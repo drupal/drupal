@@ -182,9 +182,10 @@ pre {
   position: relative;
   background-color: #e0e0d8;
 }
-#branding .breadcrumb {
+.breadcrumb {
   font-size: 0.846em;
-  padding-bottom: 5px;
+  line-height: 1em;
+  padding: 0;
 }
 
 /**
@@ -674,6 +675,9 @@ input.form-color,
 input.form-file,
 textarea.form-textarea,
 select.form-select {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing:    border-box;
+  box-sizing:         border-box;
   padding: 2px;
   border: 1px solid #ccc;
   border-top-color: #999;
@@ -682,6 +686,7 @@ select.form-select {
   -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
   -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
   transition: border linear 0.2s, box-shadow linear 0.2s;
+  max-width: 100%;
 }
 input.form-text:focus,
 input.form-tel:focus,
@@ -807,6 +812,9 @@ select.form-select:focus {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
   }
   #dblog-filter-form .form-actions {
     float: none;
@@ -978,6 +986,7 @@ body.in-maintenance #branding .step-indicator {
 .overlay #branding {
   background-color: #fff;
   padding-top: 15px;
+  padding-bottom: 15px;
 }
 .overlay #branding h1.page-title,
 .overlay #left,
@@ -1462,16 +1471,14 @@ details.fieldset-no-legend {
 
 /* @end */
 
-/* @end */
-
 /**
  * Entity meta settings.
  */
 .entity-meta {
-  background-color: #e2e2e2;
+  background-color: #ececec;
   border-bottom: 0;
-  border-left: 1px solid #a5a5a5;
-  border-right: 1px solid #a5a5a5;
+  border-left: 1px solid #bfbfbf;
+  border-right: 1px solid #bfbfbf;
   border-top: 0;
   -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, .15);
   box-shadow:         inset 0 0 5px rgba(0, 0, 0, .15);
@@ -1480,12 +1487,15 @@ details.fieldset-no-legend {
 }
 .entity-meta-header,
 .entity-meta details {
-  background-color: #f2f2f2;
-  border-top: 1px solid #a5a5a5;
-  border-bottom: 1px solid #a5a5a5;
+  background-color: #f7f7f7;
+  border-top: 1px solid #bfbfbf;
+  border-bottom: 1px solid #bfbfbf;
 }
 .entity-meta-header {
   padding: 1em 1.5em;
+}
+.entity-meta-header .form-item {
+  margin: .25em 0;
 }
 .entity-meta-header .published {
   font-size: 1.231em;
@@ -1498,15 +1508,15 @@ details.fieldset-no-legend {
 .entity-meta details {
   border-left: 0;
   border-right: 0;
-  border-top: 1px solid #fff;
+  border-top: 1px solid #ffffff;
   margin: 0;
 }
 .entity-meta details[open] {
   background-color: transparent;
-  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, .15), transparent 5px);
-  background-image:    -moz-linear-gradient(top, rgba(0, 0, 0, .15), transparent 5px);
-  background-image:      -o-linear-gradient(top, rgba(0, 0, 0, .15), transparent 5px);
-  background-image:         linear-gradient(to bottom, rgba(0, 0, 0, .15), transparent 5px);
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, .125), transparent 4px);
+  background-image:    -moz-linear-gradient(top, rgba(0, 0, 0, .125), transparent 4px);
+  background-image:      -o-linear-gradient(top, rgba(0, 0, 0, .125), transparent 4px);
+  background-image:         linear-gradient(to bottom, rgba(0, 0, 0, .125), transparent 4px);
   border-top-width: 0;
   padding-top: 1px;
 }
@@ -1523,7 +1533,137 @@ details.fieldset-no-legend {
   text-shadow: 0 1px 0 white;
 }
 .entity-meta details .summary {
-  display: none; /* Hide JS summaries. @todo Rethink summaries. */
+ display: none; /* Hide JS summaries. @todo Rethink summaries. */
+}
+.overlay .layout-region-node-footer {
+  padding-bottom: .5em;
+}
+
+/**
+ * Widescreen
+ *
+ * Both of the following media queries must *exactly* match what is in
+ * node.edit.admin.css. This is rather crazy.
+ *
+ * @todo Figure out how to reduce media query duplication across files
+ *       and modules. Layout styles only allowed in themes?
+ */
+@media
+  screen and (min-width: 780px),
+  (orientation: landscape) and (min-device-height: 780px) {
+
+  [class*="page-node-add-"] #page,
+  .page-node-edit #page {
+    padding-top: 0;
+    margin-right: 0;
+  }
+
+  [class*="page-node-add-"] #console,
+  .page-node-edit #console {
+    margin-right: 2.5em;
+  }
+
+  .layout-node-form {
+    overflow: hidden;
+    position: relative;
+  }
+  /**
+   * Draw a bottom border on the meta settings region
+   * @todo Better ideas welcome.
+   */
+  .layout-node-form:before {
+    content: '';
+    display: block;
+    height: 0;
+    width: 34.9%;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border-top: 1px solid #bfbfbf;
+  }
+
+  .layout-region-node-secondary {
+    /**
+     * 1. Applies the Position Is Everything technique for equal-height columns;
+     *    @see http://www.positioniseverything.net/articles/onetruelayout/equalheight
+     * 2. When animating the height of elements within this region, prevent
+     *    vertical jittering of elements further down in the document flow.
+     */
+    margin-bottom: -999em; /* 1 */
+    padding-bottom: 999em; /* 1 */
+    display: table; /* 2 */
+
+    background-color: #f7f7f7;
+    border-left: 1px solid #bfbfbf;
+  }
+
+  .entity-meta {
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 1px solid #ffffff;
+  }
+  .entity-meta-header {
+    border-top: 0;
+  }
+
+  /* Additional overlay theming */
+
+  /**
+   * These are terrible selectors.
+   * @todo Add a proper class to the overlay for this page.
+   */
+  .overlay[class*="page-node-add-"] #overlay-content,
+  .overlay.page-node-edit #overlay-content {
+    padding: 0;
+  }
+  .overlay[class*="page-node-add-"] #page,
+  .overlay.page-node-edit #page {
+    padding: 0;
+  }
+  .overlay[class*="page-node-add-"] #branding,
+  .overlay.page-node-edit #branding {
+    padding-left: 2em;
+    padding-right: 2em;
+  }
+  .overlay[class*="page-node-add-"] #console,
+  .overlay.page-node-edit #console {
+    margin: 0 2em;
+  }
+  .overlay[class*="page-node-add-"] .messages,
+  .overlay.page-node-edit .messages {
+    margin-bottom: 1em;
+  }
+  .overlay .layout-node-form {
+    border-top: 1px solid #bfbfbf;
+  }
+  .overlay .layout-node-form:before {
+    display: none;
+  }
+  .overlay .layout-region-node-main,
+  .overlay .layout-region-node-footer {
+    padding-left: 2em;
+  }
+  .overlay .layout-region-node-footer {
+    padding-bottom: 1.5em;
+  }
+}
+@media
+  screen and (max-width: 1020px),
+  (orientation: landscape) and (max-device-height: 1020px) {
+
+  .toolbar-vertical .layout-region-node-secondary {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    display: block;
+  }
+  .toolbar-vertical .layout-region-node-secondary {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    display: block;
+  }
+  .toolbar-vertical .layout-node-form:after {
+    display: none;
+  }
 }
 
 

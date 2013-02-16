@@ -56,6 +56,7 @@ class NodeFormController extends EntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
   public function form(array $form, array &$form_state, EntityInterface $node) {
+
     $user_config = config('user.settings');
     // Some special stuff when previewing a node.
     if (isset($form_state['node_preview'])) {

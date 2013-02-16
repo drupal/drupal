@@ -77,6 +77,14 @@
   /* Replace with position:fixed to get a scrolling close button. */
   position: absolute;
   width: 26px;
+
+  -webkit-border-top-right-radius: 12px;
+  -webkit-border-bottom-right-radius: 12px;
+  -moz-border-radius-topright: 12px;
+  -moz-border-radius-bottomright: 12px;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  background-color: #ffffff;
 }
 
 /**
