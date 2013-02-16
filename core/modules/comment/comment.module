@@ -1058,10 +1058,18 @@ function comment_form_field_ui_field_edit_form_alter(&$form, $form_state) {
 
     // Hide required checkbox.
     $form['instance']['required']['#access'] = FALSE;
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for field_ui_field_settings_form().
+ */
+function comment_form_field_ui_field_settings_form_alter(&$form, $form_state) {
+  if ($form['#field']['type'] == 'comment') {
     // We only support posting one comment at the time so it doesn't make sense
     // to let the site builder choose anything else.
-    $form['field']['cardinality']['#options'] = drupal_map_assoc(array(1));
-    $form['field']['cardinality']['#access'] = FALSE;
+    $form['field']['container']['cardinality']['#options'] = drupal_map_assoc(array(1));
+    $form['field']['container']['#access'] = FALSE;
   }
 }
 
