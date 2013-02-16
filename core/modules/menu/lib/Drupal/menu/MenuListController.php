@@ -47,10 +47,10 @@ class MenuListController extends ConfigEntityListController {
     $operations = parent::getOperations($entity);
     $uri = $entity->uri();
 
-    $operations['edit']['title'] = t('edit menu');
+    $operations['edit']['title'] = t('Edit menu');
     $operatuins['edit']['href'] = $uri['path'];
     $operations['add'] = array(
-      'title' => t('add link'),
+      'title' => t('Add link'),
       'href' => $uri['path'] . '/add',
       'options' => $uri['options'],
       'weight' => 20,
@@ -61,7 +61,7 @@ class MenuListController extends ConfigEntityListController {
       unset($operations['delete']);
     }
     else {
-      $operations['delete']['title'] = t('delete menu');
+      $operations['delete']['title'] = t('Delete menu');
     }
     return $operations;
   }
