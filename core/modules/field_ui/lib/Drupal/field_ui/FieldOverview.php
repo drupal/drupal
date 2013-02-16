@@ -145,12 +145,12 @@ class FieldOverview extends OverviewBase {
 
       $links = array();
       $links['edit'] = array(
-        'title' => t('edit'),
+        'title' => t('Edit'),
         'href' => $admin_field_path,
         'attributes' => array('title' => t('Edit instance settings.')),
       );
       $links['delete'] = array(
-        'title' => t('delete'),
+        'title' => t('Delete'),
         'href' => "$admin_field_path/delete",
         'attributes' => array('title' => t('Delete instance.')),
       );
