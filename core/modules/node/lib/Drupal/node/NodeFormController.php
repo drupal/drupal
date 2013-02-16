@@ -41,7 +41,7 @@ class NodeFormController extends EntityFormController {
       $node->created = REQUEST_TIME;
     }
     else {
-      $node->date = format_date($node->created, 'custom', 'Y-m-d H:i:s O');
+      $node->date = new DrupalDateTime($node->created);
       // Remove the log message from the original node entity.
       $node->log = NULL;
     }
@@ -185,12 +185,11 @@ class NodeFormController extends EntityFormController {
       '#weight' => -1,
       '#description' => t('Leave blank for %anonymous.', array('%anonymous' => $user_config->get('anonymous'))),
     );
-
+    $format = variable_get('date_format_html_date', 'Y-m-d') . ' ' . variable_get('date_format_html_time', 'H:i:s');
     $form['author']['date'] = array(
-      '#type' => 'textfield',
+      '#type' => 'datetime',
       '#title' => t('Authored on'),
-      '#maxlength' => 25,
-      '#description' => t('Format: %time. The date format is YYYY-MM-DD and %timezone is the time zone offset from UTC. Leave blank to use the time of form submission.', array('%time' => !empty($node->date) ? date_format(date_create($node->date), 'Y-m-d H:i:s O') : format_date($node->created, 'custom', 'Y-m-d H:i:s O'), '%timezone' => !empty($node->date) ? date_format(date_create($node->date), 'O') : format_date($node->created, 'custom', 'O'))),
+      '#description' => t('Format: %format. Leave blank to use the time of form submission.', array('%format' => datetime_format_example($format))),
       '#default_value' => !empty($node->date) ? $node->date : '',
     );
 
@@ -331,8 +330,8 @@ class NodeFormController extends EntityFormController {
     }
 
     // Validate the "authored on" field.
-    $date = new DrupalDateTime($node->date);
-    if ($date->hasErrors()) {
+    // The date element contains the date object.
+    if ($node->date instanceOf DrupalDateTime && $node->date->hasErrors()) {
       form_set_error('date', t('You have to specify a valid date.'));
     }
 

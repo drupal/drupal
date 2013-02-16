@@ -61,7 +61,7 @@ class CommentFormController extends EntityFormControllerNG {
     if ($is_admin) {
       $author = $comment->name->value;
       $status = (isset($comment->status->value) ? $comment->status->value : COMMENT_NOT_PUBLISHED);
-      $date = (!empty($comment->date) ? $comment->date : format_date($comment->created->value, 'custom', 'Y-m-d H:i O'));
+      $date = (!empty($comment->date) ? $comment->date : new DrupalDateTime($comment->created->value));
     }
     else {
       if ($user->uid) {
@@ -117,10 +117,9 @@ class CommentFormController extends EntityFormControllerNG {
 
     // Add administrative comment publishing options.
     $form['author']['date'] = array(
-      '#type' => 'textfield',
+      '#type' => 'datetime',
       '#title' => t('Authored on'),
       '#default_value' => $date,
-      '#maxlength' => 25,
       '#size' => 20,
       '#access' => $is_admin,
     );
@@ -212,8 +211,8 @@ class CommentFormController extends EntityFormControllerNG {
       $account = user_load_by_name($form_state['values']['name']);
       $form_state['values']['uid'] = $account ? $account->uid : 0;
 
-      $date = new DrupalDateTime(!empty($form_state['values']['date']) ? $form_state['values']['date'] : 'now');
-      if ($date->hasErrors()) {
+      $date = $form_state['values']['date'];
+      if ($date instanceOf DrupalDateTime && $date->hasErrors()) {
         form_set_error('date', t('You have to specify a valid date.'));
       }
       if ($form_state['values']['name'] && !$form_state['values']['is_anonymous'] && !$account) {
@@ -244,8 +243,12 @@ class CommentFormController extends EntityFormControllerNG {
    */
   public function buildEntity(array $form, array &$form_state) {
     $comment = parent::buildEntity($form, $form_state);
-    $date = new DrupalDateTime(!empty($form_state['values']['date']) ? $form_state['values']['date'] : 'now');
-    $comment->created->value = $date->getTimestamp();
+    if (!empty($form_state['values']['date']) && $form_state['values']['date'] instanceOf DrupalDateTime) {
+      $comment->created->value = $form_state['values']['date']->getTimestamp();
+    }
+    else {
+      $comment->created->value = REQUEST_TIME;
+    }
     $comment->changed->value = REQUEST_TIME;
     return $comment;
   }

@@ -1564,6 +1564,12 @@ function theme_disable($theme_list) {
 
 /**
  * Preprocess variables for theme_datetime().
+ *
+ * @param array $variables
+ *   An associative array possbily containing:
+ *   - attributes['timestamp']:
+ *   - timestamp:
+ *   - text:
  */
 function template_preprocess_datetime(&$variables) {
   // Format the 'datetime' attribute based on the timestamp.
@@ -1585,6 +1591,7 @@ function template_preprocess_datetime(&$variables) {
       $variables['html'] = FALSE;
     }
   }
+  $variables['attributes'] = new Attribute($variables['attributes']);
 }
 
 /**

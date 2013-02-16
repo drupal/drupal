@@ -690,7 +690,6 @@ function node_update_8012() {
   update_module_enable(array('history'));
 }
 
-
 /**
  * Renames global revision permissions to use the word 'all'.
  */
@@ -704,6 +703,14 @@ function node_update_8013() {
       ->condition('module', 'node')
       ->execute();
   }
+}
+
+/**
+ * Enable Datetime module, which is now a required dependency.
+ */
+function node_update_8014() {
+  // Enable the datetime module.
+  update_module_enable(array('datetime'));
 }
 
 /**

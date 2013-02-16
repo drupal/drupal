@@ -8,6 +8,7 @@
 namespace Drupal\forum\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Datetime\DrupalDateTime;
 
 /**
  * Provides automated tests for the Forum blocks.
@@ -96,17 +97,18 @@ class ForumBlockTest extends WebTestBase {
     $topics = $this->createForumTopics(10);
 
     // Comment on the first 5 topics.
-    $timestamp = time();
+    $date = new DrupalDateTime();
     $langcode = LANGUAGE_NOT_SPECIFIED;
     for ($index = 0; $index < 5; $index++) {
       // Get the node from the topic title.
       $node = $this->drupalGetNodeByTitle($topics[$index]);
+      $date->modify('+1 minute');
       $comment = entity_create('comment', array(
         'nid' => $node->nid,
         'node_type' => 'node_type_' . $node->bundle(),
         'subject' => $this->randomString(20),
         'comment_body' => $this->randomString(256),
-        'created' => $timestamp + $index,
+        'created' => $date->getTimestamp(),
       ));
       comment_save($comment);
     }
@@ -155,12 +157,16 @@ class ForumBlockTest extends WebTestBase {
    */
   protected function createForumTopics($count = 5) {
     $topics = array();
-    $timestamp = time() - 24 * 60 * 60;
+    $date = new DrupalDateTime();
+    $date->modify('-24 hours');
 
     for ($index = 0; $index < $count; $index++) {
       // Generate a random subject/body.
       $title = $this->randomName(20);
       $body = $this->randomName(200);
+      // Forum posts are ordered by timestamp, so force a unique timestamp by
+      // changing the date.
+      $date->modify('+1 minute');
 
       $langcode = LANGUAGE_NOT_SPECIFIED;
       $edit = array(
@@ -168,7 +174,8 @@ class ForumBlockTest extends WebTestBase {
         "body[$langcode][0][value]" => $body,
         // Forum posts are ordered by timestamp, so force a unique timestamp by
         // adding the index.
-        'date' => date('c', $timestamp + $index),
+        'date[date]' => $date->format('Y-m-d'),
+        'date[time]' => $date->format('H:i:s'),
       );
 
       // Create the forum topic, preselecting the forum ID via a URL parameter.

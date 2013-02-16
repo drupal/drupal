@@ -16,7 +16,7 @@ class FormTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('form_test', 'file');
+  public static $modules = array('form_test', 'file', 'datetime');
 
   public static function getInfo() {
     return array(
@@ -518,7 +518,7 @@ class FormTest extends WebTestBase {
 
     // All the elements should be marked as disabled, including the ones below
     // the disabled container.
-    $this->assertEqual(count($disabled_elements), 40, 'The correct elements have the disabled property in the HTML code.');
+    $this->assertEqual(count($disabled_elements), 39, 'The correct elements have the disabled property in the HTML code.');
 
     $this->drupalPost(NULL, $edit, t('Submit'));
     $returned_values['hijacked'] = drupal_json_decode($this->content);
@@ -568,7 +568,7 @@ class FormTest extends WebTestBase {
       'textarea' => 'textarea',
       'select' => 'select',
       'weight' => 'select',
-      'date' => 'select',
+      'datetime' => 'datetime',
     );
 
     foreach ($form as $name => $item) {

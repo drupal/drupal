@@ -1009,14 +1009,7 @@ function node_submit(Node $node) {
     $node->revision_uid = $user->uid;
   }
 
-  if (!empty($node->date)) {
-    $node_created = new DrupalDateTime($node->date);
-    $node->created = $node_created->getTimestamp();
-  }
-  else {
-    $node->created = REQUEST_TIME;
-  }
-
+  $node->created = !empty($node->date) && $node->date instanceOf DrupalDateTime ? $node->date->getTimestamp() : REQUEST_TIME;
   $node->validated = TRUE;
 
   return $node;

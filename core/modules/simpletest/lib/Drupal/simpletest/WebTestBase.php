@@ -16,6 +16,7 @@ use stdClass;
 use DOMDocument;
 use DOMXPath;
 use SimpleXMLElement;
+use Drupal\Core\Datetime\DrupalDateTime;
 
 /**
  * Test case for typical Drupal tests.
@@ -1277,7 +1278,6 @@ abstract class WebTestBase extends TestBase {
           // handleForm() function, it's not currently a requirement.
           $submit_matches = TRUE;
         }
-
         // We post only if we managed to handle every field in edit and the
         // submit button matches.
         if (!$edit && ($submit_matches || !isset($submit))) {
@@ -1613,6 +1613,10 @@ abstract class WebTestBase extends TestBase {
           case 'password':
           case 'email':
           case 'search':
+          case 'date':
+          case 'time':
+          case 'datetime':
+          case 'datetime-local';
             $post[$name] = $edit[$name];
             unset($edit[$name]);
             break;
