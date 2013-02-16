@@ -36,6 +36,17 @@ class UserCreateTest extends WebTestBase {
     $this->assertFieldbyId('edit-status-1', 1, 'The user status option Active exists.', 'User login');
     $this->assertFieldByXPath('//input[@type="radio" and @id="edit-status-1" and @checked="checked"]', NULL, 'Default setting for user status is active.');
 
+    // Test that the password strength indicator displays.
+    $config = config('user.settings');
+
+    $config->set('password_strength', TRUE)->save();
+    $this->drupalGet('admin/people/create');
+    $this->assertRaw(t('Password strength:'), 'The password strength indicator is displayed.');
+
+    $config->set('password_strength', FALSE)->save();
+    $this->drupalGet('admin/people/create');
+    $this->assertNoRaw(t('Password strength:'), 'The password strength indicator is not displayed.');
+
     // We create two users, notifying one and not notifying the other, to
     // ensure that the tests work in both cases.
     foreach (array(FALSE, TRUE) as $notify) {
