@@ -58,6 +58,6 @@ class DBLogResource extends ResourceBase {
         return $response;
       }
     }
-    throw new NotFoundHttpException('Not Found');
+    throw new NotFoundHttpException(t('Log entry with ID @id was not found', array('@id' => $id)));
   }
 }

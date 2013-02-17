@@ -57,7 +57,8 @@ class DeleteTest extends RESTTestBase {
       // Try to delete an entity that does not exist.
       $response = $this->httpRequest('entity/' . $entity_type . '/9999', 'DELETE');
       $this->assertResponse(404);
-      $this->assertEqual($response, 'Entity with ID 9999 not found', 'Response message is correct.');
+      $decoded = drupal_json_decode($response);
+      $this->assertEqual($decoded['error'], 'Entity with ID 9999 not found', 'Response message is correct.');
 
       // Try to delete an entity without proper permissions.
       $this->drupalLogout();

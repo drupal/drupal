@@ -61,6 +61,7 @@ class DBLogTest extends RESTTestBase {
     // Request an unknown log entry.
     $response = $this->httpRequest("dblog/9999", 'GET', NULL, 'application/vnd.drupal.ld+json');
     $this->assertResponse(404);
-    $this->assertEqual($response, 'Not Found', 'Response message is correct.');
+    $decoded = drupal_json_decode($response);
+    $this->assertEqual($decoded['error'], 'Log entry with ID 9999 was not found', 'Response message is correct.');
   }
 }

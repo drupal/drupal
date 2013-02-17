@@ -9,6 +9,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Utility\Color;
 
 /**
@@ -1728,8 +1729,8 @@ function form_error(&$element, $message = '') {
  * - $element['#process']: An array of functions called after user input has
  *   been mapped to the element's #value property. These functions can be used
  *   to dynamically add child elements: for example, for the 'date' element
- *   type, one of the functions in this array is form_process_date(), which adds
- *   the individual 'year', 'month', 'day', etc. child elements. These functions
+ *   type, one of the functions in this array is form_process_datetime(), which adds
+ *   the individual 'date', and 'time'. child elements. These functions
  *   can also be used to set additional properties or implement special logic
  *   other than adding child elements: for example, for the 'details' element
  *   type, one of the functions in this array is form_process_details(), which
@@ -3031,118 +3032,29 @@ function password_confirm_validate($element, &$element_state) {
 }
 
 /**
- * Returns HTML for a date selection form element.
+ * Returns HTML for an #date form element.
  *
- * @param $variables
+ * Supports HTML5 types of 'date', 'datetime', 'datetime-local', and 'time'.
+ * Falls back to a plain textfield. Used as a sub-element by the datetime
+ * element type.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #value, #options, #description, #required,
- *     #attributes.
+ *     #attributes, #id, #name, #type, #min, #max, #step, #value, #size.
  *
  * @ingroup themeable
  */
 function theme_date($variables) {
   $element = $variables['element'];
-
-  $attributes = array();
-  if (isset($element['#id'])) {
-    $attributes['id'] = $element['#id'];
+  if (empty($element['attribute']['type'])) {
+    $element['attribute']['type'] = 'date';
   }
-  if (!empty($element['#attributes']['class'])) {
-    $attributes['class'] = (array) $element['#attributes']['class'];
-  }
-  $attributes['class'][] = 'container-inline';
+  element_set_attributes($element, array('id', 'name', 'type', 'min', 'max', 'step', 'value', 'size'));
+  _form_set_attributes($element, array('form-' . $element['attribute']['type']));
 
-  return '<div' . new Attribute($attributes) . '>' . drupal_render_children($element) . '</div>';
-}
-
-/**
- * Expands a date element into year, month, and day select elements.
- */
-function form_process_date($element) {
-  // Default to current date
-  if (empty($element['#value'])) {
-    $element['#value'] = array(
-      'day' => format_date(REQUEST_TIME, 'custom', 'j'),
-      'month' => format_date(REQUEST_TIME, 'custom', 'n'),
-      'year' => format_date(REQUEST_TIME, 'custom', 'Y'),
-    );
-  }
-
-  $element['#tree'] = TRUE;
-
-  // Determine the order of day, month, year in the site's chosen date format.
-  $format = config('system.date')->get('formats.short.pattern');
-  $format = $format['php'];
-  $sort = array();
-  $sort['day'] = max(strpos($format, 'd'), strpos($format, 'j'));
-  $sort['month'] = max(strpos($format, 'm'), strpos($format, 'M'));
-  $sort['year'] = strpos($format, 'Y');
-  asort($sort);
-  $order = array_keys($sort);
-
-  // Output multi-selector for date.
-  foreach ($order as $type) {
-    switch ($type) {
-      case 'day':
-        $options = drupal_map_assoc(range(1, 31));
-        $title = t('Day');
-        break;
-
-      case 'month':
-        $options = drupal_map_assoc(range(1, 12), 'map_month');
-        $title = t('Month');
-        break;
-
-      case 'year':
-        $options = drupal_map_assoc(range(1900, 2050));
-        $title = t('Year');
-        break;
-    }
-
-    $element[$type] = array(
-      '#type' => 'select',
-      '#title' => $title,
-      '#title_display' => 'invisible',
-      '#value' => $element['#value'][$type],
-      '#attributes' => $element['#attributes'],
-      '#options' => $options,
-    );
-  }
-
-  return $element;
-}
-
-/**
- * Validates the date type to prevent invalid dates (e.g., February 30, 2006).
- */
-function date_validate($element) {
-  if (!checkdate($element['#value']['month'], $element['#value']['day'], $element['#value']['year'])) {
-    form_error($element, t('The specified date is invalid.'));
-  }
-}
-
-/**
- * Renders a month name for display.
- *
- * Callback for drupal_map_assoc() within form_process_date().
- */
-function map_month($month) {
-  $months = &drupal_static(__FUNCTION__, array(
-    1 => 'Jan',
-    2 => 'Feb',
-    3 => 'Mar',
-    4 => 'Apr',
-    5 => 'May',
-    6 => 'Jun',
-    7 => 'Jul',
-    8 => 'Aug',
-    9 => 'Sep',
-    10 => 'Oct',
-    11 => 'Nov',
-    12 => 'Dec',
-  ));
-  return t($months[$month]);
+  return '<input' . new Attribute($element['#attributes']) . ' />';
 }
 
 /**

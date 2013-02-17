@@ -12,13 +12,6 @@ namespace Drupal\taxonomy\Tests;
  */
 class TermTest extends TaxonomyTestBase {
 
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('taxonomy', 'contextual');
-
   public static function getInfo() {
     return array(
       'name' => 'Taxonomy term functions and forms',
@@ -29,7 +22,7 @@ class TermTest extends TaxonomyTestBase {
 
   function setUp() {
     parent::setUp();
-    $this->admin_user = $this->drupalCreateUser(array('administer taxonomy', 'bypass node access', 'access contextual links'));
+    $this->admin_user = $this->drupalCreateUser(array('administer taxonomy', 'bypass node access'));
     $this->drupalLogin($this->admin_user);
     $this->vocabulary = $this->createVocabulary();
 

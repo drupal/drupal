@@ -489,8 +489,6 @@ function system_element_info() {
   );
   $types['date'] = array(
     '#input' => TRUE,
-    '#element_validate' => array('date_validate'),
-    '#process' => array('form_process_date'),
     '#theme' => 'date',
     '#theme_wrappers' => array('form_element'),
   );

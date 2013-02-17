@@ -1,5 +1,5 @@
 name = Menu Link
-description = Provides menu links, trees and bunnies!
+description = Provides menu links.
 package = Core
 version = VERSION
 core = 8.x

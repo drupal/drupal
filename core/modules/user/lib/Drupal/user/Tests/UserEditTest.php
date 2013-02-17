@@ -76,6 +76,18 @@ class UserEditTest extends WebTestBase {
     $user1->pass_raw = $new_pass;
     $this->drupalLogin($user1);
     $this->drupalLogout();
+
+    // Test that the password strength indicator displays.
+    $config = config('user.settings');
+    $this->drupalLogin($user1);
+
+    $config->set('password_strength', TRUE)->save();
+    $this->drupalPost("user/$user1->uid/edit", $edit, t('Save'));
+    $this->assertRaw(t('Password strength:'), 'The password strength indicator is displayed.');
+
+    $config->set('password_strength', FALSE)->save();
+    $this->drupalPost("user/$user1->uid/edit", $edit, t('Save'));
+    $this->assertNoRaw(t('Password strength:'), 'The password strength indicator is not displayed.');
   }
 
   /**

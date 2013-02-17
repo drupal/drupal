@@ -22,8 +22,16 @@ html {
 }
 #overlay-close,
 #overlay-close:hover {
-  background: transparent url(images/close-rtl.png) no-repeat;
+  background: transparent url(images/close.png) no-repeat;
   border-top-right-radius: 0;
+
+  -webkit-border-top-left-radius: 12px;
+  -webkit-border-bottom-left-radius: 12px;
+  -moz-border-radius-topleft: 12px;
+  -moz-border-radius-bottomleft: 12px;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  background-color: #ffffff;
 }
 
 /**

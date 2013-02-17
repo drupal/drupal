@@ -4,3 +4,35 @@ pre,
 kbd {
   font-size: 1em;
 }
+
+/* Node Add/Edit Page Layout */
+
+.layout-node-form {
+  overflow: hidden;
+}
+
+.overlay .node-actions {
+  margin-bottom: 1em;
+}
+
+.node-main-content,
+.node-actions {
+  padding: 0.5em 1.5em 0 1.5em;
+}
+
+/**
+ * 1. Applies the Position Is Everything technique for equal-height columns;
+ *    @see http://www.positioniseverything.net/articles/onetruelayout/equalheight
+ * 2. When animating the height of elements within this region, prevent
+ *    vertical jittering of elements further down in the document flow.
+ */
+.node-advanced-settings {
+  margin-bottom: -999em;
+  padding-bottom: 999em;
+  display: table;
+
+  -moz-box-shadow: inset 0.1em -1em 0.6em rgba(100, 100, 100, .1);
+  -webkit-box-shadow: inset 0.1em -1em 0.6em rgba(100, 100, 100, .1);
+  box-shadow: inset 0.1em -1em 0.6em rgba(100, 100, 100, .1);
+  border: none;
+}

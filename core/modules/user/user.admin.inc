@@ -361,6 +361,11 @@ function user_admin_settings($form, &$form_state) {
     '#default_value' => $config->get('verify_mail'),
     '#description' => t('New users will be required to validate their e-mail address prior to logging into the site, and will be assigned a system-generated password. With this setting disabled, users will be logged in immediately upon registering, and may select their own passwords during registration.')
   );
+  $form['registration_cancellation']['user_password_strength'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable password strength indicator'),
+    '#default_value' => $config->get('password_strength'),
+  );
   form_load_include($form_state, 'inc', 'user', 'user.pages');
   $form['registration_cancellation']['user_cancel_method'] = array(
     '#type' => 'radios',
@@ -631,6 +636,7 @@ function user_admin_settings_submit($form, &$form_state) {
     ->set('anonymous', $form_state['values']['anonymous'])
     ->set('admin_role', $form_state['values']['user_admin_role'])
     ->set('register', $form_state['values']['user_register'])
+    ->set('password_strength', $form_state['values']['user_password_strength'])
     ->set('verify_mail', $form_state['values']['user_email_verification'])
     ->set('signatures', $form_state['values']['user_signatures'])
     ->set('cancel_method', $form_state['values']['user_cancel_method'])

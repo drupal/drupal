@@ -7,6 +7,8 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\Core\Datetime\DrupalDateTime;
+
 /**
  * Tests previewing comments.
  */
@@ -86,13 +88,16 @@ class CommentPreviewTest extends CommentTestBase {
     $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, 'Comment paging changed.');
 
     $edit = array();
+    $date = new DrupalDateTime('2008-03-02 17:23');
     $edit['subject'] = $this->randomName(8);
     $edit['comment_body[' . $langcode . '][0][value]'] = $this->randomName(16);
     $edit['name'] = $web_user->name;
-    $edit['date'] = '2008-03-02 17:23 +0300';
-    $raw_date = strtotime($edit['date']);
+    $edit['date[date]'] = $date->format('Y-m-d');
+    $edit['date[time]'] = $date->format('H:i:s');
+    $raw_date = $date->getTimestamp();
     $expected_text_date = format_date($raw_date);
-    $expected_form_date = format_date($raw_date, 'custom', 'Y-m-d H:i O');
+    $expected_form_date = $date->format('Y-m-d');
+    $expected_form_time = $date->format('H:i:s');
     $comment = $this->postComment($this->node, $edit['subject'], $edit['comment_body[' . $langcode . '][0][value]'], TRUE);
     $this->drupalPost('comment/' . $comment->id() . '/edit', $edit, t('Preview'));
 
@@ -107,7 +112,8 @@ class CommentPreviewTest extends CommentTestBase {
     $this->assertFieldByName('subject', $edit['subject'], 'Subject field displayed.');
     $this->assertFieldByName('comment_body[' . $langcode . '][0][value]', $edit['comment_body[' . $langcode . '][0][value]'], 'Comment field displayed.');
     $this->assertFieldByName('name', $edit['name'], 'Author field displayed.');
-    $this->assertFieldByName('date', $edit['date'], 'Date field displayed.');
+    $this->assertFieldByName('date[date]', $edit['date[date]'], 'Date field displayed.');
+    $this->assertFieldByName('date[time]', $edit['date[time]'], 'Time field displayed.');
 
     // Check that saving a comment produces a success message.
     $this->drupalPost('comment/' . $comment->id() . '/edit', $edit, t('Save'));
@@ -118,14 +124,16 @@ class CommentPreviewTest extends CommentTestBase {
     $this->assertFieldByName('subject', $edit['subject'], 'Subject field displayed.');
     $this->assertFieldByName('comment_body[' . $langcode . '][0][value]', $edit['comment_body[' . $langcode . '][0][value]'], 'Comment field displayed.');
     $this->assertFieldByName('name', $edit['name'], 'Author field displayed.');
-    $this->assertFieldByName('date', $expected_form_date, 'Date field displayed.');
+    $this->assertFieldByName('date[date]', $expected_form_date, 'Date field displayed.');
+    $this->assertFieldByName('date[time]', $expected_form_time, 'Time field displayed.');
 
     // Submit the form using the displayed values.
     $displayed = array();
     $displayed['subject'] = (string) current($this->xpath("//input[@id='edit-subject']/@value"));
     $displayed['comment_body[' . $langcode . '][0][value]'] = (string) current($this->xpath("//textarea[@id='edit-comment-body-" . $langcode . "-0-value']"));
     $displayed['name'] = (string) current($this->xpath("//input[@id='edit-name']/@value"));
-    $displayed['date'] = (string) current($this->xpath("//input[@id='edit-date']/@value"));
+    $displayed['date[date]'] = (string) current($this->xpath("//input[@id='edit-date-date']/@value"));
+    $displayed['date[time]'] = (string) current($this->xpath("//input[@id='edit-date-time']/@value"));
     $this->drupalPost('comment/' . $comment->id() . '/edit', $displayed, t('Save'));
 
     // Check that the saved comment is still correct.
