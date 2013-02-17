@@ -104,7 +104,7 @@ class TypedDataTest extends WebTestBase {
     $this->assertEqual($typed_data->validate()->count(), 1, 'Validation detected invalid value.');
 
     // Date type.
-    $value = new DrupalDateTime(REQUEST_TIME);
+    $value = new DrupalDateTime();
     $typed_data = $this->createTypedData(array('type' => 'date'), $value);
     $this->assertTrue($typed_data->getValue() === $value, 'Date value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);

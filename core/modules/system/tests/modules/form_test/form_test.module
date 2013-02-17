@@ -7,6 +7,7 @@
 
 use Drupal\form_test\Callbacks;
 use Drupal\form_test\FormTestObject;
+use Drupal\Core\Datetime\DrupalDateTime;
 
 /**
  * Implements hook_menu().
@@ -1783,23 +1784,6 @@ function _form_test_disabled_elements($form, &$form_state) {
     '#disabled' => TRUE,
   );
 
-  // Date.
-  $form['date'] = array(
-    '#type' => 'date',
-    '#title' => 'date',
-    '#disabled' => TRUE,
-    '#default_value' => array(
-      'day' => 19,
-      'month' => 11,
-      'year' => 1978,
-    ),
-    '#test_hijack_value' => array(
-      'day' => 20,
-      'month' => 12,
-      'year' => 1979,
-    ),
-  );
-
   // The #disabled state should propagate to children.
   $form['disabled_container'] = array(
     '#disabled' => TRUE,
@@ -1812,6 +1796,19 @@ function _form_test_disabled_elements($form, &$form_state) {
       '#test_hijack_value' => 'HIJACK',
     );
   }
+
+  // Date.
+  $date = new DrupalDateTime('1978-11-01 10:30:00', 'Europe/Berlin');
+  $expected = array('date' => '1978-11-01 10:30:00', 'timezone_type' => 3, 'timezone' => 'Europe/Berlin',);
+  $form['disabled_container']['disabled_container_datetime'] = array(
+    '#type' => 'datetime',
+    '#title' => 'datetime',
+    '#default_value' => $date,
+    '#expected_value' => $expected,
+    '#test_hijack_value' => new DrupalDateTime('1978-12-02 11:30:00', 'Europe/Berlin'),
+    '#date_timezone' => 'Europe/Berlin',
+  );
+
 
   // Try to hijack the email field with a valid email.
   $form['disabled_container']['disabled_container_email'] = array(

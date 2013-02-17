@@ -63,16 +63,16 @@ class EntityResource extends ResourceBase {
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    */
   public function post($id, EntityInterface $entity) {
+    $definition = $this->getDefinition();
     // Verify that the deserialized entity is of the type that we expect to
     // prevent security issues.
-    $definition = $this->getDefinition();
     if ($entity->entityType() != $definition['entity_type']) {
-      throw new BadRequestHttpException();
+      throw new BadRequestHttpException(t('Invalid entity type'));
     }
     // POSTed entities must not have an ID set, because we always want to create
     // new entities here.
     if (!$entity->isNew()) {
-      throw new BadRequestHttpException();
+      throw new BadRequestHttpException(t('Only new entities can be created'));
     }
     try {
       $entity->save();
@@ -83,7 +83,7 @@ class EntityResource extends ResourceBase {
       return new ResourceResponse(NULL, 201, array('Location' => $url));
     }
     catch (EntityStorageException $e) {
-      throw new HttpException(500, 'Internal Server Error', $e);
+      throw new HttpException(500, t('Internal Server Error'), $e);
     }
   }
 
@@ -122,7 +122,7 @@ class EntityResource extends ResourceBase {
       return new ResourceResponse(NULL, 204);
     }
     catch (EntityStorageException $e) {
-      throw new HttpException(500, 'Internal Server Error', $e);
+      throw new HttpException(500, t('Internal Server Error'), $e);
     }
   }
 
@@ -145,7 +145,7 @@ class EntityResource extends ResourceBase {
     }
     $definition = $this->getDefinition();
     if ($entity->entityType() != $definition['entity_type']) {
-      throw new BadRequestHttpException('Invalid entity type');
+      throw new BadRequestHttpException(t('Invalid entity type'));
     }
     $original_entity = entity_load($definition['entity_type'], $id);
     // We don't support creating entities with PATCH, so we throw an error if
@@ -167,7 +167,7 @@ class EntityResource extends ResourceBase {
       return new ResourceResponse(NULL, 204);
     }
     catch (EntityStorageException $e) {
-      throw new HttpException(500, 'Internal Server Error', $e);
+      throw new HttpException(500, t('Internal Server Error'), $e);
     }
   }
 
@@ -194,7 +194,7 @@ class EntityResource extends ResourceBase {
         return new ResourceResponse(NULL, 204);
       }
       catch (EntityStorageException $e) {
-        throw new HttpException(500, 'Internal Server Error', $e);
+        throw new HttpException(500, t('Internal Server Error'), $e);
       }
     }
     throw new NotFoundHttpException(t('Entity with ID @id not found', array('@id' => $id)));

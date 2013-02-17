@@ -49,7 +49,7 @@ class CreateTest extends RESTTestBase {
     $serialized = $serializer->serialize($entity, 'drupal_jsonld');
     // Create the entity over the web API.
     $this->httpRequest('entity/' . $entity_type, 'POST', $serialized, 'application/vnd.drupal.ld+json');
-    $this->assertResponse('201', 'HTTP response code is correct.');
+    $this->assertResponse(201);
 
     // Get the new entity ID from the location header and try to read it from
     // the database.
@@ -69,6 +69,11 @@ class CreateTest extends RESTTestBase {
     }
 
     $loaded_entity->delete();
+
+    // Try to send invalid data that cannot be correctly deserialized.
+    $this->httpRequest('entity/' . $entity_type, 'POST', 'kaboom!', 'application/vnd.drupal.ld+json');
+    $this->assertResponse(400);
+
     // Try to create an entity without the CSRF token.
     $this->curlExec(array(
       CURLOPT_HTTPGET => FALSE,

@@ -48,13 +48,6 @@ class FilterFormatAccessTest extends WebTestBase {
    */
   protected $disallowed_format;
 
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('contextual');
-
   public static function getInfo() {
     return array(
       'name' => 'Filter format access',
@@ -95,7 +88,6 @@ class FilterFormatAccessTest extends WebTestBase {
     $this->web_user = $this->drupalCreateUser(array(
       'create page content',
       'edit any page content',
-      'access contextual links',
       filter_permission_name($this->allowed_format),
     ));
 
@@ -104,7 +96,6 @@ class FilterFormatAccessTest extends WebTestBase {
       'administer filters',
       'create page content',
       'edit any page content',
-      'access contextual links',
       filter_permission_name($this->allowed_format),
       filter_permission_name($this->disallowed_format),
     ));

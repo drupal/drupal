@@ -121,7 +121,8 @@ class NodeTranslationUITest extends EntityTranslationUITest {
       );
       $edit = array(
         'name' => $user->name,
-        'date' => format_date($values[$langcode]['created'], 'custom', 'Y-m-d H:i:s O'),
+        'date[date]' => format_date($values[$langcode]['created'], 'custom', 'Y-m-d'),
+        'date[time]' => format_date($values[$langcode]['created'], 'custom', 'H:i:s'),
       );
       $this->drupalPost($path, $edit, $this->getFormSubmitAction(), array('language' => $languages[$langcode]));
     }

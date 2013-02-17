@@ -186,8 +186,9 @@ class LocalePluralFormatTest extends WebTestBase {
     $this->assertText('@count sati');
 
     // Edit langcode hr translations and see if that took effect.
+    $lid = db_query("SELECT lid FROM {locales_source} WHERE source = :source AND context = ''", array(':source' => "1 hour" . LOCALE_PLURAL_DELIMITER . "@count hours"))->fetchField();
     $edit = array(
-      'strings[10][translations][1]' => '@count sata edited',
+      "strings[$lid][translations][1]" => '@count sata edited',
     );
     $this->drupalPost($path, $edit, t('Save translations'));
 
@@ -202,7 +203,7 @@ class LocalePluralFormatTest extends WebTestBase {
 
     // Edit langcode fr translations and see if that took effect.
     $edit = array(
-      'strings[10][translations][0]' => '@count heure edited',
+      "strings[$lid][translations][0]" => '@count heure edited',
     );
     $this->drupalPost($path, $edit, t('Save translations'));
 

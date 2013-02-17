@@ -171,6 +171,11 @@ function node_theme() {
     'node_recent_content' => array(
       'variables' => array('node' => NULL),
     ),
+    'node_edit_form' => array(
+      'render element' => 'form',
+      'path' => drupal_get_path('module', 'node') . '/templates',
+      'template' => 'node-edit-form',
+    ),
   );
 }
 
@@ -1004,14 +1009,7 @@ function node_submit(Node $node) {
     $node->revision_uid = $user->uid;
   }
 
-  if (!empty($node->date)) {
-    $node_created = new DrupalDateTime($node->date);
-    $node->created = $node_created->getTimestamp();
-  }
-  else {
-    $node->created = REQUEST_TIME;
-  }
-
+  $node->created = !empty($node->date) && $node->date instanceOf DrupalDateTime ? $node->date->getTimestamp() : REQUEST_TIME;
   $node->validated = TRUE;
 
   return $node;
@@ -1769,7 +1767,7 @@ function node_menu() {
     'access arguments' => array('update', 1),
     'weight' => 0,
     'type' => MENU_LOCAL_TASK,
-    'context' => MENU_CONTEXT_INLINE,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'node.pages.inc',
   );
   $items['node/%node/delete'] = array(
@@ -1791,7 +1789,6 @@ function node_menu() {
     'access arguments' => array(1),
     'weight' => 2,
     'type' => MENU_LOCAL_TASK,
-    'context' => MENU_CONTEXT_INLINE,
     'file' => 'node.pages.inc',
   );
   $items['node/%node/revisions/%node_revision/view'] = array(

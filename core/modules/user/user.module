@@ -2440,10 +2440,18 @@ function _user_mail_notify($op, $account, $langcode = NULL) {
  * @see system_element_info()
  */
 function user_form_process_password_confirm($element) {
-  global $user;
+  $password_settings = array(
+    'confirmTitle' => t('Passwords match:'),
+    'confirmSuccess' => t('yes'),
+    'confirmFailure' => t('no'),
+    'showStrengthIndicator' => FALSE,
+  );
 
-  $js_settings = array(
-    'password' => array(
+  if (config('user.settings')->get('password_strength')) {
+
+    global $user;
+    $password_settings['showStrengthIndicator'] = TRUE;
+    $password_settings += array(
       'strengthTitle' => t('Password strength:'),
       'hasWeaknesses' => t('To make your password stronger:'),
       'tooShort' => t('Make it at least 6 characters'),
@@ -2452,15 +2460,16 @@ function user_form_process_password_confirm($element) {
       'addNumbers' => t('Add numbers'),
       'addPunctuation' => t('Add punctuation'),
       'sameAsUsername' => t('Make it different from your username'),
-      'confirmSuccess' => t('yes'),
-      'confirmFailure' => t('no'),
       'weak' => t('Weak'),
       'fair' => t('Fair'),
       'good' => t('Good'),
       'strong' => t('Strong'),
-      'confirmTitle' => t('Passwords match:'),
       'username' => (isset($user->name) ? $user->name : ''),
-    ),
+    );
+  }
+
+  $js_settings = array(
+    'password' => $password_settings,
   );
 
   $element['#attached']['library'][] = array('user', 'drupal.user');

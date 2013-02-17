@@ -19,7 +19,7 @@ abstract class NodeTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node');
+  public static $modules = array('node', 'datetime');
 
   function setUp() {
     parent::setUp();

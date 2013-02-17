@@ -94,7 +94,7 @@ class EditController extends ContainerAware {
     if (!empty($form_state['executed'])) {
       // The form submission took care of saving the updated entity. Return the
       // updated view of the field.
-      $entity = $form_state['entity'];
+      $entity = entity_load($form_state['entity']->entityType(), $form_state['entity']->id(), TRUE);
       $output = field_view_field($entity, $field_name, $view_mode, $langcode);
 
       $response->addCommand(new FieldFormSavedCommand(drupal_render($output)));

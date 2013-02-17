@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Datetime module.
+ */
+
+/**
+ * Implements hook_field_schema().
+ */
+function datetime_field_schema($field) {
+  $db_columns = array();
+  $db_columns['value'] = array(
+    'description' => 'The date value',
+    'type' => 'varchar',
+    'length' => 20,
+    'not null' => FALSE,
+  );
+  $indexes = array(
+    'value' => array('value'),
+  );
+  return array('columns' => $db_columns, 'indexes' => $indexes);
+}
+
+/**
+ * Install the new to D8 Datetime module.
+ *
+ * As part of adding this new module to Drupal 8, the Datetime namespace is now
+ * reserved for this module.  This is a possible conflict with a popular contrib
+ * field DateTime that existed in D7.  Hence, any Datetime fields that may have
+ * existed prior to D8 need to renamed for later upgrade by contrib modules like
+ * the Date module.
+ */
+function datetime_install() {
+  db_update('field_config')
+    ->fields(array(
+      'type' => 'datetime_old',
+    ))
+    ->condition('type', 'datetime')
+    ->execute();
+}

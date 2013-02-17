@@ -120,6 +120,11 @@ function seven_preprocess_install_page(&$variables) {
 function seven_form_node_form_alter(&$form, &$form_state) {
   $node = $form_state['controller']->getEntity($form_state);
 
+  $form['#theme'] = array('node_edit_form');
+  $form['#attached'] = array(
+    'css' => array(drupal_get_path('module', 'node') . '/node.edit.admin.css'),
+  );
+
   $form['advanced']['#type'] = 'container';
   $form['meta'] = array (
     '#type' => 'fieldset',

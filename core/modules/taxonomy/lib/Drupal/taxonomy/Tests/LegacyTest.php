@@ -7,6 +7,8 @@
 
 namespace Drupal\taxonomy\Tests;
 
+use Drupal\Core\Datetime\DrupalDateTime;
+
 /**
  * Test for legacy node bug.
  */
@@ -34,14 +36,16 @@ class LegacyTest extends TaxonomyTestBase {
   function testTaxonomyLegacyNode() {
     // Posts an article with a taxonomy term and a date prior to 1970.
     $langcode = LANGUAGE_NOT_SPECIFIED;
+    $date = new DrupalDateTime('1969-01-01 00:00:00');
     $edit = array();
     $edit['title'] = $this->randomName();
-    $edit['date'] = '1969-01-01 00:00:00 -0500';
+    $edit['date[date]'] = $date->format('Y-m-d');
+    $edit['date[time]'] = $date->format('H:i:s');
     $edit["body[$langcode][0][value]"] = $this->randomName();
     $edit["field_tags[$langcode]"] = $this->randomName();
     $this->drupalPost('node/add/article', $edit, t('Save and publish'));
     // Checks that the node has been saved.
     $node = $this->drupalGetNodeByTitle($edit['title']);
-    $this->assertEqual($node->created, strtotime($edit['date']), 'Legacy node was saved with the right date.');
+    $this->assertEqual($node->created, $date->getTimestamp(), 'Legacy node was saved with the right date.');
   }
 }
