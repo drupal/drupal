@@ -42,11 +42,7 @@ class NodeAccessPagerTest extends WebTestBase {
    */
   public function testCommentPager() {
     // Create a node.
-    $node = $this->drupalCreateNode(
-      array('comment' => array(
-        LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN))
-      ))
-    );
+    $node = $this->drupalCreateNode();
 
     // Create 60 comments.
     for ($i = 0; $i < 60; $i++) {

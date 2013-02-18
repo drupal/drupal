@@ -49,9 +49,6 @@ class FieldEntityTest extends ViewTestBase {
     $node = entity_create('node', array(
       'uid' => $account->id(),
       'type' => 'page',
-      'comment' => array(
-        LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN))
-      ),
     ));
     $node->save();
     $comment = entity_create('comment', array(

@@ -97,9 +97,6 @@ class UserPictureTest extends WebTestBase {
 
     $node = $this->drupalCreateNode(array(
       'type' => 'article',
-      'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array(
-        'comment' => COMMENT_OPEN
-      ))),
     ));
 
     // Enable user pictures on nodes.

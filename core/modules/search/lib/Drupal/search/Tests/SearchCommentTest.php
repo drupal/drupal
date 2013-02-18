@@ -78,11 +78,6 @@ class SearchCommentTest extends SearchTestBase {
     // Create a node.
     $node = $this->drupalCreateNode(array(
       'type' => 'article',
-      'comment' => array(
-        LANGUAGE_NOT_SPECIFIED => array(
-          array('comment' => COMMENT_OPEN)
-        )
-      )
     ));
     // Post a comment using 'Full HTML' text format.
     $edit_comment = array();
@@ -148,11 +143,6 @@ class SearchCommentTest extends SearchTestBase {
     field_update_instance($instance);
     $this->node = $this->drupalCreateNode(array(
       'type' => 'article',
-      'comment' => array(
-        LANGUAGE_NOT_SPECIFIED => array(
-          array('comment' => COMMENT_OPEN)
-        )
-      )
     ));
 
     // Post a comment using 'Full HTML' text format.
@@ -245,11 +235,6 @@ class SearchCommentTest extends SearchTestBase {
       'type' => 'article',
       'title' => 'short title',
       'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => 'short body text'))),
-      'comment' => array(
-        LANGUAGE_NOT_SPECIFIED => array(
-          array('comment' => COMMENT_OPEN)
-        )
-      )
     );
 
     $user = $this->drupalCreateUser(array('search content', 'create article content', 'access content'));

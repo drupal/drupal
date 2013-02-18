@@ -54,7 +54,7 @@ class UserCancelTest extends WebTestBase {
       'uid' => $account->uid,
       'comment' => array(
         LANGUAGE_NOT_SPECIFIED => array(
-          array('comment' => COMMENT_CLOSED)
+          array('status' => COMMENT_CLOSED)
         )
       )
     ));
@@ -128,7 +128,6 @@ class UserCancelTest extends WebTestBase {
     // Create a node.
     $node = $this->drupalCreateNode(array(
       'uid' => $account->uid,
-      'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))
     ));
 
     // Attempt to cancel account.
@@ -208,7 +207,6 @@ class UserCancelTest extends WebTestBase {
     // Create a node with two revisions.
     $node = $this->drupalCreateNode(array(
       'uid' => $account->uid,
-      'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))
     ));
     $settings = get_object_vars($node);
     $settings['revision'] = 1;
@@ -255,14 +253,12 @@ class UserCancelTest extends WebTestBase {
     // Create a simple node.
     $node = $this->drupalCreateNode(array(
       'uid' => $account->uid,
-      'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))
     ));
 
     // Create a node with two revisions, the initial one belonging to the
     // cancelling user.
     $revision_node = $this->drupalCreateNode(array(
       'uid' => $account->uid,
-      'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))
     ));
     $revision = $revision_node->vid;
     $settings = get_object_vars($revision_node);
@@ -314,11 +310,6 @@ class UserCancelTest extends WebTestBase {
     // Create a simple node.
     $node = $this->drupalCreateNode(array(
       'uid' => $account->uid,
-      'comment' => array(
-        LANGUAGE_NOT_SPECIFIED => array(
-          array('comment' => COMMENT_OPEN)
-        )
-      )
     ));
 
     // Create comment.
@@ -338,7 +329,6 @@ class UserCancelTest extends WebTestBase {
     // cancelling user.
     $revision_node = $this->drupalCreateNode(array(
       'uid' => $account->uid,
-      'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))
     ));
     $revision = $revision_node->vid;
     $settings = get_object_vars($revision_node);

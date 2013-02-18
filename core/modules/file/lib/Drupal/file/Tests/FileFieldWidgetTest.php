@@ -266,13 +266,10 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->drupalPost(NULL, array(), t('Save settings'));
 
     // Create node.
-    $langcode = LANGUAGE_NOT_SPECIFIED;
-    $edit = array(
+    $node = $this->drupalCreateNode(array(
+      'type' => 'article',
       'title' => $this->randomName(),
-      "comment[$langcode][0][comment]" => COMMENT_OPEN
-    );
-    $this->drupalPost('node/add/article', $edit, t('Save and publish'));
-    $node = $this->drupalGetNodeByTitle($edit['title']);
+    ));
 
     // Add a comment with a file.
     $text_file = $this->getTestFile('text');
@@ -280,7 +277,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       'files[field_' . $name . '_' . LANGUAGE_NOT_SPECIFIED . '_' . 0 . ']' => drupal_realpath($text_file->uri),
       'comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]' => $comment_body = $this->randomName(),
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPost('node/' . $node->nid, $edit, t('Save'));
 
     // Get the comment ID.
     preg_match('/comment-([0-9]+)/', $this->getUrl(), $matches);

@@ -38,7 +38,7 @@ class SearchRankingTest extends SearchTestBase {
       $settings = array(
         'type' => 'page',
         'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array(
-          'comment' => COMMENT_HIDDEN
+          'status' => COMMENT_HIDDEN
         ))),
         'title' => 'Drupal rocks',
         'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => "Drupal's search rocks"))),
@@ -57,7 +57,7 @@ class SearchRankingTest extends SearchTestBase {
               $settings['created'] = REQUEST_TIME + 3600;
               break;
             case 'comments':
-              $settings['comment'][LANGUAGE_NOT_SPECIFIED][0]['comment'] = COMMENT_OPEN;
+              $settings['comment'][LANGUAGE_NOT_SPECIFIED][0]['status'] = COMMENT_OPEN;
               break;
           }
         }

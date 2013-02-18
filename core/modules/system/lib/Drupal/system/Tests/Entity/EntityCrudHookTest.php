@@ -130,13 +130,6 @@ class EntityCrudHookTest extends WebTestBase {
       'type' => 'article',
       'title' => 'Test node',
       'status' => 1,
-      'comment' => array(
-        LANGUAGE_NOT_SPECIFIED => array(
-          array(
-            'comment' => COMMENT_OPEN
-          )
-        )
-      ),
       'promote' => 0,
       'sticky' => 0,
       'langcode' => LANGUAGE_NOT_SPECIFIED,

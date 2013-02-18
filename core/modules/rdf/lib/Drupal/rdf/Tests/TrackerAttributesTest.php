@@ -59,9 +59,9 @@ class TrackerAttributesTest extends WebTestBase {
    */
   function testAttributesInTracker() {
     // Creates node as anonymous user.
-    $node_anon = $this->drupalCreateNode(array('type' => 'article', 'uid' => 0, 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
+    $node_anon = $this->drupalCreateNode(array('type' => 'article', 'uid' => 0));
     // Creates node as admin user.
-    $node_admin = $this->drupalCreateNode(array('type' => 'article', 'uid' => 1, 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
+    $node_admin = $this->drupalCreateNode(array('type' => 'article', 'uid' => 1));
 
     // Passes both the anonymously posted node and the administrator posted node
     // through to test for the RDF attributes.
