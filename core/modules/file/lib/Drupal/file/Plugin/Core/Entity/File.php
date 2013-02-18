@@ -20,6 +20,7 @@ use Drupal\Core\Annotation\Translation;
  *   label = @Translation("File"),
  *   module = "file",
  *   controller_class = "Drupal\file\FileStorageController",
+ *   render_controller_class = "Drupal\Core\Entity\EntityRenderController",
  *   base_table = "file_managed",
  *   entity_keys = {
  *     "id" = "fid",
