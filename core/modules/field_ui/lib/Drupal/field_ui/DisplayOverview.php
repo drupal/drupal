@@ -39,9 +39,9 @@ class DisplayOverview extends OverviewBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::build().
+   * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
-  public function build(array $form, array &$form_state) {
+  public function buildForm(array $form, array &$form_state) {
     // Gather type information.
     $instances = field_info_instances($this->entity_type, $this->bundle);
     $field_types = field_info_field_types();
@@ -407,9 +407,9 @@ class DisplayOverview extends OverviewBase {
   }
 
   /**
-   * Overrides \Drupal\field_ui\OverviewBase::submit().
+   * Overrides \Drupal\field_ui\OverviewBase::submitForm().
    */
-  public function submit(array &$form, array &$form_state) {
+  public function submitForm(array &$form, array &$form_state) {
     $form_values = $form_state['values'];
     $display = entity_get_display($this->entity_type, $this->bundle, $this->view_mode);
 

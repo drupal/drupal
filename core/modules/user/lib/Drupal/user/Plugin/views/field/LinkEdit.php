@@ -29,7 +29,7 @@ class LinkEdit extends Link {
     if ($entity && $entity->access('edit')) {
       $this->options['alter']['make_link'] = TRUE;
 
-      $text = !empty($this->options['text']) ? $this->options['text'] : t('edit');
+      $text = !empty($this->options['text']) ? $this->options['text'] : t('Edit');
 
       $uri = $entity->uri();
       $this->options['alter']['path'] = $uri['path'] . '/edit';

@@ -768,7 +768,7 @@ function drupal_retrieve_form($form_id, &$form_state) {
     $callback = $form_state['build_info']['callback'];
   }
   elseif (!empty($form_state['build_info']['callback_object'])) {
-    $callback = array($form_state['build_info']['callback_object'], 'build');
+    $callback = array($form_state['build_info']['callback_object'], 'buildForm');
   }
 
   // We first check to see if there is a valid form builder callback defined.
@@ -1078,7 +1078,7 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
     // Ensure that modules can rely on #validate being set.
     $form['#validate'] = array();
     if (isset($form_state['build_info']['callback_object'])) {
-      $form['#validate'][] = array($form_state['build_info']['callback_object'], 'validate');
+      $form['#validate'][] = array($form_state['build_info']['callback_object'], 'validateForm');
     }
     // Check for a handler specific to $form_id.
     elseif (function_exists($form_id . '_validate')) {
@@ -1095,7 +1095,7 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
     // Ensure that modules can rely on #submit being set.
     $form['#submit'] = array();
     if (isset($form_state['build_info']['callback_object'])) {
-      $form['#submit'][] = array($form_state['build_info']['callback_object'], 'submit');
+      $form['#submit'][] = array($form_state['build_info']['callback_object'], 'submitForm');
     }
     // Check for a handler specific to $form_id.
     elseif (function_exists($form_id . '_submit')) {
