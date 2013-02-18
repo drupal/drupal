@@ -307,6 +307,9 @@ Taxonomy module
 Toolbar module
 - ?
 
+Tour module
+- Nick Schuch 'nick_schuch' http://drupal.org/user/1412036
+
 Tracker module
 - David Strauss 'David Strauss' http://drupal.org/user/93254
 

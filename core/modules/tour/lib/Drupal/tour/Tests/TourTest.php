@@ -44,19 +44,19 @@ class TourTest extends WebTestBase {
     $this->drupalGet('tour-test-1');
     $elements = $this->xpath('//li[@data-id=:data_id and ./h2[contains(., :text)]]', array(
       ':data_id' => 'tour-test-1',
-      ':text' => 'The first tip'
+      ':text' => 'The first tip',
     ));
     $this->assertEqual(count($elements), 1, 'Found English variant of tip 1.');
 
     $elements = $this->xpath('//li[@data-id=:data_id and ./h2[contains(., :text)]]', array(
       ':data_id' => 'tour-test-2',
-      ':text' => 'The quick brown fox'
+      ':text' => 'The quick brown fox',
     ));
     $this->assertNotEqual(count($elements), 1, 'Did not find English variant of tip 2.');
 
     $elements = $this->xpath('//li[@data-id=:data_id and ./h2[contains(., :text)]]', array(
       ':data_id' => 'tour-test-1',
-      ':text' => 'La pioggia cade in spagna'
+      ':text' => 'La pioggia cade in spagna',
     ));
     $this->assertNotEqual(count($elements), 1, 'Did not find Italian variant of tip 1.');
 
@@ -67,13 +67,13 @@ class TourTest extends WebTestBase {
     $this->drupalGet('tour-test-2/subpath');
     $elements = $this->xpath('//li[@data-id=:data_id and ./h2[contains(., :text)]]', array(
       ':data_id' => 'tour-test-2',
-      ':text' => 'The quick brown fox'
+      ':text' => 'The quick brown fox',
     ));
     $this->assertEqual(count($elements), 1, 'Found English variant of tip 2.');
 
     $elements = $this->xpath('//li[@data-id=:data_id and ./h2[contains(., :text)]]', array(
       ':data_id' => 'tour-test-1',
-      ':text' => 'The first tip'
+      ':text' => 'The first tip',
     ));
     $this->assertNotEqual(count($elements), 1, 'Did not find English variant of tip 1.');
 
@@ -84,13 +84,13 @@ class TourTest extends WebTestBase {
 
     $elements = $this->xpath('//li[@data-id=:data_id and ./h2[contains(., :text)]]', array(
       ':data_id' => 'tour-test-1',
-      ':text' => 'La pioggia cade in spagna'
+      ':text' => 'La pioggia cade in spagna',
     ));
     $this->assertEqual(count($elements), 1, 'Found Italian variant of tip 1.');
 
     $elements = $this->xpath('//li[@data-id=:data_id and ./h2[contains(., :text)]]', array(
       ':data_id' => 'tour-test-1',
-      ':text' => 'The first tip'
+      ':text' => 'The first tip',
     ));
     $this->assertNotEqual(count($elements), 1, 'Did not find English variant of tip 1.');
 
@@ -131,17 +131,17 @@ class TourTest extends WebTestBase {
     $this->drupalGet('tour-test-1');
     $elements = $this->xpath('//li[@data-id=:data_id and ./h2[contains(., :text)]]', array(
       ':data_id' => 'tour-code-test-1',
-      ':text' => 'The rain in spain'
+      ':text' => 'The rain in spain',
     ));
     $this->assertEqual(count($elements), 1, 'Found the required tip markup for tip 4');
 
     // Verify that the weight sorting works by ensuring the lower weight item
-    // (tip 4) has the close button.
-    $elements = $this->xpath('//li[@data-id=:data_id and ./div[contains(., :text)]]', array(
+    // (tip 4) has the 'End tour' button.
+    $elements = $this->xpath('//li[@data-id=:data_id and @data-text=:text]', array(
       ':data_id' => 'tour-code-test-1',
-      ':text' => '3 of 3'
+      ':text' => 'End tour',
     ));
-    $this->assertEqual(count($elements), 1, 'Found code tip was weighted last and had "3 of 3".');
+    $this->assertEqual(count($elements), 1, 'Found code tip was weighted last and had "End tour".');
 
     // Test hook_tour_alter().
     $this->assertText('Altered by hook_tour_tips_alter');

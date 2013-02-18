@@ -13,7 +13,7 @@ use Drupal\Core\Annotation\Translation;
 use Drupal\tour\TipsBag;
 
 /**
- * Defines the configured text tour entity.
+ * Defines the configured tour entity.
  *
  * @Plugin(
  *   id = "tour",

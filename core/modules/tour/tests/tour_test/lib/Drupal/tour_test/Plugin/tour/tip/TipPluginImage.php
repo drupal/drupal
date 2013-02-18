@@ -40,9 +40,9 @@ class TipPluginImage extends TipPluginBase {
    * Overrides \Drupal\tour\Plugin\tour\tour\TipPluginInterface::getOutput().
    */
   public function getOutput() {
-    return array(
-      '#markup' => '<h2 class="tour-tip-label" id="tour-tip-' . $this->get('ariaId') . '-label">' . check_plain($this->get('label')) . '</h2>
-      <p class="tour-tip-image" id="tour-tip-' . $this->get('ariaId') . '-contents">' . theme('image', array('uri' => $this->get('url'), 'alt' => $this->get('alt'))) . '</p>'
-    );
+    $output = '<h2 class="tour-tip-label" id="tour-tip-' . $this->get('ariaId') . '-label">' . check_plain($this->get('label')) . '</h2>';
+    $output .= '<p class="tour-tip-image" id="tour-tip-' . $this->get('ariaId') . '-contents">' . theme('image', array('uri' => $this->get('url'), 'alt' => $this->get('alt'))) . '</p>';
+    return array('#markup' => $output);
   }
+
 }

@@ -45,6 +45,7 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
    */
   public function __construct(array $configuration, $plugin_id, CacheDecorator $discovery) {
     parent::__construct($configuration, $plugin_id, $discovery);
+
     $this->definition = $this->discovery->getDefinition($plugin_id);
     $this->module = $this->definition['module'];
   }

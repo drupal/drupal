@@ -106,6 +106,11 @@ function tour_toolbar() {
  * Implements hook_preprocess_HOOK() for page.tpl.php.
  */
 function tour_preprocess_page(&$variables) {
+  if (!user_access('access tour')) {
+    return;
+  }
+
+  // @todo replace this with http://drupal.org/node/1918768 once it is committed.
   $path = current_path();
   $langcode = language(LANGUAGE_TYPE_CONTENT)->langcode;
   $tour_items = array();
@@ -161,6 +166,11 @@ function tour_preprocess_page(&$variables) {
     $index++;
   }
 
+  // Give the last tip the "End tour" button.
+  end($list_items);
+  $key = key($list_items);
+  $list_items[$key]['#wrapper_attributes']['data-text'] = t('End tour');
+
   $variables['page']['help']['tour'] = array(
     '#theme' => 'item_list',
     '#items' => $list_items,
@@ -191,14 +201,14 @@ function tour_preprocess_page(&$variables) {
 }
 
 /**
- * Implements hook_tour_tour_insert().
+ * Implements hook_tour_insert().
  */
 function tour_tour_insert($entity) {
   drupal_container()->get('plugin.manager.tour')->clearCachedDefinitions();
 }
 
 /**
- * Implements hook_tour_tour_update().
+ * Implements hook_tour_update().
  */
 function tour_tour_update($entity) {
   drupal_container()->get('plugin.manager.tour')->clearCachedDefinitions();

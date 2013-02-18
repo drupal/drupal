@@ -87,9 +87,8 @@ class TipPluginText extends TipPluginBase {
    * Overrides \Drupal\tour\Plugin\tour\tour\TipPluginInterface::getOutput();
    */
   public function getOutput() {
-    return array(
-      '#markup' => '<h2 class="tour-tip-label" id="tour-tip-' . $this->getAriaId() . '-label">' . check_plain($this->getLabel()) . '</h2>
-      <p class="tour-tip-body" id="tour-tip-' . $this->getAriaId() . '-contents">' . filter_xss_admin($this->getBody()) . '</p>'
-    );
+    $output = '<h2 class="tour-tip-label" id="tour-tip-' . $this->getAriaId() . '-label">' . check_plain($this->getLabel()) . '</h2>';
+    $output .= '<p class="tour-tip-body" id="tour-tip-' . $this->getAriaId() . '-contents">' . filter_xss_admin($this->getBody()) . '</p>';
+    return array('#markup' => $output);
   }
 }

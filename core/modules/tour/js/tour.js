@@ -12,46 +12,48 @@
  */
 Drupal.behaviors.tour = {
   attach: function (context) {
-    var model = new Drupal.tour.models.StateModel();
-    var view = new Drupal.tour.views.ToggleTourView({
-      el: $(context).find('#toolbar-tab-tour'),
-      model: model
-    });
-
-    // Update the model based on Overlay events.
-    $(document)
-      // Overlay is opening: cancel tour if active and mark overlay as open.
-      .on('drupalOverlayOpen.tour', function () {
-        model.set({ isActive: false, overlayIsOpen: true });
-      })
-      // Overlay is loading a new URL: clear tour & cancel if active.
-      .on('drupalOverlayBeforeLoad.tour', function () {
-        model.set({ isActive: false, overlayTour: [] });
-      })
-      // Overlay is closing: clear tour & cancel if active, mark overlay closed.
-      .on('drupalOverlayClose.tour', function () {
-        model.set({ isActive: false, overlayIsOpen: false, overlayTour: [] });
-      })
-      // Overlay has loaded DOM: check whether a tour is available.
-      .on('drupalOverlayReady.tour', function () {
-        // We must select the tour in the Overlay's window using the Overlay's
-        // jQuery, because the joyride plugin only works for the window in which
-        // it was loaded.
-        // @todo Make upstream contribution so this can be simplified, which
-        // should also allow us to *not* load jquery.joyride.js in the Overlay,
-        // resulting in better front-end performance.
-        var overlay = Drupal.overlay.iframeWindow;
-        var $overlayContext = overlay.jQuery(overlay.document);
-        model.set('overlayTour', $overlayContext.find('#tour'));
+    $('body').once('tour', function (index, element) {
+      var model = new Drupal.tour.models.StateModel();
+      var view = new Drupal.tour.views.ToggleTourView({
+        el: $(context).find('#toolbar-tab-tour'),
+        model: model
       });
 
-    model
-      // Allow other scripts to respond to tour events.
-      .on('change:isActive', function (model, isActive) {
-        $(document).trigger((isActive) ? 'drupalTourStarted' : 'drupalTourStopped');
-      })
-      // Initialization: check whether a tour is available on the current page.
-      .set('tour', $(context).find('#tour'));
+      // Update the model based on Overlay events.
+      $(document)
+        // Overlay is opening: cancel tour if active and mark overlay as open.
+        .on('drupalOverlayOpen.tour', function () {
+          model.set({ isActive: false, overlayIsOpen: true });
+        })
+        // Overlay is loading a new URL: clear tour & cancel if active.
+        .on('drupalOverlayBeforeLoad.tour', function () {
+          model.set({ isActive: false, overlayTour: [] });
+        })
+        // Overlay is closing: clear tour & cancel if active, mark overlay closed.
+        .on('drupalOverlayClose.tour', function () {
+          model.set({ isActive: false, overlayIsOpen: false, overlayTour: [] });
+        })
+        // Overlay has loaded DOM: check whether a tour is available.
+        .on('drupalOverlayReady.tour', function () {
+          // We must select the tour in the Overlay's window using the Overlay's
+          // jQuery, because the joyride plugin only works for the window in which
+          // it was loaded.
+          // @todo Make upstream contribution so this can be simplified, which
+          // should also allow us to *not* load jquery.joyride.js in the Overlay,
+          // resulting in better front-end performance.
+          var overlay = Drupal.overlay.iframeWindow;
+          var $overlayContext = overlay.jQuery(overlay.document);
+          model.set('overlayTour', $overlayContext.find('ol#tour'));
+        });
+
+      model
+        // Allow other scripts to respond to tour events.
+        .on('change:isActive', function (model, isActive) {
+          $(document).trigger((isActive) ? 'drupalTourStarted' : 'drupalTourStopped');
+        })
+        // Initialization: check whether a tour is available on the current page.
+        .set('tour', $(context).find('ol#tour'));
+    });
   }
 };
 

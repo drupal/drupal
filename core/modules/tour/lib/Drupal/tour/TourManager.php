@@ -14,7 +14,7 @@ use Drupal\Core\Plugin\Discovery\CacheDecorator;
 use Drupal\Component\Plugin\Discovery\ProcessDecorator;
 
 /**
- * Configurable text tour manager.
+ * Configurable tour manager.
  */
 class TourManager extends PluginManagerBase {
 
@@ -30,6 +30,8 @@ class TourManager extends PluginManagerBase {
 
   /**
    * Overrides \Drupal\Component\Plugin\PluginManagerBase::createInstance().
+   *
+   * Pass the TipsBag to the plugin constructor.
    */
   public function createInstance($plugin_id, array $configuration = array(), TipsBag $bag = NULL) {
     $plugin_class = DefaultFactory::getPluginClass($plugin_id, $this->discovery);

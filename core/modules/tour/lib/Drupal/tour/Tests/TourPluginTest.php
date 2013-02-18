@@ -28,9 +28,6 @@ class TourPluginTest extends DrupalUnitTestBase {
    */
   protected $pluginManager;
 
-  /**
-   * Defines test info.
-   */
   public static function getInfo() {
     return array(
       'name' => 'Tour plugin tests',
@@ -39,9 +36,6 @@ class TourPluginTest extends DrupalUnitTestBase {
     );
   }
 
-  /**
-   * Sets up the test.
-   */
   protected function setUp() {
     parent::setUp();
 
