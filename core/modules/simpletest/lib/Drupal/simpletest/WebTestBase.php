@@ -244,7 +244,7 @@ abstract class WebTestBase extends TestBase {
     if (module_exists('comment')) {
       $settings += array(
         'comment' => array(LANGUAGE_NOT_SPECIFIED => array(
-          array('comment' => COMMENT_OPEN)
+          array('status' => COMMENT_OPEN)
         )),
       );
     }

@@ -33,10 +33,9 @@ class CommentDefaultFormatter extends FormatterBase {
     $elements = array();
 
     $field = $this->field;
-    // We only ever process first value.
-    // @todo Alter default field instance settings to
-    // disallow select more then 1 value cardinality.
-    $commenting_status = isset($items[0]['comment']) ? $items[0]['comment'] : COMMENT_OPEN;
+    // We only ever process first value if any.
+    // @todo Field instance should provide always default value http://drupal.org/node/1919834
+    $commenting_status = isset($items[0]['status']) ? $items[0]['status'] : COMMENT_OPEN;
     if ($commenting_status != COMMENT_HIDDEN && empty($entity->in_preview)) {
       $comment_settings = $this->instance['settings']['comment'];
 

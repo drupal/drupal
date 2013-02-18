@@ -35,7 +35,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $this->setCommentSubject(TRUE);
 
     // Create a node and a comment.
-    $node = $this->drupalCreateNode(array('type' => 'article', 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
+    $node = $this->drupalCreateNode(array('type' => 'article'));
     $parent_comment = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
 
     // Post a reply to the comment.

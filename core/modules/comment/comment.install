@@ -316,16 +316,15 @@ function comment_schema() {
  * Implements hook_field_schema().
  */
 function comment_field_schema($field) {
-  $columns = array(
-    'comment' => array(
-      'description' => 'Whether comments are allowed on this entity: 0 = no, 1 = closed (read only), 2 = open (read/write).',
-      'type' => 'int',
-      'not null' => TRUE,
-      'default' => 0,
-    ),
-  );
   return array(
-    'columns' => $columns,
+    'columns' => array(
+      'status' => array(
+        'description' => 'Whether comments are allowed on this entity: 0 = no, 1 = closed (read only), 2 = open (read/write).',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
   );
 }
 
@@ -458,7 +457,7 @@ function comment_update_8004() {
 }
 
 /**
- * Updates the comment_node_statistics and comment tables to new structure.
+ * Updates the {comment_node_statistics} and {comment} tables to new structure.
  */
 function comment_update_8005(&$sandbox) {
   // Drop old indexes.
@@ -569,7 +568,7 @@ function comment_update_8006(&$sandbox) {
     // Add a default comment field for existing node comments.
     $field = array(
       'cardinality' => '1',
-      // We need one per content type to match the existing bundles.
+      // We need one per content type to match the existing comment bundles.
       'field_name' => 'comment_node_' . $node_type,
       'module' => 'comment',
       'settings' => array(),
@@ -598,7 +597,7 @@ function comment_update_8006(&$sandbox) {
     );
     $instance = array(
       'bundle' => $node_type,
-      'default_value' => array(array('comment' => $default_value)),
+      'default_value' => array(array('status' => $default_value)),
       'deleted' => '0',
       'description' => '',
       'entity_type' => 'node',
@@ -619,11 +618,6 @@ function comment_update_8006(&$sandbox) {
     _update_7000_field_create_instance($field, $instance);
 
     // Prepare defaults for the default and full view modes.
-    $formatter_settings = array(
-      'default_mode' => $instance_settings['comment_default_mode'],
-      'per_page' => $instance_settings['comment_default_per_page'],
-      'form_location' => $instance_settings['comment_form_location'],
-    );
     $display_options_default = array(
       'label' => 'hidden',
       'type' => 'comment_default',
@@ -643,21 +637,6 @@ function comment_update_8006(&$sandbox) {
     $display->set('content.' . $field['field_name'], $display_options_default)
       ->save();
     update_config_manifest_add('entity.display', array($display->get('id')));
-
-    // Update all other entity displays with custom settings.
-    $display_options = array(
-      'type' => 'hidden',
-      'label' => 'hidden',
-      'settings' => array(),
-    );
-    foreach (entity_get_view_modes('node') as $view_mode => $view_mode_settings) {
-      if ($view_mode != 'full') {
-        $display = _update_8000_entity_get_display('node', $node_type, $view_mode);
-        $display->set('content.' . $field['field_name'], $display_options)
-          ->save();
-        update_config_manifest_add('entity.display', array($display->get('id')));
-      }
-    }
 
     // Clean up old variables.
     variable_del('comment_' . $node_type);
@@ -714,7 +693,7 @@ function comment_update_8007(&$sandbox) {
         'revision_id',
         'langcode',
         'delta',
-        'comment_node_' . $sandbox['node_type'] . '_comment',
+        'comment_node_' . $sandbox['node_type'] . '_status',
       ));
     $revision = db_insert('field_revision_comment_node_' . $sandbox['node_type'])
       ->fields(array(
@@ -724,7 +703,7 @@ function comment_update_8007(&$sandbox) {
         'revision_id',
         'langcode',
         'delta',
-        'comment_node_' . $sandbox['node_type'] . '_comment',
+        'comment_node_' . $sandbox['node_type'] . '_status',
       ));
 
     // Update the field name to match the node type.
@@ -740,24 +719,31 @@ function comment_update_8007(&$sandbox) {
         'bundle' => $sandbox['node_type'],
         'entity_id' => $nid,
         'revision_id' => $node->vid,
-        'langcode' => $node->langcode,
+        'langcode' => LANGUAGE_NOT_SPECIFIED,
         'delta' => 0,
-        'comment_node_' . $sandbox['node_type'] . '_comment' => $node->comment,
+        'comment_node_' . $sandbox['node_type'] . '_status' => $node->comment,
       ));
       $revision->values(array(
         'entity_type' => 'node',
         'bundle' => $sandbox['node_type'],
         'entity_id' => $nid,
         'revision_id' => $node->vid,
-        'langcode' => $node->langcode,
+        'langcode' => LANGUAGE_NOT_SPECIFIED,
         'delta' => 0,
-        'comment_node_' . $sandbox['node_type'] . '_comment' => $node->comment,
+        'comment_node_' . $sandbox['node_type'] . '_status' => $node->comment,
       ));
       $sandbox['progress']++;
       $sandbox['current_nid'] = $nid;
     }
     $insert->execute();
     $revision->execute();
+    // Populate the field name to match the node type.
+    db_update('comment_entity_statistics')
+      ->fields(array(
+        'field_name' => 'comment_node_' . $sandbox['node_type'],
+      ))
+      ->condition('entity_id', array_keys($nodes))
+      ->execute();
   }
   else {
     // Move to the next node type.

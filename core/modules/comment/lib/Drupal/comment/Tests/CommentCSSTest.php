@@ -45,7 +45,7 @@ class CommentCSSTest extends CommentTestBase {
 
     foreach ($permutations as $case) {
       // Create a new node.
-      $node = $this->drupalCreateNode(array('type' => 'article', 'uid' => $case['node_uid'], 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
+      $node = $this->drupalCreateNode(array('type' => 'article', 'uid' => $case['node_uid']));
 
       // Add a comment.
       $comment = entity_create('comment', array(

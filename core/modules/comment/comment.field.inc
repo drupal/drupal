@@ -121,18 +121,6 @@ function comment_instance_settings_translation_entity_process($element, $form_st
 }
 
 /**
- * Implements hook_field_widget_info_alter().
- *
- * @todo convert this to a WidgetPlugin annotation.
- */
-function comment_field_widget_info_alter(&$info) {
-  $info['comment_default']['behaviors'] = array(
-    'multiple values' => FIELD_BEHAVIOR_CUSTOM,
-    'default value' => FIELD_BEHAVIOR_NONE,
-  );
-}
-
-/**
  * Implements hook_field_is_empty().
  */
 function comment_field_is_empty($item, $field) {

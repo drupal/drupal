@@ -84,9 +84,6 @@ class CommentUserTest extends WebTestBase {
       'post comments',
       'skip comment approval',
     ));
-
-    $this->web_user->comment = array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)));
-    $this->web_user->save();
   }
 
   /**
@@ -321,8 +318,8 @@ class CommentUserTest extends WebTestBase {
     drupal_flush_all_caches();
     $this->drupalGet('user/' . $this->web_user->uid);
     $this->assertPattern('@<h2[^>]*>Comments</h2>@', 'Comments were displayed.');
-    $this->assertLink('Log in', 1, 'Link to log in was found.');
-    $this->assertLink('register', 1, 'Link to register was found.');
+    $this->assertLink('Log in', 0, 'Link to log in was found.');
+    $this->assertLink('register', 0, 'Link to register was found.');
 
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
       'access comments' => FALSE,

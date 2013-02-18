@@ -31,15 +31,13 @@ class CommentWidget extends WidgetBase {
   public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     $field = $this->field;
     $entity = $element['#entity'];
-    $default_value = isset($items[0]['comment']) ? $items[0]['comment'] : COMMENT_OPEN;
 
-    $comment_count = empty($entity->comment_statistics[$field['field_name']]->comment_count) ? 0 : $entity->comment_statistics[$field['field_name']]->comment_count;
-    $commenting_enabled = ($default_value == COMMENT_HIDDEN && empty($comment_count)) ? COMMENT_CLOSED : $default_value;
-    $element['comment'] = array(
+    $element['status'] = array(
       '#type' => 'radios',
       '#title' => t('Comments'),
       '#title_display' => 'invisible',
-      '#default_value' => $commenting_enabled,
+      // @todo Field instance should provide always default value http://drupal.org/node/1919834
+      '#default_value' => isset($items[0]['status']) ? $items[0]['status'] : COMMENT_OPEN,
       '#options' => array(
         COMMENT_OPEN => t('Open'),
         COMMENT_CLOSED => t('Closed'),
@@ -55,22 +53,21 @@ class CommentWidget extends WidgetBase {
         '#description' => t('Comments are hidden from view.'),
       ),
     );
-    // If the node doesn't have any comments, the "hidden" option makes no
-    // sense, so don't even bother presenting it to the user.
-    if (empty($comment_count)) {
-      $element['comment'][COMMENT_HIDDEN]['#access'] = FALSE;
+    // If used for the field settings form or the entity doesn't have any
+    // comments, the "hidden" option makes no sense, so don't even bother
+    // presenting it to the user.
+    if (!empty($entity->field_ui_default_value) || empty($entity->comment_statistics[$field['field_name']]->comment_count)) {
+      $element['status'][COMMENT_HIDDEN]['#access'] = FALSE;
       // Also adjust the description of the "closed" option.
-      $element['comment'][COMMENT_CLOSED]['#description'] = t('Users cannot post comments.');
+      $element['status'][COMMENT_CLOSED]['#description'] = t('Users cannot post comments.');
     }
     // Integrate with advanced settings, if available.
     if (isset($form['advanced'])) {
       $element += array(
         '#type' => 'details',
         '#group' => 'advanced',
-        '#access' => user_access('administer comments'),
-        '#collapsed' => TRUE,
         '#attributes' => array(
-          'class' => array('comment-node-settings-form'),
+          'class' => array('comment-' . $element['#entity_type'] . '-settings-form'),
         ),
         '#attached' => array(
           'library' => array('comment', 'drupal.comment'),
