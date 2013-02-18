@@ -43,11 +43,11 @@ class ConfigImportTest extends DrupalUnitTestBase {
    * Tests omission of module APIs for bare configuration operations.
    */
   function testNoImport() {
-    $dynamic_name = 'config_test.dynamic.default';
+    $dynamic_name = 'config_test.dynamic.dotted.default';
 
     // Verify the default configuration values exist.
     $config = config($dynamic_name);
-    $this->assertIdentical($config->get('id'), 'default');
+    $this->assertIdentical($config->get('id'), 'dotted.default');
 
     // Verify that a bare config() does not involve module APIs.
     $this->assertFalse(isset($GLOBALS['hook_config_test']));
@@ -57,13 +57,13 @@ class ConfigImportTest extends DrupalUnitTestBase {
    * Tests deletion of configuration during import.
    */
   function testDeleted() {
-    $dynamic_name = 'config_test.dynamic.default';
+    $dynamic_name = 'config_test.dynamic.dotted.default';
     $storage = $this->container->get('config.storage');
     $staging = $this->container->get('config.storage.staging');
 
     // Verify the default configuration values exist.
     $config = config($dynamic_name);
-    $this->assertIdentical($config->get('id'), 'default');
+    $this->assertIdentical($config->get('id'), 'dotted.default');
 
     // Create an empty manifest to delete the configuration object.
     $staging->write('manifest.config_test.dynamic', array());
@@ -144,7 +144,7 @@ class ConfigImportTest extends DrupalUnitTestBase {
    */
   function testUpdated() {
     $name = 'config_test.system';
-    $dynamic_name = 'config_test.dynamic.default';
+    $dynamic_name = 'config_test.dynamic.dotted.default';
     $storage = $this->container->get('config.storage');
     $staging = $this->container->get('config.storage.staging');
 

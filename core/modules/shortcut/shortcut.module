@@ -271,56 +271,6 @@ function shortcut_link_access($menu_link) {
 }
 
 /**
- * Implements hook_config_import_create().
- */
-function shortcut_config_import_create($name, $new_config, $old_config) {
-  if (strpos($name, 'shortcut.set.') !== 0) {
-    return FALSE;
-  }
-
-  $entity = entity_create('shortcut', $new_config->get());
-  $entity->save();
-  return TRUE;
-}
-
-/**
- * Implements hook_config_import_change().
- */
-function shortcut_config_import_change($name, $new_config, $old_config) {
-  if (strpos($name, 'shortcut.set.') !== 0) {
-    return FALSE;
-  }
-
-  list(, , $id) = explode('.', $name);
-  $entity = entity_load('shortcut', $id);
-
-  $entity->original = clone $entity;
-  foreach ($old_config->get() as $property => $value) {
-    $entity->original->$property = $value;
-  }
-
-  foreach ($new_config->get() as $property => $value) {
-    $entity->$property = $value;
-  }
-
-  $entity->save();
-  return TRUE;
-}
-
-/**
- * Implements hook_config_import_delete().
- */
-function shortcut_config_import_delete($name, $new_config, $old_config) {
-  if (strpos($name, 'shortcut.set.') !== 0) {
-    return FALSE;
-  }
-
-  list(, , $id) = explode('.', $name);
-  entity_delete_multiple('shortcut', array($id));
-  return TRUE;
-}
-
-/**
  * Loads the data for a shortcut set.
  *
  * @param $id

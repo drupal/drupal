@@ -19,7 +19,7 @@ class ImageStyleStorageController extends ConfigStorageController {
    * Overrides \Drupal\Core\Config\Entity\ConfigStorageController::importDelete().
    */
   public function importDelete($name, Config $new_config, Config $old_config) {
-    list(, , $id) = explode('.', $name);
+    $id = static::getIDFromConfigName($name, $this->entityInfo['config_prefix']);
     $entities = $this->load(array($id));
     $entity = $entities[$id];
 
