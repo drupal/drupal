@@ -448,13 +448,12 @@ function entity_form_id(EntityInterface $entity, $operation = 'default') {
  * @return
  *   A $form_state array already filled the entity form controller.
  */
-function entity_form_state_defaults(EntityInterface $entity, $operation = 'default', $langcode = NULL) {
+function entity_form_state_defaults(EntityInterface $entity, $operation = 'default') {
   $form_state = array();
   $controller = drupal_container()->get('plugin.manager.entity')->getFormController($entity->entityType(), $operation);
   $form_state['build_info']['callback'] = array($controller, 'build');
   $form_state['build_info']['base_form_id'] = $entity->entityType() . '_form';
   $form_state['build_info']['args'] = array($entity);
-  $form_state['langcode'] = $langcode;
   return $form_state;
 }
 
@@ -484,12 +483,19 @@ function entity_form_submit(EntityInterface $entity, $operation = 'default', &$f
  *   The entity to be created or edited.
  * @param $operation
  *   (optional) The operation identifying the form variation to be returned.
+ * @param array $form_state
+ *   (optional) An associative array containing the current state of the form.
+ *   Use this to pass additional information to the form, such as the langcode.
+ *   @code
+ *   $form_state['langcode'] = $langcode;
+ *   $form = entity_get_form($entity, 'default', $form_state);
+ *   @endcode
  *
  * @return
  *   The processed form for the given entity and operation.
  */
-function entity_get_form(EntityInterface $entity, $operation = 'default', $langcode = NULL) {
-  $form_state = entity_form_state_defaults($entity, $operation, $langcode);
+function entity_get_form(EntityInterface $entity, $operation = 'default', array $form_state = array()) {
+  $form_state += entity_form_state_defaults($entity, $operation);
   $form_id = entity_form_id($entity, $operation);
   return drupal_build_form($form_id, $form_state);
 }

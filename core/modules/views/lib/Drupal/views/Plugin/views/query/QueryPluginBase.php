@@ -24,6 +24,13 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
   var $pager = NULL;
 
   /**
+   * Stores the limit of items that should be requested in the query.
+   *
+   * @var int
+   */
+  protected $limit;
+
+  /**
    * Generate a query and a countquery from all of the information supplied
    * to the object.
    *
@@ -101,6 +108,13 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
    */
   function set_offset($offset) {
     $this->offset = $offset;
+  }
+
+  /**
+   * Returns the limit of the query.
+   */
+  public function getLimit() {
+    return $this->limit;
   }
 
   /**

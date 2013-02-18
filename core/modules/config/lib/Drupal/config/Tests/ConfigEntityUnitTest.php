@@ -38,6 +38,11 @@ class ConfigEntityUnitTest extends DrupalUnitTestBase {
 
     $expected = $info['config_prefix'] . '.';
     $this->assertIdentical($controller->getConfigPrefix(), $expected);
+
+    // Test the static extractID() method.
+    $expected_id = 'test_id';
+    $config_name = $info['config_prefix'] . '.' . $expected_id;
+    $this->assertIdentical($controller::getIDFromConfigName($config_name, $info['config_prefix']), $expected_id);
   }
 
 }

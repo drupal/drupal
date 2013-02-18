@@ -43,6 +43,7 @@ class QueryTest extends ViewUnitTestBase {
   public function testQuery() {
     $this->_testInitQuery();
     $this->_testQueryExecute();
+    $this->queryMethodsTests();
   }
 
   /**
@@ -65,6 +66,22 @@ class QueryTest extends ViewUnitTestBase {
 
     $this->executeView($view);
     $this->assertTrue($view->result, 'Make sure the view result got filled');
+  }
+
+  /**
+   * Test methods provided by the QueryPluginBase.
+   *
+   * @see \Drupal\views\Plugin\views\query\QueryPluginBase
+   */
+  protected function queryMethodsTests() {
+    $view = views_get_view('test_view');
+    $view->setDisplay();
+
+    $view->initQuery();
+    $this->assertFalse($view->query->getLimit(), 'Default to an empty limit.');
+    $rand_number = rand(5, 10);
+    $view->query->set_limit($rand_number);
+    $this->assertEqual($view->query->getLimit(), $rand_number, 'set_limit adapts the amount of items.');
   }
 
 }

@@ -160,7 +160,6 @@ class EntityManager extends PluginManagerBase {
       'default' => 'Drupal\Core\Entity\EntityFormController',
     ),
     'list_controller_class' => 'Drupal\Core\Entity\EntityListController',
-    'render_controller_class' => 'Drupal\Core\Entity\EntityRenderController',
     'access_controller_class' => 'Drupal\Core\Entity\EntityAccessController',
     'static_cache' => TRUE,
     'translation' => array(),

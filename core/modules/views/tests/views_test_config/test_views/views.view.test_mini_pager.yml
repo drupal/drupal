@@ -66,7 +66,13 @@ display:
           link_to_node: '1'
           plugin_id: node
       filters: {  }
-      sorts: {  }
+      sorts:
+        nid:
+          id: nid
+          table: node
+          field: nid
+          plugin_id: standard
+          order: ASC
       title: test_mini_pager
       filter_groups:
         operator: AND

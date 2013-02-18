@@ -20,6 +20,7 @@ use Drupal\Core\Entity\Entity;
  *   label = @Translation("Menu link"),
  *   module = "menu_link",
  *   controller_class = "Drupal\menu_link\MenuLinkStorageController",
+ *   render_controller_class = "Drupal\Core\Entity\EntityRenderController",
  *   form_controller_class = {
  *     "default" = "Drupal\menu_link\MenuLinkFormController"
  *   },
