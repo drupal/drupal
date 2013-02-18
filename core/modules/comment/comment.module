@@ -2115,7 +2115,7 @@ function comment_library_info() {
  *   - bundles: The bundles in which the field appears, as an array with entity
  *     types as keys and the array of bundle names as values.
  *
- * @see field_info_fields().
+ * @see field_info_field_map().
  */
 function comment_get_comment_fields($entity_type = NULL) {
   return array_filter(field_info_field_map(), function ($value) use($entity_type) {
