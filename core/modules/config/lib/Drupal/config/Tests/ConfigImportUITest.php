@@ -47,6 +47,7 @@ class ConfigImportUITest extends WebTestBase {
     // Verify that the import UI recognises that the staging folder is empty.
     $this->drupalGet('admin/config/development/sync');
     $this->assertText('There is no configuration to import.');
+    $this->assertNoFieldById('edit-submit', t('Import all'));
 
     // Create updated configuration object.
     $new_site_name = 'Config import test ' . $this->randomString();
@@ -76,12 +77,14 @@ class ConfigImportUITest extends WebTestBase {
     $this->drupalGet('admin/config/development/sync');
     $this->assertText($name);
     $this->assertText($dynamic_name);
+    $this->assertFieldById('edit-submit', t('Import all'));
 
     // Import and verify that both do not appear anymore.
     $this->drupalPost(NULL, array(), t('Import all'));
     $this->assertUrl('admin/config/development/sync');
     $this->assertNoText($name);
     $this->assertNoText($dynamic_name);
+    $this->assertNoFieldById('edit-submit', t('Import all'));
 
     // Verify that there are no further changes to import.
     $this->assertText(t('There is no configuration to import.'));
