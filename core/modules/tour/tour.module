@@ -1,0 +1,205 @@
+<?php
+
+/**
+ * @file
+ * Main functions of the module.
+ */
+use Drupal\Core\Cache\CacheBackendInterface;
+
+/**
+ * Implements hook_permission().
+ */
+function tour_permission() {
+  return array(
+    'access tour' => array(
+      'title' => t('Access tour'),
+      'description' => t('View tour tips.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_library_info().
+ */
+function tour_library_info() {
+  $path = drupal_get_path('module', 'tour');
+
+  $libraries['tour'] = array(
+    'title' => 'Tour',
+    'version' => VERSION,
+    'js' => array(
+      // Add the JavaScript, with a group and weight such that it will run
+      // before modules/overlay/overlay-parent.js.
+      $path . '/js/tour.js' => array('group' => JS_LIBRARY, 'weight' => -1),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'backbone'),
+      array('tour', 'jquery.joyride'),
+      array('tour', 'tour-styling'),
+    ),
+  );
+
+  $libraries['tour-styling'] = array(
+    'title' => 'Tour',
+    'version' => VERSION,
+    'css' => array(
+      $path . '/css/tour.css' => array('media' => 'screen'),
+    )
+  );
+
+  $libraries['jquery.joyride'] = array(
+    'title' => 'Joyride',
+    'website' => 'https://github.com/zurb/joyride',
+    'version' => '2.0.3',
+    'js' => array(
+      $path . '/js/jquery.joyride-2.0.3.js' => array(),
+    ),
+    'css' => array(
+      $path . '/css/joyride-2.0.3.css' => array('media' => 'screen'),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'jquery.cookie'),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
+ * Implements hook_toolbar().
+ */
+function tour_toolbar() {
+  if (!user_access('access tour')) {
+    return;
+  }
+
+  $tab['tour'] = array(
+    '#type' => 'toolbar_item',
+    'tab' => array(
+      '#type' => 'html_tag',
+      '#tag' => 'button',
+      '#value' => t('Tour'),
+      '#attributes' => array(
+        'class' => array('icon', 'icon-help'),
+        'role' => 'button',
+        'aria-pressed' => 'false',
+      ),
+    ),
+    '#wrapper_attributes' => array(
+      'class' => array('tour-toolbar-tab', 'element-hidden'),
+      'id' => 'toolbar-tab-tour',
+    ),
+    '#attached' => array(
+      'library' => array(
+        array('tour', 'tour'),
+      ),
+    ),
+  );
+
+  return $tab;
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for page.tpl.php.
+ */
+function tour_preprocess_page(&$variables) {
+  $path = current_path();
+  $langcode = language(LANGUAGE_TYPE_CONTENT)->langcode;
+  $tour_items = array();
+  // Load all of the items and match on path.
+  $tour_ids = entity_query('tour')
+    ->condition('langcode', $langcode)
+    ->execute();
+  $tours = entity_load_multiple('tour', $tour_ids);
+
+  $path_alias = drupal_strtolower(drupal_container()->get('path.alias_manager')->getPathAlias($path));
+  foreach ($tours as $tour) {
+    // @todo replace this with an entity_query() that does path matching when
+    // http://drupal.org/node/1918768 lands.
+    $pages = implode("\n", $tour->getPaths());
+    if (drupal_match_path($path_alias, $pages) || (($path != $path_alias) && drupal_match_path($path, $pages))) {
+      foreach ($tour->getTipList() as $id) {
+        $tour_items[] = $tour->getTip($id);
+      }
+    }
+  }
+
+  // Allow other modules to alter.
+  drupal_container()->get('module_handler')->alter('tour_tips', $tour_items, $path);
+
+  if (empty($tour_items)) {
+    return;
+  }
+
+  // Sort by weight.
+  uasort($tour_items, function ($a, $b) {
+    if ($a->getWeight() == $b->getWeight()) {
+      return 0;
+    }
+    return ($a->getWeight() < $b->getWeight()) ? -1 : 1;
+  });
+
+  $index = 1;
+  $count = count($tour_items);
+  foreach ($tour_items as $tour_item) {
+    $list_items[] = array(
+      'output' => $tour_item->getOutput(),
+      'counter' => array(
+        '#type' => 'container',
+        '#attributes' => array(
+          'class' => array(
+            'tour-progress',
+          ),
+        ),
+        '#children' => t('!tour_item of !total', array('!tour_item' => $index, '!total' => $count)),
+      ),
+      '#wrapper_attributes' => $tour_item->getAttributes(),
+    );
+    $index++;
+  }
+
+  $variables['page']['help']['tour'] = array(
+    '#theme' => 'item_list',
+    '#items' => $list_items,
+    '#type' => 'ol',
+    '#attributes' => array(
+      'id' => 'tour',
+      'class' => array(
+        'element-hidden',
+      ),
+    ),
+    '#attached' => array(
+      'library' => array(
+        // We must also attach the jquery.joyride library here, because it only
+        // works within the window within which it is loaded. This means that if
+        // we want the Tour module to work inside the Overlay, we must ensure
+        // that jquery.joyride also is loaded there. (And since the Toolbar does
+        // not get loaded inside the Overlay, we cannot rely on it being loaded
+        // that way.)
+        // If this a non-overlay page, then Drupal's dependency checking will
+        // ensure this gets loaded only once.
+        array('tour', 'jquery.joyride'),
+        // Similarly, we must load tour's CSS, in order to style the tour tips
+        // in the desired way inside the Overlay.
+        array('tour', 'tour-styling'),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_tour_tour_insert().
+ */
+function tour_tour_insert($entity) {
+  drupal_container()->get('plugin.manager.tour')->clearCachedDefinitions();
+}
+
+/**
+ * Implements hook_tour_tour_update().
+ */
+function tour_tour_update($entity) {
+  drupal_container()->get('plugin.manager.tour')->clearCachedDefinitions();
+}

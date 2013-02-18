@@ -1,0 +1,87 @@
+<?php
+
+/**
+ * @file
+ * Provides tests for tour module
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function tour_test_menu() {
+  $items['tour-test-1'] = array(
+    'page callback' => 'tour_test_1',
+    'access callback' => TRUE,
+    'title' => 'Tour test 1'
+  );
+  $items['tour-test-2/subpath'] = array(
+    'page callback' => 'tour_test_2',
+    'access callback' => TRUE,
+    'title' => 'Tour test 2'
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_load() for tour.
+ */
+function tour_test_tour_load($entities) {
+  if (isset($entities['tour-entity-create-test-en'])) {
+    $entities['tour-entity-create-test-en']->loaded = 'Load hooks work';
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for tour.
+ */
+function tour_test_tour_presave($entity) {
+  if ($entity->id() == 'tour-entity-create-test-en') {
+    $entity->set('label', $entity->label() . ' alter');
+  }
+}
+
+/**
+ * Page callback: output some content for testing tours.
+ */
+function tour_test_1() {
+  return array(
+    'tip-1' => array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'id' => 'tour-test-1',
+      ),
+      '#children' => t('Where does the rain in Spain fail?'),
+    ),
+    'tip-4' => array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'id' => 'tour-test-4',
+      ),
+      '#children' => t('Tip created later?'),
+    ),
+  );
+}
+
+/**
+ * Page callback: output some content for testing tours.
+ */
+function tour_test_2() {
+  return array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'id' => 'tour-test-2',
+    ),
+    '#children' => t('Pangram example'),
+  );
+}
+
+/**
+ * Implements hook_tour_alter().
+ */
+function tour_test_tour_tips_alter(array &$tour_tips, $path) {
+  foreach ($tour_tips as $tour_tip) {
+    if ($tour_tip->get('id') == 'tour-code-test-1') {
+      $tour_tip->set('body', 'Altered by hook_tour_tips_alter');
+    }
+  }
+}

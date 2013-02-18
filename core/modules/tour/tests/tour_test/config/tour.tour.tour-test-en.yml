@@ -1,0 +1,22 @@
+id: tour-test-en
+label: Tour test english
+langcode: en
+paths:
+  - tour-test-1
+tips:
+  tour-test-1:
+    id: tour-test-1-en
+    plugin: text
+    label: The first tip
+    body: Is always the best dressed.
+    weight: "1"
+    attributes:
+      data-id: tour-test-1
+  tour-test-3:
+    id: tour-test-3-en
+    plugin: image
+    label: The awesome image
+    url: http://local/image.png
+    weight: "1"
+    attributes:
+      data-id: tour-test-3
