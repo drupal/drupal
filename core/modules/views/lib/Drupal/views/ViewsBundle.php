@@ -37,6 +37,9 @@ class ViewsBundle extends Bundle {
       ->addArgument(new Reference('config.factory'));
 
     $container->register('views.executable', 'Drupal\views\ViewExecutableFactory');
+
+    $container->register('views.analyzer', 'Drupal\views\Analyzer')
+      ->addArgument(new Reference('module_handler'));
   }
 
 }

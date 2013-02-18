@@ -2,11 +2,12 @@
 
 /**
  * @file
- * Definition of Drupal\views\Analyzer.
+ * Contains \Drupal\views\Analyzer.
  */
 
 namespace Drupal\views;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -20,44 +21,36 @@ use Drupal\views\ViewExecutable;
 class Analyzer {
 
   /**
-   * The view to analyze.
+   * A module handler that invokes the 'views_analyze' hook.
    *
-   * @var Drupal\views\ViewExecutable.
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
-  protected $view;
+  protected $moduleHandler;
 
   /**
-   * Constructs the analyzer object.
+   * Constructs an Analyzer object.
    *
-   * @param Drupal\views\ViewExecutable $view
-   *   (optional) The view to analyze.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler that invokes the 'views_analyze' hook.
    */
-  function __construct(ViewExecutable $view = NULL) {
-    if (isset($view)) {
-      $this->view = $view;
-    }
+  public function __construct(ModuleHandlerInterface $module_handler) {
+    $this->moduleHandler = $module_handler;
   }
 
-  /**
-   * Sets the view which is analyzed by this analyzer.
-   *
-   * @param Drupal\views\ViewExecutable
-   *   The view to analyze.
-   */
-  public function setView(ViewExecutable $view = NULL) {
-    $this->view = $view;
-  }
 
   /**
    * Analyzes a review and return the results.
+   *
+   * @param \Drupal\views\ViewExecutable $view
+   *   The view to analyze.
    *
    * @return array
    *   An array of analyze results organized into arrays keyed by 'ok',
    *   'warning' and 'error'.
    */
-  public function getMessages() {
-    $this->view->initDisplay();
-    $messages = module_invoke_all('views_analyze', $this->view);
+  public function getMessages(ViewExecutable $view) {
+    $view->initDisplay();
+    $messages = $this->moduleHandler->invokeAll('views_analyze', array($view));
 
     return $messages;
   }
@@ -70,7 +63,7 @@ class Analyzer {
    */
   public function formatMessages(array $messages) {
     if (empty($messages)) {
-      $messages = array($this->formatMessage(t('View analysis can find nothing to report.'), 'ok'));
+      $messages = array(static::formatMessage(t('View analysis can find nothing to report.'), 'ok'));
     }
 
     $types = array('ok' => array(), 'warning' => array(), 'error' => array());
