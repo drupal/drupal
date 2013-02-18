@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\comment\Plugin\views\filter\StatisticsLastUpdated.
+ * Contains \Drupal\comment\Plugin\views\filter\StatisticsLastUpdated.
  */
 
 namespace Drupal\comment\Plugin\views\filter;

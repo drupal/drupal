@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\comment\Plugin\views\field\StatisticsLastCommentName.
+ * Contains \Drupal\comment\Plugin\views\field\StatisticsLastCommentName.
  */
 
 namespace Drupal\comment\Plugin\views\field;

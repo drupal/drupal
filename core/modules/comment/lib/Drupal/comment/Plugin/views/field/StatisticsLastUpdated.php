@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Plugin\views\field\StatisticsLastUpdated.
+ * Contains \Drupal\comment\Plugin\views\field\StatisticsLastUpdated.
  */
 
 namespace Drupal\comment\Plugin\views\field;
