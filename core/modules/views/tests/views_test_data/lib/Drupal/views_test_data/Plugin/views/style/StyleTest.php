@@ -100,7 +100,7 @@ class StyleTest extends StylePluginBase {
     else {
       foreach ($this->view->result as $index => $row) {
         $this->view->row_index = $index;
-        $output .= $this->view->rowPlugin->render($row) . "\n";
+        $output .= $this->row_plugin->render($row) . "\n";
       }
     }
 

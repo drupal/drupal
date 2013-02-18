@@ -91,7 +91,7 @@ class EntityReference extends StylePluginBase {
     foreach ($sets as $records) {
       foreach ($records as $values) {
         // Sanitize HTML, remove line breaks and extra whitespace.
-        $output = $this->view->rowPlugin->render($values);
+        $output = $this->row_plugin->render($values);
         $output = drupal_render($output);
         $results[$values->{$id_field_alias}] = filter_xss_admin(preg_replace('/\s\s+/', ' ', str_replace("\n", '', $output)));
         $this->view->row_index++;

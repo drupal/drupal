@@ -14,8 +14,6 @@ use Drupal\views\DisplayBag;
 use Drupal\views\Plugin\views\display\DefaultDisplay;
 use Drupal\views\Plugin\views\display\Page;
 use Drupal\views\Plugin\views\style\DefaultStyle;
-use Drupal\views\Plugin\views\style\Grid;
-use Drupal\views\Plugin\views\row\Fields;
 use Drupal\views\Plugin\views\query\Sql;
 
 /**
@@ -194,21 +192,6 @@ class ViewExecutableTest extends ViewUnitTestBase {
     $view->setDisplay('invalid');
     $this->assertEqual($view->current_display, 'default', 'If setDisplay is called with an invalid display id the default display should be used.');
     $this->assertEqual(spl_object_hash($view->display_handler), spl_object_hash($view->displayHandlers->get('default')));
-
-    // Test the style and row plugins are replaced correctly when setting the
-    // display.
-    $view->setDisplay('page_1');
-    $view->initStyle();
-    $this->assertTrue($view->style_plugin instanceof DefaultStyle);
-    $this->assertTrue($view->rowPlugin instanceof Fields);
-    $this->assertEqual($view->plugin_name, 'default');
-
-    $view->setDisplay('page_2');
-    $view->initStyle();
-    $this->assertTrue($view->style_plugin instanceof Grid);
-    // @todo Change this rowPlugin type too.
-    $this->assertTrue($view->rowPlugin instanceof Fields);
-    $this->assertEqual($view->plugin_name, 'grid');
   }
 
   /**

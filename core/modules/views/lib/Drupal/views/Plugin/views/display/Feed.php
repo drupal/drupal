@@ -255,15 +255,16 @@ class Feed extends PathPluginBase {
 
     // Defer to the feed style; it may put in meta information, and/or
     // attach a feed icon.
-    $clone->setDisplay($this->display['id']);
-    $clone->buildTitle();
-    if ($plugin = $clone->display_handler->getPlugin('style')) {
+    $plugin = $this->getPlugin('style');
+    if ($plugin) {
+      $clone->setDisplay($this->display['id']);
+      $clone->buildTitle();
       $plugin->attach_to($display_id, $this->getPath(), $clone->getTitle());
-    }
 
-    // Clean up.
-    $clone->destroy();
-    unset($clone);
+      // Clean up.
+      $clone->destroy();
+      unset($clone);
+    }
   }
 
   /**
