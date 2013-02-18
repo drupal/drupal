@@ -1195,17 +1195,31 @@ abstract class WebTestBase extends TestBase {
    *   @endcode
    * @param  $edit
    *   Field data in an associative array. Changes the current input fields
-   *   (where possible) to the values indicated. A checkbox can be set to
-   *   TRUE to be checked and should be set to FALSE to be unchecked. Note that
-   *   when a form contains file upload fields, other fields cannot start with
-   *   the '@' character.
+   *   (where possible) to the values indicated.
    *
-   *   Multiple select fields can be set using name[] and setting each of the
-   *   possible values. Example:
+   *   When working with form tests, the keys for an $edit element should match
+   *   the 'name' parameter of the HTML of the form. For example, the 'body'
+   *   field for a node has the following HTML:
+   *   @code
+   *   <textarea id="edit-body-und-0-value" class="text-full form-textarea
+   *    resize-vertical" placeholder="" cols="60" rows="9"
+   *    name="body[und][0][value]"></textarea>
+   *   @endcode
+   *   When testing this field using an $edit parameter, the code becomes:
+   *   @code
+   *   $edit["body[und][0][value]"] = 'My test value';
+   *   @endcode
+   *
+   *   A checkbox can be set to TRUE to be checked and should be set to FALSE to
+   *   be unchecked. Multiple select fields can be tested using 'name[]' and
+   *   setting each of the desired values in an array:
    *   @code
    *   $edit = array();
    *   $edit['name[]'] = array('value1', 'value2');
    *   @endcode
+   *
+   *   Note that when a form contains file upload fields, other
+   *   fields cannot start with the '@' character.
    * @param $submit
    *   Value of the submit button whose click is to be emulated. For example,
    *   t('Save'). The processing of the request depends on this value. For
