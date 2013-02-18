@@ -20,7 +20,7 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'locale', 'image');
+  public static $modules = array('system', 'locale', 'image', 'config_test');
 
   public static function getInfo() {
     return array(
@@ -34,12 +34,48 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     parent::setUp();
     config_install_default_config('module', 'system');
     config_install_default_config('module', 'image');
+    config_install_default_config('module', 'config_test');
   }
 
   /**
    * Tests the basic metadata retrieval layer.
    */
   function testSchemaMapping() {
+    // Nonexistent configuration key will have Unknown as metadata.
+    $definition = config_typed()->getDefinition('config_test.no_such_key');
+    $expected = array();
+    $expected['label'] = 'Unknown';
+    $expected['class'] = '\Drupal\Core\Config\Schema\Property';
+    $this->assertEqual($definition, $expected, 'Retrieved the right metadata for nonexistent configuration.');
+
+    // Configuration file without schema will return Unknown as well.
+    $definition = config_typed()->getDefinition('config_test.noschema');
+    $this->assertEqual($definition, $expected, 'Retrieved the right metadata for configuration with no schema.');
+
+    // Configuration file with only some schema.
+    $definition = config_typed()->getDefinition('config_test.someschema');
+    $expected = array();
+    $expected['label'] = 'Schema test data';
+    $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
+    $expected['mapping']['testitem'] = array('label' => 'Test item');
+    $expected['mapping']['testlist'] = array('label' => 'Test list');
+    $this->assertEqual($definition, $expected, 'Retrieved the right metadata for configuration with only some schema.');
+
+    // Check type detection on elements with undefined types.
+    $config = config_typed()->get('config_test.someschema');
+    $definition = $config['testitem']->getDefinition();
+    $expected = array();
+    $expected['label'] = 'Test item';
+    $expected['class'] = '\Drupal\Core\TypedData\Type\String';
+    $expected['type'] = 'string';
+    $this->assertEqual($definition, $expected, 'Automatic type detection on string item worked.');
+    $definition = $config['testlist']->getDefinition();
+    $expected = array();
+    $expected['label'] = 'Test list';
+    $expected['class'] = '\Drupal\Core\Config\Schema\Property';
+    $expected['type'] = 'undefined';
+    $this->assertEqual($definition, $expected, 'Automatic type fallback on non-string item worked.');
+
     // Simple case, straight metadata.
     $definition = config_typed()->getDefinition('system.maintenance');
     $expected = array();

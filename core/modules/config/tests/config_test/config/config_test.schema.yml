@@ -1,0 +1,8 @@
+config_test.someschema:
+  type: mapping
+  label: "Schema test data"
+  mapping:
+    "testitem":
+      label: "Test item"
+    "testlist":
+      label: "Test list"
