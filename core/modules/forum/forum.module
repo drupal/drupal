@@ -118,7 +118,6 @@ function forum_menu() {
   $items['admin/structure/forum/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
   $items['admin/structure/forum/add/container'] = array(
     'title' => 'Add container',
@@ -143,7 +142,7 @@ function forum_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('forum_admin_settings'),
     'access arguments' => array('administer forums'),
-    'weight' => 5,
+    'weight' => 100,
     'type' => MENU_LOCAL_TASK,
     'parent' => 'admin/structure/forum',
     'file' => 'forum.admin.inc',
@@ -166,9 +165,9 @@ function forum_menu() {
 }
 
 /**
- * Implements hook_menu_local_tasks_alter().
+ * Implements hook_menu_local_tasks().
  */
-function forum_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+function forum_menu_local_tasks(&$data, $router_item, $root_path) {
   global $user;
 
   // Add action link to 'node/add/forum' on 'forum' sub-pages.
@@ -213,7 +212,7 @@ function forum_menu_local_tasks_alter(&$data, $router_item, $root_path) {
           );
         }
       }
-      $data['actions']['output'] = array_merge($data['actions']['output'], $links);
+      $data['actions'] += $links;
     }
   }
 }

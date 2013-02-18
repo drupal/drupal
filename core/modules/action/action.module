@@ -69,7 +69,6 @@ function action_menu() {
     'description' => 'Manage the actions defined for your site.',
     'page callback' => 'action_admin_manage',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -2,
     'file' => 'action.admin.inc',
   );
   $items['admin/config/system/actions/configure'] = array(

@@ -46,7 +46,6 @@ function config_test_menu() {
   $items['admin/structure/config_test/manage/%config_test/edit'] = array(
     'title' => 'Edit',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
   $items['admin/structure/config_test/manage/%config_test/delete'] = array(
     'title' => 'Delete',

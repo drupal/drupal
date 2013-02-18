@@ -1599,6 +1599,9 @@ function theme_menu_link(array $variables) {
  */
 function theme_menu_local_task($variables) {
   $link = $variables['element']['#link'];
+  $link += array(
+    'localized_options' => array(),
+  );
   $link_text = $link['title'];
 
   if (!empty($variables['element']['#active'])) {
@@ -1831,21 +1834,20 @@ function menu_navigation_links($menu_name, $level = 0) {
  *
  * @return
  *   An array containing
- *   - tabs: Local tasks for the requested level:
- *     - count: The number of local tasks.
- *     - output: The themed output of local tasks.
- *   - actions: Action links for the requested level:
- *     - count: The number of action links.
- *     - output: The themed output of action links.
+ *   - tabs: Local tasks for the requested level.
+ *   - actions: Action links for the requested level.
  *   - root_path: The router path for the current page. If the current page is
  *     a default local task, then this corresponds to the parent tab.
+ *
+ * @see hook_menu_local_tasks()
+ * @see hook_menu_local_tasks_alter()
  */
 function menu_local_tasks($level = 0) {
   $data = &drupal_static(__FUNCTION__);
   $root_path = &drupal_static(__FUNCTION__ . ':root_path', '');
   $empty = array(
-    'tabs' => array('count' => 0, 'output' => array()),
-    'actions' => array('count' => 0, 'output' => array()),
+    'tabs' => array(),
+    'actions' => array(),
     'root_path' => &$root_path,
   );
 
@@ -1897,8 +1899,7 @@ function menu_local_tasks($level = 0) {
     // Tab parenting may skip levels, so the number of parts in the path may not
     // equal the depth. Thus we use the $depth counter (offset by 1000 for ksort).
     $depth = 1001;
-    $actions['count'] = 0;
-    $actions['output'] = array();
+    $actions = array();
     while (isset($children[$path])) {
       $tabs_current = array();
       $actions_current = array();
@@ -1931,10 +1932,11 @@ function menu_local_tasks($level = 0) {
             if ($link['href'] != current_path()) {
               $link['localized_options']['attributes']['class'][] = 'active';
             }
-            $tabs_current[] = array(
+            $tabs_current[$link['href']] = array(
               '#theme' => 'menu_local_task',
               '#link' => $link,
               '#active' => TRUE,
+              '#weight' => isset($link['weight']) ? $link['weight'] : NULL,
             );
             $next_path = $item['path'];
             $tab_count++;
@@ -1944,17 +1946,19 @@ function menu_local_tasks($level = 0) {
             // MENU_IS_LOCAL_ACTION before checking.
             if (($item['type'] & MENU_IS_LOCAL_ACTION) == MENU_IS_LOCAL_ACTION) {
               // The item is an action, display it as such.
-              $actions_current[] = array(
+              $actions_current[$link['href']] = array(
                 '#theme' => 'menu_local_action',
                 '#link' => $link,
+                '#weight' => isset($link['weight']) ? $link['weight'] : NULL,
               );
               $action_count++;
             }
             else {
               // Otherwise, it's a normal tab.
-              $tabs_current[] = array(
+              $tabs_current[$link['href']] = array(
                 '#theme' => 'menu_local_task',
                 '#link' => $link,
+                '#weight' => isset($link['weight']) ? $link['weight'] : NULL,
               );
               $tab_count++;
             }
@@ -1962,10 +1966,8 @@ function menu_local_tasks($level = 0) {
         }
       }
       $path = $next_path;
-      $tabs[$depth]['count'] = $tab_count;
-      $tabs[$depth]['output'] = $tabs_current;
-      $actions['count'] += $action_count;
-      $actions['output'] = array_merge($actions['output'], $actions_current);
+      $tabs[$depth] = $tabs_current;
+      $actions = array_merge($actions, $actions_current);
       $depth++;
     }
     $data['actions'] = $actions;
@@ -2007,10 +2009,11 @@ function menu_local_tasks($level = 0) {
             if ($link['href'] != current_path()) {
               $link['localized_options']['attributes']['class'][] = 'active';
             }
-            $tabs_current[] = array(
+            $tabs_current[$link['href']] = array(
               '#theme' => 'menu_local_task',
               '#link' => $link,
               '#active' => TRUE,
+              '#weight' => isset($link['weight']) ? $link['weight'] : NULL,
             );
             $next_path = $item['tab_parent'];
             if (isset($tasks[$next_path])) {
@@ -2018,17 +2021,17 @@ function menu_local_tasks($level = 0) {
             }
           }
           else {
-            $tabs_current[] = array(
+            $tabs_current[$link['href']] = array(
               '#theme' => 'menu_local_task',
               '#link' => $link,
+              '#weight' => isset($link['weight']) ? $link['weight'] : NULL,
             );
           }
         }
       }
       $path = $next_path;
       $parent = $next_parent;
-      $tabs[$depth]['count'] = $count;
-      $tabs[$depth]['output'] = $tabs_current;
+      $tabs[$depth] = $tabs_current;
       $depth--;
     }
     // Sort by depth.
@@ -2037,8 +2040,14 @@ function menu_local_tasks($level = 0) {
     $tabs = array_values($tabs);
     $data['tabs'] = $tabs;
 
-    // Allow modules to alter local tasks or dynamically append further tasks.
-    drupal_alter('menu_local_tasks', $data, $router_item, $root_path);
+    // Allow modules to dynamically add further tasks.
+    $module_handler = drupal_container()->get('module_handler');
+    foreach ($module_handler->getImplementations('menu_local_tasks') as $module) {
+      $function = $module . '_menu_local_tasks';
+      $function($data, $router_item, $root_path);
+    }
+    // Allow modules to alter local tasks.
+    $module_handler->alter('menu_local_tasks', $data, $router_item, $root_path);
   }
 
   if (isset($data['tabs'][$level])) {
@@ -2048,9 +2057,7 @@ function menu_local_tasks($level = 0) {
       'root_path' => $root_path,
     );
   }
-  // @todo If there are no tabs, then there still can be actions; for example,
-  //   when added via hook_menu_local_tasks_alter().
-  elseif (!empty($data['actions']['output'])) {
+  elseif (!empty($data['actions'])) {
     return array('actions' => $data['actions']) + $empty;
   }
   return $empty;
@@ -2163,7 +2170,7 @@ function menu_contextual_links($module, $parent_path, $args) {
 function menu_primary_local_tasks() {
   $links = menu_local_tasks(0);
   // Do not display single tabs.
-  return ($links['tabs']['count'] > 1 ? $links['tabs']['output'] : '');
+  return count(element_get_visible_children($links['tabs'])) > 1 ? $links['tabs'] : '';
 }
 
 /**
@@ -2172,7 +2179,7 @@ function menu_primary_local_tasks() {
 function menu_secondary_local_tasks() {
   $links = menu_local_tasks(1);
   // Do not display single tabs.
-  return ($links['tabs']['count'] > 1 ? $links['tabs']['output'] : '');
+  return count(element_get_visible_children($links['tabs'])) > 1 ? $links['tabs'] : '';
 }
 
 /**
@@ -2180,7 +2187,7 @@ function menu_secondary_local_tasks() {
  */
 function menu_local_actions() {
   $links = menu_local_tasks();
-  return $links['actions']['output'];
+  return $links['actions'];
 }
 
 /**
@@ -2195,11 +2202,12 @@ function menu_tab_root_path() {
  * Returns a renderable element for the primary and secondary tabs.
  */
 function menu_local_tabs() {
-  return array(
+  $build = array(
     '#theme' => 'menu_local_tasks',
     '#primary' => menu_primary_local_tasks(),
     '#secondary' => menu_secondary_local_tasks(),
   );
+  return !empty($build['#primary']) || !empty($build['#secondary']) ? $build : array();
 }
 
 /**
@@ -2958,7 +2966,6 @@ function _menu_router_build($callbacks) {
     $item['to_arg_functions'] = empty($to_arg_functions) ? '' : serialize($to_arg_functions);
     $item += array(
       'title' => '',
-      'weight' => 0,
       'type' => MENU_NORMAL_ITEM,
       'module' => '',
       '_number_parts' => $number_parts,
@@ -2966,6 +2973,9 @@ function _menu_router_build($callbacks) {
       '_fit' => $fit,
     );
     $item += array(
+      // Default MENU_DEFAULT_LOCAL_TASKs to a weight of -10, so they appear as
+      // first tab by default.
+      'weight' => ($item['type'] & MENU_DEFAULT_LOCAL_TASK) == MENU_DEFAULT_LOCAL_TASK ? -10 : 0,
       '_visible' => (bool) ($item['type'] & MENU_VISIBLE_IN_BREADCRUMB),
       '_tab' => (bool) ($item['type'] & MENU_IS_LOCAL_TASK),
     );

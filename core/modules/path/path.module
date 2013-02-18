@@ -64,6 +64,10 @@ function path_menu() {
     'weight' => -5,
     'file' => 'path.admin.inc',
   );
+  $items['admin/config/search/path/list'] = array(
+    'title' => 'List',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
   $items['admin/config/search/path/edit/%path'] = array(
     'title' => 'Edit alias',
     'page callback' => 'path_admin_edit',
@@ -77,11 +81,6 @@ function path_menu() {
     'page arguments' => array('path_admin_delete_confirm', 5),
     'access arguments' => array('administer url aliases'),
     'file' => 'path.admin.inc',
-  );
-  $items['admin/config/search/path/list'] = array(
-    'title' => 'List',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
   $items['admin/config/search/path/add'] = array(
     'title' => 'Add alias',

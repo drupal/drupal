@@ -901,8 +901,7 @@ function hook_menu_alter(&$items) {
  * Alter tabs and actions displayed on the page before they are rendered.
  *
  * This hook is invoked by menu_local_tasks(). The system-determined tabs and
- * actions are passed in by reference. Additional tabs or actions may be added,
- * or existing items altered.
+ * actions are passed in by reference. Additional tabs or actions may be added.
  *
  * Each tab or action is an associative array containing:
  * - #theme: The theme function to use to render.
@@ -910,30 +909,24 @@ function hook_menu_alter(&$items) {
  *   - title: The localized title of the link.
  *   - href: The system path to link to.
  *   - localized_options: An array of options to pass to l().
+ * - #weight: The link's weight compared to other links.
  * - #active: Whether the link should be marked as 'active'.
  *
- * @param $data
+ * @param array $data
  *   An associative array containing:
- *   - actions: An associative array containing:
- *     - count: The amount of actions determined by the menu system, which can
- *       be ignored.
- *     - output: A list of of actions, each one being an associative array
- *       as described above.
- *   - tabs: An indexed array (list) of tab levels (up to 2 levels), each
- *     containing an associative array:
- *     - count: The amount of tabs determined by the menu system. This value
- *       does not need to be altered if there is more than one tab.
- *     - output: A list of of tabs, each one being an associative array as
- *       described above.
- * @param $router_item
+ *   - actions: A list of of actions keyed by their href, each one being an
+ *     associative array as described above.
+ *   - tabs: A list of (up to 2) tab levels that contain a list of of tabs keyed
+ *     by their href, each one being an associative array as described above.
+ * @param array $router_item
  *   The menu system router item of the page.
- * @param $root_path
+ * @param string $root_path
  *   The path to the root item for this set of tabs.
  */
-function hook_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+function hook_menu_local_tasks(&$data, $router_item, $root_path) {
   // Add an action linking to node/add to all pages.
-  $data['actions']['output'][] = array(
-    '#theme' => 'menu_local_task',
+  $data['actions']['node/add'] = array(
+    '#theme' => 'menu_local_action',
     '#link' => array(
       'title' => t('Add new content'),
       'href' => 'node/add',
@@ -946,7 +939,7 @@ function hook_menu_local_tasks_alter(&$data, $router_item, $root_path) {
   );
 
   // Add a tab linking to node/add to all pages.
-  $data['tabs'][0]['output'][] = array(
+  $data['tabs'][0]['node/add'] = array(
     '#theme' => 'menu_local_task',
     '#link' => array(
       'title' => t('Example tab'),
@@ -957,11 +950,28 @@ function hook_menu_local_tasks_alter(&$data, $router_item, $root_path) {
         ),
       ),
     ),
-    // Define whether this link is active. This can be omitted for
-    // implementations that add links to pages outside of the current page
-    // context.
+    // Define whether this link is active. This can usually be omitted.
     '#active' => ($router_item['path'] == $root_path),
   );
+}
+
+/**
+ * Alter tabs and actions displayed on the page before they are rendered.
+ *
+ * This hook is invoked by menu_local_tasks(). The system-determined tabs and
+ * actions are passed in by reference. Existing tabs or actions may be altered.
+ *
+ * @param array $data
+ *   An associative array containing tabs and actions. See
+ *   hook_menu_local_tasks() for details.
+ * @param array $router_item
+ *   The menu system router item of the page.
+ * @param string $root_path
+ *   The path to the root item for this set of tabs.
+ *
+ * @see hook_menu_local_tasks()
+ */
+function hook_menu_local_tasks_alter(&$data, $router_item, $root_path) {
 }
 
 /**

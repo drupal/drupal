@@ -75,7 +75,6 @@ function language_menu() {
   );
   $items['admin/config/regional/language/list'] = array(
     'title' => 'List',
-    'weight' => 0,
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/config/regional/language/add'] = array(
@@ -83,7 +82,6 @@ function language_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('language_admin_add_form'),
     'access arguments' => array('administer languages'),
-    'weight' => 5,
     'type' => MENU_LOCAL_ACTION,
     'file' => 'language.admin.inc',
   );

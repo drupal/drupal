@@ -124,7 +124,6 @@ function menu_test_menu() {
   $items['menu-test/hidden/menu/list'] = array(
     'title' => 'List menus',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
   $items['menu-test/hidden/menu/add'] = array(
     'title' => 'Add menu',
@@ -146,7 +145,6 @@ function menu_test_menu() {
   );
   $items['menu-test/hidden/menu/manage/%menu/list'] = array(
     'title' => 'List links',
-    'weight' => -10,
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
   );
@@ -178,7 +176,6 @@ function menu_test_menu() {
   $items['menu-test/hidden/block/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
   $items['menu-test/hidden/block/add'] = array(
     'title' => 'Add block',
@@ -237,6 +234,38 @@ function menu_test_menu() {
   $items['menu-test/breadcrumb/tasks/second/second'] = array(
     'title' => 'Second second',
     'type' => MENU_LOCAL_TASK,
+  ) + $base;
+
+  // Menu local tasks tests.
+  // @see Drupal\system\Tests\Menu\LocalTasksTest
+  $items['menu-test/tasks'] = array(
+    'title' => 'Local tasks',
+  ) + $base;
+  $items['menu-test/tasks/empty'] = array(
+    'title' => 'Empty',
+  ) + $base;
+  $items['menu-test/tasks/default'] = array(
+    'title' => 'Default only',
+  ) + $base;
+  $items['menu-test/tasks/default/view'] = array(
+    'title' => 'View',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  ) + $base;
+  $items['menu-test/tasks/tasks'] = array(
+    'title' => 'With tasks',
+  ) + $base;
+  $items['menu-test/tasks/tasks/view'] = array(
+    'title' => 'View',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  ) + $base;
+  $items['menu-test/tasks/tasks/edit'] = array(
+    'title' => 'Edit',
+    'type' => MENU_LOCAL_TASK,
+  ) + $base;
+  $items['menu-test/tasks/tasks/settings'] = array(
+    'title' => 'Settings',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 100,
   ) + $base;
 
   // Menu trail tests.
@@ -364,6 +393,56 @@ function menu_test_menu() {
   );
 
   return $items;
+}
+
+/**
+ * Implements hook_menu_local_tasks().
+ */
+function menu_test_menu_local_tasks(&$data, $router_item, $root_path) {
+  if (!config('menu_test.settings')->get('tasks.add')) {
+    return;
+  }
+  if (strpos($router_item['tab_root'], 'menu-test/tasks/') === 0) {
+    $data['tabs'][0]['foo'] = array(
+      '#theme' => 'menu_local_task',
+      '#link' => array(
+        'title' => 'Task 1',
+        'href' => 'task/foo',
+      ),
+      '#weight' => 10,
+    );
+    $data['tabs'][0]['bar'] = array(
+      '#theme' => 'menu_local_task',
+      '#link' => array(
+        'title' => 'Task 2',
+        'href' => 'task/bar',
+      ),
+      '#weight' => 20,
+    );
+  }
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function menu_test_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  if (!config('menu_test.settings')->get('tasks.alter')) {
+    return;
+  }
+  if (strpos($router_item['tab_root'], 'menu-test/tasks/') === 0) {
+    // Rename the default local task from 'View' to 'Show'.
+    // $data['tabs'] is expected to be keyed by link hrefs.
+    // The default local task always links to its parent path, which means that
+    // if the tab root path appears as key in $data['tabs'], then that key is
+    // the default local task.
+    $key = $router_item['tab_root'];
+    if (isset($data['tabs'][0][$key])) {
+      $data['tabs'][0][$key]['#link']['title'] = 'Show it';
+    }
+    // Rename the 'foo' task to "Advanced settings" and put it last.
+    $data['tabs'][0]['foo']['#link']['title'] = 'Advanced settings';
+    $data['tabs'][0]['foo']['#weight'] = 110;
+  }
 }
 
 /**

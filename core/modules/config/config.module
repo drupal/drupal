@@ -51,7 +51,6 @@ function config_menu() {
   $items['admin/config/development/sync/import'] = array(
     'title' => 'Import',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
   return $items;
 }

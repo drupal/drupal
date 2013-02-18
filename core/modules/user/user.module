@@ -908,7 +908,6 @@ function user_menu() {
   $items['user/login/default'] = array(
     'title' => 'Username and password',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
 
   $items['user/register'] = array(
@@ -965,7 +964,6 @@ function user_menu() {
     'description' => 'Find and manage people interacting with your site.',
     'access arguments' => array('administer users'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
     'file' => 'user.admin.inc',
   );
 
@@ -1032,7 +1030,6 @@ function user_menu() {
   $items['admin/config/people/accounts/settings'] = array(
     'title' => 'Settings',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
 
   $items['user/%user'] = array(
@@ -1044,13 +1041,10 @@ function user_menu() {
     'access callback' => 'entity_page_access',
     'access arguments' => array(1),
   );
-
   $items['user/%user/view'] = array(
     'title' => 'View',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
-
   $items['user/%user/cancel'] = array(
     'title' => 'Cancel account',
     'page callback' => 'drupal_get_form',
@@ -1059,7 +1053,6 @@ function user_menu() {
     'access arguments' => array(1, 'delete'),
     'file' => 'user.pages.inc',
   );
-
   $items['user/%user/cancel/confirm/%/%'] = array(
     'title' => 'Confirm account cancellation',
     'page callback' => 'user_cancel_confirm',
@@ -1068,7 +1061,6 @@ function user_menu() {
     'access arguments' => array(1, 'delete'),
     'file' => 'user.pages.inc',
   );
-
   $items['user/%user/edit'] = array(
     'title' => 'Edit',
     'page callback' => 'entity_get_form',

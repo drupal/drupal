@@ -160,7 +160,6 @@ function block_menu() {
         'title' => check_plain($theme->info['name']),
         'page arguments' => array($key),
         'type' => $key == $default_theme ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
-        'weight' => $key == $default_theme ? -10 : 0,
         'access callback' => '_block_themes_access',
         'access arguments' => array($key),
         'file' => 'block.admin.inc',

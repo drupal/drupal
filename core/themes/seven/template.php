@@ -34,7 +34,7 @@ function seven_preprocess_page(&$vars) {
   unset($vars['primary_local_tasks']['#secondary']);
   $vars['secondary_local_tasks'] = array(
     '#theme' => 'menu_local_tasks',
-    '#secondary' => $vars['tabs']['#secondary'],
+    '#secondary' => isset($vars['tabs']['#secondary']) ? $vars['tabs']['#secondary'] : '',
   );
 }
 

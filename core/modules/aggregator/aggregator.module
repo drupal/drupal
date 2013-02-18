@@ -141,7 +141,6 @@ function aggregator_menu() {
   $items['admin/config/services/aggregator/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
   $items['admin/config/services/aggregator/settings'] = array(
     'title' => 'Settings',
@@ -150,6 +149,7 @@ function aggregator_menu() {
     'page arguments' => array('aggregator_admin_form'),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_TASK,
+    'weight' => 100,
     'file' => 'aggregator.admin.inc',
   );
   $items['aggregator'] = array(
@@ -196,7 +196,6 @@ function aggregator_menu() {
   $items['aggregator/categories/%aggregator_category/view'] = array(
     'title' => 'View',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
   $items['aggregator/categories/%aggregator_category/categorize'] = array(
     'title' => 'Categorize',
@@ -212,7 +211,7 @@ function aggregator_menu() {
     'page arguments' => array('aggregator_form_category', 2),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_TASK,
-    'weight' => 1,
+    'weight' => 10,
     'file' => 'aggregator.admin.inc',
   );
   $items['aggregator/sources/%aggregator_feed'] = array(
@@ -226,7 +225,6 @@ function aggregator_menu() {
   $items['aggregator/sources/%aggregator_feed/view'] = array(
     'title' => 'View',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
   $items['aggregator/sources/%aggregator_feed/categorize'] = array(
     'title' => 'Categorize',
@@ -242,7 +240,7 @@ function aggregator_menu() {
     'page arguments' => array(2),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_TASK,
-    'weight' => 1,
+    'weight' => 10,
     'file' => 'aggregator.admin.inc',
   );
   $items['admin/config/services/aggregator/edit/feed/%aggregator_feed'] = array(

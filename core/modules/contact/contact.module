@@ -84,7 +84,6 @@ function contact_menu() {
   $items['admin/structure/contact/manage/%contact_category/edit'] = array(
     'title' => 'Edit',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
   $items['admin/structure/contact/manage/%contact_category/delete'] = array(
     'title' => 'Delete',

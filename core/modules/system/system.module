@@ -693,7 +693,6 @@ function system_menu() {
     'title' => 'List',
     'description' => 'Select and configure your theme',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -1,
     'file' => 'system.admin.inc',
   );
   $items['admin/appearance/enable'] = array(
@@ -725,13 +724,12 @@ function system_menu() {
     'access arguments' => array('administer themes'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'system.admin.inc',
-    'weight' => 20,
+    'weight' => 100,
   );
   // Theme configuration subtabs.
   $items['admin/appearance/settings/global'] = array(
     'title' => 'Global settings',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -1,
   );
 
   foreach (list_themes() as $key => $theme) {

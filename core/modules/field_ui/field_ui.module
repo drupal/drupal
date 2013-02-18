@@ -68,9 +68,8 @@ function field_ui_menu() {
     'file' => 'field_ui.admin.inc',
   );
   $items['admin/reports/fields/list'] = array(
-    'title' => 'List',
+    'title' => 'Entities',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
 
   // Create tabs for all possible bundles.
@@ -190,9 +189,11 @@ function field_ui_menu() {
               'access callback' => '_field_ui_view_mode_menu_access',
               'access arguments' => array($entity_type, $bundle_arg, $view_mode, $access_display['access arguments'][0]),
               'type' => ($view_mode == 'default' ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK),
-              'weight' => ($view_mode == 'default' ? -10 : $weight++),
               'file' => 'field_ui.admin.inc',
             );
+            if ($view_mode != 'default') {
+              $items["$path/display/$view_mode"]['weight'] = $weight++;
+            }
           }
         }
       }

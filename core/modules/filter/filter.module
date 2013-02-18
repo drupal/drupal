@@ -148,7 +148,6 @@ function filter_menu() {
     'page callback' => 'filter_admin_format_page',
     'access arguments' => array('administer filters'),
     'type' => MENU_LOCAL_ACTION,
-    'weight' => 1,
     'file' => 'filter.admin.inc',
   );
   $items['admin/config/content/formats/%filter_format'] = array(
