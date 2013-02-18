@@ -18,6 +18,11 @@ display:
     display_title: 'Page 2'
     id: page_2
     position: '2'
+    display_options:
+      defaults:
+        style: '0'
+      style:
+        type: grid
 human_name: ''
 id: test_executable_displays
 tag: ''

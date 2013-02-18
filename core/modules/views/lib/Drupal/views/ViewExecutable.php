@@ -212,6 +212,13 @@ class ViewExecutable {
   public $style_plugin;
 
   /**
+   * The current used row plugin, if the style plugin supports row plugins.
+   *
+   * @var \Drupal\views\Plugin\views\row\RowPluginBase
+   */
+  public $rowPlugin;
+
+  /**
    * Stores the current active row while rendering.
    *
    * @var int
@@ -671,8 +678,17 @@ class ViewExecutable {
       }
     }
 
-    // Set the current display.
-    $this->current_display = $display_id;
+    // Reset if the display has changed. It could be called multiple times for
+    // the same display, especially in the UI.
+    if ($this->current_display != $display_id) {
+      // Set the current display.
+      $this->current_display = $display_id;
+
+      // Reset the style and row plugins.
+      $this->style_plugin = NULL;
+      $this->plugin_name = NULL;
+      $this->rowPlugin = NULL;
+    }
 
     // Ensure requested display has a working handler.
     if (!$this->displayHandlers->has($display_id)) {
@@ -1737,7 +1753,7 @@ class ViewExecutable {
       $this->style_plugin->destroy();
     }
 
-    $keys = array('current_display', 'display_handler', 'displayHandlers', 'field', 'argument', 'filter', 'sort', 'relationship', 'header', 'footer', 'empty', 'query', 'result', 'inited', 'style_plugin', 'plugin_name', 'exposed_data', 'exposed_input', 'many_to_one_tables');
+    $keys = array('current_display', 'display_handler', 'displayHandlers', 'field', 'argument', 'filter', 'sort', 'relationship', 'header', 'footer', 'empty', 'query', 'result', 'inited', 'style_plugin', 'rowPlugin', 'plugin_name', 'exposed_data', 'exposed_input', 'many_to_one_tables');
     foreach ($keys as $key) {
       unset($this->$key);
     }

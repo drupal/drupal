@@ -650,7 +650,7 @@ function node_views_data() {
  */
 function node_row_node_view_preprocess_node(&$vars) {
   $node = $vars['node'];
-  $options = $vars['view']->style_plugin->row_plugin->options;
+  $options = $vars['view']->rowPlugin->options;
 
   // Prevent the comment form from showing up if this is not a page display.
   if ($vars['view_mode'] == 'full' && !$vars['view']->display_handler->hasPath()) {
