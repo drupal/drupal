@@ -77,7 +77,7 @@ class Link extends FieldPluginBase {
    *   The acutal rendered text (without the link) of this field.
    */
   public function render_link(EntityInterface $entity, \stdClass $values) {
-    $text = !empty($this->options['text']) ? $this->options['text'] : t('view');
+    $text = !empty($this->options['text']) ? $this->options['text'] : t('View');
 
     $this->options['alter']['make_link'] = TRUE;
     $uri = $entity->uri();

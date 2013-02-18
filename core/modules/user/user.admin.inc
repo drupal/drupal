@@ -228,13 +228,13 @@ function user_admin_account() {
     );
     $links = array();
     $links['edit'] = array(
-      'title' => t('edit'),
+      'title' => t('Edit'),
       'href' => 'user/' . $account->uid . '/edit',
       'query' => $destination,
     );
     if (module_invoke('translation_entity', 'translate_access', $account)) {
       $links['translate'] = array(
-        'title' => t('translate'),
+        'title' => t('Translate'),
         'href' => 'user/' . $account->uid . '/translations',
         'query' => $destination,
       );
@@ -865,12 +865,12 @@ function user_admin_roles($form, $form_state) {
       '#attributes' => array('class' => array('role-weight')),
     );
     $links['edit'] = array(
-      'title' => t('edit role'),
+      'title' => t('Edit role'),
       'href' => 'admin/people/roles/edit/' . $rid,
       'weight' => 0,
     );
     $links['permissions'] = array(
-      'title' => t('edit permissions'),
+      'title' => t('Edit permissions'),
       'href' => 'admin/people/permissions/' . $rid,
       'weight' => 5,
     );
