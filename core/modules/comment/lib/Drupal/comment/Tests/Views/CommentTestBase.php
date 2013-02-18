@@ -42,17 +42,8 @@ abstract class CommentTestBase extends ViewTestBase {
 
     comment_add_default_comment_field('node', 'page');
 
-    $this->node_user_posted = $this->drupalCreateNode(array(
-      'comment' => array(
-        LANGUAGE_NOT_SPECIFIED => array(array('status' => COMMENT_OPEN))
-      ),
-    ));
-    $this->node_user_commented = $this->drupalCreateNode(array(
-      'uid' => $this->account2->uid,
-      'comment' => array(
-        LANGUAGE_NOT_SPECIFIED => array(array('status' => COMMENT_OPEN))
-      ),
-    ));
+    $this->node_user_posted = $this->drupalCreateNode();
+    $this->node_user_commented = $this->drupalCreateNode(array('uid' => $this->account2->uid));
 
     $comment = array(
       'uid' => $this->loggedInUser->uid,

@@ -205,9 +205,7 @@ class UserCancelTest extends WebTestBase {
     $account = user_load($account->uid, TRUE);
 
     // Create a node with two revisions.
-    $node = $this->drupalCreateNode(array(
-      'uid' => $account->uid,
-    ));
+    $node = $this->drupalCreateNode(array('uid' => $account->uid));
     $settings = get_object_vars($node);
     $settings['revision'] = 1;
     $node = $this->drupalCreateNode($settings);
@@ -257,9 +255,7 @@ class UserCancelTest extends WebTestBase {
 
     // Create a node with two revisions, the initial one belonging to the
     // cancelling user.
-    $revision_node = $this->drupalCreateNode(array(
-      'uid' => $account->uid,
-    ));
+    $revision_node = $this->drupalCreateNode(array('uid' => $account->uid));
     $revision = $revision_node->vid;
     $settings = get_object_vars($revision_node);
     $settings['revision'] = 1;
@@ -308,9 +304,7 @@ class UserCancelTest extends WebTestBase {
     $account = user_load($account->uid, TRUE);
 
     // Create a simple node.
-    $node = $this->drupalCreateNode(array(
-      'uid' => $account->uid,
-    ));
+    $node = $this->drupalCreateNode(array('uid' => $account->uid));
 
     // Create comment.
     $langcode = LANGUAGE_NOT_SPECIFIED;
@@ -327,9 +321,7 @@ class UserCancelTest extends WebTestBase {
 
     // Create a node with two revisions, the initial one belonging to the
     // cancelling user.
-    $revision_node = $this->drupalCreateNode(array(
-      'uid' => $account->uid,
-    ));
+    $revision_node = $this->drupalCreateNode(array('uid' => $account->uid));
     $revision = $revision_node->vid;
     $settings = get_object_vars($revision_node);
     $settings['revision'] = 1;

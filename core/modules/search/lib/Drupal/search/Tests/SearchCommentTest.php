@@ -76,9 +76,7 @@ class SearchCommentTest extends SearchTestBase {
     $this->drupalPost('admin/people/permissions', $edit, t('Save permissions'));
 
     // Create a node.
-    $node = $this->drupalCreateNode(array(
-      'type' => 'article',
-    ));
+    $node = $this->drupalCreateNode(array('type' => 'article'));
     // Post a comment using 'Full HTML' text format.
     $edit_comment = array();
     $edit_comment['subject'] = 'Test comment subject';
