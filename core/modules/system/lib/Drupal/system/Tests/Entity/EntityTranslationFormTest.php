@@ -80,7 +80,8 @@ class EntityTranslationFormTest extends WebTestBase {
 
     // Explicitly set form langcode.
     $langcode = $this->langcodes[0];
-    entity_get_form($node, 'default', $langcode);
+    $form_state['langcode'] = $langcode;
+    entity_get_form($node, 'default', $form_state);
     $form_langcode = variable_get('entity_form_langcode', FALSE);
     $this->assertTrue($langcode == $form_langcode, 'Form language is the same as the language parameter.');
 

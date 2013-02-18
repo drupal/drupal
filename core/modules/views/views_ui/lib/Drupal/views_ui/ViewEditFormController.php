@@ -37,7 +37,7 @@ class ViewEditFormController extends ViewFormControllerBase {
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
   public function form(array $form, array &$form_state, EntityInterface $view) {
-    $display_id = $view->displayID;
+    $display_id = $this->displayID;
     // Do not allow the form to be cached, because $form_state['view'] can become
     // stale between page requests.
     // See views_ui_ajax_get_form() for how this affects #ajax.
@@ -318,7 +318,7 @@ class ViewEditFormController extends ViewFormControllerBase {
    */
   public function getDisplayTab($view) {
     $build = array();
-    $display_id = $view->displayID;
+    $display_id = $this->displayID;
     $display = $view->get('executable')->displayHandlers->get($display_id);
     // If the plugin doesn't exist, display an error message instead of an edit
     // page.
@@ -619,7 +619,7 @@ class ViewEditFormController extends ViewFormControllerBase {
    *   The display ID of the tab to regenerate.
    */
   public function rebuildCurrentTab(ViewUI $view, AjaxResponse $response, $display_id) {
-    $view->displayID = $display_id;
+    $this->displayID = $display_id;
     if (!$view->get('executable')->setDisplay('default')) {
       return;
     }
@@ -639,7 +639,7 @@ class ViewEditFormController extends ViewFormControllerBase {
    * Render the top of the display so it can be updated during ajax operations.
    */
   public function renderDisplayTop(ViewUI $view) {
-    $display_id = $view->displayID;
+    $display_id = $this->displayID;
     $element['#theme_wrappers'][] = 'views_ui_container';
     $element['#attributes']['class'] = array('views-display-top', 'clearfix');
     $element['#attributes']['id'] = array('views-display-top');
@@ -755,7 +755,7 @@ class ViewEditFormController extends ViewFormControllerBase {
    */
   public function submitDisplayDuplicate($form, &$form_state) {
     $view = $this->getEntity($form_state);
-    $display_id = $view->displayID;
+    $display_id = $this->displayID;
 
     // Create the new display.
     $displays = $view->get('display');
@@ -796,7 +796,7 @@ class ViewEditFormController extends ViewFormControllerBase {
    */
   public function submitCloneDisplayAsType($form, &$form_state) {
     $view = $this->getEntity($form_state);
-    $display_id = $view->displayID;
+    $display_id = $this->displayID;
 
     // Create the new display.
     $parents = $form_state['triggering_element']['#parents'];

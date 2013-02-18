@@ -18,13 +18,24 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 abstract class ViewFormControllerBase extends EntityFormController {
 
   /**
-   * Overrides \Drupal\Core\Entity\EntityFormController::init().
+   * The name of the display used by the form.
+   *
+   * @var string
    */
-  protected function init(array &$form_state, EntityInterface $entity) {
-    parent::init($form_state, $entity);
+  protected $displayID;
+
+  /**
+   * Overrides \Drupal\Core\Entity\EntityFormController::build().
+   */
+  public function build(array $form, array &$form_state, EntityInterface $entity) {
+    if (isset($form_state['display_id'])) {
+      $this->displayID = $form_state['display_id'];
+    }
 
     // @todo Remove the need for this.
     form_load_include($form_state, 'inc', 'views_ui', 'admin');
+
+    return parent::build($form, $form_state, $entity);
   }
 
   /**
@@ -34,25 +45,25 @@ abstract class ViewFormControllerBase extends EntityFormController {
     // Determine the displays available for editing.
     if ($tabs = $this->getDisplayTabs($view)) {
       // If a display isn't specified, use the first one.
-      if (empty($view->displayID)) {
+      if (empty($this->displayID)) {
         foreach ($tabs as $id => $tab) {
           if (!isset($tab['#access']) || $tab['#access']) {
-            $view->displayID = $id;
+            $this->displayID = $id;
             break;
           }
         }
       }
       // If a display is specified, but we don't have access to it, return
       // an access denied page.
-      if ($view->displayID && !isset($tabs[$view->displayID])) {
+      if ($this->displayID && !isset($tabs[$this->displayID])) {
         throw new NotFoundHttpException();
       }
-      elseif ($view->displayID && (isset($tabs[$view->displayID]['#access']) && !$tabs[$view->displayID]['#access'])) {
+      elseif ($this->displayID && (isset($tabs[$this->displayID]['#access']) && !$tabs[$this->displayID]['#access'])) {
         throw new AccessDeniedHttpException();
       }
 
     }
-    elseif ($view->displayID) {
+    elseif ($this->displayID) {
       throw new NotFoundHttpException();
     }
   }
@@ -90,7 +101,7 @@ abstract class ViewFormControllerBase extends EntityFormController {
    *   The display_id which is edited on the current request.
    */
   public function getDisplayTabs(ViewUI $view) {
-    $display_id = $view->displayID;
+    $display_id = $this->displayID;
     $tabs = array();
 
     // Create a tab for each display.

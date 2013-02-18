@@ -294,16 +294,6 @@ function views_ui_break_lock_confirm($form, &$form_state, ViewUI $view) {
 }
 
 /**
- * Page callback for the Edit View page.
- */
-function views_ui_edit_page(ViewUI $view, $display_id = NULL) {
-  $view->displayID = $display_id;
-  $build['edit'] = entity_get_form($view, 'edit');
-  $build['preview'] = entity_get_form($view, 'preview');
-  return $build;
-}
-
-/**
  * Move form elements into details for presentation purposes.
  *
  * Many views forms use #tree = TRUE to keep their values in a hierarchy for

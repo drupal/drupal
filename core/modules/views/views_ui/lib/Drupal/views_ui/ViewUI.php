@@ -96,8 +96,6 @@ class ViewUI implements ViewStorageInterface {
    */
   public $live_preview;
 
-  public $displayID;
-
   public $renderPreview = FALSE;
 
   /**
