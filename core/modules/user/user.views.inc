@@ -324,6 +324,15 @@ function user_views_data() {
     ),
   );
 
+  $data['users']['data'] = array(
+    'title' => t('Data'),
+    'help' => t('Provides access to the user data service.'),
+    'real field' => 'uid',
+    'field' => array(
+      'id' => 'user_data',
+    ),
+  );
+
   // users_roles table
 
   $data['users_roles']['table']['group']  = t('User');
