@@ -235,29 +235,38 @@ function user_field_info_alter(&$info) {
  * Implements hook_field_extra_fields().
  */
 function user_field_extra_fields() {
-  $return['user']['user'] = array(
-    'form' => array(
-      'account' => array(
-        'label' => t('User name and password'),
-        'description' => t('User module account form elements.'),
-        'weight' => -10,
-      ),
-      'timezone' => array(
-        'label' => t('Timezone'),
-        'description' => t('User module timezone form element.'),
-        'weight' => 6,
-      ),
-    ),
-    'display' => array(
-      'member_for' => array(
-        'label' => t('Member for'),
-        'description' => t('User module \'member for\' view element.'),
-        'weight' => 5,
-      ),
-    ),
+  $fields['user']['user']['form']['account'] = array(
+    'label' => t('User name and password'),
+    'description' => t('User module account form elements.'),
+    'weight' => -10,
+  );
+  if (config('user.settings')->get('signatures')) {
+    $fields['user']['user']['form']['signature_settings'] = array(
+      'label' => t('Signature settings'),
+      'description' => t('User module form element.'),
+      'weight' => 1,
+    );
+  }
+  $fields['user']['user']['form']['language'] = array(
+    'label' => t('Language settings'),
+    'description' => t('User module form element.'),
+    'weight' => 0,
+  );
+  if (config('system.timezone')->get('user.configurable')) {
+    $fields['user']['user']['form']['timezone'] = array(
+      'label' => t('Timezone'),
+      'description' => t('System module form element.'),
+      'weight' => 6,
+    );
+  }
+
+  $fields['user']['user']['display']['member_for'] = array(
+    'label' => t('Member for'),
+    'description' => t('User module \'member for\' view element.'),
+    'weight' => 5,
   );
 
-  return $return;
+  return $fields;
 }
 
 /**

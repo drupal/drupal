@@ -236,6 +236,12 @@ function contact_field_extra_fields() {
       'weight' => 0,
     );
   }
+
+  $fields['user']['user']['form']['contact'] = array(
+    'label' => t('Contact settings'),
+    'description' => t('Contact module form element.'),
+    'weight' => 5,
+  );
   return $fields;
 }
 
