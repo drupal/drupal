@@ -660,10 +660,6 @@ function node_row_node_view_preprocess_node(&$vars) {
   if (!$options['links']) {
     unset($vars['content']['links']);
   }
-
-  if (!empty($options['comments']) && user_access('access comments') && $node->comment) {
-    $vars['content']['comments'] = comment_node_page_additions($node);
-  }
 }
 
 /**
