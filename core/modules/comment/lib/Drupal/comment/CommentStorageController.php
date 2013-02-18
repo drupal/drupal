@@ -201,7 +201,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
 
     $query = db_select('comment', 'c');
     $query->addExpression('COUNT(cid)');
-    $count = $query->condition('c.entity_id', $comment->entity_id->value)
+    $count = $query->condition('c.entity_id', $comment->entity_id->target_id)
     ->condition('c.entity_type', $comment->entity_type->value)
     ->condition('c.field_name', $comment->field_name->value)
     ->condition('c.status', COMMENT_PUBLISHED)
@@ -212,7 +212,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
       // Comments exist.
       $last_reply = db_select('comment', 'c')
       ->fields('c', array('cid', 'name', 'changed', 'uid'))
-      ->condition('c.entity_id', $comment->entity_id->value)
+      ->condition('c.entity_id', $comment->entity_id->target_id)
       ->condition('c.entity_type', $comment->entity_type->value)
       ->condition('c.field_name', $comment->field_name->value)
       ->condition('c.status', COMMENT_PUBLISHED)
@@ -228,14 +228,14 @@ class CommentStorageController extends DatabaseStorageControllerNG {
           'last_comment_name' => $last_reply->uid ? '' : $last_reply->name,
           'last_comment_uid' => $last_reply->uid,
         ))
-        ->condition('entity_id', $comment->entity_id->value)
+        ->condition('entity_id', $comment->entity_id->target_id)
         ->condition('entity_type', $comment->entity_type->value)
         ->condition('field_name', $comment->field_name->value)
         ->execute();
     }
     else {
       // Comments do not exist.
-      $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+      $entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
       db_update('comment_entity_statistics')
         ->fields(array(
           'cid' => 0,
@@ -248,7 +248,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
           // Get uid from entity or default to logged in user if none exists.
           'last_comment_uid' => isset($entity->uid) ? $entity->uid : $user->uid,
         ))
-        ->condition('entity_id', $comment->entity_id->value)
+        ->condition('entity_id', $comment->entity_id->target_id)
         ->condition('entity_type', $comment->entity_type->value)
         ->condition('field_name', $comment->field_name->value)
         ->execute();

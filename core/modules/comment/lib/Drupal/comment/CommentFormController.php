@@ -22,7 +22,7 @@ class CommentFormController extends EntityFormControllerNG {
   public function form(array $form, array &$form_state, EntityInterface $comment) {
     global $user;
 
-    $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+    $entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
     $instance = field_info_instance($comment->entity_type->value, $comment->field_name->value, $entity->bundle());
 
     // Use #comment-form as unique jump target, regardless of entity type.
@@ -173,7 +173,7 @@ class CommentFormController extends EntityFormControllerNG {
   protected function actions(array $form, array &$form_state) {
     $element = parent::actions($form, $form_state);
     $comment = $this->getEntity($form_state);
-    $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+    $entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
     $instance = field_info_instance($comment->entity_type->value, $comment->field_name->value, $entity->bundle());
     $preview_mode = $instance['settings']['comment']['comment_preview'];
 

@@ -596,7 +596,7 @@ function comment_permission() {
  *   The comment listing set to the page on which the comment appears.
  */
 function comment_permalink($cid) {
-  if (($comment = comment_load($cid)) && ($entity = entity_load($comment->entity_type->value, $comment->entity_id->value))) {
+  if (($comment = comment_load($cid)) && ($entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id))) {
 
     $instance = field_info_instance($entity->entityType(), $comment->field_name->value, $entity->bundle());
     // Find the current display page for this comment.
@@ -1543,7 +1543,7 @@ function comment_edit_page(Comment $comment) {
 function comment_preview(Comment $comment) {
   global $user;
   $preview_build = array();
-  $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+  $entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
 
   if (!form_get_errors()) {
     // Attach the user and time information.
@@ -2073,10 +2073,9 @@ function comment_rdf_mapping() {
 function comment_file_download_access($field, EntityInterface $entity, File $file) {
   if ($entity->entityType() == 'comment') {
     if (user_access('access comments') && $entity->status->value == COMMENT_PUBLISHED || user_access('administer comments')) {
-      $commented_entity = entity_load($entity->entity_type->value, $entity->entity_id->value);
-      if ($commented_entity instanceof AccessibleInterface) {
-        return $commented_entity->access('view');
-      }
+      $commented_entity = entity_load($entity->entity_type->value, $entity->entity_id->target_id);
+      // Check access to parent entity.
+      return comment_reply_access($commented_entity);
     }
     return FALSE;
   }
@@ -2141,14 +2140,14 @@ function comment_get_comment_fields($entity_type = NULL) {
 function comment_mark(Comment $comment) {
   global $user;
   $cache = &drupal_static(__FUNCTION__, array());
-  $cid = $comment->entity_id->value . '__' . $comment->entity_type->value;
+  $cid = $comment->entity_id->target_id . '__' . $comment->entity_type->value;
 
   if (!$user->uid) {
     return MARK_READ;
   }
   if (!isset($cache[$cid])) {
     if ($comment->entity_type->value == 'node' && module_exists('history')) {
-      $cache[$cid] = history_read($comment->entity_id->value);
+      $cache[$cid] = history_read($comment->entity_id->target_id);
     }
     else {
       // @todo - decide how to handle last viewed for other entities. For now
