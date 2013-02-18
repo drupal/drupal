@@ -34,12 +34,12 @@ class FormObjectTest extends WebTestBase {
    */
   function testObjectFormCallback() {
     $this->drupalGet('form-test/object-builder');
-    $this->assertText('The FormTestObject::build() method was used for this form.');
+    $this->assertText('The FormTestObject::buildForm() method was used for this form.');
     $elements = $this->xpath('//form[@id="form-test-form-test-object"]');
     $this->assertTrue(!empty($elements), 'The correct form ID was used.');
     $this->drupalPost('form-test/object-builder', NULL, t('Save'));
-    $this->assertText('The FormTestObject::validate() method was used for this form.');
-    $this->assertText('The FormTestObject::submit() method was used for this form.');
+    $this->assertText('The FormTestObject::validateForm() method was used for this form.');
+    $this->assertText('The FormTestObject::submitForm() method was used for this form.');
   }
 
 }

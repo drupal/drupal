@@ -22,10 +22,10 @@ class FormTestObject implements FormInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::build().
+   * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
-  public function build(array $form, array &$form_state) {
-    $form['element'] = array('#markup' => 'The FormTestObject::build() method was used for this form.');
+  public function buildForm(array $form, array &$form_state) {
+    $form['element'] = array('#markup' => 'The FormTestObject::buildForm() method was used for this form.');
 
     $form['actions']['#type'] = 'actions';
     $form['actions']['submit'] = array(
@@ -36,17 +36,17 @@ class FormTestObject implements FormInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::validate().
+   * Implements \Drupal\Core\Form\FormInterface::validateForm().
    */
-  public function validate(array &$form, array &$form_state) {
-    drupal_set_message(t('The FormTestObject::validate() method was used for this form.'));
+  public function validateForm(array &$form, array &$form_state) {
+    drupal_set_message(t('The FormTestObject::validateForm() method was used for this form.'));
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submit().
+   * Implements \Drupal\Core\Form\FormInterface::submitForm().
    */
-  public function submit(array &$form, array &$form_state) {
-    drupal_set_message(t('The FormTestObject::submit() method was used for this form.'));
+  public function submitForm(array &$form, array &$form_state) {
+    drupal_set_message(t('The FormTestObject::submitForm() method was used for this form.'));
   }
 
 }

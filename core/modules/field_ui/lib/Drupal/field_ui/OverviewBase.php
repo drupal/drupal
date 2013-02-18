@@ -61,15 +61,15 @@ abstract class OverviewBase implements FormInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::validate().
+   * Implements \Drupal\Core\Form\FormInterface::validateForm().
    */
-  public function validate(array &$form, array &$form_state) {
+  public function validateForm(array &$form, array &$form_state) {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submit().
+   * Implements \Drupal\Core\Form\FormInterface::submitForm().
    */
-  public function submit(array &$form, array &$form_state) {
+  public function submitForm(array &$form, array &$form_state) {
   }
 
   /**

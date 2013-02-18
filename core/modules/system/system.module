@@ -3283,7 +3283,7 @@ function system_config_form($form, &$form_state) {
   if (!isset($form['#submit'])) {
     $form['#submit'] = array();
     if (isset($form_state['build_info']['callback_object'])) {
-      $form['#submit'][] = array($form_state['build_info']['callback_object'], 'submit');
+      $form['#submit'][] = array($form_state['build_info']['callback_object'], 'submitForm');
     }
     elseif (function_exists($form_state['build_info']['form_id'] . '_submit')) {
       $form['#submit'][] = $form_state['build_info']['form_id'] . '_submit';
