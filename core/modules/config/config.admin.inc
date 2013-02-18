@@ -25,6 +25,7 @@ function config_admin_sync_form(array &$form, array &$form_state, StorageInterfa
     $form['no_changes'] = array(
       '#markup' => t('There is no configuration to import.'),
     );
+    $form['actions']['#access'] = FALSE;
     return $form;
   }
 
@@ -80,13 +81,14 @@ function config_admin_import_form($form, &$form_state) {
   $source_storage = drupal_container()->get('config.storage.staging');
   $target_storage = drupal_container()->get('config.storage');
 
-  config_admin_sync_form($form, $form_state, $source_storage, $target_storage);
-
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Import all'),
   );
+
+  config_admin_sync_form($form, $form_state, $source_storage, $target_storage);
+
   return $form;
 }
 

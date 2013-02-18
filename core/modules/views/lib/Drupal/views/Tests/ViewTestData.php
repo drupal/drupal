@@ -52,8 +52,8 @@ class ViewTestData {
         }
 
         $source_storage = new FileStorage($config_dir);
-        foreach ($source_storage->listAll() as $config_name) {
-          list(, , $id) = explode('.', $config_name);
+        foreach ($source_storage->listAll('views.view.') as $config_name) {
+          $id = str_replace('views.view.', '', $config_name);
           if (in_array($id, $views)) {
             $config_changes['create'][] = $config_name;
           }

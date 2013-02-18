@@ -34,11 +34,11 @@ class ConfigInstallTest extends DrupalUnitTestBase {
    */
   function testModuleInstallation() {
     $default_config = 'config_test.system';
-    $default_configuration_entity = 'config_test.dynamic.default';
+    $default_configuration_entity = 'config_test.dynamic.dotted.default';
     $default_config_manifest = 'manifest.config_test.dynamic';
     $expected_manifest_data = array(
-      'default' => array(
-        'name' => 'config_test.dynamic.default',
+      'dotted.default' => array(
+        'name' => 'config_test.dynamic.dotted.default',
       ),
     );
     $default_empty_config_manifest = 'manifest.config_test.empty_manifest';

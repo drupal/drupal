@@ -15,6 +15,18 @@ use Drupal\Core\Config\Config;
 
 /**
  * Defines the storage controller class for configuration entities.
+ *
+ * Configuration object names of configuration entities are comprised of two
+ * parts, separated by a dot:
+ * - config_prefix: A string denoting the owner (module/extension) of the
+ *   configuration object, followed by arbitrary other namespace identifiers
+ *   that are declared by the owning extension; e.g., 'node.type'. The
+ *   config_prefix does NOT contain a trailing dot. It is defined by the entity
+ *   type's annotation.
+ * - ID: A string denoting the entity ID within the entity type namespace; e.g.,
+ *   'article'. Entity IDs may contain dots/periods. The entire remaining string
+ *   after the config_prefix in a config name forms the entity ID. Additional or
+ *   custom suffixes are not possible.
  */
 class ConfigStorageController implements EntityStorageControllerInterface {
 
@@ -162,6 +174,22 @@ class ConfigStorageController implements EntityStorageControllerInterface {
   }
 
   /**
+   * Extracts the configuration entity ID from the full configuration name.
+   *
+   * @param string $config_name
+   *   The full configuration name to extract the ID from. E.g.
+   *   'views.view.archive'.
+   * @param string $config_prefix
+   *   The config prefix of the configuration entity. E.g. 'views.view'
+   *
+   * @return string
+   *   The ID of the configuration entity.
+   */
+  public static function getIDFromConfigName($config_name, $config_prefix) {
+    return substr($config_name, strlen($config_prefix . '.'));
+  }
+
+  /**
    * Builds the query to load the entity.
    *
    * This has full revision support. For entities requiring special queries,
@@ -288,10 +316,14 @@ class ConfigStorageController implements EntityStorageControllerInterface {
       $config = config($this->getConfigPrefix() . $entity->id());
       $config->delete();
 
-      // Remove the entity from the manifest file.
-      config('manifest.' . $this->entityInfo['config_prefix'])
-        ->clear($entity->id())
-        ->save();
+      // Remove the entity from the manifest file. Entity id's can contain a dot
+      // so we can not use Config::clear() to remove the entity from the
+      // manifest.
+      $manifest = config('manifest.' . $this->entityInfo['config_prefix']);
+      $manifest_data = $manifest->get();
+      unset($manifest_data[$entity->id()]);
+      $manifest->setData($manifest_data);
+      $manifest->save();
     }
 
     $this->postDelete($entities);
@@ -483,7 +515,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
    *   A configuration object containing the old configuration data.
    */
   public function importChange($name, Config $new_config, Config $old_config) {
-    list(, , $id) = explode('.', $name);
+    $id = static::getIDFromConfigName($name, $this->entityInfo['config_prefix']);
     $entities = $this->load(array($id));
     $entity = $entities[$id];
     $entity->original = clone $entity;
@@ -514,7 +546,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
    *   A configuration object containing the old configuration data.
    */
   public function importDelete($name, Config $new_config, Config $old_config) {
-    list(, , $id) = explode('.', $name);
+    $id = static::getIDFromConfigName($name, $this->entityInfo['config_prefix']);
     $entities = $this->load(array($id));
     $entity = $entities[$id];
     $entity->delete();

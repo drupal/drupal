@@ -1042,12 +1042,9 @@ function theme_views_mini_pager($vars) {
   $tags = $vars['tags'];
   $element = $vars['element'];
   $parameters = $vars['parameters'];
-  $quantity = $vars['quantity'];
 
-  // current is the page we are currently paged to
+  // Current is the page we are currently paged to.
   $pager_current = $pager_page_array[$element] + 1;
-  // max is the maximum page number
-  $pager_max = $pager_total[$element];
   // End of marker calculations.
 
   $li_previous = array();
@@ -1080,7 +1077,7 @@ function theme_views_mini_pager($vars) {
 
   $items[] = array(
     '#wrapper_attributes' => array('class' => array('pager-current')),
-    '#markup' => t('@current of @max', array('@current' => $pager_current, '@max' => $pager_max)),
+    '#markup' => t('Page @current', array('@current' => $pager_current)),
   );
 
   $items[] = array(

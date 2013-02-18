@@ -295,9 +295,8 @@ class ViewsUIController {
     }
     drupal_set_title($name);
 
-    $view_ui->displayID = $display_id;
-    $build['edit'] = entity_get_form($view_ui, 'edit');
-    $build['preview'] = entity_get_form($view_ui, 'preview');
+    $build['edit'] = entity_get_form($view_ui, 'edit', array('display_id' => $display_id));
+    $build['preview'] = entity_get_form($view_ui, 'preview', array('display_id' => $display_id));
     return $build;
   }
 
@@ -316,8 +315,7 @@ class ViewsUIController {
   public function preview(ViewStorageInterface $view, $display_id = NULL) {
     $view_ui = $this->getViewUI($view);
 
-    $view_ui->displayID = $display_id;
-    return entity_get_form($view_ui, 'preview');
+    return entity_get_form($view_ui, 'preview', array('display_id' => $display_id));
   }
 
   /**

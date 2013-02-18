@@ -58,10 +58,10 @@ class ViewPreviewFormController extends ViewFormControllerBase {
         '#weight' => 110,
         '#theme_wrappers' => array('container'),
         '#attributes' => array('id' => 'views-live-preview'),
-        '#markup' => $view->renderPreview($view->displayID, $args),
+        '#markup' => $view->renderPreview($this->displayID, $args),
       );
     }
-    $form['#action'] = url('admin/structure/views/view/' . $view->id() .'/preview/' . $view->displayID);
+    $form['#action'] = url('admin/structure/views/view/' . $view->id() .'/preview/' . $this->displayID);
 
     return $form;
   }
@@ -82,7 +82,7 @@ class ViewPreviewFormController extends ViewFormControllerBase {
         '#submit' => array(array($this, 'submitPreview')),
         '#id' => 'preview-submit',
         '#ajax' => array(
-          'path' => 'admin/structure/views/view/' . $view->id() . '/preview/' . $view->displayID,
+          'path' => 'admin/structure/views/view/' . $view->id() . '/preview/' . $this->displayID,
           'wrapper' => 'views-preview-wrapper',
           'event' => 'click',
           'progress' => array('type' => 'throbber'),

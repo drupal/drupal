@@ -19,6 +19,7 @@ use Drupal\Core\Annotation\Translation;
  *   label = @Translation("Test Entity"),
  *   module = "field_test",
  *   controller_class = "Drupal\field_test\TestEntityController",
+ *   render_controller_class = "Drupal\Core\Entity\EntityRenderController",
  *   form_controller_class = {
  *     "default" = "Drupal\field_test\TestEntityFormController"
  *   },

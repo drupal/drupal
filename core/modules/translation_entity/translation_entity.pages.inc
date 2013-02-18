@@ -196,13 +196,12 @@ function translation_entity_add_page(EntityInterface $entity, Language $source =
   translation_entity_prepare_translation($entity, $source, $target);
   $info = $entity->entityInfo();
   $operation = isset($info['default_operation']) ? $info['default_operation'] : 'default';
-  $form_state = entity_form_state_defaults($entity, $operation, $target->langcode);
+  $form_state['langcode'] = $target->langcode;
   $form_state['translation_entity']['source'] = $source;
   $form_state['translation_entity']['target'] = $target;
   $controller = translation_entity_controller($entity->entityType());
   $form_state['translation_entity']['translation_form'] = !$controller->getAccess($entity, 'update');
-  $form_id = entity_form_id($entity);
-  return drupal_build_form($form_id, $form_state);
+  return entity_get_form($entity, $operation, $form_state);
 }
 
 /**
@@ -221,10 +220,9 @@ function translation_entity_edit_page(EntityInterface $entity, Language $languag
   $language = !empty($language) ? $language : language(LANGUAGE_TYPE_CONTENT);
   $info = $entity->entityInfo();
   $operation = isset($info['default_operation']) ? $info['default_operation'] : 'default';
-  $form_state = entity_form_state_defaults($entity, $operation, $language->langcode);
+  $form_state['langcode'] = $language->langcode;
   $form_state['translation_entity']['translation_form'] = TRUE;
-  $form_id = entity_form_id($entity);
-  return drupal_build_form($form_id, $form_state);
+  return entity_get_form($entity, $operation, $form_state);
 }
 
 /**

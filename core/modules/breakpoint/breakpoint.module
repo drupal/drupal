@@ -7,6 +7,7 @@
 
 use Drupal\breakpoint\Plugin\Core\Entity\Breakpoint;
 use Drupal\breakpoint\Plugin\Core\Entity\BreakpointGroup;
+use Drupal\Core\Config\Entity\ConfigStorageController;
 
 /**
  * Implements hook_help().
@@ -191,7 +192,7 @@ function _breakpoint_delete_breakpoints($list, $source_type) {
 
   // Remove the breakpoint.breakpoint part of the breakpoint identifier.
   foreach ($ids as &$id) {
-    $id = drupal_substr($id, drupal_strlen($entity_info['config_prefix']) + 1);
+    $id = ConfigStorageController::getIDFromConfigName($id, $entity_info['config_prefix']);
   }
   $breakpoint_groups = entity_load_multiple('breakpoint_group', $ids);
 
@@ -206,7 +207,7 @@ function _breakpoint_delete_breakpoints($list, $source_type) {
 
       // Remove the breakpoint.breakpoint part of the breakpoint identifier.
       foreach ($breakpoint_ids as &$breakpoint_id) {
-        $breakpoint_id = drupal_substr($breakpoint_id, drupal_strlen($entity_info['config_prefix']) + 1);
+        $breakpoint_id = ConfigStorageController::getIDFromConfigName($breakpoint_id, $entity_info['config_prefix']);
       }
       $breakpoints = entity_load_multiple('breakpoint', $breakpoint_ids);
 

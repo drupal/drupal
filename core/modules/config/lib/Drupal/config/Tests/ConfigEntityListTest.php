@@ -43,10 +43,10 @@ class ConfigEntityListTest extends WebTestBase {
 
     // Get a list of ConfigTest entities and confirm that it contains the
     // ConfigTest entity provided by the config_test module.
-    // @see config_test.dynamic.default.yml
+    // @see config_test.dynamic.dotted.default.yml
     $list = $controller->load();
     $this->assertEqual(count($list), 1, '1 ConfigTest entity found.');
-    $entity = $list['default'];
+    $entity = $list['dotted.default'];
     $this->assertTrue(!empty($entity), '"Default" ConfigTest entity ID found.');
     $this->assertTrue($entity instanceof ConfigTest, '"Default" ConfigTest entity is an instance of ConfigTest.');
 
@@ -91,7 +91,7 @@ class ConfigEntityListTest extends WebTestBase {
     $build_operations = $controller->buildOperations($entity);
     $expected_items = array(
       'label' => 'Default',
-      'id' => 'default',
+      'id' => 'dotted.default',
       'operations' => array(
         'data' => $build_operations,
       ),
@@ -135,7 +135,7 @@ class ConfigEntityListTest extends WebTestBase {
     // the second contains the machine name, and the third contains the
     // operations list.
     $this->assertIdentical((string) $elements[0], 'Default');
-    $this->assertIdentical((string) $elements[1], 'default');
+    $this->assertIdentical((string) $elements[1], 'dotted.default');
     $this->assertTrue($elements[2]->children()->xpath('//ul'), 'Operations list found.');
 
     // Add a new entity using the operations link.
@@ -189,7 +189,7 @@ class ConfigEntityListTest extends WebTestBase {
     // Verify that the text of the label and machine name does not appear in
     // the list (though it may appear elsewhere on the page).
     $this->assertNoFieldByXpath('//td', 'Default', "No label found for deleted 'Default' entity.");
-    $this->assertNoFieldByXpath('//td', 'default', "No machine name found for deleted 'Default' entity.");
+    $this->assertNoFieldByXpath('//td', 'dotted.default', "No machine name found for deleted 'Default' entity.");
 
     // Confirm that the empty text is displayed.
     $this->assertText('There is no Test configuration yet.');

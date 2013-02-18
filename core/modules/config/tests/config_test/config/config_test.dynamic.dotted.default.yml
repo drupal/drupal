@@ -1,4 +1,4 @@
-id: default
+id: dotted.default
 label: Default
 protected_property: Default
 # Intentionally commented out to verify default status behavior.
