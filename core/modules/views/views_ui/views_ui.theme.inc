@@ -69,7 +69,7 @@ function template_preprocess_views_ui_view_info(&$variables) {
  */
 function theme_views_ui_view_info($variables) {
   $output = '';
-  $output .= '<div class="views-ui-view-title">' . $variables['title'] . "</div>\n";
+  $output .= '<h3 class="views-ui-view-title">' . $variables['title'] . "</h3>\n";
   $output .= '<div class="views-ui-view-displays">' . $variables['displays'] . "</div>\n";
   return $output;
 }
