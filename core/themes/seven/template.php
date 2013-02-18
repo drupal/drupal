@@ -63,6 +63,29 @@ function seven_node_add_list($variables) {
 }
 
 /**
+ * Overrides theme_custom_block_add_list().
+ *
+ * Displays the list of available custom block types for creation.
+ */
+function seven_custom_block_add_list($variables) {
+  $content = $variables['content'];
+  $output = '';
+  if ($content) {
+    $output = '<ul class="admin-list">';
+    foreach ($content as $type) {
+      $output .= '<li class="clearfix">';
+      $content = '<span class="label">' . check_plain($type->label()) . '</span>';
+      $content .= '<div class="description">' . filter_xss_admin($type->description) . '</div>';
+      $options['html'] = TRUE;
+      $output .= l($content, 'block/add/' . $type->id(), $options);
+      $output .= '</li>';
+    }
+    $output .= '</ul>';
+  }
+  return $output;
+}
+
+/**
  * Overrides theme_admin_block_content().
  *
  * Uses an unordered list markup in both compact and extended mode.

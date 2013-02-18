@@ -73,7 +73,7 @@ class BlockPluginUI extends PluginUIBase {
     $rows = array();
     foreach ($plugins as $plugin_id => $display_plugin_definition) {
       if (empty($facet) || $this->facetCompare($facet, $display_plugin_definition)) {
-        $rows[] = $this->row($plugin_id, $display_plugin_definition);
+        $rows[$plugin_id] = $this->row($plugin_id, $display_plugin_definition);
       }
       foreach ($plugin_definition['facets'] as $key => $title) {
         $facets[$key][$display_plugin_definition[$key]] = $this->facetLink($key, $plugin_id, $display_plugin_definition);
@@ -95,7 +95,7 @@ class BlockPluginUI extends PluginUIBase {
       }
     }
     // Sort rows alphabetically.
-    sort($rows);
+    asort($rows);
     $form['left']['plugin_library'] = array(
       '#theme' => 'table',
       '#header' => $this->tableHeader(),

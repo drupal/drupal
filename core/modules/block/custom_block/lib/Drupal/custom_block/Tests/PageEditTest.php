@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * @file
+ * Contains \Drupal\custom_block\Tests\PageEditTest.
+ */
+
+namespace Drupal\custom_block\Tests;
+
+/**
+ * Tests the block edit functionality.
+ */
+class PageEditTest extends CustomBlockTestBase {
+
+  /**
+   * Declares test information.
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Custom Block edit',
+      'description' => 'Create a block and test block edit functionality.',
+      'group' => 'Custom Block',
+    );
+  }
+
+  /**
+   * Checks block edit functionality.
+   */
+  public function testPageEdit() {
+    $this->drupalLogin($this->adminUser);
+
+    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $title_key = 'info';
+    $body_key = "block_body[$langcode][0][value]";
+    // Create block to edit.
+    $edit = array();
+    $edit['info'] = drupal_strtolower($this->randomName(8));
+    $edit[$body_key] = $this->randomName(16);
+    $this->drupalPost('block/add/basic', $edit, t('Save'));
+
+    // Check that the block exists in the database.
+    $blocks = entity_query('custom_block')->condition('info', $edit['info'])->execute();
+    $block = entity_load('custom_block', reset($blocks));
+    $this->assertTrue($block, 'Custom block found in database.');
+
+    // Load the edit page.
+    $this->drupalGet('block/' . $block->id() . '/edit');
+    $this->assertFieldByName($title_key, $edit[$title_key], 'Title field displayed.');
+    $this->assertFieldByName($body_key, $edit[$body_key], 'Body field displayed.');
+
+    // Edit the content of the block.
+    $edit = array();
+    $edit[$title_key] = $this->randomName(8);
+    $edit[$body_key] = $this->randomName(16);
+    // Stay on the current page, without reloading.
+    $this->drupalPost(NULL, $edit, t('Save'));
+
+    // Edit the same block, creating a new revision.
+    $this->drupalGet("block/" . $block->id() . "/edit");
+    $edit = array();
+    $edit['info'] = $this->randomName(8);
+    $edit[$body_key] = $this->randomName(16);
+    $edit['revision'] = TRUE;
+    $this->drupalPost(NULL, $edit, t('Save'));
+
+    // Ensure that the block revision has been created.
+    $revised_block = entity_load('custom_block', $block->id->value, TRUE);
+    $this->assertNotIdentical($block->revision_id->value, $revised_block->revision_id->value, 'A new revision has been created.');
+  }
+
+}
