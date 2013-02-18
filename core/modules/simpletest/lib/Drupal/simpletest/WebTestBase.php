@@ -2120,7 +2120,7 @@ abstract class WebTestBase extends TestBase {
    * outside of the internal browser and assertions need to be made on the
    * returned page.
    *
-   * A good example would be when testing drupal_http_request(). After fetching
+   * A good example would be when testing HTTP request made by Drupal. After fetching
    * the page the content can be set and page elements can be checked to ensure
    * that the function worked properly.
    */
