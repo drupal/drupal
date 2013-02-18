@@ -31,7 +31,7 @@ interface FormInterface {
    * @return array
    *   The form structure.
    */
-  public function build(array $form, array &$form_state);
+  public function buildForm(array $form, array &$form_state);
 
   /**
    * Form validation handler.
@@ -41,7 +41,7 @@ interface FormInterface {
    * @param array $form_state
    *   An associative array containing the current state of the form.
    */
-  public function validate(array &$form, array &$form_state);
+  public function validateForm(array &$form, array &$form_state);
 
   /**
    * Form submission handler.
@@ -51,6 +51,6 @@ interface FormInterface {
    * @param array $form_state
    *   An associative array containing the current state of the form.
    */
-  public function submit(array &$form, array &$form_state);
+  public function submitForm(array &$form, array &$form_state);
 
 }

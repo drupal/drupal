@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Tests;
 
-use DOMDocument;
 use Drupal\simpletest\WebTestBase;
 
 /**

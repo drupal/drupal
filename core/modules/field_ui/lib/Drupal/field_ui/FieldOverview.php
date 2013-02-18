@@ -50,9 +50,9 @@ class FieldOverview extends OverviewBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::build().
+   * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
-  public function build(array $form, array &$form_state) {
+  public function buildForm(array $form, array &$form_state) {
     // When displaying the form, make sure the list of fields is up-to-date.
     if (empty($form_state['post'])) {
       field_info_cache_clear();
@@ -420,9 +420,9 @@ class FieldOverview extends OverviewBase {
   }
 
   /**
-   * Overrides \Drupal\field_ui\OverviewBase::validate().
+   * Implements \Drupal\Core\Form\FormInterface::validateForm().
    */
-  public function validate(array &$form, array &$form_state) {
+  public function validateForm(array &$form, array &$form_state) {
     $this->validateAddNew($form, $form_state);
     $this->validateAddExisting($form, $form_state);
   }
@@ -435,7 +435,7 @@ class FieldOverview extends OverviewBase {
    * @param array $form_state
    *   A reference to a keyed array containing the current state of the form.
    *
-   * @see Drupal\field_ui\FieldOverview::validate()
+   * @see Drupal\field_ui\FieldOverview::validateForm()
    */
   protected function validateAddNew(array $form, array &$form_state) {
     $field = $form_state['values']['fields']['_add_new_field'];
@@ -524,9 +524,9 @@ class FieldOverview extends OverviewBase {
   }
 
   /**
-   * Overrides \Drupal\field_ui\OverviewBase::submit().
+   * Overrides \Drupal\field_ui\OverviewBase::submitForm().
    */
-  public function submit(array &$form, array &$form_state) {
+  public function submitForm(array &$form, array &$form_state) {
     $form_values = $form_state['values']['fields'];
 
     $bundle_settings = field_bundle_settings($this->entity_type, $this->bundle);

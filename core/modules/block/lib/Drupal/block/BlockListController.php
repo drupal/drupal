@@ -100,11 +100,11 @@ class BlockListController extends ConfigEntityListController implements FormInte
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::build().
+   * Implements \Drupal\Core\Form\FormInterface::buildForm().
    *
    * Form constructor for the main block administration form.
    */
-  public function build(array $form, array &$form_state) {
+  public function buildForm(array $form, array &$form_state) {
     $entities = $this->load();
     $form['#attached']['css'][] = drupal_get_path('module', 'block') . '/block.admin.css';
     $form['#attached']['library'][] = array('system', 'drupal.tableheader');
@@ -190,18 +190,18 @@ class BlockListController extends ConfigEntityListController implements FormInte
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::validate().
+   * Implements \Drupal\Core\Form\FormInterface::validateForm().
    */
-  public function validate(array &$form, array &$form_state) {
+  public function validateForm(array &$form, array &$form_state) {
     // No validation.
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submit().
+   * Implements \Drupal\Core\Form\FormInterface::submitForm().
    *
    * Form submission handler for the main block administration form.
    */
-  public function submit(array &$form, array &$form_state) {
+  public function submitForm(array &$form, array &$form_state) {
     $entities = entity_load_multiple('block', array_keys($form_state['values']['blocks']));
     foreach ($entities as $entity_id => $entity) {
       $entity->set('weight', $form_state['values']['blocks'][$entity_id]['weight']);

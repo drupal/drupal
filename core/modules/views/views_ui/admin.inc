@@ -615,8 +615,8 @@ function views_ui_analyze_view_form($form, &$form_state) {
   $form['#title'] = t('View analysis');
   $form['#section'] = 'analyze';
 
-  $analyzer = new Analyzer($view->get('executable'));
-  $messages = $analyzer->getMessages();
+  $analyzer = drupal_container()->get('views.analyzer');
+  $messages = $analyzer->getMessages($view->get('executable'));
 
   $form['analysis'] = array(
     '#prefix' => '<div class="form-item">',
