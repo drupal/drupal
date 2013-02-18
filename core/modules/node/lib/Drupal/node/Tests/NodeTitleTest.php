@@ -46,9 +46,6 @@ class NodeTitleTest extends NodeTestBase {
     $settings = array(
       'title' => $this->randomName(8),
       'promote' => 1,
-      'comment' => array(
-        LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN))
-      )
     );
     $node = $this->drupalCreateNode($settings);
 

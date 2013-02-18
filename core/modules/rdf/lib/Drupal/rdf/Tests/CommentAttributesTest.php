@@ -51,7 +51,7 @@ class CommentAttributesTest extends CommentTestBase {
 
     // Creates the nodes on which the test comments will be posted.
     $this->drupalLogin($this->web_user);
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
+    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
     $this->drupalLogout();
     // Prepares commonly used URIs.
     $this->base_uri = url('<front>', array('absolute' => TRUE));

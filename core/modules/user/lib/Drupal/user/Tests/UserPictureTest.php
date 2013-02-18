@@ -95,12 +95,7 @@ class UserPictureTest extends WebTestBase {
     $image = current($this->drupalGetTestFiles('image'));
     $file = $this->saveUserPicture($image);
 
-    $node = $this->drupalCreateNode(array(
-      'type' => 'article',
-      'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array(
-        'comment' => COMMENT_OPEN
-      ))),
-    ));
+    $node = $this->drupalCreateNode(array('type' => 'article'));
 
     // Enable user pictures on nodes.
     variable_set('theme_settings', array('toggle_node_user_picture' => TRUE));

@@ -31,7 +31,7 @@ class CommentPagerTest extends CommentTestBase {
     $this->setCommentPreview(DRUPAL_DISABLED);
 
     // Create a node and three comments.
-    $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
+    $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
     $comments = array();
     $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
     $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
@@ -106,7 +106,7 @@ class CommentPagerTest extends CommentTestBase {
     $this->setCommentsPerPage(1000);
 
     // Create a node and three comments.
-    $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
+    $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
     $comments = array();
     $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
     $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
@@ -206,7 +206,7 @@ class CommentPagerTest extends CommentTestBase {
     $this->setCommentsPerPage(1);
 
     // Create a node and three comments.
-    $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
+    $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
     $comments = array();
     $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
     $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);

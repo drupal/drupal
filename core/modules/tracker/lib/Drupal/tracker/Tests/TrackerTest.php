@@ -63,16 +63,10 @@ class TrackerTest extends WebTestBase {
     $unpublished = $this->drupalCreateNode(array(
       'title' => $this->randomName(8),
       'status' => 0,
-      'comment' => array(
-        LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN))
-      ),
     ));
     $published = $this->drupalCreateNode(array(
       'title' => $this->randomName(8),
       'status' => 1,
-      'comment' => array(
-        LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN))
-      ),
     ));
 
     $this->drupalGet('tracker');
@@ -96,17 +90,11 @@ class TrackerTest extends WebTestBase {
       'title' => $this->randomName(8),
       'uid' => $this->user->uid,
       'status' => 0,
-      'comment' => array(
-        LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN))
-      ),
     ));
     $my_published = $this->drupalCreateNode(array(
       'title' => $this->randomName(8),
       'uid' => $this->user->uid,
       'status' => 1,
-      'comment' => array(
-        LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN))
-      ),
     ));
     $other_published_no_comment = $this->drupalCreateNode(array(
       'title' => $this->randomName(8),
@@ -117,9 +105,6 @@ class TrackerTest extends WebTestBase {
       'title' => $this->randomName(8),
       'uid' => $this->other_user->uid,
       'status' => 1,
-      'comment' => array(
-        LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN))
-      ),
     ));
     $comment = array(
       'subject' => $this->randomName(),
@@ -176,9 +161,6 @@ class TrackerTest extends WebTestBase {
     $this->drupalLogin($this->user);
 
     $node = $this->drupalCreateNode(array(
-      'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array(
-        'comment' => COMMENT_OPEN
-      ))),
       'title' => $this->randomName(8),
     ));
 
@@ -221,9 +203,6 @@ class TrackerTest extends WebTestBase {
     $nodes = array();
     for ($i = 1; $i <= 3; $i++) {
       $edits[$i] = array(
-        'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array(
-          'comment' => COMMENT_OPEN
-        ))),
         'title' => $this->randomName(),
       );
       $nodes[$i] = $this->drupalCreateNode($edits[$i]);
@@ -277,9 +256,6 @@ class TrackerTest extends WebTestBase {
     $this->drupalLogin($admin_user);
 
     $node = $this->drupalCreateNode(array(
-      'comment' => array(
-        LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN))
-      ),
       'title' => $this->randomName(),
     ));
 

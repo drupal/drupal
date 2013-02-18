@@ -96,7 +96,6 @@ class DefaultViewsTest extends WebTestBase {
 
       $values = array('created' => $time, 'type' => 'page');
       $values[$this->field_name][LANGUAGE_NOT_SPECIFIED][]['tid'] = $term->tid;
-      $values['comment'][LANGUAGE_NOT_SPECIFIED][]['comment'] = COMMENT_OPEN;
 
       // Make every other node promoted.
       if ($i % 2) {

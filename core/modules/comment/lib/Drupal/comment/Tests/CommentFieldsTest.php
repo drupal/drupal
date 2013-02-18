@@ -81,10 +81,7 @@ class CommentFieldsTest extends CommentTestBase {
 
     // Create nodes of each type.
     comment_add_default_comment_field('node', 'book');
-    $book_node = $this->drupalCreateNode(array(
-      'type' => 'book',
-      'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))
-    ));
+    $book_node = $this->drupalCreateNode(array('type' => 'book'));
 
     $this->drupalLogout();
 

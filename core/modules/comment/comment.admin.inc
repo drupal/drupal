@@ -196,7 +196,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
 
   foreach ($comments as $comment) {
     // Use the first entity label.
-    $entity = $entities[$comment->entity_type->value][$comment->entity_id->value];
+    $entity = $entities[$comment->entity_type->value][$comment->entity_id->target_id];
     $comment->entity_title = $entity->label();
     $comment->entity_uri = $entity->uri();
     $comment_body = field_get_items($comment, 'comment_body');
@@ -381,7 +381,7 @@ function comment_confirm_delete($form, &$form_state, Comment $comment) {
   $form_state['comment'] = $comment;
   // Always provide entity id in the same form key as in the entity edit form.
   $form['cid'] = array('#type' => 'value', '#value' => $comment->id());
-  $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+  $entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
   $uri = $entity->uri();
   return confirm_form(
     $form,

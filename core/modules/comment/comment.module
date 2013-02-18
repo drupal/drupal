@@ -125,19 +125,26 @@ function comment_help($path, $arg) {
 
 /**
  * Implements hook_entity_view().
+ *
+ * @todo Make node links as comment_links formatter http://drupal.org/node/1901110
  */
 function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $view_mode, $langcode) {
+  if ($entity->entityType() != 'node') {
+    // Only content needs comment links.
+    return;
+  }
   $fields = field_info_instances($entity->entityType(), $entity->bundle());
   foreach ($fields as $field_name => $instance) {
     $links = array();
-    $field = field_info_field($instance['field_name']);
+    $field = field_info_field($field_name);
     if ($field['type'] != 'comment') {
       continue;
     }
     $values = field_get_items($entity, $field_name);
-    if ($values && is_array($values) && ($value = reset($values)) &&
-        !empty($value['comment']) &&
-        $value['comment'] != COMMENT_HIDDEN) {
+    // @todo Field instance should provide always default value http://drupal.org/node/1919834
+    $commenting_status = isset($values[0]['status']) ? $values[0]['status'] : NULL;
+    if (isset($commenting_status) && $commenting_status) {
+      // Entity have comment open or close.
       $uri = $entity->uri();
       if ($view_mode == 'rss') {
         // Add a comments RSS element which is a URL to the comments of this node.
@@ -176,9 +183,8 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
             }
           }
         }
-        $values = field_get_items($entity, $field_name);
-        $value = reset($values);
-        if (!empty($value['comment']) && $value['comment'] == COMMENT_OPEN) {
+        // Provide a link to new comment form.
+        if ($commenting_status == COMMENT_OPEN) {
           $comment_form_location = $instance['settings']['comment']['comment_form_location'];
           if (user_access('post comments')) {
             $links['comment-add'] = array(
@@ -204,9 +210,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
         // allowed to post comments and if this entity is allowing new comments.
         // But we don't want this link if we're building the entity for search
         // indexing or constructing a search result excerpt.
-        $values = field_get_items($entity, $field_name);
-        if (is_array($values) && ($value = reset($values)) &&
-            !empty($value['comment']) && $value['comment'] == COMMENT_OPEN) {
+        if ($commenting_status == COMMENT_OPEN) {
           $comment_form_location = $instance['settings']['comment']['comment_form_location'];
           if (user_access('post comments')) {
             // Show the "post comment" link if the form is on another page, or
@@ -592,7 +596,7 @@ function comment_permission() {
  *   The comment listing set to the page on which the comment appears.
  */
 function comment_permalink($cid) {
-  if (($comment = comment_load($cid)) && ($entity = entity_load($comment->entity_type->value, $comment->entity_id->value))) {
+  if (($comment = comment_load($cid)) && ($entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id))) {
 
     $instance = field_info_instance($entity->entityType(), $comment->field_name->value, $entity->bundle());
     // Find the current display page for this comment.
@@ -963,7 +967,8 @@ function comment_view(Comment $comment, $view_mode = 'full', $langcode = NULL) {
 function comment_links(Comment $comment, EntityInterface $entity, $field_name) {
   $links = array();
   $items = field_get_items($entity, $field_name);
-  $status = isset($items[0]['comment']) ? $items[0]['comment'] : COMMENT_OPEN;
+  // @todo Field instance should provide always default value http://drupal.org/node/1919834
+  $status = isset($items[0]['status']) ? $items[0]['status'] : COMMENT_OPEN;
   if ($status == COMMENT_OPEN) {
     if (user_access('administer comments') && user_access('post comments')) {
       $links['comment-delete'] = array(
@@ -1215,8 +1220,9 @@ function comment_node_update_index(Node $node, $langcode) {
       $mode = $instance['settings']['comment']['comment_default_mode'];
       $comments_per_page = $instance['settings']['comment']['comment_default_per_page'];
       if (($items = field_get_items($node, $field_name)) &&
-          isset($items[0]['comment']) &&
-          $items[0]['comment'] && $cids = comment_get_thread($node, $field_name, $mode, $comments_per_page)) {
+          // @todo Field instance should provide always default value http://drupal.org/node/1919834
+          isset($items[0]['status']) &&
+          $items[0]['status'] && $cids = comment_get_thread($node, $field_name, $mode, $comments_per_page)) {
         $comments = comment_load_multiple($cids);
         comment_prepare_thread($comments);
         $build = comment_view_multiple($comments);
@@ -1249,8 +1255,9 @@ function comment_node_search_result($node) {
   foreach ($comment_fields as $field_name => $info) {
     // Do not make a string if comments are hidden.
     if (user_access('access comments') && ($items = field_get_items($node, $field_name)) &&
-        isset($items[0]['comment']) && $items[0]['comment'] != COMMENT_HIDDEN) {
-      if ($items[0]['comment'] == COMMENT_OPEN) {
+      // @todo Field instance should provide always default value http://drupal.org/node/1919834
+      isset($items[0]['status']) && $items[0]['status'] != COMMENT_HIDDEN) {
+      if ($items[0]['status'] == COMMENT_OPEN) {
         // At least one comment field is open.
         $open = TRUE;
       }
@@ -1536,7 +1543,7 @@ function comment_edit_page(Comment $comment) {
 function comment_preview(Comment $comment) {
   global $user;
   $preview_build = array();
-  $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+  $entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
 
   if (!form_get_errors()) {
     // Attach the user and time information.
@@ -1576,7 +1583,7 @@ function comment_preview(Comment $comment) {
     // loop.
     $values = $entity->{$comment->field_name->value};
     $entity->{$comment->field_name->value} = array(
-      field_language($entity, $comment->field_name->value) => array(array('comment' => COMMENT_HIDDEN)),
+      field_language($entity, $comment->field_name->value) => array(array('status' => COMMENT_HIDDEN)),
     );
     $build = entity_view($entity, 'full');
     $entity->{$comment->field_name->value} = $values;
@@ -2066,10 +2073,9 @@ function comment_rdf_mapping() {
 function comment_file_download_access($field, EntityInterface $entity, File $file) {
   if ($entity->entityType() == 'comment') {
     if (user_access('access comments') && $entity->status->value == COMMENT_PUBLISHED || user_access('administer comments')) {
-      $commented_entity = entity_load($entity->entity_type->value, $entity->entity_id->value);
-      if ($commented_entity instanceof AccessibleInterface) {
-        return $commented_entity->access('view');
-      }
+      $commented_entity = entity_load($entity->entity_type->value, $entity->entity_id->target_id);
+      // Check access to parent entity.
+      return comment_reply_access($commented_entity);
     }
     return FALSE;
   }
@@ -2103,9 +2109,11 @@ function comment_library_info() {
  *   are attached on a certain entity type. Defaults to NULL.
  *
  * @return array
- *   An array of comment field definitions, keyed by field name. Each field has
- *   an additional property, 'bundles', which is an array of all the bundles to
- *   which this field belongs, keyed by entity type.
+ *   An array of comment field map definitions, keyed by field name. Each value
+ *   is an array with two entries:
+ *   - type: The field type.
+ *   - bundles: The bundles in which the field appears, as an array with entity
+ *     types as keys and the array of bundle names as values.
  *
  * @see field_info_fields().
  */
@@ -2132,14 +2140,14 @@ function comment_get_comment_fields($entity_type = NULL) {
 function comment_mark(Comment $comment) {
   global $user;
   $cache = &drupal_static(__FUNCTION__, array());
-  $cid = $comment->entity_id->value . '__' . $comment->entity_type->value;
+  $cid = $comment->entity_id->target_id . '__' . $comment->entity_type->value;
 
   if (!$user->uid) {
     return MARK_READ;
   }
   if (!isset($cache[$cid])) {
     if ($comment->entity_type->value == 'node' && module_exists('history')) {
-      $cache[$cid] = history_read($comment->entity_id->value);
+      $cache[$cid] = history_read($comment->entity_id->target_id);
     }
     else {
       // @todo - decide how to handle last viewed for other entities. For now
@@ -2179,6 +2187,7 @@ function comment_add_default_comment_field($entity_type, $bundle, $field_name = 
     $field = array(
       'field_name' => $field_name,
       'type' => 'comment',
+      'translatable' => '0',
     );
     // Create the field.
     field_create_field($field);
@@ -2192,35 +2201,10 @@ function comment_add_default_comment_field($entity_type, $bundle, $field_name = 
       'entity_type' => $entity_type,
       'bundle' => $bundle,
       'required' => 1,
-      'default_value' => array(array('comment' => $default_value)),
+      'default_value' => array(array('status' => $default_value)),
       'widget' => array(
         'type' => 'comment_default',
         'weight' => '50',
-      ),
-      'display' => array(
-        'default' => array(
-          'label' => 'hidden',
-          'module' => 'comment',
-          'settings' => array(),
-          'type' => 'comment_default',
-          'weight' => '1',
-        ),
-        'rss' => array(
-          'type' => 'hidden',
-          'label' => 'hidden',
-        ),
-        'teaser' => array(
-          'type' => 'hidden',
-          'label' => 'hidden',
-        ),
-        'search_index' => array(
-          'type' => 'hidden',
-          'label' => 'hidden',
-        ),
-        'search_result' => array(
-          'type' => 'hidden',
-          'label' => 'hidden',
-        )
       ),
     );
     field_create_instance($instance);

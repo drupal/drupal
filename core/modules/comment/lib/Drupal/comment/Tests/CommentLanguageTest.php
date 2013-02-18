@@ -100,7 +100,7 @@ class CommentLanguageTest extends WebTestBase {
         "title" => $title,
         "body[$langcode_not_specified][0][value]" => $this->randomName(),
         "langcode" => $node_langcode,
-         "comment[$langcode_not_specified][0][comment]" => COMMENT_OPEN,
+         "comment[$langcode_not_specified][0][status]" => COMMENT_OPEN,
       );
       $this->drupalPost("node/add/article", $edit, t('Save'));
       $node = $this->drupalGetNodeByTitle($title);
