@@ -8,19 +8,19 @@
 namespace Drupal\options\Tests;
 
 use Drupal\field\FieldException;
-use Drupal\field\Tests\FieldTestBase;
+use Drupal\field\Tests\FieldItemUnitTestBase;
 
 /**
  * Tests for the 'Options' field types.
  */
-class OptionsFieldTest extends FieldTestBase {
+class OptionsFieldTest extends FieldItemUnitTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('options', 'field_test');
+  public static $modules = array('options', 'entity_test');
 
   public static function getInfo() {
     return array(
@@ -32,6 +32,10 @@ class OptionsFieldTest extends FieldTestBase {
 
   function setUp() {
     parent::setUp();
+
+    $this->installSchema('system', 'menu_router');
+    $this->installSchema('system', 'variable');
+
 
     $this->field_name = 'test_options';
     $this->field = array(
@@ -46,8 +50,8 @@ class OptionsFieldTest extends FieldTestBase {
 
     $this->instance = array(
       'field_name' => $this->field_name,
-      'entity_type' => 'test_entity',
-      'bundle' => 'test_bundle',
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
       'widget' => array(
         'type' => 'options_buttons',
       ),
@@ -62,7 +66,7 @@ class OptionsFieldTest extends FieldTestBase {
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // All three options appear.
-    $entity = field_test_create_entity();
+    $entity = entity_create('entity_test', array());
     $form = entity_get_form($entity);
     $this->assertTrue(!empty($form[$this->field_name][$langcode][1]), 'Option 1 exists');
     $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), 'Option 2 exists');
@@ -70,9 +74,9 @@ class OptionsFieldTest extends FieldTestBase {
 
     // Use one of the values in an actual entity, and check that this value
     // cannot be removed from the list.
-    $entity = field_test_create_entity();
-    $entity->{$this->field_name}[$langcode][0] = array('value' => 1);
-    field_test_entity_save($entity);
+    $entity = entity_create('entity_test', array());
+    $entity->{$this->field_name}->value = 1;
+    $entity->save();
     $this->field['settings']['allowed_values'] = array(2 => 'Two');
     try {
       field_update_field($this->field);
@@ -82,13 +86,13 @@ class OptionsFieldTest extends FieldTestBase {
       $this->pass(t('Cannot update a list field to not include keys with existing data.'));
     }
     // Empty the value, so that we can actually remove the option.
-    $entity->{$this->field_name}[$langcode] = array();
-    field_test_entity_save($entity);
+    unset($entity->{$this->field_name});
+    $entity->save();
 
     // Removed options do not appear.
     $this->field['settings']['allowed_values'] = array(2 => 'Two');
     field_update_field($this->field);
-    $entity = field_test_create_entity();
+    $entity = entity_create('entity_test', array());
     $form = entity_get_form($entity);
     $this->assertTrue(empty($form[$this->field_name][$langcode][1]), 'Option 1 does not exist');
     $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), 'Option 2 exists');
@@ -111,14 +115,14 @@ class OptionsFieldTest extends FieldTestBase {
     $this->field = field_create_field($this->field);
     $this->instance = array(
       'field_name' => $this->field_name,
-      'entity_type' => 'test_entity',
-      'bundle' => 'test_bundle',
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
       'widget' => array(
         'type' => 'options_buttons',
       ),
     );
     $this->instance = field_create_instance($this->instance);
-    $entity = field_test_create_entity();
+    $entity = entity_create('entity_test', array());
     $form = entity_get_form($entity);
     $this->assertTrue(!empty($form[$this->field_name][$langcode][1]), 'Option 1 exists');
     $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), 'Option 2 exists');
