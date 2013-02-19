@@ -394,6 +394,15 @@ function user_admin_settings($form, &$form_state) {
     '#default_value' => $config->get('signatures'),
   );
 
+  // Default notifications address.
+  $form['mail_notification_address'] = array(
+    '#type' => 'email',
+    '#title' => t('Notification e-mail address'),
+    '#default_value' => config('system.site')->get('mail_notification'),
+    '#description' => t("The e-mail address to be used as the 'from' address for all account notifications listed below. If <em>'Visitors, but administrator approval is required'</em> is selected above, a notification email will also be sent to this address for any new registrations. Leave empty to use the default system e-mail address <em>(%site-email).</em>", array('%site-email' => config('system.site')->get('mail'))),
+    '#maxlength' => 180,
+  );
+
   $form['email'] = array(
     '#type' => 'vertical_tabs',
     '#title' => t('E-mails'),
@@ -661,6 +670,9 @@ function user_admin_settings_submit($form, &$form_state) {
     ->set('status_blocked.subject', $form_state['values']['user_mail_status_blocked_subject'])
     ->set('status_canceled.body', $form_state['values']['user_mail_status_canceled_body'])
     ->set('status_canceled.subject', $form_state['values']['user_mail_status_canceled_subject'])
+    ->save();
+  config('system.site')
+    ->set('mail_notification', $form_state['values']['mail_notification_address'])
     ->save();
 }
 
