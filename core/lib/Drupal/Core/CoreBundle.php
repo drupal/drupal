@@ -61,6 +61,12 @@ class CoreBundle extends Bundle {
       ->register('config.storage.staging', 'Drupal\Core\Config\FileStorage')
       ->addArgument(config_get_config_directory(CONFIG_STAGING_DIRECTORY));
 
+    // Register import snapshot configuration storage.
+    $container
+      ->register('config.storage.snapshot', 'Drupal\Core\Config\DatabaseStorage')
+      ->addArgument(new Reference('database'))
+      ->addArgument('config_snapshot');
+
     // Register the typed configuration data manager.
     $container->register('config.typed', 'Drupal\Core\Config\TypedConfigManager')
       ->addArgument(new Reference('config.storage'));

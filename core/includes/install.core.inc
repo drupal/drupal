@@ -1855,6 +1855,11 @@ function install_finished(&$install_state) {
   // Will also trigger indexing of profile-supplied content or feeds.
   drupal_cron_run();
 
+  // Save a snapshot of the intially installed configuration.
+  $active = drupal_container()->get('config.storage');
+  $snapshot = drupal_container()->get('config.storage.snapshot');
+  config_import_create_snapshot($active, $snapshot);
+
   return $output;
 }
 
