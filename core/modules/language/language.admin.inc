@@ -1021,6 +1021,7 @@ function language_content_settings_form(array $form, array $form_state, array $s
     $form['settings'][$entity_type] = array(
       '#title' => $labels[$entity_type],
       '#type' => 'container',
+      '#entity_type' => $entity_type,
       '#theme' => 'language_content_settings_table',
       '#bundle_label' => isset($info['bundle_label']) ? $info['bundle_label'] : $labels[$entity_type],
       '#states' => array(

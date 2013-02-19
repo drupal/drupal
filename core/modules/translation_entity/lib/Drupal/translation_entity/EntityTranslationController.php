@@ -430,6 +430,13 @@ class EntityTranslationController implements EntityTranslationControllerInterfac
     if (!empty($values['retranslate'])) {
       $this->retranslate($entity, $form_langcode);
     }
+
+    // Set contextual information that can be reused during the storage phase.
+    // @todo Remove this once we have an EntityLanguageDecorator to deal with
+    //   the active language.
+    $attributes = drupal_container()->get('request')->attributes;
+    $attributes->set('working_langcode', $form_langcode);
+    $attributes->set('source_langcode', $source_langcode);
   }
 
   /**

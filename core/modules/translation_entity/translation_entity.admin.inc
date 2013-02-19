@@ -6,11 +6,44 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\field\FieldInstance;
 
 /**
- * Implements hook_form_FORM_ID_alter() for language_content_settings_form().
+ * Returns a form element to configure field synchronization.
  *
- * @see translation_entity_form_language_content_settings_form_alter()
+ * @param array $field
+ *   A field definition array.
+ * @param \Drupal\Field\FieldInstance $instance
+ *   A field instance definition object.
+ *
+ * @return array
+ *   A form element to configure field synchronization.
+ */
+function translation_entity_field_sync_widget(array $field, FieldInstance $instance) {
+  $element = array();
+
+  if (!empty($field['settings']['column_groups']) && count($field['settings']['column_groups']) > 1) {
+    $options = array();
+    $default = array();
+
+    foreach ($field['settings']['column_groups'] as $group => $info) {
+      $options[$group] = $info['label'];
+      $default[$group] = !empty($info['translatable']) ? $group : FALSE;
+    }
+
+    $element = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Translatable elements'),
+      '#options' => $options,
+      '#default_value' => !empty($instance['settings']['translation_sync']) ? $instance['settings']['translation_sync'] : $default,
+    );
+  }
+
+  return $element;
+}
+
+/**
+ * (proxied) Implements hook_form_FORM_ID_alter().
  */
 function _translation_entity_form_language_content_settings_form_alter(array &$form, array &$form_state) {
   // Inject into the content language settings the translation settings if the
@@ -48,12 +81,122 @@ function _translation_entity_form_language_content_settings_form_alter(array &$f
           '#type' => 'checkbox',
           '#default_value' => $field['translatable'],
         );
+        $column_element = translation_entity_field_sync_widget($field, $instance);
+        if ($column_element) {
+          $form['settings'][$entity_type][$bundle]['columns'][$field_name] = $column_element;
+        }
       }
     }
   }
 
   $form['#validate'][] = 'translation_entity_form_language_content_settings_validate';
   $form['#submit'][] = 'translation_entity_form_language_content_settings_submit';
+}
+
+/**
+ * (proxied) Implements hook_preprocess_HOOK();
+ */
+function _translation_entity_preprocess_language_content_settings_table(&$variables) {
+  // Alter the 'build' variable injecting the translation settings if the user
+  // has the required permission.
+  if (!user_access('administer entity translation')) {
+    return;
+  }
+
+  $element = $variables['element'];
+  $build = &$variables['build'];
+
+  array_unshift($build['#header'], array('data' => t('Translatable'), 'class' => array('translatable')));
+  $rows = array();
+
+  foreach (element_children($element) as $bundle) {
+    $field_names = !empty($element[$bundle]['fields']) ? element_children($element[$bundle]['fields']) : array();
+    $checkbox_id = $element[$bundle]['translatable']['#id'];
+    $rows[$bundle] = $build['#rows'][$bundle];
+
+    $translatable = array(
+      'data' => $element[$bundle]['translatable'],
+      'class' => array('translatable'),
+    );
+    array_unshift($rows[$bundle]['data'], $translatable);
+
+    $rows[$bundle]['data'][1]['data']['#prefix'] = '<label for="' . $checkbox_id . '">';
+
+    foreach ($field_names as $field_name) {
+      $field_element = &$element[$bundle]['fields'][$field_name];
+      $rows[] = array(
+        'data' => array(
+          array(
+            'data' => drupal_render($field_element),
+            'class' => array('translatable'),
+          ),
+          array(
+            'data' => array(
+              '#prefix' => '<label for="' . $field_element['#id'] . '">',
+              '#suffix' => '</label>',
+              'bundle' => array(
+                '#prefix' => '<span class="element-invisible">',
+                '#suffix' => '</span> ',
+                '#markup' => check_plain($element[$bundle]['settings']['#label']),
+              ),
+              'field' => array(
+                '#markup' => check_plain($field_element['#label']),
+              ),
+            ),
+            'class' => array('field'),
+          ),
+          array(
+            'data' => '',
+            'class' => array('operations'),
+          ),
+        ),
+        'class' => array('field-settings'),
+      );
+
+      if (!empty($element[$bundle]['columns'][$field_name])) {
+        $column_element = &$element[$bundle]['columns'][$field_name];
+        foreach (element_children($column_element) as $key) {
+          $column_label = $column_element[$key]['#title'];
+          unset($column_element[$key]['#title']);
+          $rows[] = array(
+            'data' => array(
+              array(
+                'data' => drupal_render($column_element[$key]),
+                'class' => array('translatable'),
+              ),
+              array(
+                'data' => array(
+                  '#prefix' => '<label for="' . $column_element[$key]['#id'] . '">',
+                  '#suffix' => '</label>',
+                  'bundle' => array(
+                    '#prefix' => '<span class="element-invisible">',
+                    '#suffix' => '</span> ',
+                    '#markup' => check_plain($element[$bundle]['settings']['#label']),
+                  ),
+                  'field' => array(
+                    '#prefix' => '<span class="element-invisible">',
+                    '#suffix' => '</span> ',
+                    '#markup' => check_plain($field_element['#label']),
+                  ),
+                  'columns' => array(
+                    '#markup' => check_plain($column_label),
+                  ),
+                ),
+                'class' => array('column'),
+              ),
+              array(
+                'data' => '',
+                'class' => array('operations'),
+              ),
+            ),
+            'class' => array('column-settings'),
+          );
+        }
+      }
+    }
+  }
+
+  $build['#rows'] = $rows;
 }
 
 /**
@@ -104,6 +247,11 @@ function translation_entity_form_language_content_settings_submit(array $form, a
       if (!empty($bundle_settings['fields'])) {
         foreach ($bundle_settings['fields'] as $field_name => $translatable) {
           $bundle_settings['fields'][$field_name] = $translatable && $bundle_settings['translatable'];
+          // If we have column settings and no column is translatable, no point
+          // in making the field translatable.
+          if (isset($bundle_settings['columns'][$field_name]) && !array_filter($bundle_settings['columns'][$field_name])) {
+            $bundle_settings['fields'][$field_name] = FALSE;
+          }
         }
       }
     }

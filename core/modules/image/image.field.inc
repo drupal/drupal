@@ -19,6 +19,20 @@ function image_field_info() {
       'settings' => array(
         'uri_scheme' => file_default_scheme(),
         'default_image' => 0,
+        'column_groups' => array(
+          'file' => array(
+            'label' => t('File'),
+            'columns' => array('fid', 'width', 'height'),
+          ),
+          'alt' => array(
+            'label' => t('Alt'),
+            'translatable' => TRUE,
+          ),
+          'title' => array(
+            'label' => t('Title'),
+            'translatable' => TRUE,
+          ),
+        ),
       ),
       'instance_settings' => array(
         'file_extensions' => 'png gif jpg jpeg',
