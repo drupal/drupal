@@ -17,7 +17,7 @@ use Drupal\Core\Entity\EntityFormControllerNG;
 class CommentFormController extends EntityFormControllerNG {
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormControllerNG::form().
+   * Overrides \Drupal\Core\Entity\EntityFormControllerNG::form().
    */
   public function form(array $form, array &$form_state, EntityInterface $comment) {
     global $user;

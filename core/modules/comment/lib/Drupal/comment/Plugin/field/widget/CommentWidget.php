@@ -67,7 +67,7 @@ class CommentWidget extends WidgetBase {
         '#type' => 'details',
         '#group' => 'advanced',
         '#attributes' => array(
-          'class' => array('comment-' . $element['#entity_type'] . '-settings-form'),
+          'class' => array('comment-' . drupal_html_class($element['#entity_type']) . '-settings-form'),
         ),
         '#attached' => array(
           'library' => array('comment', 'drupal.comment'),

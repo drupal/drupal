@@ -92,4 +92,20 @@ class CommentFieldsTest extends CommentTestBase {
     $this->drupalLogin($this->web_user);
     $this->postComment($book_node, $this->randomName(), $this->randomName());
   }
+
+  /**
+   * Tests that comment module works correctly with plain text format.
+   */
+  function testCommentFormat() {
+    // Disable text processing for comments.
+    $this->drupalLogin($this->admin_user);
+    $edit = array('instance[settings][text_processing]' => 0);
+    $this->drupalPost('admin/structure/comments/comment/fields/comment_body', $edit, t('Save settings'));
+
+    // Post a comment without an explicit subject.
+    $this->drupalLogin($this->web_user);
+    $edit = array('comment_body[und][0][value]' => $this->randomName(8));
+    $this->drupalPost('node/' . $this->node->nid, $edit, t('Save'));
+  }
+
 }
