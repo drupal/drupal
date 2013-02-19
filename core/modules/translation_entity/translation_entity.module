@@ -803,7 +803,7 @@ function translation_entity_field_extra_fields() {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for field_ui_field_settings_form().
  */
 function translation_entity_form_field_ui_field_settings_form_alter(array &$form, array &$form_state, $form_id) {
   $field = $form['#field'];
@@ -838,6 +838,41 @@ function translation_entity_form_field_ui_field_settings_form_alter(array &$form
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function translation_entity_form_field_ui_field_edit_form_alter(array &$form, array &$form_state, $form_id) {
+  if ($form['#field']['translatable']) {
+    module_load_include('inc', 'translation_entity', 'translation_entity.admin');
+    $element = translation_entity_field_sync_widget($form['#field'], $form['#instance']);
+    if ($element) {
+      $form['instance']['settings']['translation_sync'] = $element;
+    }
+  }
+}
+
+/**
+ * Implements hook_field_info_alter().
+ */
+function translation_entity_field_info_alter(&$info) {
+  foreach ($info as $field_type => &$field_type_info) {
+    // By default no column has to be synchronized.
+    $field_type_info['settings'] += array('translation_sync' => FALSE);
+    // Synchronization can be enabled per instance.
+    $field_type_info['instance_settings'] += array('translation_sync' => FALSE);
+  }
+}
+
+/**
+ * Implements hook_field_attach_presave().
+ */
+function translation_entity_field_attach_presave(EntityInterface $entity) {
+  if (translation_entity_enabled($entity->entityType(), $entity->bundle())) {
+    $attributes = drupal_container()->get('request')->attributes;
+    drupal_container()->get('translation_entity.synchronizer')->synchronizeFields($entity, $attributes->get('working_langcode'), $attributes->get('source_langcode'));
+  }
+}
+
+/**
  * Implements hook_element_info_alter().
  */
 function translation_entity_element_info_alter(&$type) {
@@ -845,6 +880,7 @@ function translation_entity_element_info_alter(&$type) {
     $type['language_configuration']['#process'][] = 'translation_entity_language_configuration_element_process';
   }
 }
+
 /**
  * Returns a widget to enable entity translation per entity bundle.
  *
@@ -951,6 +987,14 @@ function translation_entity_form_language_content_settings_form_alter(array &$fo
 }
 
 /**
+ * Implements hook_preprocess_HOOK() for theme_language_content_settings_table().
+ */
+function translation_entity_preprocess_language_content_settings_table(&$variables) {
+  module_load_include('inc', 'translation_entity', 'translation_entity.admin');
+  _translation_entity_preprocess_language_content_settings_table($variables);
+}
+
+/**
  * Stores entity translation settings.
  *
  * @param array $settings
@@ -961,81 +1005,35 @@ function translation_entity_form_language_content_settings_form_alter(array &$fo
  *     language_save_default_configuration().
  *   - fields: An associative array with field names as keys and a boolean as
  *     value, indicating field translatability.
+ *   - columns: An associative array of translation synchronization settings
+ *     keyed by field names.
  */
 function translation_entity_save_settings($settings) {
   foreach ($settings as $entity_type => $entity_settings) {
     foreach ($entity_settings as $bundle => $bundle_settings) {
+      // Store bundle translatability.
       translation_entity_set_config($entity_type, $bundle, 'enabled', $bundle_settings['translatable']);
+
+      // Store column translatability.
+      if (!empty($bundle_settings['columns'])) {
+        foreach ($bundle_settings['columns'] as $field_name => $column_settings) {
+          $field = field_info_field($field_name);
+          $instance = field_info_instance($entity_type, $field_name, $bundle);
+          if ($field['translatable']) {
+            $instance['settings']['translation_sync'] = $column_settings;
+          }
+          // If the field is untransltable we need to reset the sync settings to
+          // their defaults.
+          else {
+            unset($instance['settings']['translation_sync']);
+          }
+          field_update_instance($instance);
+        }
+      }
     }
   }
+
   // Ensure entity and menu router information are correctly rebuilt.
   entity_info_cache_clear();
   menu_router_rebuild();
-}
-
-/**
- * Implements hook_preprocess_HOOK() for theme_language_content_settings_table().
- */
-function translation_entity_preprocess_language_content_settings_table(&$variables) {
-  // Alter the 'build' variable injecting the translation settings if the user
-  // has the required permission.
-  if (!user_access('administer entity translation')) {
-    return;
-  }
-
-  $element = $variables['element'];
-  $build = &$variables['build'];
-
-  array_unshift($build['#header'], array('data' => t('Translatable'), 'class' => array('translatable')));
-  $rows = array();
-
-  foreach (element_children($element) as $bundle) {
-    $field_names = !empty($element[$bundle]['fields']) ? element_children($element[$bundle]['fields']) : array();
-    $checkbox_id = $element[$bundle]['translatable']['#id'];
-    $rows[$bundle] = $build['#rows'][$bundle];
-
-    $translatable = array(
-      'data' => $element[$bundle]['translatable'],
-      'class' => array('translatable'),
-    );
-    array_unshift($rows[$bundle]['data'], $translatable);
-
-    $rows[$bundle]['data'][1]['data']['#prefix'] = '<label for="' . $checkbox_id . '">';
-
-    foreach ($field_names as $field_name) {
-      $field = $element[$bundle]['fields'][$field_name];
-      $checkbox_id = $field['#id'];
-
-      $rows[] = array(
-        'data' => array(
-          array(
-            'data' => drupal_render($field),
-            'class' => array('translatable'),
-          ),
-          array(
-            'data' => array(
-              '#prefix' => '<label for="' . $checkbox_id . '">',
-              '#suffix' => '</label>',
-              'bundle' => array(
-                '#prefix' => '<span class="element-invisible">',
-                '#suffix' => '</span> ',
-                '#markup' => check_plain($element[$bundle]['settings']['#label']),
-              ),
-              'field' => array(
-                '#markup' => check_plain($field['#label']),
-              ),
-            ),
-            'class' => array('field'),
-          ),
-          array(
-            'data' => '',
-            'class' => array('operations'),
-          ),
-        ),
-        'class' => array('field-settings'),
-      );
-    }
-  }
-
-  $build['#rows'] = $rows;
 }

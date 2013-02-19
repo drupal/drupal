@@ -11,12 +11,18 @@
   font-weight: bold;
 }
 
-#language-content-settings-form table .field {
+#language-content-settings-form table .field,
+#language-content-settings-form table .column {
   width: 24%;
   padding-left: 3em;
 }
 
-#language-content-settings-form table .field label {
+#language-content-settings-form table .column {
+  padding-left: 5em;
+}
+
+#language-content-settings-form table .field label,
+#language-content-settings-form table .column label {
   font-weight: normal;
 }
 
