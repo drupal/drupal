@@ -121,6 +121,11 @@ Plugin system
 - Kris Vanderwater 'EclipseGc' http://drupal.org/user/61203
 - Alex Bronstein 'effulgentsia' http://drupal.org/user/78040
 
+Queue system
+- James Gilliland 'neclimdul' http://drupal.org/user/48673
+- Károly Négyesi 'chx' http://drupal.org/user/9446
+- Mark Sonnabaum 'msonnabaum' http://drupal.org/user/75278
+
 Render system
 - Moshe Weitzman 'moshe weitzman' http://drupal.org/user/23
 - Alex Bronstein 'effulgentsia' http://drupal.org/user/78040
