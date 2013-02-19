@@ -8,9 +8,11 @@
 namespace Drupal\Core\Plugin\Context;
 
 use Drupal\Component\Plugin\Context\Context as ComponentContext;
-use Drupal\Component\Plugin\Exception\ContextException;
-use Drupal\Core\TypedData\TypedDataManager;
+use Drupal\Core\TypedData\ComplexDataInterface;
+use Drupal\Core\TypedData\ListInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\Validation\DrupalTranslator;
+use Symfony\Component\Validator\Validation;
 
 /**
  * A Drupal specific context wrapper class.
@@ -26,15 +28,29 @@ class Context extends ComponentContext {
    */
   public function getContextValue() {
     $typed_value = parent::getContextValue();
-    // If the data is of a primitive type, directly return the plain value.
-    // That way, e.g. a string will be return as plain PHP string.
-    if ($typed_value instanceof \Drupal\Core\TypedData\TypedDataInterface) {
-      $type_definition = typed_data()->getDefinition($typed_value->getType());
-      if (!empty($type_definition['primitive type'])) {
-        return $typed_value->getValue();
-      }
+    // If the typed data is complex, pass it on as typed data. Else pass on its
+    // plain value, such that e.g. a string will be directly returned as PHP
+    // string.
+    $is_complex = $typed_value instanceof ComplexDataInterface;
+    if (!$is_complex && $typed_value instanceof ListInterface) {
+      $is_complex = $typed_value[0] instanceof ComplexDataInterface;
+    }
+    // @todo We won't need the getType == entity check once #1868004 lands.
+    if ($typed_value instanceof TypedDataInterface && (!$is_complex || $typed_value->getType() == 'entity')) {
+      return $typed_value->getValue();
     }
     return $typed_value;
+  }
+
+  /**
+   * Implements \Drupal\Component\Plugin\Context\ContextInterface::setContextValue().
+   */
+  public function setContextValue($value) {
+    // Make sure the value set is a typed data object.
+    if (!empty($this->contextDefinition['type']) && !$value instanceof TypedDataInterface) {
+      $value = typed_data()->create($this->contextDefinition, $value);
+    }
+    parent::setContextValue($value);
   }
 
   /**
@@ -54,21 +70,31 @@ class Context extends ComponentContext {
   }
 
   /**
-   * Override for \Drupal\Component\Plugin\Context\Context::validate().
+   * Implements \Drupal\Component\Plugin\Context\ContextInterface::getConstraints().
    */
-  public function validate($value) {
+  public function getConstraints() {
     if (!empty($this->contextDefinition['type'])) {
-      $typed_data_manager = new TypedDataManager();
-      $typed_data = $typed_data_manager->create($this->contextDefinition, $value);
-      // If we do have a typed data definition, validate it and return the
-      // typed data instance instead.
-      $violations = $typed_data->validate();
-      if (count($violations) == 0) {
-        return $typed_data;
-      }
-      throw new ContextException("The context passed could not be validated through typed data.");
+      // If we do have typed data, leverage it for getting constraints.
+      return $this->getTypedContext()->getConstraints();
     }
-    return parent::validate($value);
+    return parent::getConstraints();
   }
 
+  /**
+   * Overrides \Drupal\Component\Plugin\Context\Context::getConstraints().
+   */
+  public function validate() {
+    $validator = Validation::createValidatorBuilder()
+      ->setTranslator(new DrupalTranslator())
+      ->getValidator();
+
+    // @todo We won't need to special case "entity" here once #1868004 lands.
+    if (!empty($this->contextDefinition['type']) && $this->contextDefinition['type'] == 'entity') {
+      $value = $this->getTypedContext();
+    }
+    else {
+      $value = $this->getContextValue();
+    }
+    return $validator->validateValue($value, $this->getConstraints());
+  }
 }

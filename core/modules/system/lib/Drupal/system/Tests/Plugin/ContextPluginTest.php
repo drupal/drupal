@@ -93,8 +93,8 @@ class ContextPluginTest extends DrupalUnitTestBase {
       $plugin->setContextValue('user', $node);
       $this->fail('The node context should fail validation for a user context.');
     }
-    catch (ContextException $e) {
-      $this->assertEqual($e->getMessage(), 'The context passed was not an instance of Drupal\user\Plugin\Core\Entity\User.');
+    catch (PluginException $e) {
+      $this->assertEqual($e->getMessage(), 'The provided context value does not pass validation.');
     }
 
     // Set an appropriate context value appropriately and check to make sure
@@ -157,13 +157,8 @@ class ContextPluginTest extends DrupalUnitTestBase {
     }
 
     // With no contexts set, try to get the context values.
-    try {
-      $complex_plugin->getContextValues();
-      $this->fail('There should not be any contexts set yet.');
-    }
-    catch (PluginException $e) {
-      $this->assertEqual($e->getMessage(), 'There are no set contexts.');
-    }
+    $values = $complex_plugin->getContextValues();
+    $this->assertIdentical(array_filter($values), array(), 'There are no set contexts.');
 
     // Set the user context value.
     $complex_plugin->setContextValue('user', $user);
@@ -178,13 +173,9 @@ class ContextPluginTest extends DrupalUnitTestBase {
     }
 
     // With only the user context set, try to get the context values.
-    try {
-      $complex_plugin->getContextValues();
-      $this->fail('The node context should not yet be set.');
-    }
-    catch (PluginException $e) {
-      $this->assertEqual($e->getMessage(), 'The node context is not yet set.');
-    }
+    $values = $complex_plugin->getContextValues();
+    $this->assertNull($values['node'], 'The node context is not yet set.');
+    $this->assertNotNull($values['user'], 'The user context is set');
 
     $complex_plugin->setContextValue('node', $node);
     $context_wrappers = $complex_plugin->getContexts();
