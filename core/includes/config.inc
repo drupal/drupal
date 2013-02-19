@@ -106,44 +106,55 @@ function config($name) {
  *   The storage to synchronize configuration from.
  * @param Drupal\Core\Config\StorageInterface $target_storage
  *   The storage to synchronize configuration to.
+ * @param bool $use_manifest
+ *   (optional) Whether to determine changes based on manifest files. Defaults
+ *   to TRUE.
  *
  * @return array|bool
- *   An assocative array containing the differences between source and target
+ *   An associative array containing the differences between source and target
  *   storage, or FALSE if there are no differences.
  */
-function config_sync_get_changes(StorageInterface $source_storage, StorageInterface $target_storage) {
-  // Config entities maintain 'manifest' files that list the objects they
-  // are currently handling. Each file is a simple indexed array of config
-  // object names. In order to generate a list of objects that have been
-  // created or deleted we need to open these files in both the source and
-  // target storage, generate an array of the objects, and compare them.
-  $source_config_data = array();
-  $target_config_data = array();
-  foreach ($source_storage->listAll('manifest') as $name) {
-    if ($source_manifest_data = $source_storage->read($name)) {
-      $source_config_data = array_merge($source_config_data, $source_manifest_data);
-    }
-
-    if ($target_manifest_data = $target_storage->read($name)) {
-      $target_config_data = array_merge($target_config_data, $target_manifest_data);
-    }
-  }
-
+function config_sync_get_changes(StorageInterface $source_storage, StorageInterface $target_storage, $use_manifest = TRUE) {
   $config_changes = array(
     'create' => array(),
     'change' => array(),
     'delete' => array(),
   );
+  $all_source_names = $source_storage->listAll();
+  $all_target_names = $target_storage->listAll();
 
-  foreach (array_diff_key($target_config_data, $source_config_data) as $name => $value) {
-    $config_changes['delete'][] = $value['name'];
+  // Config entities maintain 'manifest' files that list the objects they
+  // are currently handling. Each file is a simple indexed array of config
+  // object names. In order to generate a list of objects that have been
+  // created or deleted we need to open these files in both the source and
+  // target storage, generate an array of the objects, and compare them.
+  if ($use_manifest) {
+    $source_config_data = array();
+    $target_config_data = array();
+    foreach ($source_storage->listAll('manifest') as $name) {
+      if ($source_manifest_data = $source_storage->read($name)) {
+        $source_config_data = array_merge($source_config_data, $source_manifest_data);
+      }
+
+      if ($target_manifest_data = $target_storage->read($name)) {
+        $target_config_data = array_merge($target_config_data, $target_manifest_data);
+      }
+    }
+
+    foreach (array_diff_key($target_config_data, $source_config_data) as $name => $value) {
+      $config_changes['delete'][] = $value['name'];
+    }
+
+    foreach (array_diff_key($source_config_data, $target_config_data) as $name => $value) {
+      $config_changes['create'][] = $value['name'];
+    }
+  }
+  else {
+    $config_changes['delete'] = array_diff($all_target_names, $all_source_names);
+    $config_changes['create'] = array_diff($all_source_names, $all_target_names);
   }
 
-  foreach (array_diff_key($source_config_data, $target_config_data) as $name => $value) {
-    $config_changes['create'][] = $value['name'];
-  }
-
-  foreach (array_intersect($source_storage->listAll(), $target_storage->listAll()) as $name) {
+  foreach (array_intersect($all_source_names, $all_target_names) as $name) {
     // Ignore manifest files
     if (substr($name, 0, 9) != 'manifest.') {
       $source_config_data = $source_storage->read($name);
@@ -200,6 +211,7 @@ function config_sync_changes(array $config_changes, StorageInterface $source_sto
 function config_import() {
   // Retrieve a list of differences between staging and the active configuration.
   $source_storage = drupal_container()->get('config.storage.staging');
+  $snapshot_storage = drupal_container()->get('config.storage.snapshot');
   $target_storage = drupal_container()->get('config.storage');
 
   $config_changes = config_sync_get_changes($source_storage, $target_storage);
@@ -220,6 +232,7 @@ function config_import() {
   try {
     $remaining_changes = config_import_invoke_owner($config_changes, $source_storage, $target_storage);
     config_sync_changes($remaining_changes, $source_storage, $target_storage);
+    config_import_create_snapshot($target_storage, $snapshot_storage);
   }
   catch (ConfigException $e) {
     watchdog_exception('config_import', $e);
@@ -228,6 +241,21 @@ function config_import() {
   lock()->release(CONFIG_IMPORT_LOCK);
 
   return $success;
+}
+
+/**
+ * Creates a configuration snapshot following a successful import.
+ *
+ * @param Drupal\Core\Config\StorageInterface $source_storage
+ *   The storage to synchronize configuration from.
+ * @param Drupal\Core\Config\StorageInterface $target_storage
+ *   The storage to synchronize configuration to.
+ */
+function config_import_create_snapshot(StorageInterface $source_storage, StorageInterface $snapshot_storage) {
+  $snapshot_storage->deleteAll();
+  foreach ($source_storage->listAll() as $name) {
+    $snapshot_storage->write($name, $source_storage->read($name));
+  }
 }
 
 /**

@@ -19,7 +19,7 @@ class ConfigImportTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('config_test');
+  public static $modules = array('config_test', 'system');
 
   public static function getInfo() {
     return array(
@@ -31,6 +31,8 @@ class ConfigImportTest extends DrupalUnitTestBase {
 
   function setUp() {
     parent::setUp();
+
+    $this->installSchema('system', 'config_snapshot');
 
     config_install_default_config('module', 'config_test');
     // Installing config_test's default configuration pollutes the global

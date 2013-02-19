@@ -1205,6 +1205,26 @@ function system_schema() {
     ),
   );
 
+  $schema['config_snapshot'] = array(
+    'description' => 'Stores a snapshot of the last imported configuration.',
+    'fields' => array(
+      'name' => array(
+        'description' => 'The identifier for the config object (the name of the file, minus the file extension).',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'data' => array(
+        'description' => 'The raw data for this configuration object.',
+        'type' => 'blob',
+        'not null' => TRUE,
+        'size' => 'big',
+      ),
+    ),
+    'primary key' => array('name'),
+  );
+
   return $schema;
 }
 
@@ -2092,6 +2112,33 @@ function system_update_8048() {
     ),
   );
   db_add_field('menu_links', 'uuid', $column, $keys);
+}
+
+/**
+ * Create the 'config_snapshot' table.
+ */
+function system_update_8049() {
+  $table = array(
+    'description' => 'Stores a snapshot of the last imported configuration.',
+    'fields' => array(
+      'name' => array(
+        'description' => 'The identifier for the config object (the name of the file, minus the file extension).',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'data' => array(
+        'description' => 'The raw data for this configuration object.',
+        'type' => 'blob',
+        'not null' => TRUE,
+        'size' => 'big',
+      ),
+    ),
+    'primary key' => array('name'),
+  );
+
+  db_create_table('config_snapshot', $table);
 }
 
 /**
