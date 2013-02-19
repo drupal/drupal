@@ -91,27 +91,31 @@ class BlockTest extends WebTestBase {
       }
     }
 
-    // Add a new custom block by filling out the input form on the admin/structure/block/add page.
+    // Add a new custom block by filling out the input form on block/add/basic.
     $info = strtolower($this->randomName(8));
+    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $values = array(
+      'info' => $info,
+      "block_body[$langcode][0][value]" => $this->randomName(8)
+    );
+    $this->drupalPost('block/add/basic', $values, t('Save'));
     $custom_block['machine_name'] = $info;
-    $custom_block['info'] = $info;
     $custom_block['label'] = $this->randomName(8);
-    $custom_block['body[value]'] = $this->randomName(32);
     $custom_block['region'] = $this->regions[0];
-    $this->drupalPost("admin/structure/block/list/block_plugin_ui:$default_theme/add/custom_blocks", $custom_block, t('Save block'));
+    $this->drupalPost(NULL, $custom_block, t('Save block'));
     $block = entity_load('block', $default_theme . '.' . $info);
 
     // Confirm that the custom block has been created, and then query the created bid.
-    $this->assertText(t('The block configuration has been saved.'), 'Custom block successfully created.');
+    $this->assertText(t('The block configuration has been saved.'), 'Custom block instance successfully created.');
 
-    // Check that entity_view() returns the correct title and content.
-    // @todo This assumes that a block's content can be rendered without its
-    //   wrappers. If this is a reasonable expectation, it should be documented
-    //   elsewhere.
+    // Check that block_block_view() returns the correct content.
     $data = entity_view($block, 'content');
-    $definition = $block->getPlugin()->getDefinition();
-    $config = $definition['settings'];
-    $this->assertEqual(check_markup($custom_block['body[value]'], $config['format']), render($data), 'BlockInterface::build() provides correct block content.');
+    $output = render($data);
+
+    $this->drupalSetcontent($output);
+    $elements = $this->xpath('//div[@class=:class]', array(':class' => 'field-item even'));
+
+    $this->assertEqual($values["block_body[$langcode][0][value]"], $elements[0], 'BlockInterface::build() provides correct block content.');
 
     // Check whether the block can be moved to all available regions.
     $custom_block['module'] = 'block';
@@ -144,35 +148,42 @@ class BlockTest extends WebTestBase {
   public function testCustomBlockFormat() {
     $default_theme = variable_get('theme_default', 'stark');
 
-    // Add a new custom block by filling out the input form on the admin/structure/block/add page.
+    // Add a new custom block by filling out the input form on block/add/basic.
     $info = strtolower($this->randomName(8));
+    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $values = array(
+      'info' => $info,
+      "block_body[$langcode][0][value]" => '<h1>Full HTML</h1>',
+      "block_body[$langcode][0][format]" => 'full_html',
+    );
+    $this->drupalPost('block/add/basic', $values, t('Save'));
+    // Load the block up from the database.
+    $blocks = entity_load_multiple('custom_block');
+    $loaded_block = end($blocks);
     $custom_block['machine_name'] = $info;
-    $custom_block['info'] = $info;
     $custom_block['label'] = $this->randomName(8);
-    $custom_block['body[value]'] = '<h1>Full HTML</h1>';
-    $full_html_format = filter_format_load('full_html');
-    $custom_block['body[format]'] = $full_html_format->format;
     $custom_block['region'] = $this->regions[0];
-    $this->drupalPost("admin/structure/block/list/block_plugin_ui:$default_theme/add/custom_blocks", $custom_block, t('Save block'));
+    $this->drupalPost(NULL, $custom_block, t('Save block'));
 
     // Set the created custom block to a specific region.
     $edit['blocks[' . $default_theme . '.' . $custom_block['machine_name'] . '][region]'] = $this->regions[1];
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
-    // Confirm that the custom block is being displayed using configured text format.
+    // Confirm that the custom block is being displayed using configured text
+    // format.
     $this->drupalGet('');
     $this->assertRaw('<h1>Full HTML</h1>', 'Custom block successfully being displayed using Full HTML.');
 
-    // Confirm that a user without access to Full HTML can not see the body field,
-    // but can still submit the form without errors.
+    // Confirm that a user without access to Full HTML can not see the body
+    // field, but can still submit the form without errors.
     $block_admin = $this->drupalCreateUser(array('administer blocks'));
     $this->drupalLogin($block_admin);
-    $this->drupalGet("admin/structure/block/manage/$default_theme.$info/configure");
-    $this->assertFieldByXPath("//textarea[@name='body[value]' and @disabled='disabled']", t('This field has been disabled because you do not have sufficient permissions to edit it.'), 'Body field contains denied message');
-    $this->drupalPost("admin/structure/block/manage/$default_theme.$info/configure", array(), t('Save block'));
+    $this->drupalGet("block/" . $loaded_block->id() . "/edit");
+    $this->assertFieldByXPath("//textarea[@name='block_body[und][0][value]' and @disabled='disabled']", t('This field has been disabled because you do not have sufficient permissions to edit it.'), 'Body field contains denied message');
     $this->assertNoText(t('Ensure that each block description is unique.'));
 
-    // Confirm that the custom block is still being displayed using configured text format.
+    // Confirm that the custom block is still being displayed using configured
+    // text format.
     $this->drupalGet('');
     $this->assertRaw('<h1>Full HTML</h1>', 'Custom block successfully being displayed using Full HTML.');
   }

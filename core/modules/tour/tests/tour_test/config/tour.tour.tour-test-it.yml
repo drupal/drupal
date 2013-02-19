@@ -1,0 +1,14 @@
+id: tour-test-it
+label: Tour test italian
+langcode: it
+paths:
+  - tour-test-1
+tips:
+  tour-test-1-it:
+    id: tour-test-1-it
+    plugin: text
+    label: La pioggia cade in spagna
+    body: Per lo più in pianura.
+    weight: "1"
+    attributes:
+      data-id: tour-test-1

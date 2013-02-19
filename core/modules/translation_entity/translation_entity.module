@@ -224,7 +224,8 @@ function translation_entity_menu_alter(array &$items) {
       // for this entity type. In some cases the actual base path might not have
       // a menu loader associated, hence we need to check also for the plain "%"
       // variant. See for instance comment_menu().
-      if (!isset($items[$path]) && !isset($items[_translation_entity_menu_strip_loaders($path)])) {
+      if (!isset($items[$path]) && !isset($items["$path/edit"])
+          && !isset($items[_translation_entity_menu_strip_loaders($path)])) {
         unset(
           $items["$path/translations"],
           $items["$path/translations/add/%language/%language"],

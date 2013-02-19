@@ -374,7 +374,6 @@ function comment_menu() {
   $items['admin/content/comment/new'] = array(
     'title' => 'Published comments',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
   $items['admin/content/comment/approval'] = array(
     'title' => 'Unapproved comments',
@@ -392,7 +391,6 @@ function comment_menu() {
   $items['comment/%/view'] = array(
     'title' => 'View comment',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
   // Every other comment path uses %, but this one loads the comment directly,
   // so we don't end up loading it twice (in the page and access callback).
@@ -403,7 +401,6 @@ function comment_menu() {
     'access callback' => 'comment_access',
     'access arguments' => array('edit', 1),
     'type' => MENU_LOCAL_TASK,
-    'weight' => 0,
   );
   $items['comment/%/approve'] = array(
     'title' => 'Approve',
@@ -411,7 +408,7 @@ function comment_menu() {
     'page arguments' => array(1),
     'access arguments' => array('administer comments'),
     'file' => 'comment.pages.inc',
-    'weight' => 1,
+    'weight' => 10,
   );
   $items['comment/%/delete'] = array(
     'title' => 'Delete',
@@ -420,7 +417,7 @@ function comment_menu() {
     'access arguments' => array('administer comments'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'comment.admin.inc',
-    'weight' => 2,
+    'weight' => 20,
   );
   $items['comment/reply/%/%comment_entity_reply/%'] = array(
     'title' => 'Add new comment',

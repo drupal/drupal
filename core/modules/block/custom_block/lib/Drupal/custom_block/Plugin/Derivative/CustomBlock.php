@@ -40,17 +40,14 @@ class CustomBlock implements DerivativeInterface {
    * Retrieves custom block definitions from storage.
    */
   public function getDerivativeDefinitions(array $base_plugin_definition) {
-    $results = db_query('SELECT * FROM {block_custom}');
-    foreach ($results as $result) {
-      $this->derivatives[$result->bid] = $base_plugin_definition;
-      $this->derivatives[$result->bid]['settings'] = array(
-        'info' => $result->info,
-        'body' => $result->body,
-        'format' => $result->format,
+    $custom_blocks = entity_load_multiple('custom_block');
+    foreach ($custom_blocks as $custom_block) {
+      $this->derivatives[$custom_block->uuid->value] = $base_plugin_definition;
+      $this->derivatives[$custom_block->uuid->value]['settings'] = array(
+        'info' => $custom_block->info->value,
       ) + $base_plugin_definition['settings'];
-      $this->derivatives[$result->bid]['subject'] = $result->info;
+      $this->derivatives[$custom_block->uuid->value]['subject'] = $custom_block->info->value;
     }
-    $this->derivatives['custom_block'] = $base_plugin_definition;
     return $this->derivatives;
   }
 }

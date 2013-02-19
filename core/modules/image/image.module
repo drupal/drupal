@@ -121,7 +121,6 @@ function image_menu() {
     'page callback' => 'image_style_list',
     'access arguments' => array('administer image styles'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => 1,
     'file' => 'image.admin.inc',
   );
   $items['admin/config/media/image-styles/add'] = array(

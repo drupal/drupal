@@ -193,7 +193,6 @@ function locale_menu() {
   );
   $items['admin/config/regional/translate/translate'] = array(
     'title' => 'Translate',
-    'weight' => -10,
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/config/regional/translate/import'] = array(
@@ -219,7 +218,7 @@ function locale_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('locale_translate_settings'),
     'access arguments' => array('translate interface'),
-    'weight' => 40,
+    'weight' => 100,
     'type' => MENU_LOCAL_TASK,
     'file' => 'locale.pages.inc',
   );

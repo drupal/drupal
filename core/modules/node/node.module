@@ -1658,7 +1658,6 @@ function node_menu() {
   $items['admin/content/node'] = array(
     'title' => 'Content',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
 
   $items['admin/reports/status/rebuild'] = array(
@@ -1682,7 +1681,6 @@ function node_menu() {
   $items['admin/structure/types/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
   $items['admin/structure/types/add'] = array(
     'title' => 'Add content type',
@@ -1757,7 +1755,6 @@ function node_menu() {
   $items['node/%node/view'] = array(
     'title' => 'View',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
   $items['node/%node/edit'] = array(
     'title' => 'Edit',
@@ -1765,7 +1762,6 @@ function node_menu() {
     'page arguments' => array(1),
     'access callback' => 'node_access',
     'access arguments' => array('update', 1),
-    'weight' => 0,
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'node.pages.inc',
@@ -1776,7 +1772,7 @@ function node_menu() {
     'page arguments' => array('node_delete_confirm', 1),
     'access callback' => 'node_access',
     'access arguments' => array('delete', 1),
-    'weight' => 1,
+    'weight' => 10,
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_INLINE,
     'file' => 'node.pages.inc',
@@ -1787,7 +1783,7 @@ function node_menu() {
     'page arguments' => array(1),
     'access callback' => '_node_revision_access',
     'access arguments' => array(1),
-    'weight' => 2,
+    'weight' => 20,
     'type' => MENU_LOCAL_TASK,
     'file' => 'node.pages.inc',
   );
@@ -1818,14 +1814,14 @@ function node_menu() {
 }
 
 /**
- * Implements hook_menu_local_tasks_alter().
+ * Implements hook_menu_local_tasks().
  */
-function node_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+function node_menu_local_tasks(&$data, $router_item, $root_path) {
   // Add action link to 'node/add' on 'admin/content' page.
   if ($root_path == 'admin/content') {
     $item = menu_get_item('node/add');
     if ($item['access']) {
-      $data['actions']['output'][] = array(
+      $data['actions'][] = array(
         '#theme' => 'menu_local_action',
         '#link' => $item,
       );

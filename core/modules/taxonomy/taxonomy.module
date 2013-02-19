@@ -266,7 +266,6 @@ function taxonomy_menu() {
   $items['admin/structure/taxonomy/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
   $items['admin/structure/taxonomy/add'] = array(
     'title' => 'Add vocabulary',
@@ -310,7 +309,7 @@ function taxonomy_menu() {
     'access callback' => 'entity_page_access',
     'access arguments' => array(2, 'delete'),
     'type' => MENU_LOCAL_TASK,
-    'weight' => 11,
+    'weight' => 20,
     'file' => 'taxonomy.admin.inc',
   );
   $items['taxonomy/term/%taxonomy_term/feed'] = array(
@@ -345,7 +344,6 @@ function taxonomy_menu() {
   $items['admin/structure/taxonomy/%taxonomy_vocabulary/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -20,
   );
   $items['admin/structure/taxonomy/%taxonomy_vocabulary/edit'] = array(
     'title' => 'Edit',
@@ -354,7 +352,6 @@ function taxonomy_menu() {
     'access callback' => 'entity_page_access',
     'access arguments' => array(3, 'update'),
     'type' => MENU_LOCAL_TASK,
-    'weight' => -10,
     'file' => 'taxonomy.admin.inc',
   );
 

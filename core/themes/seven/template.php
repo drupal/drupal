@@ -34,7 +34,7 @@ function seven_preprocess_page(&$vars) {
   unset($vars['primary_local_tasks']['#secondary']);
   $vars['secondary_local_tasks'] = array(
     '#theme' => 'menu_local_tasks',
-    '#secondary' => $vars['tabs']['#secondary'],
+    '#secondary' => isset($vars['tabs']['#secondary']) ? $vars['tabs']['#secondary'] : '',
   );
 }
 
@@ -58,6 +58,29 @@ function seven_node_add_list($variables) {
   }
   else {
     $output = '<p>' . t('You have not created any content types yet. Go to the <a href="@create-content">content type creation page</a> to add a new content type.', array('@create-content' => url('admin/structure/types/add'))) . '</p>';
+  }
+  return $output;
+}
+
+/**
+ * Overrides theme_custom_block_add_list().
+ *
+ * Displays the list of available custom block types for creation.
+ */
+function seven_custom_block_add_list($variables) {
+  $content = $variables['content'];
+  $output = '';
+  if ($content) {
+    $output = '<ul class="admin-list">';
+    foreach ($content as $type) {
+      $output .= '<li class="clearfix">';
+      $content = '<span class="label">' . check_plain($type->label()) . '</span>';
+      $content .= '<div class="description">' . filter_xss_admin($type->description) . '</div>';
+      $options['html'] = TRUE;
+      $output .= l($content, 'block/add/' . $type->id(), $options);
+      $output .= '</li>';
+    }
+    $output .= '</ul>';
   }
   return $output;
 }

@@ -31,3 +31,4 @@ dependencies[] = file
 dependencies[] = rdf
 dependencies[] = views
 dependencies[] = views_ui
+dependencies[] = tour

@@ -149,7 +149,7 @@ function book_menu() {
     'page arguments' => array('book_admin_settings'),
     'access arguments' => array('administer site configuration'),
     'type' => MENU_LOCAL_TASK,
-    'weight' => 8,
+    'weight' => 100,
     'file' => 'book.admin.inc',
   );
   $items['admin/content/book/%node'] = array(

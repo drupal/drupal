@@ -82,7 +82,6 @@ function menu_menu() {
   $items['admin/structure/menu/list'] = array(
     'title' => 'List menus',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
   $items['admin/structure/menu/add'] = array(
     'title' => 'Add menu',
@@ -97,7 +96,7 @@ function menu_menu() {
     'page arguments' => array('menu_configure'),
     'access arguments' => array('administer menu'),
     'type' => MENU_LOCAL_TASK,
-    'weight' => 5,
+    'weight' => 100,
     'file' => 'menu.admin.inc',
   );
   $items['admin/structure/menu/manage/%menu'] = array(

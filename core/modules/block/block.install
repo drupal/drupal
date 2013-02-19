@@ -4,6 +4,7 @@
  * @file
  * Install, update and uninstall functions for the block module.
  */
+use Drupal\Component\Uuid\Uuid;
 
 /**
  * Implements hook_schema().
@@ -42,7 +43,7 @@ function block_update_dependencies() {
   );
   // Migrate users.data after User module prepared the tables.
   $dependencies['block'][8005] = array(
-    'user' => 8011,
+    'user' => 8016,
   );
   return $dependencies;
 }
@@ -191,6 +192,246 @@ function block_update_8005() {
  */
 function block_update_8006() {
   update_module_enable(array('custom_block'));
+}
+
+/**
+ * Migrate {block_custom} to {custom_block}.
+ *
+ * Note this table now resides in custom_block_schema() but for 7.x to 8.x
+ * upgrades, changes must be made from block module as custom_block module is
+ * only enabled during upgrade process.
+ */
+function block_update_8007() {
+  // Add the {custom_block} table.
+  db_create_table('custom_block', array(
+    'description' => 'Stores contents of custom-made blocks.',
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => "The block's {custom_block}.id.",
+      ),
+      'uuid' => array(
+        'description' => 'Unique Key: Universally unique identifier for this entity.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+      ),
+      'info' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Block description.',
+      ),
+      // Defaults to NULL in order to avoid a brief period of potential
+      // deadlocks on the index.
+      'revision_id' => array(
+        'description' => 'The current {block_custom_revision}.revision_id version identifier.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => NULL,
+      ),
+      'type' => array(
+        'description' => 'The type of this custom block.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'langcode' => array(
+        'description' => 'The {language}.langcode of this node.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('id'),
+    'indexes' => array(
+      'block_custom_type'   => array(array('type', 4)),
+    ),
+    'unique keys' => array(
+      'revision_id' => array('revision_id'),
+      'uuid' => array('uuid'),
+      'info' => array('info'),
+    ),
+    'foreign keys' => array(
+      'custom_block_revision' => array(
+        'table' => 'custom_block_revision',
+        'columns' => array('revision_id' => 'revision_id'),
+      ),
+    ),
+  ));
+  // Add the {custom_block_revision} table.
+  db_create_table('custom_block_revision', array(
+    'description' => 'Stores contents of custom-made blocks.',
+    'fields' => array(
+      'id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "The block's {custom_block}.id.",
+      ),
+      // Defaults to NULL in order to avoid a brief period of potential
+      // deadlocks on the index.
+      'revision_id' => array(
+        'description' => 'The current version identifier.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'log' => array(
+        'description' => 'The log entry explaining the changes in this version.',
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+      ),
+      'info' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Block description.',
+      ),
+    ),
+    'primary key' => array('revision_id'),
+  ));
+  // Populate the {custom_block} and {custom_block_revision} table.
+  $results = db_select('block_custom', 'bc')->fields('bc')->execute();
+
+  $uuid = new Uuid();
+  $execute = FALSE;
+  $block_insert = db_insert('custom_block')->fields(array(
+    'id',
+    'uuid',
+    'info',
+    'revision_id',
+    'langcode',
+    'type'
+  ));
+  $revision_insert = db_insert('custom_block_revision')->fields(array(
+    'id',
+    'revision_id',
+    'log',
+    'info'
+  ));
+  foreach ($results as $block) {
+    $custom_block = array(
+      'id' => $block->bid,
+      'uuid' => $uuid->generate(),
+      'info' => $block->info,
+      'revision_id' => $block->bid,
+      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'type' => 'basic'
+    );
+    $revision = array(
+      'id' => $block->bid,
+      'revision_id' => $block->bid,
+      'info' => $block->info,
+      'log' => 'Initial value from 7.x to 8.x upgrade'
+    );
+    $block_insert->values($custom_block);
+    $revision_insert->values($revision);
+    // We have something to execute.
+    $execute = TRUE;
+  }
+  if ($execute) {
+    $block_insert->execute();
+    $revision_insert->execute();
+  }
+}
+
+/**
+ * Migrate {block_custom}.body and {block_custom}.format to block_body field.
+ */
+function block_update_8008() {
+  $sandbox['#finished'] = 0;
+
+  if (!isset($sandbox['total'])) {
+    // Initial invocation.
+
+    // First, create the body field.
+    $body_field = array(
+      'field_name' => 'block_body',
+      'type' => 'text_with_summary',
+      'entity_types' => array('custom_block'),
+      'module' => 'text',
+      'cardinality' => 1,
+    );
+    _update_7000_field_create_field($body_field);
+
+    $instance = array(
+      'field_name' => 'block_body',
+      'entity_type' => 'custom_block',
+      'bundle' => 'basic',
+      'label' => 'Block body',
+      'widget' => array('type' => 'text_textarea_with_summary'),
+      'settings' => array('display_summary' => FALSE),
+    );
+    _update_7000_field_create_instance($body_field, $instance);
+
+    // Initialize state for future calls.
+    $sandbox['last'] = 0;
+    $sandbox['count'] = 0;
+
+    $query = db_select('block_custom', 'bc');
+    $sandbox['total'] = $query->countQuery()->execute()->fetchField();
+
+    $sandbox['body_field_id'] = $body_field['id'];
+  }
+  else {
+    // Subsequent invocations.
+
+    $found = FALSE;
+    if ($sandbox['total']) {
+      // Operate on each block in turn.
+      $batch_size = 200;
+      $query = db_select('block_custom', 'bc');
+      $query
+        ->fields('bc', array('bid', 'body', 'format'))
+        ->condition('bc.bid', $sandbox['last'], '>')
+        ->orderBy('bc.bid', 'ASC')
+        ->range(0, $batch_size);
+      $blocks = $query->execute();
+
+      // Load the block, set up 'body' and save the field data.
+      foreach ($blocks as $block) {
+        $found = TRUE;
+
+        $data = array(
+          LANGUAGE_NOT_SPECIFIED => array(
+            array(
+              'format' => $block->format,
+              'value' => $block->body
+            )
+          )
+        );
+        // This is a core update and no contrib modules are enabled yet, so
+        // we can assume default field storage for a faster update.
+        _update_7000_field_sql_storage_write('custom_block', 'basic', $block->bid, $block->bid, 'block_body', $data);
+
+        $sandbox['last'] = $block->bid;
+        $sandbox['count'] += 1;
+      }
+
+      $sandbox['#finished'] = min(0.99, $sandbox['count'] / $sandbox['total']);
+    }
+
+    if (!$found) {
+      // All blocks are processed.
+
+      // Remove the now-obsolete body info from block_custom.
+      db_drop_field('block_custom', 'body');
+      db_drop_field('block_custom', 'format');
+
+      // We're done.
+      $sandbox['#finished'] = 1;
+    }
+  }
 }
 
 /**

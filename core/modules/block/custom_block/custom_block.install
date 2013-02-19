@@ -10,21 +10,20 @@
  */
 function custom_block_schema() {
   $schema = array();
-  $schema['block_custom'] = array(
+  $schema['custom_block'] = array(
     'description' => 'Stores contents of custom-made blocks.',
     'fields' => array(
-      'bid' => array(
+      'id' => array(
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'description' => "The block's {block}.bid.",
+        'description' => "The block's {custom_block}.id.",
       ),
-      'body' => array(
-        'type' => 'text',
+      'uuid' => array(
+        'description' => 'Unique Key: Universally unique identifier for this entity.',
+        'type' => 'varchar',
+        'length' => 128,
         'not null' => FALSE,
-        'size' => 'big',
-        'description' => 'Block contents.',
-        'translatable' => TRUE,
       ),
       'info' => array(
         'type' => 'varchar',
@@ -33,17 +32,80 @@ function custom_block_schema() {
         'default' => '',
         'description' => 'Block description.',
       ),
-      'format' => array(
-        'type' => 'varchar',
-        'length' => 255,
+      // Defaults to NULL in order to avoid a brief period of potential
+      // deadlocks on the index.
+      'revision_id' => array(
+        'description' => 'The current {block_custom_revision}.revision_id version identifier.',
+        'type' => 'int',
+        'unsigned' => TRUE,
         'not null' => FALSE,
-        'description' => 'The {filter_format}.format of the block body.',
+        'default' => NULL,
+      ),
+      'type' => array(
+        'description' => 'The type of this custom block.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'langcode' => array(
+        'description' => 'The {language}.langcode of this node.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
       ),
     ),
+    'primary key' => array('id'),
+    'indexes' => array(
+      'block_custom_type'   => array(array('type', 4)),
+    ),
     'unique keys' => array(
+      'revision_id' => array('revision_id'),
+      'uuid' => array('uuid'),
       'info' => array('info'),
     ),
-    'primary key' => array('bid'),
+    'foreign keys' => array(
+      'custom_block_revision' => array(
+        'table' => 'custom_block_revision',
+        'columns' => array('revision_id' => 'revision_id'),
+      ),
+    ),
+  );
+
+  $schema['custom_block_revision'] = array(
+    'description' => 'Stores contents of custom-made blocks.',
+    'fields' => array(
+      'id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "The block's {custom_block}.id.",
+      ),
+      // Defaults to NULL in order to avoid a brief period of potential
+      // deadlocks on the index.
+      'revision_id' => array(
+        'description' => 'The current version identifier.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'log' => array(
+        'description' => 'The log entry explaining the changes in this version.',
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+      ),
+      'info' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Block description.',
+      ),
+    ),
+    'primary key' => array('revision_id'),
   );
   return $schema;
 }

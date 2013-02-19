@@ -35,7 +35,6 @@ function views_ui_menu() {
 
   $items['admin/structure/views/list'] = array(
     'title' => 'List',
-    'weight' => -10,
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'access arguments' => array('administer views'),
   );
@@ -68,7 +67,6 @@ function views_ui_menu() {
     'title' => 'Edit view',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
-    'weight' => -10,
     'access arguments' => array('administer views'),
   );
   $items['admin/structure/views/view/%/preview/%'] = array(
@@ -101,7 +99,6 @@ function views_ui_menu() {
     'description' => 'Overview of fields used in all views.',
     'page callback' => 'NOT_USED',
     'type' => MENU_LOCAL_TASK,
-    'weight' => 0,
     'access arguments' => array('administer views'),
   );
 

@@ -23,7 +23,6 @@ contact.settings:
   mapping:
     "default_category":
       type: string
-      required: yes
     "flood":
       type: mapping
       mapping:
