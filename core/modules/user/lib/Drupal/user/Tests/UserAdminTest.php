@@ -99,4 +99,54 @@ class UserAdminTest extends WebTestBase {
     $this->assertEqual($account1->status, 1, 'User D unblocked');
     $this->assertMail("to", $account1->mail, "Activation mail sent to user D");
   }
+
+  /**
+   * Tests the alternate notification e-mail address for user mails.
+   */
+  function testNotificationEmailAddress() {
+    // Test that the Notification E-mail address field is on the config page.
+    $admin_user = $this->drupalCreateUser(array('administer users'));
+    $this->drupalLogin($admin_user);
+    $this->drupalGet('admin/config/people/accounts');
+    $this->assertRaw('id="edit-mail-notification-address"', 'Notification E-mail address field exists');
+    $this->drupalLogout();
+
+    // Test custom user registration approval email address(es).
+    $config = config('user.settings');
+    // Allow users to register with admin approval.
+    $config
+      ->set('verify_mail', TRUE)
+      ->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)
+      ->save();
+    // Set the site and notification email addresses.
+    $system = config('system.site');
+    $server_address = $this->randomName() . '@example.com';
+    $notify_address = $this->randomName() . '@example.com';
+    $system
+      ->set('mail', $server_address)
+      ->set('mail_notification', $notify_address)
+      ->save();
+    // Register a new user account.
+    $edit = array();
+    $edit['name'] = $name = $this->randomName();
+    $edit['mail'] = $mail = $edit['name'] . '@example.com';
+    $this->drupalPost('user/register', $edit, t('Create new account'));
+    $subject = 'Account details for ' . $edit['name'] . ' at ' . $system->get('name') . ' (pending admin approval)';
+    // Ensure that admin notification mail is sent to the configured
+    // Notification E-mail address.
+    $admin_mail = $this->drupalGetMails(array(
+      'to' => $notify_address,
+      'from' => $server_address,
+      'subject' => $subject,
+    ));
+    $this->assertTrue(count($admin_mail), 'New user mail to admin is sent to configured Notification E-mail address');
+    // Ensure that user notification mail is sent from the configured
+    // Notification E-mail address.
+    $user_mail = $this->drupalGetMails(array(
+      'to' => $edit['mail'],
+      'from' => $notify_address,
+      'subject' => $subject,
+    ));
+    $this->assertTrue(count($user_mail), 'New user mail to user is sent from configured Notification E-mail address');
+  }
 }
