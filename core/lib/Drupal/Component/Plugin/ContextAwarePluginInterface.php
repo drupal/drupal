@@ -8,34 +8,42 @@
 namespace Drupal\Component\Plugin;
 
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Component\Plugin\Context\Context;
 
 /**
  * Interface for defining context aware plugins.
+ *
+ * Context aware plugins can specify an array of context definitions keyed by
+ * context name at the plugin definition under the "context" key.
  */
 interface ContextAwarePluginInterface extends PluginInspectionInterface {
 
   /**
    * Gets the context definitions of the plugin.
    *
-   * @return array|null
-   *   The context definitions if set, otherwise NULL.
+   * @return array
+   *   The array of context definitions, keyed by context name.
    */
   public function getContextDefinitions();
 
   /**
-   * Gets the a specific context definition of the plugin.
+   * Gets a specific context definition of the plugin.
    *
-   * @param string $key
+   * @param string $name
    *   The name of the context in the plugin definition.
    *
-   * @return mixed
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   *   If the requested context is not defined.
+   *
+   * @return array
    *   The definition against which the context value must validate.
    */
-  public function getContextDefinition($key);
+  public function getContextDefinition($name);
 
   /**
    * Gets the defined contexts.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   *   If contexts are defined but not set.
    *
    * @return array
    *   The set context objects.
@@ -45,47 +53,64 @@ interface ContextAwarePluginInterface extends PluginInspectionInterface {
   /**
    * Gets a defined context.
    *
-   * @param string $key
-   *   The name of the context in the plugin configuration. This string is
-   *   usually identical to the representative string in the plugin definition.
+   * @param string $name
+   *   The name of the context in the plugin definition.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   *   If the requested context is not set.
    *
    * @return \Drupal\Component\Plugin\Context\ContextInterface
    *   The context object.
    */
-  public function getContext($key);
+  public function getContext($name);
 
   /**
    * Gets the values for all defined contexts.
    *
    * @return array
-   *   The set context object values.
+   *   An array of set context values, keyed by context name. If a context is
+   *   unset its value is returned as NULL.
    */
   public function getContextValues();
 
   /**
    * Gets the value for a defined context.
    *
-   * @param string $key
-   *   The name of the context in the plugin configuration. This string is
-   *   usually identical to the representative string in the plugin definition.
+   * @param string $name
+   *   The name of the context in the plugin configuration.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   *   If the requested context is not set.
    *
    * @return mixed
    *   The currently set context value.
    */
-  public function getContextValue($key);
+  public function getContextValue($name);
 
   /**
    * Sets the value for a defined context.
    *
-   * @param string $key
+   * @param string $name
    *   The name of the context in the plugin definition.
    * @param mixed $value
-   *   The variable to set the context to. This should validate against the
+   *   The value to set the context to. The value has to validate against the
    *   provided context definition.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   *   If the value does not pass validation.
    *
    * @return \Drupal\Component\Plugin\ContextAwarePluginInterface.
    *   A context aware plugin object for chaining.
    */
-  public function setContextValue($key, $value);
+  public function setContextValue($name, $value);
+
+  /**
+   * Validates the set values for the defined contexts.
+   *
+   * @return \Symfony\Component\Validator\ConstraintViolationListInterface
+   *   A list of constraint violations. If the list is empty, validation
+   *   succeeded.
+   */
+  public function validateContexts();
 
 }

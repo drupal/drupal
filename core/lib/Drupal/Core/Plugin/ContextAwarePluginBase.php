@@ -8,7 +8,9 @@
 namespace Drupal\Core\Plugin;
 
 use Drupal\Component\Plugin\ContextAwarePluginBase as PluginBase;
+use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Plugin\Context\Context;
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Drupal specific class for plugins that use context.
@@ -20,13 +22,35 @@ use Drupal\Core\Plugin\Context\Context;
 abstract class ContextAwarePluginBase extends PluginBase {
 
   /**
+   * Override of \Drupal\Component\Plugin\ContextAwarePluginBase::__construct().
+   */
+  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
+    $context = array();
+    if (isset($configuration['context'])) {
+      $context = $configuration['context'];
+      unset($configuration['context']);
+    }
+    parent::__construct($configuration, $plugin_id, $discovery);
+    foreach ($context as $key => $value) {
+      $context_definition = $this->getContextDefinition($key);
+      $this->context[$key] = new Context($context_definition);
+      $this->context[$key]->setContextValue($value);
+    }
+  }
+
+  /**
    * Override of \Drupal\Component\Plugin\ContextAwarePluginBase::setContextValue().
    */
-  public function setContextValue($key, $value) {
-    $context_definition = $this->getContextDefinition($key);
-    $this->context[$key] = new Context($context_definition);
-    $this->context[$key]->setContextValue($value);
+  public function setContextValue($name, $value) {
+    $context_definition = $this->getContextDefinition($name);
+    // Use the Drupal specific context class.
+    $this->context[$name] = new Context($context_definition);
+    $this->context[$name]->setContextValue($value);
 
+    // Verify the provided value validates.
+    if ($this->context[$name]->validate()->count() > 0) {
+      throw new PluginException("The provided context value does not pass validation.");
+    }
     return $this;
   }
 

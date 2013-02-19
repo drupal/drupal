@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * Implements hook_node_info().
+ */
+function condition_test_node_info() {
+  return array(
+    'article' => array(
+      'name' => t('Article'),
+      'base' => 'article',
+      'description' => t('An article content type'),
+      'title_label' => t('Subject'),
+    ),
+    'page' => array(
+      'name' => t('Page'),
+      'base' => 'page',
+      'description' => t('A page content type'),
+      'title_label' => t('Subject'),
+    ),
+  );
+}

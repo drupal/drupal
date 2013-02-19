@@ -8,6 +8,8 @@
 namespace Drupal\Component\Plugin\Context;
 
 use Drupal\Component\Plugin\Exception\ContextException;
+use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Validation;
 
 /**
  * A generic context class for wrapping data a plugin needs to operate.
@@ -39,7 +41,6 @@ class Context implements ContextInterface {
    * Implements \Drupal\Component\Plugin\Context\ContextInterface::setContextValue().
    */
   public function setContextValue($value) {
-    $value = $this->validate($value);
     $this->contextValue = $value;
   }
 
@@ -65,22 +66,22 @@ class Context implements ContextInterface {
   }
 
   /**
-   * Implements \Drupal\Component\Plugin\Context\ContextInterface::validate().
-   *
-   * The default validation method only supports instance of checks between the
-   * contextDefintion and the contextValue. Other formats of context
-   * definitions can be supported through a subclass.
+   * Implements \Drupal\Component\Plugin\Context\ContextInterface::getConstraints().
    */
-  public function validate($value) {
-    // Check to make sure we have a class name, and that the passed context is
-    // an instance of that class name.
-    if (!empty($this->contextDefinition['class'])) {
-      if ($value instanceof $this->contextDefinition['class']) {
-        return $value;
-      }
-      throw new ContextException("The context passed was not an instance of {$this->contextDefinition['class']}.");
+  public function getConstraints() {
+    if (empty($this->contextDefinition['class'])) {
+      throw new ContextException("An error was encountered while trying to validate the context.");
     }
-    throw new ContextException("An error was encountered while trying to validate the context.");
+    return array(new Type($this->contextDefinition['class']));
+  }
+
+  /**
+   * Implements \Drupal\Component\Plugin\Context\ContextInterface::validate().
+   */
+  public function validate() {
+    $validator = Validation::createValidatorBuilder()
+      ->getValidator();
+    return $validator->validateValue($this->getContextValue(), $this->getConstraints());
   }
 
 }

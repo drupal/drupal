@@ -22,7 +22,7 @@ class EntityTypeConstraintValidator extends ConstraintValidator {
     $entity = isset($typed_data) ? $typed_data->getValue() : FALSE;
 
     if (!empty($entity) && $entity->entityType() != $constraint->type) {
-      $this->context->addViolation($constraint->message, array('%type', $constraint->type));
+      $this->context->addViolation($constraint->message, array('%type' => $constraint->type));
     }
   }
 }

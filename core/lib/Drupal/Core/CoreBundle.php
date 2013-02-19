@@ -276,6 +276,8 @@ class CoreBundle extends Bundle {
     $container->register('flood', 'Drupal\Core\Flood\DatabaseBackend')
       ->addArgument(new Reference('database'));
 
+    $container->register('plugin.manager.condition', 'Drupal\Core\Condition\ConditionManager');
+
     $container->addCompilerPass(new RegisterMatchersPass());
     $container->addCompilerPass(new RegisterRouteFiltersPass());
     // Add a compiler pass for registering event subscribers.
