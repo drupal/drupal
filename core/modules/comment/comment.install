@@ -548,9 +548,6 @@ function comment_update_8005(&$sandbox) {
   db_add_index('comment_entity_statistics', 'last_comment_timestamp', array('last_comment_timestamp'));
   db_add_index('comment_entity_statistics', 'comment_count', array('comment_count'));
   db_add_index('comment_entity_statistics', 'last_comment_uid', array('last_comment_uid'));
-
-  $t = get_t();
-  return $t('Updated database to reflect new comment structure');
 }
 
 /**
@@ -647,8 +644,6 @@ function comment_update_8006(&$sandbox) {
     variable_del('comment_form_location_' . $node_type);
     variable_del('comment_preview_' . $node_type);
   }
-  $t = get_t();
-  return $t('Created required fields for each comment bundle');
 }
 
 /**
@@ -752,11 +747,6 @@ function comment_update_8007(&$sandbox) {
     $sandbox['current_nid'] = 0;
   }
   $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
-
-  if ($sandbox['#finished'] === 1) {
-    $t = get_t();
-    return $t('Migrated existing node comment settings to field api.');
-  }
 }
 
 /**
@@ -767,8 +757,6 @@ function comment_update_8008(&$sandbox) {
   db_drop_field('node', 'comment');
   // Remove the {node_revision}.comment field.
   db_drop_field('node_revision', 'comment');
-  $t = get_t();
-  return $t('Removed old fields.');
 }
 
 /**
