@@ -48,7 +48,7 @@ tips:
     id: views-ui-format-en
     plugin: text
     label: Output format
-    body: Use this section to manage the format of the output results. You can choose different ways in which the matching results are output. E.g. Choose <em>Content</em> to output each item completely, using your configured display settings. Other options include <em>Fields</em> which allows you to output only specific fields on each matching result. Additional formats can be added by installing additional module to <em>extend</em> Drupal's base functionality. 
+    body: Use this section to manage the format of the output results. You can choose different ways in which the matching results are output. E.g. Choose <em>Content</em> to output each item completely, using your configured display settings. Other options include <em>Fields</em> which allows you to output only specific fields on each matching result. Additional formats can be added by installing additional modules to <em>extend</em> Drupal's base functionality.
     weight: "4"
     attributes:
       data-class: views-ui-display-tab-bucket.format
