@@ -1,6 +1,7 @@
 
 Drupal 8.0, xxxx-xx-xx (development version)
 ----------------------
+- Added tour module. Provides highly contextual tips for UI elements.
 - Improved entity system.
     * Added support for saving and deleting entities through the controller.
     * Entities are now classed objects, implementing EntityInterface.
