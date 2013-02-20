@@ -30,6 +30,11 @@ define('IMAGE_STORAGE_EDITABLE', IMAGE_STORAGE_NORMAL | IMAGE_STORAGE_OVERRIDE);
  */
 define('IMAGE_STORAGE_MODULE', IMAGE_STORAGE_OVERRIDE | IMAGE_STORAGE_DEFAULT);
 
+/**
+ * The name of the query parameter for image derivative tokens.
+ */
+define('IMAGE_DERIVATIVE_TOKEN', 'itok');
+
 // Load all Field module hooks for Image.
 require_once DRUPAL_ROOT . '/modules/image/image.field.inc';
 
@@ -766,15 +771,23 @@ function image_style_options($include_empty = TRUE) {
  *   The image style
  */
 function image_style_deliver($style, $scheme) {
-  // Check that the style is defined and the scheme is valid.
-  if (!$style || !file_stream_wrapper_valid_scheme($scheme)) {
-    drupal_exit();
-  }
-
   $args = func_get_args();
   array_shift($args);
   array_shift($args);
   $target = implode('/', $args);
+
+  // Check that the style is defined, the scheme is valid, and the image
+  // derivative token is valid. (Sites which require image derivatives to be
+  // generated without a token can set the 'image_allow_insecure_derivatives'
+  // variable to TRUE to bypass the latter check, but this will increase the
+  // site's vulnerability to denial-of-service attacks.)
+  $valid = !empty($style) && file_stream_wrapper_valid_scheme($scheme);
+  if (!variable_get('image_allow_insecure_derivatives', FALSE)) {
+    $valid = $valid && isset($_GET[IMAGE_DERIVATIVE_TOKEN]) && $_GET[IMAGE_DERIVATIVE_TOKEN] === image_style_path_token($style['name'], $scheme . '://' . $target);
+  }
+  if (!$valid) {
+    return MENU_ACCESS_DENIED;
+  }
 
   $image_uri = $scheme . '://' . $target;
   $derivative_uri = image_style_path($style['name'], $image_uri);
@@ -960,6 +973,10 @@ function image_style_flush($style) {
  */
 function image_style_url($style_name, $path) {
   $uri = image_style_path($style_name, $path);
+  // The token query is added even if the 'image_allow_insecure_derivatives'
+  // variable is TRUE, so that the emitted links remain valid if it is changed
+  // back to the default FALSE.
+  $token_query = array(IMAGE_DERIVATIVE_TOKEN => image_style_path_token($style_name, $path));
 
   // If not using clean URLs, the image derivative callback is only available
   // with the query string. If the file does not exist, use url() to ensure
@@ -967,10 +984,33 @@ function image_style_url($style_name, $path) {
   // actual file path, this avoids bootstrapping PHP once the files are built.
   if (!variable_get('clean_url') && file_uri_scheme($uri) == 'public' && !file_exists($uri)) {
     $directory_path = file_stream_wrapper_get_instance_by_uri($uri)->getDirectoryPath();
-    return url($directory_path . '/' . file_uri_target($uri), array('absolute' => TRUE));
+    return url($directory_path . '/' . file_uri_target($uri), array('absolute' => TRUE, 'query' => $token_query));
   }
 
-  return file_create_url($uri);
+  $file_url = file_create_url($uri);
+  // Append the query string with the token.
+  return $file_url . (strpos($file_url, '?') !== FALSE ? '&' : '?') . drupal_http_build_query($token_query);
+}
+
+/**
+ * Generates a token to protect an image style derivative.
+ *
+ * This prevents unauthorized generation of an image style derivative,
+ * which can be costly both in CPU time and disk space.
+ *
+ * @param $style_name
+ *   The name of the image style.
+ * @param $uri
+ *   The URI of the image for this style, for example as returned by
+ *   image_style_path().
+ *
+ * @return
+ *   An eight-character token which can be used to protect image style
+ *   derivatives against denial-of-service attacks.
+ */
+function image_style_path_token($style_name, $uri) {
+  // Return the first eight characters.
+  return substr(drupal_hmac_base64($style_name . ':' . $uri, drupal_get_private_key() . drupal_get_hash_salt()), 0, 8);
 }
 
 /**

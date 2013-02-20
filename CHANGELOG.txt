@@ -1,3 +1,8 @@
+
+Drupal 7.20, 2013-02-20
+-----------------------
+- Fixed security issues (denial of service). See SA-CORE-2013-002.
+
 Drupal 7.19, 2013-01-16
 -----------------------
 - Fixed security issues (multiple vulnerabilities). See SA-CORE-2013-001.
