@@ -192,13 +192,19 @@ class ImageStylesPathAndUrlTestCase extends DrupalWebTestCase {
     $this->assertNotIdentical(FALSE, $original_uri, t('Created the generated image file.'));
 
     // Get the URL of a file that has not been generated and try to create it.
-    $generated_uri = $scheme . '://styles/' . $this->style_name . '/' . $scheme . '/'. drupal_basename($original_uri);
+    $generated_uri = image_style_path($this->style_name, $original_uri);
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $generate_url = image_style_url($this->style_name, $original_uri);
 
     if (!$clean_url) {
       $this->assertTrue(strpos($generate_url, '?q=') !== FALSE, 'When using non-clean URLS, the system path contains the query string.');
     }
+    // Add some extra chars to the token.
+    $this->drupalGet(str_replace(IMAGE_DERIVATIVE_TOKEN . '=', IMAGE_DERIVATIVE_TOKEN . '=Zo', $generate_url));
+    $this->assertResponse(403, 'Image was inaccessible at the URL wih an invalid token.');
+    // Change the parameter name so the token is missing.
+    $this->drupalGet(str_replace(IMAGE_DERIVATIVE_TOKEN . '=', 'wrongparam=', $generate_url));
+    $this->assertResponse(403, 'Image was inaccessible at the URL wih a missing token.');
 
     // Fetch the URL that generates the file.
     $this->drupalGet($generate_url);
@@ -237,6 +243,11 @@ class ImageStylesPathAndUrlTestCase extends DrupalWebTestCase {
         // response body.
         $this->assertNoRaw( chr(137) . chr(80) . chr(78) . chr(71) . chr(13) . chr(10) . chr(26) . chr(10), 'No PNG signature found in the response body.');
       }
+    }
+    elseif ($clean_url) {
+      // Add some extra chars to the token.
+      $this->drupalGet(str_replace(IMAGE_DERIVATIVE_TOKEN . '=', IMAGE_DERIVATIVE_TOKEN . '=Zo', $generate_url));
+      $this->assertResponse(200, 'Existing image was accessible at the URL wih an invalid token.');
     }
   }
 }
@@ -661,7 +672,7 @@ class ImageAdminStylesUnitTest extends ImageFieldTestCase {
 
     // Test that image is displayed using newly created style.
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(image_style_url($style_name, $node->{$field_name}[LANGUAGE_NONE][0]['uri']), t('Image displayed using style @style.', array('@style' => $style_name)));
+    $this->assertRaw(check_plain(image_style_url($style_name, $node->{$field_name}[LANGUAGE_NONE][0]['uri'])), t('Image displayed using style @style.', array('@style' => $style_name)));
 
     // Rename the style and make sure the image field is updated.
     $new_style_name = strtolower($this->randomName(10));
@@ -671,7 +682,7 @@ class ImageAdminStylesUnitTest extends ImageFieldTestCase {
     $this->drupalPost('admin/config/media/image-styles/edit/' . $style_name, $edit, t('Update style'));
     $this->assertText(t('Changes to the style have been saved.'), t('Style %name was renamed to %new_name.', array('%name' => $style_name, '%new_name' => $new_style_name)));
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(image_style_url($new_style_name, $node->{$field_name}[LANGUAGE_NONE][0]['uri']), t('Image displayed using style replacement style.'));
+    $this->assertRaw(check_plain(image_style_url($new_style_name, $node->{$field_name}[LANGUAGE_NONE][0]['uri'])), t('Image displayed using style replacement style.'));
 
     // Delete the style and choose a replacement style.
     $edit = array(
@@ -682,7 +693,7 @@ class ImageAdminStylesUnitTest extends ImageFieldTestCase {
     $this->assertRaw($message, $message);
 
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(image_style_url('thumbnail', $node->{$field_name}[LANGUAGE_NONE][0]['uri']), t('Image displayed using style replacement style.'));
+    $this->assertRaw(check_plain(image_style_url('thumbnail', $node->{$field_name}[LANGUAGE_NONE][0]['uri'])), t('Image displayed using style replacement style.'));
   }
 }
 
@@ -775,7 +786,9 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     // Ensure the derivative image is generated so we do not have to deal with
     // image style callback paths.
     $this->drupalGet(image_style_url('thumbnail', $image_uri));
-    $image_info['path'] = image_style_path('thumbnail', $image_uri);
+    // Need to create the URL again since it will change if clean URLs
+    // are disabled.
+    $image_info['path'] = image_style_url('thumbnail', $image_uri);
     $image_info['width'] = 100;
     $image_info['height'] = 50;
     $default_output = theme('image', $image_info);
@@ -1061,7 +1074,7 @@ class ImageDimensionsTestCase extends DrupalWebTestCase {
 
     image_effect_save($effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="120" height="60" alt="" />', t('Expected img tag was found.'));
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . check_plain($url) . '" width="120" height="60" alt="" />', t('Expected img tag was found.'));
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -1082,7 +1095,7 @@ class ImageDimensionsTestCase extends DrupalWebTestCase {
 
     image_effect_save($effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="60" height="120" alt="" />', t('Expected img tag was found.'));
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . check_plain($url) . '" width="60" height="120" alt="" />', t('Expected img tag was found.'));
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -1104,7 +1117,7 @@ class ImageDimensionsTestCase extends DrupalWebTestCase {
 
     image_effect_save($effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="45" height="90" alt="" />', t('Expected img tag was found.'));
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . check_plain($url) . '" width="45" height="90" alt="" />', t('Expected img tag was found.'));
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -1126,7 +1139,7 @@ class ImageDimensionsTestCase extends DrupalWebTestCase {
 
     image_effect_save($effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="45" height="90" alt="" />', t('Expected img tag was found.'));
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . check_plain($url) . '" width="45" height="90" alt="" />', t('Expected img tag was found.'));
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -1144,7 +1157,7 @@ class ImageDimensionsTestCase extends DrupalWebTestCase {
 
     image_effect_save($effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="45" height="90" alt="" />', t('Expected img tag was found.'));
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . check_plain($url) . '" width="45" height="90" alt="" />', t('Expected img tag was found.'));
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -1165,7 +1178,7 @@ class ImageDimensionsTestCase extends DrupalWebTestCase {
 
     image_effect_save($effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" alt="" />', t('Expected img tag was found.'));
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . check_plain($url) . '" alt="" />', t('Expected img tag was found.'));
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -1185,7 +1198,7 @@ class ImageDimensionsTestCase extends DrupalWebTestCase {
 
     image_effect_save($effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="30" height="30" alt="" />', t('Expected img tag was found.'));
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . check_plain($url) . '" width="30" height="30" alt="" />', t('Expected img tag was found.'));
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -1206,7 +1219,7 @@ class ImageDimensionsTestCase extends DrupalWebTestCase {
 
     $effect = image_effect_save($effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" alt="" />', t('Expected img tag was found.'));
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . check_plain($url) . '" alt="" />', t('Expected img tag was found.'));
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -1224,7 +1237,7 @@ class ImageDimensionsTestCase extends DrupalWebTestCase {
 
     image_effect_save($effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" alt="" />', t('Expected img tag was found.'));
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . check_plain($url) . '" alt="" />', t('Expected img tag was found.'));
   }
 }
 
@@ -1642,7 +1655,7 @@ class ImageThemeFunctionWebTestCase extends DrupalWebTestCase {
       ),
     );
     $rendered_element = render($element);
-    $expected_result = '<a href="' . url($path) . '"><img typeof="foaf:Image" src="' . $url . '" alt="" /></a>';
+    $expected_result = '<a href="' . url($path) . '"><img typeof="foaf:Image" src="' . check_plain($url) . '" alt="" /></a>';
     $this->assertEqual($expected_result, $rendered_element, 'theme_image_formatter() correctly renders without title, alt, or path options.');
 
     // Link the image to a fragment on the page, and not a full URL.
@@ -1653,7 +1666,7 @@ class ImageThemeFunctionWebTestCase extends DrupalWebTestCase {
       'fragment' => $fragment,
     );
     $rendered_element = render($element);
-    $expected_result = '<a href="#' . $fragment . '"><img typeof="foaf:Image" src="' . $url . '" alt="" /></a>';
+    $expected_result = '<a href="#' . $fragment . '"><img typeof="foaf:Image" src="' . check_plain($url) . '" alt="" /></a>';
     $this->assertEqual($expected_result, $rendered_element, 'theme_image_formatter() correctly renders a link fragment.');
   }
 

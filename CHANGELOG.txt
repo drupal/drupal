@@ -1,5 +1,5 @@
 
-Drupal 7.20, xxxx-xx-xx (development version)
+Drupal 7.21, xxxx-xx-xx (development version)
 -----------------------
 - Fixed enforced dependencies errors updating to recent versions of Drupal 7 on
   certain non-MySQL databases.
@@ -27,6 +27,10 @@ Drupal 7.20, xxxx-xx-xx (development version)
 - Made the default .htaccess rules protocol sensitive to improve security for
   sites which use HTTPS and redirect between "www" and non-"www" versions of
   the page.
+
+Drupal 7.20, 2013-02-20
+-----------------------
+- Fixed security issues (denial of service). See SA-CORE-2013-002.
 
 Drupal 7.19, 2013-01-16
 -----------------------
