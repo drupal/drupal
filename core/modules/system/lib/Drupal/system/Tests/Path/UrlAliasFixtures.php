@@ -16,7 +16,7 @@ class UrlAliasFixtures {
    *   The connection to use to create the tables.
    */
   public function createTables(Connection $connection) {
-    $tables = $this->urlAliasTableDefinition();
+    $tables = $this->tableDefinition();
     $schema = $connection->schema();
 
     foreach ($tables as $name => $table) {
@@ -32,7 +32,7 @@ class UrlAliasFixtures {
    *   The connection to use to drop the tables.
    */
   public function dropTables(Connection $connection) {
-    $tables = $this->urlAliasTableDefinition();
+    $tables = $this->tableDefinition();
     $schema = $connection->schema();
 
     foreach ($tables as $name => $table) {
@@ -77,7 +77,7 @@ class UrlAliasFixtures {
    * @return array
    *   Table definitions.
    */
-  public function urlAliasTableDefinition() {
+  public function tableDefinition() {
     $tables = array();
 
     module_load_install('system');

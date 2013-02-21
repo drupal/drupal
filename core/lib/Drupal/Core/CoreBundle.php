@@ -10,6 +10,7 @@ namespace Drupal\Core;
 use Drupal\Core\DependencyInjection\Compiler\RegisterKernelListenersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterAccessChecksPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterMatchersPass;
+use Drupal\Core\DependencyInjection\Compiler\RegisterPathProcessorsPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterRouteFiltersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterParamConvertersPass;
@@ -245,6 +246,7 @@ class CoreBundle extends Bundle {
       ->addTag('event_subscriber');
     $container->register('path_subscriber', 'Drupal\Core\EventSubscriber\PathSubscriber')
       ->addArgument(new Reference('path.alias_manager.cached'))
+      ->addArgument(new Reference('path_processor_manager'))
       ->addTag('event_subscriber');
     $container->register('legacy_request_subscriber', 'Drupal\Core\EventSubscriber\LegacyRequestSubscriber')
       ->addTag('event_subscriber');
@@ -269,6 +271,8 @@ class CoreBundle extends Bundle {
     $container->register('exception_listener', 'Drupal\Core\EventSubscriber\ExceptionListener')
       ->addTag('event_subscriber')
       ->addArgument(array(new Reference('exception_controller'), 'execute'));
+
+    $this->registerPathProcessors($container);
 
     $container
       ->register('transliteration', 'Drupal\Core\Transliteration\PHPTransliteration');
@@ -375,4 +379,27 @@ class CoreBundle extends Bundle {
       // @see http://drupal.org/node/1804998
       ->addMethodCall('addExtension', array(new Definition('Twig_Extension_Debug')));
   }
+
+  /**
+   * Register services related to path processing.
+   */
+  protected function registerPathProcessors(ContainerBuilder $container) {
+    // Register the path processor manager service.
+    $container->register('path_processor_manager', 'Drupal\Core\PathProcessor\PathProcessorManager');
+    // Register the processor that urldecodes the path.
+    $container->register('path_processor_decode', 'Drupal\Core\PathProcessor\PathProcessorDecode')
+      ->addTag('path_processor_inbound', array('priority' => 1000));
+    // Register the processor that resolves the front page.
+    $container->register('path_processor_front', 'Drupal\Core\PathProcessor\PathProcessorFront')
+      ->addArgument(new Reference('config.factory'))
+      ->addTag('path_processor_inbound', array('priority' => 200));
+    // Register the alias path processor.
+    $container->register('path_processor_alias', 'Drupal\Core\PathProcessor\PathProcessorAlias')
+      ->addArgument(new Reference('path.alias_manager'))
+      ->addTag('path_processor_inbound', array('priority' => 100));
+
+    // Add the compiler pass that will process the tagged services.
+    $container->addCompilerPass(new RegisterPathProcessorsPass());
+  }
+
 }

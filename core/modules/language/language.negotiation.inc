@@ -282,11 +282,7 @@ function language_from_url($languages, Request $request = NULL) {
     case LANGUAGE_NEGOTIATION_URL_PREFIX:
 
       $request_path = urldecode(trim($request->getPathInfo(), '/'));
-
       list($language, $path) = language_url_split_prefix($request_path, $languages);
-      // Store the correct system path, i.e., the request path without the
-      // language prefix.
-      _language_resolved_path($path);
 
       if ($language !== FALSE) {
         $language_url = $language->langcode;
