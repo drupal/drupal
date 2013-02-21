@@ -6,19 +6,8 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Database\Database;
-use Drupal\views\Ajax\ReplaceTitleCommand;
-use Drupal\views\Ajax\TriggerPreviewCommand;
-use Drupal\views\Ajax\ShowButtonsCommand;
-use Drupal\views\Ajax\DismissFormCommand;
-use Drupal\Core\Ajax\AjaxResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Drupal\views_ui\ViewUI;
-use Drupal\views_ui\ViewFormControllerBase;
 use Drupal\views\Analyzer;
 use Drupal\views\ViewExecutable;
-use Drupal\views\Plugin\views\wizard\WizardException;
 
 /**
  * Converts a form element in the add view wizard to be AJAX-enabled.
@@ -265,35 +254,6 @@ function views_ui_taxonomy_autocomplete_validate($element, &$form_state) {
 }
 
 /**
- * Page to delete a view.
- */
-function views_ui_break_lock_confirm($form, &$form_state, ViewUI $view) {
-  $form_state['view'] = &$view;
-  $form = array();
-
-  if (empty($view->locked)) {
-    $form['message']['#markup'] = t('There is no lock on view %name to break.', array('%name' => $view->id()));
-    return $form;
-  }
-
-  $cancel = drupal_container()->get('request')->query->get('cancel');
-  if (empty($cancel)) {
-    $cancel = 'admin/structure/views/view/' . $view->id() . '/edit';
-  }
-
-  $account = user_load($view->locked->owner);
-  $form = confirm_form($form,
-                  t('Do you want to break the lock on view %name?',
-                  array('%name' => $view->id())),
-                  $cancel,
-                  t('By breaking this lock, any unsaved changes made by !user will be lost.', array('!user' => theme('username', array('account' => $account)))),
-                  t('Break lock'),
-                  t('Cancel'));
-  $form['actions']['submit']['#submit'][] = array($view, 'submitBreakLock');
-  return $form;
-}
-
-/**
  * Move form elements into details for presentation purposes.
  *
  * Many views forms use #tree = TRUE to keep their values in a hierarchy for
@@ -431,76 +391,12 @@ function views_ui_standard_display_dropdown(&$form, &$form_state, $section) {
 
 }
 
-
-/**
- * Returns information about subforms for editing the pieces of a view.
- *
- * @param string|null $key
- *   The form for which to retrieve data. If NULL, the list of all forms is
- *   returned.
- */
-function views_ui_ajax_forms($key = NULL) {
-  $forms = array(
-    'display' => array(
-      'form_id' => 'views_ui_edit_display_form',
-      'args' => array('section'),
-    ),
-    'remove-display' => array(
-      'form_id' => 'views_ui_remove_display_form',
-      'args' => array(),
-    ),
-    'rearrange' => array(
-      'form_id' => 'views_ui_rearrange_form',
-      'args' => array('type'),
-    ),
-    'rearrange-filter' => array(
-      'form_id' => 'views_ui_rearrange_filter_form',
-      'args' => array('type'),
-    ),
-    'reorder-displays' => array(
-      'form_id' => 'views_ui_reorder_displays_form',
-      'args' => array(),
-      'callback' => 'buildDisplaysReorderForm',
-    ),
-    'add-item' => array(
-      'form_id' => 'views_ui_add_item_form',
-      'args' => array('type'),
-    ),
-    'config-item' => array(
-      'form_id' => 'views_ui_config_item_form',
-      'args' => array('type', 'id'),
-    ),
-    'config-item-extra' => array(
-      'form_id' => 'views_ui_config_item_extra_form',
-      'args' => array('type', 'id'),
-    ),
-    'config-item-group' => array(
-      'form_id' => 'views_ui_config_item_group_form',
-      'args' => array('type', 'id'),
-    ),
-    'edit-details' => array(
-      'form_id' => 'views_ui_edit_details_form',
-      'args' => array(),
-    ),
-    'analyze' => array(
-      'form_id' => 'views_ui_analyze_view_form',
-      'args' => array(),
-    ),
-  );
-
-  if ($key) {
-    return !empty($forms[$key]) ? $forms[$key] : NULL;
-  }
-
-  return $forms;
-}
-
 /**
  * Create the URL for one of our standard AJAX forms based upon known
  * information about the form.
  */
 function views_ui_build_form_url($form_state) {
-  $form = views_ui_ajax_forms($form_state['form_key']);
+  $form = $form_state['view']::$forms[$form_state['form_key']];
   $ajax = empty($form_state['ajax']) ? 'nojs' : 'ajax';
   $name = $form_state['view']->id();
   $url = "admin/structure/views/$ajax/$form_state[form_key]/$name/$form_state[display_id]";
@@ -508,102 +404,6 @@ function views_ui_build_form_url($form_state) {
     $url .= '/' . $form_state[$arg];
   }
   return $url;
-}
-
-/**
- * Generic entry point to handle forms.
- *
- * We do this for consistency and to make it easy to chain forms
- * together.
- */
-function views_ui_ajax_form($js, $key, ViewUI $view, $display_id = '') {
-  // Reset the cache of IDs. Drupal rather aggressively prevents ID
-  // duplication but this causes it to remember IDs that are no longer even
-  // being used.
-  $seen_ids_init = &drupal_static('drupal_html_id:init');
-  $seen_ids_init = array();
-
-  $form = views_ui_ajax_forms($key);
-  if (empty($form)) {
-    throw new NotFoundHttpException();
-  }
-
-  module_load_include('inc', 'views', 'includes/ajax');
-  $args = func_get_args();
-  // Remove the known args
-  array_splice($args, 0, 4);
-
-  $form_state = $view->buildFormState($js, $key, $display_id, $args);
-  // check to see if this is the top form of the stack. If it is, pop
-  // it off; if it isn't, the user clicked somewhere else and the stack is
-  // now irrelevant.
-  if (!empty($view->stack)) {
-    $identifier = $view->buildIdentifier($key, $display_id, $args);
-    // Retrieve the first form from the stack without changing the integer keys,
-    // as they're being used for the "2 of 3" progress indicator.
-    reset($view->stack);
-    list($key, $top) = each($view->stack);
-    unset($view->stack[$key]);
-
-    if (array_shift($top) != $identifier) {
-      $view->stack = array();
-    }
-  }
-
-  // Automatically remove the form cache if it is set and the key does
-  // not match. This way navigating away from the form without hitting
-  // update will work.
-  if (isset($view->form_cache) && $view->form_cache['key'] != $key) {
-    unset($view->form_cache);
-  }
-
-  // With the below logic, we may end up rendering a form twice (or two forms
-  // each sharing the same element ids), potentially resulting in
-  // drupal_add_js() being called twice to add the same setting. drupal_get_js()
-  // is ok with that, but until ajax_render() is (http://drupal.org/node/208611),
-  // reset the drupal_add_js() static before rendering the second time.
-  $drupal_add_js_original = drupal_add_js();
-  $drupal_add_js = &drupal_static('drupal_add_js');
-  $response = views_ajax_form_wrapper($form_state['form_id'], $form_state);
-  if ($form_state['submitted'] && empty($form_state['rerender'])) {
-    // Sometimes we need to re-generate the form for multi-step type operations.
-    $object = NULL;
-    if (!empty($view->stack)) {
-      $drupal_add_js = $drupal_add_js_original;
-      $stack = $view->stack;
-      $top = array_shift($stack);
-      $top[0] = $js;
-      $form_state = call_user_func_array(array($view, 'buildFormState'), $top);
-      $form_state['input'] = array();
-      $form_state['url'] = url(views_ui_build_form_url($form_state));
-      if (!$js) {
-        return drupal_goto(views_ui_build_form_url($form_state));
-      }
-      $response = views_ajax_form_wrapper($form_state['form_id'], $form_state);
-    }
-    elseif (!$js) {
-      // if nothing on the stack, non-js forms just go back to the main view editor.
-      return drupal_goto("admin/structure/views/view/{$view->id()}/edit");
-    }
-    else {
-      $response = new AjaxResponse();
-      $response->addCommand(new DismissFormCommand());
-      $response->addCommand(new ShowButtonsCommand());
-      $response->addCommand(new TriggerPreviewCommand());
-      if (!empty($form_state['#page_title'])) {
-        $response->addCommand(new ReplaceTitleCommand($form_state['#page_title']));
-      }
-    }
-    // If this form was for view-wide changes, there's no need to regenerate
-    // the display section of the form.
-    if ($display_id !== '') {
-      drupal_container()->get('plugin.manager.entity')
-        ->getFormController('view', 'edit')
-        ->rebuildCurrentTab($view, $response, $display_id);
-    }
-  }
-
-  return $response;
 }
 
 /**
@@ -1543,9 +1343,11 @@ function views_ui_config_item_form_submit_temporary($form, &$form_state) {
   $executable = $form_state['view']->get('executable');
   $executable->temporary_options[$type][$form_state['id']] = $handler->options;
 
-  // @todo: Figure out whether views_ui_ajax_form is perhaps the better place to fix the issue.
-  // views_ui_ajax_form() drops the current form from the stack, even if it's an #ajax.
-  // So add the item back to the top of the stack.
+  // @todo Decide if \Drupal\views_ui\Routing\ViewsUIController::ajaxForm() is
+  //   perhaps the better place to fix the issue.
+  // \Drupal\views_ui\Routing\ViewsUIController::ajaxForm() drops the current
+  // form from the stack, even if it's an #ajax. So add the item back to the top
+  // of the stack.
   $form_state['view']->addFormToStack($form_state['form_key'], $form_state['display_id'], array($type, $item['id']), TRUE);
 
   $form_state['rerender'] = TRUE;
@@ -1783,225 +1585,6 @@ function views_ui_config_item_extra_form_submit($form, &$form_state) {
 
   // Write to cache
   views_ui_cache_set($form_state['view']);
-}
-
-/**
- * Form builder for the admin display defaults page.
- */
-function views_ui_admin_settings_basic($form, &$form_state) {
-  $form = array();
-  $form['#attached']['css'] = ViewFormControllerBase::getAdminCSS();
-
-  $config = config('views.settings');
-
-  $options = array();
-  foreach (list_themes() as $name => $theme) {
-    if ($theme->status) {
-      $options[$name] = $theme->info['name'];
-    }
-  }
-
-  // This is not currently a fieldset but we may want it to be later,
-  // so this will make it easier to change if we do.
-  $form['basic'] = array();
-
-  $form['basic']['ui_show_master_display'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Always show the master display'),
-    '#description' => t('Advanced users of views may choose to see the master (i.e. default) display.'),
-    '#default_value' => $config->get('ui.show.master_display'),
-  );
-
-  $form['basic']['ui_show_advanced_column'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Always show advanced display settings'),
-    '#description' => t('Default to showing advanced display settings, such as relationships and contextual filters.'),
-    '#default_value' => $config->get('ui.show.advanced_column'),
-  );
-
-  $form['basic']['ui_show_display_embed'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Show the embed display in the ui.'),
-    '#description' => t('Allow advanced user to use the embed view display. The plugin itself works if it\'s not visible in the ui'),
-    '#default_value' => $config->get('ui.show.display_embed'),
-  );
-
-  $form['basic']['ui_exposed_filter_any_label'] = array(
-    '#type' => 'select',
-    '#title' => t('Label for "Any" value on non-required single-select exposed filters'),
-    '#options' => array('old_any' => '<Any>', 'new_any' => t('- Any -')),
-    '#default_value' => $config->get('ui.exposed_filter_any_label'),
-  );
-
-  $form['live_preview'] = array(
-    '#type' => 'details',
-    '#title' => t('Live preview settings'),
-  );
-
-  $form['live_preview']['ui_always_live_preview'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Automatically update preview on changes'),
-    '#default_value' => $config->get('ui.always_live_preview'),
-  );
-
-  $form['live_preview']['ui_show_preview_information'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Show information and statistics about the view during live preview'),
-    '#default_value' => $config->get('ui.show.preview_information'),
-  );
-
-  $form['live_preview']['options'] = array(
-    '#type' => 'container',
-    '#states' => array(
-      'visible' => array(
-        ':input[name="ui_show_preview_information"]' => array('checked' => TRUE),
-      ),
-    ),
-  );
-
-  $form['live_preview']['options']['ui_show_sql_query_where'] = array(
-    '#type' => 'radios',
-    '#options' => array(
-      'above' => t('Above the preview'),
-      'below' => t('Below the preview'),
-    ),
-    '#default_value' => $config->get('ui.show.sql_query.where'),
-  );
-
-  $form['live_preview']['options']['ui_show_sql_query_enabled'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Show the SQL query'),
-    '#default_value' => $config->get('ui.show.sql_query.enabled'),
-  );
-  $form['live_preview']['options']['ui_show_performance_statistics'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Show performance statistics'),
-    '#default_value' => $config->get('ui.show.performance_statistics'),
-  );
-
-  $form['live_preview']['options']['ui_show_additional_queries'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Show other queries run during render during live preview'),
-    '#description' => t("Drupal has the potential to run many queries while a view is being rendered. Checking this box will display every query run during view render as part of the live preview."),
-    '#default_value' => $config->get('ui.show.additional_queries'),
-  );
-
-  return system_config_form($form, $form_state);
-}
-
-/**
- * Form builder submit handler; Handle submission the basic views settings.
- * @ingroup forms
- * @see system_settings_form()
- */
-function views_ui_admin_settings_basic_submit(&$form, &$form_state) {
-  config('views.settings')
-    ->set('ui.show.master_display', $form_state['values']['ui_show_master_display'])
-    ->set('ui.show.advanced_column', $form_state['values']['ui_show_advanced_column'])
-    ->set('ui.show.display_embed', $form_state['values']['ui_show_display_embed'])
-    ->set('ui.exposed_filter_any_label', $form_state['values']['ui_exposed_filter_any_label'])
-    ->set('ui.always_live_preview', $form_state['values']['ui_always_live_preview'])
-    ->set('ui.show.preview_information', $form_state['values']['ui_show_preview_information'])
-    ->set('ui.show.sql_query.where', $form_state['values']['ui_show_sql_query_where'])
-    ->set('ui.show.sql_query.enabled', $form_state['values']['ui_show_sql_query_enabled'])
-    ->set('ui.show.performance_statistics', $form_state['values']['ui_show_performance_statistics'])
-    ->set('ui.show.additional_queries', $form_state['values']['ui_show_additional_queries'])
-    ->save();
-}
-
-/**
- * Form builder for the advanced admin settings page.
- */
-function views_ui_admin_settings_advanced() {
-  $form = array();
-  $form['#attached']['css'] = ViewFormControllerBase::getAdminCSS();
-
-  $config = config('views.settings');
-
-  $form['cache'] = array(
-    '#type' => 'details',
-    '#title' => t('Caching'),
-  );
-
-  $form['cache']['skip_cache'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Disable views data caching'),
-    '#description' => t("Views caches data about tables, modules and views available, to increase performance. By checking this box, Views will skip this cache and always rebuild this data when needed. This can have a serious performance impact on your site."),
-    '#default_value' => $config->get('skip_cache'),
-  );
-
-  $form['cache']['clear_cache'] = array(
-    '#type' => 'submit',
-    '#value' => t("Clear Views' cache"),
-    '#submit' => array('views_ui_tools_clear_cache'),
-  );
-
-  $form['debug'] = array(
-    '#type' => 'details',
-    '#title' => t('Debugging'),
-  );
-
-  $form['debug']['sql_signature'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Add Views signature to all SQL queries'),
-    '#description' => t("All Views-generated queries will include the name of the views and display 'view-name:display-name' as a string  at the end of the SELECT clause. This makes identifying Views queries in database server logs simpler, but should only be used when troubleshooting."),
-
-    '#default_value' => $config->get('sql_signature'),
-  );
-
-  $form['debug']['no_javascript'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Disable JavaScript with Views'),
-    '#description' => t("If you are having problems with the JavaScript, you can disable it here. The Views UI should degrade and still be usable without javascript; it's just not as good."),
-    '#default_value' => $config->get('no_javascript'),
-  );
-
-  $options = views_fetch_plugin_names('display_extender');
-  if (!empty($options)) {
-    $form['extenders'] = array(
-      '#type' => 'details',
-    );
-    ;
-    $form['extenders']['display_extenders'] = array(
-      '#title' => t('Display extenders'),
-      '#default_value' => views_get_enabled_display_extenders(),
-      '#options' => $options,
-      '#type' => 'checkboxes',
-      '#description' => t('Select extensions of the views interface.')
-    );
-  }
-
-  $form['actions']['#type'] = 'actions';
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save configuration'),
-    '#button_type' => 'primary',
-  );
-  $form['#submit'][] = 'views_ui_admin_settings_advanced_submit';
-
-  return $form;
-}
-
-/**
- * Form builder submit handler; Handle submission the basic views settings..
- * @ingroup forms
- * @see system_settings_form()
- */
-function views_ui_admin_settings_advanced_submit(&$form, &$form_state) {
-  config('views.settings')
-    ->set('skip_cache', $form_state['values']['skip_cache'])
-    ->set('sql_signature', $form_state['values']['sql_signature'])
-    ->set('no_javascript', $form_state['values']['no_javascript'])
-    ->set('display_extenders', isset($form_state['values']['display_extenders']) ? $form_state['values']['display_extenders'] : array())
-    ->save();
-}
-
-/**
- * Submit hook to clear the views cache.
- */
-function views_ui_tools_clear_cache() {
-  views_invalidate_cache();
-  drupal_set_message(t('The cache has been cleared.'));
 }
 
 /**

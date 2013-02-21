@@ -11,13 +11,17 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\ViewStorageInterface;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\ViewsDataCache;
+use Drupal\user\TempStore;
 use Drupal\user\TempStoreFactory;
 use Drupal\Core\Entity\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
+
+use Drupal\views\Ajax;
 
 /**
  * Returns responses for Views UI routes.
@@ -82,30 +86,6 @@ class ViewsUIController {
 
     $entity = $this->entityManager->getStorageController('view')->create(array());
     return entity_get_form($entity, 'add');
-  }
-
-  /**
-   * Form builder for the admin display defaults page.
-   *
-   * @return array
-   *   The Views basic settings form.
-   */
-  public function settingsBasic() {
-    // @todo Remove the need for this.
-    module_load_include('inc', 'views_ui', 'admin');
-    return drupal_get_form('views_ui_admin_settings_basic');
-  }
-
-  /**
-   * Form builder for the advanced admin settings page.
-   *
-   * @return array
-   *   The Views advanced settings form.
-   */
-  public function settingsAdvanced() {
-    // @todo Remove the need for this.
-    module_load_include('inc', 'views_ui', 'admin');
-    return drupal_get_form('views_ui_admin_settings_advanced');
   }
 
   /**
@@ -234,19 +214,6 @@ class ViewsUIController {
   }
 
   /**
-   * Returns the form to delete a view.
-   *
-   * @param \Drupal\views\ViewStorageInterface $view
-   *   The view being deleted.
-   *
-   * @return array
-   *   The Views delete form.
-   */
-  public function deleteForm(ViewStorageInterface $view) {
-    return drupal_get_form('views_ui_confirm_delete', $view);
-  }
-
-  /**
    * Menu callback for Views tag autocompletion.
    *
    * Like other autocomplete functions, this function inspects the 'q' query
@@ -276,7 +243,7 @@ class ViewsUIController {
   /**
    * Returns the form to edit a view.
    *
-   * @param \Drupal\views\ViewStorageInterface $view
+   * @param \Drupal\views_ui\ViewUI $view
    *   The view being deleted.
    * @param string|null $display_id
    *   (optional) The display ID being edited. Defaults to NULL, which will load
@@ -285,25 +252,23 @@ class ViewsUIController {
    * @return array
    *   An array containing the Views edit and preview forms.
    */
-  public function edit(ViewStorageInterface $view, $display_id = NULL) {
-    $view_ui = $this->getViewUI($view);
-
-    $name = $view_ui->getHumanName();
-    $data = $this->viewsData->get($view_ui->get('base_table'));
+  public function edit(ViewUI $view, $display_id = NULL) {
+    $name = $view->getHumanName();
+    $data = $this->viewsData->get($view->get('base_table'));
     if (isset($data['table']['base']['title'])) {
       $name .= ' (' . $data['table']['base']['title'] . ')';
     }
     drupal_set_title($name);
 
-    $build['edit'] = entity_get_form($view_ui, 'edit', array('display_id' => $display_id));
-    $build['preview'] = entity_get_form($view_ui, 'preview', array('display_id' => $display_id));
+    $build['edit'] = entity_get_form($view, 'edit', array('display_id' => $display_id));
+    $build['preview'] = entity_get_form($view, 'preview', array('display_id' => $display_id));
     return $build;
   }
 
   /**
    * Returns the form to preview a view.
    *
-   * @param \Drupal\views\ViewStorageInterface $view
+   * @param \Drupal\views_ui\ViewUI $view
    *   The view being deleted.
    * @param string|null $display_id
    *   (optional) The display ID being edited. Defaults to NULL, which will
@@ -312,26 +277,8 @@ class ViewsUIController {
    * @return array
    *   The Views preview form.
    */
-  public function preview(ViewStorageInterface $view, $display_id = NULL) {
-    $view_ui = $this->getViewUI($view);
-
-    return entity_get_form($view_ui, 'preview', array('display_id' => $display_id));
-  }
-
-  /**
-   * Returns the form to break the lock of an edited view.
-   *
-   * @param \Drupal\views\ViewStorageInterface $view
-   *   The locked view.
-   *
-   * @return array
-   *   The Views 'break lock' form.
-   */
-  public function breakLock(ViewStorageInterface $view) {
-    // @todo Remove the need for this.
-    module_load_include('inc', 'views_ui', 'admin');
-
-    return drupal_get_form('views_ui_break_lock_confirm', $this->getViewUI($view));
+  public function preview(ViewUI $view, $display_id = NULL) {
+    return entity_get_form($view, 'preview', array('display_id' => $display_id));
   }
 
   /**
@@ -342,8 +289,8 @@ class ViewsUIController {
    *   be 'nojs'. This determines the response.
    * @param string $key
    *   A string representing a section of the Views UI. Available keys are in
-   *   views_ui_ajax_forms().
-   * @param \Drupal\views\ViewStorageInterface $view
+   *   \Drupal\views_ui\ViewUI::$forms.
+   * @param \Drupal\views_ui\ViewUI $view
    *   The view being edited.
    * @param string|null $display_id
    *   The display ID being edited, or NULL to load the first available display.
@@ -365,41 +312,96 @@ class ViewsUIController {
    *
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
-  public function ajaxForm($js, $key, ViewStorageInterface $view, $display_id, $type, $id) {
+  public function ajaxForm($js, $key, ViewUI $view, $display_id, $type, $id) {
     // Determine if this is an AJAX submission.
     $js = $js == 'ajax';
 
     // @todo Remove the need for this.
     module_load_include('inc', 'views_ui', 'admin');
+    module_load_include('inc', 'views', 'includes/ajax');
 
-    return views_ui_ajax_form($js, $key, $this->getViewUI($view), $display_id, $type, $id);
-  }
+    $args = array($type, $id);
 
-  /**
-   * Loads a view, first checking for a view being currently edited.
-   *
-   * @param \Drupal\views\ViewStorageInterface $view
-   *   The view being acted upon.
-   *
-   * @return \Drupal\views_ui\ViewUI
-   *   The view object, with a 'locked' property indicating whether or not
-   *   someone else is already editing the view.
-   */
-  public function getViewUI(ViewStorageInterface $view) {
-    $view_ui = new ViewUI($view);
-    if ($new_view = $this->tempStore->get($view_ui->id())) {
-      if ($view_ui->status()) {
-        $new_view->enable();
+    // Reset the cache of IDs. Drupal rather aggressively prevents ID
+    // duplication but this causes it to remember IDs that are no longer even
+    // being used.
+    $seen_ids_init = &drupal_static('drupal_html_id:init');
+    $seen_ids_init = array();
+
+    if (empty($view::$forms[$key])) {
+      throw new NotFoundHttpException();
+    }
+
+    $form_state = $view->buildFormState($js, $key, $display_id, $args);
+    // check to see if this is the top form of the stack. If it is, pop
+    // it off; if it isn't, the user clicked somewhere else and the stack is
+    // now irrelevant.
+    if (!empty($view->stack)) {
+      $identifier = $view->buildIdentifier($key, $display_id, $args);
+      // Retrieve the first form from the stack without changing the integer keys,
+      // as they're being used for the "2 of 3" progress indicator.
+      reset($view->stack);
+      list($key, $top) = each($view->stack);
+      unset($view->stack[$key]);
+
+      if (array_shift($top) != $identifier) {
+        $view->stack = array();
+      }
+    }
+
+    // Automatically remove the form cache if it is set and the key does
+    // not match. This way navigating away from the form without hitting
+    // update will work.
+    if (isset($view->form_cache) && $view->form_cache['key'] != $key) {
+      unset($view->form_cache);
+    }
+
+    // With the below logic, we may end up rendering a form twice (or two forms
+    // each sharing the same element ids), potentially resulting in
+    // drupal_add_js() being called twice to add the same setting. drupal_get_js()
+    // is ok with that, but until ajax_render() is (http://drupal.org/node/208611),
+    // reset the drupal_add_js() static before rendering the second time.
+    $drupal_add_js_original = drupal_add_js();
+    $drupal_add_js = &drupal_static('drupal_add_js');
+    $response = views_ajax_form_wrapper($form_state['form_id'], $form_state);
+    if ($form_state['submitted'] && empty($form_state['rerender'])) {
+      // Sometimes we need to re-generate the form for multi-step type operations.
+      $object = NULL;
+      if (!empty($view->stack)) {
+        $drupal_add_js = $drupal_add_js_original;
+        $stack = $view->stack;
+        $top = array_shift($stack);
+        $top[0] = $js;
+        $form_state = call_user_func_array(array($view, 'buildFormState'), $top);
+        $form_state['input'] = array();
+        $form_url = views_ui_build_form_url($form_state);
+        if (!$js) {
+          return new RedirectResponse(url($form_url, array('absolute' => TRUE)));
+        }
+        $form_state['url'] = url($form_url);
+        $response = views_ajax_form_wrapper($form_state['form_id'], $form_state);
+      }
+      elseif (!$js) {
+        // if nothing on the stack, non-js forms just go back to the main view editor.
+        return new RedirectResponse(url("admin/structure/views/view/{$view->id()}/edit", array('absolute' => TRUE)));
       }
       else {
-        $new_view->disable();
+        $response = new AjaxResponse();
+        $response->addCommand(new Ajax\DismissFormCommand());
+        $response->addCommand(new Ajax\ShowButtonsCommand());
+        $response->addCommand(new Ajax\TriggerPreviewCommand());
+        if (!empty($form_state['#page_title'])) {
+          $response->addCommand(new Ajax\ReplaceTitleCommand($form_state['#page_title']));
+        }
+      }
+      // If this form was for view-wide changes, there's no need to regenerate
+      // the display section of the form.
+      if ($display_id !== '') {
+        $this->entityManager->getFormController('view', 'edit')->rebuildCurrentTab($view, $response, $display_id);
       }
     }
-    else {
-      $new_view = $view_ui;
-    }
-    $new_view->locked = $this->tempStore->getMetadata($new_view->id());
-    return $new_view;
+
+    return $response;
   }
 
 }

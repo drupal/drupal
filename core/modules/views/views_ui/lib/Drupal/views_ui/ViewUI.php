@@ -121,6 +121,54 @@ class ViewUI implements ViewStorageInterface {
    */
   protected $additionalQueries;
 
+  public static $forms = array(
+    'display' => array(
+      'form_id' => 'views_ui_edit_display_form',
+      'args' => array('section'),
+    ),
+    'remove-display' => array(
+      'form_id' => 'views_ui_remove_display_form',
+      'args' => array(),
+    ),
+    'rearrange' => array(
+      'form_id' => 'views_ui_rearrange_form',
+      'args' => array('type'),
+    ),
+    'rearrange-filter' => array(
+      'form_id' => 'views_ui_rearrange_filter_form',
+      'args' => array('type'),
+    ),
+    'reorder-displays' => array(
+      'form_id' => 'views_ui_reorder_displays_form',
+      'args' => array(),
+      'callback' => 'buildDisplaysReorderForm',
+    ),
+    'add-item' => array(
+      'form_id' => 'views_ui_add_item_form',
+      'args' => array('type'),
+    ),
+    'config-item' => array(
+      'form_id' => 'views_ui_config_item_form',
+      'args' => array('type', 'id'),
+    ),
+    'config-item-extra' => array(
+      'form_id' => 'views_ui_config_item_extra_form',
+      'args' => array('type', 'id'),
+    ),
+    'config-item-group' => array(
+      'form_id' => 'views_ui_config_item_group_form',
+      'args' => array('type', 'id'),
+    ),
+    'edit-details' => array(
+      'form_id' => 'views_ui_edit_details_form',
+      'args' => array(),
+    ),
+    'analyze' => array(
+      'form_id' => 'views_ui_analyze_view_form',
+      'args' => array(),
+    ),
+  );
+
   /**
    * Constructs a View UI object.
    *
@@ -269,13 +317,14 @@ class ViewUI implements ViewStorageInterface {
         '#button_type' => 'primary',
       );
       // Form API button click detection requires the button's #value to be the
-      // same between the form build of the initial page request, and the initial
-      // form build of the request processing the form submission. Ideally, the
-      // button's #value shouldn't change until the form rebuild step. However,
-      // views_ui_ajax_form() implements a different multistep form workflow than
-      // the Form API does, and adjusts $view->stack prior to form processing, so
-      // we compensate by extending button click detection code to support any of
-      // the possible button labels.
+      // same between the form build of the initial page request, and the
+      // initial form build of the request processing the form submission.
+      // Ideally, the button's #value shouldn't change until the form rebuild
+      // step. However, \Drupal\views_ui\Routing\ViewsUIController::ajaxForm()
+      // implements a different multistep form workflow than the Form API does,
+      // and adjusts $view->stack prior to form processing, so we compensate by
+      // extending button click detection code to support any of the possible
+      // button labels.
       if (isset($names)) {
         $form['buttons']['submit']['#values'] = $names;
         $form['buttons']['submit']['#process'] = array_merge(array('views_ui_form_button_was_clicked'), element_info_property($form['buttons']['submit']['#type'], '#process', array()));
@@ -356,15 +405,6 @@ class ViewUI implements ViewStorageInterface {
     }
 
     return array($was_defaulted, $is_defaulted, $revert);
-  }
-
-  /**
-   * Submit handler to break_lock a view.
-   */
-  public function submitBreakLock(&$form, &$form_state) {
-    drupal_container()->get('user.tempstore')->get('views')->delete($this->id());
-    $form_state['redirect'] = 'admin/structure/views/view/' . $this->id() . '/edit';
-    drupal_set_message(t('The lock has been broken and you may now edit this view.'));
   }
 
   /**
@@ -847,7 +887,7 @@ class ViewUI implements ViewStorageInterface {
    * we do a lot of spiffy concatenation here.
    */
   public function buildIdentifier($key, $display_id, $args) {
-    $form = views_ui_ajax_forms($key);
+    $form = static::$forms[$key];
     // Automatically remove the single-form cache if it exists and
     // does not match the key.
     $identifier = implode('-', array($key, $this->id(), $display_id));
@@ -875,7 +915,7 @@ class ViewUI implements ViewStorageInterface {
    * based on known information about a form.
    */
   public function buildFormState($js, $key, $display_id, $args) {
-    $form = views_ui_ajax_forms($key);
+    $form = static::$forms[$key];
     // Build up form state
     $form_state = array(
       'form_key' => $key,

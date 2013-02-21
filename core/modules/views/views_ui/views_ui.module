@@ -482,30 +482,3 @@ function views_ui_truncate($string, $length) {
 function views_ui_load($name) {
   return views_get_view($name);
 }
-
-/**
- * Form constructor for the View deletion form.
- *
- * @param \Drupal\views\ViewExectuable $view
- *   The View being deleted.
- *
- * @see views_ui_confirm_delete_submit()
- */
-function views_ui_confirm_delete($form, &$form_state, ViewStorageInterface $view) {
-  $form['view'] = array('#type' => 'value', '#value' => $view);
-  return confirm_form($form,
-    t('Are you sure you want to delete the %name view?', array('%name' => $view->getHumanName())),
-    'admin/structure/views',
-    t('This action cannot be undone.'),
-    t('Delete'),
-    t('Cancel')
-  );
-}
-
-/**
- * Form submission handler for views_ui_confirm_delete().
- */
-function views_ui_confirm_delete_submit($form, &$form_state) {
-  $form_state['values']['view']->delete();
-  $form_state['redirect'] = 'admin/structure/views';
-}

@@ -15,14 +15,14 @@ views_ui.add:
 views_ui.settings.basic:
   pattern: '/admin/structure/views/settings'
   defaults:
-    _controller: 'views_ui.controller:settingsBasic'
+    _controller: 'views_ui.form.basic_settings:getForm'
   requirements:
     _permission: 'administer views'
 
 views_ui.settings.advanced:
   pattern: '/admin/structure/views/settings/advanced'
   defaults:
-    _controller: 'views_ui.controller:settingsAdvanced'
+    _controller: 'views_ui.form.advanced_settings:getForm'
   requirements:
     _permission: 'administer views'
 
@@ -42,9 +42,6 @@ views_ui.reports.plugins:
 
 views_ui.operation:
   pattern: '/admin/structure/views/view/{view}/{op}'
-  options:
-    converters:
-      view: 'view'
   defaults:
     _controller: 'views_ui.controller:ajaxOperation'
   requirements:
@@ -53,9 +50,6 @@ views_ui.operation:
 
 views_ui.clone:
   pattern: '/admin/structure/views/view/{view}/clone'
-  options:
-    converters:
-      view: 'view'
   defaults:
     _controller: 'views_ui.controller:cloneForm'
   requirements:
@@ -63,11 +57,8 @@ views_ui.clone:
 
 views_ui.delete:
   pattern: '/admin/structure/views/view/{view}/delete'
-  options:
-    converters:
-      view: 'view'
   defaults:
-    _controller: 'views_ui.controller:deleteForm'
+    _controller: 'Drupal\views_ui\Form\DeleteForm::getForm'
   requirements:
     _permission: 'administer views'
 
@@ -81,8 +72,8 @@ views_ui.autocomplete:
 views_ui.edit:
   pattern: '/admin/structure/views/view/{view}'
   options:
-    converters:
-      view: 'view'
+    tempstore:
+      view: 'views'
   defaults:
     _controller: 'views_ui.controller:edit'
   requirements:
@@ -91,8 +82,8 @@ views_ui.edit:
 views_ui.edit.display:
   pattern: '/admin/structure/views/view/{view}/edit/{display_id}'
   options:
-    converters:
-      view: 'view'
+    tempstore:
+      view: 'views'
   defaults:
     _controller: 'views_ui.controller:edit'
     display_id: NULL
@@ -102,8 +93,8 @@ views_ui.edit.display:
 views_ui.preview:
   pattern: '/admin/structure/views/view/{view}/preview/{display_id}'
   options:
-    converters:
-      view: 'view'
+    tempstore:
+      view: 'views'
   defaults:
     _controller: 'views_ui.controller:preview'
     display_id: NULL
@@ -112,11 +103,8 @@ views_ui.preview:
 
 views_ui.breakLock:
   pattern: '/admin/structure/views/view/{view}/break-lock'
-  options:
-    converters:
-      view: 'view'
   defaults:
-    _controller: 'views_ui.controller:breakLock'
+    _controller: 'views_ui.form.breakLock:getForm'
     display_id: NULL
   requirements:
     _permission: 'administer views'
@@ -124,8 +112,8 @@ views_ui.breakLock:
 views_ui.ajaxForm:
   pattern: '/admin/structure/views/{js}/{key}/{view}/{display_id}/{type}/{id}'
   options:
-    converters:
-      view: 'view'
+    tempstore:
+      view: 'views'
   defaults:
     _controller: 'views_ui.controller:ajaxForm'
     type: NULL

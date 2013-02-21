@@ -24,6 +24,16 @@ class ViewsUiBundle extends Bundle {
       ->addArgument(new Reference('plugin.manager.entity'))
       ->addArgument(new Reference('views.views_data'))
       ->addArgument(new Reference('user.tempstore'));
+    $container->register('views_ui.form.basic_settings', 'Drupal\views_ui\Form\BasicSettingsForm')
+      ->addArgument(new Reference('config.factory'));
+    $container->register('views_ui.form.advanced_settings', 'Drupal\views_ui\Form\AdvancedSettingsForm')
+      ->addArgument(new Reference('config.factory'));
+    $container->register('views_ui.form.breakLock', 'Drupal\views_ui\Form\BreakLockForm')
+      ->addArgument(new Reference('plugin.manager.entity'))
+      ->addArgument(new Reference('user.tempstore'));
+    $container->register('paramconverter.views_ui', 'Drupal\views_ui\ParamConverter\ViewUIConverter')
+      ->addArgument(new Reference('user.tempstore'))
+      ->addTag('paramconverter');
   }
 
 }
