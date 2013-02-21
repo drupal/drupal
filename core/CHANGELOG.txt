@@ -36,6 +36,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
       modules with similar functionality are available:
       * Blog
       * Dashboard
+      * Poll
       * Profile
       * Trigger
 - Removed the Garland theme from core.
