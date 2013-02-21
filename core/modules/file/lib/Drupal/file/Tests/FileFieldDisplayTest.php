@@ -41,7 +41,9 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     // Create a new node *without* the file field set, and check that the field
     // is not shown for each node display.
     $node = $this->drupalCreateNode(array('type' => $type_name));
-    $file_formatters = array('file_default', 'file_table', 'file_url_plain', 'hidden');
+    // Check file_default last as the assertions below assume that this is the
+    // case.
+    $file_formatters = array('file_table', 'file_url_plain', 'hidden', 'file_default');
     foreach ($file_formatters as $formatter) {
       $edit = array(
         "fields[$field_name][type]" => $formatter,
@@ -55,7 +57,6 @@ class FileFieldDisplayTest extends FileFieldTestBase {
 
     // Create a new node with the uploaded file.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
-    $this->drupalGet('node/' . $nid . '/edit');
 
     // Check that the default formatter is displaying with the file name.
     $node = node_load($nid, TRUE);
@@ -69,5 +70,13 @@ class FileFieldDisplayTest extends FileFieldTestBase {
 
     $this->assertNoRaw($default_output, t('Field is hidden when "display" option is unchecked.'));
 
+    // Add a description and make sure that it is displayed.
+    $description = $this->randomName();
+    $edit = array(
+      $field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][description]' => $description,
+      $field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][display]' => TRUE,
+    );
+    $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save and keep published'));
+    $this->assertText($description);
   }
 }

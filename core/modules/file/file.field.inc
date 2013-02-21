@@ -29,6 +29,7 @@ function file_field_info() {
       ),
       'default_widget' => 'file_generic',
       'default_formatter' => 'file_default',
+      'field item class' => '\Drupal\file\Type\FileItem',
     ),
   );
 }

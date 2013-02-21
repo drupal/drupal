@@ -285,7 +285,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->drupalLogin($user);
 
     $comment = comment_load($cid);
-    $comment_file = file_load($comment->{'field_' . $name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
+    $comment_file = $comment->{'field_' . $name}->entity;
     $this->assertFileExists($comment_file, t('New file saved to disk on node creation.'));
     // Test authenticated file download.
     $url = file_create_url($comment_file->uri);
