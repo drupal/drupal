@@ -19,7 +19,7 @@ class EntityUriTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('field', 'field_sql_storage', 'system', 'text');
+  public static $modules = array('field', 'field_sql_storage', 'system', 'text', 'entity_test');
 
   public static function getInfo() {
     return array(
@@ -32,12 +32,9 @@ class EntityUriTest extends DrupalUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('system', 'variable');
-    $this->installSchema('system', 'url_alias');
-    $this->installSchema('field', 'field_config');
-    $this->installSchema('field', 'field_config_instance');
-
-    $this->enableModules(array('entity_test'));
+    $this->installSchema('system', array('variable', 'url_alias'));
+    $this->installSchema('field', array('field_config', 'field_config_instance'));
+    $this->installSchema('entity_test', array('entity_test'));
   }
 
   /**

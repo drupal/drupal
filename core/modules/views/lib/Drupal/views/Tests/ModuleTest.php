@@ -60,7 +60,7 @@ class ModuleTest extends ViewUnitTestBase {
    * Tests the load wrapper/helper functions.
    */
   public function testLoadFunctions() {
-    $this->enableModules(array('node'), FALSE);
+    $this->enableModules(array('node'));
     $controller = $this->container->get('plugin.manager.entity')->getStorageController('view');
 
     // Test views_view_is_enabled/disabled.

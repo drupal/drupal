@@ -14,6 +14,8 @@ use Drupal\views\Tests\ViewUnitTestBase;
  */
 class FieldUrlTest extends ViewUnitTestBase {
 
+  public static $modules = array('system');
+
   /**
    * Views used by this test.
    *
@@ -29,9 +31,9 @@ class FieldUrlTest extends ViewUnitTestBase {
     );
   }
 
-  public function setup() {
-    parent::setup();
-    $this->enableModules(array('system'));
+  public function setUp() {
+    parent::setUp();
+    $this->installSchema('system', 'url_alias');
   }
 
   function viewsData() {

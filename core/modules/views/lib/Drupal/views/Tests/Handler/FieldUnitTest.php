@@ -17,6 +17,8 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
  */
 class FieldUnitTest extends ViewUnitTestBase {
 
+  public static $modules = array('user');
+
   /**
    * Views used by this test.
    *
@@ -36,10 +38,9 @@ class FieldUnitTest extends ViewUnitTestBase {
     );
   }
 
-  protected function setUp() {
+  public function setUp() {
     parent::setUp();
-
-    $this->enableModules(array('user'));
+    $this->installSchema('user', 'role_permission');
   }
 
   /**

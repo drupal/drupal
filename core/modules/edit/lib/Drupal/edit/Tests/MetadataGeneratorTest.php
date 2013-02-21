@@ -56,6 +56,8 @@ class MetadataGeneratorTest extends EditTestBase {
   function setUp() {
     parent::setUp();
 
+    $this->installSchema('field_test', 'test_entity_revision');
+
     $this->editorManager = new EditorManager();
     $this->accessChecker = new MockEditEntityFieldAccessCheck();
     $this->editorSelector = new EditorSelector($this->editorManager);

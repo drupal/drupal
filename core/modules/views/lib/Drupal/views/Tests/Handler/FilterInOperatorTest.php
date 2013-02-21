@@ -14,6 +14,8 @@ use Drupal\views\Tests\ViewUnitTestBase;
  */
 class FilterInOperatorTest extends ViewUnitTestBase {
 
+  public static $modules = array('system');
+
   /**
    * Views used by this test.
    *
@@ -37,8 +39,7 @@ class FilterInOperatorTest extends ViewUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->enableModules(array('system'));
-    $this->enableModules(array('menu_link'));
+    $this->installSchema('system', array('menu_router', 'variable'));
   }
 
   function viewsData() {

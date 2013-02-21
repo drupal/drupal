@@ -17,7 +17,7 @@ class SelectComplexTest extends DatabaseTestBase {
    *
    * @var array
    */
-  public static $modules = array('node_access_test');
+  public static $modules = array('node_access_test', 'field');
 
   public static function getInfo() {
     return array(
@@ -25,6 +25,11 @@ class SelectComplexTest extends DatabaseTestBase {
       'description' => 'Test the Select query builder with more complex queries.',
       'group' => 'Database',
     );
+  }
+
+  function setUp() {
+    parent::setUp();
+    $this->installSchema('field', array('field_config', 'field_config_instance'));
   }
 
   /**

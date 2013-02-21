@@ -163,6 +163,7 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
     $message = 'Expected ConfigNameException was thrown when attempting to install invalid configuration.';
     try {
       $this->enableModules(array('config_test_invalid_name'));
+      $this->installConfig(array('config_test_invalid_name'));
       $this->fail($message);
     }
     catch (ConfigNameException $e) {

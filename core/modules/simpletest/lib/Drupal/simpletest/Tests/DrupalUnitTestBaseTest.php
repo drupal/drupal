@@ -60,7 +60,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $this->assertFalse(in_array($module, $list), "{$module}_permission() in module_implements() not found.");
 
     // Enable the module.
-    $this->enableModules(array($module), FALSE);
+    $this->enableModules(array($module));
 
     // Verify that the module exists.
     $this->assertTrue(module_exists($module), "$module module found.");
@@ -77,10 +77,6 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $module = 'node';
     $table = 'node';
 
-    // @todo Remove after configuration system conversion.
-    $this->enableModules(array('system'), FALSE);
-    $this->installSchema('system', 'variable');
-
     // Verify that the module does not exist yet.
     $this->assertFalse(module_exists($module), "$module module not found.");
     $list = array_keys(drupal_container()->get('module_handler')->getModuleList());
@@ -92,8 +88,8 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $schema = drupal_get_schema($table);
     $this->assertFalse($schema, "'$table' table schema not found.");
 
-    // Enable the module.
-    $this->enableModules(array($module));
+    // Install the module.
+    module_enable(array($module));
 
     // Verify that the enabled module exists.
     $this->assertTrue(module_exists($module), "$module module found.");
@@ -108,24 +104,6 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
   }
 
   /**
-   * Tests installing of multiple modules via enableModules().
-   *
-   * Regression test: Each passed module has to be enabled and installed on its
-   * own, in the same way as module_enable() enables only one module after the
-   * other.
-   */
-  function testEnableModulesInstallMultiple() {
-    // Field retrieves entity type plugins, and EntityTypeManager calls into
-    // hook_entity_info_alter(). If both modules would be first enabled together
-    // instead of each on its own, then Node module's alter implementation
-    // would be called and this simply blows up. To further complicate matters,
-    // additionally install Comment module, whose entity bundles depend on node
-    // types.
-    $this->enableModules(array('field', 'node', 'comment'));
-    $this->pass('Comment module was installed.');
-  }
-
-  /**
    * Tests installing modules via enableModules() with DepedencyInjection services.
    */
   function testEnableModulesInstallContainer() {
@@ -133,6 +111,9 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     // @todo field_sql_storage and field should technically not be necessary
     //   for an entity query.
     $this->enableModules(array('field_sql_storage', 'field', 'node'));
+    $this->installSchema('field', array('field_config', 'field_config_instance'));
+
+    $this->installSchema('node', array('node_type', 'node'));
     // Perform an entity query against node.
     $query = entity_query('node');
     // Disable node access checks, since User module is not enabled.
@@ -158,6 +139,19 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $schema = drupal_get_schema($table);
     $this->assertTrue($schema, "'$table' table schema found.");
 
+    // Verify that a unknown table from an enabled module throws an error.
+    $table = 'unknown_entity_test_table';
+    try {
+      $this->installSchema($module, $table);
+      $this->fail('Exception for non-retrievable schema found.');
+    }
+    catch (\Exception $e) {
+      $this->pass('Exception for non-retrievable schema found.');
+    }
+    $this->assertFalse(db_table_exists($table), "'$table' database table not found.");
+    $schema = drupal_get_schema($table);
+    $this->assertFalse($schema, "'$table' table schema not found.");
+
     // Verify that a table from a unknown module cannot be installed.
     $module = 'database_test';
     $table = 'test';
@@ -173,7 +167,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $this->assertFalse($schema, "'$table' table schema not found.");
 
     // Verify that the same table can be installed after enabling the module.
-    $this->enableModules(array($module), FALSE);
+    $this->enableModules(array($module));
     $this->installSchema($module, $table);
     $this->assertTrue(db_table_exists($table), "'$table' database table found.");
     $schema = drupal_get_schema($table);
@@ -181,7 +175,30 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
   }
 
   /**
-   * Tests that the fixed module list is retained after enabling and installing modules.
+   * Tests expected behavior of installConfig().
+   */
+  function testInstallConfig() {
+    $module = 'user';
+
+    // Verify that default config can only be installed for enabled modules.
+    try {
+      $this->installConfig(array($module));
+      $this->fail('Exception for non-enabled module found.');
+    }
+    catch (\Exception $e) {
+      $this->pass('Exception for non-enabled module found.');
+    }
+    $this->assertFalse($this->container->get('config.storage')->exists('user.settings'));
+
+    // Verify that default config can be installed.
+    $this->enableModules(array('user'));
+    $this->installConfig(array('user'));
+    $this->assertTrue($this->container->get('config.storage')->exists('user.settings'));
+    $this->assertTrue(config('user.settings')->get('register'));
+  }
+
+  /**
+   * Tests that the module list is retained after enabling/installing/disabling modules.
    */
   function testEnableModulesFixedList() {
     // entity_test is loaded via $modules; its entity type should exist.
@@ -189,7 +206,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $this->assertTrue(TRUE == entity_get_info('entity_test'));
 
     // Load some additional modules; entity_test should still exist.
-    $this->enableModules(array('entity', 'field', 'field_sql_storage', 'text', 'entity_test'), FALSE);
+    $this->enableModules(array('entity', 'field', 'field_sql_storage', 'text', 'entity_test'));
     $this->assertEqual($this->container->get('module_handler')->moduleExists('entity_test'), TRUE);
     $this->assertTrue(TRUE == entity_get_info('entity_test'));
 
@@ -209,7 +226,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $this->assertTrue(TRUE == entity_get_info('entity_test'));
 
     // Reactivate the disabled module without enabling it.
-    $this->enableModules(array('field_test'), FALSE);
+    $this->enableModules(array('field_test'));
 
     // Create a field and an instance.
     $display = entity_create('entity_display', array(
@@ -234,14 +251,18 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
    * Tests that theme() works right after loading a module.
    */
   function testEnableModulesTheme() {
-    $element = array(
+    $original_element = $element = array(
       '#type' => 'container',
       '#markup' => 'Foo',
       '#attributes' => array(),
     );
-    $this->enableModules(array('system'), FALSE);
+    $this->enableModules(array('system'));
     // theme() throws an exception if modules are not loaded yet.
-    drupal_render($element);
+    $this->assertTrue(drupal_render($element));
+
+    $element = $original_element;
+    $this->disableModules(array('entity_test'));
+    $this->assertTrue(drupal_render($element));
   }
 
 }

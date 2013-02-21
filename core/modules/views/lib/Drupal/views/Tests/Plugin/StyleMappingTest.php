@@ -12,6 +12,8 @@ namespace Drupal\views\Tests\Plugin;
  */
 class StyleMappingTest extends StyleTestBase {
 
+  public static $modules = array('system');
+
   /**
    * Views used by this test.
    *
@@ -25,12 +27,6 @@ class StyleMappingTest extends StyleTestBase {
       'description' => 'Test mapping style functionality.',
       'group' => 'Views Plugins',
     );
-  }
-
-  public function setUp() {
-    parent::setUp();
-
-    $this->enableModules(array('system'));
   }
 
   /**

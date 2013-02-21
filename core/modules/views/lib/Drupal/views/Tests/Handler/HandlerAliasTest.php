@@ -14,6 +14,8 @@ use Drupal\views\Tests\ViewUnitTestBase;
  */
 class HandlerAliasTest extends ViewUnitTestBase {
 
+  public static $modules = array('user');
+
   /**
    * Views used by this test.
    *
@@ -32,7 +34,7 @@ class HandlerAliasTest extends ViewUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->enableModules(array('user'));
+    $this->installSchema('user', 'users');
   }
 
   /**
