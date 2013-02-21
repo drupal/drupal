@@ -275,6 +275,18 @@ class Query extends QueryBase implements QueryInterface {
     return $this->sqlQuery->execute()->fetchAllKeyed();
   }
 
+  /**
+   * Constructs a select expression for a given field and language.
+   *
+   * @param string $field
+   *   The name of the field being queried.
+   * @param string $langcode
+   *   The language code of the field.
+   *
+   * @return string
+   *   An expression that will select the given field for the given language in
+   *   a SELECT query, such as 'base_table.id'.
+   */
   protected function getSqlField($field, $langcode) {
     if (!isset($this->tables)) {
       $this->tables = new Tables($this->sqlQuery);

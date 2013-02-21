@@ -69,7 +69,7 @@ class QueryFactory {
    *   The query object that can query the given entity type.
    */
    public function getAggregate($entity_type, $conjunction, EntityManager $entity_manager) {
-      throw new QueryException('Aggregation over configuration enitties is not supported');
+      throw new QueryException('Aggregation over configuration entities is not supported');
   }
 
 }
