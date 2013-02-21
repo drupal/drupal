@@ -43,7 +43,6 @@
  * Other variables:
  * - $node: Full node entity. Contains data that may not be safe.
  * - $type: Node type; for example, page, article, etc.
- * - $comment_count: Number of comments attached to the node.
  * - $uid: User ID of the node author.
  * - $created: Time the node was published formatted in Unix timestamp.
  * - $zebra: Outputs either "even" or "odd". Useful for zebra striping in
@@ -57,7 +56,6 @@
  * - $promote: Flag for front page promotion state.
  * - $sticky: Flags for sticky post setting.
  * - $status: Flag for published status.
- * - $comment: State of comment settings for the node.
  * - $is_front: Flags true when presented in the front page.
  * - $logged_in: Flags true when the current user is a logged-in member.
  * - $is_admin: Flags true when the current user is an administrator.
@@ -93,14 +91,12 @@
 
   <div class="content"<?php print $content_attributes; ?>>
     <?php
-      // We hide the comments and links now so that we can render them later.
-      hide($content['comments']);
+      // We hide links now so that we can render them later.
       hide($content['links']);
       print render($content);
     ?>
   </div>
 
   <?php print render($content['links']); ?>
-  <?php print render($content['comments']); ?>
 
 </article>

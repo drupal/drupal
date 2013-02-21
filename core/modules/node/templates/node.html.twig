@@ -40,7 +40,6 @@
  * Other variables:
  * - node: Fully loaded node entity.
  * - type: Node type; for example, page, article, etc.
- * - comment_count: Number of comments attached to the node.
  * - uid: User ID of the node author.
  * - created: Time the node was published formatted as a Unix timestamp.
  * - zebra: Outputs either "even" or "odd". Useful for zebra striping in
@@ -54,7 +53,6 @@
  * - promote: Flag for front page promotion state.
  * - sticky: Flag for sticky post setting.
  * - status: Flag for published status.
- * - comment: State of comment settings for the node.
  * - readmore: Flag for more state. Will be true if the teaser content of the
  *   node cannot hold the main body content.
  * - is_front: Flag for front. Will be true when presented on the front page.
@@ -94,13 +92,11 @@
   {% endif %}
 
   <div class="content"{{ content_attributes }}>
-    {# We hide the comments and links now so that we can render them later. #}
-    {% hide(content.comments) %}
+    {# We hide links now so that we can render them later. #}
     {% hide(content.links) %}
     {{ content }}
   </div>
 
   {{ content.links }}
-  {{ content.comments }}
 
 </article>

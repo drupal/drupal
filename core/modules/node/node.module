@@ -1156,10 +1156,7 @@ function template_preprocess_node(&$variables) {
   $variables['page']      = $variables['view_mode'] == 'full' && node_is_page($node);
 
   // Make useful flags and node data available.
-  // @todo: The comment properties only exist if comment.module is enabled, but
-  //   are documented in node.tpl.php, so we make sure that they are set.
-  //   Consider removing them.
-  $properties = array('type', 'comment_count', 'uid', 'created', 'promote', 'sticky', 'status', 'comment');
+  $properties = array('type', 'uid', 'created', 'promote', 'sticky', 'status');
   foreach ($properties as $property) {
     $variables[$property] = isset($node->$property) ? $node->$property : NULL;
   }
