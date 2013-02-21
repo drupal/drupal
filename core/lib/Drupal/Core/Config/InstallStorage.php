@@ -15,6 +15,13 @@ namespace Drupal\Core\Config;
 class InstallStorage extends FileStorage {
 
   /**
+   * Folder map indexed by configuration name.
+   *
+   * @var array
+   */
+  protected $folders;
+
+  /**
    * Overrides Drupal\Core\Config\FileStorage::__construct().
    */
   public function __construct() {
@@ -38,17 +45,9 @@ class InstallStorage extends FileStorage {
    *   afterwards check for a corresponding module or theme.
    */
   public function getFilePath($name) {
-    // Extract the owner.
-    $owner = strtok($name, '.');
-    // Determine the path to the owner.
-    $path = FALSE;
-    foreach (array('profile', 'module', 'theme') as $type) {
-      if ($path = drupal_get_path($type, $owner)) {
-        $file = $path . '/config/' . $name . '.' . static::getFileExtension();
-        if (file_exists($file)) {
-          return $file;
-        }
-      }
+    $folders = $this->getAllFolders();
+    if (isset($folders[$name])) {
+      return $folders[$name] . '/' . $name . '.' . $this->getFileExtension();
     }
     // If any code in the early installer requests a configuration object that
     // does not exist anywhere as default config, then that must be mistake.
@@ -86,12 +85,79 @@ class InstallStorage extends FileStorage {
 
   /**
    * Implements Drupal\Core\Config\StorageInterface::listAll().
-   *
-   * @throws Drupal\Core\Config\StorageException
    */
   public function listAll($prefix = '') {
-    throw new StorageException('List operation is not allowed during install.');
-  }
+      $names = array_keys($this->getAllFolders());
+      if (!$prefix) {
+        return $names;
+      }
+      else {
+        $return = array();
+        foreach ($names as $index => $name) {
+          if (strpos($name, $prefix) === 0 ) {
+            $return[$index] = $names[$index];
+          }
+        }
+        return $return;
+      }
+    }
+
+    /**
+     * Returns a map of all config object names and their folders.
+     *
+     * @return array
+     *   An array mapping config object names with directories.
+     */
+    protected function getAllFolders() {
+      if (!isset($this->folders)) {
+        $this->folders = $this->getComponentNames('profile', array(drupal_get_profile()));
+        $this->folders += $this->getComponentNames('module', array_keys(drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.module$/', 'modules', 'name', 0)));
+        $this->folders += $this->getComponentNames('theme', array_keys(drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info$/', 'themes')));
+      }
+      return $this->folders;
+    }
+
+    /**
+     * Get all configuration names and folders for a list of modules or themes.
+     *
+     * @param string $type
+     *   Type of components: 'module' | 'theme' | 'profile'
+     * @param array $list
+     *   Array of theme or module names.
+     *
+     * @return array
+     *   Folders indexed by configuration name.
+     */
+    protected function getComponentNames($type, array $list) {
+      $extension = '.' . $this->getFileExtension();
+      $folders = array();
+      foreach ($list as $name) {
+        $directory = $this->getComponentFolder($type, $name);
+        if (file_exists($directory)) {
+          $files = glob($directory . '/*' . $extension);
+          foreach ($files as $filename) {
+            $name = basename($filename, $extension);
+            $folders[$name] = $directory;
+          }
+        }
+      }
+      return $folders;
+    }
+
+    /**
+     * Get folder inside each component that contains the files.
+     *
+     * @param string $type
+     *   Component type: 'module' | 'theme' | 'profile'
+     * @param string $name
+     *   Component name.
+     *
+     * @return string
+     *   The configuration folder name for this component.
+     */
+    protected function getComponentFolder($type, $name) {
+      return drupal_get_path($type, $name) . '/config';
+    }
 
   /**
    * Overrides Drupal\Core\Config\FileStorage::deleteAll().

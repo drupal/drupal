@@ -1,0 +1,39 @@
+# Schema for configuration files of system module:
+system.site:
+  type: mapping
+  label: 'Site information'
+  mapping:
+    "name":
+      label: "Site name"
+      type: label
+    "mail":
+      label: "Site mail"
+      type: email
+    "slogan":
+      label: "Site slogan"
+      type: text
+    "page":
+      type: mapping
+      mapping:
+        "403":
+          type: path
+        "404":
+          type: path
+        "front":
+          type: path
+          label: "Front page path"
+    "admin_compact_mode":
+      type: boolean
+    "weight_select_max":
+      type: integer
+
+system.maintenance:
+  type: mapping
+  label: 'Maintenance mode'
+  mapping:
+    "enabled":
+      type: boolean
+      label: "Put site into maintenance mode"
+    "message":
+      type: text
+      label: "Message to display when in maintenance mode"

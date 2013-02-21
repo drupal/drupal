@@ -68,9 +68,14 @@ class CoreBundle extends Bundle {
       ->addArgument(new Reference('database'))
       ->addArgument('config_snapshot');
 
+    // Register schema configuration storage.
+    $container
+      ->register('config.storage.schema', 'Drupal\Core\Config\Schema\SchemaStorage');
+
     // Register the typed configuration data manager.
     $container->register('config.typed', 'Drupal\Core\Config\TypedConfigManager')
-      ->addArgument(new Reference('config.storage'));
+      ->addArgument(new Reference('config.storage'))
+      ->addArgument(new Reference('config.storage.schema'));
 
     // Register the service for the default database connection.
     $container->register('database', 'Drupal\Core\Database\Connection')
