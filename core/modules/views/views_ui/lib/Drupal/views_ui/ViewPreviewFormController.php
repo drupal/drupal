@@ -98,7 +98,11 @@ class ViewPreviewFormController extends ViewFormControllerBase {
   public function submitPreview($form, &$form_state) {
     // Rebuild the form with a pristine $view object.
     $view = $this->getEntity($form_state);
-    $form_state['build_info']['args'][0] = drupal_container()->get('views_ui.controller')->getViewUI($view);
+    // Attempt to load the view from temp store, otherwise create a new one.
+    if (!$new_view = drupal_container()->get('user.tempstore')->get('views')->get($view->id())) {
+      $new_view = new ViewUI($view);
+    }
+    $form_state['build_info']['args'][0] = $new_view;
     $view->renderPreview = TRUE;
     $form_state['show_preview'] = TRUE;
     $form_state['rebuild'] = TRUE;

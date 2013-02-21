@@ -34,28 +34,22 @@ class CachedDataUITest extends UITestBase {
     $controller = $this->container->get('views_ui.controller');
     $view = entity_load('view', 'test_view');
 
-    $view_cache = $controller->getViewUI($view);
+    $temp_store = $this->container->get('user.tempstore')->get('views');
+    $view_cache = $temp_store->getMetadata('test_view');
     // The view should not be locked.
-    $this->assertFalse($view_cache->locked, 'The view is not locked.');
+    $this->assertFalse($view_cache, 'The view is not locked.');
 
     $this->drupalGet('admin/structure/views/view/test_view/edit');
     // Make sure we have 'changes' to the view.
     $this->drupalPost('admin/structure/views/nojs/display/test_view/default/title', array(), t('Apply'));
     $this->assertText('* All changes are stored temporarily. Click Save to make your changes permanent. Click Cancel to discard your changes.', 'The view has been changed.');
 
-    $view_cache = $controller->getViewUI($view);
+    $view_cache = $temp_store->get('test_view');
     // The view should be enabled.
-    $this->assertTrue($view_cache->status(), ' The view is enabled.');
+    $this->assertTrue($view_cache->status(), 'The view is enabled.');
     // The view should now be locked.
-    $this->assertTrue($view_cache->locked, 'The view is locked.');
-
-    // Change the status of the view.
-    $view->disable()->save();
-
-    // Load the tempstore data again and check test the status.
-    $view_cache = $controller->getViewUI($view);
-    // The view should be disabled.
-    $this->assertFalse($view_cache->status(), 'The cached view is disabled.');
+    $view_cache = $temp_store->getMetadata('test_view');
+    $this->assertTrue($view_cache, 'The view is locked.');
 
     // Login with another user and make sure the view is locked and break.
     $this->drupalLogin($this->adminUser);

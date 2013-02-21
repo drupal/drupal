@@ -104,17 +104,18 @@ following the instructions in the INTRODUCTION section at the top of this file:
    - Open settings.php with a text editor.
 
    - Find the line that says:
-     $update_free_access = FALSE;
+     $settings['update_free_access'] = FALSE;
 
    - Change it into:
-     $update_free_access = TRUE;
+     $settings['update_free_access'] = TRUE;
 
-   - Once the upgrade is done, $update_free_access must be reverted to FALSE.
+   - Once the upgrade is done, $settings['update_free_access'] must be
+     reverted to FALSE.
 
 7. Go to Administration > Reports > Status report. Verify that everything is
    working as expected.
 
-8. Ensure that $update_free_access is FALSE in settings.php.
+8. Ensure that $settings['update_free_access'] is FALSE in settings.php.
 
 9. Go to Administration > Configuration > Development > Maintenance mode.
    Disable the "Put site into maintenance mode" checkbox and save the
@@ -211,12 +212,13 @@ following the instructions in the INTRODUCTION section at the top of this file:
    - Open settings.php with a text editor.
 
    - Find the line that says:
-     $update_free_access = FALSE;
+     $settings['update_free_access'] = FALSE;
 
    - Change it into:
-     $update_free_access = TRUE;
+     $settings['update_free_access'] = TRUE;
 
-   - Once the upgrade is done, $update_free_access must be reverted to FALSE.
+   - Once the upgrade is done, $settings['update_free_access'] must be
+     reverted to FALSE.
 
 15. Backup your database after the core upgrade has run.
 
@@ -226,7 +228,7 @@ following the instructions in the INTRODUCTION section at the top of this file:
 17. Go to Administration > Reports > Status report. Verify that everything is
    working as expected.
 
-18. Ensure that $update_free_access is FALSE in settings.php.
+18. Ensure that $settings['update_free_access'] is FALSE in settings.php.
 
 19. Go to Administration > Configuration > Development > Maintenance mode.
    Disable the "Put site into maintenance mode" checkbox and save the
