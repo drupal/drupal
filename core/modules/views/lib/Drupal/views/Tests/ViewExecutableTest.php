@@ -23,6 +23,8 @@ use Drupal\views\Plugin\views\query\Sql;
  */
 class ViewExecutableTest extends ViewUnitTestBase {
 
+  public static $modules = array('system', 'node', 'user', 'filter', 'comment', 'entity', 'field', 'field_sql_storage', 'text');
+
   /**
    * Views used by this test.
    *
@@ -75,20 +77,15 @@ class ViewExecutableTest extends ViewUnitTestBase {
     );
   }
 
-  protected function setUp() {
-    parent::setUp();
-    $this->enableModules(array(
-      'entity',
-      'field',
-      'field_sql_storage',
-      'text',
-      'node',
-      'system',
-      'comment',
-      'user',
-      'filter'
-    ));
+  protected function setUpFixtures() {
+    $this->installSchema('user', array('users', 'role_permission'));
+    $this->installSchema('node', array('node_type', 'node'));
+    $this->installSchema('comment', array('comment', 'comment_entity_statistics'));
+    $this->installSchema('field', array('field_config', 'field_config_instance'));
     comment_add_default_comment_field('node', 'page');
+    parent::setUpFixtures();
+
+    $this->installConfig(array('filter'));
   }
 
   /**

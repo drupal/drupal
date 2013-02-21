@@ -14,7 +14,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
  */
 class FilterDefaultConfigTest extends DrupalUnitTestBase {
 
-  public static $modules = array('system', 'user', 'filter');
+  public static $modules = array('system', 'user', 'filter', 'filter_test');
 
   public static function getInfo() {
     return array(
@@ -26,18 +26,20 @@ class FilterDefaultConfigTest extends DrupalUnitTestBase {
 
   function setUp() {
     parent::setUp();
-    $this->enableModules(array('user'));
+
     // filter_permission() calls into url() to output a link in the description.
     $this->installSchema('system', 'url_alias');
+
+    $this->installSchema('user', array('users_roles', 'role_permission'));
+
+    // Install filter_test module, which ships with custom default format.
+    $this->installConfig(array('user', 'filter_test'));
   }
 
   /**
    * Tests installation of default formats.
    */
   function testInstallation() {
-    // Install filter_test module, which ships with custom default format.
-    $this->enableModules(array('filter_test'));
-
     // Verify that the format was installed correctly.
     $format = filter_format_load('filter_test');
     $this->assertTrue($format);
@@ -87,9 +89,6 @@ class FilterDefaultConfigTest extends DrupalUnitTestBase {
    * Tests that changes to FilterFormat::$roles do not have an effect.
    */
   function testUpdateRoles() {
-    // Install filter_test module, which ships with custom default format.
-    $this->enableModules(array('filter_test'));
-
     // Verify role permissions declared in default config.
     $format = filter_format_load('filter_test');
     $this->assertEqual(array_keys(filter_get_roles_by_format($format)), array(

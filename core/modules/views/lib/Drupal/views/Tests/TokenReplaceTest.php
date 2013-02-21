@@ -12,6 +12,8 @@ namespace Drupal\views\Tests;
  */
 class TokenReplaceTest extends ViewUnitTestBase {
 
+  public static $modules = array('system');
+
   /**
    * Views used by this test.
    *
@@ -27,10 +29,9 @@ class TokenReplaceTest extends ViewUnitTestBase {
     );
   }
 
-  public function setUp() {
+  function setUp() {
     parent::setUp();
-
-    $this->enableModules(array('system'));
+    $this->installSchema('system', 'url_alias');
   }
 
   /**

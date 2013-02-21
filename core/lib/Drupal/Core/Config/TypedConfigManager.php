@@ -18,19 +18,21 @@ class TypedConfigManager extends TypedDataManager {
   /**
    * A storage controller instance for reading configuration data.
    *
-   * @var Drupal\Core\Config\StorageInterface
+   * @var \Drupal\Core\Config\StorageInterface
    */
-  protected $storage;
+  protected $configStorage;
 
   /**
    * Creates a new typed configuration manager.
    *
-   * @param Drupal\Core\Config\StorageInterface $storage
+   * @param \Drupal\Core\Config\StorageInterface $configStorage
+   *   The storage controller object to use for reading schema data
+   * @param \Drupal\Core\Config\StorageInterface $schemaStorage
    *   The storage controller object to use for reading schema data
    */
-  public function __construct($storage) {
-    $this->storage = $storage;
-    $this->discovery = new SchemaDiscovery($storage);
+  public function __construct(StorageInterface $configStorage, StorageInterface $schemaStorage) {
+    $this->configStorage = $configStorage;
+    $this->discovery = new SchemaDiscovery($schemaStorage);
     $this->factory = new TypedConfigElementFactory($this->discovery);
   }
 
@@ -40,17 +42,17 @@ class TypedConfigManager extends TypedDataManager {
    * @param string $name
    *   Configuration object name.
    *
-   * @return Drupal\Core\Config\Schema\Element
+   * @return \Drupal\Core\Config\Schema\Element
    *   Typed configuration element.
    */
   public function get($name) {
-    $data = $this->storage->read($name);
+    $data = $this->configStorage->read($name);
     $definition = $this->getDefinition($name);
     return $this->create($definition, $data);
   }
 
   /**
-   * Overrides Drupal\Core\TypedData\TypedDataManager::create()
+   * Overrides \Drupal\Core\TypedData\TypedDataManager::create()
    *
    * Fills in default type and does variable replacement.
    */

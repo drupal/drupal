@@ -38,12 +38,7 @@ class SchemaDiscovery implements DiscoveryInterface {
    */
   public function __construct($storage) {
     $this->storage = $storage;
-    // Load definitions for all enabled modules.
-    foreach (module_list() as $module) {
-      $this->loadSchema($module);
-    }
-    // @todo Load definitions for all enabled themes.
-
+    $this->loadAllSchema();
   }
 
   /**
@@ -84,11 +79,12 @@ class SchemaDiscovery implements DiscoveryInterface {
   /**
    * Load schema for module / theme.
    */
-  protected function loadSchema($component) {
-    if ($schema = $this->storage->read($component . '.schema')) {
-      foreach ($schema as $type => $definition) {
-        $this->definitions[$type] = $definition;
-
+  protected function loadAllSchema() {
+    foreach ($this->storage->listAll() as $name) {
+      if ($schema = $this->storage->read($name)) {
+        foreach ($schema as $type => $definition) {
+          $this->definitions[$type] = $definition;
+        }
       }
     }
   }

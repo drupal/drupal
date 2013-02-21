@@ -26,7 +26,7 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('block_test');
+  public static $modules = array('block', 'block_test');
 
   /**
    * The block storage controller.
@@ -46,7 +46,6 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->enableModules(array('block'));
     $this->controller = $this->container->get('plugin.manager.entity')->getStorageController('block');
   }
 
@@ -196,7 +195,7 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
     $this->assertTrue(empty($entities), 'There are no blocks initially.');
 
     // Install the block_test.module, so that its default config is installed.
-    $this->enableModules(array('block_test'));
+    $this->installConfig(array('block_test'));
 
     $entities = $this->controller->load();
     $entity = reset($entities);

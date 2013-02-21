@@ -35,7 +35,8 @@ class GenericFileFormatter extends FormatterBase {
     foreach ($items as $delta => $item) {
       $elements[$delta] = array(
         '#theme' => 'file_link',
-        '#file' => (object) $item,
+        '#file' => file_load($item['fid']),
+        '#description' => $item['description'],
       );
     }
 

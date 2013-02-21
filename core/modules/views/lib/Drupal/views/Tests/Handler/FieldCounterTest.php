@@ -15,6 +15,13 @@ use Drupal\views\Tests\ViewUnitTestBase;
 class FieldCounterTest extends ViewUnitTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('user');
+
+  /**
    * Views used by this test.
    *
    * @var array
@@ -31,8 +38,7 @@ class FieldCounterTest extends ViewUnitTestBase {
 
   protected function setUp() {
     parent::setUp();
-
-    $this->enableModules(array('user'));
+    $this->installSchema('user', 'role_permission');
   }
 
   function testSimple() {

@@ -17,9 +17,19 @@ use Drupal\simpletest\DrupalUnitTestBase;
  */
 abstract class DatabaseTestBase extends DrupalUnitTestBase {
 
+  public static $modules = array('database_test');
+
   function setUp() {
     parent::setUp();
-    $this->enableModules(array('database_test'));
+    $this->installSchema('database_test', array(
+      'test',
+      'test_people',
+      'test_one_blob',
+      'test_two_blobs',
+      'test_task',
+      'test_null',
+      'test_serialized',
+    ));
     self::addSampleData();
   }
 

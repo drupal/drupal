@@ -16,6 +16,8 @@ use Drupal\views\Tests\ViewUnitTestBase;
  */
 class AreaTextTest extends ViewUnitTestBase {
 
+  public static $modules = array('system', 'user', 'filter');
+
   /**
    * Views used by this test.
    *
@@ -34,7 +36,7 @@ class AreaTextTest extends ViewUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->enableModules(array('system', 'user', 'filter'));
+    $this->installConfig(array('system', 'filter'));
   }
 
   public function testAreaText() {

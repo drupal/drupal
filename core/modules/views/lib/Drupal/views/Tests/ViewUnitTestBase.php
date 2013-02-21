@@ -24,14 +24,34 @@ use Symfony\Component\HttpFoundation\Request;
  */
 abstract class ViewUnitTestBase extends DrupalUnitTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('views', 'views_test_config', 'views_test_data');
+
   protected function setUp() {
     parent::setUp();
 
+    $this->setUpFixtures();
+  }
+
+  /**
+   * Sets up the configuration and schema of views and views_test_data modules.
+   *
+   * Because the schema of views_test_data.module is dependent on the test
+   * using it, it cannot be enabled normally.
+   */
+  protected function setUpFixtures() {
     // Define the schema and views data variable before enabling the test module.
     state()->set('views_test_data_schema', $this->schemaDefinition());
     state()->set('views_test_data_views_data', $this->viewsData());
 
-    $this->enableModules(array('views', 'views_test_config', 'views_test_data'));
+    $this->installConfig(array('views', 'views_test_config', 'views_test_data'));
+    foreach ($this->schemaDefinition() as $table => $schema) {
+      $this->installSchema('views_test_data', $table);
+    }
 
     // Load the test dataset.
     $data_set = $this->dataSet();
@@ -66,8 +86,8 @@ abstract class ViewUnitTestBase extends DrupalUnitTestBase {
    * @return bool
    *   TRUE if the assertion succeeded, or FALSE otherwise.
    */
-  protected function assertIdenticalResultset($view, $expected_result, $column_map = array(), $message = 'Identical result set') {
-    return $this->assertIdenticalResultsetHelper($view, $expected_result, $column_map, $message, 'assertIdentical');
+  protected function assertIdenticalResultset($view, $expected_result, $column_map = array(), $message = NULL) {
+    return $this->assertIdenticalResultsetHelper($view, $expected_result, $column_map, 'assertIdentical', $message);
   }
 
   /**
@@ -89,8 +109,8 @@ abstract class ViewUnitTestBase extends DrupalUnitTestBase {
    * @return bool
    *   TRUE if the assertion succeeded, or FALSE otherwise.
    */
-  protected function assertNotIdenticalResultset($view, $expected_result, $column_map = array(), $message = 'Identical result set') {
-    return $this->assertIdenticalResultsetHelper($view, $expected_result, $column_map, $message, 'assertNotIdentical');
+  protected function assertNotIdenticalResultset($view, $expected_result, $column_map = array(), $message = NULL) {
+    return $this->assertIdenticalResultsetHelper($view, $expected_result, $column_map, 'assertNotIdentical', $message);
   }
 
   /**
@@ -106,11 +126,11 @@ abstract class ViewUnitTestBase extends DrupalUnitTestBase {
    * @param array $column_map
    *   An associative array mapping the columns of the result set
    *   from the view (as keys) and the expected result set (as values).
-   * @param string $message
-   *   The message to display with the assertion.
    * @param string $assert_method
    *   The TestBase assertion method to use (either 'assertIdentical' or
    *   'assertNotIdentical').
+   * @param string $message
+   *   (optional) The message to display with the assertion.
    *
    * @return bool
    *   TRUE if the assertion succeeded, or FALSE otherwise.
@@ -118,7 +138,7 @@ abstract class ViewUnitTestBase extends DrupalUnitTestBase {
    * @see \Drupal\views\Tests\ViewTestBase::assertIdenticalResultset()
    * @see \Drupal\views\Tests\ViewTestBase::assertNotIdenticalResultset()
    */
-  protected function assertIdenticalResultsetHelper($view, $expected_result, $column_map, $message, $assert_method) {
+  protected function assertIdenticalResultsetHelper($view, $expected_result, $column_map, $assert_method, $message = NULL) {
     // Convert $view->result to an array of arrays.
     $result = array();
     foreach ($view->result as $key => $value) {
@@ -140,13 +160,24 @@ abstract class ViewUnitTestBase extends DrupalUnitTestBase {
       $expected_result[$key] = $row;
     }
 
+    $this->verbose('<pre style="white-space: pre-wrap;">'
+      . "\n\nQuery:\n" . $view->build_info['query']
+      . "\n\nQuery arguments:\n" . var_export($view->build_info['query_args'], TRUE)
+      . "\n\nActual result:\n" . var_export($result, TRUE)
+      . "\n\nExpected result:\n" . var_export($expected_result, TRUE));
+
     // Reset the numbering of the arrays.
     $result = array_values($result);
     $expected_result = array_values($expected_result);
 
-    $this->verbose('<pre>Returned data set: ' . print_r($result, TRUE) . "\n\nExpected: ". print_r($expected_result, TRUE));
-
     // Do the actual comparison.
+    if (!isset($message)) {
+      $not = (strpos($assert_method, 'Not') ? 'not' : '');
+      $message = format_string("Actual result <pre>\n@actual\n</pre> is $not identical to expected <pre>\n@expected\n</pre>", array(
+        '@actual' => var_export($result, TRUE),
+        '@expected' => var_export($expected_result, TRUE),
+      ));
+    }
     return $this->$assert_method($result, $expected_result, $message);
   }
 
@@ -188,7 +219,6 @@ abstract class ViewUnitTestBase extends DrupalUnitTestBase {
     $view->setDisplay();
     $view->preExecute($args);
     $view->execute();
-    $this->verbose('<pre>Executed view: ' . ((string) $view->build_info['query']) . '</pre>');
   }
 
   /**

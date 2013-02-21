@@ -57,6 +57,7 @@ class ConfigInstallTest extends DrupalUnitTestBase {
 
     // Install the test module.
     $this->enableModules(array('config_test'));
+    $this->installConfig(array('config_test'));
 
     // Verify that default module config exists.
     $config = config($default_config);

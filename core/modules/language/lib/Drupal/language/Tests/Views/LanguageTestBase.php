@@ -15,12 +15,22 @@ use Drupal\Core\Language\Language;
  */
 abstract class LanguageTestBase extends ViewUnitTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('system', 'language');
+
   protected function setUp() {
     parent::setUp();
+    $this->installSchema('language', 'language');
+    $this->installSchema('system', 'variable');
 
-    $this->enableModules(array('system', 'language'));
 
-    // Create another language beside English.
+    // Create English and another language beside English.
+    $language = new Language(array('langcode' => 'en'));
+    language_save($language);
     $language = new Language(array('langcode' => 'xx-lolspeak', 'name' => 'Lolspeak'));
     language_save($language);
   }

@@ -13,19 +13,28 @@ namespace Drupal\views\Tests\Plugin;
  * @see \Drupal\views\Tests\Handler\JoinTest
  * @see \Drupal\views\Tests\Plugin\RelationshipTest
  */
-abstract class RelationshipJoinTestBase extends PluginTestBase {
+abstract class RelationshipJoinTestBase extends PluginUnitTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('user');
+  public static $modules = array('system', 'user', 'field');
 
-  protected function setUp() {
-    parent::setUp();
+  /**
+   * Overrides \Drupal\views\Tests\ViewUnitTestBase::setUpFixtures().
+   */
+  protected function setUpFixtures() {
+    $this->installSchema('user', array('users', 'users_roles', 'role_permission'));
+    $this->installSchema('field', array('field_config', 'field_config_instance'));
+    $this->installConfig(array('user'));
+    parent::setUpFixtures();
 
-    $this->enableViewsTestModule();
+    // Create a record for uid 1.
+    $this->installSchema('system', 'sequences');
+    $this->root_user = entity_create('user', array('name' => $this->randomName()));
+    $this->root_user->save();
   }
 
   /**

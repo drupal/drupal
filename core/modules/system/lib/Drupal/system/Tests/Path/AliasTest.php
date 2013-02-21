@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Path\CrudTest.
+ * Contains Drupal\system\Tests\Path\AliasTest.
  */
 
 namespace Drupal\system\Tests\Path;
@@ -15,7 +15,7 @@ use Drupal\Core\Path\AliasManager;
 /**
  * Tests path alias CRUD and lookup functionality.
  */
-class AliasTest extends DrupalUnitTestBase {
+class AliasTest extends PathUnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -24,18 +24,6 @@ class AliasTest extends DrupalUnitTestBase {
       'group' => t('Path API'),
     );
   }
-
-  public function setUp() {
-    parent::setUp();
-    $this->fixtures = new UrlAliasFixtures();
-  }
-
-  public function tearDown() {
-    $this->fixtures->dropTables(Database::getConnection());
-
-    parent::tearDown();
-  }
-
 
   function testCRUD() {
     //Prepare database table.

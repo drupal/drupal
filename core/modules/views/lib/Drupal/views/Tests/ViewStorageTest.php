@@ -192,6 +192,7 @@ class ViewStorageTest extends ViewUnitTestBase {
   protected function displayMethodTests() {
     // Enable the system module so l() can work using url_alias table.
     $this->enableModules(array('system'));
+    $this->installSchema('system', 'url_alias');
 
     $config['display'] = array(
       'page_1' => array(
