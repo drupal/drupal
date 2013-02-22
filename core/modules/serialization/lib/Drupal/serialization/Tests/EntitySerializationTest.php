@@ -23,7 +23,7 @@ class EntitySerializationTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('serialization');
+  public static $modules = array('serialization', 'system', 'entity', 'field', 'entity_test', 'text', 'field_sql_storage');
 
   /**
    * The test values.
@@ -57,7 +57,27 @@ class EntitySerializationTest extends DrupalUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->enableModules(array('system', 'field', 'field_sql_storage', 'text', 'entity_test'));
+    $this->installSchema('field', array('field_config', 'field_config_instance'));
+    $this->installSchema('entity_test', array('entity_test_mulrev', 'entity_test_mulrev_property_revision', 'entity_test_mulrev_property_data'));
+
+    // Auto-create a field for testing.
+    field_create_field(array(
+      'field_name' => 'field_test_text',
+      'type' => 'text',
+      'cardinality' => 1,
+      'translatable' => FALSE,
+    ));
+    $instance = array(
+      'entity_type' => 'entity_test_mulrev',
+      'field_name' => 'field_test_text',
+      'bundle' => 'entity_test_mulrev',
+      'label' => 'Test text-field',
+      'widget' => array(
+        'type' => 'text_textfield',
+        'weight' => 0,
+      ),
+    );
+    field_create_instance($instance);
 
     // Create a test entity to serialize.
     $this->values = array(
