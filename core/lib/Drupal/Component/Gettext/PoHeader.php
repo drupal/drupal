@@ -77,7 +77,9 @@ class PoHeader {
    */
   public function __construct($langcode = NULL) {
     $this->_langcode = $langcode;
-    $this->_po_date = date("Y-m-d H:iO");
+    // Ignore errors when run during site installation before
+    // date_default_timezone_set() is called.
+    $this->_po_date = @date("Y-m-d H:iO");
     $this->_pluralForms = 'nplurals=2; plural=(n > 1);';
   }
 
