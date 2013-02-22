@@ -10,20 +10,20 @@ namespace Drupal\serialization\Tests;
 use Drupal\serialization\Encoder\JsonEncoder;
 use Drupal\serialization\Normalizer\ComplexDataNormalizer;
 use Drupal\serialization\Normalizer\TypedDataNormalizer;
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 use Symfony\Component\Serializer\Serializer;
 
 /**
  * Tests entity normalization and serialization of supported core formats.
  */
-class EntitySerializationTest extends WebTestBase {
+class EntitySerializationTest extends DrupalUnitTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('entity_test', 'serialization');
+  public static $modules = array('serialization');
 
   /**
    * The test values.
@@ -39,6 +39,13 @@ class EntitySerializationTest extends WebTestBase {
    */
   protected $entity;
 
+  /**
+   * The serializer serivce.
+   *
+   * @var \Symfony\Component\Serializer\Serializer.
+   */
+  protected $serializer;
+
   public static function getInfo() {
     return array(
       'name' => 'Entity serialization tests',
@@ -49,6 +56,8 @@ class EntitySerializationTest extends WebTestBase {
 
   protected function setUp() {
     parent::setUp();
+
+    $this->enableModules(array('system', 'field', 'field_sql_storage', 'text', 'entity_test'));
 
     // Create a test entity to serialize.
     $this->values = array(
@@ -61,17 +70,14 @@ class EntitySerializationTest extends WebTestBase {
     );
     $this->entity = entity_create('entity_test_mulrev', $this->values);
     $this->entity->save();
+
+    $this->serializer = $this->container->get('serializer');
   }
 
   /**
    * Test the normalize function.
    */
   public function testNormalize() {
-    // Set up the serializer.
-    $encoders = array(new JsonEncoder());
-    $normalizers = array(new ComplexDataNormalizer(), new TypedDataNormalizer());
-    $serializer = new Serializer($normalizers, $encoders);
-
     $expected = array(
       'id' => array(
         array('value' => 1),
@@ -85,7 +91,9 @@ class EntitySerializationTest extends WebTestBase {
       'langcode' => array(
         array('value' => LANGUAGE_NOT_SPECIFIED),
       ),
-      'default_langcode' => array(NULL),
+      'default_langcode' => array(
+        array('value' => NULL),
+      ),
       'name' => array(
         array('value' => $this->values['name']),
       ),
@@ -100,7 +108,7 @@ class EntitySerializationTest extends WebTestBase {
       ),
     );
 
-    $normalized = $serializer->normalize($this->entity);
+    $normalized = $this->serializer->normalize($this->entity);
 
     foreach (array_keys($expected) as $fieldName) {
       $this->assertEqual($expected[$fieldName], $normalized[$fieldName], "ComplexDataNormalizer produces expected array for $fieldName.");
@@ -112,21 +120,20 @@ class EntitySerializationTest extends WebTestBase {
    * Test registered Serializer's entity serialization for core's formats.
    */
   public function testSerialize() {
-    $serializer = drupal_container()->get('serializer');
     // Test that Serializer responds using the ComplexDataNormalizer and
     // JsonEncoder. The output of ComplexDataNormalizer::normalize() is tested
     // elsewhere, so we can just assume that it works properly here.
-    $normalized = $serializer->normalize($this->entity, 'json');
+    $normalized = $this->serializer->normalize($this->entity, 'json');
     $expected = json_encode($normalized);
     // Test 'json'.
-    $actual = $serializer->serialize($this->entity, 'json');
+    $actual = $this->serializer->serialize($this->entity, 'json');
     $this->assertIdentical($actual, $expected, 'Entity serializes to JSON when "json" is requested.');
-    $actual = $serializer->serialize($normalized, 'json');
+    $actual = $this->serializer->serialize($normalized, 'json');
     $this->assertIdentical($actual, $expected, 'A normalized array serializes to JSON when "json" is requested');
     // Test 'ajax'.
-    $actual = $serializer->serialize($this->entity, 'ajax');
+    $actual = $this->serializer->serialize($this->entity, 'ajax');
     $this->assertIdentical($actual, $expected, 'Entity serializes to JSON when "ajax" is requested.');
-    $actual = $serializer->serialize($normalized, 'ajax');
+    $actual = $this->serializer->serialize($normalized, 'ajax');
     $this->assertIdentical($actual, $expected, 'A normalized array serializes to JSON when "ajax" is requested');
 
     // Generate the expected xml in a way that allows changes to entity property
@@ -149,9 +156,9 @@ class EntitySerializationTest extends WebTestBase {
     // Reduced the array to a string.
     $expected = implode('', $expected);
     // Test 'xml'. The output should match that of Symfony's XmlEncoder.
-    $actual = $serializer->serialize($this->entity, 'xml');
+    $actual = $this->serializer->serialize($this->entity, 'xml');
     $this->assertIdentical($actual, $expected);
-    $actual = $serializer->serialize($normalized, 'xml');
+    $actual = $this->serializer->serialize($normalized, 'xml');
     $this->assertIdentical($actual, $expected);
   }
 }
