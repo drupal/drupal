@@ -133,3 +133,65 @@ db_update('variable')
   ->fields(array('value' => 's:10:"plain_text";'))
   ->condition('name', 'filter_fallback_format')
   ->execute();
+
+// color module in bartik
+$palette = array(
+  'top' => '#8eccf2',
+  'bottom' => '#48a9e4',
+  'bg' => '#ffffff',
+  'sidebar' => '#f6f6f2',
+  'sidebarborders' => '#f9f9f9',
+  'footer' => '#db2a2a',
+  'titleslogan' => '#fffeff',
+  'text' => '#fb8484',
+  'link' => '#3587b7',
+);
+
+db_insert('variable')->fields(array(
+  'name',
+  'value',
+))
+  ->values(array(
+  'name' => 'color_bartik_files',
+  'value' => serialize(array('public://color/bartik-09696463/logo.png', 'public://color/bartik-09696463/colors.css')),
+))
+  ->values(array(
+  'name' => 'color_bartik_logo',
+  'value' => serialize('public://color/bartik-09696463/logo.png'),
+))
+  ->values(array(
+  'name' => 'color_bartik_palette',
+  'value' => serialize($palette),
+))
+  ->values(array(
+  'name' => 'color_bartik_stylesheets',
+  'value' => serialize('public://color/bartik-09696463/colors.css'),
+))
+  ->execute();
+
+// color module with faked seven upgrade path to test screenshot option
+db_insert('variable')->fields(array(
+  'name',
+  'value',
+))
+  ->values(array(
+  'name' => 'color_seven_files',
+  'value' => serialize(array('public://color/seven-09696463/logo.png', 'public://color/seven-09696463/colors.css')),
+))
+  ->values(array(
+  'name' => 'color_seven_logo',
+  'value' => serialize('public://color/seven-09696463/logo.png'),
+))
+  ->values(array(
+  'name' => 'color_seven_palette',
+  'value' => serialize($palette),
+))
+  ->values(array(
+  'name' => 'color_seven_stylesheets',
+  'value' => serialize('public://color/seven-09696463/colors.css'),
+))
+  ->values(array(
+  'name' => 'color_seven_screenshot',
+  'value' => serialize('public://color/seven-09696463/dummy-screenshot.png'),
+))
+  ->execute();
