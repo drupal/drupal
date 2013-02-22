@@ -20,6 +20,8 @@ class UserBundle extends Bundle {
    * Overrides Symfony\Component\HttpKernel\Bundle\Bundle::build().
    */
   public function build(ContainerBuilder $container) {
+    $container->register('access_check.permission', 'Drupal\user\Access\PermissionAccessCheck')
+      ->addTag('access_check');
     $container->register('access_check.user.register', 'Drupal\user\Access\RegisterAccessCheck')
       ->addTag('access_check');
     $container

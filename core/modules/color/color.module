@@ -65,7 +65,7 @@ function _color_html_alter(&$vars) {
   $themes = list_themes();
 
   // Override stylesheets.
-  $color_paths = variable_get('color_' . $theme_key . '_stylesheets', array());
+  $color_paths = config('color.' . $theme_key)->get('stylesheets');
   if (!empty($color_paths)) {
 
     foreach ($themes[$theme_key]->stylesheets['all'] as $base_filename => $old_path) {
@@ -99,7 +99,7 @@ function _color_page_alter(&$vars) {
   global $theme_key;
 
   // Override logo.
-  $logo = variable_get('color_' . $theme_key . '_logo');
+  $logo = config('color.' . $theme_key)->get('logo');
   if ($logo && $vars['logo'] && preg_match('!' . $theme_key . '/logo.png$!', $vars['logo'])) {
     $vars['logo'] = file_create_url($logo);
   }
@@ -132,8 +132,13 @@ function color_get_palette($theme, $default = FALSE) {
   $info = color_get_info($theme);
   $palette = $info['schemes']['default']['colors'];
 
+  if ($default) {
+    return $palette;
+  }
+
   // Load variable.
-  return $default ? $palette : variable_get('color_' . $theme . '_palette', $palette);
+  // @todo Default color config should be moved to yaml in the theme.
+  return config('color.' . $theme)->get('palette') ?: $palette;
 }
 
 /**
@@ -161,7 +166,7 @@ function color_scheme_form($complete_form, &$form_state, $theme) {
 
   // See if we're using a predefined scheme.
   // Note: we use the original theme when the default scheme is chosen.
-  $current_scheme = variable_get('color_' . $theme . '_palette', array());
+  $current_scheme = config('color.' . $theme)->get('palette');
   foreach ($schemes as $key => $scheme) {
     if ($current_scheme == $scheme) {
       $scheme_name = $key;
@@ -291,12 +296,15 @@ function color_scheme_form_validate($form, &$form_state) {
  * @see color_scheme_form_validate()
  */
 function color_scheme_form_submit($form, &$form_state) {
+
   // Get theme coloring info.
   if (!isset($form_state['values']['info'])) {
     return;
   }
   $theme = $form_state['values']['theme'];
   $info = $form_state['values']['info'];
+
+  $config = config('color.' . $theme);
 
   // Resolve palette.
   $palette = $form_state['values']['palette'];
@@ -332,20 +340,19 @@ function color_scheme_form_submit($form, &$form_state) {
   }
 
   // Delete old files.
-  foreach (variable_get('color_' . $theme . '_files', array()) as $file) {
-    @drupal_unlink($file);
+  $files = $config->get('files');
+  if (isset($files)) {
+    foreach ($files as $file) {
+      @drupal_unlink($file);
+    }
   }
   if (isset($file) && $file = dirname($file)) {
     @drupal_rmdir($file);
   }
 
-  // Don't render the default colorscheme, use the standard theme instead.
+  // No change in color config, use the standard theme from color.inc.
   if (implode(',', color_get_palette($theme, TRUE)) == implode(',', $palette)) {
-    variable_del('color_' . $theme . '_palette');
-    variable_del('color_' . $theme . '_stylesheets');
-    variable_del('color_' . $theme . '_logo');
-    variable_del('color_' . $theme . '_files');
-    variable_del('color_' . $theme . '_screenshot');
+    $config->delete();
     return;
   }
 
@@ -362,8 +369,10 @@ function color_scheme_form_submit($form, &$form_state) {
   $paths['files'] = $paths['map'] = array();
 
   // Save palette and logo location.
-  variable_set('color_' . $theme . '_palette', $palette);
-  variable_set('color_' . $theme . '_logo', $paths['target'] . 'logo.png');
+  $config
+    ->set('palette', $palette)
+    ->set('logo', $paths['target'] . 'logo.png')
+    ->save();
 
   // Copy over neutral images.
   foreach ($info['copy'] as $file) {
@@ -416,8 +425,10 @@ function color_scheme_form_submit($form, &$form_state) {
   }
 
   // Maintain list of files.
-  variable_set('color_' . $theme . '_stylesheets', $css);
-  variable_set('color_' . $theme . '_files', $paths['files']);
+  $config
+    ->set('stylesheets', $css)
+    ->set('files', $paths['files'])
+    ->save();
 }
 
 /**
@@ -556,7 +567,9 @@ function _color_render_images($theme, &$info, &$paths, $palette) {
     if ($file == 'screenshot.png') {
       $slice = imagecreatetruecolor(150, 90);
       imagecopyresampled($slice, $target, 0, 0, $x, $y, 150, 90, $width, $height);
-      variable_set('color_' . $theme . '_screenshot', $image);
+      config('color.' . $theme)
+        ->set('screenshot', $image)
+        ->save();
     }
     else {
       $slice = imagecreatetruecolor($width, $height);

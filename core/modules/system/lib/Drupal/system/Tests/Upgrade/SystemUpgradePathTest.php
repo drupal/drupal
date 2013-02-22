@@ -99,12 +99,55 @@ class SystemUpgradePathTest extends UpgradePathTestBase {
       'recursion_limit' => 42,
     );
 
+    // Color module for theme bartik, optional screenshot.
+    $expected_config['color.bartik'] = array(
+      'palette' => array(
+        'top' => '#8eccf2',
+        'bottom' => '#48a9e4',
+        'bg' => '#ffffff',
+        'sidebar' => '#f6f6f2',
+        'sidebarborders' => '#f9f9f9',
+        'footer' => '#db2a2a',
+        'titleslogan' => '#fffeff',
+        'text' => '#fb8484',
+        'link' => '#3587b7',
+      ),
+      'logo' => 'public://color/bartik-09696463/logo.png',
+      'stylesheets' => 'public://color/bartik-09696463/colors.css',
+      'files' => array(
+        'public://color/bartik-09696463/logo.png', 'public://color/bartik-09696463/colors.css'
+      ),
+    );
+    // Second try with faked seven upgrade, optional screenshot.
+    $expected_config['color.seven'] = array(
+      'palette' => array(
+        'top' => '#8eccf2',
+        'bottom' => '#48a9e4',
+        'bg' => '#ffffff',
+        'sidebar' => '#f6f6f2',
+        'sidebarborders' => '#f9f9f9',
+        'footer' => '#db2a2a',
+        'titleslogan' => '#fffeff',
+        'text' => '#fb8484',
+        'link' => '#3587b7',
+      ),
+      'logo' => 'public://color/seven-09696463/logo.png',
+      'stylesheets' => 'public://color/seven-09696463/colors.css',
+      'files' => array(
+        'public://color/seven-09696463/logo.png', 'public://color/seven-09696463/colors.css'
+      ),
+      'screenshot' => 'public://color/seven-09696463/dummy-screenshot.png',
+    );
+
     foreach ($expected_config as $file => $values) {
       $config = config($file);
       $this->verbose(print_r($config->get(), TRUE));
       foreach ($values as $name => $value) {
         $stored = $config->get($name);
-        $this->assertEqual($value, $stored, format_string('Expected value for %name found: %stored (previously: %value).', array('%stored' => $stored, '%name' => $name, '%value' => $value)));
+        // Make sure we have a string representation to show.
+        $stored_txt = !is_string($stored) ? json_encode($stored) : $stored;
+        $value_txt = !is_string($value) ? json_encode($value) : $value;
+        $this->assertEqual($value, $stored, format_string('Expected value for %name found: %stored (previously: %value).', array('%name' => $name, '%stored' => $stored_txt, '%value' => $value_txt)));
       }
     }
   }

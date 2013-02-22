@@ -2,11 +2,12 @@
 
 /**
  * @file
- * Contains Drupal\Core\Access\PermissionAccessCheck.
+ * Contains Drupal\user\Access\PermissionAccessCheck.
  */
 
-namespace Drupal\Core\Access;
+namespace Drupal\user\Access;
 
+use Drupal\Core\Access\AccessCheckInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 

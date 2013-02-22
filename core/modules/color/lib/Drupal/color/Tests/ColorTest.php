@@ -87,7 +87,7 @@ class ColorTest extends WebTestBase {
     $this->drupalPost($settings_path, $edit, t('Save configuration'));
 
     $this->drupalGet('<front>');
-    $stylesheets = variable_get('color_' . $theme . '_stylesheets', array());
+    $stylesheets = config('color.' . $theme)->get('stylesheets');
     $this->assertPattern('|' . file_create_url($stylesheets[0]) . '|', 'Make sure the color stylesheet is included in the content. (' . $theme . ')');
 
     $stylesheet_content = join("\n", file($stylesheets[0]));
@@ -99,7 +99,7 @@ class ColorTest extends WebTestBase {
     $this->drupalPost($settings_path, $edit, t('Save configuration'));
 
     $this->drupalGet('<front>');
-    $stylesheets = variable_get('color_' . $theme . '_stylesheets', array());
+    $stylesheets = config('color.' . $theme)->get('stylesheets');
     $stylesheet_content = join("\n", file($stylesheets[0]));
     $this->assertTrue(strpos($stylesheet_content, 'color: ' . $test_values['scheme_color']) !== FALSE, 'Make sure the color we changed is in the color stylesheet. (' . $theme . ')');
 

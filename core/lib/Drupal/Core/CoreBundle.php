@@ -245,8 +245,6 @@ class CoreBundle extends Bundle {
       ->addTag('event_subscriber');
     $container->register('access_check.default', 'Drupal\Core\Access\DefaultAccessCheck')
       ->addTag('access_check');
-    $container->register('access_check.permission', 'Drupal\Core\Access\PermissionAccessCheck')
-      ->addTag('access_check');
     $container->register('maintenance_mode_subscriber', 'Drupal\Core\EventSubscriber\MaintenanceModeSubscriber')
       ->addTag('event_subscriber');
     $container->register('path_subscriber', 'Drupal\Core\EventSubscriber\PathSubscriber')
