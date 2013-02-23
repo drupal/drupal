@@ -103,10 +103,8 @@ function comment_reply(EntityInterface $entity, $field_name, $pid = NULL) {
     }
 
     // Should we show the reply box?
-    $items = field_get_items($entity, $field_name);
-    // @todo Field instance should provide always default value http://drupal.org/node/1919834
-    $status = isset($items[0]['status']) ? $items[0]['status'] : COMMENT_OPEN;
-    if ($status != COMMENT_OPEN) {
+    $commenting_status = _comment_get_default_status(field_get_items($entity, $field_name));
+    if ($commenting_status != COMMENT_OPEN) {
       drupal_set_message(t("This discussion is closed: you can't post new comments."), 'error');
       drupal_goto($uri['path']);
     }

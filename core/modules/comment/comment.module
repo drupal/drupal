@@ -140,9 +140,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
     if ($field['type'] != 'comment') {
       continue;
     }
-    $values = field_get_items($entity, $field_name);
-    // @todo Field instance should provide always default value http://drupal.org/node/1919834
-    $commenting_status = isset($values[0]['status']) ? $values[0]['status'] : NULL;
+    $commenting_status = _comment_get_default_status(field_get_items($entity, $field_name));
     if (isset($commenting_status) && $commenting_status) {
       // Entity have comment open or close.
       $uri = $entity->uri();
@@ -963,9 +961,7 @@ function comment_view(Comment $comment, $view_mode = 'full', $langcode = NULL) {
  */
 function comment_links(Comment $comment, EntityInterface $entity, $field_name) {
   $links = array();
-  $items = field_get_items($entity, $field_name);
-  // @todo Field instance should provide always default value http://drupal.org/node/1919834
-  $status = isset($items[0]['status']) ? $items[0]['status'] : COMMENT_OPEN;
+  $status = _comment_get_default_status(field_get_items($entity, $field_name));
   if ($status == COMMENT_OPEN) {
     if (user_access('administer comments') && user_access('post comments')) {
       $links['comment-delete'] = array(
@@ -1214,9 +1210,7 @@ function comment_node_update_index(Node $node, $langcode) {
       $mode = $instance['settings']['comment']['comment_default_mode'];
       $comments_per_page = $instance['settings']['comment']['comment_default_per_page'];
       if (($items = field_get_items($node, $field_name)) &&
-          // @todo Field instance should provide always default value http://drupal.org/node/1919834
-          isset($items[0]['status']) &&
-          $items[0]['status'] && $cids = comment_get_thread($node, $field_name, $mode, $comments_per_page)) {
+        _comment_get_default_status($items) && $cids = comment_get_thread($node, $field_name, $mode, $comments_per_page)) {
         $comments = comment_load_multiple($cids);
         comment_prepare_thread($comments);
         $build = comment_view_multiple($comments);
@@ -1249,7 +1243,6 @@ function comment_node_search_result($node) {
   foreach ($comment_fields as $field_name => $info) {
     // Do not make a string if comments are hidden.
     if (user_access('access comments') && ($items = field_get_items($node, $field_name)) &&
-      // @todo Field instance should provide always default value http://drupal.org/node/1919834
       isset($items[0]['status']) && $items[0]['status'] != COMMENT_HIDDEN) {
       if ($items[0]['status'] == COMMENT_OPEN) {
         // At least one comment field is open.
@@ -2236,4 +2229,20 @@ function comment_field_delete_instance($instance) {
     field_attach_delete_bundle('comment', $instance['field_name']);
     cache()->delete('comment_entity_info');
   }
+}
+
+/**
+ * Helper to get default value for field.
+ *
+ * @param array $values
+ *   The field values array or NULL for field create with field UI.
+ *
+ * @return int
+ *   The value when exists or COMMENT_OPEN.
+ *
+ * @todo Replace with field default value after http://drupal.org/node/1919834
+ */
+function _comment_get_default_status($values) {
+  // We only ever process first value if any.
+  return isset($values[0]['status']) ? $values[0]['status'] : COMMENT_OPEN;
 }

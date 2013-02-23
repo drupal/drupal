@@ -36,8 +36,7 @@ class CommentWidget extends WidgetBase {
       '#type' => 'radios',
       '#title' => t('Comments'),
       '#title_display' => 'invisible',
-      // @todo Field instance should provide always default value http://drupal.org/node/1919834
-      '#default_value' => isset($items[0]['status']) ? $items[0]['status'] : COMMENT_OPEN,
+      '#default_value' => _comment_get_default_status($items),
       '#options' => array(
         COMMENT_OPEN => t('Open'),
         COMMENT_CLOSED => t('Closed'),
@@ -65,6 +64,8 @@ class CommentWidget extends WidgetBase {
     if (isset($form['advanced'])) {
       $element += array(
         '#type' => 'details',
+        // Collapse details when value is the same as default for instance.
+        '#collapsed' => (_comment_get_default_status($items) == _comment_get_default_status($this->instance['default_value'])),
         '#group' => 'advanced',
         '#attributes' => array(
           'class' => array('comment-' . drupal_html_class($element['#entity_type']) . '-settings-form'),
