@@ -553,8 +553,8 @@ function comment_update_8005(&$sandbox) {
 /**
  * Adds comment fields for all node types.
  *
- * Field instance settings "comment_default_mode", "comment_default_per_page"
- * and "comment_form_location" are preserved to allow migrate contrib modules.
+ * Field instance settings "default_mode", "per_page" and "form_location" are
+ * preserved to allow migrate contrib modules.
  */
 function comment_update_8006(&$sandbox) {
   // Loop over defined node_types.
@@ -582,15 +582,15 @@ function comment_update_8006(&$sandbox) {
     // the given node_type.
     $instance_settings = array(
       // COMMENT_MODE_THREADED
-      'comment_default_mode' => variable_get('comment_default_mode_' . $node_type, 1),
-      'comment_default_per_page' => variable_get('comment_default_per_page_' . $node_type, 50),
+      'default_mode' => variable_get('comment_default_mode_' . $node_type, 1),
+      'per_page' => variable_get('comment_default_per_page_' . $node_type, 50),
       // COMMENT_FORM_BELOW
-      'comment_form_location' => variable_get('comment_form_location' . $node_type, 1),
+      'form_location' => variable_get('comment_form_location' . $node_type, 1),
       // COMMENT_ANONYMOUS_MAYNOT_CONTACT
-      'comment_anonymous' => variable_get('comment_anonymous_' . $node_type, 0),
-      'comment_subject_field' => variable_get('comment_subject_field_' . $node_type, 1),
+      'anonymous' => variable_get('comment_anonymous_' . $node_type, 0),
+      'subject' => variable_get('comment_subject_field_' . $node_type, 1),
       // DRUPAL_OPTIONAL
-      'comment_preview' => variable_get('comment_preview_' . $node_type, 1),
+      'preview' => variable_get('comment_preview_' . $node_type, 1),
     );
     $instance = array(
       'bundle' => $node_type,
@@ -601,9 +601,7 @@ function comment_update_8006(&$sandbox) {
       'field_name' => $field['field_name'],
       'label' => 'Comment settings',
       'required' => 1,
-      'settings' => array(
-        'comment' => $instance_settings,
-      ),
+      'settings' => $instance_settings,
       'widget' => array(
         'active' => 0,
         'module' => 'comment',

@@ -105,8 +105,8 @@ class CommentUserTest extends WebTestBase {
     $edit['comment_body[' . $langcode . '][0][value]'] = $comment;
 
     $instance = field_info_instance('user', 'comment', 'user');
-    $preview_mode = $instance['settings']['comment']['comment_preview'];
-    $subject_mode = $instance['settings']['comment']['comment_subject_field'];
+    $preview_mode = $instance['settings']['preview'];
+    $subject_mode = $instance['settings']['subject'];
 
     // Must get the page before we test for fields.
     if ($account !== NULL) {

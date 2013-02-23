@@ -19,17 +19,15 @@ function comment_field_info() {
       'description' => t('This field manages configuration and presentation of comments on an entity'),
       'settings' => array(),
       'instance_settings' => array(
-        'comment' => array(
-          // Save this settings to allow other modules to migrate their data.
-          // The "comment_default" formatter settings are used instead.
-          'comment_default_mode' => COMMENT_MODE_THREADED,
-          'comment_default_per_page' => 50,
-          'comment_form_location' => COMMENT_FORM_BELOW,
-          // Comment form settings per field bundle.
-          'comment_anonymous' => COMMENT_ANONYMOUS_MAYNOT_CONTACT,
-          'comment_subject_field' => 1,
-          'comment_preview' => DRUPAL_OPTIONAL
-        )
+        // Save this settings to allow other modules to migrate their data.
+        // @todo The "comment_default" formatter settings should used instead.
+        'default_mode' => COMMENT_MODE_THREADED,
+        'per_page' => 50,
+        'form_location' => COMMENT_FORM_BELOW,
+        // Comment form settings per field bundle.
+        'anonymous' => COMMENT_ANONYMOUS_MAYNOT_CONTACT,
+        'subject' => 1,
+        'preview' => DRUPAL_OPTIONAL,
       ),
       'default_widget' => 'comment_default',
       'default_formatter' => 'comment_default'
@@ -41,14 +39,14 @@ function comment_field_info() {
  * Implements hook_field_instance_settings_form().
  */
 function comment_field_instance_settings_form($field, $instance) {
-  $settings = $instance['settings']['comment'];
+  $settings = $instance['settings'];
   $form['comment'] = array(
     '#type' => 'details',
     '#title' => t('Comment form settings'),
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
     '#field_name' => $field['field_name'],
-    '#process' => array('comment_instance_settings_translation_entity_process'),
+    '#process' => array('_comment_field_instance_settings_form_process'),
     '#attributes' => array(
       'class' => array('comment-instance-settings-form'),
     ),
@@ -56,22 +54,22 @@ function comment_field_instance_settings_form($field, $instance) {
       'library' => array(array('comment', 'drupal.comment')),
     ),
   );
-  $form['comment']['comment_default_mode'] = array(
+  $form['comment']['default_mode'] = array(
     '#type' => 'checkbox',
     '#title' => t('Threading'),
-    '#default_value' => $settings['comment_default_mode'],
+    '#default_value' => $settings['default_mode'],
     '#description' => t('Show comment replies in a threaded list.'),
   );
-  $form['comment']['comment_default_per_page'] = array(
+  $form['comment']['per_page'] = array(
     '#type' => 'select',
     '#title' => t('Comments per page'),
-    '#default_value' => $settings['comment_default_per_page'],
+    '#default_value' => $settings['per_page'],
     '#options' => _comment_per_page(),
   );
-  $form['comment']['comment_anonymous'] = array(
+  $form['comment']['anonymous'] = array(
     '#type' => 'select',
     '#title' => t('Anonymous commenting'),
-    '#default_value' => $settings['comment_anonymous'],
+    '#default_value' => $settings['anonymous'],
     '#options' => array(
       COMMENT_ANONYMOUS_MAYNOT_CONTACT => t('Anonymous posters may not enter their contact information'),
       COMMENT_ANONYMOUS_MAY_CONTACT => t('Anonymous posters may leave their contact information'),
@@ -79,20 +77,20 @@ function comment_field_instance_settings_form($field, $instance) {
     ),
     '#access' => user_access('post comments', drupal_anonymous_user()),
   );
-  $form['comment']['comment_subject_field'] = array(
+  $form['comment']['subject'] = array(
     '#type' => 'checkbox',
     '#title' => t('Allow comment title'),
-    '#default_value' => $settings['comment_subject_field'],
+    '#default_value' => $settings['subject'],
   );
-  $form['comment']['comment_form_location'] = array(
+  $form['comment']['form_location'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show reply form on the same page as comments'),
-    '#default_value' => $settings['comment_form_location'],
+    '#default_value' => $settings['form_location'],
   );
-  $form['comment']['comment_preview'] = array(
+  $form['comment']['preview'] = array(
     '#type' => 'radios',
     '#title' => t('Preview comment'),
-    '#default_value' => $settings['comment_preview'],
+    '#default_value' => $settings['preview'],
     '#options' => array(
       DRUPAL_DISABLED => t('Disabled'),
       DRUPAL_OPTIONAL => t('Optional'),
@@ -108,8 +106,13 @@ function comment_field_instance_settings_form($field, $instance) {
  * Attaches the required translation entity handlers for the instance which
  * correlates one to one with the comment bundle.
  */
-function comment_instance_settings_translation_entity_process($element, $form_state) {
-  if (module_exists('translation_entity')) {
+function _comment_field_instance_settings_form_process($element, $form_state) {
+  // Settings should not be stored as nested.
+  $parents = $element['#parents'];
+  array_pop($parents);
+  $element['#parents'] = $parents;
+  // Add translation entity handlers.
+  if (drupal_container()->get('module_handler')->moduleExists('translation_entity')) {
     $comment_form = $element;
     $comment_form_state['translation_entity']['key'] = 'language_configuration';
     $element += translation_entity_enable_widget('comment', $element['#field_name'], $comment_form, $comment_form_state);

@@ -183,7 +183,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
         }
         // Provide a link to new comment form.
         if ($commenting_status == COMMENT_OPEN) {
-          $comment_form_location = $instance['settings']['comment']['comment_form_location'];
+          $comment_form_location = $instance['settings']['form_location'];
           if (user_access('post comments')) {
             $links['comment-add'] = array(
               'title' => t('Add new comment'),
@@ -209,7 +209,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
         // But we don't want this link if we're building the entity for search
         // indexing or constructing a search result excerpt.
         if ($commenting_status == COMMENT_OPEN) {
-          $comment_form_location = $instance['settings']['comment']['comment_form_location'];
+          $comment_form_location = $instance['settings']['form_location'];
           if (user_access('post comments')) {
             // Show the "post comment" link if the form is on another page, or
             // if there are existing comments that the link will skip past.
@@ -663,8 +663,8 @@ function comment_get_recent($number = 10) {
  */
 function comment_new_page_count($num_comments, $new_replies, EntityInterface $entity, $field_name = 'comment') {
   $instance = field_info_instance($entity->entityType(), $field_name, $entity->bundle());
-  $mode = $instance['settings']['comment']['comment_default_mode'];
-  $comments_per_page = $instance['settings']['comment']['comment_default_per_page'];
+  $mode = $instance['settings']['default_mode'];
+  $comments_per_page = $instance['settings']['per_page'];
   $pagenum = NULL;
   $flat = $mode == COMMENT_MODE_FLAT ? TRUE : FALSE;
   if ($num_comments <= $comments_per_page) {
@@ -1207,8 +1207,8 @@ function comment_node_update_index(Node $node, $langcode) {
   if ($index_comments) {
     foreach (comment_get_comment_fields('node') as $field_name => $info) {
       $instance = field_info_instance('node', $field_name, $node->type);
-      $mode = $instance['settings']['comment']['comment_default_mode'];
-      $comments_per_page = $instance['settings']['comment']['comment_default_per_page'];
+      $mode = $instance['settings']['default_mode'];
+      $comments_per_page = $instance['settings']['per_page'];
       if (($items = field_get_items($node, $field_name)) &&
         _comment_get_default_status($items) && $cids = comment_get_thread($node, $field_name, $mode, $comments_per_page)) {
         $comments = comment_load_multiple($cids);
@@ -1471,7 +1471,7 @@ function comment_get_display_ordinal($cid, $instance) {
   if (!user_access('administer comments')) {
     $query->condition('c1.status', COMMENT_PUBLISHED);
   }
-  $mode = $instance['settings']['comment']['comment_default_mode'];
+  $mode = $instance['settings']['default_mode'];
 
   if ($mode == COMMENT_MODE_FLAT) {
     // For flat comments, cid is used for ordering comments due to
@@ -1505,7 +1505,7 @@ function comment_get_display_ordinal($cid, $instance) {
  */
 function comment_get_display_page($cid, $instance) {
   $ordinal = comment_get_display_ordinal($cid, $instance);
-  $comments_per_page = $instance['settings']['comment']['comment_default_per_page'];
+  $comments_per_page = $instance['settings']['per_page'];
   return floor($ordinal / $comments_per_page);
 }
 
@@ -1753,7 +1753,7 @@ function theme_comment_post_forbidden($variables) {
     if ($authenticated_post_comments) {
       // We cannot use drupal_get_destination() because these links
       // sometimes appear on /node and taxonomy listing pages.
-      if ($instance['settings']['comment']['comment_form_location'] == COMMENT_FORM_SEPARATE_PAGE) {
+      if ($instance['settings']['form_location'] == COMMENT_FORM_SEPARATE_PAGE) {
         $destination = array('destination' => 'comment/reply/' . $entity->entityType() . '/' . $entity->id() . '/' . $field_name .'#comment-form');
       }
       else {

@@ -98,8 +98,8 @@ abstract class CommentTestBase extends WebTestBase {
     $edit['comment_body[' . $langcode . '][0][value]'] = $comment;
 
     $instance = field_info_instance('node', 'comment', 'article');
-    $preview_mode = $instance['settings']['comment']['comment_preview'];
-    $subject_mode = $instance['settings']['comment']['comment_subject_field'];
+    $preview_mode = $instance['settings']['preview'];
+    $subject_mode = $instance['settings']['subject'];
 
     // Must get the page before we test for fields.
     if ($node !== NULL) {
@@ -198,7 +198,7 @@ abstract class CommentTestBase extends WebTestBase {
    *   Boolean specifying whether the subject field should be enabled.
    */
   function setCommentSubject($enabled) {
-    $this->setCommentSettings('comment_subject_field', ($enabled ? '1' : '0'), 'Comment subject ' . ($enabled ? 'enabled' : 'disabled') . '.');
+    $this->setCommentSettings('subject', ($enabled ? '1' : '0'), 'Comment subject ' . ($enabled ? 'enabled' : 'disabled') . '.');
   }
 
   /**
@@ -221,7 +221,7 @@ abstract class CommentTestBase extends WebTestBase {
         $mode_text = 'required';
         break;
     }
-    $this->setCommentSettings('comment_preview', $mode, format_string('Comment preview @mode_text.', array('@mode_text' => $mode_text)));
+    $this->setCommentSettings('preview', $mode, format_string('Comment preview @mode_text.', array('@mode_text' => $mode_text)));
   }
 
   /**
@@ -232,7 +232,7 @@ abstract class CommentTestBase extends WebTestBase {
    *   comments; FALSE if it should be displayed on its own page.
    */
   function setCommentForm($enabled) {
-    $this->setCommentSettings('comment_form_location', ($enabled ? COMMENT_FORM_BELOW : COMMENT_FORM_SEPARATE_PAGE), 'Comment controls ' . ($enabled ? 'enabled' : 'disabled') . '.');
+    $this->setCommentSettings('form_location', ($enabled ? COMMENT_FORM_BELOW : COMMENT_FORM_SEPARATE_PAGE), 'Comment controls ' . ($enabled ? 'enabled' : 'disabled') . '.');
   }
 
   /**
@@ -245,7 +245,7 @@ abstract class CommentTestBase extends WebTestBase {
    *   - 2: Contact information required.
    */
   function setCommentAnonymous($level) {
-    $this->setCommentSettings('comment_anonymous', $level, format_string('Anonymous commenting set to level @level.', array('@level' => $level)));
+    $this->setCommentSettings('anonymous', $level, format_string('Anonymous commenting set to level @level.', array('@level' => $level)));
   }
 
   /**
@@ -255,7 +255,7 @@ abstract class CommentTestBase extends WebTestBase {
    *   Comments per page value.
    */
   function setCommentsPerPage($number) {
-    $this->setCommentSettings('comment_default_per_page', $number, format_string('Number of comments per page set to @number.', array('@number' => $number)));
+    $this->setCommentSettings('per_page', $number, format_string('Number of comments per page set to @number.', array('@number' => $number)));
   }
 
   /**
@@ -270,7 +270,7 @@ abstract class CommentTestBase extends WebTestBase {
    */
   function setCommentSettings($name, $value, $message) {
     $instance = field_info_instance('node', 'comment', 'article');
-    $instance['settings']['comment'][$name] = $value;
+    $instance['settings'][$name] = $value;
     field_update_instance($instance);
     // Display status message.
     $this->pass($message);

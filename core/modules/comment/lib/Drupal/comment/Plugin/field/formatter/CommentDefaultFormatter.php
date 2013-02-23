@@ -36,7 +36,7 @@ class CommentDefaultFormatter extends FormatterBase {
 
     $commenting_status = _comment_get_default_status($items);
     if ($commenting_status != COMMENT_HIDDEN && empty($entity->in_preview)) {
-      $comment_settings = $this->instance['settings']['comment'];
+      $comment_settings = $this->instance['settings'];
 
       // Only attempt to render comments if the entity has visible comments.
       // Unpublished comments are not included in
@@ -48,8 +48,8 @@ class CommentDefaultFormatter extends FormatterBase {
 
         // Comment threads aren't added to search results/indexes using the
         // formatter, @see comment_node_update_index().
-        $mode = $comment_settings['comment_default_mode'];
-        $comments_per_page = $comment_settings['comment_default_per_page'];
+        $mode = $comment_settings['default_mode'];
+        $comments_per_page = $comment_settings['per_page'];
         if ($cids = comment_get_thread($entity, $field['field_name'], $mode, $comments_per_page)) {
           $comments = comment_load_multiple($cids);
           comment_prepare_thread($comments);
@@ -60,7 +60,7 @@ class CommentDefaultFormatter extends FormatterBase {
       }
 
       // Append comment form if needed.
-      if ($commenting_status == COMMENT_OPEN && $comment_settings['comment_form_location'] == COMMENT_FORM_BELOW) {
+      if ($commenting_status == COMMENT_OPEN && $comment_settings['form_location'] == COMMENT_FORM_BELOW) {
         // Only show the add comment form if the user has permission and the
         // view mode is not search_result or search_index.
         if (user_access('post comments') && !empty($entity->content['#view_mode']) &&
@@ -74,7 +74,7 @@ class CommentDefaultFormatter extends FormatterBase {
       $elements[] = $additions + array(
         '#theme' => 'comment_wrapper__' . $entity->entityType() . '__' . $entity->bundle() . '__' . $field['field_name'],
         '#entity' => $entity,
-        '#display_mode' => $this->instance['settings']['comment']['comment_default_mode'],
+        '#display_mode' => $this->instance['settings']['default_mode'],
         'comments' => array(),
         'comment_form' => array(),
       );

@@ -85,7 +85,7 @@ class CommentRenderController extends EntityRenderController {
       $comment_entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
       $instance = field_info_instance($comment_entity->entityType(), $comment->field_name->value, $comment_entity->bundle());
       $is_threaded = isset($comment->divs)
-        && $instance['settings']['comment']['comment_default_mode'] == COMMENT_MODE_THREADED;
+        && $instance['settings']['default_mode'] == COMMENT_MODE_THREADED;
 
       // Add 'new' anchor if needed.
       if (!empty($comment->first_new)) {
