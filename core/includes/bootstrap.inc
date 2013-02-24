@@ -2030,17 +2030,6 @@ function drupal_hash_base64($data) {
 }
 
 /**
- * Gets a salt useful for hardening against SQL injection.
- *
- * @return string
- *   A salt based on information in settings.php, not in the database.
- */
-function drupal_get_hash_salt() {
-  global $drupal_hash_salt;
-  return !empty($drupal_hash_salt) ? $drupal_hash_salt : '';
-}
-
-/**
  * Generates a default anonymous $user object.
  *
  * @return Object - the user object.
@@ -2282,11 +2271,11 @@ function _drupal_bootstrap_configuration() {
   // Initialize the configuration, including variables from settings.php.
   drupal_settings_initialize();
 
-  // Activate the class loader.
-  drupal_classloader();
-
   // Make sure we are using the test database prefix in child Drupal sites.
   _drupal_initialize_db_test_prefix();
+
+  // Activate the class loader.
+  drupal_classloader();
 
   // Load the procedural configuration system helper functions.
   require_once DRUPAL_ROOT . '/core/includes/config.inc';
@@ -2596,6 +2585,7 @@ function typed_data() {
  *   HMAC and timestamp.
  */
 function drupal_valid_test_ua($new_prefix = NULL) {
+  global $drupal_hash_salt;
   static $test_prefix;
 
   if (isset($new_prefix)) {
@@ -2608,10 +2598,10 @@ function drupal_valid_test_ua($new_prefix = NULL) {
   if (isset($_SERVER['HTTP_USER_AGENT']) && preg_match("/^(simpletest\d+);(.+);(.+);(.+)$/", $_SERVER['HTTP_USER_AGENT'], $matches)) {
     list(, $prefix, $time, $salt, $hmac) = $matches;
     $check_string =  $prefix . ';' . $time . ';' . $salt;
-    // Use the salt from settings.php to create the HMAC key, since no services
-    // are available yet. The file properties add more entropy not easily
-    // accessible to others.
-    $key = drupal_get_hash_salt() . filectime(__FILE__) . fileinode(__FILE__);
+    // We use the salt from settings.php to make the HMAC key, since
+    // the database is not yet initialized and we can't access any Drupal variables.
+    // The file properties add more entropy not easily accessible to others.
+    $key = $drupal_hash_salt . filectime(__FILE__) . fileinode(__FILE__);
     $time_diff = REQUEST_TIME - $time;
     // Since we are making a local request a 5 second time window is allowed,
     // and the HMAC must match.
@@ -2629,13 +2619,14 @@ function drupal_valid_test_ua($new_prefix = NULL) {
  * Generates a user agent string with a HMAC and timestamp for simpletest.
  */
 function drupal_generate_test_ua($prefix) {
+  global $drupal_hash_salt;
   static $key;
 
   if (!isset($key)) {
-    // Use the salt from settings.php to create the HMAC key, since no services
-    // are available yet. The file properties add more entropy not easily
-    // accessible to others.
-    $key = drupal_get_hash_salt() . filectime(__FILE__) . fileinode(__FILE__);
+    // We use the salt from settings.php to make the HMAC key, since
+    // the database is not yet initialized and we can't access any Drupal variables.
+    // The file properties add more entropy not easily accessible to others.
+    $key = $drupal_hash_salt . filectime(__FILE__) . fileinode(__FILE__);
   }
   // Generate a moderately secure HMAC based on the database credentials.
   $salt = uniqid('', TRUE);
@@ -3147,7 +3138,7 @@ function drupal_classloader($class_loader = NULL) {
       case 'apc':
         if (function_exists('apc_store')) {
           require_once DRUPAL_ROOT . '/core/vendor/symfony/class-loader/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php';
-          $loader = new ApcUniversalClassLoader('drupal.' . drupal_get_hash_salt());
+          $loader = new ApcUniversalClassLoader('drupal.' . $GLOBALS['drupal_hash_salt']);
           break;
         }
       // Fall through to the default loader if APC was not loaded, so that the
