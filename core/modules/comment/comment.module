@@ -141,8 +141,8 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
       continue;
     }
     $commenting_status = _comment_get_default_status(field_get_items($entity, $field_name));
-    if (isset($commenting_status) && $commenting_status) {
-      // Entity have comment open or close.
+    if ($commenting_status) {
+      // Entity have commenting open or close.
       $uri = $entity->uri();
       if ($view_mode == 'rss') {
         // Add a comments RSS element which is a URL to the comments of this node.
@@ -442,7 +442,7 @@ function comment_menu() {
 }
 
 /**
- * Dynamic menu loader callback for comment/reply/%/%commenty_entity/%.
+ * Dynamic menu loader callback for comment/reply/%/%comment_entity/%.
  *
  * Loads the entity given and entity id and entity type
  *
@@ -1075,9 +1075,9 @@ function comment_form_field_ui_field_settings_form_alter(&$form, $form_state) {
  * Form submission handler for field_ui_field_edit_form().
  *
  * This handles the comment translation settings added by
- * comment_instance_settings_translation_entity_process().
+ * _comment_field_instance_settings_form_process().
  *
- * @see comment_instance_settings_translation_entity_process()
+ * @see _comment_field_instance_settings_form_process()
  */
 function comment_translation_configuration_element_submit($form, &$form_state) {
   // The comment translation settings form element is embedded into the instance
@@ -1570,7 +1570,7 @@ function comment_preview(Comment $comment) {
     // loop.
     $values = $entity->{$comment->field_name->value};
     $entity->{$comment->field_name->value} = array(
-      field_language($entity, $comment->field_name->value) => array(array('status' => COMMENT_HIDDEN)),
+      LANGUAGE_NOT_SPECIFIED => array(array('status' => COMMENT_HIDDEN)),
     );
     $build = entity_view($entity, 'full');
     $entity->{$comment->field_name->value} = $values;

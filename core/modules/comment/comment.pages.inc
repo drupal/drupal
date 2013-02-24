@@ -96,7 +96,7 @@ function comment_reply(EntityInterface $entity, $field_name, $pid = NULL) {
       // We make sure the field value isn't set so we don't end up with a redirect loop.
       $original = $entity->{$field_name};
       $entity->{$field_name} = array(
-        field_language($entity, $field_name) => array(array('status' => COMMENT_HIDDEN)),
+        LANGUAGE_NOT_SPECIFIED => array(array('status' => COMMENT_HIDDEN)),
       );
       $build['comment_entity'] = entity_view($entity, 'full');
       $entity->{$field_name} = $original;

@@ -92,9 +92,9 @@ class CommentTranslationUITest extends EntityTranslationUITest {
     }
     $node = $this->drupalCreateNode(array(
       'type' => $node_type,
-        $field_name => array(LANGUAGE_NOT_SPECIFIED => array(
-          array('status' => COMMENT_OPEN)
-        )),
+      $field_name => array(LANGUAGE_NOT_SPECIFIED => array(
+        array('status' => COMMENT_OPEN)
+      )),
     ));
     $values['entity_id'] = $node->nid;
     $values['entity_type'] = 'node';

@@ -36,8 +36,7 @@ class EntityTranslationSettingsTest extends WebTestBase {
     // bundles.
     $this->drupalCreateContentType(array('type' => 'article'));
     $this->drupalCreateContentType(array('type' => 'page'));
-    comment_add_default_comment_field('node', 'article');
-    comment_add_default_comment_field('node', 'page');
+    comment_add_default_comment_field('node', 'article', 'comment_node_article');
 
     $admin_user = $this->drupalCreateUser(array('administer languages', 'administer entity translation'));
     $this->drupalLogin($admin_user);
@@ -49,21 +48,21 @@ class EntityTranslationSettingsTest extends WebTestBase {
   function testSettingsUI() {
     // Test that the translation settings are ignored if the bundle is marked
     // translatable but the entity type is not.
-    $edit = array('settings[comment][comment][translatable]' => TRUE);
+    $edit = array('settings[comment][comment_node_article][translatable]' => TRUE);
     $this->assertSettings('comment', NULL, FALSE, $edit);
 
     // Test that the translation settings are ignored if only a field is marked
     // as translatable and not the related entity type and bundle.
-    $edit = array('settings[comment][comment][fields][comment_body]' => TRUE);
+    $edit = array('settings[comment][comment_node_article][fields][comment_body]' => TRUE);
     $this->assertSettings('comment', NULL, FALSE, $edit);
 
     // Test that the translation settings are not stored if an entity type and
     // bundle are marked as translatable but no field is.
     $edit = array(
       'entity_types[comment]' => TRUE,
-      'settings[comment][comment][translatable]' => TRUE,
+      'settings[comment][comment_node_article][translatable]' => TRUE,
     );
-    $this->assertSettings('comment', 'comment', FALSE, $edit);
+    $this->assertSettings('comment', 'comment_node_article', FALSE, $edit);
     $xpath_err = '//div[@id="messages"]//div[contains(@class, "error")]';
     $this->assertTrue($this->xpath($xpath_err), 'Enabling translation only for entity bundles generates a form error.');
 
@@ -71,31 +70,31 @@ class EntityTranslationSettingsTest extends WebTestBase {
     // language is set as default and the language selector is hidden.
     $edit = array(
       'entity_types[comment]' => TRUE,
-      'settings[comment][comment][settings][language][langcode]' => LANGUAGE_NOT_SPECIFIED,
-      'settings[comment][comment][settings][language][language_show]' => FALSE,
-      'settings[comment][comment][translatable]' => TRUE,
-      'settings[comment][comment][fields][comment_body]' => TRUE,
+      'settings[comment][comment_node_article][settings][language][langcode]' => LANGUAGE_NOT_SPECIFIED,
+      'settings[comment][comment_node_article][settings][language][language_show]' => FALSE,
+      'settings[comment][comment_node_article][translatable]' => TRUE,
+      'settings[comment][comment_node_article][fields][comment_body]' => TRUE,
     );
-    $this->assertSettings('comment', 'comment', FALSE, $edit);
+    $this->assertSettings('comment', 'comment_node_article', FALSE, $edit);
     $this->assertTrue($this->xpath($xpath_err), 'Enabling translation with a fixed non-configurable language generates a form error.');
 
     // Test that a field shared among different bundles can be enabled without
     // needing to make all the related bundles translatable.
     $edit = array(
       'entity_types[comment]' => TRUE,
-      'settings[comment][comment][settings][language][langcode]' => 'current_interface',
-      'settings[comment][comment][settings][language][language_show]' => TRUE,
-      'settings[comment][comment][translatable]' => TRUE,
-      'settings[comment][comment][fields][comment_body]' => TRUE,
+      'settings[comment][comment_node_article][settings][language][langcode]' => 'current_interface',
+      'settings[comment][comment_node_article][settings][language][language_show]' => TRUE,
+      'settings[comment][comment_node_article][translatable]' => TRUE,
+      'settings[comment][comment_node_article][fields][comment_body]' => TRUE,
     );
-    $this->assertSettings('comment', 'comment', TRUE, $edit);
+    $this->assertSettings('comment', 'comment_node_article', TRUE, $edit);
     // Clear static field cache.
     drupal_static_reset('_field_info_field_cache');
     $field = field_info_field('comment_body');
     $this->assertTrue($field['translatable'], 'Comment body is translatable.');
 
     // Test that language settings are correctly stored.
-    $language_configuration = language_get_default_configuration('comment', 'comment');
+    $language_configuration = language_get_default_configuration('comment', 'comment_node_article');
     $this->assertEqual($language_configuration['langcode'], 'current_interface', 'The default language for article comments is set to the current interface language.');
     $this->assertTrue($language_configuration['language_show'], 'The language selector for article comments is shown.');
   }

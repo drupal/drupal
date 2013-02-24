@@ -14,13 +14,6 @@ use Drupal\simpletest\WebTestBase;
  */
 class UserCancelTest extends WebTestBase {
 
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('node', 'comment');
-
   public static function getInfo() {
     return array(
       'name' => 'Cancel account',
@@ -29,11 +22,10 @@ class UserCancelTest extends WebTestBase {
     );
   }
 
-  protected function setUp() {
+  function setUp() {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
-    comment_add_default_comment_field('node', 'page');
   }
 
   /**
@@ -47,17 +39,9 @@ class UserCancelTest extends WebTestBase {
     $this->drupalLogin($account);
     // Load real user object.
     $account = user_load($account->uid, TRUE);
-    comment_add_default_comment_field('node', 'page');
 
     // Create a node.
-    $node = $this->drupalCreateNode(array(
-      'uid' => $account->uid,
-      'comment' => array(
-        LANGUAGE_NOT_SPECIFIED => array(
-          array('status' => COMMENT_CLOSED)
-        )
-      )
-    ));
+    $node = $this->drupalCreateNode(array('uid' => $account->uid));
 
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->uid . '/edit');
@@ -126,9 +110,7 @@ class UserCancelTest extends WebTestBase {
     $account = user_load($account->uid, TRUE);
 
     // Create a node.
-    $node = $this->drupalCreateNode(array(
-      'uid' => $account->uid,
-    ));
+    $node = $this->drupalCreateNode(array('uid' => $account->uid));
 
     // Attempt to cancel account.
     $this->drupalPost('user/' . $account->uid . '/edit', NULL, t('Cancel account'));
@@ -249,9 +231,7 @@ class UserCancelTest extends WebTestBase {
     $account = user_load($account->uid, TRUE);
 
     // Create a simple node.
-    $node = $this->drupalCreateNode(array(
-      'uid' => $account->uid,
-    ));
+    $node = $this->drupalCreateNode(array('uid' => $account->uid));
 
     // Create a node with two revisions, the initial one belonging to the
     // cancelling user.
@@ -296,6 +276,7 @@ class UserCancelTest extends WebTestBase {
     config('user.settings')->set('cancel_method', 'user_cancel_delete')->save();
     module_enable(array('comment'));
     $this->resetAll();
+    comment_add_default_comment_field('node', 'page');
 
     // Create a user.
     $account = $this->drupalCreateUser(array('cancel account', 'post comments', 'skip comment approval'));

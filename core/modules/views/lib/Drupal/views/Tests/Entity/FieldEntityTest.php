@@ -46,10 +46,7 @@ class FieldEntityTest extends ViewTestBase {
     $account = entity_create('user', array('name' => $this->randomName(), 'bundle' => 'user'));
     $account->save();
     comment_add_default_comment_field('node', 'page');
-    $node = entity_create('node', array(
-      'uid' => $account->id(),
-      'type' => 'page',
-    ));
+    $node = entity_create('node', array('uid' => $account->id(), 'type' => 'page'));
     $node->save();
     $comment = entity_create('comment', array(
       'uid' => $account->id(),

@@ -59,7 +59,7 @@ class SearchCommentTest extends SearchTestBase {
 
     // Make preview optional.
     $instance = field_info_instance('node', 'comment', 'article');
-    $instance['settings']['comment']['comment_preview'] = DRUPAL_OPTIONAL;
+    $instance['settings']['preview'] = DRUPAL_OPTIONAL;
     field_update_instance($instance);
     // Enable check_plain() for 'Filtered HTML' text format.
     $filtered_html_format_id = 'filtered_html';
@@ -137,11 +137,9 @@ class SearchCommentTest extends SearchTestBase {
     // Create a node.
     // Make preview optional.
     $instance = field_info_instance('node', 'comment', 'article');
-    $instance['settings']['comment']['comment_preview'] = DRUPAL_OPTIONAL;
+    $instance['settings']['preview'] = DRUPAL_OPTIONAL;
     field_update_instance($instance);
-    $this->node = $this->drupalCreateNode(array(
-      'type' => 'article',
-    ));
+    $this->node = $this->drupalCreateNode(array('type' => 'article'));
 
     // Post a comment using 'Full HTML' text format.
     $edit_comment = array();

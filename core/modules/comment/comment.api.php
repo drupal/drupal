@@ -34,7 +34,7 @@ function hook_comment_presave(Drupal\comment\Comment $comment) {
  */
 function hook_comment_insert(Drupal\comment\Comment $comment) {
   // Reindex the node when comments are added.
-  if ($comment->entity_type == 'node') {
+  if ($comment->entity_type->value == 'node') {
     search_touch_node($comment->entity_id->target_id);
   }
 }
@@ -47,7 +47,7 @@ function hook_comment_insert(Drupal\comment\Comment $comment) {
  */
 function hook_comment_update(Drupal\comment\Comment $comment) {
   // Reindex the node when comments are updated.
-  if ($comment->entity_type == 'node') {
+  if ($comment->entity_type->value == 'node') {
     search_touch_node($comment->entity_id->target_id);
   }
 }
@@ -90,7 +90,7 @@ function hook_comment_load(Drupal\comment\Comment $comments) {
  *   comment components.
  * @param $view_mode
  *   View mode, e.g. 'full', 'teaser'...
- * @param string $langcode
+ * @param $langcode
  *   The language code used for rendering.
  *
  * @see hook_entity_view()
@@ -120,7 +120,7 @@ function hook_comment_view(\Drupal\comment\Plugin\Core\Entity\Comment $comment, 
  * comment.tpl.php. See drupal_render() and theme() documentation respectively
  * for details.
  *
- * @param array $build
+ * @param $build
  *   A renderable array representing the comment.
  * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
  *   The comment being rendered.
@@ -224,9 +224,7 @@ function hook_comment_delete(Drupal\comment\Comment $comment) {
  * @see http://drupal.org/node/1696660
  */
 function hook_comment_access(\Drupal\Core\Entity\EntityInterface $entity) {
-  $type = $entity->entityType();
-
-  if ($type == 'comment') {
+  if ($entity->entityType() == 'comment') {
     return COMMENT_ACCESS_DENY;
   }
 
