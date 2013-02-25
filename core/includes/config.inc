@@ -35,15 +35,15 @@ function config_install_default_config($type, $name) {
     $source_storage = new FileStorage($config_dir);
     $target_storage = drupal_container()->get('config.storage');
 
-    $config_changes = array(
-      'delete' => array(),
-      'create' => array(),
-      'change' => array(),
-    );
-    $config_changes['create'] = $source_storage->listAll();
+    // Ignore manifest files.
+    $config_changes = config_sync_get_changes($source_storage, $target_storage, FALSE);
     if (empty($config_changes['create'])) {
       return;
     }
+
+    // Do not overwrite or delete pre-existing configuration.
+    $config_changes['change'] = array();
+    $config_changes['delete'] = array();
     $remaining_changes = config_import_invoke_owner($config_changes, $source_storage, $target_storage);
     config_sync_changes($remaining_changes, $source_storage, $target_storage);
   }
