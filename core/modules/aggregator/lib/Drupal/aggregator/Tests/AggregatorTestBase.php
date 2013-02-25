@@ -162,7 +162,7 @@ abstract class AggregatorTestBase extends WebTestBase {
 
     // Refresh the feed (simulated link click).
     $this->drupalGet('admin/config/services/aggregator');
-    $this->clickLink('update items');
+    $this->clickLink('Update items');
 
     // Ensure we have the right number of items.
     $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->id()));
