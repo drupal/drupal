@@ -314,7 +314,6 @@ abstract class HandlerBase extends PluginBase {
    * Provide a form for aggregation settings.
    */
   public function buildGroupByForm(&$form, &$form_state) {
-    $view = &$form_state['view'];
     $display_id = $form_state['display_id'];
     $types = ViewExecutable::viewsHandlerTypes();
     $type = $form_state['type'];
@@ -322,8 +321,8 @@ abstract class HandlerBase extends PluginBase {
 
     $form['#section'] = $display_id . '-' . $type . '-' . $id;
 
-    $view->initQuery();
-    $info = $view->query->get_aggregation_info();
+    $this->view->initQuery();
+    $info = $this->view->query->get_aggregation_info();
     foreach ($info as $id => $aggregate) {
       $group_types[$id] = $aggregate['title'];
     }

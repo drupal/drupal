@@ -1,4 +1,5 @@
-base_table: node
+base_table: views_test_data
+base_table: id
 core: '8'
 description: ''
 status: '1'
@@ -17,6 +18,12 @@ display:
         type: default
       row:
         type: fields
+      fields:
+        id:
+          field: id
+          table: views_test_data
+          id: id
+          plugin_id: id
     display_plugin: default
     display_title: Master
     id: default
