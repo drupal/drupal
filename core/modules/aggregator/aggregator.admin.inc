@@ -42,15 +42,15 @@ function aggregator_view() {
     $row[] = ($feed->checked && $feed->refresh ? t('%time left', array('%time' => format_interval($feed->checked + $feed->refresh - REQUEST_TIME))) : t('never'));
     $links = array();
     $links['edit'] = array(
-      'title' => t('edit'),
+      'title' => t('Edit'),
       'href' => "admin/config/services/aggregator/edit/feed/$feed->fid",
     );
     $links['remove'] = array(
-      'title' => t('remove items'),
+      'title' => t('Remove items'),
       'href' => "admin/config/services/aggregator/remove/$feed->fid",
     );
     $links['update'] = array(
-      'title' => t('update items'),
+      'title' => t('Update items'),
       'href' => "admin/config/services/aggregator/update/$feed->fid",
       'query' => array('token' => drupal_get_token("aggregator/update/$feed->fid")),
     );
@@ -76,7 +76,7 @@ function aggregator_view() {
     $row[] = format_plural($category->items, '1 item', '@count items');
     $links = array();
     $links['edit'] = array(
-      'title' => t('edit'),
+      'title' => t('Edit'),
       'href' => "admin/config/services/aggregator/edit/category/$category->cid",
     );
     $row[] = array(
