@@ -48,5 +48,10 @@ class CategorizeFeedTest extends AggregatorTestBase {
     $db_feed = aggregator_feed_load($db_fid);
     // Assert the feed has two categories.
     $this->assertEqual(count($db_feed->categories), 2, 'Feed has 2 categories');
+
+    // Verify the categories overview page is correctly displayed.
+    $this->drupalGet('aggregator/categories');
+    $this->assertText($category_1['title']);
+    $this->assertText($category_2['title']);
   }
 }
