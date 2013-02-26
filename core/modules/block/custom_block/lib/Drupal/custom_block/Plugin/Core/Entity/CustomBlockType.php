@@ -69,7 +69,7 @@ class CustomBlockType extends ConfigEntityBase {
   public $description;
 
   /**
-   * Overrides \Drupal\Core\Entity\Entity::getRevisionId().
+   * Overrides \Drupal\Core\Entity\Entity::uri().
    */
   public function uri() {
     return array(
