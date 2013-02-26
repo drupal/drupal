@@ -2650,8 +2650,6 @@ function _template_preprocess_default_variables() {
     'title_prefix' => array(),
     'title_suffix' => array(),
     'db_is_active' => !defined('MAINTENANCE_MODE'),
-    // User module overrides these when it is loaded.
-    'user' => drupal_anonymous_user(),
     'is_admin' => FALSE,
     'logged_in' => FALSE,
   );

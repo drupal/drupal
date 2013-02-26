@@ -148,7 +148,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
       }
       // We test the value with '===' because we need to modify anonymous
       // users as well.
-      if ($comment->uid->target_id === $user->uid && isset($user->name)) {
+      if ($comment->uid->target_id === $user->uid && $user->uid) {
         $comment->name->value = $user->name;
       }
       // Add the values which aren't passed into the function.
