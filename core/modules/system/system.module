@@ -5,6 +5,7 @@
  * Configuration system that lets administrators modify the workings of the site.
  */
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Utility\ModuleInfo;
 use Drupal\Core\TypedData\Primitive;
 use Drupal\system\Plugin\block\block\SystemMenuBlock;
