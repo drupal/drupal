@@ -4814,9 +4814,9 @@ function drupal_get_hash_salt() {
  *   The private key.
  */
 function drupal_get_private_key() {
-  if (!($key = variable_get('drupal_private_key', 0))) {
+  if (!($key = state()->get('system.private_key'))) {
     $key = drupal_hash_base64(drupal_random_bytes(55));
-    variable_set('drupal_private_key', $key);
+    state()->set('system.private_key', $key);
   }
   return $key;
 }
