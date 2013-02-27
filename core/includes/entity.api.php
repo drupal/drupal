@@ -512,3 +512,56 @@ function hook_entity_field_info_alter(&$info, $entity_type) {
     $info['definitions']['mymodule_text']['class'] = '\Drupal\anothermodule\EntityComputedText';
   }
 }
+
+/**
+ * Control access to fields.
+ *
+ * This hook is invoked from \Drupal\Core\Entity\Field\Type\Field::access() to
+ * let modules grant or deny operations on fields.
+ *
+ * @param string $operation
+ *   The operation to be performed. See
+ *   \Drupal\Core\TypedData\AccessibleInterface::access() for possible values.
+ * @param \Drupal\Core\Entity\Field\Type\Field $field
+ *   The entity field object on which the operation is to be performed.
+ * @param \Drupal\user\Plugin\Core\Entity\User $account
+ *   The user account to check.
+ *
+ * @return bool|NULL
+ *   TRUE if access hould be allowed, FALSE if access should be denied and NULL
+ *   if the implementation has no opinion.
+ */
+function hook_entity_field_access($operation, $field, $account) {
+  if ($field->getName() == 'field_of_interest' && $operation == 'edit') {
+    return user_access('edit field of interest', $account);
+  }
+}
+
+/**
+ * Alters the default access behaviour for a given field.
+ *
+ * Use this hook to override access grants from another module. Note that the
+ * original default access flag is masked under the ':default' key.
+ *
+ * @param array $grants
+ *   An array of grants gathered by hook_entity_field_access(). The array is
+ *   keyed by the module that defines the field's access control; the values are
+ *   grant responses for each module (Boolean or NULL).
+ * @param array $context
+ *   Context array on the performed operation with the following keys:
+ *   - operation: The operation to be performed (string).
+ *   - field: The entity field object (\Drupal\Core\Entity\Field\Type\Field).
+ *   - account: The user account to check access for
+ *     (Drupal\user\Plugin\Core\Entity\User).
+ */
+function hook_entity_field_access_alter(array &$grants, array $context) {
+  $field = $context['field'];
+  if ($field->getName() == 'field_of_interest' && $grants['node'] === FALSE) {
+    // Override node module's restriction to no opinion. We don't want to
+    // provide our own access hook, we only want to take out node module's part
+    // in the access handling of this field. We also don't want to switch node
+    // module's grant to TRUE, because the grants of other modules should still
+    // decide on their own if this field is accessible or not.
+    $grants['node'] = NULL;
+  }
+}

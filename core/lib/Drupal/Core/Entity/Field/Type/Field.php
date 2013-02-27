@@ -289,6 +289,51 @@ class Field extends ContextAwareTypedData implements IteratorAggregate, FieldInt
    * Implements \Drupal\Core\TypedData\AccessibleInterface::access().
    */
   public function access($operation = 'view', User $account = NULL) {
-    // TODO: Implement access() method. Use item access.
+    global $user;
+    if (!isset($account) && $user->uid) {
+      $account = user_load($user->uid);
+    }
+    // Get the default access restriction that lives within this field.
+    $access = $this->defaultAccess($operation, $account);
+    // Invoke hook and collect grants/denies for field access from other
+    // modules. Our default access flag is masked under the ':default' key.
+    $grants = array(':default' => $access);
+    foreach (module_implements('entity_field_access') as $module) {
+      $grants = array_merge($grants, array($module => module_invoke($module, 'entity_field_access', $operation, $this, $account)));
+    }
+    // Also allow modules to alter the returned grants/denies.
+    $context = array(
+      'operation' => $operation,
+      'field' => $this,
+      'account' => $account,
+    );
+    drupal_alter('entity_field_access', $grants, $context);
+
+    // One grant being FALSE is enough to deny access immediately.
+    if (in_array(FALSE, $grants, TRUE)) {
+      return FALSE;
+    }
+    // At least one grant has the explicit opinion to allow access.
+    if (in_array(TRUE, $grants, TRUE)) {
+      return TRUE;
+    }
+    // All grants are NULL and have no opinion - deny access in that case.
+    return FALSE;
+  }
+
+  /**
+   * Contains the default access logic of this field.
+   *
+   * See \Drupal\Core\TypedData\AccessibleInterface::access() for the parameter
+   * doucmentation. This method can be overriden by field sub classes to provide
+   * a different default access logic. That allows them to inherit the complete
+   * access() method which contains the access hook invocation logic.
+   *
+   * @return bool
+   *   TRUE if access to this field is allowed per default, FALSE otherwise.
+   */
+  public function defaultAccess($operation = 'view', User $account = NULL) {
+    // Grant access per default.
+    return TRUE;
   }
 }

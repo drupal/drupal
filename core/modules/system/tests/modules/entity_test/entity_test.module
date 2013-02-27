@@ -251,3 +251,26 @@ function entity_test_entity_test_insert($entity) {
     throw new Exception("Test exception rollback.");
   }
 }
+
+/**
+ * Implements hook_entity_field_access().
+ *
+ * @see \Drupal\system\Tests\Entity\FieldAccessTest::testFieldAccess()
+ */
+function entity_test_entity_field_access($operation, $field, $account) {
+  if ($field->getName() == 'field_test_text' && $field->value == 'no access value') {
+    return FALSE;
+  }
+}
+
+/**
+ * Implements hook_entity_field_access_alter().
+ *
+ * @see \Drupal\system\Tests\Entity\FieldAccessTest::testFieldAccess()
+ */
+function entity_test_entity_field_access_alter(array &$grants, array $context) {
+  $field = $context['field'];
+  if ($field->getName() == 'field_test_text' && $field->value == 'access alter value') {
+    $grants[':default'] = FALSE;
+  }
+}
