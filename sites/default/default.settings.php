@@ -286,11 +286,16 @@ $settings['update_free_access'] = FALSE;
 /**
  * Twig debugging:
  *
- * When enabled, you can use the 'dump' function in Twig templates to output
- * information about variables, and templates are automatically recompiled
- * whenever the source code changes.
+ * When debugging is enabled:
+ * - The markup of each Twig template is surrounded by HTML comments which
+ *   contain theming information such as template file name suggestions.
+ * - The 'dump' function can be used in Twig templates to output information
+ *   about template variables.
+ * - Twig templates are automatically recompiled whenever the source code
+ *   changes (see twig_auto_reload below).
  *
- * @see http://drupal.org/node/1906392
+ * For more information about debugging Twig templates, see
+ * http://drupal.org/node/1906392.
  *
  * Not recommended in production environments (Default: FALSE).
  */

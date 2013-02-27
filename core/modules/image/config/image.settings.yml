@@ -1,1 +1,2 @@
 preview_image: core/modules/image/sample.png
+allow_insecure_derivatives: false
