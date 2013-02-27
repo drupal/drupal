@@ -1,0 +1,12 @@
+# Schema for the configuration files of the shortcut module.
+
+shortcut.set.default:
+  type: mapping
+  label: 'Shortcut settings'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: string
+      label: 'Label'
