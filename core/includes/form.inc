@@ -102,6 +102,31 @@ use Drupal\Core\Utility\Color;
  */
 
 /**
+ * Determines the form ID.
+ *
+ * @param \Drupal\Core\Form\FormInterface|string $form_arg
+ *   A form object to use to build the form, or the unique string identifying
+ *   the desired form. If $form_arg is a string and a function with that
+ *   name exists, it is called to build the form array.
+ * @param array $form_state
+ *   An associative array containing the current state of the form.
+ *
+ * @return string
+ *   The unique string identifying the desired form.
+ */
+function _drupal_form_id($form_arg, &$form_state) {
+  // If the $form_arg implements \Drupal\Core\Form\FormInterface, add that as
+  // the callback object and determine the form ID.
+  if (is_object($form_arg) && $form_arg instanceof FormInterface) {
+    $form_state['build_info']['callback_object'] = $form_arg;
+    return $form_arg->getFormID();
+  }
+
+  // Otherwise, the $form_arg is the form ID.
+  return $form_arg;
+}
+
+/**
  * Returns a renderable form array for a given form ID.
  *
  * This function should be used instead of drupal_build_form() when $form_state
@@ -137,15 +162,7 @@ function drupal_get_form($form_arg) {
   array_shift($args);
   $form_state['build_info']['args'] = $args;
 
-  // Determine the form ID.
-  if (is_object($form_arg) && $form_arg instanceof FormInterface) {
-    $form_state['build_info']['callback_object'] = $form_arg;
-    $form_id = $form_arg->getFormID();
-  }
-  else {
-    $form_id = $form_arg;
-  }
-
+  $form_id = _drupal_form_id($form_arg, $form_state);
   return drupal_build_form($form_id, $form_state);
 }
 
@@ -648,13 +665,14 @@ function form_load_include(&$form_state, $type, $module, $name = NULL) {
  * There is no return value, but you can check to see if there are errors
  * by calling form_get_errors().
  *
- * @param $form_id
- *   The unique string identifying the desired form. If a function
- *   with that name exists, it is called to build the form array.
- *   Modules that need to generate the same form (or very similar forms)
- *   using different $form_ids can implement hook_forms(), which maps
- *   different $form_id values to the proper form constructor function. Examples
- *   may be found in node_forms() and search_forms().
+ * @param \Drupal\Core\Form\FormInterface|string $form_arg
+ *   A form object to use to build the form, or the unique string identifying
+ *   the desired form. If $form_arg is a string and a function with that
+ *   name exists, it is called to build the form array. Modules that need to
+ *   generate the same form (or very similar forms) using different $form_ids
+ *   can implement hook_forms(), which maps different $form_id values to the
+ *   proper form constructor function. Examples may be found in node_forms()
+ *   and search_forms().
  * @param $form_state
  *   A keyed array containing the current state of the form. Most important is
  *   the $form_state['values'] collection, a tree of data used to simulate the
@@ -693,7 +711,7 @@ function form_load_include(&$form_state, $type, $module, $name = NULL) {
  * drupal_form_submit('user_register_form', $form_state);
  * @endcode
  */
-function drupal_form_submit($form_id, &$form_state) {
+function drupal_form_submit($form_arg, &$form_state) {
   if (!isset($form_state['build_info']['args'])) {
     $args = func_get_args();
     array_shift($args);
@@ -710,6 +728,8 @@ function drupal_form_submit($form_id, &$form_state) {
   $form_state['input'] = $form_state['values'];
 
   $form_state['programmed'] = TRUE;
+
+  $form_id = _drupal_form_id($form_arg, $form_state);
   $form = drupal_retrieve_form($form_id, $form_state);
   // Programmed forms are always submitted.
   $form_state['submitted'] = TRUE;

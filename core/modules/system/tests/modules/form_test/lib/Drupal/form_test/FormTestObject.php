@@ -27,6 +27,11 @@ class FormTestObject implements FormInterface {
   public function buildForm(array $form, array &$form_state) {
     $form['element'] = array('#markup' => 'The FormTestObject::buildForm() method was used for this form.');
 
+    $form['bananas'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Bananas'),
+    );
+
     $form['actions']['#type'] = 'actions';
     $form['actions']['submit'] = array(
       '#type' => 'submit',
@@ -47,6 +52,9 @@ class FormTestObject implements FormInterface {
    */
   public function submitForm(array &$form, array &$form_state) {
     drupal_set_message(t('The FormTestObject::submitForm() method was used for this form.'));
+    config('form_test.object')
+      ->set('bananas', $form_state['values']['bananas'])
+      ->save();
   }
 
 }
