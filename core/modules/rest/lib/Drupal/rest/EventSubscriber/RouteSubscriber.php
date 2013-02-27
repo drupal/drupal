@@ -54,15 +54,30 @@ class RouteSubscriber implements EventSubscriberInterface {
   public function dynamicRoutes(RouteBuildEvent $event) {
 
     $collection = $event->getRouteCollection();
+    $enabled_resources = $this->config->get('rest.settings')->load()->get('resources');
 
-    $resources = $this->config->get('rest.settings')->load()->get('resources');
-    if ($resources && $enabled = array_intersect_key($this->manager->getDefinitions(), $resources)) {
-      foreach ($enabled as $key => $resource) {
-        $plugin = $this->manager->getInstance(array('id' => $key));
+    // Iterate over all enabled resource plugins.
+    foreach ($enabled_resources as $id => $enabled_methods) {
+      $plugin = $this->manager->getInstance(array('id' => $id));
 
-        foreach ($plugin->routes() as $name => $route) {
+      foreach ($plugin->routes() as $name => $route) {
+        $method = $route->getRequirement('_method');
+        // Only expose routes where the method is enabled in the configuration.
+        if ($method && isset($enabled_methods[$method])) {
           $route->setRequirement('_access_rest_csrf',  'TRUE');
-          $collection->add("rest.$name", $route);
+
+          // If the array of configured format restrictions is empty for a
+          // method always add the route.
+          if (empty($enabled_methods[$method])) {
+            $collection->add("rest.$name", $route);
+            continue;
+          }
+          // If there is no format requirement or if it matches the
+          // configuration also add the route.
+          $format_requirement = $route->getRequirement('_format');
+          if (!$format_requirement || isset($enabled_methods[$method][$format_requirement])) {
+            $collection->add("rest.$name", $route);
+          }
         }
       }
     }

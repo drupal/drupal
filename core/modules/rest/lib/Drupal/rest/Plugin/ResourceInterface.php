@@ -36,4 +36,12 @@ interface ResourceInterface extends PluginInspectionInterface {
    */
   public function permissions();
 
+  /**
+   * Returns the available HTTP request methods on this plugin.
+   *
+   * @return array
+   *   The list of supported methods. Example: array('GET', 'POST', 'PATCH').
+   */
+  public function availableMethods();
+
 }

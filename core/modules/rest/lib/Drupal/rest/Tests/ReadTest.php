@@ -38,7 +38,7 @@ class ReadTest extends RESTTestBase {
     // Define the entity types we want to test.
     $entity_types = array('entity_test');
     foreach ($entity_types as $entity_type) {
-      $this->enableService('entity:' . $entity_type);
+      $this->enableService('entity:' . $entity_type, 'GET');
       // Create a user account that has the required permissions to delete
       // resources via the web API.
       $account = $this->drupalCreateUser(array('restful get entity:' . $entity_type));
@@ -57,12 +57,8 @@ class ReadTest extends RESTTestBase {
       $this->assertEqual($data['uuid'][LANGUAGE_DEFAULT][0]['value'], $entity->uuid(), 'Entity UUID is correct');
 
       // Try to read the entity with an unsupported mime format.
-      // Because the matcher checks mime type first, then method, this will hit
-      // zero viable routes on the method.  If the mime matcher wasn't working,
-      // we would still find an existing GET route with the wrong format. That
-      // means this is a valid functional test for mime-matching.
       $response = $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'GET', NULL, 'application/wrongformat');
-      $this->assertResponse(405);
+      $this->assertResponse(415);
 
       // Try to read an entity that does not exist.
       $response = $this->httpRequest('entity/' . $entity_type . '/9999', 'GET', NULL, 'application/vnd.drupal.ld+json');

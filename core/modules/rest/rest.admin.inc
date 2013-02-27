@@ -34,7 +34,10 @@ function rest_admin_form($form, &$form_state) {
   }
   asort($entity_resources);
   asort($other_resources);
-  $enabled_resources = config('rest.settings')->get('resources') ?: array();
+  $config = config('rest.settings')->get('resources') ?: array();
+  // Strip out the nested method configuration, we are only interested in the
+  // plugin IDs of the resources.
+  $enabled_resources = drupal_map_assoc(array_keys($config));
 
   // Render the output using table_select().
   $header = array(
@@ -79,9 +82,19 @@ function rest_admin_form($form, &$form_state) {
  * Form submission handler for rest_admin_form().
  */
 function rest_admin_form_submit($form, &$form_state) {
-  $resources = array_filter($form_state['values']['entity_resources']);
+  $enabled_resources = array_filter($form_state['values']['entity_resources']);
   if (!empty($form_state['values']['other_resources'])) {
-    $resources += array_filter($form_state['values']['other_resources']);
+    $enabled_resources += array_filter($form_state['values']['other_resources']);
+  }
+  $resources = array();
+  $plugin_manager = drupal_container()->get('plugin.manager.rest');
+
+  // Enable all methods and all formats for each selected resource.
+  foreach ($enabled_resources as $resource) {
+    $plugin = $plugin_manager->getInstance(array('id' => $resource));
+    $methods = $plugin->availableMethods();
+    // An empty array means all formats are allowed for a method.
+    $resources[$resource] = array_fill_keys($methods, array());
   }
 
   $config = config('rest.settings');

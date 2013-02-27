@@ -12,6 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 /**
@@ -43,17 +44,28 @@ class RequestHandler extends ContainerAware {
     $received = $request->getContent();
     $unserialized = NULL;
     if (!empty($received)) {
-      $definition = $resource->getDefinition();
-      $class = $definition['serialization_class'];
-      try {
-        // @todo Replace the format here with something we get from the HTTP
-        //   Content-type header. See http://drupal.org/node/1850704
-        $unserialized = $serializer->deserialize($received, $class, 'drupal_jsonld');
+      $format = $request->getContentType();
+
+      // Only allow serialization formats that are explicitly configured. If no
+      // formats are configured allow all and hope that the serializer knows the
+      // format. If the serializer cannot handle it an exception will be thrown
+      // that bubbles up to the client.
+      $config = $this->container->get('config.factory')->get('rest.settings')->get('resources');
+      $enabled_formats = $config[$plugin][$request->getMethod()];
+      if (empty($enabled_formats) || isset($enabled_formats[$format])) {
+        $definition = $resource->getDefinition();
+        $class = $definition['serialization_class'];
+        try {
+          $unserialized = $serializer->deserialize($received, $class, $format);
+        }
+        catch (UnexpectedValueException $e) {
+          $error['error'] = $e->getMessage();
+          $content = $serializer->serialize($error, $format);
+          return new Response($content, 400, array('Content-Type' => $request->getMimeType($format)));
+        }
       }
-      catch (UnexpectedValueException $e) {
-        $error['error'] = $e->getMessage();
-        $content = $serializer->serialize($error, 'drupal_jsonld');
-        return new Response($content, 400, array('Content-Type' => 'application/vnd.drupal.ld+json'));
+      else {
+        throw new UnsupportedMediaTypeHttpException();
       }
     }
 
@@ -63,21 +75,26 @@ class RequestHandler extends ContainerAware {
     }
     catch (HttpException $e) {
       $error['error'] = $e->getMessage();
-      $content = $serializer->serialize($error, 'drupal_jsonld');
+      $format = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)->getRequirement('_format') ?: 'drupal_jsonld';
+      $content = $serializer->serialize($error, $format);
       // Add the default content type, but only if the headers from the
       // exception have not specified it already.
-      $headers = $e->getHeaders() + array('Content-Type' => 'application/vnd.drupal.ld+json');
+      $headers = $e->getHeaders() + array('Content-Type' => $request->getMimeType($format));
       return new Response($content, $e->getStatusCode(), $headers);
     }
 
     // Serialize the outgoing data for the response, if available.
     $data = $response->getResponseData();
     if ($data != NULL) {
-      // @todo Replace the format here with something we get from the HTTP
-      //   Accept headers. See http://drupal.org/node/1833440
-      $output = $serializer->serialize($data, 'drupal_jsonld');
+      // All REST routes are restricted to exactly one format, so instead of
+      // parsing it out of the Accept headers again we can simply retrieve the
+      // format requirement. If there is no format associated just pick Drupal
+      // JSON-LD.
+      $format = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)->getRequirement('_format') ?: 'drupal_jsonld';
+
+      $output = $serializer->serialize($data, $format);
       $response->setContent($output);
-      $response->headers->set('Content-Type', 'application/vnd.drupal.ld+json');
+      $response->headers->set('Content-Type', $request->getMimeType($format));
     }
     return $response;
   }

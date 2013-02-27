@@ -38,7 +38,7 @@ class UpdateTest extends RESTTestBase {
     // entity types here as well.
     $entity_type = 'entity_test';
 
-    $this->enableService('entity:' . $entity_type);
+    $this->enableService('entity:' . $entity_type, 'PATCH');
     // Create a user account that has the required permissions to create
     // resources via the web API.
     $account = $this->drupalCreateUser(array('restful patch entity:' . $entity_type));
@@ -103,7 +103,7 @@ class UpdateTest extends RESTTestBase {
     // entity types here as well.
     $entity_type = 'entity_test';
 
-    $this->enableService('entity:' . $entity_type);
+    $this->enableService('entity:' . $entity_type, 'PUT');
     // Create a user account that has the required permissions to create
     // resources via the web API.
     $account = $this->drupalCreateUser(array('restful put entity:' . $entity_type));

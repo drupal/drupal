@@ -38,7 +38,7 @@ class CreateTest extends RESTTestBase {
     // entity types here as well.
     $entity_type = 'entity_test';
 
-    $this->enableService('entity:' . $entity_type);
+    $this->enableService('entity:' . $entity_type, 'POST');
     // Create a user account that has the required permissions to create
     // resources via the web API.
     $account = $this->drupalCreateUser(array('restful post entity:' . $entity_type));
