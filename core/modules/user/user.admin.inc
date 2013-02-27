@@ -292,6 +292,7 @@ function user_admin_account_validate($form, &$form_state) {
  * @see user_admin_settings_submit()
  */
 function user_admin_settings($form, &$form_state) {
+  config_context_enter('config.context.free');
   $config = config('user.settings');
   $mail_config = config('user.mail');
 
@@ -641,6 +642,7 @@ function user_admin_settings($form, &$form_state) {
  * Form submission handler for user_admin_settings().
  */
 function user_admin_settings_submit($form, &$form_state) {
+  config_context_enter('config.context.free');
   config('user.settings')
     ->set('anonymous', $form_state['values']['anonymous'])
     ->set('admin_role', $form_state['values']['user_admin_role'])

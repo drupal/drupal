@@ -1403,6 +1403,7 @@ function system_modules_uninstall_submit($form, &$form_state) {
  * @see system_settings_form()
  */
 function system_site_information_settings($form, &$form_state) {
+  config_context_enter('config.context.free');
   $site_config = config('system.site');
   $site_mail = $site_config->get('mail');
   if (empty($site_mail)) {
@@ -1509,6 +1510,7 @@ function system_site_information_settings_validate($form, &$form_state) {
  * Form submission handler for system_site_information_settings().
  */
 function system_site_information_settings_submit($form, &$form_state) {
+  config_context_enter('config.context.free');
   config('system.site')
     ->set('name', $form_state['values']['site_name'])
     ->set('mail', $form_state['values']['site_mail'])
@@ -1525,6 +1527,7 @@ function system_site_information_settings_submit($form, &$form_state) {
  * @ingroup forms
  */
 function system_cron_settings($form, &$form_state) {
+  config_context_enter('config.context.free');
   $form['description'] = array(
     '#markup' => '<p>' . t('Cron takes care of running periodic tasks like checking for updates and indexing content for search.') . '</p>',
   );
@@ -1562,6 +1565,7 @@ function system_cron_settings($form, &$form_state) {
  * @ingroup forms
  */
 function system_cron_settings_submit($form, &$form_state) {
+  config_context_enter('config.context.free');
   config('system.cron')
     ->set('threshold.autorun', $form_state['values']['cron_safe_threshold'])
     ->save();
@@ -1591,6 +1595,7 @@ function system_run_cron_submit($form, &$form_state) {
  * @see system_logging_settings_submit()
  */
 function system_logging_settings($form, &$form_state) {
+  config_context_enter('config.context.free');
   $form['error_level'] = array(
     '#type' => 'radios',
     '#title' => t('Error messages to display'),
@@ -1613,6 +1618,7 @@ function system_logging_settings($form, &$form_state) {
  * @ingroup forms
  */
 function system_logging_settings_submit($form, &$form_state) {
+  config_context_enter('config.context.free');
   config('system.logging')
     ->set('error_level', $form_state['values']['error_level'])
     ->save();
@@ -1626,6 +1632,7 @@ function system_logging_settings_submit($form, &$form_state) {
  */
 function system_performance_settings($form, &$form_state) {
   drupal_add_library('system', 'drupal.system');
+  config_context_enter('config.context.free');
   $config = config('system.performance');
 
   $form['clear_cache'] = array(
@@ -1715,6 +1722,7 @@ function system_performance_settings($form, &$form_state) {
  * @ingroup forms
  */
 function system_performance_settings_submit($form, &$form_state) {
+  config_context_enter('config.context.free');
   $config = config('system.performance');
   $config->set('cache.page.enabled', $form_state['values']['cache']);
   $config->set('cache.page.max_age', $form_state['values']['page_cache_maximum_age']);
@@ -1860,6 +1868,7 @@ function system_image_toolkit_settings() {
  * @ingroup forms
  */
 function system_rss_feeds_settings($form, &$form_state) {
+  config_context_enter('config.context.free');
   $rss_config = config('system.rss');
   $form['feed_description'] = array(
     '#type' => 'textarea',
@@ -1895,6 +1904,7 @@ function system_rss_feeds_settings($form, &$form_state) {
  * @ingroup forms
  */
 function system_rss_feeds_settings_submit($form, &$form_state) {
+  config_context_enter('config.context.free');
   config('system.rss')
     ->set('channel.description', $form_state['values']['feed_description'])
     ->set('items.limit', $form_state['values']['feed_default_items'])
@@ -2015,6 +2025,7 @@ function system_regional_settings_submit($form, &$form_state) {
  * @see system_site_maintenance_mode_submit()
  */
 function system_site_maintenance_mode($form, &$form_state) {
+  config_context_enter('config.context.free');
   $config = config('system.maintenance');
   $form['maintenance_mode'] = array(
     '#type' => 'checkbox',
@@ -2037,6 +2048,7 @@ function system_site_maintenance_mode($form, &$form_state) {
  * @ingroup forms
  */
 function system_site_maintenance_mode_submit($form, &$form_state) {
+  config_context_enter('config.context.free');
   config('system.maintenance')
     ->set('enabled', $form_state['values']['maintenance_mode'])
     ->set('message', $form_state['values']['maintenance_mode_message'])

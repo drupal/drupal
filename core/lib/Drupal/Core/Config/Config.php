@@ -9,7 +9,7 @@ namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\ConfigNameException;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Drupal\Core\Config\Context\ContextInterface;
 
 /**
  * Defines the default configuration object.
@@ -71,11 +71,11 @@ class Config {
   protected $storage;
 
   /**
-   * The event dispatcher used to notify subscribers.
+   * The configuration context used for this configuration object.
    *
-   * @var Symfony\Component\EventDispatcher\EventDispatcher
+   * @var \Drupal\Core\Config\Context\ContextInterface
    */
-  protected $eventDispatcher;
+  protected $context;
 
   /**
    * Whether the config object has already been loaded.
@@ -89,16 +89,16 @@ class Config {
    *
    * @param string $name
    *   The name of the configuration object being constructed.
-   * @param Drupal\Core\Config\StorageInterface $storage
+   * @param \Drupal\Core\Config\StorageInterface $storage
    *   A storage controller object to use for reading and writing the
    *   configuration data.
-   * @param Symfony\Component\EventDispatcher\EventDispatcher $event_dispatcher
-   *   The event dispatcher used to notify subscribers.
+   * @param \Drupal\Core\Config\Context\ContextInterface $context
+   *   The configuration context used for this configuration object.
    */
-  public function __construct($name, StorageInterface $storage, EventDispatcher $event_dispatcher = NULL) {
+  public function __construct($name, StorageInterface $storage, ContextInterface $context) {
     $this->name = $name;
     $this->storage = $storage;
-    $this->eventDispatcher = $event_dispatcher ? $event_dispatcher : drupal_container()->get('event_dispatcher');
+    $this->context = $context;
   }
 
   /**
@@ -491,7 +491,7 @@ class Config {
    * Dispatch a config event.
    */
   protected function notify($config_event_name) {
-    $this->eventDispatcher->dispatch('config.' . $config_event_name, new ConfigEvent($this));
+    $this->context->notify($config_event_name, $this);
   }
 
   /**

@@ -2,10 +2,11 @@
 
 namespace Drupal\Core\Config;
 
+use Drupal\Core\Config\Context\ContextInterface;
 use Symfony\Component\EventDispatcher\Event;
-use Drupal\Core\Config\Config;
 
 class ConfigEvent extends Event {
+
   /**
    * Configuration object.
    *
@@ -14,10 +15,23 @@ class ConfigEvent extends Event {
   protected $config;
 
   /**
-   * Constructor.
+   * Configuration context object.
+   *
+   * @var \Drupal\Core\Config\Context\ContextInterface
    */
-  public function __construct(Config $config) {
+  protected $context;
+
+  /**
+   * Constructs a configuration event object.
+   *
+   * @param \Drupal\Core\Config\Context\ContextInterface
+   *   Configuration context object.
+   * @param \Drupal\Core\Config\Config
+   *   (optional) Configuration object.
+   */
+  public function __construct(ContextInterface $context, Config $config = NULL) {
     $this->config = $config;
+    $this->context = $context;
   }
 
   /**
@@ -25,5 +39,15 @@ class ConfigEvent extends Event {
    */
   public function getConfig() {
     return $this->config;
+  }
+
+  /**
+   * Get configuration context object.
+   *
+   * @return \Drupal\Core\Config\Context\ContextInterface
+   *   Configuration context.
+   */
+  public function getContext() {
+    return $this->context;
   }
 }

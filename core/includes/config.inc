@@ -1,8 +1,8 @@
 <?php
 
 use Drupal\Core\Config\Config;
+use Drupal\Core\Config\ConfigException;
 use Drupal\Core\Config\FileStorage;
-use Drupal\Core\Config\NullStorage;
 use Drupal\Core\Config\StorageInterface;
 
 /**
@@ -24,6 +24,10 @@ const CONFIG_IMPORT_LOCK = 'config_import';
  *   The name of the module or theme to install default configuration for.
  */
 function config_install_default_config($type, $name) {
+  // Use the override free context for config importing so that any overrides do
+  // not change the data on import.
+  config_context_enter('config.context.free');
+
   // If this module defines any ConfigEntity types then create an empty
   // manifest file for each of them.
   foreach (config_get_module_config_entities($name) as $entity_info) {
@@ -47,6 +51,8 @@ function config_install_default_config($type, $name) {
     $remaining_changes = config_import_invoke_owner($config_changes, $source_storage, $target_storage);
     config_sync_changes($remaining_changes, $source_storage, $target_storage);
   }
+  // Exit the override free context.
+  config_context_leave();
 }
 
 /**
@@ -87,7 +93,7 @@ function config_get_storage_names_with_prefix($prefix = '') {
  * @code config('book.admin') @endcode will return a configuration object in
  * which the book module can store its administrative settings.
  *
- * @param $name
+ * @param string $name
  *   The name of the configuration object to retrieve. The name corresponds to
  *   a configuration file. For @code config('book.admin') @endcode, the config
  *   object returned will contain the contents of book.admin configuration file.
@@ -97,6 +103,54 @@ function config_get_storage_names_with_prefix($prefix = '') {
  */
 function config($name) {
   return drupal_container()->get('config.factory')->get($name);
+}
+
+/*
+ * Sets the config context on the config factory.
+ *
+ * This allows configuration objects to be created using special configuration
+ * contexts eg. global override free or locale using a user preferred language.
+ * Calling this function affects all subsequent calls to config() until
+ * config_context_leave() is called.
+ *
+ * @see config_context_leave()
+ * @see \Drupal\Core\Config\ConfigFactory
+ *
+ * @param string $context_name
+ *   The name of the config context service on the container or a fully
+ *   qualified class implementing \Drupal\Core\Config\Context\ContextInterface.
+ *
+ * @return \Drupal\Core\Config\Context\ContextInterface
+ *   The configuration context object.
+ */
+function config_context_enter($context_name) {
+  if (drupal_container()->has($context_name)) {
+    $context = drupal_container()->get($context_name);
+  }
+  elseif (class_exists($context_name) && in_array("Drupal\\Core\\Config\\Context\\ContextInterface", class_implements($context_name))) {
+    $context = drupal_container()
+      ->get('config.context.factory')
+      ->get($context_name);
+  }
+  else {
+    throw new ConfigException(sprintf('Unknown config context service or class: %s', $context_name));
+  }
+  drupal_container()
+    ->get('config.factory')
+    ->enterContext($context);
+  return $context;
+}
+
+/*
+ * Leaves the current config context returning to the previous context.
+ *
+ * @see config_context_enter()
+ * @see \Drupal\Core\Config\ConfigFactory
+ */
+function config_context_leave() {
+  drupal_container()
+    ->get('config.factory')
+    ->leaveContext();
 }
 
 /**
@@ -184,10 +238,11 @@ function config_sync_get_changes(StorageInterface $source_storage, StorageInterf
  *   The storage to synchronize configuration to.
  */
 function config_sync_changes(array $config_changes, StorageInterface $source_storage, StorageInterface $target_storage) {
+  $target_context = drupal_container()->get('config.context.free');
   $factory = drupal_container()->get('config.factory');
   foreach (array('delete', 'create', 'change') as $op) {
     foreach ($config_changes[$op] as $name) {
-      $config = new Config($name, $target_storage);
+      $config = new Config($name, $target_storage, $target_context);
       if ($op == 'delete') {
         $config->delete();
       }
@@ -230,9 +285,16 @@ function config_import() {
 
   $success = TRUE;
   try {
+    // Use the override free context for config importing so that any overrides do
+    // not change the data on import.
+    config_context_enter('config.context.free');
+
     $remaining_changes = config_import_invoke_owner($config_changes, $source_storage, $target_storage);
     config_sync_changes($remaining_changes, $source_storage, $target_storage);
     config_import_create_snapshot($target_storage, $snapshot_storage);
+
+    // Exit the override free context.
+    config_context_leave();
   }
   catch (ConfigException $e) {
     watchdog_exception('config_import', $e);
@@ -271,6 +333,10 @@ function config_import_create_snapshot(StorageInterface $source_storage, Storage
  * @todo Add support for other extension types; e.g., themes etc.
  */
 function config_import_invoke_owner(array $config_changes, StorageInterface $source_storage, StorageInterface $target_storage) {
+  $factory = drupal_container()->get('config.factory');
+  // Use the admin context for config importing so that any overrides do not
+  // change the data on import.
+  $free_context = drupal_container()->get('config.context.free');
   // Allow modules to take over configuration change operations for
   // higher-level configuration data.
   // First pass deleted, then new, and lastly changed configuration, in order to
@@ -284,11 +350,11 @@ function config_import_invoke_owner(array $config_changes, StorageInterface $sou
       // Validate the configuration object name before importing it.
       Config::validateName($name);
       if ($entity_type = config_get_entity_type_by_name($name)) {
-        $old_config = new Config($name, $target_storage);
+        $old_config = new Config($name, $target_storage, $free_context);
         $old_config->load();
 
         $data = $source_storage->read($name);
-        $new_config = new Config($name, $target_storage);
+        $new_config = new Config($name, $source_storage, $free_context);
         if ($data !== FALSE) {
           $new_config->setData($data);
         }
@@ -297,6 +363,10 @@ function config_import_invoke_owner(array $config_changes, StorageInterface $sou
         $handled_by_module = $manager->getStorageController($entity_type)->$method($name, $new_config, $old_config);
       }
       if (!empty($handled_by_module)) {
+        $factory->reset($name);
+        // Reset the manifest config object for the config entity.
+        $entity_info = drupal_container()->get('plugin.manager.entity')->getDefinition($entity_type);
+        $factory->reset('manifest.' . $entity_info['config_prefix']);
         unset($config_changes[$op][$key]);
       }
     }
