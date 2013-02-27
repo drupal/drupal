@@ -744,6 +744,7 @@ function system_schema() {
         'type' => 'varchar',
         'length' => 100,
         'not null' => TRUE,
+        'binary' => TRUE,
       ),
       'type' => array(
         'description' => 'The date format type, e.g. medium.',
@@ -3086,6 +3087,21 @@ function system_update_7077() {
     'not null' => TRUE,
     'default' => '',
   ));
+}
+
+
+/**
+ * Add binary to {date_formats}.format.
+ */
+function system_update_7078() {
+  db_drop_unique_key('date_formats', 'formats');
+  db_change_field('date_formats', 'format', 'format', array(
+    'description' => 'The date format string.',
+    'type' => 'varchar',
+    'length' => 100,
+    'not null' => TRUE,
+    'binary' => TRUE,
+  ), array('unique keys' => array('formats' => array('format', 'type'))));
 }
 
 /**
