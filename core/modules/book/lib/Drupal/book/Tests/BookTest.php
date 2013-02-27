@@ -67,7 +67,7 @@ class BookTest extends WebTestBase {
     // Create users.
     $this->book_author = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books'));
     $this->web_user = $this->drupalCreateUser(array('access printer-friendly version', 'node test view'));
-    $this->admin_user = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books', 'administer blocks', 'administer permissions', 'administer book outlines', 'node test view'));
+    $this->admin_user = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books', 'administer blocks', 'administer permissions', 'administer book outlines', 'node test view', 'administer content types'));
   }
 
   /**
@@ -388,5 +388,23 @@ class BookTest extends WebTestBase {
      $node = node_load($this->book->nid, TRUE);
      $this->assertTrue(empty($node->book), 'Deleting childless top-level book node properly allowed.');
    }
+
+  /*
+   * Tests node type changing machine name when type is a book allowed type.
+   */
+  function testBookNodeTypeChange() {
+    $this->drupalLogin($this->admin_user);
+    // Change the name, machine name and description.
+    $edit = array(
+      'name' => 'Bar',
+      'type' => 'bar',
+    );
+    $this->drupalPost('admin/structure/types/manage/book', $edit, t('Save content type'));
+
+    // Ensure that the config book.settings:allowed_types has been updated with
+    // the new machine and the old one has been removed.
+    $this->assertTrue(book_type_is_allowed('bar'), 'Config book.settings:allowed_types contains the updated node type machine name "bar".');
+    $this->assertFalse(book_type_is_allowed('book'), 'Config book.settings:allowed_types does not contain the old node type machine name "book".');
+  }
 }
 

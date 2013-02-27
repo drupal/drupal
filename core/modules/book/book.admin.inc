@@ -93,7 +93,8 @@ function book_admin_settings_validate($form, &$form_state) {
  */
 function book_admin_settings_submit($form, &$form_state) {
   config('book.settings')
-    ->set('allowed_types', $form_state['values']['book_allowed_types'])
+    // Remove unchecked types.
+    ->set('allowed_types', array_filter($form_state['values']['book_allowed_types']))
     ->set('child_type', $form_state['values']['book_child_type'])
     ->save();
  }

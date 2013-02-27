@@ -139,6 +139,20 @@ class SystemUpgradePathTest extends UpgradePathTestBase {
       'screenshot' => 'public://color/seven-09696463/dummy-screenshot.png',
     );
 
+    $expected_config['book.settings'] = array(
+      'allowed_types' => array(
+        'book' => 'book',
+        // Content type does not have to exist.
+        'test' => 'test',
+      ),
+      'block' => array(
+        'navigation' => array(
+          'mode' => 'all pages'
+        )
+      ),
+      'child_type' => 'book',
+    );
+
     foreach ($expected_config as $file => $values) {
       $config = config($file);
       $this->verbose(print_r($config->get(), TRUE));
