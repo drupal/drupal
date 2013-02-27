@@ -29,18 +29,18 @@ class ShortcutListController extends ConfigEntityListController {
   public function getOperations(EntityInterface $entity) {
     $uri = $entity->uri();
     $operations['list'] = array(
-      'title' => t('list links'),
+      'title' => t('List links'),
       'href' => $uri['path'],
     );
     $operations['edit'] = array(
-      'title' => t('edit set'),
+      'title' => t('Edit set'),
       'href' => $uri['path'] . '/edit',
       'options' => $uri['options'],
       'weight' => 10,
     );
     if (shortcut_set_delete_access($entity)) {
       $operations['delete'] = array(
-        'title' => t('delete set'),
+        'title' => t('Delete set'),
         'href' => $uri['path'] . '/delete',
         'options' => $uri['options'],
         'weight' => 100,
