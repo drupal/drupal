@@ -2618,11 +2618,11 @@ function system_date_time_formats() {
         // Prepare Operational links.
         $links = array();
         $links['edit'] = array(
-          'title' => t('edit'),
+          'title' => t('Edit'),
           'href' => 'admin/config/regional/date-time/formats/' . $date_format_id . '/edit',
         );
         $links['delete'] = array(
-          'title' => t('delete'),
+          'title' => t('Delete'),
           'href' => 'admin/config/regional/date-time/formats/' . $date_format_id . '/delete',
         );
         $row['operations'] = array('data' => array(
@@ -2794,11 +2794,11 @@ function system_date_format_language_overview_page() {
     $row[] = $language->name;
     $links = array();
     $links['edit'] = array(
-      'title' => t('edit'),
+      'title' => t('Edit'),
       'href' => "admin/config/regional/date-time/locale/$langcode/edit",
     );
     $links['reset'] = array(
-      'title' => t('reset'),
+      'title' => t('Reset'),
       'href' => "admin/config/regional/date-time/locale/$langcode/reset",
     );
     $row[] = array(
