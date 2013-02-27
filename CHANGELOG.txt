@@ -1,6 +1,8 @@
 
 Drupal 7.21, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a bug with update queries in the SQLite database driver that prevented
+  Drupal from being installed with SQLite on PHP 5.4.
 - Fixed enforced dependencies errors updating to recent versions of Drupal 7 on
   certain non-MySQL databases.
 - Refactored the Field module's caching behavior to obtain large improvements
