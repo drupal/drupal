@@ -479,11 +479,11 @@ function _book_add_form_elements(&$form, &$form_state, Node $node) {
 
   if (user_access('create new books') && ($nid == 'new' || ($nid != $node->book['original_bid']))) {
     // The node can become a new book, if it is not one already.
-    $options = array($nid => '<' . t('create a new book') . '>') + $options;
+    $options = array($nid => t('- Create a new book -')) + $options;
   }
   if (!$node->book['mlid']) {
     // The node is not currently in the hierarchy.
-    $options = array(0 => '<' . t('none') . '>') + $options;
+    $options = array(0 => t('- None -')) + $options;
   }
 
   // Add a drop-down to select the destination book.

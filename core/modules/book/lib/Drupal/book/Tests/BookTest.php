@@ -178,7 +178,7 @@ class BookTest extends WebTestBase {
     }
 
     if ($up) {
-      $this->assertRaw(l('up', 'node/' . $up->nid, array('html'=> TRUE, 'attributes' => array('title' => t('Go to parent page')))), 'Up page link found.');
+      $this->assertRaw(l('Up', 'node/' . $up->nid, array('html'=> TRUE, 'attributes' => array('title' => t('Go to parent page')))), 'Up page link found.');
     }
 
     if ($next) {

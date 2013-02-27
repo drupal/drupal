@@ -27,7 +27,7 @@ function book_admin_overview() {
     );
     $links = array();
     $links['edit'] = array(
-      'title' => t('edit order and titles'),
+      'title' => t('Edit order and titles'),
       'href' => 'admin/content/book/' . $book['nid'],
     );
     $row[] = array(
@@ -305,17 +305,17 @@ function theme_book_admin_table($variables) {
     );
     $links = array();
     $links['view'] = array(
-      'title' => t('view'),
+      'title' => t('View'),
       'href' => $href,
     );
     if ($access) {
       $links['edit'] = array(
-        'title' => t('edit'),
+        'title' => t('Edit'),
         'href' => "node/$nid/edit",
         'query' => $destination,
       );
       $links['delete'] = array(
-        'title' => t('delete'),
+        'title' => t('Delete'),
         'href' => "node/$nid/delete",
         'query' => $destination,
       );
