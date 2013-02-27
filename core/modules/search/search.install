@@ -24,6 +24,7 @@ function search_schema() {
         'length' => '12',
         'not null' => TRUE,
         'description' => 'The {languages}.langcode of the item variant.',
+        'default' => '',
       ),
       'type' => array(
         'type' => 'varchar',
@@ -70,6 +71,7 @@ function search_schema() {
         'length' => '12',
         'not null' => TRUE,
         'description' => 'The {languages}.langcode of the item variant.',
+        'default' => '',
       ),
       'type' => array(
         'type' => 'varchar',
@@ -173,4 +175,42 @@ function search_update_8000() {
    'search_and_or_limit' => 'and_or_limit',
    'search_default_module' => 'default_module',
   ));
+}
+
+/**
+ * Adds the langcode field and indexes to {search_dataset} and {search_index}.
+ */
+function search_update_8001() {
+  // In order to upgrade the existing entries to have the correct langcode we
+  // need to recreate search data through running cron.
+  db_truncate('search_dataset');
+  db_truncate('search_index');
+  db_truncate('search_node_links');
+
+  // Add the fields and indexes.
+  db_drop_primary_key('search_dataset');
+  db_add_field('search_dataset', 'langcode', array(
+    'type' => 'varchar',
+    'length' => '12',
+    'not null' => TRUE,
+    'description' => 'The {languages}.langcode of the item variant.',
+    'default' => '',
+  ));
+  db_add_primary_key('search_dataset', array('sid', 'langcode', 'type'));
+
+  db_drop_primary_key('search_index');
+  db_drop_index('search_index', 'sid_type');
+  db_add_field('search_index', 'langcode', array(
+    'type' => 'varchar',
+    'length' => '12',
+    'not null' => TRUE,
+    'description' => 'The {languages}.langcode of the item variant.',
+    'default' => '',
+  ),
+  array(
+    'indexes' => array(
+      'sid_type' => array('sid', 'langcode', 'type'),
+    ),
+  ));
+  db_add_primary_key('search_index', array('word', 'sid', 'langcode', 'type'));
 }
