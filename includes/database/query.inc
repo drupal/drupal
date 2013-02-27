@@ -1898,8 +1898,13 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
   function __clone() {
     $this->changed = TRUE;
     foreach ($this->conditions as $key => $condition) {
-      if ($key !== '#conjunction' && $condition['field'] instanceOf QueryConditionInterface) {
-        $this->conditions[$key]['field'] = clone($condition['field']);
+      if ($key !== '#conjunction') {
+        if ($condition['field'] instanceOf QueryConditionInterface) {
+          $this->conditions[$key]['field'] = clone($condition['field']);
+        }
+        if ($condition['value'] instanceOf SelectQueryInterface) {
+          $this->conditions[$key]['value'] = clone($condition['value']);
+        }
       }
     }
   }
