@@ -11,8 +11,9 @@
  * Implements hook_views_data().
  */
 function comment_views_data() {
-  // Define the base group of this table. Fields that don't
-  // have a group defined will go into this field by default.
+
+  // Define the base group of this table. Fields that don't have a group defined
+  // will go into this field by default.
   $data['comment']['table']['group']  = t('Comment');
 
   $data['comment']['table']['base'] = array(
@@ -24,9 +25,6 @@ function comment_views_data() {
   $data['comment']['table']['entity type'] = 'comment';
   $data['comment']['table']['wizard_id'] = 'comment';
 
-  // Fields
-
-  // subject
   $data['comment']['subject'] = array(
     'title' => t('Title'),
     'help' => t('The title of the comment.'),
@@ -44,7 +42,6 @@ function comment_views_data() {
     ),
   );
 
-  // cid
   $data['comment']['cid'] = array(
     'title' => t('ID'),
     'help' => t('The comment ID of the field'),
@@ -62,7 +59,6 @@ function comment_views_data() {
     ),
   );
 
-  // name (of comment author)
   $data['comment']['name'] = array(
     'title' => t('Author'),
     'help' => t("The name of the comment's author. Can be rendered as a link to the author's homepage."),
@@ -80,7 +76,6 @@ function comment_views_data() {
     ),
   );
 
-  // homepage
   $data['comment']['homepage'] = array(
     'title' => t("Author's website"),
     'help' => t("The website address of the comment's author. Can be rendered as a link. Will be empty if the author is a registered user."),
@@ -98,7 +93,6 @@ function comment_views_data() {
     ),
   );
 
-  // hostname
   $data['comment']['hostname'] = array(
     'title' => t('Hostname'),
     'help' => t('Hostname of user that posted the comment.'),
@@ -116,7 +110,6 @@ function comment_views_data() {
     ),
   );
 
-  // mail
   $data['comment']['mail'] = array(
     'title' => t('E-mail'),
     'help' => t('E-mail of user that posted the comment. Will be empty if the author is a registered user.'),
@@ -134,7 +127,6 @@ function comment_views_data() {
     ),
   );
 
-  // created (when comment was posted)
   $data['comment']['created'] = array(
     'title' => t('Post date'),
     'help' => t('Date and time of when the comment was created.'),
@@ -149,7 +141,6 @@ function comment_views_data() {
     ),
   );
 
-  // Langcode field
   if (module_exists('language')) {
     $data['comment']['langcode'] = array(
       'title' => t('Language'),
@@ -169,7 +160,6 @@ function comment_views_data() {
     );
   }
 
-  // changed (when comment was last updated)
   $data['comment']['changed'] = array(
     'title' => t('Updated date'),
     'help' => t('Date and time of when the comment was last updated.'),
@@ -238,7 +228,6 @@ function comment_views_data() {
     ),
   );
 
-  // status (approved or not)
   $data['comment']['status'] = array(
     'title' => t('Approved status'),
     'help' => t('Whether the comment is approved (or still in the moderation queue).'),
@@ -258,7 +247,6 @@ function comment_views_data() {
     ),
   );
 
-  // Link to view comment.
   $data['comment']['view_comment'] = array(
     'field' => array(
       'title' => t('Link to comment'),
@@ -267,7 +255,6 @@ function comment_views_data() {
     ),
   );
 
-  // Link to edit comment.
   $data['comment']['edit_comment'] = array(
     'field' => array(
       'title' => t('Link to edit comment'),
@@ -276,7 +263,6 @@ function comment_views_data() {
     ),
   );
 
-  // Link to delete comment.
   $data['comment']['delete_comment'] = array(
     'field' => array(
       'title' => t('Link to delete comment'),
@@ -285,7 +271,6 @@ function comment_views_data() {
     ),
   );
 
-  // Link to approve comment.
   $data['comment']['approve_comment'] = array(
     'field' => array(
       'title' => t('Link to approve comment'),
@@ -294,7 +279,6 @@ function comment_views_data() {
     ),
   );
 
-  // Link to reply to comment.
   $data['comment']['replyto_comment'] = array(
     'field' => array(
       'title' => t('Link to reply-to comment'),
@@ -376,7 +360,6 @@ function comment_views_data() {
     ),
   );
 
-  // Entity translation field.
   if (drupal_container()->get('module_handler')->moduleExists('translation_entity')) {
     $data['comment']['translation_link'] = array(
       'title' => t('Translation link'),
@@ -387,14 +370,12 @@ function comment_views_data() {
     );
   }
 
-  // node_comment_statistics table
-
-  // define the group
+  // Define the base group of this table. Fields that don't have a group defined
+  // will go into this field by default.
   $data['node_comment_statistics']['table']['group']  = t('Content');
 
-  // joins
+  // Explain how this table joins to others.
   $data['node_comment_statistics']['table']['join'] = array(
-    //...to the node table
     'node' => array(
       'type' => 'INNER',
       'left_field' => 'nid',
@@ -402,7 +383,6 @@ function comment_views_data() {
      ),
   );
 
-  // last_comment_timestamp
   $data['node_comment_statistics']['last_comment_timestamp'] = array(
     'title' => t('Last comment time'),
     'help' => t('Date and time of when the last comment was posted.'),
@@ -417,7 +397,6 @@ function comment_views_data() {
     ),
   );
 
-  // last_comment_name (author's name)
   $data['node_comment_statistics']['last_comment_name'] = array(
     'title' => t("Last comment author"),
     'help' => t('The name of the author of the last posted comment.'),
@@ -431,7 +410,6 @@ function comment_views_data() {
     ),
   );
 
-  // comment_count
   $data['node_comment_statistics']['comment_count'] = array(
     'title' => t('Comment count'),
     'help' => t('The number of comments a node has.'),
@@ -449,7 +427,6 @@ function comment_views_data() {
     ),
   );
 
-  // last_comment_timestamp
   $data['node_comment_statistics']['last_updated'] = array(
     'title' => t('Updated/commented date'),
     'help' => t('The most recent of last comment posted or node updated time.'),
@@ -480,7 +457,6 @@ function comment_views_data() {
     ),
   );
 
-  // last_comment_uid
   $data['node_comment_statistics']['last_comment_uid'] = array(
     'title' => t('Last comment uid'),
     'help' => t('The User ID of the author of the last comment of a node.'),
@@ -506,8 +482,7 @@ function comment_views_data() {
 }
 
 /**
- * Use views_data_alter to add items to the node table that are
- * relevant to comments.
+ * Implements hook_views_data_alter().
  */
 function comment_views_data_alter(&$data) {
   // new comments
@@ -528,7 +503,6 @@ function comment_views_data_alter(&$data) {
     ),
   );
 
-  // Comment status of the node
   $data['node']['comment'] = array(
     'title' => t('Comment status'),
     'help' => t('Whether comments are enabled or disabled on the node.'),
