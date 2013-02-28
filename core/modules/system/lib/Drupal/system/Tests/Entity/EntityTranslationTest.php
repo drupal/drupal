@@ -10,21 +10,15 @@ namespace Drupal\system\Tests\Entity;
 use InvalidArgumentException;
 
 use Drupal\Core\Language\Language;
-use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests entity translation.
  */
-class EntityTranslationTest extends WebTestBase {
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('entity_test', 'locale');
+class EntityTranslationTest extends EntityUnitBaseTest {
 
   protected $langcodes;
+
+  public static $modules = array('language', 'locale');
 
   public static function getInfo() {
     return array(
@@ -36,6 +30,21 @@ class EntityTranslationTest extends WebTestBase {
 
   function setUp() {
     parent::setUp();
+    $this->installSchema('system', 'variable');
+    $this->installSchema('language', 'language');
+    $this->installSchema('entity_test', array(
+      'entity_test_mul',
+      'entity_test_mul_property_data',
+      'entity_test_rev',
+      'entity_test_rev_revision',
+      'entity_test_mulrev',
+      'entity_test_mulrev_property_data',
+      'entity_test_mulrev_property_revision',
+    ));
+
+    // Create the test field.
+    entity_test_install();
+
     // Enable translations for the test entity type.
     state()->set('entity_test.translation', TRUE);
 
@@ -59,6 +68,13 @@ class EntityTranslationTest extends WebTestBase {
       );
       field_create_instance($instance);
       $this->instance[$entity_type] = field_read_instance($entity_type, $this->field_name, $entity_type);
+    }
+
+    // Create the default languages.
+    $default_language = language_save(language_default());
+    $languages = language_default_locked_languages($default_language->weight);
+    foreach ($languages as $language) {
+      language_save($language);
     }
 
     // Create test languages.

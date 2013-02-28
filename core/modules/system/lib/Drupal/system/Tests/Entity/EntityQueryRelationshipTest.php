@@ -7,19 +7,17 @@
 
 namespace Drupal\system\Tests\Entity;
 
-use Drupal\simpletest\WebTestBase;
-
 /**
  * Tests Entity Query API relationship functionality.
  */
-class EntityQueryRelationshipTest extends WebTestBase  {
+class EntityQueryRelationshipTest extends EntityUnitBaseTest  {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('entity_test', 'taxonomy');
+  public static $modules = array('taxonomy', 'options');
 
   /**
    * @var \Drupal\field_sql_storage\Entity\QueryFactory
@@ -69,8 +67,11 @@ class EntityQueryRelationshipTest extends WebTestBase  {
     );
   }
 
-  protected function setUp() {
+  public function setUp() {
     parent::setUp();
+
+    $this->installSchema('taxonomy', array('taxonomy_term_data', 'taxonomy_term_hierarchy'));
+
     // We want a taxonomy term reference field. It needs a vocabulary, terms,
     // a field and an instance. First, create the vocabulary.
     $vocabulary = entity_create('taxonomy_vocabulary', array(
@@ -100,7 +101,7 @@ class EntityQueryRelationshipTest extends WebTestBase  {
       ));
       $term->save();
       $this->terms[] = $term;
-      $this->accounts[] = $this->drupalCreateUser();
+      $this->accounts[] = $this->createUser();
     }
     // Create three entity_test entities, the 0th entity will point to the
     // 0th account and 0th term, the 1st and 2nd entity will point to the

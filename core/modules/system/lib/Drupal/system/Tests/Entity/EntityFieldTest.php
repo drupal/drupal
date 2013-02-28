@@ -11,19 +11,18 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\Core\Entity\Field\FieldItemInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
-use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests Entity API base functionality.
  */
-class EntityFieldTest extends WebTestBase  {
+class EntityFieldTest extends EntityUnitBaseTest  {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('entity_test');
+  public static $modules = array('filter', 'text', 'node');
 
   public static function getInfo() {
     return array(
@@ -33,6 +32,27 @@ class EntityFieldTest extends WebTestBase  {
     );
   }
 
+  public function setUp() {
+    parent::setUp();
+    $this->installSchema('user', array('users_roles', 'users_data'));
+    $this->installSchema('node', array('node', 'node_revision', 'node_type', 'node_access'));
+    $this->installSchema('entity_test', array(
+      'entity_test_mul',
+      'entity_test_mul_property_data',
+      'entity_test_rev',
+      'entity_test_rev_revision',
+      'entity_test_mulrev',
+      'entity_test_mulrev_property_data',
+      'entity_test_mulrev_property_revision'
+    ));
+
+    // Create the test field.
+    entity_test_install();
+
+    // Install required default configuration for filter module.
+    $this->installConfig(array('system', 'filter'));
+  }
+
   /**
    * Creates a test entity.
    *
@@ -40,7 +60,7 @@ class EntityFieldTest extends WebTestBase  {
    */
   protected function createTestEntity($entity_type) {
     $this->entity_name = $this->randomName();
-    $this->entity_user = $this->drupalCreateUser();
+    $this->entity_user = $this->createUser();
     $this->entity_field_text = $this->randomName();
 
     // Pass in the value of the name field when creating. With the user
@@ -100,13 +120,13 @@ class EntityFieldTest extends WebTestBase  {
     $this->assertEqual($this->entity_user->name, $entity->user_id->entity->name, format_string('%entity_type: User name can be read.', array('%entity_type' => $entity_type)));
 
     // Change the assigned user by entity.
-    $new_user = $this->drupalCreateUser();
+    $new_user = $this->createUser();
     $entity->user_id->entity = $new_user;
     $this->assertEqual($new_user->uid, $entity->user_id->target_id, format_string('%entity_type: Updated user id can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual($new_user->name, $entity->user_id->entity->name, format_string('%entity_type: Updated user name value can be read.', array('%entity_type' => $entity_type)));
 
     // Change the assigned user by id.
-    $new_user = $this->drupalCreateUser();
+    $new_user = $this->createUser();
     $entity->user_id->target_id = $new_user->uid;
     $this->assertEqual($new_user->uid, $entity->user_id->target_id, format_string('%entity_type: Updated user id can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual($new_user->name, $entity->user_id->entity->name, format_string('%entity_type: Updated user name value can be read.', array('%entity_type' => $entity_type)));
@@ -185,7 +205,7 @@ class EntityFieldTest extends WebTestBase  {
     // Test creating the entity by passing in plain values.
     $this->entity_name = $this->randomName();
     $name_item[0]['value'] = $this->entity_name;
-    $this->entity_user = $this->drupalCreateUser();
+    $this->entity_user = $this->createUser();
     $user_item[0]['target_id'] = $this->entity_user->uid;
     $this->entity_field_text = $this->randomName();
     $text_item[0]['value'] = $this->entity_field_text;
@@ -523,7 +543,14 @@ class EntityFieldTest extends WebTestBase  {
     $this->assertEqual($violations->count(), 0);
 
     // Test validating an entity of the wrong type.
-    $node = $this->drupalCreateNode(array('type' => 'page'));
+    $user = $this->createUser();
+    $user->save();
+    $node = entity_create('node', array(
+      'type' => 'page',
+      'uid' => $user->id(),
+    ));
+    // @todo: EntityWrapper can only handle entities with an id.
+    $node->save();
     $wrapped_entity->setValue($node);
     $violations = $wrapped_entity->validate();
     $this->assertEqual($violations->count(), 1);

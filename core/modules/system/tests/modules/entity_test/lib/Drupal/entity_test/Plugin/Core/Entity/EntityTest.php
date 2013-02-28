@@ -79,6 +79,12 @@ class EntityTest extends EntityNG {
    * Overrides Drupal\entity\Entity::label().
    */
   public function label($langcode = LANGUAGE_DEFAULT) {
-    return $this->getTranslation($langcode)->name->value;
+    $info = $this->entityInfo();
+    if (isset($info['entity_keys']['label']) && $info['entity_keys']['label'] == 'name') {
+      return $this->getTranslation($langcode)->name->value;
+    }
+    else {
+      return parent::label($langcode);
+    }
   }
 }

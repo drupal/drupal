@@ -7,19 +7,10 @@
 
 namespace Drupal\system\Tests\Entity;
 
-use Drupal\simpletest\DrupalUnitTestBase;
-
 /**
  * Tests the basic Entity API.
  */
-class EntityUriTest extends DrupalUnitTestBase {
-
-  /**
-   * Modules to load.
-   *
-   * @var array
-   */
-  public static $modules = array('field', 'field_sql_storage', 'system', 'text', 'entity_test');
+class EntityUriTest extends EntityUnitBaseTest {
 
   public static function getInfo() {
     return array(
@@ -29,12 +20,9 @@ class EntityUriTest extends DrupalUnitTestBase {
     );
   }
 
-  protected function setUp() {
+  public function setUp() {
     parent::setUp();
-
     $this->installSchema('system', array('variable', 'url_alias'));
-    $this->installSchema('field', array('field_config', 'field_config_instance'));
-    $this->installSchema('entity_test', array('entity_test'));
   }
 
   /**

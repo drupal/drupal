@@ -7,19 +7,12 @@
 
 namespace Drupal\system\Tests\Entity;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\user\Plugin\Core\Entity\User;
 
 /**
  * Tests the basic Entity API.
  */
-class EntityApiTest extends WebTestBase {
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('entity_test');
+class EntityApiTest extends EntityUnitBaseTest {
 
   public static function getInfo() {
     return array(
@@ -29,15 +22,26 @@ class EntityApiTest extends WebTestBase {
     );
   }
 
+  public function setUp() {
+    parent::setUp();
+    $this->installSchema('entity_test', array(
+      'entity_test_mul',
+      'entity_test_mul_property_data',
+      'entity_test_rev',
+      'entity_test_rev_revision',
+      'entity_test_mulrev',
+      'entity_test_mulrev_property_data',
+      'entity_test_mulrev_property_revision'
+    ));
+  }
+
   /**
    * Tests basic CRUD functionality of the Entity API.
    */
   public function testCRUD() {
-    $user1 = $this->drupalCreateUser();
-
     // All entity variations have to have the same results.
     foreach (entity_test_entity_types() as $entity_type) {
-      $this->assertCRUD($entity_type, $user1);
+      $this->assertCRUD($entity_type, $this->createUser());
     }
   }
 
@@ -49,7 +53,7 @@ class EntityApiTest extends WebTestBase {
    * @param \Drupal\user\Plugin\Core\Entity\User $user1
    *   The user to run the tests with.
    */
-  protected function assertCRUD($entity_type, \Drupal\user\Plugin\Core\Entity\User $user1) {
+  protected function assertCRUD($entity_type, User $user1) {
     // Create some test entities.
     $entity = entity_create($entity_type, array('name' => 'test', 'user_id' => $user1->uid));
     $entity->save();

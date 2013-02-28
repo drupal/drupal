@@ -8,19 +8,11 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Component\Uuid\Uuid;
-use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests creation, saving, and loading of entity UUIDs.
  */
-class EntityUUIDTest extends WebTestBase {
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('entity_test');
+class EntityUUIDTest extends EntityUnitBaseTest {
 
   public static function getInfo() {
     return array(
@@ -28,6 +20,20 @@ class EntityUUIDTest extends WebTestBase {
       'description' => 'Tests creation, saving, and loading of entity UUIDs.',
       'group' => 'Entity API',
     );
+  }
+
+  public function setUp() {
+    parent::setUp();
+
+    $this->installSchema('entity_test', array(
+      'entity_test_mul',
+      'entity_test_mul_property_data',
+      'entity_test_rev',
+      'entity_test_rev_revision',
+      'entity_test_mulrev',
+      'entity_test_mulrev_property_data',
+      'entity_test_mulrev_property_revision',
+    ));
   }
 
   /**

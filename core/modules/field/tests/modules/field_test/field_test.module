@@ -187,23 +187,6 @@ function field_test_field_create_field($field) {
 }
 
 /**
- * Entity label callback.
- *
- * @param $entity_type
- *   The entity type.
- * @param $entity
- *   The entity object.
- * @param $langcocde
- *   (optional) The langcode.
- *
- * @return
- *   The label of the entity prefixed with "label callback".
- */
-function field_test_entity_label_callback($entity_type, $entity, $langcode = NULL) {
-  return 'label callback ' . $entity->ftlabel;
-}
-
-/**
  * Implements hook_field_attach_view_alter().
  */
 function field_test_field_attach_view_alter(&$output, $context) {

@@ -9,14 +9,15 @@ namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Language\Language;
 use Drupal\Core\TypedData\AccessibleInterface;
-use Drupal\simpletest\WebTestBase;
 use Drupal\user\Plugin\Core\Entity\User;
 use Drupal\Core\Entity\EntityAccessController;
 
 /**
  * Tests the entity access controller.
  */
-class EntityAccessTest extends WebTestBase  {
+class EntityAccessTest extends EntityUnitBaseTest  {
+
+  public static $modules = array('language', 'locale');
 
   public static function getInfo() {
     return array(
@@ -26,12 +27,20 @@ class EntityAccessTest extends WebTestBase  {
     );
   }
 
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('entity_test');
+  function setUp() {
+    parent::setUp();
+    $this->installSchema('user', array('role_permission', 'users_roles'));
+    $this->installSchema('system', array('variable', 'url_alias'));
+    $this->installSchema('language', 'language');
+
+    // Create the default languages.
+    $default_language = language_save(language_default());
+    $languages = language_default_locked_languages($default_language->weight);
+    foreach ($languages as $language) {
+      language_save($language);
+    }
+
+  }
 
   /**
    * Asserts entity access correctly grants or denies access.
@@ -39,7 +48,7 @@ class EntityAccessTest extends WebTestBase  {
   function assertEntityAccess($ops, AccessibleInterface $object, User $account = NULL) {
     foreach ($ops as $op => $result) {
       $message = format_string("Entity access returns @result with operation '@op'.", array(
-        '@result' => isset($result) ? 'null' : ($result ? 'true' : 'false'),
+        '@result' => !isset($result) ? 'null' : ($result ? 'true' : 'false'),
         '@op' => $op,
       ));
 
@@ -52,24 +61,22 @@ class EntityAccessTest extends WebTestBase  {
    */
   function testEntityAccess() {
     // Set up a non-admin user that is allowed to view test entities.
-    $user = $this->drupalCreateUser(array('view test entity'));
-    $this->drupalLogin($user);
-
+    global $user;
+    $user = $this->createUser(array('uid' => 2), array('view test entity'));
     $entity = entity_create('entity_test', array(
       'name' => 'test',
     ));
-    $entity->save();
 
-    // The current user is allowed to view, create, update and delete entities.
+    // The current user is allowed to view entities.
     $this->assertEntityAccess(array(
-      'create' => TRUE,
-      'update' => TRUE,
-      'delete' => TRUE,
+      'create' => FALSE,
+      'update' => FALSE,
+      'delete' => FALSE,
       'view' => TRUE,
     ), $entity);
 
     // The custom user is not allowed to perform any operation on test entities.
-    $custom_user = $this->drupalCreateUser();
+    $custom_user = $this->createUser();
     $this->assertEntityAccess(array(
       'create' => FALSE,
       'update' => FALSE,
@@ -100,13 +107,10 @@ class EntityAccessTest extends WebTestBase  {
    * Ensures entity access for entity translations is properly working.
    */
   function testEntityTranslationAccess() {
-    // Enable translations for the test entity type.
-    variable_set('entity_test_translation', TRUE);
-    module_enable(array('locale'));
 
     // Set up a non-admin user that is allowed to view test entity translations.
-    $user = $this->drupalCreateUser(array('view test entity translations'));
-    $this->drupalLogin($user);
+    global $user;
+    $user = $this->createUser(array('uid' => 2), array('view test entity translations'));
 
     // Create two test languages.
     foreach (array('foo', 'bar') as $langcode) {

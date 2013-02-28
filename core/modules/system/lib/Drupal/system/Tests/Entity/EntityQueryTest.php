@@ -7,19 +7,17 @@
 
 namespace Drupal\system\Tests\Entity;
 
-use Drupal\simpletest\WebTestBase;
-
 /**
  * Tests the basic Entity API.
  */
-class EntityQueryTest extends WebTestBase {
+class EntityQueryTest extends EntityUnitBaseTest {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('field', 'field_sql_storage', 'field_test', 'text');
+  public static $modules = array('field_test');
 
   /**
    * @var array
@@ -55,6 +53,7 @@ class EntityQueryTest extends WebTestBase {
 
   function setUp() {
     parent::setUp();
+    $this->installSchema('field_test', array('test_entity', 'test_entity_revision', 'test_entity_bundle'));
     $figures = drupal_strtolower($this->randomName());
     $greetings = drupal_strtolower($this->randomName());
     foreach (array($figures => 'shape', $greetings => 'text') as $field_name => $field_type) {

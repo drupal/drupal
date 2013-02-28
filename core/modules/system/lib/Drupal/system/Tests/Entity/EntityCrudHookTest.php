@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Tests\Entity;
 
-use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Database\Database;
 
 /**
@@ -22,14 +21,14 @@ use Drupal\Core\Database\Database;
  * As well as all type-specific hooks, like hook_node_insert(),
  * hook_comment_update(), etc.
  */
-class EntityCrudHookTest extends WebTestBase {
+class EntityCrudHookTest extends EntityUnitBaseTest {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('entity_crud_hook_test', 'taxonomy', 'block_test', 'block', 'comment', 'file', 'entity_test');
+  public static $modules = array('block', 'block_test', 'entity_crud_hook_test', 'file', 'taxonomy', 'node', 'comment');
 
   protected $ids = array();
 
@@ -39,6 +38,13 @@ class EntityCrudHookTest extends WebTestBase {
       'description' => 'Tests the invocation of hooks when creating, inserting, loading, updating or deleting an entity.',
       'group' => 'Entity API',
     );
+  }
+
+  public function setUp() {
+    parent::setUp();
+    $this->installSchema('user', array('users_roles', 'users_data'));
+    $this->installSchema('node', array('node', 'node_revision', 'node_type', 'node_access'));
+    $this->installSchema('comment', array('comment', 'node_comment_statistics'));
   }
 
   /**
@@ -124,8 +130,10 @@ class EntityCrudHookTest extends WebTestBase {
    * Tests hook invocations for CRUD operations on comments.
    */
   public function testCommentHooks() {
+    $account = $this->createUser();
+
     $node = entity_create('node', array(
-      'uid' => 1,
+      'uid' => $account->uid,
       'type' => 'article',
       'title' => 'Test node',
       'status' => 1,
@@ -145,7 +153,7 @@ class EntityCrudHookTest extends WebTestBase {
       'cid' => NULL,
       'pid' => 0,
       'nid' => $nid,
-      'uid' => 1,
+      'uid' => $account->uid,
       'subject' => 'Test comment',
       'created' => REQUEST_TIME,
       'changed' => REQUEST_TIME,
@@ -202,6 +210,7 @@ class EntityCrudHookTest extends WebTestBase {
    * Tests hook invocations for CRUD operations on files.
    */
   public function testFileHooks() {
+    $this->installSchema('file', array('file_managed', 'file_usage'));
     $url = 'public://entity_crud_hook_test.file';
     file_put_contents($url, 'Test test test');
     $file = entity_create('file', array(
@@ -264,8 +273,10 @@ class EntityCrudHookTest extends WebTestBase {
    * Tests hook invocations for CRUD operations on nodes.
    */
   public function testNodeHooks() {
+    $account = $this->createUser();
+
     $node = entity_create('node', array(
-      'uid' => 1,
+      'uid' => $account->id(),
       'type' => 'article',
       'title' => 'Test node',
       'status' => 1,
@@ -326,6 +337,8 @@ class EntityCrudHookTest extends WebTestBase {
    * Tests hook invocations for CRUD operations on taxonomy terms.
    */
   public function testTaxonomyTermHooks() {
+    $this->installSchema('taxonomy', array('taxonomy_term_data', 'taxonomy_term_hierarchy'));
+
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => 'Test vocabulary',
       'vid' => 'test',
@@ -393,6 +406,8 @@ class EntityCrudHookTest extends WebTestBase {
    * Tests hook invocations for CRUD operations on taxonomy vocabularies.
    */
   public function testTaxonomyVocabularyHooks() {
+    $this->installSchema('taxonomy', array('taxonomy_term_data', 'taxonomy_term_hierarchy'));
+
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => 'Test vocabulary',
       'vid' => 'test',
