@@ -21,6 +21,6 @@ class TourBundle extends Bundle {
   public function build(ContainerBuilder $container) {
     // Register the plugin manager for our plugin type with the dependency
     // injection container.
-    $container->register('plugin.manager.tour', 'Drupal\tour\TourManager');
+    $container->register('plugin.manager.tour.tip', 'Drupal\tour\TipPluginManager');
   }
 }

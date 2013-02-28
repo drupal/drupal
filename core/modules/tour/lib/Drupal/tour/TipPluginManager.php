@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\tour\TourManager.
+ * Contains \Drupal\tour\TipPluginManager.
  */
 
 namespace Drupal\tour;
@@ -16,7 +16,7 @@ use Drupal\Component\Plugin\Discovery\ProcessDecorator;
 /**
  * Configurable tour manager.
  */
-class TourManager extends PluginManagerBase {
+class TipPluginManager extends PluginManagerBase {
 
   /**
    * Overrides \Drupal\Component\Plugin\PluginManagerBase::__construct().

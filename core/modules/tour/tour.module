@@ -204,12 +204,12 @@ function tour_preprocess_page(&$variables) {
  * Implements hook_tour_insert().
  */
 function tour_tour_insert($entity) {
-  drupal_container()->get('plugin.manager.tour')->clearCachedDefinitions();
+  drupal_container()->get('plugin.manager.tour.tip')->clearCachedDefinitions();
 }
 
 /**
  * Implements hook_tour_update().
  */
 function tour_tour_update($entity) {
-  drupal_container()->get('plugin.manager.tour')->clearCachedDefinitions();
+  drupal_container()->get('plugin.manager.tour.tip')->clearCachedDefinitions();
 }
