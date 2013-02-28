@@ -21,21 +21,3 @@ function datetime_field_schema($field) {
   );
   return array('columns' => $db_columns, 'indexes' => $indexes);
 }
-
-/**
- * Install the new to D8 Datetime module.
- *
- * As part of adding this new module to Drupal 8, the Datetime namespace is now
- * reserved for this module.  This is a possible conflict with a popular contrib
- * field DateTime that existed in D7.  Hence, any Datetime fields that may have
- * existed prior to D8 need to renamed for later upgrade by contrib modules like
- * the Date module.
- */
-function datetime_install() {
-  db_update('field_config')
-    ->fields(array(
-      'type' => 'datetime_old',
-    ))
-    ->condition('type', 'datetime')
-    ->execute();
-}
