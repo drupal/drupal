@@ -55,6 +55,13 @@ class Shortcut extends ConfigEntityBase {
   public $label;
 
   /**
+   * An array of menu links.
+   *
+   * @var array
+   */
+  public $links = array();
+
+  /**
    * Overrides \Drupal\Core\Entity\Entity::uri().
    */
   public function uri() {

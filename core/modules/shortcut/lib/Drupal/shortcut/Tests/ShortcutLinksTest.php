@@ -118,6 +118,14 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $saved_set = shortcut_set_load($set->id());
     $mlids = $this->getShortcutInformation($saved_set, 'mlid');
     $this->assertFalse(in_array($link->mlid, $mlids), 'Successfully deleted a shortcut.');
+
+    // Delete all the remaining shortcut menu links.
+    foreach (array_filter($mlids) as $mlid) {
+      menu_link_delete($mlid);
+    }
+
+    // Get the front page to check that no exceptions occur.
+    $this->drupalGet('');
   }
 
   /**
