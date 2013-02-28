@@ -15,6 +15,6 @@ namespace Drupal\Component\Uuid;
 class Com implements UuidInterface {
   public function generate() {
     // Remove {} wrapper and make lower case to keep result consistent.
-    return drupal_strtolower(trim(com_create_guid(), '{}'));
+    return strtolower(trim(com_create_guid(), '{}'));
   }
 }
