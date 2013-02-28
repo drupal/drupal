@@ -149,8 +149,12 @@ function block_menu() {
     'context' => MENU_CONTEXT_NONE,
     'file' => 'block.admin.inc',
   );
-  // Block administration is actually tied to theme and plugin definition so
-  // that the plugin can appropriately attach to this url structure.
+  // Block administration is tied to the theme and plugin definition so
+  // that the plugin can appropriately attach to this URL structure.
+  // @todo D8: Use dynamic % arguments instead of static, hard-coded theme names
+  //   and plugin IDs to decouple the routes from these dependencies and allow
+  //   hook_menu_local_tasks() to check for the untranslated tab_parent path.
+  // @see http://drupal.org/node/1067408
   $themes = list_themes();
   foreach (drupal_container()->get('plugin.manager.system.plugin_ui')->getDefinitions() as $plugin_id => $plugin) {
     list($plugin_base, $key) = explode(':', $plugin_id);

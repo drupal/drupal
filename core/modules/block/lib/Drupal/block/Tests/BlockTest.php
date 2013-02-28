@@ -77,6 +77,10 @@ class BlockTest extends WebTestBase {
     $this->drupalGet("admin/structure/block/list/block_plugin_ui:$default_theme/add");
     $this->assertLink(t('Add custom block'));
 
+    // But not on the normal admin page.
+    $this->drupalGet('admin/structure/block');
+    $this->assertNoLink(t('Add custom block'));
+
     // Confirm that hidden regions are not shown as options for block placement
     // when adding a new block.
     theme_enable(array('bartik'));
