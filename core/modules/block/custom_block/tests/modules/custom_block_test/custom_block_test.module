@@ -73,10 +73,27 @@ function custom_block_test_custom_block_update(CustomBlock $custom_block) {
 function custom_block_test_custom_block_insert(CustomBlock $custom_block) {
   // Set the custom_block title to the custom_block ID and save.
   if ($custom_block->info->value == 'new') {
-    $custom_block->info->value = 'CustomBlock '. $custom_block->id->value;
+    $custom_block->info->value = 'CustomBlock ' . $custom_block->id->value;
     $custom_block->save();
   }
   if ($custom_block->info->value == 'fail_creation') {
     throw new Exception('Test exception for rollback.');
   }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function custom_block_test_menu() {
+  $items = array();
+  // Add a block-view callback.
+  $items['custom-block/%custom_block'] = array(
+    'title callback' => 'entity_page_label',
+    'title arguments' => array(1),
+    'page callback' => 'entity_view',
+    'page arguments' => array(1, 'default'),
+    'access callback' => 'entity_page_access',
+    'access arguments' => array(1, 'view'),
+  );
+  return $items;
 }
