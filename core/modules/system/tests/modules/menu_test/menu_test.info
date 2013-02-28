@@ -5,3 +5,4 @@ version = VERSION
 core = 8.x
 hidden = TRUE
 dependencies[] = test_page_test
+dependencies[] = menu
