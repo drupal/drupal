@@ -573,7 +573,7 @@ abstract class DisplayPluginBase extends PluginBase {
       ),
       'pager' => array(
         'contains' => array(
-          'type' => array('default' => 'full'),
+          'type' => array('default' => 'mini'),
           'options' => array('default' => array()),
          ),
       ),
