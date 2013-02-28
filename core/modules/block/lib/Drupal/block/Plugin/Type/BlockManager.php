@@ -26,9 +26,12 @@ class BlockManager extends PluginManagerBase {
 
   /**
    * Constructs a new \Drupal\block\Plugin\Type\BlockManager object.
+   *
+   * @param array $namespaces
+   *   An array of paths keyed by it's corresponding namespaces.
    */
-  public function __construct() {
-    $this->discovery = new AnnotatedClassDiscovery('block', 'block');
+  public function __construct(array $namespaces) {
+    $this->discovery = new AnnotatedClassDiscovery('block', 'block', $namespaces);
     $this->discovery = new DerivativeDiscoveryDecorator($this->discovery);
     $this->discovery = new AlterDecorator($this->discovery, 'block');
     $this->discovery = new CacheDecorator($this->discovery, 'block_plugins:' . language(LANGUAGE_TYPE_INTERFACE)->langcode, 'cache_block', CacheBackendInterface::CACHE_PERMANENT, array('block'));
@@ -37,7 +40,7 @@ class BlockManager extends PluginManagerBase {
   /**
    * Overrides \Drupal\Component\Plugin\PluginManagerBase::createInstance().
    */
-  public function createInstance($plugin_id, array $configuration = array(), Block $entity = NULl) {
+  public function createInstance($plugin_id, array $configuration = array(), Block $entity = NULL) {
     $plugin_class = DefaultFactory::getPluginClass($plugin_id, $this->discovery);
     return new $plugin_class($configuration, $plugin_id, $this->discovery, $entity);
   }

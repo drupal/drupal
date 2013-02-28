@@ -20,7 +20,8 @@ class BlockBundle extends Bundle {
    */
   public function build(ContainerBuilder $container) {
     // Register the BlockManager class with the dependency injection container.
-    $container->register('plugin.manager.block', 'Drupal\block\Plugin\Type\BlockManager');
+    $container->register('plugin.manager.block', 'Drupal\block\Plugin\Type\BlockManager')
+      ->addArgument('%container.namespaces%');
   }
 
 }

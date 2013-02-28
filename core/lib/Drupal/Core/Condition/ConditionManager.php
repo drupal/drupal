@@ -23,9 +23,12 @@ class ConditionManager extends PluginManagerBase implements ExecutableManagerInt
 
   /**
    * Constructs aa ConditionManager object.
+   *
+   * @param array $namespaces
+   *   An array of paths keyed by it's corresponding namespaces.
    */
-  public function __construct() {
-    $this->discovery = new AnnotatedClassDiscovery('Core', 'Condition');
+  public function __construct(array $namespaces) {
+    $this->discovery = new AnnotatedClassDiscovery('Core', 'Condition', $namespaces);
     $this->discovery = new DerivativeDiscoveryDecorator($this->discovery);
     $this->discovery = new AlterDecorator($this->discovery, 'condition_info');
     $this->discovery = new CacheDecorator($this->discovery, 'condition:' . language(LANGUAGE_TYPE_INTERFACE)->langcode);

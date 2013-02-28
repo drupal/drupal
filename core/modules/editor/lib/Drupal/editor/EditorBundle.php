@@ -21,7 +21,8 @@ class EditorBundle extends Bundle {
   public function build(ContainerBuilder $container) {
     // Register the plugin manager for our plugin type with the dependency
     // injection container.
-    $container->register('plugin.manager.editor', 'Drupal\editor\Plugin\EditorManager');
+    $container->register('plugin.manager.editor', 'Drupal\editor\Plugin\EditorManager')
+      ->addArgument('%container.namespaces%');
   }
 
 }

@@ -24,10 +24,13 @@ class LayoutManager extends PluginManagerBase {
 
   /**
    * Overrides Drupal\Component\Plugin\PluginManagerBase::__construct().
+   *
+   * @param array $namespaces
+   *   An array of paths keyed by it's corresponding namespaces.
    */
-  public function __construct() {
+  public function __construct($namespaces) {
     // Create layout plugin derivatives from declaratively defined layouts.
-    $this->discovery = new AnnotatedClassDiscovery('layout', 'layout');
+    $this->discovery = new AnnotatedClassDiscovery('layout', 'layout', $namespaces);
     $this->discovery = new DerivativeDiscoveryDecorator($this->discovery);
     $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
 

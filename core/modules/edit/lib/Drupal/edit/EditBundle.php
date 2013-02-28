@@ -20,7 +20,8 @@ class EditBundle extends Bundle {
    * Overrides Symfony\Component\HttpKernel\Bundle\Bundle::build().
    */
   public function build(ContainerBuilder $container) {
-    $container->register('plugin.manager.edit.editor', 'Drupal\edit\Plugin\EditorManager');
+    $container->register('plugin.manager.edit.editor', 'Drupal\edit\Plugin\EditorManager')
+      ->addArgument('%container.namespaces%');
 
     $container->register('access_check.edit.entity_field', 'Drupal\edit\Access\EditEntityFieldAccessCheck')
       ->addTag('access_check');

@@ -168,7 +168,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
       $module_list = $this->configStorage->read('system.module');
       $this->moduleList = isset($module_list['enabled']) ? $module_list['enabled'] : array();
     }
-    $this->registerModuleNamespaces($this->getModuleFileNames());
+    $this->registerNamespaces($this->getModuleNamespaces($this->getModuleFileNames()));
 
     // Load each module's bundle class.
     foreach ($this->moduleList as $module => $weight) {
@@ -295,7 +295,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
       // from the container.
       $container_modules = $this->container->getParameter('container.modules');
       $namespaces_before = $this->classLoader->getNamespaces();
-      $this->registerModuleNamespaces($container_modules);
+      $this->registerNamespaces($this->getModuleNamespaces($container_modules));
 
       // If 'container.modules' is wrong, the container must be rebuilt.
       if (!isset($this->moduleList)) {
@@ -368,6 +368,13 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     $container = $this->getContainerBuilder();
     $container->setParameter('container.bundles', $this->bundleClasses);
     $container->setParameter('container.modules', $this->getModuleFileNames());
+
+    // Get a list of namespaces and put it onto the container.
+    $namespaces = $this->getModuleNamespaces($this->getModuleFileNames());
+    $namespaces['Drupal\Core'] = DRUPAL_ROOT . '/core/lib';
+    $namespaces['Drupal\Component'] = DRUPAL_ROOT . '/core/lib';
+    $container->setParameter('container.namespaces', $namespaces);
+
     // Register synthetic services.
     $container->register('class_loader', 'Symfony\Component\ClassLoader\UniversalClassLoader')->setSynthetic(TRUE);
     $container->register('kernel', 'Symfony\Component\HttpKernel\KernelInterface')->setSynthetic(TRUE);
@@ -453,11 +460,22 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
   }
 
   /**
-   * Registers the namespace of each enabled module with the class loader.
+   * Gets the namespaces of each enabled module.
    */
-  protected function registerModuleNamespaces($moduleFileNames) {
+  protected function getModuleNamespaces($moduleFileNames) {
+    $namespaces = array();
     foreach ($moduleFileNames as $module => $filename) {
-      $this->classLoader->registerNamespace("Drupal\\$module", DRUPAL_ROOT . '/' . dirname($filename) . '/lib');
+      $namespaces["Drupal\\$module"] = DRUPAL_ROOT . '/' . dirname($filename) . '/lib';
+    }
+    return $namespaces;
+  }
+
+  /**
+   * Registers a list of namespaces.
+   */
+  protected function registerNamespaces(array $namespaces = array()) {
+    foreach ($namespaces as $namespace => $dir) {
+      $this->classLoader->registerNamespace($namespace, $dir);
     }
   }
 }

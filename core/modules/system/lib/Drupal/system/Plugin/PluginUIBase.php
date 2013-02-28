@@ -22,7 +22,13 @@ abstract class PluginUIBase extends PluginBase implements PluginUIInterface {
    */
   public function form($form, &$form_state) {
     $plugin_definition = $this->getDefinition();
-    $manager = new $plugin_definition['manager']();
+    // @todo Find out how to let the manager be injected into the class.
+    if (class_exists($plugin_definition['manager'])) {
+      $manager = new $plugin_definition['manager']();
+    }
+    else {
+      $manager = drupal_container()->get($plugin_definition['manager']);
+    }
     $plugins = $manager->getDefinitions();
 
     $rows = array();

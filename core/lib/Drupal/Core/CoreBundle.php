@@ -141,7 +141,8 @@ class CoreBundle extends Bundle {
       ->addMethodCall('setUserAgent', array('Drupal (+http://drupal.org/)'));
 
     // Register the EntityManager.
-    $container->register('plugin.manager.entity', 'Drupal\Core\Entity\EntityManager');
+    $container->register('plugin.manager.entity', 'Drupal\Core\Entity\EntityManager')
+      ->addArgument('%container.namespaces%');
 
     // The 'request' scope and service enable services to depend on the Request
     // object and get reconstructed when the request object changes (e.g.,
@@ -181,7 +182,8 @@ class CoreBundle extends Bundle {
       ->addArgument('slave');
     $container->register('typed_data', 'Drupal\Core\TypedData\TypedDataManager')
       ->addMethodCall('setValidationConstraintManager', array(new Reference('validation.constraint')));
-    $container->register('validation.constraint', 'Drupal\Core\Validation\ConstraintManager');
+    $container->register('validation.constraint', 'Drupal\Core\Validation\ConstraintManager')
+      ->addArgument('%container.namespaces%');
 
     // Add the user's storage for temporary, non-cache data.
     $container->register('lock', 'Drupal\Core\Lock\DatabaseLockBackend');

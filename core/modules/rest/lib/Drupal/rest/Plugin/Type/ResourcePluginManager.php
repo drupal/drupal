@@ -19,10 +19,13 @@ class ResourcePluginManager extends PluginManagerBase {
 
   /**
    * Overrides Drupal\Component\Plugin\PluginManagerBase::__construct().
+   *
+   * @param array $namespaces
+   *   An array of paths keyed by it's corresponding namespaces.
    */
-  public function __construct() {
+  public function __construct($namespaces) {
     // Create resource plugin derivatives from declaratively defined resources.
-    $this->discovery = new DerivativeDiscoveryDecorator(new AnnotatedClassDiscovery('rest', 'resource'));
+    $this->discovery = new DerivativeDiscoveryDecorator(new AnnotatedClassDiscovery('rest', 'resource', $namespaces));
     $this->factory = new ReflectionFactory($this->discovery);
   }
 

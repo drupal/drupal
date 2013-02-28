@@ -23,9 +23,12 @@ class PluginUIManager extends PluginManagerBase {
 
   /**
    * Constructs a \Drupal\system\Plugin\Type\PluginUIManager object.
+   *
+   * @param array $namespaces
+   *   An array of paths keyed by it's corresponding namespaces.
    */
-  public function __construct() {
-    $this->discovery = new AnnotatedClassDiscovery('system', 'plugin_ui');
+  public function __construct($namespaces) {
+    $this->discovery = new AnnotatedClassDiscovery('system', 'plugin_ui', $namespaces);
     $this->discovery = new DerivativeDiscoveryDecorator($this->discovery);
     $this->discovery = new AlterDecorator($this->discovery, 'plugin_ui');
     $this->discovery = new CacheDecorator($this->discovery, 'plugin_ui');

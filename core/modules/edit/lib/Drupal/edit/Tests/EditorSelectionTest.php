@@ -40,7 +40,7 @@ class EditorSelectionTest extends EditTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->editorManager = new EditorManager();
+    $this->editorManager = new EditorManager($this->container->getParameter('container.namespaces'));
     $this->editorSelector = new EditorSelector($this->editorManager);
   }
 
@@ -108,7 +108,9 @@ class EditorSelectionTest extends EditTestBase {
   function testTextWysiwyg() {
     // Enable edit_test module so that the 'wysiwyg' Create.js PropertyEditor
     // widget becomes available.
-    $this->enableModules(array('edit_test'), FALSE);
+    $this->enableModules(array('edit_test'));
+    $this->editorManager = new EditorManager($this->container->getParameter('container.namespaces'));
+    $this->editorSelector = new EditorSelector($this->editorManager);
 
     $field_name = 'field_textarea';
     $this->createFieldWithInstance(

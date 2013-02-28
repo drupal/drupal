@@ -24,7 +24,7 @@ use Drupal\Core\Annotation\Translation;
  *     "module" = @Translation("Modules")
  *   },
  *   link_title = @Translation("Configure block"),
- *   manager = "Drupal\block\Plugin\Type\BlockManager",
+ *   manager = "plugin.manager.block",
  *   menu = TRUE,
  *   path = "admin/structure/block/list",
  *   suffix = "add",
@@ -46,7 +46,8 @@ class BlockPluginUI extends PluginUIBase {
     // @todo Add an inline comment here.
     list($plugin, $theme) = explode(':', $this->getPluginId());
     $plugin_definition = $this->getDefinition();
-    $manager = new $plugin_definition['manager']();
+    // @todo Find out how to let the manager be injected into the class.
+    $manager = drupal_container()->get($plugin_definition['manager']);
     $plugins = $manager->getDefinitions();
     $form['#theme'] = 'system_plugin_ui_form';
     $form['theme'] = array(

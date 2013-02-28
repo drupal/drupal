@@ -20,6 +20,7 @@ class LayoutBundle extends Bundle {
    */
   public function build(ContainerBuilder $container) {
     // Register the LayoutManager class with the dependency injection container.
-    $container->register('plugin.manager.layout', 'Drupal\layout\Plugin\Type\LayoutManager');
+    $container->register('plugin.manager.layout', 'Drupal\layout\Plugin\Type\LayoutManager')
+      ->addArgument('%container.namespaces%');
   }
 }
