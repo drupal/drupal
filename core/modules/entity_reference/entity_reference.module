@@ -420,6 +420,65 @@ function entity_reference_query_entity_reference_alter(AlterableInterface $query
 }
 
 /**
+ * Creates an instance of a entity reference field on the specified bundle.
+ *
+ * @param string $entity_type
+ *   The type of entity the field instance will be attached to.
+ * @param string $bundle
+ *   The bundle name of the entity the field instance will be attached to.
+ * @param string $field_name
+ *   The name of the field; if it already exists, a new instance of the existing
+ *   field will be created.
+ * @param string $field_label
+ *   The label of the field instance.
+ * @param string $target_entity_type
+ *   The type of the referenced entity.
+ * @param string $selection_handler
+ *   The selection handler used by this field.
+ * @param array $selection_handler_settings
+ *   An array of settings supported by the selection handler specified above.
+ *   (e.g. 'target_bundles', 'sort', 'auto_create', etc).
+ *
+ * @see \Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase::settingsForm()
+ */
+function entity_reference_create_instance($entity_type, $bundle, $field_name, $field_label, $target_entity_type, $selection_handler = 'default', $selection_handler_settings = array()) {
+  // If a field type we know should exist isn't found, clear the field cache.
+  if (!field_info_field_types('entity_reference')) {
+    field_cache_clear();
+  }
+
+  // Look for or add the specified field to the requested entity bundle.
+  $field = field_info_field($field_name);
+  $instance = field_info_instance($entity_type, $field_name, $bundle);
+
+  if (empty($field)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'entity_reference',
+      'entity_types' => array($entity_type),
+      'settings' => array(
+        'target_type' => $target_entity_type,
+      ),
+    );
+    field_create_field($field);
+  }
+
+  if (empty($instance)) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => $entity_type,
+      'bundle' => $bundle,
+      'label' => $field_label,
+      'settings' => array(
+        'handler' => $selection_handler,
+        'handler_settings' => $selection_handler_settings,
+      ),
+    );
+    field_create_instance($instance);
+  }
+}
+
+/**
  * Menu Access callback for the autocomplete widget.
  *
  * @param string $type
