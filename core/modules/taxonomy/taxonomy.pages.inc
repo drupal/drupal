@@ -130,7 +130,6 @@ function taxonomy_autocomplete($field_name) {
     }
 
     $query = db_select('taxonomy_term_data', 't');
-    $query->addTag('translatable');
     $query->addTag('term_access');
 
     // Do not select already entered terms.

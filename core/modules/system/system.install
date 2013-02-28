@@ -553,7 +553,6 @@ function system_schema() {
         'type' => 'blob',
         'not null' => TRUE,
         'size' => 'big',
-        'translatable' => TRUE,
       ),
     ),
     'primary key' => array('name'),
@@ -756,7 +755,6 @@ function system_schema() {
         'type' => 'blob',
         'not null' => TRUE,
         'size' => 'big',
-        'translatable' => TRUE,
       ),
     ),
     'primary key' => array('collection', 'name'),
@@ -785,7 +783,6 @@ function system_schema() {
         'type' => 'blob',
         'not null' => TRUE,
         'size' => 'big',
-        'translatable' => TRUE,
       ),
       'expire' => array(
         'description' => 'The time since Unix epoch in seconds when this item expires. Defaults to the maximum possible time.',
@@ -1759,7 +1756,6 @@ function system_update_8023() {
         'type' => 'blob',
         'not null' => TRUE,
         'size' => 'big',
-        'translatable' => TRUE,
       ),
       'expire' => array(
         'description' => 'The time since Unix epoch in seconds when this item expires. Defaults to the maximum possible time.',

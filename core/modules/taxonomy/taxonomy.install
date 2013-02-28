@@ -58,14 +58,12 @@ function taxonomy_schema() {
         'not null' => TRUE,
         'default' => '',
         'description' => 'The term name.',
-        'translatable' => TRUE,
       ),
       'description' => array(
         'type' => 'text',
         'not null' => FALSE,
         'size' => 'big',
         'description' => 'A description of the term.',
-        'translatable' => TRUE,
       ),
       'format' => array(
         'type' => 'varchar',

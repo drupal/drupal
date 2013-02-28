@@ -454,7 +454,6 @@ function user_update_8002() {
     'not null' => TRUE,
     'default' => '',
     'description' => 'Role label.',
-    'translatable' => TRUE,
   );
   db_change_field('role', 'name', 'name', $column);
   // Remove unique index.
