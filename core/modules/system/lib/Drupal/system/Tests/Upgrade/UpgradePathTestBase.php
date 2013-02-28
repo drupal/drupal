@@ -245,6 +245,11 @@ abstract class UpgradePathTestBase extends WebTestBase {
       throw new Exception('POST to update.php to apply pending updates did not return HTTP 200 status.');
     }
 
+    if (!$this->assertNoText(t('An unrecoverable error has occurred.'))) {
+      // Error occured during update process.
+      throw new Exception('POST to update.php to apply pending updates detected an unrecoverable error.');
+    }
+
     // Check for errors during the update process.
     foreach ($this->xpath('//li[@class=:class]', array(':class' => 'failure')) as $element) {
       $message = strip_tags($element->asXML());
