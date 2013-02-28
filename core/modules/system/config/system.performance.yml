@@ -1,6 +1,6 @@
 cache:
   page:
-    enabled: '0'
+    use_internal: '0'
     max_age: '0'
 css:
   preprocess: '0'

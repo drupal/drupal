@@ -1651,21 +1651,21 @@ function system_performance_settings($form, &$form_state) {
     '#title' => t('Caching'),
   );
 
-  $form['caching']['cache'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Cache pages for anonymous users'),
-    '#default_value' => $config->get('cache.page.enabled'),
-    '#weight' => -2,
-  );
-
   $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
   $period[0] = '<' . t('none') . '>';
   $form['caching']['page_cache_maximum_age'] = array(
     '#type' => 'select',
-    '#title' => t('Expiration of cached pages'),
+    '#title' => t('Page cache maximum age'),
     '#default_value' => $config->get('cache.page.max_age'),
     '#options' => $period,
-    '#description' => t('The maximum time an external cache can use an old version of a page.'),
+    '#description' => t('The maximum time a page can be cached. This is used as the value for max-age in Cache-Control headers.'),
+  );
+
+  $form['caching']['cache'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use internal page cache'),
+    '#description' => t("If a reverse proxy cache isn't available, use Drupal's internal cache system to store cached pages."),
+    '#default_value' => $config->get('cache.page.use_internal'),
   );
 
   $directory = 'public://';
@@ -1682,7 +1682,7 @@ function system_performance_settings($form, &$form_state) {
     '#description' => t('External resources can be optimized automatically, which can reduce both the size and number of requests made to your website.') . $disabled_message,
   );
 
-  $js_hide = $config->get('cache.page.enabled') ? '' : ' class="js-hide"';
+  $js_hide = ($config->get('cache.page.max_age') > 0) ? '' : ' class="js-hide"';
   $form['bandwidth_optimization']['page_compression'] = array(
     '#type' => 'checkbox',
     '#title' => t('Compress cached pages.'),
@@ -1724,7 +1724,7 @@ function system_performance_settings($form, &$form_state) {
 function system_performance_settings_submit($form, &$form_state) {
   config_context_enter('config.context.free');
   $config = config('system.performance');
-  $config->set('cache.page.enabled', $form_state['values']['cache']);
+  $config->set('cache.page.use_internal', $form_state['values']['cache']);
   $config->set('cache.page.max_age', $form_state['values']['page_cache_maximum_age']);
   $config->set('response.gzip', $form_state['values']['page_compression']);
   $config->set('css.preprocess', $form_state['values']['preprocess_css']);

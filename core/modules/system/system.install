@@ -1585,7 +1585,7 @@ function system_update_8016() {
  */
 function system_update_8017() {
   update_variables_to_config('system.performance', array(
-    'cache' => 'cache.page.enabled',
+    'cache' => 'cache.page.use_internal',
     'page_cache_maximum_age' => 'cache.page.max_age',
     'page_compression' => 'response.gzip',
     'preprocess_css' => 'css.preprocess',

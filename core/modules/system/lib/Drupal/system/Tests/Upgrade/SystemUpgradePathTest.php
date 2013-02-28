@@ -50,7 +50,7 @@ class SystemUpgradePathTest extends UpgradePathTestBase {
     );
 
     $expected_config['system.performance'] = array(
-      'cache.page.enabled' => '1',
+      'cache.page.use_internal' => '1',
       'cache.page.max_age' => '1800',
       'response.gzip' => '1',
       'js.preprocess' => '1',

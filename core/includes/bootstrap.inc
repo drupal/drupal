@@ -2328,7 +2328,7 @@ function _drupal_bootstrap_page_cache() {
   else {
     drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES, FALSE);
     $config = config('system.performance');
-    $cache_enabled = $config->get('cache.page.enabled');
+    $cache_enabled = $config->get('cache.page.use_internal');
   }
   // If there is no session cookie and cache is enabled (or forced), try
   // to serve a cached page.

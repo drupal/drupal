@@ -43,7 +43,8 @@ class PageCacheTest extends WebTestBase {
    */
   function testConditionalRequests() {
     $config = config('system.performance');
-    $config->set('cache.page.enabled', 1);
+    $config->set('cache.page.use_internal', 1);
+    $config->set('cache.page.max_age', 300);
     $config->save();
 
     // Fill the cache.
@@ -87,14 +88,15 @@ class PageCacheTest extends WebTestBase {
    */
   function testPageCache() {
     $config = config('system.performance');
-    $config->set('cache.page.enabled', 1);
+    $config->set('cache.page.use_internal', 1);
+    $config->set('cache.page.max_age', 300);
     $config->save();
 
     // Fill the cache.
     $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Foo', 'value' => 'bar')));
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
     $this->assertEqual($this->drupalGetHeader('Vary'), 'Cookie,Accept-Encoding', 'Vary header was sent.');
-    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'public, max-age=0', 'Cache-Control header was sent.');
+    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'public, max-age=300', 'Cache-Control header was sent.');
     $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', 'Expires header was sent.');
     $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
 
@@ -102,7 +104,7 @@ class PageCacheTest extends WebTestBase {
     $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Foo', 'value' => 'bar')));
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
     $this->assertEqual($this->drupalGetHeader('Vary'), 'Cookie,Accept-Encoding', 'Vary: Cookie header was sent.');
-    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'public, max-age=0', 'Cache-Control header was sent.');
+    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'public, max-age=300', 'Cache-Control header was sent.');
     $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', 'Expires header was sent.');
     $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
 
@@ -133,7 +135,8 @@ class PageCacheTest extends WebTestBase {
    */
   function testPageCompression() {
     $config = config('system.performance');
-    $config->set('cache.page.enabled', 1);
+    $config->set('cache.page.use_internal', 1);
+    $config->set('cache.page.max_age', 300);
     $config->save();
 
     // Fill the cache and verify that output is compressed.

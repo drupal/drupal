@@ -920,7 +920,7 @@ function drupal_process_form($form_id, &$form, &$form_state) {
       // here, as we've finished with them. The in-memory copies are still
       // here, though.
       $config = config('system.performance');
-      if (!$config->get('cache.page.enabled') && !empty($form_state['values']['form_build_id'])) {
+      if (!$config->get('cache.page.use_internal') && !empty($form_state['values']['form_build_id'])) {
         cache('form')->delete('form_' . $form_state['values']['form_build_id']);
         cache('form')->delete('form_state_' . $form_state['values']['form_build_id']);
       }

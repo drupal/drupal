@@ -35,7 +35,7 @@ class HookExitTest extends WebTestBase {
   function testHookExit() {
     // Test with cache disabled. Exit should always fire.
     $config = config('system.performance');
-    $config->set('cache.page.enabled', 0);
+    $config->set('cache.page.use_internal', 0);
     $config->save();
 
     $this->drupalGet('');
@@ -44,7 +44,8 @@ class HookExitTest extends WebTestBase {
 
     // Test with normal cache. On the first call, exit should fire
     // (since cache is empty), but on the second call it should not be fired.
-    $config->set('cache.page.enabled', 1);
+    $config->set('cache.page.use_internal', 1);
+    $config->set('cache.page.max_age', 300);
     $config->save();
     $this->drupalGet('');
     $calls++;

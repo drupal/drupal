@@ -48,7 +48,8 @@ class StatisticsLoggingTest extends WebTestBase {
 
     // Enable page caching.
     $config = config('system.performance');
-    $config->set('cache.page.enabled', 1);
+    $config->set('cache.page.use_internal', 1);
+    $config->set('cache.page.max_age', 300);
     $config->save();
 
     // Enable access logging.
