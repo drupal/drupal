@@ -222,6 +222,28 @@ class ModuleHandler implements ModuleHandlerInterface {
   }
 
   /**
+   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::getHookInfo().
+   */
+  public function getHookInfo() {
+    if (isset($this->hookInfo)) {
+      return $this->hookInfo;
+    }
+    $this->hookInfo = array();
+    // We can't use $this->invokeAll() here or it would cause an infinite
+    // loop.
+    foreach ($this->moduleList as $module => $filename) {
+      $function = $module . '_hook_info';
+      if (function_exists($function)) {
+        $result = $function();
+        if (isset($result) && is_array($result)) {
+          $this->hookInfo = NestedArray::mergeDeep($this->hookInfo, $result);
+        }
+      }
+    }
+    return $this->hookInfo;
+  }
+
+  /**
    * Implements \Drupal\Core\Extension\ModuleHandlerInterface::getImplementations().
    */
   public function getImplementations($hook) {
@@ -435,35 +457,6 @@ class ModuleHandler implements ModuleHandlerInterface {
       $this->alter('module_implements', $this->implementations[$hook], $hook);
     }
     return $this->implementations[$hook];
-  }
-
-  /**
-   * Retrieves a list of hooks that are declared through hook_hook_info().
-   *
-   * @return
-   *   An associative array whose keys are hook names and whose values are an
-   *   associative array containing a group name. The structure of the array
-   *   is the same as the return value of hook_hook_info().
-   *
-   * @see hook_hook_info()
-   */
-  protected function getHookInfo() {
-    if ($this->hookInfo) {
-      return $this->hookInfo;
-    }
-    $this->hookInfo = array();
-    // We can't use $this->invokeAll() here or it would cause an infinite
-    // loop.
-    foreach ($this->moduleList as $module => $filename) {
-      $function = $module . '_hook_info';
-      if (function_exists($function)) {
-        $result = $function();
-        if (isset($result) && is_array($result)) {
-          $this->hookInfo = NestedArray::mergeDeep($this->hookInfo, $result);
-        }
-      }
-    }
-    return $this->hookInfo;
   }
 
   /**

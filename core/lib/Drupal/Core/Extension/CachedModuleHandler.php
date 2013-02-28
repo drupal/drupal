@@ -64,6 +64,30 @@ class CachedModuleHandler extends ModuleHandler implements CachedModuleHandlerIn
   }
 
   /**
+   * Overrides \Drupal\Core\Extension\ModuleHandler::getHookInfo().
+   */
+  public function getHookInfo() {
+    // When this function is indirectly invoked from bootstrap_invoke_all() prior
+    // to all modules being loaded, we do not want to cache an incomplete
+    // hook_hookInfo() result, so instead return an empty array. This requires
+    // bootstrap hook implementations to reside in the .module file, which is
+    // optimal for performance anyway.
+    if (!$this->loaded) {
+      return array();
+    }
+    if (!isset($this->hookInfo)) {
+      if ($cache = $this->bootstrapCache->get('hook_info')) {
+        $this->hookInfo = $cache->data;
+      }
+      else {
+        $this->hookInfo = parent::getHookInfo();
+        $this->bootstrapCache->set('hook_info', $this->hookInfo);
+      }
+    }
+    return $this->hookInfo;
+  }
+
+  /**
    * Implements \Drupal\Core\Extension\ModuleHandlerInterface::resetImplementations().
    */
   public function resetImplementations() {
@@ -126,30 +150,6 @@ class CachedModuleHandler extends ModuleHandler implements CachedModuleHandlerIn
       }
     }
     return $this->implementations[$hook];
-  }
-
-  /**
-   * Overrides \Drupal\Core\Extension\ModuleHandler::getHookInfo().
-   */
-  protected function getHookInfo() {
-    // When this function is indirectly invoked from bootstrap_invoke_all() prior
-    // to all modules being loaded, we do not want to cache an incomplete
-    // hook_hookInfo() result, so instead return an empty array. This requires
-    // bootstrap hook implementations to reside in the .module file, which is
-    // optimal for performance anyway.
-    if (!$this->loaded) {
-      return array();
-    }
-    if (!isset($this->hookInfo)) {
-      if ($cache = $this->bootstrapCache->get('hook_info')) {
-        $this->hookInfo = $cache->data;
-      }
-      else {
-        $this->hookInfo = parent::getHookInfo();
-        $this->bootstrapCache->set('hook_info', $this->hookInfo);
-      }
-    }
-    return $this->hookInfo;
   }
 
   /**
