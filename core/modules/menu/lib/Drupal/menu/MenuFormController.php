@@ -64,20 +64,20 @@ class MenuFormController extends EntityFormController {
       $form['links'] = menu_overview_form($form['links'], $form_state);
     }
 
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
-      '#type' => 'submit',
-      '#value' => t('Save'),
-      '#button_type' => 'primary',
-    );
-    // Only custom menus may be deleted.
-    $form['actions']['delete'] = array(
-      '#type' => 'submit',
-      '#value' => t('Delete'),
-      '#access' => !$menu->isNew() && !isset($system_menus[$menu->id()]),
-    );
-
     return $form;
+  }
+
+  /**
+   * Overrides Drupal\Core\Entity\EntityFormController::actions().
+   */
+  protected function actions(array $form, array &$form_state) {
+    $actions = parent::actions($form, $form_state);
+    $menu = $this->getEntity($form_state);
+
+    $system_menus = menu_list_system_menus();
+    $actions['delete']['#access'] = !$menu->isNew() && !isset($system_menus[$menu->id()]);
+
+    return $actions;
   }
 
   /**

@@ -8,6 +8,7 @@
 use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
 use Drupal\system\Plugin\Core\Entity\Menu;
 use Drupal\Component\Utility\NestedArray;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Menu callback which shows an overview page of all the custom menus and their descriptions.
