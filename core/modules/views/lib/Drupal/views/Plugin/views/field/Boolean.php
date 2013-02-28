@@ -38,7 +38,7 @@ class Boolean extends FieldPluginBase {
     $options['type'] = array('default' => 'yes-no');
     $options['type_custom_true'] = array('default' => '', 'translatable' => TRUE);
     $options['type_custom_false'] = array('default' => '', 'translatable' => TRUE);
-    $options['not'] = array('definition bool' => 'reverse');
+    $options['not'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;
   }

@@ -37,8 +37,8 @@ class RssFields extends RowPluginBase {
     $options['description_field'] = array('default' => '');
     $options['creator_field'] = array('default' => '');
     $options['date_field'] = array('default' => '');
-    $options['guid_field_options']['guid_field'] = array('default' => '');
-    $options['guid_field_options']['guid_field_is_permalink'] = array('default' => TRUE, 'bool' => TRUE);
+    $options['guid_field_options']['contains']['guid_field'] = array('default' => '');
+    $options['guid_field_options']['contains']['guid_field_is_permalink'] = array('default' => TRUE, 'bool' => TRUE);
     return $options;
   }
 
