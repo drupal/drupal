@@ -27,9 +27,7 @@
   cursor: default;
   white-space: pre;
 }
-input.form-autocomplete {
-  max-width: 100%;
-}
+
 /* Animated throbber */
 .js input.form-autocomplete {
   background-image: url(../../misc/throbber.gif);
@@ -174,6 +172,16 @@ tr .ajax-progress-throbber .throbber {
 }
 .ajax-progress-bar {
   width: 16em;
+}
+
+/**
+ *  Keep form elements from overflowing their containers.
+ */
+input {
+  max-width: 100%;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 /**
