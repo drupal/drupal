@@ -993,7 +993,7 @@ function image_style_url($style_name, $path) {
   // The token query is added even if the 'image_allow_insecure_derivatives'
   // variable is TRUE, so that the emitted links remain valid if it is changed
   // back to the default FALSE.
-  $token_query = array(IMAGE_DERIVATIVE_TOKEN => image_style_path_token($style_name, $path));
+  $token_query = array(IMAGE_DERIVATIVE_TOKEN => image_style_path_token($style_name, file_stream_wrapper_uri_normalize($path)));
 
   // If not using clean URLs, the image derivative callback is only available
   // with the query string. If the file does not exist, use url() to ensure

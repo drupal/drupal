@@ -1,6 +1,8 @@
 
 Drupal 7.21, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a bug which caused the denial-of-service protection added in Drupal
+  7.20 to break certain valid image URLs that had an extra slash in them.
 - Fixed a bug with update queries in the SQLite database driver that prevented
   Drupal from being installed with SQLite on PHP 5.4.
 - Fixed enforced dependencies errors updating to recent versions of Drupal 7 on
