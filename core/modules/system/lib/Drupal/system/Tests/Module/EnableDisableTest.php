@@ -58,13 +58,13 @@ class EnableDisableTest extends ModuleTestBase {
 
     // Enable the dblog module first, since we will be asserting the presence
     // of log messages throughout the test.
-   if (isset($modules['dblog'])) {
-     $modules = array('dblog' => $modules['dblog']) + $modules;
-   }
+    if (isset($modules['dblog'])) {
+      $modules = array('dblog' => $modules['dblog']) + $modules;
+    }
 
-   // Set a variable so that the hook implementations in system_test.module
-   // will display messages via drupal_set_message().
-   state()->set('system_test.verbose_module_hooks', TRUE);
+    // Set a variable so that the hook implementations in system_test.module
+    // will display messages via drupal_set_message().
+    state()->set('system_test.verbose_module_hooks', TRUE);
 
     // Go through each module in the list and try to enable it (unless it was
     // already enabled automatically due to a dependency).
@@ -192,7 +192,9 @@ class EnableDisableTest extends ModuleTestBase {
     // Check that the appropriate hook was fired and the appropriate log
     // message appears.
     $this->assertText(t('hook_modules_disabled fired for @module', array('@module' => $module)));
-    $this->assertLogMessage('system', "%module module disabled.", array('%module' => $module), WATCHDOG_INFO);
+    if ($module != 'dblog') {
+      $this->assertLogMessage('system', "%module module disabled.", array('%module' => $module), WATCHDOG_INFO);
+    }
 
     //  Check that the module's database tables still exist.
     $this->assertModuleTablesExist($module);

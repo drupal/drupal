@@ -97,11 +97,19 @@ class ModuleApiTest extends WebTestBase {
     $this->drupalGet('');
     $this->assertTrue(cache('bootstrap')->get('module_implements'), 'The module implements cache is populated after requesting a page.');
 
+    // Prime ModuleHandler's hook implementation cache by invoking a random hook
+    // name. The subsequent module_enable() below will only call into
+    // setModuleList(), but will not explicitly reset the hook implementation
+    // cache, as that is expected to happen implicitly by setting the module
+    // list. This verifies that the hook implementation cache is cleared
+    // whenever setModuleList() is called.
+    $module_handler = drupal_container()->get('module_handler');
+    $module_handler->invokeAll('test');
+
     // Make sure group include files are detected properly even when the file is
     // already loaded when the cache is rebuilt.
     // For that activate the module_test which provides the file to load.
     module_enable(array('module_test'));
-    $module_handler = drupal_container()->get('module_handler');
     $module_handler->loadAll();
     module_load_include('inc', 'module_test', 'module_test.file');
     $modules = $module_handler->getImplementations('test_hook');

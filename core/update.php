@@ -444,10 +444,6 @@ if (is_null($op) && update_access_allowed()) {
   $module_handler->setModuleList($module_list);
   $module_handler->load('system');
 
-  // Reset the module implementations cache so that any new hook implementations
-  // in updated code are picked up.
-  $module_handler->resetImplementations();
-
   // Set up $language, since the installer components require it.
   drupal_language_initialize();
 

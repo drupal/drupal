@@ -152,6 +152,9 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   public function setModuleList(array $module_list = array()) {
     $this->moduleList = $module_list;
+    // Reset the implementations, so a new call triggers a reloading of the
+    // available hooks.
+    $this->resetImplementations();
   }
 
   /**
