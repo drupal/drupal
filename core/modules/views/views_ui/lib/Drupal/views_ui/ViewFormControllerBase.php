@@ -106,8 +106,6 @@ abstract class ViewFormControllerBase extends EntityFormController {
 
     // Create a tab for each display.
     $displays = $view->get('display');
-    uasort($displays, array($view, 'sortPosition'));
-    $view->set('display', $displays);
     foreach ($displays as $id => $display) {
       $tabs[$id] = array(
         '#theme' => 'menu_local_task',

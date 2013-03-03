@@ -81,23 +81,26 @@ class ViewStorageController extends ConfigStorageController {
    *   The view entity to attach default displays options.
    */
   protected function mergeDefaultDisplaysOptions(EntityInterface $entity) {
-    if (isset($entity->display) && is_array($entity->display)) {
-      $displays = array();
-
-      foreach ($entity->get('display') as $key => $options) {
-        $options += array(
-          'display_options' => array(),
-          'display_plugin' => NULL,
-          'id' => NULL,
-          'display_title' => '',
-          'position' => NULL,
-        );
-        // Add the defaults for the display.
-        $displays[$key] = $options;
-      }
-
-      $entity->set('display', $displays);
+    $displays = array();
+    foreach ($entity->get('display') as $key => $options) {
+      $options += array(
+        'display_options' => array(),
+        'display_plugin' => NULL,
+        'id' => NULL,
+        'display_title' => '',
+        'position' => NULL,
+      );
+      // Add the defaults for the display.
+      $displays[$key] = $options;
     }
+    // Sort the displays.
+    uasort($displays, function ($display1, $display2) {
+      if ($display1['position'] != $display2['position']) {
+        return $display1['position'] < $display2['position'] ? -1 : 1;
+      }
+      return 0;
+    });
+    $entity->set('display', $displays);
   }
 
 }

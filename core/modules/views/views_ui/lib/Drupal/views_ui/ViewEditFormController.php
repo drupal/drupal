@@ -884,7 +884,7 @@ class ViewEditFormController extends ViewFormControllerBase {
       case 'filter':
         // The rearrange form for filters contains the and/or UI, so override
         // the used path.
-        $rearrange_url = "admin/structure/views/nojs/rearrange-$type/{$view->id()}/{$display['id']}/$type";
+        $rearrange_url = "admin/structure/views/nojs/rearrange-filter/{$view->id()}/{$display['id']}";
         $rearrange_text = t('And/Or, Rearrange');
         // TODO: Add another class to have another symbol for filter rearrange.
         $class = 'icon compact rearrange';

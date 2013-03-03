@@ -109,15 +109,113 @@ views_ui.breakLock:
   requirements:
     _permission: 'administer views'
 
-views_ui.ajaxForm:
-  pattern: '/admin/structure/views/{js}/{key}/{view}/{display_id}/{type}/{id}'
+views_ui.form.addItem:
+  pattern: '/admin/structure/views/{js}/add-item/{view}/{display_id}/{type}'
   options:
     tempstore:
       view: 'views'
   defaults:
-    _controller: 'views_ui.controller:ajaxForm'
-    type: NULL
-    id: NULL
+    _controller: '\Drupal\views_ui\Form\Ajax\AddItem::getForm'
+  requirements:
+    _permission: 'administer views'
+    js: 'nojs|ajax'
+
+views_ui.form.editDetails:
+  pattern: '/admin/structure/views/{js}/edit-details/{view}/{display_id}'
+  options:
+    tempstore:
+      view: 'views'
+  defaults:
+    _controller: '\Drupal\views_ui\Form\Ajax\EditDetails::getForm'
+  requirements:
+    _permission: 'administer views'
+    js: 'nojs|ajax'
+
+views_ui.form.reorderDisplays:
+  pattern: '/admin/structure/views/{js}/reorder-displays/{view}/{display_id}'
+  options:
+    tempstore:
+      view: 'views'
+  defaults:
+    _controller: '\Drupal\views_ui\Form\Ajax\ReorderDisplays::getForm'
+  requirements:
+    _permission: 'administer views'
+    js: 'nojs|ajax'
+
+views_ui.form.analyze:
+  pattern: '/admin/structure/views/{js}/analyze/{view}/{display_id}'
+  options:
+    tempstore:
+      view: 'views'
+  defaults:
+    _controller: '\Drupal\views_ui\Form\Ajax\Analyze::getForm'
+  requirements:
+    _permission: 'administer views'
+    js: 'nojs|ajax'
+
+views_ui.form.rearrange:
+  pattern: '/admin/structure/views/{js}/rearrange/{view}/{display_id}/{type}'
+  options:
+    tempstore:
+      view: 'views'
+  defaults:
+    _controller: '\Drupal\views_ui\Form\Ajax\Rearrange::getForm'
+  requirements:
+    _permission: 'administer views'
+    js: 'nojs|ajax'
+
+views_ui.form.rearrangeFilter:
+  pattern: '/admin/structure/views/{js}/rearrange-filter/{view}/{display_id}'
+  options:
+    tempstore:
+      view: 'views'
+  defaults:
+    _controller: '\Drupal\views_ui\Form\Ajax\RearrangeFilter::getForm'
+  requirements:
+    _permission: 'administer views'
+    js: 'nojs|ajax'
+
+views_ui.form.display:
+  pattern: '/admin/structure/views/{js}/display/{view}/{display_id}/{type}'
+  options:
+    tempstore:
+      view: 'views'
+  defaults:
+    _controller: '\Drupal\views_ui\Form\Ajax\Display::getForm'
+  requirements:
+    _permission: 'administer views'
+    js: 'nojs|ajax'
+
+views_ui.form.configItem:
+  pattern: '/admin/structure/views/{js}/config-item/{view}/{display_id}/{type}/{id}'
+  options:
+    tempstore:
+      view: 'views'
+  defaults:
+    _controller: '\Drupal\views_ui\Form\Ajax\ConfigItem::getForm'
+  requirements:
+    _permission: 'administer views'
+    js: 'nojs|ajax'
+
+views_ui.form.configItemExtra:
+  pattern: '/admin/structure/views/{js}/config-item-extra/{view}/{display_id}/{type}/{id}'
+  options:
+    tempstore:
+      view: 'views'
+  defaults:
+    _controller: '\Drupal\views_ui\Form\Ajax\ConfigItemExtra::getForm'
+  requirements:
+    _permission: 'administer views'
+    js: 'nojs|ajax'
+
+views_ui.form.configItemGroup:
+  pattern: '/admin/structure/views/{js}/config-item-group/{view}/{display_id}/{type}/{id}'
+  options:
+    tempstore:
+      view: 'views'
+  defaults:
+    _controller: '\Drupal\views_ui\Form\Ajax\ConfigItemGroup::getForm'
+    form_state: NULL
   requirements:
     _permission: 'administer views'
     js: 'nojs|ajax'

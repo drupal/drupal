@@ -99,7 +99,7 @@ class HandlerTest extends UITestBase {
       $this->assertUrl($edit_handler_url, array(), 'The user got redirected to the handler edit form.');
       $this->drupalPost(NULL, array(), t('Apply'));
 
-      $this->assertUrl('admin/structure/views/view/test_view_empty/edit', array(), 'The user got redirected to the views edit form.');
+      $this->assertUrl('admin/structure/views/view/test_view_empty/edit/default', array(), 'The user got redirected to the views edit form.');
 
       $this->assertLinkByHref($edit_handler_url, 0, 'The handler edit link appears in the UI.');
 

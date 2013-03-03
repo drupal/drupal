@@ -1837,7 +1837,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $form['box']['change'] = array(
           '#type' => 'submit',
           '#value' => t('Change theme'),
-          '#submit' => array('views_ui_edit_display_form_change_theme'),
+          '#submit' => array(array($this, 'changeThemeForm')),
         );
 
         $form['analysis'] = array(
@@ -1851,7 +1851,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $form['rescan_button']['button'] = array(
           '#type' => 'submit',
           '#value' => t('Rescan template files'),
-          '#submit' => array('views_ui_config_item_form_rescan'),
+          '#submit' => array(array($this, 'rescanThemes')),
         );
         $form['rescan_button']['markup'] = array(
           '#markup' => '<div class="description">' . t("<strong>Important!</strong> When adding, removing, or renaming template files, it is necessary to make Drupal aware of the changes by making it rescan the files on your system. By clicking this button you clear Drupal's theme registry and thereby trigger this rescanning process. The highlighted templates above will then reflect the new state of your system.") . '</div>',
@@ -2021,6 +2021,38 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
+   * Submit hook to clear Drupal's theme registry (thereby triggering
+   * a templates rescan).
+   */
+  public function rescanThemes($form, &$form_state) {
+    drupal_theme_rebuild();
+
+    // The 'Theme: Information' page is about to be shown again. That page
+    // analyzes the output of theme_get_registry(). However, this latter
+    // function uses an internal cache (which was initialized before we
+    // called drupal_theme_rebuild()) so it won't reflect the
+    // current state of our theme registry. The only way to clear that cache
+    // is to re-initialize the theme system:
+    unset($GLOBALS['theme']);
+    drupal_theme_initialize();
+
+    $form_state['rerender'] = TRUE;
+    $form_state['rebuild'] = TRUE;
+  }
+
+  /**
+   * Displays the Change Theme form.
+   */
+  public function changeThemeForm($form, &$form_state) {
+    // This is just a temporary variable.
+    $form_state['view']->theme = $form_state['values']['theme'];
+
+    views_ui_cache_set($form_state['view']);
+    $form_state['rerender'] = TRUE;
+    $form_state['rebuild'] = TRUE;
+  }
+
+  /**
    * Format a list of theme templates for output by the theme info helper.
    */
   protected function formatThemes($themes) {
@@ -2129,7 +2161,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $access = array('type' => $form_state['values']['access']['type']);
             $this->setOption('access', $access);
             if ($plugin->usesOptions()) {
-              $form_state['view']->addFormToStack('display', $this->display['id'], array('access_options'));
+              $form_state['view']->addFormToStack('display', $this->display['id'], 'access_options');
             }
           }
         }
@@ -2152,7 +2184,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $cache = array('type' => $form_state['values']['cache']['type']);
             $this->setOption('cache', $cache);
             if ($plugin->usesOptions()) {
-              $form_state['view']->addFormToStack('display', $this->display['id'], array('cache_options'));
+              $form_state['view']->addFormToStack('display', $this->display['id'], 'cache_options');
             }
           }
         }
@@ -2213,7 +2245,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
             // send ajax form to options page if we use it.
             if ($plugin->usesOptions()) {
-              $form_state['view']->addFormToStack('display', $this->display['id'], array('row_options'));
+              $form_state['view']->addFormToStack('display', $this->display['id'], 'row_options');
             }
           }
         }
@@ -2229,7 +2261,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $this->setOption($section, $row);
             // send ajax form to options page if we use it.
             if ($plugin->usesOptions()) {
-              $form_state['view']->addFormToStack('display', $this->display['id'], array('style_options'));
+              $form_state['view']->addFormToStack('display', $this->display['id'], 'style_options');
             }
           }
         }
@@ -2263,7 +2295,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $exposed_form = array('type' => $form_state['values']['exposed_form']['type'], 'options' => array());
             $this->setOption('exposed_form', $exposed_form);
             if ($plugin->usesOptions()) {
-              $form_state['view']->addFormToStack('display', $this->display['id'], array('exposed_form_options'));
+              $form_state['view']->addFormToStack('display', $this->display['id'], 'exposed_form_options');
             }
           }
         }
@@ -2290,7 +2322,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $pager = array('type' => $form_state['values']['pager']['type'], 'options' => $plugin->options);
             $this->setOption('pager', $pager);
             if ($plugin->usesOptions()) {
-              $form_state['view']->addFormToStack('display', $this->display['id'], array('pager_options'));
+              $form_state['view']->addFormToStack('display', $this->display['id'], 'pager_options');
             }
           }
         }

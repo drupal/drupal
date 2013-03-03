@@ -365,7 +365,7 @@ class Field extends FieldPluginBase {
       '#ajax' => array(
         'path' => views_ui_build_form_url($form_state),
       ),
-      '#submit' => array('views_ui_config_item_form_submit_temporary'),
+      '#submit' => array(array($this, 'submitTemporaryForm')),
       '#executes_submit_callback' => TRUE,
     );
 

@@ -398,7 +398,7 @@ abstract class FilterPluginBase extends HandlerBase {
         '#limit_validation_errors' => array(),
         '#type' => 'submit',
         '#value' => t('Grouped filters'),
-        '#submit' => array('views_ui_config_item_form_build_group'),
+        '#submit' => array(array($this, 'buildGroupForm')),
       );
       $form['group_button']['radios']['radios']['#default_value'] = 0;
     }
@@ -407,11 +407,35 @@ abstract class FilterPluginBase extends HandlerBase {
         '#limit_validation_errors' => array(),
         '#type' => 'submit',
         '#value' => t('Single filter'),
-        '#submit' => array('views_ui_config_item_form_build_group'),
+        '#submit' => array(array($this, 'buildGroupForm')),
       );
       $form['group_button']['radios']['radios']['#default_value'] = 1;
     }
   }
+
+  /**
+   * Displays the Build Group form.
+   */
+  public function buildGroupForm($form, &$form_state) {
+    $item = &$this->options;
+    // flip. If the filter was a group, set back to a standard filter.
+    $item['is_grouped'] = empty($item['is_grouped']);
+
+    // If necessary, set new defaults:
+    if ($item['is_grouped']) {
+      $this->build_group_options();
+    }
+
+    $form_state['view']->get('executable')->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+
+    $form_state['view']->addFormToStack($form_state['form_key'], $form_state['display_id'], $form_state['type'], $form_state['id'], TRUE, TRUE);
+
+    views_ui_cache_set($form_state['view']);
+    $form_state['rerender'] = TRUE;
+    $form_state['rebuild'] = TRUE;
+    $form_state['force_build_group_options'] = TRUE;
+  }
+
   /**
    * Shortcut to display the expose/hide button.
    */
@@ -443,7 +467,7 @@ abstract class FilterPluginBase extends HandlerBase {
         '#limit_validation_errors' => array(),
         '#type' => 'submit',
         '#value' => t('Expose filter'),
-        '#submit' => array('views_ui_config_item_form_expose'),
+        '#submit' => array(array($this, 'displayExposedForm')),
       );
       $form['expose_button']['checkbox']['checkbox']['#default_value'] = 0;
     }
@@ -455,7 +479,7 @@ abstract class FilterPluginBase extends HandlerBase {
         '#limit_validation_errors' => array(),
         '#type' => 'submit',
         '#value' => t('Hide filter'),
-        '#submit' => array('views_ui_config_item_form_expose'),
+        '#submit' => array(array($this, 'displayExposedForm')),
       );
       $form['expose_button']['checkbox']['checkbox']['#default_value'] = 1;
     }
@@ -1038,7 +1062,7 @@ abstract class FilterPluginBase extends HandlerBase {
       '#suffix' => '</div>',
       '#type' => 'submit',
       '#value' => t('Add another item'),
-      '#submit' => array('views_ui_config_item_form_add_group'),
+      '#submit' => array(array($this, 'addGroupForm')),
     );
 
     $js = array();
@@ -1056,6 +1080,23 @@ abstract class FilterPluginBase extends HandlerBase {
     else {
       $form_state['js settings'] = $js;
     }
+  }
+
+  /**
+   * Add a new group to the exposed filter groups.
+   */
+  public function addGroupForm($form, &$form_state) {
+    $item = &$this->options;
+
+    // Add a new row.
+    $item['group_info']['group_items'][] = array();
+
+    $form_state['view']->get('executable')->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+
+    views_ui_cache_set($form_state['view']);
+    $form_state['rerender'] = TRUE;
+    $form_state['rebuild'] = TRUE;
+    $form_state['force_build_group_options'] = TRUE;
   }
 
 

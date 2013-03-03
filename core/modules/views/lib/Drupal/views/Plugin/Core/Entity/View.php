@@ -94,7 +94,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    *
    * @var array
    */
-  protected $display;
+  protected $display = array();
 
   /**
    * The name of the base field to use.

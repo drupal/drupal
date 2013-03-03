@@ -117,7 +117,7 @@ abstract class SortPluginBase extends HandlerBase {
         '#limit_validation_errors' => array(),
         '#type' => 'submit',
         '#value' => t('Expose sort'),
-        '#submit' => array('views_ui_config_item_form_expose'),
+        '#submit' => array(array($this, 'displayExposedForm')),
       );
       $form['expose_button']['checkbox']['checkbox']['#default_value'] = 0;
     }
@@ -129,7 +129,7 @@ abstract class SortPluginBase extends HandlerBase {
         '#limit_validation_errors' => array(),
         '#type' => 'submit',
         '#value' => t('Hide sort'),
-        '#submit' => array('views_ui_config_item_form_expose'),
+        '#submit' => array(array($this, 'displayExposedForm')),
       );
       $form['expose_button']['checkbox']['checkbox']['#default_value'] = 1;
     }
