@@ -21,13 +21,13 @@ abstract class NormalizerBase extends SerializerAwareNormalizer implements Norma
    *
    * @var string
    */
-  protected static $supportedInterfaceOrClass;
+  protected $supportedInterfaceOrClass;
 
   /**
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::supportsNormalization().
    */
   public function supportsNormalization($data, $format = NULL) {
-    return is_object($data) && ($data instanceof static::$supportedInterfaceOrClass);
+    return is_object($data) && ($data instanceof $this->supportedInterfaceOrClass);
   }
 
 }

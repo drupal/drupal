@@ -23,7 +23,7 @@ abstract class JsonldNormalizerBase extends SerializerAwareNormalizer implements
    *
    * @var string
    */
-  protected static $supportedInterfaceOrClass;
+  protected $supportedInterfaceOrClass;
 
   /**
    * The formats that this Normalizer supports.
@@ -63,7 +63,7 @@ abstract class JsonldNormalizerBase extends SerializerAwareNormalizer implements
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()
    */
   public function supportsNormalization($data, $format = NULL) {
-    return is_object($data) && in_array($format, static::$format) && ($data instanceof static::$supportedInterfaceOrClass);
+    return is_object($data) && in_array($format, static::$format) && ($data instanceof $this->supportedInterfaceOrClass);
   }
 
   /**
@@ -75,6 +75,6 @@ abstract class JsonldNormalizerBase extends SerializerAwareNormalizer implements
    */
   public function supportsDenormalization($data, $type, $format = NULL) {
     $reflection = new ReflectionClass($type);
-    return in_array($format, static::$format) && $reflection->implementsInterface(static::$supportedInterfaceOrClass);
+    return in_array($format, static::$format) && $reflection->implementsInterface($this->supportedInterfaceOrClass);
   }
 }

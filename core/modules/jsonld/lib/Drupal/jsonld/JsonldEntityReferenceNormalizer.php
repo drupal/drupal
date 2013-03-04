@@ -25,7 +25,7 @@ class JsonldEntityReferenceNormalizer extends JsonldNormalizerBase implements De
    *
    * @var string
    */
-  protected static $supportedInterfaceOrClass = 'Drupal\Core\Entity\Field\Type\EntityReferenceItem';
+  protected $supportedInterfaceOrClass = 'Drupal\Core\Entity\Field\Type\EntityReferenceItem';
 
   /**
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()
@@ -55,7 +55,7 @@ class JsonldEntityReferenceNormalizer extends JsonldNormalizerBase implements De
    */
   public function supportsDenormalization($data, $type, $format = NULL) {
     $reflection = new ReflectionClass($type);
-    return in_array($format, static::$format) && ($reflection->getName() == static::$supportedInterfaceOrClass || $reflection->isSubclassOf(static::$supportedInterfaceOrClass));
+    return in_array($format, static::$format) && ($reflection->getName() == $this->supportedInterfaceOrClass || $reflection->isSubclassOf($this->supportedInterfaceOrClass));
   }
 
 }

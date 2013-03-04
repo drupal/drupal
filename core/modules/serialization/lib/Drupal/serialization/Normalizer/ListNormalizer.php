@@ -25,7 +25,7 @@ class ListNormalizer extends NormalizerBase {
    *
    * @var string
    */
-  protected static $supportedInterfaceOrClass = 'Drupal\Core\TypedData\ListInterface';
+  protected $supportedInterfaceOrClass = 'Drupal\Core\TypedData\ListInterface';
 
   /**
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize().

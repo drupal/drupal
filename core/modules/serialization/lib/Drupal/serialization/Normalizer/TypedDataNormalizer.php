@@ -19,7 +19,7 @@ class TypedDataNormalizer extends NormalizerBase {
    *
    * @var string
    */
-  protected static $supportedInterfaceOrClass = 'Drupal\Core\TypedData\TypedDataInterface';
+  protected $supportedInterfaceOrClass = 'Drupal\Core\TypedData\TypedDataInterface';
 
   /**
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize().

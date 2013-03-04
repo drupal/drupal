@@ -22,7 +22,7 @@ class JsonldFieldItemNormalizer extends JsonldNormalizerBase implements Denormal
    *
    * @var string
    */
-  protected static $supportedInterfaceOrClass = 'Drupal\Core\Entity\Field\FieldItemInterface';
+  protected $supportedInterfaceOrClass = 'Drupal\Core\Entity\Field\FieldItemInterface';
 
   /**
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()

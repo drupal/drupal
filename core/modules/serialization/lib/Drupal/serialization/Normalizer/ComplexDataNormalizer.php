@@ -26,7 +26,7 @@ class ComplexDataNormalizer extends NormalizerBase {
    *
    * @var string
    */
-  protected static $supportedInterfaceOrClass = 'Drupal\Core\TypedData\ComplexDataInterface';
+  protected $supportedInterfaceOrClass = 'Drupal\Core\TypedData\ComplexDataInterface';
 
   /**
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize().
