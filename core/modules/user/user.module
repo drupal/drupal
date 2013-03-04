@@ -9,6 +9,7 @@ use Drupal\user\Plugin\Core\Entity\User;
 use Drupal\user\UserRole;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
 
 /**
  * @file
@@ -1127,19 +1128,19 @@ function user_menu_site_status_alter(&$menu_site_status, $path) {
 /**
  * Implements hook_menu_link_presave().
  */
-function user_menu_link_presave($link) {
+function user_menu_link_presave(MenuLink $menu_link) {
   // The path 'user' must be accessible for anonymous users, but only visible
   // for authenticated users. Authenticated users should see "My account", but
   // anonymous users should not see it at all. Therefore, invoke
   // user_menu_link_load() to conditionally hide the link.
-  if ($link->link_path == 'user' && $link->module == 'system') {
-    $link->options['alter'] = TRUE;
+  if ($menu_link->link_path == 'user' && $menu_link->module == 'system') {
+    $menu_link->options['alter'] = TRUE;
   }
 
   // Force the Logout link to appear on the top-level of 'account' menu by
   // default (i.e., unless it has been customized).
-  if ($link->link_path == 'user/logout' && $link->module == 'system' && empty($link->customized)) {
-    $link->plid = 0;
+  if ($menu_link->link_path == 'user/logout' && $menu_link->module == 'system' && empty($menu_link->customized)) {
+    $menu_link->plid = 0;
   }
 }
 
