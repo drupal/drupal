@@ -22,7 +22,7 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test CRUD operations for text formats and filters.
+   * Tests CRUD operations for text formats and filters.
    */
   function testTextFormatCRUD() {
     // Add a text format with minimum data only.
@@ -73,7 +73,7 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Verify that a text format is properly stored.
+   * Verifies that a text format is properly stored.
    */
   function verifyTextFormat($format) {
     $t_args = array('%format' => $format->name);
@@ -111,7 +111,7 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Verify that filters are properly stored for a text format.
+   * Verifies that filters are properly stored for a text format.
    */
   function verifyFilters($format) {
     // Verify filter database records.
@@ -160,6 +160,9 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Tests the administrative functionality of the Filter module.
+ */
 class FilterAdminTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
@@ -185,6 +188,9 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
   }
 
+  /**
+   * Tests the format administration functionality.
+   */
   function testFormatAdmin() {
     // Add text format.
     $this->drupalGet('admin/config/content/formats');
@@ -249,7 +255,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test filter administration functionality.
+   * Tests filter administration functionality.
    */
   function testFilterAdmin() {
     // URL filter.
@@ -413,11 +419,43 @@ class FilterAdminTestCase extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Tests the filter format access functionality in the Filter module.
+ */
 class FilterFormatAccessTestCase extends DrupalWebTestCase {
+  /**
+   * A user with administrative permissions.
+   *
+   * @var object
+   */
   protected $admin_user;
+
+  /**
+   * A user with 'administer filters' permission.
+   *
+   * @var object
+   */
   protected $filter_admin_user;
+
+  /**
+   * A user with permission to create and edit own content.
+   *
+   * @var object
+   */
   protected $web_user;
+
+  /**
+   * An object representing an allowed text format.
+   *
+   * @var object
+   */
   protected $allowed_format;
+
+  /**
+   * An object representing a disallowed text format.
+   *
+   * @var object
+   */
   protected $disallowed_format;
 
   public static function getInfo() {
@@ -471,6 +509,9 @@ class FilterFormatAccessTestCase extends DrupalWebTestCase {
     ));
   }
 
+  /**
+   * Tests the Filter format access permissions functionality.
+   */
   function testFormatPermissions() {
     // Make sure that a regular user only has access to the text format they
     // were granted access to, as well to the fallback format.
@@ -507,6 +548,9 @@ class FilterFormatAccessTestCase extends DrupalWebTestCase {
     $this->assertTrue(isset($options[filter_fallback_format()]), t('The fallback format appears as an option when adding a new node.'));
   }
 
+  /**
+   * Tests if text format is available to a role.
+   */
   function testFormatRoles() {
     // Get the role ID assigned to the regular user; it must be the maximum.
     $rid = max(array_keys($this->web_user->roles));
@@ -528,13 +572,13 @@ class FilterFormatAccessTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test editing a page using a disallowed text format.
+   * Tests editing a page using a disallowed text format.
    *
-   * Verifies that regular users and administrators are able to edit a page,
-   * but not allowed to change the fields which use an inaccessible text
-   * format. Also verifies that fields which use a text format that does not
-   * exist can be edited by administrators only, but that the administrator is
-   * forced to choose a new format before saving the page.
+   * Verifies that regular users and administrators are able to edit a page, but
+   * not allowed to change the fields which use an inaccessible text format.
+   * Also verifies that fields which use a text format that does not exist can
+   * be edited by administrators only, but that the administrator is forced to
+   * choose a new format before saving the page.
    */
   function testFormatWidgetPermissions() {
     $langcode = LANGUAGE_NONE;
@@ -650,7 +694,7 @@ class FilterFormatAccessTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Rebuild text format and permission caches in the thread running the tests.
+   * Rebuilds text format and permission caches in the thread running the tests.
    */
   protected function resetFilterCaches() {
     filter_formats_reset();
@@ -658,6 +702,9 @@ class FilterFormatAccessTestCase extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Tests the default filter functionality in the Filter module.
+ */
 class FilterDefaultFormatTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
@@ -667,6 +714,9 @@ class FilterDefaultFormatTestCase extends DrupalWebTestCase {
     );
   }
 
+  /**
+   * Tests if the default text format is accessible to users.
+   */
   function testDefaultTextFormats() {
     // Create two text formats, and two users. The first user has access to
     // both formats, but the second user only has access to the second one.
@@ -710,7 +760,7 @@ class FilterDefaultFormatTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Rebuild text format and permission caches in the thread running the tests.
+   * Rebuilds text format and permission caches in the thread running the tests.
    */
   protected function resetFilterCaches() {
     filter_formats_reset();
@@ -718,6 +768,9 @@ class FilterDefaultFormatTestCase extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Tests the behavior of check_markup() when it is called without text format.
+ */
 class FilterNoFormatTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
@@ -727,6 +780,12 @@ class FilterNoFormatTestCase extends DrupalWebTestCase {
     );
   }
 
+  /**
+   * Tests text without format.
+   *
+   * Tests if text with no format is filtered the same way as text in the
+   * fallback format.
+   */
   function testCheckMarkupNoFormat() {
     // Create some text. Include some HTML and line breaks, so we get a good
     // test of the filtering that is applied to it.
@@ -757,7 +816,10 @@ class FilterSecurityTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test that filtered content is emptied when an actively used filter module is disabled.
+   * Tests removal of filtered content when an active filter is disabled.
+   *
+   * Tests that filtered content is emptied when an actively used filter module
+   * is disabled.
    */
   function testDisableFilterModule() {
     // Create a new node.
@@ -800,7 +862,7 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
   }
 
   /**
-   * Test the line break filter.
+   * Tests the line break filter.
    */
   function testLineBreakFilter() {
     // Setup dummy filter object.
@@ -1060,7 +1122,7 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
   }
 
   /**
-   * Test filter settings, defaults, access restrictions and similar.
+   * Tests filter settings, defaults, access restrictions and similar.
    *
    * @todo This is for functions like filter_filter and check_markup, whose
    *   functionality is not completely focused on filtering. Some ideas:
@@ -1116,7 +1178,7 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
   }
 
   /**
-   * Test the spam deterrent.
+   * Tests the spam deterrent.
    */
   function testNoFollowFilter() {
     // Setup dummy filter object.
@@ -1147,7 +1209,7 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
   }
 
   /**
-   * Test the loose, admin HTML filter.
+   * Tests the loose, admin HTML filter.
    */
   function testFilterXSSAdmin() {
     // DRUPAL-SA-2008-044
@@ -1541,7 +1603,7 @@ www.example.com with a newline in comments -->
   }
 
   /**
-   * Test the HTML corrector filter.
+   * Tests the HTML corrector filter.
    *
    * @todo This test could really use some validity checking function.
    */
@@ -1745,9 +1807,9 @@ body {color:red}
    * @param $needle
    *   Lowercase, plain text to look for.
    * @param $message
-   *   Message to display if failed.
+   *   (optional) Message to display if failed. Defaults to an empty string.
    * @param $group
-   *   The group this message belongs to, defaults to 'Other'.
+   *   (optional) The group this message belongs to. Defaults to 'Other'.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -1769,9 +1831,9 @@ body {color:red}
    * @param $needle
    *   Lowercase, plain text to look for.
    * @param $message
-   *   Message to display if failed.
+   *   (optional) Message to display if failed. Defaults to an empty string.
    * @param $group
-   *   The group this message belongs to, defaults to 'Other'.
+   *   (optional) The group this message belongs to. Defaults to 'Other'.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -1781,7 +1843,7 @@ body {color:red}
 }
 
 /**
- * Tests for filter hook invocation.
+ * Tests for Filter's hook invocations.
  */
 class FilterHooksTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -1799,7 +1861,10 @@ class FilterHooksTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test that hooks run correctly on creating, editing, and deleting a text format.
+   * Tests hooks on format management.
+   *
+   * Tests that hooks run correctly on creating, editing, and deleting a text
+   * format.
    */
   function testFilterHooks() {
     // Add a text format.
@@ -1846,6 +1911,11 @@ class FilterHooksTestCase extends DrupalWebTestCase {
  * Tests filter settings.
  */
 class FilterSettingsTestCase extends DrupalWebTestCase {
+  /**
+   * The installation profile to use with this test class.
+   *
+   * @var string
+   */
   protected $profile = 'testing';
 
   public static function getInfo() {
