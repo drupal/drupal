@@ -25,7 +25,9 @@ class ThemeTest extends TaxonomyTestBase {
 
     // Make sure we are using distinct default and administrative themes for
     // the duration of these tests.
-    variable_set('theme_default', 'bartik');
+    config('system.theme')
+      ->set('default', 'bartik')
+      ->save();
     theme_enable(array('seven'));
     config('system.theme')->set('admin', 'seven')->save();
 

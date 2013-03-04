@@ -54,7 +54,7 @@ class BlockLanguageTest extends WebTestBase {
    */
   public function testLanguageBlockVisibility() {
     // Check if the visibility setting is available.
-    $default_theme = variable_get('theme_default', 'stark');
+    $default_theme = config('system.theme')->get('default');
     $this->drupalGet('admin/structure/block/add/system_powered_by_block' . '/' . $default_theme);
 
     $this->assertField('visibility[language][langcodes][en]', 'Language visibility field is visible.');

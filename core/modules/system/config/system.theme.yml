@@ -1,3 +1,4 @@
 admin: '0'
 enabled:
   stark: '0'
+default: stark

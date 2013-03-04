@@ -531,12 +531,12 @@ ini_set('session.cookie_lifetime', 2000000);
  *
  * The following overrides are examples:
  * - site_name: Defines the site's name.
- * - theme_default: Defines the default theme for this site.
+ * - $conf['system.theme']['default']: Defines the default theme for this site.
  * - anonymous: Defines the human-readable name of anonymous users.
  * Remove the leading hash signs to enable.
  */
 # $conf['system.site']['name'] = 'My Drupal site';
-# $conf['theme_default'] = 'stark';
+# $conf['system.theme']['default'] = 'stark';
 # $conf['anonymous'] = 'Visitor';
 
 /**

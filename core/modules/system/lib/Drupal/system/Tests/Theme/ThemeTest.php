@@ -132,7 +132,9 @@ class ThemeTest extends WebTestBase {
    * Ensures a themes template is overrideable based on the 'template' filename.
    */
   function testTemplateOverride() {
-    variable_set('theme_default', 'test_theme');
+    config('system.theme')
+      ->set('default', 'test_theme')
+      ->save();
     $this->drupalGet('theme-test/template-test');
     $this->assertText('Success: Template overridden.', 'Template overridden by defined \'template\' filename.');
   }

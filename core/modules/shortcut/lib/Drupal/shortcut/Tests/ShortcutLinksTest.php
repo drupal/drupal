@@ -136,7 +136,9 @@ class ShortcutLinksTest extends ShortcutTestBase {
    */
   function testNoShortcutLink() {
     // Change to a theme that displays shortcuts.
-    variable_set('theme_default', 'seven');
+    config('system.theme')
+      ->set('default', 'seven')
+      ->save();
 
     $this->drupalGet('page-that-does-not-exist');
     $this->assertNoRaw('add-shortcut', 'Add to shortcuts link was not shown on a page not found.');

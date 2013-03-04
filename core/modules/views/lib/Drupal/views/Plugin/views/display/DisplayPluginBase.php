@@ -1715,7 +1715,7 @@ abstract class DisplayPluginBase extends PluginBase {
           $this->theme = $theme;
         }
         elseif (empty($this->theme)) {
-          $this->theme = variable_get('theme_default', 'bartik');
+          $this->theme = config('system.theme')->get('default');
         }
 
         if (isset($GLOBALS['theme']) && $GLOBALS['theme'] == $this->theme) {

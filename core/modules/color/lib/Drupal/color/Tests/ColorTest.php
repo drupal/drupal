@@ -76,7 +76,9 @@ class ColorTest extends WebTestBase {
    * Tests the Color module functionality using the given theme.
    */
   function _testColor($theme, $test_values) {
-    variable_set('theme_default', $theme);
+    config('system.theme')
+      ->set('default', $theme)
+      ->save();
     $settings_path = 'admin/appearance/settings/' . $theme;
 
     $this->drupalLogin($this->big_user);
@@ -122,7 +124,9 @@ class ColorTest extends WebTestBase {
    * Tests whether the provided color is valid.
    */
   function testValidColor() {
-    variable_set('theme_default', 'bartik');
+    config('system.theme')
+      ->set('default', 'bartik')
+      ->save();
     $settings_path = 'admin/appearance/settings/bartik';
 
     $this->drupalLogin($this->big_user);

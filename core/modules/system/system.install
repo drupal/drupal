@@ -521,10 +521,12 @@ function system_requirements($phase) {
  * Implements hook_install().
  */
 function system_install() {
-  // Enable the default theme. Can't use theme_enable() this early in
+  // Enable and set the default theme. Can't use theme_enable() this early in
   // installation.
-  variable_set('theme_default', 'stark');
   config_install_default_config('theme', 'stark');
+  config('system.theme')
+    ->set('default', 'stark')
+    ->save();
 
   // Populate the cron key state variable.
   $cron_key = drupal_hash_base64(drupal_random_bytes(55));
@@ -1972,7 +1974,8 @@ function system_update_8040() {
  */
 function system_update_8041() {
   update_variables_to_config('system.theme', array(
-    'admin_theme' => 'admin'
+    'admin_theme' => 'admin',
+    'theme_default' => 'default'
   ));
 }
 

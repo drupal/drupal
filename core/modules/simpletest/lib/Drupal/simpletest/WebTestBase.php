@@ -376,7 +376,7 @@ abstract class WebTestBase extends TestBase {
       'plugin' => $plugin_id,
       'label' => $this->randomName(8),
       'region' => 'sidebar_first',
-      'theme' => variable_get('theme_default', 'stark'),
+      'theme' => config('system.theme')->get('default'),
       'machine_name' => strtolower($this->randomName(8)),
       'settings' => $settings,
     );

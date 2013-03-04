@@ -157,7 +157,9 @@ class FrameworkTest extends AjaxTestBase {
     // The test theme overrides system.base.css without an implementation,
     // thereby removing it.
     theme_enable(array('test_theme'));
-    variable_set('theme_default', 'test_theme');
+    config('system.theme')
+      ->set('default', 'test_theme')
+      ->save();
 
     // This gets the form, and emulates an Ajax submission on it, including
     // adding markup to the HEAD and BODY for any lazy loaded JS/CSS files.

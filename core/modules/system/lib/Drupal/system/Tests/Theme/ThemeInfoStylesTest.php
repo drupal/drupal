@@ -34,7 +34,9 @@ class ThemeInfoStylesTest extends WebTestBase {
    */
   function testStylesheets() {
     theme_enable(array('test_basetheme', 'test_subtheme'));
-    variable_set('theme_default', 'test_subtheme');
+    config('system.theme')
+      ->set('default', 'test_subtheme')
+      ->save();
 
     $base = drupal_get_path('theme', 'test_basetheme');
     // Unlike test_basetheme (and the original module CSS), the subtheme decides

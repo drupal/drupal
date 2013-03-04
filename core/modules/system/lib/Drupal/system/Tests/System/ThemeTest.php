@@ -205,7 +205,9 @@ class ThemeTest extends WebTestBase {
     $this->assertRaw('core/themes/stark', 'Site default theme used on the add content page.');
 
     // Reset to the default theme settings.
-    variable_set('theme_default', 'bartik');
+    config('system.theme')
+      ->set('default', 'bartik')
+      ->save();
     $edit = array(
       'admin_theme' => '0',
       'node_admin_theme' => FALSE,
@@ -227,7 +229,7 @@ class ThemeTest extends WebTestBase {
     theme_enable(array('bartik'));
     $this->drupalGet('admin/appearance');
     $this->clickLink(t('Set default'));
-    $this->assertEqual(variable_get('theme_default', ''), 'bartik');
+    $this->assertEqual(config('system.theme')->get('default'), 'bartik');
 
     // Test the default theme on the secondary links (blocks admin page).
     $this->drupalGet('admin/structure/block');

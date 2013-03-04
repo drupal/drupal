@@ -70,7 +70,7 @@ function block_admin_edit(Block $entity) {
   $theme = $themes[$theme_key];
   // Use meaningful titles for the main site and administrative themes.
   $theme_title = $theme->info['name'];
-  if ($theme_key == variable_get('theme_default', 'stark')) {
+  if ($theme_key == config('system.theme')->get('default')) {
     $theme_title = t('!theme (default theme)', array('!theme' => $theme_title));
   }
   elseif ($admin_theme && $theme_key == $admin_theme) {

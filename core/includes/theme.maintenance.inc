@@ -50,7 +50,7 @@ function _drupal_maintenance_theme() {
     //   Stark otherwise. Since there is no low-level access to configuration
     //   currently, we only consult settings.php and fall back to Bartik
     //   otherwise, as it looks generic enough and way more user-friendly.
-    $custom_theme = variable_get('maintenance_theme', variable_get('theme_default', 'bartik'));
+    $custom_theme = variable_get('maintenance_theme', config('system.theme')->get('default')) ?: 'bartik';
   }
 
   // Ensure that system.module is loaded.

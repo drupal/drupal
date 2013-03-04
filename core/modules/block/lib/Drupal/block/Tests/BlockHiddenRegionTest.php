@@ -61,7 +61,9 @@ class BlockHiddenRegionTest extends WebTestBase {
     // Enable "block_test_theme" and set it as the default theme.
     $theme = 'block_test_theme';
     theme_enable(array($theme));
-    variable_set('theme_default', $theme);
+    config('system.theme')
+      ->set('default', $theme)
+      ->save();
     menu_router_rebuild();
 
     // Ensure that "block_test_theme" is set as the default theme.

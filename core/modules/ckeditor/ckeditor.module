@@ -97,7 +97,7 @@ function ckeditor_theme() {
 function _ckeditor_theme_css($theme = NULL) {
   $css = array();
   if (!isset($theme)) {
-    $theme = variable_get('theme_default');
+    $theme = config('system.theme')->get('default');
   }
   if ($theme_path = drupal_get_path('theme', $theme)) {
     $info = system_get_info('theme', $theme);

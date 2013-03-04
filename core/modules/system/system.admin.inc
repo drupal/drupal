@@ -124,7 +124,7 @@ function system_themes_page() {
   $themes = system_rebuild_theme_data();
   uasort($themes, 'system_sort_modules_by_info_name');
 
-  $theme_default = variable_get('theme_default', 'stark');
+  $theme_default = config('system.theme')->get('default');
   $theme_groups  = array();
   $admin_theme = config('system.theme')->get('admin');
 
@@ -315,7 +315,7 @@ function system_theme_disable() {
     // Check if the specified theme is one recognized by the system.
     if (!empty($themes[$theme])) {
       // Do not disable the default or admin theme.
-      if ($theme == variable_get('theme_default', 'stark') || $theme == config('system.theme')->get('admin')) {
+      if ($theme === config('system.theme')->get('default') || $theme === config('system.theme')->get('admin')) {
         drupal_set_message(t('%theme is the default theme and cannot be disabled.', array('%theme' => $themes[$theme]->info['name'])), 'error');
       }
       else {
@@ -347,7 +347,9 @@ function system_theme_default() {
        theme_enable(array($theme));
       }
       // Set the default theme.
-      variable_set('theme_default', $theme);
+      config('system.theme')
+        ->set('default', $theme)
+        ->save();
 
       // Rebuild the menu. This duplicates the menu_router_rebuild() in
       // theme_enable(). However, modules must know the current default theme in
