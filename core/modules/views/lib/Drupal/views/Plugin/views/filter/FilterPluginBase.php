@@ -641,7 +641,7 @@ abstract class FilterPluginBase extends HandlerBase {
           // Check if the title is defined but value wasn't defined.
           if (!empty($group['title'])) {
             if ((!is_array($group['value']) && trim($group['value']) == "") ||
-                (is_array($group['value']) && count(array_filter($group['value'], '_views_array_filter_zero')) == 0)) {
+                (is_array($group['value']) && count(array_filter($group['value'], 'static::arrayFilterZero')) == 0)) {
               form_error($form['group_info']['group_items'][$id]['value'],
                          t('The value is required if title for this item is defined.'));
             }
@@ -649,7 +649,7 @@ abstract class FilterPluginBase extends HandlerBase {
 
           // Check if the value is defined but title wasn't defined.
           if ((!is_array($group['value']) && trim($group['value']) != "") ||
-              (is_array($group['value']) && count(array_filter($group['value'], '_views_array_filter_zero')) > 0)) {
+              (is_array($group['value']) && count(array_filter($group['value'], 'static::arrayFilterZero')) > 0)) {
             if (empty($group['title'])) {
               form_error($form['group_info']['group_items'][$id]['title'],
                          t('The title is required if value for this item is defined.'));
@@ -1430,6 +1430,19 @@ abstract class FilterPluginBase extends HandlerBase {
    function can_group() {
      return TRUE;
    }
+
+  /**
+   * Filter by no empty values, though allow to use "0".
+   *
+   * @param string $var
+   *   The variable to evaluate.
+   *
+   * @return bool
+   *   TRUE if the value is equal to an empty string, FALSE otherwise.
+   */
+  protected static function arrayFilterZero($var) {
+    return trim($var) != '';
+  }
 
 }
 

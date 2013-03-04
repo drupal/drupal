@@ -1769,15 +1769,6 @@ function _field_view_formatter_options($field_type = NULL) {
 }
 
 /**
- * Filter by no empty values, though allow to use "0".
- * @param $var
- * @return bool
- */
-function _views_array_filter_zero($var) {
-  return trim($var) != "";
-}
-
-/**
  * Adds one to each key of the array.
  *
  * For example array(0 => 'foo') would be array(1 => 'foo').
