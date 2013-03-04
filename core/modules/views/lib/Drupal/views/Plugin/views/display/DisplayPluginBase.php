@@ -894,20 +894,18 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Retrieve a list of fields for the current display with the
-   * relationship associated if it exists.
+   * Retrieves a list of fields for the current display.
    *
-   * @param $groupable_only
-   *  Return only an array of field labels from handler that return TRUE
-   *  from use_string_group_by method.
+   * This also takes into account any associated relationships, if they exist.
+   *
+   * @param bool $groupable_only
+   *   (optional) TRUE to only return an array of field labels from handlers
+   *   that support the use_string_group_by method, defaults to FALSE.
+   *
+   * @return array
+   *   An array of applicable field options, keyed by ID.
    */
-  public function getFieldLabels() {
-    // Use func_get_arg so the function signature isn't amended
-    // but we can still pass TRUE into the function to filter
-    // by groupable handlers.
-    $args = func_get_args();
-    $groupable_only = isset($args[0]) ? $args[0] : FALSE;
-
+  public function getFieldLabels($groupable_only = FALSE) {
     $options = array();
     foreach ($this->getHandlers('relationship') as $relationship => $handler) {
       if ($label = $handler->label()) {
