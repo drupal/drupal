@@ -77,7 +77,7 @@ function dblog_overview() {
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
-    '#attributes' => array('id' => 'admin-dblog'),
+    '#attributes' => array('id' => 'admin-dblog', 'class' => array('admin-dblog')),
     '#empty' => t('No log messages available.'),
   );
   $build['dblog_pager'] = array('#theme' => 'pager');
