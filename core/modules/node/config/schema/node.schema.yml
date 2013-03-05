@@ -1,0 +1,9 @@
+# Schema for the configuration files of the node module.
+
+node.settings:
+  type: mapping
+  label: 'Node settings'
+  mapping:
+    items_per_page:
+      type: integer
+      label: 'Number of posts on front page'
