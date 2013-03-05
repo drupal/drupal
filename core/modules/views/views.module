@@ -483,7 +483,7 @@ function views_preprocess_html(&$variables) {
       unset($variables['attributes']['class'][$key]);
       // Add the JavaScript, with a group and weight such that it will run
       // before modules/contextual/contextual.js.
-      drupal_add_js(drupal_get_path('module', 'views') . '/js/views-contextual.js', array('group' => JS_LIBRARY, 'weight' => -1));
+      drupal_add_library('views', 'views.contextual-links');
     }
   }
 }
@@ -859,6 +859,17 @@ function views_library_info() {
       array('system', 'jquery.once'),
       array('system', 'jquery.form'),
       array('system', 'drupal.ajax'),
+    ),
+  );
+  $libraries['views.contextual-links'] = array(
+    'title' => 'Views Contextual links',
+    'version' => VERSION,
+    'js' => array(
+      "$path/views-contextual.js" => array('group' => JS_LIBRARY, 'weight' => -10),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
     ),
   );
 
