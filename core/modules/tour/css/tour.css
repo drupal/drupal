@@ -17,6 +17,9 @@
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
   background-image: linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
 }
+.js .tour-toolbar-tab button:focus {
+  outline: thin dotted;
+}
 
 /* Joyride tips should always be on top of everything else. */
 .joyride-tip-guide {

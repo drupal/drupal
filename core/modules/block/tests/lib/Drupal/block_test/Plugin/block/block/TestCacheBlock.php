@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "test_cache",
- *   subject = @Translation("Test block caching"),
+ *   admin_label = @Translation("Test block caching"),
  *   module = "block_test"
  * )
  */

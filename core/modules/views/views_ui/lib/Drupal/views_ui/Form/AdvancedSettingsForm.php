@@ -23,6 +23,8 @@ class AdvancedSettingsForm extends SettingsFormBase {
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
   public function buildForm(array $form, array &$form_state) {
+    $form = parent::buildForm($form, $form_state);
+
     $form['cache'] = array(
       '#type' => 'details',
       '#title' => t('Caching'),
@@ -75,7 +77,7 @@ class AdvancedSettingsForm extends SettingsFormBase {
       );
     }
 
-    return system_config_form($form, $form_state);
+    return $form;
   }
 
   /**

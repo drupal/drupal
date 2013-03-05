@@ -6,6 +6,7 @@
  */
 
 use Drupal\aggregator\Plugin\Core\Entity\Feed;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Page callback: Displays the most recent items gathered from any feed.
@@ -563,7 +564,7 @@ function theme_aggregator_page_opml($variables) {
  * @see aggregator-summary-items.tpl.php
  */
 function template_preprocess_aggregator_summary_items(&$variables) {
-  $variables['title'] = check_plain($variables['source']->label());
+  $variables['title'] = check_plain($variables['source'] instanceof EntityInterface ? $variables['source']->label() : $variables['source']->title);
   $summary_items = array();
   foreach (element_children($variables['summary_items']) as $key) {
     $summary_items[] = $variables['summary_items'][$key];
@@ -572,7 +573,7 @@ function template_preprocess_aggregator_summary_items(&$variables) {
     '#theme' => 'item_list',
     '#items' => $summary_items,
   );
-  $variables['source_url'] = $variables['source']->url->value;
+  $variables['source_url'] = $variables['source'] instanceof EntityInterface ? $variables['source']->url->value : $variables['source']->url;
 }
 
 /**

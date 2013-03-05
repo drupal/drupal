@@ -479,11 +479,11 @@ function _book_add_form_elements(&$form, &$form_state, Node $node) {
 
   if (user_access('create new books') && ($nid == 'new' || ($nid != $node->book['original_bid']))) {
     // The node can become a new book, if it is not one already.
-    $options = array($nid => '<' . t('create a new book') . '>') + $options;
+    $options = array($nid => t('- Create a new book -')) + $options;
   }
   if (!$node->book['mlid']) {
     // The node is not currently in the hierarchy.
-    $options = array(0 => '<' . t('none') . '>') + $options;
+    $options = array(0 => t('- None -')) + $options;
   }
 
   // Add a drop-down to select the destination book.
@@ -1232,7 +1232,8 @@ function template_preprocess_book_node_export_html(&$variables) {
  *   A Boolean TRUE if the node type can be included in books; otherwise, FALSE.
  */
 function book_type_is_allowed($type) {
-  return in_array($type, config('book.settings')->get('allowed_types'));
+  $allowed_types = config('book.settings')->get('allowed_types');
+  return isset($allowed_types[$type]);
 }
 
 /**
@@ -1246,11 +1247,12 @@ function book_node_type_update($type) {
     $config = config('book.settings');
     // Update the list of node types that are allowed to be added to books.
     $allowed_types = $config->get('allowed_types');
-    $key = array_search($type->old_type, $allowed_types);
 
-    if ($key !== FALSE) {
-      $allowed_types[$type->type] = $allowed_types[$key] ? $type->type : 0;
-      unset($allowed_types[$key]);
+    if (isset($allowed_types[$type->old_type])) {
+      // Replace the old machine-readable name with the new machine-readable
+      // name.
+      $allowed_types[$type->type] = $type->type;
+      unset($allowed_types[$type->old_type]);
       $config->set('allowed_types', $allowed_types);
     }
 

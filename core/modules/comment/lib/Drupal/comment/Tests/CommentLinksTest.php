@@ -35,7 +35,9 @@ class CommentLinksTest extends CommentTestBase {
   function testCommentLinks() {
     // Bartik theme alters comment links, so use a different theme.
     theme_enable(array('stark'));
-    variable_set('theme_default', 'stark');
+    config('system.theme')
+      ->set('default', 'stark')
+      ->save();
 
     // Remove additional user permissions from $this->web_user added by setUp(),
     // since this test is limited to anonymous and authenticated roles only.

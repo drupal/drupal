@@ -50,12 +50,7 @@ class DBLogResource extends ResourceBase {
       $record = db_query("SELECT * FROM {watchdog} WHERE wid = :wid", array(':wid' => $id))
         ->fetchObject();
       if (!empty($record)) {
-        // Serialization is done here, so we indicate with NULL that there is no
-        // subsequent serialization necessary.
-        $response = new ResourceResponse(NULL, 200, array('Content-Type' => 'application/vnd.drupal.ld+json'));
-        // @todo remove hard coded format here.
-        $response->setContent(drupal_json_encode($record));
-        return $response;
+        return new ResourceResponse((array) $record);
       }
     }
     throw new NotFoundHttpException(t('Log entry with ID @id was not found', array('@id' => $id)));

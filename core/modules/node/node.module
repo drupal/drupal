@@ -740,7 +740,6 @@ function _node_types_build($rebuild = FALSE) {
     }
   }
   $query = db_select('node_type', 'nt')
-    ->addTag('translatable')
     ->addTag('node_type_access')
     ->fields('nt')
     ->orderBy('nt.type', 'ASC');

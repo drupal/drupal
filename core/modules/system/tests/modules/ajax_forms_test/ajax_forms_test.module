@@ -502,8 +502,10 @@ function ajax_forms_test_lazy_load_form($form, &$form_state) {
     '#type' => 'submit',
     '#value' => t('Submit'),
     '#ajax' => array(
+      'wrapper' => 'ajax-forms-test-lazy-load-ajax-wrapper',
       'callback' => 'ajax_forms_test_lazy_load_form_ajax',
     ),
+    '#prefix' => '<div id="ajax-forms-test-lazy-load-ajax-wrapper"></div>',
   );
   return $form;
 }
@@ -522,11 +524,7 @@ function ajax_forms_test_lazy_load_form_submit($form, &$form_state) {
 
 /**
  * AJAX form callback: Selects for the ajax_forms_test_lazy_load_form() form.
- *
- * This function returns nothing, because all we're interested in testing is
- * ajax_render() adding commands for JavaScript and CSS added during the page
- * request, such as the ones added in ajax_forms_test_lazy_load_form_submit().
  */
 function ajax_forms_test_lazy_load_form_ajax($form, &$form_state) {
-  return NULL;
+  return array('#markup' => 'new content');
 }

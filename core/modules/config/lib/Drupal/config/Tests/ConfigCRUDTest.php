@@ -172,21 +172,13 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
 
     // Write configuration with an invalid name (missing a namespace) to
     // staging.
-    $storage = $this->container->get('config.storage');
     $staging = $this->container->get('config.storage.staging');
     $manifest_data = config('manifest.invalid_object_name')->get();
     $manifest_data['new']['name'] = 'invalid';
     $staging->write('manifest.invalid_object_name', $manifest_data);
 
-    // Verify that an exception is thrown when synchronizing.
-    $message = 'Expected ConfigNameException was thrown when attempting to sync invalid configuration.';
-    try {
-      config_import();
-      $this->fail($message);
-    }
-    catch (ConfigNameException $e) {
-      $this->pass($message);
-    }
+    // Assert that config_import returns false indicating a failure.
+    $this->assertFalse(config_import(), "Config import failed when trying to importing an object with an invalid name");
   }
 
 }

@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *  id = "recent_comments",
- *  subject = @Translation("Recent comments"),
+ *  admin_label = @Translation("Recent comments"),
  *  module = "comment"
  * )
  */

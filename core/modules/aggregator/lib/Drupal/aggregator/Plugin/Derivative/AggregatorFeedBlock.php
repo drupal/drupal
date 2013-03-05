@@ -33,7 +33,7 @@ class AggregatorFeedBlock implements DerivativeInterface {
     $result = db_query('SELECT fid, title, block FROM {aggregator_feed} WHERE block <> 0 AND fid = :fid', array(':fid' => $derivative_id))->fetchObject();
     $this->derivatives[$derivative_id] = $base_plugin_definition;
     $this->derivatives[$derivative_id]['delta'] = $result->fid;
-    $this->derivatives[$derivative_id]['subject'] = t('@title feed latest items', array('@title' => $result->title));
+    $this->derivatives[$derivative_id]['admin_label'] = t('@title feed latest items', array('@title' => $result->title));
     return $this->derivatives[$derivative_id];
   }
 
@@ -46,7 +46,7 @@ class AggregatorFeedBlock implements DerivativeInterface {
     foreach ($result as $feed) {
       $this->derivatives[$feed->fid] = $base_plugin_definition;
       $this->derivatives[$feed->fid]['delta'] = $feed->fid;
-      $this->derivatives[$feed->fid]['subject'] = t('@title feed latest items', array('@title' => $feed->title));
+      $this->derivatives[$feed->fid]['admin_label'] = t('@title feed latest items', array('@title' => $feed->title));
     }
     return $this->derivatives;
   }

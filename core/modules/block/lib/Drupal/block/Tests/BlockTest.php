@@ -35,6 +35,12 @@ class BlockTest extends WebTestBase {
     // Use the test page as the front page.
     config('system.site')->set('page.front', 'test-page')->save();
 
+    // Create Filtered HTML text format.
+    $filtered_html_format = entity_create('filter_format', array(
+      'format' => 'filtered_html',
+      'name' => 'Filtered HTML',
+    ));
+    $filtered_html_format->save();
     // Create Full HTML text format.
     $full_html_format = entity_create('filter_format', array(
       'format' => 'full_html',
@@ -47,6 +53,7 @@ class BlockTest extends WebTestBase {
     // text format.
     $this->adminUser = $this->drupalCreateUser(array(
       'administer blocks',
+      filter_permission_name($filtered_html_format),
       filter_permission_name($full_html_format),
       'access administration pages',
     ));
@@ -65,7 +72,7 @@ class BlockTest extends WebTestBase {
    * Test creating custom block, moving it to a specific region and then deleting it.
    */
   public function testCustomBlock() {
-    $default_theme = variable_get('theme_default', 'stark');
+    $default_theme = config('system.theme')->get('default');
 
     // Clear the block cache to load the Custom Block module's block definitions.
     $this->container->get('plugin.manager.block')->clearCachedDefinitions();
@@ -76,6 +83,10 @@ class BlockTest extends WebTestBase {
     // Confirm that the add block link appears on block overview pages.
     $this->drupalGet("admin/structure/block/list/block_plugin_ui:$default_theme/add");
     $this->assertLink(t('Add custom block'));
+
+    // But not on the normal admin page.
+    $this->drupalGet('admin/structure/block');
+    $this->assertNoLink(t('Add custom block'));
 
     // Confirm that hidden regions are not shown as options for block placement
     // when adding a new block.
@@ -146,7 +157,7 @@ class BlockTest extends WebTestBase {
    * Test creating custom block using Full HTML.
    */
   public function testCustomBlockFormat() {
-    $default_theme = variable_get('theme_default', 'stark');
+    $default_theme = config('system.theme')->get('default');
 
     // Add a new custom block by filling out the input form on block/add/basic.
     $info = strtolower($this->randomName(8));
@@ -196,7 +207,7 @@ class BlockTest extends WebTestBase {
     // Create a random title for the block.
     $title = $this->randomName(8);
     // Enable a standard block.
-    $default_theme = variable_get('theme_default', 'stark');
+    $default_theme = config('system.theme')->get('default');
     $edit = array(
       'machine_name' => strtolower($this->randomName(8)),
       'region' => 'sidebar_first',
@@ -236,7 +247,7 @@ class BlockTest extends WebTestBase {
     // Create a random title for the block.
     $title = $this->randomName(8);
     // Enable a standard block.
-    $default_theme = variable_get('theme_default', 'stark');
+    $default_theme = config('system.theme')->get('default');
     $edit = array(
       'machine_name' => strtolower($this->randomName(8)),
       'region' => 'sidebar_first',
@@ -269,7 +280,7 @@ class BlockTest extends WebTestBase {
     $block['id'] = 'system_powered_by_block';
     $block['label'] = $this->randomName(8);
     $block['machine_name'] = strtolower($this->randomName(8));
-    $block['theme'] = variable_get('theme_default', 'stark');
+    $block['theme'] = config('system.theme')->get('default');
     $block['region'] = 'header';
 
     // Set block title to confirm that interface works and override any custom titles.
@@ -316,7 +327,7 @@ class BlockTest extends WebTestBase {
    */
   function moveBlockToRegion(array $block, $region) {
     // Set the created block to a specific region.
-    $block += array('theme' => variable_get('theme_default', 'stark'));
+    $block += array('theme' => config('system.theme')->get('default'));
     $edit = array();
     $edit['blocks[' . $block['theme'] . '.' . $block['machine_name'] . '][region]'] = $region;
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
@@ -350,7 +361,7 @@ class BlockTest extends WebTestBase {
     $block = array();
     $block['id'] = 'test_cache';
     $block['machine_name'] = strtolower($this->randomName(8));
-    $block['theme'] = variable_get('theme_default', 'stark');
+    $block['theme'] = config('system.theme')->get('default');
     $block['region'] = 'header';
     $block = $this->drupalPlaceBlock('test_cache', array('region' => 'header'));
 
@@ -409,7 +420,7 @@ class BlockTest extends WebTestBase {
     }
 
     // Ensure that the disabled module's block plugin is no longer available.
-    $this->drupalGet('admin/structure/block/list/block_plugin_ui:' . variable_get('theme_default', 'stark') . '/add');
+    $this->drupalGet('admin/structure/block/list/block_plugin_ui:' . config('system.theme')->get('default') . '/add');
     $this->assertNoText(t('Test block caching'));
 
     // Confirm that the block is no longer displayed on the front page.

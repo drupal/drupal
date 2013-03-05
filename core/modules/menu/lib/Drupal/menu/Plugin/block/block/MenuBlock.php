@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "menu_menu_block",
- *   subject = @Translation("Menu"),
+ *   admin_label = @Translation("Menu"),
  *   module = "menu",
  *   derivative = "Drupal\menu\Plugin\Derivative\MenuBlock"
  * )

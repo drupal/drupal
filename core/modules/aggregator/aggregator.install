@@ -319,6 +319,7 @@ function aggregator_update_8001() {
     'length' => 12,
     'not null' => TRUE,
     'default' => '',
+    'initial' => LANGUAGE_DEFAULT,
   ));
   db_add_field('aggregator_item', 'langcode', array(
     'description' => 'The {language}.langcode of this feed item.',
@@ -326,12 +327,6 @@ function aggregator_update_8001() {
     'length' => 12,
     'not null' => TRUE,
     'default' => '',
+    'initial' => LANGUAGE_DEFAULT,
   ));
-  // Set langcode to LANGUAGE_DEFAULT.
-  db_update('aggregator_feed')
-    ->fields(array('langcode' => LANGUAGE_DEFAULT))
-    ->execute();
-  db_update('aggregator_item')
-    ->fields(array('langcode' => LANGUAGE_DEFAULT))
-    ->execute();
 }

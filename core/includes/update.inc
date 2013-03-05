@@ -400,6 +400,12 @@ function update_prepare_d8_bootstrap() {
       $theme_config->save();
       $disabled_themes->save();
 
+      // Migrate the private key to state. This is used to create the token for
+      // the upgrade batch so needs to be be done before the upgrade has begun.
+      update_variables_to_state(array(
+        'drupal_private_key' => 'system.private_key',
+      ));
+
       // Update the dynamic include paths that might be used before running the
       // proper update functions.
       update_prepare_stored_includes();

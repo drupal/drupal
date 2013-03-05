@@ -23,6 +23,8 @@ class BasicSettingsForm extends SettingsFormBase {
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
   public function buildForm(array $form, array &$form_state) {
+    $form = parent::buildForm($form, $form_state);
+
     $options = array();
     foreach (list_themes() as $name => $theme) {
       if ($theme->status) {
@@ -115,7 +117,7 @@ class BasicSettingsForm extends SettingsFormBase {
       '#default_value' => $this->config->get('ui.show.additional_queries'),
     );
 
-    return system_config_form($form, $form_state);
+    return $form;
   }
 
   /**

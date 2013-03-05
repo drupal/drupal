@@ -27,7 +27,7 @@ function book_admin_overview() {
     );
     $links = array();
     $links['edit'] = array(
-      'title' => t('edit order and titles'),
+      'title' => t('Edit order and titles'),
       'href' => 'admin/content/book/' . $book['nid'],
     );
     $row[] = array(
@@ -93,7 +93,8 @@ function book_admin_settings_validate($form, &$form_state) {
  */
 function book_admin_settings_submit($form, &$form_state) {
   config('book.settings')
-    ->set('allowed_types', $form_state['values']['book_allowed_types'])
+    // Remove unchecked types.
+    ->set('allowed_types', array_filter($form_state['values']['book_allowed_types']))
     ->set('child_type', $form_state['values']['book_child_type'])
     ->save();
  }
@@ -305,17 +306,17 @@ function theme_book_admin_table($variables) {
     );
     $links = array();
     $links['view'] = array(
-      'title' => t('view'),
+      'title' => t('View'),
       'href' => $href,
     );
     if ($access) {
       $links['edit'] = array(
-        'title' => t('edit'),
+        'title' => t('Edit'),
         'href' => "node/$nid/edit",
         'query' => $destination,
       );
       $links['delete'] = array(
-        'title' => t('delete'),
+        'title' => t('Delete'),
         'href' => "node/$nid/delete",
         'query' => $destination,
       );

@@ -21,6 +21,7 @@ class EntityReferenceBundle extends Bundle {
   public function build(ContainerBuilder $container) {
     // Register the SelectionPluginManager class with the dependency injection
     // container.
-    $container->register('plugin.manager.entity_reference.selection', 'Drupal\entity_reference\Plugin\Type\SelectionPluginManager');
+    $container->register('plugin.manager.entity_reference.selection', 'Drupal\entity_reference\Plugin\Type\SelectionPluginManager')
+      ->addArgument('%container.namespaces%');
   }
 }

@@ -7,13 +7,13 @@
 
 namespace Drupal\views_ui\Form;
 
-use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\system\SystemConfigFormBase;
 
 /**
  * Form builder for the advanced admin settings page.
  */
-abstract class SettingsFormBase implements FormInterface {
+abstract class SettingsFormBase extends SystemConfigFormBase {
 
   /**
    * Stores the views configuration.
@@ -40,12 +40,6 @@ abstract class SettingsFormBase implements FormInterface {
    */
   public function getForm() {
     return drupal_get_form($this);
-  }
-
-  /**
-   * Implements \Drupal\Core\Form\FormInterface::validateForm().
-   */
-  public function validateForm(array &$form, array &$form_state) {
   }
 
 }

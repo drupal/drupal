@@ -22,9 +22,14 @@ class ViewsPluginManager extends PluginManagerBase {
 
   /**
    * Constructs a ViewsPluginManager object.
+   *
+   * @param string $type
+   *   The plugin type, for example filter.
+   * @param array $namespaces
+   *   An array of paths keyed by it's corresponding namespaces.
    */
-  public function __construct($type) {
-    $this->discovery = new AnnotatedClassDiscovery('views', $type);
+  public function __construct($type, array $namespaces = array()) {
+    $this->discovery = new AnnotatedClassDiscovery('views', $type, $namespaces);
     $this->discovery = new DerivativeDiscoveryDecorator($this->discovery);
     $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
     $this->discovery = new AlterDecorator($this->discovery, 'views_plugins_' . $type);

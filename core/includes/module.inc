@@ -339,9 +339,6 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
       $module_handler->load($module);
       module_load_install($module);
 
-      // Reset the the hook implementations cache.
-      $module_handler->resetImplementations();
-
       // Flush theme info caches, since (testing) modules can implement
       // hook_system_theme_info() to register additional themes.
       system_list_reset();
@@ -499,8 +496,6 @@ function module_disable($module_list, $disable_dependents = TRUE) {
 
   if (!empty($invoke_modules)) {
     // @todo Most of the following should happen in above loop already.
-    // Refresh the module list to exclude the disabled modules.
-    $module_handler->resetImplementations();
 
     // Refresh the system list to exclude the disabled modules.
     // @todo Only needed to rebuild theme info.

@@ -172,7 +172,7 @@ abstract class WebTestBase extends TestBase {
    * @param $reset
    *   (optional) Whether to reset the entity cache.
    *
-   * @return
+   * @return \Drupal\node\Plugin\Core\Entity\Node
    *   A node entity matching $title.
    */
   function drupalGetNodeByTitle($title, $reset = FALSE) {
@@ -222,7 +222,7 @@ abstract class WebTestBase extends TestBase {
    *   - revision: 1. (Backwards-compatible binary flag indicating whether a
    *     new revision should be created; use 1 to specify a new revision.)
    *
-   * @return Drupal\node\Node
+   * @return \Drupal\node\Plugin\Core\Entity\Node
    *   The created node entity.
    */
   protected function drupalCreateNode(array $settings = array()) {
@@ -378,7 +378,7 @@ abstract class WebTestBase extends TestBase {
       'plugin' => $plugin_id,
       'label' => $this->randomName(8),
       'region' => 'sidebar_first',
-      'theme' => variable_get('theme_default', 'stark'),
+      'theme' => config('system.theme')->get('default'),
       'machine_name' => strtolower($this->randomName(8)),
       'settings' => $settings,
     );
@@ -468,7 +468,7 @@ abstract class WebTestBase extends TestBase {
    * @param string $name
    *   The user name.
    *
-   * @return object|false
+   * @return \Drupal\user\Plugin\Core\Entity\User|false
    *   A fully loaded user object with pass_raw property, or FALSE if account
    *   creation fails.
    */
@@ -621,7 +621,7 @@ abstract class WebTestBase extends TestBase {
    *   $account->pass_raw = $pass_raw;
    * @endcode
    *
-   * @param $account
+   * @param \Drupal\user\Plugin\Core\Entity\User $account
    *   User object representing the user to log in.
    *
    * @see drupalCreateUser()

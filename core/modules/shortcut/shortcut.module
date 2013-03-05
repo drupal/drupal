@@ -271,6 +271,18 @@ function shortcut_link_access($menu_link) {
 }
 
 /**
+ * Implements hook_menu_link_delete().
+ */
+function shortcut_menu_link_delete($menu_link) {
+  // If the deleted menu link was in a shortcut set, remove it.
+  if (strpos($menu_link->menu_name, 'shortcut-') === 0) {
+    $shortcut = entity_load('shortcut', str_replace('shortcut-', '', $menu_link->menu_name));
+    unset($shortcut->links[$menu_link->uuid]);
+    $shortcut->save();
+  }
+}
+
+/**
  * Loads the data for a shortcut set.
  *
  * @param $id

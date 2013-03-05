@@ -59,6 +59,10 @@ class StateSystemUpgradePathTest extends UpgradePathTestBase {
       'value' => 'kdm95qppDDlyZrcUOx453YwQqDA4DNmxi4VQcxzFU9M',
       'variable_name' => 'cron_key',
     );
+    $expected_state['system.private_key'] = array(
+      'value' => 'G38mKqASKus8VGMkMzVuXImYbzspCQ1iRT2iEZpMYmQ',
+      'variable_name' => 'drupal_private_key',
+    );
     $expected_state['tracker.index_nid'] = array(
       'value' => 0,
       'variable_name' => 'tracker_index_nid',

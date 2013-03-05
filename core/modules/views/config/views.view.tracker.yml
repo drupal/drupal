@@ -25,7 +25,7 @@ display:
       exposed_form:
         type: basic
       pager:
-        type: full
+        type: mini
         options:
           items_per_page: '25'
       relationships:

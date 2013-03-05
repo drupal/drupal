@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "node_syndicate_block",
- *   subject = @Translation("Syndicate"),
+ *   admin_label = @Translation("Syndicate"),
  *   module = "node"
  * )
  */

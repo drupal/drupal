@@ -168,10 +168,13 @@ class EntityManager extends PluginManagerBase {
 
   /**
    * Constructs a new Entity plugin manager.
+   *
+   * @param array $namespaces
+   *   An array of paths keyed by it's corresponding namespaces.
    */
-  public function __construct() {
+  public function __construct(array $namespaces) {
     // Allow the plugin definition to be altered by hook_entity_info_alter().
-    $this->discovery = new AnnotatedClassDiscovery('Core', 'Entity');
+    $this->discovery = new AnnotatedClassDiscovery('Core', 'Entity', $namespaces);
     $this->discovery = new InfoHookDecorator($this->discovery, 'entity_info');
     $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
     $this->discovery = new AlterDecorator($this->discovery, 'entity_info');
@@ -185,12 +188,6 @@ class EntityManager extends PluginManagerBase {
    */
   public function processDefinition(&$definition, $plugin_id) {
     parent::processDefinition($definition, $plugin_id);
-
-    // @todo Remove this check once http://drupal.org/node/1780396 is resolved.
-    if (!module_exists($definition['module'])) {
-      $definition = NULL;
-      return;
-    }
 
     // Prepare entity schema fields SQL info for
     // Drupal\Core\Entity\DatabaseStorageControllerInterface::buildQuery().

@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Lock\DatabaseLockBackend;
 use Drupal\Core\Lock\LockBackendInterface;
+use Drupal\user\Plugin\Core\Entity\User;
 
 /**
  * @file
@@ -2032,15 +2033,18 @@ function drupal_hash_base64($data) {
 /**
  * Generates a default anonymous $user object.
  *
- * @return Object - the user object.
+ * @return Drupal\user\Plugin\Core\Entity\User
+ *   The user object.
  */
 function drupal_anonymous_user() {
-  $user = new stdClass();
-  $user->uid = 0;
-  $user->hostname = ip_address();
-  $user->roles = array();
-  $user->roles[DRUPAL_ANONYMOUS_RID] = DRUPAL_ANONYMOUS_RID;
-  return $user;
+  $values = array(
+    'uid' => 0,
+    'hostname' => ip_address(),
+    'roles' => array(
+      DRUPAL_ANONYMOUS_RID => DRUPAL_ANONYMOUS_RID,
+    ),
+  );
+  return new User($values, 'user');
 }
 
 /**
@@ -2324,7 +2328,7 @@ function _drupal_bootstrap_page_cache() {
   else {
     drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES, FALSE);
     $config = config('system.performance');
-    $cache_enabled = $config->get('cache.page.enabled');
+    $cache_enabled = $config->get('cache.page.use_internal');
   }
   // If there is no session cookie and cache is enabled (or forced), try
   // to serve a cached page.

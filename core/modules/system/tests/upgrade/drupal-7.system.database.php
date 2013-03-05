@@ -133,6 +133,10 @@ db_update('variable')
   ->fields(array('value' => 's:10:"plain_text";'))
   ->condition('name', 'filter_fallback_format')
   ->execute();
+db_update('variable')
+  ->fields(array('value' => 'a:2:{i:0;s:4:"book";i:1;s:4:"test";}'))
+  ->condition('name', 'book_allowed_types')
+  ->execute();
 
 // color module in bartik
 $palette = array(

@@ -222,11 +222,11 @@ function shortcut_set_customize($form, &$form_state, $shortcut_set) {
     );
 
     $links['edit'] = array(
-      'title' => t('edit'),
+      'title' => t('Edit'),
       'href' => "admin/config/user-interface/shortcut/link/$mlid",
     );
     $links['delete'] = array(
-      'title' => t('delete'),
+      'title' => t('Delete'),
       'href' => "admin/config/user-interface/shortcut/link/$mlid/delete",
     );
     $form['shortcuts']['links'][$mlid]['operations'] = array(

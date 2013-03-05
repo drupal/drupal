@@ -24,7 +24,7 @@ class TourPluginTest extends DrupalUnitTestBase {
   /**
    * Stores the tour plugin manager.
    *
-   * @var \Drupal\tour\TourManager
+   * @var \Drupal\tour\TipPluginManager
    */
   protected $pluginManager;
 
@@ -40,7 +40,7 @@ class TourPluginTest extends DrupalUnitTestBase {
     parent::setUp();
 
     config_install_default_config('module', 'tour');
-    $this->pluginManager = $this->container->get('plugin.manager.tour');
+    $this->pluginManager = $this->container->get('plugin.manager.tour.tip');
   }
 
   /**

@@ -162,6 +162,13 @@ abstract class TestBase {
   public $dieOnFail = FALSE;
 
   /**
+   * The dependency injection container used in the test.
+   *
+   * @var \Symfony\Component\DependencyInjection\ContainerInterface
+   */
+  protected $container;
+
+  /**
    * Constructor for Test.
    *
    * @param $test_id

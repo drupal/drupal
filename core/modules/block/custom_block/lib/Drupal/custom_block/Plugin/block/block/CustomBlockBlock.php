@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *  id = "custom_block",
- *  subject = @Translation("Custom Block"),
+ *  admin_label = @Translation("Custom block"),
  *  module = "custom_block",
  *  derivative = "Drupal\custom_block\Plugin\Derivative\CustomBlock",
  *  settings = {

@@ -23,10 +23,12 @@ class CKEditorPluginManager extends PluginManagerBase {
 
   /**
    * Overrides \Drupal\Component\Plugin\PluginManagerBase::__construct().
+   *
+   * @param array $namespaces
+   *   An array of paths keyed by it's corresponding namespaces.
    */
-  public function __construct() {
-    $this->discovery = new AnnotatedClassDiscovery('ckeditor', 'plugin');
-    $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
+  public function __construct(array $namespaces) {
+    $this->discovery = new AnnotatedClassDiscovery('ckeditor', 'plugin', $namespaces);
     $this->discovery = new AlterDecorator($this->discovery, 'ckeditor_plugin_info');
     $this->discovery = new CacheDecorator($this->discovery, 'ckeditor_plugin');
     $this->factory = new DefaultFactory($this->discovery);
@@ -141,18 +143,4 @@ class CKEditorPluginManager extends PluginManagerBase {
       }
     }
   }
-
-  /**
-   * Overrides Drupal\Component\Plugin\PluginManagerBase::processDefinition().
-   */
-  public function processDefinition(&$definition, $plugin_id) {
-    parent::processDefinition($definition, $plugin_id);
-
-    // @todo Remove this check once http://drupal.org/node/1780396 is resolved.
-    if (!module_exists($definition['module'])) {
-      $definition = NULL;
-      return;
-    }
-  }
-
 }

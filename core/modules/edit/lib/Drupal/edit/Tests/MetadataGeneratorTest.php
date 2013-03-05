@@ -58,7 +58,7 @@ class MetadataGeneratorTest extends EditTestBase {
 
     $this->installSchema('field_test', 'test_entity_revision');
 
-    $this->editorManager = new EditorManager();
+    $this->editorManager = new EditorManager($this->container->getParameter('container.namespaces'));
     $this->accessChecker = new MockEditEntityFieldAccessCheck();
     $this->editorSelector = new EditorSelector($this->editorManager);
     $this->metadataGenerator = new MetadataGenerator($this->accessChecker, $this->editorSelector, $this->editorManager);
@@ -132,7 +132,10 @@ class MetadataGeneratorTest extends EditTestBase {
 
     // Enable edit_test module so that the WYSIWYG Create.js PropertyEditor
     // widget becomes available.
-    $this->enableModules(array('edit_test'), FALSE);
+    $this->enableModules(array('edit_test'));
+    $this->editorManager = new EditorManager($this->container->getParameter('container.namespaces'));
+    $this->editorSelector = new EditorSelector($this->editorManager);
+    $this->metadataGenerator = new MetadataGenerator($this->accessChecker, $this->editorSelector, $this->editorManager);
 
     // Create a rich text field.
     $field_name = 'field_rich';

@@ -61,7 +61,7 @@ class ViewsBlock implements DerivativeInterface {
             }
           }
           $this->derivatives[$delta] = array(
-            'subject' => $desc,
+            'admin_label' => $desc,
             'cache' => $display->getCacheType()
           );
           $this->derivatives[$delta] += $base_plugin_definition;

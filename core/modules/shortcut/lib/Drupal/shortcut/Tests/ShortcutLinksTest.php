@@ -118,6 +118,14 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $saved_set = shortcut_set_load($set->id());
     $mlids = $this->getShortcutInformation($saved_set, 'mlid');
     $this->assertFalse(in_array($link->mlid, $mlids), 'Successfully deleted a shortcut.');
+
+    // Delete all the remaining shortcut menu links.
+    foreach (array_filter($mlids) as $mlid) {
+      menu_link_delete($mlid);
+    }
+
+    // Get the front page to check that no exceptions occur.
+    $this->drupalGet('');
   }
 
   /**
@@ -128,7 +136,9 @@ class ShortcutLinksTest extends ShortcutTestBase {
    */
   function testNoShortcutLink() {
     // Change to a theme that displays shortcuts.
-    variable_set('theme_default', 'seven');
+    config('system.theme')
+      ->set('default', 'seven')
+      ->save();
 
     $this->drupalGet('page-that-does-not-exist');
     $this->assertNoRaw('add-shortcut', 'Add to shortcuts link was not shown on a page not found.');

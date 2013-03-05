@@ -22,7 +22,7 @@ class JsonldEntityNormalizer extends JsonldNormalizerBase implements Denormalize
    *
    * @var string
    */
-  protected static $supportedInterfaceOrClass = 'Drupal\Core\Entity\EntityInterface';
+  protected $supportedInterfaceOrClass = 'Drupal\Core\Entity\EntityInterface';
 
   /**
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()

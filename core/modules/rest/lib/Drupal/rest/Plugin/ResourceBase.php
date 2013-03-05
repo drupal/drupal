@@ -26,15 +26,11 @@ abstract class ResourceBase extends PluginBase implements ResourceInterface {
   public function permissions() {
     $permissions = array();
     $definition = $this->getDefinition();
-    foreach ($this->requestMethods() as $method) {
+    foreach ($this->availableMethods() as $method) {
       $lowered_method = strtolower($method);
-      // Only expose permissions where the HTTP request method exists on the
-      // plugin.
-      if (method_exists($this, $lowered_method)) {
-        $permissions["restful $lowered_method $this->plugin_id"] = array(
-          'title' => t('Access @method on %label resource', array('@method' => $method, '%label' => $definition['label'])),
-        );
-      }
+      $permissions["restful $lowered_method $this->plugin_id"] = array(
+        'title' => t('Access @method on %label resource', array('@method' => $method, '%label' => $definition['label'])),
+      );
     }
     return $permissions;
   }
@@ -47,38 +43,44 @@ abstract class ResourceBase extends PluginBase implements ResourceInterface {
     $path_prefix = strtr($this->plugin_id, ':', '/');
     $route_name = strtr($this->plugin_id, ':', '.');
 
-    $methods = $this->requestMethods();
+    $methods = $this->availableMethods();
     foreach ($methods as $method) {
       $lower_method = strtolower($method);
-      // Only expose routes where the HTTP request method exists on the plugin.
-      if (method_exists($this, $lower_method)) {
-        $route = new Route("/$path_prefix/{id}", array(
-          '_controller' => 'Drupal\rest\RequestHandler::handle',
-          // Pass the resource plugin ID along as default property.
-          '_plugin' => $this->plugin_id,
-        ), array(
-          // The HTTP method is a requirement for this route.
-          '_method' => $method,
-          '_permission' => "restful $lower_method $this->plugin_id",
-        ));
+      $route = new Route("/$path_prefix/{id}", array(
+        '_controller' => 'Drupal\rest\RequestHandler::handle',
+        // Pass the resource plugin ID along as default property.
+        '_plugin' => $this->plugin_id,
+      ), array(
+        // The HTTP method is a requirement for this route.
+        '_method' => $method,
+        '_permission' => "restful $lower_method $this->plugin_id",
+      ));
 
-        switch ($method) {
-          case 'POST':
-            // POST routes do not require an ID in the URL path.
-            $route->setPattern("/$path_prefix");
-            $route->addDefaults(array('id' => NULL));
-            break;
+      switch ($method) {
+        case 'POST':
+          // POST routes do not require an ID in the URL path.
+          $route->setPattern("/$path_prefix");
+          $route->addDefaults(array('id' => NULL));
+          $collection->add("$route_name.$method", $route);
+          break;
 
-          case 'GET':
-          case 'HEAD':
-            // Restrict GET and HEAD requests to the media type specified in the
-            // HTTP Accept headers.
-            // @todo Replace hard coded format here with available formats.
-            $route->addRequirements(array('_format' => 'drupal_jsonld'));
-            break;
-        }
+        case 'GET':
+        case 'HEAD':
+          // Restrict GET and HEAD requests to the media type specified in the
+          // HTTP Accept headers.
+          $formats = drupal_container()->getParameter('serializer.formats');
+          foreach ($formats as $format_name => $label) {
+            // Expose one route per available format.
+            //$format_route = new Route($route->getPattern(), $route->getDefaults(), $route->getRequirements());
+            $format_route = clone $route;
+            $format_route->addRequirements(array('_format' => $format_name));
+            $collection->add("$route_name.$method.$format_name", $format_route);
+          }
+          break;
 
-        $collection->add("$route_name.$method", $route);
+        default:
+          $collection->add("$route_name.$method", $route);
+          break;
       }
     }
 
@@ -95,7 +97,7 @@ abstract class ResourceBase extends PluginBase implements ResourceInterface {
    *   The list of allowed HTTP request method strings.
    */
   protected function requestMethods() {
-    return drupal_map_assoc(array(
+    return array(
       'HEAD',
       'GET',
       'POST',
@@ -105,6 +107,21 @@ abstract class ResourceBase extends PluginBase implements ResourceInterface {
       'OPTIONS',
       'CONNECT',
       'PATCH',
-    ));
+    );
+  }
+
+  /**
+   * Implements ResourceInterface::availableMethods().
+   */
+  public function availableMethods() {
+    $methods = $this->requestMethods();
+    $available = array();
+    foreach ($methods as $method) {
+      // Only expose methods where the HTTP request method exists on the plugin.
+      if (method_exists($this, strtolower($method))) {
+        $available[] = $method;
+      }
+    }
+    return $available;
   }
 }

@@ -32,35 +32,14 @@ class EntityReferenceItemTest extends WebTestBase {
     );
   }
 
+  /**
+   * Sets up the test.
+   */
   public function setUp() {
     parent::setUp();
 
-    $field = array(
-      'translatable' => FALSE,
-      'entity_types' => array(),
-      'settings' => array(
-        'target_type' => 'node',
-      ),
-      'field_name' => 'field_test',
-      'type' => 'entity_reference',
-      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
-    );
-
-    field_create_field($field);
-
-    $instance = array(
-      'entity_type' => 'entity_test',
-      'field_name' => 'field_test',
-      'bundle' => 'entity_test',
-      'widget' => array(
-        'type' => 'options_select',
-      ),
-      'settings' => array(
-        'handler' => 'default',
-        'handler_settings' => array(),
-      ),
-    );
-    field_create_instance($instance);
+    // Use the util to create an instance.
+    entity_reference_create_instance('entity_test', 'entity_test', 'field_test', 'Test entity reference', 'node');
   }
 
   /**

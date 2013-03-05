@@ -24,6 +24,7 @@ class SystemBundle extends Bundle {
 
     // Register the various system plugin manager classes with the dependency
     // injection container.
-    $container->register('plugin.manager.system.plugin_ui', 'Drupal\system\Plugin\Type\PluginUIManager');
+    $container->register('plugin.manager.system.plugin_ui', 'Drupal\system\Plugin\Type\PluginUIManager')
+      ->addArgument('%container.namespaces%');
   }
 }

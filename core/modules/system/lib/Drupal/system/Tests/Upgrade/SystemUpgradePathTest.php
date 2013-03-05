@@ -50,7 +50,7 @@ class SystemUpgradePathTest extends UpgradePathTestBase {
     );
 
     $expected_config['system.performance'] = array(
-      'cache.page.enabled' => '1',
+      'cache.page.use_internal' => '1',
       'cache.page.max_age' => '1800',
       'response.gzip' => '1',
       'js.preprocess' => '1',
@@ -137,6 +137,20 @@ class SystemUpgradePathTest extends UpgradePathTestBase {
         'public://color/seven-09696463/logo.png', 'public://color/seven-09696463/colors.css'
       ),
       'screenshot' => 'public://color/seven-09696463/dummy-screenshot.png',
+    );
+
+    $expected_config['book.settings'] = array(
+      'allowed_types' => array(
+        'book' => 'book',
+        // Content type does not have to exist.
+        'test' => 'test',
+      ),
+      'block' => array(
+        'navigation' => array(
+          'mode' => 'all pages'
+        )
+      ),
+      'child_type' => 'book',
     );
 
     foreach ($expected_config as $file => $values) {

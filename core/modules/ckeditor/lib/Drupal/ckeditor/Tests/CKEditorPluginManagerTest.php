@@ -63,7 +63,7 @@ class CKEditorPluginManagerTest extends DrupalUnitTestBase {
    * Tests the enabling of plugins.
    */
   function testEnabledPlugins() {
-    $this->manager = new CKEditorPluginManager();
+    $this->manager = new CKEditorPluginManager($this->container->getParameter('container.namespaces'));
     $editor = entity_load('editor', 'filtered_html');
 
     // Case 1: no CKEditor plugins.
@@ -77,6 +77,7 @@ class CKEditorPluginManagerTest extends DrupalUnitTestBase {
     // variations of it, to cover all possible ways a plugin can be enabled) and
     // clear the editor manager's cache so it is picked up.
     $this->enableModules(array('ckeditor_test'));
+    $this->manager = new CKEditorPluginManager($this->container->getParameter('container.namespaces'));
     $this->manager->clearCachedDefinitions();
 
     // Case 2: CKEditor plugins are available.

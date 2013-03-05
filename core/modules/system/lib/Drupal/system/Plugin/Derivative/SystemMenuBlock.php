@@ -45,7 +45,7 @@ class SystemMenuBlock implements DerivativeInterface {
       $menu = "menu-$menu";
       $this->derivatives[$menu] = $base_plugin_definition;
       $this->derivatives[$menu]['delta'] = $menu;
-      $this->derivatives[$menu]['subject'] = $name;
+      $this->derivatives[$menu]['admin_label'] = $name;
       $this->derivatives[$menu]['cache'] = DRUPAL_NO_CACHE;
     }
     return $this->derivatives;

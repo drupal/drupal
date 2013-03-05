@@ -42,6 +42,13 @@ class FilterFormatAccessTest extends WebTestBase {
   protected $allowed_format;
 
   /**
+   * An object representing a secondary allowed text format.
+   *
+   * @var object
+   */
+  protected $second_allowed_format;
+
+  /**
    * An object representing a disallowed text format.
    *
    * @var object
@@ -69,10 +76,11 @@ class FilterFormatAccessTest extends WebTestBase {
       'edit any page content',
     ));
 
-    // Create two text formats.
+    // Create three text formats. Two text formats are created for all users so
+    // that the drop-down list appears for all tests.
     $this->drupalLogin($this->filter_admin_user);
     $formats = array();
-    for ($i = 0; $i < 2; $i++) {
+    for ($i = 0; $i < 3; $i++) {
       $edit = array(
         'format' => drupal_strtolower($this->randomName()),
         'name' => $this->randomName(),
@@ -81,22 +89,24 @@ class FilterFormatAccessTest extends WebTestBase {
       $this->resetFilterCaches();
       $formats[] = filter_format_load($edit['format']);
     }
-    list($this->allowed_format, $this->disallowed_format) = $formats;
+    list($this->allowed_format, $this->second_allowed_format, $this->disallowed_format) = $formats;
     $this->drupalLogout();
 
-    // Create a regular user with access to one of the formats.
+    // Create a regular user with access to two of the formats.
     $this->web_user = $this->drupalCreateUser(array(
       'create page content',
       'edit any page content',
       filter_permission_name($this->allowed_format),
+      filter_permission_name($this->second_allowed_format),
     ));
 
-    // Create an administrative user who has access to use both formats.
+    // Create an administrative user who has access to use all three formats.
     $this->admin_user = $this->drupalCreateUser(array(
       'administer filters',
       'create page content',
       'edit any page content',
       filter_permission_name($this->allowed_format),
+      filter_permission_name($this->second_allowed_format),
       filter_permission_name($this->disallowed_format),
     ));
   }
@@ -105,8 +115,8 @@ class FilterFormatAccessTest extends WebTestBase {
    * Tests the Filter format access permissions functionality.
    */
   function testFormatPermissions() {
-    // Make sure that a regular user only has access to the text format they
-    // were granted access to, as well to the fallback format.
+    // Make sure that a regular user only has access to the text formats for
+    // which they were granted access.
     $this->assertTrue(filter_access($this->allowed_format, $this->web_user), 'A regular user has access to a text format they were granted access to.');
     $this->assertFalse(filter_access($this->disallowed_format, $this->web_user), 'A regular user does not have access to a text format they were not granted access to.');
     $this->assertTrue(filter_access(filter_format_load(filter_fallback_format()), $this->web_user), 'A regular user has access to the fallback format.');
@@ -137,7 +147,7 @@ class FilterFormatAccessTest extends WebTestBase {
     }
     $this->assertTrue(isset($options[$this->allowed_format->format]), 'The allowed text format appears as an option when adding a new node.');
     $this->assertFalse(isset($options[$this->disallowed_format->format]), 'The disallowed text format does not appear as an option when adding a new node.');
-    $this->assertTrue(isset($options[filter_fallback_format()]), 'The fallback format appears as an option when adding a new node.');
+    $this->assertFalse(isset($options[filter_fallback_format()]), 'The fallback format does not appear as an option when adding a new node.');
 
     // Check regular user access to the filter tips pages.
     $this->drupalGet('filter/tips/' . $this->allowed_format->format);

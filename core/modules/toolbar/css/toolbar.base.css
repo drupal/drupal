@@ -84,6 +84,10 @@ html.js .toolbar {
  */
 .js .toolbar .tray {
   display: none;
+  position: fixed;
+}
+/* Make vertical toolbar tray scroll with page for touch devices. */
+.touch .toolbar .tray {
   position: absolute;
 }
 .toolbar .tray {
@@ -115,6 +119,8 @@ html.js .toolbar {
 .toolbar .vertical > .lining:before {
   left: -100%; /* LTR */
   min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
   position: absolute;
   width: 100%;
 }
@@ -141,7 +147,15 @@ html.js .toolbar {
 }
 .toolbar .vertical.active,
 .toolbar .vertical.active > .lining {
+  bottom: 0;
   left: 0; /* LTR */
+  top: 0;
+}
+/* Make vertical toolbar tray scroll with page for touch devices. */
+.touch .toolbar .vertical.active,
+.touch .toolbar .vertical.active > .lining {
+  bottom: auto;
+  top: auto;
 }
 .toolbar .horizontal .menu li ul {
   display: none;

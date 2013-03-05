@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\tour\TourManager.
+ * Contains \Drupal\tour\TipPluginManager.
  */
 
 namespace Drupal\tour;
@@ -16,14 +16,16 @@ use Drupal\Component\Plugin\Discovery\ProcessDecorator;
 /**
  * Configurable tour manager.
  */
-class TourManager extends PluginManagerBase {
+class TipPluginManager extends PluginManagerBase {
 
   /**
    * Overrides \Drupal\Component\Plugin\PluginManagerBase::__construct().
+   *
+   * @param array $namespaces
+   *   An array of paths keyed by it's corresponding namespaces.
    */
-  public function __construct() {
-    $this->discovery = new AnnotatedClassDiscovery('tour', 'tip');
-    $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
+  public function __construct(array $namespaces) {
+    $this->discovery = new AnnotatedClassDiscovery('tour', 'tip', $namespaces);
     $this->discovery = new CacheDecorator($this->discovery, 'tour');
     $this->factory = new DefaultFactory($this->discovery);
   }
@@ -36,18 +38,5 @@ class TourManager extends PluginManagerBase {
   public function createInstance($plugin_id, array $configuration = array(), TipsBag $bag = NULL) {
     $plugin_class = DefaultFactory::getPluginClass($plugin_id, $this->discovery);
     return new $plugin_class($configuration, $plugin_id, $this->discovery, $bag);
-  }
-
-  /**
-   * Overrides \Drupal\Component\Plugin\PluginManagerBase::processDefinition().
-   */
-  public function processDefinition(&$definition, $plugin_id) {
-    parent::processDefinition($definition, $plugin_id);
-
-    // @todo Remove this check once http://drupal.org/node/1780396 is resolved.
-    if (!module_exists($definition['module'])) {
-      $definition = NULL;
-      return;
-    }
   }
 }

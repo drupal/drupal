@@ -17,8 +17,14 @@ use Drupal\Core\Plugin\Discovery\CacheDecorator;
  */
 class FetcherManager extends PluginManagerBase {
 
-  public function __construct() {
-    $this->discovery = new AnnotatedClassDiscovery('aggregator', 'fetcher');
+  /**
+   * Constructs a FetcherManager object.
+   *
+   * @param array $namespaces
+   *   An array of paths keyed by it's corresponding namespaces.
+   */
+  public function __construct(array $namespaces) {
+    $this->discovery = new AnnotatedClassDiscovery('aggregator', 'fetcher', $namespaces);
     $this->discovery = new CacheDecorator($this->discovery, 'aggregator_fetcher:' . language(LANGUAGE_TYPE_INTERFACE)->langcode);
     $this->factory = new DefaultFactory($this->discovery);
   }

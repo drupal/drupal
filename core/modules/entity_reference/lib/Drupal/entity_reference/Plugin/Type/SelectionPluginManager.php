@@ -22,9 +22,12 @@ class SelectionPluginManager extends PluginManagerBase {
 
   /**
    * Constructs a SelectionPluginManager object.
+   *
+   * @param array $namespaces
+   *   An array of paths keyed by it's corresponding namespaces.
    */
-  public function __construct() {
-    $this->baseDiscovery = new AlterDecorator(new AnnotatedClassDiscovery('entity_reference', 'selection'), 'entity_reference_selection');
+  public function __construct($namespaces) {
+    $this->baseDiscovery = new AlterDecorator(new AnnotatedClassDiscovery('entity_reference', 'selection', $namespaces), 'entity_reference_selection');
     $this->discovery = new CacheDecorator($this->baseDiscovery, 'entity_reference_selection');
     $this->factory = new ReflectionFactory($this);
   }

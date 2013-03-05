@@ -30,9 +30,12 @@ class FormatterPluginManager extends PluginManagerBase {
 
   /**
    * Constructs a FormatterPluginManager object.
+   *
+   * @param array $namespaces
+   *   An array of paths keyed by it's corresponding namespaces.
    */
-  public function __construct() {
-    $this->discovery = new AnnotatedClassDiscovery('field', 'formatter');
+  public function __construct($namespaces) {
+    $this->discovery = new AnnotatedClassDiscovery('field', 'formatter', $namespaces);
     $this->discovery = new FormatterLegacyDiscoveryDecorator($this->discovery);
     $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
     $this->discovery = new AlterDecorator($this->discovery, 'field_formatter_info');

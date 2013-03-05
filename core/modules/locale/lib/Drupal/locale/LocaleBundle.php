@@ -22,6 +22,7 @@ class LocaleBundle extends Bundle {
   public function build(ContainerBuilder $container) {
     $container->register('locale_config_subscriber', 'Drupal\locale\LocaleConfigSubscriber')
       ->addArgument(new Reference('language_manager'))
+      ->addArgument(new Reference('config.context'))
       ->addTag('event_subscriber');
   }
 

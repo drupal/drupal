@@ -33,7 +33,7 @@ class FormController implements FormInterface {
    * Provides a simple method the router can fire in order to invoke this form.
    */
   public function getForm() {
-    $manager = new ConditionManager();
+    $manager = new ConditionManager(drupal_container()->getParameter('container.namespaces'));
     $this->condition = $manager->createInstance('node_type');
     return drupal_get_form($this);
   }

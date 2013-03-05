@@ -47,7 +47,7 @@ function hook_menu_link_load($menu_links) {
  *
  * @see hook_menu_link_load()
  */
-function hook_menu_link_presave($menu_link) {
+function hook_menu_link_presave(\Drupal\menu_link\Plugin\Core\Entity\MenuLink $menu_link) {
   // Make all new admin links hidden (a.k.a disabled).
   if (strpos($menu_link->link_path, 'admin') === 0 && $menu_link->isNew()) {
     $menu_link->hidden = 1;
@@ -78,7 +78,7 @@ function hook_menu_link_presave($menu_link) {
  * @see hook_menu_link_update()
  * @see hook_menu_link_delete()
  */
-function hook_menu_link_insert($menu_link) {
+function hook_menu_link_insert(\Drupal\menu_link\Plugin\Core\Entity\MenuLink $menu_link) {
   // In our sample case, we track menu items as editing sections
   // of the site. These are stored in our table as 'disabled' items.
   $record['mlid'] = $menu_link->id();
@@ -101,7 +101,7 @@ function hook_menu_link_insert($menu_link) {
  * @see hook_menu_link_insert()
  * @see hook_menu_link_delete()
  */
-function hook_menu_link_update($menu_link) {
+function hook_menu_link_update(\Drupal\menu_link\Plugin\Core\Entity\MenuLink $menu_link) {
   // If the parent menu has changed, update our record.
   $menu_name = db_query("SELECT menu_name FROM {menu_example} WHERE mlid = :mlid", array(':mlid' => $menu_link->id()))->fetchField();
   if ($menu_name != $menu_link->menu_name) {
@@ -126,7 +126,7 @@ function hook_menu_link_update($menu_link) {
  * @see hook_menu_link_insert()
  * @see hook_menu_link_update()
  */
-function hook_menu_link_delete($menu_link) {
+function hook_menu_link_delete(\Drupal\menu_link\Plugin\Core\Entity\MenuLink $menu_link) {
   // Delete the record from our table.
   db_delete('menu_example')
     ->condition('mlid', $menu_link->id())

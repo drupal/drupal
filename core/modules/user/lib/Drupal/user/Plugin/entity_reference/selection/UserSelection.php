@@ -31,8 +31,6 @@ class UserSelection extends SelectionBase {
    * Overrides SelectionBase::settingsForm().
    */
   public static function settingsForm(&$field, &$instance) {
-    $form = parent::settingsForm($field, $instance);
-
     // Merge in default values.
     $instance['settings']['handler_settings'] += array(
       'filter' => array(
@@ -73,6 +71,8 @@ class UserSelection extends SelectionBase {
         '#default_value' => $instance['settings']['handler_settings']['filter']['role'],
       );
     }
+
+    $form += parent::settingsForm($field, $instance);
 
     return $form;
   }

@@ -47,7 +47,7 @@ class BlockTitleXSSTest extends WebTestBase {
     $this->assertNoRaw('<script>alert("XSS label");</script>', 'The block title was properly sanitized when rendered.');
 
     $this->drupalLogin($this->drupalCreateUser(array('administer blocks', 'access administration pages')));
-    $default_theme = variable_get('theme_default', 'stark');
+    $default_theme = config('system.theme')->get('default');
     $this->drupalGet('admin/structure/block/list/block_plugin_ui:' . $default_theme . '/add');
     $this->assertNoRaw("<script>alert('XSS subject');</script>", 'The block title was properly sanitized in Block Plugin UI Admin page.');
   }

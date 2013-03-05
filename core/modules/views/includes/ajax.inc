@@ -159,7 +159,6 @@ function views_ajax_autocomplete_taxonomy($vid) {
   if ($tag_last != '') {
 
     $query = db_select('taxonomy_term_data', 't');
-    $query->addTag('translatable');
     $query->addTag('term_access');
 
     // Do not select already entered terms.

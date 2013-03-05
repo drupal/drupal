@@ -7,6 +7,7 @@
 
 use Drupal\form_test\Callbacks;
 use Drupal\form_test\FormTestObject;
+use Drupal\form_test\SystemConfigFormTestForm;
 use Drupal\Core\Datetime\DrupalDateTime;
 
 /**
@@ -30,6 +31,12 @@ function form_test_menu() {
   $items['form-test/object-builder'] = array(
     'title' => 'Form object builder test',
     'page callback' => 'form_test_object_builder',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['form-test/system-config-form'] = array(
+    'title' => 'Form object builder test',
+    'page callback' => 'form_test_system_config_form',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
@@ -374,6 +381,13 @@ function form_test_permission() {
  */
 function form_test_object_builder() {
   return drupal_get_form(new FormTestObject());
+}
+
+/**
+ * Page callback: Displays a form built from SystemConfigForm.
+ */
+function form_test_system_config_form() {
+  return drupal_get_form(new SystemConfigFormTestForm());
 }
 
 /**

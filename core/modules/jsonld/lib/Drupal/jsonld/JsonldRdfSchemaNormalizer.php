@@ -20,7 +20,7 @@ class JsonldRdfSchemaNormalizer extends JsonldNormalizerBase {
      *
      * @var string
      */
-  protected static $supportedInterfaceOrClass = 'Drupal\rdf\SiteSchema\SchemaTermBase';
+  protected $supportedInterfaceOrClass = 'Drupal\rdf\SiteSchema\SchemaTermBase';
 
   /**
     * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()

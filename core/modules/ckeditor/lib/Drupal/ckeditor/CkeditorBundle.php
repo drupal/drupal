@@ -20,7 +20,8 @@ class CKEditorBundle extends Bundle {
    * Overrides Symfony\Component\HttpKernel\Bundle\Bundle::build().
    */
   public function build(ContainerBuilder $container) {
-    $container->register('plugin.manager.ckeditor.plugin', 'Drupal\ckeditor\CKEditorPluginManager');
+    $container->register('plugin.manager.ckeditor.plugin', 'Drupal\ckeditor\CKEditorPluginManager')
+      ->addArgument('%container.namespaces%');
   }
 
 }

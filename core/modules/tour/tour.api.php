@@ -57,7 +57,7 @@ function hook_tour_presave($entity) {
  *   The tour object being inserted.
  */
 function hook_tour_insert($entity) {
-  drupal_container()->get('plugin.manager.tour')->clearCachedDefinitions();
+  drupal_container()->get('plugin.manager.tour.tip')->clearCachedDefinitions();
   cache('cache_tour')->deleteTags(array('tour_items'));
 }
 
@@ -68,6 +68,6 @@ function hook_tour_insert($entity) {
  *   The tour object being updated.
  */
 function hook_tour_update($entity) {
-  drupal_container()->get('plugin.manager.tour')->clearCachedDefinitions();
+  drupal_container()->get('plugin.manager.tour.tip')->clearCachedDefinitions();
   cache('cache_tour')->deleteTags(array('tour_items'));
 }

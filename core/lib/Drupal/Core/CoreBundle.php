@@ -52,9 +52,25 @@ class CoreBundle extends Bundle {
       ->addArgument(new Reference('config.cachedstorage.storage'))
       ->addArgument(new Reference('cache.config'));
 
+    $container->register('config.context.factory', 'Drupal\Core\Config\Context\ConfigContextFactory')
+      ->addArgument(new Reference('event_dispatcher'));
+
+    $container->register('config.context', 'Drupal\Core\Config\Context\ContextInterface')
+      ->setFactoryService(new Reference('config.context.factory'))
+      ->setFactoryMethod('get')
+      ->addArgument('Drupal\Core\Config\Context\GlobalConfigContext')
+      ->addTag('persist')
+      ->addMethodCall('setGlobalOverride');
+
+    // Register a config context with no overrides for use in administration
+    // forms, enabling modules and importing configuration.
+    $container->register('config.context.free', 'Drupal\Core\Config\Context\ContextInterface')
+      ->setFactoryService(new Reference('config.context.factory'))
+      ->setFactoryMethod('get');
+
     $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
       ->addArgument(new Reference('config.storage'))
-      ->addArgument(new Reference('event_dispatcher'))
+      ->addArgument(new Reference('config.context'))
       ->addTag('persist');
 
     // Register staging configuration storage.
@@ -125,7 +141,8 @@ class CoreBundle extends Bundle {
       ->addMethodCall('setUserAgent', array('Drupal (+http://drupal.org/)'));
 
     // Register the EntityManager.
-    $container->register('plugin.manager.entity', 'Drupal\Core\Entity\EntityManager');
+    $container->register('plugin.manager.entity', 'Drupal\Core\Entity\EntityManager')
+      ->addArgument('%container.namespaces%');
 
     // The 'request' scope and service enable services to depend on the Request
     // object and get reconstructed when the request object changes (e.g.,
@@ -165,7 +182,8 @@ class CoreBundle extends Bundle {
       ->addArgument('slave');
     $container->register('typed_data', 'Drupal\Core\TypedData\TypedDataManager')
       ->addMethodCall('setValidationConstraintManager', array(new Reference('validation.constraint')));
-    $container->register('validation.constraint', 'Drupal\Core\Validation\ConstraintManager');
+    $container->register('validation.constraint', 'Drupal\Core\Validation\ConstraintManager')
+      ->addArgument('%container.namespaces%');
 
     // Add the user's storage for temporary, non-cache data.
     $container->register('lock', 'Drupal\Core\Lock\DatabaseLockBackend');
@@ -262,7 +280,7 @@ class CoreBundle extends Bundle {
     $container->register('request_close_subscriber', 'Drupal\Core\EventSubscriber\RequestCloseSubscriber')
       ->addArgument(new Reference('module_handler'))
       ->addTag('event_subscriber');
-    $container->register('config_global_override_subscriber', 'Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber')
+    $container->register('config_global_override_subscriber', 'Drupal\Core\EventSubscriber\ConfigOverrideSubscriber')
       ->addTag('event_subscriber');
     $container->register('language_request_subscriber', 'Drupal\Core\EventSubscriber\LanguageRequestSubscriber')
       ->addArgument(new Reference('language_manager'))

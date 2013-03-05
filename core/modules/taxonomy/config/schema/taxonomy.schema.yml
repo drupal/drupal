@@ -1,0 +1,16 @@
+# Schema for the configuration files of the taxonomy module.
+
+taxonomy.settings:
+  type: mapping
+  label: 'Taxonomy settings'
+  mapping:
+    maintain_index_table:
+      type: boolean
+      label: 'Maintain index table'
+    override_selector:
+      type: boolean
+      label: 'Override selector'
+    terms_per_page_admin:
+      type: integer
+      label: 'Number of terms per page'
+

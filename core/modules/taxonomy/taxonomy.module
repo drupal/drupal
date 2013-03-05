@@ -733,7 +733,6 @@ function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $load_entities 
     $query = db_select('taxonomy_term_data', 't');
     $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
     $result = $query
-      ->addTag('translatable')
       ->addTag('term_access')
       ->fields('t')
       ->fields('h', array('parent'))

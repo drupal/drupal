@@ -12,18 +12,16 @@ use Drupal\simpletest\DrupalUnitTestBase;
 /**
  * Defines a test for testing aggregation support for entity query.
  *
- * @todo Use EntityUnitBaseTest provided by http://drupal.org/node/1893108.
- *
  * @see \Drupal\entity_test\Plugin\Core\Entity\EntityTest
  */
-class EntityQueryAggregateTest extends DrupalUnitTestBase {
+class EntityQueryAggregateTest extends EntityUnitTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('user', 'system', 'field', 'number', 'text', 'field_sql_storage', 'entity_test');
+  public static $modules = array('number');
 
   /**
    * The entity_test storage controller to create the test entities.
@@ -54,13 +52,8 @@ class EntityQueryAggregateTest extends DrupalUnitTestBase {
     );
   }
 
-  protected function setUp() {
+  public function setUp() {
     parent::setUp();
-    $this->installSchema('user', 'users');
-    $this->installSchema('system', 'sequences');
-    $this->installSchema('field', 'field_config');
-    $this->installSchema('field', 'field_config_instance');
-    $this->installSchema('entity_test', 'entity_test');
 
     $this->entityStorageController = $this->container->get('plugin.manager.entity')->getStorageController('entity_test');
     $this->factory = $this->container->get('entity.query');

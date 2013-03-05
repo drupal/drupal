@@ -38,7 +38,7 @@ class NodeConditionTest extends DrupalUnitTestBase {
    * Tests conditions.
    */
   function testConditions() {
-    $manager = new ConditionManager();
+    $manager = new ConditionManager($this->container->getParameter('container.namespaces'));
 
     // Get some nodes of various types to check against.
     $page = entity_create('node', array('type' => 'page', 'title' => $this->randomName()));

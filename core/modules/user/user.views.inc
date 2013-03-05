@@ -11,10 +11,9 @@
  * Implements hook_views_data().
  */
 function user_views_data() {
-  // users table
 
-  // Define the base group of this table. Fields that don't
-  // have a group defined will go into this field by default.
+  // Define the base group of this table. Fields that don't have a group defined
+  // will go into this field by default.
   $data['users']['table']['group']  = t('User');
 
   $data['users']['table']['base'] = array(
@@ -26,16 +25,15 @@ function user_views_data() {
   $data['users']['table']['entity type'] = 'user';
   $data['users']['table']['wizard_id'] = 'user';
 
-  // uid
   $data['users']['uid'] = array(
     'title' => t('Uid'),
-    'help' => t('The user ID'), // The help that appears on the UI,
+    'help' => t('The user ID'),
     'field' => array(
       'id' => 'user',
     ),
     'argument' => array(
       'id' => 'user_uid',
-      'name field' => 'name', // display this field in the summary
+      'name field' => 'name',
     ),
     'filter' => array(
       'title' => t('Name'),
@@ -55,7 +53,6 @@ function user_views_data() {
     ),
   );
 
-  // uid_raw
   $data['users']['uid_raw'] = array(
     'help' => t('The raw numeric user ID.'),
     'real field' => 'uid',
@@ -65,7 +62,6 @@ function user_views_data() {
     ),
   );
 
-  // uid
   $data['users']['uid_representative'] = array(
     'relationship' => array(
       'title' => t('Representative node'),
@@ -82,7 +78,6 @@ function user_views_data() {
     ),
   );
 
-  // uid
   $data['users']['uid_current'] = array(
     'real field' => 'uid',
     'title' => t('Current'),
@@ -93,10 +88,9 @@ function user_views_data() {
     ),
   );
 
-  // name
   $data['users']['name'] = array(
-    'title' => t('Name'), // The item it appears as on the UI,
-    'help' => t('The user or author name.'), // The help that appears on the UI,
+    'title' => t('Name'),
+    'help' => t('The user or author name.'),
     'field' => array(
       'id' => 'user_name',
     ),
@@ -113,7 +107,6 @@ function user_views_data() {
     ),
   );
 
-  // mail
   // Note that this field implements field level access control.
   $data['users']['mail'] = array(
     'title' => t('E-mail'),
@@ -132,9 +125,8 @@ function user_views_data() {
     ),
   );
 
-  // language
   $data['users']['langcode'] = array(
-    'title' => t('Language'), // The item it appears as on the UI,
+    'title' => t('Language'),
     'help' => t('Language of the user'),
     'field' => array(
       'id' => 'user_language',
@@ -150,7 +142,6 @@ function user_views_data() {
     ),
   );
 
-  // link
   $data['users']['view_user'] = array(
     'field' => array(
       'title' => t('Link to user'),
@@ -160,10 +151,9 @@ function user_views_data() {
     ),
   );
 
-  // created field
   $data['users']['created'] = array(
-    'title' => t('Created date'), // The item it appears as on the UI,
-    'help' => t('The date the user was created.'), // The help that appears on the UI,
+    'title' => t('Created date'),
+    'help' => t('The date the user was created.'),
     'field' => array(
       'id' => 'date',
     ),
@@ -229,10 +219,9 @@ function user_views_data() {
     ),
   );
 
-  // access field
   $data['users']['access'] = array(
-    'title' => t('Last access'), // The item it appears as on the UI,
-    'help' => t("The user's last access date."), // The help that appears on the UI,
+    'title' => t('Last access'),
+    'help' => t("The user's last access date."),
     'field' => array(
       'id' => 'date',
     ),
@@ -244,10 +233,9 @@ function user_views_data() {
     ),
   );
 
-  // login field
   $data['users']['login'] = array(
-    'title' => t('Last login'), // The item it appears as on the UI,
-    'help' => t("The user's last login date."), // The help that appears on the UI,
+    'title' => t('Last login'),
+    'help' => t("The user's last login date."),
     'field' => array(
       'id' => 'date',
     ),
@@ -259,11 +247,9 @@ function user_views_data() {
     ),
   );
 
-  // active status
   $data['users']['status'] = array(
     'title' => t('Active status'),
-    'help' => t('Whether a user is active or blocked.'), // The help that appears on the UI,
-     // Information for displaying a title as a field
+    'help' => t('Whether a user is active or blocked.'),
     'field' => array(
       'id' => 'boolean',
       'output formats' => array(
@@ -280,11 +266,9 @@ function user_views_data() {
     ),
   );
 
-  // log field
   $data['users']['signature'] = array(
-    'title' => t('Signature'), // The item it appears as on the UI,
-    'help' => t("The user's signature."), // The help that appears on the UI,
-     // Information for displaying a title as a field
+    'title' => t('Signature'),
+    'help' => t("The user's signature."),
     'field' => array(
       'id' => 'markup',
       'format' => filter_fallback_format(),
@@ -295,7 +279,6 @@ function user_views_data() {
     ),
   );
 
-  // Entity translation field.
   if (drupal_container()->get('module_handler')->moduleExists('translation_entity')) {
     $data['users']['translation_link'] = array(
       'title' => t('Translation link'),
@@ -333,13 +316,12 @@ function user_views_data() {
     ),
   );
 
-  // users_roles table
-
+  // Define the base group of this table. Fields that don't have a group defined
+  // will go into this field by default.
   $data['users_roles']['table']['group']  = t('User');
 
   // Explain how this table joins to others.
   $data['users_roles']['table']['join'] = array(
-     // Directly links to users table.
     'users' => array(
       'left_field' => 'uid',
       'field' => 'uid',
@@ -367,10 +349,11 @@ function user_views_data() {
     ),
   );
 
-  // permission table
+  // Define the base group of this table. Fields that don't have a group defined
+  // will go into this field by default.
   $data['role_permission']['table']['group']  = t('User');
+  // Explain how this table joins to others.
   $data['role_permission']['table']['join'] = array(
-     // Directly links to users table.
     'users' => array(
       'left_table' => 'users_roles',
       'left_field' => 'rid',
@@ -394,7 +377,9 @@ function user_views_data() {
 }
 
 /**
- * Allow replacement of current userid so we can cache these queries
+ * Implements hook_views_query_substitutions().
+ *
+ * Allow replacement of current userid so we can cache these queries.
  */
 function user_views_query_substitutions($view) {
   global $user;

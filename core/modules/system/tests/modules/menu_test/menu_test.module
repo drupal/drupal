@@ -5,6 +5,8 @@
  * Dummy module implementing hook menu.
  */
 
+use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
+
 /**
  * Implements hook_menu().
  */
@@ -594,7 +596,7 @@ function menu_test_menu_name($new_name = '') {
  * @return
  *  A random string.
  */
-function menu_test_menu_link_insert($item) {
+function menu_test_menu_link_insert(MenuLink $item) {
   menu_test_static_variable('insert');
 }
 
@@ -604,7 +606,7 @@ function menu_test_menu_link_insert($item) {
  * @return
  *  A random string.
  */
-function menu_test_menu_link_update($item) {
+function menu_test_menu_link_update(MenuLink $item) {
   menu_test_static_variable('update');
 }
 
@@ -614,7 +616,7 @@ function menu_test_menu_link_update($item) {
  * @return
  *  A random string.
  */
-function menu_test_menu_link_delete($item) {
+function menu_test_menu_link_delete(MenuLink $item) {
   menu_test_static_variable('delete');
 }
 

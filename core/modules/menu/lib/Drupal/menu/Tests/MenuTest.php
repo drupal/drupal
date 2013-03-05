@@ -157,7 +157,7 @@ class MenuTest extends WebTestBase {
     // Enable the custom menu block.
     $menu_name = 'menu-' . $menu_name; // Drupal prepends the name with 'menu-'.
     // Confirm that the custom menu block is available.
-    $this->drupalGet('admin/structure/block/list/block_plugin_ui:' . variable_get('theme_default', 'stark') . '/add');
+    $this->drupalGet('admin/structure/block/list/block_plugin_ui:' . config('system.theme')->get('default') . '/add');
     $this->assertText($label);
 
     // Enable the block.
@@ -182,6 +182,14 @@ class MenuTest extends WebTestBase {
     // Test if all menu links associated to the menu were removed from database.
     $result = entity_load_multiple_by_properties('menu_link', array('menu_name' => $menu_name));
     $this->assertFalse($result, 'All menu links associated to the custom menu were deleted.');
+
+    // Make sure there's no delete button on system menus.
+    $this->drupalGet('admin/structure/menu/manage/main/edit');
+    $this->assertNoRaw('edit-delete', 'The delete button was not found');
+
+    // Try to delete the main menu.
+    $this->drupalGet('admin/structure/menu/manage/main/delete');
+    $this->assertText(t('You are not authorized to access this page.'));
   }
 
   /**

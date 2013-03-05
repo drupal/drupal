@@ -156,18 +156,24 @@ abstract class RESTTestBase extends WebTestBase {
    * @param string|FALSE $resource_type
    *   The resource type that should get web API enabled or FALSE to disable all
    *   resource types.
+   * @param string $method
+   *   The HTTP method to enable, e.g. GET, POST etc.
+   * @param string $format
+   *   (Optional) The serialization format, e.g. jsonld.
    */
-  protected function enableService($resource_type) {
+  protected function enableService($resource_type, $method = 'GET', $format = NULL) {
     // Enable web API for this entity type.
     $config = config('rest.settings');
+    $settings = array();
     if ($resource_type) {
-      $config->set('resources', array(
-        $resource_type => $resource_type,
-      ));
+      if ($format) {
+        $settings[$resource_type][$method][$format] = 'TRUE';
+      }
+      else {
+        $settings[$resource_type][$method] = array();
+      }
     }
-    else {
-      $config->set('resources', array());
-    }
+    $config->set('resources', $settings);
     $config->save();
 
     // Rebuild routing cache, so that the web API paths are available.

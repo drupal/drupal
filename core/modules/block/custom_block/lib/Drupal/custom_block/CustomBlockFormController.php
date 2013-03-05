@@ -80,7 +80,7 @@ class CustomBlockFormController extends EntityFormControllerNG {
       '#access' => isset($language_configuration['language_show']) && $language_configuration['language_show'],
     );
 
-    $form['additional_settings'] = array(
+    $form['advanced'] = array(
       '#type' => 'vertical_tabs',
       '#weight' => 99,
     );
@@ -93,7 +93,7 @@ class CustomBlockFormController extends EntityFormControllerNG {
       '#collapsible' => TRUE,
       // Collapsed by default when "Create new revision" is unchecked.
       '#collapsed' => !$block->isNewRevision(),
-      '#group' => 'additional_settings',
+      '#group' => 'advanced',
       '#attributes' => array(
         'class' => array('custom-block-form-revision-information'),
       ),
@@ -182,7 +182,7 @@ class CustomBlockFormController extends EntityFormControllerNG {
           $form_state['redirect'] = 'admin/structure/block/add/custom_block:' . $block->uuid->value . '/' . $theme;
         }
         else {
-          $form_state['redirect'] = 'admin/structure/block/add/custom_block:' . $block->uuid->value . '/' . variable_get('theme_default', 'stark');
+          $form_state['redirect'] = 'admin/structure/block/add/custom_block:' . $block->uuid->value . '/' . config('system.theme')->get('default');
         }
       }
       else {

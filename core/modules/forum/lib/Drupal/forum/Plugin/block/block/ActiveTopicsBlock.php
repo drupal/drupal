@@ -15,7 +15,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "forum_active_block",
- *   subject = @Translation("Active forum topics"),
+ *   admin_label = @Translation("Active forum topics"),
  *   module = "forum"
  * )
  */

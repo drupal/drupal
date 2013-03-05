@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "user_login_block",
- *   subject = @Translation("User login"),
+ *   admin_label = @Translation("User login"),
  *   module = "user"
  * )
  */

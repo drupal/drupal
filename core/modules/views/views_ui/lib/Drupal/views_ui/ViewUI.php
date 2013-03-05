@@ -121,52 +121,22 @@ class ViewUI implements ViewStorageInterface {
    */
   protected $additionalQueries;
 
+  /**
+   * Contains an array of form keys and their respective classes.
+   *
+   * @var array
+   */
   public static $forms = array(
-    'display' => array(
-      'form_id' => 'views_ui_edit_display_form',
-      'args' => array('section'),
-    ),
-    'remove-display' => array(
-      'form_id' => 'views_ui_remove_display_form',
-      'args' => array(),
-    ),
-    'rearrange' => array(
-      'form_id' => 'views_ui_rearrange_form',
-      'args' => array('type'),
-    ),
-    'rearrange-filter' => array(
-      'form_id' => 'views_ui_rearrange_filter_form',
-      'args' => array('type'),
-    ),
-    'reorder-displays' => array(
-      'form_id' => 'views_ui_reorder_displays_form',
-      'args' => array(),
-      'callback' => 'buildDisplaysReorderForm',
-    ),
-    'add-item' => array(
-      'form_id' => 'views_ui_add_item_form',
-      'args' => array('type'),
-    ),
-    'config-item' => array(
-      'form_id' => 'views_ui_config_item_form',
-      'args' => array('type', 'id'),
-    ),
-    'config-item-extra' => array(
-      'form_id' => 'views_ui_config_item_extra_form',
-      'args' => array('type', 'id'),
-    ),
-    'config-item-group' => array(
-      'form_id' => 'views_ui_config_item_group_form',
-      'args' => array('type', 'id'),
-    ),
-    'edit-details' => array(
-      'form_id' => 'views_ui_edit_details_form',
-      'args' => array(),
-    ),
-    'analyze' => array(
-      'form_id' => 'views_ui_analyze_view_form',
-      'args' => array(),
-    ),
+    'add-item' => '\Drupal\views_ui\Form\Ajax\AddItem',
+    'analyze' => '\Drupal\views_ui\Form\Ajax\Analyze',
+    'config-item' => '\Drupal\views_ui\Form\Ajax\ConfigItem',
+    'config-item-extra' => '\Drupal\views_ui\Form\Ajax\ConfigItemExtra',
+    'config-item-group' => '\Drupal\views_ui\Form\Ajax\ConfigItemGroup',
+    'display' => '\Drupal\views_ui\Form\Ajax\Display',
+    'edit-details' => '\Drupal\views_ui\Form\Ajax\EditDetails',
+    'rearrange' => '\Drupal\views_ui\Form\Ajax\Rearrange',
+    'rearrange-filter' => '\Drupal\views_ui\Form\Ajax\RearrangeFilter',
+    'reorder-displays' => '\Drupal\views_ui\Form\Ajax\ReorderDisplays',
   );
 
   /**
@@ -263,8 +233,11 @@ class ViewUI implements ViewStorageInterface {
     }
 
     $submit_handler = $form['#form_id'] . '_submit';
-    if (function_exists($submit_handler)) {
-      $submit_handler($form, $form_state);
+    if (isset($form_state['build_info']['callback_object'])) {
+      $submit_handler = array($form_state['build_info']['callback_object'], 'submitForm');
+    }
+    if (is_callable($submit_handler)) {
+      call_user_func($submit_handler, $form, $form_state);
     }
   }
 
@@ -288,7 +261,7 @@ class ViewUI implements ViewStorageInterface {
    * TODO: Is the hidden op operator still here somewhere, or is that part of the
    * docblock outdated?
    */
-  public function getStandardButtons(&$form, &$form_state, $form_id, $name = NULL, $third = NULL, $submit = NULL) {
+  public function getStandardButtons(&$form, &$form_state, $form_id, $name = NULL) {
     $form['buttons'] = array(
       '#prefix' => '<div class="clearfix"><div class="form-buttons">',
       '#suffix' => '</div></div>',
@@ -320,7 +293,7 @@ class ViewUI implements ViewStorageInterface {
       // same between the form build of the initial page request, and the
       // initial form build of the request processing the form submission.
       // Ideally, the button's #value shouldn't change until the form rebuild
-      // step. However, \Drupal\views_ui\Routing\ViewsUIController::ajaxForm()
+      // step. However, \Drupal\views_ui\Form\Ajax\ViewsFormBase::getForm()
       // implements a different multistep form workflow than the Form API does,
       // and adjusts $view->stack prior to form processing, so we compensate by
       // extending button click detection code to support any of the possible
@@ -330,6 +303,9 @@ class ViewUI implements ViewStorageInterface {
         $form['buttons']['submit']['#process'] = array_merge(array('views_ui_form_button_was_clicked'), element_info_property($form['buttons']['submit']['#type'], '#process', array()));
       }
       // If a validation handler exists for the form, assign it to this button.
+      if (isset($form_state['build_info']['callback_object'])) {
+        $form['buttons']['submit']['#validate'][] = array($form_state['build_info']['callback_object'], 'validateForm');
+      }
       if (function_exists($form_id . '_validate')) {
         $form['buttons']['submit']['#validate'][] = $form_id . '_validate';
       }
@@ -343,21 +319,6 @@ class ViewUI implements ViewStorageInterface {
       '#submit' => array($cancel_submit),
       '#validate' => array(),
     );
-
-    // Some forms specify a third button, with a name and submit handler.
-    if ($third) {
-      if (empty($submit)) {
-        $submit = 'third';
-      }
-      $third_submit = function_exists($form_id . '_' . $submit) ? $form_id . '_' . $submit : array($this, 'standardCancel');
-
-      $form['buttons'][$submit] = array(
-        '#type' => 'submit',
-        '#value' => $third,
-        '#validate' => array(),
-        '#submit' => array($third_submit),
-      );
-    }
 
     // Compatibility, to be removed later: // TODO: When is "later"?
     // We used to set these items on the form, but now we want them on the $form_state:
@@ -408,123 +369,10 @@ class ViewUI implements ViewStorageInterface {
   }
 
   /**
-   * Form constructor callback to reorder displays on a view
-   */
-  public function buildDisplaysReorderForm($form, &$form_state) {
-    $display_id = $form_state['display_id'];
-
-    $form['view'] = array('#type' => 'value', '#value' => $this);
-
-    $form['#tree'] = TRUE;
-
-    $count = count($this->get('display'));
-
-    $displays = $this->get('display');
-    uasort($displays, array('static', 'sortPosition'));
-    $this->set('display', $displays);
-    foreach ($displays as $display) {
-      $form[$display['id']] = array(
-        'title'  => array('#markup' => $display['display_title']),
-        'weight' => array(
-          '#type' => 'weight',
-          '#value' => $display['position'],
-          '#delta' => $count,
-          '#title' => t('Weight for @display', array('@display' => $display['display_title'])),
-          '#title_display' => 'invisible',
-        ),
-        '#tree' => TRUE,
-        '#display' => $display,
-        'removed' => array(
-          '#type' => 'checkbox',
-          '#id' => 'display-removed-' . $display['id'],
-          '#attributes' => array('class' => array('views-remove-checkbox')),
-          '#default_value' => isset($display['deleted']),
-        ),
-      );
-
-      if (isset($display['deleted']) && $display['deleted']) {
-        $form[$display['id']]['deleted'] = array('#type' => 'value', '#value' => TRUE);
-      }
-      if ($display['id'] === 'default') {
-        unset($form[$display['id']]['weight']);
-        unset($form[$display['id']]['removed']);
-      }
-
-    }
-
-    $form['#title'] = t('Displays Reorder');
-    $form['#section'] = 'reorder';
-
-    // Add javascript settings that will be added via $.extend for tabledragging
-    $form['#js']['tableDrag']['reorder-displays']['weight'][0] = array(
-      'target' => 'weight',
-      'source' => NULL,
-      'relationship' => 'sibling',
-      'action' => 'order',
-      'hidden' => TRUE,
-      'limit' => 0,
-    );
-
-    $form['#action'] = url('admin/structure/views/nojs/reorder-displays/' . $this->id() . '/' . $display_id);
-
-    $this->getStandardButtons($form, $form_state, 'views_ui_reorder_displays_form');
-    $form['buttons']['submit']['#submit'] = array(array($this, 'submitDisplaysReorderForm'));
-
-    return $form;
-  }
-
-  /**
-   * Submit handler for rearranging display form
-   */
-  public function submitDisplaysReorderForm($form, &$form_state) {
-    foreach ($form_state['input'] as $display => $info) {
-      // add each value that is a field with a weight to our list, but only if
-      // it has had its 'removed' checkbox checked.
-      if (is_array($info) && isset($info['weight']) && empty($info['removed'])) {
-        $order[$display] = $info['weight'];
-      }
-    }
-
-    // Sort the order array
-    asort($order);
-
-    // Fixing up positions
-    $position = 1;
-
-    foreach (array_keys($order) as $display) {
-      $order[$display] = $position++;
-    }
-
-    // Setting up position and removing deleted displays
-    $displays = $this->get('display');
-    foreach ($displays as $display_id => $display) {
-      // Don't touch the default !!!
-      if ($display_id === 'default') {
-        $displays[$display_id]['position'] = 0;
-        continue;
-      }
-      if (isset($order[$display_id])) {
-        $displays[$display_id]['position'] = $order[$display_id];
-      }
-      else {
-        $displays[$display_id]['deleted'] = TRUE;
-      }
-    }
-
-    // Sorting back the display array as the position is not enough
-    uasort($displays, array('static', 'sortPosition'));
-    $this->set('display', $displays);
-
-    // Store in cache
-    views_ui_cache_set($this);
-    $form_state['redirect'] = array('admin/structure/views/view/' . $this->id() . '/edit', array('fragment' => 'views-tab-default'));
-  }
-
-  /**
    * Add another form to the stack; clicking 'apply' will go to this form
    * rather than closing the ajax popup.
    */
-  public function addFormToStack($key, $display_id, $args, $top = FALSE, $rebuild_keys = FALSE) {
+  public function addFormToStack($key, $display_id, $type, $id = NULL, $top = FALSE, $rebuild_keys = FALSE) {
     // Reset the cache of IDs. Drupal rather aggressively prevents ID
     // duplication but this causes it to remember IDs that are no longer even
     // being used.
@@ -535,7 +383,7 @@ class ViewUI implements ViewStorageInterface {
       $this->stack = array();
     }
 
-    $stack = array($this->buildIdentifier($key, $display_id, $args), $key, $display_id, $args);
+    $stack = array(implode('-', array_filter(array($key, $this->id(), $display_id, $type, $id))), $key, $display_id, $type, $id);
     // If we're being asked to add this form to the bottom of the stack, no
     // special logic is required. Our work is equally easy if we were asked to add
     // to the top of the stack, but there's nothing in it yet.
@@ -613,15 +461,15 @@ class ViewUI implements ViewStorageInterface {
         }
         $handler = views_get_handler($table, $field, $key);
         if ($this->executable->displayHandlers->get('default')->useGroupBy() && $handler->usesGroupBy()) {
-          $this->addFormToStack('config-item-group', $form_state['display_id'], array($type, $id));
+          $this->addFormToStack('config-item-group', $form_state['display_id'], $type, $id);
         }
 
         // check to see if this type has settings, if so add the settings form first
         if ($handler && $handler->hasExtraOptions()) {
-          $this->addFormToStack('config-item-extra', $form_state['display_id'], array($type, $id));
+          $this->addFormToStack('config-item-extra', $form_state['display_id'], $type, $id);
         }
         // Then add the form to the stack
-        $this->addFormToStack('config-item', $form_state['display_id'], array($type, $id));
+        $this->addFormToStack('config-item', $form_state['display_id'], $type, $id);
       }
     }
 
@@ -879,63 +727,6 @@ class ViewUI implements ViewStorageInterface {
       }
     }
     return $progress;
-  }
-
-  /**
-   * Build a form identifier that we can use to see if one form
-   * is the same as another. Since the arguments differ slightly
-   * we do a lot of spiffy concatenation here.
-   */
-  public function buildIdentifier($key, $display_id, $args) {
-    $form = static::$forms[$key];
-    // Automatically remove the single-form cache if it exists and
-    // does not match the key.
-    $identifier = implode('-', array($key, $this->id(), $display_id));
-
-    foreach ($form['args'] as $id) {
-      $arg = (!empty($args)) ? array_shift($args) : NULL;
-      $identifier .= '-' . $arg;
-    }
-    return $identifier;
-  }
-
-  /**
-   * Display position sorting function
-   */
-  public static function sortPosition($display1, $display2) {
-    if ($display1['position'] != $display2['position']) {
-      return $display1['position'] < $display2['position'] ? -1 : 1;
-    }
-
-    return 0;
-  }
-
-  /**
-   * Build up a $form_state object suitable for use with drupal_build_form
-   * based on known information about a form.
-   */
-  public function buildFormState($js, $key, $display_id, $args) {
-    $form = static::$forms[$key];
-    // Build up form state
-    $form_state = array(
-      'form_key' => $key,
-      'form_id' => $form['form_id'],
-      'view' => &$this,
-      'ajax' => $js,
-      'display_id' => $display_id,
-      'no_redirect' => TRUE,
-    );
-    // If an method was specified, use that for the callback.
-    if (isset($form['callback'])) {
-      $form_state['build_info']['args'] = array();
-      $form_state['build_info']['callback'] = array($this, $form['callback']);
-    }
-
-    foreach ($form['args'] as $id) {
-      $form_state[$id] = (!empty($args)) ? array_shift($args) : NULL;
-    }
-
-    return $form_state;
   }
 
   /**

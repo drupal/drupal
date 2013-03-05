@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "user_online_block",
- *   subject = @Translation("Who's online"),
+ *   admin_label = @Translation("Who's online"),
  *   module = "user"
  * )
  */

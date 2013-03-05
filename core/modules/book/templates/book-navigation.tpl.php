@@ -44,7 +44,7 @@
       <?php endif; ?>
       <?php if ($parent_url): ?>
         <li class="up">
-          <a href="<?php print $parent_url; ?>" title="<?php print t('Go to parent page'); ?>"><?php print t('up'); ?></a>
+          <a href="<?php print $parent_url; ?>" title="<?php print t('Go to parent page'); ?>"><?php print t('Up'); ?></a>
         </li>
       <?php endif; ?>
       <?php if ($next_url): ?>

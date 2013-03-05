@@ -937,4 +937,86 @@ abstract class HandlerBase extends PluginBase {
     return $handler;
   }
 
+  /**
+   * Displays the Expose form.
+   */
+  public function displayExposedForm($form, &$form_state) {
+    $item = &$this->options;
+    // flip
+    $item['exposed'] = empty($item['exposed']);
+
+    // If necessary, set new defaults:
+    if ($item['exposed']) {
+      $this->defaultExposeOptions();
+    }
+
+    $form_state['view']->get('executable')->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+
+    $form_state['view']->addFormToStack($form_state['form_key'], $form_state['display_id'], $form_state['type'], $form_state['id'], TRUE, TRUE);
+
+    views_ui_cache_set($form_state['view']);
+    $form_state['rerender'] = TRUE;
+    $form_state['rebuild'] = TRUE;
+    $form_state['force_expose_options'] = TRUE;
+  }
+
+  /**
+   * A submit handler that is used for storing temporary items when using
+   * multi-step changes, such as ajax requests.
+   */
+  public function submitTemporaryForm($form, &$form_state) {
+    // Run it through the handler's submit function.
+    $this->submitOptionsForm($form['options'], $form_state);
+    $item = $this->options;
+    $types = ViewExecutable::viewsHandlerTypes();
+
+    // For footer/header $handler_type is area but $type is footer/header.
+    // For all other handle types it's the same.
+    $handler_type = $type = $form_state['type'];
+    if (!empty($types[$type]['type'])) {
+      $handler_type = $types[$type]['type'];
+    }
+
+    $override = NULL;
+    $executable = $form_state['view']->get('executable');
+    if ($executable->display_handler->useGroupBy() && !empty($item['group_type'])) {
+      if (empty($executable->query)) {
+        $executable->initQuery();
+      }
+      $aggregate = $executable->query->get_aggregation_info();
+      if (!empty($aggregate[$item['group_type']]['handler'][$type])) {
+        $override = $aggregate[$item['group_type']]['handler'][$type];
+      }
+    }
+
+    // Create a new handler and unpack the options from the form onto it. We
+    // can use that for storage.
+    $handler = views_get_handler($item['table'], $item['field'], $handler_type, $override);
+    $handler->init($executable, $executable->display_handler, $item);
+
+    // Add the incoming options to existing options because items using
+    // the extra form may not have everything in the form here.
+    $options = $form_state['values']['options'] + $this->options;
+
+    // This unpacks only options that are in the definition, ensuring random
+    // extra stuff on the form is not sent through.
+    $handler->unpackOptions($handler->options, $options, NULL, FALSE);
+
+    // Store the item back on the view.
+    $executable = $form_state['view']->get('executable');
+    $executable->temporary_options[$type][$form_state['id']] = $handler->options;
+
+    // @todo Decide if \Drupal\views_ui\Form\Ajax\ViewsFormBase::getForm() is
+    //   perhaps the better place to fix the issue.
+    // \Drupal\views_ui\Form\Ajax\ViewsFormBase::getForm() drops the current
+    // form from the stack, even if it's an #ajax. So add the item back to the top
+    // of the stack.
+    $form_state['view']->addFormToStack($form_state['form_key'], $form_state['display_id'], $type, $item['id'], TRUE);
+
+    $form_state['rerender'] = TRUE;
+    $form_state['rebuild'] = TRUE;
+    // Write to cache
+    views_ui_cache_set($form_state['view']);
+  }
+
 }

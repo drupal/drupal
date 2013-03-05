@@ -124,7 +124,7 @@ function system_themes_page() {
   $themes = system_rebuild_theme_data();
   uasort($themes, 'system_sort_modules_by_info_name');
 
-  $theme_default = variable_get('theme_default', 'stark');
+  $theme_default = config('system.theme')->get('default');
   $theme_groups  = array();
   $admin_theme = config('system.theme')->get('admin');
 
@@ -315,7 +315,7 @@ function system_theme_disable() {
     // Check if the specified theme is one recognized by the system.
     if (!empty($themes[$theme])) {
       // Do not disable the default or admin theme.
-      if ($theme == variable_get('theme_default', 'stark') || $theme == config('system.theme')->get('admin')) {
+      if ($theme === config('system.theme')->get('default') || $theme === config('system.theme')->get('admin')) {
         drupal_set_message(t('%theme is the default theme and cannot be disabled.', array('%theme' => $themes[$theme]->info['name'])), 'error');
       }
       else {
@@ -347,7 +347,9 @@ function system_theme_default() {
        theme_enable(array($theme));
       }
       // Set the default theme.
-      variable_set('theme_default', $theme);
+      config('system.theme')
+        ->set('default', $theme)
+        ->save();
 
       // Rebuild the menu. This duplicates the menu_router_rebuild() in
       // theme_enable(). However, modules must know the current default theme in
@@ -1403,6 +1405,7 @@ function system_modules_uninstall_submit($form, &$form_state) {
  * @see system_settings_form()
  */
 function system_site_information_settings($form, &$form_state) {
+  config_context_enter('config.context.free');
   $site_config = config('system.site');
   $site_mail = $site_config->get('mail');
   if (empty($site_mail)) {
@@ -1509,6 +1512,7 @@ function system_site_information_settings_validate($form, &$form_state) {
  * Form submission handler for system_site_information_settings().
  */
 function system_site_information_settings_submit($form, &$form_state) {
+  config_context_enter('config.context.free');
   config('system.site')
     ->set('name', $form_state['values']['site_name'])
     ->set('mail', $form_state['values']['site_mail'])
@@ -1525,6 +1529,7 @@ function system_site_information_settings_submit($form, &$form_state) {
  * @ingroup forms
  */
 function system_cron_settings($form, &$form_state) {
+  config_context_enter('config.context.free');
   $form['description'] = array(
     '#markup' => '<p>' . t('Cron takes care of running periodic tasks like checking for updates and indexing content for search.') . '</p>',
   );
@@ -1562,6 +1567,7 @@ function system_cron_settings($form, &$form_state) {
  * @ingroup forms
  */
 function system_cron_settings_submit($form, &$form_state) {
+  config_context_enter('config.context.free');
   config('system.cron')
     ->set('threshold.autorun', $form_state['values']['cron_safe_threshold'])
     ->save();
@@ -1591,6 +1597,7 @@ function system_run_cron_submit($form, &$form_state) {
  * @see system_logging_settings_submit()
  */
 function system_logging_settings($form, &$form_state) {
+  config_context_enter('config.context.free');
   $form['error_level'] = array(
     '#type' => 'radios',
     '#title' => t('Error messages to display'),
@@ -1613,6 +1620,7 @@ function system_logging_settings($form, &$form_state) {
  * @ingroup forms
  */
 function system_logging_settings_submit($form, &$form_state) {
+  config_context_enter('config.context.free');
   config('system.logging')
     ->set('error_level', $form_state['values']['error_level'])
     ->save();
@@ -1626,6 +1634,7 @@ function system_logging_settings_submit($form, &$form_state) {
  */
 function system_performance_settings($form, &$form_state) {
   drupal_add_library('system', 'drupal.system');
+  config_context_enter('config.context.free');
   $config = config('system.performance');
 
   $form['clear_cache'] = array(
@@ -1644,21 +1653,21 @@ function system_performance_settings($form, &$form_state) {
     '#title' => t('Caching'),
   );
 
-  $form['caching']['cache'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Cache pages for anonymous users'),
-    '#default_value' => $config->get('cache.page.enabled'),
-    '#weight' => -2,
-  );
-
   $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
   $period[0] = '<' . t('none') . '>';
   $form['caching']['page_cache_maximum_age'] = array(
     '#type' => 'select',
-    '#title' => t('Expiration of cached pages'),
+    '#title' => t('Page cache maximum age'),
     '#default_value' => $config->get('cache.page.max_age'),
     '#options' => $period,
-    '#description' => t('The maximum time an external cache can use an old version of a page.'),
+    '#description' => t('The maximum time a page can be cached. This is used as the value for max-age in Cache-Control headers.'),
+  );
+
+  $form['caching']['cache'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use internal page cache'),
+    '#description' => t("If a reverse proxy cache isn't available, use Drupal's internal cache system to store cached pages."),
+    '#default_value' => $config->get('cache.page.use_internal'),
   );
 
   $directory = 'public://';
@@ -1675,7 +1684,7 @@ function system_performance_settings($form, &$form_state) {
     '#description' => t('External resources can be optimized automatically, which can reduce both the size and number of requests made to your website.') . $disabled_message,
   );
 
-  $js_hide = $config->get('cache.page.enabled') ? '' : ' class="js-hide"';
+  $js_hide = ($config->get('cache.page.max_age') > 0) ? '' : ' class="js-hide"';
   $form['bandwidth_optimization']['page_compression'] = array(
     '#type' => 'checkbox',
     '#title' => t('Compress cached pages.'),
@@ -1715,8 +1724,9 @@ function system_performance_settings($form, &$form_state) {
  * @ingroup forms
  */
 function system_performance_settings_submit($form, &$form_state) {
+  config_context_enter('config.context.free');
   $config = config('system.performance');
-  $config->set('cache.page.enabled', $form_state['values']['cache']);
+  $config->set('cache.page.use_internal', $form_state['values']['cache']);
   $config->set('cache.page.max_age', $form_state['values']['page_cache_maximum_age']);
   $config->set('response.gzip', $form_state['values']['page_compression']);
   $config->set('css.preprocess', $form_state['values']['preprocess_css']);
@@ -1860,6 +1870,7 @@ function system_image_toolkit_settings() {
  * @ingroup forms
  */
 function system_rss_feeds_settings($form, &$form_state) {
+  config_context_enter('config.context.free');
   $rss_config = config('system.rss');
   $form['feed_description'] = array(
     '#type' => 'textarea',
@@ -1895,6 +1906,7 @@ function system_rss_feeds_settings($form, &$form_state) {
  * @ingroup forms
  */
 function system_rss_feeds_settings_submit($form, &$form_state) {
+  config_context_enter('config.context.free');
   config('system.rss')
     ->set('channel.description', $form_state['values']['feed_description'])
     ->set('items.limit', $form_state['values']['feed_default_items'])
@@ -2015,6 +2027,7 @@ function system_regional_settings_submit($form, &$form_state) {
  * @see system_site_maintenance_mode_submit()
  */
 function system_site_maintenance_mode($form, &$form_state) {
+  config_context_enter('config.context.free');
   $config = config('system.maintenance');
   $form['maintenance_mode'] = array(
     '#type' => 'checkbox',
@@ -2037,6 +2050,7 @@ function system_site_maintenance_mode($form, &$form_state) {
  * @ingroup forms
  */
 function system_site_maintenance_mode_submit($form, &$form_state) {
+  config_context_enter('config.context.free');
   config('system.maintenance')
     ->set('enabled', $form_state['values']['maintenance_mode'])
     ->set('message', $form_state['values']['maintenance_mode_message'])
@@ -2606,11 +2620,11 @@ function system_date_time_formats() {
         // Prepare Operational links.
         $links = array();
         $links['edit'] = array(
-          'title' => t('edit'),
+          'title' => t('Edit'),
           'href' => 'admin/config/regional/date-time/formats/' . $date_format_id . '/edit',
         );
         $links['delete'] = array(
-          'title' => t('delete'),
+          'title' => t('Delete'),
           'href' => 'admin/config/regional/date-time/formats/' . $date_format_id . '/delete',
         );
         $row['operations'] = array('data' => array(
@@ -2782,11 +2796,11 @@ function system_date_format_language_overview_page() {
     $row[] = $language->name;
     $links = array();
     $links['edit'] = array(
-      'title' => t('edit'),
+      'title' => t('Edit'),
       'href' => "admin/config/regional/date-time/locale/$langcode/edit",
     );
     $links['reset'] = array(
-      'title' => t('reset'),
+      'title' => t('Reset'),
       'href' => "admin/config/regional/date-time/locale/$langcode/reset",
     );
     $row[] = array(

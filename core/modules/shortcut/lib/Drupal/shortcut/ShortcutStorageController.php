@@ -29,11 +29,12 @@ class ShortcutStorageController extends ConfigStorageController {
     }
   }
 
-
   /**
-   * Overrides \Drupal\config\ConfigStorageController::save().
+   * Overrides \Drupal\config\ConfigStorageController::create().
    */
-  public function save(EntityInterface $entity) {
+  public function create(array $values) {
+    $entity = parent::create($values);
+
     // Generate menu-compatible set name.
     if (!$entity->getOriginalID()) {
       // Save a new shortcut set with links copied from the user's default set.
@@ -42,23 +43,30 @@ class ShortcutStorageController extends ConfigStorageController {
       // Size of menu_name is 32 so id could be 23 = 32 - strlen('shortcut-').
       $id = substr($entity->id(), 0, 23);
       $entity->set('id', $id);
-      $entity->set('links', $default_set->links);
-      foreach ($entity->links as $link) {
-        $link = $link->createDuplicate();
-        $link->menu_name = $id;
-        unset($link->mlid);
-        $link->save();
+      if ($default_set->id() != $id) {
+        foreach ($default_set->links as $link) {
+          $link = $link->createDuplicate();
+          $link->enforceIsNew();
+          $link->menu_name = $id;
+          $link->save();
+          $entity->links[$link->uuid()] = $link;
+        }
       }
     }
 
+    return $entity;
+  }
+
+  /**
+   * Overrides \Drupal\config\ConfigStorageController::preSave().
+   */
+  public function preSave(EntityInterface $entity) {
     // Just store the UUIDs.
-    if (isset($entity->links)) {
-      foreach ($entity->links as $uuid => $link) {
-        $entity->links[$uuid] = $uuid;
-      }
+    foreach ($entity->links as $uuid => $link) {
+      $entity->links[$uuid] = $uuid;
     }
 
-    return parent::save($entity);
+    parent::preSave($entity);
   }
 
   /**
@@ -66,10 +74,8 @@ class ShortcutStorageController extends ConfigStorageController {
    */
   function postSave(EntityInterface $entity, $update) {
     // Process links in shortcut set.
-    // If links were provided for the set, save them.
-    if (isset($entity->links)) {
-      foreach ($entity->links as $uuid) {
-        $menu_link = entity_load_by_uuid('menu_link', $uuid);
+    foreach ($entity->links as $uuid) {
+      if ($menu_link = entity_load_by_uuid('menu_link', $uuid)) {
         // Do not specifically associate these links with the shortcut module,
         // since other modules may make them editable via the menu system.
         // However, we do need to specify the correct menu name.

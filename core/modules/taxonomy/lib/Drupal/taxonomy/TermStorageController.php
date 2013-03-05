@@ -37,7 +37,6 @@ class TermStorageController extends DatabaseStorageController {
    */
   protected function buildQuery($ids, $revision_id = FALSE) {
     $query = parent::buildQuery($ids, $revision_id);
-    $query->addTag('translatable');
     $query->addTag('term_access');
     return $query;
   }

@@ -7,6 +7,8 @@
 
 namespace Drupal\system\Tests\Upgrade;
 
+use Drupal\Core\Database\DatabaseException;
+
 /**
  * Tests upgrading a filled database with language data.
  *
@@ -136,6 +138,17 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
 
     $translation_string = db_query("SELECT * FROM {locales_target} WHERE lid = 22 AND language = 'ca'")->fetchObject();
     $this->assertEqual($translation_string->translation, implode(LOCALE_PLURAL_DELIMITER, array('1 byte', '@count bytes')));
+
+    // Ensure that re-indexing search for a specific language does not fail. It
+    // does not matter if the sid exists on not. This tests whether or not
+    // search_update_8001() has added the langcode fields.
+    try {
+      search_reindex(1, 'node', FALSE, 'ca');
+      $this->pass("Calling search_reindex succeeds after upgrade.");
+    }
+    catch (DatabaseException $e) {
+      $this->fail("Calling search_reindex fails after upgrade.");
+    }
   }
 
   /**

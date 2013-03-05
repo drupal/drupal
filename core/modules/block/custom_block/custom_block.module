@@ -11,33 +11,20 @@ use Drupal\custom_block\Plugin\block\block\CustomBlockBlock;
 use Drupal\block\Plugin\Core\Entity\Block;
 
 /**
- * Implements hook_menu_local_task_alter().
+ * Implements hook_menu_local_tasks().
  */
-function custom_block_menu_local_tasks_alter(&$data, $router_item, $root_path) {
-  // Make sure we're at least in the right general area.
-  if (substr($root_path, 0, 26) == 'admin/structure/block/list') {
-    // This is the path we want to match.
-    $admin_path = array(
-      'admin',
-      'structure',
-      'block',
-      'list',
-      'add',
-    );
-    // We're going to want an array so we can remove the plugin id.
-    $path_map = explode('/', $root_path);
-    $before = array_slice($path_map, 0, 4);
-    $after = array_slice($path_map, 5);
-    $path_map = array_merge($before, $after);
-    // If the path is absolutely equal to $admin_path, we have a winner.
-    if($path_map === $admin_path) {
-      $item = menu_get_item('block/add');
-      if ($item['access']) {
-        $data['actions']['output'][] = array(
-          '#theme' => 'menu_local_action',
-          '#link' => $item,
-        );
-      }
+function custom_block_menu_local_tasks(&$data, $router_item, $root_path) {
+  // Add the "Add custom block" action link to the theme-specific block library
+  // listing page.
+  // @todo This should just be $root_path == 'admin/structure/block/list/%/add'
+  //   but block_menu() registers static router paths instead of dynamic ones.
+  if (preg_match('@^admin/structure/block/list/(.*)/add$@', $root_path)) {
+    $item = menu_get_item('block/add');
+    if ($item['access']) {
+      $data['actions']['block/add'] = array(
+        '#theme' => 'menu_local_action',
+        '#link' => $item,
+      );
     }
   }
 }
@@ -46,7 +33,6 @@ function custom_block_menu_local_tasks_alter(&$data, $router_item, $root_path) {
  * Implements hook_menu().
  */
 function custom_block_menu() {
-  $items = array();
   $items['admin/structure/custom-blocks'] = array(
     'title' => 'Custom block types',
     'description' => 'Manage custom block types.',
@@ -92,7 +78,6 @@ function custom_block_menu() {
     'access arguments' => array('administer blocks'),
     'file' => 'custom_block.pages.inc',
   );
-
   $items['block/add/%custom_block_type'] = array(
     'title callback' => 'entity_page_label',
     'title arguments' => array(2),

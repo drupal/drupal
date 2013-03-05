@@ -20,8 +20,10 @@ class FieldBundle extends Bundle {
    */
   public function build(ContainerBuilder $container) {
     // Register the plugin managers for our plugin types with the dependency injection container.
-    $container->register('plugin.manager.field.widget', 'Drupal\field\Plugin\Type\Widget\WidgetPluginManager');
-    $container->register('plugin.manager.field.formatter', 'Drupal\field\Plugin\Type\Formatter\FormatterPluginManager');
+    $container->register('plugin.manager.field.widget', 'Drupal\field\Plugin\Type\Widget\WidgetPluginManager')
+      ->addArgument('%container.namespaces%');
+    $container->register('plugin.manager.field.formatter', 'Drupal\field\Plugin\Type\Formatter\FormatterPluginManager')
+      ->addArgument('%container.namespaces%');
   }
 
 }

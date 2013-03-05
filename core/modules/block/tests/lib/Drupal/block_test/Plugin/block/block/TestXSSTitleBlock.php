@@ -14,7 +14,7 @@ use Drupal\Core\Annotation\Plugin;
  *
  * @Plugin(
  *   id = "test_xss_title",
- *   subject = "<script>alert('XSS subject');</script>",
+ *   admin_label = "<script>alert('XSS subject');</script>",
  *   module = "block_test"
  * )
  */

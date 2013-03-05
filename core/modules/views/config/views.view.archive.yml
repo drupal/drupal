@@ -25,7 +25,7 @@ display:
       exposed_form:
         type: basic
       pager:
-        type: full
+        type: mini
       sorts:
         created:
           id: created

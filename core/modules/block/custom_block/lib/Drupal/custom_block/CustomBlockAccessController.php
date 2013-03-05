@@ -20,7 +20,7 @@ class CustomBlockAccessController implements EntityAccessControllerInterface {
    * Implements EntityAccessControllerInterface::viewAccess().
    */
   public function viewAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return user_access('view content', $account);
+    return TRUE;
   }
 
   /**

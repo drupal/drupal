@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "aggregator_category_block",
- *   subject = @Translation("Aggregator category"),
+ *   admin_label = @Translation("Aggregator category"),
  *   module = "aggregator",
  *   derivative = "Drupal\aggregator\Plugin\Derivative\AggregatorCategoryBlock"
  * )

@@ -5,7 +5,6 @@
  * Used to aggregate syndicated content (RSS, RDF, and Atom).
  */
 
-use Drupal\aggregator\Plugin\FetcherManager;
 use Drupal\aggregator\Plugin\Core\Entity\Feed;
 
 /**
@@ -450,7 +449,7 @@ function aggregator_refresh(Feed $feed) {
   list($fetcher, $parser, $processors) = _aggregator_get_variables();
 
   // Fetch the feed.
-  $fetcher_manager = new FetcherManager();
+  $fetcher_manager = drupal_container()->get('plugin.manager.aggregator.fetcher');
   try {
     $success = $fetcher_manager->createInstance($fetcher)->fetch($feed);
   }

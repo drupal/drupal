@@ -51,8 +51,8 @@ class AjaxResponse extends JsonResponse {
    * @param Request $request
    *   A request object.
    *
-   * @return
-   *   Response The current response.
+   * @return Response
+   *   The current response.
    */
   public function prepare(Request $request) {
     $this->setData($this->ajaxRender($request));
@@ -133,7 +133,7 @@ class AjaxResponse extends JsonResponse {
     $scripts = drupal_add_js();
     if (!empty($scripts['settings'])) {
       $settings = drupal_merge_js_settings($scripts['settings']['data']);
-      $this->addCommand(new SettingsCommand($settings, TRUE));
+      $this->addCommand(new SettingsCommand($settings, TRUE), TRUE);
     }
 
     $commands = $this->commands;

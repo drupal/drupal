@@ -48,6 +48,10 @@ db_merge('variable')
   ->fields(array('value' => serialize('kdm95qppDDlyZrcUOx453YwQqDA4DNmxi4VQcxzFU9M')))
   ->execute();
 db_merge('variable')
+  ->key(array('name' => 'drupal_private_key'))
+  ->fields(array('value' => serialize('G38mKqASKus8VGMkMzVuXImYbzspCQ1iRT2iEZpMYmQ')))
+  ->execute();
+db_merge('variable')
   ->key(array('name' => 'node_cron_comments_scale'))
   ->fields(array('value' => serialize(1.0 / 1000)))
   ->execute();

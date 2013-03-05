@@ -3,8 +3,7 @@
  * Right-to-Left styling for the Database Logging module.
  */
 
-.form-item-type,
-.form-item-severity {
-  margin-right: 0;
-  margin-left: 1em;
+.dblog-filter-form .form-item-type,
+.dblog-filter-form .form-item-severity {
+  margin: .1em .1em .1em .9em;
 }

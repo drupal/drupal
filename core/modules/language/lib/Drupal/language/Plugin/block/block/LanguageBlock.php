@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "language_block",
- *   subject = @Translation("Language switcher"),
+ *   admin_label = @Translation("Language switcher"),
  *   module = "language",
  *   derivative = "Drupal\language\Plugin\Derivative\LanguageBlock"
  * )

@@ -6,7 +6,6 @@
  */
 
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Drupal\aggregator\Plugin\FetcherManager;
 use Drupal\aggregator\Plugin\Core\Entity\Feed;
 
 /**
@@ -346,7 +345,7 @@ function aggregator_admin_form($form, $form_state) {
   aggregator_sanitize_configuration();
 
   // Get all available fetchers.
-  $fetcher_manager = new FetcherManager();
+  $fetcher_manager = drupal_container()->get('plugin.manager.aggregator.fetcher');
   $fetchers = array();
   foreach ($fetcher_manager->getDefinitions() as $id => $definition) {
     $label = $definition['title'] . ' <span class="description">' . $definition['description'] . '</span>';

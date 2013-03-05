@@ -1,0 +1,23 @@
+# Schema for the configuration files of the file module.
+
+file.settings:
+  type: mapping
+  label: 'File settings'
+  mapping:
+    description:
+      type: mapping
+      label: 'Description'
+      mapping:
+        type:
+          type: string
+          label: 'Type'
+        length:
+          type: integer
+          label: 'Length'
+    icon:
+      type: mapping
+      label: 'Icon'
+      mapping:
+        directory:
+          type: path
+          label: 'Directory'

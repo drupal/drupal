@@ -868,7 +868,6 @@ function filter_process_format($element) {
   $element['value'] += element_info($element['#base_type']);
 
   // Turn original element into a text format wrapper.
-  $path = drupal_get_path('module', 'filter');
   $element['#attached']['library'][] = array('filter', 'drupal.filter');
 
   // Setup child container for the text format widget.
@@ -877,25 +876,36 @@ function filter_process_format($element) {
     '#attributes' => array('class' => array('filter-wrapper')),
   );
 
+  // Get a list of formats that the current user has access to.
+  $formats = filter_formats($user);
+
+  // Use the default format for this user if none was selected.
+  if (!isset($element['#format'])) {
+    $element['#format'] = filter_default_format($user);
+  }
+
+  // If multiple text formats are available, remove the fallback. The
+  // "always_show_fallback_choice" is a hidden variable that has no UI. It
+  // defaults to false.
+  if (!config('filter.settings')->get('always_show_fallback_choice')) {
+    $fallback_format = filter_fallback_format();
+    if ($element['#format'] !== $fallback_format && count($formats) > 1) {
+      unset($formats[$fallback_format]);
+    }
+  }
+
   // Prepare text format guidelines.
   $element['format']['guidelines'] = array(
     '#type' => 'container',
     '#attributes' => array('class' => array('filter-guidelines')),
     '#weight' => 20,
   );
-  // Get a list of formats that the current user has access to.
-  $formats = filter_formats($user);
   foreach ($formats as $format) {
     $options[$format->format] = $format->name;
     $element['format']['guidelines'][$format->format] = array(
       '#theme' => 'filter_guidelines',
       '#format' => $format,
     );
-  }
-
-  // Use the default format for this user if none was selected.
-  if (!isset($element['#format'])) {
-    $element['#format'] = filter_default_format($user);
   }
 
   $element['format']['format'] = array(

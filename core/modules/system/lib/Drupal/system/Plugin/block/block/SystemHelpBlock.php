@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "system_help_block",
- *   subject = @Translation("System Help"),
+ *   admin_label = @Translation("System Help"),
  *   module = "system"
  * )
  */

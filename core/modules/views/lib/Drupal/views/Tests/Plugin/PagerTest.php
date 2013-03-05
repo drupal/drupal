@@ -103,7 +103,9 @@ class PagerTest extends PluginTestBase {
       'pager_options[items_per_page]' => 10,
     );
     $this->drupalPost('admin/structure/views/nojs/display/test_store_pager_settings/default/pager_options', $edit, t('Apply'));
-    $this->assertText('20 items');
+    $this->assertText('10 items', 'The default value has been changed.');
+    $this->drupalGet('admin/structure/views/view/test_store_pager_settings/edit/page_1');
+    $this->assertText('20 items', 'The original value remains unchanged.');
 
   }
 

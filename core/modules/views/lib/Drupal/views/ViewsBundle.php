@@ -23,7 +23,8 @@ class ViewsBundle extends Bundle {
   public function build(ContainerBuilder $container) {
     foreach (ViewExecutable::getPluginTypes() as $type) {
       $container->register("plugin.manager.views.$type", 'Drupal\views\Plugin\ViewsPluginManager')
-        ->addArgument($type);
+        ->addArgument($type)
+        ->addArgument('%container.namespaces%');
     }
 
     $container

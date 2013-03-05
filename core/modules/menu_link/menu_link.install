@@ -65,13 +65,11 @@ function menu_link_schema() {
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'translatable' => TRUE,
       ),
       'options' => array(
         'description' => 'A serialized array of options to be passed to the url() or l() function, such as a query string or HTML attributes.',
         'type' => 'blob',
         'not null' => FALSE,
-        'translatable' => TRUE,
         'serialize' => TRUE,
       ),
       'module' => array(

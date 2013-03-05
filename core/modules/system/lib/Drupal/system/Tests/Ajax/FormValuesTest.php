@@ -2,10 +2,12 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Ajax\FormValuesTest.
+ * Contains \Drupal\system\Tests\Ajax\FormValuesTest.
  */
 
 namespace Drupal\system\Tests\Ajax;
+
+use Drupal\Core\Ajax\DataCommand;
 
 /**
  * Tests that $form_state['values'] is properly delivered to $ajax['callback'].
@@ -36,11 +38,8 @@ class FormValuesTest extends AjaxTestBase {
         'select' => $item,
       );
       $commands = $this->drupalPostAJAX('ajax_forms_test_get_form', $edit, 'select');
-      $expected = array(
-        'command' => 'data',
-        'value' => $item,
-      );
-      $this->assertCommand($commands, $expected, "verification of AJAX form values from a selectbox issued with a correct value");
+      $expected = new DataCommand('#ajax_selected_color', 'form_state_value_select', $item);
+      $this->assertCommand($commands, $expected->render(), 'Verification of AJAX form values from a selectbox issued with a correct value.');
     }
 
     // Verify form values of a checkbox element.
@@ -49,11 +48,8 @@ class FormValuesTest extends AjaxTestBase {
         'checkbox' => $item,
       );
       $commands = $this->drupalPostAJAX('ajax_forms_test_get_form', $edit, 'checkbox');
-      $expected = array(
-        'command' => 'data',
-        'value' => (int) $item,
-      );
-      $this->assertCommand($commands, $expected, "verification of AJAX form values from a checkbox issued with a correct value");
+      $expected = new DataCommand('#ajax_checkbox_value', 'form_state_value_select', (int) $item);
+      $this->assertCommand($commands, $expected->render(), 'Verification of AJAX form values from a checkbox issued with a correct value.');
     }
   }
 }

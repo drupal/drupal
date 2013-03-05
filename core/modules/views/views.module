@@ -271,17 +271,14 @@ function views_preprocess_comment(&$vars) {
 }
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function views_permission() {
   return array(
-    'administer views' => array(
-      'title' => t('Administer views'),
-      'description' => t('Access the views administration pages.'),
-    ),
     'access all views' => array(
       'title' => t('Bypass views access control'),
       'description' => t('Bypass access control when accessing views.'),
+      'restrict access' => TRUE,
     ),
   );
 }
@@ -486,7 +483,7 @@ function views_preprocess_html(&$variables) {
       unset($variables['attributes']['class'][$key]);
       // Add the JavaScript, with a group and weight such that it will run
       // before modules/contextual/contextual.js.
-      drupal_add_js(drupal_get_path('module', 'views') . '/js/views-contextual.js', array('group' => JS_LIBRARY, 'weight' => -1));
+      drupal_add_library('views', 'views.contextual-links');
     }
   }
 }
@@ -862,6 +859,17 @@ function views_library_info() {
       array('system', 'jquery.once'),
       array('system', 'jquery.form'),
       array('system', 'drupal.ajax'),
+    ),
+  );
+  $libraries['views.contextual-links'] = array(
+    'title' => 'Views Contextual links',
+    'version' => VERSION,
+    'js' => array(
+      "$path/views-contextual.js" => array('group' => JS_LIBRARY, 'weight' => -10),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
     ),
   );
 
@@ -1769,15 +1777,6 @@ function _field_view_formatter_options($field_type = NULL) {
     return !empty($options[$field_type]) ? $options[$field_type] : array();
   }
   return $options;
-}
-
-/**
- * Filter by no empty values, though allow to use "0".
- * @param $var
- * @return bool
- */
-function _views_array_filter_zero($var) {
-  return trim($var) != "";
 }
 
 /**
