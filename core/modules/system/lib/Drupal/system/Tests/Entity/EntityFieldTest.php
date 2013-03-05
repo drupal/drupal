@@ -15,7 +15,7 @@ use Drupal\Core\TypedData\TypedDataInterface;
 /**
  * Tests Entity API base functionality.
  */
-class EntityFieldTest extends EntityUnitBaseTest  {
+class EntityFieldTest extends EntityUnitTestBase  {
 
   /**
    * Modules to enable.

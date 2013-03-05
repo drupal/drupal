@@ -12,7 +12,7 @@ use Drupal\user\Plugin\Core\Entity\User;
 /**
  * Tests the basic Entity API.
  */
-class EntityApiTest extends EntityUnitBaseTest {
+class EntityApiTest extends EntityUnitTestBase {
 
   public static function getInfo() {
     return array(

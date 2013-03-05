@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Entity;
 /**
  * Tests entity properties.
  */
-class EntityLabelTest extends EntityUnitBaseTest {
+class EntityLabelTest extends EntityUnitTestBase {
 
   public static function getInfo() {
     return array(

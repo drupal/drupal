@@ -21,7 +21,7 @@ use Drupal\Core\Database\Database;
  * As well as all type-specific hooks, like hook_node_insert(),
  * hook_comment_update(), etc.
  */
-class EntityCrudHookTest extends EntityUnitBaseTest {
+class EntityCrudHookTest extends EntityUnitTestBase {
 
   /**
    * Modules to enable.

@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Entity;
 /**
  * Tests the basic Entity API.
  */
-class EntityUriTest extends EntityUnitBaseTest {
+class EntityUriTest extends EntityUnitTestBase {
 
   public static function getInfo() {
     return array(

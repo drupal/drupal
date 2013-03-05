@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Entity;
 /**
  * Tests the basic Entity API.
  */
-class EntityQueryTest extends EntityUnitBaseTest {
+class EntityQueryTest extends EntityUnitTestBase {
 
   /**
    * Modules to enable.

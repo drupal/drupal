@@ -14,7 +14,7 @@ use Drupal\Core\Language\Language;
 /**
  * Tests entity translation.
  */
-class EntityTranslationTest extends EntityUnitBaseTest {
+class EntityTranslationTest extends EntityUnitTestBase {
 
   protected $langcodes;
 

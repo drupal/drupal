@@ -12,7 +12,7 @@ use Drupal\Component\Uuid\Uuid;
 /**
  * Tests creation, saving, and loading of entity UUIDs.
  */
-class EntityUUIDTest extends EntityUnitBaseTest {
+class EntityUUIDTest extends EntityUnitTestBase {
 
   public static function getInfo() {
     return array(

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Entity\EntityApiTest.
+ * Contains \Drupal\system\Tests\Entity\EntityUnitTestBase.
  */
 
 namespace Drupal\system\Tests\Entity;
@@ -12,7 +12,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
 /**
  * Defines an abstract test base for entity unit tests.
  */
-abstract class EntityUnitBaseTest extends DrupalUnitTestBase {
+abstract class EntityUnitTestBase extends DrupalUnitTestBase {
 
   /**
    * Modules to enable.

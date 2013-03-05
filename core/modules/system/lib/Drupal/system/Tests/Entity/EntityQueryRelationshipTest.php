@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Entity;
 /**
  * Tests Entity Query API relationship functionality.
  */
-class EntityQueryRelationshipTest extends EntityUnitBaseTest  {
+class EntityQueryRelationshipTest extends EntityUnitTestBase  {
 
   /**
    * Modules to enable.

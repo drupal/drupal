@@ -15,7 +15,7 @@ use Drupal\Core\Entity\EntityAccessController;
 /**
  * Tests the entity access controller.
  */
-class EntityAccessTest extends EntityUnitBaseTest  {
+class EntityAccessTest extends EntityUnitTestBase  {
 
   public static $modules = array('language', 'locale');
 
