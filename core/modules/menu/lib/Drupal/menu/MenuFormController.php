@@ -47,8 +47,9 @@ class MenuFormController extends EntityFormController {
       '#disabled' => !$menu->isNew() || isset($system_menus[$menu->id()]),
     );
     $form['description'] = array(
-      '#type' => 'textarea',
-      '#title' => t('Description'),
+      '#type' => 'textfield',
+      '#title' => t('Administrative summary'),
+      '#maxlength' => 512,
       '#default_value' => $menu->description,
     );
 
