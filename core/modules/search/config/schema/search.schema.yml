@@ -1,0 +1,71 @@
+# Schema for the configuration files of the search module.
+
+search.settings:
+  type: mapping
+  label: 'Search settings'
+  mapping:
+    active_modules:
+      type: sequence
+      label: 'Active search modules'
+      sequence:
+        - type: string
+          label: 'Module'
+    and_or_limit:
+      type: integer
+      label: 'AND/OR combination limit'
+    default_module:
+      type: string
+      label: 'Default search module'
+    index:
+      type: mapping
+      label: 'Indexing settings'
+      mapping:
+        cron_limit:
+          type: integer
+          label: 'Number of items to index per cron run'
+        overlap_cjk:
+          type: boolean
+          label: 'Simple CJK handling'
+        minimum_word_size:
+          type: integer
+          label: 'Minimum word length to index'
+        tag_weights:
+          type: mapping
+          label: 'HTML tags weight'
+          mapping:
+            h1:
+              type: integer
+              label: 'Tag h1 weight'
+            h2:
+              type: integer
+              label: 'Tag h2 weight'
+            h3:
+              type: integer
+              label: 'Tag h3 weight'
+            h4:
+              type: integer
+              label: 'Tag h4 weight'
+            h5:
+              type: integer
+              label: 'Tag h5 weight'
+            h6:
+              type: integer
+              label: 'Tag h6 weight'
+            u:
+              type: integer
+              label: 'Tag u weight'
+            b:
+              type: integer
+              label: 'Tag b weight'
+            i:
+              type: integer
+              label: 'Tag i weight'
+            strong:
+              type: integer
+              label: 'Tag strong weight'
+            em:
+              type: integer
+              label: 'Tag em weight'
+            a:
+              type: integer
+              label: 'Tag a weight'
