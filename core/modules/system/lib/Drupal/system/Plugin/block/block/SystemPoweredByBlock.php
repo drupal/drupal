@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "system_powered_by_block",
- *   subject = @Translation("Powered by Drupal"),
+ *   admin_label = @Translation("Powered by Drupal"),
  *   module = "system"
  * )
  */

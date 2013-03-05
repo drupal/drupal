@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "node_recent_block",
- *   subject = @Translation("Recent content"),
+ *   admin_label = @Translation("Recent content"),
  *   module = "node"
  * )
  */

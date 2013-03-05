@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *  id = "shortcuts",
- *  subject = @Translation("Shortcuts"),
+ *  admin_label = @Translation("Shortcuts"),
  *  module = "shortcut"
  * )
  */

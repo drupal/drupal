@@ -33,7 +33,7 @@ class AggregatorCategoryBlock implements DerivativeInterface {
     $result = db_query('SELECT cid, title FROM {aggregator_category} ORDER BY title WHERE cid = :cid', array(':cid' => $derivative_id))->fetchObject();
     $this->derivatives[$derivative_id] = $base_plugin_definition;
     $this->derivatives[$derivative_id]['delta'] = $result->cid;
-    $this->derivatives[$derivative_id]['subject'] = t('@title category latest items', array('@title' => $result->title));
+    $this->derivatives[$derivative_id]['admin_label'] = t('@title category latest items', array('@title' => $result->title));
     return $this->derivatives[$derivative_id];
   }
 
@@ -46,7 +46,7 @@ class AggregatorCategoryBlock implements DerivativeInterface {
     foreach ($result as $category) {
       $this->derivatives[$category->cid] = $base_plugin_definition;
       $this->derivatives[$category->cid]['delta'] = $category->cid;
-      $this->derivatives[$category->cid]['subject'] = t('@title category latest items', array('@title' => $category->title));
+      $this->derivatives[$category->cid]['admin_label'] = t('@title category latest items', array('@title' => $category->title));
     }
     return $this->derivatives;
   }

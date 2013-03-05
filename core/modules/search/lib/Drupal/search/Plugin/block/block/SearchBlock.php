@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "search_form_block",
- *   subject = @Translation("Search form"),
+ *   admin_label = @Translation("Search form"),
  *   module = "search"
  * )
  */

@@ -15,7 +15,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "views_exposed_filter_block",
- *   subject = @Translation("Views Exposed Filter Block"),
+ *   admin_label = @Translation("Views Exposed Filter Block"),
  *   module = "views",
  *   derivative = "Drupal\views\Plugin\Derivative\ViewsExposedFilterBlock"
  * )

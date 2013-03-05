@@ -138,7 +138,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
     foreach ($entities as $entity_id => $entity) {
       $info = $entity->getPlugin()->getDefinition();
       $form['blocks'][$entity_id]['info'] = array(
-        '#markup' => check_plain($info['subject']),
+        '#markup' => check_plain($info['admin_label']),
       );
       $form['blocks'][$entity_id]['theme'] = array(
         '#type' => 'hidden',
@@ -149,14 +149,14 @@ class BlockListController extends ConfigEntityListController implements FormInte
         '#default_value' => $entity->get('weight'),
         '#delta' => $weight_delta,
         '#title_display' => 'invisible',
-        '#title' => t('Weight for @block block', array('@block' => $info['subject'])),
+        '#title' => t('Weight for @block block', array('@block' => $info['admin_label'])),
       );
       $form['blocks'][$entity_id]['region'] = array(
         '#type' => 'select',
         '#default_value' => $entity->get('region') != BLOCK_REGION_NONE ? $entity->get('region') : NULL,
         '#empty_value' => BLOCK_REGION_NONE,
         '#title_display' => 'invisible',
-        '#title' => t('Region for @block block', array('@block' => $info['subject'])),
+        '#title' => t('Region for @block block', array('@block' => $info['admin_label'])),
         '#options' => $this->regions,
       );
       $links['configure'] = array(

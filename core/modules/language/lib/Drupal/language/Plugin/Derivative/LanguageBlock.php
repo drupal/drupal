@@ -40,7 +40,7 @@ class LanguageBlock implements DerivativeInterface {
     $info = language_types_info();
     foreach (language_types_get_configurable(FALSE) as $type) {
       $this->derivatives[$type] = $base_plugin_definition;
-      $this->derivatives[$type]['subject'] = t('Language switcher (!type)', array('!type' => $info[$type]['name']));
+      $this->derivatives[$type]['admin_label'] = t('Language switcher (!type)', array('!type' => $info[$type]['name']));
       $this->derivatives[$type]['cache'] = DRUPAL_NO_CACHE;
     }
     return $this->derivatives;

@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "book_navigation",
- *   subject = @Translation("Book navigation"),
+ *   admin_label = @Translation("Book navigation"),
  *   module = "book"
  * )
  */

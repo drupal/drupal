@@ -477,7 +477,7 @@ function block_load($entity_id) {
 }
 
 /**
- * Builds the content and subject for a block.
+ * Builds the content and label for a block.
  *
  * For cacheable blocks, this is called during #pre_render.
  *

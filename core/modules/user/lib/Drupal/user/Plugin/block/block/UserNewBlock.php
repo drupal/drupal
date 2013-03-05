@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "user_new_block",
- *   subject = @Translation("Who's new"),
+ *   admin_label = @Translation("Who's new"),
  *   module = "user"
  * )
  */

@@ -18,7 +18,7 @@ use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
  *
  * @Plugin(
  *   id = "views_block",
- *   subject = @Translation("Views Block"),
+ *   admin_label = @Translation("Views Block"),
  *   module = "views",
  *   derivative = "Drupal\views\Plugin\Derivative\ViewsBlock"
  * )

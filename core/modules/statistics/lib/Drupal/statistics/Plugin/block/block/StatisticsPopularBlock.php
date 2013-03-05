@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "statistics_popular_block",
- *   subject = @Translation("Popular content"),
+ *   admin_label = @Translation("Popular content"),
  *   module = "statistics"
  * )
  */

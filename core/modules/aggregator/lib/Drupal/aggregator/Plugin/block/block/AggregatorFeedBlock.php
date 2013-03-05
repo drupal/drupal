@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "aggregator_feed_block",
- *   subject = @Translation("Aggregator feed"),
+ *   admin_label = @Translation("Aggregator feed"),
  *   module = "aggregator",
  *   derivative = "Drupal\aggregator\Plugin\Derivative\AggregatorFeedBlock"
  * )

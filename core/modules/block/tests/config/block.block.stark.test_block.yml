@@ -8,4 +8,4 @@ visibility: {  }
 plugin: test_html_id
 settings:
   cache: '1'
-  subject: 'Test block html id'
+  admin_label: 'Test block html id'

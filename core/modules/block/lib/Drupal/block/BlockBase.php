@@ -70,10 +70,9 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
       // default settings for the block plugin.
       $this->configuration = $this->settings();
 
-      // @todo This loads the default subject. Is this the right place to do so?
       $definition = $this->getDefinition();
-      if (isset($definition['subject'])) {
-        $this->configuration += array('subject' => $definition['subject']);
+      if (isset($definition['admin_label'])) {
+        $this->configuration += array('admin_label' => $definition['admin_label']);
       }
     }
     // Ensure that the default cache mode is set.
@@ -238,7 +237,7 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
       '#type' => 'textfield',
       '#title' => t('Title'),
       '#maxlength' => 255,
-      '#default_value' => !$entity->isNew() ? $entity->label() : $definition['subject'],
+      '#default_value' => !$entity->isNew() ? $entity->label() : $definition['admin_label'],
     );
     $form['machine_name'] = array(
       '#type' => 'machine_name',

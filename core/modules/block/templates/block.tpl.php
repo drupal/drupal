@@ -5,7 +5,7 @@
  * Default theme implementation to display a block.
  *
  * Available variables:
- * - $block->subject: Block title.
+ * - $block->label: Block title.
  * - $content: Block content.
  * - $block->module: Module that generated the block.
  * - $block->delta: An ID for the block, unique within each module.
@@ -48,8 +48,8 @@
 <?php endif; ?>
 
   <?php print render($title_prefix); ?>
-<?php if ($block->subject): ?>
-  <h2<?php print $title_attributes; ?>><?php print $block->subject ?></h2>
+<?php if ($block->label): ?>
+  <h2<?php print $title_attributes; ?>><?php print $block->label; ?></h2>
 <?php endif;?>
   <?php print render($title_suffix); ?>
 

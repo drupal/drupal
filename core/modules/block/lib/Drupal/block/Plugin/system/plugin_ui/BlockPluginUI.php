@@ -31,7 +31,7 @@ use Drupal\Core\Annotation\Translation;
  *   task_suffix = "library",
  *   task_title = @Translation("Library"),
  *   title = @Translation("Add block"),
- *   title_attribute = "subject",
+ *   title_attribute = "admin_label",
  *   type = MENU_LOCAL_ACTION
  * )
  */
@@ -144,7 +144,7 @@ class BlockPluginUI extends PluginUIBase {
     $plugin_definition = $this->getDefinition();
     list($plugin, $theme) = explode(':', $this->getPluginId());
     $row = array();
-    $row[] = check_plain($display_plugin_definition['subject']);
+    $row[] = check_plain($display_plugin_definition['admin_label']);
     $row[] = array('data' => array(
       '#type' => 'operations',
       '#links' => array(

@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "system_main_block",
- *   subject = @Translation("Main page content"),
+ *   admin_label = @Translation("Main page content"),
  *   module = "system"
  * )
  */
