@@ -2,10 +2,17 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Ajax\FrameworkTest.
+ * Contains \Drupal\system\Tests\Ajax\FrameworkTest.
  */
 
 namespace Drupal\system\Tests\Ajax;
+
+use Drupal\Core\Ajax\AddCssCommand;
+use Drupal\Core\Ajax\AlertCommand;
+use Drupal\Core\Ajax\AppendCommand;
+use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\Ajax\PrependCommand;
+use Drupal\Core\Ajax\SettingsCommand;
 
 /**
  * Tests primary Ajax framework functions.
@@ -21,27 +28,61 @@ class FrameworkTest extends AjaxTestBase {
 
   /**
    * Ensures ajax_render() returns JavaScript settings from the page request.
-   *
-   * @todo Add tests to ensure that ajax_render() returns commands for new CSS
-   *   and JavaScript files to be loaded by the page. See
-   *   http://drupal.org/node/561858.
    */
   function testAJAXRender() {
+    // Verify that settings command is generated when JavaScript settings are
+    // set via drupal_add_js().
     $commands = $this->drupalGetAJAX('ajax-test/render');
+    $expected = new SettingsCommand(array('ajax' => 'test'), TRUE);
+    $this->assertCommand($commands, $expected->render(), 'ajax_render() loads settings added with drupal_add_js().');
 
-    // Verify that there is a command to load settings added with
-    // drupal_add_js().
-    $expected = array(
-      'command' => 'settings',
-      'settings' => array('ajax' => 'test'),
-    );
-    $this->assertCommand($commands, $expected, 'ajax_render() loads settings added with drupal_add_js().');
-
-    // Verify that Ajax settings are loaded for #type 'link'.
+    // Verify that JavaScript settings are loaded for #type 'link'.
     $this->drupalGet('ajax-test/link');
     $settings = $this->drupalGetSettings();
     $this->assertEqual($settings['ajax']['ajax-link']['url'], url('filter/tips'));
     $this->assertEqual($settings['ajax']['ajax-link']['wrapper'], 'block-system-main');
+  }
+
+  /**
+   * Tests AjaxResponse::prepare() AJAX commands ordering.
+   */
+  function testOrder() {
+    $path = drupal_get_path('module', 'system');
+    $expected_commands = array();
+
+    // Expected commands, in a very specific order.
+    $expected_commands[0] = new SettingsCommand(array('ajax' => 'test'), TRUE);
+    drupal_static_reset('drupal_add_css');
+    drupal_add_css($path . '/system.admin.css');
+    drupal_add_css($path . '/system.maintenance.css');
+    $expected_commands[1] = new AddCssCommand(drupal_get_css(drupal_add_css(), TRUE));
+    drupal_static_reset('drupal_add_js');
+    drupal_add_js($path . '/system.js');
+    $expected_commands[2] = new PrependCommand('head', drupal_get_js('header', drupal_add_js(), TRUE));
+    drupal_static_reset('drupal_add_js');
+    drupal_add_js($path . '/system.modules.js', array('scope' => 'footer'));
+    $expected_commands[3] = new AppendCommand('body', drupal_get_js('footer', drupal_add_js(), TRUE));
+    $expected_commands[4] = new HtmlCommand('body', 'Hello, world!');
+
+    // Load any page with at least one CSS file, at least one JavaScript file
+    // and at least one #ajax-powered element. The latter is an assumption of
+    // drupalPostAJAX(), the two former are assumptions of
+    // AjaxReponse::ajaxRender().
+    // @todo refactor AJAX Framework + tests to make less assumptions.
+    $this->drupalGet('ajax_forms_test_lazy_load_form');
+
+    // Verify AJAX command order — this should always be the order:
+    // 1. JavaScript settings
+    // 2. CSS files
+    // 3. JavaScript files in the header
+    // 4. JavaScript files in the footer
+    // 5. Any other AJAX commands, in whatever order they were added.
+    $commands = $this->drupalPostAJAX(NULL, array(), NULL, 'ajax-test/order', array(), array(), NULL, array());
+    $this->assertCommand(array_slice($commands, 0, 1), $expected_commands[0]->render(), 'Settings command is first.');
+    $this->assertCommand(array_slice($commands, 1, 1), $expected_commands[1]->render(), 'CSS command is second (and CSS files are ordered correctly).');
+    $this->assertCommand(array_slice($commands, 2, 1), $expected_commands[2]->render(), 'Header JS command is third.');
+    $this->assertCommand(array_slice($commands, 3, 1), $expected_commands[3]->render(), 'Footer JS command is fourth.');
+    $this->assertCommand(array_slice($commands, 4, 1), $expected_commands[4]->render(), 'HTML command is fifth.');
   }
 
   /**
@@ -50,26 +91,20 @@ class FrameworkTest extends AjaxTestBase {
   function testAJAXRenderError() {
     // Verify default error message.
     $commands = $this->drupalGetAJAX('ajax-test/render-error');
-    $expected = array(
-      'command' => 'alert',
-      'text' => t('An error occurred while handling the request: The server received invalid input.'),
-    );
-    $this->assertCommand($commands, $expected, 'ajax_render_error() invokes alert command.');
+    $expected = new AlertCommand(t('An error occurred while handling the request: The server received invalid input.'));
+    $this->assertCommand($commands, $expected->render(), 'ajax_render_error() invokes alert command.');
 
     // Verify custom error message.
     $edit = array(
       'message' => 'Custom error message.',
     );
     $commands = $this->drupalGetAJAX('ajax-test/render-error', array('query' => $edit));
-    $expected = array(
-      'command' => 'alert',
-      'text' => $edit['message'],
-    );
-     $this->assertCommand($commands, $expected, 'Custom error message is output.');
+    $expected = new AlertCommand($edit['message']);
+    $this->assertCommand($commands, $expected->render(), 'Custom error message is output.');
   }
 
   /**
-   * Tests that new JavaScript and CSS files are returned on an Ajax request.
+   * Tests that new JavaScript and CSS files are lazy-loaded on an AJAX request.
    */
   function testLazyLoad() {
     $expected = array(
@@ -103,16 +138,20 @@ class FrameworkTest extends AjaxTestBase {
     // Verify that the base page doesn't have the settings and files that are to
     // be lazy loaded as part of the next requests.
     $this->assertTrue(!isset($original_settings[$expected['setting_name']]), format_string('Page originally lacks the %setting, as expected.', array('%setting' => $expected['setting_name'])));
-    $this->assertTrue(!isset($original_settings[$expected['css']]), format_string('Page originally lacks the %css file, as expected.', array('%css' => $expected['css'])));
-    $this->assertTrue(!isset($original_settings[$expected['js']]), format_string('Page originally lacks the %js file, as expected.', array('%js' => $expected['js'])));
+    $this->assertTrue(!isset($original_css[$expected['css']]), format_string('Page originally lacks the %css file, as expected.', array('%css' => $expected['css'])));
+    $this->assertTrue(!isset($original_js[$expected['js']]), format_string('Page originally lacks the %js file, as expected.', array('%js' => $expected['js'])));
 
-    // Submit the Ajax request without triggering files getting added.
+    // Submit the AJAX request without triggering files getting added.
     $commands = $this->drupalPostAJAX(NULL, array('add_files' => FALSE), array('op' => t('Submit')));
     $new_settings = $this->drupalGetSettings();
+    $new_css = $new_settings['ajaxPageState']['css'];
+    $new_js = $new_settings['ajaxPageState']['js'];
 
     // Verify the setting was not added when not expected.
-    $this->assertTrue(!isset($new_settings['setting_name']), format_string('Page still lacks the %setting, as expected.', array('%setting' => $expected['setting_name'])));
-    // Verify a settings command does not add CSS or scripts to Drupal.settings
+    $this->assertTrue(!isset($new_settings[$expected['setting_name']]), format_string('Page still lacks the %setting, as expected.', array('%setting' => $expected['setting_name'])));
+    $this->assertTrue(!isset($new_css[$expected['css']]), format_string('Page still lacks the %css file, as expected.', array('%css' => $expected['css'])));
+    $this->assertTrue(!isset($new_js[$expected['js']]), format_string('Page still lacks the %js file, as expected.', array('%js' => $expected['js'])));
+    // Verify a settings command does not add CSS or scripts to drupalSettings
     // and no command inserts the corresponding tags on the page.
     $found_settings_command = FALSE;
     $found_markup_command = FALSE;
@@ -127,27 +166,31 @@ class FrameworkTest extends AjaxTestBase {
     $this->assertFalse($found_settings_command, format_string('Page state still lacks the %css and %js files, as expected.', array('%css' => $expected['css'], '%js' => $expected['js'])));
     $this->assertFalse($found_markup_command, format_string('Page still lacks the %css and %js files, as expected.', array('%css' => $expected['css'], '%js' => $expected['js'])));
 
-    // Submit the Ajax request and trigger adding files.
+    // Submit the AJAX request and trigger adding files.
     $commands = $this->drupalPostAJAX(NULL, array('add_files' => TRUE), array('op' => t('Submit')));
     $new_settings = $this->drupalGetSettings();
     $new_css = $new_settings['ajaxPageState']['css'];
     $new_js = $new_settings['ajaxPageState']['js'];
 
-    // Verify the expected setting was added.
+    // Verify the expected setting was added, both to drupalSettings, and as
+    // the first AJAX command.
     $this->assertIdentical($new_settings[$expected['setting_name']], $expected['setting_value'], format_string('Page now has the %setting.', array('%setting' => $expected['setting_name'])));
+    $expected_command = new SettingsCommand(array($expected['setting_name'] => $expected['setting_value']), TRUE);
+    $this->assertCommand(array_slice($commands, 0, 1), $expected_command->render(), format_string('The settings command was first.'));
 
-    // Verify the expected CSS file was added, both to Drupal.settings, and as
-    // an Ajax command for inclusion into the HTML.
+    // Verify the expected CSS file was added, both to drupalSettings, and as
+    // the second AJAX command for inclusion into the HTML.
     $this->assertEqual($new_css, $original_css + array($expected_css_basename => 1), format_string('Page state now has the %css file.', array('%css' => $expected['css'])));
-    $this->assertCommand($commands, array('data' => $expected_css_html), format_string('Page now has the %css file.', array('%css' => $expected['css'])));
+    $this->assertCommand(array_slice($commands, 1, 1), array('data' => $expected_css_html), format_string('Page now has the %css file.', array('%css' => $expected['css'])));
 
-    // Verify the expected JS file was added, both to Drupal.settings, and as
-    // an Ajax command for inclusion into the HTML. By testing for an exact HTML
-    // string containing the SCRIPT tag, we also ensure that unexpected
-    // JavaScript code, such as a jQuery.extend() that would potentially clobber
-    // rather than properly merge settings, didn't accidentally get added.
+    // Verify the expected JS file was added, both to drupalSettings, and as
+    // the third AJAX command for inclusion into the HTML. By testing for an
+    // exact HTML string containing the SCRIPT tag, we also ensure that
+    // unexpected JavaScript code, such as a jQuery.extend() that would
+    // potentially clobber rather than properly merge settings, didn't
+    // accidentally get added.
     $this->assertEqual($new_js, $original_js + array($expected['js'] => 1), format_string('Page state now has the %js file.', array('%js' => $expected['js'])));
-    $this->assertCommand($commands, array('data' => $expected_js_html), format_string('Page now has the %js file.', array('%js' => $expected['js'])));
+    $this->assertCommand(array_slice($commands, 2, 1), array('data' => $expected_js_html), format_string('Page now has the %js file.', array('%js' => $expected['js'])));
   }
 
   /**
