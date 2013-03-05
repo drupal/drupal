@@ -48,7 +48,6 @@ class CommentPreviewTest extends CommentTestBase {
     config('user.settings')->set('signatures', 1)->save();
     $test_signature = $this->randomName();
     $edit['signature[value]'] = '<a href="http://example.com/">' . $test_signature. '</a>';
-    $edit['signature[format]'] = 'filtered_html';
     $image = current($this->drupalGetTestFiles('image'));
     $edit['files[user_picture_und_0]'] = drupal_realpath($image->uri);
     $this->drupalPost('user/' . $this->web_user->uid . '/edit', $edit, t('Save'));

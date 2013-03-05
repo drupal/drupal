@@ -59,8 +59,6 @@ class SearchCommentCountToggleTest extends SearchTestBase {
     $edit_comment = array();
     $edit_comment['subject'] = $this->randomName();
     $edit_comment['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]'] = $this->randomName();
-    $filtered_html_format_id = 'filtered_html';
-    $edit_comment['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][format]'] = $filtered_html_format_id;
 
     // Post comment to the test node with comment
     $this->drupalPost('comment/reply/' . $this->searchable_nodes['1 comment']->nid, $edit_comment, t('Save'));

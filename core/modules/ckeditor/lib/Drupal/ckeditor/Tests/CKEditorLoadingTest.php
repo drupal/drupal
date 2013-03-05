@@ -46,6 +46,16 @@ class CKEditorLoadingTest extends WebTestBase {
     ));
     $editor->save();
 
+    // Create a second format without an associated editor so a drop down select
+    // list is created when selecting formats.
+    $full_html_format = entity_create('filter_format', array(
+      'format' => 'full_html',
+      'name' => 'Full HTML',
+      'weight' => 1,
+      'filters' => array(),
+    ));
+    $full_html_format->save();
+
     // Create node type.
     $this->drupalCreateContentType(array(
       'type' => 'article',
@@ -56,7 +66,7 @@ class CKEditorLoadingTest extends WebTestBase {
     //   - "untrusted": plain_text
     //   - "normal": plain_text, filtered_html
     $this->untrusted_user = $this->drupalCreateUser(array('create article content', 'edit any article content'));
-    $this->normal_user = $this->drupalCreateUser(array('create article content', 'edit any article content', 'use text format filtered_html'));
+    $this->normal_user = $this->drupalCreateUser(array('create article content', 'edit any article content', 'use text format filtered_html', 'use text format full_html'));
   }
 
   /**

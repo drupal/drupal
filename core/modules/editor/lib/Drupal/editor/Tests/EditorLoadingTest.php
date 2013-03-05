@@ -83,14 +83,11 @@ class EditorLoadingTest extends WebTestBase {
     $this->assertFalse($editor_settings_present, 'No Text Editor module settings.');
     $this->assertFalse($editor_js_present, 'No Text Editor JavaScript.');
     $this->assertTrue(count($body) === 1, 'A body field exists.');
-    $this->assertTrue(count($format_selector) === 1, 'A single text format selector exists on the page.');
-    $specific_format_selector = $this->xpath('//select[contains(@class, "filter-list") and not(contains(@class, "editor")) and not(@data-editor-for="edit-body-und-0-value")]');
-    $this->assertTrue(count($specific_format_selector) === 1, 'A single text format selector exists on the page and does not have the "editor" class nor a "data-editor-for" attribute.');
-
+    $this->assertTrue(count($format_selector) === 0, 'No text format selector exists on the page because the user only has access to a single format.');
     $this->drupalLogout($this->normal_user);
 
     // The normal user:
-    // - has access to 3 text formats;
+    // - has access to 2 text formats (and the fallback format);
     // - does have access to the full_html text format, so: Unicorn text editor.
     $this->drupalLogin($this->privileged_user);
     $this->drupalGet('node/add/article');

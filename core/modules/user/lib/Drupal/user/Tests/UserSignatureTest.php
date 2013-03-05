@@ -39,11 +39,19 @@ class UserSignatureTest extends WebTestBase {
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
     // Prefetch and create text formats.
-    $this->plain_text_format = filter_format_load('plain_text');
-
     $this->filtered_html_format = entity_create('filter_format', array(
-      'format' => 'filtered_html',
+      'format' => 'filtered_html_format',
       'name' => 'Filtered HTML',
+      'weight' => -1,
+      'filters' => array(
+        'filter_html' => array(
+          'module' => 'filter',
+          'status' => '1',
+          'settings' => array(
+            'allowed_html' => '<a> <em> <strong>',
+          ),
+        ),
+      ),
     ));
     $this->filtered_html_format->save();
 
@@ -85,13 +93,11 @@ class UserSignatureTest extends WebTestBase {
     $signature_text = "<h1>" . $this->randomName() . "</h1>";
     $edit = array(
       'signature[value]' => $signature_text,
-      'signature[format]' => $this->plain_text_format->format,
     );
     $this->drupalPost('user/' . $this->web_user->uid . '/edit', $edit, t('Save'));
 
     // Verify that values were stored.
     $this->assertFieldByName('signature[value]', $edit['signature[value]'], 'Submitted signature text found.');
-    $this->assertFieldByName('signature[format]', $edit['signature[format]'], 'Submitted signature format found.');
 
     // Create a comment.
     $langcode = LANGUAGE_NOT_SPECIFIED;
@@ -115,6 +121,6 @@ class UserSignatureTest extends WebTestBase {
     // Assert that the signature did not make it through unfiltered.
     $this->drupalGet('node/' . $node->nid);
     $this->assertNoRaw($signature_text, 'Unfiltered signature text not found.');
-    $this->assertRaw(check_markup($signature_text, $this->plain_text_format->format), 'Filtered signature text found.');
+    $this->assertRaw(check_markup($signature_text, $this->filtered_html_format->format), 'Filtered signature text found.');
   }
 }

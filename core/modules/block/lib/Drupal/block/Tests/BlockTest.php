@@ -35,6 +35,12 @@ class BlockTest extends WebTestBase {
     // Use the test page as the front page.
     config('system.site')->set('page.front', 'test-page')->save();
 
+    // Create Filtered HTML text format.
+    $filtered_html_format = entity_create('filter_format', array(
+      'format' => 'filtered_html',
+      'name' => 'Filtered HTML',
+    ));
+    $filtered_html_format->save();
     // Create Full HTML text format.
     $full_html_format = entity_create('filter_format', array(
       'format' => 'full_html',
@@ -47,6 +53,7 @@ class BlockTest extends WebTestBase {
     // text format.
     $this->adminUser = $this->drupalCreateUser(array(
       'administer blocks',
+      filter_permission_name($filtered_html_format),
       filter_permission_name($full_html_format),
       'access administration pages',
     ));

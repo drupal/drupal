@@ -39,7 +39,12 @@ function filter_admin_overview($form) {
     $form['formats'][$id]['#is_fallback'] = ($id == $fallback_format);
     if ($form['formats'][$id]['#is_fallback']) {
       $form['formats'][$id]['name'] = array('#markup' => drupal_placeholder($format->name));
-      $roles_markup = drupal_placeholder(t('All roles may use this format'));
+      if (config('filter.settings')->get('always_show_fallback_choice')) {
+        $roles_markup = drupal_placeholder(t('All roles may use this format'));
+      }
+      else {
+        $roles_markup = drupal_placeholder(t('This format is shown when no other formats are available'));
+      }
     }
     else {
       $form['formats'][$id]['name'] = array('#markup' => check_plain($format->name));
