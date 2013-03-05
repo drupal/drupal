@@ -22,21 +22,13 @@ use Drupal\Core\Config\Config;
  */
 interface ContextInterface {
 
-  /*
+  /**
    * Initialises a config context for use.
-   *
-   * Creates a unique context identifier, adds data and notifies system about
-   * the new context.
-   *
-   * @param string $context_key
-   *   The key that is used to set context data.
-   * @param mixed $data
-   *   The context config data.
    *
    * @return \Drupal\Core\Config\Context\ConfigContext
    *   The config context object.
    */
-  public function init($context_key, $data);
+  public function init();
 
   /**
    * Returns the stored value for a given key.
@@ -84,5 +76,26 @@ interface ContextInterface {
    *   (optional) Configuration object.
    */
   public function notify($config_event_name, Config $config = NULL);
+
+  /**
+   * Sets the override data for a configuration object.
+   *
+   * @param string $config_name
+   *   Configuration name.
+   * @param array data
+   *   The override data.
+   */
+  public function setOverrides($config_name, $data);
+
+  /**
+   * Gets the override data for a configuration object.
+   *
+   * @param string $config_name
+   *   Configuration name.
+   *
+   * @return mixed
+   *   The override data or FALSE if there is none.
+   */
+  public function getOverrides($config_name);
 
 }

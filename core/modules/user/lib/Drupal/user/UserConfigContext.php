@@ -26,14 +26,6 @@ class UserConfigContext extends ConfigContext {
    */
   const USER_KEY = 'user.account';
 
-  /**
-   * Implements \Drupal\Core\Config\Context\ContextInterface::setUuid().
-   */
-  public function setUuid() {
-    // Use the user's uuid to identify the config context.
-    $this->uuid = $this->get(self::USER_KEY)->uuid();
-  }
-
   /*
    * Helper function to create config context for user accounts.
    *
@@ -44,7 +36,9 @@ class UserConfigContext extends ConfigContext {
    *   The user config context object.
    */
   public function setAccount(User $account) {
-    $this->init(self::USER_KEY, $account);
+    $this->set(self::USER_KEY, $account);
+    // Re-initialize since the user change changes the context fundamentally.
+    $this->init();
     return $this;
   }
 

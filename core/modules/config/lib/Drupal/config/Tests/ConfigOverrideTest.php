@@ -51,7 +51,6 @@ class ConfigOverrideTest extends DrupalUnitTestBase {
     $conf['config_test.system']['foo'] = 'overridden';
     $conf['config_test.system']['baz'] = 'injected';
     $conf['config_test.system']['404'] = 'derp';
-    drupal_container()->get('config.context')->setGlobalOverride();
 
     config_install_default_config('module', 'config_test');
 
@@ -63,31 +62,17 @@ class ConfigOverrideTest extends DrupalUnitTestBase {
     $this->assertFalse(isset($data['baz']));
     $this->assertIdentical($data['404'], $expected_original_data['404']);
 
-    // Remove the $conf overrides and reset value in config.context service.
-    unset($conf['config_test.system']);
-    drupal_container()->get('config.context')->setGlobalOverride();
-
-    // Verify that the original configuration data exists.
+    // Enter an override-free context to ensure the original data remains.
+    config_context_enter('config.context.free');
     $config = config('config_test.system');
     $this->assertIdentical($config->get('foo'), $expected_original_data['foo']);
     $this->assertIdentical($config->get('baz'), $expected_original_data['baz']);
     $this->assertIdentical($config->get('404'), $expected_original_data['404']);
+    config_context_leave();
 
-    // Apply the overridden data, that needs to be set into the config.context
-    // service.
-    $conf['config_test.system']['foo'] = 'overridden';
-    $conf['config_test.system']['baz'] = 'injected';
-    $conf['config_test.system']['404'] = 'derp';
-    drupal_container()->get('config.context')->setGlobalOverride();
-
-    // Verify that the in-memory configuration object still contains the
-    // original data.
-    $this->assertIdentical($config->get('foo'), $expected_original_data['foo']);
-    $this->assertIdentical($config->get('baz'), $expected_original_data['baz']);
-    $this->assertIdentical($config->get('404'), $expected_original_data['404']);
-
-    // Reload the configuration object.
-    $config->init();
+    // Get the configuration object in an overriden context (the one set by
+    // default).
+    $config = config('config_test.system');
 
     // Verify that it contains the overridden data from $conf.
     $this->assertIdentical($config->get('foo'), $conf['config_test.system']['foo']);
@@ -116,24 +101,15 @@ class ConfigOverrideTest extends DrupalUnitTestBase {
     $this->assertIdentical($config->get('baz'), $conf['config_test.system']['baz']);
     $this->assertIdentical($config->get('404'), $conf['config_test.system']['404']);
 
-    // Remove the $conf overrides and reset value in config.context service.
-    unset($conf['config_test.system']);
-    drupal_container()->get('config.context')->setGlobalOverride();
-
-    // Reload it and verify that it still contains the original data.
-    $config->init();
+    // Enter an override-free context to ensure the original data remains saved.
+    config_context_enter('config.context.free');
+    $config = config('config_test.system');
     $this->assertIdentical($config->get('foo'), $expected_original_data['foo']);
     $this->assertIdentical($config->get('baz'), $expected_original_data['baz']);
     $this->assertIdentical($config->get('404'), $expected_original_data['404']);
+    config_context_leave();
 
-    // Set globals before importing to prove that the imported file does not
-    // contain these values.
-    $conf['config_test.system']['foo'] = 'overridden';
-    $conf['config_test.system']['baz'] = 'injected';
-    $conf['config_test.system']['404'] = 'derp';
-
-    // Write file to staging
-    drupal_container()->get('config.context')->setGlobalOverride();
+    // Write file to staging.
     $staging = $this->container->get('config.storage.staging');
     $expected_new_data = array(
       'foo' => 'barbar',
@@ -152,6 +128,7 @@ class ConfigOverrideTest extends DrupalUnitTestBase {
     $this->assertIdentical($data['404'], $expected_new_data['404']);
 
     // Verifiy the overrides are still working.
+    $config = config('config_test.system');
     $this->assertIdentical($config->get('foo'), $conf['config_test.system']['foo']);
     $this->assertIdentical($config->get('baz'), $conf['config_test.system']['baz']);
     $this->assertIdentical($config->get('404'), $conf['config_test.system']['404']);

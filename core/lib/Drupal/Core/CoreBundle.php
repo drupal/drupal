@@ -58,15 +58,14 @@ class CoreBundle extends Bundle {
     $container->register('config.context', 'Drupal\Core\Config\Context\ContextInterface')
       ->setFactoryService(new Reference('config.context.factory'))
       ->setFactoryMethod('get')
-      ->addArgument('Drupal\Core\Config\Context\GlobalConfigContext')
-      ->addTag('persist')
-      ->addMethodCall('setGlobalOverride');
+      ->addTag('persist');
 
     // Register a config context with no overrides for use in administration
     // forms, enabling modules and importing configuration.
     $container->register('config.context.free', 'Drupal\Core\Config\Context\ContextInterface')
       ->setFactoryService(new Reference('config.context.factory'))
-      ->setFactoryMethod('get');
+      ->setFactoryMethod('get')
+      ->addArgument('Drupal\Core\Config\Context\FreeConfigContext');
 
     $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
       ->addArgument(new Reference('config.storage'))
@@ -280,7 +279,7 @@ class CoreBundle extends Bundle {
     $container->register('request_close_subscriber', 'Drupal\Core\EventSubscriber\RequestCloseSubscriber')
       ->addArgument(new Reference('module_handler'))
       ->addTag('event_subscriber');
-    $container->register('config_global_override_subscriber', 'Drupal\Core\EventSubscriber\ConfigOverrideSubscriber')
+    $container->register('config_global_override_subscriber', 'Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber')
       ->addTag('event_subscriber');
     $container->register('language_request_subscriber', 'Drupal\Core\EventSubscriber\LanguageRequestSubscriber')
       ->addArgument(new Reference('language_manager'))

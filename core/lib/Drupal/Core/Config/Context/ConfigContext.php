@@ -9,22 +9,17 @@ namespace Drupal\Core\Config\Context;
 
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigEvent;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Defines the base configuration context object.
  *
- * A configuration context object provides a data array that can be used:
- *   - as a parameter to get customized configuration objects.
- *   - as a store of config data used to override values.
+ * A configuration context object provides a data array that can be used as
+ * parameters to get customized configuration objects.
  */
 class ConfigContext implements ContextInterface {
-
-  /**
-   * Predefined key, values to override specific configuration objects.
-   */
-  const OVERRIDE = 'config.override';
 
   /**
    * The actual storage of key-value pairs.
@@ -32,6 +27,13 @@ class ConfigContext implements ContextInterface {
    * @var array
    */
   protected $data = array();
+
+  /**
+   * Any config overrides of key-value pairs.
+   *
+   * @var array
+   */
+  protected $overrides = array();
 
   /**
    * An event dispatcher instance to use for configuration events.
@@ -60,10 +62,7 @@ class ConfigContext implements ContextInterface {
   /**
    * Implements Drupal\Core\Config\Context\ContextInterface::init().
    */
-  public function init($context_key, $data) {
-    if ($data) {
-      $this->set($context_key, $data);
-    }
+  public function init() {
     $this->setUuid();
     // Notify event listeners that a configuration context has been created.
     $this->notify('context', NULL);
@@ -82,20 +81,6 @@ class ConfigContext implements ContextInterface {
    */
   public function set($key, $value) {
     $this->data[$key] = $value;
-  }
-
-  /**
-   * Sets override data.
-   *
-   * @param mixed $data
-   *   Override data to store.
-   *
-   * @return \Drupal\Core\Config\Context\ConfigContext
-   *   The config context object.
-   */
-  public function setOverride($data) {
-    $this->init(self::OVERRIDE, $data);
-    return $this;
   }
 
   /**
@@ -118,6 +103,28 @@ class ConfigContext implements ContextInterface {
    */
   public function notify($config_event_name, Config $config = NULL) {
     $this->eventDispatcher->dispatch('config.' . $config_event_name, new ConfigEvent($this, $config));
+  }
+
+  /**
+   * Implements \Drupal\Core\Config\Context\ContextInterface::setOverride().
+   */
+  public function setOverrides($config_name, $data) {
+    if (!isset($this->overrides[$config_name])) {
+      $this->overrides[$config_name] = $data;
+    }
+    else {
+      $this->overrides[$config_name] = NestedArray::mergeDeepArray(array($this->overrides[$config_name], $data), TRUE);
+    }
+  }
+
+  /**
+   * Implements \Drupal\Core\Config\Context\ContextInterface::getOverrides().
+   */
+  public function getOverrides($config_name) {
+    if (isset($this->overrides[$config_name])) {
+      return $this->overrides[$config_name];
+    }
+    return FALSE;
   }
 
 }

@@ -140,7 +140,8 @@ class ConfigFactory {
    *   The config factory object.
    */
   public function enterContext(ContextInterface $context) {
-    $this->contextStack[] = $context;
+    // Initialize the context as it is being entered.
+    $this->contextStack[] = $context->init();
     return $this;
   }
 
