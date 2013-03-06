@@ -343,10 +343,7 @@ function file_stream_wrapper_uri_normalize($uri) {
       $uri = $scheme . '://' . $target;
     }
   }
-  else {
-    // The default scheme is file://
-    $url = 'file://' . $uri;
-  }
+
   return $uri;
 }
 
@@ -612,9 +609,8 @@ function file_valid_uri($uri) {
  *   A string specifying the filepath or URI of the source file.
  * @param $destination
  *   A URI containing the destination that $source should be copied to. The
- *   URI may be a bare filepath (without a scheme) and in that case the default
- *   scheme (file://) will be used. If this value is omitted, Drupal's default
- *   files scheme will be used, usually "public://".
+ *   URI may be a bare filepath (without a scheme). If this value is omitted,
+ *   Drupal's default files scheme will be used, usually "public://".
  * @param $replace
  *   Replace behavior when the destination file already exists:
  *   - FILE_EXISTS_REPLACE - Replace the existing file.
