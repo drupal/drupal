@@ -186,6 +186,7 @@ class SystemListing {
               $file->uri = $uri;
               $file->filename = $filename;
               $file->name = pathinfo($filename, PATHINFO_FILENAME);
+              $this->processFile($file);
               $files[$file->$key] = $file;
             }
           }
@@ -195,4 +196,14 @@ class SystemListing {
     }
     return $files;
   }
+
+  /**
+   * Process each file object as it is found by scanDirectory().
+   *
+   * @param $file
+   *   A file object.
+   */
+  protected function processFile($file) {
+  }
+
 }

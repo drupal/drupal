@@ -54,8 +54,8 @@ class SystemListingInfo extends SystemListing {
     foreach (array_intersect_key($files_to_add, $files) as $file_key => $file) {
       // If it has no info file, then we just behave liberally and accept the
       // new resource on the list for merging.
-      if (file_exists($info_file = dirname($file->uri) . '/' . $file->name . '.info')) {
-        // Get the .info file for the module or theme this file belongs to.
+      if (file_exists($info_file = dirname($file->uri) . '/' . $file->name . '.info.yml')) {
+        // Get the .info.yml file for the module or theme this file belongs to.
         $info = drupal_parse_info_file($info_file);
 
         // If the module or theme is incompatible with Drupal core, remove it
@@ -67,6 +67,13 @@ class SystemListingInfo extends SystemListing {
       }
     }
     return $files_to_add;
+  }
+
+  /**
+   * Overrides Drupal\Core\SystemListing::processFile().
+   */
+  protected function processFile($file) {
+    $file->name = basename($file->name, '.info');
   }
 
 }

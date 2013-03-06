@@ -187,7 +187,7 @@ function install_state_defaults() {
     // redirect.
     'parameters_changed' => FALSE,
     // An array of information about the chosen installation profile. This will
-    // be filled in based on the profile's .info file.
+    // be filled in based on the profile's .info.yml file.
     'profile_info' => array(),
     // An array of available installation profiles.
     'profiles' => array(),

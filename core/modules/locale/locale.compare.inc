@@ -50,7 +50,7 @@ function locale_translation_build_projects() {
     return array();
   }
 
-  // Get the project list based on .info files.
+  // Get the project list based on .info.yml files.
   $projects = locale_translation_project_list();
 
   // Mark all previous projects as disabled and store new project data.
@@ -128,7 +128,7 @@ function locale_translation_build_projects() {
  * Fetch an array of projects for translation update.
  *
  * @return array
- *   Array of project data including .info file data.
+ *   Array of project data including .info.yml file data.
  */
 function locale_translation_project_list() {
   // This function depends on Update module. We degrade gracefully.
@@ -164,22 +164,22 @@ function locale_translation_project_list() {
 /**
  * Prepare module and theme data.
  *
- * Modify .info file data before it is processed by update_process_info_list().
+ * Modify .info.yml file data before it is processed by update_process_info_list().
  * In order for update_process_info_list() to recognize a project, it requires
- * the 'project' parameter in the .info file data.
+ * the 'project' parameter in the .info.yml file data.
  *
  * Custom modules or themes can bring their own gettext translation file. To
  * enable import of this file the module or theme defines "interface translation
- * project = myproject" in its .info file. This function will add a project
+ * project = myproject" in its .info.yml file. This function will add a project
  * "myproject" to the info data.
  *
  * @param array $data
- *   Array of .info file data.
+ *   Array of .info.yml file data.
  * @param string $type
  *   The project type. i.e. module, theme.
  *
  * @return array
- *   Array of .info file data.
+ *   Array of .info.yml file data.
  */
 function _locale_translation_prepare_project_list($data, $type) {
   foreach ($data as $name => $file) {
@@ -356,7 +356,8 @@ function _locale_translation_batch_status_operations($projects, $langcodes) {
  * path to the po source files. If no server_pattern is defined the default
  * translation directory is checked for the po file. When a server_pattern is
  * defined the specified location is checked. The server_pattern can be set in
- * the module's .info file or by using hook_locale_translation_projects_alter().
+ * the module's .info.yml file or by using
+ * hook_locale_translation_projects_alter().
  *
  * @param array $projects
  *   Array of project names for which to check the state of translation files.

@@ -12,8 +12,8 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
  * Implements hook_system_theme_info().
  */
 function update_test_system_theme_info() {
-  $themes['update_test_basetheme'] = drupal_get_path('module', 'update') . '/tests/themes/update_test_basetheme/update_test_basetheme.info';
-  $themes['update_test_subtheme'] = drupal_get_path('module', 'update') . '/tests/themes/update_test_subtheme/update_test_subtheme.info';
+  $themes['update_test_basetheme'] = drupal_get_path('module', 'update') . '/tests/themes/update_test_basetheme/update_test_basetheme.info.yml';
+  $themes['update_test_subtheme'] = drupal_get_path('module', 'update') . '/tests/themes/update_test_subtheme/update_test_subtheme.info.yml';
   return $themes;
 }
 
@@ -45,10 +45,10 @@ function update_test_menu() {
  * Checks the 'update_test.settings:system_info' configuration and sees if we
  * need to alter the system info for the given $file based on the setting. The
  * setting is expected to be a nested associative array. If the key '#all' is
- * defined, its subarray will include .info keys and values for all modules and
- * themes on the system. Otherwise, the settings array is keyed by the module or
- * theme short name ($file->name) and the subarrays contain settings just for
- * that module or theme.
+ * defined, its subarray will include .info.yml keys and values for all modules
+ * and themes on the system. Otherwise, the settings array is keyed by the
+ * module or theme short name ($file->name) and the subarrays contain settings
+ * just for that module or theme.
  */
 function update_test_system_info_alter(&$info, $file) {
   $setting = config('update_test.settings')->get('system_info');
@@ -67,7 +67,7 @@ function update_test_system_info_alter(&$info, $file) {
  * Checks the 'update_test.settings:update_status' configuration and sees if we
  * need to alter the update status for the given project based on the setting.
  * The setting is expected to be a nested associative array. If the key '#all'
- * is defined, its subarray will include .info keys and values for all modules
+ * is defined, its subarray will include .info.yml keys and values for all modules
  * and themes on the system. Otherwise, the settings array is keyed by the
  * module or theme short name and the subarrays contain settings just for that
  * module or theme.

@@ -1,8 +1,0 @@
-name = Block test views
-description = Provides a view and block to test block displays in views.
-package = Core
-version = VERSION
-hidden = TRUE
-core = 8.x
-dependencies[] = block
-dependencies[] = views

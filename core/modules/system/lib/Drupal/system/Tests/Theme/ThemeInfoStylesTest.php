@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Theme;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests processing of theme .info stylesheets.
+ * Tests processing of theme .info.yml stylesheets.
  */
 class ThemeInfoStylesTest extends WebTestBase {
 
@@ -23,8 +23,8 @@ class ThemeInfoStylesTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Theme .info styles',
-      'description' => 'Tests processing of theme .info stylesheets.',
+      'name' => 'Theme .info.yml styles',
+      'description' => 'Tests processing of theme .info.yml stylesheets.',
       'group' => 'Theme',
     );
   }

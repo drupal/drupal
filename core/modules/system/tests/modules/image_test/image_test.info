@@ -1,6 +1,0 @@
-name = "Image test"
-description = "Support module for image toolkit tests."
-package = Testing
-version = VERSION
-core = 8.x
-hidden = TRUE

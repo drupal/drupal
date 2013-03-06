@@ -626,7 +626,7 @@ function module_uninstall($module_list = array(), $uninstall_dependents = TRUE) 
  * Returns an array of modules required by core.
  */
 function drupal_required_modules() {
-  $files = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info$/', 'modules');
+  $files = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info.yml$/', 'modules');
   $required = array();
 
   // An installation profile is required and one must always be loaded.

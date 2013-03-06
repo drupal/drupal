@@ -1,0 +1,8 @@
+name: Menu
+description: 'Allows administrators to customize the site navigation menu.'
+package: Core
+version: VERSION
+core: 8.x
+configure: admin/structure/menu
+dependencies:
+  - menu_link

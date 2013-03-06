@@ -1,0 +1,15 @@
+name: 'Block test theme'
+description: 'Theme for testing the block system'
+core: 8.x
+hidden: true
+regions:
+  sidebar_first: 'Left sidebar'
+  sidebar_second: 'Right sidebar'
+  content: Content
+  header: Header
+  footer: Footer
+  highlighted: Highlighted
+  help: Help
+regions_hidden:
+  - sidebar_first
+  - sidebar_second

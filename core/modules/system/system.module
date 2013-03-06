@@ -2749,8 +2749,8 @@ function system_check_directory($form_element) {
 /**
  * Returns an array of information about enabled modules or themes.
  *
- * This function returns the contents of the .info file for each enabled module
- * or theme.
+ * This function returns the contents of the .info.yml file for each enabled
+ * module or theme.
  *
  * @param $type
  *   Either 'module' or 'theme'.
@@ -2791,14 +2791,14 @@ function system_get_info($type, $name = NULL) {
 }
 
 /**
- * Return .info data for modules.
+ * Return .info.yml data for modules.
  *
  * @param string $property
- *   The .info property to retrieve.
+ *   The .info.yml property to retrieve.
  *
  * @return array
- *   An array keyed by module name, with the .info file property as values.
- *   Only modules with the property specified in their .info file will be
+ *   An array keyed by module name, with the .info.yml file property as values.
+ *   Only modules with the property specified in their .info.yml file will be
  *   returned.
  *
  * @see Drupal\Core\Utility\ModuleInfo
@@ -2812,7 +2812,7 @@ function system_get_module_info($property) {
 }
 
 /**
- * Helper function to scan and collect module .info data.
+ * Helper function to scan and collect module .info.yml data.
  *
  * @return
  *   An associative array of module information.
@@ -2849,11 +2849,11 @@ function _system_rebuild_module_data() {
     $modules[$key]->filename = $module->uri;
 
     // Look for the info file.
-    $module->info = drupal_parse_info_file(dirname($module->uri) . '/' . $module->name . '.info');
+    $module->info = drupal_parse_info_file(dirname($module->uri) . '/' . $module->name . '.info.yml');
 
     // Add the info file modification time, so it becomes available for
     // contributed modules to use for ordering module lists.
-    $module->info['mtime'] = filemtime(dirname($module->uri) . '/' . $module->name . '.info');
+    $module->info['mtime'] = filemtime(dirname($module->uri) . '/' . $module->name . '.info.yml');
 
     // Skip modules that don't provide info.
     if (empty($module->info)) {
@@ -2865,13 +2865,13 @@ function _system_rebuild_module_data() {
     $modules[$key]->info = $module->info + $defaults;
 
     // Installation profiles are hidden by default, unless explicitly specified
-    // otherwise in the .info file.
+    // otherwise in the .info.yml file.
     if ($key == $profile && !isset($modules[$key]->info['hidden'])) {
       $modules[$key]->info['hidden'] = TRUE;
     }
 
     // Invoke hook_system_info_alter() to give installed modules a chance to
-    // modify the data in the .info files if necessary.
+    // modify the data in the .info.yml files if necessary.
     $type = 'module';
     drupal_alter('system_info', $modules[$key]->info, $modules[$key], $type);
   }
@@ -2943,14 +2943,14 @@ function _system_update_bootstrap_status() {
 }
 
 /**
- * Helper function to scan and collect theme .info data and their engines.
+ * Helper function to scan and collect theme .info.yml data and their engines.
  *
  * @return
  *   An associative array of themes information.
  */
 function _system_rebuild_theme_data() {
   // Find themes
-  $themes = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info$/', 'themes');
+  $themes = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info.yml$/', 'themes');
   // Allow modules to add further themes.
   if ($module_themes = module_invoke_all('system_theme_info')) {
     foreach ($module_themes as $name => $uri) {
@@ -2999,7 +2999,7 @@ function _system_rebuild_theme_data() {
     $themes[$key]->info['mtime'] = filemtime($theme->uri);
 
     // Invoke hook_system_info_alter() to give installed modules a chance to
-    // modify the data in the .info files if necessary.
+    // modify the data in the .info.yml files if necessary.
     $type = 'theme';
     drupal_alter('system_info', $themes[$key]->info, $themes[$key], $type);
 
@@ -3096,15 +3096,15 @@ function system_rebuild_theme_data() {
 }
 
 /**
- * Prefixes all values in an .info file array with a given path.
+ * Prefixes all values in an .info.yml file array with a given path.
  *
- * This helper function is mainly used to prefix all array values of an .info
- * file property with a single given path (to the module or theme); e.g., to
- * prefix all values of the 'stylesheets' or 'scripts' properties with the file
- * path to the defining module/theme.
+ * This helper function is mainly used to prefix all array values of an
+ * .info.yml file property with a single given path (to the module or theme);
+ * e.g., to prefix all values of the 'stylesheets' or 'scripts' properties with
+ * the file path to the defining module/theme.
  *
  * @param $info
- *   A nested array of data of an .info file to be processed.
+ *   A nested array of data of an .info.yml file to be processed.
  * @param $path
  *   A file path to prepend to each value in $info.
  *

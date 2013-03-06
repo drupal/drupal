@@ -1,7 +1,0 @@
-name = "Entity Reference Test"
-description = "Support module for the Entity Reference tests."
-core = 8.x
-dependencies[] = entity_reference
-package = Testing
-version = VERSION
-hidden = TRUE

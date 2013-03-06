@@ -1,0 +1,9 @@
+name: 'Content Translation (deprecated)'
+description: 'Allows content to be translated into different languages.'
+dependencies:
+  - node
+  - language
+package: Multilingual
+version: VERSION
+core: 8.x
+hidden: true

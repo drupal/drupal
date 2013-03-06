@@ -1,5 +1,0 @@
-name = Tour
-description = Provides guided tours.
-package = Core
-version = VERSION
-core = 8.x

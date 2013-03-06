@@ -1,0 +1,6 @@
+name: Actions
+description: 'Perform tasks on specific events triggered within the system.'
+package: Core
+version: VERSION
+core: 8.x
+configure: admin/config/system/actions

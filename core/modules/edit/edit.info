@@ -1,7 +1,0 @@
-name = Edit
-description = In-place content editing.
-package = Core
-core = 8.x
-version = VERSION
-dependencies[] = contextual
-dependencies[] = field

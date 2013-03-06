@@ -94,7 +94,7 @@ class Updater {
    *   Path to the info file.
    */
   public static function findInfoFile($directory) {
-    $info_files = file_scan_directory($directory, '/.*\.info$/');
+    $info_files = file_scan_directory($directory, '/.*\.info.yml$/');
     if (!$info_files) {
       return FALSE;
     }

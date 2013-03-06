@@ -12,7 +12,8 @@
  *   - region: The current template type, i.e., "theming hook".
  *   - region-[name]: The name of the region with underscores replaced with
  *     dashes. For example, the page_top region would have a region-page-top class.
- * - $region: The name of the region variable as defined in the theme's .info file.
+ * - $region: The name of the region variable as defined in the theme's
+ *    .info.yml file.
  *
  * Helper variables:
  * - $is_admin: Flags true when the current user is an administrator.

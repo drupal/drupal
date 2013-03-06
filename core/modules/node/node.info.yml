@@ -1,0 +1,8 @@
+name: Node
+description: 'Allows content to be submitted to the site and displayed on pages.'
+package: Core
+version: VERSION
+core: 8.x
+configure: admin/structure/types
+dependencies:
+  - datetime

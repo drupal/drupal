@@ -1,0 +1,5 @@
+name: 'Invalid configuration name'
+package: Core
+version: VERSION
+core: 8.x
+hidden: true

@@ -918,7 +918,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
         $extension = 'engine';
       }
       elseif ($type == 'theme') {
-        $extension = 'info';
+        $extension = 'info.yml';
       }
       // Profiles are converted into modules in system_rebuild_module_data().
       // @todo Remove false-exposure of profiles as modules.

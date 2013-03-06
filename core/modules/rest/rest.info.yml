@@ -1,0 +1,10 @@
+name: 'RESTful web services'
+description: 'Exposes entities and other resources as RESTful web API'
+package: Core
+version: VERSION
+core: 8.x
+dependencies:
+  # @todo Remove this dependency once hard coding to JSON-LD is gone.
+  - jsonld
+  - serialization
+configure: admin/config/services/rest

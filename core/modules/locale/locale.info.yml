@@ -1,0 +1,8 @@
+name: 'Interface Translation'
+description: 'Translates the built-in user interface.'
+package: Multilingual
+version: VERSION
+core: 8.x
+dependencies:
+  - language
+  - file

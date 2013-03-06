@@ -1,8 +1,0 @@
-name = Test theme
-description = Theme for testing the theme system
-core = 8.x
-hidden = TRUE
-
-stylesheets-remove[] = system.base.css
-
-settings[theme_test_setting] = default value

@@ -102,20 +102,20 @@ class ThemeTest extends WebTestBase {
   }
 
   /**
-   * Ensures a theme's .info file is able to override a module CSS file from being added to the page.
+   * Ensures a theme's .info.yml file is able to override a module CSS file from being added to the page.
    *
-   * @see test_theme.info
+   * @see test_theme.info.yml
    */
   function testCSSOverride() {
     // Reuse the same page as in testPreprocessForSuggestions(). We're testing
-    // what is output to the HTML HEAD based on what is in a theme's .info file,
-    // so it doesn't matter what page we get, as long as it is themed with the
-    // test theme. First we test with CSS aggregation disabled.
+    // what is output to the HTML HEAD based on what is in a theme's .info.yml
+    // file, so it doesn't matter what page we get, as long as it is themed with
+    // the test theme. First we test with CSS aggregation disabled.
     $config = config('system.performance');
     $config->set('css.preprocess', 0);
     $config->save();
     $this->drupalGet('theme-test/suggestion');
-    $this->assertNoText('system.base.css', 'The theme\'s .info file is able to override a module CSS file from being added to the page.');
+    $this->assertNoText('system.base.css', 'The theme\'s .info.yml file is able to override a module CSS file from being added to the page.');
 
     // Also test with aggregation enabled, simply ensuring no PHP errors are
     // triggered during drupal_build_css_cache() when a source file doesn't

@@ -1,0 +1,22 @@
+name: Seven
+description: 'A simple one-column, tableless, fluid width administration theme.'
+package: Core
+version: VERSION
+core: 8.x
+stylesheets:
+  screen:
+    - style.css
+stylesheets-override:
+  - vertical-tabs.css
+  - vertical-tabs-rtl.css
+  - jquery.ui.theme.css
+settings:
+  shortcut_module_link: '1'
+regions:
+  content: Content
+  help: Help
+  page_top: 'Page top'
+  page_bottom: 'Page bottom'
+  sidebar_first: 'First sidebar'
+regions_hidden:
+  - sidebar_first

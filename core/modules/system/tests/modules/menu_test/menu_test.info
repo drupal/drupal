@@ -1,8 +1,0 @@
-name = "Hook menu tests"
-description = "Support module for menu hook testing."
-package = Testing
-version = VERSION
-core = 8.x
-hidden = TRUE
-dependencies[] = test_page_test
-dependencies[] = menu
