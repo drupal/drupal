@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\cache;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Annotation\Translation;
 

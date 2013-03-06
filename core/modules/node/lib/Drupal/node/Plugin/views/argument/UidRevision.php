@@ -8,7 +8,7 @@
 namespace Drupal\node\Plugin\views\argument;
 
 use Drupal\user\Plugin\views\argument\Uid;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Filter handler to accept a user id to check for nodes that

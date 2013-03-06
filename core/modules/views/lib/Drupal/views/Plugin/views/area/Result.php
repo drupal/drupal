@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\area;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Views area handler to display some configurable result summary.

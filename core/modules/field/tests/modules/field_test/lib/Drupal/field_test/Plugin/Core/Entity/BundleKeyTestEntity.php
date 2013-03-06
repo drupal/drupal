@@ -7,7 +7,7 @@
 
 namespace Drupal\field_test\Plugin\Core\Entity;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
 /**

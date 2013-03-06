@@ -7,7 +7,7 @@
 
 namespace Drupal\taxonomy\Plugin\views\field;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Field handler to show the language of a taxonomy term.

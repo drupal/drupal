@@ -9,7 +9,7 @@ namespace Drupal\ckeditor_test\Plugin\ckeditor\plugin;
 
 use Drupal\ckeditor\CKEditorPluginInterface;
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\editor\Plugin\Core\Entity\Editor;
 

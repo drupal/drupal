@@ -8,7 +8,7 @@
 namespace Drupal\comment\Plugin\views\sort;
 
 use Drupal\views\Plugin\views\sort\Date;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Sort handler for the newer of last comment / node updated.

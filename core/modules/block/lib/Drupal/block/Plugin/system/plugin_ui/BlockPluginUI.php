@@ -7,7 +7,7 @@
 namespace Drupal\block\Plugin\system\plugin_ui;
 
 use Drupal\system\Plugin\PluginUIBase;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
 /**

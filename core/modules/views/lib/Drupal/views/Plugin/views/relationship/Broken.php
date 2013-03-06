@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\relationship;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * A special handler to take the place of missing or broken handlers.

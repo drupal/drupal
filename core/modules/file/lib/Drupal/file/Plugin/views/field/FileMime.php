@@ -7,7 +7,7 @@
 
 namespace Drupal\file\Plugin\views\field;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Field handler to add rendering MIME type images as an option on the filemime field.

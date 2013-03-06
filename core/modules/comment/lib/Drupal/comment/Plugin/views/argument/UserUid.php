@@ -8,7 +8,7 @@
 namespace Drupal\comment\Plugin\views\argument;
 
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Argument handler to accept a user id to check for nodes that

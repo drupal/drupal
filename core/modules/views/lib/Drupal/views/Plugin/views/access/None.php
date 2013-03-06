@@ -8,7 +8,7 @@
 namespace Drupal\views\Plugin\views\access;
 
 use Drupal\Core\Annotation\Translation;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Access plugin that provides no access control at all.

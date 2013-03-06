@@ -8,7 +8,7 @@
 namespace Drupal\views\Plugin\views\sort;
 
 use Drupal\views\Plugin\views\HandlerBase;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * @defgroup views_sort_handlers Views sort handlers

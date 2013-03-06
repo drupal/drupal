@@ -10,7 +10,7 @@ namespace Drupal\comment\Plugin\views\field;
 use Drupal\views\Plugin\views\field\Date;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Field handler to display the timestamp of a comment with the count of comments.

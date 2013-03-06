@@ -9,7 +9,7 @@ namespace Drupal\user\Plugin\views\field;
 
 use Drupal\user\Plugin\views\field\User;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\views\ViewExecutable;
 
 /**

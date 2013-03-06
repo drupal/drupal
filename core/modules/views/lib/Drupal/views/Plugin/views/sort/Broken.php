@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\sort;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * A special handler to take the place of missing or broken handlers.

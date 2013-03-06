@@ -10,7 +10,7 @@ namespace Drupal\comment\Plugin\views\field;
 use Drupal\views\Plugin\views\field\Numeric;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Field handler to display the number of new comments.

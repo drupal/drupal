@@ -8,7 +8,7 @@
 namespace Drupal\views_test_data\Plugin\views\display_extender;
 
 use Drupal\views\Plugin\views\display_extender\DisplayExtenderPluginBase;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
 /**

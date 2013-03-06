@@ -13,7 +13,7 @@ use Drupal\breakpoint\InvalidBreakpointNameException;
 use Drupal\breakpoint\InvalidBreakpointSourceException;
 use Drupal\breakpoint\InvalidBreakpointSourceTypeException;
 use Drupal\breakpoint\InvalidBreakpointMediaQueryException;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
 /**

@@ -7,7 +7,7 @@
 
 namespace Drupal\tour\Plugin\tour\tip;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\tour\TipPluginBase;
 
 /**

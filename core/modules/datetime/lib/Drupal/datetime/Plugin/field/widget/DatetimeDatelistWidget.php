@@ -6,7 +6,7 @@
 
 namespace Drupal\datetime\Plugin\field\widget;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;

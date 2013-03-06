@@ -8,7 +8,7 @@
 namespace Drupal\node\Plugin\views\argument;
 
 use Drupal\views\Plugin\views\argument\String;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Argument handler to accept a node type.

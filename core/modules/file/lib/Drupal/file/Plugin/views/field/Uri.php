@@ -7,7 +7,7 @@
 
 namespace Drupal\file\Plugin\views\field;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Field handler to add rendering file paths as file URLs instead of as internal file URIs.

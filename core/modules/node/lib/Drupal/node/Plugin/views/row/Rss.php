@@ -7,7 +7,7 @@
 
 namespace Drupal\node\Plugin\views\row;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\row\RowPluginBase;
 

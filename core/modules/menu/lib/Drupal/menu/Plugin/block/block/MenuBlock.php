@@ -8,7 +8,7 @@
 namespace Drupal\menu\Plugin\block\block;
 
 use Drupal\system\Plugin\block\block\SystemMenuBlock;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
 /**

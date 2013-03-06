@@ -7,7 +7,7 @@
 
 namespace Drupal\block_test\Plugin\block\block;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Provides a block to test XSS in title.

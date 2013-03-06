@@ -8,7 +8,7 @@
 namespace Drupal\node\Plugin\Core\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
 /**

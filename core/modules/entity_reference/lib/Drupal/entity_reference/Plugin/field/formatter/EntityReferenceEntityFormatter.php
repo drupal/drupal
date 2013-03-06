@@ -7,7 +7,7 @@
 
 namespace Drupal\entity_reference\Plugin\field\formatter;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity_reference\RecursiveRenderingException;

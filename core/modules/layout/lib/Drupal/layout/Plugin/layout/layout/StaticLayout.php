@@ -10,7 +10,7 @@ namespace Drupal\layout\Plugin\layout\layout;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\layout\Plugin\LayoutInterface;
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * @Plugin(

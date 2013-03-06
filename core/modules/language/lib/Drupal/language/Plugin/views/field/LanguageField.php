@@ -8,7 +8,7 @@
 namespace Drupal\language\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Defines a field handler to translate a language into its readable form.

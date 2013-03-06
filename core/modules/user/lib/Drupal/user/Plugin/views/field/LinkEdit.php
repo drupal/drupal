@@ -8,7 +8,7 @@
 namespace Drupal\user\Plugin\views\field;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Field handler to present a link to user edit.
