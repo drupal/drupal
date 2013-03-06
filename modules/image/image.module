@@ -780,9 +780,11 @@ function image_style_deliver($style, $scheme) {
   // derivative token is valid. (Sites which require image derivatives to be
   // generated without a token can set the 'image_allow_insecure_derivatives'
   // variable to TRUE to bypass the latter check, but this will increase the
-  // site's vulnerability to denial-of-service attacks.)
+  // site's vulnerability to denial-of-service attacks. To prevent this
+  // variable from leaving the site vulnerable to the most serious attacks, a
+  // token is always required when a derivative of a derivative is requested.)
   $valid = !empty($style) && file_stream_wrapper_valid_scheme($scheme);
-  if (!variable_get('image_allow_insecure_derivatives', FALSE)) {
+  if (!variable_get('image_allow_insecure_derivatives', FALSE) || strpos(ltrim($target, '\/'), 'styles/') === 0) {
     $valid = $valid && isset($_GET[IMAGE_DERIVATIVE_TOKEN]) && $_GET[IMAGE_DERIVATIVE_TOKEN] === image_style_path_token($style['name'], $scheme . '://' . $target);
   }
   if (!$valid) {
@@ -867,16 +869,17 @@ function image_style_deliver($style, $scheme) {
  * @see image_style_load()
  */
 function image_style_create_derivative($style, $source, $destination) {
+  // If the source file doesn't exist, return FALSE without creating folders.
+  if (!$image = image_load($source)) {
+    return FALSE;
+  }
+
   // Get the folder for the final location of this style.
   $directory = drupal_dirname($destination);
 
   // Build the destination folder tree if it doesn't already exist.
   if (!file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
     watchdog('image', 'Failed to create style directory: %directory', array('%directory' => $directory), WATCHDOG_ERROR);
-    return FALSE;
-  }
-
-  if (!$image = image_load($source)) {
     return FALSE;
   }
 
