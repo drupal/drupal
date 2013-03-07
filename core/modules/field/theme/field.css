@@ -9,6 +9,9 @@
 }
 
 /* Form display */
+form .field-edit-link {
+  margin: 0 0.3em;
+}
 form .field-multiple-table {
   margin: 0;
 }
