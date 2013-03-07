@@ -314,17 +314,14 @@ function user_admin_settings($form, &$form_state) {
     '#type' => 'details',
     '#title' => t('Administrator role'),
   );
-
   // Do not allow users to set the anonymous or authenticated user roles as the
   // administrator role.
-  $roles = user_role_names();
-  unset($roles[DRUPAL_ANONYMOUS_RID]);
+  $roles = user_role_names(TRUE);
   unset($roles[DRUPAL_AUTHENTICATED_RID]);
-  $roles[0] = t('disabled');
-
   $form['admin_role']['user_admin_role'] = array(
     '#type' => 'select',
     '#title' => t('Administrator role'),
+    '#empty_value' => '',
     '#default_value' => $config->get('admin_role'),
     '#options' => $roles,
     '#description' => t('This role will be automatically assigned new permissions whenever a module is enabled. Changing this setting will not affect existing permissions.'),
