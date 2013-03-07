@@ -8,7 +8,7 @@
 /**
  * List tests arranged in groups that can be selected and run.
  */
-function simpletest_test_form($form) {
+function simpletest_test_form($form, &$form_state) {
   $form['tests'] = array(
     '#type' => 'details',
     '#title' => t('Tests'),
@@ -21,6 +21,9 @@ function simpletest_test_form($form) {
 
   // Generate the list of tests arranged by group.
   $groups = simpletest_test_get_all();
+  $groups['PHPUnit'] = simpletest_phpunit_get_available_tests();
+  $form_state['storage']['PHPUnit'] = $groups['PHPUnit'];
+
   foreach ($groups as $group => $tests) {
     $form['tests']['table'][$group] = array(
       '#collapsed' => TRUE,
@@ -180,11 +183,15 @@ function simpletest_test_form_submit($form, &$form_state) {
   // Get list of tests.
   $tests_list = array();
   simpletest_classloader_register();
+
+  $phpunit_all = array_keys($form_state['storage']['PHPUnit']);
+
   foreach ($form_state['values'] as $class_name => $value) {
     // Since class_exists() will likely trigger an autoload lookup,
     // we do the fast check first.
     if ($value === 1 && class_exists($class_name)) {
-      $tests_list[] = $class_name;
+      $test_type = in_array($class_name, $phpunit_all) ? 'UnitTest' : 'WebTest';
+      $tests_list[$test_type][] = $class_name;
     }
   }
   if (count($tests_list) > 0 ) {

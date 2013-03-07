@@ -2,18 +2,20 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Cache\NullBackendTest.
+ * Definition of Drupal\Tests\Core\Cache\NullBackendTest.
  */
 
-namespace Drupal\system\Tests\Cache;
+namespace Drupal\Tests\Core\Cache;
 
 use Drupal\Core\Cache\NullBackend;
-use Drupal\simpletest\UnitTestBase;
+use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests the cache NullBackend.
+ *
+ * @group Cache
  */
-class NullBackendTest extends UnitTestBase {
+class NullBackendTest extends UnitTestCase {
 
   public static function getInfo() {
     return array(

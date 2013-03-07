@@ -131,6 +131,18 @@ function simpletest_run_tests($test_list, $reporter = 'drupal') {
     ->useDefaults(array('test_id'))
     ->execute();
 
+  $phpunit_tests = isset($test_list['UnitTest']) ? $test_list['UnitTest'] : array();
+  $phpunit_results = simpletest_run_phpunit_tests($test_id, $phpunit_tests);
+  simpletest_process_phpunit_results($phpunit_results);
+
+  if (!array_key_exists('WebTest', $test_list) || empty($test_list['WebTest'])) {
+    // Early return if there are no WebTests to run.
+    return $test_id;
+  }
+
+  // Contine with SimpleTests only.
+  $test_list = $test_list['WebTest'];
+
   // Clear out the previous verbose files.
   file_unmanaged_delete_recursive('public://simpletest/verbose');
 
@@ -155,6 +167,104 @@ function simpletest_run_tests($test_list, $reporter = 'drupal') {
   module_invoke_all('test_group_started');
 
   return $test_id;
+}
+
+/**
+ * Executes phpunit tests and returns the results of the run.
+ *
+ * @param $test_id
+ *   The current test ID.
+ * @param $unescaped_test_classnames
+ *   An array of test class names, including full namespaces, to be passed as
+ *   a regular expression to phpunit's --filter option.
+ *
+ * @return array
+ *   The parsed results of phpunit's junit xml output, in the format of the
+ *   simpletest table's schema.
+ */
+function simpletest_run_phpunit_tests($test_id, array $unescaped_test_classnames) {
+  $phpunit_file = simpletest_phpunit_xml_filepath($test_id);
+  simpletest_phpunit_run_command($unescaped_test_classnames, $phpunit_file);
+  return simpletest_phpunit_xml_to_rows($test_id, $phpunit_file);
+}
+
+/**
+ * Inserts the parsed phpunit results into the simpletest table.
+ *
+ * @param array $phpunit_results
+ *   An array of test results returned from simpletest_phpunit_xml_to_rows.
+ */
+function simpletest_process_phpunit_results($phpunit_results) {
+  // Insert the results of the phpunit test run into the db so the results are
+  // displayed along with simpletest's results.
+  if (!empty($phpunit_results)) {
+    $query = db_insert('simpletest')->fields(array_keys($phpunit_results[0]));
+    foreach ($phpunit_results as $result) {
+      $query->values($result);
+    }
+    $query->execute();
+  }
+}
+
+/**
+ * Returns the path to use for phpunit's --log-junit option.
+ *
+ * @param $test_id
+ *   The current test ID.
+ * @return string
+ *   Path to the phpunit xml file to use for the current test_id.
+ */
+function simpletest_phpunit_xml_filepath($test_id) {
+  return drupal_realpath('public://simpletest') . '/phpunit-' . $test_id . '.xml';
+}
+
+/**
+ * Returns the path to core's phpunit.xml.dist configuration file.
+ *
+ * @return string
+ *   Path to core's phpunit.xml.dist configuration file.
+ */
+function simpletest_phpunit_configuration_filepath() {
+  return DRUPAL_ROOT . '/core/phpunit.xml.dist';
+}
+
+/**
+ * Executes the phpunit command.
+ *
+ * @param array $unescaped_test_classnames
+ *   An array of test class names, including full namespaces, to be passed as
+ *   a regular expression to phpunit's --filter option.
+ * @param string $phpunit_file
+ *   A filepath to use for phpunit's --log-junit option.
+ */
+function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpunit_file) {
+  $phpunit_bin = DRUPAL_ROOT . "/core/vendor/bin/phpunit";
+
+  // Double escape namespaces so they'll work in a regexp.
+  $escaped_test_classnames = array_map(function($class) {
+    return addslashes($class);
+  }, $unescaped_test_classnames);
+
+  $filter_string = implode("|", $escaped_test_classnames);
+
+  $command = array(
+    $phpunit_bin,
+    '--filter',
+    escapeshellarg($filter_string),
+    '--log-junit',
+    escapeshellarg($phpunit_file),
+  );
+
+  // Need to change directories before running the command so that we can use
+  // relative paths in the configuration file's exclusions.
+  $old_cwd = getcwd();
+  chdir(DRUPAL_ROOT . "/core");
+
+  // exec in a subshell so that the environment is isolated when running tests
+  // via the simpletest UI.
+  $ret = exec(join($command, " "));
+  chdir($old_cwd);
+  return $ret;
 }
 
 /**
@@ -398,10 +508,23 @@ function simpletest_classloader_register() {
     $matches = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.' . $info['extension'] . '$/', $info['dir']);
     foreach ($matches as $name => $file) {
       drupal_classloader_register($name, dirname($file->uri));
+      drupal_classloader()->registerNamespace('Drupal\\' . $name . '\\Tests', DRUPAL_ROOT . '/' . dirname($file->uri) . '/tests');
       // While being there, prime drupal_get_filename().
       drupal_get_filename($type, $name, $file->uri);
     }
   }
+
+  // Register the core test directory so we can find Drupal\UnitTestCase.
+  drupal_classloader()->registerNamespace('Drupal\\Tests', DRUPAL_ROOT . '/core/tests');
+
+  // Manually register phpunit prefixes because they use a classmap instead of a
+  // prefix. This can be safely removed if we move to using composer's
+  // autoloader with a classmap.
+  drupal_classloader()->registerPrefixes(array(
+    'PHPUnit' => DRUPAL_ROOT . '/core/vendor/phpunit/phpunit',
+    'File_Iterator' => DRUPAL_ROOT . '/core/vendor/phpunit/php-file-iterator/',
+    'PHP_Timer' => DRUPAL_ROOT . '/core/vendor/phpunit/php-timer/',
+  ));
 }
 
 /**
@@ -452,7 +575,8 @@ function simpletest_clean_environment() {
 }
 
 /**
- * Removed prefixed tables from the database that are left over from crashed tests.
+ * Removed prefixed tables from the database that are left over from crashed
+ * tests.
  */
 function simpletest_clean_database() {
   $tables = db_find_tables(Database::getConnection()->prefixTables('{simpletest}') . '%');
@@ -568,4 +692,68 @@ function simpletest_library_info() {
   );
 
   return $libraries;
+}
+
+/**
+ * Get PHPUnit Classes
+ *
+ * @param bool $name_only
+ *  If TRUE, returns a flat array of class names only.
+ */
+function simpletest_phpunit_get_available_tests() {
+  // Load the PHPUnit configuration file, which tells us where to find the
+  // tests.
+  $phpunit_config = simpletest_phpunit_configuration_filepath();
+  $configuration = PHPUnit_Util_Configuration::getInstance($phpunit_config);
+  // Find all the tests and get a list of unique class names.
+  $test_suite = $configuration->getTestSuiteConfiguration(NULL);
+  $test_classes = array();
+  foreach ($test_suite AS $test) {
+    $name = get_class($test);
+    if (!array_key_exists($name, $test_classes)) {
+      $test_classes[$name] =  $test->getInfo();
+    }
+  }
+
+  return $test_classes;
+}
+
+/**
+ * Converts phpunit's junit xml output to an array.
+ *
+ * The returned array of rows is in a format that can be inserted into the
+ * simpletest results table.
+ *
+ * @param $test_id
+ *   The current test ID.
+ * @param $phpunit_xml_file
+ *   Path to the phpunit xml file.
+ */
+function simpletest_phpunit_xml_to_rows($test_id, $phpunit_xml_file) {
+  $contents = file_get_contents($phpunit_xml_file);
+  $xml = new SimpleXMLElement($contents);
+  $records = array();
+  foreach ($xml->testsuite as $testsuite) {
+    foreach ($testsuite as $suite) {
+      foreach ($suite as $testcase) {
+        $message = '';
+        if ($testcase->failure) {
+          $lines = explode("\n", $testcase->failure);
+          $message = $lines[2];
+        }
+        $attributes = $testcase->attributes();
+        $records[] = array(
+          'test_id' => $test_id,
+          'test_class' => (string)$attributes->class,
+          'status' => empty($testcase->failure) ? 'pass' : 'fail',
+          'message' => $message,
+          'message_group' => 'Other', // TODO: Check on the proper values for this.
+          'function' => $attributes->class . '->' . $attributes->name . '()',
+          'line' => (string)$attributes->line,
+          'file' => (string)$attributes->file,
+        );
+      }
+    }
+  }
+  return $records;
 }

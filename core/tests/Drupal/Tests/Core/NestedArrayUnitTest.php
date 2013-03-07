@@ -2,18 +2,20 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Common\NestedArrayUnitTest.
+ * Contains \Drupal\Core\NestedArrayUnitTest.
  */
 
-namespace Drupal\system\Tests\Common;
+namespace Drupal\Tests\Core;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\simpletest\UnitTestBase;
+use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests the NestedArray helper class.
+ *
+ * @group System
  */
-class NestedArrayUnitTest extends UnitTestBase {
+class NestedArrayUnitTest extends UnitTestCase {
 
   /**
    * Form array to check.
@@ -51,26 +53,26 @@ class NestedArrayUnitTest extends UnitTestBase {
   function testGetValue() {
     // Verify getting a value of a nested element.
     $value = NestedArray::getValue($this->form, $this->parents);
-    $this->assertEqual($value['#value'], 'Nested element', 'Nested element value found.');
+    $this->assertEquals($value['#value'], 'Nested element', 'Nested element value found.');
 
     // Verify changing a value of a nested element by reference.
     $value = &NestedArray::getValue($this->form, $this->parents);
     $value['#value'] = 'New value';
     $value = NestedArray::getValue($this->form, $this->parents);
-    $this->assertEqual($value['#value'], 'New value', 'Nested element value was changed by reference.');
-    $this->assertEqual($this->form['details']['element']['#value'], 'New value', 'Nested element value was changed by reference.');
+    $this->assertEquals($value['#value'], 'New value', 'Nested element value was changed by reference.');
+    $this->assertEquals($this->form['details']['element']['#value'], 'New value', 'Nested element value was changed by reference.');
 
     // Verify that an existing key is reported back.
     $key_exists = NULL;
     NestedArray::getValue($this->form, $this->parents, $key_exists);
-    $this->assertIdentical($key_exists, TRUE, 'Existing key found.');
+    $this->assertSame($key_exists, TRUE, 'Existing key found.');
 
     // Verify that a non-existing key is reported back and throws no errors.
     $key_exists = NULL;
     $parents = $this->parents;
     $parents[] = 'foo';
     NestedArray::getValue($this->form, $parents, $key_exists);
-    $this->assertIdentical($key_exists, FALSE, 'Non-existing key not found.');
+    $this->assertSame($key_exists, FALSE, 'Non-existing key not found.');
   }
 
   /**
@@ -84,8 +86,8 @@ class NestedArrayUnitTest extends UnitTestBase {
 
     // Verify setting the value of a nested element.
     NestedArray::setValue($this->form, $this->parents, $new_value);
-    $this->assertEqual($this->form['details']['element']['#value'], 'New value', 'Changed nested element value found.');
-    $this->assertIdentical($this->form['details']['element']['#required'], TRUE, 'New nested element value found.');
+    $this->assertEquals($this->form['details']['element']['#value'], 'New value', 'Changed nested element value found.');
+    $this->assertSame($this->form['details']['element']['#required'], TRUE, 'New nested element value found.');
   }
 
   /**
@@ -99,13 +101,13 @@ class NestedArrayUnitTest extends UnitTestBase {
     $parents[] = 'foo';
     NestedArray::unsetValue($this->form, $parents, $key_existed);
     $this->assertTrue(isset($this->form['details']['element']['#value']), 'Outermost nested element key still exists.');
-    $this->assertIdentical($key_existed, FALSE, 'Non-existing key not found.');
+    $this->assertSame($key_existed, FALSE, 'Non-existing key not found.');
 
     // Verify unsetting a nested element.
     $key_existed = NULL;
     NestedArray::unsetValue($this->form, $this->parents, $key_existed);
     $this->assertFalse(isset($this->form['details']['element']), 'Removed nested element not found.');
-    $this->assertIdentical($key_existed, TRUE, 'Existing key was found.');
+    $this->assertSame($key_existed, TRUE, 'Existing key was found.');
   }
 
   /**
@@ -113,12 +115,12 @@ class NestedArrayUnitTest extends UnitTestBase {
    */
   function testKeyExists() {
     // Verify that existing key is found.
-    $this->assertIdentical(NestedArray::keyExists($this->form, $this->parents), TRUE, 'Nested key found.');
+    $this->assertSame(NestedArray::keyExists($this->form, $this->parents), TRUE, 'Nested key found.');
 
     // Verify that non-existing keys are not found.
     $parents = $this->parents;
     $parents[] = 'foo';
-    $this->assertIdentical(NestedArray::keyExists($this->form, $parents), FALSE, 'Non-existing nested key not found.');
+    $this->assertSame(NestedArray::keyExists($this->form, $parents), FALSE, 'Non-existing nested key not found.');
   }
 
   /**
@@ -141,6 +143,6 @@ class NestedArrayUnitTest extends UnitTestBase {
       'language' => 'en',
       'html' => TRUE,
     );
-    $this->assertIdentical(NestedArray::mergeDeepArray(array($link_options_1, $link_options_2)), $expected, 'NestedArray::mergeDeepArray() returned a properly merged array.');
+    $this->assertSame(NestedArray::mergeDeepArray(array($link_options_1, $link_options_2)), $expected, 'NestedArray::mergeDeepArray() returned a properly merged array.');
   }
 }
