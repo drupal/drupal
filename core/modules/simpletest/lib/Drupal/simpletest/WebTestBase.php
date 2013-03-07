@@ -854,7 +854,7 @@ abstract class WebTestBase extends TestBase {
     variable_set('file_public_path', $this->public_files_directory);
 
     // Use the test mail class instead of the default mail handler class.
-    variable_set('mail_system', array('default-system' => 'Drupal\Core\Mail\VariableLog'));
+    config('system.mail')->set('interface.default', 'Drupal\Core\Mail\VariableLog')->save();
 
     drupal_set_time_limit($this->timeLimit);
     // Temporary fix so that when running from run-tests.sh we don't get an

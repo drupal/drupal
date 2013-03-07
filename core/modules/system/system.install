@@ -2141,6 +2141,45 @@ function system_update_8049() {
 }
 
 /**
+ * Converts mail settings to config.
+ *
+ * @ingroup config_upgrade
+ */
+function system_update_8050() {
+  // Update any mail interfaces to their Drupal 8 equivalents.
+  $old_mail_system_settings = update_variable_get('mail_system');
+
+  if ($old_mail_system_settings) {
+    $new_mail_system_settings = array();
+
+    foreach ($old_mail_system_settings as $key => $mailer_class) {
+      // Update old class name to PSR-0.
+      if ($mailer_class == 'DefaultMailSystem') {
+        $mailer_class = 'Drupal\Core\Mail\PhpMail';
+      }
+      // New default key.
+      if ($key == 'default-system') {
+        $new_mail_system_settings['default'] = $mailer_class;
+        unset($old_mail_system_settings[$key]);
+      }
+    }
+    if (count($old_mail_system_settings)) {
+      // Warn about non-core classes which may need to be updated.
+      drupal_set_message(format_string('The following mail backends need to be re-configured: @list.', array('@list' => implode(', ', $old_mail_system_settings))), 'warning');
+    }
+
+    $new_mail_system_settings += $old_mail_system_settings;
+    // Save the updated variable, and let update_variables_to_config convert it.
+    if ($new_mail_system_settings) {
+      update_variable_set('mail_system', $new_mail_system_settings);
+    }
+  }
+  update_variables_to_config('system.mail', array(
+    'mail_system' => 'interface',
+  ));
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

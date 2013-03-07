@@ -1,0 +1,2 @@
+interface:
+ default: 'Drupal\Core\Mail\PhpMail'

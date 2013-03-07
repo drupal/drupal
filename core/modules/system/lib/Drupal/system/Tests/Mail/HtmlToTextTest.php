@@ -348,11 +348,8 @@ class HtmlToTextTest extends WebTestBase {
   public function testVeryLongLineWrap() {
     $input = 'Drupal<br /><p>' . str_repeat('x', 2100) . '</><br />Drupal';
     $output = drupal_html_to_text($input);
-    // This awkward construct comes from includes/mail.inc lines 8-13.
-    $eol = variable_get('mail_line_endings', MAIL_LINE_ENDINGS);
-    // We must use strlen() rather than drupal_strlen() in order to count
-    // octets rather than characters.
-    $line_length_limit = 1000 - drupal_strlen($eol);
+    $eol = settings()->get('mail_line_endings', MAIL_LINE_ENDINGS);
+
     $maximum_line_length = 0;
     foreach (explode($eol, $output) as $line) {
       // We must use strlen() rather than drupal_strlen() in order to count
