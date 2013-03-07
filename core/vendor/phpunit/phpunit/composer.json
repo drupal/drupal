@@ -22,19 +22,28 @@
     },
     "require": {
         "php": ">=5.3.3",
-        "phpunit/php-file-iterator": ">=1.3.1@stable",
-        "phpunit/php-text-template": ">=1.1.1@stable",
-        "phpunit/php-code-coverage": ">=1.2.0@stable",
-        "phpunit/php-timer": ">=1.0.2@stable",
-        "phpunit/phpunit-mock-objects": ">=1.2.0@stable",
-        "symfony/yaml": ">=2.1.0@stable",
+        "phpunit/php-file-iterator": ">=1.3.1",
+        "phpunit/php-text-template": ">=1.1.1",
+        "phpunit/php-code-coverage": ">=1.2.1,<1.3.0",
+        "phpunit/php-timer": ">=1.0.2,<1.1.0",
+        "phpunit/phpunit-mock-objects": ">=1.2.0,<1.3.0",
+        "symfony/yaml": ">=2.2.0",
         "ext-dom": "*",
         "ext-pcre": "*",
         "ext-reflection": "*",
         "ext-spl": "*"
     },
+    "require-dev": {
+        "pear-pear/pear": "1.9.4"
+    },
+    "repositories": [
+        {
+            "type": "pear",
+            "url": "http://pear.php.net"
+        }
+    ],
     "suggest": {
-        "phpunit/php-invoker": ">=1.1.0@stable",
+        "phpunit/php-invoker": ">=1.1.0,<1.2.0",
         "ext-json": "*",
         "ext-simplexml": "*",
         "ext-tokenizer": "*"
@@ -42,12 +51,9 @@
     "bin": [
         "composer/bin/phpunit"
     ],
-    "config": {
-        "bin-dir": "bin"
-    },
     "autoload": {
-        "files": [
-            "PHPUnit/Autoload.php"
+        "classmap": [
+            "PHPUnit/"
         ]
     },
     "extra": {

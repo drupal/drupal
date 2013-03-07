@@ -128,19 +128,19 @@
         "target-dir": "Symfony/Component/Process",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/Process",
-            "reference": "v2.1.7"
+            "url": "https://github.com/symfony/Process.git",
+            "reference": "v2.1.8"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/Process/zipball/v2.1.7",
-            "reference": "v2.1.7",
+            "url": "https://api.github.com/repos/symfony/Process/zipball/v2.1.8",
+            "reference": "v2.1.8",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.3"
         },
-        "time": "2013-01-16 09:27:54",
+        "time": "2013-02-18 21:27:57",
         "type": "library",
         "installation-source": "source",
         "autoload": {
@@ -270,24 +270,24 @@
     },
     {
         "name": "symfony/http-foundation",
-        "version": "v2.2.0-BETA2",
-        "version_normalized": "2.2.0.0-beta2",
+        "version": "v2.2.0",
+        "version_normalized": "2.2.0.0",
         "target-dir": "Symfony/Component/HttpFoundation",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/HttpFoundation",
-            "reference": "v2.2.0-BETA2"
+            "url": "https://github.com/symfony/HttpFoundation.git",
+            "reference": "v2.2.0"
         },
         "dist": {
             "type": "zip",
-            "url": "https://github.com/symfony/HttpFoundation/archive/v2.2.0-BETA2.zip",
-            "reference": "v2.2.0-BETA2",
+            "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/v2.2.0",
+            "reference": "v2.2.0",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.3"
         },
-        "time": "2013-01-21 16:56:55",
+        "time": "2013-02-26 09:42:13",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -322,31 +322,31 @@
     },
     {
         "name": "symfony/event-dispatcher",
-        "version": "v2.2.0-BETA2",
-        "version_normalized": "2.2.0.0-beta2",
+        "version": "v2.2.0",
+        "version_normalized": "2.2.0.0",
         "target-dir": "Symfony/Component/EventDispatcher",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/EventDispatcher",
-            "reference": "v2.2.0-BETA2"
+            "url": "https://github.com/symfony/EventDispatcher.git",
+            "reference": "v2.2.0-RC3"
         },
         "dist": {
             "type": "zip",
-            "url": "https://github.com/symfony/EventDispatcher/archive/v2.2.0-BETA2.zip",
-            "reference": "v2.2.0-BETA2",
+            "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/v2.2.0-RC3",
+            "reference": "v2.2.0-RC3",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.3"
         },
         "require-dev": {
-            "symfony/dependency-injection": "2.2.*"
+            "symfony/dependency-injection": ">=2.0,<3.0"
         },
         "suggest": {
             "symfony/dependency-injection": "2.2.*",
             "symfony/http-kernel": "2.2.*"
         },
-        "time": "2013-01-17 15:25:59",
+        "time": "2013-02-11 11:26:43",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -378,36 +378,36 @@
     },
     {
         "name": "symfony/http-kernel",
-        "version": "v2.2.0-BETA2",
-        "version_normalized": "2.2.0.0-beta2",
+        "version": "v2.2.0",
+        "version_normalized": "2.2.0.0",
         "target-dir": "Symfony/Component/HttpKernel",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/HttpKernel",
-            "reference": "v2.2.0-BETA2"
+            "url": "https://github.com/symfony/HttpKernel.git",
+            "reference": "v2.2.0"
         },
         "dist": {
             "type": "zip",
-            "url": "https://github.com/symfony/HttpKernel/archive/v2.2.0-BETA2.zip",
-            "reference": "v2.2.0-BETA2",
+            "url": "https://api.github.com/repos/symfony/HttpKernel/zipball/v2.2.0",
+            "reference": "v2.2.0",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.3",
             "psr/log": ">=1.0,<2.0",
-            "symfony/event-dispatcher": "2.2.*",
-            "symfony/http-foundation": "2.2.*"
+            "symfony/event-dispatcher": ">=2.1,<3.0",
+            "symfony/http-foundation": ">=2.2,<2.3-dev"
         },
         "require-dev": {
             "symfony/browser-kit": "2.2.*",
-            "symfony/class-loader": "2.2.*",
-            "symfony/config": "2.2.*",
+            "symfony/class-loader": ">=2.1,<3.0",
+            "symfony/config": ">=2.0,<3.0",
             "symfony/console": "2.2.*",
-            "symfony/dependency-injection": "2.2.*",
-            "symfony/finder": "2.2.*",
-            "symfony/process": "2.2.*",
-            "symfony/routing": "2.2.*",
-            "symfony/stopwatch": "2.2.*"
+            "symfony/dependency-injection": ">=2.0,<3.0",
+            "symfony/finder": ">=2.0,<3.0",
+            "symfony/process": ">=2.0,<3.0",
+            "symfony/routing": ">=2.2,<2.3-dev",
+            "symfony/stopwatch": ">=2.2,<2.3-dev"
         },
         "suggest": {
             "symfony/browser-kit": "2.2.*",
@@ -417,7 +417,7 @@
             "symfony/dependency-injection": "2.2.*",
             "symfony/finder": "2.2.*"
         },
-        "time": "2013-01-24 07:15:19",
+        "time": "2013-03-01 06:52:29",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -449,36 +449,35 @@
     },
     {
         "name": "symfony/routing",
-        "version": "v2.2.0-BETA2",
-        "version_normalized": "2.2.0.0-beta2",
+        "version": "v2.2.0",
+        "version_normalized": "2.2.0.0",
         "target-dir": "Symfony/Component/Routing",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/Routing",
-            "reference": "v2.2.0-BETA2"
+            "url": "https://github.com/symfony/Routing.git",
+            "reference": "v2.2.0-RC3"
         },
         "dist": {
             "type": "zip",
-            "url": "https://github.com/symfony/Routing/archive/v2.2.0-BETA2.zip",
-            "reference": "v2.2.0-BETA2",
+            "url": "https://api.github.com/repos/symfony/Routing/zipball/v2.2.0-RC3",
+            "reference": "v2.2.0-RC3",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.3"
         },
         "require-dev": {
-            "doctrine/common": ">=2.2,<2.4-dev",
+            "doctrine/common": ">=2.2,<3.0",
             "psr/log": ">=1.0,<2.0",
-            "symfony/config": "2.2.*",
-            "symfony/http-kernel": "2.2.*",
-            "symfony/yaml": "2.2.*"
+            "symfony/config": ">=2.2,<2.3-dev",
+            "symfony/yaml": ">=2.0,<3.0"
         },
         "suggest": {
-            "doctrine/common": ">=2.2,<2.4-dev",
+            "doctrine/common": "~2.2",
             "symfony/config": "2.2.*",
             "symfony/yaml": "2.2.*"
         },
-        "time": "2013-01-21 16:57:32",
+        "time": "2013-02-11 11:24:47",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -507,6 +506,57 @@
         ],
         "description": "Symfony Routing Component",
         "homepage": "http://symfony.com"
+    },
+    {
+        "name": "symfony-cmf/routing",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "target-dir": "Symfony/Cmf/Component/Routing",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony-cmf/Routing.git",
+            "reference": "ea4a10"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony-cmf/Routing/zipball/43585d83fb07f9354c098fcae593010567f53d45",
+            "reference": "ea4a10",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2",
+            "symfony/http-kernel": ">=2.1,<2.3-dev",
+            "symfony/routing": ">=2.1,<2.3-dev"
+        },
+        "time": "2013-02-22 13:50:34",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Symfony\\Cmf\\Component\\Routing": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Symfony CMF Community",
+                "homepage": "https://github.com/symfony-cmf/Routing/contributors"
+            }
+        ],
+        "description": "Extends the Symfony2 routing component for dynamic routes and chaining several routers",
+        "homepage": "http://cmf.symfony.com",
+        "keywords": [
+            "database",
+            "routing"
+        ]
     },
     {
         "name": "easyrdf/easyrdf",
@@ -565,77 +615,25 @@
         ]
     },
     {
-        "name": "symfony/class-loader",
-        "version": "v2.2.0-BETA2",
-        "version_normalized": "2.2.0.0-beta2",
-        "target-dir": "Symfony/Component/ClassLoader",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/ClassLoader",
-            "reference": "v2.2.0-BETA2"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://github.com/symfony/ClassLoader/archive/v2.2.0-BETA2.zip",
-            "reference": "v2.2.0-BETA2",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3"
-        },
-        "require-dev": {
-            "symfony/finder": "2.2.*"
-        },
-        "time": "2013-01-23 20:21:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.2-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Symfony\\Component\\ClassLoader\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "http://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony ClassLoader Component",
-        "homepage": "http://symfony.com"
-    },
-    {
         "name": "symfony/yaml",
-        "version": "v2.2.0-BETA2",
-        "version_normalized": "2.2.0.0-beta2",
+        "version": "v2.2.0",
+        "version_normalized": "2.2.0.0",
         "target-dir": "Symfony/Component/Yaml",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/Yaml",
-            "reference": "v2.2.0-BETA2"
+            "url": "https://github.com/symfony/Yaml.git",
+            "reference": "v2.2.0-RC3"
         },
         "dist": {
             "type": "zip",
-            "url": "https://github.com/symfony/Yaml/archive/v2.2.0-BETA2.zip",
-            "reference": "v2.2.0-BETA2",
+            "url": "https://api.github.com/repos/symfony/Yaml/zipball/v2.2.0-RC3",
+            "reference": "v2.2.0-RC3",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.3"
         },
-        "time": "2013-01-23 20:21:00",
+        "time": "2013-01-27 16:49:19",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -666,38 +664,516 @@
         "homepage": "http://symfony.com"
     },
     {
-        "name": "symfony/validator",
-        "version": "v2.2.0-BETA2",
-        "version_normalized": "2.2.0.0-beta2",
-        "target-dir": "Symfony/Component/Validator",
+        "name": "phpunit/php-text-template",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/Validator",
-            "reference": "v2.2.0-BETA2"
+            "url": "https://github.com/sebastianbergmann/php-text-template.git",
+            "reference": "1eeef106193d2f8c539728e566bb4793071a9e18"
         },
         "dist": {
             "type": "zip",
-            "url": "https://github.com/symfony/Validator/archive/v2.2.0-BETA2.zip",
-            "reference": "v2.2.0-BETA2",
+            "url": "https://api.github.com/repos/sebastianbergmann/php-text-template/zipball/1eeef106193d2f8c539728e566bb4793071a9e18",
+            "reference": "1eeef106193d2f8c539728e566bb4793071a9e18",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "time": "2013-01-07 10:56:17",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "Text/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "include-path": [
+            ""
+        ],
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Sebastian Bergmann",
+                "email": "sb@sebastian-bergmann.de",
+                "role": "lead"
+            }
+        ],
+        "description": "Simple template engine.",
+        "homepage": "https://github.com/sebastianbergmann/php-text-template/",
+        "keywords": [
+            "template"
+        ]
+    },
+    {
+        "name": "phpunit/phpunit-mock-objects",
+        "version": "1.2.x-dev",
+        "version_normalized": "1.2.9999999.9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
+            "reference": "d49b5683200b5db9b1c64cb06f52f50d147891c4"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/d49b5683200b5db9b1c64cb06f52f50d147891c4",
+            "reference": "d49b5683200b5db9b1c64cb06f52f50d147891c4",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.3",
-            "symfony/translation": "2.2.*"
+            "phpunit/php-text-template": ">=1.1.1@stable"
+        },
+        "suggest": {
+            "ext-soap": "*"
+        },
+        "time": "2013-02-05 07:46:41",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "PHPUnit/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "include-path": [
+            ""
+        ],
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Sebastian Bergmann",
+                "email": "sb@sebastian-bergmann.de",
+                "role": "lead"
+            }
+        ],
+        "description": "Mock Object library for PHPUnit",
+        "homepage": "https://github.com/sebastianbergmann/phpunit-mock-objects/",
+        "keywords": [
+            "mock",
+            "xunit"
+        ]
+    },
+    {
+        "name": "phpunit/php-timer",
+        "version": "1.0.x-dev",
+        "version_normalized": "1.0.9999999.9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/sebastianbergmann/php-timer.git",
+            "reference": "ecf7920b27003a9412b07dad79dbb5ad1249e6c3"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/ecf7920b27003a9412b07dad79dbb5ad1249e6c3",
+            "reference": "ecf7920b27003a9412b07dad79dbb5ad1249e6c3",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "time": "2013-01-30 06:08:51",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "PHP/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "include-path": [
+            ""
+        ],
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Sebastian Bergmann",
+                "email": "sb@sebastian-bergmann.de",
+                "role": "lead"
+            }
+        ],
+        "description": "Utility class for timing",
+        "homepage": "https://github.com/sebastianbergmann/php-timer/",
+        "keywords": [
+            "timer"
+        ]
+    },
+    {
+        "name": "phpunit/php-token-stream",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/sebastianbergmann/php-token-stream.git",
+            "reference": "c25dd88e1592e66dee2553c99ef244203d5a1b98"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/c25dd88e1592e66dee2553c99ef244203d5a1b98",
+            "reference": "c25dd88e1592e66dee2553c99ef244203d5a1b98",
+            "shasum": ""
+        },
+        "require": {
+            "ext-tokenizer": "*",
+            "php": ">=5.3.3"
+        },
+        "time": "2013-01-07 10:56:35",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "PHP/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "include-path": [
+            ""
+        ],
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Sebastian Bergmann",
+                "email": "sb@sebastian-bergmann.de",
+                "role": "lead"
+            }
+        ],
+        "description": "Wrapper around PHP's tokenizer extension.",
+        "homepage": "https://github.com/sebastianbergmann/php-token-stream/",
+        "keywords": [
+            "tokenizer"
+        ]
+    },
+    {
+        "name": "phpunit/php-file-iterator",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/sebastianbergmann/php-file-iterator.git",
+            "reference": "2deb24c65ea78e126daa8d45b2089ddc29ec1d26"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/sebastianbergmann/php-file-iterator/zipball/2deb24c65ea78e126daa8d45b2089ddc29ec1d26",
+            "reference": "2deb24c65ea78e126daa8d45b2089ddc29ec1d26",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "time": "2013-01-07 10:47:05",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "File/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "include-path": [
+            ""
+        ],
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Sebastian Bergmann",
+                "email": "sb@sebastian-bergmann.de",
+                "role": "lead"
+            }
+        ],
+        "description": "FilterIterator implementation that filters files based on a list of suffixes.",
+        "homepage": "https://github.com/sebastianbergmann/php-file-iterator/",
+        "keywords": [
+            "filesystem",
+            "iterator"
+        ]
+    },
+    {
+        "name": "phpunit/php-code-coverage",
+        "version": "1.2.x-dev",
+        "version_normalized": "1.2.9999999.9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
+            "reference": "1.2.9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/1.2.9",
+            "reference": "1.2.9",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3",
+            "phpunit/php-file-iterator": ">=1.3.0@stable",
+            "phpunit/php-text-template": ">=1.1.1@stable",
+            "phpunit/php-token-stream": ">=1.1.3@stable"
+        },
+        "suggest": {
+            "ext-dom": "*",
+            "ext-xdebug": ">=2.0.5"
+        },
+        "time": "2013-02-26 18:55:56",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "PHP/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "include-path": [
+            ""
+        ],
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Sebastian Bergmann",
+                "email": "sb@sebastian-bergmann.de",
+                "role": "lead"
+            }
+        ],
+        "description": "Library that provides collection, processing, and rendering functionality for PHP code coverage information.",
+        "homepage": "https://github.com/sebastianbergmann/php-code-coverage",
+        "keywords": [
+            "coverage",
+            "testing",
+            "xunit"
+        ]
+    },
+    {
+        "name": "phpunit/phpunit",
+        "version": "3.7.15",
+        "version_normalized": "3.7.15.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/sebastianbergmann/phpunit.git",
+            "reference": "3.7.15"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3.7.15",
+            "reference": "3.7.15",
+            "shasum": ""
+        },
+        "require": {
+            "ext-dom": "*",
+            "ext-pcre": "*",
+            "ext-reflection": "*",
+            "ext-spl": "*",
+            "php": ">=5.3.3",
+            "phpunit/php-code-coverage": ">=1.2.1,<1.3.0",
+            "phpunit/php-file-iterator": ">=1.3.1",
+            "phpunit/php-text-template": ">=1.1.1",
+            "phpunit/php-timer": ">=1.0.2,<1.1.0",
+            "phpunit/phpunit-mock-objects": ">=1.2.0,<1.3.0",
+            "symfony/yaml": ">=2.2.0"
         },
         "require-dev": {
+            "pear-pear/pear": "1.9.4"
+        },
+        "suggest": {
+            "ext-json": "*",
+            "ext-simplexml": "*",
+            "ext-tokenizer": "*",
+            "phpunit/php-invoker": ">=1.1.0,<1.2.0"
+        },
+        "time": "2013-03-01 11:55:06",
+        "bin": [
+            "composer/bin/phpunit"
+        ],
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "3.7.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "PHPUnit/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "include-path": [
+            "",
+            "../../symfony/yaml/"
+        ],
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Sebastian Bergmann",
+                "email": "sebastian@phpunit.de",
+                "role": "lead"
+            }
+        ],
+        "description": "The PHP Unit Testing framework.",
+        "homepage": "http://www.phpunit.de/",
+        "keywords": [
+            "phpunit",
+            "testing",
+            "xunit"
+        ]
+    },
+    {
+        "name": "symfony/class-loader",
+        "version": "v2.2.0",
+        "version_normalized": "2.2.0.0",
+        "target-dir": "Symfony/Component/ClassLoader",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/ClassLoader.git",
+            "reference": "v2.2.0"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/ClassLoader/zipball/v2.2.0",
+            "reference": "v2.2.0",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "require-dev": {
+            "symfony/finder": ">=2.0,<3.0"
+        },
+        "time": "2013-03-01 06:43:14",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.2-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Symfony\\Component\\ClassLoader\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "http://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony ClassLoader Component",
+        "homepage": "http://symfony.com"
+    },
+    {
+        "name": "symfony/translation",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "target-dir": "Symfony/Component/Translation",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/Translation.git",
+            "reference": "10164d84c407fd9ac5918172f86a4b94bf2b9c0b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/Translation/zipball/10164d84c407fd9ac5918172f86a4b94bf2b9c0b",
+            "reference": "10164d84c407fd9ac5918172f86a4b94bf2b9c0b",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "require-dev": {
+            "symfony/config": ">=2.0,<2.4-dev",
+            "symfony/yaml": ">=2.2,<3.0"
+        },
+        "suggest": {
+            "symfony/config": "2.2.*",
+            "symfony/yaml": "2.2.*"
+        },
+        "time": "2013-02-11 10:13:11",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Symfony\\Component\\Translation\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "http://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Translation Component",
+        "homepage": "http://symfony.com"
+    },
+    {
+        "name": "symfony/validator",
+        "version": "v2.2.0",
+        "version_normalized": "2.2.0.0",
+        "target-dir": "Symfony/Component/Validator",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/Validator.git",
+            "reference": "v2.2.0"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/Validator/zipball/v2.2.0",
+            "reference": "v2.2.0",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3",
+            "symfony/translation": ">=2.0,<3.0"
+        },
+        "require-dev": {
+            "symfony/config": ">=2.2,<2.3-dev",
+            "symfony/http-foundation": ">=2.1,<3.0",
+            "symfony/locale": ">=2.0,<3.0",
+            "symfony/yaml": ">=2.0,<3.0"
+        },
+        "suggest": {
+            "doctrine/common": "~2.2",
             "symfony/config": "2.2.*",
             "symfony/http-foundation": "2.2.*",
             "symfony/locale": "2.2.*",
             "symfony/yaml": "2.2.*"
         },
-        "suggest": {
-            "doctrine/common": ">=2.1,<2.4-dev",
-            "symfony/config": "2.2.*",
-            "symfony/http-foundation": "2.2.*",
-            "symfony/yaml": "2.2.*"
-        },
-        "time": "2013-01-21 16:57:12",
+        "time": "2013-02-28 14:29:34",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -729,18 +1205,18 @@
     },
     {
         "name": "symfony/serializer",
-        "version": "v2.2.0-BETA2",
-        "version_normalized": "2.2.0.0-beta2",
+        "version": "v2.2.0",
+        "version_normalized": "2.2.0.0",
         "target-dir": "Symfony/Component/Serializer",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/Serializer",
-            "reference": "v2.2.0-BETA2"
+            "url": "https://github.com/symfony/Serializer.git",
+            "reference": "v2.2.0-RC3"
         },
         "dist": {
             "type": "zip",
-            "url": "https://github.com/symfony/Serializer/archive/v2.2.0-BETA2.zip",
-            "reference": "v2.2.0-BETA2",
+            "url": "https://api.github.com/repos/symfony/Serializer/zipball/v2.2.0-RC3",
+            "reference": "v2.2.0-RC3",
             "shasum": ""
         },
         "require": {
@@ -778,32 +1254,32 @@
     },
     {
         "name": "symfony/dependency-injection",
-        "version": "v2.2.0-BETA2",
-        "version_normalized": "2.2.0.0-beta2",
+        "version": "v2.2.0",
+        "version_normalized": "2.2.0.0",
         "target-dir": "Symfony/Component/DependencyInjection",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/DependencyInjection",
-            "reference": "v2.2.0-BETA2"
+            "url": "https://github.com/symfony/DependencyInjection.git",
+            "reference": "v2.2.0-RC3"
         },
         "dist": {
             "type": "zip",
-            "url": "https://github.com/symfony/DependencyInjection/archive/v2.2.0-BETA2.zip",
-            "reference": "v2.2.0-BETA2",
+            "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/v2.2.0-RC3",
+            "reference": "v2.2.0-RC3",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.3"
         },
         "require-dev": {
-            "symfony/config": "2.2.*",
-            "symfony/yaml": "2.2.*"
+            "symfony/config": ">=2.2,<2.3-dev",
+            "symfony/yaml": ">=2.0,<3.0"
         },
         "suggest": {
             "symfony/config": "2.2.*",
             "symfony/yaml": "2.2.*"
         },
-        "time": "2013-01-23 20:21:00",
+        "time": "2013-02-11 11:43:49",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1032,483 +1508,6 @@
             "curl",
             "http",
             "http client"
-        ]
-    },
-    {
-        "name": "symfony/translation",
-        "version": "2.2.x-dev",
-        "version_normalized": "2.2.9999999.9999999-dev",
-        "target-dir": "Symfony/Component/Translation",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/Translation",
-            "reference": "v2.2.0-RC2"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/Translation/zipball/v2.2.0-RC2",
-            "reference": "v2.2.0-RC2",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3"
-        },
-        "require-dev": {
-            "symfony/config": ">=2.0,<2.3-dev",
-            "symfony/yaml": ">=2.2,<3.0"
-        },
-        "suggest": {
-            "symfony/config": "2.2.*",
-            "symfony/yaml": "2.2.*"
-        },
-        "time": "2013-02-08 16:10:57",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.2-dev"
-            }
-        },
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "Symfony\\Component\\Translation\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "http://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Translation Component",
-        "homepage": "http://symfony.com"
-    },
-    {
-        "name": "phpunit/php-text-template",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "git://github.com/sebastianbergmann/php-text-template.git",
-            "reference": "1eeef106193d2f8c539728e566bb4793071a9e18"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/sebastianbergmann/php-text-template/zipball/1eeef106193d2f8c539728e566bb4793071a9e18",
-            "reference": "1eeef106193d2f8c539728e566bb4793071a9e18",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3"
-        },
-        "time": "2013-01-07 10:56:17",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "classmap": [
-                "Text/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "include-path": [
-            ""
-        ],
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Sebastian Bergmann",
-                "email": "sb@sebastian-bergmann.de",
-                "role": "lead"
-            }
-        ],
-        "description": "Simple template engine.",
-        "homepage": "https://github.com/sebastianbergmann/php-text-template/",
-        "keywords": [
-            "template"
-        ]
-    },
-    {
-        "name": "phpunit/phpunit-mock-objects",
-        "version": "1.2.x-dev",
-        "version_normalized": "1.2.9999999.9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "git://github.com/sebastianbergmann/phpunit-mock-objects.git",
-            "reference": "d49b5683200b5db9b1c64cb06f52f50d147891c4"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/d49b5683200b5db9b1c64cb06f52f50d147891c4",
-            "reference": "d49b5683200b5db9b1c64cb06f52f50d147891c4",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3",
-            "phpunit/php-text-template": ">=1.1.1@stable"
-        },
-        "suggest": {
-            "ext-soap": "*"
-        },
-        "time": "2013-02-05 07:46:41",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "classmap": [
-                "PHPUnit/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "include-path": [
-            ""
-        ],
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Sebastian Bergmann",
-                "email": "sb@sebastian-bergmann.de",
-                "role": "lead"
-            }
-        ],
-        "description": "Mock Object library for PHPUnit",
-        "homepage": "https://github.com/sebastianbergmann/phpunit-mock-objects/",
-        "keywords": [
-            "mock",
-            "xunit"
-        ]
-    },
-    {
-        "name": "phpunit/php-timer",
-        "version": "1.0.x-dev",
-        "version_normalized": "1.0.9999999.9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "git://github.com/sebastianbergmann/php-timer.git",
-            "reference": "ecf7920b27003a9412b07dad79dbb5ad1249e6c3"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/ecf7920b27003a9412b07dad79dbb5ad1249e6c3",
-            "reference": "ecf7920b27003a9412b07dad79dbb5ad1249e6c3",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3"
-        },
-        "time": "2013-01-30 06:08:51",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "classmap": [
-                "PHP/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "include-path": [
-            ""
-        ],
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Sebastian Bergmann",
-                "email": "sb@sebastian-bergmann.de",
-                "role": "lead"
-            }
-        ],
-        "description": "Utility class for timing",
-        "homepage": "https://github.com/sebastianbergmann/php-timer/",
-        "keywords": [
-            "timer"
-        ]
-    },
-    {
-        "name": "phpunit/php-token-stream",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "git://github.com/sebastianbergmann/php-token-stream.git",
-            "reference": "c25dd88e1592e66dee2553c99ef244203d5a1b98"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/c25dd88e1592e66dee2553c99ef244203d5a1b98",
-            "reference": "c25dd88e1592e66dee2553c99ef244203d5a1b98",
-            "shasum": ""
-        },
-        "require": {
-            "ext-tokenizer": "*",
-            "php": ">=5.3.3"
-        },
-        "time": "2013-01-07 10:56:35",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "classmap": [
-                "PHP/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "include-path": [
-            ""
-        ],
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Sebastian Bergmann",
-                "email": "sb@sebastian-bergmann.de",
-                "role": "lead"
-            }
-        ],
-        "description": "Wrapper around PHP's tokenizer extension.",
-        "homepage": "https://github.com/sebastianbergmann/php-token-stream/",
-        "keywords": [
-            "tokenizer"
-        ]
-    },
-    {
-        "name": "phpunit/php-file-iterator",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "git://github.com/sebastianbergmann/php-file-iterator.git",
-            "reference": "2deb24c65ea78e126daa8d45b2089ddc29ec1d26"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/sebastianbergmann/php-file-iterator/zipball/2deb24c65ea78e126daa8d45b2089ddc29ec1d26",
-            "reference": "2deb24c65ea78e126daa8d45b2089ddc29ec1d26",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3"
-        },
-        "time": "2013-01-07 10:47:05",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "classmap": [
-                "File/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "include-path": [
-            ""
-        ],
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Sebastian Bergmann",
-                "email": "sb@sebastian-bergmann.de",
-                "role": "lead"
-            }
-        ],
-        "description": "FilterIterator implementation that filters files based on a list of suffixes.",
-        "homepage": "https://github.com/sebastianbergmann/php-file-iterator/",
-        "keywords": [
-            "filesystem",
-            "iterator"
-        ]
-    },
-    {
-        "name": "phpunit/php-code-coverage",
-        "version": "1.2.x-dev",
-        "version_normalized": "1.2.9999999.9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "git://github.com/sebastianbergmann/php-code-coverage.git",
-            "reference": "fa8ba7588bdaa48b93cd60629273ee6b9699b280"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/fa8ba7588bdaa48b93cd60629273ee6b9699b280",
-            "reference": "fa8ba7588bdaa48b93cd60629273ee6b9699b280",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3",
-            "phpunit/php-file-iterator": ">=1.3.0@stable",
-            "phpunit/php-text-template": ">=1.1.1@stable",
-            "phpunit/php-token-stream": ">=1.1.3@stable"
-        },
-        "suggest": {
-            "ext-dom": "*",
-            "ext-xdebug": ">=2.0.5"
-        },
-        "time": "2013-02-12 10:55:13",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "classmap": [
-                "PHP/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "include-path": [
-            ""
-        ],
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Sebastian Bergmann",
-                "email": "sb@sebastian-bergmann.de",
-                "role": "lead"
-            }
-        ],
-        "description": "Library that provides collection, processing, and rendering functionality for PHP code coverage information.",
-        "homepage": "https://github.com/sebastianbergmann/php-code-coverage",
-        "keywords": [
-            "coverage",
-            "testing",
-            "xunit"
-        ]
-    },
-    {
-        "name": "phpunit/phpunit",
-        "version": "3.7.0",
-        "version_normalized": "3.7.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/msonnabaum/phpunit.git",
-            "reference": "3.7.0"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/msonnabaum/phpunit/zipball/3.7.0",
-            "reference": "3.7.0",
-            "shasum": ""
-        },
-        "require": {
-            "ext-dom": "*",
-            "ext-pcre": "*",
-            "ext-reflection": "*",
-            "ext-spl": "*",
-            "php": ">=5.3.3",
-            "phpunit/php-code-coverage": ">=1.2.0@stable",
-            "phpunit/php-file-iterator": ">=1.3.1@stable",
-            "phpunit/php-text-template": ">=1.1.1@stable",
-            "phpunit/php-timer": ">=1.0.2@stable",
-            "phpunit/phpunit-mock-objects": ">=1.2.0@stable",
-            "symfony/yaml": ">=2.1.0@stable"
-        },
-        "suggest": {
-            "ext-json": "*",
-            "ext-simplexml": "*",
-            "ext-tokenizer": "*",
-            "phpunit/php-invoker": ">=1.1.0@stable"
-        },
-        "time": "2012-09-19 05:07:48",
-        "bin": [
-            "composer/bin/phpunit"
-        ],
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "3.7.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "files": [
-                "PHPUnit/Autoload.php"
-            ]
-        },
-        "include-path": [
-            "",
-            "../../symfony/yaml/"
-        ],
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Sebastian Bergmann",
-                "email": "sebastian@phpunit.de",
-                "role": "lead"
-            }
-        ],
-        "description": "The PHP Unit Testing framework.",
-        "homepage": "http://www.phpunit.de/",
-        "keywords": [
-            "phpunit",
-            "testing",
-            "xunit"
-        ],
-        "support": {
-            "issues": "https://github.com/sebastianbergmann/phpunit/issues",
-            "irc": "irc://irc.freenode.net/phpunit",
-            "source": "https://github.com/msonnabaum/phpunit/tree/3.7.0"
-        }
-    },
-    {
-        "name": "symfony-cmf/routing",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "target-dir": "Symfony/Cmf/Component/Routing",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony-cmf/Routing",
-            "reference": "ea4a10"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony-cmf/Routing/zipball/72df1da07b3c4edf16df169fb7987f504070fe0d",
-            "reference": "ea4a10",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.2",
-            "symfony/http-kernel": ">=2.1,<2.3-dev",
-            "symfony/routing": ">=2.1,<2.3-dev"
-        },
-        "time": "2013-01-24 16:09:01",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.0-dev"
-            }
-        },
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "Symfony\\Cmf\\Component\\Routing": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Symfony CMF Community",
-                "homepage": "https://github.com/symfony-cmf/Routing/contributors"
-            }
-        ],
-        "description": "Extends the Symfony2 routing component for dynamic routes and chaining several routers",
-        "homepage": "http://cmf.symfony.com",
-        "keywords": [
-            "database",
-            "routing"
         ]
     }
 ]

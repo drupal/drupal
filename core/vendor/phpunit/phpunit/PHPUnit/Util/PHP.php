@@ -2,7 +2,7 @@
 /**
  * PHPUnit
  *
- * Copyright (c) 2001-2012, Sebastian Bergmann <sebastian@phpunit.de>.
+ * Copyright (c) 2001-2013, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@
  * @package    PHPUnit
  * @subpackage Util
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://www.phpunit.de/
  * @since      File available since Release 3.4.0
@@ -49,9 +49,8 @@
  * @package    PHPUnit
  * @subpackage Util
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @version    Release: @package_version@
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 3.4.0
  */
@@ -128,7 +127,7 @@ abstract class PHPUnit_Util_PHP
             if (!is_readable($this->phpBinary)) {
                 $this->phpBinary = 'php';
             } else {
-                $this->phpBinary = escapeshellcmd($this->phpBinary);
+                $this->phpBinary = escapeshellarg($this->phpBinary);
             }
         }
 
@@ -223,8 +222,9 @@ abstract class PHPUnit_Util_PHP
      */
     protected function processChildResult(PHPUnit_Framework_Test $test, PHPUnit_Framework_TestResult $result, $stdout, $stderr)
     {
+        $time = 0;
+
         if (!empty($stderr)) {
-            $time = 0;
             $result->addError(
               $test,
               new PHPUnit_Framework_Exception(trim($stderr)), $time
@@ -240,7 +240,6 @@ abstract class PHPUnit_Util_PHP
                 restore_error_handler();
                 $childResult = FALSE;
 
-                $time = 0;
                 $result->addError(
                   $test, new PHPUnit_Framework_Exception(trim($stdout), 0, $e), $time
                 );

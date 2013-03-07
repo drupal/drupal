@@ -746,7 +746,7 @@ EOF;
     {
         \$name = strtolower(\$name);
 
-        if (!array_key_exists(\$name, \$this->parameters)) {
+        if (!(isset(\$this->parameters[\$name]) || array_key_exists(\$name, \$this->parameters))) {
             throw new InvalidArgumentException(sprintf('The parameter "%s" must be defined.', \$name));
         }
 
@@ -758,7 +758,9 @@ EOF;
      */
     public function hasParameter(\$name)
     {
-        return array_key_exists(strtolower(\$name), \$this->parameters);
+        \$name = strtolower(\$name);
+
+        return isset(\$this->parameters[\$name]) || array_key_exists(\$name, \$this->parameters);
     }
 
     /**
@@ -958,11 +960,11 @@ EOF;
      *
      * @return Boolean
      */
-    private function hasReference($id, array $arguments, $deep = false)
+    private function hasReference($id, array $arguments, $deep = false, $visited = array())
     {
         foreach ($arguments as $argument) {
             if (is_array($argument)) {
-                if ($this->hasReference($id, $argument, $deep)) {
+                if ($this->hasReference($id, $argument, $deep, $visited)) {
                     return true;
                 }
             } elseif ($argument instanceof Reference) {
@@ -970,11 +972,13 @@ EOF;
                     return true;
                 }
 
-                if ($deep) {
+                if ($deep && !isset($visited[(string) $argument])) {
+                    $visited[(string) $argument] = true;
+
                     $service = $this->container->getDefinition((string) $argument);
                     $arguments = array_merge($service->getMethodCalls(), $service->getArguments(), $service->getProperties());
 
-                    if ($this->hasReference($id, $arguments, $deep)) {
+                    if ($this->hasReference($id, $arguments, $deep, $visited)) {
                         return true;
                     }
                 }

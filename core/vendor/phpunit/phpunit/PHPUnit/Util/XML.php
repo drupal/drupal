@@ -2,7 +2,7 @@
 /**
  * PHPUnit
  *
- * Copyright (c) 2001-2012, Sebastian Bergmann <sebastian@phpunit.de>.
+ * Copyright (c) 2001-2013, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@
  * @package    PHPUnit
  * @subpackage Util
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://www.phpunit.de/
  * @since      File available since Release 3.2.0
@@ -49,9 +49,8 @@
  * @package    PHPUnit
  * @subpackage Util
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @version    Release: @package_version@
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 3.2.0
  */
@@ -65,9 +64,12 @@ class PHPUnit_Util_XML
      */
     public static function prepareString($string)
     {
-        return preg_replace(
-          '([\\x00-\\x04\\x0b\\x0c\\x0e-\\x1f\\x7f])e',
-          'sprintf( "&#x%02x;", ord( "\\1" ) )',
+        return preg_replace_callback(
+          '/[\\x00-\\x04\\x0b\\x0c\\x0e-\\x1f\\x7f]/',
+          function ($matches)
+          {
+              return sprintf('&#x%02x;', ord($matches[0]));
+          },
           htmlspecialchars(
             PHPUnit_Util_String::convertToUtf8($string), ENT_COMPAT, 'UTF-8'
           )
@@ -79,10 +81,11 @@ class PHPUnit_Util_XML
      *
      * @param  string  $filename
      * @param  boolean $isHtml
+     * @param  boolean $xinclude
      * @return DOMDocument
      * @since  Method available since Release 3.3.0
      */
-    public static function loadFile($filename, $isHtml = FALSE)
+    public static function loadFile($filename, $isHtml = FALSE, $xinclude = FALSE)
     {
         $reporting = error_reporting(0);
         $contents  = file_get_contents($filename);
@@ -97,7 +100,7 @@ class PHPUnit_Util_XML
             );
         }
 
-        return self::load($contents, $isHtml, $filename);
+        return self::load($contents, $isHtml, $filename, $xinclude);
     }
 
     /**
@@ -106,7 +109,9 @@ class PHPUnit_Util_XML
      *
      * If $actual is already a DOMDocument, it is returned with
      * no changes.  Otherwise, $actual is loaded into a new DOMDocument
-     * as either HTML or XML, depending on the value of $isHtml.
+     * as either HTML or XML, depending on the value of $isHtml. If $isHtml is
+     * false and $xinclude is true, xinclude is performed on the loaded
+     * DOMDocument.
      *
      * Note: prior to PHPUnit 3.3.0, this method loaded a file and
      * not a string as it currently does.  To load a file into a
@@ -115,18 +120,21 @@ class PHPUnit_Util_XML
      * @param  string|DOMDocument  $actual
      * @param  boolean             $isHtml
      * @param  string              $filename
+     * @param  boolean             $xinclude
      * @return DOMDocument
      * @since  Method available since Release 3.3.0
      * @author Mike Naberezny <mike@maintainable.com>
      * @author Derek DeVries <derek@maintainable.com>
+     * @author Tobias Schlitt <toby@php.net>
      */
-    public static function load($actual, $isHtml = FALSE, $filename = '')
+    public static function load($actual, $isHtml = FALSE, $filename = '', $xinclude = FALSE)
     {
         if ($actual instanceof DOMDocument) {
             return $actual;
         }
 
         $document  = new DOMDocument;
+
         $internal  = libxml_use_internal_errors(TRUE);
         $message   = '';
         $reporting = error_reporting(0);
@@ -135,6 +143,15 @@ class PHPUnit_Util_XML
             $loaded = $document->loadHTML($actual);
         } else {
             $loaded = $document->loadXML($actual);
+        }
+
+        if ('' !== $filename) {
+            // Necessary for xinclude
+            $document->documentURI = $filename;
+        }
+
+        if (!$isHtml && $xinclude) {
+            $document->xinclude();
         }
 
         foreach (libxml_get_errors() as $error) {

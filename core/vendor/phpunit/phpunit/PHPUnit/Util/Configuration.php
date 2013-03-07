@@ -2,7 +2,7 @@
 /**
  * PHPUnit
  *
- * Copyright (c) 2001-2012, Sebastian Bergmann <sebastian@phpunit.de>.
+ * Copyright (c) 2001-2013, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@
  * @package    PHPUnit
  * @subpackage Util
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://www.phpunit.de/
  * @since      File available since Release 3.2.0
@@ -53,7 +53,7 @@
  * <phpunit backupGlobals="true"
  *          backupStaticAttributes="false"
  *          bootstrap="/path/to/bootstrap.php"
- *          cacheTokens="true"
+ *          cacheTokens="false"
  *          colors="false"
  *          convertErrorsToExceptions="true"
  *          convertNoticesToExceptions="true"
@@ -98,7 +98,8 @@
  *         <file>/path/to/file</file>
  *       </exclude>
  *     </blacklist>
- *     <whitelist processUncoveredFilesFromWhitelist="false">
+ *     <whitelist addUncoveredFilesFromWhitelist="true"
+ *                processUncoveredFilesFromWhitelist="false">
  *       <directory suffix=".php">/path/to/files</directory>
  *       <file>/path/to/file</file>
  *       <exclude>
@@ -167,9 +168,8 @@
  * @package    PHPUnit
  * @subpackage Util
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @version    Release: @package_version@
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 3.2.0
  */
@@ -189,7 +189,7 @@ class PHPUnit_Util_Configuration
     protected function __construct($filename)
     {
         $this->filename = $filename;
-        $this->document = PHPUnit_Util_XML::loadFile($filename);
+        $this->document = PHPUnit_Util_XML::loadFile($filename, FALSE, TRUE);
         $this->xpath    = new DOMXPath($this->document);
     }
 
@@ -246,18 +246,29 @@ class PHPUnit_Util_Configuration
      */
     public function getFilterConfiguration()
     {
+        $addUncoveredFilesFromWhitelist     = TRUE;
         $processUncoveredFilesFromWhitelist = FALSE;
 
         $tmp = $this->xpath->query('filter/whitelist');
 
-        if ($tmp->length == 1 &&
-            $tmp->item(0)->hasAttribute('processUncoveredFilesFromWhitelist')) {
-            $processUncoveredFilesFromWhitelist = $this->getBoolean(
-              (string)$tmp->item(0)->getAttribute(
-                'processUncoveredFilesFromWhitelist'
-              ),
-              FALSE
-            );
+        if ($tmp->length == 1) {
+            if ($tmp->item(0)->hasAttribute('addUncoveredFilesFromWhitelist')) {
+                $addUncoveredFilesFromWhitelist = $this->getBoolean(
+                  (string)$tmp->item(0)->getAttribute(
+                    'addUncoveredFilesFromWhitelist'
+                  ),
+                  TRUE
+                );
+            }
+
+            if ($tmp->item(0)->hasAttribute('processUncoveredFilesFromWhitelist')) {
+                $processUncoveredFilesFromWhitelist = $this->getBoolean(
+                  (string)$tmp->item(0)->getAttribute(
+                    'processUncoveredFilesFromWhitelist'
+                  ),
+                  FALSE
+                );
+            }
         }
 
         return array(
@@ -280,6 +291,7 @@ class PHPUnit_Util_Configuration
             )
           ),
           'whitelist' => array(
+            'addUncoveredFilesFromWhitelist' => $addUncoveredFilesFromWhitelist,
             'processUncoveredFilesFromWhitelist' => $processUncoveredFilesFromWhitelist,
             'include' => array(
               'directory' => $this->readFilterDirectories(
@@ -552,7 +564,7 @@ class PHPUnit_Util_Configuration
 
         if ($root->hasAttribute('cacheTokens')) {
             $result['cacheTokens'] = $this->getBoolean(
-              (string)$root->getAttribute('cacheTokens'), TRUE
+              (string)$root->getAttribute('cacheTokens'), FALSE
             );
         }
 

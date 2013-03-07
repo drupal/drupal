@@ -253,6 +253,9 @@ class Request
     /**
      * Creates a Request based on a given URI and configuration.
      *
+     * The information contained in the URI always take precedence
+     * over the other information (server and parameters).
+     *
      * @param string $uri        The URI
      * @param string $method     The HTTP method
      * @param array  $parameters The query (GET) or request (POST) parameters
@@ -267,7 +270,7 @@ class Request
      */
     public static function create($uri, $method = 'GET', $parameters = array(), $cookies = array(), $files = array(), $server = array(), $content = null)
     {
-        $defaults = array(
+        $server = array_replace(array(
             'SERVER_NAME'          => 'localhost',
             'SERVER_PORT'          => 80,
             'HTTP_HOST'            => 'localhost',
@@ -280,32 +283,38 @@ class Request
             'SCRIPT_FILENAME'      => '',
             'SERVER_PROTOCOL'      => 'HTTP/1.1',
             'REQUEST_TIME'         => time(),
-        );
+        ), $server);
+
+        $server['PATH_INFO'] = '';
+        $server['REQUEST_METHOD'] = strtoupper($method);
 
         $components = parse_url($uri);
         if (isset($components['host'])) {
-            $defaults['SERVER_NAME'] = $components['host'];
-            $defaults['HTTP_HOST'] = $components['host'];
+            $server['SERVER_NAME'] = $components['host'];
+            $server['HTTP_HOST'] = $components['host'];
         }
 
         if (isset($components['scheme'])) {
             if ('https' === $components['scheme']) {
-                $defaults['HTTPS'] = 'on';
-                $defaults['SERVER_PORT'] = 443;
+                $server['HTTPS'] = 'on';
+                $server['SERVER_PORT'] = 443;
+            } else {
+                unset($server['HTTPS']);
+                $server['SERVER_PORT'] = 80;
             }
         }
 
         if (isset($components['port'])) {
-            $defaults['SERVER_PORT'] = $components['port'];
-            $defaults['HTTP_HOST'] = $defaults['HTTP_HOST'].':'.$components['port'];
+            $server['SERVER_PORT'] = $components['port'];
+            $server['HTTP_HOST'] = $server['HTTP_HOST'].':'.$components['port'];
         }
 
         if (isset($components['user'])) {
-            $defaults['PHP_AUTH_USER'] = $components['user'];
+            $server['PHP_AUTH_USER'] = $components['user'];
         }
 
         if (isset($components['pass'])) {
-            $defaults['PHP_AUTH_PW'] = $components['pass'];
+            $server['PHP_AUTH_PW'] = $components['pass'];
         }
 
         if (!isset($components['path'])) {
@@ -316,7 +325,9 @@ class Request
             case 'POST':
             case 'PUT':
             case 'DELETE':
-                $defaults['CONTENT_TYPE'] = 'application/x-www-form-urlencoded';
+                if (!isset($server['CONTENT_TYPE'])) {
+                    $server['CONTENT_TYPE'] = 'application/x-www-form-urlencoded';
+                }
             case 'PATCH':
                 $request = $parameters;
                 $query = array();
@@ -333,14 +344,8 @@ class Request
         }
         $queryString = http_build_query($query, '', '&');
 
-        $uri = $components['path'].('' !== $queryString ? '?'.$queryString : '');
-
-        $server = array_replace($defaults, $server, array(
-            'REQUEST_METHOD' => strtoupper($method),
-            'PATH_INFO'      => '',
-            'REQUEST_URI'    => $uri,
-            'QUERY_STRING'   => $queryString,
-        ));
+        $server['REQUEST_URI'] = $components['path'].('' !== $queryString ? '?'.$queryString : '');
+        $server['QUERY_STRING'] = $queryString;
 
         return new static($query, $request, array(), $cookies, $files, $server, $content);
     }
@@ -589,6 +594,16 @@ class Request
     public static function enableHttpMethodParameterOverride()
     {
         self::$httpMethodParameterOverride = true;
+    }
+
+    /**
+     * Checks whether support for the _method request parameter is enabled.
+     *
+     * @return Boolean True when the _method request parameter is enabled, false otherwise
+     */
+    public static function getHttpMethodParameterOverride()
+    {
+        return self::$httpMethodParameterOverride;
     }
 
     /**
@@ -1465,12 +1480,16 @@ class Request
         if ($this->headers->has('X_ORIGINAL_URL') && false !== stripos(PHP_OS, 'WIN')) {
             // IIS with Microsoft Rewrite Module
             $requestUri = $this->headers->get('X_ORIGINAL_URL');
+            $this->headers->remove('X_ORIGINAL_URL');
         } elseif ($this->headers->has('X_REWRITE_URL') && false !== stripos(PHP_OS, 'WIN')) {
             // IIS with ISAPI_Rewrite
             $requestUri = $this->headers->get('X_REWRITE_URL');
+            $this->headers->remove('X_REWRITE_URL');
         } elseif ($this->server->get('IIS_WasUrlRewritten') == '1' && $this->server->get('UNENCODED_URL') != '') {
             // IIS7 with URL Rewrite: make sure we get the unencoded url (double slash problem)
             $requestUri = $this->server->get('UNENCODED_URL');
+            $this->server->remove('UNENCODED_URL');
+            $this->server->remove('IIS_WasUrlRewritten');
         } elseif ($this->server->has('REQUEST_URI')) {
             $requestUri = $this->server->get('REQUEST_URI');
             // HTTP proxy reqs setup request uri with scheme and host [and port] + the url path, only use url path
@@ -1484,7 +1503,11 @@ class Request
             if ('' != $this->server->get('QUERY_STRING')) {
                 $requestUri .= '?'.$this->server->get('QUERY_STRING');
             }
+            $this->server->remove('ORIG_PATH_INFO');
         }
+
+        // normalize the request URI to ease creating sub-requests from this request
+        $this->server->set('REQUEST_URI', $requestUri);
 
         return $requestUri;
     }

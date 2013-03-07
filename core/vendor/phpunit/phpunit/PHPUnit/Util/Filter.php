@@ -2,7 +2,7 @@
 /**
  * PHPUnit
  *
- * Copyright (c) 2001-2012, Sebastian Bergmann <sebastian@phpunit.de>.
+ * Copyright (c) 2001-2013, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@
  * @package    PHPUnit
  * @subpackage Util
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://www.phpunit.de/
  * @since      File available since Release 2.0.0
@@ -49,9 +49,8 @@
  * @package    PHPUnit
  * @subpackage Util
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @version    Release: @package_version@
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 2.0.0
  */
@@ -66,6 +65,13 @@ class PHPUnit_Util_Filter
      */
     public static function getFilteredStacktrace(Exception $e, $asString = TRUE)
     {
+        $prefix = FALSE;
+        $script = realpath($GLOBALS['_SERVER']['SCRIPT_NAME']);
+
+        if (defined('__PHPUNIT_PHAR__')) {
+            $prefix = 'phar://' . __PHPUNIT_PHAR__ . '/';
+        }
+
         if (!defined('PHPUNIT_TESTSUITE')) {
             $blacklist = PHPUnit_Util_GlobalState::phpunitFiles();
         } else {
@@ -100,7 +106,9 @@ class PHPUnit_Util_Filter
 
         foreach ($eTrace as $frame) {
             if (isset($frame['file']) && is_file($frame['file']) &&
-                !isset($blacklist[$frame['file']])) {
+                !isset($blacklist[$frame['file']]) &&
+                strpos($frame['file'], $prefix) !== 0 &&
+                $frame['file'] !== $script) {
                 if ($asString === TRUE) {
                     $filteredStacktrace .= sprintf(
                       "%s:%s\n",

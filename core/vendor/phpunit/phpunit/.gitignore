@@ -5,10 +5,12 @@ build/logs
 build/pdepend
 build/phar
 build/phpdox
-build/phpunit.phar
+build/*.phar
 Tests/TextUI/*.diff
 Tests/TextUI/*.exp
 Tests/TextUI/*.log
 Tests/TextUI/*.out
 Tests/TextUI/*.php
 phpunit.xml
+cache.properties
+.idea

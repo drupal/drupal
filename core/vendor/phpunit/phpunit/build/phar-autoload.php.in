@@ -1,34 +1,27 @@
 #!/usr/bin/env php
 <?php
-function phpunit_autoload($class = NULL)
-{
-    static $classes = NULL;
+define('__PHPUNIT_PHAR__', realpath($GLOBALS['_SERVER']['SCRIPT_NAME']));
 
-    if ($classes === NULL) {
-        $classes = array(
-          ___CLASSLIST___
-        );
-    }
+spl_autoload_register(
+  function ($class)
+  {
+      static $classes = NULL;
 
-    if ($class === NULL) {
-        $result = array(__FILE__);
+      if ($classes === NULL) {
+          $classes = array(
+            ___CLASSLIST___
+          );
+      }
 
-        foreach ($classes as $file) {
-            $result[] = 'phar://___PHAR___' . $file;
-        }
+      $class = strtolower($class);
 
-        return $result;
-    }
+      if (isset($classes[$class])) {
+          require 'phar://___PHAR___' . $classes[$class];
+      }
+  }
+);
 
-    $class = strtolower($class);
-
-    if (isset($classes[$class])) {
-        require 'phar://___PHAR___' . $classes[$class];
-    }
-}
-
-spl_autoload_register('phpunit_autoload');
-
+Phar::mapPhar('___PHAR___');
 PHPUnit_TextUI_Command::main();
 
 __HALT_COMPILER();

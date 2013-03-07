@@ -2,7 +2,7 @@
 /**
  * PHPUnit
  *
- * Copyright (c) 2001-2012, Sebastian Bergmann <sebastian@phpunit.de>.
+ * Copyright (c) 2001-2013, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,7 @@
  *
  * @package    PHPUnit
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://www.phpunit.de/
  * @since      File available since Release 3.3.0
@@ -47,9 +47,8 @@
  *
  * @package    PHPUnit
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @version    Release: @package_version@
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 3.3.0
  */
@@ -115,6 +114,7 @@ class Util_ConfigurationTest extends PHPUnit_Framework_TestCase
             ),
             'whitelist' =>
             array(
+              'addUncoveredFilesFromWhitelist' => TRUE,
               'processUncoveredFilesFromWhitelist' => FALSE,
               'include' =>
               array(
@@ -296,7 +296,7 @@ class Util_ConfigurationTest extends PHPUnit_Framework_TestCase
             'backupGlobals' => TRUE,
             'backupStaticAttributes' => FALSE,
             'bootstrap' => '/path/to/bootstrap.php',
-            'cacheTokens' => TRUE,
+            'cacheTokens' => FALSE,
             'colors' => FALSE,
             'convertErrorsToExceptions' => TRUE,
             'convertNoticesToExceptions' => TRUE,
@@ -330,6 +330,61 @@ class Util_ConfigurationTest extends PHPUnit_Framework_TestCase
             ),
           ),
           $this->configuration->getSeleniumBrowserConfiguration()
+        );
+    }
+
+    public function testXincludeInConfiguration()
+    {
+        $configurationWithXinclude = PHPUnit_Util_Configuration::getInstance(
+          dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'configuration_xinclude.xml'
+        );
+
+        $this->assertConfigurationEquals(
+            $this->configuration,
+            $configurationWithXinclude
+        );
+    }
+
+    /**
+     * Asserts that the values in $actualConfiguration equal $expectedConfiguration.
+     *
+     * @param PHPUnit_Util_Configuration $expectedConfiguration
+     * @param PHPUnit_Util_Configuration $actualConfiguration
+     * @return void
+     */
+    protected function assertConfigurationEquals( PHPUnit_Util_Configuration $expectedConfiguration, PHPUnit_Util_Configuration $actualConfiguration )
+    {
+        $this->assertEquals(
+            $expectedConfiguration->getFilterConfiguration(),
+            $actualConfiguration->getFilterConfiguration()
+        );
+        $this->assertEquals(
+            $expectedConfiguration->getGroupConfiguration(),
+            $actualConfiguration->getGroupConfiguration()
+        );
+        $this->assertEquals(
+            $expectedConfiguration->getListenerConfiguration(),
+            $actualConfiguration->getListenerConfiguration()
+        );
+        $this->assertEquals(
+            $expectedConfiguration->getLoggingConfiguration(),
+            $actualConfiguration->getLoggingConfiguration()
+        );
+        $this->assertEquals(
+            $expectedConfiguration->getPHPConfiguration(),
+            $actualConfiguration->getPHPConfiguration()
+        );
+        $this->assertEquals(
+            $expectedConfiguration->getPHPUnitConfiguration(),
+            $actualConfiguration->getPHPUnitConfiguration()
+        );
+        $this->assertEquals(
+            $expectedConfiguration->getSeleniumBrowserConfiguration(),
+            $actualConfiguration->getSeleniumBrowserConfiguration()
+        );
+        $this->assertEquals(
+            $expectedConfiguration->getTestSuiteConfiguration(),
+            $actualConfiguration->getTestSuiteConfiguration()
         );
     }
 }

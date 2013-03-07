@@ -2,28 +2,23 @@
   "name": "drupal/drupal",
   "description": "Drupal is an open source content management platform powering millions of websites and applications.",
   "license": "GPL-2.0+",
-  "repositories": [{
-    "type": "vcs",
-    "url": "https://github.com/msonnabaum/phpunit.git"
-  }
-  ],
   "require": {
-    "symfony/class-loader": "2.2.0-BETA2",
-    "symfony/dependency-injection": "2.2.0-BETA2",
-    "symfony/event-dispatcher": "2.2.0-BETA2",
-    "symfony/http-foundation": "2.2.0-BETA2",
-    "symfony/http-kernel": "2.2.0-BETA2",
-    "symfony/routing": "2.2.0-BETA2",
-    "symfony/serializer": "2.2.0-BETA2",
-    "symfony/validator": "2.2.0-BETA2",
-    "symfony/yaml": "2.2.0-BETA2",
+    "symfony/class-loader": "2.2.0",
+    "symfony/dependency-injection": "2.2.0",
+    "symfony/event-dispatcher": "2.2.0",
+    "symfony/http-foundation": "2.2.0",
+    "symfony/http-kernel": "2.2.0",
+    "symfony/routing": "2.2.0",
+    "symfony/serializer": "2.2.0",
+    "symfony/validator": "2.2.0",
+    "symfony/yaml": "2.2.0",
     "twig/twig": "1.12.1",
     "doctrine/common": "2.3.0",
     "guzzle/http": "3.1.0",
     "kriswallsmith/assetic": "1.1.0-alpha1",
     "symfony-cmf/routing": "dev-master#ea4a10",
     "easyrdf/easyrdf": "0.8.0-beta.1",
-    "phpunit/phpunit": "3.7 as dev-3.7"
+    "phpunit/phpunit": "3.7.15"
   },
   "minimum-stability": "dev"
 }
