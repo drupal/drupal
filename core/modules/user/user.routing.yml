@@ -8,13 +8,13 @@ user_register:
 user_autocomplete:
   pattern: '/user/autocomplete'
   defaults:
-    _controller: 'user.autocomplete_controller:autocompleteUser'
+    _controller: '\Drupal\user\UserAutocompleteController::autocompleteUser'
   requirements:
     _permission: 'access user profiles'
 
 user_autocomplete_anonymous:
   pattern: '/user/autocomplete/anonymous'
   defaults:
-    _controller: 'user.autocomplete_controller:autocompleteUserAnonymous'
+    _controller: '\Drupal\user\UserAutocompleteController::autocompleteUserAnonymous'
   requirements:
     _permission: 'access user profiles'

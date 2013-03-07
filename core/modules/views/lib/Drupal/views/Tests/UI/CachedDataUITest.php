@@ -31,7 +31,6 @@ class CachedDataUITest extends UITestBase {
    * Tests the user tempstore views data in the UI.
    */
   public function testCacheData() {
-    $controller = $this->container->get('views_ui.controller');
     $view = entity_load('view', 'test_view');
 
     $temp_store = $this->container->get('user.tempstore')->get('views');

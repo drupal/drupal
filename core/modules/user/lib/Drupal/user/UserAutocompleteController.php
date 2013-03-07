@@ -8,11 +8,14 @@ namespace Drupal\user;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+use Drupal\Core\ControllerInterface;
 
 /**
  * Controller routines for taxonomy user routes.
  */
-class UserAutocompleteController {
+class UserAutocompleteController implements ControllerInterface {
 
   /**
    * The user autocomplete helper class to find matching user names.
@@ -29,6 +32,15 @@ class UserAutocompleteController {
    */
   public function __construct(UserAutocomplete $user_autocomplete) {
     $this->userAutocomplete = $user_autocomplete;
+  }
+
+  /**
+   * Implements \Drupal\Core\ControllerInterface::create().
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('user.autocomplete')
+    );
   }
 
   /**

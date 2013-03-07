@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\UI;
 
 use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views_ui\Routing\ViewsUIController;
 
 /**
  * Tests the views ui tagging functionality.
@@ -45,7 +46,7 @@ class TagTest extends ViewUnitTestBase {
     }
 
     // Make sure just ten results are returns.
-    $controller = $this->container->get('views_ui.controller');
+    $controller = ViewsUIController::create($this->container);
     $request = $this->container->get('request');
     $request->query->set('q', 'autocomplete_tag_test');
     $result = $controller->autocompleteTag($request);

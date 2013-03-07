@@ -13,7 +13,9 @@ use Drupal\views_ui\ViewUI;
 use Drupal\views\ViewsDataCache;
 use Drupal\user\TempStore;
 use Drupal\user\TempStoreFactory;
+use Drupal\Core\ControllerInterface;
 use Drupal\Core\Entity\EntityManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -23,7 +25,7 @@ use Drupal\Core\Ajax\ReplaceCommand;
 /**
  * Returns responses for Views UI routes.
  */
-class ViewsUIController {
+class ViewsUIController implements ControllerInterface {
 
   /**
    * Stores the Entity manager.
@@ -60,6 +62,17 @@ class ViewsUIController {
     $this->entityManager = $entity_manager;
     $this->viewsData = $views_data;
     $this->tempStore = $temp_store_factory->get('views');
+  }
+
+  /**
+   * Implements \Drupal\Core\ControllerInterface::create().
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('plugin.manager.entity'),
+      $container->get('views.views_data'),
+      $container->get('user.tempstore')
+    );
   }
 
   /**
