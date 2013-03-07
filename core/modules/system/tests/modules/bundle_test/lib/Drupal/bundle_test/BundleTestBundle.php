@@ -19,7 +19,9 @@ class BundleTestBundle extends Bundle
 {
   public function build(ContainerBuilder $container) {
     $container->register('bundle_test_class', 'Drupal\bundle_test\TestClass')
-      ->addTag('event_subscriber');
+      ->addArgument(new Reference('state'))
+      ->addTag('event_subscriber')
+      ->addTag('needs_destruction');
 
     // Override a default bundle used by core to a dummy class.
     $container->register('file.usage', 'Drupal\bundle_test\TestFileUsage');

@@ -14,6 +14,7 @@ use Drupal\Core\DependencyInjection\Compiler\RegisterPathProcessorsPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterRouteFiltersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterParamConvertersPass;
+use Drupal\Core\DependencyInjection\Compiler\RegisterServicesForDestructionPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
@@ -302,6 +303,10 @@ class CoreBundle extends Bundle {
 
     $container->register('plugin.manager.condition', 'Drupal\Core\Condition\ConditionManager');
 
+    $container->register('kernel_destruct_subscriber', 'Drupal\Core\EventSubscriber\KernelDestructionSubscriber')
+      ->addMethodCall('setContainer', array(new Reference('service_container')))
+      ->addTag('event_subscriber');
+
     $container->addCompilerPass(new RegisterMatchersPass());
     $container->addCompilerPass(new RegisterRouteFiltersPass());
     // Add a compiler pass for registering event subscribers.
@@ -312,6 +317,8 @@ class CoreBundle extends Bundle {
     // Add a compiler pass for upcasting of entity route parameters.
     $container->addCompilerPass(new RegisterParamConvertersPass());
     $container->addCompilerPass(new RegisterRouteEnhancersPass());
+    // Add a compiler pass for registering services needing destruction.
+    $container->addCompilerPass(new RegisterServicesForDestructionPass());
   }
 
   /**

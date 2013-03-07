@@ -7,11 +7,30 @@
 
 namespace Drupal\bundle_test;
 
-use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
+use Drupal\Core\DestructableInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
-class TestClass implements EventSubscriberInterface {
+class TestClass implements EventSubscriberInterface, DestructableInterface {
+
+  /**
+   * The state keyvalue collection.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   */
+  protected $state;
+
+  /**
+   * Constructor.
+   *
+   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $state
+   *   The state key value store.
+   */
+  public function __construct(KeyValueStoreInterface $state) {
+    $this->state = $state;
+  }
 
   /**
    * A simple kernel listener method.
@@ -29,5 +48,12 @@ class TestClass implements EventSubscriberInterface {
   static function getSubscribedEvents() {
     $events[KernelEvents::REQUEST][] = array('onKernelRequestTest', 100);
     return $events;
+  }
+
+  /**
+   * Implements \Drupal\Core\DestructableInterface::destruct().
+   */
+  public function destruct() {
+    $this->state->set('bundle_test.destructed', TRUE);
   }
 }
