@@ -1,5 +1,5 @@
 
-Drupal 7.21, xxxx-xx-xx (development version)
+Drupal 7.22, xxxx-xx-xx (development version)
 -----------------------
 - Fixed a bug which caused the denial-of-service protection added in Drupal
   7.20 to break certain valid image URLs that had an extra slash in them.
@@ -31,6 +31,11 @@ Drupal 7.21, xxxx-xx-xx (development version)
 - Made the default .htaccess rules protocol sensitive to improve security for
   sites which use HTTPS and redirect between "www" and non-"www" versions of
   the page.
+
+Drupal 7.21, 2013-03-06
+-----------------------
+- Allowed sites using the 'image_allow_insecure_derivatives' variable to still
+  have partial protection from the security issues fixed in Drupal 7.20.
 
 Drupal 7.20, 2013-02-20
 -----------------------
