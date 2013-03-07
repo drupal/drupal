@@ -1,4 +1,9 @@
 
+Drupal 7.21, 2013-03-06
+-----------------------
+- Allowed sites using the 'image_allow_insecure_derivatives' variable to still
+  have partial protection from the security issues fixed in Drupal 7.20.
+
 Drupal 7.20, 2013-02-20
 -----------------------
 - Fixed security issues (denial of service). See SA-CORE-2013-002.
