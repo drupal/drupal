@@ -62,7 +62,7 @@ class UserUid extends ArgumentPluginBase {
     // attached to.
     if ($this->table != 'comment') {
       $table_info = drupal_container()->get('views.views_data')->get($this->table);
-      $entity_info = entity_get_info($table_info['table']['entity type']);
+      $entity_info = drupal_container()->get('plugin.manager.entity')->getDefinitions($table_info['table']['entity type']);
 
       $subselect = db_select('comment', 'c');
       $subselect->addField('c', 'cid');

@@ -39,7 +39,7 @@ function comment_uninstall() {
  */
 function comment_enable() {
   $comment_fields = comment_get_comment_fields();
-  $entity_info = entity_get_info();
+  $entity_info = drupal_container()->get('plugin.manager.entity')->getDefinitions();
   foreach ($comment_fields as $field_name => $info) {
     foreach ($info['bundles'] as $entity_type => $bundles) {
       foreach ($bundles as $bundle) {

@@ -329,7 +329,7 @@ function comment_views_data() {
   );
 
   // Provide a relationship for each entity type except comment.
-  foreach (entity_get_info() as $type => $entity_info) {
+  foreach (drupal_container()->get('plugin.manager.entity')->getDefinitions() as $type => $entity_info) {
     if ($type == 'comment') {
       continue;
     }
@@ -346,7 +346,7 @@ function comment_views_data() {
           'extra' => array(
             array(
               'field' => 'entity_type',
-              'value' => 'node',
+              'value' => $type,
               'table' => 'comment'
             ),
           ),
@@ -422,7 +422,7 @@ function comment_views_data() {
   $data['comment_entity_statistics']['table']['group']  = t('Comment Statistics');
 
   // Provide a relationship for each entity type except comment.
-  foreach (entity_get_info() as $type => $entity_info) {
+  foreach (drupal_container()->get('plugin.manager.entity')->getDefinitions() as $type => $entity_info) {
     if ($type == 'comment') {
       continue;
     }
@@ -572,7 +572,7 @@ function comment_views_data_alter(&$data) {
   );
 
   // Provide a integration for each entity type.
-  foreach (entity_get_info() as $entity_type => $entity_info) {
+  foreach (drupal_container()->get('plugin.manager.entity')->getDefinitions() as $entity_type => $entity_info) {
     if (!isset($entity_info['base_table'])) {
       continue;
     }
