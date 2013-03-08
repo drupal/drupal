@@ -23,14 +23,6 @@ use Drupal\views\Plugin\views\argument\Date;
 class CreatedDay extends Date {
 
   /**
-   * Overrides Drupal\views\Plugin\views\argument\Formula::get_formula().
-   */
-  function get_formula() {
-    $this->formula = $this->extractSQL('DAY');
-    return parent::get_formula();
-  }
-
-  /**
    * Provide a link to the next level of the view
    */
   function summary_name($data) {

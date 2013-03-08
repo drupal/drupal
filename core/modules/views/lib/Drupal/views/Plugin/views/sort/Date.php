@@ -59,19 +59,19 @@ class Date extends SortPluginBase {
         $this->query->add_orderby($this->tableAlias, $this->realField, $this->options['order']);
         return;
       case 'minute':
-        $formula = $this->getSQLFormat('YmdHi');
+        $formula = $this->getDateFormat('YmdHi');
         break;
       case 'hour':
-        $formula = $this->getSQLFormat('YmdH');
+        $formula = $this->getDateFormat('YmdH');
         break;
       case 'day':
-        $formula = $this->getSQLFormat('Ymd');
+        $formula = $this->getDateFormat('Ymd');
         break;
       case 'month':
-        $formula = $this->getSQLFormat('Ym');
+        $formula = $this->getDateFormat('Ym');
         break;
       case 'year':
-        $formula = $this->getSQLFormat('Y');
+        $formula = $this->getDateFormat('Y');
         break;
     }
 

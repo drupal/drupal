@@ -15,19 +15,11 @@ use Drupal\views\Plugin\views\argument\Date;
  *
  * @Plugin(
  *   id = "node_created_week",
- *   arg_format = "w",
+ *   arg_format = "W",
  *   module = "node"
  * )
  */
 class CreatedWeek extends Date {
-
-  /**
-   * Overrides Drupal\views\Plugin\views\argument\Formula::get_formula().
-   */
-  function get_formula() {
-    $this->formula = $this->extractSQL('WEEK');
-    return parent::get_formula();
-  }
 
   /**
    * Provide a link to the next level of the view

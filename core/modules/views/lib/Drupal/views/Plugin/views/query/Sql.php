@@ -1739,4 +1739,149 @@ class Sql extends QueryPluginBase {
     return strtoupper($group_type) . '(DISTINCT ' . $field . ')';
   }
 
+  /**
+   * Overrides \Drupal\views\Plugin\views\query\QueryPluginBase::getDateField().
+   */
+  public function getDateField($field) {
+    $db_type = Database::getConnection()->databaseType();
+    $offset = $this->setupTimezone();
+    if (isset($offset) && !is_numeric($offset)) {
+      $dtz = new \DateTimeZone($offset);
+      $dt = new \DateTime('now', $dtz);
+      $offset_seconds = $dtz->getOffset($dt);
+    }
+
+    switch ($db_type) {
+      case 'mysql':
+        $field = "DATE_ADD('19700101', INTERVAL $field SECOND)";
+        if (!empty($offset)) {
+          $field = "($field + INTERVAL $offset_seconds SECOND)";
+        }
+        break;
+      case 'pgsql':
+        $field = "TO_TIMESTAMP($field)";
+        if (!empty($offset)) {
+          $field = "($field + INTERVAL '$offset_seconds SECONDS')";
+        }
+        break;
+      case 'sqlite':
+        if (!empty($offset)) {
+          $field = "($field + '$offset_seconds')";
+        }
+        break;
+    }
+
+    return $field;
+  }
+
+  /**
+   * Overrides \Drupal\views\Plugin\views\query\QueryPluginBase::setupTimezone().
+   */
+  public function setupTimezone() {
+    $timezone = drupal_get_user_timezone();
+
+    // set up the database timezone
+    $db_type = Database::getConnection()->databaseType();
+    if (in_array($db_type, array('mysql', 'pgsql'))) {
+      $offset = '+00:00';
+      static $already_set = FALSE;
+      if (!$already_set) {
+        if ($db_type == 'pgsql') {
+          Database::getConnection()->query("SET TIME ZONE INTERVAL '$offset' HOUR TO MINUTE");
+        }
+        elseif ($db_type == 'mysql') {
+          Database::getConnection()->query("SET @@session.time_zone = '$offset'");
+        }
+
+        $already_set = TRUE;
+      }
+    }
+
+    return $timezone;
+  }
+
+  /**
+   * Overrides \Drupal\views\Plugin\views\query\QueryPluginBase::getDateFormat().
+   */
+  public function getDateFormat($field, $format) {
+    $db_type = Database::getConnection()->databaseType();
+    switch ($db_type) {
+      case 'mysql':
+        $replace = array(
+          'Y' => '%Y',
+          'y' => '%y',
+          'M' => '%b',
+          'm' => '%m',
+          'n' => '%c',
+          'F' => '%M',
+          'D' => '%a',
+          'd' => '%d',
+          'l' => '%W',
+          'j' => '%e',
+          'W' => '%v',
+          'H' => '%H',
+          'h' => '%h',
+          'i' => '%i',
+          's' => '%s',
+          'A' => '%p',
+        );
+        $format = strtr($format, $replace);
+        return "DATE_FORMAT($field, '$format')";
+      case 'pgsql':
+        $replace = array(
+          'Y' => 'YYYY',
+          'y' => 'YY',
+          'M' => 'Mon',
+          'm' => 'MM',
+          // No format for Numeric representation of a month, without leading
+          // zeros.
+          'n' => 'MM',
+          'F' => 'Month',
+          'D' => 'Dy',
+          'd' => 'DD',
+          'l' => 'Day',
+          // No format for Day of the month without leading zeros.
+          'j' => 'DD',
+          'W' => 'WW',
+          'H' => 'HH24',
+          'h' => 'HH12',
+          'i' => 'MI',
+          's' => 'SS',
+          'A' => 'AM',
+        );
+        $format = strtr($format, $replace);
+        return "TO_CHAR($field, '$format')";
+      case 'sqlite':
+        $replace = array(
+          'Y' => '%Y',
+          // No format for 2 digit year number.
+          'y' => '%Y',
+          // No format for 3 letter month name.
+          'M' => '%m',
+          'm' => '%m',
+          // No format for month number without leading zeros.
+          'n' => '%m',
+          // No format for full month name.
+          'F' => '%m',
+          // No format for 3 letter day name.
+          'D' => '%d',
+          'd' => '%d',
+          // No format for full day name.
+          'l' => '%d',
+          // no format for day of month number without leading zeros.
+          'j' => '%d',
+          'W' => '%W',
+          'H' => '%H',
+          // No format for 12 hour hour with leading zeros.
+          'h' => '%H',
+          'i' => '%M',
+          's' => '%S',
+          // No format for AM/PM.
+          'A' => '',
+        );
+        $format = strtr($format, $replace);
+        return "strftime('$format', $field, 'unixepoch')";
+    }
+  }
+
 }

@@ -21,12 +21,4 @@ use Drupal\views\Plugin\views\argument\Date;
  */
 class CreatedYear extends Date {
 
-  /**
-   * Overrides Drupal\views\Plugin\views\argument\Formula::get_formula().
-   */
-  function get_formula() {
-    $this->formula = $this->extractSQL('YEAR');
-    return parent::get_formula();
-  }
-
 }

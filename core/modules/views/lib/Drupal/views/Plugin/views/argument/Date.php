@@ -14,27 +14,25 @@ use Drupal\Component\Annotation\Plugin;
  *
  * Adds an option to set a default argument based on the current date.
  *
- * @param $arg_format
- *   The format string to use on the current time when
- *   creating a default date argument.
- *
  * Definitions terms:
  * - many to one: If true, the "many to one" helper will be used.
  * - invalid input: A string to give to the user for obviously invalid input.
  *                  This is deprecated in favor of argument validators.
+ * - arg_format: The format string to use on the current time when dealing with
+ *     date values.
  *
  * @see Drupal\views\ManyTonOneHelper
  *
  * @ingroup views_argument_handlers
  *
  * @Plugin(
- *   id = "date"
+ *   id = "date",
+ *   arg_format = "Y-m-d"
  * )
  */
 class Date extends Formula {
 
   var $option_name = 'default_argument_date';
-  var $arg_format = 'Y-m-d';
 
   /**
    * Add an option to set the default value to the current date.
@@ -84,62 +82,11 @@ class Date extends Formula {
   }
 
   /**
-   * Creates cross-database SQL date extraction.
-   *
-   * @param string $extract_type
-   *   The type of value to extract from the date, like 'MONTH'.
-   *
-   * @return string
-   *   An appropriate SQL string for the DB type and field type.
+   * Overrides \Drupal\views\Plugin\views\argument\Formula::get_formula().
    */
-  public function extractSQL($extract_type) {
-    $db_type = Database::getConnection()->databaseType();
-    $field = $this->getSQLDateField();
-
-    // Note there is no space after FROM to avoid db_rewrite problems
-    // see http://drupal.org/node/79904.
-    switch ($extract_type) {
-      case 'DATE':
-        return $field;
-      case 'YEAR':
-        return "EXTRACT(YEAR FROM($field))";
-      case 'MONTH':
-        return "EXTRACT(MONTH FROM($field))";
-      case 'DAY':
-        return "EXTRACT(DAY FROM($field))";
-      case 'HOUR':
-        return "EXTRACT(HOUR FROM($field))";
-      case 'MINUTE':
-        return "EXTRACT(MINUTE FROM($field))";
-      case 'SECOND':
-        return "EXTRACT(SECOND FROM($field))";
-      // ISO week number for date
-      case 'WEEK':
-        switch ($db_type) {
-          case 'mysql':
-            // WEEK using arg 3 in mysql should return the same value as postgres
-            // EXTRACT.
-            return "WEEK($field, 3)";
-          case 'pgsql':
-            return "EXTRACT(WEEK FROM($field))";
-        }
-      case 'DOW':
-        switch ($db_type) {
-          case 'mysql':
-            // mysql returns 1 for Sunday through 7 for Saturday php date
-            // functions and postgres use 0 for Sunday and 6 for Saturday.
-            return "INTEGER(DAYOFWEEK($field) - 1)";
-          case 'pgsql':
-            return "EXTRACT(DOW FROM($field))";
-        }
-      case 'DOY':
-        switch ($db_type) {
-          case 'mysql':
-            return "DAYOFYEAR($field)";
-          case 'pgsql':
-            return "EXTRACT(DOY FROM($field))";
-        }
-    }
+  function get_formula() {
+    $this->formula = $this->getDateFormat($this->definition['arg_format']);
+    return parent::get_formula();
   }
 
 }

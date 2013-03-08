@@ -620,74 +620,8 @@ abstract class HandlerBase extends PluginBase {
    * @return string
    *   An appropriate SQL string for the DB type and field type.
    */
-  public function getSQLFormat($format) {
-    $db_type = Database::getConnection()->databaseType();
-    $field = $this->getSQLDateField();
-    switch ($db_type) {
-      case 'mysql':
-        $replace = array(
-          'Y' => '%Y',
-          'y' => '%y',
-          'M' => '%b',
-          'm' => '%m',
-          'n' => '%c',
-          'F' => '%M',
-          'D' => '%a',
-          'd' => '%d',
-          'l' => '%W',
-          'j' => '%e',
-          'W' => '%v',
-          'H' => '%H',
-          'h' => '%h',
-          'i' => '%i',
-          's' => '%s',
-          'A' => '%p',
-          );
-        $format = strtr($format, $replace);
-        return "DATE_FORMAT($field, '$format')";
-      case 'pgsql':
-        $replace = array(
-          'Y' => 'YYYY',
-          'y' => 'YY',
-          'M' => 'Mon',
-          'm' => 'MM',
-          'n' => 'MM', // no format for Numeric representation of a month, without leading zeros
-          'F' => 'Month',
-          'D' => 'Dy',
-          'd' => 'DD',
-          'l' => 'Day',
-          'j' => 'DD', // no format for Day of the month without leading zeros
-          'W' => 'WW',
-          'H' => 'HH24',
-          'h' => 'HH12',
-          'i' => 'MI',
-          's' => 'SS',
-          'A' => 'AM',
-          );
-        $format = strtr($format, $replace);
-        return "TO_CHAR($field, '$format')";
-      case 'sqlite':
-        $replace = array(
-          'Y' => '%Y', // 4 digit year number
-          'y' => '%Y', // no format for 2 digit year number
-          'M' => '%m', // no format for 3 letter month name
-          'm' => '%m', // month number with leading zeros
-          'n' => '%m', // no format for month number without leading zeros
-          'F' => '%m', // no format for full month name
-          'D' => '%d', // no format for 3 letter day name
-          'd' => '%d', // day of month number with leading zeros
-          'l' => '%d', // no format for full day name
-          'j' => '%d', // no format for day of month number without leading zeros
-          'W' => '%W', // ISO week number
-          'H' => '%H', // 24 hour hour with leading zeros
-          'h' => '%H', // no format for 12 hour hour with leading zeros
-          'i' => '%M', // minutes with leading zeros
-          's' => '%S', // seconds with leading zeros
-          'A' => '', // no format for  AM/PM
-        );
-        $format = strtr($format, $replace);
-        return "strftime('$format', $field, 'unixepoch')";
-    }
+  public function getDateFormat($format) {
+    return $this->query->getDateFormat($this->getDateField(), $format);
   }
 
   /**
@@ -696,61 +630,8 @@ abstract class HandlerBase extends PluginBase {
    * @return string
    *   An appropriate SQL string for the db type and field type.
    */
-  public function getSQLDateField() {
-    $field = "$this->tableAlias.$this->realField";
-    $db_type = Database::getConnection()->databaseType();
-    $offset = $this->getTimezone();
-    if (isset($offset) && !is_numeric($offset)) {
-      $dtz = new \DateTimeZone($offset);
-      $dt = new \DateTime('now', $dtz);
-      $offset_seconds = $dtz->getOffset($dt);
-    }
-
-    switch ($db_type) {
-      case 'mysql':
-        $field = "DATE_ADD('19700101', INTERVAL $field SECOND)";
-        if (!empty($offset)) {
-          $field = "($field + INTERVAL $offset_seconds SECOND)";
-        }
-        return $field;
-      case 'pgsql':
-        $field = "TO_TIMESTAMP($field)";
-        if (!empty($offset)) {
-          $field = "($field + INTERVAL '$offset_seconds SECONDS')";
-        }
-        return $field;
-      case 'sqlite':
-        if (!empty($offset)) {
-          $field = "($field + '$offset_seconds')";
-        }
-        return $field;
-    }
-  }
-
-  /**
-   * Figure out what timezone we're in; needed for some date manipulations.
-   */
-  public static function getTimezone() {
-    $timezone = drupal_get_user_timezone();
-
-    // set up the database timezone
-    $db_type = Database::getConnection()->databaseType();
-    if (in_array($db_type, array('mysql', 'pgsql'))) {
-      $offset = '+00:00';
-      static $already_set = FALSE;
-      if (!$already_set) {
-        if ($db_type == 'pgsql') {
-          db_query("SET TIME ZONE INTERVAL '$offset' HOUR TO MINUTE");
-        }
-        elseif ($db_type == 'mysql') {
-          db_query("SET @@session.time_zone = '$offset'");
-        }
-
-        $already_set = TRUE;
-      }
-    }
-
-    return $timezone;
+  public function getDateField() {
+    return $this->query->getDateField("$this->tableAlias.$this->realField");
   }
 
   /**
