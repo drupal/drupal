@@ -2,6 +2,7 @@
 
 use Drupal\Core\Database\Database;
 use Drupal\simpletest\TestBase;
+use Symfony\Component\Process\PhpExecutableFinder;
 
 /**
  * @file
@@ -238,7 +239,7 @@ function simpletest_phpunit_configuration_filepath() {
  *   A filepath to use for phpunit's --log-junit option.
  */
 function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpunit_file) {
-  $phpunit_bin = DRUPAL_ROOT . "/core/vendor/bin/phpunit";
+  $phpunit_bin = simpletest_phpunit_command();
 
   // Double escape namespaces so they'll work in a regexp.
   $escaped_test_classnames = array_map(function($class) {
@@ -265,6 +266,23 @@ function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpun
   $ret = exec(join($command, " "));
   chdir($old_cwd);
   return $ret;
+}
+
+/**
+ * Returns the command to run PHPUnit.
+ */
+function simpletest_phpunit_command() {
+  // Don't use the committed version in composer's bin dir if running on
+  // windows.
+  if (substr(PHP_OS, 0, 3) == 'WIN') {
+    $php_executable_finder = new PhpExecutableFinder();
+    $php = $php_executable_finder->find();
+    $phpunit_bin = escapeshellarg($php) . " -f " . escapeshellarg(DRUPAL_ROOT . "/core/vendor/phpunit/phpunit/composer/bin/phpunit") . " --";
+  }
+  else {
+    $phpunit_bin = DRUPAL_ROOT . "/core/vendor/bin/phpunit";
+  }
+  return $phpunit_bin;
 }
 
 /**
