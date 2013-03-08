@@ -1052,6 +1052,7 @@ function theme_views_mini_pager($vars) {
     $li_previous = array(
       '#theme' => 'pager_link__previous',
       '#text' => (isset($tags[1]) ? $tags[1] : t('‹‹')),
+      '#attributes' => array('title' => t('Go to previous page')),
       '#page_new' => pager_load_array($pager_page_array[$element] - 1, $element, $pager_page_array),
       '#element' => $element,
       '#interval' => 1,
@@ -1064,6 +1065,7 @@ function theme_views_mini_pager($vars) {
     $li_next = array(
       '#theme' => 'pager_link__next',
       '#text' => (isset($tags[3]) ? $tags[3] : t('››')),
+      '#attributes' => array('title' => t('Go to next page')),
       '#page_new' => pager_load_array($pager_page_array[$element] + 1, $element, $pager_page_array),
       '#element' => $element,
       '#interval' => 1,
