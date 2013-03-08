@@ -22,8 +22,8 @@ interface QueueInterface {
    *   Arbitrary data to be associated with the new task in the queue.
    *
    * @return
-   *   TRUE if the item was successfully created and was (best effort) added
-   *   to the queue, otherwise FALSE. We don't guarantee the item was
+   *   A unique ID if the item was successfully created and was (best effort)
+   *   added to the queue, otherwise FALSE. We don't guarantee the item was
    *   committed to disk etc, but as far as we know, the item is now in the
    *   queue.
    */
@@ -63,6 +63,11 @@ interface QueueInterface {
    *   item it returns false. This implies a best effort to retrieve an item
    *   and either the queue is empty or there is some other non-recoverable
    *   problem.
+   *
+   *   If returned, the object will have at least the following properties:
+   *   - data: the same as what what passed into createItem().
+   *   - item_id: the unique ID returned from createItem().
+   *   - created: timestamp when the item was put into the queue.
    */
   public function claimItem($lease_time = 3600);
 
