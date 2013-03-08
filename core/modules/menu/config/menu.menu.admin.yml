@@ -1,3 +1,4 @@
 id: admin
 label: Administration
 description: Contains links to administrative tasks.
+langcode: en

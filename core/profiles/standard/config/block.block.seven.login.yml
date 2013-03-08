@@ -18,4 +18,4 @@ label: 'User login'
 module: user
 region: content
 weight: '10'
-langcode: und
+langcode: en

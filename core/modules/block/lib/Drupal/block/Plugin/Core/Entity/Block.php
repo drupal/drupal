@@ -177,6 +177,7 @@ class Block extends ConfigEntityBase {
       'visibility',
       'plugin',
       'settings',
+      'langcode',
     );
     $properties = array();
     foreach ($names as $name) {

@@ -127,6 +127,7 @@ class Tour extends ConfigEntityBase {
       'label',
       'paths',
       'tips',
+      'langcode',
     );
     foreach ($names as $name) {
       $properties[$name] = $this->get($name);

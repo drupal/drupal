@@ -18,4 +18,4 @@ label: 'Tools'
 module: system
 region: sidebar_first
 weight: '0'
-langcode: und
+langcode: en
