@@ -342,42 +342,29 @@ function simpletest_script_get_all_tests() {
 /**
  * Execute a batch of tests.
  */
-function simpletest_script_execute_batch($test_groups) {
+function simpletest_script_execute_batch($test_classes) {
   global $args, $test_ids;
-
-  // Separate PHPUnit tests from simpletest.
-  if (isset($test_groups['PHPUnit'])) {
-    $phpunit_tests = $test_groups['PHPUnit'];
-    unset($test_groups['PHPUnit']);
-  }
-
-  // Flatten the simpletest tests into an array of classnames.
-  $test_classes = array();
-  foreach ($test_groups as $group) {
-    $test_classes = array_merge($test_classes, array_values($group));
-  }
-
+  simpletest_classloader_register();
   // Multi-process execution.
   $children = array();
-  while (!empty($test_classes) || !empty($children) || isset($phpunit_tests)) {
+  while (!empty($test_classes) || !empty($children)) {
     while (count($children) < $args['concurrency']) {
-      if (empty($test_classes) && !isset($phpunit_tests)) {
+      if (empty($test_classes)) {
         break;
       }
 
       $test_id = db_insert('simpletest_test_id')->useDefaults(array('test_id'))->execute();
       $test_ids[] = $test_id;
 
+      $test_class = array_shift($test_classes);
       // Process phpunit tests immediately since they are fast and we don't need
       // to fork for them.
-      if (isset($phpunit_tests)) {
-        simpletest_script_run_phpunit($test_id, $phpunit_tests);
-        unset($phpunit_tests);
+      if (is_subclass_of($test_class, 'Drupal\Tests\UnitTestCase')) {
+        simpletest_script_run_phpunit($test_id, $test_class);
         continue;
       }
 
       // Fork a child process.
-      $test_class = array_shift($test_classes);
       $command = simpletest_script_command($test_id, $test_class);
       $process = proc_open($command, array(), $pipes, NULL, NULL, array('bypass_shell' => TRUE));
 
@@ -431,8 +418,8 @@ function simpletest_script_execute_batch($test_groups) {
 /**
  * Run a group of phpunit tests.
  */
-function simpletest_script_run_phpunit($test_id, $phpunit_tests) {
-  $results = simpletest_run_phpunit_tests($test_id, $phpunit_tests);
+function simpletest_script_run_phpunit($test_id, $class) {
+  $results = simpletest_run_phpunit_tests($test_id, array($class));
   simpletest_process_phpunit_results($results);
 
   // Map phpunit results to a data structure we can pass to
@@ -459,7 +446,7 @@ function simpletest_script_run_phpunit($test_id, $phpunit_tests) {
         $summaries[$result['test_class']]['#exception']++;
         break;
       case 'debug':
-        $summary['#exception']++;
+        $summaries[$result['test_class']]['#debug']++;
         break;
     }
   }
@@ -628,7 +615,7 @@ function simpletest_script_get_test_list() {
     $groups = simpletest_script_get_all_tests();
     $all_tests = array();
     foreach ($groups as $group => $tests) {
-      $all_tests[$group] = array_keys($tests);
+      $all_tests = array_merge($all_tests, array_keys($tests));
     }
     $test_list = $all_tests;
   }
@@ -668,20 +655,12 @@ function simpletest_script_get_test_list() {
         // Extract all class names.
         // Abstract classes are excluded on purpose.
         preg_match_all('@^class ([^ ]+)@m', $content, $matches);
-
-        require $file;
         if (!$namespace) {
-          $info = $matches[1][0]::getInfo();
-          $test_list[$info[$group]] = $matches[1][0];
+          $test_list = array_merge($test_list, $matches[1]);
         }
         else {
-          $class = '\\' . $namespace . '\\' . $matches[1][0];
-          $info = $class::getInfo();
           foreach ($matches[1] as $class_name) {
-            if (!isset($test_list[$info['group']])) {
-              $test_list[$info['group']] = array();
-            }
-            $test_list[$info['group']][] = $namespace . '\\' . $class_name;
+            $test_list[] = $namespace . '\\' . $class_name;
           }
         }
       }
@@ -689,7 +668,7 @@ function simpletest_script_get_test_list() {
     else {
       $groups = simpletest_script_get_all_tests();
       foreach ($args['test_names'] as $group_name) {
-        $test_list[$group_name] = array_keys($groups[$group_name]);
+        $test_list = array_merge($test_list, array_keys($groups[$group_name]));
       }
     }
   }
@@ -724,11 +703,9 @@ function simpletest_script_reporter_init() {
   }
   else {
     echo "Tests to be run:\n";
-    foreach ($test_list as $group) {
-      foreach ($group as $class_name) {
-        $info = call_user_func(array($class_name, 'getInfo'));
-        echo " - " . $info['name'] . ' (' . $class_name . ')' . "\n";
-      }
+    foreach ($test_list as $class_name) {
+      $info = call_user_func(array($class_name, 'getInfo'));
+      echo " - " . $info['name'] . ' (' . $class_name . ')' . "\n";
     }
     echo "\n";
   }
