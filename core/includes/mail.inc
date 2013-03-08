@@ -8,7 +8,7 @@
 /**
  * Auto-detect appropriate line endings for e-mails.
  *
- * $conf['mail_line_endings'] will override this setting.
+ * $settings['mail_line_endings'] will override this setting.
  */
 define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER_SOFTWARE'], 'Win32') !== FALSE ? "\r\n" : "\n");
 
@@ -216,14 +216,14 @@ function drupal_mail($module, $key, $to, $langcode, $params = array(), $from = N
  *   By default, all messages are sent via PHP's mail() function by the
  *   Drupal\Core\Mail\PhpMail implementation.
  *
- * The selection of a particular implementation is controlled via the variable
- * 'mail_system', which is a keyed array.  The default implementation
- * is the class whose name is the value of 'default-system' key. A more specific
- * match first to key and then to module will be used in preference to the
- * default. To specify a different class for all mail sent by one module, set
- * the class name as the value for the key corresponding to the module name. To
- * specify a class for a particular message sent by one module, set the class
- * name as the value for the array key that is the message id, which is
+ * The selection of a particular implementation is controlled via the config
+ * 'system.mail.interface', which is a keyed array.  The default implementation
+ * is the class whose name is the value of 'default' key. A more specific match
+ * first to key and then to module will be used in preference to the default. To
+ * specify a different class for all mail sent by one module, set the class
+ * name as the value for the key corresponding to the module name. To specify
+ * a class for a particular message sent by one module, set the class name as
+ * the value for the array key that is the message id, which is
  * "${module}_${key}".
  *
  * For example to debug all mail sent by the user module by logging it to a
@@ -231,7 +231,7 @@ function drupal_mail($module, $key, $to, $langcode, $params = array(), $from = N
  *
  * @code
  * array(
- *   'default-system' => 'Drupal\Core\Mail\PhpMail',
+ *   'default' => 'Drupal\Core\Mail\PhpMail',
  *   'user' => 'DevelMailLog',
  * );
  * @endcode
@@ -241,7 +241,7 @@ function drupal_mail($module, $key, $to, $langcode, $params = array(), $from = N
  *
  * @code
  * array(
- *   'default-system' => 'Drupal\Core\Mail\PhpMail',
+ *   'default' => 'Drupal\Core\Mail\PhpMail',
  *   'user' => 'DevelMailLog',
  *   'contact_page_autoreply' => 'DrupalDevNullMailSend',
  * );
@@ -260,13 +260,15 @@ function drupal_mail($module, $key, $to, $langcode, $params = array(), $from = N
  *   alter hook in drupal_mail() would have been {$module}_{$key}.
  *
  * @return Drupal\Core\Mail\MailInterface
+ *
+ * @throws \Exception
  */
 function drupal_mail_system($module, $key) {
   $instances = &drupal_static(__FUNCTION__, array());
 
   $id = $module . '_' . $key;
 
-  $configuration = variable_get('mail_system', array('default-system' => 'Drupal\Core\Mail\PhpMail'));
+  $configuration = config('system.mail')->get('interface');
 
   // Look for overrides for the default class, starting from the most specific
   // id, and falling back to the module name.
@@ -277,7 +279,7 @@ function drupal_mail_system($module, $key) {
     $class = $configuration[$module];
   }
   else {
-    $class = $configuration['default-system'];
+    $class = $configuration['default'];
   }
 
   if (empty($instances[$class])) {
@@ -506,8 +508,9 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
       if (isset($casing)) {
         $chunk = $casing($chunk);
       }
+      $line_endings = settings()->get('mail_line_endings', MAIL_LINE_ENDINGS);
       // Format it and apply the current indentation.
-      $output .= drupal_wrap_mail($chunk, implode('', $indent)) . MAIL_LINE_ENDINGS;
+      $output .= drupal_wrap_mail($chunk, implode('', $indent)) . $line_endings;
       // Remove non-quotation markers from indentation.
       $indent = array_map('_drupal_html_to_text_clean', $indent);
     }

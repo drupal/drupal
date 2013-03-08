@@ -232,7 +232,7 @@ function _update_refresh() {
  * @param $project
  *   Associative array of information about a project as created by
  *   update_get_projects(), including keys such as 'name' (short name), and the
- *   'info' array with data from a .info file for the project.
+ *   'info' array with data from a .info.yml file for the project.
  *
  * @see update_get_projects()
  * @see update_get_available()
@@ -272,8 +272,8 @@ function _update_create_fetch_task($project) {
 /**
  * Generates the URL to fetch information about project updates.
  *
- * This figures out the right URL to use, based on the project's .info file and
- * the global defaults. Appends optional query arguments when the site is
+ * This figures out the right URL to use, based on the project's .info.yml file
+ * and the global defaults. Appends optional query arguments when the site is
  * configured to report usage stats.
  *
  * @param $project

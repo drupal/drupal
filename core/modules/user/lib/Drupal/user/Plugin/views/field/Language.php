@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Plugin\views\field;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Views field handler for user language.

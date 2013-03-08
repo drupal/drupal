@@ -8,7 +8,7 @@
 namespace Drupal\block\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Component\Plugin\Exception\PluginException;
 
@@ -177,6 +177,7 @@ class Block extends ConfigEntityBase {
       'visibility',
       'plugin',
       'settings',
+      'langcode',
     );
     $properties = array();
     foreach ($names as $name) {

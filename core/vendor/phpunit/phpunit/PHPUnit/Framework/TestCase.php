@@ -2,7 +2,7 @@
 /**
  * PHPUnit
  *
- * Copyright (c) 2001-2012, Sebastian Bergmann <sebastian@phpunit.de>.
+ * Copyright (c) 2001-2013, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@
  * @package    PHPUnit
  * @subpackage Framework
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://www.phpunit.de/
  * @since      File available since Release 2.0.0
@@ -90,9 +90,8 @@
  * @package    PHPUnit
  * @subpackage Framework
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @version    Release: @package_version@
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 2.0.0
  */
@@ -693,7 +692,7 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
             $result->convertErrorsToExceptions($this->useErrorHandler);
         }
 
-        if (!$this->handleDependencies()) {
+        if (!$this instanceof PHPUnit_Framework_Warning && !$this->handleDependencies()) {
             return;
         }
 
@@ -847,6 +846,9 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
             $this->status        = PHPUnit_Runner_BaseTestRunner::STATUS_ERROR;
             $this->statusMessage = $e->getMessage();
         }
+
+        // Clean up the mock objects.
+        $this->mockObjects = array();
 
         // Tear down the fixture. An exception raised in tearDown() will be
         // caught and passed on when no exception was raised before.
@@ -1045,8 +1047,6 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
             $mockObject->__phpunit_verify();
             $mockObject->__phpunit_cleanup();
         }
-
-        $this->mockObjects = array();
     }
 
     /**

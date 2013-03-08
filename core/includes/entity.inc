@@ -297,10 +297,9 @@ function entity_load_multiple_by_properties($entity_type, array $values) {
  *   The unchanged entity, or FALSE if the entity cannot be loaded.
  */
 function entity_load_unchanged($entity_type, $id) {
-  $controller = drupal_container()->get('plugin.manager.entity')->getStorageController($entity_type);
-  $controller->resetCache(array($id));
-  $result = $controller->load(array($id));
-  return reset($result);
+  return drupal_container()->get('plugin.manager.entity')
+    ->getStorageController($entity_type)
+    ->loadUnchanged($id);
 }
 
 /**

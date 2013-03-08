@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\area;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Views area handlers. Insert a view inside of an area.

@@ -7,7 +7,7 @@
 
 namespace Drupal\plugin_test\Plugin\plugin_test\fruit;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * @Plugin(

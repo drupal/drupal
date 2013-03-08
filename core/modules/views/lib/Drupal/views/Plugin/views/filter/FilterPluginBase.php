@@ -9,7 +9,7 @@ namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\views\ViewExecutable;
 
 /**

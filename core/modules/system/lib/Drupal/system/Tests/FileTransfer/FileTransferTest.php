@@ -35,7 +35,7 @@ class FileTransferTest extends WebTestBase {
   function _getFakeModuleFiles() {
     $files = array(
       'fake.module',
-      'fake.info',
+      'fake.info.yml',
       'theme' => array(
         'fake.tpl.php'
       ),

@@ -8,7 +8,7 @@
 namespace Drupal\comment\Plugin\views\sort;
 
 use Drupal\views\Plugin\views\sort\SortPluginBase;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Sort handler to sort by last comment name which might be in 2 different

@@ -8,7 +8,7 @@
 namespace Drupal\views\Plugin\views\display;
 
 use Drupal\views\ViewExecutable;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
 /**

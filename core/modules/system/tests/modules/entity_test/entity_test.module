@@ -147,7 +147,7 @@ function entity_test_menu() {
  */
 function entity_test_form_node_form_alter(&$form, &$form_state, $form_id) {
   $langcode = $form_state['controller']->getFormLangcode($form_state);
-  variable_set('entity_form_langcode', $langcode);
+  state()->set('entity_test.form_langcode', $langcode);
 }
 
 /**

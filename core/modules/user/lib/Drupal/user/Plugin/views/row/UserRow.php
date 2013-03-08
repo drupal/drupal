@@ -8,7 +8,7 @@
 namespace Drupal\user\Plugin\views\row;
 
 use Drupal\system\Plugin\views\row\EntityRow;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
 /**

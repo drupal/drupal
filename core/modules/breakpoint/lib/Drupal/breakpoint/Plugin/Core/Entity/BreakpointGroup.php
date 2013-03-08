@@ -10,7 +10,7 @@ namespace Drupal\breakpoint\Plugin\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\breakpoint\InvalidBreakpointSourceException;
 use Drupal\breakpoint\InvalidBreakpointSourceTypeException;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
 /**

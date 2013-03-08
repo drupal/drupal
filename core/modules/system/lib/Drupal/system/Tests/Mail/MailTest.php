@@ -42,7 +42,7 @@ class MailTest extends WebTestBase implements MailInterface {
     parent::setUp();
 
     // Set MailTestCase (i.e. this class) as the SMTP library
-    variable_set('mail_system', array('default-system' => 'Drupal\system\Tests\Mail\MailTest'));
+    config('system.mail')->set('interface.default', 'Drupal\system\Tests\Mail\MailTest')->save();
   }
 
   /**
@@ -119,4 +119,3 @@ class MailTest extends WebTestBase implements MailInterface {
     self::$sent_message = $message;
   }
 }
-

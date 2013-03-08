@@ -1,75 +1,124 @@
-# User module schema: user.schema.yml
+# Schema for the configuration files of the User module.
 
-# User mails.
-user.mail:
- type: mapping
- mapping:
-  "cancel_confirm":
-    type: mail
-    label: "Account cancellation confirmation"
-  "password_reset":
-    type: mail
-    label: "Password reset email"
-  "register_admin_created":
-    type: mail
-    label: "Account created by administrator"
-  "register_no_approval_required":
-    type: mail
-    label: "Registration confirmation (No approval required)"
-  "register_pending_approval":
-    type: mail
-    label: "Registration confirmation (Pending approval)"
-  "status_activated":
-    type: mail
-    label: "Account activation"
-  "status_blocked":
-    type: mail
-    label: "Account blocked"
-  "status_canceled":
-    type: mail
-    label: "Account cancelled"
-
-# User settings.
 user.settings:
   type: mapping
+  label: 'User settings'
   mapping:
-    "admin_role":
+    admin_role:
       type: string
-      label: "Administrator role"
-    "anonymous":
+      label: 'Administrator role'
+    anonymous:
       type: label
-      label: "Anonymous name"
-    "verify_mail":
+      label: 'Name'
+    verify_mail:
       type: boolean
-      label: "Verify mail"
-    "notify":
+      label: 'Require e-mail verification when a visitor creates an account.'
+    notify:
       type: mapping
-      label: "Notify user"
+      label: 'Notify user'
       mapping:
-        "cancel_confirm":
+        cancel_confirm:
           type: boolean
-        "password_reset":
+          label: 'Account cancellation confirmation'
+        password_reset:
           type: boolean
-        "status_activated":
+          label: 'Notify user when password reset'
+        status_activated:
           type: boolean
-        "status_blocked":
+          label: 'Notify user when account is activated.'
+        status_blocked:
           type: boolean
-        "status_cancelled":
+          label: 'Account blocked'
+        status_cancelled:
           type: boolean
-        "register_admin_created":
+          label: 'Account canceled'
+        register_admin_created:
           type: boolean
-        "register_no_approval_required":
+          label: 'Welcome (new user created by administrator)'
+        register_no_approval_required:
           type: boolean
-        "register_pending_approval":
+          label: 'Welcome (no approval required)'
+        register_pending_approval:
           type: boolean
-    "register":
+          label: 'Welcome (awaiting approval)'
+    register:
       type: string
-      enum: [visitors, admin_only, visitors_admin_approval]
-    "signatures":
+      label: 'Who can register accounts?'
+    signatures:
       type: boolean
-      label: "User signatures"
-    "cancel_method":
+      label: 'Enable signatures.'
+    cancel_method:
       type: string
-      label: "User cancel method"
-    "password_reset_timeout":
+      label: 'When cancelling a user account'
+    password_reset_timeout:
       type: integer
+      label: 'Password reset timeout'
+    password_strength:
+      type: boolean
+      label: 'Enable password strength indicator'
+
+user.mail:
+ type: mapping
+ label: 'E-mail settings'
+ mapping:
+  cancel_confirm:
+    type: mail
+    label: 'Account cancellation confirmation'
+  password_reset:
+    type: mail
+    label: 'Password recovery'
+  register_admin_created:
+    type: mail
+    label: 'Account created by administrator'
+  register_no_approval_required:
+    type: mail
+    label: 'Registration confirmation (No approval required)'
+  register_pending_approval:
+    type: mail
+    label: 'Registration confirmation (Pending approval)'
+  register_pending_approval_admin:
+    type: mail
+    label: 'Admin (user awaiting approval)'
+  status_activated:
+    type: mail
+    label: 'Account activation'
+  status_blocked:
+    type: mail
+    label: 'Account blocked'
+  status_canceled:
+    type: mail
+    label: 'Account cancelled'
+
+user.flood:
+  type: mapping
+  label: 'User flood settings'
+  mapping:
+    uid_only:
+      type: boolean
+      label: 'UID only identifier'
+    ip_limit:
+      type: integer
+      label: 'IP limit'
+    ip_window:
+      type: integer
+      label: 'IP window'
+    user_limit:
+      type: integer
+      label: 'User limit'
+    user_window:
+      type: integer
+      label: 'User window'
+
+user.role.*:
+  type: mapping
+  label: 'User role settings'
+  mapping:
+    id:
+      type: string
+      label: 'User role ID'
+    label:
+      type: string
+      label: 'User role label'
+    weight:
+      type: integer
+      label: 'User role weight'

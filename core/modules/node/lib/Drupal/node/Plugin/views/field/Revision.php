@@ -10,7 +10,7 @@ namespace Drupal\node\Plugin\views\field;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\node\Plugin\views\field\Node;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * A basic node_revision handler.

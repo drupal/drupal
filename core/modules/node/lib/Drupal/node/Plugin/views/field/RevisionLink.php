@@ -10,7 +10,7 @@ namespace Drupal\node\Plugin\views\field;
 use Drupal\node\Plugin\views\field\Link;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Field handler to present a link to a node revision.

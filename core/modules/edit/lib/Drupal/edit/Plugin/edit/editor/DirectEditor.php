@@ -8,7 +8,7 @@
 namespace Drupal\edit\Plugin\edit\editor;
 
 use Drupal\edit\EditorBase;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\field\FieldInstance;
 
 /**

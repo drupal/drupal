@@ -9,7 +9,7 @@ namespace Drupal\views\Plugin\block\block;
 
 use Drupal\block\BlockBase;
 use Drupal\block\Plugin\Core\Entity\Block;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 

@@ -9,7 +9,7 @@ namespace Drupal\views\Plugin\views\field;
 
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * A handler to provide proper displays for booleans.

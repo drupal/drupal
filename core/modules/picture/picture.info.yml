@@ -1,0 +1,9 @@
+name: Picture
+description: 'Provides an image formatter and breakpoint mappings to output responsive images using the HTML5 picture tag.'
+package: Core
+version: VERSION
+core: 8.x
+dependencies:
+  - breakpoint
+  - image
+configure: admin/config/media/picturemapping

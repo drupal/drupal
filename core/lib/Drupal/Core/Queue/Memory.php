@@ -52,6 +52,7 @@ class Memory implements QueueInterface {
     $item->created = time();
     $item->expire = 0;
     $this->queue[$item->item_id] = $item;
+    return $item->item_id;
   }
 
   /**

@@ -8,7 +8,7 @@
 namespace Drupal\views_test_data\Plugin\views\join;
 
 use Drupal\views\Plugin\views\join\JoinPluginBase;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
 /**

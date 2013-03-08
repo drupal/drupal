@@ -8,7 +8,7 @@
 namespace Drupal\search\Plugin\views\sort;
 
 use Drupal\views\Plugin\views\sort\SortPluginBase;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Field handler to provide simple renderer that allows linking to a node.

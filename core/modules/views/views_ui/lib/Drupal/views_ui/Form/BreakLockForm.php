@@ -7,6 +7,9 @@
 
 namespace Drupal\views_ui\Form;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+use Drupal\Core\ControllerInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\views\ViewStorageInterface;
 use Drupal\Core\Entity\EntityManager;
@@ -15,7 +18,7 @@ use Drupal\user\TempStoreFactory;
 /**
  * Builds the form to break the lock of an edited view.
  */
-class BreakLockForm implements FormInterface {
+class BreakLockForm implements FormInterface, ControllerInterface {
 
   /**
    * Stores the Entity manager.
@@ -42,6 +45,16 @@ class BreakLockForm implements FormInterface {
   public function __construct(EntityManager $entity_manager, TempStoreFactory $temp_store_factory) {
     $this->entityManager = $entity_manager;
     $this->tempStore = $temp_store_factory->get('views');
+  }
+
+  /**
+   * Implements \Drupal\Core\ControllerInterface::create().
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('plugin.manager.entity'),
+      $container->get('user.tempstore')
+    );
   }
 
   /**

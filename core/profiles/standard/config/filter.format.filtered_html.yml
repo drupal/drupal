@@ -19,4 +19,4 @@ filters:
   filter_htmlcorrector:
     module: filter
     status: '1'
-langcode: und
+langcode: en

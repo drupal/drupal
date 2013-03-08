@@ -1,0 +1,9 @@
+name: 'User test views'
+description: 'Provides default views for views user tests.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - user
+  - views
+hidden: true

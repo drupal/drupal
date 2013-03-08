@@ -11,7 +11,7 @@ use Drupal\ckeditor\CKEditorPluginButtonsInterface;
 use Drupal\ckeditor\CKEditorPluginContextualInterface;
 use Drupal\ckeditor\CKEditorPluginConfigurableInterface;
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\editor\Plugin\Core\Entity\Editor;
 

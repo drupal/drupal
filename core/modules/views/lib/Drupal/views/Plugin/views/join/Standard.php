@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\join;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Default implementation of the join plugin.

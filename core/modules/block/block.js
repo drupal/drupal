@@ -23,7 +23,7 @@ Drupal.behaviors.blockSettingsSummary = {
       if (!vals.length) {
         vals.push(Drupal.t('Not restricted'));
       }
-      return $.map(vals, $.trim).join(', ');
+      return vals.join(', ');
     }
 
     $('#edit-visibility-node-type').drupalSetSummary(checkboxesSummary);

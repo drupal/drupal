@@ -7,7 +7,7 @@
 
 namespace Drupal\entity_reference\Plugin\field\widget;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\entity_reference\Plugin\field\widget\AutocompleteWidgetBase;
 

@@ -8,7 +8,7 @@
 namespace Drupal\taxonomy\Plugin\views\argument;
 
 use Drupal\views\Plugin\views\argument\Numeric;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Argument handler for basic taxonomy tid.

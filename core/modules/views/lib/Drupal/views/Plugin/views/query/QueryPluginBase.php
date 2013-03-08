@@ -169,4 +169,43 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
    */
   function load_entities(&$results) {}
 
+  /**
+   * Returns a Unix timestamp to database native timestamp expression.
+   *
+   * @param string $field
+   *   The query field that will be used in the expression.
+   *
+   * @return string
+   *   An expression representing a timestamp with time zone.
+   */
+  public function getDateField($field) {
+    return $field;
+  }
+
+  /**
+   * Set the database to the current user timezone,
+   *
+   * @return string
+   *   The current timezone as returned by drupal_get_user_timezone().
+   */
+  public function setupTimezone() {
+    return drupal_get_user_timezone();
+  }
+
+  /**
+   * Creates cross-database date formatting.
+   *
+   * @param string $field
+   *   An appropriate query expression pointing to the date field.
+   * @param string $format
+   *   A format string for the result, like 'Y-m-d H:i:s'.
+   *
+   * @return string
+   *   A string representing the field formatted as a date in the format
+   *   specified by $format.
+   */
+  public function getDateFormat($field, $format) {
+    return $field;
+  }
+
 }

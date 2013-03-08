@@ -129,7 +129,7 @@ display:
         path: test_status_extra
       display_plugin: page
       display_title: Page
-      id: page
+      id: page_1
       position: '0'
 base_field: nid
 status: '1'

@@ -39,6 +39,19 @@ class PropertyContainerMetadata extends Metadata implements PropertyMetadataCont
   }
 
   /**
+   * Implements PropertyMetadataContainerInterface::hasPropertyMetadata().
+   */
+  public function hasPropertyMetadata($property_name) {
+    try {
+      $exists = (bool)$this->getPropertyMetadata($property_name);
+    }
+    catch (\LogicException $e) {
+      $exists = FALSE;
+    }
+    return $exists;
+  }
+
+  /**
    * Implements PropertyMetadataContainerInterface::getPropertyMetadata().
    */
   public function getPropertyMetadata($property_name) {

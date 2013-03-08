@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit bootstrap="tests/bootstrap.php" colors="true">
+  <testsuites>
+    <testsuite name="Drupal Unit Test Suite">
+      <directory>./tests/*</directory>
+      <directory>./modules/*/tests/*</directory>
+      <directory>../modules/*/tests/*</directory>
+      <directory>../sites/*/modules/*/tests/*</directory>
+      <!-- Exclude files that end in Test.php that aren't actually phpunit tests. -->
+      <exclude>./modules/config/tests/config_test/lib/Drupal/config_test</exclude>
+      <exclude>./modules/views/tests/views_test_data/lib/Drupal/views_test_data</exclude>
+    </testsuite>
+  </testsuites>
+</phpunit>
+

@@ -579,7 +579,7 @@ function system_theme_settings($form, &$form_state, $key = '') {
     // Process the theme and all its base themes.
     foreach ($theme_keys as $theme) {
       // Include the theme-settings.php file.
-      $filename = DRUPAL_ROOT . '/' . str_replace("/$theme.info", '', $themes[$theme]->filename) . '/theme-settings.php';
+      $filename = DRUPAL_ROOT . '/' . str_replace("/$theme.info.yml", '', $themes[$theme]->filename) . '/theme-settings.php';
       if (file_exists($filename)) {
         require_once $filename;
       }
@@ -777,9 +777,10 @@ function _system_is_incompatible(&$incompatible, $files, $file) {
 /**
  * Menu callback; provides module enable/disable interface.
  *
- * The list of modules gets populated by module.info files, which contain each
- * module's name, description, and information about which modules it requires.
- * See drupal_parse_info_file() for information on module.info descriptors.
+ * The list of modules gets populated by module.info.yml files, which contain
+ * each module's name, description, and information about which modules it
+ * requires.
+ * See drupal_parse_info_file() for information on module.info.yml descriptors.
  *
  * Dependency checking is performed to ensure that a module:
  * - can not be enabled if there are disabled modules it requires.
@@ -1343,7 +1344,7 @@ function system_modules_uninstall_confirm_form($storage) {
 
   // Construct the hidden form elements and list items.
   foreach (array_filter($storage['uninstall']) as $module => $value) {
-    $info = drupal_parse_info_file(drupal_get_path('module', $module) . '/' . $module . '.info');
+    $info = drupal_parse_info_file(drupal_get_path('module', $module) . '/' . $module . '.info.yml');
     $uninstall[] = $info['name'];
     $form['uninstall'][$module] = array('#type' => 'hidden',
       '#value' => 1,

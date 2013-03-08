@@ -1,49 +1,49 @@
 views_ui.list:
   pattern: '/admin/structure/views'
   defaults:
-    _controller: 'views_ui.controller:listing'
+    _controller: '\Drupal\views_ui\Routing\ViewsUIController::listing'
   requirements:
     _permission: 'administer views'
 
 views_ui.add:
   pattern: '/admin/structure/views/add'
   defaults:
-    _controller: 'views_ui.controller:add'
+    _controller: '\Drupal\views_ui\Routing\ViewsUIController::add'
   requirements:
     _permission: 'administer views'
 
 views_ui.settings.basic:
   pattern: '/admin/structure/views/settings'
   defaults:
-    _controller: 'views_ui.form.basic_settings:getForm'
+    _controller: '\Drupal\views_ui\Form\BasicSettingsForm::getForm'
   requirements:
     _permission: 'administer views'
 
 views_ui.settings.advanced:
   pattern: '/admin/structure/views/settings/advanced'
   defaults:
-    _controller: 'views_ui.form.advanced_settings:getForm'
+    _controller: '\Drupal\views_ui\Form\AdvancedSettingsForm::getForm'
   requirements:
     _permission: 'administer views'
 
 views_ui.reports.fields:
   pattern: '/admin/reports/fields/views-fields'
   defaults:
-    _controller: 'views_ui.controller:reportFields'
+    _controller: '\Drupal\views_ui\Routing\ViewsUIController::reportFields'
   requirements:
     _permission: 'administer views'
 
 views_ui.reports.plugins:
   pattern: '/admin/reports/views-plugins'
   defaults:
-    _controller: 'views_ui.controller:reportPlugins'
+    _controller: '\Drupal\views_ui\Routing\ViewsUIController::reportPlugins'
   requirements:
     _permission: 'administer views'
 
 views_ui.operation:
   pattern: '/admin/structure/views/view/{view}/{op}'
   defaults:
-    _controller: 'views_ui.controller:ajaxOperation'
+    _controller: '\Drupal\views_ui\Routing\ViewsUIController::ajaxOperation'
   requirements:
     _permission: 'administer views'
     op: 'enable|disable'
@@ -51,7 +51,7 @@ views_ui.operation:
 views_ui.clone:
   pattern: '/admin/structure/views/view/{view}/clone'
   defaults:
-    _controller: 'views_ui.controller:cloneForm'
+    _controller: '\Drupal\views_ui\Routing\ViewsUIController::cloneForm'
   requirements:
     _permission: 'administer views'
 
@@ -65,7 +65,7 @@ views_ui.delete:
 views_ui.autocomplete:
   pattern: '/admin/views/ajax/autocomplete/tag'
   defaults:
-    _controller: 'views_ui.controller:autocompleteTag'
+    _controller: '\Drupal\views_ui\Routing\ViewsUIController::autocompleteTag'
   requirements:
     _permission: 'administer views'
 
@@ -75,7 +75,7 @@ views_ui.edit:
     tempstore:
       view: 'views'
   defaults:
-    _controller: 'views_ui.controller:edit'
+    _controller: '\Drupal\views_ui\Routing\ViewsUIController::edit'
   requirements:
     _permission: 'administer views'
 
@@ -85,7 +85,7 @@ views_ui.edit.display:
     tempstore:
       view: 'views'
   defaults:
-    _controller: 'views_ui.controller:edit'
+    _controller: '\Drupal\views_ui\Routing\ViewsUIController::edit'
     display_id: NULL
   requirements:
     _permission: 'administer views'
@@ -96,7 +96,7 @@ views_ui.preview:
     tempstore:
       view: 'views'
   defaults:
-    _controller: 'views_ui.controller:preview'
+    _controller: '\Drupal\views_ui\Routing\ViewsUIController::preview'
     display_id: NULL
   requirements:
     _permission: 'administer views'
@@ -104,7 +104,7 @@ views_ui.preview:
 views_ui.breakLock:
   pattern: '/admin/structure/views/view/{view}/break-lock'
   defaults:
-    _controller: 'views_ui.form.breakLock:getForm'
+    _controller: '\Drupal\views_ui\Form\BreakLockForm::getForm'
     display_id: NULL
   requirements:
     _permission: 'administer views'

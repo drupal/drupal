@@ -50,14 +50,7 @@ class Config {
   protected $data;
 
   /**
-   * The overridden data of the configuration object.
-   *
-   * @var array
-   */
-  protected $overrides = array();
-
-  /**
-   * The current runtime data ($data + $overrides).
+   * The current runtime data ($data + $overrides from Config Context).
    *
    * @var array
    */
@@ -275,7 +268,7 @@ class Config {
    *   The configuration object.
    */
   public function setOverride(array $data) {
-    $this->overrides = NestedArray::mergeDeepArray(array($this->overrides, $data), TRUE);
+    $this->context->setOverrides($this->getName(), $data);
     $this->resetOverriddenData();
     return $this;
   }
@@ -290,8 +283,9 @@ class Config {
    */
   protected function setOverriddenData() {
     $this->overriddenData = $this->data;
-    if (!empty($this->overrides)) {
-      $this->overriddenData = NestedArray::mergeDeepArray(array($this->overriddenData, $this->overrides), TRUE);
+    $overrides = $this->context->getOverrides($this->getName());
+    if (is_array($overrides)) {
+      $this->overriddenData = NestedArray::mergeDeepArray(array($this->overriddenData, $overrides), TRUE);
     }
     return $this;
   }

@@ -18,4 +18,4 @@ visibility:
 module: system
 region: footer
 weight: '0'
-langcode: und
+langcode: en

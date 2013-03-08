@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Definition of \Drupal\locale\LocaleConfigSubscriber.
+ * Contains \Drupal\locale\LocaleConfigSubscriber.
  */
 
 namespace Drupal\locale;
@@ -25,6 +25,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * $config is always a DrupalConfig object.
  */
 class LocaleConfigSubscriber implements EventSubscriberInterface {
+
   /**
    * The language manager.
    *
@@ -32,15 +33,20 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
    */
   protected $languageManager;
 
+  /**
+   * Default configuration context.
+   *
+   * @var \Drupal\Core\Config\Context\ContextInterface
+   */
   protected $defaultConfigContext;
 
   /**
    * Constructs a LocaleConfigSubscriber object.
    *
-   * @param \Drupal\Core\Config\Context\ConfigContext $config_context
-   *   The config context service.
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager service.
+   * @param \Drupal\Core\Config\Context\ConfigContext $config_context
+   *   The configuration context service.
    */
   public function __construct(LanguageManager $language_manager, ContextInterface $config_context) {
     $this->languageManager = $language_manager;
@@ -48,7 +54,7 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Initialize configuration context with language.
+   * Initializes configuration context with language.
    *
    * @param \Drupal\Core\Config\ConfigEvent $event
    *   The Event to process.
@@ -56,7 +62,9 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
   public function configContext(ConfigEvent $event) {
     $context = $event->getContext();
 
-    // Add user's language for user context.
+    // If there is a user set in the current context, set the language based on
+    // the preferred language of the user. Otherwise set it based on the
+    // negotiated interface language.
     if ($account = $context->get('user.account')) {
       $context->set('locale.language', language_load(user_preferred_langcode($account)));
     }
@@ -84,6 +92,12 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
     }
   }
 
+  /**
+   * Sets the negotiated interface language on the default configuration context.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   *   Kernel event to respond to.
+   */
   public function onKernelRequestSetDefaultConfigContextLocale(GetResponseEvent $event) {
     if ($language = $this->languageManager->getLanguage(LANGUAGE_TYPE_INTERFACE)) {
       $this->defaultConfigContext->set('locale.language', $language);
@@ -102,7 +116,7 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
    *   The language object.
    *
    * @return string
-   *   The localised config name.
+   *   The localized config name.
    */
   public function getLocaleConfigName($name, Language $language) {
     return 'locale.config.' . $language->langcode . '.' . $name;

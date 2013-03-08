@@ -236,6 +236,15 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
   }
 
   /**
+   * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::loadUnchanged()
+   */
+  public function loadUnchanged($id) {
+    $this->resetCache(array($id));
+    $result = $this->load(array($id));
+    return reset($result);
+  }
+
+  /**
    * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::loadRevision().
    */
   public function loadRevision($revision_id) {

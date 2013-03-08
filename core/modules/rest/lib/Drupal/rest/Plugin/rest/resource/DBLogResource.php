@@ -7,7 +7,7 @@
 
 namespace Drupal\rest\Plugin\rest\resource;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;

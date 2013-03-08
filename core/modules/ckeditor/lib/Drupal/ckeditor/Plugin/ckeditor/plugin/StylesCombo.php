@@ -10,7 +10,7 @@ namespace Drupal\ckeditor\Plugin\ckeditor\plugin;
 use Drupal\ckeditor\CKEditorPluginBase;
 use Drupal\ckeditor\CKEditorPluginConfigurableInterface;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\editor\Plugin\Core\Entity\Editor;
 

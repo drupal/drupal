@@ -8,7 +8,7 @@
 namespace Drupal\views\Plugin\views\style;
 
 use Drupal\views\Plugin\views\wizard\WizardInterface;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
 /**

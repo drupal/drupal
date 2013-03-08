@@ -1,6 +1,0 @@
-name = Datetime
-description = Defines datetime form elements and a datetime field type.
-package = Core
-version = VERSION
-core = 8.x
-dependencies[] = field

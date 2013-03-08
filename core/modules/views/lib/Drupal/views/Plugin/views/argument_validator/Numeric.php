@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\argument_validator;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
 /**

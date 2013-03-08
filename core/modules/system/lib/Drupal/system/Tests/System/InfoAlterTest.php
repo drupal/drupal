@@ -22,7 +22,7 @@ class InfoAlterTest extends WebTestBase {
   }
 
   /**
-   * Tests that theme .info data is rebuild after enabling a module.
+   * Tests that theme .info.yml data is rebuild after enabling a module.
    *
    * Tests that info data is rebuilt after a module that implements
    * hook_system_info_alter() is enabled. Also tests if core *_list() functions
@@ -45,7 +45,7 @@ class InfoAlterTest extends WebTestBase {
     $list_themes = list_themes();
     $this->assertTrue(isset($list_themes['seven']->info['regions']['test_region']), 'Altered theme info was returned by list_themes().');
 
-    // Disable the module and verify that rebuilt .info does not contain it.
+    // Disable the module and verify that rebuilt .info.yml does not contain it.
     module_disable(array('module_test'), FALSE);
     $this->assertFalse(module_exists('module_test'), 'Test module is disabled.');
 

@@ -1,7 +1,0 @@
-name = "System dependency test"
-description = "Support module for testing system dependencies."
-package = Testing
-version = VERSION
-core = 8.x
-hidden = TRUE
-dependencies[] = _missing_dependency

@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Plugin\entity_reference\selection;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\SelectInterface;

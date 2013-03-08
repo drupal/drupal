@@ -121,7 +121,7 @@ function drupal_theme_initialize() {
  * @param $theme
  *   An object with the following information:
  *     filename
- *       The .info file for this theme. The 'path' to
+ *       The .info.yml file for this theme. The 'path' to
  *       the theme will be in this file's directory. (Required)
  *     owner
  *       The path to the .theme file or the .engine file to load for
@@ -693,22 +693,22 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
  *   An associative array of the currently available themes. The keys are the
  *   themes' machine names and the values are objects having the following
  *   properties:
- *   - filename: The filepath and name of the .info file.
+ *   - filename: The filepath and name of the .info.yml file.
  *   - name: The machine name of the theme.
  *   - status: 1 for enabled, 0 for disabled themes.
- *   - info: The contents of the .info file.
+ *   - info: The contents of the .info.yml file.
  *   - stylesheets: A two dimensional array, using the first key for the
  *     media attribute (e.g. 'all'), the second for the name of the file
  *     (e.g. style.css). The value is a complete filepath (e.g.
  *     themes/bartik/style.css). Not set if no stylesheets are defined in the
- *     .info file.
+ *     .info.yml file.
  *   - scripts: An associative array of JavaScripts, using the filename as key
  *     and the complete filepath as value. Not set if no scripts are defined in
- *     the .info file.
+ *     the .info.yml file.
  *   - prefix: The base theme engine prefix.
  *   - engine: The machine name of the theme engine.
  *   - base_theme: If this is a sub-theme, the machine name of the base theme
- *     defined in the .info file. Otherwise, the element is not set.
+ *     defined in the .info.yml file. Otherwise, the element is not set.
  *   - base_themes: If this is a sub-theme, an associative array of the
  *     base-theme ancestors of this theme, starting with this theme's base
  *     theme, then the base theme's own base theme, etc. Each entry has an
@@ -1357,8 +1357,9 @@ function drupal_find_theme_templates($cache, $extension, $path) {
  * The final setting is obtained from the last value found in the following
  * sources:
  * - the default global settings specified in this function
- * - the default theme-specific settings defined in any base theme's .info file
- * - the default theme-specific settings defined in the theme's .info file
+ * - the default theme-specific settings defined in any base theme's .info.yml
+ *   file
+ * - the default theme-specific settings defined in the theme's .info.yml file
  * - the saved values from the global theme settings form
  * - the saved values from the theme's settings form
  * To only retrieve the default global theme setting, an empty string should be
@@ -1398,8 +1399,8 @@ function theme_get_setting($setting_name, $theme = NULL) {
       $cache[$theme]['toggle_' . $feature] = 1;
     }
 
-    // Get the values for the theme-specific settings from the .info files of
-    // the theme and all its base themes.
+    // Get the values for the theme-specific settings from the .info.yml files
+    // of the theme and all its base themes.
     if ($theme) {
       $themes = list_themes();
       $theme_object = $themes[$theme];

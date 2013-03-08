@@ -18,4 +18,4 @@ label: ''
 module: system
 region: footer
 weight: '10'
-langcode: und
+langcode: en

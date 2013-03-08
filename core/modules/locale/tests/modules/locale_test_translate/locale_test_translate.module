@@ -9,7 +9,7 @@
  * Implements hook_system_info_alter().
  *
  * By default this modules is hidden but once enabled it behaves like a normal
- * (not hidden) module. This hook implementation changes the .info data by
+ * (not hidden) module. This hook implementation changes the .info.yml data by
  * setting the hidden status to FALSE.
  */
 function locale_test_translate_system_info_alter(&$info, $file, $type) {

@@ -263,11 +263,11 @@ class ModuleApiTest extends WebTestBase {
     // Generate the list of available modules.
     $modules = system_rebuild_module_data();
     // Check that the mtime field exists for the system module.
-    $this->assertTrue(!empty($modules['system']->info['mtime']), 'The system.info file modification time field is present.');
+    $this->assertTrue(!empty($modules['system']->info['mtime']), 'The system.info.yml file modification time field is present.');
     // Use 0 if mtime isn't present, to avoid an array index notice.
     $test_mtime = !empty($modules['system']->info['mtime']) ? $modules['system']->info['mtime'] : 0;
     // Ensure the mtime field contains a number that is greater than zero.
-    $this->assertTrue(is_numeric($test_mtime) && ($test_mtime > 0), 'The system.info file modification time field contains a timestamp.');
+    $this->assertTrue(is_numeric($test_mtime) && ($test_mtime > 0), 'The system.info.yml file modification time field contains a timestamp.');
   }
 
   /**
@@ -277,10 +277,10 @@ class ModuleApiTest extends WebTestBase {
     // Generate the list of available themes.
     $themes = system_rebuild_theme_data();
     // Check that the mtime field exists for the bartik theme.
-    $this->assertTrue(!empty($themes['bartik']->info['mtime']), 'The bartik.info file modification time field is present.');
+    $this->assertTrue(!empty($themes['bartik']->info['mtime']), 'The bartik.info.yml file modification time field is present.');
     // Use 0 if mtime isn't present, to avoid an array index notice.
     $test_mtime = !empty($themes['bartik']->info['mtime']) ? $themes['bartik']->info['mtime'] : 0;
     // Ensure the mtime field contains a number that is greater than zero.
-    $this->assertTrue(is_numeric($test_mtime) && ($test_mtime > 0), 'The bartik.info file modification time field contains a timestamp.');
+    $this->assertTrue(is_numeric($test_mtime) && ($test_mtime > 0), 'The bartik.info.yml file modification time field contains a timestamp.');
   }
 }

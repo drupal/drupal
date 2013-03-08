@@ -1,0 +1,18 @@
+name: 'Theme test subtheme'
+description: 'Test theme which uses test_basetheme as the base theme.'
+core: 8.x
+'base theme': test_basetheme
+hidden: true
+stylesheets:
+  all:
+    - css/sub-add.css
+stylesheets-override:
+  - css/sub-override.css
+  - css/base-add.sub-override.css
+  - css/base-remove.sub-override.css
+stylesheets-remove:
+  - sub-remove.css
+  - base-add.sub-remove.css
+  - base-override.sub-remove.css
+settings:
+  subtheme_override: 'subtheme value'

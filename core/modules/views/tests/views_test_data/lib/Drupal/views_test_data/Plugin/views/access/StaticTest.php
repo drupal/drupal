@@ -7,7 +7,7 @@
 
 namespace Drupal\views_test_data\Plugin\views\access;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
 

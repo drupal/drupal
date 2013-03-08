@@ -1,8 +1,0 @@
-/**
- * Styles for theme in the Aggregator module.
- */
-
-.aggregator .feed-icon {
-  float: right; /* LTR */
-  display: block;
-}

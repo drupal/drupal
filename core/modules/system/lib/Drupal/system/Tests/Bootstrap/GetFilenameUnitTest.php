@@ -33,7 +33,7 @@ class GetFilenameUnitTest extends UnitTestBase {
     $this->assertIdentical(drupal_get_filename('module', 'php'), 'core/modules/php/php.module', 'Retrieve module location.');
 
     // Retrieving the location of a theme.
-    $this->assertIdentical(drupal_get_filename('theme', 'stark'), 'core/themes/stark/stark.info', 'Retrieve theme location.');
+    $this->assertIdentical(drupal_get_filename('theme', 'stark'), 'core/themes/stark/stark.info.yml', 'Retrieve theme location.');
 
     // Retrieving the location of a theme engine.
     $this->assertIdentical(drupal_get_filename('theme_engine', 'phptemplate'), 'core/themes/engines/phptemplate/phptemplate.engine', 'Retrieve theme engine location.');

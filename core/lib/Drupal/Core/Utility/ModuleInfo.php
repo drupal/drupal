@@ -10,7 +10,7 @@ namespace Drupal\Core\Utility;
 use Drupal\Core\Utility\CacheArray;
 
 /**
- * Extends CacheArray to lazy load .info properties for modules.
+ * Extends CacheArray to lazy load .info.yml properties for modules.
  *
  * Use system_get_module_info() rather than instantiating this class directly.
  */

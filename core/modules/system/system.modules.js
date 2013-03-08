@@ -114,8 +114,7 @@ Drupal.behaviors.tableFilterByText = {
       $rows = $table.find('tbody tr');
       $details = $table.find('details');
 
-      // @todo Use autofocus attribute when possible.
-      $input.focus().on('keyup', filterModuleList);
+      $input.on('keyup', filterModuleList);
     }
   }
 };

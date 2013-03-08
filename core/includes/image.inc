@@ -24,7 +24,7 @@
  *
  * Image toolkits are discovered based on the associated module's
  * hook_image_toolkits. Additionally the image toolkit include file
- * must be identified in the files array in the module.info file. The
+ * must be identified in the files array in the module.info.yml file. The
  * toolkit must then be enabled using the admin/config/media/image-toolkit
  * form.
  *

@@ -8,7 +8,7 @@
 namespace Drupal\field\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\filter\ManyToOne;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Filter handler which uses list-fields as options.

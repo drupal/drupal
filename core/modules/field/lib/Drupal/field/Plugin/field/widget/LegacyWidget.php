@@ -8,7 +8,7 @@
 namespace Drupal\field\Plugin\field\widget;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;

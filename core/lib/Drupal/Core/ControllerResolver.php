@@ -66,28 +66,35 @@ class ControllerResolver extends BaseControllerResolver {
    *   If the controller class does not exist
    */
   protected function createController($controller) {
-    // class::method
-    if (strpos($controller, '::') !== FALSE) {
-      list($class, $method) = explode('::', $controller, 2);
-
-      if (!class_exists($class)) {
-        throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
-      }
-
-      $controller = new $class();
-      if ($controller instanceof ContainerAwareInterface) {
-        $controller->setContainer($this->container);
-      }
-      return array($controller, $method);
-    }
-
-    // service:method
-    if (substr_count($controller, ':') == 1) {
-      // controller in the service:method notation
+    // Controller in the service:method notation.
+    $count = substr_count($controller, ':');
+    if ($count == 1) {
       list($service, $method) = explode(':', $controller, 2);
       return array($this->container->get($service), $method);
     }
 
-    throw new \LogicException(sprintf('Unable to parse the controller name "%s".', $controller));
+    // Controller in the class::method notation.
+    if (strpos($controller, '::') !== FALSE) {
+      list($class, $method) = explode('::', $controller, 2);
+      if (!class_exists($class)) {
+        throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
+      }
+      if (in_array('Drupal\Core\ControllerInterface', class_implements($class))) {
+        $controller = $class::create($this->container);
+      }
+      else {
+        $controller = new $class();
+      }
+    }
+    else {
+      throw new \LogicException(sprintf('Unable to parse the controller name "%s".', $controller));
+    }
+
+    if ($controller instanceof ContainerAwareInterface) {
+      $controller->setContainer($this->container);
+    }
+
+    return array($controller, $method);
   }
+
 }

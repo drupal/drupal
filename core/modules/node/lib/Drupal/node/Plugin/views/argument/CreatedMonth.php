@@ -7,7 +7,7 @@
 
 namespace Drupal\node\Plugin\views\argument;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\views\Plugin\views\argument\Date;
 
 /**
@@ -21,14 +21,6 @@ use Drupal\views\Plugin\views\argument\Date;
  * )
  */
 class CreatedMonth extends Date {
-
-  /**
-   * Overrides Drupal\views\Plugin\views\argument\Formula::get_formula().
-   */
-  function get_formula() {
-    $this->formula = $this->extractSQL('MONTH');
-    return parent::get_formula();
-  }
 
   /**
    * Provide a link to the next level of the view

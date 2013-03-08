@@ -8,7 +8,7 @@
 namespace Drupal\search\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\Numeric;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Field handler to provide simple renderer that allows linking to a node.

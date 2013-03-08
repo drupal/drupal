@@ -9,23 +9,24 @@
  * @defgroup interface_translation_properties Interface translation properties
  * @{
  *
- * .info file properties for interface translation settings.
+ * .info.yml file properties for interface translation settings.
  *
  * For modules hosted on drupal.org, a project definition is automatically added
- * to the .info file. Only modules with this project definition are discovered
- * by the update module and use it to check for new releases. Locale module uses
- * the same data to build a list of modules to check for new translations.
- * Therefore modules not hosted at drupal.org, such as custom modules, custom
- * themes, features and distributions, need a way to identify themselves to
- * the Locale module if they have translations that require to be updated.
+ * to the .info.yml file. Only modules with this project definition are
+ * discovered by the update module and use it to check for new releases. Locale
+ * module uses the same data to build a list of modules to check for new
+ * translations. Therefore modules not hosted at drupal.org, such as custom
+ * modules, custom themes, features and distributions, need a way to identify
+ * themselves to the Locale module if they have translations that require to be
+ * updated.
  *
  * Custom modules which contain new strings should provide po file(s) containing
  * source strings and string translations in gettext format. The translation
- * file can be located both local and remote. Use the following .info file
+ * file can be located both local and remote. Use the following .info.yml file
  * properties to inform Locale module to load and import the translations.
  *
- * Example .info file properties for a custom module with a po file located in
- * the module's folder.
+ * Example .info.yml file properties for a custom module with a po file located
+ * in the module's folder.
  * @code
  * interface translation project = example_module
  * interface translation server pattern = modules/custom/example_module/%project-%version.%language.po
@@ -47,22 +48,22 @@
  * the same project/code tree. Both "interface translation project" and
  * "interface translation server pattern" definitions of these modules should match.
  *
- * Example .info file properties for a custom module with a po file located on
- * a remote translation server.
+ * Example .info.yml file properties for a custom module with a po file located
+ * on a remote translation server.
  * @code
  * interface translation project = example_module
  * interface translation server pattern = http://example.com/files/translations/%core/%project/%project-%version.%language.po
  * @endcode
  *
- * Custom themes, features and distributions can implement these .info file
- * properties in their .info file too.
+ * Custom themes, features and distributions can implement these .info.yml file
+ * properties in their .info.yml file too.
  *
  * To change the interface translation settings of modules and themes hosted at
  * drupal.org use hook_locale_translation_projects_alter(). Possible changes
  * include changing the po file location (server pattern) or removing the
  * project from the translation update list.
  *
- * Available .info file properties:
+ * Available .info.yml file properties:
  * - "interface translation project": project name. Required.
  *   Name of the project a (sub-)module belongs to. Multiple modules sharing
  *   the same project name will be listed as one the translation status list.

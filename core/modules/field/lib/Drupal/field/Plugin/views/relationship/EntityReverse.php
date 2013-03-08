@@ -10,7 +10,7 @@ namespace Drupal\field\Plugin\views\relationship;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\relationship\RelationshipPluginBase;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * A relationship handlers which reverse entity references.

@@ -8,7 +8,7 @@
 namespace Drupal\language\Plugin\views\argument;
 
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Defines an argument handler to accept a language.

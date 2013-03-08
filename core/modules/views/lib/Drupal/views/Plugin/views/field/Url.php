@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\field;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Field handler to provide simple renderer that turns a URL into a clickable link.

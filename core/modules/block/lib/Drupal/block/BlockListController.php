@@ -75,7 +75,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
     if ($status) {
       return $status;
     }
-    // Sort by region (in the order defined by theme .info file).
+    // Sort by region (in the order defined by theme .info.yml file).
     $aregion = $a->get('region');
     $bregion = $b->get('region');
     if ((!empty($aregion) && !empty($bregion)) && ($place = ($regions[$aregion] - $regions[$bregion]))) {

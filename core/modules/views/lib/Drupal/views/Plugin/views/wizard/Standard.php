@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\wizard;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * @Plugin(

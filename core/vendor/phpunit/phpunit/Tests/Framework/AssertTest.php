@@ -2,7 +2,7 @@
 /**
  * PHPUnit
  *
- * Copyright (c) 2001-2012, Sebastian Bergmann <sebastian@phpunit.de>.
+ * Copyright (c) 2001-2013, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@
  * @package    PHPUnit
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @author     Bernhard Schussek <bschussek@2bepublished.at>
- * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://www.phpunit.de/
  * @since      File available since Release 2.0.0
@@ -57,9 +57,8 @@ require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPAR
  * @package    PHPUnit
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @author     Bernhard Schussek <bschussek@2bepublished.at>
- * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @version    Release: @package_version@
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 2.0.0
  */
@@ -633,6 +632,8 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
             array(array(array(2.3)), array(array(4.2)), 0.5),
             array(new Struct(2.3), new Struct(4.2), 0.5),
             array(array(new Struct(2.3)), array(new Struct(4.2)), 0.5),
+            // NAN
+            array(NAN, NAN),
             // arrays
             array(array(), array(0 => 1)),
             array(array(0 => 1), array()),

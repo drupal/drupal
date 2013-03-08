@@ -1,8 +1,0 @@
-name = Interface Translation
-description = Translates the built-in user interface.
-package = Multilingual
-version = VERSION
-core = 8.x
-configure = admin/config/regional/translate
-dependencies[] = language
-dependencies[] = file

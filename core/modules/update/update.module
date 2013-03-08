@@ -367,12 +367,12 @@ function _update_no_data() {
  * Tries to get update information from cache and refreshes it when necessary.
  *
  * In addition to checking the cache lifetime, this function also ensures that
- * there are no .info files for enabled modules or themes that have a newer
+ * there are no .info.yml files for enabled modules or themes that have a newer
  * modification timestamp than the last time we checked for available update
- * data. If any .info file was modified, it almost certainly means a new version
- * of something was installed. Without fresh available update data, the logic in
- * update_calculate_project_data() will be wrong and produce confusing, bogus
- * results.
+ * data. If any .info.yml file was modified, it almost certainly means a new
+ * version of something was installed. Without fresh available update data, the
+ * logic in update_calculate_project_data() will be wrong and produce confusing,
+ * bogus results.
  *
  * @param $refresh
  *   (optional) Boolean to indicate if this method should refresh the cache
@@ -401,10 +401,10 @@ function update_get_available($refresh = FALSE) {
       continue;
     }
 
-    // See if the .info file is newer than the last time we checked for data,
-    // and if so, mark this project's data as needing to be re-fetched. Any
-    // time an admin upgrades their local installation, the .info file will
-    // be changed, so this is the only way we can be sure we're not showing
+    // See if the .info.yml file is newer than the last time we checked for
+    // data, and if so, mark this project's data as needing to be re-fetched.
+    // Any time an admin upgrades their local installation, the .info.yml file
+    // will be changed, so this is the only way we can be sure we're not showing
     // bogus information right after they upgrade.
     if ($project['info']['_info_file_ctime'] > $available[$key]['last_fetch']) {
       $available[$key]['fetch_status'] = UPDATE_FETCH_PENDING;
@@ -667,7 +667,7 @@ function theme_update_last_check($variables) {
  * update manager does not yet support. See http://drupal.org/node/606592
  *
  * Then, we make sure that at least one module included in the archive file has
- * an .info file which claims that the code is compatible with the current
+ * an .info.yml file which claims that the code is compatible with the current
  * version of Drupal core.
  *
  * @see drupal_system_listing()
@@ -689,16 +689,16 @@ function update_verify_update_archive($project, $archive_file, $directory) {
     );
   }
 
-  // Parse all the .info files and make sure at least one is compatible with
+  // Parse all the .info.yml files and make sure at least one is compatible with
   // this version of Drupal core. If one is compatible, then the project as a
   // whole is considered compatible (since, for example, the project may ship
   // with some out-of-date modules that are not necessary for its overall
   // functionality).
   $compatible_project = FALSE;
   $incompatible = array();
-  $files = file_scan_directory("$directory/$project", '/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info$/', array('key' => 'name', 'min_depth' => 0));
+  $files = file_scan_directory("$directory/$project", '/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info.yml$/', array('key' => 'name', 'min_depth' => 0));
   foreach ($files as $key => $file) {
-    // Get the .info file for the module or theme this file belongs to.
+    // Get the .info.yml file for the module or theme this file belongs to.
     $info = drupal_parse_info_file($file->uri);
 
     // If the module or theme is incompatible with Drupal core, set an error.
@@ -712,7 +712,7 @@ function update_verify_update_archive($project, $archive_file, $directory) {
   }
 
   if (empty($files)) {
-    $errors[] = t('%archive_file does not contain any .info files.', array('%archive_file' => drupal_basename($archive_file)));
+    $errors[] = t('%archive_file does not contain any .info.yml files.', array('%archive_file' => drupal_basename($archive_file)));
   }
   elseif (!$compatible_project) {
     $errors[] = format_plural(

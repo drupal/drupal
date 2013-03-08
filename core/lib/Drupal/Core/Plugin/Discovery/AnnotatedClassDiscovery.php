@@ -42,7 +42,7 @@ class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
     foreach ($root_namespaces as $namespace => $dir) {
       $plugin_namespaces["$namespace\\Plugin\\{$owner}\\{$type}"] = array($dir);
     }
-    parent::__construct($plugin_namespaces, $annotation_namespaces, 'Drupal\Core\Annotation\Plugin');
+    parent::__construct($plugin_namespaces, $annotation_namespaces);
   }
 
 }

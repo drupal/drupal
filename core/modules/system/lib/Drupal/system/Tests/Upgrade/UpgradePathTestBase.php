@@ -264,6 +264,9 @@ abstract class UpgradePathTestBase extends WebTestBase {
       throw new Exception('Errors during update process.');
     }
 
+    // Allow tests to check the completion page.
+    $this->checkCompletionPage();
+
     // Check if there still are pending updates.
     $this->getUpdatePhp();
     $this->drupalPost(NULL, array(), t('Continue'));
@@ -316,4 +319,11 @@ abstract class UpgradePathTestBase extends WebTestBase {
     return $out;
   }
 
+  /**
+   * Checks the update.php completion page.
+   *
+   * Invoked by UpgradePathTestBase::performUpgrade() to allow upgrade tests to
+   * check messages and other output on the final confirmation page.
+   */
+  protected function checkCompletionPage() { }
 }

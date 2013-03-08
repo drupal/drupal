@@ -41,6 +41,20 @@ interface EntityStorageControllerInterface {
   public function load(array $ids = NULL);
 
   /**
+   * Loads an unchanged entity from the database.
+   *
+   * @param mixed $id
+   *   The ID of the entity to load.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   The unchanged entity, or FALSE if the entity cannot be loaded.
+   *
+   * @todo Remove this method once we have a reliable way to retrieve the
+   *   unchanged entity from the entity object.
+   */
+  public function loadUnchanged($id);
+
+  /**
    * Load a specific entity revision.
    *
    * @param int $revision_id

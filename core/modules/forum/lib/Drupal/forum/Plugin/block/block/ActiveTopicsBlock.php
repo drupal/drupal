@@ -7,7 +7,7 @@
 
 namespace Drupal\forum\Plugin\block\block;
 
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
 /**

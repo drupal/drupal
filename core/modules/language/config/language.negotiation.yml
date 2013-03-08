@@ -1,8 +1,8 @@
 session:
-    parameter: language
+  parameter: language
 url:
-    source: path_prefix
-    prefixes:
-      en: ''
-    domains:
-      en: ''
+  source: path_prefix
+  prefixes:
+    en: ''
+  domains:
+    en: ''

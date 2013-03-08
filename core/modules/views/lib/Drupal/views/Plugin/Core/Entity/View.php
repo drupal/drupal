@@ -11,7 +11,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\ViewStorageInterface;
 use Drupal\views\ViewExecutable;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
 /**

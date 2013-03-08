@@ -3,6 +3,7 @@
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Yaml\Parser;
 use Drupal\Component\PhpStorage\PhpStorageFactory;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -2507,7 +2508,7 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  *     enabled, this should be set to TRUE if the stylesheet is present on every
  *     page of the website for users for whom it is present at all. This
  *     defaults to FALSE. It is set to TRUE for stylesheets added via module and
- *     theme .info files. Modules that add stylesheets within hook_init()
+ *     theme .info.yml files. Modules that add stylesheets within hook_init()
  *     implementations, or from other code that ensures that the stylesheet is
  *     added to all website pages, should also set this flag to TRUE. All
  *     stylesheets within the same group that have the 'every_page' flag set to
@@ -3252,7 +3253,7 @@ function drupal_load_stylesheet($file, $optimize = NULL, $reset_basepath = TRUE)
   $basepath = dirname($file);
 
   // Load the CSS stylesheet. We suppress errors because themes may specify
-  // stylesheets in their .info file that don't exist in the theme's path,
+  // stylesheets in their .info.yml file that don't exist in the theme's path,
   // but are merely there to disable certain module CSS files.
   if ($contents = @file_get_contents($file)) {
     // Return the processed stylesheet.
@@ -3631,7 +3632,7 @@ function drupal_region_class($region) {
  *     enabled, this should be set to TRUE if the JavaScript is present on every
  *     page of the website for users for whom it is present at all. This
  *     defaults to FALSE. It is set to TRUE for JavaScript files that are added
- *     via module and theme .info files. Modules that add JavaScript within
+ *     via module and theme .info.yml files. Modules that add JavaScript within
  *     hook_init() implementations, or from other code that ensures that the
  *     JavaScript is added to all website pages, should also set this flag to
  *     TRUE. All JavaScript files within the same group and that have the
@@ -6185,39 +6186,39 @@ function element_set_attributes(array &$element, array $map) {
 }
 
 /**
- * Parses Drupal module and theme .info files.
+ * Parses Drupal module and theme .info.yml files.
  *
  * Info files are NOT for placing arbitrary theme and module-specific settings.
- * Use variable_get() and variable_set() for that.
+ * Use variable_get() and variable_set() for that. Info files are formatted as
+ * YAML. If the 'version' key is set to 'VERSION' in any info file, then the
+ * value will be substituted with the current version of Drupal core.
  *
- * Information stored in a module .info file:
+ * Information stored in a module .info.yml file:
  * - name: The real name of the module for display purposes.
  * - description: A brief description of the module.
  * - dependencies: An array of shortnames of other modules this module requires.
  * - package: The name of the package of modules this module belongs to.
  *
- * See forum.info for an example of a module .info file.
+ * See forum.info.yml for an example of a module .info.yml file.
  *
- * Information stored in a theme .info file:
+ * Information stored in a theme .info.yml file:
  * - name: The real name of the theme for display purposes.
  * - description: Brief description.
- * - screenshot: Path to screenshot relative to the theme's .info file.
+ * - screenshot: Path to screenshot relative to the theme's .info.yml file.
  * - engine: Theme engine; typically phptemplate.
- * - base: Name of a base theme, if applicable; e.g., base = zen.
- * - regions: Listed regions; e.g., region[left] = Left sidebar.
- * - features: Features available; e.g., features[] = logo.
- * - stylesheets: Theme stylesheets; e.g., stylesheets[all][] = my-style.css.
- * - scripts: Theme scripts; e.g., scripts[] = my-script.js.
+ * - base theme: Name of a base theme, if applicable.
+ * - regions: Listed regions.
+ * - features: Features available.
+ * - stylesheets: Theme stylesheets.
+ * - scripts: Theme scripts.
  *
- * See bartik.info for an example of a theme .info file.
+ * See bartik.info.yml for an example of a theme .info.yml file.
  *
- * @param $filename
+ * @param string $filename
  *   The file we are parsing. Accepts file with relative or absolute path.
  *
- * @return
+ * @return array
  *   The info array.
- *
- * @see drupal_parse_info_format()
  */
 function drupal_parse_info_file($filename) {
   $info = &drupal_static(__FUNCTION__, array());
@@ -6227,105 +6228,14 @@ function drupal_parse_info_file($filename) {
       $info[$filename] = array();
     }
     else {
-      $data = file_get_contents($filename);
-      $info[$filename] = drupal_parse_info_format($data);
+      $parser = new Parser();
+      $info[$filename] = $parser->parse(file_get_contents($filename));
+      if (isset($info[$filename]['version']) && $info[$filename]['version'] === 'VERSION') {
+        $info[$filename]['version'] = VERSION;
+      }
     }
   }
   return $info[$filename];
-}
-
-/**
- * Parses data in Drupal's .info format.
- *
- * Data should be in an .ini-like format to specify values. White-space
- * generally doesn't matter, except inside values:
- * @code
- *   key = value
- *   key = "value"
- *   key = 'value'
- *   key = "multi-line
- *   value"
- *   key = 'multi-line
- *   value'
- *   key
- *   =
- *   'value'
- * @endcode
- *
- * Arrays are created using a HTTP GET alike syntax:
- * @code
- *   key[] = "numeric array"
- *   key[index] = "associative array"
- *   key[index][] = "nested numeric array"
- *   key[index][index] = "nested associative array"
- * @endcode
- *
- * PHP constants are substituted in, but only when used as the entire value.
- * Comments should start with a semi-colon at the beginning of a line.
- *
- * @param $data
- *   A string to parse.
- *
- * @return
- *   The info array.
- *
- * @see drupal_parse_info_file()
- */
-function drupal_parse_info_format($data) {
-  $info = array();
-  $constants = get_defined_constants();
-
-  if (preg_match_all('
-    @^\s*                           # Start at the beginning of a line, ignoring leading whitespace
-    ((?:
-      [^=;\[\]]|                    # Key names cannot contain equal signs, semi-colons or square brackets,
-      \[[^\[\]]*\]                  # unless they are balanced and not nested
-    )+?)
-    \s*=\s*                         # Key/value pairs are separated by equal signs (ignoring white-space)
-    (?:
-      ("(?:[^"]|(?<=\\\\)")*")|     # Double-quoted string, which may contain slash-escaped quotes/slashes
-      (\'(?:[^\']|(?<=\\\\)\')*\')| # Single-quoted string, which may contain slash-escaped quotes/slashes
-      ([^\r\n]*?)                   # Non-quoted string
-    )\s*$                           # Stop at the next end of a line, ignoring trailing whitespace
-    @msx', $data, $matches, PREG_SET_ORDER)) {
-    foreach ($matches as $match) {
-      // Fetch the key and value string.
-      $i = 0;
-      foreach (array('key', 'value1', 'value2', 'value3') as $var) {
-        $$var = isset($match[++$i]) ? $match[$i] : '';
-      }
-      $value = stripslashes(substr($value1, 1, -1)) . stripslashes(substr($value2, 1, -1)) . $value3;
-
-      // Parse array syntax.
-      $keys = preg_split('/\]?\[/', rtrim($key, ']'));
-      $last = array_pop($keys);
-      $parent = &$info;
-
-      // Create nested arrays.
-      foreach ($keys as $key) {
-        if ($key == '') {
-          $key = count($parent);
-        }
-        if (!isset($parent[$key]) || !is_array($parent[$key])) {
-          $parent[$key] = array();
-        }
-        $parent = &$parent[$key];
-      }
-
-      // Handle PHP constants.
-      if (isset($constants[$value])) {
-        $value = $constants[$value];
-      }
-
-      // Insert actual value.
-      if ($last == '') {
-        $last = count($parent);
-      }
-      $parent[$last] = $value;
-    }
-  }
-
-  return $info;
 }
 
 /**

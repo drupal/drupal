@@ -7,13 +7,16 @@
 
 namespace Drupal\views_ui\Form;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\ControllerInterface;
 use Drupal\system\SystemConfigFormBase;
 
 /**
  * Form builder for the advanced admin settings page.
  */
-abstract class SettingsFormBase extends SystemConfigFormBase {
+abstract class SettingsFormBase extends SystemConfigFormBase implements ControllerInterface {
 
   /**
    * Stores the views configuration.
@@ -30,6 +33,15 @@ abstract class SettingsFormBase extends SystemConfigFormBase {
    */
   public function __construct(ConfigFactory $config_factory) {
     $this->config = $config_factory->get('views.settings');
+  }
+
+  /**
+   * Implements \Drupal\Core\ControllerInterface::create().
+   */
+  public static function create(ContainerInterface $container) {
+   return new static(
+      $container->get('config.factory')
+    );
   }
 
   /**
