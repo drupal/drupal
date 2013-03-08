@@ -162,7 +162,7 @@ function hook_cron() {
  *   - primitive type: (optional) Maps the data type to one of the pre-defined
  *     primitive types in \Drupal\Core\TypedData\Primitive. If set, it must be
  *     a constant defined by \Drupal\Core\TypedData\Primitive such as
- *     \Drupal\Core\TypedData\Primitive::String.
+ *     \Drupal\Core\TypedData\Primitive::STRING.
  *   - constraints: An array of validation constraints for this type. See
  *     \Drupal\Core\TypedData\TypedDataManager::getConstraints() for details.
  *
@@ -175,7 +175,7 @@ function hook_data_type_info() {
     'email' => array(
       'label' => t('Email'),
       'class' => '\Drupal\email\Type\Email',
-      'primitive type' => \Drupal\Core\TypedData\Primitive::String,
+      'primitive type' => \Drupal\Core\TypedData\Primitive::STRING,
       'constraints' => array('Email' => array()),
     ),
   );
