@@ -2851,15 +2851,15 @@ function _system_rebuild_module_data() {
     // Look for the info file.
     $module->info = drupal_parse_info_file(dirname($module->uri) . '/' . $module->name . '.info.yml');
 
-    // Add the info file modification time, so it becomes available for
-    // contributed modules to use for ordering module lists.
-    $module->info['mtime'] = filemtime(dirname($module->uri) . '/' . $module->name . '.info.yml');
-
     // Skip modules that don't provide info.
     if (empty($module->info)) {
       unset($modules[$key]);
       continue;
     }
+
+    // Add the info file modification time, so it becomes available for
+    // contributed modules to use for ordering module lists.
+    $module->info['mtime'] = filemtime(dirname($module->uri) . '/' . $module->name . '.info.yml');
 
     // Merge in defaults and save.
     $modules[$key]->info = $module->info + $defaults;
