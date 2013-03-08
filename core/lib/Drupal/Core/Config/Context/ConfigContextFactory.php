@@ -49,7 +49,7 @@ class ConfigContextFactory {
    */
   public function get($class = NULL) {
     if (!$class) {
-      $class = "Drupal\\Core\\Config\\Context\\ConfigContext";
+      $class = 'Drupal\Core\Config\Context\ConfigContext';
     }
     if (class_exists($class)) {
       $context = new $class($this->eventDispatcher);

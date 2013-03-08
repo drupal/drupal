@@ -93,7 +93,7 @@ class ConfigFactory {
    */
   public function reset($name = NULL) {
     if ($name) {
-      // Reinitialise the configuration object in all contexts.
+      // Reinitialize the configuration object in all contexts.
       foreach ($this->getCacheKeys($name) as $cache_key) {
         $this->cache[$cache_key]->init();
       }
@@ -162,13 +162,16 @@ class ConfigFactory {
    *   The config factory object.
    */
   public function leaveContext() {
+    // Ensure at least one context is left on the stack. We already ensured
+    // there is at least one context set by taking the initial one in the
+    // constructor.
     if (count($this->contextStack) > 1) {
       array_pop($this->contextStack);
     }
     return $this;
   }
 
-  /*
+  /**
    * Gets the cache key for a given config name in a particular context.
    *
    * @param string $name

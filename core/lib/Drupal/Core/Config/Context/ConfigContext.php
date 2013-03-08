@@ -60,7 +60,7 @@ class ConfigContext implements ContextInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\Context\ContextInterface::init().
+   * Implements \Drupal\Core\Config\Context\ContextInterface::init().
    */
   public function init() {
     $this->setUuid();
@@ -70,21 +70,21 @@ class ConfigContext implements ContextInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\Context\ContextInterface::get().
+   * Implements \Drupal\Core\Config\Context\ContextInterface::get().
    */
   public function get($key) {
     return array_key_exists($key, $this->data) ? $this->data[$key] : NULL;
   }
 
   /**
-   * Implements Drupal\Core\Config\Context\ContextInterface::set().
+   * Implements \Drupal\Core\Config\Context\ContextInterface::set().
    */
   public function set($key, $value) {
     $this->data[$key] = $value;
   }
 
   /**
-   * Implements Drupal\Core\Config\Context\ContextInterface::setUuid().
+   * Implements \Drupal\Core\Config\Context\ContextInterface::setUuid().
    */
   public function setUuid() {
     $uuid = new Uuid();
@@ -92,14 +92,14 @@ class ConfigContext implements ContextInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\Context\ContextInterface::getUuid().
+   * Implements \Drupal\Core\Config\Context\ContextInterface::getUuid().
    */
   public function getUuid() {
     return $this->uuid;
   }
 
   /**
-   * Implements Drupal\Core\Config\Context\ContextInterface::notify().
+   * Implements \Drupal\Core\Config\Context\ContextInterface::notify().
    */
   public function notify($config_event_name, Config $config = NULL) {
     $this->eventDispatcher->dispatch('config.' . $config_event_name, new ConfigEvent($this, $config));

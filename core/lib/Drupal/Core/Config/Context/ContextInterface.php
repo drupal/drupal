@@ -23,7 +23,7 @@ use Drupal\Core\Config\Config;
 interface ContextInterface {
 
   /**
-   * Initialises a config context for use.
+   * Initializes a configuration context for use.
    *
    * @return \Drupal\Core\Config\Context\ConfigContext
    *   The config context object.

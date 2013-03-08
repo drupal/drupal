@@ -1762,7 +1762,7 @@ function user_mail($key, &$message, $params) {
   // this user is not necessarily the same as the one triggering the mail. This
   // allows the configuration objects to be localized for the user's language if
   // the locale module is enabled.
-  $user_config_context = config_context_enter("Drupal\\user\\UserConfigContext");
+  $user_config_context = config_context_enter('Drupal\user\UserConfigContext');
   $user_config_context->setAccount($params['account']);
   $mail_config = config('user.mail');
 

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\user\UserConfigContext
+ * Contains \Drupal\user\UserConfigContext.
  */
 
 namespace Drupal\user;
@@ -26,8 +26,8 @@ class UserConfigContext extends ConfigContext {
    */
   const USER_KEY = 'user.account';
 
-  /*
-   * Helper function to create config context for user accounts.
+  /**
+   * Creates the configuration context for user accounts.
    *
    * @param \Drupal\user\Plugin\Core\Entity\User $account
    *   The account to add to the config context.

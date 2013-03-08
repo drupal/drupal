@@ -105,7 +105,7 @@ function config($name) {
   return drupal_container()->get('config.factory')->get($name);
 }
 
-/*
+/**
  * Sets the config context on the config factory.
  *
  * This allows configuration objects to be created using special configuration
@@ -127,7 +127,7 @@ function config_context_enter($context_name) {
   if (drupal_container()->has($context_name)) {
     $context = drupal_container()->get($context_name);
   }
-  elseif (class_exists($context_name) && in_array("Drupal\\Core\\Config\\Context\\ContextInterface", class_implements($context_name))) {
+  elseif (class_exists($context_name) && in_array('Drupal\Core\Config\Context\ContextInterface', class_implements($context_name))) {
     $context = drupal_container()
       ->get('config.context.factory')
       ->get($context_name);
@@ -141,7 +141,7 @@ function config_context_enter($context_name) {
   return $context;
 }
 
-/*
+/**
  * Leaves the current config context returning to the previous context.
  *
  * @see config_context_enter()
@@ -410,7 +410,7 @@ function config_get_entity_type_by_name($name) {
   return key($entities);
 }
 
-/*
+/**
  * Returns the typed config manager service.
  *
  * Use the typed data manager service for creating typed configuration objects.

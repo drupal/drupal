@@ -42,7 +42,7 @@ class ConfigEvent extends Event {
   }
 
   /**
-   * Get configuration context object.
+   * Gets configuration context object.
    *
    * @return \Drupal\Core\Config\Context\ContextInterface
    *   Configuration context.

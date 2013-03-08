@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\config\Tests\ConfigLocaleOverride.
+ * Contains \Drupal\config\Tests\ConfigLocaleOverride.
  */
 
 namespace Drupal\config\Tests;
@@ -112,8 +112,8 @@ class ConfigLocaleOverride extends DrupalUnitTestBase {
 
     $config_factory = drupal_container()->get('config.factory');
     $config_factory->enterContext($user_config_context->setAccount($account));
-    // Should not have to re-initialise config object to get new overrides as
-    // the new context will have a different uuid.
+    // Should not have to re-initialize the configuration object to get new
+    // overrides as the new context will have a different uuid.
     $config = config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'de bar');
 
