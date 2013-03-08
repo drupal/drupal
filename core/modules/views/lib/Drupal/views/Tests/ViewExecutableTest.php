@@ -194,7 +194,14 @@ class ViewExecutableTest extends ViewUnitTestBase {
     $this->assertEqual($view->current_display, 'page_2', 'If setDisplay is called with a valid display id the appropriate display should be used.');
     $this->assertEqual(spl_object_hash($view->display_handler), spl_object_hash($view->displayHandlers->get('page_2')));
 
+    // Destroy the view, so we can start again and test an invalid display.
+    $view->destroy();
+
+    $count_before = count($this->assertions);
     $view->setDisplay('invalid');
+    $count_after = count($this->assertions);
+    $this->assertTrue($count_after - $count_before, 'Error is triggered while calling the wrong display.');
+
     $this->assertEqual($view->current_display, 'default', 'If setDisplay is called with an invalid display id the default display should be used.');
     $this->assertEqual(spl_object_hash($view->display_handler), spl_object_hash($view->displayHandlers->get('default')));
   }

@@ -638,48 +638,39 @@ class ViewExecutable {
   }
 
   /**
-   * Set the display as current.
+   * Sets the current display.
    *
-   * @param $display_id
-   *   The id of the display to mark as current.
+   * @param string $display_id
+   *   The ID of the display to mark as current.
+   *
+   * @return bool
+   *   TRUE if the display was correctly set, FALSE otherwise.
    */
   public function setDisplay($display_id = NULL) {
-    // If we have not already initialized the display, do so. But be careful.
-    if (empty($this->current_display)) {
+    // If we have not already initialized the display, do so.
+    if (!isset($this->current_display)) {
+      // This will set the default display and instantiate the default display
+      // plugin.
       $this->initDisplay();
+    }
 
-      // If handlers were not initialized, and no argument was sent, set up
-      // to the default display.
-      if (empty($display_id)) {
-        $display_id = 'default';
-      }
+    // If no display ID is passed, we either have initialized the default or
+    // already have a display set.
+    if (!isset($display_id)) {
+      return TRUE;
     }
 
     $display_id = $this->chooseDisplay($display_id);
 
-    // If no display id sent in and one wasn't chosen above, we're finished.
-    if (empty($display_id)) {
-      return FALSE;
-    }
-
     // Ensure the requested display exists.
     if (!$this->displayHandlers->has($display_id)) {
-      $display_id = 'default';
-      if (!$this->displayHandlers->has($display_id)) {
-        debug(format_string('set_display() called with invalid display ID @display.', array('@display' => $display_id)));
-        return FALSE;
-      }
+      debug(format_string('setDisplay() called with invalid display ID "@display".', array('@display' => $display_id)));
+      return FALSE;
     }
 
     // Set the current display.
     $this->current_display = $display_id;
-
-    // Ensure requested display has a working handler.
-    if (!$this->displayHandlers->has($display_id)) {
-      return FALSE;
-    }
-
-    // Set a shortcut
+    // Set a shortcut.
     $this->display_handler = $this->displayHandlers->get($display_id);
 
     return TRUE;
