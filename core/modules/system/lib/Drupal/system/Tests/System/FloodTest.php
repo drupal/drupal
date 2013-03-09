@@ -30,20 +30,21 @@ class FloodTest extends WebTestBase {
     $name = 'flood_test_cleanup';
 
     // Register expired event.
-    drupal_container()->get('flood')->register($name, $window_expired);
+    $flood = \Drupal::service('flood');
+    $flood->register($name, $window_expired);
     // Verify event is not allowed.
-    $this->assertFalse(drupal_container()->get('flood')->isAllowed($name, $threshold));
+    $this->assertFalse($flood->isAllowed($name, $threshold));
     // Run cron and verify event is now allowed.
     $this->cronRun();
-    $this->assertTrue(drupal_container()->get('flood')->isAllowed($name, $threshold));
+    $this->assertTrue($flood->isAllowed($name, $threshold));
 
     // Register unexpired event.
-    drupal_container()->get('flood')->register($name);
+    $flood->register($name);
     // Verify event is not allowed.
-    $this->assertFalse(drupal_container()->get('flood')->isAllowed($name, $threshold));
+    $this->assertFalse($flood->isAllowed($name, $threshold));
     // Run cron and verify event is still not allowed.
     $this->cronRun();
-    $this->assertFalse(drupal_container()->get('flood')->isAllowed($name, $threshold));
+    $this->assertFalse($flood->isAllowed($name, $threshold));
   }
 
   /**

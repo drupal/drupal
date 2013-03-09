@@ -901,7 +901,7 @@ abstract class TestBase {
 
     // Reset and create a new service container.
     $this->container = new ContainerBuilder();
-    drupal_container($this->container);
+    \Drupal::setContainer($this->container);
 
     // Unset globals.
     unset($GLOBALS['theme_key']);
@@ -1046,7 +1046,7 @@ abstract class TestBase {
     new Settings($this->originalSettings);
 
     // Restore original statics and globals.
-    drupal_container($this->originalContainer);
+    \Drupal::setContainer($this->originalContainer);
     $GLOBALS['config_directories'] = $this->originalConfigDirectories;
     if (isset($this->originalPrefix)) {
       drupal_valid_test_ua($this->originalPrefix);

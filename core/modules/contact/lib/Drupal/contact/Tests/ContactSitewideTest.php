@@ -207,7 +207,7 @@ class ContactSitewideTest extends WebTestBase {
     // We are testing the auto-reply, so there should be one e-mail going to the sender.
     $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email));
     $this->assertEqual(count($captured_emails), 1);
-    $this->assertEqual($captured_emails[0]['body'], drupal_html_to_text($foo_autoreply));
+    $this->assertEqual(trim($captured_emails[0]['body']), trim(drupal_html_to_text($foo_autoreply)));
 
     // Test the auto-reply for category 'bar'.
     $email = $this->randomName(32) . '@example.com';
@@ -216,7 +216,7 @@ class ContactSitewideTest extends WebTestBase {
     // Auto-reply for category 'bar' should result in one auto-reply e-mail to the sender.
     $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email));
     $this->assertEqual(count($captured_emails), 1);
-    $this->assertEqual($captured_emails[0]['body'], drupal_html_to_text($bar_autoreply));
+    $this->assertEqual(trim($captured_emails[0]['body']), trim(drupal_html_to_text($bar_autoreply)));
 
     // Verify that no auto-reply is sent when the auto-reply field is left blank.
     $email = $this->randomName(32) . '@example.com';

@@ -868,7 +868,7 @@ function translation_entity_field_info_alter(&$info) {
 function translation_entity_field_attach_presave(EntityInterface $entity) {
   if (translation_entity_enabled($entity->entityType(), $entity->bundle())) {
     $attributes = drupal_container()->get('request')->attributes;
-    drupal_container()->get('translation_entity.synchronizer')->synchronizeFields($entity, $attributes->get('working_langcode'), $attributes->get('source_langcode'));
+    Drupal::service('translation_entity.synchronizer')->synchronizeFields($entity, $attributes->get('working_langcode'), $attributes->get('source_langcode'));
   }
 }
 

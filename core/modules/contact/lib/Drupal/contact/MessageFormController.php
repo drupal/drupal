@@ -191,7 +191,7 @@ class MessageFormController extends EntityFormController {
       drupal_mail('contact', 'page_autoreply', $sender->mail, $language_interface->langcode, $params);
     }
 
-    drupal_container()->get('flood')->register('contact', config('contact.settings')->get('flood.interval'));
+    \Drupal::service('flood')->register('contact', config('contact.settings')->get('flood.interval'));
     if ($message->category) {
       watchdog('contact', '%sender-name (@sender-from) sent an e-mail regarding %category.', array(
         '%sender-name' => $sender->name,

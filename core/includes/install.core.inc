@@ -374,7 +374,7 @@ function install_begin_request(&$install_state) {
       ))
       ->addMethodCall('setUserAgent', array('Drupal (+http://drupal.org/)'));
 
-    drupal_container($container);
+    Drupal::setContainer($container);
   }
 
   // Set up $language, so t() caller functions will still work.

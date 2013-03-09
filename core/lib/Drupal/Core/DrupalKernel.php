@@ -326,7 +326,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     // Set the class loader which was registered as a synthetic service.
     $this->container->set('class_loader', $this->classLoader);
 
-    drupal_container($this->container);
+    \Drupal::setContainer($this->container);
   }
 
   /**
