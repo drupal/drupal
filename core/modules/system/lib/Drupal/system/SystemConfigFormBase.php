@@ -8,11 +8,40 @@
 namespace Drupal\system;
 
 use Drupal\Core\Form\FormInterface;
+use Drupal\Core\ControllerInterface;
+use Drupal\Core\Config\ConfigFactory;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for implementing system configuration forms.
  */
-abstract class SystemConfigFormBase implements FormInterface {
+abstract class SystemConfigFormBase implements FormInterface, ControllerInterface {
+
+  /**
+   * Stores the configuration factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $configFactory;
+
+  /**
+   * Constructs a \Drupal\system\SystemConfigFormBase object.
+   *
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The factory for configuration objects.
+   */
+  public function __construct(ConfigFactory $config_factory) {
+    $this->configFactory = $config_factory;
+  }
+
+  /**
+   * Implements \Drupal\Core\ControllerInterface::create().
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('config.factory')
+    );
+  }
 
   /**
    * Implements \Drupal\Core\Form\FormInterface::buildForm().

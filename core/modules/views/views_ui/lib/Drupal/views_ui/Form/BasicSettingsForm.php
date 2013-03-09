@@ -7,10 +7,12 @@
 
 namespace Drupal\views_ui\Form;
 
+use Drupal\system\SystemConfigFormBase;
+
 /**
  * Form builder for the admin display defaults page.
  */
-class BasicSettingsForm extends SettingsFormBase {
+class BasicSettingsForm extends SystemConfigFormBase {
 
   /**
    * Implements \Drupal\Core\Form\FormInterface::getFormID().
@@ -25,6 +27,7 @@ class BasicSettingsForm extends SettingsFormBase {
   public function buildForm(array $form, array &$form_state) {
     $form = parent::buildForm($form, $form_state);
 
+    $config = $this->configFactory->get('views.settings');
     $options = array();
     foreach (list_themes() as $name => $theme) {
       if ($theme->status) {
@@ -40,28 +43,28 @@ class BasicSettingsForm extends SettingsFormBase {
       '#type' => 'checkbox',
       '#title' => t('Always show the master display'),
       '#description' => t('Advanced users of views may choose to see the master (i.e. default) display.'),
-      '#default_value' => $this->config->get('ui.show.master_display'),
+      '#default_value' => $config->get('ui.show.master_display'),
     );
 
     $form['basic']['ui_show_advanced_column'] = array(
       '#type' => 'checkbox',
       '#title' => t('Always show advanced display settings'),
       '#description' => t('Default to showing advanced display settings, such as relationships and contextual filters.'),
-      '#default_value' => $this->config->get('ui.show.advanced_column'),
+      '#default_value' => $config->get('ui.show.advanced_column'),
     );
 
     $form['basic']['ui_show_display_embed'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show the embed display in the ui.'),
       '#description' => t('Allow advanced user to use the embed view display. The plugin itself works if it\'s not visible in the ui'),
-      '#default_value' => $this->config->get('ui.show.display_embed'),
+      '#default_value' => $config->get('ui.show.display_embed'),
     );
 
     $form['basic']['ui_exposed_filter_any_label'] = array(
       '#type' => 'select',
       '#title' => t('Label for "Any" value on non-required single-select exposed filters'),
       '#options' => array('old_any' => '<Any>', 'new_any' => t('- Any -')),
-      '#default_value' => $this->config->get('ui.exposed_filter_any_label'),
+      '#default_value' => $config->get('ui.exposed_filter_any_label'),
     );
 
     $form['live_preview'] = array(
@@ -72,13 +75,13 @@ class BasicSettingsForm extends SettingsFormBase {
     $form['live_preview']['ui_always_live_preview'] = array(
       '#type' => 'checkbox',
       '#title' => t('Automatically update preview on changes'),
-      '#default_value' => $this->config->get('ui.always_live_preview'),
+      '#default_value' => $config->get('ui.always_live_preview'),
     );
 
     $form['live_preview']['ui_show_preview_information'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show information and statistics about the view during live preview'),
-      '#default_value' => $this->config->get('ui.show.preview_information'),
+      '#default_value' => $config->get('ui.show.preview_information'),
     );
 
     $form['live_preview']['options'] = array(
@@ -96,25 +99,25 @@ class BasicSettingsForm extends SettingsFormBase {
         'above' => t('Above the preview'),
         'below' => t('Below the preview'),
       ),
-      '#default_value' => $this->config->get('ui.show.sql_query.where'),
+      '#default_value' => $config->get('ui.show.sql_query.where'),
     );
 
     $form['live_preview']['options']['ui_show_sql_query_enabled'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show the SQL query'),
-      '#default_value' => $this->config->get('ui.show.sql_query.enabled'),
+      '#default_value' => $config->get('ui.show.sql_query.enabled'),
     );
     $form['live_preview']['options']['ui_show_performance_statistics'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show performance statistics'),
-      '#default_value' => $this->config->get('ui.show.performance_statistics'),
+      '#default_value' => $config->get('ui.show.performance_statistics'),
     );
 
     $form['live_preview']['options']['ui_show_additional_queries'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show other queries run during render during live preview'),
       '#description' => t("Drupal has the potential to run many queries while a view is being rendered. Checking this box will display every query run during view render as part of the live preview."),
-      '#default_value' => $this->config->get('ui.show.additional_queries'),
+      '#default_value' => $config->get('ui.show.additional_queries'),
     );
 
     return $form;
@@ -124,7 +127,7 @@ class BasicSettingsForm extends SettingsFormBase {
    * Implements \Drupal\Core\Form\FormInterface::submitForm().
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->config
+    $this->configFactory->get('views.settings')
       ->set('ui.show.master_display', $form_state['values']['ui_show_master_display'])
       ->set('ui.show.advanced_column', $form_state['values']['ui_show_advanced_column'])
       ->set('ui.show.display_embed', $form_state['values']['ui_show_display_embed'])

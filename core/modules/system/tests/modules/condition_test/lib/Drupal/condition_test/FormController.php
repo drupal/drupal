@@ -30,12 +30,11 @@ class FormController implements FormInterface {
   }
 
   /**
-   * Provides a simple method the router can fire in order to invoke this form.
+   * Constructs a \Drupal\condition_test\FormController object.
    */
-  public function getForm() {
+  public function __construct() {
     $manager = new ConditionManager(drupal_container()->getParameter('container.namespaces'));
     $this->condition = $manager->createInstance('node_type');
-    return drupal_get_form($this);
   }
 
   /**

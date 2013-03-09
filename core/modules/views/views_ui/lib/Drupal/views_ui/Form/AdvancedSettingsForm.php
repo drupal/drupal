@@ -7,10 +7,12 @@
 
 namespace Drupal\views_ui\Form;
 
+use Drupal\system\SystemConfigFormBase;
+
 /**
  * Form builder for the advanced admin settings page.
  */
-class AdvancedSettingsForm extends SettingsFormBase {
+class AdvancedSettingsForm extends SystemConfigFormBase {
 
   /**
    * Implements \Drupal\Core\Form\FormInterface::getFormID().
@@ -25,6 +27,7 @@ class AdvancedSettingsForm extends SettingsFormBase {
   public function buildForm(array $form, array &$form_state) {
     $form = parent::buildForm($form, $form_state);
 
+    $config = $this->configFactory->get('views.settings');
     $form['cache'] = array(
       '#type' => 'details',
       '#title' => t('Caching'),
@@ -34,7 +37,7 @@ class AdvancedSettingsForm extends SettingsFormBase {
       '#type' => 'checkbox',
       '#title' => t('Disable views data caching'),
       '#description' => t("Views caches data about tables, modules and views available, to increase performance. By checking this box, Views will skip this cache and always rebuild this data when needed. This can have a serious performance impact on your site."),
-      '#default_value' => $this->config->get('skip_cache'),
+      '#default_value' => $config->get('skip_cache'),
     );
 
     $form['cache']['clear_cache'] = array(
@@ -53,14 +56,14 @@ class AdvancedSettingsForm extends SettingsFormBase {
       '#title' => t('Add Views signature to all SQL queries'),
       '#description' => t("All Views-generated queries will include the name of the views and display 'view-name:display-name' as a string  at the end of the SELECT clause. This makes identifying Views queries in database server logs simpler, but should only be used when troubleshooting."),
 
-      '#default_value' => $this->config->get('sql_signature'),
+      '#default_value' => $config->get('sql_signature'),
     );
 
     $form['debug']['no_javascript'] = array(
       '#type' => 'checkbox',
       '#title' => t('Disable JavaScript with Views'),
       '#description' => t("If you are having problems with the JavaScript, you can disable it here. The Views UI should degrade and still be usable without javascript; it's just not as good."),
-      '#default_value' => $this->config->get('no_javascript'),
+      '#default_value' => $config->get('no_javascript'),
     );
 
     $options = views_fetch_plugin_names('display_extender');
@@ -70,7 +73,7 @@ class AdvancedSettingsForm extends SettingsFormBase {
       );
       $form['extenders']['display_extenders'] = array(
         '#title' => t('Display extenders'),
-        '#default_value' => array_filter($this->config->get('display_extenders')),
+        '#default_value' => array_filter($config->get('display_extenders')),
         '#options' => $options,
         '#type' => 'checkboxes',
         '#description' => t('Select extensions of the views interface.')
@@ -84,7 +87,7 @@ class AdvancedSettingsForm extends SettingsFormBase {
    * Implements \Drupal\Core\Form\FormInterface::submitForm().
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->config
+    $this->configFactory->get('views.settings')
       ->set('skip_cache', $form_state['values']['skip_cache'])
       ->set('sql_signature', $form_state['values']['sql_signature'])
       ->set('no_javascript', $form_state['values']['no_javascript'])

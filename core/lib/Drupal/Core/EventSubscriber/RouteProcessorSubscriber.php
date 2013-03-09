@@ -38,8 +38,18 @@ class RouteProcessorSubscriber implements EventSubscriberInterface {
   public function onRequestSetController(GetResponseEvent $event) {
     $request = $event->getRequest();
 
+    // @todo This should all get converted into one or more RouteEnhancers.
     if (!$request->attributes->has('_controller') && $this->negotiation->getContentType($request) === 'html') {
-      $request->attributes->set('_controller', '\Drupal\Core\HtmlPageController::content');
+      if ($request->attributes->has('_form')) {
+        $request->attributes->set('_controller', '\Drupal\Core\HtmlFormController::content');
+      }
+      elseif ($request->attributes->has('_content')) {
+        $request->attributes->set('_controller', '\Drupal\Core\HtmlPageController::content');
+      }
+      else {
+        throw new \InvalidArgumentException('No valid subcontroller key was found');
+      }
+
     }
   }
 

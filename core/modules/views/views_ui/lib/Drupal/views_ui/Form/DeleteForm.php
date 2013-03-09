@@ -16,19 +16,6 @@ use Drupal\views\ViewStorageInterface;
 class DeleteForm implements FormInterface {
 
   /**
-   * Creates a new instance of this form.
-   *
-   * @param \Drupal\views\ViewStorageInterface $view
-   *   The view being acted upon.
-   *
-   * @return array
-   *   The built form array.
-   */
-  public function getForm(ViewStorageInterface $view) {
-    return drupal_get_form($this, $view);
-  }
-
-  /**
    * Implements \Drupal\Core\Form\FormInterface::getFormID().
    */
   public function getFormID() {
