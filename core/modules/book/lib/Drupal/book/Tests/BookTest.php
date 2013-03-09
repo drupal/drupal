@@ -406,5 +406,32 @@ class BookTest extends WebTestBase {
     $this->assertTrue(book_type_is_allowed('bar'), 'Config book.settings:allowed_types contains the updated node type machine name "bar".');
     $this->assertFalse(book_type_is_allowed('book'), 'Config book.settings:allowed_types does not contain the old node type machine name "book".');
   }
-}
 
+  /**
+   * Tests re-ordering of books.
+   */
+  public function testBookOrdering() {
+    // Create new book.
+    $nodes = $this->createBook();
+    $book = $this->book;
+
+    $this->drupalLogin($this->admin_user);
+    $node1 = $this->createBookNode($book->nid);
+    $node2 = $this->createBookNode($book->nid);
+    $plid = $node1->book['mlid'];
+
+    // Head to admin screen and attempt to re-order.
+    $this->drupalGet('admin/content/book/' . $book->nid);
+    $edit = array(
+      "table[book-admin-{$node1->nid}][weight]" => 1,
+      "table[book-admin-{$node2->nid}][weight]" => 2,
+      // Put node 2 under node 1.
+      "table[book-admin-{$node2->nid}][plid]" => $plid,
+    );
+    $this->drupalPost(NULL, $edit, t('Save book pages'));
+    // Verify weight was updated.
+    $this->assertFieldByName("table[book-admin-{$node1->nid}][weight]", 1);
+    $this->assertFieldByName("table[book-admin-{$node2->nid}][weight]", 2);
+    $this->assertFieldByName("table[book-admin-{$node2->nid}][plid]", $plid);
+  }
+}
