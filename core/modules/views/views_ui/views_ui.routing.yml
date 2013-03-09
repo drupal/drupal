@@ -15,14 +15,14 @@ views_ui.add:
 views_ui.settings.basic:
   pattern: '/admin/structure/views/settings'
   defaults:
-    _controller: '\Drupal\views_ui\Form\BasicSettingsForm::getForm'
+    _form: '\Drupal\views_ui\Form\BasicSettingsForm'
   requirements:
     _permission: 'administer views'
 
 views_ui.settings.advanced:
   pattern: '/admin/structure/views/settings/advanced'
   defaults:
-    _controller: '\Drupal\views_ui\Form\AdvancedSettingsForm::getForm'
+    _form: '\Drupal\views_ui\Form\AdvancedSettingsForm'
   requirements:
     _permission: 'administer views'
 
@@ -58,7 +58,7 @@ views_ui.clone:
 views_ui.delete:
   pattern: '/admin/structure/views/view/{view}/delete'
   defaults:
-    _controller: 'Drupal\views_ui\Form\DeleteForm::getForm'
+    _form: 'Drupal\views_ui\Form\DeleteForm'
   requirements:
     _permission: 'administer views'
 
@@ -104,7 +104,7 @@ views_ui.preview:
 views_ui.breakLock:
   pattern: '/admin/structure/views/view/{view}/break-lock'
   defaults:
-    _controller: '\Drupal\views_ui\Form\BreakLockForm::getForm'
+    _form: '\Drupal\views_ui\Form\BreakLockForm'
     display_id: NULL
   requirements:
     _permission: 'administer views'

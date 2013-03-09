@@ -28,16 +28,9 @@ function form_test_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
-  $items['form-test/object-builder'] = array(
-    'title' => 'Form object builder test',
-    'page callback' => 'form_test_object_builder',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
   $items['form-test/system-config-form'] = array(
     'title' => 'Form object builder test',
-    'page callback' => 'form_test_system_config_form',
-    'access callback' => TRUE,
+    'page callback' => 'NOT_USED',
     'type' => MENU_CALLBACK,
   );
   $items['form-test/validate-required'] = array(
@@ -374,20 +367,6 @@ function form_test_permission() {
     ),
   );
   return $perms;
-}
-
-/**
- * Page callback: Displays a form built from an object.
- */
-function form_test_object_builder() {
-  return drupal_get_form(new FormTestObject());
-}
-
-/**
- * Page callback: Displays a form built from SystemConfigForm.
- */
-function form_test_system_config_form() {
-  return drupal_get_form(new SystemConfigFormTestForm());
 }
 
 /**

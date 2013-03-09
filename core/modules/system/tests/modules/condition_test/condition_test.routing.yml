@@ -1,6 +1,6 @@
 condition_test_1:
   pattern: '/condition_test'
   defaults:
-    _controller: '\Drupal\condition_test\FormController::getForm'
+    _form: '\Drupal\condition_test\FormController'
   requirements:
     _access: 'TRUE'
