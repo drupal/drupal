@@ -133,8 +133,10 @@ function simpletest_run_tests($test_list, $reporter = 'drupal') {
     ->execute();
 
   $phpunit_tests = isset($test_list['UnitTest']) ? $test_list['UnitTest'] : array();
-  $phpunit_results = simpletest_run_phpunit_tests($test_id, $phpunit_tests);
-  simpletest_process_phpunit_results($phpunit_results);
+  if ($phpunit_tests) {
+    $phpunit_results = simpletest_run_phpunit_tests($test_id, $phpunit_tests);
+    simpletest_process_phpunit_results($phpunit_results);
+  }
 
   if (!array_key_exists('WebTest', $test_list) || empty($test_list['WebTest'])) {
     // Early return if there are no WebTests to run.
