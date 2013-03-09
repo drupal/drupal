@@ -97,9 +97,9 @@ function hook_editor_default_settings_alter(&$default_settings, $editor) {
  *   The list of format objects for which settings are being added.
  */
 function hook_editor_js_settings_alter(array &$settings, array $formats) {
-  if (isset($formats['filtered_html'])) {
-    $settings['filtered_html']['editor'][] = 'MyDifferentEditor';
-    $settings['filtered_html']['editorSettings']['buttons'] = array('strong', 'italic', 'underline');
+  if (isset($formats['basic_html'])) {
+    $settings['basic_html']['editor'][] = 'MyDifferentEditor';
+    $settings['basic_html']['editorSettings']['buttons'] = array('strong', 'italic', 'underline');
   }
 }
 

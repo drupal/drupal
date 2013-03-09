@@ -7,6 +7,7 @@ dependencies:
   - history
   - block
   - breakpoint
+  - ckeditor
   - color
   - config
   - comment
@@ -15,6 +16,7 @@ dependencies:
   - datetime
   - custom_block
   - edit
+  - editor
   - help
   - image
   - menu

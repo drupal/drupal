@@ -86,7 +86,7 @@ display:
           field: area
           empty: '1'
           content: 'No people available.'
-          format: filtered_html
+          format: plain_text
           plugin_id: text
   page_1:
     display_plugin: page

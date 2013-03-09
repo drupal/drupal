@@ -61,12 +61,12 @@ class SearchCommentTest extends SearchTestBase {
     $instance = field_info_instance('node', 'comment', 'article');
     $instance['settings']['preview'] = DRUPAL_OPTIONAL;
     field_update_instance($instance);
-    // Enable check_plain() for 'Filtered HTML' text format.
-    $filtered_html_format_id = 'filtered_html';
+    // Enable check_plain() for 'Basic HTML' text format.
+    $basic_html_format_id = 'basic_html';
     $edit = array(
       'filters[filter_html_escape][status]' => TRUE,
     );
-    $this->drupalPost('admin/config/content/formats/' . $filtered_html_format_id, $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/content/formats/' . $basic_html_format_id, $edit, t('Save configuration'));
     // Allow anonymous users to search content.
     $edit = array(
       DRUPAL_ANONYMOUS_RID . '[search content]' => 1,
