@@ -28,8 +28,6 @@ class MenuFormController extends EntityFormController {
       '#title' => t('Title'),
       '#default_value' => $menu->label(),
       '#required' => TRUE,
-      // The title of a system menu cannot be altered.
-      '#access' => !isset($system_menus[$menu->id()]),
     );
     $form['id'] = array(
       '#type' => 'machine_name',
