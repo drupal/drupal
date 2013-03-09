@@ -1,0 +1,24 @@
+format: basic_html
+editor: ckeditor
+settings:
+  toolbar:
+    buttons:
+      -
+        - Bold
+        - Italic
+        - '|'
+        - Link
+        - Unlink
+        - '|'
+        - BulletedList
+        - NumberedList
+        - '|'
+        - Blockquote
+        - Image
+        - '|'
+        - Source
+  plugins:
+    stylescombo:
+      styles: ''
+status: '1'
+langcode: und
