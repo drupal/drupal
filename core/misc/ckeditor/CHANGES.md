@@ -1,6 +1,54 @@
 CKEditor 4 Changelog
 ====================
 
+## CKEditor 4.1 RC
+
+* [#9829](http://dev.ckeditor.com/ticket/9829): Data and features activation based on editor configuration.
+
+  Brand new data filtering system that works in 2 modes:
+
+  * based on loaded features (toolbar items, plugins) - the data will be filtered according to what the editor in its
+  current configuration can handle,
+  * based on `config.allowedContent` rules - the data will be filtered and the editor features (toolbar items, commands,
+  keystrokes) will be enabled if they are allowed.
+
+  See the `datafiltering.html` sample, [guides](http://docs.ckeditor.com/#!/guide/dev_data_filter) and [`CKEDITOR.filter` API documentation](http://docs.ckeditor.com/#!/api/CKEDITOR.filter).
+* [#9387](http://dev.ckeditor.com/ticket/9387): Reintroduced "Shared Spaces" - the ability to display toolbar and bottom editor space in selected locations and to share them by different editor instances.
+* [#9907](http://dev.ckeditor.com/ticket/9907): Added the `contentPreview` event for preview data manipulation.
+* [#9713](http://dev.ckeditor.com/ticket/9713): Introduced the `sourcedialog` plugin that brings raw HTML editing for inline editor instances.
+* Included in [#9829](http://dev.ckeditor.com/ticket/9829): Introduced new events, `toHtml` and `toDataFormat`, allowing for better integration with data processing. See API documentation: [`toHtml`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-event-toHtml), [`toDataFormat`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-event-toDataFormat).
+* [#9981](http://dev.ckeditor.com/ticket/9981): Added ability to filter `htmlParser.fragment`, `htmlParser.element` etc. by many `htmlParser.filter`s before writing structure to an HTML string.
+* Included in [#10103](http://dev.ckeditor.com/ticket/10103):
+  * Introduced the `editor.status` property to make it easier to check the current status of the editor. See [API documentation](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-property-status).
+  * Default `command` state is now `CKEDITOR.TRISTATE_DISABLE`. It will be activated on `editor.instanceReady` or immediately after being added if the editor is already initialized.
+* [#9796](http://dev.ckeditor.com/ticket/9796): Introduced `<s>` as a default tag for strikethrough, which replaces obsolete `<strike>` in HTML5.
+
+## CKEditor 4.0.2
+
+* [#9779](http://dev.ckeditor.com/ticket/9779): Fixed overriding `CKEDITOR.getUrl` with `CKEDITOR_GETURL`.
+* [#9772](http://dev.ckeditor.com/ticket/9772): Custom buttons in dialog window footer have different look and size (Moono, Kama).
+* [#9029](http://dev.ckeditor.com/ticket/9029): Custom styles added with `styleSet.add()` are displayed in wrong order.
+* [#9887](http://dev.ckeditor.com/ticket/9887): Disable magicline when `editor.readOnly` is set.
+* [#9882](http://dev.ckeditor.com/ticket/9882): Fixed empty document title on `getData()` if set via the Document Properties dialog window.
+* [#9773](http://dev.ckeditor.com/ticket/9773): Fixed rendering problems with selection fields in the Kama skin.
+* [#9851](http://dev.ckeditor.com/ticket/9851): The `selectionChange` event is not fired when mouse selection ended outside editable.
+* [#9903](http://dev.ckeditor.com/ticket/9903): [Inline editor] Bad positioning of floating space with page horizontal scroll.
+* [#9872](http://dev.ckeditor.com/ticket/9872): `editor.checkDirty()` returns `true` when called onload. Removed the obsolete `editor.mayBeDirty` flag.
+* [#9893](http://dev.ckeditor.com/ticket/9893): Fixed broken toolbar when editing mixed direction content in Quirks mode.
+* [#9845](http://dev.ckeditor.com/ticket/9845): Fixed TAB navigation in the Link dialog window when the Anchor option is used and no anchors are available.
+* [#9883](http://dev.ckeditor.com/ticket/9883): Maximizing was making the entire page editable with divarea-based editors.
+* [#9940](http://dev.ckeditor.com/ticket/9940): [Firefox] Navigating back to a page with the editor was making the entire page editable.
+* [#9966](http://dev.ckeditor.com/ticket/9966): Fixed: Unable to type square brackets with French keyboard layout. Changed magicline keystrokes.
+* [#9507](http://dev.ckeditor.com/ticket/9507): [Firefox] Selection is moved before editable position when the editor is focused for the first time.
+* [#9947](http://dev.ckeditor.com/ticket/9947): [Webkit] Editor overflows parent container in some edge cases.
+* [#10105](http://dev.ckeditor.com/ticket/10105): Fixed: Broken sourcearea view when an RTL language is set.
+* [#10123](http://dev.ckeditor.com/ticket/10123): [Webkit] Fixed: Several dialog windows have broken layout since the latest Webkit release.
+* [#10152](http://dev.ckeditor.com/ticket/10152): Fixed: Invalid ARIA property used on menu items.
+
+## CKEditor 4.0.1.1
+
+* Security update: Added protection against XSS attack and possible path disclosure in PHP sample.
+
 ## CKEditor 4.0.1
 
 Fixed issues:
@@ -53,4 +101,4 @@ The CKEditor JavaScript API has been kept compatible with CKEditor 4, whenever
 possible. The list of relevant changes can be found in the [API Changes page of
 the CKEditor 4 documentation][1].
 
-[1]: http://docs.ckeditor.com/#!/guide/dev_api_changes "API Changes""
+[1]: http://docs.ckeditor.com/#!/guide/dev_api_changes "API Changes"

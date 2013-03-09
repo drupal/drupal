@@ -1,17 +1,13 @@
-﻿
-/**
- * @license Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
- * For licensing, see LICENSE.html or http://ckeditor.com/license
- */
-
-/**
+﻿/**
  * This is a Drupal-optimized build of CKEditor.
  *
  * At the time of writing, this build is identical to the "standard" build of
- * CKEditor, includes all languages, and excludes the "placeholder" plugin.
+ * CKEditor, includes all languages, excludes the "placeholder" and includes the
+ * "sourcedialog" plugin.
  *
  * You may re-use it at any time at http://ckeditor.com/builder to build
- * CKEditor again.
+ * CKEditor again. Alternatively, use the "build.sh" script to build it locally.
+ * If you do so, be sure to pass it the "-s" flag. So: "sh build.sh -s".
  *
  * NOTE:
  *    This file is not used by CKEditor, you may remove it.
@@ -21,21 +17,18 @@
 var CKBUILDER_CONFIG = {
 	skin: 'moono',
 	ignore: [
+		// CKEditor repository structure: unrelated to the usage of CKEditor itself.
 		'dev',
+		'.mailmap',
 		'.gitignore',
 		'.gitattributes',
+		// Parts of CKEditor that we consciously don't ship with Drupal.
 		'README.md',
-		'.mailmap',
 		'config.js',
 		'contents.css',
-		/**
-		  * A bug requires us to include this file.
-		  *
-		  * Will be fixed at http://dev.ckeditor.com/ticket/9992#comment:4.
-		  *
 		'styles.js',
-		  */
-		'samples'
+		'samples',
+		'skins/moono/readme.md'
 	],
 	plugins : {
 		'about' : 1,
@@ -86,11 +79,15 @@ var CKBUILDER_CONFIG = {
 		'showborders' : 1,
 		'tableresize' : 1,
 		'sharedspace' : 1,
-		'widget' : 1,
-		'widgetblockquote' : 1,
-		'widgetcaption' : 1,
-		'widgettime' : 1,
-		'widgetvideo' : 1
+		'sourcedialog' : 1
+		// @todo D8: CKEditor Widgets is not available in 4.1 RC, and we're not yet
+		// using this, so it's commented out for now. However, it will be readded in
+		// the nearby future.
+		// 'widget' : 1,
+		// 'widgetblockquote' : 1,
+		// 'widgetcaption' : 1,
+		// 'widgettime' : 1,
+		// 'widgetvideo' : 1
 	},
 	languages : {
 		'af' : 1,

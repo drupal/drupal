@@ -45,14 +45,8 @@ class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurab
    */
   public function getConfig(Editor $editor) {
     $config = array();
-
-    // Next, add the stylesSet setting, if its button is enabled.
-    $toolbar_buttons = array_unique(NestedArray::mergeDeepArray($editor->settings['toolbar']['buttons']));
-    if (in_array('Styles', $toolbar_buttons)) {
-      $styles = $editor->settings['plugins']['stylescombo']['styles'];
-      $config['stylesSet'] = $this->generateStylesSetSetting($styles);
-    }
-
+    $styles = $editor->settings['plugins']['stylescombo']['styles'];
+    $config['stylesSet'] = $this->generateStylesSetSetting($styles);
     return $config;
   }
 

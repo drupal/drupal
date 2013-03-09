@@ -80,6 +80,7 @@ class CKEditorTest extends DrupalUnitTestBase {
       'contentsCss' => $this->getDefaultContentsCssConfig(),
       'extraPlugins' => '',
       'language' => 'en',
+      'stylesSet' => FALSE,
       'drupalExternalPlugins' => array(),
     );
     $this->assertIdentical($expected_config, $this->ckeditor->getJSSettings($editor), 'Generated JS settings are correct for default configuration.');
@@ -181,10 +182,6 @@ class CKEditorTest extends DrupalUnitTestBase {
     $manager = drupal_container()->get('plugin.manager.ckeditor.plugin');
     $stylescombo_plugin = $manager->createInstance('stylescombo');
 
-    // Default toolbar.
-    $expected = $this->getDefaultStylesComboConfig();
-    $this->assertIdentical($expected, $stylescombo_plugin->getConfig($editor), '"StylesCombo" plugin configuration built correctly for default toolbar.');
-
     // Styles dropdown/button enabled: new setting should be present.
     $editor->settings['toolbar']['buttons'][0][] = 'Styles';
     $editor->settings['plugins']['stylescombo']['styles'] = '';
@@ -231,10 +228,6 @@ class CKEditorTest extends DrupalUnitTestBase {
       'resize_dir' => 'vertical',
       'keystrokes' =>  array(array(0x110000 + 75, 'link'), array(0x110000 + 76, NULL)),
     );
-  }
-
-  protected function getDefaultStylesComboConfig() {
-    return array();
   }
 
   protected function getDefaultToolbarConfig() {
