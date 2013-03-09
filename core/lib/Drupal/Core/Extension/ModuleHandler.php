@@ -234,6 +234,8 @@ class ModuleHandler implements ModuleHandlerInterface {
     $this->hookInfo = array();
     // We can't use $this->invokeAll() here or it would cause an infinite
     // loop.
+    // Make sure that the modules are loaded before checking.
+    $this->reload();
     foreach ($this->moduleList as $module => $filename) {
       $function = $module . '_hook_info';
       if (function_exists($function)) {

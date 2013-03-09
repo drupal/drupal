@@ -2058,6 +2058,8 @@ function system_update_8046() {
 
     // This does not fire a hook just calls views.
     config_install_default_config('module', 'views');
+    // This imports the node frontpage view.
+    config_install_default_config('module', 'node');
   }
 }
 

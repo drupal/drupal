@@ -19,7 +19,7 @@ class LocalePathTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'locale', 'path');
+  public static $modules = array('node', 'locale', 'path', 'views');
 
   public static function getInfo() {
     return array(

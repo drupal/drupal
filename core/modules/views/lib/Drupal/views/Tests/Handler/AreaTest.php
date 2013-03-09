@@ -175,7 +175,7 @@ class AreaTest extends HandlerTestBase {
 
     $view->storage->enable()->save();
 
-    $this->drupalGet('frontpage');
+    $this->drupalGet('node');
     $this->assertText('Overridden title', 'Overridden title found.');
   }
 

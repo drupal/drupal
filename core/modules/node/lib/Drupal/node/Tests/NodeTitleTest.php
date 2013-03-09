@@ -17,7 +17,7 @@ class NodeTitleTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('comment');
+  public static $modules = array('comment', 'views');
 
   protected $admin_user;
 

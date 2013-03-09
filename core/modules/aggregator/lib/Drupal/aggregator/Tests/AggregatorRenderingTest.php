@@ -17,7 +17,7 @@ class AggregatorRenderingTest extends AggregatorTestBase {
    *
    * @var array
    */
-  public static $modules = array('block');
+  public static $modules = array('block', 'test_page_test');
 
   public static function getInfo() {
     return array(
@@ -53,7 +53,7 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     $block = $this->drupalPlaceBlock("aggregator_feed_block:{$feed->id()}", array('label' => 'feed-' . $feed->label()), array('block_count' => 2));
 
     // Confirm that the block is now being displayed on pages.
-    $this->drupalGet('node');
+    $this->drupalGet('test-page');
     $this->assertText($block->label(), 'Feed block is displayed on the page.');
 
     // Find the expected read_more link.
@@ -71,7 +71,7 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     $feed->block = 0;
     $feed->save();
     // Check that the block is no longer displayed.
-    $this->drupalGet('node');
+    $this->drupalGet('test-page');
     $this->assertNoText($block->label(), 'Feed block is not displayed on the page when number of items is set to 0.');
   }
 

@@ -391,6 +391,14 @@ function node_views_data() {
     ),
   );
 
+  $data['node']['node_listing_empty'] = array(
+    'title' => t('Empty Node Frontpage behavior'),
+    'help' => t('Provides a link to the node add overview page.'),
+    'area' => array(
+      'id' => 'node_listing_empty',
+    ),
+  );
+
   $data['node']['uid_revision'] = array(
     'title' => t('User has a revision'),
     'help' => t('All nodes where a certain user has a revision'),

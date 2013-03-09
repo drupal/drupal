@@ -12,6 +12,13 @@ namespace Drupal\node\Tests;
  */
 class NodeLoadMultipleTest extends NodeTestBase {
 
+  /**
+   * Enable Views to test the frontpage against node_load_multiple() results.
+   *
+   * @var array
+   */
+  public static $modules = array('views');
+
   public static function getInfo() {
     return array(
       'name' => 'Load multiple nodes',
