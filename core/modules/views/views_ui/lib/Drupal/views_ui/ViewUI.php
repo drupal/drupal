@@ -237,7 +237,10 @@ class ViewUI implements ViewStorageInterface {
       $submit_handler = array($form_state['build_info']['callback_object'], 'submitForm');
     }
     if (is_callable($submit_handler)) {
-      call_user_func($submit_handler, $form, $form_state);
+      // The submit handler might be a function or a method on the
+      // callback_object. Additional note that we have to pass the parameters
+      // by reference, as php 5.4 requires us to do that.
+      call_user_func_array($submit_handler, array(&$form, &$form_state));
     }
   }
 
