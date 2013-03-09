@@ -42,7 +42,7 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
       '#type' => 'textfield',
       '#title' => t('Placeholder'),
       '#default_value' => $this->getSetting('placeholder'),
-      '#description' => t('The placeholder is a short hint (a word or short phrase) intended to aid the user with data entry. A hint could be a sample value or a brief description of the expected format.'),
+      '#description' => t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),
     );
 
 
