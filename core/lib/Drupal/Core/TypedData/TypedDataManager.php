@@ -8,6 +8,7 @@
 namespace Drupal\Core\TypedData;
 
 use InvalidArgumentException;
+use Drupal\Component\Plugin\Discovery\ProcessDecorator;
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
 use Drupal\Core\Plugin\Discovery\HookDiscovery;
@@ -37,6 +38,17 @@ class TypedDataManager extends PluginManagerBase {
   protected $constraintManager;
 
   /**
+   * Type definition defaults which are merged in by the ProcessDecorator.
+   *
+   * @see \Drupal\Component\Plugin\PluginManagerBase::processDefinition()
+   *
+   * @var array
+   */
+  protected $defaults = array(
+    'list class' => '\Drupal\Core\TypedData\ItemList',
+  );
+
+  /**
    * An array of typed data property prototypes.
    *
    * @var array
@@ -44,7 +56,10 @@ class TypedDataManager extends PluginManagerBase {
   protected $prototypes = array();
 
   public function __construct() {
-    $this->discovery = new CacheDecorator(new HookDiscovery('data_type_info'), 'typed_data:types');
+    $this->discovery = new HookDiscovery('data_type_info');
+    $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
+    $this->discovery = new CacheDecorator($this->discovery, 'typed_data:types');
+
     $this->factory = new TypedDataFactory($this->discovery);
   }
 
@@ -191,14 +206,21 @@ class TypedDataManager extends PluginManagerBase {
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
    */
   public function getPropertyInstance(ContextAwareInterface $object, $property_name, $value = NULL) {
-    $key = $object->getRoot()->getType() . ':' . $object->getPropertyPath() . '.';
-    // If we are creating list items, we always use 0 in the key as all list
-    // items look the same.
-    $key .= is_numeric($property_name) ? 0 : $property_name;
+    if ($root = $object->getRoot()) {
+      $key = $root->getType() . ':' . $object->getPropertyPath() . '.';
+      // If we are creating list items, we always use 0 in the key as all list
+      // items look the same.
+      $key .= is_numeric($property_name) ? 0 : $property_name;
+    }
+    else {
+      // Missing context, thus we cannot determine a unique key for prototyping.
+      // Fall back to create a new prototype on each call.
+      $key = FALSE;
+    }
 
     // Make sure we have a prototype. Then, clone the prototype and set object
     // specific values, i.e. the value and the context.
-    if (!isset($this->prototypes[$key])) {
+    if (!isset($this->prototypes[$key]) || !$key) {
       // Create the initial prototype. For that we need to fetch the definition
       // of the to be created property instance from the parent.
       if ($object instanceof ComplexDataInterface) {

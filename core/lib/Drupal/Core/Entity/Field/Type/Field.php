@@ -10,11 +10,7 @@ namespace Drupal\Core\Entity\Field\Type;
 use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\user\Plugin\Core\Entity\User;
 use Drupal\Core\TypedData\ContextAwareInterface;
-use Drupal\Core\TypedData\ContextAwareTypedData;
-use Drupal\Core\TypedData\TypedDataInterface;
-use ArrayIterator;
-use IteratorAggregate;
-use InvalidArgumentException;
+use Drupal\Core\TypedData\ItemList;
 
 /**
  * Represents an entity field; that is, a list of field item objects.
@@ -27,7 +23,7 @@ use InvalidArgumentException;
  *
  * @see \Drupal\Core\Entity\Field\FieldInterface
  */
-class Field extends ContextAwareTypedData implements IteratorAggregate, FieldInterface {
+class Field extends ItemList implements FieldInterface {
 
   /**
    * Numerically indexed array of field items, implementing the
@@ -50,7 +46,7 @@ class Field extends ContextAwareTypedData implements IteratorAggregate, FieldInt
   }
 
   /**
-   * Overrides \Drupal\Core\TypedData\TypedData::getValue().
+   * Overrides \Drupal\Core\TypedData\ItemList::getValue().
    */
   public function getValue() {
     if (isset($this->list)) {
@@ -68,10 +64,7 @@ class Field extends ContextAwareTypedData implements IteratorAggregate, FieldInt
   }
 
   /**
-   * Overrides \Drupal\Core\TypedData\TypedData::setValue().
-   *
-   * @param array|null $values
-   *   An array of values of the field items, or NULL to unset the field.
+   * Overrides \Drupal\Core\TypedData\ItemList::setValue().
    */
   public function setValue($values) {
     if (!isset($values) || $values === array()) {
@@ -91,7 +84,7 @@ class Field extends ContextAwareTypedData implements IteratorAggregate, FieldInt
       // Set the values.
       foreach ($values as $delta => $value) {
         if (!is_numeric($delta)) {
-          throw new InvalidArgumentException('Unable to set a value with a non-numeric delta in a list.');
+          throw new \InvalidArgumentException('Unable to set a value with a non-numeric delta in a list.');
         }
         elseif (!isset($this->list[$delta])) {
           $this->list[$delta] = $this->createItem($delta, $value);
@@ -101,111 +94,6 @@ class Field extends ContextAwareTypedData implements IteratorAggregate, FieldInt
         }
       }
     }
-  }
-
-  /**
-   * Overrides \Drupal\Core\TypedData\TypedData::getString().
-   */
-  public function getString() {
-    $strings = array();
-    if (isset($this->list)) {
-      foreach ($this->list as $item) {
-        $strings[] = $item->getString();
-      }
-      return implode(', ', array_filter($strings));
-    }
-  }
-
-  /**
-   * Overrides \Drupal\Core\TypedData\TypedData::getConstraints().
-   */
-  public function getConstraints() {
-    // Apply the constraints to the list items only.
-    return array();
-  }
-
-  /**
-   * Implements \ArrayAccess::offsetExists().
-   */
-  public function offsetExists($offset) {
-    return isset($this->list) && array_key_exists($offset, $this->list);
-  }
-
-  /**
-   * Implements \ArrayAccess::offsetUnset().
-   */
-  public function offsetUnset($offset) {
-    if (isset($this->list)) {
-      unset($this->list[$offset]);
-    }
-  }
-
-  /**
-   * Implements \ArrayAccess::offsetGet().
-   */
-  public function offsetGet($offset) {
-    if (!is_numeric($offset)) {
-      throw new InvalidArgumentException('Unable to get a value with a non-numeric delta in a list.');
-    }
-    // Allow getting not yet existing items as well.
-    // @todo: Maybe add a public createItem() method in addition?
-    elseif (!isset($this->list[$offset])) {
-      $this->list[$offset] = $this->createItem($offset);
-    }
-    return $this->list[$offset];
-  }
-
-  /**
-   * Helper for creating a list item object.
-   *
-   * @return \Drupal\Core\TypedData\TypedDataInterface
-   */
-  protected function createItem($offset = 0, $value = NULL) {
-    return typed_data()->getPropertyInstance($this, $offset, $value);
-  }
-
-  /**
-   * Implements \Drupal\Core\TypedData\ListInterface::getItemDefinition().
-   */
-  public function getItemDefinition() {
-    return array('list' => FALSE) + $this->definition;
-  }
-
-  /**
-   * Implements \ArrayAccess::offsetSet().
-   */
-  public function offsetSet($offset, $value) {
-    if (!isset($offset)) {
-      // The [] operator has been used so point at a new entry.
-      $offset = $this->list ? max(array_keys($this->list)) + 1 : 0;
-    }
-    if (is_numeric($offset)) {
-      // Support setting values via typed data objects.
-      if ($value instanceof TypedDataInterface) {
-        $value = $value->getValue();
-      }
-      $this->offsetGet($offset)->setValue($value);
-    }
-    else {
-      throw new InvalidArgumentException('Unable to set a value with a non-numeric delta in a list.');
-    }
-  }
-
-  /**
-   * Implements \IteratorAggregate::getIterator().
-   */
-  public function getIterator() {
-    if (isset($this->list)) {
-      return new ArrayIterator($this->list);
-    }
-    return new ArrayIterator(array());
-  }
-
-  /**
-   * Implements \Countable::count().
-   */
-  public function count() {
-    return isset($this->list) ? count($this->list) : 0;
   }
 
   /**
@@ -255,34 +143,6 @@ class Field extends ContextAwareTypedData implements IteratorAggregate, FieldInt
    */
   public function __unset($property_name) {
     return $this->offsetGet(0)->__unset($property_name);
-  }
-
-  /**
-   * Implements \Drupal\Core\TypedData\ListInterface::isEmpty().
-   */
-  public function isEmpty() {
-    if (isset($this->list)) {
-      foreach ($this->list as $item) {
-        if (!$item->isEmpty()) {
-          return FALSE;
-        }
-      }
-    }
-    return TRUE;
-  }
-
-  /**
-   * Magic method: Implements a deep clone.
-   */
-  public function __clone() {
-    if (isset($this->list)) {
-      foreach ($this->list as $delta => $item) {
-        $this->list[$delta] = clone $item;
-        if ($item instanceof ContextAwareInterface) {
-          $this->list[$delta]->setContext($delta, $this);
-        }
-      }
-    }
   }
 
   /**
