@@ -3,9 +3,9 @@
  * CSS for the Locale module for right-to-left languages.
  */
 
-.locale-translate-filter-form .form-item-language,
+.locale-translate-filter-form .form-item-langcode,
 .locale-translate-filter-form .form-item-translation,
-.locale-translate-filter-form .form-item-group {
+.locale-translate-filter-form .form-item-customized {
   float: right;
   margin-left: 1em;
   margin-right: 0;
