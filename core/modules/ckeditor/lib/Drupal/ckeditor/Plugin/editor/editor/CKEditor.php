@@ -125,6 +125,12 @@ class CKEditor extends EditorBase {
       'contentsCss' => $this->buildContentsCssJSSetting($editor),
       'extraPlugins' => implode(',', array_keys($external_plugins)),
       'language' => $language_interface->langcode,
+      // Configure CKEditor to not load styles.js. The StylesCombo plugin will
+      // set stylesSet according to the user's settings, if the "Styles" button
+      // is enabled. We cannot get rid of this until CKEditor will stop loading
+      // styles.js by default.
+      // See http://dev.ckeditor.com/ticket/9992#comment:9.
+      'stylesSet' => FALSE,
     );
 
     // Finally, set Drupal-specific CKEditor settings.
