@@ -5,6 +5,8 @@
  * API for the Drupal menu system.
  */
 
+use Symfony\Component\HttpFoundation\Request;
+
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Template\Attribute;
@@ -896,7 +898,11 @@ function _menu_link_translate(&$item, $translate = FALSE) {
     }
     // menu_tree_check_access() may set this ahead of time for links to nodes.
     if (!isset($item['access'])) {
-      if (!empty($item['load_functions']) && !_menu_load_objects($item, $map)) {
+      if ($route = $item->getRoute()) {
+        $request = Request::create('/' . $item['path']);
+        $item['access'] = drupal_container()->get('access_manager')->check($route, $request);
+      }
+      elseif (!empty($item['load_functions']) && !_menu_load_objects($item, $map)) {
         // An error occurred loading an object.
         $item['access'] = FALSE;
         return FALSE;
@@ -2642,6 +2648,17 @@ function menu_router_build() {
     $router_items = call_user_func($module . '_menu');
     if (isset($router_items) && is_array($router_items)) {
       foreach (array_keys($router_items) as $path) {
+        // If the menu item references a route, normalize the route information
+        // into the old structure. Note that routes are keyed by name, not path,
+        // so the path of the route takes precedence.
+        if (isset($router_items[$path]['route_name'])) {
+          $router_item = $router_items[$path];
+          $router_item = _menu_router_merge_route($router_item, $path);
+          $new_path = $router_item['path'];
+          unset($router_items[$path]);
+          $router_items[$new_path] = $router_item;
+          $path = $new_path;
+        }
         $router_items[$path]['module'] = $module;
       }
       $callbacks = array_merge($callbacks, $router_items);
@@ -2653,6 +2670,33 @@ function menu_router_build() {
   _menu_router_cache($menu);
 
   return array($menu, $masks);
+}
+
+/**
+ * Merges a legacy menu router item with its referenced route.
+ *
+ * @param array $router_item
+ *   The router item to modify.
+ * @param string $path
+ *   The path this router item is for.
+ *
+ * @return array
+ *   The modified router item, including the path pattern from the route in the
+ *   'path' key.
+ */
+function _menu_router_merge_route(array $router_item, $path) {
+  $router_item['path'] = $path;
+
+  $route_provider = drupal_container()->get('router.route_provider');
+
+  $route = $route_provider->getRouteByName($router_item['route_name']);
+  $router_item['path'] = trim($route->getPattern(), '/');
+
+  $router_item['page callback'] = 'USES_ROUTE';
+  $router_item['access callback'] = TRUE;
+
+
+  return $router_item;
 }
 
 /**

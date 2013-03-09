@@ -875,29 +875,6 @@ function user_register_access() {
  * Implements hook_menu().
  */
 function user_menu() {
-  // @todo Remove once drupal_valid_path() is fixed to find and access check
-  //   paths managed by the new routing system: http://drupal.org/node/1793520.
-  $items['user/autocomplete'] = array(
-    'title' => 'User autocomplete',
-    // _menu_router_build() denies access to paths without a page callback.
-    'page callback' => 'NOT_USED',
-    'access callback' => 'user_access',
-    'access arguments' => array('access user profiles'),
-    'type' => MENU_CALLBACK,
-    'file' => 'user.pages.inc',
-  );
-
-  $items['user/autocomplete/anonymous'] = array(
-    'title' => 'User autocomplete including anonymous',
-    // _menu_router_build() denies access to paths without a page callback.
-    'page callback' => 'NOT_USED',
-    'page arguments' => array(TRUE),
-    'access callback' => 'user_access',
-    'access arguments' => array('access user profiles'),
-    'type' => MENU_CALLBACK,
-    'file' => 'user.pages.inc',
-  );
-
   // Registration and login pages.
   $items['user'] = array(
     'title' => 'User account',
@@ -923,13 +900,7 @@ function user_menu() {
   $items['user/register'] = array(
     'title' => 'Create new account',
     'type' => MENU_LOCAL_TASK,
-    // @todo This route is now declared in user.routing.yml, so the below are
-    //   only needed for drupal_valid_path(). Without a non-empty (but not
-    //   necessarily valid) page callback, _menu_router_build() overrides the
-    //   access callback to 0. Remove once drupal_valid_path works with the new
-    //   routing system: http://drupal.org/node/1793520.
-    'page callback' => 'NOT_USED',
-    'access callback' => 'user_register_access',
+    'route_name' => 'user_register',
   );
 
   $items['user/password'] = array(

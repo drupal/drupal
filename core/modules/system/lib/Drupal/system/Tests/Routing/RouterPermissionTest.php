@@ -33,7 +33,6 @@ class RouterPermissionTest extends WebTestBase {
    * Tests permission requirements on routes.
    */
   public function testPermissionAccess() {
-
     $this->drupalGet('router_test/test7');
     $this->assertResponse(403, "Access denied for a route where we don't have a permission");
 

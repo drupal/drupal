@@ -62,11 +62,27 @@ class MenuLinkStorageController extends DatabaseStorageController {
    * control the entity load hooks.
    */
   protected function attachLoad(&$menu_links, $load_revision = FALSE) {
+    $routes = array();
+
     foreach ($menu_links as &$menu_link) {
       $menu_link->options = unserialize($menu_link->options);
 
       // Use the weight property from the menu link.
       $menu_link->router_item['weight'] = $menu_link->weight;
+
+      // For all links that have an associated route, load the route object now
+      // and save it on the object. That way we avoid a select N+1 problem later.
+      if ($menu_link->route_name) {
+        $routes[$menu_link->id()] = $menu_link->route_name;
+      }
+    }
+
+    // Now mass-load any routes needed and associate them.
+    if ($routes) {
+      $route_objects = drupal_container()->get('router.route_provider')->getRoutesByNames($routes);
+      foreach ($routes as $entity_id => $route) {
+        $menu_links[$entity_id]->setRouteObject($route_objects[$route]);
+      }
     }
 
     parent::attachLoad($menu_links, $load_revision);

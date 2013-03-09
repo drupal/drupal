@@ -166,14 +166,20 @@ class RouteProvider implements RouteProviderInterface {
    */
   public function getRoutesByNames($names, $parameters = array()) {
 
+    if (empty($names)) {
+      throw new \InvalidArgumentException('You must specify the route names to load');
+    }
+
     $routes_to_load = array_diff($names, array_keys($this->routes));
 
-    $result = $this->connection->query('SELECT name, route FROM {' . $this->connection->escapeTable($this->tableName) . '} WHERE name IN (:names)', array(':names' => $routes_to_load));
-    $routes = $result->fetchAllKeyed();
+    if ($routes_to_load) {
+      $result = $this->connection->query('SELECT name, route FROM {' . $this->connection->escapeTable($this->tableName) . '} WHERE name IN (:names)', array(':names' => $routes_to_load));
+      $routes = $result->fetchAllKeyed();
 
-    $return = array();
-    foreach ($routes as $name => $route) {
-      $this->routes[$name] = unserialize($route);
+      $return = array();
+      foreach ($routes as $name => $route) {
+        $this->routes[$name] = unserialize($route);
+      }
     }
 
     return array_intersect_key($this->routes, array_flip($names));

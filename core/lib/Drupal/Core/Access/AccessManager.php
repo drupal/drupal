@@ -32,23 +32,6 @@ class AccessManager extends ContainerAware {
   protected $checks;
 
   /**
-   * The request object.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $request;
-
-  /**
-   * Constructs a new AccessManager.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   */
-  public function __construct(Request $request) {
-    $this->request = $request;
-  }
-
-  /**
    * Registers a new AccessCheck by service ID.
    *
    * @param string $service_id
@@ -106,11 +89,13 @@ class AccessManager extends ContainerAware {
    *
    * @param \Symfony\Component\Routing\Route $route
    *   The route to check access to.
+   * @param \Symfony\Commponent\HttpFoundation\Request $request
+   *   The incoming request object.
    *
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    *   If any access check denies access or none explicitly approve.
    */
-  public function check(Route $route) {
+  public function check(Route $route, Request $request) {
     $access = FALSE;
     $checks = $route->getOption('_access_checks') ?: array();
 
@@ -120,7 +105,7 @@ class AccessManager extends ContainerAware {
         $this->loadCheck($service_id);
       }
 
-      $service_access = $this->checks[$service_id]->access($route, $this->request);
+      $service_access = $this->checks[$service_id]->access($route, $request);
       if ($service_access === FALSE) {
         // A check has denied access, no need to continue checking.
         $access = FALSE;
@@ -132,10 +117,7 @@ class AccessManager extends ContainerAware {
       }
     }
 
-    // Access has been denied or not explicily approved.
-    if (!$access) {
-      throw new AccessDeniedHttpException();
-    }
+    return $access;
   }
 
   /**

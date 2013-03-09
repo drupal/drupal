@@ -256,7 +256,6 @@ class CoreBundle extends Bundle {
     $container->register('legacy_access_subscriber', 'Drupal\Core\EventSubscriber\LegacyAccessSubscriber')
       ->addTag('event_subscriber');
     $container->register('access_manager', 'Drupal\Core\Access\AccessManager')
-      ->addArgument(new Reference('request'))
       ->addMethodCall('setContainer', array(new Reference('service_container')));
     $container->register('access_subscriber', 'Drupal\Core\EventSubscriber\AccessSubscriber')
       ->addArgument(new Reference('access_manager'))

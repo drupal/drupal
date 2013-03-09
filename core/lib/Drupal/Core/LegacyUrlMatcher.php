@@ -158,7 +158,7 @@ class LegacyUrlMatcher implements RequestMatcherInterface, RequestContextAwareIn
 
     // A few menu items have a fake page callback temporarily. Skip those,
     // we aren't going to route them.
-    if ($router_item['page_callback'] == 'NOT_USED') {
+    if ($router_item['page_callback'] == 'USES_ROUTE') {
       throw new ResourceNotFoundException();
     }
 
