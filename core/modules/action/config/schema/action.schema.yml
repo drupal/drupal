@@ -1,0 +1,9 @@
+# Schema for the configuration files of the Action module.
+
+action.settings:
+  type: mapping
+  label: 'Action settings'
+  mapping:
+    recursion_limit:
+      type: integer
+      label: 'Recursion limit for actions'
