@@ -50,7 +50,7 @@ Drupal.behaviors.formUpdated = {
     $(context)
       // Since context could be an input element itself, it's added back to
       // the jQuery object and filtered again.
-      .find(':input').andSelf().filter(':input')
+      .find(':input').addBack().filter(':input')
       // To prevent duplicate events, the handlers are first removed and then
       // (re-)added.
       .unbind(events).bind(events, function () {
