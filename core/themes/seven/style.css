@@ -185,7 +185,7 @@ pre {
 .breadcrumb {
   font-size: 0.846em;
   line-height: 1em;
-  padding: 0;
+  padding: 0 0 10px 0;
 }
 
 /**
@@ -1023,7 +1023,7 @@ h1#overlay-title {
 /* Shortcut theming */
 div.add-or-remove-shortcuts {
   float: left; /* LTR */
-  padding-top: 6px;
+  padding-top: 0;
   padding-left: 6px; /* LTR */
 }
 
