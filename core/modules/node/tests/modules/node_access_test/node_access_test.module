@@ -241,7 +241,8 @@ function _node_access_test_node_write(Node $node) {
  * Implements hook_node_access().
  */
 function node_access_test_node_access($node, $op, $account, $langcode) {
-  if (variable_get('node_access_test_secret_catalan', 0) && $langcode == 'ca') {
+  $secret_catalan = state()->get('node_access_test_secret_catalan') ?: 0;
+  if ($secret_catalan && $langcode == 'ca') {
     // Make all Catalan content secret.
     return NODE_ACCESS_DENY;
   }
