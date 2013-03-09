@@ -61,3 +61,15 @@ mail:
     "body":
       type: text
       label: "Body"
+
+# Filter with module and status.
+filter:
+  type: mapping
+  label: 'Filter'
+  mapping:
+    module:
+      type: string
+      label: 'Module'
+    status:
+      type: boolean
+      label: 'Enabled'
