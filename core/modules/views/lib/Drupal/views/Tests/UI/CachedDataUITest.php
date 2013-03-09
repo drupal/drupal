@@ -41,7 +41,7 @@ class CachedDataUITest extends UITestBase {
     $this->drupalGet('admin/structure/views/view/test_view/edit');
     // Make sure we have 'changes' to the view.
     $this->drupalPost('admin/structure/views/nojs/display/test_view/default/title', array(), t('Apply'));
-    $this->assertText('* All changes are stored temporarily. Click Save to make your changes permanent. Click Cancel to discard your changes.', 'The view has been changed.');
+    $this->assertText('All changes are stored temporarily.', 'The view has been changed.');
 
     $view_cache = $temp_store->get('test_view');
     // The view should be enabled.
