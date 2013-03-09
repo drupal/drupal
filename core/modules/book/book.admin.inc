@@ -150,6 +150,8 @@ function book_admin_edit_submit($form, &$form_state) {
   $order = array_flip(array_keys($form_state['input']['table']));
   $form['table'] = array_merge($order, $form['table']);
 
+  // Track updates.
+  $updated = FALSE;
   foreach (element_children($form['table']) as $key) {
     if ($form['table'][$key]['#item']) {
       $row = $form['table'][$key];
@@ -157,9 +159,11 @@ function book_admin_edit_submit($form, &$form_state) {
 
       // Update menu item if moved.
       if ($row['plid']['#default_value'] != $values['plid'] || $row['weight']['#default_value'] != $values['weight']) {
-        $row['#item']['plid'] = $values['plid'];
-        $row['#item']['weight'] = $values['weight'];
-        menu_link_save($row['#item']);
+        $menu_link = entity_load('menu_link', $values['mlid']);
+        $menu_link->weight = $values['weight'];
+        $menu_link->plid = $values['plid'];
+        $menu_link->save();
+        $updated = TRUE;
       }
 
       // Update the title if changed.
@@ -175,6 +179,12 @@ function book_admin_edit_submit($form, &$form_state) {
         watchdog('content', 'book: updated %title.', array('%title' => $node->label()), WATCHDOG_NOTICE, l(t('view'), 'node/' . $node->nid));
       }
     }
+  }
+  if ($updated) {
+    // Flush static and cache.
+    drupal_static_reset('book_menu_subtree_data');
+    $cid = 'links:' . $form['#node']->book['menu_name'] . ':subtree-cid:' . $form['#node']->book['mlid'];
+    cache('menu')->delete($cid);
   }
 
   drupal_set_message(t('Updated book %title.', array('%title' => $form['#node']->label())));
