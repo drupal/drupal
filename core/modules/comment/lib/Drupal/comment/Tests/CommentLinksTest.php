@@ -12,6 +12,15 @@ namespace Drupal\comment\Tests;
  */
 class CommentLinksTest extends CommentTestBase {
 
+  /**
+   * Use the main node listing to test rendering on teasers.
+   *
+   * @var array
+   *
+   * @todo Remove this dependency.
+   */
+  public static $modules = array('views');
+
   public static function getInfo() {
     return array(
       'name' => 'Comment links',

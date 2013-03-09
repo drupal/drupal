@@ -19,7 +19,7 @@ class CommentAttributesTest extends CommentTestBase {
    *
    * @var array
    */
-  public static $modules = array('comment', 'rdf');
+  public static $modules = array('views', 'node', 'comment', 'rdf');
 
   public static function getInfo() {
     return array(

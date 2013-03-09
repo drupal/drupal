@@ -31,34 +31,34 @@ class DefaultViewsTest extends UITestBase {
    * Tests default views.
    */
   function testDefaultViews() {
-    // Make sure the front page view starts off as disabled (does not appear on
-    // the listing page).
-    $edit_href = 'admin/structure/views/view/frontpage/edit';
+    // Make sure the view starts off as disabled (does not appear on the listing
+    // page).
+    $edit_href = 'admin/structure/views/view/glossary/edit';
     $this->drupalGet('admin/structure/views');
     // @todo Disabled default views do now appear on the front page. Test this
     // behavior with templates instead.
     // $this->assertNoLinkByHref($edit_href);
 
-    // Enable the front page view, and make sure it is now visible on the main
-    // listing page.
+    // Enable the view, and make sure it is now visible on the main listing
+    // page.
     $this->drupalGet('admin/structure/views');
-    $this->clickViewsOperationLink(t('Enable'), '/frontpage/');
+    $this->clickViewsOperationLink(t('Enable'), '/glossary/');
     $this->assertUrl('admin/structure/views');
     $this->assertLinkByHref($edit_href);
 
     // It should not be possible to revert the view yet.
     // @todo Figure out how to handle this with the new configuration system.
     // $this->assertNoLink(t('Revert'));
-    // $revert_href = 'admin/structure/views/view/frontpage/revert';
+    // $revert_href = 'admin/structure/views/view/glossary/revert';
     // $this->assertNoLinkByHref($revert_href);
 
     // Edit the view and change the title. Make sure that the new title is
     // displayed.
     $new_title = $this->randomName(16);
     $edit = array('title' => $new_title);
-    $this->drupalPost('admin/structure/views/nojs/display/frontpage/page_1/title', $edit, t('Apply'));
-    $this->drupalPost('admin/structure/views/view/frontpage/edit/page_1', array(), t('Save'));
-    $this->drupalGet('frontpage');
+    $this->drupalPost('admin/structure/views/nojs/display/glossary/page_1/title', $edit, t('Apply'));
+    $this->drupalPost('admin/structure/views/view/glossary/edit/page_1', array(), t('Save'));
+    $this->drupalGet('glossary');
     $this->assertResponse(200);
     $this->assertText($new_title);
 
@@ -77,22 +77,22 @@ class DefaultViewsTest extends UITestBase {
     // $this->assertLink(t('Revert'));
     // $this->assertLinkByHref($revert_href);
     // $this->drupalPost($revert_href, array(), t('Revert'));
-    // $this->drupalGet('frontpage');
+    // $this->drupalGet('glossary');
     // $this->assertNoText($new_title);
 
     // Clone the view and check that the normal schema of cloned views is used.
     $this->drupalGet('admin/structure/views');
-    $this->clickViewsOperationLink(t('Clone'), '/frontpage');
+    $this->clickViewsOperationLink(t('Clone'), '/glossary');
     $edit = array(
-      'id' => 'clone_of_frontpage',
+      'id' => 'clone_of_glossary',
     );
-    $this->assertTitle(t('Clone of @human_name | @site-name', array('@human_name' => 'Front page', '@site-name' => config('system.site')->get('name'))));
+    $this->assertTitle(t('Clone of @human_name | @site-name', array('@human_name' => 'Glossary', '@site-name' => config('system.site')->get('name'))));
     $this->drupalPost(NULL, $edit, t('Clone'));
-    $this->assertUrl('admin/structure/views/view/clone_of_frontpage/edit', array(), 'The normal cloning name schema is applied.');
+    $this->assertUrl('admin/structure/views/view/clone_of_glossary/edit', array(), 'The normal cloning name schema is applied.');
 
     // Clone a view and set a custom name.
     $this->drupalGet('admin/structure/views');
-    $this->clickViewsOperationLink(t('Clone'), '/frontpage');
+    $this->clickViewsOperationLink(t('Clone'), '/glossary');
     $random_name = strtolower($this->randomName());
     $this->drupalPost(NULL, array('id' => $random_name), t('Clone'));
     $this->assertUrl("admin/structure/views/view/$random_name/edit", array(), 'The custom view name got saved.');
@@ -102,19 +102,19 @@ class DefaultViewsTest extends UITestBase {
     // listing page.
     // @todo Test this behavior with templates instead.
     $this->drupalGet('admin/structure/views');
-    $this->clickViewsOperationLink(t('Disable'), '/frontpage/');
+    $this->clickViewsOperationLink(t('Disable'), '/glossary/');
     // $this->assertUrl('admin/structure/views');
     // $this->assertNoLinkByHref($edit_href);
     // The easiest way to verify it appears on the disabled views listing page
     // is to try to click the "enable" link from there again.
     $this->drupalGet('admin/structure/views');
-    $this->clickViewsOperationLink(t('Enable'), '/frontpage/');
+    $this->clickViewsOperationLink(t('Enable'), '/glossary/');
     $this->assertUrl('admin/structure/views');
     $this->assertLinkByHref($edit_href);
 
     // Test deleting a view.
     $this->drupalGet('admin/structure/views');
-    $this->clickViewsOperationLink(t('Delete'), '/frontpage/');
+    $this->clickViewsOperationLink(t('Delete'), '/glossary/');
     // Submit the confirmation form.
     $this->drupalPost(NULL, array(), t('Delete'));
     // Ensure the view is no longer listed.
@@ -165,7 +165,7 @@ class DefaultViewsTest extends UITestBase {
    * @param $unique_href_part
    *   A unique string that is expected to occur within the href of the desired
    *   link. For example, if the link URL is expected to look like
-   *   "admin/structure/views/view/frontpage/...", then "/frontpage/" could be
+   *   "admin/structure/views/view/glossary/...", then "/glossary/" could be
    *   passed as the expected unique string.
    *
    * @return

@@ -17,7 +17,7 @@ class PagerTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_store_pager_settings', 'test_pager_none', 'test_pager_some', 'test_pager_full', 'test_view_pager_full_zero_items_per_page');
+  public static $testViews = array('test_store_pager_settings', 'test_pager_none', 'test_pager_some', 'test_pager_full', 'test_view_pager_full_zero_items_per_page', 'test_view');
 
   /**
    * Modules to enable.
@@ -44,13 +44,16 @@ class PagerTest extends PluginTestBase {
     $this->drupalLogin($admin_user);
     // Test behaviour described in http://drupal.org/node/652712#comment-2354918.
 
-    $this->drupalGet('admin/structure/views/view/frontpage/edit');
+    $this->drupalGet('admin/structure/views/view/test_view/edit');
 
-
+    $edit = array(
+      'pager[type]' => 'full',
+    );
+    $this->drupalPost('admin/structure/views/nojs/display/test_view/default/pager', $edit, t('Apply'));
     $edit = array(
       'pager_options[items_per_page]' => 20,
     );
-    $this->drupalPost('admin/structure/views/nojs/display/frontpage/default/pager_options', $edit, t('Apply'));
+    $this->drupalPost('admin/structure/views/nojs/display/test_view/default/pager_options', $edit, t('Apply'));
     $this->assertText('20 items');
 
     // Change type and check whether the type is new type is stored.
@@ -58,8 +61,8 @@ class PagerTest extends PluginTestBase {
     $edit = array(
       'pager[type]' => 'mini',
     );
-    $this->drupalPost('admin/structure/views/nojs/display/frontpage/default/pager', $edit, t('Apply'));
-    $this->drupalGet('admin/structure/views/view/frontpage/edit');
+    $this->drupalPost('admin/structure/views/nojs/display/test_view/default/pager', $edit, t('Apply'));
+    $this->drupalGet('admin/structure/views/view/test_view/edit');
     $this->assertText('Mini', 'Changed pager plugin, should change some text');
 
     // Test behaviour described in http://drupal.org/node/652712#comment-2354400

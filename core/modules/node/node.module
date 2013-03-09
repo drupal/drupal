@@ -1708,13 +1708,6 @@ function node_menu() {
     'access arguments' => array('administer content types'),
     'file' => 'content_types.inc',
   );
-
-  $items['node'] = array(
-    'page callback' => 'node_page_default',
-    'access arguments' => array('access content'),
-    'menu_name' => 'tools',
-    'type' => MENU_CALLBACK,
-  );
   $items['node/add'] = array(
     'title' => 'Add content',
     'page callback' => 'node_add_page',
@@ -2186,62 +2179,6 @@ function node_view(Node $node, $view_mode = 'full', $langcode = NULL) {
  */
 function node_view_multiple($nodes, $view_mode = 'teaser', $langcode = NULL) {
   return entity_view_multiple($nodes, $view_mode, $langcode);
-}
-
-/**
- * Page callback: Generates a listing of promoted nodes.
- *
- * @return array
- *   An array in the format expected by drupal_render().
- *
- * @see node_menu()
- */
-function node_page_default() {
-  $site_config = config('system.site');
-  $select = db_select('node', 'n')
-    ->fields('n', array('nid', 'sticky', 'created'))
-    ->condition('n.promote', 1)
-    ->condition('n.status', 1)
-    ->orderBy('n.sticky', 'DESC')
-    ->orderBy('n.created', 'DESC')
-    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
-    ->limit(config('node.settings')->get('items_per_page'))
-    ->addTag('node_access');
-
-  $nids = $select->execute()->fetchCol();
-
-  if (!empty($nids)) {
-    $nodes = node_load_multiple($nids);
-    $build['nodes'] = node_view_multiple($nodes);
-
-    // 'rss.xml' is a path, not a file, registered in node_menu().
-    drupal_add_feed('rss.xml', $site_config->get('name') . ' ' . t('RSS'));
-    $build['pager'] = array(
-      '#theme' => 'pager',
-      '#weight' => 5,
-    );
-    drupal_set_title('');
-  }
-  else {
-    drupal_set_title(t('Welcome to @site-name', array('@site-name' => $site_config->get('name'))), PASS_THROUGH);
-
-    $default_message = '<p>' . t('No front page content has been created yet.') . '</p>';
-
-    $default_links = array();
-    if (_node_add_access()) {
-      $default_links[] = l(t('Add new content'), 'node/add');
-    }
-    if (!empty($default_links)) {
-      $default_message .= theme('item_list', array('items' => $default_links));
-    }
-
-    $build['default_message'] = array(
-      '#markup' => $default_message,
-      '#prefix' => '<div id="first-time">',
-      '#suffix' => '</div>',
-    );
-  }
-  return $build;
 }
 
 /**

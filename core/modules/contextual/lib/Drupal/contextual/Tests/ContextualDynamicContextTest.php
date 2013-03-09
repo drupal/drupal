@@ -19,7 +19,7 @@ class ContextualDynamicContextTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('contextual', 'node');
+  public static $modules = array('contextual', 'node', 'views');
 
   public static function getInfo() {
     return array(

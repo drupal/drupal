@@ -14,9 +14,6 @@
 function minimal_install() {
   $default_theme = 'stark';
 
-  // Set front page to "node".
-  config('system.site')->set('page.front', 'node')->save();
-
   // Allow visitor account creation, but with administrative approval.
   config('user.settings')->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save();
 

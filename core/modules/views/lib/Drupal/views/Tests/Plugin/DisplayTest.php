@@ -19,7 +19,7 @@ class DisplayTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_filter_groups', 'test_get_attach_displays');
+  public static $testViews = array('test_filter_groups', 'test_get_attach_displays', 'test_view');
 
   /**
    * Modules to enable.
@@ -56,7 +56,7 @@ class DisplayTest extends PluginTestBase {
    * @see Drupal\views_test_data\Plugin\views\display\DisplayTest
    */
   function testDisplayPlugin() {
-    $view = views_get_view('frontpage');
+    $view = views_get_view('test_view');
 
     // Add a new 'display_test' display and test it's there.
     $view->storage->addDisplay('display_test');
@@ -95,7 +95,7 @@ class DisplayTest extends PluginTestBase {
     $this->assertTrue(strpos($output, '<h1>Test option title</h1>') !== FALSE, 'The test_option value found in display output title.');
 
     // Test that the display category/summary is in the UI.
-    $this->drupalGet('admin/structure/views/view/frontpage/edit/display_test_1');
+    $this->drupalGet('admin/structure/views/view/test_view/edit/display_test_1');
     $this->assertText('Display test settings');
 
     $this->clickLink('Test option title');
@@ -104,7 +104,7 @@ class DisplayTest extends PluginTestBase {
     $this->drupalPost(NULL, array('test_option' => $this->randomString), t('Apply'));
 
     // Check the new value has been saved by checking the UI summary text.
-    $this->drupalGet('admin/structure/views/view/frontpage/edit/display_test_1');
+    $this->drupalGet('admin/structure/views/view/test_view/edit/display_test_1');
     $this->assertRaw($this->randomString);
 
     // Test the enable/disable status of a display.

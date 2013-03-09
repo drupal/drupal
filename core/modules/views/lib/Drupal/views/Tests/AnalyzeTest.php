@@ -19,6 +19,13 @@ class AnalyzeTest extends ViewTestBase {
    */
   public static $modules = array('views_ui');
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view');
+
   public static function getInfo() {
     return array(
       'name' => 'Views Analyze',
@@ -41,10 +48,8 @@ class AnalyzeTest extends ViewTestBase {
    */
   function testAnalyzeBasic() {
     $this->drupalLogin($this->admin);
-    // Enable the frontpage view and click the analyse button.
-    $view = views_get_view('frontpage');
 
-    $this->drupalGet('admin/structure/views/view/frontpage/edit');
+    $this->drupalGet('admin/structure/views/view/test_view/edit');
     $this->assertLink(t('analyze view'));
 
     // This redirects the user to the analyze form.

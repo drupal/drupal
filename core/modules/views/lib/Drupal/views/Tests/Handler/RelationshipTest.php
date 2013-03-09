@@ -138,4 +138,5 @@ class RelationshipTest extends RelationshipJoinTestBase {
 
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
   }
+
 }

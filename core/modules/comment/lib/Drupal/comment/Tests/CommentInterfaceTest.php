@@ -109,10 +109,6 @@ class CommentInterfaceTest extends CommentTestBase {
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
     $this->assertTrue($this->commentExists($reply, TRUE), 'Modified reply found.');
 
-    // Correct link count
-    $this->drupalGet('node');
-    $this->assertRaw('4 comments', 'Link to the 4 comments exist.');
-
     // Confirm a new comment is posted to the correct page.
     $this->setCommentsPerPage(2);
     $comment_new_page = $this->postComment($this->node, $this->randomName(), $this->randomName(), TRUE);

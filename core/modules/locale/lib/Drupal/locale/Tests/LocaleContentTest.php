@@ -179,9 +179,9 @@ class LocaleContentTest extends WebTestBase {
       ));
     }
 
-    $this->drupalGet('node');
 
     // Check if English node does not have lang tag.
+    $this->drupalGet('node/' . $nodes['en']->nid);
     $pattern = '|id="node-' . $nodes['en']->nid . '"[^<>]*lang="en"|';
     $this->assertNoPattern($pattern, 'The lang tag has not been assigned to the English node.');
 
@@ -190,18 +190,18 @@ class LocaleContentTest extends WebTestBase {
     $this->assertNoPattern($pattern, 'The dir tag has not been assigned to the English node.');
 
     // Check if Arabic node has lang="ar" & dir="rtl" tags.
+    $this->drupalGet('node/' . $nodes['ar']->nid);
     $pattern = '|id="node-' . $nodes['ar']->nid . '"[^<>]*lang="ar" dir="rtl"|';
     $this->assertPattern($pattern, 'The lang and dir tags have been assigned correctly to the Arabic node.');
 
     // Check if Spanish node has lang="es" tag.
+    $this->drupalGet('node/' . $nodes['es']->nid);
     $pattern = '|id="node-' . $nodes['es']->nid . '"[^<>]*lang="es"|';
     $this->assertPattern($pattern, 'The lang tag has been assigned correctly to the Spanish node.');
 
     // Check if Spanish node does not have dir="ltr" tag.
     $pattern = '|id="node-' . $nodes['es']->nid . '"[^<>]*lang="es" dir="ltr"|';
     $this->assertNoPattern($pattern, 'The dir tag has not been assigned to the Spanish node.');
-
-    $this->drupalLogout();
   }
 
 

@@ -16,7 +16,7 @@ class MenuTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('menu', 'block');
+  public static $modules = array('menu', 'block', 'test_page_test');
 
   protected $big_user;
   protected $std_user;
@@ -270,14 +270,14 @@ class MenuTest extends WebTestBase {
     $this->drupalLogin($this->big_user);
 
     // Make a path with query and fragment on.
-    $path = 'node?arg1=value1&arg2=value2';
+    $path = 'test-page?arg1=value1&arg2=value2';
     $item = $this->addMenuLink(0, $path);
 
     $this->drupalGet('admin/structure/menu/item/' . $item['mlid'] . '/edit');
     $this->assertFieldByName('link_path', $path, 'Path is found with both query and fragment.');
 
     // Now change the path to something without query and fragment.
-    $path = 'node';
+    $path = 'test-page';
     $this->drupalPost('admin/structure/menu/item/' . $item['mlid'] . '/edit', array('link_path' => $path), t('Save'));
     $this->drupalGet('admin/structure/menu/item/' . $item['mlid'] . '/edit');
     $this->assertFieldByName('link_path', $path, 'Path no longer has query or fragment.');
