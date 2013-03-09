@@ -80,7 +80,7 @@ class NodeAccessLanguageTest extends NodeTestBase {
 
     // Reset the node access cache and turn on our test node_access() code.
     drupal_static_reset('node_access');
-    variable_set('node_access_test_secret_catalan', 1);
+    state()->set('node_access_test_secret_catalan', 1);
 
     // Tests that Hungarian is still accessible.
     $this->assertNodeAccess($expected_node_access, $node, $web_user, 'hu');
