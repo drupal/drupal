@@ -38,7 +38,9 @@ class TextPlainFormatter extends FormatterBase {
     $elements = array();
 
     foreach ($items as $delta => $item) {
-      $elements[$delta] = array('#markup' => strip_tags($item['value']));
+      // The text value has no text format assigned to it, so the user input
+      // should equal the output, including newlines.
+      $elements[$delta] = array('#markup' => nl2br(check_plain($item['value'])));
     }
 
     return $elements;
