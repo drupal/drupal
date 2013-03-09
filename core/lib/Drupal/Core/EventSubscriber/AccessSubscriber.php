@@ -11,6 +11,7 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\Core\Routing\RoutingEvents;
 use Drupal\Core\Access\AccessManager;
 use Drupal\Core\Routing\RouteBuildEvent;
@@ -45,7 +46,10 @@ class AccessSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    $this->accessManager->check($request->attributes->get(RouteObjectInterface::ROUTE_OBJECT));
+    $access = $this->accessManager->check($request->attributes->get(RouteObjectInterface::ROUTE_OBJECT), $request);
+    if (!$access) {
+      throw new AccessDeniedHttpException();
+    }
   }
 
   /**

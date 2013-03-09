@@ -1025,7 +1025,7 @@ function template_preprocess_book_navigation(&$variables) {
     }
 
     if ($book_link['plid'] && $parent = book_link_load($book_link['plid'])) {
-      $parent_href = url($parent['href']);
+      $parent_href = url($parent['link_path']);
       drupal_add_html_head_link(array('rel' => 'up', 'href' => $parent_href));
       $variables['parent_url'] = $parent_href;
       $variables['parent_title'] = check_plain($parent['title']);
@@ -1279,14 +1279,7 @@ function book_node_type_update($type) {
  *   {book} table. FALSE if there is an error.
  */
 function book_link_load($mlid) {
-  if ($item = db_query("SELECT * FROM {menu_links} ml INNER JOIN {book} b ON b.mlid = ml.mlid LEFT JOIN {menu_router} m ON m.path = ml.router_path WHERE ml.mlid = :mlid", array(
-      ':mlid' => $mlid,
-    ))->fetchAssoc()) {
-    _menu_link_translate($item);
-    return $item;
-  }
-
-  return FALSE;
+  return entity_load('menu_link', $mlid);
 }
 
 /**

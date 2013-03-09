@@ -197,6 +197,11 @@ function menu_link_schema() {
         'default' => 0,
         'size' => 'small',
       ),
+      'route_name' => array(
+        'description' => 'The machine name of a defined Symfony Route this menu item represents.',
+        'type' => 'varchar',
+        'length' => 255,
+      ),
     ),
     'indexes' => array(
       'path_menu' => array(array('link_path', 128), 'menu_name'),

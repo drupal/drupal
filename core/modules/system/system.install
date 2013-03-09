@@ -2182,6 +2182,19 @@ function system_update_8050() {
 }
 
 /**
+ * Adds route_name column to the menu_links table.
+ */
+function system_update_8051() {
+  $spec = array(
+    'description' => 'The machine name of a defined Symfony Route this menu item represents.',
+    'type' => 'varchar',
+    'length' => 255,
+  );
+
+  db_add_field('menu_links', 'route_name', $spec);
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

@@ -7,6 +7,8 @@
 
 namespace Drupal\menu_link\Plugin\Core\Entity;
 
+use Symfony\Component\Routing\Route;
+
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -233,6 +235,20 @@ class MenuLink extends Entity implements \ArrayAccess, ContentEntityInterface {
   public $updated = 0;
 
   /**
+   * The name of the route associated with this menu link, if any.
+   *
+   * @var string
+   */
+  public $route_name;
+
+  /**
+   * The route object associated with this menu link, if any.
+   *
+   * @var \Symfony\Component\Routing\Route
+   */
+  protected $routeObject;
+
+  /**
    * Overrides Entity::id().
    */
   public function id() {
@@ -246,6 +262,36 @@ class MenuLink extends Entity implements \ArrayAccess, ContentEntityInterface {
     $duplicate = parent::createDuplicate();
     $duplicate->plid = NULL;
     return $duplicate;
+  }
+
+  /**
+   * Returns the Route object associated with this link, if any.
+   *
+   * @return \Symfony\Component\Routing\Route|null
+   *   The route object for this menu link, or NULL if there isn't one.
+   */
+  public function getRoute() {
+    if (!$this->route_name) {
+      return NULL;
+    }
+    if (!($this->routeObject instanceof Route)) {
+      $route_provider = drupal_container()->get('router.route_provider');
+      $this->routeObject = $route_provider->getRouteByName($this->route_name);
+    }
+    return $this->routeObject;
+  }
+
+  /**
+   * Sets the route object for this link.
+   *
+   * This should only be called by MenuLinkStorageController when loading
+   * the link object. Calling it at other times could result in unpredictable
+   * behavior.
+   *
+   * @param \Symfony\Component\Routing\Route $route
+   */
+  public function setRouteObject(Route $route) {
+    $this->routeObject = $route;
   }
 
   /**
