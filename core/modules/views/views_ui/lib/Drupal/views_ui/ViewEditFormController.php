@@ -96,17 +96,10 @@ class ViewEditFormController extends ViewFormControllerBase {
       );
     }
     else {
-      if (isset($view->vid) && $view->vid == 'new') {
-        $message = t('* All changes are stored temporarily. Click Save to make your changes permanent. Click Cancel to discard the view.');
-      }
-      else {
-        $message = t('* All changes are stored temporarily. Click Save to make your changes permanent. Click Cancel to discard your changes.');
-      }
-
       $form['changed'] = array(
         '#type' => 'container',
         '#attributes' => array('class' => array('view-changed', 'messages', 'warning')),
-        '#children' => $message,
+        '#children' => t('All changes are stored temporarily. Click "Save" to make your changes permanent. Click "Cancel" to discard your changes.'),
         '#weight' => -10,
       );
       if (empty($view->changed)) {
