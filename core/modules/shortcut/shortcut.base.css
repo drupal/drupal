@@ -9,10 +9,12 @@
 .add-or-remove-shortcuts .icon {
   display: block;
   float: left; /* LTR */
+  margin-top: 5px;
 }
 .add-or-remove-shortcuts .text {
   display: none;
   float: left; /* LTR */
+  padding-top: 2px;
 }
 .add-or-remove-shortcuts a:focus .text,
 .add-or-remove-shortcuts a:hover .text {

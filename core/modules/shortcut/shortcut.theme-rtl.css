@@ -8,7 +8,7 @@
  * Add/remove links.
  */
 .add-or-remove-shortcuts .icon {
-  margin-left: 0;
+  margin-left: 4px;
   margin-right: 8px;
 }
 .add-shortcut a:focus .icon,

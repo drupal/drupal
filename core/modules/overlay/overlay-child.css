@@ -139,9 +139,14 @@
  * Add to shortcuts link
  */
 #overlay-titlebar .add-or-remove-shortcuts {
-  padding-top: 0.9em;
+  padding-top: 0.6em;
 }
-
+#overlay-titlebar .add-or-remove-shortcuts .icon {
+  margin-top: 4px;
+}
+#overlay-titlebar .add-or-remove-shortcuts .text {
+  padding-top: 0;
+}
 /**
  * Disable message.
  */
