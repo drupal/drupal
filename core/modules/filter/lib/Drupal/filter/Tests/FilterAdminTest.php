@@ -33,11 +33,11 @@ class FilterAdminTest extends WebTestBase {
     parent::setUp();
 
     // Create users.
-    $filtered_html_format = filter_format_load('filtered_html');
+    $basic_html_format = filter_format_load('basic_html');
     $full_html_format = filter_format_load('full_html');
     $this->admin_user = $this->drupalCreateUser(array(
       'administer filters',
-      filter_permission_name($filtered_html_format),
+      filter_permission_name($basic_html_format),
       filter_permission_name($full_html_format),
     ));
 
@@ -120,7 +120,7 @@ class FilterAdminTest extends WebTestBase {
     // Line filter.
     $second_filter = 'filter_autop';
 
-    $filtered = 'filtered_html';
+    $basic = 'basic_html';
     $full = 'full_html';
     $plain = 'plain_text';
 
@@ -138,9 +138,9 @@ class FilterAdminTest extends WebTestBase {
     // Add an additional tag.
     $edit = array();
     $edit['filters[filter_html][settings][allowed_html]'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd> <quote>';
-    $this->drupalPost('admin/config/content/formats/' . $filtered, $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/content/formats/' . $basic, $edit, t('Save configuration'));
     $this->assertUrl('admin/config/content/formats');
-    $this->drupalGet('admin/config/content/formats/' . $filtered);
+    $this->drupalGet('admin/config/content/formats/' . $basic);
     $this->assertFieldByName('filters[filter_html][settings][allowed_html]', $edit['filters[filter_html][settings][allowed_html]'], 'Allowed HTML tag added.');
 
     $result = db_query('SELECT * FROM {cache_filter}')->fetchObject();
@@ -158,7 +158,7 @@ class FilterAdminTest extends WebTestBase {
     $edit['filters[' . $first_filter . '][weight]'] = 2;
     $this->drupalPost(NULL, $edit, t('Save configuration'));
     $this->assertUrl('admin/config/content/formats');
-    $this->drupalGet('admin/config/content/formats/' . $filtered);
+    $this->drupalGet('admin/config/content/formats/' . $basic);
     $this->assertFieldByName('filters[' . $second_filter . '][weight]', 1, 'Order saved successfully.');
     $this->assertFieldByName('filters[' . $first_filter . '][weight]', 2, 'Order saved successfully.');
 
@@ -168,13 +168,13 @@ class FilterAdminTest extends WebTestBase {
     ));
     $this->assertTrue(!empty($elements), 'Reorder confirmed in admin interface.');
 
-    $filter_format = entity_load('filter_format', $filtered);
+    $filter_format = entity_load('filter_format', $basic);
     foreach ($filter_format->filters as $filter_name => $filter) {
       if ($filter_name == $second_filter || $filter_name == $first_filter) {
         $filters[] = $filter_name;
       }
     }
-    $this->assertTrue(($filters[0] == $second_filter && $filters[1] == $first_filter), t('Order confirmed in database.'));
+    $this->assertTrue($filter_format->filters['filter_autop']['weight'] + 1 == $filter_format->filters['filter_url']['weight'], t('Order confirmed in configuration.'));
 
     // Add format.
     $edit = array();
@@ -216,7 +216,7 @@ class FilterAdminTest extends WebTestBase {
     $this->drupalGet('node/add/page');
     $this->assertRaw('<option value="' . $full . '">Full HTML</option>', 'Full HTML filter accessible.');
 
-    // Use filtered HTML and see if it removes tags that are not allowed.
+    // Use basic HTML and see if it removes tags that are not allowed.
     $body = '<em>' . $this->randomName() . '</em>';
     $extra_text = 'text';
     $text = $body . '<random>' . $extra_text . '</random>';
@@ -225,7 +225,7 @@ class FilterAdminTest extends WebTestBase {
     $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName();
     $edit["body[$langcode][0][value]"] = $text;
-    $edit["body[$langcode][0][format]"] = $filtered;
+    $edit["body[$langcode][0][format]"] = $basic;
     $this->drupalPost('node/add/page', $edit, t('Save'));
     $this->assertRaw(t('Basic page %title has been created.', array('%title' => $edit["title"])), 'Filtered node created.');
 
@@ -258,9 +258,9 @@ class FilterAdminTest extends WebTestBase {
     // Allowed tags.
     $edit = array();
     $edit['filters[filter_html][settings][allowed_html]'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>';
-    $this->drupalPost('admin/config/content/formats/' . $filtered, $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/content/formats/' . $basic, $edit, t('Save configuration'));
     $this->assertUrl('admin/config/content/formats');
-    $this->drupalGet('admin/config/content/formats/' . $filtered);
+    $this->drupalGet('admin/config/content/formats/' . $basic);
     $this->assertFieldByName('filters[filter_html][settings][allowed_html]', $edit['filters[filter_html][settings][allowed_html]'], 'Changes reverted.');
 
     // Full HTML.
@@ -276,9 +276,9 @@ class FilterAdminTest extends WebTestBase {
     $edit = array();
     $edit['filters[' . $second_filter . '][weight]'] = 2;
     $edit['filters[' . $first_filter . '][weight]'] = 1;
-    $this->drupalPost('admin/config/content/formats/' . $filtered, $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/content/formats/' . $basic, $edit, t('Save configuration'));
     $this->assertUrl('admin/config/content/formats');
-    $this->drupalGet('admin/config/content/formats/' . $filtered);
+    $this->drupalGet('admin/config/content/formats/' . $basic);
     $this->assertFieldByName('filters[' . $second_filter . '][weight]', $edit['filters[' . $second_filter . '][weight]'], 'Changes reverted.');
     $this->assertFieldByName('filters[' . $first_filter . '][weight]', $edit['filters[' . $first_filter . '][weight]'], 'Changes reverted.');
   }
@@ -291,7 +291,7 @@ class FilterAdminTest extends WebTestBase {
     $edit = array(
       'filters[filter_url][settings][filter_url_length]' => $this->randomName(4),
     );
-    $this->drupalPost('admin/config/content/formats/filtered_html', $edit, t('Save configuration'));
-    $this->assertNoRaw(t('The text format %format has been updated.', array('%format' => 'Filtered HTML')));
+    $this->drupalPost('admin/config/content/formats/basic_html', $edit, t('Save configuration'));
+    $this->assertNoRaw(t('The text format %format has been updated.', array('%format' => 'Basic HTML')));
   }
 }

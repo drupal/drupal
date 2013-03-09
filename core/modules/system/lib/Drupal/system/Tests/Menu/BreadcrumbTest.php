@@ -162,7 +162,7 @@ class BreadcrumbTest extends MenuTestBase {
     $this->assertBreadcrumb('admin/config/content/formats', $trail);
 
     $trail += array(
-      'admin/config/content/formats' => t('Text formats'),
+      'admin/config/content/formats' => t('Text formats and editors'),
     );
     $this->assertBreadcrumb('admin/config/content/formats/add', $trail);
     $this->assertBreadcrumb("admin/config/content/formats/$format_id", $trail);

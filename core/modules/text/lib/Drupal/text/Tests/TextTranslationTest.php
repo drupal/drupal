@@ -110,8 +110,8 @@ class TextTranslationTest extends WebTestBase {
     $this->drupalPost('node/add/article', $edit, t('Save'));
 
     // Populate the body field: the first item gets the "Full HTML" input
-    // format, the second one "Filtered HTML".
-    $formats = array('full_html', 'filtered_html');
+    // format, the second one "Basic HTML".
+    $formats = array('full_html', 'basic_html');
     $langcode = LANGUAGE_NOT_SPECIFIED;
     foreach ($body as $delta => $value) {
       $edit = array(

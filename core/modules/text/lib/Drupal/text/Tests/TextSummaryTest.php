@@ -151,7 +151,7 @@ class TextSummaryTest extends WebTestBase {
     for ($i = 0; $i <= 37; $i++) {
       $this->callTextSummary($text, $expected[$i],    NULL, $i);
       $this->callTextSummary($text, $expected_lb[$i], 'plain_text', $i);
-      $this->callTextSummary($text, $expected_lb[$i], 'filtered_html', $i);
+      $this->callTextSummary($text, $expected_lb[$i], 'basic_html', $i);
     }
   }
 
