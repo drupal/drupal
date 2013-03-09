@@ -92,7 +92,7 @@ function contact_flood_control() {
   $config = config('contact.settings');
   $limit = $config->get('flood.limit');
   $interval = $config->get('flood.interval');
-  if (!drupal_container()->get('flood')->isAllowed('contact', $limit, $interval)) {
+  if (!Drupal::service('flood')->isAllowed('contact', $limit, $interval)) {
     drupal_set_message(t("You cannot send more than %limit messages in @interval. Try again later.", array(
       '%limit' => $limit,
       '@interval' => format_interval($interval),

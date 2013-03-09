@@ -595,6 +595,9 @@ function drupal_override_server_variables($variables = array()) {
  * Initializes the PHP environment.
  */
 function drupal_environment_initialize() {
+  // Make sure the \Drupal class is available.
+  require_once DRUPAL_ROOT . '/core/lib/Drupal.php';
+
   if (!isset($_SERVER['HTTP_REFERER'])) {
     $_SERVER['HTTP_REFERER'] = '';
   }
@@ -982,17 +985,18 @@ function variable_initialize($conf = array()) {
   else {
     // Cache miss. Avoid a stampede.
     $name = 'variable_init';
-    if (!lock()->acquire($name, 1)) {
+    $lock = Drupal::lock();
+    if (!$lock->acquire($name, 1)) {
       // Another request is building the variable cache.
       // Wait, then re-run this function.
-      lock()->wait($name);
+      $lock->wait($name);
       return variable_initialize($conf);
     }
     else {
       // Proceed with variable rebuild.
       $variables = array_map('unserialize', db_query('SELECT name, value FROM {variable}')->fetchAllKeyed());
       cache('bootstrap')->set('variables', $variables);
-      lock()->release($name);
+      $lock->release($name);
     }
   }
 
@@ -2424,29 +2428,15 @@ function drupal_get_bootstrap_phase() {
 /**
  * Retrieves the Drupal Container to standardize object construction.
  *
- * The container is built by the kernel and passed in to this function which
- * stores it statically. The container always contains the services from
- * \Drupal\Core\CoreBundle, the bundles of enabled modules and any other
- * bundles defined in $GLOBALS['conf']['container_bundles'].
- *
- * @see Drupal\Core\DrupalKernel
- *
- * @param Symfony\Component\DependencyInjection\ContainerInterface $new_container
- *   (optional) A new container instance to replace the current.
+ * @deprecated This function has been replaced by the \Drupal class. Use that
+ *   instead.
  *
  * @return Symfony\Component\DependencyInjection\ContainerInterface|bool
  *   The instance of the ContainerInterface used to set up and maintain
  *   object instances or FALSE if none exist yet.
  */
-function drupal_container(ContainerInterface $new_container = NULL) {
-  // We do not use drupal_static() here because we do not have a mechanism by
-  // which to reinitialize the stored objects, so a drupal_static_reset() call
-  // would leave Drupal in a nonfunctional state.
-  static $container;
-  if (isset($new_container)) {
-    $container = $new_container;
-  }
-  return $container;
+function drupal_container() {
+  return Drupal::getContainer();
 }
 
 /**
@@ -3542,10 +3532,13 @@ function drupal_check_memory_limit($required, $memory_limit = NULL) {
 /**
  * Get locking layer instance.
  *
+ * @deprecated Use Drupal::lock() instead, or even better have the lock service
+ *   injected into your object.
+ *
  * @return Drupal\Core\Lock\LockBackendInterface
  */
 function lock() {
-  return drupal_container()->get('lock');
+  return Drupal::lock();
 }
 
 /**

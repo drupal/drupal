@@ -1331,13 +1331,14 @@ function user_login_name_validate($form, &$form_state) {
 function user_login_authenticate_validate($form, &$form_state) {
   $password = trim($form_state['values']['pass']);
   $flood_config = config('user.flood');
+  $flood = Drupal::service('flood');
   if (!empty($form_state['values']['name']) && !empty($password)) {
     // Do not allow any login from the current user's IP if the limit has been
     // reached. Default is 50 failed attempts allowed in one hour. This is
     // independent of the per-user limit to catch attempts from one IP to log
     // in to many different user accounts.  We have a reasonably high limit
     // since there may be only one apparent IP for all users at an institution.
-    if (!drupal_container()->get('flood')->isAllowed('user.failed_login_ip', $flood_config->get('ip_limit'), $flood_config->get('ip_window'))) {
+    if (!$flood->isAllowed('user.failed_login_ip', $flood_config->get('ip_limit'), $flood_config->get('ip_window'))) {
       $form_state['flood_control_triggered'] = 'ip';
       return;
     }
@@ -1358,7 +1359,7 @@ function user_login_authenticate_validate($form, &$form_state) {
 
       // Don't allow login if the limit for this user has been reached.
       // Default is to allow 5 failed attempts every 6 hours.
-      if (!drupal_container()->get('flood')->isAllowed('user.failed_login_user', $flood_config->get('user_limit'), $flood_config->get('user_window'), $identifier)) {
+      if (!$flood->isAllowed('user.failed_login_user', $flood_config->get('user_limit'), $flood_config->get('user_window'), $identifier)) {
         $form_state['flood_control_triggered'] = 'user';
         return;
       }
@@ -1378,12 +1379,13 @@ function user_login_authenticate_validate($form, &$form_state) {
  */
 function user_login_final_validate($form, &$form_state) {
   $flood_config = config('user.flood');
+  $flood = Drupal::service('flood');
   if (empty($form_state['uid'])) {
     // Always register an IP-based failed login event.
-    drupal_container()->get('flood')->register('user.failed_login_ip', $flood_config->get('ip_window'));
+    $flood->register('user.failed_login_ip', $flood_config->get('ip_window'));
     // Register a per-user failed login event.
     if (isset($form_state['flood_control_user_identifier'])) {
-      drupal_container()->get('flood')->register('user.failed_login_user', $flood_config->get('user_window'), $form_state['flood_control_user_identifier']);
+      $flood->register('user.failed_login_user', $flood_config->get('user_window'), $form_state['flood_control_user_identifier']);
     }
 
     if (isset($form_state['flood_control_triggered'])) {
@@ -1403,7 +1405,7 @@ function user_login_final_validate($form, &$form_state) {
   elseif (isset($form_state['flood_control_user_identifier'])) {
     // Clear past failures for this user so as not to block a user who might
     // log in and out more than once in an hour.
-    drupal_container()->get('flood')->clear('user.failed_login_user', $form_state['flood_control_user_identifier']);
+    $flood->clear('user.failed_login_user', $form_state['flood_control_user_identifier']);
   }
 }
 
