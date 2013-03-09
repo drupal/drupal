@@ -222,7 +222,12 @@ function _text_sanitize($instance, $langcode, $item, $column) {
   if (isset($item["safe_$column"])) {
     return $item["safe_$column"];
   }
-  return $instance['settings']['text_processing'] ? check_markup($item[$column], $item['format'], $langcode) : check_plain($item[$column]);
+  if ($instance['settings']['text_processing']) {
+    return check_markup($item[$column], $item['format'], $langcode);
+  }
+  // Escape all HTML and retain newlines.
+  // @see \Drupal\text\Plugin\field\formatter\TextPlainFormatter
+  return nl2br(check_plain($item[$column]));
 }
 
 /**
