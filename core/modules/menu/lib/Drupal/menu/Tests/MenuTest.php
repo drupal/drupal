@@ -284,6 +284,22 @@ class MenuTest extends WebTestBase {
   }
 
   /**
+   * Test renaming built-in menu.
+   */
+  function testSystemMenuRename() {
+    $this->drupalLogin($this->big_user);
+    $edit = array(
+      'label' => $this->randomName(16),
+    );
+    $this->drupalPost('admin/structure/menu/manage/main/edit', $edit, t('Save'));
+
+    // Make sure menu shows up with new name in block addition.
+    $default_theme = variable_get('theme_default', 'stark');
+    $this->drupalget('admin/structure/block/list/block_plugin_ui:' . $default_theme . '/add');
+    $this->assertText($edit['label']);
+  }
+
+  /**
    * Add a menu link using the menu module UI.
    *
    * @param integer $plid Parent menu link id.
