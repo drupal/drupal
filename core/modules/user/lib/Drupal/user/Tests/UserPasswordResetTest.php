@@ -60,7 +60,7 @@ class UserPasswordResetTest extends WebTestBase {
 
      // Verify that the user was sent an e-mail.
     $this->assertMail('to', $this->account->mail, t('Password e-mail sent to user.'));
-    $subject = t('Replacement login information for @username at @site', array('@username' => $this->account->name, '@site' => variable_get('site_name', 'Drupal')));
+    $subject = t('Replacement login information for @username at @site', array('@username' => $this->account->name, '@site' => config('system.site')->get('name')));
     $this->assertMail('subject', $subject, 'Password reset e-mail subject is correct.');
 
     $resetURL = $this->getResetURL();
@@ -73,7 +73,7 @@ class UserPasswordResetTest extends WebTestBase {
     // Check successful login.
     $this->drupalPost(NULL, NULL, t('Log in'));
     $this->assertLink(t('Log out'));
-    $this->assertTitle(t('@name | @site', array('@name' => $this->account->name, '@site' => variable_get('site_name', 'Drupal'))), 'Logged in using password reset link.');
+    $this->assertTitle(t('@name | @site', array('@name' => $this->account->name, '@site' => config('system.site')->get('name'))), 'Logged in using password reset link.');
 
     // Log out, and try to log in again using the same one-time link.
     $this->drupalLogout();
