@@ -1,0 +1,46 @@
+# Schema for the configuration files of the Filter module.
+
+filter.settings:
+  type: mapping
+  label: 'Filter settings'
+  mapping:
+    fallback_format:
+      type: string
+      label: 'Fallback text format'
+    always_show_fallback_choice:
+      type: boolean
+      label: 'Always show fallback choice'
+
+filter.format.*:
+  type: mapping
+  label: 'Text formats'
+  mapping:
+    format:
+      type: string
+      label: 'Machine name'
+    name:
+      type: string
+      label: 'Name'
+    status:
+      type: boolean
+      label: 'Enabled'
+    weight:
+      type: integer
+      label: 'Weight'
+    roles:
+      type: sequence
+      label: 'Roles'
+      sequence:
+        - type: string
+          label: 'Role'
+    cache:
+      type: boolean
+      label: 'Cache'
+    filters:
+      type: sequence
+      label: 'Enabled filters'
+      sequence:
+        - type: filter
+    langcode:
+      type: string
+      label: 'Language'
