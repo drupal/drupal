@@ -197,6 +197,208 @@ class TypedDataTest extends WebTestBase {
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue('invalid');
     $this->assertEqual($typed_data->validate()->count(), 1, 'Validation detected invalid value.');
+
+    // Any type.
+    $value = array('foo');
+    $typed_data = $this->createTypedData(array('type' => 'any'), $value);
+    $this->assertIdentical($typed_data->getValue(), $value, 'Any value was fetched.');
+    $new_value = 'test@example.com';
+    $typed_data->setValue($new_value);
+    $this->assertIdentical($typed_data->getValue(), $new_value, 'Any value was changed.');
+    $this->assertTrue(is_string($typed_data->getString()), 'Any value was converted to string');
+    $this->assertEqual($typed_data->validate()->count(), 0);
+    $typed_data->setValue(NULL);
+    $this->assertNull($typed_data->getValue(), 'Any wrapper is null-able.');
+    $this->assertEqual($typed_data->validate()->count(), 0);
+    // We cannot test invalid values as everything is valid for the any type,
+    // but make sure an array or object value passes validation also.
+    $typed_data->setValue(array('entry'));
+    $this->assertEqual($typed_data->validate()->count(), 0);
+    $typed_data->setValue((object) array('entry'));
+    $this->assertEqual($typed_data->validate()->count(), 0);
+  }
+
+  /**
+   * Tests using typed data lists.
+   */
+  public function testTypedDataLists() {
+    // Test working with an existing list of strings.
+    $value = array('one', 'two', 'three');
+    $typed_data = $this->createTypedData(array(
+      'type' => 'string',
+      'list' => TRUE,
+    ), $value);
+    $this->assertEqual($typed_data->getValue(), $value, 'List value has been set.');
+    // Test iterating.
+    $count = 0;
+    foreach ($typed_data as $item) {
+      $this->assertTrue($item instanceof \Drupal\Core\TypedData\TypedDataInterface);
+      $count++;
+    }
+    $this->assertEqual($count, 3);
+
+    // Test getting the string representation.
+    $this->assertEqual($typed_data->getString(), 'one, two, three');
+    $typed_data[1] = '';
+    $this->assertEqual($typed_data->getString(), 'one, three');
+
+    // Test using array access.
+    $this->assertEqual($typed_data[0]->getValue(), 'one');
+    $typed_data[4] = 'four';
+    $this->assertEqual($typed_data[4]->getValue(), 'four');
+    $typed_data[] = 'five';
+    $this->assertEqual($typed_data[5]->getValue(), 'five');
+    $this->assertEqual($typed_data->count(), 5);
+    $this->assertTrue(isset($typed_data[0]));
+    $this->assertTrue(!isset($typed_data[6]));
+
+    // Test isEmpty and cloning.
+    $this->assertFalse($typed_data->isEmpty());
+    $clone = clone $typed_data;
+    $this->assertTrue($typed_data->getValue() === $clone->getValue());
+    $this->assertTrue($typed_data[0] !== $clone[0]);
+    $clone->setValue(array());
+    $this->assertTrue($clone->isEmpty());
+
+    // Make sure the difference between NULL (not set) and an empty array is
+    // kept.
+    $clone->setValue(array());
+    $typed_data->setValue(NULL);
+    $this->assertNull($typed_data->getValue());
+    $this->assertIdentical($clone->getValue(), array());
+
+    // Test dealing with NULL items.
+    $typed_data[] = NULL;
+    $this->assertTrue($typed_data->isEmpty());
+    $this->assertEqual(count($typed_data), 1);
+    $typed_data[] = '';
+    $this->assertFalse($typed_data->isEmpty());
+    $this->assertEqual(count($typed_data), 2);
+    $typed_data[] = 'three';
+    $this->assertFalse($typed_data->isEmpty());
+    $this->assertEqual(count($typed_data), 3);
+
+    $this->assertEqual($typed_data->getValue(), array(NULL, '', 'three'));
+    // Test unsetting.
+    unset($typed_data[2]);
+    $this->assertEqual(count($typed_data), 2);
+    $this->assertNull($typed_data[3]->getValue());
+
+    // Getting a not set list item sets it.
+    $this->assertNull($typed_data[4]->getValue());
+    $this->assertEqual(count($typed_data), 4);
+
+    // Test setting the list with less values.
+    $typed_data->setValue(array('one'));
+    $this->assertEqual($typed_data->count(), 1);
+
+    // Test setting invalid values.
+    try {
+      $typed_data->setValue(array('not a list' => 'one'));
+      $this->fail('No exception has been thrown when setting an invalid value.');
+    }
+    catch (\Exception $e) {
+      $this->pass('Exception thrown:' . $e->getMessage());
+    }
+    try {
+      $typed_data->setValue('string');
+      $this->fail('No exception has been thrown when setting an invalid value.');
+    }
+    catch (\Exception $e) {
+      $this->pass('Exception thrown:' . $e->getMessage());
+    }
+  }
+
+  /**
+   * Tests using a typed data map.
+   */
+  public function testTypedDataMaps() {
+    // Test working with a simple map.
+    $value = array(
+      'one' => 'eins',
+      'two' => 'zwei',
+      'three' => 'drei',
+    );
+    $typed_data = $this->createTypedData(array(
+      'type' => 'map',
+    ), $value);
+
+    // Test iterating.
+    $count = 0;
+    foreach ($typed_data as $item) {
+      $this->assertTrue($item instanceof \Drupal\Core\TypedData\TypedDataInterface);
+      $count++;
+    }
+    $this->assertEqual($count, 3);
+
+    // Test retrieving metadata.
+    $this->assertEqual(array_keys($typed_data->getPropertyDefinitions()), array_keys($value));
+    $definition = $typed_data->getPropertyDefinition('one');
+    $this->assertEqual($definition['type'], 'any');
+    $this->assertFalse($typed_data->getPropertyDefinition('invalid'));
+
+    // Test getting and setting properties.
+    $this->assertEqual($typed_data->get('one')->getValue(), 'eins');
+    $this->assertEqual($typed_data->getPropertyValues(), $value);
+    $typed_data->set('one', 'uno');
+    $this->assertEqual($typed_data->get('one')->getValue(), 'uno');
+
+    $properties = $typed_data->getProperties();
+    $this->assertEqual(array_keys($properties), array_keys($value));
+    $this->assertIdentical($properties['one'], $typed_data->get('one'));
+
+    $typed_data->setPropertyValues(array('one' => 'eins'));
+    $this->assertEqual($typed_data->get('one')->getValue(), 'eins');
+    $this->assertEqual($typed_data->get('two')->getValue(), 'zwei');
+    $this->assertEqual($typed_data->get('three')->getValue(), 'drei');
+
+    $typed_data->setValue(array('foo' => 'bar'));
+    $this->assertEqual(array_keys($typed_data->getProperties()), array('foo'));
+
+    // Test getting the string representation.
+    $typed_data->setValue(array('one' => 'eins', 'two' => '', 'three' => 'drei'));
+    $this->assertEqual($typed_data->getString(), 'eins, drei');
+
+    // Test isEmpty and cloning.
+    $this->assertFalse($typed_data->isEmpty());
+    $clone = clone $typed_data;
+    $this->assertTrue($typed_data->getValue() === $clone->getValue());
+    $this->assertTrue($typed_data->get('one') !== $clone->get('one'));
+    $clone->setValue(array());
+    $this->assertTrue($clone->isEmpty());
+
+    // Make sure the difference between NULL (not set) and an empty array is
+    // kept.
+    $clone->setValue(array());
+    $typed_data->setValue(NULL);
+    $this->assertNull($typed_data->getValue());
+    $this->assertIdentical($clone->getValue(), array());
+
+    // Test accessing invalid properties.
+    $typed_data->setValue($value);
+    try {
+      $typed_data->get('invalid');
+      $this->fail('No exception has been thrown when getting an invalid value.');
+    }
+    catch (\Exception $e) {
+      $this->pass('Exception thrown:' . $e->getMessage());
+    }
+    try {
+      $typed_data->set('invalid', 'foo');
+      $this->fail('No exception has been thrown when setting an invalid value.');
+    }
+    catch (\Exception $e) {
+      $this->pass('Exception thrown:' . $e->getMessage());
+    }
+
+    // Test setting invalid values.
+    try {
+      $typed_data->setValue('invalid');
+      $this->fail('No exception has been thrown when setting an invalid value.');
+    }
+    catch (\Exception $e) {
+      $this->pass('Exception thrown:' . $e->getMessage());
+    }
   }
 
   /**

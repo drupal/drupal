@@ -2228,6 +2228,14 @@ function system_data_type_info() {
       'class' => '\Drupal\Core\TypedData\Type\Binary',
       'primitive type' => Primitive::BINARY,
     ),
+    'map' => array(
+      'label' => t('Map'),
+      'class' =>  '\Drupal\Core\TypedData\Type\Map',
+    ),
+    'any' => array(
+      'label' => t('Any data'),
+      'class' =>  '\Drupal\Core\TypedData\Type\Any',
+    ),
     'language' => array(
       'label' => t('Language'),
       'description' => t('A language object.'),

@@ -158,7 +158,8 @@ function hook_cron() {
  *     \Drupal\Core\TypedData\TypedDataInterface.
  *   - list class: (optional) A typed data class used for wrapping multiple
  *     data items of the type. Must implement the
- *     \Drupal\Core\TypedData\ListInterface.
+ *     \Drupal\Core\TypedData\ListInterface. Defaults to
+ *     \Drupal\Core\TypedData\ItemList;
  *   - primitive type: (optional) Maps the data type to one of the pre-defined
  *     primitive types in \Drupal\Core\TypedData\Primitive. If set, it must be
  *     a constant defined by \Drupal\Core\TypedData\Primitive such as
