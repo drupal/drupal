@@ -36,16 +36,11 @@ class ContentNegotiation {
       return 'iframeupload';
     }
 
-    // AJAX calls need to be run through ajax rendering functions
-    elseif ($request->isXmlHttpRequest()) {
-      return 'ajax';
-    }
-
     // Check all formats, it HTML is found return it.
     $first_found_format = FALSE;
     foreach ($request->getAcceptableContentTypes() as $mime_type) {
       $format = $request->getFormat($mime_type);
-      if ($format === 'html') {
+      if ($format === 'html' || $format === 'drupal_ajax') {
         return $format;
       }
       if (!is_null($format) && !$first_found_format) {
@@ -56,6 +51,10 @@ class ContentNegotiation {
     // No HTML found, return first found.
     if ($first_found_format) {
       return $first_found_format;
+    }
+
+    if ($request->isXmlHttpRequest()) {
+      return 'ajax';
     }
 
     // Do HTML last so that it always wins.
