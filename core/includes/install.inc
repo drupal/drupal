@@ -166,58 +166,144 @@ function drupal_get_database_types() {
 /**
  * Replaces values in settings.php with values in the submitted array.
  *
+ * This function replaces values in place if possible, even for
+ * multidimensional arrays. This way the old settings do not linger,
+ * overridden and also the doxygen on a value remains where it should be.
+ *
  * @param $settings
- *   An array of settings that need to be updated.
+ *   An array of settings that need to be updated. Multidimensional arrays
+ *   are dumped up to a stdClass object. The object can have value, required
+ *   and comment properties.
+ *   @code
+ *   $settings['config_directories'] = array(
+ *     CONFIG_ACTIVE_DIRECTORY => array(
+ *       'path' => (object) array(
+ *         'value' => 'config__hash/active'
+ *         'required' => TRUE,
+ *       ),
+ *     ),
+ *     CONFIG_STAGING_DIRECTORY => array(
+ *       'path' => (object) array(
+ *         'value' => 'config_hash/staging',
+ *         'required' => TRUE,
+ *       ),
+ *     ),
+ *   );
+ *   @endcode
+ *   gets dumped as:
+ *   @code
+ *   $config_directories['active']['path'] = 'config__hash/active';
+ *   $config_directories['staging']['path'] = 'config__hash/staging'
+ *   @endcode
  */
-function drupal_rewrite_settings($settings = array()) {
-  drupal_static_reset('conf_path');
-  $settings_file = conf_path(FALSE) . '/settings.php';
-
-  // Build list of setting names and insert the values into the global namespace.
-  $keys = array();
-  foreach ($settings as $setting => $data) {
-    $GLOBALS[$setting] = $data['value'];
-    $keys[] = $setting;
+function drupal_rewrite_settings($settings = array(), $settings_file = NULL) {
+  if (!isset($settings_file)) {
+    $settings_file = conf_path(FALSE) . '/settings.php';
   }
-
-  $buffer = NULL;
+  // Build list of setting names and insert the values into the global namespace.
+  $variable_names = array();
+  foreach ($settings as $setting => $data) {
+    _drupal_rewrite_settings_global($GLOBALS[$setting], $data);
+    $variable_names['$'. $setting] = $setting;
+  }
   $contents = file_get_contents(DRUPAL_ROOT . '/' . $settings_file);
   if ($contents !== FALSE) {
     // Step through each token in settings.php and replace any variables that
     // are in the passed-in array.
-    $replacing_variable = FALSE;
+    $buffer = '';
+    $state = 'default';
     foreach (token_get_all($contents) as $token) {
-      // Strip off the leading "$" before comparing the variable name.
-      if (is_array($token) && $token[0] == T_VARIABLE && ($variable_name = substr($token[1], 1)) && in_array($variable_name, $keys)) {
-        // Write the new value to settings.php in the following format:
-        //    $[setting] = '[value]'; // [comment]
-        $setting = $settings[$variable_name];
-        $buffer .= '$' . $variable_name . ' = ' . var_export($setting['value'], TRUE) . ';';
-        if (!empty($setting['comment'])) {
-          $buffer .= ' // ' . $setting['comment'];
-        }
-        unset($settings[$variable_name]);
-        $replacing_variable = TRUE;
+      if (is_array($token)) {
+        list($type, $value) = $token;
       }
       else {
-        // Write a regular token (that is not part of a variable we're
-        // replacing) to settings.php directly.
-        if (!$replacing_variable) {
-          $buffer .= is_array($token) ? $token[1] : $token;
-        }
-        // When we hit a semicolon, we are done with the code that defines the
-        // variable that is being replaced.
-        if ($token == ';') {
-          $replacing_variable = FALSE;
+        $type = -1;
+        $value = $token;
+      }
+      // Do not operate on whitespace.
+      if (!in_array($type, array(T_WHITESPACE, T_COMMENT, T_DOC_COMMENT))) {
+        switch ($state) {
+          case 'default':
+            if ($type === T_VARIABLE && isset($variable_names[$value])) {
+              // This will be necessary to unset the dumped variable.
+              $parent = &$settings;
+              // This is the current index in parent.
+              $index = $variable_names[$value];
+              // This will be necessary for descending into the array.
+              $current = &$parent[$index];
+              $state = 'candidate_left';
+            }
+            break;
+          case 'candidate_left':
+            if ($value == '[') {
+              $state = 'array_index';
+            }
+            if ($value == '=') {
+              $state = 'candidate_right';
+            }
+            break;
+          case 'array_index':
+            if (_drupal_rewrite_settings_is_array_index($type, $value)) {
+              $index = trim($value, '\'"');
+              $state = 'right_bracket';
+            }
+            else {
+              // $a[foo()] or $a[$bar] or something like that.
+              throw new Exception('invalid array index');
+            }
+            break;
+          case 'right_bracket':
+            if ($value == ']') {
+              if (isset($current[$index])) {
+                // If the new settings has this index, descend into it.
+                $parent = &$current;
+                $current = &$parent[$index];
+                $state = 'candidate_left';
+              }
+              else {
+                // Otherwise, jump back to the default state.
+                $state = 'wait_for_semicolon';
+              }
+            }
+            else {
+              // $a[1 + 2].
+              throw new Exception('] expected');
+            }
+            break;
+          case 'candidate_right':
+            if (_drupal_rewrite_settings_is_simple($type, $value)) {
+              $value = _drupal_rewrite_settings_dump_one($current);
+              // Unsetting $current would not affect $settings at all.
+              unset($parent[$index]);
+              // Skip the semicolon because _drupal_rewrite_settings_dump_one() added one.
+              $state = 'semicolon_skip';
+            }
+            else {
+              $state = 'wait_for_semicolon';
+            }
+            break;
+          case 'wait_for_semicolon':
+            if ($value == ';') {
+              $state = 'default';
+            }
+            break;
+          case 'semicolon_skip':
+            if ($value == ';') {
+              $value = '';
+              $state = 'default';
+            }
+            else {
+              // If the expression was $a = 1 + 2; then we replaced 1 and
+              // the + is unexpected.
+              throw new Exception('Unepxected token after replacing value.');
+            }
+            break;
         }
       }
+      $buffer .= $value;
     }
-
-    // Add required settings that were missing from settings.php.
-    foreach ($settings as $setting => $data) {
-      if (!empty($data['required'])) {
-        $buffer .= "\$$setting = " . var_export($data['value'], TRUE) . ";\n";
-      }
+    foreach ($settings as $name => $setting) {
+      $buffer .= _drupal_rewrite_settings_dump($setting, '$' . $name);
     }
 
     // Write the new settings file.
@@ -228,6 +314,123 @@ function drupal_rewrite_settings($settings = array()) {
   else {
     throw new Exception(st('Failed to open %settings. Verify the file permissions.', array('%settings' => $settings_file)));
   }
+}
+
+/**
+ * Helper for drupal_rewrite_settings().
+ *
+ * Checks whether this token represents a scalar or NULL.
+ *
+ * @param int $type
+ *   The token type
+ *   @see token_name().
+ * @param string $value
+ *   The value of the token.
+ *
+ * @return bool
+ *   TRUE if this token represents a scalar or NULL.
+ */
+function _drupal_rewrite_settings_is_simple($type, $value) {
+  $is_integer = $type == T_LNUMBER;
+  $is_float = $type == T_DNUMBER;
+  $is_string = $type == T_CONSTANT_ENCAPSED_STRING;
+  $is_boolean_or_null = $type == T_STRING && in_array(strtoupper($value), array('TRUE', 'FALSE', 'NULL'));
+  return $is_integer || $is_float || $is_string || $is_boolean_or_null;
+}
+
+
+/**
+ * Helper for drupal_rewrite_settings().
+ *
+ * Checks whether this token represents a valid array index: a number or a
+ * stirng.
+ *
+ * @param int $type
+ *   The token type
+ *   @see token_name().
+ *
+ * @return bool
+ *   TRUE if this token represents a number or a string.
+ */
+function _drupal_rewrite_settings_is_array_index($type) {
+  $is_integer = $type == T_LNUMBER;
+  $is_float = $type == T_DNUMBER;
+  $is_string = $type == T_CONSTANT_ENCAPSED_STRING;
+  return $is_integer || $is_float || $is_string;
+}
+
+/**
+ * Helper for drupal_rewrite_settings().
+ *
+ * Makes the new settings global.
+ *
+ * @param array|NULL $ref
+ *   A reference to a nested index in $GLOBALS.
+ * @param array|object $variable
+ *   The nested value of the setting being copied.
+ */
+function _drupal_rewrite_settings_global(&$ref, $variable) {
+  if (is_object($variable)) {
+    $ref = $variable->value;
+  }
+  else {
+    foreach ($variable as $k => $v) {
+      _drupal_rewrite_settings_global($ref[$k], $v);
+    }
+  }
+}
+
+/**
+ * Helper for drupal_rewrite_settings().
+ *
+ * Dump the relevant value properties.
+ *
+ * @param array|object $variable
+ *   The container for variable values.
+ * @param string $variable_name
+ *   Name of variable.
+ * @return string
+ *   A string containing valid PHP code of the variable suitable for placing
+ *   into settings.php.
+ */
+function _drupal_rewrite_settings_dump($variable, $variable_name) {
+  $return = '';
+  if (is_object($variable)) {
+    if (!empty($variable->required)) {
+      $return .= _drupal_rewrite_settings_dump_one($variable, "$variable_name = ", "\n");
+    }
+  }
+  else {
+    foreach ($variable as $k => $v) {
+      $return .= _drupal_rewrite_settings_dump($v, $variable_name . "['" . $k . "']");
+    }
+  }
+  return $return;
+}
+
+
+/**
+ * Helper for drupal_rewrite_settings().
+ *
+ * Dump the value of a value property and adds the comment if it exists.
+ *
+ * @param stdClass $variable
+ *   A stdClass object with at least a value property.
+ * @param string $prefix
+ *   A string to prepend to the variable's value.
+ * @param string $suffix
+ *   A string to append to the variable's value.
+ * @return string
+ *   A string containing valid PHP code of the variable suitable for placing
+ *   into settings.php.
+ */
+function _drupal_rewrite_settings_dump_one(\stdClass $variable, $prefix = '', $suffix = '') {
+  $return = $prefix . var_export($variable->value, TRUE) . ';';
+  if (!empty($variable->comment)) {
+    $return .= ' // ' . $variable->comment;
+  }
+  $return .= $suffix;
+  return $return;
 }
 
 /**
@@ -244,15 +447,18 @@ function drupal_install_config_directories() {
   if (empty($config_directories)) {
     $config_directories_hash = drupal_hash_base64(drupal_random_bytes(55));
     $settings['config_directories'] = array(
-      'value' => array(
-        CONFIG_ACTIVE_DIRECTORY => array(
-          'path' => 'config_' . $config_directories_hash . '/active',
-        ),
-        CONFIG_STAGING_DIRECTORY => array(
-          'path' => 'config_' . $config_directories_hash . '/staging',
+      CONFIG_ACTIVE_DIRECTORY => array(
+        'path' => (object) array(
+          'value' => 'config_' . $config_directories_hash . '/active',
+          'required' => TRUE,
         ),
       ),
-      'required' => TRUE,
+      CONFIG_STAGING_DIRECTORY => array(
+        'path' => (object) array(
+          'value' => 'config_' . $config_directories_hash . '/staging',
+          'required' => TRUE,
+        ),
+      ),
     );
     // Rewrite settings.php, which also sets the value as global variable.
     drupal_rewrite_settings($settings);
