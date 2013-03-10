@@ -9,12 +9,12 @@ namespace Drupal\file\Tests;
 
 use Drupal\Core\Entity\Field\FieldItemInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
-use Drupal\field\Tests\FieldItemUnitTestBase;
+use Drupal\field\Tests\FieldUnitTestBase;
 
 /**
  * Tests the new entity API for the file field type.
  */
-class FileItemTest extends FieldItemUnitTestBase {
+class FileItemTest extends FieldUnitTestBase {
 
   /**
    * Modules to enable.

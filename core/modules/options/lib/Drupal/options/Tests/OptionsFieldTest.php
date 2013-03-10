@@ -8,19 +8,19 @@
 namespace Drupal\options\Tests;
 
 use Drupal\field\FieldException;
-use Drupal\field\Tests\FieldItemUnitTestBase;
+use Drupal\field\Tests\FieldUnitTestBase;
 
 /**
  * Tests for the 'Options' field types.
  */
-class OptionsFieldTest extends FieldItemUnitTestBase {
+class OptionsFieldTest extends FieldUnitTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('options', 'entity_test');
+  public static $modules = array('options');
 
   public static function getInfo() {
     return array(
@@ -32,9 +32,7 @@ class OptionsFieldTest extends FieldItemUnitTestBase {
 
   function setUp() {
     parent::setUp();
-
     $this->installSchema('system', 'menu_router');
-    $this->installSchema('system', 'variable');
 
 
     $this->field_name = 'test_options';

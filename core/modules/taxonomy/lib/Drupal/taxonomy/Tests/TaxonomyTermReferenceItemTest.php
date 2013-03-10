@@ -9,12 +9,12 @@ namespace Drupal\taxonomy\Tests;
 
 use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\Core\Entity\Field\FieldItemInterface;
-use Drupal\field\Tests\FieldItemUnitTestBase;
+use Drupal\field\Tests\FieldUnitTestBase;
 
 /**
  * Tests the new entity API for the taxonomy term reference field type.
  */
-class TaxonomyTermReferenceItemTest extends FieldItemUnitTestBase {
+class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
 
   /**
    * Modules to enable.

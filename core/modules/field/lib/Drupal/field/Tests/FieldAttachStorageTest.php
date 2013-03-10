@@ -13,13 +13,18 @@ namespace Drupal\field\Tests;
  * All field_attach_* test work with all field_storage plugins and
  * all hook_field_attach_pre_{load,insert,update}() hooks.
  */
-class FieldAttachStorageTest extends FieldAttachTestBase {
+class FieldAttachStorageTest extends FieldUnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Field attach tests (storage-related)',
       'description' => 'Test storage-related Field Attach API functions.',
       'group' => 'Field API',
     );
+  }
+
+  public function setUp() {
+    parent::setUp();
+    $this->createFieldWithInstance();
   }
 
   /**
