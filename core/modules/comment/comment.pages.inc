@@ -5,7 +5,7 @@
  * User page callbacks for the Comment module.
  */
 
-use Drupal\core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\Plugin\Core\Entity\Node;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

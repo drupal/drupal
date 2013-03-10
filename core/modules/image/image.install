@@ -176,6 +176,5 @@ function image_update_8001() {
 function image_update_8002() {
   update_variables_to_config('image.settings', array(
     'image_style_preview_image' => 'preview_image',
-    'image_jpeg_quality' => 'jpeg_quality',
   ));
 }

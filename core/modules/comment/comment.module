@@ -1123,7 +1123,7 @@ function comment_entity_load($entities, $entity_type) {
 /**
  * Implements hook_entity_insert().
  */
-function comment_entity_insert($entity) {
+function comment_entity_insert(EntityInterface $entity) {
   global $user;
   // Allow bulk updates and inserts to temporarily disable the
   // maintenance of the {comment_entity_statistics} table.
@@ -1162,7 +1162,7 @@ function comment_entity_insert($entity) {
 /**
  * Implements hook_entity_predelete().
  */
-function comment_entity_predelete($entity) {
+function comment_entity_predelete(EntityInterface $entity) {
   $cids = db_select('comment', 'c')
     ->fields('c', array('cid'))
     ->condition('entity_id', $entity->id())

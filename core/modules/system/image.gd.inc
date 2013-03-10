@@ -37,7 +37,7 @@ function image_gd_settings() {
       '#description' => t('Define the image quality for JPEG manipulations. Ranges from 0 to 100. Higher values mean better image quality but bigger files.'),
       '#min' => 0,
       '#max' => 100,
-      '#default_value' => config('image.settings')->get('jpeg_quality'),
+      '#default_value' => variable_get('image_jpeg_quality', 75),
       '#field_suffix' => t('%'),
     );
 
@@ -296,8 +296,7 @@ function image_gd_save(stdClass $image, $destination) {
     return FALSE;
   }
   if ($extension == 'jpeg') {
-    $quality = config('image.settings')->get('jpeg_quality');
-    $success = $function($image->resource, $destination, $quality);
+    $success = $function($image->resource, $destination, variable_get('image_jpeg_quality', 75));
   }
   else {
     // Always save PNG images with full transparency.
