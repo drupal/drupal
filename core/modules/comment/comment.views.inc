@@ -328,12 +328,14 @@ function comment_views_data() {
     ),
   );
 
+  $entities_info = Drupal::service('plugin.manager.entity')->getDefinitions();
+
   // Provide a relationship for each entity type except comment.
-  foreach (drupal_container()->get('plugin.manager.entity')->getDefinitions() as $type => $entity_info) {
-    if ($type == 'comment') {
+  foreach ($entities_info as $type => $entity_info) {
+    if ($type == 'comment' || empty($entity_info['fieldable']) || !isset($entity_info['base_table'])) {
       continue;
     }
-    if (($fields = comment_get_comment_fields($type)) && isset($entity_info['base_table'])) {
+    if ($fields = comment_get_comment_fields($type)) {
       $data['comment'][$type] = array(
         'relationship' => array(
           'title' => $entity_info['label'],
@@ -422,12 +424,12 @@ function comment_views_data() {
   $data['comment_entity_statistics']['table']['group']  = t('Comment Statistics');
 
   // Provide a relationship for each entity type except comment.
-  foreach (drupal_container()->get('plugin.manager.entity')->getDefinitions() as $type => $entity_info) {
-    if ($type == 'comment') {
+  foreach ($entities_info as $type => $entity_info) {
+    if ($type == 'comment' || empty($entity_info['fieldable']) || !isset($entity_info['base_table'])) {
       continue;
     }
     // @todo As you can't have multiple joins this join doesn't use the field_name yet.
-    if (comment_get_comment_fields($type) && isset($entity_info['base_table'])) {
+    if (comment_get_comment_fields($type)) {
       // Explain how this table joins to others.
       $data['comment_entity_statistics']['table']['join'][$entity_info['base_table']] = array(
         'type' => 'INNER',
@@ -572,7 +574,7 @@ function comment_views_data_alter(&$data) {
   );
 
   // Provide a integration for each entity type.
-  foreach (drupal_container()->get('plugin.manager.entity')->getDefinitions() as $entity_type => $entity_info) {
+  foreach (Drupal::service('plugin.manager.entity')->getDefinitions() as $entity_type => $entity_info) {
     if (!isset($entity_info['base_table'])) {
       continue;
     }

@@ -68,11 +68,9 @@ class DefaultViewRecentComments extends ViewTestBase {
     // Create a new content type
     $content_type = $this->drupalCreateContentType();
 
-    $language_not_specified = LANGUAGE_NOT_SPECIFIED;
     // Add a node of the new content type.
     $node_data = array(
       'type' => $content_type->type,
-      "comment[$language_not_specified][0][comment]" => COMMENT_OPEN
     );
 
     comment_add_default_comment_field('node', $content_type->type);
@@ -82,12 +80,14 @@ class DefaultViewRecentComments extends ViewTestBase {
 
     // Create some comments and attach them to the created node.
     for ($i = 0; $i < $this->masterDisplayResults; $i++) {
-      $comment = entity_create('comment', array('field_name' => 'comment'));
+      $comment = entity_create('comment', array(
+        'field_name' => 'comment',
+        'entity_type' => 'node',
+        'entity_id' => $this->node->nid,
+      ));
       $comment->uid->target_id = 0;
-      $comment->entity_type->value = 'node';
       // Stagger the comments so the timestamp sorting works.
       $comment->created->value = REQUEST_TIME - $i;
-      $comment->entity_id->target_id = $this->node->nid;
       $comment->subject->value = 'Test comment ' . $i;
       $comment->comment_body->value = 'Test body ' . $i;
       $comment->comment_body->format = 'full_html';
@@ -104,7 +104,7 @@ class DefaultViewRecentComments extends ViewTestBase {
    */
   public function testBlockDisplay() {
     $view = views_get_view('comments_recent');
-    $view->setDisplay('block');
+    $view->setDisplay('block_1');
     $this->executeView($view);
 
     $map = array(
@@ -135,7 +135,7 @@ class DefaultViewRecentComments extends ViewTestBase {
    */
   public function testPageDisplay() {
     $view = views_get_view('comments_recent');
-    $view->setDisplay('page');
+    $view->setDisplay('page_1');
     $this->executeView($view);
 
     $map = array(
