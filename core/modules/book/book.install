@@ -99,18 +99,12 @@ function book_update_8000() {
   ));
   $allowed_types = update_variable_get('book_allowed_types', FALSE);
   if ($allowed_types) {
-    // In Drupal 7 the variable book_allowed_types was stored like this:
-    // array(
-    //   0 => 'book',
-    //   1 => 'article',
-    // )
-    // In Drupal 8 book.settings:allowed_types should be stored like this:
-    // array(
-    //   'book' => 'book',
-    //   'article' => 'article',
-    // )
+    // Ensure consistent ordering of allowed_types.
+    // @see book_admin_settings_submit()
+    sort($allowed_types);
+
     config('book.settings')
-      ->set('allowed_types', drupal_map_assoc($allowed_types))
+      ->set('allowed_types', $allowed_types)
       ->save();
   }
 

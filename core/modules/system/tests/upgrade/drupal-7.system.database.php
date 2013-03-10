@@ -150,7 +150,7 @@ db_update('variable')
   ->condition('name', 'filter_fallback_format')
   ->execute();
 db_update('variable')
-  ->fields(array('value' => 'a:2:{i:0;s:4:"book";i:1;s:4:"test";}'))
+  ->fields(array('value' => 'a:2:{i:0;s:4:"test";i:1;s:4:"book";}'))
   ->condition('name', 'book_allowed_types')
   ->execute();
 

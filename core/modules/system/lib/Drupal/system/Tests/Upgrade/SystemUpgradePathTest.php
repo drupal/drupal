@@ -147,9 +147,9 @@ class SystemUpgradePathTest extends UpgradePathTestBase {
 
     $expected_config['book.settings'] = array(
       'allowed_types' => array(
-        'book' => 'book',
+        'book',
         // Content type does not have to exist.
-        'test' => 'test',
+        'test',
       ),
       'block' => array(
         'navigation' => array(

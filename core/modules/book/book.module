@@ -1230,27 +1230,28 @@ function template_preprocess_book_node_export_html(&$variables) {
  *   A Boolean TRUE if the node type can be included in books; otherwise, FALSE.
  */
 function book_type_is_allowed($type) {
-  $allowed_types = config('book.settings')->get('allowed_types');
-  return isset($allowed_types[$type]);
+  return in_array($type, config('book.settings')->get('allowed_types'));
 }
 
 /**
  * Implements hook_node_type_update().
  *
- * Updates the Book module's persistent variables if the machine-readable name
- * of a node type is changed.
+ * Updates book.settings configuration object if the machine-readable name of a
+ * node type is changed.
  */
 function book_node_type_update($type) {
   if (!empty($type->old_type) && $type->old_type != $type->type) {
     $config = config('book.settings');
     // Update the list of node types that are allowed to be added to books.
     $allowed_types = $config->get('allowed_types');
-
-    if (isset($allowed_types[$type->old_type])) {
+    $old_key = array_search($type->old_type, $allowed_types);
+    if ($old_key !== FALSE) {
       // Replace the old machine-readable name with the new machine-readable
       // name.
-      $allowed_types[$type->type] = $type->type;
-      unset($allowed_types[$type->old_type]);
+      $allowed_types[$old_key] = $type->type;
+      // Ensure that the allowed_types array is sorted consistently.
+      // @see book_admin_settings_submit()
+      sort($allowed_types);
       $config->set('allowed_types', $allowed_types);
     }
 
