@@ -365,6 +365,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
       'id',
       'tag',
       'uuid',
+      'langcode',
     );
     $properties = array();
     foreach ($names as $name) {
