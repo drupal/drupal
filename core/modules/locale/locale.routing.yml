@@ -1,0 +1,6 @@
+locale_settings:
+  pattern: '/admin/config/regional/translate/settings'
+  defaults:
+    _form: 'Drupal\locale\Form\LocaleSettingsForm'
+  requirements:
+    _permission: 'translate interface'
