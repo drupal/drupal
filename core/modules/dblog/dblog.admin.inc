@@ -58,13 +58,29 @@ function dblog_overview() {
     ->execute();
 
   foreach ($result as $dblog) {
+    // Check for required properties.
+    if (isset($dblog->message) && isset($dblog->variables)) {
+      // Messages without variables or user specified text.
+      if ($dblog->variables === 'N;') {
+        $message = $dblog->message;
+      }
+      // Message to translate with injected variables.
+      else {
+        $message = t($dblog->message, unserialize($dblog->variables));
+      }
+      if (isset($dblog->wid)) {
+        // Truncate link_text to 56 chars of message.
+        $log_text = truncate_utf8(filter_xss($message, array()), 56, TRUE, TRUE);
+        $message = l($log_text, 'admin/reports/event/' . $dblog->wid, array('html' => TRUE));
+      }
+    }
     $rows[] = array('data' =>
       array(
         // Cells
         array('class' => array('icon')),
         t($dblog->type),
         format_date($dblog->timestamp, 'short'),
-        theme('dblog_message', array('event' => $dblog, 'link' => TRUE)),
+        $message,
         theme('username', array('account' => $dblog)),
         filter_xss($dblog->link),
       ),
@@ -125,7 +141,18 @@ function dblog_top($type) {
 
   $rows = array();
   foreach ($result as $dblog) {
-    $rows[] = array($dblog->count, theme('dblog_message', array('event' => $dblog)));
+    // Check for required properties.
+    if (isset($dblog->message) && isset($dblog->variables)) {
+      // Messages without variables or user specified text.
+      if ($dblog->variables === 'N;') {
+        $message = $dblog->message;
+      }
+      // Message to translate with injected variables.
+      else {
+        $message = t($dblog->message, unserialize($dblog->variables));
+      }
+    }
+    $rows[] = array($dblog->count, $message);
   }
 
   $build['dblog_top_table']  = array(
@@ -155,6 +182,17 @@ function dblog_event($id) {
   $severity = watchdog_severity_levels();
   $result = db_query('SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid WHERE w.wid = :id', array(':id' => $id))->fetchObject();
   if ($dblog = $result) {
+    // Check for required properties.
+    if (isset($dblog->message) && isset($dblog->variables)) {
+      // Messages without variables or user specified text.
+      if ($dblog->variables === 'N;') {
+        $message = $dblog->message;
+      }
+      // Message to translate with injected variables.
+      else {
+        $message = t($dblog->message, unserialize($dblog->variables));
+      }
+    }
     $rows = array(
       array(
         array('data' => t('Type'), 'header' => TRUE),
@@ -178,7 +216,7 @@ function dblog_event($id) {
       ),
       array(
         array('data' => t('Message'), 'header' => TRUE),
-        theme('dblog_message', array('event' => $dblog)),
+        $message,
       ),
       array(
         array('data' => t('Severity'), 'header' => TRUE),
@@ -271,38 +309,6 @@ function dblog_filters() {
   );
 
   return $filters;
-}
-
-/**
- * Returns HTML for a log message.
- *
- * @param array $variables
- *   An associative array containing:
- *   - event: An object with at least the message and variables properties.
- *   - link: (optional) Format message as link, event->wid is required.
- *
- * @ingroup themeable
- */
-function theme_dblog_message($variables) {
-  $output = '';
-  $event = $variables['event'];
-  // Check for required properties.
-  if (isset($event->message) && isset($event->variables)) {
-    // Messages without variables or user specified text.
-    if ($event->variables === 'N;') {
-      $output = $event->message;
-    }
-    // Message to translate with injected variables.
-    else {
-      $output = t($event->message, unserialize($event->variables));
-    }
-    if ($variables['link'] && isset($event->wid)) {
-      // Truncate message to 56 chars.
-      $output = truncate_utf8(filter_xss($output, array()), 56, TRUE, TRUE);
-      $output = l($output, 'admin/reports/event/' . $event->wid, array('html' => TRUE));
-    }
-  }
-  return $output;
 }
 
 /**
