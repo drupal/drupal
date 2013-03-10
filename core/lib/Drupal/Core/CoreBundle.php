@@ -288,7 +288,7 @@ class CoreBundle extends Bundle {
     $container->register('exception_controller', 'Drupal\Core\ExceptionController')
       ->addArgument(new Reference('content_negotiation'))
       ->addMethodCall('setContainer', array(new Reference('service_container')));
-    $container->register('exception_listener', 'Drupal\Core\EventSubscriber\ExceptionListener')
+    $container->register('exception_listener', 'Symfony\Component\HttpKernel\EventListener\ExceptionListener')
       ->addTag('event_subscriber')
       ->addArgument(array(new Reference('exception_controller'), 'execute'));
 
