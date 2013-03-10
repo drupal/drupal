@@ -49,7 +49,7 @@ class SearchCommentCountToggleTest extends SearchTestBase {
     // Add a comment field.
     comment_add_default_comment_field('node', 'article');
     // Create initial nodes.
-    $node_params = array('type' => 'article', 'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => 'SearchCommentToggleTestCase'))));
+    $node_params = array('type' => 'article', 'body' => array(array('value' => 'SearchCommentToggleTestCase')));
 
     $this->searchable_nodes['1 comment'] = $this->drupalCreateNode($node_params);
     $this->searchable_nodes['0 comments'] = $this->drupalCreateNode($node_params);

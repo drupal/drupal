@@ -49,7 +49,7 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
       for ($i = 0; $i < 3; $i++) {
         // Create a revision for the same nid and settings with a random log.
         $revision = clone $nodes[$type];
-        $revision->revision = 1;
+        $revision->setNewRevision();
         $revision->log = $this->randomName(32);
         node_save($revision);
         $this->node_revisions[$type][] = $revision;

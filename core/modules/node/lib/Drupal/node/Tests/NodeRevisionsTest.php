@@ -48,20 +48,24 @@ class NodeRevisionsTest extends NodeTestBase {
     $logs = array();
 
     // Get original node.
-    $nodes[] = $node;
+    $nodes[] = clone $node;
 
     // Create three revisions.
     $revision_count = 3;
     for ($i = 0; $i < $revision_count; $i++) {
-      $logs[] = $settings['log'] = $this->randomName(32);
+      $logs[] = $node->log = $this->randomName(32);
 
-      // Create revision with random title and body and update variables.
-      $this->drupalCreateNode($settings);
+      // Create revision with a random title and body and update variables.
+      $node->title = $this->randomName();
+      $node->body[$node->language()->langcode][0] = array(
+        'value' => $this->randomName(32),
+        'format' => filter_default_format(),
+      );
+      $node->setNewRevision();
+      $node->save();
+
       $node = node_load($node->nid); // Make sure we get revision information.
-      $settings = get_object_vars($node);
-      $settings['isDefaultRevision'] = TRUE;
-
-      $nodes[] = $node;
+      $nodes[] = clone $node;
     }
 
     $this->nodes = $nodes;
@@ -96,7 +100,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->assertRaw(t('@type %title has been reverted back to the revision from %revision-date.',
                         array('@type' => 'Basic page', '%title' => $nodes[1]->label(),
                               '%revision-date' => format_date($nodes[1]->revision_timestamp))), 'Revision reverted.');
-    $reverted_node = node_load($node->nid);
+    $reverted_node = node_load($node->nid, TRUE);
     $this->assertTrue(($nodes[1]->body[LANGUAGE_NOT_SPECIFIED][0]['value'] == $reverted_node->body[LANGUAGE_NOT_SPECIFIED][0]['value']), 'Node reverted correctly.');
 
     // Confirm that this is not the default version.

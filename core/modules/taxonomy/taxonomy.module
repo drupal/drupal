@@ -1067,10 +1067,7 @@ function taxonomy_field_validate(EntityInterface $entity = NULL, $field, $instan
  * Implements hook_field_is_empty().
  */
 function taxonomy_field_is_empty($item, $field) {
-  if (!is_array($item) || (empty($item['tid']) && (string) $item['tid'] !== '0')) {
-    return TRUE;
-  }
-  return FALSE;
+  return !is_array($item) || (empty($item['tid']) && empty($item['entity']));
 }
 
 /**
@@ -1099,9 +1096,8 @@ function taxonomy_field_formatter_info() {
 function taxonomy_field_formatter_view(EntityInterface $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
 
-  // Terms whose tid is 'autocreate' do not exist
-  // yet and $item['taxonomy_term'] is not set. Theme such terms as
-  // just their name.
+  // Terms whose tid is 'autocreate' do not exist yet and $item['entity'] is not
+  // set. Theme such terms as just their name.
 
   switch ($display['type']) {
     case 'taxonomy_term_reference_link':
@@ -1112,7 +1108,7 @@ function taxonomy_field_formatter_view(EntityInterface $entity, $field, $instanc
           );
         }
         else {
-          $term = $item['taxonomy_term'];
+          $term = $item['entity'];
           $uri = $term->uri();
           $element[$delta] = array(
             '#type' => 'link',
@@ -1126,7 +1122,7 @@ function taxonomy_field_formatter_view(EntityInterface $entity, $field, $instanc
 
     case 'taxonomy_term_reference_plain':
       foreach ($items as $delta => $item) {
-        $name = ($item['tid'] != 'autocreate' ? $item['taxonomy_term']->label() : $item['name']);
+        $name = ($item['tid'] != 'autocreate' ? $item['entity']->label() : $item['name']);
         $element[$delta] = array(
           '#markup' => check_plain($name),
         );
@@ -1137,7 +1133,7 @@ function taxonomy_field_formatter_view(EntityInterface $entity, $field, $instanc
       foreach ($items as $delta => $item) {
         $entity->rss_elements[] = array(
           'key' => 'category',
-          'value' => $item['tid'] != 'autocreate' ? $item['taxonomy_term']->label() : $item['name'],
+          'value' => $item['tid'] != 'autocreate' ? $item['entity']->label() : $item['name'],
           'attributes' => array(
             'domain' => $item['tid'] != 'autocreate' ? url('taxonomy/term/' . $item['tid'], array('absolute' => TRUE)) : '',
           ),
@@ -1192,7 +1188,7 @@ function taxonomy_field_formatter_prepare_view($entity_type, $entities, $field, 
   foreach ($entities as $id => $entity) {
     foreach ($items[$id] as $delta => $item) {
       // Force the array key to prevent duplicates.
-      if ($item['tid'] != 'autocreate') {
+      if ($item['tid'] != 'autocreate' && $item['tid'] !== FALSE) {
         $tids[$item['tid']] = $item['tid'];
       }
     }
@@ -1208,7 +1204,7 @@ function taxonomy_field_formatter_prepare_view($entity_type, $entities, $field, 
         // Check whether the taxonomy term field instance value could be loaded.
         if (isset($terms[$item['tid']])) {
           // Replace the instance value with the term data.
-          $items[$id][$delta]['taxonomy_term'] = $terms[$item['tid']];
+          $items[$id][$delta]['entity'] = $terms[$item['tid']];
         }
         // Terms to be created are not in $terms, but are still legitimate.
         elseif ($item['tid'] == 'autocreate') {
@@ -1358,12 +1354,10 @@ function taxonomy_rdf_mapping() {
  */
 function taxonomy_field_presave(EntityInterface $entity, $field, $instance, $langcode, &$items) {
   foreach ($items as $delta => $item) {
-    if ($item['tid'] == 'autocreate') {
+    if (!$item['tid'] && isset($item['entity'])) {
       unset($item['tid']);
-      $term = entity_create('taxonomy_term', $item);
-      $term->langcode = $langcode;
-      taxonomy_term_save($term);
-      $items[$delta]['tid'] = $term->tid;
+      taxonomy_term_save($item['entity']);
+      $items[$delta]['tid'] = $item['entity']->tid;
     }
   }
 }
@@ -1371,7 +1365,7 @@ function taxonomy_field_presave(EntityInterface $entity, $field, $instance, $lan
 /**
  * Implements hook_node_insert().
  */
-function taxonomy_node_insert(Node $node) {
+function taxonomy_node_insert(EntityInterface $node) {
   // Add taxonomy index entries for the node.
   taxonomy_build_node_index($node);
 }
@@ -1448,7 +1442,7 @@ function taxonomy_build_node_index($node) {
 /**
  * Implements hook_node_update().
  */
-function taxonomy_node_update(Node $node) {
+function taxonomy_node_update(EntityInterface $node) {
   // Always rebuild the node's taxonomy index entries on node save.
   taxonomy_delete_node_index($node);
   taxonomy_build_node_index($node);
@@ -1457,7 +1451,7 @@ function taxonomy_node_update(Node $node) {
 /**
  * Implements hook_node_predelete().
  */
-function taxonomy_node_predelete(Node $node) {
+function taxonomy_node_predelete(EntityInterface $node) {
   // Clean up the {taxonomy_index} table when nodes are deleted.
   taxonomy_delete_node_index($node);
 }
@@ -1465,10 +1459,10 @@ function taxonomy_node_predelete(Node $node) {
 /**
  * Deletes taxonomy index entries for a given node.
  *
- * @param Drupal\node\Plugin\Core\Entity\Node $node
+ * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node entity.
  */
-function taxonomy_delete_node_index(Node $node) {
+function taxonomy_delete_node_index(EntityInterface $node) {
   if (config('taxonomy.settings')->get('maintain_index_table')) {
     db_delete('taxonomy_index')->condition('nid', $node->nid)->execute();
   }

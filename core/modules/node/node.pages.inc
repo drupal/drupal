@@ -9,7 +9,7 @@
  * @see node_menu()
  */
 
-use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Page callback: Presents the node editing form.
@@ -106,7 +106,7 @@ function node_add($node_type) {
     'name' => (isset($user->name) ? $user->name : ''),
     'type' => $type,
     'langcode' => $langcode ? $langcode : language_default()->langcode,
-  ));
+  ))->getBCEntity();
   drupal_set_title(t('Create @name', array('@name' => $node_type->name)), PASS_THROUGH);
   $output = entity_get_form($node);
 
@@ -116,7 +116,7 @@ function node_add($node_type) {
 /**
  * Generates a node preview.
  *
- * @param Drupal\node\Node $node
+ * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node to preview.
  *
  * @return
@@ -124,7 +124,7 @@ function node_add($node_type) {
  *
  * @see node_form_build_preview()
  */
-function node_preview(Node $node) {
+function node_preview(EntityInterface $node) {
   if (node_access('create', $node) || node_access('update', $node)) {
     _field_invoke_multiple('load', 'node', array($node->nid => $node));
     // Load the user's name when needed.

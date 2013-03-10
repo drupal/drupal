@@ -37,7 +37,7 @@ function tracker_page($account = NULL, $set_title = FALSE) {
 
   // This array acts as a placeholder for the data selected later
   // while keeping the correct order.
-  $nodes = $query
+  $tracker_data = $query
     ->addTag('node_access')
     ->addMetaData('base_table', 'tracker_node')
     ->fields('t', array('nid', 'changed'))
@@ -48,12 +48,14 @@ function tracker_page($account = NULL, $set_title = FALSE) {
     ->fetchAllAssoc('nid');
 
   $rows = array();
-  if (!empty($nodes)) {
+  if (!empty($tracker_data)) {
+    $nids = array_keys($tracker_data);
+    $nodes = entity_load_multiple('node', $nids);
     // Now, get the data and put into the placeholder array.
-    $result = db_query("SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, SUM(l.comment_count) AS comment_count FROM {node} n INNER JOIN {comment_entity_statistics} l ON n.nid = l.entity_id AND l.entity_type = 'node' INNER JOIN {users} u ON n.uid = u.uid WHERE n.nid IN (:nids) GROUP BY 1, 2, 3, 4, 5, 6", array(':nids' => array_keys($nodes)), array('target' => 'slave'));
-    foreach ($result as $node) {
-      $node->last_activity = $nodes[$node->nid]->changed;
-      $nodes[$node->nid] = $node;
+    $result = db_query("SELECT n.nid, SUM(l.comment_count) AS comment_count FROM {node} n INNER JOIN {comment_entity_statistics} l ON n.nid = l.entity_id AND l.entity_type = 'node' INNER JOIN {users} u ON n.uid = u.uid WHERE n.nid IN (:nids) GROUP BY n.nid", array(':nids' => array_keys($nodes)), array('target' => 'slave'))->fetchAllKeyed();
+    foreach ($result as $nid => $comment_count) {
+      $nodes[$nid]->last_activity = $tracker_data[$nid]->changed;
+      $nodes[$nid]->comment_count = $comment_count;
     }
 
     // Display the data.

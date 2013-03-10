@@ -86,10 +86,34 @@ class EntityReferenceItem extends FieldItemBase {
   }
 
   /**
+   * Overrides \Drupal\Core\Entity\Field\FieldItemBase::__set().
+   */
+  public function __set($name, $value) {
+    parent::__set($name, $value);
+  }
+
+  /**
+   * Overrides \Drupal\Core\Entity\Field\FieldItemBase::__get().
+   */
+  public function __get($name) {
+    $name = ($name == 'value') ? 'target_id' : $name;
+    return parent::__get($name);
+  }
+
+  /**
    * Overrides \Drupal\Core\Entity\Field\FieldItemBase::get().
    */
   public function get($property_name) {
     $property_name = ($property_name == 'value') ? 'target_id' : $property_name;
     return parent::get($property_name);
   }
+
+  /**
+   * Implements \Drupal\Core\Entity\Field\FieldItemInterface::__isset().
+   */
+  public function __isset($property_name) {
+    $property_name = ($property_name == 'value') ? 'target_id' : $property_name;
+    return parent::__isset($property_name);
+  }
+
 }

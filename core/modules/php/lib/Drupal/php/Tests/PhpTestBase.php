@@ -58,6 +58,6 @@ abstract class PhpTestBase extends WebTestBase {
    * @return stdObject Node object.
    */
   function createNodeWithCode() {
-    return $this->drupalCreateNode(array('body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => '<?php print "SimpleTest PHP was executed!"; ?>')))));
+    return $this->drupalCreateNode(array('body' => array(array('value' => '<?php print "SimpleTest PHP was executed!"; ?>'))));
   }
 }

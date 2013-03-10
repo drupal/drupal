@@ -46,13 +46,23 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
   protected $decorated;
 
   /**
+   * Local cache for field definitions.
+   *
+   * @var array
+   */
+  protected $definitions;
+
+  /**
    * Constructs a Drupal\Core\Entity\EntityCompatibilityDecorator object.
    *
    * @param \Drupal\Core\Entity\EntityInterface $decorated
    *   The decorated entity.
+   * @param array &$definitions
+   *   An array of field definitions.
    */
-  function __construct(EntityNG $decorated) {
+  function __construct(EntityNG $decorated, array &$definitions) {
     $this->decorated = $decorated;
+    $this->definitions = &$definitions;
   }
 
   /**
@@ -75,6 +85,11 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
    * Directly accesses the plain field values, as done in Drupal 7.
    */
   public function &__get($name) {
+    // Directly return the original property.
+    if ($name == 'original') {
+      return $this->decorated->values[$name];
+    }
+
     // We access the protected 'values' and 'fields' properties of the decorated
     // entity via the magic getter - which returns them by reference for us. We
     // do so, as providing references to these arrays would make $entity->values
@@ -88,7 +103,10 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
       // the field objects managed by the entity, thus we need to ensure
       // $this->decorated->values reflects the latest values first.
       foreach ($this->decorated->fields[$name] as $langcode => $field) {
-        $this->decorated->values[$name][$langcode] = $field->getValue();
+        // Only set if it's not empty, otherwise there can be ghost values.
+        if (!$field->isEmpty()) {
+          $this->decorated->values[$name][$langcode] = $field->getValue();
+        }
       }
       // The returned values might be changed by reference, so we need to remove
       // the field object to avoid the field object and the value getting out of
@@ -96,21 +114,39 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
       // receive the possibly updated value.
       unset($this->decorated->fields[$name]);
     }
-    // Allow accessing field values in entity default language other than
-    // LANGUAGE_DEFAULT by mapping the values to LANGUAGE_DEFAULT. This is
-    // necessary as EntityNG does key values in default language always with
-    // LANGUAGE_DEFAULT while field API expects them to be keyed by langcode.
-    $langcode = $this->decorated->language()->langcode;
-    if ($langcode != LANGUAGE_DEFAULT && isset($this->decorated->values[$name]) && is_array($this->decorated->values[$name])) {
-      if (isset($this->decorated->values[$name][LANGUAGE_DEFAULT]) && !isset($this->decorated->values[$name][$langcode])) {
-        $this->decorated->values[$name][$langcode] = &$this->decorated->values[$name][LANGUAGE_DEFAULT];
+    // When accessing values for entity properties that have been converted to
+    // an entity field, provide direct access to the plain value. This makes it
+    // possible to use the BC-decorator with properties; e.g., $node->title.
+    if (isset($this->definitions[$name]) && empty($this->definitions[$name]['configurable'])) {
+      if (!isset($this->decorated->values[$name][LANGUAGE_DEFAULT])) {
+        $this->decorated->values[$name][LANGUAGE_DEFAULT][0]['value'] = NULL;
       }
+      if (is_array($this->decorated->values[$name][LANGUAGE_DEFAULT])) {
+        // This will work with all defined properties that have a single value.
+        // We need to ensure the key doesn't matter. Mostly it's 'value' but
+        // e.g. EntityReferenceItem uses target_id.
+        if (isset($this->decorated->values[$name][LANGUAGE_DEFAULT][0]) && count($this->decorated->values[$name][LANGUAGE_DEFAULT][0]) == 1) {
+          return $this->decorated->values[$name][LANGUAGE_DEFAULT][0][key($this->decorated->values[$name][LANGUAGE_DEFAULT][0])];
+        }
+      }
+      return $this->decorated->values[$name][LANGUAGE_DEFAULT];
     }
-
-    if (!isset($this->decorated->values[$name])) {
-      $this->decorated->values[$name] = NULL;
+    else {
+      // Allow accessing field values in an entity default language other than
+      // LANGUAGE_DEFAULT by mapping the values to LANGUAGE_DEFAULT. This is
+      // necessary as EntityNG always keys default language values with
+      // LANGUAGE_DEFAULT while field API expects them to be keyed by langcode.
+      $langcode = $this->decorated->language()->langcode;
+      if ($langcode != LANGUAGE_DEFAULT && isset($this->decorated->values[$name]) && is_array($this->decorated->values[$name])) {
+        if (isset($this->decorated->values[$name][LANGUAGE_DEFAULT]) && !isset($this->decorated->values[$name][$langcode])) {
+          $this->decorated->values[$name][$langcode] = &$this->decorated->values[$name][LANGUAGE_DEFAULT];
+        }
+      }
+      if (!isset($this->decorated->values[$name])) {
+        $this->decorated->values[$name] = NULL;
+      }
+      return $this->decorated->values[$name];
     }
-    return $this->decorated->values[$name];
   }
 
   /**
@@ -119,20 +155,29 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
    * Directly writes to the plain field values, as done by Drupal 7.
    */
   public function __set($name, $value) {
-    if (is_array($value) && $definition = $this->decorated->getPropertyDefinition($name)) {
-      // If field API sets a value with a langcode in entity language, move it
-      // to LANGUAGE_DEFAULT.
-      // This is necessary as EntityNG does key values in default language always
-      // with LANGUAGE_DEFAULT while field API expects them to be keyed by
-      // langcode.
-      foreach ($value as $langcode => $data) {
-        if ($langcode != LANGUAGE_DEFAULT && $langcode == $this->decorated->language()->langcode) {
-          $value[LANGUAGE_DEFAULT] = $data;
-          unset($value[$langcode]);
+    $defined = isset($this->definitions[$name]);
+    // When updating values for entity properties that have been converted to
+    // an entity field, directly write to the plain value. This makes it
+    // possible to use the BC-decorator with properties; e.g., $node->title.
+    if ($defined && empty($this->definitions[$name]['configurable'])) {
+      $this->decorated->values[$name][LANGUAGE_DEFAULT] = $value;
+    }
+    else {
+      if ($defined && is_array($value)) {
+        // If field API sets a value with a langcode in entity language, move it
+        // to LANGUAGE_DEFAULT.
+        // This is necessary as EntityNG always keys default language values
+        // with LANGUAGE_DEFAULT while field API expects them to be keyed by
+        // langcode.
+        foreach ($value as $langcode => $data) {
+          if ($langcode != LANGUAGE_DEFAULT && $langcode == $this->decorated->language()->langcode) {
+            $value[LANGUAGE_DEFAULT] = $data;
+            unset($value[$langcode]);
+          }
         }
       }
+      $this->decorated->values[$name] = $value;
     }
-    $this->decorated->values[$name] = $value;
     // Remove the field object to avoid the field object and the value getting
     // out of sync. That way, the next field object instantiated by EntityNG
     // will hold the updated value.
@@ -151,8 +196,9 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
    * Implements the magic method for unset().
    */
   public function __unset($name) {
+    // Set the value to NULL.
     $value = &$this->__get($name);
-    $value = array();
+    $value = NULL;
   }
 
   /**
@@ -173,6 +219,10 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
    * Forwards the call to the decorated entity.
    */
   public function get($property_name) {
+    // Ensure this works with not yet defined fields.
+    if (!isset($this->definitions[$property_name])) {
+      return $this->__get($property_name);
+    }
     return $this->decorated->get($property_name);
   }
 
@@ -180,6 +230,10 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
    * Forwards the call to the decorated entity.
    */
   public function set($property_name, $value) {
+    // Ensure this works with not yet defined fields.
+    if (!isset($this->definitions[$property_name])) {
+      return $this->__set($property_name, $value);
+    }
     return $this->decorated->set($property_name, $value);
   }
 

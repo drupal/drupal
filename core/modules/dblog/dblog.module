@@ -184,15 +184,3 @@ function dblog_form_system_logging_settings_alter(&$form, $form_state) {
 function dblog_logging_settings_submit($form, &$form_state) {
   config('dblog.settings')->set('row_limit', $form_state['values']['dblog_row_limit'])->save();
 }
-
-/**
- * Implements hook_theme().
- */
-function dblog_theme() {
-  return array(
-    'dblog_message' => array(
-      'variables' => array('event' => NULL, 'link' => FALSE),
-      'file' => 'dblog.admin.inc',
-    ),
-  );
-}

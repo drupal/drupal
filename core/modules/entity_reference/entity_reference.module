@@ -35,24 +35,32 @@ function entity_reference_field_info() {
 }
 
 /**
- * Implements hook_entity_field_info().
+ * Implements hook_entity_field_info_alter().
  *
  * Set the "target_type" property definition for entity reference fields.
  *
  * @see \Drupal\Core\Entity\Field\Type\EntityReferenceItem::getPropertyDefinitions()
+ *
+ * @param array $info
+ *   The property info array as returned by hook_entity_field_info().
+ * @param string $entity_type
+ *   The entity type for which entity properties are defined.
  */
-function entity_reference_entity_field_info($entity_type) {
-  $property_info = array();
+function entity_reference_entity_field_info_alter(&$info, $entity_type) {
   foreach (field_info_instances($entity_type) as $bundle_name => $instances) {
     foreach ($instances as $field_name => $instance) {
       $field = field_info_field($field_name);
       if ($field['type'] != 'entity_reference') {
         continue;
       }
-      $property_info['definitions'][$field_name]['settings']['target_type'] = $field['settings']['target_type'];
+      if (isset($info['definitions'][$field_name])) {
+        $info['definitions'][$field_name]['settings']['target_type'] = $field['settings']['target_type'];
+      }
+      elseif (isset($info['optional'][$field_name])) {
+        $info['optional'][$field_name]['settings']['target_type'] = $field['settings']['target_type'];
+      }
     }
   }
-  return $property_info;
 }
 
 /**

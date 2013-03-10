@@ -70,7 +70,7 @@ class OptionsFieldUITest extends FieldTestBase {
     // Create a node with actual data for the field.
     $settings = array(
       'type' => $this->type,
-      $this->field_name => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => 1))),
+      $this->field_name =>array(array('value' => 1)),
     );
     $node = $this->drupalCreateNode($settings);
 
@@ -120,7 +120,7 @@ class OptionsFieldUITest extends FieldTestBase {
     // Create a node with actual data for the field.
     $settings = array(
       'type' => $this->type,
-      $this->field_name => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => .5))),
+      $this->field_name => array(array('value' => .5)),
     );
     $node = $this->drupalCreateNode($settings);
 
@@ -172,7 +172,7 @@ class OptionsFieldUITest extends FieldTestBase {
     // Create a node with actual data for the field.
     $settings = array(
       'type' => $this->type,
-      $this->field_name => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => 'One'))),
+      $this->field_name => array(array('value' => 'One')),
     );
     $node = $this->drupalCreateNode($settings);
 

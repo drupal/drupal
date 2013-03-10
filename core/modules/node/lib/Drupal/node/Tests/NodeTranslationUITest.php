@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\translation_entity\Tests\EntityTranslationUITest;
 
 /**
@@ -67,7 +68,10 @@ class NodeTranslationUITest extends EntityTranslationUITest {
   /**
    * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::getFormSubmitAction().
    */
-  protected function getFormSubmitAction() {
+  protected function getFormSubmitAction(EntityInterface $entity) {
+    if ($entity->status) {
+      return t('Save and unpublish');
+    }
     return t('Save and keep unpublished');
   }
 
@@ -124,7 +128,7 @@ class NodeTranslationUITest extends EntityTranslationUITest {
         'date[date]' => format_date($values[$langcode]['created'], 'custom', 'Y-m-d'),
         'date[time]' => format_date($values[$langcode]['created'], 'custom', 'H:i:s'),
       );
-      $this->drupalPost($path, $edit, $this->getFormSubmitAction(), array('language' => $languages[$langcode]));
+      $this->drupalPost($path, $edit, $this->getFormSubmitAction($entity), array('language' => $languages[$langcode]));
     }
 
     $entity = entity_load($this->entityType, $this->entityId, TRUE);

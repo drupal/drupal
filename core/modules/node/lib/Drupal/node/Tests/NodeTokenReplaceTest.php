@@ -35,7 +35,7 @@ class NodeTokenReplaceTest extends NodeTestBase {
       'type' => 'article',
       'uid' => $account->uid,
       'title' => '<blink>Blinking Text</blink>',
-      'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => $this->randomName(32), 'summary' => $this->randomName(16)))),
+      'body' => array(array('value' => $this->randomName(32), 'summary' => $this->randomName(16))),
     );
     $node = $this->drupalCreateNode($settings);
 
@@ -83,7 +83,7 @@ class NodeTokenReplaceTest extends NodeTestBase {
     }
 
     // Repeat for a node without a summary.
-    $settings['body'] = array(LANGUAGE_NOT_SPECIFIED => array(array('value' => $this->randomName(32), 'summary' => '')));
+    $settings['body'] = array(array('value' => $this->randomName(32), 'summary' => ''));
     $node = $this->drupalCreateNode($settings);
 
     // Load node (without summary) so that the body and summary fields are

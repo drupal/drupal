@@ -54,6 +54,13 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
   protected $id;
 
   /**
+   * If set, a new entity to create and reference.
+   *
+   * @var \Drupal\Core\Entity\EntityInterface
+   */
+  protected $newEntity;
+
+  /**
    * Overrides ContextAwareTypedData::__construct().
    */
   public function __construct(array $definition, $name = NULL, ContextAwareInterface $parent = NULL) {
@@ -65,6 +72,9 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
    * Overrides \Drupal\Core\TypedData\TypedData::getValue().
    */
   public function getValue() {
+    if (isset($this->newEntity)) {
+      return $this->newEntity;
+    }
     $source = $this->getIdSource();
     $id = $source ? $source->getValue() : $this->id;
     return $id ? entity_load($this->entityType, $id) : NULL;
@@ -85,10 +95,17 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
    * Both the entity ID and the entity object may be passed as value.
    */
   public function setValue($value) {
-    // Support passing in the entity object.
-    if ($value instanceof EntityInterface) {
+    // Support passing in the entity object. If it's not yet saved we have
+    // to store the whole entity such that it could be saved later on.
+    if ($value instanceof EntityInterface && $value->isNew()) {
+      $this->newEntity = $value;
+      $this->entityType = $value->entityType();
+      $value = FALSE;
+    }
+    elseif ($value instanceof EntityInterface) {
       $this->entityType = $value->entityType();
       $value = $value->id();
+      unset($this->newEntity);
     }
     elseif (isset($value) && !(is_scalar($value) && !empty($this->definition['constraints']['EntityType']))) {
       throw new InvalidArgumentException('Value is not a valid entity.');

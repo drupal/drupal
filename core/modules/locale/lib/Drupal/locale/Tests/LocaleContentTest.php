@@ -115,7 +115,7 @@ class LocaleContentTest extends WebTestBase {
     $edit = array(
       'type' => $type2->type,
       'title' => $node_title,
-      'body' => array($langcode => array(array('value' => $node_body))),
+      'body' => array(array('value' => $node_body)),
       'langcode' => $langcode,
     );
     $node = $this->drupalCreateNode($edit);

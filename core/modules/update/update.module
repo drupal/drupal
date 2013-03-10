@@ -604,7 +604,7 @@ function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $lan
       break;
   }
   if (!empty($langcode)) {
-    $language = language_load(langcode);
+    $language = language_load($langcode);
   }
   else {
     $language = NULL;

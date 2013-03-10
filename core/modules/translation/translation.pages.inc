@@ -6,12 +6,12 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Page callback: Displays a list of a node's translations.
  *
- * @param Drupal\node\Node $node
+ * @param \Drupal\Core\Entity\EntityInterface $node
  *   A node entity.
  *
  * @return
@@ -19,7 +19,7 @@ use Drupal\node\Plugin\Core\Entity\Node;
  *
  * @see translation_menu()
  */
-function translation_node_overview(Node $node) {
+function translation_node_overview(EntityInterface $node) {
   include_once DRUPAL_ROOT . '/core/includes/language.inc';
 
   if ($node->tnid) {

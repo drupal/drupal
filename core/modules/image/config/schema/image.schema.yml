@@ -4,53 +4,53 @@
 image.size:
   type: mapping
   mapping:
-    "width":
+    width:
       type: integer
-      label: "Width"
-    "height":
+      label: 'Width'
+    height:
       type: integer
-      label: "Height"
+      label: 'Height'
 
 # Image styles (multiple).
 # Plugin \Drupal\image\Plugin\Core\Entity\ImageStyle
 image.style.*:
   type: mapping
-  label: "Image style"
+  label: 'Image style'
   mapping:
-    "name":
+    name:
       type: string
-    "label":
+    label:
       type: label
-    "effects":
+    effects:
       type: sequence
       sequence:
         - type: mapping
           mapping:
-            "name":
+            name:
               type: string
-            "data":
+            data:
               type: image.effect.[%parent.name]
-            "weight":
+            weight:
               type: integer
-            "ieid":
+            ieid:
               type: string
 
 # Image effects plugins: image.effect.%
 # These are used in image styles.
 image.effect.image_crop:
   type: image.size
-  label: "Image crop"
+  label: 'Image crop'
   mapping:
-    "anchor":
-      label: "Anchor"
+    anchor:
+      label: 'Anchor'
 
 image.effect.image_resize:
   type: image.size
-  label: "Image resize"
+  label: 'Image resize'
 
 image.effect.image_rotate:
   type: mapping
-  label: "Image rotate"
+  label: 'Image rotate'
   mapping:
     degrees:
       type: integer
@@ -63,20 +63,20 @@ image.effect.image_rotate:
 
 image.effect.image_scale:
   type: image.size
-  label: "Image scale"
+  label: 'Image scale'
   mapping:
-    "upscale":
+    upscale:
       type: boolean
-      label: "Upscale"
+      label: 'Upscale'
 
 image.effect.image_scale_and_crop:
   type: image.size
-  label: "Image scale and crop"
+  label: 'Image scale and crop'
 
 # Schema for configuration files of image module.
 image.settings:
   type: mapping
   mapping:
-    "preview_image":
+    preview_image:
       type: string
-      label: "Preview image"
+      label: 'Preview image'

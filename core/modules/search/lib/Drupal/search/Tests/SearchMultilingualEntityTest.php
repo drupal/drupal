@@ -57,33 +57,35 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     $nodes = array(
       array(
         'type' => 'page',
-        'body' => array(
-          'en' => array(array('value' => $this->randomName(32), 'format' => $default_format)),
-        ),
+        'body' => array(array('value' => $this->randomName(32), 'format' => $default_format)),
         'langcode' => 'en',
       ),
       array(
         'type' => 'page',
-        'body' => array(
-          'en' => array(array('value' => $this->randomName(32), 'format' => $default_format)),
-          'hu' => array(array('value' => $this->randomName(32), 'format' => $default_format)),
-        ),
+        'body' => array(array('value' => $this->randomName(32), 'format' => $default_format)),
         'langcode' => 'en',
       ),
       array(
         'type' => 'page',
-        'body' => array(
-          'en' => array(array('value' => $this->randomName(32), 'format' => $default_format)),
-          'hu' => array(array('value' => $this->randomName(32), 'format' => $default_format)),
-          'sv' => array(array('value' => $this->randomName(32), 'format' => $default_format)),
-        ),
+        'body' => array(array('value' => $this->randomName(32), 'format' => $default_format)),
         'langcode' => 'en',
       ),
     );
     $this->searchable_nodes = array();
-    foreach ($nodes as $node) {
-      $this->searchable_nodes[] = $this->drupalCreateNode($node);
+    foreach ($nodes as $setting) {
+      $this->searchable_nodes[] = $this->drupalCreateNode($setting);
     }
+    // Add a single translation to the second node.
+    $translation = $this->searchable_nodes[1]->getTranslation('hu');
+    $translation->body->value = $this->randomName(32);
+    $this->searchable_nodes[1]->save();
+
+    // Add two translations to the third node.
+    $translation = $this->searchable_nodes[2]->getTranslation('hu');
+    $translation->body->value = $this->randomName(32);
+    $translation = $this->searchable_nodes[2]->getTranslation('sv');
+    $translation->body->value = $this->randomName(32);
+    $this->searchable_nodes[2]->save();
   }
 
   /**

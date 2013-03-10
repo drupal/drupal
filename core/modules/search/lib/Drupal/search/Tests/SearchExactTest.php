@@ -32,12 +32,12 @@ class SearchExactTest extends SearchTestBase {
     );
     // Create nodes with exact phrase.
     for ($i = 0; $i <= 17; $i++) {
-      $settings['body'] = array(LANGUAGE_NOT_SPECIFIED => array(array('value' => 'love pizza')));
+      $settings['body'] = array(array('value' => 'love pizza'));
       $this->drupalCreateNode($settings);
     }
     // Create nodes containing keywords.
     for ($i = 0; $i <= 17; $i++) {
-      $settings['body'] = array(LANGUAGE_NOT_SPECIFIED => array(array('value' => 'love cheesy pizza')));
+      $settings['body'] = array(array('value' => 'love cheesy pizza'));
       $this->drupalCreateNode($settings);
     }
 

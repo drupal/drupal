@@ -8,7 +8,7 @@
  * interaction with the Node module.
  */
 
-use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 
 /**
@@ -30,7 +30,7 @@ function node_test_node_load($nodes, $types) {
 /**
  * Implements hook_node_view().
  */
-function node_test_node_view(Node $node, EntityDisplay $display, $view_mode) {
+function node_test_node_view(EntityInterface $node, EntityDisplay $display, $view_mode) {
   if ($view_mode == 'rss') {
     // Add RSS elements and namespaces when building the RSS feed.
     $node->rss_elements[] = array(
@@ -71,7 +71,7 @@ function node_test_node_grants($account, $op) {
 /**
  * Implements hook_node_access_records().
  */
-function node_test_node_access_records(Node $node) {
+function node_test_node_access_records(EntityInterface $node) {
   // Return nothing when testing for empty responses.
   if (!empty($node->disable_node_access)) {
     return;
@@ -105,7 +105,7 @@ function node_test_node_access_records(Node $node) {
 /**
  * Implements hook_node_access_records_alter().
  */
-function node_test_node_access_records_alter(&$grants, Node $node) {
+function node_test_node_access_records_alter(&$grants, EntityInterface $node) {
   if (!empty($grants)) {
     foreach ($grants as $key => $grant) {
       // Alter grant from test_page_realm to test_alter_realm and modify the gid.
@@ -128,7 +128,7 @@ function node_test_node_grants_alter(&$grants, $account, $op) {
 /**
  * Implements hook_node_presave().
  */
-function node_test_node_presave(Node $node) {
+function node_test_node_presave(EntityInterface $node) {
   if ($node->title == 'testing_node_presave') {
     // Sun, 19 Nov 1978 05:00:00 GMT
     $node->created = 280299600;
@@ -146,7 +146,7 @@ function node_test_node_presave(Node $node) {
 /**
  * Implements hook_node_update().
  */
-function node_test_node_update(Node $node) {
+function node_test_node_update(EntityInterface $node) {
   // Determine changes on update.
   if (!empty($node->original) && $node->original->title == 'test_changes') {
     if ($node->original->title != $node->title) {
@@ -173,7 +173,7 @@ function node_test_entity_view_mode_alter(&$view_mode, Drupal\Core\Entity\Entity
  *
  * @see \Drupal\node\Tests\NodeSaveTest::testNodeSaveOnInsert()
  */
-function node_test_node_insert(Node $node) {
+function node_test_node_insert(EntityInterface $node) {
   // Set the node title to the node ID and save.
   if ($node->title == 'new') {
     $node->title = 'Node '. $node->nid;

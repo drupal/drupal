@@ -51,7 +51,7 @@ class SearchNumbersTest extends SearchTestBase {
 
     foreach ($this->numbers as $doc => $num) {
       $info = array(
-        'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => $num))),
+        'body' => array(array('value' => $num)),
         'type' => 'page',
         'language' => LANGUAGE_NOT_SPECIFIED,
         'title' => $doc . ' number',

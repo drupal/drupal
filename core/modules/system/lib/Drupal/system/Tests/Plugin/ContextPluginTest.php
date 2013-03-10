@@ -40,7 +40,7 @@ class ContextPluginTest extends DrupalUnitTestBase {
     $manager = new MockBlockManager();
     $plugin = $manager->createInstance('user_name');
     // Create a node, add it as context, catch the exception.
-    $node = entity_create('node', array('title' => $name));
+    $node = entity_create('node', array('title' => $name, 'type' => 'page'));
 
     // Try to get a valid context that has not been set.
     try {

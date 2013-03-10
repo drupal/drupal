@@ -7,7 +7,7 @@
 
 namespace Drupal\book\Tests;
 
-use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -67,7 +67,7 @@ class BookTest extends WebTestBase {
     // Create users.
     $this->book_author = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books'));
     $this->web_user = $this->drupalCreateUser(array('access printer-friendly version', 'node test view'));
-    $this->admin_user = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books', 'administer blocks', 'administer permissions', 'administer book outlines', 'node test view', 'administer content types'));
+    $this->admin_user = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books', 'administer blocks', 'administer permissions', 'administer book outlines', 'node test view', 'administer content types', 'administer site configuration'));
   }
 
   /**
@@ -145,7 +145,7 @@ class BookTest extends WebTestBase {
    *
    * Also checks the printer friendly version of the outline.
    *
-   * @param Drupal\node\Node $node
+   * @param \Drupal\Core\Entity\EntityInterface $node
    *   Node to check.
    * @param $nodes
    *   Nodes that should be in outline.
@@ -158,7 +158,7 @@ class BookTest extends WebTestBase {
    * @param array $breadcrumb
    *   The nodes that should be displayed in the breadcrumb.
    */
-  function checkBookNode(Node $node, $nodes, $previous = FALSE, $up = FALSE, $next = FALSE, array $breadcrumb) {
+  function checkBookNode(EntityInterface $node, $nodes, $previous = FALSE, $up = FALSE, $next = FALSE, array $breadcrumb) {
     // $number does not use drupal_static as it should not be reset
     // since it uniquely identifies each call to checkBookNode().
     static $number = 0;
@@ -405,6 +405,81 @@ class BookTest extends WebTestBase {
     // the new machine and the old one has been removed.
     $this->assertTrue(book_type_is_allowed('bar'), 'Config book.settings:allowed_types contains the updated node type machine name "bar".');
     $this->assertFalse(book_type_is_allowed('book'), 'Config book.settings:allowed_types does not contain the old node type machine name "book".');
+
+    $edit = array(
+      'name' => 'Basic page',
+      'title_label' => 'Title for basic page',
+      'type' => 'page',
+    );
+    $this->drupalPost('admin/structure/types/add', $edit, t('Save content type'));
+
+    // Add page to the allowed node types.
+    $edit = array(
+      'book_allowed_types[page]' => 'page',
+      'book_allowed_types[bar]' => 'bar',
+    );
+
+    $this->drupalPost('admin/content/book/settings', $edit, t('Save configuration'));
+    $this->assertTrue(book_type_is_allowed('bar'), 'Config book.settings:allowed_types contains the bar node type.');
+    $this->assertTrue(book_type_is_allowed('page'), 'Config book.settings:allowed_types contains the page node type.');
+
+    // Test the order of the book.settings::allowed_types configuration is as
+    // expected. The point of this test is to prove that after changing a node
+    // type going to admin/content/book/settings and pressing save without
+    // changing anything should not alter the book.settings configuration. The
+    // order will be:
+    // @code
+    // array(
+    //   'bar',
+    //   'page',
+    // );
+    // @endcode
+    $current_config = config('book.settings')->init()->get();
+    $this->drupalPost('admin/content/book/settings', array(), t('Save configuration'));
+    $this->assertIdentical($current_config, config('book.settings')->init()->get());
+
+    // Change the name, machine name and description.
+    $edit = array(
+      'name' => 'Zebra book',
+      'type' => 'zebra',
+    );
+    $this->drupalPost('admin/structure/types/manage/bar', $edit, t('Save content type'));
+    $this->assertTrue(book_type_is_allowed('zebra'), 'Config book.settings:allowed_types contains the zebra node type.');
+    $this->assertTrue(book_type_is_allowed('page'), 'Config book.settings:allowed_types contains the page node type.');
+
+    // Test the order of the book.settings::allowed_types configuration is as
+    // expected. The order should be:
+    // @code
+    // array(
+    //   'page',
+    //   'zebra',
+    // );
+    // @endcode
+    $current_config = config('book.settings')->init()->get();
+    $this->drupalPost('admin/content/book/settings', array(), t('Save configuration'));
+    $this->assertIdentical($current_config, config('book.settings')->init()->get());
+
+    $edit = array(
+      'name' => 'Animal book',
+      'type' => 'zebra',
+    );
+    $this->drupalPost('admin/structure/types/manage/zebra', $edit, t('Save content type'));
+
+    // Test the order of the book.settings::allowed_types configuration is as
+    // expected. The order should be:
+    // @code
+    // array(
+    //   'page',
+    //   'zebra',
+    // );
+    // @endcode
+    $current_config = config('book.settings')->init()->get();
+    $this->drupalPost('admin/content/book/settings', array(), t('Save configuration'));
+    $this->assertIdentical($current_config, config('book.settings')->init()->get());
+
+    // Ensure that after all the node type changes book.settings:child_type has
+    // the expected value.
+    $this->assertEqual(config('book.settings')->get('child_type'), 'zebra');
   }
 
   /**

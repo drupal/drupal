@@ -1,5 +1,5 @@
 allowed_types:
-  book: book
+  - book
 block:
   navigation:
     mode: 'all pages'

@@ -945,12 +945,13 @@ function field_view_field(EntityInterface $entity, $field_name, $display_options
 
   if ($formatter) {
     $display_langcode = field_language($entity, $field_name, $langcode);
+    $items = array();
     // @todo Drop once every entity got converted to entityNG.
     if ($entity instanceof EntityNG) {
       $entity_translation = $entity->getTranslation($display_langcode);
       $items = $entity_translation->get($field_name);
     }
-    else {
+    elseif (isset($entity->{$field_name}[$display_langcode])) {
       $items = $entity->{$field_name}[$display_langcode];
     }
 

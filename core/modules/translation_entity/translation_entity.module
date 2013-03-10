@@ -614,6 +614,7 @@ function translation_entity_form_alter(array &$form, array &$form_state) {
     // Handle fields shared between translations when there is at least one
     // translation available or a new one is being created.
     if (!$entity->isNew() && (!isset($translations[$form_langcode]) || count($translations) > 1)) {
+      $entity = $entity->getOriginalEntity();
       if ($entity instanceof EntityNG) {
         foreach ($entity->getPropertyDefinitions() as $property_name => $definition) {
           if (isset($form[$property_name])) {

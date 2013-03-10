@@ -10,7 +10,6 @@
  * book page, user etc.
  */
 
-use Drupal\node\Plugin\Core\Entity\Node;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\file\Plugin\Core\Entity\File;
 use Drupal\Core\Entity\EntityInterface;
@@ -1180,7 +1179,7 @@ function comment_entity_predelete($entity) {
 /**
  * Implements hook_node_update_index().
  */
-function comment_node_update_index(Node $node, $langcode) {
+function comment_node_update_index(EntityInterface $node, $langcode) {
   $index_comments = &drupal_static(__FUNCTION__);
 
   if ($index_comments === NULL) {
@@ -1235,9 +1234,8 @@ function comment_update_index() {
  * Formats a comment count string and returns it, for display with search
  * results.
  */
-function comment_node_search_result($node) {
+function comment_node_search_result(EntityInterface $node) {
   $comment_fields = comment_get_comment_fields('node');
-  $return = FALSE;
   $comments = 0;
   $open = FALSE;
   foreach ($comment_fields as $field_name => $info) {

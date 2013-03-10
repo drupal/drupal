@@ -7,7 +7,7 @@
 
 namespace Drupal\node;
 
-use Drupal\Core\Entity\DatabaseStorageController;
+use Drupal\Core\Entity\DatabaseStorageControllerNG;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
@@ -16,31 +16,40 @@ use Drupal\Core\Entity\EntityInterface;
  * This extends the Drupal\Core\Entity\DatabaseStorageController class, adding
  * required special handling for node entities.
  */
-class NodeStorageController extends DatabaseStorageController {
+class NodeStorageController extends DatabaseStorageControllerNG {
 
   /**
    * Overrides Drupal\Core\Entity\DatabaseStorageController::create().
    */
   public function create(array $values) {
-    $node = parent::create($values);
-
-    // Set the created time to now.
-    if (empty($node->created)) {
-      $node->created = REQUEST_TIME;
+    // @todo Handle this through property defaults.
+    if (empty($values['created'])) {
+      $values['created'] = REQUEST_TIME;
     }
-
-    return $node;
+    return parent::create($values)->getBCEntity();
   }
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::attachLoad().
+   * Overrides Drupal\Core\Entity\DatabaseStorageControllerNG::attachLoad().
    */
-  protected function attachLoad(&$nodes, $load_revision = FALSE) {
+  protected function attachLoad(&$queried_entities, $load_revision = FALSE) {
+    $nodes = $this->mapFromStorageRecords($queried_entities, $load_revision);
+
     // Create an array of nodes for each content type and pass this to the
-    // object type specific callback.
+    // object type specific callback. To preserve backward-compatibility we
+    // pass on BC decorators to node-specific hooks, while we pass on the
+    // regular entity objects else.
     $typed_nodes = array();
-    foreach ($nodes as $id => $entity) {
-      $typed_nodes[$entity->type][$id] = $entity;
+    foreach ($nodes as $id => $node) {
+      $queried_entities[$id] = $node->getBCEntity();
+      $typed_nodes[$node->bundle()][$id] = $queried_entities[$id];
+    }
+
+    if ($load_revision) {
+      field_attach_load_revision($this->entityType, $queried_entities);
+    }
+    else {
+      field_attach_load($this->entityType, $queried_entities);
     }
 
     // Call object type specific callbacks on each typed array of nodes.
@@ -55,7 +64,19 @@ class NodeStorageController extends DatabaseStorageController {
     // hook_node_load(), containing a list of node types that were loaded.
     $argument = array_keys($typed_nodes);
     $this->hookLoadArguments = array($argument);
-    parent::attachLoad($nodes, $load_revision);
+
+    // Call hook_entity_load().
+    foreach (module_implements('entity_load') as $module) {
+      $function = $module . '_entity_load';
+      $function($queried_entities, $this->entityType);
+    }
+    // Call hook_TYPE_load(). The first argument for hook_TYPE_load() are
+    // always the queried entities, followed by additional arguments set in
+    // $this->hookLoadArguments.
+    $args = array_merge(array($queried_entities), $this->hookLoadArguments);
+    foreach (module_implements($this->entityType . '_load') as $module) {
+      call_user_func_array($module . '_' . $this->entityType . '_load', $args);
+    }
   }
 
   /**
@@ -77,6 +98,8 @@ class NodeStorageController extends DatabaseStorageController {
    * Overrides Drupal\Core\Entity\DatabaseStorageController::invokeHook().
    */
   protected function invokeHook($hook, EntityInterface $node) {
+    $node = $node->getBCEntity();
+
     if ($hook == 'insert' || $hook == 'update') {
       node_invoke($node, $hook);
     }
@@ -86,7 +109,23 @@ class NodeStorageController extends DatabaseStorageController {
       node_invoke($node, 'delete');
     }
 
-    parent::invokeHook($hook, $node);
+    // Inline parent::invokeHook() to pass on BC-entities to node-specific
+    // hooks.
+
+    $function = 'field_attach_' . $hook;
+    // @todo: field_attach_delete_revision() is named the wrong way round,
+    // consider renaming it.
+    if ($function == 'field_attach_revision_delete') {
+      $function = 'field_attach_delete_revision';
+    }
+    if (!empty($this->entityInfo['fieldable']) && function_exists($function)) {
+      $function($node);
+    }
+
+    // Invoke the hook.
+    module_invoke_all($this->entityType . '_' . $hook, $node);
+    // Invoke the respective entity-level hook.
+    module_invoke_all('entity_' . $hook, $node, $this->entityType);
   }
 
   /**
@@ -94,7 +133,7 @@ class NodeStorageController extends DatabaseStorageController {
    */
   protected function preSave(EntityInterface $node) {
     // Before saving the node, set changed and revision times.
-    $node->changed = REQUEST_TIME;
+    $node->changed->value = REQUEST_TIME;
   }
 
   /**
@@ -126,28 +165,29 @@ class NodeStorageController extends DatabaseStorageController {
 
     if ($entity->isNewRevision()) {
       $record->timestamp = REQUEST_TIME;
-      $record->uid = isset($record->revision_uid) ? $record->revision_uid : $GLOBALS['user']->uid;
+      $record->uid = isset($entity->revision_uid->value) ? $entity->revision_uid->value : $GLOBALS['user']->uid;
     }
   }
 
   /**
    * Overrides Drupal\Core\Entity\DatabaseStorageController::postSave().
    */
-  function postSave(EntityInterface $node, $update) {
+  public function postSave(EntityInterface $node, $update) {
     // Update the node access table for this node, but only if it is the
     // default revision. There's no need to delete existing records if the node
     // is new.
     if ($node->isDefaultRevision()) {
-      node_access_acquire_grants($node, $update);
+      node_access_acquire_grants($node->getBCEntity(), $update);
     }
   }
+
   /**
    * Overrides Drupal\Core\Entity\DatabaseStorageController::preDelete().
    */
-  function preDelete($entities) {
+  public function preDelete($entities) {
     if (module_exists('search')) {
       foreach ($entities as $id => $entity) {
-        search_reindex($entity->nid, 'node');
+        search_reindex($entity->nid->value, 'node');
       }
     }
   }
@@ -163,4 +203,110 @@ class NodeStorageController extends DatabaseStorageController {
       ->condition('nid', $ids, 'IN')
       ->execute();
   }
+
+  /**
+   * Overrides \Drupal\Core\Entity\DataBaseStorageControllerNG::basePropertyDefinitions().
+   */
+  public function baseFieldDefinitions() {
+    $properties['nid'] = array(
+      'label' => t('Node ID'),
+      'description' => t('The node ID.'),
+      'type' => 'integer_field',
+      'read-only' => TRUE,
+    );
+    $properties['uuid'] = array(
+      'label' => t('UUID'),
+      'description' => t('The node UUID.'),
+      'type' => 'string_field',
+      'read-only' => TRUE,
+    );
+    $properties['vid'] = array(
+      'label' => t('Revision ID'),
+      'description' => t('The node revision ID.'),
+      'type' => 'integer_field',
+      'read-only' => TRUE,
+    );
+    $properties['type'] = array(
+      'label' => t('Type'),
+      'description' => t('The node type.'),
+      'type' => 'string_field',
+      'read-only' => TRUE,
+    );
+    $properties['langcode'] = array(
+      'label' => t('Language code'),
+      'description' => t('The node language code.'),
+      'type' => 'language_field',
+    );
+    $properties['title'] = array(
+      'label' => t('Title'),
+      'description' => t('The title of this node, always treated as non-markup plain text.'),
+      'type' => 'string_field',
+    );
+    $properties['uid'] = array(
+      'label' => t('User ID'),
+      'description' => t('The user ID of the node author.'),
+      'type' => 'entity_reference_field',
+      'settings' => array('target_type' => 'user'),
+    );
+    $properties['status'] = array(
+      'label' => t('Publishing status'),
+      'description' => t('A boolean indicating whether the node is published.'),
+      'type' => 'boolean_field',
+    );
+    $properties['created'] = array(
+      'label' => t('Created'),
+      'description' => t('The time that the node was created.'),
+      'type' => 'integer_field',
+    );
+    $properties['changed'] = array(
+      'label' => t('Changed'),
+      'description' => t('The time that the node was last edited.'),
+      'type' => 'integer_field',
+    );
+    $properties['comment'] = array(
+      'label' => t('Comment'),
+      'description' => t('Whether comments are allowed on this node: 0 = no, 1 = closed (read only), 2 = open (read/write).'),
+      'type' => 'integer_field',
+    );
+    $properties['promote'] = array(
+      'label' => t('Promote'),
+      'description' => t('A boolean indicating whether the node should be displayed on the front page.'),
+      'type' => 'boolean_field',
+    );
+    $properties['sticky'] = array(
+      'label' => t('Sticky'),
+      'description' => t('A boolean indicating whether the node should be displayed at the top of lists in which it appears.'),
+      'type' => 'boolean_field',
+    );
+    $properties['tnid'] = array(
+      'label' => t('Translation set ID'),
+      'description' => t('The translation set id for this node, which equals the node id of the source post in each set.'),
+      'type' => 'integer_field',
+    );
+    $properties['translate'] = array(
+      'label' => t('Translate'),
+      'description' => t('A boolean indicating whether this translation page needs to be updated.'),
+      'type' => 'boolean_field',
+    );
+    $properties['revision_timestamp'] = array(
+      'label' => t('Revision timestamp'),
+      'description' => t('The time that the current revision was created.'),
+      'type' => 'integer_field',
+      'queryable' => FALSE,
+    );
+    $properties['revision_uid'] = array(
+      'label' => t('Revision user ID'),
+      'description' => t('The user ID of the author of the current revision.'),
+      'type' => 'entity_reference_field',
+      'settings' => array('target_type' => 'user'),
+      'queryable' => FALSE,
+    );
+    $properties['log'] = array(
+      'label' => t('Log'),
+      'description' => t('The log entry explaining the changes in this version.'),
+      'type' => 'string_field',
+    );
+    return $properties;
+  }
+
 }

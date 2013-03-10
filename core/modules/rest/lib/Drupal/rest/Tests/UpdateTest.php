@@ -40,7 +40,7 @@ class UpdateTest extends RESTTestBase {
 
     $this->enableService('entity:' . $entity_type, 'PATCH');
     // Create a user account that has the required permissions to create
-    // resources via the web API.
+    // resources via the REST API.
     $account = $this->drupalCreateUser(array('restful patch entity:' . $entity_type));
     $this->drupalLogin($account);
 
@@ -55,7 +55,7 @@ class UpdateTest extends RESTTestBase {
     unset($patch_entity->uuid);
     $serialized = $serializer->serialize($patch_entity, 'drupal_jsonld');
 
-    // Update the entity over the web API.
+    // Update the entity over the REST API.
     $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'PATCH', $serialized, 'application/vnd.drupal.ld+json');
     $this->assertResponse(204);
 
@@ -68,7 +68,7 @@ class UpdateTest extends RESTTestBase {
     $normalized['field_test_text'] = array();
     $serialized = $serializer->encode($normalized, 'jsonld');
 
-    // Update the entity over the web API.
+    // Update the entity over the REST API.
     $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'PATCH', $serialized, 'application/vnd.drupal.ld+json');
     $this->assertResponse(204);
 
@@ -87,7 +87,7 @@ class UpdateTest extends RESTTestBase {
     $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'PATCH', $serialized, 'application/vnd.drupal.ld+json');
     $this->assertResponse(403);
 
-    // Try to update a resource which is not web API enabled.
+    // Try to update a resource which is not REST API enabled.
     $this->enableService(FALSE);
     $this->drupalLogin($account);
     $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'PATCH', $serialized, 'application/vnd.drupal.ld+json');
@@ -105,7 +105,7 @@ class UpdateTest extends RESTTestBase {
 
     $this->enableService('entity:' . $entity_type, 'PUT');
     // Create a user account that has the required permissions to create
-    // resources via the web API.
+    // resources via the REST API.
     $account = $this->drupalCreateUser(array('restful put entity:' . $entity_type));
     $this->drupalLogin($account);
 
@@ -121,7 +121,7 @@ class UpdateTest extends RESTTestBase {
     $update_entity->id->value = $entity->id();
 
     $serialized = $serializer->serialize($update_entity, 'drupal_jsonld');
-    // Update the entity over the web API.
+    // Update the entity over the REST API.
     $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'PUT', $serialized, 'application/vnd.drupal.ld+json');
     $this->assertResponse(204);
 
@@ -157,7 +157,7 @@ class UpdateTest extends RESTTestBase {
     $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'PUT', $serialized, 'application/vnd.drupal.ld+json');
     $this->assertResponse(403);
 
-    // Try to update a resource which is not web API enabled.
+    // Try to update a resource which is not REST API enabled.
     $this->enableService(FALSE);
     $this->drupalLogin($account);
     $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'PUT', $serialized, 'application/vnd.drupal.ld+json');

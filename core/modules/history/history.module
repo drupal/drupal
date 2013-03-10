@@ -9,7 +9,7 @@
  * - Generic helper for node_mark().
  */
 
-use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Entities changed before this time are always shown as read.
@@ -79,7 +79,7 @@ function history_cron() {
 /**
  * Implements hook_node_delete().
  */
-function history_node_delete(Node $node) {
+function history_node_delete(EntityInterface $node) {
   db_delete('history')
     ->condition('nid', $node->nid)
     ->execute();

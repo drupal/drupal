@@ -81,6 +81,11 @@ class EntityNG extends Entity {
     $this->entityType = $entity_type;
     $this->bundle = $bundle ? $bundle : $this->entityType;
     foreach ($values as $key => $value) {
+      // If the key matches an existing property set the value to the property
+      // to ensure non converted properties have the correct value.
+      if (property_exists($this, $key) && isset($value[LANGUAGE_DEFAULT])) {
+        $this->$key = $value[LANGUAGE_DEFAULT];
+      }
       $this->values[$key] = $value;
     }
     $this->init();
@@ -269,7 +274,7 @@ class EntityNG extends Entity {
     if ($this->getPropertyDefinition('langcode')) {
       $language = $this->get('langcode')->language;
     }
-    if (!isset($language)) {
+    if (empty($language)) {
       // Make sure we return a proper language object.
       $language = new Language(array('langcode' => LANGUAGE_NOT_SPECIFIED));
     }
@@ -367,7 +372,9 @@ class EntityNG extends Entity {
    */
   public function getBCEntity() {
     if (!isset($this->bcEntity)) {
-      $this->bcEntity = new EntityBCDecorator($this);
+      // Initialize field definitions so that we can pass them by reference.
+      $this->getPropertyDefinitions();
+      $this->bcEntity = new EntityBCDecorator($this, $this->fieldDefinitions);
     }
     return $this->bcEntity;
   }
@@ -483,6 +490,12 @@ class EntityNG extends Entity {
       $uuid = new Uuid();
       $duplicate->{$entity_info['entity_keys']['uuid']}->value = $uuid->generate();
     }
+
+    // Check whether the entity type supports revisions and initialize it if so.
+    if (!empty($entity_info['entity_keys']['revision'])) {
+      $duplicate->{$entity_info['entity_keys']['revision']}->value = NULL;
+    }
+
     return $duplicate;
   }
 

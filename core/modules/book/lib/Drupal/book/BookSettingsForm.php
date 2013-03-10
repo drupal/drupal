@@ -63,9 +63,14 @@ class BookSettingsForm extends SystemConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::submitForm().
    */
   public function submitForm(array &$form, array &$form_state) {
+    $allowed_types = array_filter($form_state['values']['book_allowed_types']);
+    // We need to save the allowed types in an array ordered by machine_name so
+    // that we can save them in the correct order if node type changes.
+    // @see book_node_type_update().
+    sort($allowed_types);
     $this->configFactory->get('book.settings')
-      // Remove unchecked types.
-      ->set('allowed_types', array_filter($form_state['values']['book_allowed_types']))
+    // Remove unchecked types.
+      ->set('allowed_types', $allowed_types)
       ->set('child_type', $form_state['values']['book_child_type'])
       ->save();
 

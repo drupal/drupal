@@ -31,12 +31,12 @@ class DBLogTest extends RESTTestBase {
 
   public function setUp() {
     parent::setUp();
-    // Enable web API for the watchdog resource.
+    // Enable REST API for the watchdog resource.
     $this->enableService('dblog');
   }
 
   /**
-   * Writes a log messages and retrieves it via the web API.
+   * Writes a log messages and retrieves it via the REST API.
    */
   public function testWatchdog() {
     // Write a log message to the DB.
@@ -46,7 +46,7 @@ class DBLogTest extends RESTTestBase {
       ->fetchField();
 
     // Create a user account that has the required permissions to read
-    // the watchdog resource via the web API.
+    // the watchdog resource via the REST API.
     $account = $this->drupalCreateUser(array('restful get dblog'));
     $this->drupalLogin($account);
 
