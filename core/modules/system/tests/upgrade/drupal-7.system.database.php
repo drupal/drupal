@@ -123,6 +123,18 @@ db_insert('variable')->fields(array(
     'name' => 'mail_system',
     'value' => 'a:2:{s:14:"default-system";s:17:"DefaultMailSystem";s:7:"maillog";s:17:"MaillogMailSystem";}',
   ))
+  ->values(array(
+    'name' => 'fast_404_paths',
+    'value' => 's:74:"/\.(?:txt|png|gif|jpe?g|css|js|ico|swf|flv|cgi|bat|pl|dll|exe|aspi|pdf)$/i";',
+  ))
+  ->values(array(
+    'name' => 'fast_404_excluded_paths',
+    'value' => 's:27:"/\/(?:styles|imagecache)\//";',
+  ))
+  ->values(array(
+    'name' => 'fast_404_html',
+    'value' => 's:168:"<!DOCTYPE html><html><head><title>Page Not Found</title></head><body><h1>Page Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>";',
+  ))
   ->execute();
 
 db_update('variable')

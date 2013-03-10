@@ -2003,10 +2003,10 @@ function system_update_8043() {
  * @ingroup config_upgrade
  */
 function system_update_8044() {
-  update_variables_to_config('system.fast_404', array(
-    '404_fast_html' => 'html',
-    '404_fast_paths' => 'paths',
-    '404_fast_paths_exclude' => 'exclude_paths',
+  update_variables_to_config('system.performance', array(
+    'fast_404_html' => 'fast_404.html',
+    'fast_404_paths' => 'fast_404.paths',
+    'fast_404_paths_exclude' => 'fast_404.exclude_paths',
   ));
 }
 

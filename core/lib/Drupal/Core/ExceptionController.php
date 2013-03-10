@@ -137,13 +137,13 @@ class ExceptionController extends ContainerAware {
     watchdog('page not found', check_plain($request->attributes->get('system_path')), NULL, WATCHDOG_WARNING);
 
     // Check for and return a fast 404 page if configured.
-    $config = config('system.fast_404');
+    $config = config('system.performance');
 
-    $exclude_paths = $config->get('exclude_paths');
-    if ($config->get('enabled') && $exclude_paths && !preg_match($exclude_paths, $request->getPathInfo())) {
-      $fast_paths = $config->get('paths');
+    $exclude_paths = $config->get('fast_404.exclude_paths');
+    if ($config->get('fast_404.enabled') && $exclude_paths && !preg_match($exclude_paths, $request->getPathInfo())) {
+      $fast_paths = $config->get('fast_404.paths');
       if ($fast_paths && preg_match($fast_paths, $request->getPathInfo())) {
-        $fast_404_html = $config->get('html');
+        $fast_404_html = $config->get('fast_404.html');
         $fast_404_html = strtr($fast_404_html, array('@path' => check_plain($request->getUri())));
         return new Response($fast_404_html, 404);
       }

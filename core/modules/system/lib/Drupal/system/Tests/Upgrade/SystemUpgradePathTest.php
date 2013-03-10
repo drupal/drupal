@@ -55,6 +55,12 @@ class SystemUpgradePathTest extends UpgradePathTestBase {
       'response.gzip' => '1',
       'js.preprocess' => '1',
       'css.preprocess' => '1',
+      'fast_404' => array(
+        'enabled' => '1',
+        'paths' => '/\.(?:txt|png|gif|jpe?g|css|js|ico|swf|flv|cgi|bat|pl|dll|exe|aspi|pdf)$/i',
+        'exclude_paths' => '/\/(?:styles|imagecache)\//',
+        'html' => '<!DOCTYPE html><html><head><title>Page Not Found</title></head><body><h1>Page Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>',
+      ),
     );
 
     $expected_config['system.rss'] = array(
