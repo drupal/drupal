@@ -7,7 +7,7 @@
 
 namespace Drupal\paramconverter_test;
 
-use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Controller routine for testing the paramconverter.
@@ -21,7 +21,7 @@ class TestControllers {
     return $retval;
   }
 
-  public function testNodeSetParent(Node $node, Node $parent) {
+  public function testNodeSetParent(EntityInterface $node, EntityInterface $parent) {
     return "Setting '{$parent->title}' as parent of '{$node->title}'.";
   }
 }

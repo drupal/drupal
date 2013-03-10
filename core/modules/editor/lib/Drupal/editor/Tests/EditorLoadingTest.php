@@ -134,9 +134,9 @@ class EditorLoadingTest extends WebTestBase {
     // to let the untrusted user edit it.
     $this->drupalCreateNode(array(
       'type' => 'article',
-      'body' => array(LANGUAGE_NOT_SPECIFIED => array(
-        0 => array('value' => $this->randomName(32), 'format' => 'full_html')
-      )),
+      'body' => array(
+        array('value' => $this->randomName(32), 'format' => 'full_html')
+      ),
     ));
 
     // The untrusted user tries to edit content that is written in a text format

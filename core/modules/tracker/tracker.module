@@ -5,7 +5,7 @@
  * Tracks recent content posted by a user or users.
  */
 
-use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_help().
@@ -193,7 +193,7 @@ function _tracker_user_access($account) {
  *
  * Adds new tracking information for this node since it's new.
  */
-function tracker_node_insert(Node $node, $arg = 0) {
+function tracker_node_insert(EntityInterface $node, $arg = 0) {
   _tracker_add($node->nid, $node->uid, $node->changed);
 }
 
@@ -202,7 +202,7 @@ function tracker_node_insert(Node $node, $arg = 0) {
  *
  * Adds tracking information for this node since it's been updated.
  */
-function tracker_node_update(Node $node, $arg = 0) {
+function tracker_node_update(EntityInterface $node, $arg = 0) {
   _tracker_add($node->nid, $node->uid, $node->changed);
 }
 
@@ -211,7 +211,7 @@ function tracker_node_update(Node $node, $arg = 0) {
  *
  * Deletes tracking information for a node.
  */
-function tracker_node_predelete(Node $node, $arg = 0) {
+function tracker_node_predelete(EntityInterface $node, $arg = 0) {
   db_delete('tracker_node')
     ->condition('nid', $node->nid)
     ->execute();

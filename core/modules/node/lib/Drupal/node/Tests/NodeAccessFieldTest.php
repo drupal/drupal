@@ -57,7 +57,7 @@ class NodeAccessFieldTest extends NodeTestBase {
     // Create a page node.
     $langcode = LANGUAGE_NOT_SPECIFIED;
     $field_data = array();
-    $value = $field_data[$langcode][0]['value'] = $this->randomName();
+    $value = $field_data[0]['value'] = $this->randomName();
     $node = $this->drupalCreateNode(array($this->field_name => $field_data));
 
     // Log in as the administrator and confirm that the field value is present.

@@ -50,7 +50,7 @@ class NodeEntityFieldQueryAlterTest extends NodeTestBase {
         'value' => 'A' . $this->randomName(32),
         'format' => filter_default_format(),
       );
-      $settings['body'][LANGUAGE_NOT_SPECIFIED][0] = $body;
+      $settings['body'][0] = $body;
       $this->drupalCreateNode($settings);
     }
 

@@ -56,7 +56,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
    */
   public function create(array $values) {
     if (empty($values['node_type']) && !empty($values['nid'])) {
-      $node = node_load($values['nid']);
+      $node = node_load(is_object($values['nid']) ? $values['nid']->value : $values['nid']);
       $values['node_type'] = 'comment_node_' . $node->type;
     }
     return parent::create($values);

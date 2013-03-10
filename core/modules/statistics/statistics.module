@@ -5,7 +5,7 @@
  * Logs and displays content statistics for a site.
  */
 
-use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 
 /**
@@ -47,7 +47,7 @@ function statistics_permission() {
 /**
  * Implements hook_node_view().
  */
-function statistics_node_view(Node $node, EntityDisplay $display, $view_mode) {
+function statistics_node_view(EntityInterface $node, EntityDisplay $display, $view_mode) {
   if (!empty($node->nid) && $view_mode == 'full' && node_is_page($node) && empty($node->in_preview)) {
     $node->content['#attached']['library'][] = array('statistics', 'drupal.statistics');
     $settings = array('data' => array('nid' => $node->nid), 'url' => url(drupal_get_path('module', 'statistics') . '/statistics.php'));
@@ -197,7 +197,7 @@ function _statistics_format_item($title, $path) {
 /**
  * Implements hook_node_predelete().
  */
-function statistics_node_predelete(Node $node) {
+function statistics_node_predelete(EntityInterface $node) {
   // clean up statistics table when node is deleted
   db_delete('node_counter')
     ->condition('nid', $node->nid)

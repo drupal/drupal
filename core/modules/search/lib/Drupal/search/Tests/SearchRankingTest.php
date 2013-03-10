@@ -36,7 +36,7 @@ class SearchRankingTest extends SearchTestBase {
       $settings = array(
         'type' => 'page',
         'title' => 'Drupal rocks',
-        'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => "Drupal's search rocks"))),
+        'body' => array(array('value' => "Drupal's search rocks")),
       );
       foreach (array(0, 1) as $num) {
         if ($num == 1) {
@@ -46,7 +46,7 @@ class SearchRankingTest extends SearchTestBase {
               $settings[$node_rank] = 1;
               break;
             case 'relevance':
-              $settings['body'][LANGUAGE_NOT_SPECIFIED][0]['value'] .= " really rocks";
+              $settings['body'][0]['value'] .= " really rocks";
               break;
             case 'recent':
               $settings['created'] = REQUEST_TIME + 3600;
@@ -128,13 +128,13 @@ class SearchRankingTest extends SearchTestBase {
     foreach ($shuffled_tags as $tag) {
       switch ($tag) {
         case 'a':
-          $settings['body'] = array(LANGUAGE_NOT_SPECIFIED => array(array('value' => l('Drupal Rocks', 'node'), 'format' => 'full_html')));
+          $settings['body'] = array(array('value' => l('Drupal Rocks', 'node'), 'format' => 'full_html'));
           break;
         case 'notag':
-          $settings['body'] = array(LANGUAGE_NOT_SPECIFIED => array(array('value' => 'Drupal Rocks')));
+          $settings['body'] = array(array('value' => 'Drupal Rocks'));
           break;
         default:
-          $settings['body'] = array(LANGUAGE_NOT_SPECIFIED => array(array('value' => "<$tag>Drupal Rocks</$tag>", 'format' => 'full_html')));
+          $settings['body'] = array(array('value' => "<$tag>Drupal Rocks</$tag>", 'format' => 'full_html'));
           break;
       }
       $nodes[$tag] = $this->drupalCreateNode($settings);
@@ -167,7 +167,7 @@ class SearchRankingTest extends SearchTestBase {
     // Test tags with the same weight against the sorted tags.
     $unsorted_tags = array('u', 'b', 'i', 'strong', 'em');
     foreach ($unsorted_tags as $tag) {
-      $settings['body'] = array(LANGUAGE_NOT_SPECIFIED => array(array('value' => "<$tag>Drupal Rocks</$tag>", 'format' => 'full_html')));
+      $settings['body'] = array(array('value' => "<$tag>Drupal Rocks</$tag>", 'format' => 'full_html'));
       $node = $this->drupalCreateNode($settings);
 
       // Update the search index.
@@ -203,7 +203,7 @@ class SearchRankingTest extends SearchTestBase {
     $settings = array(
       'type' => 'page',
       'title' => 'Drupal rocks',
-      'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => "Drupal's search rocks"))),
+      'body' => array(array('value' => "Drupal's search rocks")),
       'sticky' => 1,
     );
 

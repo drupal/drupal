@@ -7,7 +7,7 @@
 
 namespace Drupal\translation\Tests;
 
-use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -362,7 +362,7 @@ class TranslationTest extends WebTestBase {
   /**
    * Creates a translation for a basic page in the specified language.
    *
-   * @param Drupal\node\Node $node
+   * @param \Drupal\Core\Entity\EntityInterface $node
    *   The basic page to create the translation for.
    * @param $title
    *   The title of a basic page in the specified language.
@@ -374,7 +374,7 @@ class TranslationTest extends WebTestBase {
    * @return
    *   Translation object.
    */
-  function createTranslation(Node $node, $title, $body, $langcode) {
+  function createTranslation(EntityInterface $node, $title, $body, $langcode) {
     $this->drupalGet('node/add/page', array('query' => array('translation' => $node->nid, 'target' => $langcode)));
 
     $field_langcode = LANGUAGE_NOT_SPECIFIED;

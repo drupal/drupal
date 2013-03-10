@@ -73,7 +73,7 @@ class TaxonomyAutocompleteWidget extends WidgetBase {
   public function massageFormValues(array $values, array $form, array &$form_state) {
     // Autocomplete widgets do not send their tids in the form, so we must detect
     // them here and process them independently.
-    $terms = array();
+    $items = array();
     $field = $this->field;
 
     // Collect candidate vocabularies.
@@ -89,19 +89,20 @@ class TaxonomyAutocompleteWidget extends WidgetBase {
       // otherwise, create a new 'autocreate' term for insert/update.
       if ($possibilities = entity_load_multiple_by_properties('taxonomy_term', array('name' => trim($value), 'vid' => array_keys($vocabularies)))) {
         $term = array_pop($possibilities);
+        $item = array('tid' => $term->tid);
       }
       else {
         $vocabulary = reset($vocabularies);
-        $term = array(
-          'tid' => 'autocreate',
+        $term = entity_create('taxonomy_term', array(
           'vid' => $vocabulary->id(),
           'name' => $value,
-        );
+        ));
+        $item = array('tid' => FALSE, 'entity' => $term);
       }
-      $terms[] = (array)$term;
+      $items[] = $item;
     }
 
-    return $terms;
+    return $items;
   }
 
 }

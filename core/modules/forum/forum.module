@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\node\Plugin\Core\Entity\Node;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\taxonomy\Plugin\Core\Entity\Term;
 
@@ -241,13 +240,13 @@ function forum_uri($forum) {
 /**
  * Checks whether a node can be used in a forum, based on its content type.
  *
- * @param Drupal\node\Node $node
+ * @param \Drupal\Core\Entity\EntityInterface $node
  *   A node entity.
  *
  * @return
  *   Boolean indicating if the node can be assigned to a forum.
  */
-function _forum_node_check_node_type(Node $node) {
+function _forum_node_check_node_type(EntityInterface $node) {
   // Fetch information about the forum field.
   $instance = field_info_instance('node', 'taxonomy_forums', $node->type);
   return !empty($instance);
@@ -256,7 +255,7 @@ function _forum_node_check_node_type(Node $node) {
 /**
  * Implements hook_node_view().
  */
-function forum_node_view(Node $node, EntityDisplay $display, $view_mode) {
+function forum_node_view(EntityInterface $node, EntityDisplay $display, $view_mode) {
   $vid = config('forum.settings')->get('vocabulary');
   $vocabulary = taxonomy_vocabulary_load($vid);
   if (_forum_node_check_node_type($node)) {
@@ -282,7 +281,7 @@ function forum_node_view(Node $node, EntityDisplay $display, $view_mode) {
  * Checks in particular that the node is assigned only a "leaf" term in the
  * forum taxonomy.
  */
-function forum_node_validate(Node $node, $form) {
+function forum_node_validate(EntityInterface $node, $form) {
   if (_forum_node_check_node_type($node)) {
     $langcode = $form['taxonomy_forums']['#language'];
     // vocabulary is selected, not a "container" term.
@@ -318,7 +317,7 @@ function forum_node_validate(Node $node, $form) {
  *
  * Assigns the forum taxonomy when adding a topic from within a forum.
  */
-function forum_node_presave(Node $node) {
+function forum_node_presave(EntityInterface $node) {
   if (_forum_node_check_node_type($node)) {
     // Make sure all fields are set properly:
     $node->icon = !empty($node->icon) ? $node->icon : '';
@@ -338,7 +337,7 @@ function forum_node_presave(Node $node) {
 /**
  * Implements hook_node_update().
  */
-function forum_node_update(Node $node) {
+function forum_node_update(EntityInterface $node) {
   if (_forum_node_check_node_type($node)) {
     // If this is not a new revision and does exist, update the forum record,
     // otherwise insert a new one.
@@ -388,7 +387,7 @@ function forum_node_update(Node $node) {
 /**
  * Implements hook_node_insert().
  */
-function forum_node_insert(Node $node) {
+function forum_node_insert(EntityInterface $node) {
   if (_forum_node_check_node_type($node)) {
     if (!empty($node->forum_tid)) {
       $nid = db_insert('forum')
@@ -405,7 +404,7 @@ function forum_node_insert(Node $node) {
 /**
  * Implements hook_node_predelete().
  */
-function forum_node_predelete(Node $node) {
+function forum_node_predelete(EntityInterface $node) {
   if (_forum_node_check_node_type($node)) {
     db_delete('forum')
       ->condition('nid', $node->nid)
@@ -522,18 +521,17 @@ function forum_comment_delete($comment) {
 function forum_field_storage_pre_insert(EntityInterface $entity, &$skip_fields) {
   if ($entity->entityType() == 'node' && $entity->status && _forum_node_check_node_type($entity)) {
     $query = db_insert('forum_index')->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
-    foreach ($entity->taxonomy_forums as $language) {
-      foreach ($language as $item) {
-        $query->values(array(
-          'nid' => $entity->nid,
-          'title' => $entity->title,
-          'tid' => $item['tid'],
-          'sticky' => $entity->sticky,
-          'created' => $entity->created,
-          'comment_count' => 0,
-          'last_comment_timestamp' => $entity->created,
-        ));
-      }
+    foreach ($entity->getTranslationLanguages() as $langcode => $language) {
+      $translation = $entity->getTranslation($langcode, FALSE);
+      $query->values(array(
+        'nid' => $entity->id(),
+        'title' => $translation->title->value,
+        'tid' => $translation->taxonomy_forums->tid,
+        'sticky' => $entity->sticky,
+        'created' => $entity->created,
+        'comment_count' => 0,
+        'last_comment_timestamp' => $entity->created,
+      ));
     }
     $query->execute();
   }
@@ -656,7 +654,7 @@ function forum_block_view_pre_render($elements) {
 /**
  * Implements hook_form().
  */
-function forum_form(Node $node, &$form_state) {
+function forum_form(EntityInterface $node, &$form_state) {
   $type = node_type_load($node->type);
   $form['title'] = array(
     '#type' => 'textfield',

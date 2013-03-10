@@ -102,7 +102,7 @@ class EntityFilteringThemeTest extends WebTestBase {
       'title' => $this->xss_label,
       'type' => 'article',
       'promote' => NODE_PROMOTED,
-      'field_tags' => array(LANGUAGE_NOT_SPECIFIED => array(array('tid' => $this->term->tid))),
+      'field_tags' => array(array('tid' => $this->term->tid)),
     ));
 
     // Create a test comment on the test node.
@@ -111,7 +111,7 @@ class EntityFilteringThemeTest extends WebTestBase {
       'node_type' => $this->node->type,
       'status' => COMMENT_PUBLISHED,
       'subject' => $this->xss_label,
-      'comment_body' => array(LANGUAGE_NOT_SPECIFIED => array($this->randomName())),
+      'comment_body' => array($this->randomName()),
     ));
     comment_save($this->comment);
   }

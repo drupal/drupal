@@ -5,7 +5,7 @@
  * User page callbacks for the book module.
  */
 
-use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\Core\Entity\EntityInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -39,7 +39,7 @@ function book_render() {
  *   currently supported in book module:
  *   - html: Printer-friendly HTML.
  *   Other types may be supported in contributed modules.
- * @param \Drupal\node\Plugin\Core\Entity\Node $node
+ * @param \Drupal\node\Plugin\Core\Entity\EntityInterface $node
  *   The node to export.
  *
  * @return
@@ -50,7 +50,7 @@ function book_render() {
  *
  * @see book_menu()
  */
-function book_export($type, Node $node) {
+function book_export($type, EntityInterface $node) {
   $type = drupal_strtolower($type);
 
   $export_function = 'book_export_' . $type;
@@ -84,7 +84,7 @@ function book_export($type, Node $node) {
  * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
  * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
  */
-function book_export_html(Node $node) {
+function book_export_html(EntityInterface $node) {
   if (user_access('access printer-friendly version')) {
     if (isset($node->book)) {
       $tree = book_menu_subtree_data($node->book);
@@ -103,7 +103,7 @@ function book_export_html(Node $node) {
 /**
  * Page callback: Shows the outline form for a single node.
  *
- * @param Drupal\node\Node $node
+ * @param \Drupal\Core\Entity\EntityInterface $node
  *   The book node for which to show the outline.
  *
  * @return string
@@ -111,7 +111,7 @@ function book_export_html(Node $node) {
  *
  * @see book_menu()
  */
-function book_outline(Node $node) {
+function book_outline(EntityInterface $node) {
   drupal_set_title($node->label());
   return drupal_get_form('book_outline_form', $node);
 }
@@ -121,14 +121,14 @@ function book_outline(Node $node) {
  *
  * Allows handling of all book outline operations via the outline tab.
  *
- * @param Drupal\node\Node $node
+ * @param \Drupal\Core\Entity\EntityInterface $node
  *   The book node for which to show the outline.
  *
  * @see book_outline_form_submit()
  * @see book_remove_button_submit()
  * @ingroup forms
  */
-function book_outline_form($form, &$form_state, Node $node) {
+function book_outline_form($form, &$form_state, EntityInterface $node) {
   if (!isset($node->book)) {
     // The node is not part of any book yet - set default options.
     $node->book = _book_link_defaults($node->nid);
@@ -208,14 +208,14 @@ function book_outline_form_submit($form, &$form_state) {
 /**
  * Form constructor to confirm removal of a node from a book.
  *
- * @param Drupal\node\Node $node
+ * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node to delete.
  *
  * @see book_remove_form_submit()
  * @see book_menu()
  * @ingroup forms
  */
-function book_remove_form($form, &$form_state, Node $node) {
+function book_remove_form($form, &$form_state, EntityInterface $node) {
   $form['#node'] = $node;
   $title = array('%title' => $node->label());
 

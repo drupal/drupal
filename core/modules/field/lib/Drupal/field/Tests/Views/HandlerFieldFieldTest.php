@@ -59,13 +59,13 @@ class HandlerFieldFieldTest extends FieldTestBase {
 
       for ($key = 0; $key < 3; $key++) {
         $field = $this->fields[$key];
-        $edit[$field['field_name']][LANGUAGE_NOT_SPECIFIED][0]['value'] = $this->randomName(8);
+        $edit[$field['field_name']][0]['value'] = $this->randomName(8);
       }
       for ($j = 0; $j < 5; $j++) {
-        $edit[$this->fields[3]['field_name']][LANGUAGE_NOT_SPECIFIED][$j]['value'] = $this->randomName(8);
+        $edit[$this->fields[3]['field_name']][$j]['value'] = $this->randomName(8);
       }
       // Set this field to be empty.
-      $edit[$this->fields[4]['field_name']] = array(LANGUAGE_NOT_SPECIFIED => array(0 => array('value' => NULL)));
+      $edit[$this->fields[4]['field_name']] = array(array('value' => NULL));
 
       $this->nodes[$i] = $this->drupalCreateNode($edit);
     }

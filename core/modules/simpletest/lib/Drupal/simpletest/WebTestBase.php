@@ -172,7 +172,7 @@ abstract class WebTestBase extends TestBase {
    * @param $reset
    *   (optional) Whether to reset the entity cache.
    *
-   * @return \Drupal\node\Plugin\Core\Entity\Node
+   * @return \Drupal\Core\Entity\EntityInterface
    *   A node entity matching $title.
    */
   function drupalGetNodeByTitle($title, $reset = FALSE) {
@@ -201,7 +201,7 @@ abstract class WebTestBase extends TestBase {
    *   The following defaults are provided:
    *   - body: Random string using the default filter format:
    *     @code
-   *       $settings['body'][LANGUAGE_NOT_SPECIFIED][0] = array(
+   *       $settings['body'][0] = array(
    *         'value' => $this->randomName(32),
    *         'format' => filter_default_format(),
    *       );
@@ -214,10 +214,7 @@ abstract class WebTestBase extends TestBase {
    *   - status: NODE_PUBLISHED.
    *   - sticky: NODE_NOT_STICKY.
    *   - type: 'page'.
-   *   - langcode: LANGUAGE_NOT_SPECIFIED. (If a 'langcode' key is provided in
-   *     the array, this language code will also be used for a randomly
-   *     generated body field for that language, and the body for
-   *     LANGUAGE_NOT_SPECIFIED will remain empty.)
+   *   - langcode: LANGUAGE_NOT_SPECIFIED.
    *   - uid: The currently logged in user, or the user running test.
    *   - revision: 1. (Backwards-compatible binary flag indicating whether a
    *     new revision should be created; use 1 to specify a new revision.)
@@ -228,7 +225,7 @@ abstract class WebTestBase extends TestBase {
   protected function drupalCreateNode(array $settings = array()) {
     // Populate defaults array.
     $settings += array(
-      'body'      => array(LANGUAGE_NOT_SPECIFIED => array(array())),
+      'body'      => array(array()),
       'title'     => $this->randomName(8),
       'changed'   => REQUEST_TIME,
       'promote'   => NODE_NOT_PROMOTED,
@@ -265,14 +262,10 @@ abstract class WebTestBase extends TestBase {
     }
 
     // Merge body field value and format separately.
-    $body = array(
+    $settings['body'][0] += array(
       'value' => $this->randomName(32),
       'format' => filter_default_format(),
     );
-    if (empty($settings['body'][$settings['langcode']])) {
-      $settings['body'][$settings['langcode']][0] = array();
-    }
-    $settings['body'][$settings['langcode']][0] += $body;
 
     $node = entity_create('node', $settings);
     if (!empty($settings['revision'])) {

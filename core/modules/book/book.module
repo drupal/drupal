@@ -5,7 +5,7 @@
  * Allows users to create and organize related content in an outline.
  */
 
-use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\Core\Template\Attribute;
 use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
@@ -89,12 +89,12 @@ function book_permission() {
 /**
  * Adds relevant book links to the node's links.
  *
- * @param Drupal\node\Node $node
+ * @param \Drupal\Core\Entity\EntityInterface $node
  *   The book page node to add links to.
  * @param $view_mode
  *   The view mode of the node.
  */
-function book_node_view_link(Node $node, $view_mode) {
+function book_node_view_link(EntityInterface $node, $view_mode) {
   $links = array();
 
   if (isset($node->book['depth'])) {
@@ -199,10 +199,10 @@ function book_menu() {
 /**
  * Access callback: Determines if the book export page is accessible.
  *
- * @param \Drupal\node\Plugin\Core\Entity\Node $node
+ * @param \Drupal\node\Plugin\Core\Entity\EntityInterface $node
  *   The node whose export page is to be viewed.
  */
-function book_export_access(Node $node) {
+function book_export_access(EntityInterface $node) {
   return user_access('access printer-friendly version') && node_access('view', $node);
 }
 
@@ -213,24 +213,24 @@ function book_export_access(Node $node) {
  * - admin/content/book/%node
  * - node/%node/outline
  *
- * @param Drupal\node\Node $node
+ * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node whose outline tab is to be viewed.
  *
  * @see book_menu()
  */
-function _book_outline_access(Node $node) {
+function _book_outline_access(EntityInterface $node) {
   return user_access('administer book outlines') && node_access('view', $node);
 }
 
 /**
  * Access callback: Determines if the user can remove nodes from the outline.
  *
- * @param Drupal\node\Node $node
+ * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node to remove from the outline.
  *
  * @see book_menu()
  */
-function _book_outline_remove_access(Node $node) {
+function _book_outline_remove_access(EntityInterface $node) {
   return _book_node_is_removable($node) && _book_outline_access($node);
 }
 
@@ -240,10 +240,10 @@ function _book_outline_remove_access(Node $node) {
  * A node can be removed from a book if it is actually in a book and it either
  * is not a top-level page or is a top-level page with no children.
  *
- * @param Drupal\node\Node $node
+ * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node to remove from the outline.
  */
-function _book_node_is_removable($node) {
+function _book_node_is_removable(EntityInterface $node) {
   return (!empty($node->book['bid']) && (($node->book['bid'] != $node->nid) || !$node->book['has_children']));
 }
 
@@ -420,10 +420,10 @@ function _book_parent_select($book_link) {
 /**
  * Builds the common elements of the book form for the node and outline forms.
  *
- * @param Drupal\node\Node $node
+ * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node whose form is being viewed.
  */
-function _book_add_form_elements(&$form, &$form_state, Node $node) {
+function _book_add_form_elements(&$form, &$form_state, EntityInterface $node) {
   // If the form is being processed during the Ajax callback of our book bid
   // dropdown, then $form_state will hold the value that was selected.
   if (isset($form_state['values']['book'])) {
@@ -523,13 +523,13 @@ function book_form_update($form, $form_state) {
  * outline through node addition, node editing, node deletion, or the outline
  * tab.
  *
- * @param Drupal\node\Node $node
+ * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node that is being saved, added, deleted, or moved.
  *
  * @return
  *   TRUE if the menu link was saved; FALSE otherwise.
  */
-function _book_update_outline(Node $node) {
+function _book_update_outline(EntityInterface $node) {
   if (empty($node->book['bid'])) {
     return FALSE;
   }
@@ -788,7 +788,7 @@ function book_node_load($nodes, $types) {
 /**
  * Implements hook_node_view().
  */
-function book_node_view(Node $node, EntityDisplay $display, $view_mode) {
+function book_node_view(EntityInterface $node, EntityDisplay $display, $view_mode) {
   if ($view_mode == 'full') {
     if (!empty($node->book['bid']) && empty($node->in_preview)) {
       $node->content['book_navigation'] = array(
@@ -820,7 +820,7 @@ function book_page_alter(&$page) {
 /**
  * Implements hook_node_presave().
  */
-function book_node_presave(Node $node) {
+function book_node_presave(EntityInterface $node) {
   // Always save a revision for non-administrators.
   if (!empty($node->book['bid']) && !user_access('administer nodes')) {
     $node->setNewRevision();
@@ -834,7 +834,7 @@ function book_node_presave(Node $node) {
 /**
  * Implements hook_node_insert().
  */
-function book_node_insert(Node $node) {
+function book_node_insert(EntityInterface $node) {
   if (!empty($node->book['bid'])) {
     if ($node->book['bid'] == 'new') {
       // New nodes that are their own book.
@@ -849,7 +849,7 @@ function book_node_insert(Node $node) {
 /**
  * Implements hook_node_update().
  */
-function book_node_update(Node $node) {
+function book_node_update(EntityInterface $node) {
   if (!empty($node->book['bid'])) {
     if ($node->book['bid'] == 'new') {
       // New nodes that are their own book.
@@ -864,7 +864,7 @@ function book_node_update(Node $node) {
 /**
  * Implements hook_node_predelete().
  */
-function book_node_predelete(Node $node) {
+function book_node_predelete(EntityInterface $node) {
   if (!empty($node->book['bid'])) {
     if ($node->nid == $node->book['bid']) {
       // Handle deletion of a top-level post.
@@ -888,7 +888,7 @@ function book_node_predelete(Node $node) {
 /**
  * Implements hook_node_prepare().
  */
-function book_node_prepare(Node $node) {
+function book_node_prepare(EntityInterface $node) {
   // Prepare defaults for the add/edit form.
   if (empty($node->book) && (user_access('add content to books') || user_access('administer book outlines'))) {
     $node->book = array();
@@ -1184,7 +1184,7 @@ function book_export_traverse($tree, $visit_func) {
 /**
  * Generates printer-friendly HTML for a node.
  *
- * @param Drupal\node\Node $node
+ * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node that will be output.
  * @param $children
  *   (optional) All the rendered child nodes within the current node. Defaults
@@ -1195,7 +1195,7 @@ function book_export_traverse($tree, $visit_func) {
  *
  * @see book_export_traverse()
  */
-function book_node_export(Node $node, $children = '') {
+function book_node_export(EntityInterface $node, $children = '') {
   $build = node_view($node, 'print');
   unset($build['#theme']);
   // @todo Rendering should happen in the template using render().

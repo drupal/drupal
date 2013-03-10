@@ -221,7 +221,7 @@ class SearchCommentTest extends SearchTestBase {
     $settings = array(
       'type' => 'article',
       'title' => 'short title',
-      'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => 'short body text'))),
+      'body' => array(array('value' => 'short body text')),
     );
 
     $user = $this->drupalCreateUser(array('search content', 'create article content', 'access content'));

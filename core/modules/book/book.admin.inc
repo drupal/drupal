@@ -5,7 +5,7 @@
  * Administration page callbacks for the Book module.
  */
 
-use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Page callback: Returns an administrative overview of all books.
@@ -45,7 +45,7 @@ function book_admin_overview() {
 /**
  * Form constructor for administering a single book's hierarchy.
  *
- * @param Drupal\node\Node $node
+ * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node of the top-level page in the book.
  *
  * @see book_menu()
@@ -53,7 +53,7 @@ function book_admin_overview() {
  * @see book_admin_edit_submit()
  * @ingroup forms
  */
-function book_admin_edit($form, $form_state, Node $node) {
+function book_admin_edit($form, $form_state, EntityInterface $node) {
   drupal_set_title($node->label());
   $form['#node'] = $node;
   _book_admin_table($node, $form);
@@ -136,14 +136,14 @@ function book_admin_edit_submit($form, &$form_state) {
 /**
  * Builds the table portion of the form for the book administration page.
  *
- * @param Drupal\node\Node $node
+ * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node of the top-level page in the book.
  * @param $form
  *   The form that is being modified, passed by reference.
  *
  * @see book_admin_edit()
  */
-function _book_admin_table(Node $node, &$form) {
+function _book_admin_table(EntityInterface $node, &$form) {
   $form['table'] = array(
     '#theme' => 'book_admin_table',
     '#tree' => TRUE,

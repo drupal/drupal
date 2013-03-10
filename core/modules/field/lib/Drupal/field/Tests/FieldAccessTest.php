@@ -64,7 +64,7 @@ class FieldAccessTest extends FieldTestBase {
     $settings = array();
     $settings['type'] = $this->content_type;
     $settings['title'] = 'Field view access test';
-    $settings['test_view_field'] = array(LANGUAGE_NOT_SPECIFIED => array(array('value' => $this->test_view_field_value)));
+    $settings['test_view_field'] = array(array('value' => $this->test_view_field_value));
     $this->node = $this->drupalCreateNode($settings);
   }
 

@@ -9,7 +9,7 @@
  * a special 'node test view' permission.
  */
 
-use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_node_grants().
@@ -32,7 +32,7 @@ function node_access_test_node_grants($account, $op) {
 /**
  * Implements hook_node_access_records().
  */
-function node_access_test_node_access_records(Node $node) {
+function node_access_test_node_access_records(EntityInterface $node) {
   $grants = array();
   // For NodeAccessBaseTableTestCase, only set records for private nodes.
   if (!state()->get('node_access_test.private') || $node->private) {
@@ -207,28 +207,28 @@ function node_access_test_node_load($nodes, $types) {
  * Implements hook_node_predelete().
  */
 
-function node_access_test_node_predelete(Node $node) {
+function node_access_test_node_predelete(EntityInterface $node) {
   db_delete('node_access_test')->condition('nid', $node->nid)->execute();
 }
 
 /**
  * Implements hook_node_insert().
  */
-function node_access_test_node_insert(Node $node) {
+function node_access_test_node_insert(EntityInterface $node) {
   _node_access_test_node_write($node);
 }
 
 /**
  * Implements hook_nodeapi_update().
  */
-function node_access_test_node_update(Node $node) {
+function node_access_test_node_update(EntityInterface $node) {
   _node_access_test_node_write($node);
 }
 
 /**
  * Helper for node insert/update.
  */
-function _node_access_test_node_write(Node $node) {
+function _node_access_test_node_write(EntityInterface $node) {
   if (isset($node->private)) {
     db_merge('node_access_test')
       ->key(array('nid' => $node->nid))

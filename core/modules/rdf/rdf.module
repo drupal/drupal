@@ -787,9 +787,9 @@ function rdf_field_attach_view_alter(&$output, $context) {
       foreach ($element['#items'] as $delta => $item) {
         // This function is invoked during entity preview when taxonomy term
         // reference items might contain free-tagging terms that do not exist
-        // yet and thus have no $item['taxonomy_term'].
-        if (isset($item['taxonomy_term'])) {
-          $term = $item['taxonomy_term'];
+        // yet and thus have no $item['entity'].
+        if (isset($item['entity'])) {
+          $term = $item['entity'];
           if (!empty($term->rdf_mapping['rdftype'])) {
             $element[$delta]['#options']['attributes']['typeof'] = $term->rdf_mapping['rdftype'];
           }

@@ -5,7 +5,7 @@
  * Enables site-wide keyword searching.
  */
 
-use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Matches all 'N' Unicode character classes (numbers)
@@ -792,7 +792,7 @@ function search_touch_node($nid) {
 /**
  * Implements hook_node_update_index().
  */
-function search_node_update_index(Node $node) {
+function search_node_update_index(EntityInterface $node) {
   // Transplant links to a node into the target node.
   $result = db_query("SELECT caption FROM {search_node_links} WHERE nid = :nid", array(':nid' => $node->nid), array('target' => 'slave'));
   $output = array();
@@ -807,7 +807,7 @@ function search_node_update_index(Node $node) {
 /**
  * Implements hook_node_update().
  */
-function search_node_update(Node $node) {
+function search_node_update(EntityInterface $node) {
   // Reindex the node when it is updated. The node is automatically indexed
   // when it is added, simply by being added to the node table.
   search_touch_node($node->nid);

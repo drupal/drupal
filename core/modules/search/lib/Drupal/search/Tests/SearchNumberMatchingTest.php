@@ -45,7 +45,7 @@ class SearchNumberMatchingTest extends SearchTestBase {
 
     foreach ($this->numbers as $num) {
       $info = array(
-        'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => $num))),
+        'body' => array(array('value' => $num)),
         'type' => 'page',
         'language' => LANGUAGE_NOT_SPECIFIED,
       );

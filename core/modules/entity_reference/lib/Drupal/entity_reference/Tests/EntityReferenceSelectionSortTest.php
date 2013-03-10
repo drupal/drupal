@@ -88,10 +88,8 @@ class EntityReferenceSelectionSortTest extends WebTestBase {
         'title' => 'Node published1 (<&>)',
         'uid' => 1,
         'field_text' => array(
-          LANGUAGE_NOT_SPECIFIED => array(
-            array(
-              'value' => 1,
-            ),
+          array(
+            'value' => 1,
           ),
         ),
       ),
@@ -101,10 +99,8 @@ class EntityReferenceSelectionSortTest extends WebTestBase {
         'title' => 'Node published2 (<&>)',
         'uid' => 1,
         'field_text' => array(
-          LANGUAGE_NOT_SPECIFIED => array(
-            array(
-              'value' => 2,
-            ),
+          array(
+            'value' => 2,
           ),
         ),
       ),

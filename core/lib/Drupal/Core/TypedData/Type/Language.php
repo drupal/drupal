@@ -8,6 +8,7 @@
 namespace Drupal\Core\TypedData\Type;
 
 use InvalidArgumentException;
+use Drupal\Core\Language\Language as LanguageObject;
 use Drupal\Core\TypedData\ContextAwareTypedData;
 
 /**
@@ -40,7 +41,8 @@ class Language extends ContextAwareTypedData {
     $source = $this->getLanguageCodeSource();
     $langcode = $source ? $source->getValue() : $this->langcode;
     if ($langcode) {
-      return language_load($langcode);
+      $language = language_load($langcode);
+      return $language ?: new LanguageObject(array('langcode' => $this->langcode));
     }
   }
 

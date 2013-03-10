@@ -7,7 +7,7 @@
 
 namespace Drupal\forum\Tests;
 
-use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -540,14 +540,14 @@ class ForumTest extends WebTestBase {
    *
    * @param $node_user
    *   The user who creates the node.
-   * @param Drupal\node\Node $node
+   * @param \Drupal\Core\Entity\EntityInterface $node
    *   The node being checked.
    * @param $admin
    *   Boolean to indicate whether the user can 'access administration pages'.
    * @param $response
    *   The exptected HTTP response code.
    */
-  private function verifyForums($node_user, Node $node, $admin, $response = 200) {
+  private function verifyForums($node_user, EntityInterface $node, $admin, $response = 200) {
     $response2 = ($admin) ? 200 : 403;
 
     // View forum help node.

@@ -96,6 +96,8 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
    */
   public function create(array $values) {
     // We have to determine the bundle first.
+    // @todo Throw an exception if no bundle is passed and we have a bundle key
+    //   defined.
     $bundle = $this->bundleKey ? $values[$this->bundleKey] : FALSE;
     $entity = new $this->entityClass(array(), $this->entityType, $bundle);
 
@@ -154,7 +156,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
     // Map the loaded stdclass records into entity objects and according fields.
     $queried_entities = $this->mapFromStorageRecords($queried_entities, $load_revision);
 
-    // Attach fields.
+    // Activate backward-compatibility mode to attach fields.
     if ($this->entityInfo['fieldable']) {
       // Prepare BC compatible entities before passing them to the field API.
       $bc_entities = array();
@@ -251,7 +253,10 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
         foreach ($field_definition as $name => $definition) {
           // Set translatable properties only.
           if (isset($data_fields[$name]) && !empty($definition['translatable'])) {
-            $translation->{$name}->value = $values[$name];
+            // @todo Figure out how to determine which property has to be set.
+            // Currently it's guessing, and guessing is evil!
+            $property_definition = $translation->{$name}->getPropertyDefinitions();
+            $translation->{$name}->{key($property_definition)} = $values[$name];
           }
           // Avoid initializing configurable fields before loading them.
           elseif (!empty($definition['configurable'])) {
@@ -270,6 +275,12 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
   public function save(EntityInterface $entity) {
     $transaction = db_transaction();
     try {
+      // Ensure we are dealing with the actual entity.
+      $entity = $entity->getOriginalEntity();
+
+      // Sync the changes made in the fields array to the internal values array.
+      $entity->updateOriginalValues();
+
       // Load the stored entity, if any.
       if (!$entity->isNew() && !isset($entity->original)) {
         $entity->original = entity_load_unchanged($this->entityType, $entity->id());
@@ -279,7 +290,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       $this->invokeHook('presave', $entity);
 
       // Create the storage record to be saved.
-      $record = $this->maptoStorageRecord($entity);
+      $record = $this->mapToStorageRecord($entity);
 
       if (!$entity->isNew()) {
         if ($entity->isDefaultRevision()) {
@@ -446,7 +457,9 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
   protected function mapToRevisionStorageRecord(EntityInterface $entity) {
     $record = new \stdClass();
     foreach ($this->entityInfo['schema_fields_sql']['revision_table'] as $name) {
-      $record->$name = $entity->$name->value;
+      if (isset($entity->$name->value)) {
+        $record->$name = $entity->$name->value;
+      }
     }
     return $record;
   }
@@ -489,6 +502,11 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
 
     $transaction = db_transaction();
     try {
+      // Ensure we are dealing with the actual entities.
+      foreach ($entities as $id => $entity) {
+        $entities[$id] = $entity->getOriginalEntity();
+      }
+
       $this->preDelete($entities);
       foreach ($entities as $id => $entity) {
         $this->invokeHook('predelete', $entity);

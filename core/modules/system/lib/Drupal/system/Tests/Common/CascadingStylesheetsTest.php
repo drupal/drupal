@@ -134,11 +134,9 @@ class CascadingStylesheetsTest extends WebTestBase {
     $settings = array(
       'type' => 'page',
       'body' => array(
-        LANGUAGE_NOT_SPECIFIED => array(
-          array(
-            'value' => t('This tests the inline CSS!') . "<?php drupal_add_css('$css', 'inline'); ?>",
-            'format' => $php_format_id,
-          ),
+        array(
+          'value' => t('This tests the inline CSS!') . "<?php drupal_add_css('$css', 'inline'); ?>",
+          'format' => $php_format_id,
         ),
       ),
       'promote' => 1,

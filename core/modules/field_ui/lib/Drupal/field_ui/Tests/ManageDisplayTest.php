@@ -7,7 +7,7 @@
 
 namespace Drupal\field_ui\Tests;
 
-use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Tests the functionality of the 'Manage display' screens.
@@ -111,7 +111,7 @@ class ManageDisplayTest extends FieldUiTestBase {
     $value = 12345;
     $settings = array(
       'type' => $this->type,
-      'field_test' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => $value))),
+      'field_test' => array(array('value' => $value)),
     );
     $node = $this->drupalCreateNode($settings);
 
@@ -216,7 +216,7 @@ class ManageDisplayTest extends FieldUiTestBase {
   /**
    * Asserts that a string is found in the rendered node in a view mode.
    *
-   * @param Node $node
+   * @param EntityInterface $node
    *   The node.
    * @param $view_mode
    *   The view mode in which the node should be displayed.
@@ -228,14 +228,14 @@ class ManageDisplayTest extends FieldUiTestBase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  function assertNodeViewText(Node $node, $view_mode, $text, $message) {
+  function assertNodeViewText(EntityInterface $node, $view_mode, $text, $message) {
     return $this->assertNodeViewTextHelper($node, $view_mode, $text, $message, FALSE);
   }
 
   /**
    * Asserts that a string is not found in the rendered node in a view mode.
    *
-   * @param Node $node
+   * @param EntityInterface $node
    *   The node.
    * @param $view_mode
    *   The view mode in which the node should be displayed.
@@ -246,7 +246,7 @@ class ManageDisplayTest extends FieldUiTestBase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  function assertNodeViewNoText(Node $node, $view_mode, $text, $message) {
+  function assertNodeViewNoText(EntityInterface $node, $view_mode, $text, $message) {
     return $this->assertNodeViewTextHelper($node, $view_mode, $text, $message, TRUE);
   }
 
@@ -256,7 +256,7 @@ class ManageDisplayTest extends FieldUiTestBase {
    * This helper function is used by assertNodeViewText() and
    * assertNodeViewNoText().
    *
-   * @param Node $node
+   * @param EntityInterface $node
    *   The node.
    * @param $view_mode
    *   The view mode in which the node should be displayed.
@@ -270,7 +270,7 @@ class ManageDisplayTest extends FieldUiTestBase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  function assertNodeViewTextHelper(Node $node, $view_mode, $text, $message, $not_exists) {
+  function assertNodeViewTextHelper(EntityInterface $node, $view_mode, $text, $message, $not_exists) {
     // Make sure caches on the tester side are refreshed after changes
     // submitted on the tested side.
     field_info_cache_clear();

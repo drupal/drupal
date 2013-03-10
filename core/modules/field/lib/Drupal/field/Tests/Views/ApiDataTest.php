@@ -28,8 +28,6 @@ class ApiDataTest extends FieldTestBase {
   function setUp() {
     parent::setUp();
 
-    $langcode = LANGUAGE_NOT_SPECIFIED;
-
     $field_names = $this->setUpFields();
 
     // The first one will be attached to nodes only.
@@ -65,9 +63,8 @@ class ApiDataTest extends FieldTestBase {
     // Now create some example nodes/users for the view result.
     for ($i = 0; $i < 5; $i++) {
       $edit = array(
-        // @TODO Write a helper method to create such values.
-        'field_name_0' => array($langcode => array((array('value' => $this->randomName())))),
-        'field_name_2' => array($langcode => array((array('value' => $this->randomName())))),
+        'field_name_0' => array((array('value' => $this->randomName()))),
+        'field_name_2' => array((array('value' => $this->randomName()))),
       );
       $this->nodes[] = $this->drupalCreateNode($edit);
     }

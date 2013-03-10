@@ -37,6 +37,15 @@ abstract class FieldItemBase extends ContextAwareTypedData implements IteratorAg
   protected $properties = array();
 
   /**
+   * Holds any non-property values that get set on the object.
+   *
+   * @todo: Remove or refactor once EntityNG conversion is complete.
+   *
+   * @var array
+   */
+  protected $extraValues = array();
+
+  /**
    * Overrides ContextAwareTypedData::__construct().
    */
   public function __construct(array $definition, $name = NULL, ContextAwareInterface $parent = NULL) {
@@ -68,7 +77,7 @@ abstract class FieldItemBase extends ContextAwareTypedData implements IteratorAg
     foreach ($this->getProperties() as $name => $property) {
       $values[$name] = $property->getValue();
     }
-    return $values;
+    return $values + $this->extraValues;
   }
 
   /**
@@ -92,9 +101,11 @@ abstract class FieldItemBase extends ContextAwareTypedData implements IteratorAg
       else {
         $property->setValue(NULL);
       }
+      unset($values[$name]);
     }
     // @todo: Throw an exception for invalid values once conversion is
     // totally completed.
+    $this->extraValues = $values;
   }
 
   /**
@@ -129,7 +140,13 @@ abstract class FieldItemBase extends ContextAwareTypedData implements IteratorAg
    * Implements \Drupal\Core\Entity\Field\FieldItemInterface::__get().
    */
   public function __get($name) {
-    return $this->get($name)->getValue();
+    if (isset($this->properties[$name])) {
+      return $this->properties[$name]->getValue();
+    }
+    // The property is unknown, so try to get it from the extra values.
+    elseif (isset($this->extraValues[$name])) {
+      return $this->extraValues[$name];
+    }
   }
 
   /**
@@ -140,7 +157,13 @@ abstract class FieldItemBase extends ContextAwareTypedData implements IteratorAg
     if ($value instanceof TypedDataInterface) {
       $value = $value->getValue();
     }
-    $this->get($name)->setValue($value);
+    if (isset($this->properties[$name])) {
+      $this->properties[$name]->setValue($value);
+    }
+    else {
+      // The property is unknown, so set it to the extra values.
+      $this->extraValues[$name] = $value;
+    }
   }
 
   /**

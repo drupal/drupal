@@ -7,7 +7,7 @@
 
 namespace Drupal\rdf\Tests;
 
-use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -71,10 +71,10 @@ class TrackerAttributesTest extends WebTestBase {
    *
    * Tests the tracker page for RDFa markup.
    *
-   * @param Node $node
+   * @param \Drupal\Core\Entity\EntityInterface $node
    * The node just created.
    */
-  function _testBasicTrackerRdfaMarkup(Node $node) {
+  function _testBasicTrackerRdfaMarkup(EntityInterface $node) {
     $node_uri = url('node/' . $node->nid, array('absolute' => TRUE));
     $user_uri = url('user/' . $node->uid, array('absolute' => TRUE));
 

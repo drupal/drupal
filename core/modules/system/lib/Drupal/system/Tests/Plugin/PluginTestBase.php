@@ -89,7 +89,7 @@ abstract class PluginTestBase extends UnitTestBase {
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockComplexContextBlock',
         'context' => array(
           'user' => array('class' => 'Drupal\user\Plugin\Core\Entity\User'),
-          'node' => array('class' => 'Drupal\node\Plugin\Core\Entity\Node'),
+          'node' => array('class' => 'Drupal\Core\Entity\EntityBCDecorator'),
         ),
       ),
     );

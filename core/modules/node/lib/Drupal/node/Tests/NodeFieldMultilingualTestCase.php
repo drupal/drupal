@@ -82,33 +82,30 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
     // Check that the node exists in the database.
-    $node = $this->drupalGetNodeByTitle($edit[$title_key]);
+    $node = $this->drupalGetNodeByTitle($edit[$title_key])->getOriginalEntity();
     $this->assertTrue($node, 'Node found in database.');
-
-    $assert = isset($node->body['en']) && !isset($node->body[LANGUAGE_NOT_SPECIFIED]) && $node->body['en'][0]['value'] == $body_value;
-    $this->assertTrue($assert, 'Field language correctly set.');
+    $this->assertTrue($node->language()->langcode == $langcode && $node->body->value == $body_value, 'Field language correctly set.');
 
     // Change node language.
-    $this->drupalGet("node/$node->nid/edit");
+    $langcode = 'it';
+    $this->drupalGet("node/{$node->id()}/edit");
     $edit = array(
       $title_key => $this->randomName(8),
-      'langcode' => 'it'
+      'langcode' => $langcode,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
-    $node = $this->drupalGetNodeByTitle($edit[$title_key], TRUE);
+    $node = $this->drupalGetNodeByTitle($edit[$title_key], TRUE)->getOriginalEntity();
     $this->assertTrue($node, 'Node found in database.');
-
-    $assert = isset($node->body['it']) && !isset($node->body['en']) && $node->body['it'][0]['value'] == $body_value;
-    $this->assertTrue($assert, 'Field language correctly changed.');
+    $this->assertTrue($node->language()->langcode == $langcode && $node->body->value == $body_value, 'Field language correctly changed.');
 
     // Enable content language URL detection.
     language_negotiation_set(LANGUAGE_TYPE_CONTENT, array(LANGUAGE_NEGOTIATION_URL => 0));
 
     // Test multilingual field language fallback logic.
-    $this->drupalGet("it/node/$node->nid");
+    $this->drupalGet("it/node/{$node->id()}");
     $this->assertRaw($body_value, 'Body correctly displayed using Italian as requested language');
 
-    $this->drupalGet("node/$node->nid");
+    $this->drupalGet("node/{$node->id()}");
     $this->assertRaw($body_value, 'Body correctly displayed using English as requested language');
   }
 

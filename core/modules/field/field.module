@@ -944,7 +944,10 @@ function field_view_field(EntityInterface $entity, $field_name, $display_options
 
   if ($formatter) {
     $display_langcode = field_language($entity, $field_name, $langcode);
-    $items = $entity->{$field_name}[$display_langcode];
+    $items = array();
+    if (isset($entity->{$field_name}[$display_langcode])) {
+      $items = $entity->{$field_name}[$display_langcode];
+    }
 
     // Invoke prepare_view steps if needed.
     if (empty($entity->_field_view_prepared)) {
@@ -956,7 +959,10 @@ function field_view_field(EntityInterface $entity, $field_name, $display_options
       _field_invoke_multiple('prepare_view', $entity->entityType(), array($id => $entity), $null, $null, $options);
 
       // Then let the formatter do its own specific massaging.
-      $items_multi = array($id => $entity->{$field_name}[$display_langcode]);
+      $items_multi = array($id => array());
+      if (isset($entity->{$field_name}[$display_langcode])) {
+        $items_multi[$id] = $entity->{$field_name}[$display_langcode];
+      }
       $formatter->prepareView(array($id => $entity), $display_langcode, $items_multi);
       $items = $items_multi[$id];
     }

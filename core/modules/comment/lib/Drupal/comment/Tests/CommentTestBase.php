@@ -80,7 +80,7 @@ abstract class CommentTestBase extends WebTestBase {
   /**
    * Posts a comment.
    *
-   * @param Drupal\node\Node|null $node
+   * @param \Drupal\Core\Entity\EntityInterface $node|null $node
    *   Node to post comment on or NULL to post to the previusly loaded page.
    * @param $comment
    *   Comment body.
