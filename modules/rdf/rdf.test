@@ -195,12 +195,12 @@ class RdfRdfaMarkupTestCase extends DrupalWebTestCase {
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     // Ensures the RDFa markup for the relationship between the node and its
     // tags is correct.
-    $term_rdfa_meta = $this->xpath('//div[@about=:node-url and contains(@typeof, "sioc:Item") and contains(@typeof, "foaf:Document")]//ul[@class="links"]/li[@rel="dc:subject"]/a[@typeof="skos:Concept" and text()=:term-name]', array(
+    $term_rdfa_meta = $this->xpath('//div[@about=:node-url and contains(@typeof, "sioc:Item") and contains(@typeof, "foaf:Document")]//ul[@class="links"]/li[@rel="dc:subject"]/a[@typeof="skos:Concept" and @datatype="" and text()=:term-name]', array(
       ':node-url' => url('node/' . $node->nid),
       ':term-name' => $tag1,
     ));
     $this->assertTrue(!empty($term_rdfa_meta), t('Property dc:subject is present for the tag1 field item.'));
-    $term_rdfa_meta = $this->xpath('//div[@about=:node-url and contains(@typeof, "sioc:Item") and contains(@typeof, "foaf:Document")]//ul[@class="links"]/li[@rel="dc:subject"]/a[@typeof="skos:Concept" and text()=:term-name]', array(
+    $term_rdfa_meta = $this->xpath('//div[@about=:node-url and contains(@typeof, "sioc:Item") and contains(@typeof, "foaf:Document")]//ul[@class="links"]/li[@rel="dc:subject"]/a[@typeof="skos:Concept" and @datatype="" and text()=:term-name]', array(
       ':node-url' => url('node/' . $node->nid),
       ':term-name' => $tag2,
     ));
@@ -384,7 +384,7 @@ class RdfMappingDefinitionTestCase extends TaxonomyWebTestCase {
     $this->drupalGet('node/' . $node->nid);
     // Ensures the default bundle mapping for user is used on the Authored By
     // information on the node.
-    $author_about = $this->xpath('//a[@typeof="sioc:UserAccount" and @about=:account-uri and @property="foaf:name" and contains(@xml:lang, "")]', array(
+    $author_about = $this->xpath('//a[@typeof="sioc:UserAccount" and @about=:account-uri and @property="foaf:name" and @datatype="" and contains(@xml:lang, "")]', array(
       ':account-uri' => $account_uri,
     ));
     $this->assertTrue(!empty($author_about), t('RDFa markup found on author information on post. xml:lang on username is set to empty string.'));
@@ -502,7 +502,7 @@ class RdfCommentAttributesTestCase extends CommentHelperCase {
     // Tests comment #2 as anonymous user.
     $this->_testBasicCommentRdfaMarkup($comment2, $anonymous_user);
     // Tests the RDFa markup for the homepage (specific to anonymous comments).
-    $comment_homepage = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//span[@rel="sioc:has_creator"]/a[contains(@class, "username") and @typeof="sioc:UserAccount" and @property="foaf:name" and @href="http://example.org/" and contains(@rel, "foaf:page")]');
+    $comment_homepage = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//span[@rel="sioc:has_creator"]/a[contains(@class, "username") and @typeof="sioc:UserAccount" and @property="foaf:name" and @datatype="" and @href="http://example.org/" and contains(@rel, "foaf:page")]');
     $this->assertTrue(!empty($comment_homepage), t('RDFa markup for the homepage of anonymous user found.'));
     // There should be no about attribute on anonymous comments.
     $comment_homepage = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//span[@rel="sioc:has_creator"]/a[@about]');
@@ -513,7 +513,7 @@ class RdfCommentAttributesTestCase extends CommentHelperCase {
     $this->drupalGet('node/' . $this->node2->nid);
     $this->_testBasicCommentRdfaMarkup($comment2, $anonymous_user);
     // Tests the RDFa markup for the homepage (specific to anonymous comments).
-    $comment_homepage = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//span[@rel="sioc:has_creator"]/a[contains(@class, "username") and @typeof="sioc:UserAccount" and @property="foaf:name" and @href="http://example.org/" and contains(@rel, "foaf:page")]');
+    $comment_homepage = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//span[@rel="sioc:has_creator"]/a[contains(@class, "username") and @typeof="sioc:UserAccount" and @property="foaf:name" and @datatype="" and @href="http://example.org/" and contains(@rel, "foaf:page")]');
     $this->assertTrue(!empty($comment_homepage), t("RDFa markup for the homepage of anonymous user found."));
     // There should be no about attribute on anonymous comments.
     $comment_homepage = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//span[@rel="sioc:has_creator"]/a[@about]');
@@ -564,7 +564,7 @@ class RdfCommentAttributesTestCase extends CommentHelperCase {
     $comment_date = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//*[contains(@property, "dc:date") and contains(@property, "dc:created")]');
     $this->assertTrue(!empty($comment_date), t("RDFa markup for the date of the comment found."));
     // The author tag can be either a or span
-    $comment_author = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//span[@rel="sioc:has_creator"]/*[contains(@class, "username") and @typeof="sioc:UserAccount" and @property="foaf:name"]');
+    $comment_author = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//span[@rel="sioc:has_creator"]/*[contains(@class, "username") and @typeof="sioc:UserAccount" and @property="foaf:name" and @datatype=""]');
     $name = empty($account["name"]) ? $this->web_user->name : $account["name"] . " (not verified)";
     $this->assertEqual((string)$comment_author[0], $name, t("RDFa markup for the comment author found."));
     $comment_body = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//div[@class="content"]//div[contains(@class, "comment-body")]//div[@property="content:encoded"]');
