@@ -8,12 +8,12 @@
 /**
  * Allow modules to alter tour items before render.
  *
- * @param array $tour_items
+ * @param array $tour_tips
  *   Array of \Drupal\tour\TipPluginInterface items.
- * @param string $path
- *   The path for which the tour is valid.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The tour which contains the $tour_tips.
  */
-function hook_tour_tips_alter(array &$tour_tips, $path) {
+function hook_tour_tips_alter(array &$tour_tips, Drupal\Core\Entity\EntityInterface $entity) {
   foreach ($tour_tips as $tour_tip) {
     if ($tour_tip->get('id') == 'tour-code-test-1') {
       $tour_tip->set('body', 'Altered by hook_tour_tips_alter');

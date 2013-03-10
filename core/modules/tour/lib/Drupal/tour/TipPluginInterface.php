@@ -65,4 +65,5 @@ interface TipPluginInterface {
    *   A renderable array.
    */
   public function getOutput();
+
 }

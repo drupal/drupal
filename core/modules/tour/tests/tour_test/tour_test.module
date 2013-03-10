@@ -5,6 +5,8 @@
  * Provides tests for tour module
  */
 
+use Drupal\Core\Entity\EntityInterface;
+
 /**
  * Implements hook_menu().
  */
@@ -76,9 +78,9 @@ function tour_test_2() {
 }
 
 /**
- * Implements hook_tour_alter().
+ * Implements hook_tour_tips_alter().
  */
-function tour_test_tour_tips_alter(array &$tour_tips, $path) {
+function tour_test_tour_tips_alter(array &$tour_tips, EntityInterface $entity) {
   foreach ($tour_tips as $tour_tip) {
     if ($tour_tip->get('id') == 'tour-code-test-1') {
       $tour_tip->set('body', 'Altered by hook_tour_tips_alter');

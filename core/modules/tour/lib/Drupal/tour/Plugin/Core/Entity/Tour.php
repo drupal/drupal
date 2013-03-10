@@ -20,11 +20,12 @@ use Drupal\tour\TipsBag;
  *   label = @Translation("Tour"),
  *   module = "tour",
  *   controller_class = "Drupal\Core\Config\Entity\ConfigStorageController",
+ *   render_controller_class = "Drupal\tour\TourRenderController",
  *   config_prefix = "tour.tour",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
- *     "uuid" = "uuid",
+ *     "uuid" = "uuid"
  *   }
  * )
  */
@@ -34,7 +35,6 @@ class Tour extends ConfigEntityBase {
    * The name (plugin ID) of the tour.
    *
    * @var string
-   *   Unique identifier for this tour.
    */
   public $id;
 
@@ -42,7 +42,6 @@ class Tour extends ConfigEntityBase {
    * The label of the tour.
    *
    * @var string
-   *   A human readable name for this tour.
    */
   public $label;
 
@@ -50,9 +49,8 @@ class Tour extends ConfigEntityBase {
    * The paths in which this tip can be displayed.
    *
    * @var array
-   *   An array of paths.
    */
-  protected $paths;
+  protected $paths = array();
 
   /**
    * Holds the collection of tips that are attached to this tour.
@@ -66,7 +64,7 @@ class Tour extends ConfigEntityBase {
    *
    * @var array
    */
-  protected $tips;
+  protected $tips = array();
 
   /**
    * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::__construct();
@@ -108,13 +106,25 @@ class Tour extends ConfigEntityBase {
   }
 
   /**
-   * Returns a list of tips.
+   * Returns the tips for this tour.
    *
    * @return array
-   *   A list of tips.
+   *   An array of tip plugins.
    */
-  public function getTipList() {
-    return array_keys($this->tips);
+  public function getTips() {
+    $tips = array();
+    foreach ($this->tips as $id => $tip) {
+      $tips[] = $this->getTip($id);
+    }
+    uasort($tips, function ($a, $b) {
+      if ($a->getWeight() == $b->getWeight()) {
+        return 0;
+      }
+      return ($a->getWeight() < $b->getWeight()) ? -1 : 1;
+    });
+
+    drupal_container()->get('module_handler')->alter('tour_tips', $tips, $this);
+    return array_values($tips);
   }
 
   /**
@@ -123,15 +133,13 @@ class Tour extends ConfigEntityBase {
   public function getExportProperties() {
     $properties = parent::getExportProperties();
     $names = array(
-      'id',
-      'label',
       'paths',
       'tips',
-      'langcode',
     );
     foreach ($names as $name) {
       $properties[$name] = $this->get($name);
     }
     return $properties;
   }
+
 }
