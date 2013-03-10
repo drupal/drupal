@@ -215,12 +215,10 @@ function locale_menu() {
   );
   $items['admin/config/regional/translate/settings'] = array(
     'title' => 'Settings',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('locale_translate_settings'),
+    'route_name' => 'locale_settings',
     'access arguments' => array('translate interface'),
     'weight' => 100,
     'type' => MENU_LOCAL_TASK,
-    'file' => 'locale.pages.inc',
   );
   $items['admin/reports/translations'] = array(
     'title' => 'Available translation updates',
