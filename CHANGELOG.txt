@@ -1,6 +1,9 @@
 
 Drupal 7.22, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a serious documentation bug: The $name variable in the
+  taxonomy-term.tpl.php theme template was incorrectly documented as being
+  sanitized when in fact it is not.
 - Fixed a bug which prevented Drupal 6 to Drupal 7 upgrades on sites which had
   duplicate permission names in the User module's database tables.
 - Added an empty "datatype" attribute to taxonomy term and username links to
