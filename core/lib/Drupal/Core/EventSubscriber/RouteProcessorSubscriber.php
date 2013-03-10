@@ -39,7 +39,11 @@ class RouteProcessorSubscriber implements EventSubscriberInterface {
     $request = $event->getRequest();
 
     // @todo This should all get converted into one or more RouteEnhancers.
-    if (!$request->attributes->has('_controller') && $this->negotiation->getContentType($request) === 'html') {
+    if (!$request->attributes->has('_content') && $this->negotiation->getContentType($request) == 'drupal_ajax') {
+      $request->attributes->set('_content', $request->attributes->get('_controller'));
+      $request->attributes->set('_controller', '\Drupal\Core\AjaxController::content');
+    }
+    elseif (!$request->attributes->has('_controller') && $this->negotiation->getContentType($request) === 'html') {
       if ($request->attributes->has('_form')) {
         $request->attributes->set('_controller', '\Drupal\Core\HtmlFormController::content');
       }
@@ -49,7 +53,6 @@ class RouteProcessorSubscriber implements EventSubscriberInterface {
       else {
         throw new \InvalidArgumentException('No valid subcontroller key was found');
       }
-
     }
   }
 
@@ -65,4 +68,5 @@ class RouteProcessorSubscriber implements EventSubscriberInterface {
 
     return $events;
   }
+
 }

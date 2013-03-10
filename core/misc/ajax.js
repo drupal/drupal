@@ -208,6 +208,9 @@ Drupal.ajax = function (base, element, element_settings) {
       }
     },
     dataType: 'json',
+    accepts: {
+      json: 'application/vnd.drupal-ajax'
+    },
     type: 'POST'
   };
 
