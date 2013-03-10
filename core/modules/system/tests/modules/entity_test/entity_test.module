@@ -268,3 +268,17 @@ function entity_test_entity_test_insert($entity) {
 function entity_test_label_callback($entity_type, $entity, $langcode = NULL) {
   return 'label callback ' . $entity->name->value;
 }
+
+/**
+ * Implements hook_entity_view_mode_info().
+ */
+function entity_test_entity_view_mode_info() {
+  $view_modes['entity_test_render']['full'] = array(
+    'label' => t('Full'),
+  );
+  $view_modes['entity_test_render']['test'] = array(
+    'label' => t('Test'),
+  );
+
+  return $view_modes;
+}
