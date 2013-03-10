@@ -41,6 +41,7 @@ function config_admin_sync_form(array &$form, array &$form_state, StorageInterfa
     if (empty($config_files)) {
       continue;
     }
+
     // @todo A table caption would be more appropriate, but does not have the
     //   visual importance of a heading.
     $form[$config_change_type]['heading'] = array(
@@ -62,10 +63,24 @@ function config_admin_sync_form(array &$form, array &$form_state, StorageInterfa
     }
     $form[$config_change_type]['list'] = array(
       '#theme' => 'table',
-      '#header' => array('Name'),
+      '#header' => array('Name', 'Operations'),
     );
+
     foreach ($config_files as $config_file) {
-      $form[$config_change_type]['list']['#rows'][] = array($config_file);
+      $links['view_diff'] = array(
+        'title' => t('View differences'),
+        'href' => 'admin/config/development/sync/diff/' . $config_file,
+        'ajax' => array('dialog' => array('modal' =>TRUE, 'width' => '700px')),
+      );
+      $form[$config_change_type]['list']['#rows'][] = array(
+        'name' => $config_file,
+        'operations' => array(
+          'data' => array(
+            '#type' => 'operations',
+            '#links' => $links,
+          ),
+        ),
+      );
     }
   }
 }
@@ -115,4 +130,55 @@ function config_admin_import_form_submit($form, &$form_state) {
   else {
     drupal_set_message(t('The import failed due to an error. Any errors have been logged.'), 'error');
   }
+}
+
+/**
+ * Page callback: Shows diff of specificed configuration file.
+ *
+ * @param string $config_file
+ *   The name of the configuration file.
+ *
+ * @return string
+ *   Table showing a two-way diff between the active and staged configuration.
+ */
+function config_admin_diff_page($config_file) {
+  // Retrieve a list of differences between last known state and active store.
+  $source_storage = drupal_container()->get('config.storage.staging');
+  $target_storage = drupal_container()->get('config.storage');
+
+  // Add the CSS for the inline diff.
+  $output['#attached']['css'][] = drupal_get_path('module', 'system') . '/system.diff.css';
+
+  $output['title'] = array(
+    '#theme' => 'html_tag',
+    '#tag' => 'h3',
+    '#value' => t('View changes of @config_file', array('@config_file' => $config_file)),
+  );
+
+  $diff = config_diff($target_storage, $source_storage, $config_file);
+  $formatter = new DrupalDiffFormatter();
+  $formatter->show_header = FALSE;
+
+  $variables = array(
+    'header' => array(
+      array('data' => t('Old'), 'colspan' => '2'),
+      array('data' => t('New'), 'colspan' => '2'),
+    ),
+    'rows' => $formatter->format($diff),
+  );
+
+  $output['diff'] = array(
+    '#markup' => theme('table', $variables),
+  );
+
+  $output['back'] = array(
+    '#type' => 'link',
+    '#title' => "Back to 'Synchronize configuration' page.",
+    '#href' => 'admin/config/development/sync',
+    '#attributes' => array(
+      'class' => array('dialog-cancel'),
+    ),
+  );
+
+  return $output;
 }

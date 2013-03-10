@@ -1,0 +1,83 @@
+/**
+ * Inline diff metadata
+ */
+.diff-inline-metadata {
+  padding:4px;
+  border:1px solid #ddd;
+  background:#fff;
+  margin:0px 0px 10px;
+}
+
+.diff-inline-legend { font-size:11px; }
+
+.diff-inline-legend span,
+.diff-inline-legend label { margin-right:5px; }
+
+/**
+ * Inline diff markup
+ */
+span.diff-deleted { color:#ccc; }
+span.diff-deleted img { border: solid 2px #ccc; }
+span.diff-changed { background:#ffb; }
+span.diff-changed img { border:solid 2px #ffb; }
+span.diff-added { background:#cfc; }
+span.diff-added img { border: solid 2px #cfc; }
+
+/**
+ * Traditional split diff theming
+ */
+table.diff {
+  border-spacing: 4px;
+  margin-bottom: 20px;
+  table-layout: fixed;
+  width: 100%;
+}
+table.diff tr.even, table.diff tr.odd {
+  background-color: inherit;
+  border: none;
+}
+td.diff-prevlink {
+  text-align: left;
+}
+td.diff-nextlink {
+  text-align: right;
+}
+td.diff-section-title, div.diff-section-title {
+  background-color: #f0f0ff;
+  font-size: 0.83em;
+  font-weight: bold;
+  padding: 0.1em 1em;
+}
+td.diff-context {
+    background-color: #fafafa;
+}
+td.diff-deletedline {
+  background-color: #ffa;
+  width: 50%;
+}
+td.diff-addedline {
+  background-color: #afa;
+  width: 50%;
+}
+span.diffchange {
+  color: #f00;
+  font-weight: bold;
+}
+
+table.diff col.diff-marker {
+  width: 1.4em;
+}
+table.diff col.diff-content {
+  width: 50%;
+}
+table.diff th {
+  padding-right: inherit;
+}
+table.diff td div {
+  overflow: auto;
+  padding: 0.1ex 0.5em;
+  word-wrap: break-word;
+}
+table.diff td {
+  padding: 0.1ex 0.4em;
+}

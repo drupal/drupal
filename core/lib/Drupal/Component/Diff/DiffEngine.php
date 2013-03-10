@@ -1111,11 +1111,11 @@ class DrupalDiffFormatter extends DiffFormatter {
   function _block_header($xbeg, $xlen, $ybeg, $ylen) {
     return array(
       array(
-        'data' => theme('diff_header_line', array('lineno' => $xbeg + $this->line_stats['offset']['x'])),
+        'data' => $xbeg + $this->line_stats['offset']['x'],
         'colspan' => 2,
       ),
       array(
-        'data' => theme('diff_header_line', array('lineno' => $ybeg + $this->line_stats['offset']['y'])),
+        'data' => $ybeg + $this->line_stats['offset']['y'],
         'colspan' => 2,
       )
     );
@@ -1143,7 +1143,7 @@ class DrupalDiffFormatter extends DiffFormatter {
         'class' => 'diff-marker',
       ),
       array(
-        'data' => theme('diff_content_line', array('line' => $line)),
+        'data' => $line,
         'class' => 'diff-context diff-addedline',
       )
     );
@@ -1159,7 +1159,7 @@ class DrupalDiffFormatter extends DiffFormatter {
         'class' => 'diff-marker',
       ),
       array(
-        'data' => theme('diff_content_line', array('line' => $line)),
+        'data' => $line,
         'class' => 'diff-context diff-deletedline',
       )
     );
@@ -1172,7 +1172,7 @@ class DrupalDiffFormatter extends DiffFormatter {
     return array(
       '&nbsp;',
       array(
-        'data' => theme('diff_content_line', array('line' => $line)),
+        'data' => $line,
         'class' => 'diff-context',
       )
     );
@@ -1181,7 +1181,7 @@ class DrupalDiffFormatter extends DiffFormatter {
   function emptyLine() {
     return array(
       '&nbsp;',
-      theme('diff_empty_line', array('line' => '&nbsp;')),
+      '&nbsp;',
     );
   }
 

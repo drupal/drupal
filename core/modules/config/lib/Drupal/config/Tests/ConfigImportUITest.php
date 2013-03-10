@@ -126,6 +126,49 @@ class ConfigImportUITest extends WebTestBase {
     $this->assertNotEqual($new_site_name, config('system.site')->get('name'));
   }
 
+  /**
+   * Tests the screen that shows differences between active and staging.
+   */
+  function testImportDiff() {
+    $active = $this->container->get('config.storage');
+    $staging = $this->container->get('config.storage.staging');
+    $config_name = 'config_test.system';
+    $change_key = 'foo';
+    $remove_key = '404';
+    $add_key = 'biff';
+    $add_data = 'bangpow';
+    $change_data = 'foobar';
+    $original_data = array(
+      'foo' => 'bar',
+      '404' => 'herp',
+    );
+
+    // Change a configuration value in staging.
+    $staging_data = $original_data;
+    $staging_data[$change_key] = $change_data;
+    $staging_data[$add_key] = $add_data;
+    $staging->write($config_name, $staging_data);
+
+    // Load the diff UI and verify that the diff reflects the change.
+    $this->drupalGet('admin/config/development/sync/diff/' . $config_name);
+
+    // Reset data back to original, and remove a key
+    $staging_data = $original_data;
+    unset($staging_data[$remove_key]);
+    $staging->write($config_name, $staging_data);
+
+    // Load the diff UI and verify that the diff reflects a removed key.
+    $this->drupalGet('admin/config/development/sync/diff/' . $config_name);
+
+    // Reset data back to original and add a key
+    $staging_data = $original_data;
+    $staging_data[$add_key] = $add_data;
+    $staging->write($config_name, $staging_data);
+
+    // Load the diff UI and verify that the diff reflects an added key.
+    $this->drupalGet('admin/config/development/sync/diff/' . $config_name);
+  }
+
   function prepareSiteNameUpdate($new_site_name) {
     $staging = $this->container->get('config.storage.staging');
     // Create updated configuration object.
