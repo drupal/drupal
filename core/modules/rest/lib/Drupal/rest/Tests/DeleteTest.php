@@ -38,14 +38,14 @@ class DeleteTest extends RESTTestBase {
     foreach ($entity_types as $entity_type) {
       $this->enableService('entity:' . $entity_type, 'DELETE');
       // Create a user account that has the required permissions to delete
-      // resources via the web API.
+      // resources via the REST API.
       $account = $this->drupalCreateUser(array('restful delete entity:' . $entity_type));
       $this->drupalLogin($account);
 
       // Create an entity programmatically.
       $entity = $this->entityCreate($entity_type);
       $entity->save();
-      // Delete it over the web API.
+      // Delete it over the REST API.
       $response = $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'DELETE');
       // Clear the static cache with entity_load(), otherwise we won't see the
       // update.
@@ -69,7 +69,7 @@ class DeleteTest extends RESTTestBase {
       $this->assertResponse(403);
       $this->assertNotIdentical(FALSE, entity_load($entity_type, $entity->id(), TRUE), 'The ' . $entity_type . ' entity is still in the database.');
     }
-    // Try to delete a resource which is not web API enabled.
+    // Try to delete a resource which is not REST API enabled.
     $this->enableService(FALSE);
     $account = $this->drupalCreateUser();
     $this->drupalLogin($account);

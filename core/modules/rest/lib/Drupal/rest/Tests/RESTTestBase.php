@@ -151,10 +151,10 @@ abstract class RESTTestBase extends WebTestBase {
   }
 
   /**
-   * Enables the web service interface for a specific entity type.
+   * Enables the REST service interface for a specific entity type.
    *
    * @param string|FALSE $resource_type
-   *   The resource type that should get web API enabled or FALSE to disable all
+   *   The resource type that should get REST API enabled or FALSE to disable all
    *   resource types.
    * @param string $method
    *   The HTTP method to enable, e.g. GET, POST etc.
@@ -162,7 +162,7 @@ abstract class RESTTestBase extends WebTestBase {
    *   (Optional) The serialization format, e.g. jsonld.
    */
   protected function enableService($resource_type, $method = 'GET', $format = NULL) {
-    // Enable web API for this entity type.
+    // Enable REST API for this entity type.
     $config = config('rest.settings');
     $settings = array();
     if ($resource_type) {
@@ -176,7 +176,7 @@ abstract class RESTTestBase extends WebTestBase {
     $config->set('resources', $settings);
     $config->save();
 
-    // Rebuild routing cache, so that the web API paths are available.
+    // Rebuild routing cache, so that the REST API paths are available.
     drupal_container()->get('router.builder')->rebuild();
     // Reset the Simpletest permission cache, so that the new resource
     // permissions get picked up.

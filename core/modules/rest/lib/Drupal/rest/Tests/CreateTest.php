@@ -40,14 +40,14 @@ class CreateTest extends RESTTestBase {
 
     $this->enableService('entity:' . $entity_type, 'POST');
     // Create a user account that has the required permissions to create
-    // resources via the web API.
+    // resources via the REST API.
     $account = $this->drupalCreateUser(array('restful post entity:' . $entity_type));
     $this->drupalLogin($account);
 
     $entity_values = $this->entityValues($entity_type);
     $entity = entity_create($entity_type, $entity_values);
     $serialized = $serializer->serialize($entity, 'drupal_jsonld');
-    // Create the entity over the web API.
+    // Create the entity over the REST API.
     $this->httpRequest('entity/' . $entity_type, 'POST', $serialized, 'application/vnd.drupal.ld+json');
     $this->assertResponse(201);
 
@@ -93,7 +93,7 @@ class CreateTest extends RESTTestBase {
     $this->assertResponse(403);
     $this->assertFalse(entity_load_multiple($entity_type, NULL, TRUE), 'No entity has been created in the database.');
 
-    // Try to create a resource which is not web API enabled.
+    // Try to create a resource which is not REST API enabled.
     $this->enableService(FALSE);
     $this->drupalLogin($account);
     $this->httpRequest('entity/entity_test', 'POST', $serialized, 'application/vnd.drupal.ld+json');

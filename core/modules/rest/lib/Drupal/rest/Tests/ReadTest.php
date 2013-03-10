@@ -40,14 +40,14 @@ class ReadTest extends RESTTestBase {
     foreach ($entity_types as $entity_type) {
       $this->enableService('entity:' . $entity_type, 'GET');
       // Create a user account that has the required permissions to delete
-      // resources via the web API.
+      // resources via the REST API.
       $account = $this->drupalCreateUser(array('restful get entity:' . $entity_type));
       $this->drupalLogin($account);
 
       // Create an entity programmatically.
       $entity = $this->entityCreate($entity_type);
       $entity->save();
-      // Read it over the web API.
+      // Read it over the REST API.
       $response = $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'GET', NULL, 'application/vnd.drupal.ld+json');
       $this->assertResponse('200', 'HTTP response code is correct.');
       $this->assertHeader('content-type', 'application/vnd.drupal.ld+json');
@@ -72,7 +72,7 @@ class ReadTest extends RESTTestBase {
       $this->assertResponse(403);
       $this->assertNull(drupal_json_decode($response), 'No valid JSON found.');
     }
-    // Try to read a resource which is not web API enabled.
+    // Try to read a resource which is not REST API enabled.
     $account = $this->drupalCreateUser();
     $this->drupalLogin($account);
     $response = $this->httpRequest('entity/user/' . $account->id(), 'GET', NULL, 'application/vnd.drupal.ld+json');
