@@ -1,0 +1,53 @@
+base_table: views_test_data
+core: '8'
+description: ''
+status: '1'
+display:
+  default:
+    display_options:
+      defaults:
+        fields: '0'
+        pager: '0'
+        pager_options: '0'
+        sorts: '0'
+      header:
+        entity_entity_test_render:
+          field: entity_entity_test_render
+          id: entity_entity_test_render
+          table: views
+          entity_id: 1
+          view_mode: full
+          plugin_id: entity
+      footer:
+        entity_entity_test_render:
+          field: entity_entity_test_render
+          id: entity_entity_test_render
+          table: views
+          entity_id: !1
+          view_mode: full
+          plugin_id: entity
+      fields:
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+      arguments:
+        id:
+          id: id
+          table: views_test_data
+          field: id
+          plugin_id: numeric
+      pager:
+        options:
+          offset: '0'
+        type: none
+      pager_options: {  }
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+human_name: ''
+id: test_entity_area
+tag: ''
