@@ -15,8 +15,8 @@ use Drupal\simpletest\WebTestBase;
 class ConfigInstallWebTest extends WebTestBase {
   public static function getInfo() {
     return array(
-      'name' => 'Installation functionality',
-      'description' => 'Tests installation of configuration objects in installation functionality.',
+      'name' => 'Install, disable and uninstall functionality',
+      'description' => 'Tests installation and removal of configuration objects in install, disable and uninstall functionality.',
       'group' => 'Configuration',
     );
   }

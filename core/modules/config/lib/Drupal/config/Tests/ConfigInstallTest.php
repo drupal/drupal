@@ -15,7 +15,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
 class ConfigInstallTest extends DrupalUnitTestBase {
   public static function getInfo() {
     return array(
-      'name' => 'Installation functionality',
+      'name' => 'Installation functionality unit tests',
       'description' => 'Tests installation of configuration objects in installation functionality.',
       'group' => 'Configuration',
     );
