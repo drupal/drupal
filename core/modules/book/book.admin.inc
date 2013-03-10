@@ -43,63 +43,6 @@ function book_admin_overview() {
 }
 
 /**
- * Form constructor for the book settings form.
- *
- * @see book_menu()
- * @see book_admin_settings_submit()
- * @see book_admin_settings_validate()
- * @ingroup forms
- */
-function book_admin_settings($form, &$form_state) {
-  $types = node_type_get_names();
-  $config = config('book.settings');
-  $form['book_allowed_types'] = array(
-    '#type' => 'checkboxes',
-    '#title' => t('Content types allowed in book outlines'),
-    '#default_value' => $config->get('allowed_types'),
-    '#options' => $types,
-    '#description' => t('Users with the %outline-perm permission can add all content types.', array('%outline-perm' => t('Administer book outlines'))),
-    '#required' => TRUE,
-  );
-  $form['book_child_type'] = array(
-    '#type' => 'radios',
-    '#title' => t('Content type for child pages'),
-    '#default_value' => $config->get('child_type'),
-    '#options' => $types,
-    '#required' => TRUE,
-  );
-  $form['array_filter'] = array('#type' => 'value', '#value' => TRUE);
-  $form['#validate'][] = 'book_admin_settings_validate';
-
-  return system_config_form($form, $form_state);
-}
-
-/**
- * Form validation handler for book_admin_settings().
- *
- * @see book_admin_settings_submit()
- */
-function book_admin_settings_validate($form, &$form_state) {
-  $child_type = $form_state['values']['book_child_type'];
-  if (empty($form_state['values']['book_allowed_types'][$child_type])) {
-    form_set_error('book_child_type', t('The content type for the %add-child link must be one of those selected as an allowed book outline type.', array('%add-child' => t('Add child page'))));
-  }
-}
-
-/**
- * Form submission handler for book_admin_settings().
- *
- * @see book_admin_settings_validate()
- */
-function book_admin_settings_submit($form, &$form_state) {
-  config('book.settings')
-    // Remove unchecked types.
-    ->set('allowed_types', array_filter($form_state['values']['book_allowed_types']))
-    ->set('child_type', $form_state['values']['book_child_type'])
-    ->save();
- }
-
-/**
  * Form constructor for administering a single book's hierarchy.
  *
  * @param Drupal\node\Node $node

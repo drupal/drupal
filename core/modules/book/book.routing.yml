@@ -1,0 +1,6 @@
+book_settings:
+  pattern: '/admin/content/book/settings'
+  defaults:
+    _form: 'Drupal\book\BookSettingsForm'
+  requirements:
+    _permission: 'administer site configuration'

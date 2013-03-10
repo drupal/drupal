@@ -145,12 +145,10 @@ function book_menu() {
   );
   $items['admin/content/book/settings'] = array(
     'title' => 'Settings',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('book_admin_settings'),
+    'route_name' => 'book_settings',
     'access arguments' => array('administer site configuration'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 100,
-    'file' => 'book.admin.inc',
   );
   $items['admin/content/book/%node'] = array(
     'title' => 'Re-order book pages and change titles',
