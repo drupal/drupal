@@ -4,6 +4,7 @@ use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigException;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\StorageInterface;
+use Symfony\Component\Yaml\Dumper;
 
 /**
  * @file
@@ -421,4 +422,44 @@ function config_get_entity_type_by_name($name) {
  */
 function config_typed() {
   return drupal_container()->get('config.typed');
+}
+
+/**
+ * Return a formatted diff of a named config between two storages.
+ *
+ * @param Drupal\Core\Config\StorageInterface $source_storage
+ *   The storage to diff configuration from.
+ * @param Drupal\Core\Config\StorageInterface $target_storage
+ *   The storage to diff configuration to.
+ * @param string $name
+ *   The name of the configuration object to diff.
+ *
+ * @return core/lib/Drupal/Component/Diff
+ *   A formatted string showing the difference between the two storages.
+ *
+ * @todo Make renderer injectable
+ */
+function config_diff(StorageInterface $source_storage, StorageInterface $target_storage, $name) {
+  require_once DRUPAL_ROOT . '/core/lib/Drupal/Component/Diff/DiffEngine.php';
+
+  // The output should show configuration object differences formatted as YAML.
+  // But the configuration is not necessarily stored in files. Therefore, they
+  // need to be read and parsed, and lastly, dumped into YAML strings.
+  $dumper = new Dumper();
+  $dumper->setIndentation(2);
+
+  $source_data = explode("\n", $dumper->dump($source_storage->read($name), PHP_INT_MAX));
+  $target_data = explode("\n", $dumper->dump($target_storage->read($name), PHP_INT_MAX));
+
+  // Check for new or removed files.
+  if ($source_data === array('false')) {
+    // Added file.
+    $source_data = array(t('File added'));
+  }
+  if ($target_data === array('false')) {
+    // Deleted file.
+    $target_data = array(t('File removed'));
+  }
+
+  return new Diff($source_data, $target_data);
 }
