@@ -16,6 +16,7 @@ use Drupal\Component\Utility\NestedArray;
  * A collection of tips.
  */
 class TipsBag extends PluginBag {
+
   /**
    * The initial configuration for each tip in the bag.
    *
@@ -70,10 +71,11 @@ class TipsBag extends PluginBag {
       if (isset($this->configurations[$instance_id])) {
         $configuration = NestedArray::mergeDeep($configuration, $this->configurations[$instance_id]);
       }
-      $this->pluginInstances[$instance_id] = $this->manager->createInstance($type, $configuration, $this);
+      $this->pluginInstances[$instance_id] = $this->manager->createInstance($type, $configuration);
     }
     else {
       throw new PluginException(format_string("Unknown tip plugin ID '@tip'.", array('@tip' => $instance_id)));
     }
   }
+
 }

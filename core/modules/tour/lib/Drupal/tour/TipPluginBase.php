@@ -8,7 +8,7 @@
 namespace Drupal\tour;
 
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Core\Plugin\Discovery\CacheDecorator;
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\tour\TipPluginInterface;
 
 /**
@@ -20,7 +20,6 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
    * The label which is used for render of this tip.
    *
    * @var string
-   *   The label of this tip.
    */
   protected $label;
 
@@ -28,7 +27,6 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
    * Allows tips to take more priority that others.
    *
    * @var string
-   *   A number which pertains to ordering.
    */
   protected $weight;
 
@@ -36,14 +34,13 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
    * The attributes that will be applied to the markup of this tip.
    *
    * @var array
-   *   An array of attributes.
    */
   protected $attributes;
 
   /**
    * Overrides \Drupal\Component\Plugin\PluginBase::__construct().
    */
-  public function __construct(array $configuration, $plugin_id, CacheDecorator $discovery) {
+  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
     parent::__construct($configuration, $plugin_id, $discovery);
 
     $this->definition = $this->discovery->getDefinition($plugin_id);
@@ -51,28 +48,28 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
   }
 
   /**
-   * Implements \Drupal\tour\Plugin\tour\tour\TourInterface::getLabel().
+   * Implements \Drupal\tour\TipPluginInterface::getLabel().
    */
   public function getLabel() {
     return $this->get('label');
   }
 
   /**
-   * Implements \Drupal\tour\Plugin\tour\tour\TourInterface::getWeight().
+   * Implements \Drupal\tour\TipPluginInterface::getWeight().
    */
   public function getWeight() {
     return $this->get('weight');
   }
 
   /**
-   * Implements \Drupal\tour\Plugin\tour\tour\TourInterface::getAttributes().
+   * Implements \Drupal\tour\TipPluginInterface::getAttributes().
    */
   public function getAttributes() {
     return $this->get('attributes');
   }
 
   /**
-   * Implements \Drupal\tour\Plugin\tour\tour\TourInterface::get().
+   * Implements \Drupal\tour\TipPluginInterface::get().
    */
   public function get($key) {
     if (!empty($this->configuration[$key])) {
@@ -81,7 +78,7 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
   }
 
   /**
-   * Implements \Drupal\tour\Plugin\tour\tour\TourInterface::set().
+   * Implements \Drupal\tour\TipPluginInterface::set().
    */
   public function set($key, $value) {
     $this->configuration[$key] = $value;

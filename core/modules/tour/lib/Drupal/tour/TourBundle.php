@@ -24,4 +24,5 @@ class TourBundle extends Bundle {
     $container->register('plugin.manager.tour.tip', 'Drupal\tour\TipPluginManager')
       ->addArgument('%container.namespaces%');
   }
+
 }

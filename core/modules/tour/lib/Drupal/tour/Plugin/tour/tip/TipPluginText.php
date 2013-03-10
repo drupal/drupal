@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\tour\TipPluginText.
+ * Contains \Drupal\tour\Plugin\tour\tip\TipPluginText.
  */
 
 namespace Drupal\tour\Plugin\tour\tip;
@@ -24,7 +24,6 @@ class TipPluginText extends TipPluginBase {
    * The body text which is used for render of this Text Tip.
    *
    * @var string
-   *   A string of text used as the body.
    */
   protected $body;
 
@@ -32,7 +31,6 @@ class TipPluginText extends TipPluginBase {
    * The forced position of where the tip will be located.
    *
    * @var string
-   *   A string of left|right|top|bottom.
    */
   protected $location;
 
@@ -40,7 +38,7 @@ class TipPluginText extends TipPluginBase {
    * Returns a ID that is guaranteed uniqueness.
    *
    * @return string
-   *   A unique string.
+   *   A unique id to be used to generate aria attributes.
    */
   public function getAriaId() {
     static $id;
@@ -54,7 +52,7 @@ class TipPluginText extends TipPluginBase {
    * Returns body of the text tip.
    *
    * @return string
-   *   The body of the text tip.
+   *   The tip body.
    */
   public function getBody() {
     return $this->get('body');
@@ -64,14 +62,14 @@ class TipPluginText extends TipPluginBase {
    * Returns location of the text tip.
    *
    * @return string
-   *   The location (left|right|top|bottom) of the text tip.
+   *   The tip location.
    */
   public function getLocation() {
     return $this->get('location');
   }
 
   /**
-   * Overrides \Drupal\tour\Plugin\tour\tour\TipPluginInterface::getAttributes();
+   * Overrides \Drupal\tour\TipPluginBase::getAttributes().
    */
   public function getAttributes() {
     $attributes = parent::getAttributes();
@@ -84,7 +82,7 @@ class TipPluginText extends TipPluginBase {
   }
 
   /**
-   * Overrides \Drupal\tour\Plugin\tour\tour\TipPluginInterface::getOutput();
+   * Implements \Drupal\tour\TipPluginInterface::getOutput().
    */
   public function getOutput() {
     $output = '<h2 class="tour-tip-label" id="tour-tip-' . $this->getAriaId() . '-label">' . check_plain($this->getLabel()) . '</h2>';
