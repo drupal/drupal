@@ -1,0 +1,6 @@
+statistics_settings:
+  pattern: '/admin/config/system/statistics'
+  defaults:
+    _form: 'Drupal\statistics\StatisticsSettingsForm'
+  requirements:
+    _permission: 'administer statistics'
