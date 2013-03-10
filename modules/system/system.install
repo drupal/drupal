@@ -1890,7 +1890,7 @@ function system_update_7007() {
   $result = db_query("SELECT rid, perm FROM {permission} ORDER BY rid ASC");
   $query = db_insert('role_permission')->fields(array('rid', 'permission'));
   foreach ($result as $role) {
-    foreach (explode(', ', $role->perm) as $perm) {
+    foreach (array_unique(explode(', ', $role->perm)) as $perm) {
       $query->values(array(
         'rid' => $role->rid,
         'permission' => $perm,

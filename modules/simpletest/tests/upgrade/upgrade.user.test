@@ -61,3 +61,32 @@ class UserUpgradePathNoPasswordTokenTestCase extends UpgradePathTestCase {
     $this->assertEqual(variable_get('user_mail_register_no_approval_required_body'), '[user:name], [site:name], [site:url], [site:url-brief], [user:mail], [date:medium], [site:login-url], [user:edit-url], [user:one-time-login-url].', 'Existing email templates have been modified (password token not involved).');
   }
 }
+
+/**
+ * Upgrade test for user.module (duplicated permission).
+ */
+class UserUpgradePathDuplicatedPermissionTestCase extends UpgradePathTestCase {
+  public static function getInfo() {
+    return array(
+      'name'  => 'User upgrade path (duplicated permission)',
+      'description'  => 'User upgrade path tests (duplicated permission).',
+      'group' => 'Upgrade path',
+    );
+  }
+
+  public function setUp() {
+    // Path to the database dump files.
+    $this->databaseDumpFiles = array(
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.bare.database.php',
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.duplicate-permission.database.php',
+    );
+    parent::setUp();
+  }
+
+  /**
+   * Test a successful upgrade.
+   */
+  public function testUserUpgrade() {
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
+  }
+}

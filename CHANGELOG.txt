@@ -1,6 +1,8 @@
 
 Drupal 7.22, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a bug which prevented Drupal 6 to Drupal 7 upgrades on sites which had
+  duplicate permission names in the User module's database tables.
 - Added an empty "datatype" attribute to taxonomy term and username links to
   make the RDFa markup upward compatible with RDFa 1.1 (minor markup addition).
 - Fixed a bug which caused the denial-of-service protection added in Drupal
