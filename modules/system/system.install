@@ -2759,12 +2759,14 @@ function system_update_7061(&$sandbox) {
     // Retrieve a list of node revisions that have uploaded files attached.
     // DISTINCT queries are expensive, especially when paged, so we store the
     // data in its own table for the duration of the update.
-    $table = array(
-      'description' => t('Stores temporary data for system_update_7061.'),
-      'fields' => array('vid' => array('type' => 'int')),
-      'primary key' => array('vid'),
-    );
-    db_create_table('system_update_7061', $table);
+    if (!db_table_exists('system_update_7061')) {
+      $table = array(
+        'description' => t('Stores temporary data for system_update_7061.'),
+        'fields' => array('vid' => array('type' => 'int')),
+        'primary key' => array('vid'),
+      );
+      db_create_table('system_update_7061', $table);
+    }
     $query = db_select('upload', 'u');
     $query->distinct();
     $query->addField('u','vid');
