@@ -79,10 +79,8 @@ function statistics_menu() {
   $items['admin/config/system/statistics'] = array(
     'title' => 'Statistics',
     'description' => 'Control details about what and how your site logs content statistics.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('statistics_settings_form'),
+    'route_name' => 'statistics_settings',
     'access arguments' => array('administer statistics'),
-    'file' => 'statistics.admin.inc',
     'weight' => -15,
   );
   return $items;
