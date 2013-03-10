@@ -31,11 +31,19 @@ function translation_entity_field_sync_widget(array $field, FieldInstance $insta
       $default[$group] = !empty($info['translatable']) ? $group : FALSE;
     }
 
+    $settings = array('dependent_selectors' => array('instance[settings][translation_sync]' => array('file')));
+
     $element = array(
       '#type' => 'checkboxes',
       '#title' => t('Translatable elements'),
       '#options' => $options,
       '#default_value' => !empty($instance['settings']['translation_sync']) ? $instance['settings']['translation_sync'] : $default,
+      '#attached' => array(
+        'js' => array(
+          array('data' => drupal_get_path('module', 'translation_entity') . '/translation_entity.admin.js', 'type' => 'file'),
+          array('data' => array('translationEntityDependentOptions' => $settings), 'type' => 'setting'),
+        ),
+      ),
     );
   }
 
@@ -59,7 +67,9 @@ function _translation_entity_form_language_content_settings_form_alter(array &$f
   $form['entity_types']['#default_value'] = $default;
 
   $form['#attached']['library'][] = array('translation_entity', 'drupal.translation_entity.admin');
+  $form['#attached']['js'][] = array('data' => drupal_get_path('module', 'translation_entity') . '/translation_entity.admin.js', 'type' => 'file');
 
+  $dependent_options_settings = array();
   foreach ($form['#labels'] as $entity_type => $label) {
     foreach (entity_get_bundles($entity_type) as $bundle => $bundle_info) {
       $form['settings'][$entity_type][$bundle]['translatable'] = array(
@@ -84,11 +94,16 @@ function _translation_entity_form_language_content_settings_form_alter(array &$f
         $column_element = translation_entity_field_sync_widget($field, $instance);
         if ($column_element) {
           $form['settings'][$entity_type][$bundle]['columns'][$field_name] = $column_element;
+
+          if(isset($column_element['#options']['file'])) {
+            $dependent_options_settings["settings[{$entity_type}][{$bundle}][columns][{$field_name}]"] = array('file');
+          }
         }
       }
     }
   }
-
+  $settings = array('dependent_selectors' => $dependent_options_settings);
+  $form['#attached']['js'][] = array('data' => array('translationEntityDependentOptions' => $settings), 'type' => 'setting');
   $form['#validate'][] = 'translation_entity_form_language_content_settings_validate';
   $form['#submit'][] = 'translation_entity_form_language_content_settings_submit';
 }

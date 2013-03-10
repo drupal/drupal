@@ -3,6 +3,59 @@
 "use strict";
 
 /**
+ * Forces applicable options to be checked as translatable.
+ */
+Drupal.behaviors.translationEntityDependentOptions = {
+  attach: function (context, settings) {
+    var $options = settings.translationEntityDependentOptions;
+    var $collections = [];
+
+    // We're given a generic name to look for so we find all inputs containing
+    // that name and copy over the input values that require all columns to be
+    // translatable.
+    if ($options.dependent_selectors) {
+      $.each($options.dependent_selectors, function($field, $dependent_columns) {
+        $collections.push({ elements : $(context).find('input[name^="' + $field + '"]'), dependent_columns : $dependent_columns });
+      });
+    }
+
+    $.each($collections, function($index, $collection) {
+      var $fields = $collection.elements;
+      var $dependent_columns = $collection.dependent_columns;
+
+      $fields.change(function() {
+        Drupal.behaviors.translationEntityDependentOptions.check($fields, $dependent_columns, $(this));
+      });
+
+      // Run the check function on first trigger of this behavior.
+      Drupal.behaviors.translationEntityDependentOptions.check($fields, $dependent_columns, false);
+    });
+  },
+  check: function($fields, $dependent_columns, $changed) {
+    // A field that has many different translatable parts can also define one
+    // or more columns that require all columns to be translatable.
+    $.each($dependent_columns, function($index, $column) {
+      var $element = $changed;
+
+      if(!$element) {
+        $fields.each(function() {
+          if($(this).val() == $column) {
+            $element = $(this);
+            return false;
+          }
+        });
+      }
+
+      if($element.is('input[value="' + $column + '"]:checked')) {
+        $fields.prop('checked', true).not($element).prop('disabled', true);
+      } else {
+        $fields.prop('disabled', false);
+      }
+    });
+  }
+};
+
+/**
  * Makes field translatability inherit bundle translatability.
  */
 Drupal.behaviors.translationEntity = {
