@@ -47,6 +47,12 @@ class EditDetails extends ViewsFormBase {
       '#description' => t('A descriptive human-readable name for this view. Spaces are allowed'),
       '#default_value' => $view->getHumanName(),
     );
+    $form['details']['langcode'] = array(
+      '#type' => 'language_select',
+      '#title' => t('View language'),
+      '#description' => t('Language of labels and other textual elements in this view.'),
+      '#default_value' => $view->get('langcode'),
+    );
     $form['details']['tag'] = array(
       '#type' => 'textfield',
       '#title' => t('View tag'),

@@ -556,6 +556,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    */
   protected function build_filters(&$form, &$form_state) {
     // Find all the fields we are allowed to filter by.
+    module_load_include('inc', 'views_ui', 'admin');
     $fields = views_fetch_fields($this->base_table, 'filter');
 
     $bundles = entity_get_bundles($this->entity_type);
@@ -625,6 +626,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       'human_name' => $form_state['values']['human_name'],
       'description' => $form_state['values']['description'],
       'base_table' => $this->base_table,
+      'langcode' => language_default()->langcode,
     );
 
     $view = entity_create('view', $values);
@@ -821,6 +823,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       // Figure out the table where $bundle_key lives. It may not be the same as
       // the base table for the view; the taxonomy vocabulary machine_name, for
       // example, is stored in taxonomy_vocabulary, not taxonomy_term_data.
+      module_load_include('inc', 'views_ui', 'admin');
       $fields = views_fetch_fields($this->base_table, 'filter');
       if (isset($fields[$this->base_table . '.' . $bundle_key])) {
         $table = $this->base_table;

@@ -1,8 +1,9 @@
+langcode: en
+status: '1'
 base_field: nid
 base_table: node
 core: 8.x
 description: 'A list of nodes marked for display on the front page.'
-status: '1'
 display:
   default:
     display_options:
