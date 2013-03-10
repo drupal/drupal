@@ -9,16 +9,17 @@ namespace Drupal\field_sql_storage\Tests;
 
 use Drupal\Core\Database\Database;
 use Drupal\field\FieldException;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\system\Tests\Entity\EntityUnitTestBase;
 use Exception;
 use PDO;
+
 /**
  * Tests field storage.
  *
  * Field_sql_storage.module implements the default back-end storage plugin
  * for the Field Strage API.
  */
-class FieldSqlStorageTest extends \Drupal\system\Tests\Entity\EntityUnitBaseTest {
+class FieldSqlStorageTest extends EntityUnitTestBase {
 
   /**
    * Modules to enable.
