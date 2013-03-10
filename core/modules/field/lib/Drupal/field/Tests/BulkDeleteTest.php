@@ -10,14 +10,7 @@ namespace Drupal\field\Tests;
 /**
  * Unit test class for field bulk delete and batch purge functionality.
  */
-class BulkDeleteTest extends FieldTestBase {
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('field_test');
+class BulkDeleteTest extends FieldUnitTestBase {
 
   protected $field;
 

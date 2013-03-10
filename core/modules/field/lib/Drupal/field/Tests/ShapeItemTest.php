@@ -13,7 +13,7 @@ use Drupal\Core\Entity\Field\FieldInterface;
 /**
  * Tests the new entity API for the shape field type.
  */
-class ShapeItemTest extends FieldItemUnitTestBase {
+class ShapeItemTest extends FieldUnitTestBase {
 
   /**
    * Modules to enable.

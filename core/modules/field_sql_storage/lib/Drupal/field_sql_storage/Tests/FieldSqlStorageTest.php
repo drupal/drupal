@@ -9,7 +9,7 @@ namespace Drupal\field_sql_storage\Tests;
 
 use Drupal\Core\Database\Database;
 use Drupal\field\FieldException;
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 use Exception;
 use PDO;
 /**
@@ -18,14 +18,14 @@ use PDO;
  * Field_sql_storage.module implements the default back-end storage plugin
  * for the Field Strage API.
  */
-class FieldSqlStorageTest extends WebTestBase {
+class FieldSqlStorageTest extends \Drupal\system\Tests\Entity\EntityUnitBaseTest {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('field_sql_storage', 'field', 'field_test', 'text', 'number');
+  public static $modules = array('field_test', 'text', 'number');
 
   public static function getInfo() {
     return array(
@@ -37,6 +37,7 @@ class FieldSqlStorageTest extends WebTestBase {
 
   function setUp() {
     parent::setUp();
+    $this->installSchema('field_test', array('test_entity', 'test_entity_revision', 'test_entity_bundle'));
 
     $this->field_name = strtolower($this->randomName());
     $this->field = array('field_name' => $this->field_name, 'type' => 'test_field', 'cardinality' => 4);

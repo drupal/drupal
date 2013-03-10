@@ -7,14 +7,7 @@
 
 namespace Drupal\field\Tests;
 
-class FieldInfoTest extends FieldTestBase {
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('field_test');
+class FieldInfoTest extends FieldUnitTestBase {
 
   public static function getInfo() {
     return array(

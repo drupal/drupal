@@ -15,14 +15,16 @@ use Drupal\Core\Language\Language;
  * The following tests will check the multilanguage logic of _field_invoke() and
  * that only the correct values are returned by field_available_languages().
  */
-class TranslationTest extends FieldTestBase {
+class TranslationTest extends FieldUnitTestBase {
 
   /**
    * Modules to enable.
    *
+   * node is required because the tests alter node entity info.
+   *
    * @var array
    */
-  public static $modules = array('language', 'field_test');
+  public static $modules = array('language', 'node');
 
   public static function getInfo() {
     return array(
@@ -34,6 +36,8 @@ class TranslationTest extends FieldTestBase {
 
   function setUp() {
     parent::setUp();
+    $this->installSchema('language', array('language'));
+    $this->installSchema('node', array('node_type'));
 
     $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
 
@@ -381,50 +385,5 @@ class TranslationTest extends FieldTestBase {
     drupal_static_reset('field_language');
     $display_langcode = field_language($entity, $this->field_name, $requested_langcode);
     $this->assertEqual($display_langcode, $requested_langcode, 'Display language behave correctly when language fallback is disabled');
-  }
-
-  /**
-   * Tests field translations when creating a new revision.
-   */
-  function testFieldFormTranslationRevisions() {
-    $web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content'));
-    $this->drupalLogin($web_user);
-
-    // Prepare the field translations.
-    field_test_entity_info_translatable($this->entity_type, TRUE);
-    $eid = 1;
-    $entity = field_test_create_entity($eid, $eid, $this->instance['bundle']);
-    $available_langcodes = array_flip(field_available_languages($this->entity_type, $this->field));
-    unset($available_langcodes[LANGUAGE_NOT_SPECIFIED]);
-    $field_name = $this->field['field_name'];
-
-    // Store the field translations.
-    $entity->enforceIsNew();
-    foreach ($available_langcodes as $langcode => $value) {
-      $entity->{$field_name}[$langcode][0]['value'] = $value + 1;
-    }
-    field_test_entity_save($entity);
-
-    // Create a new revision.
-    $langcode = field_valid_language(NULL);
-    $edit = array("{$field_name}[$langcode][0][value]" => $entity->{$field_name}[$langcode][0]['value'], 'revision' => TRUE);
-    $this->drupalPost('test-entity/manage/' . $eid . '/edit', $edit, t('Save'));
-
-    // Check translation revisions.
-    $this->checkTranslationRevisions($eid, $eid, $available_langcodes);
-    $this->checkTranslationRevisions($eid, $eid + 1, $available_langcodes);
-  }
-
-  /**
-   * Check if the field translation attached to the entity revision identified
-   * by the passed arguments were correctly stored.
-   */
-  private function checkTranslationRevisions($eid, $evid, $available_langcodes) {
-    $field_name = $this->field['field_name'];
-    $entity = field_test_entity_test_load($eid, $evid);
-    foreach ($available_langcodes as $langcode => $value) {
-      $passed = isset($entity->{$field_name}[$langcode]) && $entity->{$field_name}[$langcode][0]['value'] == $value + 1;
-      $this->assertTrue($passed, format_string('The @language translation for revision @revision was correctly stored', array('@language' => $langcode, '@revision' => $entity->ftvid)));
-    }
   }
 }

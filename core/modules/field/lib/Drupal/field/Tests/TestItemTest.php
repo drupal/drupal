@@ -13,7 +13,7 @@ use Drupal\Core\Entity\Field\FieldInterface;
 /**
  * Tests the new entity API for the test field type.
  */
-class TestItemTest extends FieldItemUnitTestBase {
+class TestItemTest extends FieldUnitTestBase {
 
   /**
    * Modules to enable.

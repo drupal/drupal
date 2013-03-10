@@ -12,13 +12,18 @@ use Drupal\field\FieldValidationException;
 /**
  * Unit test class for non-storage related field_attach_* functions.
  */
-class FieldAttachOtherTest extends FieldAttachTestBase {
+class FieldAttachOtherTest extends FieldUnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Field attach tests (other)',
       'description' => 'Test other Field Attach API functions.',
       'group' => 'Field API',
     );
+  }
+
+  public function setUp() {
+    parent::setUp();
+    $this->createFieldWithInstance();
   }
 
   /**

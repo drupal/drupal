@@ -9,14 +9,7 @@ namespace Drupal\field\Tests;
 
 use Drupal\field\FieldException;
 
-class FieldInstanceCrudTest extends FieldTestBase {
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('field_test');
+class FieldInstanceCrudTest extends FieldUnitTestBase {
 
   protected $field;
 
