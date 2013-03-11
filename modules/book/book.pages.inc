@@ -86,7 +86,6 @@ function book_export($type, $nid) {
  */
 function book_export_html($nid) {
   if (user_access('access printer-friendly version')) {
-    $export_data = array();
     $node = node_load($nid);
     if (isset($node->book)) {
       $tree = book_menu_subtree_data($node->book);
