@@ -68,7 +68,7 @@ function field_info_cache_clear() {
  *
  * Deprecated. This function is kept to ensure backwards compatibility, but has
  * a serious performance impact, and should be absolutely avoided.
- * See http://drupal.org/node/1880666.
+ * See http://drupal.org/node/1915646.
  *
  * Use the regular field_info_*() API functions to access the information, or
  * field_info_cache_clear() to clear the cached data.
@@ -234,7 +234,7 @@ function _field_info_collate_types($reset = FALSE) {
  * Prepares a field definition for the current run-time context.
  *
  * The functionality has moved to the FieldInfo class. This function is kept as
- * a backwards-compatibility layer. See http://drupal.org/node/1880666.
+ * a backwards-compatibility layer. See http://drupal.org/node/1915646.
  *
  * @see FieldInfo::prepareField()
  */
@@ -247,7 +247,7 @@ function _field_info_prepare_field($field) {
  * Prepares an instance definition for the current run-time context.
  *
  * The functionality has moved to the FieldInfo class. This function is kept as
- * a backwards-compatibility layer. See http://drupal.org/node/1880666.
+ * a backwards-compatibility layer. See http://drupal.org/node/1915646.
  *
  * @see FieldInfo::prepareInstance()
  */
@@ -260,7 +260,7 @@ function _field_info_prepare_instance($instance, $field) {
  * Adapts display specifications to the current run-time context.
  *
  * The functionality has moved to the FieldInfo class. This function is kept as
- * a backwards-compatibility layer. See http://drupal.org/node/1880666.
+ * a backwards-compatibility layer. See http://drupal.org/node/1915646.
  *
  * @see FieldInfo::prepareInstanceDisplay()
  */
@@ -273,7 +273,7 @@ function _field_info_prepare_instance_display($field, $display) {
  * Prepares widget specifications for the current run-time context.
  *
  * The functionality has moved to the FieldInfo class. This function is kept as
- * a backwards-compatibility layer. See http://drupal.org/node/1880666.
+ * a backwards-compatibility layer. See http://drupal.org/node/1915646.
  *
  * @see FieldInfo::prepareInstanceWidget()
  */
@@ -286,7 +286,7 @@ function _field_info_prepare_instance_widget($field, $widget) {
  * Prepares 'extra fields' for the current run-time context.
  *
  * The functionality has moved to the FieldInfo class. This function is kept as
- * a backwards-compatibility layer. See http://drupal.org/node/1880666.
+ * a backwards-compatibility layer. See http://drupal.org/node/1915646.
  *
  * @see FieldInfo::prepareExtraFields()
  */

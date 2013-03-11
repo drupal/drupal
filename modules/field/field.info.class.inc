@@ -217,7 +217,7 @@ class FieldInfo {
 
         // Initialize empty arrays for all existing entity types and bundles.
         // This is not strictly needed, but is done to preserve the behavior of
-        // field_info_instances() before http://drupal.org/node/1880666.
+        // field_info_instances() before http://drupal.org/node/1915646.
         foreach (field_info_bundles() as $existing_entity_type => $bundles) {
           foreach ($bundles as $bundle => $bundle_info) {
             $this->bundleInstances[$existing_entity_type][$bundle] = array();
