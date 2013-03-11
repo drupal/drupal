@@ -3058,7 +3058,6 @@ function form_process_radios($element) {
  */
 function theme_checkbox($variables) {
   $element = $variables['element'];
-  $t = get_t();
   $element['#attributes']['type'] = 'checkbox';
   element_set_attributes($element, array('id', 'name', '#return_value' => 'value'));
 
