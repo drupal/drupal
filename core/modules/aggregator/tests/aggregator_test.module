@@ -11,6 +11,13 @@ function aggregator_test_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
+  $items['aggregator/redirect'] = array(
+    'title' => 'Test feed with a redirect',
+    'description' => "A feed that redirects to another one",
+    'page callback' => 'aggregator_test_redirect',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
   return $items;
 }
 
@@ -55,4 +62,11 @@ function aggregator_test_feed($use_last_modified = FALSE, $use_etag = FALSE) {
   fclose($handle);
 
   print $feed;
+}
+
+/**
+ * Page callback that redirects to another feed.
+ */
+function aggregator_test_redirect() {
+  drupal_goto('aggregator/test-feed', array(), 301);
 }
