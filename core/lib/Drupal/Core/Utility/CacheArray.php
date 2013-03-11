@@ -212,6 +212,15 @@ abstract class CacheArray implements ArrayAccess {
   }
 
   /**
+   * Clear the cache.
+   */
+  public function clear() {
+    $this->storage = array();
+    $this->keysToPersist = array();
+    cache($this->bin)->delete($this->cid);
+  }
+
+  /**
    * Destructs the CacheArray object.
    */
   public function __destruct() {

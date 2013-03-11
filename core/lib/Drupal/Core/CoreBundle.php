@@ -125,9 +125,16 @@ class CoreBundle extends Bundle {
       ->register('queue.database', 'Drupal\Core\Queue\QueueDatabaseFactory')
       ->addArgument(new Reference('database'));
 
-    $container->register('path.alias_manager', 'Drupal\Core\Path\AliasManager')
+    $container->register('path.alias_whitelist', 'Drupal\Core\Path\AliasWhitelist')
+      ->addArgument('path_alias_whitelist')
+      ->addArgument('cache')
+      ->addArgument(new Reference('keyvalue'))
       ->addArgument(new Reference('database'))
-      ->addArgument(new Reference('state'))
+      ->addTag('needs_destruction');
+
+     $container->register('path.alias_manager', 'Drupal\Core\Path\AliasManager')
+      ->addArgument(new Reference('database'))
+      ->addArgument(new Reference('path.alias_whitelist'))
       ->addArgument(new Reference('language_manager'));
 
     $container->register('http_client_simpletest_subscriber', 'Drupal\Core\Http\Plugin\SimpletestHttpRequestSubscriber');

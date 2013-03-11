@@ -2619,8 +2619,7 @@ function menu_router_rebuild() {
   $transaction = db_transaction();
 
   try {
-    list($menu, $masks) = menu_router_build();
-    _menu_router_save($menu, $masks);
+    list($menu, $masks) = menu_router_build(TRUE);
     _menu_navigation_links_rebuild($menu);
     // Clear the menu, page and block caches.
     menu_cache_clear_all();
@@ -2639,8 +2638,11 @@ function menu_router_rebuild() {
 
 /**
  * Collects and alters the menu definitions.
+ *
+ * @param bool $save
+ *   (optional) Save the new router to the database. Defaults to FALSE.
  */
-function menu_router_build() {
+function menu_router_build($save = FALSE) {
   // We need to manually call each module so that we can know which module
   // a given item came from.
   $callbacks = array();
@@ -2666,7 +2668,7 @@ function menu_router_build() {
   }
   // Alter the menu as defined in modules, keys are like user/%user.
   drupal_alter('menu', $callbacks);
-  list($menu, $masks) = _menu_router_build($callbacks);
+  list($menu, $masks) = _menu_router_build($callbacks, $save);
   _menu_router_cache($menu);
 
   return array($menu, $masks);
@@ -2949,11 +2951,12 @@ function _menu_find_router_path($link_path) {
 /**
  * Builds the router table based on the data from hook_menu().
  */
-function _menu_router_build($callbacks) {
+function _menu_router_build($callbacks, $save = FALSE) {
   // First pass: separate callbacks from paths, making paths ready for
   // matching. Calculate fitness, and fill some default values.
   $menu = array();
   $masks = array();
+  $path_roots = array();
   foreach ($callbacks as $path => $item) {
     $load_functions = array();
     $to_arg_functions = array();
@@ -2961,6 +2964,7 @@ function _menu_router_build($callbacks) {
     $move = FALSE;
 
     $parts = explode('/', $path, MENU_MAX_PARTS);
+    $path_roots[$parts[0]] = $parts[0];
     $number_parts = count($parts);
     // We store the highest index of parts here to save some work in the fit
     // calculation loop.
@@ -3168,6 +3172,17 @@ function _menu_router_build($callbacks) {
   // Sort the masks so they are in order of descending fit.
   $masks = array_keys($masks);
   rsort($masks);
+
+  if ($save) {
+    $path_roots = array_values($path_roots);
+    // Update the path roots variable and reset the path alias whitelist cache
+    // if the list has changed.
+    if ($path_roots != state()->get('menu_path_roots')) {
+      state()->set('menu_path_roots', array_values($path_roots));
+      drupal_container()->get('path.alias_manager')->cacheClear();
+    }
+    _menu_router_save($menu, $masks);
+  }
 
   return array($menu, $masks);
 }

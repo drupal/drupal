@@ -7,10 +7,10 @@
 
 namespace Drupal\system\Tests\Path;
 
-use Drupal\simpletest\DrupalUnitTestBase;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Path\Path;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Path\AliasManager;
+use Drupal\Core\Path\AliasWhitelist;
 
 /**
  * Tests path alias CRUD and lookup functionality.
@@ -31,7 +31,8 @@ class AliasTest extends PathUnitTestBase {
     $this->fixtures->createTables($connection);
 
     //Create AliasManager and Path object.
-    $aliasManager = new AliasManager($connection, $this->container->get('state'), $this->container->get('language_manager'));
+    $whitelist = new AliasWhitelist('path_alias_whitelist', 'cache', $this->container->get('keyvalue'), $connection);
+    $aliasManager = new AliasManager($connection, $whitelist, $this->container->get('language_manager'));
     $path = new Path($connection, $aliasManager);
 
     $aliases = $this->fixtures->sampleUrlAliases();
@@ -84,7 +85,8 @@ class AliasTest extends PathUnitTestBase {
     $this->fixtures->createTables($connection);
 
     //Create AliasManager and Path object.
-    $aliasManager = new AliasManager($connection, $this->container->get('state'), $this->container->get('language_manager'));
+    $whitelist = new AliasWhitelist('path_alias_whitelist', 'cache', $this->container->get('keyvalue'), $connection);
+    $aliasManager = new AliasManager($connection, $whitelist, $this->container->get('language_manager'));
     $pathObject = new Path($connection, $aliasManager);
 
     // Test the situation where the source is the same for multiple aliases.
@@ -147,5 +149,45 @@ class AliasTest extends PathUnitTestBase {
     // the source differs. The newer alias record should be returned.
     $pathObject->save('user/2', 'bar');
     $this->assertEqual($aliasManager->getSystemPath('bar'), 'user/2', 'Newer alias record is returned when comparing two LANGUAGE_NOT_SPECIFIED paths with the same alias.');
+  }
+
+  /**
+   * Tests the alias whitelist.
+   */
+  function testWhitelist() {
+    // Prepare database table.
+    $connection = Database::getConnection();
+    $this->fixtures->createTables($connection);
+    // Create AliasManager and Path object.
+    $whitelist = new AliasWhitelist('path_alias_whitelist', 'cache', $this->container->get('keyvalue'), $connection);
+    $aliasManager = new AliasManager($connection, $whitelist, $this->container->get('language_manager'));
+    $path = new Path($connection, $aliasManager);
+
+    // No alias for user and admin yet, so should be NULL.
+    $this->assertNull($whitelist['user']);
+    $this->assertNull($whitelist['admin']);
+
+    // Non-existing path roots should be NULL too. Use a length of 7 to avoid
+    // possible conflict with random aliases below.
+    $this->assertNull($whitelist[$this->randomName()]);
+
+    // Add an alias for user/1, user should get whitelisted now.
+    $path->save('user/1', $this->randomName());
+    $this->assertTrue($whitelist['user']);
+    $this->assertNull($whitelist['admin']);
+    $this->assertNull($whitelist[$this->randomName()]);
+
+    // Add an alias for admin, both should get whitelisted now.
+    $path->save('admin/something', $this->randomName());
+    $this->assertTrue($whitelist['user']);
+    $this->assertTrue($whitelist['admin']);
+    $this->assertNull($whitelist[$this->randomName()]);
+
+    // Remove the user alias again, whitelist entry should be removed.
+    $path->delete(array('source' => 'user/1'));
+    $this->assertNull($whitelist['user']);
+    $this->assertTrue($whitelist['admin']);
+    $this->assertNull($whitelist[$this->randomName()]);
+
   }
 }

@@ -8,7 +8,6 @@
 namespace Drupal\Core\Path;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\Language\LanguageManager;
 
 class AliasManager implements AliasManagerInterface {
@@ -51,7 +50,7 @@ class AliasManager implements AliasManagerInterface {
   /**
    * Holds the array of whitelisted path aliases.
    *
-   * @var array
+   * @var \Drupal\Core\Utility\PathAliasWhitelist;
    */
   protected $whitelist;
 
@@ -79,15 +78,20 @@ class AliasManager implements AliasManagerInterface {
    */
   protected $preloadedPathLookups = array();
 
-  public function __construct(Connection $connection, KeyValueStoreInterface $state, LanguageManager $language_manager) {
+  /**
+   * Constructs an AliasManager.
+   *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection to use.
+   * @param \Drupal\Core\Path\AliasWhitelist $whitelist
+   *   The whitelist implementation to use.
+   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   *   The language manager.
+   */
+  public function __construct(Connection $connection, AliasWhitelist $whitelist, LanguageManager $language_manager) {
     $this->connection = $connection;
-    $this->state = $state;
     $this->languageManager = $language_manager;
-    $this->whitelist = $this->state->get('system.path_alias_whitelist', NULL);
-
-    if (!isset($this->whitelist)) {
-      $this->whitelist = $this->pathAliasWhitelistRebuild();
-    }
+    $this->whitelist = $whitelist;
   }
 
   /**
@@ -133,7 +137,7 @@ class AliasManager implements AliasManagerInterface {
     $this->no_aliases = array();
     $this->firstCall = TRUE;
     $this->preloadedPathLookups = array();
-    $this->whitelist = $this->pathAliasWhitelistRebuild($source);
+    $this->pathAliasWhitelistRebuild($source);
   }
 
   /**
@@ -302,21 +306,10 @@ class AliasManager implements AliasManagerInterface {
     // When paths are inserted, only rebuild the whitelist if the system path
     // has a top level component which is not already in the whitelist.
     if (!empty($source)) {
-      // @todo Inject state so we don't have this function call.
-      $whitelist = $this->state->get('system.path_alias_whitelist', NULL);
-      if (isset($whitelist[strtok($source, '/')])) {
-        return $whitelist;
-      }
+      if (isset($this->whitelist[strtok($source, '/')])) {
+        return;
+     }
     }
-    // For each alias in the database, get the top level component of the system
-    // path it corresponds to. This is the portion of the path before the first
-    // '/', if present, otherwise the whole path itself.
-    $whitelist = array();
-    $result = $this->connection->query("SELECT DISTINCT SUBSTRING_INDEX(source, '/', 1) AS path FROM {url_alias}");
-    foreach ($result as $row) {
-      $whitelist[$row->path] = TRUE;
-    }
-    $this->state->set('system.path_alias_whitelist', $whitelist);
-    return $whitelist;
+    $this->whitelist->clear();
   }
 }

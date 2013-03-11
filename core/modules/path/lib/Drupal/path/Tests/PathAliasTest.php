@@ -51,7 +51,8 @@ class PathAliasTest extends PathTestBase {
     // Visit the system path for the node and confirm a cache entry is
     // created.
     cache('path')->deleteAll();
-    $this->drupalGet($edit['source']);
+    // Make sure the path is not converted to the alias.
+    $this->drupalGet($edit['source'], array('alias' => TRUE));
     $this->assertTrue(cache('path')->get($edit['source']), 'Cache entry was created.');
 
     // Visit the alias for the node and confirm a cache entry is created.
