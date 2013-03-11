@@ -119,17 +119,6 @@ class Node extends EntityNG implements ContentEntityInterface {
   public $changed;
 
   /**
-   * The node comment status indicator.
-   *
-   * COMMENT_NODE_HIDDEN => no comments
-   * COMMENT_NODE_CLOSED => comments are read-only
-   * COMMENT_NODE_OPEN => open (read/write)
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $comment;
-
-  /**
    * The node promotion status.
    *
    * Promoted nodes should be displayed on the front page of the site. The value
@@ -197,7 +186,6 @@ class Node extends EntityNG implements ContentEntityInterface {
     unset($this->status);
     unset($this->created);
     unset($this->changed);
-    unset($this->comment);
     unset($this->promote);
     unset($this->sticky);
     unset($this->tnid);

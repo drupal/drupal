@@ -263,11 +263,6 @@ class NodeStorageController extends DatabaseStorageControllerNG {
       'description' => t('The time that the node was last edited.'),
       'type' => 'integer_field',
     );
-    $properties['comment'] = array(
-      'label' => t('Comment'),
-      'description' => t('Whether comments are allowed on this node: 0 = no, 1 = closed (read only), 2 = open (read/write).'),
-      'type' => 'integer_field',
-    );
     $properties['promote'] = array(
       'label' => t('Promote'),
       'description' => t('A boolean indicating whether the node should be displayed on the front page.'),

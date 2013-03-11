@@ -19,7 +19,7 @@ class EntityBCDecoratorTest extends EntityUnitTestBase  {
    *
    * @var array
    */
-  public static $modules = array('filter', 'text', 'node', 'comment');
+  public static $modules = array('filter', 'text', 'node', 'entity', 'comment');
 
   public static function getInfo() {
     return array(
@@ -33,7 +33,7 @@ class EntityBCDecoratorTest extends EntityUnitTestBase  {
     parent::setUp();
     $this->installSchema('user', array('users_roles', 'users_data', 'role_permission'));
     $this->installSchema('node', array('node', 'node_revision', 'node_type', 'node_access'));
-    $this->installSchema('comment', array('comment', 'node_comment_statistics'));
+    $this->installSchema('comment', array('comment', 'comment_entity_statistics'));
   }
 
   /**
@@ -44,13 +44,16 @@ class EntityBCDecoratorTest extends EntityUnitTestBase  {
   public function testBCDecorator() {
     // Test using comment subject via the BC decorator.
     $this->createUser();
+    comment_add_default_comment_field('node', 'page');
     $node = entity_create('node', array(
       'type' => 'page',
       'uid' => 1,
     ));
     $node->save();
     $comment = entity_create('comment', array(
-      'nid' => $node->nid,
+      'entity_id' => $node->nid,
+      'entity_type' => 'node',
+      'field_name' => 'comment',
       'subject' => 'old-value',
     ));
     $comment->save();
