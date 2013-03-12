@@ -510,8 +510,8 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
         if (!isset($info['path'])) {
           $result[$hook]['template'] = $path . '/templates/' . $info['template'];
         }
-        if ($type == 'module') {
-          // Add two render engines for modules.
+        if ($type == 'module' || $type == 'theme_engine') {
+          // Add two render engines for modules and theme engines.
           // @todo Remove and make twig the default engine.
           $render_engines = array(
             '.html.twig' => 'twig',
@@ -661,6 +661,12 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
   // And then the same thing, but for the theme.
   if ($theme_engine) {
     _theme_process_registry($cache, $theme_engine, 'theme_engine', $theme->name, dirname($theme->filename));
+  }
+
+  if ($theme_engine == 'phptemplate') {
+    // Check for Twig templates if this is a PHPTemplate theme.
+    // @todo Remove this once all core themes are converted to Twig.
+    _theme_process_registry($cache, 'twig', 'theme_engine', $theme->name, dirname($theme->filename));
   }
 
   // Finally, hooks provided by the theme itself.
@@ -1127,7 +1133,9 @@ function theme($hook, $variables = array()) {
           $extension = $extension_function();
         }
       }
-      elseif (isset($info['engine'])) {
+      // @todo Change this 'if' back to 'elseif' once Twig conversion is
+      // complete. Normally only modules have this key set.
+      if (isset($info['engine'])) {
         if (function_exists($info['engine'] . '_render_template')) {
           $render_function = $info['engine'] . '_render_template';
         }
