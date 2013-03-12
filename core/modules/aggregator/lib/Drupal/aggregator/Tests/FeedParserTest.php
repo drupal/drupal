@@ -73,4 +73,33 @@ class FeedParserTest extends AggregatorTestBase {
     $this->assertResponse(200, format_string('Feed %name exists.', array('%name' => $feed->label())));
     $this->assertRaw("Quote&quot; Amp&amp;");
   }
+
+  /**
+   * Tests error handling when an invalid feed is added.
+   */
+  function testRedirectFeed() {
+    // Simulate a typo in the URL to force a curl exception.
+    $invalid_url = url('aggregator/redirect', array('absolute' => TRUE));
+    $feed = entity_create('aggregator_feed', array('url' => $invalid_url));
+    $feed->save();
+    aggregator_refresh($feed);
+
+    // Make sure that the feed URL was updated correctly.
+    $this->assertEqual($feed->url->value, url('aggregator/test-feed', array('absolute' => TRUE)));
+  }
+
+  /**
+   * Tests error handling when an invalid feed is added.
+   */
+  function testInvalidFeed() {
+    // Simulate a typo in the URL to force a curl exception.
+    $invalid_url = 'http:/www.drupal.org';
+    $feed = entity_create('aggregator_feed', array('url' => $invalid_url, 'title' => $this->randomName()));
+    $feed->save();
+
+    // Update the feed. Use the UI to be able to check the message easily.
+    $this->drupalGet('admin/config/services/aggregator');
+    $this->clickLink(t('Update items'));
+    $this->assertRaw(t('The feed from %title seems to be broken because of error "%error"', array('%title' => $feed->label(), '%error' => "[curl] 6: Couldn't resolve host 'http' [url] /")));
+  }
 }

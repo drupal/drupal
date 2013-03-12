@@ -82,7 +82,7 @@ class ForumNodeAccessTest extends WebTestBase {
 
     // Test for $access_user.
     $this->drupalLogin($access_user);
-    $this->drupalGet('/');
+    $this->drupalGet('');
 
     // Ensure private node and public node are found.
     $this->assertText($private_node->title, 'Private node found in block by $access_user');
@@ -90,7 +90,7 @@ class ForumNodeAccessTest extends WebTestBase {
 
     // Test for $no_access_user.
     $this->drupalLogin($no_access_user);
-    $this->drupalGet('/');
+    $this->drupalGet('');
 
     // Ensure private node is not found but public is found.
     $this->assertNoText($private_node->title, 'Private node not found in block by $no_access_user');

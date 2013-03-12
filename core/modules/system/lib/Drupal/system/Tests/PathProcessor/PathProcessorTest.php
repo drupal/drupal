@@ -11,6 +11,7 @@ use Drupal\system\Tests\Path\PathUnitTestBase;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Path\Path;
 use Drupal\Core\Path\AliasManager;
+use Drupal\Core\Path\AliasWhitelist;
 use Drupal\Core\PathProcessor\PathProcessorAlias;
 use Drupal\Core\PathProcessor\PathProcessorDecode;
 use Drupal\Core\PathProcessor\PathProcessorFront;
@@ -46,7 +47,8 @@ class PathProcessorTest extends PathUnitTestBase {
     $this->fixtures->createTables($connection);
 
     // Create dependecies needed by various path processors.
-    $alias_manager = new AliasManager($connection, $this->container->get('state'), $this->container->get('language_manager'));
+    $whitelist = new AliasWhitelist('path_alias_whitelist', 'cache', $this->container->get('keyvalue'), $connection);
+    $alias_manager = new AliasManager($connection, $whitelist, $this->container->get('language_manager'));
     $module_handler = $this->container->get('module_handler');
 
     // Create the processors.
