@@ -303,20 +303,26 @@ function comment_views_data() {
   $data['comment']['entity_id'] = array(
     'title' => t('Entity id'),
     'help' => t('The Entity ID to which the comment is a reply to.'),
+    'field' => array(
+      'id' => 'standard',
+    ),
     'filter' => array(
       'id' => 'numeric',
     ),
     'argument' => array(
       'id' => 'numeric',
     ),
-    'field' => array(
-      'id' => 'numeric',
+    'sort' => array(
+      'id' => 'standard',
     ),
   );
 
   $data['comment']['entity_type'] = array(
     'title' => t('Entity type'),
     'help' => t('The Entity type to which the comment is a reply to.'),
+    'field' => array(
+      'id' => 'standard',
+    ),
     'filter' => array(
       'id' => 'string',
     ),
@@ -324,7 +330,24 @@ function comment_views_data() {
       'id' => 'string',
     ),
     'sort' => array(
+      'id' => 'standard',
+    ),
+  );
+
+  $data['comment']['field_name'] = array(
+    'title' => t('Comment field name'),
+    'help' => t('The Field name from which the comment originated.'),
+    'field' => array(
+      'id' => 'standard',
+    ),
+    'filter' => array(
       'id' => 'string',
+    ),
+    'argument' => array(
+      'id' => 'string',
+    ),
+    'sort' => array(
+      'id' => 'standard',
     ),
   );
 
@@ -356,20 +379,6 @@ function comment_views_data() {
       );
     }
   }
-
-  $data['comment']['field_name'] = array(
-    'title' => t('Comment field name'),
-    'help' => t('The Field name from which the comment originated.'),
-    'filter' => array(
-      'id' => 'string',
-    ),
-    'argument' => array(
-      'id' => 'string',
-    ),
-    'sort' => array(
-      'id' => 'string',
-    ),
-  );
 
   $data['comment']['uid'] = array(
     'title' => t('Author uid'),
@@ -540,9 +549,12 @@ function comment_views_data() {
     ),
   );
 
-  $data['comment_entity_statistics']['field_name'] = array(
-    'title' => t('Comment field name'),
-    'help' => t('The Field name from which the comment originated.'),
+  $data['comment_entity_statistics']['entity_type'] = array(
+    'title' => t('Entity type'),
+    'help' => t('The Entity type to which the comment is a reply to.'),
+    'field' => array(
+      'id' => 'standard',
+    ),
     'filter' => array(
       'id' => 'string',
     ),
@@ -550,7 +562,23 @@ function comment_views_data() {
       'id' => 'string',
     ),
     'sort' => array(
+      'id' => 'standard',
+    ),
+  );
+  $data['comment_entity_statistics']['field_name'] = array(
+    'title' => t('Comment field name'),
+    'help' => t('The Field name from which the comment originated.'),
+    'field' => array(
+      'id' => 'standard',
+    ),
+    'filter' => array(
       'id' => 'string',
+    ),
+    'argument' => array(
+      'id' => 'string',
+    ),
+    'sort' => array(
+      'id' => 'standard',
     ),
   );
 
