@@ -907,7 +907,11 @@ function _menu_link_translate(&$item, $translate = FALSE) {
         $item['access'] = FALSE;
         return FALSE;
       }
-      _menu_check_access($item, $map);
+      // Apply the access check defined in hook_menu() if there is not route
+      // defined.
+      else {
+        _menu_check_access($item, $map);
+      }
     }
     // For performance, don't localize a link the user can't access.
     if ($item['access']) {
