@@ -34,7 +34,7 @@ class Map extends ContextAwareTypedData implements \IteratorAggregate, ComplexDa
    *
    * @var array
    */
-  protected $properties;
+  protected $properties = array();
 
   /**
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
@@ -53,6 +53,10 @@ class Map extends ContextAwareTypedData implements \IteratorAggregate, ComplexDa
    * Overrides \Drupal\Core\TypedData\TypedData::getValue().
    */
   public function getValue() {
+    // Update the values and return them.
+    foreach ($this->properties as $name => $property) {
+      $this->values[$name] = $property->getValue();
+    }
     return $this->values;
   }
 
@@ -67,7 +71,7 @@ class Map extends ContextAwareTypedData implements \IteratorAggregate, ComplexDa
       throw new \InvalidArgumentException("Invalid values given. Values must be represented as an associative array.");
     }
     $this->values = $values;
-    unset($this->properties);
+    $this->properties = array();
   }
 
   /**
@@ -99,7 +103,13 @@ class Map extends ContextAwareTypedData implements \IteratorAggregate, ComplexDa
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::set().
    */
   public function set($property_name, $value) {
-    $this->get($property_name)->setValue($value);
+    if (isset($this->properties[$property_name])) {
+      $this->properties[$property_name]->setValue($value);
+    }
+    else {
+      // Just the plain value, so it's possible to add a new entry to the map.
+      $this->values[$property_name] = $value;
+    }
   }
 
   /**

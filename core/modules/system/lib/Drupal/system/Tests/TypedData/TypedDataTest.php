@@ -342,6 +342,13 @@ class TypedDataTest extends WebTestBase {
     $this->assertEqual($typed_data->getPropertyValues(), $value);
     $typed_data->set('one', 'uno');
     $this->assertEqual($typed_data->get('one')->getValue(), 'uno');
+    // Make sure the update is reflected in the value of the map also.
+    $value = $typed_data->getValue();
+    $this->assertEqual($value, array(
+      'one' => 'uno',
+      'two' => 'zwei',
+      'three' => 'drei'
+    ));
 
     $properties = $typed_data->getProperties();
     $this->assertEqual(array_keys($properties), array_keys($value));
@@ -383,13 +390,6 @@ class TypedDataTest extends WebTestBase {
     catch (\Exception $e) {
       $this->pass('Exception thrown:' . $e->getMessage());
     }
-    try {
-      $typed_data->set('invalid', 'foo');
-      $this->fail('No exception has been thrown when setting an invalid value.');
-    }
-    catch (\Exception $e) {
-      $this->pass('Exception thrown:' . $e->getMessage());
-    }
 
     // Test setting invalid values.
     try {
@@ -399,6 +399,12 @@ class TypedDataTest extends WebTestBase {
     catch (\Exception $e) {
       $this->pass('Exception thrown:' . $e->getMessage());
     }
+
+    // Test adding a new entry to the map.
+    $typed_data->set('zero', 'null');
+    $this->assertEqual($typed_data->get('zero')->getValue(), 'null');
+    $definition = $typed_data->getPropertyDefinition('zero');
+    $this->assertEqual($definition['type'], 'any', 'Definition for a new map entry returned.');
   }
 
   /**
