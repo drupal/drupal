@@ -262,12 +262,14 @@ class ViewsDataCache implements DestructableInterface {
    * @param string $key
    *   (Optional) The key to clear in the storage. Defaults to NULL.
    */
-  public function flush($key = NULL) {
+  public function delete($key = NULL) {
     if ($key) {
       unset($this->storage[$key]);
+      $this->cacheBackend->delete($this->baseCid . ':' . $table);
     }
     else {
       $this->storage = array();
+      $this->cacheBackend->deleteAll();
     }
   }
 
