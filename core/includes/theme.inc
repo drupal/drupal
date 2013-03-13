@@ -1575,7 +1575,7 @@ function theme_disable($theme_list) {
  * Preprocess variables for theme_datetime().
  *
  * @param array $variables
- *   An associative array possbily containing:
+ *   An associative array possibly containing:
  *   - attributes['timestamp']:
  *   - timestamp:
  *   - text:
