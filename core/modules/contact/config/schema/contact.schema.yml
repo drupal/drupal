@@ -1,34 +1,45 @@
-# Configuration schema: contact.schema.yml
+# Schema for the configuration files of the Contact module.
 
-# Schema for contact category (multiple)
 contact.category.*:
   type: mapping
+  label: 'Contact category'
   mapping:
-    "id":
+    id:
       type: string
-    "label":
+      label: 'Category identifier'
+    label:
       type: string
-    "recipients":
+      label: 'Label'
+    recipients:
       type: sequence
+      label: 'Recipients'
       sequence:
         - type: email
-    "reply":
+          label: 'E-mail address'
+    reply:
       type: string
-    "weight":
+      label: 'Auto-reply'
+    weight:
       type: integer
+      label: 'Weight'
 
-# Module settings
 contact.settings:
   type: mapping
+  label: 'Contact settings'
   mapping:
-    "default_category":
+    default_category:
       type: string
-    "flood":
+      label: 'Default category identifier'
+    flood:
       type: mapping
+      label: 'Flood control'
       mapping:
-        "limit":
+        limit:
           type: integer
-        "interval":
+          label: 'Limit'
+        interval:
           type: integer
-      "user_default_enabled":
-        type: boolean
+          label: 'Interval'
+    user_default_enabled:
+      type: boolean
+      label: 'Personal contact form enabled by default'
