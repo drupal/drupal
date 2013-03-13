@@ -16,7 +16,7 @@
  * @ingroup themeable
  */
 ?>
-  <div id="branding" class="clearfix" role="navigation">
+  <header id="branding" class="clearfix" role="navigation">
     <?php print $breadcrumb; ?>
     <?php print render($title_prefix); ?>
     <?php if ($title): ?>
@@ -26,14 +26,14 @@
     <?php if ($primary_local_tasks): ?>
       <?php print '<div role="tab">' . render($primary_local_tasks) . '</div>'; ?>
     <?php endif; ?>
-  </div>
+  </header>
 
   <div id="page">
     <?php if ($secondary_local_tasks): ?>
       <div class="tabs-secondary clearfix" role="navigation"><?php print render($secondary_local_tasks); ?></div>
     <?php endif; ?>
 
-    <div id="content" class="clearfix" role="main">
+    <main id="content" class="clearfix" role="main">
       <div class="element-invisible"><a id="main-content"></a></div>
       <?php if ($messages): ?>
         <div id="console" class="clearfix"><?php print $messages; ?></div>
@@ -45,10 +45,10 @@
       <?php endif; ?>
       <?php if ($action_links): ?><ul class="action-links"><?php print render($action_links); ?></ul><?php endif; ?>
       <?php print render($page['content']); ?>
-    </div>
+    </main>
 
-    <div id="footer" role="contentinfo">
+    <footer id="footer" role="contentinfo">
       <?php print $feed_icons; ?>
-    </div>
+    </footer>
 
   </div>

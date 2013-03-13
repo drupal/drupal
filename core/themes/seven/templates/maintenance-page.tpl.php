@@ -13,9 +13,8 @@
  * @ingroup themeable
  */
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->langcode ?>" lang="<?php print $language->langcode ?>" dir="<?php print $language->dir ?>">
+<!DOCTYPE html>
+<html lang="<?php print $language->langcode ?>" dir="<?php print $language->dir ?>">
   <head>
     <title><?php print $head_title; ?></title>
     <?php print $head; ?>
@@ -26,9 +25,9 @@
 
   <?php print $page_top; ?>
 
-  <div id="branding">
+  <header id="branding">
     <?php if ($title): ?><h1 class="page-title"><?php print $title; ?></h1><?php endif; ?>
-  </div>
+  </header>
 
   <div id="page">
 
@@ -41,7 +40,7 @@
       <?php endif; ?>
     </div>
 
-    <div id="content" class="clearfix">
+    <main id="content" class="clearfix">
       <?php if ($messages): ?>
         <div id="console"><?php print $messages; ?></div>
       <?php endif; ?>
@@ -51,11 +50,13 @@
         </div>
       <?php endif; ?>
       <?php print $content; ?>
-    </div>
+    </main>
 
   </div>
 
-  <?php print $page_bottom; ?>
+  <footer role="contentinfo">
+    <?php print $page_bottom; ?>
+  </footer>
 
   </body>
 </html>
