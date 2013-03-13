@@ -48,7 +48,7 @@ class SchemaDiscovery implements DiscoveryInterface {
     if (isset($this->definitions[$base_plugin_id])) {
       $type = $base_plugin_id;
     }
-    elseif (strpos($base_plugin_id, '.') && ($name = $this->getFallbackName($base_plugin_id)) && isset($this->definitions[$name])) {
+    elseif (strpos($base_plugin_id, '.') && $name = $this->getFallbackName($base_plugin_id)) {
       // Found a generic name, replacing the last element by '*'.
       $type = $name;
     }
@@ -95,13 +95,28 @@ class SchemaDiscovery implements DiscoveryInterface {
    * @param string $name
    *   Configuration name or key.
    *
-   * @return string
-   *   Same name with the last part replaced by the filesystem marker.
+   * @return null|string
+   *   Same name with the last part(s) replaced by the filesystem marker.
+   *   for example, breakpoint.breakpoint.module.toolbar.narrow check for
+   *   definition in below order:
+   *     breakpoint.breakpoint.module.toolbar.*
+   *     breakpoint.breakpoint.module.*.*
+   *     breakpoint.breakpoint.*.*.*
+   *     breakpoint.*.*.*.*
+   *   Returns null, if no matching element.
    */
-  protected static function getFallbackName($name) {
-    $replaced = preg_replace('/\.[^.]+$/', '.' . '*', $name);
-    if ($replaced != $name) {
-      return $replaced;
+  protected function getFallbackName($name) {
+    // Check for definition of $name with filesystem marker.
+    $replaced = preg_replace('/(\.[^\.]+)([\.\*]*)$/', '.*\2', $name);
+    if ($replaced != $name ) {
+      if (isset($this->definitions[$replaced])) {
+        return $replaced;
+      }
+      else {
+        // No definition for this level(for example, breakpoint.breakpoint.*),
+        // check for next level (which is, breakpoint.*.*).
+        return self::getFallbackName($replaced);
+      }
     }
   }
 }
