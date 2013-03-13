@@ -1,11 +1,11 @@
-id: tour-test-en
+id: tour-test
 label: Tour test english
 langcode: en
 paths:
   - tour-test-1
 tips:
   tour-test-1:
-    id: tour-test-1-en
+    id: tour-test-1
     plugin: text
     label: The first tip
     body: Is always the best dressed.
@@ -13,7 +13,7 @@ tips:
     attributes:
       data-id: tour-test-1
   tour-test-3:
-    id: tour-test-3-en
+    id: tour-test-3
     plugin: image
     label: The awesome image
     url: http://local/image.png

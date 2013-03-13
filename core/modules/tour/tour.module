@@ -112,13 +112,9 @@ function tour_preprocess_page(&$variables) {
 
   // @todo replace this with http://drupal.org/node/1918768 once it is committed.
   $path = current_path();
-  $langcode = language(LANGUAGE_TYPE_CONTENT)->langcode;
   $tour_items = array();
   // Load all of the items and match on path.
-  $tour_ids = entity_query('tour')
-    ->condition('langcode', $langcode)
-    ->execute();
-  $tours = entity_load_multiple('tour', $tour_ids);
+  $tours = entity_load_multiple('tour');
 
   $path_alias = drupal_strtolower(drupal_container()->get('path.alias_manager')->getPathAlias($path));
   foreach ($tours as $tour_id => $tour) {
