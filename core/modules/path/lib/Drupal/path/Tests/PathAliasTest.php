@@ -48,6 +48,11 @@ class PathAliasTest extends PathTestBase {
     $edit['alias'] = $this->randomName(8);
     $this->drupalPost('admin/config/search/path/add', $edit, t('Save'));
 
+    // Check the path alias whitelist cache.
+    $whitelist = cache()->get('path_alias_whitelist');
+    $this->assertTrue($whitelist->data['node']);
+    $this->assertFalse($whitelist->data['admin']);
+
     // Visit the system path for the node and confirm a cache entry is
     // created.
     cache('path')->deleteAll();

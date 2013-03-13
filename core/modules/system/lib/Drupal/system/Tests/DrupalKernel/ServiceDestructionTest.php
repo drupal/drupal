@@ -34,14 +34,10 @@ class ServiceDestructionTest extends DrupalUnitTestBase {
     // The service has not been destructed yet.
     $this->assertNull(state()->get('bundle_test.destructed'));
 
-    // Get the service destructor.
-    $service_destruction = $this->container->get('kernel_destruct_subscriber');
-
-    // Call the class and then invoke the kernel terminate event.
+    // Call the class and then terminate the kernel
     $this->container->get('bundle_test_class');
     $response = new Response();
-    $event = new PostResponseEvent($this->container->get('kernel'), $this->container->get('request'), $response);
-    $service_destruction->onKernelTerminate($event);
+    $this->container->get('kernel')->terminate($this->container->get('request'), $response);
     $this->assertTrue(state()->get('bundle_test.destructed'));
   }
 
@@ -55,14 +51,10 @@ class ServiceDestructionTest extends DrupalUnitTestBase {
     // The service has not been destructed yet.
     $this->assertNull(state()->get('bundle_test.destructed'));
 
-    // Get the service destructor.
-    $service_destruction = $this->container->get('kernel_destruct_subscriber');
-
-    // Simulate a shutdown. The test class has not been called, so it should not
+    // Terminate the kernel. The test class has not been called, so it should not
     // be destructed.
     $response = new Response();
-    $event = new PostResponseEvent($this->container->get('kernel'), $this->container->get('request'), $response);
-    $service_destruction->onKernelTerminate($event);
+    $this->container->get('kernel')->terminate($this->container->get('request'), $response);
     $this->assertNull(state()->get('bundle_test.destructed'));
   }
 }
