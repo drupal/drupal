@@ -265,7 +265,7 @@ class ViewsDataCache implements DestructableInterface {
   public function delete($key = NULL) {
     if ($key) {
       unset($this->storage[$key]);
-      $this->cacheBackend->delete($this->baseCid . ':' . $table);
+      $this->cacheBackend->delete($this->baseCid . ':' . $key);
     }
     else {
       $this->storage = array();
