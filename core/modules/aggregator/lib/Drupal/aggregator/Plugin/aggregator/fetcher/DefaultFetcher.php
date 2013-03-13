@@ -51,7 +51,7 @@ class DefaultFetcher implements FetcherInterface {
 
       // Update the feed URL in case of a 301 redirect.
       if ($previous_response = $response->getPreviousResponse()) {
-        if ($previous_response->getStatusCode() == 301 && $location = $response->getPreviousResponse()->getLocation()) {
+        if ($previous_response->getStatusCode() == 301 && $location = $previous_response->getLocation()) {
           $feed->url->value = $location;
         }
       }
