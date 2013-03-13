@@ -12,14 +12,13 @@ display:
       cache:
         type: none
       empty:
-        area:
+        area_text_custom:
           admin_label: ''
           content: 'No front page content has been created yet.'
           empty: '1'
-          field: area
-          format: plain_text
+          field: area_text_custom
           group_type: group
-          id: area
+          id: area_text_custom
           label: ''
           relationship: none
           table: views
