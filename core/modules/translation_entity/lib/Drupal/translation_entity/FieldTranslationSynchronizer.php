@@ -8,11 +8,29 @@
 namespace Drupal\translation_entity;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityManager;
 
 /**
  * Provides field translation synchronization capabilities.
  */
 class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterface {
+
+  /**
+   * The entity manager to use to load unchanged entities.
+   *
+   * @var \Drupal\Core\Entity\EntityManager
+   */
+  protected $entityManager;
+
+  /**
+   * Constructs a FieldTranslationSynchronizer object.
+   *
+   * @param \Drupal\Core\Entity\EntityManager $entityManager
+   *   The entity manager.
+   */
+  public function __construct(EntityManager $entityManager) {
+    $this->entityManager = $entityManager;
+  }
 
   /**
    * Implements \Drupal\translation_entity\FieldTranslationSynchronizerInterface::synchronizeFields().
@@ -29,9 +47,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
 
     // If the entity language is being changed there is nothing to synchronize.
     $entity_type = $entity->entityType();
-    // @todo Use the entity storage controller directly to avoid accessing the
-    //   global scope.
-    $entity_unchanged = isset($entity->original) ? $entity->original : entity_load_unchanged($entity_type, $entity->id());
+    $entity_unchanged = isset($entity->original) ? $entity->original : $this->entityManager->getStorageController($entity_type)->loadUnchanged($entity->id());
     if ($entity->language()->langcode != $entity_unchanged->language()->langcode) {
       return;
     }

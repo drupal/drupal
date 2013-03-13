@@ -20,7 +20,8 @@ class TranslationEntityBundle extends Bundle {
    * Implements \Symfony\Component\HttpKernel\Bundle\BundleInterface::build().
    */
   public function build(ContainerBuilder $container) {
-    $container->register('translation_entity.synchronizer', 'Drupal\translation_entity\FieldTranslationSynchronizer');
+    $container->register('translation_entity.synchronizer', 'Drupal\translation_entity\FieldTranslationSynchronizer')
+      ->addArgument(new Reference('plugin.manager.entity'));
   }
 
 }
