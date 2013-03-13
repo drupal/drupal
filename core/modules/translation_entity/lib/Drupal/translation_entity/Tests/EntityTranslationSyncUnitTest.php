@@ -71,7 +71,7 @@ class EntityTranslationSyncUnitTest extends DrupalUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->synchronizer = new FieldTranslationSynchronizer();
+    $this->synchronizer = new FieldTranslationSynchronizer($this->container->get('plugin.manager.entity'));
     $this->synchronized = array('sync1', 'sync2');
     $this->columns = array_merge($this->synchronized, array('var1', 'var2'));
     $this->langcodes = array('en', 'it', 'fr', 'de', 'es');

@@ -32,6 +32,7 @@ function link_field_info() {
     ),
     'default_widget' => 'link_default',
     'default_formatter' => 'link',
+    'field item class' => '\Drupal\link\Type\LinkItem',
   );
   return $types;
 }

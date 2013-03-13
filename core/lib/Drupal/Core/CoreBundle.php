@@ -310,7 +310,8 @@ class CoreBundle extends Bundle {
     $container->register('plugin.manager.condition', 'Drupal\Core\Condition\ConditionManager');
 
     $container->register('kernel_destruct_subscriber', 'Drupal\Core\EventSubscriber\KernelDestructionSubscriber')
-      ->addMethodCall('setContainer', array(new Reference('service_container')));
+      ->addMethodCall('setContainer', array(new Reference('service_container')))
+      ->addTag('event_subscriber');
 
     // Register Ajax event subscriber.
     $container->register('ajax.subscriber', 'Drupal\Core\Ajax\AjaxSubscriber')
