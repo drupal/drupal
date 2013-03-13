@@ -256,4 +256,19 @@ class ViewsDataCache implements DestructableInterface {
     }
   }
 
+  /**
+   * Allows an entry in the storage to be removed.
+   *
+   * @param string $key
+   *   (Optional) The key to clear in the storage. Defaults to NULL.
+   */
+  public function flush($key = NULL) {
+    if ($key) {
+      unset($this->storage[$key]);
+    }
+    else {
+      $this->storage = array();
+    }
+  }
+
 }

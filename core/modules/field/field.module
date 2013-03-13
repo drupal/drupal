@@ -970,7 +970,7 @@ function field_view_field(EntityInterface $entity, $field_name, $display_options
         $items_multi = array($id => $entity_translation->get($field_name)->getValue());
       }
       else {
-        $items_multi = array($id => $entity->{$field_name}[$display_langcode]);
+        $items_multi = array($id => empty($entity->{$field_name}[$display_langcode]) ? array() : $entity->{$field_name}[$display_langcode]);
       }
 
       $formatter->prepareView(array($id => $entity), $display_langcode, $items_multi);

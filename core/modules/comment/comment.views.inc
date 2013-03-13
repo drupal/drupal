@@ -640,31 +640,31 @@ function comment_views_data_alter(&$data) {
           'entity_id' => $entity_info['entity_keys']['id'],
         ),
       );
-    }
 
-    foreach (comment_get_comment_fields() as $field_name => $field) {
-      $data[$base_table][$field_name . '_cid'] = array(
-        'title' => t('Comments of the @entity_type using field: @field_name', $args + array('@field_name' => $field_name)),
-        'help' => t('Relate all comments on the @entity_type. This will create 1 duplicate record for every comment. Usually if you need this it is better to create a comment view.', $args),
-        'relationship' => array(
-          'group' => t('Comment'),
-          'label' => t('Comments'),
-          'base' => 'comment',
-          'base field' => 'entity_id',
-          'relationship field' => $entity_info['entity_keys']['id'],
-          'id' => 'standard',
-          'extra' => array(
-            array(
-              'field' => 'entity_type',
-              'value' => $entity_type,
-            ),
-            array(
-              'field' => 'field_name',
-              'value' => $field_name,
+      foreach ($fields as $field_name => $field) {
+        $data[$base_table][$field_name . '_cid'] = array(
+          'title' => t('Comments of the @entity_type using field: @field_name', $args + array('@field_name' => $field_name)),
+          'help' => t('Relate all comments on the @entity_type. This will create 1 duplicate record for every comment. Usually if you need this it is better to create a comment view.', $args),
+          'relationship' => array(
+            'group' => t('Comment'),
+            'label' => t('Comments'),
+            'base' => 'comment',
+            'base field' => 'entity_id',
+            'relationship field' => $entity_info['entity_keys']['id'],
+            'id' => 'standard',
+            'extra' => array(
+              array(
+                'field' => 'entity_type',
+                'value' => $entity_type,
+              ),
+              array(
+                'field' => 'field_name',
+                'value' => $field_name,
+              ),
             ),
           ),
-        ),
-      );
+        );
+      }
     }
   }
 }

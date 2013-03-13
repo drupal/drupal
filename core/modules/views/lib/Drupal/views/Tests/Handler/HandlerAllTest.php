@@ -54,6 +54,10 @@ class HandlerAllTest extends HandlerTestBase {
    */
   public function testHandlers() {
     comment_add_default_comment_field('node', 'page');
+    // Force a flush of the in-memory storage.
+    \Drupal::service('views.views_data')->flush('comment');
+    \Drupal::service('views.views_data')->flush('comment_entity_statistics');
+
     $object_types = array_keys(ViewExecutable::viewsHandlerTypes());
     foreach (drupal_container()->get('views.views_data')->get() as $base_table => $info) {
       if (!isset($info['table']['base'])) {
