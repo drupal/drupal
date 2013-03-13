@@ -11,6 +11,7 @@ use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\HandlerBase;
+use Drupal\views\Views;
 
 /**
  * @defgroup views_argument_handlers Views argument handlers
@@ -301,7 +302,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       ),
     );
 
-    $plugins = drupal_container()->get('plugin.manager.views.argument_validator')->getDefinitions();
+    $plugins = Views::pluginManager('argument_validator')->getDefinitions();
     foreach ($plugins as $id => $info) {
       if (!empty($info['no_ui'])) {
         continue;
@@ -497,7 +498,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * default action is set to provide default argument.
    */
   function default_argument_form(&$form, &$form_state) {
-    $plugins = drupal_container()->get('plugin.manager.views.argument_default')->getDefinitions();
+    $plugins = Views::pluginManager('argument_default')->getDefinitions();
     $options = array();
 
     $form['default_argument_skip_url'] = array(
@@ -562,7 +563,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * default action is set to display one.
    */
   function default_summary_form(&$form, &$form_state) {
-    $style_plugins = drupal_container()->get('plugin.manager.views.style')->getDefinitions();
+    $style_plugins = Views::pluginManager('style')->getDefinitions();
     $summary_plugins = array();
     $format_options = array();
     foreach ($style_plugins as $key => $plugin) {
@@ -1056,7 +1057,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       $options = $this->options[$options_name];
     }
 
-    $plugin = drupal_container()->get("plugin.manager.views.$type")->createInstance($name);
+    $plugin = Views::pluginManager($type)->createInstance($name);
     if ($plugin) {
       $plugin->init($this->view, $this->displayHandler, $options);
 

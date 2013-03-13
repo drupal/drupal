@@ -28,7 +28,7 @@ use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
  *   'left_field' => 'field_a',
  *   'operator' => '='
  * );
- * $join = drupal_container()->get('plugin.manager.views.join')->createInstance('standard', $configuration);
+ * $join = Views::pluginManager('join')->createInstance('standard', $configuration);
  *
  * Here is how you do complex joins:
  *

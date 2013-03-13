@@ -60,7 +60,7 @@ class ContactFieldsTest extends ViewTestBase {
   public function testViewsData() {
     $field_name = $this->field['field_name'];
     $table_name = _field_sql_storage_tablename($this->field);
-    $data = drupal_container()->get('views.views_data')->get($table_name);
+    $data = $this->container->get('views.views_data')->get($table_name);
 
     // Test that the expected data array is returned.
     $expected = array('', '_value', '_format');

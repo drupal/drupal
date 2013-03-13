@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui\Form\Ajax;
 
+use Drupal\views\Views;
 use Drupal\views_ui\ViewUI;
 
 /**
@@ -83,7 +84,7 @@ class EditDetails extends ViewsFormBase {
         $view->set($key, $value);
       }
     }
-    $bases = drupal_container()->get('views.views_data')->fetchBaseTables();
+    $bases = Views::viewsData()->fetchBaseTables();
     $form_state['#page_title'] = $view->getHumanName();
     if (isset($bases[$view->get('base_table')])) {
       $form_state['#page_title'] .= ' (' . $bases[$view->get('base_table')]['title'] . ')';

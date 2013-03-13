@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\join\JoinTest as JoinTestPlugin;
 use Drupal\views\Plugin\views\join\JoinPluginBase;
 
@@ -45,7 +46,7 @@ class JoinTest extends RelationshipJoinTestBase {
     parent::setUp();
 
     // Add a join plugin manager which can be used in all of the tests.
-    $this->manager = drupal_container()->get('plugin.manager.views.join');
+    $this->manager = Views::pluginManager('join');
   }
 
   /**

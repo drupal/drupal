@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui\Form\Ajax;
 
+use Drupal\views\Views;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\Analyzer;
 
@@ -38,7 +39,7 @@ class Analyze extends ViewsFormBase {
     $form['#title'] = t('View analysis');
     $form['#section'] = 'analyze';
 
-    $analyzer = drupal_container()->get('views.analyzer');
+    $analyzer = Views::analyzer();
     $messages = $analyzer->getMessages($view->get('executable'));
 
     $form['analysis'] = array(

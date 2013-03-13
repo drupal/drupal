@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\wizard;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\views\Plugin\Core\Entity\View;
+use Drupal\views\Views;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
@@ -508,7 +509,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   protected function build_form_style(array &$form, array &$form_state, $type) {
     $style_form =& $form['displays'][$type]['options']['style'];
     $style = $style_form['style_plugin']['#default_value'];
-    $style_plugin = drupal_container()->get("plugin.manager.views.style")->createInstance($style);
+    $style_plugin = Views::pluginManager('style')->createInstance($style);
     if (isset($style_plugin) && $style_plugin->usesRowPlugin()) {
       $options = $this->row_style_options();
       $style_form['row_plugin'] = array(
@@ -685,7 +686,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   protected function alter_display_options(&$display_options, $form, $form_state) {
     foreach ($display_options as $display_type => $options) {
       // Allow style plugins to hook in and provide some settings.
-      $style_plugin = drupal_container()->get("plugin.manager.views.style")->createInstance($options['style']['type']);
+      $style_plugin = Views::pluginManager('style')->createInstance($options['style']['type']);
       $style_plugin->wizard_submit($form, $form_state, $this, $display_options, $display_type);
     }
   }
@@ -754,7 +755,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     // Add a least one field so the view validates and the user has a preview.
     // The base field can provide a default in its base settings; otherwise,
     // choose the first field with a field handler.
-    $data = drupal_container()->get('views.views_data')->get($this->base_table);
+    $data = Views::viewsData()->get($this->base_table);
     if (isset($data['table']['base']['defaults']['field'])) {
       $field = $data['table']['base']['defaults']['field'];
     }
@@ -836,10 +837,10 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
           }
         }
       }
-      $table_data = drupal_container()->get('views.views_data')->get($table);
+      $table_data = Views::viewsData()->get($table);
       // If the 'in' operator is being used, map the values to an array.
       $handler = $table_data[$bundle_key]['filter']['id'];
-      $handler_definition = drupal_container()->get('plugin.manager.views.filter')->getDefinition($handler);
+      $handler_definition = Views::pluginManager('filter')->getDefinition($handler);
       if ($handler == 'in_operator' || is_subclass_of($handler_definition['class'], 'Drupal\\views\\Plugin\\views\\filter\\InOperator')) {
         $value = drupal_map_assoc(array($form_state['values']['show']['type']));
       }
@@ -922,7 +923,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       // created from node, but the wizard type is another base table, make
       // sure it is not added. This usually don't happen if you have js
       // enabled.
-      $data = drupal_container()->get('views.views_data')->get($table);
+      $data = Views::viewsData()->get($table);
       if (isset($data[$column]['sort'])) {
         $sorts[$column] = array(
           'id' => $column,

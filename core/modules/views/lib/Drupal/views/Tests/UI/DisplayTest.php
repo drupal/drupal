@@ -10,6 +10,8 @@ namespace Drupal\views\Tests\UI;
 /**
  * Tests the handling of displays in the UI, adding removing etc.
  */
+use Drupal\views\Views;
+
 class DisplayTest extends UITestBase {
 
   /**
@@ -212,7 +214,7 @@ class DisplayTest extends UITestBase {
    * Tests views_ui_views_plugins_display_alter is altering plugin definitions.
    */
   public function testDisplayPluginsAlter() {
-    $definitions = drupal_container()->get('plugin.manager.views.display')->getDefinitions();
+    $definitions = Views::pluginManager('display')->getDefinitions();
 
     $expected = array(
       'parent path' => 'admin/structure/views/view',

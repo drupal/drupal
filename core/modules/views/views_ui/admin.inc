@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\views\ViewExecutable;
+use Drupal\views\Views;
 
 /**
  * Converts a form element in the add view wizard to be AJAX-enabled.
@@ -442,7 +443,7 @@ function _views_sort_types($a, $b) {
 function views_fetch_fields($base, $type, $grouping = FALSE, $sub_type = NULL) {
   static $fields = array();
   if (empty($fields)) {
-    $data = drupal_container()->get('views.views_data')->get();
+    $data = Views::viewsData()->get();
     $start = microtime(TRUE);
     // This constructs this ginormous multi dimensional array to
     // collect the important data about fields. In the end,

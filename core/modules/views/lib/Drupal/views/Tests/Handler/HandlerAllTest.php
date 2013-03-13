@@ -10,6 +10,7 @@ namespace Drupal\views\Tests\Handler;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\filter\InOperator;
+use Drupal\views\Views;
 
 /**
  * Creates views with instances of all handlers...
@@ -54,7 +55,7 @@ class HandlerAllTest extends HandlerTestBase {
    */
   public function testHandlers() {
     $object_types = array_keys(ViewExecutable::viewsHandlerTypes());
-    foreach (drupal_container()->get('views.views_data')->get() as $base_table => $info) {
+    foreach (Views::viewsData()->get() as $base_table => $info) {
       if (!isset($info['table']['base'])) {
         continue;
       }
