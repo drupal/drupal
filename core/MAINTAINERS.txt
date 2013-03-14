@@ -237,6 +237,9 @@ Filter module
 Forum module
 - Lee Rowlands 'larowlan' http://drupal.org/user/395439
 
+Hypertext Application Language (HAL) module
+- Lin Clark 'linclark' http://drupal.org/user/396253
+
 Help module
 - ?
 

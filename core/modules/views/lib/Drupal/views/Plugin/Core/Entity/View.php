@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\views\Views;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\ViewStorageInterface;
 use Drupal\views\ViewExecutable;
@@ -130,7 +131,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   public function get($property_name, $langcode = NULL) {
     // Ensure that an executable View is available.
     if ($property_name == 'executable' && !isset($this->{$property_name})) {
-      $this->set('executable', drupal_container()->get('views.executable')->get($this));
+      $this->set('executable', Views::executableFactory()->get($this));
     }
 
     return parent::get($property_name, $langcode);
@@ -191,7 +192,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
       return FALSE;
     }
 
-    $plugin = drupal_container()->get('plugin.manager.views.display')->getDefinition($plugin_id);
+    $plugin = Views::pluginManager('display')->getDefinition($plugin_id);
     if (empty($plugin)) {
       $plugin['title'] = t('Broken');
     }
@@ -308,7 +309,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    *   An array of display types that this view includes.
    */
   function getDisplaysList() {
-    $manager = drupal_container()->get('plugin.manager.views.display');
+    $manager = Views::pluginManager('display');
     $displays = array();
     foreach ($this->display as $display) {
       $definition = $manager->getDefinition($display['display_plugin']);

@@ -11,6 +11,7 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\relationship\RelationshipPluginBase;
 use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Views;
 
 /**
  * A relationship handlers which reverse entity references.
@@ -40,7 +41,7 @@ class EntityReverse extends RelationshipPluginBase  {
     $this->ensureMyTable();
     // First, relate our base table to the current base table to the
     // field, using the base table's id field to the field's column.
-    $views_data = drupal_container()->get('views.views_data')->get($this->table);
+    $views_data = Views::viewsData()->get($this->table);
     $left_field = $views_data['table']['base']['field'];
 
     $first = array(

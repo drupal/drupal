@@ -16,6 +16,7 @@ use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\ViewExecutable;
+use Drupal\views\Views;
 
 /**
  * @todo.
@@ -1444,7 +1445,7 @@ class Sql extends QueryPluginBase {
     $count_query->addMetaData('view', $view);
 
     if (empty($this->options['disable_sql_rewrite'])) {
-      $base_table_data = drupal_container()->get('views.views_data')->get($this->view->storage->get('base_table'));
+      $base_table_data = Views::viewsData()->get($this->view->storage->get('base_table'));
       if (isset($base_table_data['table']['base']['access query tag'])) {
         $access_tag = $base_table_data['table']['base']['access query tag'];
         $query->addTag($access_tag);
@@ -1542,7 +1543,7 @@ class Sql extends QueryPluginBase {
   function get_entity_tables() {
     // Start with the base table.
     $entity_tables = array();
-    $views_data = drupal_container()->get('views.views_data');
+    $views_data = Views::viewsData();
     $base_table_data = $views_data->get($this->view->storage->get('base_table'));
     if (isset($base_table_data['table']['entity type'])) {
       $entity_tables[$this->view->storage->get('base_table')] = array(

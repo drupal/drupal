@@ -12,6 +12,7 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Join;
 use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Views;
 
 /**
  * @defgroup views_relationship_handlers Views relationship handlers
@@ -119,7 +120,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
    */
   public function query() {
     // Figure out what base table this relationship brings to the party.
-    $table_data = drupal_container()->get('views.views_data')->get($this->definition['base']);
+    $table_data = Views::viewsData()->get($this->definition['base']);
     $base_field = empty($this->definition['base field']) ? $table_data['table']['base']['field'] : $this->definition['base field'];
 
     $this->ensureMyTable();
@@ -144,7 +145,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
     else {
       $id = 'standard';
     }
-    $join = drupal_container()->get('plugin.manager.views.join')->createInstance($id, $def);
+    $join = Views::pluginManager('join')->createInstance($id, $def);
 
     // use a short alias for this:
     $alias = $def['table'] . '_' . $this->table;

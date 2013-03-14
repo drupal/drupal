@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\row;
 
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\ViewExecutable;
+use Drupal\views\Views;
 
 /**
  * @defgroup views_row_plugins Views row plugins
@@ -73,7 +74,7 @@ abstract class RowPluginBase extends PluginBase {
         $relationship_handler = views_get_handler($relationship['table'], $relationship['field'], 'relationship');
 
         // If this relationship is valid for this type, add it to the list.
-        $data = drupal_container()->get('views.views_data')->get($relationship['table']);
+        $data = Views::viewsData()->get($relationship['table']);
         $base = $data[$relationship['field']]['relationship']['base'];
         if ($base == $this->base_table) {
           $relationship_handler->init($executable, $relationship);

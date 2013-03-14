@@ -1,11 +1,11 @@
-id: tour-test-2-en
+id: tour-test-2
 label: Tour test english
 langcode: en
 paths:
   - tour-test-2/*
 tips:
   tour-test-2:
-    id: tour-test-2-en
+    id: tour-test-2
     plugin: text
     label: The quick brown fox
     body: Per lo più in pianura.

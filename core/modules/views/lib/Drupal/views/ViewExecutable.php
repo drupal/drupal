@@ -7,6 +7,7 @@
 
 namespace Drupal\views;
 
+use Drupal;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\views\Plugin\Core\Entity\View;
 
@@ -604,7 +605,7 @@ class ViewExecutable {
     }
 
     // Initialize the display cache array.
-    $this->displayHandlers = new DisplayBag($this, drupal_container()->get('plugin.manager.views.display'));
+    $this->displayHandlers = new DisplayBag($this, Views::pluginManager('display'));
 
     $this->current_display = 'default';
     $this->display_handler = $this->displayHandlers->get('default');
@@ -693,7 +694,7 @@ class ViewExecutable {
       $this->style_options = $style['options'];
     }
 
-    $this->style_plugin = drupal_container()->get("plugin.manager.views.style")->createInstance($this->plugin_name);
+    $this->style_plugin = Views::pluginManager("style")->createInstance($this->plugin_name);
 
     if (empty($this->style_plugin)) {
       return FALSE;
@@ -944,7 +945,7 @@ class ViewExecutable {
     }
 
     // Create and initialize the query object.
-    $views_data = drupal_container()->get('views.views_data')->get($this->storage->get('base_table'));
+    $views_data = Views::viewsData()->get($this->storage->get('base_table'));
     $this->storage->set('base_field', !empty($views_data['table']['base']['field']) ? $views_data['table']['base']['field'] : '');
     if (!empty($views_data['table']['base']['database'])) {
       $this->base_database = $views_data['table']['base']['database'];
@@ -1937,7 +1938,7 @@ class ViewExecutable {
     ) + $options;
 
     // Load the plugin ID if available.
-    $data = drupal_container()->get('views.views_data')->get($table);
+    $data = Views::viewsData()->get($table);
     if (isset($data[$field][$handler_type]['id'])) {
       $fields[$id]['plugin_id'] = $data[$field][$handler_type]['id'];
     }

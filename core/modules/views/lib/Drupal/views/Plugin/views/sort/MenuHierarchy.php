@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\sort;
 
 use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Views;
 
 
 /**
@@ -52,7 +53,7 @@ class MenuHierarchy extends SortPluginBase {
           'left_table' => $this->tableAlias,
           'left_field' => $this->field . $i
         );
-        $join = drupal_container()->get('plugin.manager.views.join')->createInstance('standard', $definition);
+        $join = Views::pluginManager('join')->createInstance('standard', $definition);
 
         $menu_links = $this->query->add_table('menu_links', NULL, $join);
         $this->query->add_orderby($menu_links, 'weight', $this->options['order']);

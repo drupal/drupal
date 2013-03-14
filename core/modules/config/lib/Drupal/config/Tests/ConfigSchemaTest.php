@@ -129,6 +129,24 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $expected['type'] =  'image.effect.image_scale';
 
     $this->assertEqual($definition, $expected, 'Retrieved the right metadata for the first effect of image.style.medium');
+
+    // More complex, multiple filesystem marker test.
+    $definition = config_typed()->getDefinition('config_test.someschema.somemodule.section_one.subsection');
+    // This should be the schema of config_test.someschema.somemodule.*.*.
+    $expected = array();
+    $expected['label'] = 'Schema multiple filesytem marker test';
+    $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
+    $expected['mapping']['id']['type'] = 'string';
+    $expected['mapping']['id']['label'] = 'ID';
+    $expected['mapping']['description']['type'] = 'text';
+    $expected['mapping']['description']['label'] = 'Description';
+
+    $this->assertEqual($definition, $expected, 'Retrieved the right metadata for config_test.someschema.somemodule.section_one.subsection');
+
+    $definition = config_typed()->getDefinition('config_test.someschema.somemodule.section_two.subsection');
+    // The other file should have the same schema.
+    $this->assertEqual($definition, $expected, 'Retrieved the right metadata for config_test.someschema.somemodule.section_two.subsection');
+
   }
 
   /**

@@ -10,6 +10,7 @@ namespace Drupal\views\Plugin\views\relationship;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Views;
 
 /**
  * Relationship handler that allows a groupwise maximum of the linked in table.
@@ -93,7 +94,7 @@ class GroupwiseMax extends RelationshipPluginBase {
     foreach ($sorts as $sort_id => $sort) {
       $sort_options[$sort_id] = "$sort[group]: $sort[title]";
     }
-    $base_table_data = drupal_container()->get('views.views_data')->get($this->definition['base']);
+    $base_table_data = Views::viewsData()->get($this->definition['base']);
 
     $form['subquery_sort'] = array(
       '#type' => 'select',
@@ -219,7 +220,7 @@ class GroupwiseMax extends RelationshipPluginBase {
     $temp_view->args[] = '**CORRELATED**';
 
     // Add the base table ID field.
-    $views_data = drupal_container()->get('views.views_data')->get($this->definition['base']);
+    $views_data = Views::viewsData()->get($this->definition['base']);
     $base_field = $views_data['table']['base']['field'];
     $temp_view->addItem('default', 'field', $this->definition['base'], $this->definition['field']);
 
@@ -341,7 +342,7 @@ class GroupwiseMax extends RelationshipPluginBase {
    */
   public function query() {
     // Figure out what base table this relationship brings to the party.
-    $table_data = drupal_container()->get('views.views_data')->get($this->definition['base']);
+    $table_data = Views::viewsData()->get($this->definition['base']);
     $base_field = empty($this->definition['base field']) ? $table_data['table']['base']['field'] : $this->definition['base field'];
 
     $this->ensureMyTable();
@@ -379,7 +380,7 @@ class GroupwiseMax extends RelationshipPluginBase {
     else {
       $id = 'subquery';
     }
-    $join = drupal_container()->get('plugin.manager.views.join')->createInstance($id, $def);
+    $join = Views::pluginManager('join')->createInstance($id, $def);
 
     // use a short alias for this:
     $alias = $def['table'] . '_' . $this->table;

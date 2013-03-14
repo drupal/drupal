@@ -13,6 +13,7 @@ use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\views\Plugin\Core\Entity\View;
+use Drupal\views\Views;
 
 /**
  * Implements hook_forms().
@@ -569,7 +570,7 @@ function views_add_contextual_links(&$render_element, $location, ViewExecutable 
     // contextual links that are intended to be displayed in the requested
     // location.
     $plugin_id = $view->displayHandlers->get($display_id)->getPluginId();
-    $plugin = drupal_container()->get('plugin.manager.views.display')->getDefinition($plugin_id);
+    $plugin = Views::pluginManager('display')->getDefinition($plugin_id);
     // If contextual_links_locations are not set, provide a sane default. (To
     // avoid displaying any contextual links at all, a display plugin can still
     // set 'contextual_links_locations' to, e.g., {""}.)
@@ -895,8 +896,8 @@ function views_library_info() {
  */
 function views_get_handler($table, $field, $type, $override = NULL) {
   // Get the plugin manager for this type.
-  $manager = drupal_container()->get("plugin.manager.views.$type");
-  $data = drupal_container()->get('views.views_data')->get($table);
+  $manager = Views::pluginManager($type);;
+  $data = Views::viewsData()->get($table);
 
   if (isset($data[$field][$type])) {
     $definition = $data[$field][$type];
@@ -950,7 +951,7 @@ function views_get_handler($table, $field, $type, $override = NULL) {
  *   A keyed array of in the form of 'base_table' => 'Description'.
  */
 function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
-  $definitions = drupal_container()->get("plugin.manager.views.$type")->getDefinitions();
+  $definitions = Views::pluginManager($type)->getDefinitions();
   $plugins = array();
 
   foreach ($definitions as $id => $plugin) {

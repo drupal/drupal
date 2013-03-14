@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\filter\FilterTest as FilterPlugin;
 
 /**
@@ -59,7 +60,7 @@ class FilterTest extends PluginTestBase {
    */
   public function testFilterQuery() {
     // Check that we can find the test filter plugin.
-    $plugin = drupal_container()->get("plugin.manager.views.filter")->createInstance('test_filter');
+    $plugin = Views::pluginManager('filter')->createInstance('test_filter');
     $this->assertTrue($plugin instanceof FilterPlugin, 'Test filter plugin found.');
 
     $view = views_get_view('test_filter');

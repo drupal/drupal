@@ -12,6 +12,7 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Database\Database;
+use Drupal\views\Views;
 
 abstract class HandlerBase extends PluginBase {
 
@@ -645,7 +646,7 @@ abstract class HandlerBase extends PluginBase {
    * @return Drupal\views\Plugin\views\join\JoinPluginBase
    */
   public static function getTableJoin($table, $base_table) {
-    $data = drupal_container()->get('views.views_data')->get($table);
+    $data = Views::viewsData()->get($table);
     if (isset($data['table']['join'][$base_table])) {
       $join_info = $data['table']['join'][$base_table];
       if (!empty($join_info['join_id'])) {
@@ -671,7 +672,7 @@ abstract class HandlerBase extends PluginBase {
         }
       }
 
-      $join = drupal_container()->get('plugin.manager.views.join')->createInstance($id, $configuration);
+      $join = Views::pluginManager('join')->createInstance($id, $configuration);
 
       return $join;
     }
@@ -690,10 +691,10 @@ abstract class HandlerBase extends PluginBase {
     // If the user has configured a relationship on the handler take that into
     // account.
     if (!empty($this->options['relationship']) && $this->options['relationship'] != 'none') {
-      $views_data = drupal_container()->get('views.views_data')->get($this->view->relationship->table);
+      $views_data = Views::viewsData()->get($this->view->relationship->table);
     }
     else {
-      $views_data = drupal_container()->get('views.views_data')->get($this->view->storage->get('base_table'));
+      $views_data = Views::viewsData()->get($this->view->storage->get('base_table'));
     }
 
     if (isset($views_data['table']['entity type'])) {

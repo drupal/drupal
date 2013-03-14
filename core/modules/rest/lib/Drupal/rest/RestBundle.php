@@ -32,5 +32,11 @@ class RestBundle extends Bundle {
 
     $container->register('access_check.rest.csrf', 'Drupal\rest\Access\CSRFAccessCheck')
       ->addTag('access_check');
+
+    $container->register('rest.link_manager', 'Drupal\rest\LinkManager\LinkManager')
+      ->addArgument(new Reference('rest.link_manager.type'))
+      ->addArgument(new Reference('rest.link_manager.relation'));
+    $container->register('rest.link_manager.type', 'Drupal\rest\LinkManager\TypeLinkManager');
+    $container->register('rest.link_manager.relation', 'Drupal\rest\LinkManager\RelationLinkManager');
   }
 }

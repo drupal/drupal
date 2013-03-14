@@ -20,5 +20,5 @@
 <h3><?php print $title; ?></h3>
 <?php print render($summary_list); ?>
 <div class="links">
-  <a href="<?php print $source_url; ?>"><?php print t('More'); ?></a>
+  <a href="<?php print $source_url; ?>"><?php print t("More<span class=\"element-invisible\"> posts about %title</span>", array('%title' => $title)); ?></a>
 </div>

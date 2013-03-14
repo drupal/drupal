@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\display;
 
+use Drupal\views\Views;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -61,7 +62,7 @@ abstract class PathPluginBase extends DisplayPluginBase {
 
     $access_plugin = $this->getPlugin('access');
     if (!isset($access_plugin)) {
-      $access_plugin = drupal_container()->get("plugin.manager.views.access")->createInstance('none');
+      $access_plugin = Views::pluginManager('access')->createInstance('none');
     }
 
     // Get access callback might return an array of the callback + the dynamic
