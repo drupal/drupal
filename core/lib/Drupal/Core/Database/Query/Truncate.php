@@ -73,6 +73,16 @@ class Truncate extends Query {
     // Create a sanitized comment string to prepend to the query.
     $comments = $this->connection->makeComment($this->comments);
 
-    return $comments . 'TRUNCATE {' . $this->connection->escapeTable($this->table) . '} ';
+    // In most cases, TRUNCATE is not a transaction safe statement as it is a
+    // DDL statement which results in an implicit COMMIT. When we are in a
+    // transaction, fallback to the slower, but transactional, DELETE.
+    // PostgreSQL also locks the entire table for a TRUNCATE strongly reducing
+    // the concurrency with other transactions.
+    if ($this->connection->inTransaction()) {
+      return $comments . 'DELETE FROM {' . $this->connection->escapeTable($this->table) . '}';
+    }
+    else {
+      return $comments . 'TRUNCATE {' . $this->connection->escapeTable($this->table) . '} ';
+    }
   }
 }
