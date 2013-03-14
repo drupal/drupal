@@ -6,12 +6,6 @@ roles:
   - administrator
 cache: '1'
 filters:
-  filter_url:
-    module: filter
-    status: '1'
-  filter_autop:
-    module: filter
-    status: '1'
   filter_htmlcorrector:
     module: filter
     status: '1'
