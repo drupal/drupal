@@ -20,8 +20,7 @@ class EditTestBase extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'entity', 'field', 'field_sql_storage', 'field_test', 'number', 'text', 'edit');
-
+  public static $modules = array('system', 'entity', 'entity_test', 'field', 'field_sql_storage', 'field_test', 'number', 'text', 'edit');
   /**
    * Sets the default field storage backend for fields created during tests.
    */
@@ -30,7 +29,7 @@ class EditTestBase extends DrupalUnitTestBase {
 
     $this->installSchema('system', 'variable');
     $this->installSchema('field', array('field_config', 'field_config_instance'));
-    $this->installSchema('field_test', 'test_entity');
+    $this->installSchema('entity_test', 'entity_test');
 
     // Set default storage backend.
     variable_set('field_storage_default', $this->default_storage);
@@ -69,8 +68,8 @@ class EditTestBase extends DrupalUnitTestBase {
     $instance = $field_name . '_instance';
     $this->$instance = array(
       'field_name' => $field_name,
-      'entity_type' => 'test_entity',
-      'bundle' => 'test_bundle',
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
       'label' => $label,
       'description' => $label,
       'weight' => mt_rand(0, 127),
@@ -83,7 +82,7 @@ class EditTestBase extends DrupalUnitTestBase {
     );
     field_create_instance($this->$instance);
 
-    entity_get_display('test_entity', 'test_bundle', 'default')
+    entity_get_display('entity_test', 'entity_test', 'default')
       ->setComponent($field_name, array(
         'label' => 'above',
         'type' => $formatter_type,

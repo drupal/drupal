@@ -79,8 +79,7 @@
       this.$formContainer
         .find('.edit-form')
         .addClass('edit-editable edit-highlighted edit-editing')
-        .attr('role', 'dialog')
-        .css('background-color', $editorElement.css('background-color'));
+        .attr('role', 'dialog');
 
       // Insert form container in DOM.
       if ($editorElement.css('display') === 'inline') {
@@ -138,6 +137,8 @@
       }
 
       Drupal.edit.util.form.unajaxifySaving(this.$formContainer.find('.edit-form-submit'));
+      // Allow form widgets to detach properly.
+      Drupal.detachBehaviors(this.$formContainer, null, 'unload');
       this.$formContainer
         .off('change.edit', ':input')
         .off('keypress.edit', 'input')

@@ -96,12 +96,12 @@ class MetadataGeneratorTest extends EditTestBase {
     );
 
     // Create an entity with values for this text field.
-    $this->entity = field_test_create_entity();
+    $this->entity = entity_create('entity_test', array());
     $this->is_new = TRUE;
-    $this->entity->{$field_1_name}[LANGUAGE_NOT_SPECIFIED] = array(array('value' => 'Test'));
-    $this->entity->{$field_2_name}[LANGUAGE_NOT_SPECIFIED] = array(array('value' => 42));
-    field_test_entity_save($this->entity);
-    $entity = entity_load('test_entity', $this->entity->ftid);
+    $this->entity->{$field_1_name}->value = 'Test';
+    $this->entity->{$field_2_name}->value = 42;
+    $this->entity->save();
+    $entity = entity_load('entity_test', $this->entity->id());
 
     // Verify metadata for field 1.
     $instance_1 = field_info_instance($entity->entityType(), $field_1_name, $entity->bundle());
@@ -110,7 +110,7 @@ class MetadataGeneratorTest extends EditTestBase {
       'access' => TRUE,
       'label' => 'Simple text field',
       'editor' => 'direct',
-      'aria' => 'Entity test_entity 1, field Simple text field',
+      'aria' => 'Entity entity_test 1, field Simple text field',
     );
     $this->assertEqual($expected_1, $metadata_1, 'The correct metadata is generated for the first field.');
 
@@ -121,7 +121,7 @@ class MetadataGeneratorTest extends EditTestBase {
       'access' => TRUE,
       'label' => 'Simple number field',
       'editor' => 'form',
-      'aria' => 'Entity test_entity 1, field Simple number field',
+      'aria' => 'Entity entity_test 1, field Simple number field',
     );
     $this->assertEqual($expected_2, $metadata_2, 'The correct metadata is generated for the second field.');
   }
@@ -164,11 +164,11 @@ class MetadataGeneratorTest extends EditTestBase {
     $full_html_format->save();
 
     // Create an entity with values for this rich text field.
-    $this->entity = field_test_create_entity();
-    $this->is_new = TRUE;
-    $this->entity->{$field_name}[LANGUAGE_NOT_SPECIFIED] = array(array('value' => 'Test', 'format' => 'full_html'));
-    field_test_entity_save($this->entity);
-    $entity = entity_load('test_entity', $this->entity->ftid);
+    $this->entity = entity_create('entity_test', array());
+    $this->entity->{$field_name}->value = 'Test';
+    $this->entity->{$field_name}->format = 'full_html';
+    $this->entity->save();
+    $entity = entity_load('entity_test', $this->entity->id());
 
     // Verify metadata.
     $instance = field_info_instance($entity->entityType(), $field_name, $entity->bundle());
@@ -177,7 +177,7 @@ class MetadataGeneratorTest extends EditTestBase {
       'access' => TRUE,
       'label' => 'Rich text field',
       'editor' => 'wysiwyg',
-      'aria' => 'Entity test_entity 1, field Rich text field',
+      'aria' => 'Entity entity_test 1, field Rich text field',
       'custom' => array(
         'format' => 'full_html'
       ),

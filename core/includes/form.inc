@@ -4837,7 +4837,7 @@ function _form_set_attributes(&$element, $class = array()) {
     $element['#attributes']['required'] = 'required';
     $element['#attributes']['aria-required'] = 'true';
   }
-  if (isset($element['#parents']) && form_get_error($element) !== NULL) {
+  if (isset($element['#parents']) && form_get_error($element) !== NULL && !empty($element['#validated'])) {
     $element['#attributes']['class'][] = 'error';
   }
 }
