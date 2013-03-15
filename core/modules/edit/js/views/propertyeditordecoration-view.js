@@ -41,8 +41,6 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
 
     this.predicate = this.editor.options.property;
 
-    this.$el.css('background-color', this._getBgColor(this.$el));
-
     // Only start listening to events as soon as we're no longer in the 'inactive' state.
     this.undelegateEvents();
   },
@@ -257,28 +255,6 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
         'margin-bottom': posProp['margin-bottom'] + 10 + 'px'
       });
     }, 0);
-  },
-
-  /**
-   * Gets the background color of an element (or the inherited one).
-   *
-   * @param $e
-   *   A DOM element.
-   */
-  _getBgColor: function($e) {
-    var c;
-
-    if ($e === null || $e[0].nodeName === 'HTML') {
-      // Fallback to white.
-      return 'rgb(255, 255, 255)';
-    }
-    c = $e.css('background-color');
-    // TRICKY: edge case for Firefox' "transparent" here; this is a
-    // browser bug: https://bugzilla.mozilla.org/show_bug.cgi?id=635724
-    if (c === 'rgba(0, 0, 0, 0)' || c === 'transparent') {
-      return this._getBgColor($e.parent());
-    }
-    return c;
   },
 
   /**

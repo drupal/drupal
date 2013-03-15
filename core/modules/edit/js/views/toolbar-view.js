@@ -29,7 +29,7 @@ Drupal.edit.views.ToolbarView = Backbone.View.extend({
     'click.edit button.label': 'onClickInfoLabel',
     'mouseleave.edit': 'onMouseLeave',
     'click.edit button.field-save': 'onClickSave',
-    'click.edit button.field-close': 'onClickClose',
+    'click.edit button.field-close': 'onClickClose'
   },
 
   /**
@@ -394,7 +394,7 @@ Drupal.edit.views.ToolbarView = Backbone.View.extend({
     })));
 
     // Insert in DOM.
-    if (this.$el.css('display') === 'inline') {
+    if (this.editor.element.css('display') === 'inline') {
       this.$el.prependTo(this.editor.element.offsetParent());
       var pos = this.editor.element.position();
       this.$el.css('left', pos.left).css('top', pos.top);

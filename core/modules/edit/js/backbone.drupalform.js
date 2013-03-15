@@ -89,11 +89,13 @@ Backbone.syncDrupalFormWidget = function(method, model, options) {
 Backbone.syncDirect = function(method, model, options) {
   if (method === 'update') {
     var fillAndSubmitForm = function(value) {
-      jQuery('#edit_backstage form')
+      var $form = jQuery('#edit_backstage form');
         // Fill in the value in any <input> that isn't hidden or a submit button.
-        .find(':input[type!="hidden"][type!="submit"]:not(select)').val(value).end()
+      $form.find(':input[type!="hidden"][type!="submit"]:not(select)')
+          // Don't mess with the node summary.
+          .not('[name$="\[summary\]"]').val(value);
         // Submit the form.
-        .find('.edit-form-submit').trigger('click.edit');
+      $form.find('.edit-form-submit').trigger('click.edit');
     };
     var entity = options.editor.options.entity;
     var predicate = options.editor.options.property;

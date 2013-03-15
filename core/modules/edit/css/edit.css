@@ -188,6 +188,7 @@
   z-index: 300;
   box-shadow: 0 0 30px 4px #4f4f4f;
   max-width: 35em;
+  background-color: white;
 }
 
 .edit-form .placeholder {
