@@ -17,7 +17,7 @@ Drupal requires:
 - A web server with PHP support, for example:
   - Apache 2.0 (or greater) (http://httpd.apache.org/).
   - Nginx 1.1 (or greater) (http://www.nginx.com/).
-- PHP 5.3.5 (or greater) (http://www.php.net/).
+- PHP 5.3.10 (or greater) (http://www.php.net/).
 - One of the following databases:
   - MySQL 5.0.15 (or greater) (http://www.mysql.com/).
   - MariaDB 5.1.44 (or greater) (http://mariadb.org/). MariaDB is a fully
