@@ -82,7 +82,10 @@ class MenuTest extends WebTestBase {
     // Verify that a change to the description is saved.
     $description = $this->randomName(16);
     $item['options']['attributes']['title']  = $description;
-    menu_link_save($item);
+    $return_value = menu_link_save($item);
+    // Save the menu link again to test the return value of the procedural save
+    // helper.
+    $this->assertIdentical($return_value, $item->save(), 'Return value of menu_link_save() is identical to the return value of $menu_link->save().');
     $saved_item = entity_load('menu_link', $item['mlid']);
     $this->assertEqual($description, $saved_item['options']['attributes']['title'], 'Saving an existing link updates the description (title attribute)');
     $this->resetMenuLink($item, $old_title);
