@@ -125,6 +125,9 @@ interface CacheBackendInterface {
    *   The cache ID of the data to store.
    * @param mixed $data
    *   The data to store in the cache.
+   *   Some storage engines only allow objects up to a maximum of 1MB in size to
+   *   be stored by default. When caching large arrays or similar, take care to
+   *   ensure $data does not exceed this size.
    * @param int $expire
    *   One of the following values:
    *   - CacheBackendInterface::CACHE_PERMANENT: Indicates that the item should
