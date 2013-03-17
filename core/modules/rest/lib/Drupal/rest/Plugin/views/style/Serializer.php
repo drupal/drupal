@@ -66,7 +66,7 @@ class Serializer extends StylePluginBase {
     // is used, $rows will not contain objects and will pass directly to the
     // Encoder.
     foreach ($this->view->result as $row) {
-      $rows[] = $this->row_plugin->render($row);
+      $rows[] = $this->view->rowPlugin->render($row);
     }
 
     return $this->serializer->serialize($rows, $this->displayHandler->getContentType());
