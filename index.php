@@ -8,10 +8,5 @@
  * See COPYRIGHT.txt and LICENSE.txt files in the "core" directory.
  */
 
-/**
- * Root directory of Drupal installation.
- */
-define('DRUPAL_ROOT', getcwd());
-
-require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
+require_once __DIR__ . '/core/includes/bootstrap.inc';
 drupal_handle_request();

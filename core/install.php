@@ -9,11 +9,6 @@
 chdir('..');
 
 /**
- * Defines the root directory of the Drupal installation.
- */
-define('DRUPAL_ROOT', getcwd());
-
-/**
  * Global flag to indicate the site is in installation mode.
  *
  * The constant is defined using define() instead of const so that PHP
@@ -32,5 +27,5 @@ if (version_compare(PHP_VERSION, '5.3.3') < 0) {
 }
 
 // Start the installer.
-require_once DRUPAL_ROOT . '/core/includes/install.core.inc';
+require_once __DIR__ . '/includes/install.core.inc';
 install_drupal();

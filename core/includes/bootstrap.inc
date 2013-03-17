@@ -327,6 +327,13 @@ const CONFIG_ACTIVE_DIRECTORY = 'active';
 const CONFIG_STAGING_DIRECTORY = 'staging';
 
 /**
+ * Defines the root directory of the Drupal installation.
+ *
+ * This strips two levels of directories off the current directory.
+ */
+define('DRUPAL_ROOT', dirname(dirname(__DIR__)));
+
+/**
  * Starts the timer with the specified name.
  *
  * If you start and stop the same timer multiple times, the measured intervals

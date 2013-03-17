@@ -24,11 +24,6 @@
 chdir('..');
 
 /**
- * Defines the root directory of the Drupal installation.
- */
-define('DRUPAL_ROOT', getcwd());
-
-/**
  * Global flag to identify update.php and authorize.php runs.
  *
  * Identifies update.php and authorize.php runs, avoiding unwanted operations
@@ -63,11 +58,11 @@ function authorize_access_allowed() {
 
 // *** Real work of the script begins here. ***
 
-require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
-require_once DRUPAL_ROOT . '/core/includes/common.inc';
-require_once DRUPAL_ROOT . '/core/includes/file.inc';
-require_once DRUPAL_ROOT . '/core/includes/module.inc';
-require_once DRUPAL_ROOT . '/core/includes/ajax.inc';
+require_once __DIR__ . '/includes/bootstrap.inc';
+require_once __DIR__ . '/includes/common.inc';
+require_once __DIR__ . '/includes/file.inc';
+require_once __DIR__ . '/includes/module.inc';
+require_once __DIR__ . '/includes/ajax.inc';
 
 // We prepare only a minimal bootstrap. This includes the database and
 // variables, however, so we have access to the class autoloader.

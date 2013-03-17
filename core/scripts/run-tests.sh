@@ -311,8 +311,7 @@ function simpletest_script_init($server_software) {
   }
 
   chdir(realpath(__DIR__ . '/../..'));
-  define('DRUPAL_ROOT', getcwd());
-  require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
+  require_once dirname(__DIR__) . '/includes/bootstrap.inc';
 }
 
 /**
