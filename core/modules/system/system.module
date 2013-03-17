@@ -3387,6 +3387,8 @@ function _system_sort_requirements($a, $b) {
  *
  * @return
  *   The form array.
+ *
+ * @deprecated Use \Drupal\Core\Form\ConfirmFormBase instead.
  */
 function confirm_form($form, $question, $path, $description = NULL, $yes = NULL, $no = NULL, $name = 'confirm') {
   $description = isset($description) ? $description : t('This action cannot be undone.');

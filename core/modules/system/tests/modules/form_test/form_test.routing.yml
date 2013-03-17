@@ -32,3 +32,17 @@ form_test.route5:
     _form: '\Drupal\form_test\SystemConfigFormTestForm'
   requirements:
     _access: 'TRUE'
+
+form_test.route6:
+  pattern: '/form-test/confirm-form'
+  defaults:
+    _form: '\Drupal\form_test\ConfirmFormTestForm'
+  requirements:
+    _access: 'TRUE'
+
+form_test.route7:
+  pattern: '/form-test/confirm-form-array-path'
+  defaults:
+    _form: '\Drupal\form_test\ConfirmFormArrayPathTestForm'
+  requirements:
+    _access: 'TRUE'

@@ -10,7 +10,7 @@ namespace Drupal\views_ui\Form;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Drupal\Core\ControllerInterface;
-use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\views\ViewStorageInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\user\TempStoreFactory;
@@ -18,7 +18,7 @@ use Drupal\user\TempStoreFactory;
 /**
  * Builds the form to break the lock of an edited view.
  */
-class BreakLockForm implements FormInterface, ControllerInterface {
+class BreakLockForm extends ConfirmFormBase implements ControllerInterface {
 
   /**
    * Stores the Entity manager.
@@ -33,6 +33,13 @@ class BreakLockForm implements FormInterface, ControllerInterface {
    * @var \Drupal\user\TempStore
    */
   protected $tempStore;
+
+  /**
+   * The view being deleted.
+   *
+   * @var \Drupal\views\ViewStorageInterface
+   */
+  protected $view;
 
   /**
    * Constructs a \Drupal\views_ui\Form\BreakLockForm object.
@@ -65,39 +72,53 @@ class BreakLockForm implements FormInterface, ControllerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * Implements \Drupal\Core\Form\ConfirmFormBase::getQuestion().
    */
-  public function buildForm(array $form, array &$form_state, ViewStorageInterface $view = NULL) {
-    $form_state['view_id'] = $view->id();
-    $locked = $this->tempStore->getMetadata($form_state['view_id']);
-
-    if (!$locked) {
-      $form['message']['#markup'] = t('There is no lock on view %name to break.', array('%name' => $form_state['view_id']));
-      return $form;
-    }
-
-    $account = $this->entityManager->getStorageController('user')->load(array($locked->owner));
-    return confirm_form($form,
-      t('Do you want to break the lock on view %name?', array('%name' => $form_state['view_id'])),
-      'admin/structure/views/view/' . $form_state['view_id'],
-      t('By breaking this lock, any unsaved changes made by !user will be lost.', array('!user' => theme('username', array('account' => reset($account))))),
-      t('Break lock'),
-      t('Cancel')
-    );
+  protected function getQuestion() {
+    return t('Do you want to break the lock on view %name?', array('%name' => $this->view->id()));
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::validateForm().
+   * Implements \Drupal\Core\Form\ConfirmFormBase::getDescription().
    */
-  public function validateForm(array &$form, array &$form_state) {
+  protected function getDescription() {
+    $locked = $this->tempStore->getMetadata($this->view->id());
+    $account = $this->entityManager->getStorageController('user')->load(array($locked->owner));
+    return t('By breaking this lock, any unsaved changes made by !user will be lost.', array('!user' => theme('username', array('account' => reset($account)))));
+  }
+
+  /**
+   * Implements \Drupal\Core\Form\ConfirmFormBase::getCancelPath().
+   */
+  protected function getCancelPath() {
+    return 'admin/structure/views/view/' . $this->view->id();
+  }
+
+  /**
+   * Implements \Drupal\Core\Form\ConfirmFormBase::getConfirmText().
+   */
+  protected function getConfirmText() {
+    return t('Break lock');
+  }
+
+  /**
+   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   */
+  public function buildForm(array $form, array &$form_state, ViewStorageInterface $view = NULL) {
+    $this->view = $view;
+    if (!$this->tempStore->getMetadata($this->view->id())) {
+      $form['message']['#markup'] = t('There is no lock on view %name to break.', array('%name' => $this->view->id()));
+      return $form;
+    }
+    return parent::buildForm($form, $form_state);
   }
 
   /**
    * Implements \Drupal\Core\Form\FormInterface::submitForm().
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->tempStore->delete($form_state['view_id']);
-    $form_state['redirect'] = 'admin/structure/views/view/' . $form_state['view_id'];
+    $this->tempStore->delete($this->view->id());
+    $form_state['redirect'] = 'admin/structure/views/view/' . $this->view->id();
     drupal_set_message(t('The lock has been broken and you may now edit this view.'));
   }
 
