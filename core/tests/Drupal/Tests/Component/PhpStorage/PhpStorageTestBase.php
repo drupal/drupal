@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\PhpStorage\PhpStorageTestBase.
+ * Definition of Drupal\Tests\Component\PhpStorage\PhpStorageTestBase.
  */
 
-namespace Drupal\system\Tests\PhpStorage;
+namespace Drupal\Tests\Component\PhpStorage;
 
-use Drupal\simpletest\UnitTestBase;
+use Drupal\Tests\UnitTestCase;
 use Drupal\Component\PhpStorage\PhpStorageFactory;
 
 /**
  * Base test for PHP storage controllers.
  */
-abstract class PhpStorageTestBase extends UnitTestBase {
+abstract class PhpStorageTestBase extends UnitTestCase {
 
   /**
    * The storage factory object.
@@ -23,7 +23,7 @@ abstract class PhpStorageTestBase extends UnitTestBase {
   protected $storageFactory;
 
   /**
-   * Overrides \Drupal\simpletest\UnitTestBase::setUp()
+   * Overrides \Drupal\Tests\UnitTestCase::setUp()
    */
   function setUp() {
     parent::setUp();
@@ -44,21 +44,21 @@ abstract class PhpStorageTestBase extends UnitTestBase {
     // Write out a PHP file and ensure it's successfully loaded.
     $code = "<?php\n\$GLOBALS[$random] = TRUE;";
     $success = $php->save($name, $code);
-    $this->assertIdentical($success, TRUE);
+    $this->assertSame($success, TRUE);
     $php->load($name);
     $this->assertTrue($GLOBALS[$random]);
 
     // If the file was successfully loaded, it must also exist, but ensure the
     // exists() method returns that correctly.
-    $this->assertIdentical($php->exists($name), TRUE);
+    $this->assertSame($php->exists($name), TRUE);
 
     // Delete the file, and then ensure exists() returns FALSE.
     $success = $php->delete($name);
-    $this->assertIdentical($success, TRUE);
-    $this->assertIdentical($php->exists($name), FALSE);
+    $this->assertSame($success, TRUE);
+    $this->assertSame($php->exists($name), FALSE);
 
     // Ensure delete() can be called on a non-existing file. It should return
     // FALSE, but not trigger errors.
-    $this->assertIdentical($php->delete($name), FALSE);
+    $this->assertSame($php->delete($name), FALSE);
   }
 }

@@ -170,10 +170,8 @@ function update_menu() {
   );
   $items['admin/reports/updates/settings'] = array(
     'title' => 'Settings',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('update_settings'),
+    'route_name' => 'update_settings',
     'access arguments' => array('administer site configuration'),
-    'file' => 'update.settings.inc',
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
   );

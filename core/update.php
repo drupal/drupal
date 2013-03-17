@@ -21,11 +21,6 @@ use Symfony\Component\DependencyInjection\Reference;
 // Change the directory to the Drupal root.
 chdir('..');
 
-/**
- * Defines the root directory of the Drupal installation.
- */
-define('DRUPAL_ROOT', getcwd());
-
 // Exit early if an incompatible PHP version would cause fatal errors.
 // The minimum version is specified explicitly, as DRUPAL_MINIMUM_PHP is not
 // yet available. It is defined in bootstrap.inc, but it is not possible to
@@ -404,12 +399,12 @@ ini_set('display_errors', FALSE);
 
 // We prepare a minimal bootstrap for the update requirements check to avoid
 // reaching the PHP memory limit.
-require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
-require_once DRUPAL_ROOT . '/core/includes/update.inc';
-require_once DRUPAL_ROOT . '/core/includes/common.inc';
-require_once DRUPAL_ROOT . '/core/includes/file.inc';
-require_once DRUPAL_ROOT . '/core/includes/unicode.inc';
-require_once DRUPAL_ROOT . '/core/includes/schema.inc';
+require_once __DIR__ . '/includes/bootstrap.inc';
+require_once __DIR__ . '/includes/update.inc';
+require_once __DIR__ . '/includes/common.inc';
+require_once __DIR__ . '/includes/file.inc';
+require_once __DIR__ . '/includes/unicode.inc';
+require_once __DIR__ . '/includes/schema.inc';
 update_prepare_d8_bootstrap();
 
 // Determine if the current user has access to run update.php.

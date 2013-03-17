@@ -1,0 +1,6 @@
+menu_settings:
+  pattern: '/admin/structure/menu/settings'
+  defaults:
+    _form: 'Drupal\menu\MenuSettingsForm'
+  requirements:
+    _permission: 'administer menu'

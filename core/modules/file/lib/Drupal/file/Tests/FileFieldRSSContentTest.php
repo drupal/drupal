@@ -12,6 +12,13 @@ namespace Drupal\file\Tests;
  */
 class FileFieldRSSContentTest extends FileFieldTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'views');
+
   public static function getInfo() {
     return array(
       'name' => 'File field RSS content',

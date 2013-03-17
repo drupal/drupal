@@ -257,7 +257,7 @@ function install_begin_request(&$install_state) {
   }
 
   // Allow command line scripts to override server variables used by Drupal.
-  require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
+  require_once __DIR__ . '/bootstrap.inc';
 
   if (!$install_state['interactive']) {
     drupal_override_server_variables($install_state['server']);

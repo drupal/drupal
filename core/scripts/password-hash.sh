@@ -79,9 +79,9 @@ while ($param = array_shift($_SERVER['argv'])) {
 }
 
 chdir('..');
-define('DRUPAL_ROOT', getcwd());
-
-include_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
+$core = dirname(__DIR__);
+include_once $core . '/includes/password.inc';
+include_once $core . '/includes/bootstrap.inc';
 
 $password_hasher = drupal_container()->get('password');
 

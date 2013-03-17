@@ -92,12 +92,10 @@ function menu_menu() {
   );
   $items['admin/structure/menu/settings'] = array(
     'title' => 'Settings',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('menu_configure'),
+    'route_name' => 'menu_settings',
     'access arguments' => array('administer menu'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 100,
-    'file' => 'menu.admin.inc',
   );
   $items['admin/structure/menu/manage/%menu'] = array(
     'title' => 'Edit menu',

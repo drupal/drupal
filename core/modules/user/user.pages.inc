@@ -131,7 +131,13 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
           drupal_goto('user/' . $user->uid . '/edit', array('query' => array('pass-reset-token' => $token)));
         }
         else {
-          $form['message'] = array('#markup' => t('<p>This is a one-time login for %user_name and will expire on %expiration_date.</p><p>Click on this button to log in to the site and change your password.</p>', array('%user_name' => $account->name, '%expiration_date' => format_date($timestamp + $timeout))));
+          if (!$account->login) {
+            // No expiration for first time login.
+            $form['message'] = array('#markup' => t('<p>This is a one-time login for %user_name.</p><p>Click on this button to log in to the site and change your password.</p>', array('%user_name' => $account->name)));
+          }
+          else {
+            $form['message'] = array('#markup' => t('<p>This is a one-time login for %user_name and will expire on %expiration_date.</p><p>Click on this button to log in to the site and change your password.</p>', array('%user_name' => $account->name, '%expiration_date' => format_date($timestamp + $timeout))));
+          }
           $form['help'] = array('#markup' => '<p>' . t('This login can be used only once.') . '</p>');
           $form['actions'] = array('#type' => 'actions');
           $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Log in'));

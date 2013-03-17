@@ -7,14 +7,14 @@
 
 namespace Drupal\system\Tests\TypedData;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 use DateInterval;
 
 /**
  * Tests primitive data types.
  */
-class TypedDataTest extends WebTestBase {
+class TypedDataTest extends DrupalUnitTestBase {
 
   /**
    * The typed data manager to use.
@@ -22,6 +22,13 @@ class TypedDataTest extends WebTestBase {
    * @var \Drupal\Core\TypedData\TypedDataManager
    */
   protected $typedData;
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('system', 'file');
 
   public static function getInfo() {
     return array(
@@ -33,7 +40,28 @@ class TypedDataTest extends WebTestBase {
 
   public function setUp() {
     parent::setup();
+
+    $this->installSchema('file', array('file_managed', "file_usage"));
     $this->typedData = typed_data();
+  }
+
+  /**
+   * Creates a typed data object and executes some basic assertions.
+   *
+   * @see Drupal\Core\TypedData\TypedDataManager::create().
+   */
+  protected function createTypedData($definition, $value = NULL, $name = NULL) {
+    // Save the type that was passed in so we can compare with it later.
+    $type = $definition['type'];
+    // Construct the object.
+    $data = typed_data()->create($definition, $value, $name);
+    // Assert the definition of the wrapper.
+    $this->assertTrue($data instanceof \Drupal\Core\TypedData\TypedDataInterface, 'Typed data object is an instance of the typed data interface.');
+    $definition = $data->getDefinition();
+    $this->assertTrue(!empty($definition['type']), format_string('!type data definition was returned.', array('!type' => $definition['type'])));
+    // Assert that the correct type was constructed.
+    $this->assertEqual($data->getType(), $type, format_string('!type object returned type.', array('!type' => $definition['type'])));
+    return $data;
   }
 
   /**
@@ -160,8 +188,16 @@ class TypedDataTest extends WebTestBase {
     $typed_data->setValue('invalid');
     $this->assertEqual($typed_data->validate()->count(), 1, 'Validation detected invalid value.');
 
+
     // Generate some files that will be used to test the binary data type.
-    $files = $this->drupalGetTestFiles('image');
+    $files = array();
+    for ($i = 0; $i < 3; $i++){
+      $path = "public://example_$i.png";
+      file_unmanaged_copy(DRUPAL_ROOT . '/core/misc/druplicon.png', $path);
+      $image = entity_create('file', array('uri' => $path));
+      $image->save();
+      $files[] = $image;
+    }
 
     // Email type.
     $value = $this->randomString();
