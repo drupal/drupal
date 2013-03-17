@@ -1,4 +1,4 @@
-# Schema for configuration files of the menu module.
+# Schema for configuration files of the Menu module.
 
 menu.settings:
   type: mapping
@@ -13,17 +13,3 @@ menu.settings:
     override_parent_selector:
       type: boolean
       label: 'Override parent selector'
-
-menu.menu.*:
-  type: mapping
-  label: 'Menu'
-  mapping:
-    id:
-      type: string
-      label: 'Menu identifier'
-    label:
-      type: string
-      label: 'Menu label'
-    description:
-      type: text
-      label: 'Menu description'
