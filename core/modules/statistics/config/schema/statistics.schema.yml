@@ -1,0 +1,36 @@
+# Schema for the configuration files of the statistics module.
+
+statistics.settings:
+  type: mapping
+  label: 'Statistics settings'
+  mapping:
+    access_log:
+      type: mapping
+      label: 'Access log settings'
+      mapping:
+        enabled:
+          type: boolean
+          label: 'Enable'
+        max_lifetime:
+          type: integer
+          label: 'Maximum lifetime'
+    count_content_views:
+      type: integer
+      label: 'Count content views'
+    block:
+      type: mapping
+      label: 'Block settings'
+      mapping:
+        popular:
+          type: mapping
+          label: 'Popular content block'
+          mapping:
+            top_day_limit:
+              type: integer
+              label: 'Number of day''s top views to display'
+            top_all_limit:
+              type: integer
+              label: 'Number of all time views to display'
+            top_recent_limit:
+              type: integer
+              label: 'Number of most recent views to display'
