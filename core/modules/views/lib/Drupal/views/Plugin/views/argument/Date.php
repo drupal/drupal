@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Database\Database;
 
 /**
  * Abstract argument handler for dates.

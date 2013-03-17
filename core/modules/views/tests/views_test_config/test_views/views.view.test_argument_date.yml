@@ -1,0 +1,105 @@
+base_table: views_test_data
+core: '8'
+description: ''
+status: '1'
+display:
+  default:
+    display_options:
+      defaults:
+        fields: '0'
+        pager: '0'
+        pager_options: '0'
+        sorts: '0'
+      arguments:
+        node_created_fulldate:
+          field: node_created_fulldate
+          id: node_created_fulldate
+          table: views_test_data
+          plugin_id: node_created_fulldate
+      fields:
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+      pager:
+        options:
+          offset: '0'
+        type: none
+      pager_options: {  }
+      sorts:
+        id:
+          field: id
+          id: id
+          order: ASC
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+  embed_1:
+    display_options:
+      defaults:
+        arguments: '0'
+      arguments:
+        node_created_day:
+          field: node_created_day
+          id: node_created_day
+          table: views_test_data
+          plugin_id: node_created_day
+    display_plugin: embed
+    id: embed_1
+  embed_2:
+    display_options:
+      defaults:
+        arguments: '0'
+      arguments:
+        node_created_month:
+          field: node_created_month
+          id: node_created_month
+          table: views_test_data
+          plugin_id: node_created_month
+    display_plugin: embed
+    id: embed_2
+  embed_3:
+    display_options:
+      defaults:
+        arguments: '0'
+      arguments:
+        node_created_week:
+          field: node_created_week
+          id: node_created_week
+          table: views_test_data
+          plugin_id: node_created_week
+    display_plugin: embed
+    id: embed_3
+  embed_4:
+    display_options:
+      defaults:
+        arguments: '0'
+      arguments:
+        node_created_year:
+          field: node_created_year
+          id: node_created_year
+          table: views_test_data
+          plugin_id: node_created_year
+    display_plugin: embed
+    id: embed_4
+  embed_5:
+    display_options:
+      defaults:
+        arguments: '0'
+      arguments:
+        node_created_year_month:
+          field: node_created_year_month
+          id: node_created_year_month
+          table: views_test_data
+          plugin_id: node_created_year_month
+    display_plugin: embed
+    id: embed_5
+human_name: ''
+id: test_argument_date
+tag: ''
