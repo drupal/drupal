@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\PhpStorage\MTimeProtectedFileStorageTest.
+ * Definition of Drupal\Tests\Component\PhpStorage\MTimeProtectedFileStorageTest.
  */
 
-namespace Drupal\system\Tests\PhpStorage;
+namespace Drupal\Tests\Component\PhpStorage;
 
 /**
  * Tests the directory mtime based PHP loader implementation.

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\PhpStorage\FileStorageTest.
+ * Definition of Drupal\Tests\Component\PhpStorage\FileStorageTest.
  */
 
-namespace Drupal\system\Tests\PhpStorage;
+namespace Drupal\Tests\Component\PhpStorage;
 
 /**
  * Tests the simple file storage.
@@ -23,7 +23,7 @@ class FileStorageTest extends PhpStorageTestBase {
   function setUp() {
     global $conf;
     parent::setUp();
-    $dir_path = DRUPAL_ROOT . '/' . $this->public_files_directory . '/php';
+    $dir_path = sys_get_temp_dir() . '/php';
     $conf['php_storage']['simpletest'] = array(
       'class' => 'Drupal\Component\PhpStorage\FileStorage',
       'directory' => $dir_path,
@@ -41,7 +41,7 @@ class FileStorageTest extends PhpStorageTestBase {
    */
   function testCRUD() {
     $php = $this->storageFactory->get('simpletest');
-    $this->assertIdentical(get_class($php), 'Drupal\Component\PhpStorage\FileStorage');
+    $this->assertInstanceOf('Drupal\Component\PhpStorage\FileStorage', $php);
     $this->assertCRUD($php);
   }
 
@@ -60,14 +60,14 @@ class FileStorageTest extends PhpStorageTestBase {
     // Write out a PHP file and ensure it's successfully loaded.
     $code = "<?php\n\$GLOBALS[$random] = TRUE;";
     $success = $php->save($name, $code);
-    $this->assertIdentical($success, TRUE);
+    $this->assertSame($success, TRUE);
     $php_read = $this->storageFactory->get('readonly');
     $php_read->load($name);
     $this->assertTrue($GLOBALS[$random]);
 
     // If the file was successfully loaded, it must also exist, but ensure the
     // exists() method returns that correctly.
-    $this->assertIdentical($php_read->exists($name), TRUE);
+    $this->assertSame($php_read->exists($name), TRUE);
     // Saving and deleting should always fail.
     $this->assertFalse($php_read->save($name, $code));
     $this->assertFalse($php_read->delete($name));
