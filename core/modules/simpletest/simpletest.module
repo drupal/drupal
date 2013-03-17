@@ -47,12 +47,10 @@ function simpletest_menu() {
   );
   $items['admin/config/development/testing/settings'] = array(
     'title' => 'Settings',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('simpletest_settings_form'),
+    'route_name' => 'simpletest_settings',
     'access arguments' => array('administer unit tests'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 100,
-    'file' => 'simpletest.pages.inc',
   );
   $items['admin/config/development/testing/results/%'] = array(
     'title' => 'Test result',
