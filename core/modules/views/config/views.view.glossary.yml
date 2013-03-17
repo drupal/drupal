@@ -1,12 +1,8 @@
-langcode: en
-status: '0'
-module: node
-id: glossary
-description: 'A list of all content, by letter.'
-tag: default
+base_field: nid
 base_table: node
-human_name: Glossary
 core: '8'
+description: 'A list of all content, by letter.'
+status: '0'
 display:
   default:
     id: default
@@ -17,8 +13,8 @@ display:
       query:
         type: views_query
         options:
-          query_comment: false
-      use_ajax: true
+          query_comment: '0'
+      use_ajax: '1'
       access:
         type: none
       cache:
@@ -28,20 +24,20 @@ display:
       pager:
         type: mini
         options:
-          items_per_page: 36
+          items_per_page: '36'
       fields:
         title:
           id: title
           table: node
           field: title
-          link_to_node: 1
+          link_to_node: '1'
           plugin_id: node
         name:
           id: name
           table: users
           field: name
           label: Author
-          link_to_user: 1
+          link_to_user: '1'
           relationship: uid
           plugin_id: user_name
         changed:
@@ -58,18 +54,18 @@ display:
           field: title
           default_action: default
           exception:
-            title_enable: 1
+            title_enable: '1'
           default_argument_type: fixed
           default_argument_options:
             argument: a
           summary:
             format: default_summary
-          specify_validation: 1
-          glossary: 1
+          specify_validation: '1'
+          glossary: '1'
           limit: '1'
           case: upper
           path_case: lower
-          transform_dash: 0
+          transform_dash: '0'
           plugin_id: string
       relationships:
         uid:
@@ -87,16 +83,16 @@ display:
           default: title
           info:
             title:
-              sortable: 1
+              sortable: '1'
               separator: ''
             name:
-              sortable: 1
+              sortable: '1'
               separator: ''
             changed:
-              sortable: 1
+              sortable: '1'
               separator: ''
-          override: 1
-          sticky: 0
+          override: '1'
+          sticky: '0'
   page_1:
     id: page_1
     display_title: Page
@@ -125,7 +121,7 @@ display:
         options:
           offset: '0'
       defaults:
-        arguments: false
+        arguments: '0'
       arguments:
         title:
           id: title
@@ -133,7 +129,7 @@ display:
           field: title
           default_action: summary
           exception:
-            title_enable: 1
+            title_enable: '1'
           default_argument_type: fixed
           default_argument_options:
             argument: a
@@ -141,16 +137,21 @@ display:
             format: unformatted_summary
           summary_options:
             items_per_page: '25'
-            inline: 1
+            inline: '1'
             separator: ' | '
-          specify_validation: 1
-          glossary: 1
+          specify_validation: '1'
+          glossary: '1'
           limit: '1'
           case: upper
           path_case: lower
-          transform_dash: 0
+          transform_dash: '0'
           plugin_id: string
       displays:
         default: default
         page: page_1
-      inherit_arguments: 0
+      inherit_arguments: '0'
+human_name: Glossary
+module: node
+id: glossary
+tag: default
+langcode: en

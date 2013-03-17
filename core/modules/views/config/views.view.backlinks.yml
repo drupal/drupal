@@ -1,12 +1,8 @@
-langcode: en
-status: '0'
-module: search
-id: backlinks
-description: 'A list of other content items which have a link to the content item.'
-tag: default
+base_field: nid
 base_table: node
-human_name: Backlinks
 core: '8'
+description: 'A list of other content items which have a link to the content item.'
+status: '0'
 display:
   default:
     id: default
@@ -17,7 +13,7 @@ display:
       query:
         type: views_query
         options:
-          query_comment: false
+          query_comment: '0'
       access:
         type: none
       cache:
@@ -27,13 +23,13 @@ display:
       pager:
         type: mini
         options:
-          items_per_page: 30
+          items_per_page: '30'
       empty:
         text:
           id: area
           table: views
           field: area
-          empty: false
+          empty: '0'
           content: 'No backlinks found.'
           format: '1'
           plugin_id: text
@@ -43,7 +39,7 @@ display:
           table: node
           field: title
           label: ''
-          link_to_node: 1
+          link_to_node: '1'
           plugin_id: node
       arguments:
         nid:
@@ -51,12 +47,12 @@ display:
           table: search_node_links_to
           field: nid
           default_action: 'not found'
-          title_enable: 1
+          title_enable: '1'
           title: 'Pages that link to %1'
           default_argument_type: fixed
           summary:
             format: default_summary
-          specify_validation: 1
+          specify_validation: '1'
           validate:
             type: node
       filters:
@@ -64,10 +60,10 @@ display:
           id: status
           table: node
           field: status
-          value: 1
-          group: 0
+          value: '1'
+          group: '0'
           expose:
-            operator: false
+            operator: '0'
           plugin_id: boolean
       style:
         type: html_list
@@ -99,28 +95,33 @@ display:
         type: views_query
         options: {  }
         defaults:
-          use_more: false
-          style_plugin: false
-          style_options: false
-          row_plugin: false
-          row_options: false
-          arguments: false
-      use_more: true
+          use_more: '0'
+          style_plugin: '0'
+          style_options: '0'
+          row_plugin: '0'
+          row_options: '0'
+          arguments: '0'
+      use_more: '1'
       arguments:
         nid:
           id: nid
           table: search_node_links_to
           field: nid
           default_action: default
-          title_enable: 1
+          title_enable: '1'
           title: 'What links here'
           default_argument_type: node
           summary:
             format: default_summary
-          specify_validation: 1
+          specify_validation: '1'
           validate:
             type: node
       style:
         type: html_list
       row:
         type: fields
+human_name: Backlinks
+module: search
+id: backlinks
+tag: default
+langcode: en

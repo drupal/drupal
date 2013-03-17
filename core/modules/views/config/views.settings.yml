@@ -1,4 +1,4 @@
-display_extenders: { }
+display_extenders: {  }
 no_javascript: '0'
 skip_cache: '0'
 sql_signature: '0'
@@ -11,12 +11,12 @@ ui:
     preview_information: '1'
     sql_query:
       enabled: '0'
-      where: 'above'
+      where: above
     display_embed: '0'
-  custom_theme: '_default'
+  custom_theme: _default
   always_live_preview: '1'
   always_live_preview_button: '1'
-  exposed_filter_any_label: 'new_any'
+  exposed_filter_any_label: new_any
 field_rewrite_elements:
   div: DIV
   span: SPAN

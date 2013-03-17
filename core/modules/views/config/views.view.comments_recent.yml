@@ -1,12 +1,8 @@
-langcode: en
-status: '0'
-module: comment
-id: comments_recent
-description: 'A block and a page with recent comments.'
-tag: default
+base_field: cid
 base_table: comment
-human_name: 'Recent comments'
 core: '8'
+description: 'A block and a page with recent comments.'
+status: '0'
 display:
   default:
     id: default
@@ -17,9 +13,9 @@ display:
       query:
         type: views_query
         options:
-          query_comment: false
+          query_comment: '0'
       title: 'Recent comments'
-      use_more: true
+      use_more: '1'
       access:
         type: none
       cache:
@@ -29,7 +25,7 @@ display:
       pager:
         type: some
         options:
-          items_per_page: 5
+          items_per_page: '5'
       relationships:
         nid:
           id: nid
@@ -42,7 +38,7 @@ display:
           table: comment
           field: subject
           label: ''
-          link_to_comment: 1
+          link_to_comment: '1'
           plugin_id: comment
         timestamp:
           id: timestamp
@@ -64,7 +60,7 @@ display:
           table: node
           field: status_extra
           relationship: nid
-          group: 0
+          group: '0'
           plugin_id: node_status
       style:
         type: html_list
@@ -80,11 +76,11 @@ display:
         type: views_query
         options: {  }
       defaults:
-        style_plugin: false
-        style_options: false
-        row_plugin: false
-        row_options: false
-        fields: false
+        style_plugin: '0'
+        style_options: '0'
+        row_plugin: '0'
+        row_options: '0'
+        fields: '0'
       fields:
         title:
           id: title
@@ -92,7 +88,7 @@ display:
           field: title
           relationship: nid
           label: 'Reply to'
-          link_to_node: 1
+          link_to_node: '1'
           plugin_id: node
         timestamp:
           id: timestamp
@@ -106,7 +102,7 @@ display:
           table: comment
           field: subject
           label: ''
-          link_to_comment: 1
+          link_to_comment: '1'
           plugin_id: comment
         comment:
           id: comment
@@ -133,3 +129,8 @@ display:
       query:
         type: views_query
         options: {  }
+human_name: 'Recent comments'
+module: comment
+id: comments_recent
+tag: default
+langcode: en
