@@ -1,12 +1,8 @@
-langcode: en
-status: '0'
-module: node
-id: tracker
-description: 'Shows all new activity on the system.'
-tag: default
+base_field: nid
 base_table: node
-human_name: Tracker
 core: '8'
+description: 'Shows all new activity on the system.'
+status: '0'
 display:
   default:
     id: default
@@ -17,7 +13,7 @@ display:
       query:
         type: views_query
         options:
-          query_comment: false
+          query_comment: '0'
       title: 'Recent posts'
       access:
         type: none
@@ -70,17 +66,17 @@ display:
           table: history
           field: timestamp
           label: ''
-          link_to_node: 0
-          comments: 1
+          link_to_node: '0'
+          comments: '1'
           plugin_id: node_history_user_timestamp
         new_comments:
           id: new_comments
           table: node
           field: new_comments
           label: ''
-          hide_empty: true
+          hide_empty: '1'
           suffix: ' new'
-          link_to_comment: 1
+          link_to_comment: '1'
           plugin_id: node_new_comments
       sorts:
         last_comment_timestamp:
@@ -94,13 +90,13 @@ display:
           table: node
           field: uid_touch
           exception:
-            title_enable: 1
-          title_enable: 1
+            title_enable: '1'
+          title_enable: '1'
           title: 'Recent posts for %1'
           default_argument_type: fixed
           summary:
             format: default_summary
-          specify_validation: 1
+          specify_validation: '1'
           plugin_id: argument_comment_user_uid
       filters:
         status:
@@ -108,9 +104,9 @@ display:
           table: node
           field: status
           value: '1'
-          group: 0
+          group: '0'
           expose:
-            operator: false
+            operator: '0'
           plugin_id: boolean
       style:
         type: table
@@ -126,25 +122,25 @@ display:
           default: last_comment_timestamp
           info:
             type:
-              sortable: 1
+              sortable: '1'
               separator: ''
             title:
-              sortable: 1
+              sortable: '1'
               separator: '&nbsp;'
             name:
-              sortable: 1
+              sortable: '1'
               separator: ''
             comment_count:
-              sortable: 1
+              sortable: '1'
               separator: '<br />'
             last_comment_timestamp:
-              sortable: 1
+              sortable: '1'
               separator: '&nbsp;'
             timestamp:
               separator: ''
             new_comments:
               separator: ''
-          override: 1
+          override: '1'
           order: desc
   page_1:
     id: page_1
@@ -159,3 +155,8 @@ display:
       menu:
         type: normal
         title: 'Recent posts'
+human_name: Tracker
+module: node
+id: tracker
+tag: default
+langcode: en

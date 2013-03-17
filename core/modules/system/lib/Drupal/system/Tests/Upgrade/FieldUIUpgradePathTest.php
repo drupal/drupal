@@ -66,7 +66,7 @@ class FieldUIUpgradePathTest extends UpgradePathTestBase {
     $role_permissions = user_role_permissions(array($this->normal_role_id => $this->normal_role_name, $this->admin_role_id => $this->admin_role_name));
     foreach ($permissions as $old_permission => $new_permissions) {
       $this->assertFalse(isset($role_permissions[$this->normal_role_id][$old_permission]), format_string('%role_name does not have the old %permission permission', array('%role_name' => $this->normal_role_name, '%permission' => $old_permission)));
-      $this->assertFalse(isset($role_permissions[$this->admin_role_id][$old_permission]), format_string('%role_name does not have the old %permission permission', array('%role_name' => $this->admin_role_name, '%permission' => $old_permission)));
+      $this->assertTrue(isset($role_permissions[$this->admin_role_id][$old_permission]), format_string('%role_name still has the old %permission permission', array('%role_name' => $this->admin_role_name, '%permission' => $old_permission)));
       foreach ($new_permissions as $new_permission) {
         $this->assertFalse(isset($role_permissions[$this->normal_role_id][$new_permission]), format_string('%role_name does not have the new %permission permission', array('%role_name' => $this->normal_role_name, '%permission' => $new_permission)));
         $this->assertTrue(isset($role_permissions[$this->admin_role_id][$new_permission]), format_string('%role_name has the new %permission permission', array('%role_name' => $this->admin_role_name, '%permission' => $new_permission)));

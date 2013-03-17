@@ -63,6 +63,8 @@ class ConfigContext implements ContextInterface {
    * Implements \Drupal\Core\Config\Context\ContextInterface::init().
    */
   public function init() {
+    // Reset existing overrides and get a UUID for this context.
+    $this->overrides = array();
     $this->setUuid();
     // Notify event listeners that a configuration context has been created.
     $this->notify('context', NULL);

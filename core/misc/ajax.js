@@ -126,15 +126,6 @@ Drupal.ajax = function (base, element, element_settings) {
     this.wrapper = '#' + this.wrapper;
   }
 
-  // For Ajax responses that are wanted in a dialog, use the needed method.
-  // If wanted in a modal dialog, also use the needed wrapper.
-  if (this.dialog) {
-    this.method = 'html';
-    if (this.dialog.modal) {
-      this.wrapper = '#drupal-modal';
-    }
-  }
-
   this.element = element;
   this.element_settings = element_settings;
 
@@ -561,19 +552,6 @@ Drupal.ajax.prototype.commands = {
     // Add the new content to the page.
     wrapper[method](new_content);
 
-    // If the requesting object wanted the response in a dialog, open that
-    // dialog. However, a single server response can include multiple insert
-    // commands (e.g., one for the primary content and another one for status
-    // messages), but we only want to open the dialog once, so we assume that
-    // only commands with a title property are dialog eligible.
-    // @todo Consider whether this is overloading title inappropriately, and
-    //   if so, find another way to determine dialog eligibility.
-    if (ajax.dialog && ('title' in response)) {
-      var dialogOptions = $.extend({title: response.title}, ajax.dialog);
-      var dialog = Drupal.dialog(wrapper, dialogOptions);
-      ajax.dialog.modal ? dialog.showModal() : dialog.show();
-    }
-
     // Immediately hide the new content if we're using any effects.
     if (effect.showEffect !== 'show') {
       new_content.hide();
@@ -626,6 +604,13 @@ Drupal.ajax.prototype.commands = {
    */
   alert: function (ajax, response, status) {
     window.alert(response.text, response.title);
+  },
+
+  /**
+   * Command to set the window.location, redirecting the browser.
+   */
+  redirect: function (ajax, response, status) {
+    window.location = response.url;
   },
 
   /**

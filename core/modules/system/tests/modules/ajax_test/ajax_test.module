@@ -6,6 +6,9 @@
  */
 
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\OpenDialogCommand;
+use Drupal\Core\Ajax\OpenModalDialogCommand;
+use Drupal\Core\Ajax\CloseDialogCommand;
 use Drupal\Core\Ajax\HtmlCommand;
 
 /**
@@ -31,11 +34,6 @@ function ajax_test_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
-  $items['ajax-test/link'] = array(
-    'title' => 'AJAX Link',
-    'page callback' => 'ajax_test_link',
-    'access callback' => TRUE,
-  );
   $items['ajax-test/dialog'] = array(
     'title' => 'AJAX Dialog',
     'page callback' => 'ajax_test_dialog',
@@ -45,6 +43,12 @@ function ajax_test_menu() {
     'title' => 'AJAX Dialog contents',
     'page callback' => 'ajax_test_dialog_contents',
     'access callback' => TRUE,
+  );
+  $items['ajax-test/dialog-close'] = array(
+    'title' => 'AJAX Dialog close',
+    'page callback' => 'ajax_test_dialog_close',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
   );
   return $items;
 }
@@ -102,21 +106,6 @@ function ajax_test_error() {
 }
 
 /**
- * Menu callback: Renders a #type link with #ajax.
- */
-function ajax_test_link() {
-  $build['link'] = array(
-    '#type' => 'link',
-    '#title' => 'Show help',
-    '#href' => 'filter/tips',
-    '#ajax' => array(
-      'wrapper' => 'block-system-main',
-    ),
-  );
-  return $build;
-}
-
-/**
  * Menu callback: Renders a form elements and links with #ajax['dialog'].
  */
 function ajax_test_dialog() {
@@ -131,10 +120,8 @@ function ajax_test_dialog() {
   $build['link'] = array(
     '#type' => 'link',
     '#title' => 'Link 1 (modal)',
-    '#href' => 'ajax-test/dialog-contents',
-    '#ajax' => array(
-      'dialog' => array('modal' => TRUE),
-    ),
+    '#href' => 'ajax-test/dialog-contents/nojs/1',
+    '#attributes' => array('class' => array('use-ajax')),
   );
 
   // Dialog behavior applied to links rendered by theme_links().
@@ -143,18 +130,18 @@ function ajax_test_dialog() {
     '#links' => array(
       'link2' => array(
         'title' => 'Link 2 (modal)',
-        'href' => 'ajax-test/dialog-contents',
-        'ajax' => array(
-          'dialog' => array('modal' => TRUE),
-         ),
+        'href' => 'ajax-test/dialog-contents/nojs/1',
+        'attributes' => array('class' => array('use-ajax')),
       ),
       'link3' => array(
         'title' => 'Link 3 (non-modal)',
-        'href' => 'ajax-test/dialog-contents',
-        'ajax' => array(
-          'dialog' => array(),
-          'wrapper' => 'ajax-test-dialog-wrapper-2',
-        ),
+        'href' => 'ajax-test/dialog-contents/nojs',
+        'attributes' => array('class' => array('use-ajax')),
+      ),
+      'link4' => array(
+        'title' => 'Link 4 (close non-modal if open)',
+        'href' => 'ajax-test/dialog-close',
+        'attributes' => array('class' => array('use-ajax')),
       ),
     ),
   );
@@ -167,35 +154,50 @@ function ajax_test_dialog() {
 function ajax_test_dialog_form($form, &$form_state) {
   $form['button1'] = array(
     '#type' => 'submit',
+    '#name' => 'button1',
     '#value' => 'Button 1 (modal)',
     '#ajax' => array(
-      'dialog' => array('modal' => TRUE),
+      'callback' => 'ajax_test_dialog_form_callback_modal',
     ),
   );
   $form['button2'] = array(
     '#type' => 'submit',
+    '#name' => 'button2',
     '#value' => 'Button 2 (non-modal)',
     '#ajax' => array(
-      'dialog' => array(),
-      'wrapper' => 'ajax-test-dialog-wrapper-1',
+      'callback' => 'ajax_test_dialog_form_callback_nonmodal',
     ),
   );
   return $form;
 }
 
 /**
- * Form submit handler for ajax_test_dialog_form().
+ * Non-AJAX behavior of the dialog buttons.
  */
 function ajax_test_dialog_form_submit($form, &$form_state) {
   $form_state['redirect'] = 'ajax-test/dialog-contents';
 }
 
 /**
+ * AJAX callback handler for ajax_test_dialog_form().
+ */
+function ajax_test_dialog_form_callback_modal($form, &$form_state) {
+  return ajax_test_dialog_contents('ajax', TRUE);
+}
+
+/**
+ * AJAX callback handler for ajax_test_dialog_form().
+ */
+function ajax_test_dialog_form_callback_nonmodal($form, &$form_state) {
+  return ajax_test_dialog_contents('ajax', FALSE);
+}
+
+/**
  * Menu callback: Returns the contents for dialogs opened by ajax_test_dialog().
  */
-function ajax_test_dialog_contents() {
+function ajax_test_dialog_contents($page_mode = 'nojs', $is_modal = 0) {
   // This is a regular render array; the keys do not have special meaning.
-  return array(
+  $content = array(
     'content' => array(
       '#markup' => 'Example message',
     ),
@@ -210,5 +212,30 @@ function ajax_test_dialog_contents() {
       ),
     ),
   );
+
+  if ($page_mode === 'ajax') {
+    $response = new AjaxResponse();
+    $title = t('AJAX Dialog');
+    $html = drupal_render($content);
+    if ($is_modal) {
+      $response->addCommand(new OpenModalDialogCommand($title, $html));
+    }
+    else {
+      $selector = '#ajax-test-dialog-wrapper-1';
+      $response->addCommand(new OpenDialogCommand($selector, $title, $html));
+    }
+    return $response;
+  }
+  else {
+    return $content;
+  }
 }
 
+/**
+ * Menu callback: Close the ajax dialog.
+ */
+function ajax_test_dialog_close() {
+  $response = new AjaxResponse();
+  $response->addCommand(new CloseDialogCommand('#ajax-test-dialog-wrapper-1'));
+  return $response;
+}

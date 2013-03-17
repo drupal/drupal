@@ -42,14 +42,6 @@ abstract class StylePluginBase extends PluginBase {
   var $row_tokens = array();
 
   /**
-   * Contains the row plugin, if it's initialized
-   * and the style itself supports it.
-   *
-   * @var views_plugin_row
-   */
-  var $row_plugin;
-
-  /**
    * Does the style plugin allows to use style plugins.
    *
    * @var bool
@@ -100,7 +92,7 @@ abstract class StylePluginBase extends PluginBase {
     parent::init($view, $display, $options);
 
     if ($this->usesRowPlugin() && $display->getOption('row')) {
-      $this->row_plugin = $display->getPlugin('row');
+      $this->view->rowPlugin = $display->getPlugin('row');
     }
 
     $this->options += array(
@@ -112,8 +104,8 @@ abstract class StylePluginBase extends PluginBase {
   public function destroy() {
     parent::destroy();
 
-    if (isset($this->row_plugin)) {
-      $this->row_plugin->destroy();
+    if (isset($this->view->rowPlugin)) {
+      $this->view->rowPlugin->destroy();
     }
   }
 
@@ -154,8 +146,8 @@ abstract class StylePluginBase extends PluginBase {
     // If we use a row plugin, ask the row plugin. Chances are, we don't
     // care, it does.
     $row_uses_fields = FALSE;
-    if ($this->usesRowPlugin() && !empty($this->row_plugin)) {
-      $row_uses_fields = $this->row_plugin->usesFields();
+    if ($this->usesRowPlugin() && !empty($this->view->rowPlugin)) {
+      $row_uses_fields = $this->view->rowPlugin->usesFields();
     }
     // Otherwise, check the definition or the option.
     return $row_uses_fields || $this->usesFields || !empty($this->options['uses_fields']);
@@ -396,8 +388,8 @@ abstract class StylePluginBase extends PluginBase {
    *   The full array of results from the query.
    */
   function pre_render($result) {
-    if (!empty($this->row_plugin)) {
-      $this->row_plugin->pre_render($result);
+    if (!empty($this->view->rowPlugin)) {
+      $this->view->rowPlugin->pre_render($result);
     }
   }
 
@@ -405,7 +397,7 @@ abstract class StylePluginBase extends PluginBase {
    * Render the display in this style.
    */
   function render() {
-    if ($this->usesRowPlugin() && empty($this->row_plugin)) {
+    if ($this->usesRowPlugin() && empty($this->view->rowPlugin)) {
       debug('Drupal\views\Plugin\views\style\StylePluginBase: Missing row plugin');
       return;
     }
@@ -455,7 +447,7 @@ abstract class StylePluginBase extends PluginBase {
         if ($this->usesRowPlugin()) {
           foreach ($set['rows'] as $index => $row) {
             $this->view->row_index = $index;
-            $render = $this->row_plugin->render($row);
+            $render = $this->view->rowPlugin->render($row);
             // Row render arrays cannot be contained by style render arrays.
             $set['rows'][$index] = drupal_render($render);
           }
@@ -684,8 +676,8 @@ abstract class StylePluginBase extends PluginBase {
 
   public function query() {
     parent::query();
-    if (isset($this->row_plugin)) {
-      $this->row_plugin->query();
+    if (isset($this->view->rowPlugin)) {
+      $this->view->rowPlugin->query();
     }
   }
 

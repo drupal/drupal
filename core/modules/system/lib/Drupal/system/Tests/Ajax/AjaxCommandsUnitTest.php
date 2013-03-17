@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Ajax;
 
-use Drupal\simpletest\UnitTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\Core\Ajax\AddCssCommand;
 use Drupal\Core\Ajax\AfterCommand;
 use Drupal\Core\Ajax\AlertCommand;
@@ -24,11 +24,18 @@ use Drupal\Core\Ajax\RemoveCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\RestripeCommand;
 use Drupal\Core\Ajax\SettingsCommand;
+use Drupal\Core\Ajax\OpenDialogCommand;
+use Drupal\Core\Ajax\OpenModalDialogCommand;
+use Drupal\Core\Ajax\CloseDialogCommand;
+use Drupal\Core\Ajax\CloseModalDialogCommand;
+use Drupal\Core\Ajax\SetDialogOptionCommand;
+use Drupal\Core\Ajax\SetDialogTitleCommand;
+use Drupal\Core\Ajax\RedirectCommand;
 
 /**
  * Tests for all AJAX Commands.
  */
-class AjaxCommandsUnitTest extends UnitTestBase {
+class AjaxCommandsUnitTest extends DrupalUnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -305,5 +312,121 @@ class AjaxCommandsUnitTest extends UnitTestBase {
     $this->assertEqual($command->render(), $expected, 'SettingsCommand::render() returns a proper array.');
   }
 
-}
+  /**
+   * Tests that OpenDialogCommand objects can be constructed and rendered.
+   */
+  function testOpenDialogCommand() {
+    $command = new OpenDialogCommand('#some-dialog', 'Title', '<p>Text!</p>', array(
+      'url' => FALSE,
+      'width' => 500,
+    ));
 
+    $expected = array(
+      'command' => 'openDialog',
+      'selector' => '#some-dialog',
+      'settings' => NULL,
+      'data' => '<p>Text!</p>',
+      'dialogOptions' => array(
+        'url' => FALSE,
+        'width' => 500,
+        'title' => 'Title',
+        'modal' => FALSE,
+      ),
+    );
+    $this->assertEqual($command->render(), $expected, 'OpenDialogCommand::render() returns a proper array.');
+  }
+
+  /**
+   * Tests that OpenModalDialogCommand objects can be constructed and rendered.
+   */
+  function testOpenModalDialogCommand() {
+    $command = new OpenModalDialogCommand('Title', '<p>Text!</p>', array(
+      'url' => 'example',
+      'width' => 500,
+    ));
+
+    $expected = array(
+      'command' => 'openDialog',
+      'selector' => '#drupal-modal',
+      'settings' => NULL,
+      'data' => '<p>Text!</p>',
+      'dialogOptions' => array(
+        'url' => 'example',
+        'width' => 500,
+        'title' => 'Title',
+        'modal' => TRUE,
+      ),
+    );
+    $this->assertEqual($command->render(), $expected, 'OpenModalDialogCommand::render() returns a proper array.');
+  }
+
+  /**
+   * Tests that CloseModalDialogCommand objects can be constructed and rendered.
+   */
+  function testCloseModalDialogCommand() {
+    $command = new CloseModalDialogCommand();
+    $expected = array(
+      'command' => 'closeDialog',
+      'selector' => '#drupal-modal',
+    );
+
+    $this->assertEqual($command->render(), $expected, 'CloseModalDialogCommand::render() returns a proper array.');
+  }
+
+  /**
+   * Tests that CloseDialogCommand objects can be constructed and rendered.
+   */
+  function testCloseDialogCommand() {
+    $command = new CloseDialogCommand('#some-dialog');
+    $expected = array(
+      'command' => 'closeDialog',
+      'selector' => '#some-dialog',
+    );
+
+    $this->assertEqual($command->render(), $expected, 'CloseDialogCommand::render() with a selector returns a proper array.');
+  }
+
+  /**
+   * Tests that SetDialogOptionCommand objects can be constructed and rendered.
+   */
+  function testSetDialogOptionCommand() {
+    $command = new SetDialogOptionCommand('#some-dialog', 'width', '500');
+    $expected = array(
+      'command' => 'setDialogOption',
+      'selector' => '#some-dialog',
+      'optionName' => 'width',
+      'optionValue' => '500',
+    );
+
+    $this->assertEqual($command->render(), $expected, 'SetDialogOptionCommand::render() with a selector returns a proper array.');
+  }
+
+  /**
+   * Tests that SetDialogTitleCommand objects can be constructed and rendered.
+   */
+  function testSetDialogTitleCommand() {
+    $command = new SetDialogTitleCommand('#some-dialog', 'Example');
+    $expected = array(
+      'command' => 'setDialogOption',
+      'selector' => '#some-dialog',
+      'optionName' => 'title',
+      'optionValue' => 'Example',
+    );
+
+    $this->assertEqual($command->render(), $expected, 'SetDialogTitleCommand::render() with a selector returns a proper array.');
+  }
+
+  /**
+   * Tests that RedirectCommand objects can be constructed and rendered.
+   */
+  function testRedirectCommand() {
+    $command = new RedirectCommand('http://example.com');
+    $expected = array(
+      'command' => 'redirect',
+      'url' => 'http://example.com',
+    );
+
+    $this->assertEqual($command->render(), $expected, 'RedirectCommand::render() with the expected command array.');
+  }
+
+}

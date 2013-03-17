@@ -1,0 +1,9 @@
+# Schema for configuration files of the Field module.
+
+field.settings:
+  type: mapping
+  label: 'Field settings'
+  mapping:
+    purge_batch_size:
+      type: integer
+      label: 'Maximum number of field data records to purge'

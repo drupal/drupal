@@ -857,10 +857,15 @@ class ViewEditFormController extends ViewFormControllerBase {
    * Add information about a section to a display.
    */
   public function getFormBucket(ViewUI $view, $type, $display) {
+    $executable = $view->get('executable');
+    $executable->setDisplay($display['id']);
+    $executable->initStyle();
+
+    $types = $executable->viewsHandlerTypes();
+
     $build = array(
       '#theme_wrappers' => array('views_ui_display_tab_bucket'),
     );
-    $types = ViewExecutable::viewsHandlerTypes();
 
     $build['#overridden'] = FALSE;
     $build['#defaulted'] = FALSE;
@@ -884,7 +889,7 @@ class ViewEditFormController extends ViewFormControllerBase {
         break;
       case 'field':
         // Fetch the style plugin info so we know whether to list fields or not.
-        $style_plugin = $view->get('executable')->displayHandlers->get($display['id'])->getPlugin('style');
+        $style_plugin = $executable->style_plugin;
         $uses_fields = $style_plugin && $style_plugin->usesFields();
         if (!$uses_fields) {
           $build['fields'][] = array(
@@ -898,7 +903,7 @@ class ViewEditFormController extends ViewFormControllerBase {
       case 'header':
       case 'footer':
       case 'empty':
-        if (!$view->get('executable')->displayHandlers->get($display['id'])->usesAreas()) {
+        if (!$executable->display_handler->usesAreas()) {
           $build[$type][] = array(
             '#markup' => t('The selected display type does not utilize @type plugins', array('@type' => $type)),
             '#theme_wrappers' => array('views_ui_container'),
@@ -911,7 +916,7 @@ class ViewEditFormController extends ViewFormControllerBase {
 
     // Create an array of actions to pass to theme_links
     $actions = array();
-    $count_handlers = count($view->get('executable')->displayHandlers->get($display['id'])->getHandlers($type));
+    $count_handlers = count($executable->display_handler->getHandlers($type));
     $actions['add'] = array(
       'title' => t('Add'),
       'href' => "admin/structure/views/nojs/add-item/{$view->id()}/{$display['id']}/$type",
@@ -936,8 +941,8 @@ class ViewEditFormController extends ViewFormControllerBase {
       ),
     );
 
-    if (!$view->get('executable')->displayHandlers->get($display['id'])->isDefaultDisplay()) {
-      if (!$view->get('executable')->displayHandlers->get($display['id'])->isDefaulted($types[$type]['plural'])) {
+    if (!$executable->display_handler->isDefaultDisplay()) {
+      if (!$executable->display_handler->isDefaulted($types[$type]['plural'])) {
         $build['#overridden'] = TRUE;
       }
       else {
@@ -949,7 +954,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     if (!isset($relationships)) {
       // Get relationship labels
       $relationships = array();
-      foreach ($view->get('executable')->displayHandlers->get($display['id'])->getHandlers('relationship') as $id => $handler) {
+      foreach ($executable->display_handler->getHandlers('relationship') as $id => $handler) {
         $relationships[$id] = $handler->label();
       }
     }
@@ -958,7 +963,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     $groups = array();
     $grouping = FALSE;
     if ($type == 'filter') {
-      $group_info = $view->get('executable')->displayHandlers->get('default')->getOption('filter_groups');
+      $group_info = $executable->display_handler->getOption('filter_groups');
       // If there is only one group but it is using the "OR" filter, we still
       // treat it as a group for display purposes, since we want to display the
       // "OR" label next to items within the group.
@@ -970,12 +975,12 @@ class ViewEditFormController extends ViewFormControllerBase {
 
     $build['fields'] = array();
 
-    foreach ($view->get('executable')->displayHandlers->get($display['id'])->getOption($types[$type]['plural']) as $id => $field) {
+    foreach ($executable->display_handler->getOption($types[$type]['plural']) as $id => $field) {
       // Build the option link for this handler ("Node: ID = article").
       $build['fields'][$id] = array();
       $build['fields'][$id]['#theme'] = 'views_ui_display_tab_setting';
 
-      $handler = $view->get('executable')->displayHandlers->get($display['id'])->getHandler($type, $id);
+      $handler = $executable->display_handler->getHandler($type, $id);
       if (empty($handler)) {
         $build['fields'][$id]['#class'][] = 'broken';
         $field_name = t('Broken/missing handler: @table > @field', array('@table' => $field['table'], '@field' => $field['field']));
@@ -997,7 +1002,7 @@ class ViewEditFormController extends ViewFormControllerBase {
       $build['fields'][$id]['#link'] = l($link_text, "admin/structure/views/nojs/config-item/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => $link_attributes, 'html' => TRUE));
       $build['fields'][$id]['#class'][] = drupal_clean_css_identifier($display['id']. '-' . $type . '-' . $id);
 
-      if ($view->get('executable')->displayHandlers->get($display['id'])->useGroupBy() && $handler->usesGroupBy()) {
+      if ($executable->display_handler->useGroupBy() && $handler->usesGroupBy()) {
         $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . t('Aggregation settings') . '</span>', "admin/structure/views/nojs/config-item-group/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => array('class' => 'views-button-configure views-ajax-link', 'title' => t('Aggregation settings')), 'html' => TRUE));
       }
 

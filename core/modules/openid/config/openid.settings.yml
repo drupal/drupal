@@ -1,2 +1,1 @@
-xri_proxy_resolver:
-  http://xri.net/
+xri_proxy_resolver: 'http://xri.net/'

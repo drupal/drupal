@@ -1,0 +1,46 @@
+# Schema for the configuration files of the Forum module.
+
+forum.settings:
+  type: mapping
+  label: 'Forum settings'
+  mapping:
+    block:
+      type: mapping
+      label: 'Forum blocks'
+      mapping:
+        active:
+          type: mapping
+          label: 'Active forum block'
+          mapping:
+            limit:
+              type: integer
+              label: 'Active forum Count'
+        new:
+          type: mapping
+          label: 'New forum topics'
+          mapping:
+            limit:
+              type: integer
+              label: 'New forum Count'
+    containers:
+      type: sequence
+      label: 'Containers to group related forums'
+      sequence:
+        - type: integer
+          label: 'Taxonomy Term ID'
+    topics:
+      type: mapping
+      label: 'Forum topics block'
+      mapping:
+        hot_threshold:
+          type: integer
+          label: 'Hot topic threshold'
+        order:
+          type: integer
+          label: 'Forum default topic order'
+        page_limit:
+          type: integer
+          label: 'Topics per page'
+    vocabulary:
+      type: string
+      label: 'Forum vocabulary ID'

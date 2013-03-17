@@ -115,9 +115,13 @@ function menu_link_delete_multiple(array $mlids, $force = FALSE, $prevent_repare
  *
  * @param \Drupal\menu_link\Plugin\Core\Entity\MenuLink $menu_link
  *   The menu link entity to be saved.
+ *
+ * @return int|bool
+ *   Returns SAVED_NEW or SAVED_UPDATED if the save operation succeeded, or
+ *   FALSE if it failed.
  */
 function menu_link_save(MenuLink $menu_link) {
-  $menu_link->save();
+  return $menu_link->save();
 }
 
 /**

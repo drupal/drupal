@@ -1,12 +1,8 @@
-langcode: en
-status: '0'
-module: taxonomy
-id: taxonomy_term
-description: 'Customize the default taxonomy/term display.'
-tag: default
+base_field: nid
 base_table: node
-human_name: 'Taxonomy term'
 core: '8'
+description: 'Customize the default taxonomy/term display.'
+status: '0'
 display:
   default:
     id: default
@@ -17,7 +13,7 @@ display:
       query:
         type: views_query
         options:
-          query_comment: false
+          query_comment: '0'
       access:
         type: none
       cache:
@@ -46,37 +42,37 @@ display:
           field: term_node_tid_depth
           default_action: 'not found'
           exception:
-            title_enable: 1
-          title_enable: 1
+            title_enable: '1'
+          title_enable: '1'
           title: '%1'
           default_argument_type: fixed
           summary:
             format: default_summary
-          specify_validation: 1
+          specify_validation: '1'
           validate:
             type: taxonomy_term
           depth: '0'
-          break_phrase: 1
+          break_phrase: '1'
           plugin_id: taxonomy_index_tid_depth
         term_node_tid_depth_modifier:
           id: term_node_tid_depth_modifier
           table: node
           field: term_node_tid_depth_modifier
           exception:
-            title_enable: 1
+            title_enable: '1'
           default_argument_type: fixed
           summary:
             format: default_summary
-          specify_validation: 1
+          specify_validation: '1'
           plugin_id: taxonomy_index_tid_depth_modifier
       filters:
         status_extra:
           id: status_extra
           table: node
           field: status_extra
-          group: 0
+          group: '0'
           expose:
-            operator: false
+            operator: '0'
           plugin_id: node_status
       style:
         type: default
@@ -104,12 +100,17 @@ display:
       pager:
         type: full
         options:
-          items_per_page: 15
+          items_per_page: '15'
       path: taxonomy/term/%/%/feed
       displays:
         page: page
-        default: 0
+        default: '0'
       style:
         type: rss
       row:
         type: node_rss
+human_name: 'Taxonomy term'
+module: taxonomy
+id: taxonomy_term
+tag: default
+langcode: en

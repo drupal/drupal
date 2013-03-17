@@ -35,12 +35,6 @@ class FrameworkTest extends AjaxTestBase {
     $commands = $this->drupalGetAJAX('ajax-test/render');
     $expected = new SettingsCommand(array('ajax' => 'test'), TRUE);
     $this->assertCommand($commands, $expected->render(), 'ajax_render() loads settings added with drupal_add_js().');
-
-    // Verify that JavaScript settings are loaded for #type 'link'.
-    $this->drupalGet('ajax-test/link');
-    $settings = $this->drupalGetSettings();
-    $this->assertEqual($settings['ajax']['ajax-link']['url'], url('filter/tips'));
-    $this->assertEqual($settings['ajax']['ajax-link']['wrapper'], 'block-system-main');
   }
 
   /**

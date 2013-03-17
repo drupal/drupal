@@ -41,10 +41,5 @@ function field_ui_update_8001() {
       }
       $query->execute();
     }
-
-    // Remove old permission.
-    db_delete('role_permission')
-      ->condition('permission', $old_permission)
-      ->execute();
   }
 }

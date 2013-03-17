@@ -99,9 +99,11 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
    *   Kernel event to respond to.
    */
   public function onKernelRequestSetDefaultConfigContextLocale(GetResponseEvent $event) {
-    if ($language = $this->languageManager->getLanguage(LANGUAGE_TYPE_INTERFACE)) {
-      $this->defaultConfigContext->set('locale.language', $language);
-    }
+    // Re-initialize the default configuration context to ensure any cached
+    // configuration object are reset and can be translated. This will invoke
+    // the config context event which will retrieve the negotiated language
+    // from the language manager in configContext().
+    $this->defaultConfigContext->init();
   }
 
   /**

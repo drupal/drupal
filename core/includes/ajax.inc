@@ -473,13 +473,8 @@ function ajax_prepare_response($page_callback_result) {
     // manipulation method is used. The method used is specified by
     // #ajax['method']. The default method is 'replaceWith', which completely
     // replaces the old wrapper element and its content with the new HTML.
-    // Since this is the primary response content returned to the client, we
-    // also attach the page title. It is up to client code to determine if and
-    // how to display that. For example, if the requesting element is configured
-    // to display the response in a dialog (via #ajax['dialog']), it can use
-    // this for the dialog title.
     $html = is_string($page_callback_result) ? $page_callback_result : drupal_render($page_callback_result);
-    $commands[] = ajax_command_insert(NULL, $html) + array('title' => drupal_get_title());
+    $commands[] = ajax_command_insert(NULL, $html);
     // Add the status messages inside the new content's wrapper element, so that
     // on subsequent Ajax requests, it is treated as old content.
     $commands[] = ajax_command_prepend(NULL, theme('status_messages'));
@@ -594,9 +589,6 @@ function ajax_pre_render_element($element) {
   if (isset($element['#ajax']['event'])) {
     $element['#attached']['library'][] = array('system', 'jquery.form');
     $element['#attached']['library'][] = array('system', 'drupal.ajax');
-    if (!empty($element['#ajax']['dialog'])) {
-      $element['#attached']['library'][] = array('system', 'drupal.dialog');
-    }
 
     $settings = $element['#ajax'];
 
