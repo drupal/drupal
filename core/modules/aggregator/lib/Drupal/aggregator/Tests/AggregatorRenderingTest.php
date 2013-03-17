@@ -81,9 +81,10 @@ class AggregatorRenderingTest extends AggregatorTestBase {
   public function testFeedPage() {
     // Increase the number of items published in the rss.xml feed so we have
     // enough articles to test paging.
-    $config = config('system.rss');
-    $config->set('items.limit', 30);
-    $config->save();
+    $view = entity_load('view', 'frontpage');
+    $display = &$view->getDisplay('feed_1');
+    $display['display_options']['pager']['options']['items_per_page'] = 30;
+    $view->save();
 
     // Create a feed with 30 items.
     $this->createSampleNodes(30);
@@ -94,9 +95,5 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     $this->drupalGet('aggregator/sources/' . $feed->id());
     $elements = $this->xpath("//ul[@class=:class]", array(':class' => 'pager'));
     $this->assertTrue(!empty($elements), 'Individual source page contains a pager.');
-
-    // Reset the number of items in rss.xml to the default value.
-    $config->set('items.limit', 10);
-    $config->save();
   }
 }

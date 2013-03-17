@@ -1,9 +1,8 @@
-langcode: en
-status: '1'
 base_field: nid
 base_table: node
 core: 8.x
 description: 'A list of nodes marked for display on the front page.'
+status: '1'
 display:
   default:
     display_options:
@@ -138,8 +137,19 @@ display:
     display_title: Page
     id: page_1
     position: {  }
+  feed_1:
+    display_plugin: feed
+    id: feed_1
+    display_title: Feed
+    position: ''
+    display_options:
+      sitename_title: '1'
+      path: rss.xml
+      displays:
+        page_1: page_1
+        default: '0'
 human_name: Frontpage
-langcode: und
 module: node
 id: frontpage
 tag: ''
+langcode: en

@@ -21,7 +21,7 @@ class NodeRSSContentTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('node_test');
+  public static $modules = array('node_test', 'views');
 
   public static function getInfo() {
     return array(

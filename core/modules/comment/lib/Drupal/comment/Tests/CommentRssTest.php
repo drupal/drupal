@@ -11,6 +11,14 @@ namespace Drupal\comment\Tests;
  * Tests for Comment module integration with RSS feeds.
  */
 class CommentRssTest extends CommentTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('views');
+
   public static function getInfo() {
     return array(
       'name' => 'Comment RSS',

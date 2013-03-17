@@ -2,4 +2,4 @@ channel:
   description: ''
 items:
   limit: '10'
-  view_mode: fulltext
+  view_mode: rss
