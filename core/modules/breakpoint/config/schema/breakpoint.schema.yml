@@ -1,0 +1,79 @@
+# Schema for the configuration files of the Breakpoint module.
+
+breakpoint.settings:
+  type: mapping
+  label: 'Breakpoint settings'
+  mapping:
+    multipliers:
+      type: sequence
+      label: 'Assigning resolution multipliers to breakpoints'
+      sequence:
+        - type: string
+          label: 'Multiplier'
+
+breakpoint.breakpoint.*.*.*:
+  type: mapping
+  label: 'Defines the Breakpoint entity'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    uuid:
+      type: string
+      label: 'UUID'
+    name:
+      type: string
+      label: 'Machine name'
+    label:
+      type: string
+      label: 'Label'
+    mediaQuery:
+      type: string
+      label: 'Media query'
+    source:
+      type: string
+      label: 'Source'
+    sourceType:
+      type: string
+      label: 'Source type'
+    weight:
+      type: string
+      label: 'Weight'
+    multipliers:
+      type: sequence
+      label: 'Multipliers'
+      sequence:
+        - type: string
+          label: 'Multiplier'
+    langcode:
+      type: string
+      label: 'Language'
+
+breakpoint.breakpoint_group.*.*.*:
+  type: mapping
+  label: 'Breakpoint group settings'
+  mapping:
+    id:
+      type: string
+      label: 'Group ID'
+    uuid:
+      type: string
+      label: 'UUID'
+    name:
+      type: string
+      label: 'Machine name'
+    label:
+      type: string
+      label: 'Label'
+    breakpoints:
+      type: sequence
+      label: 'Breakpoints'
+      sequence:
+        - type: string
+          label: 'Breakpoint name'
+    source:
+      type: string
+      label: 'Group source: theme or module name'
+    sourceType:
+      type: string
+      label: 'Group source type'
