@@ -1242,6 +1242,7 @@ function system_library_info() {
       array('system', 'drupal'),
       array('system', 'drupalSettings'),
       array('system', 'drupal.progress'),
+      array('system', 'jquery.once'),
     ),
   );
 
@@ -1302,6 +1303,22 @@ function system_library_info() {
       array('system', 'drupal'),
       array('system', 'drupalSettings'),
       array('system', 'jquery.ui.dialog')
+    ),
+  );
+
+  // Drupal's integration between AJAX and dialogs.
+  $libraries['drupal.dialog.ajax'] = array(
+    'title' => 'Drupal Dialog AJAX',
+    'version' => VERSION,
+    'js' => array(
+      'core/misc/dialog.ajax.js' => array('group' => JS_LIBRARY, 'weight' => 3),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupalSettings'),
+      array('system', 'drupal.ajax'),
+      array('system', 'drupal.dialog'),
     ),
   );
 
