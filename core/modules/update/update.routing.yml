@@ -1,0 +1,6 @@
+update_settings:
+  pattern: '/admin/reports/updates/settings'
+  defaults:
+    _form: '\Drupal\update\UpdateSettingsForm'
+  requirements:
+    _permission: 'administer site configuration'
