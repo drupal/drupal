@@ -3839,7 +3839,12 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
     uasort($items, 'drupal_sort_css_js');
     // Don't add settings if there is no other JavaScript on the page, unless
     // this is an AJAX request.
-    if (!empty($items['settings']) || Drupal::service('request')->isXmlHttpRequest()) {
+    // @todo Clean up container call.
+    $container = drupal_container();
+    if ($container->has('content_negotiation') && $container->isScopeActive('request')) {
+      $type = $container->get('content_negotiation')->getContentType($container->get('request'));
+    }
+    if (!empty($items['settings']) || (!empty($type) && $type == 'ajax')) {
       global $theme_key;
       // Provide the page with information about the theme that's used, so that
       // a later AJAX request can be rendered using the same theme.
