@@ -1698,7 +1698,7 @@ function system_performance_settings($form, &$form_state) {
   );
   $form['bandwidth_optimization']['preprocess_css'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Aggregate and compress CSS files.'),
+    '#title' => t('Aggregate CSS files.'),
     '#default_value' => $config->get('css.preprocess'),
     '#disabled' => $disabled,
   );
