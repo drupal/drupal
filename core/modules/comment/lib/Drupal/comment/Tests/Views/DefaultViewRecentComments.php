@@ -96,7 +96,7 @@ class DefaultViewRecentComments extends ViewTestBase {
    */
   public function testBlockDisplay() {
     $view = views_get_view('comments_recent');
-    $view->setDisplay('block');
+    $view->setDisplay('block_1');
     $this->executeView($view);
 
     $map = array(
@@ -127,7 +127,7 @@ class DefaultViewRecentComments extends ViewTestBase {
    */
   public function testPageDisplay() {
     $view = views_get_view('comments_recent');
-    $view->setDisplay('page');
+    $view->setDisplay('page_1');
     $this->executeView($view);
 
     $map = array(
