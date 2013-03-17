@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\node\Plugin\views\area\LinkAdd.
+ * Contains \Drupal\node\Plugin\views\area\ListingEmpty.
  */
 
 namespace Drupal\node\Plugin\views\area;
