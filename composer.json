@@ -1,6 +1,7 @@
 {
   "name": "drupal/drupal",
   "description": "Drupal is an open source content management platform powering millions of websites and applications.",
+  "type": "drupal-core",
   "license": "GPL-2.0+",
   "require": {
     "symfony/class-loader": "2.2.0",
@@ -20,5 +21,8 @@
     "easyrdf/easyrdf": "0.8.0-beta.1",
     "phpunit/phpunit": "3.7.15"
   },
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "config": {
+    "vendor-dir": "core/vendor"
+  }
 }
