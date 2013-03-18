@@ -107,6 +107,8 @@ function hook_entity_view_mode_info_alter(&$view_modes) {
  *     - access callback: As in hook_menu(). 'user_access' will be assumed if
  *       no value is provided.
  *     - access arguments: As in hook_menu().
+ *   - translatable: (optional) A boolean value specifying whether this bundle
+ *     has translation support enabled. Defaults to FALSE.
  *
  * @see entity_get_bundles()
  * @see hook_entity_bundle_info_alter()

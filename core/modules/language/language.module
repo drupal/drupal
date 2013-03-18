@@ -210,11 +210,7 @@ function language_theme() {
 function language_entity_supported() {
   $supported = array();
   foreach (entity_get_info() as $entity_type => $info) {
-    // @todo Revisit this once all core entities are migrated to the Entity
-    //   Field API and language support for configuration entities has been
-    //   sorted out.
-    $entity_class = new ReflectionClass($info['class']);
-    if ($info['fieldable'] && !$entity_class->implementsInterface('Drupal\Core\Config\Entity\ConfigEntityInterface')) {
+    if (!empty($info['fieldable']) && !empty($info['translatable'])) {
       $supported[$entity_type] = $entity_type;
     }
   }

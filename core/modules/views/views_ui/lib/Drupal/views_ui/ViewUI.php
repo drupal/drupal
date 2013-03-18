@@ -985,6 +985,13 @@ class ViewUI implements ViewStorageInterface {
   }
 
   /**
+   * Implements \Drupal\Core\Entity\EntityInterface::isTranslatable().
+   */
+  public function isTranslatable() {
+    return $this->__call(__FUNCTION__, func_get_args());
+  }
+
+  /**
    * Implements \Drupal\Core\TypedData\ContextAwareInterface::getName().
    */
   public function getName() {

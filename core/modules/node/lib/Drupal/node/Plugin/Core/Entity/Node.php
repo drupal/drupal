@@ -30,6 +30,7 @@ use Drupal\Core\Annotation\Translation;
  *   revision_table = "node_revision",
  *   uri_callback = "node_uri",
  *   fieldable = TRUE,
+ *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "nid",
  *     "revision" = "vid",

@@ -31,6 +31,7 @@ use Drupal\Core\Annotation\Translation;
  *   revision_table = "custom_block_revision",
  *   menu_base_path = "block/%custom_block",
  *   fieldable = TRUE,
+ *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "id",
  *     "revision" = "revision_id",

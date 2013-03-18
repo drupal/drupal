@@ -29,17 +29,9 @@ use Drupal\Core\Entity\EntityInterface;
  * The available language codes for a particular field are returned by
  * field_available_languages(). Whether a field is translatable is determined by
  * calling field_is_translatable(), which checks the $field['translatable']
- * property returned by field_info_field(), and whether there is at least one
- * translation handler available for the field. A translation handler is a
- * module registering itself via hook_entity_info_alter() to handle field
- * translations.
+ * property returned by field_info_field() and whether the entity type the field
+ * is attached to supports translation.
  *
-
- * By default, _field_invoke() and _field_invoke_multiple() are processing a
- * field in all available languages, unless they are given a language code
- * suggestion. Based on that suggestion, _field_language_suggestion() determines
- * the languages to act on.
-
  * By default, _field_invoke() and _field_invoke_multiple() process a field in
  * all available languages, unless they are given a language code suggestion.
  * Based on that suggestion, _field_language_suggestion() determines the
@@ -226,23 +218,12 @@ function field_is_translatable($entity_type, $field) {
  *   TRUE, if the given handler is allowed to manage field translations. If no
  *   handler is passed, TRUE means there is at least one registered translation
  *   handler.
+ *
+ * @todo Remove this once the migration to the Entity Field API is complete.
  */
 function field_has_translation_handler($entity_type, $handler = NULL) {
-  $entity_info = entity_get_info($entity_type);
-
-  if (isset($handler)) {
-    return !empty($entity_info['translation'][$handler]);
-  }
-  elseif (isset($entity_info['translation'])) {
-    foreach ($entity_info['translation'] as $handler_info) {
-      // The translation handler must use a non-empty data structure.
-      if (!empty($handler_info)) {
-        return TRUE;
-      }
-    }
-  }
-
-  return FALSE;
+  $info = entity_get_info($entity_type);
+  return !empty($info['translatable']);
 }
 
 /**

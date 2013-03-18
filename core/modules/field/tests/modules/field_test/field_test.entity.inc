@@ -12,13 +12,8 @@ use Drupal\field_test\Plugin\Core\Entity\TestEntity;
  * Implements hook_entity_info_alter().
  */
 function field_test_entity_info_alter(&$entity_info) {
-  // Enable/disable field_test as a translation handler.
   foreach (field_test_entity_info_translatable() as $entity_type => $translatable) {
-    $entity_info[$entity_type]['translation']['field_test'] = $translatable;
-  }
-  // Disable the entity type translation handler.
-  foreach ($entity_info as $entity_type => $info) {
-    $entity_info[$entity_type]['translation'][$entity_type] = FALSE;
+    $entity_info[$entity_type]['translatable'] = $translatable;
   }
 }
 

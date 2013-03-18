@@ -52,4 +52,5 @@ interface TranslatableInterface {
    *   A typed data object for the translated data.
    */
   public function getTranslation($langcode, $strict = TRUE);
+
 }

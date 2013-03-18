@@ -460,4 +460,12 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
   public function getExportProperties() {
     $this->decorated->getExportProperties();
   }
+
+  /**
+   * Forwards the call to the decorated entity.
+   */
+  public function isTranslatable() {
+    return $this->decorated->isTranslatable();
+  }
+
 }

@@ -440,4 +440,14 @@ class Entity implements IteratorAggregate, EntityInterface {
     // As entities are always the root of the tree of typed data, we do not need
     // to set any parent or name.
   }
+
+  /**
+   * Implements \Drupal\Core\Entity\EntityInterface::isTranslatable().
+   */
+  public function isTranslatable() {
+    // @todo Inject the entity manager and retrieve bundle info from it.
+    $bundles = entity_get_bundles($this->entityType);
+    return !empty($bundles[$this->bundle()]['translatable']);
+  }
+
 }

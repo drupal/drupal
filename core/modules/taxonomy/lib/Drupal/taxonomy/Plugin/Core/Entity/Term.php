@@ -30,6 +30,7 @@ use Drupal\Core\Annotation\Translation;
  *   base_table = "taxonomy_term_data",
  *   uri_callback = "taxonomy_term_uri",
  *   fieldable = TRUE,
+ *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "tid",
  *     "bundle" = "vid",
