@@ -31,6 +31,7 @@ use Drupal\Core\Annotation\Translation;
  *   uri_callback = "user_uri",
  *   label_callback = "user_label",
  *   fieldable = TRUE,
+ *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "uid",
  *     "uuid" = "uuid"

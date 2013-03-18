@@ -75,11 +75,8 @@ use Drupal\Core\Cache\CacheBackendInterface;
  * - static_cache: (optional) Boolean indicating whether entities should be
  *   statically cached during a page request. Used by
  *   Drupal\Core\Entity\DatabaseStorageController. Defaults to TRUE.
- * - translation: (optional) An associative array of modules registered as
- *   field translation handlers. Array keys are the module names, and array
- *   values can be any data structure the module uses to provide field
- *   translation. If the value is empty, the module will not be used as a
- *   translation handler.
+ * - translatable: (optional) Boolean indicating whether entities of this type
+ *   have mutlilingual support. Defaults to FALSE.
  * - entity_keys: An array describing how the Field API can extract certain
  *   information from objects of this entity type. Elements:
  *   - id: The name of the property that contains the primary ID of the

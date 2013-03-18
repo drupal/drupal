@@ -29,6 +29,7 @@ use Drupal\Core\Annotation\Translation;
  *   base_table = "comment",
  *   uri_callback = "comment_uri",
  *   fieldable = TRUE,
+ *   translatable = TRUE,
  *   static_cache = FALSE,
  *   entity_keys = {
  *     "id" = "cid",

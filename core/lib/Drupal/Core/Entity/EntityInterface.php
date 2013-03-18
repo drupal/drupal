@@ -219,4 +219,13 @@ interface EntityInterface extends ContextAwareInterface, ComplexDataInterface, A
    * @see \Drupal\Core\Entity\EntityInterface::getBCEntity()
    */
   public function getOriginalEntity();
+
+  /**
+   * Returns the translation support status.
+   *
+   * @return bool
+   *   TRUE if the entity bundle has translation support enabled.
+   */
+  public function isTranslatable();
+
 }

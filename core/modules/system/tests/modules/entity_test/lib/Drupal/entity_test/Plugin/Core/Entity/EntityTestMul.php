@@ -27,6 +27,7 @@ use Drupal\Core\Annotation\Translation;
  *   base_table = "entity_test_mul",
  *   data_table = "entity_test_mul_property_data",
  *   fieldable = TRUE,
+ *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",

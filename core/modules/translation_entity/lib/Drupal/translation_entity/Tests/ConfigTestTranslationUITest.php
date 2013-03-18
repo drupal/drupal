@@ -35,6 +35,14 @@ class ConfigTestTranslationUITest extends EntityTranslationUITest {
   }
 
   /**
+   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::enableTranslation().
+   */
+  protected function enableTranslation() {
+    $this->container->get('state')->set('config_test.translatable', TRUE);
+    parent::enableTranslation();
+  }
+
+  /**
    * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::getNewEntityValues().
    */
   protected function getNewEntityValues($langcode) {

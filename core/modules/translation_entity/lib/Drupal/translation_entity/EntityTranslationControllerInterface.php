@@ -50,9 +50,7 @@ use Drupal\Core\Entity\EntityInterface;
  * Additionally some more entity info keys can be defined to further customize
  * the translation UI. The entity translation info is an associative array that
  * has to match the following structure. Two nested arrays keyed respectively
- * by the 'translation' key and the 'entity_translation' key: the first one is
- * the key defined by the core entity system, while the second one registers
- * Entity Tanslation as a field translation handler. Elements:
+ * by the 'translation' key and the 'translation_entity' key. Elements:
  * - access callback: The access callback for the translation pages. Defaults to
  *   'entity_translation_translate_access'.
  * - access arguments: The access arguments for the translation pages. By
