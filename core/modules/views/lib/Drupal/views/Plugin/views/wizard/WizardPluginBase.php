@@ -14,7 +14,6 @@ use Drupal\views_ui\ViewUI;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\views\wizard\WizardInterface;
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Provides the interface and base class for Views Wizard plugins.
@@ -114,8 +113,8 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   /**
    * Constructs a WizardPluginBase object.
    */
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
-    parent::__construct($configuration, $plugin_id, $discovery);
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->base_table = $this->definition['base_table'];
 

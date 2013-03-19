@@ -6,8 +6,6 @@
 
 namespace Drupal\Component\Plugin\Factory;
 
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
-
 /**
  * Factory interface implemented by all plugin factories.
  */

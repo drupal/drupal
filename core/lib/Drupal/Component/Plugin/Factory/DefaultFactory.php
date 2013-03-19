@@ -41,23 +41,23 @@ class DefaultFactory implements FactoryInterface {
    * Implements Drupal\Component\Plugin\Factory\FactoryInterface::createInstance().
    */
   public function createInstance($plugin_id, array $configuration) {
-    $plugin_class = static::getPluginClass($plugin_id, $this->discovery);
-    return new $plugin_class($configuration, $plugin_id, $this->discovery);
+    $plugin_definition = $this->discovery->getDefinition($plugin_id);
+    $plugin_class = static::getPluginClass($plugin_id, $plugin_definition);
+    return new $plugin_class($configuration, $plugin_id, $plugin_definition);
   }
 
   /**
    * Finds the class relevant for a given plugin.
    *
-   *  @param array $plugin_id
-   *    The id of a plugin.
-   * @param \Drupal\Component\Plugin\Discovery\DiscoveryInterface $discovery
-   *   The discovery object.
+   * @param string $plugin_id
+   *   The id of a plugin.
+   * @param array $plugin_definition
+   *   The plugin definition associated to the plugin_id.
    *
-   *  @return string
-   *    The appropriate class name.
+   * @return string
+   *   The appropriate class name.
    */
-  public static function getPluginClass($plugin_id, DiscoveryInterface $discovery) {
-    $plugin_definition = $discovery->getDefinition($plugin_id);
+  public static function getPluginClass($plugin_id, array $plugin_definition = NULL) {
     if (empty($plugin_definition['class'])) {
       throw new PluginException(sprintf('The plugin (%s) did not specify an instance class.', $plugin_id));
     }

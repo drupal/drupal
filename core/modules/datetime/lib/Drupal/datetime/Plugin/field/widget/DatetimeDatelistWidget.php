@@ -40,9 +40,8 @@ class DateTimeDatelistWidget extends WidgetBase {
    *
    * @param array $plugin_id
    *   The plugin_id for the widget.
-   * @param \Drupal\Component\Plugin\Discovery\DiscoveryInterface $discovery
-   *   The Discovery class that holds access to the widget implementation
-   *   definition.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
    * @param \Drupal\field\FieldInstance $instance
    *   The field instance to which the widget is associated.
    * @param array $settings
@@ -50,10 +49,10 @@ class DateTimeDatelistWidget extends WidgetBase {
    * @param int $weight
    *   The widget weight.
    */
-  public function __construct($plugin_id, DiscoveryInterface $discovery, FieldInstance $instance, array $settings, $weight) {
+  public function __construct($plugin_id, array $plugin_definition, FieldInstance $instance, array $settings, $weight) {
     // Identify the function used to set the default value.
     $instance['default_value_function'] = $this->defaultValueFunction();
-    parent::__construct($plugin_id, $discovery, $instance, $settings, $weight);
+    parent::__construct($plugin_id, $plugin_definition, $instance, $settings, $weight);
   }
 
   /**

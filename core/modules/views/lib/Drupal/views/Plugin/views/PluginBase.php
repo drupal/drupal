@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Plugin\views;
 
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Component\Plugin\PluginBase as ComponentPluginBase;
 use Drupal\views\ViewExecutable;
@@ -57,10 +56,10 @@ abstract class PluginBase extends ComponentPluginBase {
   /**
    * Constructs a Plugin object.
    */
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
-    parent::__construct($configuration, $plugin_id, $discovery);
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->definition = $this->discovery->getDefinition($plugin_id) + $configuration;
+    $this->definition = $plugin_definition + $configuration;
   }
 
   /**

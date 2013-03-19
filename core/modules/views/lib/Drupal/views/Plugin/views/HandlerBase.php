@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Plugin\views;
 
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\ViewExecutable;
@@ -76,8 +75,8 @@ abstract class HandlerBase extends PluginBase {
   /**
    * Constructs a Handler object.
    */
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
-    parent::__construct($configuration, $plugin_id, $discovery);
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->is_handler = TRUE;
   }
 

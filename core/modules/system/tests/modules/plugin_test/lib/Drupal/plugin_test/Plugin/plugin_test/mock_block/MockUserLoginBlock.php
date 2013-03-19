@@ -8,7 +8,6 @@
 namespace Drupal\plugin_test\Plugin\plugin_test\mock_block;
 
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Mock implementation of a login block plugin used by Plugin API unit tests.
@@ -24,8 +23,8 @@ class MockUserLoginBlock extends PluginBase {
    */
   protected $title;
 
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
-    parent::__construct($configuration, $plugin_id, $discovery);
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->title = isset($configuration['title']) ? $configuration['title'] : '';
   }
 
