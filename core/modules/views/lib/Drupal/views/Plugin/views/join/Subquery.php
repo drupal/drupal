@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Plugin\views\join;
 use Drupal\Component\Annotation\Plugin;
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Join handler for relationships that join with a subquery as the left field.
@@ -27,8 +26,8 @@ class Subquery extends JoinPluginBase {
   /**
    * Constructs a Subquery object.
    */
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
-    parent::__construct($configuration, $plugin_id, $discovery);
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->left_query = $this->configuration['left_query'];
   }

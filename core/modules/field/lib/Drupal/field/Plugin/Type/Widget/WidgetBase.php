@@ -7,7 +7,6 @@
 
 namespace Drupal\field\Plugin\Type\Widget;
 
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Plugin\PluginSettingsBase;
@@ -51,9 +50,8 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    *
    * @param array $plugin_id
    *   The plugin_id for the widget.
-   * @param Drupal\Component\Plugin\Discovery\DiscoveryInterface $discovery
-   *   The Discovery class that holds access to the widget implementation
-   *   definition.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
    * @param Drupal\field\FieldInstance $instance
    *   The field instance to which the widget is associated.
    * @param array $settings
@@ -61,8 +59,8 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    * @param int $weight
    *   The widget weight.
    */
-  public function __construct($plugin_id, DiscoveryInterface $discovery, FieldInstance $instance, array $settings, $weight) {
-    parent::__construct(array(), $plugin_id, $discovery);
+  public function __construct($plugin_id, array $plugin_definition, FieldInstance $instance, array $settings, $weight) {
+    parent::__construct(array(), $plugin_id, $plugin_definition);
 
     $this->instance = $instance;
     $this->field = field_info_field($instance['field_name']);

@@ -20,13 +20,14 @@ class ReflectionFactory extends DefaultFactory {
    * Implements Drupal\Component\Plugin\Factory\FactoryInterface::createInstance().
    */
   public function createInstance($plugin_id, array $configuration) {
-    $plugin_class = static::getPluginClass($plugin_id, $this->discovery);
+    $plugin_definition = $this->discovery->getDefinition($plugin_id);
+    $plugin_class = static::getPluginClass($plugin_id, $plugin_definition);
 
     // Lets figure out of there's a constructor for this class and pull
     // arguments from the $options array if so to populate it.
     $reflector = new ReflectionClass($plugin_class);
     if ($reflector->hasMethod('__construct')) {
-      $arguments = $this->getInstanceArguments($reflector, $plugin_id, $configuration);
+      $arguments = $this->getInstanceArguments($reflector, $plugin_id, $plugin_definition, $configuration);
       $instance = $reflector->newInstanceArgs($arguments);
     }
     else {
@@ -46,27 +47,28 @@ class ReflectionFactory extends DefaultFactory {
    *   The reflector object being used to inspect the plugin class.
    * @param string $plugin_id
    *   The identifier of the plugin implementation.
+   * @param array $plugin_definition
+   *   The definition associated to the plugin_id.
    * @param array $configuration
    *   An array of configuration that may be passed to the instance.
    *
    * @return array
    *   An array of arguments to be passed to the constructor.
    */
-  protected function getInstanceArguments(ReflectionClass $reflector, $plugin_id, array $configuration) {
+  protected function getInstanceArguments(ReflectionClass $reflector, $plugin_id, array $plugin_definition, array $configuration) {
 
     $arguments = array();
     foreach ($reflector->getMethod('__construct')->getParameters() as $param) {
       $param_name = $param->getName();
-      $param_class = $param->getClass();
 
       if ($param_name == 'plugin_id') {
         $arguments[] = $plugin_id;
       }
+      elseif ($param_name == 'plugin_definition') {
+        $arguments[] = $plugin_definition;
+      }
       elseif ($param_name == 'configuration') {
         $arguments[] = $configuration;
-      }
-      elseif ($param_class && $param_class->isInstance($this->discovery)) {
-        $arguments[] = $this->discovery;
       }
       elseif (isset($configuration[$param_name]) || array_key_exists($param_name, $configuration)) {
         $arguments[] = $configuration[$param_name];

@@ -249,9 +249,7 @@ class PluginBaseUnitTest extends DrupalUnitTestBase {
    *   A test plugin instance.
    */
   protected function getTestPlugin() {
-    $discovery = new StaticDiscovery();
-    $discovery->setDefinition('default', array());
-    return new TestHelperPlugin(array(), 'default', $discovery);
+    return new TestHelperPlugin(array(), 'default', array());
   }
 
 }

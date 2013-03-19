@@ -36,13 +36,13 @@ abstract class ContextAwarePluginBase extends PluginBase implements ContextAware
    *   initialize the defined contexts by setting it to an array of context
    *   values keyed by context names.
    */
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
     $context = array();
     if (isset($configuration['context'])) {
       $context = $configuration['context'];
       unset($configuration['context']);
     }
-    parent::__construct($configuration, $plugin_id, $discovery);
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
     foreach ($context as $key => $value) {
       $context_definition = $this->getContextDefinition($key);
       $this->context[$key] = new Context($context_definition);

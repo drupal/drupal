@@ -30,8 +30,8 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
   /**
    * Overrides \Drupal\Component\Plugin\PluginBase::__construct().
    */
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery, Block $entity) {
-    parent::__construct($configuration, $plugin_id, $discovery);
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, Block $entity) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entity = $entity;
   }

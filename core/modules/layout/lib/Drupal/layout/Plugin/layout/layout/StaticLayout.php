@@ -7,7 +7,6 @@
 
 namespace Drupal\layout\Plugin\layout\layout;
 
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\layout\Plugin\LayoutInterface;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Component\Annotation\Plugin;
@@ -23,15 +22,13 @@ class StaticLayout extends PluginBase implements LayoutInterface {
   /**
    * Overrides Drupal\Component\Plugin\PluginBase::__construct().
    */
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
-    // Get definition by discovering the declarative information.
-    $definition = $discovery->getDefinition($plugin_id);
-    foreach ($definition['regions'] as $region => $title) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
+    foreach ($plugin_definition['regions'] as $region => $title) {
       if (!isset($configuration['regions'][$region])) {
         $configuration['regions'][$region] = array();
       }
     }
-    parent::__construct($configuration, $plugin_id, $discovery);
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
   /**

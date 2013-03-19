@@ -41,8 +41,9 @@ class BlockManager extends PluginManagerBase {
    * Overrides \Drupal\Component\Plugin\PluginManagerBase::createInstance().
    */
   public function createInstance($plugin_id, array $configuration = array(), Block $entity = NULL) {
-    $plugin_class = DefaultFactory::getPluginClass($plugin_id, $this->discovery);
-    return new $plugin_class($configuration, $plugin_id, $this->discovery, $entity);
+    $plugin_definition = $this->discovery->getDefinition($plugin_id);
+    $plugin_class = DefaultFactory::getPluginClass($plugin_id, $plugin_definition);
+    return new $plugin_class($configuration, $plugin_id, $plugin_definition, $entity);
   }
 
 }

@@ -78,7 +78,7 @@ class EntityResource extends ResourceBase {
       $entity->save();
       watchdog('rest', 'Created entity %type with ID %id.', array('%type' => $entity->entityType(), '%id' => $entity->id()));
 
-      $url = url(strtr($this->plugin_id, ':', '/') . '/' . $entity->id(), array('absolute' => TRUE));
+      $url = url(strtr($this->pluginId, ':', '/') . '/' . $entity->id(), array('absolute' => TRUE));
       // 201 Created responses have an empty body.
       return new ResourceResponse(NULL, 201, array('Location' => $url));
     }

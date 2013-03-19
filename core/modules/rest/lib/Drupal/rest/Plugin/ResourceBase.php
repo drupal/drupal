@@ -28,7 +28,7 @@ abstract class ResourceBase extends PluginBase implements ResourceInterface {
     $definition = $this->getDefinition();
     foreach ($this->availableMethods() as $method) {
       $lowered_method = strtolower($method);
-      $permissions["restful $lowered_method $this->plugin_id"] = array(
+      $permissions["restful $lowered_method $this->pluginId"] = array(
         'title' => t('Access @method on %label resource', array('@method' => $method, '%label' => $definition['label'])),
       );
     }
@@ -40,8 +40,8 @@ abstract class ResourceBase extends PluginBase implements ResourceInterface {
    */
   public function routes() {
     $collection = new RouteCollection();
-    $path_prefix = strtr($this->plugin_id, ':', '/');
-    $route_name = strtr($this->plugin_id, ':', '.');
+    $path_prefix = strtr($this->pluginId, ':', '/');
+    $route_name = strtr($this->pluginId, ':', '.');
 
     $methods = $this->availableMethods();
     foreach ($methods as $method) {
@@ -49,11 +49,11 @@ abstract class ResourceBase extends PluginBase implements ResourceInterface {
       $route = new Route("/$path_prefix/{id}", array(
         '_controller' => 'Drupal\rest\RequestHandler::handle',
         // Pass the resource plugin ID along as default property.
-        '_plugin' => $this->plugin_id,
+        '_plugin' => $this->pluginId,
       ), array(
         // The HTTP method is a requirement for this route.
         '_method' => $method,
-        '_permission' => "restful $lower_method $this->plugin_id",
+        '_permission' => "restful $lower_method $this->pluginId",
       ));
 
       switch ($method) {

@@ -18,7 +18,8 @@ class WidgetFactory extends DefaultFactory {
    * Overrides Drupal\Component\Plugin\Factory\DefaultFactory::createInstance().
    */
   public function createInstance($plugin_id, array $configuration) {
-    $plugin_class = static::getPluginClass($plugin_id, $this->discovery);
-    return new $plugin_class($plugin_id, $this->discovery, $configuration['instance'], $configuration['settings'], $configuration['weight']);
+    $plugin_definition = $this->discovery->getDefinition($plugin_id);
+    $plugin_class = static::getPluginClass($plugin_id, $plugin_definition);
+    return new $plugin_class($plugin_id, $plugin_definition, $configuration['instance'], $configuration['settings'], $configuration['weight']);
   }
 }
