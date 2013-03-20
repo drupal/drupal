@@ -54,41 +54,6 @@ Drupal.edit.util.buildUrl = function(id, urlFormat) {
   });
 };
 
-/**
- * Loads rerendered processed text for a given property.
- *
- * Leverages Drupal.ajax' ability to have scoped (per-instance) command
- * implementations to be able to call a callback.
- *
- * @param options
- *   An object with the following keys:
- *    - $editorElement (required): the PredicateEditor DOM element.
- *    - propertyID (required): the property ID that uniquely identifies the
- *      property for which this form will be loaded.
- *    - callback (required: A callback function that will receive the rerendered
- *      processed text.
- */
-Drupal.edit.util.loadRerenderedProcessedText = function(options) {
-  // Create a Drupal.ajax instance to load the form.
-  Drupal.ajax[options.propertyID] = new Drupal.ajax(options.propertyID, options.$editorElement, {
-    url: Drupal.edit.util.buildUrl(options.propertyID, drupalSettings.edit.rerenderProcessedTextURL),
-    event: 'edit-internal.edit',
-    submit: { nocssjs : true },
-    progress: { type : null } // No progress indicator.
-  });
-  // Implement a scoped editFieldRenderedWithoutTransformationFilters AJAX
-  // command: calls the callback.
-  Drupal.ajax[options.propertyID].commands.editFieldRenderedWithoutTransformationFilters = function(ajax, response, status) {
-    options.callback(response.data);
-    // Delete the Drupal.ajax instance that called this very function.
-    delete Drupal.ajax[options.propertyID];
-    options.$editorElement.off('edit-internal.edit');
-  };
-  // This will ensure our scoped editFieldRenderedWithoutTransformationFilters
-  // AJAX command gets called.
-  options.$editorElement.trigger('edit-internal.edit');
-};
-
 Drupal.edit.util.form = {
   /**
    * Loads a form, calls a callback to inserts.

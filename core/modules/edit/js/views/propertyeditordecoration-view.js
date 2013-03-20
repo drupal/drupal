@@ -32,7 +32,8 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
    *   - editor: the editor object with an 'options' object that has these keys:
    *      * entity: the VIE entity for the property.
    *      * property: the predicate of the property.
-   *      * widget: the parent EditableeEntity widget.
+   *      * widget: the parent EditableEntity widget.
+   *      * editorName: the name of the PropertyEditor widget
    *   - toolbarId: the ID attribute of the toolbar as rendered in the DOM.
    */
   initialize: function(options) {
@@ -40,6 +41,7 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
     this.toolbarId = options.toolbarId;
 
     this.predicate = this.editor.options.property;
+    this.editorName = this.editor.options.editorName;
 
     // Only start listening to events as soon as we're no longer in the 'inactive' state.
     this.undelegateEvents();
@@ -53,6 +55,9 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
       case 'inactive':
         if (from !== null) {
           this.undecorate();
+          if (from === 'invalid') {
+            this._removeValidationErrors();
+          }
         }
         break;
       case 'candidate':
@@ -61,6 +66,9 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
           this.stopHighlight();
           if (from !== 'highlighted') {
             this.stopEdit();
+            if (from === 'invalid') {
+              this._removeValidationErrors();
+            }
           }
         }
         break;
@@ -81,6 +89,9 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
       case 'changed':
         break;
       case 'saving':
+        if (from === 'invalid') {
+          this._removeValidationErrors();
+        }
         break;
       case 'saved':
         break;
@@ -305,7 +316,24 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
     else {
       callback();
     }
+  },
+
+  /**
+   * Removes validation errors' markup changes, if any.
+   *
+   * Note: this only needs to happen for type=direct, because for type=direct,
+   * the property DOM element itself is modified; this is not the case for
+   * type=form.
+   */
+  _removeValidationErrors: function() {
+    if (this.editorName !== 'form') {
+      this.$el
+        .removeClass('edit-validation-error')
+        .next('.edit-validation-errors')
+        .remove();
+    }
   }
+
 });
 
 })(jQuery, Backbone, Drupal);

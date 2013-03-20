@@ -125,8 +125,7 @@ Backbone.syncDirect = function(method, model, options) {
 
         // Successfully saved.
         Drupal.ajax[base].commands.editFieldFormSaved = function (ajax, response, status) {
-          Drupal.edit.util.form.unajaxifySaving(jQuery(ajax.element));
-          jQuery('#edit_backstage form').remove();
+          Backbone.syncDirectCleanUp();
 
           // Call Backbone.sync's success callback with the rerendered field.
           var changedAttributes = {};
@@ -161,6 +160,25 @@ Backbone.syncDirect = function(method, model, options) {
       fillAndSubmitForm(value);
     }
   }
+};
+
+/**
+ * Cleans up the hidden form that Backbone.syncDirect uses for syncing.
+ *
+ * This is called automatically by Backbone.syncDirect when saving is successful
+ * (i.e. when there are no validation errors). Only when editing is canceled
+ * while a PropertyEditor widget is in the invalid state, this must be called
+ * "manually" (in practice, ToolbarView does this). This is necessary because
+ * Backbone.syncDirect is not aware of the application state, it only does the
+ * syncing.
+ * An alternative could be to also remove the hidden form when validation errors
+ * occur, but then the form must be retrieved again, thus resulting in another
+ * roundtrip, which is bad for front-end performance.
+ */
+Backbone.syncDirectCleanUp = function() {
+  var $submit = jQuery('#edit_backstage form .edit-form-submit');
+  Drupal.edit.util.form.unajaxifySaving($submit);
+  jQuery('#edit_backstage form').remove();
 };
 
 })(jQuery, Backbone, Drupal);

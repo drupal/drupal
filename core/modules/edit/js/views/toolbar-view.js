@@ -68,6 +68,9 @@ Drupal.edit.views.ToolbarView = Backbone.View.extend({
       case 'inactive':
         if (from) {
           this.remove();
+          if (this.editorName !== 'form') {
+            Backbone.syncDirectCleanUp();
+          }
         }
         break;
       case 'candidate':
@@ -75,6 +78,9 @@ Drupal.edit.views.ToolbarView = Backbone.View.extend({
           this.render();
         }
         else {
+          if (this.editorName !== 'form') {
+            Backbone.syncDirectCleanUp();
+          }
           // Remove all toolgroups; they're no longer necessary.
           this.$el
             .removeClass('edit-highlighted edit-editing')

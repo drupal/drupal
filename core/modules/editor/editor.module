@@ -78,8 +78,45 @@ function editor_library_info() {
       array('system', 'jquery.once'),
     ),
   );
+  // Create.js PropertyEditor widget library names begin with "edit.editor".
+  $libraries['edit.editorWidget.editor'] = array(
+    'title' => '"Editor" Create.js PropertyEditor widget',
+    'version' => VERSION,
+    'js' => array(
+      $path . '/js/editor.createjs.js' => array(
+        'scope' => 'footer',
+        'attributes' => array('defer' => TRUE),
+      ),
+      array(
+        'type' => 'setting',
+        'data' => array(
+          'editor' => array(
+            'getUntransformedTextURL' => url('editor/!entity_type/!id/!field_name/!langcode/!view_mode'),
+          )
+        )
+      ),
+    ),
+    'dependencies' => array(
+      array('edit', 'edit'),
+      array('editor', 'drupal.editor'),
+      array('system', 'drupal.ajax'),
+      array('system', 'drupalSettings'),
+    ),
+  );
 
   return $libraries;
+}
+
+/**
+ * Implements hook_custom_theme().
+ *
+ * @todo Add an event subscriber to the Ajax system to automatically set the
+ *   base page theme for all Ajax requests, and then remove this one off.
+ */
+function editor_custom_theme() {
+  if (substr(current_path(), 0, 7) === 'editor/') {
+    return ajax_base_page_theme();
+  }
 }
 
 /**

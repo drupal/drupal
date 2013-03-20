@@ -16,7 +16,7 @@ use Drupal\field\FieldInstance;
  *
  * @Plugin(
  *   id = "form",
- *   jsClassName = "drupalFormWidget",
+ *   jsClassName = "formEditEditor",
  *   module = "edit"
  * )
  */
@@ -35,7 +35,7 @@ class FormEditor extends EditorBase {
   public function getAttachments() {
     return array(
       'library' => array(
-        array('edit', 'edit.editor.form'),
+        array('edit', 'edit.editorWidget.form'),
       ),
     );
   }

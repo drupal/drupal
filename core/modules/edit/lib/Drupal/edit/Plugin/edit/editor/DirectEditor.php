@@ -16,7 +16,7 @@ use Drupal\field\FieldInstance;
  *
  * @Plugin(
  *   id = "direct",
- *   jsClassName = "drupalContentEditableWidget",
+ *   jsClassName = "direct",
  *   module = "edit"
  * )
  */
@@ -50,7 +50,7 @@ class DirectEditor extends EditorBase {
   public function getAttachments() {
     return array(
       'library' => array(
-        array('edit', 'edit.editor.direct'),
+        array('edit', 'edit.editorWidget.direct'),
       ),
     );
   }

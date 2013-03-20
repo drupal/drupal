@@ -16,7 +16,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\edit\Ajax\FieldFormCommand;
 use Drupal\edit\Ajax\FieldFormSavedCommand;
 use Drupal\edit\Ajax\FieldFormValidationErrorsCommand;
-use Drupal\edit\Ajax\FieldRenderedWithoutTransformationFiltersCommand;
 
 /**
  * Returns responses for Edit module routes.
@@ -113,33 +112,6 @@ class EditController extends ContainerAware {
       drupal_static_reset('drupal_add_css');
       drupal_static_reset('drupal_add_js');
     }
-
-    return $response;
-  }
-
-  /**
-   * Returns an Ajax response to render a text field without transformation filters.
-   *
-   * @param int $entity
-   *   The entity of which a processed text field is being rerendered.
-   * @param string $field_name
-   *   The name of the (processed text) field that that is being rerendered
-   * @param string $langcode
-   *   The name of the language for which the processed text field is being
-   *   rererendered.
-   * @param string $view_mode
-   *   The view mode the processed text field should be rerendered in.
-   * @return \Drupal\Core\Ajax\AjaxResponse
-   *   The Ajax response.
-   */
-  public function getUntransformedText(EntityInterface $entity, $field_name, $langcode, $view_mode) {
-    $response = new AjaxResponse();
-
-    $output = field_view_field($entity, $field_name, $view_mode, $langcode);
-    $langcode = $output['#language'];
-    // Direct text editing is only supported for single-valued fields.
-    $editable_text = check_markup($output['#items'][0]['value'], $output['#items'][0]['format'], $langcode, FALSE, array(FILTER_TYPE_TRANSFORM_REVERSIBLE, FILTER_TYPE_TRANSFORM_IRREVERSIBLE));
-    $response->addCommand(new FieldRenderedWithoutTransformationFiltersCommand($editable_text));
 
     return $response;
   }
