@@ -53,6 +53,24 @@ class ViewsDataTest extends ViewUnitTestBase {
     $data = $this->viewsDataCache->get();
     $this->assertTrue(isset($data[$table_name]), 'Make sure the views_test_data info appears in the total views data.');
     $this->assertEqual($data[$table_name], $expected_data[$table_name], 'Make sure the views_test_data has the expected values.');
+
+    // Verify that views_test_data_views_data() has only been called once.
+    $state = \Drupal::service('state');
+    $count = $state->get('views_test_data_views_data_count');
+
+    // Clear the storage/cache.
+    $this->viewsDataCache->clear();
+    // Get the data again.
+    $this->viewsDataCache->get($table_name);
+    // Verify that view_test_data_views_data() has run again.
+    $this->assertEqual($count + 1, $state->get('views_test_data_views_data_count'));
+
+    // Get the data again.
+    $this->viewsDataCache->get($table_name);
+    // Also request all table data.
+    $this->viewsDataCache->get();
+    // Verify that view_test_data_views_data() has not run again.
+    $this->assertEqual($count + 1, $state->get('views_test_data_views_data_count'));
   }
 
   /**

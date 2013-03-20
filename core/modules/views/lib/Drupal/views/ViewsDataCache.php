@@ -273,4 +273,11 @@ class ViewsDataCache implements DestructableInterface {
     }
   }
 
+  /**
+   * Clears the class storage and cache.
+   */
+  public function clear() {
+    $this->storage = array();
+    $this->cacheBackend->deleteAll();
+  }
 }
