@@ -156,6 +156,6 @@ interface QueryAggregateInterface extends QueryInterface {
    * $result[2] = array('count_nid' => 4, 'type' => 'story');
    * @endcode
    */
-  // public function execute();
+  public function execute();
 
 }
