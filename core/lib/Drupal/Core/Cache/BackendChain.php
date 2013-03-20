@@ -166,15 +166,6 @@ class BackendChain implements CacheBackendInterface {
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::expire().
-   */
-  public function deleteExpired() {
-    foreach ($this->backends as $backend) {
-      $backend->deleteExpired();
-    }
-  }
-
-  /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::invalidate().
    */
   public function invalidate($cid) {

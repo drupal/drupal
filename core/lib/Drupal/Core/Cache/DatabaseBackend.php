@@ -193,16 +193,6 @@ class DatabaseBackend implements CacheBackendInterface {
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::deleteExpired().
-   */
-  public function deleteExpired() {
-    Database::getConnection()->delete($this->bin)
-      ->condition('expire', CacheBackendInterface::CACHE_PERMANENT, '<>')
-      ->condition('expire', REQUEST_TIME, '<')
-      ->execute();
-  }
-
-  /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::invalidate().
    */
   public function invalidate($cid) {
@@ -251,7 +241,10 @@ class DatabaseBackend implements CacheBackendInterface {
    * Implements Drupal\Core\Cache\CacheBackendInterface::garbageCollection().
    */
   public function garbageCollection() {
-    $this->deleteExpired();
+    Database::getConnection()->delete($this->bin)
+      ->condition('expire', CacheBackendInterface::CACHE_PERMANENT, '<>')
+      ->condition('expire', REQUEST_TIME, '<')
+      ->execute();
   }
 
   /**

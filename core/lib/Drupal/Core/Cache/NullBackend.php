@@ -63,11 +63,6 @@ class NullBackend implements CacheBackendInterface {
   public function deleteAll() {}
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::deleteExpired().
-   */
-  public function deleteExpired() {}
-
-  /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::deleteTags().
    */
   public function deleteTags(array $tags) {}

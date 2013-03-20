@@ -139,16 +139,6 @@ class MemoryBackend implements CacheBackendInterface {
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::deleteExpired().
-   *
-   * Cache expiration is not implemented for MemoryBackend as this backend only
-   * persists during a single request and expiration are done using
-   * REQUEST_TIME.
-   */
-  public function deleteExpired() {
-  }
-
-  /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::invalidate().
    */
   public function invalidate($cid) {

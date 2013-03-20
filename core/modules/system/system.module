@@ -3550,7 +3550,7 @@ function system_cron() {
 
   $cache_bins = array_merge(module_invoke_all('cache_flush'), array('form', 'menu'));
   foreach ($cache_bins as $bin) {
-    cache($bin)->deleteExpired();
+    cache($bin)->garbageCollection();
   }
 
   // Cleanup the batch table and the queue for failed batches.
