@@ -2,10 +2,12 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\AnalyzeTest.
+ * Contains \Drupal\views\Tests\UI\AnalyzeTest.
  */
 
-namespace Drupal\views\Tests;
+namespace Drupal\views\Tests\UI;
+
+use Drupal\views\Tests\ViewTestBase;
 
 /**
  * Tests the views analyze system.
