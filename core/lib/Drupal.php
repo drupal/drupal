@@ -132,6 +132,19 @@ class Drupal {
   }
 
   /**
+   * Returns an expirable key value store collection.
+   *
+   * @param string $collection
+   *   The name of the collection holding key and value pairs.
+   *
+   * @return \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface
+   *   An expirable key value store collection.
+   */
+  public static function keyValueExpirable($collection) {
+    return static::$container->get('keyvalue.expirable')->get($collection);
+  }
+
+  /**
    * Returns the locking layer instance.
    *
    * @return \Drupal\Core\Lock\LockBackendInterface

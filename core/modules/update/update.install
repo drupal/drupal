@@ -57,15 +57,6 @@ function update_requirements($phase) {
 }
 
 /**
- * Implements hook_schema().
- */
-function update_schema() {
-  $schema['cache_update'] = drupal_get_schema_unprocessed('system', 'cache');
-  $schema['cache_update']['description'] = 'Cache table for the Update module to store information about available releases, fetched from central server.';
-  return $schema;
-}
-
-/**
  * Implements hook_install().
  */
 function update_install() {
@@ -174,4 +165,11 @@ function update_update_8001() {
     'update_last_email_notification' => 'update.last_email_notification'
   );
   update_variables_to_state($variable_map);
+}
+
+/**
+ * Deletes the {cache_update} table.
+ */
+function update_update_8002() {
+  db_drop_table('cache_update');
 }

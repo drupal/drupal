@@ -105,6 +105,14 @@ class CoreBundle extends Bundle {
     $container
       ->register('keyvalue.database', 'Drupal\Core\KeyValueStore\KeyValueDatabaseFactory')
       ->addArgument(new Reference('database'));
+    // Register the KeyValueStoreExpirable factory.
+    $container
+      ->register('keyvalue.expirable', 'Drupal\Core\KeyValueStore\KeyValueExpirableFactory')
+      ->addArgument(new Reference('service_container'));
+    $container
+      ->register('keyvalue.expirable.database', 'Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory')
+      ->addArgument(new Reference('database'))
+      ->addTag('needs_destruction');
 
     $container->register('settings', 'Drupal\Component\Utility\Settings')
       ->setFactoryClass('Drupal\Component\Utility\Settings')

@@ -286,7 +286,7 @@ function update_cron() {
   $last_check = state()->get('update.last_check') ?: 0;
   if ((REQUEST_TIME - $last_check) > $interval) {
     // If the configured update interval has elapsed, we want to invalidate
-    // the cached data for all projects, attempt to re-fetch, and trigger any
+    // the data for all projects, attempt to re-fetch, and trigger any
     // configured notifications about the new status.
     update_refresh();
     update_fetch_data();
@@ -311,33 +311,33 @@ function update_cron() {
 /**
  * Implements hook_themes_enabled().
  *
- * If themes are enabled, we invalidate the cache of available updates.
+ * If themes are enabled, we invalidate the information of available updates.
  */
 function update_themes_enabled($themes) {
-  // Clear all update module caches.
-  _update_cache_clear();
+  // Clear all update module data.
+  update_storage_clear();
 }
 
 /**
  * Implements hook_themes_disabled().
  *
- * If themes are disabled, we invalidate the cache of available updates.
+ * If themes are disabled, we invalidate the information of available updates.
  */
 function update_themes_disabled($themes) {
-  // Clear all update module caches.
-  _update_cache_clear();
+  // Clear all update module data.
+  update_storage_clear();
 }
 
 /**
  * Implements hook_form_FORM_ID_alter() for system_modules().
  *
  * Adds a form submission handler to the system modules form, so that if a site
- * admin saves the form, we invalidate the cache of available updates.
+ * admin saves the form, we invalidate the information of available updates.
  *
  * @see _update_cache_clear()
  */
 function update_form_system_modules_alter(&$form, $form_state) {
-  $form['#submit'][] = 'update_cache_clear_submit';
+  $form['#submit'][] = 'update_storage_clear_submit';
 }
 
 /**
@@ -345,9 +345,9 @@ function update_form_system_modules_alter(&$form, $form_state) {
  *
  * @see update_form_system_modules_alter()
  */
-function update_cache_clear_submit($form, &$form_state) {
-  // Clear all update module caches.
-  _update_cache_clear();
+function update_storage_clear_submit($form, &$form_state) {
+  // Clear all update module data.
+  update_storage_clear();
 }
 
 /**
@@ -362,9 +362,9 @@ function _update_no_data() {
 }
 
 /**
- * Tries to get update information from cache and refreshes it when necessary.
+ * Tries to get update information and refreshes it when necessary.
  *
- * In addition to checking the cache lifetime, this function also ensures that
+ * In addition to checking the lifetime, this function also ensures that
  * there are no .info.yml files for enabled modules or themes that have a newer
  * modification timestamp than the last time we checked for available update
  * data. If any .info.yml file was modified, it almost certainly means a new
@@ -373,8 +373,8 @@ function _update_no_data() {
  * bogus results.
  *
  * @param $refresh
- *   (optional) Boolean to indicate if this method should refresh the cache
- *   automatically if there's no data. Defaults to FALSE.
+ *   (optional) Boolean to indicate if this method should refresh automatically
+ *   if there's no data. Defaults to FALSE.
  *
  * @return
  *   Array of data about available releases, keyed by project shortname.
@@ -386,9 +386,8 @@ function update_get_available($refresh = FALSE) {
   module_load_include('inc', 'update', 'update.compare');
   $needs_refresh = FALSE;
 
-  // Grab whatever data we currently have cached in the DB.
-  $available = _update_get_cached_available_releases();
-  $num_avail = count($available);
+  // Grab whatever data we currently have.
+  $available = Drupal::keyValueExpirable('update_available_releases')->getAll();
 
   $projects = update_get_projects();
   foreach ($projects as $key => $project) {
@@ -426,8 +425,8 @@ function update_get_available($refresh = FALSE) {
     // Attempt to drain the queue of fetch tasks.
     update_fetch_data();
     // After processing the queue, we've (hopefully) got better data, so pull
-    // the latest from the cache again and use that directly.
-    $available = _update_get_cached_available_releases();
+    // the latest data again and use that directly.
+    $available = Drupal::keyValueExpirable('update_available_releases')->getAll();
   }
 
   return $available;
@@ -465,29 +464,6 @@ function update_refresh() {
 function update_fetch_data() {
   module_load_include('inc', 'update', 'update.fetch');
   return _update_fetch_data();
-}
-
-/**
- * Returns all currently cached data about available releases for all projects.
- *
- * @return
- *   Array of data about available releases, keyed by project shortname.
- */
-function _update_get_cached_available_releases() {
-  $data = array();
-  $cache_items = _update_get_cache_multiple('available_releases');
-  foreach ($cache_items as $cid => $cache) {
-    $cache->data['last_fetch'] = $cache->created;
-    if ($cache->expire < REQUEST_TIME) {
-      $cache->data['fetch_status'] = UPDATE_FETCH_PENDING;
-    }
-    // The project shortname is embedded in the cache ID, even if there's no
-    // data for this project in the DB at all, so use that for the indexes in
-    // the array.
-    $parts = explode('::', $cid, 2);
-    $data[$parts[1]] = $cache->data;
-  }
-  return $data;
 }
 
 /**
@@ -725,163 +701,12 @@ function update_verify_update_archive($project, $archive_file, $directory) {
 }
 
 /**
- * @defgroup update_status_cache Private update status cache system
- * @{
- * Functions to manage the update status cache.
- *
- * We specifically do NOT use the core cache API for saving the fetched data
- * about available updates. It is vitally important that this cache is only
- * cleared when we're populating it after successfully fetching new available
- * update data. Usage of the core cache API results in all sorts of potential
- * problems that would result in attempting to fetch available update data all
- * the time, including if a site has a "minimum cache lifetime" (which is both a
- * minimum and a maximum) defined, or if a site uses memcache or another
- * pluggable cache system that assumes volatile caches.
- *
- * The Update Manager module still uses the {cache_update} table, but instead of
- * using the cache API, there are private helper functions that implement these
- * same basic tasks but ensure that the cache is not prematurely cleared, and
- * that the data is always stored in the database, even if memcache or another
- * cache backend is in use.
+ * Invalidates stored data relating to update status.
  */
-
-/**
- * Stores data in the private update status cache table.
- *
- * @param $cid
- *   The cache ID to save the data with.
- * @param $data
- *   The data to store.
- * @param $expire
- *   One of the following values:
- *   - CacheBackendInterface::CACHE_PERMANENT: Indicates that the item should
- *     never be removed except by explicitly using _update_cache_clear().
- *   - A Unix timestamp: Indicates that the item should be kept at least until
- *     the given time, after which it will be invalidated.
- *
- * @see _update_cache_get()
- */
-function _update_cache_set($cid, $data, $expire) {
-  $fields = array(
-    'created' => REQUEST_TIME,
-    'expire' => $expire,
-  );
-  if (!is_string($data)) {
-    $fields['data'] = serialize($data);
-    $fields['serialized'] = 1;
-  }
-  else {
-    $fields['data'] = $data;
-    $fields['serialized'] = 0;
-  }
-  db_merge('cache_update')
-    ->key(array('cid' => $cid))
-    ->fields($fields)
-    ->execute();
+function update_storage_clear() {
+  Drupal::keyValueExpirable('update')->deleteAll();
+  Drupal::keyValueExpirable('update_available_release')->deleteAll();
 }
-
-/**
- * Retrieves data from the private update status cache table.
- *
- * @param $cid
- *   The cache ID to retrieve.
- *
- * @return
- *   An array of data for the given cache ID, or NULL if the ID was not found.
- *
- * @see _update_cache_set()
- */
-function _update_cache_get($cid) {
-  $cache = db_query("SELECT data, created, expire, serialized FROM {cache_update} WHERE cid = :cid", array(':cid' => $cid))->fetchObject();
-  if (isset($cache->data)) {
-    if ($cache->serialized) {
-      $cache->data = unserialize($cache->data);
-    }
-  }
-  return $cache;
-}
-
-/**
- * Returns an array of cache items with a given cache ID prefix.
- *
- * @param string $cid_prefix
- *   The cache ID prefix.
- *
- * @return
- *   Associative array of cache items, keyed by cache ID.
- */
-function _update_get_cache_multiple($cid_prefix) {
-  $data = array();
-  $result = db_select('cache_update')
-    ->fields('cache_update', array('cid', 'data', 'created', 'expire', 'serialized'))
-    ->condition('cache_update.cid', $cid_prefix . '::%', 'LIKE')
-    ->execute();
-  foreach ($result as $cache) {
-    if ($cache) {
-      if ($cache->serialized) {
-        $cache->data = unserialize($cache->data);
-      }
-      $data[$cache->cid] = $cache;
-    }
-  }
-  return $data;
-}
-
-/**
- * Invalidates cached data relating to update status.
- *
- * @param $cid
- *   (optional) Cache ID of the record to clear from the private update module
- *   cache. If empty, all records will be cleared from the table except fetch
- *   tasks. Defaults to NULL.
- * @param $wildcard
- *   (optional) If TRUE, cache IDs starting with $cid are deleted in addition to
- *   the exact cache ID specified by $cid. Defaults to FALSE.
- */
-function _update_cache_clear($cid = NULL, $wildcard = FALSE) {
-  if (empty($cid)) {
-    db_delete('cache_update')
-      // Clear everything except fetch task information because these are used
-      // to ensure that the fetch task queue items are not added multiple times.
-      ->condition('cid', 'fetch_task::%', 'NOT LIKE')
-      ->execute();
-  }
-  else {
-    $query = db_delete('cache_update');
-    if ($wildcard) {
-      $query->condition('cid', $cid . '%', 'LIKE');
-    }
-    else {
-      $query->condition('cid', $cid);
-    }
-    $query->execute();
-  }
-}
-
-/**
- * Implements hook_cache_flush().
- *
- * Called from update.php (among others) to flush the caches. Since we're
- * running update.php, we are likely to install a new version of something, in
- * which case, we want to check for available update data again. However,
- * because we have our own caching system, we need to directly clear the
- * the database table ourselves at this point and return nothing.
- *
- * However, we only want to do this from update.php, since otherwise, we'd lose
- * all the available update data on every cron run. So, we specifically check if
- * the site is in MAINTENANCE_MODE == 'update' (which indicates update.php is
- * running, not update module... alas for overloaded names).
- */
-function update_cache_flush() {
-  if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update') {
-    _update_cache_clear();
-  }
-  return array();
-}
-
-/**
- * @} End of "defgroup update_status_cache".
- */
 
 /**
  * Returns a short unique identifier for this Drupal installation.

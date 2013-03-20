@@ -1735,44 +1735,7 @@ function system_update_8022() {
  * Create the 'key_value_expire' table.
  */
 function system_update_8023() {
-  $table = array(
-    'description' => 'Generic key/value storage table with an expiration.',
-    'fields' => array(
-      'collection' => array(
-        'description' => 'A named collection of key and value pairs.',
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'name' => array(
-        // KEY is an SQL reserved word, so use 'name' as the key's field name.
-        'description' => 'The key of the key/value pair.',
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'value' => array(
-        'description' => 'The value of the key/value pair.',
-        'type' => 'blob',
-        'not null' => TRUE,
-        'size' => 'big',
-      ),
-      'expire' => array(
-        'description' => 'The time since Unix epoch in seconds when this item expires. Defaults to the maximum possible time.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 2147483647,
-      ),
-    ),
-    'primary key' => array('collection', 'name'),
-    'indexes' => array(
-      'all' => array('name', 'collection', 'expire'),
-    ),
-  );
-
-  db_create_table('key_value_expire', $table);
+  // Moved to update_fix_d8_requirements() as it is required early.
 }
 
 /**

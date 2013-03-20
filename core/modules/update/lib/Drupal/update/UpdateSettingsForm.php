@@ -106,9 +106,9 @@ class UpdateSettingsForm extends SystemConfigFormBase {
   public function submitForm(array &$form, array &$form_state) {
     $config = $this->configFactory->get('update.settings');
      // See if the update_check_disabled setting is being changed, and if so,
-    // invalidate all cached update status data.
+    // invalidate all update status data.
     if ($form_state['values']['update_check_disabled'] != $config->get('check.disabled_extensions')) {
-      _update_cache_clear();
+      update_storage_clear();
     }
 
     $config

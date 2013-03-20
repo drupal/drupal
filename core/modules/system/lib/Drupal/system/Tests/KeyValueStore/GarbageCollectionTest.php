@@ -62,10 +62,10 @@ class GarbageCollectionTest extends UnitTestBase {
         ->execute();
     }
 
-    // Perform a new set operation and then manually unset the object to
+    // Perform a new set operation and then manually destruct the object to
     // trigger garbage collection.
     $store->setWithExpire('autumn', 'winter', rand(500, 1000000));
-    unset($store);
+    $store->destruct();
 
     // Query the database and confirm that the stale records were deleted.
     $result = db_query(

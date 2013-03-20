@@ -81,4 +81,10 @@ class MemoryStorage extends StorageBase {
     }
   }
 
+  /**
+   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::deleteAll().
+   */
+  public function deleteAll() {
+    $this->data = array();
+  }
 }

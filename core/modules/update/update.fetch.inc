@@ -117,8 +117,8 @@ function _update_fetch_data() {
 /**
  * Processes a task to fetch available update data for a single project.
  *
- * Once the release history XML data is downloaded, it is parsed and saved into
- * the {cache_update} table in an entry just for that project.
+ * Once the release history XML data is downloaded, it is parsed and saved in an
+ * entry just for that project.
  *
  * @param $project
  *   Associative array of information about the project to fetch data for.
@@ -132,13 +132,11 @@ function _update_process_fetch_task($project) {
   $fail = &drupal_static(__FUNCTION__, array());
   // This can be in the middle of a long-running batch, so REQUEST_TIME won't
   // necessarily be valid.
-  $now = time();
+  $request_time_difference = time() - REQUEST_TIME;
   if (empty($fail)) {
     // If we have valid data about release history XML servers that we have
-    // failed to fetch from on previous attempts, load that from the cache.
-    if (($cache = _update_cache_get('fetch_failures')) && ($cache->expire > $now)) {
-      $fail = $cache->data;
-    }
+    // failed to fetch from on previous attempts, load that.
+    $fail = Drupal::keyValueExpirable('update')->get('fetch_failures');
   }
 
   $max_fetch_attempts = $update_config->get('fetch.max_attempts');
@@ -179,43 +177,43 @@ function _update_process_fetch_task($project) {
   }
 
   $frequency = $update_config->get('check.interval_days');
-  $cid = 'available_releases::' . $project_name;
-  _update_cache_set($cid, $available, $now + (60 * 60 * 24 * $frequency));
+  $available['last_fetch'] = REQUEST_TIME + $request_time_difference;
+  Drupal::keyValueExpirable('update_available_releases')->setWithExpire($project_name, $available, $request_time_difference + (60 * 60 * 24 * $frequency));
 
   // Stash the $fail data back in the DB for the next 5 minutes.
-  _update_cache_set('fetch_failures', $fail, $now + (60 * 5));
+  Drupal::keyValueExpirable('update')->setWithExpire('fetch_failures', $fail, $request_time_difference + (60 * 5));
 
   // Whether this worked or not, we did just (try to) check for updates.
-  state()->set('update.last_check', $now);
+  state()->set('update.last_check', REQUEST_TIME + $request_time_difference);
 
   // Now that we processed the fetch task for this project, clear out the
-  // record in {cache_update} for this task so we're willing to fetch again.
-  _update_cache_clear('fetch_task::' . $project_name);
+  // record for this task so we're willing to fetch again.
+  drupal_container()->get('keyvalue')->get('update_fetch_task')->delete($project_name);
 
   return $success;
 }
 
 /**
- * Clears out all the cached available update data and initiates re-fetching.
+ * Clears out all the available update data and initiates re-fetching.
  */
 function _update_refresh() {
   module_load_include('inc', 'update', 'update.compare');
 
   // Since we're fetching new available update data, we want to clear
-  // our cache of both the projects we care about, and the current update
-  // status of the site. We do *not* want to clear the cache of available
-  // releases just yet, since that data (even if it's stale) can be useful
-  // during update_get_projects(); for example, to modules that implement
+  // of both the projects we care about, and the current update status of the
+  // site. We do *not* want to clear the cache of available releases just yet,
+  // since that data (even if it's stale) can be useful during
+  // update_get_projects(); for example, to modules that implement
   // hook_system_info_alter() such as cvs_deploy.
-  _update_cache_clear('update_project_projects');
-  _update_cache_clear('update_project_data');
+  Drupal::keyValueExpirable('update')->delete('update_project_projects');
+  Drupal::keyValueExpirable('update')->delete('update_project_data');
 
   $projects = update_get_projects();
 
-  // Now that we have the list of projects, we should also clear our cache of
-  // available release data, since even if we fail to fetch new data, we need
-  // to clear out the stale data at this point.
-  _update_cache_clear('available_releases::', TRUE);
+  // Now that we have the list of projects, we should also clear the available
+  // release data, since even if we fail to fetch new data, we need to clear
+  // out the stale data at this point.
+  Drupal::keyValueExpirable('update_available_releases')->deleteAll();
 
   foreach ($projects as $key => $project) {
     update_create_fetch_task($project);
@@ -226,8 +224,7 @@ function _update_refresh() {
  * Adds a task to the queue for fetching release history data for a project.
  *
  * We only create a new fetch task if there's no task already in the queue for
- * this particular project (based on 'fetch_task::' entries in the
- * {cache_update} table).
+ * this particular project (based on 'update_fetch_task' key-value collection).
  *
  * @param $project
  *   Associative array of information about a project as created by
@@ -243,29 +240,13 @@ function _update_refresh() {
 function _update_create_fetch_task($project) {
   $fetch_tasks = &drupal_static(__FUNCTION__, array());
   if (empty($fetch_tasks)) {
-    $fetch_tasks = _update_get_cache_multiple('fetch_task');
+    $fetch_tasks = drupal_container()->get('keyvalue')->get('update_fetch_task')->getAll();
   }
-  $cid = 'fetch_task::' . $project['name'];
-  if (empty($fetch_tasks[$cid])) {
+  if (empty($fetch_tasks[$project['name']])) {
     $queue = queue('update_fetch_tasks');
     $queue->createItem($project);
-    // Due to race conditions, it is possible that another process already
-    // inserted a row into the {cache_update} table and the following query will
-    // throw an exception.
-    // @todo: Remove the need for the manual check by relying on a queue that
-    // enforces unique items.
-    try {
-      db_insert('cache_update')
-        ->fields(array(
-          'cid' => $cid,
-          'created' => REQUEST_TIME,
-        ))
-        ->execute();
-    }
-    catch (Exception $e) {
-      // The exception can be ignored safely.
-    }
-    $fetch_tasks[$cid] = REQUEST_TIME;
+    drupal_container()->get('keyvalue')->get('update_fetch_task')->set($project['name'], $project);
+    $fetch_tasks[$project['name']] = REQUEST_TIME;
   }
 }
 

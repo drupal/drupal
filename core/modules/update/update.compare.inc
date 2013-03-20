@@ -16,13 +16,12 @@
  * fetching the available release data.
  *
  * This array is fairly expensive to construct, since it involves a lot of disk
- * I/O, so we cache the results into the {cache_update} table using the
- * 'update_project_projects' cache ID. However, since this is not the data about
+ * I/O, so we store the results. However, since this is not the data about
  * available updates fetched from the network, it is acceptable to invalidate it
  * somewhat quickly. If we keep this data for very long, site administrators are
  * more likely to see incorrect results if they upgrade to a newer version of a
  * module or theme but do not visit certain pages that automatically clear this
- * cache.
+ * data.
  *
  * @return
  *   An associative array of currently enabled projects keyed by the
@@ -51,15 +50,15 @@
  *
  * @see update_process_project_info()
  * @see update_calculate_project_data()
- * @see update_project_cache()
+ * @see update_project_storage()
  */
 function update_get_projects() {
   $projects = &drupal_static(__FUNCTION__, array());
   if (empty($projects)) {
-    // Retrieve the projects from cache, if present.
-    $projects = update_project_cache('update_project_projects');
+    // Retrieve the projects from storage, if present.
+    $projects = update_project_storage('update_project_projects');
     if (empty($projects)) {
-      // Still empty, so we have to rebuild the cache.
+      // Still empty, so we have to rebuild.
       $module_data = system_rebuild_module_data();
       $theme_data = system_rebuild_theme_data();
       update_process_info_list($projects, $module_data, 'module', TRUE);
@@ -70,8 +69,8 @@ function update_get_projects() {
       }
       // Allow other modules to alter projects before fetching and comparing.
       drupal_alter('update_projects', $projects);
-      // Cache the site's project data for at most 1 hour.
-      _update_cache_set('update_project_projects', $projects, REQUEST_TIME + 3600);
+      // Store the site's project data for at most 1 hour.
+      Drupal::keyValueExpirable('update')->setWithExpire('update_project_projects', $projects, 3600);
     }
   }
   return $projects;
@@ -90,7 +89,7 @@ function update_get_projects() {
  * 'Hidden' themes are ignored only if they have no enabled sub-themes.
  * This function also records the latest change time on the .info.yml
  * files for each module or theme, which is important data which is used when
- * deciding if the cached available update data should be invalidated.
+ * deciding if the available update data should be invalidated.
  *
  * @param $projects
  *   Reference to the array of project data of what's installed on this site.
@@ -318,13 +317,12 @@ function update_process_project_info(&$projects) {
  *
  * The results of this function are expensive to compute, especially on sites
  * with lots of modules or themes, since it involves a lot of comparisons and
- * other operations. Therefore, we cache the results into the {cache_update}
- * table using the 'update_project_data' cache ID. However, since this is not
+ * other operations. Therefore, we store the results. However, since this is not
  * the data about available updates fetched from the network, it is ok to
  * invalidate it somewhat quickly. If we keep this data for very long, site
  * administrators are more likely to see incorrect results if they upgrade to a
  * newer version of a module or theme but do not visit certain pages that
- * automatically clear this cache.
+ * automatically clear this.
  *
  * @param array $available
  *   Data about available project releases.
@@ -335,13 +333,13 @@ function update_process_project_info(&$projects) {
  * @see update_get_available()
  * @see update_get_projects()
  * @see update_process_project_info()
- * @see update_project_cache()
+ * @see update_project_storage()
  */
 function update_calculate_project_data($available) {
-  // Retrieve the projects from cache, if present.
-  $projects = update_project_cache('update_project_data');
-  // If $projects is empty, then the cache must be rebuilt.
-  // Otherwise, return the cached data and skip the rest of the function.
+  // Retrieve the projects from storage, if present.
+  $projects = update_project_storage('update_project_data');
+  // If $projects is empty, then the data must be rebuilt.
+  // Otherwise, return the data and skip the rest of the function.
   if (!empty($projects)) {
     return $projects;
   }
@@ -361,8 +359,8 @@ function update_calculate_project_data($available) {
   // projects or releases).
   drupal_alter('update_status', $projects);
 
-  // Cache the site's update status for at most 1 hour.
-  _update_cache_set('update_project_data', $projects, REQUEST_TIME + 3600);
+  // Store the site's update status for at most 1 hour.
+  Drupal::keyValueExpirable('update')->setWithExpire('update_project_data', $projects, 3600);
   return $projects;
 }
 
@@ -752,37 +750,36 @@ function update_calculate_project_update_status(&$project_data, $available) {
 }
 
 /**
- * Retrieves data from {cache_update} or empties the cache when necessary.
+ * Retrieves update storage data or empties it.
  *
  * Two very expensive arrays computed by this module are the list of all
- * installed modules and themes (and .info.yml data, project associations, etc),
- * and the current status of the site relative to the currently available
- * releases. These two arrays are cached in the {cache_update} table and used
- * whenever possible. The cache is cleared whenever the administrator visits the
- * status report, available updates report, or the module or theme
- * administration pages, since we should always recompute the most current
- * values on any of those pages.
+ * installed modules and themes (and .info.yml data, project associations, etc), and
+ * the current status of the site relative to the currently available releases.
+ * These two arrays are stored and used whenever possible. The data is cleared
+ * whenever the administrator visits the status report, available updates
+ * report, or the module or theme administration pages, since we should always
+ * recompute the most current values on any of those pages.
  *
  * Note: while both of these arrays are expensive to compute (in terms of disk
  * I/O and some fairly heavy CPU processing), neither of these is the actual
  * data about available updates that we have to fetch over the network from
- * updates.drupal.org. That information is stored with the
- * 'update_available_releases' cache ID -- it needs to persist longer than 1
+ * updates.drupal.org. That information is stored in the
+ * 'update_available_releases' collection -- it needs to persist longer than 1
  * hour and never get invalidated just by visiting a page on the site.
  *
- * @param $cid
- *   The cache ID of data to return from the cache. Valid options are
- *   'update_project_data' and 'update_project_projects'.
+ * @param $key
+ *   The key of data to return. Valid options are 'update_project_data' and
+ *   'update_project_projects'.
  *
  * @return
- *   The cached value of the $projects array generated by
+ *   The stored value of the $projects array generated by
  *   update_calculate_project_data() or update_get_projects(), or an empty array
- *   when the cache is cleared.
+ *   when the storage is cleared.
  */
-function update_project_cache($cid) {
+function update_project_storage($key) {
   $projects = array();
 
-  // On certain paths, we should clear the cache and recompute the projects for
+  // On certain paths, we should clear the data and recompute the projects for
   // update status of the site to avoid presenting stale information.
   $paths = array(
     'admin/modules',
@@ -796,13 +793,10 @@ function update_project_cache($cid) {
     'admin/reports/updates/check',
   );
   if (in_array(current_path(), $paths)) {
-    _update_cache_clear($cid);
+    Drupal::keyValueExpirable('update')->delete($key);
   }
   else {
-    $cache = _update_cache_get($cid);
-    if (!empty($cache->data) && $cache->expire > REQUEST_TIME) {
-      $projects = $cache->data;
-    }
+    $projects = Drupal::keyValueExpirable('update')->get($key);
   }
   return $projects;
 }
