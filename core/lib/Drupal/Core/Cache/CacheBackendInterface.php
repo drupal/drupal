@@ -43,8 +43,8 @@ namespace Drupal\Core\Cache;
  * @endcode
  *
  * There are two ways to "remove" a cache item:
- * - Deletion (using delete(), deleteMultiple(), deleteTags(), deleteAll() or
- *   deleteExpired()): Permanently removes the item from the cache.
+ * - Deletion (using delete(), deleteMultiple(), deleteTags() or deleteAll()):
+ *   Permanently removes the item from the cache.
  * - Invalidation (using invalidate(), invalidateMultiple(), invalidateTags()
  *   or invalidateAll()): a "soft" delete that only marks the items as
  *   "invalid", meaning "not fresh" or "not fresh enough". Invalid items are
@@ -163,7 +163,6 @@ interface CacheBackendInterface {
    * @see Drupal\Core\Cache\CacheBackendInterface::deleteMultiple()
    * @see Drupal\Core\Cache\CacheBackendInterface::deleteTags()
    * @see Drupal\Core\Cache\CacheBackendInterface::deleteAll()
-   * @see Drupal\Core\Cache\CacheBackendInterface::deleteExpired()
    */
   public function delete($cid);
 
@@ -183,7 +182,6 @@ interface CacheBackendInterface {
    * @see Drupal\Core\Cache\CacheBackendInterface::delete()
    * @see Drupal\Core\Cache\CacheBackendInterface::deleteTags()
    * @see Drupal\Core\Cache\CacheBackendInterface::deleteAll()
-   * @see Drupal\Core\Cache\CacheBackendInterface::deleteExpired()
    */
   public function deleteMultiple(array $cids);
 
@@ -205,7 +203,6 @@ interface CacheBackendInterface {
    * @see Drupal\Core\Cache\CacheBackendInterface::delete()
    * @see Drupal\Core\Cache\CacheBackendInterface::deleteMultiple()
    * @see Drupal\Core\Cache\CacheBackendInterface::deleteAll()
-   * @see Drupal\Core\Cache\CacheBackendInterface::deleteExpired()
    */
   public function deleteTags(array $tags);
 
@@ -216,20 +213,8 @@ interface CacheBackendInterface {
    * @see Drupal\Core\Cache\CacheBackendInterface::delete()
    * @see Drupal\Core\Cache\CacheBackendInterface::deleteMultiple()
    * @see Drupal\Core\Cache\CacheBackendInterface::deleteTags()
-   * @see Drupal\Core\Cache\CacheBackendInterface::deleteExpired()
    */
   public function deleteAll();
-
-  /**
-   * Deletes expired items from the cache.
-   *
-   * @see Drupal\Core\Cache\CacheBackendInterface::delete()
-   * @see Drupal\Core\Cache\CacheBackendInterface::deleteMultiple()
-   * @see Drupal\Core\Cache\CacheBackendInterface::deleteTags()
-   * @see Drupal\Core\Cache\CacheBackendInterface::deleteAll()
-   * @see Drupal\Core\Cache\CacheBackendInterface::deleteExpired()
-   */
-  public function deleteExpired();
 
   /**
    * Marks a cache item as invalid.

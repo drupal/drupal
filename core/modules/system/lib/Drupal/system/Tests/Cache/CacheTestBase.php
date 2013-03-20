@@ -87,18 +87,4 @@ abstract class CacheTestBase extends WebTestBase {
     $cached = cache($bin)->get($cid);
     $this->assertFalse($cached, $message);
   }
-
-  /**
-   * Performs a general wipe of the bin.
-   *
-   * @param $bin
-   *   The bin to perform the wipe on.
-   */
-  protected function generalWipe($bin = NULL) {
-    if ($bin == NULL) {
-      $bin = $this->default_bin;
-    }
-
-    cache($bin)->deleteExpired();
-  }
 }
