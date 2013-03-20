@@ -1727,7 +1727,11 @@ function drupal_basename($uri, $suffix = NULL) {
 function drupal_mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
   if (!isset($mode)) {
     // Configuration system stores default mode as strings.
-    $mode = octdec(config('system.file')->get('chmod.directory'));
+    $mode = FALSE;
+    // During early update there's no container.
+    if (is_object(Drupal::getContainer())) {
+      $mode = octdec(config('system.file')->get('chmod.directory'));
+    }
     if (!$mode) {
       $mode = 0775;
     }
