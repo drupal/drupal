@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\KeyValueStore;
 
+use Drupal\Core\DestructableInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\Merge;
 
@@ -16,7 +17,7 @@ use Drupal\Core\Database\Query\Merge;
  * This key/value store implementation uses the database to store key/value
  * data with an expire date.
  */
-class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreExpirableInterface {
+class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreExpirableInterface, DestructableInterface {
 
   /**
    * The connection object for this storage.
@@ -53,15 +54,6 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    */
   public function __construct($collection, Connection $connection, $table = 'key_value_expire') {
     parent::__construct($collection, $connection, $table);
-  }
-
-  /**
-   * Performs garbage collection as needed when destructing the storage object.
-   */
-  public function __destruct() {
-    if ($this->needsGarbageCollection) {
-      $this->garbageCollection();
-    }
   }
 
   /**
@@ -156,6 +148,15 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
     $this->connection->delete($this->table)
       ->condition('expire', REQUEST_TIME, '<')
       ->execute();
+  }
+
+  /**
+   * Implements Drupal\Core\DestructableInterface::destruct().
+   */
+  public function destruct() {
+    if ($this->needsGarbageCollection) {
+      $this->garbageCollection();
+    }
   }
 
 }

@@ -178,7 +178,7 @@ function update_authorize_batch_copy_project($project, $updater_name, $local_url
  *
  * This processes the results and stashes them into SESSION such that
  * authorize.php will render a report. Also responsible for putting the site
- * back online and clearing the update status cache after a successful update.
+ * back online and clearing the update status storage after a successful update.
  *
  * @param $success
  *   TRUE if the batch operation was successful; FALSE if there were errors.
@@ -193,8 +193,8 @@ function update_authorize_update_batch_finished($success, $results) {
   }
   $offline = config('system.maintenance')->get('enabled');
   if ($success) {
-    // Now that the update completed, we need to clear the cache of available
-    // update data and recompute our status, so prevent show bogus results.
+    // Now that the update completed, we need to clear the available update data
+    // and recompute our status, so prevent show bogus results.
     _update_authorize_clear_update_status();
 
     // Take the site out of maintenance mode if it was previously that way.
@@ -315,25 +315,19 @@ function _update_batch_create_message(&$project_results, $message, $success = TR
 }
 
 /**
- * Clears cached available update status data.
+ * Clears available update status data.
  *
  * Since this function is run at such a low bootstrap level, the Update Manager
- * module is not loaded. So, we can't just call _update_cache_clear(). However,
- * the database is bootstrapped, so we can do a query ourselves to clear out
- * what we want to clear.
+ * module is not loaded. So, we can't just call update_storage_clear(). However,
+ * the key-value backend is available, so we just call that.
  *
- * Note that we do not want to just truncate the table, since that would remove
- * items related to currently pending fetch attempts.
+ * Note that we do not want to delete  items related to currently pending fetch
+ * attempts.
  *
  * @see update_authorize_update_batch_finished()
- * @see _update_cache_clear()
+ * @see update_storage_clear()
  */
 function _update_authorize_clear_update_status() {
-  $query = db_delete('cache_update');
-  $query->condition(
-    db_or()
-    ->condition('cid', 'update_project_%', 'LIKE')
-    ->condition('cid', 'available_releases::%', 'LIKE')
-  );
-  $query->execute();
+  Drupal::keyValueExpirable('update')->deleteAll();
+  Drupal::keyValueExpirable('update_available_release')->deleteAll();
 }

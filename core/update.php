@@ -271,9 +271,8 @@ function update_info_page() {
   // Change query-strings on css/js files to enforce reload for all users.
   _drupal_flush_css_js();
   // Flush the cache of all data for the update status module.
-  if (db_table_exists('cache_update')) {
-    cache('update')->deleteAll();
-  }
+  drupal_container()->get('keyvalue.expirable')->get('update')->deleteAll();
+  drupal_container()->get('keyvalue.expirable')->get('update_available_release')->deleteAll();
 
   update_task_list('info');
   drupal_set_title('Drupal database update');

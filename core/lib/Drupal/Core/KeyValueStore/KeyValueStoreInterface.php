@@ -99,4 +99,9 @@ interface KeyValueStoreInterface {
    */
   public function deleteMultiple(array $keys);
 
+  /**
+   * Deletes all items from the key/value store.
+   */
+  public function deleteAll();
+
 }

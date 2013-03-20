@@ -234,5 +234,5 @@ function hook_themes_enabled($theme_list) {
  */
 function hook_themes_disabled($theme_list) {
  // Clear all update module caches.
-  _update_cache_clear();
+  update_storage_clear();
 }
