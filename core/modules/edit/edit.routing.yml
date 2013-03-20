@@ -12,11 +12,3 @@ edit_field_form:
   requirements:
     _permission: 'access in-place editing'
     _access_edit_entity_field: 'TRUE'
-
-edit_text:
-  pattern: '/edit/text/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode}'
-  defaults:
-    _controller: '\Drupal\edit\EditController::getUntransformedText'
-  requirements:
-    _permission: 'access in-place editing'
-    _access_edit_entity_field: 'TRUE'

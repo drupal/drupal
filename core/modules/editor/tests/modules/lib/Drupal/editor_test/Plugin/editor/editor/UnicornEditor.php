@@ -18,7 +18,8 @@ use Drupal\editor\Plugin\Core\Entity\Editor;
  * @Plugin(
  *   id = "unicorn",
  *   label = @Translation("Unicorn Editor"),
- *   module = "editor_test"
+ *   module = "editor_test",
+ *   supports_inline_editing = TRUE
  * )
  */
 class UnicornEditor extends EditorBase {

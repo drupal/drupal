@@ -6,7 +6,9 @@
 
 "use strict";
 
-  jQuery.widget('Drupal.drupalContentEditableWidget', jQuery.Create.editWidget, {
+  // @todo D8: use jQuery UI Widget bridging.
+  // @see http://drupal.org/node/1874934#comment-7124904
+  jQuery.widget('DrupalEditEditor.direct', jQuery.Create.editWidget, {
 
     /**
      * Implements getEditUISettings() method.
@@ -54,8 +56,6 @@
           if (from !== 'inactive') {
             // Removes the "contenteditable" attribute.
             this.disable();
-            this._removeValidationErrors();
-            this._cleanUp();
           }
           break;
         case 'highlighted':
@@ -70,42 +70,14 @@
         case 'changed':
           break;
         case 'saving':
-          this._removeValidationErrors();
           break;
         case 'saved':
           break;
         case 'invalid':
           break;
       }
-    },
-
-    /**
-     * Removes validation errors' markup changes, if any.
-     *
-     * Note: this only needs to happen for type=direct, because for type=direct,
-     * the property DOM element itself is modified; this is not the case for
-     * type=form.
-     */
-    _removeValidationErrors: function() {
-      this.element
-        .removeClass('edit-validation-error')
-        .next('.edit-validation-errors').remove();
-    },
-
-    /**
-     * Cleans up after the widget has been saved.
-     *
-     * Note: this is where the Create.Storage and accompanying Backbone.sync
-     * abstractions "leak" implementation details. That is only the case because
-     * we have to use Drupal's Form API as a transport mechanism. It is
-     * unfortunately a stateful transport mechanism, and that's why we have to
-     * clean it up here. This clean-up is only necessary when canceling the
-     * editing of a property after having attempted to save at least once.
-     */
-    _cleanUp: function() {
-      Drupal.edit.util.form.unajaxifySaving(jQuery('#edit_backstage form .edit-form-submit'));
-      jQuery('#edit_backstage form').remove();
     }
+
   });
 
 })(jQuery, Drupal);

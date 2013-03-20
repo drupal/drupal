@@ -97,7 +97,6 @@ function edit_library_info() {
         'data' => array('edit' => array(
           'metadataURL' => url('edit/metadata'),
           'fieldFormURL' => url('edit/form/!entity_type/!id/!field_name/!langcode/!view_mode'),
-          'rerenderProcessedTextURL' => url('edit/text/!entity_type/!id/!field_name/!langcode/!view_mode'),
           'context' => 'body',
         )),
         'type' => 'setting',
@@ -118,7 +117,7 @@ function edit_library_info() {
       array('system', 'drupalSettings'),
     ),
   );
-  $libraries['edit.editor.form'] = array(
+  $libraries['edit.editorWidget.form'] = array(
     'title' => '"Form" Create.js PropertyEditor widget',
     'version' => VERSION,
     'js' => array(
@@ -128,7 +127,7 @@ function edit_library_info() {
       array('edit', 'edit'),
     ),
   );
-  $libraries['edit.editor.direct'] = array(
+  $libraries['edit.editorWidget.direct'] = array(
     'title' => '"Direct" Create.js PropertyEditor widget',
     'version' => VERSION,
     'js' => array(
