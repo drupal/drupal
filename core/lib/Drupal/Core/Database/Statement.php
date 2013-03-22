@@ -40,10 +40,9 @@ class Statement extends PDOStatement implements StatementInterface {
   public function execute($args = array(), $options = array()) {
     if (isset($options['fetch'])) {
       if (is_string($options['fetch'])) {
-        // Default to an object. Note: db fields will be added to the object
-        // before the constructor is run. If you need to assign fields after
-        // the constructor is run, see http://drupal.org/node/315092.
-        $this->setFetchMode(PDO::FETCH_CLASS, $options['fetch']);
+        // PDO::FETCH_PROPS_LATE tells __construct() to run before properties
+        // are added to the object.
+        $this->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $options['fetch']);
       }
       else {
         $this->setFetchMode($options['fetch']);
