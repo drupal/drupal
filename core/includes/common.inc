@@ -5099,7 +5099,9 @@ function drupal_set_page_content($content = NULL) {
   $content_block = &drupal_static(__FUNCTION__, NULL);
   $main_content_display = &drupal_static('system_main_content_added', FALSE);
 
-  if (!empty($content)) {
+  // Filter out each empty value, though allow '0' and 0, which would be
+  // filtered out by empty().
+  if ($content !== NULL && $content !== '') {
     $content_block = (is_array($content) ? $content : array('main' => array('#markup' => $content)));
   }
   else {
