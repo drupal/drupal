@@ -1,6 +1,16 @@
 CKEditor 4 Changelog
 ====================
 
+## CKEditor 4.1
+
+* [#10192](http://dev.ckeditor.com/ticket/10192): Closing lists with Enter key does not work with Advanced Content Filter in several cases.
+* [#10191](http://dev.ckeditor.com/ticket/10191): Fixed allowed content rules unification, so the `filter.allowedContent` property always contains rules in the same format.
+* [#10224](http://dev.ckeditor.com/ticket/10224): Advanced Content Filter does not remove non-empty `<a>` elements anymore.
+* Minor issues in plugin integration with Advanced Content Filter:
+  * [#10166](http://dev.ckeditor.com/ticket/10166): Added transformation from the `align` attribute to `float` style to preserve backward compatibility after the introduction of Advanced Content Filter.
+  * [#10195](http://dev.ckeditor.com/ticket/10195): Image plugin no longer registers rules for links to Advanced Content Filter.
+  * [#10213](http://dev.ckeditor.com/ticket/10213): Justify plugin is now correctly registering rules to Advanced Content Filter when `config.justifyClasses` is defined.
+
 ## CKEditor 4.1 RC
 
 * [#9829](http://dev.ckeditor.com/ticket/9829): Data and features activation based on editor configuration.
@@ -12,7 +22,7 @@ CKEditor 4 Changelog
   * based on `config.allowedContent` rules - the data will be filtered and the editor features (toolbar items, commands,
   keystrokes) will be enabled if they are allowed.
 
-  See the `datafiltering.html` sample, [guides](http://docs.ckeditor.com/#!/guide/dev_data_filter) and [`CKEDITOR.filter` API documentation](http://docs.ckeditor.com/#!/api/CKEDITOR.filter).
+  See the `datafiltering.html` sample, [guides](http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter) and [`CKEDITOR.filter` API documentation](http://docs.ckeditor.com/#!/api/CKEDITOR.filter).
 * [#9387](http://dev.ckeditor.com/ticket/9387): Reintroduced "Shared Spaces" - the ability to display toolbar and bottom editor space in selected locations and to share them by different editor instances.
 * [#9907](http://dev.ckeditor.com/ticket/9907): Added the `contentPreview` event for preview data manipulation.
 * [#9713](http://dev.ckeditor.com/ticket/9713): Introduced the `sourcedialog` plugin that brings raw HTML editing for inline editor instances.
@@ -22,6 +32,12 @@ CKEditor 4 Changelog
   * Introduced the `editor.status` property to make it easier to check the current status of the editor. See [API documentation](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-property-status).
   * Default `command` state is now `CKEDITOR.TRISTATE_DISABLE`. It will be activated on `editor.instanceReady` or immediately after being added if the editor is already initialized.
 * [#9796](http://dev.ckeditor.com/ticket/9796): Introduced `<s>` as a default tag for strikethrough, which replaces obsolete `<strike>` in HTML5.
+
+## CKEditor 4.0.3
+
+* [#10196](http://dev.ckeditor.com/ticket/10196): Fixed context menus not opening with keyboard shortcuts when Autogrow is enabled.
+* [#10212](http://dev.ckeditor.com/ticket/10212): [IE7-10] Undo command throws errors after multiple switches between Source and WYSIWYG view.
+* [#10219](http://dev.ckeditor.com/ticket/10219): [Inline editor] Error thrown after calling editor.destroy().
 
 ## CKEditor 4.0.2
 
