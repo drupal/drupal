@@ -82,4 +82,9 @@ interface EntityAccessControllerInterface {
    *   TRUE if access was granted, FALSE otherwise.
    */
   public function deleteAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL);
+
+  /**
+   * Clears all cached access checks.
+   */
+  public function resetCache();
 }

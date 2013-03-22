@@ -19,6 +19,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\file\Plugin\Core\Entity\File;
+use Drupal\user\Plugin\Core\Entity\User;
 
 /**
  * Denotes that the node is not published.
@@ -56,7 +57,7 @@ const NODE_STICKY = 1;
  * Modules should return this value from hook_node_access() to allow access to a
  * node.
  */
-const NODE_ACCESS_ALLOW = 'allow';
+const NODE_ACCESS_ALLOW = TRUE;
 
 /**
  * Denotes that access is denied for a node.
@@ -64,7 +65,7 @@ const NODE_ACCESS_ALLOW = 'allow';
  * Modules should return this value from hook_node_access() to deny access to a
  * node.
  */
-const NODE_ACCESS_DENY = 'deny';
+const NODE_ACCESS_DENY = FALSE;
 
 /**
  * Denotes that access is unaffected for a node.
@@ -2513,126 +2514,31 @@ function node_form_system_themes_admin_form_submit($form, &$form_state) {
  *   http://drupal.org/node/1658846
  */
 function node_access($op, $node, $account = NULL, $langcode = NULL) {
-  $rights = &drupal_static(__FUNCTION__, array());
-
-  if (!$node || !in_array($op, array('view', 'update', 'delete', 'create'), TRUE)) {
-    // If there was no node to check against, or the $op was not one of the
-    // supported ones, we return access denied.
-    return FALSE;
-  }
-  // If no user object is supplied, the access check is for the current user.
-  if (empty($account)) {
-    $account = $GLOBALS['user'];
+  if (!$node instanceof EntityInterface) {
+    $type = is_object($node) ? $node->type : $node;
+    $node = entity_create('node', array('type' => $type));
   }
 
-  // $node may be a node object, a node type object, or a node type string.
-  // Use the node ID as the primary cache ID, or the node type name otherwise.
-  $cid = is_object($node) ? (isset($node->nid) ? $node->nid : $node->type) : $node;
-
-  // If no language code was provided, default to the node's langcode or
-  // to an empty langcode if a node type was requested. The latter is purely
-  // for caching purposes.
+  // If no language code was provided, default to the node's langcode.
   if (empty($langcode)) {
-    $langcode = (is_object($node) && isset($node->nid)) ? $node->langcode : '';
+    $langcode = $node->langcode;
   }
 
-  // Fetch information from the node object if possible.
-  $node_status = NULL;
-  $node_uid = NULL;
-  if (is_object($node)) {
-    $node_status = (isset($node->status)) ? $node->status : $node_status;
-    $node_uid = (isset($node->uid)) ? $node->uid : $node_uid;
-    // If it is a proper EntityNG object, use the proper methods.
-    if ($node instanceof \Drupal\Core\Entity\EntityNG){
-      $node_status = $node->get('status', $langcode)->value;
-      $node_uid = $node->get('uid', $langcode)->value ;
-    }
+  // Make sure that if an account is passed, that it is a fully loaded user
+  // object.
+  if ($account && !($account instanceof User)) {
+    $account = user_load($account->uid);
   }
 
-  // If we've already checked access for this node, user and op, return from
-  // cache.
-  if (isset($rights[$account->uid][$cid][$langcode][$op])) {
-    return $rights[$account->uid][$cid][$langcode][$op];
-  }
-
-  if (user_access('bypass node access', $account)) {
-    $rights[$account->uid][$cid][$langcode][$op] = TRUE;
-    return TRUE;
-  }
-  if (!user_access('access content', $account)) {
-    $rights[$account->uid][$cid][$langcode][$op] = FALSE;
-    return FALSE;
-  }
-
-  // We grant access to the node if both of the following conditions are met:
-  // - No modules say to deny access.
-  // - At least one module says to grant access.
-  // If no module specified either allow or deny, we fall back to the
-  // node_access table.
-  $access = module_invoke_all('node_access', $node, $op, $account, $langcode);
-  if (in_array(NODE_ACCESS_DENY, $access, TRUE)) {
-    $rights[$account->uid][$cid][$langcode][$op] = FALSE;
-    return FALSE;
-  }
-  elseif (in_array(NODE_ACCESS_ALLOW, $access, TRUE)) {
-    $rights[$account->uid][$cid][$langcode][$op] = TRUE;
-    return TRUE;
-  }
-
-  // Check if authors can view their own unpublished nodes.
-  if ($op == 'view' && empty($node_status) && user_access('view own unpublished content', $account) && $account->uid === $node_uid && $account->uid != 0) {
-    $rights[$account->uid][$cid][$langcode][$op] = TRUE;
-    return TRUE;
-  }
-
-  // If the module did not override the access rights, use those set in the
-  // node_access table.
-  if ($op != 'create' && !empty($node->nid)) {
-    if (module_implements('node_grants')) {
-      $query = db_select('node_access');
-      $query->addExpression('1');
-      $query->condition('grant_' . $op, 1, '>=');
-      $nids = db_or()->condition('nid', $node->nid);
-      if ($node->status) {
-        $nids->condition('nid', 0);
-      }
-      $query->condition($nids);
-      $query->range(0, 1);
-
-      $grants = db_or();
-      foreach (node_access_grants($op, $account) as $realm => $gids) {
-        foreach ($gids as $gid) {
-          $grants->condition(db_and()
-            ->condition('gid', $gid)
-            ->condition('realm', $realm)
-          );
-        }
-      }
-      if (count($grants) > 0) {
-        $query->condition($grants);
-      }
-      $result =  (bool) $query
-        ->execute()
-        ->fetchField();
-      $rights[$account->uid][$cid][$langcode][$op] = $result;
-      return $result;
-    }
-    elseif (is_object($node) && $op == 'view' && !empty($node_status)) {
-      // If no modules implement hook_node_grants(), the default behavior is to
-      // allow all users to view published nodes, so reflect that here.
-      $rights[$account->uid][$cid][$langcode][$op] = TRUE;
-      return TRUE;
-    }
-  }
-
-  return FALSE;
+  $method = $op . 'Access';
+  return entity_access_controller('node')->$method($node, $langcode, $account);
 }
 
 /**
  * Implements hook_node_access().
  */
 function node_node_access($node, $op, $account) {
-  $type = is_string($node) ? $node : $node->type;
+  $type = $node->bundle();
 
   $configured_types = node_permissions_get_configured_types();
   if (isset($configured_types[$type])) {

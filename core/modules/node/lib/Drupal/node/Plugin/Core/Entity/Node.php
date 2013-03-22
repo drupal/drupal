@@ -22,6 +22,7 @@ use Drupal\Core\Annotation\Translation;
  *   module = "node",
  *   controller_class = "Drupal\node\NodeStorageController",
  *   render_controller_class = "Drupal\node\NodeRenderController",
+ *   access_controller_class = "Drupal\node\NodeAccessController",
  *   form_controller_class = {
  *     "default" = "Drupal\node\NodeFormController"
  *   },

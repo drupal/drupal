@@ -8,13 +8,13 @@
 namespace Drupal\entity_test;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityAccessControllerInterface;
+use Drupal\Core\Entity\EntityAccessController;
 use Drupal\user\Plugin\Core\Entity\User;
 
 /**
  * Defines the access controller for the test entity type.
  */
-class EntityTestAccessController implements EntityAccessControllerInterface {
+class EntityTestAccessController extends EntityAccessController {
 
   /**
    * Implements \Drupal\Core\Entity\EntityAccessControllerInterface::viewAccess().

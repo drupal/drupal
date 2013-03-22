@@ -8,13 +8,13 @@
 namespace Drupal\user;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityAccessControllerInterface;
+use Drupal\Core\Entity\EntityAccessController;
 use Drupal\user\Plugin\Core\Entity\User;
 
 /**
  * Defines the access controller for the user entity type.
  */
-class UserAccessController implements EntityAccessControllerInterface {
+class UserAccessController extends EntityAccessController {
 
   /**
    * Implements EntityAccessControllerInterface::viewAccess().
