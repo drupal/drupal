@@ -117,7 +117,7 @@ user.role.*:
       type: string
       label: 'User role ID'
     label:
-      type: string
+      type: label
       label: 'User role label'
     weight:
       type: integer

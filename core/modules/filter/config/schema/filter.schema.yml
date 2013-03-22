@@ -19,7 +19,7 @@ filter.format.*:
       type: string
       label: 'Machine name'
     name:
-      type: string
+      type: label
       label: 'Name'
     status:
       type: boolean
