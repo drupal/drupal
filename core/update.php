@@ -46,6 +46,9 @@ define('MAINTENANCE_MODE', 'update');
  * Renders a form with a list of available database updates.
  */
 function update_selection_page() {
+  // Make sure there is no stale theme registry.
+  cache()->deleteAll();
+
   drupal_set_title('Drupal database update');
   $elements = drupal_get_form('update_script_selection_form');
   $output = drupal_render($elements);

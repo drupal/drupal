@@ -388,6 +388,7 @@ function update_prepare_d8_bootstrap() {
       $disabled_modules->save();
       $theme_config->save();
       $disabled_themes->save();
+      Drupal::service('kernel')->updateModules($sorted_with_filenames, $sorted_with_filenames);
 
       // Migrate the private key to state. This is used to create the token for
       // the upgrade batch so needs to be be done before the upgrade has begun.
