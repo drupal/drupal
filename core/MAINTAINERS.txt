@@ -67,6 +67,7 @@ Database system
 
 Database update system
 - Ashok Modi 'BTMash' http://drupal.org/user/60422
+- Károly Négyesi 'chx' http://drupal.org/user/9446
 
 Entity system
 - Wolfgang Ziegler 'fago' http://drupal.org/user/16747
