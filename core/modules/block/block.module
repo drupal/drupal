@@ -497,13 +497,6 @@ function _block_get_renderable_block($element) {
 }
 
 /**
- * Implements hook_cache_flush().
- */
-function block_cache_flush() {
-  return array('block');
-}
-
-/**
  * Implements hook_rebuild().
  */
 function block_rebuild() {

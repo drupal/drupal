@@ -132,6 +132,20 @@ class Drupal {
   }
 
   /**
+   * Returns the requested cache bin.
+   *
+   * @param string $bin
+   *   (optional) The cache bin for which the cache object should be returned,
+   *   defaults to 'cache'.
+   *
+   * @return Drupal\Core\Cache\CacheBackendInterface
+   *   The cache object associated with the specified bin.
+   */
+  public static function cache($bin = 'cache') {
+    return static::$container->get('cache.' . $bin);
+  }
+
+  /**
    * Returns an expirable key value store collection.
    *
    * @param string $collection

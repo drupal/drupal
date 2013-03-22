@@ -350,6 +350,11 @@ function install_begin_request(&$install_state) {
 
     // Register the 'language_manager' service.
     $container->register('language_manager', 'Drupal\Core\Language\LanguageManager');
+    foreach (array('bootstrap', 'config', 'cache', 'form', 'menu', 'page', 'path') as $bin) {
+      $container
+        ->register("cache.$bin", 'Drupal\Core\Cache\MemoryBackend')
+        ->addArgument($bin);
+    }
 
     // The install process cannot use the database lock backend since the database
     // is not fully up, so we use a null backend implementation during the
@@ -390,7 +395,6 @@ function install_begin_request(&$install_state) {
   $module_handler->load('system');
 
   require_once DRUPAL_ROOT . '/core/includes/cache.inc';
-  $conf['cache_classes'] = array('cache' => 'Drupal\Core\Cache\MemoryBackend');
 
   // Prepare for themed output. We need to run this at the beginning of the
   // page request to avoid a different theme accidentally getting set. (We also
@@ -1622,13 +1626,7 @@ function install_load_profile(&$install_state) {
  * @param $install_state
  *   An array of information about the current installation state.
  */
-function install_bootstrap_full(&$install_state) {
-  // The early stages of the installer override the cache backend since Drupal
-  // isn't fully set up yet. Here the override is removed so that the standard
-  // cache backend will be used again.
-  unset($GLOBALS['conf']['cache_classes']['cache']);
-  drupal_static_reset('cache');
-
+function install_bootstrap_full() {
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 }
 

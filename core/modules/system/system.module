@@ -5,6 +5,8 @@
  * Configuration system that lets administrators modify the workings of the site.
  */
 
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Utility\ModuleInfo;
 use Drupal\Core\TypedData\Primitive;
@@ -3549,9 +3551,9 @@ function system_cron() {
   // Cleanup the flood.
   Drupal::service('flood')->garbageCollection();
 
-  $cache_bins = array_merge(module_invoke_all('cache_flush'), array('form', 'menu'));
-  foreach ($cache_bins as $bin) {
-    cache($bin)->garbageCollection();
+  module_invoke_all('cache_flush');
+  foreach (Cache::getBins() as $cache_backend) {
+    $cache_backend->garbageCollection();
   }
 
   // Cleanup the batch table and the queue for failed batches.
@@ -3572,14 +3574,6 @@ function system_cron() {
     ->condition('expire', 0, '<>')
     ->condition('expire', REQUEST_TIME, '<')
     ->execute();
-}
-
-/**
- * Implements hook_cache_flush().
- */
-function system_cache_flush() {
-  // Do NOT flush the 'form' cache bin to retain in-progress form submissions.
-  return array('bootstrap', 'config', 'cache', 'page', 'path');
 }
 
 /**

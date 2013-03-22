@@ -1986,14 +1986,13 @@ function hook_mail($key, &$message, $params) {
  * This hook is invoked by drupal_flush_all_caches(). It runs before module data
  * is updated and before hook_rebuild().
  *
- * @return array
- *   An array of cache bins to be flushed.
- *
  * @see drupal_flush_all_caches()
  * @see hook_rebuild()
  */
 function hook_cache_flush() {
-  return array('example');
+  if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update') {
+    _update_cache_clear();
+  }
 }
 
 /**

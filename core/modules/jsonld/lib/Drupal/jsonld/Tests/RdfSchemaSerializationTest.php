@@ -38,7 +38,7 @@ class RdfSchemaSerializationTest extends DrupalUnitTestBase {
     $schema = new SiteSchema(SiteSchema::CONTENT_DEPLOYMENT);
     $bundle_schema = $schema->bundle($entity_type, $bundle);
     // Set up the serializer.
-    $setup_helper = new JsonldTestSetupHelper();
+    $setup_helper = new JsonldTestSetupHelper($this->container);
     $normalizer = new JsonldRdfSchemaNormalizer($setup_helper->getSiteSchemaManager(), $setup_helper->getRdfMappingManager());
     $serializer = new Serializer(array($normalizer), array(new JsonldEncoder()));
 

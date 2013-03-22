@@ -7,6 +7,7 @@
 
 namespace Drupal\field;
 
+use Drupal\Core\Cache\CacheFactory;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -24,6 +25,7 @@ class FieldBundle extends Bundle {
       ->addArgument('%container.namespaces%');
     $container->register('plugin.manager.field.formatter', 'Drupal\field\Plugin\Type\Formatter\FormatterPluginManager')
       ->addArgument('%container.namespaces%');
+    CacheFactory::registerBin($container, 'field');
   }
 
 }

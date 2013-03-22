@@ -146,8 +146,6 @@ function config_test_delete_form_submit($form, &$form_state) {
 function config_test_cache_flush() {
   // Set a global value we can check in test code.
   $GLOBALS['hook_cache_flush'] = __FUNCTION__;
-
-  return array();
 }
 
 /**

@@ -799,15 +799,14 @@ abstract class WebTestBase extends TestBase {
     $GLOBALS['conf']['file_public_path'] = $this->public_files_directory;
     // Execute the non-interactive installer.
     require_once DRUPAL_ROOT . '/core/includes/install.core.inc';
+    $this->settingsSet('cache', array('default' => 'cache.backend.memory'));
     install_drupal($settings);
+    $this->settingsSet('cache', array());
     $this->rebuildContainer();
 
     // Restore the original Simpletest batch.
     $batch = &batch_get();
     $batch = $this->originalBatch;
-
-    // Revert install_begin_request() cache service overrides.
-    unset($conf['cache_classes']);
 
     // Set path variables.
 

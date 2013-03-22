@@ -34,7 +34,7 @@ class BlockManager extends PluginManagerBase {
     $this->discovery = new AnnotatedClassDiscovery('block', 'block', $namespaces);
     $this->discovery = new DerivativeDiscoveryDecorator($this->discovery);
     $this->discovery = new AlterDecorator($this->discovery, 'block');
-    $this->discovery = new CacheDecorator($this->discovery, 'block_plugins:' . language(LANGUAGE_TYPE_INTERFACE)->langcode, 'cache_block', CacheBackendInterface::CACHE_PERMANENT, array('block'));
+    $this->discovery = new CacheDecorator($this->discovery, 'block_plugins:' . language(LANGUAGE_TYPE_INTERFACE)->langcode, 'block', CacheBackendInterface::CACHE_PERMANENT, array('block'));
   }
 
   /**

@@ -504,14 +504,6 @@ function field_language_fallback(&$field_langcodes, EntityInterface $entity, $la
 }
 
 /**
- * Implements hook_cache_flush().
- */
-function field_cache_flush() {
-  // Request a flush of our cache table.
-  return array('field');
-}
-
-/**
  * Implements hook_rebuild().
  */
 function field_rebuild() {

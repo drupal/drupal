@@ -7,6 +7,7 @@
 
 namespace Drupal\views;
 
+use Drupal\Core\Cache\CacheFactory;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\Reference;
@@ -27,12 +28,6 @@ class ViewsBundle extends Bundle {
         ->addArgument('%container.namespaces%');
     }
 
-    $container
-      ->register('cache.views_info', 'Drupal\Core\Cache\CacheBackendInterface')
-      ->setFactoryClass('Drupal\Core\Cache\CacheFactory')
-      ->setFactoryMethod('get')
-      ->addArgument('views_info');
-
     $container->register('views.views_data', 'Drupal\views\ViewsDataCache')
       ->addArgument(new Reference('cache.views_info'))
       ->addArgument(new Reference('config.factory'))
@@ -42,6 +37,8 @@ class ViewsBundle extends Bundle {
 
     $container->register('views.analyzer', 'Drupal\views\Analyzer')
       ->addArgument(new Reference('module_handler'));
+    CacheFactory::registerBin($container, 'views_info');
+    CacheFactory::registerBin($container, 'views_results');
   }
 
 }

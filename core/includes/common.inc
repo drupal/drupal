@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\Cache\Cache;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -6311,8 +6312,7 @@ function drupal_implode_tags($tags) {
  *
  * At times, it is necessary to re-initialize the entire system to account for
  * changed or new code. This function:
- * - Clears all persistent caches (invoking hook_cache_flush()), which always
- *   includes:
+ * - Clears all persistent caches:
  *   - The bootstrap cache bin containing base system, module system, and theme
  *     system information.
  *   - The common 'cache' cache bin containing arbitrary caches.
@@ -6342,6 +6342,7 @@ function drupal_implode_tags($tags) {
  * longer exist. All following hook_rebuild() operations must be based on fresh
  * and current system data. All modules must be able to rely on this contract.
  *
+ * @see \Drupal\Core\Cache\CacheHelper::getBins()
  * @see hook_cache_flush()
  * @see hook_rebuild()
  *
@@ -6364,8 +6365,12 @@ function drupal_flush_all_caches() {
   // Flush all persistent caches.
   // This is executed based on old/previously known information, which is
   // sufficient, since new extensions cannot have any primed caches yet.
-  foreach (module_invoke_all('cache_flush') as $bin) {
-    cache($bin)->deleteAll();
+  module_invoke_all('cache_flush');
+  foreach (Cache::getBins() as $service_id => $cache_backend) {
+    // @todo remove form after http://drupal.org/node/512026 is in.
+    if ($service_id != 'cache.form' && $service_id != 'cache.menu') {
+      $cache_backend->deleteAll();
+    }
   }
 
   // Flush asset file caches.

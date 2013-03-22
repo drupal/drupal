@@ -655,13 +655,6 @@ function toolbar_library_info() {
 }
 
 /**
- * Implements hook_cache_flush().
- */
-function toolbar_cache_flush() {
-  return array('toolbar');
-}
-
-/**
  * Returns the hash of the per-user rendered toolbar subtrees.
  */
 function _toolbar_get_subtree_hash() {

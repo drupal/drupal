@@ -9,6 +9,7 @@
  * incoming page and block requests.
  */
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\Component\Plugin\Exception\PluginException;
@@ -650,13 +651,6 @@ function views_language_list($field = 'name', $flags = LANGUAGE_ALL) {
 }
 
 /**
- * Implements hook_cache_flush().
- */
-function views_cache_flush() {
-  return array('views_info', 'views_results');
-}
-
-/**
  * Implements hook_field_create_instance.
  */
 function views_field_create_instance($instance) {
@@ -688,7 +682,7 @@ function views_invalidate_cache() {
   cache('views_info')->deleteAll();
 
   // Clear the page and block cache.
-  cache_delete_tags(array('content' => TRUE));
+  Cache::deleteTags(array('content' => TRUE));
 
   // Set the menu as needed to be rebuilt.
   state()->set('menu_rebuild_needed', TRUE);

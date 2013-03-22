@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Menu;
 
 use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
 use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -43,7 +44,7 @@ class TreeAccessTest extends DrupalUnitTestBase {
   /**
    * Overrides \Drupal\simpletest\DrupalUnitTestBase::containerBuild().
    */
-  public function containerBuild($container) {
+  public function containerBuild(ContainerBuilder $container) {
     parent::containerBuild($container);
 
     $route_collection = $this->getTestRouteCollection();

@@ -7,7 +7,6 @@
 
 namespace Drupal\jsonld\Tests;
 
-use Drupal\Core\Cache\DatabaseBackend;
 use Drupal\jsonld\JsonldEncoder;
 use Drupal\jsonld\JsonldEntityNormalizer;
 use Drupal\jsonld\JsonldEntityReferenceNormalizer;
@@ -15,6 +14,7 @@ use Drupal\jsonld\JsonldFieldItemNormalizer;
 use Drupal\rdf\RdfMappingManager;
 use Drupal\rdf\EventSubscriber\MappingSubscriber;
 use Drupal\rdf\SiteSchema\SiteSchemaManager;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Serializer\Serializer;
 
@@ -46,10 +46,13 @@ class JsonldTestSetupHelper {
 
   /**
    * Constructor.
+   *
+   * @param \Symfony\Component\DependencyInjection\Container $container
+   *   The container.
    */
-  public function __construct() {
+  public function __construct(Container $container) {
     // Construct site schema manager.
-    $this->siteSchemaManager = new SiteSchemaManager(new DatabaseBackend('cache'));
+    $this->siteSchemaManager = new SiteSchemaManager($container->get('cache.cache'));
     // Construct RDF mapping manager.
     $dispatcher = new EventDispatcher();
     $dispatcher->addSubscriber(new MappingSubscriber());

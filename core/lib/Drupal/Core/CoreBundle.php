@@ -7,6 +7,8 @@
 
 namespace Drupal\Core;
 
+use Drupal\Core\Cache\CacheFactory;
+use Drupal\Core\Cache\ListCacheBinsPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterKernelListenersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterAccessChecksPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterMatchersPass;
@@ -36,18 +38,11 @@ class CoreBundle extends Bundle {
    * Implements \Symfony\Component\HttpKernel\Bundle\BundleInterface::build().
    */
   public function build(ContainerBuilder $container) {
-
+    $this->registerCache($container);
     // Register active configuration storage.
     $container
       ->register('config.cachedstorage.storage', 'Drupal\Core\Config\FileStorage')
       ->addArgument(config_get_config_directory(CONFIG_ACTIVE_DIRECTORY));
-    // @todo Replace this with a cache.factory service plus 'config' argument.
-    $container
-      ->register('cache.config', 'Drupal\Core\Cache\CacheBackendInterface')
-      ->setFactoryClass('Drupal\Core\Cache\CacheFactory')
-      ->setFactoryMethod('get')
-      ->addArgument('config');
-
     $container
       ->register('config.storage', 'Drupal\Core\Config\CachedStorage')
       ->addArgument(new Reference('config.cachedstorage.storage'))
@@ -170,17 +165,6 @@ class CoreBundle extends Bundle {
     $container->register('controller_resolver', 'Drupal\Core\ControllerResolver')
       ->addArgument(new Reference('service_container'));
 
-    $container
-      ->register('cache.cache', 'Drupal\Core\Cache\CacheBackendInterface')
-      ->setFactoryClass('Drupal\Core\Cache\CacheFactory')
-      ->setFactoryMethod('get')
-      ->addArgument('cache');
-    $container
-      ->register('cache.bootstrap', 'Drupal\Core\Cache\CacheBackendInterface')
-      ->setFactoryClass('Drupal\Core\Cache\CacheFactory')
-      ->setFactoryMethod('get')
-      ->addArgument('bootstrap');
-
     $this->registerModuleHandler($container);
 
     $container->register('http_kernel', 'Drupal\Core\HttpKernel')
@@ -223,12 +207,6 @@ class CoreBundle extends Bundle {
       ->addArgument(new Reference('lock'))
       ->addArgument(new Reference('event_dispatcher'))
       ->addArgument(new Reference('module_handler'));
-
-    $container
-      ->register('cache.path', 'Drupal\Core\Cache\CacheBackendInterface')
-      ->setFactoryClass('Drupal\Core\Cache\CacheFactory')
-      ->setFactoryMethod('get')
-      ->addArgument('path');
 
     $container->register('path.alias_manager.cached', 'Drupal\Core\CacheDecorator\AliasManagerCacheDecorator')
       ->addArgument(new Reference('path.alias_manager'))
@@ -445,6 +423,29 @@ class CoreBundle extends Bundle {
 
     // Add the compiler pass that will process the tagged services.
     $container->addCompilerPass(new RegisterPathProcessorsPass());
+  }
+
+  /**
+   * Register services related to cache.
+   */
+  protected function registerCache(ContainerBuilder $container) {
+    // This factory chooses the backend service for a given bin.
+    $container
+      ->register('cache_factory', 'Drupal\Core\Cache\CacheFactory')
+      ->addArgument(new Reference('settings'))
+      ->addMethodCall('setContainer', array(new Reference('service_container')));
+    // These are the core provided backend services.
+    $container
+      ->register('cache.backend.database', 'Drupal\Core\Cache\DatabaseBackendFactory')
+      ->addArgument(new Reference('database'));
+    $container
+      ->register('cache.backend.memory', 'Drupal\Core\Cache\MemoryBackendFactory');
+    // Register a service for each bin for injecting purposes.
+    foreach (array('bootstrap', 'config', 'cache', 'form', 'menu', 'page', 'path') as $bin) {
+      CacheFactory::registerBin($container, $bin);
+    }
+
+    $container->addCompilerPass(new ListCacheBinsPass());
   }
 
 }
