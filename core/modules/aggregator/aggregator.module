@@ -125,10 +125,7 @@ function aggregator_menu() {
   );
   $items['admin/config/services/aggregator/remove/%aggregator_feed'] = array(
     'title' => 'Remove items',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('aggregator_admin_remove_feed', 5),
-    'access arguments' => array('administer news feeds'),
-    'file' => 'aggregator.admin.inc',
+    'route_name' => 'aggregator_feed_items_delete',
   );
   $items['admin/config/services/aggregator/update/%aggregator_feed'] = array(
     'title' => 'Update items',
