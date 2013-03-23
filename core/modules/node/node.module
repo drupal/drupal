@@ -813,7 +813,7 @@ function node_type_cache_reset() {
  * @return
  *   A node type object, with missing values in $info set to their defaults.
  *
- * @see hook_node_ifo()
+ * @see hook_node_info()
  */
 function node_type_set_defaults($info = array()) {
   $info = (array) $info;
