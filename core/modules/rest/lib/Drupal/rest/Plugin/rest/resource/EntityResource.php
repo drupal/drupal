@@ -88,45 +88,6 @@ class EntityResource extends ResourceBase {
   }
 
   /**
-   * Responds to entity PUT requests.
-   *
-   * @param mixed $id
-   *   The entity ID.
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity.
-   *
-   * @return \Drupal\rest\ResourceResponse
-   *   The HTTP response object.
-   *
-   * @throws \Symfony\Component\HttpKernel\Exception\HttpException
-   */
-  public function put($id, EntityInterface $entity) {
-    if (empty($id)) {
-      throw new NotFoundHttpException();
-    }
-    $definition = $this->getDefinition();
-    $original_entity = entity_load($definition['entity_type'], $id);
-    // We don't support creating entities with PUT, so we throw an error if
-    // there is no existing entity.
-    if ($original_entity == FALSE) {
-      throw new NotFoundHttpException();
-    }
-    $info = $entity->entityInfo();
-    // Make sure that the entity ID is the one provided in the URL.
-    $entity->{$info['entity_keys']['id']} = $id;
-    try {
-      $entity->save();
-      watchdog('rest', 'Updated entity %type with ID %id.', array('%type' => $entity->entityType(), '%id' => $entity->id()));
-
-      // Update responses have an empty body.
-      return new ResourceResponse(NULL, 204);
-    }
-    catch (EntityStorageException $e) {
-      throw new HttpException(500, t('Internal Server Error'), $e);
-    }
-  }
-
-  /**
    * Responds to entity PATCH requests.
    *
    * @param mixed $id
