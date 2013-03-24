@@ -2716,7 +2716,9 @@ function form_process_select($element) {
   // preselecting the first option without intention. #multiple select lists do
   // not get an empty option, as it would not make sense, user interface-wise.
   else {
-    $required = $element['#required'];
+    // If the element is set to #required through #states, override the
+    // element's #required setting.
+    $required = isset($element['#states']['required']) ? TRUE : $element['#required'];
     // If the element is required and there is no #default_value, then add an
     // empty option that will fail validation, so that the user is required to
     // make a choice. Also, if there's a value for #empty_value or
