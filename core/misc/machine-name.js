@@ -116,7 +116,7 @@ Drupal.behaviors.machineName = {
         // changes, but only if there is no machine name yet; i.e., only upon
         // initial creation, not when editing.
         if ($target.val() === '') {
-          $source.bind('keyup.machineName change.machineName', eventData, machineNameHandler)
+          $source.bind('keyup.machineName change.machineName input.machineName', eventData, machineNameHandler)
           // Initialize machine name preview.
           .keyup();
         }
