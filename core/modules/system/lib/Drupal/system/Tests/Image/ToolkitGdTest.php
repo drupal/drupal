@@ -7,12 +7,13 @@
 
 namespace Drupal\system\Tests\Image;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\system\Plugin\ImageToolkitManager;
 
 /**
  * Test the core GD image manipulation functions.
  */
-class ToolkitGdTest extends WebTestBase {
+class ToolkitGdTest extends DrupalUnitTestBase {
   // Colors that are used in testing.
   protected $black       = array(0, 0, 0, 0);
   protected $red         = array(255, 0, 0, 0);
@@ -26,6 +27,13 @@ class ToolkitGdTest extends WebTestBase {
   protected $width = 40;
   protected $height = 20;
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('system', 'simpletest');
+
   public static function getInfo() {
     return array(
       'name' => 'Image GD manipulation tests',
@@ -35,8 +43,14 @@ class ToolkitGdTest extends WebTestBase {
   }
 
   protected function checkRequirements() {
-    image_get_available_toolkits();
-    if (!function_exists('image_gd_check_settings') || !image_gd_check_settings()) {
+    $gd_available = FALSE;
+    if ($check = get_extension_funcs('gd')) {
+      if (in_array('imagegd2', $check)) {
+        // GD2 support is available.
+        $gd_available =  TRUE;
+      }
+    }
+    if (!$gd_available) {
       return array(
         'Image manipulations for the GD toolkit cannot run because the GD toolkit is not available.',
       );
@@ -201,10 +215,11 @@ class ToolkitGdTest extends WebTestBase {
       );
     }
 
+    $manager = new ImageToolkitManager($this->container->getParameter('container.namespaces'));
     foreach ($files as $file) {
       foreach ($operations as $op => $values) {
         // Load up a fresh image.
-        $image = image_load(drupal_get_path('module', 'simpletest') . '/files/' . $file, 'gd');
+        $image = image_load(drupal_get_path('module', 'simpletest') . '/files/' . $file, $manager->createInstance('gd'));
         if (!$image) {
           $this->fail(t('Could not load image %file.', array('%file' => $file)));
           continue 2;
@@ -244,7 +259,7 @@ class ToolkitGdTest extends WebTestBase {
           $correct_dimensions_object = FALSE;
         }
 
-        $directory = file_default_scheme() . '://imagetests';
+        $directory = $this->public_files_directory .'/imagetest';
         file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
         image_save($image, $directory . '/' . $op . '.' . $image->info['extension']);
 

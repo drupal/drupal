@@ -1360,44 +1360,6 @@ function hook_init() {
 }
 
 /**
- * Define image toolkits provided by this module.
- *
- * The file which includes each toolkit's functions must be declared as part of
- * the files array in the module .info.yml file so that the registry will find
- * and parse it.
- *
- * The toolkit's functions must be named image_toolkitname_operation().
- * where the operation may be:
- *   - 'load': Required. See image_gd_load() for usage.
- *   - 'save': Required. See image_gd_save() for usage.
- *   - 'settings': Optional. See image_gd_settings() for usage.
- *   - 'resize': Optional. See image_gd_resize() for usage.
- *   - 'rotate': Optional. See image_gd_rotate() for usage.
- *   - 'crop': Optional. See image_gd_crop() for usage.
- *   - 'desaturate': Optional. See image_gd_desaturate() for usage.
- *
- * @return
- *   An array with the toolkit name as keys and sub-arrays with these keys:
- *     - 'title': A string with the toolkit's title.
- *     - 'available': A Boolean value to indicate that the toolkit is operating
- *       properly, e.g. all required libraries exist.
- *
- * @see system_image_toolkits()
- */
-function hook_image_toolkits() {
-  return array(
-    'working' => array(
-      'title' => t('A toolkit that works.'),
-      'available' => TRUE,
-    ),
-    'broken' => array(
-      'title' => t('A toolkit that is "broken" and will not be listed.'),
-      'available' => FALSE,
-    ),
-  );
-}
-
-/**
  * Alter an email message created with the drupal_mail() function.
  *
  * hook_mail_alter() allows modification of email messages created and sent

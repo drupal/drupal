@@ -1830,39 +1830,65 @@ function system_file_system_settings_submit($form, &$form_state) {
  * Form builder; Configure site image toolkit usage.
  *
  * @ingroup forms
- * @see system_settings_form()
+ * @see system_image_toolkit_settings_submit()
  */
-function system_image_toolkit_settings() {
-  $toolkits_available = image_get_available_toolkits();
-  $current_toolkit = image_get_toolkit();
+function system_image_toolkit_settings($form, &$form_state) {
+  $manager = Drupal::service('image.toolkit.manager');
+  $toolkits_available = $manager->getAvailableToolkits();
+  $current_toolkit = config('system.image')->get('toolkit');
 
-  if (count($toolkits_available) == 0) {
-    variable_del('image_toolkit');
-    $form['image_toolkit_help'] = array(
-      '#markup' => t("No image toolkits were detected. Drupal includes support for <a href='!gd-link'>PHP's built-in image processing functions</a> but they were not detected on this system. You should consult your system administrator to have them enabled, or try using a third party toolkit.", array('gd-link' => url('http://php.net/gd'))),
-    );
-    return $form;
-  }
+  // If we have available toolkits allow the user to select the image toolkit to
+  // use and load the settings forms.
+  if (count($toolkits_available)) {
+    $options = array();
+    foreach($toolkits_available as $id => $definition) {
+      $options[$id] = $definition['title'];
+    }
 
-  if (count($toolkits_available) > 1) {
     $form['image_toolkit'] = array(
       '#type' => 'radios',
       '#title' => t('Select an image processing toolkit'),
-      '#default_value' => variable_get('image_toolkit', $current_toolkit),
-      '#options' => $toolkits_available
+      '#default_value' => $current_toolkit,
+      '#options' => $options,
     );
+
+    // Get the toolkit settings forms.
+    foreach ($toolkits_available as $id => $definition) {
+      $toolkit = $manager->createInstance($id);
+      $form['image_toolkit_settings'][$id] = array(
+        '#type' => 'fieldset',
+        '#title' => t('@toolkit settings', array('@toolkit' => $definition['title'])),
+        '#collapsible' => TRUE,
+        '#collapsed' => ($id == $current_toolkit) ? FALSE : TRUE,
+        '#tree' => TRUE,
+      );
+      $form['image_toolkit_settings'][$id] += $toolkit->settingsForm();
+    }
+
+    $form = system_config_form($form, $form_state);
   }
   else {
-    variable_set('image_toolkit', key($toolkits_available));
+    form_set_error('image_toolkit', t('There are no image toolkits available. Drupal comes with support for PHP\'s GD image toolkit. This requires that the GD module for PHP be installed and configured properly. For more information see <a href="@url">PHP\'s image documentation</a>.', array('@url' => 'http://php.net/image')));
   }
 
-  // Get the toolkit's settings form.
-  $function = 'image_' . $current_toolkit . '_settings';
-  if (function_exists($function)) {
-    $form['image_toolkit_settings'] = $function();
-  }
+  return $form;
+}
 
-  return system_settings_form($form);
+/**
+ * Form submission handler for system_image_toolkit_settings().
+ */
+function system_image_toolkit_settings_submit($form, &$form_state) {
+  config('system.image')
+    ->set('toolkit', $form_state['values']['image_toolkit'])
+    ->save();
+
+  // Call the form submit handler for each of the toolkits.
+  // Get the toolkit settings forms.
+  $manager = Drupal::service('image.toolkit.manager');
+  foreach ($manager->getAvailableToolkits() as $id => $definition) {
+    $toolkit = $manager->createInstance($id);
+    $toolkit->settingsFormSubmit($form, $form_state);
+  }
 }
 
 /**

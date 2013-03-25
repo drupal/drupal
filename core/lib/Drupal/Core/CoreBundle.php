@@ -303,6 +303,16 @@ class CoreBundle extends Bundle {
     $container->register('ajax.subscriber', 'Drupal\Core\Ajax\AjaxSubscriber')
       ->addTag('event_subscriber');
 
+    // Register image toolkit manager.
+    $container
+      ->register('image.toolkit.manager', 'Drupal\system\Plugin\ImageToolkitManager')
+      ->addArgument('%container.namespaces%');
+    // Register image toolkit.
+    $container
+      ->register('image.toolkit', 'Drupal\system\Plugin\ImageToolkitInterface')
+      ->setFactoryService('image.toolkit.manager')
+      ->setFactoryMethod('getDefaultToolkit');
+
     $container->addCompilerPass(new RegisterMatchersPass());
     $container->addCompilerPass(new RegisterRouteFiltersPass());
     // Add a compiler pass for registering event subscribers.

@@ -3650,19 +3650,6 @@ function theme_system_compact_link() {
 }
 
 /**
- * Implements hook_image_toolkits().
- */
-function system_image_toolkits() {
-  include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'system') . '/' . 'image.gd.inc';
-  return array(
-    'gd' => array(
-      'title' => t('GD2 image manipulation toolkit'),
-      'available' => function_exists('image_gd_check_settings') && image_gd_check_settings(),
-    ),
-  );
-}
-
-/**
  * Attempts to get a file using drupal_http_request and to store it locally.
  *
  * @param $url
