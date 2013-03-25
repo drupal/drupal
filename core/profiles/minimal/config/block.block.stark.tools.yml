@@ -16,3 +16,4 @@ visibility:
 plugin: 'system_menu_block:menu-tools'
 settings:
   cache: '-1'
+label_display: visible

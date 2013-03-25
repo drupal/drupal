@@ -43,6 +43,11 @@ const BLOCK_VISIBILITY_LISTED = 1;
 const BLOCK_VISIBILITY_PHP = 2;
 
 /**
+ * Indicates the block label (title) should be displayed to end users.
+ */
+const BLOCK_LABEL_VISIBLE = 'visible';
+
+/**
  * Implements hook_help().
  */
 function block_help($path, $arg) {
@@ -528,6 +533,11 @@ function template_preprocess_block(&$variables) {
   $block_counter = &drupal_static(__FUNCTION__, array());
 
   $variables['block'] = (object) $variables['elements']['#block_config'];
+  // If the block title is configured to be hidden, set it to an empty string.
+  if (empty($variables['elements']['#block']->label_display)) {
+    $variables['block']->label_hidden = $variables['block']->label;
+    $variables['block']->label = '';
+  }
 
   // All blocks get an independent counter for each region.
   if (!isset($block_counter[$variables['block']->region])) {

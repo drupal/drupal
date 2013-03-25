@@ -20,3 +20,4 @@ region: sidebar_first
 weight: '0'
 plugin: user_login_block
 langcode: en
+label_display: visible

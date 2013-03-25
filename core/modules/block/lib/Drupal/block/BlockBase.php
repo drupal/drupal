@@ -238,6 +238,13 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
       '#title' => t('Title'),
       '#maxlength' => 255,
       '#default_value' => !$entity->isNew() ? $entity->label() : $definition['admin_label'],
+      '#required' => TRUE,
+    );
+    $form['label_display'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Display title'),
+      '#default_value' => $entity->label_display == BLOCK_LABEL_VISIBLE ? TRUE : FALSE,
+      '#return_value' => BLOCK_LABEL_VISIBLE,
     );
     $form['machine_name'] = array(
       '#type' => 'machine_name',

@@ -314,6 +314,37 @@ class BlockTest extends WebTestBase {
   }
 
   /**
+   * Test block title display settings.
+   */
+  function testHideBlockTitle() {
+    $block_name = 'system_powered_by_block';
+    // Create a random title for the block.
+    $title = $this->randomName(8);
+    $machine_name = strtolower($this->randomName(8));
+    // Enable a standard block.
+    $default_theme = variable_get('theme_default', 'stark');
+    $edit = array(
+      'machine_name' => $machine_name,
+      'region' => 'sidebar_first',
+      'label' => $title,
+    );
+    $this->drupalPost('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, t('Save block'));
+    $this->assertText('The block configuration has been saved.', 'Block was saved');
+
+    $this->drupalGet('user');
+    $this->assertText($title, 'Block title was displayed by default.');
+
+    $edit = array(
+      'label_display' => FALSE,
+    );
+    $this->drupalPost('admin/structure/block/manage/' . $default_theme . '.' . $machine_name . '/configure', $edit, t('Save block'));
+    $this->assertText('The block configuration has been saved.', 'Block was saved');
+
+    $this->drupalGet('user');
+    $this->assertNoText($title, 'Block title was not displayed when hidden.');
+  }
+
+  /**
    * Moves a block to a given region via the UI and confirms the result.
    *
    * @param array $block

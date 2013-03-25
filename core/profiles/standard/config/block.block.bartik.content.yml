@@ -19,3 +19,4 @@ module: system
 region: content
 weight: '0'
 langcode: en
+label_display: visible
