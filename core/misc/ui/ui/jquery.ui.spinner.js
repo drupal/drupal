@@ -1,11 +1,12 @@
 /*!
- * jQuery UI Spinner @VERSION
+ * jQuery UI Spinner 1.10.2
+ * http://jqueryui.com
  *
- * Copyright 2012, AUTHORS.txt (http://jqueryui.com/about)
- * Dual licensed under the MIT or GPL Version 2 licenses.
+ * Copyright 2013 jQuery Foundation and other contributors
+ * Released under the MIT license.
  * http://jquery.org/license
  *
- * http://docs.jquery.com/UI/Spinner
+ * http://api.jqueryui.com/spinner/
  *
  * Depends:
  *  jquery.ui.core.js
@@ -26,11 +27,15 @@ function modifier( fn ) {
 }
 
 $.widget( "ui.spinner", {
-	version: "@VERSION",
+	version: "1.10.2",
 	defaultElement: "<input>",
 	widgetEventPrefix: "spin",
 	options: {
 		culture: null,
+		icons: {
+			down: "ui-icon-triangle-1-s",
+			up: "ui-icon-triangle-1-n"
+		},
 		incremental: true,
 		max: null,
 		min: null,
@@ -89,7 +94,6 @@ $.widget( "ui.spinner", {
 		},
 		keyup: "_stop",
 		focus: function() {
-			this.uiSpinner.addClass( "ui-state-active" );
 			this.previous = this.element.val();
 		},
 		blur: function( event ) {
@@ -98,8 +102,8 @@ $.widget( "ui.spinner", {
 				return;
 			}
 
+			this._stop();
 			this._refresh();
-			this.uiSpinner.removeClass( "ui-state-active" );
 			if ( this.previous !== this.element.val() ) {
 				this._trigger( "change", event );
 			}
@@ -191,7 +195,6 @@ $.widget( "ui.spinner", {
 			.parent()
 				// add buttons
 				.append( this._buttonHtml() );
-		this._hoverable( uiSpinner );
 
 		this.element.attr( "role", "spinbutton" );
 
@@ -237,16 +240,16 @@ $.widget( "ui.spinner", {
 	},
 
 	_uiSpinnerHtml: function() {
-		return "<span class='ui-spinner ui-state-default ui-widget ui-widget-content ui-corner-all'></span>";
+		return "<span class='ui-spinner ui-widget ui-widget-content ui-corner-all'></span>";
 	},
 
 	_buttonHtml: function() {
 		return "" +
 			"<a class='ui-spinner-button ui-spinner-up ui-corner-tr'>" +
-				"<span class='ui-icon ui-icon-triangle-1-n'>&#9650;</span>" +
+				"<span class='ui-icon " + this.options.icons.up + "'>&#9650;</span>" +
 			"</a>" +
 			"<a class='ui-spinner-button ui-spinner-down ui-corner-br'>" +
-				"<span class='ui-icon ui-icon-triangle-1-s'>&#9660;</span>" +
+				"<span class='ui-icon " + this.options.icons.down + "'>&#9660;</span>" +
 			"</a>";
 	},
 
@@ -366,6 +369,14 @@ $.widget( "ui.spinner", {
 				value = this._parse( value );
 			}
 		}
+		if ( key === "icons" ) {
+			this.buttons.first().find( ".ui-icon" )
+				.removeClass( this.options.icons.up )
+				.addClass( value.up );
+			this.buttons.last().find( ".ui-icon" )
+				.removeClass( this.options.icons.down )
+				.addClass( value.down );
+		}
 
 		this._super( key, value );
 
@@ -443,14 +454,20 @@ $.widget( "ui.spinner", {
 		this._stepUp( steps );
 	}),
 	_stepUp: function( steps ) {
-		this._spin( (steps || 1) * this.options.step );
+		if ( this._start() ) {
+			this._spin( (steps || 1) * this.options.step );
+			this._stop();
+		}
 	},
 
 	stepDown: modifier(function( steps ) {
 		this._stepDown( steps );
 	}),
 	_stepDown: function( steps ) {
-		this._spin( (steps || 1) * -this.options.step );
+		if ( this._start() ) {
+			this._spin( (steps || 1) * -this.options.step );
+			this._stop();
+		}
 	},
 
 	pageUp: modifier(function( pages ) {

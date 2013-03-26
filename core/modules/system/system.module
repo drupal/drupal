@@ -1572,7 +1572,7 @@ function system_library_info() {
   $libraries['jquery.ui.core'] = array(
     'title' => 'jQuery UI: Core',
     'website' => 'http://jqueryui.com',
-    'version' => '1.9.0-pre',
+    'version' => '1.10.2',
     'js' => array(
       'core/misc/ui/ui/jquery.ui.core.js' => array('group' => JS_LIBRARY, 'weight' => -11),
     ),

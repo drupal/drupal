@@ -1,11 +1,12 @@
 /*!
- * jQuery UI Effects Fade @VERSION
+ * jQuery UI Effects Fade 1.10.2
+ * http://jqueryui.com
  *
- * Copyright 2012, AUTHORS.txt (http://jqueryui.com/about)
- * Dual licensed under the MIT or GPL Version 2 licenses.
+ * Copyright 2013 jQuery Foundation and other contributors
+ * Released under the MIT license.
  * http://jquery.org/license
  *
- * http://docs.jquery.com/UI/Effects/Fade
+ * http://api.jqueryui.com/fade-effect/
  *
  * Depends:
  *	jquery.ui.effect.js
