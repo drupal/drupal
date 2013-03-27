@@ -87,7 +87,23 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
 
     // Rename the configuration object.
     $new_name = 'config_test.crud_rename';
-    $config->rename($new_name);
+    $this->container->get('config.factory')->rename($name, $new_name);
+    $renamed_config = config($new_name);
+    $this->assertIdentical($renamed_config->get(), $config->get());
+    $this->assertIdentical($renamed_config->isNew(), FALSE);
+
+    // Ensure that the old configuration object is removed from both the cache
+    // and the configuration storage.
+    $config = config($name);
+    $this->assertIdentical($config->get(), array());
+    $this->assertIdentical($config->isNew(), TRUE);
+
+    // Test renaming when config.factory does not have the object in its static
+    // cache.
+    $name = 'config_test.crud_rename';
+    $config = config($name);
+    $new_name = 'config_test.crud_rename_no_cache';
+    $this->container->get('config.factory')->clearStaticCache()->rename($name, $new_name);
     $renamed_config = config($new_name);
     $this->assertIdentical($renamed_config->get(), $config->get());
     $this->assertIdentical($renamed_config->isNew(), FALSE);
