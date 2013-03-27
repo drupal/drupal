@@ -100,7 +100,9 @@ class EntityReferenceAdminTest extends WebTestBase {
     $this->drupalPostAJAX(NULL, array('instance[settings][handler_settings][sort][field]' => '_none'), 'instance[settings][handler_settings][sort][field]');
 
     // Third step: confirm.
-    $this->drupalPost(NULL, array(), t('Save settings'));
+    $this->drupalPost(NULL, array(
+      'instance[settings][handler_settings][target_bundles][' . key($bundles) . ']' => key($bundles),
+    ), t('Save settings'));
 
     // Check that the field appears in the overview form.
     $this->assertFieldByXPath('//table[@id="field-overview"]//td[1]', 'Test label', t('Field was created and appears in the overview page.'));
