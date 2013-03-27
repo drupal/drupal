@@ -82,44 +82,52 @@ function _update_8000_field_sql_storage_write($entity_type, $bundle, $entity_id,
  * Changes field language into langcode.
  */
 function field_sql_storage_update_8000(&$sandbox) {
-  // Prepare updated schema data structures.
-  $primary_key_data = array (
-    'entity_type',
-    'entity_id',
-    'deleted',
-    'delta',
-    'langcode',
-  );
-  $primary_key_revision = array (
-    'entity_type',
-    'entity_id',
-    'revision_id',
-    'deleted',
-    'delta',
-    'langcode',
-  );
-  $langcode_index = array(
-    'langcode',
-  );
-  $field_langcode = array(
-    'type' => 'varchar',
-    'length' => 32,
-    'not null' => true,
-    'default' => '',
-  );
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $sandbox['last'] = 0;
+    $sandbox['max'] = db_query("SELECT COUNT(id) FROM {field_config} WHERE storage_type = 'field_sql_storage'")->fetchField();
+  }
 
   // Retrieve field data.
-  $fields = _update_7000_field_read_fields(array('storage_type' => 'field_sql_storage'));
+  $field = db_query("SELECT id, field_name, deleted FROM {field_config} WHERE id > :id AND storage_type = 'field_sql_storage'", array(':id' => $sandbox['last']))->fetchAssoc();
+  if ($field) {
 
-  // Update schema.
-  foreach ($fields as $field) {
+    $sandbox['progress']++;
+    $sandbox['last'] = $field['id'];
+
+    // Prepare updated schema data structures.
+    $primary_key_data = array (
+      'entity_type',
+      'entity_id',
+      'deleted',
+      'delta',
+      'langcode',
+    );
+    $primary_key_revision = array (
+      'entity_type',
+      'entity_id',
+      'revision_id',
+      'deleted',
+      'delta',
+      'langcode',
+    );
+    $langcode_index = array(
+      'langcode',
+    );
+    $field_langcode = array(
+      'type' => 'varchar',
+      'length' => 32,
+      'not null' => true,
+      'default' => '',
+    );
+
     $data_table = _field_sql_storage_tablename($field);
     $revision_table = _field_sql_storage_revision_tablename($field);
     $table_info = array($data_table => $primary_key_data, $revision_table => $primary_key_revision);
 
     foreach ($table_info as $table => $primary_key) {
-      // Do not attempt to rename the 'language' column for fields that already
-      // contain it (created during the upgrade before this update function).
+      // Do not update tables which already have the langcode column,
+      // created during the upgrade before this update function.
       if (db_field_exists($table, 'language')) {
         db_drop_primary_key($table);
         db_drop_index($table, 'language');
@@ -129,4 +137,6 @@ function field_sql_storage_update_8000(&$sandbox) {
       }
     }
   }
+
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
 }
