@@ -41,7 +41,9 @@ class UpdateTest extends RESTTestBase {
     $this->enableService('entity:' . $entity_type, 'PATCH');
     // Create a user account that has the required permissions to create
     // resources via the REST API.
-    $account = $this->drupalCreateUser(array('restful patch entity:' . $entity_type));
+    $permissions = $this->entityPermissions($entity_type, 'update');
+    $permissions[] = 'restful patch entity:' . $entity_type;
+    $account = $this->drupalCreateUser($permissions);
     $this->drupalLogin($account);
 
     // Create an entity and save it to the database.
@@ -75,6 +77,32 @@ class UpdateTest extends RESTTestBase {
     // Re-load updated entity from the database.
     $entity = entity_load($entity_type, $entity->id(), TRUE);
     $this->assertNull($entity->field_test_text->value, 'Test field has been cleared.');
+
+    // Enable access protection for the text field.
+    // @see entity_test_entity_field_access()
+    $entity->field_test_text->value = 'no access value';
+    $entity->save();
+
+    // Try to empty a field that is access protected.
+    $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'PATCH', $serialized, 'application/vnd.drupal.ld+json');
+    $this->assertResponse(403);
+
+    // Re-load the entity from the database.
+    $entity = entity_load($entity_type, $entity->id(), TRUE);
+    $this->assertEqual($entity->field_test_text->value, 'no access value', 'Text field was not updated.');
+
+    // Try to update an access protected field.
+    $serialized = $serializer->serialize($patch_entity, 'drupal_jsonld');
+    $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'PATCH', $serialized, 'application/vnd.drupal.ld+json');
+    $this->assertResponse(403);
+
+    // Re-load the entity from the database.
+    $entity = entity_load($entity_type, $entity->id(), TRUE);
+    $this->assertEqual($entity->field_test_text->value, 'no access value', 'Text field was not updated.');
+
+    // Restore the valid test value.
+    $entity->field_test_text->value = $this->randomString();
+    $entity->save();
 
     // Try to update a non-existing entity with ID 9999.
     $this->httpRequest('entity/' . $entity_type . '/9999', 'PATCH', $serialized, 'application/vnd.drupal.ld+json');

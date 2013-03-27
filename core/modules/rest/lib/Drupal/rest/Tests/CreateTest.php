@@ -41,7 +41,9 @@ class CreateTest extends RESTTestBase {
     $this->enableService('entity:' . $entity_type, 'POST');
     // Create a user account that has the required permissions to create
     // resources via the REST API.
-    $account = $this->drupalCreateUser(array('restful post entity:' . $entity_type));
+    $permissions = $this->entityPermissions($entity_type, 'create');
+    $permissions[] = 'restful post entity:' . $entity_type;
+    $account = $this->drupalCreateUser($permissions);
     $this->drupalLogin($account);
 
     $entity_values = $this->entityValues($entity_type);
@@ -69,6 +71,18 @@ class CreateTest extends RESTTestBase {
     }
 
     $loaded_entity->delete();
+
+    // Try to create an entity with an access protected field.
+    // @see entity_test_entity_field_access()
+    $entity->field_test_text->value = 'no access value';
+    $serialized = $serializer->serialize($entity, 'drupal_jsonld');
+    $this->httpRequest('entity/' . $entity_type, 'POST', $serialized, 'application/vnd.drupal.ld+json');
+    $this->assertResponse(403);
+    $this->assertFalse(entity_load_multiple($entity_type, NULL, TRUE), 'No entity has been created in the database.');
+
+    // Restore the valid test value.
+    $entity->field_test_text->value = $entity_values['field_test_text'][0]['value'];
+    $serialized = $serializer->serialize($entity, 'drupal_jsonld');
 
     // Try to send invalid data that cannot be correctly deserialized.
     $this->httpRequest('entity/' . $entity_type, 'POST', 'kaboom!', 'application/vnd.drupal.ld+json');

@@ -111,6 +111,7 @@ class JsonldEntityWrapper {
   public function getProperties() {
     // Properties to skip.
     $skip = array('id');
+    $properties = array();
 
     // Create language map property structure.
     foreach ($this->entity->getTranslationLanguages() as $langcode => $language) {

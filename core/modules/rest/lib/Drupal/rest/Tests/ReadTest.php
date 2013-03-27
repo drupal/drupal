@@ -39,9 +39,11 @@ class ReadTest extends RESTTestBase {
     $entity_types = array('entity_test');
     foreach ($entity_types as $entity_type) {
       $this->enableService('entity:' . $entity_type, 'GET');
-      // Create a user account that has the required permissions to delete
+      // Create a user account that has the required permissions to read
       // resources via the REST API.
-      $account = $this->drupalCreateUser(array('restful get entity:' . $entity_type));
+      $permissions = $this->entityPermissions($entity_type, 'view');
+      $permissions[] = 'restful get entity:' . $entity_type;
+      $account = $this->drupalCreateUser($permissions);
       $this->drupalLogin($account);
 
       // Create an entity programmatically.
@@ -65,6 +67,17 @@ class ReadTest extends RESTTestBase {
       $this->assertResponse(404);
       $decoded = drupal_json_decode($response);
       $this->assertEqual($decoded['error'], 'Entity with ID 9999 not found', 'Response message is correct.');
+
+      // Make sure that field level access works and that the according field is
+      // not available in the response.
+      // @see entity_test_entity_field_access()
+      $entity->field_test_text->value = 'no access value';
+      $entity->save();
+      $response = $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'GET', NULL, 'application/vnd.drupal.ld+json');
+      $this->assertResponse(200);
+      $this->assertHeader('content-type', 'application/vnd.drupal.ld+json');
+      $data = drupal_json_decode($response);
+      $this->assertFalse(isset($data['field_test_text']), 'Field access protexted field is not visible in the response.');
 
       // Try to read an entity without proper permissions.
       $this->drupalLogout();
