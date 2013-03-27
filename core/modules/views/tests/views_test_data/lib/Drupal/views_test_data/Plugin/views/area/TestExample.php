@@ -40,12 +40,15 @@ class TestExample extends AreaPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\area\AreaPluginBase::render().
+   * Implements \Drupal\views\Plugin\views\area\AreaPluginBase::render().
    */
   public function render($empty = FALSE) {
     if (!$empty || !empty($this->options['empty'])) {
-      return $this->globalTokenReplace($this->options['string']);
+      return array(
+        '#markup' => $this->globalTokenReplace($this->options['string']),
+      );
     }
+    return array();
   }
 
 }

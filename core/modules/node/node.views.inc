@@ -266,16 +266,16 @@ function node_views_data() {
     'help' => t('Date in the form of CCYYMMDD.'),
     'argument' => array(
       'field' => 'created',
-      'id' => 'node_created_fulldate',
+      'id' => 'date_fulldate',
     ),
   );
 
-  $data['node']['created_year_month'] = array(
+  $data['node']['date_year_month'] = array(
     'title' => t('Created year + month'),
     'help' => t('Date in the form of YYYYMM.'),
     'argument' => array(
       'field' => 'created',
-      'id' => 'node_created_year_month',
+      'id' => 'date_year_month',
     ),
   );
 
@@ -284,7 +284,7 @@ function node_views_data() {
     'help' => t('Date in the form of YYYY.'),
     'argument' => array(
       'field' => 'created',
-      'id' => 'node_created_year',
+      'id' => 'date_year',
     ),
   );
 
@@ -293,7 +293,7 @@ function node_views_data() {
     'help' => t('Date in the form of MM (01 - 12).'),
     'argument' => array(
       'field' => 'created',
-      'id' => 'node_created_month',
+      'id' => 'date_month',
     ),
   );
 
@@ -302,7 +302,7 @@ function node_views_data() {
     'help' => t('Date in the form of DD (01 - 31).'),
     'argument' => array(
       'field' => 'created',
-      'id' => 'node_created_day',
+      'id' => 'date_day',
     ),
   );
 
@@ -311,7 +311,7 @@ function node_views_data() {
     'help' => t('Date in the form of WW (01 - 53).'),
     'argument' => array(
       'field' => 'created',
-      'id' => 'node_created_week',
+      'id' => 'date_week',
     ),
   );
 
@@ -320,7 +320,7 @@ function node_views_data() {
     'help' => t('Date in the form of CCYYMMDD.'),
     'argument' => array(
       'field' => 'changed',
-      'id' => 'node_created_fulldate',
+      'id' => 'date_fulldate',
     ),
   );
 
@@ -329,7 +329,7 @@ function node_views_data() {
     'help' => t('Date in the form of YYYYMM.'),
     'argument' => array(
       'field' => 'changed',
-      'id' => 'node_created_year_month',
+      'id' => 'date_year_month',
     ),
   );
 
@@ -338,7 +338,7 @@ function node_views_data() {
     'help' => t('Date in the form of YYYY.'),
     'argument' => array(
       'field' => 'changed',
-      'id' => 'node_created_year',
+      'id' => 'date_year',
     ),
   );
 
@@ -347,7 +347,7 @@ function node_views_data() {
     'help' => t('Date in the form of MM (01 - 12).'),
     'argument' => array(
       'field' => 'changed',
-      'id' => 'node_created_month',
+      'id' => 'date_month',
     ),
   );
 
@@ -356,7 +356,7 @@ function node_views_data() {
     'help' => t('Date in the form of DD (01 - 31).'),
     'argument' => array(
       'field' => 'changed',
-      'id' => 'node_created_day',
+      'id' => 'date_day',
     ),
   );
 
@@ -365,7 +365,7 @@ function node_views_data() {
     'help' => t('Date in the form of WW (01 - 53).'),
     'argument' => array(
       'field' => 'changed',
-      'id' => 'node_created_week',
+      'id' => 'date_week',
     ),
   );
 

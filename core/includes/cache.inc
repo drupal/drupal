@@ -5,7 +5,7 @@
  * Functions and interfaces for cache handling.
  */
 
-use Drupal\Core\Cache\CacheFactory;
+use Drupal\Core\Cache\Cache;
 
 /**
  * Instantiates and statically caches the correct class for a cache bin.
@@ -26,40 +26,7 @@ use Drupal\Core\Cache\CacheFactory;
  * @see Drupal\Core\Cache\CacheBackendInterface
  */
 function cache($bin = 'cache') {
-  // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static_fast;
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['cache'] = &drupal_static(__FUNCTION__, array());
-  }
-  $cache_objects = &$drupal_static_fast['cache'];
-
-  // Temporary backwards compatibiltiy layer, allow old style prefixed cache
-  // bin names to be passed as arguments.
-  $bin = str_replace('cache_', '', $bin);
-
-  if (!isset($cache_objects[$bin])) {
-    $cache_objects[$bin] = CacheFactory::get($bin);
-  }
-  return $cache_objects[$bin];
-}
-
-/**
- * Deletes items from all bins with any of the specified tags.
- *
- * Many sites have more than one active cache backend, and each backend may use
- * a different strategy for storing tags against cache items, and deleting cache
- * items associated with a given tag.
- *
- * When deleting a given list of tags, we iterate over each cache backend, and
- * and call deleteTags() on each.
- *
- * @param array $tags
- *   The list of tags to delete cache items for.
- */
-function cache_delete_tags(array $tags) {
-  foreach (CacheFactory::getBackends() as $bin => $class) {
-    cache($bin)->deleteTags($tags);
-  }
+  return Drupal::cache($bin);
 }
 
 /**
@@ -74,9 +41,10 @@ function cache_delete_tags(array $tags) {
  *
  * @param array $tags
  *   The list of tags to invalidate cache items for.
+ *
+ * @deprecated 8.x
+ *   Use \Drupal\Core\Cache\Cache::invalidateTags().
  */
 function cache_invalidate_tags(array $tags) {
-  foreach (CacheFactory::getBackends() as $bin => $class) {
-    cache($bin)->invalidateTags($tags);
-  }
+  Cache::invalidateTags($tags);
 }

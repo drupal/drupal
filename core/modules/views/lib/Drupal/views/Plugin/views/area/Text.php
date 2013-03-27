@@ -49,12 +49,18 @@ class Text extends AreaPluginBase {
     parent::submitOptionsForm($form, $form_state);
   }
 
+  /**
+   * Implements \Drupal\views\Plugin\views\area\AreaPluginBase::render().
+   */
   function render($empty = FALSE) {
     $format = isset($this->options['format']) ? $this->options['format'] : filter_default_format();
     if (!$empty || !empty($this->options['empty'])) {
-      return $this->render_textarea($this->options['content'], $format);
+      return array(
+        '#markup' => $this->render_textarea($this->options['content'], $format),
+      );
     }
-    return '';
+
+    return array();
   }
 
   /**

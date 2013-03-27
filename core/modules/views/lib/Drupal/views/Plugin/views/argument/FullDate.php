@@ -2,25 +2,24 @@
 
 /**
  * @file
- * Definition of Drupal\node\Plugin\views\argument\CreatedFullDate.
+ * Contains \Drupal\views\Plugin\views\argument\FullDate.
  */
 
-namespace Drupal\node\Plugin\views\argument;
+namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\Component\Annotation\Plugin;
-use Drupal\views\Plugin\views\argument\Date;
 
 /**
  * Argument handler for a full date (CCYYMMDD)
  *
  * @Plugin(
- *   id = "node_created_fulldate",
+ *   id = "date_fulldate",
  *   arg_format = "Ymd",
  *   format = "F j, Y",
- *   module = "node"
+ *   module = "views"
  * )
  */
-class CreatedFullDate extends Date {
+class FullDate extends Date {
 
   /**
    * Provide a link to the next level of the view

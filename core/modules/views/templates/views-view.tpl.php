@@ -35,7 +35,7 @@
   <?php print render($title_suffix); ?>
   <?php if ($header): ?>
     <div class="view-header">
-      <?php print $header; ?>
+      <?php print render($header); ?>
     </div>
   <?php endif; ?>
 
@@ -57,7 +57,7 @@
     </div>
   <?php elseif ($empty): ?>
     <div class="view-empty">
-      <?php print $empty; ?>
+      <?php print render($empty); ?>
     </div>
   <?php endif; ?>
 
@@ -77,7 +77,7 @@
 
   <?php if ($footer): ?>
     <div class="view-footer">
-      <?php print $footer; ?>
+      <?php print render($footer); ?>
     </div>
   <?php endif; ?>
 

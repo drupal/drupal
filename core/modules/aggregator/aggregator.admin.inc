@@ -108,41 +108,6 @@ function aggregator_feed_add() {
 }
 
 /**
- * Page callback: Deletes a feed.
- *
- * @param \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
- *   A feed object describing the feed to be cleared.
- *
- * @see aggregator_admin_remove_feed_submit()
- * @see aggregator_menu()
- */
-function aggregator_admin_remove_feed($form, $form_state, Feed $feed) {
-  return confirm_form(
-    array(
-      'feed' => array(
-        '#type' => 'value',
-        '#value' => $feed,
-      ),
-    ),
-    t('Are you sure you want to remove all items from the feed %feed?', array('%feed' => $feed->label())),
-    'admin/config/services/aggregator',
-    t('This action cannot be undone.'),
-    t('Remove items'),
-    t('Cancel')
-  );
-}
-
-/**
- * Form submission handler for aggregator_admin_remove_feed().
- *
- * Removes all items from a feed and redirects to the overview page.
- */
-function aggregator_admin_remove_feed_submit($form, &$form_state) {
-  aggregator_remove($form_state['values']['feed']);
-  $form_state['redirect'] = 'admin/config/services/aggregator';
-}
-
-/**
  * Form constructor for importing feeds from OPML.
  *
  * @ingroup forms

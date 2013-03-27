@@ -56,7 +56,7 @@ class View extends AreaPluginBase {
   }
 
   /**
-   * Render the area
+   * Implements \Drupal\views\Plugin\views\area\AreaPluginBase::render().
    */
   function render($empty = FALSE) {
     if (!empty($this->options['view_to_insert'])) {
@@ -64,7 +64,7 @@ class View extends AreaPluginBase {
 
       $view = views_get_view($view_name);
       if (empty($view) || !$view->access($display_id)) {
-        return;
+        return array();
       }
       $view->setDisplay($display_id);
 
@@ -78,15 +78,21 @@ class View extends AreaPluginBase {
         drupal_set_message(t("Recursion detected in view @view display @display.", array('@view' => $view_name, '@display' => $display_id)), 'error');
       }
       else {
+        // Current $view->preview() does not return a render array, so we have
+        // to build a markup out if it.
         if (!empty($this->options['inherit_arguments']) && !empty($this->view->args)) {
-          return $view->preview($display_id, $this->view->args);
+          return array(
+            '#markup' => $view->preview($display_id, $this->view->args),
+          );
         }
         else {
-          return $view->preview($display_id);
+          return array(
+            '#markup' => $view->preview($display_id),
+          );
         }
       }
     }
-    return '';
+    return array();
   }
 
 }

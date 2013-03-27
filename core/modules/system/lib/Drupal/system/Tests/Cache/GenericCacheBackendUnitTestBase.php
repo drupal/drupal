@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Cache;
 
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\simpletest\UnitTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 use stdClass;
 
@@ -22,7 +22,7 @@ use stdClass;
  * @see DatabaseBackendUnitTestCase
  *   For a full working implementation.
  */
-abstract class GenericCacheBackendUnitTestBase extends UnitTestBase {
+abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
 
   /**
    * Array of objects implementing Drupal\Core\Cache\CacheBackendInterface.

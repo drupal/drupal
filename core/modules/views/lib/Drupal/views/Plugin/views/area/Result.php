@@ -57,12 +57,12 @@ class Result extends AreaPluginBase {
 
 
   /**
-   * Find out the information to render.
+   * Implements \Drupal\views\Plugin\views\area\AreaPluginBase::render().
    */
   function render($empty = FALSE) {
     // Must have options and does not work on summaries.
     if (!isset($this->options['content']) || $this->view->plugin_name == 'default_summary') {
-      return;
+      return array();
     }
     $output = '';
     $format = $this->options['content'];
@@ -99,7 +99,10 @@ class Result extends AreaPluginBase {
     if (!empty($total)) {
       $output .= filter_xss_admin(str_replace(array_keys($replacements), array_values($replacements), $format));
     }
-    return $output;
+    // Return as render array.
+    return array(
+      '#markup' => $output,
+    );
   }
 
 }

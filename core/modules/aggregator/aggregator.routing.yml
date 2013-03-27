@@ -1,0 +1,6 @@
+aggregator_feed_items_delete:
+  pattern: '/admin/config/services/aggregator/remove/{aggregator_feed}'
+  defaults:
+    _form: '\Drupal\aggregator\Form\FeedItemsDelete'
+  requirements:
+    _permission: 'administer news feeds'

@@ -7,6 +7,7 @@
 
 namespace Drupal\simpletest;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Symfony\Component\DependencyInjection\Reference;
@@ -139,14 +140,13 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
    * @see DrupalUnitTestBase::enableModules()
    * @see DrupalUnitTestBase::disableModules()
    */
-  public function containerBuild($container) {
+  public function containerBuild(ContainerBuilder $container) {
     global $conf;
     // Keep the container object around for tests.
     $this->container = $container;
 
     $container->register('lock', 'Drupal\Core\Lock\NullLockBackend');
-
-    $conf['cache_classes'] = array('cache' => 'Drupal\Core\Cache\MemoryBackend');
+    $this->settingsSet('cache', array('default' => 'cache.backend.memory'));
 
     $container
       ->register('config.storage', 'Drupal\Core\Config\FileStorage')

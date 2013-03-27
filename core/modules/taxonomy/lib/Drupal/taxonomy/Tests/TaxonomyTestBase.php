@@ -40,7 +40,6 @@ abstract class TaxonomyTestBase extends WebTestBase {
       'description' => $this->randomName(),
       'vid' => drupal_strtolower($this->randomName()),
       'langcode' => LANGUAGE_NOT_SPECIFIED,
-      'help' => '',
       'weight' => mt_rand(0, 10),
     ));
     $vocabulary->save();

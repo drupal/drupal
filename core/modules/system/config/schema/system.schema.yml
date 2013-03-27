@@ -46,8 +46,8 @@ menu.menu.*:
       type: string
       label: 'Menu identifier'
     label:
-      type: string
+      type: label
       label: 'Menu label'
     description:
-      type: text
+      type: label
       label: 'Menu description'

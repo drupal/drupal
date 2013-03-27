@@ -1,0 +1,47 @@
+# Schema for the configuration files of the Language module.
+
+language.detection:
+  type: mapping
+  label: 'Language detection settings'
+  mapping:
+    selected_langcode:
+      type: string
+      label: 'Selected language code'
+
+language.negotiation:
+  type: mapping
+  label: 'Language detection methods'
+  mapping:
+    session:
+      type: mapping
+      label: 'Session'
+      mapping:
+        parameter:
+          type: string
+          label: 'Request/session parameter'
+    url:
+      type: mapping
+      label: 'Language from the URL (Path prefix or domain).'
+      mapping:
+        source:
+          type: string
+          label: 'Part of the URL that determines language'
+        prefixes:
+          type: sequence
+          label: 'Path prefix configuration'
+          sequence:
+            - type: string
+              label: 'Path prefix'
+        domains:
+          type: sequence
+          label: 'Domain configuration'
+          sequence:
+            - type: string
+              label: 'Domain'
+
+language.mappings:
+  type: sequence
+  label: 'Language mapping'
+  sequence:
+    - type: string
+      label: 'Language'

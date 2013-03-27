@@ -79,7 +79,7 @@ class ValidatorTest extends FileManagedTestBase {
     $this->assertEqual(count($errors), 1, t('Small images report an error.'), 'File');
 
     // Maximum size.
-    if (image_get_toolkit()) {
+    if ($this->container->has('image.toolkit')) {
       // Copy the image so that the original doesn't get resized.
       copy('core/misc/druplicon.png', 'temporary://druplicon.png');
       $this->image->uri = 'temporary://druplicon.png';

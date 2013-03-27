@@ -297,7 +297,6 @@ class FieldInfoTest extends FieldUnitTestBase {
     $this->assertEqual($map, $expected);
   }
 
-
   /**
    * Test that the field_info settings convenience functions work.
    */
@@ -321,6 +320,31 @@ class FieldInfoTest extends FieldUnitTestBase {
       $info = field_info_formatter_types($type);
       $this->assertIdentical(field_info_formatter_settings($type), $info['settings'], format_string("field_info_formatter_settings returns %type's formatter settings", array('%type' => $type)));
     }
+  }
+
+  /**
+   * Tests that the field info cache can be built correctly.
+   */
+  function testFieldInfoCache() {
+    // Create a test field and ensure it's in the array returned by
+    // field_info_fields().
+    $field_name = drupal_strtolower($this->randomName());
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'test_field',
+    );
+    field_create_field($field);
+    $fields = field_info_fields();
+    $this->assertTrue(isset($fields[$field_name]), 'The test field is initially found in the array returned by field_info_fields().');
+
+    // Now rebuild the field info cache, and set a variable which will cause
+    // the cache to be cleared while it's being rebuilt; see
+    // field_test_entity_info(). Ensure the test field is still in the returned
+    // array.
+    field_info_cache_clear();
+    state()->set('field_test.clear_info_cache_in_hook_entity_info', TRUE);
+    $fields = field_info_fields();
+    $this->assertTrue(isset($fields[$field_name]), 'The test field is found in the array returned by field_info_fields() even if its cache is cleared while being rebuilt.');
   }
 
   /**

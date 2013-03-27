@@ -19,3 +19,4 @@ module: system
 region: sidebar_first
 weight: '0'
 langcode: en
+label_display: visible

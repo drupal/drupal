@@ -19,3 +19,4 @@ module: search
 region: sidebar_first
 weight: '-1'
 langcode: en
+label_display: visible

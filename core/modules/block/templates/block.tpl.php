@@ -6,6 +6,8 @@
  *
  * Available variables:
  * - $block->label: Block title.
+ * - $block->label_hidden: The hidden block title value if the block was
+ *    configured to hide the title ($block->label is empty in this case).
  * - $content: Block content.
  * - $block->module: Module that generated the block.
  * - $block->delta: An ID for the block, unique within each module.

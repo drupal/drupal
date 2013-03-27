@@ -1,0 +1,6 @@
+forum_settings:
+  pattern: '/admin/structure/forum/settings'
+  defaults:
+    _form: '\Drupal\forum\ForumSettingsForm'
+  requirements:
+    _permission: 'administer forums'

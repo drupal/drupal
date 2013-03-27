@@ -48,6 +48,7 @@ function image_field_info() {
       ),
       'default_widget' => 'image_image',
       'default_formatter' => 'image',
+      'field item class' => '\Drupal\image\Type\ImageItem',
     ),
   );
 }

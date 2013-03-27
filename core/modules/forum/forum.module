@@ -138,13 +138,10 @@ function forum_menu() {
   );
   $items['admin/structure/forum/settings'] = array(
     'title' => 'Settings',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('forum_admin_settings'),
-    'access arguments' => array('administer forums'),
     'weight' => 100,
     'type' => MENU_LOCAL_TASK,
     'parent' => 'admin/structure/forum',
-    'file' => 'forum.admin.inc',
+    'route_name' => 'forum_settings',
   );
   $items['admin/structure/forum/edit/container/%taxonomy_term'] = array(
     'title' => 'Edit container',

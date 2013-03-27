@@ -145,6 +145,9 @@ function _dblog_get_message_types() {
  * Note: Some values may be truncated to meet database column size restrictions.
  */
 function dblog_watchdog(array $log_entry) {
+  // Remove any backtraces since they may contain an unserializable variable.
+  unset($log_entry['variables']['backtrace']);
+
   Database::getConnection('default', 'default')->insert('watchdog')
     ->fields(array(
       'uid' => $log_entry['uid'],

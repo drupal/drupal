@@ -22,6 +22,7 @@
   /* Hide tab text. */
   padding-left: 1.3333em; /* LTR */
   text-indent: -9999px;
+  line-height: 1em;
 }
 .js .toolbar .bar .contextual-toolbar-tab button.active {
   background-image:-moz-linear-gradient(rgb(78,159,234) 0%,rgb(69,132,221) 100%);

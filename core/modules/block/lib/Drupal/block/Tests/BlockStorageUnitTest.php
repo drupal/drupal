@@ -93,6 +93,7 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
     $expected_properties = array(
       'id' => 'stark.test_block',
       'label' => '',
+      'label_display' => BLOCK_LABEL_VISIBLE,
       'region' => '-1',
       'weight' => '',
       'module' => 'block_test',

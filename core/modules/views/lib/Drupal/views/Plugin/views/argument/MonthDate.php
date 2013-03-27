@@ -2,25 +2,24 @@
 
 /**
  * @file
- * Definition of Drupal\node\Plugin\views\argument\CreatedMonth.
+ * Contains \Drupal\views\Plugin\views\argument\MonthDate.
  */
 
-namespace Drupal\node\Plugin\views\argument;
+namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\Component\Annotation\Plugin;
-use Drupal\views\Plugin\views\argument\Date;
 
 /**
  * Argument handler for a month (MM)
  *
  * @Plugin(
- *   id = "node_created_month",
+ *   id = "date_month",
  *   arg_format = "m",
  *   format = "F",
- *   module = "node"
+ *   module = "views"
  * )
  */
-class CreatedMonth extends Date {
+class MonthDate extends Date {
 
   /**
    * Provide a link to the next level of the view

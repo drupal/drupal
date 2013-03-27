@@ -51,7 +51,7 @@ class NormalizeDenormalizeTest extends WebTestBase {
   function setUp() {
     parent::setUp();
 
-    $setup_helper = new JsonldTestSetupHelper();
+    $setup_helper = new JsonldTestSetupHelper($this->container);
     $this->normalizers = $setup_helper->getNormalizers();
 
     // Add German as a language.

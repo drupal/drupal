@@ -19,3 +19,4 @@ module: system
 region: footer
 weight: '10'
 langcode: en
+label_display: visible

@@ -6,7 +6,6 @@
 
 namespace Drupal\rdf\Tests;
 
-use Drupal\Core\Cache\DatabaseBackend;
 use Drupal\rdf\RdfMappingManager;
 use Drupal\rdf\EventSubscriber\MappingSubscriber;
 use Drupal\rdf_test_mapping\EventSubscriber\TestMappingSubscriber;
@@ -45,7 +44,7 @@ class RdfMappingEventTest extends WebTestBase {
     $dispatcher = new EventDispatcher();
     $dispatcher->addSubscriber(new MappingSubscriber());
     $dispatcher->addSubscriber(new TestMappingSubscriber());
-    $site_schema_manager = new SiteSchemaManager(new DatabaseBackend('cache'));
+    $site_schema_manager = new SiteSchemaManager($this->container->get('cache.cache'));
     $mapping_manager = new RdfMappingManager($dispatcher, $site_schema_manager);
 
     // Test that a site schema URI is mapped to itself. This is the default

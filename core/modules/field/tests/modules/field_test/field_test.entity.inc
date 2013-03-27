@@ -9,6 +9,17 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\field_test\Plugin\Core\Entity\TestEntity;
 
 /**
+ * Implements hook_entity_info().
+ */
+function field_test_entity_info() {
+  // If requested, clear the field cache while this is being called. See
+  // Drupal\field\Tests\FieldInfoTest::testFieldInfoCache().
+  if (state()->get('field_test.clear_info_cache_in_hook_entity_info')) {
+    field_info_cache_clear();
+  }
+}
+
+/**
  * Implements hook_entity_info_alter().
  */
 function field_test_entity_info_alter(&$entity_info) {

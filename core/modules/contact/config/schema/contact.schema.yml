@@ -8,7 +8,7 @@ contact.category.*:
       type: string
       label: 'Category identifier'
     label:
-      type: string
+      type: label
       label: 'Label'
     recipients:
       type: sequence
@@ -17,7 +17,7 @@ contact.category.*:
         - type: email
           label: 'E-mail address'
     reply:
-      type: string
+      type: text
       label: 'Auto-reply'
     weight:
       type: integer

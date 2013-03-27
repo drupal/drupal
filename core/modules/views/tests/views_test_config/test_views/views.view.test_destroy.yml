@@ -36,21 +36,21 @@ display:
           id: created_day
           style_plugin: default_summary
           table: node
-          plugin_id: node_created_day
+          plugin_id: date_day
         created_fulldate:
           default_argument_type: fixed
           field: created_fulldate
           id: created_fulldate
           style_plugin: default_summary
           table: node
-          plugin_id: node_created_fulldate
+          plugin_id: date_fulldate
         created_month:
           default_argument_type: fixed
           field: created_month
           id: created_month
           style_plugin: default_summary
           table: node
-          plugin_id: node_created_month
+          plugin_id: date_month
       cache:
         type: none
       empty:

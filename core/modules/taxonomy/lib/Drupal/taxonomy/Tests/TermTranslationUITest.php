@@ -60,7 +60,6 @@ class TermTranslationUITest extends EntityTranslationUITest {
       'description' => $this->randomName(),
       'vid' => $this->bundle,
       'langcode' => LANGUAGE_NOT_SPECIFIED,
-      'help' => '',
       'weight' => mt_rand(0, 10),
     ));
     $this->vocabulary->save();
@@ -110,7 +109,6 @@ class TermTranslationUITest extends EntityTranslationUITest {
       'description' => $this->randomName(),
       'vid' => 'untranslatable_voc',
       'langcode' => LANGUAGE_NOT_SPECIFIED,
-      'help' => '',
       'weight' => mt_rand(0, 10),
     ));
     $untranslatable_vocabulary->save();

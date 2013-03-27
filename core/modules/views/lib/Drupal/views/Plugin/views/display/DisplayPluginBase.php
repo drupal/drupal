@@ -2466,10 +2466,22 @@ abstract class DisplayPluginBase extends PluginBase {
     return $element;
   }
 
+  /**
+   * Render one of the available areas.
+   *
+   * @param string $area
+   *   Identifier of the specific area to render.
+   * @param bool $empty
+   *   (optional) Indicator whether or not the view result is empty. Defaults to
+   *   FALSE
+   *
+   * @return array
+   *   A render array for the given area.
+   */
   public function renderArea($area, $empty = FALSE) {
-    $return = '';
-    foreach ($this->getHandlers($area) as $area) {
-      $return .= $area->render($empty);
+    $return = array();
+    foreach ($this->getHandlers($area) as $key => $area_handler) {
+      $return[$key] = $area_handler->render($empty);
     }
     return $return;
   }

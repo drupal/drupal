@@ -36,7 +36,7 @@ class DrupalKernelTest extends UnitTestBase {
       'secret' => $GLOBALS['drupal_hash_salt'],
     );
     // Use a non-persistent cache to avoid queries to non-existing tables.
-    $conf['cache_classes'] = array('cache' => 'Drupal\Core\Cache\MemoryBackend');
+    $this->settingsSet('cache', array('default' => 'cache.backend.memory'));
   }
 
   /**

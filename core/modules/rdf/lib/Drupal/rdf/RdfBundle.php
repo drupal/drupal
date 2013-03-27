@@ -20,15 +20,9 @@ class RdfBundle extends Bundle {
    * Overrides Symfony\Component\HttpKernel\Bundle\Bundle::build().
    */
   public function build(ContainerBuilder $container) {
-    // Site schema type cache.
-    $container->register('cache.rdf.site_schema.types', 'Drupal\Core\Cache\CacheBackendInterface')
-      ->setFactoryClass('Drupal\Core\Cache\CacheFactory')
-      ->setFactoryMethod('get')
-      ->addArgument('cache');
-
     // Site schema manager service.
     $container->register('rdf.site_schema_manager', 'Drupal\rdf\SiteSchema\SiteSchemaManager')
-      ->addArgument(new Reference('cache.rdf.site_schema.types'));
+      ->addArgument(new Reference('cache.cache'));
     // Mapping manager service.
     $container->register('rdf.mapping_manager', 'Drupal\rdf\RdfMappingManager')
       ->addArgument(new Reference('event_dispatcher'))

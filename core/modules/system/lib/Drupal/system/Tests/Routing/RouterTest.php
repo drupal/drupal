@@ -57,9 +57,13 @@ class RouterTest extends WebTestBase {
    * Confirms that placeholders in paths work correctly.
    */
   public function testControllerPlaceholders() {
-    $value = $this->randomName();
-    $this->drupalGet('router_test/test3/' . $value);
-    $this->assertRaw($value, 'The correct string was returned because the route was successful.');
+    // Test with 0 and a random value.
+    $values = array("0", $this->randomName());
+    foreach ($values as $value) {
+      $this->drupalGet('router_test/test3/' . $value);
+      $this->assertResponse(200);
+      $this->assertRaw($value, 'The correct string was returned because the route was successful.');
+    }
 
     // Confirm that the page wrapping is being added, so we're not getting a
     // raw body returned.

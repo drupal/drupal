@@ -20,7 +20,7 @@ class ImageEffectsTest extends ToolkitTestBase {
    *
    * @var array
    */
-  public static $modules = array('image_test', 'image_module_test');
+  public static $modules = array('image', 'image_test', 'image_module_test');
 
   public static function getInfo() {
     return array(
@@ -44,7 +44,7 @@ class ImageEffectsTest extends ToolkitTestBase {
     $this->assertToolkitOperationsCalled(array('resize'));
 
     // Check the parameters.
-    $calls = image_test_get_all_calls();
+    $calls = $this->imageTestGetAllCalls();
     $this->assertEqual($calls['resize'][0][1], 1, 'Width was passed correctly');
     $this->assertEqual($calls['resize'][0][2], 2, 'Height was passed correctly');
   }
@@ -58,7 +58,7 @@ class ImageEffectsTest extends ToolkitTestBase {
     $this->assertToolkitOperationsCalled(array('resize'));
 
     // Check the parameters.
-    $calls = image_test_get_all_calls();
+    $calls = $this->imageTestGetAllCalls();
     $this->assertEqual($calls['resize'][0][1], 10, 'Width was passed correctly');
     $this->assertEqual($calls['resize'][0][2], 5, 'Height was based off aspect ratio and passed correctly');
   }
@@ -72,7 +72,7 @@ class ImageEffectsTest extends ToolkitTestBase {
     $this->assertToolkitOperationsCalled(array('crop'));
 
     // Check the parameters.
-    $calls = image_test_get_all_calls();
+    $calls = $this->imageTestGetAllCalls();
     $this->assertEqual($calls['crop'][0][1], 0, 'X was passed correctly');
     $this->assertEqual($calls['crop'][0][2], 1, 'Y was passed correctly');
     $this->assertEqual($calls['crop'][0][3], 3, 'Width was passed correctly');
@@ -87,7 +87,7 @@ class ImageEffectsTest extends ToolkitTestBase {
     $this->assertToolkitOperationsCalled(array('resize', 'crop'));
 
     // Check the parameters.
-    $calls = image_test_get_all_calls();
+    $calls = $this->imageTestGetAllCalls();
     $this->assertEqual($calls['crop'][0][1], 7.5, 'X was computed and passed correctly');
     $this->assertEqual($calls['crop'][0][2], 0, 'Y was computed and passed correctly');
     $this->assertEqual($calls['crop'][0][3], 5, 'Width was computed and passed correctly');
@@ -102,7 +102,7 @@ class ImageEffectsTest extends ToolkitTestBase {
     $this->assertToolkitOperationsCalled(array('desaturate'));
 
     // Check the parameters.
-    $calls = image_test_get_all_calls();
+    $calls = $this->imageTestGetAllCalls();
     $this->assertEqual(count($calls['desaturate'][0]), 1, 'Only the image was passed.');
   }
 
@@ -115,7 +115,7 @@ class ImageEffectsTest extends ToolkitTestBase {
     $this->assertToolkitOperationsCalled(array('rotate'));
 
     // Check the parameters.
-    $calls = image_test_get_all_calls();
+    $calls = $this->imageTestGetAllCalls();
     $this->assertEqual($calls['rotate'][0][1], 90, 'Degrees were passed correctly');
     $this->assertEqual($calls['rotate'][0][2], 0xffffff, 'Background color was passed correctly');
   }

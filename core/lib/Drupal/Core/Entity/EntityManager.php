@@ -200,6 +200,22 @@ class EntityManager extends PluginManagerBase {
   }
 
   /**
+   * Checks whether a certain entity type has a certain controller.
+   *
+   * @param string $entity_type
+   *   The name of the entity type.
+   * @param string $controller_type
+   *   The name of the controller.
+   *
+   * @return bool
+   *   Returns TRUE if the entity type has the controller, else FALSE.
+   */
+  public function hasController($entity_type, $controller_type) {
+    $definition = $this->getDefinition($entity_type);
+    return !empty($definition[$controller_type]);
+  }
+
+  /**
    * Returns an entity controller class.
    *
    * @param string $entity_type

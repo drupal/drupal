@@ -5,6 +5,8 @@
  * API for manipulating images.
  */
 
+use Drupal\system\Plugin\ImageToolkitInterface;
+
 /**
  * @defgroup image Image toolkits
  * @{
@@ -22,83 +24,15 @@
  * from this problem, but it requires the ISP to have installed additional
  * software.
  *
- * Image toolkits are discovered based on the associated module's
- * hook_image_toolkits. Additionally the image toolkit include file
- * must be identified in the files array in the module.info.yml file. The
- * toolkit must then be enabled using the admin/config/media/image-toolkit
- * form.
+ * Image toolkits are discovered using the Plugin system using
+ * \Drupal\system\Plugin\ImageToolkitManager. The toolkit must then be enabled
+ * using the admin/config/media/image-toolkit form.
  *
  * Only one toolkit may be selected at a time. If a module author wishes to call
  * a specific toolkit they can check that it is installed by calling
- * image_get_available_toolkits(), and then calling its functions directly.
+ * \Drupal\system\Plugin\ImageToolkitManager::getAvailableToolkits(), and then
+ * calling its functions directly.
  */
-
-/**
- * Gets a list of available toolkits.
- *
- * @return
- *   An array with the toolkit names as keys and the descriptions as values.
- */
-function image_get_available_toolkits() {
-  // hook_image_toolkits returns an array of toolkit names.
-  $toolkits = module_invoke_all('image_toolkits');
-
-  $output = array();
-  foreach ($toolkits as $name => $info) {
-    // Only allow modules that aren't marked as unavailable.
-    if ($info['available']) {
-      $output[$name] = $info['title'];
-    }
-  }
-
-  return $output;
-}
-
-/**
- * Gets the name of the currently used toolkit.
- *
- * @return
- *   String containing the name of the selected toolkit, or FALSE on error.
- */
-function image_get_toolkit() {
-  static $toolkit;
-
-  if (!isset($toolkit)) {
-    $toolkits = image_get_available_toolkits();
-    $toolkit = variable_get('image_toolkit', 'gd');
-    if (!isset($toolkits[$toolkit]) || !function_exists('image_' . $toolkit . '_load')) {
-      // The selected toolkit isn't available so return the first one found. If
-      // none are available this will return FALSE.
-      reset($toolkits);
-      $toolkit = key($toolkits);
-    }
-  }
-
-  return $toolkit;
-}
-
-/**
- * Invokes the given method using the currently selected toolkit.
- *
- * @param $method
- *   A string containing the method to invoke.
- * @param $image
- *   An image object returned by image_load().
- * @param $params
- *   An optional array of parameters to pass to the toolkit method.
- *
- * @return
- *   Mixed values (typically Boolean indicating successful operation).
- */
-function image_toolkit_invoke($method, stdClass $image, array $params = array()) {
-  $function = 'image_' . $image->toolkit . '_' . $method;
-  if (function_exists($function)) {
-    array_unshift($params, $image);
-    return call_user_func_array($function, $params);
-  }
-  watchdog('image', 'The selected image handling toolkit %toolkit can not correctly process %function.', array('%toolkit' => $image->toolkit, '%function' => $function), WATCHDOG_ERROR);
-  return FALSE;
-}
 
 /**
  * Gets details about an image.
@@ -107,12 +41,12 @@ function image_toolkit_invoke($method, stdClass $image, array $params = array())
  * toolkit, and may support others, depending on which toolkits are
  * installed.
  *
- * @param $filepath
+ * @param string $filepath
  *   String specifying the path of the image file.
- * @param $toolkit
- *   An optional image toolkit name to override the default.
+ * @param \Drupal\system\Plugin\ImageToolkitInterface $toolkit
+ *   (optional) An image toolkit object to override the default.
  *
- * @return
+ * @return array
  *   FALSE, if the file could not be found or is not an image. Otherwise, a
  *   keyed array containing information about the image:
  *   - "width": Width, in pixels.
@@ -121,20 +55,20 @@ function image_toolkit_invoke($method, stdClass $image, array $params = array())
  *   - "mime_type": MIME type ('image/jpeg', 'image/gif', 'image/png').
  *   - "file_size": File size in bytes.
  */
-function image_get_info($filepath, $toolkit = FALSE) {
+function image_get_info($filepath, ImageToolkitInterface $toolkit = NULL) {
   $details = FALSE;
   if (!is_file($filepath) && !is_uploaded_file($filepath)) {
     return $details;
   }
 
-  if (!$toolkit) {
-    $toolkit = image_get_toolkit();
+  if ($toolkit === NULL) {
+    $toolkit = Drupal::service('image.toolkit');
   }
   if ($toolkit) {
     $image = new stdClass();
     $image->source = $filepath;
     $image->toolkit = $toolkit;
-    $details = image_toolkit_invoke('get_info', $image);
+    $details = $toolkit->getInfo($image);
     if (isset($details) && is_array($details)) {
       $details['file_size'] = filesize($filepath);
     }
@@ -152,21 +86,21 @@ function image_get_info($filepath, $toolkit = FALSE) {
  *
  * The resulting image always has the exact target dimensions.
  *
- * @param $image
+ * @param object $image
  *   An image object returned by image_load().
- * @param $width
+ * @param int $width
  *   The target width, in pixels.
- * @param $height
+ * @param int $height
  *   The target height, in pixels.
  *
- * @return
+ * @return bool
  *   TRUE on success, FALSE on failure.
  *
  * @see image_load()
  * @see image_resize()
  * @see image_crop()
  */
-function image_scale_and_crop(stdClass $image, $width, $height) {
+function image_scale_and_crop($image, $width, $height) {
   $scale = max($width / $image->info['width'], $height / $image->info['height']);
   $x = ($image->info['width'] * $scale - $width) / 2;
   $y = ($image->info['height'] * $scale - $height) / 2;
@@ -182,20 +116,21 @@ function image_scale_and_crop(stdClass $image, $width, $height) {
  *
  * The resulting dimensions can be smaller for one or both target dimensions.
  *
- * @param $dimensions
+ * @param array $dimensions
  *   Dimensions to be modified - an array with components width and height, in
  *   pixels.
- * @param $width
- *   The target width, in pixels. If this value is NULL then the scaling will be
- *   based only on the height value.
- * @param $height
- *   The target height, in pixels. If this value is NULL then the scaling will
- *   be based only on the width value.
- * @param $upscale
- *   Boolean indicating that images smaller than the target dimensions will be
- *   scaled up. This generally results in a low quality image.
+ * @param int $width
+ *   (optional) The target width, in pixels. If this value is NULL then the
+ *   scaling will be based only on the height value.
+ * @param int $height
+ *   (optional) The target height, in pixels. If this value is NULL then the
+ *   scaling will be based only on the width value.
+ * @param bool $upscale
+ *   (optional) Boolean indicating that images smaller than the target
+ *   dimensions will be scaled up. This generally results in a low quality
+ *   image.
  *
- * @return
+ * @return bool
  *   TRUE if $dimensions was modified, FALSE otherwise.
  *
  * @see image_scale()
@@ -230,26 +165,26 @@ function image_dimensions_scale(array &$dimensions, $width = NULL, $height = NUL
  *
  * The resulting image can be smaller for one or both target dimensions.
  *
- * @param $image
+ * @param object $image
  *   An image object returned by image_load().
- * @param $width
- *   The target width, in pixels. If this value is NULL then the scaling will
- *   be based only on the height value.
- * @param $height
- *   The target height, in pixels. If this value is NULL then the scaling will
- *   be based only on the width value.
- * @param $upscale
- *   Boolean indicating that files smaller than the dimensions will be scaled
- *   up. This generally results in a low quality image.
+ * @param int $width
+ *   (optional) The target width, in pixels. This value is omitted then the
+ *   scaling will based only on the height value.
+ * @param int $height
+ *   (optional) The target height, in pixels. This value is omitted then the
+ *   scaling will based only on the width value.
+ * @param bool $upscale
+ *   (optional) Boolean indicating that files smaller than the dimensions will
+ *   be scaled up. This generally results in a low quality image.
  *
- * @return
+ * @return bool
  *   TRUE on success, FALSE on failure.
  *
  * @see image_dimensions_scale()
  * @see image_load()
  * @see image_scale_and_crop()
  */
-function image_scale(stdClass $image, $width = NULL, $height = NULL, $upscale = FALSE) {
+function image_scale($image, $width = NULL, $height = NULL, $upscale = FALSE) {
   $dimensions = $image->info;
 
   // Scale the dimensions - if they don't change then just return success.
@@ -263,24 +198,24 @@ function image_scale(stdClass $image, $width = NULL, $height = NULL, $upscale = 
 /**
  * Resizes an image to the given dimensions (ignoring aspect ratio).
  *
- * @param $image
+ * @param object $image
  *   An image object returned by image_load().
- * @param $width
+ * @param int $width
  *   The target width, in pixels.
- * @param $height
+ * @param int $height
  *   The target height, in pixels.
  *
- * @return
+ * @return bool
  *   TRUE on success, FALSE on failure.
  *
  * @see image_load()
- * @see image_gd_resize()
+ * @see \Drupal\system\Plugin\ImageToolkitInterface::resize()
  */
-function image_resize(stdClass $image, $width, $height) {
+function image_resize($image, $width, $height) {
   $width = (int) round($width);
   $height = (int) round($height);
 
-  return image_toolkit_invoke('resize', $image, array($width, $height));
+  return $image->toolkit->resize($image, $width, $height);
 }
 
 /**
@@ -288,23 +223,23 @@ function image_resize(stdClass $image, $width, $height) {
  *
  * @param $image
  *   An image object returned by image_load().
- * @param $degrees
+ * @param int $degrees
  *   The number of (clockwise) degrees to rotate the image.
- * @param $background
- *   An hexadecimal integer specifying the background color to use for the
- *   uncovered area of the image after the rotation. E.g. 0x000000 for black,
- *   0xff00ff for magenta, and 0xffffff for white. For images that support
- *   transparency, this will default to transparent. Otherwise it will
+ * @param string $background
+ *   (optional) An hexadecimal integer specifying the background color to use
+ *   for the uncovered area of the image after the rotation. E.g. 0x000000 for
+ *   black, 0xff00ff for magenta, and 0xffffff for white. For images that
+ *   support transparency, this will default to transparent. Otherwise it will
  *   be white.
  *
- * @return
+ * @return bool
  *   TRUE on success, FALSE on failure.
  *
  * @see image_load()
- * @see image_gd_rotate()
+ * @see \Drupal\system\Plugin\ImageToolkitInterface::rotate()
  */
-function image_rotate(stdClass $image, $degrees, $background = NULL) {
-  return image_toolkit_invoke('rotate', $image, array($degrees, $background));
+function image_rotate($image, $degrees, $background = NULL) {
+  return $image->toolkit->rotate($image, $degrees, $background);
 }
 
 /**
@@ -312,23 +247,23 @@ function image_rotate(stdClass $image, $degrees, $background = NULL) {
  *
  * @param $image
  *   An image object returned by image_load().
- * @param $x
+ * @param int $x
  *   The top left coordinate, in pixels, of the crop area (x axis value).
- * @param $y
+ * @param int $y
  *   The top left coordinate, in pixels, of the crop area (y axis value).
- * @param $width
+ * @param int $width
  *   The target width, in pixels.
- * @param $height
+ * @param int $height
  *   The target height, in pixels.
  *
- * @return
+ * @return bool
  *   TRUE on success, FALSE on failure.
  *
  * @see image_load()
  * @see image_scale_and_crop()
- * @see image_gd_crop()
+ * @see \Drupal\system\Plugin\ImageToolkitInterface::crop()
  */
-function image_crop(stdClass $image, $x, $y, $width, $height) {
+function image_crop($image, $x, $y, $width, $height) {
   $aspect = $image->info['height'] / $image->info['width'];
   if (empty($height)) $height = $width / $aspect;
   if (empty($width)) $width = $height * $aspect;
@@ -336,7 +271,7 @@ function image_crop(stdClass $image, $x, $y, $width, $height) {
   $width = (int) round($width);
   $height = (int) round($height);
 
-  return image_toolkit_invoke('crop', $image, array($x, $y, $width, $height));
+  return $image->toolkit->crop($image, $x, $y, $width, $height);
 }
 
 /**
@@ -345,14 +280,14 @@ function image_crop(stdClass $image, $x, $y, $width, $height) {
  * @param $image
  *   An image object returned by image_load().
  *
- * @return
+ * @return bool
  *   TRUE on success, FALSE on failure.
  *
  * @see image_load()
- * @see image_gd_desaturate()
+ * @see \Drupal\system\Plugin\ImageToolkitInterface::desaturate()
  */
-function image_desaturate(stdClass $image) {
-  return image_toolkit_invoke('desaturate', $image);
+function image_desaturate($image) {
+  return $image->toolkit->desaturate($image);
 }
 
 /**
@@ -360,12 +295,12 @@ function image_desaturate(stdClass $image) {
  *
  * Any changes to the file are not saved until image_save() is called.
  *
- * @param $file
+ * @param string $file
  *   Path to an image file.
- * @param $toolkit
- *   An optional, image toolkit name to override the default.
+ * @param \Drupal\system\Plugin\ImageToolkitInterface $toolkit
+ *   (optional) Image toolkit object to override the default.
  *
- * @return
+ * @return object
  *   An image object or FALSE if there was a problem loading the file. The
  *   image object has the following properties:
  *    - 'source' - The original file path.
@@ -377,12 +312,10 @@ function image_desaturate(stdClass $image) {
  *
  * @see image_save()
  * @see image_get_info()
- * @see image_get_available_toolkits()
- * @see image_gd_load()
  */
-function image_load($file, $toolkit = FALSE) {
-  if (!$toolkit) {
-    $toolkit = image_get_toolkit();
+function image_load($file, ImageToolkitInterface $toolkit = NULL) {
+  if ($toolkit === NULL) {
+    $toolkit = Drupal::service('image.toolkit');
   }
   if ($toolkit) {
     $image = new stdClass();
@@ -390,7 +323,7 @@ function image_load($file, $toolkit = FALSE) {
     $image->info = image_get_info($file, $toolkit);
     if (isset($image->info) && is_array($image->info)) {
       $image->toolkit = $toolkit;
-      if (image_toolkit_invoke('load', $image)) {
+      if ($toolkit->load($image)) {
         return $image;
       }
     }
@@ -401,24 +334,24 @@ function image_load($file, $toolkit = FALSE) {
 /**
  * Closes the image and saves the changes to a file.
  *
- * @param $image
+ * @param object $image
  *   An image object returned by image_load(). The object's 'info' property
  *   will be updated if the file is saved successfully.
  * @param $destination
- *   Destination path where the image should be saved. If it is empty the
- *   original image file will be overwritten.
+ *   (optional) Destination path where the image should be saved. If it is empty
+ *   the original image file will be overwritten.
  *
- * @return
+ * @return bool
  *   TRUE on success, FALSE on failure.
  *
  * @see image_load()
- * @see image_gd_save()
+ * @see \Drupal\system\Plugin\ImageToolkitInterface::save()
  */
-function image_save(stdClass $image, $destination = NULL) {
+function image_save($image, $destination = NULL) {
   if (empty($destination)) {
     $destination = $image->source;
   }
-  if ($return = image_toolkit_invoke('save', $image, array($destination))) {
+  if ($return = $image->toolkit->save($image, $destination)) {
     // Clear the cached file size and refresh the image information.
     clearstatcache(TRUE, $destination);
     $image->info = image_get_info($destination, $image->toolkit);

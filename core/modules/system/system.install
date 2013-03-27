@@ -2052,7 +2052,7 @@ function system_update_8048() {
   update_module_enable(array('menu_link'));
 
   // Add the langcode column if it doesn't exist.
-  if (!db_field_exists('menu_links', 'langcode')) {
+  if (!db_field_exists('menu_inks', 'langcode')) {
     $column = array(
       'description' => 'The {language}.langcode of this entity.',
       'type' => 'varchar',
@@ -2155,6 +2155,20 @@ function system_update_8051() {
   );
 
   db_add_field('menu_links', 'route_name', $spec);
+}
+
+/**
+ * Moves image toolkit settings from variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function system_update_8052() {
+  update_variables_to_config('system.image', array(
+    'image_toolkit' => 'toolkit',
+  ));
+  update_variables_to_config('system.image.gd', array(
+    'image_jpeg_quality' => 'jpeg_quality',
+  ));
 }
 
 /**

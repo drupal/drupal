@@ -748,22 +748,31 @@ function simpletest_phpunit_get_available_tests() {
  *   Path to the phpunit xml file.
  */
 function simpletest_phpunit_xml_to_rows($test_id, $phpunit_xml_file) {
-  $contents = file_get_contents($phpunit_xml_file);
+  $contents = @file_get_contents($phpunit_xml_file);
+  if (!$contents) {
+    return;
+  }
   $xml = new SimpleXMLElement($contents);
   $records = array();
   foreach ($xml->testsuite as $testsuite) {
     foreach ($testsuite as $suite) {
       foreach ($suite as $testcase) {
         $message = '';
+        $pass = TRUE;
         if ($testcase->failure) {
           $lines = explode("\n", $testcase->failure);
           $message = $lines[2];
+          $pass = FALSE;
+        }
+        if ($testcase->error) {
+          $message = $testcase->error;
+          $pass = FALSE;
         }
         $attributes = $testcase->attributes();
         $records[] = array(
           'test_id' => $test_id,
           'test_class' => (string)$attributes->class,
-          'status' => empty($testcase->failure) ? 'pass' : 'fail',
+          'status' => $pass ? 'pass' : 'fail',
           'message' => $message,
           'message_group' => 'Other', // TODO: Check on the proper values for this.
           'function' => $attributes->class . '->' . $attributes->name . '()',

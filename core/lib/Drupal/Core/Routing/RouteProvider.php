@@ -97,7 +97,11 @@ class RouteProvider implements RouteProviderInterface {
       $path = rtrim($request->getPathInfo(), '/');
     }
 
-    $parts = array_slice(array_filter(explode('/', $path)), 0, MatcherDumper::MAX_PARTS);
+    // Filter out each empty value, though allow '0' and 0, which would be
+    // filtered out by empty().
+    $parts = array_slice(array_filter(explode('/', $path), function($value) {
+      return $value !== NULL && $value !== '';
+    }), 0, MatcherDumper::MAX_PARTS);
 
     $ancestors = $this->getCandidateOutlines($parts);
 

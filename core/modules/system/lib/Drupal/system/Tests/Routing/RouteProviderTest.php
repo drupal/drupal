@@ -272,6 +272,41 @@ class RouteProviderTest extends UnitTestBase {
   }
 
   /**
+   * Tests a route with a 0 as value.
+   */
+  public function testOutlinePathMatchZero() {
+    $connection = Database::getConnection();
+    $provider = new RouteProvider($connection, 'test_routes');
+
+    $this->fixtures->createTables($connection);
+
+    $collection = new RouteCollection();
+    $collection->add('poink', new Route('/some/path/{value}'));
+
+    $dumper = new MatcherDumper($connection, 'test_routes');
+    $dumper->addRoutes($collection);
+    $dumper->dump();
+
+    $path = '/some/path/0';
+
+    $request = Request::create($path, 'GET');
+
+    try {
+      $routes = $provider->getRouteCollectionForRequest($request);
+
+      // All of the matching paths have the correct pattern.
+      foreach ($routes as $route) {
+        $this->assertEqual($route->compile()->getPatternOutline(), '/some/path/%', 'Found path has correct pattern');
+      }
+
+      $this->assertEqual(count($routes), 1, 'The correct number of routes was found.');
+    }
+    catch (ResourceNotFoundException $e) {
+      $this->fail('No matchout route found with 0 as argument value');
+    }
+  }
+
+  /**
    * Confirms that an exception is thrown when no matching path is found.
    */
   function testOutlinePathNoMatch() {

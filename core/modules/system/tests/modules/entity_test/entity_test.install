@@ -229,8 +229,7 @@ function entity_test_schema() {
         'description' => 'The name of the test entity.',
         'type' => 'varchar',
         'length' => 32,
-        'not null' => TRUE,
-        'default' => '',
+        'not null' => FALSE,
       ),
       'user_id' => array(
         'type' => 'int',

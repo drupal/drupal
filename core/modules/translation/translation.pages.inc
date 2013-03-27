@@ -77,6 +77,7 @@ function translation_node_overview(EntityInterface $node) {
       }
       $status = t('Not translated');
     }
+    $row = array();
     $row[] = $language_name;
     $row[] = $title;
     $row[] = $status;

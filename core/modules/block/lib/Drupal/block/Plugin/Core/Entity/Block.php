@@ -53,6 +53,17 @@ class Block extends ConfigEntityBase {
   public $label;
 
   /**
+   * Whether the block label is displayed to end users.
+   *
+   * When this is set to BLOCK_LABEL_VISIBLE (the default value), the label is
+   * rendered as header in the block markup. Otherwise, the label is passed
+   * to the block template as a separate $label_hidden variable.
+   *
+   * @var string
+   */
+  public $label_display = BLOCK_LABEL_VISIBLE;
+
+  /**
    * The block UUID.
    *
    * @var string
@@ -169,6 +180,7 @@ class Block extends ConfigEntityBase {
     $names = array(
       'id',
       'label',
+      'label_display',
       'uuid',
       'region',
       'weight',

@@ -1,4 +1,4 @@
-# Schema for the configuration files of the taxonomy module.
+# Schema for the configuration files of the Taxonomy module.
 
 taxonomy.settings:
   type: mapping
@@ -14,3 +14,28 @@ taxonomy.settings:
       type: integer
       label: 'Number of terms per page'
 
+taxonomy.vocabulary.*:
+  type: mapping
+  label: 'Vocabulary'
+  mapping:
+    vid:
+      type: string
+      label: 'Machine name'
+    name:
+      type: label
+      label: 'Name'
+    description:
+      type: label
+      label: 'Description'
+    hierarchy:
+      type: boolean
+      label: 'Hierarchy'
+    weight:
+      type: integer
+      label: 'Weight'
+    status:
+      type: boolean
+      label: 'Status'
+    langcode:
+      type: string
+      label: 'Default language'

@@ -64,22 +64,22 @@ function image_image_effect_info() {
 /**
  * Image effect callback; Resize an image resource.
  *
- * @param $image
+ * @param object $image
  *   An image object returned by image_load().
- * @param $data
+ * @param array $data
  *   An array of attributes to use when performing the resize effect with the
  *   following items:
  *   - "width": An integer representing the desired width in pixels.
  *   - "height": An integer representing the desired height in pixels.
  *
- * @return
+ * @return bool
  *   TRUE on success. FALSE on failure to resize image.
  *
  * @see image_resize()
  */
-function image_resize_effect($image, $data) {
+function image_resize_effect($image, array $data) {
   if (!image_resize($image, $data['width'], $data['height'])) {
-    watchdog('image', 'Image resize failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit, '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['width'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
+    watchdog('image', 'Image resize failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit->getPluginId(), '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['width'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
     return FALSE;
   }
   return TRUE;
@@ -88,10 +88,10 @@ function image_resize_effect($image, $data) {
 /**
  * Image dimensions callback; Resize.
  *
- * @param $dimensions
+ * @param array $dimensions
  *   Dimensions to be modified - an array with components width and height, in
  *   pixels.
- * @param $data
+ * @param array $data
  *   An array of attributes to use when performing the resize effect with the
  *   following items:
  *   - "width": An integer representing the desired width in pixels.
@@ -106,9 +106,9 @@ function image_resize_dimensions(array &$dimensions, array $data) {
 /**
  * Image effect callback; Scale an image resource.
  *
- * @param $image
+ * @param object $image
  *   An image object returned by image_load().
- * @param $data
+ * @param array $data
  *   An array of attributes to use when performing the scale effect with the
  *   following items:
  *   - "width": An integer representing the desired width in pixels.
@@ -116,12 +116,12 @@ function image_resize_dimensions(array &$dimensions, array $data) {
  *   - "upscale": A boolean indicating that the image should be upscaled if the
  *     dimensions are larger than the original image.
  *
- * @return
+ * @return bool
  *   TRUE on success. FALSE on failure to scale image.
  *
  * @see image_scale()
  */
-function image_scale_effect($image, $data) {
+function image_scale_effect($image, array $data) {
   // Set sane default values.
   $data += array(
     'width' => NULL,
@@ -130,7 +130,7 @@ function image_scale_effect($image, $data) {
   );
 
   if (!image_scale($image, $data['width'], $data['height'], $data['upscale'])) {
-    watchdog('image', 'Image scale failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit, '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['width'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
+    watchdog('image', 'Image scale failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit->getPluginId(), '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['width'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
     return FALSE;
   }
   return TRUE;
@@ -139,10 +139,10 @@ function image_scale_effect($image, $data) {
 /**
  * Image dimensions callback; Scale.
  *
- * @param $dimensions
+ * @param array $dimensions
  *   Dimensions to be modified - an array with components width and height, in
  *   pixels.
- * @param $data
+ * @param array $data
  *   An array of attributes to use when performing the scale effect with the
  *   following items:
  *   - "width": An integer representing the desired width in pixels.
@@ -159,9 +159,9 @@ function image_scale_dimensions(array &$dimensions, array $data) {
 /**
  * Image effect callback; Crop an image resource.
  *
- * @param $image
+ * @param object $image
  *   An image object returned by image_load().
- * @param $data
+ * @param array $data
  *   An array of attributes to use when performing the crop effect with the
  *   following items:
  *   - "width": An integer representing the desired width in pixels.
@@ -170,11 +170,13 @@ function image_scale_dimensions(array &$dimensions, array $data) {
  *     of "XOFFSET-YOFFSET". XOFFSET is either a number of pixels or
  *     "left", "center", "right" and YOFFSET is either a number of pixels or
  *     "top", "center", "bottom".
- * @return
+ *
+ * @return bool
  *   TRUE on success. FALSE on failure to crop image.
+ *
  * @see image_crop()
  */
-function image_crop_effect($image, $data) {
+function image_crop_effect($image, array $data) {
   // Set sane default values.
   $data += array(
     'anchor' => 'center-center',
@@ -184,7 +186,7 @@ function image_crop_effect($image, $data) {
   $x = image_filter_keyword($x, $image->info['width'], $data['width']);
   $y = image_filter_keyword($y, $image->info['height'], $data['height']);
   if (!image_crop($image, $x, $y, $data['width'], $data['height'])) {
-    watchdog('image', 'Image crop failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit, '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['width'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
+    watchdog('image', 'Image crop failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit->getPluginId(), '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['width'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
     return FALSE;
   }
   return TRUE;
@@ -193,20 +195,22 @@ function image_crop_effect($image, $data) {
 /**
  * Image effect callback; Scale and crop an image resource.
  *
- * @param $image
+ * @param object $image
  *   An image object returned by image_load().
- * @param $data
+ * @param array $data
  *   An array of attributes to use when performing the scale and crop effect
  *   with the following items:
  *   - "width": An integer representing the desired width in pixels.
  *   - "height": An integer representing the desired height in pixels.
- * @return
+ *
+ * @return bool
  *   TRUE on success. FALSE on failure to scale and crop image.
+ *
  * @see image_scale_and_crop()
  */
-function image_scale_and_crop_effect($image, $data) {
+function image_scale_and_crop_effect($image, array $data) {
   if (!image_scale_and_crop($image, $data['width'], $data['height'])) {
-    watchdog('image', 'Image scale and crop failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit, '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['width'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
+    watchdog('image', 'Image scale and crop failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit->getPluginId(), '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['width'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
     return FALSE;
   }
   return TRUE;
@@ -215,17 +219,19 @@ function image_scale_and_crop_effect($image, $data) {
 /**
  * Image effect callback; Desaturate (grayscale) an image resource.
  *
- * @param $image
+ * @param object $image
  *   An image object returned by image_load().
- * @param $data
+ * @param array $data
  *   An array of attributes to use when performing the desaturate effect.
- * @return
+ *
+ * @return bool
  *   TRUE on success. FALSE on failure to desaturate image.
+ *
  * @see image_desaturate()
  */
 function image_desaturate_effect($image, $data) {
   if (!image_desaturate($image)) {
-    watchdog('image', 'Image desaturate failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit, '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['width'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
+    watchdog('image', 'Image desaturate failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit->getPluginId(), '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['width'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
     return FALSE;
   }
   return TRUE;
@@ -234,9 +240,9 @@ function image_desaturate_effect($image, $data) {
 /**
  * Image effect callback; Rotate an image resource.
  *
- * @param $image
+ * @param object $image
  *   An image object returned by image_load().
- * @param $data
+ * @param array $data
  *   An array of attributes to use when performing the rotate effect containing
  *   the following items:
  *   - "degrees": The number of (clockwise) degrees to rotate the image.
@@ -246,8 +252,10 @@ function image_desaturate_effect($image, $data) {
  *   - "bgcolor": The background color to use for exposed areas of the image.
  *     Use web-style hex colors (#FFFFFF for white, #000000 for black). Leave
  *     blank for transparency on image types that support it.
- * @return
+ *
+ * @return bool
  *   TRUE on success. FALSE on failure to rotate image.
+ *
  * @see image_rotate().
  */
 function image_rotate_effect($image, $data) {
@@ -278,7 +286,7 @@ function image_rotate_effect($image, $data) {
   }
 
   if (!image_rotate($image, $data['degrees'], $data['bgcolor'])) {
-    watchdog('image', 'Image rotate failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit, '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['width'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
+    watchdog('image', 'Image rotate failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit->getPluginId(), '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['width'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
     return FALSE;
   }
   return TRUE;
@@ -287,10 +295,10 @@ function image_rotate_effect($image, $data) {
 /**
  * Image dimensions callback; Rotate.
  *
- * @param $dimensions
+ * @param array $dimensions
  *   Dimensions to be modified - an array with components width and height, in
  *   pixels.
- * @param $data
+ * @param array $data
  *   An array of attributes to use when performing the rotate effect containing
  *   the following items:
  *   - "degrees": The number of (clockwise) degrees to rotate the image.

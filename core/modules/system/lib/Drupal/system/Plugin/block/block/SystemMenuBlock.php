@@ -29,7 +29,7 @@ class SystemMenuBlock extends BlockBase {
   public function blockAccess() {
     // @todo The 'Tools' menu should be available to anonymous users.
     list($plugin, $derivative) = explode(':', $this->getPluginId());
-    return ($GLOBALS['user']->uid || in_array($derivative, array('menu-tools', 'menu-footer')));
+    return ($GLOBALS['user']->uid || in_array($derivative, array('menu-main', 'menu-tools', 'menu-footer')));
   }
 
   /**

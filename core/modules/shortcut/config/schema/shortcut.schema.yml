@@ -1,4 +1,4 @@
-# Schema for the configuration files of the shortcut module.
+# Schema for the configuration files of the Shortcut module.
 
 shortcut.set.default:
   type: mapping
@@ -8,5 +8,5 @@ shortcut.set.default:
       type: string
       label: 'ID'
     label:
-      type: string
+      type: label
       label: 'Label'

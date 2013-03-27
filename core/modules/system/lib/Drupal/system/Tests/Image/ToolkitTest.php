@@ -7,6 +7,8 @@
 
 namespace Drupal\system\Tests\Image;
 
+use Drupal\system\Plugin\ImageToolkitManager;
+
 /**
  * Test that the functions in image.inc correctly pass data to the toolkit.
  */
@@ -20,11 +22,12 @@ class ToolkitTest extends ToolkitTestBase {
   }
 
   /**
-   * Check that hook_image_toolkits() is called and only available toolkits are
-   * returned.
+   * Check that ImageToolkitManager::getAvailableToolkits() only returns
+   * available toolkits.
    */
   function testGetAvailableToolkits() {
-    $toolkits = image_get_available_toolkits();
+    $manager = new ImageToolkitManager($this->container->getParameter('container.namespaces'));
+    $toolkits = $manager->getAvailableToolkits();
     $this->assertTrue(isset($toolkits['test']), 'The working toolkit was returned.');
     $this->assertFalse(isset($toolkits['broken']), 'The toolkit marked unavailable was not returned');
     $this->assertToolkitOperationsCalled(array());
@@ -36,7 +39,7 @@ class ToolkitTest extends ToolkitTestBase {
   function testLoad() {
     $image = image_load($this->file, $this->toolkit);
     $this->assertTrue(is_object($image), 'Returned an object.');
-    $this->assertEqual($this->toolkit, $image->toolkit, 'Image had toolkit set.');
+    $this->assertEqual($this->toolkit, $image->toolkit, t('Image had toolkit set.'));
     $this->assertToolkitOperationsCalled(array('load', 'get_info'));
   }
 
@@ -56,7 +59,7 @@ class ToolkitTest extends ToolkitTestBase {
     $this->assertToolkitOperationsCalled(array('resize'));
 
     // Check the parameters.
-    $calls = image_test_get_all_calls();
+    $calls = $this->imageTestGetAllCalls();
     $this->assertEqual($calls['resize'][0][1], 1, 'Width was passed correctly');
     $this->assertEqual($calls['resize'][0][2], 2, 'Height was passed correctly');
   }
@@ -70,7 +73,7 @@ class ToolkitTest extends ToolkitTestBase {
     $this->assertToolkitOperationsCalled(array('resize'));
 
     // Check the parameters.
-    $calls = image_test_get_all_calls();
+    $calls = $this->imageTestGetAllCalls();
     $this->assertEqual($calls['resize'][0][1], 10, 'Width was passed correctly');
     $this->assertEqual($calls['resize'][0][2], 5, 'Height was based off aspect ratio and passed correctly');
   }
@@ -83,7 +86,7 @@ class ToolkitTest extends ToolkitTestBase {
     $this->assertToolkitOperationsCalled(array('resize', 'crop'));
 
     // Check the parameters.
-    $calls = image_test_get_all_calls();
+    $calls = $this->imageTestGetAllCalls();
 
     $this->assertEqual($calls['crop'][0][1], 7.5, 'X was computed and passed correctly');
     $this->assertEqual($calls['crop'][0][2], 0, 'Y was computed and passed correctly');
@@ -99,7 +102,7 @@ class ToolkitTest extends ToolkitTestBase {
     $this->assertToolkitOperationsCalled(array('rotate'));
 
     // Check the parameters.
-    $calls = image_test_get_all_calls();
+    $calls = $this->imageTestGetAllCalls();
     $this->assertEqual($calls['rotate'][0][1], 90, 'Degrees were passed correctly');
     $this->assertEqual($calls['rotate'][0][2], 1, 'Background color was passed correctly');
   }
@@ -112,7 +115,7 @@ class ToolkitTest extends ToolkitTestBase {
     $this->assertToolkitOperationsCalled(array('crop'));
 
     // Check the parameters.
-    $calls = image_test_get_all_calls();
+    $calls = $this->imageTestGetAllCalls();
     $this->assertEqual($calls['crop'][0][1], 1, 'X was passed correctly');
     $this->assertEqual($calls['crop'][0][2], 2, 'Y was passed correctly');
     $this->assertEqual($calls['crop'][0][3], 3, 'Width was passed correctly');
@@ -127,7 +130,7 @@ class ToolkitTest extends ToolkitTestBase {
     $this->assertToolkitOperationsCalled(array('desaturate'));
 
     // Check the parameters.
-    $calls = image_test_get_all_calls();
+    $calls = $this->imageTestGetAllCalls();
     $this->assertEqual(count($calls['desaturate'][0]), 1, 'Only the image was passed.');
   }
 }

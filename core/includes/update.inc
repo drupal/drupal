@@ -9,6 +9,7 @@
  */
 
 use Drupal\Component\Graph\Graph;
+use Drupal\Component\Utility\Settings;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\ConfigException;
 use Drupal\Core\DrupalKernel;
@@ -97,7 +98,9 @@ function update_prepare_d8_bootstrap() {
   // During the bootstrap to DRUPAL_BOOTSTRAP_PAGE_CACHE, code will try to read
   // the cache but the cache tables are not compatible yet. Use the Null backend
   // by default to avoid exceptions.
-  $GLOBALS['conf']['cache_classes'] = array('cache' => 'Drupal\Core\Cache\NullBackend');
+  $settings = settings()->getAll();
+  $settings['cache']['default'] = 'cache.backend.memory';
+  new Settings($settings);
 
   // Enable UpdateBundle service overrides.
   $GLOBALS['conf']['container_bundles'][] = 'Drupal\Core\DependencyInjection\UpdateBundle';
@@ -385,6 +388,7 @@ function update_prepare_d8_bootstrap() {
       $disabled_modules->save();
       $theme_config->save();
       $disabled_themes->save();
+      Drupal::service('kernel')->updateModules($sorted_with_filenames, $sorted_with_filenames);
 
       // Migrate the private key to state. This is used to create the token for
       // the upgrade batch so needs to be be done before the upgrade has begun.
@@ -420,8 +424,11 @@ function update_prepare_d8_bootstrap() {
     }
   }
   // Now remove the cache override.
-  unset($GLOBALS['conf']['cache_classes']['cache']);
-  drupal_static_reset('cache');
+  $settings = settings()->getAll();
+  unset($settings['cache']['default']);
+  new Settings($settings);
+  $kernel = new DrupalKernel('update', FALSE, drupal_classloader(), FALSE);
+  $kernel->boot();
 }
 
 /**

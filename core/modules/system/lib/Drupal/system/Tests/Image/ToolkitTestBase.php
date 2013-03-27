@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Image;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\system\Plugin\ImageToolkitManager;
 use stdClass;
 
 /**
@@ -30,7 +31,8 @@ abstract class ToolkitTestBase extends WebTestBase {
     parent::setUp();
 
     // Use the image_test.module's test toolkit.
-    $this->toolkit = 'test';
+    $manager = new ImageToolkitManager($this->container->getParameter('container.namespaces'));
+    $this->toolkit = $manager->createInstance('test');
 
     // Pick a file for testing.
     $file = current($this->drupalGetTestFiles('image'));
@@ -44,7 +46,7 @@ abstract class ToolkitTestBase extends WebTestBase {
     $this->image->toolkit = $this->toolkit;
 
     // Clear out any hook calls.
-    image_test_reset();
+    $this->imageTestReset();
   }
 
   /**
@@ -57,7 +59,7 @@ abstract class ToolkitTestBase extends WebTestBase {
    */
   function assertToolkitOperationsCalled(array $expected) {
     // Determine which operations were called.
-    $actual = array_keys(array_filter(image_test_get_all_calls()));
+    $actual = array_keys(array_filter($this->imageTestGetAllCalls()));
 
     // Determine if there were any expected that were not called.
     $uncalled = array_diff($expected, $actual);
@@ -76,5 +78,34 @@ abstract class ToolkitTestBase extends WebTestBase {
     else {
       $this->assertTrue(TRUE, 'No unexpected operations were called.');
     }
+  }
+
+  /**
+   * Resets/initializes the history of calls to the test toolkit functions.
+   */
+  function imageTestReset() {
+    // Keep track of calls to these operations
+    $results = array(
+      'load' => array(),
+      'save' => array(),
+      'settings' => array(),
+      'resize' => array(),
+      'rotate' => array(),
+      'crop' => array(),
+      'desaturate' => array(),
+    );
+    state()->set('image_test.results', $results);
+  }
+
+  /**
+   * Gets an array of calls to the test toolkit.
+   *
+   * @return array
+   *   An array keyed by operation name ('load', 'save', 'settings', 'resize',
+   *   'rotate', 'crop', 'desaturate') with values being arrays of parameters
+   *   passed to each call.
+   */
+  function imageTestGetAllCalls() {
+    return state()->get('image_test.results') ?: array();
   }
 }

@@ -2,25 +2,24 @@
 
 /**
  * @file
- * Definition of Drupal\node\Plugin\views\argument\CreatedYearMonth.
+ * Contains \Drupal\views\Plugin\views\argument\YearMonthDate.
  */
 
-namespace Drupal\node\Plugin\views\argument;
+namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\Component\Annotation\Plugin;
-use Drupal\views\Plugin\views\argument\Date;
 
 /**
  * Argument handler for a year plus month (CCYYMM)
  *
  * @Plugin(
- *   id = "node_created_year_month",
+ *   id = "date_year_month",
  *   format = "F Y",
  *   arg_format = "Ym",
- *   module = "node"
+ *   module = "views"
  * )
  */
-class CreatedYearMonth extends Date {
+class YearMonthDate extends Date {
 
   /**
    * Provide a link to the next level of the view

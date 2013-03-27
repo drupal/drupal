@@ -9,12 +9,12 @@ namespace Drupal\custom_block;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\user\Plugin\Core\Entity\User;
-use Drupal\Core\Entity\EntityAccessControllerInterface;
+use Drupal\Core\Entity\EntityAccessController;
 
 /**
  * Defines the access controller for the custom block entity type.
  */
-class CustomBlockAccessController implements EntityAccessControllerInterface {
+class CustomBlockAccessController extends EntityAccessController {
 
   /**
    * Implements EntityAccessControllerInterface::viewAccess().

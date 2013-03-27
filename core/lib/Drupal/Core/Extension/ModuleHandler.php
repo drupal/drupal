@@ -215,10 +215,12 @@ class ModuleHandler implements ModuleHandlerInterface {
     }
 
     $name = $name ?: $module;
-    $file = DRUPAL_ROOT . '/' . dirname($this->moduleList[$module]) . "/$name.$type";
-    if (is_file($file)) {
-      require_once $file;
-      return $file;
+    if (isset($this->moduleList[$module])) {
+      $file = DRUPAL_ROOT . '/' . dirname($this->moduleList[$module]) . "/$name.$type";
+      if (is_file($file)) {
+        require_once $file;
+        return $file;
+      }
     }
 
     return FALSE;
