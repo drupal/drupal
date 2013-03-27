@@ -2,24 +2,23 @@
 
 /**
  * @file
- * Definition of Drupal\node\Plugin\views\argument\CreatedWeek.
+ * Contains \Drupal\views\Plugin\views\argument\WeekDate.
  */
 
-namespace Drupal\node\Plugin\views\argument;
+namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\Component\Annotation\Plugin;
-use Drupal\views\Plugin\views\argument\Date;
 
 /**
  * Argument handler for a week.
  *
  * @Plugin(
- *   id = "node_created_week",
+ *   id = "date_week",
  *   arg_format = "W",
- *   module = "node"
+ *   module = "views"
  * )
  */
-class CreatedWeek extends Date {
+class WeekDate extends Date {
 
   /**
    * Provide a link to the next level of the view

@@ -2,25 +2,24 @@
 
 /**
  * @file
- * Definition of Drupal\node\Plugin\views\argument\CreatedDay.
+ * Contains \Drupal\views\Plugin\views\argument\DayDate.
  */
 
-namespace Drupal\node\Plugin\views\argument;
+namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\Component\Annotation\Plugin;
-use Drupal\views\Plugin\views\argument\Date;
 
 /**
  * Argument handler for a day (DD)
  *
  * @Plugin(
- *   id = "node_created_day",
+ *   id = "date_day",
  *   arg_format = "d",
  *   format = "j",
- *   module = "node"
+ *   module = "views"
  * )
  */
-class CreatedDay extends Date {
+class DayDate extends Date {
 
   /**
    * Provide a link to the next level of the view

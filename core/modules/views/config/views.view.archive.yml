@@ -100,7 +100,7 @@ display:
           summary_options:
             items_per_page: '30'
           specify_validation: '1'
-          plugin_id: node_created_year_month
+          plugin_id: date_year_month
 human_name: Archive
 module: node
 id: archive

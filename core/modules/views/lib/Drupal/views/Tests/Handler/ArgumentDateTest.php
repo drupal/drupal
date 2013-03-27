@@ -24,15 +24,6 @@ class ArgumentDateTest extends ViewUnitTestBase {
   public static $testViews = array('test_argument_date');
 
   /**
-   * Modules to enable.
-   *
-   * @todo Remove the node dependency once the handlers are moved to views.
-   *
-   * @var array
-   */
-  public static $modules = array('node', 'user');
-
-  /**
    * Stores the column map for this testCase.
    *
    * @var array
@@ -49,13 +40,6 @@ class ArgumentDateTest extends ViewUnitTestBase {
     );
   }
 
-  protected function setUp() {
-    parent::setUp();
-
-    $this->installSchema('user', 'role_permission');
-  }
-
-
   /**
    * Overrides \Drupal\views\Tests\ViewUnitTestBase::viewsData().
    */
@@ -63,12 +47,12 @@ class ArgumentDateTest extends ViewUnitTestBase {
     $data = parent::viewsData();
 
     $date_plugins = array(
-      'node_created_fulldate',
-      'node_created_day',
-      'node_created_month',
-      'node_created_week',
-      'node_created_year',
-      'node_created_year_month',
+      'date_fulldate',
+      'date_day',
+      'date_month',
+      'date_week',
+      'date_year',
+      'date_year_month',
     );
     foreach ($date_plugins as $plugin_id) {
       $data['views_test_data'][$plugin_id] = $data['views_test_data']['created'];
