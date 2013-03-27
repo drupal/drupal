@@ -3120,7 +3120,7 @@ function drupal_pre_render_styles($elements) {
 function drupal_build_css_cache($css) {
   $data = '';
   $uri = '';
-  $map = variable_get('drupal_css_cache_files', array());
+  $map = state()->get('drupal_css_cache_files') ?: array();
   // Create a new array so that only the file names are used to create the hash.
   // This prevents new aggregates from being created unnecessarily.
   $css_data = array();
@@ -3188,7 +3188,7 @@ function drupal_build_css_cache($css) {
     }
     // Save the updated map.
     $map[$key] = $uri;
-    variable_set('drupal_css_cache_files', $map);
+    state()->set('drupal_css_cache_files', $map);
   }
   return $uri;
 }
@@ -3353,7 +3353,7 @@ function _drupal_load_stylesheet($matches) {
  * Deletes old cached CSS files.
  */
 function drupal_clear_css_cache() {
-  variable_del('drupal_css_cache_files');
+  state()->delete('drupal_css_cache_files');
   file_scan_directory('public://css', '/.*/', array('callback' => 'drupal_delete_file_if_stale'));
 }
 
