@@ -44,7 +44,7 @@ class ViewStorageController extends ConfigStorageController {
   /**
    * Overrides Drupal\config\ConfigStorageController::postSave().
    */
-  public function postSave(EntityInterface $entity, $update) {
+  protected function postSave(EntityInterface $entity, $update) {
     parent::postSave($entity, $update);
     // Clear caches.
     views_invalidate_cache();
