@@ -33,15 +33,6 @@ class TermStorageController extends DatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::buildQuery().
-   */
-  protected function buildQuery($ids, $revision_id = FALSE) {
-    $query = parent::buildQuery($ids, $revision_id);
-    $query->addTag('term_access');
-    return $query;
-  }
-
-  /**
    * Overrides Drupal\Core\Entity\DatabaseStorageController::buildPropertyQuery().
    */
   protected function buildPropertyQuery(QueryInterface $entity_query, array $values) {
