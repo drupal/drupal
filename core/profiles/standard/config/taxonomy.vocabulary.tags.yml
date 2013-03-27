@@ -1,0 +1,7 @@
+vid: tags
+name: Tags
+description: 'Use tags to group articles on similar topics into categories.'
+hierarchy: '0'
+weight: '0'
+status: '1'
+langcode: en

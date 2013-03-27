@@ -93,27 +93,16 @@ function standard_install() {
   $user_settings = config('user.settings');
   $user_settings->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save();
 
-  // Create a default vocabulary named "Tags", enabled for the 'article' content type.
-  $description = st('Use tags to group articles on similar topics into categories.');
-  $help = st('Enter a comma-separated list of words to describe your content.');
-  $vocabulary = entity_create('taxonomy_vocabulary', array(
-    'name' => st('Tags'),
-    'description' => $description,
-    'vid' => 'tags',
-    'langcode' => language_default()->langcode,
-    'help' => $help,
-  ));
-  taxonomy_vocabulary_save($vocabulary);
-
+  // Create a default field named "Tags" for the 'article' content type.
   $field = array(
-    'field_name' => 'field_' . $vocabulary->id(),
+    'field_name' => 'field_tags',
     'type' => 'taxonomy_term_reference',
     // Set cardinality to unlimited for tagging.
     'cardinality' => FIELD_CARDINALITY_UNLIMITED,
     'settings' => array(
       'allowed_values' => array(
         array(
-          'vocabulary' => $vocabulary->id(),
+          'vocabulary' => 'tags',
           'parent' => 0,
         ),
       ),
@@ -121,12 +110,13 @@ function standard_install() {
   );
   field_create_field($field);
 
+  $help = st('Enter a comma-separated list of words to describe your content.');
   $instance = array(
-    'field_name' => 'field_' . $vocabulary->id(),
+    'field_name' => 'field_tags',
     'entity_type' => 'node',
     'label' => 'Tags',
     'bundle' => 'article',
-    'description' => $vocabulary->help,
+    'description' => $help,
     'widget' => array(
       'type' => 'taxonomy_autocomplete',
       'weight' => -4,
