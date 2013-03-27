@@ -2509,10 +2509,6 @@ function node_form_system_themes_admin_form_submit($form, &$form_state) {
  *   TRUE if the operation may be performed, FALSE otherwise.
  *
  * @see node_menu()
- *
- * @todo
- *   Add langcode support to node_access schema / queries.
- *   http://drupal.org/node/1658846
  */
 function node_access($op, $node, $account = NULL, $langcode = NULL) {
   if (!$node instanceof EntityInterface) {
@@ -2523,6 +2519,18 @@ function node_access($op, $node, $account = NULL, $langcode = NULL) {
   // If no language code was provided, default to the node's langcode.
   if (empty($langcode)) {
     $langcode = $node->langcode;
+    // If the Language module is enabled, try to use the language from content
+    // negotiation.
+    if (module_exists('language')) {
+      // Load languages the node exists in.
+      $node_translations = $node->getTranslationLanguages();
+      // Load the language from content negotiation.
+      $content_negotiation_langcode = language(LANGUAGE_TYPE_CONTENT)->langcode;
+      // If there is a translation available, use it.
+      if (isset($node_translations[$content_negotiation_langcode])) {
+        $langcode = $content_negotiation_langcode;
+      }
+    }
   }
 
   // Make sure that if an account is passed, that it is a fully loaded user
@@ -2756,6 +2764,9 @@ function node_query_node_access_alter(AlterableInterface $query) {
   if (!$op = $query->getMetaData('op')) {
     $op = 'view';
   }
+  if (!$langcode = $query->getMetaData('langcode')) {
+    $langcode = FALSE;
+  }
 
   // If $account can bypass node access, or there are no node access modules,
   // or the operation is 'view' and the $account has a global view grant
@@ -2793,7 +2804,6 @@ function node_query_node_access_alter(AlterableInterface $query) {
   // Find all instances of the base table being joined -- could appear
   // more than once in the query, and could be aliased. Join each one to
   // the node_access table.
-
   $grants = node_access_grants($op, $account);
   foreach ($tables as $nalias => $tableinfo) {
     $table = $tableinfo['table'];
@@ -2803,8 +2813,8 @@ function node_query_node_access_alter(AlterableInterface $query) {
        ->fields('na', array('nid'));
 
       $grant_conditions = db_or();
-      // If any grant exists for the specified user, then user has access
-      // to the node for the specified operation.
+      // If any grant exists for the specified user, then user has access to the
+      // node for the specified operation.
       foreach ($grants as $realm => $gids) {
         foreach ($gids as $gid) {
           $grant_conditions->condition(db_and()
@@ -2819,6 +2829,20 @@ function node_query_node_access_alter(AlterableInterface $query) {
         $subquery->condition($grant_conditions);
       }
       $subquery->condition('na.grant_' . $op, 1, '>=');
+
+      // Add langcode-based filtering if this is a multilingual site.
+      if (language_multilingual()) {
+        // If no specific langcode to check for is given, use the grant entry
+        // which is set as a fallback.
+        // If a specific langcode is given, use the grant entry for it.
+        if ($langcode === FALSE) {
+          $subquery->condition('na.fallback', 1, '=');
+        }
+        else {
+          $subquery->condition('na.langcode', $langcode, '=');
+        }
+      }
+
       $field = 'nid';
       // Now handle entities.
       $subquery->where("$nalias.$field = na.nid");
@@ -2869,11 +2893,8 @@ function node_access_acquire_grants(EntityInterface $node, $delete = TRUE) {
  * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node whose grants are being written.
  * @param $grants
- *   A list of grants to write. Each grant is an array that must contain the
- *   following keys: realm, gid, grant_view, grant_update, grant_delete.
- *   The realm is specified by a particular module; the gid is as well, and
- *   is a module-defined id to define grant privileges. each grant_* field
- *   is a boolean value.
+ *   A list of grants to write. See hook_node_access_records() for the
+ *   expected structure of the grants array.
  * @param $realm
  *   (optional) If provided, read/write grants for that realm only. Defaults to
  *   NULL.
@@ -2892,18 +2913,35 @@ function _node_access_write_grants(EntityInterface $node, $grants, $realm = NULL
     }
     $query->execute();
   }
-
   // Only perform work when node_access modules are active.
   if (!empty($grants) && count(module_implements('node_grants'))) {
-    $query = db_insert('node_access')->fields(array('nid', 'realm', 'gid', 'grant_view', 'grant_update', 'grant_delete'));
+    $query = db_insert('node_access')->fields(array('nid', 'langcode', 'fallback', 'realm', 'gid', 'grant_view', 'grant_update', 'grant_delete'));
+    // If we have defined a granted langcode, use it. But if not, add a grant
+    // for every language this node is translated to.
     foreach ($grants as $grant) {
       if ($realm && $realm != $grant['realm']) {
         continue;
       }
-      // Only write grants; denies are implicit.
-      if ($grant['grant_view'] || $grant['grant_update'] || $grant['grant_delete']) {
-        $grant['nid'] = $node->nid;
-        $query->values($grant);
+      if (isset($grant['langcode'])) {
+        $grant_languages = array($grant['langcode'] => language_load($grant['langcode']));
+      }
+      else {
+        $grant_languages = $node->getTranslationLanguages(TRUE);
+      }
+      foreach ($grant_languages as $grant_langcode => $grant_language) {
+        // Only write grants; denies are implicit.
+        if ($grant['grant_view'] || $grant['grant_update'] || $grant['grant_delete']) {
+          $grant['nid'] = $node->nid;
+          $grant['langcode'] = $grant_langcode;
+          // The record with the original langcode is used as the fallback.
+          if ($grant['langcode'] == $node->langcode) {
+            $grant['fallback'] = 1;
+          }
+          else {
+            $grant['fallback'] = 0;
+          }
+          $query->values($grant);
+        }
       }
     }
     $query->execute();
@@ -3485,7 +3523,9 @@ function node_modules_disabled($modules) {
     // At this point, the module is already disabled, but its code is still
     // loaded in memory. Module functions must no longer be called. We only
     // check whether a hook implementation function exists and do not invoke it.
-    if (!node_access_needs_rebuild() && module_hook($module, 'node_grants')) {
+    // Node access also needs to be rebuilt if language module is disabled to
+    // remove any language-specific grants.
+    if (!node_access_needs_rebuild() && (module_hook($module, 'node_grants') || $module == 'language')) {
       node_access_needs_rebuild(TRUE);
     }
   }

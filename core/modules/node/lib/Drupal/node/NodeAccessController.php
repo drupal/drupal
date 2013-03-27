@@ -109,11 +109,19 @@ class NodeAccessController extends EntityAccessController {
     // Check the database for potential access grants.
     $query = db_select('node_access');
     $query->addExpression('1');
+    // Only interested for granting in the current operation.
     $query->condition('grant_' . $operation, 1, '>=');
-    $nids = db_or()->condition('nid', $node->id());
+    // Check for grants for this node and the correct langcode.
+    $nids = db_and()
+      ->condition('nid', $node->nid)
+      ->condition('langcode', $langcode);
+    // If the node is published, also take the default grant into account. The
+    // default is saved with a node ID of 0.
     $status = $node instanceof EntityNG ? $node->status : $node->get('status', $langcode)->value;
     if ($status) {
-      $nids->condition('nid', 0);
+      $nids = db_or()
+        ->condition($nids)
+        ->condition('nid', 0);
     }
     $query->condition($nids);
     $query->range(0, 1);

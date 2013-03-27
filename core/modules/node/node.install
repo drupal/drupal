@@ -149,6 +149,20 @@ function node_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
+      'langcode' => array(
+        'description' => 'The {language}.langcode of this node.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'fallback' => array(
+        'description' => 'Boolean indicating whether this record should be used as a fallback if a language condition is not provided.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 1,
+      ),
       'gid' => array(
         'description' => "The grant ID a user must possess in the specified realm to gain this row's privileges on the node.",
         'type' => 'int',
@@ -188,7 +202,7 @@ function node_schema() {
         'size' => 'tiny',
       ),
     ),
-    'primary key' => array('nid', 'gid', 'realm'),
+    'primary key' => array('nid', 'gid', 'realm', 'langcode'),
     'foreign keys' => array(
       'affected_node' => array(
         'table' => 'node',
@@ -707,6 +721,34 @@ function node_update_8013() {
 function node_update_8014() {
   // Enable the datetime module.
   update_module_enable(array('datetime'));
+}
+
+/**
+ * Add language support to the {node_access} table.
+ */
+function node_update_8015() {
+  // Add the langcode field.
+  $langcode_field = array(
+    'type' => 'varchar',
+    'length' => 12,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => 'The {language}.langcode of this node.',
+  );
+  db_add_field('node_access', 'langcode', $langcode_field);
+
+  // Add the fallback field.
+  $fallback_field = array(
+    'description' => 'Boolean indicating whether this record should be used as a fallback if a language condition is not provided.',
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 1,
+  );
+  db_add_field('node_access', 'fallback', $fallback_field);
+
+  db_drop_primary_key('node_access');
+  db_add_primary_key('node_access', array('nid', 'gid', 'realm', 'langcode'));
 }
 
 /**

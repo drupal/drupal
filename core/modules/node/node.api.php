@@ -234,11 +234,17 @@ function hook_node_grants($account, $op) {
  *   of this gid within this realm can edit this node.
  * - 'grant_delete': If set to 1 a user that has been identified as a member
  *   of this gid within this realm can delete this node.
+ * - langcode: (optional) The language code of a specific translation of the
+ *   node, if any. Modules may add this key to grant different access to
+ *   different translations of a node, such that (e.g.) a particular group is
+ *   granted access to edit the Catalan version of the node, but not the
+ *   Hungarian version. If no value is provided, the langcode is set
+ *   automatically from the $node parameter and the node's original language (if
+ *   specified) is used as a fallback. Only specify multiple grant records with
+ *   different languages for a node if the site has those languages configured.
  *
- *
- * When an implementation is interested in a node but want to deny access to
- * everyone, it may return a "deny all" grant:
- *
+ * A "deny all" grant may be used to deny all access to a particular node or
+ * node translation:
  * @code
  * $grants[] = array(
  *   'realm' => 'all',
@@ -246,15 +252,14 @@ function hook_node_grants($account, $op) {
  *   'grant_view' => 0,
  *   'grant_update' => 0,
  *   'grant_delete' => 0,
- *   'priority' => 1,
+ *   'langcode' => 'ca',
  * );
  * @endcode
- *
- * Setting the priority should cancel out other grants. In the case of a
- * conflict between modules, it is safer to use hook_node_access_records_alter()
- * to return only the deny grant.
- *
- * Note: a deny all grant is not written to the database; denies are implicit.
+ * Note that another module node access module could override this by granting
+ * access to one or more nodes, since grants are additive. To enforce that
+ * access is denied in a particular case, use hook_node_access_records_alter().
+ * Also note that a deny all is not written to the database; denies are
+ * implicit.
  *
  * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node that has just been saved.
@@ -271,8 +276,9 @@ function hook_node_access_records(\Drupal\Core\Entity\EntityInterface $node) {
   // treated just like any other node and we completely ignore it.
   if ($node->private) {
     $grants = array();
-    // Only published nodes should be viewable to all users. If we allow access
-    // blindly here, then all users could view an unpublished node.
+    // Only published Catalan translations of private nodes should be viewable
+    // to all users. If we fail to check $node->status, all users would be able
+    // to view an unpublished node.
     if ($node->status) {
       $grants[] = array(
         'realm' => 'example',
@@ -280,6 +286,7 @@ function hook_node_access_records(\Drupal\Core\Entity\EntityInterface $node) {
         'grant_view' => 1,
         'grant_update' => 0,
         'grant_delete' => 0,
+        'langcode' => 'ca'
       );
     }
     // For the example_author array, the GID is equivalent to a UID, which
@@ -292,6 +299,7 @@ function hook_node_access_records(\Drupal\Core\Entity\EntityInterface $node) {
       'grant_view' => 1,
       'grant_update' => 1,
       'grant_delete' => 1,
+      'langcode' => 'ca'
     );
 
     return $grants;

@@ -84,7 +84,10 @@ class FileItem extends FieldItemBase {
     else {
       $this->properties['entity']->setValue(NULL);
     }
-    unset($values['entity'], $values['fid'], $values['display'], $values['description']);
+    unset($values['entity'], $values['fid']);
+    // @todo These properties are sometimes set due to being present in form
+    //   values. Needs to be cleaned up somewhere.
+    unset($values['display'], $values['description'], $values['upload']);
     if ($values) {
       throw new \InvalidArgumentException('Property ' . key($values) . ' is unknown.');
     }
