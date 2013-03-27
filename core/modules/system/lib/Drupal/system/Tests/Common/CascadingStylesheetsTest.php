@@ -99,7 +99,7 @@ class CascadingStylesheetsTest extends WebTestBase {
    */
   function testRenderInlinePreprocess() {
     $css = 'body { padding: 0px; }';
-    $css_preprocessed = '<style media="all">' . "\n<!--/*--><![CDATA[/*><!--*/\n" . drupal_load_stylesheet_content($css, TRUE) . "\n/*]]>*/-->\n" . '</style>';
+    $css_preprocessed = '<style media="all">' . "\n/* <![CDATA[ */\n" . drupal_load_stylesheet_content($css, TRUE) . "\n/* ]]> */\n" . '</style>';
     drupal_add_css($css, array('type' => 'inline'));
     $styles = drupal_get_css();
     $this->assertEqual(trim($styles), $css_preprocessed, 'Rendering preprocessed inline CSS adds it to the page.');

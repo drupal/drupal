@@ -2969,8 +2969,8 @@ function drupal_pre_render_styles($elements) {
   // For inline CSS to validate as XHTML, all CSS containing XHTML needs to be
   // wrapped in CDATA. To make that backwards compatible with HTML 4, we need to
   // comment out the CDATA-tag.
-  $embed_prefix = "\n<!--/*--><![CDATA[/*><!--*/\n";
-  $embed_suffix = "\n/*]]>*/-->\n";
+  $embed_prefix = "\n/* <![CDATA[ */\n";
+  $embed_suffix = "\n/* ]]> */\n";
 
   // Defaults for LINK and STYLE elements.
   $link_element_defaults = array(
