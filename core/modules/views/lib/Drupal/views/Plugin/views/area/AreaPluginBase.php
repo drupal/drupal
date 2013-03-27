@@ -159,7 +159,13 @@ abstract class AreaPluginBase extends HandlerBase {
   }
 
   /**
-   * Render the area
+   * Render the area.
+   *
+   * @param bool $empty
+   *   (optional) Indicator if view result is empty or not. Defaults to FALSE.
+   *
+   * @return array
+   *   In any case we need a valid Drupal render array to return.
    */
   public abstract function render($empty = FALSE);
 

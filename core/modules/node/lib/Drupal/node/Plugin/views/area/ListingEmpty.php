@@ -37,8 +37,9 @@ class ListingEmpty extends AreaPluginBase {
         ) ,
         '#access' => _node_add_access()
       );
-      return drupal_render($element);
+      return $element;
     }
+    return array();
   }
 
 }

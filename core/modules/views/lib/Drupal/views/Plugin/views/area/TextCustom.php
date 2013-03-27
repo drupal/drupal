@@ -44,12 +44,17 @@ class TextCustom extends AreaPluginBase {
   public function submitOptionsForm(&$form, &$form_state) {
   }
 
+  /**
+   * Implements \Drupal\views\Plugin\views\area\AreaPluginBase::render().
+   */
   function render($empty = FALSE) {
     if (!$empty || !empty($this->options['empty'])) {
-      return $this->render_textarea($this->options['content']);
+      return array(
+        '#markup' => $this->render_textarea($this->options['content']),
+      );
     }
 
-    return '';
+    return array();
   }
 
   /**

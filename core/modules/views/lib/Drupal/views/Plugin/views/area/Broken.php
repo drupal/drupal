@@ -27,7 +27,13 @@ class Broken extends AreaPluginBase {
   public function defineOptions() { return array(); }
   public function ensureMyTable() { /* No table to ensure! */ }
   public function query($group_by = FALSE) { /* No query to run */ }
-  function render($empty = FALSE) { return ''; }
+  /**
+   * Implements \Drupal\views\Plugin\views\area\AreaPluginBase::render().
+   */
+  public function render($empty = FALSE) {
+    // Simply render nothing by returning an empty render array.
+    return array();
+  }
   public function buildOptionsForm(&$form, &$form_state) {
     $form['markup'] = array(
       '#markup' => '<div class="form-item description">' . t('The handler for this item is broken or missing and cannot be used. If a module provided the handler and was disabled, re-enabling the module may restore it. Otherwise, you should probably delete this item.') . '</div>',
