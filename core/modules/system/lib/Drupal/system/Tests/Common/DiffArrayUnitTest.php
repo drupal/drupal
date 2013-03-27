@@ -47,6 +47,8 @@ class DiffArrayUnitTest extends UnitTestBase {
       'null' => NULL,
       'int_diff' => 1,
       'array_diff' => array('same' => 'same', 'array' => array('same' => 'same')),
+      'array_compared_to_string' => array('value'),
+      'string_compared_to_array' => 'value',
       'new' => 'new',
     );
     $this->array2 = array(
@@ -56,19 +58,9 @@ class DiffArrayUnitTest extends UnitTestBase {
       'null' => NULL,
       'int_diff' => '1',
       'array_diff' => array('same' => 'different', 'array' => array('same' => 'same')),
+      'array_compared_to_string' => 'value',
+      'string_compared_to_array' => array('value'),
     );
-  }
-
-  /**
-   * Tests DiffArray::diffAssoc().
-   */
-  public function testDiffAssoc() {
-    $expected = array(
-      'different' => 'no',
-      'new' => 'new',
-    );
-
-    $this->assertIdentical(DiffArray::diffAssoc($this->array1, $this->array2), $expected);
   }
 
   /**
@@ -80,6 +72,8 @@ class DiffArrayUnitTest extends UnitTestBase {
       'int_diff' => 1,
       // The 'array' key should not be returned, as it's the same.
       'array_diff' => array('same' => 'same'),
+      'array_compared_to_string' => array('value'),
+      'string_compared_to_array' => 'value',
       'new' => 'new',
     );
 
