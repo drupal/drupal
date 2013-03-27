@@ -1,42 +1,252 @@
-# Schema for configuration files of system module:
+# Schema for the configuration files of the System module.
+
 system.site:
   type: mapping
   label: 'Site information'
   mapping:
-    "name":
-      label: "Site name"
+    name:
       type: label
-    "mail":
-      label: "Site mail"
+      label: 'Site name'
+    mail:
       type: email
-    "slogan":
-      label: "Site slogan"
-      type: text
-    "page":
+      label: 'E-mail address'
+    slogan:
+      type: label
+      label: 'Slogan'
+    page:
       type: mapping
+      label: 'Pages'
       mapping:
-        "403":
+        403:
           type: path
-        "404":
+          label: 'Default 403 (access denied) page'
+        404:
           type: path
-        "front":
+          label: 'Default 404 (not found) page'
+        front:
           type: path
-          label: "Front page path"
-    "admin_compact_mode":
+          label: 'Default front page'
+    admin_compact_mode:
       type: boolean
-    "weight_select_max":
+      label: 'Compact mode'
+    weight_select_max:
       type: integer
+      label: 'Weight element maximum value'
 
 system.maintenance:
   type: mapping
   label: 'Maintenance mode'
   mapping:
-    "enabled":
+    enabled:
       type: boolean
-      label: "Put site into maintenance mode"
-    "message":
+      label: 'Put site into maintenance mode'
+    message:
       type: text
-      label: "Message to display when in maintenance mode"
+      label: 'Message to display when in maintenance mode'
+
+system.authorize:
+  type: mapping
+  label: 'Authorize settings'
+  mapping:
+    filetransfer_default:
+      type: string
+      label: 'Default file transfer protocol'
+
+system.cron:
+  type: mapping
+  label: 'Cron settings'
+  mapping:
+    threshold:
+      type: mapping
+      label: 'Thresholds'
+      mapping:
+        autorun:
+          type: integer
+          label: 'Run cron every'
+        requirements_warning:
+          type: integer
+          label: 'Requirements warning period'
+        requirements_error:
+          type: integer
+          label: 'Requirements error period'
+
+system.date:
+  type: mapping
+  label: 'Date settings'
+  mapping:
+    first_day:
+      type: integer
+      label: 'First day of week'
+    country:
+      type: mapping
+      label: 'Country'
+      mapping:
+        default:
+          type: string
+          label: 'Default country'
+    formats:
+      type: sequence
+      label: 'Date formats'
+      sequence:
+        - type: date_format
+          label: 'Date format'
+
+
+system.fast_404:
+  type: mapping
+  label: 'Fast 404 settings'
+  mapping:
+    enabled:
+      type: boolean
+      label: 'Enabled'
+    paths:
+      type: string
+      label: 'Paths'
+    exclude_paths:
+      type: string
+      label: 'Exclude paths'
+    html:
+      type: string
+      label: 'HTML'
+
+system.filter:
+  type: mapping
+  label: 'Filter settings'
+  mapping:
+    protocols:
+      type: sequence
+      label: 'Allowed protocols'
+      sequence:
+        - type: string
+          label: 'Protocol'
+
+system.logging:
+  type: mapping
+  label: 'Logging settings'
+  mapping:
+    error_level:
+      type: string
+      label: 'Error messages to display'
+
+system.menu:
+  type: mapping
+  label: 'Menu settings'
+  mapping:
+    active_menus_default:
+      type: sequence
+      label: 'Active menus'
+      sequence:
+        - type: string
+          label: 'Menu'
+
+system.performance:
+  type: mapping
+  label: 'Performance settings'
+  mapping:
+    cache:
+      type: mapping
+      label: 'Caching'
+      mapping:
+        page:
+          type: mapping
+          label: 'Page cache'
+          mapping:
+            enabled:
+              type: boolean
+              label: 'Cache pages for anonymous users'
+            max_age:
+              type: integer
+              label: 'Max age of page cache'
+    css:
+      type: mapping
+      label: 'CSS performance settings'
+      mapping:
+        preprocess:
+          type: boolean
+          label: 'Aggregate CSS files'
+        gzip:
+          type: boolean
+          label: 'Compress CSS files'
+    js:
+      type: mapping
+      label: 'JavaScript performance settings'
+      mapping:
+        preprocess:
+          type: boolean
+          label: 'JavaScript preprocess'
+        gzip:
+          type: boolean
+          label: 'Compress JavaScript files.'
+    response:
+      type: mapping
+      label: 'Response performance settings'
+      mapping:
+        gzip:
+          type: boolean
+          label: 'Compress cached pages'
+    stale_file_threshold:
+      type: integer
+      label: 'Stale file threshold'
+    theme_link:
+      type: boolean
+      label: 'Force inline link rendering'
+
+system.rss:
+  type: mapping
+  label: 'Feed settings'
+  mapping:
+    channel:
+      type: mapping
+      label: 'Feed channel'
+      mapping:
+        description:
+          type: text
+          label: 'Feed description'
+    items:
+      type: mapping
+      label: 'Feed items'
+      mapping:
+        limit:
+          type: integer
+          label: 'Feed item limit'
+        view_mode:
+          type: string
+          label: 'Feed content'
+
+system.theme:
+  type: mapping
+  label: 'Theme settings'
+  mapping:
+    admin:
+      type: string
+      label: 'Administration theme'
+    enabled:
+      type: sequence
+      label: 'Enabled themes'
+      sequence:
+        - type: string
+          label: 'Theme'
+
+system.timezone:
+  type: mapping
+  label: 'Time zone settings'
+  mapping:
+    default:
+      type: string
+      label: 'Default time zone'
+    user:
+      type: mapping
+      label: 'User'
+      mapping:
+        configurable:
+          type: boolean
+          label: 'Users may set their own time zone'
+        default:
+          type: integer
+          label: 'Time zone for new users'
+        warn:
+          type: boolean
+          label: 'Remind users at login if their time zone is not set'
 
 menu.menu.*:
   type: mapping

@@ -53,14 +53,14 @@ text:
 # Mail text with subject and body parts.
 mail:
   type: mapping
-  label: "Mail"
+  label: 'Mail'
   mapping:
-    "subject":
+    subject:
+      type: label
+      label: 'Subject'
+    body:
       type: text
-      label: "Subject"
-    "body":
-      type: text
-      label: "Body"
+      label: 'Body'
 
 # Filter with module and status.
 filter:
@@ -73,3 +73,25 @@ filter:
     status:
       type: boolean
       label: 'Enabled'
+
+# Date format with name and pattern.
+date_format:
+  type: mapping
+  label: 'Date Format'
+  mapping:
+    name:
+      type: label
+      label: 'Name'
+    pattern:
+      type: mapping
+      label: 'Format string'
+      mapping:
+        php:
+          type: label
+          label: 'PHP date format'
+        intl:
+          type: label
+          label: 'International'
+    locked:
+      type: boolean
+      label: 'Locked'
