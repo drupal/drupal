@@ -2172,7 +2172,7 @@ function system_update_8052() {
 /**
  * Remove {cache_form} table.
  */
-function system_update_8052() {
+function system_update_8053() {
   db_drop_table('cache_form');
 }
 
