@@ -250,7 +250,7 @@ function update_results_page() {
       }
     }
     if ($all_messages) {
-      $output .= '<div id="update-results"><h2>The following updates returned messages</h2>';
+      $output .= '<div class="update-results"><h2>The following updates returned messages</h2>';
       $output .= $all_messages;
       $output .= '</div>';
     }

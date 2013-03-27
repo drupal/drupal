@@ -1,24 +1,24 @@
 /**
  * Update styles
  */
-#update-results {
+.update-results {
   margin-top: 3em;
   padding: 0.25em;
   border: 1px solid #ccc;
   background: #eee;
   font-size: smaller;
 }
-#update-results h2 {
+.update-results h2 {
   margin-top: 0.25em;
 }
-#update-results h4 {
+.update-results h4 {
   margin-bottom: 0.25em;
 }
-#update-results li.none {
+.update-results .none {
   color: #888;
   font-style: italic;
 }
-#update-results li.failure strong {
+.update-results .failure strong {
   color: #b63300;
 }
 
@@ -41,12 +41,12 @@
 }
 
 #edit-connection-settings-change-connection-type {
-  margin: 2.6em 0.5em 0em 1em;
+  margin: 2.6em 0.5em 0 1em;
 }
 
 /**
  * Installation task list
  */
-ol.task-list li.active {
+.task-list li.active {
   font-weight: bold;
 }
