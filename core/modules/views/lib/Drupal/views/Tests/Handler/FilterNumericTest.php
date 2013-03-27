@@ -39,7 +39,7 @@ class FilterNumericTest extends ViewUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('system', array('menu_router', 'variable'));
+    $this->installSchema('system', array('menu_router', 'variable', 'key_value_expire'));
   }
 
   function viewsData() {

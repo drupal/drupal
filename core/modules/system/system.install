@@ -684,8 +684,6 @@ function system_schema() {
   $schema['cache_bootstrap']['description'] = 'Cache table for data required to bootstrap Drupal, may be routed to a shared memory cache.';
   $schema['cache_config'] = $schema['cache'];
   $schema['cache_config']['description'] = 'Cache table for configuration data.';
-  $schema['cache_form'] = $schema['cache'];
-  $schema['cache_form']['description'] = 'Cache table for the form system to store recently built forms and their storage data, to be used in subsequent page requests.';
   $schema['cache_page'] = $schema['cache'];
   $schema['cache_page']['description'] = 'Cache table used to store compressed pages for anonymous users, if page caching is enabled.';
   $schema['cache_menu'] = $schema['cache'];
@@ -2169,6 +2167,13 @@ function system_update_8052() {
   update_variables_to_config('system.image.gd', array(
     'image_jpeg_quality' => 'jpeg_quality',
   ));
+}
+
+/**
+ * Remove {cache_form} table.
+ */
+function system_update_8052() {
+  db_drop_table('cache_form');
 }
 
 /**

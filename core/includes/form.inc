@@ -530,14 +530,12 @@ function drupal_rebuild_form($form_id, &$form_state, $old_form = NULL) {
  * Fetches a form from the cache.
  */
 function form_get_cache($form_build_id, &$form_state) {
-  if ($cached = cache('form')->get('form_' . $form_build_id)) {
-    $form = $cached->data;
-
+  if ($form = Drupal::keyValueExpirable('form')->get($form_build_id)) {
     global $user;
     if ((isset($form['#cache_token']) && drupal_valid_token($form['#cache_token'])) || (!isset($form['#cache_token']) && !$user->uid)) {
-      if ($cached = cache('form')->get('form_state_' . $form_build_id)) {
+      if ($stored_form_state = Drupal::keyValueExpirable('form_state')->get($form_build_id)) {
         // Re-populate $form_state for subsequent rebuilds.
-        $form_state = $cached->data + $form_state;
+        $form_state = $stored_form_state + $form_state;
 
         // If the original form is contained in include files, load the files.
         // @see form_load_include()
@@ -569,12 +567,12 @@ function form_set_cache($form_build_id, $form, $form_state) {
     if ($GLOBALS['user']->uid) {
       $form['#cache_token'] = drupal_get_token();
     }
-    cache('form')->set('form_' . $form_build_id, $form, REQUEST_TIME + $expire);
+    Drupal::keyValueExpirable('form')->setWithExpire($form_build_id, $form, $expire);
   }
 
   // Cache form state.
   if ($data = array_diff_key($form_state, array_flip(form_state_keys_no_cache()))) {
-    cache('form')->set('form_state_' . $form_build_id, $data, REQUEST_TIME + $expire);
+    Drupal::keyValueExpirable('form_state')->setWithExpire($form_build_id, $data, $expire);
   }
 }
 
@@ -915,15 +913,6 @@ function drupal_process_form($form_id, &$form, &$form_state) {
     if ($form_state['submitted'] && !form_get_errors() && !$form_state['rebuild']) {
       // Execute form submit handlers.
       form_execute_handlers('submit', $form, $form_state);
-
-      // We'll clear out the cached copies of the form and its stored data
-      // here, as we've finished with them. The in-memory copies are still
-      // here, though.
-      $config = config('system.performance');
-      if (!$config->get('cache.page.use_internal') && !empty($form_state['values']['form_build_id'])) {
-        cache('form')->delete('form_' . $form_state['values']['form_build_id']);
-        cache('form')->delete('form_state_' . $form_state['values']['form_build_id']);
-      }
 
       // If batches were set in the submit handlers, we process them now,
       // possibly ending execution. We make sure we do not react to the batch

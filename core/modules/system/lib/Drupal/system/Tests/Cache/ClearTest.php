@@ -35,8 +35,6 @@ class ClearTest extends CacheTestBase {
   function testFlushAllCaches() {
     // Create cache entries for each flushed cache bin.
     $bins = Cache::getBins();
-    // @todo remove after http://drupal.org/node/512026
-    unset($bins['form']);
     $this->assertTrue($bins, 'cache_get_bins() returned bins to flush.');
     $bins['menu'] = $this->container->get('cache.menu');
     foreach ($bins as $bin => $cache_backend) {

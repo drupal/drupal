@@ -350,7 +350,7 @@ function install_begin_request(&$install_state) {
 
     // Register the 'language_manager' service.
     $container->register('language_manager', 'Drupal\Core\Language\LanguageManager');
-    foreach (array('bootstrap', 'config', 'cache', 'form', 'menu', 'page', 'path') as $bin) {
+    foreach (array('bootstrap', 'config', 'cache', 'menu', 'page', 'path') as $bin) {
       $container
         ->register("cache.$bin", 'Drupal\Core\Cache\MemoryBackend')
         ->addArgument($bin);
@@ -378,6 +378,14 @@ function install_begin_request(&$install_state) {
         'curl.CURLOPT_MAXREDIRS' => 3,
       ))
       ->addMethodCall('setUserAgent', array('Drupal (+http://drupal.org/)'));
+
+    // Register the expirable key value store used by form cache.
+    $container
+      ->register('keyvalue.expirable', 'Drupal\Core\KeyValueStore\KeyValueExpirableFactory')
+      ->addArgument(new Reference('service_container'));
+    $container
+      ->register('keyvalue.expirable.null', 'Drupal\Core\KeyValueStore\KeyValueNullExpirableFactory');
+    $conf['keyvalue_expirable_default'] = 'keyvalue.expirable.null';
 
     Drupal::setContainer($container);
   }
