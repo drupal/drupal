@@ -164,6 +164,7 @@ function node_theme() {
     ),
     'node_admin_overview' => array(
       'variables' => array('name' => NULL, 'type' => NULL),
+      'file' => 'content_types.inc',
     ),
     'node_recent_block' => array(
       'variables' => array('nodes' => NULL),
