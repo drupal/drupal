@@ -53,10 +53,3 @@ router_test_9:
   requirements:
     _permission: 'access test7'
     _access_router_test: 'TRUE'
-
-router_test_10:
-  pattern: '/router_test/test10'
-  defaults:
-    _content: '\Drupal\router_test\TestContent::test1'
-  requirements:
-    _access: 'TRUE'

@@ -230,10 +230,15 @@ class CoreBundle extends Bundle {
     $container->register('mime_type_matcher', 'Drupal\Core\Routing\MimeTypeMatcher')
       ->addTag('route_filter');
 
+    $container->register('paramconverter_manager', 'Drupal\Core\ParamConverter\ParamConverterManager')
+      ->addTag('route_enhancer');
     $container->register('paramconverter.entity', 'Drupal\Core\ParamConverter\EntityConverter')
       ->addArgument(new Reference('plugin.manager.entity'))
       ->addTag('paramconverter');
 
+    $container->register('router_processor_subscriber', 'Drupal\Core\EventSubscriber\RouteProcessorSubscriber')
+      ->addArgument(new Reference('content_negotiation'))
+      ->addTag('event_subscriber');
     $container->register('router_listener', 'Symfony\Component\HttpKernel\EventListener\RouterListener')
       ->addArgument(new Reference('router'))
       ->addTag('event_subscriber');
@@ -317,6 +322,7 @@ class CoreBundle extends Bundle {
     $container->addCompilerPass(new RegisterAccessChecksPass());
     // Add a compiler pass for upcasting of entity route parameters.
     $container->addCompilerPass(new RegisterParamConvertersPass());
+    $container->addCompilerPass(new RegisterRouteEnhancersPass());
     // Add a compiler pass for registering services needing destruction.
     $container->addCompilerPass(new RegisterServicesForDestructionPass());
   }
@@ -374,23 +380,6 @@ class CoreBundle extends Bundle {
       ->addMethodCall('setContext', array(new Reference('router.request_context')))
       ->addMethodCall('add', array(new Reference('router.dynamic')))
       ->addMethodCall('add', array(new Reference('legacy_router')));
-
-    // Add a route enhancer to upcast parameters to objects if possible.
-    $container->register('paramconverter_manager', 'Drupal\Core\ParamConverter\ParamConverterManager')
-      ->addTag('route_enhancer', array('priority' => 50));
-
-    // Add core route enhancers to dynamically derive the _controller
-    $container->register('route_enhancer.ajax', 'Drupal\Core\Routing\Enhancer\AjaxEnhancer')
-      ->addArgument(new Reference('content_negotiation'))
-      ->addTag('route_enhancer', array('priority' => 20));
-    $container->register('route_enhancer.form', 'Drupal\Core\Routing\Enhancer\FormEnhancer')
-      ->addArgument(new Reference('content_negotiation'))
-      ->addTag('route_enhancer', array('priority' => 10));
-    $container->register('route_enhancer.page', 'Drupal\Core\Routing\Enhancer\PageEnhancer')
-      ->addArgument(new Reference('content_negotiation'))
-      ->addTag('route_enhancer', array('priority' => 0));
-
-    $container->addCompilerPass(new RegisterRouteEnhancersPass());
   }
 
   /**

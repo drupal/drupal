@@ -106,35 +106,4 @@ class RouterTest extends WebTestBase {
     $this->assertResponse(200);
     $this->assertRaw('test5', 'The correct string was returned because the route was successful.');
   }
-
-  /**
-   * Checks that a request with text/html response gets rendered as a page.
-   */
-  public function testControllerResolutionPage() {
-    $this->drupalGet('/router_test/test10');
-
-    $this->assertRaw('abcde', 'Correct body was found.');
-
-    // Confirm that the page wrapping is being added, so we're not getting a
-    // raw body returned.
-    $this->assertRaw('</html>', 'Page markup was found.');
-
-    // In some instances, the subrequest handling may get confused and render
-    // a page inception style.  This test verifies that is not happening.
-    $this->assertNoPattern('#</body>.*</body>#s', 'There was no double-page effect from a misrendered subrequest.');
-  }
-
-  /**
-   * Checks that an ajax request gets rendered as an Ajax response, by mime.
-   */
-  public function testControllerResolutionAjax() {
-    // This will fail with a JSON parse error if the request is not routed to
-    // The correct controller.
-    $this->drupalGetAJAX('/router_test/test10', array(), array('Accept: application/vnd.drupal-ajax'));
-
-    $this->assertEqual($this->drupalGetHeader('Content-Type'), 'application/json', 'Correct mime content type was returned');
-
-    $this->assertRaw('abcde', 'Correct body was found.');
-  }
-
 }
