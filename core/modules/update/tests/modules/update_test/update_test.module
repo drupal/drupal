@@ -1,7 +1,7 @@
 <?php
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * @file
@@ -101,8 +101,8 @@ function update_test_update_status_alter(&$projects) {
  *   The project short name the update manager is trying to fetch data for (the
  *   fetch URLs are of the form: [base_url]/[project_name]/[core_version]).
  *
- * @return StreamedResponse|Response
- *   A StreamedResponse object containing the content of the XML release file
+ * @return BinaryFileResponse|Response
+ *   A BinaryFileResponse object containing the content of the XML release file
  *   for the specified project if one is available; a Response object with no
  *   content otherwise.
  *
@@ -132,7 +132,7 @@ function update_test_mock_page($project_name) {
     // Return an empty response.
     return new Response('', 200, $headers);
   }
-  return file_transfer($file, $headers);
+  return new BinaryFileResponse($file, 200, $headers);
 }
 
 /**
