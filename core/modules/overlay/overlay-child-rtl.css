@@ -1,4 +1,3 @@
-
 /**
  * @file
  * RTL styling for Overlay child pages.
@@ -12,26 +11,13 @@ html {
   float: right;
   left: auto;
 }
-#overlay {
-  padding: 0.2em;
-  padding-left: 26px;
-}
 #overlay-close-wrapper {
   left: 0;
   right: auto;
 }
 #overlay-close,
 #overlay-close:hover {
-  background: transparent url(images/close.png) no-repeat;
-  border-top-right-radius: 0;
-
-  -webkit-border-top-left-radius: 12px;
-  -webkit-border-bottom-left-radius: 12px;
-  -moz-border-radius-topleft: 12px;
-  -moz-border-radius-bottomleft: 12px;
-  border-top-left-radius: 12px;
-  border-bottom-left-radius: 12px;
-  background-color: #ffffff;
+  border-radius: 12px 0 0 12px;
 }
 
 /**

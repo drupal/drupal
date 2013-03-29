@@ -1399,6 +1399,22 @@ function system_library_info() {
     ),
   );
 
+  // A utility that measures and reports viewport offset dimensions from
+  // elements like the toolbar that can potentially displace the positioning of
+  // elements like the overlay.
+  $libraries['drupal.displace'] = array(
+    'title' => 'Drupal displace',
+    'version' => VERSION,
+    'js' => array(
+      'core/misc/displace.js' => array('group' => JS_LIBRARY),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.debounce'),
+    ),
+  );
+
   // A utility function to limit calls to a function with a given time.
   $libraries['drupal.debounce'] = array(
     'title' => 'Drupal debounce',
@@ -2095,6 +2111,7 @@ function system_library_info() {
       array('system', 'drupal'),
       array('system', 'drupalSettings'),
       array('system', 'jquery.once'),
+      array('system', 'drupal.displace'),
     ),
   );
   $libraries['drupal.timezone'] = array(

@@ -91,7 +91,7 @@ html.js .toolbar {
   position: absolute;
 }
 .toolbar .tray {
-  z-index: 250;
+  z-index: 1200;
 }
 .toolbar .horizontal {
   width: 100%;

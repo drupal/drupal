@@ -3,8 +3,17 @@
  */
 
 /**
+ * Toolbar bar.
+ */
+.toolbar .bar {
+  box-shadow: 1px 0 3px 1px rgba(0, 0, 0, 0.3333);
+}
+/**
  * Toolbar tray.
  */
+ .toolbar .horizontal {
+  box-shadow: 2px 1px 3px 1px rgba(0, 0, 0, 0.3333);
+}
 .toolbar .horizontal > .lining {
   padding-right: 0;
   padding-left: 5em;

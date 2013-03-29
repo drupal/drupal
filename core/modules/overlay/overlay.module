@@ -225,6 +225,7 @@ function overlay_library_info() {
       array('system', 'jquery'),
       array('system', 'drupal'),
       array('system', 'drupalSettings'),
+      array('system', 'drupal.displace'),
       array('system', 'jquery.ui.core'),
       array('system', 'jquery.bbq'),
     ),

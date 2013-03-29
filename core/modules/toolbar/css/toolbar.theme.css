@@ -28,7 +28,7 @@
  */
 .toolbar .bar {
   background-color: #0f0f0f;
-  box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.3333);
+  box-shadow: -1px 0 3px 1px rgba(0, 0, 0, 0.3333); /* LTR */
   color: #dddddd;
 }
 .toolbar .bar a {
@@ -66,7 +66,7 @@
 }
 .toolbar .horizontal {
   border-bottom: 1px solid #aaaaaa;
-  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.3333);
+  box-shadow: -2px 1px 3px 1px rgba(0, 0, 0, 0.3333); /* LTR */
 }
 .toolbar .horizontal .tray {
   background-color: #f5f5f5;
