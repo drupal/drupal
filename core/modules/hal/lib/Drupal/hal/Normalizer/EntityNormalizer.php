@@ -9,6 +9,7 @@ namespace Drupal\hal\Normalizer;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityNG;
+use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 /**
  * Converts the Drupal entity object structure to a HAL array structure.
@@ -62,6 +63,56 @@ class EntityNormalizer extends NormalizerBase {
   }
 
   /**
+   * Implements \Symfony\Component\Serializer\Normalizer\DenormalizerInterface::denormalize().
+   *
+   * @throws \Symfony\Component\Serializer\Exception\UnexpectedValueException
+   */
+  public function denormalize($data, $class, $format = NULL, array $context = array()) {
+    // Get type, necessary for determining which bundle to create.
+    if (!isset($data['_links']['type'])) {
+      throw new UnexpectedValueException('The type link relation must be specified.');
+    }
+
+    // Get language.
+    $langcode = isset($data['langcode']) ? $data['langcode'][0]['value'] : LANGUAGE_NOT_SPECIFIED;
+
+    // Create the entity.
+    $typed_data_ids = $this->getTypedDataIds($data['_links']['type']);
+    $entity = entity_create($typed_data_ids['entity_type'], array('langcode' => $langcode, 'type' => $typed_data_ids['bundle']));
+
+    // Get links and remove from data array.
+    $links = $data['_links'];
+    unset($data['_links']);
+    // Get embedded resources and remove from data array.
+    $embedded = array();
+    if (isset($data['_embedded'])) {
+      $embedded = $data['_embedded'];
+      unset($data['_embedded']);
+    }
+
+    // Iterate through remaining items in data array. These should all
+    // correspond to fields.
+    foreach ($data as $field_name => $field_data) {
+      // Remove any values that were set as a part of entity creation (e.g
+      // uuid). If this field is set to an empty array in the data, this will
+      // also have the effect of marking the field for deletion in REST module.
+      $entity->{$field_name} = array();
+
+      $field = $entity->get($field_name);
+      // Get the class of the field. This will generally be the default Field
+      // class.
+      $class = get_class($field);
+      // Pass in the empty field object as a target instance. Since the context
+      // is already prepared for the field, any data added to it is
+      // automatically added to the entity.
+      $context['target_instance'] = $field;
+      $this->serializer->denormalize($field_data, $class, $format, $context);
+    }
+
+    return $entity;
+  }
+
+  /**
    * Constructs the entity URI.
    *
    * @param $entity
@@ -73,6 +124,46 @@ class EntityNormalizer extends NormalizerBase {
   protected function getEntityUri($entity) {
     $uri_info = $entity->uri();
     return url($uri_info['path'], array('absolute' => TRUE));
+  }
+
+  /**
+   * Gets the typed data IDs for a type URI.
+   *
+   * @param array $types
+   *   The type array(s) (value of the 'type' attribute of the incoming data).
+   *
+   * @return array
+   *   The typed data IDs.
+   *
+   * @throws \Symfony\Component\Serializer\Exception\UnexpectedValueException
+   */
+  protected function getTypedDataIds($types) {
+    // The 'type' can potentially contain an array of type objects. By default,
+    // Drupal only uses a single type in serializing, but allows for multiple
+    // types when deserializing.
+    if (isset($types['href'])) {
+      $types = array($types);
+    }
+
+    foreach ($types as $type) {
+      if (!isset($type['href'])) {
+        throw new UnexpectedValueException('Type must contain an \'href\' attribute.');
+      }
+      $type_uri = $type['href'];
+      // Check whether the URI corresponds to a known type on this site. Break
+      // once one does.
+      if ($typed_data_ids = $this->linkManager->getTypeInternalIds($type['href'])) {
+        break;
+      }
+    }
+
+    // If none of the URIs correspond to an entity type on this site, no entity
+    // can be created. Throw an exception.
+    if (empty($typed_data_ids)) {
+      throw new UnexpectedValueException(sprintf('Type %s does not correspond to an entity on this site.', $type_uri));
+    }
+
+    return $typed_data_ids;
   }
 
 }
