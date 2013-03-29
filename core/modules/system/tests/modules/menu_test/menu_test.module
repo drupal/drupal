@@ -394,6 +394,23 @@ function menu_test_menu() {
     'access callback' => TRUE,
   );
 
+  // Parent page for controller-based local tasks.
+  $items['foo/%'] = array(
+    'title' => 'Controller-based local tasks',
+    'route_name' => 'menu_router_test1',
+  );
+  // Controller-based local task.
+  $items['foo/%/a'] = array(
+    'title' => 'Local task A',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  // Controller-based local task.
+  $items['foo/%/b'] = array(
+    'title' => 'Local task B',
+    'route_name' => 'menu_router_test3',
+    'type' => MENU_LOCAL_TASK,
+  );
+
   return $items;
 }
 

@@ -1,0 +1,12 @@
+menu_router_test1:
+  pattern: '/foo/{bar}'
+  defaults:
+    _content: '\Drupal\menu_test\TestControllers::test1'
+  requirements:
+    _access: 'TRUE'
+menu_router_test3:
+  pattern: '/foo/{bar}/b'
+  defaults:
+    _content: '\Drupal\menu_test\TestControllers::test2'
+  requirements:
+    _access: 'TRUE'

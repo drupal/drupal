@@ -2701,6 +2701,8 @@ function _menu_router_merge_route(array $router_item, $path) {
   $router_item['page callback'] = 'USES_ROUTE';
   $router_item['access callback'] = TRUE;
 
+  // Translate placeholders, e.g. {foo} -> %.
+  $router_item['path'] = preg_replace('/{' . DRUPAL_PHP_FUNCTION_PATTERN . '}/', '%', $router_item['path']);
 
   return $router_item;
 }
