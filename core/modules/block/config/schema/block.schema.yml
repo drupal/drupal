@@ -1,0 +1,92 @@
+# Schema for the configuration files of the Block module.
+
+block.block.*.*:
+  type: mapping
+  label: 'Block'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Title'
+    label_display:
+      type: string
+      label: 'Display title'
+    uuid:
+      type: string
+      label: 'UUID'
+    region:
+      type: string
+      label: 'Region'
+    weight:
+      type: integer
+      label: 'Weight'
+    module:
+      type: string
+      label: 'Module'
+    status:
+      type: boolean
+      label: 'Status'
+    visibility:
+      type: mapping
+      label: 'Visibility settings'
+      mapping:
+        path:
+          type: mapping
+          label: 'Pages'
+          mapping:
+            visibility:
+              type: integer
+              label: 'Visibility'
+            pages:
+              type: string
+              label: 'Show block on specific pages'
+        role:
+          type: mapping
+          label: 'Roles'
+          mapping:
+            roles:
+              type: sequence
+              label: 'Show block for specific roles'
+              sequence:
+                - type: string
+                  label: 'Role'
+        node_type:
+          type: mapping
+          label: 'Content types'
+          mapping:
+            types:
+              type: sequence
+              label: 'Show block for specific content types'
+              sequence:
+               - type: string
+                 label: 'Node type'
+        visibility__active_tab:
+          type: string
+          label: 'Visibility active tab'
+    plugin:
+      type: string
+      label: 'Plugin'
+    settings:
+      type: mapping
+      label: 'Block settings'
+      mapping:
+        admin_label:
+          type: label
+          label: 'Description'
+        cache:
+          type: integer
+          label: 'Cache'
+        status:
+          type: boolean
+          label: 'Status'
+        info:
+          type: label
+          label: 'Admin info'
+        view_mode:
+          type: string
+          label: 'View mode'
+    langcode:
+      type: string
+      label: 'Language code'
