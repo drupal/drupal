@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\CoreBundle;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Install\TaskException;
 use Drupal\Core\Language\Language;
@@ -386,6 +387,9 @@ function install_begin_request(&$install_state) {
     $container
       ->register('keyvalue.expirable.null', 'Drupal\Core\KeyValueStore\KeyValueNullExpirableFactory');
     $conf['keyvalue_expirable_default'] = 'keyvalue.expirable.null';
+
+    // Register Twig template engine for use during install.
+    CoreBundle::registerTwig($container);
 
     Drupal::setContainer($container);
   }

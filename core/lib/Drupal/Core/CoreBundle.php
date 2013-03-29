@@ -385,7 +385,7 @@ class CoreBundle extends Bundle {
   /**
    * Registers Twig services.
    */
-  protected function registerTwig(ContainerBuilder $container) {
+  public static function registerTwig(ContainerBuilder $container) {
     $container->register('twig.loader.filesystem', 'Twig_Loader_Filesystem')
       ->addArgument(DRUPAL_ROOT);
     $container->setAlias('twig.loader', 'twig.loader.filesystem');
