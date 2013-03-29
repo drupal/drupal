@@ -1378,6 +1378,7 @@ div.password-suggestions {
 /* --------------- Search Results ---------------- */
 ol.search-results {
   padding-left: 0;
+  list-style-position: inside;
 }
 .search-results li {
   border-bottom: 1px solid #d3d7d9;
