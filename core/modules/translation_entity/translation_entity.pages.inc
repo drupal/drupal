@@ -102,7 +102,7 @@ function translation_entity_overview(EntityInterface $entity) {
         $status = '<span class="status">' . $status . '</span>' . (!empty($translation['outdated']) ? ' <span class="marker">' . t('outdated') . '</span>' : '');
 
         if ($is_original) {
-          $language_name = t('<strong>@language_name</strong>', array('@language_name' => $language_name));
+          $language_name = t('<strong>@language_name (Original language)</strong>', array('@language_name' => $language_name));
           $source_name = t('n/a');
         }
         else {
