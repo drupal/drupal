@@ -1,0 +1,102 @@
+<?php
+
+/**
+ * @file
+ * Contains \Drupal\entity_reference/EntityReferenceAutocomplete.
+ */
+namespace Drupal\entity_reference;
+
+use Drupal\Core\Entity\EntityManager;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+
+/**
+ * Helper class to get autocompletion results for entity reference.
+ */
+class EntityReferenceAutocomplete {
+
+  /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManager
+   */
+  protected $entityManager;
+
+  /**
+   * Constructs a EntityReferenceAutocomplete object.
+   *
+   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   *   The entity manager.
+   */
+  public function __construct(EntityManager $entity_manager) {
+    $this->entityManager = $entity_manager;
+  }
+
+  /**
+   * Returns matched labels based on a given field, instance and search string.
+   *
+   * This function can be used by other modules that wish to pass a mocked
+   * definition of the field on instance.
+   *
+   * @param array $field
+   *   The field array definition.
+   * @param array $instance
+   *   The instance array definition.
+   * @param string $entity_type
+   *   The entity type.
+   * @param string $entity_id
+   *   (optional) The entity ID the entity reference field is attached to.
+   *   Defaults to ''.
+   * @param string $prefix
+   *   (optional) A prefix for all the keys returned by this function.
+   * @param string $string
+   *   (optional) The label of the entity to query by.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+   *   Thrown when the current user doesn't have access to the specifies entity.
+   *
+   * @return array
+   *   A list of matched entity labels.
+   *
+   * @see \Drupal\entity_reference\EntityReferenceController
+   */
+  public function getMatches($field, $instance, $entity_type, $entity_id = '', $prefix = '', $string = '') {
+    $target_type = $field['settings']['target_type'];
+    $matches = array();
+    $entity = NULL;
+
+    if ($entity_id !== 'NULL') {
+      $entities = $this->entityManager->getStorageController($entity_type)->load(array($entity_id));
+      $entity = reset($entities);
+      // @todo: Improve when we have entity_access().
+      $entity_access = $target_type == 'node' ? node_access('view', $entity) : TRUE;
+      if (!$entity || !$entity_access) {
+        throw new AccessDeniedHttpException();
+      }
+    }
+    $handler = entity_reference_get_selection_handler($field, $instance, $entity);
+
+    if (isset($string)) {
+      // Get an array of matching entities.
+      $match_operator = !empty($instance['widget']['settings']['match_operator']) ? $instance['widget']['settings']['match_operator'] : 'CONTAINS';
+      $entity_labels = $handler->getReferencableEntities($string, $match_operator, 10);
+
+      // Loop through the entities and convert them into autocomplete output.
+      foreach ($entity_labels as $values) {
+        foreach ($values as $entity_id => $label) {
+          $key = "$label ($entity_id)";
+          // Strip things like starting/trailing white spaces, line breaks and
+          // tags.
+          $key = preg_replace('/\s\s+/', ' ', str_replace("\n", '', trim(decode_entities(strip_tags($key)))));
+          // Names containing commas or quotes must be wrapped in quotes.
+          if (strpos($key, ',') !== FALSE || strpos($key, '"') !== FALSE) {
+            $key = '"' . str_replace('"', '""', $key) . '"';
+          }
+          $matches[$prefix . $key] = '<div class="reference-autocomplete">' . $label . '</div>';
+        }
+      }
+    }
+
+    return $matches;
+  }
+
+}
