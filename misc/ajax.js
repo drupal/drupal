@@ -396,7 +396,7 @@ Drupal.ajax.prototype.success = function (response, status) {
   Drupal.freezeHeight();
 
   for (var i in response) {
-    if (response[i]['command'] && this.commands[response[i]['command']]) {
+    if (response.hasOwnProperty(i) && response[i]['command'] && this.commands[response[i]['command']]) {
       this.commands[response[i]['command']](this, response[i], status);
     }
   }
