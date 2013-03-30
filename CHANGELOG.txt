@@ -1,6 +1,8 @@
 
 Drupal 7.22, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a bug which prevented Drupal's file transfer functionality from working
+  on some PHP 5.4 systems.
 - Fixed incorrect log message when theme() is called for a theme hook that does
   not exist (minor string change).
 - Fixed Drupal's token-replacement system to allow spaces in the token value.
