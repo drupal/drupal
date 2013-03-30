@@ -1,6 +1,10 @@
 
 Drupal 7.22, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a bug which prevented empty HTTP headers (such as "0") from being set.
+  (Minor behavior change: Callers of drupal_add_http_header() must now set
+  FALSE explicitly to prevent a header from being sent at all; this was already
+  indicated in the function's documentation.)
 - Fixed OpenID errors when more than one module implements hook_openid(). The
   behavior is now changed so that if more than one module tries to set the same
   parameter, the last module's change takes effect.
