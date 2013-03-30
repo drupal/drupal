@@ -1,6 +1,7 @@
 
 Drupal 7.22, xxxx-xx-xx (development version)
 -----------------------
+- Fixed Drupal's token-replacement system to allow spaces in the token value.
 - Changed the default behavior after a user creates a node they do not have
   access to view. The user will now be redirected to the front page rather than
   an access denied page.
