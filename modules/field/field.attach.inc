@@ -554,16 +554,19 @@ function _field_invoke_get_instances($entity_type, $bundle, $options) {
  * @param $langcode
  *   The language the field values are going to be entered, if no language
  *   is provided the default site language will be used.
+ * @param array $options
+ *   An associative array of additional options. See _field_invoke() for
+ *   details.
  *
  * @see field_form_get_state()
  * @see field_form_set_state()
  */
-function field_attach_form($entity_type, $entity, &$form, &$form_state, $langcode = NULL) {
+function field_attach_form($entity_type, $entity, &$form, &$form_state, $langcode = NULL, $options = array()) {
   // Set #parents to 'top-level' by default.
   $form += array('#parents' => array());
 
   // If no language is provided use the default site language.
-  $options = array('language' => field_valid_language($langcode));
+  $options['language'] = field_valid_language($langcode);
   $form += (array) _field_invoke_default('form', $entity_type, $entity, $form, $form_state, $options);
 
   // Add custom weight handling.
@@ -767,13 +770,17 @@ function field_attach_load_revision($entity_type, $entities, $options = array())
  *   If validation errors are found, a FieldValidationException is thrown. The
  *   'errors' property contains the array of errors, keyed by field name,
  *   language and delta.
+ * @param array $options
+ *   An associative array of additional options. See _field_invoke() for
+ *   details.
  */
-function field_attach_validate($entity_type, $entity) {
+function field_attach_validate($entity_type, $entity, $options = array()) {
   $errors = array();
   // Check generic, field-type-agnostic errors first.
-  _field_invoke_default('validate', $entity_type, $entity, $errors);
+  $null = NULL;
+  _field_invoke_default('validate', $entity_type, $entity, $errors, $null, $options);
   // Check field-type specific errors.
-  _field_invoke('validate', $entity_type, $entity, $errors);
+  _field_invoke('validate', $entity_type, $entity, $errors, $null, $options);
 
   // Let other modules validate the entity.
   // Avoid module_invoke_all() to let $errors be taken by reference.
@@ -815,14 +822,17 @@ function field_attach_validate($entity_type, $entity) {
  *   full form structure, or a sub-element of a larger form.
  * @param $form_state
  *   An associative array containing the current state of the form.
+ * @param array $options
+ *   An associative array of additional options. See _field_invoke() for
+ *   details.
  */
-function field_attach_form_validate($entity_type, $entity, $form, &$form_state) {
+function field_attach_form_validate($entity_type, $entity, $form, &$form_state, $options = array()) {
   // Extract field values from submitted values.
   _field_invoke_default('extract_form_values', $entity_type, $entity, $form, $form_state);
 
   // Perform field_level validation.
   try {
-    field_attach_validate($entity_type, $entity);
+    field_attach_validate($entity_type, $entity, $options);
   }
   catch (FieldValidationException $e) {
     // Pass field-level validation errors back to widgets for accurate error
@@ -834,7 +844,7 @@ function field_attach_form_validate($entity_type, $entity, $form, &$form_state) 
         field_form_set_state($form['#parents'], $field_name, $langcode, $form_state, $field_state);
       }
     }
-    _field_invoke_default('form_errors', $entity_type, $entity, $form, $form_state);
+    _field_invoke_default('form_errors', $entity_type, $entity, $form, $form_state, $options);
   }
 }
 
@@ -855,12 +865,15 @@ function field_attach_form_validate($entity_type, $entity, $form, &$form_state) 
  *   full form structure, or a sub-element of a larger form.
  * @param $form_state
  *   An associative array containing the current state of the form.
+ * @param array $options
+ *   An associative array of additional options. See _field_invoke() for
+ *   details.
  */
-function field_attach_submit($entity_type, $entity, $form, &$form_state) {
+function field_attach_submit($entity_type, $entity, $form, &$form_state, $options = array()) {
   // Extract field values from submitted values.
-  _field_invoke_default('extract_form_values', $entity_type, $entity, $form, $form_state);
+  _field_invoke_default('extract_form_values', $entity_type, $entity, $form, $form_state, $options);
 
-  _field_invoke_default('submit', $entity_type, $entity, $form, $form_state);
+  _field_invoke_default('submit', $entity_type, $entity, $form, $form_state, $options);
 
   // Let other modules act on submitting the entity.
   // Avoid module_invoke_all() to let $form_state be taken by reference.
@@ -1091,9 +1104,12 @@ function field_attach_delete_revision($entity_type, $entity) {
  * @param $langcode
  *   (Optional) The language the field values are to be shown in. If no language
  *   is provided the current language is used.
+ * @param array $options
+ *   An associative array of additional options. See _field_invoke() for
+ *   details.
  */
-function field_attach_prepare_view($entity_type, $entities, $view_mode, $langcode = NULL) {
-  $options = array('language' => array());
+function field_attach_prepare_view($entity_type, $entities, $view_mode, $langcode = NULL, $options = array()) {
+  $options['language'] = array();
 
   // To ensure hooks are only run once per entity, only process items without
   // the _field_view_prepared flag.
@@ -1165,14 +1181,17 @@ function field_attach_prepare_view($entity_type, $entities, $view_mode, $langcod
  * @param $langcode
  *   The language the field values are to be shown in. If no language is
  *   provided the current language is used.
+ * @param array $options
+ *   An associative array of additional options. See _field_invoke() for
+ *   details.
  * @return
  *   A renderable array for the field values.
  */
-function field_attach_view($entity_type, $entity, $view_mode, $langcode = NULL) {
+function field_attach_view($entity_type, $entity, $view_mode, $langcode = NULL, $options = array()) {
   // Determine the actual language to display for each field, given the
   // languages available in the field data.
   $display_language = field_language($entity_type, $entity, NULL, $langcode);
-  $options = array('language' => $display_language);
+  $options['language'] = $display_language;
 
   // Invoke field_default_view().
   $null = NULL;

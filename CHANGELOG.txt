@@ -1,6 +1,8 @@
 
 Drupal 7.22, xxxx-xx-xx (development version)
 -----------------------
+- Changed various field API functions to allow them to be used to act on a
+  single field within an entity (API addition: http://drupal.org/node/1825844).
 - Fixed a bug which prevented Drupal's file transfer functionality from working
   on some PHP 5.4 systems.
 - Fixed incorrect log message when theme() is called for a theme hook that does
