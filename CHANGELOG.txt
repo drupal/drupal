@@ -47,7 +47,7 @@ Drupal 7.22, xxxx-xx-xx (development version)
   installation (API addition).
 - Fixed a bug which caused the database API to not properly close database
   connections.
-- Added link to the URL for running cron from outside the site to the Cron
+- Added a link to the URL for running cron from outside the site to the Cron
   settings page (UI change).
 - Fixed a bug which prevented image styles from being reverted on PHP 5.4.
 - Made the default .htaccess rules protocol sensitive to improve security for
