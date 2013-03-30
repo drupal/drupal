@@ -1,6 +1,9 @@
 
 Drupal 7.22, xxxx-xx-xx (development version)
 -----------------------
+- Changed the default behavior after a user creates a node they do not have
+  access to view. The user will now be redirected to the front page rather than
+  an access denied page.
 - Fixed a bug which prevented empty HTTP headers (such as "0") from being set.
   (Minor behavior change: Callers of drupal_add_http_header() must now set
   FALSE explicitly to prevent a header from being sent at all; this was already
