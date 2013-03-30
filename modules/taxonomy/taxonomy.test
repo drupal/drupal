@@ -722,6 +722,13 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $this->assertFalse(field_info_field($field_name), format_string('Field %field_name does not exist.', array('%field_name' => $field_name)));
     $this->drupalGet('taxonomy/autocomplete/' . $field_name . '/' . $tag);
     $this->assertRaw($message, 'Autocomplete returns correct error message when the taxonomy field does not exist.');
+
+    // Test the autocomplete path without passing a field_name and terms.
+    // This should not trigger a PHP notice.
+    $field_name = '';
+    $message = t("Taxonomy field @field_name not found.", array('@field_name' => $field_name));
+    $this->drupalGet('taxonomy/autocomplete');
+    $this->assertRaw($message, 'Autocomplete returns correct error message when no taxonomy field is given.');
   }
 
   /**
