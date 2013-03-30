@@ -1,6 +1,9 @@
 
 Drupal 7.22, xxxx-xx-xx (development version)
 -----------------------
+- Fixed OpenID errors when more than one module implements hook_openid(). The
+  behavior is now changed so that if more than one module tries to set the same
+  parameter, the last module's change takes effect.
 - Fixed a serious documentation bug: The $name variable in the
   taxonomy-term.tpl.php theme template was incorrectly documented as being
   sanitized when in fact it is not.
