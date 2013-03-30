@@ -658,7 +658,12 @@ function forum_block_info() {
  * Implements hook_block_configure().
  */
 function forum_block_configure($delta = '') {
-  $form['forum_block_num_' . $delta] = array('#type' => 'select', '#title' => t('Number of topics'), '#default_value' => variable_get('forum_block_num_' . $delta, '5'), '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)));
+  $form['forum_block_num_' . $delta] = array(
+    '#type' => 'select',
+    '#title' => t('Number of topics'),
+    '#default_value' => variable_get('forum_block_num_' . $delta, '5'),
+    '#options' => drupal_map_assoc(range(2, 20))
+  );
   return $form;
 }
 
