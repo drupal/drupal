@@ -69,6 +69,23 @@ class MenuRouterTest extends WebTestBase {
   }
 
   /**
+   * Test local tasks with route placeholders.
+   */
+  public function testHookMenuIntegration() {
+    // Generate base path with random argument.
+    $base_path = 'foo/' . $this->randomName(8);
+    $this->drupalGet($base_path);
+    // Confirm correct controller activated.
+    $this->assertText('test1');
+    // Confirm local task links are displayed.
+    $this->assertLink('Local task A');
+    $this->assertLink('Local task B');
+    // Confirm correct local task href.
+    $this->assertLinkByHref(url($base_path));
+    $this->assertLinkByHref(url($base_path . '/b'));
+  }
+
+  /**
    * Test title callback set to FALSE.
    */
   function testTitleCallbackFalse() {

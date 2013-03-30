@@ -8,6 +8,7 @@
 namespace Drupal\hal\Normalizer;
 
 use Drupal\Component\Utility\NestedArray;
+use Symfony\Component\Serializer\Exception\LogicException;
 
 /**
  * Converts the Drupal field structure to HAL array structure.
@@ -26,6 +27,8 @@ class FieldNormalizer extends NormalizerBase {
    */
   public function normalize($field, $format = NULL, array $context = array()) {
     $normalized_field_items = array();
+
+    // Get the field definition.
     $entity = $field->getParent();
     $field_name = $field->getName();
     $field_definition = $entity->getPropertyDefinition($field_name);
@@ -51,6 +54,34 @@ class FieldNormalizer extends NormalizerBase {
     // into the links property.
     $normalized = NestedArray::mergeDeepArray($normalized_field_items);
     return $normalized;
+  }
+
+
+  /**
+   * Implements \Symfony\Component\Serializer\Normalizer\DenormalizerInterface::denormalize()
+   */
+  public function denormalize($data, $class, $format = NULL, array $context = array()) {
+    if (!isset($context['target_instance'])) {
+      throw new LogicException('$context[\'target_instance\'] must be set to denormalize with the FieldNormalizer');
+    }
+    if ($context['target_instance']->getParent() == NULL) {
+      throw new LogicException('The field passed in via $context[\'target_instance\'] must have a parent set.');
+    }
+
+    $field = $context['target_instance'];
+    foreach ($data as $field_item_data) {
+      $count = $field->count();
+      // Get the next field item instance. The offset will serve as the field
+      // item name.
+      $field_item = $field->offsetGet($count);
+      $field_item_class = get_class($field_item);
+      // Pass in the empty field item object as the target instance.
+      $context['target_instance'] = $field_item;
+      $this->serializer->denormalize($field_item_data, $field_item_class, $format, $context);
+    }
+
+    return $field;
+
   }
 
   /**

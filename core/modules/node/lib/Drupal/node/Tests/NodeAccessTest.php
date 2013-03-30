@@ -23,16 +23,6 @@ class NodeAccessTest extends NodeTestBase {
     );
   }
 
-  /**
-   * Asserts node_access() correctly grants or denies access.
-   */
-  function assertNodeAccess($ops, $node, $account) {
-    foreach ($ops as $op => $result) {
-      $msg = t("node_access returns @result with operation '@op'.", array('@result' => $result ? 'true' : 'false', '@op' => $op));
-      $this->assertEqual($result, node_access($op, $node, $account), $msg);
-    }
-  }
-
   function setUp() {
     parent::setUp();
     // Clear permissions for authenticated users.
@@ -76,4 +66,5 @@ class NodeAccessTest extends NodeTestBase {
     $node5 = $this->drupalCreateNode();
     $this->assertNodeAccess(array('view' => TRUE, 'update' => FALSE, 'delete' => FALSE), $node5, $web_user3);
   }
+
 }

@@ -6,7 +6,7 @@
  */
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\file\Plugin\Core\Entity\File;
@@ -669,7 +669,7 @@ function image_style_deliver($style, $scheme) {
       'Content-Type' => $image->info['mime_type'],
       'Content-Length' => $image->info['file_size'],
     );
-    return file_transfer($uri, $headers);
+    return new BinaryFileResponse($uri, 200, $headers);
   }
   else {
     watchdog('image', 'Unable to generate the derived image located at %path.', array('%path' => $derivative_uri));

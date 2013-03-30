@@ -439,22 +439,6 @@ class Config {
     return $this;
   }
 
-  /*
-   * Renames the configuration object.
-   *
-   * @param $new_name
-   *   The new name of the configuration object being constructed.
-   *
-   * @return Drupal\Core\Config\Config
-   *   The configuration object.
-   */
-  public function rename($new_name) {
-    if ($this->storage->rename($this->name, $new_name)) {
-      $this->name = $new_name;
-    }
-    return $this;
-  }
-
   /**
    * Deletes the configuration object.
    *

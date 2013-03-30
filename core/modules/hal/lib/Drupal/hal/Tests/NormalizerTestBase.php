@@ -7,8 +7,18 @@
 
 namespace Drupal\hal\Tests;
 
+use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Language\Language;
+use Drupal\hal\Encoder\JsonEncoder;
+use Drupal\hal\Normalizer\EntityNormalizer;
+use Drupal\hal\Normalizer\EntityReferenceItemNormalizer;
+use Drupal\hal\Normalizer\FieldItemNormalizer;
+use Drupal\hal\Normalizer\FieldNormalizer;
+use Drupal\rest\LinkManager\LinkManager;
+use Drupal\rest\LinkManager\RelationLinkManager;
+use Drupal\rest\LinkManager\TypeLinkManager;
 use Drupal\simpletest\DrupalUnitTestBase;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Test the HAL normalizer.
@@ -23,11 +33,25 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
   public static $modules = array('entity_test', 'entity_reference', 'field', 'field_sql_storage', 'hal', 'language', 'rest', 'serialization', 'system', 'text', 'user');
 
   /**
+   * The mock serializer.
+   *
+   * @var \Symfony\Component\Serializer\Serializer
+   */
+  protected $serializer;
+
+  /**
    * The format being tested.
    *
    * @var string
    */
   protected $format = 'hal_json';
+
+  /**
+   * The class name of the test class.
+   *
+   * @var string
+   */
+  protected $entityClass = 'Drupal\entity_test\Plugin\Core\Entity\EntityTest';
 
   /**
    * Overrides \Drupal\simpletest\DrupalUnitTestBase::setup().
@@ -57,13 +81,26 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
     $field = array(
       'field_name' => 'field_test_text',
       'type' => 'text',
-      'cardinality' => 1,
       'translatable' => FALSE,
     );
     field_create_field($field);
     $instance = array(
       'entity_type' => 'entity_test',
       'field_name' => 'field_test_text',
+      'bundle' => 'entity_test',
+    );
+    field_create_instance($instance);
+
+    // Create the test translatable field.
+    $field = array(
+      'field_name' => 'field_test_translatable_text',
+      'type' => 'text',
+      'translatable' => TRUE,
+    );
+    field_create_field($field);
+    $instance = array(
+      'entity_type' => 'entity_test',
+      'field_name' => 'field_test_translatable_text',
       'bundle' => 'entity_test',
     );
     field_create_instance($instance);
@@ -84,6 +121,22 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
       'bundle' => 'entity_test',
     );
     field_create_instance($instance);
+
+    // Set up the mock serializer.
+    $normalizers = array(
+      new EntityNormalizer(),
+      new EntityReferenceItemNormalizer(),
+      new FieldItemNormalizer(),
+      new FieldNormalizer(),
+    );
+    $link_manager = new LinkManager(new TypeLinkManager(new MemoryBackend('cache')), new RelationLinkManager());
+    foreach ($normalizers as $normalizer) {
+      $normalizer->setLinkManager($link_manager);
+    }
+    $encoders = array(
+      new JsonEncoder(),
+    );
+    $this->serializer = new Serializer($normalizers, $encoders);
   }
 
 }

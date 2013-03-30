@@ -150,7 +150,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
     $this->assertEqual($this->drupalGetHeader('Content-Length'), $generated_image_info['file_size'], 'Expected Content-Length was reported.');
     if ($scheme == 'private') {
       $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', 'Expires header was sent.');
-      $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'no-cache, private', 'Cache-Control header was set to prevent caching.');
+      $this->assertNotEqual(strpos($this->drupalGetHeader('Cache-Control'), 'no-cache'), FALSE, 'Cache-Control header contains \'no-cache\' to prevent caching.');
       $this->assertEqual($this->drupalGetHeader('X-Image-Owned-By'), 'image_module_test', 'Expected custom header has been added.');
 
       // Make sure that a second request to the already existing derivate works

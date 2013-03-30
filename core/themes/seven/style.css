@@ -522,7 +522,7 @@ table.system-status-report tr.error {
 /**
  * Responsive tables.
  */
-@media screen and (max-width:28.125em) { /* 450px */
+@media screen and (max-width: 37.5em) { /* 600px */
   th.priority-low,
   td.priority-low,
   th.priority-medium,
@@ -530,7 +530,7 @@ table.system-status-report tr.error {
     display: none;
   }
 }
-@media screen and (max-width:45em) { /* 720px */
+@media screen and (max-width: 60em) { /* 920px */
   th.priority-low,
   td.priority-low {
     display: none;

@@ -8,11 +8,12 @@
 namespace Drupal\hal\Normalizer;
 
 use Drupal\serialization\Normalizer\NormalizerBase as SerializationNormalizerBase;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 /**
  * Base class for Normalizers.
  */
-abstract class NormalizerBase extends SerializationNormalizerBase {
+abstract class NormalizerBase extends SerializationNormalizerBase implements DenormalizerInterface {
 
   /**
    * The formats that the Normalizer can handle.
@@ -33,6 +34,22 @@ abstract class NormalizerBase extends SerializationNormalizerBase {
    */
   public function supportsNormalization($data, $format = NULL) {
     return in_array($format, $this->formats) && parent::supportsNormalization($data, $format);
+  }
+
+  /**
+   * Implements \Symfony\Component\Serializer\Normalizer\DenormalizerInterface::supportsDenormalization()
+   */
+  public function supportsDenormalization($data, $type, $format = NULL) {
+    if (in_array($format, $this->formats)) {
+      $target = new \ReflectionClass($type);
+      $supported = new \ReflectionClass($this->supportedInterfaceOrClass);
+      if ($supported->isInterface()) {
+        return $target->implementsInterface($this->supportedInterfaceOrClass);
+      }
+      else {
+        return ($target->getName() == $this->supportedInterfaceOrClass || $target->isSubclassOf($this->supportedInterfaceOrClass));
+      }
+    }
   }
 
   /**

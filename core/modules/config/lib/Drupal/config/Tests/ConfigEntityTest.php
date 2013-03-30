@@ -34,6 +34,7 @@ class ConfigEntityTest extends WebTestBase {
    * Tests CRUD operations.
    */
   function testCRUD() {
+    $manifest_name = 'manifest.config_test.dynamic';
     // Verify default properties on a newly created empty entity.
     $empty = entity_create('config_test', array());
     $this->assertIdentical($empty->id, NULL);
@@ -120,6 +121,10 @@ class ConfigEntityTest extends WebTestBase {
       $this->fail('EntityMalformedException was not thrown.');
     }
 
+    // Verify that the config manifest entry exists.
+    $manifest_data = config($manifest_name)->get();
+    $this->assertTrue(isset($manifest_data[$config_test->id()]), 'Configuration manifest for config_test.dynamic entities updated after an entity save.');
+
     // Verify that the correct status is returned and properties did not change.
     $this->assertIdentical($status, SAVED_NEW);
     $this->assertIdentical($config_test->id(), $expected['id']);
@@ -174,6 +179,13 @@ class ConfigEntityTest extends WebTestBase {
       // Verify that originalID points to new ID directly after renaming.
       $this->assertIdentical($config_test->id(), $new_id);
       $this->assertIdentical($config_test->getOriginalID(), $new_id);
+
+      // Verify that the config manifest entry exists.
+      $manifest_data = config($manifest_name)->get();
+      // Check that the old id is not in the manifest.
+      $this->assertFalse(isset($manifest_data[$old_id]), 'Old id removed from configuration manifest after an entity save.');
+      // Check that the new id is in the manifest.
+      $this->assertTrue(isset($manifest_data[$new_id]), 'New id added to configuration manifest after an entity save.');
     }
 
     // Test config entity prepopulation.

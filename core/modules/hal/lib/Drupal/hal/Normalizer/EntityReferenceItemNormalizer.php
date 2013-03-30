@@ -57,4 +57,11 @@ class EntityReferenceItemNormalizer extends FieldItemNormalizer {
     );
   }
 
+  /**
+   * Implements \Symfony\Component\Serializer\Normalizer\DenormalizerInterface::denormalize()
+   */
+  public function denormalize($data, $class, $format = NULL, array $context = array()) {
+    // @todo Implement this in http://drupal.org/node/1880424
+  }
+
 }

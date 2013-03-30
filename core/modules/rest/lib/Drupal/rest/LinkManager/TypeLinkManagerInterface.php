@@ -25,4 +25,16 @@ interface TypeLinkManagerInterface {
    *   The corresponding URI for the bundle.
    */
   public function getTypeUri($entity_type, $bundle);
+
+  /**
+   * Get a bundle's Typed Data IDs based on a URI.
+   *
+   * @param string $type_uri
+   *   The type URI.
+   *
+   * @return array | boolean
+   *   If the URI matches a bundle, returns an array containing entity_type and
+   *   bundle. Otherwise, returns false.
+   */
+  public function getTypeInternalIds($type_uri);
 }

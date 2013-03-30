@@ -1,0 +1,27 @@
+# Schema for the configuration files of the Custom Block module.
+
+custom_block.type.*:
+  type: mapping
+  label: 'Custom block type settings'
+  mapping:
+    id:
+      type: string
+      label: 'Machine-readable name'
+    uuid:
+      type: string
+      label: 'UUID'
+    label:
+      type: label
+      label: 'Label'
+    revision:
+      type: integer
+      label: 'Create new revision'
+    description:
+      type: text
+      label: 'Description'
+    status:
+      type: boolean
+      label: 'Status'
+    langcode:
+      type: string
+      label: 'Default language'

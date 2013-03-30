@@ -30,4 +30,11 @@ class JsonEncoder extends SymfonyJsonEncoder {
     return $format == $this->format;
   }
 
+  /**
+   * Overrides \Symfony\Component\Serializer\Encoder\JsonEncoder::supportsDecoding()
+   */
+  public function supportsDecoding($format) {
+    return $format == $this->format;
+  }
+
 }

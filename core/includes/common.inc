@@ -6369,8 +6369,7 @@ function drupal_flush_all_caches() {
   // sufficient, since new extensions cannot have any primed caches yet.
   module_invoke_all('cache_flush');
   foreach (Cache::getBins() as $service_id => $cache_backend) {
-    // @todo remove form after http://drupal.org/node/512026 is in.
-    if ($service_id != 'cache.form' && $service_id != 'cache.menu') {
+    if ($service_id != 'cache.menu') {
       $cache_backend->deleteAll();
     }
   }

@@ -104,6 +104,11 @@ abstract class ModuleTestBase extends WebTestBase {
     // Verify that the module's default config directory is not empty and
     // contains default configuration files (instead of something else).
     $all_names = $module_file_storage->listAll();
+    if (empty($all_names)) {
+      // Module has an empty config directory. For example it might contain a
+      // schema directory.
+      return;
+    }
     $this->assertTrue($all_names);
 
     // Look up each default configuration object name in the active

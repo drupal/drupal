@@ -385,7 +385,7 @@ class CoreBundle extends Bundle {
   /**
    * Registers Twig services.
    */
-  protected function registerTwig(ContainerBuilder $container) {
+  public static function registerTwig(ContainerBuilder $container) {
     $container->register('twig.loader.filesystem', 'Twig_Loader_Filesystem')
       ->addArgument(DRUPAL_ROOT);
     $container->setAlias('twig.loader', 'twig.loader.filesystem');
@@ -451,7 +451,7 @@ class CoreBundle extends Bundle {
     $container
       ->register('cache.backend.memory', 'Drupal\Core\Cache\MemoryBackendFactory');
     // Register a service for each bin for injecting purposes.
-    foreach (array('bootstrap', 'config', 'cache', 'form', 'menu', 'page', 'path') as $bin) {
+    foreach (array('bootstrap', 'config', 'cache', 'menu', 'page', 'path') as $bin) {
       CacheFactory::registerBin($container, $bin);
     }
 

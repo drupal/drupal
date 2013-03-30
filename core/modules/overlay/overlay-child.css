@@ -1,4 +1,3 @@
-
 /**
  * @file
  * Basic styling for the Overlay child pages.
@@ -16,15 +15,15 @@
 }
 
 #overlay {
-  display: table;
+  box-sizing: border-box;
+  display: block;
   margin: 0 auto;
+  max-width: 80em;
+  max-width: 80rem;
   min-height: 100px;
-  min-width: 700px;
   position: relative;
-  padding: .2em;
-  padding-bottom: 2em;
-  padding-right: 26px; /* LTR */
-  width: 88%;
+  padding: 2em 40px;
+  width: 100%;
 }
 #overlay-titlebar {
   padding: 0 20px;
@@ -68,8 +67,8 @@
 }
 #overlay-close,
 #overlay-close:hover {
-  background: transparent url(images/close.png) no-repeat; /* LTR */
-  border-top-left-radius: 0; /* LTR */
+  background: #ffffff url(images/close.png) no-repeat;
+  border-radius: 0 12px 12px 0; /* LTR */
   display: block;
   height: 26px;
   margin: 0;
@@ -77,14 +76,6 @@
   /* Replace with position:fixed to get a scrolling close button. */
   position: absolute;
   width: 26px;
-
-  -webkit-border-top-right-radius: 12px;
-  -webkit-border-bottom-right-radius: 12px;
-  -moz-border-radius-topright: 12px;
-  -moz-border-radius-bottomright: 12px;
-  border-top-right-radius: 12px;
-  border-bottom-right-radius: 12px;
-  background-color: #ffffff;
 }
 
 /**

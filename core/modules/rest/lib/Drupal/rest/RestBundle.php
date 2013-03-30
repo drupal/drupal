@@ -36,7 +36,8 @@ class RestBundle extends Bundle {
     $container->register('rest.link_manager', 'Drupal\rest\LinkManager\LinkManager')
       ->addArgument(new Reference('rest.link_manager.type'))
       ->addArgument(new Reference('rest.link_manager.relation'));
-    $container->register('rest.link_manager.type', 'Drupal\rest\LinkManager\TypeLinkManager');
+    $container->register('rest.link_manager.type', 'Drupal\rest\LinkManager\TypeLinkManager')
+      ->addArgument(new Reference('cache.cache'));
     $container->register('rest.link_manager.relation', 'Drupal\rest\LinkManager\RelationLinkManager');
   }
 }

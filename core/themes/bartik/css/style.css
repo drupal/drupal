@@ -1378,6 +1378,7 @@ div.password-suggestions {
 /* --------------- Search Results ---------------- */
 ol.search-results {
   padding-left: 0;
+  list-style-position: inside;
 }
 .search-results li {
   border-bottom: 1px solid #d3d7d9;
@@ -1622,7 +1623,7 @@ div.admin-panel .description {
 /**
  * Responsive tables.
  */
-@media screen and (max-width:28.125em) { /* 450px */
+@media screen and (max-width: 37.5em) { /* 600px */
   th.priority-low,
   td.priority-low,
   th.priority-medium,
@@ -1630,7 +1631,7 @@ div.admin-panel .description {
     display: none;
   }
 }
-@media screen and (max-width:45em) { /* 720px */
+@media screen and (max-width: 60em) { /* 920px */
   th.priority-low,
   td.priority-low {
     display: none;

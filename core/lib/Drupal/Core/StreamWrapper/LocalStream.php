@@ -339,6 +339,22 @@ abstract class LocalStream implements StreamWrapperInterface {
   }
 
   /**
+   * Gets the underlying stream resource for stream_select().
+   *
+   * @param int $cast_as
+   *   Can be STREAM_CAST_FOR_SELECT or STREAM_CAST_AS_STREAM.
+   *
+   * @return resource|false
+   *   The underlying stream resource or FALSE if stream_select() is not
+   *   supported.
+   *
+   * @see http://php.net/manual/streamwrapper.stream-cast.php
+   */
+  public function stream_cast($cast_as) {
+    return false;
+  }
+
+  /**
    * Support for unlink().
    *
    * @param string $uri

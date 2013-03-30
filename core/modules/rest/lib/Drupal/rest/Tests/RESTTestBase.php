@@ -218,4 +218,29 @@ abstract class RESTTestBase extends WebTestBase {
     }
     parent::drupalLogin($user);
   }
+
+  /**
+   * Provides the necessary user permissions for entity operations.
+   *
+   * @param string $entity_type
+   *   The entity type.
+   * @param type $operation
+   *   The operation, one of 'view', 'create', 'update' or 'delete'.
+   *
+   * @return array
+   *   The set of user permission strings.
+   */
+  protected function entityPermissions($entity_type, $operation) {
+    switch ($entity_type) {
+      case 'entity_test':
+        switch ($operation) {
+          case 'view':
+            return array('view test entity');
+          case 'create':
+          case 'update':
+          case 'delete':
+            return array('administer entity_test content');
+        }
+    }
+  }
 }

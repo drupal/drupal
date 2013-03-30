@@ -1,0 +1,79 @@
+<?php
+
+/**
+ * @file
+ * Test module with a language-aware node access implementation.
+ *
+ * The module adds a 'private' field to page nodes that allows each translation
+ * of the node to be marked as private (viewable only by administrators).
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_node_grants().
+ *
+ * This module defines a single grant realm. All users belong to this group.
+ */
+function node_access_test_language_node_grants($account, $op) {
+  $grants['node_access_language_test'] = array(7888);
+  return $grants;
+}
+
+/**
+ * Implements hook_node_access_records().
+ */
+function node_access_test_language_node_access_records(EntityInterface $node) {
+  $grants = array();
+
+  // Create grants for each translation of the node.
+  foreach ($node->getTranslationLanguages() as $langcode => $language) {
+    // If the translation is not marked as private, grant access.
+    $grants[] = array(
+      'realm' => 'node_access_language_test',
+      'gid' => 7888,
+      'grant_view' => empty($node->field_private[$langcode][0]['value']) ? 1 : 0,
+      'grant_update' => 0,
+      'grant_delete' => 0,
+      'priority' => 0,
+      'langcode' => $langcode,
+    );
+  }
+  return $grants;
+}
+
+/**
+ * Implements hook_enable().
+ *
+ * Creates the 'private' field, which allows the node to be marked as private
+ * (restricted access) in a given translation.
+ */
+function node_access_test_language_enable() {
+  $field_private = array(
+    'field_name' => 'field_private',
+    'type' => 'list_boolean',
+    'cardinality' => 1,
+    'translatable'  => TRUE,
+    'settings' => array(
+      'allowed_values' => array(0 => 'Not private', 1 => 'Private'),
+    ),
+  );
+  $field_private = field_create_field($field_private);
+
+  $instance = array(
+    'field_name' => $field_private['field_name'],
+    'entity_type' => 'node',
+    'bundle' => 'page',
+    'widget' => array(
+      'type' => 'options_buttons',
+    ),
+  );
+  $instance = field_create_instance($instance);
+}
+
+/**
+ * Implements hook_disable().
+ */
+function node_access_test_language_disable() {
+  field_delete_instance(field_read_instance('node', 'field_private', 'page'));
+}

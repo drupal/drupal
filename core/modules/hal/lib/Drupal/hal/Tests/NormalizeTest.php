@@ -150,7 +150,7 @@ class NormalizeTest extends NormalizerTestBase {
       ),
     );
 
-    $normalized = $this->container->get('serializer')->normalize($entity, $this->format);
+    $normalized = $this->serializer->normalize($entity, $this->format);
     $this->assertEqual($normalized['_links']['self'], $expected_array['_links']['self'], 'self link placed correctly.');
     // @todo Test curies.
     // @todo Test type.

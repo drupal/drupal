@@ -34,12 +34,16 @@ class DeleteTest extends RESTTestBase {
    */
   public function testDelete() {
     // Define the entity types we want to test.
-    $entity_types = array('entity_test', 'node', 'user');
+    // @todo expand this test to at least nodes and users once their access
+    // controllers are implemented.
+    $entity_types = array('entity_test');
     foreach ($entity_types as $entity_type) {
       $this->enableService('entity:' . $entity_type, 'DELETE');
       // Create a user account that has the required permissions to delete
       // resources via the REST API.
-      $account = $this->drupalCreateUser(array('restful delete entity:' . $entity_type));
+      $permissions = $this->entityPermissions($entity_type, 'delete');
+      $permissions[] = 'restful delete entity:' . $entity_type;
+      $account = $this->drupalCreateUser($permissions);
       $this->drupalLogin($account);
 
       // Create an entity programmatically.

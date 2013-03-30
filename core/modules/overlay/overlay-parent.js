@@ -3,7 +3,7 @@
  * Attaches the behaviors for the Overlay parent pages.
  */
 
-(function ($) {
+(function ($, Drupal, displace) {
 
 "use strict";
 
@@ -106,6 +106,10 @@ Drupal.overlay.open = function (url) {
  * Create the underlying markup and behaviors for the overlay.
  */
 Drupal.overlay.create = function () {
+  // Update offsets values on the page.
+  displace(false);
+
+  // Build the overlay container.
   this.$container = $(Drupal.theme('overlayContainer'))
     .appendTo(document.body);
 
@@ -131,6 +135,7 @@ Drupal.overlay.create = function () {
   $(window)
     .bind('resize' + eventClass, $.proxy(this, 'eventhandlerOuterResize'));
   $(document)
+    .bind('drupalViewportOffsetChange' + eventClass, $.proxy(this, 'eventhandlerViewportOffsetChange'))
     .bind('drupalOverlayLoad' + eventClass, $.proxy(this, 'eventhandlerOuterResize'))
     .bind('drupalOverlayReady' + eventClass +
           ' drupalOverlayClose' + eventClass, $.proxy(this, 'eventhandlerSyncURLFragment'))
@@ -139,11 +144,9 @@ Drupal.overlay.create = function () {
           ' drupalOverlayBeforeLoad' + eventClass +
           ' drupalOverlayResize' + eventClass, $.proxy(this, 'eventhandlerDispatchEvent'));
 
-  if ($('.overlay-displace-top, .overlay-displace-bottom').length) {
-    $(document)
-      .bind('drupalOverlayResize' + eventClass, $.proxy(this, 'eventhandlerAlterDisplacedElements'))
-      .bind('drupalOverlayClose' + eventClass, $.proxy(this, 'eventhandlerRestoreDisplacedElements'));
-  }
+  $(document)
+    .bind('drupalOverlayResize' + eventClass, $.proxy(this, 'eventhandlerAlterDisplacedElements'))
+    .bind('drupalOverlayClose' + eventClass, $.proxy(this, 'eventhandlerRestoreDisplacedElements'));
 };
 
 /**
@@ -398,6 +401,22 @@ Drupal.overlay.isExternalLink = function (url) {
 };
 
 /**
+ * Responds to the drupalViewportOffsetChange event.
+ *
+ * @param object event
+ *   A jQuery event object.
+ *
+ * @param object offsets
+ *   An object whose keys are the for sides an element -- top, right, bottom
+ *   and left. The value of each key is the viewport displacement distance for
+ *   that edge.
+ */
+Drupal.overlay.eventhandlerViewportOffsetChange = function (event, offsets) {
+  // Allow other scripts to respond to this event.
+  $(document).trigger('drupalOverlayResize');
+};
+
+/**
  * Event handler: resizes overlay according to the size of the parent window.
  *
  * @param event
@@ -435,78 +454,29 @@ Drupal.overlay.eventhandlerAlterDisplacedElements = function (event) {
     return;
   }
 
-  $(this.iframeWindow.document.body).css({
-    marginTop: Drupal.overlay.getDisplacement('top'),
-    marginBottom: Drupal.overlay.getDisplacement('bottom')
-  }).attr('data-offset-top', Drupal.overlay.getDisplacement('top'));
+  var offsets = displace.offsets;
 
-  $(document).bind('offsettopchange', function () {
-    var iframeDocument = Drupal.overlay.iframeWindow.document;
-    $(iframeDocument.body).attr('data-offset-top', Drupal.overlay.getDisplacement('top'));
-    $(iframeDocument).trigger('offsettopchange');
+  // Move the body of the iframe contentDocument inward a sufficient distance
+  // to prevent it from appearing underneath displacing elements like the
+  // toolbar.
+  var iframeBody = this.iframeWindow.document.body;
+  $(iframeBody).css({
+    'padding-top': offsets.top,
+    'padding-right': offsets.right,
+    'padding-bottom': offsets.bottom,
+    'padding-left': offsets.left
   });
+  // Trigger a repaint.
+  iframeBody.style.display = 'none';
+  var _tmp = iframeBody.offsetHeight;
+  iframeBody.style.display = 'block';
 
-  var documentHeight = this.iframeWindow.document.body.clientHeight;
-  var documentWidth = this.iframeWindow.document.body.clientWidth;
-  // IE6 doesn't support maxWidth, use width instead.
-  var maxWidthName = 'maxWidth';
-
-  if (Drupal.overlay.leftSidedScrollbarOffset === undefined && $(document.documentElement).attr('dir') === 'rtl') {
-    // We can't use element.clientLeft to detect whether scrollbars are placed
-    // on the left side of the element when direction is set to "rtl" as most
-    // browsers dont't support it correctly.
-    // http://www.gtalbot.org/BugzillaSection/DocumentAllDHTMLproperties.html
-    // There seems to be absolutely no way to detect whether the scrollbar
-    // is on the left side in Opera; always expect scrollbar to be on the left.
-    if ($.browser.opera) {
-      Drupal.overlay.leftSidedScrollbarOffset = document.documentElement.clientWidth - this.iframeWindow.document.documentElement.clientWidth + this.iframeWindow.document.documentElement.clientLeft;
-    }
-    else if (this.iframeWindow.document.documentElement.clientLeft) {
-      Drupal.overlay.leftSidedScrollbarOffset = this.iframeWindow.document.documentElement.clientLeft;
-    }
-    else {
-      var el1 = $('<div style="direction: rtl; overflow: scroll;"></div>').appendTo(document.body);
-      var el2 = $('<div></div>').appendTo(el1);
-      Drupal.overlay.leftSidedScrollbarOffset = parseInt(el2[0].offsetLeft - el1[0].offsetLeft, 10);
-      el1.remove();
-    }
+  // Constrain the width of offsetting top and bottom elements, such as the
+  // toolbar, so that a scroll in the overlay iframe won't be occluded.
+  var iframeBodyWidth = iframeBody.clientWidth;
+  if (iframeBodyWidth > 0 && iframeBodyWidth < document.documentElement.clientWidth) {
+    $('[data-offset-top], [data-offset-bottom]').css('max-width', iframeBodyWidth);
   }
-
-  // Consider any element that should be visible above the overlay (such as
-  // a toolbar).
-  $('.overlay-displace-top, .overlay-displace-bottom').each(function () {
-    var data = $(this).data();
-    var maxWidth = documentWidth;
-    // In IE, Shadow filter makes element to overlap the scrollbar with 1px.
-    if (this.filters && this.filters.length && this.filters.item('DXImageTransform.Microsoft.Shadow')) {
-      maxWidth -= 1;
-    }
-
-    if (Drupal.overlay.leftSidedScrollbarOffset) {
-      $(this).css('left', Drupal.overlay.leftSidedScrollbarOffset);
-    }
-
-    // Prevent displaced elements overlapping window's scrollbar.
-    var currentMaxWidth = parseInt($(this).css(maxWidthName), 10);
-    if ((data.drupalOverlay && data.drupalOverlay.maxWidth) || isNaN(currentMaxWidth) || currentMaxWidth > maxWidth || currentMaxWidth <= 0) {
-      $(this).css(maxWidthName, maxWidth);
-      (data.drupalOverlay = data.drupalOverlay || {}).maxWidth = true;
-    }
-
-    // Use a more rigorous approach if the displaced element still overlaps
-    // window's scrollbar; clip the element on the right.
-    var offset = $(this).offset();
-    var offsetRight = offset.left + $(this).outerWidth();
-    if ((data.drupalOverlay && data.drupalOverlay.clip) || offsetRight > maxWidth) {
-      if (Drupal.overlay.leftSidedScrollbarOffset) {
-        $(this).css('clip', 'rect(auto, auto, ' + (documentHeight - offset.top) + 'px, ' + (Drupal.overlay.leftSidedScrollbarOffset + 2) + 'px)');
-      }
-      else {
-        $(this).css('clip', 'rect(auto, ' + (maxWidth - offset.left) + 'px, ' + (documentHeight - offset.top) + 'px, auto)');
-      }
-      (data.drupalOverlay = data.drupalOverlay || {}).clip = true;
-    }
-  });
 };
 
 /**
@@ -519,16 +489,7 @@ Drupal.overlay.eventhandlerAlterDisplacedElements = function (event) {
  *   - event.currentTarget: any
  */
 Drupal.overlay.eventhandlerRestoreDisplacedElements = function (event) {
-  var $displacedElements = $('.overlay-displace-top, .overlay-displace-bottom');
-  try {
-    $displacedElements.css({ maxWidth: '', clip: '' });
-  }
-  // IE bug that doesn't allow unsetting style.clip (http://dev.jquery.com/ticket/6512).
-  catch (err) {
-    $displacedElements.attr('style', function (index, attr) {
-      return attr.replace(/clip\s*:\s*rect\([^)]+\);?/i, '');
-    });
-  }
+  $('[data-offset-top], [data-offset-bottom]').css('max-width', 'none');
 };
 
 /**
@@ -828,7 +789,7 @@ Drupal.overlay.resetActiveClass = function(activePath) {
   var self = this;
   var windowDomain = window.location.protocol + window.location.hostname;
 
-  $('.overlay-displace-top, .overlay-displace-bottom')
+  $('#toolbar-administration')
   .find('a[href]')
   // Remove active class from all links in displaced elements.
   .removeClass('active')
@@ -871,24 +832,6 @@ Drupal.overlay.getPath = function (link) {
 };
 
 /**
- * Get the total displacement of given region.
- *
- * @param region
- *   Region name. Either "top" or "bottom".
- *
- * @return
- *   The total displacement of given region in pixels.
- */
-Drupal.overlay.getDisplacement = function (region) {
-  var displacement = 0;
-  var lastDisplaced = $('[data-offset-' + region + ']');
-  if (lastDisplaced.length) {
-    displacement = parseInt(lastDisplaced.attr('data-offset-' + region));
-  }
-  return displacement;
-};
-
-/**
  * Makes elements outside the overlay unreachable via the tab key.
  *
  * @param context
@@ -916,7 +859,7 @@ Drupal.overlay.makeDocumentUntabbable = function (context) {
   // If another element (like a div) has a tabindex, it's also tabbable.
   $tabbable = $tabbable.add($hasTabindex);
   // Leave links inside the overlay and toolbars alone.
-  $overlay = $('.overlay-element, #overlay-container, .overlay-displace-top, .overlay-displace-bottom').find('*');
+  $overlay = $('.overlay-element, #overlay-container, #toolbar-administration').find('*');
   $tabbable = $tabbable.not($overlay);
   // We now have a list of everything in the underlying document that could
   // possibly be reachable via the tab key. Make it all unreachable.
@@ -982,4 +925,4 @@ $.extend(Drupal.theme, {
   }
 });
 
-})(jQuery);
+})(jQuery, Drupal, Drupal.displace);

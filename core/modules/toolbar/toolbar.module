@@ -93,7 +93,7 @@ function toolbar_element_info() {
       'id' => 'toolbar-administration',
       // The 'overlay-displace-top' class pushes the overlay down, so it appears
       // below the toolbar.
-      'class' => array('toolbar', 'overlay-displace-top'),
+      'class' => array('toolbar',),
       'role' => 'navigation',
     ),
     // Metadata for the administration bar.
@@ -101,7 +101,8 @@ function toolbar_element_info() {
       '#heading' => t('Toolbar items'),
       '#attributes' => array(
         'id' => 'toolbar-bar',
-        'class' => array('bar', 'overlay-displace-top', 'clearfix'),
+        'class' => array('bar', 'clearfix',),
+        'data-offset-top' => array(),
       ),
     ),
   );
@@ -315,7 +316,6 @@ function toolbar_pre_render_item($element) {
     }
     $element['tray']['#wrapper_attributes'] += $attributes;
     $element['tray']['#wrapper_attributes']['class'][] = 'tray';
-    $element['tray']['#wrapper_attributes']['class'][] = 'overlay-displace-top';
 
     if (!isset($element['tray']['#theme_wrappers'])) {
       $element['tray']['#theme_wrappers'] = array();
@@ -631,6 +631,7 @@ function toolbar_library_info() {
       array('system', 'matchmedia'),
       array('system', 'jquery.once'),
       array('system', 'drupal.debounce'),
+      array('system', 'drupal.displace'),
       array('toolbar', 'toolbar.menu'),
     ),
   );

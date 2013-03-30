@@ -1,4 +1,4 @@
-(function ($, Drupal) {
+(function ($, Drupal, displace) {
 
 "use strict";
 
@@ -39,16 +39,14 @@ function tableHeaderOnScrollHandler(e) {
   forTables('onScroll');
 }
 
-function tableHeaderOffsetChangeHandler(e) {
-  // Compute the new offset value.
-  TableHeader.computeOffsetTop();
-  forTables('stickyPosition', TableHeader.offsetTop);
+function tableHeaderOffsetChangeHandler(e, offsets) {
+  forTables('stickyPosition', offsets.top);
 }
 
 // Bind event that need to change all tables.
 $(window).on({
   /**
-   * When resizing table width and offset top can change, recalculate everything.
+   * When resizing table width can change, recalculate everything.
    */
   'resize.TableHeader': tableHeaderResizeHandler,
 
@@ -66,9 +64,9 @@ $(document).on({
   'columnschange.TableHeader': tableHeaderResizeHandler,
 
   /**
-   * Offset value vas changed by a third party script.
+   * Recalculate TableHeader.topOffset when viewport is resized
    */
-  'offsettopchange.TableHeader': tableHeaderOffsetChangeHandler
+  'drupalViewportOffsetChange.TableHeader': tableHeaderOffsetChangeHandler
 });
 
 /**
@@ -76,9 +74,6 @@ $(document).on({
  *
  * TableHeader will make the current table header stick to the top of the page
  * if the table is very long.
- *
- * Fire a custom "topoffsetchange" event to make TableHeader compute the
- * new offset value from the "data-offset-top" attributes of relevant elements.
  *
  * @param table
  *   DOM object for the table to add a sticky header to.
@@ -119,28 +114,7 @@ $.extend(TableHeader, {
    *
    * @type {Array}
    */
-  tables: [],
-
-  /**
-   * Cache of computed offset value.
-   *
-   * @type {Number}
-   */
-  offsetTop: 0,
-
-  /**
-   * Sum all [data-offset-top] values and cache it.
-   */
-  computeOffsetTop: function () {
-    var $offsets = $('[data-offset-top]');
-    var value, sum = 0;
-    for (var i = 0, il = $offsets.length; i < il; i++) {
-      value = parseInt($offsets[i].getAttribute('data-offset-top'), 10);
-      sum += !isNaN(value) ? value : 0;
-    }
-    this.offsetTop = sum;
-    return sum;
-  }
+  tables: []
 });
 
 /**
@@ -211,7 +185,7 @@ $.extend(TableHeader.prototype, {
    */
   checkStickyVisible: function () {
     var scrollTop = scrollValue('scrollTop');
-    var tableTop = this.tableOffset.top - TableHeader.offsetTop;
+    var tableTop = this.tableOffset.top - displace.offsets.top;
     var tableBottom = tableTop + this.tableHeight;
     var visible = false;
 
@@ -248,9 +222,9 @@ $.extend(TableHeader.prototype, {
     this.tableHeight = this.$originalTable[0].clientHeight;
 
     // Update offset top.
-    TableHeader.computeOffsetTop();
+    displace.offsets.top = displace.calculateOffset('top');
     this.tableOffset = this.$originalTable.offset();
-    this.stickyPosition(TableHeader.offsetTop);
+    this.stickyPosition(displace.offsets.top, scrollValue('scrollLeft'));
 
     // Update columns width.
     var $that = null;
@@ -277,4 +251,4 @@ $.extend(TableHeader.prototype, {
 // Expose constructor in the public space.
 Drupal.TableHeader = TableHeader;
 
-}(jQuery, Drupal));
+}(jQuery, Drupal, window.parent.Drupal.displace));

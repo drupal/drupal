@@ -7,6 +7,8 @@
 
 namespace Drupal\hal\Normalizer;
 
+use Drupal\Core\Entity\Field\FieldItemInterface;
+
 /**
  * Converts the Drupal field item object structure to HAL array structure.
  */
@@ -36,6 +38,74 @@ class FieldItemNormalizer extends NormalizerBase {
     return array(
       $field->getName() => array($values),
     );
+  }
+
+  /**
+   * Implements \Symfony\Component\Serializer\Normalizer\DenormalizerInterface::denormalize()
+   */
+  public function denormalize($data, $class, $format = NULL, array $context = array()) {
+    if (!isset($context['target_instance'])) {
+      throw new LogicException('$context[\'target_instance\'] must be set to denormalize with the FieldItemNormalizer');
+    }
+    if ($context['target_instance']->getParent() == NULL) {
+      throw new LogicException('The field item passed in via $context[\'target_instance\'] must have a parent set.');
+    }
+
+    $field_item = $context['target_instance'];
+
+    // If this field is translatable, we need to create a translated instance.
+    if (isset($data['lang'])) {
+      $langcode = $data['lang'];
+      unset($data['lang']);
+      $field_definition = $field_item->getDefinition();
+      if ($field_definition['translatable'] == TRUE) {
+        $field_item = $this->createTranslatedInstance($field_item, $langcode);
+      }
+    }
+
+    $field_item->setValue($data);
+    return $field_item;
+  }
+
+  /**
+   * Get a translated version of the field item instance.
+   *
+   * To indicate that a field item applies to one translation of an entity and
+   * not another, the property path must originate with a translation of the
+   * entity. This is the reason for using target_instances, from which the
+   * property path can be traversed up to the root.
+   *
+   * @param \Drupal\Core\Entity\Field\FieldItemInterface $field_item
+   *   The untranslated field item instance.
+   * @param $langcode
+   *   The langcode.
+   *
+   * @return \Drupal\Core\Entity\Field\FieldItemInterface
+   *   The translated field item instance.
+   */
+  protected function createTranslatedInstance(FieldItemInterface $field_item, $langcode) {
+    $parent = $field_item->getParent();
+    $ancestors = array();
+
+    // Remove the untranslated instance from the field's list of items.
+    $parent->offsetUnset($field_item->getName());
+
+    // Get the property path.
+    while (!method_exists($parent, 'getTranslation')) {
+      array_unshift($ancestors, $parent);
+      $parent = $parent->getParent();
+    }
+
+    // Recreate the property path with translations.
+    $translation = $parent->getTranslation($langcode);
+    foreach ($ancestors as $ancestor) {
+      $ancestor_name =  $ancestor->getName();
+      $translation = $translation->get($ancestor_name);
+    }
+
+    // Create a new instance at the end of the property path and return it.
+    $count = $translation->isEmpty() ? 0 : $translation->count();
+    return $translation->offsetGet($count);
   }
 
 }

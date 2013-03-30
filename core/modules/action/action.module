@@ -60,16 +60,13 @@ function action_menu() {
   $items['admin/config/system/actions'] = array(
     'title' => 'Actions',
     'description' => 'Manage the actions defined for your site.',
-    'access arguments' => array('administer actions'),
-    'page callback' => 'action_admin_manage',
-    'file' => 'action.admin.inc',
+    'route_name' => 'action_admin',
   );
   $items['admin/config/system/actions/manage'] = array(
     'title' => 'Manage actions',
     'description' => 'Manage the actions defined for your site.',
-    'page callback' => 'action_admin_manage',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'file' => 'action.admin.inc',
+    'route_name' => 'action_admin_manage',
   );
   $items['admin/config/system/actions/configure'] = array(
     'title' => 'Configure an advanced action',
@@ -89,10 +86,9 @@ function action_menu() {
   );
   $items['admin/config/system/actions/orphan'] = array(
     'title' => 'Remove orphans',
-    'page callback' => 'action_admin_remove_orphans',
-    'access arguments' => array('administer actions'),
+    'description' => 'Remove actions that are in the database but not supported by any enabled module.',
+    'route_name' => 'action_admin_orphans_remove',
     'type' => MENU_CALLBACK,
-    'file' => 'action.admin.inc',
   );
   return $items;
 }

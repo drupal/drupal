@@ -9,7 +9,7 @@ use Drupal\Core\StreamWrapper\LocalStream;
 use Drupal\Component\PhpStorage\MTimeProtectedFastFileStorage;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Stream wrapper bit flags that are the basis for composite types.
@@ -1302,28 +1302,6 @@ function file_unmanaged_save_data($data, $destination = NULL, $replace = FILE_EX
 }
 
 /**
- * Transfers a file to the client using HTTP.
- *
- * Pipes a file through Drupal to the client.
- *
- * @param $uri
- *   String specifying the file URI to transfer.
- * @param $headers
- *   An array of HTTP headers to send along with file.
- */
-function file_transfer($uri, $headers) {
-  return new StreamedResponse(function() use ($uri) {
-    // Transfer file in 1024 byte chunks to save memory usage.
-    if (file_exists($uri) && $fd = fopen($uri, 'rb')) {
-      while (!feof($fd)) {
-        print fread($fd, 1024);
-      }
-      fclose($fd);
-    }
-  }, 200, $headers);
-}
-
-/**
  * Page callback: Handles private file transfers.
  *
  * Call modules that implement hook_file_download() to find out if a file is
@@ -1351,7 +1329,7 @@ function file_download() {
       }
     }
     if (count($headers)) {
-      return file_transfer($uri, $headers);
+      return new BinaryFileResponse($uri, 200, $headers);
     }
     throw new AccessDeniedHttpException();
   }

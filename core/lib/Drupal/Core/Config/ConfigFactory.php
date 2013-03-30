@@ -107,27 +107,32 @@ class ConfigFactory {
   }
 
   /**
-   * Renames a configuration object in the cache.
+   * Renames a configuration object using the storage controller.
    *
    * @param string $old_name
    *   The old name of the configuration object.
    * @param string $new_name
    *   The new name of the configuration object.
    *
-   * @todo D8: Remove after http://drupal.org/node/1865206.
+   * @return \Drupal\Core\Config\Config
+   *   The renamed config object.
    */
   public function rename($old_name, $new_name) {
-    $old_cache_key = $this->getCacheKey($old_name, $this->getContext());
-    $new_cache_key = $this->getCacheKey($new_name, $this->getContext());
+    $context = $this->getContext();
+    $old_cache_key = $this->getCacheKey($old_name, $context);
+    $new_cache_key = $this->getCacheKey($new_name, $context);
     if (isset($this->cache[$old_cache_key])) {
       $config = $this->cache[$old_cache_key];
-      // Clone the object into the existing slot.
-      $this->cache[$old_cache_key] = clone $config;
-
-      // Change the object's name and re-initialize it.
-      $config->setName($new_name)->init();
-      $this->cache[$new_cache_key] = $config;
+      unset($this->cache[$old_cache_key]);
     }
+    else {
+      // Create the config object if it's not yet loaded into the static cache.
+      $config = new Config($old_name, $this->storage, $context);
+    }
+
+    $this->cache[$new_cache_key] = $config;
+    $this->storage->rename($old_name, $new_name);
+    return $this->cache[$new_cache_key]->setName($new_name)->init();
   }
 
   /**
@@ -200,5 +205,16 @@ class ConfigFactory {
     return array_filter($cache_keys, function($key) use ($name) {
       return ( strpos($key, $name) !== false );
     });
+  }
+
+  /**
+   * Clears the config factory static cache.
+   *
+   * @return \Drupal\Core\Config\ConfigFactory
+   *   The config factory object.
+   */
+  public function clearStaticCache() {
+    $this->cache = array();
+    return $this;
   }
 }

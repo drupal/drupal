@@ -9,6 +9,7 @@ namespace Drupal\image;
 
 use Drupal\Core\Config\Entity\ConfigStorageController;
 use Drupal\Core\Config\Config;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Defines a controller class for image styles.
@@ -29,6 +30,16 @@ class ImageStyleStorageController extends ConfigStorageController {
     //   about deleted and added changes. Introduce an 'old_ID' key within
     //   config objects as a standard?
     return image_style_delete($entity);
+  }
+
+  /**
+   * Overrides \Drupal\Core\Config\Entity\ConfigStorageController::postSave().
+   */
+  protected function postSave(EntityInterface $entity, $update) {
+    if ($update && !empty($entity->original) && $entity->{$this->idKey} !== $entity->original->{$this->idKey}) {
+      // The old imagestyle name needs flushing after a rename.
+      image_style_flush($entity->original);
+    }
   }
 
 }

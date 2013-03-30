@@ -179,11 +179,13 @@ Drupal.overlayChild.behaviors.shortcutAddLink = function (context, settings) {
   });
 };
 
-// Workaround because of the way jQuery events works.
-// jQuery from the parent frame needs to be used to catch this event.
-parent.jQuery(document).bind('offsettopchange', function () {
-  // Fires an event that the child iframe can listen to.
-  $(document).trigger('offsettopchange');
-});
+Drupal.overlayChild.behaviors.bindDrupalViewportOffsetChangeEvent = function (context, settings) {
+  // Workaround because of the way jQuery events works.
+  // jQuery from the parent frame needs to be used to catch this event.
+  parent.jQuery(parent.document).on('drupalViewportOffsetChange', function (event, offsets) {
+    // Fires an event that the child iframe can listen to.
+    $(document).trigger('drupalViewportOffsetChange', offsets);
+  });
+};
 
 })(jQuery);
