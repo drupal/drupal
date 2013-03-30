@@ -151,8 +151,6 @@ function update_script_selection_form($form, &$form_state) {
  * Provides links to the homepage and administration pages.
  */
 function update_helpful_links() {
-  // NOTE: we can't use l() here because the URL would point to
-  // 'update.php?q=admin'.
   $links[] = '<a href="' . base_path() . '">Front page</a>';
   if (user_access('access administration pages')) {
     $links[] = '<a href="' . base_path() . '?q=admin">Administration pages</a>';
