@@ -395,7 +395,7 @@ function menu_edit_item_validate($form, &$form_state) {
     else {
       unset($item['options']['fragment']);
     }
-    if ($item['link_path'] != $parsed_link['path']) {
+    if (isset($parsed_link['path']) && $item['link_path'] != $parsed_link['path']) {
       $item['link_path'] = $parsed_link['path'];
     }
   }
