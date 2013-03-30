@@ -122,7 +122,7 @@ else {
   print t(\'Welcome visitor! Thank you for visiting.\');
 }
 </pre>') . '</li></ul>';
-    $output .= '<p>' . t('<a href="@drupal">Drupal.org</a> offers <a href="@php-snippets">some example PHP snippets</a>, or you can create your own with some PHP experience and knowledge of the Drupal system.', array('@drupal' => url('http://drupal.org'), '@php-snippets' => url('http://http://drupal.org/documentation/customization/php-snippets'))) . '</p>';
+    $output .= '<p>' . t('<a href="@drupal">Drupal.org</a> offers <a href="@php-snippets">some example PHP snippets</a>, or you can create your own with some PHP experience and knowledge of the Drupal system.', array('@drupal' => url('http://drupal.org'), '@php-snippets' => url('http://drupal.org/documentation/customization/php-snippets'))) . '</p>';
     return $output;
   }
   else {
