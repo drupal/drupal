@@ -394,6 +394,20 @@ abstract class StylePluginBase extends PluginBase {
   }
 
   /**
+   * Renders a single group of a grouped view.
+   *
+   * @return array
+   *   The render array containing the single view theme output.
+   */
+  protected function renderSingleGroup(array $rows = array()) {
+    return array(
+      '#theme' => $this->themeFunctions(),
+      '#view' => $this->view,
+      '#rows' => $rows,
+    );
+  }
+
+  /**
    * Render the display in this style.
    */
   function render() {
@@ -453,14 +467,10 @@ abstract class StylePluginBase extends PluginBase {
           }
         }
 
-        $output[] = array(
-          '#theme' => $this->themeFunctions(),
-          '#view' => $this->view,
-          '#options' => $this->options,
-          '#grouping_level' => $level,
-          '#rows' => $set['rows'],
-          '#title' => $set['group'],
-        );
+        $single_output = $this->renderSingleGroup($set['rows']);
+        $single_output['#grouping_level'] = $level;
+        $single_output['#title'] = $set['group'];
+        $output[] = $single_output;
       }
     }
     unset($this->view->row_index);
