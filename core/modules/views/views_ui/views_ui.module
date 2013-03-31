@@ -19,80 +19,95 @@ function views_ui_menu() {
   $items = array();
 
   // Top-level Views module pages (not tied to a particular View).
+  $items['admin/structure/views/add'] = array(
+    'title' => 'Add new view',
+    'page callback' => 'NOT_USED',
+    'type' => MENU_LOCAL_ACTION,
+    'access arguments' => array('administer views'),
+  );
+
   $items['admin/structure/views'] = array(
     'title' => 'Views',
     'description' => 'Manage customized lists of content.',
-    'route_name' => 'views_ui.list',
+    'page callback' => 'NOT_USED',
+    'access arguments' => array('administer views'),
   );
 
   $items['admin/structure/views/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-
-  $items['admin/structure/views/add'] = array(
-    'title' => 'Add new view',
-    'route_name' => 'views_ui.add',
-    'type' => MENU_LOCAL_ACTION,
+    'access arguments' => array('administer views'),
   );
 
   $items['admin/structure/views/settings'] = array(
     'title' => 'Settings',
-    'route_name' => 'views_ui.settings.basic',
+    'page callback' => 'NOT_USED',
     'type' => MENU_LOCAL_TASK,
+    'access arguments' => array('administer views'),
   );
   $items['admin/structure/views/settings/basic'] = array(
     'title' => 'Basic',
     'type' => MENU_DEFAULT_LOCAL_TASK,
+    'access arguments' => array('administer views'),
   );
   $items['admin/structure/views/settings/advanced'] = array(
     'title' => 'Advanced',
-    'route_name' => 'views_ui.settings.advanced',
     'type' => MENU_LOCAL_TASK,
+    'weight' => 1,
+    'access arguments' => array('administer views'),
   );
 
   // The primary Edit View page. Secondary tabs for each Display are added in
   // views_ui_menu_local_tasks_alter().
   $items['admin/structure/views/view/%'] = array(
-    'route_name' => 'views_ui.edit',
+    'page callback' => 'NOT_USED',
+    'access arguments' => array('administer views'),
   );
   $items['admin/structure/views/view/%/edit'] = array(
     'title' => 'Edit view',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+    'access arguments' => array('administer views'),
   );
   $items['admin/structure/views/view/%/preview/%'] = array(
-    'route_name' => 'views_ui.preview',
+    'page callback' => 'NOT_USED',
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
+    'access arguments' => array('administer views'),
   );
 
   // Additional pages for acting on a View.
 
   $items['admin/structure/views/view/%/break-lock'] = array(
     'title' => 'Break lock',
-    'route_name' => 'views_ui.breakLock',
+    'page callback' => 'NOT_USED',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
+    'access arguments' => array('administer views'),
   );
 
   // NoJS/AJAX callbacks that can use the default Views AJAX form system.
   $items['admin/structure/views/nojs/%/%'] = array(
+    'page callback' => 'NOT_USED',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
+    'access arguments' => array('administer views'),
   );
+
 
   // A page in the Reports section to show usage of fields in all views
   $items['admin/reports/fields/views-fields'] = array(
     'title' => 'Used in views',
     'description' => 'Overview of fields used in all views.',
-    'route_name' => 'views_ui.reports.fields',
+    'page callback' => 'NOT_USED',
     'type' => MENU_LOCAL_TASK,
+    'access arguments' => array('administer views'),
   );
 
   // A page in the Reports section to show usage of plugins in all views.
   $items['admin/reports/views-plugins'] = array(
     'title' => 'Views plugins',
     'description' => 'Overview of plugins used in all views.',
-    'route_name' => 'views_ui.reports.plugins',
+    'page callback' => 'NOT_USED',
+    'access arguments' => array('administer views'),
   );
 
   return $items;

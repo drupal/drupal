@@ -116,31 +116,4 @@ abstract class MenuTestBase extends WebTestBase {
     }
     return $parts;
   }
-
-  /**
-   * Asserts local tasks in the page output.
-   *
-   * @param array $hrefs
-   *   A list of expected link hrefs of local tasks to assert on the page (in
-   *   the given order).
-   * @param int $level
-   *   (optional) The local tasks level to assert; 0 for primary, 1 for
-   *   secondary. Defaults to 0.
-   */
-  protected function assertLocalTasks(array $hrefs, $level = 0) {
-    $elements = $this->xpath('//*[contains(@class, :class)]//a', array(
-      ':class' => $level == 0 ? 'tabs primary' : 'tabs secondary',
-    ));
-    $this->assertTrue(count($elements), 'Local tasks found.');
-    foreach ($hrefs as $index => $element) {
-      $expected = url($hrefs[$index]);
-      $method = ($elements[$index]['href'] == $expected ? 'pass' : 'fail');
-      $this->{$method}(format_string('Task @number href @value equals @expected.', array(
-        '@number' => $index + 1,
-        '@value' => (string) $elements[$index]['href'],
-        '@expected' => $expected,
-      )));
-    }
-  }
-
 }
