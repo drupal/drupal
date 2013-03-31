@@ -48,12 +48,13 @@ class FeedStorageController extends DatabaseStorageControllerNG {
 
     // Invalidate the block cache to update aggregator feed-based derivatives.
     if (module_exists('block')) {
-      drupal_container()->get('plugin.manager.block')->clearCachedDefinitions();
+      \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
     }
     foreach ($entities as $entity) {
-      $iids = db_query('SELECT iid FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $entity->id()))->fetchCol();
-      if ($iids) {
-        entity_delete_multiple('aggregator_item', $iids);
+      // Notify processors to remove stored items.
+      $manager = \Drupal::service('plugin.manager.aggregator.processor');
+      foreach ($manager->getDefinitions() as $id => $definition) {
+        $manager->createInstance($id)->remove($entity);
       }
     }
   }

@@ -13,6 +13,7 @@ use Drupal\Core\TypedData\ContextAwareInterface;
 use Drupal\views\Plugin\views\query\Sql;
 use Drupal\views\Plugin\Core\Entity\View;
 use Drupal\views\ViewStorageInterface;
+use Drupal\user\Plugin\Core\Entity\User;
 
 /**
  * Stores UI related temporary settings.
@@ -743,286 +744,286 @@ class ViewUI implements ViewStorageInterface {
    * Implements \IteratorAggregate::getIterator().
    */
   public function getIterator() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->getIterator();
   }
 
   /**
    * Implements \Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->id();
   }
 
   /**
    * Implements \Drupal\Core\Entity\EntityInterface::uuid().
    */
   public function uuid() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->uuid();
   }
 
   /**
    * Implements \Drupal\Core\Entity\EntityInterface::isNew().
    */
   public function isNew() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->isNew();
   }
 
   /**
    * Implements \Drupal\Core\Entity\EntityInterface::entityType().
    */
   public function entityType() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->entityType();
   }
 
   /**
    * Implements \Drupal\Core\Entity\EntityInterface::bundle().
    */
   public function bundle() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->bundle();
   }
 
   /**
    * Implements \Drupal\Core\Entity\EntityInterface::isDefaultRevision().
    */
   public function isDefaultRevision($new_value = NULL) {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->isDefaultRevision($new_value);
   }
 
   /**
    * Implements \Drupal\Core\Entity\EntityInterface::getRevisionId().
    */
   public function getRevisionId() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->getRevisionId();
   }
 
   /**
    * Implements \Drupal\Core\Entity\EntityInterface::entityInfo().
    */
   public function entityInfo() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->entityInfo();
   }
 
   /**
    * Implements \Drupal\Core\Entity\EntityInterface::createDuplicate().
    */
   public function createDuplicate() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->createDuplicate();
   }
 
   /**
    * Implements \Drupal\Core\Entity\EntityInterface::delete().
    */
   public function delete() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->delete();
   }
 
   /**
    * Implements \Drupal\Core\Entity\EntityInterface::save().
    */
   public function save() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->save();
   }
 
   /**
    * Implements \Drupal\Core\Entity\EntityInterface::uri().
    */
   public function uri() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->uri();
   }
 
   /**
    * Implements \Drupal\Core\Entity\EntityInterface::label().
    */
   public function label($langcode = NULL) {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->label($langcode);
   }
 
   /**
    * Implements \Drupal\Core\Entity\EntityInterface::isNewRevision().
    */
   public function isNewRevision() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->isNewRevision();
   }
 
   /**
    * Implements \Drupal\Core\Entity\EntityInterface::setNewRevision().
    */
   public function setNewRevision($value = TRUE) {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->setNewRevision($value);
   }
 
   /**
    * Implements \Drupal\Core\Entity\EntityInterface::enforceIsNew().
    */
   public function enforceIsNew($value = TRUE) {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->enforceIsNew($value);
   }
 
   /**
    * Implements \Drupal\Core\Entity\EntityInterface::getExportProperties().
    */
   public function getExportProperties() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->getExportProperties();
   }
 
   /**
    * Implements \Drupal\Core\TypedData\TranslatableInterface::getTranslation().
    */
   public function getTranslation($langcode, $strict = TRUE) {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->getTranslation($langcode, $strict);
   }
 
   /**
    * Implements \Drupal\Core\TypedData\TranslatableInterface::getTranslationLanguages().
    */
   public function getTranslationLanguages($include_default = TRUE) {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->getTranslationLanguages($include_default);
   }
 
   /**
    * Implements \Drupal\Core\TypedData\TranslatableInterface::language)().
    */
   public function language() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->language();
   }
 
   /**
    * Implements \Drupal\Core\TypedData\AccessibleInterface::access().
    */
-  public function access($operation = 'view', \Drupal\user\Plugin\Core\Entity\User $account = NULL) {
-    return $this->__call(__FUNCTION__, func_get_args());
+  public function access($operation = 'view', User $account = NULL) {
+    return $this->storage->access($operation, $account);
   }
 
   /**
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::isEmpty)().
    */
   public function isEmpty() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->isEmpty();
   }
 
   /**
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyValues().
    */
   public function getPropertyValues() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->getPropertyValues();
   }
 
   /**
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
    */
   public function getPropertyDefinitions() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->getPropertyDefinitions();
   }
 
   /**
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinition().
    */
   public function getPropertyDefinition($name) {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->getPropertyDefinition($name);
   }
 
   /**
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::setPropertyValues().
    */
   public function setPropertyValues($values) {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->setPropertyValues($values);
   }
 
   /**
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::getProperties().
    */
   public function getProperties($include_computed = FALSE) {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->getProperties($include_computed);
   }
 
   /**
    * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::enable().
    */
   public function enable() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->enable();
   }
 
   /**
    * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::disable().
    */
   public function disable() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->disable();
   }
 
   /**
    * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::status().
    */
   public function status() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->status();
   }
 
   /**
    * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::getOriginalID().
    */
   public function getOriginalID() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->getOriginalID();
   }
 
   /**
    * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::setOriginalID().
    */
   public function setOriginalID($id) {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->setOriginalID($id);
   }
 
   /**
    * Implements Drupal\Core\Entity\EntityInterface::getBCEntity().
    */
   public function getBCEntity() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->getBCEntity();
   }
 
   /**
    * Implements Drupal\Core\Entity\EntityInterface::getOriginalEntity().
    */
   public function getOriginalEntity() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->getOriginalEntity();
   }
 
   /**
    * Implements \Drupal\Core\Entity\EntityInterface::isTranslatable().
    */
   public function isTranslatable() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->isTranslatable();
   }
 
   /**
    * Implements \Drupal\Core\TypedData\ContextAwareInterface::getName().
    */
   public function getName() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->getName();
   }
 
   /**
    * Implements \Drupal\Core\TypedData\ContextAwareInterface::getRoot().
    */
   public function getRoot() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->getRoot();
   }
 
   /**
    * Implements \Drupal\Core\TypedData\ContextAwareInterface::getPropertyPath().
    */
   public function getPropertyPath() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->getPropertyPath();
   }
 
   /**
    * Implements \Drupal\Core\TypedData\ContextAwareInterface::getParent().
    */
   public function getParent() {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->getParent();
   }
 
   /**
    * Implements \Drupal\Core\TypedData\ContextAwareInterface::setContext().
    */
   public function setContext($name = NULL, ContextAwareInterface $parent = NULL) {
-    return $this->__call(__FUNCTION__, func_get_args());
+    return $this->storage->setContext($name, $parent);
   }
 }

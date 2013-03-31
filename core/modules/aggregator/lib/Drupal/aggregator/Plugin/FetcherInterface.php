@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\aggregator\Plugin\FetcherInterface.
+ * Contains \Drupal\aggregator\Plugin\FetcherInterface.
  */
 
 namespace Drupal\aggregator\Plugin;

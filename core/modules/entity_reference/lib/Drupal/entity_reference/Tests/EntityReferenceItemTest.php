@@ -7,26 +7,25 @@
 
 namespace Drupal\entity_reference\Tests;
 
-use Drupal\simpletest\WebTestBase;
-use Drupal\entity_reference\Type\EntityReferenceItem;
-use Drupal\Core\Entity\Field\FieldItemInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemInterface;
+use Drupal\field\Tests\FieldUnitTestBase;
 
 /**
  * Tests the new entity API for the entity reference field type.
  */
-class EntityReferenceItemTest extends WebTestBase {
+class EntityReferenceItemTest extends FieldUnitTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('field', 'field_sql_storage', 'entity_test', 'options', 'entity_reference');
+  public static $modules = array('entity_reference', 'taxonomy', 'options');
 
   public static function getInfo() {
     return array(
-      'name' => 'Entity Reference field API',
+      'name' => 'Entity Reference field item',
       'description' => 'Tests using entity fields of the entity reference field type.',
       'group' => 'Entity Reference',
     );
@@ -38,44 +37,65 @@ class EntityReferenceItemTest extends WebTestBase {
   public function setUp() {
     parent::setUp();
 
+    $this->installSchema('taxonomy', 'taxonomy_term_data');
+    $this->installSchema('taxonomy', 'taxonomy_term_hierarchy');
+
+    $vocabulary = entity_create('taxonomy_vocabulary', array(
+      'name' => $this->randomName(),
+      'vid' => drupal_strtolower($this->randomName()),
+      'langcode' => LANGUAGE_NOT_SPECIFIED,
+    ));
+    $vocabulary->save();
+
+    $this->term = entity_create('taxonomy_term', array(
+      'name' => $this->randomName(),
+      'vid' => $vocabulary->id(),
+      'langcode' => LANGUAGE_NOT_SPECIFIED,
+    ));
+    $this->term->save();
+
     // Use the util to create an instance.
-    entity_reference_create_instance('entity_test', 'entity_test', 'field_test', 'Test entity reference', 'node');
+    entity_reference_create_instance('entity_test', 'entity_test', 'field_test_taxonomy', 'Test entity reference', 'taxonomy_term');
   }
 
   /**
-   * Tests using entity fields of the taxonomy term reference field type.
+   * Tests using entity fields of the entity reference field type.
    */
   public function testEntityReferenceItem() {
-    // Create a node.
-    $node1 = $this->drupalCreateNode();
-    $nid = $node1->id();
+    $tid = $this->term->id();
 
     // Just being able to create the entity like this verifies a lot of code.
-    $entity = entity_create('entity_test', array('name' => 'foo'));
-    $entity->field_test->target_id = $nid;
+    $entity = entity_create('entity_test', array());
+    $entity->field_test_taxonomy->target_id = $tid;
+    $entity->name->value = $this->randomName();
     $entity->save();
 
-    $this->assertTrue($entity->field_test instanceof FieldInterface, 'Field implements interface.');
-    $this->assertTrue($entity->field_test[0] instanceof FieldItemInterface, 'Field item implements interface.');
-    $this->assertEqual($entity->field_test->target_id, $nid);
-    $this->assertEqual($entity->field_test->entity->title, $node1->label());
-    $this->assertEqual($entity->field_test->entity->id(), $nid);
-    $this->assertEqual($entity->field_test->entity->uuid(), $node1->uuid());
+    $entity = entity_load('entity_test', $entity->id());
+    $this->assertTrue($entity->field_test_taxonomy instanceof FieldInterface, 'Field implements interface.');
+    $this->assertTrue($entity->field_test_taxonomy[0] instanceof FieldItemInterface, 'Field item implements interface.');
+    $this->assertEqual($entity->field_test_taxonomy->target_id, $tid);
+    $this->assertEqual($entity->field_test_taxonomy->entity->name, $this->term->name);
+    $this->assertEqual($entity->field_test_taxonomy->entity->id(), $tid);
+    $this->assertEqual($entity->field_test_taxonomy->entity->uuid(), $this->term->uuid());
 
     // Change the name of the term via the reference.
     $new_name = $this->randomName();
-    $entity->field_test->entity->title = $new_name;
-    $entity->field_test->entity->save();
-
+    $entity->field_test_taxonomy->entity->name = $new_name;
+    $entity->field_test_taxonomy->entity->save();
     // Verify it is the correct name.
-    $node = node_load($nid);
-    $this->assertEqual($node->label(), $new_name);
+    $term = entity_load('taxonomy_term', $tid);
+    $this->assertEqual($term->name, $new_name);
 
-    // Make sure the computed node reflects updates to the node id.
-    $node2 = $this->drupalCreateNode();
+    // Make sure the computed term reflects updates to the term id.
+    $term2 = entity_create('taxonomy_term', array(
+      'name' => $this->randomName(),
+      'vid' => $this->term->vid,
+      'langcode' => LANGUAGE_NOT_SPECIFIED,
+    ));
+    $term2->save();
 
-    $entity->field_test->target_id = $node2->nid;
-    $this->assertEqual($entity->field_test->entity->id(), $node2->id());
-    $this->assertEqual($entity->field_test->entity->title, $node2->label());
+    $entity->field_test_taxonomy->target_id = $term2->id();
+    $this->assertEqual($entity->field_test_taxonomy->entity->id(), $term2->id());
+    $this->assertEqual($entity->field_test_taxonomy->entity->name, $term2->name);
   }
 }

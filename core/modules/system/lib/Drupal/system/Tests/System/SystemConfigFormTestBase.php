@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\System\SystemConfigFormBase.
+ * Definition of Drupal\system\Tests\System\SystemConfigFormTestBase.
  */
 
 namespace Drupal\system\Tests\System;
@@ -15,7 +15,7 @@ use Drupal\simpletest\WebTestBase;
  * @see UserAdminSettingsFormTest
  *   For a full working implementation.
  */
-abstract class SystemConfigFormBase extends WebTestBase {
+abstract class SystemConfigFormTestBase extends WebTestBase {
   /**
    * Form ID to use for testing.
    *

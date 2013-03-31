@@ -19,8 +19,11 @@ class AggregatorBundle extends Bundle {
    * Overrides Bundle::build().
    */
   public function build(ContainerBuilder $container) {
-    $container->register('plugin.manager.aggregator.fetcher', 'Drupal\aggregator\Plugin\FetcherManager')
-      ->addArgument('%container.namespaces%');
+    foreach (array('fetcher', 'parser', 'processor') as $type) {
+      $container->register("plugin.manager.aggregator.$type", 'Drupal\aggregator\Plugin\AggregatorPluginManager')
+        ->addArgument($type)
+        ->addArgument('%container.namespaces%');
+    }
   }
 
 }

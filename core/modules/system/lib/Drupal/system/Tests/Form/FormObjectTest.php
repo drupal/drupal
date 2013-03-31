@@ -7,13 +7,13 @@
 
 namespace Drupal\system\Tests\Form;
 
-use Drupal\system\Tests\System\SystemConfigFormBase;
+use Drupal\system\Tests\System\SystemConfigFormTestBase;
 use Drupal\form_test\FormTestObject;
 
 /**
  * Tests building a form from an object.
  */
-class FormObjectTest extends SystemConfigFormBase {
+class FormObjectTest extends SystemConfigFormTestBase {
 
   /**
    * Modules to enable.

@@ -11,7 +11,7 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\form_test\SystemConfigFormTestForm;
 
 /**
- * Tests the SystemConfigFormBase class.
+ * Tests the SystemConfigFormTestBase class.
  */
 class SystemConfigFormTest extends WebTestBase {
 
@@ -25,13 +25,13 @@ class SystemConfigFormTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'SystemConfigmForm tests',
-      'description' => 'Tests the SystemConfigFormBase class.',
+      'description' => 'Tests the SystemConfigFormTestBase class.',
       'group' => 'Form API',
     );
   }
 
   /**
-   * Tests the SystemConfigFormBase class.
+   * Tests the SystemConfigFormTestBase class.
    */
   function testSystemConfigForm() {
     $this->drupalGet('form-test/system-config-form');

@@ -7,9 +7,9 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\system\Tests\System\SystemConfigFormBase;
+use Drupal\system\Tests\System\SystemConfigFormTestBase;
 
-class UserAdminSettingsFormTest extends SystemConfigFormBase {
+class UserAdminSettingsFormTest extends SystemConfigFormTestBase {
 
   public static function getInfo() {
     return array(

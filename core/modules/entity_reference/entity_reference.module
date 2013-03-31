@@ -28,7 +28,8 @@ function entity_reference_field_info() {
     ),
     'default_widget' => 'entity_reference_autocomplete',
     'default_formatter' => 'entity_reference_label',
-    'field item class' => '\Drupal\Core\Entity\Field\Type\EntityReferenceItem',
+    'data_type' => 'entity_reference_configurable_field',
+    'field item class' => '\Drupal\entity_reference\Type\ConfigurableEntityReferenceItem',
   );
   return $field_info;
 }
@@ -167,11 +168,10 @@ function entity_reference_field_settings_form($field, $instance, $has_data) {
 
   $form['target_type'] = array(
     '#type' => 'select',
-    '#title' => t('Target type'),
+    '#title' => t('Type of item to reference'),
     '#options' => $entity_type_options,
     '#default_value' => $field['settings']['target_type'],
     '#required' => TRUE,
-    '#description' => t('The entity type that can be referenced through this field.'),
     '#disabled' => $has_data,
     '#size' => 1,
   );
