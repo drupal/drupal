@@ -372,16 +372,13 @@ function field_data_type_info() {
   $items = array();
 
   // Expose data types for all the field type items.
-  // @todo: Make 'field item class' mandatory.
   foreach ($field_types as $type_name => $type_info) {
-
-    if (!empty($type_info['field item class'])) {
-      $items[$type_name . '_field'] = array(
-        'label' => t('Field !label item', array('!label' => $type_info['label'])),
-        'class' => $type_info['field item class'],
-        'list class' => !empty($type_info['field class']) ? $type_info['field class'] : '\Drupal\Core\Entity\Field\Type\Field',
-      );
-    }
+    $data_type = isset($type_info['data_type']) ? $type_info['data_type'] : $type_name . '_field';
+    $items[$data_type] = array(
+      'label' => t('Field !label item', array('!label' => $type_info['label'])),
+      'class' => $type_info['field item class'],
+      'list class' => !empty($type_info['field class']) ? $type_info['field class'] : '\Drupal\Core\Entity\Field\Type\Field',
+    );
   }
   return $items;
 }
@@ -441,7 +438,7 @@ function field_entity_field_info($entity_type) {
         // @todo: Allow for adding field type settings.
         $definition = array(
           'label' => t('Field !name', array('!name' => $field_name)),
-          'type' => $field['type'] . '_field',
+          'type' => isset($field_types[$field['type']]['data_type']) ? $field_types[$field['type']]['data_type'] :  $field['type'] . '_field',
           'configurable' => TRUE,
           'translatable' => !empty($field['translatable'])
         );

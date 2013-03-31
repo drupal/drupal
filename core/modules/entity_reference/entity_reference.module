@@ -28,7 +28,8 @@ function entity_reference_field_info() {
     ),
     'default_widget' => 'entity_reference_autocomplete',
     'default_formatter' => 'entity_reference_label',
-    'field item class' => '\Drupal\Core\Entity\Field\Type\EntityReferenceItem',
+    'data_type' => 'entity_reference_configurable_field',
+    'field item class' => '\Drupal\entity_reference\Type\ConfigurableEntityReferenceItem',
   );
   return $field_info;
 }
