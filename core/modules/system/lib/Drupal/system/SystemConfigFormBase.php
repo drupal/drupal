@@ -10,6 +10,7 @@ namespace Drupal\system;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\ControllerInterface;
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\Context\ContextInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -29,9 +30,12 @@ abstract class SystemConfigFormBase implements FormInterface, ControllerInterfac
    *
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The factory for configuration objects.
+   * @param \Drupal\Core\Config\Context\ContextInterface $context
+   *   The configuration context to use.
    */
-  public function __construct(ConfigFactory $config_factory) {
+  public function __construct(ConfigFactory $config_factory, ContextInterface $context) {
     $this->configFactory = $config_factory;
+    $this->configFactory->enterContext($context);
   }
 
   /**
@@ -39,7 +43,8 @@ abstract class SystemConfigFormBase implements FormInterface, ControllerInterfac
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('config.context.free')
     );
   }
 
