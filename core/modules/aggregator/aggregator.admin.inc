@@ -306,70 +306,50 @@ function aggregator_admin_form($form, $form_state) {
     '#description' => t('A space-separated list of HTML tags allowed in the content of feed items. Disallowed tags are stripped from the content.'),
   );
 
-  // Make sure configuration is sane.
-  aggregator_sanitize_configuration();
+  $config = config('aggregator.settings');
 
-  // Get all available fetchers.
-  $fetcher_manager = drupal_container()->get('plugin.manager.aggregator.fetcher');
-  $fetchers = array();
-  foreach ($fetcher_manager->getDefinitions() as $id => $definition) {
-    $label = $definition['title'] . ' <span class="description">' . $definition['description'] . '</span>';
-    $fetchers[$id] = $label;
+  // Get all available fetchers, parsers and processors.
+  foreach (array('fetcher', 'parser', 'processor') as $type) {
+    // Initialize definitions if not set.
+    $definitions[$type] = isset($definitions[$type]) ? $definitions[$type] : array();
+    $managers[$type] = Drupal::service("plugin.manager.aggregator.$type");
+    foreach ($managers[$type]->getDefinitions() as $id => $definition) {
+      $label = $definition['title'] . ' <span class="description">' . $definition['description'] . '</span>';
+      $definitions[$type][$id] = $label;
+    }
   }
 
-  // Get all available parsers.
-  $parsers = module_implements('aggregator_parse');
-  foreach ($parsers as $k => $module) {
-    if ($info = module_invoke($module, 'aggregator_parse_info')) {
-      $label = $info['title'] . ' <span class="description">' . $info['description'] . '</span>';
-    }
-    else {
-      $label = $module;
-    }
-    unset($parsers[$k]);
-    $parsers[$module] = $label;
-  }
-
-  // Get all available processors.
-  $processors = module_implements('aggregator_process');
-  foreach ($processors as $k => $module) {
-    if ($info = module_invoke($module, 'aggregator_process_info')) {
-      $label = $info['title'] . ' <span class="description">' . $info['description'] . '</span>';
-    }
-    else {
-      $label = $module;
-    }
-    unset($processors[$k]);
-    $processors[$module] = $label;
-  }
+  // Store definitions and managers so we can access them later.
+  $form_state['definitions'] = $definitions;
+  $form_state['managers'] = $managers;
 
   // Only show basic configuration if there are actually options.
   $basic_conf = array();
-  if (count($fetchers) > 1) {
+  if (count($definitions['fetcher']) > 1) {
     $basic_conf['aggregator_fetcher'] = array(
       '#type' => 'radios',
       '#title' => t('Fetcher'),
       '#description' => t('Fetchers download data from an external source. Choose a fetcher suitable for the external source you would like to download from.'),
-      '#options' => $fetchers,
-      '#default_value' => config('aggregator.settings')->get('fetcher'),
+      '#options' => $definitions['fetcher'],
+      '#default_value' => $config->get('fetcher'),
     );
   }
-  if (count($parsers) > 1) {
+  if (count($definitions['parser']) > 1) {
     $basic_conf['aggregator_parser'] = array(
       '#type' => 'radios',
       '#title' => t('Parser'),
       '#description' => t('Parsers transform downloaded data into standard structures. Choose a parser suitable for the type of feeds you would like to aggregate.'),
-      '#options' => $parsers,
-      '#default_value' => config('aggregator.settings')->get('parser'),
+      '#options' => $definitions['parser'],
+      '#default_value' => $config->get('parser'),
     );
   }
-  if (count($processors) > 1) {
+  if (count($definitions['processor']) > 1) {
     $basic_conf['aggregator_processors'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Processors'),
       '#description' => t('Processors act on parsed feed data, for example they store feed items. Choose the processors suitable for your task.'),
-      '#options' => $processors,
-      '#default_value' => config('aggregator.settings')->get('processors'),
+      '#options' => $definitions['processor'],
+      '#default_value' => $config->get('processors'),
     );
   }
   if (count($basic_conf)) {
@@ -382,9 +362,14 @@ function aggregator_admin_form($form, $form_state) {
     $form['basic_conf'] += $basic_conf;
   }
 
-  // Implementing modules will expect an array at $form['modules'].
-  $form['modules'] = array();
-
+  // Implementing processor plugins will expect an array at $form['processors'].
+  $form['processors'] = array();
+  // Call settingsForm() for each acrive processor.
+  foreach ($definitions['processor'] as $id => $definition) {
+    if (in_array($id, $config->get('processors'))) {
+      $form = $managers['processor']->createInstance($id)->settingsForm($form, $form_state);
+    }
+  }
   return system_config_form($form, $form_state);
 }
 
@@ -393,13 +378,14 @@ function aggregator_admin_form($form, $form_state) {
  */
 function aggregator_admin_form_submit($form, &$form_state) {
   $config = config('aggregator.settings');
-  $config
-    ->set('items.allowed_html', $form_state['values']['aggregator_allowed_html_tags'])
-    ->set('items.expire', $form_state['values']['aggregator_clear'])
-    ->set('items.teaser_length', $form_state['values']['aggregator_teaser_length'])
-    ->set('source.list_max', $form_state['values']['aggregator_summary_items'])
-    ->set('source.category_selector', $form_state['values']['aggregator_category_selector']);
+  // Let active processors save their settings.
+  foreach ($form_state['definitions']['processor'] as $id => $definition) {
+    if (in_array($id, $config->get('processors'))) {
+      $form_state['managers']['processor']->createInstance($id)->settingsSubmit($form, $form_state);
+    }
+  }
 
+  $config->set('items.allowed_html', $form_state['values']['aggregator_allowed_html_tags']);
   if (isset($form_state['values']['aggregator_fetcher'])) {
     $config->set('fetcher', $form_state['values']['aggregator_fetcher']);
   }

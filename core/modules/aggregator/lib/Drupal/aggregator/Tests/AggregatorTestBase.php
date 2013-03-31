@@ -148,10 +148,10 @@ abstract class AggregatorTestBase extends WebTestBase {
    *
    * @param \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
    *   Feed object representing the feed.
-   * @param $expected_count
-   *   Expected number of feed items.
+   * @param int|null $expected_count
+   *   Expected number of feed items. If omitted no check will happen.
    */
-  function updateFeedItems(Feed $feed, $expected_count) {
+  function updateFeedItems(Feed $feed, $expected_count = NULL) {
     // First, let's ensure we can get to the rss xml.
     $this->drupalGet($feed->url->value);
     $this->assertResponse(200, format_string('!url is reachable.', array('!url' => $feed->url->value)));
@@ -171,8 +171,11 @@ abstract class AggregatorTestBase extends WebTestBase {
     foreach ($result as $item) {
       $feed->items[] = $item->iid;
     }
-    $feed->item_count = count($feed->items);
-    $this->assertEqual($expected_count, $feed->item_count, format_string('Total items in feed equal to the total items in database (!val1 != !val2)', array('!val1' => $expected_count, '!val2' => $feed->item_count)));
+
+    if ($expected_count !== NULL) {
+      $feed->item_count = count($feed->items);
+      $this->assertEqual($expected_count, $feed->item_count, format_string('Total items in feed equal to the total items in database (!val1 != !val2)', array('!val1' => $expected_count, '!val2' => $feed->item_count)));
+    }
   }
 
   /**
@@ -360,5 +363,19 @@ EOF;
       $edit["body[$langcode][0][value]"] = $this->randomName();
       $this->drupalPost('node/add/article', $edit, t('Save'));
     }
+  }
+
+  /**
+   * Enable the plugins coming with aggregator_test module.
+   */
+  function enableTestPlugins() {
+    config('aggregator.settings')
+      ->set('fetcher', 'aggregator_test_fetcher')
+      ->set('parser', 'aggregator_test_parser')
+      ->set('processors', array(
+        'aggregator_test_processor' => 'aggregator_test_processor',
+        'aggregator' => 'aggregator'
+      ))
+      ->save();
   }
 }

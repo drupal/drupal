@@ -6,6 +6,7 @@
  */
 
 use Drupal\aggregator\Plugin\Core\Entity\Feed;
+use Drupal\Component\Plugin\Exception\PluginException;
 
 /**
  * Denotes that a feed's items should never expire.
@@ -301,7 +302,7 @@ function aggregator_permission() {
  * Queues news feeds for updates once their refresh interval has elapsed.
  */
 function aggregator_cron() {
- $result = db_query('SELECT fid FROM {aggregator_feed} WHERE queued = 0 AND checked + refresh < :time AND refresh <> :never', array(
+  $result = db_query('SELECT fid FROM {aggregator_feed} WHERE queued = 0 AND checked + refresh < :time AND refresh <> :never', array(
     ':time' => REQUEST_TIME,
     ':never' => AGGREGATOR_CLEAR_NEVER
   ));
@@ -310,10 +311,8 @@ function aggregator_cron() {
     $feed = aggregator_feed_load($fid);
     if ($queue->createItem($feed)) {
       // Add timestamp to avoid queueing item more than once.
-      db_update('aggregator_feed')
-        ->fields(array('queued' => REQUEST_TIME))
-        ->condition('fid', $feed->id())
-        ->execute();
+      $feed->queued->value = REQUEST_TIME;
+      $feed->save();
     }
   }
 
@@ -395,42 +394,18 @@ function aggregator_save_category($edit) {
  *   An object describing the feed to be cleared.
  */
 function aggregator_remove(Feed $feed) {
-  _aggregator_get_variables();
-  // Call hook_aggregator_remove() on all modules.
-  module_invoke_all('aggregator_remove', $feed);
+  // Call \Drupal\aggregator\Plugin\ProcessorInterface::remove() on all
+  // processors.
+  $manager = Drupal::service('plugin.manager.aggregator.processor');
+  foreach ($manager->getDefinitions() as $id => $definition) {
+    $manager->createInstance($id)->remove($feed);
+  }
   // Reset feed.
-  db_update('aggregator_feed')
-    ->condition('fid', $feed->id())
-    ->fields(array(
-      'checked' => 0,
-      'hash' => '',
-      'etag' => '',
-      'modified' => 0,
-    ))
-    ->execute();
-}
-
-/**
- * Gets the fetcher, parser, and processors.
- *
- * @return
- *   An array containing the fetcher, parser, and processors.
- */
-function _aggregator_get_variables() {
-  $config = config('aggregator.settings');
-  $fetcher = $config->get('fetcher');
-
-  $parser = $config->get('parser');
-  if ($parser == 'aggregator') {
-    include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'aggregator') . '/aggregator.parser.inc';
-  }
-
-  $processors = $config->get('processors');
-  if (in_array('aggregator', $processors)) {
-    include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'aggregator') . '/aggregator.processor.inc';
-  }
-
-  return array($fetcher, $parser, $processors);
+  $feed->checked->value = 0;
+  $feed->hash->value = '';
+  $feed->etag->value = '';
+  $feed->modified->value = 0;
+  $feed->save();
 }
 
 /**
@@ -443,15 +418,28 @@ function aggregator_refresh(Feed $feed) {
   // Store feed URL to track changes.
   $feed_url = $feed->url->value;
 
-  list($fetcher, $parser, $processors) = _aggregator_get_variables();
-
+  $config = config('aggregator.settings');
   // Fetch the feed.
-  $fetcher_manager = drupal_container()->get('plugin.manager.aggregator.fetcher');
+  $fetcher_manager = Drupal::service('plugin.manager.aggregator.fetcher');
   try {
-    $success = $fetcher_manager->createInstance($fetcher)->fetch($feed);
+    $success = $fetcher_manager->createInstance($config->get('fetcher'))->fetch($feed);
   }
   catch (PluginException $e) {
     $success = FALSE;
+    watchdog_exception('aggregator', $e);
+  }
+
+  // Retrieve processor manager now.
+  $processor_manager = Drupal::service('plugin.manager.aggregator.processor');
+  // Store instances in an array so we dont have to instantiate new objects.
+  $processor_instances = array();
+  foreach ($config->get('processors') as $processor) {
+    try {
+      $processor_instances[$processor] = $processor_manager->createInstance($processor);
+    }
+    catch (PluginException $e) {
+      watchdog_exception('aggregator', $e);
+    }
   }
 
   // We store the hash of feed data in the database. When refreshing a
@@ -461,28 +449,34 @@ function aggregator_refresh(Feed $feed) {
 
   if ($success && ($feed->hash->value != $hash)) {
     // Parse the feed.
-    if (module_invoke($parser, 'aggregator_parse', $feed)) {
-      if (empty($feed->link->value)) {
-        $feed->link->value = $feed->url->value;
-      }
-      $feed->hash->value = $hash;
-      // Update feed with parsed data.
-      $feed->save();
+    $parser_manager = Drupal::service('plugin.manager.aggregator.parser');
+    try {
+      if ($parser_manager->createInstance($config->get('parser'))->parse($feed)) {
+        if (empty($feed->link->value)) {
+          $feed->link->value = $feed->url->value;
+        }
+        $feed->hash->value = $hash;
+        // Update feed with parsed data.
+        $feed->save();
 
-      // Log if feed URL has changed.
-      if ($feed->url->value != $feed_url) {
-        watchdog('aggregator', 'Updated URL for feed %title to %url.', array('%title' => $feed->label(), '%url' => $feed->url->value));
-      }
+        // Log if feed URL has changed.
+        if ($feed->url->value != $feed_url) {
+          watchdog('aggregator', 'Updated URL for feed %title to %url.', array('%title' => $feed->label(), '%url' => $feed->url->value));
+        }
 
-      watchdog('aggregator', 'There is new syndicated content from %site.', array('%site' => $feed->label()));
-      drupal_set_message(t('There is new syndicated content from %site.', array('%site' => $feed->label())));
+        watchdog('aggregator', 'There is new syndicated content from %site.', array('%site' => $feed->label()));
+        drupal_set_message(t('There is new syndicated content from %site.', array('%site' => $feed->label())));
 
-      // If there are items on the feed, let all enabled processors do their work on it.
-      if (@count($feed->items)) {
-        foreach ($processors as $processor) {
-          module_invoke($processor, 'aggregator_process', $feed);
+        // If there are items on the feed, let enabled processors process them.
+        if (!empty($feed->items)) {
+          foreach ($processor_instances as $instance) {
+            $instance->process($feed);
+          }
         }
       }
+    }
+    catch (PluginException $e) {
+      watchdog_exception('aggregator', $e);
     }
   }
   else {
@@ -490,14 +484,13 @@ function aggregator_refresh(Feed $feed) {
   }
 
   // Regardless of successful or not, indicate that this feed has been checked.
-  db_update('aggregator_feed')
-    ->fields(array('checked' => REQUEST_TIME, 'queued' => 0))
-    ->condition('fid', $feed->id())
-    ->execute();
+  $feed->checked->value = REQUEST_TIME;
+  $feed->queued->value = 0;
+  $feed->save();
 
-  // Expire old feed items.
-  if (function_exists('aggregator_expire')) {
-    aggregator_expire($feed);
+  // Processing is done, call postProcess on enabled processors.
+  foreach ($processor_instances as $instance) {
+    $instance->postProcess($feed);
   }
 }
 
@@ -558,55 +551,6 @@ function theme_aggregator_block_item($variables) {
  */
 function aggregator_filter_xss($value) {
   return filter_xss($value, preg_split('/\s+|<|>/', config('aggregator.settings')->get('items.allowed_html'), -1, PREG_SPLIT_NO_EMPTY));
-}
-
-/**
- * Checks and sanitizes the aggregator configuration.
- *
- * Goes through all fetchers, parsers and processors and checks whether they
- * are available. If one is missing, resets to standard configuration.
- *
- * @return
- *   TRUE if this function resets the configuration; FALSE if not.
- */
-function aggregator_sanitize_configuration() {
-  $reset = FALSE;
-  list($fetcher, $parser, $processors) = _aggregator_get_variables();
-  if (!module_exists($fetcher)) {
-    $reset = TRUE;
-  }
-  if (!module_exists($parser)) {
-    $reset = TRUE;
-  }
-  foreach ($processors as $processor) {
-    if (!module_exists($processor)) {
-      $reset = TRUE;
-      break;
-    }
-  }
-  if ($reset) {
-    // Reset aggregator config if necessary using the module defaults.
-    config('aggregator.settings')
-      ->set('fetcher', 'aggregator')
-      ->set('parser', 'aggregator')
-      ->set('processors', array('aggregator' => 'aggregator'))
-      ->save();
-    return TRUE;
-  }
-  return FALSE;
-}
-
-/**
- * Helper function for drupal_map_assoc.
- *
- * @param $count
- *   Items count.
- *
- * @return
- *   A string that is plural-formatted as "@count items".
- */
-function _aggregator_items($count) {
-  return format_plural($count, '1 item', '@count items');
 }
 
 /**
