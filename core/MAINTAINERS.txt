@@ -179,7 +179,7 @@ Module maintainers
 ------------------
 
 Aggregator module
-- ?
+- Paris Liakos 'rootatwc' http://drupal.org/user/1011436
 
 Block module
 - John Albin Wilkins 'JohnAlbin' http://drupal.org/user/32095
