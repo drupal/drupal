@@ -62,6 +62,9 @@ Drupal 7.22, xxxx-xx-xx (development version)
 - Made the default .htaccess rules protocol sensitive to improve security for
   sites which use HTTPS and redirect between "www" and non-"www" versions of
   the page.
+- Numerous small bug fixes.
+- Numerous API documentation improvements.
+- Additional automated test coverage.
 
 Drupal 7.21, 2013-03-06
 -----------------------
