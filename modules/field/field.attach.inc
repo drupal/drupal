@@ -562,6 +562,10 @@ function _field_invoke_get_instances($entity_type, $bundle, $options) {
  * @see field_form_set_state()
  */
 function field_attach_form($entity_type, $entity, &$form, &$form_state, $langcode = NULL, $options = array()) {
+  // Validate $options since this is a new parameter added after Drupal 7 was
+  // released.
+  $options = is_array($options) ? $options : array();
+
   // Set #parents to 'top-level' by default.
   $form += array('#parents' => array());
 
@@ -775,6 +779,10 @@ function field_attach_load_revision($entity_type, $entities, $options = array())
  *   details.
  */
 function field_attach_validate($entity_type, $entity, $options = array()) {
+  // Validate $options since this is a new parameter added after Drupal 7 was
+  // released.
+  $options = is_array($options) ? $options : array();
+
   $errors = array();
   // Check generic, field-type-agnostic errors first.
   $null = NULL;
@@ -827,6 +835,10 @@ function field_attach_validate($entity_type, $entity, $options = array()) {
  *   details.
  */
 function field_attach_form_validate($entity_type, $entity, $form, &$form_state, $options = array()) {
+  // Validate $options since this is a new parameter added after Drupal 7 was
+  // released.
+  $options = is_array($options) ? $options : array();
+
   // Extract field values from submitted values.
   _field_invoke_default('extract_form_values', $entity_type, $entity, $form, $form_state);
 
@@ -870,6 +882,10 @@ function field_attach_form_validate($entity_type, $entity, $form, &$form_state, 
  *   details.
  */
 function field_attach_submit($entity_type, $entity, $form, &$form_state, $options = array()) {
+  // Validate $options since this is a new parameter added after Drupal 7 was
+  // released.
+  $options = is_array($options) ? $options : array();
+
   // Extract field values from submitted values.
   _field_invoke_default('extract_form_values', $entity_type, $entity, $form, $form_state, $options);
 
@@ -1109,6 +1125,10 @@ function field_attach_delete_revision($entity_type, $entity) {
  *   details.
  */
 function field_attach_prepare_view($entity_type, $entities, $view_mode, $langcode = NULL, $options = array()) {
+  // Validate $options since this is a new parameter added after Drupal 7 was
+  // released.
+  $options = is_array($options) ? $options : array();
+
   $options['language'] = array();
 
   // To ensure hooks are only run once per entity, only process items without
@@ -1188,6 +1208,10 @@ function field_attach_prepare_view($entity_type, $entities, $view_mode, $langcod
  *   A renderable array for the field values.
  */
 function field_attach_view($entity_type, $entity, $view_mode, $langcode = NULL, $options = array()) {
+  // Validate $options since this is a new parameter added after Drupal 7 was
+  // released.
+  $options = is_array($options) ? $options : array();
+
   // Determine the actual language to display for each field, given the
   // languages available in the field data.
   $display_language = field_language($entity_type, $entity, NULL, $langcode);
