@@ -655,3 +655,92 @@ class SimpleTestOtherInstallationProfileModuleTestsTestCase extends DrupalWebTes
     $this->assertNoText('Installation profile module tests helper');
   }
 }
+
+/**
+ * Verifies that tests in other installation profiles are not found.
+ *
+ * @see SimpleTestInstallationProfileModuleTestsTestCase
+ */
+class SimpleTestDiscoveryTestCase extends DrupalWebTestCase {
+  /**
+   * Use the Testing profile.
+   *
+   * The Testing profile contains drupal_system_listing_compatible_test.test,
+   * which attempts to:
+   * - run tests using the Minimal profile (which does not contain the
+   *   drupal_system_listing_compatible_test.module)
+   * - but still install the drupal_system_listing_compatible_test.module
+   *   contained in the Testing profile.
+   *
+   * @see DrupalSystemListingCompatibleTestCase
+   */
+  protected $profile = 'testing';
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Discovery of test classes',
+      'description' => 'Verifies that tests classes are discovered and can be autoloaded (class_exists).',
+      'group' => 'SimpleTest',
+    );
+  }
+
+  function setUp() {
+    parent::setUp(array('simpletest'));
+
+    $this->admin_user = $this->drupalCreateUser(array('administer unit tests'));
+    $this->drupalLogin($this->admin_user);
+  }
+
+  /**
+   * Test discovery of PSR-0 test classes.
+   */
+  function testDiscoveryFunctions() {
+    if (version_compare(PHP_VERSION, '5.3') < 0) {
+      // Don't expect PSR-0 tests to be discovered on older PHP versions.
+      return;
+    }
+    // TODO: What if we have cached values? Do we need to force a cache refresh?
+    $classes_all = simpletest_test_get_all();
+    foreach (array(
+      'Drupal\\simpletest\\Tests\\PSR0WebTest',
+      'Drupal\\psr_0_test\\Tests\\ExampleTest',
+    ) as $class) {
+      $this->assert(!empty($classes_all['SimpleTest'][$class]), t('Class @class must be discovered by simpletest_test_get_all().', array('@class' => $class)));
+    }
+  }
+
+  /**
+   * Tests existence of test cases.
+   */
+  function testDiscovery() {
+    $this->drupalGet('admin/config/development/testing');
+    // Tests within enabled modules.
+    // (without these, this test wouldn't happen in the first place, so this is
+    // a bit pointless. We still run it for proof-of-concept.)
+    // This one is defined in system module.
+    $this->assertText('Drupal error handlers');
+    // This one is defined in simpletest module.
+    $this->assertText('Discovery of test classes');
+    // Tests within disabled modules.
+    if (version_compare(PHP_VERSION, '5.3') < 0) {
+      // Don't expect PSR-0 tests to be discovered on older PHP versions.
+      return;
+    }
+    // This one is provided by simpletest itself via PSR-0.
+    $this->assertText('PSR0 web test');
+    $this->assertText('PSR0 example test: PSR-0 in disabled modules.');
+    $this->assertText('PSR0 example test: PSR-0 in nested subfolders.');
+
+    // Test each test individually.
+    foreach (array(
+      'Drupal\\psr_0_test\\Tests\\ExampleTest',
+      'Drupal\\psr_0_test\\Tests\\Nested\\NestedExampleTest',
+    ) as $class) {
+      $this->drupalGet('admin/config/development/testing');
+      $edit = array($class => TRUE);
+      $this->drupalPost(NULL, $edit, t('Run tests'));
+      $this->assertText('The test run finished', t('Test @class must finish.', array('@class' => $class)));
+      $this->assertText('1 pass, 0 fails, and 0 exceptions', t('Test @class must pass.', array('@class' => $class)));
+    }
+  }
+}

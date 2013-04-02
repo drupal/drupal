@@ -1,6 +1,8 @@
 
 Drupal 7.22, xxxx-xx-xx (development version)
 -----------------------
+- Changed the Simpletest module to allow PSR-0 test classes to be used in
+  Drupal 7.
 - Removed an unnecessary "Content-Disposition" header from private file
   downloads; it prevented many private files from being viewed inline in a web
   browser.

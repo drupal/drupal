@@ -157,6 +157,7 @@ function simpletest_run_tests($test_list, $reporter = 'drupal') {
  * Batch operation callback.
  */
 function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
+  simpletest_classloader_register();
   // Get working values.
   if (!isset($context['sandbox']['max'])) {
     // First iteration: initialize working values.
@@ -289,6 +290,9 @@ function simpletest_log_read($test_id, $prefix, $test_class, $during_test = FALS
  * a static variable. In order to list tests provided by disabled modules
  * hook_registry_files_alter() is used to forcefully add them to the registry.
  *
+ * PSR-0 classes are found by searching the designated directory for each module
+ * for files matching the PSR-0 standard.
+ *
  * @return
  *   An array of tests keyed with the groups specified in each of the tests
  *   getInfo() method and then keyed by the test class. An example of the array
@@ -309,6 +313,9 @@ function simpletest_test_get_all() {
   $groups = &drupal_static(__FUNCTION__);
 
   if (!$groups) {
+    // Register a simple class loader for PSR-0 test classes.
+    simpletest_classloader_register();
+
     // Load test information from cache if available, otherwise retrieve the
     // information from each tests getInfo() method.
     if ($cache = cache_get('simpletest', 'cache')) {
@@ -317,6 +324,34 @@ function simpletest_test_get_all() {
     else {
       // Select all clases in files ending with .test.
       $classes = db_query("SELECT name FROM {registry} WHERE type = :type AND filename LIKE :name", array(':type' => 'class', ':name' => '%.test'))->fetchCol();
+
+      // Also discover PSR-0 test classes, if the PHP version allows it.
+      if (version_compare(PHP_VERSION, '5.3') > 0) {
+
+        // Select all PSR-0 classes in the Tests namespace of all modules.
+        $system_list = db_query("SELECT name, filename FROM {system}")->fetchAllKeyed();
+
+        foreach ($system_list as $name => $filename) {
+          // Build directory in which the test files would reside.
+          $tests_dir = DRUPAL_ROOT . '/' . dirname($filename) . '/lib/Drupal/' . $name . '/Tests';
+          // Scan it for test files if it exists.
+          if (is_dir($tests_dir)) {
+            $files = file_scan_directory($tests_dir, '/.*\.php/');
+            if (!empty($files)) {
+              $basedir = DRUPAL_ROOT . '/' . dirname($filename) . '/lib/';
+              foreach ($files as $file) {
+                // Convert the file name into the namespaced class name.
+                $replacements = array(
+                  '/' => '\\',
+                  $basedir => '',
+                  '.php' => '',
+                );
+                $classes[] = strtr($file->uri, $replacements);
+              }
+            }
+          }
+        }
+      }
 
       // Check that each class has a getInfo() method and store the information
       // in an array keyed with the group specified in the test information.
@@ -351,6 +386,78 @@ function simpletest_test_get_all() {
     }
   }
   return $groups;
+}
+
+/*
+ * Register a simple class loader that can find D8-style PSR-0 test classes.
+ *
+ * Other PSR-0 class loading can happen in contrib, but those contrib class
+ * loader modules will not be enabled when testbot runs. So we need to do this
+ * one in core.
+ */
+function simpletest_classloader_register() {
+
+  // Prevent duplicate classloader registration.
+  static $first_run = TRUE;
+  if (!$first_run) {
+    return;
+  }
+  $first_run = FALSE;
+
+  // Only register PSR-0 class loading if we are on PHP 5.3 or higher.
+  if (version_compare(PHP_VERSION, '5.3') > 0) {
+    spl_autoload_register('_simpletest_autoload_psr0');
+  }
+}
+
+/**
+ * Autoload callback to find PSR-0 test classes.
+ *
+ * This will only work on classes where the namespace is of the pattern
+ *   "Drupal\$extension\Tests\.."
+ */
+function _simpletest_autoload_psr0($class) {
+
+  // Static cache for extension paths.
+  // This cache is lazily filled as soon as it is needed.
+  static $extensions;
+
+  // Check that the first namespace fragment is "Drupal\"
+  if (substr($class, 0, 7) === 'Drupal\\') {
+    // Find the position of the second namespace separator.
+    $pos = strpos($class, '\\', 7);
+    // Check that the third namespace fragment is "\Tests\".
+    if (substr($class, $pos, 7) === '\\Tests\\') {
+
+      // Extract the second namespace fragment, which we expect to be the
+      // extension name.
+      $extension = substr($class, 7, $pos - 7);
+
+      // Lazy-load the extension paths, both enabled and disabled.
+      if (!isset($extensions)) {
+        $extensions = db_query("SELECT name, filename FROM {system}")->fetchAllKeyed();
+      }
+
+      // Check if the second namespace fragment is a known extension name.
+      if (isset($extensions[$extension])) {
+
+        // Split the class into namespace and classname.
+        $nspos = strrpos($class, '\\');
+        $namespace = substr($class, 0, $nspos);
+        $classname = substr($class, $nspos + 1);
+
+        // Build the filepath where we expect the class to be defined.
+        $path = dirname($extensions[$extension]) . '/lib/' .
+          str_replace('\\', '/', $namespace) . '/' .
+          str_replace('_', '/', $classname) . '.php';
+
+        // Include the file, if it does exist.
+        if (file_exists($path)) {
+          include $path;
+        }
+      }
+    }
+  }
 }
 
 /**
