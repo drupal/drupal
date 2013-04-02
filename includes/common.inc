@@ -785,6 +785,13 @@ function drupal_access_denied() {
  *   - data: A string containing the response body that was received.
  */
 function drupal_http_request($url, array $options = array()) {
+  // Allow an alternate HTTP client library to replace Drupal's default
+  // implementation.
+  $override_function = variable_get('drupal_http_request_function', FALSE);
+  if (!empty($override_function) && function_exists($override_function)) {
+    return $override_function($url, $options);
+  }
+
   $result = new stdClass();
 
   // Parse the URL and make sure we can handle the schema.

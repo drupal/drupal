@@ -1,6 +1,8 @@
 
 Drupal 7.22, xxxx-xx-xx (development version)
 -----------------------
+- Allowed the drupal_http_request() function to be overridden so that
+  additional HTTP request capabilities can be added by contributed modules.
 - Changed the Simpletest module to allow PSR-0 test classes to be used in
   Drupal 7.
 - Removed an unnecessary "Content-Disposition" header from private file
