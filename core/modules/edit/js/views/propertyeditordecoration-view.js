@@ -212,7 +212,8 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
       this._widthAttributeIsEmpty = true;
       this.$el
         .addClass('edit-animate-disable-width')
-        .css('width', this.$el.width());
+        .css('width', this.$el.width())
+        .css('background-color', this._getBgColor(this.$el));
     }
 
     // 2) Add padding; use animations.
@@ -243,7 +244,8 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
     if (this._widthAttributeIsEmpty) {
       this.$el
         .addClass('edit-animate-disable-width')
-        .css('width', '');
+        .css('width', '')
+        .css('background-color', '');
     }
 
     // 2) Remove padding; use animations (these will run simultaneously with)
@@ -266,6 +268,28 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
         'margin-bottom': posProp['margin-bottom'] + 10 + 'px'
       });
     }, 0);
+  },
+
+  /**
+   * Gets the background color of an element (or the inherited one).
+   *
+   * @param $e
+   *   A DOM element.
+   */
+  _getBgColor: function($e) {
+    var c;
+
+    if ($e === null || $e[0].nodeName === 'HTML') {
+      // Fallback to white.
+      return 'rgb(255, 255, 255)';
+    }
+    c = $e.css('background-color');
+    // TRICKY: edge case for Firefox' "transparent" here; this is a
+    // browser bug: https://bugzilla.mozilla.org/show_bug.cgi?id=635724
+    if (c === 'rgba(0, 0, 0, 0)' || c === 'transparent') {
+      return this._getBgColor($e.parent());
+    }
+    return c;
   },
 
   /**
