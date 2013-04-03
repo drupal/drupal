@@ -295,7 +295,7 @@ function aggregator_schema() {
  *
  * @ingroup config_upgrade
  */
-function aggregrator_update_8000() {
+function aggregator_update_8000() {
   update_variables_to_config('aggregator.settings', array(
     'aggregator_fetcher' => 'fetcher',
     'aggregator_parser' => 'parser',
