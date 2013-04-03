@@ -1,5 +1,5 @@
 
-Drupal 7.22, xxxx-xx-xx (development version)
+Drupal 7.22, 2013-04-03
 -----------------------
 - Allowed the drupal_http_request() function to be overridden so that
   additional HTTP request capabilities can be added by contributed modules.
