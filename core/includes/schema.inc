@@ -173,7 +173,7 @@ function drupal_get_installed_schema_version($module, $reset = FALSE, $array = F
   }
 
   if (!$versions) {
-    if (!$versions = drupal_container()->get('keyvalue')->get('system.schema')->getAll()) {
+    if (!$versions = Drupal::keyValue('system.schema')->getAll()) {
       $versions = array();
     }
   }
@@ -195,7 +195,7 @@ function drupal_get_installed_schema_version($module, $reset = FALSE, $array = F
  *   The new schema version.
  */
 function drupal_set_installed_schema_version($module, $version) {
-  drupal_container()->get('keyvalue')->get('system.schema')->set($module, $version);
+  Drupal::keyValue('system.schema')->set($module, $version);
   // Reset the static cache of module schema versions.
   drupal_get_installed_schema_version(NULL, TRUE);
 }

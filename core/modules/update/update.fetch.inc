@@ -35,7 +35,7 @@ function update_manual_status() {
  *   Reference to an array used for Batch API storage.
  */
 function update_fetch_data_batch(&$context) {
-  $queue = queue('update_fetch_tasks');
+  $queue = Drupal::queue('update_fetch_tasks');
   if (empty($context['sandbox']['max'])) {
     $context['finished'] = 0;
     $context['sandbox']['max'] = $queue->numberOfItems();
@@ -106,7 +106,7 @@ function update_fetch_data_finished($success, $results) {
  * Attempts to drain the queue of tasks for release history data to fetch.
  */
 function _update_fetch_data() {
-  $queue = queue('update_fetch_tasks');
+  $queue = Drupal::queue('update_fetch_tasks');
   $end = time() + config('update.settings')->get('fetch.timeout');
   while (time() < $end && ($item = $queue->claimItem())) {
     _update_process_fetch_task($item->data);
@@ -243,7 +243,7 @@ function _update_create_fetch_task($project) {
     $fetch_tasks = drupal_container()->get('keyvalue')->get('update_fetch_task')->getAll();
   }
   if (empty($fetch_tasks[$project['name']])) {
-    $queue = queue('update_fetch_tasks');
+    $queue = Drupal::queue('update_fetch_tasks');
     $queue->createItem($project);
     drupal_container()->get('keyvalue')->get('update_fetch_task')->set($project['name'], $project);
     $fetch_tasks[$project['name']] = REQUEST_TIME;

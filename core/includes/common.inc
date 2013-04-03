@@ -5024,7 +5024,7 @@ function drupal_cron_run() {
     // existing queue.
     foreach ($queues as $queue_name => $info) {
       if (isset($info['cron'])) {
-        queue($queue_name)->createQueue();
+        Drupal::queue($queue_name)->createQueue();
       }
     }
 
@@ -5054,7 +5054,7 @@ function drupal_cron_run() {
     if (isset($info['cron'])) {
       $function = $info['worker callback'];
       $end = time() + (isset($info['cron']['time']) ? $info['cron']['time'] : 15);
-      $queue = queue($queue_name);
+      $queue = Drupal::queue($queue_name);
       while (time() < $end && ($item = $queue->claimItem())) {
         $function($item->data);
         $queue->deleteItem($item);
@@ -6664,34 +6664,6 @@ function drupal_get_filetransfer_info() {
  * should be aware that an item might be handed over for processing more than
  * once (because the processing code might time out before it finishes).
  */
-
-/**
- * Instantiates and statically caches the correct class for a queue.
- *
- * The following variables can be set by variable_set or $conf overrides:
- * - queue_class_$name: The class to be used for the queue $name.
- * - queue_default_class: The class to use when queue_class_$name is not
- *   defined. Defaults to Drupal\Core\Queue\System, a reliable backend using
- *   SQL.
- * - queue_default_reliable_class: The class to use when queue_class_$name is
- *   not defined and the queue_default_class is not reliable. Defaults to
- *   Drupal\Core\Queue\System.
- *
- * @param string $name
- *   The name of the queue to work with.
- * @param bool $reliable
- *   (optional) TRUE if the ordering of items and guaranteeing every item
- *   executes at least once is important, FALSE if scalability is the main
- *   concern. Defaults to FALSE.
- *
- * @return Drupal\Core\Queue\QueueInterface
- *   The queue object for a given name.
- *
- * @see Drupal\Core\Queue\QueueInterface
- */
-function queue($name, $reliable = FALSE) {
-  return drupal_container()->get('queue')->get($name, $reliable);
-}
 
 /**
  * @} End of "defgroup queue".

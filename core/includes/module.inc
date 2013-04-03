@@ -284,7 +284,7 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
 
   $modules_installed = array();
   $modules_enabled = array();
-  $schema_store = drupal_container()->get('keyvalue')->get('system.schema');
+  $schema_store = Drupal::keyValue('system.schema');
   $module_config = config('system.module');
   $disabled_config = config('system.module.disabled');
   $module_handler = drupal_container()->get('module_handler');
@@ -567,7 +567,7 @@ function module_uninstall($module_list = array(), $uninstall_dependents = TRUE) 
   }
 
   $storage = drupal_container()->get('config.storage');
-  $schema_store = drupal_container()->get('keyvalue')->get('system.schema');
+  $schema_store = Drupal::keyValue('system.schema');
   $disabled_config = config('system.module.disabled');
   foreach ($module_list as $module) {
     // Uninstall the module.
