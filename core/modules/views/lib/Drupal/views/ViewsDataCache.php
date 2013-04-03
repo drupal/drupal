@@ -38,18 +38,11 @@ class ViewsDataCache implements DestructableInterface {
   protected $storage = array();
 
   /**
-   * The configuration factory object.
+   * An array of requested tables.
    *
-   * @var \Drupal\Core\Config\ConfigFactory
+   * @var array
    */
-  protected $config;
-
-  /**
-   * The current language code.
-   *
-   * @var string
-   */
-  protected $langcode;
+  protected $requestedTables = array();
 
   /**
    * Whether the data has been fully loaded in this request.
@@ -59,88 +52,82 @@ class ViewsDataCache implements DestructableInterface {
   protected $fullyLoaded = FALSE;
 
   /**
+   * Whether views data has been rebuilt. This is set when getData() doesn't
+   * return anything from cache.
+   *
+   * @var bool
+   */
+  protected $rebuildAll = FALSE;
+
+  /**
    * Whether or not to skip data caching and rebuild data each time.
    *
    * @var bool
    */
-  protected $skipCache;
+  protected $skipCache = FALSE;
 
   /**
-   * Whether the cache should be rebuilt. This is set when getData() is called.
+   * The current language code.
    *
-   * @var bool
+   * @var string
    */
-  protected $rebuildCache;
+  protected $langcode;
 
   public function __construct(CacheBackendInterface $cache_backend, ConfigFactory $config) {
-    $this->config = $config;
     $this->cacheBackend = $cache_backend;
 
     $this->langcode = language(LANGUAGE_TYPE_INTERFACE)->langcode;
-    $this->skipCache = $this->config->get('views.settings')->get('skip_cache');
+    $this->skipCache = $config->get('views.settings')->get('skip_cache');
   }
 
   /**
-   * Gets cached data for a particular key, or rebuilds if necessary.
+   * Gets data for a particular table, or all tables.
    *
    * @param string|null $key
-   *   The key of the cache entry to retrieve. Defaults to NULL.
+   *   The key of the cache entry to retrieve. Defaults to NULL, this will
+   *   return all table data.
    *
    * @return array $data
-   *   The cached data.
+   *   An array of table data.
    */
   public function get($key = NULL) {
     if ($key) {
+      $from_cache = FALSE;
       if (!isset($this->storage[$key])) {
+        // Prepare a cache ID.
         $cid = $this->baseCid . ':' . $key;
-        $data = $this->cacheGet($cid);
-        if (!empty($data->data)) {
+
+        if ($data = $this->cacheGet($cid)) {
           $this->storage[$key] = $data->data;
+          $from_cache = TRUE;
         }
-        else {
-          // No cache entry, rebuild.
+        // If there is no cached entry and data is not already fully loaded,
+        // rebuild. This will stop requests for invalid tables calling getData.
+        elseif (!$this->fullyLoaded) {
           $this->storage = $this->getData();
-          $this->fullyLoaded = TRUE;
         }
       }
+
       if (isset($this->storage[$key])) {
+        if (!$from_cache) {
+          // Add this table to a list of requested tables, as it's table cache
+          // entry was not found.
+          array_push($this->requestedTables, $key);
+        }
+
         return $this->storage[$key];
       }
+
       // If the key is invalid, return an empty array.
       return array();
     }
     else {
       if (!$this->fullyLoaded) {
-        $data = $this->cacheGet($this->baseCid);
-        if (!empty($data->data)) {
-          $this->storage = $data->data;
-        }
-        else {
-          $this->storage = $this->getData();
-        }
-        $this->fullyLoaded = TRUE;
+        $this->storage = $this->getData();
       }
     }
 
     return $this->storage;
-  }
-
-  /**
-   * Sets the data in the cache backend for a cache key.
-   *
-   * @param string $key
-   *   The cache key to set.
-   * @param mixed $value
-   *   The value to set for this key.
-   */
-  public function set($key, $value) {
-    if ($this->skipCache) {
-      return FALSE;
-    }
-
-    $key .= ':' . $this->langcode;
-
-    $this->cacheBackend->set($key, $value);
   }
 
   /**
@@ -158,26 +145,47 @@ class ViewsDataCache implements DestructableInterface {
       return FALSE;
     }
 
-    $cid .= ':' . $this->langcode;
+    return $this->cacheBackend->get($this->prepareCid($cid));
+  }
 
-    return $this->cacheBackend->get($cid);
+  /**
+   * Prepares the cache ID by appending a language code.
+   *
+   * @param string $cid
+   *   The cache ID to prepare.
+   *
+   * @return string
+   *   The prepared cache ID.
+   */
+  protected function prepareCid($cid) {
+    return $cid . ':' . $this->langcode;
   }
 
   /**
    * Gets all data invoked by hook_views_data().
    *
+   * This is requested from the cache before being rebuilt.
+   *
    * @return array
    *   An array of all data.
    */
   protected function getData() {
-    $data = module_invoke_all('views_data');
-    drupal_alter('views_data', $data);
+    $this->fullyLoaded = TRUE;
 
-    $this->processEntityTypes($data);
+    if ($data = $this->cacheGet($this->baseCid)) {
+      return $data->data;
+    }
+    else {
+      $data = module_invoke_all('views_data');
+      drupal_alter('views_data', $data);
 
-    $this->rebuildCache = TRUE;
+      $this->processEntityTypes($data);
 
-    return $data;
+      // Set as TRUE, so all table data will be cached.
+      $this->rebuildAll = TRUE;
+
+      return $data;
+    }
   }
 
   /**
@@ -245,13 +253,16 @@ class ViewsDataCache implements DestructableInterface {
    * Implements \Drupal\Core\DestructableInterface::destruct().
    */
   public function destruct() {
-    if ($this->rebuildCache && !empty($this->storage)) {
-      // Keep a record with all data.
-      $this->set($this->baseCid, $this->storage);
-      // Save data in seperate cache entries.
-      foreach ($this->storage as $table => $data) {
+    if (!empty($this->storage) && !$this->skipCache) {
+      if ($this->rebuildAll) {
+        // Keep a record with all data.
+        $this->cacheBackend->set($this->prepareCid($this->baseCid), $this->storage);
+      }
+
+      // Save data in seperate, per table cache entries.
+      foreach ($this->requestedTables as $table) {
         $cid = $this->baseCid . ':' . $table;
-        $this->set($cid, $data);
+        $this->cacheBackend->set($this->prepareCid($cid), $this->storage[$table]);
       }
     }
   }
@@ -261,6 +272,7 @@ class ViewsDataCache implements DestructableInterface {
    */
   public function clear() {
     $this->storage = array();
+    $this->fullyLoaded = FALSE;
     $this->cacheBackend->deleteAll();
   }
 }
