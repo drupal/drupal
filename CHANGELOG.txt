@@ -1,4 +1,7 @@
 
+Drupal 7.23, xxxx-xx-xx (development version)
+-----------------------
+
 Drupal 7.22, 2013-04-03
 -----------------------
 - Allowed the drupal_http_request() function to be overridden so that
