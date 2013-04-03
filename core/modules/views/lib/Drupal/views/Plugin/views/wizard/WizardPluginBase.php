@@ -623,7 +623,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     // Build the basic view properties and create the view.
     $values = array(
       'id' => $form_state['values']['id'],
-      'human_name' => $form_state['values']['human_name'],
+      'label' => $form_state['values']['label'],
       'description' => $form_state['values']['description'],
       'base_table' => $this->base_table,
       'langcode' => language_default()->langcode,

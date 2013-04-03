@@ -99,6 +99,6 @@ display:
     display_title: Master
     id: default
     position: '0'
-human_name: test_user_relationship
+label: test_user_relationship
 id: test_user_relationship
 tag: default

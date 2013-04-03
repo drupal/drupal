@@ -2,7 +2,7 @@ base_table: views_test_data
 id: test_view_status
 description: ''
 tag: ''
-human_name: test_view_status
+label: test_view_status
 core: 8.x
 display:
   default:

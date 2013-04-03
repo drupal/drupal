@@ -60,7 +60,7 @@ display:
     display_options:
       displays:
         page_1: page_1
-human_name: test_display_attachment
+label: test_display_attachment
 module: views
 id: test_display_attachment
 tag: ''

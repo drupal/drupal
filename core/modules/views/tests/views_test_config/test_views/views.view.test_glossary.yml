@@ -44,6 +44,6 @@ display:
     display_title: Master
     id: default
     position: '0'
-human_name: test_glossary
+label: test_glossary
 id: test_glossary
 tag: default

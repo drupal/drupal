@@ -44,7 +44,7 @@ class SettingsTest extends UITestBase {
     $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
 
     $view = array();
-    $view['human_name'] = $this->randomName(16);
+    $view['label'] = $this->randomName(16);
     $view['id'] = strtolower($this->randomName(16));
     $view['description'] = $this->randomName(16);
     $view['page[create]'] = TRUE;

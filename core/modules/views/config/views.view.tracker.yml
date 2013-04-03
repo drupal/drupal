@@ -155,7 +155,7 @@ display:
       menu:
         type: normal
         title: 'Recent posts'
-human_name: Tracker
+label: Tracker
 module: node
 id: tracker
 tag: default

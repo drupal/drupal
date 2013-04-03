@@ -1134,7 +1134,7 @@ function views_get_views_as_options($views_only = FALSE, $filter = 'all', $exclu
     $id = $view->id();
     // Return only views.
     if ($views_only && $id != $exclude_view_name) {
-      $options[$id] = $view->getHumanName();
+      $options[$id] = $view->label();
     }
     // Return views with display ids.
     else {

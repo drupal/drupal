@@ -30,14 +30,14 @@ class BasicTest extends WizardTestBase {
 
     // Create a simple and not at all useful view.
     $view1 = array();
-    $view1['human_name'] = $this->randomName(16);
+    $view1['label'] = $this->randomName(16);
     $view1['id'] = strtolower($this->randomName(16));
     $view1['description'] = $this->randomName(16);
     $view1['page[create]'] = FALSE;
     $this->drupalPost('admin/structure/views/add', $view1, t('Save and edit'));
     $this->assertResponse(200);
     $this->drupalGet('admin/structure/views');
-    $this->assertText($view1['human_name']);
+    $this->assertText($view1['label']);
     $this->assertText($view1['description']);
     // @todo For now, clone is being left to config.module to solve.
     foreach (array('delete', 'edit') as $operation) {
@@ -46,7 +46,7 @@ class BasicTest extends WizardTestBase {
 
     // This view should not have a block.
     $this->drupalGet('admin/structure/block');
-    $this->assertNoText('View: ' . $view1['human_name']);
+    $this->assertNoText('View: ' . $view1['label']);
 
     // Create two nodes.
     $node1 = $this->drupalCreateNode(array('type' => 'page'));
@@ -54,7 +54,7 @@ class BasicTest extends WizardTestBase {
 
     // Now create a page with simple node listing and an attached feed.
     $view2 = array();
-    $view2['human_name'] = $this->randomName(16);
+    $view2['label'] = $this->randomName(16);
     $view2['id'] = strtolower($this->randomName(16));
     $view2['description'] = $this->randomName(16);
     $view2['page[create]'] = 1;
@@ -86,17 +86,17 @@ class BasicTest extends WizardTestBase {
 
     // Go back to the views page and check if this view is there.
     $this->drupalGet('admin/structure/views');
-    $this->assertText($view2['human_name']);
+    $this->assertText($view2['label']);
     $this->assertText($view2['description']);
     $this->assertLinkByHref(url($view2['page[path]']));
 
     // This view should not have a block.
     $this->drupalGet('admin/structure/block');
-    $this->assertNoText('View: ' . $view2['human_name']);
+    $this->assertNoText('View: ' . $view2['label']);
 
     // Create a view with a page and a block, and filter the listing.
     $view3 = array();
-    $view3['human_name'] = $this->randomName(16);
+    $view3['label'] = $this->randomName(16);
     $view3['id'] = strtolower($this->randomName(16));
     $view3['description'] = $this->randomName(16);
     $view3['show[wizard_key]'] = 'node';
@@ -118,13 +118,13 @@ class BasicTest extends WizardTestBase {
 
     // Go back to the views page and check if this view is there.
     $this->drupalGet('admin/structure/views');
-    $this->assertText($view3['human_name']);
+    $this->assertText($view3['label']);
     $this->assertText($view3['description']);
     $this->assertLinkByHref(url($view3['page[path]']));
 
     // Confirm that the block is available in the block administration UI.
     $this->drupalGet('admin/structure/block/list/block_plugin_ui:' . config('system.theme')->get('default') . '/add');
-    $this->assertText('View: ' . $view3['human_name']);
+    $this->assertText('View: ' . $view3['label']);
 
     // Place the block.
     $this->drupalPlaceBlock("views_block:{$view3['id']}-block_1");
@@ -147,7 +147,7 @@ class BasicTest extends WizardTestBase {
   protected function testWizardForm() {
     $this->drupalGet('admin/structure/views/add');
 
-    $result = $this->xpath('//small[@id = "edit-human-name-machine-name-suffix"]');
+    $result = $this->xpath('//small[@id = "edit-label-machine-name-suffix"]');
     $this->assertTrue(count($result), 'Ensure that the machine name is applied to the name field.');
   }
 }

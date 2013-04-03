@@ -37,7 +37,7 @@ class ViewAddFormController extends ViewFormControllerBase {
       '#attributes' => array('class' => array('fieldset-no-legend')),
     );
 
-    $form['name']['human_name'] = array(
+    $form['name']['label'] = array(
       '#type' => 'textfield',
       '#title' => t('View name'),
       '#required' => TRUE,
@@ -50,7 +50,7 @@ class ViewAddFormController extends ViewFormControllerBase {
       '#maxlength' => 128,
       '#machine_name' => array(
         'exists' => 'views_get_view',
-        'source' => array('name', 'human_name'),
+        'source' => array('name', 'label'),
       ),
       '#description' => t('A unique machine-readable name for this View. It must only contain lowercase letters, numbers, and underscores.'),
     );

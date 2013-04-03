@@ -21,7 +21,7 @@ views.view.*:
       label: 'Base table'
     base_field:
       label: 'Base field'
-    human_name:
+    label:
       type: label
       label: 'Human readable name'
     core:

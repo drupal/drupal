@@ -151,6 +151,6 @@ display:
     position: ''
     display_options:
       path: test-views-handler-field-role
-human_name: test_views_handler_field_role
+label: test_views_handler_field_role
 id: test_views_handler_field_role
 tag: ''

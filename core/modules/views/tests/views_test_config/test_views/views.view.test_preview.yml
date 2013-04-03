@@ -56,7 +56,7 @@ display:
           title_enable: '0'
           title: ''
           plugin_id: numeric
-human_name: test_preview
+label: test_preview
 module: views
 id: test_preview
 tag: ''

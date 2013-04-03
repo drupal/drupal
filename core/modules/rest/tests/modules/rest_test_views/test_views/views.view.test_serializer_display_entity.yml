@@ -2,7 +2,7 @@ base_table: entity_test
 id: test_serializer_display_entity
 description: ''
 tag: ''
-human_name: 'Test serialize display entity rows'
+label: 'Test serialize display entity rows'
 core: 8.x
 display:
   default:

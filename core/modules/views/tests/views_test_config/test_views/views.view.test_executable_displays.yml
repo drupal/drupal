@@ -23,7 +23,7 @@ display:
         style: '0'
       style:
         type: grid
-human_name: ''
+label: ''
 langcode: en
 id: test_executable_displays
 tag: ''

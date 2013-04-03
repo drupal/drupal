@@ -88,7 +88,7 @@ display:
     display_title: Page
     id: page
     position: '0'
-human_name: test_feed_display
+label: test_feed_display
 module: views
 id: test_feed_display
 tag: default

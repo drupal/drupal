@@ -33,7 +33,7 @@ class ViewStorageTest extends ViewUnitTestBase {
     'description',
     'tag',
     'base_table',
-    'human_name',
+    'label',
     'core',
     'display',
   );
@@ -356,7 +356,7 @@ class ViewStorageTest extends ViewUnitTestBase {
       'description',
       'tag',
       'base_table',
-      'human_name',
+      'label',
       'core',
     );
 

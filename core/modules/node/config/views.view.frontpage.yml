@@ -148,7 +148,7 @@ display:
       displays:
         page_1: page_1
         default: '0'
-human_name: Frontpage
+label: Frontpage
 module: node
 id: frontpage
 tag: ''

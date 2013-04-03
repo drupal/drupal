@@ -113,6 +113,6 @@ display:
     display_title: Page
     id: page
     position: '0'
-human_name: test_filter_groups
+label: test_filter_groups
 id: test_filter_groups
 tag: default

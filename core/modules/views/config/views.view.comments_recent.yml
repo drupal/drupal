@@ -129,7 +129,7 @@ display:
       query:
         type: views_query
         options: {  }
-human_name: 'Recent comments'
+label: 'Recent comments'
 module: comment
 id: comments_recent
 tag: default

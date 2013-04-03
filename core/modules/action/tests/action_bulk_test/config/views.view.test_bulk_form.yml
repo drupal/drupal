@@ -2,7 +2,7 @@ base_table: node
 id: test_bulk_form
 description: ''
 tag: ''
-human_name: form
+label: form
 core: 8.x
 display:
   default:

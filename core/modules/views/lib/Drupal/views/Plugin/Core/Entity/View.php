@@ -34,7 +34,7 @@ use Drupal\Core\Annotation\Translation;
  *   fieldable = FALSE,
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "human_name",
+ *     "label" = "label",
  *     "uuid" = "uuid",
  *     "status" = "status"
  *   }
@@ -57,6 +57,11 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   public $id = NULL;
 
   /**
+   * The label of the view.
+   */
+  protected $label;
+
+  /**
    * The description of the view, which is used only in the interface.
    *
    * @var string
@@ -72,13 +77,6 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    * @var string
    */
   protected $tag = '';
-
-  /**
-   * The human readable name of the view.
-   *
-   * @var string
-   */
-  public $human_name = '';
 
   /**
    * The core version the view was created for.
@@ -160,15 +158,15 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   }
 
   /**
-   * Return the human readable name for a view.
+   * Overrides \Drupal\Core\Entity\Entity::label().
    *
-   * When a certain view doesn't have a human readable name return the machine readable name.
+   * When a certain view doesn't have a label return the ID.
    */
-  public function getHumanName() {
-    if (!$human_name = $this->get('human_name')) {
-      $human_name = $this->id();
+  public function label($langcode = NULL) {
+    if (!$label = $this->get('label')) {
+      $label = $this->id();
     }
-    return $human_name;
+    return $label;
   }
 
   /**
@@ -361,7 +359,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
       'description',
       'status',
       'display',
-      'human_name',
+      'label',
       'module',
       'id',
       'tag',

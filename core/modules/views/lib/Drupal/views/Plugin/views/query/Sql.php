@@ -1515,7 +1515,7 @@ class Sql extends QueryPluginBase {
           drupal_set_message($e->getMessage(), 'error');
         }
         else {
-          throw new DatabaseExceptionWrapper(format_string('Exception in @human_name[@view_name]: @message', array('@human_name' => $view->storage->getHumanName(), '@view_name' => $view->storage->id(), '@message' => $e->getMessage())));
+          throw new DatabaseExceptionWrapper(format_string('Exception in @label[@view_name]: @message', array('@label' => $view->storage->label(), '@view_name' => $view->storage->id(), '@message' => $e->getMessage())));
         }
       }
 

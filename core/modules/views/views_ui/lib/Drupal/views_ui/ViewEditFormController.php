@@ -268,7 +268,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     }
 
     $view->save();
-    drupal_set_message(t('The view %name has been saved.', array('%name' => $view->getHumanName())));
+    drupal_set_message(t('The view %name has been saved.', array('%name' => $view->label())));
 
     // Remove this view from cache so we can edit it properly.
     drupal_container()->get('user.tempstore')->get('views')->delete($view->id());

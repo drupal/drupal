@@ -76,7 +76,7 @@ display:
             all: all
             test_bundle: test_bundle
             test_bundle_2: test_bundle_2
-human_name: ''
+label: ''
 id: test_entity_type_filter
 tag: ''
 base_field: nid

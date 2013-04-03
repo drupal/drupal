@@ -50,7 +50,7 @@ display:
       field:
         title:
           link_to_node: '1'
-human_name: test_view_block2
+label: test_view_block2
 module: views
 id: test_view_block2
 tag: ''

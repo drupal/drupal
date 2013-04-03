@@ -96,7 +96,7 @@ class ModuleTest extends ViewUnitTestBase {
     $this->assertIdentical(array_keys($all_views), array_keys(views_get_views_as_options(TRUE)), 'Expected option keys for all views were returned.');
     $expected_options = array();
     foreach ($all_views as $id => $view) {
-      $expected_options[$id] = $view->getHumanName();
+      $expected_options[$id] = $view->label();
     }
     $this->assertIdentical($expected_options, views_get_views_as_options(TRUE), 'Expected options array was returned.');
 

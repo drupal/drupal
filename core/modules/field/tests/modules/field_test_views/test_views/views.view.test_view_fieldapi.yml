@@ -34,6 +34,6 @@ display:
     display_title: Master
     id: default
     position: '0'
-human_name: test_view_fieldapi
+label: test_view_fieldapi
 id: test_view_fieldapi
 tag: default

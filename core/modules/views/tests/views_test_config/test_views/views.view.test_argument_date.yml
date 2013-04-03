@@ -100,6 +100,6 @@ display:
           plugin_id: date_year_month
     display_plugin: embed
     id: embed_5
-human_name: ''
+label: ''
 id: test_argument_date
 tag: ''
