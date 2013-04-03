@@ -13,6 +13,12 @@ use Drupal\simpletest\WebTestBase;
  * Tests class loading.
  */
 class ClassLoaderTest extends WebTestBase {
+
+  /**
+   * The expected result from calling the module-provided class' method.
+   */
+  protected $expected = 'Drupal\\module_autoload_test\\SomeClass::testMethod() was invoked.';
+
   public static function getInfo() {
     return array(
       'name' => 'Module class loader',
@@ -23,24 +29,33 @@ class ClassLoaderTest extends WebTestBase {
 
   /**
    * Tests that module-provided classes can be loaded when a module is enabled.
+   *
+   * @see \Drupal\module_autoload_test\SomeClass
    */
   function testClassLoading() {
-    $expected = 'Drupal\\module_autoload_test\\SomeClass::testMethod() was invoked.';
-
+    // Enable the module_test and module_autoload_test modules.
     module_enable(array('module_test', 'module_autoload_test'), FALSE);
     $this->resetAll();
     // Check twice to test an unprimed and primed system_list() cache.
     for ($i=0; $i<2; $i++) {
       $this->drupalGet('module-test/class-loading');
-      $this->assertText($expected, 'Autoloader loads classes from an enabled module.');
+      $this->assertText($this->expected, 'Autoloader loads classes from an enabled module.');
     }
+  }
 
+  /**
+   * Tests that module-provided classes can't be loaded from disabled modules.
+   *
+   * @see \Drupal\module_autoload_test\SomeClass
+   */
+  function testClassLoadingDisabledModules() {
+    // Ensure that module_autoload_test is disabled.
     module_disable(array('module_autoload_test'), FALSE);
     $this->resetAll();
     // Check twice to test an unprimed and primed system_list() cache.
     for ($i=0; $i<2; $i++) {
       $this->drupalGet('module-test/class-loading');
-      $this->assertNoText($expected, 'Autoloader does not load classes from a disabled module.');
+      $this->assertNoText($this->expected, 'Autoloader does not load classes from a disabled module.');
     }
   }
 }

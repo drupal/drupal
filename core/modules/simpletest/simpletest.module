@@ -526,19 +526,19 @@ function simpletest_classloader_register() {
     $matches = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.' . $info['extension'] . '$/', $info['dir']);
     foreach ($matches as $name => $file) {
       drupal_classloader_register($name, dirname($file->uri));
-      drupal_classloader()->registerNamespace('Drupal\\' . $name . '\\Tests', DRUPAL_ROOT . '/' . dirname($file->uri) . '/tests');
+      drupal_classloader()->addPrefix('Drupal\\' . $name . '\\Tests', DRUPAL_ROOT . '/' . dirname($file->uri) . '/tests');
       // While being there, prime drupal_get_filename().
       drupal_get_filename($type, $name, $file->uri);
     }
   }
 
   // Register the core test directory so we can find Drupal\UnitTestCase.
-  drupal_classloader()->registerNamespace('Drupal\\Tests', DRUPAL_ROOT . '/core/tests');
+  drupal_classloader()->addPrefix('Drupal\\Tests', DRUPAL_ROOT . '/core/tests');
 
   // Manually register phpunit prefixes because they use a classmap instead of a
   // prefix. This can be safely removed if we move to using composer's
   // autoloader with a classmap.
-  drupal_classloader()->registerPrefixes(array(
+  drupal_classloader()->addPrefixes(array(
     'PHPUnit' => DRUPAL_ROOT . '/core/vendor/phpunit/phpunit',
     'File_Iterator' => DRUPAL_ROOT . '/core/vendor/phpunit/php-file-iterator/',
     'PHP_Timer' => DRUPAL_ROOT . '/core/vendor/phpunit/php-timer/',

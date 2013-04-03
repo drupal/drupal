@@ -11,7 +11,7 @@ use Drupal\Component\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\CoreBundle;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Symfony\Component\ClassLoader\UniversalClassLoader;
+use Symfony\Component\ClassLoader\ClassLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
@@ -67,7 +67,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
   /**
    * The classloader object.
    *
-   * @var \Symfony\Component\ClassLoader\UniversalClassLoader
+   * @var \Symfony\Component\ClassLoader\ClassLoader
    */
   protected $classLoader;
 
@@ -110,7 +110,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
    *   Boolean indicating whether we are in debug mode. Used by
    *   Symfony\Component\HttpKernel\Kernel::__construct(). Drupal does not use
    *   this value currently. Pass TRUE.
-   * @param \Symfony\Component\ClassLoader\UniversalClassLoader $class_loader
+   * @param \Symfony\Component\ClassLoader\ClassLoader $class_loader
    *   (optional) The classloader is only used if $storage is not given or
    *   the load from storage fails and a container rebuild is required. In
    *   this case, the loaded modules will be registered with this loader in
@@ -119,7 +119,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
    *   (optional) FALSE to stop the container from being written to or read
    *   from disk. Defaults to TRUE.
    */
-  public function __construct($environment, $debug, UniversalClassLoader $class_loader, $allow_dumping = TRUE) {
+  public function __construct($environment, $debug, ClassLoader $class_loader, $allow_dumping = TRUE) {
     parent::__construct($environment, $debug);
     $this->classLoader = $class_loader;
     $this->allowDumping = $allow_dumping;
@@ -294,7 +294,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
       // All namespaces must be registered before we attempt to use any service
       // from the container.
       $container_modules = $this->container->getParameter('container.modules');
-      $namespaces_before = $this->classLoader->getNamespaces();
+      $namespaces_before = $this->classLoader->getPrefixes();
       $this->registerNamespaces($this->getModuleNamespaces($container_modules));
 
       // If 'container.modules' is wrong, the container must be rebuilt.
@@ -308,9 +308,9 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
         // registerNamespaces() performs a merge rather than replace, so to
         // effectively remove erroneous registrations, we must replace them with
         // empty arrays.
-        $namespaces_after = $this->classLoader->getNamespaces();
+        $namespaces_after = $this->classLoader->getPrefixes();
         $namespaces_before += array_fill_keys(array_diff(array_keys($namespaces_after), array_keys($namespaces_before)), array());
-        $this->classLoader->registerNamespaces($namespaces_before);
+        $this->registerNamespaces($namespaces_before);
       }
     }
 
@@ -376,7 +376,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     $container->setParameter('container.namespaces', $namespaces);
 
     // Register synthetic services.
-    $container->register('class_loader', 'Symfony\Component\ClassLoader\UniversalClassLoader')->setSynthetic(TRUE);
+    $container->register('class_loader', 'Symfony\Component\ClassLoader\ClassLoader')->setSynthetic(TRUE);
     $container->register('kernel', 'Symfony\Component\HttpKernel\KernelInterface')->setSynthetic(TRUE);
     $container->register('service_container', 'Symfony\Component\DependencyInjection\ContainerInterface')->setSynthetic(TRUE);
     foreach ($this->bundles as $bundle) {
@@ -474,8 +474,6 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
    * Registers a list of namespaces.
    */
   protected function registerNamespaces(array $namespaces = array()) {
-    foreach ($namespaces as $namespace => $dir) {
-      $this->classLoader->registerNamespace($namespace, $dir);
-    }
+    $this->classLoader->addPrefixes($namespaces);
   }
 }

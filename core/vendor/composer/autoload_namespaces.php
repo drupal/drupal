@@ -6,6 +6,9 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Drupal\\Driver' => $baseDir . '/../drivers/lib/',
+    'Drupal\\Core' => $baseDir . '/lib/',
+    'Drupal\\Component' => $baseDir . '/lib/',
     'Twig_' => $vendorDir . '/twig/twig/lib/',
     'Symfony\\Component\\Yaml\\' => $vendorDir . '/symfony/yaml/',
     'Symfony\\Component\\Validator\\' => $vendorDir . '/symfony/validator/',
