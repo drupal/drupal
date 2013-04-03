@@ -589,7 +589,7 @@ class Select extends Query implements SelectInterface {
   public function countQuery() {
     $count = $this->prepareCountQuery();
 
-    $query = $this->connection->select($count);
+    $query = $this->connection->select($count, NULL, $this->queryOptions);
     $query->addExpression('COUNT(*)');
 
     return $query;

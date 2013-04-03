@@ -376,4 +376,40 @@ class SelectTest extends DatabaseTestBase {
     $alias2 = $query->addField('t', 'age', 'the_alias');
     $this->assertNotIdentical($alias1, $alias2, 'Duplicate aliases are renamed.');
   }
+
+  /**
+   * Tests that an invalid merge query throws an exception.
+   */
+  function testInvalidSelectCount() {
+    try {
+      // This query will fail because the table does not exist.
+      // Normally it would throw an exception but we are supressing
+      // it with the throw_exception option.
+      $options['throw_exception'] = FALSE;
+      db_select('some_table_that_doesnt_exist', 't', $options)
+        ->fields('t')
+        ->countQuery()
+        ->execute();
+
+      $this->pass('$options[\'throw_exception\'] is FALSE, no Exception thrown.');
+    }
+    catch (\Exception $e) {
+      $this->fail('$options[\'throw_exception\'] is FALSE, but Exception thrown for invalid query.');
+      return;
+    }
+
+    try {
+      // This query will fail because the table does not exist.
+      db_select('some_table_that_doesnt_exist', 't')
+        ->fields('t')
+        ->countQuery()
+        ->execute();
+    }
+    catch (\Exception $e) {
+      $this->pass('Exception thrown for invalid query.');
+      return;
+    }
+    $this->fail('No Exception thrown.');
+  }
+
 }

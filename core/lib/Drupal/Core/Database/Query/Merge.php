@@ -403,42 +403,57 @@ class Merge extends Query implements ConditionInterface {
   }
 
   public function execute() {
-    if (!count($this->condition)) {
-      throw new InvalidMergeQueryException(t('Invalid merge query: no conditions'));
-    }
-    $select = $this->connection->select($this->conditionTable)
-      ->condition($this->condition);
-    $select->addExpression('1');
-    if (!$select->execute()->fetchField()) {
-      try {
-        $insert = $this->connection->insert($this->table)->fields($this->insertFields);
-        if ($this->defaultFields) {
-          $insert->useDefaults($this->defaultFields);
-        }
-        $insert->execute();
-        return self::STATUS_INSERT;
+    // Default options for merge queries.
+    $this->queryOptions += array(
+      'throw_exception' => TRUE,
+    );
+
+    try {
+      if (!count($this->condition)) {
+        throw new InvalidMergeQueryException(t('Invalid merge query: no conditions'));
       }
-      catch (IntegrityConstraintViolationException $e) {
-        // The insert query failed, maybe it's because a racing insert query
-        // beat us in inserting the same row. Retry the select query, if it
-        // returns a row, ignore the error and continue with the update
-        // query below.
-        if (!$select->execute()->fetchField()) {
-          throw $e;
-        }
-      }
-    }
-    if ($this->needsUpdate) {
-      $update = $this->connection->update($this->table)
-        ->fields($this->updateFields)
+      $select = $this->connection->select($this->conditionTable)
         ->condition($this->condition);
-      if ($this->expressionFields) {
-        foreach ($this->expressionFields as $field => $data) {
-          $update->expression($field, $data['expression'], $data['arguments']);
+      $select->addExpression('1');
+      if (!$select->execute()->fetchField()) {
+        try {
+          $insert = $this->connection->insert($this->table)->fields($this->insertFields);
+          if ($this->defaultFields) {
+            $insert->useDefaults($this->defaultFields);
+          }
+          $insert->execute();
+          return self::STATUS_INSERT;
+        }
+        catch (IntegrityConstraintViolationException $e) {
+          // The insert query failed, maybe it's because a racing insert query
+          // beat us in inserting the same row. Retry the select query, if it
+          // returns a row, ignore the error and continue with the update
+          // query below.
+          if (!$select->execute()->fetchField()) {
+            throw $e;
+          }
         }
       }
-      $update->execute();
-      return self::STATUS_UPDATE;
+      if ($this->needsUpdate) {
+        $update = $this->connection->update($this->table)
+          ->fields($this->updateFields)
+          ->condition($this->condition);
+        if ($this->expressionFields) {
+          foreach ($this->expressionFields as $field => $data) {
+            $update->expression($field, $data['expression'], $data['arguments']);
+          }
+        }
+        $update->execute();
+        return self::STATUS_UPDATE;
+      }
+    }
+    catch (\Exception $e) {
+      if ($this->queryOptions['throw_exception']) {
+        throw $e;
+      }
+      else {
+        return NULL;
+      }
     }
   }
 }

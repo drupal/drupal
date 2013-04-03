@@ -208,7 +208,25 @@ class MergeTest extends DatabaseTestBase {
    */
   function testInvalidMerge() {
     try {
-      // This query should die because there is no key field specified.
+      // This query will fail because there is no key field specified.
+      // Normally it would throw an exception but we are supressing it with
+      // the throw_exception option.
+      $options['throw_exception'] = FALSE;
+      db_merge('test_people', $options)
+        ->fields(array(
+          'age' => 31,
+          'name' => 'Tiffany',
+        ))
+        ->execute();
+      $this->pass('$options[\'throw_exception\'] is FALSE, no InvalidMergeQueryException thrown.');
+    }
+    catch (InvalidMergeQueryException $e) {
+      $this->fail('$options[\'throw_exception\'] is FALSE, but InvalidMergeQueryException thrown for invalid query.');
+      return;
+    }
+
+    try {
+      // This query will fail because there is no key field specified.
       db_merge('test_people')
         ->fields(array(
           'age' => 31,
