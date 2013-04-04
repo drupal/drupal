@@ -52,6 +52,8 @@ class ContactFieldsTest extends ViewTestBase {
       'bundle' => 'contact_message',
     );
     field_create_instance($instance);
+
+    $this->container->get('views.views_data')->clear();
   }
 
   /**

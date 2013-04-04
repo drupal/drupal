@@ -86,7 +86,7 @@ class DefaultViewsTest extends UITestBase {
     $edit = array(
       'id' => 'clone_of_glossary',
     );
-    $this->assertTitle(t('Clone of @human_name | @site-name', array('@human_name' => 'Glossary', '@site-name' => config('system.site')->get('name'))));
+    $this->assertTitle(t('Clone of @label | @site-name', array('@label' => 'Glossary', '@site-name' => config('system.site')->get('name'))));
     $this->drupalPost(NULL, $edit, t('Clone'));
     $this->assertUrl('admin/structure/views/view/clone_of_glossary/edit', array(), 'The normal cloning name schema is applied.');
 

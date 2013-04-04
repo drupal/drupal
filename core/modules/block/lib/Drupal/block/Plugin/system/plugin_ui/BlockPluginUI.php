@@ -23,14 +23,14 @@ use Drupal\Core\Annotation\Translation;
  *   facets = {
  *     "module" = @Translation("Modules")
  *   },
- *   link_title = @Translation("Configure block"),
+ *   link_title = @Translation("Place block"),
  *   manager = "plugin.manager.block",
  *   menu = TRUE,
  *   path = "admin/structure/block/list",
  *   suffix = "add",
  *   task_suffix = "library",
  *   task_title = @Translation("Library"),
- *   title = @Translation("Add block"),
+ *   title = @Translation("Place blocks"),
  *   title_attribute = "admin_label",
  *   type = MENU_LOCAL_ACTION
  * )

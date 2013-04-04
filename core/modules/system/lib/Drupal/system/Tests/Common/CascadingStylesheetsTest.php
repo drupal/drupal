@@ -156,8 +156,8 @@ class CascadingStylesheetsTest extends WebTestBase {
     drupal_add_css(drupal_get_path('module', 'simpletest') . '/simpletest.css');
     // A few system CSS files, ordered in a strange way.
     $system_path = drupal_get_path('module', 'system');
-    drupal_add_css($system_path . '/system.base.css', array('group' => CSS_SYSTEM, 'weight' => -10));
-    drupal_add_css($system_path . '/system.theme.css', array('group' => CSS_SYSTEM));
+    drupal_add_css($system_path . '/system.base.css', array('group' => CSS_AGGREGATE_SYSTEM, 'weight' => -10));
+    drupal_add_css($system_path . '/system.theme.css', array('group' => CSS_AGGREGATE_SYSTEM));
 
     $expected = array(
       $system_path . '/system.base.css',

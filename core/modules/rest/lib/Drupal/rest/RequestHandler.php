@@ -70,12 +70,15 @@ class RequestHandler extends ContainerAware {
     }
 
     // Invoke the operation on the resource plugin.
+    // All REST routes are restricted to exactly one format, so instead of
+    // parsing it out of the Accept headers again, we can simply retrieve the
+    // format requirement. If there is no format associated, just pick HAL.
+    $format = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)->getRequirement('_format') ?: 'hal_json';
     try {
       $response = $resource->{$method}($id, $unserialized, $request);
     }
     catch (HttpException $e) {
       $error['error'] = $e->getMessage();
-      $format = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)->getRequirement('_format') ?: 'drupal_jsonld';
       $content = $serializer->serialize($error, $format);
       // Add the default content type, but only if the headers from the
       // exception have not specified it already.
@@ -86,12 +89,6 @@ class RequestHandler extends ContainerAware {
     // Serialize the outgoing data for the response, if available.
     $data = $response->getResponseData();
     if ($data != NULL) {
-      // All REST routes are restricted to exactly one format, so instead of
-      // parsing it out of the Accept headers again we can simply retrieve the
-      // format requirement. If there is no format associated just pick Drupal
-      // JSON-LD.
-      $format = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)->getRequirement('_format') ?: 'drupal_jsonld';
-
       $output = $serializer->serialize($data, $format);
       $response->setContent($output);
       $response->headers->set('Content-Type', $request->getMimeType($format));

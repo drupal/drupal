@@ -21,6 +21,13 @@
     "easyrdf/easyrdf": "0.8.0-beta.1",
     "phpunit/phpunit": "3.7.15"
   },
+  "autoload": {
+    "psr-0": {
+      "Drupal\\Core": "core/lib/",
+      "Drupal\\Component": "core/lib/",
+      "Drupal\\Driver": "drivers/lib/"
+    }
+  },
   "minimum-stability": "dev",
   "config": {
     "vendor-dir": "core/vendor"

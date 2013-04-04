@@ -75,9 +75,7 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
           $entity = $target_entities[$identifier];
           $items[$id][$delta]['entity'] = $entity;
 
-          // @todo: Improve when we have entity_access().
-          $entity_access = $target_type == 'node' ? node_access('view', $entity) : TRUE;
-          if (!$entity_access) {
+          if (!$entity->access('view')) {
             continue;
           }
         }

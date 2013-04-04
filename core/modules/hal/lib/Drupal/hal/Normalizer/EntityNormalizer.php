@@ -80,6 +80,7 @@ class EntityNormalizer extends NormalizerBase {
     $typed_data_ids = $this->getTypedDataIds($data['_links']['type']);
     $entity = entity_create($typed_data_ids['entity_type'], array('langcode' => $langcode, 'type' => $typed_data_ids['bundle']));
 
+    // @todo Handle data in _links and _embedded, http://drupal.org/node/1880424
     // Get links and remove from data array.
     $links = $data['_links'];
     unset($data['_links']);
@@ -101,12 +102,12 @@ class EntityNormalizer extends NormalizerBase {
       $field = $entity->get($field_name);
       // Get the class of the field. This will generally be the default Field
       // class.
-      $class = get_class($field);
+      $field_class = get_class($field);
       // Pass in the empty field object as a target instance. Since the context
       // is already prepared for the field, any data added to it is
       // automatically added to the entity.
       $context['target_instance'] = $field;
-      $this->serializer->denormalize($field_data, $class, $format, $context);
+      $this->serializer->denormalize($field_data, $field_class, $format, $context);
     }
 
     return $entity;

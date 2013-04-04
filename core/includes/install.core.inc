@@ -1526,7 +1526,7 @@ function install_retrieve_file($uri, $destination) {
   }
 
   try {
-    $request = drupal_container()->get('http_default_client')->get($uri, array('Accept' => 'text/plain'));
+    $request = Drupal::httpClient()->get($uri, array('Accept' => 'text/plain'));
     $data = $request->send()->getBody(TRUE);
     if (empty($data)) {
       return FALSE;
@@ -1549,7 +1549,7 @@ function install_retrieve_file($uri, $destination) {
  */
 function install_check_localization_server($uri) {
   try {
-    $request = drupal_container()->get('http_default_client')->head($uri);
+    $request = Drupal::httpClient()->head($uri);
     $response = $request->send();
     return TRUE;
   }

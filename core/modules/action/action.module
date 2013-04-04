@@ -66,7 +66,6 @@ function action_menu() {
     'title' => 'Manage actions',
     'description' => 'Manage the actions defined for your site.',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'route_name' => 'action_admin_manage',
   );
   $items['admin/config/system/actions/configure'] = array(
     'title' => 'Configure an advanced action',
@@ -83,12 +82,6 @@ function action_menu() {
     'page arguments' => array('action_admin_delete_form', 5),
     'access arguments' => array('administer actions'),
     'file' => 'action.admin.inc',
-  );
-  $items['admin/config/system/actions/orphan'] = array(
-    'title' => 'Remove orphans',
-    'description' => 'Remove actions that are in the database but not supported by any enabled module.',
-    'route_name' => 'action_admin_orphans_remove',
-    'type' => MENU_CALLBACK,
   );
   return $items;
 }

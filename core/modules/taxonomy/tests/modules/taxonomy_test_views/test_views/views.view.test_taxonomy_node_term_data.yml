@@ -71,6 +71,6 @@ display:
     display_title: Master
     id: default
     position: '0'
-human_name: test_taxonomy_node_term_data
+label: test_taxonomy_node_term_data
 id: test_taxonomy_node_term_data
 tag: ''

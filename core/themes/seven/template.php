@@ -23,7 +23,7 @@ function seven_preprocess_maintenance_page(&$vars) {
 function seven_preprocess_html(&$vars) {
   drupal_add_library('system', 'normalize');
   // Add conditional CSS for IE8 and below.
-  drupal_add_css(path_to_theme() . '/ie.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'lte IE 8', '!IE' => FALSE), 'weight' => 999, 'preprocess' => FALSE));
+  drupal_add_css(path_to_theme() . '/ie.css', array('group' => CSS_AGGREGATE_THEME, 'browsers' => array('IE' => 'lte IE 8', '!IE' => FALSE), 'weight' => 999, 'preprocess' => FALSE));
 }
 
 /**

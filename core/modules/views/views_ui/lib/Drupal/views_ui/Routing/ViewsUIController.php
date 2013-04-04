@@ -219,7 +219,7 @@ class ViewsUIController implements ControllerInterface {
    *   The Views clone form.
    */
   public function cloneForm(ViewStorageInterface $view) {
-    drupal_set_title(t('Clone of @human_name', array('@human_name' => $view->getHumanName())));
+    drupal_set_title(t('Clone of @label', array('@label' => $view->label())));
     return entity_get_form($view, 'clone');
   }
 
@@ -263,8 +263,9 @@ class ViewsUIController implements ControllerInterface {
    *   An array containing the Views edit and preview forms.
    */
   public function edit(ViewUI $view, $display_id = NULL) {
-    $name = $view->getHumanName();
+    $name = $view->label();
     $data = $this->viewsData->get($view->get('base_table'));
+
     if (isset($data['table']['base']['title'])) {
       $name .= ' (' . $data['table']['base']['title'] . ')';
     }

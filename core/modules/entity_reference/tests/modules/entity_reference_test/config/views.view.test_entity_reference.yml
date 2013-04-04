@@ -5,7 +5,7 @@ core: 8.x
 module: entity_reference_test
 id: test_entity_reference
 description: ''
-human_name: 'Entity reference'
+label: 'Entity reference'
 tag: ''
 disabled: false
 display:

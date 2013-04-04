@@ -58,7 +58,7 @@ display:
     position: ''
     display_options:
       path: test-comment-rss
-human_name: test_comment_rss
+label: test_comment_rss
 module: views
 id: test_comment_rss
 tag: ''

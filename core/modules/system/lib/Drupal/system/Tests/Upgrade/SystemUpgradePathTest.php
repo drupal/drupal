@@ -159,6 +159,16 @@ class SystemUpgradePathTest extends UpgradePathTestBase {
       'child_type' => 'book',
     );
 
+    $expected_config['aggregator.settings'] = array(
+      'fetcher' => 'test_fetcher',
+      'parser' => 'test_parser',
+      'processors' => array('test_processor'),
+      'items.allowed_html' => '<a>',
+      'items.teaser_length' => 6000,
+      'items.expire' => 10,
+      'source.list_max' => 5,
+    );
+
     foreach ($expected_config as $file => $values) {
       $config = config($file);
       $this->verbose(print_r($config->get(), TRUE));

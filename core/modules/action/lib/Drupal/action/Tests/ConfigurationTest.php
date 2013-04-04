@@ -37,10 +37,10 @@ class ConfigurationTest extends WebTestBase {
     $user = $this->drupalCreateUser(array('administer actions'));
     $this->drupalLogin($user);
 
-    // Make a POST request to admin/config/system/actions/manage.
+    // Make a POST request to admin/config/system/actions.
     $edit = array();
     $edit['action'] = drupal_hash_base64('action_goto_action');
-    $this->drupalPost('admin/config/system/actions/manage', $edit, t('Create'));
+    $this->drupalPost('admin/config/system/actions', $edit, t('Create'));
 
     // Make a POST request to the individual action configuration page.
     $edit = array();
@@ -75,7 +75,7 @@ class ConfigurationTest extends WebTestBase {
 
     // Make sure that the action was actually deleted.
     $this->assertRaw(t('Action %action was deleted', array('%action' => $new_action_label)), 'Make sure that we get a delete confirmation message.');
-    $this->drupalGet('admin/config/system/actions/manage');
+    $this->drupalGet('admin/config/system/actions');
     $this->assertNoText($new_action_label, "Make sure the action label does not appear on the overview page after we've deleted the action.");
     $exists = db_query('SELECT aid FROM {actions} WHERE callback = :callback', array(':callback' => 'drupal_goto_action'))->fetchField();
     $this->assertFalse($exists, 'Make sure the action is gone from the database after being deleted.');

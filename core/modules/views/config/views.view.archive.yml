@@ -101,7 +101,7 @@ display:
             items_per_page: '30'
           specify_validation: '1'
           plugin_id: date_year_month
-human_name: Archive
+label: Archive
 module: node
 id: archive
 tag: default

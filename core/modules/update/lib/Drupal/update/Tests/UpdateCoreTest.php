@@ -201,7 +201,7 @@ class UpdateCoreTest extends UpdateTestBase {
     $projectb = array(
       'name' => 'bbb_update_test',
     );
-    $queue = queue('update_fetch_tasks');
+    $queue = \Drupal::queue('update_fetch_tasks');
     $this->assertEqual($queue->numberOfItems(), 0, 'Queue is empty');
     update_create_fetch_task($projecta);
     $this->assertEqual($queue->numberOfItems(), 1, 'Queue contains one item');

@@ -69,6 +69,8 @@ class HandlerFieldFieldTest extends FieldTestBase {
 
       $this->nodes[$i] = $this->drupalCreateNode($edit);
     }
+
+    $this->container->get('views.views_data')->clear();
   }
 
   /**

@@ -332,7 +332,7 @@ function update_prepare_d8_bootstrap() {
       $disabled_modules = config('system.module.disabled');
       $theme_config = config('system.theme');
       $disabled_themes = config('system.theme.disabled');
-      $schema_store = drupal_container()->get('keyvalue')->get('system.schema');
+      $schema_store = Drupal::keyValue('system.schema');
 
       // Load system.module, because update_prepare_d8_bootstrap() is called in
       // the initial minimal update.php bootstrap that performs the core
@@ -694,7 +694,7 @@ function update_fix_d8_requirements() {
  *   if the module was not installed before.
  */
 function update_module_enable(array $modules, $schema_version = 0) {
-  $schema_store = drupal_container()->get('keyvalue')->get('system.schema');
+  $schema_store = Drupal::keyValue('system.schema');
   $old_schema = array();
   foreach ($modules as $module) {
     // Check for initial schema and install it. The schema version of a newly
@@ -1268,7 +1268,7 @@ function update_retrieve_dependencies() {
   $return = array();
   // Get a list of installed modules, arranged so that we invoke their hooks in
   // the same order that module_invoke_all() does.
-  foreach (drupal_container()->get('keyvalue')->get('system.schema')->getAll() as $module => $schema) {
+  foreach (Drupal::keyValue('system.schema')->getAll() as $module => $schema) {
     if ($schema == SCHEMA_UNINSTALLED) {
       // Nothing to upgrade.
       continue;

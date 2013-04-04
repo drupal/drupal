@@ -68,19 +68,44 @@ const SAVED_UPDATED = 2;
 const SAVED_DELETED = 3;
 
 /**
- * The default group for system CSS files added to the page.
+ * The default aggregation group for system CSS files added to the page.
  */
-const CSS_SYSTEM = -100;
+const CSS_AGGREGATE_SYSTEM = -100;
 
 /**
- * The default group for module CSS files added to the page.
+ * The default aggregation group for CSS files added to the page.
  */
-const CSS_DEFAULT = 0;
+const CSS_AGGREGATE_DEFAULT = 0;
 
 /**
- * The default group for theme CSS files added to the page.
+ * The default aggregation group for theme CSS files added to the page.
  */
-const CSS_THEME = 100;
+const CSS_AGGREGATE_THEME = 100;
+
+/**
+ * The default weight for CSS rules that style HTML elements ("base" styles).
+ */
+const CSS_BASE = -200;
+
+/**
+ * The default weight for CSS rules that layout a page.
+ */
+const CSS_LAYOUT = -100;
+
+/**
+ * The default weight for CSS rules that style design components (and their associated states and skins.)
+ */
+const CSS_COMPONENT = 0;
+
+/**
+ * The default weight for CSS rules that style states and are not included with components.
+ */
+const CSS_STATE = 100;
+
+/**
+ * The default weight for CSS rules that style skins and are not included with components.
+ */
+const CSS_SKIN = 200;
 
 /**
  * The default group for JavaScript settings added to the page.
@@ -2496,15 +2521,16 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  *     'core/modules/node/node.css' is 'node.css'. If the external library
  *     "node.js" ships with a 'node.css', then a different, unique basename
  *     would be 'node.js.css'.
- *   - 'group': A number identifying the group in which to add the stylesheet.
- *     Available constants are:
- *     - CSS_SYSTEM: Any system-layer CSS.
- *     - CSS_DEFAULT: (default) Any module-layer CSS.
- *     - CSS_THEME: Any theme-layer CSS.
- *     The group number serves as a weight: the markup for loading a stylesheet
- *     within a lower weight group is output to the page before the markup for
- *     loading a stylesheet within a higher weight group, so CSS within higher
- *     weight groups take precendence over CSS within lower weight groups.
+ *   - 'group': A number identifying the aggregation group in which to add the
+ *     stylesheet. Available constants are:
+ *     - CSS_AGGREGATE_SYSTEM: Any system-layer CSS.
+ *     - CSS_AGGREGATE_DEFAULT: (default) Any module-layer CSS.
+ *     - CSS_AGGREGATE_THEME: Any theme-layer CSS.
+ *     The aggregate group number affects load order and the CSS cascade.
+ *     Stylesheets in an aggregate with a lower group number will be output to
+ *     the page before stylesheets in an aggregate with a higher group number,
+ *     so CSS within higher aggregate groups can take precendence over CSS
+ *     within lower aggregate groups.
  *   - 'every_page': For optimal front-end performance when aggregation is
  *     enabled, this should be set to TRUE if the stylesheet is present on every
  *     page of the website for users for whom it is present at all. This
@@ -2527,17 +2553,29 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  *     small by ensuring that most commonly needed stylesheets are added to
  *     every page.
  *   - 'weight': The weight of the stylesheet specifies the order in which the
- *     CSS will appear relative to other stylesheets with the same group and
- *     'every_page' flag. The exact ordering of stylesheets is as follows:
- *     - First by group.
+ *     CSS will appear relative to other stylesheets with the same aggregate
+ *     group and 'every_page' flag. The exact ordering of stylesheets is as
+ *     follows:
+ *     - First by aggregate group.
  *     - Then by the 'every_page' flag, with TRUE coming before FALSE.
  *     - Then by weight.
  *     - Then by the order in which the CSS was added. For example, all else
  *       being the same, a stylesheet added by a call to drupal_add_css() that
  *       happened later in the page request gets added to the page after one for
  *       which drupal_add_css() happened earlier in the page request.
+ *     Available constants are:
+ *     - CSS_BASE: Styles for HTML elements ("base" styles).
+ *     - CSS_LAYOUT: Styles that layout a page.
+ *     - CSS_COMPONENT: Styles for design components (and their associated
+ *       states and skins.)
+ *     - CSS_STATE: Styles for states that are not included with components.
+ *     - CSS_SKIN: Styles for skins that are not included with components.
+ *     The weight numbers follow the SMACSS convention of CSS categorization.
+ *     See http://drupal.org/node/1887922
  *   - 'media': The media type for the stylesheet, e.g., all, print, screen.
- *     Defaults to 'all'.
+ *     Defaults to 'all'. It is extremely important to leave this set to 'all'
+ *     or it will negatively impact front-end peformance. Instead add a @media
+ *     block to the included CSS file.
  *   - 'preprocess': If TRUE and CSS aggregation/compression is enabled, the
  *     styles will be aggregated and compressed. Defaults to TRUE.
  *   - 'browsers': An array containing information specifying which browsers
@@ -2567,7 +2605,7 @@ function drupal_add_css($data = NULL, $options = NULL) {
   if (isset($data)) {
     $options += array(
       'type' => 'file',
-      'group' => CSS_DEFAULT,
+      'group' => CSS_AGGREGATE_DEFAULT,
       'weight' => 0,
       'every_page' => FALSE,
       'media' => 'all',
@@ -2710,10 +2748,10 @@ function drupal_get_css($css = NULL, $skip_alter = FALSE) {
  * @see drupal_add_js()
  */
 function drupal_sort_css_js($a, $b) {
-  // First order by group, so that, for example, all items in the CSS_SYSTEM
-  // group appear before items in the CSS_DEFAULT group, which appear before
-  // all items in the CSS_THEME group. Modules may create additional groups by
-  // defining their own constants.
+  // First order by group, so that, for example, all items in the
+  // CSS_AGGREGATE_SYSTEM group appear before items in the CSS_AGGREGATE_DEFAULT
+  // group, which appear before all items in the CSS_AGGREGATE_THEME group.
+  // Modules may create additional groups by defining their own constants.
   if ($a['group'] < $b['group']) {
     return -1;
   }
@@ -5024,7 +5062,7 @@ function drupal_cron_run() {
     // existing queue.
     foreach ($queues as $queue_name => $info) {
       if (isset($info['cron'])) {
-        queue($queue_name)->createQueue();
+        Drupal::queue($queue_name)->createQueue();
       }
     }
 
@@ -5054,7 +5092,7 @@ function drupal_cron_run() {
     if (isset($info['cron'])) {
       $function = $info['worker callback'];
       $end = time() + (isset($info['cron']['time']) ? $info['cron']['time'] : 15);
-      $queue = queue($queue_name);
+      $queue = Drupal::queue($queue_name);
       while (time() < $end && ($item = $queue->claimItem())) {
         $function($item->data);
         $queue->deleteItem($item);
@@ -6664,34 +6702,6 @@ function drupal_get_filetransfer_info() {
  * should be aware that an item might be handed over for processing more than
  * once (because the processing code might time out before it finishes).
  */
-
-/**
- * Instantiates and statically caches the correct class for a queue.
- *
- * The following variables can be set by variable_set or $conf overrides:
- * - queue_class_$name: The class to be used for the queue $name.
- * - queue_default_class: The class to use when queue_class_$name is not
- *   defined. Defaults to Drupal\Core\Queue\System, a reliable backend using
- *   SQL.
- * - queue_default_reliable_class: The class to use when queue_class_$name is
- *   not defined and the queue_default_class is not reliable. Defaults to
- *   Drupal\Core\Queue\System.
- *
- * @param string $name
- *   The name of the queue to work with.
- * @param bool $reliable
- *   (optional) TRUE if the ordering of items and guaranteeing every item
- *   executes at least once is important, FALSE if scalability is the main
- *   concern. Defaults to FALSE.
- *
- * @return Drupal\Core\Queue\QueueInterface
- *   The queue object for a given name.
- *
- * @see Drupal\Core\Queue\QueueInterface
- */
-function queue($name, $reliable = FALSE) {
-  return drupal_container()->get('queue')->get($name, $reliable);
-}
 
 /**
  * @} End of "defgroup queue".

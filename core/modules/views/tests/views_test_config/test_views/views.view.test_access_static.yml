@@ -28,6 +28,6 @@ display:
     display_title: Page
     id: page_1
     position: '0'
-human_name: ''
+label: ''
 id: test_access_static
 tag: ''

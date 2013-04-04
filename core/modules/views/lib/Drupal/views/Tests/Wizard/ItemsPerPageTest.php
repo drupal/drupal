@@ -40,7 +40,7 @@ class ItemsPerPageTest extends WizardTestBase {
     // Create a view that sorts newest first, and shows 4 items in the page and
     // 3 in the block.
     $view = array();
-    $view['human_name'] = $this->randomName(16);
+    $view['label'] = $this->randomName(16);
     $view['id'] = strtolower($this->randomName(16));
     $view['description'] = $this->randomName(16);
     $view['show[wizard_key]'] = 'node';
@@ -76,7 +76,8 @@ class ItemsPerPageTest extends WizardTestBase {
 
     // Confirm that the block is listed in the block administration UI.
     $this->drupalGet('admin/structure/block/list/block_plugin_ui:' . config('system.theme')->get('default') . '/add');
-    $this->assertText('View: ' . $view['human_name']);
+    $this->assertText('View: ' . $view['label']);
+
     // Place the block, visit a page that displays the block, and check that the
     // nodes we expect appear in the correct order.
     $this->drupalPlaceBlock("views_block:{$view['id']}-block_1");

@@ -2,7 +2,7 @@ base_table: node
 id: test_get_attach_displays
 description: ''
 tag: ''
-human_name: test_get_attach_displays
+label: test_get_attach_displays
 core: 8.x
 display:
   default:

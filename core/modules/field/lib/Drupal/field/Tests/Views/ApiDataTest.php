@@ -68,6 +68,8 @@ class ApiDataTest extends FieldTestBase {
       );
       $this->nodes[] = $this->drupalCreateNode($edit);
     }
+
+    $this->container->get('views.views_data')->clear();
   }
 
   /**

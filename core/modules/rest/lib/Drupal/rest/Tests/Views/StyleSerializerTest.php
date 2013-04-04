@@ -25,7 +25,7 @@ class StyleSerializerTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $modules = array('views_ui', 'entity_test', 'jsonld', 'rest_test_views');
+  public static $modules = array('views_ui', 'entity_test', 'hal', 'rest_test_views');
 
   /**
    * Views used by this test.
@@ -127,13 +127,9 @@ class StyleSerializerTest extends PluginTestBase {
 
     $this->assertIdentical($actual_json, $expected, 'The expected JSON output was found.');
 
-    $expected = $serializer->serialize($entities, 'jsonld');
-    $actual_json = $this->drupalGet('test/serialize/entity', array(), array('Accept: application/ld+json'));
-    $this->assertIdentical($actual_json, $expected, 'The expected JSONLD output was found.');
-
-    $expected = $serializer->serialize($entities, 'drupal_jsonld');
-    $actual_json = $this->drupalGet('test/serialize/entity', array(), array('Accept: application/vnd.drupal.ld+json'));
-    $this->assertIdentical($actual_json, $expected, 'The expected JSONLD output was found.');
+    $expected = $serializer->serialize($entities, 'hal_json');
+    $actual_json = $this->drupalGet('test/serialize/entity', array(), array('Accept: application/hal+json'));
+    $this->assertIdentical($actual_json, $expected, 'The expected HAL output was found.');
   }
 
   /**

@@ -135,6 +135,34 @@ db_insert('variable')->fields(array(
     'name' => 'fast_404_html',
     'value' => 's:168:"<!DOCTYPE html><html><head><title>Page Not Found</title></head><body><h1>Page Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>";',
   ))
+  ->values(array(
+    'name' => 'aggregator_fetcher',
+    'value' => 's:12:"test_fetcher";',
+  ))
+  ->values(array(
+    'name' => 'aggregator_parser',
+    'value' => 's:11:"test_parser";',
+  ))
+  ->values(array(
+    'name' => 'aggregator_processors',
+    'value' => 'a:1:{i:0;s:14:"test_processor";}',
+  ))
+  ->values(array(
+    'name' => 'aggregator_allowed_html_tags',
+    'value' => 's:3:"<a>";',
+  ))
+  ->values(array(
+    'name' => 'aggregator_teaser_length',
+    'value' => 'i:6000;',
+  ))
+  ->values(array(
+    'name' => 'aggregator_clear',
+    'value' => 'i:10;',
+  ))
+  ->values(array(
+    'name' => 'aggregator_summary_items',
+    'value' => 'i:5;',
+  ))
   ->execute();
 
 db_update('variable')

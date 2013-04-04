@@ -99,7 +99,7 @@ Drupal.viewsUi.FormFieldFiller = function ($target, exclude, replace, suffix) {
   "use strict";
 
   var $ = jQuery;
-  this.source = $('#edit-human-name');
+  this.source = $('#edit-label');
   this.target = $target;
   this.exclude = exclude || false;
   this.replace = replace || '';

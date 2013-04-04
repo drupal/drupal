@@ -21,6 +21,13 @@ class ViewsDataTest extends ViewUnitTestBase {
    */
   protected $viewsDataCache;
 
+  /**
+   * Stores a count for hook_views_data being invoked.
+   *
+   * @var int
+   */
+  protected $count = 0;
+
   public static function getInfo() {
     return array(
       'name' => 'Table Data',
@@ -33,6 +40,7 @@ class ViewsDataTest extends ViewUnitTestBase {
     parent::setUp();
 
     $this->viewsDataCache = $this->container->get('views.views_data');
+    $this->state = $this->container->get('state');
   }
 
   /**
@@ -42,35 +50,98 @@ class ViewsDataTest extends ViewUnitTestBase {
    */
   public function testViewsFetchData() {
     $table_name = 'views_test_data';
-    $expected_data = $this->viewsData();
+    $random_table_name = $this->randomName();
+    // Invoke expected data directly from hook_views_data implementations.
+    $expected_data = $this->container->get('module_handler')->invokeAll('views_data');
 
+    // Verify that views_test_data_views_data() has only been called once after
+    // calling clear().
+    $this->startCount();
+    $this->viewsDataCache->get();
+    // Test views data has been invoked.
+    $this->assertCountIncrement();
+    // Clear the storage/cache.
+    $this->viewsDataCache->clear();
+    // Get the data again.
+    $this->viewsDataCache->get();
+    $this->viewsDataCache->get($table_name);
+    $this->viewsDataCache->get($random_table_name);
+    // Verify that view_test_data_views_data() has run once.
+    $this->assertCountIncrement();
+
+    // Get the data again.
+    $this->viewsDataCache->get();
+    $this->viewsDataCache->get($table_name);
+    $this->viewsDataCache->get($random_table_name);
+    // Verify that view_test_data_views_data() has not run again.
+    $this->assertCountIncrement(FALSE);
+
+    // Clear the views data, and test all table data.
+    $this->viewsDataCache->clear();
+    $this->startCount();
+    $data = $this->viewsDataCache->get();
+    $this->assertEqual($data, $expected_data, 'Make sure fetching all views data by works as expected.');
+    // Views data should be invoked once.
+    $this->assertCountIncrement();
+    // Calling get() again, the count for this table should stay the same.
+    $data = $this->viewsDataCache->get();
+    $this->assertEqual($data, $expected_data, 'Make sure fetching all cached views data works as expected.');
+    $this->assertCountIncrement(FALSE);
+
+    // Clear the views data, and test data for a specific table.
+    $this->viewsDataCache->clear();
+    $this->startCount();
     $data = $this->viewsDataCache->get($table_name);
     $this->assertEqual($data, $expected_data[$table_name], 'Make sure fetching views data by table works as expected.');
-
-    $data = $this->viewsDataCache->get($this->randomName());
-    $this->assertTrue(empty($data), 'Make sure fetching views data for an invalid table returns empty.');
-
+    // Views data should be invoked once.
+    $this->assertCountIncrement();
+    // Calling get() again, the count for this table should stay the same.
+    $data = $this->viewsDataCache->get($table_name);
+    $this->assertEqual($data, $expected_data[$table_name], 'Make sure fetching cached views data by table works as expected.');
+    $this->assertCountIncrement(FALSE);
+    // Test that this data is present if all views data is returned.
     $data = $this->viewsDataCache->get();
     $this->assertTrue(isset($data[$table_name]), 'Make sure the views_test_data info appears in the total views data.');
     $this->assertEqual($data[$table_name], $expected_data[$table_name], 'Make sure the views_test_data has the expected values.');
 
-    // Verify that views_test_data_views_data() has only been called once.
-    $state = \Drupal::service('state');
-    $count = $state->get('views_test_data_views_data_count');
-
-    // Clear the storage/cache.
+    // Clear the views data, and test data for an invalid table.
     $this->viewsDataCache->clear();
-    // Get the data again.
-    $this->viewsDataCache->get($table_name);
-    // Verify that view_test_data_views_data() has run again.
-    $this->assertEqual($count + 1, $state->get('views_test_data_views_data_count'));
+    $this->startCount();
+    // All views data should be requested on the first try.
+    $data = $this->viewsDataCache->get($random_table_name);
+    $this->assertEqual($data, array(), 'Make sure fetching views data for an invalid table returns an empty array.');
+    $this->assertCountIncrement();
+    // Test no data is rebuilt when requesting an invalid table again.
+    $data = $this->viewsDataCache->get($random_table_name);
+    $this->assertEqual($data, array(), 'Make sure fetching views data for an invalid table returns an empty array.');
+    $this->assertCountIncrement(FALSE);
+  }
 
-    // Get the data again.
-    $this->viewsDataCache->get($table_name);
-    // Also request all table data.
-    $this->viewsDataCache->get();
-    // Verify that view_test_data_views_data() has not run again.
-    $this->assertEqual($count + 1, $state->get('views_test_data_views_data_count'));
+  /**
+   * Starts a count for hook_views_data being invoked.
+   */
+  protected function startCount() {
+    $count = $this->state->get('views_test_data_views_data_count');
+    $this->count = isset($count) ? $count : 0;
+  }
+
+  /**
+   * Asserts that the count for hook_views_data either equal or has increased.
+   *
+   * @param bool $equal
+   *   Whether to assert that the count should be equal. Defaults to FALSE.
+   */
+  protected function assertCountIncrement($increment = TRUE) {
+    if ($increment) {
+      // If an incremented count is expected, increment this now.
+      $this->count++;
+      $message = 'hook_views_data has been invoked.';
+    }
+    else {
+      $message = 'hook_views_data has not been invoked';
+    }
+
+    $this->assertEqual($this->count, $this->state->get('views_test_data_views_data_count'), $message);
   }
 
   /**

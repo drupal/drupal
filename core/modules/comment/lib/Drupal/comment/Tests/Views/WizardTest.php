@@ -37,7 +37,7 @@ class WizardTest extends WizardTestBase {
    */
   public function testCommentWizard() {
     $view = array();
-    $view['human_name'] = $this->randomName(16);
+    $view['label'] = $this->randomName(16);
     $view['id'] = strtolower($this->randomName(16));
     $view['show[wizard_key]'] = 'comment';
     $view['page[create]'] = TRUE;

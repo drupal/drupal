@@ -95,7 +95,7 @@ display:
     position: ''
     display_options:
       path: test-entity-translations-link
-human_name: People
+label: People
 module: views
 id: test_entity_translations_link
 tag: ''

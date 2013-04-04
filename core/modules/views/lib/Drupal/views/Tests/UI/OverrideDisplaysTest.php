@@ -26,7 +26,7 @@ class OverrideDisplaysTest extends UITestBase {
   function testOverrideDisplays() {
     // Create a basic view that shows all content, with a page and a block
     // display.
-    $view['human_name'] = $this->randomName(16);
+    $view['label'] = $this->randomName(16);
     $view['id'] = strtolower($this->randomName(16));
     $view['page[create]'] = 1;
     $view['page[path]'] = $this->randomName(16);
@@ -55,7 +55,7 @@ class OverrideDisplaysTest extends UITestBase {
 
     // Confirm that the view block is available in the block administration UI.
     $this->drupalGet('admin/structure/block/list/block_plugin_ui:' . config('system.theme')->get('default') . '/add');
-    $this->assertText('View: ' . $view['human_name']);
+    $this->assertText('View: ' . $view['label']);
 
     // Place the block.
     $this->drupalPlaceBlock("views_block:{$view['id']}-block_1");
@@ -85,7 +85,7 @@ class OverrideDisplaysTest extends UITestBase {
     // identical titles, but give the block a different one, so we expect the
     // page and feed to inherit their titles from the default display, but the
     // block to override it.
-    $view['human_name'] = $this->randomName(16);
+    $view['label'] = $this->randomName(16);
     $view['id'] = strtolower($this->randomName(16));
     $view['page[create]'] = 1;
     $view['page[title]'] = $this->randomName(16);
@@ -114,7 +114,7 @@ class OverrideDisplaysTest extends UITestBase {
 
     // Confirm that the block is available in the block administration UI.
     $this->drupalGet('admin/structure/block/list/block_plugin_ui:' . config('system.theme')->get('default') . '/add');
-    $this->assertText('View: ' . $view['human_name']);
+    $this->assertText('View: ' . $view['label']);
 
     // Place the block.
     $this->drupalPlaceBlock("views_block:{$view['id']}-block_1");
@@ -167,7 +167,7 @@ class OverrideDisplaysTest extends UITestBase {
     // Create a basic view with a page, block.
     // Because there is both a title on page and block we expect the title on
     // the block be overriden.
-    $view['human_name'] = $this->randomName(16);
+    $view['label'] = $this->randomName(16);
     $view['id'] = strtolower($this->randomName(16));
     $view['page[create]'] = 1;
     $view['page[title]'] = $this->randomName(16);

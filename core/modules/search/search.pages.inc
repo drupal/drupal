@@ -72,15 +72,15 @@ function search_view($module = NULL, $keys = '') {
 }
 
 /**
- * Prepocesses the variables for search-results.tpl.php.
+ * Prepares variables for search results templates.
  *
- * @param $variables
+ * Default template: search-results.html.twig.
+ *
+ * @param array $variables
  *   An array with the following elements:
  *   - results: Search results array.
  *   - module: Module the search results came from (module implementing
  *     hook_search_info()).
- *
- * @see search-results.tpl.php
  */
 function template_preprocess_search_results(&$variables) {
   $variables['search_results'] = '';
@@ -88,22 +88,38 @@ function template_preprocess_search_results(&$variables) {
     $variables['module'] = check_plain($variables['module']);
   }
   foreach ($variables['results'] as $result) {
-    $variables['search_results'] .= theme('search_result', array('result' => $result, 'module' => $variables['module']));
+    $variables['search_results'][] = array(
+      '#theme' => 'search_result',
+      '#result' => $result,
+      '#module' => $variables['module'],
+    );
   }
-  $variables['pager'] = theme('pager', array('tags' => NULL));
+  $variables['pager'] = array(
+    '#theme' => 'pager',
+    '#tags' => NULL,
+  );
+  // @todo Revisit where this help text is added, see also
+  //   http://drupal.org/node/1918856.
+  $variables['help'] = search_help('search#noresults', drupal_help_arg());
   $variables['theme_hook_suggestions'][] = 'search_results__' . $variables['module'];
 }
 
 /**
- * Preprocesses the variables for search-result.tpl.php.
+ * Prepares variables for individual search result templates.
  *
- * @param $variables
+ * Default template: search-result.html.twig
+ *
+ * @param array $variables
  *   An array with the following elements:
- *   - result: Search results array.
+ *   - result: Individual search result.
  *   - module: Module the search results came from (module implementing
  *     hook_search_info()).
- *
- * @see search-result.tpl.php
+ *   - title_prefix: Additional output populated by modules, intended to be
+ *     displayed in front of the main title tag that appears in the template.
+ *   - title_suffix: Additional output populated by modules, intended to be
+ *     displayed after the main title tag that appears in the template.
+ *   - title_attributes: HTML attributes for the title.
+ *   - content_attributes: HTML attributes for the content.
  */
 function template_preprocess_search_result(&$variables) {
   $language_interface = language(LANGUAGE_TYPE_INTERFACE);

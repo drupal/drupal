@@ -232,7 +232,7 @@ display:
     position: ''
     display_options:
       path: test_statistics_integration
-human_name: 'Test statistics integration'
+label: 'Test statistics integration'
 module: views
 id: test_statistics_integration
 tag: ''

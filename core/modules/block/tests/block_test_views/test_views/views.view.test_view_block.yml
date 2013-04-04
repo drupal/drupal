@@ -41,7 +41,7 @@ display:
       field:
         title:
           link_to_node: '1'
-human_name: test_view_block
+label: test_view_block
 module: views
 id: test_view_block
 tag: ''

@@ -31,7 +31,8 @@ class DefaultFetcher implements FetcherInterface {
    * Implements \Drupal\aggregator\Plugin\FetcherInterface::fetch().
    */
   public function fetch(Feed $feed) {
-    $request = \Drupal::service('http_default_client')->get($feed->url->value);
+    // @todo: Inject the http client.
+    $request = \Drupal::httpClient()->get($feed->url->value);
     $feed->source_string = FALSE;
 
     // Generate conditional GET headers.

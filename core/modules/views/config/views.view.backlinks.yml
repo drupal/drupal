@@ -120,7 +120,7 @@ display:
         type: html_list
       row:
         type: fields
-human_name: Backlinks
+label: Backlinks
 module: search
 id: backlinks
 tag: default

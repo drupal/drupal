@@ -59,7 +59,7 @@ class WizardPluginBaseUnitTest extends ViewUnitTestBase {
     $form_state = array();
     $form = $this->wizard->build_form($form, $form_state);
     $random_id = strtolower($this->randomName());
-    $random_human_name = $this->randomName();
+    $random_label = $this->randomName();
     $random_description = $this->randomName();
 
     // Add a new language and mark it as default.
@@ -72,7 +72,7 @@ class WizardPluginBaseUnitTest extends ViewUnitTestBase {
 
     $form_state['values'] = array(
       'id' => $random_id,
-      'human_name' => $random_human_name,
+      'label' => $random_label,
       'description' => $random_description,
       'base_table' => 'views_test_data',
     );
@@ -81,7 +81,7 @@ class WizardPluginBaseUnitTest extends ViewUnitTestBase {
     $view = $this->wizard->create_view($form, $form_state);
     $this->assertTrue($view instanceof ViewUI, 'The created view is a ViewUI object.');
     $this->assertEqual($view->get('id'), $random_id);
-    $this->assertEqual($view->get('human_name'), $random_human_name);
+    $this->assertEqual($view->get('label'), $random_label);
     $this->assertEqual($view->get('description'), $random_description);
     $this->assertEqual($view->get('base_table'), 'views_test_data');
     $this->assertEqual($view->get('langcode'), 'it');

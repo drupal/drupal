@@ -26,7 +26,7 @@ class DeleteForm extends ConfirmFormBase {
    * Implements \Drupal\Core\Form\ConfirmFormBase::getQuestion().
    */
   protected function getQuestion() {
-    return t('Are you sure you want to delete the %name view?', array('%name' => $this->view->getHumanName()));
+    return t('Are you sure you want to delete the %name view?', array('%name' => $this->view->label()));
   }
 
   /**

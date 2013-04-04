@@ -114,18 +114,12 @@ function language_menu() {
   );
   $items['admin/config/regional/language/detection/url'] = array(
     'title' => 'URL language detection configuration',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('language_negotiation_configure_url_form'),
-    'access arguments' => array('administer languages'),
-    'file' => 'language.admin.inc',
+    'route_name' => 'language_negotiation_url',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
   $items['admin/config/regional/language/detection/session'] = array(
     'title' => 'Session language detection configuration',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('language_negotiation_configure_session_form'),
-    'access arguments' => array('administer languages'),
-    'file' => 'language.admin.inc',
+    'route_name' => 'language_negotiation_session',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
   $items['admin/config/regional/language/detection/browser'] = array(
@@ -145,10 +139,7 @@ function language_menu() {
   );
   $items['admin/config/regional/language/detection/selected'] = array(
     'title' => 'Selected language detection configuration',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('language_negotiation_configure_selected_form'),
-    'access arguments' => array('administer languages'),
-    'file' => 'language.admin.inc',
+    'route_name' => 'language_negotiation_selected',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
 

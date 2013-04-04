@@ -27,21 +27,21 @@ class ViewCloneFormController extends ViewFormControllerBase {
   public function form(array $form, array &$form_state, EntityInterface $entity) {
     parent::form($form, $form_state, $entity);
 
-    $form['human_name'] = array(
+    $form['label'] = array(
       '#type' => 'textfield',
       '#title' => t('View name'),
       '#required' => TRUE,
       '#size' => 32,
       '#default_value' => '',
       '#maxlength' => 255,
-      '#default_value' => t('Clone of @human_name', array('@human_name' => $entity->getHumanName())),
+      '#default_value' => t('Clone of @label', array('@label' => $entity->label())),
     );
     $form['id'] = array(
       '#type' => 'machine_name',
       '#maxlength' => 128,
       '#machine_name' => array(
         'exists' => 'views_get_view',
-        'source' => array('human_name'),
+        'source' => array('label'),
       ),
       '#default_value' => '',
       '#description' => t('A unique machine-readable name for this View. It must only contain lowercase letters, numbers, and underscores.'),

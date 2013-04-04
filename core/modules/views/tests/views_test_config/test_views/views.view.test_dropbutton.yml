@@ -226,7 +226,7 @@ display:
       field:
         title:
           link_to_node: '0'
-human_name: test_dropbutton
+label: test_dropbutton
 module: views
 id: test_dropbutton
 tag: ''

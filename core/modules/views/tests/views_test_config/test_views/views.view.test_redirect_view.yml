@@ -2,7 +2,7 @@ base_table: node
 id: test_redirect_view
 description: ''
 tag: ''
-human_name: test_redirect_view
+label: test_redirect_view
 core: 8.x
 display:
   default:

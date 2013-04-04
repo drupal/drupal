@@ -58,7 +58,7 @@ function template_preprocess_views_ui_display_tab_bucket(&$variables) {
  * Implements hook_preprocess_HOOK() for theme_views_ui_view_info().
  */
 function template_preprocess_views_ui_view_info(&$variables) {
-  $variables['title'] = $variables['view']->getHumanName();
+  $variables['title'] = $variables['view']->label();
 
   $displays = $variables['view']->getDisplaysList();
   $variables['displays'] = empty($displays) ? t('None') : format_plural(count($displays), 'Display', 'Displays') . ': ' . '<em>' . implode(', ', $displays) . '</em>';

@@ -49,6 +49,6 @@ display:
       query:
         type: views_query
         options: {  }
-human_name: 'Storage Test View'
+label: 'Storage Test View'
 id: test_view_storage
 tag: 'test'

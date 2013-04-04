@@ -62,7 +62,7 @@ display:
     display_title: Master
     id: default
     position: {  }
-human_name: test_groupwise
+label: test_groupwise
 langcode: und
 module: views
 id: test_groupwise_term

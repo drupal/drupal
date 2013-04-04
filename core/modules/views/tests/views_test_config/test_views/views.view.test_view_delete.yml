@@ -23,6 +23,6 @@ display:
     display_title: Defaults
     id: default
     position: '0'
-human_name: test_view_delete
+label: test_view_delete
 id: test_view_delete
 tag: ''

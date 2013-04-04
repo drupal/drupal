@@ -109,7 +109,7 @@ display:
         type: rss
       row:
         type: node_rss
-human_name: 'Taxonomy term'
+label: 'Taxonomy term'
 module: taxonomy
 id: taxonomy_term
 tag: default

@@ -113,7 +113,7 @@ class FrameworkTest extends AjaxTestBase {
     // @todo D8: Add a drupal_css_defaults() helper function.
     $expected_css_html = drupal_get_css(array($expected_css_basename => array(
       'type' => 'file',
-      'group' => CSS_DEFAULT,
+      'group' => CSS_AGGREGATE_DEFAULT,
       'weight' => 0,
       'every_page' => FALSE,
       'media' => 'all',

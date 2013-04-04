@@ -2,11 +2,12 @@
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Settings;
+use Drupal\Component\Utility\Timer;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Symfony\Component\ClassLoader\UniversalClassLoader;
-use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
+use Symfony\Component\ClassLoader\ClassLoader;
+use Symfony\Component\ClassLoader\ApcClassLoader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Reference;
@@ -334,71 +335,27 @@ const CONFIG_STAGING_DIRECTORY = 'staging';
 define('DRUPAL_ROOT', dirname(dirname(__DIR__)));
 
 /**
- * Starts the timer with the specified name.
- *
- * If you start and stop the same timer multiple times, the measured intervals
- * will be accumulated.
- *
- * @param $name
- *   The name of the timer.
+ * @deprecated as of Drupal 8.0.
+ * @see \Drupal\Component\Utility\Timer::start
  */
 function timer_start($name) {
-  global $timers;
-
-  $timers[$name]['start'] = microtime(TRUE);
-  $timers[$name]['count'] = isset($timers[$name]['count']) ? ++$timers[$name]['count'] : 1;
+  Timer::start($name);
 }
 
 /**
- * Reads the current timer value without stopping the timer.
- *
- * @param $name
- *   The name of the timer.
- *
- * @return
- *   The current timer value in ms.
+ * @deprecated as of Drupal 8.0.
+ * @see \Drupal\Component\Utility\Timer::read
  */
 function timer_read($name) {
-  global $timers;
-
-  if (isset($timers[$name]['start'])) {
-    $stop = microtime(TRUE);
-    $diff = round(($stop - $timers[$name]['start']) * 1000, 2);
-
-    if (isset($timers[$name]['time'])) {
-      $diff += $timers[$name]['time'];
-    }
-    return $diff;
-  }
-  return $timers[$name]['time'];
+  return Timer::read($name);
 }
 
 /**
- * Stops the timer with the specified name.
- *
- * @param $name
- *   The name of the timer.
- *
- * @return
- *   A timer array. The array contains the number of times the timer has been
- *   started and stopped (count) and the accumulated timer value in ms (time).
+ * @deprecated as of Drupal 8.0.
+ * @see \Drupal\Component\Utility\Timer::stop
  */
 function timer_stop($name) {
-  global $timers;
-
-  if (isset($timers[$name]['start'])) {
-    $stop = microtime(TRUE);
-    $diff = round(($stop - $timers[$name]['start']) * 1000, 2);
-    if (isset($timers[$name]['time'])) {
-      $timers[$name]['time'] += $diff;
-    }
-    else {
-      $timers[$name]['time'] = $diff;
-    }
-    unset($timers[$name]['start']);
-  }
-
-  return $timers[$name];
+  return Timer::stop($name);
 }
 
 /**
@@ -2281,8 +2238,6 @@ function _drupal_exception_handler($exception) {
  */
 function _drupal_bootstrap_configuration() {
   drupal_environment_initialize();
-  // Start a page timer:
-  timer_start('page');
   // Initialize the configuration, including variables from settings.php.
   drupal_settings_initialize();
 
@@ -2291,6 +2246,9 @@ function _drupal_bootstrap_configuration() {
 
   // Activate the class loader.
   drupal_classloader();
+
+  // Start a page timer:
+  Timer::start('page');
 
   // Load the procedural configuration system helper functions.
   require_once DRUPAL_ROOT . '/core/includes/config.inc';
@@ -3118,78 +3076,41 @@ function ip_address() {
  *   loader class when calling drupal_classloader() from settings.php. It is
  *   ignored otherwise.
  *
- * @return Symfony\Component\ClassLoader\UniversalClassLoader
- *   A UniversalClassLoader class instance (or extension thereof).
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ *   A ClassLoader class instance (or extension thereof).
  */
 function drupal_classloader($class_loader = NULL) {
-  // By default, use the UniversalClassLoader which is best for development,
-  // as it does not break when code is moved on the file system. However, as it
-  // is slow, allow to use the APC class loader in production.
+  // By default, use the ClassLoader which is best for development, as it does
+  // not break when code is moved on the file system. However, as it is slow,
+  // allow to use the APC class loader in production.
   static $loader;
 
   if (!isset($loader)) {
 
     // Include the Symfony ClassLoader for loading PSR-0-compatible classes.
-    require_once DRUPAL_ROOT . '/core/vendor/symfony/class-loader/Symfony/Component/ClassLoader/UniversalClassLoader.php';
-    if (!isset($class_loader) && class_exists('Drupal\Component\Utility\Settings', FALSE)) {
-      $class_loader = settings()->get('class_loader');
+    require_once DRUPAL_ROOT . '/core/vendor/symfony/class-loader/Symfony/Component/ClassLoader/ClassLoader.php';
+    $loader = new ClassLoader();
+
+    // Register the class loader.
+    // When configured to use APC, the ApcClassLoader is registered instead.
+    // Note that ApcClassLoader decorates ClassLoader and only provides the
+    // findFile() method, but none of the others. The actual registry is still
+    // in ClassLoader.
+    if (!isset($class_loader)) {
+      $class_loader = settings()->get('class_loader', 'default');
+    }
+    if ($class_loader === 'apc') {
+      require_once DRUPAL_ROOT . '/core/vendor/symfony/class-loader/Symfony/Component/ClassLoader/ApcClassLoader.php';
+      $apc_loader = new ApcClassLoader('drupal.' . $GLOBALS['drupal_hash_salt'], $loader);
+      $apc_loader->register();
+    }
+    else {
+      $loader->register();
     }
 
-    switch ($class_loader) {
-      case 'apc':
-        if (function_exists('apc_store')) {
-          require_once DRUPAL_ROOT . '/core/vendor/symfony/class-loader/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php';
-          $loader = new ApcUniversalClassLoader('drupal.' . $GLOBALS['drupal_hash_salt']);
-          break;
-        }
-      // Fall through to the default loader if APC was not loaded, so that the
-      // site does not fail completely.
-      case 'dev':
-      case 'default':
-      default:
-        $loader = new UniversalClassLoader();
-        break;
-    }
-
-    // Register explicit namespaces for Drupal core.
-    // The majority of namespaces that need to be resolved are from Drupal core,
-    // so registering/setting them before vendor libraries saves a few
-    // additional cycles per class lookup.
-    $loader->registerNamespaces(array(
-      'Drupal\Core' => DRUPAL_ROOT . '/core/lib',
-      'Drupal\Component' => DRUPAL_ROOT . '/core/lib',
-      'Drupal\Driver' => DRUPAL_ROOT . '/drivers/lib',
-    ));
-
-    // Register namespaces and PEAR-like prefixes for vendor libraries managed
-    // by Composer. Composer combines libraries that use PHP 5.3 namespaces and
-    // ones that use PEAR-like class prefixes in a single array, but the Symfony
-    // class loader requires them to be registered separately.
+    // Register namespaces for vendor libraries managed by Composer.
     $prefixes_and_namespaces = require DRUPAL_ROOT . '/core/vendor/composer/autoload_namespaces.php';
-    $prefixes = array();
-    $namespaces = array();
-    foreach ($prefixes_and_namespaces as $key => $path) {
-      // If the key:
-      // - Contains a namespace separator, we know it's a namespace.
-      // - Doesn't contain a namespace separator and ends in an "_" (e.g.,
-      //   "Twig_"), it's likely intended as a PEAR-like prefix rather than a
-      //   namespace.
-      // - Doesn't contain a namespace separator or end in an "_" (e.g.,
-      //   "Assetic"), then it could be either a namespace or an incomplete
-      //   PEAR-like prefix, but we assume the former, since the only example of
-      //   that currently in Drupal is Assetic.
-      // @todo Switch to a class loader that doesn't require this guessing:
-      //   http://drupal.org/node/1658720.
-      $is_namespace = (strpos($key, '\\') !== FALSE) && (substr($key, -1) !== '_');
-      if ($is_namespace) {
-        $namespaces[rtrim($key, '\\')] = $path;
-      }
-      else {
-        $prefixes[$key] = $path;
-      }
-    }
-    $loader->registerPrefixes($prefixes);
-    $loader->registerNamespaces($namespaces);
+    $loader->addPrefixes($prefixes_and_namespaces);
 
     // Register the loader with PHP.
     $loader->register();
@@ -3207,7 +3128,7 @@ function drupal_classloader($class_loader = NULL) {
  */
 function drupal_classloader_register($name, $path) {
   $loader = drupal_classloader();
-  $loader->registerNamespace('Drupal\\' . $name, DRUPAL_ROOT . '/' . $path . '/lib');
+  $loader->addPrefix('Drupal\\' . $name, DRUPAL_ROOT . '/' . $path . '/lib');
 }
 
 /**

@@ -2,7 +2,7 @@ base_table: node
 id: test_mini_pager
 description: ''
 tag: ''
-human_name: test_mini_pager
+label: test_mini_pager
 core: 8.x
 api_version: '3.0'
 display:

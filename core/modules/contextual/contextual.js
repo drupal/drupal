@@ -14,17 +14,57 @@ var contextuals = [];
  */
 Drupal.behaviors.contextual = {
   attach: function (context) {
+    var that = this;
     $('ul.contextual-links', context).once('contextual', function () {
       var $this = $(this);
       var contextual = new Drupal.contextual($this, $this.closest('.contextual-region'));
       contextuals.push(contextual);
       $this.data('drupal-contextual', contextual);
+      that._adjustIfNestedAndOverlapping(this);
     });
 
     // Bind to edit mode changes.
     $('body').once('contextual', function () {
       $(document).on('drupalEditModeChanged.contextual', toggleEditMode);
     });
+  },
+
+  /**
+   * Determines if a contextual link is nested & overlapping, if so: adjusts it.
+   *
+   * This only deals with two levels of nesting; deeper levels are not touched.
+   *
+   * @param DOM contextualLink
+   *   A contextual link DOM element.
+   */
+  _adjustIfNestedAndOverlapping: function (contextualLink) {
+    var $contextuals = $(contextualLink)
+      .parents('.contextual-region').eq(-1)
+      .find('.contextual');
+
+    // Early-return when there's no nesting.
+    if ($contextuals.length === 1) {
+      return;
+    }
+
+    // If the two contextual links overlap, then we move the second one.
+    var firstTop = $contextuals.eq(0).offset().top;
+    var secondTop = $contextuals.eq(1).offset().top;
+    if (firstTop === secondTop) {
+      var $nestedContextual = $contextuals.eq(1);
+
+      // Retrieve height of nested contextual link.
+      var height = 0;
+      var $trigger = $nestedContextual.find('.trigger');
+      // Elements with the .element-invisible class have no dimensions, so this
+      // class must be temporarily removed to the calculate the height.
+      $trigger.removeClass('element-invisible');
+      height = $nestedContextual.height();
+      $trigger.addClass('element-invisible');
+
+      // Adjust nested contextual link's position.
+      $nestedContextual.css({ top: $nestedContextual.position().top + height });
+    }
   }
 };
 
@@ -67,7 +107,7 @@ Drupal.contextual.prototype.init = function() {
 
   // The trigger behaviors are never detached or mutated.
   this.$region
-    .on('click.contextual', '.contextual .trigger', $.proxy(this.triggerClickHandler, this))
+    .on('click.contextual', '.contextual .trigger:first', $.proxy(this.triggerClickHandler, this))
     .on('mouseleave.contextual', '.contextual', {show: false}, $.proxy(this.triggerLeaveHandler, this));
   // Attach highlight behaviors.
   this.attachHighlightBehaviors();
@@ -128,6 +168,8 @@ Drupal.contextual.prototype.highlightRegion = function(event) {
  */
 Drupal.contextual.prototype.triggerClickHandler = function (event) {
   event.preventDefault();
+  // Hide all nested contextual triggers while the links are shown for this one.
+  this.$region.find('.contextual .trigger:not(:first)').hide();
   this.showLinks();
 };
 
@@ -139,6 +181,8 @@ Drupal.contextual.prototype.triggerClickHandler = function (event) {
  */
 Drupal.contextual.prototype.triggerLeaveHandler = function (event) {
   var show = event && event.data && event.data.show;
+  // Show all nested contextual triggers when the links are hidden for this one.
+  this.$region.find('.contextual .trigger:not(:first)').show();
   this.showLinks(show);
 };
 

@@ -43,7 +43,7 @@ class TokenReplaceTest extends ViewUnitTestBase {
     $this->executeView($view);
 
     $expected = array(
-      '[view:name]' => 'Test tokens',
+      '[view:label]' => 'Test tokens',
       '[view:description]' => 'Test view to token replacement tests.',
       '[view:id]' => 'test_tokens',
       '[view:title]' => 'Test token page',

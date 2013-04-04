@@ -85,6 +85,6 @@ display:
     display_title: Page
     id: page_1
     position: '1'
-human_name: ''
+label: ''
 id: test_display
 tag: ''

@@ -70,7 +70,7 @@ class BlockLanguageCacheTest extends AggregatorTestBase {
     // Create the block cache for all languages.
     foreach ($this->langcodes as $langcode) {
       $this->drupalGet('admin/structure/block', array('language' => $langcode));
-      $this->clickLink(t('Add block'));
+      $this->clickLink(t('Place blocks'));
     }
 
     // Create a feed in the default language.
@@ -80,7 +80,7 @@ class BlockLanguageCacheTest extends AggregatorTestBase {
     // Check that the block is listed for all languages.
     foreach ($this->langcodes as $langcode) {
       $this->drupalGet('admin/structure/block', array('language' => $langcode));
-      $this->clickLink(t('Add block'));
+      $this->clickLink(t('Place blocks'));
       $this->assertText($feed->label());
     }
   }

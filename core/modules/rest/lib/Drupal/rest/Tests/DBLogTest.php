@@ -19,7 +19,7 @@ class DBLogTest extends RESTTestBase {
    *
    * @var array
    */
-  public static $modules = array('jsonld', 'rest', 'dblog');
+  public static $modules = array('hal', 'rest', 'dblog');
 
   public static function getInfo() {
     return array(
@@ -50,16 +50,16 @@ class DBLogTest extends RESTTestBase {
     $account = $this->drupalCreateUser(array('restful get dblog'));
     $this->drupalLogin($account);
 
-    $response = $this->httpRequest("dblog/$id", 'GET', NULL, 'application/vnd.drupal.ld+json');
+    $response = $this->httpRequest("dblog/$id", 'GET', NULL, $this->defaultMimeType);
     $this->assertResponse(200);
-    $this->assertHeader('content-type', 'application/vnd.drupal.ld+json');
+    $this->assertHeader('content-type', $this->defaultMimeType);
     $log = drupal_json_decode($response);
     $this->assertEqual($log['wid'], $id, 'Log ID is correct.');
     $this->assertEqual($log['type'], 'rest_test', 'Type of log message is correct.');
     $this->assertEqual($log['message'], 'Test message', 'Log message text is correct.');
 
     // Request an unknown log entry.
-    $response = $this->httpRequest("dblog/9999", 'GET', NULL, 'application/vnd.drupal.ld+json');
+    $response = $this->httpRequest("dblog/9999", 'GET', NULL, $this->defaultMimeType);
     $this->assertResponse(404);
     $decoded = drupal_json_decode($response);
     $this->assertEqual($decoded['error'], 'Log entry with ID 9999 was not found', 'Response message is correct.');

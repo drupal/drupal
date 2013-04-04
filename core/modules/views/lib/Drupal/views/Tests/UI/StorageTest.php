@@ -37,7 +37,7 @@ class StorageTest extends UITestBase {
   }
 
   /**
-   * Tests changing human_name, description and tag.
+   * Tests changing label, description and tag.
    *
    * @see views_ui_edit_details_form
    */
@@ -48,7 +48,7 @@ class StorageTest extends UITestBase {
     language_save($language);
 
     $edit = array(
-      'human_name' => $this->randomName(),
+      'label' => $this->randomName(),
       'tag' => $this->randomName(),
       'description' => $this->randomName(30),
       'langcode' => 'fr',
@@ -58,7 +58,8 @@ class StorageTest extends UITestBase {
     $this->drupalPost(NULL, array(), t('Save'));
 
     $view = views_get_view($view_name);
-    foreach (array('human_name', 'tag', 'description', 'langcode') as $property) {
+
+    foreach (array('label', 'tag', 'description', 'langcode') as $property) {
       $this->assertEqual($view->storage->get($property), $edit[$property], format_string('Make sure the property @property got probably saved.', array('@property' => $property)));
     }
   }

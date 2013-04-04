@@ -206,7 +206,7 @@ display:
         operator: AND
         groups:
           1: AND
-human_name: test_history
+label: test_history
 module: views
 id: test_history
 tag: ''

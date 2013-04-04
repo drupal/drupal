@@ -629,10 +629,7 @@ function drupal_install_system() {
   require_once DRUPAL_ROOT . '/' . $system_path . '/system.install';
   $system_versions = drupal_get_schema_versions('system');
   $system_version = $system_versions ? max($system_versions) : SCHEMA_INSTALLED;
-  drupal_container()
-    ->get('keyvalue')
-    ->get('system.schema')
-    ->set('system', $system_version);
+  Drupal::keyValue('system.schema')->set('system', $system_version);
 
   // System module needs to be enabled and the system/module lists need to be
   // reset first in order to allow config_install_default_config() to invoke

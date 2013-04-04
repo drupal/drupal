@@ -2,7 +2,7 @@ base_table: views_test_data
 id: test_tokens
 description: 'Test view to token replacement tests.'
 tag: ''
-human_name: 'Test tokens'
+label: 'Test tokens'
 core: 8.x
 display:
   default:

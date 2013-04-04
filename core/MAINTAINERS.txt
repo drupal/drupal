@@ -11,6 +11,7 @@ whole. The branch maintainers for Drupal 8 are:
 - Dries Buytaert 'dries' http://drupal.org/user/1
 - Nathaniel Catchpole 'catch' http://drupal.org/user/35733
 - Angela Byron 'webchick' http://drupal.org/user/24967
+- Alex Pott 'alexpott' http://drupal.org/user/157725
 
 Component maintainers
 ---------------------
@@ -66,7 +67,6 @@ Database system
     - Károly Négyesi 'chx' http://drupal.org/user/9446
 
 Database update system
-- Ashok Modi 'BTMash' http://drupal.org/user/60422
 - Károly Négyesi 'chx' http://drupal.org/user/9446
 
 Entity system
@@ -180,7 +180,7 @@ Module maintainers
 ------------------
 
 Aggregator module
-- ?
+- Paris Liakos 'rootatwc' http://drupal.org/user/1011436
 
 Block module
 - John Albin Wilkins 'JohnAlbin' http://drupal.org/user/32095

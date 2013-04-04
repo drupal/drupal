@@ -42,7 +42,7 @@ class DisplayTest extends UITestBase {
   public function randomView(array $view = array()) {
     // Create a new view in the UI.
     $default = array();
-    $default['human_name'] = $this->randomName(16);
+    $default['label'] = $this->randomName(16);
     $default['id'] = strtolower($this->randomName(16));
     $default['description'] = $this->randomName(16);
     $default['page[create]'] = TRUE;

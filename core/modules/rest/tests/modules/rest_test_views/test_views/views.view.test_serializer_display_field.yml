@@ -2,7 +2,7 @@ base_table: views_test_data
 id: test_serializer_display_field
 description: ''
 tag: ''
-human_name: 'Test serializer display field rows'
+label: 'Test serializer display field rows'
 core: 8.x
 display:
   default:

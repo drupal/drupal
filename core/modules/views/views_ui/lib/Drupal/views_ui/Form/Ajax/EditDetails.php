@@ -42,11 +42,11 @@ class EditDetails extends ViewsFormBase {
       '#theme_wrappers' => array('container'),
       '#attributes' => array('class' => array('scroll')),
     );
-    $form['details']['human_name'] = array(
+    $form['details']['label'] = array(
       '#type' => 'textfield',
       '#title' => t('Human-readable name'),
       '#description' => t('A descriptive human-readable name for this view. Spaces are allowed'),
-      '#default_value' => $view->getHumanName(),
+      '#default_value' => $view->label(),
     );
     $form['details']['langcode'] = array(
       '#type' => 'language_select',
@@ -85,7 +85,8 @@ class EditDetails extends ViewsFormBase {
       }
     }
     $bases = Views::viewsData()->fetchBaseTables();
-    $form_state['#page_title'] = $view->getHumanName();
+    $form_state['#page_title'] = $view->label();
+
     if (isset($bases[$view->get('base_table')])) {
       $form_state['#page_title'] .= ' (' . $bases[$view->get('base_table')]['title'] . ')';
     }
