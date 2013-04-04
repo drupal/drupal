@@ -30,7 +30,7 @@ class NodeNewComments extends Numeric {
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
 
-    $this->additional_fields['nid'] = 'nid';
+    $this->additional_fields['entity_id'] = 'entity_id';
     $this->additional_fields['type'] = 'type';
     $this->additional_fields['comment_count'] = array('table' => 'comment_entity_statistics', 'field' => 'comment_count');
   }
@@ -69,13 +69,13 @@ class NodeNewComments extends Numeric {
     $nids = array();
     $ids = array();
     foreach ($values as $id => $result) {
-      $nids[] = $result->{$this->aliases['nid']};
+      $nids[] = $result->{$this->aliases['entity_id']};
       $values[$id]->{$this->field_alias} = 0;
       // Create a reference so we can find this record in the values again.
-      if (empty($ids[$result->{$this->aliases['nid']}])) {
-        $ids[$result->{$this->aliases['nid']}] = array();
+      if (empty($ids[$result->{$this->aliases['entity_id']}])) {
+        $ids[$result->{$this->aliases['entity_id']}] = array();
       }
-      $ids[$result->{$this->aliases['nid']}][] = $id;
+      $ids[$result->{$this->aliases['entity_id']}][] = $id;
     }
 
     if ($nids) {
