@@ -15,6 +15,26 @@ use Drupal\simpletest\WebTestBase;
 abstract class RESTTestBase extends WebTestBase {
 
   /**
+   * The default serialization format to use for testing REST operations.
+   *
+   * @var string
+   */
+  protected $defaultFormat;
+
+  /**
+   * The default MIME type to use for testing REST operations.
+   *
+   * @var string
+   */
+  protected $defaultMimeType;
+
+  protected function setUp() {
+    parent::setUp();
+    $this->defaultFormat = 'hal_json';
+    $this->defaultMimeType = 'application/hal+json';
+  }
+
+  /**
    * Helper function to issue a HTTP request with simpletest's cURL.
    *
    * @param string $url
@@ -23,10 +43,13 @@ abstract class RESTTestBase extends WebTestBase {
    *   HTTP method, one of GET, POST, PUT or DELETE.
    * @param array $body
    *   Either the body for POST and PUT or additional URL parameters for GET.
-   * @param string $format
+   * @param string $mime_type
    *   The MIME type of the transmitted content.
    */
-  protected function httpRequest($url, $method, $body = NULL, $format = 'application/ld+json') {
+  protected function httpRequest($url, $method, $body = NULL, $mime_type = NULL) {
+    if (!isset($mime_type)) {
+      $mime_type = $this->defaultMimeType;
+    }
     if (!in_array($method, array('GET', 'HEAD', 'OPTIONS', 'TRACE'))) {
       // GET the CSRF token first for writing requests.
       $token = $this->drupalGet('rest/session/token');
@@ -39,7 +62,7 @@ abstract class RESTTestBase extends WebTestBase {
           CURLOPT_HTTPGET => TRUE,
           CURLOPT_URL => url($url, $options),
           CURLOPT_NOBODY => FALSE,
-          CURLOPT_HTTPHEADER => array('Accept: ' . $format),
+          CURLOPT_HTTPHEADER => array('Accept: ' . $mime_type),
         );
         break;
 
@@ -51,7 +74,7 @@ abstract class RESTTestBase extends WebTestBase {
           CURLOPT_URL => url($url, array('absolute' => TRUE)),
           CURLOPT_NOBODY => FALSE,
           CURLOPT_HTTPHEADER => array(
-            'Content-Type: ' . $format,
+            'Content-Type: ' . $mime_type,
             'X-CSRF-Token: ' . $token,
           ),
         );
@@ -65,7 +88,7 @@ abstract class RESTTestBase extends WebTestBase {
           CURLOPT_URL => url($url, array('absolute' => TRUE)),
           CURLOPT_NOBODY => FALSE,
           CURLOPT_HTTPHEADER => array(
-            'Content-Type: ' . $format,
+            'Content-Type: ' . $mime_type,
             'X-CSRF-Token: ' . $token,
           ),
         );
@@ -79,7 +102,7 @@ abstract class RESTTestBase extends WebTestBase {
           CURLOPT_URL => url($url, array('absolute' => TRUE)),
           CURLOPT_NOBODY => FALSE,
           CURLOPT_HTTPHEADER => array(
-            'Content-Type: ' . $format,
+            'Content-Type: ' . $mime_type,
             'X-CSRF-Token: ' . $token,
           ),
         );
@@ -159,7 +182,7 @@ abstract class RESTTestBase extends WebTestBase {
    * @param string $method
    *   The HTTP method to enable, e.g. GET, POST etc.
    * @param string $format
-   *   (Optional) The serialization format, e.g. jsonld.
+   *   (Optional) The serialization format, e.g. hal_json.
    */
   protected function enableService($resource_type, $method = 'GET', $format = NULL) {
     // Enable REST API for this entity type.

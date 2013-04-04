@@ -69,7 +69,7 @@ function rest_help($path, $arg) {
       $output .= '<h3>' . t('Example uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('An HTTP GET request can be used to get a node') . '</dt>';
-      $output .= '<dd><code>curl -H "Accept: application/vnd.drupal.ld+json" --include --request GET --cookie ' . session_name() . '=' . session_id() . ' ' . url('entity/node/5', array('absolute' => TRUE)) . '</code></dd>';
+      $output .= '<dd><code>curl -H "Accept: application/hal+json" --include --request GET --cookie ' . session_name() . '=' . session_id() . ' ' . url('entity/node/5', array('absolute' => TRUE)) . '</code></dd>';
       $output .= '<dt>' . t('An HTTP DELETE request can be used to delete a node') . '</dt>';
       $output .= '<dd><code>curl --include --request DELETE --cookie ' . session_name() . '=' . session_id() . ' ' . url('entity/node/5', array('absolute' => TRUE)) . '</code></dd>';
       $output .= '</dl>';
