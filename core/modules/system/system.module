@@ -2561,12 +2561,12 @@ function system_init() {
  */
 function system_page_build(&$page) {
   $path = drupal_get_path('module', 'system');
-  // Use the CSS_SYSTEM group to load these early.
-  $page['#attached']['css'][$path . '/system.base.css'] = array('group' => CSS_SYSTEM, 'every_page' => TRUE);
+  // Use the CSS_AGGREGATE_SYSTEM group to load these early.
+  $page['#attached']['css'][$path . '/system.base.css'] = array('group' => CSS_AGGREGATE_SYSTEM, 'every_page' => TRUE);
   if (path_is_admin(current_path())) {
-    $page['#attached']['css'][$path . '/system.admin.css'] = array('group' => CSS_SYSTEM);
+    $page['#attached']['css'][$path . '/system.admin.css'] = array('group' => CSS_AGGREGATE_SYSTEM);
   }
-  $page['#attached']['css'][$path . '/system.theme.css'] = array('group' => CSS_SYSTEM, 'every_page' => TRUE);
+  $page['#attached']['css'][$path . '/system.theme.css'] = array('group' => CSS_AGGREGATE_SYSTEM, 'every_page' => TRUE);
 }
 
 /**
