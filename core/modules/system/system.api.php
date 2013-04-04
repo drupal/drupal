@@ -2314,8 +2314,9 @@ function hook_file_url_alter(&$uri) {
  *     status report page.
  *
  * @return
- *   A keyed array of requirements. Each requirement is itself an array with
- *   the following items:
+ *   An associative array where the keys are arbitrary but must be unique (it
+ *   is suggested to use the module short name as a prefix) and the values are
+ *   themselves associative arrays with the following elements:
  *   - title: The name of the requirement.
  *   - value: The current value (e.g., version, time, level, etc). During
  *     install phase, this should only be used for version numbers, do not set
