@@ -635,11 +635,13 @@ abstract class FilterPluginBase extends HandlerBase {
     }
 
     if (!empty($form_state['values']['options']['group_info']['group_items'])) {
+      $operators = $this->operators();
+
       foreach ($form_state['values']['options']['group_info']['group_items'] as $id => $group) {
         if (empty($group['remove'])) {
 
           // Check if the title is defined but value wasn't defined.
-          if (!empty($group['title'])) {
+          if (!empty($group['title']) && $operators[$group['operator']]['values'] > 0) {
             if ((!is_array($group['value']) && trim($group['value']) == "") ||
                 (is_array($group['value']) && count(array_filter($group['value'], 'static::arrayFilterZero')) == 0)) {
               form_error($form['group_info']['group_items'][$id]['value'],
