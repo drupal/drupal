@@ -177,7 +177,7 @@ class NodeTranslationUITest extends EntityTranslationUITest {
   }
 
   /**
-   * Test that no metadata is stored for a disabled bundle.
+   * Tests that no metadata is stored for a disabled bundle.
    */
   public function testDisabledBundle() {
     // Create a bundle that does not have translation enabled.
