@@ -21,6 +21,35 @@ use Drupal\views\ViewExecutable;
 
 /**
  * The base plugin to handle pager.
+ *
+ * Pager plugins take care of everything regarding pagers, including getting
+ * and setting the total number of items to render the pager and setting the
+ * global pager arrays.
+ *
+ * To define a pager type, extend this base class. The ViewsPluginManager (used
+ * to create views plugins objects) adds annotated discovery for pager plugins.
+ * Your pager plugin must have an annotation that includes the plugin's metadata,
+ * for example:
+ * @code
+ * @ Plugin(
+ *   id = "demo_pager",
+ *   title = @ Translation("Display a demonstration pager"),
+ *   help = @ Translation("Demonstrate pagination of views items."),
+ *   theme = "views_demo_pager"
+ * )
+ * @endcode
+ * Remove spaces after @ in your actual plugin - these are put into this sample
+ * code so that it is not recognized as annotation.
+ *
+ * The plugin annotation contains these components:
+ * - id: The unique identifier of your pager plugin.
+ * - title: The "full" title for your pager type; used in the views UI.
+ * - short_title: (optional) The "short" title for your pager type;
+ *   used in the views UI when specified.
+ * - help: (optional) A short help string; this is displayed in the views UI.
+ * - theme: The theme function used to render the pager's output.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
  */
 abstract class PagerPluginBase extends PluginBase {
 
