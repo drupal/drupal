@@ -233,6 +233,8 @@ function forum_entity_info_alter(&$info) {
 }
 
 /**
+ * Implements callback_entity_info_uri().
+ *
  * Entity URI callback used in forum_entity_info_alter().
  */
 function forum_uri($forum) {

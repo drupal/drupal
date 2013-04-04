@@ -187,7 +187,7 @@ function user_entity_info() {
 }
 
 /**
- * Entity URI callback.
+ * Implements callback_entity_info_uri().
  */
 function user_uri($user) {
   return array(

@@ -2086,6 +2086,9 @@ function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
 /**
  * Format a username.
  *
+ * This is also the label callback implementation of
+ * callback_entity_info_label() for user_entity_info().
+ *
  * By default, the passed-in object's 'name' property is used if it exists, or
  * else, the site-defined value for the 'anonymous' variable. However, a module
  * may override this by implementing hook_username_alter(&$name, $account).

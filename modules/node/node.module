@@ -244,13 +244,7 @@ function node_field_display_node_alter(&$display, $context) {
 }
 
 /**
- * Entity URI callback.
- *
- * @param $node
- *   A node entity.
- *
- * @return array
- *   An array with 'path' as the key and the path to the node as its value.
+ * Implements callback_entity_info_uri().
  */
 function node_uri($node) {
   return array(

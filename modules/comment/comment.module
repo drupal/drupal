@@ -152,7 +152,7 @@ function comment_node_type_load($name) {
 }
 
 /**
- * Entity URI callback.
+ * Implements callback_entity_info_uri().
  */
 function comment_uri($comment) {
   return array(

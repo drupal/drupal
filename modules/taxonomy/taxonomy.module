@@ -140,7 +140,7 @@ function taxonomy_entity_info() {
 }
 
 /**
- * Entity URI callback.
+ * Implements callback_entity_info_uri().
  */
 function taxonomy_term_uri($term) {
   return array(

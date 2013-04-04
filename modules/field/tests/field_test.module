@@ -204,10 +204,7 @@ function field_test_dummy_field_storage_query(EntityFieldQuery $query) {
 }
 
 /**
- * Entity label callback.
- *
- * @param $entity
- *   The entity object.
+ * Implements callback_entity_info_label().
  *
  * @return
  *   The label of the entity prefixed with "label callback".
