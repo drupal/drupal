@@ -121,7 +121,7 @@ function action_admin_configure_submit($form, &$form_state) {
   action_save($function, $form_state['values']['action_type'], $params, $form_state['values']['action_label'], $aid);
   drupal_set_message(t('The action has been successfully saved.'));
 
-  $form_state['redirect'] = 'admin/config/system/actions/manage';
+  $form_state['redirect'] = 'admin/config/system/actions';
 }
 
 /**
@@ -137,7 +137,7 @@ function action_admin_delete_form($form, &$form_state, $action) {
   );
   return confirm_form($form,
     t('Are you sure you want to delete the action %action?', array('%action' => $action->label)),
-    'admin/config/system/actions/manage',
+    'admin/config/system/actions',
     t('This cannot be undone.'),
     t('Delete'),
     t('Cancel')
@@ -153,7 +153,7 @@ function action_admin_delete_form_submit($form, &$form_state) {
   action_delete($aid);
   watchdog('user', 'Deleted action %aid (%action)', array('%aid' => $aid, '%action' => $action->label));
   drupal_set_message(t('Action %action was deleted', array('%action' => $action->label)));
-  $form_state['redirect'] = 'admin/config/system/actions/manage';
+  $form_state['redirect'] = 'admin/config/system/actions';
 }
 
 /**

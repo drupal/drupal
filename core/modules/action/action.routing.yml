@@ -5,13 +5,6 @@ action_admin:
   requirements:
     _permission: 'administer actions'
 
-action_admin_manage:
-  pattern: '/admin/config/system/actions/manage'
-  defaults:
-    _content: '\Drupal\action\Controller\ActionController::adminManage'
-  requirements:
-    _permission: 'administer actions'
-
 action_admin_orphans_remove:
   pattern: '/admin/config/system/actions/orphan'
   defaults:
