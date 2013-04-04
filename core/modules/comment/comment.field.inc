@@ -30,7 +30,8 @@ function comment_field_info() {
         'preview' => DRUPAL_OPTIONAL,
       ),
       'default_widget' => 'comment_default',
-      'default_formatter' => 'comment_default'
+      'default_formatter' => 'comment_default',
+      'field item class' => 'Drupal\comment\Type\CommentItem',
     )
   );
 }
