@@ -10,7 +10,7 @@ namespace Drupal\comment\Type;
 use Drupal\Core\Entity\Field\FieldItemBase;
 
 /**
- * Defines the 'test_field' entity field item.
+ * Defines the 'comment_field' entity field item.
  */
 class CommentItem extends FieldItemBase {
 
