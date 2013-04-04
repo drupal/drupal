@@ -240,9 +240,7 @@ abstract class WebTestBase extends TestBase {
     // Add in comment settings for nodes.
     if (module_exists('comment')) {
       $settings += array(
-        'comment' => array(LANGUAGE_NOT_SPECIFIED => array(
-          array('status' => COMMENT_OPEN)
-        )),
+        'comment' => array(array('status' => COMMENT_OPEN)),
       );
     }
 

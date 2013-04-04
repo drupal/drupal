@@ -1096,6 +1096,11 @@ function comment_translation_configuration_element_submit($form, &$form_state) {
  * Implements hook_entity_load().
  */
 function comment_entity_load($entities, $entity_type) {
+  $fields = comment_get_comment_fields($entity_type);
+  if (!$fields) {
+    // Do not query database when entity has not comment fields.
+    return;
+  }
   // Load comment information from the database and add it to the entity's
   // comment_statistics property, which is an array keyed by field_name.
   $result = db_select('comment_entity_statistics', 'ces')
@@ -1128,7 +1133,7 @@ function comment_entity_insert(EntityInterface $entity) {
   // Allow bulk updates and inserts to temporarily disable the
   // maintenance of the {comment_entity_statistics} table.
   $fields = comment_get_comment_fields($entity->entityType());
-  if (state()->get('comment.maintain_entity_statistics', TRUE)) {
+  if ($fields && state()->get('comment.maintain_entity_statistics', TRUE)) {
     $query = db_insert('comment_entity_statistics')
      ->fields(array(
       'entity_id',
@@ -1473,7 +1478,7 @@ function comment_get_display_ordinal($cid, $instance) {
 
   if ($mode == COMMENT_MODE_FLAT) {
     // For flat comments, cid is used for ordering comments due to
-    // unpredicatable behavior with timestamp, so we make the same assumption
+    // unpredictable behavior with timestamp, so we make the same assumption
     // here.
     $query->condition('c1.cid', $cid, '<');
   }

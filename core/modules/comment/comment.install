@@ -453,6 +453,7 @@ function comment_update_8003(&$sandbox) {
 function comment_update_8004() {
   update_variables_to_state(array(
     'node_cron_comments_scale' => 'comment.node_comment_statistics_scale',
+    'comment_maintain_node_statistics' => 'comment.maintain_entity_statistics',
   ));
 }
 
