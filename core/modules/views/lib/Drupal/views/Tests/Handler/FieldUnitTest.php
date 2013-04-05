@@ -218,6 +218,7 @@ class FieldUnitTest extends ViewUnitTestBase {
     $view->field['name']->options['exclude'] = TRUE;
 
     $output = $view->preview();
+    $output = drupal_render($output);
     foreach ($this->dataSet() as $entry) {
       $this->assertNotSubString($output, $entry['name']);
     }
@@ -226,6 +227,7 @@ class FieldUnitTest extends ViewUnitTestBase {
     $view->field['name']->options['exclude'] = FALSE;
 
     $output = $view->preview();
+    $output = drupal_render($output);
     foreach ($this->dataSet() as $entry) {
       $this->assertSubString($output, $entry['name']);
     }

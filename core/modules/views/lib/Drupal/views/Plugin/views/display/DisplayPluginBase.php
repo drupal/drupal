@@ -2549,8 +2549,7 @@ abstract class DisplayPluginBase extends PluginBase {
    * some other AJAXy reason.
    */
   function preview() {
-    $element = $this->view->render();
-    return drupal_render($element);
+    return $this->view->render();
   }
 
   /**

@@ -139,14 +139,16 @@ class CacheTest extends PluginTestBase {
       )
     ));
 
-    $view->preview();
+    $output = $view->preview();
+    drupal_render($output);
     unset($view->pre_render_called);
     drupal_static_reset('drupal_add_css');
     drupal_static_reset('drupal_add_js');
     $view->destroy();
 
     $view->setDisplay();
-    $view->preview();
+    $output = $view->preview();
+    drupal_render($output);
     $css = drupal_add_css();
     $css_path = drupal_get_path('module', 'views_test_data') . '/views_cache.test.css';
     $js_path = drupal_get_path('module', 'views_test_data') . '/views_cache.test.js';
@@ -166,14 +168,14 @@ class CacheTest extends PluginTestBase {
     drupal_add_js($system_js_path);
     $view->destroy();
 
-    $view->setDisplay();
-    $view->preview();
+    $output = $view->preview();
+    drupal_render($output);
     drupal_static_reset('drupal_add_css');
     drupal_static_reset('drupal_add_js');
     $view->destroy();
 
-    $view->setDisplay();
-    $view->preview();
+    $output = $view->preview();
+    drupal_render($output);
 
     $css = drupal_add_css();
     $js = drupal_add_js();

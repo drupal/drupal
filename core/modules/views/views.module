@@ -69,7 +69,7 @@ function views_pre_render_view_element($element) {
 
   $view = views_get_view($element['#name']);
   if ($view && $view->access($element['#display_id'])) {
-    $element['view']['#markup'] = $view->preview($element['#display_id'], $element['#arguments']);
+    $element['view'] = $view->preview($element['#display_id'], $element['#arguments']);
   }
 
   return $element;

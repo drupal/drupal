@@ -202,20 +202,24 @@ class RestExport extends PathPluginBase {
   public function execute() {
     parent::execute();
 
-    return new Response($this->view->render(), 200, array('Content-type' => $this->getMimeType()));
+    $output = $this->view->render();
+    return new Response(drupal_render($output), 200, array('Content-type' => $this->getMimeType()));
   }
 
   /**
    * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::render().
    */
   public function render() {
-    $output = $this->view->style_plugin->render();
+    $build = array();
+    $build['#markup'] = $this->view->style_plugin->render();
 
+    // Wrap the output in a pre tag if this is for a live preview.
     if (!empty($this->view->live_preview)) {
-      return '<pre>' . $output . '</pre>';
+      $build['#prefix'] = '<pre>';
+      $build['#suffix'] = '</pre>';
     }
 
-    return $output;
+    return $build;
   }
 
   /**

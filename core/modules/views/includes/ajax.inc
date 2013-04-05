@@ -80,7 +80,8 @@ function views_ajax() {
       // Reuse the same DOM id so it matches that in Drupal.settings.
       $view->dom_id = $dom_id;
 
-      $response->addCommand(new ReplaceCommand(".view-dom-id-$dom_id", $view->preview($display_id, $args)));
+      $preview = $view->preview($display_id, $args);
+      $response->addCommand(new ReplaceCommand(".view-dom-id-$dom_id", drupal_render($preview)));
     }
     return $response;
   }

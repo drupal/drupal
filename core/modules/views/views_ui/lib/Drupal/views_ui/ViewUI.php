@@ -585,6 +585,7 @@ class ViewUI implements ViewStorageInterface {
 
       // Execute/get the view preview.
       $preview = $this->executable->preview($display_id, $args);
+      $preview = drupal_render($preview);
 
       if ($show_additional_queries) {
         $this->endQueryCapture();

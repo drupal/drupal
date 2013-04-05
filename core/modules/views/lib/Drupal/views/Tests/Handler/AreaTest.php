@@ -111,6 +111,7 @@ class AreaTest extends HandlerTestBase {
 
     // Check whether the strings exists in the output.
     $output = $view->preview();
+    $output = drupal_render($output);
     $this->assertTrue(strpos($output, $header_string) !== FALSE);
     $this->assertTrue(strpos($output, $footer_string) !== FALSE);
     $this->assertTrue(strpos($output, $empty_string) !== FALSE);
@@ -149,6 +150,7 @@ class AreaTest extends HandlerTestBase {
 
     // Test we have the site:name token in the output.
     $output = $view->preview();
+    $output = drupal_render($output);
     $expected = token_replace('[site:name]');
     $this->assertTrue(strpos($output, $expected) !== FALSE);
   }

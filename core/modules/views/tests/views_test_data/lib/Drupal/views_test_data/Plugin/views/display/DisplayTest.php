@@ -127,8 +127,7 @@ class DisplayTest extends DisplayPluginBase {
    * Override so preview and execute are the same output.
    */
   public function preview() {
-    $element = $this->execute();
-    return drupal_render($element);
+    return $this->execute();
   }
 
 }
