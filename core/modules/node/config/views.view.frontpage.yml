@@ -151,5 +151,5 @@ display:
 label: Frontpage
 module: node
 id: frontpage
-tag: ''
+tag: 'default'
 langcode: en
