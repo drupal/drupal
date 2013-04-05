@@ -1167,68 +1167,6 @@ function hook_field_available_languages_alter(&$langcodes, $context) {
 }
 
 /**
- * Act on field_attach_create_bundle().
- *
- * This hook is invoked after the field module has performed the operation.
- *
- * @param string $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
- * @param string $bundle
- *   The name of the bundle.
- */
-function hook_field_attach_create_bundle($entity_type, $bundle) {
-  // When a new bundle is created, the menu needs to be rebuilt to add the
-  // Field UI menu item tabs.
-  state()->set('menu_rebuild_needed', TRUE);
-}
-
-/**
- * Act on field_attach_rename_bundle().
- *
- * This hook is invoked after the field module has performed the operation.
- *
- * @param $entity_type
- *   The entity type to which the bundle is bound.
- * @param $bundle_old
- *   The previous name of the bundle.
- * @param $bundle_new
- *   The new name of the bundle.
- */
-function hook_field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new) {
-  // Update the extra weights variable with new information.
-  if ($bundle_old !== $bundle_new) {
-    $extra_weights = variable_get('field_extra_weights', array());
-    if (isset($info[$entity_type][$bundle_old])) {
-      $extra_weights[$entity_type][$bundle_new] = $extra_weights[$entity_type][$bundle_old];
-      unset($extra_weights[$entity_type][$bundle_old]);
-      variable_set('field_extra_weights', $extra_weights);
-    }
-  }
-}
-
-/**
- * Act on field_attach_delete_bundle.
- *
- * This hook is invoked after the field module has performed the operation.
- *
- * @param $entity_type
- *   The type of entity; for example, 'node' or 'user'.
- * @param $bundle
- *   The bundle that was just deleted.
- * @param $instances
- *   An array of all instances that existed for the bundle before it was
- *   deleted.
- */
-function hook_field_attach_delete_bundle($entity_type, $bundle, $instances) {
-  // Remove the extra weights variable information for this bundle.
-  $extra_weights = variable_get('field_extra_weights', array());
-  if (isset($extra_weights[$entity_type][$bundle])) {
-    unset($extra_weights[$entity_type][$bundle]);
-    variable_set('field_extra_weights', $extra_weights);
-  }
-}
-
-/**
  * @} End of "addtogroup field_attach".
  */
 

@@ -434,9 +434,9 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
   }
 
   /**
-   * Test field_attach_create_bundle() and field_attach_rename_bundle().
+   * Test entity_bundle_create() and entity_bundle_rename().
    */
-  function testFieldAttachCreateRenameBundle() {
+  function testEntityCreateRenameBundle() {
     // Create a new bundle.
     $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomName());
     field_test_create_bundle($new_bundle);
@@ -473,9 +473,9 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
   }
 
   /**
-   * Test field_attach_delete_bundle().
+   * Test entity_bundle_delete().
    */
-  function testFieldAttachDeleteBundle() {
+  function testEntityDeleteBundle() {
     // Create a new bundle.
     $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomName());
     field_test_create_bundle($new_bundle);

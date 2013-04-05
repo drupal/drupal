@@ -22,10 +22,10 @@ class CategoryStorageController extends ConfigStorageController {
     parent::postSave($entity, $update);
 
     if (!$update) {
-      field_attach_create_bundle('contact_message', $entity->id());
+      entity_invoke_bundle_hook('create', 'contact_message', $entity->id());
     }
     elseif ($entity->original->id() != $entity->id()) {
-      field_attach_rename_bundle('contact_message', $entity->original->id(), $entity->id());
+      entity_invoke_bundle_hook('rename', 'contact_message', $entity->original->id(), $entity->id());
     }
   }
 
@@ -36,7 +36,7 @@ class CategoryStorageController extends ConfigStorageController {
     parent::postDelete($entities);
 
     foreach ($entities as $entity) {
-      field_attach_delete_bundle('contact_message', $entity->id());
+      entity_invoke_bundle_hook('delete', 'contact_message', $entity->id());
     }
   }
 

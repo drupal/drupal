@@ -332,7 +332,7 @@ function comment_node_type_insert($info) {
  */
 function comment_node_type_update($info) {
   if (!empty($info->old_type) && $info->type != $info->old_type) {
-    field_attach_rename_bundle('comment', 'comment_node_' . $info->old_type, 'comment_node_' . $info->type);
+    entity_invoke_bundle_hook('rename', 'comment', 'comment_node_' . $info->old_type, 'comment_node_' . $info->type);
   }
 }
 
@@ -340,7 +340,7 @@ function comment_node_type_update($info) {
  * Implements hook_node_type_delete().
  */
 function comment_node_type_delete($info) {
-  field_attach_delete_bundle('comment', 'comment_node_' . $info->type);
+  entity_invoke_bundle_hook('delete', 'comment', 'comment_node_' . $info->type);
   $settings = array(
     'comment',
     'comment_default_mode',
@@ -375,7 +375,7 @@ function _comment_body_field_create($info) {
   }
   // Create the instance if needed.
   if (!field_read_instance('comment', 'comment_body', 'comment_node_' . $info->type, array('include_inactive' => TRUE))) {
-    field_attach_create_bundle('comment', 'comment_node_' . $info->type);
+    entity_invoke_bundle_hook('create', 'comment', 'comment_node_' . $info->type);
     // Attaches the body field by default.
     $instance = array(
       'field_name' => 'comment_body',

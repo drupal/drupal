@@ -86,6 +86,24 @@ function entity_get_bundles($entity_type = NULL) {
 }
 
 /**
+ * Notifies modules about an operation that was performed on a entity bundle.
+ *
+ * @param string $hook
+ *   One of 'create', 'rename' or 'delete'.
+ * @param string $entity_type
+ *   The entity type to which the bundle is bound.
+ * @param string $bundle
+ *   The name of the bundle on which the operation was performed.
+ * @param string|null $bundle_new
+ *   The new name of the bundle in case of a 'rename' operation. Defaults to
+ *   NULL.
+ */
+function entity_invoke_bundle_hook($hook, $entity_type, $bundle, $bundle_new = NULL) {
+  entity_info_cache_clear();
+  module_invoke_all('entity_bundle_' . $hook, $entity_type, $bundle, $bundle_new);
+}
+
+/**
  * Returns the entity view mode info.
  *
  * @param string|null $entity_type

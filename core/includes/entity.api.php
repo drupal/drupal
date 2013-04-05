@@ -137,6 +137,65 @@ function hook_entity_bundle_info_alter(&$bundles) {
 }
 
 /**
+ * Act on entity_bundle_create().
+ *
+ * This hook is invoked after the operation has been performed.
+ *
+ * @param string $entity_type
+ *   The type of $entity; e.g. 'node' or 'user'.
+ * @param string $bundle
+ *   The name of the bundle.
+ */
+function hook_entity_bundle_create($entity_type, $bundle) {
+  // When a new bundle is created, the menu needs to be rebuilt to add the
+  // Field UI menu item tabs.
+  state()->set('menu_rebuild_needed', TRUE);
+}
+
+/**
+ * Act on entity_bundle_rename().
+ *
+ * This hook is invoked after the operation has been performed.
+ *
+ * @param string $entity_type
+ *   The entity type to which the bundle is bound.
+ * @param string $bundle_old
+ *   The previous name of the bundle.
+ * @param string $bundle_new
+ *   The new name of the bundle.
+ */
+function hook_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
+  // Update the settings associated with the bundle in my_module.settings.
+  $config = config('my_module.settings');
+  $bundle_settings = $config->get('bundle_settings');
+  if (isset($bundle_settings[$entity_type][$bundle_old])) {
+    $bundle_settings[$entity_type][$bundle_new] = $bundle_settings[$entity_type][$bundle_old];
+    unset($bundle_settings[$entity_type][$bundle_old]);
+    $config->set('bundle_settings', $bundle_settings);
+  }
+}
+
+/**
+ * Act on entity_bundle_delete().
+ *
+ * This hook is invoked after the operation has been performed.
+ *
+ * @param string $entity_type
+ *   The type of entity; for example, 'node' or 'user'.
+ * @param string $bundle
+ *   The bundle that was just deleted.
+ */
+function hook_entity_bundle_delete($entity_type, $bundle) {
+  // Remove the settings associated with the bundle in my_module.settings.
+  $config = config('my_module.settings');
+  $bundle_settings = $config->get('bundle_settings');
+  if (isset($bundle_settings[$entity_type][$bundle])) {
+    unset($bundle_settings[$entity_type][$bundle]);
+    $config->set('bundle_settings', $bundle_settings);
+  }
+}
+
+/**
  * Alter the entity type definitions.
  *
  * Modules may implement this hook to alter the information that defines an

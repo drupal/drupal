@@ -537,7 +537,7 @@ function node_type_save($info) {
       ->execute();
 
     if (!empty($type->old_type) && $type->old_type != $type->type) {
-      field_attach_rename_bundle('node', $type->old_type, $type->type);
+      entity_invoke_bundle_hook('rename', 'node', $type->old_type, $type->type);
     }
     module_invoke_all('node_type_update', $type);
     $status = SAVED_UPDATED;
@@ -548,7 +548,7 @@ function node_type_save($info) {
       ->fields($fields)
       ->execute();
 
-    field_attach_create_bundle('node', $type->type);
+    entity_invoke_bundle_hook('create', 'node', $type->type);
 
     module_invoke_all('node_type_insert', $type);
     $status = SAVED_NEW;
@@ -665,7 +665,7 @@ function node_type_delete($name) {
   db_delete('node_type')
     ->condition('type', $name)
     ->execute();
-  field_attach_delete_bundle('node', $name);
+  entity_invoke_bundle_hook('delete', 'node', $name);
   module_invoke_all('node_type_delete', $type);
 
   // Clear the node type cache.

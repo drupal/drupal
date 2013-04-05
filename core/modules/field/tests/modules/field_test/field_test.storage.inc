@@ -416,16 +416,9 @@ function field_test_field_storage_delete_instance($instance) {
 }
 
 /**
- * Implements hook_field_attach_create_bundle().
+ * Implements hook_entity_bundle_rename().
  */
-function field_test_field_attach_create_bundle($bundle) {
-  // We don't need to do anything here.
-}
-
-/**
- * Implements hook_field_attach_rename_bundle().
- */
-function field_test_field_attach_rename_bundle($bundle_old, $bundle_new) {
+function field_test_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
   $data = _field_test_storage_data();
 
   // We need to account for deleted or inactive fields and instances.
@@ -448,20 +441,18 @@ function field_test_field_attach_rename_bundle($bundle_old, $bundle_new) {
 }
 
 /**
- * Implements hook_field_attach_delete_bundle().
+ * Implements hook_field_delete_instance().
  */
-function field_test_field_attach_delete_bundle($entity_type, $bundle, $instances) {
+function field_test_field_delete_instance($instance) {
   $data = _field_test_storage_data();
 
-  foreach ($instances as $field_name => $instance) {
-    $field = field_info_field($field_name);
-    if ($field['storage']['type'] == 'field_test_storage') {
-      $field_data = &$data[$field['id']];
-      foreach (array('current', 'revisions') as $sub_table) {
-        foreach ($field_data[$sub_table] as &$row) {
-          if ($row->bundle == $bundle_old) {
-            $row->deleted = TRUE;
-          }
+  $field = field_info_field($instance['field_name']);
+  if ($field['storage']['type'] == 'field_test_storage') {
+    $field_data = &$data[$field['id']];
+    foreach (array('current', 'revisions') as $sub_table) {
+      foreach ($field_data[$sub_table] as &$row) {
+        if ($row->bundle == $instance['bundle']) {
+          $row->deleted = TRUE;
         }
       }
     }
