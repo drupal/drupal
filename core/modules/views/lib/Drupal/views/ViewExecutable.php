@@ -1287,7 +1287,12 @@ class ViewExecutable {
       $this->style_plugin->pre_render($this->result);
 
       // Let each area handler have access to the result set.
-      foreach (array('header', 'footer', 'empty') as $area) {
+      $areas = array('header', 'footer');
+      // Only call preRender() on the empty handlers if the result is empty.
+      if (empty($this->result)) {
+        $areas[] = 'empty';
+      }
+      foreach ($areas as $area) {
         foreach ($this->{$area} as $handler) {
           $handler->preRender($this->result);
         }

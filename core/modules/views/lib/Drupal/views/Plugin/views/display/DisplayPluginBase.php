@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\display;
 
+use Drupal\views\Plugin\views\area\AreaPluginBase;
 use Drupal\views\ViewExecutable;
 use \Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Views;
@@ -878,8 +879,8 @@ abstract class DisplayPluginBase extends PluginBase {
         $handler = views_get_handler($info['table'], $info['field'], $handler_type, $override);
         if ($handler) {
           // Special override for area types so they know where they come from.
-          if ($handler_type == 'area') {
-            $handler->handler_type = $type;
+          if ($handler instanceof AreaPluginBase) {
+            $handler->areaType = $type;
           }
 
           $handler->init($this->view, $this, $info);
