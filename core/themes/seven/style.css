@@ -1033,10 +1033,14 @@ h1#overlay-title {
 }
 
 /* Shortcut theming */
-div.add-or-remove-shortcuts {
-  float: left; /* LTR */
-  padding-top: 0;
-  padding-left: 6px; /* LTR */
+.add-or-remove-shortcuts a:focus span.text,
+.add-or-remove-shortcuts a:hover span.text {
+  color: #fff;
+  background-color: #5f605b;
+  padding: 0 6px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
 }
 
 /* Field UI */
