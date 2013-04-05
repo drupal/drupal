@@ -290,7 +290,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       '#prefix' => '<div id="edit-page-link-properties-wrapper">',
       '#suffix' => '</div>',
     );
-    if (module_exists('menu')) {
+    if (\Drupal::moduleHandler()->moduleExists('menu')) {
       $menu_options = menu_get_menus();
     }
     else {
@@ -348,7 +348,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       );
     }
 
-    if (!module_exists('block')) {
+    if (!\Drupal::moduleHandler()->moduleExists('block')) {
       return $form;
     }
 
@@ -555,9 +555,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * available).
    */
   protected function build_filters(&$form, &$form_state) {
-    // Find all the fields we are allowed to filter by.
     module_load_include('inc', 'views_ui', 'admin');
-    $fields = views_fetch_fields($this->base_table, 'filter');
 
     $bundles = entity_get_bundles($this->entity_type);
     // If the current base table support bundles and has more than one (like user).

@@ -295,7 +295,8 @@ abstract class HandlerBase extends PluginBase {
       '#weight' => 150,
     );
     // Allow to alter the default values brought into the form.
-    drupal_alter('views_handler_options', $this->options, $view);
+    // @todo Do we really want to keep this hook.
+    \Drupal::moduleHandler()->alter('views_handler_options', $this->options, $this->view);
   }
 
   /**

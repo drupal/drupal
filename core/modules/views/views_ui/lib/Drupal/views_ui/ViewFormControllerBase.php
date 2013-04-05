@@ -82,7 +82,7 @@ abstract class ViewFormControllerBase extends EntityFormController {
     $list[$module_path . '/css/views-admin.css'] = array();
     $list[$module_path . '/css/views-admin.theme.css'] = array();
 
-    if (module_exists('contextual')) {
+    if (\Drupal::moduleHandler()->moduleExists('contextual')) {
       $list[$module_path . '/css/views-admin.contextual.css'] = array();
     }
 

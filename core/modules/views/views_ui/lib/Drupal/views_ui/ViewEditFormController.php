@@ -326,7 +326,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     }
     // In AJAX context, ViewUI::rebuildCurrentTab() returns this outside of form
     // context, so hook_form_views_ui_edit_form_alter() is insufficient.
-    drupal_alter('views_ui_display_tab', $build, $view, $display_id);
+    \Drupal::moduleHandler()->alter('views_ui_display_tab', $build, $view, $display_id);
     return $build;
   }
 
@@ -667,7 +667,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     );
 
     // Let other modules add additional links here.
-    drupal_alter('views_ui_display_top_links', $element['extra_actions']['#links'], $view, $display_id);
+    \Drupal::moduleHandler()->alter('views_ui_display_top_links', $element['extra_actions']['#links'], $view, $display_id);
 
     if (isset($view->type) && $view->type != t('Default')) {
       if ($view->type == t('Overridden')) {
@@ -724,7 +724,7 @@ class ViewEditFormController extends ViewFormControllerBase {
    * should not yet redirect to the destination.
    */
   public function submitDelayDestination($form, &$form_state) {
-    $query = drupal_container()->get('request')->query;
+    $query = \Drupal::service('request')->query;
     // @todo: Revisit this when http://drupal.org/node/1668866 is in.
     $destination = $query->get('destination');
     if (isset($destination) && $form_state['redirect'] !== FALSE) {

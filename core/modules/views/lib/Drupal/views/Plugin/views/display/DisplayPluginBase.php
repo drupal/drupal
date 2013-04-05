@@ -1202,7 +1202,7 @@ abstract class DisplayPluginBase extends PluginBase {
         '***DEFAULT_LANGUAGE***' => t("Default site language"),
         LANGUAGE_NOT_SPECIFIED => t('Language neutral'),
     );
-    if (module_exists('language')) {
+    if (\Drupal::moduleHandler()->moduleExists('language')) {
       $languages = array_merge($languages, language_list());
     }
     $options['field_langcode'] = array(

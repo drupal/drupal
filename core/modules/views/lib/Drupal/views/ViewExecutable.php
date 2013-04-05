@@ -987,10 +987,8 @@ class ViewExecutable {
     }
 
     // Let modules modify the view just prior to building it.
-    foreach (module_implements('views_pre_build') as $module) {
-      $function = $module . '_views_pre_build';
-      $function($this);
-    }
+    $module_handler = \Drupal::moduleHandler();
+    $module_handler->invokeAll('views_pre_build', array($this));
 
     // Attempt to load from cache.
     // @todo Load a build_info from cache.
@@ -1111,10 +1109,7 @@ class ViewExecutable {
     $this->attachDisplays();
 
     // Let modules modify the view just after building it.
-    foreach (module_implements('views_post_build') as $module) {
-      $function = $module . '_views_post_build';
-      $function($this);
-    }
+    $module_handler->invokeAll('views_post_build', array($this));
 
     return TRUE;
   }
@@ -1189,10 +1184,8 @@ class ViewExecutable {
     }
 
     // Let modules modify the view just prior to executing it.
-    foreach (module_implements('views_pre_execute') as $module) {
-      $function = $module . '_views_pre_execute';
-      $function($this);
-    }
+    $module_handler = \Drupal::moduleHandler();
+    $module_handler->invokeAll('views_pre_execute', array($this));
 
     // Check for already-cached results.
     if (!empty($this->live_preview)) {
@@ -1217,10 +1210,7 @@ class ViewExecutable {
     }
 
     // Let modules modify the view just after executing it.
-    foreach (module_implements('views_post_execute') as $module) {
-      $function = $module . '_views_post_execute';
-      $function($this);
-    }
+    $module_handler->invokeAll('views_post_execute', array($this));
 
     $this->executed = TRUE;
   }
@@ -1254,6 +1244,8 @@ class ViewExecutable {
     $exposed_form = $this->display_handler->getPlugin('exposed_form');
     $exposed_form->pre_render($this->result);
 
+    $module_handler = \Drupal::moduleHandler();
+
     // Check for already-cached output.
     if (!empty($this->live_preview)) {
       $cache = FALSE;
@@ -1261,6 +1253,7 @@ class ViewExecutable {
     else {
       $cache = $this->display_handler->getPlugin('cache');
     }
+
     if ($cache && $cache->cache_get('output')) {
     }
     else {
@@ -1301,22 +1294,14 @@ class ViewExecutable {
       }
 
       // Let modules modify the view just prior to rendering it.
-      foreach (module_implements('views_pre_render') as $module) {
-        $function = $module . '_views_pre_render';
-        $function($this);
-      }
+      $module_handler->invokeAll('views_pre_render', array($this));
 
       // Let the themes play too, because pre render is a very themey thing.
       foreach ($GLOBALS['base_theme_info'] as $base) {
-        $function = $base->name . '_views_pre_render';
-        if (function_exists($function)) {
-          $function($this);
-        }
+        $module_handler->invoke($base, 'views_pre_render', array($this));
       }
-      $function = $GLOBALS['theme'] . '_views_pre_render';
-      if (function_exists($function)) {
-        $function($this);
-      }
+
+      $module_handler->invoke($GLOBALS['theme'], 'views_pre_render', array($this));
 
       $this->display_handler->output = $this->display_handler->render();
       if ($cache) {
@@ -1331,22 +1316,14 @@ class ViewExecutable {
     }
 
     // Let modules modify the view output after it is rendered.
-    foreach (module_implements('views_post_render') as $module) {
-      $function = $module . '_views_post_render';
-      $function($this, $this->display_handler->output, $cache);
-    }
+    $module_handler->invokeAll('views_post_render', array($this, $this->display_handler->output, $cache));
 
     // Let the themes play too, because post render is a very themey thing.
     foreach ($GLOBALS['base_theme_info'] as $base) {
-      $function = $base->name . '_views_post_render';
-      if (function_exists($function)) {
-        $function($this);
-      }
+      $module_handler->invoke($base, 'views_post_render', array($this));
     }
-    $function = $GLOBALS['theme'] . '_views_post_render';
-    if (function_exists($function)) {
-      $function($this, $this->display_handler->output, $cache);
-    }
+
+    $module_handler->invoke($GLOBALS['theme'], 'views_post_render', array($this));
 
     return $this->display_handler->output;
   }
@@ -1423,10 +1400,7 @@ class ViewExecutable {
     }
 
     // Let modules modify the view just prior to executing it.
-    foreach (module_implements('views_pre_view') as $module) {
-      $function = $module . '_views_pre_view';
-      $function($this, $display_id, $this->args);
-    }
+    \Drupal::moduleHandler()->invokeAll('views_pre_view', array($this, $display_id, $this->args));
 
     // Allow hook_views_pre_view() to set the dom_id, then ensure it is set.
     $this->dom_id = !empty($this->dom_id) ? $this->dom_id : hash('sha256', $this->storage->id() . REQUEST_TIME . mt_rand());

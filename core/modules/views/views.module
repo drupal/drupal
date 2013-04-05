@@ -79,7 +79,7 @@ function views_pre_render_view_element($element) {
  * Implement hook_theme(). Register views theming functions.
  */
 function views_theme($existing, $type, $theme, $path) {
-  module_load_include('inc', 'views', 'views.theme');
+  Drupal::moduleHandler()->loadInclude('views', 'inc', 'views.theme');
 
   // Some quasi clever array merging here.
   $base = array(
@@ -687,13 +687,15 @@ function views_invalidate_cache() {
   // Set the menu as needed to be rebuilt.
   state()->set('menu_rebuild_needed', TRUE);
 
+  $module_handler = Drupal::moduleHandler();
+
   // Invalidate the block cache to update views block derivatives.
-  if (module_exists('block')) {
-    drupal_container()->get('plugin.manager.block')->clearCachedDefinitions();
+  if ($module_handler->moduleExists('block')) {
+    Drupal::service('plugin.manager.block')->clearCachedDefinitions();
   }
 
   // Allow modules to respond to the Views cache being cleared.
-  module_invoke_all('views_invalidate_cache');
+  $module_handler->invokeAll('views_invalidate_cache');
 }
 
 /**
@@ -955,7 +957,7 @@ function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
     }
     // @todo While Views is providing on behalf of core modules, check to see
     //   if they are enabled or not.
-    if (isset($plugin['module']) && !module_exists($plugin['module'])) {
+    if (isset($plugin['module']) && !\Drupal::moduleHandler()->moduleExists($plugin['module'])) {
       continue;
     }
 
@@ -980,10 +982,9 @@ function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
  *   An array of plugin definitions for all types.
  */
 function views_get_plugin_definitions() {
-  $container = drupal_container();
   $plugins = array();
   foreach (ViewExecutable::getPluginTypes() as $plugin_type) {
-    $plugins[$plugin_type] = $container->get("plugin.manager.views.$plugin_type")->getDefinitions();
+    $plugins[$plugin_type] = Views::pluginManager($plugin_type)->getDefinitions();
   }
 
   return $plugins;
@@ -1015,10 +1016,8 @@ function views_get_enabled_display_extenders() {
  * @endcode
  */
 function views_get_applicable_views($type) {
-  $container = drupal_container();
-
   // Get all display plugins which provides the type.
-  $display_plugins = $container->get('plugin.manager.views.display')->getDefinitions();
+  $display_plugins = Views::pluginManager('display')->getDefinitions();
   $ids = array();
   foreach ($display_plugins as $id => $definition) {
     if (!empty($definition[$type])) {
@@ -1026,13 +1025,13 @@ function views_get_applicable_views($type) {
     }
   }
 
-  $entity_ids = $container->get('entity.query')->get('view')
+  $entity_ids = Drupal::service('entity.query')->get('view')
     ->condition('status', TRUE)
     ->condition("display.*.display_plugin", $ids, 'IN')
     ->execute();
 
   $result = array();
-  foreach ($container->get('plugin.manager.entity')->getStorageController('view')->load($entity_ids) as $view) {
+  foreach (Drupal::service('plugin.manager.entity')->getStorageController('view')->load($entity_ids) as $view) {
     // Check each display to see if it meets the criteria and is enabled.
     $executable = $view->get('executable');
     $executable->initDisplay();
@@ -1560,7 +1559,7 @@ function views_exposed_form_cache($views_name, $display_name, $form_output = NUL
  * Build a list of theme function names for use most everywhere.
  */
 function views_theme_functions($hook, ViewExecutable $view, $display = NULL) {
-  module_load_include('inc', 'views', 'views.theme');
+  Drupal::moduleHandler()->loadInclude('views', 'inc', 'views.theme');
   return _views_theme_functions($hook, $view, $display);
 }
 

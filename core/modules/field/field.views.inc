@@ -28,7 +28,7 @@ function field_views_data() {
     if (empty($result)) {
       $result = field_views_field_default_views_data($field);
     }
-    drupal_alter('field_views_data', $result, $field, $module);
+    Drupal::moduleHandler()->alter('field_views_data', $result, $field, $module);
 
     if (is_array($result)) {
       $data = NestedArray::mergeDeep($result, $data);

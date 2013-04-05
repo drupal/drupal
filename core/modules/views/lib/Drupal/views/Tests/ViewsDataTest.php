@@ -170,7 +170,8 @@ class ViewsDataTest extends ViewUnitTestBase {
    * Tests the views_fetch_fields function().
    */
   public function testViewsFetchFields() {
-    module_load_include('inc', 'views_ui', 'admin');
+    $this->enableModules(array('views_ui'));
+    $this->container->get('module_handler')->loadInclude('views_ui', 'inc', 'admin');
 
     $expected = array(
       'field' => array(

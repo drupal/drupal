@@ -9,6 +9,7 @@ namespace Drupal\views;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\DestructableInterface;
 
 /**
@@ -73,8 +74,26 @@ class ViewsDataCache implements DestructableInterface {
    */
   protected $langcode;
 
-  public function __construct(CacheBackendInterface $cache_backend, ConfigFactory $config) {
+  /**
+   * Stores a module manager to invoke hooks.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * Constructs this ViewsDataCache object.
+   *
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   The cache backend to use.
+   * @param \Drupal\Core\Config\ConfigFactory $config
+   *   The configuration factory object to use.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler class to use for invoking hooks.
+   */
+  public function __construct(CacheBackendInterface $cache_backend, ConfigFactory $config, ModuleHandlerInterface $module_handler) {
     $this->cacheBackend = $cache_backend;
+    $this->moduleHandler = $module_handler;
 
     $this->langcode = language(LANGUAGE_TYPE_INTERFACE)->langcode;
     $this->skipCache = $config->get('views.settings')->get('skip_cache');
@@ -176,8 +195,8 @@ class ViewsDataCache implements DestructableInterface {
       return $data->data;
     }
     else {
-      $data = module_invoke_all('views_data');
-      drupal_alter('views_data', $data);
+      $data = $this->moduleHandler->invokeAll('views_data');
+      $this->moduleHandler->alter('views_data', $data);
 
       $this->processEntityTypes($data);
 

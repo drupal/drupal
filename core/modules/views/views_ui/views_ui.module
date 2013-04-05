@@ -246,7 +246,7 @@ function views_ui_cache_set(ViewUI $view) {
  */
 function views_ui_preprocess_views_view(&$vars) {
   $view = $vars['view'];
-  if (!empty($view->live_preview) && module_exists('contextual')) {
+  if (!empty($view->live_preview) && Drupal::moduleHandler()->moduleExists('contextual')) {
     $view->hide_admin_links = TRUE;
     foreach (array('title', 'header', 'exposed', 'rows', 'pager', 'more', 'footer', 'empty', 'attachment_after', 'attachment_before') as $section) {
       if (!empty($vars[$section])) {
