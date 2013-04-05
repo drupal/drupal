@@ -210,7 +210,7 @@ class CustomBlockFormController extends EntityFormControllerNG {
       unset($_GET['destination']);
     }
     $block = $this->buildEntity($form, $form_state);
-    $form_state['redirect'] = array('block/' . $block->uuid->value . '/delete', array('query' => $destination));
+    $form_state['redirect'] = array('block/' . $block->id() . '/delete', array('query' => $destination));
   }
 
 }

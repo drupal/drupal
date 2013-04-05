@@ -66,6 +66,11 @@ class PageEditTest extends CustomBlockTestBase {
     // Ensure that the block revision has been created.
     $revised_block = entity_load('custom_block', $block->id->value, TRUE);
     $this->assertNotIdentical($block->revision_id->value, $revised_block->revision_id->value, 'A new revision has been created.');
+
+    // Test deleting the block.
+    $this->drupalGet("block/" . $revised_block->id() . "/edit");
+    $this->drupalPost(NULL, array(), t('Delete'));
+    $this->assertText(format_string('Are you sure you want to delete !label?', array('!label' => $revised_block->label())));
   }
 
 }
