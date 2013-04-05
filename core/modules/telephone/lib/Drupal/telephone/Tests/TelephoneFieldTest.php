@@ -64,6 +64,12 @@ class TelephoneFieldTest extends WebTestBase {
       'label' => 'Telephone Number',
       'entity_type' => 'node',
       'bundle' => 'article',
+      'widget' => array(
+        'type' => 'telephone_default',
+        'settings' => array(
+          'placeholder' => '123-456-7890',
+        ),
+      ),
     );
     field_create_instance($instance);
 
@@ -74,16 +80,21 @@ class TelephoneFieldTest extends WebTestBase {
       ))
       ->save();
 
+    // Display creation form.
+    $this->drupalGet('node/add/article');
+    $this->assertFieldByName("field_telephone[und][0][value]", '', 'Widget found.');
+    $this->assertRaw('placeholder="123-456-7890"');
+
     // Test basic entery of telephone field.
     $edit = array(
       "title" => $this->randomName(),
       "field_telephone[und][0][value]" => "123456789",
     );
 
-    $this->drupalPost('node/add/article', $edit, t('Save'));
+    $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertRaw('<a href="tel:123456789">', 'A telephone link is provided on the article node page.');
 
-    // Add number with a space in it. Need to ensure it is stripped.
+    // Add number with a space in it. Need to ensure it is stripped on output.
     $edit = array(
       "title" => $this->randomName(),
       "field_telephone[und][0][value]" => "1234 56789",

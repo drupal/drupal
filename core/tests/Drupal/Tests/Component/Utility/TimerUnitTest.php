@@ -41,17 +41,13 @@ class TimerUnitTest extends UnitTestCase {
     usleep(5000);
     $value4 = Timer::read('test');
 
-    $this->assertGreaterThanOrEqual(5, $value, 'Timer measured 5 milliseconds of sleeping while running.');
-    $this->assertLessThan(10, $value, 'Timer measured 5 milliseconds of sleeping while running.');
+    $this->assertGreaterThanOrEqual(5, $value, 'Timer measured at least 5 milliseconds of sleeping while running.');
 
-    $this->assertGreaterThanOrEqual(10, $value2, 'Timer measured 10 milliseconds of sleeping while running.');
-    $this->assertLessThan(15, $value2, 'Timer measured 10 milliseconds of sleeping while running.');
+    $this->assertGreaterThanOrEqual($value + 5, $value2, 'Timer measured at least 10 milliseconds of sleeping while running.');
 
-    $this->assertGreaterThanOrEqual(15, $value3, 'Timer measured 15 milliseconds of sleeping while running.');
-    $this->assertLessThan(20, $value3, 'Timer measured 15 milliseconds of sleeping while running.');
+    $this->assertGreaterThanOrEqual($value2 + 5, $value3, 'Timer measured at least 15 milliseconds of sleeping while running.');
 
-    $this->assertGreaterThanOrEqual(20, $value4, 'Timer measured 20 milliseconds of sleeping while running.');
-    $this->assertLessThan(25, $value4, 'Timer measured 20 milliseconds of sleeping while running.');
+    $this->assertGreaterThanOrEqual($value3 + 5, $value4, 'Timer measured at least 20 milliseconds of sleeping while running.');
   }
 
 }

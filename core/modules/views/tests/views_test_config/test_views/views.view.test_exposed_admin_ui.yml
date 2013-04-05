@@ -23,6 +23,46 @@ display:
           id: type
           table: node
           plugin_id: node_type
+        body_value:
+          id: body_value
+          table: field_data_body
+          field: body_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: ''
+          group: '1'
+          exposed: '1'
+          expose:
+            operator_id: body_value_op
+            label: 'Body (body)'
+            description: ''
+            use_operator: '0'
+            operator: body_value_op
+            identifier: body_value
+            required: '0'
+            remember: '0'
+            multiple: '0'
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: '1'
+          group_info:
+            label: 'Body (body)'
+            description: ''
+            identifier: body_value
+            optional: '1'
+            widget: select
+            multiple: '0'
+            remember: '0'
+            default_group: All
+            default_group_multiple: {  }
+            group_items:
+              1:
+                title: Test
+                operator: empty
+                value: ''
+          plugin_id: string
       pager:
         type: full
       sorts:

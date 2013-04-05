@@ -25,16 +25,22 @@ use Drupal\field\FieldUpdateForbiddenException;
  * @see hook_field_extra_fields_alter()
  *
  * @return
- *   A nested array of 'pseudo-field' components. Each list is nested within the
+ *   A nested array of 'pseudo-field' elements. Each list is nested within the
  *   following keys: entity type, bundle name, context (either 'form' or
  *   'display'). The keys are the name of the elements as appearing in the
  *   renderable array (either the entity form or the displayed entity). The
  *   value is an associative array:
- *   - label: The human readable name of the component.
- *   - description: A short description of the component contents.
+ *   - label: The human readable name of the element.
+ *   - description: A short description of the element contents.
  *   - weight: The default weight of the element.
  *   - visible: The default visibility of the element. Only for 'display'
  *     context.
+ *   - edit: (optional) String containing markup (normally a link) used as the 
+ *     element's 'edit' operation in the administration interface. Only for 
+ *     'form' context.
+ *   - delete: (optional) String containing markup (normally a link) used as the 
+ *     element's 'delete' operation in the administration interface. Only for 
+ *     'form' context.
  */
 function hook_field_extra_fields() {
   $extra = array();
