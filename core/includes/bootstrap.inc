@@ -387,6 +387,13 @@ function conf_path($require_settings = TRUE, $reset = FALSE) {
     return $conf;
   }
 
+  // Check for a simpletest override.
+  if ($simpletest_conf_path = _drupal_simpletest_conf_path()) {
+    $conf = $simpletest_conf_path;
+    return $conf;
+  }
+
+  // Otherwise, use the normal $conf_path.
   $script_name = $_SERVER['SCRIPT_NAME'];
   if (!$script_name) {
     $script_name = $_SERVER['SCRIPT_FILENAME'];
@@ -394,6 +401,50 @@ function conf_path($require_settings = TRUE, $reset = FALSE) {
   $http_host = $_SERVER['HTTP_HOST'];
   $conf = find_conf_path($http_host, $script_name, $require_settings);
   return $conf;
+}
+
+/**
+ * Determines whether to use an overridden value for conf_path().
+ *
+ * Simpletest may provide a secondary, test-specific settings.php file to load
+ * after the primary one used by the parent site and override its variables.
+ * - If the child settings.php does not override $conf_path, then this function
+ * returns FALSE and conf_path() returns the directory of the primary
+ * settings.php.
+ * - If the child settings.php does override $conf_path, then
+ * _drupal_load_test_overrides() sets the 'simpletest_conf_path' setting, and
+ * this function returns that to conf_path(), causing installations and
+ * upgrades to act on that one.
+ *
+ * @return string|false
+ *   The overridden $conf_path, or FALSE if the $conf_path should not currently
+ *   be overridden.
+ *
+ * @see conf_path()
+ * @see _drupal_load_test_overrides()
+ */
+function _drupal_simpletest_conf_path() {
+  // Ensure that the settings object is available. conf_path() is called once
+  // before the Settings class is included, and at that point it should still
+  // load the primary $conf_path. See drupal_settings_initialize().
+  if (!class_exists('Drupal\Component\Utility\Settings', FALSE)) {
+    return FALSE;
+  }
+
+  // If no $simpletest_conf_path is set, use the normal $conf_path.
+  if (!($simpletest_conf_path = settings()->get('simpletest_conf_path'))) {
+    return FALSE;
+  }
+
+  // Ensure that this is actually a simpletest request. We can't check this
+  // before settings.php is loaded.
+  if (!drupal_valid_test_ua()) {
+    return FALSE;
+  }
+
+  // When the $simpletest_conf_path is set in a valid test request,
+  // return that path.
+  return $simpletest_conf_path;
 }
 
 /**
@@ -474,11 +525,7 @@ function find_conf_path($http_host, $script_name, $require_settings = TRUE) {
 function config_get_config_directory($type = CONFIG_ACTIVE_DIRECTORY) {
   global $config_directories;
 
-  if ($test_prefix = drupal_valid_test_ua()) {
-    // @see Drupal\simpletest\WebTestBase::setUp()
-    $path = conf_path() . '/files/simpletest/' . substr($test_prefix, 10) . '/config_' . $type;
-  }
-  elseif (!empty($config_directories[$type])) {
+  if (!empty($config_directories[$type])) {
     // Allow a configuration directory path to be outside of webroot.
     if (empty($config_directories[$type]['absolute'])) {
       $path = conf_path() . '/files/' . $config_directories[$type]['path'];
@@ -2566,12 +2613,50 @@ function drupal_valid_test_ua($new_prefix = NULL) {
     // and the HMAC must match.
     if ($time_diff >= 0 && $time_diff <= 5 && $hmac == drupal_hmac_base64($check_string, $key)) {
       $test_prefix = $prefix;
+      _drupal_load_test_overrides($test_prefix);
       return $test_prefix;
     }
   }
 
   $test_prefix = FALSE;
   return $test_prefix;
+}
+
+/**
+ * Overrides low-level and environment-specific configuration.
+ *
+ * Very strictly for internal use only.
+ *
+ * Loads settings.php from the simpletest public files directory. These files
+ * can change the global $conf, the global $config_directories, the return
+ * value of conf_path(), and settings().
+ *
+ * @param string $test_prefix
+ *   The simpletest prefix.
+ */
+function _drupal_load_test_overrides($test_prefix) {
+  global $conf, $config_directories;
+
+  // Do not use the parent site's config directories. Use only the child site's.
+  // @see Drupal\simpletest\TestBase::prepareConfigDirectories()
+  $path_prefix = 'simpletest/' . substr($test_prefix, 10);
+  $config_directories = array();
+  foreach (array(CONFIG_ACTIVE_DIRECTORY, CONFIG_STAGING_DIRECTORY) as $type) {
+    $config_directories[$type] = array('path' => $path_prefix . '/config_' . $type);
+  }
+
+  // Check for and load a settings.php file in the simpletest files directory.
+  $filename = conf_path() . '/files/' . $path_prefix . '/settings.php';
+  if (file_exists($filename)) {
+    $settings = settings()->getAll();
+    $conf_path = &drupal_static('conf_path');
+    // This can override $conf, $conf_path, $settings, and $config_directories.
+    include $filename;
+    // Keep the overriden $conf_path alive across drupal_static_reset() calls.
+    // @see conf_path()
+    $settings['simpletest_conf_path'] = $conf_path;
+    new Settings($settings);
+  }
 }
 
 /**

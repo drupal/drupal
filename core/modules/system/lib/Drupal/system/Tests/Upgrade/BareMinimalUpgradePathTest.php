@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Upgrade\BareMinimalUpgradePathTest.
+ * Contains \Drupal\system\Tests\Upgrade\BareMinimalUpgradePathTest.
  */
 
 namespace Drupal\system\Tests\Upgrade;
@@ -16,6 +16,7 @@ namespace Drupal\system\Tests\Upgrade;
  * content) so that an upgrade from of a site under this profile may be tested.
  */
 class BareMinimalUpgradePathTest extends UpgradePathTestBase {
+
   public static function getInfo() {
     return array(
       'name'  => 'Basic minimal profile upgrade path, bare database',
@@ -43,12 +44,7 @@ class BareMinimalUpgradePathTest extends UpgradePathTestBase {
     $this->assertResponse(200);
 
     // Verify that we are still logged in.
-    $this->drupalGet('user');
-    $this->clickLink(t('Edit'));
-    $this->assertEqual($this->getUrl(), url('user/1/edit', array('absolute' => TRUE)), 'We are still logged in as admin at the end of the upgrade.');
-
-    // Logout and verify that we can login back in with our initial password.
-    $this->drupalLogout();
+    $this->finishUpgradeSession();
     $this->drupalLogin((object) array(
       'uid' => 1,
       'name' => 'admin',
@@ -93,6 +89,16 @@ class BareMinimalUpgradePathTest extends UpgradePathTestBase {
 
     // Make sure that the default mail configuration has been converted.
     $this->assertEqual(array('default' => 'Drupal\Core\Mail\PhpMail'), config('system.mail')->get('interface'), 'Default mail configuration set.');
+  }
+
+  /**
+   * Asserts that the session was kept during update. Also, log out.
+   */
+  protected function finishUpgradeSession() {
+    $this->drupalGet('user');
+    $this->clickLink(t('Edit'));
+    $this->assertEqual($this->getUrl(), url('user/1/edit', array('absolute' => TRUE)), 'We are still logged in as admin at the end of the upgrade.');
+    $this->drupalLogout();
   }
 
 }

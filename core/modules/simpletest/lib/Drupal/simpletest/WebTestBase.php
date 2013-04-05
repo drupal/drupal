@@ -859,6 +859,36 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
+   * Writes a test-specific settings.php file for the child site.
+   *
+   * The child site loads this after the parent site's settings.php, so settings
+   * here override those.
+   *
+   * @param $settings An array of settings to write out, in the format expected
+   *   by drupal_rewrite_settings().
+   *
+   * @see _drupal_load_test_overrides()
+   * @see drupal_rewrite_settings()
+   */
+  protected function writeSettings($settings) {
+    // drupal_rewrite_settings() sets the in-memory global variables in addition
+    // to writing the file. We'll want to restore the original globals.
+    foreach (array_keys($settings) as $variable_name) {
+      $original_globals[$variable_name] = isset($GLOBALS[$variable_name]) ? $GLOBALS[$variable_name] : NULL;
+    }
+
+    include_once DRUPAL_ROOT . '/core/includes/install.inc';
+    $filename = $this->public_files_directory . '/settings.php';
+    file_put_contents($filename, "<?php\n");
+    drupal_rewrite_settings($settings, $filename);
+
+    // Restore the original globals.
+    foreach ($original_globals as $variable_name => $value) {
+      $GLOBALS[$variable_name] = $value;
+    }
+  }
+
+  /**
    * Reset all data structures after having enabled new modules.
    *
    * This method is called by Drupal\simpletest\WebTestBase::setUp() after enabling
