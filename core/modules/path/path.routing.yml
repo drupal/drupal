@@ -1,0 +1,6 @@
+path_delete:
+  pattern: 'admin/config/search/path/delete/{pid}'
+  defaults:
+    _form: '\Drupal\path\Form\DeleteForm'
+  requirements:
+    _permission: 'administer url aliases'
