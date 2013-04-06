@@ -149,30 +149,9 @@ function filter_menu() {
   );
   $items['admin/config/content/formats/%filter_format/disable'] = array(
     'title' => 'Disable text format',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('filter_admin_disable', 4),
-    'access callback' => '_filter_disable_format_access',
-    'access arguments' => array(4),
-    'file' => 'filter.admin.inc',
+    'route_name' => 'filter_admin_disable',
   );
   return $items;
-}
-
-/**
- * Access callback: Checks access for disabling text formats.
- *
- * @param $format
- *   A text format object.
- *
- * @return
- *   TRUE if the text format can be disabled by the current user, FALSE
- *   otherwise.
- *
- * @see filter_menu()
- */
-function _filter_disable_format_access($format) {
-  // The fallback format can never be disabled.
-  return user_access('administer filters') && ($format->format != filter_fallback_format());
 }
 
 /**
@@ -191,28 +170,6 @@ function _filter_disable_format_access($format) {
 function filter_format_load($format_id) {
   $formats = filter_formats();
   return isset($formats[$format_id]) ? $formats[$format_id] : FALSE;
-}
-
-/**
- * Disables a text format.
- *
- * There is no core facility to re-enable a disabled format. It is not deleted
- * to keep information for contrib and to make sure the format ID is never
- * reused. As there might be content using the disabled format, this would lead
- * to data corruption.
- *
- * @param $format
- *   The text format object to be disabled.
- */
-function filter_format_disable($format) {
-  $format->disable()->save();
-
-  // Allow modules to react on text format deletion.
-  module_invoke_all('filter_format_disable', $format);
-
-  // Clear the filter cache whenever a text format is disabled.
-  filter_formats_reset();
-  cache('filter')->deleteTags(array('filter_format' => $format->format));
 }
 
 /**

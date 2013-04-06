@@ -250,7 +250,7 @@ class FilterFormatAccessTest extends WebTestBase {
     $this->assertFieldByXPath("//textarea[@name='$body_value_key' and @disabled='disabled']", t('This field has been disabled because you do not have sufficient permissions to edit it.'), 'Text format access denied message found.');
 
     // Disable the text format used above.
-    filter_format_disable($this->disallowed_format);
+    $this->disallowed_format->disable()->save();
     $this->resetFilterCaches();
 
     // Log back in as the less privileged user and verify that the body field
@@ -293,7 +293,7 @@ class FilterFormatAccessTest extends WebTestBase {
     $this->assertUrl('node/' . $node->nid);
     foreach (filter_formats() as $format) {
       if ($format->format != filter_fallback_format()) {
-        filter_format_disable($format);
+        $format->disable()->save();
       }
     }
 

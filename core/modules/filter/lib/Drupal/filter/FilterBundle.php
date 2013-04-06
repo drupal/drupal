@@ -21,6 +21,9 @@ class FilterBundle extends Bundle {
    */
   public function build(ContainerBuilder $container) {
     CacheFactory::registerBin($container, 'filter');
+
+    $container->register('access_check.filter_disable', 'Drupal\filter\Access\FormatDisableCheck')
+      ->addTag('access_check');
   }
 
 }

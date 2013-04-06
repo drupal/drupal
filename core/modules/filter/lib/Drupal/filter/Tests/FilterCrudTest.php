@@ -73,7 +73,7 @@ class FilterCrudTest extends WebTestBase {
     $this->verifyFilters($format);
 
     // Disable the text format.
-    filter_format_disable($format);
+    $format->disable()->save();
 
     $formats = filter_formats();
     $this->assertTrue(!isset($formats[$format->format]), 'filter_formats: Disabled text format no longer exists.');

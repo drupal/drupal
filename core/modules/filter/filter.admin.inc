@@ -355,35 +355,3 @@ function filter_admin_format_form_submit($form, &$form_state) {
 
   $form_state['redirect'] = 'admin/config/content/formats';
 }
-
-/**
- * Page callback: Form constructor to confirm the text format deletion.
- *
- * @param $format
- *   An object representing a text format.
- *
- * @see filter_menu()
- * @see filter_admin_disable_submit()
- * @ingroup forms
- */
-function filter_admin_disable($form, &$form_state, $format) {
-  $form['#format'] = $format;
-
-  return confirm_form($form,
-    t('Are you sure you want to disable the text format %format?', array('%format' => $format->name)),
-    'admin/config/content/formats',
-    t('Disabled text formats are completely removed from the administrative interface, and any content stored with that format will not be displayed. This action cannot be undone.'),
-    t('Disable')
-  );
-}
-
-/**
- * Form submission handler for filter_admin_disable().
- */
-function filter_admin_disable_submit($form, &$form_state) {
-  $format = $form['#format'];
-  filter_format_disable($format);
-  drupal_set_message(t('Disabled text format %format.', array('%format' => $format->name)));
-
-  $form_state['redirect'] = 'admin/config/content/formats';
-}

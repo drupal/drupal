@@ -137,4 +137,20 @@ class FilterFormat extends ConfigEntityBase {
     return strnatcasecmp($a['name'], $b['name']);
   }
 
+  /**
+   * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::disable().
+   */
+  public function disable() {
+    parent::disable();
+
+    // Allow modules to react on text format deletion.
+    module_invoke_all('filter_format_disable', $this);
+
+    // Clear the filter cache whenever a text format is disabled.
+    filter_formats_reset();
+    cache('filter')->deleteTags(array('filter_format' => $this->format));
+
+    return $this;
+  }
+
 }
