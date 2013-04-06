@@ -1,3 +1,9 @@
+aggregator_admin_settings:
+  pattern: 'admin/config/services/aggregator/settings'
+  defaults:
+    _form: '\Drupal\aggregator\Form\SettingsForm'
+  requirements:
+    _permission: 'administer news feeds'
 aggregator_feed_items_delete:
   pattern: '/admin/config/services/aggregator/remove/{aggregator_feed}'
   defaults:

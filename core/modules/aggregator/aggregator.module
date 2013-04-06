@@ -138,12 +138,9 @@ function aggregator_menu() {
   $items['admin/config/services/aggregator/settings'] = array(
     'title' => 'Settings',
     'description' => 'Configure the behavior of the feed aggregator, including when to discard feed items and how to present feed items and categories.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('aggregator_admin_form'),
-    'access arguments' => array('administer news feeds'),
+    'route_name' => 'aggregator_admin_settings',
     'type' => MENU_LOCAL_TASK,
     'weight' => 100,
-    'file' => 'aggregator.admin.inc',
   );
   $items['aggregator'] = array(
     'title' => 'Feed aggregator',
