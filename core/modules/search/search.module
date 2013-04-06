@@ -165,11 +165,8 @@ function search_menu() {
   );
   $items['admin/config/search/settings/reindex'] = array(
     'title' => 'Clear index',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('search_reindex_confirm'),
-    'access arguments' => array('administer search'),
+    'route_name' => 'search_reindex_confirm',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
-    'file' => 'search.admin.inc',
   );
 
   // Add paths for searching. We add each module search path twice: once without
