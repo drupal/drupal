@@ -72,13 +72,17 @@ class UserAccountLinksTests extends WebTestBase {
     // Create an admin user and log in.
     $this->drupalLogin($this->drupalCreateUser(array('access administration pages', 'administer menu')));
 
-    // Verify that the 'My account' link is enabled.
+    // Verify that the 'My account' link is enabled. Do not assume the value of
+    // auto-increment is 1. Use XPath to obtain input element id and name using
+    // the consistent label text.
     $this->drupalGet('admin/structure/menu/manage/account');
-    $this->assertFieldChecked('edit-links-mlid2-hidden', "The 'My account' link is enabled by default.");
+    $label = $this->xpath('//label[contains(.,:text)]/@for', array(':text' => 'Enable My account menu link'));
+    $this->assertFieldChecked((string) $label[0], "The 'My account' link is enabled by default.");
 
     // Disable the 'My account' link.
+    $input = $this->xpath('//input[@id=:field_id]/@name', array(':field_id' => (string)$label[0]));
     $edit = array(
-      'links[mlid:2][hidden]' => FALSE,
+      (string) $input[0] => FALSE,
     );
     $this->drupalPost('admin/structure/menu/manage/account', $edit, t('Save'));
 
