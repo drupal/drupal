@@ -433,23 +433,20 @@ function field_entity_field_info($entity_type) {
     foreach ($instances as $field_name => $instance) {
       $field = field_info_field($field_name);
 
-      if (!empty($field_types[$field['type']]['field item class'])) {
+      // @todo: Allow for adding field type settings.
+      $definition = array(
+        'label' => t('Field !name', array('!name' => $field_name)),
+        'type' => isset($field_types[$field['type']]['data_type']) ? $field_types[$field['type']]['data_type'] :  $field['type'] . '_field',
+        'configurable' => TRUE,
+        'translatable' => !empty($field['translatable'])
+      );
 
-        // @todo: Allow for adding field type settings.
-        $definition = array(
-          'label' => t('Field !name', array('!name' => $field_name)),
-          'type' => isset($field_types[$field['type']]['data_type']) ? $field_types[$field['type']]['data_type'] :  $field['type'] . '_field',
-          'configurable' => TRUE,
-          'translatable' => !empty($field['translatable'])
-        );
-
-        if ($optional) {
-          $property_info['optional'][$field_name] = $definition;
-          $property_info['bundle map'][$bundle_name][] = $field_name;
-        }
-        else {
-          $property_info['definitions'][$field_name] = $definition;
-        }
+      if ($optional) {
+        $property_info['optional'][$field_name] = $definition;
+        $property_info['bundle map'][$bundle_name][] = $field_name;
+      }
+      else {
+        $property_info['definitions'][$field_name] = $definition;
       }
     }
   }
