@@ -52,10 +52,6 @@ function aggregator_help($path, $arg) {
  */
 function aggregator_theme() {
   return array(
-    'aggregator_categorize_items' => array(
-      'render element' => 'form',
-      'file' => 'aggregator.pages.inc',
-    ),
     'aggregator_feed_source' => array(
       'variables' => array('aggregator_feed' => NULL, 'view_mode' => NULL),
       'file' => 'aggregator.pages.inc',

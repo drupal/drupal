@@ -211,42 +211,44 @@ function _aggregator_page_list($items, $op, $feed_source = '') {
  */
 function aggregator_categorize_items($items, $feed_source = '') {
   $form['#submit'][] = 'aggregator_categorize_items_submit';
-  $form['#theme'] = 'aggregator_categorize_items';
   $form['feed_source'] = array(
     '#value' => $feed_source,
   );
   $categories = array();
   $done = FALSE;
-  $form['items'] = array();
-  if ($items) {
-    $form['items'] = entity_view_multiple($items, 'default');
-  }
-  $form['categories'] = array(
-    '#tree' => TRUE,
+
+  $form['items'] = array(
+    '#type' => 'table',
+    '#header' => array('', t('Categorize')),
   );
-  foreach ($items as $item) {
-    $form['categories'][$item->id()] = array();
-    $categories_result = db_query('SELECT c.cid, c.title, ci.iid FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid AND ci.iid = :iid', array(':iid' => $item->id()));
-    $selected = array();
-    foreach ($categories_result as $category) {
-      if (!$done) {
-        $categories[$category->cid] = check_plain($category->title);
+  if ($items && $form_items = entity_view_multiple($items, 'default')) {
+    foreach (element_children($form_items) as $iid) {
+      $categories_result = db_query('SELECT c.cid, c.title, ci.iid FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid AND ci.iid = :iid', array(':iid' => $iid));
+      $selected = array();
+      foreach ($categories_result as $category) {
+        if (!$done) {
+          $categories[$category->cid] = check_plain($category->title);
+        }
+        if ($category->iid) {
+          $selected[] = $category->cid;
+        }
       }
-      if ($category->iid) {
-        $selected[] = $category->cid;
-      }
+      $done = TRUE;
+      $form['items'][$iid]['item'] = $form_items[$iid];
+      $form['items'][$iid]['categories'] = array(
+        '#type' => config('aggregator.settings')->get('source.category_selector'),
+        '#default_value' => $selected,
+        '#options' => $categories,
+        '#size' => 10,
+        '#multiple' => TRUE,
+        '#parents' => array('categories', $iid),
+      );
     }
-    $done = TRUE;
-    $form['categories'][$item->id()] = array(
-      '#type' => config('aggregator.settings')->get('source.category_selector'),
-      '#default_value' => $selected,
-      '#options' => $categories,
-      '#size' => 10,
-      '#multiple' => TRUE
-    );
   }
+
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save categories'));
+  $form['pager'] = array('#theme' => 'pager');
 
   return $form;
 }
@@ -277,36 +279,6 @@ function aggregator_categorize_items_submit($form, &$form_state) {
     }
   }
   drupal_set_message(t('The categories have been saved.'));
-}
-
-/**
- * Returns HTML for the aggregator page list form for assigning categories.
- *
- * @param $variables
- *   An associative array containing:
- *   - form: A render element representing the form.
- *
- * @ingroup themeable
- */
-function theme_aggregator_categorize_items($variables) {
-  $form = $variables['form'];
-
-  $output = drupal_render($form['feed_source']);
-  $rows = array();
-  if (!empty($form['items'])) {
-    foreach (element_children($form['items']) as $key) {
-      $rows[] = array(
-        drupal_render($form['items'][$key]),
-        array('data' => drupal_render($form['categories'][$key]), 'class' => array('categorize-item')),
-      );
-    }
-  }
-  $output .= theme('table', array('header' => array('', t('Categorize')), 'rows' => $rows));
-  $output .= drupal_render($form['submit']);
-  $output .= drupal_render_children($form);
-
-  $output .= theme('pager');
-  return $output;
 }
 
 /**
