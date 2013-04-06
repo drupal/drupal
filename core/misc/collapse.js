@@ -29,7 +29,7 @@ var isDetailsSupported = (function (doc) {
   root.appendChild(el);
   diff = el.offsetHeight;
   el.open = true;
-  diff = diff != el.offsetHeight;
+  diff = diff !== el.offsetHeight;
   root.removeChild(el);
   if (fake) {
     root.parentNode.removeChild(root);
