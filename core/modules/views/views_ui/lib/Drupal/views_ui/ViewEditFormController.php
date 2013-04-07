@@ -468,6 +468,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     $build['columns']['second']['settings'] = array();
     $build['columns']['second']['header'] = array();
     $build['columns']['second']['footer'] = array();
+    $build['columns']['second']['empty'] = array();
     $build['columns']['second']['pager'] = array();
 
     // The third column buckets are wrapped in details.
@@ -527,9 +528,9 @@ class ViewEditFormController extends ViewFormControllerBase {
     $build['columns']['first']['sorts'] = $this->getFormBucket($view, 'sort', $display);
     $build['columns']['second']['header'] = $this->getFormBucket($view, 'header', $display);
     $build['columns']['second']['footer'] = $this->getFormBucket($view, 'footer', $display);
+    $build['columns']['second']['empty'] = $this->getFormBucket($view, 'empty', $display);
     $build['columns']['third']['arguments'] = $this->getFormBucket($view, 'argument', $display);
     $build['columns']['third']['relationships'] = $this->getFormBucket($view, 'relationship', $display);
-    $build['columns']['third']['empty'] = $this->getFormBucket($view, 'empty', $display);
 
     return $build;
   }
