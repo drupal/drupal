@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\Config\FileStorage;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\CoreBundle;
 use Drupal\Core\Database\Database;
@@ -428,6 +429,16 @@ function install_begin_request(&$install_state) {
 
     // Do not install over a configured settings.php.
     if (!empty($GLOBALS['databases'])) {
+      throw new Exception(install_already_done_error());
+    }
+  }
+
+  // Ensure that the active configuration directory is empty before installation
+  // starts.
+  if ($install_state['config_verified'] && empty($task)) {
+    $config = glob(config_get_config_directory(CONFIG_ACTIVE_DIRECTORY) . '/*.' . FileStorage::getFileExtension());
+    if (!empty($config)) {
+      $task = NULL;
       throw new Exception(install_already_done_error());
     }
   }
@@ -1609,7 +1620,7 @@ function install_already_done_error() {
   global $base_url;
 
   drupal_set_title(st('Drupal already installed'));
-  return st('<ul><li>To start over, you must empty your existing database.</li><li>To install to a different database, edit the appropriate <em>settings.php</em> file in the <em>sites</em> folder.</li><li>To upgrade an existing installation, proceed to the <a href="@base-url/core/update.php">update script</a>.</li><li>View your <a href="@base-url">existing site</a>.</li></ul>', array('@base-url' => $base_url));
+  return st('<ul><li>To start over, you must empty your existing database, delete your active configuration, and copy <em>default.settings.php</em> over <em>settings.php</em>.</li><li>To install to a different database, edit the appropriate <em>settings.php</em> file in the <em>sites</em> folder.</li><li>To locate your active configuration, view the appropriate <em>settings.php</em> file in the <em>sites</em> folder.</em></li></li><li>To upgrade an existing installation, proceed to the <a href="@base-url/core/update.php">update script</a>.</li><li>View your <a href="@base-url">existing site</a>.</li></ul>', array('@base-url' => $base_url));
 }
 
 /**

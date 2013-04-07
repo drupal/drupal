@@ -397,7 +397,9 @@ function system_requirements($phase) {
       }
     }
     else {
-      if (file_default_scheme() == 'public') {
+      // This function can be called before the config_cache table has been
+      // created.
+      if ($phase == 'install' || file_default_scheme() == 'public') {
         $requirements['file system']['value'] = $t('Writable (<em>public</em> download method)');
       }
       else {

@@ -719,6 +719,12 @@ function user_format_name($account) {
 function user_template_preprocess_default_variables_alter(&$variables) {
   global $user;
 
+  // If this function is called from the installer after Drupal has been
+  // installed then $user will not be set.
+  if (!is_object($user)) {
+    return;
+  }
+
   $variables['user'] = clone $user;
   // Remove password and session IDs, since themes should not need nor see them.
   unset($variables['user']->pass, $variables['user']->sid, $variables['user']->ssid);

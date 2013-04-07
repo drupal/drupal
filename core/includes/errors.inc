@@ -153,7 +153,7 @@ function _drupal_render_exception_safe($exception) {
  *   TRUE if an error should be displayed.
  */
 function error_displayable($error = NULL) {
-  $error_level = config('system.logging')->get('error_level');
+  $error_level = _drupal_get_error_level();
   $updating = (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update');
   $all_errors_displayed = ($error_level == ERROR_REPORTING_DISPLAY_ALL) ||
     ($error_level == ERROR_REPORTING_DISPLAY_VERBOSE);
@@ -254,7 +254,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
       $message = format_string('%type: !message in %function (line %line of %file).', $error);
 
       // Check if verbose error reporting is on.
-      $error_level = config('system.logging')->get('error_level');
+      $error_level = _drupal_get_error_level();
 
       if ($error_level == ERROR_REPORTING_DISPLAY_VERBOSE) {
         // First trace is the error itself, already contained in the message.
@@ -283,6 +283,29 @@ function _drupal_log_error($error, $fatal = FALSE) {
 
       return $response;
     }
+  }
+}
+
+/**
+ * Returns the current error level.
+ *
+ * This function should only be used to get the current error level pre
+ * DRUPAL_BOOTSTRAP_KERNEL or before Drupal is installed. In all other
+ * situations the following code is preferred:
+ * @code
+ * Drupal::config('system.logging')->get('error_level');
+ * @endcode
+ *
+ * @return string
+ *   The current error level.
+ */
+function _drupal_get_error_level() {
+  try {
+    return Drupal::config('system.logging')->get('error_level');
+  }
+  catch (Exception $e) {
+    // During very early install the cache_config table does not exist.
+    return ERROR_REPORTING_DISPLAY_ALL;
   }
 }
 

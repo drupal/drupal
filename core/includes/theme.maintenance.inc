@@ -50,7 +50,17 @@ function _drupal_maintenance_theme() {
     //   Stark otherwise. Since there is no low-level access to configuration
     //   currently, we only consult settings.php and fall back to Bartik
     //   otherwise, as it looks generic enough and way more user-friendly.
-    $custom_theme = variable_get('maintenance_theme', config('system.theme')->get('default')) ?: 'bartik';
+    $custom_theme = variable_get('maintenance_theme');
+    if (!$custom_theme)  {
+      $config = Drupal::config('system.theme');
+      // A broken install might not return an object.
+      if (is_object($config)) {
+        $custom_theme = $config->get('default');
+      }
+    }
+    if (!$custom_theme)  {
+      $custom_theme = 'bartik';
+    }
   }
 
   // Ensure that system.module is loaded.
