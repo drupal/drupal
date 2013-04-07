@@ -27,7 +27,7 @@ Drupal.behaviors.password = {
       if (settings.password.showStrengthIndicator) {
         var passwordMeter = '<div class="password-strength"><div class="password-strength-text" aria-live="assertive"></div><div class="password-strength-title">' + translate.strengthTitle + '</div><div class="password-indicator"><div class="indicator"></div></div></div>';
         confirmInput.parent().after('<div class="password-suggestions description"></div>');
-        innerWrapper.prepend(passwordMeter);
+        innerWrapper.append(passwordMeter);
         var passwordDescription = outerWrapper.find('div.password-suggestions').hide();
       }
 
