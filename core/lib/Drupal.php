@@ -122,6 +122,32 @@ class Drupal {
   }
 
   /**
+   * Retrieves the currently active request object.
+   *
+   * Note: The use of this wrapper in particular is especially discourged. Most
+   * code should not need to access the request directly.  Doing so means it
+   * will only function when handling an HTTP request, and will require special
+   * modification or wrapping when run from a command line tool, from certain
+   * queue processors, or from automated tests.
+   *
+   * If code must access the request, it is considerably better to register
+   * an object with the Service Container and give it a setRequest() method
+   * that is configured to run when the service is created.  That way, the
+   * correct request object can always be provided by the container and the
+   * service can still be unit tested.
+   *
+   * If this method must be used, never save the request object that is
+   * returned.  Doing so may lead to inconsistencies as the request object is
+   * volatile and may change at various times, such as during a subrequest.
+   *
+   * @return \Symfony\Component\HttpFoundation\Request
+   *   The currently active request object.
+   */
+  public static function request() {
+    return static::$container->get('request');
+  }
+
+  /**
    * Returns the current primary database.
    *
    * @return \Drupal\Core\Database\Connection
