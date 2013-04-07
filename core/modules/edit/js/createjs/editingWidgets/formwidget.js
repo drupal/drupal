@@ -8,7 +8,7 @@
 
   // @todo D8: change the name to "form" + use jQuery UI Widget bridging.
   // @see http://drupal.org/node/1874934#comment-7124904
-  $.widget('Midgard.formEditEditor', $.Midgard.editWidget, {
+  $.widget('DrupalEditEditor.formEditEditor', $.Create.editWidget, {
 
     id: null,
     $formContainer: null,

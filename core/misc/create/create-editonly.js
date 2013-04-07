@@ -334,6 +334,7 @@
         element: this.element,
         instance: this.options.model
       };
+
       var propertyParams = (predicate) ? {
         predicate: predicate,
         propertyEditor: this.options.propertyEditors[predicate],
@@ -516,11 +517,11 @@
 
     disable: function () {
       _.each(this.options.propertyEditors, function (editable) {
-        this.disablePropertyEditor({
+        this.disableEditor({
           widget: this,
           editable: editable,
           entity: this.options.model,
-          element: editable.element
+          element: jQuery(editable)
         });
       }, this);
       this.options.propertyEditors = {};
@@ -591,7 +592,7 @@
         return;
       }
       var widgetType = propertyElement.data('createWidgetName');
-      this.options.propertyEditors[predicate] = propertyElement.data('Midgard-' + widgetType);
+      this.options.propertyEditors[predicate] = propertyElement.data(widgetType);
 
       // Deprecated.
       this.options.editables.push(propertyElement);
@@ -672,13 +673,18 @@
     },
 
     disablePropertyEditor: function (data) {
-      data.element[data.editable.widgetName]({
-        disabled: true
-      });
-      jQuery(data.element).removeClass('ui-state-disabled');
+      var widgetName = jQuery(data.element).data('createWidgetName');
 
-      if (data.element.is(':focus')) {
-        data.element.blur();
+      data.disabled = true;
+
+      if (widgetName) {
+        // only if there has been an editing widget registered
+        jQuery(data.element)[widgetName](data);
+        jQuery(data.element).removeClass('ui-state-disabled');
+
+        if (data.element.is(':focus')) {
+          data.element.blur();
+        }
       }
     },
 
@@ -749,7 +755,7 @@
   //     jQuery.widget('Namespace.MyWidget', jQuery.Create.editWidget, {
   //       // override any properties
   //     });
-  jQuery.widget('Midgard.editWidget', {
+  jQuery.widget('Create.editWidget', {
     options: {
       disabled: false,
       vie: null
@@ -843,7 +849,7 @@
   //
   // Due to licensing incompatibilities, Aloha Editor needs to be installed
   // and configured separately.
-  jQuery.widget('Midgard.alohaWidget', jQuery.Midgard.editWidget, {
+  jQuery.widget('Create.alohaWidget', jQuery.Create.editWidget, {
     _initialize: function () {},
     enable: function () {
       var options = this.options;
@@ -906,7 +912,7 @@
   //
   // This widget allows editing textual content areas with the
   // [CKEditor](http://ckeditor.com/) rich text editor.
-  jQuery.widget('Midgard.ckeditorWidget', jQuery.Midgard.editWidget, {
+  jQuery.widget('Create.ckeditorWidget', jQuery.Create.editWidget, {
     enable: function () {
       this.element.attr('contentEditable', 'true');
       this.editor = CKEDITOR.inline(this.element.get(0));
@@ -918,7 +924,6 @@
       });
       this.editor.on('blur', function () {
         widget.options.activated();
-        widget.options.changed(widget.editor.getData());
       });
       this.editor.on('key', function () {
         widget.options.changed(widget.editor.getData());
@@ -928,11 +933,6 @@
       });
       this.editor.on('afterCommandExec', function () {
         widget.options.changed(widget.editor.getData());
-      });
-      this.editor.on('configLoaded', function() {
-        jQuery.each(widget.options.editorOptions, function(optionName, option) {
-          widget.editor.config[optionName] = option;
-        });
       });
     },
 
@@ -964,7 +964,7 @@
   //
   // This widget allows editing textual content areas with the
   // [Hallo](http://hallojs.org) rich text editor.
-  jQuery.widget('Midgard.halloWidget', jQuery.Midgard.editWidget, {
+  jQuery.widget('Create.halloWidget', jQuery.Create.editWidget, {
     options: {
       editorOptions: {},
       disabled: true,
@@ -1006,10 +1006,6 @@
           return;
         }
         self.options.toolbarState = data.display;
-        if (!self.element.data('IKS-hallo')) {
-          // Hallo not yet instantiated
-          return;
-        }
         var newOptions = self.getHalloOptions();
         self.element.hallo('changeToolbar', newOptions.parentElement, newOptions.toolbar, true);
       });
@@ -1065,7 +1061,7 @@
   //
   // This widget allows editing textual content areas with the
   // [Redactor](http://redactorjs.com/) rich text editor.
-  jQuery.widget('Midgard.redactorWidget', jQuery.Midgard.editWidget, {
+  jQuery.widget('Create.redactorWidget', jQuery.Create.editWidget, {
     editor: null,
 
     options: {
