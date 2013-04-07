@@ -8,7 +8,7 @@
 
   // @todo D8: use jQuery UI Widget bridging.
   // @see http://drupal.org/node/1874934#comment-7124904
-  jQuery.widget('DrupalEditEditor.direct', jQuery.Create.editWidget, {
+  jQuery.widget('Midgard.direct', jQuery.Midgard.editWidget, {
 
     /**
      * Implements getEditUISettings() method.
