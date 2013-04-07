@@ -290,6 +290,21 @@ function common_test_library_info() {
       array('system', 'jquery'),
     ),
   );
+  // Nominate a library using the shorthand format, where no options are given,
+  // just the file name.
+  $libraries['shorthand.plugin'] = array(
+    'title' => 'Shorthand Plugin',
+    'website' => 'http://www.example.com/',
+    'version' => '0.8.3.37',
+    'js' => array(
+      // Here we attach the JavaScript file using the shorthand format, only
+      // the file name is given, no options.
+      drupal_get_path('module', 'common_test') . '/js/shorthand.js',
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+    ),
+  );
   return $libraries;
 }
 

@@ -4576,6 +4576,13 @@ function drupal_get_library($module, $name = NULL) {
         // Add default elements to allow for easier processing.
         $module_libraries[$key] += array('dependencies' => array(), 'js' => array(), 'css' => array());
         foreach ($module_libraries[$key]['js'] as $file => $options) {
+          if (is_scalar($options)) {
+            // The JavaScript or CSS file has been specified in shorthand
+            // format, without an array of options. In this case $options is the
+            // filename.
+            $file = $options;
+            $options = array();
+          }
           $module_libraries[$key]['js'][$file]['version'] = $module_libraries[$key]['version'];
         }
       }
