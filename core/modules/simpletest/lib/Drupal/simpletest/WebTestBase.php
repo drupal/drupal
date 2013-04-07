@@ -775,10 +775,6 @@ abstract class WebTestBase extends TestBase {
       ),
     );
 
-    // Replace the global $user session with an anonymous user to resemble a
-    // regular installation.
-    $user = drupal_anonymous_user();
-
     // Reset the static batch to remove Simpletest's batch operations.
     $batch = &batch_get();
     $batch = array();
