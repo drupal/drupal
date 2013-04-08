@@ -45,7 +45,10 @@ class EditorAdminTest extends WebTestBase {
     $this->admin_user = $this->drupalCreateUser(array('administer filters'));
   }
 
-  function testWithoutEditorAvailable() {
+  /**
+   * Tests an existing format without any editors available.
+   */
+  function testNoEditorAvailable() {
     $this->drupalLogin($this->admin_user);
     $this->drupalGet('admin/config/content/formats/filtered_html');
 
@@ -62,15 +65,57 @@ class EditorAdminTest extends WebTestBase {
     $this->assertTrue(count($select) === 1, 'The Text Editor select exists.');
     $this->assertTrue(count($select_is_disabled) === 1, 'The Text Editor select is disabled.');
     $this->assertTrue(count($options) === 1, 'The Text Editor select has only one option.');
-    $this->assertTrue(((string) $options[0]) === 'None', 'Option 1 in the he Text Editor select is "None".');
+    $this->assertTrue(((string) $options[0]) === 'None', 'Option 1 in the Text Editor select is "None".');
     $this->assertRaw(t('This option is disabled because no modules that provide a text editor are currently enabled.'), 'Description for select present that tells users to install a text editor module.');
+  }
 
-    // Make a text editor available.
+  /**
+   * Tests adding a text editor to an existing text format.
+   */
+  function testAddEditorToExistingFormat() {
+    $this->enableUnicornEditor();
+    $this->drupalLogin($this->admin_user);
+    $this->drupalGet('admin/config/content/formats/filtered_html');
+    $edit = $this->selectUnicornEditor();
+    // Configure Unicorn Editor's setting to another value.
+    $edit['editor[settings][foo]'] = 'baz';
+    $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $this->verifyUnicornEditorConfiguration('filtered_html', 'baz');
+  }
+
+  /**
+   * Tests adding a text editor to a new text format.
+   */
+  function testAddEditorToNewFormat() {
+    $this->enableUnicornEditor();
+    $this->drupalLogin($this->admin_user);
+    $this->drupalGet('admin/config/content/formats/add');
+    // Configure the text format name.
+    $edit = array(
+      'name' => 'Monocerus',
+      'format' => 'monocerus',
+    );
+    $edit += $this->selectUnicornEditor();
+    $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $this->verifyUnicornEditorConfiguration($edit['format']);
+  }
+
+  /**
+   * Enables the unicorn editor.
+   */
+  protected function enableUnicornEditor() {
     module_enable(array('editor_test'));
     $this->rebuildContainer();
     $this->resetAll();
-    $this->drupalGet('admin/config/content/formats/filtered_html');
+  }
 
+  /**
+   * Tests and selects the unicorn editor.
+   *
+   * @return array
+   *   Returns an edit array containing the values to be posted.
+   */
+  protected function selectUnicornEditor() {
     // Verify the <select> when a text editor is available.
     $select = $this->xpath('//select[@name="editor[editor]"]');
     $select_is_disabled = $this->xpath('//select[@name="editor[editor]" and @disabled="disabled"]');
@@ -78,8 +123,8 @@ class EditorAdminTest extends WebTestBase {
     $this->assertTrue(count($select) === 1, 'The Text Editor select exists.');
     $this->assertTrue(count($select_is_disabled) === 0, 'The Text Editor select is not disabled.');
     $this->assertTrue(count($options) === 2, 'The Text Editor select has two options.');
-    $this->assertTrue(((string) $options[0]) === 'None', 'Option 1 in the he Text Editor select is "None".');
-    $this->assertTrue(((string) $options[1]) === 'Unicorn Editor', 'Option 2 in the he Text Editor select is "Unicorn Editor".');
+    $this->assertTrue(((string) $options[0]) === 'None', 'Option 1 in the Text Editor select is "None".');
+    $this->assertTrue(((string) $options[1]) === 'Unicorn Editor', 'Option 2 in the Text Editor select is "Unicorn Editor".');
     $this->assertTrue(((string) $options[0]['selected']) === 'selected', 'Option 1 ("None") is selected.');
     // Ensure the none option is selected
     $this->assertNoRaw(t('This option is disabled because no modules that provide a text editor are currently enabled.'), 'Description for select absent that tells users to install a text editor module.');
@@ -91,20 +136,26 @@ class EditorAdminTest extends WebTestBase {
     $this->drupalPostAjax(NULL, $edit, 'editor_configure');
     $unicorn_setting_foo = $this->xpath('//input[@name="editor[settings][foo]" and @type="text" and @value="bar"]');
     $this->assertTrue(count($unicorn_setting_foo), "Unicorn Editor's settings form is present.");
-    $options = $this->xpath('//select[@name="editor[editor]"]/option');
 
-    // Now configure the setting to another value.
-    $edit['editor[settings][foo]'] = 'baz';
-    $this->drupalPost(NULL, $edit, t('Save configuration'));
+    return $edit;
+  }
 
-    // Verify the editor configuration is saved correctly.
-    $editor = editor_load('filtered_html');
+  /**
+   * Verifies unicorn editor configuration.
+   *
+   * @param string $format_id
+   *   The format machine name.
+   * @param string $foo
+   *   The expected value of the foo setting.
+   */
+  protected function verifyUnicornEditorConfiguration($format_id, $foo = 'bar') {
+    $editor = editor_load($format_id);
     $this->assertIdentical($editor->editor, 'unicorn', 'The text editor is configured correctly.');
-    $this->assertIdentical($editor->settings['foo'], 'baz', 'The text editor settings are stored correctly.');
+    $this->assertIdentical($editor->settings['foo'], $foo, 'The text editor settings are stored correctly.');
     $this->assertIdentical($editor->settings['ponies too'], true, 'The text editor defaults are retrieved correctly.');
     $this->assertIdentical($editor->settings['rainbows'], true, 'The text editor defaults added by hook_editor_settings_defaults() are retrieved correctly.');
     $this->assertIdentical($editor->settings['sparkles'], false, 'The text editor defaults modified by hook_editor_settings_defaults_alter() are retrieved correctly.');
-    $this->drupalGet('admin/config/content/formats/filtered_html');
+    $this->drupalGet('admin/config/content/formats/'. $format_id);
     $select = $this->xpath('//select[@name="editor[editor]"]');
     $select_is_disabled = $this->xpath('//select[@name="editor[editor]" and @disabled="disabled"]');
     $options = $this->xpath('//select[@name="editor[editor]"]/option');
@@ -113,4 +164,5 @@ class EditorAdminTest extends WebTestBase {
     $this->assertTrue(count($options) === 2, 'The Text Editor select has two options.');
     $this->assertTrue(((string) $options[1]['selected']) === 'selected', 'Option 2 ("Unicorn Editor") is selected.');
   }
+
 }
