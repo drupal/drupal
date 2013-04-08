@@ -1,0 +1,56 @@
+base_field: nid
+base_table: node
+core: 8
+description: ''
+status: '1'
+display:
+  default:
+    display_options:
+      access:
+        type: perm
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      filters:
+        status:
+          expose:
+            operator: '0'
+          field: status
+          group: '1'
+          id: status
+          table: node
+          value: '1'
+          plugin_id: boolean
+      pager:
+        options:
+          items_per_page: '10'
+        type: full
+      query:
+        type: views_query
+      row:
+        options:
+          build_mode: teaser
+          comments: '0'
+          links: '1'
+        type: node
+      sorts: {  }
+      style:
+        type: default
+      title: test_node_row_plugin
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: {  }
+  page_1:
+    display_options:
+      path: test-node-row-plugin
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: {  }
+label: test_node_row_plugin
+langcode: en
+module: views
+id: test_node_row_plugin
+tag: default

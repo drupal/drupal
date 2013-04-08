@@ -236,6 +236,7 @@ function views_plugin_list() {
  * node portion of the theme registry.
  */
 function views_preprocess_node(&$vars) {
+  Drupal::moduleHandler()->loadInclude('node', 'views.inc');
   // The 'view' attribute of the node is added in views_preprocess_node()
   if (!empty($vars['node']->view) && $vars['node']->view->storage->id()) {
     $vars['view'] = $vars['node']->view;
@@ -252,7 +253,7 @@ function views_preprocess_node(&$vars) {
   }
 
   // Allow to alter comments and links based on the settings in the row plugin.
-  if (!empty($vars['view']->style_plugin->row_plugin) && get_class($vars['view']->style_plugin->row_plugin) == 'views_plugin_row_node_view') {
+  if (!empty($vars['view']->rowPlugin) && $vars['view']->rowPlugin->getPluginId() == 'node') {
     node_row_node_view_preprocess_node($vars);
   }
 }
