@@ -349,55 +349,6 @@ function image_file_predelete(File $file) {
 }
 
 /**
- * Implements hook_image_style_update().
- */
-function image_image_style_update(ImageStyle $style) {
-  if ($style->id() != $style->getOriginalID()) {
-    $instances = field_read_instances();
-    // Loop through all fields searching for image fields.
-    foreach ($instances as $instance) {
-      if ($instance['widget']['module'] == 'image') {
-        $view_modes = entity_get_view_modes($instance['entity_type']);
-        $view_modes = array('default') + array_keys($view_modes);
-        foreach ($view_modes as $view_mode) {
-          $display = entity_get_display($instance['entity_type'], $instance['bundle'], $view_mode);
-          $display_options = $display->getComponent($instance['field_name']);
-
-          // Check if the formatter involves an image style.
-          if ($display_options && $display_options['type'] == 'image' && $display_options['settings']['image_style'] == $style->getOriginalID()) {
-            // Update display information for any instance using the image
-            // style that was just deleted.
-            $display_options['settings']['image_style'] = $style->id();
-            $display->setComponent($instance['field_name'], $display_options)
-              ->save();
-          }
-        }
-        if ($instance['widget']['settings']['preview_image_style'] == $style->getOriginalID()) {
-          $instance['widget']['settings']['preview_image_style'] = $style->id();
-          field_update_instance($instance);
-        }
-      }
-    }
-  }
-}
-
-/**
- * Implements hook_image_style_delete().
- */
-function image_image_style_delete(ImageStyle $style) {
-  // Flush cached media for the style.
-  image_style_flush($style);
-  // Check whether field instance settings need to be updated.
-  // In case no replacement style was specified, all image fields that are using
-  // the deleted style are left in a broken state.
-  if ($new_id = $style->get('replacementID')) {
-    // The deleted ID is still set as originalID.
-    $style->set('name', $new_id);
-    image_image_style_update($style);
-  }
-}
-
-/**
  * Implements hook_field_delete_field().
  */
 function image_field_delete_field($field) {
@@ -540,23 +491,6 @@ function image_path_flush($path) {
  */
 function image_style_load($name) {
   return entity_load('image_style', $name);
-}
-
-/**
- * Implements hook_image_style_load.
- */
-function image_image_style_load($styles) {
-  foreach ($styles as $style) {
-    if (!empty($style->effects)) {
-      foreach ($style->effects as $ieid => $effect) {
-        $definition = image_effect_definition_load($effect['name']);
-        $effect = array_merge($definition, $effect);
-        $style->effects[$ieid] = $effect;
-      }
-      // Sort effects by weight.
-      uasort($style->effects, 'drupal_sort_weight');
-    }
-  }
 }
 
 /**

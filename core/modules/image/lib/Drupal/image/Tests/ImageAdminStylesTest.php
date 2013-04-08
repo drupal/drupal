@@ -333,4 +333,43 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->assertText(t('Scale 12x19'));
   }
 
+  /**
+   * Tests image style configuration import that does a delete.
+   */
+  function testConfigImport() {
+    // Create a new style.
+    $style_name = strtolower($this->randomName(10));
+    $style_label = $this->randomString();
+    $style = entity_create('image_style', array('name' => $style_name, 'label' => $style_label));
+    $style->save();
+
+    // Create an image field that uses the new style.
+    $field_name = strtolower($this->randomName(10));
+    $this->createImageField($field_name, 'article');
+    entity_get_display('node', 'article', 'default')
+      ->setComponent($field_name, array(
+        'type' => 'image',
+        'settings' => array('image_style' => $style_name),
+      ))
+      ->save();
+
+    // Create a new node with an image attached.
+    $test_image = current($this->drupalGetTestFiles('image'));
+    $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
+    $node = node_load($nid);
+
+    // Test that image is displayed using newly created style.
+    $this->drupalGet('node/' . $nid);
+    $this->assertRaw(image_style_url($style_name, file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri), format_string('Image displayed using style @style.', array('@style' => $style_name)));
+
+    // Write empty manifest to staging.
+    $manifest_data = config('manifest.image.style')->get();
+    unset($manifest_data[$style_name]);
+    $staging = $this->container->get('config.storage.staging');
+    $staging->write('manifest.image.style', $manifest_data);
+    config_import();
+
+    $this->assertFalse(entity_load('image_style', $style_name), 'Style deleted after config import.');
+    $this->assertEqual($this->getImageCount($style), 0, 'Image style was flushed after being deleted by config import.');
+  }
 }
