@@ -7,6 +7,8 @@
 
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\aggregator\Plugin\Core\Entity\Feed;
+use Guzzle\Http\Exception\RequestException;
+use Guzzle\Http\Exception\BadResponseException;
 
 /**
  * Page callback: Displays the aggregator administration page.
@@ -186,12 +188,22 @@ function aggregator_form_opml_submit($form, &$form_state) {
     $data = file_get_contents($file->uri);
   }
   else {
-    $response = drupal_http_request($form_state['values']['remote']);
-    if (!isset($response->error)) {
-      $data = $response->data;
+    try {
+      $response = Drupal::httpClient()
+        ->get($form_state['values']['remote'])
+        ->send();
+      $data = $response->getBody(TRUE);
     }
-    else {
-      watchdog('aggregator', 'HTTP request to @url failed with error: @error', array('@url' => $form_state['values']['remote'], '@error' => $response->error));
+    catch (BadResponseException $e) {
+      $response = $e->getResponse();
+      watchdog('aggregator', 'Failed to download OPML file due to "%error".', array('%error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase()), WATCHDOG_WARNING);
+      drupal_set_message(t('Failed to download OPML file due to "%error".', array('%error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase())));
+      return;
+    }
+    catch (RequestException $e) {
+      watchdog('aggregator', 'Failed to download OPML file due to "%error".', array('%error' => $e->getMessage()), WATCHDOG_WARNING);
+      drupal_set_message(t('Failed to download OPML file due to "%error".', array('%error' => $e->getMessage())));
+      return;
     }
   }
 
