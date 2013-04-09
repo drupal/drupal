@@ -5,6 +5,8 @@
  * Admin page callbacks for the system module.
  */
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -2919,8 +2921,9 @@ function system_date_time_lookup($form, &$form_state) {
   // Return a command instead of a string, since the Ajax framework
   // automatically prepends an additional empty DIV element for a string, which
   // breaks the layout.
-  $commands[] = ajax_command_replace('#edit-date-format-suffix', '<small id="edit-date-format-suffix">' . $format . '</small>');
-  return array('#type' => 'ajax', '#commands' => $commands);
+  $response = new AjaxResponse();
+  $response->addCommand(new ReplaceCommand('#edit-date-format-suffix', '<small id="edit-date-format-suffix">' . $format . '</small>'));
+  return $response;
 }
 
 /**
