@@ -45,7 +45,7 @@ Drupal.behaviors.verticalTabs = {
         tab_list.append(vertical_tab.item);
         $this
           .removeClass('collapsed')
-          .attr('open', true)
+          .prop('open', true)
           .addClass('vertical-tabs-pane')
           .data('verticalTab', vertical_tab);
         if (this.id === focusID) {

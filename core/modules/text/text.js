@@ -24,20 +24,21 @@ Drupal.behaviors.textSummary = {
       // Set up the edit/hide summary link.
       var $link = $('<span class="field-edit-link">(<a class="link-edit-summary" href="#nogo">' + Drupal.t('Hide summary') + '</a>)</span>');
       var $a = $link.find('a');
-      $link.toggle(
-        function (e) {
-          e.preventDefault();
+      var toggleClick = true;
+      $link.on('click', function (e) {
+        if (toggleClick) {
           $summary.hide();
           $a.html(Drupal.t('Edit summary'));
           $link.appendTo($fullLabel);
-        },
-        function (e) {
-          e.preventDefault();
+        }
+        else {
           $summary.show();
           $a.html(Drupal.t('Hide summary'));
           $link.appendTo($summaryLabel);
         }
-      ).appendTo($summaryLabel);
+        e.preventDefault();
+        toggleClick = !toggleClick;
+      }).appendTo($summaryLabel);
 
       // If no summary is set, hide the summary field.
       if ($widget.find('.text-summary').val() === '') {

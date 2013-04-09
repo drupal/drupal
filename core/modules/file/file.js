@@ -130,7 +130,7 @@ Drupal.file = Drupal.file || {
     // don't have to worry about the fields being re-enabled too soon.
     // @todo If the previous sentence is true, why not set the timeout to 0?
     var $fieldsToTemporarilyDisable = $('div.form-managed-file input.form-file').not($enabledFields).not(':disabled');
-    $fieldsToTemporarilyDisable.attr('disabled', 'disabled');
+    $fieldsToTemporarilyDisable.prop('disabled', true);
     setTimeout(function (){
       $fieldsToTemporarilyDisable.prop('disabled', false);
     }, 1000);

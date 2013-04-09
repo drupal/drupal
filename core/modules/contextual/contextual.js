@@ -90,10 +90,8 @@ Drupal.contextual.prototype.init = function() {
   // Mark the links as hidden. Use aria-role form so that the number of items
   // in the list is spoken.
   this.$links
-    .attr({
-      'hidden': 'hidden',
-      'role': 'form'
-    });
+    .prop('hidden', true)
+    .attr('role', 'form');
 
   // Create and append the contextual links trigger.
   var action = Drupal.t('Open');
@@ -102,7 +100,7 @@ Drupal.contextual.prototype.init = function() {
   this.$trigger = $(Drupal.theme.contextualTrigger())
     .text(Drupal.t('@action @parent configuration options', {'@action': action, '@parent': parentBlock}))
     // Set the aria-pressed state.
-    .attr('aria-pressed', false)
+    .prop('aria-pressed', false)
     .prependTo(this.$wrapper);
 
   // The trigger behaviors are never detached or mutated.
@@ -201,13 +199,13 @@ Drupal.contextual.prototype.showLinks = function(show) {
   this.$trigger
     .text(Drupal.t('@action @parent configuration options', {'@action': action, '@parent': parentBlock}))
     // Set the aria-pressed state.
-    .attr('aria-pressed', isOpen);
+    .prop('aria-pressed', isOpen);
   // Mark the links as hidden if they are.
   if (isOpen) {
-    this.$links.removeAttr('hidden');
+    this.$links.prop('hidden', false);
   }
   else {
-    this.$links.attr('hidden', 'hidden');
+    this.$links.prop('hidden', true);
   }
 
 };

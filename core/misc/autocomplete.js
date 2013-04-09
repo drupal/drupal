@@ -14,7 +14,7 @@ Drupal.behaviors.autocomplete = {
         acdb[uri] = new Drupal.ACDB(uri);
       }
       var $input = $('#' + this.id.substr(0, this.id.length - 13))
-        .attr('autocomplete', 'OFF')
+        .prop('autocomplete', 'OFF')
         .attr('aria-autocomplete', 'list');
       $($input[0].form).submit(Drupal.autocompleteSubmit);
       $input.parent()

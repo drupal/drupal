@@ -136,8 +136,8 @@ Drupal.toolbar.toggleTray = function (event) {
     event.stopPropagation();
     $tab.toggleClass('active');
     // Toggle aria-pressed.
-    var value = $tab.attr('aria-pressed');
-    $tab.attr('aria-pressed', (value === 'false') ? 'true' : 'false');
+    var value = $tab.prop('aria-pressed');
+    $tab.prop('aria-pressed', (value === 'false') ? 'true' : 'false');
     // Append a message that a tray has been opened.
     setMessage(Drupal.t('@tray tray @state.', {
       '@tray': name,
@@ -155,7 +155,7 @@ Drupal.toolbar.toggleTray = function (event) {
       .not($tab)
       .removeClass('active')
       // Set aria-pressed to false.
-      .attr('aria-pressed', 'false');
+      .prop('aria-pressed', false);
     $toolbar.find('.tray').not($activateTray).removeClass('active');
   }
   // Update the page and toolbar dimension indicators.

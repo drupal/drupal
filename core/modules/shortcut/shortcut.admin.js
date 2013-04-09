@@ -9,7 +9,7 @@
 Drupal.behaviors.newSet = {
   attach: function (context, settings) {
     var selectDefault = function() {
-      $(this).closest('form').find('.form-item-set .form-type-radio:last input').attr('checked', 'checked');
+      $(this).closest('form').find('.form-item-set .form-type-radio:last input').prop('checked', true);
     };
     $('div.form-item-new input').focus(selectDefault).keyup(selectDefault);
   }

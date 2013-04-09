@@ -1434,7 +1434,7 @@ function system_library_info() {
   $libraries['jquery'] = array(
     'title' => 'jQuery',
     'website' => 'http://jquery.com',
-    'version' => '1.8.2',
+    'version' => '1.9.1',
     'js' => array(
       'core/misc/jquery.js' => array('group' => JS_LIBRARY, 'weight' => -20),
     ),
@@ -1471,7 +1471,7 @@ function system_library_info() {
   $libraries['jquery.bbq'] = array(
     'title' => 'jQuery BBQ',
     'website' => 'http://benalman.com/projects/jquery-bbq-plugin/',
-    'version' => '1.2.1',
+    'version' => '1.3pre',
     'js' => array(
       'core/misc/jquery.ba-bbq.js' => array(),
     ),

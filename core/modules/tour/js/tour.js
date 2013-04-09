@@ -102,7 +102,7 @@ Drupal.tour.views.ToggleTourView = Backbone.View.extend({
     var isActive = this.model.get('isActive');
     this.$el.find('button')
       .toggleClass('active', isActive)
-      .attr('aria-pressed', isActive);
+      .prop('aria-pressed', isActive);
     return this;
   },
 
