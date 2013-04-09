@@ -35,13 +35,14 @@ class ConfigEntityTest extends WebTestBase {
    */
   function testCRUD() {
     $manifest_name = 'manifest.config_test.dynamic';
+    $default_langcode = language_default()->langcode;
     // Verify default properties on a newly created empty entity.
     $empty = entity_create('config_test', array());
     $this->assertIdentical($empty->id, NULL);
     $this->assertTrue($empty->uuid);
     $this->assertIdentical($empty->label, NULL);
     $this->assertIdentical($empty->style, NULL);
-    $this->assertIdentical($empty->langcode, LANGUAGE_NOT_SPECIFIED);
+    $this->assertIdentical($empty->langcode, $default_langcode);
 
     // Verify ConfigEntity properties/methods on the newly created empty entity.
     $this->assertIdentical($empty->isNew(), TRUE);
@@ -55,7 +56,7 @@ class ConfigEntityTest extends WebTestBase {
     $this->assertTrue($empty->get('uuid'));
     $this->assertIdentical($empty->get('label'), NULL);
     $this->assertIdentical($empty->get('style'), NULL);
-    $this->assertIdentical($empty->get('langcode'), LANGUAGE_NOT_SPECIFIED);
+    $this->assertIdentical($empty->get('langcode'), $default_langcode);
 
     // Verify Entity properties/methods on the newly created empty entity.
     $this->assertIdentical($empty->isNewRevision(), FALSE);
@@ -97,7 +98,7 @@ class ConfigEntityTest extends WebTestBase {
     $this->assertNotEqual($config_test->uuid, $empty->uuid);
     $this->assertIdentical($config_test->label, $expected['label']);
     $this->assertIdentical($config_test->style, $expected['style']);
-    $this->assertIdentical($config_test->langcode, LANGUAGE_NOT_SPECIFIED);
+    $this->assertIdentical($config_test->langcode, $default_langcode);
 
     // Verify methods on the newly created entity.
     $this->assertIdentical($config_test->isNew(), TRUE);

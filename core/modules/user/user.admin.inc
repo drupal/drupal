@@ -1004,6 +1004,11 @@ function user_admin_role($form, $form_state, $role) {
       'source' => array('role', 'label'),
     ),
   );
+  // @todo Remove once moved to RoleFormController.
+  $form['role']['langcode'] = array(
+    '#type' => 'value',
+    '#value' => !$role->isNew() ? $role->langcode : language_default()->langcode,
+  );
   $form['role']['weight'] = array(
     '#type' => 'value',
     '#value' => $role->weight,

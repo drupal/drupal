@@ -84,6 +84,7 @@ class FilterCrudTest extends WebTestBase {
    */
   function verifyTextFormat($format) {
     $t_args = array('%format' => $format->name);
+    $default_langcode = language_default()->langcode;
 
     // Verify filter_format_load().
     $filter_format = filter_format_load($format->format);
@@ -91,6 +92,8 @@ class FilterCrudTest extends WebTestBase {
     $this->assertEqual($filter_format->name, $format->name, format_string('filter_format_load: Proper title for text format %format.', $t_args));
     $this->assertEqual($filter_format->cache, $format->cache, format_string('filter_format_load: Proper cache indicator for text format %format.', $t_args));
     $this->assertEqual($filter_format->weight, $format->weight, format_string('filter_format_load: Proper weight for text format %format.', $t_args));
+    // Check that the filter was created in site default language.
+    $this->assertEqual($format->langcode, $default_langcode, format_string('filter_format_load: Proper language code for text format %format.', $t_args));
 
     // Verify the 'cache' text format property according to enabled filters.
     $filter_info = filter_get_filters();

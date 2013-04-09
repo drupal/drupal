@@ -169,6 +169,11 @@ function filter_admin_format_form($form, &$form_state, $format) {
     '#disabled' => !empty($format->format),
     '#weight' => -20,
   );
+  // @todo Remove once moved to FilterFormatFormController.
+  $form['langcode'] = array(
+    '#type' => 'value',
+    '#value' => !$format->isNew() ? $format->langcode : language_default()->langcode,
+  );
 
   // Add user role access selection.
   $form['roles'] = array(
