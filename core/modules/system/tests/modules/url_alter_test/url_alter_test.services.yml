@@ -1,0 +1,5 @@
+services:
+  url_alter_test.path_subscriber:
+    class: Drupal\url_alter_test\PathSubscriber
+    tags:
+      - { name: event_subscriber }

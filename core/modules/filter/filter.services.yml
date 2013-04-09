@@ -1,0 +1,12 @@
+services:
+  cache.filter:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory_method: get
+    factory_service: cache_factory
+    arguments: [filter]
+  access_check.filter_disable:
+    class: Drupal\filter\Access\FormatDisableCheck
+    tags:
+      - { name: access_check }

@@ -1,0 +1,372 @@
+services:
+  cache_factory:
+    class: Drupal\Core\Cache\CacheFactory
+    arguments: ['@settings']
+    calls:
+      - [setContainer, ['@service_container']]
+  cache.backend.database:
+    class: Drupal\Core\Cache\DatabaseBackendFactory
+    arguments: ['@database']
+  cache.backend.memory:
+    class: Drupal\Core\Cache\MemoryBackendFactory
+  cache.bootstrap:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory_method: get
+    factory_service: cache_factory
+    arguments: [bootstrap]
+  cache.config:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory_method: get
+    factory_service: cache_factory
+    arguments: [config]
+  cache.cache:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory_method: get
+    factory_service: cache_factory
+    arguments: [cache]
+  cache.menu:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory_method: get
+    factory_service: cache_factory
+    arguments: [menu]
+  cache.page:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory_method: get
+    factory_service: cache_factory
+    arguments: [page]
+  cache.path:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory_method: get
+    factory_service: cache_factory
+    arguments: [path]
+  config.cachedstorage.storage:
+    class: Drupal\Core\Config\FileStorage
+    factory_class: Drupal\Core\Config\FileStorageFactory
+    factory_method: getActive
+  config.storage:
+    class: Drupal\Core\Config\CachedStorage
+    arguments: ['@config.cachedstorage.storage', '@cache.config']
+  config.context.factory:
+    class: Drupal\Core\Config\Context\ConfigContextFactory
+    arguments: ['@event_dispatcher']
+  config.context:
+    class: Drupal\Core\Config\Context\ContextInterface
+    tags:
+      - { name: persist }
+    factory_method: get
+    factory_service: config.context.factory
+  config.context.free:
+    class: Drupal\Core\Config\Context\ContextInterface
+    factory_method: get
+    factory_service: config.context.factory
+    arguments: [Drupal\Core\Config\Context\FreeConfigContext]
+  config.factory:
+    class: Drupal\Core\Config\ConfigFactory
+    tags:
+      - { name: persist }
+    arguments: ['@config.storage', '@config.context']
+  config.storage.staging:
+    class: Drupal\Core\Config\FileStorage
+    factory_class: Drupal\Core\Config\FileStorageFactory
+    factory_method: getStaging
+  config.storage.snapshot:
+    class: Drupal\Core\Config\DatabaseStorage
+    arguments: ['@database', config_snapshot]
+  config.storage.schema:
+    class: Drupal\Core\Config\Schema\SchemaStorage
+  config.typed:
+    class: Drupal\Core\Config\TypedConfigManager
+    arguments: ['@config.storage', '@config.storage.schema']
+  database:
+    class: Drupal\Core\Database\Connection
+    factory_class: Drupal\Core\Database\Database
+    factory_method: getConnection
+    arguments: [default]
+  keyvalue:
+    class: Drupal\Core\KeyValueStore\KeyValueFactory
+    arguments: ['@service_container']
+  keyvalue.database:
+    class: Drupal\Core\KeyValueStore\KeyValueDatabaseFactory
+    arguments: ['@database']
+  keyvalue.expirable:
+    class: Drupal\Core\KeyValueStore\KeyValueExpirableFactory
+    arguments: ['@service_container']
+  keyvalue.expirable.database:
+    class: Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory
+    tags:
+      - { name: needs_destruction }
+    arguments: ['@database']
+  settings:
+    class: Drupal\Component\Utility\Settings
+    factory_class: Drupal\Component\Utility\Settings
+    factory_method: getSingleton
+  state:
+    class: Drupal\Core\KeyValueStore\KeyValueStoreInterface
+    factory_method: get
+    factory_service: keyvalue
+    arguments: [state]
+  queue:
+    class: Drupal\Core\Queue\QueueFactory
+    arguments: ['@settings']
+    calls:
+      - [setContainer, ['@service_container']]
+  queue.database:
+    class: Drupal\Core\Queue\QueueDatabaseFactory
+    arguments: ['@database']
+  path.alias_whitelist:
+    class: Drupal\Core\Path\AliasWhitelist
+    tags:
+      - { name: needs_destruction }
+    arguments: [path_alias_whitelist, cache, '@keyvalue', '@database']
+  path.alias_manager:
+    class: Drupal\Core\Path\AliasManager
+    arguments: ['@database', '@path.alias_whitelist', '@language_manager']
+  http_client_simpletest_subscriber:
+    class: Drupal\Core\Http\Plugin\SimpletestHttpRequestSubscriber
+  http_default_client:
+    class: Guzzle\Http\Client
+    arguments: [null, { curl.CURLOPT_TIMEOUT: 30, curl.CURLOPT_MAXREDIRS: 3 }]
+    calls:
+      - [addSubscriber, ['@http_client_simpletest_subscriber']]
+      - [setUserAgent, ['Drupal (+http://drupal.org/)']]
+  plugin.manager.entity:
+    class: Drupal\Core\Entity\EntityManager
+    arguments: ['%container.namespaces%']
+  request:
+    class: Symfony\Component\HttpFoundation\Request
+  event_dispatcher:
+    class: Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher
+    arguments: ['@service_container']
+  controller_resolver:
+    class: Drupal\Core\ControllerResolver
+    arguments: ['@service_container']
+  http_kernel:
+    class: Drupal\Core\HttpKernel
+    arguments: ['@event_dispatcher', '@service_container', '@controller_resolver']
+  language_manager:
+    class: Drupal\Core\Language\LanguageManager
+  database.slave:
+    class: Drupal\Core\Database\Connection
+    factory_class: Drupal\Core\Database\Database
+    factory_method: getConnection
+    arguments: [slave]
+  typed_data:
+    class: Drupal\Core\TypedData\TypedDataManager
+    calls:
+      - [setValidationConstraintManager, ['@validation.constraint']]
+  validation.constraint:
+    class: Drupal\Core\Validation\ConstraintManager
+    arguments: ['%container.namespaces%']
+  lock:
+    class: Drupal\Core\Lock\DatabaseLockBackend
+  user.tempstore:
+    class: Drupal\user\TempStoreFactory
+    arguments: ['@database', '@lock']
+  router.request_context:
+    class: Symfony\Component\Routing\RequestContext
+    calls:
+      - [fromRequest, ['@request']]
+  router.route_provider:
+    class: Drupal\Core\Routing\RouteProvider
+    arguments: ['@database']
+  router.matcher.final_matcher:
+    class: Drupal\Core\Routing\UrlMatcher
+  router.matcher:
+    class: Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher
+    arguments: ['@router.route_provider']
+    calls:
+      - [setFinalMatcher, ['@router.matcher.final_matcher']]
+  router.generator:
+    class: Drupal\Core\Routing\UrlGenerator
+    arguments: ['@router.route_provider', '@path.alias_manager.cached']
+  router.dynamic:
+    class: Symfony\Cmf\Component\Routing\DynamicRouter
+    arguments: ['@router.request_context', '@router.matcher', '@router.generator']
+  legacy_generator:
+    class: Drupal\Core\Routing\NullGenerator
+  legacy_url_matcher:
+    class: Drupal\Core\LegacyUrlMatcher
+  legacy_router:
+    class: Symfony\Cmf\Component\Routing\DynamicRouter
+    arguments: ['@router.request_context', '@legacy_url_matcher', '@legacy_generator']
+  router:
+    class: Symfony\Cmf\Component\Routing\ChainRouter
+    calls:
+      - [setContext, ['@router.request_context']]
+      - [add, ['@router.dynamic']]
+      - [add, ['@legacy_router']]
+  entity.query:
+    class: Drupal\Core\Entity\Query\QueryFactory
+    arguments: ['@plugin.manager.entity']
+    calls:
+      - [setContainer, ['@service_container']]
+  entity.query.config:
+    class: Drupal\Core\Config\Entity\Query\QueryFactory
+    arguments: ['@config.storage']
+  router.dumper:
+    class: Drupal\Core\Routing\MatcherDumper
+    arguments: ['@database']
+  router.builder:
+    class: Drupal\Core\Routing\RouteBuilder
+    arguments: ['@router.dumper', '@lock', '@event_dispatcher', '@module_handler']
+  path.alias_manager.cached:
+    class: Drupal\Core\CacheDecorator\AliasManagerCacheDecorator
+    arguments: ['@path.alias_manager', '@cache.path']
+  path.crud:
+    class: Drupal\Core\Path\Path
+    arguments: ['@database', '@path.alias_manager']
+# The argument to the hashing service defined in services.yml, to the
+# constructor of PhpassHashedPassword is the log2 number of iterations for
+# password stretching.
+# @todo increase by 1 every Drupal version in order to counteract increases in
+# the speed and power of computers available to crack the hashes. The current
+# password hashing method was introduced in Drupal 7 with a log2 count of 15.
+  password:
+    class: Drupal\Core\Password\PhpassHashedPassword
+    arguments: [16]
+  mime_type_matcher:
+    class: Drupal\Core\Routing\MimeTypeMatcher
+    tags:
+      - { name: route_filter }
+  paramconverter_manager:
+    class: Drupal\Core\ParamConverter\ParamConverterManager
+    tags:
+      - { name: route_enhancer }
+  paramconverter.entity:
+    class: Drupal\Core\ParamConverter\EntityConverter
+    tags:
+      - { name: paramconverter }
+    arguments: ['@plugin.manager.entity']
+  router_processor_subscriber:
+    class: Drupal\Core\EventSubscriber\RouteProcessorSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@content_negotiation']
+  router_listener:
+    class: Symfony\Component\HttpKernel\EventListener\RouterListener
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@router']
+  content_negotiation:
+    class: Drupal\Core\ContentNegotiation
+  view_subscriber:
+    class: Drupal\Core\EventSubscriber\ViewSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@content_negotiation']
+  legacy_access_subscriber:
+    class: Drupal\Core\EventSubscriber\LegacyAccessSubscriber
+    tags:
+      - { name: event_subscriber }
+  access_manager:
+    class: Drupal\Core\Access\AccessManager
+    calls:
+      - [setContainer, ['@service_container']]
+  access_subscriber:
+    class: Drupal\Core\EventSubscriber\AccessSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@access_manager']
+  access_check.default:
+    class: Drupal\Core\Access\DefaultAccessCheck
+    tags:
+      - { name: access_check }
+  maintenance_mode_subscriber:
+    class: Drupal\Core\EventSubscriber\MaintenanceModeSubscriber
+    tags:
+      - { name: event_subscriber }
+  path_subscriber:
+    class: Drupal\Core\EventSubscriber\PathSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@path.alias_manager.cached', '@path_processor_manager']
+  legacy_request_subscriber:
+    class: Drupal\Core\EventSubscriber\LegacyRequestSubscriber
+    tags:
+      - { name: event_subscriber }
+  legacy_controller_subscriber:
+    class: Drupal\Core\EventSubscriber\LegacyControllerSubscriber
+    tags:
+      - { name: event_subscriber }
+  finish_response_subscriber:
+    class: Drupal\Core\EventSubscriber\FinishResponseSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@language_manager']
+    scope: request
+  request_close_subscriber:
+    class: Drupal\Core\EventSubscriber\RequestCloseSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@module_handler']
+  config_global_override_subscriber:
+    class: Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber
+    tags:
+      - { name: event_subscriber }
+  language_request_subscriber:
+    class: Drupal\Core\EventSubscriber\LanguageRequestSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@language_manager']
+  exception_controller:
+    class: Drupal\Core\ExceptionController
+    arguments: ['@content_negotiation']
+    calls:
+      - [setContainer, ['@service_container']]
+  exception_listener:
+    class: Symfony\Component\HttpKernel\EventListener\ExceptionListener
+    tags:
+      - { name: event_subscriber }
+    arguments: [['@exception_controller', execute]]
+  path_processor_manager:
+    class: Drupal\Core\PathProcessor\PathProcessorManager
+  path_processor_decode:
+    class: Drupal\Core\PathProcessor\PathProcessorDecode
+    tags:
+      - { name: path_processor_inbound, priority: 1000 }
+  path_processor_front:
+    class: Drupal\Core\PathProcessor\PathProcessorFront
+    tags:
+      - { name: path_processor_inbound, priority: 200 }
+    arguments: ['@config.factory']
+  path_processor_alias:
+    class: Drupal\Core\PathProcessor\PathProcessorAlias
+    tags:
+      - { name: path_processor_inbound, priority: 100 }
+    arguments: ['@path.alias_manager']
+  transliteration:
+    class: Drupal\Core\Transliteration\PHPTransliteration
+  flood:
+    class: Drupal\Core\Flood\DatabaseBackend
+    arguments: ['@database']
+  plugin.manager.condition:
+    class: Drupal\Core\Condition\ConditionManager
+  kernel_destruct_subscriber:
+    class: Drupal\Core\EventSubscriber\KernelDestructionSubscriber
+    tags:
+      - { name: event_subscriber }
+    calls:
+      - [setContainer, ['@service_container']]
+  ajax.subscriber:
+    class: Drupal\Core\Ajax\AjaxSubscriber
+    tags:
+      - { name: event_subscriber }
+  image.toolkit.manager:
+    class: Drupal\system\Plugin\ImageToolkitManager
+    arguments: ['%container.namespaces%']
+  image.toolkit:
+    class: Drupal\system\Plugin\ImageToolkitInterface
+    factory_method: getDefaultToolkit
+    factory_service: image.toolkit.manager

@@ -1,0 +1,4 @@
+services:
+  plugin.manager.tour.tip:
+    class: Drupal\tour\TipPluginManager
+    arguments: ['%container.namespaces%']

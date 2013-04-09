@@ -1,0 +1,82 @@
+services:
+  plugin.manager.views.access:
+    class: Drupal\views\Plugin\ViewsPluginManager
+    arguments: [access, '%container.namespaces%']
+  plugin.manager.views.area:
+    class: Drupal\views\Plugin\ViewsPluginManager
+    arguments: [area, '%container.namespaces%']
+  plugin.manager.views.argument:
+    class: Drupal\views\Plugin\ViewsPluginManager
+    arguments: [argument, '%container.namespaces%']
+  plugin.manager.views.argument_default:
+    class: Drupal\views\Plugin\ViewsPluginManager
+    arguments: [argument_default, '%container.namespaces%']
+  plugin.manager.views.argument_validator:
+    class: Drupal\views\Plugin\ViewsPluginManager
+    arguments: [argument_validator, '%container.namespaces%']
+  plugin.manager.views.cache:
+    class: Drupal\views\Plugin\ViewsPluginManager
+    arguments: [cache, '%container.namespaces%']
+  plugin.manager.views.display_extender:
+    class: Drupal\views\Plugin\ViewsPluginManager
+    arguments: [display_extender, '%container.namespaces%']
+  plugin.manager.views.display:
+    class: Drupal\views\Plugin\ViewsPluginManager
+    arguments: [display, '%container.namespaces%']
+  plugin.manager.views.exposed_form:
+    class: Drupal\views\Plugin\ViewsPluginManager
+    arguments: [exposed_form, '%container.namespaces%']
+  plugin.manager.views.field:
+    class: Drupal\views\Plugin\ViewsPluginManager
+    arguments: [field, '%container.namespaces%']
+  plugin.manager.views.filter:
+    class: Drupal\views\Plugin\ViewsPluginManager
+    arguments: [filter, '%container.namespaces%']
+  plugin.manager.views.join:
+    class: Drupal\views\Plugin\ViewsPluginManager
+    arguments: [join, '%container.namespaces%']
+  plugin.manager.views.pager:
+    class: Drupal\views\Plugin\ViewsPluginManager
+    arguments: [pager, '%container.namespaces%']
+  plugin.manager.views.query:
+    class: Drupal\views\Plugin\ViewsPluginManager
+    arguments: [query, '%container.namespaces%']
+  plugin.manager.views.relationship:
+    class: Drupal\views\Plugin\ViewsPluginManager
+    arguments: [relationship, '%container.namespaces%']
+  plugin.manager.views.row:
+    class: Drupal\views\Plugin\ViewsPluginManager
+    arguments: [row, '%container.namespaces%']
+  plugin.manager.views.sort:
+    class: Drupal\views\Plugin\ViewsPluginManager
+    arguments: [sort, '%container.namespaces%']
+  plugin.manager.views.style:
+    class: Drupal\views\Plugin\ViewsPluginManager
+    arguments: [style, '%container.namespaces%']
+  plugin.manager.views.wizard:
+    class: Drupal\views\Plugin\ViewsPluginManager
+    arguments: [wizard, '%container.namespaces%']
+  views.views_data:
+    class: Drupal\views\ViewsDataCache
+    tags:
+      - { name: needs_destruction }
+    arguments: ['@cache.views_info', '@config.factory', '@module_handler']
+  views.executable:
+    class: Drupal\views\ViewExecutableFactory
+  views.analyzer:
+    class: Drupal\views\Analyzer
+    arguments: ['@module_handler']
+  cache.views_info:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory_method: get
+    factory_service: cache_factory
+    arguments: [views_info]
+  cache.views_results:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory_method: get
+    factory_service: cache_factory
+    arguments: [views_results]

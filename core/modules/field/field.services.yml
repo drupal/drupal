@@ -1,0 +1,14 @@
+services:
+  plugin.manager.field.widget:
+    class: Drupal\field\Plugin\Type\Widget\WidgetPluginManager
+    arguments: ['%container.namespaces%']
+  plugin.manager.field.formatter:
+    class: Drupal\field\Plugin\Type\Formatter\FormatterPluginManager
+    arguments: ['%container.namespaces%']
+  cache.field:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory_method: get
+    factory_service: cache_factory
+    arguments: [field]

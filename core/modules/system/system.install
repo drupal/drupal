@@ -2017,7 +2017,7 @@ function system_update_8046() {
     $module_list = drupal_container()->getParameter('container.modules');
     drupal_load('module', 'views');
 
-    drupal_container()->get('kernel')->updateModules(array_keys($module_list), array('views' => 'core/modules/views/views.module'));
+    drupal_container()->get('kernel')->updateModules($module_list, array('views' => 'core/modules/views/views.module'));
 
     // This does not fire a hook just calls views.
     config_install_default_config('module', 'views');

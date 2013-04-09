@@ -11,6 +11,7 @@ use Drupal\Component\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\CoreBundle;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\DependencyInjection\YamlFileLoader;
 use Symfony\Component\ClassLoader\ClassLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -100,6 +101,13 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
   protected $containerNeedsDumping;
 
   /**
+   * Holds the list of YAML files containing service definitions.
+   *
+   * @var array
+   */
+  protected $serviceYamls;
+
+  /**
    * Constructs a DrupalKernel object.
    *
    * @param string $environment
@@ -160,6 +168,9 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     $bundles = array(
       new CoreBundle(),
     );
+    $this->serviceYamls = array(
+      'core/core.services.yml'
+    );
     $this->bundleClasses = array('Drupal\Core\CoreBundle');
 
     // Ensure we know what modules are enabled and that their namespaces are
@@ -168,7 +179,8 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
       $module_list = $this->configStorage->read('system.module');
       $this->moduleList = isset($module_list['enabled']) ? $module_list['enabled'] : array();
     }
-    $this->registerNamespaces($this->getModuleNamespaces($this->getModuleFileNames()));
+    $module_filenames = $this->getModuleFileNames();
+    $this->registerNamespaces($this->getModuleNamespaces($module_filenames));
 
     // Load each module's bundle class.
     foreach ($this->moduleList as $module => $weight) {
@@ -178,6 +190,10 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
         $bundles[] = new $class();
         $this->bundleClasses[] = $class;
       }
+      $filename = dirname($module_filenames[$module]) . "/$module.services.yml";
+      if (file_exists($filename)) {
+        $this->serviceYamls[] = $filename;
+      }
     }
 
     // Add site specific or test bundles.
@@ -186,6 +202,10 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
         $bundles[] = new $class();
         $this->bundleClasses[] = $class;
       }
+    }
+    // Add site specific or test YAMLs.
+    if (!empty($GLOBALS['conf']['container_yamls'])) {
+      $this->serviceYamls = array_merge($this->serviceYamls, $GLOBALS['conf']['container_yamls']);
     }
     return $bundles;
   }
@@ -379,6 +399,10 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     $container->register('class_loader', 'Symfony\Component\ClassLoader\ClassLoader')->setSynthetic(TRUE);
     $container->register('kernel', 'Symfony\Component\HttpKernel\KernelInterface')->setSynthetic(TRUE);
     $container->register('service_container', 'Symfony\Component\DependencyInjection\ContainerInterface')->setSynthetic(TRUE);
+    $yaml_loader = new YamlFileLoader($container);
+    foreach ($this->serviceYamls as $filename) {
+      $yaml_loader->load($filename);
+    }
     foreach ($this->bundles as $bundle) {
       $bundle->build($container);
     }

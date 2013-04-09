@@ -1,0 +1,11 @@
+services:
+  plugin.manager.block:
+    class: Drupal\block\Plugin\Type\BlockManager
+    arguments: ['%container.namespaces%']
+  cache.block:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory_method: get
+    factory_service: cache_factory
+    arguments: [block]
