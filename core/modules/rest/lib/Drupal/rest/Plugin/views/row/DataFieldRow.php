@@ -41,14 +41,25 @@ class DataFieldRow extends RowPluginBase {
   protected $replacementAliases = array();
 
   /**
+   * Stores an array of options to determine if the raw field output is used.
+   *
+   * @var array
+   */
+  protected $rawOutputOptions = array();
+
+  /**
    * Overrides \Drupal\views\Plugin\views\row\RowPluginBase::init().
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
 
-    if (!empty($this->options['aliases'])) {
+    if (!empty($this->options['field_options'])) {
+      $options = (array) $this->options['field_options'];
       // Prepare a trimmed version of replacement aliases.
-      $this->replacementAliases = array_filter(array_map('trim', (array) $this->options['aliases']));
+      $aliases = static::extractFromOptionsArray('alias', $options);
+      $this->replacementAliases = array_filter(array_map('trim', $aliases));
+      // Prepare an array of raw output field options.
+      $this->rawOutputOptions = static::extractFromOptionsArray('raw_output', $options);
     }
   }
 
@@ -57,7 +68,7 @@ class DataFieldRow extends RowPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['aliases'] = array('default' => array());
+    $options['field_options'] = array('default' => array());
 
     return $options;
   }
@@ -69,20 +80,28 @@ class DataFieldRow extends RowPluginBase {
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $form['aliases'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Field ID aliases'),
-      '#description' => t('Rename views default field IDs in the output data.'),
+    $form['field_options'] = array(
+      '#type' => 'table',
+      '#header' => array(t('Field'), t('Alias'), t('Raw output')),
+      '#empty' => t('You have no fields. Add some to your view.'),
       '#tree' => TRUE,
     );
 
+    $options = $this->options['field_options'];
+
     if ($fields = $this->view->display_handler->getOption('fields')) {
       foreach ($fields as $id => $field) {
-        $form['aliases'][$id] = array(
+        $form['field_options'][$id]['field'] = array(
+          '#markup' => $id,
+        );
+        $form['field_options'][$id]['alias'] = array(
           '#type' => 'textfield',
-          '#title' => $id,
-          '#default_value' => isset($this->options['aliases'][$id]) ? $this->options['aliases'][$id] : '',
+          '#default_value' => isset($options[$id]['alias']) ? $options[$id]['alias'] : '',
           '#element_validate' => array(array($this, 'validateAliasName')),
+        );
+        $form['field_options'][$id]['raw_output'] = array(
+          '#type' => 'checkbox',
+          '#default_value' => isset($options[$id]['raw_output']) ? $options[$id]['raw_output'] : '',
         );
       }
     }
@@ -101,10 +120,12 @@ class DataFieldRow extends RowPluginBase {
    * Overrides \Drupal\views\Plugin\views\row\RowPluginBase::validateOptionsForm().
    */
   public function validateOptionsForm(&$form, &$form_state) {
-    $aliases = $form_state['values']['row_options']['aliases'];
+    // Collect an array of aliases to validate.
+    $aliases = static::extractFromOptionsArray('alias', $form_state['values']['row_options']['field_options']);
+
     // If array filter returns empty, no values have been entered. Unique keys
     // should only be validated if we have some.
-    if (array_filter($aliases) && (array_unique($aliases) !== $aliases)) {
+    if (($filtered = array_filter($aliases)) && (array_unique($filtered) !== $filtered)) {
       form_set_error('aliases', t('All field aliases must be unique'));
     }
   }
@@ -116,14 +137,14 @@ class DataFieldRow extends RowPluginBase {
     $output = array();
 
     foreach ($this->view->field as $id => $field) {
-      // If we don't have a field alias, Just try to get the rendered output
-      // from the field.
-      if ($field->field_alias == 'unknown') {
-        $value = $field->render($row);
+      // If this is not unknown and the raw output option has been set, just get
+      // the raw value.
+      if (($field->field_alias != 'unknown') && !empty($this->rawOutputOptions[$id])) {
+        $value = $field->sanitizeValue($field->get_value($row), 'xss_admin');
       }
-      // Get the value directly from the result row.
+      // Otherwise, pass this through the field render() method.
       else {
-        $value = $row->{$field->field_alias};
+        $value = $field->render($row);
       }
 
       $output[$this->getFieldKeyAlias($id)] = $value;
@@ -147,6 +168,23 @@ class DataFieldRow extends RowPluginBase {
     }
 
     return $id;
+  }
+
+  /**
+   * Extracts a set of option values from a nested options array.
+   *
+   * @param string $key
+   *   The key to extract from each array item.
+   * @param array $options
+   *   The options array to return values from.
+   *
+   * @return array
+   *   A regular one dimensional array of values.
+   */
+  protected static function extractFromOptionsArray($key, $options) {
+    return array_map(function($item) use ($key) {
+      return isset($item[$key]) ? $item[$key] : NULL;
+    }, $options);
   }
 
 }

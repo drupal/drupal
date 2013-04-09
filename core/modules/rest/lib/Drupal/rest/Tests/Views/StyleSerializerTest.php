@@ -82,12 +82,7 @@ class StyleSerializerTest extends PluginTestBase {
     foreach ($view->result as $row) {
       $expected_row = array();
       foreach ($view->field as $id => $field) {
-        if ($field->field_alias == 'unknown') {
-          $expected_row[$id] = $field->render($row);
-        }
-        else {
-          $expected_row[$id] = $row->{$field->field_alias};
-        }
+        $expected_row[$id] = $field->render($row);
       }
       $expected[] = $expected_row;
     }
@@ -146,7 +141,7 @@ class StyleSerializerTest extends PluginTestBase {
 
     // Test an empty string for an alias, this should not be used. This also
     // tests that the form can be submitted with no aliases.
-    $this->drupalPost($row_options, array('row_options[aliases][name]' => ''), t('Apply'));
+    $this->drupalPost($row_options, array('row_options[field_options][name][alias]' => ''), t('Apply'));
     $this->drupalPost(NULL, array(), t('Save'));
 
     $view = views_get_view('test_serializer_display_field');
@@ -157,13 +152,7 @@ class StyleSerializerTest extends PluginTestBase {
     foreach ($view->result as $row) {
       $expected_row = array();
       foreach ($view->field as $id => $field) {
-        // Original field key is expected.
-        if ($field->field_alias == 'unknown') {
-          $expected_row[$id] = $field->render($row);
-        }
-        else {
-          $expected_row[$id] = $row->{$field->field_alias};
-        }
+        $expected_row[$id] = $field->render($row);
       }
       $expected[] = $expected_row;
     }
@@ -172,40 +161,65 @@ class StyleSerializerTest extends PluginTestBase {
     $this->assertIdentical($this->drupalGetAJAX('test/serialize/field'), $expected);
 
     // Test a random aliases for fields, they should be replaced.
-    $random_name = $this->randomName();
-    // Use # to produce an invalid character for the validation.
-    $invalid_random_name = '#' . $this->randomName();
-    $edit = array('row_options[aliases][name]' => $random_name, 'row_options[aliases][nothing]' => $invalid_random_name);
+    $alias_map = array(
+      'name' => $this->randomName(),
+      // Use # to produce an invalid character for the validation.
+      'nothing' => '#' . $this->randomName(),
+      'created' => 'created',
+    );
+
+    $edit = array('row_options[field_options][name][alias]' => $alias_map['name'], 'row_options[field_options][nothing][alias]' => $alias_map['nothing']);
     $this->drupalPost($row_options, $edit, t('Apply'));
     $this->assertText(t('The machine-readable name must contain only letters, numbers, dashes and underscores.'));
 
-    $random_name_custom = $this->randomName();
-    $edit = array('row_options[aliases][name]' => $random_name, 'row_options[aliases][nothing]' => $random_name_custom);
+    // Change the map alias value to a valid one.
+    $alias_map['nothing'] = $this->randomName();
+
+    $edit = array('row_options[field_options][name][alias]' => $alias_map['name'], 'row_options[field_options][nothing][alias]' => $alias_map['nothing']);
     $this->drupalPost($row_options, $edit, t('Apply'));
 
     $this->drupalPost(NULL, array(), t('Save'));
 
     $view = views_get_view('test_serializer_display_field');
-    $view->setDisplay('ws_endpoint_1');
+    $view->setDisplay('rest_export_1');
     $this->executeView($view);
 
     $expected = array();
     foreach ($view->result as $row) {
       $expected_row = array();
       foreach ($view->field as $id => $field) {
-        // This will be the custom field.
-        if ($field->field_alias == 'unknown') {
-          $expected_row[$random_name_custom] = $field->render($row);
-        }
-        // This will be the name field.
-        else {
-          $expected_row[$random_name] = $row->{$field->field_alias};
-        }
+        $expected_row[$alias_map[$id]] = $field->render($row);
       }
       $expected[] = $expected_row;
     }
 
     $this->assertIdentical($this->drupalGetAJAX('test/serialize/field'), $expected);
+  }
+
+  /**
+   * Tests the raw output options for row field rendering.
+   */
+  public function testFieldRawOutput() {
+    $this->drupalLogin($this->adminUser);
+
+    // Test the UI settings for adding field ID aliases.
+    $this->drupalGet('admin/structure/views/view/test_serializer_display_field/edit/rest_export_1');
+    $row_options = 'admin/structure/views/nojs/display/test_serializer_display_field/rest_export_1/row_options';
+    $this->assertLinkByHref($row_options);
+
+    // Test an empty string for an alias, this should not be used. This also
+    // tests that the form can be submitted with no aliases.
+    $this->drupalPost($row_options, array('row_options[field_options][created][raw_output]' => '1'), t('Apply'));
+    $this->drupalPost(NULL, array(), t('Save'));
+
+    $view = views_get_view('test_serializer_display_field');
+    $view->setDisplay('rest_export_1');
+    $this->executeView($view);
+
+    // Just test the raw 'created' value against each row.
+    foreach ($this->drupalGetAJAX('test/serialize/field') as $index => $values) {
+      $this->assertIdentical($values['created'], $view->result[$index]->views_test_data_created, 'Expected raw created value found.');
+    }
   }
 
 }

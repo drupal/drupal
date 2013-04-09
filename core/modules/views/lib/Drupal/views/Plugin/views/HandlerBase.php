@@ -208,7 +208,7 @@ abstract class HandlerBase extends PluginBase {
    * @return string
    *   Returns the safe value.
    */
-  protected function sanitizeValue($value, $type = NULL) {
+  public function sanitizeValue($value, $type = NULL) {
     switch ($type) {
       case 'xss':
         $value = filter_xss($value);
