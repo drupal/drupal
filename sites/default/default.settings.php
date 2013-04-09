@@ -444,6 +444,14 @@ $settings['update_free_access'] = FALSE;
 # $settings['allow_authorize_operations'] = FALSE;
 
 /**
+ * Mixed-mode sessions:
+ *
+ * Set to TRUE to create both secure and insecure sessions when using HTTPS.
+ * Defaults to FALSE.
+ */
+# $settings['mixed_mode_sessions'] = TRUE;
+
+/**
  * Base URL (optional).
  *
  * If Drupal is generating incorrect URLs on your site, which could

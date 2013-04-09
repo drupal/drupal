@@ -2113,7 +2113,7 @@ function url($path = NULL, array $options = array()) {
     if ($options['query']) {
       $path .= (strpos($path, '?') !== FALSE ? '&' : '?') . drupal_http_build_query($options['query']);
     }
-    if (isset($options['https']) && variable_get('https', FALSE)) {
+    if (isset($options['https']) && settings()->get('mixed_mode_sessions', FALSE)) {
       if ($options['https'] === TRUE) {
         $path = str_replace('http://', 'https://', $path);
       }
@@ -2129,7 +2129,7 @@ function url($path = NULL, array $options = array()) {
 
   // The base_url might be rewritten from the language rewrite in domain mode.
   if (!isset($options['base_url'])) {
-    if (isset($options['https']) && variable_get('https', FALSE)) {
+    if (isset($options['https']) && settings()->get('mixed_mode_sessions', FALSE)) {
       if ($options['https'] === TRUE) {
         $options['base_url'] = $base_secure_url;
         $options['absolute'] = TRUE;
