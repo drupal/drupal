@@ -376,10 +376,11 @@ class ViewEditFormController extends ViewFormControllerBase {
             "#suffix" => '</li>',
           );
         }
-        // Add a link to view the page.
-        elseif ($view->get('executable')->displayHandlers->get($display['id'])->hasPath()) {
+        // Add a link to view the page unless the view is disabled or has no
+        // path.
+        elseif ($view->status() && $view->get('executable')->displayHandlers->get($display['id'])->hasPath()) {
           $path = $view->get('executable')->displayHandlers->get($display['id'])->getPath();
-          if (strpos($path, '%') === FALSE) {
+          if ($path && (strpos($path, '%') === FALSE)) {
             $build['top']['actions']['path'] = array(
               '#type' => 'link',
               '#title' => t('view @display', array('@display' => $display['display_title'])),
@@ -409,16 +410,6 @@ class ViewEditFormController extends ViewFormControllerBase {
           '#prefix' => '<li class="delete">',
           "#suffix" => '</li>',
         );
-        if ($is_enabled) {
-          $build['top']['actions']['disable'] = array(
-            '#type' => 'submit',
-            '#value' => t('disable @display_title', array('@display_title' => $display_title)),
-            '#limit_validation_errors' => array(),
-            '#submit' => array(array($this, 'submitDisplayDisable'), array($this, 'submitDelayDestination')),
-            '#prefix' => '<li class="disable">',
-            "#suffix" => '</li>',
-          );
-        }
 
         foreach (views_fetch_plugin_names('display', NULL, array($view->get('storage')->get('base_table'))) as $type => $label) {
           if ($type == $display['display_plugin']) {
@@ -442,6 +433,16 @@ class ViewEditFormController extends ViewFormControllerBase {
           '#limit_validation_errors' => array(),
           '#submit' => array(array($this, 'submitDisplayUndoDelete'), array($this, 'submitDelayDestination')),
           '#prefix' => '<li class="undo-delete">',
+          "#suffix" => '</li>',
+        );
+      }
+      if ($is_enabled) {
+        $build['top']['actions']['disable'] = array(
+          '#type' => 'submit',
+          '#value' => t('disable @display_title', array('@display_title' => $display_title)),
+          '#limit_validation_errors' => array(),
+          '#submit' => array(array($this, 'submitDisplayDisable'), array($this, 'submitDelayDestination')),
+          '#prefix' => '<li class="disable">',
           "#suffix" => '</li>',
         );
       }
