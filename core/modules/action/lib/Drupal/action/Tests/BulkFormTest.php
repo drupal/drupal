@@ -47,8 +47,8 @@ class BulkFormTest extends WebTestBase {
     // Make sure a checkbox appears on all rows.
     $edit = array();
     for ($i = 0; $i < 10; $i++) {
-      $this->assertFieldById('edit-bulk-form-' . $i, NULL, format_string('The checkbox on row @row appears.', array('@row' => $i)));
-      $edit["bulk_form[$i]"] = TRUE;
+      $this->assertFieldById('edit-action-bulk-form-' . $i, NULL, format_string('The checkbox on row @row appears.', array('@row' => $i)));
+      $edit["action_bulk_form[$i]"] = TRUE;
     }
 
     // Set all nodes to sticky and check that.
@@ -66,7 +66,7 @@ class BulkFormTest extends WebTestBase {
     $node = node_load($nodes[0]->id());
     $this->assertTrue($node->status, 'The node is published.');
 
-    $edit = array('bulk_form[0]' => TRUE, 'action' => 'node_unpublish_action');
+    $edit = array('action_bulk_form[0]' => TRUE, 'action' => 'node_unpublish_action');
     $this->drupalPost(NULL, $edit, t('Apply'));
 
     $this->assertText('Unpublish content was applied to 1 item.');
@@ -78,6 +78,30 @@ class BulkFormTest extends WebTestBase {
     // The second node should still be published.
     $node = node_load($nodes[1]->id(), TRUE);
     $this->assertTrue($node->status, 'An unchecked node is still published.');
+
+    // Set up to include just the sticky actions.
+    $view = views_get_view('test_bulk_form');
+    $display = &$view->storage->getDisplay('default');
+    $display['display_options']['fields']['action_bulk_form']['include_exclude'] = 'include';
+    $display['display_options']['fields']['action_bulk_form']['selected_actions']['node_make_sticky_action'] = 'node_make_sticky_action';
+    $display['display_options']['fields']['action_bulk_form']['selected_actions']['node_make_unsticky_action'] = 'node_make_unsticky_action';
+    $view->save();
+
+    $this->drupalGet('test_bulk_form');
+    $options = $this->xpath('//select[@id=:id]/option', array(':id' => 'edit-action'));
+    $this->assertEqual(count($options), 2);
+    $this->assertOption('edit-action', 'node_make_sticky_action');
+    $this->assertOption('edit-action', 'node_make_unsticky_action');
+
+    // Set up to exclude the sticky actions.
+    $view = views_get_view('test_bulk_form');
+    $display = &$view->storage->getDisplay('default');
+    $display['display_options']['fields']['action_bulk_form']['include_exclude'] = 'exclude';
+    $view->save();
+
+    $this->drupalGet('test_bulk_form');
+    $this->assertNoOption('edit-action', 'node_make_sticky_action');
+    $this->assertNoOption('edit-action', 'node_make_unsticky_action');
   }
 
 }
