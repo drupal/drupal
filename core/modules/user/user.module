@@ -1008,11 +1008,8 @@ function user_menu() {
   $items['admin/config/people/accounts'] = array(
     'title' => 'Account settings',
     'description' => 'Configure default behavior of users, including registration requirements, e-mails, and fields.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('user_admin_settings'),
-    'access arguments' => array('administer users'),
-    'file' => 'user.admin.inc',
     'weight' => -10,
+    'route_name' => 'user_account_settings',
   );
   $items['admin/config/people/accounts/settings'] = array(
     'title' => 'Settings',
