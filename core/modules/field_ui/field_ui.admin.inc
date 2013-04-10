@@ -492,7 +492,7 @@ function field_ui_existing_field_options($entity_type, $bundle) {
  *
  * @see field_ui_menu()
  * @see field_ui_field_settings_form_submit()
- * @ingroups forms
+ * @ingroup forms
  */
 function field_ui_field_settings_form($form, &$form_state, $instance) {
   $bundle = $instance['bundle'];
