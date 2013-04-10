@@ -54,9 +54,12 @@ Drupal.behaviors.toolbar = {
       // @todo Optimize this to delay adding each subtree to the DOM until it is
       //   needed; however, take into account screen readers for determining
       //   when the DOM elements are needed.
-      if (Drupal.toolbar.subtrees) {
-        for (var id in Drupal.toolbar.subtrees) {
-          $('#toolbar-link-' + id).after(Drupal.toolbar.subtrees[id]);
+      var subtrees = Drupal.toolbar.subtrees;
+      if (subtrees) {
+        for (var id in subtrees) {
+          if (subtrees.hasOwnProperty(id)) {
+            $('#toolbar-link-' + id).after(subtrees.id);
+          }
         }
       }
       // Append a messages element for appending interaction updates for screen
