@@ -169,7 +169,7 @@ function error_displayable($error = NULL) {
  *   TRUE if the error is fatal.
  */
 function _drupal_log_error($error, $fatal = FALSE) {
-  // Initialize a maintenance theme if the boostrap was not complete.
+  // Initialize a maintenance theme if the bootstrap was not complete.
   // Do it early because drupal_set_message() triggers a drupal_theme_initialize().
   if ($fatal && (drupal_get_bootstrap_phase() != DRUPAL_BOOTSTRAP_FULL)) {
     unset($GLOBALS['theme']);
