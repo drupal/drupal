@@ -7,6 +7,9 @@ contact.category.*:
     id:
       type: string
       label: 'Category identifier'
+    uuid:
+      type: string
+      label: 'UUID'
     label:
       type: label
       label: 'Label'
@@ -22,6 +25,12 @@ contact.category.*:
     weight:
       type: integer
       label: 'Weight'
+    status:
+      type: boolean
+      label: 'Status'
+    langcode:
+      type: string
+      label: 'Default language'
 
 contact.settings:
   type: mapping

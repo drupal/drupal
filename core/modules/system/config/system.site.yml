@@ -7,3 +7,4 @@ page:
   front: user
 admin_compact_mode: '0'
 weight_select_max: '100'
+langcode: en

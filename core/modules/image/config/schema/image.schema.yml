@@ -34,6 +34,9 @@ image.style.*:
               type: integer
             ieid:
               type: string
+    langcode:
+      type: string
+      label: 'Default language'
 
 # Image effects plugins: image.effect.%
 # These are used in image styles.

@@ -25,3 +25,4 @@ status_blocked:
 status_canceled:
   body: "[user:name],\n\nYour account on [site:name] has been canceled.\n\n--  [site:name] team"
   subject: 'Account details for [user:name] at [site:name] (canceled)'
+langcode: en

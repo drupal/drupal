@@ -7,6 +7,9 @@ block.block.*.*:
     id:
       type: string
       label: 'ID'
+    uuid:
+      type: string
+      label: 'UUID'
     label:
       type: label
       label: 'Title'
