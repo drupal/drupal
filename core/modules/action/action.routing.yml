@@ -11,3 +11,10 @@ action_admin_orphans_remove:
     _content: '\Drupal\action\Controller\ActionController::adminRemoveOrphans'
   requirements:
     _permission: 'administer actions'
+
+action_admin_configure:
+  pattern: '/admin/config/system/actions/configure/{action}'
+  defaults:
+    _form: '\Drupal\action\Form\ActionAdminConfigureForm'
+  requirements:
+    _permission: 'administer actions'
