@@ -353,6 +353,7 @@ services:
     arguments: ['@database']
   plugin.manager.condition:
     class: Drupal\Core\Condition\ConditionManager
+    arguments: ['%container.namespaces%']
   kernel_destruct_subscriber:
     class: Drupal\Core\EventSubscriber\KernelDestructionSubscriber
     tags:
