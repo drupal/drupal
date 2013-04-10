@@ -3177,9 +3177,6 @@ function drupal_common_theme() {
     'breadcrumb' => array(
       'variables' => array('breadcrumb' => NULL),
     ),
-    'help' => array(
-      'variables' => array(),
-    ),
     'table' => array(
       'variables' => array('header' => NULL, 'rows' => NULL, 'attributes' => array(), 'caption' => NULL, 'colgroups' => array(), 'sticky' => TRUE, 'responsive' => TRUE, 'empty' => ''),
     ),
