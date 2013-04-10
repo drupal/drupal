@@ -48,15 +48,15 @@
 /**
  * Replaces all tokens in a given string with appropriate values.
  *
- * @param $text
+ * @param string $text
  *   A string potentially containing replaceable tokens.
- * @param $data
+ * @param array $data
  *   (optional) An array of keyed objects. For simple replacement scenarios
  *   'node', 'user', and others are common keys, with an accompanying node or
  *   user object being the value. Some token types, like 'site', do not require
  *   any explicit information from $data and can be replaced even if it is
  *   empty.
- * @param $options
+ * @param array $options
  *   (optional) A keyed array of settings and flags to control the token
  *   replacement process. Supported options are:
  *   - langcode: A language code to be used when generating locale-sensitive
@@ -74,7 +74,7 @@
  *     check_plain() or other appropriate scrubbing functions before displaying
  *     data to users.
  *
- * @return
+ * @return string
  *   Text with tokens replaced.
  */
 function token_replace($text, array $data = array(), array $options = array()) {
@@ -106,10 +106,10 @@ function token_replace($text, array $data = array(), array $options = array()) {
 /**
  * Builds a list of all token-like patterns that appear in the text.
  *
- * @param $text
+ * @param string $text
  *   The text to be scanned for possible tokens.
  *
- * @return
+ * @return array
  *   An associative array of discovered tokens, grouped by type.
  */
 function token_scan($text) {
@@ -141,18 +141,18 @@ function token_scan($text) {
 /**
  * Generates replacement values for a list of tokens.
  *
- * @param $type
+ * @param string $type
  *   The type of token being replaced. 'node', 'user', and 'date' are common.
- * @param $tokens
+ * @param array $tokens
  *   An array of tokens to be replaced, keyed by the literal text of the token
  *   as it appeared in the source text.
- * @param $data
+ * @param array $data
  *   (optional) An array of keyed objects. For simple replacement scenarios
  *   'node', 'user', and others are common keys, with an accompanying node or
  *   user object being the value. Some token types, like 'site', do not require
  *   any explicit information from $data and can be replaced even if it is
  *   empty.
- * @param $options
+ * @param array $options
  *   (optional) A keyed array of settings and flags to control the token
  *   replacement process. Supported options are:
  *   - langcode: A language code to be used when generating locale-sensitive
@@ -166,7 +166,7 @@ function token_scan($text) {
  *     responsibility for running filter_xss(), check_plain() or other
  *     appropriate scrubbing functions before displaying data to users.
  *
- * @return
+ * @return array
  *   An associative array of replacement values, keyed by the original 'raw'
  *   tokens that were found in the source text. For example:
  *   $results['[node:title]'] = 'My new node';
@@ -205,15 +205,15 @@ function token_generate($type, array $tokens, array $data = array(), array $opti
  *   $results == array('name' => '[node:author:name]');
  * @endcode
  *
- * @param $tokens
+ * @param array $tokens
  *   A keyed array of tokens, and their original raw form in the source text.
- * @param $prefix
+ * @param string $prefix
  *   A textual string to be matched at the beginning of the token.
- * @param $delimiter
- *   An optional string containing the character that separates the prefix from
+ * @param string $delimiter
+ *   (optional) A string containing the character that separates the prefix from
  *   the rest of the token. Defaults to ':'.
  *
- * @return
+ * @return array
  *   An associative array of discovered tokens, with the prefix and delimiter
  *   stripped from the key.
  */
@@ -252,7 +252,7 @@ function token_find_with_prefix(array $tokens, $prefix, $delimiter = ':') {
  *   );
  * @endcode
  *
- * @return
+ * @return array
  *   An associative array of token information, grouped by token type.
  */
 function token_info() {
