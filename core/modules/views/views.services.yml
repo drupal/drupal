@@ -58,8 +58,6 @@ services:
     arguments: [wizard, '%container.namespaces%']
   views.views_data:
     class: Drupal\views\ViewsDataCache
-    tags:
-      - { name: needs_destruction }
     arguments: ['@cache.views_info', '@config.factory', '@module_handler']
   views.executable:
     class: Drupal\views\ViewExecutableFactory

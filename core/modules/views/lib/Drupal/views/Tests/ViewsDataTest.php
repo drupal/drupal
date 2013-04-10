@@ -7,6 +7,9 @@
 
 namespace Drupal\views\Tests;
 
+use Drupal\Core\Cache\MemoryCounterBackend;
+use Drupal\views\ViewsDataCache;
+
 /**
  * Tests the fetching of views data.
  *
@@ -28,6 +31,13 @@ class ViewsDataTest extends ViewUnitTestBase {
    */
   protected $count = 0;
 
+  /**
+   * The memory backend to use for the test.
+   *
+   * @var \Drupal\Core\Cache\MemoryCounterBackend
+   */
+  protected $memoryCounterBackend;
+
   public static function getInfo() {
     return array(
       'name' => 'Table Data',
@@ -39,8 +49,10 @@ class ViewsDataTest extends ViewUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->viewsDataCache = $this->container->get('views.views_data');
+    $this->memoryCounterBackend = new MemoryCounterBackend('views_info');
     $this->state = $this->container->get('state');
+
+    $this->initViewsDataCache();
   }
 
   /**
@@ -115,6 +127,111 @@ class ViewsDataTest extends ViewUnitTestBase {
     $data = $this->viewsDataCache->get($random_table_name);
     $this->assertEqual($data, array(), 'Make sure fetching views data for an invalid table returns an empty array.');
     $this->assertCountIncrement(FALSE);
+  }
+
+  /**
+   * Ensures that cache entries are only set and get when necessary.
+   */
+  public function testCacheRequests() {
+    // Request the same table 5 times. The caches are empty at this point, so
+    // what will happen is that it will first check for a cache entry for the
+    // given table, get a cache miss, then try the cache entry for all tables,
+    // which does not exist yet either. As a result, it rebuilds the information
+    // and writes a cache entry for all tables and the requested table.
+    $table_name = 'views_test_data';
+    for ($i = 0; $i < 5; $i++) {
+      $this->viewsDataCache->get($table_name);
+    }
+
+    // Assert cache set and get calls.
+    $this->assertEqual($this->memoryCounterBackend->getCounter('get', 'views_data:views_test_data:en'), 1, 'Requested the cache for the table-specific cache entry.');
+    $this->assertEqual($this->memoryCounterBackend->getCounter('get', 'views_data:en'), 1, 'Requested the cache for all tables.');
+    $this->assertEqual($this->memoryCounterBackend->getCounter('set', 'views_data:views_test_data:en'), 1, 'Wrote the cache for the requested once.');
+    $this->assertEqual($this->memoryCounterBackend->getCounter('set', 'views_data:en'), 1, 'Wrote the cache for the all tables once.');
+
+    // Re-initialize the views data cache to simulate a new request and repeat.
+    // We have a warm cache now, so this will only request the tables-specific
+    // cache entry and return that.
+    $this->initViewsDataCache();
+    for ($i = 0; $i < 5; $i++) {
+      $this->viewsDataCache->get($table_name);
+    }
+
+    // Assert cache set and get calls.
+    $this->assertEqual($this->memoryCounterBackend->getCounter('get', 'views_data:views_test_data:en'), 1, 'Requested the cache for the table-specific cache entry.');
+    $this->assertEqual($this->memoryCounterBackend->getCounter('get', 'views_data:en'), 0, 'Did not request to load the cache entry for all tables.');
+    $this->assertEqual($this->memoryCounterBackend->getCounter('set', 'views_data:views_test_data:en'), 0, 'Did not write the cache for the requested table.');
+    $this->assertEqual($this->memoryCounterBackend->getCounter('set', 'views_data:en'), 0, 'Did not write the cache for all tables.');
+
+    // Re-initialize the views data cache to simulate a new request and request
+    // a different table. This will fail to get a table specific cache entry,
+    // load the cache entry for all tables and save a cache entry for this table
+    // but not all.
+    $this->initViewsDataCache();
+    $another_table_name = 'views';
+    for ($i = 0; $i < 5; $i++) {
+      $this->viewsDataCache->get($another_table_name);
+    }
+
+    // Assert cache set and get calls.
+    $this->assertEqual($this->memoryCounterBackend->getCounter('get', 'views_data:views:en'), 1, 'Requested the cache for the table-specific cache entry.');
+    $this->assertEqual($this->memoryCounterBackend->getCounter('get', 'views_data:en'), 1, 'Requested the cache for all tables.');
+    $this->assertEqual($this->memoryCounterBackend->getCounter('set', 'views_data:views:en'), 1, 'Wrote the cache for the requested once.');
+    $this->assertEqual($this->memoryCounterBackend->getCounter('set', 'views_data:en'), 0, 'Did not write the cache for all tables.');
+
+    // Re-initialize the views data cache to simulate a new request and request
+    // a non-existing table. This will result in the same cache requests as we
+    // explicitly write an empty cache entry for non-existing tables to avoid
+    // unecessary requests in those situations. We do have to load the cache
+    // entry for all tables to check if the table does exist or not.
+    $this->initViewsDataCache();
+    $non_existing_table = $this->randomName();
+    for ($i = 0; $i < 5; $i++) {
+      $this->viewsDataCache->get($non_existing_table);
+    }
+
+    // Assert cache set and get calls.
+    $this->assertEqual($this->memoryCounterBackend->getCounter('get', "views_data:$non_existing_table:en"), 1, 'Requested the cache for the table-specific cache entry.');
+    $this->assertEqual($this->memoryCounterBackend->getCounter('get', 'views_data:en'), 1, 'Requested the cache for all tables.');
+    $this->assertEqual($this->memoryCounterBackend->getCounter('set', "views_data:$non_existing_table:en"), 1, 'Wrote the cache for the requested once.');
+    $this->assertEqual($this->memoryCounterBackend->getCounter('set', 'views_data:en'), 0, 'Did not write the cache for all tables.');
+
+    // Re-initialize the views data cache to simulate a new request and request
+    // the same non-existing table. This will load the table-specific cache
+    // entry and return the stored empty array for that.
+    $this->initViewsDataCache();
+    for ($i = 0; $i < 5; $i++) {
+      $this->viewsDataCache->get($non_existing_table);
+    }
+
+    // Assert cache set and get calls.
+    $this->assertEqual($this->memoryCounterBackend->getCounter('get', "views_data:$non_existing_table:en"), 1, 'Requested the cache for the table-specific cache entry.');
+    $this->assertEqual($this->memoryCounterBackend->getCounter('get', 'views_data:en'), 0, 'Did not request to load the cache entry for all tables.');
+    $this->assertEqual($this->memoryCounterBackend->getCounter('set', "views_data:$non_existing_table:en"), 0, 'Did not write the cache for the requested table.');
+    $this->assertEqual($this->memoryCounterBackend->getCounter('set', 'views_data:en'), 0, 'Did not write the cache for all tables.');
+
+    // Re-initialize the views data cache and repeat with no specified table.
+    // This should only load the cache entry for all tables.
+    $this->initViewsDataCache();
+    for ($i = 0; $i < 5; $i++) {
+      $this->viewsDataCache->get();
+    }
+
+    // This only requested the full information. No other cache requests should
+    // have been made.
+    $this->assertEqual($this->memoryCounterBackend->getCounter('get', 'views_data:views_test_data:en'), 0);
+    $this->assertEqual($this->memoryCounterBackend->getCounter('get', 'views_data:en'), 1);
+    $this->assertEqual($this->memoryCounterBackend->getCounter('set', 'views_data:views_test_data:en'), 0);
+    $this->assertEqual($this->memoryCounterBackend->getCounter('set', 'views_data:en'), 0);
+
+  }
+
+  /**
+   * Initializes a new ViewsDataCache instance and resets the cache backend.
+   */
+  protected function initViewsDataCache() {
+    $this->memoryCounterBackend->resetCounter();
+    $this->viewsDataCache = new ViewsDataCache($this->memoryCounterBackend, $this->container->get('config.factory'), $this->container->get('module_handler'));
   }
 
   /**
