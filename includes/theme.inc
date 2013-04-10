@@ -508,7 +508,7 @@ class ThemeRegistry Extends DrupalCacheArray {
  *   themes/bartik.
  *
  * @see theme()
- * @see _theme_process_registry()
+ * @see _theme_build_registry()
  * @see hook_theme()
  * @see list_themes()
  */
