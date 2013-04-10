@@ -419,6 +419,8 @@ div.messages {
   border: 1px solid;
   margin: 6px 0;
   padding: 10px 10px 10px 50px; /* LTR */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .messages.status {
