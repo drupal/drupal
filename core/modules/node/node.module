@@ -2279,23 +2279,28 @@ function node_form_search_form_alter(&$form, $form_state) {
       '#collapsed' => TRUE,
       '#attributes' => array('class' => array('search-advanced')),
     );
+    $form['advanced']['keywords-fieldset'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Keywords'),
+      '#collapsible' => FALSE,
+    );
     $form['advanced']['keywords'] = array(
       '#prefix' => '<div class="criterion">',
       '#suffix' => '</div>',
     );
-    $form['advanced']['keywords']['or'] = array(
+    $form['advanced']['keywords-fieldset']['keywords']['or'] = array(
       '#type' => 'textfield',
       '#title' => t('Containing any of the words'),
       '#size' => 30,
       '#maxlength' => 255,
     );
-    $form['advanced']['keywords']['phrase'] = array(
+    $form['advanced']['keywords-fieldset']['keywords']['phrase'] = array(
       '#type' => 'textfield',
       '#title' => t('Containing the phrase'),
       '#size' => 30,
       '#maxlength' => 255,
     );
-    $form['advanced']['keywords']['negative'] = array(
+    $form['advanced']['keywords-fieldset']['keywords']['negative'] = array(
       '#type' => 'textfield',
       '#title' => t('Containing none of the words'),
       '#size' => 30,
@@ -2304,7 +2309,12 @@ function node_form_search_form_alter(&$form, $form_state) {
 
     // Node types:
     $types = array_map('check_plain', node_type_get_names());
-    $form['advanced']['type'] = array(
+    $form['advanced']['types-fieldset'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Types'),
+      '#collapsible' => FALSE,
+    );
+    $form['advanced']['types-fieldset']['type'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Only of the type(s)'),
       '#prefix' => '<div class="criterion">',
@@ -2326,7 +2336,13 @@ function node_form_search_form_alter(&$form, $form_state) {
       $language_options[$langcode] = $language->locked ? t('- @name -', array('@name' => $language->name)) : $language->name;
     }
     if (count($language_options) > 1) {
-      $form['advanced']['language'] = array(
+      $form['advanced']['lang-fieldset'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Languages'),
+        '#collapsible' => FALSE,
+        '#collapsed' => FALSE,
+      );
+      $form['advanced']['lang-fieldset']['language'] = array(
         '#type' => 'checkboxes',
         '#title' => t('Languages'),
         '#prefix' => '<div class="criterion">',
