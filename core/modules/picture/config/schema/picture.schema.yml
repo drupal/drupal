@@ -1,0 +1,33 @@
+# Schema for the configuration files of the Picture module.
+
+picture.mappings.*:
+  type: mapping
+  label: 'Picture mapping'
+  mapping:
+    id:
+      type: string
+      label: 'Machine-readable name'
+    uuid:
+      type: string
+      label: 'UUID'
+    label:
+      type: label
+      label: 'Label'
+    mappings:
+      type: sequence
+      label: 'Mappings'
+      sequence:
+        - type: sequence
+          label: 'Mapping'
+          sequence:
+            - type: string
+              label: 'Image style'
+    breakpointGroup:
+      type: string
+      label: 'Breakpoint group'
+    status:
+      type: boolean
+      label: 'Status'
+    langcode:
+      type: string
+      label: 'Default language'
