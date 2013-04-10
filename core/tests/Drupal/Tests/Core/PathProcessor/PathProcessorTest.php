@@ -2,16 +2,11 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\PathProcessor\PathProcessorTest.
+ * Contains Drupal\Tests\Core\PathProcessor\PathProcessorTest.
  */
 
-namespace Drupal\system\Tests\PathProcessor;
+namespace Drupal\Tests\Core\PathProcessor;
 
-use Drupal\system\Tests\Path\PathUnitTestBase;
-use Drupal\Core\Database\Database;
-use Drupal\Core\Path\Path;
-use Drupal\Core\Path\AliasManager;
-use Drupal\Core\Path\AliasWhitelist;
 use Drupal\Core\PathProcessor\PathProcessorAlias;
 use Drupal\Core\PathProcessor\PathProcessorDecode;
 use Drupal\Core\PathProcessor\PathProcessorFront;
@@ -19,10 +14,14 @@ use Drupal\Core\PathProcessor\PathProcessorManager;
 use Drupal\language\HttpKernel\PathProcessorLanguage;
 use Symfony\Component\HttpFoundation\Request;
 
+use Drupal\Tests\UnitTestCase;
+
 /**
  * Tests path processor functionality.
  */
-class PathProcessorTest extends PathUnitTestBase {
+class PathProcessorTest extends UnitTestCase {
+
+  protected $languages;
 
   public static function getInfo() {
     return array(
@@ -33,8 +32,17 @@ class PathProcessorTest extends PathUnitTestBase {
   }
 
   public function setUp() {
-    parent::setUp();
-    $this->fixtures = new PathProcessorFixtures();
+
+    // Set up some languages to be used by the language-based path processor.
+    $languages = array();
+    foreach (array('en' => 'English', 'fr' => 'French') as $langcode => $language_name) {
+      $language = new \stdClass();
+      $language->langcode = $langcode;
+      $language->name = $language_name;
+      $languages[$langcode] = $language;
+    }
+    $this->languages = $languages;
+
   }
 
   /**
@@ -42,32 +50,43 @@ class PathProcessorTest extends PathUnitTestBase {
    */
   function testProcessInbound() {
 
-    // Ensure all tables needed for these tests are created.
-    $connection = Database::getConnection();
-    $this->fixtures->createTables($connection);
+    // Create an alias manager stub.
+    $alias_manager = $this->getMockBuilder('Drupal\Core\Path\AliasManager')
+      ->disableOriginalConstructor()
+      ->getMock();
 
-    // Create dependecies needed by various path processors.
-    $whitelist = new AliasWhitelist('path_alias_whitelist', 'cache', $this->container->get('keyvalue'), $connection);
-    $alias_manager = new AliasManager($connection, $whitelist, $this->container->get('language_manager'));
-    $module_handler = $this->container->get('module_handler');
+    $system_path_map = array(
+      // Set up one proper alias that can be resolved to a system path.
+      array('foo', NULL, 'user/1'),
+      // Passing in anything else should return the same string.
+      array('fr/foo', NULL, 'fr/foo'),
+      array('fr', NULL, 'fr'),
+      array('user', NULL, 'user'),
+    );
+
+    $alias_manager->expects($this->any())
+      ->method('getSystemPath')
+      ->will($this->returnValueMap($system_path_map));
+
+    // Create a stub config factory with all config settings that will be checked
+    // during this test.
+    $language_prefixes = array_keys($this->languages);
+    $config_factory_stub = $this->getConfigFactoryStub(
+      array(
+        'system.site' => array(
+          'page.front' => 'user'
+        ),
+        'language.negotiation' => array(
+          'url.prefixes' => array_combine($language_prefixes, $language_prefixes)
+        )
+      )
+    );
 
     // Create the processors.
     $alias_processor = new PathProcessorAlias($alias_manager);
     $decode_processor = new PathProcessorDecode();
-    $front_processor = new PathProcessorFront($this->container->get('config.factory'));
-    $language_processor = new PathProcessorLanguage($module_handler);
-
-    // Add a url alias for testing the alias-based processor.
-    $path_crud = new Path($connection, $alias_manager);
-    $path_crud->save('user/1', 'foo');
-
-    // Add a language for testing the language-based processor.
-    $module_handler->setModuleList(array('language' => 'core/modules/language/language.module'));
-    $module_handler->load('language');
-    $language = new \stdClass();
-    $language->langcode = 'fr';
-    $language->name = 'French';
-    language_save($language);
+    $front_processor = new PathProcessorFront($config_factory_stub);
+    $language_processor = new PathProcessorLanguage($config_factory_stub, $this->languages);
 
     // First, test the processor manager with the processors in the incorrect
     // order. The alias processor will run before the language processor, meaning
@@ -89,13 +108,13 @@ class PathProcessorTest extends PathUnitTestBase {
     $test_path = 'fr';
     $request = Request::create($test_path);
     $processed = $processor_manager->processInbound($test_path, $request);
-    $this->assertEqual($processed, '', 'Processing in the incorrect order fails to resolve the system path from the empty path');
+    $this->assertEquals('', $processed, 'Processing in the incorrect order fails to resolve the system path from the empty path');
 
     // Test resolving an existing alias using the incorrect processor order.
     $test_path = 'fr/foo';
     $request = Request::create($test_path);
     $processed = $processor_manager->processInbound($test_path, $request);
-    $this->assertEqual($processed, 'foo', 'Processing in the incorrect order fails to resolve the system path from an alias');
+    $this->assertEquals('foo', $processed, 'Processing in the incorrect order fails to resolve the system path from an alias');
 
     // Now create a new processor manager and add the processors, this time in
     // the correct order.
@@ -114,13 +133,12 @@ class PathProcessorTest extends PathUnitTestBase {
     $test_path = 'fr';
     $request = Request::create($test_path);
     $processed = $processor_manager->processInbound($test_path, $request);
-    $this->assertEqual($processed, 'user', 'Processing in the correct order resolves the system path from the empty path.');
+    $this->assertEquals('user', $processed, 'Processing in the correct order resolves the system path from the empty path.');
 
     // Test resolving an existing alias using the correct processor order.
     $test_path = 'fr/foo';
     $request = Request::create($test_path);
     $processed = $processor_manager->processInbound($test_path, $request);
-    $this->assertEqual($processed, 'user/1', 'Processing in the correct order resolves the system path from an alias.');
+    $this->assertEquals('user/1', $processed, 'Processing in the correct order resolves the system path from an alias.');
   }
-
 }
