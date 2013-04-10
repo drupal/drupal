@@ -83,8 +83,8 @@ class BreakLockForm extends ConfirmFormBase implements ControllerInterface {
    */
   protected function getDescription() {
     $locked = $this->tempStore->getMetadata($this->view->id());
-    $account = $this->entityManager->getStorageController('user')->load(array($locked->owner));
-    return t('By breaking this lock, any unsaved changes made by !user will be lost.', array('!user' => theme('username', array('account' => reset($account)))));
+    $accounts = $this->entityManager->getStorageController('user')->load(array($locked->owner));
+    return t('By breaking this lock, any unsaved changes made by !user will be lost.', array('!user' => theme('username', array('account' => reset($accounts)))));
   }
 
   /**
