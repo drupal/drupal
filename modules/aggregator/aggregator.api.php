@@ -189,7 +189,7 @@ function hook_aggregator_process($feed) {
  *
  * @ingroup aggregator
  */
-function hook_aggregator_process_info($feed) {
+function hook_aggregator_process_info() {
   return array(
     'title' => t('Default processor'),
     'description' => t('Creates lightweight records of feed items.'),
