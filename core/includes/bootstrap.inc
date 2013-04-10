@@ -382,16 +382,16 @@ function timer_stop($name) {
  * @see default.settings.php
  */
 function conf_path($require_settings = TRUE, $reset = FALSE) {
-  $conf = &drupal_static(__FUNCTION__, '');
+  $conf_path = &drupal_static(__FUNCTION__, '');
 
-  if ($conf && !$reset) {
-    return $conf;
+  if ($conf_path && !$reset) {
+    return $conf_path;
   }
 
   // Check for a simpletest override.
   if ($simpletest_conf_path = _drupal_simpletest_conf_path()) {
-    $conf = $simpletest_conf_path;
-    return $conf;
+    $conf_path = $simpletest_conf_path;
+    return $conf_path;
   }
 
   // Otherwise, use the normal $conf_path.
@@ -400,8 +400,8 @@ function conf_path($require_settings = TRUE, $reset = FALSE) {
     $script_name = $_SERVER['SCRIPT_FILENAME'];
   }
   $http_host = $_SERVER['HTTP_HOST'];
-  $conf = find_conf_path($http_host, $script_name, $require_settings);
-  return $conf;
+  $conf_path = find_conf_path($http_host, $script_name, $require_settings);
+  return $conf_path;
 }
 
 /**
