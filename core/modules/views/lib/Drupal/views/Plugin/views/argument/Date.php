@@ -19,19 +19,30 @@ use Drupal\Core\Database\Database;
  * - many to one: If true, the "many to one" helper will be used.
  * - invalid input: A string to give to the user for obviously invalid input.
  *                  This is deprecated in favor of argument validators.
- * - arg_format: The format string to use on the current time when dealing with
- *     date values.
  *
  * @see Drupal\views\ManyTonOneHelper
  *
  * @ingroup views_argument_handlers
  *
  * @Plugin(
- *   id = "date",
- *   arg_format = "Y-m-d"
+ *   id = "date"
  * )
  */
 class Date extends Formula {
+
+  /**
+   * The date format used in the title.
+   *
+   * @var string
+   */
+  protected $format;
+
+  /**
+   * The date format used in the query.
+   *
+   * @var string
+   */
+  protected $argFormat = 'Y-m-d';
 
   var $option_name = 'default_argument_date';
 
@@ -50,7 +61,7 @@ class Date extends Formula {
    */
   function get_default_argument($raw = FALSE) {
     if (!$raw && $this->options['default_argument_type'] == 'date') {
-      return date($this->definition['format'], REQUEST_TIME);
+      return date($this->argFormat, REQUEST_TIME);
     }
     elseif (!$raw && in_array($this->options['default_argument_type'], array('node_created', 'node_changed'))) {
       foreach (range(1, 3) as $i) {
@@ -68,10 +79,10 @@ class Date extends Formula {
         return parent::get_default_argument();
       }
       elseif ($this->options['default_argument_type'] == 'node_created') {
-        return date($this->definition['format'], $node->created);
+        return date($this->argFormat, $node->created);
       }
       elseif ($this->options['default_argument_type'] == 'node_changed') {
-        return date($this->definition['format'], $node->changed);
+        return date($this->argFormat, $node->changed);
       }
     }
 
@@ -86,7 +97,7 @@ class Date extends Formula {
    * Overrides \Drupal\views\Plugin\views\argument\Formula::get_formula().
    */
   function get_formula() {
-    $this->formula = $this->getDateFormat($this->definition['arg_format']);
+    $this->formula = $this->getDateFormat($this->argFormat);
     return parent::get_formula();
   }
 

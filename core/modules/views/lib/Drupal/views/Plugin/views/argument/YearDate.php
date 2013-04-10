@@ -14,10 +14,14 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @Plugin(
  *   id = "date_year",
- *   arg_format = "Y",
  *   module = "views"
  * )
  */
 class YearDate extends Date {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $argFormat = 'Y';
 
 }

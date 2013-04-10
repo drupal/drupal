@@ -14,11 +14,15 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @Plugin(
  *   id = "date_week",
- *   arg_format = "W",
  *   module = "views"
  * )
  */
 class WeekDate extends Date {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $argFormat = 'W';
 
   /**
    * Provide a link to the next level of the view
