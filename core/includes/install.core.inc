@@ -2384,6 +2384,7 @@ function install_configure_form_submit($form, &$form_state) {
   config('system.site')
     ->set('name', $form_state['values']['site_name'])
     ->set('mail', $form_state['values']['site_mail'])
+    ->set('langcode', language_default()->langcode)
     ->save();
 
   config('system.timezone')
