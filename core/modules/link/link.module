@@ -176,6 +176,14 @@ function link_field_widget_form(&$form, &$form_state, $field, $instance, $langco
     '#attributes' => array('class' => array('link-field-widget-attributes')),
   );
 
+  // If cardinality is 1, ensure a label is output for the field by wrapping it
+  // in a details element.
+  if ($field['cardinality'] == 1) {
+    $element += array(
+      '#type' => 'fieldset',
+    );
+  }
+
   return $element;
 }
 
