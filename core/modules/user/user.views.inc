@@ -7,6 +7,8 @@
  * @ingroup views_module_handlers
  */
 
+use Drupal\views\ViewExecutable;
+
 /**
  * Implements hook_views_data().
  */
@@ -374,14 +376,4 @@ function user_views_data() {
   );
 
   return $data;
-}
-
-/**
- * Implements hook_views_query_substitutions().
- *
- * Allow replacement of current userid so we can cache these queries.
- */
-function user_views_query_substitutions($view) {
-  global $user;
-  return array('***CURRENT_USER***' => intval($user->uid));
 }

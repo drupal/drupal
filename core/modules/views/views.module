@@ -816,24 +816,27 @@ function &views_get_current_view() {
  * Implements hook_hook_info().
  */
 function views_hook_info() {
-  $hooks['views_data'] = array(
-    'group' => 'views',
-  );
-  $hooks['views_data_alter'] = array(
-    'group' => 'views',
-  );
-  $hooks['views_query_substitutions'] = array(
-    'group' => 'views',
-  );
-  $hooks['views_form_substitutions'] = array(
-    'group' => 'views',
-  );
-  $hooks['views_analyze'] = array(
-    'group' => 'views',
-  );
-  $hooks['views_data_alter'] = array(
-    'group' => 'views',
-  );
+  $hooks = array();
+
+  $hooks += array_fill_keys(array(
+    'views_data',
+    'views_data_alter',
+    'views_analyze',
+    'views_invalidate_cache',
+  ), array('group' => 'views'));
+
+  $hooks += array_fill_keys(array(
+    'views_query_substitutions',
+    'views_form_substitutions',
+    'views_pre_view',
+    'views_pre_build',
+    'views_post_build',
+    'views_pre_execute',
+    'views_post_execute',
+    'views_pre_render',
+    'views_post_render',
+    'views_query_alter',
+  ), array('group' => 'views_execution'));
 
   return $hooks;
 }
@@ -1562,18 +1565,6 @@ function views_exposed_form_cache($views_name, $display_name, $form_output = NUL
 function views_theme_functions($hook, ViewExecutable $view, $display = NULL) {
   Drupal::moduleHandler()->loadInclude('views', 'inc', 'views.theme');
   return _views_theme_functions($hook, $view, $display);
-}
-
-/**
- * Substitute current time; this works with cached queries.
- */
-function views_views_query_substitutions($view) {
-  return array(
-    '***CURRENT_VERSION***' => VERSION,
-    '***CURRENT_TIME***' => REQUEST_TIME,
-    '***CURRENT_LANGUAGE***' => language(LANGUAGE_TYPE_CONTENT)->langcode,
-    '***DEFAULT_LANGUAGE***' => language_default()->langcode,
-  );
 }
 
 /**
