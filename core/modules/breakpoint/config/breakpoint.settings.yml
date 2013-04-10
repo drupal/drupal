@@ -1,2 +1,4 @@
-multipliers: [1x, 1.5x, 2x]
-
+multipliers:
+  - 1x
+  - 1.5x
+  - 2x
