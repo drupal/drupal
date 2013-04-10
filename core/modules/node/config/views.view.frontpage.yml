@@ -42,7 +42,7 @@ display:
           admin_label: ''
           label: ''
           empty: '1'
-          title: 'Welcome to Drupal'
+          title: 'Welcome to [site:name]'
           plugin_id: title
       exposed_form:
         type: basic
@@ -105,12 +105,6 @@ display:
           links: '1'
         type: node
       sorts:
-        created:
-          field: created
-          id: created
-          order: DESC
-          table: node
-          plugin_id: date
         sticky:
           admin_label: ''
           expose:
@@ -119,10 +113,16 @@ display:
           field: sticky
           group_type: group
           id: sticky
-          order: ASC
+          order: DESC
           relationship: none
           table: node
           plugin_id: boolean
+        created:
+          field: created
+          id: created
+          order: DESC
+          table: node
+          plugin_id: date
       style:
         type: default
       title: ''
