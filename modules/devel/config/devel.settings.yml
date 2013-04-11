@@ -1,0 +1,19 @@
+query_display: FALSE
+query_sort: 0
+execution: 5
+xhprof_enabled: FALSE
+xhprof_directory: ''
+xhprof_url: ''
+api_url: 'api.drupal.org'
+timer: 0
+memory: 0
+redirect_page: 0
+page_alter: FALSE
+raw_names: FALSE
+error_handlers:
+  1: 1
+krumo_skin: 'default'
+rebuild_theme_registry: FALSE
+use_uncompressed_jquery: FALSE
+debug_mail_file_format: '%to-%subject-%datetime.mail.txt'
+debug_mail_directory: 'temporary://devel-mails'

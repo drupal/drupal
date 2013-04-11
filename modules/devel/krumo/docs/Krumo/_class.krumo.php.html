@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos  -->
+			<title>Docs for page class.krumo.php</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+						<script src="../media/lib/classTree.js"></script>
+												<script language="javascript" type="text/javascript">
+				var imgPlus = new Image();
+				var imgMinus = new Image();
+				imgPlus.src = "../media/images/plus.png";
+				imgMinus.src = "../media/images/minus.png";
+				
+				function showNode(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+							var oImg = document.layers["img" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+							var oImg = document.all["img" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+							var oImg = document.getElementById("img" + Node);
+									break;
+							}
+					oImg.src = imgMinus.src;
+					oTable.style.display = "block";
+				}
+				
+				function hideNode(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+							var oImg = document.layers["img" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+							var oImg = document.all["img" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+							var oImg = document.getElementById("img" + Node);
+									break;
+							}
+					oImg.src = imgPlus.src;
+					oTable.style.display = "none";
+				}
+				
+				function nodeIsVisible(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+									break;
+							}
+					return (oTable && oTable.style.display == "block");
+				}
+				
+				function toggleNodeVisibility(Node){
+					if (nodeIsVisible(Node)){
+						hideNode(Node);
+					}else{
+						showNode(Node);
+					}
+				}
+			</script>
+					</head>
+		<body>
+			<div class="page-body">			
+<h2 class="file-name"><img src="../media/images/Page_logo.png" alt="File" style="vertical-align: middle">/class.krumo.php</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+							<a href="#sec-classes">Classes</a>
+			|									<a href="#sec-constants">Constants</a>
+			|									<a href="#sec-functions">Functions</a>
+			</div>
+	<div class="info-box-body">	
+		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Krumo: Structured information display solution</p>
+<p class="description"><p>Krumo is a debugging tool (PHP5 only), which displays structured information  about any PHP variable. It is a nice replacement for print_r() or var_dump()  which are used by a lot of PHP developers.</p></p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Kaloyan K. Tsvetkov &lt;<a href="mailto:kaloyan@kaloyan.info">kaloyan@kaloyan.info</a>&gt;</li>
+				<li><span class="field">version:</span> $Id$</li>
+				<li><span class="field">license:</span> <a href="http://opensource.org/licenses/lgpl-license.php">GNU Lesser General Public License Version 2.1</a></li>
+			</ul>
+		
+			</div>
+</div>
+		
+	<a name="sec-classes"></a>	
+	<div class="info-box">
+		<div class="info-box-title">Classes</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+			<span class="disabled">Classes</span>
+			|										<a href="#sec-constants">Constants</a>
+				|													<a href="#sec-functions">Functions</a>
+					</div>
+		<div class="info-box-body">	
+			<table cellpadding="2" cellspacing="0" class="class-table">
+				<tr>
+					<th class="class-table-header">Class</th>
+					<th class="class-table-header">Description</th>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em; vertical-align: top; white-space: nowrap">
+						<img src="../media/images/Class.png"
+								 alt=" class"
+								 title=" class"/>
+						<a href="../Krumo/krumo.html">krumo</a>
+					</td>
+					<td>
+											Krumo API
+										</td>
+				</tr>
+							</table>
+		</div>
+	</div>
+
+	
+	<a name="sec-constants"></a>	
+	<div class="info-box">
+		<div class="info-box-title">Constants</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-classes">Classes</a>
+				|									<span class="disabled">Constants</span>
+			|										<a href="#sec-functions">Functions</a>
+					</div>
+		<div class="info-box-body">	
+			<a name="defineDIR_SEP"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<img src="../media/images/Constant.png" />
+		<span class="const-title">
+			<span class="const-name">DIR_SEP</span> = DIRECTORY_SEPARATOR
+			(line <span class="line-number">22</span>)
+		</span>
+	</div>
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">backward compatibility: the DIR_SEP constant isn't used anymore</p>
+	
+		
+</div>
+<a name="defineKRUMO_DIR"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<img src="../media/images/Constant.png" />
+		<span class="const-title">
+			<span class="const-name">KRUMO_DIR</span> = dirname(__FILE__).DIRECTORY_SEPARATOR
+			(line <span class="line-number">39</span>)
+		</span>
+	</div>
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Set the KRUMO_DIR constant up with the absolute path to Krumo files. If it is  not defined, include_path will be used. Set KRUMO_DIR only if any other module  or application has not already set it up.</p>
+	
+		
+</div>
+<a name="defineKRUMO_TRUNCATE_LENGTH"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<img src="../media/images/Constant.png" />
+		<span class="const-title">
+			<span class="const-name">KRUMO_TRUNCATE_LENGTH</span> = 50
+			(line <span class="line-number">48</span>)
+		</span>
+	</div>
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This constant sets the maximum strings of strings that will be shown  as they are. Longer strings will be truncated with this length, and  their `full form` will be shown in a child node.</p>
+	
+		
+</div>
+<a name="definePATH_SEPARATOR"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<img src="../media/images/Constant.png" />
+		<span class="const-title">
+			<span class="const-name">PATH_SEPARATOR</span> = OS_WINDOWS?';':':'
+			(line <span class="line-number">28</span>)
+		</span>
+	</div>
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">backward compatibility: the PATH_SEPARATOR constant is availble since 4.3.0RC2</p>
+	
+		
+</div>
+		</div>
+	</div>
+	
+	
+	<a name="sec-functions"></a>	
+	<div class="info-box">
+		<div class="info-box-title">Functions</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-classes">Classes</a>
+				|													<a href="#sec-constants">Constants</a>
+				|									<span class="disabled">Functions</span>
+		</div>
+		<div class="info-box-body">	
+			<a name="functionkrumo" id="functionkrumo"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<img src="../media/images/Function.png" />
+		<span class="method-title">krumo</span> (line <span class="line-number">1295</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Alias of <a href="../Krumo/krumo.html#methoddump">krumo::dump()</a></p>
+	<ul class="tags">
+				<li><span class="field">see:</span> <a href="../Krumo/krumo.html#methoddump">krumo::dump()</a></li>
+			</ul>
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			krumo
+		</span>
+					([<span class="var-type">mixed</span>&nbsp;<span class="var-name">$data,...</span> = <span class="var-default"></span>])
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$data,...</span>			</li>
+				</ul>
+		
+	
+</div>
+		</div>
+	</div>
+	
+	<p class="notes" id="credit">
+		Documentation generated on Sun, 02 Dec 2007 09:43:24 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0a2</a>
+	</p>
+	</div></body>
+</html>

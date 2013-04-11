@@ -1,0 +1,104 @@
+<?php
+
+/**
+ * Implements hook_enable().
+ */
+function devel_enable() {
+  // New module weights in core: put devel as the very last in the chain.
+  module_set_weight('devel', 88);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function devel_uninstall() {
+  // Delete the development menu.
+  if (module_exists('menu')) {
+    if ($devel_menu = menu_load('devel')) {
+      $devel_menu->delete();
+    }
+  }
+}
+
+/**
+ * Remove feature for storing queries. Cleanup deprecated tables and variables.
+ */
+function devel_update_7000() {
+  db_drop_table('devel_queries');
+  db_drop_table('devel_times');
+}
+
+/**
+ * Rebuild the menus since everything is defined by devel_menu().
+ */
+function devel_update_7001() {
+  db_delete('menu_links')
+    ->condition('module', 'devel')
+    ->execute();
+  state()->set('menu_rebuild_needed', TRUE);
+  return t('Devel module menu links will be rebuilt.');
+}
+
+/**
+ * Remove deprecated variables - dev_query, devel_code_coverage
+ */
+function devel_update_7002() {
+  variable_del('dev_query'); // Sad trombone. http://drupalcode.org/viewvc/drupal/drupal/includes/database.mysql.inc?revision=1.2&view=markup
+  variable_del('devel_code_coverage');
+}
+
+/**
+ * As per issue #813132: change schablon.com to white for krumo.
+ */
+function devel_update_7003() {
+  if (variable_get('devel_krumo_skin', 'white') == 'schablon.com') {
+    variable_set('devel_krumo_skin', 'white');
+  }
+}
+
+/**
+ * Convert devel_error_handler variable to devel_error_handlers array.
+ */
+function devel_update_7004() {
+  define('DEVEL_ERROR_HANDLER_BACKTRACE_AND_MESSAGE', 3);
+
+  $error_handler = variable_get('devel_error_handler', NULL);
+  if (isset($error_handler)) {
+    if ($error_handler == DEVEL_ERROR_HANDLER_BACKTRACE_AND_MESSAGE) {
+      $error_handlers = array(DEVEL_ERROR_HANDLER_STANDARD, DEVEL_ERROR_HANDLER_BACKTRACE_KRUMO);
+    }
+    else {
+      $error_handlers = array($error_handler);
+    }
+    variable_del('devel_error_handler');
+    variable_set('devel_error_handlers', drupal_map_assoc($error_handlers));
+  }
+}
+
+/**
+ * Moves devel settings from variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function devel_update_8001() {
+  update_variables_to_config('devel.settings',array(
+    'devel_query_display' => 'query_display',
+    'devel_query_sort' => 'query_sort',
+    'devel_execution' => 'execution',
+    'devel_xhprof_enabled' => 'xhprof_enabled',
+    'devel_xhprof_directory' => 'xhprof_directory',
+    'devel_xhprof_url' => 'xhprof_url',
+    'devel_api_url' => 'api_url',
+    'dev_timer' => 'timer',
+    'dev_mem' => 'memory',
+    'devel_redirect_page' => 'redirect_page',
+    'devel_page_alter' => 'page_alter',
+    'devel_raw_names' => 'raw_names',
+    'devel_error_handlers' => 'error_handlers',
+    'devel_krumo_skin' => 'krumo_skin',
+    'devel_rebuild_theme_registry' => 'rebuild_theme_registry',
+    'devel_use_uncompressed_jquery' => 'use_uncompressed_jquery',
+    'devel_debug_mail_file_format' => 'debug_mail_file_format',
+    'devel_debug_mail_directory' => 'debug_mail_directory'
+  ));
+}

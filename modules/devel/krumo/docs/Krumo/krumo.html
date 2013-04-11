@@ -1,0 +1,900 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos  -->
+			<title>Docs For Class krumo</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+						<script src="../media/lib/classTree.js"></script>
+												<script language="javascript" type="text/javascript">
+				var imgPlus = new Image();
+				var imgMinus = new Image();
+				imgPlus.src = "../media/images/plus.png";
+				imgMinus.src = "../media/images/minus.png";
+				
+				function showNode(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+							var oImg = document.layers["img" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+							var oImg = document.all["img" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+							var oImg = document.getElementById("img" + Node);
+									break;
+							}
+					oImg.src = imgMinus.src;
+					oTable.style.display = "block";
+				}
+				
+				function hideNode(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+							var oImg = document.layers["img" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+							var oImg = document.all["img" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+							var oImg = document.getElementById("img" + Node);
+									break;
+							}
+					oImg.src = imgPlus.src;
+					oTable.style.display = "none";
+				}
+				
+				function nodeIsVisible(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+									break;
+							}
+					return (oTable && oTable.style.display == "block");
+				}
+				
+				function toggleNodeVisibility(Node){
+					if (nodeIsVisible(Node)){
+						hideNode(Node);
+					}else{
+						showNode(Node);
+					}
+				}
+			</script>
+					</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name"><img src="../media/images/Class_logo.png"
+														alt=" Class"
+														title=" Class"
+														style="vertical-align: middle"> krumo</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Krumo API</p>
+<p class="description"><p>This class stores the Krumo API for rendering and  displaying the structured information it is reporting</p></p>
+		<p class="notes">
+			Located in <a class="field" href="_class.krumo.php.html">/class.krumo.php</a> (line <span class="field">61</span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+												<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+											
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#backtrace" title="details" class="method-name">backtrace</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#classes" title="details" class="method-name">classes</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#conf" title="details" class="method-name">conf</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#cookie" title="details" class="method-name">cookie</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#defines" title="details" class="method-name">defines</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">boolean</span>
+										<a href="#disable" title="details" class="method-name">disable</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#dump" title="details" class="method-name">dump</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$data</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$data,...</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">boolean</span>
+										<a href="#enable" title="details" class="method-name">enable</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#env" title="details" class="method-name">env</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#extensions" title="details" class="method-name">extensions</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#functions" title="details" class="method-name">functions</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#get" title="details" class="method-name">get</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#headers" title="details" class="method-name">headers</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#includes" title="details" class="method-name">includes</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#ini" title="details" class="method-name">ini</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$ini_file</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#interfaces" title="details" class="method-name">interfaces</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#path" title="details" class="method-name">path</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#phpini" title="details" class="method-name">phpini</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#post" title="details" class="method-name">post</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#request" title="details" class="method-name">request</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#server" title="details" class="method-name">server</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#session" title="details" class="method-name">session</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">string</span>
+										<a href="#version" title="details" class="method-name">version</a>
+										()
+									</div>
+																																																																																																																																																																																																							</div>
+		</div>
+	</div>		
+
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methodbacktrace" id="backtrace"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static backtrace</span> (line <span class="line-number">82</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Prints a debug backtrace</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			backtrace
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodclasses" id="classes"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static classes</span> (line <span class="line-number">101</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Prints a list of all currently declared classes.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			classes
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodconf" id="conf"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static conf</span> (line <span class="line-number">297</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Prints a list of all your configuration settings.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			conf
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodcookie" id="cookie"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static cookie</span> (line <span class="line-number">441</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Prints a list of all the values from the <em>$_COOKIE</em> array.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			cookie
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methoddefines" id="defines"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static defines</span> (line <span class="line-number">197</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Prints a list of all currently declared constants.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			defines
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methoddisable" id="disable"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static disable</span> (line <span class="line-number">747</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Disable Krumo</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">boolean</span>
+		<span class="method-name">
+			disable
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methoddump" id="dump"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static dump</span> (line <span class="line-number">548</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Dump information about a variable</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			dump
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$data</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$data,...</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$data,...</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$data</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodenable" id="enable"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static enable</span> (line <span class="line-number">736</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Enable Krumo</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">boolean</span>
+		<span class="method-name">
+			enable
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodenv" id="env"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static env</span> (line <span class="line-number">465</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Prints a list of all the values from the <em>$_ENV</em> array.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			env
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodextensions" id="extensions"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static extensions</span> (line <span class="line-number">221</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Prints a list of all currently loaded PHP extensions.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			extensions
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodfunctions" id="functions"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static functions</span> (line <span class="line-number">173</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Prints a list of all currently declared functions.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			functions
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodget" id="get"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static get</span> (line <span class="line-number">369</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Prints a list of all the values from the <em>$_GET</em> array.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			get
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodheaders" id="headers"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static headers</span> (line <span class="line-number">245</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Prints a list of all HTTP request headers.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			headers
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodincludes" id="includes"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static includes</span> (line <span class="line-number">149</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Prints a list of all currently included (or required) files.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			includes
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodini" id="ini"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static ini</span> (line <span class="line-number">515</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Prints a list of all the values from an INI file.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			ini
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$ini_file</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$ini_file</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodinterfaces" id="interfaces"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static interfaces</span> (line <span class="line-number">125</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Prints a list of all currently declared interfaces (PHP5 only).</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			interfaces
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodpath" id="path"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static path</span> (line <span class="line-number">321</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Prints a list of the specified directories under your <em>include_path</em> option.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			path
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodphpini" id="phpini"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static phpini</span> (line <span class="line-number">269</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Prints a list of the configuration settings read from <em>php.ini</em></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			phpini
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodpost" id="post"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static post</span> (line <span class="line-number">393</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Prints a list of all the values from the <em>$_POST</em> array.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			post
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodrequest" id="request"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static request</span> (line <span class="line-number">345</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Prints a list of all the values from the <em>$_REQUEST</em> array.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			request
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodserver" id="server"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static server</span> (line <span class="line-number">417</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Prints a list of all the values from the <em>$_SERVER</em> array.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			server
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodsession" id="session"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static session</span> (line <span class="line-number">489</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Prints a list of all the values from the <em>$_SESSION</em> array.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			session
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodversion" id="version"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static version</span> (line <span class="line-number">70</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Return Krumo version</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">string</span>
+		<span class="method-name">
+			version
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+	
+	<p class="notes" id="credit">
+		Documentation generated on Sun, 02 Dec 2007 09:43:24 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0a2</a>
+	</p>
+	</div></body>
+</html>

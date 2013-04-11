@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * Implements hook_uninstall().
+ */
+function devel_node_access_uninstall() {
+  if (!module_exists('devel') && ($devel_menu = menu_load('devel'))) {
+    // Delete the development menu.
+    $devel_menu->delete();
+  }
+}
+
+/**
+ * Moves devel_node_access settings from variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function devel_node_access_update_8001() {
+  update_variables_to_config('devel_node_access.settings', array(
+    'devel_node_access_debug_mode' => 'debug_mode',
+    'devel_node_access_user_ajax' => 'user_ajax',
+  ));
+}

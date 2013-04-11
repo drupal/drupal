@@ -1,0 +1,10 @@
+name: 'Devel node access'
+description: 'Developer blocks and page illustrating relevant node_access records.'
+package: Development
+core: 8.x
+configure: admin/config/development/devel
+dependencies:
+ - devel
+ - menu
+tags:
+ - developer

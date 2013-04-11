@@ -1,0 +1,521 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function devel_generate_menu() {
+  $items = array();
+
+  $items['admin/config/development/generate/user'] = array(
+    'title' => 'Generate users',
+    'description' => 'Generate a given number of users. Optionally delete current users.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('devel_generate_users_form'),
+    'access arguments' => array('administer users'),
+  );
+  $items['admin/config/development/generate/content'] = array(
+    'title' => 'Generate content',
+    'description' => 'Generate a given number of nodes and comments. Optionally delete current items.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('devel_generate_content_form'),
+    'access arguments' => array('administer nodes'),
+  );
+  if (module_exists('taxonomy')) {
+    $items['admin/config/development/generate/taxonomy'] = array(
+      'title' => 'Generate terms',
+      'description' => 'Generate a given number of terms. Optionally delete current terms.',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('devel_generate_term_form'),
+      'access arguments' => array('administer taxonomy'),
+    );
+    $items['admin/config/development/generate/vocabs'] = array(
+      'title' => 'Generate vocabularies',
+      'description' => 'Generate a given number of vocabularies. Optionally delete current vocabularies.',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('devel_generate_vocab_form'),
+      'access arguments' => array('administer taxonomy'),
+    );
+  }
+  $items['admin/config/development/generate/menu'] = array(
+    'title' => 'Generate menus',
+    'description' => 'Generate a given number of menus and menu links. Optionally delete current menus.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('devel_generate_menu_form'),
+    'access arguments' => array('administer menu'),
+  );
+
+  return $items;
+}
+
+/**
+ * Generates users using FormAPI.
+ */
+function devel_generate_users_form() {
+  $form['num'] = array(
+    '#type' => 'textfield',
+    '#title' => t('How many users would you like to generate?'),
+    '#default_value' => 50,
+    '#size' => 10,
+  );
+  $form['kill_users'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Delete all users (except user id 1) before generating new users.'),
+    '#default_value' => FALSE,
+  );
+  $options = user_role_names(TRUE);
+  unset($options[DRUPAL_AUTHENTICATED_RID]);
+  $form['roles'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Which roles should the users receive?'),
+    '#description' => t('Users always receive the <em>authenticated user</em> role.'),
+    '#options' => $options,
+  );
+  $form['pass'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Password to be set'),
+    '#default_value' => NULL,
+    '#size' => 32,
+    '#description' => t('Leave this field empty if you do not need to set a password'),
+  );
+
+  $options = array(1 => t('Now'));
+  foreach (array(3600, 86400, 604800, 2592000, 31536000) as $interval) {
+    $options[$interval] = format_interval($interval, 1) . ' ' . t('ago');
+  }
+  $form['time_range'] = array(
+    '#type' => 'select',
+    '#title' => t('How old should user accounts be?'),
+    '#description' => t('User ages will be distributed randomly from the current time, back to the selected time.'),
+    '#options' => $options,
+    '#default_value' => 604800,
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Generate'),
+  );
+  return $form;
+}
+
+/**
+ * FormAPI submission to generate users.
+ */
+function devel_generate_users_form_submit($form, &$form_state) {
+  module_load_include('inc', 'devel_generate');
+  $values = $form_state['values'];
+  devel_create_users($values['num'], $values['kill_users'], $values['time_range'], $values['roles'], $values['pass']);
+}
+
+/**
+ * Generates nodes using FormAPI.
+ */
+function devel_generate_content_form() {
+  $options = array();
+
+  if (module_exists('content')) {
+    $types = content_types();
+    foreach ($types as $type) {
+      $warn = '';
+      if (count($type['fields'])) {
+        $warn = t('. This type contains CCK fields which will only be populated by fields that implement the content_generate hook.');
+      }
+      $options[$type['type']] = array('#markup' => t($type['name']). $warn);
+    }
+  }
+  else {
+    $types = node_type_get_types();
+    foreach ($types as $type) {
+      $options[$type->type] = array(
+        'type' => array('#markup' => t($type->name)),
+      );
+      if (module_exists('comment')) {
+        $default = variable_get('comment_' . $type->type, COMMENT_NODE_OPEN);
+        $map = array(t('Hidden'), t('Closed'), t('Open'));
+        $options[$type->type]['comments'] = array('#markup' => '<small>'. $map[$default]. '</small>');
+      }
+    }
+  }
+  // we cannot currently generate valid polls.
+  unset($options['poll']);
+
+  if (empty($options)) {
+    drupal_set_message(t('You do not have any content types that can be generated. <a href="@create-type">Go create a new content type</a> already!</a>', array('@create-type' => url('admin/structure/types/add'))), 'error', FALSE);
+    return;
+  }
+
+  $header = array(
+    'type' => t('Content type'),
+  );
+  if (module_exists('comment')) {
+    $header['comments'] = t('Comments');
+  }
+
+  $form['node_types'] = array(
+    '#type' => 'table',
+    '#header' => $header,
+    '#tableselect' => TRUE,
+  );
+
+  $form['node_types'] += $options;
+
+  if (module_exists('checkall')) $form['node_types']['#checkall'] = TRUE;
+  $form['kill_content'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('<strong>Delete all content</strong> in these content types before generating new content.'),
+    '#default_value' => FALSE,
+  );
+  $form['num_nodes'] = array(
+    '#type' => 'textfield',
+    '#title' => t('How many nodes would you like to generate?'),
+    '#default_value' => 50,
+    '#size' => 10,
+  );
+
+  $options = array(1 => t('Now'));
+  foreach (array(3600, 86400, 604800, 2592000, 31536000) as $interval) {
+    $options[$interval] = format_interval($interval, 1) . ' ' . t('ago');
+  }
+  $form['time_range'] = array(
+    '#type' => 'select',
+    '#title' => t('How far back in time should the nodes be dated?'),
+    '#description' => t('Node creation dates will be distributed randomly from the current time, back to the selected time.'),
+    '#options' => $options,
+    '#default_value' => 604800,
+  );
+
+  $form['max_comments'] = array(
+    '#type' => module_exists('comment') ? 'textfield' : 'value',
+    '#title' => t('Maximum number of comments per node.'),
+    '#description' => t('You must also enable comments for the content types you are generating. Note that some nodes will randomly receive zero comments. Some will receive the max.'),
+    '#default_value' => 0,
+    '#size' => 3,
+    '#access' => module_exists('comment'),
+  );
+  $form['title_length'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Maximum number of words in titles'),
+    '#default_value' => 4,
+    '#size' => 10,
+  );
+  $form['add_alias'] = array(
+    '#type' => 'checkbox',
+    '#disabled' => !module_exists('path'),
+    '#description' => t('Requires path.module'),
+    '#title' => t('Add an url alias for each node.'),
+    '#default_value' => FALSE,
+  );
+  $form['add_statistics'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Add statistics for each node (node_counter table).'),
+    '#default_value' => TRUE,
+    '#access' => module_exists('statistics'),
+  );
+
+  unset($options);
+  $options[LANGUAGE_NOT_SPECIFIED] = t('Language neutral');
+  if (module_exists('locale')) {
+    $languages = language_list();
+    foreach ($languages as $langcode => $language) {
+      $options[$langcode] = $language->name;
+    }
+  }
+  $form['add_language'] = array(
+    '#type' => 'select',
+    '#title' => t('Set language on nodes'),
+    '#multiple' => TRUE,
+    '#disabled' => !module_exists('locale'),
+    '#description' => t('Requires locale.module'),
+    '#options' => $options,
+    '#default_value' => array(LANGUAGE_NOT_SPECIFIED),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Generate'),
+    '#tableselect' => TRUE,
+  );
+  $form['#redirect'] = FALSE;
+
+  return $form;
+}
+
+/**
+ * FormAPI submission to generate nodes.
+ */
+function devel_generate_content_form_submit($form, &$form_state) {
+  module_load_include('inc', 'devel_generate', 'devel_generate');
+  if ($form_state['values']['num_nodes'] <= 50 && $form_state['values']['max_comments'] <= 10) {
+    module_load_include('inc', 'devel_generate');
+    devel_generate_content($form_state);
+  }
+  else {
+    module_load_include('inc', 'devel_generate', 'devel_generate_batch');
+    devel_generate_batch_content($form_state);
+  }
+}
+
+/**
+ * Generates taxonomy terms using FormAPI.
+ */
+function devel_generate_term_form() {
+  $options = array();
+  foreach (taxonomy_vocabulary_load_multiple() as $vid => $vocab) {
+    $options[$vid] = $vocab->vid;
+  }
+  $form['vids'] = array(
+    '#type' => 'select',
+    '#multiple' => TRUE,
+    '#title' => t('Vocabularies'),
+    '#required' => TRUE,
+    '#options' => $options,
+    '#description' => t('Restrict terms to these vocabularies.'),
+  );
+  $form['num_terms'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Number of terms?'),
+    '#default_value' => 10,
+    '#size' => 10,
+  );
+  $form['title_length'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Maximum number of characters in term names'),
+    '#default_value' => 12,
+    '#size' => 10,
+  );
+  $form['kill_taxonomy'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Delete existing terms in specified vocabularies before generating new terms.'),
+    '#default_value' => FALSE,
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Generate'),
+  );
+  return $form;
+}
+
+/**
+ * Generates taxonomy vocabularies using FormAPI.
+ */
+function devel_generate_vocab_form() {
+  $form['num_vocabs'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Number of vocabularies?'),
+    '#default_value' => 1,
+    '#size' => 10,
+  );
+  $form['title_length'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Maximum number of characters in vocabulary names'),
+    '#default_value' => 12,
+    '#size' => 10,
+  );
+  $form['kill_taxonomy'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Delete existing vocabularies before generating new ones.'),
+    '#default_value' => FALSE,
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Generate'),
+  );
+  return $form;
+}
+
+/**
+ * FormAPI submission to generate taxonomy terms.
+ */
+function devel_generate_term_form_submit($form, &$form_state) {
+  $values = $form_state['values'];
+  module_load_include('inc', 'devel_generate');
+  if ($values['kill_taxonomy']) {
+    foreach ($values['vids'] as $vid) {
+      devel_generate_delete_vocabulary_terms($vid);
+    }
+    drupal_set_message(t('Deleted existing terms.'));
+  }
+  $vocabs = taxonomy_vocabulary_load_multiple($values['vids']);
+  $new_terms = devel_generate_terms($values['num_terms'], $vocabs, $values['title_length']);
+  if (!empty($new_terms)) {
+    drupal_set_message(t('Created the following new terms: !terms', array('!terms' => implode(', ', $new_terms))));
+  }
+}
+
+/**
+ * FormAPI submission to generate taxonomy vocabularies.
+ */
+function devel_generate_vocab_form_submit($form, &$form_state) {
+  $values = $form_state['values'];
+  module_load_include('inc', 'devel_generate');
+  if ($values['kill_taxonomy']) {
+    devel_generate_delete_vocabularies();
+    drupal_set_message(t('Deleted existing vocabularies.'));
+  }
+  $new_vocs = devel_generate_vocabs($values['num_vocabs'], $values['title_length']);
+  if (!empty($new_vocs)) {
+    drupal_set_message(t('Created the following new vocabularies: !vocs', array('!vocs' => implode(', ', $new_vocs))));
+  }
+}
+
+/**
+ * Inserts nodes properly based on generation options.
+ *
+ * @param $node
+ *  The base node created on submit. Inspects $node->devel_generate.
+ */
+function devel_generate_node_insert($node) {
+  if (isset($node->devel_generate)) {
+    $results = $node->devel_generate;
+
+    if (!empty($results['max_comments']) && $node->comment >= COMMENT_NODE_OPEN) {
+      devel_generate_add_comments($node, $results['users'], $results['max_comments'], $results['title_length']);
+    }
+
+
+    // Add an url alias. Cannot happen before save because we don't know the nid.
+    if (!empty($results['add_alias'])) {
+      $path = array(
+        'source' => 'node/' . $node->nid,
+        'alias' => 'node-' . $node->nid . '-' . $node->type,
+      );
+      drupal_container()->get('path.crud')->save($path['source'], $path['alias']);
+    }
+
+    // Add node statistics.
+    if (!empty($results['add_statistics']) && module_exists('statistics')) {
+      devel_generate_add_statistics($node);
+    }
+  }
+}
+
+/**
+ * Set a message for either drush or the web interface.
+ *
+ * @param $msg
+ *  The message to display.
+ * @param $type
+ *  The message type, as defined by drupal_set_message().
+ *
+ * @return
+ *  Context-appropriate message output.
+ */
+function devel_generate_set_message($msg, $type = 'status') {
+  $function  = function_exists('drush_log') ? 'drush_log' : 'drupal_set_message';
+  $function($msg, $type);
+}
+
+/**
+ * Generates menus using FormAPI.
+ */
+function devel_generate_menu_form() {
+  $menu_enabled = module_exists('menu');
+  if ($menu_enabled) {
+    $menus = array('__new-menu__' => t('Create new menu(s)')) + menu_get_menus();
+  }
+  else {
+    $menus = menu_list_system_menus();
+  }
+  $form['existing_menus'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Generate links for these menus'),
+    '#options' => $menus,
+    '#default_value' => array('__new-menu__'),
+    '#required' => TRUE,
+  );
+  if ($menu_enabled) {
+    $form['num_menus'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Number of new menus to create'),
+      '#default_value' => 2,
+      '#size' => 10,
+      '#states' => array(
+        'visible' => array(
+          ':input[name=existing_menus[__new-menu__]]' => array('checked' => TRUE),
+        ),
+      ),
+    );
+  }
+  $form['num_links'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Number of links to generate'),
+    '#default_value' => 50,
+    '#size' => 10,
+    '#required' => TRUE,
+  );
+  $form['title_length'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Maximum number of characters in menu and menu link names'),
+    '#description' => t("The minimum length is 2."),
+    '#default_value' => 12,
+    '#size' => 10,
+    '#required' => TRUE,
+  );
+  $form['link_types'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Types of links to generate'),
+    '#options' => array(
+      'node' => t('Nodes'),
+      'front' => t('Front page'),
+      'external' => t('External'),
+    ),
+    '#default_value' => array('node', 'front', 'external'),
+    '#required' => TRUE,
+  );
+  $form['max_depth'] = array(
+    '#type' => 'select',
+    '#title' => t('Maximum link depth'),
+    '#options' => range(0, MENU_MAX_DEPTH),
+    '#default_value' => floor(MENU_MAX_DEPTH / 2),
+    '#required' => TRUE,
+  );
+  unset($form['max_depth']['#options'][0]);
+  $form['max_width'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Maximum menu width'),
+    '#default_value' => 6,
+    '#size' => 10,
+    '#description' => t("Limit the width of the generated menu's first level of links to a certain number of items."),
+    '#required' => TRUE,
+  );
+  $form['kill'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Delete existing custom generated menus and menu links before generating new ones.'),
+    '#default_value' => FALSE,
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Generate'),
+  );
+  return $form;
+}
+
+/**
+ * FormAPI submission to generate menus.
+ */
+function devel_generate_menu_form_submit($form, &$form_state) {
+  // If the create new menus checkbox is off, set the number of new menus to 0.
+  if (!isset($form_state['values']['existing_menus']['__new-menu__']) || !$form_state['values']['existing_menus']['__new-menu__']) {
+    $form_state['values']['num_menus'] = 0;
+  }
+  else {
+    // Unset the aux menu to avoid attach menu new items.
+    unset($form_state['values']['existing_menus']['__new-menu__']);
+  }
+  module_load_include('inc', 'devel_generate');
+  // Delete custom menus.
+  if ($form_state['values']['kill']) {
+    devel_generate_delete_menus();
+    drupal_set_message(t('Deleted existing menus and links.'));
+  }
+
+  // Generate new menus.
+  $new_menus = devel_generate_menus($form_state['values']['num_menus'], $form_state['values']['title_length']);
+  if (!empty($new_menus)) {
+    drupal_set_message(t('Created the following new menus: !menus', array('!menus' => implode(', ', $new_menus))));
+  }
+
+  // Generate new menu links.
+  $menus = $new_menus + $form_state['values']['existing_menus'];
+  $new_links = devel_generate_links($form_state['values']['num_links'], $menus, $form_state['values']['title_length'], $form_state['values']['link_types'], $form_state['values']['max_depth'], $form_state['values']['max_width']);
+  drupal_set_message(t('Created @count new menu links.', array('@count' => count($new_links))));
+}
