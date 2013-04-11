@@ -284,6 +284,11 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
    */
   protected function initializeContainer() {
     $persist = $this->getServicesToPersist();
+    // If we are rebuilding the kernel and we are in a request scope, store
+    // request info so we can add them back after the rebuild.
+    if (isset($this->container) && $this->container->hasScope('request')) {
+      $request = $this->container->get('request');
+    }
     $this->container = NULL;
     $class = $this->getClassName();
     $cache_file = $class . '.php';
@@ -345,7 +350,11 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     $this->container->set('kernel', $this);
     // Set the class loader which was registered as a synthetic service.
     $this->container->set('class_loader', $this->classLoader);
-
+    // If we have a request set it back to the new container.
+    if (isset($request)) {
+      $this->container->enterScope('request');
+      $this->container->set('request', $request);
+    }
     \Drupal::setContainer($this->container);
   }
 

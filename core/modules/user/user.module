@@ -1327,7 +1327,7 @@ function user_login_authenticate_validate($form, &$form_state) {
         // The default identifier is a combination of uid and IP address. This
         // is less secure but more resistant to denial-of-service attacks that
         // could lock out all users with public user names.
-        $identifier = $account->uid . '-' . ip_address();
+        $identifier = $account->uid . '-' . Drupal::request()->getClientIP();
       }
       $form_state['flood_control_user_identifier'] = $identifier;
 

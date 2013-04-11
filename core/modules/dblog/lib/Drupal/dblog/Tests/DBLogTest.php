@@ -137,7 +137,7 @@ class DBLogTest extends WebTestBase {
       'uid'         => isset($this->big_user->uid) ? $this->big_user->uid : 0,
       'request_uri' => $base_root . request_uri(),
       'referer'     => $_SERVER['HTTP_REFERER'],
-      'ip'          => ip_address(),
+      'ip'          => '127.0.0.1',
       'timestamp'   => REQUEST_TIME,
       );
     $message = 'Log entry added to test the dblog row limit. Entry #';
@@ -424,7 +424,7 @@ class DBLogTest extends WebTestBase {
       'uid'         => isset($this->big_user->uid) ? $this->big_user->uid : 0,
       'request_uri' => $base_root . request_uri(),
       'referer'     => $_SERVER['HTTP_REFERER'],
-      'ip'          => ip_address(),
+      'ip'          => '127.0.0.1',
       'timestamp'   => REQUEST_TIME,
     );
     // Add a watchdog entry.

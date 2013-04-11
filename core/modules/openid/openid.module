@@ -1066,7 +1066,7 @@ function openid_verify_assertion_nonce($service, $response) {
     return TRUE;
   }
   else {
-    watchdog('openid', 'Nonce replay attempt blocked from @ip, nonce: @nonce.', array('@ip' => ip_address(), '@nonce' => $response['openid.response_nonce']), WATCHDOG_CRITICAL);
+    watchdog('openid', 'Nonce replay attempt blocked from @ip, nonce: @nonce.', array('@ip' => Drupal::request()->getClientIP(), '@nonce' => $response['openid.response_nonce']), WATCHDOG_CRITICAL);
     return FALSE;
   }
 }

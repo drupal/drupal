@@ -78,7 +78,7 @@ class IpAddressBlockingTest extends WebTestBase {
     // manually.
     // TODO: On some systems this test fails due to a bug/inconsistency in cURL.
     // $edit = array();
-    // $edit['ip'] = ip_address();
+    // $edit['ip'] = \Drupal::request()->getClientIP();
     // $this->drupalPost('admin/config/people/ban', $edit, t('Save'));
     // $this->assertText(t('You may not ban your own IP address.'));
   }

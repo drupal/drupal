@@ -249,6 +249,11 @@ services:
     tags:
       - { name: paramconverter }
     arguments: ['@plugin.manager.entity']
+  reverse_proxy_subscriber:
+    class: Drupal\Core\EventSubscriber\ReverseProxySubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@settings']
   router_processor_subscriber:
     class: Drupal\Core\EventSubscriber\RouteProcessorSubscriber
     tags:
@@ -350,7 +355,7 @@ services:
     class: Drupal\Core\Transliteration\PHPTransliteration
   flood:
     class: Drupal\Core\Flood\DatabaseBackend
-    arguments: ['@database']
+    arguments: ['@database', '@request']
   plugin.manager.condition:
     class: Drupal\Core\Condition\ConditionManager
     arguments: ['%container.namespaces%']

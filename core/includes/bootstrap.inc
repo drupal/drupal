@@ -560,9 +560,10 @@ function config_get_config_directory($type = CONFIG_ACTIVE_DIRECTORY) {
  * return the expected values.
  *
  * Most other parameters do not need to be passed in, but may be necessary in
- * some cases; for example, if Drupal's ip_address() function needs to return
- * anything but the standard localhost value ('127.0.0.1'), the command line
- * script should pass in the desired value via the 'REMOTE_ADDR' key.
+ * some cases; for example, if Drupal::request()->getClientIP()
+ * needs to return anything but the standard localhost value ('127.0.0.1'),
+ * the command line script should pass in the desired value via the
+ * 'REMOTE_ADDR' key.
  *
  * @param $variables
  *   (optional) An associative array of variables within $_SERVER that should
@@ -573,7 +574,7 @@ function config_get_config_directory($type = CONFIG_ACTIVE_DIRECTORY) {
  *
  * @see conf_path()
  * @see request_uri()
- * @see ip_address()
+ * @see \Symfony\Component\HttpFoundation\Request::getClientIP()
  */
 function drupal_override_server_variables($variables = array()) {
   // Allow the provided URL to override any existing values in $_SERVER.
@@ -1739,7 +1740,7 @@ function watchdog($type, $message, array $variables = NULL, $severity = WATCHDOG
       'uid'         => $user_uid,
       'request_uri' => $base_root . request_uri(),
       'referer'     => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
-      'ip'          => ip_address(),
+      'ip'          => Drupal::request()->getClientIP(),
       // Request time isn't accurate for long processes, use time() instead.
       'timestamp'   => time(),
     );
@@ -2003,7 +2004,7 @@ function drupal_hash_base64($data) {
 function drupal_anonymous_user() {
   $values = array(
     'uid' => 0,
-    'hostname' => ip_address(),
+    'hostname' => Drupal::request()->getClientIP(),
     'roles' => array(
       DRUPAL_ANONYMOUS_RID => DRUPAL_ANONYMOUS_RID,
     ),
@@ -3061,52 +3062,6 @@ function arg($index = NULL, $path = NULL) {
   if (isset($arguments[$path][$index])) {
     return $arguments[$path][$index];
   }
-}
-
-/**
- * Returns the IP address of the client machine.
- *
- * If Drupal is behind a reverse proxy, we use the X-Forwarded-For header
- * instead of $_SERVER['REMOTE_ADDR'], which would be the IP address of
- * the proxy server, and not the client's. The actual header name can be
- * configured by the reverse_proxy_header variable.
- *
- * @return
- *   IP address of client machine, adjusted for reverse proxy and/or cluster
- *   environments.
- */
-function ip_address() {
-  $ip_address = &drupal_static(__FUNCTION__);
-
-  if (!isset($ip_address)) {
-    $ip_address = $_SERVER['REMOTE_ADDR'];
-
-    if (settings()->get('reverse_proxy', 0)) {
-      $reverse_proxy_header = settings()->get('reverse_proxy_header', 'HTTP_X_FORWARDED_FOR');
-      if (!empty($_SERVER[$reverse_proxy_header])) {
-        // If an array of known reverse proxy IPs is provided, then trust
-        // the XFF header if request really comes from one of them.
-        $reverse_proxy_addresses = settings()->get('reverse_proxy_addresses', array());
-
-        // Turn XFF header into an array.
-        $forwarded = explode(',', $_SERVER[$reverse_proxy_header]);
-
-        // Trim the forwarded IPs; they may have been delimited by commas and spaces.
-        $forwarded = array_map('trim', $forwarded);
-
-        // Tack direct client IP onto end of forwarded array.
-        $forwarded[] = $ip_address;
-
-        // Eliminate all trusted IPs.
-        $untrusted = array_diff($forwarded, $reverse_proxy_addresses);
-
-        // The right-most IP is the most specific we can trust.
-        $ip_address = array_pop($untrusted);
-      }
-    }
-  }
-
-  return $ip_address;
 }
 
 /**

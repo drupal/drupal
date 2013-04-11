@@ -173,7 +173,7 @@ function _drupal_session_write($sid, $value) {
       // Either ssid or sid or both will be added from $key below.
       $fields = array(
         'uid' => $user->uid,
-        'hostname' => ip_address(),
+        'hostname' => Drupal::request()->getClientIP(),
         'session' => $value,
         'timestamp' => REQUEST_TIME,
       );

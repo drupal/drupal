@@ -331,6 +331,10 @@ function install_begin_request(&$install_state) {
   if ($install_state['settings_verified']) {
     $kernel = new DrupalKernel('install', FALSE, drupal_classloader(), FALSE);
     $kernel->boot();
+    // Set the request in the kernel to the new created Request above
+    // so it is available to the rest of the installation process.
+    $kernel->getContainer()
+      ->set('request', $request);
   }
   else {
     // @todo Move into a proper Drupal\Core\DependencyInjection\InstallContainerBuilder.

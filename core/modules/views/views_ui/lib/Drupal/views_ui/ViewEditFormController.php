@@ -726,7 +726,7 @@ class ViewEditFormController extends ViewFormControllerBase {
    * should not yet redirect to the destination.
    */
   public function submitDelayDestination($form, &$form_state) {
-    $query = \Drupal::service('request')->query;
+    $query = \Drupal::request()->query;
     // @todo: Revisit this when http://drupal.org/node/1668866 is in.
     $destination = $query->get('destination');
     if (isset($destination) && $form_state['redirect'] !== FALSE) {

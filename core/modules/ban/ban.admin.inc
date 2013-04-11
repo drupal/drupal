@@ -85,7 +85,7 @@ function ban_ip_form_validate($form, &$form_state) {
   if (db_query("SELECT * FROM {ban_ip} WHERE ip = :ip", array(':ip' => $ip))->fetchField()) {
     form_set_error('ip', t('This IP address is already banned.'));
   }
-  elseif ($ip == ip_address()) {
+  elseif ($ip == Drupal::request()->getClientIP()) {
     form_set_error('ip', t('You may not ban your own IP address.'));
   }
   elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) == FALSE) {

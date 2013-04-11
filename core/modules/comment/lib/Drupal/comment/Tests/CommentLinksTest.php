@@ -145,7 +145,7 @@ class CommentLinksTest extends CommentTestBase {
           'uid' => 0,
           'status' => COMMENT_PUBLISHED,
           'subject' => $this->randomName(),
-          'hostname' => ip_address(),
+          'hostname' => '127.0.0.1',
           'langcode' => LANGUAGE_NOT_SPECIFIED,
           'comment_body' => array(LANGUAGE_NOT_SPECIFIED => array($this->randomName())),
         ));

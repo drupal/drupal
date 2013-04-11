@@ -153,7 +153,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
       }
       // Add the values which aren't passed into the function.
       $comment->thread->value = $thread;
-      $comment->hostname->value = ip_address();
+      $comment->hostname->value = \Drupal::request()->getClientIP();
     }
   }
 
