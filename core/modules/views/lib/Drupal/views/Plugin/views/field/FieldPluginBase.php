@@ -693,8 +693,7 @@ abstract class FieldPluginBase extends HandlerBase {
       $form['alter']['#tree'] = TRUE;
       $form['alter']['alter_text'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Rewrite the output of this field'),
-        '#description' => t('Enable to override the output of this field with custom text or replacement tokens.'),
+        '#title' => t('Override the output of this field with custom text'),
         '#default_value' => $this->options['alter']['alter_text'],
       );
 
@@ -712,8 +711,7 @@ abstract class FieldPluginBase extends HandlerBase {
 
       $form['alter']['make_link'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Output this field as a link'),
-        '#description' => t('If checked, this field will be made into a link. The destination must be given below.'),
+        '#title' => t('Output this field as a custom link'),
         '#default_value' => $this->options['alter']['make_link'],
       );
       $form['alter']['path'] = array(
@@ -907,16 +905,14 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
 
       $form['alter']['trim'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Trim this field to a maximum length'),
-        '#description' => t('Enable to trim the field to a maximum length of characters'),
+        '#title' => t('Trim this field to a maximum number of characters'),
         '#default_value' => $this->options['alter']['trim'],
       );
 
       $form['alter']['max_length'] = array(
-        '#title' => t('Maximum length'),
+        '#title' => t('Maximum number of characters'),
         '#type' => 'textfield',
         '#default_value' => $this->options['alter']['max_length'],
-        '#description' => t('The maximum number of characters this field can be.'),
         '#states' => array(
           'visible' => array(
             ':input[name="options[alter][trim]"]' => array('checked' => TRUE),
@@ -938,8 +934,7 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
 
       $form['alter']['ellipsis'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Add an ellipsis'),
-        '#description' => t('If checked, a "..." will be added if a field was trimmed.'),
+        '#title' => t('Add "..." at the end of trimmed text'),
         '#default_value' => $this->options['alter']['ellipsis'],
         '#states' => array(
           'visible' => array(
@@ -951,7 +946,6 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
       $form['alter']['more_link'] = array(
         '#type' => 'checkbox',
         '#title' => t('Add a read-more link if output is trimmed.'),
-        '#description' => t('If checked, a read-more link will be added at the end of the trimmed output'),
         '#default_value' => $this->options['alter']['more_link'],
         '#states' => array(
           'visible' => array(
@@ -962,9 +956,9 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
 
       $form['alter']['more_link_text'] = array(
         '#type' => 'textfield',
-        '#title' => t('More link text'),
+        '#title' => t('More link label'),
         '#default_value' => $this->options['alter']['more_link_text'],
-        '#description' => t('The text which will be displayed on the more link. You may enter data from this view as per the "Replacement patterns" above.'),
+        '#description' => t('You may use the "Replacement patterns" above.'),
         '#states' => array(
           'visible' => array(
             ':input[name="options[alter][trim]"]' => array('checked' => TRUE),
@@ -976,7 +970,7 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
         '#type' => 'textfield',
         '#title' => t('More link path'),
         '#default_value' => $this->options['alter']['more_link_path'],
-        '#description' => t('The path which is used for the more link. You may enter data from this view as per the "Replacement patterns" above.'),
+        '#description' => t('This can be an internal Drupal path such as node/add or an external URL such as "http://drupal.org". You may use the "Replacement patterns" above.'),
         '#states' => array(
           'visible' => array(
             ':input[name="options[alter][trim]"]' => array('checked' => TRUE),
@@ -988,7 +982,7 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
       $form['alter']['html'] = array(
         '#type' => 'checkbox',
         '#title' => t('Field can contain HTML'),
-        '#description' => t('If checked, HTML corrector will be run to ensure tags are properly closed after trimming.'),
+        '#description' => t('An HTML corrector will be run to ensure HTML tags are properly closed after trimming.'),
         '#default_value' => $this->options['alter']['html'],
         '#states' => array(
           'visible' => array(
@@ -1000,7 +994,6 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
       $form['alter']['strip_tags'] = array(
         '#type' => 'checkbox',
         '#title' => t('Strip HTML tags'),
-        '#description' => t('If checked, all HTML tags will be stripped.'),
         '#default_value' => $this->options['alter']['strip_tags'],
       );
 
@@ -1019,14 +1012,12 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
       $form['alter']['trim_whitespace'] = array(
         '#type' => 'checkbox',
         '#title' => t('Remove whitespace'),
-        '#description' => t('If checked, all whitespaces at the beginning and the end of the output will be removed.'),
         '#default_value' => $this->options['alter']['trim_whitespace'],
       );
 
       $form['alter']['nl2br'] = array(
         '#type' => 'checkbox',
         '#title' => t('Convert newlines to HTML &lt;br&gt; tags'),
-        '#description' => t('If checked, all newlines chars (e.g. \n) are converted into HTML &lt;br&gt; tags.'),
         '#default_value' => $this->options['alter']['nl2br'],
       );
     }
