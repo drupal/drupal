@@ -389,7 +389,7 @@ function options_field_update_forbid($field, $prior_field, $has_data) {
 function _options_values_in_use($field, $values) {
   if ($values) {
     $field = field_info_field_by_id($field['id']);
-    $factory = drupal_container()->get('entity.query');
+    $factory = Drupal::service('entity.query');
     foreach ($field['bundles'] as $entity_type => $bundle) {
       $result = $factory->get($entity_type)
         ->condition($field['field_name'] . '.value', $values)

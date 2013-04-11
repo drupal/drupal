@@ -1005,7 +1005,7 @@ function field_get_items(EntityInterface $entity, $field_name, $langcode = NULL)
 function field_has_data($field) {
   $field = field_info_field_by_id($field['id']);
   $columns = array_keys($field['columns']);
-  $factory = drupal_container()->get('entity.query');
+  $factory = Drupal::service('entity.query');
   foreach ($field['bundles'] as $entity_type => $bundle) {
     // Entity Query throws an exception if there is no base table.
     $entity_info = entity_get_info($entity_type);

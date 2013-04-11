@@ -23,7 +23,7 @@ function system_admin_config_page() {
   $blocks = array();
   if ($system_link = entity_load_multiple_by_properties('menu_link', array('link_path' => 'admin/config', 'module' => 'system'))) {
     $system_link = reset($system_link);
-    $query = entity_query('menu_link')
+    $query = Drupal::entityQuery('menu_link')
       ->condition('link_path', 'admin/help', '<>')
       ->condition('menu_name', $system_link->menu_name)
       ->condition('plid', $system_link->id())

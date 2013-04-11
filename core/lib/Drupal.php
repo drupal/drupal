@@ -293,6 +293,23 @@ class Drupal {
   }
 
   /**
+   * Returns the entity query aggregate object for this entity type.
+   *
+   * @param $entity_type
+   *   The entity type, e.g. node, for which the query object should be
+   *   returned.
+   * @param $conjunction
+   *   AND if all conditions in the query need to apply, OR if any of them is
+   *   enough. Optional, defaults to AND.
+   *
+   * @return \Drupal\Core\Entity\Query\QueryInterface
+   *   The query object that can query the given entity type.
+   */
+  public static function entityQueryAggregate($entity_type, $conjunction = 'AND') {
+    return static::$container->get('entity.query')->getAggregate($entity_type, $conjunction);
+  }
+
+  /**
    * Returns the flood instance.
    *
    * @return \Drupal\Core\Flood\FloodInterface

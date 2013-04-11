@@ -115,7 +115,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
 
     $this->installSchema('node', array('node_type', 'node'));
     // Perform an entity query against node.
-    $query = entity_query('node');
+    $query = \Drupal::entityQuery('node');
     // Disable node access checks, since User module is not enabled.
     $query->accessCheck(FALSE);
     $query->condition('nid', 1);

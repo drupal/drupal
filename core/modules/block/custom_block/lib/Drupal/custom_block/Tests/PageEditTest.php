@@ -39,7 +39,7 @@ class PageEditTest extends CustomBlockTestBase {
     $this->drupalPost('block/add/basic', $edit, t('Save'));
 
     // Check that the block exists in the database.
-    $blocks = entity_query('custom_block')->condition('info', $edit['info'])->execute();
+    $blocks = \Drupal::entityQuery('custom_block')->condition('info', $edit['info'])->execute();
     $block = entity_load('custom_block', reset($blocks));
     $this->assertTrue($block, 'Custom block found in database.');
 

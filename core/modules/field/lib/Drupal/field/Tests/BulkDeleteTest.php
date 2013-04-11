@@ -151,7 +151,7 @@ class BulkDeleteTest extends FieldUnitTestBase {
     $bundle = reset($this->bundles);
     $field = reset($this->fields);
     $field_name = $field['field_name'];
-    $factory = drupal_container()->get('entity.query');
+    $factory = \Drupal::service('entity.query');
 
     // There are 10 entities of this bundle.
     $found = $factory->get('test_entity')
@@ -223,7 +223,7 @@ class BulkDeleteTest extends FieldUnitTestBase {
       field_purge_batch($batch_size);
 
       // There are $count deleted entities left.
-      $found = entity_query('test_entity')
+      $found = \Drupal::entityQuery('test_entity')
         ->condition('fttype', $bundle)
         ->condition($field['field_name'] . '.deleted', 1)
         ->execute();

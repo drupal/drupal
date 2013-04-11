@@ -1060,7 +1060,7 @@ function views_get_all_views() {
  * Returns an array of all enabled views, as fully loaded $view objects.
  */
 function views_get_enabled_views() {
-  $query = drupal_container()->get('entity.query')->get('view')
+  $query = Drupal::entityQuery('view')
     ->condition('status', TRUE)
     ->execute();
 
@@ -1071,7 +1071,7 @@ function views_get_enabled_views() {
  * Returns an array of all disabled views, as fully loaded $view objects.
  */
 function views_get_disabled_views() {
-  $query = drupal_container()->get('entity.query')->get('view')
+  $query = Drupal::entityQuery('view')
     ->condition('status', FALSE)
     ->execute();
 

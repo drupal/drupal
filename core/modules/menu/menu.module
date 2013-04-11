@@ -210,7 +210,7 @@ function menu_enable() {
     $link->link_title = $menu->label();
     $link->link_path = 'admin/structure/menu/manage/' . $menu->id();
 
-    $query = entity_query('menu_link')
+    $query = Drupal::entityQuery('menu_link')
       ->condition('link_path', $link->link_path)
       ->condition('plid', $link->plid);
     $result = $query->execute();
@@ -467,7 +467,7 @@ function menu_node_save(EntityInterface $node) {
  */
 function menu_node_predelete(EntityInterface $node) {
   // Delete all menu module links that point to this node.
-  $query = entity_query('menu_link')
+  $query = Drupal::entityQuery('menu_link')
     ->condition('link_path', 'node/' . $node->nid)
     ->condition('module', 'menu');
   $result = $query->execute();
@@ -490,7 +490,7 @@ function menu_node_prepare(EntityInterface $node) {
       // Give priority to the default menu
       $type_menus = variable_get('menu_options_' . $node->type, array('main' => 'main'));
       if (in_array($menu_name, $type_menus)) {
-        $query = entity_query('menu_link')
+        $query = Drupal::entityQuery('menu_link')
           ->condition('link_path', 'node/' . $node->nid)
           ->condition('menu_name', $menu_name)
           ->condition('module', 'menu')
@@ -502,7 +502,7 @@ function menu_node_prepare(EntityInterface $node) {
       }
       // Check all allowed menus if a link does not exist in the default menu.
       if (!$mlid && !empty($type_menus)) {
-        $query = entity_query('menu_link')
+        $query = Drupal::entityQuery('menu_link')
           ->condition('link_path', 'node/' . $node->nid)
           ->condition('menu_name', array_values($type_menus), 'IN')
           ->condition('module', 'menu')

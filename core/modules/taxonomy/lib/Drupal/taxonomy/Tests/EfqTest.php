@@ -37,7 +37,7 @@ class EfqTest extends TaxonomyTestBase {
       $term = $this->createTerm($this->vocabulary);
       $terms[$term->tid] = $term;
     }
-    $result = entity_query('taxonomy_term')->execute();
+    $result = \Drupal::entityQuery('taxonomy_term')->execute();
     sort($result);
     $this->assertEqual(array_keys($terms), $result, 'Taxonomy terms were retrieved by entity query.');
     $tid = reset($result);
@@ -57,7 +57,7 @@ class EfqTest extends TaxonomyTestBase {
       $terms2[$term->tid] = $term;
     }
 
-    $result = entity_query('taxonomy_term')
+    $result = \Drupal::entityQuery('taxonomy_term')
       ->condition('vid', $vocabulary2->id())
       ->execute();
     sort($result);

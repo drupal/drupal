@@ -533,12 +533,12 @@ class EntityCrudHookTest extends EntityUnitTestBase {
 
     if (Database::getConnection()->supportsTransactions()) {
       // Check that the block does not exist in the database.
-      $ids = entity_query('entity_test')->condition('name', 'fail_insert')->execute();
+      $ids = \Drupal::entityQuery('entity_test')->condition('name', 'fail_insert')->execute();
       $this->assertTrue(empty($ids), 'Transactions supported, and entity not found in database.');
     }
     else {
       // Check that the block exists in the database.
-      $ids = entity_query('entity_test')->condition('name', 'fail_insert')->execute();
+      $ids = \Drupal::entityQuery('entity_test')->condition('name', 'fail_insert')->execute();
       $this->assertFalse(empty($ids), 'Transactions not supported, and entity found in database.');
     }
   }

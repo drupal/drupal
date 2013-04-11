@@ -290,7 +290,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
    */
   public function loadByProperties(array $values = array()) {
     // Build a query to fetch the entity IDs.
-    $entity_query = entity_query($this->entityType);
+    $entity_query = \Drupal::entityQuery($this->entityType);
     $this->buildPropertyQuery($entity_query, $values);
     $result = $entity_query->execute();
     return $result ? $this->load($result) : array();

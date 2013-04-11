@@ -365,7 +365,7 @@ class MenuRouterTest extends WebTestBase {
    */
   function testMenuHidden() {
     // Verify links for one dynamic argument.
-    $query = entity_query('menu_link')
+    $query = \Drupal::entityQuery('menu_link')
       ->condition('router_path', 'menu-test/hidden/menu', 'STARTS_WITH')
       ->sort('router_path');
     $result = $query->execute();
@@ -417,7 +417,7 @@ class MenuRouterTest extends WebTestBase {
     $this->assertEqual($link['plid'], $plid, format_string('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
 
     // Verify links for two dynamic arguments.
-    $query = entity_query('menu_link')
+    $query = \Drupal::entityQuery('menu_link')
       ->condition('router_path', 'menu-test/hidden/block', 'STARTS_WITH')
       ->sort('router_path');
     $result = $query->execute();

@@ -854,7 +854,7 @@ function field_purge_batch($batch_size) {
   // Retrieve all deleted field instances. We cannot use field_info_instances()
   // because that function does not return deleted instances.
   $instances = field_read_instances(array('deleted' => 1), array('include_deleted' => 1));
-  $factory = drupal_container()->get('entity.query');
+  $factory = Drupal::service('entity.query');
   $info = entity_get_info();
   foreach ($instances as $instance) {
     $entity_type = $instance['entity_type'];

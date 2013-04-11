@@ -57,7 +57,7 @@ class CustomBlockLoadHooksTest extends CustomBlockTestBase {
     // Now, as part of the same page request, load a set of custom_blocks that contain
     // both basic and other bundle, and make sure the parameters passed to
     // custom_block_test_custom_block_load() are correctly updated.
-    $custom_blocks = entity_load_multiple('custom_block', entity_query('custom_block')->execute(), TRUE);
+    $custom_blocks = entity_load_multiple('custom_block', \Drupal::entityQuery('custom_block')->execute(), TRUE);
     $loaded_custom_block = end($custom_blocks);
     $this->assertEqual($loaded_custom_block->custom_block_test_loaded_ids, array(
       $custom_block1->id->value,

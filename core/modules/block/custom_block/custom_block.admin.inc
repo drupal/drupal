@@ -67,7 +67,7 @@ function custom_block_type_delete_form($form, &$form_state, CustomBlockType $blo
 
   $message = t('Are you sure you want to delete %label?', array('%label' => $block_type->label()));
 
-  $blocks = entity_query('custom_block')->condition('type', $block_type->id())->execute();
+  $blocks = Drupal::entityQuery('custom_block')->condition('type', $block_type->id())->execute();
   if (!empty($blocks)) {
     drupal_set_title($message, PASS_THROUGH);
     $caption = '<p>' . format_plural(count($blocks), '%label is used by 1 custom block on your site. You can not remove this block type until you have removed all of the %label blocks.', '%label is used by @count custom blocks on your site. You may not remove %label until you have removed all of the %label custom blocks.', array('%label' => $block_type->label())) . '</p>';

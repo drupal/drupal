@@ -37,7 +37,7 @@ interface QueryInterface extends AlterableInterface {
    * For example, to find all entities containing both the Turkish 'merhaba'
    * and the Polish 'siema' within a 'greetings' text field:
    * @code
-   *   $entity_ids = entity_query($entity_type)
+   *   $entity_ids = Drupal::entityQuery($entity_type)
    *     ->condition('greetings', 'merhaba', '=', 'tr');
    *     ->condition('greetings.value', 'siema', '=', 'pl');
    *     ->execute();
@@ -198,7 +198,7 @@ interface QueryInterface extends AlterableInterface {
    * field containing 'shape' and 'color' columns. To find all drawings
    * containing both a red triangle and a blue circle:
    * @code
-   *   $query = entity_query('drawing');
+   *   $query = Drupal::entityQuery('drawing');
    *   $group = $query->andConditionGroup()
    *     ->condition('figures.color', 'red')
    *     ->condition('figures.shape', 'triangle');
@@ -221,7 +221,7 @@ interface QueryInterface extends AlterableInterface {
    * containing 'building_type' and 'color' columns.  To find all green and
    * red bikesheds:
    * @code
-   *   $query = entity_query('map');
+   *   $query = Drupal::entityQuery('map');
    *   $group = $query->orConditionGroup()
    *     ->condition('attributes.color', 'red')
    *     ->condition('attributes.color', 'green');

@@ -736,40 +736,6 @@ function entity_get_render_display(EntityInterface $entity, $view_mode) {
 }
 
 /**
- * Returns the entity query object for this entity type.
- *
- * @param $entity_type
- *   The entity type, e.g. node, for which the query object should be
- *   returned.
- * @param $conjunction
- *   AND if all conditions in the query need to apply, OR if any of them is
- *   enough. Optional, defaults to AND.
- *
- * @return \Drupal\Core\Entity\Query\QueryInterface
- *   The query object that can query the given entity type.
- */
-function entity_query($entity_type, $conjunction = 'AND') {
-  return drupal_container()->get('entity.query')->get($entity_type, $conjunction);
-}
-
-/**
- * Returns the entity query aggregate object for this entity type.
- *
- * @param $entity_type
- *   The entity type, e.g. node, for which the query object should be
- *   returned.
- * @param $conjunction
- *   AND if all conditions in the query need to apply, OR if any of them is
- *   enough. Optional, defaults to AND.
- *
- * @return \Drupal\Core\Entity\Query\QueryInterface
- *   The query object that can query the given entity type.
- */
-function entity_query_aggregate($entity_type, $conjunction = 'AND') {
-  return drupal_container()->get('entity.query')->getAggregate($entity_type, $conjunction);
-}
-
-/**
  * Generic access callback for entity pages.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity

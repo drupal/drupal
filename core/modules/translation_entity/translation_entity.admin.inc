@@ -475,7 +475,7 @@ function translation_entity_translatable_batch($translatable, $field_name, &$con
 
     foreach ($entity_types as $entity_type) {
       // How many entities will need processing?
-      $query = entity_query($entity_type);
+      $query = Drupal::entityQuery($entity_type);
       $count = $query
         ->exists($query_field)
         ->count()
@@ -500,7 +500,7 @@ function translation_entity_translatable_batch($translatable, $field_name, &$con
 
     $info = entity_get_info($entity_type);
     $offset = $context['sandbox']['progress_entity_type'][$entity_type];
-    $query = entity_query($entity_type);
+    $query = Drupal::entityQuery($entity_type);
     $result = $query
       ->exists($query_field)
       ->sort($info['entity_keys']['id'])

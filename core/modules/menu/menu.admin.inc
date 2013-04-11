@@ -74,7 +74,7 @@ function menu_overview_form($form, &$form_state) {
   $form['#attached']['css'] = array(drupal_get_path('module', 'menu') . '/menu.admin.css');
 
   $links = array();
-  $query = entity_query('menu_link')
+  $query = Drupal::entityQuery('menu_link')
     ->condition('menu_name', $form_state['menu']->id());
   for ($i = 1; $i <= MENU_MAX_DEPTH; $i++) {
     $query->sort('p' . $i, 'ASC');
@@ -379,7 +379,7 @@ function menu_edit_menu_name_exists($value) {
   $custom_exists = entity_load('menu', $value);
   // 'menu-' is added to the menu name to avoid name-space conflicts.
   $value = 'menu-' . $value;
-  $link_exists = entity_query('menu_link')->condition('menu_name', $value)->range(0,1)->count()->execute();
+  $link_exists = Drupal::entityQuery('menu_link')->condition('menu_name', $value)->range(0,1)->count()->execute();
 
   return $custom_exists || $link_exists;
 }

@@ -78,7 +78,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
     $new_title = $this->randomName();
 
     // Assert referenced node does not exist.
-    $base_query = entity_query('node');
+    $base_query = \Drupal::entityQuery('node');
     $base_query
       ->condition('type', $this->referenced_type)
       ->condition('title', $new_title);
@@ -100,7 +100,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
     $referenced_nid = key($result);
 
     // Assert the referenced node is associated with referencing node.
-    $result = entity_query('node')
+    $result = \Drupal::entityQuery('node')
       ->condition('type', $this->referencing_type)
       ->execute();
 
