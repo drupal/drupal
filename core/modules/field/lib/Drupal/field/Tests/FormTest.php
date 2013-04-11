@@ -577,4 +577,63 @@ class FormTest extends FieldTestBase {
     $this->assertFieldValues($entity_1, 'field_unlimited', LANGUAGE_NOT_SPECIFIED, array(3, 2));
     $this->assertFieldValues($entity_2, 'field_unlimited', LANGUAGE_NOT_SPECIFIED, array(13, 14, 15));
   }
+
+  /**
+   * Tests the Hidden widget.
+   */
+  function testFieldFormHiddenWidget() {
+    $this->field = $this->field_single;
+    $this->field_name = $this->field['field_name'];
+    $this->instance['field_name'] = $this->field_name;
+    $this->instance['widget']['type'] = 'hidden';
+    $this->instance['default_value'] = array(0 => array('value' => 99));
+    field_create_field($this->field);
+    field_create_instance($this->instance);
+    $langcode = LANGUAGE_NOT_SPECIFIED;
+
+    // Display the entity creation form.
+    $this->drupalGet('test-entity/add/test_bundle');
+
+    // Create an entity and test that the default value is assigned correctly to
+    // the field that uses the hidden widget.
+    $this->assertNoField("{$this->field_name}[$langcode][0][value]", 'The hidden widget is not displayed');
+    $this->drupalPost(NULL, array(), t('Save'));
+    preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
+    $id = $match[1];
+    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), 'Entity was created');
+    $entity = field_test_entity_test_load($id);
+    $this->assertEqual($entity->{$this->field_name}[$langcode][0]['value'], 99, 'Default value was saved');
+
+    // Update the instance to remove the default value and switch to the
+    // default widget.
+    $this->instance['default_value'] = NULL;
+    $this->instance['widget']['type'] = 'test_field_widget';
+    field_update_instance($this->instance);
+
+    // Display edit form.
+    $this->drupalGet('test-entity/manage/' . $id . '/edit');
+    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", 99, 'Widget is displayed with the correct default value');
+
+    // Update the entity.
+    $value = mt_rand(1, 127);
+    $edit = array("{$this->field_name}[$langcode][0][value]" => $value);
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->assertRaw(t('test_entity @id has been updated.', array('@id' => $id)), 'Entity was updated');
+    entity_get_controller('test_entity')->resetCache(array($id));
+    $entity = field_test_entity_test_load($id);
+    $this->assertEqual($entity->{$this->field_name}[$langcode][0]['value'], $value, 'Field value was updated');
+
+    // Update the instance and switch to the Hidden widget again.
+    $this->instance['widget']['type'] = 'hidden';
+    field_update_instance($this->instance);
+
+    // Create a new revision.
+    $edit = array('revision' => TRUE);
+    $this->drupalPost('test-entity/manage/' . $id . '/edit', $edit, t('Save'));
+
+    // Check that the expected value has been carried over to the new revision.
+    entity_get_controller('test_entity')->resetCache(array($id));
+    $entity = field_test_entity_test_load($id);
+    $this->assertEqual($entity->{$this->field_name}[$langcode][0]['value'], $value, 'New revision has the expected value for the field with the Hidden widget');
+  }
 }

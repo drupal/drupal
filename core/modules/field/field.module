@@ -455,6 +455,14 @@ function field_entity_field_info($entity_type) {
 }
 
 /**
+ * Implements hook_field_widget_info_alter().
+ */
+function field_field_widget_info_alter(&$info) {
+  // Add the Hidden widget to all field types.
+  $info['hidden']['field_types'] = array_keys(field_info_field_types());
+}
+
+/**
  * Applies language fallback rules to the fields attached to the given entity.
  *
  * Core language fallback rules simply check if fields have a field translation

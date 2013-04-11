@@ -691,6 +691,10 @@ function field_ui_widget_type_form_submit($form, &$form_state) {
   try {
     field_update_instance($instance);
     drupal_set_message(t('Changed the widget for field %label.', array('%label' => $instance['label'])));
+
+    if ($instance['required'] && empty($instance['default_value']) && empty($instance['default_value_function']) && $instance['widget']['type'] == 'field_hidden') {
+      drupal_set_message(t('Field %label is required and uses the "hidden" widget. You might want to configure a default value.', array('%label' => $instance['label'])), 'warning');
+    }
   }
   catch (Exception $e) {
     drupal_set_message(t('There was a problem changing the widget for field %label.', array('%label' => $instance['label'])), 'error');
@@ -934,6 +938,19 @@ function field_ui_default_value_widget($field, $instance, &$form, &$form_state) 
   $instance['required'] = FALSE;
   $instance['description'] = '';
 
+  // Adjust the instance definition to use the default widget of this field type
+  // instead of the hidden widget.
+  if ($instance['widget']['type'] == 'field_hidden') {
+    $field_type = field_info_field_types($field['type']);
+    $default_widget = field_info_widget_types($field_type['default_widget']);
+
+    $instance['widget'] = array(
+      'type' => $default_widget['id'],
+      'settings' => $default_widget['settings'],
+      'weight' => 0,
+    );
+  }
+
   // Insert the widget. Since we do not use the "official" instance definition,
   // the whole flow cannot use field_invoke_method().
   $items = (array) $instance['default_value'];
@@ -1012,6 +1029,10 @@ function field_ui_field_edit_form_submit($form, &$form_state) {
   field_update_instance($instance);
 
   drupal_set_message(t('Saved %label configuration.', array('%label' => $instance['label'])));
+
+  if ($instance['required'] && empty($instance['default_value']) && empty($instance['default_value_function']) && $instance['widget']['type'] == 'field_hidden') {
+    drupal_set_message(t('Field %label is required and uses the "hidden" widget. You might want to configure a default value.', array('%label' => $instance['label'])), 'warning');
+  }
 
   $form_state['redirect'] = field_ui_next_destination($instance['entity_type'], $instance['bundle']);
 }
