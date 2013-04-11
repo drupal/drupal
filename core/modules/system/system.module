@@ -3053,20 +3053,12 @@ function _system_rebuild_theme_data() {
     if (!empty($themes[$key]->info['base theme'])) {
       $sub_themes[] = $key;
     }
-    if ($themes[$key]->info['engine'] == 'theme') {
-      $filename = dirname($themes[$key]->uri) . '/' . $themes[$key]->name . '.theme';
-      if (file_exists($filename)) {
-        $themes[$key]->owner = $filename;
-        $themes[$key]->prefix = $key;
-      }
-    }
-    else {
-      $engine = $themes[$key]->info['engine'];
-      if (isset($engines[$engine])) {
-        $themes[$key]->owner = $engines[$engine]->uri;
-        $themes[$key]->prefix = $engines[$engine]->name;
-        $themes[$key]->template = TRUE;
-      }
+
+    $engine = $themes[$key]->info['engine'];
+    if (isset($engines[$engine])) {
+      $themes[$key]->owner = $engines[$engine]->uri;
+      $themes[$key]->prefix = $engines[$engine]->name;
+      $themes[$key]->template = TRUE;
     }
 
     // Prefix stylesheets and scripts with module path.

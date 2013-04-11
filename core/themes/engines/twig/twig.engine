@@ -24,7 +24,7 @@ function twig_extension() {
  * Implements hook_init().
  */
 function twig_init($template) {
-  $file = dirname($template->filename) . '/template.php';
+  $file = dirname($template->filename) . '/' . $template->name . '.theme';
   if (file_exists($file)) {
     include_once DRUPAL_ROOT . '/' . $file;
   }

@@ -197,7 +197,7 @@ class BreadcrumbTest extends MenuTestBase {
     // Do this separately for Main menu and Tools menu, since only the
     // latter is a preferred menu by default.
     // @todo Also test all themes? Manually testing led to the suspicion that
-    //   breadcrumbs may differ, possibly due to template.php overrides.
+    //   breadcrumbs may differ, possibly due to theme overrides.
     $menus = array('main', 'tools');
     // Alter node type menu settings.
     variable_set("menu_options_$type", $menus);
