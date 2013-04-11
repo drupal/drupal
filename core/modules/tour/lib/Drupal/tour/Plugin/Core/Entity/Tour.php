@@ -39,6 +39,13 @@ class Tour extends ConfigEntityBase {
   public $id;
 
   /**
+   * The module which this tour is assigned to.
+   *
+   * @var string
+   */
+  public $module;
+
+  /**
    * The label of the tour.
    *
    * @var string

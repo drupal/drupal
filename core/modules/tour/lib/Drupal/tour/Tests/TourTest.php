@@ -40,9 +40,10 @@ class TourTest extends WebTestBase {
    * Test tour functionality.
    */
   public function testTourFunctionality() {
-    // Navigate to tour-test-1 and verify the tour_test_1 tip is found.
+    // Navigate to tour-test-1 and verify the tour_test_1 tip is found with appropriate classes.
     $this->drupalGet('tour-test-1');
-    $elements = $this->xpath('//li[@data-id=:data_id and ./h2[contains(., :text)]]', array(
+    $elements = $this->xpath('//li[@data-id=:data_id and @class=:classes and ./h2[contains(., :text)]]', array(
+      ':classes' => 'tip-module-tour-test tip-type-text tip-tour-test-1 even last',
       ':data_id' => 'tour-test-1',
       ':text' => 'The first tip',
     ));

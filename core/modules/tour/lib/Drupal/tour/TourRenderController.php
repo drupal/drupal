@@ -26,6 +26,13 @@ class TourRenderController extends EntityRenderController {
       $list_items = array();
       foreach ($tips as $index => $tip) {
         if ($output = $tip->getOutput()) {
+          $attributes = array(
+            'class' => array(
+              'tip-module-' . drupal_clean_css_identifier($entity->get('module')),
+              'tip-type-' . drupal_clean_css_identifier($tip->get('plugin')),
+              'tip-' . drupal_clean_css_identifier($tip->get('id')),
+            ),
+          );
           $list_items[] = array(
             'output' => $output,
             'counter' => array(
@@ -37,7 +44,7 @@ class TourRenderController extends EntityRenderController {
               ),
               '#children' => t('!tour_item of !total', array('!tour_item' => $index + 1, '!total' => $count)),
             ),
-            '#wrapper_attributes' => $tip->getAttributes(),
+            '#wrapper_attributes' => $tip->getAttributes() + $attributes,
           );
         }
       }
