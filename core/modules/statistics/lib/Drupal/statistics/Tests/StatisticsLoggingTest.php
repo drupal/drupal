@@ -25,6 +25,13 @@ class StatisticsLoggingTest extends WebTestBase {
    */
   public static $modules = array('statistics', 'block');
 
+  /**
+   * The Guzzle HTTP client.
+   *
+   * @var \Guzzle\Http\ClientInterface;
+   */
+  protected $client;
+
   public static function getInfo() {
     return array(
       'name' => 'Statistics logging tests',
@@ -59,6 +66,9 @@ class StatisticsLoggingTest extends WebTestBase {
 
     // Clear the logs.
     db_truncate('node_counter');
+
+    $this->client = \Drupal::httpClient();
+    $this->client->setConfig(array('curl.options' => array(CURLOPT_TIMEOUT => 10)));
   }
 
   /**
@@ -79,7 +89,7 @@ class StatisticsLoggingTest extends WebTestBase {
     $headers = array('Content-Type' => 'application/x-www-form-urlencoded');
     global $base_url;
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
-    drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
+    $this->client->post($stats_path, $headers, $post)->send();
     $this->assertIdentical($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Testing an uncached page.');
     $node_counter = statistics_get($this->node->nid);
     $this->assertIdentical($node_counter['totalcount'], '1');
@@ -87,7 +97,7 @@ class StatisticsLoggingTest extends WebTestBase {
     // Verify logging of a cached page.
     $this->drupalGet($path);
     // Manually calling statistics.php, simulating ajax behavior.
-    drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
+    $this->client->post($stats_path, $headers, $post)->send();
     $this->assertIdentical($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Testing a cached page.');
     $node_counter = statistics_get($this->node->nid);
     $this->assertIdentical($node_counter['totalcount'], '2');
@@ -96,7 +106,7 @@ class StatisticsLoggingTest extends WebTestBase {
     $this->drupalLogin($this->auth_user);
     $this->drupalGet($path);
     // Manually calling statistics.php, simulating ajax behavior.
-    drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
+    $this->client->post($stats_path, $headers, $post)->send();
     $node_counter = statistics_get($this->node->nid);
     $this->assertIdentical($node_counter['totalcount'], '3');
 
