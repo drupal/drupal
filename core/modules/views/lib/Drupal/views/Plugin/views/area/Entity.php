@@ -9,7 +9,7 @@ namespace Drupal\views\Plugin\views\area;
 
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\area\AreaPluginBase;
 
 /**
@@ -17,10 +17,7 @@ use Drupal\views\Plugin\views\area\AreaPluginBase;
  *
  * @ingroup views_area_handlers
  *
- * @Plugin(
- *   id = "entity",
- *   module = "views"
- * )
+ * @PluginID("entity")
  */
 class Entity extends AreaPluginBase {
 

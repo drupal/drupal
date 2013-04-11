@@ -10,17 +10,14 @@ namespace Drupal\taxonomy\Plugin\views\relationship;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\relationship\RelationshipPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Relationship handler to return the taxonomy terms of nodes.
  *
  * @ingroup views_relationship_handlers
  *
- * @Plugin(
- *   id = "node_term_data",
- *   module = "taxonomy"
- * )
+ * @PluginID("node_term_data")
  */
 class NodeTermData extends RelationshipPluginBase  {
 

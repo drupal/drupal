@@ -7,15 +7,12 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Argument handler for a week.
  *
- * @Plugin(
- *   id = "date_week",
- *   module = "views"
- * )
+ * @PluginID("date_week")
  */
 class WeekDate extends Date {
 

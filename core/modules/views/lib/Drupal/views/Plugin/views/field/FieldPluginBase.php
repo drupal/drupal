@@ -10,7 +10,6 @@ namespace Drupal\views\Plugin\views\field;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
-use Drupal\Component\Annotation\Plugin;
 
 /**
  * @defgroup views_field_handlers Views field handlers

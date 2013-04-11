@@ -10,17 +10,14 @@ namespace Drupal\node\Plugin\views\field;
 use Drupal\node\Plugin\views\field\Link;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to present a link to a node revision.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "node_revision_link",
- *   module = "node"
- * )
+ * @PluginID("node_revision_link")
  */
 class RevisionLink extends Link {
 

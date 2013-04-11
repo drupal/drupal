@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Plugin\views\argument;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\argument\ManyToOne;
 
 /**
@@ -15,10 +15,7 @@ use Drupal\views\Plugin\views\argument\ManyToOne;
  *
  * @ingroup views_argument_handlers
  *
- * @Plugin(
- *   id = "users_roles_rid",
- *   module = "user"
- * )
+ * @PluginID("users_roles_rid")
  */
 class RolesRid extends ManyToOne {
 

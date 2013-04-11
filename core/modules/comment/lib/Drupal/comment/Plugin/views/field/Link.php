@@ -8,17 +8,14 @@
 namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Base field handler to present a link.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "comment_link",
- *   module = "comment"
- * )
+ * @PluginID("comment_link")
  */
 class Link extends FieldPluginBase {
 

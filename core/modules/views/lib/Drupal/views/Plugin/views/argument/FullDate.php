@@ -7,15 +7,12 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Argument handler for a full date (CCYYMMDD)
  *
- * @Plugin(
- *   id = "date_fulldate",
- *   module = "views"
- * )
+ * @PluginID("date_fulldate")
  */
 class FullDate extends Date {
 

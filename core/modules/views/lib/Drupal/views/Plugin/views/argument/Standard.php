@@ -7,16 +7,14 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Default implementation of the base argument plugin.
  *
  * @ingroup views_argument_handlers
  *
- * @Plugin(
- *   id = "standard"
- * )
+ * @PluginID("standard")
  */
 class Standard extends ArgumentPluginBase {
 

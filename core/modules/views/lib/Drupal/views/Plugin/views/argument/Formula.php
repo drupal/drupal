@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 
@@ -21,9 +21,7 @@ use Drupal\views\ViewExecutable;
  *
  * @ingroup views_argument_handlers
  *
- * @Plugin(
- *   id = "formula"
- * )
+ * @PluginID("formula")
  */
 class Formula extends ArgumentPluginBase {
 

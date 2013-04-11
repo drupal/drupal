@@ -7,16 +7,14 @@
 
 namespace Drupal\views\Plugin\views\field;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to provide simple renderer that turns a URL into a clickable link.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "url"
- * )
+ * @PluginID("url")
  */
 class Url extends FieldPluginBase {
 

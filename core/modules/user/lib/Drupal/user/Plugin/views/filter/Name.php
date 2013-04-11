@@ -8,17 +8,14 @@
 namespace Drupal\user\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\filter\InOperator;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Filter handler for usernames.
  *
  * @ingroup views_filter_handlers
  *
- * @Plugin(
- *   id = "user_name",
- *   module = "user"
- * )
+ * @PluginID("user_name")
  */
 class Name extends InOperator {
 

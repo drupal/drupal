@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\Core\Database\Database;
 
 /**
@@ -24,9 +24,7 @@ use Drupal\Core\Database\Database;
  *
  * @ingroup views_argument_handlers
  *
- * @Plugin(
- *   id = "date"
- * )
+ * @PluginID("date")
  */
 class Date extends Formula {
 

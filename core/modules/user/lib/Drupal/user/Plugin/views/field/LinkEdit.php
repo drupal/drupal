@@ -8,17 +8,14 @@
 namespace Drupal\user\Plugin\views\field;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to present a link to user edit.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "user_link_edit",
- *   module = "user"
- * )
+ * @PluginID("user_link_edit")
  */
 class LinkEdit extends Link {
 

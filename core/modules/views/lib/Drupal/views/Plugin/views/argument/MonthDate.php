@@ -7,15 +7,12 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Argument handler for a month (MM)
  *
- * @Plugin(
- *   id = "date_month",
- *   module = "views"
- * )
+ * @PluginID("date_month")
  */
 class MonthDate extends Date {
 

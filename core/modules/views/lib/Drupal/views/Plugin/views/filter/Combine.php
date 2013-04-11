@@ -7,16 +7,14 @@
 
 namespace Drupal\views\Plugin\views\filter;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Filter handler which allows to search on multiple fields.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "combine"
- * )
+ * @PluginID("combine")
  */
 class Combine extends String {
 

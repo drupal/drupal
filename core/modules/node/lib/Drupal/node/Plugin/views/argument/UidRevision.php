@@ -8,16 +8,13 @@
 namespace Drupal\node\Plugin\views\argument;
 
 use Drupal\user\Plugin\views\argument\Uid;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Filter handler to accept a user id to check for nodes that
  * user posted or created a revision on.
  *
- * @Plugin(
- *   id = "node_uid_revision",
- *   module = "node"
- * )
+ * @PluginID("node_uid_revision")
  */
 class UidRevision extends Uid {
 

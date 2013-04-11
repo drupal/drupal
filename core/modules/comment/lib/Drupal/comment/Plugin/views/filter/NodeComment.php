@@ -8,17 +8,14 @@
 namespace Drupal\comment\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\filter\InOperator;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Filter based on comment node status.
  *
  * @ingroup views_filter_handlers
  *
- * @Plugin(
- *   id = "node_comment",
- *   module = "comment"
- * )
+ * @PluginID("node_comment")
  */
 class NodeComment extends InOperator {
 

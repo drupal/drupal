@@ -7,16 +7,13 @@
 
 namespace Drupal\action\Plugin\views\field;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\system\Plugin\views\field\BulkFormBase;
 
 /**
  * Defines a actions-based bulk operation form element.
  *
- * @Plugin(
- *   id = "action_bulk_form",
- *   module = "action"
- * )
+ * @PluginID("action_bulk_form")
  */
 class BulkForm extends BulkFormBase {
 

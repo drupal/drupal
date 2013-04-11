@@ -7,16 +7,14 @@
 
 namespace Drupal\views\Plugin\views\area;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Views area handlers. Insert a view inside of an area.
  *
  * @ingroup views_area_handlers
  *
- * @Plugin(
- *   id = "view"
- * )
+ * @PluginID("view")
  */
 class View extends AreaPluginBase {
 

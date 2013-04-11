@@ -8,17 +8,14 @@
 namespace Drupal\language\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Defines a field handler to translate a language into its readable form.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "language",
- *   module = "language"
- * )
+ * @PluginID("language")
  */
 class LanguageField extends FieldPluginBase {
 

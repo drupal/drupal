@@ -7,16 +7,14 @@
 
 namespace Drupal\views\Plugin\views\area;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Views area title override handler.
  *
  * @ingroup views_area_handlers
  *
- * @Plugin(
- *   id = "title"
- * )
+ * @PluginID("title")
  */
 class Title extends AreaPluginBase {
 

@@ -10,17 +10,14 @@ namespace Drupal\node\Plugin\views\field;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\node\Plugin\views\field\Node;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * A basic node_revision handler.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "node_revision",
- *   module = "node"
- * )
+ * @PluginID("node_revision")
  */
 class Revision extends Node {
 

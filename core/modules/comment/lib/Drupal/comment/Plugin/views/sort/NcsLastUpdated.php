@@ -8,17 +8,14 @@
 namespace Drupal\comment\Plugin\views\sort;
 
 use Drupal\views\Plugin\views\sort\Date;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Sort handler for the newer of last comment / node updated.
  *
  * @ingroup views_sort_handlers
  *
- * @Plugin(
- *   id = "ncs_last_updated",
- *   module = "comment"
- * )
+ * @PluginID("ncs_last_updated")
  */
 class NcsLastUpdated extends Date {
 

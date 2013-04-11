@@ -8,17 +8,14 @@
 namespace Drupal\node\Plugin\views\field;
 
 use Drupal\node\Plugin\views\field\Node;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to translate a node type into its readable form.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "node_type",
- *   module = "node"
- * )
+ * @PluginID("node_type")
  */
 class Type extends Node {
 

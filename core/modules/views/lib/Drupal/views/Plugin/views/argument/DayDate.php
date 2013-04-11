@@ -7,15 +7,12 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Argument handler for a day (DD)
  *
- * @Plugin(
- *   id = "date_day",
- *   module = "views"
- * )
+ * @PluginID("date_day")
  */
 class DayDate extends Date {
 

@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\filter;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 
@@ -20,9 +20,7 @@ use Drupal\views\ViewExecutable;
  *
  * @ingroup views_filter_handlers
  *
- * @Plugin(
- *   id = "in_operator"
- * )
+ * @PluginID("in_operator")
  */
 class InOperator extends FilterPluginBase {
 

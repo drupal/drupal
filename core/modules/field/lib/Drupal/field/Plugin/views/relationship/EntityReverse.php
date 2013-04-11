@@ -10,7 +10,7 @@ namespace Drupal\field\Plugin\views\relationship;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\relationship\RelationshipPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Views;
 
 /**
@@ -18,10 +18,7 @@ use Drupal\views\Views;
  *
  * @ingroup views_relationship_handlers
  *
- * @Plugin(
- *   id = "entity_reverse",
- *   module = "field"
- * )
+ * @PluginID("entity_reverse")
  */
 class EntityReverse extends RelationshipPluginBase  {
 

@@ -10,17 +10,14 @@ namespace Drupal\comment\Plugin\views\field;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to allow linking to a user account or homepage.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "comment_username",
- *   module = "comment"
- * )
+ * @PluginID("comment_username")
  */
 class Username extends FieldPluginBase {
 

@@ -8,17 +8,14 @@
 namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Display node comment status.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "node_comment",
- *   module = "comment"
- * )
+ * @PluginID("node_comment")
  */
 class NodeComment extends FieldPluginBase {
 

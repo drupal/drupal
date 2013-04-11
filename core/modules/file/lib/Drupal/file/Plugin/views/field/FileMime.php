@@ -7,17 +7,14 @@
 
 namespace Drupal\file\Plugin\views\field;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to add rendering MIME type images as an option on the filemime field.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "file_filemime",
- *   module = "file"
- * )
+ * @PluginID("file_filemime")
  */
 class FileMime extends File {
 

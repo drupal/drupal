@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\field;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 
@@ -22,9 +22,7 @@ use Drupal\views\ViewExecutable;
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "markup"
- * )
+ * @PluginID("markup")
  */
 class Markup extends FieldPluginBase {
 

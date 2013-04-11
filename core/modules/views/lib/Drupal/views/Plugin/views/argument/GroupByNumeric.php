@@ -7,16 +7,14 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Simple handler for arguments using group by.
  *
  * @ingroup views_argument_handlers
  *
- * @Plugin(
- *   id = "groupby_numeric"
- * )
+ * @PluginID("groupby_numeric")
  */
 class GroupByNumeric extends ArgumentPluginBase {
 

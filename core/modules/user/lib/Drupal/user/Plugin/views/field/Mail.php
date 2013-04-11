@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Plugin\views\field;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
 /**
@@ -15,10 +15,7 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "user_mail",
- *   module = "user"
- * )
+ * @PluginID("user_mail")
  */
 class Mail extends User {
 

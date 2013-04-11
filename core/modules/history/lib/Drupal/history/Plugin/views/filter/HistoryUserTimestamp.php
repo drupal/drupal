@@ -8,7 +8,7 @@
 namespace Drupal\history\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Filter for new content.
@@ -18,10 +18,7 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @ingroup views_filter_handlers
  *
- * @Plugin(
- *   id = "history_user_timestamp",
- *   module = "history"
- * )
+ * @PluginID("history_user_timestamp")
  */
 class HistoryUserTimestamp extends FilterPluginBase {
 

@@ -7,16 +7,14 @@
 
 namespace Drupal\views\Plugin\views\field;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Render a numeric value as a size.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "file_size"
- * )
+ * @PluginID("file_size")
  */
 class FileSize extends FieldPluginBase {
 

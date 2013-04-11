@@ -3,10 +3,10 @@ services:
     class: Drupal\views\Plugin\ViewsPluginManager
     arguments: [access, '%container.namespaces%']
   plugin.manager.views.area:
-    class: Drupal\views\Plugin\ViewsPluginManager
+    class: Drupal\views\Plugin\ViewsHandlerManager
     arguments: [area, '%container.namespaces%']
   plugin.manager.views.argument:
-    class: Drupal\views\Plugin\ViewsPluginManager
+    class: Drupal\views\Plugin\ViewsHandlerManager
     arguments: [argument, '%container.namespaces%']
   plugin.manager.views.argument_default:
     class: Drupal\views\Plugin\ViewsPluginManager
@@ -27,13 +27,13 @@ services:
     class: Drupal\views\Plugin\ViewsPluginManager
     arguments: [exposed_form, '%container.namespaces%']
   plugin.manager.views.field:
-    class: Drupal\views\Plugin\ViewsPluginManager
+    class: Drupal\views\Plugin\ViewsHandlerManager
     arguments: [field, '%container.namespaces%']
   plugin.manager.views.filter:
-    class: Drupal\views\Plugin\ViewsPluginManager
+    class: Drupal\views\Plugin\ViewsHandlerManager
     arguments: [filter, '%container.namespaces%']
   plugin.manager.views.join:
-    class: Drupal\views\Plugin\ViewsPluginManager
+    class: Drupal\views\Plugin\ViewsHandlerManager
     arguments: [join, '%container.namespaces%']
   plugin.manager.views.pager:
     class: Drupal\views\Plugin\ViewsPluginManager
@@ -42,13 +42,13 @@ services:
     class: Drupal\views\Plugin\ViewsPluginManager
     arguments: [query, '%container.namespaces%']
   plugin.manager.views.relationship:
-    class: Drupal\views\Plugin\ViewsPluginManager
+    class: Drupal\views\Plugin\ViewsHandlerManager
     arguments: [relationship, '%container.namespaces%']
   plugin.manager.views.row:
     class: Drupal\views\Plugin\ViewsPluginManager
     arguments: [row, '%container.namespaces%']
   plugin.manager.views.sort:
-    class: Drupal\views\Plugin\ViewsPluginManager
+    class: Drupal\views\Plugin\ViewsHandlerManager
     arguments: [sort, '%container.namespaces%']
   plugin.manager.views.style:
     class: Drupal\views\Plugin\ViewsPluginManager

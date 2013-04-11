@@ -11,7 +11,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Views;
 
 /**
@@ -19,10 +19,7 @@ use Drupal\views\Views;
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "field",
- *   module = "field"
- * )
+ * @PluginID("field")
  */
 class Field extends FieldPluginBase {
 
