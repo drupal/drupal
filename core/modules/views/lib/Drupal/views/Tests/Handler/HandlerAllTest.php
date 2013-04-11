@@ -31,6 +31,7 @@ class HandlerAllTest extends HandlerTestBase {
     'field',
     'filter',
     'file',
+    'forum',
     'history',
     'language',
     'locale',
