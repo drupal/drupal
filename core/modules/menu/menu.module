@@ -123,10 +123,7 @@ function menu_menu() {
   );
   $items['admin/structure/menu/manage/%menu/delete'] = array(
     'title' => 'Delete menu',
-    'page callback' => 'menu_delete_menu_page',
-    'page arguments' => array(4),
-    'access arguments' => array('administer menu'),
-    'file' => 'menu.admin.inc',
+    'route_name' => 'menu_delete_menu',
   );
   $items['admin/structure/menu/item/%menu_link/edit'] = array(
     'title' => 'Edit menu link',
@@ -136,17 +133,11 @@ function menu_menu() {
   );
   $items['admin/structure/menu/item/%menu_link/reset'] = array(
     'title' => 'Reset menu link',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('menu_link_reset_form', 4),
-    'access arguments' => array('administer menu'),
-    'file' => 'menu.admin.inc',
+    'route_name' => 'menu_link_reset',
   );
   $items['admin/structure/menu/item/%menu_link/delete'] = array(
     'title' => 'Delete menu link',
-    'page callback' => 'menu_link_delete_page',
-    'page arguments' => array(4),
-    'access arguments' => array('administer menu'),
-    'file' => 'menu.admin.inc',
+    'route_name' => 'menu_link_delete',
   );
   return $items;
 }
