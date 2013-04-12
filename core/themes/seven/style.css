@@ -750,6 +750,13 @@ select.form-select:focus {
 }
 
 /**
+ * Improve spacing of cancel link.
+ */
+#edit-cancel {
+  margin-left: 10px; /* LTR */
+}
+
+/**
  * Improve form element usability on narrow devices.
  */
 @media screen and (max-width: 600px) {
@@ -788,11 +795,6 @@ select.form-select:focus {
     font-size: 1.2em;
     line-height: 1.2em;
   }
-  .form-actions a#edit-cancel {
-    display: inline-block;
-    padding: 10px 0;
-    margin: 10px 0;
-  }
   .form-actions input,
   .form-wrapper input[type="submit"] {
     float: none;
@@ -825,13 +827,10 @@ select.form-select:focus {
     float: none;
     padding: 0;
   }
-}
-
-/**
- * Improve form element usability on normal and wide screens
- */
-.form-actions #edit-cancel {
-  margin-left: 10px;
+  #edit-cancel {
+    display: block;
+    margin: 10px 0 0 0;
+  }
 }
 
 /* Exceptions */

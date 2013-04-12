@@ -157,12 +157,14 @@ ol.task-list li.active {
 #user-login-form .openid-links .user-link {
   margin-right: 1.5em;
 }
+
 /**
- * Improve form element usability
+ * Improve spacing of cancel link.
  */
-.form-actions #edit-cancel {
-  margin: 0 10px 0 0;
+#edit-cancel {
+  margin-right: 10px;
 }
+
 /**
  * Views styling
  */
