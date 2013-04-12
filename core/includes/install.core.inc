@@ -1483,7 +1483,7 @@ function install_select_language_form($form, &$form_state, $files = array()) {
   if (empty($files)) {
     $form['help'] = array(
       '#markup' => '<p>Translations will be downloaded from the <a href="http://localize.drupal.org">Drupal Translation website</a>. ' .
-                   'If you do not want this, select <em>English</em> and continue the installation. For more information, see the <a href="http://drupal.org/documentation/install">online handbook</a>.</p>',
+      'If you do not want this, select <em>English</em> and continue the installation. For more information, see the <a href="http://drupal.org/documentation/install">online handbook</a>.</p>',
     );
   }
   $form['actions'] = array('#type' => 'actions');
@@ -1992,7 +1992,7 @@ function install_check_translations($install_state) {
     // If the translations directory is not readable, throw an error.
     if (!$readable) {
       $requirements['translations directory readable'] = array(
-      'title'       => st('Translations directory'),
+        'title'       => st('Translations directory'),
         'value'       => st('The translations directory is not readable.'),
         'severity'    => REQUIREMENT_ERROR,
         'description' => st('The installer requires read permissions to %translations_directory at all times. If you are unsure how to grant file permissions, consult the <a href="@handbook_url">online handbook</a>.', array('%translations_directory' => $translations_directory, '@handbook_url' => 'http://drupal.org/server-permissions')),
@@ -2001,7 +2001,7 @@ function install_check_translations($install_state) {
     // If translations directory is not writable, throw an error.
     if (!$writable) {
       $requirements['translations directory writable'] = array(
-      'title'       => st('Translations directory'),
+        'title'       => st('Translations directory'),
         'value'       => st('The translations directory is not writable.'),
         'severity'    => REQUIREMENT_ERROR,
         'description' => st('The installer requires write permissions to %translations_directory during the installation process. If you are unsure how to grant file permissions, consult the <a href="@handbook_url">online handbook</a>.', array('%translations_directory' => $translations_directory, '@handbook_url' => 'http://drupal.org/server-permissions')),
@@ -2009,7 +2009,7 @@ function install_check_translations($install_state) {
     }
     else {
       $requirements['translations directory writable'] = array(
-      'title'       => st('Translations directory'),
+        'title'       => st('Translations directory'),
         'value'       => st('The translations directory is writable.'),
       );
     }
@@ -2033,7 +2033,7 @@ function install_check_translations($install_state) {
     // error.
     if (!$translation_available) {
       $requirements['translation available'] = array(
-      'title'       => st('Translation'),
+        'title'       => st('Translation'),
         'value'       => st('The %language translation is not available.', array('%language' => $language)),
         'severity'    => REQUIREMENT_ERROR,
         'description' => st('The %language translation file is not available at the translation server. <a href="!url">Choose a different language</a> or select English and translate your website later.', array('%language' => $language, '!url' => check_url($_SERVER['SCRIPT_NAME']))),
@@ -2041,7 +2041,7 @@ function install_check_translations($install_state) {
     }
     else {
       $requirements['translation available'] = array(
-      'title'       => st('Translation'),
+        'title'       => st('Translation'),
         'value'       => st('The %language translation is available.', array('%language' => $language)),
       );
     }
@@ -2052,7 +2052,7 @@ function install_check_translations($install_state) {
 
     if (!$translation_downloaded) {
       $requirements['translation downloaded'] = array(
-      'title'       => st('Translation'),
+        'title'       => st('Translation'),
         'value'       => st('The %language translation could not be downloaded.', array('%language' => $language)),
         'severity'    => REQUIREMENT_ERROR,
         'description' => st('The %language translation file could not be downloaded. <a href="!url">Choose a different language</a> or select English and translate your website later.', array('%language' => $language, '!url' => check_url($_SERVER['SCRIPT_NAME']))),
