@@ -250,7 +250,7 @@ function openid_test_redirected_method($method1, $method2) {
  * using Diffie-Hellman key exchange. The MAC key is used in subsequent
  * "authenticate" requests. The "associate" request is made by the Relying Party
  * (in the testing scenario, this is the OpenID module that communicates with
- * the endpoint using drupal_http_request()).
+ * the endpoint).
  */
 function _openid_test_endpoint_associate() {
   module_load_include('inc', 'openid');

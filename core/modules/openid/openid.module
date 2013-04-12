@@ -5,6 +5,8 @@
  * Implement OpenID Relying Party support for Drupal
  */
 
+use Guzzle\Http\Exception\RequestException;
+
 /**
  * Implements hook_menu().
  */
@@ -595,54 +597,43 @@ function _openid_xrds_discovery($claimed_id) {
   $scheme = @parse_url($xrds_url, PHP_URL_SCHEME);
   if ($scheme == 'http' || $scheme == 'https') {
     // For regular URLs, try Yadis resolution first, then HTML-based discovery
-    $headers = array('Accept' => 'application/xrds+xml');
-    $result = drupal_http_request($xrds_url, array('headers' => $headers));
-
-    // Check for HTTP error and make sure, that we reach the target. If the
-    // maximum allowed redirects are exhausted, final destination URL isn't
-    // reached, but drupal_http_request() doesn't return any error.
-    // @todo Remove the check for 200 HTTP result code after the following issue
-    // will be fixed: http://drupal.org/node/1096890.
-    if (!isset($result->error) && $result->code == 200) {
-
+    try {
+      $client = Drupal::httpClient();
+      $headers = array('Accept' => 'application/xrds+xml');
+      $response = $client->get($xrds_url, $headers)->send();
       // Replace the user-entered claimed_id if we received a redirect.
-      if (!empty($result->redirect_url)) {
-        $claimed_id = openid_normalize($result->redirect_url);
+      if ($previous_response = $response->getPreviousResponse()) {
+        $claimed_id = openid_normalize($previous_response->getLocation());
       }
 
-      if (isset($result->headers['content-type']) && preg_match("/application\/xrds\+xml/", $result->headers['content-type'])) {
+      if ($response->getHeader('content-type') && preg_match("/application\/xrds\+xml/", $response->getHeader('Content-Type'))) {
         // Parse XML document to find URL
-        $services = _openid_xrds_parse($result->data);
+        $services = _openid_xrds_parse($response->getBody(TRUE));
       }
       else {
-        $xrds_url = NULL;
-        if (isset($result->headers['x-xrds-location'])) {
-          $xrds_url = $result->headers['x-xrds-location'];
-        }
-        else {
+        $xrds_url = $response->getHeader('x-xrds-location');
+        if (empty($xrds_url)) {
           // Look for meta http-equiv link in HTML head
-          $xrds_url = _openid_meta_httpequiv($result->data);
+          $xrds_url = _openid_meta_httpequiv($response->getBody(TRUE));
         }
         if (!empty($xrds_url)) {
-          $headers = array('Accept' => 'application/xrds+xml');
-          $xrds_result = drupal_http_request($xrds_url, array('headers' => $headers));
-          if (!isset($xrds_result->error)) {
-            $services = _openid_xrds_parse($xrds_result->data);
-          }
+          $xrds_response = $client->get($xrds_url, $headers)->send();
+          $services = _openid_xrds_parse($xrds_response->getBody(TRUE));
         }
       }
 
       // Check for HTML delegation
       if (count($services) == 0) {
         // Look for 2.0 links
-        $uri = _openid_link_href('openid2.provider', $result->data);
-        $identity = _openid_link_href('openid2.local_id', $result->data);
+        $body = $response->getBody(TRUE);
+        $uri = _openid_link_href('openid2.provider', $body);
+        $identity = _openid_link_href('openid2.local_id', $body);
         $type = 'http://specs.openid.net/auth/2.0/signon';
 
         // 1.x links
         if (empty($uri)) {
-          $uri = _openid_link_href('openid.server', $result->data);
-          $identity = _openid_link_href('openid.delegate', $result->data);
+          $uri = _openid_link_href('openid.server', $body);
+          $identity = _openid_link_href('openid.delegate', $body);
           $type = 'http://openid.net/signon/1.1';
         }
         if (!empty($uri)) {
@@ -653,14 +644,16 @@ function _openid_xrds_discovery($claimed_id) {
           );
         }
       }
+      if (!empty($services)) {
+        return array(
+          'services' => $services,
+          'claimed_id' => $claimed_id,
+        );
+      }
     }
-  }
-
-  if (!empty($services)) {
-    return array(
-      'services' => $services,
-      'claimed_id' => $claimed_id,
-    );
+    catch (RequestException $exception) {
+      return;
+    }
   }
 }
 
@@ -706,39 +699,38 @@ function openid_association($op_endpoint) {
     // If there is no existing association, then request one
     $assoc_request = openid_association_request($public);
     $assoc_message = _openid_encode_message(_openid_create_message($assoc_request));
-    $assoc_options = array(
-      'headers' => array('Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8'),
-      'method' => 'POST',
-      'data' => $assoc_message,
-    );
-    $assoc_result = drupal_http_request($op_endpoint, $assoc_options);
-    if (isset($assoc_result->error)) {
+    try {
+      $headers = array('Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8');
+      $response = Drupal::httpClient()
+        ->post($op_endpoint, $headers, $assoc_message)
+        ->send();
+      $assoc_response = _openid_parse_message($response->getBody(TRUE));
+      if (isset($assoc_response['mode']) && $assoc_response['mode'] == 'error') {
+        return FALSE;
+      }
+
+      if ($assoc_response['session_type'] == 'DH-SHA1') {
+        $spub = _openid_dh_base64_to_long($assoc_response['dh_server_public']);
+        $enc_mac_key = base64_decode($assoc_response['enc_mac_key']);
+        $shared = _openid_math_powmod($spub, $private, $mod);
+        $assoc_response['mac_key'] = base64_encode(_openid_dh_xorsecret($shared, $enc_mac_key));
+      }
+      db_insert('openid_association')
+        ->fields(array(
+          'idp_endpoint_uri' => $op_endpoint,
+          'session_type' => $assoc_response['session_type'],
+          'assoc_handle' => $assoc_response['assoc_handle'],
+          'assoc_type' => $assoc_response['assoc_type'],
+          'expires_in' => $assoc_response['expires_in'],
+          'mac_key' => $assoc_response['mac_key'],
+          'created' => REQUEST_TIME,
+        ))
+        ->execute();
+      $assoc_handle = $assoc_response['assoc_handle'];
+    }
+    catch (RequestException $exception) {
       return FALSE;
     }
-
-    $assoc_response = _openid_parse_message($assoc_result->data);
-    if (isset($assoc_response['mode']) && $assoc_response['mode'] == 'error') {
-      return FALSE;
-    }
-
-    if ($assoc_response['session_type'] == 'DH-SHA1') {
-      $spub = _openid_dh_base64_to_long($assoc_response['dh_server_public']);
-      $enc_mac_key = base64_decode($assoc_response['enc_mac_key']);
-      $shared = _openid_math_powmod($spub, $private, $mod);
-      $assoc_response['mac_key'] = base64_encode(_openid_dh_xorsecret($shared, $enc_mac_key));
-    }
-    db_insert('openid_association')
-      ->fields(array(
-        'idp_endpoint_uri' => $op_endpoint,
-        'session_type' => $assoc_response['session_type'],
-        'assoc_handle' => $assoc_response['assoc_handle'],
-        'assoc_type' => $assoc_response['assoc_type'],
-        'expires_in' => $assoc_response['expires_in'],
-        'mac_key' => $assoc_response['mac_key'],
-        'created' => REQUEST_TIME,
-      ))
-      ->execute();
-    $assoc_handle = $assoc_response['assoc_handle'];
   }
   return $assoc_handle;
 }
@@ -944,14 +936,12 @@ function openid_verify_assertion($service, $response) {
     $request = $response;
     $request['openid.mode'] = 'check_authentication';
     $message = _openid_create_message($request);
-    $options = array(
-      'headers' => array('Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8'),
-      'method' => 'POST',
-      'data' => _openid_encode_message($message),
-    );
-    $result = drupal_http_request($service['uri'], $options);
-    if (!isset($result->error)) {
-      $response = _openid_parse_message($result->data);
+    try {
+      $headers = array('Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8');
+      $http_response = Drupal::httpClient()
+        ->post($service['uri'], $headers, _openid_encode_message($message))
+        ->send();
+      $response = _openid_parse_message($http_response->getBody(TRUE));
 
       if (strtolower(trim($response['is_valid'])) == 'true') {
         $valid = TRUE;
@@ -967,6 +957,9 @@ function openid_verify_assertion($service, $response) {
       else {
         $valid = FALSE;
       }
+    }
+    catch (RequestException $exception) {
+      $valid = FALSE;
     }
   }
   return $valid;
