@@ -919,17 +919,24 @@ class ViewEditFormController extends ViewFormControllerBase {
     // Create an array of actions to pass to theme_links
     $actions = array();
     $count_handlers = count($executable->display_handler->getHandlers($type));
+
+    // Create the add text variable for the add action.
+    $add_text = t('Add <span class="element-invisible">@type</span>', array('@type' => $types[$type]['ltitle']));
+
     $actions['add'] = array(
-      'title' => t('Add'),
+      'title' => $add_text,
       'href' => "admin/structure/views/nojs/add-item/{$view->id()}/{$display['id']}/$type",
-      'attributes' => array('class' => array('icon compact add', 'views-ajax-link'), 'title' => t('Add'), 'id' => 'views-add-' . $type),
+      'attributes' => array('class' => array('icon compact add', 'views-ajax-link'), 'id' => 'views-add-' . $type),
       'html' => TRUE,
     );
     if ($count_handlers > 0) {
+      // Create the rearrange text variable for the rearrange action.
+      $rearrange_text = $type == 'filter' ? t('And/Or Rearrange <span class="element-invisible">filter criteria</span>') : t('Rearrange <span class="element-invisible">@type</span>', array('@type' => $types[$type]['ltitle']));
+
       $actions['rearrange'] = array(
         'title' => $rearrange_text,
         'href' => $rearrange_url,
-        'attributes' => array('class' => array($class, 'views-ajax-link'), 'title' => t('Rearrange'), 'id' => 'views-rearrange-' . $type),
+        'attributes' => array('class' => array($class, 'views-ajax-link'), 'id' => 'views-rearrange-' . $type),
         'html' => TRUE,
       );
     }
