@@ -139,13 +139,7 @@ function views_ui_theme() {
       'file' => 'views_ui.theme.inc',
     ),
 
-    // tab themes
-    'views_tabset' => array(
-      'variables' => array('tabs' => NULL),
-    ),
-    'views_tab' => array(
-      'variables' => array('body' => NULL),
-    ),
+    // Reordering displays.
     'views_ui_reorder_displays_form' => array(
       'render element' => 'form',
       'file' => 'views_ui.theme.inc',
