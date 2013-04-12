@@ -378,19 +378,18 @@ class ViewExecutableTest extends ViewUnitTestBase {
       $match = function($value) use ($display) {
         return strpos($value, $display->display['display_title']) !== false;
       };
-      $this->assertTrue(array_filter($validate, $match), format_string('Error message found for @id display', array('@id' => $id)));
+      $this->assertTrue(array_filter($validate[$id], $match), format_string('Error message found for @id display', array('@id' => $id)));
       $count++;
     }
 
     $this->assertEqual(count($view->displayHandlers), $count, 'Error messages from all handlers merged.');
 
     // Test that a deleted display is not included.
-    $view->displayHandlers->get('default')->deleted = TRUE;
+    $display = &$view->storage->getDisplay('default');
+    $display['deleted'] = TRUE;
     $validate_deleted = $view->validate();
 
-    $this->assertNotEqual(count($validate), count($validate_deleted));
-    // The first item was the default validation error originally.
-    $this->assertNotIdentical($validate[0], $validate_deleted[0], 'Master display has not been validated.');
+    $this->assertNotIdentical($validate, $validate_deleted, 'Master display has not been validated.');
   }
 
 }

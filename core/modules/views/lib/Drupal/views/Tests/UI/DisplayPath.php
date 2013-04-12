@@ -44,5 +44,15 @@ class DisplayPath extends UITestBase {
     $this->assertLink(t('view @display', array('@display' => 'Page')), 0, 'view page link found on the page.');
   }
 
-}
+  /**
+   * Tests deleting a page display that has no path.
+   */
+  public function testDeleteWithNoPath() {
+    $this->drupalGet('admin/structure/views/view/test_view');
+    $this->drupalPost(NULL, array(), t('Add Page'));
+    $this->drupalPost(NULL, array(), t('delete Page'));
+    $this->drupalPost(NULL, array(), t('Save'));
+    $this->assertRaw(format_string('The view %view has been saved.', array('%view' => 'test_view')));
+  }
 
+}

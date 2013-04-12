@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui;
 
+use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Database\Database;
 use Drupal\Core\TypedData\ContextAwareInterface;
@@ -26,13 +27,6 @@ class ViewUI implements ViewStorageInterface {
    * @var bool
    */
   public $editing = FALSE;
-
-  /**
-   * Stores an array of errors for any displays.
-   *
-   * @var array
-   */
-  public $display_errors;
 
   /**
    * Stores an array of displays that have been changed.
@@ -149,7 +143,7 @@ class ViewUI implements ViewStorageInterface {
   public function __construct(ViewStorageInterface $storage) {
     $this->entityType = 'view';
     $this->storage = $storage;
-    $this->executable = $storage->get('executable');
+    $this->executable = Views::executableFactory()->get($this);
   }
 
   /**
@@ -530,7 +524,7 @@ class ViewUI implements ViewStorageInterface {
     $output = '';
 
     $errors = $this->executable->validate();
-    if ($errors === TRUE) {
+    if (empty($errors)) {
       $this->ajax = TRUE;
       $this->executable->live_preview = TRUE;
       $this->views_ui_context = TRUE;
@@ -668,8 +662,10 @@ class ViewUI implements ViewStorageInterface {
       }
     }
     else {
-      foreach ($errors as $error) {
-        drupal_set_message($error, 'error');
+      foreach ($errors as $display_errors) {
+        foreach ($display_errors as $error) {
+          drupal_set_message($error, 'error');
+        }
       }
       $preview = t('Unable to preview due to validation errors.');
     }
@@ -740,6 +736,13 @@ class ViewUI implements ViewStorageInterface {
    */
   public function __call($method, $args) {
     return call_user_func_array(array($this->storage, $method), $args);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function &getDisplay($display_id) {
+    return $this->storage->getDisplay($display_id);
   }
 
   /**

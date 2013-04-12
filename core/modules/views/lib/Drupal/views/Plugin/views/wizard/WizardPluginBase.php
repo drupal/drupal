@@ -1143,10 +1143,11 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   public function validateView(array $form, array &$form_state) {
     $view = $this->instantiate_view($form, $form_state);
     $errors = $view->get('executable')->validate();
-    if (!is_array($errors) || empty($errors)) {
+
+    if (empty($errors)) {
       $this->set_validated_view($form, $form_state, $view);
-      return array();
     }
+
     return $errors;
   }
 

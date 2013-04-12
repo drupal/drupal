@@ -129,9 +129,9 @@ abstract class ViewFormControllerBase extends EntityFormController {
     }
 
     // Mark the display tab as red to show validation errors.
-    $view->get('executable')->validate();
+    $errors = $view->get('executable')->validate();
     foreach ($view->get('display') as $id => $display) {
-      if (!empty($view->display_errors[$id])) {
+      if (!empty($errors[$id])) {
         // Always show the tab.
         $tabs[$id]['#access'] = TRUE;
         // Add a class to mark the error and a title to make a hover tip.

@@ -141,8 +141,10 @@ class ViewAddFormController extends ViewFormControllerBase {
     $form_state['wizard_instance'] = $wizard_instance;
     $errors = $form_state['wizard_instance']->validateView($form, $form_state);
 
-    foreach ($errors as $name => $message) {
-      form_set_error($name, $message);
+    foreach ($errors as $display_errors) {
+      foreach ($display_errors as $name => $message) {
+        form_set_error($name, $message);
+      }
     }
   }
 

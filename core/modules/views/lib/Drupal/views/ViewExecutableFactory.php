@@ -7,7 +7,7 @@
 
 namespace Drupal\views;
 
-use Drupal\views\Plugin\Core\Entity\View;
+use Drupal\views\ViewStorageInterface;
 
 /**
  * Defines the cache backend factory.
@@ -17,13 +17,13 @@ class ViewExecutableFactory {
   /**
    * Instantiates a ViewExecutable class.
    *
-   * @param \Drupal\views\Plugin\Core\Entity\View $view
+   * @param \Drupal\views\ViewStorageInterface $view
    *   A view entity instance.
    *
    * @return \Drupal\views\ViewExecutable
    *   A ViewExecutable instance.
    */
-  public static function get(View $view) {
+  public static function get(ViewStorageInterface $view) {
     return new ViewExecutable($view);
   }
 

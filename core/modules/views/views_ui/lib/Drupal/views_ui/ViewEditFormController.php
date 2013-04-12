@@ -203,9 +203,9 @@ class ViewEditFormController extends ViewFormControllerBase {
     parent::validate($form, $form_state);
 
     $view = $this->getEntity($form_state);
-    $errors = $view->get('executable')->validate();
-    if ($errors !== TRUE) {
-      foreach ($errors as $error) {
+
+    foreach ($view->get('executable')->validate() as $display_errors) {
+      foreach ($display_errors as $error) {
         form_set_error('', $error);
       }
     }

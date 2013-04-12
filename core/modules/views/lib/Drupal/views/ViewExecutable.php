@@ -9,7 +9,7 @@ namespace Drupal\views;
 
 use Drupal;
 use Symfony\Component\HttpFoundation\Response;
-use Drupal\views\Plugin\Core\Entity\View;
+use Drupal\views\ViewStorageInterface;
 
 /**
  * @defgroup views_objects Objects that represent a View or part of a view
@@ -426,10 +426,10 @@ class ViewExecutable {
   /**
    * Constructs a new ViewExecutable object.
    *
-   * @param Drupal\views\Plugin\Core\Entity\View $storage
+   * @param \Drupal\views\ViewStorageInterface $storage
    *   The view config entity the actual information is stored on.
    */
-  public function __construct(View $storage) {
+  public function __construct(ViewStorageInterface $storage) {
     // Reference the storage and the executable to each other.
     $this->storage = $storage;
     $this->storage->set('executable', $this);
@@ -1732,35 +1732,34 @@ class ViewExecutable {
   }
 
   /**
-   * Make sure the view is completely valid.
+   * Makes sure the view is completely valid.
    *
-   * @return
-   *   TRUE if the view is valid; an array of error strings if it is not.
+   * @return array
+   *   An array of error strings. This will be empty if there are no validation
+   *   errors.
    */
   public function validate() {
-    $this->initDisplay();
-
     $errors = array();
-    $this->display_errors = NULL;
 
+    $this->initDisplay();
     $current_display = $this->current_display;
+
     foreach ($this->displayHandlers as $id => $display) {
       if (!empty($display)) {
-        if (!empty($display->deleted)) {
+        if (!empty($display->display['deleted'])) {
           continue;
         }
 
         $result = $this->displayHandlers->get($id)->validate();
         if (!empty($result) && is_array($result)) {
-          $errors = array_merge($errors, $result);
-          // Mark this display as having validation errors.
-          $this->display_errors[$id] = TRUE;
+          $errors[$id] =  $result;
         }
       }
     }
 
     $this->setDisplay($current_display);
-    return $errors ? $errors : TRUE;
+
+    return $errors;
   }
 
   /**
