@@ -33,11 +33,6 @@ use Drupal\Core\Entity\Entity;
  *     "id" = "mlid",
  *     "label" = "link_title",
  *     "uuid" = "uuid"
- *   },
- *   bundles = {
- *     "menu_link" = {
- *       "label" = "Menu link",
- *     }
  *   }
  * )
  */
