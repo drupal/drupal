@@ -144,6 +144,9 @@ services:
   plugin.manager.entity:
     class: Drupal\Core\Entity\EntityManager
     arguments: ['%container.namespaces%']
+  plugin.manager.archiver:
+    class: Drupal\Core\Archiver\ArchiverManager
+    arguments: ['%container.namespaces%']
   request:
     class: Symfony\Component\HttpFoundation\Request
   event_dispatcher:

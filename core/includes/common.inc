@@ -6524,32 +6524,6 @@ function drupal_check_incompatibility($v, $current_version) {
 }
 
 /**
- * Retrieves a list of all available archivers.
- *
- * @see hook_archiver_info()
- * @see hook_archiver_info_alter()
- */
-function archiver_get_info() {
-  $archiver_info = &drupal_static(__FUNCTION__, array());
-
-  if (empty($archiver_info)) {
-    $cache = cache()->get('archiver_info');
-    if ($cache === FALSE) {
-      // Rebuild the cache and save it.
-      $archiver_info = module_invoke_all('archiver_info');
-      drupal_alter('archiver_info', $archiver_info);
-      uasort($archiver_info, 'drupal_sort_weight');
-      cache()->set('archiver_info', $archiver_info);
-    }
-    else {
-      $archiver_info = $cache->data;
-    }
-  }
-
-  return $archiver_info;
-}
-
-/**
  * Returns a string of supported archive extensions.
  *
  * @return
@@ -6558,7 +6532,7 @@ function archiver_get_info() {
  */
 function archiver_get_extensions() {
   $valid_extensions = array();
-  foreach (archiver_get_info() as $archive) {
+  foreach (Drupal::service('plugin.manager.archiver')->getDefinitions() as $archive) {
     foreach ($archive['extensions'] as $extension) {
       foreach (explode('.', $extension) as $part) {
         if (!in_array($part, $valid_extensions)) {
@@ -6588,20 +6562,7 @@ function archiver_get_archiver($file) {
   if (!is_file($filepath)) {
     throw new Exception(t('Archivers can only operate on local files: %file not supported', array('%file' => $file)));
   }
-  $archiver_info = archiver_get_info();
-
-  foreach ($archiver_info as $implementation) {
-    foreach ($implementation['extensions'] as $extension) {
-      // Because extensions may be multi-part, such as .tar.gz,
-      // we cannot use simpler approaches like substr() or pathinfo().
-      // This method isn't quite as clean but gets the job done.
-      // Also note that the file may not yet exist, so we cannot rely
-      // on fileinfo() or other disk-level utilities.
-      if (strrpos($filepath, '.' . $extension) === strlen($filepath) - strlen('.' . $extension)) {
-        return new $implementation['class']($filepath);
-      }
-    }
-  }
+  return Drupal::service('plugin.manager.archiver')->getInstance(array('filepath' => $filepath));
 }
 
 /**

@@ -3890,23 +3890,6 @@ function system_date_format_delete($date_format_id) {
 }
 
 /**
- * Implements hook_archiver_info().
- */
-function system_archiver_info() {
-  $archivers['tar'] = array(
-    'class' => 'Drupal\Component\Archiver\Tar',
-    'extensions' => array('tar', 'tgz', 'tar.gz', 'tar.bz2'),
-  );
-  if (function_exists('zip_open')) {
-    $archivers['zip'] = array(
-      'class' => 'Drupal\Component\Archiver\Zip',
-      'extensions' => array('zip'),
-    );
-  }
-  return $archivers;
-}
-
-/**
  * Returns HTML for a confirmation form.
  *
  * By default this does not alter the appearance of a form at all,
