@@ -66,7 +66,7 @@ Drupal.theme.editModal = function(settings) {
  */
 Drupal.theme.editToolbarContainer = function(settings) {
   var html = '';
-  html += '<div id="' + settings.id + '" class="edit-toolbar-container edit-animate-invisible edit-animate-only-visibility">';
+  html += '<div id="' + settings.id + '" class="edit-toolbar-container">';
   html += '  <div class="edit-toolbar-heightfaker edit-animate-fast">';
   html += '    <div class="edit-toolbar primary" />';
   html += '  </div>';
