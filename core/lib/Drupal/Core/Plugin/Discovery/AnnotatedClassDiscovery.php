@@ -22,9 +22,15 @@ class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
    * @param string $type
    *   The plugin type, for example filter.
    * @param array $root_namespaces
-   *   Array of root paths keyed by the corresponding namespace to look for
-   *   plugin implementations, \Plugin\$owner\$type will be appended to each
-   *   namespace.
+   *   (optional) An array of root paths keyed by the corresponding namespace to
+   *   look for plugin implementations. '\Plugin\$owner\$type' will be appended
+   *   to each namespace. Defaults to an empty array.
+   * @param array $annotation_namespaces
+   *   (optional) The namespaces of classes that can be used as annotations.
+   *   Defaults to an empty array.
+   * @param string $plugin_definition_annotation_name
+   *   (optional) The name of the annotation that contains the plugin definition.
+   *   Defaults to 'Drupal\Component\Annotation\Plugin'.
    *
    * @todo Figure out how to make the following comment FALSE.
    *   Drupal modules can be enabled (and therefore, namespaces registered)
@@ -33,8 +39,8 @@ class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
    *   until the next request. Additionally when a namespace is unregistered,
    *   plugins will not be removed until the next request.
    */
-  function __construct($owner, $type, array $root_namespaces = array()) {
-    $annotation_namespaces = array(
+  function __construct($owner, $type, array $root_namespaces = array(), $annotation_namespaces = array(), $plugin_definition_annotation_name = 'Drupal\Component\Annotation\Plugin') {
+    $annotation_namespaces += array(
       'Drupal\Component\Annotation' => DRUPAL_ROOT . '/core/lib',
       'Drupal\Core\Annotation' => DRUPAL_ROOT . '/core/lib',
     );
@@ -42,7 +48,7 @@ class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
     foreach ($root_namespaces as $namespace => $dir) {
       $plugin_namespaces["$namespace\\Plugin\\{$owner}\\{$type}"] = array($dir);
     }
-    parent::__construct($plugin_namespaces, $annotation_namespaces);
+    parent::__construct($plugin_namespaces, $annotation_namespaces, $plugin_definition_annotation_name);
   }
 
 }
