@@ -58,7 +58,7 @@ Drupal.behaviors.toolbar = {
       if (subtrees) {
         for (var id in subtrees) {
           if (subtrees.hasOwnProperty(id)) {
-            $('#toolbar-link-' + id).after(subtrees.id);
+            $('#toolbar-link-' + id).after(subtrees[id]);
           }
         }
       }
