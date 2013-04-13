@@ -29,8 +29,6 @@ class NodeConditionTest extends DrupalUnitTestBase {
     $this->installSchema('node', 'node_type');
     $this->installSchema('node', 'node');
     $this->installSchema('node', 'node_revision');
-    $this->installSchema('field', 'field_config');
-    $this->installSchema('field', 'field_config_instance');
   }
 
   /**

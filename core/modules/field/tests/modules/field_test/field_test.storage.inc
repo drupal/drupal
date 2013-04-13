@@ -89,7 +89,7 @@ function field_test_field_storage_load($entity_type, $entities, $age, $fields, $
   foreach ($fields as $field_id => $ids) {
     $field = field_info_field_by_id($field_id);
     $field_name = $field['field_name'];
-    $field_data = $data[$field['id']];
+    $field_data = $data[$field['uuid']];
     $sub_table = $load_current ? 'current' : 'revisions';
     $delta_count = array();
     foreach ($field_data[$sub_table] as $row) {
@@ -206,7 +206,7 @@ function field_test_field_storage_delete(EntityInterface $entity, $fields) {
 function field_test_field_storage_purge(EntityInterface $entity, $field, $instance) {
   $data = _field_test_storage_data();
 
-  $field_data = &$data[$field['id']];
+  $field_data = &$data[$field['uuid']];
   foreach (array('current', 'revisions') as $sub_table) {
     foreach ($field_data[$sub_table] as $key => $row) {
       if ($row->type == $entity->entityType() && $row->entity_id == $entity->id()) {
@@ -249,7 +249,7 @@ function field_test_field_storage_query($field_id, $conditions, $count, &$cursor
   $field = field_info_field_by_id($field_id);
   $field_columns = array_keys($field['columns']);
 
-  $field_data = $data[$field['id']];
+  $field_data = $data[$field['uuid']];
   $sub_table = $load_current ? 'current' : 'revisions';
   // We need to sort records by entity type and entity id.
   usort($field_data[$sub_table], '_field_test_field_storage_query_sort_helper');
@@ -267,7 +267,7 @@ function field_test_field_storage_query($field_id, $conditions, $count, &$cursor
       break;
     }
 
-    if ($row->field_id == $field['id']) {
+    if ($row->field_id == $field['uuid']) {
       $match = TRUE;
       $condition_deleted = FALSE;
       // Add conditions.
@@ -372,7 +372,7 @@ function field_test_field_storage_create_field($field) {
 
   $data = _field_test_storage_data();
 
-  $data[$field['id']] = array(
+  $data[$field['uuid']] = array(
     'current' => array(),
     'revisions' => array(),
   );
@@ -386,7 +386,7 @@ function field_test_field_storage_create_field($field) {
 function field_test_field_storage_delete_field($field) {
   $data = _field_test_storage_data();
 
-  $field_data = &$data[$field['id']];
+  $field_data = &$data[$field['uuid']];
   foreach (array('current', 'revisions') as $sub_table) {
     foreach ($field_data[$sub_table] as &$row) {
       $row->deleted = TRUE;
@@ -403,7 +403,7 @@ function field_test_field_storage_delete_instance($instance) {
   $data = _field_test_storage_data();
 
   $field = field_info_field($instance['field_name']);
-  $field_data = &$data[$field['id']];
+  $field_data = &$data[$field['uuid']];
   foreach (array('current', 'revisions') as $sub_table) {
     foreach ($field_data[$sub_table] as &$row) {
       if ($row->bundle == $instance['bundle']) {
@@ -425,8 +425,8 @@ function field_test_entity_bundle_rename($entity_type, $bundle_old, $bundle_new)
   $instances = field_read_instances(array('bundle' => $bundle_new), array('include_deleted' => TRUE, 'include_inactive' => TRUE));
   foreach ($instances as $field_name => $instance) {
     $field = field_info_field_by_id($instance['field_id']);
-    if ($field['storage']['type'] == 'field_test_storage') {
-      $field_data = &$data[$field['id']];
+    if ($field && $field['storage']['type'] == 'field_test_storage') {
+      $field_data = &$data[$field['uuid']];
       foreach (array('current', 'revisions') as $sub_table) {
         foreach ($field_data[$sub_table] as &$row) {
           if ($row->bundle == $bundle_old) {
@@ -448,7 +448,7 @@ function field_test_field_delete_instance($instance) {
 
   $field = field_info_field($instance['field_name']);
   if ($field['storage']['type'] == 'field_test_storage') {
-    $field_data = &$data[$field['id']];
+    $field_data = &$data[$field['uuid']];
     foreach (array('current', 'revisions') as $sub_table) {
       foreach ($field_data[$sub_table] as &$row) {
         if ($row->bundle == $instance['bundle']) {

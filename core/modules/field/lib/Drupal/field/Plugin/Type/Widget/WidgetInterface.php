@@ -8,7 +8,7 @@
 namespace Drupal\field\Plugin\Type\Widget;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\field\FieldInstance;
+use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
  * Interface definition for field widget plugins.

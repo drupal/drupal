@@ -49,144 +49,6 @@ require_once DRUPAL_ROOT . '/core/modules/field/field.form.inc';
  * 'subtitle' and 'photo' fields because they are both attached to the 'node'
  * bundle 'article'.
  *
- * Field definitions are represented as an array of key/value pairs.
- *
- * array $field:
- * - id: (integer, read-only) The primary identifier of the field. It is
- *   assigned automatically by field_create_field().
- * - field_name: (string) The name of the field. Each field name is unique
- *   within Field API. When a field is attached to an entity, the field's data
- *   is stored in $entity->$field_name. Maximum length is 32 characters.
- * - type: (string) The type of the field, such as 'text' or 'image'. Field
- *   types are defined by modules that implement hook_field_info().
- * - entity_types: (array) The array of entity types that can hold instances of
- *   this field. If empty or not specified, the field can have instances in any
- *   entity type.
- * - cardinality: (integer) The number of values the field can hold. Legal
- *   values are any positive integer or FIELD_CARDINALITY_UNLIMITED.
- * - translatable: (integer) Whether the field is translatable.
- * - locked: (integer) Whether or not the field is available for editing. If
- *   TRUE, users can't change field settings or create new instances of the
- *   field in the UI. Defaults to FALSE.
- * - module: (string, read-only) The name of the module that implements the
- *   field type.
- * - active: (integer, read-only) TRUE if the module that implements the field
- *   type is currently enabled, FALSE otherwise.
- * - deleted: (integer, read-only) TRUE if this field has been deleted, FALSE
- *   otherwise. Deleted fields are ignored by the Field Attach API. This
- *   property exists because fields can be marked for deletion but only actually
- *   destroyed by a separate garbage-collection process.
- * - columns: (array, read-only) An array of the Field API columns used to store
- *   each value of this field. The column list may depend on field settings; it
- *   is not constant per field type. Field API column specifications are exactly
- *   like Schema API column specifications but, depending onthe field storage
- *   module in use, the name of the column may not represent an actual column in
- *   an SQL database.
- * - indexes: (array) An array of indexes on data columns, using the same
- *   definition format as Schema API index specifications. Only columns that
- *   appear in the 'columns' setting are allowed. Note that field types can
- *   specify default indexes, which can be modified or added to when creating a
- *   field.
- * - foreign keys: (optional) An associative array of relations, using the same
- *   structure as the 'foreign keys' definition of hook_schema(). Note,
- *   however, that the field data is not necessarily stored in SQL. Also, the
- *   possible usage is limited, as you cannot specify another field as
- *   related, only existing SQL tables, such as filter formats.
- * - settings: (array) A sub-array of key/value pairs of field-type-specific
- *   settings. Each field type module defines and documents its own field
- *   settings.
- * - storage: (array) A sub-array of key/value pairs identifying the storage
- *   backend to use for the for the field.
- *   - type: (string) The storage backend used by the field. Storage backends
- *     are defined by modules that implement hook_field_storage_info().
- *   - module: (string, read-only) The name of the module that implements the
- *     storage backend.
- *   - active: (integer, read-only) TRUE if the module that implements the
- *     storage backend is currently enabled, FALSE otherwise.
- *   - settings: (array) A sub-array of key/value pairs of settings. Each
- *     storage backend defines and documents its own settings.
- *
- * Field instance definitions are represented as an array of key/value pairs.
- *
- * array $instance:
- * - id: (integer, read-only) The primary identifier of this field instance. It
- *   is assigned automatically by field_create_instance().
- * - field_id: (integer, read-only) The foreign key of the field attached to the
- *   bundle by this instance. It is populated automatically by
- *   field_create_instance().
- * - field_name: (string) The name of the field attached to the bundle by this
- *   instance.
- * - entity_type: (string) The name of the entity type the instance is attached
- *   to.
- * - bundle: (string) The name of the bundle that the field is attached to.
- * - label: (string) A human-readable label for the field when used with this
- *   bundle. For example, the label will be the title of Form API elements for
- *   this instance.
- * - description: (string)A human-readable description for the field when used
- *   with this bundle. For example, the description will be the help text of
- *   Form API elements for this instance.
- * - required: (integer) TRUE if a value for this field is required when used
- *   with this bundle, FALSE otherwise. Currently, required-ness is only
- *   enforced during Form API operations, not by field_attach_load(),
- *   field_attach_insert(), or field_attach_update().
- * - default_value_function: (string) The name of the function, if any, that
- *   will provide a default value.
- * - default_value: (array) If default_value_function is not set, then fixed
- *   values can be provided.
- * - deleted: (integer, read-only) TRUE if this instance has been deleted, FALSE
- *   otherwise. Deleted instances are ignored by the Field Attach API. This
- *   property exists because instances can be marked for deletion but only
- *   actually destroyed by a separate garbage-collection process.
- * - settings: (array) A sub-array of key/value pairs of field-type-specific
- *   instance settings. Each field type module defines and documents its own
- *   instance settings.
- * - widget: (array) A sub-array of key/value pairs identifying the Form API
- *   input widget for the field when used by this bundle.
- *   - type: (string) The type of the widget, such as text_textfield. Widget
- *     types are defined by modules that implement hook_field_widget_info().
- *   - settings: (array) A sub-array of key/value pairs of widget-type-specific
- *     settings. Each field widget type module defines and documents its own
- *     widget settings.
- *   - weight: (float) The weight of the widget relative to the other elements
- *     in entity edit forms.
- *   - module: (string, read-only) The name of the module that implements the
- *     widget type.
- * - display: (array) A sub-array of key/value pairs identifying the way field
- *   values should be displayed in each of the entity type's view modes, plus
- *   the 'default' mode. For each view mode, Field UI lets site administrators
- *   define whether they want to use a dedicated set of display options or the
- *   'default' options to reduce the number of displays to maintain as they add
- *   new fields. For nodes, on a fresh install, only the 'teaser' view mode is
- *   configured to use custom display options, all other view modes defined use
- *   the 'default' options by default. When programmatically adding field
- *   instances on nodes, it is therefore recommended to at least specify display
- *   options for 'default' and 'teaser'.
- *   - default: (array) A sub-array of key/value pairs describing the display
- *     options to be used when the field is being displayed in view modes that
- *     are not configured to use dedicated display options.
- *     - label: (string) Position of the label. 'inline', 'above' and 'hidden'
- *       are the values recognized by the default 'field' theme implementation.
- *     - type: (string) The type of the display formatter, or 'hidden' for no
- *       display.
- *     - settings: (array) A sub-array of key/value pairs of display options
- *       specific to the formatter.
- *       - weight: (float) The weight of the field relative to the other entity
- *         components displayed in this view mode.
- *       - module: (string, read-only) The name of the module which implements
- *         the display formatter.
- *   - some_mode: A sub-array of key/value pairs describing the display options
- *     to be used when the field is being displayed in the 'some_mode' view
- *     mode. Those options will only be actually applied at run time if the view
- *     mode is not configured to use default settings for this bundle.
- *     - ...
- *   - other_mode:
- *     - ...
- *
- * The (default) render arrays produced for field instances are documented at
- * field_attach_view().
- *
- * Bundles are represented by two strings, an entity type and a bundle name.
- *
  * - @link field_types Field Types API @endlink: Defines field types, widget
  *   types, and display formatters. Field modules use this API to provide field
  *   types like Text and Node Reference along with the associated form elements
@@ -334,7 +196,8 @@ function field_cron() {
  * required if there are any active fields of that type.
  */
 function field_system_info_alter(&$info, $file, $type) {
-  if ($type == 'module' && module_hook($file->name, 'field_info')) {
+  // It is not safe to call field_read_fields() during maintenance mode.
+  if ($type == 'module' && module_hook($file->name, 'field_info') && !defined('MAINTENANCE_MODE')) {
     $fields = field_read_fields(array('module' => $file->name), array('include_deleted' => TRUE));
     if ($fields) {
       $info['required'] = TRUE;
@@ -530,48 +393,81 @@ function field_modules_disabled($modules) {
 }
 
 /**
- * Refreshes the 'active' and 'storage_active' columns for fields.
+ * Refreshes the 'active' and 'storage[active]' values for fields.
  */
 function field_sync_field_status() {
-  // Refresh the 'active' and 'storage_active' columns according to the current
-  // set of enabled modules.
-  $modules = array_keys(drupal_container()->get('module_handler')->getModuleList());
-  foreach ($modules as $module_name) {
-    field_associate_fields($module_name);
-  }
-  db_update('field_config')
-    ->fields(array('active' => 0))
-    ->condition('module', $modules, 'NOT IN')
-    ->execute();
-  db_update('field_config')
-    ->fields(array('storage_active' => 0))
-    ->condition('storage_module', $modules, 'NOT IN')
-    ->execute();
-}
+  $module_handler = Drupal::moduleHandler();
+  $state = Drupal::state();
 
-/**
- * Allows a module to update the database for fields and columns it controls.
- *
- * @param $module
- *   The name of the module to update on.
- */
-function field_associate_fields($module) {
-  // Associate field types.
-  $field_types = (array) module_invoke($module, 'field_info');
-  if ($field_types) {
-    db_update('field_config')
-      ->fields(array('module' => $module, 'active' => 1))
-      ->condition('type', array_keys($field_types))
-      ->execute();
+  // Get both deleted and non-deleted field definitions.
+  $fields = array();
+  foreach (config_get_storage_names_with_prefix('field.field') as $name) {
+    $field = Drupal::config($name)->get();
+    $fields[$field['uuid']] = $field;
   }
-  // Associate storage backends.
-  $storage_types = (array) module_invoke($module, 'field_storage_info');
-  if ($storage_types) {
-    db_update('field_config')
-      ->fields(array('storage_module' => $module, 'storage_active' => 1))
-      ->condition('storage_type', array_keys($storage_types))
-      ->execute();
+  $deleted_fields = $state->get('field.field.deleted') ?: array();
+  $fields += $deleted_fields;
+
+  if (empty($fields)) {
+    return;
   }
+
+  // Set the 'module' and 'active' values for the current set of enabled
+  // modules.
+  $changed = array();
+  $modules = $module_handler->getModuleList();
+  foreach ($modules as $module => $module_info) {
+    // Collect field types and storage backends exposed by the module.
+    $field_types = (array) $module_handler->invoke($module, 'field_info');
+    $storage_types = (array) $module_handler->invoke($module, 'field_storage_info');
+
+    if ($field_types || $storage_types) {
+      foreach ($fields as $uuid => &$field) {
+        // Associate field types.
+        if (isset($field_types[$field['type']]) && ($field['module'] !== $module || !$field['active'])) {
+          $field['module'] = $module;
+          $field['active'] = TRUE;
+          $changed[$uuid] = $field;
+        }
+        // Associate storage backends.
+        if (isset($storage_types[$field['storage']['type']]) && ($field['storage']['module'] !== $module || !$field['storage']['active'])) {
+          $field['storage']['module'] = $module;
+          $field['storage']['active'] = TRUE;
+          $changed[$uuid] = $field;
+        }
+      }
+    }
+  }
+
+  // Set fields with missing field type or storage modules to inactive.
+  foreach ($fields as $uuid => &$field) {
+    if (!isset($modules[$field['module']]) && $field['active']) {
+      $field['active'] = FALSE;
+      $changed[$uuid] = $field;
+    }
+    if (!isset($modules[$field['storage']['module']]) && $field['storage']['active']) {
+      $field['storage']['active'] = FALSE;
+      $changed[$uuid] = $field;
+    }
+  }
+
+  // Store the updated field definitions.
+  foreach ($changed as $uuid => $field) {
+    if (!empty($field['deleted'])) {
+      $deleted_fields[$uuid] = $field;
+    }
+    else {
+      Drupal::config('field.field.' . $field['id'])
+        ->set('module', $field['module'])
+        ->set('active', $field['active'])
+        ->set('storage.module', $field['storage']['module'])
+        ->set('storage.active', $field['storage']['active'])
+        ->save();
+    }
+  }
+  $state->set('field.field.deleted', $deleted_fields);
+
+  field_cache_clear();
 }
 
 /**
@@ -1011,7 +907,6 @@ function field_get_items(EntityInterface $entity, $field_name, $langcode = NULL)
  *   TRUE if the field has data for any entity; FALSE otherwise.
  */
 function field_has_data($field) {
-  $field = field_info_field_by_id($field['id']);
   $columns = array_keys($field['columns']);
   $factory = Drupal::service('entity.query');
   foreach ($field['bundles'] as $entity_type => $bundle) {

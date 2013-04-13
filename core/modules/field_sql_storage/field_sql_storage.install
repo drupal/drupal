@@ -5,22 +5,31 @@
  * Install, update, and uninstall functions for the Field SQL Storage module.
  */
 
+use Drupal\field\Plugin\Core\Entity\Field;
+
 /**
  * Implements hook_schema().
  */
 function field_sql_storage_schema() {
   $schema = array();
 
-  // Dynamic (data) tables.
-  if (db_table_exists('field_config')) {
-    $fields = field_read_fields(array(), array('include_deleted' => TRUE, 'include_inactive' => TRUE));
-    drupal_load('module', 'field_sql_storage');
-    foreach ($fields as $field) {
-      if ($field['storage']['type'] == 'field_sql_storage') {
-        $schema += _field_sql_storage_schema($field);
-      }
+  // Loading entities within hook_schema() triggers lots of race conditions.
+  // Read definitions for raw storage instead (configuration, and state for
+  // deleted fields).
+  $fields = array();
+  foreach (config_get_storage_names_with_prefix('field.field') as $name) {
+    $fields[] = config($name)->get();
+  }
+  $deleted_fields = Drupal::state()->get('field.field.deleted') ?: array();
+  $fields = array_merge($fields, $deleted_fields);
+
+  foreach ($fields as $field) {
+    if ($field['storage']['type'] == 'field_sql_storage') {
+      $field = new Field($field);
+      $schema += _field_sql_storage_schema($field);
     }
   }
+
   return $schema;
 }
 
@@ -79,31 +88,58 @@ function _update_8000_field_sql_storage_write($entity_type, $bundle, $entity_id,
 }
 
 /**
- * Changes field language into langcode.
+ * Implements hook_update_dependencies().
+ */
+function field_sql_storage_update_dependencies() {
+  // Convert storage tables after field definitions have moved to
+  // ConfigEntities.
+  $dependencies['field_sql_storage'][8000] = array(
+    'field' => 8003,
+  );
+  return $dependencies;
+}
+
+/**
+ * Renames the 'language' column to 'langcode' in field data tables.
  */
 function field_sql_storage_update_8000(&$sandbox) {
-  if (!isset($sandbox['progress'])) {
-    $sandbox['progress'] = 0;
-    $sandbox['last'] = 0;
-    $sandbox['max'] = db_query("SELECT COUNT(id) FROM {field_config} WHERE storage_type = 'field_sql_storage'")->fetchField();
+  // Get field definitions from config, and deleted fields from state().
+  $config_names = config_get_storage_names_with_prefix('field.field');
+  $deleted_fields = Drupal::state()->get('field.field.deleted') ?: array();
+  // Ditch UUID keys, we will iterate through deleted fields using a numeric
+  // index.
+  $deleted_fields = array_values($deleted_fields);
+
+  if (empty($config_names) && empty($deleted_fields)) {
+    return;
   }
 
-  // Retrieve field data.
-  $field = db_query("SELECT id, field_name, deleted FROM {field_config} WHERE id > :id AND storage_type = 'field_sql_storage'", array(':id' => $sandbox['last']))->fetchAssoc();
-  if ($field) {
+  if (!isset($sandbox['index'])) {
+    $sandbox['index'] = 0;
+    $sandbox['max'] = count($config_names) + count($deleted_fields);
+  }
 
-    $sandbox['progress']++;
-    $sandbox['last'] = $field['id'];
+  // Retrieve the next field definition. When the index exceeds the number of
+  // 'configuration' fields, use it to iterate on deleted fields.
+  if (isset($config_names[$sandbox['index']])) {
+    $field_config = config($config_names[$sandbox['index']])->get();
+  }
+  else {
+    $field_config = $deleted_fields[$sandbox['index'] - count($config_names)];
+  }
+
+  if ($field_config['storage']['type'] == 'field_sql_storage') {
+    $field = new Field($field_config);
 
     // Prepare updated schema data structures.
-    $primary_key_data = array (
+    $primary_key_data = array(
       'entity_type',
       'entity_id',
       'deleted',
       'delta',
       'langcode',
     );
-    $primary_key_revision = array (
+    $primary_key_revision = array(
       'entity_type',
       'entity_id',
       'revision_id',
@@ -117,14 +153,14 @@ function field_sql_storage_update_8000(&$sandbox) {
     $field_langcode = array(
       'type' => 'varchar',
       'length' => 32,
-      'not null' => true,
+      'not null' => TRUE,
       'default' => '',
     );
 
-    $data_table = _field_sql_storage_tablename($field);
-    $revision_table = _field_sql_storage_revision_tablename($field);
-    $table_info = array($data_table => $primary_key_data, $revision_table => $primary_key_revision);
-
+    $table_info = array(
+      _field_sql_storage_tablename($field) => $primary_key_data,
+      _field_sql_storage_revision_tablename($field) => $primary_key_revision,
+    );
     foreach ($table_info as $table => $primary_key) {
       // Do not update tables which already have the langcode column,
       // created during the upgrade before this update function.
@@ -138,5 +174,6 @@ function field_sql_storage_update_8000(&$sandbox) {
     }
   }
 
-  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+  $sandbox['index']++;
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['index'] / $sandbox['max']);
 }

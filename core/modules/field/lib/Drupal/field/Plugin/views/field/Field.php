@@ -166,8 +166,8 @@ class Field extends FieldPluginBase {
       // Go through the list and determine the actual column name from field api.
       foreach ($options as $column) {
         $name = $column;
-        if (isset($this->field_info['storage']['details']['sql'][$rkey][$this->table][$column])) {
-          $name = $this->field_info['storage']['details']['sql'][$rkey][$this->table][$column];
+        if (isset($this->field_info['storage_details']['sql'][$rkey][$this->table][$column])) {
+          $name = $this->field_info['storage_details']['sql'][$rkey][$this->table][$column];
         }
 
         $fields[$column] = $name;
@@ -448,7 +448,6 @@ class Field extends FieldPluginBase {
       ),
 
       // Set the other fields to their default values.
-      // @see _field_write_instance().
       'required' => FALSE,
       'label' => $field_name,
       'description' => '',

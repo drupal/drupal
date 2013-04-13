@@ -35,8 +35,7 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
    */
   function setUp() {
     parent::setUp();
-    $this->installSchema('system', array('sequences', 'variable'));
-    $this->installSchema('field', array('field_config', 'field_config_instance'));
+    $this->installSchema('system', array('sequences', 'variable', 'config_snapshot'));
     $this->installSchema('entity_test', 'entity_test');
     $this->installSchema('field_test', array('test_entity', 'test_entity_revision', 'test_entity_bundle'));
 
@@ -60,7 +59,7 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
     $this->$field_name = drupal_strtolower($this->randomName() . '_field_name' . $suffix);
     $this->$field = array('field_name' => $this->$field_name, 'type' => 'test_field', 'cardinality' => 4);
     $this->$field = field_create_field($this->$field);
-    $this->$field_id = $this->{$field}['id'];
+    $this->$field_id = $this->{$field}['uuid'];
     $this->$instance = array(
       'field_name' => $this->$field_name,
       'entity_type' => 'test_entity',

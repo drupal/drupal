@@ -9,7 +9,7 @@ namespace Drupal\edit;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\field\FieldInstance;
+use Drupal\field\Plugin\Core\Entity\FieldInstance;
 use Drupal\edit\Access\EditEntityFieldAccessCheckInterface;
 
 

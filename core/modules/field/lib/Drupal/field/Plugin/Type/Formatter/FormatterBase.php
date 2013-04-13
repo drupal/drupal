@@ -9,7 +9,7 @@ namespace Drupal\field\Plugin\Type\Formatter;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Plugin\PluginSettingsBase;
-use Drupal\field\FieldInstance;
+use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
  * Base class for 'Field formatter' plugin implementations.

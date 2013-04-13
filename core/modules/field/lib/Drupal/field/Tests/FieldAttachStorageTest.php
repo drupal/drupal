@@ -117,7 +117,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
       $field_names[$i] = 'field_' . $i;
       $field = array('field_name' => $field_names[$i], 'type' => 'test_field');
       $field = field_create_field($field);
-      $field_ids[$i] = $field['id'];
+      $field_ids[$i] = $field['uuid'];
       foreach ($field_bundles_map[$i] as $bundle) {
         $instance = array(
           'field_name' => $field_names[$i],
@@ -242,9 +242,9 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     $instance = field_info_instance($instance['entity_type'], $instance['field_name'], $instance['bundle']);
 
     // The storage details are indexed by a storage engine type.
-    $this->assertTrue(array_key_exists('drupal_variables', $field['storage']['details']), 'The storage type is Drupal variables.');
+    $this->assertTrue(array_key_exists('drupal_variables', $field['storage_details']), 'The storage type is Drupal variables.');
 
-    $details = $field['storage']['details']['drupal_variables'];
+    $details = $field['storage_details']['drupal_variables'];
 
     // The field_test storage details are indexed by variable name. The details
     // are altered, so moon and mars are correct for this test.
@@ -253,7 +253,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
 
     // Test current and revision storage details together because the columns
     // are the same.
-    foreach ((array) $field['columns'] as $column_name => $attributes) {
+    foreach ($field['columns'] as $column_name => $attributes) {
       $this->assertEqual($details[FIELD_LOAD_CURRENT]['moon'][$column_name], $column_name, format_string('Column name %value matches the definition in %bin.', array('%value' => $column_name, '%bin' => 'moon[FIELD_LOAD_CURRENT]')));
       $this->assertEqual($details[FIELD_LOAD_REVISION]['mars'][$column_name], $column_name, format_string('Column name %value matches the definition in %bin.', array('%value' => $column_name, '%bin' => 'mars[FIELD_LOAD_REVISION]')));
     }

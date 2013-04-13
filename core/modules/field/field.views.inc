@@ -72,7 +72,7 @@ function field_views_field_label($field_name) {
   foreach ($instances as $entity_name => $entity_type) {
     foreach ($entity_type as $bundle) {
       if (isset($bundle[$field_name])) {
-        $label_counter[$bundle[$field_name]['label']] = isset($label_counter[$bundle[$field_name]['label']]) ? ++$label_counter[$bundle[$field_name]['label']] : 1;
+        $label_counter[$bundle[$field_name]['label']] = isset($label_counter[$bundle[$field_name]['label']]) ? ++$label_counter[$bundle[$field_name]->label] : 1;
         $all_labels[$entity_name][$bundle[$field_name]['label']] = TRUE;
       }
     }
@@ -296,10 +296,10 @@ function field_views_field_default_views_data($field) {
       else {
         $group = t('@group (historical data)', array('@group' => $group_name));
       }
-      $column_real_name = $field['storage']['details']['sql'][$type][$table][$column];
+      $column_real_name = $field['storage_details']['sql'][$type][$table][$column];
 
       // Load all the fields from the table by default.
-      $additional_fields = array_values($field['storage']['details']['sql'][$type][$table]);
+      $additional_fields = array_values($field['storage_details']['sql'][$type][$table]);
 
       $data[$table][$column_real_name] = array(
         'group' => $group,

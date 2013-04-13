@@ -57,7 +57,6 @@ class EntitySerializationTest extends DrupalUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('field', array('field_config', 'field_config_instance'));
     $this->installSchema('entity_test', array('entity_test_mulrev', 'entity_test_mulrev_property_revision', 'entity_test_mulrev_property_data'));
 
     // Auto-create a field for testing.

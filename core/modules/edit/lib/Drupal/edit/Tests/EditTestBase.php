@@ -28,7 +28,6 @@ class EditTestBase extends DrupalUnitTestBase {
     parent::setUp();
 
     $this->installSchema('system', 'variable');
-    $this->installSchema('field', array('field_config', 'field_config_instance'));
     $this->installSchema('entity_test', array('entity_test', 'entity_test_rev'));
 
     // Set default storage backend.
@@ -58,12 +57,12 @@ class EditTestBase extends DrupalUnitTestBase {
    */
   function createFieldWithInstance($field_name, $type, $cardinality, $label, $instance_settings, $widget_type, $widget_settings, $formatter_type, $formatter_settings) {
     $field = $field_name . '_field';
-    $this->$field = array(
+    $this->field = array(
       'field_name' => $field_name,
       'type' => $type,
       'cardinality' => $cardinality,
     );
-    $this->$field_name = field_create_field($this->$field);
+    $this->$field = field_create_field($this->field);
 
     $instance = $field_name . '_instance';
     $this->$instance = array(

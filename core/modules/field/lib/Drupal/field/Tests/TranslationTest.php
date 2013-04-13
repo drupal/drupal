@@ -43,21 +43,21 @@ class TranslationTest extends FieldUnitTestBase {
 
     $this->entity_type = 'test_entity';
 
-    $field = array(
+    $this->field_definition = array(
       'field_name' => $this->field_name,
       'type' => 'test_field',
       'cardinality' => 4,
       'translatable' => TRUE,
     );
-    field_create_field($field);
+    field_create_field($this->field_definition);
     $this->field = field_read_field($this->field_name);
 
-    $instance = array(
+    $this->instance_definition = array(
       'field_name' => $this->field_name,
       'entity_type' => $this->entity_type,
       'bundle' => 'test_bundle',
     );
-    field_create_instance($instance);
+    field_create_instance($this->instance_definition);
     $this->instance = field_read_instance('test_entity', $this->field_name, 'test_bundle');
 
     for ($i = 0; $i < 3; ++$i) {
@@ -75,7 +75,7 @@ class TranslationTest extends FieldUnitTestBase {
   function testFieldAvailableLanguages() {
     // Test 'translatable' fieldable info.
     field_test_entity_info_translatable('test_entity', FALSE);
-    $field = $this->field;
+    $field = clone($this->field);
     $field['field_name'] .= '_untranslatable';
 
     // Enable field translations for the entity.
@@ -249,14 +249,15 @@ class TranslationTest extends FieldUnitTestBase {
 
     // Test default values.
     $field_name_default = drupal_strtolower($this->randomName() . '_field_name');
-    $field = $this->field;
-    $field['field_name'] = $field_name_default;
-    $instance = $this->instance;
-    $instance['field_name'] = $field_name_default;
-    $default = rand(1, 127);
-    $instance['default_value'] = array(array('value' => $default));
-    field_create_field($field);
-    field_create_instance($instance);
+    $field_definition = $this->field_definition;
+    $field_definition['field_name'] = $field_name_default;
+    $field = field_create_field($field_definition);
+
+    $instance_definition = $this->instance_definition;
+    $instance_definition['field_name'] = $field_name_default;
+    $instance_definition['default_value'] = array(array('value' => rand(1, 127)));
+    $instance = field_create_instance($instance_definition);
+
     $translation_langcodes = array_slice($available_langcodes, 0, 2);
     asort($translation_langcodes);
     $translation_langcodes = array_values($translation_langcodes);

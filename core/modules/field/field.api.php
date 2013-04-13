@@ -234,6 +234,9 @@ function hook_field_info_alter(&$info) {
  *     indexes specified by the field-type module. Some storage engines might
  *     not support indexes.
  *   - foreign keys: (optional) An array of Schema API foreign key definitions.
+ *     Note, however, that the field data is not necessarily stored in SQL.
+ *     Also, the possible usage is limited, as you cannot specify another field
+ *     as related, only existing SQL tables, such as {taxonomy_term_data}.
  */
 function hook_field_schema($field) {
   if ($field['type'] == 'text_long') {
@@ -1302,7 +1305,7 @@ function hook_field_storage_details_alter(&$details, $field) {
  *   FIELD_LOAD_REVISION to load the version indicated by each entity.
  * @param $fields
  *   An array listing the fields to be loaded. The keys of the array are field
- *   IDs, and the values of the array are the entity IDs (or revision IDs,
+ *   UUIDs, and the values of the array are the entity IDs (or revision IDs,
  *   depending on the $age parameter) to add each field to.
  * @param $options
  *   An associative array of additional options, with the following keys:
@@ -1370,7 +1373,7 @@ function hook_field_storage_load($entity_type, $entities, $age, $fields, $option
  *   FIELD_STORAGE_INSERT when inserting a new entity.
  * @param $fields
  *   An array listing the fields to be written. The keys and values of the
- *   array are field IDs.
+ *   array are field UUIDs.
  */
 function hook_field_storage_write(\Drupal\Core\Entity\EntityInterface $entity, $op, $fields) {
   $id = $entity->id();
@@ -1464,7 +1467,7 @@ function hook_field_storage_write(\Drupal\Core\Entity\EntityInterface $entity, $
  *   The entity on which to operate.
  * @param $fields
  *   An array listing the fields to delete. The keys and values of the
- *   array are field IDs.
+ *   array are field UUIDs.
  */
 function hook_field_storage_delete(\Drupal\Core\Entity\EntityInterface $entity, $fields) {
   foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
@@ -1488,7 +1491,7 @@ function hook_field_storage_delete(\Drupal\Core\Entity\EntityInterface $entity, 
  *   The entity on which to operate.
  * @param $fields
  *   An array listing the fields to delete. The keys and values of the
- *   array are field IDs.
+ *   array are field UUIDs.
  */
 function hook_field_storage_delete_revision(\Drupal\Core\Entity\EntityInterface $entity, $fields) {
   $vid = $entity->getRevisionId();
@@ -1712,13 +1715,13 @@ function hook_field_storage_delete_instance($instance) {
  *   FIELD_LOAD_CURRENT to load the most recent revision for all fields, or
  *   FIELD_LOAD_REVISION to load the version indicated by each entity.
  * @param $skip_fields
- *   An array keyed by field IDs whose data has already been loaded and
+ *   An array keyed by field UUIDs whose data has already been loaded and
  *   therefore should not be loaded again. Add a key to this array to indicate
  *   that your module has already loaded a field.
  * @param $options
  *   An associative array of additional options, with the following keys:
- *   - field_id: The field ID that should be loaded. If unset, all fields should
- *     be loaded.
+ *   - field_id: The field UUID that should be loaded. If unset, all fields
+ *     should be loaded.
  *   - deleted: If TRUE, deleted fields should be loaded as well as non-deleted
  *     fields. If unset or FALSE, only non-deleted fields should be loaded.
  */
@@ -1735,11 +1738,11 @@ function hook_field_storage_pre_load($entity_type, $entities, $age, &$skip_field
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to save.
  * @param $skip_fields
- *   An array keyed by field IDs whose data has already been written and
+ *   An array keyed by field UUIDs whose data has already been written and
  *   therefore should not be written again. The values associated with these
  *   keys are not specified.
  * @return
- *   Saved field IDs are set set as keys in $skip_fields.
+ *   Saved field UUIDs are set as keys in $skip_fields.
  */
 function hook_field_storage_pre_insert(\Drupal\Core\Entity\EntityInterface $entity, &$skip_fields) {
   if ($entity->entityType() == 'node' && $entity->status && _forum_node_check_node_type($entity)) {
@@ -1770,11 +1773,11 @@ function hook_field_storage_pre_insert(\Drupal\Core\Entity\EntityInterface $enti
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to save.
  * @param $skip_fields
- *   An array keyed by field IDs whose data has already been written and
+ *   An array keyed by field UUIDs whose data has already been written and
  *   therefore should not be written again. The values associated with these
  *   keys are not specified.
  * @return
- *   Saved field IDs are set set as keys in $skip_fields.
+ *   Saved field UUIDs are set as keys in $skip_fields.
  */
 function hook_field_storage_pre_update(\Drupal\Core\Entity\EntityInterface $entity, &$skip_fields) {
   $first_call = &drupal_static(__FUNCTION__, array());

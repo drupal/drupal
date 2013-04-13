@@ -108,10 +108,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
    */
   function testEnableModulesInstallContainer() {
     // Install Node module.
-    // @todo field_sql_storage and field should technically not be necessary
-    //   for an entity query.
     $this->enableModules(array('field_sql_storage', 'field', 'node'));
-    $this->installSchema('field', array('field_config', 'field_config_instance'));
 
     $this->installSchema('node', array('node_type', 'node'));
     // Perform an entity query against node.

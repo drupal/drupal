@@ -7,7 +7,7 @@
 
 namespace Drupal\edit;
 
-use Drupal\field\FieldInstance;
+use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
  * Interface for selecting an in-place editor (an Editor plugin) for a field.

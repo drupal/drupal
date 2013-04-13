@@ -22,11 +22,6 @@ function forum_install() {
  * Implements hook_enable().
  */
 function forum_enable() {
-  // If we enable forum at the same time as taxonomy we need to call
-  // field_associate_fields() as otherwise the field won't be enabled until
-  // hook modules_enabled is called which takes place after hook_enable events.
-  field_associate_fields('taxonomy');
-
   // Create the forum vocabulary if it does not exist.
   // @todo Change Forum module so forum.settings can contain the vocabulary's
   //   machine name.
@@ -54,8 +49,10 @@ function forum_enable() {
     $config->set('vocabulary', $vocabulary->id())->save();
   }
 
-  // Create the 'taxonomy_forums' field if it doesn't already exist.
-  if (!field_info_field('taxonomy_forums')) {
+  // Create the 'taxonomy_forums' field if it doesn't already exist. If forum
+  // is being enabled at the same time as taxonomy after both modules have been
+  // enabled, the field might exist but still be marked inactive.
+  if (!field_read_field('taxonomy_forums', array('include_inactive' => TRUE))) {
     $field = array(
       'field_name' => 'taxonomy_forums',
       'type' => 'taxonomy_term_reference',

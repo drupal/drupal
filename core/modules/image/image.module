@@ -383,12 +383,12 @@ function image_field_update_field($field, $prior_field, $has_data) {
     if ($file_new) {
       $file_new->status = FILE_STATUS_PERMANENT;
       $file_new->save();
-      file_usage()->add($file_new, 'image', 'default_image', $field['id']);
+      file_usage()->add($file_new, 'image', 'default_image', $field['uuid']);
     }
 
     // Is there an old file?
     if ($fid_old && ($file_old = file_load($fid_old))) {
-      file_usage()->delete($file_old, 'image', 'default_image', $field['id']);
+      file_usage()->delete($file_old, 'image', 'default_image', $field['uuid']);
     }
   }
 
@@ -451,11 +451,11 @@ function image_field_update_instance($instance, $prior_instance) {
     if ($file_new) {
       $file_new->status = FILE_STATUS_PERMANENT;
       $file_new->save();
-      file_usage()->add($file_new, 'image', 'default_image', $instance['id']);
+      file_usage()->add($file_new, 'image', 'default_image', $instance['uuid']);
     }
     // Delete the old file, if present.
     if ($fid_old && ($file_old = file_load($fid_old))) {
-      file_usage()->delete($file_old, 'image', 'default_image', $instance['id']);
+      file_usage()->delete($file_old, 'image', 'default_image', $instance['uuid']);
     }
   }
 

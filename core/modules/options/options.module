@@ -252,7 +252,7 @@ function options_field_update_field($field, $prior_field, $has_data) {
 function options_allowed_values($field, $instance = NULL, EntityInterface $entity = NULL) {
   $allowed_values = &drupal_static(__FUNCTION__, array());
 
-  if (!isset($allowed_values[$field['id']])) {
+  if (!isset($allowed_values[$field['uuid']])) {
     $function = $field['settings']['allowed_values_function'];
     // If $cacheable is FALSE, then the allowed values are not statically
     // cached. See options_test_dynamic_values_callback() for an example of
@@ -266,14 +266,14 @@ function options_allowed_values($field, $instance = NULL, EntityInterface $entit
     }
 
     if ($cacheable) {
-      $allowed_values[$field['id']] = $values;
+      $allowed_values[$field['uuid']] = $values;
     }
     else {
       return $values;
     }
   }
 
-  return $allowed_values[$field['id']];
+  return $allowed_values[$field['uuid']];
 }
 
 /**
@@ -388,7 +388,7 @@ function options_field_update_forbid($field, $prior_field, $has_data) {
  */
 function _options_values_in_use($field, $values) {
   if ($values) {
-    $field = field_info_field_by_id($field['id']);
+    $field = field_info_field_by_id($field['uuid']);
     $factory = Drupal::service('entity.query');
     foreach ($field['bundles'] as $entity_type => $bundle) {
       $result = $factory->get($entity_type)
@@ -477,6 +477,9 @@ function options_field_widget_info() {
 function options_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   // Abstract over the actual field columns, to allow different field types to
   // reuse those widgets.
+
+  // Reset internal pointer since we're dealing with objects now.
+  reset($field['columns']);
   $value_key = key($field['columns']);
 
   $type = str_replace('options_', '', $instance['widget']['type']);

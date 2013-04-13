@@ -406,10 +406,10 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $instance = field_info_instance($this->instance['entity_type'], $this->instance['field_name'], $this->instance['bundle']);
 
     // The storage details are indexed by a storage engine type.
-    $this->assertTrue(array_key_exists('sql', $field['storage']['details']), 'The storage type is SQL.');
+    $this->assertTrue(array_key_exists('sql', $field['storage_details']), 'The storage type is SQL.');
 
     // The SQL details are indexed by table name.
-    $details = $field['storage']['details']['sql'];
+    $details = $field['storage_details']['sql'];
     $this->assertTrue(array_key_exists($current, $details[FIELD_LOAD_CURRENT]), 'Table name is available in the instance array.');
     $this->assertTrue(array_key_exists($revision, $details[FIELD_LOAD_REVISION]), 'Revision table name is available in the instance array.');
 

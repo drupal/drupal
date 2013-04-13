@@ -8,7 +8,7 @@
 namespace Drupal\edit;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\field\FieldInstance;
+use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
  * Interface for generating in-place editing metadata for an entity field.

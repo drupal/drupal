@@ -1170,7 +1170,7 @@ function field_attach_insert(EntityInterface $entity) {
   $storages = array();
   foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
-    $field_id = $field['id'];
+    $field_id = $field['uuid'];
     $field_name = $field['field_name'];
     if (!empty($entity->$field_name)) {
       // Collect the storage backend if the field has not been written yet.
@@ -1211,7 +1211,7 @@ function field_attach_update(EntityInterface $entity) {
   $storages = array();
   foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
-    $field_id = $field['id'];
+    $field_id = $field['uuid'];
     $field_name = $field['field_name'];
     // Leave the field untouched if $entity comes with no $field_name property,
     // but empty the field if it comes as a NULL value or an empty array.
@@ -1254,7 +1254,7 @@ function field_attach_delete(EntityInterface $entity) {
   $storages = array();
   foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
-    $field_id = $field['id'];
+    $field_id = $field['uuid'];
     $storages[$field['storage']['type']][$field_id] = $field_id;
   }
 
@@ -1287,7 +1287,7 @@ function field_attach_delete_revision(EntityInterface $entity) {
   $storages = array();
   foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
-    $field_id = $field['id'];
+    $field_id = $field['uuid'];
     $storages[$field['storage']['type']][$field_id] = $field_id;
   }
 
@@ -1531,11 +1531,16 @@ function field_entity_bundle_create($entity_type, $bundle) {
  * Implements hook_entity_bundle_rename().
  */
 function field_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
-  db_update('field_config_instance')
-    ->fields(array('bundle' => $bundle_new))
-    ->condition('entity_type', $entity_type)
-    ->condition('bundle', $bundle_old)
-    ->execute();
+  $instances = field_read_instances();
+  foreach ($instances as $instance) {
+    if ($instance->entity_type == $entity_type && $instance->bundle == $bundle_old) {
+      $id_new = $instance['entity_type'] . '.' . $bundle_new . '.' . $instance['field_name'];
+      $instance->id = $id_new;
+      $instance->bundle = $bundle_new;
+      $instance->allowBundleRename();
+      $instance->save();
+    }
+  }
 
   // Clear the cache.
   field_cache_clear();

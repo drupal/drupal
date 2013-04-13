@@ -8,7 +8,7 @@
 namespace Drupal\edit;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
-use Drupal\field\FieldInstance;
+use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
  * Defines an interface for in-place editors (Create.js PropertyEditor widgets).

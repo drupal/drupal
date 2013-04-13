@@ -37,6 +37,11 @@ function field_sql_storage_field_storage_info() {
 /**
  * Generates a table name for a field data table.
  *
+ * When a field is a deleted, the table is renamed to
+ * {field_deleted_data_FIELD_UUID}. To make sure we don't end up with table
+ * names longer than 64 characters, we hash the uuid and return the first 10
+ * characters so we end up with a short unique ID.
+ *
  * @param $field
  *   The field structure.
  *
@@ -45,7 +50,7 @@ function field_sql_storage_field_storage_info() {
  */
 function _field_sql_storage_tablename($field) {
   if ($field['deleted']) {
-    return "field_deleted_data_{$field['id']}";
+    return "field_deleted_data_" . substr(hash('sha256', $field['uuid']), 0, 10);
   }
   else {
     return "field_data_{$field['field_name']}";
@@ -55,6 +60,11 @@ function _field_sql_storage_tablename($field) {
 /**
  * Generates a table name for a field revision archive table.
  *
+ * When a field is a deleted, the table is renamed to
+ * {field_deleted_revision_FIELD_UUID}. To make sure we don't end up with table
+ * names longer than 64 characters, we hash the uuid and return the first
+ * 10 characters so we end up with a short unique ID.
+ *
  * @param $name
  *   The field structure.
  *
@@ -63,7 +73,7 @@ function _field_sql_storage_tablename($field) {
  */
 function _field_sql_storage_revision_tablename($field) {
   if ($field['deleted']) {
-    return "field_deleted_revision_{$field['id']}";
+    return "field_deleted_revision_" . substr(hash('sha256', $field['uuid']), 0, 10);
   }
   else {
     return "field_revision_{$field['field_name']}";
@@ -178,15 +188,16 @@ function _field_sql_storage_schema($field) {
     ),
   );
 
-  $field += array('columns' => array(), 'indexes' => array(), 'foreign keys' => array());
+  $schema = $field->getSchema();
+
   // Add field columns.
-  foreach ($field['columns'] as $column_name => $attributes) {
+  foreach ($schema['columns'] as $column_name => $attributes) {
     $real_name = _field_sql_storage_columnname($field['field_name'], $column_name);
     $current['fields'][$real_name] = $attributes;
   }
 
   // Add indexes.
-  foreach ($field['indexes'] as $index_name => $columns) {
+  foreach ($schema['indexes'] as $index_name => $columns) {
     $real_name = _field_sql_storage_indexname($field['field_name'], $index_name);
     foreach ($columns as $column_name) {
       // Indexes can be specified as either a column name or an array with
@@ -204,7 +215,7 @@ function _field_sql_storage_schema($field) {
   }
 
   // Add foreign keys.
-  foreach ($field['foreign keys'] as $specifier => $specification) {
+  foreach ($schema['foreign keys'] as $specifier => $specification) {
     $real_name = _field_sql_storage_indexname($field['field_name'], $specifier);
     $current['foreign keys'][$real_name]['table'] = $specification['table'];
     foreach ($specification['columns'] as $column => $referenced) {
@@ -234,7 +245,18 @@ function field_sql_storage_field_storage_create_field($field) {
   foreach ($schema as $name => $table) {
     db_create_table($name, $table);
   }
-  drupal_get_schema(NULL, TRUE);
+  // Do not rebuild the schema right now, since the field definition has not
+  // been saved yet. This will be done in hook_field_create_field().
+}
+
+/**
+ * Implements hook_field_create_field().
+ */
+function field_sql_storage_field_create_field($field) {
+  // Rebuild the schema now that the field has been saved.
+  if ($field['storage']['type'] == 'field_sql_storage') {
+    drupal_get_schema(NULL, TRUE);
+  }
 }
 
 /**
@@ -294,8 +316,12 @@ function field_sql_storage_field_storage_update_field($field, $prior_field, $has
     // priors that exist unchanged.
     $table = _field_sql_storage_tablename($prior_field);
     $revision_table = _field_sql_storage_revision_tablename($prior_field);
-    foreach ($prior_field['indexes'] as $name => $columns) {
-      if (!isset($field['indexes'][$name]) || $columns != $field['indexes'][$name]) {
+
+    $schema = $field->getSchema();
+    $prior_schema = $prior_field->getSchema();
+
+    foreach ($prior_schema['indexes'] as $name => $columns) {
+      if (!isset($schema['indexes'][$name]) || $columns != $schema['indexes'][$name]) {
         $real_name = _field_sql_storage_indexname($field['field_name'], $name);
         db_drop_index($table, $real_name);
         db_drop_index($revision_table, $real_name);
@@ -303,8 +329,8 @@ function field_sql_storage_field_storage_update_field($field, $prior_field, $has
     }
     $table = _field_sql_storage_tablename($field);
     $revision_table = _field_sql_storage_revision_tablename($field);
-    foreach ($field['indexes'] as $name => $columns) {
-      if (!isset($prior_field['indexes'][$name]) || $columns != $prior_field['indexes'][$name]) {
+    foreach ($schema['indexes'] as $name => $columns) {
+      if (!isset($prior_schema['indexes'][$name]) || $columns != $prior_schema['indexes'][$name]) {
         $real_name = _field_sql_storage_indexname($field['field_name'], $name);
         $real_columns = array();
         foreach ($columns as $column_name) {

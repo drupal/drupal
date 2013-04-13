@@ -315,10 +315,6 @@ function user_install_picture_field() {
       'uri_scheme' => 'public',
       'default_image' => FALSE,
     ),
-    'storage' => array(
-      'type' => 'field_sql_storage',
-      'settings' => array(),
-    ),
   );
   $field = field_create_field($field);
 

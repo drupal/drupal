@@ -6,20 +6,21 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\field\FieldInstance;
+use Drupal\field\Plugin\Core\Entity\Field;
+use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
  * Returns a form element to configure field synchronization.
  *
- * @param array $field
+ * @param \Drupal\field\Plugin\Core\Entity\Field $field
  *   A field definition array.
- * @param \Drupal\Field\FieldInstance $instance
+ * @param \Drupal\field\Plugin\Core\Entity\FieldInstance $instance
  *   A field instance definition object.
  *
  * @return array
  *   A form element to configure field synchronization.
  */
-function translation_entity_field_sync_widget(array $field, FieldInstance $instance) {
+function translation_entity_field_sync_widget(Field $field, FieldInstance $instance) {
   $element = array();
 
   if (!empty($field['settings']['column_groups']) && count($field['settings']['column_groups']) > 1) {
