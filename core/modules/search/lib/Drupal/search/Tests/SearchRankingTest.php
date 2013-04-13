@@ -80,13 +80,13 @@ class SearchRankingTest extends SearchTestBase {
 
     // Then View one of the nodes a bunch of times.
     // Manually calling statistics.php, simulating ajax behavior.
+    $client = \Drupal::httpClient();
+    $client->setConfig(array('curl.options' => array(CURLOPT_TIMEOUT => 10)));
     $nid = $nodes['views'][1]->nid;
-    $post = http_build_query(array('nid' => $nid));
-    $headers = array('Content-Type' => 'application/x-www-form-urlencoded');
     global $base_url;
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
     for ($i = 0; $i < 5; $i ++) {
-      drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
+      $client->post($stats_path, array(), array('nid' => $nid))->send();
     }
 
     // Test each of the possible rankings.
