@@ -83,9 +83,9 @@ class RestExport extends PathPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::getStyleType().
+   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::getType().
    */
-  protected function getStyleType() {
+  protected function getType() {
     return 'data';
   }
 

@@ -21,7 +21,7 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("Unformatted list"),
  *   help = @Translation("Displays rows one after another."),
  *   theme = "views_view_unformatted",
- *   type = "normal"
+ *   display_types = {"normal"}
  * )
  */
 class DefaultStyle extends StylePluginBase {

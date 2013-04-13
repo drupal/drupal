@@ -21,7 +21,7 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
  *   help = @Translation("Display the content with standard node view."),
  *   theme = "views_view_row_rss",
  *   base = {"node"},
- *   type = "feed",
+ *   display_types = {"feed"},
  *   module = "node"
  * )
  */

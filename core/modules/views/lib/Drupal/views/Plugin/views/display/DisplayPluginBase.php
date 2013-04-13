@@ -1472,7 +1472,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $access = $this->getOption('access');
         $form['access']['type'] =  array(
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('access', NULL, array($this->view->storage->get('base_table'))),
+          '#options' => views_fetch_plugin_names('access', $this->getType(), array($this->view->storage->get('base_table'))),
           '#default_value' => $access['type'],
         );
 
@@ -1507,7 +1507,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $cache = $this->getOption('cache');
         $form['cache']['type'] =  array(
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('cache', NULL, array($this->view->storage->get('base_table'))),
+          '#options' => views_fetch_plugin_names('cache', $this->getType(), array($this->view->storage->get('base_table'))),
           '#default_value' => $cache['type'],
         );
 
@@ -1598,7 +1598,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $style_plugin = $this->getPlugin('style');
         $form['style'] =  array(
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('style', $this->getStyleType(), array($this->view->storage->get('base_table'))),
+          '#options' => views_fetch_plugin_names('style', $this->getType(), array($this->view->storage->get('base_table'))),
           '#default_value' => $style_plugin->definition['id'],
           '#description' => t('If the style you choose has settings, be sure to click the settings button that will appear next to it in the View summary.'),
         );
@@ -1640,7 +1640,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $row_plugin_instance = $this->getPlugin('row');
         $form['row'] =  array(
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('row', $this->getStyleType(), array($this->view->storage->get('base_table'))),
+          '#options' => views_fetch_plugin_names('row', $this->getType(), array($this->view->storage->get('base_table'))),
           '#default_value' => $row_plugin_instance->definition['id'],
         );
 
@@ -1955,7 +1955,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $exposed_form = $this->getOption('exposed_form');
         $form['exposed_form']['type'] =  array(
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('exposed_form', NULL, array($this->view->storage->get('base_table'))),
+          '#options' => views_fetch_plugin_names('exposed_form', $this->getType(), array($this->view->storage->get('base_table'))),
           '#default_value' => $exposed_form['type'],
         );
 
@@ -2553,10 +2553,21 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Displays can require a certain type of style plugin. By default, they will
-   * be 'normal'.
+   * Returns the display type that this display requires.
+   *
+   * This can be used for filtering views plugins. E.g. if a plugin category of
+   * 'foo' is specified, only plugins with no 'types' declared or 'types'
+   * containing 'foo'. If you have a type of bar, this plugin will not be used.
+   * This is applicable for style, row, access, cache, and exposed_form plugins.
+   *
+   * @return string
+   *   The required display type. Defaults to 'normal'.
+   *
+   * @see views_fetch_plugin_names()
    */
-  protected function getStyleType() { return 'normal'; }
+  protected function getType() {
+    return 'normal';
+  }
 
   /**
    * Make sure the display and all associated handlers are valid.

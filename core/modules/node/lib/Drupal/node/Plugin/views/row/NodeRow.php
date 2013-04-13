@@ -26,7 +26,7 @@ use Drupal\system\Plugin\views\row\EntityRow;
  *   help = @Translation("Display the content with standard node view."),
  *   base = {"node"},
  *   entity_type = "node",
- *   type = "normal"
+ *   display_types = {"normal"}
  * )
  */
 class NodeRow extends EntityRow {

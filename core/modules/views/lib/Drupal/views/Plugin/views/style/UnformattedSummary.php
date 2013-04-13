@@ -20,7 +20,7 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("Unformatted"),
  *   help = @Translation("Displays the summary unformatted, with option for one after another or inline."),
  *   theme = "views_view_summary_unformatted",
- *   type = "summary"
+ *   display_types = {"summary"}
  * )
  */
 class UnformattedSummary extends DefaultSummary {

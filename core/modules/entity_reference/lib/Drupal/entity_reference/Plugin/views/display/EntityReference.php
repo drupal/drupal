@@ -82,9 +82,9 @@ class EntityReference extends DisplayPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::getStyleType().
+   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::getType().
    */
-  protected function getStyleType() {
+  protected function getType() {
     return 'entity_reference';
   }
 

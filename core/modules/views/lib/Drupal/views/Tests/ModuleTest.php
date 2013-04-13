@@ -145,6 +145,30 @@ class ModuleTest extends ViewUnitTestBase {
   }
 
   /**
+   * Tests the views_fetch_plugin_names() function.
+   */
+  public function testViewsFetchPluginNames() {
+    // All style plugins should be returned, as we have not specified a type.
+    $plugins = views_fetch_plugin_names('style');
+    $definitions = Views::pluginManager('style')->getDefinitions();
+    $expected = array();
+    foreach ($definitions as $id =>$definition) {
+      $expected[$id] = $definition['title'];
+    }
+    asort($expected);
+    $this->assertIdentical(array_keys($plugins), array_keys($expected));
+
+    // Test using the 'test' style plugin type only returns the test_style and
+    // mapping_test plugins.
+    $plugins = views_fetch_plugin_names('style', 'test');
+    $this->assertIdentical(array_keys($plugins), array('mapping_test', 'test_style'));
+
+    // Test a non existent style plugin type returns no plugins.
+    $plugins = views_fetch_plugin_names('style', $this->randomString());
+    $this->assertIdentical($plugins, array());
+  }
+
+  /**
    * Helper to return an expected views option array.
    *
    * @param array $views

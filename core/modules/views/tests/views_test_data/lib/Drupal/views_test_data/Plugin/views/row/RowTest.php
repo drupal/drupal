@@ -21,7 +21,7 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
  *   title = @Translation("Test row plugin"),
  *   help = @Translation("Provides a generic row test plugin."),
  *   theme = "views_view_row_test",
- *   type = "normal"
+ *   display_types = {"normal", "test"}
  * )
  */
 class RowTest extends RowPluginBase {

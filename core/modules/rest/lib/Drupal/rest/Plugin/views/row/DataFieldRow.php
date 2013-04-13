@@ -23,7 +23,7 @@ use Drupal\Core\Annotation\Translation;
  *   module = "rest",
  *   title = @Translation("Fields"),
  *   help = @Translation("Use fields as row data."),
- *   type = "data"
+ *   display_types = {"data"}
  * )
  */
 class DataFieldRow extends RowPluginBase {

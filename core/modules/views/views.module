@@ -955,13 +955,8 @@ function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
   $plugins = array();
 
   foreach ($definitions as $id => $plugin) {
-    // Skip plugins that don't conform to our key.
-    if ($key && (empty($plugin['type']) || $plugin['type'] != $key)) {
-      continue;
-    }
-    // @todo While Views is providing on behalf of core modules, check to see
-    //   if they are enabled or not.
-    if (isset($plugin['module']) && !\Drupal::moduleHandler()->moduleExists($plugin['module'])) {
+    // Skip plugins that don't conform to our key, if they have one.
+    if ($key && isset($plugin['display_types']) && !in_array($key, $plugin['display_types'])) {
       continue;
     }
 
@@ -975,8 +970,7 @@ function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
     return $plugins;
   }
 
-  // fall-through
-  return array();
+  return $plugins;
 }
 
 /**

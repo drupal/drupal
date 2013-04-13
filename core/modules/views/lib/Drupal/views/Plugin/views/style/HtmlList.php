@@ -20,7 +20,7 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("HTML List"),
  *   help = @Translation("Displays rows as HTML list."),
  *   theme = "views_view_list",
- *   type = "normal"
+ *   display_types = {"normal"}
  * )
  */
 class HtmlList extends StylePluginBase {

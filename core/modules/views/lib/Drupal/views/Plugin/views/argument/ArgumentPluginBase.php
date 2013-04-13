@@ -567,7 +567,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     $summary_plugins = array();
     $format_options = array();
     foreach ($style_plugins as $key => $plugin) {
-      if (isset($plugin['type']) && $plugin['type'] == 'summary') {
+      if (isset($plugin['display_types']) && in_array('summary', $plugin['display_types'])) {
         $summary_plugins[$key] = $plugin;
         $format_options[$key] = $plugin['title'];
       }

@@ -21,7 +21,7 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("Table"),
  *   help = @Translation("Displays rows in a table."),
  *   theme = "views_view_table",
- *   type = "normal"
+ *   display_types = {"normal"}
  * )
  */
 class Table extends StylePluginBase {
