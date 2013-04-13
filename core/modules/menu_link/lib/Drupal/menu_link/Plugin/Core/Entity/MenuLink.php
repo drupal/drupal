@@ -9,7 +9,7 @@ namespace Drupal\menu_link\Plugin\Core\Entity;
 
 use Symfony\Component\Routing\Route;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Entity;
@@ -17,7 +17,7 @@ use Drupal\Core\Entity\Entity;
 /**
  * Defines the menu link entity class.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "menu_link",
  *   label = @Translation("Menu link"),
  *   module = "menu_link",

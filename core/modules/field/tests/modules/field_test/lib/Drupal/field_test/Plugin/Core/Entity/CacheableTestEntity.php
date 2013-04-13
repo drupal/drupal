@@ -7,13 +7,13 @@
 
 namespace Drupal\field_test\Plugin\Core\Entity;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Test entity class.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "test_cacheable_entity",
  *   label = @Translation("Test Entity, cacheable"),
  *   module = "field_test",

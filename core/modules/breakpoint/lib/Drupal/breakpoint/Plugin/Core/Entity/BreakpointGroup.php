@@ -10,13 +10,13 @@ namespace Drupal\breakpoint\Plugin\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\breakpoint\InvalidBreakpointSourceException;
 use Drupal\breakpoint\InvalidBreakpointSourceTypeException;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the BreakpointGroup entity.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "breakpoint_group",
  *   label = @Translation("Breakpoint group"),
  *   module = "breakpoint",

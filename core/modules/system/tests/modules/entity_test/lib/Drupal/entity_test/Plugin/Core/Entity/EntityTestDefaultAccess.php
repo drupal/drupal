@@ -7,13 +7,13 @@
 
 namespace Drupal\entity_test\Plugin\Core\Entity;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines a test entity class with no access controller.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "entity_test_default_access",
  *   label = @Translation("Test entity with default access"),
  *   module = "entity_test",

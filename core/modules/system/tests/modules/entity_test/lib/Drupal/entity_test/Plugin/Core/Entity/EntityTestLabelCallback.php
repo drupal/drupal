@@ -7,13 +7,13 @@
 
 namespace Drupal\entity_test\Plugin\Core\Entity;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Test entity class.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "entity_test_label_callback",
  *   label = @Translation("Entity test label callback"),
  *   module = "entity_test",

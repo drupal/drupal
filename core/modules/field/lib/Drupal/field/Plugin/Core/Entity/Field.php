@@ -7,7 +7,7 @@
 
 namespace Drupal\field\Plugin\Core\Entity;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\field\FieldException;
@@ -18,7 +18,7 @@ use Drupal\field\FieldException;
  * @todo use 'field' as the id once hook_field_load() and friends
  * are removed.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "field_entity",
  *   label = @Translation("Field"),
  *   module = "field",

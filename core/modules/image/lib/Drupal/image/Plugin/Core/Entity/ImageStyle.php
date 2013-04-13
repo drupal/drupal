@@ -8,13 +8,13 @@
 namespace Drupal\image\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines an image style configuration entity.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "image_style",
  *   label = @Translation("Image style"),
  *   module = "image",

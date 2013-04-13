@@ -8,13 +8,13 @@
 namespace Drupal\filter\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Represents a text format.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "filter_format",
  *   label = @Translation("Text format"),
  *   module = "filter",

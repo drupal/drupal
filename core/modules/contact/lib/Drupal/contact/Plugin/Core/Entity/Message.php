@@ -7,14 +7,14 @@
 
 namespace Drupal\contact\Plugin\Core\Entity;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\Entity;
 
 /**
  * Defines the contact message entity.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "contact_message",
  *   label = @Translation("Contact message"),
  *   module = "contact",

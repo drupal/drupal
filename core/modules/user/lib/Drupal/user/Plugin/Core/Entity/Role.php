@@ -7,14 +7,14 @@
 
 namespace Drupal\user\Plugin\Core\Entity;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 
 /**
  * Defines the user role entity class.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "user_role",
  *   label = @Translation("Role"),
  *   module = "user",

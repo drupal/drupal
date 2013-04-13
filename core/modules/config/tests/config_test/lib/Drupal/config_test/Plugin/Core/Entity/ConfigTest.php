@@ -8,13 +8,13 @@
 namespace Drupal\config_test\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the ConfigTest configuration entity.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "config_test",
  *   label = @Translation("Test configuration"),
  *   module = "config_test",

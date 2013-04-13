@@ -8,14 +8,14 @@
 namespace Drupal\tour\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\tour\TipsBag;
 
 /**
  * Defines the configured tour entity.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "tour",
  *   label = @Translation("Tour"),
  *   module = "tour",

@@ -8,14 +8,14 @@
 namespace Drupal\block\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Component\Plugin\Exception\PluginException;
 
 /**
  * Defines a Block configuration entity class.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "block",
  *   label = @Translation("Block"),
  *   module = "block",

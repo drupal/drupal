@@ -9,13 +9,13 @@ namespace Drupal\aggregator\Plugin\Core\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityNG;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the aggregator item entity class.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "aggregator_item",
  *   label = @Translation("Aggregator feed item"),
  *   module = "aggregator",

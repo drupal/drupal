@@ -9,13 +9,13 @@ namespace Drupal\file\Plugin\Core\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Entity;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the file entity class.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "file",
  *   label = @Translation("File"),
  *   module = "file",
