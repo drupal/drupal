@@ -4,12 +4,6 @@
  * Implements hook_menu().
  */
 function system_test_menu() {
-  $items['system-test/sleep/%'] = array(
-    'page callback' => 'system_test_sleep',
-    'page arguments' => array(2),
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
   $items['system-test/auth'] = array(
     'page callback' => 'system_test_basic_auth_page',
     'access callback' => TRUE,
@@ -21,41 +15,11 @@ function system_test_menu() {
     'access arguments' => array('administer software updates'),
     'type' => MENU_CALLBACK,
   );
-  $items['system-test/redirect/%'] = array(
-    'title' => 'Redirect',
-    'page callback' => 'system_test_redirect',
-    'page arguments' => array(2),
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
-  $items['system-test/multiple-redirects/%'] = array(
-    'title' => 'Redirect',
-    'page callback' => 'system_test_multiple_redirects',
-    'page arguments' => array(2),
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
   $items['system-test/set-header'] = array(
     'page callback' => 'system_test_set_header',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
-  $items['system-test/redirect-noscheme'] = array(
-    'page callback' => 'system_test_redirect_noscheme',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
-  $items['system-test/redirect-noparse'] = array(
-    'page callback' => 'system_test_redirect_noparse',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
-  $items['system-test/redirect-invalid-scheme'] = array(
-    'page callback' => 'system_test_redirect_invalid_scheme',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
-
   $items['system-test/variable-get'] = array(
     'title' => 'Variable Get',
     'page callback' => 'variable_get',
@@ -109,68 +73,15 @@ function system_test_menu() {
   return $items;
 }
 
-function system_test_sleep($seconds) {
-  sleep($seconds);
-}
-
 function system_test_basic_auth_page() {
   $output = t('$_SERVER[\'PHP_AUTH_USER\'] is @username.', array('@username' => $_SERVER['PHP_AUTH_USER']));
   $output .= t('$_SERVER[\'PHP_AUTH_PW\'] is @password.', array('@password' => $_SERVER['PHP_AUTH_PW']));
   return $output;
 }
 
-function system_test_redirect($code) {
-  $code = (int) $code;
-  if ($code != 200) {
-    // Header names are case-insensitive.
-    header("locaTION: " . url('system-test/redirect/200', array('absolute' => TRUE)), TRUE, $code);
-    exit;
-  }
-  return '';
-}
-
-/**
- * Menu callback; sends a redirect header to itself until $count argument is 0.
- *
- * Emulates the variable number of redirects (given by initial $count argument)
- * to the final destination URL by continuous sending of 301 HTTP redirect
- * headers to itself together with decrementing the $count parameter until the
- * $count parameter reaches 0. After that it returns an empty string to render
- * the final destination page.
- *
- * @param $count
- *   The count of redirects left until the final destination page.
- *
- * @returns
- *   The location redirect if the $count > 0, otherwise an empty string.
- */
-function system_test_multiple_redirects($count) {
-  $count = (int) $count;
-  if ($count > 0) {
-    header("location: " . url('system-test/multiple-redirects/' . --$count, array('absolute' => TRUE)), TRUE, 301);
-    exit;
-  }
-  return '';
-}
-
 function system_test_set_header() {
   drupal_add_http_header($_GET['name'], $_GET['value']);
   return t('The following header was set: %name: %value', array('%name' => $_GET['name'], '%value' => $_GET['value']));
-}
-
-function system_test_redirect_noscheme() {
-  header("Location: localhost/path", TRUE, 301);
-  exit;
-}
-
-function system_test_redirect_noparse() {
-  header("Location: http:///path", TRUE, 301);
-  exit;
-}
-
-function system_test_redirect_invalid_scheme() {
-  header("Location: ftp://localhost/path", TRUE, 301);
-  exit;
 }
 
 /**
