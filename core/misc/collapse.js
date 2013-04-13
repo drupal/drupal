@@ -101,7 +101,8 @@ $.extend(CollapsibleDetails.prototype, {
       .after(' ');
 
     // .wrapInner() does not retain bound events.
-    var $link = $('<a class="details-title" href="#"></a>')
+    var $link = $('<a class="details-title"></a>')
+      .attr('href', '#' + this.$node.attr('id'))
       .prepend($legend.contents())
       .appendTo($legend)
       .click($.proxy(this.onLegendClick, this));

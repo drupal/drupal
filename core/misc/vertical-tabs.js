@@ -86,6 +86,8 @@ Drupal.verticalTab = function (settings) {
   var self = this;
   $.extend(this, settings, Drupal.theme('verticalTab', settings));
 
+  this.link.attr('href', '#' + settings.fieldset.attr('id'));
+
   this.link.click(function (e) {
     e.preventDefault();
     self.focus();
