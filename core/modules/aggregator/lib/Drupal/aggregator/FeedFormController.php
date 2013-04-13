@@ -139,15 +139,7 @@ class FeedFormController extends EntityFormControllerNG {
    */
   public function delete(array $form, array &$form_state) {
     $feed = $this->getEntity($form_state);
-    $feed->delete();
-    watchdog('aggregator', 'Feed %feed deleted.', array('%feed' => $feed->label()));
-    drupal_set_message(t('The feed %feed has been deleted.', array('%feed' => $feed->label())));
-    if (arg(0) == 'admin') {
-      $form_state['redirect'] = 'admin/config/services/aggregator';
-    }
-    else {
-      $form_state['redirect'] = 'aggregator/sources';
-    }
+    $form_state['redirect'] = 'admin/config/services/aggregator/delete/feed/' . $feed->id();
   }
 
 }

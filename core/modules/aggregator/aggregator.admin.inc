@@ -46,6 +46,10 @@ function aggregator_view() {
       'title' => t('Edit'),
       'href' => "admin/config/services/aggregator/edit/feed/$feed->fid",
     );
+    $links['delete'] = array(
+      'title' => t('Delete'),
+      'href' => "admin/config/services/aggregator/delete/feed/$feed->fid",
+    );
     $links['remove'] = array(
       'title' => t('Remove items'),
       'href' => "admin/config/services/aggregator/remove/$feed->fid",

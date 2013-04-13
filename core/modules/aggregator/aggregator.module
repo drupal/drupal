@@ -240,6 +240,10 @@ function aggregator_menu() {
     'access arguments' => array('administer news feeds'),
     'file' => 'aggregator.admin.inc',
   );
+  $items['admin/config/services/aggregator/delete/feed/%aggregator_feed'] = array(
+    'title' => 'Delete feed',
+    'route_name' => 'aggregator_feed_delete',
+  );
   $items['admin/config/services/aggregator/edit/category/%aggregator_category'] = array(
     'title' => 'Edit category',
     'page callback' => 'drupal_get_form',

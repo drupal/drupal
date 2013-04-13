@@ -4,9 +4,17 @@ aggregator_admin_settings:
     _form: '\Drupal\aggregator\Form\SettingsForm'
   requirements:
     _permission: 'administer news feeds'
+
 aggregator_feed_items_delete:
   pattern: '/admin/config/services/aggregator/remove/{aggregator_feed}'
   defaults:
     _form: '\Drupal\aggregator\Form\FeedItemsDelete'
+  requirements:
+    _permission: 'administer news feeds'
+
+aggregator_feed_delete:
+  pattern: '/admin/config/services/aggregator/delete/feed/{aggregator_feed}'
+  defaults:
+    _form: '\Drupal\aggregator\Form\FeedDelete'
   requirements:
     _permission: 'administer news feeds'
