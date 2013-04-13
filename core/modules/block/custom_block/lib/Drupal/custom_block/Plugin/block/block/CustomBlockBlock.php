@@ -73,9 +73,9 @@ class CustomBlockBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::build().
+   * Implements \Drupal\block\BlockBase::blockBuild().
    */
-  public function build() {
+  protected function blockBuild() {
     // @todo Clean up when http://drupal.org/node/1874498 lands.
     list(, $uuid) = explode(':', $this->getPluginId());
     if ($block = entity_load_by_uuid('custom_block', $uuid)) {

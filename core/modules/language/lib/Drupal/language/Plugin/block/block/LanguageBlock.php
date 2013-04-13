@@ -31,9 +31,9 @@ class LanguageBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::build().
+   * Implements \Drupal\block\BlockBase::blockBuild().
    */
-  public function build() {
+  protected function blockBuild() {
     $build = array();
     $path = drupal_is_front_page() ? '<front>' : current_path();
     list($plugin_id, $type) = explode(':', $this->getPluginId());

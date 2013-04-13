@@ -496,4 +496,21 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
    */
   public function blockSubmit($form, &$form_state) {}
 
+  /**
+   * Implements \Drupal\block\BlockInterface::build().
+   */
+  public function build() {
+    // @todo Move block rendering code common to all blocks from
+    //   BlockRenderController to here: http://drupal.org/node/1927608.
+    return $this->blockBuild();
+  }
+
+  /**
+   * Adds block-type-specific render handling for the block plugin.
+   *
+   * @return array
+   *   A renderable array representing the content of this block.
+   */
+  abstract protected function blockBuild();
+
 }

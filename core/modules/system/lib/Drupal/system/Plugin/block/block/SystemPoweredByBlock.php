@@ -23,9 +23,9 @@ use Drupal\Core\Annotation\Translation;
 class SystemPoweredByBlock extends BlockBase {
 
   /**
-   * Implements \Drupal\block\BlockBase::build().
+   * Implements \Drupal\block\BlockBase::blockBuild().
    */
-  public function build() {
+  protected function blockBuild() {
     return array(
       '#children' => theme('system_powered_by'),
     );

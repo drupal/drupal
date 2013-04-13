@@ -22,9 +22,9 @@ use Drupal\Core\Annotation\Translation;
 class ActiveTopicsBlock extends ForumBlockBase {
 
   /**
-   * Implements \Drupal\block\BlockBase::build().
+   * Implements \Drupal\block\BlockBase::blockBuild().
    */
-  public function build() {
+  protected function blockBuild() {
     $query = db_select('forum_index', 'f')
       ->fields('f')
       ->addTag('node_access')
