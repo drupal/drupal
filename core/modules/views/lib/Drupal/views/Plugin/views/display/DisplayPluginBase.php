@@ -1389,7 +1389,8 @@ abstract class DisplayPluginBase extends PluginBase {
         $form['#title'] .= t('CSS class');
         $form['css_class'] = array(
           '#type' => 'textfield',
-          '#description' => t('The CSS class names will be added to the view. This enables you to use specific CSS code for each view. You may define multiples classes separated by spaces.'),
+          '#title' => t('CSS class name(s)'),
+          '#description' => t('Multiples classes should be separated by spaces.'),
           '#default_value' => $this->getOption('css_class'),
         );
         break;
