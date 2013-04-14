@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\options\Tests\OptionsFieldUITest.
+ * Contains \Drupal\options\Tests\OptionsFieldUITest.
  */
 
 namespace Drupal\options\Tests;
@@ -21,6 +21,13 @@ class OptionsFieldUITest extends FieldTestBase {
    */
   public static $modules = array('options', 'field_test', 'taxonomy', 'field_ui');
 
+  /**
+   * The name of the created content type.
+   *
+   * @var string
+   */
+  protected $type_name;
+
   public static function getInfo() {
     return array(
       'name' => 'Options field UI',
@@ -33,11 +40,12 @@ class OptionsFieldUITest extends FieldTestBase {
     parent::setUp();
 
     // Create test user.
-    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer node fields', 'administer taxonomy'));
+    $admin_user = $this->drupalCreateUser(array('access content', 'administer taxonomy', 'access administration pages', 'administer site configuration', 'administer content types', 'administer nodes', 'bypass node access', 'administer node fields', 'administer node display'));
     $this->drupalLogin($admin_user);
 
     // Create content type, with underscores.
     $type_name = 'test_' . strtolower($this->randomName());
+    $this->type_name = $type_name;
     $type = $this->drupalCreateContentType(array('name' => $type_name, 'type' => $type_name));
     $this->type = $type->type;
   }
@@ -286,4 +294,51 @@ class OptionsFieldUITest extends FieldTestBase {
       $this->assertIdentical($field['settings']['allowed_values'], $result, $message);
     }
   }
+
+  /**
+   * Tests normal and key formatter display on node display.
+   */
+  function testNodeDisplay() {
+    $this->field_name = strtolower($this->randomName());
+    $this->createOptionsField('list_boolean');
+    $node = $this->drupalCreateNode(array('type' => $this->type));
+
+    $on = $this->randomName();
+    $off = $this->randomName();
+    $allowed_values = array(1 => $on, 0 => $off);
+    $edit = array(
+      'on' => $on,
+      'off' => $off,
+    );
+
+    $this->drupalPost($this->admin_path, $edit, t('Save field settings'));
+    $this->assertText(format_string('Updated field !field_name field settings.', array('!field_name' => $this->field_name)), "The 'On' and 'Off' form fields work for boolean fields.");
+
+    // Select a default value.
+    $edit = array(
+      $this->field_name . '[und]' => '1',
+    );
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save and keep published'));
+
+    // Check the node page and see if the values are correct.
+    $file_formatters = array('options_list_default', 'options_list_key');
+    foreach ($file_formatters as $formatter) {
+      $edit = array(
+        "fields[$this->field_name][type]" => $formatter,
+      );
+      $this->drupalPost('admin/structure/types/manage/' . $this->type_name . '/display', $edit, t('Save'));
+      $this->drupalGet('node/' . $node->nid);
+
+      if ($formatter == 'options_list_default') {
+        $output = $on;
+      }
+      else {
+        $output = '1';
+      }
+
+      $elements = $this->xpath('//div[text()="' . $output . '"]');
+      $this->assertEqual(count($elements), 1, 'Correct options found.');
+    }
+  }
+
 }
