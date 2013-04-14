@@ -1407,8 +1407,8 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'hide_attachment_summary':
         $form['#title'] .= t('Hide attachments when displaying a contextual filter summary');
         $form['hide_attachment_summary'] = array(
-          '#type' => 'radios',
-          '#options' => array(1 => t('Yes'), 0 => t('No')),
+          '#type' => 'checkbox',
+          '#title' => t('Hide attachments in summary'),
           '#default_value' => $this->getOption('hide_attachment_summary') ? 1 : 0,
         );
         break;
