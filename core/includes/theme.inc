@@ -3214,9 +3214,6 @@ function drupal_common_theme() {
       'variables' => array('content' => NULL, 'show_messages' => TRUE),
       'template' => 'maintenance-page',
     ),
-    'update_page' => array(
-      'variables' => array('content' => NULL, 'show_messages' => TRUE),
-    ),
     'install_page' => array(
       'variables' => array('content' => NULL),
     ),

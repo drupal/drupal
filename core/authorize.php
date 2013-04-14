@@ -154,5 +154,6 @@ else {
 }
 
 if (!empty($output)) {
-  print theme('update_page', array('content' => $output, 'show_messages' => $show_messages));
+  drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
+  print theme('maintenance_page', array('content' => $output, 'show_messages' => $show_messages));
 }
