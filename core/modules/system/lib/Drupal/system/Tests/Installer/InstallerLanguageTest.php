@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Common\InstallerLanguageTest.
+ * Definition of Drupal\system\Tests\Installer\InstallerLanguageTest.
  */
 
-namespace Drupal\system\Tests\Common;
+namespace Drupal\system\Tests\Installer;
 
 use Drupal\simpletest\WebTestBase;
 
