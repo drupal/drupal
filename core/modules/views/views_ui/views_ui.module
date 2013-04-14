@@ -114,10 +114,6 @@ function views_ui_theme() {
       'template' => 'views-ui-display-tab-bucket',
       'file' => 'views_ui.theme.inc',
     ),
-    'views_ui_rearrange_form' => array(
-      'render element' => 'form',
-      'file' => 'views_ui.theme.inc',
-    ),
     'views_ui_rearrange_filter_form' => array(
       'render element' => 'form',
       'file' => 'views_ui.theme.inc',
