@@ -71,7 +71,7 @@ abstract class RowPluginBase extends PluginBase {
       $relationship_options = array();
 
       foreach ($relationships as $relationship) {
-        $relationship_handler = views_get_handler($relationship['table'], $relationship['field'], 'relationship');
+        $relationship_handler = views_get_handler($relationship, 'relationship');
 
         // If this relationship is valid for this type, add it to the list.
         $data = Views::viewsData()->get($relationship['table']);

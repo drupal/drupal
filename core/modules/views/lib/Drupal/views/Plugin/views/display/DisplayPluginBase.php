@@ -876,8 +876,7 @@ abstract class DisplayPluginBase extends PluginBase {
           $handler_type = $type;
         }
 
-        $handler = views_get_handler($info['table'], $info['field'], $handler_type, $override);
-        if ($handler) {
+        if ($handler = views_get_handler($info, $handler_type, $override)) {
           // Special override for area types so they know where they come from.
           if ($handler instanceof AreaPluginBase) {
             $handler->areaType = $type;

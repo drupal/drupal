@@ -72,11 +72,15 @@ class HandlerAllTest extends HandlerTestBase {
       foreach ($info as $field => $field_info) {
         // Table is a reserved key for the metainformation.
         if ($field != 'table' && !in_array("$base_table:$field", $exclude)) {
+          $item = array(
+            'table' => $base_table,
+            'field' => $field,
+          );
           foreach ($object_types as $type) {
             if (isset($field_info[$type]['id'])) {
               $options = array();
               if ($type == 'filter') {
-                $handler = views_get_handler($base_table, $field, $type);
+                $handler = views_get_handler($item, $type);
                 if ($handler instanceof InOperator) {
                   $options['value'] = array(1);
                 }

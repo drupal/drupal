@@ -880,21 +880,26 @@ function views_library_info() {
 /**
  * Fetch a handler from the data cache.
  *
- * @param $table
- *   The name of the table this handler is from.
- * @param $field
- *   The name of the field this handler is from.
- * @param $type
+ * @param array $item
+ *   An associative array representing the handler to be retrieved:
+ *   - table: The name of the table containing the handler.
+ *   - field: The name of the field the handler represents.
+ *   - optional: (optional) Whether or not this handler is optional. If a
+ *     handler is missing and not optional, a debug message will be displayed.
+ *     Defaults to FALSE.
+ * @param string $type
  *   The type of handler. i.e, sort, field, argument, filter, relationship
- * @param $override
- *   Override the actual handler object with this class. Used for
- *   aggregation when the handler is redirected to the aggregation
- *   handler.
+ * @param string|null $override
+ *   (optional) Override the actual handler object with this plugin ID. Used for
+ *   aggregation when the handler is redirected to the aggregation handler.
  *
  * @return views_handler
  *   An instance of a handler object. May be views_handler_broken.
  */
-function views_get_handler($table, $field, $type, $override = NULL) {
+function views_get_handler($item, $type, $override = NULL) {
+  $table = $item['table'];
+  $field = $item['field'];
+  $optional = isset($item['optional']) ? $item['optional'] : FALSE;
   // Get the plugin manager for this type.
   $manager = Views::pluginManager($type);;
   $data = Views::viewsData()->get($table);
@@ -931,8 +936,11 @@ function views_get_handler($table, $field, $type, $override = NULL) {
     }
   }
 
+  if (!$optional) {
+    debug(t("Missing handler: @table @field @type", array('@table' => $table, '@field' => $field, '@type' => $type)));
+  }
+
   // Finally, use the 'broken' handler.
-  debug(t("Missing handler: @table @field @type", array('@table' => $table, '@field' => $field, '@type' => $type)));
   return $manager->createInstance('broken');
 }
 

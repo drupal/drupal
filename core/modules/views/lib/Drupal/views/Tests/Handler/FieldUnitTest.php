@@ -525,15 +525,21 @@ class FieldUnitTest extends ViewUnitTestBase {
    */
   public function testClickSortable() {
     // Test that click_sortable is TRUE by default.
-    $plugin = views_get_handler('views_test_data', 'name', 'field');
+    $item = array(
+      'table' => 'views_test_data',
+      'field' => 'name',
+    );
+    $plugin = views_get_handler($item, 'field');
     $this->assertTrue($plugin->click_sortable(), 'TRUE as a default value is correct.');
 
     // Test that click_sortable is TRUE by when set TRUE in the data.
-    $plugin = views_get_handler('views_test_data', 'id', 'field');
+    $item['field'] = 'id';
+    $plugin = views_get_handler($item, 'field');
     $this->assertTrue($plugin->click_sortable(), 'TRUE as a views data value is correct.');
 
     // Test that click_sortable is FALSE by when set FALSE in the data.
-    $plugin = views_get_handler('views_test_data', 'job', 'field');
+    $item['field'] = 'job';
+    $plugin = views_get_handler($item, 'field');
     $this->assertFalse($plugin->click_sortable(), 'FALSE as a views data value is correct.');
   }
 

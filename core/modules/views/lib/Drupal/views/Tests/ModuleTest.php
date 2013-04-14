@@ -10,6 +10,7 @@ namespace Drupal\views\Tests;
 /**
  * Tests basic functions from the Views module.
  */
+use Drupal\views\Plugin\views\filter\Standard;
 use Drupal\views\Views;
 
 class ModuleTest extends ViewUnitTestBase {
@@ -21,6 +22,15 @@ class ModuleTest extends ViewUnitTestBase {
    */
   public static $testViews = array('test_view_status');
 
+  /**
+   * Stores the last triggered error, for example via debug().
+   *
+   * @var string
+   *
+   * @see \Drupal\views\Tests\ModuleTest::errorHandler()
+   */
+  protected $lastErrorMessage;
+
   public static function getInfo() {
     return array(
       'name' => 'Views Module tests',
@@ -31,11 +41,17 @@ class ModuleTest extends ViewUnitTestBase {
 
   /**
    * Tests the views_get_handler method.
+   *
+   * @see views_get_handler()
    */
-  function testviews_get_handler() {
+  public function testViewsGetHandler() {
     $types = array('field', 'area', 'filter');
     foreach ($types as $type) {
-      $handler = views_get_handler($this->randomName(), $this->randomName(), $type);
+      $item = array(
+        'table' => $this->randomName(),
+        'field' => $this->randomName(),
+      );
+      $handler = views_get_handler($item, $type);
       $this->assertEqual('Drupal\views\Plugin\views\\' . $type . '\Broken', get_class($handler), t('Make sure that a broken handler of type: @type are created', array('@type' => $type)));
     }
 
@@ -44,9 +60,13 @@ class ModuleTest extends ViewUnitTestBase {
     foreach ($test_tables as $table => $fields) {
       foreach ($fields as $field) {
         $data = $views_data[$table][$field];
+        $item = array(
+          'table' => $table,
+          'field' => $field,
+        );
         foreach ($data as $id => $field_data) {
           if (!in_array($id, array('title', 'help'))) {
-            $handler = views_get_handler($table, $field, $id);
+            $handler = views_get_handler($item, $id);
             $this->assertInstanceHandler($handler, $table, $field, $id);
           }
         }
@@ -54,8 +74,73 @@ class ModuleTest extends ViewUnitTestBase {
     }
 
     // Test the override handler feature.
-    $handler = views_get_handler('views_test_data', 'job', 'filter', 'standard');
-    $this->assertEqual('Drupal\\views\\Plugin\\views\\filter\\Standard', get_class($handler));
+    $item = array(
+      'table' => 'views_test_data',
+      'field' => 'job',
+    );
+    $handler = views_get_handler($item, 'filter', 'standard');
+    $this->assertTrue($handler instanceof Standard);
+
+    // Test non-existent tables/fields.
+    set_error_handler(array($this, 'customErrorHandler'));
+    $item = array(
+      'table' => 'views_test_data',
+      'field' => 'field_invalid',
+    );
+    views_get_handler($item, 'field');
+    $this->assertTrue(strpos($this->lastErrorMessage, format_string("Missing handler: @table @field @type", array('@table' => 'views_test_data', '@field' => 'field_invalid', '@type' => 'field'))) !== FALSE, 'An invalid field name throws a debug message.');
+    unset($this->lastErrorMessage);
+
+    $item = array(
+      'table' => 'table_invalid',
+      'field' => 'id',
+    );
+    views_get_handler($item, 'filter');
+    $this->assertEqual(strpos($this->lastErrorMessage, format_string("Missing handler: @table @field @type", array('@table' => 'table_invalid', '@field' => 'id', '@type' => 'filter'))) !== FALSE, 'An invalid table name throws a debug message.');
+    unset($this->lastErrorMessage);
+
+    $item = array(
+      'table' => 'table_invalid',
+      'field' => 'id',
+      'optional' => FALSE,
+    );
+    views_get_handler($item, 'filter');
+    $this->assertEqual(strpos($this->lastErrorMessage, format_string("Missing handler: @table @field @type", array('@table' => 'table_invalid', '@field' => 'id', '@type' => 'filter'))) !== FALSE, 'An invalid table name throws a debug message.');
+    unset($this->lastErrorMessage);
+
+    $item = array(
+      'table' => 'table_invalid',
+      'field' => 'id',
+      'optional' => TRUE,
+    );
+
+    views_get_handler($item, 'filter');
+    $this->assertFalse($this->lastErrorMessage, "An optional handler does not throw a debug message.");
+    unset($this->lastErrorMessage);
+
+    restore_error_handler();
+  }
+
+  /**
+   * Defines an error handler which is used in the test.
+   *
+   * @param int $error_level
+   *   The level of the error raised.
+   * @param string $message
+   *   The error message.
+   * @param string $filename
+   *   The filename that the error was raised in.
+   * @param int $line
+   *   The line number the error was raised at.
+   * @param array $context
+   *   An array that points to the active symbol table at the point the error
+   *   occurred.
+   *
+   * Because this is registered in set_error_handler(), it has to be public.
+   * @see set_error_handler()
+   */
+  public function customErrorHandler($error_level, $message, $filename, $line, $context) {
+    $this->lastErrorMessage = $message;
   }
 
   /**

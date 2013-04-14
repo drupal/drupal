@@ -99,7 +99,7 @@ class ConfigItemGroup extends ViewsFormBase {
     $type = $form_state['type'];
     $id = $form_state['id'];
 
-    $handler = views_get_handler($item['table'], $item['field'], $type);
+    $handler = views_get_handler($item, $type);
     $executable = $form_state['view']->get('executable');
     $handler->init($executable, $executable->display_handler, $item);
 

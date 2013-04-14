@@ -96,7 +96,7 @@ class ConfigItem extends ViewsFormBase {
           if ($type == 'relationship' && $id == $relationship['id']) {
             break;
           }
-          $relationship_handler = views_get_handler($relationship['table'], $relationship['field'], 'relationship');
+          $relationship_handler = views_get_handler($relationship, 'relationship');
           // ignore invalid/broken relationships.
           if (empty($relationship_handler)) {
             continue;
@@ -225,7 +225,7 @@ class ConfigItem extends ViewsFormBase {
 
     // Create a new handler and unpack the options from the form onto it. We
     // can use that for storage.
-    $handler = views_get_handler($item['table'], $item['field'], $handler_type, $override);
+    $handler = views_get_handler($item, $handler_type, $override);
     $handler->init($executable, $executable->display_handler, $item);
 
     // Add the incoming options to existing options because items using

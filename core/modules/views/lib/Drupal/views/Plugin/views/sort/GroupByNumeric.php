@@ -25,7 +25,7 @@ class GroupByNumeric extends SortPluginBase {
     parent::init($view, $display, $options);
 
     // Initialize the original handler.
-    $this->handler = views_get_handler($options['table'], $options['field'], 'sort');
+    $this->handler = views_get_handler($options, 'sort');
     $this->handler->init($view, $display, $options);
   }
 
