@@ -1349,7 +1349,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $form['#title'] .= t('The machine name of this display');
         $form['display_id'] = array(
           '#type' => 'textfield',
-          '#description' => t('This is machine name of the display.'),
+          '#title' => t('Machine name of the display'),
           '#default_value' => !empty($this->display['new_id']) ? $this->display['new_id'] : $this->display['id'],
           '#required' => TRUE,
           '#size' => 64,
