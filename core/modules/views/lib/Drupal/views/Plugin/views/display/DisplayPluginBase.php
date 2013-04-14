@@ -1069,8 +1069,8 @@ abstract class DisplayPluginBase extends PluginBase {
     $display_comment = check_plain(drupal_substr($this->getOption('display_comment'), 0, 10));
     $options['display_comment'] = array(
       'category' => 'other',
-      'title' => t('Comment'),
-      'value' => !empty($display_comment) ? $display_comment : t('No comment'),
+      'title' => t('Administrative comment'),
+      'value' => !empty($display_comment) ? $display_comment : t('None'),
       'desc' => t('Comment or document this display.'),
     );
 
@@ -1371,10 +1371,11 @@ abstract class DisplayPluginBase extends PluginBase {
         );
         break;
       case 'display_comment':
-        $form['#title'] .= t("This display's comments");
+        $form['#title'] .= t('Administrative comment');
         $form['display_comment'] = array(
           '#type' => 'textarea',
-          '#description' => t('This value will be seen and used only within the Views UI and can be used to document this display. You can use this to provide notes for other or future maintainers of your site about how or why this display is configured.'),
+          '#title' => t('Administrative comment'),
+          '#description' => t('This description will only be seen within the administrative interface and can be used to document this display.'),
           '#default_value' => $this->getOption('display_comment'),
         );
         break;
