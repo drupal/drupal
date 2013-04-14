@@ -56,7 +56,7 @@ Drupal 7.22, 2013-04-03
   downloaded via the Update Manager (UI change).
 - Added an optional "exclusive" flag to installation profile .info files which
   allows Drupal distributions to force a profile to be selected during
-  installation (API addition).
+  installation (API addition: http://drupal.org/node/1961012).
 - Fixed a bug which caused the database API to not properly close database
   connections.
 - Added a link to the URL for running cron from outside the site to the Cron
