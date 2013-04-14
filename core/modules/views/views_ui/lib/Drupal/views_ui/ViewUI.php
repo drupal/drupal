@@ -984,10 +984,10 @@ class ViewUI implements ViewStorageInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::getOriginalEntity().
+   * Implements \Drupal\Core\Entity\EntityInterface::getNGEntity().
    */
-  public function getOriginalEntity() {
-    return $this->storage->getOriginalEntity();
+  public function getNGEntity() {
+    return $this->storage->getNGEntity();
   }
 
   /**

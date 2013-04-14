@@ -206,7 +206,7 @@ interface EntityInterface extends ContextAwareInterface, ComplexDataInterface, A
    * @return \Drupal\Core\Entity\EntityInterface
    *   The backward compatible entity.
    *
-   * @see \Drupal\Core\Entity\EntityInterface::getOriginalEntity()
+   * @see \Drupal\Core\Entity\EntityInterface::getNGEntity()
    */
   public function getBCEntity();
 
@@ -218,7 +218,7 @@ interface EntityInterface extends ContextAwareInterface, ComplexDataInterface, A
    *
    * @see \Drupal\Core\Entity\EntityInterface::getBCEntity()
    */
-  public function getOriginalEntity();
+  public function getNGEntity();
 
   /**
    * Returns the translation support status.

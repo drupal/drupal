@@ -1428,7 +1428,7 @@ function field_attach_view(EntityInterface $entity, EntityDisplay $display, $lan
   $null = NULL;
   $output = field_invoke_method('view', $target_function, $entity, $null, $null, $options);
   // Remove the BC layer now.
-  $entity = $entity->getOriginalEntity();
+  $entity = $entity->getNGEntity();
 
   // Let other modules alter the renderable array.
   $view_mode = $display->originalViewMode;
