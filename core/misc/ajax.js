@@ -242,10 +242,12 @@ Drupal.ajax.prototype.keypressResponse = function (element, event) {
   var ajax = this;
 
   // Detect enter key and space bar and allow the standard response for them,
-  // except for form elements of type 'text' and 'textarea', where the
-  // spacebar activation causes inappropriate activation if #ajax['keypress'] is
-  // TRUE. On a text-type widget a space should always be a space.
-  if (event.which === 13 || (event.which === 32 && element.type !== 'text' && element.type !== 'textarea')) {
+  // except for form elements of type 'text', 'tel', 'number' and 'textarea',
+  // where the spacebar activation causes inappropriate activation if
+  // #ajax['keypress'] is TRUE. On a text-type widget a space should always be a
+  // space.
+  if (event.which === 13 || (event.which === 32 && element.type !== 'text' &&
+      element.type !== 'textarea' && element.type !== 'tel' && element.type !== 'number')) {
     event.preventDefault();
     event.stopPropagation();
     $(ajax.element_settings.element).trigger(ajax.element_settings.event);

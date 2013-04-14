@@ -460,6 +460,19 @@ function ajax_forms_test_validation_form($form, &$form_state) {
     '#suffix' => '<div id="message_area"></div>',
   );
 
+  $form['drivernumber'] = array(
+    '#title' => t('AJAX-enabled number field.'),
+    '#description' => t("When this one AJAX-triggers and the spare required field is empty, you should not get an error."),
+    '#type' => 'number',
+    '#default_value' => !empty($form_state['values']['drivernumber']) ? $form_state['values']['drivernumber'] : "",
+    '#ajax' => array(
+      'callback' => 'ajax_forms_test_validation_number_form_callback',
+      'wrapper' => 'message_area_number',
+      'method' => 'replace',
+    ),
+    '#suffix' => '<div id="message_area_number"></div>',
+  );
+
   $form['spare_required_field'] = array(
     '#title' => t("Spare Required Field"),
     '#type' => 'textfield',
@@ -490,6 +503,15 @@ function ajax_forms_test_validation_form_callback($form, $form_state) {
   drupal_set_message("ajax_forms_test_validation_form_callback invoked");
   drupal_set_message(t("Callback: drivertext=%drivertext, spare_required_field=%spare_required_field", array('%drivertext' => $form_state['values']['drivertext'], '%spare_required_field' => $form_state['values']['spare_required_field'])));
   return '<div id="message_area">ajax_forms_test_validation_form_callback at ' . date('c') . '</div>';
+}
+
+/**
+ * Ajax form callback: Selects the 'drivernumber' element of the validation form.
+ */
+function ajax_forms_test_validation_number_form_callback($form, $form_state) {
+  drupal_set_message("ajax_forms_test_validation_number_form_callback invoked");
+  drupal_set_message(t("Callback: drivernumber=%drivernumber, spare_required_field=%spare_required_field", array('%drivernumber' => $form_state['values']['drivernumber'], '%spare_required_field' => $form_state['values']['spare_required_field'])));
+  return '<div id="message_area_number">ajax_forms_test_validation_number_form_callback at ' . date('c') . '</div>';
 }
 
 /**

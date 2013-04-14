@@ -566,6 +566,8 @@ function ajax_pre_render_element($element) {
 
       case 'password':
       case 'textfield':
+      case 'number':
+      case 'tel':
       case 'textarea':
         $element['#ajax']['event'] = 'blur';
         break;
