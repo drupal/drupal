@@ -107,10 +107,6 @@ class ViewEditFormController extends ViewFormControllerBase {
       }
     }
 
-    $form['help_text'] = array(
-      '#type' => 'container',
-      '#children' => t('Modify the display(s) of your view below or add new displays.'),
-    );
     $form['displays'] = array(
       '#prefix' => '<h1 class="unit-title clearfix">' . t('Displays') . '</h1>',
       '#type' => 'container',
