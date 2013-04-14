@@ -26,7 +26,7 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
   /**
    * The field instance definition.
    *
-   * @var Drupal\field\FieldInstance
+   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
    */
   protected $instance;
 
@@ -58,7 +58,7 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
    *   The plugin_id for the formatter.
    * @param array $plugin_definition
    *   The plugin implementation definition.
-   * @param Drupal\field\FieldInstance $instance
+   * @param \Drupal\field\Plugin\Core\Entity\FieldInstance $instance
    *   The field instance to which the formatter is associated.
    * @param array $settings
    *   The formatter settings.

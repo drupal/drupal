@@ -36,7 +36,7 @@ class DateTimeDefaultWidget extends WidgetBase {
    *   The plugin_id for the widget.
    * @param array $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\field\FieldInstance $instance
+   * @param \Drupal\field\Plugin\Core\Entity\FieldInstance $instance
    *   The field instance to which the widget is associated.
    * @param array $settings
    *   The widget settings.

@@ -27,7 +27,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * The field instance definition.
    *
-   * @var Drupal\field\FieldInstance
+   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
    */
   protected $instance;
 

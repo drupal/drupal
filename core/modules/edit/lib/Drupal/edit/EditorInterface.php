@@ -21,7 +21,7 @@ interface EditorInterface extends PluginInspectionInterface {
   /**
    * Checks whether this editor is compatible with a given field instance.
    *
-   * @param \Drupal\field\FieldInstance $instance
+   * @param \Drupal\field\Plugin\Core\Entity\FieldInstance $instance
    *   The field instance of the field being edited.
    * @param array $items
    *   The field's item values.
@@ -37,7 +37,7 @@ interface EditorInterface extends PluginInspectionInterface {
    * Will only be called by \Drupal\edit\MetadataGeneratorInterface::generate()
    * when the passed in field instance & item values will use this editor.
    *
-   * @param \Drupal\field\FieldInstance $instance
+   * @param \Drupal\field\Plugin\Core\Entity\FieldInstance $instance
    *   The field instance of the field being edited.
    * @param array $items
    *   The field's item values.

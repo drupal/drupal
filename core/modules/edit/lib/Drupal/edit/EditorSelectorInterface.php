@@ -19,7 +19,7 @@ interface EditorSelectorInterface {
    *
    * @param string $formatter_type
    *   The field's formatter type name.
-   * @param \Drupal\field\FieldInstance $instance
+   * @param \Drupal\field\Plugin\Core\Entity\FieldInstance $instance
    *   The field's instance info.
    * @param array $items
    *   The field's item values.
