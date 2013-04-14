@@ -1358,15 +1358,13 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'display_title':
         $form['#title'] .= t('The name and the description of this display');
         $form['display_title'] = array(
-          '#title' => t('Name'),
+          '#title' => t('Administrative name'),
           '#type' => 'textfield',
-          '#description' => t('This name will appear only in the administrative interface for the View.'),
           '#default_value' => $this->display['display_title'],
         );
         $form['display_description'] = array(
-          '#title' => t('Description'),
+          '#title' => t('Administrative description'),
           '#type' => 'textfield',
-          '#description' => t('This description will appear only in the administrative interface for the View.'),
           '#default_value' => $this->getOption('display_description'),
         );
         break;
