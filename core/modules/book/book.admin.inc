@@ -8,41 +8,6 @@
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Page callback: Returns an administrative overview of all books.
- *
- * @return string
- *   A HTML-formatted string with the administrative page content.
- *
- * @see book_menu()
- */
-function book_admin_overview() {
-  $rows = array();
-
-  $headers = array(t('Book'), t('Operations'));
-
-  // Add any recognized books to the table list.
-  foreach (book_get_books() as $book) {
-    $row = array(
-      l($book['title'], $book['href'], $book['options']),
-    );
-    $links = array();
-    $links['edit'] = array(
-      'title' => t('Edit order and titles'),
-      'href' => 'admin/content/book/' . $book['nid'],
-    );
-    $row[] = array(
-      'data' => array(
-        '#type' => 'operations',
-        '#links' => $links,
-      ),
-    );
-    $rows[] = $row;
-  }
-
-  return theme('table', array('header' => $headers, 'rows' => $rows, 'empty' => t('No books available.')));
-}
-
-/**
  * Form constructor for administering a single book's hierarchy.
  *
  * @param \Drupal\Core\Entity\EntityInterface $node
