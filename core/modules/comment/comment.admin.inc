@@ -262,17 +262,14 @@ function comment_multiple_delete_confirm_submit($form, &$form_state) {
 /**
  * Page callback: Shows a confirmation page for comment deletions.
  *
- * @param $cid
- *   The ID of the comment that is about to be deleted.
+ * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
+ *   The comment entity that is about to be deleted.
  *
  * @see comment_menu()
  * @see comment_confirm_delete()
  */
-function comment_confirm_delete_page($cid) {
-  if ($comment = comment_load($cid)) {
-    return drupal_get_form('comment_confirm_delete', $comment);
-  }
-  throw new NotFoundHttpException();
+function comment_confirm_delete_page(Comment $comment) {
+  return drupal_get_form('comment_confirm_delete', $comment);
 }
 
 /**

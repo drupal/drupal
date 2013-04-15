@@ -240,13 +240,14 @@ function comment_menu() {
     'access arguments' => array('administer comments'),
     'type' => MENU_LOCAL_TASK,
   );
-  $items['comment/%'] = array(
+  $items['comment/%comment'] = array(
     'title' => 'Comment permalink',
     'page callback' => 'comment_permalink',
     'page arguments' => array(1),
-    'access arguments' => array('access comments'),
+    'access callback' => 'entity_page_access',
+    'access arguments' => array(1, 'view'),
   );
-  $items['comment/%/view'] = array(
+  $items['comment/%comment/view'] = array(
     'title' => 'View comment',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
@@ -256,23 +257,25 @@ function comment_menu() {
     'title' => 'Edit',
     'page callback' => 'comment_edit_page',
     'page arguments' => array(1),
-    'access callback' => 'comment_access',
-    'access arguments' => array('edit', 1),
+    'access callback' => 'entity_page_access',
+    'access arguments' => array(1, 'update'),
     'type' => MENU_LOCAL_TASK,
   );
-  $items['comment/%/approve'] = array(
+  $items['comment/%comment/approve'] = array(
     'title' => 'Approve',
     'page callback' => 'comment_approve',
     'page arguments' => array(1),
-    'access arguments' => array('administer comments'),
+    'access callback' => 'entity_page_access',
+    'access arguments' => array(1, 'approve'),
     'file' => 'comment.pages.inc',
     'weight' => 10,
   );
-  $items['comment/%/delete'] = array(
+  $items['comment/%comment/delete'] = array(
     'title' => 'Delete',
     'page callback' => 'comment_confirm_delete_page',
     'page arguments' => array(1),
-    'access arguments' => array('administer comments'),
+    'access callback' => 'entity_page_access',
+    'access arguments' => array(1, 'delete'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'comment.admin.inc',
     'weight' => 20,
@@ -430,15 +433,14 @@ function comment_permission() {
  * calculates the page number based on current comment settings and returns
  * the full comment view with the pager set dynamically.
  *
- * @param $cid
- *   A comment identifier.
+ * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
+ *   A comment entity.
  *
  * @return
  *   The comment listing set to the page on which the comment appears.
  */
-function comment_permalink($cid) {
-  if (($comment = comment_load($cid)) && ($node = $comment->nid->entity)) {
-
+function comment_permalink(Comment $comment) {
+  if ($node = $comment->nid->entity) {
     // Find the current display page for this comment.
     $page = comment_get_display_page($comment->id(), $node->type);
 
@@ -928,46 +930,36 @@ function comment_view(Comment $comment, $view_mode = 'full', $langcode = NULL) {
 function comment_links(Comment $comment, EntityInterface $node) {
   $links = array();
   if ($node->comment == COMMENT_NODE_OPEN) {
-    if (user_access('administer comments') && user_access('post comments')) {
+    if ($comment->access('delete')) {
       $links['comment-delete'] = array(
         'title' => t('delete'),
         'href' => "comment/{$comment->id()}/delete",
         'html' => TRUE,
       );
-      $links['comment-edit'] = array(
-        'title' => t('edit'),
-        'href' => "comment/{$comment->id()}/edit",
-        'html' => TRUE,
-      );
-      $links['comment-reply'] = array(
-        'title' => t('reply'),
-        'href' => "comment/reply/{$comment->nid->target_id}/{$comment->id()}",
-        'html' => TRUE,
-      );
-      if ($comment->status->value == COMMENT_NOT_PUBLISHED) {
-        $links['comment-approve'] = array(
-          'title' => t('approve'),
-          'href' => "comment/{$comment->id()}/approve",
-          'html' => TRUE,
-          'query' => array('token' => drupal_get_token("comment/{$comment->id()}/approve")),
-        );
-      }
     }
-    elseif (user_access('post comments')) {
-      if (comment_access('edit', $comment)) {
+    if ($comment->access('update')) {
         $links['comment-edit'] = array(
           'title' => t('edit'),
           'href' => "comment/{$comment->id()}/edit",
           'html' => TRUE,
         );
-      }
+    }
+    if ($comment->access('create')) {
       $links['comment-reply'] = array(
         'title' => t('reply'),
         'href' => "comment/reply/{$comment->nid->target_id}/{$comment->id()}",
         'html' => TRUE,
       );
     }
-    else {
+    if ($comment->status->value == COMMENT_NOT_PUBLISHED && $comment->access('approve')) {
+      $links['comment-approve'] = array(
+        'title' => t('approve'),
+        'href' => "comment/{$comment->id()}/approve",
+        'html' => TRUE,
+        'query' => array('token' => drupal_get_token("comment/{$comment->id()}/approve")),
+      );
+    }
+    if (empty($links)) {
       $links['comment-forbidden']['title'] = theme('comment_post_forbidden', array('node' => $node));
       $links['comment-forbidden']['html'] = TRUE;
     }
@@ -1329,30 +1321,6 @@ function comment_user_cancel($edit, $account, $method) {
 function comment_user_predelete($account) {
   $cids = db_query('SELECT c.cid FROM {comment} c WHERE uid = :uid', array(':uid' => $account->uid))->fetchCol();
   comment_delete_multiple($cids);
-}
-
-/**
- * Determines whether the current user has access to a particular comment.
- *
- * Authenticated users can edit their comments as long they have not been
- * replied to. This prevents people from changing or revising their statements
- * based on the replies to their posts.
- *
- * @param $op
- *   The operation that is to be performed on the comment. Only 'edit' is
- *   recognized now.
- * @param Drupal\comment\Comment $comment
- *   The comment object.
- *
- * @return
- *   TRUE if the current user has acces to the comment, FALSE otherwise.
- */
-function comment_access($op, Comment $comment) {
-  global $user;
-
-  if ($op == 'edit') {
-    return ($user->uid && $user->uid == $comment->uid->target_id && $comment->status->value == COMMENT_PUBLISHED && user_access('edit own comments')) || user_access('administer comments');
-  }
 }
 
 /**
