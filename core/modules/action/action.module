@@ -75,10 +75,7 @@ function action_menu() {
   $items['admin/config/system/actions/delete/%action'] = array(
     'title' => 'Delete action',
     'description' => 'Delete an action.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('action_admin_delete_form', 5),
-    'access arguments' => array('administer actions'),
-    'file' => 'action.admin.inc',
+    'route_name' => 'action_delete',
   );
   return $items;
 }
