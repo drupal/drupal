@@ -539,14 +539,6 @@ function template_preprocess_block(&$variables) {
     $variables['block']->label = '';
   }
 
-  // All blocks get an independent counter for each region.
-  if (!isset($block_counter[$variables['block']->region])) {
-    $block_counter[$variables['block']->region] = 1;
-  }
-  // Same with zebra striping.
-  $variables['block_zebra'] = ($block_counter[$variables['block']->region] % 2) ? 'odd' : 'even';
-  $variables['block_id'] = $block_counter[$variables['block']->region]++;
-
   // Create the $content variable that templates expect.
   $variables['content'] = $variables['elements']['#children'];
 
