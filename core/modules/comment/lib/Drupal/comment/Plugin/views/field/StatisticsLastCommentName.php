@@ -15,7 +15,7 @@ use Drupal\Component\Annotation\PluginID;
  *
  * @ingroup views_field_handlers
  *
- * @Plugin("comment_ces_last_comment_name")
+ * @PluginID("comment_ces_last_comment_name")
  */
 class StatisticsLastCommentName extends FieldPluginBase {
 
