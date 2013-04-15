@@ -118,21 +118,21 @@ class CustomBlock extends EntityNG implements ContentEntityInterface {
   protected $theme;
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::id().
+   * {@inheritdoc}
    */
   public function id() {
     return $this->id->value;
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::bundle().
+   * {@inheritdoc}
    */
   public function bundle() {
     return $this->type->value;
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\Entity::createDuplicate().
+   * {@inheritdoc}
    */
   public function createDuplicate() {
     $duplicate = parent::createDuplicate();
@@ -142,7 +142,7 @@ class CustomBlock extends EntityNG implements ContentEntityInterface {
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\Entity::getRevisionId().
+   * {@inheritdoc}
    */
   public function getRevisionId() {
     return $this->revision_id->value;
@@ -194,7 +194,7 @@ class CustomBlock extends EntityNG implements ContentEntityInterface {
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\Entity::getRevisionId().
+   * {@inheritdoc}
    */
   public function uri() {
     return array(
