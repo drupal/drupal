@@ -1418,7 +1418,7 @@ function user_authenticate($name, $password) {
  * Finalize the login process. Must be called when logging in a user.
  *
  * The function records a watchdog message about the new session, saves the
- * login timestamp, calls hook_user op 'login' and generates a new session. *
+ * login timestamp, calls hook_user_login(), and generates a new session.
  */
 function user_login_finalize(&$edit = array()) {
   global $user;
