@@ -863,7 +863,7 @@ abstract class FieldPluginBase extends HandlerBase {
       // We have some options, so make a list.
       if (!empty($options)) {
         $output = t('<p>The following tokens are available for this field. Note that due to rendering order, you cannot use fields that come after this field; if you need a field not listed here, rearrange your fields.
-If you would like to have the characters \'[\' and \']\' please use the html entity codes \'%5B\' or  \'%5D\' or they will get replaced with empty space.</p>');
+If you would like to have the characters \'[\' and \']\' use the html entity codes \'%5B\' or  \'%5D\' or they will get replaced with empty space.</p>');
         foreach (array_keys($options) as $type) {
           if (!empty($options[$type])) {
             $items = array();

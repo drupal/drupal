@@ -136,7 +136,7 @@ abstract class ViewFormControllerBase extends EntityFormController {
         $tabs[$id]['#access'] = TRUE;
         // Add a class to mark the error and a title to make a hover tip.
         $tabs[$id]['#link']['localized_options']['attributes']['class'][] = 'error';
-        $tabs[$id]['#link']['localized_options']['attributes']['title'] = t('This display has one or more validation errors; please review it.');
+        $tabs[$id]['#link']['localized_options']['attributes']['title'] = t('This display has one or more validation errors.');
       }
     }
 

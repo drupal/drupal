@@ -775,11 +775,12 @@ function &views_set_page_view($view = NULL) {
 }
 
 /**
- * Find out what, if any, page view is currently in use. Please note that
- * this returns a reference, so be careful! You can unintentionally modify the
- * $view object.
+ * Find out what, if any, page view is currently in use.
  *
- * @return Drupal\views\ViewExecutable
+ * Note that this returns a reference, so be careful! You can unintentionally
+ * modify the $view object.
+ *
+ * @return \Drupal\views\ViewExecutable
  *   A fully formed, empty $view object.
  */
 function &views_get_page_view() {
@@ -802,11 +803,13 @@ function &views_set_current_view($view = NULL) {
 }
 
 /**
- * Find out what, if any, current view is currently in use. Please note that
- * this returns a reference, so be careful! You can unintentionally modify the
- * $view object.
+ * Find out what, if any, current view is currently in use.
  *
- * @return Drupal\views\ViewExecutable
+ * Note that this returns a reference, so be careful! You can unintentionally
+ * modify the $view object.
+ *
+ * @return \Drupal\views\ViewExecutable
+ *   THe current view object.
  */
 function &views_get_current_view() {
   return views_set_current_view();

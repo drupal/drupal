@@ -132,7 +132,7 @@ abstract class AreaPluginBase extends HandlerBase {
         ),
       );
       $form['tokens']['help'] = array(
-        '#markup' => '<p>' . t('The following tokens are available. If you would like to have the characters \'[\' and \']\' please use the html entity codes \'%5B\' or  \'%5D\' or they will get replaced with empty space.') . '</p>',
+        '#markup' => '<p>' . t('The following tokens are available. If you would like to have the characters \'[\' and \']\' use the html entity codes \'%5B\' or  \'%5D\' or they will get replaced with empty space.') . '</p>',
       );
       foreach (array_keys($options) as $type) {
         if (!empty($options[$type])) {
