@@ -48,13 +48,12 @@ class DatetimeFieldTest extends WebTestBase {
     $this->drupalLogin($web_user);
 
     // Create a field with settings to validate.
-    $this->field = array(
+    $this->field = field_create_field(array(
       'field_name' => drupal_strtolower($this->randomName()),
       'type' => 'datetime',
       'settings' => array('datetime_type' => 'date'),
-    );
-    field_create_field($this->field);
-    $this->instance = array(
+    ));
+    $this->instance = field_create_instance(array(
       'field_name' => $this->field['field_name'],
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
@@ -64,8 +63,7 @@ class DatetimeFieldTest extends WebTestBase {
       'settings' => array(
         'default_value' => 'blank',
       ),
-    );
-    field_create_instance($this->instance);
+    ));
 
     $this->display_options = array(
       'type' => 'datetime_default',
@@ -304,6 +302,7 @@ class DatetimeFieldTest extends WebTestBase {
 
     // Set the default value to 'blank'.
     $this->instance['settings']['default_value'] = 'blank';
+    $this->instance['default_value_function'] = 'datetime_default_value';
     field_update_instance($this->instance);
 
     // Display creation form.

@@ -8,16 +8,14 @@
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Database\Database;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Simple filter to handle greater than/less than filters
  *
  * @ingroup views_filter_handlers
  *
- * @Plugin(
- *   id = "numeric"
- * )
+ * @PluginID("numeric")
  */
 class Numeric extends FilterPluginBase {
 

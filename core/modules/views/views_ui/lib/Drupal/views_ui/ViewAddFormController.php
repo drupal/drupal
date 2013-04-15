@@ -100,7 +100,7 @@ class ViewAddFormController extends ViewFormControllerBase {
       '#options' => $options,
     );
     $show_form = &$form['displays']['show'];
-    $default_value = module_exists('node') ? 'node' : 'users';
+    $default_value = \Drupal::moduleHandler()->moduleExists('node') ? 'node' : 'users';
     $show_form['wizard_key']['#default_value'] = WizardPluginBase::getSelected($form_state, array('show', 'wizard_key'), $default_value, $show_form['wizard_key']);
     // Changing this dropdown updates the entire content of $form['displays'] via
     // AJAX.
@@ -141,8 +141,10 @@ class ViewAddFormController extends ViewFormControllerBase {
     $form_state['wizard_instance'] = $wizard_instance;
     $errors = $form_state['wizard_instance']->validateView($form, $form_state);
 
-    foreach ($errors as $name => $message) {
-      form_set_error($name, $message);
+    foreach ($errors as $display_errors) {
+      foreach ($display_errors as $name => $message) {
+        form_set_error($name, $message);
+      }
     }
   }
 

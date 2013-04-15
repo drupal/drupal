@@ -8,14 +8,14 @@
 namespace Drupal\entity\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Configuration entity that contains display options for all components of a
  * rendered entity in a given view mode..
  *
- * @Plugin(
+ * @EntityType(
  *   id = "entity_display",
  *   label = @Translation("Entity display"),
  *   module = "entity",

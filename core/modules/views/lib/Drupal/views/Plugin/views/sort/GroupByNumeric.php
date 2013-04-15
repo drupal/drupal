@@ -7,16 +7,14 @@
 
 namespace Drupal\views\Plugin\views\sort;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 
 /**
  * Handler for GROUP BY on simple numeric fields.
  *
- * @Plugin(
- *   id = "groupby_numeric"
- * )
+ * @PluginID("groupby_numeric")
  */
 class GroupByNumeric extends SortPluginBase {
 
@@ -27,7 +25,7 @@ class GroupByNumeric extends SortPluginBase {
     parent::init($view, $display, $options);
 
     // Initialize the original handler.
-    $this->handler = views_get_handler($options['table'], $options['field'], 'sort');
+    $this->handler = views_get_handler($options, 'sort');
     $this->handler->init($view, $display, $options);
   }
 

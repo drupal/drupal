@@ -7,17 +7,18 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Argument handler for a year (CCYY)
  *
- * @Plugin(
- *   id = "date_year",
- *   arg_format = "Y",
- *   module = "views"
- * )
+ * @PluginID("date_year")
  */
 class YearDate extends Date {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $argFormat = 'Y';
 
 }

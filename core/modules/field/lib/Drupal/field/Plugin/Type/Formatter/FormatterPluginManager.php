@@ -13,7 +13,7 @@ use Drupal\Core\Plugin\Discovery\CacheDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\AlterDecorator;
 use Drupal\field\Plugin\Type\Formatter\FormatterLegacyDiscoveryDecorator;
-use Drupal\field\FieldInstance;
+use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
  * Plugin type manager for field formatters.

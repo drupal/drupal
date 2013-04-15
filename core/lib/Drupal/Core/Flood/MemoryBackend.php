@@ -7,10 +7,19 @@
 
 namespace Drupal\Core\Flood;
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Defines the memory flood backend. This is used for testing.
  */
 class MemoryBackend implements FloodInterface {
+
+  /**
+   * A request object.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected $request;
 
   /**
    * An array holding flood events, keyed by event name and identifier.
@@ -18,11 +27,21 @@ class MemoryBackend implements FloodInterface {
   protected $events = array();
 
   /**
+   * Construct the MemoryBackend.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The HttpRequest object representing the current request.
+   */
+  public function __construct(Request $request) {
+    $this->request = $request;
+  }
+
+  /**
    * Implements Drupal\Core\Flood\FloodInterface::register().
    */
   public function register($name, $window = 3600, $identifier = NULL) {
     if (!isset($identifier)) {
-      $identifier = ip_address();
+      $identifier = $this->request->getClientIP();
     }
     // We can't use REQUEST_TIME here, because that would not guarantee
     // uniqueness.
@@ -35,7 +54,7 @@ class MemoryBackend implements FloodInterface {
    */
   public function clear($name, $identifier = NULL) {
     if (!isset($identifier)) {
-      $identifier = ip_address();
+      $identifier = $this->request->getClientIP();
     }
     unset($this->events[$name][$identifier]);
   }
@@ -45,7 +64,7 @@ class MemoryBackend implements FloodInterface {
    */
   public function isAllowed($name, $threshold, $window = 3600, $identifier = NULL) {
     if (!isset($identifier)) {
-      $identifier = ip_address();
+      $identifier = $this->request->getClientIP();
     }
     $limit = microtime(true) - $window;
     $number = count(array_filter($this->events[$name][$identifier], function ($timestamp) use ($limit) {

@@ -504,7 +504,7 @@ function toolbar_toolbar() {
  */
 function toolbar_get_menu_tree() {
   $tree = array();
-  $query = entity_query('menu_link')
+  $query = Drupal::entityQuery('menu_link')
     ->condition('menu_name', 'admin')
     ->condition('module', 'system')
     ->condition('link_path', 'admin');

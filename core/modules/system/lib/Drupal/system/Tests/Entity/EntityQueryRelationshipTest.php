@@ -115,7 +115,7 @@ class EntityQueryRelationshipTest extends EntityUnitTestBase  {
       $entity->save();
       $this->entities[] = $entity;
     }
-    $this->factory = drupal_container()->get('entity.query');
+    $this->factory = \Drupal::service('entity.query');
   }
 
   /**

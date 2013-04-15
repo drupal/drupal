@@ -7,16 +7,11 @@
 
 namespace Drupal\views_test_data\Plugin\views\field;
 
-use Drupal\Component\Annotation\Plugin;
-use Drupal\Core\Annotation\Translation;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 
 /**
- * @Plugin(
- *   id = "test_field",
- *   title = @Translation("Test field plugin"),
- *   help = @Translation("Provides a generic field test plugin.")
- * )
+ * @PluginID("test_field")
  */
 class FieldTest extends FieldPluginBase {
 

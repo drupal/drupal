@@ -87,12 +87,9 @@ function contact_menu() {
   );
   $items['admin/structure/contact/manage/%contact_category/delete'] = array(
     'title' => 'Delete',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('contact_category_delete_form', 4),
-    'access arguments' => array('administer contact forms'),
+    'route_name' => 'contact_category_delete',
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
-    'file' => 'contact.admin.inc',
   );
 
   $items['contact'] = array(

@@ -39,9 +39,9 @@ class SyndicateBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::build().
+   * Implements \Drupal\block\BlockBase::blockBuild().
    */
-  public function build() {
+  protected function blockBuild() {
     return array(
       '#theme' => 'feed_icon',
       '#url' => 'rss.xml',

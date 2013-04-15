@@ -208,7 +208,7 @@ abstract class HandlerBase extends PluginBase {
    * @return string
    *   Returns the safe value.
    */
-  protected function sanitizeValue($value, $type = NULL) {
+  public function sanitizeValue($value, $type = NULL) {
     switch ($type) {
       case 'xss':
         $value = filter_xss($value);
@@ -295,7 +295,8 @@ abstract class HandlerBase extends PluginBase {
       '#weight' => 150,
     );
     // Allow to alter the default values brought into the form.
-    drupal_alter('views_handler_options', $this->options, $view);
+    // @todo Do we really want to keep this hook.
+    \Drupal::moduleHandler()->alter('views_handler_options', $this->options, $this->view);
   }
 
   /**
@@ -872,7 +873,7 @@ abstract class HandlerBase extends PluginBase {
 
     // Create a new handler and unpack the options from the form onto it. We
     // can use that for storage.
-    $handler = views_get_handler($item['table'], $item['field'], $handler_type, $override);
+    $handler = views_get_handler($item, $handler_type, $override);
     $handler->init($executable, $executable->display_handler, $item);
 
     // Add the incoming options to existing options because items using

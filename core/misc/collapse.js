@@ -29,7 +29,7 @@ var isDetailsSupported = (function (doc) {
   root.appendChild(el);
   diff = el.offsetHeight;
   el.open = true;
-  diff = diff != el.offsetHeight;
+  diff = diff !== el.offsetHeight;
   root.removeChild(el);
   if (fake) {
     root.parentNode.removeChild(root);
@@ -53,7 +53,7 @@ function CollapsibleDetails(node, settings) {
   // element that is targeted by the URI fragment identifier.
   var anchor = location.hash && location.hash !== '#' ? ', ' + location.hash : '';
   if (this.$node.find('.error' + anchor).length) {
-    this.$node.attr('open', true);
+    this.$node.prop('open', true);
   }
   // Initialize and setup the summary,
   this.setupSummary();
@@ -96,12 +96,13 @@ $.extend(CollapsibleDetails.prototype, {
     var $legend = this.$node.find('> summary');
 
     $('<span class="details-summary-prefix element-invisible"></span>')
-      .append(this.$node.attr('open') ? Drupal.t('Hide') : Drupal.t('Show'))
+      .append(this.$node.prop('open') ? Drupal.t('Hide') : Drupal.t('Show'))
       .prependTo($legend)
       .after(' ');
 
     // .wrapInner() does not retain bound events.
-    var $link = $('<a class="details-title" href="#"></a>')
+    var $link = $('<a class="details-title"></a>')
+      .attr('href', '#' + this.$node.attr('id'))
       .prepend($legend.contents())
       .appendTo($legend)
       .click($.proxy(this.onLegendClick, this));
@@ -129,7 +130,7 @@ $.extend(CollapsibleDetails.prototype, {
     if (this.animating) {
       return;
     }
-    if (!this.$node.attr('open')) {
+    if (!this.$node.prop('open')) {
       var $content = this.$node.find('> .details-wrapper').hide();
       this.$node
         .trigger({ type:'collapsed', value:false })
@@ -153,7 +154,7 @@ $.extend(CollapsibleDetails.prototype, {
    * Completed opening details element.
    */
   onCompleteSlideDown: function () {
-    this.$node.attr('open', true);
+    this.$node.prop('open', true);
     this.$node.trigger('completeSlideDown');
     this.animating = false;
   },
@@ -161,7 +162,7 @@ $.extend(CollapsibleDetails.prototype, {
    * Completed closing details element.
    */
   onCompleteSlideUp: function () {
-    this.$node.attr('open', false);
+    this.$node.prop('open', false);
     this.$node
       .find('> summary span.details-summary-prefix').html(Drupal.t('Show'));
     this.$node.trigger('completeSlideUp');

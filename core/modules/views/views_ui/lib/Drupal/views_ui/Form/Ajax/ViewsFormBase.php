@@ -87,8 +87,8 @@ abstract class ViewsFormBase implements ViewsFormInterface {
     $key = $form_state['form_key'];
 
     // @todo Remove the need for this.
-    module_load_include('inc', 'views_ui', 'admin');
-    module_load_include('inc', 'views', 'includes/ajax');
+    \Drupal::moduleHandler()->loadInclude('views_ui', 'inc', 'admin');
+    \Drupal::moduleHandler()->loadInclude('views', 'inc', 'includes/ajax');
 
     // Reset the cache of IDs. Drupal rather aggressively prevents ID
     // duplication but this causes it to remember IDs that are no longer even

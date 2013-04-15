@@ -119,7 +119,7 @@ Backbone.syncDirect = function(method, model, options) {
         // side validation. (Not disabling this will actually cause problems
         // because browsers don't like to set HTML5 validation errors on hidden
         // forms.)
-        jQuery('#edit_backstage form').attr('novalidate', true);
+        jQuery('#edit_backstage form').prop('novalidate', true);
         var $submit = jQuery('#edit_backstage form .edit-form-submit');
         var base = Drupal.edit.util.form.ajaxifySaving(formOptions, $submit);
 

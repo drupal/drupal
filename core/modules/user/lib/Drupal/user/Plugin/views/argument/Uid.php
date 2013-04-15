@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Plugin\views\argument;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\argument\Numeric;
 
 /**
@@ -15,10 +15,7 @@ use Drupal\views\Plugin\views\argument\Numeric;
  *
  * @ingroup views_argument_handlers
  *
- * @Plugin(
- *   id = "user_uid",
- *   module = "user"
- * )
+ * @PluginID("user_uid")
  */
 class Uid extends Numeric {
 

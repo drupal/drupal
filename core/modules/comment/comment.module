@@ -528,7 +528,7 @@ function _comment_body_field_create($entity_type, $bundle, $field_name) {
   }
   // Create the instance if needed, field name defaults to 'comment'.
   if (!field_read_instance('comment', 'comment_body', $field_name, array('include_inactive' => TRUE))) {
-    field_attach_create_bundle('comment', $bundle);
+    entity_invoke_bundle_hook('create', 'comment', $bundle);
     // Attaches the body field by default.
     $instance = array(
       'field_name' => 'comment_body',
@@ -2229,7 +2229,7 @@ function comment_field_delete_instance($instance) {
   $field = field_info_field($instance['field_name']);
   if ($field['type'] == 'comment') {
     // Delete all fields and displays attached to the bundle.
-    field_attach_delete_bundle('comment', $instance['field_name']);
+    entity_invoke_bundle_hook('delete', 'comment', $instance['field_name']);
     cache()->delete('comment_entity_info');
   }
 }

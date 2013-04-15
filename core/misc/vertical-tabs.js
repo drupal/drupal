@@ -45,7 +45,7 @@ Drupal.behaviors.verticalTabs = {
         tab_list.append(vertical_tab.item);
         $this
           .removeClass('collapsed')
-          .attr('open', true)
+          .prop('open', true)
           .addClass('vertical-tabs-pane')
           .data('verticalTab', vertical_tab);
         if (this.id === focusID) {
@@ -85,6 +85,8 @@ Drupal.behaviors.verticalTabs = {
 Drupal.verticalTab = function (settings) {
   var self = this;
   $.extend(this, settings, Drupal.theme('verticalTab', settings));
+
+  this.link.attr('href', '#' + settings.fieldset.attr('id'));
 
   this.link.click(function (e) {
     e.preventDefault();

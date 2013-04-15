@@ -104,7 +104,7 @@ Drupal.tableDrag = function (table, tableSettings) {
   $table.find('> tr.draggable, > tbody > tr.draggable').each(function () { self.makeDraggable(this); });
 
   // Add a link before the table for users to show or hide weight columns.
-  $table.before($('<a href="#" class="tabledrag-toggle-weight"></a>')
+  $table.before($('<button type="button" class="link tabledrag-toggle-weight"></button>')
     .attr('title', Drupal.t('Re-order rows by numerical weight instead of dragging.'))
     .click($.proxy(function (e) {
       e.preventDefault();

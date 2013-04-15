@@ -11,7 +11,7 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\user\UserDataInterface;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Provides access to the user data service.
@@ -20,10 +20,7 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @see \Drupal\user\UserDataInterface
  *
- * @Plugin(
- *   id = "user_data",
- *   module = "user"
- * )
+ * @PluginID("user_data")
  */
 class UserData extends FieldPluginBase {
 

@@ -1,4 +1,5 @@
 id: tour-test
+module: tour_test
 label: Tour test english
 langcode: en
 paths:

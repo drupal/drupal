@@ -1,4 +1,5 @@
 id: views-ui
+module: views_ui
 label: Views ui
 langcode: en
 paths:

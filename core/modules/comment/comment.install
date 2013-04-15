@@ -27,7 +27,7 @@ function comment_uninstall() {
     }
   });
   foreach ($comment_fields as $field_name => $field) {
-    field_attach_delete_bundle('comment', $field_name);
+    entity_invoke_bundle_hook('delete', 'comment', $field_name);
   }
 
   // Remove states.

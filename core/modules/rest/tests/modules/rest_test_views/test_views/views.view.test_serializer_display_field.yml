@@ -45,6 +45,11 @@ display:
             alter_text: '1'
             text: TEST
           plugin_id: custom
+        created:
+          id: created
+          table: views_test_data
+          field: created
+          plugin_id: date
       sorts:
         created:
           id: created

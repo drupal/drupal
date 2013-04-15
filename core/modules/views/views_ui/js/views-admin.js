@@ -869,7 +869,7 @@ Drupal.behaviors.viewsFilterConfigSelectAll.attach = function(context) {
   $('#views-ui-config-item-form div.form-type-checkbox').not($('.form-item-options-value-all')).find('input[type=checkbox]').each(function() {
     $(this).click(function() {
       if ($(this).is('checked') === false) {
-        $('#edit-options-value-all').removeAttr('checked');
+        $('#edit-options-value-all').prop('checked', false);
       }
     });
   });

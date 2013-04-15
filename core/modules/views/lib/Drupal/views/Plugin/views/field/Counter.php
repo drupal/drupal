@@ -7,16 +7,14 @@
 
 namespace Drupal\views\Plugin\views\field;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to show a counter of the current row.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "counter"
- * )
+ * @PluginID("counter")
  */
 class Counter extends FieldPluginBase {
 

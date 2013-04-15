@@ -276,7 +276,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
     $transaction = db_transaction();
     try {
       // Ensure we are dealing with the actual entity.
-      $entity = $entity->getOriginalEntity();
+      $entity = $entity->getNGEntity();
 
       // Sync the changes made in the fields array to the internal values array.
       $entity->updateOriginalValues();
@@ -504,7 +504,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
     try {
       // Ensure we are dealing with the actual entities.
       foreach ($entities as $id => $entity) {
-        $entities[$id] = $entity->getOriginalEntity();
+        $entities[$id] = $entity->getNGEntity();
       }
 
       $this->preDelete($entities);

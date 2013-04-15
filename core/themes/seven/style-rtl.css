@@ -145,13 +145,6 @@ ol.task-list li.active {
   margin: -1.4em 0 0.3em 0;
 }
 
-/* Shortcut theming */
-div.add-or-remove-shortcuts {
-  float: none;
-  padding-left: 0;
-  padding-right: 6px;
-}
-
 /* Recent content block */
 #block-node-recent .more-link {
   padding: 0 0 5px 5px;
@@ -164,6 +157,14 @@ div.add-or-remove-shortcuts {
 #user-login-form .openid-links .user-link {
   margin-right: 1.5em;
 }
+
+/**
+ * Improve spacing of cancel link.
+ */
+#edit-cancel {
+  margin-right: 10px;
+}
+
 /**
  * Views styling
  */

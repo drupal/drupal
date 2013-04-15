@@ -54,7 +54,8 @@ class StyleMappingTest extends StyleTestBase {
    *   The view rendered as HTML.
    */
   protected function mappedOutputHelper($view) {
-    $rendered_output = $view->preview();
+    $output = $view->preview();
+    $rendered_output = drupal_render($output);
     $this->storeViewPreview($rendered_output);
     $rows = $this->elements->body->div->div->div;
     $data_set = $this->dataSet();

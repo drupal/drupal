@@ -180,6 +180,17 @@ class ExposedFormTest extends UITestBase {
     $edit["options[group_info][group_items][3][value][page]"] = TRUE;
     $this->drupalPost(NULL, $edit, t('Apply'));
 
+    // Select the empty operator, so the empty value should not trigger a form
+    // error.
+    $this->drupalGet('admin/structure/views/nojs/config-item/test_exposed_admin_ui/default/filter/body_value');
+    $edit = array();
+    $edit["options[group_info][group_items][1][title]"] = $this->randomName();
+    $edit["options[group_info][group_items][1][operator]"] = 'empty';
+    $this->drupalPost(NULL, $edit, t('Apply'));
+    $this->assertUrl('admin/structure/views/view/test_exposed_admin_ui/edit/default', array(), 'Validation did not run for the empty operator.');
+    // Test the validation error message text is not shown.
+    $this->assertNoText(t('The value is required if title for this item is defined.'));
+
     // Validate that all the titles are defined for each group
     $this->drupalGet('admin/structure/views/nojs/config-item/test_exposed_admin_ui/default/filter/type');
     $edit = array();

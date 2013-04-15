@@ -37,6 +37,13 @@ class StatisticsAdminTest extends WebTestBase {
    */
   protected $test_node;
 
+  /**
+   * The Guzzle HTTP client.
+   *
+   * @var \Guzzle\Http\ClientInterface;
+   */
+  protected $client;
+
   public static function getInfo() {
     return array(
       'name' => 'Test statistics admin.',
@@ -55,6 +62,8 @@ class StatisticsAdminTest extends WebTestBase {
     $this->privileged_user = $this->drupalCreateUser(array('administer statistics', 'view post access counter', 'create page content'));
     $this->drupalLogin($this->privileged_user);
     $this->test_node = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->privileged_user->uid));
+    $this->client = \Drupal::httpClient();
+    $this->client->setConfig(array('curl.options' => array(CURLOPT_TIMEOUT => 10)));
   }
 
   /**
@@ -78,16 +87,16 @@ class StatisticsAdminTest extends WebTestBase {
     $headers = array('Content-Type' => 'application/x-www-form-urlencoded');
     global $base_url;
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
-    drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
+    $this->client->post($stats_path, $headers, $post)->send();
 
     // Hit the node again (the counter is incremented after the hit, so
     // "1 view" will actually be shown when the node is hit the second time).
     $this->drupalGet('node/' . $this->test_node->nid);
-    drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
+    $this->client->post($stats_path, $headers, $post)->send();
     $this->assertText('1 view', 'Node is viewed once.');
 
     $this->drupalGet('node/' . $this->test_node->nid);
-    drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
+    $this->client->post($stats_path, $headers, $post)->send();
     $this->assertText('2 views', 'Node is viewed 2 times.');
   }
 
@@ -104,7 +113,7 @@ class StatisticsAdminTest extends WebTestBase {
     $headers = array('Content-Type' => 'application/x-www-form-urlencoded');
     global $base_url;
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
-    drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
+    $this->client->post($stats_path, $headers, $post)->send();
 
     $result = db_select('node_counter', 'n')
       ->fields('n', array('nid'))
@@ -139,9 +148,9 @@ class StatisticsAdminTest extends WebTestBase {
     $headers = array('Content-Type' => 'application/x-www-form-urlencoded');
     global $base_url;
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
-    drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
+    $this->client->post($stats_path, $headers, $post)->send();
     $this->drupalGet('node/' . $this->test_node->nid);
-    drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
+    $this->client->post($stats_path, $headers, $post)->send();
     $this->assertText('1 view', 'Node is viewed once.');
 
     // statistics_cron() will subtract

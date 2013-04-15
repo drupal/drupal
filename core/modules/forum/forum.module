@@ -214,6 +214,18 @@ function forum_menu_local_tasks(&$data, $router_item, $root_path) {
 }
 
 /**
+ * Implements hook_menu_local_tasks_alter().
+ *
+ * Remove the 'Add Forum' and 'Add container' local tasks on the delete form.
+ */
+function forum_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  if ($root_path == 'admin/structure/forum' && !empty($router_item['map'][3]) &&
+      $router_item['map'][3] == 'delete') {
+    $data = array();
+  }
+}
+
+/**
  * Implements hook_entity_bundle_info_alter().
  */
 function forum_entity_bundle_info_alter(&$bundles) {

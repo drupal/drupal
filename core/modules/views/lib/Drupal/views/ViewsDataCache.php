@@ -9,12 +9,17 @@ namespace Drupal\views;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\DestructableInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * Class to manage and lazy load cached views data.
+ *
+ * If a table is requested and cannot be loaded from cache, all data is then
+ * requested from cache. A table-specific cache entry will then be created for
+ * the requested table based on this cached data. Table data is only rebuilt
+ * when no cache entry for all table data can be retrieved.
  */
-class ViewsDataCache implements DestructableInterface {
+class ViewsDataCache {
 
   /**
    * The base cache ID to use.
@@ -38,26 +43,11 @@ class ViewsDataCache implements DestructableInterface {
   protected $storage = array();
 
   /**
-   * An array of requested tables.
-   *
-   * @var array
-   */
-  protected $requestedTables = array();
-
-  /**
    * Whether the data has been fully loaded in this request.
    *
    * @var bool
    */
   protected $fullyLoaded = FALSE;
-
-  /**
-   * Whether views data has been rebuilt. This is set when getData() doesn't
-   * return anything from cache.
-   *
-   * @var bool
-   */
-  protected $rebuildAll = FALSE;
 
   /**
    * Whether or not to skip data caching and rebuild data each time.
@@ -73,8 +63,26 @@ class ViewsDataCache implements DestructableInterface {
    */
   protected $langcode;
 
-  public function __construct(CacheBackendInterface $cache_backend, ConfigFactory $config) {
+  /**
+   * Stores a module manager to invoke hooks.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * Constructs this ViewsDataCache object.
+   *
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   The cache backend to use.
+   * @param \Drupal\Core\Config\ConfigFactory $config
+   *   The configuration factory object to use.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler class to use for invoking hooks.
+   */
+  public function __construct(CacheBackendInterface $cache_backend, ConfigFactory $config, ModuleHandlerInterface $module_handler) {
     $this->cacheBackend = $cache_backend;
+    $this->moduleHandler = $module_handler;
 
     $this->langcode = language(LANGUAGE_TYPE_INTERFACE)->langcode;
     $this->skipCache = $config->get('views.settings')->get('skip_cache');
@@ -92,11 +100,11 @@ class ViewsDataCache implements DestructableInterface {
    */
   public function get($key = NULL) {
     if ($key) {
-      $from_cache = FALSE;
       if (!isset($this->storage[$key])) {
         // Prepare a cache ID.
         $cid = $this->baseCid . ':' . $key;
 
+        $from_cache = FALSE;
         if ($data = $this->cacheGet($cid)) {
           $this->storage[$key] = $data->data;
           $from_cache = TRUE;
@@ -106,15 +114,19 @@ class ViewsDataCache implements DestructableInterface {
         elseif (!$this->fullyLoaded) {
           $this->storage = $this->getData();
         }
-      }
 
-      if (isset($this->storage[$key])) {
         if (!$from_cache) {
-          // Add this table to a list of requested tables, as it's table cache
-          // entry was not found.
-          array_push($this->requestedTables, $key);
+          if (!isset($this->storage[$key])) {
+            // Write an empty cache entry if no information for that table
+            // exists to avoid repeated cache get calls for this table and
+            // prevent loading all tables unnecessarily.
+            $this->storage[$key] = array();
+          }
+          // Create a cache entry for the requested table.
+          $this->cacheBackend->set($this->prepareCid($cid), $this->storage[$key]);
         }
-
+      }
+      if (isset($this->storage[$key])) {
         return $this->storage[$key];
       }
 
@@ -176,13 +188,13 @@ class ViewsDataCache implements DestructableInterface {
       return $data->data;
     }
     else {
-      $data = module_invoke_all('views_data');
-      drupal_alter('views_data', $data);
+      $data = $this->moduleHandler->invokeAll('views_data');
+      $this->moduleHandler->alter('views_data', $data);
 
       $this->processEntityTypes($data);
 
-      // Set as TRUE, so all table data will be cached.
-      $this->rebuildAll = TRUE;
+      // Keep a record with all data.
+      $this->cacheBackend->set($this->prepareCid($this->baseCid), $data);
 
       return $data;
     }
@@ -247,24 +259,6 @@ class ViewsDataCache implements DestructableInterface {
     });
 
     return $tables;
-  }
-
-  /**
-   * Implements \Drupal\Core\DestructableInterface::destruct().
-   */
-  public function destruct() {
-    if (!empty($this->storage) && !$this->skipCache) {
-      if ($this->rebuildAll) {
-        // Keep a record with all data.
-        $this->cacheBackend->set($this->prepareCid($this->baseCid), $this->storage);
-      }
-
-      // Save data in seperate, per table cache entries.
-      foreach ($this->requestedTables as $table) {
-        $cid = $this->baseCid . ':' . $table;
-        $this->cacheBackend->set($this->prepareCid($cid), $this->storage[$table]);
-      }
-    }
   }
 
   /**

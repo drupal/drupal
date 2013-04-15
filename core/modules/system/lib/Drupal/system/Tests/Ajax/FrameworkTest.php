@@ -83,11 +83,6 @@ class FrameworkTest extends AjaxTestBase {
    * Tests behavior of ajax_render_error().
    */
   function testAJAXRenderError() {
-    // Verify default error message.
-    $commands = $this->drupalGetAJAX('ajax-test/render-error');
-    $expected = new AlertCommand(t('An error occurred while handling the request: The server received invalid input.'));
-    $this->assertCommand($commands, $expected->render(), 'ajax_render_error() invokes alert command.');
-
     // Verify custom error message.
     $edit = array(
       'message' => 'Custom error message.',

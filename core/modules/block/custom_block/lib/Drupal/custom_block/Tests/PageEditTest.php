@@ -39,7 +39,7 @@ class PageEditTest extends CustomBlockTestBase {
     $this->drupalPost('block/add/basic', $edit, t('Save'));
 
     // Check that the block exists in the database.
-    $blocks = entity_query('custom_block')->condition('info', $edit['info'])->execute();
+    $blocks = \Drupal::entityQuery('custom_block')->condition('info', $edit['info'])->execute();
     $block = entity_load('custom_block', reset($blocks));
     $this->assertTrue($block, 'Custom block found in database.');
 
@@ -66,6 +66,11 @@ class PageEditTest extends CustomBlockTestBase {
     // Ensure that the block revision has been created.
     $revised_block = entity_load('custom_block', $block->id->value, TRUE);
     $this->assertNotIdentical($block->revision_id->value, $revised_block->revision_id->value, 'A new revision has been created.');
+
+    // Test deleting the block.
+    $this->drupalGet("block/" . $revised_block->id() . "/edit");
+    $this->drupalPost(NULL, array(), t('Delete'));
+    $this->assertText(format_string('Are you sure you want to delete !label?', array('!label' => $revised_block->label())));
   }
 
 }

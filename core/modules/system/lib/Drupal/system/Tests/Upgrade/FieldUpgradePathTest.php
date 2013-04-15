@@ -87,4 +87,132 @@ class FieldUpgradePathTest extends UpgradePathTestBase {
     $this->assertEqual($displays['teaser']['content']['language'], $expected['teaser']);
   }
 
+  /**
+   * Tests migration of field and instance definitions to config.
+   */
+  function testFieldUpgradeToConfig() {
+    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+
+    $field_manifest = config('manifest.field.field')->get();
+    $instance_manifest = config('manifest.field.instance')->get();
+
+    // Check that the configuration for the 'body' field is correct.
+    $config = \Drupal::config('field.field.body')->get();
+    // We cannot predict the value of the UUID, we just check it's present.
+    $this->assertFalse(empty($config['uuid']));
+    $field_uuid = $config['uuid'];
+    unset($config['uuid']);
+    $this->assertEqual($config, array(
+      'id' => 'body',
+      'type' => 'text_with_summary',
+      'module' => 'text',
+      'active' => '1',
+      'settings' => array(),
+      'storage' => array(
+        'type' => 'field_sql_storage',
+        'module' => 'field_sql_storage',
+        'active' => '1',
+        'settings' => array(),
+      ),
+      'locked' => 0,
+      'cardinality' => 1,
+      'translatable' => 0,
+      'entity_types' => array('node'),
+      'indexes' => array(
+        'format' => array('format')
+      ),
+      'status' => 1,
+      'langcode' => 'und',
+    ));
+    // Check that an entry is present in the manifest.
+    $this->assertEqual($field_manifest['body']['name'], 'field.field.body');
+
+    // Check that the configuration for the instance on article and page nodes
+    // is correct.
+    foreach (array('article', 'page') as $node_type) {
+      $config = config("field.instance.node.$node_type.body")->get();
+      // We cannot predict the value of the UUID, we just check it's present.
+      $this->assertFalse(empty($config['uuid']));
+      unset($config['uuid']);
+      $this->assertEqual($config, array(
+        'id' => "node.$node_type.body",
+        'field_uuid' => $field_uuid,
+        'entity_type' => 'node',
+        'bundle' => $node_type,
+        'label' => 'Body',
+        'description' => '',
+        'required' => FALSE,
+        'default_value' => array(),
+        'default_value_function' => '',
+        'settings' => array(
+          'display_summary' => TRUE,
+          'text_processing' => 1,
+          'user_register_form' => FALSE,
+        ),
+        'widget' => array(
+          'type' => 'text_textarea_with_summary',
+          'module' => 'text',
+          'settings' => array(
+            'rows' => 20,
+            'summary_rows' => 5,
+          ),
+          'weight' => -4,
+        ),
+        'status' => 1,
+        'langcode' => 'und',
+      ));
+      // Check that an entry is present in the manifest.
+      $this->assertEqual($instance_manifest["node.$node_type.body"]['name'], "field.instance.node.$node_type.body");
+    }
+
+    // Check that field values in a pre-existing node are read correctly.
+    $body = node_load(1)->get('body');
+    $this->assertEqual($body->value, 'Some value');
+    $this->assertEqual($body->summary, 'Some summary');
+    $this->assertEqual($body->format, 'filtered_html');
+
+    // Check that the definition of a deleted field is stored in state rather
+    // than config.
+    $this->assertFalse(\Drupal::config('field.field.test_deleted_field')->get());
+    // The array is keyed by UUID. We cannot predict the UUID of the
+    // 'test_deleted_field' field, but assume there was only one deleted field
+    // in the test database.
+    $deleted_fields = \Drupal::state()->get('field.field.deleted');
+    $uuid_key = key($deleted_fields);
+    $deleted_field = $deleted_fields[$uuid_key];
+    $this->assertEqual($deleted_field['uuid'], $uuid_key);
+    $this->assertEqual($deleted_field['id'], 'test_deleted_field');
+
+    // Check that the definition of a deleted instance is stored in state rather
+    // than config.
+    $this->assertFalse(\Drupal::config('field.instance.node.article.test_deleted_field')->get());
+    $deleted_instances = \Drupal::state()->get('field.instance.deleted');
+    // Assume there was only one deleted instance in the test database.
+    $uuid_key = key($deleted_instances);
+    $deleted_instance = $deleted_instances[$uuid_key];
+    $this->assertEqual($deleted_instance['uuid'], $uuid_key);
+    $this->assertEqual($deleted_instance['id'], 'node.article.test_deleted_field');
+    // The deleted field uuid and deleted instance field_uuid must match.
+    $this->assertEqual($deleted_field['uuid'], $deleted_instance['field_uuid']);
+
+    // Check that pre-existing deleted field values are read correctly.
+    $entity = _field_create_entity_from_ids((object) array(
+      'entity_type' => 'node',
+      'bundle' => 'article',
+      'entity_id' => 2,
+      'revision_id' => 2,
+    ));
+    field_attach_load('node', array(2 => $entity), FIELD_LOAD_CURRENT, array('field_id' => $deleted_field['uuid'], 'deleted' => 1));
+    $deleted_value = $entity->get('test_deleted_field');
+    $this->assertEqual($deleted_value[LANGUAGE_NOT_SPECIFIED][0]['value'], 'Some deleted value');
+
+    // Check that creation of a new node works as expected.
+    $value = $this->randomName();
+    $edit = array(
+      'title' => 'Node after CMI conversion',
+      'body[und][0][value]' => $value,
+    );
+    $this->drupalPost('node/add/article', $edit, 'Save and publish');
+    $this->assertText($value);
+  }
 }

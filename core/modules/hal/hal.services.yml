@@ -1,0 +1,33 @@
+services:
+  serializer.normalizer.entity_reference_item.hal:
+    class: Drupal\hal\Normalizer\EntityReferenceItemNormalizer
+    tags:
+      - { name: normalizer, priority: 10 }
+    calls:
+      - [setLinkManager, ['@rest.link_manager']]
+  serializer.normalizer.field_item.hal:
+    class: Drupal\hal\Normalizer\FieldItemNormalizer
+    tags:
+      - { name: normalizer, priority: 10 }
+    calls:
+      - [setLinkManager, ['@rest.link_manager']]
+  serializer.normalizer.field.hal:
+    class: Drupal\hal\Normalizer\FieldNormalizer
+    tags:
+      - { name: normalizer, priority: 10 }
+    calls:
+      - [setLinkManager, ['@rest.link_manager']]
+  serializer.normalizer.entity.hal:
+    class: Drupal\hal\Normalizer\EntityNormalizer
+    tags:
+      - { name: normalizer, priority: 10 }
+    calls:
+      - [setLinkManager, ['@rest.link_manager']]
+  serializer.encoder.hal:
+    class: Drupal\hal\Encoder\JsonEncoder
+    tags:
+      - { name: encoder, priority: 10, format: hal_json }
+  hal.subscriber:
+    class: Drupal\hal\HalSubscriber
+    tags:
+      - { name: event_subscriber }

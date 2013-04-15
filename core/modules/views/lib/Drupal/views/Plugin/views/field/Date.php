@@ -7,16 +7,14 @@
 
 namespace Drupal\views\Plugin\views\field;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * A handler to provide proper displays for dates.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "date"
- * )
+ * @PluginID("date")
  */
 class Date extends FieldPluginBase {
 

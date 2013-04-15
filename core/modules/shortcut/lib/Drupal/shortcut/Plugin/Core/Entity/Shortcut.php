@@ -8,13 +8,13 @@
 namespace Drupal\shortcut\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the Shortcut configuration entity.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "shortcut",
  *   label = @Translation("Shortcut set"),
  *   module = "shortcut",

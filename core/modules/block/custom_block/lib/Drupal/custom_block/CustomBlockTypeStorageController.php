@@ -22,11 +22,11 @@ class CustomBlockTypeStorageController extends ConfigStorageController {
     parent::postSave($entity, $update);
 
     if (!$update) {
-      field_attach_create_bundle('custom_block', $entity->id());
+      entity_invoke_bundle_hook('create', 'custom_block', $entity->id());
       custom_block_add_body_field($entity->id());
     }
     elseif ($entity->original->id() != $entity->id()) {
-      field_attach_rename_bundle('custom_block', $entity->original->id(), $entity->id());
+      entity_invoke_bundle_hook('rename', 'custom_block', $entity->original->id(), $entity->id());
     }
   }
 
@@ -37,7 +37,7 @@ class CustomBlockTypeStorageController extends ConfigStorageController {
     parent::postDelete($entities);
 
     foreach ($entities as $entity) {
-      field_attach_delete_bundle('custom_block', $entity->id());
+      entity_invoke_bundle_hook('delete', 'custom_block', $entity->id());
     }
   }
 

@@ -63,11 +63,6 @@ class NumberFieldTest extends WebTestBase {
           'placeholder' => '0.00'
         ),
       ),
-      'display' => array(
-        'default' => array(
-          'type' => 'number_decimal',
-        ),
-      ),
     );
     field_create_instance($this->instance);
     entity_get_display('test_entity', 'test_bundle', 'default')

@@ -119,16 +119,14 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
     $identity = $expected_claimed_id = url('openid-test/redirected/yadis/xrds/1', array('absolute' => TRUE));
     $this->addRedirectedIdentity($identity, 2, 'http://example.com/xrds', $expected_claimed_id, 0);
 
-    // Exact 3 redirects (default value for the 'max_redirects' option in
-    // drupal_http_request()).
+    // Exactly 5 redirects (default value for the max redirects setting).
     $identity = $expected_claimed_id = url('openid-test/redirected/yadis/xrds/2', array('absolute' => TRUE));
-    $this->addRedirectedIdentity($identity, 2, 'http://example.com/xrds', $expected_claimed_id, 2);
+    $this->addRedirectedIdentity($identity, 2, 'http://example.com/xrds', $expected_claimed_id, 4);
 
-    // Fails because there are more than 3 redirects (default value for the
-    // 'max_redirects' option in drupal_http_request()).
+    // Fails because there are more than 5 redirects.
     $identity = url('openid-test/redirected/yadis/xrds/3', array('absolute' => TRUE));
     $expected_claimed_id = FALSE;
-    $this->addRedirectedIdentity($identity, 2, 'http://example.com/xrds', $expected_claimed_id, 3);
+    $this->addRedirectedIdentity($identity, 2, 'http://example.com/xrds', $expected_claimed_id, 5);
   }
 
   /**

@@ -13,6 +13,8 @@ use Drupal\Core\TypedData\Primitive;
 use Drupal\system\Plugin\block\block\SystemMenuBlock;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Guzzle\Http\Exception\BadResponseException;
+use Guzzle\Http\Exception\RequestException;
 
 /**
  * Maximum age of temporary files in seconds.
@@ -1432,7 +1434,7 @@ function system_library_info() {
   $libraries['jquery'] = array(
     'title' => 'jQuery',
     'website' => 'http://jquery.com',
-    'version' => '1.8.2',
+    'version' => '1.9.1',
     'js' => array(
       'core/misc/jquery.js' => array('group' => JS_LIBRARY, 'weight' => -20),
     ),
@@ -1469,7 +1471,7 @@ function system_library_info() {
   $libraries['jquery.bbq'] = array(
     'title' => 'jQuery BBQ',
     'website' => 'http://benalman.com/projects/jquery-bbq-plugin/',
-    'version' => '1.2.1',
+    'version' => '1.3pre',
     'js' => array(
       'core/misc/jquery.ba-bbq.js' => array(),
     ),
@@ -3051,20 +3053,12 @@ function _system_rebuild_theme_data() {
     if (!empty($themes[$key]->info['base theme'])) {
       $sub_themes[] = $key;
     }
-    if ($themes[$key]->info['engine'] == 'theme') {
-      $filename = dirname($themes[$key]->uri) . '/' . $themes[$key]->name . '.theme';
-      if (file_exists($filename)) {
-        $themes[$key]->owner = $filename;
-        $themes[$key]->prefix = $key;
-      }
-    }
-    else {
-      $engine = $themes[$key]->info['engine'];
-      if (isset($engines[$engine])) {
-        $themes[$key]->owner = $engines[$engine]->uri;
-        $themes[$key]->prefix = $engines[$engine]->name;
-        $themes[$key]->template = TRUE;
-      }
+
+    $engine = $themes[$key]->info['engine'];
+    if (isset($engines[$engine])) {
+      $themes[$key]->owner = $engines[$engine]->uri;
+      $themes[$key]->prefix = $engines[$engine]->name;
+      $themes[$key]->template = TRUE;
     }
 
     // Prefix stylesheets and scripts with module path.
@@ -3667,7 +3661,7 @@ function theme_system_compact_link() {
 }
 
 /**
- * Attempts to get a file using drupal_http_request and to store it locally.
+ * Attempts to get a file using Guzzle HTTP client and to store it locally.
  *
  * @param $url
  *   The URL of the file to grab.
@@ -3708,12 +3702,22 @@ function system_retrieve_file($url, $destination = NULL, $managed = FALSE, $repl
       $path = $destination;
     }
   }
-  $result = drupal_http_request($url);
-  if ($result->code != 200) {
-    drupal_set_message(t('HTTP error @errorcode occurred when trying to fetch @remote.', array('@errorcode' => $result->code, '@remote' => $url)), 'error');
+  try {
+    $data = Drupal::httpClient()
+      ->get($url)
+      ->send()
+      ->getBody(TRUE);
+    $local = $managed ? file_save_data($data, $path, $replace) : file_unmanaged_save_data($data, $path, $replace);
+  }
+  catch (BadResponseException $exception) {
+    $response = $exception->getResponse();
+    drupal_set_message(t('Failed to fetch file due to HTTP error "%error"', array('%error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase())), 'error');
     return FALSE;
   }
-  $local = $managed ? file_save_data($result->data, $path, $replace) : file_unmanaged_save_data($result->data, $path, $replace);
+  catch (RequestException $exception) {
+    drupal_set_message(t('Failed to fetch file due to error "%error"', array('%error' => $exception->getMessage())), 'error');
+    return FALSE;
+  }
   if (!$local) {
     drupal_set_message(t('@remote could not be saved to @path.', array('@remote' => $url, '@path' => $path)), 'error');
   }
@@ -3883,23 +3887,6 @@ function system_date_format_delete($date_format_id) {
       $config->clear($format_id)->save();
     }
   }
-}
-
-/**
- * Implements hook_archiver_info().
- */
-function system_archiver_info() {
-  $archivers['tar'] = array(
-    'class' => 'Drupal\Component\Archiver\Tar',
-    'extensions' => array('tar', 'tgz', 'tar.gz', 'tar.bz2'),
-  );
-  if (function_exists('zip_open')) {
-    $archivers['zip'] = array(
-      'class' => 'Drupal\Component\Archiver\Zip',
-      'extensions' => array('zip'),
-    );
-  }
-  return $archivers;
 }
 
 /**

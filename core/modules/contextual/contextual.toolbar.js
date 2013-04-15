@@ -97,7 +97,7 @@ Drupal.contextualToolbar.views.EditToggleView = Backbone.View.extend({
     var isViewing = this.model.get('isViewing');
     this.$el.find('button')
       .toggleClass('active', !isViewing)
-      .attr('aria-pressed', !isViewing);
+      .prop('aria-pressed', !isViewing);
 
     return this;
   },

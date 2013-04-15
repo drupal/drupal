@@ -107,10 +107,6 @@ class ViewEditFormController extends ViewFormControllerBase {
       }
     }
 
-    $form['help_text'] = array(
-      '#type' => 'container',
-      '#children' => t('Modify the display(s) of your view below or add new displays.'),
-    );
     $form['displays'] = array(
       '#prefix' => '<h1 class="unit-title clearfix">' . t('Displays') . '</h1>',
       '#type' => 'container',
@@ -203,9 +199,9 @@ class ViewEditFormController extends ViewFormControllerBase {
     parent::validate($form, $form_state);
 
     $view = $this->getEntity($form_state);
-    $errors = $view->get('executable')->validate();
-    if ($errors !== TRUE) {
-      foreach ($errors as $error) {
+
+    foreach ($view->get('executable')->validate() as $display_errors) {
+      foreach ($display_errors as $error) {
         form_set_error('', $error);
       }
     }
@@ -326,7 +322,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     }
     // In AJAX context, ViewUI::rebuildCurrentTab() returns this outside of form
     // context, so hook_form_views_ui_edit_form_alter() is insufficient.
-    drupal_alter('views_ui_display_tab', $build, $view, $display_id);
+    \Drupal::moduleHandler()->alter('views_ui_display_tab', $build, $view, $display_id);
     return $build;
   }
 
@@ -376,10 +372,11 @@ class ViewEditFormController extends ViewFormControllerBase {
             "#suffix" => '</li>',
           );
         }
-        // Add a link to view the page.
-        elseif ($view->get('executable')->displayHandlers->get($display['id'])->hasPath()) {
+        // Add a link to view the page unless the view is disabled or has no
+        // path.
+        elseif ($view->status() && $view->get('executable')->displayHandlers->get($display['id'])->hasPath()) {
           $path = $view->get('executable')->displayHandlers->get($display['id'])->getPath();
-          if (strpos($path, '%') === FALSE) {
+          if ($path && (strpos($path, '%') === FALSE)) {
             $build['top']['actions']['path'] = array(
               '#type' => 'link',
               '#title' => t('view @display', array('@display' => $display['display_title'])),
@@ -409,16 +406,6 @@ class ViewEditFormController extends ViewFormControllerBase {
           '#prefix' => '<li class="delete">',
           "#suffix" => '</li>',
         );
-        if ($is_enabled) {
-          $build['top']['actions']['disable'] = array(
-            '#type' => 'submit',
-            '#value' => t('disable @display_title', array('@display_title' => $display_title)),
-            '#limit_validation_errors' => array(),
-            '#submit' => array(array($this, 'submitDisplayDisable'), array($this, 'submitDelayDestination')),
-            '#prefix' => '<li class="disable">',
-            "#suffix" => '</li>',
-          );
-        }
 
         foreach (views_fetch_plugin_names('display', NULL, array($view->get('storage')->get('base_table'))) as $type => $label) {
           if ($type == $display['display_plugin']) {
@@ -445,6 +432,16 @@ class ViewEditFormController extends ViewFormControllerBase {
           "#suffix" => '</li>',
         );
       }
+      if ($is_enabled) {
+        $build['top']['actions']['disable'] = array(
+          '#type' => 'submit',
+          '#value' => t('disable @display_title', array('@display_title' => $display_title)),
+          '#limit_validation_errors' => array(),
+          '#submit' => array(array($this, 'submitDisplayDisable'), array($this, 'submitDelayDestination')),
+          '#prefix' => '<li class="disable">',
+          "#suffix" => '</li>',
+        );
+      }
       $build['top']['actions']['suffix']['#markup'] = '</ul>';
 
       // The area above the three columns.
@@ -468,6 +465,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     $build['columns']['second']['settings'] = array();
     $build['columns']['second']['header'] = array();
     $build['columns']['second']['footer'] = array();
+    $build['columns']['second']['empty'] = array();
     $build['columns']['second']['pager'] = array();
 
     // The third column buckets are wrapped in details.
@@ -527,9 +525,9 @@ class ViewEditFormController extends ViewFormControllerBase {
     $build['columns']['first']['sorts'] = $this->getFormBucket($view, 'sort', $display);
     $build['columns']['second']['header'] = $this->getFormBucket($view, 'header', $display);
     $build['columns']['second']['footer'] = $this->getFormBucket($view, 'footer', $display);
+    $build['columns']['second']['empty'] = $this->getFormBucket($view, 'empty', $display);
     $build['columns']['third']['arguments'] = $this->getFormBucket($view, 'argument', $display);
     $build['columns']['third']['relationships'] = $this->getFormBucket($view, 'relationship', $display);
-    $build['columns']['third']['empty'] = $this->getFormBucket($view, 'empty', $display);
 
     return $build;
   }
@@ -667,7 +665,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     );
 
     // Let other modules add additional links here.
-    drupal_alter('views_ui_display_top_links', $element['extra_actions']['#links'], $view, $display_id);
+    \Drupal::moduleHandler()->alter('views_ui_display_top_links', $element['extra_actions']['#links'], $view, $display_id);
 
     if (isset($view->type) && $view->type != t('Default')) {
       if ($view->type == t('Overridden')) {
@@ -724,7 +722,7 @@ class ViewEditFormController extends ViewFormControllerBase {
    * should not yet redirect to the destination.
    */
   public function submitDelayDestination($form, &$form_state) {
-    $query = drupal_container()->get('request')->query;
+    $query = \Drupal::request()->query;
     // @todo: Revisit this when http://drupal.org/node/1668866 is in.
     $destination = $query->get('destination');
     if (isset($destination) && $form_state['redirect'] !== FALSE) {
@@ -917,17 +915,24 @@ class ViewEditFormController extends ViewFormControllerBase {
     // Create an array of actions to pass to theme_links
     $actions = array();
     $count_handlers = count($executable->display_handler->getHandlers($type));
+
+    // Create the add text variable for the add action.
+    $add_text = t('Add <span class="element-invisible">@type</span>', array('@type' => $types[$type]['ltitle']));
+
     $actions['add'] = array(
-      'title' => t('Add'),
+      'title' => $add_text,
       'href' => "admin/structure/views/nojs/add-item/{$view->id()}/{$display['id']}/$type",
-      'attributes' => array('class' => array('icon compact add', 'views-ajax-link'), 'title' => t('Add'), 'id' => 'views-add-' . $type),
+      'attributes' => array('class' => array('icon compact add', 'views-ajax-link'), 'id' => 'views-add-' . $type),
       'html' => TRUE,
     );
     if ($count_handlers > 0) {
+      // Create the rearrange text variable for the rearrange action.
+      $rearrange_text = $type == 'filter' ? t('And/Or Rearrange <span class="element-invisible">filter criteria</span>') : t('Rearrange <span class="element-invisible">@type</span>', array('@type' => $types[$type]['ltitle']));
+
       $actions['rearrange'] = array(
         'title' => $rearrange_text,
         'href' => $rearrange_url,
-        'attributes' => array('class' => array($class, 'views-ajax-link'), 'title' => t('Rearrange'), 'id' => 'views-rearrange-' . $type),
+        'attributes' => array('class' => array($class, 'views-ajax-link'), 'id' => 'views-rearrange-' . $type),
         'html' => TRUE,
       );
     }

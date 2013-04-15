@@ -1505,7 +1505,6 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
  *   defined, those handlers will be stored here.
  */
 function form_execute_handlers($type, &$form, &$form_state) {
-  $return = FALSE;
   // If there was a button pressed, use its handlers.
   if (isset($form_state[$type . '_handlers'])) {
     $handlers = $form_state[$type . '_handlers'];
@@ -1532,9 +1531,7 @@ function form_execute_handlers($type, &$form, &$form_state) {
     else {
       call_user_func_array($function, array(&$form, &$form_state));
     }
-    $return = TRUE;
   }
-  return $return;
 }
 
 /**
@@ -1828,7 +1825,7 @@ function form_builder($form_id, &$element, &$form_state) {
 
   // Special handling if we're on the top level form element.
   if (isset($element['#type']) && $element['#type'] == 'form') {
-    if (!empty($element['#https']) && variable_get('https', FALSE) &&
+    if (!empty($element['#https']) && settings()->get('mixed_mode_sessions', FALSE) &&
         !url_is_external($element['#action'])) {
       global $base_root;
 

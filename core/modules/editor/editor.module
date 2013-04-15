@@ -253,6 +253,9 @@ function editor_form_filter_admin_format_submit($form, &$form_state) {
 
   // Create a new editor or update the existing editor.
   if ($form_state['values']['editor']['editor'] !== '') {
+    // Ensure the text format is set: when creating a new text format, this
+    // would equal the empty string.
+    $form_state['editor']->format = $form['#format']->format;
     $form_state['editor']->settings = $form_state['values']['editor']['settings'];
     $form_state['editor']->save();
   }

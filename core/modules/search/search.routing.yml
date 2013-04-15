@@ -1,0 +1,6 @@
+search_reindex_confirm:
+  pattern: '/admin/config/search/settings/reindex'
+  defaults:
+    _form: 'Drupal\search\Form\ReindexConfirm'
+  requirements:
+    _permission: 'administer search'

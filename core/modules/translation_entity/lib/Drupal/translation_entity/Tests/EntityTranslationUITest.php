@@ -259,7 +259,7 @@ abstract class EntityTranslationUITest extends EntityTranslationTestBase {
    */
   protected function getTranslation(EntityInterface $entity, $langcode) {
     // @todo remove once EntityBCDecorator is gone.
-    $entity = $entity->getOriginalEntity();
+    $entity = $entity->getNGEntity();
     return $entity instanceof EntityNG ? $entity->getTranslation($langcode, FALSE) : $entity;
   }
 

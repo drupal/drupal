@@ -8,13 +8,13 @@
 namespace Drupal\filter\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Represents a text format.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "filter_format",
  *   label = @Translation("Text format"),
  *   module = "filter",
@@ -135,6 +135,22 @@ class FilterFormat extends ConfigEntityBase {
       return strnatcasecmp($a['module'], $b['module']);
     }
     return strnatcasecmp($a['name'], $b['name']);
+  }
+
+  /**
+   * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::disable().
+   */
+  public function disable() {
+    parent::disable();
+
+    // Allow modules to react on text format deletion.
+    module_invoke_all('filter_format_disable', $this);
+
+    // Clear the filter cache whenever a text format is disabled.
+    filter_formats_reset();
+    cache('filter')->deleteTags(array('filter_format' => $this->format));
+
+    return $this;
   }
 
 }

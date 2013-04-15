@@ -425,6 +425,9 @@ class ForumTest extends WebTestBase {
   function deleteForum($tid) {
     // Delete the forum.
     $this->drupalPost('admin/structure/forum/edit/forum/' . $tid, array(), t('Delete'));
+    $this->assertText('Are you sure you want to delete the forum');
+    $this->assertNoText('Add forum');
+    $this->assertNoText('Add forum container');
     $this->drupalPost(NULL, array(), t('Delete'));
 
     // Assert that the forum no longer exists.

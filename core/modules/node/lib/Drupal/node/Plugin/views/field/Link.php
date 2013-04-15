@@ -8,17 +8,14 @@
 namespace Drupal\node\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to present a link to the node.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "node_link",
- *   module = "node"
- * )
+ * @PluginID("node_link")
  */
 class Link extends FieldPluginBase {
 

@@ -62,20 +62,4 @@ class CacheFactory extends ContainerAware {
     return $this->container->get($service_name)->get($bin);
   }
 
-  /**
-   * Helper to register a cache bin to the container.
-   *
-   * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
-   *   The container to register the cache bin on.
-   * @param $bin
-   *   The cache bin to add. Do not add the cache_ prefix.
-   */
-  public static function registerBin(ContainerBuilder $container, $bin) {
-    $container
-      ->register("cache.$bin", 'Drupal\Core\Cache\CacheBackendInterface')
-      ->setFactoryService('cache_factory')
-      ->setFactoryMethod('get')
-      ->addArgument($bin)
-      ->addTag('cache.bin');
-  }
 }

@@ -175,15 +175,15 @@ class VocabularyUnitTest extends TaxonomyTestBase {
     // Fields and field instances attached to taxonomy term bundles should be
     // removed when the module is uninstalled.
     $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
-    $this->field = array('field_name' => $this->field_name, 'type' => 'text', 'cardinality' => 4);
-    $this->field = field_create_field($this->field);
-    $this->instance = array(
+    $this->field_definition = array('field_name' => $this->field_name, 'type' => 'text', 'cardinality' => 4);
+    field_create_field($this->field_definition);
+    $this->instance_definition = array(
       'field_name' => $this->field_name,
       'entity_type' => 'taxonomy_term',
       'bundle' => $this->vocabulary->id(),
       'label' => $this->randomName() . '_label',
     );
-    field_create_instance($this->instance);
+    field_create_instance($this->instance_definition);
 
     module_disable(array('taxonomy'));
     require_once DRUPAL_ROOT . '/core/includes/install.inc';
@@ -196,8 +196,7 @@ class VocabularyUnitTest extends TaxonomyTestBase {
     // an instance of this field on the same bundle name should be successful.
     $this->vocabulary->enforceIsNew();
     taxonomy_vocabulary_save($this->vocabulary);
-    unset($this->field['id']);
-    field_create_field($this->field);
-    field_create_instance($this->instance);
+    field_create_field($this->field_definition);
+    field_create_instance($this->instance_definition);
   }
 }

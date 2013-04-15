@@ -43,8 +43,7 @@ class BanSubscriber implements EventSubscriberInterface {
    *   The Event to process.
    */
   public function onKernelRequestBannedIpCheck(GetResponseEvent $event) {
-    // @todo convert this to Request::getClientIP().
-    $ip = ip_address();
+    $ip = $event->getRequest()->getClientIp();
     if ($this->manager->isDenied($ip)) {
       $response = new Response('Sorry, ' . check_plain($ip) . ' has been banned.', 403);
       $event->setResponse($response);

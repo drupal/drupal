@@ -10,7 +10,7 @@ namespace Drupal\views\Plugin\views\filter;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ManyToOneHelper;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Complex filter to handle filtering for many to one relationships,
@@ -22,9 +22,7 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @ingroup views_filter_handlers
  *
- * @Plugin(
- *   id = "many_to_one"
- * )
+ * @PluginID("many_to_one")
  */
 class ManyToOne extends InOperator {
 

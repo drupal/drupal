@@ -8,17 +8,14 @@
 namespace Drupal\node\Plugin\views\field;
 
 use Drupal\node\Plugin\views\field\RevisionLink;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to present a link to revert a node to a revision.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "node_revision_link_revert",
- *   module = "node"
- * )
+ * @PluginID("node_revision_link_revert")
  */
 class RevisionLinkRevert extends RevisionLink {
 

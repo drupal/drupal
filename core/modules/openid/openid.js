@@ -21,22 +21,24 @@ Drupal.behaviors.openid = {
       var $openid_form = $('#openid-login-form');
 
       // Change link text and triggers loginchange event.
-      $('#block-user-login .openid-link').toggle(
-        function() {
+      var toggleClick = true;
+      $('#block-user-login .openid-link').on('click', function() {
+        if (toggleClick) {
           $(this).html(Drupal.t('Cancel OpenID login'));
           $login_form.hide();
           $openid_form.show();
           clearStatus($login_form);
           // Move focus to OpenID input.
           $('#edit-openid-identifier').focus();
-        },
-        function() {
+        }
+        else {
           $(this).html(Drupal.t('Log in using OpenID'));
           $login_form.show();
           $openid_form.hide();
           clearStatus($openid_form);
         }
-      );
+        toggleClick = !toggleClick;
+      });
     }
 
   }

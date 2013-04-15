@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\Config\FileStorage;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\CoreBundle;
 use Drupal\Core\Database\Database;
@@ -330,6 +331,10 @@ function install_begin_request(&$install_state) {
   if ($install_state['settings_verified']) {
     $kernel = new DrupalKernel('install', FALSE, drupal_classloader(), FALSE);
     $kernel->boot();
+    // Set the request in the kernel to the new created Request above
+    // so it is available to the rest of the installation process.
+    $kernel->getContainer()
+      ->set('request', $request);
   }
   else {
     // @todo Move into a proper Drupal\Core\DependencyInjection\InstallContainerBuilder.
@@ -428,6 +433,16 @@ function install_begin_request(&$install_state) {
 
     // Do not install over a configured settings.php.
     if (!empty($GLOBALS['databases'])) {
+      throw new Exception(install_already_done_error());
+    }
+  }
+
+  // Ensure that the active configuration directory is empty before installation
+  // starts.
+  if ($install_state['config_verified'] && empty($task)) {
+    $config = glob(config_get_config_directory(CONFIG_ACTIVE_DIRECTORY) . '/*.' . FileStorage::getFileExtension());
+    if (!empty($config)) {
+      $task = NULL;
       throw new Exception(install_already_done_error());
     }
   }
@@ -1468,7 +1483,7 @@ function install_select_language_form($form, &$form_state, $files = array()) {
   if (empty($files)) {
     $form['help'] = array(
       '#markup' => '<p>Translations will be downloaded from the <a href="http://localize.drupal.org">Drupal Translation website</a>. ' .
-                   'If you do not want this, select <em>English</em> and continue the installation. For more information, see the <a href="http://drupal.org/documentation/install">online handbook</a>.</p>',
+      'If you do not want this, select <em>English</em> and continue the installation. For more information, see the <a href="http://drupal.org/documentation/install">online handbook</a>.</p>',
     );
   }
   $form['actions'] = array('#type' => 'actions');
@@ -1609,7 +1624,7 @@ function install_already_done_error() {
   global $base_url;
 
   drupal_set_title(st('Drupal already installed'));
-  return st('<ul><li>To start over, you must empty your existing database.</li><li>To install to a different database, edit the appropriate <em>settings.php</em> file in the <em>sites</em> folder.</li><li>To upgrade an existing installation, proceed to the <a href="@base-url/core/update.php">update script</a>.</li><li>View your <a href="@base-url">existing site</a>.</li></ul>', array('@base-url' => $base_url));
+  return st('<ul><li>To start over, you must empty your existing database, delete your active configuration, and copy <em>default.settings.php</em> over <em>settings.php</em>.</li><li>To install to a different database, edit the appropriate <em>settings.php</em> file in the <em>sites</em> folder.</li><li>To locate your active configuration, view the appropriate <em>settings.php</em> file in the <em>sites</em> folder.</em></li></li><li>To upgrade an existing installation, proceed to the <a href="@base-url/core/update.php">update script</a>.</li><li>View your <a href="@base-url">existing site</a>.</li></ul>', array('@base-url' => $base_url));
 }
 
 /**
@@ -1977,7 +1992,7 @@ function install_check_translations($install_state) {
     // If the translations directory is not readable, throw an error.
     if (!$readable) {
       $requirements['translations directory readable'] = array(
-      'title'       => st('Translations directory'),
+        'title'       => st('Translations directory'),
         'value'       => st('The translations directory is not readable.'),
         'severity'    => REQUIREMENT_ERROR,
         'description' => st('The installer requires read permissions to %translations_directory at all times. If you are unsure how to grant file permissions, consult the <a href="@handbook_url">online handbook</a>.', array('%translations_directory' => $translations_directory, '@handbook_url' => 'http://drupal.org/server-permissions')),
@@ -1986,7 +2001,7 @@ function install_check_translations($install_state) {
     // If translations directory is not writable, throw an error.
     if (!$writable) {
       $requirements['translations directory writable'] = array(
-      'title'       => st('Translations directory'),
+        'title'       => st('Translations directory'),
         'value'       => st('The translations directory is not writable.'),
         'severity'    => REQUIREMENT_ERROR,
         'description' => st('The installer requires write permissions to %translations_directory during the installation process. If you are unsure how to grant file permissions, consult the <a href="@handbook_url">online handbook</a>.', array('%translations_directory' => $translations_directory, '@handbook_url' => 'http://drupal.org/server-permissions')),
@@ -1994,7 +2009,7 @@ function install_check_translations($install_state) {
     }
     else {
       $requirements['translations directory writable'] = array(
-      'title'       => st('Translations directory'),
+        'title'       => st('Translations directory'),
         'value'       => st('The translations directory is writable.'),
       );
     }
@@ -2018,7 +2033,7 @@ function install_check_translations($install_state) {
     // error.
     if (!$translation_available) {
       $requirements['translation available'] = array(
-      'title'       => st('Translation'),
+        'title'       => st('Translation'),
         'value'       => st('The %language translation is not available.', array('%language' => $language)),
         'severity'    => REQUIREMENT_ERROR,
         'description' => st('The %language translation file is not available at the translation server. <a href="!url">Choose a different language</a> or select English and translate your website later.', array('%language' => $language, '!url' => check_url($_SERVER['SCRIPT_NAME']))),
@@ -2026,7 +2041,7 @@ function install_check_translations($install_state) {
     }
     else {
       $requirements['translation available'] = array(
-      'title'       => st('Translation'),
+        'title'       => st('Translation'),
         'value'       => st('The %language translation is available.', array('%language' => $language)),
       );
     }
@@ -2037,7 +2052,7 @@ function install_check_translations($install_state) {
 
     if (!$translation_downloaded) {
       $requirements['translation downloaded'] = array(
-      'title'       => st('Translation'),
+        'title'       => st('Translation'),
         'value'       => st('The %language translation could not be downloaded.', array('%language' => $language)),
         'severity'    => REQUIREMENT_ERROR,
         'description' => st('The %language translation file could not be downloaded. <a href="!url">Choose a different language</a> or select English and translate your website later.', array('%language' => $language, '!url' => check_url($_SERVER['SCRIPT_NAME']))),
@@ -2373,6 +2388,7 @@ function install_configure_form_submit($form, &$form_state) {
   config('system.site')
     ->set('name', $form_state['values']['site_name'])
     ->set('mail', $form_state['values']['site_mail'])
+    ->set('langcode', language_default()->langcode)
     ->save();
 
   config('system.timezone')

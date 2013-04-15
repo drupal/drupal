@@ -8,17 +8,14 @@
 namespace Drupal\node\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Filter by node_access records.
  *
  * @ingroup views_filter_handlers
  *
- * @Plugin(
- *   id = "node_access",
- *   module = "node"
- * )
+ * @PluginID("node_access")
  */
 class Access extends FilterPluginBase {
 

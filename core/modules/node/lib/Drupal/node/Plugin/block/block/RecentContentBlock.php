@@ -59,9 +59,9 @@ class RecentContentBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::build().
+   * Implements \Drupal\block\BlockBase::blockBuild().
    */
-  public function build() {
+  protected function blockBuild() {
     if ($nodes = node_get_recent($this->configuration['block_count'])) {
       return array(
         '#theme' => 'node_recent_block',

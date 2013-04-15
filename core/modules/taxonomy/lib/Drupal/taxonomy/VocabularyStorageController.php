@@ -20,7 +20,7 @@ class VocabularyStorageController extends ConfigStorageController {
    */
   protected function postSave(EntityInterface $entity, $update) {
     if (!$update) {
-      field_attach_create_bundle('taxonomy_term', $entity->id());
+      entity_invoke_bundle_hook('create', 'taxonomy_term', $entity->id());
     }
     elseif ($entity->getOriginalID() != $entity->id()) {
       // Reflect machine name changes in the definitions of existing 'taxonomy'
@@ -41,7 +41,7 @@ class VocabularyStorageController extends ConfigStorageController {
         }
       }
       // Update bundles.
-      field_attach_rename_bundle('taxonomy_term', $entity->getOriginalID(), $entity->id());
+      entity_invoke_bundle_hook('rename', 'taxonomy_term', $entity->getOriginalID(), $entity->id());
     }
     parent::postSave($entity, $update);
     $this->resetCache($update ? array($entity->getOriginalID()) : array());

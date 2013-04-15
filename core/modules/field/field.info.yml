@@ -3,6 +3,4 @@ description: 'Field API to add fields to entities like nodes and users.'
 package: Core
 version: VERSION
 core: 8.x
-dependencies:
-  - field_sql_storage
 required: true

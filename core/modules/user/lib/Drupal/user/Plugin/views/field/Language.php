@@ -7,17 +7,14 @@
 
 namespace Drupal\user\Plugin\views\field;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Views field handler for user language.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "user_language",
- *   module = "user"
- * )
+ * @PluginID("user_language")
  */
 class Language extends User {
 

@@ -23,7 +23,7 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("Fields"),
  *   help = @Translation("Displays the fields with an optional template."),
  *   theme = "views_view_fields",
- *   type = "normal"
+ *   display_types = {"normal"}
  * )
  */
 class Fields extends RowPluginBase {

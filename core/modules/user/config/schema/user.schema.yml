@@ -56,6 +56,9 @@ user.settings:
     password_strength:
       type: boolean
       label: 'Enable password strength indicator'
+    langcode:
+      type: string
+      label: 'Default language'
 
 user.mail:
  type: mapping
@@ -88,6 +91,9 @@ user.mail:
   status_canceled:
     type: mail
     label: 'Account cancelled'
+  langcode:
+    type: string
+    label: 'Default language'
 
 user.flood:
   type: mapping
@@ -116,9 +122,15 @@ user.role.*:
     id:
       type: string
       label: 'User role ID'
+    uuid:
+      type: string
+      label: 'UUID'
     label:
       type: label
       label: 'User role label'
     weight:
       type: integer
       label: 'User role weight'
+    langcode:
+      type: string
+      label: 'Default language'

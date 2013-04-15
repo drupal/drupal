@@ -23,7 +23,7 @@ use Drupal\Core\Annotation\Translation;
  *   help = @Translation("Display the user with standard user view."),
  *   base = {"users"},
  *   entity_type = "user",
- *   type = "normal"
+ *   display_types = {"normal"}
  * )
  */
 class UserRow extends EntityRow {

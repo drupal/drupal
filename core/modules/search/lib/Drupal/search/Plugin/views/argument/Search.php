@@ -8,17 +8,14 @@
 namespace Drupal\search\Plugin\views\argument;
 
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Argument that accepts query keys for search.
  *
  * @ingroup views_argument_handlers
  *
- * @Plugin(
- *   id = "search",
- *   module = "search"
- * )
+ * @PluginID("search")
  */
 class Search extends ArgumentPluginBase {
 

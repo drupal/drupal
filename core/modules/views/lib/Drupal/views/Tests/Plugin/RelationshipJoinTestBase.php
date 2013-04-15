@@ -27,7 +27,6 @@ abstract class RelationshipJoinTestBase extends PluginUnitTestBase {
    */
   protected function setUpFixtures() {
     $this->installSchema('user', array('users', 'users_roles', 'role_permission'));
-    $this->installSchema('field', array('field_config', 'field_config_instance'));
     $this->installConfig(array('user'));
     parent::setUpFixtures();
 

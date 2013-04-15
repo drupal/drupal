@@ -11,6 +11,7 @@ use Drupal\Core\Database\Database;
 use Drupal\simpletest\WebTestBase;
 use Exception;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Perform end-to-end tests of the upgrade path.
@@ -43,6 +44,12 @@ abstract class UpgradePathTestBase extends WebTestBase {
    * Prepares the appropriate session for the release of Drupal being upgraded.
    */
   protected function prepareD8Session() {
+    // We need an IP when storing sessions
+    // so add a dummy request in the container.
+    $request = Request::create('http://example.com/');
+    $request->server->set('REMOTE_ADDR', '3.3.3.3');
+    $this->container->set('request', $request);
+
     // Generate and set a D7-compatible session cookie.
     $this->curlInitialize();
     $sid = drupal_hash_base64(uniqid(mt_rand(), TRUE) . drupal_random_bytes(55));

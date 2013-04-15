@@ -7,16 +7,48 @@
 
 namespace Drupal\entity_reference\Tests;
 
-use Drupal\taxonomy\Tests\TaxonomyTestBase;
+use Drupal\entity_reference\EntityReferenceController;
+use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
-class EntityReferenceAutocompleteTest extends TaxonomyTestBase {
+use Symfony\Component\HttpFoundation\Request;
 
-  public static $modules = array('entity_reference', 'taxonomy');
+/**
+ * Tests the autocomplete functionality of Entity Reference.
+ */
+class EntityReferenceAutocompleteTest extends EntityUnitTestBase {
+
+  /**
+   * The entity type used in this test.
+   *
+   * @var string
+   */
+  protected $entityType = 'entity_test_label';
+
+  /**
+   * The bundle used in this test.
+   *
+   * @var string
+   */
+  protected $bundle = 'entity_test_label';
+
+  /**
+   * The name of the field used in this test.
+   *
+   * @var string
+   */
+  protected $fieldName = 'field_test';
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('entity_reference');
 
   public static function getInfo() {
     return array(
       'name' => 'Autocomplete',
-      'description' => 'Tests autocomplete menu item.',
+      'description' => 'Tests the autocomplete functionality.',
       'group' => 'Entity Reference',
     );
   }
@@ -24,97 +56,75 @@ class EntityReferenceAutocompleteTest extends TaxonomyTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->admin_user = $this->drupalCreateUser(array('administer taxonomy', 'bypass node access'));
-    $this->drupalLogin($this->admin_user);
-    $this->vocabulary = $this->createVocabulary();
-
-    $this->field_name = 'taxonomy_' . $this->vocabulary->id();
-
-    $field = array(
-      'field_name' => $this->field_name,
-      'type' => 'entity_reference',
-      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
-      'settings' => array(
-        'target_type' => 'taxonomy_term',
-      ),
-    );
-    field_create_field($field);
-
-    $this->instance = array(
-      'field_name' => $this->field_name,
-      'bundle' => 'article',
-      'entity_type' => 'node',
-      'widget' => array(
-        'type' => 'options_select',
-      ),
-      'settings' => array(
-        'handler' => 'default',
-        'handler_settings' => array(
-          'target_bundles' => array(
-            $this->vocabulary->id(),
-          ),
-          'auto_create' => TRUE,
-        ),
-      ),
-    );
-    field_create_instance($this->instance);
-    entity_get_display('node', 'article', 'default')
-      ->setComponent($this->instance['field_name'], array(
-        'type' => 'entity_reference_label',
-      ))
-      ->save();
+    entity_reference_create_instance($this->entityType, $this->bundle, $this->fieldName, 'Field test', $this->entityType);
   }
 
   /**
    * Tests autocompletion edge cases with slashes in the names.
    */
-  function testTermAutocompletion() {
-    // Add a term with a slash in the name.
-    $first_term = $this->createTerm($this->vocabulary);
-    $first_term->name = '10/16/2011';
-    taxonomy_term_save($first_term);
-    // Add another term that differs after the slash character.
-    $second_term = $this->createTerm($this->vocabulary);
-    $second_term->name = '10/17/2011';
-    taxonomy_term_save($second_term);
-    // Add another term that has both a comma and a slash character.
-    $third_term = $this->createTerm($this->vocabulary);
-    $third_term->name = 'term with, a comma and / a slash';
-    taxonomy_term_save($third_term);
+  function testEntityReferenceAutocompletion() {
+    // Add an entity with a slash in its name.
+    $entity_1 = entity_create($this->entityType, array('name' => '10/16/2011', $this->fieldName => NULL));
+    $entity_1->save();
 
-    // Set the path prefix to point to entity reference's autocomplete path.
-    $path_prefix_single = 'entity_reference/autocomplete/single/' . $this->field_name . '/node/article/NULL';
-    $path_prefix_tags = 'entity_reference/autocomplete/tags/' . $this->field_name . '/node/article/NULL';
+    // Add another entity that differs after the slash character.
+    $entity_2 = entity_create($this->entityType, array('name' => '10/17/2011', $this->fieldName => NULL));
+    $entity_2->save();
 
-    // Try to autocomplete a term name that matches both terms.
-    // We should get both terms in a JSON encoded string.
+    // Add another entity that has both a comma and a slash character.
+    $entity_3 = entity_create($this->entityType, array('name' => 'label with, and / test', $this->fieldName => NULL));
+    $entity_3->save();
+
+    // Try to autocomplete a entity label that matches both entities.
+    // We should get both entities in a JSON encoded string.
     $input = '10/';
-    $data = $this->drupalGetAJAX($path_prefix_single, array('query' => array('q' => $input)));
-    $this->assertEqual(strip_tags($data[$first_term->name. ' (1)']), check_plain($first_term->name), 'Autocomplete returned the first matching term');
-    $this->assertEqual(strip_tags($data[$second_term->name. ' (2)']), check_plain($second_term->name), 'Autocomplete returned the second matching term');
+    $data = $this->getAutocompleteResult('single', $input);
+    $this->assertIdentical($data[$entity_1->name->value . ' (1)'], check_plain($entity_1->name->value), 'Autocomplete returned the first matching entity');
+    $this->assertIdentical($data[$entity_2->name->value . ' (2)'], check_plain($entity_2->name->value), 'Autocomplete returned the second matching entity');
 
-    // Try to autocomplete a term name that matches the first term.
-    // We should only get the first term in a JSON encoded string.
+    // Try to autocomplete a entity label that matches the first entity.
+    // We should only get the first entity in a JSON encoded string.
     $input = '10/16';
-    $this->drupalGet($path_prefix_single, array('query' => array('q' => $input)));
-    $target = array($first_term->name . ' (1)' => '<div class="reference-autocomplete">' . check_plain($first_term->name) . '</div>');
-    $this->assertRaw(drupal_json_encode($target), 'Autocomplete returns only the expected matching term.');
+    $data = $this->getAutocompleteResult('single', $input);
+    $target = array($entity_1->name->value . ' (1)' => check_plain($entity_1->name->value));
+    $this->assertIdentical($data, $target, 'Autocomplete returns only the expected matching entity.');
 
-    // Try to autocomplete a term name that matches the second term, and the
-    // first term is already typed in the autocomplete (tags) widget.
-    $input = $first_term->name . ' (1), 10/17';
-    $data = $this->drupalGetAJAX($path_prefix_tags, array('query' => array('q' => $input)));
-    $this->assertEqual(strip_tags($data[$first_term->name . ' (1), ' . $second_term->name . ' (2)']), check_plain($second_term->name), 'Autocomplete returned the second matching term');
+    // Try to autocomplete a entity label that matches the second entity, and
+    // the first entity  is already typed in the autocomplete (tags) widget.
+    $input = $entity_1->name->value . ' (1), 10/17';
+    $data = $this->getAutocompleteResult('tags', $input);
+    $this->assertIdentical($data[$entity_1->name->value . ' (1), ' . $entity_2->name->value . ' (2)'], check_plain($entity_2->name->value), 'Autocomplete returned the second matching entity');
 
-    // Try to autocomplete a term name with both a comma and a slash.
-    $input = '"term with, comma and / a';
-    $this->drupalGet($path_prefix_single, array('query' => array('q' => $input)));
-    $n = $third_term->name;
-    // Term names containing commas or quotes must be wrapped in quotes.
-    if (strpos($third_term->name, ',') !== FALSE || strpos($third_term->name, '"') !== FALSE) {
-      $n = '"' . str_replace('"', '""', $third_term->name) .  ' (3)"';
+    // Try to autocomplete a entity label with both a comma and a slash.
+    $input = '"label with, and / t';
+    $data = $this->getAutocompleteResult('single', $input);
+    $n = $entity_3->name->value;
+    // Entity labels containing commas or quotes must be wrapped in quotes.
+    if (strpos($entity_3->name->value, ',') !== FALSE || strpos($entity_3->name->value, '"') !== FALSE) {
+      $n = '"' . str_replace('"', '""', $entity_3->name->value) .  ' (3)"';
     }
-    $target = array($n => '<div class="reference-autocomplete">' . check_plain($third_term->name) . '</div>');
-    $this->assertRaw(drupal_json_encode($target), 'Autocomplete returns a term containing a comma and a slash.');
+    $target = array($n => check_plain($entity_3->name->value));
+    $this->assertIdentical($data, $target, 'Autocomplete returns an entity label containing a comma and a slash.');
+  }
+
+  /**
+   * Returns the result of an Entity reference autocomplete request.
+   *
+   * @param string $type
+   *   The Entity reference autocomplete type (e.g. 'single', 'tags').
+   * @param string $input
+   *   The label of the entity to query by.
+   *
+   * @return mixed
+   *  The JSON value encoded in its appropriate PHP type.
+   */
+  protected function getAutocompleteResult($type, $input) {
+    $request = Request::create('entity_reference/autocomplete/' . $type . '/' . $this->fieldName . '/node/article/NULL');
+    $request->query->set('q', $input);
+
+    $entity_reference_controller = EntityReferenceController::create($this->container);
+    $result = $entity_reference_controller->handleAutocomplete($request, $type, $this->fieldName, $this->entityType, $this->bundle, 'NULL')->getContent();
+
+    return drupal_json_decode($result);
   }
 }

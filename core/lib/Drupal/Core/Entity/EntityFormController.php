@@ -80,6 +80,15 @@ class EntityFormController implements EntityFormControllerInterface {
     if (!empty($info['fieldable'])) {
       field_attach_form($entity, $form, $form_state, $this->getFormLangcode($form_state));
     }
+    if (!isset($form['langcode'])) {
+      // If the form did not specify otherwise, default to keeping the existing
+      // language of the entity or defaulting to the site default language for
+      // new entities.
+      $form['langcode'] = array(
+        '#type' => 'value',
+        '#value' => !$entity->isNew() ? $entity->langcode : language_default()->langcode,
+      );
+    }
     return $form;
   }
 

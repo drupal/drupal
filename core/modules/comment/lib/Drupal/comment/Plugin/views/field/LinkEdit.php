@@ -7,17 +7,14 @@
 
 namespace Drupal\comment\Plugin\views\field;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to present a link node edit.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "comment_link_edit",
- *   module = "comment"
- * )
+ * @PluginID("comment_link_edit")
  */
 class LinkEdit extends Link {
 

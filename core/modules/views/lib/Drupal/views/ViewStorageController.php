@@ -23,7 +23,7 @@ class ViewStorageController extends ConfigStorageController {
 
     // Only return views for enabled modules.
     return array_filter($entities, function ($entity) {
-      if (module_exists($entity->get('module'))) {
+      if (\Drupal::moduleHandler()->moduleExists($entity->get('module'))) {
         return TRUE;
       }
       return FALSE;

@@ -9,7 +9,7 @@ namespace Drupal\edit_test\Plugin\edit\editor;
 
 use Drupal\edit\EditorBase;
 use Drupal\Component\Annotation\Plugin;
-use Drupal\field\FieldInstance;
+use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
  * Defines the "wysiwyg" Create.js PropertyEditor widget.

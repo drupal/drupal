@@ -24,12 +24,6 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     );
   }
 
-  protected function setUp() {
-    parent::setUp();
-
-    $this->installSchema('field', array('field_config', 'field_config_instance'));
-  }
-
   /**
    * Tests basic CRUD operations on EntityDisplay objects.
    */

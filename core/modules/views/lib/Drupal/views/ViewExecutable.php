@@ -9,7 +9,7 @@ namespace Drupal\views;
 
 use Drupal;
 use Symfony\Component\HttpFoundation\Response;
-use Drupal\views\Plugin\Core\Entity\View;
+use Drupal\views\ViewStorageInterface;
 
 /**
  * @defgroup views_objects Objects that represent a View or part of a view
@@ -426,10 +426,10 @@ class ViewExecutable {
   /**
    * Constructs a new ViewExecutable object.
    *
-   * @param Drupal\views\Plugin\Core\Entity\View $storage
+   * @param \Drupal\views\ViewStorageInterface $storage
    *   The view config entity the actual information is stored on.
    */
-  public function __construct(View $storage) {
+  public function __construct(ViewStorageInterface $storage) {
     // Reference the storage and the executable to each other.
     $this->storage = $storage;
     $this->storage->set('executable', $this);
@@ -987,10 +987,8 @@ class ViewExecutable {
     }
 
     // Let modules modify the view just prior to building it.
-    foreach (module_implements('views_pre_build') as $module) {
-      $function = $module . '_views_pre_build';
-      $function($this);
-    }
+    $module_handler = \Drupal::moduleHandler();
+    $module_handler->invokeAll('views_pre_build', array($this));
 
     // Attempt to load from cache.
     // @todo Load a build_info from cache.
@@ -1111,10 +1109,7 @@ class ViewExecutable {
     $this->attachDisplays();
 
     // Let modules modify the view just after building it.
-    foreach (module_implements('views_post_build') as $module) {
-      $function = $module . '_views_post_build';
-      $function($this);
-    }
+    $module_handler->invokeAll('views_post_build', array($this));
 
     return TRUE;
   }
@@ -1189,10 +1184,8 @@ class ViewExecutable {
     }
 
     // Let modules modify the view just prior to executing it.
-    foreach (module_implements('views_pre_execute') as $module) {
-      $function = $module . '_views_pre_execute';
-      $function($this);
-    }
+    $module_handler = \Drupal::moduleHandler();
+    $module_handler->invokeAll('views_pre_execute', array($this));
 
     // Check for already-cached results.
     if (!empty($this->live_preview)) {
@@ -1217,10 +1210,7 @@ class ViewExecutable {
     }
 
     // Let modules modify the view just after executing it.
-    foreach (module_implements('views_post_execute') as $module) {
-      $function = $module . '_views_post_execute';
-      $function($this);
-    }
+    $module_handler->invokeAll('views_post_execute', array($this));
 
     $this->executed = TRUE;
   }
@@ -1254,6 +1244,8 @@ class ViewExecutable {
     $exposed_form = $this->display_handler->getPlugin('exposed_form');
     $exposed_form->pre_render($this->result);
 
+    $module_handler = \Drupal::moduleHandler();
+
     // Check for already-cached output.
     if (!empty($this->live_preview)) {
       $cache = FALSE;
@@ -1261,6 +1253,7 @@ class ViewExecutable {
     else {
       $cache = $this->display_handler->getPlugin('cache');
     }
+
     if ($cache && $cache->cache_get('output')) {
     }
     else {
@@ -1294,29 +1287,26 @@ class ViewExecutable {
       $this->style_plugin->pre_render($this->result);
 
       // Let each area handler have access to the result set.
-      foreach (array('header', 'footer', 'empty') as $area) {
+      $areas = array('header', 'footer');
+      // Only call preRender() on the empty handlers if the result is empty.
+      if (empty($this->result)) {
+        $areas[] = 'empty';
+      }
+      foreach ($areas as $area) {
         foreach ($this->{$area} as $handler) {
           $handler->preRender($this->result);
         }
       }
 
       // Let modules modify the view just prior to rendering it.
-      foreach (module_implements('views_pre_render') as $module) {
-        $function = $module . '_views_pre_render';
-        $function($this);
-      }
+      $module_handler->invokeAll('views_pre_render', array($this));
 
       // Let the themes play too, because pre render is a very themey thing.
       foreach ($GLOBALS['base_theme_info'] as $base) {
-        $function = $base->name . '_views_pre_render';
-        if (function_exists($function)) {
-          $function($this);
-        }
+        $module_handler->invoke($base, 'views_pre_render', array($this));
       }
-      $function = $GLOBALS['theme'] . '_views_pre_render';
-      if (function_exists($function)) {
-        $function($this);
-      }
+
+      $module_handler->invoke($GLOBALS['theme'], 'views_pre_render', array($this));
 
       $this->display_handler->output = $this->display_handler->render();
       if ($cache) {
@@ -1331,22 +1321,14 @@ class ViewExecutable {
     }
 
     // Let modules modify the view output after it is rendered.
-    foreach (module_implements('views_post_render') as $module) {
-      $function = $module . '_views_post_render';
-      $function($this, $this->display_handler->output, $cache);
-    }
+    $module_handler->invokeAll('views_post_render', array($this, $this->display_handler->output, $cache));
 
     // Let the themes play too, because post render is a very themey thing.
     foreach ($GLOBALS['base_theme_info'] as $base) {
-      $function = $base->name . '_views_post_render';
-      if (function_exists($function)) {
-        $function($this);
-      }
+      $module_handler->invoke($base, 'views_post_render', array($this));
     }
-    $function = $GLOBALS['theme'] . '_views_post_render';
-    if (function_exists($function)) {
-      $function($this, $this->display_handler->output, $cache);
-    }
+
+    $module_handler->invoke($GLOBALS['theme'], 'views_post_render', array($this));
 
     return $this->display_handler->output;
   }
@@ -1423,10 +1405,7 @@ class ViewExecutable {
     }
 
     // Let modules modify the view just prior to executing it.
-    foreach (module_implements('views_pre_view') as $module) {
-      $function = $module . '_views_pre_view';
-      $function($this, $display_id, $this->args);
-    }
+    \Drupal::moduleHandler()->invokeAll('views_pre_view', array($this, $display_id, $this->args));
 
     // Allow hook_views_pre_view() to set the dom_id, then ensure it is set.
     $this->dom_id = !empty($this->dom_id) ? $this->dom_id : hash('sha256', $this->storage->id() . REQUEST_TIME . mt_rand());
@@ -1730,15 +1709,11 @@ class ViewExecutable {
    * collected.
    */
   public function destroy() {
-    unset($this->displayHandlers);
-
     foreach ($this::viewsHandlerTypes() as $type => $info) {
       if (isset($this->$type)) {
-        $handlers = &$this->$type;
-        foreach ($handlers as $id => $item) {
-          $handlers[$id]->destroy();
+        foreach ($this->{$type} as $handler) {
+          $handler->destroy();
         }
-        unset($handlers);
       }
     }
 
@@ -1746,56 +1721,45 @@ class ViewExecutable {
       $this->style_plugin->destroy();
     }
 
-    $keys = array('current_display', 'display_handler', 'displayHandlers', 'field', 'argument', 'filter', 'sort', 'relationship', 'header', 'footer', 'empty', 'query', 'result', 'inited', 'style_plugin', 'rowPlugin', 'plugin_name', 'exposed_data', 'exposed_input', 'many_to_one_tables');
-    foreach ($keys as $key) {
-      unset($this->$key);
+    $reflection = new \ReflectionClass($this);
+    $defaults = $reflection->getDefaultProperties();
+    // The storage should not be reset. This is not generated by the execution
+    // of a view.
+    unset($defaults['storage']);
+    foreach ($defaults as $property => $default) {
+      $this->{$property} = $default;
     }
-
-    // These keys are checked by the next init, so instead of unsetting them,
-    // just set the default values.
-    $keys = array('items_per_page', 'offset', 'current_page');
-    foreach ($keys as $key) {
-      if (isset($this->$key)) {
-        $this->$key = NULL;
-      }
-    }
-
-    $this->built = $this->executed = FALSE;
-    $this->build_info = array();
-    $this->attachment_before = '';
-    $this->attachment_after = '';
   }
 
   /**
-   * Make sure the view is completely valid.
+   * Makes sure the view is completely valid.
    *
-   * @return
-   *   TRUE if the view is valid; an array of error strings if it is not.
+   * @return array
+   *   An array of error strings. This will be empty if there are no validation
+   *   errors.
    */
   public function validate() {
-    $this->initDisplay();
-
     $errors = array();
-    $this->display_errors = NULL;
 
+    $this->initDisplay();
     $current_display = $this->current_display;
+
     foreach ($this->displayHandlers as $id => $display) {
       if (!empty($display)) {
-        if (!empty($display->deleted)) {
+        if (!empty($display->display['deleted'])) {
           continue;
         }
 
         $result = $this->displayHandlers->get($id)->validate();
         if (!empty($result) && is_array($result)) {
-          $errors = array_merge($errors, $result);
-          // Mark this display as having validation errors.
-          $this->display_errors[$id] = TRUE;
+          $errors[$id] =  $result;
         }
       }
     }
 
     $this->setDisplay($current_display);
-    return $errors ? $errors : TRUE;
+
+    return $errors;
   }
 
   /**

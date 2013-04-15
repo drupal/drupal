@@ -86,6 +86,24 @@ function entity_get_bundles($entity_type = NULL) {
 }
 
 /**
+ * Notifies modules about an operation that was performed on a entity bundle.
+ *
+ * @param string $hook
+ *   One of 'create', 'rename' or 'delete'.
+ * @param string $entity_type
+ *   The entity type to which the bundle is bound.
+ * @param string $bundle
+ *   The name of the bundle on which the operation was performed.
+ * @param string|null $bundle_new
+ *   The new name of the bundle in case of a 'rename' operation. Defaults to
+ *   NULL.
+ */
+function entity_invoke_bundle_hook($hook, $entity_type, $bundle, $bundle_new = NULL) {
+  entity_info_cache_clear();
+  module_invoke_all('entity_bundle_' . $hook, $entity_type, $bundle, $bundle_new);
+}
+
+/**
  * Returns the entity view mode info.
  *
  * @param string|null $entity_type
@@ -715,40 +733,6 @@ function entity_get_render_display(EntityInterface $entity, $view_mode) {
   $display->originalViewMode = $view_mode;
 
   return $display;
-}
-
-/**
- * Returns the entity query object for this entity type.
- *
- * @param $entity_type
- *   The entity type, e.g. node, for which the query object should be
- *   returned.
- * @param $conjunction
- *   AND if all conditions in the query need to apply, OR if any of them is
- *   enough. Optional, defaults to AND.
- *
- * @return \Drupal\Core\Entity\Query\QueryInterface
- *   The query object that can query the given entity type.
- */
-function entity_query($entity_type, $conjunction = 'AND') {
-  return drupal_container()->get('entity.query')->get($entity_type, $conjunction);
-}
-
-/**
- * Returns the entity query aggregate object for this entity type.
- *
- * @param $entity_type
- *   The entity type, e.g. node, for which the query object should be
- *   returned.
- * @param $conjunction
- *   AND if all conditions in the query need to apply, OR if any of them is
- *   enough. Optional, defaults to AND.
- *
- * @return \Drupal\Core\Entity\Query\QueryInterface
- *   The query object that can query the given entity type.
- */
-function entity_query_aggregate($entity_type, $conjunction = 'AND') {
-  return drupal_container()->get('entity.query')->getAggregate($entity_type, $conjunction);
 }
 
 /**

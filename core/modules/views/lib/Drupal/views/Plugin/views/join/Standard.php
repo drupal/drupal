@@ -7,14 +7,12 @@
 
 namespace Drupal\views\Plugin\views\join;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Default implementation of the join plugin.
  *
- * @Plugin(
- *   id = "standard"
- * )
+ * @PluginID("standard")
  */
 class Standard extends JoinPluginBase {
 

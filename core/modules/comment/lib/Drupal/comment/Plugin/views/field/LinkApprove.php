@@ -7,17 +7,14 @@
 
 namespace Drupal\comment\Plugin\views\field;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Provides a comment approve link.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "comment_link_approve",
- *   module = "comment"
- * )
+ * @PluginID("comment_link_approve")
  */
 class LinkApprove extends Link {
 

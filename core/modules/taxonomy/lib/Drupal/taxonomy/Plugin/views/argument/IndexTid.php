@@ -7,7 +7,7 @@
 
 namespace Drupal\taxonomy\Plugin\views\argument;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\argument\ManyToOne;
 
 /**
@@ -15,10 +15,7 @@ use Drupal\views\Plugin\views\argument\ManyToOne;
  *
  * @ingroup views_argument_handlers
  *
- * @Plugin(
- *   id = "taxonomy_index_tid",
- *   module = "taxonomy"
- * )
+ * @PluginID("taxonomy_index_tid")
  */
 class IndexTid extends ManyToOne {
 

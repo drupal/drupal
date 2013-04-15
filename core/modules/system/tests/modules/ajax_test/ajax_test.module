@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\AlertCommand;
 use Drupal\Core\Ajax\OpenDialogCommand;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Ajax\CloseDialogCommand;
@@ -70,7 +71,8 @@ function ajax_test_system_theme_info() {
  */
 function ajax_test_render() {
   drupal_add_js(array('ajax' => 'test'), 'setting');
-  return array('#type' => 'ajax', '#commands' => array());
+  $response = new AjaxResponse();
+  return $response;
 }
 
 /**
@@ -102,7 +104,9 @@ function ajax_test_error() {
   if (!empty($_GET['message'])) {
     $message = $_GET['message'];
   }
-  return array('#type' => 'ajax', '#error' => $message);
+  $response = new AjaxResponse();
+  $response->addCommand(new AlertCommand($message));
+  return $response;
 }
 
 /**

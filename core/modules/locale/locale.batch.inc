@@ -5,6 +5,9 @@
  *   Batch process to check the availability of remote or local po files.
  */
 
+use Guzzle\Http\Exception\BadResponseException;
+use Guzzle\Http\Exception\RequestException;
+
 /**
  * Load the common translation API.
  */
@@ -40,9 +43,9 @@ function locale_translation_batch_status_fetch_remote($source, &$context) {
       // Update the file object with the result data. In case of a redirect we
       // store the resulting uri. If a file is not found we don't update the
       // file object, and store it unchanged.
-      if (isset($result->updated)) {
-        $remote_file->uri = isset($result->redirect_uri) ? $result->redirect_uri : $remote_file->uri;
-        $remote_file->timestamp = $result->updated;
+      if (isset($result['last_modified'])) {
+        $remote_file->uri = isset($result['location']) ? $result['location'] : $remote_file->uri;
+        $remote_file->timestamp = $result['last_modified'];
         $source->files[LOCALE_TRANSLATION_REMOTE] = $remote_file;
       }
       // Record success.
@@ -433,39 +436,50 @@ function locale_translation_batch_fetch_finished($success, $results) {
  *
  * @param string $uri
  *   URI of remote file.
- * @param array $headers
- *   HTTP request headers.
- * @return stdClass
- *   Result object containing the HTTP request headers, response code, headers,
- *   data, redirect status and updated timestamp.
- *   TRUE if the file is not found.
- *   FALSE if a fault occured.
+ *
+ * @return array|boolean
+ *   Associative array of file data with the following elements:
+ *   - last_modified: Last modified timestamp of the translation file.
+ *   - (optional) location: The location of the translation file. Is only set
+ *     when a redirect (301) has occurred.
+ *   TRUE if the file is not found. FALSE if a fault occurred.
  */
-function locale_translation_http_check($uri, $headers = array()) {
-  $result = drupal_http_request($uri, array('headers' => $headers, 'method' => 'HEAD'));
-  if (!isset($result->error)) {
-    if ($result->code == 200) {
-      $result->updated = isset($result->headers['last-modified']) ? strtotime($result->headers['last-modified']) : 0;
+function locale_translation_http_check($uri) {
+
+  try {
+    $response = Drupal::httpClient()
+      ->head($uri)
+      ->send();
+    $result = array();
+
+    // In case of a permanent redirected response, return the final location.
+    if ($previous = $response->getPreviousResponse()) {
+      if ($previous->getStatusCode() == 301) {
+        $result['location'] = $previous->getLocation();
+      }
     }
+
+    $result['last_modified'] = $response->getLastModified() ? strtotime($response->getLastModified()) : 0;
     return $result;
   }
-  else {
-    switch ($result->code) {
-      case 404:
-        // File not found occurs when a translation file is not yet available
-        // at the translation server. But also if a custom module or custom
-        // theme does not define the location of a translation file. By default
-        // the file is checked at the translation server, but it will not be
-        // found there.
-        watchdog('locale', 'File not found: @uri.', array('@uri' => $uri));
-        return TRUE;
-      case 0:
-        watchdog('locale', 'Error occurred when trying to check @remote: @errormessage.', array('@errormessage' => $result->error, '@remote' => $uri), WATCHDOG_ERROR);
-        break;
-      default:
-        watchdog('locale', 'HTTP error @errorcode occurred when trying to check @remote.', array('@errorcode' => $result->code, '@remote' => $uri), WATCHDOG_ERROR);
-        break;
+  catch (BadResponseException $e) {
+    // Handle 4xx and 5xx http responses.
+    $response = $e->getResponse();
+    if ($response->getStatusCode() == 404) {
+      // File not found occurs when a translation file is not yet available
+      // at the translation server. But also if a custom module or custom
+      // theme does not define the location of a translation file. By default
+      // the file is checked at the translation server, but it will not be
+      // found there.
+      watchdog('locale', 'Translation file not found: @uri.', array('@uri' => $uri));
+      return TRUE;
     }
+    watchdog('locale', 'HTTP request to @url failed with error: @error.', array('@url' => $uri, '@error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase()));
+  }
+  catch (RequestException $e) {
+    // Handle connection problems and cURL specific errors (CurlException) and
+    // other http related errors.
+    watchdog('locale', 'HTTP request to @url failed with error: @error.', array('@url' => $uri, '@error' => $e->getMessage()));
   }
   return FALSE;
 }

@@ -66,9 +66,9 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Overrides Entity::getOriginalEntity().
+   * Overrides Entity::getNGEntity().
    */
-  public function getOriginalEntity() {
+  public function getNGEntity() {
     return $this->decorated;
   }
 

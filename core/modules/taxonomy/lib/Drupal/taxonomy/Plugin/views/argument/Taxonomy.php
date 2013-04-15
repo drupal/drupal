@@ -8,17 +8,14 @@
 namespace Drupal\taxonomy\Plugin\views\argument;
 
 use Drupal\views\Plugin\views\argument\Numeric;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Argument handler for basic taxonomy tid.
  *
  * @ingroup views_argument_handlers
  *
- * @Plugin(
- *   id = "taxonomy",
- *   module = "taxonomy"
- * )
+ * @PluginID("taxonomy")
  */
 class Taxonomy extends Numeric {
 

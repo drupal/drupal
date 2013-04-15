@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\sort;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Views;
 
 
@@ -20,9 +20,7 @@ use Drupal\views\Views;
  *
  * This is only really useful for the {menu_links} table.
  *
- * @Plugin(
- *   id = "menu_hierarchy"
- * )
+ * @PluginID("menu_hierarchy")
  */
 class MenuHierarchy extends SortPluginBase {
 

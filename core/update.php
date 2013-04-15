@@ -390,7 +390,8 @@ function update_check_requirements($skip_warnings = FALSE) {
     drupal_set_title('Requirements problem');
     $status_report = theme('status_report', array('requirements' => $requirements));
     $status_report .= 'Check the messages and <a href="' . check_url(drupal_requirements_url($severity)) . '">try again</a>.';
-    print theme('update_page', array('content' => $status_report));
+    drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
+    print theme('maintenance_page', array('content' => $status_report));
     exit();
   }
 }
@@ -533,6 +534,7 @@ if (isset($output) && $output) {
     $output->send();
   }
   else {
-    print theme('update_page', array('content' => $output, 'show_messages' => !$progress_page));
+    drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
+    print theme('maintenance_page', array('content' => $output, 'show_messages' => !$progress_page));
   }
 }

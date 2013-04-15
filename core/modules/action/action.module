@@ -69,11 +69,8 @@ function action_menu() {
   );
   $items['admin/config/system/actions/configure'] = array(
     'title' => 'Configure an advanced action',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('action_admin_configure'),
-    'access arguments' => array('administer actions'),
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
-    'file' => 'action.admin.inc',
+    'route_name' => 'action_admin_configure',
   );
   $items['admin/config/system/actions/delete/%action'] = array(
     'title' => 'Delete action',

@@ -1,0 +1,4 @@
+services:
+  plugin.manager.editor:
+    class: Drupal\editor\Plugin\EditorManager
+    arguments: ['%container.namespaces%']

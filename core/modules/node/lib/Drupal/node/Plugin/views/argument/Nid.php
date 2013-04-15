@@ -8,15 +8,12 @@
 namespace Drupal\node\Plugin\views\argument;
 
 use Drupal\views\Plugin\views\argument\Numeric;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Argument handler to accept a node id.
  *
- * @Plugin(
- *   id = "node_nid",
- *   module = "node"
- * )
+ * @PluginID("node_nid")
  */
 class Nid extends Numeric {
 

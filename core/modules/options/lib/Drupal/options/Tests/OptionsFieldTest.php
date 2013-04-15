@@ -36,7 +36,7 @@ class OptionsFieldTest extends FieldUnitTestBase {
 
 
     $this->field_name = 'test_options';
-    $this->field = array(
+    $this->field_definition = array(
       'field_name' => $this->field_name,
       'type' => 'list_integer',
       'cardinality' => 1,
@@ -44,7 +44,7 @@ class OptionsFieldTest extends FieldUnitTestBase {
         'allowed_values' => array(1 => 'One', 2 => 'Two', 3 => 'Three'),
       ),
     );
-    $this->field = field_create_field($this->field);
+    $this->field = field_create_field($this->field_definition);
 
     $this->instance = array(
       'field_name' => $this->field_name,
@@ -109,8 +109,7 @@ class OptionsFieldTest extends FieldUnitTestBase {
     // Options are reset when a new field with the same name is created.
     field_delete_field($this->field_name);
     unset($this->field['id']);
-    $this->field['settings']['allowed_values'] = array(1 => 'One', 2 => 'Two', 3 => 'Three');
-    $this->field = field_create_field($this->field);
+    field_create_field($this->field_definition);
     $this->instance = array(
       'field_name' => $this->field_name,
       'entity_type' => 'entity_test',
@@ -119,7 +118,7 @@ class OptionsFieldTest extends FieldUnitTestBase {
         'type' => 'options_buttons',
       ),
     );
-    $this->instance = field_create_instance($this->instance);
+    field_create_instance($this->instance);
     $entity = entity_create('entity_test', array());
     $form = entity_get_form($entity);
     $this->assertTrue(!empty($form[$this->field_name][$langcode][1]), 'Option 1 exists');

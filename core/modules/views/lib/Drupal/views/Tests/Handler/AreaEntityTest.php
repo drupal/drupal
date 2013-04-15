@@ -88,7 +88,8 @@ class AreaEntityTest extends ViewTestBase {
     }
 
     $view = views_get_view('test_entity_area');
-    $this->drupalSetContent($view->preview('default', array($entities[1]->id())));
+    $preview = $view->preview('default', array($entities[1]->id()));
+    $this->drupalSetContent(drupal_render($preview));
 
     $result = $this->xpath('//div[@class = "view-header"]');
     $this->assertTrue(strpos(trim((string) $result[0]), $entities[0]->label()) !== FALSE, 'The rendered entity appears in the header of the view.');
@@ -104,7 +105,8 @@ class AreaEntityTest extends ViewTestBase {
     $item['view_mode'] = 'test';
     $view->setItem('default', 'header', 'entity_entity_test_render', $item);
 
-    $this->drupalSetContent($view->preview('default', array($entities[1]->id())));
+    $preview = $view->preview('default', array($entities[1]->id()));
+    $this->drupalSetContent(drupal_render($preview));
 
     $result = $this->xpath('//div[@class = "view-header"]');
     $this->assertTrue(strpos(trim((string) $result[0]), $entities[0]->label()) !== FALSE, 'The rendered entity appears in the header of the view.');

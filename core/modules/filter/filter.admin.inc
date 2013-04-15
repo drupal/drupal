@@ -169,6 +169,11 @@ function filter_admin_format_form($form, &$form_state, $format) {
     '#disabled' => !empty($format->format),
     '#weight' => -20,
   );
+  // @todo Remove once moved to FilterFormatFormController.
+  $form['langcode'] = array(
+    '#type' => 'value',
+    '#value' => !$format->isNew() ? $format->langcode : language_default()->langcode,
+  );
 
   // Add user role access selection.
   $form['roles'] = array(
@@ -236,15 +241,20 @@ function filter_admin_format_form($form, &$form_state, $format) {
 
   // Filter order (tabledrag).
   $form['filters']['order'] = array(
-    '#type' => 'item',
+    '#type' => 'table',
+    // For filter.admin.js
+    '#attributes' => array('id' => 'filter-order'),
     '#title' => t('Filter processing order'),
-    '#theme' => 'filter_admin_format_filter_order',
-    // This item is used as a pure wrapping container with heading. Ignore its
-    // value, since 'filters' should only contain filter definitions.
-    // @see http://drupal.org/node/1829202
+    '#tabledrag' => array(
+      array('order', 'sibling', 'filter-order-weight'),
+    ),
+    '#tree' => FALSE,
     '#input' => FALSE,
+    '#theme_wrappers' => array('form_element'),
   );
   foreach ($filter_info as $name => $filter) {
+    $form['filters']['order'][$name]['#attributes']['class'][] = 'draggable';
+    $form['filters']['order'][$name]['#weight'] = $filters[$name]->weight;
     $form['filters']['order'][$name]['filter'] = array(
       '#markup' => $filter['title'],
     );
@@ -255,9 +265,12 @@ function filter_admin_format_form($form, &$form_state, $format) {
       '#delta' => 50,
       '#default_value' => $filters[$name]->weight,
       '#parents' => array('filters', $name, 'weight'),
+      '#attributes' => array('class' => array('filter-order-weight')),
     );
-    $form['filters']['order'][$name]['#weight'] = $filters[$name]->weight;
   }
+  // Make sure filters are in the correct order, since filter_get_filters()
+  // doesn't return sorted filters.
+  uasort($form['filters']['order'], 'element_sort');
 
   // Filter settings.
   $form['filter_settings'] = array(
@@ -288,37 +301,6 @@ function filter_admin_format_form($form, &$form_state, $format) {
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
 
   return $form;
-}
-
-/**
- * Returns HTML for a text format's filter order form.
- *
- * @param array $variables
- *   An associative array containing:
- *   - element: A render element representing the form.
- *
- * @ingroup themeable
- */
-function theme_filter_admin_format_filter_order($variables) {
-  $element = $variables['element'];
-
-  // Filter order (tabledrag).
-  $rows = array();
-  foreach (element_children($element, TRUE) as $name) {
-    $element[$name]['weight']['#attributes']['class'][] = 'filter-order-weight';
-    $rows[] = array(
-      'data' => array(
-        drupal_render($element[$name]['filter']),
-        drupal_render($element[$name]['weight']),
-      ),
-      'class' => array('draggable'),
-    );
-  }
-  $output = drupal_render_children($element);
-  $output .= theme('table', array('rows' => $rows, 'attributes' => array('id' => 'filter-order')));
-  drupal_add_tabledrag('filter-order', 'order', 'sibling', 'filter-order-weight', NULL, NULL, TRUE);
-
-  return $output;
 }
 
 /**
@@ -375,38 +357,6 @@ function filter_admin_format_form_submit($form, &$form_state) {
       drupal_set_message(t('The text format %format has been updated.', array('%format' => $format->name)));
       break;
   }
-
-  $form_state['redirect'] = 'admin/config/content/formats';
-}
-
-/**
- * Page callback: Form constructor to confirm the text format deletion.
- *
- * @param $format
- *   An object representing a text format.
- *
- * @see filter_menu()
- * @see filter_admin_disable_submit()
- * @ingroup forms
- */
-function filter_admin_disable($form, &$form_state, $format) {
-  $form['#format'] = $format;
-
-  return confirm_form($form,
-    t('Are you sure you want to disable the text format %format?', array('%format' => $format->name)),
-    'admin/config/content/formats',
-    t('Disabled text formats are completely removed from the administrative interface, and any content stored with that format will not be displayed. This action cannot be undone.'),
-    t('Disable')
-  );
-}
-
-/**
- * Form submission handler for filter_admin_disable().
- */
-function filter_admin_disable_submit($form, &$form_state) {
-  $format = $form['#format'];
-  filter_format_disable($format);
-  drupal_set_message(t('Disabled text format %format.', array('%format' => $format->name)));
 
   $form_state['redirect'] = 'admin/config/content/formats';
 }

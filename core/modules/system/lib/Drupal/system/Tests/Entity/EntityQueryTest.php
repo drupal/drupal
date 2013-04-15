@@ -126,7 +126,7 @@ class EntityQueryTest extends EntityUnitTestBase {
     }
     $this->figures = $figures;
     $this->greetings = $greetings;
-    $this->factory = drupal_container()->get('entity.query');
+    $this->factory = \Drupal::service('entity.query');
   }
 
   /**
@@ -459,7 +459,7 @@ class EntityQueryTest extends EntityUnitTestBase {
    * The tags and metadata should propogate to the SQL query object.
    */
   function testMetaData() {
-    $query = entity_query('test_entity');
+    $query = \Drupal::entityQuery('test_entity');
     $query
       ->addTag('efq_metadata_test')
       ->addMetaData('foo', 'bar')

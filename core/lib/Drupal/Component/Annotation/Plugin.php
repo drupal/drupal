@@ -7,6 +7,8 @@
 
 namespace Drupal\Component\Annotation;
 
+use Drupal\Component\Utility\NestedArray;
+
 /**
  * Defines a Plugin annotation object.
  *
@@ -34,7 +36,13 @@ class Plugin implements AnnotationInterface {
    * classed annotations that were used.
    */
   public function __construct($values) {
-    $this->definition = $this->parse($values);
+    $reflection = new \ReflectionClass($this);
+    // Only keep actual default values by ignoring NULL values.
+    $defaults = array_filter($reflection->getDefaultProperties(), function ($value) {
+      return $value !== NULL;
+    });
+    $parsed_values = $this->parse($values);
+    $this->definition = NestedArray::mergeDeep($defaults, $parsed_values);
   }
 
   /**

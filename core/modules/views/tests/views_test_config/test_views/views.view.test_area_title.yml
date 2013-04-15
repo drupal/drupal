@@ -1,0 +1,62 @@
+base_table: views_test_data
+core: '8'
+description: ''
+status: '1'
+display:
+  default:
+    display_options:
+      defaults:
+        fields: '0'
+        pager: '0'
+        pager_options: '0'
+        sorts: '0'
+      fields:
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+      pager:
+        options:
+          offset: '0'
+        type: none
+      pager_options: {  }
+      sorts:
+        id:
+          field: id
+          id: id
+          order: ASC
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+      empty:
+        title:
+          field: title
+          id: title
+          table: views
+          plugin_id: title
+          title: test_title_empty
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+  page_1:
+    display_options:
+      defaults:
+        empty: '0'
+        header: '0'
+      header:
+        title:
+          field: title
+          id: title
+          table: views
+          plugin_id: title
+          title: test_title_header
+    display_plugin: page
+    display_title: Page 1
+    id: page_1
+    position: '1'
+label: ''
+id: test_area_title
+tag: ''

@@ -41,28 +41,29 @@ class CrudTest extends FieldUnitTestBase {
       'type' => 'test_field',
     );
     field_test_memorize();
-    $field_definition = field_create_field($field_definition);
+    $field = field_create_field($field_definition);
     $mem = field_test_memorize();
-    $this->assertIdentical($mem['field_test_field_create_field'][0][0], $field_definition, 'hook_field_create_field() called with correct arguments.');
+    $this->assertIdentical($mem['field_test_field_create_field'][0][0]['field_name'], $field_definition['field_name'], 'hook_field_create_field() called with correct arguments.');
+    $this->assertIdentical($mem['field_test_field_create_field'][0][0]['type'], $field_definition['type'], 'hook_field_create_field() called with correct arguments.');
 
-    // Read the raw record from the {field_config_instance} table.
-    $result = db_query('SELECT * FROM {field_config} WHERE field_name = :field_name', array(':field_name' => $field_definition['field_name']));
-    $record = $result->fetchAssoc();
-    $record['data'] = unserialize($record['data']);
+    // Read the configuration. Check against raw configuration data rather than
+    // the loaded ConfigEntity, to be sure we check that the defaults are
+    // applied on write.
+    $field_config = \Drupal::config('field.field.' . $field->id())->get();
 
     // Ensure that basic properties are preserved.
-    $this->assertEqual($record['field_name'], $field_definition['field_name'], 'The field name is properly saved.');
-    $this->assertEqual($record['type'], $field_definition['type'], 'The field type is properly saved.');
+    $this->assertEqual($field_config['id'], $field_definition['field_name'], 'The field name is properly saved.');
+    $this->assertEqual($field_config['type'], $field_definition['type'], 'The field type is properly saved.');
 
     // Ensure that cardinality defaults to 1.
-    $this->assertEqual($record['cardinality'], 1, 'Cardinality defaults to 1.');
+    $this->assertEqual($field_config['cardinality'], 1, 'Cardinality defaults to 1.');
 
     // Ensure that default settings are present.
     $field_type = field_info_field_types($field_definition['type']);
-    $this->assertIdentical($record['data']['settings'], $field_type['settings'], 'Default field settings have been written.');
+    $this->assertEqual($field_config['settings'], $field_type['settings'], 'Default field settings have been written.');
 
     // Ensure that default storage was set.
-    $this->assertEqual($record['storage_type'], variable_get('field_storage_default'), 'The field type is properly saved.');
+    $this->assertEqual($field_config['storage']['type'], variable_get('field_storage_default'), 'The field type is properly saved.');
 
     // Guarantee that the name is unique.
     try {
@@ -143,7 +144,7 @@ class CrudTest extends FieldUnitTestBase {
         'type' => 'test_field',
         'field_name' => 'ftvid',
       );
-      $field = field_create_field($field_definition);
+      field_create_field($field_definition);
       $this->fail(t('Cannot create a field bearing the name of an entity key.'));
     }
     catch (FieldException $e) {
@@ -157,11 +158,10 @@ class CrudTest extends FieldUnitTestBase {
   function testCreateFieldFail() {
     $field_name = 'duplicate';
     $field_definition = array('field_name' => $field_name, 'type' => 'test_field', 'storage' => array('type' => 'field_test_storage_failure'));
-    $query = db_select('field_config')->condition('field_name', $field_name)->countQuery();
+    $field = entity_load('field_entity', $field_name);
 
-    // The field does not appear in field_config.
-    $count = $query->execute()->fetchField();
-    $this->assertEqual($count, 0, 'A field_config row for the field does not exist.');
+    // The field does not exist.
+    $this->assertFalse($field, 'The field does not exist.');
 
     // Try to create the field.
     try {
@@ -172,9 +172,9 @@ class CrudTest extends FieldUnitTestBase {
       $this->assertTrue(TRUE, 'Field creation (correctly) fails.');
     }
 
-    // The field does not appear in field_config.
-    $count = $query->execute()->fetchField();
-    $this->assertEqual($count, 0, 'A field_config row for the field does not exist.');
+    // The field does not exist.
+    $field = entity_load('field_entity', $field_name);
+    $this->assertFalse($field, 'The field does not exist.');
   }
 
   /**
@@ -219,12 +219,6 @@ class CrudTest extends FieldUnitTestBase {
       'bundle' => 'test_bundle',
     );
     field_create_instance($instance_definition);
-
-    // Check that criteria spanning over the field_config_instance table work.
-    $fields = field_read_fields(array('entity_type' => $instance_definition['entity_type'], 'bundle' => $instance_definition['bundle']));
-    $this->assertTrue(count($fields) == 1 && isset($fields[$field_definition['field_name']]), 'The field was properly read.');
-    $fields = field_read_fields(array('entity_type' => $instance_definition['entity_type'], 'field_name' => $instance_definition['field_name']));
-    $this->assertTrue(count($fields) == 1 && isset($fields[$field_definition['field_name']]), 'The field was properly read.');
   }
 
   /**
@@ -238,8 +232,9 @@ class CrudTest extends FieldUnitTestBase {
     );
     field_create_field($field_definition);
     $field = field_read_field($field_definition['field_name']);
+    $schema = $field->getSchema();
     $expected_indexes = array('value' => array('value'));
-    $this->assertEqual($field['indexes'], $expected_indexes, 'Field type indexes saved by default');
+    $this->assertEqual($schema['indexes'], $expected_indexes, 'Field type indexes saved by default');
 
     // Check that indexes specified by the field definition override the field
     // type indexes.
@@ -252,8 +247,9 @@ class CrudTest extends FieldUnitTestBase {
     );
     field_create_field($field_definition);
     $field = field_read_field($field_definition['field_name']);
+    $schema = $field->getSchema();
     $expected_indexes = array('value' => array());
-    $this->assertEqual($field['indexes'], $expected_indexes, 'Field definition indexes override field type indexes');
+    $this->assertEqual($schema['indexes'], $expected_indexes, 'Field definition indexes override field type indexes');
 
     // Check that indexes specified by the field definition add to the field
     // type indexes.
@@ -266,8 +262,9 @@ class CrudTest extends FieldUnitTestBase {
     );
     field_create_field($field_definition);
     $field = field_read_field($field_definition['field_name']);
+    $schema = $field->getSchema();
     $expected_indexes = array('value' => array('value'), 'value_2' => array('value'));
-    $this->assertEqual($field['indexes'], $expected_indexes, 'Field definition indexes are merged with field type indexes');
+    $this->assertEqual($schema['indexes'], $expected_indexes, 'Field definition indexes are merged with field type indexes');
   }
 
   /**
@@ -351,17 +348,6 @@ class CrudTest extends FieldUnitTestBase {
     }
   }
 
-  function testUpdateNonExistentField() {
-    $test_field = array('field_name' => 'does_not_exist', 'type' => 'number_decimal');
-    try {
-      field_update_field($test_field);
-      $this->fail(t('Cannot update a field that does not exist.'));
-    }
-    catch (FieldException $e) {
-      $this->pass(t('Cannot update a field that does not exist.'));
-    }
-  }
-
   function testUpdateFieldType() {
     $field = array('field_name' => 'field_type', 'type' => 'number_decimal');
     $field = field_create_field($field);
@@ -384,18 +370,16 @@ class CrudTest extends FieldUnitTestBase {
     // respected. Since cardinality enforcement is consistent across database
     // systems, it makes a good test case.
     $cardinality = 4;
-    $field_definition = array(
+    $field = field_create_field(array(
       'field_name' => 'field_update',
       'type' => 'test_field',
       'cardinality' => $cardinality,
-    );
-    $field_definition = field_create_field($field_definition);
-    $instance = array(
+    ));
+    $instance = field_create_instance(array(
       'field_name' => 'field_update',
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
-    );
-    $instance = field_create_instance($instance);
+    ));
 
     do {
       // We need a unique ID for our entity. $cardinality will do.
@@ -410,14 +394,14 @@ class CrudTest extends FieldUnitTestBase {
       // Load back and assert there are $cardinality number of values.
       $entity = field_test_create_entity($id, $id, $instance['bundle']);
       field_attach_load('test_entity', array($id => $entity));
-      $this->assertEqual(count($entity->field_update[LANGUAGE_NOT_SPECIFIED]), $field_definition['cardinality'], 'Cardinality is kept');
+      $this->assertEqual(count($entity->field_update[LANGUAGE_NOT_SPECIFIED]), $field['cardinality'], 'Cardinality is kept');
       // Now check the values themselves.
       for ($delta = 0; $delta < $cardinality; $delta++) {
         $this->assertEqual($entity->field_update[LANGUAGE_NOT_SPECIFIED][$delta]['value'], $delta, 'Value is kept');
       }
       // Increase $cardinality and set the field cardinality to the new value.
-      $field_definition['cardinality'] = ++$cardinality;
-      field_update_field($field_definition);
+      $field['cardinality'] = ++$cardinality;
+      field_update_field($field);
     } while ($cardinality < 6);
   }
 
@@ -444,4 +428,5 @@ class CrudTest extends FieldUnitTestBase {
       $this->pass(t("An unchangeable setting cannot be updated."));
     }
   }
+
 }

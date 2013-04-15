@@ -205,7 +205,7 @@ class Page extends PathPluginBase {
         );
 
         // Only display the menu selector if menu module is enabled.
-        if (module_exists('menu')) {
+        if (\Drupal::moduleHandler()->moduleExists('menu')) {
           $form['menu']['name'] = array(
             '#title' => t('Menu'),
             '#type' => 'select',
@@ -322,7 +322,7 @@ class Page extends PathPluginBase {
           ),
         );
         // Only display the menu selector if menu module is enabled.
-        if (module_exists('menu')) {
+        if (\Drupal::moduleHandler()->moduleExists('menu')) {
           $form['tab_options']['name'] = array(
             '#title' => t('Menu'),
             '#type' => 'select',

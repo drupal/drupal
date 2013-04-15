@@ -6,11 +6,13 @@ body {
   background: #fff;
   font: normal 81.3%/1.538em "Lucida Grande", "Lucida Sans Unicode", sans-serif;
 }
-a {
+a,
+.link {
   color: #0074bd;
   text-decoration: none;
 }
-a:hover {
+a:hover,
+.link:hover {
   text-decoration: underline;
 }
 hr {
@@ -750,6 +752,13 @@ select.form-select:focus {
 }
 
 /**
+ * Improve spacing of cancel link.
+ */
+#edit-cancel {
+  margin-left: 10px; /* LTR */
+}
+
+/**
  * Improve form element usability on narrow devices.
  */
 @media screen and (max-width: 600px) {
@@ -819,6 +828,10 @@ select.form-select:focus {
   #dblog-filter-form .form-actions {
     float: none;
     padding: 0;
+  }
+  #edit-cancel {
+    display: block;
+    margin: 10px 0 0 0;
   }
 }
 
@@ -1021,10 +1034,14 @@ h1#overlay-title {
 }
 
 /* Shortcut theming */
-div.add-or-remove-shortcuts {
-  float: left; /* LTR */
-  padding-top: 0;
-  padding-left: 6px; /* LTR */
+.add-or-remove-shortcuts a:focus span.text,
+.add-or-remove-shortcuts a:hover span.text {
+  color: #fff;
+  background-color: #5f605b;
+  padding: 0 6px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
 }
 
 /* Field UI */

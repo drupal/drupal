@@ -7,16 +7,14 @@
 
 namespace Drupal\views\Plugin\views\area;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Views area text handler.
  *
  * @ingroup views_area_handlers
  *
- * @Plugin(
- *   id = "text_custom"
- * )
+ * @PluginID("text_custom")
  */
 class TextCustom extends AreaPluginBase {
 

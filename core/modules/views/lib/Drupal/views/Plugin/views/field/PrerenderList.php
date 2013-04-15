@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\field;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to provide a list of items.
@@ -19,9 +19,7 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "prerender_list"
- * )
+ * @PluginID("prerender_list")
  */
 class PrerenderList extends FieldPluginBase {
 

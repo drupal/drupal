@@ -33,8 +33,8 @@ class StyleUnformattedTest extends StyleTestBase {
   function testDefaultRowClasses() {
     $view = views_get_view('test_view');
     $view->setDisplay();
-    $rendered_output = $view->preview();
-    $this->storeViewPreview($rendered_output);
+    $output = $view->preview();
+    $this->storeViewPreview(drupal_render($output));
 
     $rows = $this->elements->body->div->div->div;
     $count = 0;

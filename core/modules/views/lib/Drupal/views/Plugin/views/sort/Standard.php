@@ -7,16 +7,14 @@
 
 namespace Drupal\views\Plugin\views\sort;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Default implementation of the base sort plugin.
  *
  * @ingroup views_sort_handlers
  *
- * @Plugin(
- *   id = "standard"
- * )
+ * @PluginID("standard")
  */
 class Standard extends SortPluginBase {
 

@@ -90,7 +90,7 @@ function hook_taxonomy_vocabulary_update(Drupal\taxonomy\Plugin\Core\Entity\Voca
  * Act before taxonomy vocabulary deletion.
  *
  * This hook is invoked from taxonomy_vocabulary_delete() before
- * field_attach_delete_bundle() is called and before the vocabulary is actually
+ * entity_bundle_delete() is called and before the vocabulary is actually
  * removed from the database.
  *
  * @param Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary
@@ -109,7 +109,7 @@ function hook_taxonomy_vocabulary_predelete(Drupal\taxonomy\Plugin\Core\Entity\V
  * Respond to taxonomy vocabulary deletion.
  *
  * This hook is invoked from taxonomy_vocabulary_delete() after
- * field_attach_delete_bundle() has been called and after the vocabulary has
+ * entity_bundle_delete() has been called and after the vocabulary has
  * been removed from the database.
  *
  * @param Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary

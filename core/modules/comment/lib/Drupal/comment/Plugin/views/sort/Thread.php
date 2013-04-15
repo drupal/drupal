@@ -8,17 +8,14 @@
 namespace Drupal\comment\Plugin\views\sort;
 
 use Drupal\views\Plugin\views\sort\SortPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Sort handler for ordering by thread.
  *
  * @ingroup views_sort_handlers
  *
- * @Plugin(
- *   id = "comment_thread",
- *   module = "comment"
- * )
+ * @PluginID("comment_thread")
  */
 class Thread extends SortPluginBase {
 

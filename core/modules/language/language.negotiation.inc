@@ -480,7 +480,7 @@ function language_url_rewrite_url(&$path, &$options) {
             $options['base_url'] .= ':' . $port;
           }
 
-          if (isset($options['https']) && variable_get('https', FALSE)) {
+          if (isset($options['https']) && settings()->get('mixed_mode_sessions', FALSE)) {
             if ($options['https'] === TRUE) {
               $options['base_url'] = str_replace('http://', 'https://', $options['base_url']);
             }

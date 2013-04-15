@@ -46,6 +46,8 @@ class WizardPluginBaseUnitTest extends ViewUnitTestBase {
     $this->installSchema('language', 'language');
     $this->installSchema('system', 'variable');
 
+    $this->enableModules(array('views_ui'));
+
     $this->wizard = $this->container->get('plugin.manager.views.wizard')->createInstance('standard:views_test_data', array());
   }
 

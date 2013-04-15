@@ -45,9 +45,11 @@ class ViewTestData {
         'create' => array(),
         'change' => array(),
       );
+
+      $module_handler = \Drupal::moduleHandler();
       foreach ($modules as $module) {
         $config_dir = drupal_get_path('module', $module) . '/test_views';
-        if (!is_dir($config_dir) || !module_exists($module)) {
+        if (!is_dir($config_dir) || !$module_handler->moduleExists($module)) {
           continue;
         }
 

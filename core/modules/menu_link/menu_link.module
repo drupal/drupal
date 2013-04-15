@@ -89,7 +89,7 @@ function menu_link_delete_multiple(array $mlids, $force = FALSE, $prevent_repare
   $controller = drupal_container()->get('plugin.manager.entity')
     ->getStorageController('menu_link');
   if (!$force) {
-    $entity_query = entity_query('menu_link');
+    $entity_query = Drupal::entityQuery('menu_link');
     $group = $entity_query->orConditionGroup()
       ->condition('module', 'system', '<>')
       ->condition('updated', 0, '<>');
@@ -178,7 +178,7 @@ function menu_link_maintain($module, $op, $link_path, $link_title = NULL) {
       break;
 
     case 'delete':
-      $result = entity_query('menu_link')->condition('link_path', $link_path)->execute();
+      $result = Drupal::entityQuery('menu_link')->condition('link_path', $link_path)->execute();
       if (!empty($result)) {
         menu_link_delete_multiple($result);
       }

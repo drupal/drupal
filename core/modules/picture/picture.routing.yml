@@ -1,0 +1,6 @@
+picture_mapping_action_confirm:
+  pattern: '/admin/config/media/picturemapping/{picture_mapping}/delete'
+  defaults:
+    _form: '\Drupal\picture\Form\PictureMappingActionConfirmForm'
+  requirements:
+    _permission: 'administer pictures'

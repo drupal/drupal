@@ -15,3 +15,4 @@ signatures: '0'
 cancel_method: user_cancel_block
 password_reset_timeout: '86400'
 password_strength: '1'
+langcode: en

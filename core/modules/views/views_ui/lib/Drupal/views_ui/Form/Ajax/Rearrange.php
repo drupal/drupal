@@ -74,23 +74,23 @@ class Rearrange extends ViewsFormBase {
       $relationships[$id] = $handler->label();
     }
 
-    // Filters can now be grouped so we do a little bit extra:
-    $groups = array();
-    $grouping = FALSE;
-    if ($type == 'filter') {
-      $group_info = $executable->display_handler->getOption('filter_groups');
-      if (!empty($group_info['groups']) && count($group_info['groups']) > 1) {
-        $grouping = TRUE;
-        $groups = array(0 => array());
-      }
-    }
+    $form['fields'] = array(
+      '#type' => 'table',
+      '#header' => array('', t('Weight'), t('Remove')),
+      '#empty' => t('No fields available.'),
+      '#tabledrag' => array(
+        array('order', 'sibling', 'weight'),
+      ),
+      '#tree' => TRUE,
+      '#prefix' => '<div class="scroll">',
+      '#suffix' => '</div>',
+    );
 
     foreach ($display->getOption($types[$type]['plural']) as $id => $field) {
-      $form['fields'][$id] = array('#tree' => TRUE);
-      $form['fields'][$id]['weight'] = array(
-        '#type' => 'textfield',
-        '#default_value' => ++$count,
-      );
+      $form['fields'][$id] = array();
+
+      $form['fields'][$id]['#attributes'] = array('class' => array('draggable'), 'id' => 'views-row-' . $id);
+
       $handler = $display->getHandler($type, $id);
       if ($handler) {
         $name = $handler->adminLabel() . ' ' . $handler->adminSummary();
@@ -105,23 +105,21 @@ class Rearrange extends ViewsFormBase {
       else {
         $form['fields'][$id]['name'] = array('#markup' => t('Broken field @id', array('@id' => $id)));
       }
+
+      $form['fields'][$id]['weight'] = array(
+        '#type' => 'textfield',
+        '#default_value' => ++$count,
+        '#attributes' => array('class' => array('weight')),
+      );
+
       $form['fields'][$id]['removed'] = array(
         '#type' => 'checkbox',
         '#id' => 'views-removed-' . $id,
         '#attributes' => array('class' => array('views-remove-checkbox')),
         '#default_value' => 0,
+        '#suffix' => l('<span>' . t('Remove') . '</span>', 'javascript:void()', array('attributes' => array('id' => 'views-remove-link-' . $id, 'class' => array('views-hidden', 'views-button-remove', 'views-remove-link'), 'alt' => t('Remove this item'), 'title' => t('Remove this item')), 'html' => TRUE)),
       );
     }
-
-    // Add javascript settings that will be added via $.extend for tabledragging
-    $form['#js']['tableDrag']['arrange']['weight'][0] = array(
-      'target' => 'weight',
-      'source' => NULL,
-      'relationship' => 'sibling',
-      'action' => 'order',
-      'hidden' => TRUE,
-      'limit' => 0,
-    );
 
     $name = NULL;
     if (isset($form_state['update_name'])) {
@@ -129,6 +127,7 @@ class Rearrange extends ViewsFormBase {
     }
 
     $view->getStandardButtons($form, $form_state, 'views_ui_rearrange_form');
+
     return $form;
   }
 

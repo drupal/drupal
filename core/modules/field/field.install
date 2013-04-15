@@ -5,162 +5,13 @@
  * Install, update, and uninstall functions for the Field module.
  */
 
+use Drupal\Component\Uuid\Uuid;
+use Drupal\field\Plugin\Core\Entity\Field;
+
 /**
  * Implements hook_schema().
  */
 function field_schema() {
-  // Static (meta) tables.
-  $schema['field_config'] = array(
-    'fields' => array(
-      'id' => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'The primary identifier for a field',
-      ),
-      'field_name' => array(
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'description' => 'The name of this field. Non-deleted field names are unique, but multiple deleted fields can have the same name.',
-      ),
-      'type' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'description' => 'The type of this field.',
-      ),
-     'module' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The module that implements the field type.',
-      ),
-      'active' => array(
-        'type' => 'int',
-        'size' => 'tiny',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Boolean indicating whether the module that implements the field type is enabled.',
-      ),
-      'storage_type' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'description' => 'The storage backend for the field.',
-      ),
-      'storage_module' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The module that implements the storage backend.',
-      ),
-      'storage_active' => array(
-        'type' => 'int',
-        'size' => 'tiny',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Boolean indicating whether the module that implements the storage backend is enabled.',
-      ),
-      'locked' => array(
-        'type' => 'int',
-        'size' => 'tiny',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => '@TODO',
-      ),
-      'data' => array(
-        'type' => 'blob',
-        'size' => 'big',
-        'not null' => TRUE,
-        'serialize' => TRUE,
-        'description' => 'Serialized data containing the field properties that do not warrant a dedicated column.',
-      ),
-      'cardinality' => array(
-        'type' => 'int',
-        'size' => 'tiny',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'translatable' => array(
-        'type' => 'int',
-        'size' => 'tiny',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'deleted' => array(
-        'type' => 'int',
-        'size' => 'tiny',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'primary key' => array('id'),
-    'indexes' => array(
-      'field_name' => array('field_name'),
-      // Used by field_read_fields().
-      'active' => array('active'),
-      'storage_active' => array('storage_active'),
-      'deleted' => array('deleted'),
-      // Used by field_sync_field_status().
-      'module' => array('module'),
-      'storage_module' => array('storage_module'),
-      'type' => array('type'),
-      'storage_type' => array('storage_type'),
-    ),
-  );
-  $schema['field_config_instance'] = array(
-    'fields' => array(
-      'id' => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'The primary identifier for a field instance',
-      ),
-      'field_id' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'description' => 'The identifier of the field attached by this instance',
-      ),
-      'field_name' => array(
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => ''
-      ),
-      'entity_type'       => array(
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => ''
-      ),
-      'bundle' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => ''
-      ),
-      'data' => array(
-        'type' => 'blob',
-        'size' => 'big',
-        'not null' => TRUE,
-        'serialize' => TRUE,
-      ),
-      'deleted' => array(
-        'type' => 'int',
-        'size' => 'tiny',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'primary key' => array('id'),
-    'indexes' => array(
-      // Used by field_delete_instance().
-      'field_name_bundle' => array('field_name', 'entity_type', 'bundle'),
-      // Used by field_read_instances().
-      'deleted' => array('deleted'),
-    ),
-  );
   $schema['cache_field'] = drupal_get_schema_unprocessed('system', 'cache');
   $schema['cache_field']['description'] = 'Cache table for the Field module to store already built field informations.';
 
@@ -229,12 +80,16 @@ function _update_7000_field_create_field(&$field) {
     'deleted' => (int) $field['deleted'],
   );
   // We don't use drupal_write_record() here because it depends on the schema.
-  $field['id'] = db_insert('field_config')
+  $field_id = db_insert('field_config')
     ->fields($record)
     ->execute();
 
-  // Create storage for the field.
-  field_sql_storage_field_storage_create_field($field);
+  // Create storage for the field. This requires a field entity, but cannot use
+  // the regular entity_create() function here.
+  $field_entity = new Field($field);
+  field_sql_storage_field_storage_create_field($field_entity);
+
+  $field['id'] = $field_id;
 }
 
 /**
@@ -270,7 +125,6 @@ function _update_7000_field_delete_field($field_name) {
     ->condition('field_name', $field_name)
     ->execute();
 }
-
 
 /**
  * Deletes an instance and all its data of a field stored in SQL Storage.
@@ -355,6 +209,8 @@ function _update_7000_field_create_instance($field, &$instance) {
     'field_id' => $field['id'],
     'field_name' => $field['field_name'],
     'deleted' => 0,
+    'description' => '',
+    'required' => FALSE,
   );
 
   // The serialized 'data' column contains everything from $instance that does
@@ -382,15 +238,25 @@ function _update_7000_field_create_instance($field, &$instance) {
  */
 
 /**
- * Reassign all list.module fields to be controlled by options.module.
+ * Implements hook_update_dependencies().
+ */
+function field_update_dependencies() {
+  // Convert Field API to ConfigEntities after:
+  $dependencies['field'][8003] = array(
+    // - Custom block bodies have been turned to fields.
+    'block' => 8008,
+    // - User pictures have been turned to fields.
+    'user' => 8011,
+    // - The {file_usage}.id column has moved to varchar.
+    'file' => 8001,
+  );
+  return $dependencies;
+}
+
+/**
+ * Empty update - moved into field_update_8003().
  */
 function field_update_8001() {
-  db_update('field_config')
-    ->fields(array(
-      'module' => 'options',
-    ))
-    ->condition('module', 'list')
-    ->execute();
 }
 
 /**
@@ -442,7 +308,7 @@ function field_update_8002() {
 
   // Migration of 'extra_fields' display settings. Avoid calling
   // entity_get_info() by fetching the relevant variables directly in the
-  // cariables table.
+  // variable table.
   $variables = array_map('unserialize', db_query("SELECT name, value FROM {variable} WHERE name LIKE '%field_bundle_settings_%'")->fetchAllKeyed());
   foreach ($variables as $variable_name => $variable_value) {
     if (preg_match('/field_bundle_settings_(.*)__(.*)/', $variable_name, $matches)) {
@@ -481,6 +347,137 @@ function field_update_8002() {
     $config->save();
   }
   update_config_manifest_add('entity.display', array_keys($displays));
+}
+
+/**
+ * Convert fields and instances to config.
+ */
+function field_update_8003() {
+  $uuid = new Uuid();
+  $manifest_ids = array('fields' => array(), 'instances' => array());
+
+  $state = Drupal::state();
+  $deleted_fields = $state->get('field.field.deleted') ?: array();
+  $deleted_instances = $state->get('field.instance.deleted') ?: array();
+
+  $field_uuids = array();
+
+  // Migrate field definitions.
+  $records = db_query("SELECT * FROM {field_config}")->fetchAll(PDO::FETCH_ASSOC);
+  foreach ($records as $record) {
+    $record['data'] = unserialize($record['data']);
+
+    $config = array(
+      'id' => $record['field_name'],
+      'uuid' => $uuid->generate(),
+      'type' => $record['type'],
+      'module' => $record['module'],
+      'active' => $record['active'],
+      'settings' => $record['data']['settings'],
+      'storage' => array(
+        'type' => $record['storage_type'],
+        'module' => $record['storage_module'],
+        'active' => $record['storage_active'],
+        'settings' => $record['data']['storage']['settings'],
+      ),
+      'locked' => $record['locked'],
+      'cardinality' => $record['cardinality'],
+      'translatable' => $record['translatable'],
+      'entity_types' => $record['data']['entity_types'],
+      'indexes' => $record['data']['indexes'] ?: array(),
+      'status' => 1,
+      'langcode' => 'und',
+    );
+
+    // Reassign all list.module fields to be controlled by options.module.
+    if ($config['module'] == 'list') {
+      $config['module'] = 'options';
+    }
+
+    // Save in either config or state.
+    if (!$record['deleted']) {
+      Drupal::config('field.field.' . $config['id'])
+        ->setData($config)
+        ->save();
+      $manifest_ids['fields'][] = $config['id'];
+    }
+    else {
+      $config['deleted'] = TRUE;
+      $deleted_fields[$config['uuid']] = $config;
+      // Additionally, rename the data tables for deleted fields. Technically
+      // this would belong in an update in field_sql_storage.module, but it is
+      // easier to do it now, when the old numeric ID is available.
+      if ($config['storage']['type'] == 'field_sql_storage') {
+        $field = new Field($config);
+        $tables = array(
+          "field_deleted_data_{$record['id']}" => _field_sql_storage_tablename($field),
+          "field_deleted_revision_{$record['id']}" => _field_sql_storage_revision_tablename($field),
+        );
+        foreach ($tables as $table_old => $table_new) {
+          if (db_table_exists($table_old)) {
+            db_rename_table($table_old, $table_new);
+          }
+        }
+      }
+    }
+
+    // Store the UUID with the old field_id so that we can map the instances.
+    $field_uuids[$record['id']] = $config['uuid'];
+  }
+
+  // Migrate instance definitions.
+  $records = db_query("SELECT * FROM {field_config_instance}")->fetchAll(PDO::FETCH_ASSOC);
+  foreach ($records as $record) {
+    $record['data'] = unserialize($record['data']);
+
+    $config = array(
+      'id' => $record['entity_type'] . '.' . $record['bundle'] . '.' . $record['field_name'],
+      'uuid' => $uuid->generate(),
+      'field_uuid' => $field_uuids[$record['field_id']],
+      'entity_type' => $record['entity_type'],
+      'bundle' => $record['bundle'],
+      'label' => $record['data']['label'],
+      'description' => $record['data']['description'],
+      'required' => $record['data']['required'],
+      'default_value' => isset($record['data']['default_value']) ? $record['data']['default_value'] : array(),
+      'default_value_function' => isset($record['data']['default_value_function']) ? $record['data']['default_value_function'] : '',
+      'settings' => $record['data']['settings'],
+      'widget' => $record['data']['widget'],
+      'status' => 1,
+      'langcode' => 'und',
+    );
+
+    // Save in either config or state.
+    if (!$record['deleted']) {
+      Drupal::config('field.instance.' . $config['id'])
+        ->setData($config)
+        ->save();
+      $manifest_ids['instances'][] = $config['id'];
+    }
+    else {
+      $config['deleted'] = TRUE;
+      $deleted_instances[$config['uuid']] = $config;
+    }
+
+    // Update {file_usage} table in case this instance has a default image.
+    if (!empty($config['settings']['default_image'])) {
+      db_update('file_usage')
+        ->fields(array('id' => $config['field_uuid']))
+        ->condition('type', 'default_image')
+        ->condition('module', 'image')
+        ->condition('id', $record['field_id'])
+        ->condition('fid', $config['settings']['default_image'])
+        ->execute();
+    }
+  }
+
+  // Create the manifest files.
+  update_config_manifest_add('field.field', $manifest_ids['fields']);
+  update_config_manifest_add('field.instance', $manifest_ids['instances']);
+
+  // Save the deleted fields and instances in state.
+  $state->set('field.field.deleted', $deleted_fields);
+  $state->set('field.instance.deleted', $deleted_instances);
 }
 
 /**

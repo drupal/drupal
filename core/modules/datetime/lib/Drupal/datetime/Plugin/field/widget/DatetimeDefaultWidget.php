@@ -12,7 +12,7 @@ use Drupal\field\Plugin\Type\Widget\WidgetBase;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Plugin\PluginSettingsBase;
-use Drupal\field\FieldInstance;
+use Drupal\field\Plugin\Core\Entity\FieldInstance;
 use Drupal\Core\Datetime\DrupalDateTime;
 
 /**
@@ -36,7 +36,7 @@ class DateTimeDefaultWidget extends WidgetBase {
    *   The plugin_id for the widget.
    * @param array $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\field\FieldInstance $instance
+   * @param \Drupal\field\Plugin\Core\Entity\FieldInstance $instance
    *   The field instance to which the widget is associated.
    * @param array $settings
    *   The widget settings.

@@ -7,7 +7,7 @@
 
 namespace Drupal\taxonomy\Plugin\views\argument;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\argument\Numeric;
 
 /**
@@ -15,10 +15,7 @@ use Drupal\views\Plugin\views\argument\Numeric;
  *
  * @ingroup views_argument_handlers
  *
- * @Plugin(
- *   id = "vocabulary_vid",
- *   module = "taxonomy"
- * )
+ * @PluginID("vocabulary_vid")
  */
 class VocabularyVid extends Numeric {
 

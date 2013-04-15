@@ -8,13 +8,13 @@
 namespace Drupal\picture\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the Picture entity.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "picture_mapping",
  *   label = @Translation("Picture mapping"),
  *   module = "picture",

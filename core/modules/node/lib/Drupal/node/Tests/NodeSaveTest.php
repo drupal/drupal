@@ -128,8 +128,10 @@ class NodeSaveTest extends NodeTestBase {
   }
 
   /**
-   * Tests determing changes in hook_node_presave() and verifies the static node
-   * load cache is cleared upon save.
+   * Tests node presave and static node load cache.
+   *
+   * This test determines changes in hook_node_presave() and verifies that the
+   * static node load cache is cleared upon save.
    */
   function testDeterminingChanges() {
     // Initial creation.

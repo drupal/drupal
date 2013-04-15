@@ -87,11 +87,7 @@ function picture_menu() {
   );
   $items['admin/config/media/picturemapping/%picture_mapping/delete'] = array(
     'title' => 'Delete',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('picture_mapping_action_confirm', 4, 5),
-    'access callback' => 'user_access',
-    'access arguments' => array('administer pictures'),
-    'file' => 'picture_mapping.admin.inc',
+    'route_name' => 'picture_mapping_action_confirm',
   );
 
   return $items;

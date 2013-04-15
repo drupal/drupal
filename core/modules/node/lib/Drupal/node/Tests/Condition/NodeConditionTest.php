@@ -8,7 +8,6 @@
 namespace Drupal\node\Tests\Condition;
 
 use Drupal\simpletest\DrupalUnitTestBase;
-use Drupal\Core\Condition\ConditionManager;
 
 /**
  * Tests the node conditions.
@@ -30,15 +29,13 @@ class NodeConditionTest extends DrupalUnitTestBase {
     $this->installSchema('node', 'node_type');
     $this->installSchema('node', 'node');
     $this->installSchema('node', 'node_revision');
-    $this->installSchema('field', 'field_config');
-    $this->installSchema('field', 'field_config_instance');
   }
 
   /**
    * Tests conditions.
    */
   function testConditions() {
-    $manager = new ConditionManager($this->container->getParameter('container.namespaces'));
+    $manager = $this->container->get('plugin.manager.condition');
 
     // Get some nodes of various types to check against.
     $page = entity_create('node', array('type' => 'page', 'title' => $this->randomName()));

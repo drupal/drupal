@@ -10,7 +10,7 @@ namespace Drupal\taxonomy\Plugin\views\field;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to provide simple renderer that allows linking to a taxonomy
@@ -20,10 +20,7 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "taxonomy",
- *   module = "taxonomy"
- * )
+ * @PluginID("taxonomy")
  */
 class Taxonomy extends FieldPluginBase {
 

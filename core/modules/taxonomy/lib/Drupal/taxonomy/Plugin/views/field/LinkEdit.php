@@ -10,17 +10,14 @@ namespace Drupal\taxonomy\Plugin\views\field;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to present a term edit link.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "term_link_edit",
- *   module = "taxonomy"
- * )
+ * @PluginID("term_link_edit")
  */
 class LinkEdit extends FieldPluginBase {
 

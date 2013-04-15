@@ -69,7 +69,7 @@ Drupal.behaviors.editor = {
     var editors;
     // The 'serialize' trigger indicates that we should simply update the
     // underlying element with the new text, without destroying the editor.
-    if (trigger == 'serialize') {
+    if (trigger === 'serialize') {
       // Removing the editor-processed class guarantees that the editor will
       // be reattached. Only do this if we're planning to destroy the editor.
       editors = $(context).find('.editor-processed');

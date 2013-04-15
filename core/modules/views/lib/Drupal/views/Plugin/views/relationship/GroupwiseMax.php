@@ -9,7 +9,7 @@ namespace Drupal\views\Plugin\views\relationship;
 
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\views\ViewExecutable;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Views;
 
 /**
@@ -60,9 +60,7 @@ use Drupal\views\Views;
  *
  * @ingroup views_relationship_handlers
  *
- * @Plugin(
- *   id = "groupwise_max"
- * )
+ * @PluginID("groupwise_max")
  */
 class GroupwiseMax extends RelationshipPluginBase {
 

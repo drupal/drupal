@@ -261,7 +261,7 @@ Drupal.fieldUIOverview = {
 
       // Disabled elements do not appear in POST ajax data, so we mark the
       // elements disabled only after firing the request.
-      $(ajaxElements).attr('disabled', true);
+      $(ajaxElements).prop('disabled', true);
     }
   }
 };

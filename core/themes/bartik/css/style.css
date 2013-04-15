@@ -15,7 +15,10 @@ a:visited {
 }
 a:hover,
 a:active,
-a:focus {
+a:focus,
+.link:hover,
+.link:active,
+.link:focus {
   text-decoration: underline;
 }
 h1,
@@ -122,14 +125,16 @@ div.messages,
 div.meta,
 p.comment-time,
 table,
-.breadcrumb {
+.breadcrumb,
+.link {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 input,
 textarea,
 select,
 .form-button,
-a.button {
+a.button,
+button {
   font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, sans-serif;
 }
 

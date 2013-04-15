@@ -82,6 +82,7 @@ class DisplayTest extends PluginTestBase {
     $this->assertIdentical($view->display_handler->getOption('test_option'), '');
 
     $output = $view->preview();
+    $output = drupal_render($output);
 
     $this->assertTrue(strpos($output, '<h1></h1>') !== FALSE, 'An empty value for test_option found in output.');
 
@@ -90,6 +91,7 @@ class DisplayTest extends PluginTestBase {
 
     $view->save();
     $output = $view->preview();
+    $output = drupal_render($output);
 
     // Test we have our custom <h1> tag in the output of the view.
     $this->assertTrue(strpos($output, '<h1>Test option title</h1>') !== FALSE, 'The test_option value found in display output title.');

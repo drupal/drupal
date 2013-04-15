@@ -5,7 +5,7 @@
  * Field Info API, providing information about available fields and field types.
  */
 
-use Drupal\field\FieldInstance;
+use Drupal\field\Plugin\Core\Entity\FieldInstance;
 use Drupal\field\FieldInfo;
 
 /**

@@ -32,6 +32,7 @@ class UserRoleAdminTest extends WebTestBase {
    */
   function testRoleAdministration() {
     $this->drupalLogin($this->admin_user);
+    $default_langcode = language_default()->langcode;
 
     // Test adding a role. (In doing so, we use a role name that happens to
     // correspond to an integer, to test that the role administration pages
@@ -42,6 +43,9 @@ class UserRoleAdminTest extends WebTestBase {
     $this->assertText(t('The role has been added.'), 'The role has been added.');
     $role = entity_load('user_role', $role_name);
     $this->assertTrue(is_object($role), 'The role was successfully retrieved from the database.');
+
+    // Check that the role was created in site default language.
+    $this->assertEqual($role->langcode, $default_langcode);
 
     // Try adding a duplicate role.
     $this->drupalPost(NULL, $edit, t('Add role'));

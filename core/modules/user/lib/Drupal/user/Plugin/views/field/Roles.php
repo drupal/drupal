@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Plugin\views\field;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\field\PrerenderList;
@@ -17,10 +17,7 @@ use Drupal\views\Plugin\views\field\PrerenderList;
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "user_roles",
- *   module = "user"
- * )
+ * @PluginID("user_roles")
  */
 class Roles extends PrerenderList {
 

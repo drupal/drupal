@@ -66,11 +66,15 @@ class RouteProviderTest extends UnitTestBase {
 
     $candidates = array_flip($candidates);
 
-    $this->assertTrue(count($candidates) == 4, 'Correct number of candidates found');
+    $this->assertTrue(count($candidates) == 8, 'Correct number of candidates found');
     $this->assertTrue(array_key_exists('/node/5/edit', $candidates), 'First candidate found.');
     $this->assertTrue(array_key_exists('/node/5/%', $candidates), 'Second candidate found.');
     $this->assertTrue(array_key_exists('/node/%/edit', $candidates), 'Third candidate found.');
     $this->assertTrue(array_key_exists('/node/%/%', $candidates), 'Fourth candidate found.');
+    $this->assertTrue(array_key_exists('/node/5', $candidates), 'Fifth candidate found.');
+    $this->assertTrue(array_key_exists('/node/%', $candidates), 'Sixth candidate found.');
+    $this->assertTrue(array_key_exists('/node', $candidates), 'Seventh candidate found.');
+    $this->assertTrue(array_key_exists('/', $candidates), 'Eighth candidate found.');
   }
 
   /**
@@ -246,6 +250,7 @@ class RouteProviderTest extends UnitTestBase {
       'value' => 'poink',
     )));
     $collection->add('narf', new Route('/some/path/here'));
+    $collection->add('eep', new Route('/something/completely/different'));
 
     $dumper = new MatcherDumper($connection, 'test_routes');
     $dumper->addRoutes($collection);
@@ -258,13 +263,10 @@ class RouteProviderTest extends UnitTestBase {
     try {
       $routes = $provider->getRouteCollectionForRequest($request);
 
-      // All of the matching paths have the correct pattern.
-      foreach ($routes as $route) {
-        $this->assertEqual($route->compile()->getPatternOutline(), '/some/path/here', 'Found path has correct pattern');
-      }
-
-      $this->assertEqual(count($routes), 1, 'The correct number of routes was found.');
+      $this->assertEqual(count($routes), 2, 'The correct number of routes was found.');
       $this->assertNotNull($routes->get('narf'), 'The first matching route was found.');
+      $this->assertNotNull($routes->get('poink'), 'The second matching route was found.');
+      $this->assertNull($routes->get('eep'), 'Noin-matching route was not found.');
     }
     catch (ResourceNotFoundException $e) {
       $this->fail('No matching route found with default argument value.');

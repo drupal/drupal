@@ -11,17 +11,14 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to present a link to the user.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "user_link",
- *   module = "user"
- * )
+ * @PluginID("user_link")
  */
 class Link extends FieldPluginBase {
 

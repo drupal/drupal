@@ -30,9 +30,9 @@ class UserLoginBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::build().
+   * Implements \Drupal\block\BlockBase::blockBuild().
    */
-  public function build() {
+  protected function blockBuild() {
     $form = drupal_get_form('user_login_form');
     unset($form['name']['#attributes']['autofocus']);
     unset($form['name']['#description']);

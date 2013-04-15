@@ -68,7 +68,7 @@ abstract class AggregatorTestBase extends WebTestBase {
    *   Feed object representing the feed.
    */
   function deleteFeed(Feed $feed) {
-    $this->drupalPost('admin/config/services/aggregator/edit/feed/' . $feed->id(), array(), t('Delete'));
+    $this->drupalPost('admin/config/services/aggregator/delete/feed/' . $feed->id(), array(), t('Delete'));
     $this->assertRaw(t('The feed %title has been deleted.', array('%title' => $feed->label())), 'Feed deleted successfully.');
   }
 

@@ -7,15 +7,12 @@
 
 namespace Drupal\file\Plugin\views\field;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to add rendering file paths as file URLs instead of as internal file URIs.
  *
- * @Plugin(
- *   id = "file_uri",
- *   module = "file"
- * )
+ * @PluginID("file_uri")
  */
 class Uri extends File {
 

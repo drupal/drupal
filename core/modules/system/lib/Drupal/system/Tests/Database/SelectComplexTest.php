@@ -27,11 +27,6 @@ class SelectComplexTest extends DatabaseTestBase {
     );
   }
 
-  function setUp() {
-    parent::setUp();
-    $this->installSchema('field', array('field_config', 'field_config_instance'));
-  }
-
   /**
    * Tests simple JOIN statements.
    */

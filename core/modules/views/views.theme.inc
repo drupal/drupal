@@ -1023,7 +1023,7 @@ function theme_views_form_views_form($variables) {
     $replace[] = isset($form[$field_name][$row_id]) ? drupal_render($form[$field_name][$row_id]) : '';
   }
   // Add in substitutions from hook_views_form_substitutions().
-  $substitutions = module_invoke_all('views_form_substitutions');
+  $substitutions = Drupal::moduleHandler()->invokeAll('views_form_substitutions');
   foreach ($substitutions as $placeholder => $substitution) {
     $search[] = $placeholder;
     $replace[] = $substitution;

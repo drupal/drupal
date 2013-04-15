@@ -52,10 +52,6 @@ function aggregator_help($path, $arg) {
  */
 function aggregator_theme() {
   return array(
-    'aggregator_categorize_items' => array(
-      'render element' => 'form',
-      'file' => 'aggregator.pages.inc',
-    ),
     'aggregator_feed_source' => array(
       'variables' => array('aggregator_feed' => NULL, 'view_mode' => NULL),
       'file' => 'aggregator.pages.inc',
@@ -142,12 +138,9 @@ function aggregator_menu() {
   $items['admin/config/services/aggregator/settings'] = array(
     'title' => 'Settings',
     'description' => 'Configure the behavior of the feed aggregator, including when to discard feed items and how to present feed items and categories.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('aggregator_admin_form'),
-    'access arguments' => array('administer news feeds'),
+    'route_name' => 'aggregator_admin_settings',
     'type' => MENU_LOCAL_TASK,
     'weight' => 100,
-    'file' => 'aggregator.admin.inc',
   );
   $items['aggregator'] = array(
     'title' => 'Feed aggregator',
@@ -246,6 +239,10 @@ function aggregator_menu() {
     'page arguments' => array(6),
     'access arguments' => array('administer news feeds'),
     'file' => 'aggregator.admin.inc',
+  );
+  $items['admin/config/services/aggregator/delete/feed/%aggregator_feed'] = array(
+    'title' => 'Delete feed',
+    'route_name' => 'aggregator_feed_delete',
   );
   $items['admin/config/services/aggregator/edit/category/%aggregator_category'] = array(
     'title' => 'Edit category',

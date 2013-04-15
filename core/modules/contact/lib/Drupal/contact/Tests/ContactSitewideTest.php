@@ -82,6 +82,11 @@ class ContactSitewideTest extends WebTestBase {
     $this->addCategory($id = drupal_strtolower($this->randomName(16)), $label = $this->randomName(16), implode(',', array($recipients[0])), '', TRUE);
     $this->assertRaw(t('Category %label has been added.', array('%label' => $label)));
 
+    // Check that the category was created in site default language.
+    $langcode = config('contact.category.' . $id)->get('langcode');
+    $default_langcode = language_default()->langcode;
+    $this->assertEqual($langcode, $default_langcode);
+
     // Make sure the newly created category is included in the list of categories.
     $this->assertNoUniqueText($label, 'New category included in categories list.');
 
