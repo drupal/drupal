@@ -257,11 +257,22 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@settings']
-  router_processor_subscriber:
-    class: Drupal\Core\EventSubscriber\RouteProcessorSubscriber
-    tags:
-      - { name: event_subscriber }
+  route_enhancer.ajax:
+    class: Drupal\Core\Routing\Enhancer\AjaxEnhancer
     arguments: ['@content_negotiation']
+    tags:
+      - { name: route_enhancer, priority: 20 }
+      - { name: legacy_route_enhancer, priority: 20 }
+  route_enhancer.form:
+    class: Drupal\Core\Routing\Enhancer\FormEnhancer
+    arguments: ['@content_negotiation']
+    tags:
+      - { name: route_enhancer, priority: 10 }
+  route_enhancer.page:
+    class: Drupal\Core\Routing\Enhancer\PageEnhancer
+    arguments: ['@content_negotiation']
+    tags:
+      - { name: route_enhancer, priority: 0 }
   router_listener:
     class: Symfony\Component\HttpKernel\EventListener\RouterListener
     tags:
