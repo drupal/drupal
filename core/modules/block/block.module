@@ -352,6 +352,12 @@ function _block_get_renderable_region($list = array()) {
     // draw attention on it.
     if (isset($build[$key]) && !in_array($block->get('plugin'), array('system_help_block', 'system_main_block'))) {
       $build[$key]['#contextual_links']['block'] = array('admin/structure/block/manage', array($key));
+
+      // If there are any nested contextual links, move them to the top level.
+      if (isset($build[$key]['content']['#contextual_links'])) {
+        $build[$key]['#contextual_links'] += $build[$key]['content']['#contextual_links'];
+        unset($build[$key]['content']['#contextual_links']);
+      }
     }
   }
   return $build;

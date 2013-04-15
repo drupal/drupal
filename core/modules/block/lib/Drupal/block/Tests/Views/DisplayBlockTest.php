@@ -23,7 +23,7 @@ class DisplayBlockTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('block_test_views', 'test_page_test');
+  public static $modules = array('block_test_views', 'test_page_test', 'contextual', 'views_ui');
 
   /**
    * Views used by this test.
@@ -146,6 +146,16 @@ class DisplayBlockTest extends ViewTestBase {
     $this->drupalGet('admin/structure/block/add/views_block:test_view_block-block_1/' . $default_theme);
     $elements = $this->xpath('//input[@name="label"]');
     $this->assertTrue(empty($elements), 'The label field is not found for Views blocks.');
+  }
+
+  /**
+   * Tests the contextual links on a Views block.
+   */
+  public function testBlockContextualLinks() {
+    $this->drupalLogin($this->drupalCreateUser(array('administer views', 'access contextual links')));
+    $this->drupalPlaceBlock('views_block:test_view_block-block_1', array(), array('title' => 'test_view_block-block_1:1'));
+    $this->drupalGet('test-page');
+    $this->assertLinkByHref("admin/structure/views/view/test_view_block/edit");
   }
 
 }
