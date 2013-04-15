@@ -288,15 +288,3 @@ function custom_block_admin_paths() {
   );
   return $paths;
 }
-
-/**
- * Implements hook_block_view_alter().
- */
-function custom_block_block_view_alter(array &$build, Block $block) {
-  // Add contextual links for custom blocks.
-  if ($block->getPlugin() instanceof CustomBlockBlock) {
-    // Move contextual links from inner content to outer wrapper.
-    $build['#contextual_links']['custom_block'] = $build['content']['#contextual_links']['custom_block'];
-    unset($build['content']['#contextual_links']['custom_block']);
-  }
-}

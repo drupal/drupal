@@ -65,7 +65,9 @@ function ckeditor_library_info() {
     'title' => 'Loads the main CKEditor library.',
     'version' => '4.1',
     'js' => array(
-      'core/misc/ckeditor/ckeditor.js' => array(),
+      'core/misc/ckeditor/ckeditor.js' => array(
+        'preprocess' => FALSE,
+      ),
     ),
   );
 
