@@ -2474,6 +2474,8 @@ function hook_schema() {
  *
  * @param $schema
  *   Nested array describing the schemas for all modules.
+ *
+ * @ingroup schemaapi
  */
 function hook_schema_alter(&$schema) {
   // Add field to existing schema.
@@ -3094,33 +3096,6 @@ function hook_file_mimetype_mapping_alter(&$mapping) {
   $mapping['extensions']['info'] = 'example_info';
   // Override existing extension mapping for '.ogg' files.
   $mapping['extensions']['ogg'] = 189;
-}
-
-/**
- * Declare archivers to the system.
- *
- * An archiver is a class that is able to package and unpackage one or more files
- * into a single possibly compressed file.  Common examples of such files are
- * zip files and tar.gz files.  All archiver classes must implement
- * ArchiverInterface.
- *
- * Each entry should be keyed on a unique value, and specify three
- * additional keys:
- * - class: The name of the PHP class for this archiver.
- * - extensions: An array of file extensions that this archiver supports.
- * - weight: This optional key specifies the weight of this archiver.
- *   When mapping file extensions to archivers, the first archiver by
- *   weight found that supports the requested extension will be used.
- *
- * @see hook_archiver_info_alter()
- */
-function hook_archiver_info() {
-  return array(
-    'tar' => array(
-      'class' => 'Drupal\Component\Archiver\Tar',
-      'extensions' => array('tar', 'tar.gz', 'tar.bz2'),
-    ),
-  );
 }
 
 /**

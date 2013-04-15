@@ -408,31 +408,6 @@ Drupal.edit.views.ToolbarView = Backbone.View.extend({
     else {
       this.$el.insertBefore(this.editor.element);
     }
-
-    var that = this;
-    // Animate the toolbar into visibility.
-    setTimeout(function () {
-      that.$el.removeClass('edit-animate-invisible');
-    }, 0);
-  },
-
-  remove: function () {
-    if (!this.$el) {
-      return;
-    }
-
-    // Remove after animation.
-    var that = this;
-    var $el = this.$el;
-    this.$el
-      .addClass('edit-animate-invisible')
-      // Prevent this toolbar from being detected *while* it is being removed.
-      .removeAttr('id')
-      .find('.edit-toolbar .edit-toolgroup')
-      .addClass('edit-animate-invisible')
-      .on(Drupal.edit.util.constants.transitionEnd, function (e) {
-        $el.remove();
-      });
   },
 
   /**

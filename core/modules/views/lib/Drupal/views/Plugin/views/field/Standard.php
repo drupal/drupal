@@ -7,16 +7,14 @@
 
 namespace Drupal\views\Plugin\views\field;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Default implementation of the base field plugin.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "standard"
- * )
+ * @PluginID("standard")
  */
 class Standard extends FieldPluginBase {
 

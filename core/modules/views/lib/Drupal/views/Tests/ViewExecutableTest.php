@@ -324,23 +324,31 @@ class ViewExecutableTest extends ViewUnitTestBase {
    * @param \Drupal\views\ViewExecutable $view
    */
   protected function assertViewDestroy($view) {
-    $this->assertFalse(isset($view->displayHandlers), 'Make sure all displays are destroyed');
-    $this->assertFalse(isset($view->filter), 'Make sure all filter handlers are destroyed');
-    $this->assertFalse(isset($view->field), 'Make sure all field handlers are destroyed');
-    $this->assertFalse(isset($view->argument), 'Make sure all argument handlers are destroyed');
-    $this->assertFalse(isset($view->relationship), 'Make sure all relationship handlers are destroyed');
-    $this->assertFalse(isset($view->sort), 'Make sure all sort handlers are destroyed');
-    $this->assertFalse(isset($view->area), 'Make sure all area handlers are destroyed');
+    $reflection = new \ReflectionClass($view);
+    $defaults = $reflection->getDefaultProperties();
+    // The storage should remain.
+    unset($defaults['storage']);
 
-    $keys = array('current_display', 'display_handler', 'field', 'argument', 'filter', 'sort', 'relationship', 'header', 'footer', 'empty', 'query', 'result', 'inited', 'style_plugin', 'plugin_name', 'exposed_data', 'exposed_input', 'many_to_one_tables');
-    foreach ($keys as $key) {
-      $this->assertFalse(isset($view->{$key}), $key);
+    foreach ($defaults as $property => $default) {
+      $this->assertIdentical($this->getProtectedProperty($view, $property), $default);
     }
-    $this->assertEqual($view->built, FALSE);
-    $this->assertEqual($view->executed, FALSE);
-    $this->assertEqual($view->build_info, array());
-    $this->assertEqual($view->attachment_before, '');
-    $this->assertEqual($view->attachment_after, '');
+  }
+
+  /**
+   * Returns a protected property from a class instance.
+   *
+   * @param object $instance
+   *   The class instance to return the property from.
+   * @param string $property
+   *   The name of the property to return.
+   *
+   * @return mixed
+   *   The instance property value.
+   */
+  protected function getProtectedProperty($instance, $property) {
+    $reflection = new \ReflectionProperty($instance, $property);
+    $reflection->setAccessible(TRUE);
+    return $reflection->getValue($instance);
   }
 
   /**
@@ -379,19 +387,18 @@ class ViewExecutableTest extends ViewUnitTestBase {
       $match = function($value) use ($display) {
         return strpos($value, $display->display['display_title']) !== false;
       };
-      $this->assertTrue(array_filter($validate, $match), format_string('Error message found for @id display', array('@id' => $id)));
+      $this->assertTrue(array_filter($validate[$id], $match), format_string('Error message found for @id display', array('@id' => $id)));
       $count++;
     }
 
     $this->assertEqual(count($view->displayHandlers), $count, 'Error messages from all handlers merged.');
 
     // Test that a deleted display is not included.
-    $view->displayHandlers->get('default')->deleted = TRUE;
+    $display = &$view->storage->getDisplay('default');
+    $display['deleted'] = TRUE;
     $validate_deleted = $view->validate();
 
-    $this->assertNotEqual(count($validate), count($validate_deleted));
-    // The first item was the default validation error originally.
-    $this->assertNotIdentical($validate[0], $validate_deleted[0], 'Master display has not been validated.');
+    $this->assertNotIdentical($validate, $validate_deleted, 'Master display has not been validated.');
   }
 
 }

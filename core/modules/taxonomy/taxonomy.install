@@ -15,7 +15,7 @@ function taxonomy_uninstall() {
   $config_names = config_get_storage_names_with_prefix('taxonomy.vocabulary.');
   foreach ($config_names as $config_name) {
     $vid = substr($config_name, strlen('taxonomy.vocabulary.'));
-    field_attach_delete_bundle('taxonomy_term', $vid);
+    entity_invoke_bundle_hook('delete', 'taxonomy_term', $vid);
   }
 }
 

@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Translation;
  *   module = "rest",
  *   title = @Translation("Entity"),
  *   help = @Translation("Use entities as row data."),
- *   type = "data"
+ *   display_types = {"data"}
  * )
  */
 class DataEntityRow extends RowPluginBase {

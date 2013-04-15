@@ -33,7 +33,7 @@ class DrupalKernelTest extends UnitTestBase {
       'bin' => 'service_container',
       'class' => 'Drupal\Component\PhpStorage\MTimeProtectedFileStorage',
       'directory' => DRUPAL_ROOT . '/' . $this->public_files_directory . '/php',
-      'secret' => $GLOBALS['drupal_hash_salt'],
+      'secret' => drupal_get_hash_salt(),
     );
     // Use a non-persistent cache to avoid queries to non-existing tables.
     $this->settingsSet('cache', array('default' => 'cache.backend.memory'));

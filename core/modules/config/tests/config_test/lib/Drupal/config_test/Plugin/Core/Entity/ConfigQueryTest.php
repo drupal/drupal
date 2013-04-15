@@ -7,13 +7,13 @@
 
 namespace Drupal\config_test\Plugin\Core\Entity;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the ConfigQueryTest configuration entity used by the query test.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "config_query_test",
  *   label = @Translation("Test configuration for query"),
  *   module = "config_test",

@@ -154,7 +154,7 @@ function node_access_test_page() {
 function node_access_entity_test_page() {
   $output = '';
   try {
-    $result = entity_query('node')
+    $result = Drupal::entityQuery('node')
       ->condition('body.value', 'A', 'STARTS_WITH')
       ->execute();
     if (!empty($result)) {

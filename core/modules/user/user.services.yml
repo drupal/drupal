@@ -1,0 +1,15 @@
+services:
+  access_check.permission:
+    class: Drupal\user\Access\PermissionAccessCheck
+    tags:
+      - { name: access_check }
+  access_check.user.register:
+    class: Drupal\user\Access\RegisterAccessCheck
+    tags:
+      - { name: access_check }
+  user.data:
+    class: Drupal\user\UserData
+    arguments: ['@database']
+  user.autocomplete:
+    class: Drupal\user\UserAutocomplete
+    arguments: ['@database', '@config.factory']

@@ -23,9 +23,9 @@ use Drupal\Core\Annotation\Translation;
 class ViewsExposedFilterBlock extends ViewsBlock {
 
   /**
-   * Implements \Drupal\block\BlockBase::build().
+   * Implements \Drupal\block\BlockBase::blockBuild().
    */
-  public function build() {
+  protected function blockBuild() {
     $output = $this->view->display_handler->viewExposedFormBlocks();
     // Before returning the block output, convert it to a renderable array with
     // contextual links.

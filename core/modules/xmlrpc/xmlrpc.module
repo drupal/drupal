@@ -44,14 +44,14 @@ function xmlrpc_menu() {
  * ));
  * @endcode
  *
- * @param $url
+ * @param string $url
  *   An absolute URL of the XML-RPC endpoint.
- * @param $args
+ * @param array $args
  *   An associative array whose keys are the methods to call and whose values
  *   are the arguments to pass to the respective method. If multiple methods
  *   are specified, a system.multicall is performed.
- * @param $options
- *   (optional) An array of options to pass along to drupal_http_request().
+ * @param array $headers
+ *   (optional) An array of headers to pass along.
  *
  * @return
  *   For one request:
@@ -62,7 +62,7 @@ function xmlrpc_menu() {
  *     returned by the method called, or an xmlrpc_error object if the call
  *     failed. See xmlrpc_error().
  */
-function xmlrpc($url, $args, $options = array()) {
+function xmlrpc($url, array $args, array $headers = array()) {
   module_load_include('inc', 'xmlrpc');
-  return _xmlrpc($url, $args, $options);
+  return _xmlrpc($url, $args, $headers);
 }

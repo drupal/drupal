@@ -12,13 +12,13 @@ use Drupal\views\Views;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\ViewStorageInterface;
 use Drupal\views\ViewExecutable;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines a View configuration entity class.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "view",
  *   label = @Translation("View"),
  *   module = "views",
@@ -288,13 +288,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   }
 
   /**
-   * Retrieves a specific display's configuration by reference.
-   *
-   * @param string $display_id
-   *   The display ID to retrieve, e.g., 'default', 'page_1', 'block_2'.
-   *
-   * @return array
-   *   A reference to the specified display configuration.
+   * {@inheritdoc}
    */
   public function &getDisplay($display_id) {
     return $this->display[$display_id];

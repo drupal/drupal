@@ -284,6 +284,9 @@ class ConfigStorageController implements EntityStorageControllerInterface {
   public function create(array $values) {
     $class = $this->entityInfo['class'];
 
+    // Set default language to site default if not provided.
+    $values += array('langcode' => language_default()->langcode);
+
     $entity = new $class($values, $this->entityType);
     // Mark this entity as new, so isNew() returns TRUE. This does not check
     // whether a configuration entity with the same ID (if any) already exists.

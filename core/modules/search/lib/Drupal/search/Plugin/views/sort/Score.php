@@ -8,17 +8,14 @@
 namespace Drupal\search\Plugin\views\sort;
 
 use Drupal\views\Plugin\views\sort\SortPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to provide simple renderer that allows linking to a node.
  *
  * @ingroup views_sort_handlers
  *
- * @Plugin(
- *   id = "search_score",
- *   module = "search"
- * )
+ * @PluginID("search_score")
  */
 class Score extends SortPluginBase {
 

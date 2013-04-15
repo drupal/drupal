@@ -8,7 +8,6 @@
 namespace Drupal\Core\Config\Entity;
 
 use Drupal\Core\Entity\Entity;
-use Drupal\Core\TypedData\ContextAwareInterface;
 
 /**
  * Defines a base configuration entity class.
@@ -161,55 +160,5 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
       $properties[$name] = $this->get($name);
     }
     return $properties;
-  }
-
-  /**
-   * Implements Drupal\Core\Entity\EntityInterface::getBCEntity().
-   */
-  public function getBCEntity() {
-    return $this;
-  }
-
-  /**
-   * Implements Drupal\Core\Entity\EntityInterface::getOriginalEntity().
-   */
-  public function getOriginalEntity() {
-    return $this;
-  }
-
-  /**
-   * Implements \Drupal\Core\TypedData\ContextAwareInterface::getName().
-   */
-  public function getName() {
-    return NULL;
-  }
-
-  /**
-   * Implements \Drupal\Core\TypedData\ContextAwareInterface::getRoot().
-   */
-  public function getRoot() {
-    return $this;
-  }
-
-  /**
-   * Implements \Drupal\Core\TypedData\ContextAwareInterface::getPropertyPath().
-   */
-  public function getPropertyPath() {
-    return '';
-  }
-
-  /**
-   * Implements \Drupal\Core\TypedData\ContextAwareInterface::getParent().
-   */
-  public function getParent() {
-    return NULL;
-  }
-
-  /**
-   * Implements \Drupal\Core\TypedData\ContextAwareInterface::setContext().
-   */
-  public function setContext($name = NULL, ContextAwareInterface $parent = NULL) {
-    // As entities are always the root of the tree, we do not need to set any
-    // context.
   }
 }

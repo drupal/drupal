@@ -1,0 +1,9 @@
+services:
+  ban.ip_manager:
+    class: Drupal\ban\BanIpManager
+    arguments: ['@database']
+  ban.subscriber:
+    class: Drupal\ban\EventSubscriber\BanSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@ban.ip_manager']

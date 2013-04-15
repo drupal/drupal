@@ -7,16 +7,14 @@
 
 namespace Drupal\views\Plugin\views\area;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Views area handlers. Insert a view inside of an area.
  *
  * @ingroup views_area_handlers
  *
- * @Plugin(
- *   id = "view"
- * )
+ * @PluginID("view")
  */
 class View extends AreaPluginBase {
 
@@ -78,17 +76,11 @@ class View extends AreaPluginBase {
         drupal_set_message(t("Recursion detected in view @view display @display.", array('@view' => $view_name, '@display' => $display_id)), 'error');
       }
       else {
-        // Current $view->preview() does not return a render array, so we have
-        // to build a markup out if it.
         if (!empty($this->options['inherit_arguments']) && !empty($this->view->args)) {
-          return array(
-            '#markup' => $view->preview($display_id, $this->view->args),
-          );
+          return $view->preview($display_id, $this->view->args);
         }
         else {
-          return array(
-            '#markup' => $view->preview($display_id),
-          );
+          return $view->preview($display_id);
         }
       }
     }

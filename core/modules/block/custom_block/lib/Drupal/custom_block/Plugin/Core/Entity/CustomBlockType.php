@@ -8,13 +8,13 @@
 namespace Drupal\custom_block\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the custom block type entity.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "custom_block_type",
  *   label = @Translation("Custom block type"),
  *   module = "custom_block",

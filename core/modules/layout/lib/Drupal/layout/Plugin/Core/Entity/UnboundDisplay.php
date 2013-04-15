@@ -11,7 +11,7 @@ use Drupal\layout\Config\DisplayBase;
 use Drupal\layout\Config\BoundDisplayInterface;
 use Drupal\layout\Config\UnboundDisplayInterface;
 use Drupal\layout\Plugin\LayoutInterface;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
@@ -20,7 +20,7 @@ use Drupal\Core\Annotation\Translation;
  * Unbound displays contain blocks that are not 'bound' to a specific layout,
  * and their contained blocks are mapped only to region types, not regions.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "unbound_display",
  *   label = @Translation("Unbound Display"),
  *   module = "layout",

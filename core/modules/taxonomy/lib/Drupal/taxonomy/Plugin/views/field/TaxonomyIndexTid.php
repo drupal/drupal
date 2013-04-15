@@ -10,17 +10,14 @@ namespace Drupal\taxonomy\Plugin\views\field;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\PrerenderList;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to display all taxonomy terms of a node.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "taxonomy_index_tid",
- *   module = "taxonomy"
- * )
+ * @PluginID("taxonomy_index_tid")
  */
 class TaxonomyIndexTid extends PrerenderList {
 

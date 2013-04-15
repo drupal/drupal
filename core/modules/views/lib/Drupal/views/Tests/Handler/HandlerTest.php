@@ -101,7 +101,11 @@ class HandlerTest extends ViewTestBase {
     $null = NULL;
     $this->assertEqual($empty_stdclass, HandlerBase::breakPhraseString('', $null));
 
-    $handler = views_get_handler('node', 'title', 'argument');
+    $item = array(
+      'table' => 'node',
+      'field' => 'title',
+    );
+    $handler = views_get_handler($item, 'argument');
     $this->assertEqual($handler, HandlerBase::breakPhraseString('', $handler), 'The breakPhraseString() method works correctly.');
 
     // test ors
@@ -156,7 +160,11 @@ class HandlerTest extends ViewTestBase {
     // check defaults
     $this->assertEqual($empty_stdclass, HandlerBase::breakPhrase('', $null));
 
-    $handler = views_get_handler('node', 'title', 'argument');
+    $item = array(
+      'table' => 'node',
+      'field' => 'title',
+    );
+    $handler = views_get_handler($item, 'argument');
     $this->assertEqual($handler, HandlerBase::breakPhrase('', $handler), 'The breakPhrase() method works correctly.');
 
     // Generate three random numbers which can be used below;

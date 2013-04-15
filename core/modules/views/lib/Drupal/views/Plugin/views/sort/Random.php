@@ -7,14 +7,12 @@
 
 namespace Drupal\views\Plugin\views\sort;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Handle a random sort.
  *
- * @Plugin(
- *   id = "random"
- * )
+ * @PluginID("random")
  */
 class Random extends SortPluginBase {
 

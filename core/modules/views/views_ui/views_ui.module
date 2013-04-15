@@ -114,10 +114,6 @@ function views_ui_theme() {
       'template' => 'views-ui-display-tab-bucket',
       'file' => 'views_ui.theme.inc',
     ),
-    'views_ui_rearrange_form' => array(
-      'render element' => 'form',
-      'file' => 'views_ui.theme.inc',
-    ),
     'views_ui_rearrange_filter_form' => array(
       'render element' => 'form',
       'file' => 'views_ui.theme.inc',
@@ -139,13 +135,7 @@ function views_ui_theme() {
       'file' => 'views_ui.theme.inc',
     ),
 
-    // tab themes
-    'views_tabset' => array(
-      'variables' => array('tabs' => NULL),
-    ),
-    'views_tab' => array(
-      'variables' => array('body' => NULL),
-    ),
+    // Reordering displays.
     'views_ui_reorder_displays_form' => array(
       'render element' => 'form',
       'file' => 'views_ui.theme.inc',
@@ -246,7 +236,7 @@ function views_ui_cache_set(ViewUI $view) {
  */
 function views_ui_preprocess_views_view(&$vars) {
   $view = $vars['view'];
-  if (!empty($view->live_preview) && module_exists('contextual')) {
+  if (!empty($view->live_preview) && Drupal::moduleHandler()->moduleExists('contextual')) {
     $view->hide_admin_links = TRUE;
     foreach (array('title', 'header', 'exposed', 'rows', 'pager', 'more', 'footer', 'empty', 'attachment_after', 'attachment_before') as $section) {
       if (!empty($vars[$section])) {

@@ -7,13 +7,13 @@
 
 namespace Drupal\entity_test\Plugin\Core\Entity;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines a test entity class with a render controller.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "entity_test_render",
  *   label = @Translation("Test render entity"),
  *   module = "entity_test",

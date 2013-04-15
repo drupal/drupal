@@ -267,7 +267,7 @@ class SelectionBase implements SelectionInterface {
     $target_type = $this->field['settings']['target_type'];
     $entity_info = entity_get_info($target_type);
 
-    $query = entity_query($target_type);
+    $query = \Drupal::entityQuery($target_type);
     if (!empty($this->instance['settings']['handler_settings']['target_bundles'])) {
       $query->condition($entity_info['entity_keys']['bundle'], $this->instance['settings']['handler_settings']['target_bundles'], 'IN');
     }

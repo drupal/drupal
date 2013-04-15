@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui;
 
+use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Database\Database;
 use Drupal\Core\TypedData\ContextAwareInterface;
@@ -26,13 +27,6 @@ class ViewUI implements ViewStorageInterface {
    * @var bool
    */
   public $editing = FALSE;
-
-  /**
-   * Stores an array of errors for any displays.
-   *
-   * @var array
-   */
-  public $display_errors;
 
   /**
    * Stores an array of displays that have been changed.
@@ -149,7 +143,7 @@ class ViewUI implements ViewStorageInterface {
   public function __construct(ViewStorageInterface $storage) {
     $this->entityType = 'view';
     $this->storage = $storage;
-    $this->executable = $storage->get('executable');
+    $this->executable = Views::executableFactory()->get($this);
   }
 
   /**
@@ -322,6 +316,7 @@ class ViewUI implements ViewStorageInterface {
       '#value' => empty($form_state['ok_button']) ? t('Cancel') : t('Ok'),
       '#submit' => array($cancel_submit),
       '#validate' => array(),
+      '#attributes' => array('formnovalidate' => ''),
     );
 
     // Compatibility, to be removed later: // TODO: When is "later"?
@@ -463,7 +458,11 @@ class ViewUI implements ViewStorageInterface {
         if (isset($types[$type]['type'])) {
           $key = $types[$type]['type'];
         }
-        $handler = views_get_handler($table, $field, $key);
+        $item = array(
+          'table' => $table,
+          'field' => $field,
+        );
+        $handler = views_get_handler($item, $key);
         if ($this->executable->displayHandlers->get('default')->useGroupBy() && $handler->usesGroupBy()) {
           $this->addFormToStack('config-item-group', $form_state['display_id'], $type, $id);
         }
@@ -529,7 +528,7 @@ class ViewUI implements ViewStorageInterface {
     $output = '';
 
     $errors = $this->executable->validate();
-    if ($errors === TRUE) {
+    if (empty($errors)) {
       $this->ajax = TRUE;
       $this->executable->live_preview = TRUE;
       $this->views_ui_context = TRUE;
@@ -585,6 +584,7 @@ class ViewUI implements ViewStorageInterface {
 
       // Execute/get the view preview.
       $preview = $this->executable->preview($display_id, $args);
+      $preview = drupal_render($preview);
 
       if ($show_additional_queries) {
         $this->endQueryCapture();
@@ -651,7 +651,7 @@ class ViewUI implements ViewStorageInterface {
             $rows['statistics'][] = array('<strong>' . t('View render time') . '</strong>', t('@time ms', array('@time' => intval($this->executable->render_time * 100000) / 100)));
 
           }
-          drupal_alter('views_preview_info', $rows, $this);
+          \Drupal::moduleHandler()->alter('views_preview_info', $rows, $this);
         }
         else {
           // No query was run. Display that information in place of either the
@@ -666,8 +666,10 @@ class ViewUI implements ViewStorageInterface {
       }
     }
     else {
-      foreach ($errors as $error) {
-        drupal_set_message($error, 'error');
+      foreach ($errors as $display_errors) {
+        foreach ($display_errors as $error) {
+          drupal_set_message($error, 'error');
+        }
       }
       $preview = t('Unable to preview due to validation errors.');
     }
@@ -738,6 +740,13 @@ class ViewUI implements ViewStorageInterface {
    */
   public function __call($method, $args) {
     return call_user_func_array(array($this->storage, $method), $args);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function &getDisplay($display_id) {
+    return $this->storage->getDisplay($display_id);
   }
 
   /**
@@ -979,10 +988,10 @@ class ViewUI implements ViewStorageInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::getOriginalEntity().
+   * Implements \Drupal\Core\Entity\EntityInterface::getNGEntity().
    */
-  public function getOriginalEntity() {
-    return $this->storage->getOriginalEntity();
+  public function getNGEntity() {
+    return $this->storage->getNGEntity();
   }
 
   /**

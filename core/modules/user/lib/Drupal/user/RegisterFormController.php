@@ -131,13 +131,14 @@ class RegisterFormController extends AccountFormController {
       }
       else {
         $op = $notify ? 'register_admin_created' : 'register_no_approval_required';
-        _user_mail_notify($op, $account);
-        if ($notify) {
-          drupal_set_message(t('A welcome message with further instructions has been e-mailed to the new user <a href="@url">%name</a>.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->name)));
-        }
-        else {
-          drupal_set_message(t('A welcome message with further instructions has been sent to your e-mail address.'));
-          $form_state['redirect'] = '';
+        if (_user_mail_notify($op, $account)) {
+          if ($notify) {
+            drupal_set_message(t('A welcome message with further instructions has been e-mailed to the new user <a href="@url">%name</a>.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->name)));
+          }
+          else {
+            drupal_set_message(t('A welcome message with further instructions has been sent to your e-mail address.'));
+            $form_state['redirect'] = '';
+          }
         }
       }
     }

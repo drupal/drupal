@@ -8,13 +8,13 @@
 namespace Drupal\entity_test\Plugin\Core\Entity;
 
 use Drupal\Core\Entity\EntityNG;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the test entity class.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "entity_test",
  *   label = @Translation("Test entity"),
  *   module = "entity_test",

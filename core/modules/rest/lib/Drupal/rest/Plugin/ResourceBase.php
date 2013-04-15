@@ -69,7 +69,7 @@ abstract class ResourceBase extends PluginBase implements ResourceInterface {
           // Restrict GET and HEAD requests to the media type specified in the
           // HTTP Accept headers.
           $formats = drupal_container()->getParameter('serializer.formats');
-          foreach ($formats as $format_name => $label) {
+          foreach ($formats as $format_name) {
             // Expose one route per available format.
             //$format_route = new Route($route->getPattern(), $route->getDefaults(), $route->getRequirements());
             $format_route = clone $route;

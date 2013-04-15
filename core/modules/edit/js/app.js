@@ -317,7 +317,7 @@
         // Discarded if it transitions from a changed state to 'candidate'.
         if (from === 'changed' || from === 'invalid') {
           // Retrieve the storage widget from DOM.
-          var createStorageWidget = this.$el.data('createStorage');
+          var createStorageWidget = this.$el.data('DrupalCreateStorage');
           // Revert changes in the model, this will trigger the direct editable
           // content to be reset and redrawn.
           createStorageWidget.revertChanges(editor.options.entity);

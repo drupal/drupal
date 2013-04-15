@@ -67,6 +67,9 @@ abstract class LegacyDiscoveryDecorator implements DiscoveryInterface {
           unset($definition['behaviors']['default value']);
         }
 
+        // Legacy widgets also need a plugin id.
+        $definition['id'] = $plugin_id;
+
         $definitions[$plugin_id] = $definition;
       }
     }

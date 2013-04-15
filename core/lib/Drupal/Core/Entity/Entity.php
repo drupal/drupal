@@ -399,9 +399,9 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::getOriginalEntity().
+   * Implements \Drupal\Core\Entity\EntityInterface::getNGEntity().
    */
-  public function getOriginalEntity() {
+  public function getNGEntity() {
     return $this;
   }
 

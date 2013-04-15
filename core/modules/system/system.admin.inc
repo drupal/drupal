@@ -5,6 +5,8 @@
  * Admin page callbacks for the system module.
  */
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -21,7 +23,7 @@ function system_admin_config_page() {
   $blocks = array();
   if ($system_link = entity_load_multiple_by_properties('menu_link', array('link_path' => 'admin/config', 'module' => 'system'))) {
     $system_link = reset($system_link);
-    $query = entity_query('menu_link')
+    $query = Drupal::entityQuery('menu_link')
       ->condition('link_path', 'admin/help', '<>')
       ->condition('menu_name', $system_link->menu_name)
       ->condition('plid', $system_link->id())
@@ -2424,7 +2426,7 @@ function theme_system_modules_details($variables) {
     $row[] = array('class' => array('checkbox'), 'data' => drupal_render($module['enable']));
 
     // Add the module label and expand/collapse functionalty.
-    $col2 = '<label id="' . $key . '" for="' . $module['enable']['#id'] . '" class="module-name table-filter-text-source">' . drupal_render($module['name']) . '</label>';
+    $col2 = '<label id="module-' . $key . '" for="' . $module['enable']['#id'] . '" class="module-name table-filter-text-source">' . drupal_render($module['name']) . '</label>';
     $row[] = array('class' => array('module'), 'data' => $col2);
 
     // Add the description, along with any modules it requires.
@@ -2919,8 +2921,9 @@ function system_date_time_lookup($form, &$form_state) {
   // Return a command instead of a string, since the Ajax framework
   // automatically prepends an additional empty DIV element for a string, which
   // breaks the layout.
-  $commands[] = ajax_command_replace('#edit-date-format-suffix', '<small id="edit-date-format-suffix">' . $format . '</small>');
-  return array('#type' => 'ajax', '#commands' => $commands);
+  $response = new AjaxResponse();
+  $response->addCommand(new ReplaceCommand('#edit-date-format-suffix', '<small id="edit-date-format-suffix">' . $format . '</small>'));
+  return $response;
 }
 
 /**

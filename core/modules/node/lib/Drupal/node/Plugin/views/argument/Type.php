@@ -8,15 +8,12 @@
 namespace Drupal\node\Plugin\views\argument;
 
 use Drupal\views\Plugin\views\argument\String;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Argument handler to accept a node type.
  *
- * @Plugin(
- *   id = "node_type",
- *   module = "node"
- * )
+ * @PluginID("node_type")
  */
 class Type extends String {
 

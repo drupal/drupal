@@ -24,26 +24,26 @@ function node_overview_types() {
     $type = $types[$key];
     if (node_hook($type->type, 'form')) {
       $row = array(theme('node_admin_overview', array('name' => $name, 'type' => $type)));
-      $links['edit'] = array(
-        'title' => t('Edit'),
-        'href' => 'admin/structure/types/manage/' . $type->type,
-        'weight' => 0,
-      );
-
       if ($field_ui && user_access('administer node fields')) {
         $links['fields'] = array(
           'title' => t('Manage fields'),
           'href' => 'admin/structure/types/manage/' . $type->type . '/fields',
-          'weight' => 5,
+          'weight' => 0,
         );
       }
       if ($field_ui && user_access('administer node display')) {
         $links['display'] = array(
           'title' => t('Manage display'),
           'href' => 'admin/structure/types/manage/' . $type->type . '/display',
-          'weight' => 10,
+          'weight' => 5,
         );
       }
+
+      $links['edit'] = array(
+        'title' => t('Edit'),
+        'href' => 'admin/structure/types/manage/' . $type->type,
+        'weight' => 10,
+      );
 
       if ($type->custom) {
         $links['delete'] = array(

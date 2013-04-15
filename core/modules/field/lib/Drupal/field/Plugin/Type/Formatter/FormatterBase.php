@@ -9,7 +9,7 @@ namespace Drupal\field\Plugin\Type\Formatter;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Plugin\PluginSettingsBase;
-use Drupal\field\FieldInstance;
+use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
  * Base class for 'Field formatter' plugin implementations.
@@ -26,7 +26,7 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
   /**
    * The field instance definition.
    *
-   * @var Drupal\field\FieldInstance
+   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
    */
   protected $instance;
 
@@ -58,7 +58,7 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
    *   The plugin_id for the formatter.
    * @param array $plugin_definition
    *   The plugin implementation definition.
-   * @param Drupal\field\FieldInstance $instance
+   * @param \Drupal\field\Plugin\Core\Entity\FieldInstance $instance
    *   The field instance to which the formatter is associated.
    * @param array $settings
    *   The formatter settings.

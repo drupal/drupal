@@ -242,10 +242,12 @@ Drupal.ajax.prototype.keypressResponse = function (element, event) {
   var ajax = this;
 
   // Detect enter key and space bar and allow the standard response for them,
-  // except for form elements of type 'text' and 'textarea', where the
-  // spacebar activation causes inappropriate activation if #ajax['keypress'] is
-  // TRUE. On a text-type widget a space should always be a space.
-  if (event.which === 13 || (event.which === 32 && element.type !== 'text' && element.type !== 'textarea')) {
+  // except for form elements of type 'text', 'tel', 'number' and 'textarea',
+  // where the spacebar activation causes inappropriate activation if
+  // #ajax['keypress'] is TRUE. On a text-type widget a space should always be a
+  // space.
+  if (event.which === 13 || (event.which === 32 && element.type !== 'text' &&
+      element.type !== 'textarea' && element.type !== 'tel' && element.type !== 'number')) {
     event.preventDefault();
     event.stopPropagation();
     $(ajax.element_settings.element).trigger(ajax.element_settings.event);
@@ -390,7 +392,7 @@ Drupal.ajax.prototype.beforeSend = function (xmlhttprequest, options) {
   // interaction while the Ajax request is in progress. ajax.ajaxing prevents
   // the element from triggering a new request, but does not prevent the user
   // from changing its value.
-  $(this.element).addClass('progress-disabled').attr('disabled', true);
+  $(this.element).addClass('progress-disabled').prop('disabled', true);
 
   // Insert progressbar or throbber.
   if (this.progress.type === 'bar') {
@@ -425,7 +427,7 @@ Drupal.ajax.prototype.success = function (response, status) {
   if (this.progress.object) {
     this.progress.object.stopMonitoring();
   }
-  $(this.element).removeClass('progress-disabled').removeAttr('disabled');
+  $(this.element).removeClass('progress-disabled').prop('disabled', false);
 
   Drupal.freezeHeight();
 
@@ -493,7 +495,7 @@ Drupal.ajax.prototype.error = function (response, uri) {
   // Undo hide.
   $(this.wrapper).show();
   // Re-enable the element.
-  $(this.element).removeClass('progress-disabled').removeAttr('disabled');
+  $(this.element).removeClass('progress-disabled').prop('disabled', false);
   // Reattach behaviors, if they were detached in beforeSerialize().
   if (this.form) {
     var settings = response.settings || this.settings || Drupal.settings;

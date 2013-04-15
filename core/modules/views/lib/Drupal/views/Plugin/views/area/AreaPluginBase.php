@@ -27,6 +27,13 @@ use Drupal\views\Plugin\views\HandlerBase;
 abstract class AreaPluginBase extends HandlerBase {
 
   /**
+   * The type of this area handler, i.e. 'header', 'footer', or 'empty'.
+   *
+   * @var string
+   */
+  public $areaType;
+
+  /**
    * Overrides Drupal\views\Plugin\views\HandlerBase::init().
    *
    * Make sure that no result area handlers are set to be shown when the result
@@ -35,7 +42,7 @@ abstract class AreaPluginBase extends HandlerBase {
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
 
-    if (isset($this->handler_type) && ($this->handler_type == 'empty')) {
+    if ($this->areaType == 'empty') {
       $this->options['empty'] = TRUE;
     }
   }

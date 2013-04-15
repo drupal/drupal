@@ -5,7 +5,7 @@
  * Administrative interface for custom field type creation.
  */
 
-use Drupal\field\FieldInstance;
+use Drupal\field\Plugin\Core\Entity\FieldInstance;
 use Drupal\field_ui\FieldOverview;
 use Drupal\field_ui\DisplayOverview;
 
@@ -492,7 +492,7 @@ function field_ui_existing_field_options($entity_type, $bundle) {
  *
  * @see field_ui_menu()
  * @see field_ui_field_settings_form_submit()
- * @ingroups forms
+ * @ingroup forms
  */
 function field_ui_field_settings_form($form, &$form_state, $instance) {
   $bundle = $instance['bundle'];
@@ -609,14 +609,15 @@ function field_ui_field_settings_form_submit($form, &$form_state) {
 
   // Merge incoming form values into the existing field.
   $field = field_info_field($field_values['field_name']);
+  foreach ($field_values as $key => $value) {
+    $field[$key] = $value;
+  }
 
   $entity_type = $form['#entity_type'];
   $bundle = $form['#bundle'];
   $instance = field_info_instance($entity_type, $field['field_name'], $bundle);
 
   // Update the field.
-  $field = array_merge($field, $field_values);
-
   try {
     field_update_field($field);
     drupal_set_message(t('Updated field %label field settings.', array('%label' => $instance['label'])));
@@ -691,6 +692,10 @@ function field_ui_widget_type_form_submit($form, &$form_state) {
   try {
     field_update_instance($instance);
     drupal_set_message(t('Changed the widget for field %label.', array('%label' => $instance['label'])));
+
+    if ($instance['required'] && empty($instance['default_value']) && empty($instance['default_value_function']) && $instance['widget']['type'] == 'field_hidden') {
+      drupal_set_message(t('Field %label is required and uses the "hidden" widget. You might want to configure a default value.', array('%label' => $instance['label'])), 'warning');
+    }
   }
   catch (Exception $e) {
     drupal_set_message(t('There was a problem changing the widget for field %label.', array('%label' => $instance['label'])), 'error');
@@ -859,14 +864,6 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
     '#type' => 'value',
     '#value' => $instance['widget']['type'],
   );
-  $form['instance']['widget']['module'] = array(
-    '#type' => 'value',
-    '#value' => $widget_type['module'],
-  );
-  $form['instance']['widget']['active'] = array(
-    '#type' => 'value',
-    '#value' => !empty($field['instance']['widget']['active']) ? 1 : 0,
-  );
 
   // Add additional field instance settings from the field module.
   $additions = module_invoke($field['module'], 'field_instance_settings_form', $field, $instance, $form_state);
@@ -934,9 +931,25 @@ function field_ui_default_value_widget($field, $instance, &$form, &$form_state) 
   $instance['required'] = FALSE;
   $instance['description'] = '';
 
+  // Adjust the instance definition to use the default widget of this field type
+  // instead of the hidden widget.
+  if ($instance['widget']['type'] == 'field_hidden') {
+    $field_type = field_info_field_types($field['type']);
+    $default_widget = field_info_widget_types($field_type['default_widget']);
+
+    $instance['widget'] = array(
+      'type' => $default_widget['id'],
+      'settings' => $default_widget['settings'],
+      'weight' => 0,
+    );
+  }
+
   // Insert the widget. Since we do not use the "official" instance definition,
   // the whole flow cannot use field_invoke_method().
-  $items = (array) $instance['default_value'];
+  $items = array();
+  if (!empty($instance['default_value'])) {
+    $items = (array) $instance['default_value'];
+  }
   $element += $instance->getWidget()->form($entity, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
 
   return $element;
@@ -1012,6 +1025,10 @@ function field_ui_field_edit_form_submit($form, &$form_state) {
   field_update_instance($instance);
 
   drupal_set_message(t('Saved %label configuration.', array('%label' => $instance['label'])));
+
+  if ($instance['required'] && empty($instance['default_value']) && empty($instance['default_value_function']) && $instance['widget']['type'] == 'field_hidden') {
+    drupal_set_message(t('Field %label is required and uses the "hidden" widget. You might want to configure a default value.', array('%label' => $instance['label'])), 'warning');
+  }
 
   $form_state['redirect'] = field_ui_next_destination($instance['entity_type'], $instance['bundle']);
 }

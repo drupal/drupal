@@ -121,6 +121,7 @@ class LinkFieldTest extends WebTestBase {
       'field_name' => $this->field['field_name'],
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
+      'label' => 'Read more about this entity',
       'settings' => array(
         'title' => DRUPAL_OPTIONAL,
       ),
@@ -150,6 +151,8 @@ class LinkFieldTest extends WebTestBase {
 
       // Display creation form.
       $this->drupalGet('test-entity/add/test_bundle');
+      // Assert label is shown.
+      $this->assertText('Read more about this entity');
       $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][url]", '', 'URL field found.');
       $this->assertRaw('placeholder="http://example.com"');
 
@@ -230,6 +233,7 @@ class LinkFieldTest extends WebTestBase {
     $this->instance = array(
       'field_name' => $this->field['field_name'],
       'entity_type' => 'test_entity',
+      'label' => 'Read more about this entity',
       'bundle' => 'test_bundle',
       'settings' => array(
         'title' => DRUPAL_OPTIONAL,
@@ -267,6 +271,8 @@ class LinkFieldTest extends WebTestBase {
       "{$this->field['field_name']}[$langcode][1][url]" => $url2,
       "{$this->field['field_name']}[$langcode][1][title]" => $title2,
     );
+    // Assert label is shown.
+    $this->assertText('Read more about this entity');
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];

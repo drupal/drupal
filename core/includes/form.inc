@@ -1825,7 +1825,7 @@ function form_builder($form_id, &$element, &$form_state) {
 
   // Special handling if we're on the top level form element.
   if (isset($element['#type']) && $element['#type'] == 'form') {
-    if (!empty($element['#https']) && variable_get('https', FALSE) &&
+    if (!empty($element['#https']) && settings()->get('mixed_mode_sessions', FALSE) &&
         !url_is_external($element['#action'])) {
       global $base_root;
 

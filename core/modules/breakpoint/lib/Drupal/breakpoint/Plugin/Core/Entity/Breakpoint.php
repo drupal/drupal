@@ -13,13 +13,13 @@ use Drupal\breakpoint\InvalidBreakpointNameException;
 use Drupal\breakpoint\InvalidBreakpointSourceException;
 use Drupal\breakpoint\InvalidBreakpointSourceTypeException;
 use Drupal\breakpoint\InvalidBreakpointMediaQueryException;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the Breakpoint entity.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "breakpoint",
  *   label = @Translation("Breakpoint"),
  *   module = "breakpoint",

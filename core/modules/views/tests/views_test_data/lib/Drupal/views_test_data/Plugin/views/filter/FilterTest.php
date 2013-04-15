@@ -7,18 +7,11 @@
 
 namespace Drupal\views_test_data\Plugin\views\filter;
 
-use Drupal\Component\Annotation\Plugin;
-use Drupal\Core\Annotation\Translation;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 
 /**
- * @Plugin(
- *   id = "test_filter",
- *   title = @Translation("Test filter plugin"),
- *   help = @Translation("Provides a generic filter test plugin."),
- *   base = "node",
- *   type = "type"
- * )
+ * @PluginID("test_filter")
  */
 class FilterTest extends FilterPluginBase {
 

@@ -8,29 +8,6 @@
 use Drupal\Component\Utility\NestedArray;
 
 /**
- * Menu callback: Confirms wiping of the index.
- */
-function search_reindex_confirm() {
-  return confirm_form(array(), t('Are you sure you want to re-index the site?'),
-                  'admin/config/search/settings', t('The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed. This action cannot be undone.'), t('Re-index site'), t('Cancel'));
-}
-
-/**
- * Form submission handler for search_reindex_confirm().
- *
- * @see search_reindex()
- * @see search_reindex_confirm()
- */
-function search_reindex_confirm_submit(&$form, &$form_state) {
-  if ($form['confirm']) {
-    search_reindex();
-    drupal_set_message(t('The index will be rebuilt.'));
-    $form_state['redirect'] = 'admin/config/search/settings';
-    return;
-  }
-}
-
-/**
  * Helper function to get real module names.
  */
 function _search_get_module_names() {

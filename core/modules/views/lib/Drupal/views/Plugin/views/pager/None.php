@@ -21,7 +21,7 @@ use Drupal\Core\Annotation\Translation;
  *   id = "none",
  *   title = @Translation("Display all items"),
  *   help = @Translation("Display all items that this view might find."),
- *   type = "basic"
+ *   display_types = {"basic"}
  * )
  */
 class None extends PagerPluginBase {

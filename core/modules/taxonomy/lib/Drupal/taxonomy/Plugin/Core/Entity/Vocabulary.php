@@ -8,13 +8,13 @@
 namespace Drupal\taxonomy\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the taxonomy vocabulary entity.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "taxonomy_vocabulary",
  *   label = @Translation("Taxonomy vocabulary"),
  *   module = "taxonomy",

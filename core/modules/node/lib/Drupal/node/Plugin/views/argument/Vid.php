@@ -8,15 +8,12 @@
 namespace Drupal\node\Plugin\views\argument;
 
 use Drupal\views\Plugin\views\argument\Numeric;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Argument handler to accept a node revision id.
  *
- * @Plugin(
- *   id = "node_vid",
- *   module = "node"
- * )
+ * @PluginID("node_vid")
  */
 class Vid extends Numeric {
 

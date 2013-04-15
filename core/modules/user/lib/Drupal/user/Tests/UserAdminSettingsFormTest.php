@@ -8,6 +8,7 @@
 namespace Drupal\user\Tests;
 
 use Drupal\system\Tests\System\SystemConfigFormTestBase;
+use Drupal\user\AccountSettingsForm;
 
 class UserAdminSettingsFormTest extends SystemConfigFormTestBase {
 
@@ -21,8 +22,8 @@ class UserAdminSettingsFormTest extends SystemConfigFormTestBase {
 
   public function setUp() {
     parent::setUp();
-    module_load_include('admin.inc', 'user');
-    $this->form_id = 'user_admin_settings';
+
+    $this->form = AccountSettingsForm::create($this->container);
     $this->values = array(
       'anonymous' => array(
         '#value' => $this->randomString(10),

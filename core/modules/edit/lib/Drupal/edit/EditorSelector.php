@@ -9,7 +9,7 @@ namespace Drupal\edit;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\field\FieldInstance;
+use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
  * Selects an in-place editor (an Editor plugin) for a field.

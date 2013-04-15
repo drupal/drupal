@@ -350,7 +350,7 @@ function _block_get_renderable_region($list = array()) {
     // skip the help block, since we assume that most users do not need or want
     // to perform contextual actions on the help block, and the links needlessly
     // draw attention on it.
-    if (!in_array($block->get('plugin'), array('system_help_block', 'system_main_block'))) {
+    if (isset($build[$key]) && !in_array($block->get('plugin'), array('system_help_block', 'system_main_block'))) {
       $build[$key]['#contextual_links']['block'] = array('admin/structure/block/manage', array($key));
     }
   }

@@ -64,6 +64,10 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
     $this->drupalPost('admin/structure/custom-blocks/add', $edit, t('Save'));
     $block_type = entity_load('custom_block_type', 'foo');
     $this->assertTrue($block_type, 'The new block type has been created.');
+
+    // Check that the block type was created in site default language.
+    $default_langcode = language_default()->langcode;
+    $this->assertEqual($block_type->langcode, $default_langcode);
   }
 
   /**

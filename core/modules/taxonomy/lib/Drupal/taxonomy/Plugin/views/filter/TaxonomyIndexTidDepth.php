@@ -7,7 +7,7 @@
 
 namespace Drupal\taxonomy\Plugin\views\filter;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Filter handler for taxonomy terms with depth.
@@ -17,10 +17,7 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @ingroup views_filter_handlers
  *
- * @Plugin(
- *   id = "taxonomy_index_tid_depth",
- *   module = "taxonomy"
- * )
+ * @PluginID("taxonomy_index_tid_depth")
  */
 class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
 

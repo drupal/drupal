@@ -1,4 +1,3 @@
-
 /* ---------- Color Module Styles ----------- */
 
 body,
@@ -30,14 +29,18 @@ body.overlay {
   background-image: -webkit-linear-gradient(top, #0779bf 0%, #48a9e4 100%);
   background-image: linear-gradient(top, #0779bf 0%, #48a9e4 100%);
 }
-a {
+a,
+.link {
   color: #0071b3;
 }
 a:hover,
-a:focus {
+a:focus,
+.link:hover,
+.link:focus {
   color: #018fe2;
 }
-a:active {
+a:active,
+.link:active {
   color: #23aeff;
 }
 .sidebar .block {

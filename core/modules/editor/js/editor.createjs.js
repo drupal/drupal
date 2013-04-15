@@ -18,7 +18,7 @@
 
 // @todo D8: use jQuery UI Widget bridging.
 // @see http://drupal.org/node/1874934#comment-7124904
-jQuery.widget('DrupalEditEditor.editor', jQuery.DrupalEditEditor.direct, {
+jQuery.widget('Midgard.editor', jQuery.Midgard.direct, {
 
   textFormat: null,
   textFormatHasTransformations: null,

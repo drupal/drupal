@@ -8,7 +8,7 @@
 namespace Drupal\comment\Plugin\views\argument;
 
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Argument handler to accept a user id to check for nodes that
@@ -16,10 +16,7 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @ingroup views_argument_handlers
  *
- * @Plugin(
- *   id = "argument_comment_user_uid",
- *   module = "comment"
- * )
+ * @PluginID("argument_comment_user_uid")
  */
 class UserUid extends ArgumentPluginBase {
 

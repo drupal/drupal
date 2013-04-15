@@ -737,47 +737,13 @@ abstract class WebTestBase extends TestBase {
     // @see drupal_system_listing()
     $conf['simpletest_parent_profile'] = $this->originalProfile;
 
-    // Set installer parameters.
-    // @see install.php, install.core.inc
-    $connection_info = Database::getConnectionInfo();
+    // Define information about the user 1 account.
     $this->root_user = (object) array(
       'uid' => 1,
       'name' => 'admin',
       'mail' => 'admin@example.com',
       'pass_raw' => $this->randomName(),
     );
-    $settings = array(
-      'interactive' => FALSE,
-      'parameters' => array(
-        'profile' => $this->profile,
-        'langcode' => 'en',
-      ),
-      'forms' => array(
-        'install_settings_form' => $connection_info['default'],
-        'install_configure_form' => array(
-          'site_name' => 'Drupal',
-          'site_mail' => 'simpletest@example.com',
-          'account' => array(
-            'name' => $this->root_user->name,
-            'mail' => $this->root_user->mail,
-            'pass' => array(
-              'pass1' => $this->root_user->pass_raw,
-              'pass2' => $this->root_user->pass_raw,
-            ),
-          ),
-          // form_type_checkboxes_value() requires NULL instead of FALSE values
-          // for programmatic form submissions to disable a checkbox.
-          'update_status_module' => array(
-            1 => NULL,
-            2 => NULL,
-          ),
-        ),
-      ),
-    );
-
-    // Replace the global $user session with an anonymous user to resemble a
-    // regular installation.
-    $user = drupal_anonymous_user();
 
     // Reset the static batch to remove Simpletest's batch operations.
     $batch = &batch_get();
@@ -800,7 +766,8 @@ abstract class WebTestBase extends TestBase {
     // Execute the non-interactive installer.
     require_once DRUPAL_ROOT . '/core/includes/install.core.inc';
     $this->settingsSet('cache', array('default' => 'cache.backend.memory'));
-    install_drupal($settings);
+    $parameters = $this->installParameters();
+    install_drupal($parameters);
     $this->settingsSet('cache', array());
     $this->rebuildContainer();
 
@@ -856,6 +823,75 @@ abstract class WebTestBase extends TestBase {
       _current_path('run-tests');
     }
     $this->setup = TRUE;
+  }
+
+  /**
+   * Returns the parameters that will be used when Simpletest installs Drupal.
+   *
+   * @see install_drupal()
+   * @see install_state_defaults()
+   */
+  protected function installParameters() {
+    $connection_info = Database::getConnectionInfo();
+    $parameters = array(
+      'interactive' => FALSE,
+      'parameters' => array(
+        'profile' => $this->profile,
+        'langcode' => 'en',
+      ),
+      'forms' => array(
+        'install_settings_form' => $connection_info['default'],
+        'install_configure_form' => array(
+          'site_name' => 'Drupal',
+          'site_mail' => 'simpletest@example.com',
+          'account' => array(
+            'name' => $this->root_user->name,
+            'mail' => $this->root_user->mail,
+            'pass' => array(
+              'pass1' => $this->root_user->pass_raw,
+              'pass2' => $this->root_user->pass_raw,
+            ),
+          ),
+          // form_type_checkboxes_value() requires NULL instead of FALSE values
+          // for programmatic form submissions to disable a checkbox.
+          'update_status_module' => array(
+            1 => NULL,
+            2 => NULL,
+          ),
+        ),
+      ),
+    );
+    return $parameters;
+  }
+
+  /**
+   * Writes a test-specific settings.php file for the child site.
+   *
+   * The child site loads this after the parent site's settings.php, so settings
+   * here override those.
+   *
+   * @param $settings An array of settings to write out, in the format expected
+   *   by drupal_rewrite_settings().
+   *
+   * @see _drupal_load_test_overrides()
+   * @see drupal_rewrite_settings()
+   */
+  protected function writeSettings($settings) {
+    // drupal_rewrite_settings() sets the in-memory global variables in addition
+    // to writing the file. We'll want to restore the original globals.
+    foreach (array_keys($settings) as $variable_name) {
+      $original_globals[$variable_name] = isset($GLOBALS[$variable_name]) ? $GLOBALS[$variable_name] : NULL;
+    }
+
+    include_once DRUPAL_ROOT . '/core/includes/install.inc';
+    $filename = $this->public_files_directory . '/settings.php';
+    file_put_contents($filename, "<?php\n");
+    drupal_rewrite_settings($settings, $filename);
+
+    // Restore the original globals.
+    foreach ($original_globals as $variable_name => $value) {
+      $GLOBALS[$variable_name] = $value;
+    }
   }
 
   /**

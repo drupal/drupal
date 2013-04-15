@@ -128,13 +128,6 @@ const JS_DEFAULT = 0;
 const JS_THEME = 100;
 
 /**
- * Error code indicating that the request exceeded the specified timeout.
- *
- * @see drupal_http_request()
- */
-const HTTP_REQUEST_TIMEOUT = -1;
-
-/**
  * @defgroup block_caching Block Caching
  * @{
  * Constants that define each block's caching state.
@@ -761,336 +754,6 @@ function _external_url_is_local($url) {
     // a trailing slash, we don't need to add the trailing slash here.
     return ($url_parts['host'] == $base_host && stripos($url_parts['path'], base_path()) === 0);
   }
-}
-
-/**
- * Performs an HTTP request.
- *
- * This is a flexible and powerful HTTP client implementation. Correctly
- * handles GET, POST, PUT or any other HTTP requests. Handles redirects.
- *
- * @param $url
- *   A string containing a fully qualified URI.
- * @param array $options
- *   (optional) An array that can have one or more of the following elements:
- *   - headers: An array containing request headers to send as name/value pairs.
- *   - method: A string containing the request method. Defaults to 'GET'.
- *   - data: A string containing the request body, formatted as
- *     'param=value&param=value&...'. Defaults to NULL.
- *   - max_redirects: An integer representing how many times a redirect
- *     may be followed. Defaults to 3.
- *   - timeout: A float representing the maximum number of seconds the function
- *     call may take. The default is 30 seconds. If a timeout occurs, the error
- *     code is set to the HTTP_REQUEST_TIMEOUT constant.
- *   - context: A context resource created with stream_context_create().
- *
- * @return object
- *   An object that can have one or more of the following components:
- *   - request: A string containing the request body that was sent.
- *   - code: An integer containing the response status code, or the error code
- *     if an error occurred.
- *   - protocol: The response protocol (e.g. HTTP/1.1 or HTTP/1.0).
- *   - status_message: The status message from the response, if a response was
- *     received.
- *   - redirect_code: If redirected, an integer containing the initial response
- *     status code.
- *   - redirect_url: If redirected, a string containing the URL of the redirect
- *     target.
- *   - error: If an error occurred, the error message. Otherwise not set.
- *   - headers: An array containing the response headers as name/value pairs.
- *     HTTP header names are case-insensitive (RFC 2616, section 4.2), so for
- *     easy access the array keys are returned in lower case.
- *   - data: A string containing the response body that was received.
- */
-function drupal_http_request($url, array $options = array()) {
-  $result = new stdClass();
-
-  // Parse the URL and make sure we can handle the schema.
-  $uri = @parse_url($url);
-
-  if ($uri == FALSE) {
-    $result->error = 'unable to parse URL';
-    $result->code = -1001;
-    return $result;
-  }
-
-  if (!isset($uri['scheme'])) {
-    $result->error = 'missing schema';
-    $result->code = -1002;
-    return $result;
-  }
-
-  timer_start(__FUNCTION__);
-
-  // Merge the default options.
-  $options += array(
-    'headers' => array(),
-    'method' => 'GET',
-    'data' => NULL,
-    'max_redirects' => 3,
-    'timeout' => 30.0,
-    'context' => NULL,
-  );
-
-  // Merge the default headers.
-  $options['headers'] += array(
-    'User-Agent' => 'Drupal (+http://drupal.org/)',
-  );
-
-  // stream_socket_client() requires timeout to be a float.
-  $options['timeout'] = (float) $options['timeout'];
-
-  // Use a proxy if one is defined and the host is not on the excluded list.
-  $proxy_server = settings()->get('proxy_server', '');
-  if ($proxy_server && _drupal_http_use_proxy($uri['host'])) {
-    // Set the scheme so we open a socket to the proxy server.
-    $uri['scheme'] = 'proxy';
-    // Set the path to be the full URL.
-    $uri['path'] = $url;
-    // Since the URL is passed as the path, we won't use the parsed query.
-    unset($uri['query']);
-
-    // Add in username and password to Proxy-Authorization header if needed.
-    if ($proxy_username = settings()->get('proxy_username', '')) {
-      $proxy_password = settings()->get('proxy_password', '');
-      $options['headers']['Proxy-Authorization'] = 'Basic ' . base64_encode($proxy_username . (!empty($proxy_password) ? ":" . $proxy_password : ''));
-    }
-    // Some proxies reject requests with any User-Agent headers, while others
-    // require a specific one.
-    $proxy_user_agent = settings()->get('proxy_user_agent', '');
-    // The default value matches neither condition.
-    if ($proxy_user_agent === NULL) {
-      unset($options['headers']['User-Agent']);
-    }
-    elseif ($proxy_user_agent) {
-      $options['headers']['User-Agent'] = $proxy_user_agent;
-    }
-  }
-
-  switch ($uri['scheme']) {
-    case 'proxy':
-      // Make the socket connection to a proxy server.
-      $socket = 'tcp://' . $proxy_server . ':' . settings()->get('proxy_port', 8080);
-      // The Host header still needs to match the real request.
-      $options['headers']['Host'] = $uri['host'];
-      $options['headers']['Host'] .= isset($uri['port']) && $uri['port'] != 80 ? ':' . $uri['port'] : '';
-      break;
-
-    case 'http':
-    case 'feed':
-      $port = isset($uri['port']) ? $uri['port'] : 80;
-      $socket = 'tcp://' . $uri['host'] . ':' . $port;
-      // RFC 2616: "non-standard ports MUST, default ports MAY be included".
-      // We don't add the standard port to prevent from breaking rewrite rules
-      // checking the host that do not take into account the port number.
-      $options['headers']['Host'] = $uri['host'] . ($port != 80 ? ':' . $port : '');
-      break;
-
-    case 'https':
-      // Note: Only works when PHP is compiled with OpenSSL support.
-      $port = isset($uri['port']) ? $uri['port'] : 443;
-      $socket = 'ssl://' . $uri['host'] . ':' . $port;
-      $options['headers']['Host'] = $uri['host'] . ($port != 443 ? ':' . $port : '');
-      break;
-
-    default:
-      $result->error = 'invalid schema ' . $uri['scheme'];
-      $result->code = -1003;
-      return $result;
-  }
-
-  if (empty($options['context'])) {
-    $fp = @stream_socket_client($socket, $errno, $errstr, $options['timeout']);
-  }
-  else {
-    // Create a stream with context. Allows verification of a SSL certificate.
-    $fp = @stream_socket_client($socket, $errno, $errstr, $options['timeout'], STREAM_CLIENT_CONNECT, $options['context']);
-  }
-
-  // Make sure the socket opened properly.
-  if (!$fp) {
-    // When a network error occurs, we use a negative number so it does not
-    // clash with the HTTP status codes.
-    $result->code = -$errno;
-    $result->error = trim($errstr) ? trim($errstr) : t('Error opening socket @socket', array('@socket' => $socket));
-    return $result;
-  }
-
-  // Construct the path to act on.
-  $path = isset($uri['path']) ? $uri['path'] : '/';
-  if (isset($uri['query'])) {
-    $path .= '?' . $uri['query'];
-  }
-
-  // Only add Content-Length if we actually have any content or if it is a POST
-  // or PUT request. Some non-standard servers get confused by Content-Length in
-  // at least HEAD/GET requests, and Squid always requires Content-Length in
-  // POST/PUT requests.
-  $content_length = strlen($options['data']);
-  if ($content_length > 0 || $options['method'] == 'POST' || $options['method'] == 'PUT') {
-    $options['headers']['Content-Length'] = $content_length;
-  }
-
-  // If the server URL has a user then attempt to use basic authentication.
-  if (isset($uri['user'])) {
-    $options['headers']['Authorization'] = 'Basic ' . base64_encode($uri['user'] . (isset($uri['pass']) ? ':' . $uri['pass'] : ''));
-  }
-
-  // If the database prefix is being used by SimpleTest to run the tests in a copied
-  // database then set the user-agent header to the database prefix so that any
-  // calls to other Drupal pages will run the SimpleTest prefixed database. The
-  // user-agent is used to ensure that multiple testing sessions running at the
-  // same time won't interfere with each other as they would if the database
-  // prefix were stored statically in a file or database variable.
-  $test_info = &$GLOBALS['drupal_test_info'];
-  if (!empty($test_info['test_run_id'])) {
-    $options['headers']['User-Agent'] = drupal_generate_test_ua($test_info['test_run_id']);
-  }
-
-  $request = $options['method'] . ' ' . $path . " HTTP/1.0\r\n";
-  foreach ($options['headers'] as $name => $value) {
-    $request .= $name . ': ' . trim($value) . "\r\n";
-  }
-  $request .= "\r\n" . $options['data'];
-  $result->request = $request;
-  // Calculate how much time is left of the original timeout value.
-  $timeout = $options['timeout'] - timer_read(__FUNCTION__) / 1000;
-  if ($timeout > 0) {
-    stream_set_timeout($fp, floor($timeout), floor(1000000 * fmod($timeout, 1)));
-    fwrite($fp, $request);
-  }
-
-  // Fetch response. Due to PHP bugs like http://bugs.php.net/bug.php?id=43782
-  // and http://bugs.php.net/bug.php?id=46049 we can't rely on feof(), but
-  // instead must invoke stream_get_meta_data() each iteration.
-  $info = stream_get_meta_data($fp);
-  $alive = !$info['eof'] && !$info['timed_out'];
-  $response = '';
-
-  while ($alive) {
-    // Calculate how much time is left of the original timeout value.
-    $timeout = $options['timeout'] - timer_read(__FUNCTION__) / 1000;
-    if ($timeout <= 0) {
-      $info['timed_out'] = TRUE;
-      break;
-    }
-    stream_set_timeout($fp, floor($timeout), floor(1000000 * fmod($timeout, 1)));
-    $chunk = fread($fp, 1024);
-    $response .= $chunk;
-    $info = stream_get_meta_data($fp);
-    $alive = !$info['eof'] && !$info['timed_out'] && $chunk;
-  }
-  fclose($fp);
-
-  if ($info['timed_out']) {
-    $result->code = HTTP_REQUEST_TIMEOUT;
-    $result->error = 'request timed out';
-    return $result;
-  }
-  // Parse response headers from the response body.
-  // Be tolerant of malformed HTTP responses that separate header and body with
-  // \n\n or \r\r instead of \r\n\r\n.
-  list($response, $result->data) = preg_split("/\r\n\r\n|\n\n|\r\r/", $response, 2);
-  $response = preg_split("/\r\n|\n|\r/", $response);
-
-  // Parse the response status line.
-  list($protocol, $code, $status_message) = explode(' ', trim(array_shift($response)), 3);
-  $result->protocol = $protocol;
-  $result->status_message = $status_message;
-
-  $result->headers = array();
-
-  // Parse the response headers.
-  while ($line = trim(array_shift($response))) {
-    list($name, $value) = explode(':', $line, 2);
-    $name = strtolower($name);
-    if (isset($result->headers[$name]) && $name == 'set-cookie') {
-      // RFC 2109: the Set-Cookie response header comprises the token Set-
-      // Cookie:, followed by a comma-separated list of one or more cookies.
-      $result->headers[$name] .= ',' . trim($value);
-    }
-    else {
-      $result->headers[$name] = trim($value);
-    }
-  }
-
-  $responses = array(
-    100 => 'Continue',
-    101 => 'Switching Protocols',
-    200 => 'OK',
-    201 => 'Created',
-    202 => 'Accepted',
-    203 => 'Non-Authoritative Information',
-    204 => 'No Content',
-    205 => 'Reset Content',
-    206 => 'Partial Content',
-    300 => 'Multiple Choices',
-    301 => 'Moved Permanently',
-    302 => 'Found',
-    303 => 'See Other',
-    304 => 'Not Modified',
-    305 => 'Use Proxy',
-    307 => 'Temporary Redirect',
-    400 => 'Bad Request',
-    401 => 'Unauthorized',
-    402 => 'Payment Required',
-    403 => 'Forbidden',
-    404 => 'Not Found',
-    405 => 'Method Not Allowed',
-    406 => 'Not Acceptable',
-    407 => 'Proxy Authentication Required',
-    408 => 'Request Time-out',
-    409 => 'Conflict',
-    410 => 'Gone',
-    411 => 'Length Required',
-    412 => 'Precondition Failed',
-    413 => 'Request Entity Too Large',
-    414 => 'Request-URI Too Large',
-    415 => 'Unsupported Media Type',
-    416 => 'Requested range not satisfiable',
-    417 => 'Expectation Failed',
-    500 => 'Internal Server Error',
-    501 => 'Not Implemented',
-    502 => 'Bad Gateway',
-    503 => 'Service Unavailable',
-    504 => 'Gateway Time-out',
-    505 => 'HTTP Version not supported',
-  );
-  // RFC 2616 states that all unknown HTTP codes must be treated the same as the
-  // base code in their class.
-  if (!isset($responses[$code])) {
-    $code = floor($code / 100) * 100;
-  }
-  $result->code = $code;
-
-  switch ($code) {
-    case 200: // OK
-    case 304: // Not modified
-      break;
-    case 301: // Moved permanently
-    case 302: // Moved temporarily
-    case 307: // Moved temporarily
-      $location = $result->headers['location'];
-      $options['timeout'] -= timer_read(__FUNCTION__) / 1000;
-      if ($options['timeout'] <= 0) {
-        $result->code = HTTP_REQUEST_TIMEOUT;
-        $result->error = 'request timed out';
-      }
-      elseif ($options['max_redirects']) {
-        // Redirect to the new location.
-        $options['max_redirects']--;
-        $result = drupal_http_request($location, $options);
-        $result->redirect_code = $code;
-      }
-      if (!isset($result->redirect_url)) {
-        $result->redirect_url = $location;
-      }
-      break;
-    default:
-      $result->error = $status_message;
-  }
-
-  return $result;
 }
 
 /**
@@ -2113,7 +1776,7 @@ function url($path = NULL, array $options = array()) {
     if ($options['query']) {
       $path .= (strpos($path, '?') !== FALSE ? '&' : '?') . drupal_http_build_query($options['query']);
     }
-    if (isset($options['https']) && variable_get('https', FALSE)) {
+    if (isset($options['https']) && settings()->get('mixed_mode_sessions', FALSE)) {
       if ($options['https'] === TRUE) {
         $path = str_replace('http://', 'https://', $path);
       }
@@ -2129,7 +1792,7 @@ function url($path = NULL, array $options = array()) {
 
   // The base_url might be rewritten from the language rewrite in domain mode.
   if (!isset($options['base_url'])) {
-    if (isset($options['https']) && variable_get('https', FALSE)) {
+    if (isset($options['https']) && settings()->get('mixed_mode_sessions', FALSE)) {
       if ($options['https'] === TRUE) {
         $options['base_url'] = $base_secure_url;
         $options['absolute'] = TRUE;
@@ -4576,6 +4239,13 @@ function drupal_get_library($module, $name = NULL) {
         // Add default elements to allow for easier processing.
         $module_libraries[$key] += array('dependencies' => array(), 'js' => array(), 'css' => array());
         foreach ($module_libraries[$key]['js'] as $file => $options) {
+          if (is_scalar($options)) {
+            // The JavaScript or CSS file has been specified in shorthand
+            // format, without an array of options. In this case $options is the
+            // filename.
+            $file = $options;
+            $options = array();
+          }
           $module_libraries[$key]['js'][$file]['version'] = $module_libraries[$key]['version'];
         }
       }
@@ -4835,19 +4505,6 @@ function drupal_json_decode($var) {
 }
 
 /**
- * Gets a salt useful for hardening against SQL injection.
- *
- * @return
- *   A salt based on information in settings.php, not in the database.
- */
-function drupal_get_hash_salt() {
-  global $drupal_hash_salt, $databases;
-  // If the $drupal_hash_salt variable is empty, a hash of the serialized
-  // database credentials is used as a fallback salt.
-  return empty($drupal_hash_salt) ? hash('sha256', serialize($databases)) : $drupal_hash_salt;
-}
-
-/**
  * Ensures the private key variable used to generate tokens is set.
  *
  * @return
@@ -4869,8 +4526,10 @@ function drupal_get_private_key() {
  *
  * @return string
  *   A 43-character URL-safe token for validation, based on the user session ID,
- *   the global $drupal_hash_salt variable from settings.php, and the
+ *   the hash salt provided from drupal_get_hash_salt(), and the
  *   'drupal_private_key' configuration variable.
+ *
+ * @see drupal_get_hash_salt()
  */
 function drupal_get_token($value = '') {
   return drupal_hmac_base64($value, session_id() . drupal_get_private_key() . drupal_get_hash_salt());
@@ -6528,32 +6187,6 @@ function drupal_check_incompatibility($v, $current_version) {
 }
 
 /**
- * Retrieves a list of all available archivers.
- *
- * @see hook_archiver_info()
- * @see hook_archiver_info_alter()
- */
-function archiver_get_info() {
-  $archiver_info = &drupal_static(__FUNCTION__, array());
-
-  if (empty($archiver_info)) {
-    $cache = cache()->get('archiver_info');
-    if ($cache === FALSE) {
-      // Rebuild the cache and save it.
-      $archiver_info = module_invoke_all('archiver_info');
-      drupal_alter('archiver_info', $archiver_info);
-      uasort($archiver_info, 'drupal_sort_weight');
-      cache()->set('archiver_info', $archiver_info);
-    }
-    else {
-      $archiver_info = $cache->data;
-    }
-  }
-
-  return $archiver_info;
-}
-
-/**
  * Returns a string of supported archive extensions.
  *
  * @return
@@ -6562,7 +6195,7 @@ function archiver_get_info() {
  */
 function archiver_get_extensions() {
   $valid_extensions = array();
-  foreach (archiver_get_info() as $archive) {
+  foreach (Drupal::service('plugin.manager.archiver')->getDefinitions() as $archive) {
     foreach ($archive['extensions'] as $extension) {
       foreach (explode('.', $extension) as $part) {
         if (!in_array($part, $valid_extensions)) {
@@ -6592,20 +6225,7 @@ function archiver_get_archiver($file) {
   if (!is_file($filepath)) {
     throw new Exception(t('Archivers can only operate on local files: %file not supported', array('%file' => $file)));
   }
-  $archiver_info = archiver_get_info();
-
-  foreach ($archiver_info as $implementation) {
-    foreach ($implementation['extensions'] as $extension) {
-      // Because extensions may be multi-part, such as .tar.gz,
-      // we cannot use simpler approaches like substr() or pathinfo().
-      // This method isn't quite as clean but gets the job done.
-      // Also note that the file may not yet exist, so we cannot rely
-      // on fileinfo() or other disk-level utilities.
-      if (strrpos($filepath, '.' . $extension) === strlen($filepath) - strlen('.' . $extension)) {
-        return new $implementation['class']($filepath);
-      }
-    }
-  }
+  return Drupal::service('plugin.manager.archiver')->getInstance(array('filepath' => $filepath));
 }
 
 /**

@@ -1,0 +1,6 @@
+services:
+  locale_config_subscriber:
+    class: Drupal\locale\LocaleConfigSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@language_manager', '@config.context']

@@ -7,16 +7,14 @@
 
 namespace Drupal\views\Plugin\views\area;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * A special handler to take the place of missing or broken handlers.
  *
  * @ingroup views_area_handlers
  *
- * @Plugin(
- *   id = "broken"
- * )
+ * @PluginID("broken")
  */
 class Broken extends AreaPluginBase {
 

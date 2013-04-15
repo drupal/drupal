@@ -21,7 +21,7 @@ use Drupal\Core\Annotation\Translation;
  *   help = @Translation("Display the comment as RSS."),
  *   theme = "views_view_row_rss",
  *   base = {"comment"},
- *   type = "feed"
+ *   display_types = {"feed"}
  * )
  */
 class Rss extends RowPluginBase {

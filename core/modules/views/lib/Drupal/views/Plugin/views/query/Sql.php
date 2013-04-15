@@ -1379,7 +1379,7 @@ class Sql extends QueryPluginBase {
     }
 
     // Add all query substitutions as metadata.
-    $query->addMetaData('views_substitutions', module_invoke_all('views_query_substitutions', $this));
+    $query->addMetaData('views_substitutions', \Drupal::moduleHandler()->invokeAll('views_query_substitutions', array($this->view)));
 
     return $query;
   }
@@ -1402,10 +1402,7 @@ class Sql extends QueryPluginBase {
    * Let modules modify the query just prior to finalizing it.
    */
   function alter(ViewExecutable $view) {
-    foreach (module_implements('views_query_alter') as $module) {
-      $function = $module . '_views_query_alter';
-      $function($view, $this);
-    }
+    \Drupal::moduleHandler()->invokeAll('views_query_alter', array($view, $this));
   }
 
   /**
@@ -1455,7 +1452,7 @@ class Sql extends QueryPluginBase {
 
     $items = array();
     if ($query) {
-      $additional_arguments = module_invoke_all('views_query_substitutions', $view);
+      $additional_arguments = \Drupal::moduleHandler()->invokeAll('views_query_substitutions', array($view));
 
       // Count queries must be run through the preExecute() method.
       // If not, then hook_query_node_access_alter() may munge the count by

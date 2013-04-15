@@ -7,16 +7,14 @@
 
 namespace Drupal\views\Plugin\views\field;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Provides a handler that renders links as dropbutton.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "dropbutton"
- * )
+ * @PluginID("dropbutton")
  */
 class Dropbutton extends Links {
 

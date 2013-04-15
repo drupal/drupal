@@ -1,0 +1,3 @@
+services:
+  form_test.form.serviceform:
+    class: Drupal\form_test\FormTestServiceObject

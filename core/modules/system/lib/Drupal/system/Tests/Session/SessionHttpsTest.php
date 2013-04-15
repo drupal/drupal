@@ -113,7 +113,13 @@ class SessionHttpsTest extends WebTestBase {
     }
 
     // Enable secure pages.
-    variable_set('https', TRUE);
+    $this->settingsSet('mixed_mode_sessions', TRUE);
+    // Write that value also into the test settings.php file.
+    $settings['settings']['mixed_mode_sessions'] = (object) array(
+      'value' => TRUE,
+      'required' => TRUE,
+    );
+    $this->writeSettings($settings);
 
     $this->curlClose();
     // Start an anonymous session on the insecure site.

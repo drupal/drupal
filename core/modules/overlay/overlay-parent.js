@@ -286,7 +286,7 @@ Drupal.overlay.loadChild = function (event) {
 
   this.isLoading = false;
   $(document.documentElement).removeClass('overlay-loading');
-  event.data.sibling.removeClass('overlay-active').attr({ 'tabindex': -1 });
+  event.data.sibling.removeClass('overlay-active').prop({ 'tabindex': -1 });
 
   // Only continue when overlay is still open and not closing.
   if (this.isOpen && !this.isClosing) {
@@ -298,7 +298,7 @@ Drupal.overlay.loadChild = function (event) {
       this.activeFrame = $(iframe)
         .addClass('overlay-active')
         // Add a title attribute to the iframe for accessibility.
-        .attr('title', Drupal.t('@title dialog', { '@title': iframeWindow.jQuery('#overlay-title').text() })).removeAttr('tabindex');
+        .attr('title', Drupal.t('@title dialog', { '@title': iframeWindow.jQuery('#overlay-title').text() })).prop('tabindex', false);
       this.inactiveFrame = event.data.sibling;
 
       // Load an empty document into the inactive iframe.
@@ -863,7 +863,7 @@ Drupal.overlay.makeDocumentUntabbable = function (context) {
   $tabbable = $tabbable.not($overlay);
   // We now have a list of everything in the underlying document that could
   // possibly be reachable via the tab key. Make it all unreachable.
-  $tabbable.attr('tabindex', -1);
+  $tabbable.prop('tabindex', -1);
 };
 
 /**
@@ -879,7 +879,7 @@ Drupal.overlay.makeDocumentTabbable = function (context) {
 
   // Make the underlying document tabbable again by removing all existing
   // tabindex attributes.
-  $('[tabindex]', context).removeAttr('tabindex');
+  $(context).find('[tabindex]').prop('tabindex', false);
 
   // Restore the tabindex attributes that existed before the overlay was opened.
   $needsTabindex = $(Drupal.overlay._hasTabindex, context);
@@ -894,7 +894,7 @@ Drupal.overlay.makeDocumentTabbable = function (context) {
  */
 Drupal.overlay._recordTabindex = function () {
   var $element = $(this);
-  var tabindex = $(this).attr('tabindex');
+  var tabindex = $(this).prop('tabindex');
   $element.data('drupalOverlayOriginalTabIndex', tabindex);
 };
 
@@ -906,7 +906,7 @@ Drupal.overlay._recordTabindex = function () {
 Drupal.overlay._restoreTabindex = function () {
   var $element = $(this);
   var tabindex = $element.data('drupalOverlayOriginalTabIndex');
-  $element.attr('tabindex', tabindex);
+  $element.prop('tabindex', tabindex);
 };
 
 $.extend(Drupal.theme, {

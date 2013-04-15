@@ -72,7 +72,7 @@ display:
           empty_zero: '0'
           link_to_node: '1'
           plugin_id: node
-        bulk_form:
+        action_bulk_form:
           id: action_bulk_form
           table: action
           field: action_bulk_form

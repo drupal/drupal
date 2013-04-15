@@ -1,0 +1,24 @@
+services:
+  serializer:
+    class: Symfony\Component\Serializer\Serializer
+    arguments: [{  }, {  }]
+  serializer.normalizer.complex_data:
+    class: Drupal\serialization\Normalizer\ComplexDataNormalizer
+    tags:
+      - { name: normalizer }
+  serializer.normalizer.list:
+    class: Drupal\serialization\Normalizer\ListNormalizer
+    tags:
+      - { name: normalizer }
+  serializer.normalizer.typed_data:
+    class: Drupal\serialization\Normalizer\TypedDataNormalizer
+    tags:
+      - { name: normalizer }
+  serializer.encoder.json:
+    class: Drupal\serialization\Encoder\JsonEncoder
+    tags:
+      - { name: encoder, format: json }
+  serializer.encoder.xml:
+    class: Drupal\serialization\Encoder\XmlEncoder
+    tags:
+      - { name: encoder, format: xml }

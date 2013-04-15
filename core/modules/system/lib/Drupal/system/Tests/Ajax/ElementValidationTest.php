@@ -36,5 +36,14 @@ class ElementValidationTest extends AjaxTestBase {
     // Look for a validation failure in the resultant JSON.
     $this->assertNoText(t('Error message'), 'No error message in resultant JSON');
     $this->assertText('ajax_forms_test_validation_form_callback invoked', 'The correct callback was invoked');
+
+    $this->drupalGet('ajax_validation_test');
+    $edit = array('drivernumber' => 12345);
+
+    // Post with 'drivernumber' as the triggering element.
+    $post_result = $this->drupalPostAJAX('ajax_validation_test', $edit, 'drivernumber');
+    // Look for a validation failure in the resultant JSON.
+    $this->assertNoText(t('Error message'), 'No error message in resultant JSON');
+    $this->assertText('ajax_forms_test_validation_number_form_callback invoked', 'The correct callback was invoked');
   }
 }

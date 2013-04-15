@@ -76,6 +76,11 @@ class Tables {
     // system.
     $propertyDefinitions = array();
     $entity_info = entity_get_info($entity_type);
+    // Use the lightweight and fast field map for checking whether a specifier
+    // is a field or not. While calling field_info_field() on every specifier
+    // delivers the same information, if no specifiers are using the field API
+    // it is much faster if field_info_field() is never called.
+    $field_map = field_info_field_map();
     for ($key = 0; $key <= $count; $key ++) {
       // If there is revision support and only the current revision is being
       // queried then use the revision id. Otherwise, the entity id will do.
@@ -100,8 +105,11 @@ class Tables {
       if (substr($specifier, 0, 3) == 'id:') {
         $field = field_info_field_by_id(substr($specifier, 3));
       }
-      else {
+      elseif (isset($field_map[$specifier])) {
         $field = field_info_field($specifier);
+      }
+      else {
+        $field = FALSE;
       }
       // If we managed to retrieve the field, process it.
       if ($field) {

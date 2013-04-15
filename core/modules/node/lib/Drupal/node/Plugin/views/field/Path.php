@@ -10,17 +10,14 @@ namespace Drupal\node\Plugin\views\field;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to present the path to the node.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "node_path",
- *   module = "node"
- * )
+ * @PluginID("node_path")
  */
 class Path extends FieldPluginBase {
 

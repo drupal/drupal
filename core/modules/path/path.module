@@ -77,10 +77,7 @@ function path_menu() {
   );
   $items['admin/config/search/path/delete/%path'] = array(
     'title' => 'Delete alias',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('path_admin_delete_confirm', 5),
-    'access arguments' => array('administer url aliases'),
-    'file' => 'path.admin.inc',
+    'route_name' => 'path_delete',
   );
   $items['admin/config/search/path/add'] = array(
     'title' => 'Add alias',

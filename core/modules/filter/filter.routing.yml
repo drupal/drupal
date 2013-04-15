@@ -1,0 +1,6 @@
+filter_admin_disable:
+  pattern: '/admin/config/content/formats/{filter_format}/disable'
+  defaults:
+    _form: '\Drupal\filter\Form\DisableForm'
+  requirements:
+    _filter_disable_format_access: 'TRUE'

@@ -23,7 +23,7 @@ use Drupal\Core\Annotation\Translation;
  *   module = "rest",
  *   title = @Translation("Serializer"),
  *   help = @Translation("Serializes views row data using the Serializer component."),
- *   type = "data"
+ *   display_types = {"data"}
  * )
  */
 class Serializer extends StylePluginBase {

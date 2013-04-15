@@ -1170,7 +1170,7 @@ function field_attach_insert(EntityInterface $entity) {
   $storages = array();
   foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
-    $field_id = $field['id'];
+    $field_id = $field['uuid'];
     $field_name = $field['field_name'];
     if (!empty($entity->$field_name)) {
       // Collect the storage backend if the field has not been written yet.
@@ -1211,7 +1211,7 @@ function field_attach_update(EntityInterface $entity) {
   $storages = array();
   foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
-    $field_id = $field['id'];
+    $field_id = $field['uuid'];
     $field_name = $field['field_name'];
     // Leave the field untouched if $entity comes with no $field_name property,
     // but empty the field if it comes as a NULL value or an empty array.
@@ -1254,7 +1254,7 @@ function field_attach_delete(EntityInterface $entity) {
   $storages = array();
   foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
-    $field_id = $field['id'];
+    $field_id = $field['uuid'];
     $storages[$field['storage']['type']][$field_id] = $field_id;
   }
 
@@ -1287,7 +1287,7 @@ function field_attach_delete_revision(EntityInterface $entity) {
   $storages = array();
   foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
-    $field_id = $field['id'];
+    $field_id = $field['uuid'];
     $storages[$field['storage']['type']][$field_id] = $field_id;
   }
 
@@ -1428,7 +1428,7 @@ function field_attach_view(EntityInterface $entity, EntityDisplay $display, $lan
   $null = NULL;
   $output = field_invoke_method('view', $target_function, $entity, $null, $null, $options);
   // Remove the BC layer now.
-  $entity = $entity->getOriginalEntity();
+  $entity = $entity->getNGEntity();
 
   // Let other modules alter the renderable array.
   $view_mode = $display->originalViewMode;
@@ -1520,56 +1520,39 @@ function field_attach_prepare_translation(EntityInterface $entity, $langcode, En
 }
 
 /**
- * Notifies field.module that a new bundle was created.
- *
- * The default SQL-based storage doesn't need to do anything about it, but
- * others might.
- *
- * @param $entity_type
- *   The entity type to which the bundle is bound.
- * @param $bundle
- *   The name of the newly created bundle.
+ * Implements hook_entity_bundle_create().
  */
-function field_attach_create_bundle($entity_type, $bundle) {
+function field_entity_bundle_create($entity_type, $bundle) {
   // Clear the cache.
   field_cache_clear();
-
-  // Let other modules act on creating the bundle.
-  module_invoke_all('field_attach_create_bundle', $entity_type, $bundle);
 }
 
 /**
- * Notifies field.module that a bundle was renamed.
- *
- * @param $entity_type
- *   The entity type to which the bundle is bound.
- * @param $bundle_old
- *   The previous name of the bundle.
- * @param $bundle_new
- *   The new name of the bundle.
+ * Implements hook_entity_bundle_rename().
  */
-function field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new) {
-  db_update('field_config_instance')
-    ->fields(array('bundle' => $bundle_new))
-    ->condition('entity_type', $entity_type)
-    ->condition('bundle', $bundle_old)
-    ->execute();
+function field_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
+  $instances = field_read_instances();
+  foreach ($instances as $instance) {
+    if ($instance->entity_type == $entity_type && $instance->bundle == $bundle_old) {
+      $id_new = $instance['entity_type'] . '.' . $bundle_new . '.' . $instance['field_name'];
+      $instance->id = $id_new;
+      $instance->bundle = $bundle_new;
+      $instance->allowBundleRename();
+      $instance->save();
+    }
+  }
 
   // Clear the cache.
   field_cache_clear();
-  entity_info_cache_clear();
 
   // Update bundle settings.
   $settings = variable_get('field_bundle_settings_' . $entity_type . '__' . $bundle_old, array());
   variable_set('field_bundle_settings_' . $entity_type . '__' . $bundle_new, $settings);
   variable_del('field_bundle_settings_' . $entity_type . '__' . $bundle_old);
-
-  // Let other modules act on renaming the bundle.
-  module_invoke_all('field_attach_rename_bundle', $entity_type, $bundle_old, $bundle_new);
 }
 
 /**
- * Notifies field.module the a bundle was deleted.
+ * Implements hook_entity_bundle_delete().
  *
  * This deletes the data for the field instances as well as the field instances
  * themselves. This function actually just marks the data and field instances as
@@ -1577,16 +1560,11 @@ function field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new) {
  * not always possible to delete this much data in a single page request
  * (particularly since for some field types, the deletion is more than just a
  * simple DELETE query).
- *
- * @param $entity_type
- *   The entity type to which the bundle is bound.
- * @param $bundle
- *   The bundle to delete.
  */
-function field_attach_delete_bundle($entity_type, $bundle) {
-  // First, delete the instances themselves. field_read_instances() must be
-  // used here since field_info_instances() does not return instances for
-  // disabled entity types or bundles.
+function field_entity_bundle_delete($entity_type, $bundle) {
+  // Get the instances on the bundle. field_read_instances() must be used
+  // here since field_info_instances() does not return instances for disabled
+  // entity types or bundles.
   $instances = field_read_instances(array('entity_type' => $entity_type, 'bundle' => $bundle), array('include_inactive' => 1));
   foreach ($instances as $instance) {
     field_delete_instance($instance);
@@ -1597,11 +1575,7 @@ function field_attach_delete_bundle($entity_type, $bundle) {
 
   // Clear bundle display settings.
   variable_del('field_bundle_settings_' . $entity_type . '__' . $bundle);
-
-  // Let other modules act on deleting the bundle.
-  module_invoke_all('field_attach_delete_bundle', $entity_type, $bundle, $instances);
 }
-
 
 /**
  * @} End of "defgroup field_attach".

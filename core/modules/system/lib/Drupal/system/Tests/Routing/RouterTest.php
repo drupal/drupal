@@ -79,7 +79,25 @@ class RouterTest extends WebTestBase {
    */
   public function testControllerPlaceholdersDefaultValues() {
     $this->drupalGet('router_test/test4');
+    $this->assertResponse(200);
     $this->assertRaw('narf', 'The correct string was returned because the route was successful.');
+
+    // Confirm that the page wrapping is being added, so we're not getting a
+    // raw body returned.
+    $this->assertRaw('</html>', 'Page markup was found.');
+
+    // In some instances, the subrequest handling may get confused and render
+    // a page inception style.  This test verifies that is not happening.
+    $this->assertNoPattern('#</body>.*</body>#s', 'There was no double-page effect from a misrendered subrequest.');
+  }
+
+  /**
+   * Confirms that default placeholders in paths work correctly.
+   */
+  public function testControllerPlaceholdersDefaultValuesProvided() {
+    $this->drupalGet('router_test/test4/barf');
+    $this->assertResponse(200);
+    $this->assertRaw('barf', 'The correct string was returned because the route was successful.');
 
     // Confirm that the page wrapping is being added, so we're not getting a
     // raw body returned.

@@ -89,6 +89,10 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
       'label' =>  'Message to display when in maintenance mode',
       'type' => 'text',
     );
+    $expected['mapping']['langcode'] = array(
+      'label' => 'Default language',
+      'type' => 'string',
+    );
     $this->assertEqual($definition, $expected, 'Retrieved the right metadata for system.maintenance');
 
     // More complex case, generic type. Metadata for image style.
@@ -104,6 +108,8 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $expected['mapping']['effects']['sequence'][0]['mapping']['data']['type'] = 'image.effect.[%parent.name]';
     $expected['mapping']['effects']['sequence'][0]['mapping']['weight']['type'] = 'integer';
     $expected['mapping']['effects']['sequence'][0]['mapping']['ieid']['type'] = 'string';
+    $expected['mapping']['langcode']['label'] = 'Default language';
+    $expected['mapping']['langcode']['type'] = 'string';
 
     $this->assertEqual($definition, $expected, 'Retrieved the right metadata for image.style.large');
 

@@ -7,13 +7,13 @@
 
 namespace Drupal\field_test\Plugin\Core\Entity;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Test entity class.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "test_entity_bundle",
  *   label = @Translation("Test Entity with a specified bundle"),
  *   module = "field_test",

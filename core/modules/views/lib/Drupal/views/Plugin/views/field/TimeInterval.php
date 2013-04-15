@@ -7,16 +7,14 @@
 
 namespace Drupal\views\Plugin\views\field;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * A handler to provide proper displays for time intervals.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "time_interval"
- * )
+ * @PluginID("time_interval")
  */
 class TimeInterval extends FieldPluginBase {
 

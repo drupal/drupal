@@ -8,16 +8,14 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * A handler to run a field through simple XSS filtering.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "xss"
- * )
+ * @PluginID("xss")
  */
 class Xss extends FieldPluginBase {
 

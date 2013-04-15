@@ -63,23 +63,6 @@ function views_test_data_handler_test_access_callback_argument($argument = FALSE
   }
 }
 
-
-/**
- * Implements hook_views_pre_render().
- *
- * @see \Drupal\views\Tests\Plugin\CacheTest
- * @see \Drupal\views\Tests\Plugin\RenderTest
- */
-function views_test_data_views_pre_render(ViewExecutable $view) {
-  if ($view->storage->id() == 'test_cache_header_storage') {
-    $path = drupal_get_path('module', 'views_test_data');
-    $view->element['#attached']['js'][] = "$path/views_cache.test.js";
-    $view->element['#attached']['css'][] = "$path/views_cache.test.css";
-    $view->build_info['pre_render_called'] = TRUE;
-  }
-
-}
-
 /**
  * Implements hook_preprocess_HOOK() for views-view-table.tpl.php.
  */
@@ -88,20 +71,6 @@ function views_test_data_preprocess_views_view_table(&$variables) {
     $views_render_test = state()->get('views_render.test');
     $views_render_test++;
     state()->set('views_render.test', $views_render_test);
-  }
-}
-
-/**
- * Implements hook_views_post_build().
- */
-function views_test_data_views_post_build(ViewExecutable $view) {
-  if ($view->storage->id() == 'test_page_display') {
-    if ($view->current_display == 'page_1') {
-      $view->build_info['denied'] = TRUE;
-    }
-    elseif ($view->current_display == 'page_2') {
-      $view->build_info['fail'] = TRUE;
-    }
   }
 }
 

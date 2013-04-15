@@ -7,7 +7,7 @@
 
 namespace Drupal\file\Plugin\views\field;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 
 /**
@@ -15,10 +15,7 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "file_extension",
- *   module = "file"
- * )
+ * @PluginID("file_extension")
  */
 class Extension extends FieldPluginBase {
 

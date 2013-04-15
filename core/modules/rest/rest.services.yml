@@ -1,0 +1,21 @@
+services:
+  plugin.manager.rest:
+    class: Drupal\rest\Plugin\Type\ResourcePluginManager
+    arguments: ['%container.namespaces%']
+  rest.route_subscriber:
+    class: Drupal\rest\EventSubscriber\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@plugin.manager.rest', '@config.factory']
+  access_check.rest.csrf:
+    class: Drupal\rest\Access\CSRFAccessCheck
+    tags:
+      - { name: access_check }
+  rest.link_manager:
+    class: Drupal\rest\LinkManager\LinkManager
+    arguments: ['@rest.link_manager.type', '@rest.link_manager.relation']
+  rest.link_manager.type:
+    class: Drupal\rest\LinkManager\TypeLinkManager
+    arguments: ['@cache.cache']
+  rest.link_manager.relation:
+    class: Drupal\rest\LinkManager\RelationLinkManager

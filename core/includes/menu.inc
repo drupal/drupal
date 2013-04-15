@@ -1276,7 +1276,7 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
             // Collect all the links set to be expanded, and then add all of
             // their children to the list as well.
             do {
-              $query = entity_query('menu_link')
+              $query = Drupal::entityQuery('menu_link')
                 ->condition('menu_name', $menu_name)
                 ->condition('expanded', 1)
                 ->condition('has_children', 1)
@@ -1371,7 +1371,7 @@ function _menu_build_tree($menu_name, array $parameters = array()) {
   }
 
   if (!isset($trees[$tree_cid])) {
-    $query = entity_query('menu_link');
+    $query = Drupal::entityQuery('menu_link');
     for ($i = 1; $i <= MENU_MAX_DEPTH; $i++) {
       $query->sort('p' . $i, 'ASC');
     }
@@ -2830,7 +2830,7 @@ function _menu_navigation_links_rebuild($menu) {
   }
 
   // Find any item whose router path does not exist any more.
-  $query = entity_query('menu_link')
+  $query = Drupal::entityQuery('menu_link')
     ->condition('router_path', $paths, 'NOT IN')
     ->condition('external', 0)
     ->condition('updated', 0)
@@ -2857,7 +2857,7 @@ function _menu_navigation_links_rebuild($menu) {
 function menu_load_links($menu_name) {
   $links = array();
 
-  $query = entity_query('menu_link')
+  $query = Drupal::entityQuery('menu_link')
     ->condition('menu_name', $menu_name)
     // Order by weight so as to be helpful for menus that are only one level
     // deep.

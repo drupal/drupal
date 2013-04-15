@@ -8,7 +8,7 @@
 namespace Drupal\translation_entity\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
@@ -16,10 +16,7 @@ use Drupal\Core\Entity\EntityInterface;
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "translation_entity_link",
- *   module = "translation_entity"
- * )
+ * @PluginID("translation_entity_link")
  */
 class TranslationLink extends FieldPluginBase {
 

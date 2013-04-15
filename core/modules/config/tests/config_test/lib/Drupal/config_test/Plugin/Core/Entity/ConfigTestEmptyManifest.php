@@ -8,13 +8,13 @@
 namespace Drupal\config_test\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the ConfigTestEmptyManifest configuration entity.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "config_test_empty_manifest",
  *   label = @Translation("Test empty manifest creation"),
  *   module = "config_test",

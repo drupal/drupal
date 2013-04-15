@@ -394,12 +394,15 @@ abstract class StylePluginBase extends PluginBase {
   }
 
   /**
-   * Renders a single group of a grouped view.
+   * Renders a group of rows of the grouped view.
+   *
+   * @param array $rows
+   *   The result rows rendered in this group.
    *
    * @return array
-   *   The render array containing the single view theme output.
+   *   The render array containing the single group theme output.
    */
-  protected function renderSingleGroup(array $rows = array()) {
+  protected function renderRowGroup(array $rows = array()) {
     return array(
       '#theme' => $this->themeFunctions(),
       '#view' => $this->view,
@@ -467,7 +470,7 @@ abstract class StylePluginBase extends PluginBase {
           }
         }
 
-        $single_output = $this->renderSingleGroup($set['rows']);
+        $single_output = $this->renderRowGroup($set['rows']);
         $single_output['#grouping_level'] = $level;
         $single_output['#title'] = $set['group'];
         $output[] = $single_output;

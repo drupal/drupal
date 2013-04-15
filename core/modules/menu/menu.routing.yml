@@ -4,3 +4,24 @@ menu_settings:
     _form: 'Drupal\menu\MenuSettingsForm'
   requirements:
     _permission: 'administer menu'
+
+menu_link_reset:
+  pattern: 'admin/structure/menu/item/{menu_link}/reset'
+  defaults:
+    _form: '\Drupal\menu\Form\MenuLinkResetForm'
+  requirements:
+    _permission: 'administer menu'
+
+menu_link_delete:
+  pattern: 'admin/structure/menu/item/{menu_link}/delete'
+  defaults:
+    _form: '\Drupal\menu\Form\MenuLinkDeleteForm'
+  requirements:
+    _access_menu_delete_link: 'TRUE'
+
+menu_delete_menu:
+  pattern: 'admin/structure/menu/manage/{menu}/delete'
+  defaults:
+    _form: '\Drupal\menu\Form\MenuDeleteMenuForm'
+  requirements:
+    _access_menu_delete_menu: 'TRUE'

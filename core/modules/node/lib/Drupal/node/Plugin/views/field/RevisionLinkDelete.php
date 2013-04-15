@@ -8,17 +8,14 @@
 namespace Drupal\node\Plugin\views\field;
 
 use Drupal\node\Plugin\views\field\RevisionLink;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to present link to delete a node revision.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "node_revision_link_delete",
- *   module = "node"
- * )
+ * @PluginID("node_revision_link_delete")
  */
 class RevisionLinkDelete extends RevisionLink {
 

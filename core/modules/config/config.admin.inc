@@ -182,8 +182,8 @@ function config_admin_diff_page($config_file) {
 
   // Return AJAX requests as a dialog.
   // @todo: Set up separate content callbacks for the non-JS and dialog versions
-  // of this page using the router system. See http://drupal.org/node/1944472. 
-  if (Drupal::service('request')->isXmlHttpRequest()) {
+  // of this page using the router system. See http://drupal.org/node/1944472.
+  if (Drupal::request()->isXmlHttpRequest()) {
     // Add class to the close link.
     $output['back']['#attributes']['class'][] = 'dialog-cancel';
 

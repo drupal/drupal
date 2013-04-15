@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\field;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Render a field as a numeric value
@@ -18,9 +18,7 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "numeric"
- * )
+ * @PluginID("numeric")
  */
 class Numeric extends FieldPluginBase {
 

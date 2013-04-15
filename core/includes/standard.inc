@@ -12,7 +12,7 @@
  * in ISO 3166-1 alpha-2. Originally from the location project
  * (http://drupal.org/project/location).
  *
- * @return
+ * @return array
  *   An array of country code => country name pairs.
  */
 function standard_country_list() {
@@ -298,7 +298,7 @@ function standard_country_list() {
  * make otherwise strange looking PHP syntax natural (to not be displayed in
  * right to left). See http://drupal.org/node/128866#comment-528929.
  *
- * @return
+ * @return array
  *   An array of language code to language name information.
  *   Language name information itself is an array of English and native names.
  */

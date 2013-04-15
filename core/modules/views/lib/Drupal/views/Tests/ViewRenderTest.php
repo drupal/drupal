@@ -41,7 +41,8 @@ class ViewRenderTest extends ViewTestBase {
 
     // Make sure that the rendering just calls the preprocess function once.
     $view = views_get_view('test_view_render');
-    $view->preview();
+    $output = $view->preview();
+    drupal_render($output);
 
     $this->assertEqual(state()->get('views_render.test'), 1);
   }

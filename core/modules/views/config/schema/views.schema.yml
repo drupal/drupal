@@ -47,6 +47,9 @@ views.view.*:
               label: 'Position'
             display_options:
               type: 'views.display.[%parent.display_plugin]'
+    langcode:
+      type: string
+      label: 'Default language'
 
 # Views display: common
 # Options for Drupal\views\Plugin\views\display\DisplayPluginBase

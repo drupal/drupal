@@ -60,7 +60,7 @@ abstract class ShortcutTestBase extends WebTestBase {
       $shortcut_set->links[$menu_link->uuid()] = $menu_link;
       $menu_item = entity_create('menu_link', array(
         'link_path' => 'admin/content',
-        'link_title' => st('Find content'),
+        'link_title' => st('All content'),
         'weight' => -19,
       ));
       $menu_item->save();

@@ -8,13 +8,13 @@
 namespace Drupal\system\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the Menu configuration entity class.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "menu",
  *   label = @Translation("Menu"),
  *   module = "system",

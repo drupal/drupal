@@ -104,7 +104,7 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
         'cache' => '1',
         'admin_label' => t('Test block html id'),
       ),
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => language_default()->langcode,
     );
     $this->assertIdentical($actual_properties, $expected_properties, 'The block properties are exported correctly.');
 

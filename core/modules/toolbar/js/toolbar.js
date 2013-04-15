@@ -54,9 +54,12 @@ Drupal.behaviors.toolbar = {
       // @todo Optimize this to delay adding each subtree to the DOM until it is
       //   needed; however, take into account screen readers for determining
       //   when the DOM elements are needed.
-      if (Drupal.toolbar.subtrees) {
-        for (var id in Drupal.toolbar.subtrees) {
-          $('#toolbar-link-' + id).after(Drupal.toolbar.subtrees[id]);
+      var subtrees = Drupal.toolbar.subtrees;
+      if (subtrees) {
+        for (var id in subtrees) {
+          if (subtrees.hasOwnProperty(id)) {
+            $('#toolbar-link-' + id).after(subtrees[id]);
+          }
         }
       }
       // Append a messages element for appending interaction updates for screen
@@ -136,8 +139,8 @@ Drupal.toolbar.toggleTray = function (event) {
     event.stopPropagation();
     $tab.toggleClass('active');
     // Toggle aria-pressed.
-    var value = $tab.attr('aria-pressed');
-    $tab.attr('aria-pressed', (value === 'false') ? 'true' : 'false');
+    var value = $tab.prop('aria-pressed');
+    $tab.prop('aria-pressed', (value === 'false') ? 'true' : 'false');
     // Append a message that a tray has been opened.
     setMessage(Drupal.t('@tray tray @state.', {
       '@tray': name,
@@ -155,7 +158,7 @@ Drupal.toolbar.toggleTray = function (event) {
       .not($tab)
       .removeClass('active')
       // Set aria-pressed to false.
-      .attr('aria-pressed', 'false');
+      .prop('aria-pressed', false);
     $toolbar.find('.tray').not($activateTray).removeClass('active');
   }
   // Update the page and toolbar dimension indicators.

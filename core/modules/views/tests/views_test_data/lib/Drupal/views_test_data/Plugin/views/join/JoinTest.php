@@ -8,16 +8,13 @@
 namespace Drupal\views_test_data\Plugin\views\join;
 
 use Drupal\views\Plugin\views\join\JoinPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines a join test plugin.
  *
- * @Plugin(
- *   id = "join_test",
- *   title = @Translation("Join test")
- * )
+ * @PluginID("join_test")
  */
 class JoinTest extends JoinPluginBase {
   /**

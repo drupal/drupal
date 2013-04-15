@@ -42,7 +42,7 @@ display:
           admin_label: ''
           label: ''
           empty: '1'
-          title: 'Welcome to Drupal'
+          title: 'Welcome to [site:name]'
           plugin_id: title
       exposed_form:
         type: basic
@@ -105,12 +105,6 @@ display:
           links: '1'
         type: node
       sorts:
-        created:
-          field: created
-          id: created
-          order: DESC
-          table: node
-          plugin_id: date
         sticky:
           admin_label: ''
           expose:
@@ -119,29 +113,35 @@ display:
           field: sticky
           group_type: group
           id: sticky
-          order: ASC
+          order: DESC
           relationship: none
           table: node
           plugin_id: boolean
+        created:
+          field: created
+          id: created
+          order: DESC
+          table: node
+          plugin_id: date
       style:
         type: default
       title: ''
     display_plugin: default
     display_title: Master
     id: default
-    position: {  }
+    position: 0
   page_1:
     display_options:
       path: node
     display_plugin: page
     display_title: Page
     id: page_1
-    position: {  }
+    position: 1
   feed_1:
     display_plugin: feed
     id: feed_1
     display_title: Feed
-    position: ''
+    position: 2
     display_options:
       sitename_title: '1'
       path: rss.xml
@@ -151,5 +151,5 @@ display:
 label: Frontpage
 module: node
 id: frontpage
-tag: ''
+tag: 'default'
 langcode: en

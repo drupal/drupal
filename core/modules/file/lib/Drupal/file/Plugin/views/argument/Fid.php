@@ -7,7 +7,7 @@
 
 namespace Drupal\file\Plugin\views\argument;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\argument\Numeric;
 
 /**
@@ -15,10 +15,7 @@ use Drupal\views\Plugin\views\argument\Numeric;
  *
  * @ingroup views_argument_handlers
  *
- * @Plugin(
- *   id = "file_fid",
- *   module = "file"
- * )
+ * @PluginID("file_fid")
  */
 class Fid extends Numeric {
 

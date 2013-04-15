@@ -105,7 +105,7 @@ function _php_filter_tips($filter, $format, $long = FALSE) {
     $output .= '<li>' . t('<code>register_globals</code> is <strong>turned off</strong>. If you need to use forms, understand and use the functions in <a href="@formapi">the Drupal Form API</a>.', array('@formapi' => url('http://api.drupal.org/api/group/form_api/8'))) . '</li>';
     $output .= '<li>' . t('Use a <code>print</code> or <code>return</code> statement in your code to output content.') . '</li>';
     $output .= '<li>' . t('Develop and test your PHP code using a separate test script and sample database before deploying on a production site.') . '</li>';
-    $output .= '<li>' . t('Consider including your custom PHP code within a site-specific module or <code>template.php</code> file rather than embedding it directly into a post or block.') . '</li>';
+    $output .= '<li>' . t('Consider including your custom PHP code within a site-specific module or theme rather than embedding it directly into a post or block.') . '</li>';
     $output .= '<li>' . t('Be aware that the ability to embed PHP code within content is provided by the PHP Filter module. If this module is disabled or deleted, then blocks and posts with embedded PHP may display, rather than execute, the PHP code.') . '</li></ul>';
     $output .= '<p>' . t('A basic example: <em>Creating a "Welcome" block that greets visitors with a simple message.</em>') . '</p>';
     $output .= '<ul><li>' . t('<p>Add a custom block to your site, named "Welcome" . With its text format set to "PHP code" (or another format supporting PHP input), add the following in the Block body:</p>

@@ -45,6 +45,16 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
 
   /**
    * Constructs an AnnotatedClassDiscovery object.
+   *
+   * @param array $plugin_namespaces
+   *   (optional) An array of namespace that may contain plugin implementations.
+   *   Defaults to an empty array.
+   * @param array $annotation_namespaces
+   *   (optional) The namespaces of classes that can be used as annotations.
+   *   Defaults to an empty array.
+   * @param string $plugin_definition_annotation_name
+   *   (optional) The name of the annotation that contains the plugin definition.
+   *   Defaults to 'Drupal\Component\Annotation\Plugin'.
    */
   function __construct($plugin_namespaces = array(), $annotation_namespaces = array(), $plugin_definition_annotation_name = 'Drupal\Component\Annotation\Plugin') {
     $this->pluginNamespaces = $plugin_namespaces;

@@ -21,7 +21,7 @@ use Drupal\Core\Annotation\Translation;
  *   help = @Translation("Display the comment with standard comment view."),
  *   base = {"comment"},
  *   entity_type = "comment",
- *   type = "normal"
+ *   display_types = {"normal"}
  * )
  */
 class CommentRow extends EntityRow {

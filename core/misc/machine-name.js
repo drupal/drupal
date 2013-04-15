@@ -109,7 +109,7 @@ Drupal.behaviors.machineName = {
           options: options
         };
         // If it is editable, append an edit link.
-        var $link = $('<span class="admin-link"><a href="#">' + Drupal.t('Edit') + '</a></span>').bind('click', eventData, clickEditHandler);
+        var $link = $('<span class="admin-link"><button type="button" class="link">' + Drupal.t('Edit') + '</button></span>').bind('click', eventData, clickEditHandler);
         $suffix.append(' ').append($link);
 
         // Preview the machine name in realtime when the human-readable name

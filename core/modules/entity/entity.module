@@ -11,9 +11,9 @@
 use Drupal\Core\Config\Entity\ConfigStorageController;
 
 /**
- * Implements hook_field_attach_rename_bundle().
+ * Implements hook_entity_bundle_rename().
  */
-function entity_field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new) {
+function entity_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
   $entity_info = entity_get_info('entity_display');
 
   // Rename entity displays.
@@ -31,9 +31,9 @@ function entity_field_attach_rename_bundle($entity_type, $bundle_old, $bundle_ne
 }
 
 /**
- * Implements hook_field_attach_delete_bundle().
+ * Implements hook_entity_bundle_delete().
  */
-function entity_field_attach_delete_bundle($entity_type, $bundle, $instances) {
+function entity_entity_bundle_delete($entity_type, $bundle) {
   $entity_info = entity_get_info('entity_display');
 
   // Remove entity displays of the deleted bundle.

@@ -25,7 +25,6 @@ abstract class EntityUnitTestBase extends DrupalUnitTestBase {
     parent::setUp();
     $this->installSchema('user', 'users');
     $this->installSchema('system', 'sequences');
-    $this->installSchema('field', array('field_config', 'field_config_instance'));
     $this->installSchema('entity_test', 'entity_test');
   }
 

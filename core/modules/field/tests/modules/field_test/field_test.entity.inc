@@ -97,7 +97,7 @@ function field_test_create_bundle($bundle, $text = NULL) {
   $info = entity_get_info();
   foreach ($info as $type => $type_info) {
     if ($type_info['module'] == 'field_test') {
-      field_attach_create_bundle($type, $bundle);
+      entity_invoke_bundle_hook('create', $type, $bundle);
     }
   }
 }
@@ -119,7 +119,7 @@ function field_test_rename_bundle($bundle_old, $bundle_new) {
   $info = entity_get_info();
   foreach ($info as $type => $type_info) {
     if ($type_info['module'] == 'field_test') {
-      field_attach_rename_bundle($type, $bundle_old, $bundle_new);
+      entity_invoke_bundle_hook('rename', $type, $bundle_old, $bundle_new);
     }
   }
 }
@@ -138,7 +138,7 @@ function field_test_delete_bundle($bundle) {
   $info = entity_get_info();
   foreach ($info as $type => $type_info) {
     if ($type_info['module'] == 'field_test') {
-      field_attach_delete_bundle($type, $bundle);
+      entity_invoke_bundle_hook('delete', $type, $bundle);
     }
   }
 }

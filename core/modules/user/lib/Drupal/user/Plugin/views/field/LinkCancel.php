@@ -8,17 +8,14 @@
 namespace Drupal\user\Plugin\views\field;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to present a link to user cancel.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "user_link_cancel",
- *   module = "user"
- * )
+ * @PluginID("user_link_cancel")
  */
 class LinkCancel extends Link {
 

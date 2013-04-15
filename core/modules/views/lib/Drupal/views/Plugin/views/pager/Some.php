@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Translation;
  *   id = "some",
  *   title = @Translation("Display a specified number of items"),
  *   help = @Translation("Display a limited number items that this view might find."),
- *   type = "basic"
+ *   display_types = {"basic"}
  * )
  */
 class Some extends PagerPluginBase {

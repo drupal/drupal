@@ -8,17 +8,14 @@
 namespace Drupal\language\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\filter\InOperator;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Provides filtering by language.
  *
  * @ingroup views_filter_handlers
  *
- * @Plugin(
- *   id = "language",
- *   module = "language"
- * )
+ * @PluginID("language")
  */
 class LanguageFilter extends InOperator {
 

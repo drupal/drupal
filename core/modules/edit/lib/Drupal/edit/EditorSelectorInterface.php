@@ -7,7 +7,7 @@
 
 namespace Drupal\edit;
 
-use Drupal\field\FieldInstance;
+use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
  * Interface for selecting an in-place editor (an Editor plugin) for a field.
@@ -19,7 +19,7 @@ interface EditorSelectorInterface {
    *
    * @param string $formatter_type
    *   The field's formatter type name.
-   * @param \Drupal\field\FieldInstance $instance
+   * @param \Drupal\field\Plugin\Core\Entity\FieldInstance $instance
    *   The field's instance info.
    * @param array $items
    *   The field's item values.

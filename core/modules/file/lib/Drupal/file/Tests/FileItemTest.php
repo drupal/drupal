@@ -54,9 +54,6 @@ class FileItemTest extends FieldUnitTestBase {
       'entity_type' => 'entity_test',
       'field_name' => 'file_test',
       'bundle' => 'entity_test',
-      'widget' => array(
-        'type' => 'options_select',
-      ),
     );
     field_create_instance($instance);
     file_put_contents('public://example.txt', $this->randomName());

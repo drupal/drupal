@@ -11,13 +11,13 @@ use Drupal\layout\Config\DisplayBase;
 use Drupal\layout\Config\BoundDisplayInterface;
 use Drupal\layout\Config\UnboundDisplayInterface;
 use Drupal\layout\Plugin\LayoutInterface;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the display entity.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "display",
  *   label = @Translation("Display"),
  *   module = "layout",

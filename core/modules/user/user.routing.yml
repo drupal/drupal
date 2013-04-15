@@ -18,3 +18,10 @@ user_autocomplete_anonymous:
     _controller: '\Drupal\user\UserAutocompleteController::autocompleteUserAnonymous'
   requirements:
     _permission: 'access user profiles'
+
+user_account_settings:
+  pattern: '/admin/config/people/accounts'
+  defaults:
+    _form: '\Drupal\user\AccountSettingsForm'
+  requirements:
+    _permission: 'administer users'

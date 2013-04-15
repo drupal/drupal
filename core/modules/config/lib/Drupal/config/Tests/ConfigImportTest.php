@@ -110,7 +110,7 @@ class ConfigImportTest extends DrupalUnitTestBase {
       'label' => 'New',
       'style' => '',
       'status' => '1',
-      'langcode' => 'und',
+      'langcode' => language_default()->langcode,
       'protected_property' => '',
     );
     $staging->write($dynamic_name, $original_dynamic_data);

@@ -8,13 +8,13 @@
 namespace Drupal\user\Plugin\Core\Entity;
 
 use Drupal\Core\Entity\Entity;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the user entity class.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "user",
  *   label = @Translation("User"),
  *   module = "user",

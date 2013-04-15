@@ -9,7 +9,7 @@ namespace Drupal\file\Plugin\views\field;
 
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 
 /**
@@ -17,10 +17,7 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "file",
- *   module = "file"
- * )
+ * @PluginID("file")
  */
 class File extends FieldPluginBase {
 

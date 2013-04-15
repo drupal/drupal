@@ -1,3 +1,9 @@
+forum_delete:
+  pattern: 'admin/structure/forum/delete/forum/{taxonomy_term}'
+  defaults:
+    _form: 'Drupal\forum\Form\DeleteForm'
+  requirements:
+    _permission: 'administer forums'
 forum_settings:
   pattern: '/admin/structure/forum/settings'
   defaults:

@@ -50,7 +50,17 @@ function _drupal_maintenance_theme() {
     //   Stark otherwise. Since there is no low-level access to configuration
     //   currently, we only consult settings.php and fall back to Bartik
     //   otherwise, as it looks generic enough and way more user-friendly.
-    $custom_theme = variable_get('maintenance_theme', config('system.theme')->get('default')) ?: 'bartik';
+    $custom_theme = variable_get('maintenance_theme');
+    if (!$custom_theme)  {
+      $config = Drupal::config('system.theme');
+      // A broken install might not return an object.
+      if (is_object($config)) {
+        $custom_theme = $config->get('default');
+      }
+    }
+    if (!$custom_theme)  {
+      $custom_theme = 'bartik';
+    }
   }
 
   // Ensure that system.module is loaded.
@@ -145,22 +155,6 @@ function theme_task_list($variables) {
  *   - content: The page content to show.
  */
 function theme_install_page($variables) {
-  drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
-  return theme('maintenance_page', $variables);
-}
-
-/**
- * Returns HTML for the update page.
- *
- * Note: this function is not themeable.
- *
- * @param $variables
- *   An associative array containing:
- *   - content: The page content to show.
- *   - show_messages: Whether to output status and error messages.
- *     FALSE can be useful to postpone the messages to a subsequent page.
- */
-function theme_update_page($variables) {
   drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
   return theme('maintenance_page', $variables);
 }

@@ -10,17 +10,14 @@ namespace Drupal\comment\Plugin\views\field;
 use Drupal\views\Plugin\views\field\Numeric;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to display the number of new comments.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "node_new_comments",
- *   module = "comment"
- * )
+ * @PluginID("node_new_comments")
  */
 class NodeNewComments extends Numeric {
 

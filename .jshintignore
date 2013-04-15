@@ -1,0 +1,17 @@
+core/misc/backbone
+core/misc/ckeditor
+core/misc/create
+core/misc/farbtastic
+core/misc/html5.js
+core/misc/jquery.ba-bbq.js
+core/misc/jquery.form.js
+core/misc/jquery.js
+core/misc/jquery.once.js
+core/misc/modernizr
+core/misc/normalize
+core/misc/ui
+core/misc/underscore
+core/misc/vie
+core/modules/tour/js/jquery.joyride-2.0.3.js
+core/vendor
+sites/*/files

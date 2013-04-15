@@ -45,9 +45,6 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->installSchema('field', 'field_config');
-    $this->installSchema('field', 'field_config_instance');
-
     // @todo Add helper methods for all of the following.
 
     $this->entity_type = 'test_entity';

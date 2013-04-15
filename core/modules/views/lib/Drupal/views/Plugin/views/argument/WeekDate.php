@@ -7,18 +7,19 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Argument handler for a week.
  *
- * @Plugin(
- *   id = "date_week",
- *   arg_format = "W",
- *   module = "views"
- * )
+ * @PluginID("date_week")
  */
 class WeekDate extends Date {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $argFormat = 'W';
 
   /**
    * Provide a link to the next level of the view

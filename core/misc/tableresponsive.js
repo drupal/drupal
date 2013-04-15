@@ -35,10 +35,8 @@ function TableResponsive (table) {
   // traversed only once to find them.
   this.$headers = this.$table.find('th');
   // Add a link before the table for users to show or hide weight columns.
-  this.$link = $('<a href="#" class="tableresponsive-toggle"></a>')
-    .attr({
-      'title': Drupal.t('Show table cells that were hidden to make the table fit within a small screen.')
-    })
+  this.$link = $('<button type="button" class="link tableresponsive-toggle"></button>')
+    .attr('title', Drupal.t('Show table cells that were hidden to make the table fit within a small screen.'))
     .on('click', $.proxy(this, 'eventhandlerToggleColumns'));
 
   this.$table.before($('<div class="tableresponsive-toggle-columns"></div>').append(this.$link));

@@ -264,37 +264,6 @@ function path_admin_form_submit($form, &$form_state) {
 }
 
 /**
- * Form constructor for the path deletion form.
- *
- * @param $path
- *   The path alias that will be deleted.
- *
- * @see path_admin_delete_confirm_submit()
- */
-function path_admin_delete_confirm($form, &$form_state, $path) {
-  if (user_access('administer url aliases')) {
-    $form_state['path'] = $path;
-    return confirm_form(
-      $form,
-      t('Are you sure you want to delete path alias %title?',
-      array('%title' => $path['alias'])),
-      'admin/config/search/path'
-    );
-  }
-  return array();
-}
-
-/**
- * Form submission handler for path_admin_delete_confirm().
- */
-function path_admin_delete_confirm_submit($form, &$form_state) {
-  if ($form_state['values']['confirm']) {
-    drupal_container()->get('path.crud')->delete(array('pid' => $form_state['path']['pid']));
-    $form_state['redirect'] = 'admin/config/search/path';
-  }
-}
-
-/**
  * Form constructor for the path admin overview filter form.
  *
  * @ingroup forms

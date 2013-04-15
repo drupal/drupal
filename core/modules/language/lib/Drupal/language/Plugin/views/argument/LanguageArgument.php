@@ -8,17 +8,14 @@
 namespace Drupal\language\Plugin\views\argument;
 
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Defines an argument handler to accept a language.
  *
  * @ingroup views_argument_handlers
  *
- * @Plugin(
- *   id = "language",
- *   module = "language"
- * )
+ * @PluginID("language")
  */
 class LanguageArgument extends ArgumentPluginBase {
 

@@ -34,7 +34,7 @@ class TagTest extends ViewUnitTestBase {
    * Tests the views_ui_autocomplete_tag function.
    */
   public function testViewsUiAutocompleteTag() {
-    module_load_include('inc', 'views_ui', 'admin');
+    \Drupal::moduleHandler()->loadInclude('views_ui', 'inc', 'admin');
 
     // Save 15 views with a tag.
     $tags = array();

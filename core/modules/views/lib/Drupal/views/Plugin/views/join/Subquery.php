@@ -6,7 +6,7 @@
  */
 
 namespace Drupal\views\Plugin\views\join;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Join handler for relationships that join with a subquery as the left field.
@@ -17,9 +17,7 @@ use Drupal\Component\Annotation\Plugin;
  *   same as Join class above, except:
  *   - left_query: The subquery to use in the left side of the join clause.
  *
- * @Plugin(
- *   id = "subquery"
- * )
+ * @PluginID("subquery")
  */
 class Subquery extends JoinPluginBase {
 
