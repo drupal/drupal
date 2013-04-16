@@ -1980,7 +1980,15 @@ function drupal_pre_render_table(array $element) {
     foreach (element_children($element[$first]) as $second) {
       // Assign the element by reference, so any potential changes to the
       // original element are taken over.
-      $row['data'][] = array('data' => &$element[$first][$second]);
+      $column = array('data' => &$element[$first][$second]);
+
+      // Apply wrapper attributes of second-level elements as table cell
+      // attributes.
+      if (isset($element[$first][$second]['#wrapper_attributes'])) {
+        $column += $element[$first][$second]['#wrapper_attributes'];
+      }
+
+      $row['data'][] = $column;
     }
     $element['#rows'][] = $row;
   }
