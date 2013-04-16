@@ -31,8 +31,6 @@
  *   - label: The human readable name of the element.
  *   - description: A short description of the element contents.
  *   - weight: The default weight of the element.
- *   - visible: The default visibility of the element. Only for 'display'
- *     context.
  *   - edit: (optional) String containing markup (normally a link) used as the
  *     element's 'edit' operation in the administration interface. Only for
  *     'form' context.
