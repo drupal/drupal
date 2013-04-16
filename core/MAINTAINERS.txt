@@ -138,10 +138,13 @@ Routing system
 - Larry Garfield 'Crell' http://drupal.org/user/26398
 
 Theme system
-- Earl Miles 'merlinofchaos' http://drupal.org/user/26979
 - Alex Bronstein 'effulgentsia' http://drupal.org/user/78040
-- Joon Park 'dvessel' http://drupal.org/user/56782
 - John Albin Wilkins 'JohnAlbin' http://drupal.org/user/32095
+- Jen Lampton 'jenlampton' http://drupal.org/user/85586
+- Scott Reeves 'Cottser' http://drupal.org/user/1167326
+- Carl Wiedemann 'c4rl' http://drupal.org/user/235047
+- Steve Oliver 'steveoliver' http://drupal.org/user/42327
+- Fabian Franz 'Fabianx' http://drupal.org/user/693738
 
 Token system
 - Dave Reid 'davereid' http://drupal.org/user/53892
