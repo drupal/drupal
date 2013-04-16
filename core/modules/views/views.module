@@ -809,7 +809,7 @@ function &views_set_current_view($view = NULL) {
  * modify the $view object.
  *
  * @return \Drupal\views\ViewExecutable
- *   THe current view object.
+ *   The current view object.
  */
 function &views_get_current_view() {
   return views_set_current_view();
