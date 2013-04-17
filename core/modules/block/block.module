@@ -553,7 +553,6 @@ function template_preprocess_block(&$variables) {
   // Add default class for block content.
   $variables['content_attributes']['class'][] = 'content';
 
-  $variables['theme_hook_suggestions'][] = 'block__' . $variables['block']->region;
   $variables['theme_hook_suggestions'][] = 'block__' . $variables['block']->module;
   // Hyphens (-) and underscores (_) play a special role in theme suggestions.
   // Theme suggestions should only contain underscores, because within
