@@ -5,6 +5,7 @@ services:
       - { name: normalizer, priority: 10 }
     calls:
       - [setLinkManager, ['@rest.link_manager']]
+      - [setEntityResolver, ['@serializer.entity_resolver']]
   serializer.normalizer.field_item.hal:
     class: Drupal\hal\Normalizer\FieldItemNormalizer
     tags:

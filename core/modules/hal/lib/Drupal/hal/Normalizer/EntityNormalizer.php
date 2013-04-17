@@ -80,7 +80,6 @@ class EntityNormalizer extends NormalizerBase {
     $typed_data_ids = $this->getTypedDataIds($data['_links']['type']);
     $entity = entity_create($typed_data_ids['entity_type'], array('langcode' => $langcode, 'type' => $typed_data_ids['bundle']));
 
-    // @todo Handle data in _links and _embedded, http://drupal.org/node/1880424
     // Get links and remove from data array.
     $links = $data['_links'];
     unset($data['_links']);
@@ -89,6 +88,15 @@ class EntityNormalizer extends NormalizerBase {
     if (isset($data['_embedded'])) {
       $embedded = $data['_embedded'];
       unset($data['_embedded']);
+    }
+
+    // Flatten the embedded values.
+    foreach ($embedded as $relation => $field) {
+      $field_ids = $this->linkManager->getRelationInternalIds($relation);
+      if (!empty($field_ids)) {
+        $field_name = $field_ids['field_name'];
+        $data[$field_name] = $field;
+      }
     }
 
     // Iterate through remaining items in data array. These should all
@@ -166,5 +174,4 @@ class EntityNormalizer extends NormalizerBase {
 
     return $typed_data_ids;
   }
-
 }
