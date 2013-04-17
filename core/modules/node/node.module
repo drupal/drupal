@@ -1185,7 +1185,8 @@ function template_preprocess_node(&$variables) {
     $variables['submitted'] = t('Submitted by !username on !datetime', array('!username' => $variables['name'], '!datetime' => $variables['date']));
     if (theme_get_setting('toggle_node_user_picture')) {
       // To change user picture settings (e.g. image style), edit the 'compact'
-      // view mode on User entity.
+      // view mode on the User entity. Note that the 'compact' view mode might
+      // not be configured, so remember to always check the theme setting first.
       $variables['user_picture'] = user_view($node->account, 'compact');
     }
     else {
