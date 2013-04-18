@@ -7,9 +7,12 @@
 
 namespace Drupal\views\Plugin\views\style;
 
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\views\Plugin\views\wizard\WizardInterface;
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Style plugin to render each item as a row in a table.
@@ -59,6 +62,29 @@ class Table extends StylePluginBase {
    */
   public $order;
 
+  /**
+   * Contains the current request object.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected $request;
+
+  /**
+   * {inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('request'));
+  }
+
+  /**
+   * Constructs a Table object.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, Request $request) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->request = $request;
+  }
+
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -80,7 +106,7 @@ class Table extends StylePluginBase {
    * @return bool
    */
   function build_sort() {
-    $order = drupal_container()->get('request')->query->get('order');
+    $order = $this->request->query->get('order');
     if (!isset($order) && ($this->options['default'] == -1 || empty($this->view->field[$this->options['default']]))) {
       return TRUE;
     }
@@ -98,7 +124,7 @@ class Table extends StylePluginBase {
    * Add our actual sort criteria
    */
   function build_sort_post() {
-    $query = drupal_container()->get('request')->query;
+    $query = $this->request->query;
     $order = $query->get('order');
     if (!isset($order)) {
       // check for a 'default' clicksort. If there isn't one, exit gracefully.

@@ -7,11 +7,11 @@
 
 namespace Drupal\views\Plugin\views;
 
+use Drupal\Core\Plugin\ContainerFactoryPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\Component\Plugin\PluginBase as ComponentPluginBase;
 use Drupal\views\ViewExecutable;
 
-abstract class PluginBase extends ComponentPluginBase {
+abstract class PluginBase extends ContainerFactoryPluginBase {
 
   /**
    * Options for this plugin will be held here.

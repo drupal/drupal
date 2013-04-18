@@ -14,6 +14,7 @@ use Drupal\Component\Plugin\Discovery\ProcessDecorator;
 use Drupal\Core\Plugin\Discovery\AlterDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
+use Drupal\Core\Plugin\Factory\ContainerFactory;
 
 /**
  * Plugin type manager for all views plugins.
@@ -35,7 +36,7 @@ class ViewsPluginManager extends PluginManagerBase {
     $this->discovery = new AlterDecorator($this->discovery, 'views_plugins_' . $type);
     $this->discovery = new CacheDecorator($this->discovery, 'views:' . $type, 'views_info');
 
-    $this->factory = new DefaultFactory($this->discovery);
+    $this->factory = new ContainerFactory($this);
 
     $this->defaults += array(
       'parent' => 'parent',
