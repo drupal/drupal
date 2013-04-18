@@ -94,12 +94,9 @@ class ImageItem extends FieldItemBase {
     }
 
     unset($values['fid'], $values['entity']);
-    // @todo These properties are sometimes set due to being present in form
-    //   values. Needs to be cleaned up somewhere.
-    unset($values['display'], $values['description'], $values['upload_button'], $values['remove_button'], $values['upload']);
-    if ($values) {
-      throw new \InvalidArgumentException('Property ' . key($values) . ' is unknown.');
-    }
+    // @todo: Throw an exception for invalid values once conversion is
+    // totally completed.
+    $this->extraValues = $values;
   }
 
 }

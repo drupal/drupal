@@ -1337,11 +1337,11 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
   $prepare = array();
   foreach ($entities as $id => $entity) {
     if (empty($entity->_field_view_prepared)) {
-      // Add this entity to the items to be prepared.
-      $prepare[$id] = $entity;
-
       // Enable BC if necessary.
       $entity = $entity->getBCEntity();
+
+      // Add this entity to the items to be prepared.
+      $prepare[$id] = $entity;
 
       // Determine the actual language code to display for each field, given the
       // language codes available in the field data.
