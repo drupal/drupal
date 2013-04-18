@@ -75,13 +75,13 @@ class AreaTest extends HandlerTestBase {
 
       // Then setup a no empty label.
       $labels[$type] = $this->randomName();
-      $this->drupalPost($edit_path, array('options[label]' => $labels[$type]), t('Apply'));
+      $this->drupalPost($edit_path, array('options[admin_label]' => $labels[$type]), t('Apply'));
       // Make sure that the new label appears on the site.
       $this->assertText($labels[$type]);
 
-      // Test that the settings (empty/label) are accessible.
+      // Test that the settings (empty/admin_label) are accessible.
       $this->drupalGet($edit_path);
-      $this->assertField('options[label]');
+      $this->assertField('options[admin_label]');
       if ($type !== 'empty') {
         $this->assertField('options[empty]');
       }
@@ -169,7 +169,6 @@ class AreaTest extends HandlerTestBase {
         'table' => 'views',
         'field' => 'title',
         'admin_label' => '',
-        'label' => '',
         'empty' => '0',
         'title' => 'Overridden title',
       ),

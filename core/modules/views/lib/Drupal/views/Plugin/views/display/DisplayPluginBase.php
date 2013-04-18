@@ -909,12 +909,7 @@ abstract class DisplayPluginBase extends PluginBase {
   public function getFieldLabels($groupable_only = FALSE) {
     $options = array();
     foreach ($this->getHandlers('relationship') as $relationship => $handler) {
-      if ($label = $handler->label()) {
-        $relationships[$relationship] = $label;
-      }
-      else {
-        $relationships[$relationship] = $handler->adminLabel();
-      }
+      $relationships[$relationship] = $handler->adminLabel();
     }
 
     foreach ($this->getHandlers('field') as $id => $handler) {

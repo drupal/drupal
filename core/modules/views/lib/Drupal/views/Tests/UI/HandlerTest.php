@@ -97,11 +97,14 @@ class HandlerTest extends UITestBase {
       }
 
       $this->assertUrl($edit_handler_url, array(), 'The user got redirected to the handler edit form.');
-      $this->drupalPost(NULL, array(), t('Apply'));
+      $random_label = $this->randomName();
+      $this->drupalPost(NULL, array('options[admin_label]' => $random_label), t('Apply'));
 
       $this->assertUrl('admin/structure/views/view/test_view_empty/edit/default', array(), 'The user got redirected to the views edit form.');
 
       $this->assertLinkByHref($edit_handler_url, 0, 'The handler edit link appears in the UI.');
+      $links = $this->xpath('//a[starts-with(normalize-space(text()), :label)]', array(':label' => $random_label));
+      $this->assertTrue(isset($links[0]), 'The handler edit link has the right label');
 
       // Save the view and have a look whether the handler was added as expected.
       $this->drupalPost(NULL, array(), t('Save'));

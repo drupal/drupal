@@ -957,10 +957,10 @@ class ViewEditFormController extends ViewFormControllerBase {
 
     static $relationships = NULL;
     if (!isset($relationships)) {
-      // Get relationship labels
+      // Get relationship labels.
       $relationships = array();
       foreach ($executable->display_handler->getHandlers('relationship') as $id => $handler) {
-        $relationships[$id] = $handler->label();
+        $relationships[$id] = $handler->adminLabel();
       }
     }
 

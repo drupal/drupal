@@ -47,22 +47,12 @@ abstract class AreaPluginBase extends HandlerBase {
     }
   }
 
-  /**
-   * Get this area's label.
-   */
-  public function label() {
-    if (!isset($this->options['label'])) {
-      return $this->adminLabel();
-    }
-    return $this->options['label'];
-  }
-
   protected function defineOptions() {
     $options = parent::defineOptions();
 
     $this->definition['field'] = !empty($this->definition['field']) ? $this->definition['field'] : '';
     $label = !empty($this->definition['label']) ? $this->definition['label'] : $this->definition['field'];
-    $options['label'] = array('default' => $label, 'translatable' => TRUE);
+    $options['admin_label']['default'] = $label;
     $options['empty'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;
@@ -72,7 +62,7 @@ abstract class AreaPluginBase extends HandlerBase {
    * Provide extra data to the administration form
    */
   public function adminSummary() {
-    return $this->label();
+    return $this->adminLabel();
   }
 
   /**
@@ -81,12 +71,6 @@ abstract class AreaPluginBase extends HandlerBase {
    */
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
-    $form['label'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Label'),
-      '#default_value' => isset($this->options['label']) ? $this->options['label'] : '',
-      '#description' => t('The label for this area that will be displayed only administratively.'),
-    );
 
     if ($form_state['type'] != 'empty') {
       $form['empty'] = array(

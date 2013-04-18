@@ -108,7 +108,7 @@ class ConfigItem extends ViewsFormBase {
           $base_fields = views_fetch_fields($base, $form_state['type'], $executable->display_handler->useGroupBy());
           if (isset($base_fields[$item['table'] . '.' . $item['field']])) {
             $relationship_handler->init($executable, $executable->display_handler, $relationship);
-            $relationship_options[$relationship['id']] = $relationship_handler->label();
+            $relationship_options[$relationship['id']] = $relationship_handler->adminLabel();
           }
         }
 
