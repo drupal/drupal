@@ -64,6 +64,18 @@ function entity_reference_entity_field_info_alter(&$info, $entity_type) {
 }
 
 /**
+ * Implements hook_field_widget_info_alter().
+ */
+function entity_reference_field_widget_info_alter(&$info) {
+  if (isset($info['options_select'])) {
+    $info['options_select']['field_types'][] = 'entity_reference';
+  }
+  if (isset($info['options_buttons'])) {
+    $info['options_buttons']['field_types'][] = 'entity_reference';
+  }
+}
+
+/**
  * Gets the selection handler for a given entity_reference field.
  *
  * @return \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface

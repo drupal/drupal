@@ -1155,8 +1155,7 @@ function taxonomy_field_formatter_view(EntityInterface $entity, $field, $instanc
  *   properties to filter out values from a list defined by field level
  *   properties.
  * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity object the field is attached to, or NULL if no entity
- *   exists (e.g. in field settings page).
+ *   The entity object the field is attached to.
  *
  * @return
  *   The array of valid terms for this field, keyed by term id.
