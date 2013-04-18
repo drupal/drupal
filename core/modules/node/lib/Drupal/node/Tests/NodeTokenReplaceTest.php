@@ -23,6 +23,7 @@ class NodeTokenReplaceTest extends NodeTestBase {
    * Creates a node, then tests the tokens generated from it.
    */
   function testNodeTokenReplacement() {
+    $token_service = \Drupal::token();
     $language_interface = language(LANGUAGE_TYPE_INTERFACE);
     $url_options = array(
       'absolute' => TRUE,
@@ -66,7 +67,7 @@ class NodeTokenReplaceTest extends NodeTestBase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('node' => $node), array('langcode' => $language_interface->langcode));
+      $output = $token_service->replace($input, array('node' => $node), array('langcode' => $language_interface->langcode));
       $this->assertEqual($output, $expected, format_string('Sanitized node token %token replaced.', array('%token' => $input)));
     }
 
@@ -78,7 +79,7 @@ class NodeTokenReplaceTest extends NodeTestBase {
     $tests['[node:author:name]'] = user_format_name($account);
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('node' => $node), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));
+      $output = $token_service->replace($input, array('node' => $node), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, format_string('Unsanitized node token %token replaced.', array('%token' => $input)));
     }
 
@@ -99,7 +100,7 @@ class NodeTokenReplaceTest extends NodeTestBase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated for node without a summary.');
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('node' => $node), array('language' => $language_interface));
+      $output = $token_service->replace($input, array('node' => $node), array('language' => $language_interface));
       $this->assertEqual($output, $expected, format_string('Sanitized node token %token replaced for node without a summary.', array('%token' => $input)));
     }
 
@@ -107,7 +108,7 @@ class NodeTokenReplaceTest extends NodeTestBase {
     $tests['[node:summary]'] = $node->body[$node->langcode][0]['value'];
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('node' => $node), array('language' => $language_interface, 'sanitize' => FALSE));
+      $output = $token_service->replace($input, array('node' => $node), array('language' => $language_interface, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, format_string('Unsanitized node token %token replaced for node without a summary.', array('%token' => $input)));
     }
   }

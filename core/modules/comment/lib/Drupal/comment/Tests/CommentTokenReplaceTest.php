@@ -23,6 +23,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
    * Creates a comment, then tests the tokens generated from it.
    */
   function testCommentTokenReplacement() {
+    $token_service = \Drupal::token();
     $language_interface = language(LANGUAGE_TYPE_INTERFACE);
     $url_options = array(
       'absolute' => TRUE,
@@ -72,7 +73,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('comment' => $comment), array('langcode' => $language_interface->langcode));
+      $output = $token_service->replace($input, array('comment' => $comment), array('langcode' => $language_interface->langcode));
       $this->assertEqual($output, $expected, format_string('Sanitized comment token %token replaced.', array('%token' => $input)));
     }
 
@@ -88,7 +89,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:author:name]'] = $this->admin_user->name;
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('comment' => $comment), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));
+      $output = $token_service->replace($input, array('comment' => $comment), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, format_string('Unsanitized comment token %token replaced.', array('%token' => $input)));
     }
 
@@ -101,7 +102,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[node:comment-count-new]'] = 2;
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('node' => $node), array('langcode' => $language_interface->langcode));
+      $output = $token_service->replace($input, array('node' => $node), array('langcode' => $language_interface->langcode));
       $this->assertEqual($output, $expected, format_string('Node comment token %token replaced.', array('%token' => $input)));
     }
   }

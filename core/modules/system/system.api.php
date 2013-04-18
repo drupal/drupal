@@ -3166,11 +3166,12 @@ function hook_url_outbound_alter(&$path, &$options, $original_path) {
 /**
  * Provide replacement values for placeholder tokens.
  *
- * This hook is invoked when someone calls token_replace(). That function first
- * scans the text for [type:token] patterns, and splits the needed tokens into
- * groups by type. Then hook_tokens() is invoked on each token-type group,
- * allowing your module to respond by providing replacement text for any of
- * the tokens in the group that your module knows how to process.
+ * This hook is invoked when someone calls
+ * \Drupal\Core\Utility\Token::replace(). That function first scans the text for
+ * [type:token] patterns, and splits the needed tokens into groups by type.
+ * Then hook_tokens() is invoked on each token-type group, allowing your module
+ * to respond by providing replacement text for any of the tokens in the group
+ * that your module knows how to process.
  *
  * A module implementing this hook should also implement hook_token_info() in
  * order to list its available tokens on editing screens.
@@ -3185,10 +3186,11 @@ function hook_url_outbound_alter(&$path, &$options, $original_path) {
  *   original text.
  * @param $data
  *   (optional) An associative array of data objects to be used when generating
- *   replacement values, as supplied in the $data parameter to token_replace().
+ *   replacement values, as supplied in the $data parameter to
+ *   \Drupal\Core\Utility\Token::replace().
  * @param $options
  *   (optional) An associative array of options for token replacement; see
- *   token_replace() for possible values.
+ *   \Drupal\Core\Utility\Token::replace() for possible values.
  *
  * @return
  *   An associative array of replacement values, keyed by the raw [type:token]
@@ -3198,6 +3200,8 @@ function hook_url_outbound_alter(&$path, &$options, $original_path) {
  * @see hook_tokens_alter()
  */
 function hook_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  $token_service = Drupal::token();
+
   $url_options = array('absolute' => TRUE);
   if (isset($options['langcode'])) {
     $url_options['language'] = language_load($options['langcode']);
@@ -3240,13 +3244,13 @@ function hook_tokens($type, $tokens, array $data = array(), array $options = arr
       }
     }
 
-    if ($author_tokens = token_find_with_prefix($tokens, 'author')) {
+    if ($author_tokens = $token_service->findWithPrefix($tokens, 'author')) {
       $author = user_load($node->uid);
-      $replacements += token_generate('user', $author_tokens, array('user' => $author), $options);
+      $replacements += $token_service->generate('user', $author_tokens, array('user' => $author), $options);
     }
 
-    if ($created_tokens = token_find_with_prefix($tokens, 'created')) {
-      $replacements += token_generate('date', $created_tokens, array('date' => $node->created), $options);
+    if ($created_tokens = $token_service->findWithPrefix($tokens, 'created')) {
+      $replacements += $token_service->generate('date', $created_tokens, array('date' => $node->created), $options);
     }
   }
 
@@ -3302,9 +3306,10 @@ function hook_tokens_alter(array &$replacements, array $context) {
  * provides a list of types and tokens to be displayed on text editing screens,
  * so that people editing text can see what their token options are.
  *
- * The actual token replacement is done by token_replace(), which invokes
- * hook_tokens(). Your module will need to implement that hook in order to
- * generate token replacements from the tokens defined here.
+ * The actual token replacement is done by
+ * \Drupal\Core\Utility\Token::replace(), which invokes hook_tokens(). Your
+ * module will need to implement that hook in order to generate token
+ * replacements from the tokens defined here.
  *
  * @return
  *   An associative array of available tokens and token types. The outer array
@@ -3313,12 +3318,13 @@ function hook_tokens_alter(array &$replacements, array $context) {
  *     an associative array with the following components:
  *     - name: The translated human-readable short name of the token type.
  *     - description: A translated longer description of the token type.
- *     - needs-data: The type of data that must be provided to token_replace()
- *       in the $data argument (i.e., the key name in $data) in order for tokens
- *       of this type to be used in the $text being processed. For instance, if
- *       the token needs a node object, 'needs-data' should be 'node', and to
- *       use this token in token_replace(), the caller needs to supply a node
- *       object as $data['node']. Some token data can also be supplied
+ *     - needs-data: The type of data that must be provided to
+ *       \Drupal\Core\Utility\Token::replace() in the $data argument (i.e., the
+ *       key name in $data) in order for tokens of this type to be used in the
+ *       $text being processed. For instance, if the token needs a node object,
+ *       'needs-data' should be 'node', and to use this token in
+ *       \Drupal\Core\Utility\Token::replace(), the caller needs to supply a
+ *       node object as $data['node']. Some token data can also be supplied
  *       indirectly; for instance, a node object in $data supplies a user object
  *       (the author of the node), allowing user tokens to be used when only
  *       a node data object is supplied.
@@ -3331,8 +3337,8 @@ function hook_tokens_alter(array &$replacements, array $context) {
  *     - type (optional): A 'needs-data' data type supplied by this token, which
  *       should match a 'needs-data' value from another token type. For example,
  *       the node author token provides a user object, which can then be used
- *       for token replacement data in token_replace() without having to supply
- *       a separate user object.
+ *       for token replacement data in \Drupal\Core\Utility\Token::replace()
+ *       without having to supply a separate user object.
  *
  * @see hook_token_info_alter()
  * @see hook_tokens()

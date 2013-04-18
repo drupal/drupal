@@ -362,7 +362,7 @@ function link_field_formatter_view(EntityInterface $entity, $field, $instance, $
     if (empty($settings['url_only']) && !empty($item['title'])) {
       // Unsanitizied token replacement here because $options['html'] is FALSE
       // by default in theme_link().
-      $link_title = token_replace($item['title'], array($entity->entityType() => $entity), array('sanitize' => FALSE, 'clear' => TRUE));
+      $link_title = Drupal::token()->replace($item['title'], array($entity->entityType() => $entity), array('sanitize' => FALSE, 'clear' => TRUE));
     }
 
     // Trim the link title to the desired length.

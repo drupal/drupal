@@ -90,6 +90,8 @@ function node_token_info() {
  * Implements hook_tokens().
  */
 function node_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  $token_service = Drupal::token();
+
   $url_options = array('absolute' => TRUE);
   if (isset($options['langcode'])) {
     $url_options['language'] = language_load($options['langcode']);
@@ -197,17 +199,17 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
       }
     }
 
-    if ($author_tokens = token_find_with_prefix($tokens, 'author')) {
+    if ($author_tokens = $token_service->findWithPrefix($tokens, 'author')) {
       $author = user_load($node->uid);
-      $replacements += token_generate('user', $author_tokens, array('user' => $author), $options);
+      $replacements += $token_service->generate('user', $author_tokens, array('user' => $author), $options);
     }
 
-    if ($created_tokens = token_find_with_prefix($tokens, 'created')) {
-      $replacements += token_generate('date', $created_tokens, array('date' => $node->created), $options);
+    if ($created_tokens = $token_service->findWithPrefix($tokens, 'created')) {
+      $replacements += $token_service->generate('date', $created_tokens, array('date' => $node->created), $options);
     }
 
-    if ($changed_tokens = token_find_with_prefix($tokens, 'changed')) {
-      $replacements += token_generate('date', $changed_tokens, array('date' => $node->changed), $options);
+    if ($changed_tokens = $token_service->findWithPrefix($tokens, 'changed')) {
+      $replacements += $token_service->generate('date', $changed_tokens, array('date' => $node->changed), $options);
     }
   }
 

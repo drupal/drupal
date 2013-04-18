@@ -564,11 +564,11 @@ function action_send_email_action_submit($form, $form_state) {
  * @param array $context
  *   Array with the following elements:
  *   - 'recipient': E-mail message recipient. This will be passed through
- *     token_replace().
+ *     \Drupal\Core\Utility\Token::replace().
  *   - 'subject': The subject of the message. This will be passed through
- *     token_replace().
+ *     \Drupal\Core\Utility\Token::replace().
  *   - 'message': The message to send. This will be passed through
- *     token_replace().
+ *     \Drupal\Core\Utility\Token::replace().
  *   - Other elements will be used as the data for token replacement.
  *
  * @ingroup actions
@@ -578,7 +578,7 @@ function action_send_email_action($entity, $context) {
     $context['node'] = $entity;
   }
 
-  $recipient = token_replace($context['recipient'], $context);
+  $recipient = Drupal::token()->replace($context['recipient'], $context);
 
   // If the recipient is a registered user with a language preference, use
   // the recipient's preferred language. Otherwise, use the system default
@@ -633,7 +633,7 @@ function action_message_action_submit($form, $form_state) {
  * @param array $context
  *   Array with the following elements:
  *   - 'message': The message to send. This will be passed through
- *     token_replace().
+ *     \Drupal\Core\Utility\Token::replace().
  *   - Other elements will be used as the data for token replacement in
  *     the message.
  *
@@ -644,7 +644,7 @@ function action_message_action(&$entity, $context = array()) {
     $context['node'] = $entity;
   }
 
-  $context['message'] = token_replace(filter_xss_admin($context['message']), $context);
+  $context['message'] = Drupal::token()->replace(filter_xss_admin($context['message']), $context);
   drupal_set_message($context['message']);
 }
 
@@ -685,11 +685,11 @@ function action_goto_action_submit($form, $form_state) {
  * @param array $context
  *   Array with the following elements:
  *   - 'url': URL to redirect to. This will be passed through
- *     token_replace().
+ *     \Drupal\Core\Utility\Token::replace().
  *   - Other elements will be used as the data for token replacement.
  *
  * @ingroup actions.
  */
 function action_goto_action($entity, $context) {
-  drupal_goto(token_replace($context['url'], $context));
+  drupal_goto(Drupal::token()->replace($context['url'], $context));
 }

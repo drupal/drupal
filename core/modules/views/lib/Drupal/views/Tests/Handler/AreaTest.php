@@ -151,7 +151,7 @@ class AreaTest extends HandlerTestBase {
     // Test we have the site:name token in the output.
     $output = $view->preview();
     $output = drupal_render($output);
-    $expected = token_replace('[site:name]');
+    $expected = \Drupal::token()->replace('[site:name]');
     $this->assertTrue(strpos($output, $expected) !== FALSE);
   }
 

@@ -32,6 +32,8 @@ function statistics_token_info() {
  * Implements hook_tokens().
  */
 function statistics_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  $token_service = Drupal::token();
+
   $url_options = array('absolute' => TRUE);
   $replacements = array();
 
@@ -53,9 +55,9 @@ function statistics_tokens($type, $tokens, array $data = array(), array $options
       }
     }
 
-    if ($created_tokens = token_find_with_prefix($tokens, 'last-view')) {
+    if ($created_tokens = $token_service->findWithPrefix($tokens, 'last-view')) {
       $statistics = statistics_get($node->nid);
-      $replacements += token_generate('date', $created_tokens, array('date' => $statistics['timestamp']), $options);
+      $replacements += $token_service->generate('date', $created_tokens, array('date' => $statistics['timestamp']), $options);
     }
   }
 

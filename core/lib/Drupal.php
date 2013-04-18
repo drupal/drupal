@@ -341,4 +341,14 @@ class Drupal {
     return static::$container->get('typed_data');
   }
 
+  /**
+   * Returns the token service.
+   *
+   * @return \Drupal\Core\Utility\Token
+   *   The token service.
+   */
+  public static function token() {
+    return static::$container->get('token');
+  }
+
 }

@@ -3591,10 +3591,12 @@ function system_cron() {
  * Implements hook_mail().
  */
 function system_mail($key, &$message, $params) {
+  $token_service = Drupal::token();
+
   $context = $params['context'];
 
-  $subject = token_replace($context['subject'], $context);
-  $body = token_replace($context['message'], $context);
+  $subject = $token_service->replace($context['subject'], $context);
+  $body = $token_service->replace($context['message'], $context);
 
   $message['subject'] .= str_replace(array("\r", "\n"), '', $subject);
   $message['body'][] = $body;

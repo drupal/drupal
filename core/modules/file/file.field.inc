@@ -352,18 +352,19 @@ function file_field_widget_upload_validators($field, $instance) {
  * @param $instance
  *   A field instance array.
  * @param $data
- *   An array of token objects to pass to token_replace().
+ *   An array of token objects to pass to
+ *   \Drupal\Core\Utility\Token::replace().
  *
  * @return
  *   A file directory URI with tokens replaced.
  *
- * @see token_replace()
+ * @see \Drupal\Core\Utility\Token::replace()
  */
 function file_field_widget_uri($field, $instance, $data = array()) {
   $destination = trim($instance['settings']['file_directory'], '/');
 
   // Replace tokens.
-  $destination = token_replace($destination, $data);
+  $destination = Drupal::token()->replace($destination, $data);
 
   return $field['settings']['uri_scheme'] . '://' . $destination;
 }

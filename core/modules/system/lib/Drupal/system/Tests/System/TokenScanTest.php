@@ -31,7 +31,7 @@ class TokenScanTest extends WebTestBase {
     $text = 'First a [valid:simple], but dummy token, and a dummy [valid:token with: spaces].';
     $text .= 'Then a [not valid:token].';
     $text .= 'Last an existing token: [node:author:name].';
-    $token_wannabes = token_scan($text);
+    $token_wannabes = \Drupal::token()->scan($text);
 
     $this->assertTrue(isset($token_wannabes['valid']['simple']), 'A simple valid token has been matched.');
     $this->assertTrue(isset($token_wannabes['valid']['token with: spaces']), 'A valid token with space characters in the token name has been matched.');
