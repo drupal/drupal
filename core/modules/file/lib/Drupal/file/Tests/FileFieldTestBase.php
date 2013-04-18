@@ -72,9 +72,10 @@ abstract class FileFieldTestBase extends WebTestBase {
       'cardinality' => !empty($field_settings['cardinality']) ? $field_settings['cardinality'] : 1,
     );
     $field['settings'] = array_merge($field['settings'], $field_settings);
-    field_create_field($field);
+    $field = field_create_field($field);
 
     $this->attachFileField($name, 'node', $type_name, $instance_settings, $widget_settings);
+    return $field;
   }
 
   /**

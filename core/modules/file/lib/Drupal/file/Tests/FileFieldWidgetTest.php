@@ -34,8 +34,6 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $type_name = 'article';
     $field_name = strtolower($this->randomName());
     $this->createFileField($field_name, $type_name);
-    $field = field_info_field($field_name);
-    $instance = field_info_instance('node', $field_name, $type_name);
 
     $test_file = $this->getTestFile('text');
 
@@ -98,12 +96,6 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $field_name2 = 'test_file_field_2';
     $this->createFileField($field_name, $type_name, array('cardinality' => 3));
     $this->createFileField($field_name2, $type_name, array('cardinality' => 3));
-
-    $field = field_info_field($field_name);
-    $instance = field_info_instance('node', $field_name, $type_name);
-
-    $field2 = field_info_field($field_name2);
-    $instance2 = field_info_instance('node', $field_name2, $type_name);
 
     $test_file = $this->getTestFile('text');
 
@@ -213,8 +205,6 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $type_name = 'article';
     $field_name = strtolower($this->randomName());
     $this->createFileField($field_name, $type_name);
-    $field = field_info_field($field_name);
-    $instance = field_info_instance('node', $field_name, $type_name);
 
     $test_file = $this->getTestFile('text');
 

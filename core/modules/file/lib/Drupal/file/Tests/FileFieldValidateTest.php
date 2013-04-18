@@ -28,8 +28,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
   function testRequired() {
     $type_name = 'article';
     $field_name = strtolower($this->randomName());
-    $this->createFileField($field_name, $type_name, array(), array('required' => '1'));
-    $field = field_info_field($field_name);
+    $field = $this->createFileField($field_name, $type_name, array(), array('required' => '1'));
     $instance = field_info_instance('node', $field_name, $type_name);
 
     $test_file = $this->getTestFile('text');
@@ -65,9 +64,6 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $node_file = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
     $this->assertFileExists($node_file, t('File exists after uploading to the required multiple value field.'));
     $this->assertFileEntryExists($node_file, t('File entry exists after uploading to the required multipel value field.'));
-
-    // Remove our file field.
-    field_delete_field($field_name);
   }
 
   /**
@@ -77,8 +73,6 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $type_name = 'article';
     $field_name = strtolower($this->randomName());
     $this->createFileField($field_name, $type_name, array(), array('required' => '1'));
-    $field = field_info_field($field_name);
-    $instance = field_info_instance('node', $field_name, $type_name);
 
     $small_file = $this->getTestFile('text', 131072); // 128KB.
     $large_file = $this->getTestFile('text', 1310720); // 1.2MB
@@ -93,7 +87,6 @@ class FileFieldValidateTest extends FileFieldTestBase {
     foreach ($sizes as $max_filesize => $file_limit) {
       // Set the max file upload size.
       $this->updateFileField($field_name, $type_name, array('max_filesize' => $max_filesize));
-      $instance = field_info_instance('node', $field_name, $type_name);
 
       // Create a new node with the small file, which should pass.
       $nid = $this->uploadNodeFile($small_file, $field_name, $type_name);
@@ -117,9 +110,6 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $node_file = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
     $this->assertFileExists($node_file, t('File exists after uploading a file (%filesize) with no max limit.', array('%filesize' => format_size($large_file->filesize))));
     $this->assertFileEntryExists($node_file, t('File entry exists after uploading a file (%filesize) with no max limit.', array('%filesize' => format_size($large_file->filesize))));
-
-    // Remove our file field.
-    field_delete_field($field_name);
   }
 
   /**
@@ -129,8 +119,6 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $type_name = 'article';
     $field_name = strtolower($this->randomName());
     $this->createFileField($field_name, $type_name);
-    $field = field_info_field($field_name);
-    $instance = field_info_instance('node', $field_name, $type_name);
 
     $test_file = $this->getTestFile('image');
     list(, $test_file_extension) = explode('.', $test_file->filename);
@@ -162,8 +150,5 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $node_file = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
     $this->assertFileExists($node_file, t('File exists after uploading a file with extension checking.'));
     $this->assertFileEntryExists($node_file, t('File entry exists after uploading a file with extension checking.'));
-
-    // Remove our file field.
-    field_delete_field($field_name);
   }
 }
