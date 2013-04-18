@@ -1,0 +1,23 @@
+id: node.article.teaser
+targetEntityType: node
+bundle: article
+viewMode: teaser
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: '0'
+    settings:
+      trim_length: '600'
+  field_tags:
+    type: taxonomy_term_reference_link
+    weight: '10'
+    label: above
+    settings: {  }
+  field_image:
+    label: hidden
+    type: image
+    settings:
+      image_style: medium
+      image_link: content
+    weight: '-1'
