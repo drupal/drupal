@@ -1395,12 +1395,10 @@ abstract class DisplayPluginBase extends PluginBase {
         break;
       case 'use_ajax':
         $form['#title'] .= t('Use AJAX when available to load this view');
-        $form['description'] = array(
-          '#markup' => '<div class="description form-item">' . t('If set, this view will use an AJAX mechanism for paging, table sorting and exposed filters. This means the entire page will not refresh. It is not recommended that you use this if this view is the main content of the page as it will prevent deep linking to specific pages, but it is very useful for side content.') . '</div>',
-        );
         $form['use_ajax'] = array(
-          '#type' => 'radios',
-          '#options' => array(1 => t('Yes'), 0 => t('No')),
+          '#description' => t('When viewing a view, things like paging, table sorting, and exposed filters will not trigger a page refresh.'),
+          '#type' => 'checkbox',
+          '#title' => t('Use AJAX'),
           '#default_value' => $this->getOption('use_ajax') ? 1 : 0,
         );
         break;
