@@ -1,0 +1,33 @@
+# Schema for the configuration files of the CKEditor module.
+
+editor.settings.ckeditor:
+  type: mapping
+  label: 'CKEditor settings'
+  mapping:
+    toolbar:
+      type: mapping
+      label: 'Toolbar configuration'
+      mapping:
+        buttons:
+          type: sequence
+          label: 'Rows'
+          sequence:
+            - type: sequence
+              label: 'Buttons'
+              sequence:
+                - type: string
+                  label: 'Button'
+    plugins:
+      type: sequence
+      label: 'Plugins'
+      sequence:
+        - type: ckeditor.plugin.[%key]
+
+# Plugin \Drupal\ckeditor\Plugin\ckeditor\plugin\StylesCombo
+ckeditor.plugin.stylescombo:
+  type: mapping
+  label: 'Styles dropdown'
+  mapping:
+    styles:
+      type: string
+      label: 'List of styles'

@@ -1,0 +1,20 @@
+# Schema for the configuration files of the Editor module.
+
+editor.editor.*:
+  type: mapping
+  label: 'Text editor'
+  mapping:
+    format:
+      type: string
+      label: 'Name'
+    editor:
+      type: string
+      label: 'Text editor'
+    settings:
+      type: editor.settings.[%parent.editor]
+    status:
+      type: boolean
+      label: 'Status'
+    langcode:
+      type: string
+      label: 'Language'
