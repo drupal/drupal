@@ -260,46 +260,6 @@ function image_style_add_form_submit($form, &$form_state) {
 }
 
 /**
- * Form builder; Form for deleting an image style.
- *
- * @param $style
- *   An image style array.
- *
- * @ingroup forms
- * @see image_style_delete_form_submit()
- */
-function image_style_delete_form($form, &$form_state, $style) {
-  $form_state['image_style'] = $style;
-
-  $replacement_styles = array_diff_key(image_style_options(), array($style->id() => ''));
-  $form['replacement'] = array(
-    '#title' => t('Replacement style'),
-    '#type' => 'select',
-    '#options' => $replacement_styles,
-    '#empty_option' => t('No replacement, just delete'),
-  );
-
-  return confirm_form(
-    $form,
-    t('Optionally select a style before deleting %style', array('%style' => $style->label())),
-    'admin/config/media/image-styles',
-    t('If this style is in use on the site, you may select another style to replace it. All images that have been generated for this style will be permanently deleted.'),
-    t('Delete'),  t('Cancel')
-  );
-}
-
-/**
- * Submit handler to delete an image style.
- */
-function image_style_delete_form_submit($form, &$form_state) {
-  $style = $form_state['image_style'];
-  $style->set('replacementID', $form_state['values']['replacement']);
-  $style->delete();
-  drupal_set_message(t('Style %name was deleted.', array('%name' => $style->label())));
-  $form_state['redirect'] = 'admin/config/media/image-styles';
-}
-
-/**
  * Form builder; Form for adding and editing image effects.
  *
  * This form is used universally for editing all image effects. Each effect adds
@@ -382,36 +342,6 @@ function image_effect_form_submit($form, &$form_state) {
   image_effect_save($style, $effect);
 
   drupal_set_message(t('The image effect was successfully applied.'));
-  $form_state['redirect'] = 'admin/config/media/image-styles/manage/' . $style->id();
-}
-
-/**
- * Form builder; Form for deleting an image effect.
- *
- * @param $style
- *   Name of the image style from which the image effect will be removed.
- * @param $effect
- *   Name of the image effect to remove.
- * @ingroup forms
- * @see image_effect_delete_form_submit()
- */
-function image_effect_delete_form($form, &$form_state, $style, $effect) {
-  $form_state['image_style'] = $style;
-  $form_state['image_effect'] = $effect;
-
-  $question = t('Are you sure you want to delete the @effect effect from the %style style?', array('%style' => $style->label(), '@effect' => $effect['label']));
-  return confirm_form($form, $question, 'admin/config/media/image-styles/manage/' . $style->id(), '', t('Delete'));
-}
-
-/**
- * Submit handler to delete an image effect.
- */
-function image_effect_delete_form_submit($form, &$form_state) {
-  $style = $form_state['image_style'];
-  $effect = $form_state['image_effect'];
-
-  image_effect_delete($style, $effect);
-  drupal_set_message(t('The image effect %name has been deleted.', array('%name' => $effect['label'])));
   $form_state['redirect'] = 'admin/config/media/image-styles/manage/' . $style->id();
 }
 

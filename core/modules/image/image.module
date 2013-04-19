@@ -156,13 +156,9 @@ function image_menu() {
   $items['admin/config/media/image-styles/manage/%image_style/delete'] = array(
     'title' => 'Delete',
     'description' => 'Delete an image style.',
-    'load arguments' => array(NULL, (string) IMAGE_STORAGE_NORMAL),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('image_style_delete_form', 5),
-    'access arguments' => array('administer image styles'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
-    'file' => 'image.admin.inc',
+    'route_name' => 'image_style_delete',
   );
   $items['admin/config/media/image-styles/manage/%image_style/effects/%image_effect'] = array(
     'title' => 'Edit image effect',
@@ -176,11 +172,7 @@ function image_menu() {
   $items['admin/config/media/image-styles/manage/%image_style/effects/%image_effect/delete'] = array(
     'title' => 'Delete image effect',
     'description' => 'Delete an existing effect from a style.',
-    'load arguments' => array(5, (string) IMAGE_STORAGE_EDITABLE),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('image_effect_delete_form', 5, 7),
-    'access arguments' => array('administer image styles'),
-    'file' => 'image.admin.inc',
+    'route_name' => 'image_effect_delete',
   );
   $items['admin/config/media/image-styles/manage/%image_style/add/%image_effect_definition'] = array(
     'title' => 'Add image effect',
