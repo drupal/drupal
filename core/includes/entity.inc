@@ -753,18 +753,25 @@ function entity_page_access(EntityInterface $entity, $operation = 'view') {
 /**
  * Generic access callback for create entity pages.
  *
- * Some entity types might have create access per bundle or something else.
- * In that case you have to create a custom access callback.
- *
  * @param string $entity_type
  *   The entity type.
+ * @param string $bundle
+ *   (optional) The bundle of the entity. Required if the entity supports
+ *   bundles, defaults to the entity type otherwise.
  *
  * @return bool
  *   TRUE if the access is granted. FALSE if access is denied.
  */
-function entity_page_create_access($entity_type) {
+function entity_page_create_access($entity_type, $bundle = NULL) {
+  $definition = Drupal::service('plugin.manager.entity')->getDefinition($entity_type);
+
+  // Pass in the entity bundle if given and required.
+  $values = array();
+  if ($bundle && isset($definition['entity_keys']['bundle'])) {
+    $values[$definition['entity_keys']['bundle']] = $bundle;
+  }
   $entity = drupal_container()->get('plugin.manager.entity')
     ->getStorageController($entity_type)
-    ->create(array());
+    ->create($values);
   return $entity->access('create');
 }
