@@ -1417,6 +1417,21 @@ function system_library_info() {
     ),
   );
 
+  // Manages tab orders in the document.
+  $libraries['drupal.tabbingmanager'] = array(
+    'title' => 'Drupal tabbing manager',
+    'version' => VERSION,
+    'js' => array(
+      'core/misc/tabbingmanager.js' => array('group', JS_LIBRARY),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      // Depends on jQuery UI Core to use the ":tabbable" pseudo selector.
+      array('system', 'jquery.ui.core'),
+      array('system', 'drupal'),
+    ),
+  );
+
   // A utility function to limit calls to a function with a given time.
   $libraries['drupal.debounce'] = array(
     'title' => 'Drupal debounce',

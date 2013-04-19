@@ -109,6 +109,7 @@ function contextual_library_info() {
       array('system', 'jquery'),
       array('system', 'jquery.once'),
       array('system', 'backbone'),
+      array('system', 'drupal.tabbingmanager'),
     ),
   );
 
