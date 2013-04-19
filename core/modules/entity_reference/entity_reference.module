@@ -170,10 +170,10 @@ function entity_reference_field_settings_form($field, $instance, $has_data) {
   // Select the target entity type.
   $entity_type_options = array();
   foreach (entity_get_info() as $entity_type => $entity_info) {
-    // @todo Remove this ugly hack, needed for now because Config entities have
-    // no EFQ support. Revisit after http://drupal.org/node/1853856 and
-    // http://drupal.org/node/1846454.
-    if (!is_subclass_of($entity_info['class'], '\Drupal\Core\Config\Entity\ConfigEntityBase')) {
+    // @todo As the database schema can currently only store numeric IDs of
+    // referenced entities and configuration entities have string IDs, prevent
+    // configuration entities from being referenced.
+    if (!in_array('\Drupal\Core\Config\Entity\ConfigEntityInterface', class_implements($entity_info['class']))) {
       $entity_type_options[$entity_type] = $entity_info['label'];
     }
   }
