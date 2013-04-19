@@ -46,6 +46,7 @@ function ckeditor_library_info() {
       array('system', 'jquery.once'),
       array('system', 'jquery.ui.sortable'),
       array('system', 'jquery.ui.draggable'),
+      array('system', 'jquery.ui.touch-punch'),
     ),
   );
   $libraries['drupal.ckeditor.stylescombo.admin'] = array(

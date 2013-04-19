@@ -2042,6 +2042,19 @@ function system_library_info() {
     ),
   );
 
+  // Touch Punch for jQuery UI touch support.
+  $libraries['jquery.ui.touch-punch'] = array(
+    'title' => 'jQuery UI Touch Punch',
+    'website' => 'http://jqueryui.com/demos/effect/',
+    'version' => '0.2.2',
+    'js' => array(
+      'core/misc/jquery.ui.touch-punch.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery.ui.core'),
+    ),
+  );
+
   // Underscore.
   $libraries['underscore'] = array(
     'title' => 'Underscore.js',
