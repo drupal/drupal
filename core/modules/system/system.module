@@ -1252,6 +1252,19 @@ function system_library_info() {
     ),
   );
 
+  // Drupal's Screen Reader change announcement utility.
+  $libraries['drupal.announce'] = array(
+    'title' => 'Drupal announce',
+    'version' => VERSION,
+    'js' => array(
+      'core/misc/announce.js' => array('group' => JS_LIBRARY),
+    ),
+    'dependencies' => array(
+      array('system', 'drupal'),
+      array('system', 'drupal.debounce'),
+    ),
+  );
+
   // Drupal's batch API.
   $libraries['drupal.batch'] = array(
     'title' => 'Drupal batch API',
