@@ -395,7 +395,7 @@ abstract class DisplayPluginBase extends PluginBase {
       'css_class' => array('css_class'),
       'use_ajax' => array('use_ajax'),
       'hide_attachment_summary' => array('hide_attachment_summary'),
-      'hide_admin_links' => array('hide_admin_links'),
+      'show_admin_links' => array('show_admin_links'),
       'group_by' => array('group_by'),
       'query' => array('query'),
       'use_more' => array('use_more', 'use_more_always', 'use_more_text'),
@@ -458,7 +458,7 @@ abstract class DisplayPluginBase extends PluginBase {
           'display_description' => FALSE,
           'use_ajax' => TRUE,
           'hide_attachment_summary' => TRUE,
-          'hide_admin_links' => FALSE,
+          'show_admin_links' => TRUE,
           'pager' => TRUE,
           'use_more' => TRUE,
           'use_more_always' => TRUE,
@@ -513,8 +513,8 @@ abstract class DisplayPluginBase extends PluginBase {
         'default' => FALSE,
         'bool' => TRUE,
       ),
-      'hide_admin_links' => array(
-        'default' => FALSE,
+      'show_admin_links' => array(
+        'default' => TRUE,
         'bool' => TRUE,
       ),
       'use_more' => array(
@@ -1133,10 +1133,10 @@ abstract class DisplayPluginBase extends PluginBase {
       );
     }
     if (!isset($this->definition['contextual links locations']) || !empty($this->definition['contextual links locations'])) {
-      $options['hide_admin_links'] = array(
+      $options['show_admin_links'] = array(
         'category' => 'other',
-        'title' => t('Hide contextual links'),
-        'value' => $this->getOption('hide_admin_links') ? t('Yes') : t('No'),
+        'title' => t('Display contextual links'),
+        'value' => $this->getOption('show_admin_links') ? t('Yes') : t('No'),
         'desc' => t('Change whether or not to display contextual links for this view.'),
       );
     }
@@ -1405,12 +1405,12 @@ abstract class DisplayPluginBase extends PluginBase {
           '#default_value' => $this->getOption('hide_attachment_summary') ? 1 : 0,
         );
         break;
-      case 'hide_admin_links':
-        $form['#title'] .= t('Hide contextual links on this view.');
-        $form['hide_admin_links'] = array(
+      case 'show_admin_links':
+        $form['#title'] .= t('Show contextual links on this view.');
+        $form['show_admin_links'] = array(
           '#type' => 'radios',
-          '#options' => array(1 => t('Yes'), 0 => t('No')),
-          '#default_value' => $this->getOption('hide_admin_links') ? 1 : 0,
+          '#options' => array(0 => t('No'), 1 => t('Yes')),
+          '#default_value' => $this->getOption('show_admin_links'),
         );
       break;
       case 'use_more':
@@ -2212,8 +2212,8 @@ abstract class DisplayPluginBase extends PluginBase {
         break;
       case 'use_ajax':
       case 'hide_attachment_summary':
-      case 'hide_admin_links':
-        $this->setOption($section, (bool)$form_state['values'][$section]);
+      case 'show_admin_links':
+        $this->setOption($section, (bool) $form_state['values'][$section]);
         break;
       case 'use_more':
         $this->setOption($section, intval($form_state['values'][$section]));
@@ -2523,9 +2523,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $extender->pre_execute();
     }
 
-    if ($this->getOption('hide_admin_links')) {
-      $this->view->hide_admin_links = TRUE;
-    }
+    $this->view->setShowAdminLinks($this->getOption('show_admin_links'));
   }
 
   /**

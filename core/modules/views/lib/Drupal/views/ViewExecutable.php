@@ -424,6 +424,13 @@ class ViewExecutable {
   );
 
   /**
+   * Should the admin links be shown on the rendered view.
+   *
+   * @var bool
+   */
+  protected $showAdminLinks;
+
+  /**
    * Constructs a new ViewExecutable object.
    *
    * @param \Drupal\views\ViewStorageInterface $storage
@@ -2094,4 +2101,25 @@ class ViewExecutable {
     $item[$option] = $value;
     $this->setItem($display_id, $type, $id, $item);
   }
+
+  /**
+   * Enables admin links on the rendered view.
+   *
+   * @param bool $show_admin_links
+   *   TRUE if the admin links should be shown.
+   */
+  public function setShowAdminLinks($show_admin_links) {
+    $this->showAdminLinks = (bool) $show_admin_links;
+  }
+
+  /**
+   * Returns whether admin links should be rendered on the view.
+   *
+   * @return bool
+   *  Returns TRUE if admin links should be rendered, else FALSE.
+   */
+  public function getShowAdminLinks() {
+    return $this->showAdminLinks;
+  }
+
 }

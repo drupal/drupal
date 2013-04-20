@@ -567,7 +567,7 @@ function views_contextual_links_view_alter(&$element, $items) {
 function views_add_contextual_links(&$render_element, $location, ViewExecutable $view, $display_id) {
   // Do not do anything if the view is configured to hide its administrative
   // links.
-  if (empty($view->hide_admin_links)) {
+  if ($view->getShowAdminLinks()) {
     // Also do not do anything if the display plugin has not defined any
     // contextual links that are intended to be displayed in the requested
     // location.
