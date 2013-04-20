@@ -29,7 +29,7 @@
 }
 
 #forum div.indent {
-  margin-left: 20px;
+  margin-left: 20px; /* LTR */
 }
 #forum .icon div {
   background-image: url(../../misc/forum-icons.png);

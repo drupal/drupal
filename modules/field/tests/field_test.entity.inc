@@ -9,6 +9,12 @@
  * Implements hook_entity_info().
  */
 function field_test_entity_info() {
+  // If requested, clear the field cache while this hook is being called. See
+  // testFieldInfoCache().
+  if (variable_get('field_test_clear_info_cache_in_hook_entity_info', FALSE)) {
+    field_info_cache_clear();
+  }
+
   $bundles = variable_get('field_test_bundles', array('test_bundle' => array('label' => 'Test Bundle')));
   $test_entity_modes = array(
     'full' => array(

@@ -24,17 +24,17 @@ class RdfMappingHookTestCase extends DrupalWebTestCase {
   function testMapping() {
     // Test that the mapping is returned correctly by the hook.
     $mapping = rdf_mapping_load('test_entity', 'test_bundle');
-    $this->assertIdentical($mapping['rdftype'], array('sioc:Post'), t('Mapping for rdftype is sioc:Post.'));
-    $this->assertIdentical($mapping['title'], array('predicates' => array('dc:title')), t('Mapping for title is dc:title.'));
+    $this->assertIdentical($mapping['rdftype'], array('sioc:Post'), 'Mapping for rdftype is sioc:Post.');
+    $this->assertIdentical($mapping['title'], array('predicates' => array('dc:title')), 'Mapping for title is dc:title.');
     $this->assertIdentical($mapping['created'], array(
       'predicates' => array('dc:created'),
       'datatype' => 'xsd:dateTime',
       'callback' => 'date_iso8601',
     ), t('Mapping for created is dc:created with datatype xsd:dateTime and callback date_iso8601.'));
-    $this->assertIdentical($mapping['uid'], array('predicates' => array('sioc:has_creator', 'dc:creator'), 'type' => 'rel'), t('Mapping for uid is sioc:has_creator and dc:creator, and type is rel.'));
+    $this->assertIdentical($mapping['uid'], array('predicates' => array('sioc:has_creator', 'dc:creator'), 'type' => 'rel'), 'Mapping for uid is sioc:has_creator and dc:creator, and type is rel.');
 
     $mapping = rdf_mapping_load('test_entity', 'test_bundle_no_mapping');
-    $this->assertEqual($mapping, array(), t('Empty array returned when an entity type, bundle pair has no mapping.'));
+    $this->assertEqual($mapping, array(), 'Empty array returned when an entity type, bundle pair has no mapping.');
   }
 }
 
@@ -179,13 +179,13 @@ class RdfRdfaMarkupTestCase extends DrupalWebTestCase {
     $file_rel = $this->xpath('//div[contains(@about, :node-uri)]//div[contains(@rel, "rdfs:seeAlso") and contains(@resource, ".txt")]', array(
       ':node-uri' => 'node/' . $nid,
     ));
-    $this->assertTrue(!empty($file_rel), t('Attribute \'rel\' set on file field. Attribute \'resource\' is also set.'));
+    $this->assertTrue(!empty($file_rel), "Attribute 'rel' set on file field. Attribute 'resource' is also set.");
     $image_rel = $this->xpath('//div[contains(@about, :node-uri)]//div[contains(@rel, "rdfs:seeAlso") and contains(@resource, :image)]//img[contains(@typeof, "foaf:Image")]', array(
       ':node-uri' => 'node/' . $nid,
       ':image' => $image_filename,
     ));
 
-    $this->assertTrue(!empty($image_rel), t('Attribute \'rel\' set on image field. Attribute \'resource\' is also set.'));
+    $this->assertTrue(!empty($image_rel), "Attribute 'rel' set on image field. Attribute 'resource' is also set.");
 
     // Edits the node to add tags.
     $tag1 = $this->randomName(8);
@@ -195,16 +195,16 @@ class RdfRdfaMarkupTestCase extends DrupalWebTestCase {
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     // Ensures the RDFa markup for the relationship between the node and its
     // tags is correct.
-    $term_rdfa_meta = $this->xpath('//div[@about=:node-url and contains(@typeof, "sioc:Item") and contains(@typeof, "foaf:Document")]//ul[@class="links"]/li[@rel="dc:subject"]/a[@typeof="skos:Concept" and text()=:term-name]', array(
+    $term_rdfa_meta = $this->xpath('//div[@about=:node-url and contains(@typeof, "sioc:Item") and contains(@typeof, "foaf:Document")]//ul[@class="links"]/li[@rel="dc:subject"]/a[@typeof="skos:Concept" and @datatype="" and text()=:term-name]', array(
       ':node-url' => url('node/' . $node->nid),
       ':term-name' => $tag1,
     ));
-    $this->assertTrue(!empty($term_rdfa_meta), t('Property dc:subject is present for the tag1 field item.'));
-    $term_rdfa_meta = $this->xpath('//div[@about=:node-url and contains(@typeof, "sioc:Item") and contains(@typeof, "foaf:Document")]//ul[@class="links"]/li[@rel="dc:subject"]/a[@typeof="skos:Concept" and text()=:term-name]', array(
+    $this->assertTrue(!empty($term_rdfa_meta), 'Property dc:subject is present for the tag1 field item.');
+    $term_rdfa_meta = $this->xpath('//div[@about=:node-url and contains(@typeof, "sioc:Item") and contains(@typeof, "foaf:Document")]//ul[@class="links"]/li[@rel="dc:subject"]/a[@typeof="skos:Concept" and @datatype="" and text()=:term-name]', array(
       ':node-url' => url('node/' . $node->nid),
       ':term-name' => $tag2,
     ));
-    $this->assertTrue(!empty($term_rdfa_meta), t('Property dc:subject is present for the tag2 field item.'));
+    $this->assertTrue(!empty($term_rdfa_meta), 'Property dc:subject is present for the tag2 field item.');
   }
 }
 
@@ -227,7 +227,7 @@ class RdfCrudTestCase extends DrupalWebTestCase {
   function testCRUD() {
     // Verify loading of a default mapping.
     $mapping = _rdf_mapping_load('test_entity', 'test_bundle');
-    $this->assertTrue(count($mapping), t('Default mapping was found.'));
+    $this->assertTrue(count($mapping), 'Default mapping was found.');
 
     // Verify saving a mapping.
     $mapping = array(
@@ -244,35 +244,35 @@ class RdfCrudTestCase extends DrupalWebTestCase {
         ),
       ),
     );
-    $this->assertTrue(rdf_mapping_save($mapping) === SAVED_NEW, t('Mapping was saved.'));
+    $this->assertTrue(rdf_mapping_save($mapping) === SAVED_NEW, 'Mapping was saved.');
 
     // Read the raw record from the {rdf_mapping} table.
     $result = db_query('SELECT * FROM {rdf_mapping} WHERE type = :type AND bundle = :bundle', array(':type' => $mapping['type'], ':bundle' => $mapping['bundle']));
     $stored_mapping = $result->fetchAssoc();
     $stored_mapping['mapping'] = unserialize($stored_mapping['mapping']);
-    $this->assertEqual($mapping, $stored_mapping, t('Mapping was stored properly in the {rdf_mapping} table.'));
+    $this->assertEqual($mapping, $stored_mapping, 'Mapping was stored properly in the {rdf_mapping} table.');
 
     // Verify loading of saved mapping.
-    $this->assertEqual($mapping['mapping'], _rdf_mapping_load($mapping['type'], $mapping['bundle']), t('Saved mapping loaded successfully.'));
+    $this->assertEqual($mapping['mapping'], _rdf_mapping_load($mapping['type'], $mapping['bundle']), 'Saved mapping loaded successfully.');
 
     // Verify updating of mapping.
     $mapping['mapping']['title'] = array(
       'predicates' => array('dc2:bar2'),
     );
-    $this->assertTrue(rdf_mapping_save($mapping) === SAVED_UPDATED, t('Mapping was updated.'));
+    $this->assertTrue(rdf_mapping_save($mapping) === SAVED_UPDATED, 'Mapping was updated.');
 
     // Read the raw record from the {rdf_mapping} table.
     $result = db_query('SELECT * FROM {rdf_mapping} WHERE type = :type AND bundle = :bundle', array(':type' => $mapping['type'], ':bundle' => $mapping['bundle']));
     $stored_mapping = $result->fetchAssoc();
     $stored_mapping['mapping'] = unserialize($stored_mapping['mapping']);
-    $this->assertEqual($mapping, $stored_mapping, t('Updated mapping was stored properly in the {rdf_mapping} table.'));
+    $this->assertEqual($mapping, $stored_mapping, 'Updated mapping was stored properly in the {rdf_mapping} table.');
 
     // Verify loading of saved mapping.
-    $this->assertEqual($mapping['mapping'], _rdf_mapping_load($mapping['type'], $mapping['bundle']), t('Saved mapping loaded successfully.'));
+    $this->assertEqual($mapping['mapping'], _rdf_mapping_load($mapping['type'], $mapping['bundle']), 'Saved mapping loaded successfully.');
 
     // Verify deleting of mapping.
-    $this->assertTrue(rdf_mapping_delete($mapping['type'], $mapping['bundle']), t('Mapping was deleted.'));
-    $this->assertFalse(_rdf_mapping_load($mapping['type'], $mapping['bundle']), t('Deleted mapping is no longer found in the database.'));
+    $this->assertTrue(rdf_mapping_delete($mapping['type'], $mapping['bundle']), 'Mapping was deleted.');
+    $this->assertFalse(_rdf_mapping_load($mapping['type'], $mapping['bundle']), 'Deleted mapping is no longer found in the database.');
   }
 }
 
@@ -303,8 +303,8 @@ class RdfMappingDefinitionTestCase extends TaxonomyWebTestCase {
     // from the node default bundle definition.
     $blog_title = $this->xpath("//meta[@property='dc:title' and @content='$node->title']");
     $blog_meta = $this->xpath("//div[(@about='$url') and (@typeof='sioct:Weblog')]//span[contains(@property, 'dc:date') and contains(@property, 'dc:created') and @datatype='xsd:dateTime' and @content='$isoDate']");
-    $this->assertTrue(!empty($blog_title), t('Property dc:title is present in meta tag.'));
-    $this->assertTrue(!empty($blog_meta), t('RDF type is present on post. Properties dc:date and dc:created are present on post date.'));
+    $this->assertTrue(!empty($blog_title), 'Property dc:title is present in meta tag.');
+    $this->assertTrue(!empty($blog_meta), 'RDF type is present on post. Properties dc:date and dc:created are present on post date.');
   }
 
   /**
@@ -321,8 +321,8 @@ class RdfMappingDefinitionTestCase extends TaxonomyWebTestCase {
     // Ensure the mapping defined in rdf_module.test is used.
     $test_bundle_title = $this->xpath("//meta[@property='dc:title' and @content='$node->title']");
     $test_bundle_meta = $this->xpath("//div[(@about='$url') and contains(@typeof, 'foo:mapping_install1') and contains(@typeof, 'bar:mapping_install2')]//span[contains(@property, 'dc:date') and contains(@property, 'dc:created') and @datatype='xsd:dateTime' and @content='$isoDate']");
-    $this->assertTrue(!empty($test_bundle_title), t('Property dc:title is present in meta tag.'));
-    $this->assertTrue(!empty($test_bundle_meta), t('RDF type is present on post. Properties dc:date and dc:created are present on post date.'));
+    $this->assertTrue(!empty($test_bundle_title), 'Property dc:title is present in meta tag.');
+    $this->assertTrue(!empty($test_bundle_meta), 'RDF type is present on post. Properties dc:date and dc:created are present on post date.');
   }
 
   /**
@@ -340,8 +340,8 @@ class RdfMappingDefinitionTestCase extends TaxonomyWebTestCase {
     // from the node default bundle definition.
     $random_bundle_title = $this->xpath("//meta[@property='dc:title' and @content='$node->title']");
     $random_bundle_meta = $this->xpath("//div[(@about='$url') and contains(@typeof, 'sioc:Item') and contains(@typeof, 'foaf:Document')]//span[contains(@property, 'dc:date') and contains(@property, 'dc:created') and @datatype='xsd:dateTime' and @content='$isoDate']");
-    $this->assertTrue(!empty($random_bundle_title), t('Property dc:title is present in meta tag.'));
-    $this->assertTrue(!empty($random_bundle_meta), t('RDF type is present on post. Properties dc:date and dc:created are present on post date.'));
+    $this->assertTrue(!empty($random_bundle_title), 'Property dc:title is present in meta tag.');
+    $this->assertTrue(!empty($random_bundle_meta), 'RDF type is present on post. Properties dc:date and dc:created are present on post date.');
   }
 
   /**
@@ -363,19 +363,19 @@ class RdfMappingDefinitionTestCase extends TaxonomyWebTestCase {
     $user2_profile_about = $this->xpath('//div[@class="profile" and @typeof="sioc:UserAccount" and @about=:account-uri]', array(
       ':account-uri' => $account_uri,
     ));
-    $this->assertTrue(!empty($user2_profile_about), t('RDFa markup found on user profile page'));
+    $this->assertTrue(!empty($user2_profile_about), 'RDFa markup found on user profile page');
 
     $user_account_holder = $this->xpath('//meta[contains(@typeof, "foaf:Person") and @about=:person-uri and @resource=:account-uri and contains(@rel, "foaf:account")]', array(
       ':person-uri' => $person_uri,
       ':account-uri' => $account_uri,
     ));
-    $this->assertTrue(!empty($user_account_holder), t('URI created for account holder and username set on sioc:UserAccount.'));
+    $this->assertTrue(!empty($user_account_holder), 'URI created for account holder and username set on sioc:UserAccount.');
 
     $user_username = $this->xpath('//meta[@about=:account-uri and contains(@property, "foaf:name") and @content=:username]', array(
       ':account-uri' => $account_uri,
       ':username' => $username,
     ));
-    $this->assertTrue(!empty($user_username), t('foaf:name set on username.'));
+    $this->assertTrue(!empty($user_username), 'foaf:name set on username.');
 
     // User 2 creates node.
     $this->drupalLogin($user2);
@@ -384,10 +384,10 @@ class RdfMappingDefinitionTestCase extends TaxonomyWebTestCase {
     $this->drupalGet('node/' . $node->nid);
     // Ensures the default bundle mapping for user is used on the Authored By
     // information on the node.
-    $author_about = $this->xpath('//a[@typeof="sioc:UserAccount" and @about=:account-uri and @property="foaf:name" and contains(@xml:lang, "")]', array(
+    $author_about = $this->xpath('//a[@typeof="sioc:UserAccount" and @about=:account-uri and @property="foaf:name" and @datatype="" and contains(@xml:lang, "")]', array(
       ':account-uri' => $account_uri,
     ));
-    $this->assertTrue(!empty($author_about), t('RDFa markup found on author information on post. xml:lang on username is set to empty string.'));
+    $this->assertTrue(!empty($author_about), 'RDFa markup found on author information on post. xml:lang on username is set to empty string.');
   }
 
   /**
@@ -405,7 +405,7 @@ class RdfMappingDefinitionTestCase extends TaxonomyWebTestCase {
       ':term-url' => $term_url,
       ':term-name' => $term_name,
     ));
-    $this->assertTrue(!empty($term_rdfa_meta), t('RDFa markup found on term page.'));
+    $this->assertTrue(!empty($term_rdfa_meta), 'RDFa markup found on term page.');
   }
 }
 
@@ -457,15 +457,15 @@ class RdfCommentAttributesTestCase extends CommentHelperCase {
     // Tests number of comments in teaser view.
     $this->drupalGet('node');
     $comment_count_teaser = $this->xpath('//div[contains(@typeof, "sioc:Item")]//li[contains(@class, "comment-comments")]/a[contains(@property, "sioc:num_replies") and contains(@content, "2") and @datatype="xsd:integer"]');
-    $this->assertTrue(!empty($comment_count_teaser), t('RDFa markup for the number of comments found on teaser view.'));
+    $this->assertTrue(!empty($comment_count_teaser), 'RDFa markup for the number of comments found on teaser view.');
     $comment_count_link = $this->xpath('//div[@about=:url]//a[contains(@property, "sioc:num_replies") and @rel=""]', array(':url' => url("node/{$this->node1->nid}")));
-    $this->assertTrue(!empty($comment_count_link), t('Empty rel attribute found in comment count link.'));
+    $this->assertTrue(!empty($comment_count_link), 'Empty rel attribute found in comment count link.');
 
     // Tests number of comments in full node view.
     $this->drupalGet('node/' . $this->node1->nid);
     $node_url = url('node/' . $this->node1->nid);
     $comment_count_teaser = $this->xpath('/html/head/meta[@about=:node-url and @property="sioc:num_replies" and @content="2" and @datatype="xsd:integer"]', array(':node-url' => $node_url));
-    $this->assertTrue(!empty($comment_count_teaser), t('RDFa markup for the number of comments found on full node view.'));
+    $this->assertTrue(!empty($comment_count_teaser), 'RDFa markup for the number of comments found on full node view.');
   }
 
   /**
@@ -502,22 +502,22 @@ class RdfCommentAttributesTestCase extends CommentHelperCase {
     // Tests comment #2 as anonymous user.
     $this->_testBasicCommentRdfaMarkup($comment2, $anonymous_user);
     // Tests the RDFa markup for the homepage (specific to anonymous comments).
-    $comment_homepage = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//span[@rel="sioc:has_creator"]/a[contains(@class, "username") and @typeof="sioc:UserAccount" and @property="foaf:name" and @href="http://example.org/" and contains(@rel, "foaf:page")]');
-    $this->assertTrue(!empty($comment_homepage), t('RDFa markup for the homepage of anonymous user found.'));
+    $comment_homepage = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//span[@rel="sioc:has_creator"]/a[contains(@class, "username") and @typeof="sioc:UserAccount" and @property="foaf:name" and @datatype="" and @href="http://example.org/" and contains(@rel, "foaf:page")]');
+    $this->assertTrue(!empty($comment_homepage), 'RDFa markup for the homepage of anonymous user found.');
     // There should be no about attribute on anonymous comments.
     $comment_homepage = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//span[@rel="sioc:has_creator"]/a[@about]');
-    $this->assertTrue(empty($comment_homepage), t('No about attribute is present on anonymous user comment.'));
+    $this->assertTrue(empty($comment_homepage), 'No about attribute is present on anonymous user comment.');
 
     // Tests comment #2 as logged in user.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('node/' . $this->node2->nid);
     $this->_testBasicCommentRdfaMarkup($comment2, $anonymous_user);
     // Tests the RDFa markup for the homepage (specific to anonymous comments).
-    $comment_homepage = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//span[@rel="sioc:has_creator"]/a[contains(@class, "username") and @typeof="sioc:UserAccount" and @property="foaf:name" and @href="http://example.org/" and contains(@rel, "foaf:page")]');
-    $this->assertTrue(!empty($comment_homepage), t("RDFa markup for the homepage of anonymous user found."));
+    $comment_homepage = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//span[@rel="sioc:has_creator"]/a[contains(@class, "username") and @typeof="sioc:UserAccount" and @property="foaf:name" and @datatype="" and @href="http://example.org/" and contains(@rel, "foaf:page")]');
+    $this->assertTrue(!empty($comment_homepage), "RDFa markup for the homepage of anonymous user found.");
     // There should be no about attribute on anonymous comments.
     $comment_homepage = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//span[@rel="sioc:has_creator"]/a[@about]');
-    $this->assertTrue(empty($comment_homepage), t("No about attribute is present on anonymous user comment."));
+    $this->assertTrue(empty($comment_homepage), "No about attribute is present on anonymous user comment.");
   }
 
   /**
@@ -530,9 +530,9 @@ class RdfCommentAttributesTestCase extends CommentHelperCase {
 
     // Tests the reply_of relationship of a first level comment.
     $result = $this->xpath("(id('comments')//div[contains(@class,'comment ')])[position()=1]//span[@rel='sioc:reply_of' and @resource=:node]", array(':node' => url("node/{$this->node1->nid}")));
-    $this->assertEqual(1, count($result), t('RDFa markup referring to the node is present.'));
+    $this->assertEqual(1, count($result), 'RDFa markup referring to the node is present.');
     $result = $this->xpath("(id('comments')//div[contains(@class,'comment ')])[position()=1]//span[@rel='sioc:reply_of' and @resource=:comment]", array(':comment' => url('comment/1#comment-1')));
-    $this->assertFalse($result, t('No RDFa markup referring to the comment itself is present.'));
+    $this->assertFalse($result, 'No RDFa markup referring to the comment itself is present.');
 
     // Posts a reply to the first comment.
     $this->drupalGet('comment/reply/' . $this->node1->nid . '/' . $comments[0]->id);
@@ -540,9 +540,9 @@ class RdfCommentAttributesTestCase extends CommentHelperCase {
 
     // Tests the reply_of relationship of a second level comment.
     $result = $this->xpath("(id('comments')//div[contains(@class,'comment ')])[position()=2]//span[@rel='sioc:reply_of' and @resource=:node]", array(':node' => url("node/{$this->node1->nid}")));
-    $this->assertEqual(1, count($result), t('RDFa markup referring to the node is present.'));
+    $this->assertEqual(1, count($result), 'RDFa markup referring to the node is present.');
     $result = $this->xpath("(id('comments')//div[contains(@class,'comment ')])[position()=2]//span[@rel='sioc:reply_of' and @resource=:comment]", array(':comment' => url('comment/1', array('fragment' => 'comment-1'))));
-    $this->assertEqual(1, count($result), t('RDFa markup referring to the parent comment is present.'));
+    $this->assertEqual(1, count($result), 'RDFa markup referring to the parent comment is present.');
     $comments = $this->xpath("(id('comments')//div[contains(@class,'comment ')])[position()=2]");
   }
 
@@ -558,17 +558,17 @@ class RdfCommentAttributesTestCase extends CommentHelperCase {
    */
   function _testBasicCommentRdfaMarkup($comment, $account = array()) {
     $comment_container = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]');
-    $this->assertTrue(!empty($comment_container), t("Comment RDF type for comment found."));
+    $this->assertTrue(!empty($comment_container), "Comment RDF type for comment found.");
     $comment_title = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//h3[@property="dc:title"]');
-    $this->assertEqual((string)$comment_title[0]->a, $comment->subject, t("RDFa markup for the comment title found."));
+    $this->assertEqual((string)$comment_title[0]->a, $comment->subject, "RDFa markup for the comment title found.");
     $comment_date = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//*[contains(@property, "dc:date") and contains(@property, "dc:created")]');
-    $this->assertTrue(!empty($comment_date), t("RDFa markup for the date of the comment found."));
+    $this->assertTrue(!empty($comment_date), "RDFa markup for the date of the comment found.");
     // The author tag can be either a or span
-    $comment_author = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//span[@rel="sioc:has_creator"]/*[contains(@class, "username") and @typeof="sioc:UserAccount" and @property="foaf:name"]');
+    $comment_author = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//span[@rel="sioc:has_creator"]/*[contains(@class, "username") and @typeof="sioc:UserAccount" and @property="foaf:name" and @datatype=""]');
     $name = empty($account["name"]) ? $this->web_user->name : $account["name"] . " (not verified)";
-    $this->assertEqual((string)$comment_author[0], $name, t("RDFa markup for the comment author found."));
+    $this->assertEqual((string)$comment_author[0], $name, "RDFa markup for the comment author found.");
     $comment_body = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//div[@class="content"]//div[contains(@class, "comment-body")]//div[@property="content:encoded"]');
-    $this->assertEqual((string)$comment_body[0]->p, $comment->comment, t("RDFa markup for the comment body found."));
+    $this->assertEqual((string)$comment_body[0]->p, $comment->comment, "RDFa markup for the comment body found.");
   }
 }
 
@@ -629,35 +629,35 @@ class RdfTrackerAttributesTestCase extends DrupalWebTestCase {
     // success of the following tests, but making it explicit will make
     // debugging easier in case of failure.
     $tracker_about = $this->xpath('//tr[@about=:url]', array(':url' => $url));
-    $this->assertTrue(!empty($tracker_about), t('About attribute found on table row for @user content.', array('@user'=> $user)));
+    $this->assertTrue(!empty($tracker_about), format_string('About attribute found on table row for @user content.', array('@user'=> $user)));
 
     // Tests whether the title has the correct property attribute.
     $tracker_title = $this->xpath('//tr[@about=:url]/td[@property="dc:title" and @datatype=""]', array(':url' => $url));
-    $this->assertTrue(!empty($tracker_title), t('Title property attribute found on @user content.', array('@user'=> $user)));
+    $this->assertTrue(!empty($tracker_title), format_string('Title property attribute found on @user content.', array('@user'=> $user)));
 
     // Tests whether the relationship between the content and user has been set.
     $tracker_user = $this->xpath('//tr[@about=:url]//td[contains(@rel, "sioc:has_creator")]//*[contains(@typeof, "sioc:UserAccount") and contains(@property, "foaf:name")]', array(':url' => $url));
-    $this->assertTrue(!empty($tracker_user), t('Typeof and name property attributes found on @user.', array('@user'=> $user)));
+    $this->assertTrue(!empty($tracker_user), format_string('Typeof and name property attributes found on @user.', array('@user'=> $user)));
     // There should be an about attribute on logged in users and no about
     // attribute for anonymous users.
     $tracker_user = $this->xpath('//tr[@about=:url]//td[@rel="sioc:has_creator"]/*[@about]', array(':url' => $url));
     if ($node->uid == 0) {
-      $this->assertTrue(empty($tracker_user), t('No about attribute is present on @user.', array('@user'=> $user)));
+      $this->assertTrue(empty($tracker_user), format_string('No about attribute is present on @user.', array('@user'=> $user)));
     }
     elseif ($node->uid > 0) {
-      $this->assertTrue(!empty($tracker_user), t('About attribute is present on @user.', array('@user'=> $user)));
+      $this->assertTrue(!empty($tracker_user), format_string('About attribute is present on @user.', array('@user'=> $user)));
     }
 
     // Tests whether the property has been set for number of comments.
     $tracker_replies = $this->xpath('//tr[@about=:url]//td[contains(@property, "sioc:num_replies") and contains(@content, "0") and @datatype="xsd:integer"]', array(':url' => $url));
-    $this->assertTrue($tracker_replies, t('Num replies property and content attributes found on @user content.', array('@user'=> $user)));
+    $this->assertTrue($tracker_replies, format_string('Num replies property and content attributes found on @user content.', array('@user'=> $user)));
 
     // Tests that the appropriate RDFa markup to annotate the latest activity
     // date has been added to the tracker output before comments have been
     // posted, meaning the latest activity reflects changes to the node itself.
     $isoDate = date('c', $node->changed);
     $tracker_activity = $this->xpath('//tr[@about=:url]//td[contains(@property, "dc:modified") and contains(@property, "sioc:last_activity_date") and contains(@datatype, "xsd:dateTime") and @content=:date]', array(':url' => $url, ':date' => $isoDate));
-    $this->assertTrue(!empty($tracker_activity), t('Latest activity date and changed properties found when there are no comments on @user content. Latest activity date content is correct.', array('@user'=> $user)));
+    $this->assertTrue(!empty($tracker_activity), format_string('Latest activity date and changed properties found when there are no comments on @user content. Latest activity date content is correct.', array('@user'=> $user)));
 
     // Tests that the appropriate RDFa markup to annotate the latest activity
     // date has been added to the tracker output after a comment is posted.
@@ -670,7 +670,7 @@ class RdfTrackerAttributesTestCase extends DrupalWebTestCase {
 
     // Tests whether the property has been set for number of comments.
     $tracker_replies = $this->xpath('//tr[@about=:url]//td[contains(@property, "sioc:num_replies") and contains(@content, "1") and @datatype="xsd:integer"]', array(':url' => $url));
-    $this->assertTrue($tracker_replies, t('Num replies property and content attributes found on @user content.', array('@user'=> $user)));
+    $this->assertTrue($tracker_replies, format_string('Num replies property and content attributes found on @user content.', array('@user'=> $user)));
 
     // Need to query database directly to obtain last_activity_date because
     // it cannot be accessed via node_load().
@@ -680,7 +680,7 @@ class RdfTrackerAttributesTestCase extends DrupalWebTestCase {
     }
     $isoDate = date('c', $expected_last_activity_date);
     $tracker_activity = $this->xpath('//tr[@about=:url]//td[@property="sioc:last_activity_date" and @datatype="xsd:dateTime" and @content=:date]', array(':url' => $url, ':date' => $isoDate));
-    $this->assertTrue(!empty($tracker_activity), t('Latest activity date found when there are comments on @user content. Latest activity date content is correct.', array('@user'=> $user)));
+    $this->assertTrue(!empty($tracker_activity), format_string('Latest activity date found when there are comments on @user content. Latest activity date content is correct.', array('@user'=> $user)));
   }
 }
 
@@ -707,9 +707,9 @@ class RdfGetRdfNamespacesTestCase extends DrupalWebTestCase {
     // Get all RDF namespaces.
     $ns = rdf_get_namespaces();
 
-    $this->assertEqual($ns['rdfs'], 'http://www.w3.org/2000/01/rdf-schema#', t('A prefix declared once is included.'));
-    $this->assertEqual($ns['foaf'], 'http://xmlns.com/foaf/0.1/', t('The same prefix declared in several implementations of hook_rdf_namespaces() is valid as long as all the namespaces are the same.'));
-    $this->assertEqual($ns['foaf1'], 'http://xmlns.com/foaf/0.1/', t('Two prefixes can be assigned the same namespace.'));
-    $this->assertTrue(!isset($ns['dc']), t('A prefix with conflicting namespaces is discarded.'));
+    $this->assertEqual($ns['rdfs'], 'http://www.w3.org/2000/01/rdf-schema#', 'A prefix declared once is included.');
+    $this->assertEqual($ns['foaf'], 'http://xmlns.com/foaf/0.1/', 'The same prefix declared in several implementations of hook_rdf_namespaces() is valid as long as all the namespaces are the same.');
+    $this->assertEqual($ns['foaf1'], 'http://xmlns.com/foaf/0.1/', 'Two prefixes can be assigned the same namespace.');
+    $this->assertTrue(!isset($ns['dc']), 'A prefix with conflicting namespaces is discarded.');
   }
 }

@@ -630,8 +630,11 @@ Drupal.overlay.eventhandlerOverrideLink = function (event) {
           $target.attr('href', $.param.querystring(href, { destination: fragmentizedDestination }));
         }
 
-        // Make the link open in the immediate parent of the frame.
-        $target.attr('target', '_parent');
+        // Make the link open in the immediate parent of the frame, unless the
+        // link already has a different target.
+        if (!$target.attr('target')) {
+          $target.attr('target', '_parent');
+        }
       }
     }
   }

@@ -447,7 +447,8 @@ abstract class DrupalTestCase {
    */
   protected function verbose($message) {
     if ($id = simpletest_verbose($message)) {
-      $url = file_create_url($this->originalFileDirectory . '/simpletest/verbose/' . get_class($this) . '-' . $id . '.html');
+      $class_safe = str_replace('\\', '_', get_class($this));
+      $url = file_create_url($this->originalFileDirectory . '/simpletest/verbose/' . $class_safe . '-' . $id . '.html');
       $this->error(l(t('Verbose message'), $url, array('attributes' => array('target' => '_blank'))), 'User notice');
     }
   }
@@ -466,7 +467,8 @@ abstract class DrupalTestCase {
    */
   public function run(array $methods = array()) {
     // Initialize verbose debugging.
-    simpletest_verbose(NULL, variable_get('file_public_path', conf_path() . '/files'), get_class($this));
+    $class = get_class($this);
+    simpletest_verbose(NULL, variable_get('file_public_path', conf_path() . '/files'), str_replace('\\', '_', $class));
 
     // HTTP auth settings (<username>:<password>) for the simpletest browser
     // when sending requests to the test site.
@@ -478,7 +480,6 @@ abstract class DrupalTestCase {
     }
 
     set_error_handler(array($this, 'errorHandler'));
-    $class = get_class($this);
     // Iterate through all the methods in this class, unless a specific list of
     // methods to run was passed.
     $class_methods = get_class_methods($class);
@@ -1217,28 +1218,28 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   $account->pass_raw = $pass_raw;
    * @endcode
    *
-   * @param $user
+   * @param $account
    *   User object representing the user to log in.
    *
    * @see drupalCreateUser()
    */
-  protected function drupalLogin(stdClass $user) {
+  protected function drupalLogin(stdClass $account) {
     if ($this->loggedInUser) {
       $this->drupalLogout();
     }
 
     $edit = array(
-      'name' => $user->name,
-      'pass' => $user->pass_raw
+      'name' => $account->name,
+      'pass' => $account->pass_raw
     );
     $this->drupalPost('user', $edit, t('Log in'));
 
     // If a "log out" link appears on the page, it is almost certainly because
     // the login was successful.
-    $pass = $this->assertLink(t('Log out'), 0, t('User %name successfully logged in.', array('%name' => $user->name)), t('User login'));
+    $pass = $this->assertLink(t('Log out'), 0, t('User %name successfully logged in.', array('%name' => $account->name)), t('User login'));
 
     if ($pass) {
-      $this->loggedInUser = $user;
+      $this->loggedInUser = $account;
     }
   }
 
@@ -2646,10 +2647,9 @@ class DrupalWebTestCase extends DrupalTestCase {
   /**
    * Follows a link by name.
    *
-   * Will click the first link found with this link text by default, or a
-   * later one if an index is given. Match is case insensitive with
-   * normalized space. The label is translated label. There is an assert
-   * for successful click.
+   * Will click the first link found with this link text by default, or a later
+   * one if an index is given. Match is case sensitive with normalized space.
+   * The label is translated label. There is an assert for successful click.
    *
    * @param $label
    *   Text between the anchor tags.

@@ -914,6 +914,7 @@ function node_update_7012() {
  * Change {node}.vid default value from 0 to NULL to avoid deadlock issues on MySQL.
  */
 function node_update_7013() {
+  db_drop_unique_key('node', 'vid');
   db_change_field('node', 'vid', 'vid', array(
     'description' => 'The current {node_revision}.vid version identifier.',
     'type' => 'int',
@@ -921,6 +922,7 @@ function node_update_7013() {
     'not null' => FALSE,
     'default' => NULL,
   ));
+  db_add_unique_key('node', 'vid', array('vid'));
 }
 
 /**

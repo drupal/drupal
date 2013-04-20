@@ -646,10 +646,12 @@ function rdf_preprocess_username(&$variables) {
   if (!empty($rdf_mapping['rdftype'])) {
     $attributes['typeof'] = $rdf_mapping['rdftype'];
   }
-  // Annotate the user name in RDFa. The property attribute is used here
-  // because the user name is a literal.
+  // Annotate the username in RDFa. A property attribute is used with an empty
+  // datatype attribute to ensure the username is parsed as a plain literal
+  // in RDFa 1.0 and 1.1.
   if (!empty($rdf_mapping['name'])) {
     $attributes['property'] = $rdf_mapping['name']['predicates'];
+    $attributes['datatype'] = '';
   }
   // Add the homepage RDFa markup if present.
   if (!empty($variables['homepage']) && !empty($rdf_mapping['homepage'])) {
@@ -757,7 +759,10 @@ function rdf_field_attach_view_alter(&$output, $context) {
             $element[$delta]['#options']['attributes']['typeof'] = $term->rdf_mapping['rdftype'];
           }
           if (!empty($term->rdf_mapping['name']['predicates'])) {
+            // A property attribute is used with an empty datatype attribute so
+            // the term name is parsed as a plain literal in RDFa 1.0 and 1.1.
             $element[$delta]['#options']['attributes']['property'] = $term->rdf_mapping['name']['predicates'];
+            $element[$delta]['#options']['attributes']['datatype'] = '';
           }
         }
       }

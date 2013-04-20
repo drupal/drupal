@@ -744,6 +744,7 @@ function system_schema() {
         'type' => 'varchar',
         'length' => 100,
         'not null' => TRUE,
+        'binary' => TRUE,
       ),
       'type' => array(
         'description' => 'The date format type, e.g. medium.',
@@ -1889,7 +1890,7 @@ function system_update_7007() {
   $result = db_query("SELECT rid, perm FROM {permission} ORDER BY rid ASC");
   $query = db_insert('role_permission')->fields(array('rid', 'permission'));
   foreach ($result as $role) {
-    foreach (explode(', ', $role->perm) as $perm) {
+    foreach (array_unique(explode(', ', $role->perm)) as $perm) {
       $query->values(array(
         'rid' => $role->rid,
         'permission' => $perm,
@@ -2758,12 +2759,14 @@ function system_update_7061(&$sandbox) {
     // Retrieve a list of node revisions that have uploaded files attached.
     // DISTINCT queries are expensive, especially when paged, so we store the
     // data in its own table for the duration of the update.
-    $table = array(
-      'description' => t('Stores temporary data for system_update_7061.'),
-      'fields' => array('vid' => array('type' => 'int')),
-      'primary key' => array('vid'),
-    );
-    db_create_table('system_update_7061', $table);
+    if (!db_table_exists('system_update_7061')) {
+      $table = array(
+        'description' => t('Stores temporary data for system_update_7061.'),
+        'fields' => array('vid' => array('type' => 'int')),
+        'primary key' => array('vid'),
+      );
+      db_create_table('system_update_7061', $table);
+    }
     $query = db_select('upload', 'u');
     $query->distinct();
     $query->addField('u','vid');
@@ -3032,6 +3035,7 @@ function system_update_7073() {
     'default' => '',
     'binary' => TRUE,
   ));
+  db_drop_unique_key('file_managed', 'uri');
   db_change_field('file_managed', 'uri', 'uri', array(
     'description' => 'The URI to access the file (either local or remote).',
     'type' => 'varchar',
@@ -3040,6 +3044,7 @@ function system_update_7073() {
     'default' => '',
     'binary' => TRUE,
   ));
+  db_add_unique_key('file_managed', 'uri', array('uri'));
 }
 
 /**
@@ -3084,6 +3089,21 @@ function system_update_7077() {
     'not null' => TRUE,
     'default' => '',
   ));
+}
+
+
+/**
+ * Add binary to {date_formats}.format.
+ */
+function system_update_7078() {
+  db_drop_unique_key('date_formats', 'formats');
+  db_change_field('date_formats', 'format', 'format', array(
+    'description' => 'The date format string.',
+    'type' => 'varchar',
+    'length' => 100,
+    'not null' => TRUE,
+    'binary' => TRUE,
+  ), array('unique keys' => array('formats' => array('format', 'type'))));
 }
 
 /**

@@ -787,7 +787,21 @@ function openid_authentication_request($claimed_id, $identity, $return_to = '', 
 
   $request = array_merge($request, module_invoke_all('openid', 'request', $request));
 
-  return $request;
+  // module_invoke_all() uses array_merge_recursive() which might return nested
+  // arrays if two or more modules alter a given parameter, resulting in an
+  // invalid request format. To ensure this doesn't happen, we flatten the returned
+  // value by taking the last entry in the array if an array is returned.
+  $flattened_request = array();
+  foreach ($request as $key => $value) {
+    if (is_array($value)) {
+      $flattened_request[$key] = end($value);
+    }
+    else {
+      $flattened_request[$key] = $value;
+    }
+  }
+
+  return $flattened_request;
 }
 
 /**

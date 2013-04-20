@@ -282,10 +282,6 @@ function file_stream_wrapper_uri_normalize($uri) {
       $uri = $scheme . '://' . $target;
     }
   }
-  else {
-    // The default scheme is file://
-    $url = 'file://' . $uri;
-  }
   return $uri;
 }
 
@@ -834,9 +830,8 @@ function file_valid_uri($uri) {
  *   A string specifying the filepath or URI of the source file.
  * @param $destination
  *   A URI containing the destination that $source should be copied to. The
- *   URI may be a bare filepath (without a scheme) and in that case the default
- *   scheme (file://) will be used. If this value is omitted, Drupal's default
- *   files scheme will be used, usually "public://".
+ *   URI may be a bare filepath (without a scheme). If this value is omitted,
+ *   Drupal's default files scheme will be used, usually "public://".
  * @param $replace
  *   Replace behavior when the destination file already exists:
  *   - FILE_EXISTS_REPLACE - Replace the existing file.
@@ -2481,20 +2476,10 @@ function file_directory_temp() {
 function file_get_content_headers($file) {
   $name = mime_header_encode($file->filename);
   $type = mime_header_encode($file->filemime);
-  // Serve images, text, and flash content for display rather than download.
-  $inline_types = variable_get('file_inline_types', array('^text/', '^image/', 'flash$'));
-  $disposition = 'attachment';
-  foreach ($inline_types as $inline_type) {
-    // Exclamation marks are used as delimiters to avoid escaping slashes.
-    if (preg_match('!' . $inline_type . '!', $file->filemime)) {
-      $disposition = 'inline';
-    }
-  }
 
   return array(
     'Content-Type' => $type,
     'Content-Length' => $file->filesize,
-    'Content-Disposition' => $disposition . '; filename="' . $name . '"',
     'Cache-Control' => 'private',
   );
 }

@@ -2298,6 +2298,12 @@ class FormatDateUnitTest extends DrupalWebTestCase {
     $edit = array('date_format' => $admin_date_format);
     $this->drupalPost('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
 
+    // Add a new date format which just differs in the case.
+    $admin_date_format_uppercase = 'j M Y';
+    $edit = array('date_format' => $admin_date_format_uppercase);
+    $this->drupalPost('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
+    $this->assertText(t('Custom date format added.'));
+
     // Add new date type.
     $edit = array(
       'date_type' => 'Example Style',
@@ -2306,8 +2312,18 @@ class FormatDateUnitTest extends DrupalWebTestCase {
     );
     $this->drupalPost('admin/config/regional/date-time/types/add', $edit, t('Add date type'));
 
+   // Add a second date format with a different case than the first.
+    $edit = array(
+      'machine_name' => 'example_style_uppercase',
+      'date_type' => 'Example Style Uppercase',
+      'date_format' => $admin_date_format_uppercase,
+    );
+    $this->drupalPost('admin/config/regional/date-time/types/add', $edit, t('Add date type'));
+    $this->assertText(t('New date type added successfully.'));
+
     $timestamp = strtotime('2007-03-10T00:00:00+00:00');
     $this->assertIdentical(format_date($timestamp, 'example_style', '', 'America/Los_Angeles'), '9 Mar 07', t('Test format_date() using an admin-defined date type.'));
+    $this->assertIdentical(format_date($timestamp, 'example_style_uppercase', '', 'America/Los_Angeles'), '9 Mar 2007', 'Test format_date() using an admin-defined date type with different case.');
     $this->assertIdentical(format_date($timestamp, 'undefined_style'), format_date($timestamp, 'medium'), t('Test format_date() defaulting to medium when $type not found.'));
   }
 
@@ -2499,10 +2515,10 @@ class DrupalGetRdfNamespacesTestCase extends DrupalWebTestCase {
     $xml = new SimpleXMLElement($this->content);
     $ns = $xml->getDocNamespaces();
 
-    $this->assertEqual($ns['rdfs'], 'http://www.w3.org/2000/01/rdf-schema#', t('A prefix declared once is displayed.'));
-    $this->assertEqual($ns['foaf'], 'http://xmlns.com/foaf/0.1/', t('The same prefix declared in several implementations of hook_rdf_namespaces() is valid as long as all the namespaces are the same.'));
-    $this->assertEqual($ns['foaf1'], 'http://xmlns.com/foaf/0.1/', t('Two prefixes can be assigned the same namespace.'));
-    $this->assertTrue(!isset($ns['dc']), t('A prefix with conflicting namespaces is discarded.'));
+    $this->assertEqual($ns['rdfs'], 'http://www.w3.org/2000/01/rdf-schema#', 'A prefix declared once is displayed.');
+    $this->assertEqual($ns['foaf'], 'http://xmlns.com/foaf/0.1/', 'The same prefix declared in several implementations of hook_rdf_namespaces() is valid as long as all the namespaces are the same.');
+    $this->assertEqual($ns['foaf1'], 'http://xmlns.com/foaf/0.1/', 'Two prefixes can be assigned the same namespace.');
+    $this->assertTrue(!isset($ns['dc']), 'A prefix with conflicting namespaces is discarded.');
   }
 }
 

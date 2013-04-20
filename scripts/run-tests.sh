@@ -362,6 +362,8 @@ function simpletest_script_run_one_test($test_id, $test_class) {
     // Bootstrap Drupal.
     drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
+    simpletest_classloader_register();
+
     $test = new $test_class($test_id);
     $test->run();
     $info = $test->getInfo();
@@ -395,7 +397,7 @@ function simpletest_script_command($test_id, $test_class) {
   if ($args['color']) {
     $command .= ' --color';
   }
-  $command .= " --php " . escapeshellarg($php) . " --test-id $test_id --execute-test $test_class";
+  $command .= " --php " . escapeshellarg($php) . " --test-id $test_id --execute-test " . escapeshellarg($test_class);
   return $command;
 }
 

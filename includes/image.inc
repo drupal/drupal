@@ -233,11 +233,11 @@ function image_dimensions_scale(array &$dimensions, $width = NULL, $height = NUL
  * @param $image
  *   An image object returned by image_load().
  * @param $width
- *   The target width, in pixels. This value is omitted then the scaling will
- *   based only on the height value.
+ *   The target width, in pixels. If this value is NULL then the scaling will
+ *   be based only on the height value.
  * @param $height
- *   The target height, in pixels. This value is omitted then the scaling will
- *   based only on the width value.
+ *   The target height, in pixels. If this value is NULL then the scaling will
+ *   be based only on the width value.
  * @param $upscale
  *   Boolean indicating that files smaller than the dimensions will be scaled
  *   up. This generally results in a low quality image.

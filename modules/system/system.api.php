@@ -84,25 +84,23 @@ function hook_hook_info_alter(&$hooks) {
  *     Defaults to TRUE.
  *   - load hook: The name of the hook which should be invoked by
  *     DrupalDefaultEntityController:attachLoad(), for example 'node_load'.
- *   - uri callback: A function taking an entity as argument and returning the
- *     URI elements of the entity, e.g. 'path' and 'options'. The actual entity
- *     URI can be constructed by passing these elements to url().
- *   - label callback: (optional) A function taking an entity and an entity type
- *     as arguments and returning the label of the entity. The entity label is
- *     the main string associated with an entity; for example, the title of a
- *     node or the subject of a comment. If there is an entity object property
- *     that defines the label, use the 'label' element of the 'entity keys'
- *     return value component to provide this information (see below). If more
- *     complex logic is needed to determine the label of an entity, you can
- *     instead specify a callback function here, which will be called to
- *     determine the entity label. See also the entity_label() function, which
- *     implements this logic.
- *   - language callback: (optional) A function taking an entity and an entity
- *     type as arguments and returning a language code. In most situations, when
- *     needing to determine this value, inspecting a property named after the
- *     'language' element of the 'entity keys' should be enough. The language
- *     callback is meant to be used primarily for temporary alterations of the
- *     property value: entity-defining modules are encouraged to always define a
+ *   - uri callback: The name of an implementation of
+ *     callback_entity_info_uri().
+ *   - label callback: (optional) The name of an implementation of
+ *     callback_entity_info_label(), which returns the label of the entity. The
+ *     entity label is the main string associated with an entity; for example,
+ *     the title of a node or the subject of a comment. If there is an entity
+ *     object property that defines the label, then using the 'label' element of
+ *     the 'entity keys' return value component suffices to provide this
+ *     information (see below). Alternatively, specifying this callback allows
+ *     more complex logic to determine the label of an entity. See also the
+ *     entity_label() function, which implements this logic.
+ *   - language callback: (optional) The name of an implementation of
+ *     callback_entity_info_language(). In most situations, when needing to
+ *     determine this value, inspecting a property named after the 'language'
+ *     element of the 'entity keys' should be enough. The language callback is
+ *     meant to be used primarily for temporary alterations of the property
+ *     value: entity-defining modules are encouraged to always define a
  *     language property, instead of using the callback as main entity language
  *     source. In fact not having a language property defined is likely to
  *     prevent an entity from being queried by language. Moreover, given that
@@ -2108,7 +2106,9 @@ function hook_permission() {
  * specify how a particular render array is to be rendered as HTML (this is
  * usually the case if the theme function is assigned to the render array's
  * #theme property), or they return the HTML that should be returned by an
- * invocation of theme().
+ * invocation of theme(). See
+ * @link http://drupal.org/node/933976 Using the theme layer Drupal 7.x @endlink
+ * for more information on how to implement theme hooks.
  *
  * The following parameters are all optional.
  *
@@ -2300,7 +2300,8 @@ function hook_theme_registry_alter(&$theme_registry) {
  * @return
  *   The machine-readable name of the theme that should be used for the current
  *   page request. The value returned from this function will only have an
- *   effect if it corresponds to a currently-active theme on the site.
+ *   effect if it corresponds to a currently-active theme on the site. Do not
+ *   return a value if you do not wish to set a custom theme.
  */
 function hook_custom_theme() {
   // Allow the user to request a particular theme via a query parameter.
@@ -2823,7 +2824,15 @@ function hook_file_insert($file) {
  * @see file_save()
  */
 function hook_file_update($file) {
+  $file_user = user_load($file->uid);
+  // Make sure that the file name starts with the owner's user name.
+  if (strpos($file->filename, $file_user->name) !== 0) {
+    $old_filename = $file->filename;
+    $file->filename = $file_user->name . '_' . $file->filename;
+    $file->save();
 
+    watchdog('file', t('%source has been renamed to %destination', array('%source' => $old_filename, '%destination' => $file->filename)));
+  }
 }
 
 /**
@@ -2837,7 +2846,14 @@ function hook_file_update($file) {
  * @see file_copy()
  */
 function hook_file_copy($file, $source) {
+  $file_user = user_load($file->uid);
+  // Make sure that the file name starts with the owner's user name.
+  if (strpos($file->filename, $file_user->name) !== 0) {
+    $file->filename = $file_user->name . '_' . $file->filename;
+    $file->save();
 
+    watchdog('file', t('Copied file %source has been renamed to %destination', array('%source' => $source->filename, '%destination' => $file->filename)));
+  }
 }
 
 /**
@@ -2851,7 +2867,14 @@ function hook_file_copy($file, $source) {
  * @see file_move()
  */
 function hook_file_move($file, $source) {
+  $file_user = user_load($file->uid);
+  // Make sure that the file name starts with the owner's user name.
+  if (strpos($file->filename, $file_user->name) !== 0) {
+    $file->filename = $file_user->name . '_' . $file->filename;
+    $file->save();
 
+    watchdog('file', t('Moved file %source has been renamed to %destination', array('%source' => $source->filename, '%destination' => $file->filename)));
+  }
 }
 
 /**
@@ -3003,8 +3026,9 @@ function hook_file_url_alter(&$uri) {
  *     status report page.
  *
  * @return
- *   A keyed array of requirements. Each requirement is itself an array with
- *   the following items:
+ *   An associative array where the keys are arbitrary but must be unique (it
+ *   is suggested to use the module short name as a prefix) and the values are
+ *   themselves associative arrays with the following elements:
  *   - title: The name of the requirement.
  *   - value: The current value (e.g., version, time, level, etc). During
  *     install phase, this should only be used for version numbers, do not set
@@ -3162,6 +3186,8 @@ function hook_schema() {
  *
  * @param $schema
  *   Nested array describing the schemas for all modules.
+ *
+ * @ingroup schemaapi
  */
 function hook_schema_alter(&$schema) {
   // Add field to existing schema.
@@ -3635,7 +3661,7 @@ function hook_registry_files_alter(&$files, $modules) {
  * inspect later. It is important to remove any temporary variables using
  * variable_del() before your last task has completed and control is handed
  * back to the installer.
- * 
+ *
  * @param array $install_state
  *   An array of information about the current installation state.
  *
@@ -4683,6 +4709,77 @@ function hook_filetransfer_info_alter(&$filetransfer_info) {
 
 /**
  * @} End of "addtogroup hooks".
+ */
+
+/**
+ * @addtogroup callbacks
+ * @{
+ */
+
+/**
+ * Return the URI for an entity.
+ *
+ * Callback for hook_entity_info().
+ *
+ * @param $entity
+ *   The entity to return the URI for.
+ *
+ * @return
+ *   An associative array with the following elements:
+ *   - 'path': The URL path for the entity.
+ *   - 'options': (optional) An array of options for the url() function.
+ *   The actual entity URI can be constructed by passing these elements to
+ *   url().
+ */
+function callback_entity_info_uri($entity) {
+  return array(
+    'path' => 'node/' . $entity->nid,
+  );
+}
+
+/**
+ * Return the label of an entity.
+ *
+ * Callback for hook_entity_info().
+ *
+ * @param $entity
+ *   The entity for which to generate the label.
+ * @param $entity_type
+ *   The entity type; e.g., 'node' or 'user'.
+ *
+ * @return
+ *   An unsanitized string with the label of the entity.
+ *
+ * @see entity_label()
+ */
+function callback_entity_info_label($entity, $entity_type) {
+  return empty($entity->title) ? 'Untitled entity' : $entity->title;
+}
+
+/**
+ * Return the language code of the entity.
+ *
+ * Callback for hook_entity_info().
+ *
+ * The language callback is meant to be used primarily for temporary alterations
+ * of the property value.
+ *
+ * @param $entity
+ *   The entity for which to return the language.
+ * @param $entity_type
+ *   The entity type; e.g., 'node' or 'user'.
+ *
+ * @return
+ *   The language code for the language of the entity.
+ *
+ * @see entity_language()
+ */
+function callback_entity_info_language($entity, $entity_type) {
+  return $entity->language;
+}
+
+/**
+ * @} End of "addtogroup callbacks".
  */
 
 /**

@@ -214,9 +214,11 @@ function hook_user_categories() {
  * to have their data serialized on save.
  *
  * @param $edit
- *   The array of form values submitted by the user.
+ *   The array of form values submitted by the user. Assign values to this
+ *   array to save changes in the database.
  * @param $account
- *   The user object on which the operation is performed.
+ *   The user object on which the operation is performed. Values assigned in
+ *   this object will not be saved in the database.
  * @param $category
  *   The active category of user information being edited.
  *

@@ -740,7 +740,7 @@ function _block_load_blocks() {
 /**
  * Implements hook_block_list_alter().
  *
- * Checks the page, user role, and user-specific visibilty settings.
+ * Checks the page, user role, and user-specific visibility settings.
  * Removes the block if the visibility conditions are not met.
  */
 function block_block_list_alter(&$blocks) {

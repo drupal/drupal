@@ -508,7 +508,7 @@ class ThemeRegistry Extends DrupalCacheArray {
  *   themes/bartik.
  *
  * @see theme()
- * @see _theme_process_registry()
+ * @see _theme_build_registry()
  * @see hook_theme()
  * @see list_themes()
  */
@@ -769,7 +769,7 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
  *     their base theme), direct sub-themes of sub-themes, etc. The keys are
  *     the themes' machine names, and the values are the themes' human-readable
  *     names. This element is not set if there are no themes on the system that
- *     declare this theme as their base theme. 
+ *     declare this theme as their base theme.
 */
 function list_themes($refresh = FALSE) {
   $list = &drupal_static(__FUNCTION__, array());
@@ -1033,7 +1033,7 @@ function theme($hook, $variables = array()) {
       // Only log a message when not trying theme suggestions ($hook being an
       // array).
       if (!isset($candidate)) {
-        watchdog('theme', 'Theme key "@key" not found.', array('@key' => $hook), WATCHDOG_WARNING);
+        watchdog('theme', 'Theme hook %hook not found.', array('%hook' => $hook), WATCHDOG_WARNING);
       }
       return '';
     }

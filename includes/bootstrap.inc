@@ -8,7 +8,7 @@
 /**
  * The current system version.
  */
-define('VERSION', '7.20-dev');
+define('VERSION', '7.23-dev');
 
 /**
  * Core API compatibility.
@@ -810,7 +810,7 @@ function drupal_settings_initialize() {
  *   than by consulting the database.
  *
  * @return
- *   The filename of the requested item.
+ *   The filename of the requested item or NULL if the item is not found.
  */
 function drupal_get_filename($type, $name, $filename = NULL) {
   // The location of files will not change during the request, so do not use
@@ -1212,7 +1212,7 @@ function drupal_send_headers($default_headers = array(), $only_default = FALSE) 
       header($_SERVER['SERVER_PROTOCOL'] . ' ' . $value);
     }
     // Skip headers that have been unset.
-    elseif ($value) {
+    elseif ($value !== FALSE) {
       header($header_names[$name_lower] . ': ' . $value);
     }
   }

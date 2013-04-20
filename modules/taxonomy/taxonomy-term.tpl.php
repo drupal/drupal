@@ -5,7 +5,8 @@
  * Default theme implementation to display a term.
  *
  * Available variables:
- * - $name: the (sanitized) name of the term.
+ * - $name: (deprecated) The unsanitized name of the term. Use $term_name
+ *   instead.
  * - $content: An array of items for the content of the term (fields and
  *   description). Use render($content) to print them all, or print a subset
  *   such as render($content['field_example']). Use

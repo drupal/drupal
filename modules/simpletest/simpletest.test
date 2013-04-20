@@ -45,9 +45,9 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
     global $conf;
     if (!$this->inCURL()) {
       $this->drupalGet('node');
-      $this->assertTrue($this->drupalGetHeader('Date'), t('An HTTP header was received.'));
-      $this->assertTitle(t('Welcome to @site-name | @site-name', array('@site-name' => variable_get('site_name', 'Drupal'))), t('Site title matches.'));
-      $this->assertNoTitle('Foo', t('Site title does not match.'));
+      $this->assertTrue($this->drupalGetHeader('Date'), 'An HTTP header was received.');
+      $this->assertTitle(t('Welcome to @site-name | @site-name', array('@site-name' => variable_get('site_name', 'Drupal'))), 'Site title matches.');
+      $this->assertNoTitle('Foo', 'Site title does not match.');
       // Make sure that we are locked out of the installer when prefixing
       // using the user-agent header. This is an important security check.
       global $base_url;
@@ -58,12 +58,12 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
       $user = $this->drupalCreateUser();
       $this->drupalLogin($user);
       $headers = $this->drupalGetHeaders(TRUE);
-      $this->assertEqual(count($headers), 2, t('There was one intermediate request.'));
-      $this->assertTrue(strpos($headers[0][':status'], '302') !== FALSE, t('Intermediate response code was 302.'));
-      $this->assertFalse(empty($headers[0]['location']), t('Intermediate request contained a Location header.'));
-      $this->assertEqual($this->getUrl(), $headers[0]['location'], t('HTTP redirect was followed'));
-      $this->assertFalse($this->drupalGetHeader('Location'), t('Headers from intermediate request were reset.'));
-      $this->assertResponse(200, t('Response code from intermediate request was reset.'));
+      $this->assertEqual(count($headers), 2, 'There was one intermediate request.');
+      $this->assertTrue(strpos($headers[0][':status'], '302') !== FALSE, 'Intermediate response code was 302.');
+      $this->assertFalse(empty($headers[0]['location']), 'Intermediate request contained a Location header.');
+      $this->assertEqual($this->getUrl(), $headers[0]['location'], 'HTTP redirect was followed');
+      $this->assertFalse($this->drupalGetHeader('Location'), 'Headers from intermediate request were reset.');
+      $this->assertResponse(200, 'Response code from intermediate request was reset.');
 
       // Test the maximum redirection option.
       $this->drupalLogout();
@@ -74,7 +74,7 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
       variable_set('simpletest_maximum_redirects', 1);
       $this->drupalPost('user?destination=user/logout', $edit, t('Log in'));
       $headers = $this->drupalGetHeaders(TRUE);
-      $this->assertEqual(count($headers), 2, t('Simpletest stopped following redirects after the first one.'));
+      $this->assertEqual(count($headers), 2, 'Simpletest stopped following redirects after the first one.');
     }
   }
 
@@ -88,30 +88,30 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
       $HTTP_path = $simpletest_path .'/tests/http.php?q=node';
       $https_path = $simpletest_path .'/tests/https.php?q=node';
       // Generate a valid simpletest User-Agent to pass validation.
-      $this->assertTrue(preg_match('/simpletest\d+/', $this->databasePrefix, $matches), t('Database prefix contains simpletest prefix.'));
+      $this->assertTrue(preg_match('/simpletest\d+/', $this->databasePrefix, $matches), 'Database prefix contains simpletest prefix.');
       $test_ua = drupal_generate_test_ua($matches[0]);
       $this->additionalCurlOptions = array(CURLOPT_USERAGENT => $test_ua);
 
       // Test pages only available for testing.
       $this->drupalGet($HTTP_path);
-      $this->assertResponse(200, t('Requesting http.php with a legitimate simpletest User-Agent returns OK.'));
+      $this->assertResponse(200, 'Requesting http.php with a legitimate simpletest User-Agent returns OK.');
       $this->drupalGet($https_path);
-      $this->assertResponse(200, t('Requesting https.php with a legitimate simpletest User-Agent returns OK.'));
+      $this->assertResponse(200, 'Requesting https.php with a legitimate simpletest User-Agent returns OK.');
 
       // Now slightly modify the HMAC on the header, which should not validate.
       $this->additionalCurlOptions = array(CURLOPT_USERAGENT => $test_ua . 'X');
       $this->drupalGet($HTTP_path);
-      $this->assertResponse(403, t('Requesting http.php with a bad simpletest User-Agent fails.'));
+      $this->assertResponse(403, 'Requesting http.php with a bad simpletest User-Agent fails.');
       $this->drupalGet($https_path);
-      $this->assertResponse(403, t('Requesting https.php with a bad simpletest User-Agent fails.'));
+      $this->assertResponse(403, 'Requesting https.php with a bad simpletest User-Agent fails.');
 
       // Use a real User-Agent and verify that the special files http.php and
       // https.php can't be accessed.
       $this->additionalCurlOptions = array(CURLOPT_USERAGENT => 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12');
       $this->drupalGet($HTTP_path);
-      $this->assertResponse(403, t('Requesting http.php with a normal User-Agent fails.'));
+      $this->assertResponse(403, 'Requesting http.php with a normal User-Agent fails.');
       $this->drupalGet($https_path);
-      $this->assertResponse(403, t('Requesting https.php with a normal User-Agent fails.'));
+      $this->assertResponse(403, 'Requesting https.php with a normal User-Agent fails.');
     }
   }
 
@@ -147,7 +147,7 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
 
       // Regression test for #290316.
       // Check that test_id is incrementing.
-      $this->assertTrue($this->test_ids[0] != $this->test_ids[1], t('Test ID is incrementing.'));
+      $this->assertTrue($this->test_ids[0] != $this->test_ids[1], 'Test ID is incrementing.');
     }
   }
 
@@ -210,7 +210,7 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
     $this->assertEqual('6 passes, 5 fails, 2 exceptions, and 1 debug message', $this->childTestResults['summary'], 'Stub test summary is correct');
 
     $this->test_ids[] = $test_id = $this->getTestIdFromResults();
-    $this->assertTrue($test_id, t('Found test ID in results.'));
+    $this->assertTrue($test_id, 'Found test ID in results.');
   }
 
   /**
@@ -249,7 +249,7 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
         break;
       }
     }
-    return $this->assertTrue($found, t('Found assertion {"@message", "@type", "@status", "@file", "@function"}.', array('@message' => $message, '@type' => $type, '@status' => $status, "@file" => $file, "@function" => $function)));
+    return $this->assertTrue($found, format_string('Found assertion {"@message", "@type", "@status", "@file", "@function"}.', array('@message' => $message, '@type' => $type, '@status' => $status, "@file" => $file, "@function" => $function)));
   }
 
   /**
@@ -345,18 +345,18 @@ class SimpleTestBrowserTestCase extends DrupalWebTestCase {
 
     $this->drupalGet($url);
     $absolute = url($url, array('absolute' => TRUE));
-    $this->assertEqual($absolute, $this->url, t('Passed and requested URL are equal.'));
-    $this->assertEqual($this->url, $this->getAbsoluteUrl($this->url), t('Requested and returned absolute URL are equal.'));
+    $this->assertEqual($absolute, $this->url, 'Passed and requested URL are equal.');
+    $this->assertEqual($this->url, $this->getAbsoluteUrl($this->url), 'Requested and returned absolute URL are equal.');
 
     $this->drupalPost(NULL, array(), t('Log in'));
-    $this->assertEqual($absolute, $this->url, t('Passed and requested URL are equal.'));
-    $this->assertEqual($this->url, $this->getAbsoluteUrl($this->url), t('Requested and returned absolute URL are equal.'));
+    $this->assertEqual($absolute, $this->url, 'Passed and requested URL are equal.');
+    $this->assertEqual($this->url, $this->getAbsoluteUrl($this->url), 'Requested and returned absolute URL are equal.');
 
     $this->clickLink('Create new account');
     $url = 'user/register';
     $absolute = url($url, array('absolute' => TRUE));
-    $this->assertEqual($absolute, $this->url, t('Passed and requested URL are equal.'));
-    $this->assertEqual($this->url, $this->getAbsoluteUrl($this->url), t('Requested and returned absolute URL are equal.'));
+    $this->assertEqual($absolute, $this->url, 'Passed and requested URL are equal.');
+    $this->assertEqual($this->url, $this->getAbsoluteUrl($this->url), 'Requested and returned absolute URL are equal.');
   }
 
   /**
@@ -411,19 +411,19 @@ class SimpleTestMailCaptureTestCase extends DrupalWebTestCase {
 
     // Before we send the e-mail, drupalGetMails should return an empty array.
     $captured_emails = $this->drupalGetMails();
-    $this->assertEqual(count($captured_emails), 0, t('The captured e-mails queue is empty.'), t('E-mail'));
+    $this->assertEqual(count($captured_emails), 0, 'The captured e-mails queue is empty.', 'E-mail');
 
     // Send the e-mail.
     $response = drupal_mail_system('simpletest', 'drupal_mail_test')->mail($message);
 
     // Ensure that there is one e-mail in the captured e-mails array.
     $captured_emails = $this->drupalGetMails();
-    $this->assertEqual(count($captured_emails), 1, t('One e-mail was captured.'), t('E-mail'));
+    $this->assertEqual(count($captured_emails), 1, 'One e-mail was captured.', 'E-mail');
 
     // Assert that the e-mail was sent by iterating over the message properties
     // and ensuring that they are captured intact.
     foreach ($message as $field => $value) {
-      $this->assertMail($field, $value, t('The e-mail was sent and the value for property @field is intact.', array('@field' => $field)), t('E-mail'));
+      $this->assertMail($field, $value, format_string('The e-mail was sent and the value for property @field is intact.', array('@field' => $field)), 'E-mail');
     }
 
     // Send additional e-mails so more than one e-mail is captured.
@@ -440,21 +440,21 @@ class SimpleTestMailCaptureTestCase extends DrupalWebTestCase {
 
     // There should now be 6 e-mails captured.
     $captured_emails = $this->drupalGetMails();
-    $this->assertEqual(count($captured_emails), 6, t('All e-mails were captured.'), t('E-mail'));
+    $this->assertEqual(count($captured_emails), 6, 'All e-mails were captured.', 'E-mail');
 
     // Test different ways of getting filtered e-mails via drupalGetMails().
     $captured_emails = $this->drupalGetMails(array('id' => 'drupal_mail_test'));
-    $this->assertEqual(count($captured_emails), 1, t('Only one e-mail is returned when filtering by id.'), t('E-mail'));
+    $this->assertEqual(count($captured_emails), 1, 'Only one e-mail is returned when filtering by id.', 'E-mail');
     $captured_emails = $this->drupalGetMails(array('id' => 'drupal_mail_test', 'subject' => $subject));
-    $this->assertEqual(count($captured_emails), 1, t('Only one e-mail is returned when filtering by id and subject.'), t('E-mail'));
+    $this->assertEqual(count($captured_emails), 1, 'Only one e-mail is returned when filtering by id and subject.', 'E-mail');
     $captured_emails = $this->drupalGetMails(array('id' => 'drupal_mail_test', 'subject' => $subject, 'from' => 'this_was_not_used@example.com'));
-    $this->assertEqual(count($captured_emails), 0, t('No e-mails are returned when querying with an unused from address.'), t('E-mail'));
+    $this->assertEqual(count($captured_emails), 0, 'No e-mails are returned when querying with an unused from address.', 'E-mail');
 
     // Send the last e-mail again, so we can confirm that the drupalGetMails-filter
     // correctly returns all e-mails with a given property/value.
     drupal_mail_system('drupal_mail_test', $index)->mail($message);
     $captured_emails = $this->drupalGetMails(array('id' => 'drupal_mail_test_4'));
-    $this->assertEqual(count($captured_emails), 2, t('All e-mails with the same id are returned when filtering by id.'), t('E-mail'));
+    $this->assertEqual(count($captured_emails), 2, 'All e-mails with the same id are returned when filtering by id.', 'E-mail');
   }
 }
 
@@ -476,7 +476,7 @@ class SimpleTestFolderTestCase extends DrupalWebTestCase {
 
   function testFolderSetup() {
     $directory = file_default_scheme() . '://styles';
-    $this->assertTrue(file_prepare_directory($directory, FALSE), "Directory created.");
+    $this->assertTrue(file_prepare_directory($directory, FALSE), 'Directory created.');
   }
 }
 
@@ -653,5 +653,94 @@ class SimpleTestOtherInstallationProfileModuleTestsTestCase extends DrupalWebTes
   function testOtherInstallationProfile() {
     $this->drupalGet('admin/config/development/testing');
     $this->assertNoText('Installation profile module tests helper');
+  }
+}
+
+/**
+ * Verifies that tests in other installation profiles are not found.
+ *
+ * @see SimpleTestInstallationProfileModuleTestsTestCase
+ */
+class SimpleTestDiscoveryTestCase extends DrupalWebTestCase {
+  /**
+   * Use the Testing profile.
+   *
+   * The Testing profile contains drupal_system_listing_compatible_test.test,
+   * which attempts to:
+   * - run tests using the Minimal profile (which does not contain the
+   *   drupal_system_listing_compatible_test.module)
+   * - but still install the drupal_system_listing_compatible_test.module
+   *   contained in the Testing profile.
+   *
+   * @see DrupalSystemListingCompatibleTestCase
+   */
+  protected $profile = 'testing';
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Discovery of test classes',
+      'description' => 'Verifies that tests classes are discovered and can be autoloaded (class_exists).',
+      'group' => 'SimpleTest',
+    );
+  }
+
+  function setUp() {
+    parent::setUp(array('simpletest'));
+
+    $this->admin_user = $this->drupalCreateUser(array('administer unit tests'));
+    $this->drupalLogin($this->admin_user);
+  }
+
+  /**
+   * Test discovery of PSR-0 test classes.
+   */
+  function testDiscoveryFunctions() {
+    if (version_compare(PHP_VERSION, '5.3') < 0) {
+      // Don't expect PSR-0 tests to be discovered on older PHP versions.
+      return;
+    }
+    // TODO: What if we have cached values? Do we need to force a cache refresh?
+    $classes_all = simpletest_test_get_all();
+    foreach (array(
+      'Drupal\\simpletest\\Tests\\PSR0WebTest',
+      'Drupal\\psr_0_test\\Tests\\ExampleTest',
+    ) as $class) {
+      $this->assert(!empty($classes_all['SimpleTest'][$class]), t('Class @class must be discovered by simpletest_test_get_all().', array('@class' => $class)));
+    }
+  }
+
+  /**
+   * Tests existence of test cases.
+   */
+  function testDiscovery() {
+    $this->drupalGet('admin/config/development/testing');
+    // Tests within enabled modules.
+    // (without these, this test wouldn't happen in the first place, so this is
+    // a bit pointless. We still run it for proof-of-concept.)
+    // This one is defined in system module.
+    $this->assertText('Drupal error handlers');
+    // This one is defined in simpletest module.
+    $this->assertText('Discovery of test classes');
+    // Tests within disabled modules.
+    if (version_compare(PHP_VERSION, '5.3') < 0) {
+      // Don't expect PSR-0 tests to be discovered on older PHP versions.
+      return;
+    }
+    // This one is provided by simpletest itself via PSR-0.
+    $this->assertText('PSR0 web test');
+    $this->assertText('PSR0 example test: PSR-0 in disabled modules.');
+    $this->assertText('PSR0 example test: PSR-0 in nested subfolders.');
+
+    // Test each test individually.
+    foreach (array(
+      'Drupal\\psr_0_test\\Tests\\ExampleTest',
+      'Drupal\\psr_0_test\\Tests\\Nested\\NestedExampleTest',
+    ) as $class) {
+      $this->drupalGet('admin/config/development/testing');
+      $edit = array($class => TRUE);
+      $this->drupalPost(NULL, $edit, t('Run tests'));
+      $this->assertText('The test run finished', t('Test @class must finish.', array('@class' => $class)));
+      $this->assertText('1 pass, 0 fails, and 0 exceptions', t('Test @class must pass.', array('@class' => $class)));
+    }
   }
 }

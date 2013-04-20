@@ -566,6 +566,20 @@ class BasicMinimalUpdatePath extends UpdatePathTestCase {
     // Confirm that no {menu_links} entry exists for user/autocomplete.
     $result = db_query('SELECT COUNT(*) FROM {menu_links} WHERE link_path = :user_autocomplete', array(':user_autocomplete' => 'user/autocomplete'))->fetchField();
     $this->assertFalse($result, t('No {menu_links} entry exists for user/autocomplete'));
+
+    // Confirm that a date format that just differs in the case can be added.
+    $admin_date_format = 'j M y';
+    $edit = array('date_format' => $admin_date_format);
+    $this->drupalPost('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
+
+    // Add a new date format which just differs in the case.
+    $admin_date_format_uppercase = 'j M Y';
+    $edit = array('date_format' => $admin_date_format_uppercase);
+    $this->drupalPost('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
+    $this->assertText(t('Custom date format added.'));
+
+    // Verify that the unique key on {date_formats}.format still exists.
+    $this->assertTrue(db_index_exists('date_formats', 'formats'), 'Unique key on {date_formats} exists');
   }
 }
 

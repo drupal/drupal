@@ -1,0 +1,6 @@
+name = PSR-0 Test cases
+description = Test classes to be discovered by simpletest.
+core = 7.x
+
+hidden = TRUE
+package = Testing

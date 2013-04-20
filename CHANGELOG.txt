@@ -1,6 +1,49 @@
 
-Drupal 7.20, xxxx-xx-xx (development version)
+Drupal 7.23, xxxx-xx-xx (development version)
 -----------------------
+
+Drupal 7.22, 2013-04-03
+-----------------------
+- Allowed the drupal_http_request() function to be overridden so that
+  additional HTTP request capabilities can be added by contributed modules.
+- Changed the Simpletest module to allow PSR-0 test classes to be used in
+  Drupal 7.
+- Removed an unnecessary "Content-Disposition" header from private file
+  downloads; it prevented many private files from being viewed inline in a web
+  browser.
+- Changed various field API functions to allow them to optionally act on a
+  single field within an entity (API addition: http://drupal.org/node/1825844).
+- Fixed a bug which prevented Drupal's file transfer functionality from working
+  on some PHP 5.4 systems.
+- Fixed incorrect log message when theme() is called for a theme hook that does
+  not exist (minor string change).
+- Fixed Drupal's token-replacement system to allow spaces in the token value.
+- Changed the default behavior after a user creates a node they do not have
+  access to view. The user will now be redirected to the front page rather than
+  an access denied page.
+- Fixed a bug which prevented empty HTTP headers (such as "0") from being set.
+  (Minor behavior change: Callers of drupal_add_http_header() must now set
+  FALSE explicitly to prevent a header from being sent at all; this was already
+  indicated in the function's documentation.)
+- Fixed OpenID errors when more than one module implements hook_openid(). The
+  behavior is now changed so that if more than one module tries to set the same
+  parameter, the last module's change takes effect.
+- Fixed a serious documentation bug: The $name variable in the
+  taxonomy-term.tpl.php theme template was incorrectly documented as being
+  sanitized when in fact it is not.
+- Fixed a bug which prevented Drupal 6 to Drupal 7 upgrades on sites which had
+  duplicate permission names in the User module's database tables.
+- Added an empty "datatype" attribute to taxonomy term and username links to
+  make the RDFa markup upward compatible with RDFa 1.1 (minor markup addition).
+- Fixed a bug which caused the denial-of-service protection added in Drupal
+  7.20 to break certain valid image URLs that had an extra slash in them.
+- Fixed a bug with update queries in the SQLite database driver that prevented
+  Drupal from being installed with SQLite on PHP 5.4.
+- Fixed enforced dependencies errors updating to recent versions of Drupal 7 on
+  certain non-MySQL databases.
+- Refactored the Field module's caching behavior to obtain large improvements
+  in memory usage for sites with many fields and instances (API addition:
+  http://drupal.org/node/1915646).
 - Fixed entity argument not being passed to implementations of
   hook_file_download_access_alter(). The fix adds an additional context
   parameter that can be passed when calling drupal_alter() for any hook (API
@@ -13,15 +56,27 @@ Drupal 7.20, xxxx-xx-xx (development version)
   downloaded via the Update Manager (UI change).
 - Added an optional "exclusive" flag to installation profile .info files which
   allows Drupal distributions to force a profile to be selected during
-  installation (API addition).
+  installation (API addition: http://drupal.org/node/1961012).
 - Fixed a bug which caused the database API to not properly close database
   connections.
-- Added link to the URL for running cron from outside the site to the Cron
+- Added a link to the URL for running cron from outside the site to the Cron
   settings page (UI change).
 - Fixed a bug which prevented image styles from being reverted on PHP 5.4.
 - Made the default .htaccess rules protocol sensitive to improve security for
   sites which use HTTPS and redirect between "www" and non-"www" versions of
   the page.
+- Numerous small bug fixes.
+- Numerous API documentation improvements.
+- Additional automated test coverage.
+
+Drupal 7.21, 2013-03-06
+-----------------------
+- Allowed sites using the 'image_allow_insecure_derivatives' variable to still
+  have partial protection from the security issues fixed in Drupal 7.20.
+
+Drupal 7.20, 2013-02-20
+-----------------------
+- Fixed security issues (denial of service). See SA-CORE-2013-002.
 
 Drupal 7.19, 2013-01-16
 -----------------------
