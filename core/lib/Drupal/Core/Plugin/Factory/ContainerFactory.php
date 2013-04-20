@@ -14,7 +14,7 @@ use Drupal\Component\Plugin\Factory\DefaultFactory;
 class ContainerFactory extends DefaultFactory {
 
   /**
-   * {inheritdoc}
+   * {@inheritdoc}
    */
   public function createInstance($plugin_id, array $configuration) {
     $plugin_definition = $this->discovery->getDefinition($plugin_id);
