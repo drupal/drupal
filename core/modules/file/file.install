@@ -246,7 +246,7 @@ function file_update_8000() {
   ));
 }
 
-/**
+/*
  * Convert the 'id' column in {file_usage} to accept UUIDs.
  */
 function file_update_8001() {
@@ -258,4 +258,33 @@ function file_update_8001() {
     'default' => '',
   );
   db_change_field('file_usage', 'id', 'id', $spec);
+}
+
+/**
+* Convert image field's default image configuration to the new format.
+*/
+function file_update_8002() {
+  if (module_exists('field_sql_storage')) {
+    $fields = field_read_fields(array('type' => 'image'), array('include_deleted' => TRUE, 'include_inactive' => TRUE));
+    foreach ($fields as $field) {
+      if (!empty($field['settings']['default_image'])) {
+        $field['settings']['default_image'] = array($field['settings']['default_image']);
+      }
+      else {
+        $field['settings']['default_image'] = array();
+      }
+      field_update_field($field);
+
+      $instances = field_read_instances(array('field_name' => $field['field_name']));
+      foreach ($instances as $instance) {
+        if (!empty($instance['settings']['default_image'])) {
+          $instance['settings']['default_image'] = array($instance['settings']['default_image']);
+        }
+        else {
+          $instance['settings']['default_image'] = array();
+        }
+        field_update_instance($instance);
+      }
+    }
+  }
 }

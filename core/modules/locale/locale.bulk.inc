@@ -108,7 +108,7 @@ function locale_translate_import_form($form, &$form_state) {
  */
 function locale_translate_import_form_submit($form, &$form_state) {
   // Ensure we have the file uploaded.
-  if ($file = file_save_upload('file', $form['file']['#upload_validators'], 'translations://')) {
+  if ($file = file_save_upload('file', $form['file']['#upload_validators'], 'translations://', 0)) {
 
     // Add language, if not yet supported.
     $language = language_load($form_state['values']['langcode']);

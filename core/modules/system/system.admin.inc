@@ -619,7 +619,7 @@ function system_theme_settings_validate($form, &$form_state) {
     $validators = array('file_validate_is_image' => array());
 
     // Check for a new uploaded logo.
-    $file = file_save_upload('logo_upload', $validators);
+    $file = file_save_upload('logo_upload', $validators, FALSE, 0);
     if (isset($file)) {
       // File upload was attempted.
       if ($file) {
@@ -635,7 +635,7 @@ function system_theme_settings_validate($form, &$form_state) {
     $validators = array('file_validate_extensions' => array('ico png gif jpg jpeg apng svg'));
 
     // Check for a new uploaded favicon.
-    $file = file_save_upload('favicon_upload', $validators);
+    $file = file_save_upload('favicon_upload', $validators, FALSE, 0);
     if (isset($file)) {
       // File upload was attempted.
       if ($file) {

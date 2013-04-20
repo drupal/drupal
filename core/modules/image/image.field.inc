@@ -18,7 +18,7 @@ function image_field_info() {
       'description' => t('This field stores the ID of an image file as an integer value.'),
       'settings' => array(
         'uri_scheme' => file_default_scheme(),
-        'default_image' => 0,
+        'default_image' => array(),
         'column_groups' => array(
           'file' => array(
             'label' => t('File'),
@@ -44,7 +44,7 @@ function image_field_info() {
         'title_field_required' => 0,
         'max_resolution' => '',
         'min_resolution' => '',
-        'default_image' => 0,
+        'default_image' => array(),
       ),
       'default_widget' => 'image_image',
       'default_formatter' => 'image',
@@ -231,7 +231,7 @@ function image_field_prepare_view($entity_type, $entities, $field, $instances, $
   // If there are no files specified at all, use the default.
   foreach ($entities as $id => $entity) {
     if (empty($items[$id])) {
-      $fid = 0;
+      $fid = array();
       // Use the default for the instance if one is available.
       if (!empty($instances[$id]['settings']['default_image'])) {
         $fid = $instances[$id]['settings']['default_image'];
@@ -242,7 +242,7 @@ function image_field_prepare_view($entity_type, $entities, $field, $instances, $
       }
 
       // Add the default image if one is found.
-      if ($fid && ($file = file_load($fid))) {
+      if ($fid && ($file = file_load($fid[0]))) {
         $items[$id][0] = (array) $file + array(
           'is_default' => TRUE,
           'alt' => '',
@@ -313,16 +313,17 @@ function image_field_is_empty($item, $field) {
  */
 function image_field_widget_process($element, &$form_state, $form) {
   $item = $element['#value'];
-  $item['fid'] = $element['fid']['#value'];
+  $item['fids'] = $element['fids']['#value'];
 
   $element['#theme'] = 'image_widget';
   $element['#attached']['css'][] = drupal_get_path('module', 'image') . '/image.theme.css';
 
   // Add the image preview.
-  if ($element['#file'] && $element['#preview_image_style']) {
+  if (!empty($element['#files']) && $element['#preview_image_style']) {
+    $file = reset($element['#files']);
     $variables = array(
       'style_name' => $element['#preview_image_style'],
-      'uri' => $element['#file']->uri,
+      'uri' => $file->uri,
     );
 
     // Determine image dimensions.
@@ -331,7 +332,7 @@ function image_field_widget_process($element, &$form_state, $form) {
       $variables['height'] = $element['#value']['height'];
     }
     else {
-      $info = image_get_info($element['#file']->uri);
+      $info = image_get_info($file->uri);
 
       if (is_array($info)) {
         $variables['width'] = $info['width'];
@@ -372,7 +373,7 @@ function image_field_widget_process($element, &$form_state, $form) {
     // @see http://www.gawds.org/show.php?contentid=28
     '#maxlength' => 512,
     '#weight' => -2,
-    '#access' => (bool) $item['fid'] && $element['#alt_field'],
+    '#access' => (bool) $item['fids'] && $element['#alt_field'],
     '#element_validate' => $settings['alt_field_required'] == 1 ? array('_image_field_required_fields_validate') : array(),
   );
   $element['title'] = array(
@@ -382,7 +383,7 @@ function image_field_widget_process($element, &$form_state, $form) {
     '#description' => t('The title is used as a tool tip when the user hovers the mouse over the image.'),
     '#maxlength' => 1024,
     '#weight' => -1,
-    '#access' => (bool) $item['fid'] && $element['#title_field'],
+    '#access' => (bool) $item['fids'] && $element['#title_field'],
     '#element_validate' => $settings['alt_field_required'] == 1 ? array('_image_field_required_fields_validate') : array(),
   );
 
@@ -437,8 +438,9 @@ function theme_image_widget($variables) {
   }
 
   $output .= '<div class="image-widget-data">';
-  if ($element['fid']['#value'] != 0) {
-    $element['filename']['#markup'] .= ' <span class="file-size">(' . format_size($element['#file']->filesize) . ')</span> ';
+  if (!empty($element['fids']['#value'])) {
+    $file = reset($element['#files']);
+    $element['file_' . $file->fid]['filename']['#markup'] .= ' <span class="file-size">(' . format_size($file->filesize) . ')</span> ';
   }
   $output .= drupal_render_children($element);
   $output .= '</div>';

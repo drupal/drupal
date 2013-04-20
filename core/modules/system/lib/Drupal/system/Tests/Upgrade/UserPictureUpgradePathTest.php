@@ -40,8 +40,8 @@ class UserPictureUpgradePathTest extends UpgradePathTestBase {
 
     // Retrieve the field instance and check for migrated settings.
     $instance = field_info_instance('user', 'user_picture', 'user');
-    $file = entity_load('file', $instance['settings']['default_image']);
-    $this->assertIdentical($instance['settings']['default_image'], $file->id(), 'Default user picture has been migrated.');
+    $file = entity_load('file', $instance['settings']['default_image'][0]);
+    $this->assertIdentical($instance['settings']['default_image'][0], $file->id(), 'Default user picture has been migrated.');
     $this->assertEqual($file->uri, 'public://user_pictures_dir/druplicon.png', 'File id matches the uri expected.');
     $this->assertEqual($file->filename, 'druplicon.png');
     $this->assertEqual($file->langcode, LANGUAGE_NOT_SPECIFIED);

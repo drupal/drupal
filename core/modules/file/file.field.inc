@@ -389,12 +389,53 @@ function file_field_widget_value($element, $input = FALSE, $form_state) {
 
   // Ensure that all the required properties are returned even if empty.
   $return += array(
-    'fid' => 0,
+    'fids' => array(),
     'display' => 1,
     'description' => '',
   );
 
   return $return;
+}
+
+/**
+ * Validation callback for upload element on file widget. Checks if user has
+ * uploaded more files than allowed.
+ *
+ * This validator is used only when cardinality not set to 1 or unlimited.
+ */
+function file_field_widget_multiple_count_validate($element, &$form_state, $form) {
+  $parents = $element['#parents'];
+  $values = NestedArray::getValue($form_state['values'], $parents);
+
+  array_pop($parents);
+  $current = count(element_children(NestedArray::getValue($form, $parents))) - 1;
+
+  $field = field_info_field($element['#field_name']);
+  $uploaded = count($values['fids']);
+  $count = $uploaded + $current;
+  if ($count > $field['cardinality']) {
+    $keep = $uploaded - $count + $field['cardinality'];
+    $removed_files = array_slice($values['fids'], $keep);
+    $removed_names = array();
+    foreach ($removed_files as $fid) {
+      $file = file_load($fid);
+      $removed_names[] = $file->filename;
+    }
+    drupal_set_message(
+      t(
+        'Field %field can only hold @max values but there were @count uploaded. The following files have been omitted as a result: %list.',
+        array(
+          '%field' => $field['field_name'],
+          '@max' => $field['cardinality'],
+          '@count' => $keep,
+          '%list' => implode(', ', $removed_names),
+        )
+      ),
+      'warning'
+    );
+    $values['fids'] = array_slice($values['fids'], 0, $keep);
+    NestedArray::setValue($form_state['values'], $element['#parents'], $values);
+  }
 }
 
 /**
@@ -406,7 +447,7 @@ function file_field_widget_value($element, $input = FALSE, $form_state) {
  */
 function file_field_widget_process($element, &$form_state, $form) {
   $item = $element['#value'];
-  $item['fid'] = $element['fid']['#value'];
+  $item['fids'] = $element['fids']['#value'];
 
   $field = field_widget_field($element, $form_state);
   $instance = field_widget_instance($element, $form_state);
@@ -415,9 +456,9 @@ function file_field_widget_process($element, &$form_state, $form) {
   $element['#theme'] = 'file_widget';
 
   // Add the display field if enabled.
-  if (!empty($field['settings']['display_field']) && $item['fid']) {
+  if (!empty($field['settings']['display_field']) && $item['fids']) {
     $element['display'] = array(
-      '#type' => empty($item['fid']) ? 'hidden' : 'checkbox',
+      '#type' => empty($item['fids']) ? 'hidden' : 'checkbox',
       '#title' => t('Include file in display'),
       '#value' => isset($item['display']) ? $item['display'] : $field['settings']['display_default'],
       '#attributes' => array('class' => array('file-display')),
@@ -431,7 +472,7 @@ function file_field_widget_process($element, &$form_state, $form) {
   }
 
   // Add the description field if enabled.
-  if (!empty($instance['settings']['description_field']) && $item['fid']) {
+  if (!empty($instance['settings']['description_field']) && $item['fids']) {
     $config = config('file.settings');
     $element['description'] = array(
       '#type' => $config->get('description.type'),
@@ -561,18 +602,34 @@ function file_field_widget_submit($form, &$form_state) {
   $langcode = $element['#language'];
   $parents = $element['#field_parents'];
 
-  $submitted_values = NestedArray::getValue($form_state['values'], array_slice($button['#array_parents'], 0, -2));
+  $submitted_values = NestedArray::getValue($form_state['values'], array_slice($button['#parents'], 0, -2));
   foreach ($submitted_values as $delta => $submitted_value) {
-    if (!$submitted_value['fid']) {
+    if (empty($submitted_value['fids'])) {
       unset($submitted_values[$delta]);
     }
   }
 
+  // If there are more files uploaded via the same widget, we have to separate
+  // them, as we display each file in it's own widget.
+  $new_values = array();
+  foreach ($submitted_values as $delta => $submitted_value) {
+    if (is_array($submitted_value['fids'])) {
+      foreach ($submitted_value['fids'] as $fid) {
+        $new_value = $submitted_value;
+        $new_value['fids'] = array($fid);
+        $new_values[] = $new_value;
+      }
+    }
+    else {
+      $new_value = $submitted_value;
+    }
+  }
+
   // Re-index deltas after removing empty items.
-  $submitted_values = array_values($submitted_values);
+  $submitted_values = array_values($new_values);
 
   // Update form_state values.
-  NestedArray::setValue($form_state['values'], array_slice($button['#array_parents'], 0, -2), $submitted_values);
+  NestedArray::setValue($form_state['values'], array_slice($button['#parents'], 0, -2), $submitted_values);
 
   // Update items.
   $field_state = field_form_get_state($parents, $field_name, $langcode, $form_state);
@@ -595,9 +652,10 @@ function theme_file_widget($variables) {
 
   // The "form-managed-file" class is required for proper Ajax functionality.
   $output .= '<div class="file-widget form-managed-file clearfix">';
-  if ($element['fid']['#value'] != 0) {
+  if (!empty($element['fids']['#value'])) {
     // Add the file size after the file name.
-    $element['filename']['#markup'] .= ' <span class="file-size">(' . format_size($element['#file']->filesize) . ')</span> ';
+    $file = reset($element['#files']);
+    $element['file_' . $file->fid]['filename']['#markup'] .= ' <span class="file-size">(' . format_size($file->filesize) . ')</span> ';
   }
   $output .= drupal_render_children($element);
   $output .= '</div>';
@@ -644,7 +702,7 @@ function theme_file_widget_multiple($variables) {
   $rows = array();
   foreach ($widgets as $key => &$widget) {
     // Save the uploading row for last.
-    if ($widget['#file'] == FALSE) {
+    if (empty($widget['#files'])) {
       $widget['#title'] = $element['#file_upload_title'];
       $widget['#description'] = $element['#file_upload_description'];
       continue;
@@ -726,6 +784,7 @@ function theme_file_widget_multiple($variables) {
 function theme_file_upload_help($variables) {
   $description = $variables['description'];
   $upload_validators = $variables['upload_validators'];
+  $cardinality = $variables['cardinality'];
 
   $descriptions = array();
 
@@ -737,6 +796,14 @@ function theme_file_upload_help($variables) {
   }
   if (isset($upload_validators['file_validate_extensions'])) {
     $descriptions[] = t('Allowed file types: !extensions.', array('!extensions' => '<strong>' . check_plain($upload_validators['file_validate_extensions'][0]) . '</strong>'));
+  }
+  if (isset($cardinality)) {
+    if ($cardinality == -1) {
+      $descriptions[] = t('Unlimited number of files can be uploaded to this field.');
+    }
+    else {
+      $descriptions[] = format_plural($cardinality, 'This field can store only one file.', 'This field can store at most @count files.');
+    }
   }
   if (isset($upload_validators['file_validate_image_resolution'])) {
     $max = $upload_validators['file_validate_image_resolution'][0];

@@ -149,7 +149,12 @@ abstract class FileFieldTestBase extends WebTestBase {
     }
 
     // Attach a file to the node.
-    $edit['files[' . $field_name . '_' . $langcode . '_0]'] = drupal_realpath($file->uri);
+    $field = field_info_field($field_name);
+    $name = 'files[' . $field_name . '_' . $langcode . '_0]';
+    if ($field['cardinality'] != 1) {
+      $name .= '[]';
+    }
+    $edit[$name] = drupal_realpath($file->uri);
     $this->drupalPost("node/$nid/edit", $edit, t('Save and keep published'));
 
     return $nid;

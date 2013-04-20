@@ -156,7 +156,7 @@ class FileWidget extends WidgetBase {
       // field. These are added here so that they may be referenced easily
       // through a hook_form_alter().
       $elements['#file_upload_title'] = t('Add a new file');
-      $elements['#file_upload_description'] = theme('file_upload_help', array('description' => '', 'upload_validators' => $elements[0]['#upload_validators']));
+      $elements['#file_upload_description'] = theme('file_upload_help', array('description' => '', 'upload_validators' => $elements[0]['#upload_validators'], 'cardinality' => $this->field['cardinality']));
     }
 
     return $elements;
@@ -167,7 +167,7 @@ class FileWidget extends WidgetBase {
    */
   public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     $defaults = array(
-      'fid' => 0,
+      'fids' => array(),
       'display' => !empty($this->field['settings']['display_default']),
       'description' => '',
     );
@@ -187,13 +187,45 @@ class FileWidget extends WidgetBase {
     );
 
     $element['#weight'] = $delta;
+
+    // Field stores FID value in a single mode, so we need to transform it for
+    // form element to recognize it correctly.
+    if (!isset($items[$delta]['fids']) && isset($items[$delta]['fid'])) {
+      $items[$delta]['fids'][0] = $items[$delta]['fid'];
+    }
     $element['#default_value'] = !empty($items[$delta]) ? $items[$delta] : $defaults;
 
-    if (empty($element['#default_value']['fid'])) {
-      $element['#description'] = theme('file_upload_help', array('description' => $element['#description'], 'upload_validators' => $element['#upload_validators']));
+    $default_fids = $element['#extended'] ? $element['#default_value']['fids'] : $element['#default_value'];
+    if (empty($default_fids)) {
+      $cardinality = isset($this->field['cardinality']) ? $this->field['cardinality'] : 1;
+      $element['#description'] = theme('file_upload_help', array('description' => $element['#description'], 'upload_validators' => $element['#upload_validators'], 'cardinality' => $cardinality));
+      $element['#multiple'] = $cardinality != 1 ? TRUE : FALSE;
+      if ($cardinality != 1 && $cardinality != -1) {
+        $element['#element_validate'] = array('file_field_widget_multiple_count_validate');
+      }
     }
 
     return $element;
+  }
+
+  /**
+   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::massageFormValues().
+   */
+  public function massageFormValues(array $values, array $form, array &$form_state) {
+    // Since file upload widget now supports uploads of more than one file at a
+    // time it always returns an array of fids. We have to translate this to a
+    // single fid, as field expects single value.
+    $new_values = array();
+    foreach ($values as &$value) {
+      foreach ($value['fids'] as $fid) {
+        $new_value = $value;
+        $new_value['fid'] = $fid;
+        unset($new_value['fids']);
+        $new_values[] = $new_value;
+      }
+    }
+
+    return $new_values;
   }
 
 }

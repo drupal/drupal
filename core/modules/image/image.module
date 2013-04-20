@@ -349,8 +349,8 @@ function image_field_delete_field($field) {
   }
 
   // The value of a managed_file element can be an array if #extended == TRUE.
-  $fid = (is_array($field['settings']['default_image']) ? $field['settings']['default_image']['fid'] : $field['settings']['default_image']);
-  if ($fid && ($file = file_load($fid))) {
+  $fid = (isset($field['settings']['default_image']['fids']) ? $field['settings']['default_image']['fids'] : $field['settings']['default_image']);
+  if ($fid && ($file = file_load($fid[0]))) {
     file_usage()->delete($file, 'image', 'default_image', $field['id']);
   }
 }
@@ -364,10 +364,10 @@ function image_field_update_field($field, $prior_field, $has_data) {
   }
 
   // The value of a managed_file element can be an array if #extended == TRUE.
-  $fid_new = (is_array($field['settings']['default_image']) ? $field['settings']['default_image']['fid'] : $field['settings']['default_image']);
-  $fid_old = (is_array($prior_field['settings']['default_image']) ? $prior_field['settings']['default_image']['fid'] : $prior_field['settings']['default_image']);
+  $fid_new = (isset($field['settings']['default_image']['fids']) ? $field['settings']['default_image']['fids'] : $field['settings']['default_image']);
+  $fid_old = (isset($prior_field['settings']['default_image']['fids']) ? $prior_field['settings']['default_image']['fids'] : $prior_field['settings']['default_image']);
 
-  $file_new = $fid_new ? file_load($fid_new) : FALSE;
+  $file_new = $fid_new ? file_load($fid_new[0]) : FALSE;
 
   if ($fid_new != $fid_old) {
 
@@ -379,7 +379,7 @@ function image_field_update_field($field, $prior_field, $has_data) {
     }
 
     // Is there an old file?
-    if ($fid_old && ($file_old = file_load($fid_old))) {
+    if ($fid_old && ($file_old = file_load($fid_old[0]))) {
       file_usage()->delete($file_old, 'image', 'default_image', $field['uuid']);
     }
   }
@@ -428,16 +428,16 @@ function image_field_update_instance($instance, $prior_instance) {
   // The value of a managed_file element can be an array if the #extended
   // property is set to TRUE.
   $fid_new = $instance['settings']['default_image'];
-  if (is_array($fid_new)) {
-    $fid_new = $fid_new['fid'];
+  if (isset($fid_new['fids'])) {
+    $fid_new = $fid_new['fids'];
   }
   $fid_old = $prior_instance['settings']['default_image'];
-  if (is_array($fid_old)) {
-    $fid_old = $fid_old['fid'];
+  if (isset($fid_old['fids'])) {
+    $fid_old = $fid_old['fids'];
   }
 
   // If the old and new files do not match, update the default accordingly.
-  $file_new = $fid_new ? file_load($fid_new) : FALSE;
+  $file_new = $fid_new ? file_load($fid_new[0]) : FALSE;
   if ($fid_new != $fid_old) {
     // Save the new file, if present.
     if ($file_new) {
@@ -446,7 +446,7 @@ function image_field_update_instance($instance, $prior_instance) {
       file_usage()->add($file_new, 'image', 'default_image', $instance['uuid']);
     }
     // Delete the old file, if present.
-    if ($fid_old && ($file_old = file_load($fid_old))) {
+    if ($fid_old && ($file_old = file_load($fid_old[0]))) {
       file_usage()->delete($file_old, 'image', 'default_image', $instance['uuid']);
     }
   }
@@ -1029,4 +1029,3 @@ function image_filter_keyword($value, $current_pixels, $new_pixels) {
 function _image_effect_definitions_sort($a, $b) {
   return strcasecmp($a['name'], $b['name']);
 }
-
