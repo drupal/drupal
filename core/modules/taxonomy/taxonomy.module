@@ -238,12 +238,6 @@ function taxonomy_select_nodes($tid, $pager = TRUE, $limit = FALSE, $order = arr
  */
 function taxonomy_theme() {
   return array(
-    'taxonomy_overview_vocabularies' => array(
-      'render element' => 'form',
-    ),
-    'taxonomy_overview_terms' => array(
-      'render element' => 'form',
-    ),
     'taxonomy_term' => array(
       'render element' => 'elements',
       'template' => 'taxonomy-term',

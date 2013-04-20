@@ -90,7 +90,7 @@ class VocabularyTest extends TaxonomyTestBase {
     foreach ($vocabularies as $key => $vocabulary) {
       $weight = -$vocabulary->weight;
       $vocabularies[$key]->weight = $weight;
-      $edit[$key . '[weight]'] = $weight;
+      $edit['vocabularies[' . $key . '][weight]'] = $weight;
     }
     // Saving the new weights via the interface.
     $this->drupalPost('admin/structure/taxonomy', $edit, t('Save'));
