@@ -1,0 +1,6 @@
+block_admin_block_delete:
+  pattern: '/admin/structure/block/manage/{block}/delete'
+  defaults:
+    _form: '\Drupal\block\Form\AdminBlockDeleteForm'
+  requirements:
+    _permission: 'administer blocks'

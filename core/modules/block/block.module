@@ -147,12 +147,9 @@ function block_menu() {
   );
   $items['admin/structure/block/manage/%block/delete'] = array(
     'title' => 'Delete block',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('block_admin_block_delete', 4),
-    'access arguments' => array('administer blocks'),
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_NONE,
-    'file' => 'block.admin.inc',
+    'route_name' => 'block_admin_block_delete',
   );
   // Block administration is tied to the theme and plugin definition so
   // that the plugin can appropriately attach to this URL structure.

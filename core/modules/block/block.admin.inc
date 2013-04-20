@@ -84,33 +84,6 @@ function block_admin_edit(Block $entity) {
 }
 
 /**
- * Form constructor for the block instance deletion form.
- *
- * @param \Drupal\block\Plugin\Core\Entity\Block $entity
- *   The block instance.
- *
- * @see block_menu()
- * @see block_admin_block_delete_submit()
- */
-function block_admin_block_delete(array $form, array &$form_state, Block $entity) {
-  $form['id'] = array('#type' => 'value', '#value' => $entity->id());
-
-  return confirm_form($form, t('Are you sure you want to delete the block %name?', array('%name' => $entity->label())), 'admin/structure/block', '', t('Delete'), t('Cancel'));
-}
-
-/**
- * Form submission handler for block_admin_block_delete().
- *
- * @see block_admin_block_delete()
- */
-function block_admin_block_delete_submit($form, &$form_state) {
-  $entity = entity_load('block', $form_state['values']['id']);
-  drupal_set_message(t('The block %name has been removed.', array('%name' => $entity->label())));
-  $form_state['redirect'] = 'admin/structure/block/list/block_plugin_ui:' . $entity->get('theme');
-  $entity->delete();
-}
-
-/**
  * Processes variables for block-admin-display-form.tpl.php.
  *
  * The $variables array contains the following arguments:
