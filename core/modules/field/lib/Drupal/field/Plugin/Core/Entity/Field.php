@@ -235,7 +235,7 @@ class Field extends ConfigEntityBase implements \ArrayAccess {
       'translatable' => FALSE,
       'entity_types' => array(),
       'locked' => FALSE,
-      'deleted' => 0,
+      'deleted' => FALSE,
       'storage' => array(),
       'indexes' => array(),
     );
@@ -315,7 +315,7 @@ class Field extends ConfigEntityBase implements \ArrayAccess {
         throw new FieldException(format_string('Attempt to create a field of unknown type %type.', array('%type' => $this->type)));
       }
       $this->module = $field_type['module'];
-      $this->active = 1;
+      $this->active = TRUE;
 
       // Make sure all settings are present, so that a complete field
       // definition is passed to the various hooks and written to config.
@@ -332,7 +332,7 @@ class Field extends ConfigEntityBase implements \ArrayAccess {
         throw new FieldException(format_string('Attempt to create a field with unknown storage type %type.', array('%type' => $this->storage['type'])));
       }
       $this->storage['module'] = $storage_type['module'];
-      $this->storage['active'] = 1;
+      $this->storage['active'] = TRUE;
       // Provide default storage settings.
       $this->storage['settings'] += $storage_type['settings'];
 

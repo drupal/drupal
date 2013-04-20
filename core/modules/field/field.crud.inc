@@ -169,8 +169,8 @@ function field_read_fields($conditions = array(), $include_additional = array())
 
   // Translate "do not include inactive instances" into actual conditions.
   if (!$include_inactive) {
-    $conditions['active'] = 1;
-    $conditions['storage.active'] = 1;
+    $conditions['active'] = TRUE;
+    $conditions['storage.active'] = TRUE;
   }
 
   // Collect matching fields.
@@ -360,8 +360,8 @@ function field_read_instances($conditions = array(), $include_additional = array
 
   // Translate "do not include inactive fields" into actual conditions.
   if (!$include_inactive) {
-    $conditions['field.active'] = 1;
-    $conditions['field.storage.active'] = 1;
+    $conditions['field.active'] = TRUE;
+    $conditions['field.storage.active'] = TRUE;
   }
 
   // Collect matching instances.
@@ -520,7 +520,7 @@ function field_delete_instance(FieldInstance $instance, $field_cleanup = TRUE) {
 function field_purge_batch($batch_size) {
   // Retrieve all deleted field instances. We cannot use field_info_instances()
   // because that function does not return deleted instances.
-  $instances = field_read_instances(array('deleted' => 1), array('include_deleted' => 1));
+  $instances = field_read_instances(array('deleted' => TRUE), array('include_deleted' => TRUE));
   $factory = Drupal::service('entity.query');
   $info = entity_get_info();
   foreach ($instances as $instance) {

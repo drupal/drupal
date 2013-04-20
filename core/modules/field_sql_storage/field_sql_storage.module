@@ -359,7 +359,7 @@ function field_sql_storage_field_storage_update_field($field, $prior_field, $has
  */
 function field_sql_storage_field_storage_delete_field($field) {
   // Mark all data associated with the field for deletion.
-  $field['deleted'] = 0;
+  $field['deleted'] = FALSE;
   $table = _field_sql_storage_tablename($field);
   $revision_table = _field_sql_storage_revision_tablename($field);
   db_update($table)
@@ -367,7 +367,7 @@ function field_sql_storage_field_storage_delete_field($field) {
     ->execute();
 
   // Move the table to a unique name while the table contents are being deleted.
-  $field['deleted'] = 1;
+  $field['deleted'] = TRUE;
   $new_table = _field_sql_storage_tablename($field);
   $revision_new_table = _field_sql_storage_revision_tablename($field);
   db_rename_table($table, $new_table);

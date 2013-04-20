@@ -32,8 +32,8 @@ function _update_7000_field_create_field(&$field) {
     'locked' => FALSE,
     'settings' => array(),
     'indexes' => array(),
-    'deleted' => 0,
-    'active' => 1,
+    'deleted' => FALSE,
+    'active' => TRUE,
   );
 
   // Set storage.
@@ -41,7 +41,7 @@ function _update_7000_field_create_field(&$field) {
     'type' => 'field_sql_storage',
     'settings' => array(),
     'module' => 'field_sql_storage',
-    'active' => 1,
+    'active' => TRUE,
   );
 
   // Fetch the field schema to initialize columns and indexes. The field module
@@ -208,7 +208,7 @@ function _update_7000_field_create_instance($field, &$instance) {
   $instance += array(
     'field_id' => $field['id'],
     'field_name' => $field['field_name'],
-    'deleted' => 0,
+    'deleted' => FALSE,
     'description' => '',
     'required' => FALSE,
   );

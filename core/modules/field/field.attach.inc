@@ -1565,7 +1565,7 @@ function field_entity_bundle_delete($entity_type, $bundle) {
   // Get the instances on the bundle. field_read_instances() must be used
   // here since field_info_instances() does not return instances for disabled
   // entity types or bundles.
-  $instances = field_read_instances(array('entity_type' => $entity_type, 'bundle' => $bundle), array('include_inactive' => 1));
+  $instances = field_read_instances(array('entity_type' => $entity_type, 'bundle' => $bundle), array('include_inactive' => TRUE));
   foreach ($instances as $instance) {
     field_delete_instance($instance);
   }
