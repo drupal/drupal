@@ -321,9 +321,9 @@ function hook_field_load($entity_type, $entities, $field, $instances, $langcode,
       // Only process items with a cacheable format, the rest will be handled
       // by formatters if needed.
       if (empty($instances[$id]['settings']['text_processing']) || filter_format_allowcache($item['format'])) {
-        $items[$id][$delta]['safe_value'] = isset($item['value']) ? _text_sanitize($instances[$id], $langcode, $item, 'value') : '';
+        $items[$id][$delta]['safe_value'] = isset($item['value']) ? text_sanitize($instances[$id]['settings']['text_processing'], $langcode, $item, 'value') : '';
         if ($field['type'] == 'text_with_summary') {
-          $items[$id][$delta]['safe_summary'] = isset($item['summary']) ? _text_sanitize($instances[$id], $langcode, $item, 'summary') : '';
+          $items[$id][$delta]['safe_summary'] = isset($item['summary']) ? text_sanitize($instances[$id]['settings']['text_processing'], $langcode, $item, 'summary') : '';
         }
       }
     }
