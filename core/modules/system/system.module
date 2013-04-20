@@ -1576,8 +1576,8 @@ function system_library_info() {
   // HTML5 Shiv.
   $libraries['html5shiv'] = array(
     'title' => 'html5shiv',
-    'website' => 'http://code.google.com/p/html5shiv/',
-    'version' => '11',
+    'website' => 'https://github.com/aFarkas/html5shiv/',
+    'version' => '3.6.2',
     'js' => array(
       'core/misc/html5.js' => array(
         'group' => JS_LIBRARY,
