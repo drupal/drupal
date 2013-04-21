@@ -28,7 +28,7 @@ use Drupal\field\FieldException;
  *   }
  * )
  */
-class FieldInstance extends ConfigEntityBase implements \ArrayAccess {
+class FieldInstance extends ConfigEntityBase implements \ArrayAccess, \Serializable {
 
   /**
    * The instance ID (machine name).
@@ -56,18 +56,6 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess {
    * @var string
    */
   public $field_uuid;
-
-  /**
-   * The name of the field attached to the bundle by this instance.
-   *
-   * @var string
-   *
-   * @todo Revisit that in favor of a getField() method.
-   *   See http://drupal.org/node/1967106.
-   * @todo This variable is provided for backward compatibility and will be
-   *   removed.
-   */
-  public $field_name;
 
   /**
    * The name of the entity type the instance is attached to.
@@ -211,6 +199,13 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess {
   public $deleted;
 
   /**
+   * The field ConfigEntity object corresponding to $field_uuid.
+   *
+   * @var \Drupal\field\Plugin\Core\Entity\Field
+   */
+  protected $field;
+
+  /**
    * The widget plugin used for this instance.
    *
    * @var \Drupal\field\Plugin\Type\Widget\WidgetInterface
@@ -228,45 +223,47 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess {
    * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type = 'field_instance') {
-    // Check required properties.
-    if (empty($values['entity_type'])) {
-      throw new FieldException(format_string('Attempt to create an instance of field @field_name without an entity type.', array('@field_name' => $values['field_name'])));
-    }
-    if (empty($values['bundle'])) {
-      throw new FieldException(format_string('Attempt to create an instance of field @field_name without a bundle.', array('@field_name' => $values['field_name'])));
-    }
-
     // Accept incoming 'field_name' instead of 'field_uuid', for easier DX on
     // creation of new instances.
     if (isset($values['field_name']) && !isset($values['field_uuid'])) {
       $field = field_info_field($values['field_name']);
-      if ($field) {
-        $values['field_uuid'] = $field->uuid;
+      if (!$field) {
+        throw new FieldException(format_string('Attempt to create an instance of unknown, disabled, or deleted field @field_id', array('@field_id' => $values['field_name'])));
       }
-      else {
-        throw new FieldException(format_string('Attempt to create an instance of unknown, disabled, or deleted field @name', array('@name' => $values['field_name'])));
-      }
+      $values['field_uuid'] = $field->uuid;
     }
-    // Fill in the field_name property for data coming out of config.
-    // @todo Revisit that in favor of a getField() method.
-    //   See http://drupal.org/node/1967106.
-    elseif (isset($values['field_uuid']) && !isset($values['field_name'])) {
-      $field = current(field_read_fields(array('uuid' => $values['field_uuid']), array('include_inactive' => TRUE, 'include_deleted' => TRUE)));
-      if ($field) {
-        $values['field_name'] = $field->id;
+    elseif (isset($values['field_uuid'])) {
+      $field = field_info_field_by_id($values['field_uuid']);
+      // field_info_field_by_id() will not find the field if it is inactive.
+      if (!$field) {
+        $field = current(field_read_fields(array('uuid' => $values['field_uuid']), array('include_inactive' => TRUE, 'include_deleted' => TRUE)));
       }
-      else {
+      if (!$field) {
         throw new FieldException(format_string('Attempt to create an instance of unknown field @uuid', array('@uuid' => $values['field_uuid'])));
       }
     }
-
-    if (empty($values['field_uuid'])) {
+    else {
       throw new FieldException('Attempt to create an instance of an unspecified field.');
+    }
+
+    // At this point, we should have a 'field_uuid' and a Field. Ditch the
+    // 'field_name' property if it was provided, and assign the $field property.
+    unset($values['field_name']);
+    $this->field = $field;
+
+    // Check required properties.
+    if (empty($values['entity_type'])) {
+      throw new FieldException(format_string('Attempt to create an instance of field @field_id without an entity type.', array('@field_id' => $this->field->id)));
+    }
+    if (empty($values['bundle'])) {
+      throw new FieldException(format_string('Attempt to create an instance of field @field_id without a bundle.', array('@field_id' => $this->field->id)));
     }
 
     // Provide defaults.
     $values += array(
-      'label' => $values['field_name'],
+      // 'Label' defaults to the field ID (mostly useful for field instances
+      // created in tests).
+      'label' => $this->field->id,
       'description' => '',
       'required' => FALSE,
       'default_value' => array(),
@@ -282,7 +279,7 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess {
    * {@inheritdoc}
    */
   public function id() {
-    return $this->entity_type . '.' . $this->bundle . '.' . $this->field_name;
+    return $this->entity_type . '.' . $this->bundle . '.' . $this->field->id;
   }
 
   /**
@@ -318,18 +315,12 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess {
   public function save() {
     $module_handler = \Drupal::moduleHandler();
     $entity_manager = \Drupal::service('plugin.manager.entity');
-    $field_controller = $entity_manager->getStorageController('field_entity');
     $instance_controller = $entity_manager->getStorageController($this->entityType);
 
-    $field = current($field_controller->load(array($this->field_name)));
-
     if ($this->isNew()) {
-      if (empty($field)) {
-        throw new FieldException(format_string("Attempt to save an instance of a field @field_id that doesn't exist or is currently inactive.", array('@field_name' => $this->field_name)));
-      }
       // Check that the field can be attached to this entity type.
-      if (!empty($field->entity_types) && !in_array($this->entity_type, $field->entity_types)) {
-        throw new FieldException(format_string('Attempt to create an instance of field @field_name on forbidden entity type @entity_type.', array('@field_name' => $this->field_name, '@entity_type' => $this->entity_type)));
+      if (!empty($this->field->entity_types) && !in_array($this->entity_type, $this->field->entity_types)) {
+        throw new FieldException(format_string('Attempt to create an instance of field @field_id on forbidden entity type @entity_type.', array('@field_id' => $this->field->id, '@entity_type' => $this->entity_type)));
       }
 
       // Assign the ID.
@@ -337,11 +328,8 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess {
 
       // Ensure the field instance is unique within the bundle.
       if ($prior_instance = current($instance_controller->load(array($this->id)))) {
-        throw new FieldException(format_string('Attempt to create an instance of field @field_name on bundle @bundle that already has an instance of that field.', array('@field_name' => $this->field_name, '@bundle' => $this->bundle)));
+        throw new FieldException(format_string('Attempt to create an instance of field @field_id on bundle @bundle that already has an instance of that field.', array('@field_id' => $this->field->id, '@bundle' => $this->bundle)));
       }
-
-      // Set the field UUID.
-      $this->field_uuid = $field->uuid;
 
       $hook = 'field_create_instance';
       $hook_args = array($this);
@@ -359,7 +347,7 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess {
       if ($this->bundle != $original->bundle && empty($this->bundle_rename_allowed)) {
         throw new FieldException("Cannot change an existing instance's bundle.");
       }
-      if ($this->field_name != $original->field_name || $this->field_uuid != $original->field_uuid) {
+      if ($this->field_uuid != $original->field_uuid) {
         throw new FieldException("Cannot change an existing instance's field.");
       }
 
@@ -367,7 +355,7 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess {
       $hook_args = array($this, $original);
     }
 
-    $field_type_info = field_info_field_types($field->type);
+    $field_type_info = field_info_field_types($this->field->type);
 
     // Set the default instance settings.
     $this->settings += $field_type_info['instance_settings'];
@@ -429,18 +417,27 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess {
 
       // Mark instance data for deletion by invoking
       // hook_field_storage_delete_instance().
-      $field = field_info_field($this->field_name);
-      $module_handler->invoke($field->storage['module'], 'field_storage_delete_instance', array($this));
+      $module_handler->invoke($this->field->storage['module'], 'field_storage_delete_instance', array($this));
 
       // Let modules react to the deletion of the instance with
       // hook_field_delete_instance().
       $module_handler->invokeAll('field_delete_instance', array($this));
 
       // Delete the field itself if we just deleted its last instance.
-      if ($field_cleanup && count($field->getBundles()) == 0) {
-        $field->delete();
+      if ($field_cleanup && count($this->field->getBundles()) == 0) {
+        $this->field->delete();
       }
     }
+  }
+
+ /**
+  * Returns the field entity for this instance.
+  *
+  * @return \Drupal\field\Plugin\Core\Entity\Field
+  *   The field entity for this instance.
+  */
+  public function getField() {
+    return $this->field;
   }
 
   /**
@@ -457,7 +454,7 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess {
       $context = array(
         'entity_type' => $this->entity_type,
         'bundle' => $this->bundle,
-        'field' => field_info_field_by_id($this->field_uuid),
+        'field' => $this->field,
         'instance' => $this,
       );
       // Invoke hook_field_widget_properties_alter() and
@@ -491,7 +488,7 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess {
    * {@inheritdoc}
    */
   public function offsetExists($offset) {
-    return (isset($this->{$offset}) || $offset == 'field_id');
+    return (isset($this->{$offset}) || $offset == 'field_id' || $offset == 'field_name');
   }
 
   /**
@@ -500,6 +497,9 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess {
   public function &offsetGet($offset) {
     if ($offset == 'field_id') {
       return $this->field_uuid;
+    }
+    if ($offset == 'field_name') {
+      return $this->field->id;
     }
     return $this->{$offset};
   }
@@ -524,5 +524,19 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess {
     unset($this->{$offset});
   }
 
-}
+  /**
+   * {@inheritdoc}
+   */
+  public function serialize() {
+    // Only store the definition, not external objects or derived data.
+    return serialize($this->getExportProperties());
+  }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function unserialize($serialized) {
+    $this->__construct(unserialize($serialized));
+  }
+
+}

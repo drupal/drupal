@@ -372,20 +372,17 @@ function field_read_instances($conditions = array(), $include_additional = array
       continue;
     }
 
-    // Get data from the field. If the field is marked as deleted, we need to
-    // get it from the state storage.
-    $field = entity_load('field_entity', $instance->field_name);
-    if (empty($field) && $include_deleted && isset($deleted_fields[$instance->field_uuid])) {
-      $field = new Field($deleted_fields[$instance->field_uuid]);
-    }
-    if (empty($field)) {
-      continue;
-    }
+    // Some conditions are checked against the field.
+    $field = $instance->getField();
 
     // Only keep the instance if it matches all conditions.
     foreach ($conditions as $key => $value) {
       // Extract the actual value against which the condition is checked.
       switch ($key) {
+        case 'field_name':
+          $checked_value = $field->id;
+          break;
+
         case 'field.active':
           $checked_value = $field->active;
           break;

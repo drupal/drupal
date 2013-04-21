@@ -31,7 +31,7 @@ use Drupal\field\FieldException;
  *   }
  * )
  */
-class Field extends ConfigEntityBase implements \ArrayAccess {
+class Field extends ConfigEntityBase implements \ArrayAccess, \Serializable {
 
   /**
    * The maximum length of the field ID (machine name), in characters.
@@ -596,5 +596,21 @@ class Field extends ConfigEntityBase implements \ArrayAccess {
       unset($this->{$offset});
     }
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function serialize() {
+    // Only store the definition, not external objects or derived data.
+    return serialize($this->getExportProperties());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function unserialize($serialized) {
+    $this->__construct(unserialize($serialized));
+  }
+
 
 }
