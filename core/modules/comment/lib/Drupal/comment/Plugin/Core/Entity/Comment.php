@@ -21,6 +21,7 @@ use Drupal\Core\Annotation\Translation;
  *   bundle_label = @Translation("Content type"),
  *   module = "comment",
  *   controller_class = "Drupal\comment\CommentStorageController",
+ *   access_controller_class = "Drupal\comment\CommentAccessController",
  *   render_controller_class = "Drupal\comment\CommentRenderController",
  *   form_controller_class = {
  *     "default" = "Drupal\comment\CommentFormController"
