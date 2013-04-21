@@ -113,7 +113,7 @@ function _comment_field_instance_settings_form_process($element, $form_state) {
   array_pop($parents);
   $element['#parents'] = $parents;
   // Add translation entity handlers.
-  if (drupal_container()->get('module_handler')->moduleExists('translation_entity')) {
+  if (Drupal::moduleHandler()->moduleExists('translation_entity')) {
     $comment_form = $element;
     $comment_form_state['translation_entity']['key'] = 'language_configuration';
     $element += translation_entity_enable_widget('comment', $element['#field_name'], $comment_form, $comment_form_state);
