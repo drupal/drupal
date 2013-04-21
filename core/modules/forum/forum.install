@@ -112,7 +112,9 @@ function forum_enable() {
   $types = node_type_get_types();
   node_add_body_field($types['forum']);
   // Add the comment field.
-  comment_add_default_comment_field('node', 'forum', 'comment_node_forum', COMMENT_OPEN);
+  if (!field_read_field('comment_node_forum', array('include_inactive' => TRUE))) {
+    comment_add_default_comment_field('node', 'forum', 'comment_node_forum', COMMENT_OPEN);
+  }
 }
 
 /**
@@ -129,7 +131,6 @@ function forum_uninstall() {
   // Delete comment field, load comment in case it has been disabled.
   drupal_load('module', 'comment');
   // Remove the forum comment field.
-  field_associate_fields('comment');
   field_delete_field('comment_node_forum');
 
   // Purge field data now to allow taxonomy and comment modules to be
