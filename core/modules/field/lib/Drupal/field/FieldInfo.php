@@ -1,20 +1,18 @@
 <?php
 
-/*
+/**
  * @file
- * Definition of Drupal\field\FieldInfo.
+ * Contains \Drupal\field\FieldInfo.
  */
 
 namespace Drupal\field;
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * Provides field and instance definitions for the current runtime environment.
- *
- * A Drupal\field\FieldInfo object is created and statically persisted through
- * the request by the _field_info_field_cache() function. The object properties
- * act as a "static cache" of fields and instances definitions.
  *
  * The preferred way to access definitions is through the getBundleInstances()
  * method, which keeps cache entries per bundle, storing both fields and
@@ -31,6 +29,27 @@ use Drupal\Core\Cache\CacheBackendInterface;
  * getFieldMap() method should be preferred.
  */
 class FieldInfo {
+
+  /**
+   * The cache backend to use.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cacheBackend;
+
+  /**
+   * Stores a module manager to invoke hooks.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $config;
 
   /**
    * Lightweight map of fields across entity types and bundles.
@@ -96,6 +115,22 @@ class FieldInfo {
   protected $bundleExtraFields = array();
 
   /**
+   * Constructs this FieldInfo object.
+   *
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   The cache backend to use.
+   * @param \Drupal\Core\Config\ConfigFactory $config
+   *   The configuration factory object to use.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler class to use for invoking hooks.
+   */
+  public function __construct(CacheBackendInterface $cache_backend, ConfigFactory $config, ModuleHandlerInterface $module_handler) {
+    $this->cacheBackend = $cache_backend;
+    $this->moduleHandler = $module_handler;
+    $this->config = $config;
+  }
+
+  /**
    * Clears the "static" and persistent caches.
    */
   public function flush() {
@@ -112,7 +147,7 @@ class FieldInfo {
 
     $this->bundleExtraFields = array();
 
-    cache('field')->deleteTags(array('field_info' => TRUE));
+    $this->cacheBackend->deleteTags(array('field_info' => TRUE));
   }
 
   /**
@@ -131,7 +166,7 @@ class FieldInfo {
     }
 
     // Read from persistent cache.
-    if ($cached = cache('field')->get('field_info:field_map')) {
+    if ($cached = $this->cacheBackend->get('field_info:field_map')) {
       $map = $cached->data;
 
       // Save in "static" cache.
@@ -144,14 +179,14 @@ class FieldInfo {
 
     // Get active fields.
     foreach (config_get_storage_names_with_prefix('field.field') as $config_id) {
-      $field_config = \Drupal::config($config_id)->get();
+      $field_config = $this->config->get($config_id)->get();
       if ($field_config['active'] && $field_config['storage']['active']) {
         $fields[$field_config['uuid']] = $field_config;
       }
     }
     // Get field instances.
     foreach (config_get_storage_names_with_prefix('field.instance') as $config_id) {
-      $instance_config = \Drupal::config($config_id)->get();
+      $instance_config = $this->config->get($config_id)->get();
       $field_uuid = $instance_config['field_uuid'];
       // Filter out instances of inactive fields, and instances on unknown
       // entity types.
@@ -164,7 +199,7 @@ class FieldInfo {
 
     // Save in "static" and persistent caches.
     $this->fieldMap = $map;
-    cache('field')->set('field_info:field_map', $map, CacheBackendInterface::CACHE_PERMANENT, array('field_info' => TRUE));
+    $this->cacheBackend->set('field_info:field_map', $map, CacheBackendInterface::CACHE_PERMANENT, array('field_info' => TRUE));
 
     return $map;
   }
@@ -182,7 +217,7 @@ class FieldInfo {
     }
 
     // Read from persistent cache.
-    if ($cached = cache('field')->get('field_info:fields')) {
+    if ($cached = $this->cacheBackend->get('field_info:fields')) {
       $this->fieldsById = $cached->data;
     }
     else {
@@ -192,7 +227,7 @@ class FieldInfo {
       }
 
       // Store in persistent cache.
-      cache('field')->set('field_info:fields', $this->fieldsById, CacheBackendInterface::CACHE_PERMANENT, array('field_info' => TRUE));
+      $this->cacheBackend->set('field_info:fields', $this->fieldsById, CacheBackendInterface::CACHE_PERMANENT, array('field_info' => TRUE));
     }
 
     // Fill the name/ID map.
@@ -223,7 +258,7 @@ class FieldInfo {
     if (!$this->loadedAllInstances) {
 
       // Read from persistent cache.
-      if ($cached = cache('field')->get('field_info:instances')) {
+      if ($cached = $this->cacheBackend->get('field_info:instances')) {
         $this->bundleInstances = $cached->data;
       }
       else {
@@ -240,7 +275,7 @@ class FieldInfo {
         }
 
         // Store in persistent cache.
-        cache('field')->set('field_info:instances', $this->bundleInstances, CacheBackendInterface::CACHE_PERMANENT, array('field_info' => TRUE));
+        $this->cacheBackend->set('field_info:instances', $this->bundleInstances, CacheBackendInterface::CACHE_PERMANENT, array('field_info' => TRUE));
       }
 
       $this->loadedAllInstances = TRUE;
@@ -357,7 +392,7 @@ class FieldInfo {
     }
 
     // Read from the persistent cache.
-    if ($cached = cache('field')->get("field_info:bundle:$entity_type:$bundle")) {
+    if ($cached = $this->cacheBackend->get("field_info:bundle:$entity_type:$bundle")) {
       $info = $cached->data;
 
       // Extract the field definitions and save them in the "static" cache.
@@ -440,7 +475,7 @@ class FieldInfo {
     foreach ($instances as $instance) {
       $cache['fields'][] = $this->fieldsById[$instance['field_id']];
     }
-    cache('field')->set("field_info:bundle:$entity_type:$bundle", $cache, CacheBackendInterface::CACHE_PERMANENT, array('field_info' => TRUE));
+    $this->cacheBackend->set("field_info:bundle:$entity_type:$bundle", $cache, CacheBackendInterface::CACHE_PERMANENT, array('field_info' => TRUE));
 
     return $instances;
   }
@@ -463,7 +498,7 @@ class FieldInfo {
     }
 
     // Read from the persistent cache.
-    if ($cached = cache('field')->get("field_info:bundle_extra:$entity_type:$bundle")) {
+    if ($cached = $this->cacheBackend->get("field_info:bundle_extra:$entity_type:$bundle")) {
       $this->bundleExtraFields[$entity_type][$bundle] = $cached->data;
       return $this->bundleExtraFields[$entity_type][$bundle];
     }
@@ -472,7 +507,7 @@ class FieldInfo {
     // shape of the hook, we have no other way than collecting extra fields on
     // all bundles.
     $info = array();
-    $extra = module_invoke_all('field_extra_fields');
+    $extra = $this->moduleHandler->invokeAll('field_extra_fields');
     drupal_alter('field_extra_fields', $extra);
     // Merge in saved settings.
     if (isset($extra[$entity_type][$bundle])) {
@@ -481,7 +516,7 @@ class FieldInfo {
 
     // Store in the 'static' and persistent caches.
     $this->bundleExtraFields[$entity_type][$bundle] = $info;
-    cache('field')->set("field_info:bundle_extra:$entity_type:$bundle", $info, CacheBackendInterface::CACHE_PERMANENT, array('field_info' => TRUE));
+    $this->cacheBackend->set("field_info:bundle_extra:$entity_type:$bundle", $info, CacheBackendInterface::CACHE_PERMANENT, array('field_info' => TRUE));
 
     return $this->bundleExtraFields[$entity_type][$bundle];
   }
