@@ -69,6 +69,9 @@ class ConfigFactory {
    *
    * @param string $name
    *   The name of the configuration object to construct.
+   *
+   * @return \Drupal\Core\Config\Config
+   *   A configuration object.
    */
   public function get($name) {
     $context = $this->getContext();
