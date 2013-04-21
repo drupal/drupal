@@ -333,7 +333,7 @@ function comment_field_schema($field) {
  */
 function comment_update_dependencies() {
   $dependencies['comment'][8006] = array(
-    'field' => 8002,
+    'field' => 8003,
   );
   return $dependencies;
 }
