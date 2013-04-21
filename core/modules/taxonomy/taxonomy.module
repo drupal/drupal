@@ -1078,81 +1078,6 @@ function taxonomy_field_is_empty($item, $field) {
 }
 
 /**
- * Implements hook_field_formatter_info().
- */
-function taxonomy_field_formatter_info() {
-  return array(
-    'taxonomy_term_reference_link' => array(
-      'label' => t('Link'),
-      'field types' => array('taxonomy_term_reference'),
-    ),
-    'taxonomy_term_reference_plain' => array(
-      'label' => t('Plain text'),
-      'field types' => array('taxonomy_term_reference'),
-    ),
-    'taxonomy_term_reference_rss_category' => array(
-      'label' => t('RSS category'),
-      'field types' => array('taxonomy_term_reference'),
-    ),
-  );
-}
-
-/**
- * Implements hook_field_formatter_view().
- */
-function taxonomy_field_formatter_view(EntityInterface $entity, $field, $instance, $langcode, $items, $display) {
-  $element = array();
-
-  // Terms whose tid is 'autocreate' do not exist yet and $item['entity'] is not
-  // set. Theme such terms as just their name.
-
-  switch ($display['type']) {
-    case 'taxonomy_term_reference_link':
-      foreach ($items as $delta => $item) {
-        if ($item['tid'] == 'autocreate') {
-          $element[$delta] = array(
-            '#markup' => check_plain($item['name']),
-          );
-        }
-        else {
-          $term = $item['entity'];
-          $uri = $term->uri();
-          $element[$delta] = array(
-            '#type' => 'link',
-            '#title' => $term->label(),
-            '#href' => $uri['path'],
-            '#options' => $uri['options'],
-          );
-        }
-      }
-      break;
-
-    case 'taxonomy_term_reference_plain':
-      foreach ($items as $delta => $item) {
-        $name = ($item['tid'] != 'autocreate' ? $item['entity']->label() : $item['name']);
-        $element[$delta] = array(
-          '#markup' => check_plain($name),
-        );
-      }
-      break;
-
-    case 'taxonomy_term_reference_rss_category':
-      foreach ($items as $delta => $item) {
-        $entity->rss_elements[] = array(
-          'key' => 'category',
-          'value' => $item['tid'] != 'autocreate' ? $item['entity']->label() : $item['name'],
-          'attributes' => array(
-            'domain' => $item['tid'] != 'autocreate' ? url('taxonomy/term/' . $item['tid'], array('absolute' => TRUE)) : '',
-          ),
-        );
-      }
-      break;
-  }
-
-  return $element;
-}
-
-/**
  * Returns the set of valid terms for a taxonomy field.
  *
  * @param $field
@@ -1179,56 +1104,6 @@ function taxonomy_allowed_values($field, $instance, EntityInterface $entity) {
     }
   }
   return $options;
-}
-
-/**
- * Implements hook_field_formatter_prepare_view().
- *
- * This preloads all taxonomy terms for multiple loaded objects at once and
- * unsets values for invalid terms that do not exist.
- */
-function taxonomy_field_formatter_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items, $displays) {
-  $tids = array();
-
-  // Collect every possible term attached to any of the fieldable entities.
-  foreach ($entities as $id => $entity) {
-    foreach ($items[$id] as $delta => $item) {
-      // Force the array key to prevent duplicates.
-      if ($item['tid'] != 'autocreate' && $item['tid'] !== FALSE) {
-        $tids[$item['tid']] = $item['tid'];
-      }
-    }
-  }
-  if ($tids) {
-    $terms = taxonomy_term_load_multiple($tids);
-
-    // Iterate through the fieldable entities again to attach the loaded term data.
-    foreach ($entities as $id => $entity) {
-      $rekey = FALSE;
-
-      foreach ($items[$id] as $delta => $item) {
-        // Check whether the taxonomy term field instance value could be loaded.
-        if (isset($terms[$item['tid']])) {
-          // Replace the instance value with the term data.
-          $items[$id][$delta]['entity'] = $terms[$item['tid']];
-        }
-        // Terms to be created are not in $terms, but are still legitimate.
-        elseif ($item['tid'] == 'autocreate') {
-          // Leave the item in place.
-        }
-        // Otherwise, unset the instance value, since the term does not exist.
-        else {
-          unset($items[$id][$delta]);
-          $rekey = TRUE;
-        }
-      }
-
-      if ($rekey) {
-        // Rekey the items array.
-        $items[$id] = array_values($items[$id]);
-      }
-    }
-  }
 }
 
 /**
