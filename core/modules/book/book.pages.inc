@@ -10,23 +10,6 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Page callback: Prints a listing of all books.
- *
- * @return string
- *   A HTML-formatted string with the listing of all books content.
- *
- * @see book_menu()
- */
-function book_render() {
-  $book_list = array();
-  foreach (book_get_books() as $book) {
-    $book_list[] = l($book['title'], $book['href'], $book['options']);
-  }
-
-  return theme('item_list', array('items' => $book_list));
-}
-
-/**
  * Page callback: Generates representations of a book page and its children.
  *
  * The function delegates the generation of output to helper functions. The

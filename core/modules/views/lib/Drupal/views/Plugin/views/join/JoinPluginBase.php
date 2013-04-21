@@ -6,7 +6,7 @@
  */
 
 namespace Drupal\views\Plugin\views\join;
-use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Plugin\ContainerFactoryPluginBase;
 
 /**
  * @defgroup views_join_handlers Views join handlers
@@ -49,7 +49,7 @@ use Drupal\Component\Plugin\PluginBase;
  *
  * Extensions of this class can be used to create more interesting joins.
  */
-class JoinPluginBase extends PluginBase {
+class JoinPluginBase extends ContainerFactoryPluginBase {
 
   /**
    * The table to join (right table).

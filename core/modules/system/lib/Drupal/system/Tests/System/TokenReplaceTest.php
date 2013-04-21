@@ -25,6 +25,8 @@ class TokenReplaceTest extends WebTestBase {
    * Creates a user and a node, then tests the tokens generated from them.
    */
   function testTokenReplacement() {
+    $token_service = \Drupal::token();
+
     // Create the initial objects.
     $account = $this->drupalCreateUser();
     $node = $this->drupalCreateNode(array('uid' => $account->uid));
@@ -47,34 +49,35 @@ class TokenReplaceTest extends WebTestBase {
     $target .= format_date(REQUEST_TIME, 'short', '', NULL, $language_interface->langcode);
 
     // Test that the clear parameter cleans out non-existent tokens.
-    $result = token_replace($source, array('node' => $node), array('langcode' => $language_interface->langcode, 'clear' => TRUE));
+    $result = $token_service->replace($source, array('node' => $node), array('langcode' => $language_interface->langcode, 'clear' => TRUE));
     $result = $this->assertEqual($target, $result, 'Valid tokens replaced while invalid tokens cleared out.');
 
     // Test without using the clear parameter (non-existent token untouched).
     $target .= '[user:name]';
     $target .= '[bogus:token]';
-    $result = token_replace($source, array('node' => $node), array('langcode' => $language_interface->langcode));
+    $result = $token_service->replace($source, array('node' => $node), array('langcode' => $language_interface->langcode));
     $this->assertEqual($target, $result, 'Valid tokens replaced while invalid tokens ignored.');
 
-    // Check that the results of token_generate are sanitized properly. This does NOT
-    // test the cleanliness of every token -- just that the $sanitize flag is being
-    // passed properly through the call stack and being handled correctly by a 'known'
-    // token, [node:title].
+    // Check that the results of Token::generate are sanitized properly. This
+    // does NOT test the cleanliness of every token -- just that the $sanitize
+    // flag is being passed properly through the call stack and being handled
+    // correctly by a 'known' token, [node:title].
     $raw_tokens = array('title' => '[node:title]');
-    $generated = token_generate('node', $raw_tokens, array('node' => $node));
+    $generated = $token_service->generate('node', $raw_tokens, array('node' => $node));
     $this->assertEqual($generated['[node:title]'], check_plain($node->title), 'Token sanitized.');
 
-    $generated = token_generate('node', $raw_tokens, array('node' => $node), array('sanitize' => FALSE));
+    $generated = $token_service->generate('node', $raw_tokens, array('node' => $node), array('sanitize' => FALSE));
     $this->assertEqual($generated['[node:title]'], $node->title, 'Unsanitized token generated properly.');
 
     // Test token replacement when the string contains no tokens.
-    $this->assertEqual(token_replace('No tokens here.'), 'No tokens here.');
+    $this->assertEqual($token_service->replace('No tokens here.'), 'No tokens here.');
   }
 
   /**
    * Test whether token-replacement works in various contexts.
    */
   function testSystemTokenRecognition() {
+    $token_service = \Drupal::token();
     $language_interface = language(LANGUAGE_TYPE_INTERFACE);
 
     // Generate prefixes and suffixes for the token context.
@@ -95,7 +98,7 @@ class TokenReplaceTest extends WebTestBase {
     foreach ($tests as $test) {
       $input = $test['prefix'] . '[site:name]' . $test['suffix'];
       $expected = $test['prefix'] . 'Drupal' . $test['suffix'];
-      $output = token_replace($input, array(), array('langcode' => $language_interface->langcode));
+      $output = $token_service->replace($input, array(), array('langcode' => $language_interface->langcode));
       $this->assertTrue($output == $expected, format_string('Token recognized in string %string', array('%string' => $input)));
     }
   }
@@ -104,6 +107,7 @@ class TokenReplaceTest extends WebTestBase {
    * Tests the generation of all system site information tokens.
    */
   function testSystemSiteTokenReplacement() {
+    $token_service = \Drupal::token();
     $language_interface = language(LANGUAGE_TYPE_INTERFACE);
     $url_options = array(
       'absolute' => TRUE,
@@ -129,7 +133,7 @@ class TokenReplaceTest extends WebTestBase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array(), array('langcode' => $language_interface->langcode));
+      $output = $token_service->replace($input, array(), array('langcode' => $language_interface->langcode));
       $this->assertEqual($output, $expected, format_string('Sanitized system site information token %token replaced.', array('%token' => $input)));
     }
 
@@ -138,7 +142,7 @@ class TokenReplaceTest extends WebTestBase {
     $tests['[site:slogan]'] = config('system.site')->get('slogan');
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array(), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));
+      $output = $token_service->replace($input, array(), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, format_string('Unsanitized system site information token %token replaced.', array('%token' => $input)));
     }
   }
@@ -147,6 +151,7 @@ class TokenReplaceTest extends WebTestBase {
    * Tests the generation of all system date tokens.
    */
   function testSystemDateTokenReplacement() {
+    $token_service = \Drupal::token();
     $language_interface = language(LANGUAGE_TYPE_INTERFACE);
 
     // Set time to one hour before request.
@@ -165,7 +170,7 @@ class TokenReplaceTest extends WebTestBase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('date' => $date), array('langcode' => $language_interface->langcode));
+      $output = $token_service->replace($input, array('date' => $date), array('langcode' => $language_interface->langcode));
       $this->assertEqual($output, $expected, format_string('Date token %token replaced.', array('%token' => $input)));
     }
   }

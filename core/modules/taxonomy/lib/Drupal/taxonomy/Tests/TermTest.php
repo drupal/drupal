@@ -374,18 +374,18 @@ class TermTest extends TaxonomyTestBase {
     // term3, term1 by setting weight property, make term3 a child of term2 by
     // setting the parent and depth properties, and update all hidden fields.
     $edit = array(
-      'tid:' . $term2->tid . ':0[tid]' => $term2->tid,
-      'tid:' . $term2->tid . ':0[parent]' => 0,
-      'tid:' . $term2->tid . ':0[depth]' => 0,
-      'tid:' . $term2->tid . ':0[weight]' => 0,
-      'tid:' . $term3->tid . ':0[tid]' => $term3->tid,
-      'tid:' . $term3->tid . ':0[parent]' => $term2->tid,
-      'tid:' . $term3->tid . ':0[depth]' => 1,
-      'tid:' . $term3->tid . ':0[weight]' => 1,
-      'tid:' . $term1->tid . ':0[tid]' => $term1->tid,
-      'tid:' . $term1->tid . ':0[parent]' => 0,
-      'tid:' . $term1->tid . ':0[depth]' => 0,
-      'tid:' . $term1->tid . ':0[weight]' => 2,
+      'terms[tid:' . $term2->tid . ':0][term][tid]' => $term2->tid,
+      'terms[tid:' . $term2->tid . ':0][term][parent]' => 0,
+      'terms[tid:' . $term2->tid . ':0][term][depth]' => 0,
+      'terms[tid:' . $term2->tid . ':0][weight]' => 0,
+      'terms[tid:' . $term3->tid . ':0][term][tid]' => $term3->tid,
+      'terms[tid:' . $term3->tid . ':0][term][parent]' => $term2->tid,
+      'terms[tid:' . $term3->tid . ':0][term][depth]' => 1,
+      'terms[tid:' . $term3->tid . ':0][weight]' => 1,
+      'terms[tid:' . $term1->tid . ':0][term][tid]' => $term1->tid,
+      'terms[tid:' . $term1->tid . ':0][term][parent]' => 0,
+      'terms[tid:' . $term1->tid . ':0][term][depth]' => 0,
+      'terms[tid:' . $term1->tid . ':0][weight]' => 2,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
 

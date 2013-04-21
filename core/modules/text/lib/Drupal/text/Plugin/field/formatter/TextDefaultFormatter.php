@@ -38,7 +38,7 @@ class TextDefaultFormatter extends FormatterBase {
     $elements = array();
 
     foreach ($items as $delta => $item) {
-      $output = _text_sanitize($this->instance, $langcode, $item, 'value');
+      $output = text_sanitize($this->instance['settings']['text_processing'], $langcode, $item, 'value');
       $elements[$delta] = array('#markup' => $output);
     }
 

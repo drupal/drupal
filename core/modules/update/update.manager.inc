@@ -645,7 +645,7 @@ function update_manager_install_form_submit($form, &$form_state) {
   elseif ($_FILES['files']['name']['project_upload']) {
     $validators = array('file_validate_extensions' => array(archiver_get_extensions()));
     $field = 'project_upload';
-    if (!($finfo = file_save_upload($field, $validators, NULL, FILE_EXISTS_REPLACE))) {
+    if (!($finfo = file_save_upload($field, $validators, NULL, 0, FILE_EXISTS_REPLACE))) {
       // Failed to upload the file. file_save_upload() calls form_set_error() on
       // failure.
       return;

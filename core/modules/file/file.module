@@ -81,6 +81,7 @@ function file_element_info() {
     '#upload_validators' => array(),
     '#upload_location' => NULL,
     '#size' => 22,
+    '#multiple' => FALSE,
     '#extended' => FALSE,
     '#attached' => array(
       'library' => array(array('file','drupal.file')),
@@ -610,7 +611,7 @@ function file_theme() {
       'variables' => array('items' => NULL),
     ),
     'file_upload_help' => array(
-      'variables' => array('description' => NULL, 'upload_validators' => NULL),
+      'variables' => array('description' => NULL, 'upload_validators' => NULL, 'cardinality' => NULL),
     ),
   );
 }
@@ -870,11 +871,15 @@ function file_managed_file_process($element, &$form_state, $form) {
   // Append the '-upload' to the #id so the field label's 'for' attribute
   // corresponds with the file element.
   $element['#id'] .= '-upload';
-  $fid = isset($element['#value']['fid']) ? $element['#value']['fid'] : 0;
+
+  // This is used sometimes so let's implode it just once.
+  $parents_prefix = implode('_', $element['#parents']);
+
+  $fids = isset($element['#value']['fids']) ? $element['#value']['fids'] : array();
 
   // Set some default element properties.
   $element['#progress_indicator'] = empty($element['#progress_indicator']) ? 'none' : $element['#progress_indicator'];
-  $element['#file'] = $fid ? file_load($fid) : FALSE;
+  $element['#files'] = !empty($fids) ? file_load_multiple($fids) : FALSE;
   $element['#tree'] = TRUE;
 
   $ajax_settings = array(
@@ -889,7 +894,7 @@ function file_managed_file_process($element, &$form_state, $form) {
 
   // Set up the buttons first since we need to check if they were clicked.
   $element['upload_button'] = array(
-    '#name' => implode('_', $element['#parents']) . '_upload_button',
+    '#name' => $parents_prefix . '_upload_button',
     '#type' => 'submit',
     '#value' => t('Upload'),
     '#validate' => array(),
@@ -905,19 +910,19 @@ function file_managed_file_process($element, &$form_state, $form) {
   $ajax_settings['progress']['message'] = NULL;
   $ajax_settings['effect'] = 'none';
   $element['remove_button'] = array(
-    '#name' => implode('_', $element['#parents']) . '_remove_button',
+    '#name' => $parents_prefix . '_remove_button',
     '#type' => 'submit',
-    '#value' => t('Remove'),
+    '#value' => $element['#multiple'] ? t('Remove selected') : t('Remove'),
     '#validate' => array(),
     '#submit' => array('file_managed_file_submit'),
     '#limit_validation_errors' => array($element['#parents']),
     '#ajax' => $ajax_settings,
-    '#weight' => -5,
+    '#weight' => 1,
   );
 
-  $element['fid'] = array(
+  $element['fids'] = array(
     '#type' => 'hidden',
-    '#value' => $fid,
+    '#value' => $fids,
   );
 
   // Add progress bar support to the upload if possible.
@@ -951,21 +956,32 @@ function file_managed_file_process($element, &$form_state, $form) {
 
   // The file upload field itself.
   $element['upload'] = array(
-    '#name' => 'files[' . implode('_', $element['#parents']) . ']',
+    '#name' => 'files[' . $parents_prefix . ']',
     '#type' => 'file',
     '#title' => t('Choose a file'),
     '#title_display' => 'invisible',
     '#size' => $element['#size'],
+    '#multiple' => $element['#multiple'],
     '#theme_wrappers' => array(),
     '#weight' => -10,
   );
 
-  if ($fid && $element['#file']) {
-    $element['filename'] = array(
-      '#type' => 'markup',
-      '#markup' => theme('file_link', array('file' => $element['#file'])) . ' ',
-      '#weight' => -10,
-    );
+  if (!empty($fids) && $element['#files']) {
+    foreach ($element['#files'] as $delta => $file) {
+      if ($element['#multiple']) {
+        $element['file_' . $delta]['selected'] = array(
+          '#type' => 'checkbox',
+          '#title' => theme('file_link', array('file' => $file)) . ' ',
+        );
+      }
+      else {
+        $element['file_' . $delta]['filename'] = array(
+          '#type' => 'markup',
+          '#markup' => theme('file_link', array('file' => $file)) . ' ',
+          '#weight' => -10,
+        );
+      }
+    }
   }
 
   // Add the extension list to the page as JavaScript settings.
@@ -992,28 +1008,25 @@ function file_managed_file_process($element, &$form_state, $form) {
  * This function is assigned as a #value_callback in file_element_info().
  */
 function file_managed_file_value(&$element, $input = FALSE, $form_state = NULL) {
-  $fid = 0;
-
-  // Find the current value of this field from the form state.
-  $form_state_fid = $form_state['values'];
-  foreach ($element['#parents'] as $parent) {
-    $form_state_fid = isset($form_state_fid[$parent]) ? $form_state_fid[$parent] : 0;
-  }
-
-  if ($element['#extended'] && isset($form_state_fid['fid'])) {
-    $fid = $form_state_fid['fid'];
-  }
-  elseif (is_numeric($form_state_fid)) {
-    $fid = $form_state_fid;
+  // Find the current value of this field.
+  $fids = !empty($input['fids']) ? explode(' ', $input['fids']) : array();
+  foreach ($fids as $key => $fid) {
+    $fids[$key] = (int) $fid;
   }
 
   // Process any input and save new uploads.
   if ($input !== FALSE) {
+    $input['fids'] = $fids;
     $return = $input;
 
     // Uploads take priority over all other values.
-    if ($file = file_managed_file_save_upload($element)) {
-      $fid = $file->fid;
+    if ($files = file_managed_file_save_upload($element)) {
+      if ($element['#multiple']) {
+        $fids = array_merge($fids, array_keys($files));
+      }
+      else {
+        $fids = array_keys($files);
+      }
     }
     else {
       // Check for #filefield_value_callback values.
@@ -1025,9 +1038,15 @@ function file_managed_file_value(&$element, $input = FALSE, $form_state = NULL) 
           $callback($element, $input, $form_state);
         }
       }
-      // Load file if the FID has changed to confirm it exists.
-      if (isset($input['fid']) && $file = file_load($input['fid'])) {
-        $fid = $file->fid;
+
+      // Load files if the FIDs have changed to confirm they exist.
+      if (!empty($input['fids'])) {
+        $fids = array();
+        foreach ($input['fids'] as $key => $fid) {
+          if ($file = file_load($fid)) {
+            $fids[] = $file->fid;
+          }
+        }
       }
     }
   }
@@ -1035,22 +1054,26 @@ function file_managed_file_value(&$element, $input = FALSE, $form_state = NULL) 
   // If there is no input, set the default value.
   else {
     if ($element['#extended']) {
-      $default_fid = isset($element['#default_value']['fid']) ? $element['#default_value']['fid'] : 0;
-      $return = isset($element['#default_value']) ? $element['#default_value'] : array('fid' => 0);
+      $default_fids = isset($element['#default_value']['fids']) ? $element['#default_value']['fids'] : array();
+      $return = isset($element['#default_value']) ? $element['#default_value'] : array('fids' => array());
     }
     else {
-      $default_fid = isset($element['#default_value']) ? $element['#default_value'] : 0;
-      $return = array('fid' => 0);
+      $default_fids = isset($element['#default_value']) ? $element['#default_value'] : array();
+      $return = array('fids' => array());
     }
 
     // Confirm that the file exists when used as a default value.
-    if ($default_fid && $file = file_load($default_fid)) {
-      $fid = $file->fid;
+    if (!empty($default_fids)) {
+      $fids = array();
+      foreach ($default_fids as $key => $fid) {
+        if ($file = file_load($fid)) {
+          $fids[] = $file->fid;
+        }
+      }
     }
   }
 
-  $return['fid'] = $fid;
-
+  $return['fids'] = $fids;
   return $return;
 }
 
@@ -1065,28 +1088,31 @@ function file_managed_file_validate(&$element, &$form_state) {
   // references. This prevents unmanaged files from being deleted if this
   // item were to be deleted.
   $clicked_button = end($form_state['triggering_element']['#parents']);
-  if ($clicked_button != 'remove_button' && !empty($element['fid']['#value'])) {
-    if ($file = file_load($element['fid']['#value'])) {
-      if ($file->status == FILE_STATUS_PERMANENT) {
-        $references = file_usage()->listUsage($file);
-        if (empty($references)) {
-          form_error($element, t('The file used in the !name field may not be referenced.', array('!name' => $element['#title'])));
+  if ($clicked_button != 'remove_button' && !empty($element['fids']['#value'])) {
+    $fids = $element['fids']['#value'];
+    foreach ($fids as $fid) {
+      if ($file = file_load($fid)) {
+        if ($file->status == FILE_STATUS_PERMANENT) {
+          $references = file_usage()->listUsage($file);
+          if (empty($references)) {
+            form_error($element, t('The file used in the !name field may not be referenced.', array('!name' => $element['#title'])));
+          }
         }
       }
-    }
-    else {
-      form_error($element, t('The file referenced by the !name field does not exist.', array('!name' => $element['#title'])));
+      else {
+        form_error($element, t('The file referenced by the !name field does not exist.', array('!name' => $element['#title'])));
+      }
     }
   }
 
   // Check required property based on the FID.
-  if ($element['#required'] && empty($element['fid']['#value']) && !in_array($clicked_button, array('upload_button', 'remove_button'))) {
+  if ($element['#required'] && empty($element['fids']['#value']) && !in_array($clicked_button, array('upload_button', 'remove_button'))) {
     form_error($element['upload'], t('!name field is required.', array('!name' => $element['#title'])));
   }
 
-  // Consolidate the array value of this field to a single FID.
+  // Consolidate the array value of this field to array of FIDs.
   if (!$element['#extended']) {
-    form_set_value($element, $element['fid']['#value'], $form_state);
+    form_set_value($element, $element['fids']['#value'], $form_state);
   }
 }
 
@@ -1107,11 +1133,28 @@ function file_managed_file_submit($form, &$form_state) {
   // button was clicked. Action is needed here for the remove button, because we
   // only remove a file in response to its remove button being clicked.
   if ($button_key == 'remove_button') {
-    // If it's a temporary file we can safely remove it immediately, otherwise
-    // it's up to the implementing module to remove usages of files to have them
-    // removed.
-    if ($element['#file'] && $element['#file']->status == 0) {
-      file_delete($element['#file']->fid);
+    $fids = array_keys($element['#files']);
+    // Get files that will be removed.
+    if ($element['#multiple']) {
+      $remove_fids = array();
+      foreach (element_children($element) as $name) {
+        if (strpos($name, 'file_') === 0 && $element[$name]['selected']['#value']) {
+          $remove_fids[] = (int) substr($name, 5);
+        }
+      }
+      $fids = array_diff($fids, $remove_fids);
+    }
+    else {
+      $remove_fids = $fids;
+    }
+
+    foreach ($remove_fids as $fid) {
+      // If it's a temporary file we can safely remove it immediately, otherwise
+      // it's up to the implementing module to remove usages of files to have them
+      // removed.
+      if ($element['#files'][$fid] && $element['#files'][$fid]->status == 0) {
+        file_delete($element['#files'][$fid]->fid);
+      }
     }
     // Update both $form_state['values'] and $form_state['input'] to reflect
     // that the file has been removed, so that the form is rebuilt correctly.
@@ -1120,9 +1163,8 @@ function file_managed_file_submit($form, &$form_state) {
     // when the managed_file element is part of a field widget.
     // $form_state['input'] must be updated so that file_managed_file_value()
     // has correct information during the rebuild.
-    $values_element = $element['#extended'] ? $element['fid'] : $element;
-    form_set_value($values_element, NULL, $form_state);
-    NestedArray::setValue($form_state['input'], $values_element['#parents'], NULL);
+    form_set_value($element['fids'], implode(' ', $fids), $form_state);
+    NestedArray::setValue($form_state['input'], $element['fids']['#parents'], implode(' ', $fids));
   }
 
   // Set the form to rebuild so that $form is correctly updated in response to
@@ -1141,8 +1183,8 @@ function file_managed_file_submit($form, &$form_state) {
  *   The FAPI element whose values are being saved.
  *
  * @return
- *   The file entity representing the file that was saved, or FALSE if no file
- *   was saved.
+ *   An array of file entities for each file that was saved, keyed by its file
+ *   ID, or FALSE if no files were saved.
  */
 function file_managed_file_save_upload($element) {
   $upload_name = implode('_', $element['#parents']);
@@ -1157,13 +1199,24 @@ function file_managed_file_save_upload($element) {
     return FALSE;
   }
 
-  if (!$file = file_save_upload($upload_name, $element['#upload_validators'], $destination)) {
-    watchdog('file', 'The file upload failed. %upload', array('%upload' => $upload_name));
-    form_set_error($upload_name, t('The file in the !name field was unable to be uploaded.', array('!name' => $element['#title'])));
-    return FALSE;
+  // Save attached files to the database.
+  $files_uploaded = $element['#multiple'] && count(array_filter($_FILES['files']['name'][$upload_name])) > 0;
+  $files_uploaded |= !$element['#multiple'] && !empty($_FILES['files']['name'][$upload_name]);
+  if ($files_uploaded) {
+    if (!$files = file_save_upload($upload_name, $element['#upload_validators'], $destination)) {
+      watchdog('file', 'The file upload failed. %upload', array('%upload' => $upload_name));
+      form_set_error($upload_name, t('Files in the !name field were unable to be uploaded.', array('!name' => $element['#title'])));
+      return array();
+    }
+
+    // Value callback expects FIDs to be keys.
+    $files = array_filter($files);
+    $fids = array_map(function($file) { return $file->fid; }, $files);
+
+    return empty($files) ? array() : array_combine($fids, $files);
   }
 
-  return $file;
+  return array();
 }
 
 /**
@@ -1218,9 +1271,11 @@ function theme_file_managed_file($variables) {
  */
 function file_managed_file_pre_render($element) {
   // If we already have a file, we don't want to show the upload controls.
-  if (!empty($element['#value']['fid'])) {
-    $element['upload']['#access'] = FALSE;
-    $element['upload_button']['#access'] = FALSE;
+  if (!empty($element['#value']['fids'])) {
+    if (!$element['#multiple']) {
+      $element['upload']['#access'] = FALSE;
+      $element['upload_button']['#access'] = FALSE;
+    }
   }
   // If we don't already have a file, there is nothing to remove.
   else {

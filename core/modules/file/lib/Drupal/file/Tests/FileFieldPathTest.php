@@ -25,7 +25,7 @@ class FileFieldPathTest extends FileFieldTestBase {
   function testUploadPath() {
     $field_name = strtolower($this->randomName());
     $type_name = 'article';
-    $field = $this->createFileField($field_name, $type_name);
+    $this->createFileField($field_name, $type_name);
     $test_file = $this->getTestFile('text');
 
     // Create a new node.
@@ -37,7 +37,7 @@ class FileFieldPathTest extends FileFieldTestBase {
     $this->assertPathMatch('public://' . $test_file->filename, $node_file->uri, t('The file %file was uploaded to the correct path.', array('%file' => $node_file->uri)));
 
     // Change the path to contain multiple subdirectories.
-    $field = $this->updateFileField($field_name, $type_name, array('file_directory' => 'foo/bar/baz'));
+    $this->updateFileField($field_name, $type_name, array('file_directory' => 'foo/bar/baz'));
 
     // Upload a new file into the subdirectories.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
@@ -49,7 +49,7 @@ class FileFieldPathTest extends FileFieldTestBase {
 
     // Check the path when used with tokens.
     // Change the path to contain multiple token directories.
-    $field = $this->updateFileField($field_name, $type_name, array('file_directory' => '[current-user:uid]/[current-user:name]'));
+    $this->updateFileField($field_name, $type_name, array('file_directory' => '[current-user:uid]/[current-user:name]'));
 
     // Upload a new file into the token subdirectories.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
@@ -60,7 +60,7 @@ class FileFieldPathTest extends FileFieldTestBase {
     // Do token replacement using the same user which uploaded the file, not
     // the user running the test case.
     $data = array('user' => $this->admin_user);
-    $subdirectory = token_replace('[user:uid]/[user:name]', $data);
+    $subdirectory = \Drupal::token()->replace('[user:uid]/[user:name]', $data);
     $this->assertPathMatch('public://' . $subdirectory . '/' . $test_file->filename, $node_file->uri, t('The file %file was uploaded to the correct path with token replacements.', array('%file' => $node_file->uri)));
   }
 

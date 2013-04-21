@@ -157,8 +157,7 @@ class StyleSerializerTest extends PluginTestBase {
       $expected[] = $expected_row;
     }
 
-    // Use an AJAX call, as this will return decoded JSON data.
-    $this->assertIdentical($this->drupalGetAJAX('test/serialize/field'), $expected);
+    $this->assertIdentical($this->drupalGetJSON('test/serialize/field'), $expected);
 
     // Test a random aliases for fields, they should be replaced.
     $alias_map = array(
@@ -193,7 +192,7 @@ class StyleSerializerTest extends PluginTestBase {
       $expected[] = $expected_row;
     }
 
-    $this->assertIdentical($this->drupalGetAJAX('test/serialize/field'), $expected);
+    $this->assertIdentical($this->drupalGetJSON('test/serialize/field'), $expected);
   }
 
   /**
@@ -217,7 +216,7 @@ class StyleSerializerTest extends PluginTestBase {
     $this->executeView($view);
 
     // Just test the raw 'created' value against each row.
-    foreach ($this->drupalGetAJAX('test/serialize/field') as $index => $values) {
+    foreach ($this->drupalGetJSON('test/serialize/field') as $index => $values) {
       $this->assertIdentical($values['created'], $view->result[$index]->views_test_data_created, 'Expected raw created value found.');
     }
   }

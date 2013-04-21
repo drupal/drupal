@@ -56,11 +56,11 @@ class FTPExtension extends FTP implements ChmodInterface {
     if (!$list) {
       $list = array();
     }
-    foreach ($list as $item){
+    foreach ($list as $item) {
       if ($item == '.' || $item == '..') {
         continue;
       }
-      if (@ftp_chdir($this->connection, $item)){
+      if (@ftp_chdir($this->connection, $item)) {
         ftp_cdup($this->connection);
         $this->removeDirectory(ftp_pwd($this->connection) . '/' . $item);
       }
@@ -108,7 +108,7 @@ class FTPExtension extends FTP implements ChmodInterface {
    */
   function chmodJailed($path, $mode, $recursive) {
     if (!ftp_chmod($this->connection, $mode, $path)) {
-      throw new FileTransferException("Unable to set permissions on %file", NULL, array ('%file' => $path));
+      throw new FileTransferException("Unable to set permissions on %file", NULL, array('%file' => $path));
     }
     if ($this->isDirectory($path) && $recursive) {
       $filelist = @ftp_nlist($this->connection, $path);

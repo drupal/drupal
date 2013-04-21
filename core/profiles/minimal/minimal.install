@@ -12,7 +12,8 @@
  * @see system_install()
  */
 function minimal_install() {
-  $default_theme = 'stark';
+  // Disable the user pictures on nodes.
+  variable_set('theme_settings', array('toggle_node_user_picture' => FALSE));
 
   // Allow visitor account creation, but with administrative approval.
   config('user.settings')->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save();

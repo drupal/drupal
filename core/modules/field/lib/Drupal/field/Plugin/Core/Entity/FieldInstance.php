@@ -273,7 +273,7 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess {
       'default_value_function' => '',
       'settings' => array(),
       'widget' => array(),
-      'deleted' => 0,
+      'deleted' => FALSE,
     );
     parent::__construct($values, $entity_type);
   }

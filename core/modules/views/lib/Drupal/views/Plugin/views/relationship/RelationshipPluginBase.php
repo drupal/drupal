@@ -65,19 +65,8 @@ abstract class RelationshipPluginBase extends HandlerBase {
     }
   }
 
-  /**
-   * Get this field's label.
-   */
-  function label() {
-    if (!isset($this->options['label'])) {
-      return $this->adminLabel();
-    }
-    return $this->options['label'];
-  }
-
   protected function defineOptions() {
     $options = parent::defineOptions();
-
 
     // Relationships definitions should define a default label, but if they aren't get another default value.
     if (!empty($this->definition['label'])) {
@@ -87,7 +76,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
       $label = !empty($this->definition['field']) ? $this->definition['field'] : $this->definition['base field'];
     }
 
-    $options['label'] = array('default' => $label, 'translatable' => TRUE);
+    $options['admin_label']['default'] = $label;
     $options['required'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;
@@ -99,13 +88,9 @@ abstract class RelationshipPluginBase extends HandlerBase {
    */
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
-    $form['label'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Identifier'),
-      '#default_value' => isset($this->options['label']) ? $this->options['label'] : '',
-      '#description' => t('Edit the administrative label displayed when referencing this relationship from filters, etc.'),
-      '#required' => TRUE,
-    );
+
+    unset($form['admin_label']['#fieldset']);
+    $form['admin_label']['#weight'] = -1;
 
     $form['required'] = array(
       '#type' => 'checkbox',

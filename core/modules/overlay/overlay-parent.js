@@ -12,10 +12,6 @@
  */
 Drupal.behaviors.overlayParent = {
   attach: function (context, settings) {
-    if (Drupal.overlay.isOpen) {
-      Drupal.overlay.makeDocumentUntabbable(context);
-    }
-
     if (this.processed) {
       return;
     }
@@ -94,7 +90,6 @@ Drupal.overlay.open = function (url) {
   this.isOpening = false;
   this.isOpen = true;
   $(document.documentElement).addClass('overlay-open');
-  this.makeDocumentUntabbable();
 
   // Allow other scripts to respond to this event.
   $(document).trigger('drupalOverlayOpen');
@@ -204,10 +199,11 @@ Drupal.overlay.close = function () {
   $(document.documentElement).removeClass('overlay-open');
   // Restore the original document title.
   document.title = this.originalTitle;
-  this.makeDocumentTabbable();
 
   // Allow other scripts to respond to this event.
   $(document).trigger('drupalOverlayClose');
+
+  Drupal.announce(Drupal.t('Tabbing is no longer constrained by the Overlay module.'));
 
   // When the iframe is still loading don't destroy it immediately but after
   // the content is loaded (see Drupal.overlay.loadChild).
@@ -301,14 +297,20 @@ Drupal.overlay.loadChild = function (event) {
         .attr('title', Drupal.t('@title dialog', { '@title': iframeWindow.jQuery('#overlay-title').text() })).prop('tabindex', false);
       this.inactiveFrame = event.data.sibling;
 
+      Drupal.announce(Drupal.t('The overlay has been opened to @title', {'@title': iframeWindow.jQuery('#overlay-title').text()}));
+
       // Load an empty document into the inactive iframe.
       (this.inactiveFrame[0].contentDocument || this.inactiveFrame[0].contentWindow.document).location.replace('about:blank');
 
-      // Move the focus to just before the "skip to main content" link inside
-      // the overlay.
-      this.activeFrame.focus();
-      var skipLink = iframeWindow.jQuery('a:first');
+      // Create a fake link before the skip link in order to give it focus.
+      var skipLink = iframeWindow.jQuery('[href="#main-content"]');
       Drupal.overlay.setFocusBefore(skipLink, iframeWindow.document);
+
+      // Report these tabbables to the TabbingManger in the parent window.
+      Drupal.overlay.releaseTabbing();
+      Drupal.overlay.constrainTabbing($(iframeWindow.document).add('#toolbar-administration'));
+
+      Drupal.announce(Drupal.t('Tabbing is constrained to items in the administrative toolbar and the overlay.'));
 
       // Allow other scripts to respond to this event.
       $(document).trigger('drupalOverlayLoad');
@@ -343,7 +345,7 @@ Drupal.overlay.setFocusBefore = function ($element, document) {
   var $placeholder = $(placeholder).addClass('element-invisible').attr('href', '#');
   // Put the placeholder where it belongs, and set the document focus to it.
   $placeholder.insertBefore($element);
-  $placeholder.focus();
+  $placeholder.attr('autofocus', true);
   // Make the placeholder disappear as soon as it loses focus, so that it
   // doesn't appear in the tab order again.
   $placeholder.one('blur', function () {
@@ -833,80 +835,29 @@ Drupal.overlay.getPath = function (link) {
 
 /**
  * Makes elements outside the overlay unreachable via the tab key.
- *
- * @param context
- *   The part of the DOM that should have its tabindexes changed. Defaults to
- *   the entire page.
  */
-Drupal.overlay.makeDocumentUntabbable = function (context) {
-  context = context || document.body;
-  var $overlay, $tabbable, $hasTabindex;
-
-  // Determine which elements on the page already have a tabindex.
-  $hasTabindex = $('[tabindex] :not(.overlay-element)', context);
-  // Record the tabindex for each element, so we can restore it later.
-  $hasTabindex.each(Drupal.overlay._recordTabindex);
-  // Add the tabbable elements from the current context to any that we might
-  // have previously recorded.
-  Drupal.overlay._hasTabindex = $hasTabindex.add(Drupal.overlay._hasTabindex);
-
-  // Set tabindex to -1 on everything outside the overlay and toolbars, so that
-  // the underlying page is unreachable.
-
-  // By default, browsers make a, area, button, input, object, select, textarea,
-  // and iframe elements reachable via the tab key.
-  $tabbable = $('a, area, button, input, object, select, textarea, iframe');
-  // If another element (like a div) has a tabindex, it's also tabbable.
-  $tabbable = $tabbable.add($hasTabindex);
+Drupal.overlay.constrainTabbing = function ($tabbables) {
+  // If a tabset is already active, return without creating a new one.
+  if (this.tabset && !this.tabset.released) {
+    return;
+  }
   // Leave links inside the overlay and toolbars alone.
-  $overlay = $('.overlay-element, #overlay-container, #toolbar-administration').find('*');
-  $tabbable = $tabbable.not($overlay);
-  // We now have a list of everything in the underlying document that could
-  // possibly be reachable via the tab key. Make it all unreachable.
-  $tabbable.prop('tabindex', -1);
+  this.tabset = Drupal.tabbingManager.constrain($tabbables);
+  var self = this;
+  $(document).on('drupalOverlayClose.tabbing', function () {
+    self.tabset.release();
+    $(document).off('drupalOverlayClose.tabbing');
+  });
 };
 
 /**
- * Restores the original tabindex value of a group of elements.
  *
- * @param context
- *   The part of the DOM that should have its tabindexes restored. Defaults to
- *   the entire page.
  */
-Drupal.overlay.makeDocumentTabbable = function (context) {
-  var $needsTabindex;
-  context = context || document.body;
-
-  // Make the underlying document tabbable again by removing all existing
-  // tabindex attributes.
-  $(context).find('[tabindex]').prop('tabindex', false);
-
-  // Restore the tabindex attributes that existed before the overlay was opened.
-  $needsTabindex = $(Drupal.overlay._hasTabindex, context);
-  $needsTabindex.each(Drupal.overlay._restoreTabindex);
-  Drupal.overlay._hasTabindex = Drupal.overlay._hasTabindex.not($needsTabindex);
-};
-
-/**
- * Record the tabindex for an element, using $.data.
- *
- * Meant to be used as a jQuery.fn.each callback.
- */
-Drupal.overlay._recordTabindex = function () {
-  var $element = $(this);
-  var tabindex = $(this).prop('tabindex');
-  $element.data('drupalOverlayOriginalTabIndex', tabindex);
-};
-
-/**
- * Restore an element's original tabindex.
- *
- * Meant to be used as a jQuery.fn.each callback.
- */
-Drupal.overlay._restoreTabindex = function () {
-  var $element = $(this);
-  var tabindex = $element.data('drupalOverlayOriginalTabIndex');
-  $element.prop('tabindex', tabindex);
+Drupal.overlay.releaseTabbing = function () {
+  if (this.tabset) {
+    this.tabset.release();
+    delete this.tabset;
+  }
 };
 
 $.extend(Drupal.theme, {

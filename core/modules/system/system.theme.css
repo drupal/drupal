@@ -237,6 +237,7 @@ details > .details-wrapper {
      vertically aligned with the .details-wrapper in browsers without native
      details support. */
 summary {
+  cursor: pointer;
   padding: 0.2em 0.5em;
 }
 .collapse-processed > summary {

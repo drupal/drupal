@@ -499,6 +499,8 @@ function system_element_info() {
   );
   $types['file'] = array(
     '#input' => TRUE,
+    '#multiple' => FALSE,
+    '#process' => array('form_process_file'),
     '#size' => 60,
     '#pre_render' => array('form_pre_render_file'),
     '#theme' => 'input__file',
@@ -1250,6 +1252,19 @@ function system_library_info() {
     ),
   );
 
+  // Drupal's Screen Reader change announcement utility.
+  $libraries['drupal.announce'] = array(
+    'title' => 'Drupal announce',
+    'version' => VERSION,
+    'js' => array(
+      'core/misc/announce.js' => array('group' => JS_LIBRARY),
+    ),
+    'dependencies' => array(
+      array('system', 'drupal'),
+      array('system', 'drupal.debounce'),
+    ),
+  );
+
   // Drupal's batch API.
   $libraries['drupal.batch'] = array(
     'title' => 'Drupal batch API',
@@ -1417,6 +1432,21 @@ function system_library_info() {
     ),
   );
 
+  // Manages tab orders in the document.
+  $libraries['drupal.tabbingmanager'] = array(
+    'title' => 'Drupal tabbing manager',
+    'version' => VERSION,
+    'js' => array(
+      'core/misc/tabbingmanager.js' => array('group', JS_LIBRARY),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      // Depends on jQuery UI Core to use the ":tabbable" pseudo selector.
+      array('system', 'jquery.ui.core'),
+      array('system', 'drupal'),
+    ),
+  );
+
   // A utility function to limit calls to a function with a given time.
   $libraries['drupal.debounce'] = array(
     'title' => 'Drupal debounce',
@@ -1546,8 +1576,8 @@ function system_library_info() {
   // HTML5 Shiv.
   $libraries['html5shiv'] = array(
     'title' => 'html5shiv',
-    'website' => 'http://code.google.com/p/html5shiv/',
-    'version' => '11',
+    'website' => 'https://github.com/aFarkas/html5shiv/',
+    'version' => '3.6.2',
     'js' => array(
       'core/misc/html5.js' => array(
         'group' => JS_LIBRARY,
@@ -2024,6 +2054,19 @@ function system_library_info() {
     ),
     'dependencies' => array(
       array('system', 'jquery.effects.core'),
+    ),
+  );
+
+  // Touch Punch for jQuery UI touch support.
+  $libraries['jquery.ui.touch-punch'] = array(
+    'title' => 'jQuery UI Touch Punch',
+    'website' => 'http://jqueryui.com/demos/effect/',
+    'version' => '0.2.2',
+    'js' => array(
+      'core/misc/jquery.ui.touch-punch.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery.ui.core'),
     ),
   );
 
@@ -3591,10 +3634,12 @@ function system_cron() {
  * Implements hook_mail().
  */
 function system_mail($key, &$message, $params) {
+  $token_service = Drupal::token();
+
   $context = $params['context'];
 
-  $subject = token_replace($context['subject'], $context);
-  $body = token_replace($context['message'], $context);
+  $subject = $token_service->replace($context['subject'], $context);
+  $body = $token_service->replace($context['message'], $context);
 
   $message['subject'] .= str_replace(array("\r", "\n"), '', $subject);
   $message['body'][] = $body;

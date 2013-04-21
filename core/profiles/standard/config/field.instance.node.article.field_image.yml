@@ -1,0 +1,30 @@
+id: node.article.field_image
+field_name: field_image
+entity_type: node
+bundle: article
+label: Image
+description: 'Upload an image to go with this article.'
+required: false
+default_value: {  }
+default_value_function: ''
+settings:
+  file_directory: field/image
+  file_extensions: 'png gif jpg jpeg'
+  max_filesize: ''
+  max_resolution: ''
+  min_resolution: ''
+  alt_field: true
+  title_field: ''
+  alt_field_required: 0
+  title_field_required: 0
+  default_image: 0
+  user_register_form: false
+widget:
+  type: image_image
+  settings:
+    progress_indicator: throbber
+    preview_image_style: thumbnail
+  weight: -1
+  module: image
+status: 1
+langcode: und

@@ -78,7 +78,7 @@ abstract class RowPluginBase extends PluginBase {
         $base = $data[$relationship['field']]['relationship']['base'];
         if ($base == $this->base_table) {
           $relationship_handler->init($executable, $relationship);
-          $relationship_options[$relationship['id']] = $relationship_handler->label();
+          $relationship_options[$relationship['id']] = $relationship_handler->adminLabel();
         }
       }
 

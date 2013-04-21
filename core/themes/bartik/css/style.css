@@ -344,6 +344,13 @@ h1#site-name {
   margin: 0 10px;
   padding: 0;
 }
+.region-header .block > h2 {
+  /* @extend .element-invisible */
+  position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px);
+  overflow: hidden;
+  height: 1px;
+}
 .region-header .block .content {
   margin: 0;
   padding: 0;
@@ -876,6 +883,13 @@ ul.links {
 #footer .block .content {
   padding: 0.5em 0;
   margin-top: 0;
+}
+#footer .block > h2 {
+  /* @extend .element-invisible */
+  position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px);
+  overflow: hidden;
+  height: 1px;
 }
 #footer .block h2 {
   margin: 0;

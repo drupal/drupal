@@ -89,6 +89,8 @@ function taxonomy_token_info() {
  * Implements hook_tokens().
  */
 function taxonomy_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  $token_service = Drupal::token();
+
   $replacements = array();
   $sanitize = !empty($options['sanitize']);
 
@@ -136,14 +138,14 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
       }
     }
 
-    if ($vocabulary_tokens = token_find_with_prefix($tokens, 'vocabulary')) {
+    if ($vocabulary_tokens = $token_service->findWithPrefix($tokens, 'vocabulary')) {
       $vocabulary = taxonomy_vocabulary_load($term->bundle());
-      $replacements += token_generate('vocabulary', $vocabulary_tokens, array('vocabulary' => $vocabulary), $options);
+      $replacements += $token_service->generate('vocabulary', $vocabulary_tokens, array('vocabulary' => $vocabulary), $options);
     }
 
-    if (($vocabulary_tokens = token_find_with_prefix($tokens, 'parent')) && $parents = taxonomy_term_load_parents($term->tid)) {
+    if (($vocabulary_tokens = $token_service->findWithPrefix($tokens, 'parent')) && $parents = taxonomy_term_load_parents($term->tid)) {
       $parent = array_pop($parents);
-      $replacements += token_generate('term', $vocabulary_tokens, array('term' => $parent), $options);
+      $replacements += $token_service->generate('term', $vocabulary_tokens, array('term' => $parent), $options);
     }
   }
 

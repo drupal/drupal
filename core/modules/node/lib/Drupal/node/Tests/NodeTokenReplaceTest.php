@@ -23,6 +23,7 @@ class NodeTokenReplaceTest extends NodeTestBase {
    * Creates a node, then tests the tokens generated from it.
    */
   function testNodeTokenReplacement() {
+    $token_service = \Drupal::token();
     $language_interface = language(LANGUAGE_TYPE_INTERFACE);
     $url_options = array(
       'absolute' => TRUE,
@@ -51,8 +52,8 @@ class NodeTokenReplaceTest extends NodeTestBase {
     $tests['[node:type]'] = 'article';
     $tests['[node:type-name]'] = 'Article';
     $tests['[node:title]'] = check_plain($node->title);
-    $tests['[node:body]'] = _text_sanitize($instance, $node->langcode, $node->body[$node->langcode][0], 'value');
-    $tests['[node:summary]'] = _text_sanitize($instance, $node->langcode, $node->body[$node->langcode][0], 'summary');
+    $tests['[node:body]'] = text_sanitize($instance['settings']['text_processing'], $node->langcode, $node->body[$node->langcode][0], 'value');
+    $tests['[node:summary]'] = text_sanitize($instance['settings']['text_processing'], $node->langcode, $node->body[$node->langcode][0], 'summary');
     $tests['[node:langcode]'] = check_plain($node->langcode);
     $tests['[node:url]'] = url('node/' . $node->nid, $url_options);
     $tests['[node:edit-url]'] = url('node/' . $node->nid . '/edit', $url_options);
@@ -66,7 +67,7 @@ class NodeTokenReplaceTest extends NodeTestBase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('node' => $node), array('langcode' => $language_interface->langcode));
+      $output = $token_service->replace($input, array('node' => $node), array('langcode' => $language_interface->langcode));
       $this->assertEqual($output, $expected, format_string('Sanitized node token %token replaced.', array('%token' => $input)));
     }
 
@@ -78,7 +79,7 @@ class NodeTokenReplaceTest extends NodeTestBase {
     $tests['[node:author:name]'] = user_format_name($account);
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('node' => $node), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));
+      $output = $token_service->replace($input, array('node' => $node), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, format_string('Unsanitized node token %token replaced.', array('%token' => $input)));
     }
 
@@ -93,13 +94,13 @@ class NodeTokenReplaceTest extends NodeTestBase {
 
     // Generate and test sanitized token - use full body as expected value.
     $tests = array();
-    $tests['[node:summary]'] = _text_sanitize($instance, $node->langcode, $node->body[$node->langcode][0], 'value');
+    $tests['[node:summary]'] = text_sanitize($instance['settings']['text_processing'], $node->langcode, $node->body[$node->langcode][0], 'value');
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated for node without a summary.');
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('node' => $node), array('language' => $language_interface));
+      $output = $token_service->replace($input, array('node' => $node), array('language' => $language_interface));
       $this->assertEqual($output, $expected, format_string('Sanitized node token %token replaced for node without a summary.', array('%token' => $input)));
     }
 
@@ -107,7 +108,7 @@ class NodeTokenReplaceTest extends NodeTestBase {
     $tests['[node:summary]'] = $node->body[$node->langcode][0]['value'];
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('node' => $node), array('language' => $language_interface, 'sanitize' => FALSE));
+      $output = $token_service->replace($input, array('node' => $node), array('language' => $language_interface, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, format_string('Unsanitized node token %token replaced for node without a summary.', array('%token' => $input)));
     }
   }

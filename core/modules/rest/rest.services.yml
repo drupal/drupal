@@ -19,3 +19,4 @@ services:
     arguments: ['@cache.cache']
   rest.link_manager.relation:
     class: Drupal\rest\LinkManager\RelationLinkManager
+    arguments: ['@cache.cache']

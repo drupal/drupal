@@ -166,7 +166,7 @@ class BulkDeleteTest extends FieldUnitTestBase {
     field_delete_instance($instance);
 
     // The instance still exists, deleted.
-    $instances = field_read_instances(array('field_id' => $field['uuid'], 'deleted' => 1), array('include_deleted' => 1, 'include_inactive' => 1));
+    $instances = field_read_instances(array('field_id' => $field['uuid'], 'deleted' => TRUE), array('include_deleted' => TRUE, 'include_inactive' => TRUE));
     $this->assertEqual(count($instances), 1, 'There is one deleted instance');
     $this->assertEqual($instances[0]['bundle'], $bundle, 'The deleted instance is for the correct bundle');
 
@@ -193,7 +193,7 @@ class BulkDeleteTest extends FieldUnitTestBase {
       $ids->entity_id = $entity_id;
       $entities[$entity_id] = _field_create_entity_from_ids($ids);
     }
-    field_attach_load($this->entity_type, $entities, FIELD_LOAD_CURRENT, array('field_id' => $field['uuid'], 'deleted' => 1));
+    field_attach_load($this->entity_type, $entities, FIELD_LOAD_CURRENT, array('field_id' => $field['uuid'], 'deleted' => TRUE));
     $this->assertEqual(count($found), 10, 'Correct number of entities found after deleting');
     foreach ($entities as $id => $entity) {
       $this->assertEqual($this->entities[$id]->{$field['field_name']}, $entity->{$field['field_name']}, "Entity $id with deleted data loaded correctly");
@@ -249,18 +249,18 @@ class BulkDeleteTest extends FieldUnitTestBase {
     $this->checkHooksInvocations($hooks, $actual_hooks);
 
     // The instance still exists, deleted.
-    $instances = field_read_instances(array('field_id' => $field['uuid'], 'deleted' => 1), array('include_deleted' => 1, 'include_inactive' => 1));
+    $instances = field_read_instances(array('field_id' => $field['uuid'], 'deleted' => TRUE), array('include_deleted' => TRUE, 'include_inactive' => TRUE));
     $this->assertEqual(count($instances), 1, 'There is one deleted instance');
 
     // Purge the instance.
     field_purge_batch($batch_size);
 
     // The instance is gone.
-    $instances = field_read_instances(array('field_id' => $field['uuid'], 'deleted' => 1), array('include_deleted' => 1, 'include_inactive' => 1));
+    $instances = field_read_instances(array('field_id' => $field['uuid'], 'deleted' => TRUE), array('include_deleted' => TRUE, 'include_inactive' => TRUE));
     $this->assertEqual(count($instances), 0, 'The instance is gone');
 
     // The field still exists, not deleted, because it has a second instance.
-    $fields = field_read_fields(array('uuid' => $field['uuid']), array('include_deleted' => 1, 'include_inactive' => 1));
+    $fields = field_read_fields(array('uuid' => $field['uuid']), array('include_deleted' => TRUE, 'include_inactive' => TRUE));
     $this->assertTrue(isset($fields[$field['uuid']]), 'The field exists and is not deleted');
   }
 
@@ -302,7 +302,7 @@ class BulkDeleteTest extends FieldUnitTestBase {
     field_purge_batch(0);
 
     // The field still exists, not deleted.
-    $fields = field_read_fields(array('uuid' => $field['uuid']), array('include_deleted' => 1));
+    $fields = field_read_fields(array('uuid' => $field['uuid']), array('include_deleted' => TRUE));
     $this->assertTrue(isset($fields[$field['uuid']]) && !$fields[$field['uuid']]->deleted, 'The field exists and is not deleted');
 
     // Delete the second instance.
@@ -326,14 +326,14 @@ class BulkDeleteTest extends FieldUnitTestBase {
     $this->checkHooksInvocations($hooks, $actual_hooks);
 
     // The field still exists, deleted.
-    $fields = field_read_fields(array('uuid' => $field['uuid']), array('include_deleted' => 1));
+    $fields = field_read_fields(array('uuid' => $field['uuid']), array('include_deleted' => TRUE));
     $this->assertTrue(isset($fields[$field['uuid']]) && $fields[$field['uuid']]->deleted, 'The field exists and is deleted');
 
     // Purge again to purge the instance and the field.
     field_purge_batch(0);
 
     // The field is gone.
-    $fields = field_read_fields(array('uuid' => $field['uuid']), array('include_deleted' => 1, 'include_inactive' => 1));
+    $fields = field_read_fields(array('uuid' => $field['uuid']), array('include_deleted' => TRUE, 'include_inactive' => TRUE));
     $this->assertEqual(count($fields), 0, 'The field is purged.');
   }
 }

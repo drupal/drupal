@@ -1,7 +1,6 @@
 id: test_entity.test_bundle.field_test_import
-uuid: 392b4e9d-6157-412e-9603-3d622512f498
 langcode: und
-field_uuid: fb38277f-1fd4-49d5-8d09-9d7037fdcce9
+field_name: field_test_import
 entity_type: test_entity
 bundle: test_bundle
 label: 'Test import field'

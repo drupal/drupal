@@ -451,7 +451,7 @@ class Field extends FieldPluginBase {
       'required' => FALSE,
       'label' => $field_name,
       'description' => '',
-      'deleted' => 0,
+      'deleted' => FALSE,
     );
   }
 

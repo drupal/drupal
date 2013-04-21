@@ -1123,7 +1123,7 @@ function hook_delete(\Drupal\Core\Entity\EntityInterface $node) {
  */
 function hook_prepare(\Drupal\Core\Entity\EntityInterface $node) {
   if ($file = file_check_upload($field_name)) {
-    $file = file_save_upload($field_name, _image_filename($file->filename, NULL, TRUE));
+    $file = file_save_upload($field_name, _image_filename($file->filename, NULL, TRUE), FALSE, 0);
     if ($file) {
       if (!image_get_info($file->uri)) {
         form_set_error($field_name, t('Uploaded file is not a valid image'));

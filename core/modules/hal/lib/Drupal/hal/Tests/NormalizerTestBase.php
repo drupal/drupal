@@ -128,7 +128,7 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
       new FieldItemNormalizer(),
       new FieldNormalizer(),
     );
-    $link_manager = new LinkManager(new TypeLinkManager(new MemoryBackend('cache')), new RelationLinkManager());
+    $link_manager = new LinkManager(new TypeLinkManager(new MemoryBackend('cache')), new RelationLinkManager(new MemoryBackend('cache')));
     foreach ($normalizers as $normalizer) {
       $normalizer->setLinkManager($link_manager);
     }

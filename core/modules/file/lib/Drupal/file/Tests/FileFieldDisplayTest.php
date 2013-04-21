@@ -35,8 +35,6 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     );
     $widget_settings = array();
     $this->createFileField($field_name, $type_name, $field_settings, $instance_settings, $widget_settings);
-    $field = field_info_field($field_name);
-    $instance = field_info_instance('node', $field_name, $type_name);
 
     // Create a new node *without* the file field set, and check that the field
     // is not shown for each node display.

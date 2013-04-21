@@ -452,6 +452,14 @@ $settings['update_free_access'] = FALSE;
 # $settings['mixed_mode_sessions'] = TRUE;
 
 /**
+ * Session write interval:
+ *
+ * Set the minimum interval between each session write to database.
+ * For performance reasons it defaults to 180.
+ */
+# $settings['session_write_interval'] = 180;
+
+/**
  * Base URL (optional).
  *
  * If Drupal is generating incorrect URLs on your site, which could

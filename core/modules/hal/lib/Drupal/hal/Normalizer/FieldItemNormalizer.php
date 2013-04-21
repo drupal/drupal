@@ -63,8 +63,23 @@ class FieldItemNormalizer extends NormalizerBase {
       }
     }
 
-    $field_item->setValue($data);
+    $field_item->setValue($this->constructValue($data, $context));
     return $field_item;
+  }
+
+  /**
+   * Build the field item value using the incoming data.
+   *
+   * @param $data
+   *   The incoming data for this field item.
+   * @param $context
+   *   The context passed into the Normalizer.
+   *
+   * @return mixed
+   *   The value to use in Entity::setValue().
+   */
+  protected function constructValue($data, $context) {
+    return $data;
   }
 
   /**

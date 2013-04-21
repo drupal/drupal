@@ -55,4 +55,11 @@ class LinkManager implements LinkManagerInterface {
   public function getRelationUri($entity_type, $bundle, $field_name) {
     return $this->relationLinkManager->getRelationUri($entity_type, $bundle, $field_name);
   }
+
+  /**
+   * Implements \Drupal\rest\LinkManager\RelationLinkManagerInterface::getRelationInternalIds().
+   */
+  public function getRelationInternalIds($relation_uri) {
+    return $this->relationLinkManager->getRelationInternalIds($relation_uri);
+  }
 }

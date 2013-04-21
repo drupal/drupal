@@ -228,7 +228,13 @@ class SessionTest extends WebTestBase {
     $this->assertEqual($times4->timestamp, $times3->timestamp, 'Sessions table was not updated.');
 
     // Force updating of users and sessions table once per second.
-    variable_set('session_write_interval', 0);
+    $this->settingsSet('session_write_interval', 0);
+    // Write that value also into the test settings.php file.
+    $settings['settings']['session_write_interval'] = (object) array(
+      'value' => 0,
+      'required' => TRUE,
+    );
+    $this->writeSettings($settings);
     $this->drupalGet('');
     $times5 = db_query($sql, array(':uid' => $user->uid))->fetchObject();
     $this->assertNotEqual($times5->access, $times4->access, 'Users table was updated.');

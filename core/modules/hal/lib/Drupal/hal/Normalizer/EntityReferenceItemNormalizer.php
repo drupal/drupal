@@ -7,10 +7,12 @@
 
 namespace Drupal\hal\Normalizer;
 
+use Drupal\serialization\EntityResolver\UuidReferenceInterface;
+
 /**
  * Converts the Drupal entity reference item object to HAL array structure.
  */
-class EntityReferenceItemNormalizer extends FieldItemNormalizer {
+class EntityReferenceItemNormalizer extends FieldItemNormalizer implements UuidReferenceInterface {
 
   /**
    * The interface or class that this Normalizer supports.
@@ -58,10 +60,29 @@ class EntityReferenceItemNormalizer extends FieldItemNormalizer {
   }
 
   /**
-   * Implements \Symfony\Component\Serializer\Normalizer\DenormalizerInterface::denormalize()
+   * Overrides \Drupal\hal\Normalizer\FieldItemNormalizer::constructValue().
    */
-  public function denormalize($data, $class, $format = NULL, array $context = array()) {
-    // @todo Implement this in http://drupal.org/node/1880424
+  protected function constructValue($data, $context) {
+    $field_item = $context['target_instance'];
+    $field_definition = $field_item->getDefinition();
+    $target_type = $field_definition['settings']['target_type'];
+    if ($id = $this->entityResolver->resolve($this, $data, $target_type)) {
+      return array('target_id' => $id);
+    }
+    return NULL;
+  }
+
+  /**
+   * Implements \Drupal\serialization\EntityResolver\UuidReferenceInterface::getUuid().
+   */
+  public function getUuid($data) {
+    if (isset($data['uuid'])) {
+      $uuid = $data['uuid'];
+      if (is_array($uuid)) {
+        $uuid = reset($uuid);
+      }
+      return $uuid;
+    }
   }
 
 }
