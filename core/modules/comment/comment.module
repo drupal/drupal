@@ -865,7 +865,7 @@ function comment_get_thread(EntityInterface $entity, $field_name, $mode, $commen
     $query->condition('c.status', COMMENT_PUBLISHED);
     $count_query->condition('c.status', COMMENT_PUBLISHED);
   }
-  if ($mode === COMMENT_MODE_FLAT) {
+  if ($mode == COMMENT_MODE_FLAT) {
     $query->orderBy('c.cid', 'ASC');
   }
   else {
@@ -877,9 +877,7 @@ function comment_get_thread(EntityInterface $entity, $field_name, $mode, $commen
   }
 
   $query->setCountQuery($count_query);
-  $cids = $query->execute()->fetchCol();
-
-  return $cids;
+  return $query->execute()->fetchCol();
 }
 
 /**
@@ -899,7 +897,7 @@ function comment_prepare_thread(&$comments) {
   // A counter that helps track how indented we are.
   $divs = 0;
 
-  foreach ($comments as $key => $comment) {
+  foreach ($comments as $key => &$comment) {
     if ($first_new && $comment->new->value != MARK_READ) {
       // Assign the anchor only for the first new comment. This avoids duplicate
       // id attributes on a page.
@@ -920,7 +918,6 @@ function comment_prepare_thread(&$comments) {
         $divs--;
       }
     }
-    $comments[$key] = $comment;
   }
 
   // The final comment must close up some hanging divs
