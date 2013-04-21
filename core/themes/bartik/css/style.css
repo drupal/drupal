@@ -298,7 +298,7 @@ ul.tips {
   background: #444;
   background: rgba(0, 0, 0, 0.6);
   color: #fff;
-  display: block;
+  display: inline-block;
   font-size: 0.94em;
   line-height: 1.7;
   padding: 1px 10px 2px 10px;
