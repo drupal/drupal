@@ -27,7 +27,7 @@ class NodeNewComments extends Numeric {
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
 
-    $this->additional_fields['entity_id'] = 'entity_id';
+    $this->additional_fields['entity_id'] = 'nid';
     $this->additional_fields['type'] = 'type';
     $this->additional_fields['comment_count'] = array('table' => 'comment_entity_statistics', 'field' => 'comment_count');
   }
