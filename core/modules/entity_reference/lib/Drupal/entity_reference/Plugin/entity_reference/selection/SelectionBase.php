@@ -113,7 +113,7 @@ class SelectionBase implements SelectionInterface {
 
     // @todo Use Entity::getPropertyDefinitions() when all entity types are
     // converted to the new Field API.
-    $fields = drupal_map_assoc($entity_info['schema_fields_sql']['base_table']);
+    $fields = drupal_map_assoc(drupal_schema_fields_sql($entity_info['base_table']));
     foreach (field_info_instances($field['settings']['target_type']) as $bundle_instances) {
       foreach ($bundle_instances as $instance_name => $instance_info) {
         $field_info = field_info_field($instance_name);

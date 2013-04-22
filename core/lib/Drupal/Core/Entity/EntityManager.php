@@ -9,7 +9,6 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
-use Drupal\Component\Plugin\Discovery\ProcessDecorator;
 use Drupal\Core\Plugin\Discovery\AlterDecorator;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
@@ -52,30 +51,10 @@ class EntityManager extends PluginManagerBase {
     );
     $this->discovery = new AnnotatedClassDiscovery('Core', 'Entity', $namespaces, $annotation_namespaces, 'Drupal\Core\Entity\Annotation\EntityType');
     $this->discovery = new InfoHookDecorator($this->discovery, 'entity_info');
-    $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
     $this->discovery = new AlterDecorator($this->discovery, 'entity_info');
     $this->discovery = new CacheDecorator($this->discovery, 'entity_info:' . language(LANGUAGE_TYPE_INTERFACE)->langcode, 'cache', CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
 
     $this->factory = new DefaultFactory($this->discovery);
-  }
-
-  /**
-   * Overrides Drupal\Component\Plugin\PluginManagerBase::processDefinition().
-   */
-  public function processDefinition(&$definition, $plugin_id) {
-    parent::processDefinition($definition, $plugin_id);
-
-    // Prepare entity schema fields SQL info for
-    // Drupal\Core\Entity\DatabaseStorageControllerInterface::buildQuery().
-    if (isset($definition['base_table'])) {
-      $definition['schema_fields_sql']['base_table'] = drupal_schema_fields_sql($definition['base_table']);
-      if (isset($definition['data_table'])) {
-        $definition['schema_fields_sql']['data_table'] = drupal_schema_fields_sql($definition['data_table']);
-      }
-      if (isset($definition['revision_table'])) {
-        $definition['schema_fields_sql']['revision_table'] = drupal_schema_fields_sql($definition['revision_table']);
-      }
-    }
   }
 
   /**

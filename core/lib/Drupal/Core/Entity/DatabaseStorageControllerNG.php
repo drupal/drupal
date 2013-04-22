@@ -241,7 +241,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
 
       // Fetch the field definitions to check which field is translatable.
       $field_definition = $this->getFieldDefinitions(array());
-      $data_fields = array_flip($this->entityInfo['schema_fields_sql']['data_table']);
+      $data_fields = array_flip(drupal_schema_fields_sql($this->entityInfo['data_table']));
 
       foreach ($data as $values) {
         $id = $values[$this->idKey];
@@ -439,7 +439,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
    */
   protected function mapToStorageRecord(EntityInterface $entity) {
     $record = new \stdClass();
-    foreach ($this->entityInfo['schema_fields_sql']['base_table'] as $name) {
+    foreach (drupal_schema_fields_sql($this->entityInfo['base_table']) as $name) {
       $record->$name = $entity->$name->value;
     }
     return $record;
@@ -456,7 +456,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
    */
   protected function mapToRevisionStorageRecord(EntityInterface $entity) {
     $record = new \stdClass();
-    foreach ($this->entityInfo['schema_fields_sql']['revision_table'] as $name) {
+    foreach (drupal_schema_fields_sql($this->entityInfo['revision_table']) as $name) {
       if (isset($entity->$name->value)) {
         $record->$name = $entity->$name->value;
       }
@@ -482,7 +482,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
     $translation = $entity->getTranslation($langcode, FALSE);
 
     $record = new \stdClass();
-    foreach ($this->entityInfo['schema_fields_sql']['data_table'] as $name) {
+    foreach (drupal_schema_fields_sql($this->entityInfo['data_table']) as $name) {
       $record->$name = $translation->$name->value;
     }
     $record->langcode = $langcode;
