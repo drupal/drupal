@@ -12,7 +12,6 @@ use Drupal\Component\Plugin\Discovery\ProcessDecorator;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
 use Drupal\Core\Plugin\Discovery\AlterDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
-use Drupal\field\Plugin\Type\Widget\WidgetLegacyDiscoveryDecorator;
 
 /**
  * Plugin type manager for field widgets.
@@ -37,7 +36,6 @@ class WidgetPluginManager extends PluginManagerBase {
    */
   public function __construct($namespaces) {
     $this->discovery = new AnnotatedClassDiscovery('field', 'widget', $namespaces);
-    $this->discovery = new WidgetLegacyDiscoveryDecorator($this->discovery);
     $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
     $this->discovery = new AlterDecorator($this->discovery, 'field_widget_info');
     $this->discovery = new CacheDecorator($this->discovery, 'field_widget_types',  'field');

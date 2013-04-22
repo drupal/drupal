@@ -222,4 +222,14 @@ class BackendChain implements CacheBackendInterface {
 
     return TRUE;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeBin() {
+    foreach ($this->backends as $backend) {
+      $this->removeBin();
+    }
+  }
+
 }

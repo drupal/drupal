@@ -215,4 +215,10 @@ class MemoryBackend implements CacheBackendInterface {
    */
   public function garbageCollection() {
   }
+
+ /**
+  * {@inheritdoc}
+  */
+  public function removeBin() {}
+
 }

@@ -5,9 +5,11 @@
  * API for loading and interacting with Drupal modules.
  */
 
-use Drupal\Component\Graph\Graph;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Yaml\Parser;
 
 /**
  * Builds a list of bootstrap modules and enabled modules and themes.
@@ -566,7 +568,6 @@ function module_uninstall($module_list = array(), $uninstall_dependents = TRUE) 
     $module_list = array_keys($module_list);
   }
 
-  $storage = drupal_container()->get('config.storage');
   $schema_store = Drupal::keyValue('system.schema');
   $disabled_config = config('system.module.disabled');
   foreach ($module_list as $module) {
@@ -577,6 +578,38 @@ function module_uninstall($module_list = array(), $uninstall_dependents = TRUE) 
 
     // Remove all configuration belonging to the module.
     config_uninstall_default_config('module', $module);
+
+    // Remove any cache bins defined by the module.
+    $service_yaml_file = drupal_get_path('module', $module) . "/$module.services.yml";
+    if (file_exists($service_yaml_file)) {
+      $parser = new Parser;
+      $definitions = $parser->parse(file_get_contents($service_yaml_file));
+      if (isset($definitions['services'])) {
+        foreach ($definitions['services'] as $id => $definition) {
+          if (isset($definition['tags'])) {
+            foreach ($definition['tags'] as $tag) {
+              // This works for the default cache registration and even in some
+              // cases when a non-default "super" factory is used. That should
+              // be extremely rare.
+              if ($tag['name'] == 'cache.bin' && isset($definition['factory_service']) && isset($definition['factory_method']) && !empty($definition['arguments'])) {
+                try {
+                  $factory = Drupal::service($definition['factory_service']);
+                  if (method_exists($factory, $definition['factory_method'])) {
+                    $backend = call_user_func_array(array($factory, $definition['factory_method']), $definition['arguments']);
+                    if ($backend instanceof CacheBackendInterface) {
+                      $backend->removeBin();
+                    }
+                  }
+                }
+                catch (Exception $e) {
+                  watchdog_exception('system', $e, 'Failed to remove cache bin defined by the service %id.', array('%id' => $id));
+                }
+              }
+            }
+          }
+        }
+      }
+    }
 
     watchdog('system', '%module module uninstalled.', array('%module' => $module), WATCHDOG_INFO);
     $schema_store->delete($module);

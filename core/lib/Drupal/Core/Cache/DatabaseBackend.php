@@ -9,6 +9,7 @@ namespace Drupal\Core\Cache;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\SchemaObjectExistsException;
 
 /**
  * Defines a default cache implementation.
@@ -69,7 +70,13 @@ class DatabaseBackend implements CacheBackendInterface {
     // is used here only due to the performance overhead we would incur
     // otherwise. When serving an uncached page, the overhead of using
     // ::select() is a much smaller proportion of the request.
-    $result = $this->connection->query('SELECT cid, data, created, expire, serialized, tags, checksum_invalidations, checksum_deletions FROM {' . $this->connection->escapeTable($this->bin) . '} WHERE cid IN (:cids)', array(':cids' => $cids));
+    $result = array();
+    try {
+      $result = $this->connection->query('SELECT cid, data, created, expire, serialized, tags, checksum_invalidations, checksum_deletions FROM {' . $this->connection->escapeTable($this->bin) . '} WHERE cid IN (:cids)', array(':cids' => $cids));
+    }
+    catch (\Exception $e) {
+      // Nothing to do.
+    }
     $cache = array();
     foreach ($result as $item) {
       $item = $this->prepareItem($item, $allow_invalid);
@@ -134,6 +141,29 @@ class DatabaseBackend implements CacheBackendInterface {
    * Implements Drupal\Core\Cache\CacheBackendInterface::set().
    */
   public function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array()) {
+    $try_again = FALSE;
+    try {
+      // The bin might not yet exist.
+      $this->doSet($cid, $data, $expire, $tags);
+    }
+    catch (\Exception $e) {
+      // If there was an exception, try to create the bins.
+      if (!$try_again = $this->ensureBinExists()) {
+        // If the exception happened for other reason than the missing bin
+        // table, propagate the exception.
+        throw $e;
+      }
+    }
+    // Now that the bin has been created, try again if necessary.
+    if ($try_again) {
+      $this->doSet($cid, $data, $expire, $tags);
+    }
+  }
+
+  /**
+   * Actually set the cache.
+   */
+  protected function doSet($cid, $data, $expire, $tags) {
     $flat_tags = $this->flattenTags($tags);
     $checksum = $this->checksumTags($flat_tags);
     $fields = array(
@@ -163,22 +193,25 @@ class DatabaseBackend implements CacheBackendInterface {
    * Implements Drupal\Core\Cache\CacheBackendInterface::delete().
    */
   public function delete($cid) {
-    $this->connection->delete($this->bin)
-      ->condition('cid', $cid)
-      ->execute();
+    $this->deleteMultiple(array($cid));
   }
 
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::deleteMultiple().
    */
   public function deleteMultiple(array $cids) {
-    // Delete in chunks when a large array is passed.
-    do {
-      $this->connection->delete($this->bin)
-        ->condition('cid', array_splice($cids, 0, 1000), 'IN')
-        ->execute();
+    try {
+      // Delete in chunks when a large array is passed.
+      do {
+        $this->connection->delete($this->bin)
+          ->condition('cid', array_splice($cids, 0, 1000), 'IN')
+          ->execute();
+      }
+      while (count($cids));
     }
-    while (count($cids));
+    catch (\Exception $e) {
+      $this->catchException($e);
+    }
   }
 
   /**
@@ -188,11 +221,16 @@ class DatabaseBackend implements CacheBackendInterface {
     $tag_cache = &drupal_static('Drupal\Core\Cache\CacheBackendInterface::tagCache');
     foreach ($this->flattenTags($tags) as $tag) {
       unset($tag_cache[$tag]);
-      $this->connection->merge('cache_tags')
-        ->insertFields(array('deletions' => 1))
-        ->expression('deletions', 'deletions + 1')
-        ->key(array('tag' => $tag))
-        ->execute();
+      try {
+        $this->connection->merge('cache_tags')
+          ->insertFields(array('deletions' => 1))
+          ->expression('deletions', 'deletions + 1')
+          ->key(array('tag' => $tag))
+          ->execute();
+      }
+      catch (\Exception $e) {
+        $this->catchException($e, 'cache_tags');
+      }
     }
   }
 
@@ -200,7 +238,12 @@ class DatabaseBackend implements CacheBackendInterface {
    * Implements Drupal\Core\Cache\CacheBackendInterface::deleteAll().
    */
   public function deleteAll() {
-    $this->connection->truncate($this->bin)->execute();
+    try {
+      $this->connection->truncate($this->bin)->execute();
+    }
+    catch (\Exception $e) {
+      $this->catchException($e);
+    }
   }
 
   /**
@@ -214,28 +257,38 @@ class DatabaseBackend implements CacheBackendInterface {
    * Implements Drupal\Core\Cache\CacheBackendInterface::invalideMultiple().
    */
   public function invalidateMultiple(array $cids) {
-    // Update in chunks when a large array is passed.
-    do {
-      $this->connection->update($this->bin)
-        ->fields(array('expire' => REQUEST_TIME - 1))
-        ->condition('cid', array_splice($cids, 0, 1000), 'IN')
-        ->execute();
+    try {
+      // Update in chunks when a large array is passed.
+      do {
+        $this->connection->update($this->bin)
+          ->fields(array('expire' => REQUEST_TIME - 1))
+          ->condition('cid', array_splice($cids, 0, 1000), 'IN')
+          ->execute();
+      }
+      while (count($cids));
     }
-    while (count($cids));
+    catch (\Exception $e) {
+      $this->catchException($e);
+    }
   }
 
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::invalidateTags().
    */
   public function invalidateTags(array $tags) {
-    $tag_cache = &drupal_static('Drupal\Core\Cache\CacheBackendInterface::tagCache');
-    foreach ($this->flattenTags($tags) as $tag) {
-      unset($tag_cache[$tag]);
-      $this->connection->merge('cache_tags')
-        ->insertFields(array('invalidations' => 1))
-        ->expression('invalidations', 'invalidations + 1')
-        ->key(array('tag' => $tag))
-        ->execute();
+    try {
+      $tag_cache = &drupal_static('Drupal\Core\Cache\CacheBackendInterface::tagCache');
+      foreach ($this->flattenTags($tags) as $tag) {
+        unset($tag_cache[$tag]);
+        $this->connection->merge('cache_tags')
+          ->insertFields(array('invalidations' => 1))
+          ->expression('invalidations', 'invalidations + 1')
+          ->key(array('tag' => $tag))
+          ->execute();
+      }
+    }
+    catch (\Exception $e) {
+      $this->catchException($e, 'cache_tags');
     }
   }
 
@@ -243,19 +296,31 @@ class DatabaseBackend implements CacheBackendInterface {
    * Implements Drupal\Core\Cache\CacheBackendInterface::invalidateAll().
    */
   public function invalidateAll() {
-    $this->connection->update($this->bin)
-      ->fields(array('expire' => REQUEST_TIME - 1))
-      ->execute();
+    try {
+      $this->connection->update($this->bin)
+        ->fields(array('expire' => REQUEST_TIME - 1))
+        ->execute();
+    }
+    catch (\Exception $e) {
+      $this->catchException($e);
+    }
   }
 
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::garbageCollection().
    */
   public function garbageCollection() {
-    Database::getConnection()->delete($this->bin)
-      ->condition('expire', CacheBackendInterface::CACHE_PERMANENT, '<>')
-      ->condition('expire', REQUEST_TIME, '<')
-      ->execute();
+    try {
+      Database::getConnection()->delete($this->bin)
+        ->condition('expire', CacheBackendInterface::CACHE_PERMANENT, '<>')
+        ->condition('expire', REQUEST_TIME, '<')
+        ->execute();
+    }
+    catch (\Exception $e) {
+      // If the table does not exist, it surely does not have garbage in it.
+      // If the table exists, the next garbage collection will clean up.
+      // There is nothing to do.
+    }
   }
 
   /**
@@ -329,9 +394,160 @@ class DatabaseBackend implements CacheBackendInterface {
     $this->garbageCollection();
     $query = $this->connection->select($this->bin);
     $query->addExpression('1');
-    $result = $query->range(0, 1)
-      ->execute()
-      ->fetchField();
+    try {
+      $result = $query->range(0, 1)
+        ->execute()
+        ->fetchField();
+    }
+    catch (\Exception $e) {
+      $this->catchException($e);
+    }
     return empty($result);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeBin() {
+    try {
+      $this->connection->schema()->dropTable($this->bin);
+    }
+    catch (\Exception $e) {
+      $this->catchException($e);
+    }
+  }
+
+  /**
+   * Check if the cache bin exists and create it if not.
+   */
+  protected function ensureBinExists() {
+    try {
+      $database_schema = $this->connection->schema();
+      if (!$database_schema->tableExists($this->bin)) {
+        $schema_definition = $this->schemaDefinition();
+        $database_schema->createTable($this->bin, $schema_definition['bin']);
+        // If the bin doesn't exist, the cache tags table may also not exist.
+        if (!$database_schema->tableExists('cache_tags')) {
+          $database_schema->createTable('cache_tags', $schema_definition['cache_tags']);
+        }
+        return TRUE;
+      }
+    }
+    // If another process has already created the cache table, attempting to
+    // recreate it will throw an exception. In this case just catch the
+    // exception and do nothing.
+    catch (SchemaObjectExistsException $e) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Act on an exception when cache might be stale.
+   *
+   * If the cache_tags table does not yet exist, that's fine but if the table
+   * exists and yet the query failed, then the cache is stale and the
+   * exception needs to propagate.
+   *
+   * @param $e
+   *   The exception.
+   * @param string|null $table_name
+   *   The table name, defaults to $this->bin. Can be cache_tags.
+   */
+  protected function catchException(\Exception $e, $table_name = NULL) {
+    if ($this->connection->schema()->tableExists($table_name ?: $this->bin)) {
+      throw $e;
+    }
+  }
+
+  /**
+   * Defines the schema for the cache bin and cache_tags table.
+   */
+  public function schemaDefinition() {
+    $schema['bin'] = array(
+      'description' => 'Storage for the cache API.',
+      'fields' => array(
+        'cid' => array(
+          'description' => 'Primary Key: Unique cache ID.',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+        ),
+        'data' => array(
+          'description' => 'A collection of data to cache.',
+          'type' => 'blob',
+          'not null' => FALSE,
+          'size' => 'big',
+        ),
+        'expire' => array(
+          'description' => 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'created' => array(
+          'description' => 'A Unix timestamp indicating when the cache entry was created.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'serialized' => array(
+          'description' => 'A flag to indicate whether content is serialized (1) or not (0).',
+          'type' => 'int',
+          'size' => 'small',
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'tags' => array(
+          'description' => 'Space-separated list of cache tags for this entry.',
+          'type' => 'text',
+          'size' => 'big',
+          'not null' => FALSE,
+        ),
+        'checksum_invalidations' => array(
+          'description' => 'The tag invalidation sum when this entry was saved.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'checksum_deletions' => array(
+          'description' => 'The tag deletion sum when this entry was saved.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+      ),
+      'indexes' => array(
+        'expire' => array('expire'),
+      ),
+      'primary key' => array('cid'),
+    );
+    $schema['cache_tags'] = array(
+      'description' => 'Cache table for tracking cache tags related to the cache bin.',
+      'fields' => array(
+        'tag' => array(
+          'description' => 'Namespace-prefixed tag string.',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+        ),
+        'invalidations' => array(
+          'description' => 'Number incremented when the tag is invalidated.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'deletions' => array(
+          'description' => 'Number incremented when the tag is deleted.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+      ),
+      'primary key' => array('tag'),
+    );
+    return $schema;
   }
 }

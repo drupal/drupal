@@ -1934,12 +1934,12 @@ function hook_mail($key, &$message, $params) {
 /**
  * Flush all persistent and static caches.
  *
- * This hook asks your module to clear all of its persistent (database) and
- * static caches, in order to ensure a clean environment for subsequently
+ * This hook asks your module to clear all of its static caches,
+ * in order to ensure a clean environment for subsequently
  * invoked data rebuilds.
  *
  * Do NOT use this hook for rebuilding information. Only use it to flush custom
- * caches and return the names of additional cache bins to flush.
+ * caches.
  *
  * Static caches using drupal_static() do not need to be reset manually.
  * However, all other static variables that do not use drupal_static() must be

@@ -344,11 +344,11 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
     }
 
     // Add fields from the {entity} table.
-    $entity_fields = $this->entityInfo['schema_fields_sql']['base_table'];
+    $entity_fields = drupal_schema_fields_sql($this->entityInfo['base_table']);
 
     if ($this->revisionKey) {
       // Add all fields from the {entity_revision} table.
-      $entity_revision_fields = drupal_map_assoc($this->entityInfo['schema_fields_sql']['revision_table']);
+      $entity_revision_fields = drupal_map_assoc(drupal_schema_fields_sql($this->entityInfo['revision_table']));
       // The id field is provided by entity, so remove it.
       unset($entity_revision_fields[$this->idKey]);
 

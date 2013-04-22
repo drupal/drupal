@@ -12,7 +12,6 @@ use Drupal\Component\Plugin\Discovery\ProcessDecorator;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\AlterDecorator;
-use Drupal\field\Plugin\Type\Formatter\FormatterLegacyDiscoveryDecorator;
 use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
@@ -36,7 +35,6 @@ class FormatterPluginManager extends PluginManagerBase {
    */
   public function __construct($namespaces) {
     $this->discovery = new AnnotatedClassDiscovery('field', 'formatter', $namespaces);
-    $this->discovery = new FormatterLegacyDiscoveryDecorator($this->discovery);
     $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
     $this->discovery = new AlterDecorator($this->discovery, 'field_formatter_info');
     $this->discovery = new CacheDecorator($this->discovery, 'field_formatter_types', 'field');

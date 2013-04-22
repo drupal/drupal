@@ -287,6 +287,11 @@ interface CacheBackendInterface {
   public function garbageCollection();
 
   /**
+   * Remove a cache bin.
+   */
+  public function removeBin();
+
+  /**
    * Checks if a cache bin is empty.
    *
    * A cache bin is considered empty if it does not contain any valid data for

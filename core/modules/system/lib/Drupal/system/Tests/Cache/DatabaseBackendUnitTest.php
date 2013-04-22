@@ -40,17 +40,4 @@ class DatabaseBackendUnitTest extends GenericCacheBackendUnitTestBase {
     return new DatabaseBackend($this->container->get('database'), $bin);
   }
 
-  /**
-   * Installs system schema.
-   */
-  public function setUpCacheBackend() {
-    $this->installSchema('system', array('cache', 'cache_page', 'cache_tags', 'cache_path', 'cache_bootstrap'));
-  }
-
-  /**
-   * Uninstalls system schema.
-   */
-  public function tearDownCacheBackend() {
-    drupal_uninstall_schema('system');
-  }
 }

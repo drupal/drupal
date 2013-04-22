@@ -98,4 +98,9 @@ class NullBackend implements CacheBackendInterface {
   public function isEmpty() {
     return TRUE;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeBin() {}
 }
