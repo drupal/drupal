@@ -249,6 +249,8 @@ function field_update_dependencies() {
     'user' => 8011,
     // - The {file_usage}.id column has moved to varchar.
     'file' => 8001,
+    // Node comment status have been turned to fields.
+    'comment' => 8006,
   );
   return $dependencies;
 }

@@ -329,16 +329,6 @@ function comment_field_schema($field) {
 }
 
 /**
- * Implements hook_update_dependencies().
- */
-function comment_update_dependencies() {
-  $dependencies['comment'][8006] = array(
-    'field' => 8003,
-  );
-  return $dependencies;
-}
-
-/**
  * @addtogroup updates-7.x-to-8.x
  * @{
  */
