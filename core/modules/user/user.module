@@ -2691,6 +2691,14 @@ function user_toolbar() {
           'title' => t('User account'),
         ),
       ),
+      'account_edit' => array(
+        'title' => t('Edit profile'),
+        'href' => 'user/' . $user->uid . '/edit',
+        'html' => TRUE,
+        'attributes' => array(
+          'title' => t('Edit user account'),
+        ),
+      ),
       'logout' => array(
         'title' => t('Log out'),
         'href' => 'user/logout',

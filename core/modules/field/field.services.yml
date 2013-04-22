@@ -5,6 +5,9 @@ services:
   plugin.manager.field.formatter:
     class: Drupal\field\Plugin\Type\Formatter\FormatterPluginManager
     arguments: ['%container.namespaces%']
+  field.info:
+    class: Drupal\field\FieldInfo
+    arguments: ['@cache.field', '@config.factory', '@module_handler']
   cache.field:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:

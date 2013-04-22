@@ -5,32 +5,9 @@
  * Field Info API, providing information about available fields and field types.
  */
 
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
-use Drupal\field\FieldInfo;
-
-/**
- * Retrieves the Drupal\field\FieldInfo object for the current request.
- *
- * @return Drupal\field\FieldInfo
- *   An instance of the Drupal\field\FieldInfo class.
- */
-function _field_info_field_cache() {
-  // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static_fast;
-
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['field_info_field_cache'] = &drupal_static(__FUNCTION__);
-  }
-  $info = &$drupal_static_fast['field_info_field_cache'];
-
-  if (!isset($info)) {
-    $info = new FieldInfo();
-  }
-
-  return $info;
-}
-
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\field\Plugin\Core\Entity\FieldInstance;
+use Drupal\field\Field;
 
 /**
  * @defgroup field_info Field Info API
@@ -60,7 +37,7 @@ function field_info_cache_clear() {
   entity_info_cache_clear();
 
   _field_info_collate_types_reset();
-  _field_info_field_cache()->flush();
+  Field::fieldInfo()->flush();
 }
 
 /**
@@ -182,8 +159,7 @@ function field_behaviors_widget($op, $instance) {
  *     types as keys and the array of bundle names as values.
  */
 function field_info_field_map() {
-  $cache = _field_info_field_cache();
-  return $cache->getFieldMap();
+  return Field::fieldInfo()->getFieldMap();
 }
 
 /**
@@ -294,8 +270,7 @@ function field_info_storage_types($storage_type = NULL) {
  * @see field_info_field_map()
  */
 function field_info_fields() {
-  $cache = _field_info_field_cache();
-  $info = $cache->getFields();
+  $info = Field::fieldInfo()->getFields();
 
   $fields = array();
   foreach ($info as $key => $field) {
@@ -325,8 +300,7 @@ function field_info_fields() {
  * @see field_info_field_by_id()
  */
 function field_info_field($field_name) {
-  $cache = _field_info_field_cache();
-  return $cache->getField($field_name);
+  return Field::fieldInfo()->getField($field_name);
 }
 
 /**
@@ -344,8 +318,7 @@ function field_info_field($field_name) {
  * @see field_info_field()
  */
 function field_info_field_by_id($field_id) {
-  $cache = _field_info_field_cache();
-  return $cache->getFieldById($field_id);
+  return Field::fieldInfo()->getFieldById($field_id);
 }
 
 /**
@@ -367,8 +340,7 @@ function field_info_field_by_id($field_id) {
  * @see field_info_field_by_id()
  */
 function field_info_field_by_ids() {
-  $cache = _field_info_field_cache();
-  return $cache->getFields();
+  return Field::fieldInfo()->getFields();
 }
 
 /**
@@ -397,7 +369,7 @@ function field_info_field_by_ids() {
  *   return all instances for that bundle.
  */
 function field_info_instances($entity_type = NULL, $bundle_name = NULL) {
-  $cache = _field_info_field_cache();
+  $cache = Field::fieldInfo();
 
   if (!isset($entity_type)) {
     return $cache->getInstances();
@@ -429,8 +401,7 @@ function field_info_instances($entity_type = NULL, $bundle_name = NULL) {
  *   NULL if the instance does not exist.
  */
 function field_info_instance($entity_type, $field_name, $bundle_name) {
-  $cache = _field_info_field_cache();
-  $info = $cache->getBundleInstances($entity_type, $bundle_name);
+  $info = Field::fieldInfo()->getBundleInstances($entity_type, $bundle_name);
   if (isset($info[$field_name])) {
     return $info[$field_name];
   }
@@ -490,8 +461,7 @@ function field_info_instance($entity_type, $field_name, $bundle_name) {
  *   The array of pseudo-field elements in the bundle.
  */
 function field_info_extra_fields($entity_type, $bundle, $context) {
-  $cache = _field_info_field_cache();
-  $info = $cache->getBundleExtraFields($entity_type, $bundle);
+  $info = Field::fieldInfo()->getBundleExtraFields($entity_type, $bundle);
 
   return isset($info[$context]) ? $info[$context] : array();
 }

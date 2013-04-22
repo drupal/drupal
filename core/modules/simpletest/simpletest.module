@@ -771,13 +771,13 @@ function simpletest_phpunit_xml_to_rows($test_id, $phpunit_xml_file) {
         $attributes = $testcase->attributes();
         $records[] = array(
           'test_id' => $test_id,
-          'test_class' => (string)$attributes->class,
+          'test_class' => (string) $attributes->class,
           'status' => $pass ? 'pass' : 'fail',
           'message' => $message,
           'message_group' => 'Other', // TODO: Check on the proper values for this.
           'function' => $attributes->class . '->' . $attributes->name . '()',
-          'line' => (string)$attributes->line,
-          'file' => (string)$attributes->file,
+          'line' => (int) $attributes->line,
+          'file' => (string) $attributes->file,
         );
       }
     }
