@@ -333,7 +333,7 @@ function field_field_widget_info_alter(&$info) {
  * otherwise all the fallback candidates are inspected to see if there is a
  * field translation available in another language.
  * By default this is called by field_field_language_alter(), but this
- * behavior can be disabled by setting the 'field_language_fallback'
+ * behavior can be disabled by setting the 'field.settings.language_fallback'
  * variable to FALSE.
  *
  * @param $field_langcodes

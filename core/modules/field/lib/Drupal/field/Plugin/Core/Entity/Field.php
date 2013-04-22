@@ -323,7 +323,7 @@ class Field extends ConfigEntityBase implements \ArrayAccess, \Serializable {
 
       // Provide default storage.
       $this->storage += array(
-        'type' => variable_get('field_storage_default', 'field_sql_storage'),
+        'type' => config('field.settings')->get('default_storage'),
         'settings' => array(),
       );
       // Check that the storage type is known.

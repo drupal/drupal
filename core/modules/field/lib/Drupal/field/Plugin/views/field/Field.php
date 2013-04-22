@@ -193,7 +193,7 @@ class Field extends FieldPluginBase {
                                 $this->view->display_handler->options['field_langcode']);
         $placeholder = $this->placeholder();
         $langcode_fallback_candidates = array($langcode);
-        if (variable_get('locale_field_language_fallback', TRUE)) {
+        if (field_language_fallback_enabled()) {
           require_once DRUPAL_ROOT . '/includes/language.inc';
           $langcode_fallback_candidates = array_merge($langcode_fallback_candidates, language_fallback_get_candidates());
         }

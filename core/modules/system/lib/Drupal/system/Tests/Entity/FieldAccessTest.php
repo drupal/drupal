@@ -41,6 +41,8 @@ class FieldAccessTest extends DrupalUnitTestBase {
 
   protected function setUp() {
     parent::setUp();
+    // Install field configuration.
+    $this->installConfig(array('field'));
     // The users table is needed for creating dummy user accounts.
     $this->installSchema('user', array('users'));
     // Register entity_test text field.

@@ -22,8 +22,9 @@ use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
  * the data in SQL differently or use a completely different storage mechanism
  * such as a cloud-based database.
  *
- * Each field defines which storage backend it uses. The Drupal system variable
- * 'field_storage_default' identifies the storage backend used by default.
+ * Each field defines which storage backend it uses. The Drupal configuration
+ * 'field.settings.default_storage' identifies the storage backend used by
+ * default.
  *
  * See @link field Field API @endlink for information about the other parts of
  * the Field API.
