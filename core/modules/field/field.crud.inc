@@ -55,6 +55,9 @@ use Drupal\field\FieldException;
  *
  * @throws Drupal\field\FieldException
  *
+ * @deprecated as of Drupal 8.0. Use
+ *   entity_create('field_entity', $definition)->save().
+ *
  * See: @link field Field API data structures @endlink.
  */
 function field_create_field(array $field) {
@@ -82,6 +85,8 @@ function field_create_field(array $field) {
  *   structure.
  *
  * @throws Drupal\field\FieldException
+ *
+ * @deprecated as of Drupal 8.0. Use $field->save().
  *
  * @see field_create_field()
  */
@@ -214,6 +219,8 @@ function field_read_fields($conditions = array(), $include_additional = array())
  *
  * @param $field_name
  *   The field name to delete.
+ *
+ * @deprecated as of Drupal 8.0. Use $field->delete().
  */
 function field_delete_field($field_name) {
   if ($field = field_info_field($field_name)) {
@@ -244,6 +251,9 @@ function field_delete_field($field_name) {
  *
  * @throws Drupal\field\FieldException
  *
+ * @deprecated as of Drupal 8.0. Use
+ *   entity_create('field_instance', $definition)->save().
+ *
  * See: @link field Field API data structures @endlink.
  */
 function field_create_instance(array $instance) {
@@ -267,6 +277,8 @@ function field_create_instance(array $instance) {
  *   the instance.
  *
  * @throws Drupal\field\FieldException
+ *
+ * @deprecated as of Drupal 8.0. Use $instance->save().
  *
  * @see field_create_instance()
  */
@@ -423,6 +435,8 @@ function field_read_instances($conditions = array(), $include_additional = array
  *   If TRUE, the field will be deleted as well if its last instance is being
  *   deleted. If FALSE, it is the caller's responsibility to handle the case of
  *   fields left without instances. Defaults to TRUE.
+ *
+ * @deprecated as of Drupal 8.0. Use $instance->delete().
  */
 function field_delete_instance(FieldInstance $instance, $field_cleanup = TRUE) {
   $instance->delete($field_cleanup);

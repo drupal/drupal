@@ -153,8 +153,7 @@ function hook_field_extra_fields_alter(&$info) {
  *     the field type module depends on).
  *   - no_ui: (optional) A boolean specifying that users should not be allowed
  *     to create fields and instances of this field type through the UI. Such
- *     fields can only be created programmatically with field_create_field()
- *     and field_create_instance(). Defaults to FALSE.
+ *     fields can only be created programmatically. Defaults to FALSE.
  *
  * @see hook_field_info_alter()
  */
@@ -229,10 +228,10 @@ function hook_field_info_alter(&$info) {
  *     storage.
  *   - indexes: (optional) An array of Schema API index definitions. Only
  *     columns that appear in the 'columns' array are allowed. Those indexes
- *     will be used as default indexes. Callers of field_create_field() can
- *     specify additional indexes or, at their own risk, modify the default
- *     indexes specified by the field-type module. Some storage engines might
- *     not support indexes.
+ *     will be used as default indexes. Individual field definitions can
+ *     specify additional indexes or modify, at their own risk, the indexes
+ *     specified by the field type. Some storage engines might not support
+ *     indexes.
  *   - foreign keys: (optional) An array of Schema API foreign key definitions.
  *     Note, however, that the field data is not necessarily stored in SQL.
  *     Also, the possible usage is limited, as you cannot specify another field
@@ -534,11 +533,10 @@ function hook_field_update(\Drupal\Core\Entity\EntityInterface $entity, $field, 
 /**
  * Update the storage information for a field.
  *
- * This is invoked on the field's storage module from field_update_field(),
- * before the new field information is saved to the database. The field storage
- * module should update its storage tables to agree with the new field
- * information. If there is a problem, the field storage module should throw an
- * exception.
+ * This is invoked on the field's storage module when updating the field,
+ * before the new definition is saved to the database. The field storage module
+ * should update its storage tables according to the new field definition. If
+ * there is a problem, the field storage module should throw an exception.
  *
  * @param $field
  *   The updated field structure to be saved.
@@ -1626,7 +1624,7 @@ function hook_field_storage_query($query) {
 /**
  * Act on creation of a new field.
  *
- * This hook is invoked from field_create_field() to ask the field storage
+ * This hook is invoked during the creation of a field to ask the field storage
  * module to save field information and prepare for storing field instances. If
  * there is a problem, the field storage module should throw an exception.
  *
@@ -1644,7 +1642,7 @@ function hook_field_storage_create_field($field) {
 /**
  * Act on deletion of a field.
  *
- * This hook is invoked from field_delete_field() to ask the field storage
+ * This hook is invoked during the deletion of a field to ask the field storage
  * module to mark all information stored in the field for deletion.
  *
  * @param $field
@@ -1671,8 +1669,9 @@ function hook_field_storage_delete_field($field) {
 /**
  * Act on deletion of a field instance.
  *
- * This hook is invoked from field_delete_instance() to ask the field storage
- * module to mark all information stored for the field instance for deletion.
+ * This hook is invoked during the deletion of a field instance to ask the
+ * field storage module to mark all information stored for the field instance
+ * for deletion.
  *
  * @param $instance
  *   The instance being deleted.
@@ -1885,8 +1884,8 @@ function hook_field_widget_properties_ENTITY_TYPE_alter(array &$widget_propertie
 /**
  * Act on a field being created.
  *
- * This hook is invoked from field_create_field() after the field is created, to
- * allow modules to act on field creation.
+ * This hook lets modules react to the creation of a field. It is called after
+ * the definition is saved, so it cannot be used to modify the field itself.
  *
  * @param $field
  *   The field just created.
@@ -1898,8 +1897,9 @@ function hook_field_create_field($field) {
 /**
  * Act on a field instance being created.
  *
- * This hook is invoked from field_create_instance() after the instance record
- * is saved, so it cannot be used to modify the instance itself.
+ * This hook lets modules react to the creation of a field instance. It is
+ * called after the definition is saved, so it cannot be used to modify the
+ * instance itself.
  *
  * @param $instance
  *   The instance just created.
@@ -1951,7 +1951,9 @@ function hook_field_update_forbid($field, $prior_field, $has_data) {
 /**
  * Act on a field being updated.
  *
- * This hook is invoked just after field is updated in field_update_field().
+ * This hook lets modules react to the update of an existing field. It is
+ * called after the definition is saved, so it cannot be used to modify the
+ * field itself.
  *
  * @param $field
  *   The field as it is post-update.
@@ -1968,7 +1970,8 @@ function hook_field_update_field($field, $prior_field, $has_data) {
 /**
  * Act on a field being deleted.
  *
- * This hook is invoked just after a field is deleted by field_delete_field().
+ * This hook lets modules react to the deletion of an existing field. It is
+ * called after the definition is deleted.
  *
  * @param $field
  *   The field just deleted.
@@ -1980,8 +1983,9 @@ function hook_field_delete_field($field) {
 /**
  * Act on a field instance being updated.
  *
- * This hook is invoked from field_update_instance() after the instance record
- * is saved, so it cannot be used by a module to modify the instance itself.
+ * This hook lets modules react to the update of an existing field instance. It
+ * is called after the definition is saved, so it cannot be used to modify the
+ * instance itself.
  *
  * @param $instance
  *   The instance as it is post-update.
@@ -1995,8 +1999,8 @@ function hook_field_update_instance($instance, $prior_instance) {
 /**
  * Act on a field instance being deleted.
  *
- * This hook is invoked from field_delete_instance() after the instance is
- * deleted.
+ * This hook lets modules react to the deletion of an existing field instance.
+ * It is called after the definition is deleted.
  *
  * @param $instance
  *   The instance just deleted.
