@@ -756,31 +756,85 @@ function simpletest_phpunit_xml_to_rows($test_id, $phpunit_xml_file) {
   $records = array();
   foreach ($xml->testsuite as $testsuite) {
     foreach ($testsuite as $suite) {
-      foreach ($suite as $testcase) {
-        $message = '';
-        $pass = TRUE;
-        if ($testcase->failure) {
-          $lines = explode("\n", $testcase->failure);
-          $message = $lines[2];
-          $pass = FALSE;
-        }
-        if ($testcase->error) {
-          $message = $testcase->error;
-          $pass = FALSE;
-        }
-        $attributes = $testcase->attributes();
-        $records[] = array(
-          'test_id' => $test_id,
-          'test_class' => (string) $attributes->class,
-          'status' => $pass ? 'pass' : 'fail',
-          'message' => $message,
-          'message_group' => 'Other', // TODO: Check on the proper values for this.
-          'function' => $attributes->class . '->' . $attributes->name . '()',
-          'line' => (int) $attributes->line,
-          'file' => (string) $attributes->file,
-        );
+      // The file element won't be on testcase objects created with
+      // @dataProvider, so just use the one from the test suite at this level
+      // because it should be the same.
+      $file = (string) $suite->attributes()->file;
+
+      $testcases = simpletest_phpunit_find_testcases($suite);
+      foreach ($testcases as $testcase) {
+        $records[] = simpletest_phpunit_testcase_to_row($test_id, $testcase, $file);
       }
     }
   }
   return $records;
+}
+
+/**
+ * Find all testcases recursively from a testsuite list.
+ *
+ * @param array $suite
+ *   The list of testcases contained in the PHPUnit XML.
+ *
+ * @return array
+ *   A list of all testcases.
+ */
+function simpletest_phpunit_find_testcases($suite) {
+  $testcases = array();
+
+  foreach ($suite as $testcase) {
+    // Beside from being 'testcases', it could be also a group of testcases.
+    // This happens if you use a data provider in the phpunit tests.
+    if ($testcase->getName() === 'testcase') {
+      $testcases[] = $testcase;
+    }
+    elseif (isset($testcase->testcase) && $testcase->tests > 0) {
+      foreach ($testcase->testcase as $childtestcase) {
+        $testcases[] = $childtestcase;
+      }
+    }
+  }
+  return $testcases;
+}
+
+/**
+ * Converts a PHPUnit testcase result to a simpletest result row.
+ *
+ * @param int $test_id
+ *   The current test ID.
+ * @param \SimpleXMLElement $testcase
+ *   The PHPUnit testcase represented as XML element.
+ * @param string $file
+ *   The path to test file, which was executed.
+ *
+ * @return array
+ *   An array containg the simpletest result row.
+ */
+function simpletest_phpunit_testcase_to_row($test_id, \SimpleXMLElement $testcase, $file) {
+  $message = '';
+  $pass = TRUE;
+  if ($testcase->failure) {
+    $lines = explode("\n", $testcase->failure);
+    $message = $lines[2];
+    $pass = FALSE;
+  }
+  if ($testcase->error) {
+    $message = $testcase->error;
+    $pass = FALSE;
+  }
+
+  $attributes = $testcase->attributes();
+
+  $record = array(
+    'test_id' => $test_id,
+    'test_class' => (string) $attributes->class,
+    'status' => $pass ? 'pass' : 'fail',
+    'message' => $message,
+    // @todo: Check on the proper values for this.
+    'message_group' => 'Other',
+    'function' => $attributes->class . '->' . $attributes->name . '()',
+    'line' => $attributes->line ?: 0,
+    'file' => $file,
+  );
+  return $record;
 }
