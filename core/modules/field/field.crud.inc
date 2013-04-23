@@ -272,14 +272,26 @@ function field_create_instance(array $instance) {
  *   - entity_type: The type of the entity the field is attached to.
  *   - bundle: The bundle this field belongs to.
  *   - field_name: The name of an existing field.
- *   Read-only ID properties are assigned automatically. Any other properties
- *   properties specified in $instance overwrite the existing values for
- *   the instance.
+ *   The other array elements represent properties of the instance, and all
+ *   properties must be specified or their default values will be used (except
+ *   internal-use properties, which are assigned automatically). To avoid losing
+ *   the previously stored properties of the instance when making a change,
+ *   first load the instance with field_info_instance(), then override the
+ *   values you want to override, and finally save using this function. Example:
+ *   @code
+ *   // Fetch an instance info array.
+ *   $instance_info = field_info_instance($entity_type, $field_name, $bundle_name);
+ *   // Change a single property in the instance definition.
+ *   $instance_info['definition']['required'] = TRUE;
+ *   // Write the changed definition back.
+ *   field_update_instance($instance_info['definition']);
+ *   @endcode
  *
  * @throws Drupal\field\FieldException
  *
  * @deprecated as of Drupal 8.0. Use $instance->save().
  *
+ * @see field_info_instance()
  * @see field_create_instance()
  */
 function field_update_instance($instance) {
