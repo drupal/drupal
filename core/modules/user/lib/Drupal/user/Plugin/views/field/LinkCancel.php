@@ -26,7 +26,7 @@ class LinkCancel extends Link {
     if ($entity && $entity->access('delete')) {
       $this->options['alter']['make_link'] = TRUE;
 
-      $text = !empty($this->options['text']) ? $this->options['text'] : t('Cancel');
+      $text = !empty($this->options['text']) ? $this->options['text'] : t('Cancel account');
 
       $uri = $entity->uri();
       $this->options['alter']['path'] = $uri['path'] . '/cancel';
