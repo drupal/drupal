@@ -137,6 +137,7 @@ class FieldUpgradePathTest extends UpgradePathTestBase {
       $this->assertEqual($config, array(
         'id' => "node.$node_type.body",
         'field_uuid' => $field_uuid,
+        'field_type' => 'text_with_summary',
         'entity_type' => 'node',
         'bundle' => $node_type,
         'label' => 'Body',

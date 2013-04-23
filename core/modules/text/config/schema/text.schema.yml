@@ -7,3 +7,140 @@ text.settings:
     default_summary_length:
       type: integer
       label: 'Default summary length'
+
+field.text.settings:
+  type: mapping
+  label: 'Text settings'
+  mapping:
+    max_length:
+      type: integer
+      label: 'Maximum length'
+
+field.text.instance_settings:
+  type: mapping
+  label: 'Text settings'
+  mapping:
+    text_processing:
+      type: string
+      label: 'Text processing'
+    user_register_form:
+      type: boolean
+      label: 'Display on user registration form.'
+
+field.text.value:
+  type: sequence
+  label: 'Default value'
+  sequence:
+    - type: mapping
+      label: 'Default'
+      mapping:
+        value:
+          type: label
+          label: 'Value'
+        format:
+          type: string
+          label: 'Text format'
+
+field.text_long.settings:
+  type: sequence
+  label: 'Settings'
+  sequence:
+    - type: string
+
+field.text_long.instance_settings:
+  type: mapping
+  label: 'Long text settings'
+  mapping:
+    text_processing:
+      type: string
+      label: 'Text processing'
+    user_register_form:
+      type: boolean
+      label: 'Display on user registration form.'
+
+field.text_long.value:
+  type: sequence
+  label: 'Default value'
+  sequence:
+    - type: mapping
+      label: 'Default'
+      mapping:
+        value:
+          type: text
+          label: 'Value'
+        format:
+          type: string
+          label: 'Text format'
+
+field.text_with_summary.settings:
+  type: sequence
+  label: 'Default'
+  sequence:
+    - type: string
+
+field.text_with_summary.instance_settings:
+  type: mapping
+  label: 'Text area with a summary'
+  mapping:
+    text_processing:
+      type: boolean
+      label: 'Text processing'
+    display_summary:
+      type: boolean
+      label: 'Summary input'
+    user_register_form:
+      type: boolean
+      label: 'Display on user registration form.'
+
+field.text_with_summary.value:
+  type: sequence
+  label: 'Default value'
+  sequence:
+    - type: mapping
+      label: 'Default'
+      mapping:
+        value:
+          type: text
+          label: 'Body'
+        summary:
+          type: string
+          label: 'Summary'
+        format:
+          type: string
+          label: 'Text format'
+
+field_widget.text_textfield.settings:
+  type: mapping
+  label: 'Text field widget settings'
+  mapping:
+    size:
+      type: integer
+      label: 'Size of textfield'
+    placeholder:
+      type: label
+      label: 'Placeholder'
+
+field_widget.text_textarea.settings:
+  type: mapping
+  label: 'Long text widget settings'
+  mapping:
+    rows:
+      type: integer
+      label: 'Rows'
+    placeholder:
+      type: label
+      label: 'Placeholder'
+
+field_widget.text_textarea_with_summary.settings:
+  type: mapping
+  label: 'Text area widget settings'
+  mapping:
+    rows:
+      type: integer
+      label: 'Rows'
+    summary_rows:
+      type: integer
+      label: 'Summary rows'
+    placeholder:
+      type: label
+      label: 'Placeholder'

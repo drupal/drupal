@@ -350,7 +350,7 @@ function field_update_8003() {
   $deleted_fields = $state->get('field.field.deleted') ?: array();
   $deleted_instances = $state->get('field.instance.deleted') ?: array();
 
-  $field_uuids = array();
+  $field_data = array();
 
   // Migrate field definitions.
   $records = db_query("SELECT * FROM {field_config}")->fetchAll(PDO::FETCH_ASSOC);
@@ -411,8 +411,12 @@ function field_update_8003() {
       }
     }
 
-    // Store the UUID with the old field_id so that we can map the instances.
-    $field_uuids[$record['id']] = $config['uuid'];
+    // Store the UUID and field type, they will be used when processing
+    // instances.
+    $field_data[$record['id']] = array(
+      'uuid' => $config['uuid'],
+      'type' => $record['type'],
+    );
   }
 
   // Migrate instance definitions.
@@ -423,7 +427,8 @@ function field_update_8003() {
     $config = array(
       'id' => $record['entity_type'] . '.' . $record['bundle'] . '.' . $record['field_name'],
       'uuid' => $uuid->generate(),
-      'field_uuid' => $field_uuids[$record['field_id']],
+      'field_uuid' => $field_data[$record['field_id']]['uuid'],
+      'field_type' => $field_data[$record['field_id']]['type'],
       'entity_type' => $record['entity_type'],
       'bundle' => $record['bundle'],
       'label' => $record['data']['label'],

@@ -13,3 +13,131 @@ field.settings:
     purge_batch_size:
       type: integer
       label: 'Maximum number of field data records to purge'
+
+field.field.*:
+  type: mapping
+  label: 'Field'
+  mapping:
+    id:
+      type: string
+      label: 'Machine name'
+    uuid:
+      type: string
+      label: 'UUID'
+    status:
+      type: boolean
+      label: 'Status'
+    langcode:
+      type: string
+      label: 'Default language'
+    type:
+      type: string
+      label: 'Type'
+    settings:
+      type: field.[%parent.type].settings
+    module:
+      type: string
+      label: 'Module'
+    active:
+      type: boolean
+      label: 'Active'
+    entity_types:
+      type: sequence
+      label: 'Allowed entity types'
+      sequence:
+        - type: string
+          label: 'Entity type'
+    storage:
+      type: mapping
+      label: 'Storage'
+      mapping:
+        type:
+          type: string
+          label: 'Type'
+        settings:
+          type: field_storage.[%parent.type].settings
+          label: 'Settings'
+        module:
+          type: string
+          label: 'Module'
+        active:
+          type: boolean
+          label: 'Active'
+    locked:
+      type: boolean
+      label: 'Locked'
+    cardinality:
+      type: integer
+      label: 'Maximum number of values users can enter'
+    translatable:
+      type: boolean
+      label: 'Translatable'
+    indexes:
+      type: sequence
+      label: 'Indexes'
+      sequence:
+        - type: sequence
+          label: 'Indexes'
+          sequence:
+            - type: string
+              label: 'Column'
+
+field.instance.*.*.*:
+  type: mapping
+  label: 'Field instance'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    uuid:
+      type: string
+      label: 'UUID'
+    status:
+      type: boolean
+      label: 'Status'
+    langcode:
+      type: string
+      label: 'Default language'
+    field_uuid:
+      type: string
+      label: 'Field UUID'
+    entity_type:
+      type: string
+      label: 'Allowed entity types'
+    bundle:
+      type: string
+      label: 'Bundle'
+    label:
+      type: label
+      label: 'Label'
+    description:
+      type: text
+      label: 'Help text'
+    required:
+      type: boolean
+      label: 'Required field'
+    default_value:
+      type: field.[%parent.field_type].value
+    default_value_function:
+      type: string
+      label: 'Default value funtion'
+    settings:
+      type: field.[%parent.field_type].instance_settings
+    widget:
+      type: mapping
+      label: 'Widget'
+      mapping:
+        weight:
+          type: integer
+          label: 'Weight'
+        type:
+          type: string
+          label: 'Widget type'
+        settings:
+          type: field_widget.[%parent.type].settings
+        module:
+          type: string
+          label: 'Module'
+    field_type:
+      type: string
+      label: 'Field type'

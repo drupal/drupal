@@ -253,6 +253,10 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess, \Serializa
     unset($values['field_name']);
     $this->field = $field;
 
+    // Discard the 'field_type' entry that is added in config records to ease
+    // schema generation. See getExportProperties().
+    unset($values['field_type']);
+
     // Check required properties.
     if (empty($values['entity_type'])) {
       throw new FieldException(format_string('Attempt to create an instance of field @field_id without an entity type.', array('@field_id' => $this->field->id)));
@@ -308,6 +312,11 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess, \Serializa
     foreach ($names as $name) {
       $properties[$name] = $this->get($name);
     }
+
+    // Additionally, include the field type, that is needed to be able to
+    // generate the field-type-dependant parts of the config schema.
+    $properties['field_type'] = $this->field->type;
+
     return $properties;
   }
 
