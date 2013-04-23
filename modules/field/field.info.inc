@@ -449,6 +449,17 @@ function field_info_bundles($entity_type = NULL) {
  *   - type: The field type.
  *   - bundles: The bundles in which the field appears, as an array with entity
  *     types as keys and the array of bundle names as values.
+ * Example:
+ * @code
+ * array(
+ *   'body' => array(
+ *     'bundles' => array(
+ *       'node' => array('page', 'article'),
+ *     ),
+ *     'type' => 'text_with_summary',
+ *   ),
+ * );
+ * @endcode
  */
 function field_info_field_map() {
   $cache = _field_info_field_cache();
