@@ -1,6 +1,8 @@
 
 Drupal 7.23, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a regression in Drupal 7.22 that caused internal server errors for
+  sites running on very old Apache 1.x web servers.
 
 Drupal 7.22, 2013-04-03
 -----------------------
