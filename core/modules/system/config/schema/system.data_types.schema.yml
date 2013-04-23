@@ -37,6 +37,7 @@ default:
 label:
   type: string
   label: 'Label'
+  translatable: true
 
 # Internal Drupal path
 path:
@@ -47,6 +48,7 @@ path:
 text:
   type: string
   label: 'Text'
+  translatable: true
 
 # Complex extended data types:
 

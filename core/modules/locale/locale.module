@@ -319,6 +319,9 @@ function locale_language_delete($language) {
   module_load_include('inc', 'locale', 'locale.bulk');
   locale_translate_delete_translation_files(array(), array($language->langcode));
 
+  // Remove translated configuration objects.
+  \Drupal\locale\Locale::config()->deleteLanguageTranslations($language->langcode);
+
   // Changing the language settings impacts the interface:
   _locale_invalidate_js($language->langcode);
   cache('page')->deleteAll();
@@ -473,14 +476,16 @@ function locale_get_plural($count, $langcode = NULL) {
  * Implements hook_modules_installed().
  */
 function locale_modules_installed($modules) {
-  locale_system_update($modules);
+  $components['module'] = $modules;
+  locale_system_update($components);
 }
 
 /**
  * Implements hook_modules_uninstalled().
  */
 function locale_modules_uninstalled($modules) {
-  locale_system_remove($modules);
+  $components['module'] = $modules;
+  locale_system_remove($components);
 }
 
 /**
@@ -490,14 +495,16 @@ function locale_modules_uninstalled($modules) {
  *   initial installation. The theme system is missing an installation hook.
  */
 function locale_themes_enabled($themes) {
-  locale_system_update($themes);
+  $components['theme'] = $themes;
+  locale_system_update($components);
 }
 
 /**
  * Implements hook_themes_disabled().
  */
 function locale_themes_disabled($themes) {
-  locale_system_remove($themes);
+  $components['theme'] = $themes;
+  locale_system_remove($components);
 }
 
 /**
@@ -507,10 +514,14 @@ function locale_themes_disabled($themes) {
  * components.
  *
  * @param array $components
- *   An array of component (theme and/or module) names to import
- *   translations for.
+ *   An array of arrays of component (theme and/or module) names to import
+ *   translations for, indexed by type.
  */
-function locale_system_update($components) {
+function locale_system_update(array $components) {
+
+  $components += array('module' => array(), 'theme' => array());
+  $list = array_merge($components['module'], $components['theme']);
+
   // Skip running the translation imports if in the installer,
   // because it would break out of the installer flow. We have
   // built-in support for translation imports in the installer.
@@ -521,11 +532,15 @@ function locale_system_update($components) {
     // Only when new projects are added the update batch will be triggered. Not
     // each enabled module will introduce a new project. E.g. sub modules.
     $projects = array_keys(locale_translation_build_projects());
-    if ($components = array_intersect($components, $projects)) {
+    if ($list = array_intersect($list, $projects)) {
       module_load_include('fetch.inc', 'locale');
       // Get translation status of the projects, download and update translations.
       $options = _locale_translation_default_update_options();
-      $batch = locale_translation_batch_update_build($components, array(), $options);
+      $batch = locale_translation_batch_update_build($list, array(), $options);
+      batch_set($batch);
+    }
+    Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
+    if ($batch = locale_config_batch_update_components(array(), array(), $components)) {
       batch_set($batch);
     }
   }
@@ -539,36 +554,40 @@ function locale_system_update($components) {
  * modules and we have no record of which string is used by which module.
  *
  * @param array $components
- *   An array of component (theme and/or module) names to remove
- *   translation history.
+ *   An array of arrays of component (theme and/or module) names to import
+ *   translations for, indexed by type.
  */
 function locale_system_remove($components) {
-  if (locale_translatable_language_list()) {
+  $components += array('module' => array(), 'theme' => array());
+  $list = array_merge($components['module'], $components['theme']);
+  if ($language_list = locale_translatable_language_list()) {
     module_load_include('compare.inc', 'locale');
+    Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
+    // Delete configuration translations.
+    \Drupal\locale\Locale::config()->deleteComponentTranslations($components, array_keys($language_list));
 
     // Only when projects are removed, the translation files and records will be
     // deleted. Not each disabled module will remove a project. E.g. sub modules.
     $projects = array_keys(locale_translation_get_projects());
-    if ($components = array_intersect($components, $projects)) {
-      locale_translation_file_history_delete($components);
+    if ($list = array_intersect($list, $projects)) {
+      locale_translation_file_history_delete($list);
 
       // Remove translation files.
-      module_load_include('inc', 'locale', 'locale.bulk');
-      locale_translate_delete_translation_files($components, array());
+      locale_translate_delete_translation_files($list, array());
 
       // Remove translatable projects.
       // Followup issue http://drupal.org/node/1842362 to replace the
       // {locale_project} table. Then change this to a function call.
       db_delete('locale_project')
-        ->condition('name', $components)
+        ->condition('name', $list)
         ->execute();
 
       // Clear the translation status.
-      locale_translation_status_delete_projects($components);
+      locale_translation_status_delete_projects($list);
     }
+
   }
 }
-
 
 /**
  * Implements hook_js_alter().
@@ -772,6 +791,12 @@ function locale_form_language_admin_add_form_alter_submit($form, $form_state) {
   $options = _locale_translation_default_update_options();
   $batch = locale_translation_batch_update_build(array(), array($langcode), $options);
   batch_set($batch);
+
+  // Create or update all configuration translations for this language.
+  Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
+  if ($batch = locale_config_batch_update_components($options, array($langcode))) {
+    batch_set($batch);
+  }
 }
 
 /**
@@ -1051,6 +1076,25 @@ function _locale_refresh_translations($langcodes, $lids = array()) {
 }
 
 /**
+ * Refreshes configuration after string translations have been updated.
+ *
+ * The information that will be refreshed includes:
+ * - JavaScript translations.
+ * - Locale cache.
+ *
+ * @param array $langcodes
+ *   Language codes for updated translations.
+ * @param array $lids
+ *   List of string identifiers that have been updated / created.
+ */
+function _locale_refresh_configuration(array $langcodes, array $lids) {
+  if ($lids && $langcodes && $names = \Drupal\locale\Locale::config()->getStringNames($lids)) {
+    Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
+    locale_config_update_multiple($names, $langcodes);
+  }
+}
+
+/**
  * Parses a JavaScript file, extracts strings wrapped in Drupal.t() and
  * Drupal.formatPlural() and inserts them into the database.
  *
@@ -1294,8 +1338,8 @@ function _locale_rebuild_js($langcode = NULL) {
       return TRUE;
     case 'rebuilt':
       watchdog('locale', 'JavaScript translation file %file.js was lost.', array('%file' => $locale_javascripts[$language->langcode]), WATCHDOG_WARNING);
-      // Proceed to the 'created' case as the JavaScript translation file has
-      // been created again.
+    // Proceed to the 'created' case as the JavaScript translation file has
+    // been created again.
     case 'created':
       watchdog('locale', 'Created JavaScript translation file for the language %language.', array('%language' => $language->name));
       return TRUE;

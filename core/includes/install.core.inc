@@ -760,6 +760,12 @@ function install_tasks($install_state) {
       'type' => 'batch',
       'run' => $needs_translations ? INSTALL_TASK_RUN_IF_NOT_COMPLETED : INSTALL_TASK_SKIP,
     ),
+    'install_update_configuration_translations' => array(
+      'display_name' => st('Translate configuration'),
+      'display' => $needs_translations,
+      'type' => 'batch',
+      'run' => $needs_translations ? INSTALL_TASK_RUN_IF_NOT_COMPLETED : INSTALL_TASK_SKIP,
+    ),
     'install_finished' => array(
       'display_name' => st('Finished'),
     ),
@@ -1852,6 +1858,22 @@ function install_import_translations_remaining(&$install_state) {
       return $batch;
     }
   }
+}
+
+/**
+ * Creates configuration translations.
+ *
+ * @param array $install_state
+ *   An array of information about the current installation state.
+ *
+ * @return array
+ *   The batch definition, if there are configuration objects to update.
+ *
+ * @see install_tasks()
+ */
+function install_update_configuration_translations(&$install_state) {
+  Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
+  return locale_config_batch_update_components(array(), array($install_state['parameters']['langcode']));
 }
 
 /**

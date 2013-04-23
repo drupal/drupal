@@ -84,7 +84,7 @@ function locale_translate_import_form($form, &$form_state) {
     '#type' => 'checkbox',
     '#states' => array(
       'checked' => array(
-         ':input[name="customized"]' => array('checked' => TRUE),
+        ':input[name="customized"]' => array('checked' => TRUE),
       ),
     ),
   );
@@ -181,7 +181,7 @@ function locale_translate_export_form($form, &$form_state) {
       '#tree' => TRUE,
       '#states' => array(
         'invisible' => array(
-           ':input[name="langcode"]' => array('value' => LANGUAGE_SYSTEM),
+          ':input[name="langcode"]' => array('value' => LANGUAGE_SYSTEM),
         ),
       ),
     );
@@ -400,6 +400,9 @@ function locale_translate_batch_build($files, $options) {
     // Save the translation status of all files.
     $operations[] =  array('locale_translate_batch_import_save', array());
 
+    // Add a final step to refresh JavaScript and configuration strings.
+    $operations[] = array('locale_translate_batch_refresh', array());
+
     $batch = array(
       'operations'    => $operations,
       'title'         => $t('Importing interface translations'),
@@ -537,20 +540,74 @@ function locale_translate_batch_import_save($context) {
 }
 
 /**
+ * Refreshs translations after importing strings.
+ *
+ * @param array $context
+ *   Contains a list of strings updated and information about the progress.
+ */
+function locale_translate_batch_refresh(array &$context) {
+  if (!isset($context['sandbox']['refresh'])) {
+    $strings = $langcodes = array();
+    if (isset($context['results']['stats'])) {
+      // Get list of unique string identifiers and language codes updated.
+      $langcodes = array_unique(array_values($context['results']['languages']));
+      foreach ($context['results']['stats'] as $filepath => $report) {
+        $strings = array_merge($strings, $report['strings']);
+      }
+    }
+    if ($strings) {
+      // Initialize multi-step string refresh.
+      $context['message'] = t('Updating translations for JavaScript and configuration strings.');
+      $context['sandbox']['refresh']['strings'] = array_unique($strings);
+      $context['sandbox']['refresh']['languages'] = $langcodes;
+      $context['sandbox']['refresh']['names'] = array();
+      $context['results']['stats']['config'] = 0;
+      $context['sandbox']['refresh']['count'] = count($strings);
+
+      // We will update strings on later steps.
+      $context['finished'] = 1 - 1 / $context['sandbox']['refresh']['count'];
+    }
+    else {
+      $context['finished'] = 1;
+    }
+  }
+  elseif ($name = array_shift($context['sandbox']['refresh']['names'])) {
+    // Refresh all languages for one object at a time.
+    $count = locale_config_update_multiple(array($name), $context['sandbox']['refresh']['languages']);
+    $context['results']['stats']['config'] += $count;
+  }
+  elseif (!empty($context['sandbox']['refresh']['strings'])) {
+    // Not perfect but will give some indication of progress.
+    $context['finished'] = 1 - count($context['sandbox']['refresh']['strings']) / $context['sandbox']['refresh']['count'];
+    // Pending strings, refresh 100 at a time, get next pack.
+    $next = array_slice($context['sandbox']['refresh']['strings'], 0, 100);
+    array_splice($context['sandbox']['refresh']['strings'], 0, count($next));
+    // Clear cache and force refresh of JavaScript translations.
+    _locale_refresh_translations($context['sandbox']['refresh']['languages'], $next);
+    // Check whether we need to refresh configuration objects.
+    if ($names = \Drupal\locale\Locale::config()->getStringNames($next)) {
+      $context['sandbox']['refresh']['names'] = $names;
+    }
+  }
+  else {
+    $context['finished'] = 1;
+  }
+}
+
+/**
  * Finished callback of system page locale import batch.
  */
 function locale_translate_batch_finished($success, $results) {
   if ($success) {
-    $additions = $updates = $deletes = $skips = 0;
-    $langcodes = array();
+    $additions = $updates = $deletes = $skips = $config = 0;
     if (isset($results['failed_files'])) {
-        if (module_exists('dblog')) {
-          $message = format_plural(count($results['failed_files']), 'One translation file could not be imported. <a href="@url">See the log</a> for details.', '@count translation files could not be imported. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
-        }
-        else {
-          $message = format_plural(count($results['failed_files']), 'One translation files could not be imported. See the log for details.', '@count translation files could not be imported. See the log for details.');
-        }
-        drupal_set_message($message, 'error');
+      if (Drupal::moduleHandler()->moduleExists('dblog')) {
+        $message = format_plural(count($results['failed_files']), 'One translation file could not be imported. <a href="@url">See the log</a> for details.', '@count translation files could not be imported. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
+      }
+      else {
+        $message = format_plural(count($results['failed_files']), 'One translation files could not be imported. See the log for details.', '@count translation files could not be imported. See the log for details.');
+      }
+      drupal_set_message($message, 'error');
     }
     if (isset($results['files'])) {
       $skipped_files = array();
@@ -566,8 +623,6 @@ function locale_translate_batch_finished($success, $results) {
             $skipped_files[] = $filepath;
           }
         }
-        // Get list of unique language codes updated.
-        $langcodes = array_unique(array_values($results['languages']));
       }
       drupal_set_message(format_plural(count($results['files']),
         'One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.',
@@ -586,10 +641,11 @@ function locale_translate_batch_finished($success, $results) {
         drupal_set_message($message, 'warning');
         watchdog('locale', '@count disallowed HTML string(s) in files: @files.', array('@count' => $skips, '@files' => implode(',', $skipped_files)), WATCHDOG_WARNING);
       }
-
-      // Clear cache and force refresh of JavaScript translations.
-      _locale_refresh_translations($langcodes);
     }
+  }
+  // Add messages for configuration too.
+  if (isset($results['stats']['config'])) {
+    locale_config_batch_finished($success, $results);
   }
 }
 
@@ -611,7 +667,7 @@ function locale_translate_file_create($filepath) {
 }
 
 /**
- * Generate file properties from filename and options.
+ * Generates file properties from filename and options.
  *
  * An attempt is made to determine the translation language, project name and
  * project version from the file name. Supported file name patterns are:
@@ -684,4 +740,139 @@ function locale_translate_delete_translation_files($projects = array(), $langcod
     }
   }
   return !$fail;
+}
+
+/**
+ * Builds a locale batch to refresh configuration.
+ *
+ * @param array $options
+ *   An array with options that can have the following elements:
+ *   - 'finish_feedback': (optional) Whether or not to give feedback to the user
+ *     when the batch is finished. Defaults to TRUE.
+ * @param array $langcodes
+ *   (optional) Array of language codes. Defaults to all translatable languages.
+ * @param array $components
+ *   (optional) Array of component lists indexed by type. If not present or it
+ *   is an empty array, it will update all components.
+ *
+ * @return array
+ *   The batch definition.
+ */
+function locale_config_batch_update_components(array $options, $langcodes = array(), $components = array()) {
+  $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
+  if ($langcodes && $names = \Drupal\locale\Locale::config()->getComponentNames($components)) {
+    return locale_config_batch_build($names, $langcodes, $options);
+  }
+}
+
+/**
+ * Creates a locale batch to refresh specific configuration.
+ *
+ * @param array $names
+ *   List of configuration object names (which are strings) to update.
+ * @param array $langcodes
+ *   List of language codes to refresh.
+ * @param array $options
+ *   (optional) An array with options that can have the following elements:
+ *   - 'finish_feedback': Whether or not to give feedback to the user when the
+ *     batch is finished. Defaults to TRUE.
+ *
+ * @return array
+ *   The batch definition.
+ *
+ * @see locale_config_batch_refresh_name()
+ */
+function locale_config_batch_build(array $names, array $langcodes, $options = array()) {
+  $options += array('finish_feedback' => TRUE);
+  $t = get_t();
+  foreach ($names as $name) {
+    $operations[] = array('locale_config_batch_refresh_name', array($name, $langcodes));
+  }
+  $batch = array(
+    'operations'    => $operations,
+    'title'         => $t('Updating configuration translations'),
+    'init_message'  => $t('Starting configuration update'),
+    'error_message' => $t('Error updating configuration translations'),
+    'file'          => drupal_get_path('module', 'locale') . '/locale.bulk.inc',
+  );
+  if (!empty($options['finish_feedback'])) {
+    $batch['completed'] = 'locale_config_batch_finished';
+  }
+  return $batch;
+}
+
+/**
+ * Performs configuration translation refresh as a batch step.
+ *
+ * @param string $name
+ *   Name of configuration object to update.
+ * @param array $langcodes
+ *   (optional) Array of language codes to update. Defaults to all languages.
+ * @param array $context
+ *   Contains a list of files imported.
+ *
+ * @see locale_config_batch_build()
+ */
+function locale_config_batch_refresh_name($name, array $langcodes, array &$context) {
+  if (!isset($context['result']['stats']['config'])) {
+    $context['result']['stats']['config'] = 0;
+  }
+  $context['result']['stats']['config'] += locale_config_update_multiple(array($name), $langcodes);
+  $context['result']['names'][] = $name;
+  $context['result']['langcodes'] = $langcodes;
+  $context['finished'] = 1;
+}
+
+/**
+ * Finishes callback of system page locale import batch.
+ *
+ * @see locale_config_batch_build()
+ *
+ * @param bool $success
+ *   Information about the success of the batch import.
+ * @param array $results
+ *   Information about the results of the batch import.
+ */
+function locale_config_batch_finished($success, array $results) {
+  if ($success) {
+    $configuration = isset($results['stats']['config']) ? $results['stats']['config'] : 0;
+    if ($configuration) {
+      drupal_set_message(t('The configuration was successfully updated. There are %number configuration objects updated.', array('%number' => $configuration)));
+      watchdog('locale', 'The configuration was successfully updated. %number configuration objects updated.', array('%number' => $configuration));
+    }
+    else {
+      drupal_set_message(t('No configuration objects have been updated.'));
+      watchdog('locale', 'No configuration objects have been updated.', array(), WATCHDOG_WARNING);
+    }
+  }
+}
+
+/**
+ * Updates all configuration for names / languages.
+ *
+ * @param array $names
+ *   Array of names of configuration objects to update.
+ * @param array $langcodes
+ *   (optional) Array of language codes to update. Defaults to all languages.
+ *
+ * @return int
+ *   Number of configuration objects retranslated.
+ */
+function locale_config_update_multiple(array $names, $langcodes = array()) {
+  $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
+  $count = 0;
+  foreach ($names as $name) {
+    $wrapper = \Drupal\locale\Locale::config()->get($name);
+    foreach ($langcodes as $langcode) {
+      $translation = $wrapper->getValue() ? $wrapper->getTranslation($langcode)->getValue() : NULL;
+      if ($translation) {
+        \Drupal\locale\Locale::config()->saveTranslationData($name, $langcode, $translation);
+        $count++;
+      }
+      else {
+        \Drupal\locale\Locale::config()->deleteTranslationData($name, $langcode);
+      }
+    }
+  }
+  return $count;
 }
