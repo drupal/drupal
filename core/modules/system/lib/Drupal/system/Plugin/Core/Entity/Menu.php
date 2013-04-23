@@ -18,7 +18,9 @@ use Drupal\Core\Annotation\Translation;
  *   id = "menu",
  *   label = @Translation("Menu"),
  *   module = "system",
- *   controller_class = "Drupal\Core\Config\Entity\ConfigStorageController",
+ *   controllers = {
+ *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
+ *   },
  *   config_prefix = "menu.menu",
  *   entity_keys = {
  *     "id" = "id",

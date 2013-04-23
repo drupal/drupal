@@ -17,7 +17,9 @@ use Drupal\Core\Annotation\Translation;
  *   id = "test_cacheable_entity",
  *   label = @Translation("Test Entity, cacheable"),
  *   module = "field_test",
- *   controller_class = "Drupal\field_test\TestEntityController",
+ *   controllers = {
+ *     "storage" = "Drupal\field_test\TestEntityController"
+ *   },
  *   field_cache = TRUE,
  *   base_table = "test_entity",
  *   revision_table = "test_entity_revision",

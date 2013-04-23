@@ -19,7 +19,9 @@ use Drupal\field\FieldException;
  *   id = "field_instance",
  *   label = @Translation("Field instance"),
  *   module = "field",
- *   controller_class = "Drupal\field\FieldInstanceStorageController",
+ *   controllers = {
+ *     "storage" = "Drupal\field\FieldInstanceStorageController"
+ *   },
  *   config_prefix = "field.instance",
  *   entity_keys = {
  *     "id" = "id",

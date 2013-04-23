@@ -36,7 +36,7 @@ use Drupal\Core\Entity\EntityInterface;
  * path wildcard' info key needs to be defined.
  *
  * Every entity type needs a translation controller to be translated. This can
- * be specified through the 'translation_controller_class' key in the entity
+ * be specified through the "controllers['translation']" key in the entity
  * info. If an entity type is enabled for translation and no translation
  * controller is defined, Drupal\translation_entity\EntityTranslationController
  * will be assumed. Every translation controller class must implement
@@ -63,7 +63,6 @@ use Drupal\Core\Entity\EntityInterface;
  *     $info['myentity'] += array(
  *       'menu_base_path' => 'mymodule/myentity/%my_entity_loader',
  *       'menu_path_wildcard' => '%my_entity_loader',
- *       'translation_controller_class' => 'Drupal\mymodule\MyEntityTranslationController',
  *       'translation' => array(
  *         'translation_entity' => array(
  *           'access_callback' => 'mymodule_myentity_translate_access',
@@ -71,6 +70,7 @@ use Drupal\Core\Entity\EntityInterface;
  *         ),
  *       ),
  *     );
+ *     $info['myentity']['controllers'] += array('translation' => 'Drupal\mymodule\MyEntityTranslationController');
  *   }
  * @endcode
  *

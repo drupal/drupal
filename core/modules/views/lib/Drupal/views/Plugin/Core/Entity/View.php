@@ -22,13 +22,15 @@ use Drupal\Core\Annotation\Translation;
  *   id = "view",
  *   label = @Translation("View"),
  *   module = "views",
- *   controller_class = "Drupal\views\ViewStorageController",
- *   list_controller_class = "Drupal\views_ui\ViewListController",
- *   form_controller_class = {
- *     "edit" = "Drupal\views_ui\ViewEditFormController",
- *     "add" = "Drupal\views_ui\ViewAddFormController",
- *     "preview" = "Drupal\views_ui\ViewPreviewFormController",
- *     "clone" = "Drupal\views_ui\ViewCloneFormController"
+ *   controllers = {
+ *     "storage" = "Drupal\views\ViewStorageController",
+ *     "list" = "Drupal\views_ui\ViewListController",
+ *     "form" = {
+ *       "edit" = "Drupal\views_ui\ViewEditFormController",
+ *       "add" = "Drupal\views_ui\ViewAddFormController",
+ *       "preview" = "Drupal\views_ui\ViewPreviewFormController",
+ *       "clone" = "Drupal\views_ui\ViewCloneFormController"
+ *     }
  *   },
  *   config_prefix = "views.view",
  *   fieldable = FALSE,

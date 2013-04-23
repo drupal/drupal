@@ -18,7 +18,9 @@ use Drupal\Core\Annotation\Translation;
  *   id = "image_style",
  *   label = @Translation("Image style"),
  *   module = "image",
- *   controller_class = "Drupal\image\ImageStyleStorageController",
+ *   controllers = {
+ *     "storage" = "Drupal\image\ImageStyleStorageController"
+ *   },
  *   uri_callback = "image_style_entity_uri",
  *   config_prefix = "image.style",
  *   entity_keys = {

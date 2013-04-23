@@ -21,7 +21,9 @@ use Drupal\Core\Annotation\Translation;
  *   id = "display",
  *   label = @Translation("Display"),
  *   module = "layout",
- *   controller_class = "Drupal\Core\Config\Entity\ConfigStorageController",
+ *   controllers = {
+ *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
+ *   },
  *   config_prefix = "display.bound",
  *   entity_keys = {
  *     "id" = "id",

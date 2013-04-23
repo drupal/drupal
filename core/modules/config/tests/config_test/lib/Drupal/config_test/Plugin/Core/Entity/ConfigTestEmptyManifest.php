@@ -18,7 +18,9 @@ use Drupal\Core\Annotation\Translation;
  *   id = "config_test_empty_manifest",
  *   label = @Translation("Test empty manifest creation"),
  *   module = "config_test",
- *   controller_class = "Drupal\config_test\ConfigTestStorageController",
+ *   controllers = {
+ *     "storage" = "Drupal\config_test\ConfigTestStorageController"
+ *   },
  *   config_prefix = "config_test.empty_manifest",
  *   entity_keys = {
  *     "id" = "id",

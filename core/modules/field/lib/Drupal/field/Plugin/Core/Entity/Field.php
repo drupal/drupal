@@ -22,7 +22,9 @@ use Drupal\field\FieldException;
  *   id = "field_entity",
  *   label = @Translation("Field"),
  *   module = "field",
- *   controller_class = "Drupal\Core\Config\Entity\ConfigStorageController",
+ *   controllers = {
+ *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
+ *   },
  *   config_prefix = "field.field",
  *   entity_keys = {
  *     "id" = "id",

@@ -18,10 +18,12 @@ use Drupal\Core\Annotation\Translation;
  *   id = "config_test",
  *   label = @Translation("Test configuration"),
  *   module = "config_test",
- *   controller_class = "Drupal\config_test\ConfigTestStorageController",
- *   list_controller_class = "Drupal\Core\Config\Entity\ConfigEntityListController",
- *   form_controller_class = {
- *     "default" = "Drupal\config_test\ConfigTestFormController"
+ *   controllers = {
+ *     "storage" = "Drupal\config_test\ConfigTestStorageController",
+ *     "list" = "Drupal\Core\Config\Entity\ConfigEntityListController",
+ *     "form" = {
+ *       "default" = "Drupal\config_test\ConfigTestFormController"
+ *     }
  *   },
  *   uri_callback = "config_test_uri",
  *   config_prefix = "config_test.dynamic",

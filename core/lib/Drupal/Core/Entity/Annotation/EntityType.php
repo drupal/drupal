@@ -42,13 +42,37 @@ class EntityType extends Plugin {
   public $base_table;
 
   /**
-   * The name of the class that is used to load the objects.
+   * An associative array where the keys are the names of different controller
+   * types (listed below) and the values are the names of the classes that
+   * implement that controller:
+   * - storage: The name of the class that is used to load the objects. The
+   *   class must implement \Drupal\Core\Entity\EntityStorageControllerInterface.
+   * - form: An associative array where the keys are the names of the different
+   *   form operations (such as 'create', 'edit', or 'delete') and the values
+   *   are the names of the controller classes for those operations. The name of
+   *   the operation is passed also to the form controller's constructor, so
+   *   that one class can be used for multiple entity forms when the forms are
+   *   similar. The classes must implement
+   *   \Drupal\Core\Entity\EntityFormControllerInterface
+   * - list: The name of the class that provides listings of the entities. The
+   *   class must implement \Drupal\Core\Entity\EntityListControllerInterface.
+   * - render: The name of the class that is used to render the entities. The
+   *   class must implement \Drupal\Core\Entity\EntityRenderControllerInterface.
+   * - access: The name of the class that is used for access checks. The class
+   *   must implement \Drupal\Core\Entity\EntityAccessControllerInterface.
+   *   Defaults to \Drupal\Core\Entity\EntityAccessController.
+   * - translation: The name of the controller class that should be used to
+   *   handle the translation process. The class must implement
+   *   \Drupal\translation_entity\EntityTranslationControllerInterface.
    *
-   * This must implement \Drupal\Core\Entity\EntityStorageControllerInterface.
+   * @todo Interfaces from outside \Drupal\Core or \Drupal\Component should not
+   *   be used here.
    *
-   * @var string
+   * @var array
    */
-  public $controller_class = 'Drupal\Core\Entity\DatabaseStorageController';
+  public $controllers = array(
+    'access' => 'Drupal\Core\Entity\EntityAccessController',
+  );
 
   /**
    * Boolean indicating whether fields can be attached to entities of this type.
@@ -66,20 +90,6 @@ class EntityType extends Plugin {
    * @var bool (optional)
    */
   public $field_cache = TRUE;
-
-  /**
-   * The names of classes for various form operations.
-   *
-   * An associative array where the keys are the names of the different form
-   * operations (such as 'create', 'edit', or 'delete') and the values are the
-   * names of the controller classes for those operations. The name of the
-   * operation is passed also to the form controller's constructor, so that one
-   * class can be used for multiple entity forms when the forms are similar.
-   * Defaults to Drupal\Core\Entity\EntityFormController.
-   *
-   * @var array (optional)
-   */
-  public $form_controller_class = array('Drupal\Core\Entity\EntityFormController');
 
   /**
    * The human-readable name of the type.
@@ -113,43 +123,6 @@ class EntityType extends Plugin {
    * @var string (optional)
    */
   public $label_callback;
-
-  /**
-   * The name of the class that provides listings of the entities.
-   *
-   * The class must implement \Drupal\Core\Entity\EntityListControllerInterface.
-   *
-   * @var string
-   */
-  public $list_controller_class = 'Drupal\Core\Entity\EntityListController';
-
-  /**
-   * The name of the class that is used to render the entities.
-   *
-   * @var string
-   */
-  public $render_controller_class;
-
-  /**
-   * The name of the class that is used for access checks.
-   *
-   * The class must implement \Drupal\Core\Entity\EntityAccessControllerInterface.
-   *
-   * @var string
-   */
-  public $access_controller_class = 'Drupal\Core\Entity\EntityAccessController';
-
-  /**
-   * The name of the translation controller class that should be used to handle the translation process.
-   *
-   * The class must implement \Drupal\translation_entity\EntityTranslationControllerInterface.
-   *
-   * @todo Interfaces from outside \Drupal\Core or \Drupal\Component should not
-   *   be used here.
-   *
-   * @var string
-   */
-  public $translation_controller_class;
 
   /**
    * Boolean indicating whether entities should be statically cached during a page request.

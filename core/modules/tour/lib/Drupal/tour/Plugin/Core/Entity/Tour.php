@@ -19,8 +19,10 @@ use Drupal\tour\TipsBag;
  *   id = "tour",
  *   label = @Translation("Tour"),
  *   module = "tour",
- *   controller_class = "Drupal\Core\Config\Entity\ConfigStorageController",
- *   render_controller_class = "Drupal\tour\TourRenderController",
+ *   controllers = {
+ *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
+ *     "render" = "Drupal\tour\TourRenderController"
+ *   },
  *   config_prefix = "tour.tour",
  *   entity_keys = {
  *     "id" = "id",

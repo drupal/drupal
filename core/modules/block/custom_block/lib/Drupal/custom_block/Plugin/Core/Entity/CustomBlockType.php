@@ -18,10 +18,12 @@ use Drupal\Core\Annotation\Translation;
  *   id = "custom_block_type",
  *   label = @Translation("Custom block type"),
  *   module = "custom_block",
- *   controller_class = "Drupal\custom_block\CustomBlockTypeStorageController",
- *   list_controller_class = "Drupal\custom_block\CustomBlockTypeListController",
- *   form_controller_class = {
- *     "default" = "Drupal\custom_block\CustomBlockTypeFormController"
+ *   controllers = {
+ *     "storage" = "Drupal\custom_block\CustomBlockTypeStorageController",
+ *     "form" = {
+ *       "default" = "Drupal\custom_block\CustomBlockTypeFormController"
+ *     },
+ *     "list" = "Drupal\custom_block\CustomBlockTypeListController"
  *   },
  *   config_prefix = "custom_block.type",
  *   entity_keys = {

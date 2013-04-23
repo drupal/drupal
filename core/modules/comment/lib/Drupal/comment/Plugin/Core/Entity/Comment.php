@@ -20,13 +20,15 @@ use Drupal\Core\Annotation\Translation;
  *   label = @Translation("Comment"),
  *   bundle_label = @Translation("Content type"),
  *   module = "comment",
- *   controller_class = "Drupal\comment\CommentStorageController",
- *   access_controller_class = "Drupal\comment\CommentAccessController",
- *   render_controller_class = "Drupal\comment\CommentRenderController",
- *   form_controller_class = {
- *     "default" = "Drupal\comment\CommentFormController"
+ *   controllers = {
+ *     "storage" = "Drupal\comment\CommentStorageController",
+ *     "access" = "Drupal\comment\CommentAccessController",
+ *     "render" = "Drupal\comment\CommentRenderController",
+ *     "form" = {
+ *       "default" = "Drupal\comment\CommentFormController"
+ *     },
+ *     "translation" = "Drupal\comment\CommentTranslationController"
  *   },
- *   translation_controller_class = "Drupal\comment\CommentTranslationController",
  *   base_table = "comment",
  *   uri_callback = "comment_uri",
  *   fieldable = TRUE,

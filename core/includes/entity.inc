@@ -250,8 +250,8 @@ function entity_load_by_uuid($entity_type, $uuid, $reset = FALSE) {
  * Drupal\Core\Entity\EntityStorageControllerInterface interface. By default,
  * Drupal\Core\Entity\DatabaseStorageController is used. Entity types can
  * specify that a different class should be used by setting the
- * 'controller_class' key in the entity plugin annotation. These classes can
- * either implement the Drupal\Core\Entity\EntityStorageControllerInterface
+ * "controllers['storage']" key in the entity plugin annotation. These classes
+ * can either implement the Drupal\Core\Entity\EntityStorageControllerInterface
  * interface, or, most commonly, extend the
  * Drupal\Core\Entity\DatabaseStorageController class.
  * See Drupal\node\Plugin\Core\Entity\Node and Drupal\node\NodeStorageController

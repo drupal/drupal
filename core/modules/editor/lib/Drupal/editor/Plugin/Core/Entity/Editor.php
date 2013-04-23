@@ -18,7 +18,9 @@ use Drupal\Core\Annotation\Translation;
  *   id = "editor",
  *   label = @Translation("Editor"),
  *   module = "editor",
- *   controller_class = "Drupal\Core\Config\Entity\ConfigStorageController",
+ *   controllers = {
+ *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
+ *   },
  *   config_prefix = "editor.editor",
  *   entity_keys = {
  *     "id" = "format",

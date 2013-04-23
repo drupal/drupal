@@ -18,10 +18,12 @@ use Drupal\Core\Annotation\Translation;
  *   id = "shortcut",
  *   label = @Translation("Shortcut set"),
  *   module = "shortcut",
- *   controller_class = "Drupal\shortcut\ShortcutStorageController",
- *   list_controller_class = "Drupal\shortcut\ShortcutListController",
- *   form_controller_class = {
- *     "default" = "Drupal\shortcut\ShortcutFormController"
+ *   controllers = {
+ *     "storage" = "Drupal\shortcut\ShortcutStorageController",
+ *     "list" = "Drupal\shortcut\ShortcutListController",
+ *     "form" = {
+ *       "default" = "Drupal\shortcut\ShortcutFormController"
+ *     }
  *   },
  *   config_prefix = "shortcut.set",
  *   entity_keys = {
