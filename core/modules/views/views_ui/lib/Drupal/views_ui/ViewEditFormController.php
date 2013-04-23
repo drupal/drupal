@@ -99,7 +99,7 @@ class ViewEditFormController extends ViewFormControllerBase {
       $form['changed'] = array(
         '#type' => 'container',
         '#attributes' => array('class' => array('view-changed', 'messages', 'warning')),
-        '#children' => t('All changes are stored temporarily. Click "Save" to make your changes permanent. Click "Cancel" to discard your changes.'),
+        '#children' => t('You have unsaved changes.'),
         '#weight' => -10,
       );
       if (empty($view->changed)) {
