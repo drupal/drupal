@@ -17,3 +17,4 @@ widget:
   module: text
   settings:
     size: '60'
+field_type: text

@@ -17,7 +17,9 @@ use Drupal\Core\Annotation\Translation;
  *   id = "entity_test_default_access",
  *   label = @Translation("Test entity with default access"),
  *   module = "entity_test",
- *   controller_class = "Drupal\entity_test\EntityTestStorageController",
+ *   controllers = {
+ *     "storage" = "Drupal\entity_test\EntityTestStorageController"
+ *   },
  *   base_table = "entity_test",
  *   entity_keys = {
  *     "id" = "id"

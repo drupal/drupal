@@ -18,12 +18,14 @@ use Drupal\Core\Annotation\Translation;
  *   id = "entity_test_mul",
  *   label = @Translation("Test entity - data table"),
  *   module = "entity_test",
- *   controller_class = "Drupal\entity_test\EntityTestMulStorageController",
- *   access_controller_class = "Drupal\entity_test\EntityTestAccessController",
- *   form_controller_class = {
- *     "default" = "Drupal\entity_test\EntityTestFormController"
+ *   controllers = {
+ *     "storage" = "Drupal\entity_test\EntityTestMulStorageController",
+ *     "access" = "Drupal\entity_test\EntityTestAccessController",
+ *     "form" = {
+ *       "default" = "Drupal\entity_test\EntityTestFormController"
+ *     },
+ *     "translation" = "Drupal\translation_entity\EntityTranslationControllerNG"
  *   },
- *   translation_controller_class = "Drupal\translation_entity\EntityTranslationControllerNG",
  *   base_table = "entity_test_mul",
  *   data_table = "entity_test_mul_property_data",
  *   fieldable = TRUE,

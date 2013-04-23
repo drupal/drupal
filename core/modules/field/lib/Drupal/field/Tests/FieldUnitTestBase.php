@@ -14,7 +14,6 @@ use Drupal\simpletest\DrupalUnitTestBase;
  * Parent class for Field API unit tests.
  */
 abstract class FieldUnitTestBase extends DrupalUnitTestBase {
-  var $default_storage = 'field_sql_storage';
 
   /**
    * Modules to enable.
@@ -40,7 +39,7 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
     $this->installSchema('field_test', array('test_entity', 'test_entity_revision', 'test_entity_bundle'));
 
     // Set default storage backend.
-    variable_set('field_storage_default', $this->default_storage);
+    $this->installConfig(array('field'));
   }
 
   /**

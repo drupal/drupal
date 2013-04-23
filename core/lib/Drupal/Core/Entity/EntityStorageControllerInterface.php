@@ -10,7 +10,7 @@ namespace Drupal\Core\Entity;
 /**
  * Defines a common interface for entity controller classes.
  *
- * All entity controller classes specified via the 'controller_class' key
+ * All entity controller classes specified via the "controllers['storage']" key
  * returned by \Drupal\Core\Entity\EntityManager or hook_entity_info_alter()
  * have to implement this interface.
  *

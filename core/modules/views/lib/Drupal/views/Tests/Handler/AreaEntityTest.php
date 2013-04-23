@@ -53,7 +53,7 @@ class AreaEntityTest extends ViewTestBase {
     $entity_info = $this->container->get('plugin.manager.entity')->getDefinitions();
 
     $expected_entities = array_filter($entity_info, function($info) {
-      return !empty($info['render_controller_class']);
+      return !empty($info['controllers']['render']);
     });
 
     // Test that all expected entity types have data.
@@ -64,7 +64,7 @@ class AreaEntityTest extends ViewTestBase {
     }
 
     $expected_entities = array_filter($entity_info, function($info) {
-      return empty($info['render_controller_class']);
+      return empty($info['controllers']['render']);
     });
 
     // Test that no configuration entity types have data.

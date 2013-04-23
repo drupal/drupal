@@ -24,7 +24,9 @@ use Drupal\Core\Annotation\Translation;
  *   id = "unbound_display",
  *   label = @Translation("Unbound Display"),
  *   module = "layout",
- *   controller_class = "Drupal\Core\Config\Entity\ConfigStorageController",
+ *   controllers = {
+ *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
+ *   },
  *   config_prefix = "display.unbound",
  *   entity_keys = {
  *     "id" = "id",

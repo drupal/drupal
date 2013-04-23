@@ -70,7 +70,7 @@ class EntityManager extends PluginManagerBase {
    */
   public function hasController($entity_type, $controller_type) {
     $definition = $this->getDefinition($entity_type);
-    return !empty($definition[$controller_type]);
+    return !empty($definition['controllers'][$controller_type]);
   }
 
   /**
@@ -89,6 +89,7 @@ class EntityManager extends PluginManagerBase {
    */
   public function getControllerClass($entity_type, $controller_type, $nested = NULL) {
     $definition = $this->getDefinition($entity_type);
+    $definition = $definition['controllers'];
     if (empty($definition[$controller_type])) {
       throw new \InvalidArgumentException(sprintf('The entity (%s) did not specify a %s.', $entity_type, $controller_type));
     }
@@ -122,7 +123,7 @@ class EntityManager extends PluginManagerBase {
    */
   public function getStorageController($entity_type) {
     if (!isset($this->controllers['storage'][$entity_type])) {
-      $class = $this->getControllerClass($entity_type, 'controller_class');
+      $class = $this->getControllerClass($entity_type, 'storage');
       $this->controllers['storage'][$entity_type] = new $class($entity_type);
     }
     return $this->controllers['storage'][$entity_type];
@@ -139,7 +140,7 @@ class EntityManager extends PluginManagerBase {
    */
   public function getListController($entity_type) {
     if (!isset($this->controllers['listing'][$entity_type])) {
-      $class = $this->getControllerClass($entity_type, 'list_controller_class');
+      $class = $this->getControllerClass($entity_type, 'list');
       $this->controllers['listing'][$entity_type] = new $class($entity_type, $this->getStorageController($entity_type));
     }
     return $this->controllers['listing'][$entity_type];
@@ -158,7 +159,7 @@ class EntityManager extends PluginManagerBase {
    */
   public function getFormController($entity_type, $operation) {
     if (!isset($this->controllers['form'][$operation][$entity_type])) {
-      $class = $this->getControllerClass($entity_type, 'form_controller_class', $operation);
+      $class = $this->getControllerClass($entity_type, 'form', $operation);
       $this->controllers['form'][$operation][$entity_type] = new $class($operation);
     }
     return $this->controllers['form'][$operation][$entity_type];
@@ -175,7 +176,7 @@ class EntityManager extends PluginManagerBase {
    */
   public function getRenderController($entity_type) {
     if (!isset($this->controllers['render'][$entity_type])) {
-      $class = $this->getControllerClass($entity_type, 'render_controller_class');
+      $class = $this->getControllerClass($entity_type, 'render');
       $this->controllers['render'][$entity_type] = new $class($entity_type);
     }
     return $this->controllers['render'][$entity_type];
@@ -192,7 +193,7 @@ class EntityManager extends PluginManagerBase {
    */
   public function getAccessController($entity_type) {
     if (!isset($this->controllers['access'][$entity_type])) {
-      $class = $this->getControllerClass($entity_type, 'access_controller_class');
+      $class = $this->getControllerClass($entity_type, 'access');
       $this->controllers['access'][$entity_type] = new $class($entity_type);
     }
     return $this->controllers['access'][$entity_type];

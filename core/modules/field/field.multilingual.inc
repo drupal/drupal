@@ -64,41 +64,6 @@ use Drupal\Core\Entity\EntityInterface;
  */
 
 /**
- * Implements hook_language_insert().
- */
-function field_language_insert() {
-  field_info_cache_clear();
-  // If the number of languages is bigger than 1, enable the core language
-  // fallback rules.
-  // Because the language_count is updated only after the hook is invoked, we
-  // check if the language_count is bigger or equal with 1 at the current time.
-  if (variable_get('language_count', 1) >= 1) {
-    variable_set('field_language_fallback', TRUE);
-  }
-}
-
-/**
- * Implements hook_language_update().
- */
-function field_language_update() {
-  field_info_cache_clear();
-}
-
-/**
- * Implements hook_language_delete().
- */
-function field_language_delete() {
-  field_info_cache_clear();
-  // If the number of languages is less than 2, disable the core language
-  // fallback rules.
-  // Because the language_count is updated after the hook is invoked, we check
-  // if the language_count is less or equal with 2 at the current time.
-  if (variable_get('language_count', 1) <= 2) {
-    variable_set('field_language_fallback', FALSE);
-  }
-}
-
-/**
  * Collects the available language codes for the given entity type and field.
  *
  * If the given field has language support enabled, an array of available
@@ -183,6 +148,13 @@ function _field_language_suggestion($available_langcodes, $langcode_suggestion, 
  */
 function field_content_languages() {
   return array_keys(language_list(LANGUAGE_ALL));
+}
+
+/**
+ * Checks whether field language fallback is enabled.
+ */
+function field_language_fallback_enabled() {
+  return language_multilingual() && config('field.settings')->get('language_fallback');
 }
 
 /**
@@ -317,7 +289,7 @@ function field_language(EntityInterface $entity, $field_name = NULL, $langcode =
       );
       // Do not apply core language fallback rules if they are disabled or if
       // the entity does not have a translation handler registered.
-      if (variable_get('field_language_fallback', FALSE) && field_has_translation_handler($entity_type)) {
+      if (field_language_fallback_enabled() && field_has_translation_handler($entity_type)) {
         field_language_fallback($display_langcode, $context['entity'], $context['langcode']);
       }
       drupal_alter('field_language', $display_langcode, $context);

@@ -18,10 +18,12 @@ use Drupal\Core\Annotation\Translation;
  *   id = "taxonomy_vocabulary",
  *   label = @Translation("Taxonomy vocabulary"),
  *   module = "taxonomy",
- *   controller_class = "Drupal\taxonomy\VocabularyStorageController",
- *   access_controller_class = "Drupal\taxonomy\VocabularyAccessController",
- *   form_controller_class = {
- *     "default" = "Drupal\taxonomy\VocabularyFormController"
+ *   controllers = {
+ *     "storage" = "Drupal\taxonomy\VocabularyStorageController",
+ *     "access" = "Drupal\taxonomy\VocabularyAccessController",
+ *     "form" = {
+ *       "default" = "Drupal\taxonomy\VocabularyFormController"
+ *     }
  *   },
  *   config_prefix = "taxonomy.vocabulary",
  *   entity_keys = {

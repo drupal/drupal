@@ -59,7 +59,7 @@ function edit_contextual_links_view_alter(&$element, $items) {
 }
 
 /**
- * Implements hook_library().
+ * Implements hook_library_info().
  */
 function edit_library_info() {
   $path = drupal_get_path('module', 'edit');

@@ -20,13 +20,15 @@ use Drupal\Core\Annotation\Translation;
  *   label = @Translation("Content"),
  *   bundle_label = @Translation("Content type"),
  *   module = "node",
- *   controller_class = "Drupal\node\NodeStorageController",
- *   render_controller_class = "Drupal\node\NodeRenderController",
- *   access_controller_class = "Drupal\node\NodeAccessController",
- *   form_controller_class = {
- *     "default" = "Drupal\node\NodeFormController"
+ *   controllers = {
+ *     "storage" = "Drupal\node\NodeStorageController",
+ *     "render" = "Drupal\node\NodeRenderController",
+ *     "access" = "Drupal\node\NodeAccessController",
+ *     "form" = {
+ *       "default" = "Drupal\node\NodeFormController"
+ *     },
+ *     "translation" = "Drupal\node\NodeTranslationController"
  *   },
- *   translation_controller_class = "Drupal\node\NodeTranslationController",
  *   base_table = "node",
  *   revision_table = "node_revision",
  *   uri_callback = "node_uri",

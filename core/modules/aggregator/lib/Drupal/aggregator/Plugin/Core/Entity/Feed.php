@@ -19,10 +19,12 @@ use Drupal\Core\Annotation\Translation;
  *   id = "aggregator_feed",
  *   label = @Translation("Aggregator feed"),
  *   module = "aggregator",
- *   controller_class = "Drupal\aggregator\FeedStorageController",
- *   render_controller_class = "Drupal\aggregator\FeedRenderController",
- *   form_controller_class = {
- *     "default" = "Drupal\aggregator\FeedFormController"
+ *   controllers = {
+ *     "storage" = "Drupal\aggregator\FeedStorageController",
+ *     "render" = "Drupal\aggregator\FeedRenderController",
+ *     "form" = {
+ *       "default" = "Drupal\aggregator\FeedFormController"
+ *     }
  *   },
  *   base_table = "aggregator_feed",
  *   fieldable = TRUE,

@@ -1140,7 +1140,7 @@ function hook_field_attach_prepare_translation_alter(\Drupal\Core\Entity\EntityI
 function hook_field_language_alter(&$display_langcode, $context) {
   // Do not apply core language fallback rules if they are disabled or if Locale
   // is not registered as a translation handler.
-  if (variable_get('field_language_fallback', TRUE) && field_has_translation_handler($context['entity']->entityType())) {
+  if (field_language_fallback_enabled() && field_has_translation_handler($context['entity']->entityType())) {
     field_language_fallback($display_langcode, $context['entity'], $context['langcode']);
   }
 }

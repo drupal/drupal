@@ -16,3 +16,12 @@ shortcut.set.*:
     langcode:
       type: string
       label: 'Default language'
+    links:
+      type: sequence
+      label: 'Shortcuts'
+      sequence:
+        - type: string
+          label: 'Shortcut'
+    status:
+      type: boolean
+      label: 'Status'

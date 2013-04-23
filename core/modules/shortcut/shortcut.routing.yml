@@ -1,0 +1,13 @@
+shortcut_link_delete:
+  pattern: '/admin/config/user-interface/shortcut/link/{menu_link}/delete'
+  defaults:
+    _form: 'Drupal\shortcut\Form\LinkDelete'
+  requirements:
+    _access_shortcut_link_delete: 'TRUE'
+
+shortcut_set_delete:
+  pattern: '/admin/config/user-interface/shortcut/manage/{shortcut}/delete'
+  defaults:
+    _form: 'Drupal\shortcut\Form\SetDelete'
+  requirements:
+    _entity_access: 'shortcut.delete'

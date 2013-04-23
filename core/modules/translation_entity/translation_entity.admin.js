@@ -39,7 +39,7 @@ Drupal.behaviors.translationEntityDependentOptions = {
 
       if(!$element) {
         $fields.each(function() {
-          if($(this).val() == $column) {
+          if($(this).val() === $column) {
             $element = $(this);
             return false;
           }

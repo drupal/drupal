@@ -29,13 +29,13 @@ class EntityManagerTest extends EntityUnitTestBase {
     // Tests the has controller method.
     $entity_manager = $this->container->get('plugin.manager.entity');
 
-    $this->assertFalse($entity_manager->hasController('non_existent', 'controller_class'), 'A non existent entity type has no controller.');
-    $this->assertFalse($entity_manager->hasController('non_existent', 'non_existent_controller_class'), 'A non existent entity type has no controller.');
+    $this->assertFalse($entity_manager->hasController('non_existent', 'storage'), 'A non existent entity type has no controller.');
+    $this->assertFalse($entity_manager->hasController('non_existent', 'non_existent'), 'A non existent entity type has no controller.');
 
-    $this->assertFalse($entity_manager->hasController('entity_test', 'non_existent_controller_class'), 'An existent entity type does not have a non existent controller.');
-    $this->assertFalse($entity_manager->hasController('entity_test', 'render_controller_class'), 'The test entity does not have specified the render controller.');
+    $this->assertFalse($entity_manager->hasController('entity_test', 'non_existent'), 'An existent entity type does not have a non existent controller.');
+    $this->assertFalse($entity_manager->hasController('entity_test', 'render'), 'The test entity does not have specified the render controller.');
 
-    $this->assertTrue($entity_manager->hasController('entity_test', 'controller_class'), 'The test entity has specified the controller class');
+    $this->assertTrue($entity_manager->hasController('entity_test', 'storage'), 'The test entity has specified the controller class');
   }
 
 }

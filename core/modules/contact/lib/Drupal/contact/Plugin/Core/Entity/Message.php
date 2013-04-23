@@ -18,10 +18,13 @@ use Drupal\Core\Entity\Entity;
  *   id = "contact_message",
  *   label = @Translation("Contact message"),
  *   module = "contact",
- *   form_controller_class = {
- *     "default" = "Drupal\contact\MessageFormController"
+ *   controllers = {
+ *     "storage" = "Drupal\Core\Entity\DatabaseStorageController",
+ *     "render" = "Drupal\contact\MessageRenderController",
+ *     "form" = {
+ *       "default" = "Drupal\contact\MessageFormController"
+ *     }
  *   },
- *   render_controller_class = "Drupal\contact\MessageRenderController",
  *   entity_keys = {
  *     "bundle" = "category"
  *   },

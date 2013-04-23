@@ -14,7 +14,7 @@ use Drupal\simpletest\WebTestBase;
  */
 class ConfigLocaleOverrideWebTest extends WebTestBase {
 
-  public static $modules = array('locale', 'language', 'system', 'config_test');
+  public static $modules = array('locale', 'language', 'system');
 
   public static function getInfo() {
     return array(
@@ -35,26 +35,35 @@ class ConfigLocaleOverrideWebTest extends WebTestBase {
     $adminUser = $this->drupalCreateUser(array('administer site configuration', 'administer languages'));
     $this->drupalLogin($adminUser);
 
-    // Add French and make it the site default language.
-    $this->drupalPost('admin/config/regional/language/add', array('predefined_langcode' => 'fr'), t('Add language'));
+    // Add a custom lanugage.
+    $langcode = 'xx';
+    $name = $this->randomName(16);
+    $edit = array(
+      'predefined_langcode' => 'custom',
+      'langcode' => $langcode,
+      'name' => $name,
+      'direction' => '0',
+    );
+    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
+
+    // Save an override for the XX language.
+    config('locale.config.xx.system.site')->set('name', 'XX site name')->save();
 
     $this->drupalLogout();
 
     // The home page in English should not have the override.
     $this->drupalGet('');
-    $this->assertNoText('French site name');
+    $this->assertNoText('XX site name');
 
     // During path resolution the system.site configuration object is used to
     // determine the front page. This occurs before language negotiation causing
     // the configuration factory to cache an object without the correct
-    // overrides. The config_test module includes a
-    // locale.config.fr.system.site.yml which overrides the site name to 'French
-    // site name' to test that the configuration factory is re-initialised
-    // language negotiation. Ensure that it applies when we access the French
-    // front page.
+    // overrides. We are testing that the configuration factory is
+    // re-initialised after language negotiation. Ensure that it applies when
+    // we access the XX front page.
     // @see \Drupal\Core\PathProcessor::processInbound()
-    $this->drupalGet('fr');
-    $this->assertText('French site name');
+    $this->drupalGet('xx');
+    $this->assertText('XX site name');
   }
 
 }

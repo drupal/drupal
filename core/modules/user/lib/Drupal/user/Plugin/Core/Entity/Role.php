@@ -18,7 +18,9 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *   id = "user_role",
  *   label = @Translation("Role"),
  *   module = "user",
- *   controller_class = "Drupal\user\RoleStorageController",
+ *   controllers = {
+ *     "storage" = "Drupal\user\RoleStorageController"
+ *   },
  *   config_prefix = "user.role",
  *   entity_keys = {
  *     "id" = "id",

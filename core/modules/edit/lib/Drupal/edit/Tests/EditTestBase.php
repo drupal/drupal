@@ -13,7 +13,6 @@ use Drupal\simpletest\DrupalUnitTestBase;
  * Parent class for Edit tests.
  */
 class EditTestBase extends DrupalUnitTestBase {
-  var $default_storage = 'field_sql_storage';
 
   /**
    * Modules to enable.
@@ -29,9 +28,7 @@ class EditTestBase extends DrupalUnitTestBase {
 
     $this->installSchema('system', 'variable');
     $this->installSchema('entity_test', array('entity_test', 'entity_test_rev'));
-
-    // Set default storage backend.
-    variable_set('field_storage_default', $this->default_storage);
+    $this->installConfig(array('field'));
   }
 
   /**

@@ -19,7 +19,9 @@ use Drupal\field\FieldException;
  *   id = "field_instance",
  *   label = @Translation("Field instance"),
  *   module = "field",
- *   controller_class = "Drupal\field\FieldInstanceStorageController",
+ *   controllers = {
+ *     "storage" = "Drupal\field\FieldInstanceStorageController"
+ *   },
  *   config_prefix = "field.instance",
  *   entity_keys = {
  *     "id" = "id",
@@ -77,6 +79,9 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess, \Serializa
    * This will be used as the title of Form API elements for the field in entity
    * edit forms, or as the label for the field values in displayed entities.
    *
+   * If not specified, this defaults to the field_name (mostly useful for field
+   * instances created in tests).
+   *
    * @var string
    */
   public $label;
@@ -90,7 +95,7 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess, \Serializa
    *
    * @var string
    */
-  public $description;
+  public $description = '';
 
   /**
    * Field-type specific settings.
@@ -100,7 +105,7 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess, \Serializa
    *
    * @var array
    */
-  public $settings;
+  public $settings = array();
 
   /**
    * Flag indicating whether the field is required.
@@ -111,7 +116,7 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess, \Serializa
    *
    * @var bool
    */
-  public $required;
+  public $required = FALSE;
 
   /**
    * Default field value.
@@ -141,7 +146,7 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess, \Serializa
    *
    * @var array
    */
-  public $default_value;
+  public $default_value = array();
 
   /**
    * The name of a callback function that returns default values.
@@ -163,7 +168,7 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess, \Serializa
    *
    * @var string
    */
-  public $default_value_function;
+  public $default_value_function = '';
 
   /**
    * The widget definition.
@@ -181,7 +186,7 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess, \Serializa
    *
    * @var array
    */
-  public $widget;
+  public $widget = array();
 
   /**
    * Flag indicating whether the instance is deleted.
@@ -196,7 +201,7 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess, \Serializa
    *
    * @var bool
    */
-  public $deleted;
+  public $deleted = FALSE;
 
   /**
    * The field ConfigEntity object corresponding to $field_uuid.
@@ -251,6 +256,10 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess, \Serializa
     unset($values['field_name']);
     $this->field = $field;
 
+    // Discard the 'field_type' entry that is added in config records to ease
+    // schema generation. See getExportProperties().
+    unset($values['field_type']);
+
     // Check required properties.
     if (empty($values['entity_type'])) {
       throw new FieldException(format_string('Attempt to create an instance of field @field_id without an entity type.', array('@field_id' => $this->field->id)));
@@ -259,18 +268,10 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess, \Serializa
       throw new FieldException(format_string('Attempt to create an instance of field @field_id without a bundle.', array('@field_id' => $this->field->id)));
     }
 
-    // Provide defaults.
+    // 'Label' defaults to the field ID (mostly useful for field instances
+    // created in tests).
     $values += array(
-      // 'Label' defaults to the field ID (mostly useful for field instances
-      // created in tests).
       'label' => $this->field->id,
-      'description' => '',
-      'required' => FALSE,
-      'default_value' => array(),
-      'default_value_function' => '',
-      'settings' => array(),
-      'widget' => array(),
-      'deleted' => FALSE,
     );
     parent::__construct($values, $entity_type);
   }
@@ -306,6 +307,11 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess, \Serializa
     foreach ($names as $name) {
       $properties[$name] = $this->get($name);
     }
+
+    // Additionally, include the field type, that is needed to be able to
+    // generate the field-type-dependant parts of the config schema.
+    $properties['field_type'] = $this->field->type;
+
     return $properties;
   }
 

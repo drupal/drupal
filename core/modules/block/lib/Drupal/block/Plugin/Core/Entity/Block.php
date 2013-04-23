@@ -19,12 +19,14 @@ use Drupal\Component\Plugin\Exception\PluginException;
  *   id = "block",
  *   label = @Translation("Block"),
  *   module = "block",
- *   controller_class = "Drupal\block\BlockStorageController",
- *   access_controller_class = "Drupal\block\BlockAccessController",
- *   render_controller_class = "Drupal\block\BlockRenderController",
- *   list_controller_class = "Drupal\block\BlockListController",
- *   form_controller_class = {
- *     "default" = "Drupal\block\BlockFormController"
+ *   controllers = {
+ *     "storage" = "Drupal\block\BlockStorageController",
+ *     "access" = "Drupal\block\BlockAccessController",
+ *     "render" = "Drupal\block\BlockRenderController",
+ *     "list" = "Drupal\block\BlockListController",
+ *     "form" = {
+ *       "default" = "Drupal\block\BlockFormController"
+ *     }
  *   },
  *   config_prefix = "block.block",
  *   fieldable = FALSE,

@@ -63,6 +63,8 @@ class EntitySerializationTest extends NormalizerTestBase {
     $this->entity->save();
 
     $this->serializer = $this->container->get('serializer');
+
+    $this->installConfig(array('field'));
   }
 
   /**
