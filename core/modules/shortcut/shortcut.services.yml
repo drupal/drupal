@@ -1,0 +1,5 @@
+services:
+  access_check.shortcut.link:
+    class: Drupal\shortcut\Access\LinkDeleteAccessCheck
+    tags:
+      - { name: access_check }

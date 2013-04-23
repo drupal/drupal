@@ -304,6 +304,10 @@ services:
     class: Drupal\Core\Access\DefaultAccessCheck
     tags:
       - { name: access_check }
+  access_check.entity:
+    class: Drupal\Core\Entity\EntityAccessCheck
+    tags:
+      - { name: access_check }
   maintenance_mode_subscriber:
     class: Drupal\Core\EventSubscriber\MaintenanceModeSubscriber
     tags:

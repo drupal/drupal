@@ -20,6 +20,7 @@ use Drupal\Core\Annotation\Translation;
  *   module = "shortcut",
  *   controllers = {
  *     "storage" = "Drupal\shortcut\ShortcutStorageController",
+ *     "access" = "Drupal\shortcut\ShortcutAccessController",
  *     "list" = "Drupal\shortcut\ShortcutListController",
  *     "form" = {
  *       "default" = "Drupal\shortcut\ShortcutFormController"
