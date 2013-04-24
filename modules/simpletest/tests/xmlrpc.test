@@ -48,7 +48,7 @@ class XMLRPCBasicTestCase extends DrupalWebTestCase {
     $url = url(NULL, array('absolute' => TRUE)) . 'xmlrpc.php';
     $signature = xmlrpc($url, array('system.methodSignature' => array('system.listMethods')));
     $this->assert(is_array($signature) && !empty($signature) && is_array($signature[0]),
-      t('system.methodSignature returns an array of signature arrays.'));
+      'system.methodSignature returns an array of signature arrays.');
   }
 
   /**
@@ -58,19 +58,19 @@ class XMLRPCBasicTestCase extends DrupalWebTestCase {
     $invalid_messages = array(
       array(
         'message' => xmlrpc_message(''),
-        'assertion' => t('Empty message correctly rejected during parsing.'),
+        'assertion' => 'Empty message correctly rejected during parsing.',
       ),
       array(
         'message' => xmlrpc_message('<?xml version="1.0" encoding="ISO-8859-1"?>'),
-        'assertion' => t('Empty message with XML declaration correctly rejected during parsing.'),
+        'assertion' => 'Empty message with XML declaration correctly rejected during parsing.',
       ),
       array(
         'message' => xmlrpc_message('<?xml version="1.0"?><params><param><value><string>value</string></value></param></params>'),
-        'assertion' => t('Non-empty message without a valid message type is rejected during parsing.'),
+        'assertion' => 'Non-empty message without a valid message type is rejected during parsing.',
       ),
       array(
         'message' => xmlrpc_message('<methodResponse><params><param><value><string>value</string></value></param></methodResponse>'),
-        'assertion' => t('Non-empty malformed message is rejected during parsing.'),
+        'assertion' => 'Non-empty malformed message is rejected during parsing.',
       ),
     );
 
@@ -217,7 +217,7 @@ class XMLRPCMessagesTestCase extends DrupalWebTestCase {
       $xml_message_l = xmlrpc_test_message_sized_in_kb($size);
       $xml_message_r = xmlrpc($xml_url, array('messages.messageSizedInKB' => array($size)));
 
-      $this->assertEqual($xml_message_l, $xml_message_r, t('XML-RPC messages.messageSizedInKB of %s Kb size received', array('%s' => $size)));
+      $this->assertEqual($xml_message_l, $xml_message_r, format_string('XML-RPC messages.messageSizedInKB of %s Kb size received', array('%s' => $size)));
     }
   }
 
@@ -236,9 +236,9 @@ class XMLRPCMessagesTestCase extends DrupalWebTestCase {
     $methods2 = xmlrpc($url, array('system.listMethods' => array()));
 
     $diff = array_diff($methods1, $methods2);
-    $this->assertTrue(is_array($diff) && !empty($diff), t('Method list is altered by hook_xmlrpc_alter'));
+    $this->assertTrue(is_array($diff) && !empty($diff), 'Method list is altered by hook_xmlrpc_alter');
     $removed = reset($diff);
-    $this->assertEqual($removed, 'system.methodSignature', t('Hiding builting system.methodSignature with hook_xmlrpc_alter works'));
+    $this->assertEqual($removed, 'system.methodSignature', 'Hiding builting system.methodSignature with hook_xmlrpc_alter works');
   }
 
 }
