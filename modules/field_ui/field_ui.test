@@ -59,18 +59,18 @@ class FieldUITestCase extends DrupalWebTestCase {
 
     // First step : 'Add new field' on the 'Manage fields' page.
     $this->drupalPost("$bundle_path/fields",  $initial_edit, t('Save'));
-    $this->assertRaw(t('These settings apply to the %label field everywhere it is used.', array('%label' => $label)), t('Field settings page was displayed.'));
+    $this->assertRaw(t('These settings apply to the %label field everywhere it is used.', array('%label' => $label)), 'Field settings page was displayed.');
 
     // Second step : 'Field settings' form.
     $this->drupalPost(NULL, $field_edit, t('Save field settings'));
-    $this->assertRaw(t('Updated field %label field settings.', array('%label' => $label)), t('Redirected to instance and widget settings page.'));
+    $this->assertRaw(t('Updated field %label field settings.', array('%label' => $label)), 'Redirected to instance and widget settings page.');
 
     // Third step : 'Instance settings' form.
     $this->drupalPost(NULL, $instance_edit, t('Save settings'));
-    $this->assertRaw(t('Saved %label configuration.', array('%label' => $label)), t('Redirected to "Manage fields" page.'));
+    $this->assertRaw(t('Saved %label configuration.', array('%label' => $label)), 'Redirected to "Manage fields" page.');
 
     // Check that the field appears in the overview form.
-    $this->assertFieldByXPath('//table[@id="field-overview"]//td[1]', $label, t('Field was created and appears in the overview page.'));
+    $this->assertFieldByXPath('//table[@id="field-overview"]//td[1]', $label, 'Field was created and appears in the overview page.');
   }
 
   /**
@@ -98,10 +98,10 @@ class FieldUITestCase extends DrupalWebTestCase {
 
     // Second step : 'Instance settings' form.
     $this->drupalPost(NULL, $instance_edit, t('Save settings'));
-    $this->assertRaw(t('Saved %label configuration.', array('%label' => $label)), t('Redirected to "Manage fields" page.'));
+    $this->assertRaw(t('Saved %label configuration.', array('%label' => $label)), 'Redirected to "Manage fields" page.');
 
     // Check that the field appears in the overview form.
-    $this->assertFieldByXPath('//table[@id="field-overview"]//td[1]', $label, t('Field was created and appears in the overview page.'));
+    $this->assertFieldByXPath('//table[@id="field-overview"]//td[1]', $label, 'Field was created and appears in the overview page.');
   }
 
   /**
@@ -119,14 +119,14 @@ class FieldUITestCase extends DrupalWebTestCase {
   function fieldUIDeleteField($bundle_path, $field_name, $label, $bundle_label) {
     // Display confirmation form.
     $this->drupalGet("$bundle_path/fields/$field_name/delete");
-    $this->assertRaw(t('Are you sure you want to delete the field %label', array('%label' => $label)), t('Delete confirmation was found.'));
+    $this->assertRaw(t('Are you sure you want to delete the field %label', array('%label' => $label)), 'Delete confirmation was found.');
 
     // Submit confirmation form.
     $this->drupalPost(NULL, array(), t('Delete'));
-    $this->assertRaw(t('The field %label has been deleted from the %type content type.', array('%label' => $label, '%type' => $bundle_label)), t('Delete message was found.'));
+    $this->assertRaw(t('The field %label has been deleted from the %type content type.', array('%label' => $label, '%type' => $bundle_label)), 'Delete message was found.');
 
     // Check that the field does not appear in the overview form.
-    $this->assertNoFieldByXPath('//table[@id="field-overview"]//span[@class="label-field"]', $label, t('Field does not appear in the overview page.'));
+    $this->assertNoFieldByXPath('//table[@id="field-overview"]//span[@class="label-field"]', $label, 'Field does not appear in the overview page.');
   }
 }
 
@@ -179,13 +179,13 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
     );
     foreach ($table_headers as $table_header) {
       // We check that the label appear in the table headings.
-      $this->assertRaw($table_header . '</th>', t('%table_header table header was found.', array('%table_header' => $table_header)));
+      $this->assertRaw($table_header . '</th>', format_string('%table_header table header was found.', array('%table_header' => $table_header)));
     }
 
     // "Add new field" and "Add existing field" aren't a table heading so just
     // test the text.
     foreach (array('Add new field', 'Add existing field') as $element) {
-      $this->assertText($element, t('"@element" was found.', array('@element' => $element)));
+      $this->assertText($element, format_string('"@element" was found.', array('@element' => $element)));
     }
   }
 
@@ -208,7 +208,7 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
     // should also appear in the 'taxonomy term' entity.
     $vocabulary = taxonomy_vocabulary_load(1);
     $this->drupalGet('admin/structure/taxonomy/' . $vocabulary->machine_name . '/fields');
-    $this->assertTrue($this->xpath('//select[@name="fields[_add_existing_field][field_name]"]//option[@value="' . $this->field_name . '"]'), t('Existing field was found in account settings.'));
+    $this->assertTrue($this->xpath('//select[@name="fields[_add_existing_field][field_name]"]//option[@value="' . $this->field_name . '"]'), 'Existing field was found in account settings.');
   }
 
   /**
@@ -231,7 +231,7 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
     $this->assertFieldSettings($this->type, $this->field_name, $string);
 
     // Assert redirection back to the "manage fields" page.
-    $this->assertText(t('Saved @label configuration.', array('@label' => $this->field_label)), t('Redirected to "Manage fields" page.'));
+    $this->assertText(t('Saved @label configuration.', array('@label' => $this->field_label)), 'Redirected to "Manage fields" page.');
   }
 
   /**
@@ -240,12 +240,12 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
   function addExistingField() {
     // Check "Add existing field" appears.
     $this->drupalGet('admin/structure/types/manage/page/fields');
-    $this->assertRaw(t('Add existing field'), t('"Add existing field" was found.'));
+    $this->assertRaw(t('Add existing field'), '"Add existing field" was found.');
 
     // Check that the list of options respects entity type restrictions on
     // fields. The 'comment' field is restricted to the 'comment' entity type
     // and should not appear in the list.
-    $this->assertFalse($this->xpath('//select[@id="edit-add-existing-field-field-name"]//option[@value="comment"]'), t('The list of options respects entity type restrictions.'));
+    $this->assertFalse($this->xpath('//select[@id="edit-add-existing-field-field-name"]//option[@value="comment"]'), 'The list of options respects entity type restrictions.');
 
     // Add a new field based on an existing field.
     $edit = array(
@@ -272,12 +272,12 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
     field_info_cache_clear();
     // Assert field settings.
     $field = field_info_field($field_name);
-    $this->assertTrue($field['settings']['test_field_setting'] == $string, t('Field settings were found.'));
+    $this->assertTrue($field['settings']['test_field_setting'] == $string, 'Field settings were found.');
 
     // Assert instance and widget settings.
     $instance = field_info_instance($entity_type, $field_name, $bundle);
-    $this->assertTrue($instance['settings']['test_instance_setting'] == $string, t('Field instance settings were found.'));
-    $this->assertTrue($instance['widget']['settings']['test_widget_setting'] == $string, t('Field widget settings were found.'));
+    $this->assertTrue($instance['settings']['test_instance_setting'] == $string, 'Field instance settings were found.');
+    $this->assertTrue($instance['widget']['settings']['test_widget_setting'] == $string, 'Field widget settings were found.');
   }
 
   /**
@@ -303,31 +303,31 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
     $element_id = "edit-$field_name-$langcode-0-value";
     $element_name = "{$field_name}[$langcode][0][value]";
     $this->drupalGet($admin_path);
-    $this->assertFieldById($element_id, '', t('The default value widget was empty.'));
+    $this->assertFieldById($element_id, '', 'The default value widget was empty.');
 
     // Check that invalid default values are rejected.
     $edit = array($element_name => '-1');
     $this->drupalPost($admin_path, $edit, t('Save settings'));
-    $this->assertText("$field_name does not accept the value -1", t('Form vaildation failed.'));
+    $this->assertText("$field_name does not accept the value -1", 'Form vaildation failed.');
 
     // Check that the default value is saved.
     $edit = array($element_name => '1');
     $this->drupalPost($admin_path, $edit, t('Save settings'));
-    $this->assertText("Saved $field_name configuration", t('The form was successfully submitted.'));
+    $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
     $instance = field_info_instance('node', $field_name, $this->type);
-    $this->assertEqual($instance['default_value'], array(array('value' => 1)), t('The default value was correctly saved.'));
+    $this->assertEqual($instance['default_value'], array(array('value' => 1)), 'The default value was correctly saved.');
 
     // Check that the default value shows up in the form
     $this->drupalGet($admin_path);
-    $this->assertFieldById($element_id, '1', t('The default value widget was displayed with the correct value.'));
+    $this->assertFieldById($element_id, '1', 'The default value widget was displayed with the correct value.');
 
     // Check that the default value can be emptied.
     $edit = array($element_name => '');
     $this->drupalPost(NULL, $edit, t('Save settings'));
-    $this->assertText("Saved $field_name configuration", t('The form was successfully submitted.'));
+    $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
     field_info_cache_clear();
     $instance = field_info_instance('node', $field_name, $this->type);
-    $this->assertEqual($instance['default_value'], NULL, t('The default value was correctly saved.'));
+    $this->assertEqual($instance['default_value'], NULL, 'The default value was correctly saved.');
   }
 
   /**
@@ -362,9 +362,9 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
     // Reset the fields info.
     field_info_cache_clear();
     // Check that the field instance was deleted.
-    $this->assertNull(field_info_instance('node', $this->field_name, $this->type), t('Field instance was deleted.'));
+    $this->assertNull(field_info_instance('node', $this->field_name, $this->type), 'Field instance was deleted.');
     // Check that the field was not deleted
-    $this->assertNotNull(field_info_field($this->field_name), t('Field was not deleted.'));
+    $this->assertNotNull(field_info_field($this->field_name), 'Field was not deleted.');
 
     // Delete the second instance.
     $this->fieldUIDeleteField($bundle_path2, $this->field_name, $this->field_label, $type_name2);
@@ -372,9 +372,9 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
     // Reset the fields info.
     field_info_cache_clear();
     // Check that the field instance was deleted.
-    $this->assertNull(field_info_instance('node', $this->field_name, $type_name2), t('Field instance was deleted.'));
+    $this->assertNull(field_info_instance('node', $this->field_name, $type_name2), 'Field instance was deleted.');
     // Check that the field was deleted too.
-    $this->assertNull(field_info_field($this->field_name), t('Field was deleted.'));
+    $this->assertNull(field_info_field($this->field_name), 'Field was deleted.');
   }
 
   /**
@@ -385,7 +385,7 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
 
     // Check that the field type is not available in the 'add new field' row.
     $this->drupalGet($bundle_path);
-    $this->assertFalse($this->xpath('//select[@id="edit-add-new-field-type"]//option[@value="hidden_test_field"]'), t("The 'add new field' select respects field types 'no_ui' property."));
+    $this->assertFalse($this->xpath('//select[@id="edit-add-new-field-type"]//option[@value="hidden_test_field"]'), "The 'add new field' select respects field types 'no_ui' property.");
 
     // Create a field and an instance programmatically.
     $field_name = 'hidden_test_field';
@@ -398,18 +398,18 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
       'widget' => array('type' => 'test_field_widget'),
     );
     field_create_instance($instance);
-    $this->assertTrue(field_read_instance('node', $field_name, $this->type), t('An instance of the field %field was created programmatically.', array('%field' => $field_name)));
+    $this->assertTrue(field_read_instance('node', $field_name, $this->type), format_string('An instance of the field %field was created programmatically.', array('%field' => $field_name)));
 
     // Check that the newly added instance appears on the 'Manage Fields'
     // screen.
     $this->drupalGet($bundle_path);
-    $this->assertFieldByXPath('//table[@id="field-overview"]//td[1]', $instance['label'], t('Field was created and appears in the overview page.'));
+    $this->assertFieldByXPath('//table[@id="field-overview"]//td[1]', $instance['label'], 'Field was created and appears in the overview page.');
 
     // Check that the instance does not appear in the 'add existing field' row
     // on other bundles.
     $bundle_path = 'admin/structure/types/manage/article/fields/';
     $this->drupalGet($bundle_path);
-    $this->assertFalse($this->xpath('//select[@id="edit-add-existing-field-field-name"]//option[@value=:field_name]', array(':field_name' => $field_name)), t("The 'add existing field' select respects field types 'no_ui' property."));
+    $this->assertFalse($this->xpath('//select[@id="edit-add-existing-field-field-name"]//option[@value=:field_name]', array(':field_name' => $field_name)), "The 'add existing field' select respects field types 'no_ui' property.");
   }
 
   /**
@@ -488,8 +488,8 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
     // Display the "Manage display" screen and check that the expected formatter is
     // selected.
     $this->drupalGet($manage_display);
-    $this->assertFieldByName('fields[field_test][type]', $format, t('The expected formatter is selected.'));
-    $this->assertText("$setting_name: $setting_value", t('The expected summary is displayed.'));
+    $this->assertFieldByName('fields[field_test][type]', $format, 'The expected formatter is selected.');
+    $this->assertText("$setting_name: $setting_value", 'The expected summary is displayed.');
 
     // Change the formatter and check that the summary is updated.
     $edit = array('fields[field_test][type]' => 'field_test_multiple', 'refresh_rows' => 'field_test');
@@ -498,8 +498,8 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
     $default_settings = field_info_formatter_settings($format);
     $setting_name = key($default_settings);
     $setting_value = $default_settings[$setting_name];
-    $this->assertFieldByName('fields[field_test][type]', $format, t('The expected formatter is selected.'));
-    $this->assertText("$setting_name: $setting_value", t('The expected summary is displayed.'));
+    $this->assertFieldByName('fields[field_test][type]', $format, 'The expected formatter is selected.');
+    $this->assertText("$setting_name: $setting_value", 'The expected summary is displayed.');
 
     // Submit the form and check that the instance is updated.
     $this->drupalPost(NULL, array(), t('Save'));
@@ -507,8 +507,8 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
     $instance = field_info_instance('node', 'field_test', $this->type);
     $current_format = $instance['display']['default']['type'];
     $current_setting_value = $instance['display']['default']['settings'][$setting_name];
-    $this->assertEqual($current_format, $format, t('The formatter was updated.'));
-    $this->assertEqual($current_setting_value, $setting_value, t('The setting was updated.'));
+    $this->assertEqual($current_format, $format, 'The formatter was updated.');
+    $this->assertEqual($current_setting_value, $setting_value, 'The setting was updated.');
   }
 
   /**
@@ -540,8 +540,8 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
 
     // Check that the field is displayed with the default formatter in 'rss'
     // mode (uses 'default'), and hidden in 'teaser' mode (uses custom settings).
-    $this->assertNodeViewText($node, 'rss', $output['field_test_default'], t("The field is displayed as expected in view modes that use 'default' settings."));
-    $this->assertNodeViewNoText($node, 'teaser', $value, t("The field is hidden in view modes that use custom settings."));
+    $this->assertNodeViewText($node, 'rss', $output['field_test_default'], "The field is displayed as expected in view modes that use 'default' settings.");
+    $this->assertNodeViewNoText($node, 'teaser', $value, "The field is hidden in view modes that use custom settings.");
 
     // Change fomatter for 'default' mode, check that the field is displayed
     // accordingly in 'rss' mode.
@@ -549,14 +549,14 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
       'fields[field_test][type]' => 'field_test_with_prepare_view',
     );
     $this->drupalPost('admin/structure/types/manage/' . $this->hyphen_type . '/display', $edit, t('Save'));
-    $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], t("The field is displayed as expected in view modes that use 'default' settings."));
+    $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], "The field is displayed as expected in view modes that use 'default' settings.");
 
     // Specialize the 'rss' mode, check that the field is displayed the same.
     $edit = array(
       "view_modes_custom[rss]" => TRUE,
     );
     $this->drupalPost('admin/structure/types/manage/' . $this->hyphen_type . '/display', $edit, t('Save'));
-    $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], t("The field is displayed as expected in newly specialized 'rss' mode."));
+    $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], "The field is displayed as expected in newly specialized 'rss' mode.");
 
     // Set the field to 'hidden' in the view mode, check that the field is
     // hidden.
@@ -564,7 +564,7 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
       'fields[field_test][type]' => 'hidden',
     );
     $this->drupalPost('admin/structure/types/manage/' . $this->hyphen_type . '/display/rss', $edit, t('Save'));
-    $this->assertNodeViewNoText($node, 'rss', $value, t("The field is hidden in 'rss' mode."));
+    $this->assertNodeViewNoText($node, 'rss', $value, "The field is hidden in 'rss' mode.");
 
     // Set the view mode back to 'default', check that the field is displayed
     // accordingly.
@@ -572,7 +572,7 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
       "view_modes_custom[rss]" => FALSE,
     );
     $this->drupalPost('admin/structure/types/manage/' . $this->hyphen_type . '/display', $edit, t('Save'));
-    $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], t("The field is displayed as expected when 'rss' mode is set back to 'default' settings."));
+    $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], "The field is displayed as expected when 'rss' mode is set back to 'default' settings.");
 
     // Specialize the view mode again.
     $edit = array(
@@ -580,7 +580,7 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
     );
     $this->drupalPost('admin/structure/types/manage/' . $this->hyphen_type . '/display', $edit, t('Save'));
     // Check that the previous settings for the view mode have been kept.
-    $this->assertNodeViewNoText($node, 'rss', $value, t("The previous settings are kept when 'rss' mode is specialized again."));
+    $this->assertNodeViewNoText($node, 'rss', $value, "The previous settings are kept when 'rss' mode is specialized again.");
   }
 
   /**
