@@ -181,16 +181,6 @@ function node_theme() {
 }
 
 /**
- * Implements hook_entity_info_alter().
- */
-function node_entity_info_alter(&$info) {
-  // Add a translation handler for fields if the language module is enabled.
-  if (module_exists('language')) {
-    $info['node']['translation']['node'] = TRUE;
-  }
-}
-
-/**
  * Implements hook_entity_view_mode_info().
  */
 function node_entity_view_mode_info() {
