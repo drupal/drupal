@@ -24,6 +24,7 @@ use Drupal\Core\Annotation\Translation;
  *   base_table = "entity_test",
  *   entity_keys = {
  *     "id" = "ftid",
+ *     "bundle" = "type"
  *   }
  * )
  */

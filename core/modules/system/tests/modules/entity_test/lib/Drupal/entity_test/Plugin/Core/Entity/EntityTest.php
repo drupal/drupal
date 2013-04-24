@@ -31,6 +31,7 @@ use Drupal\Core\Annotation\Translation;
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",
+ *     "bundle" = "type"
  *   },
  *   menu_base_path = "entity-test/manage/%entity_test"
  * )
@@ -50,6 +51,13 @@ class EntityTest extends EntityNG {
    * @var \Drupal\Core\Entity\Field\FieldInterface
    */
   public $uuid;
+
+  /**
+   * The bundle of the test entity.
+   *
+   * @var \Drupal\Core\Entity\Field\FieldInterface
+   */
+  public $type;
 
   /**
    * The name of the test entity.
@@ -75,6 +83,7 @@ class EntityTest extends EntityNG {
     unset($this->uuid);
     unset($this->name);
     unset($this->user_id);
+    unset($this->type);
   }
 
   /**

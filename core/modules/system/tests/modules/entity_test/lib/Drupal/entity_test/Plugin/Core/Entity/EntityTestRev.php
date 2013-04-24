@@ -33,6 +33,7 @@ use Drupal\Core\Annotation\Translation;
  *     "id" = "id",
  *     "uuid" = "uuid",
  *     "revision" = "revision_id",
+ *     "bundle" = "type"
  *   },
  *   menu_base_path = "entity_test_rev/manage/%entity_test_rev"
  * )

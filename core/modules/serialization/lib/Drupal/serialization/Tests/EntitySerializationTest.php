@@ -90,6 +90,9 @@ class EntitySerializationTest extends NormalizerTestBase {
       'name' => array(
         array('value' => $this->values['name']),
       ),
+      'type' => array(
+        array('value' => 'entity_test_mulrev'),
+      ),
       'user_id' => array(
         array('target_id' => $this->values['user_id']),
       ),
@@ -138,6 +141,7 @@ class EntitySerializationTest extends NormalizerTestBase {
       'langcode' => '<langcode><value>' . LANGUAGE_NOT_SPECIFIED . '</value></langcode>',
       'default_langcode' => '<default_langcode><value/></default_langcode>',
       'name' => '<name><value>' . $this->values['name'] . '</value></name>',
+      'type' => '<type><value>entity_test_mulrev</value></type>',
       'user_id' => '<user_id><target_id>' . $this->values['user_id'] . '</target_id></user_id>',
       'field_test_text' => '<field_test_text><value>' . $this->values['field_test_text']['value'] . '</value><format>' . $this->values['field_test_text']['format'] . '</format></field_test_text>',
     );
