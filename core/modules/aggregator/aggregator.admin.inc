@@ -98,22 +98,6 @@ function aggregator_view() {
 }
 
 /**
- * Page callback: Presents the aggregator feed creation form.
- *
- * @return array
- *   A form array as expected by drupal_render().
- *
- * @see aggregator_menu()
- */
-function aggregator_feed_add() {
-  $feed = entity_create('aggregator_feed', array(
-    'refresh' => 3600,
-    'block' => 5,
-  ));
-  return entity_get_form($feed);
-}
-
-/**
  * Form constructor for importing feeds from OPML.
  *
  * @ingroup forms
