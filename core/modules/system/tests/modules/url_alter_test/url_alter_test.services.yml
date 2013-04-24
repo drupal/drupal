@@ -1,5 +1,5 @@
 services:
   url_alter_test.path_subscriber:
-    class: Drupal\url_alter_test\PathSubscriber
+    class: Drupal\url_alter_test\PathProcessor
     tags:
-      - { name: event_subscriber }
+      - { name: path_processor_inbound, priority: 800 }
