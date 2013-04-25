@@ -146,11 +146,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $widget_settings = array(
       'preview_image_style' => 'medium',
     );
-    $field = $this->createImageField($field_name, 'article', array(), $instance_settings, $widget_settings);
-    $field['deleted'] = 0;
-    $table = _field_sql_storage_tablename($field);
-    $schema = drupal_get_schema($table, TRUE);
-    $instance = field_info_instance('node', $field_name, 'article');
+    $instance = $this->createImageField($field_name, 'article', array(), $instance_settings, $widget_settings);
 
     $this->drupalGet('node/add/article');
     $this->assertText(t('Files must be less than 50 KB.'), 'Image widget max file size is displayed on article form.');
@@ -198,12 +194,13 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       $field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][title]' => $this->randomName($test_size),
     );
     $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save and keep published'));
+    $schema = $instance->getField()->getSchema();
     $this->assertRaw(t('Alternate text cannot be longer than %max characters but is currently %length characters long.', array(
-      '%max' => $schema['fields'][$field_name .'_alt']['length'],
+      '%max' => $schema['columns']['alt']['length'],
       '%length' => $test_size,
     )));
     $this->assertRaw(t('Title cannot be longer than %max characters but is currently %length characters long.', array(
-      '%max' => $schema['fields'][$field_name .'_title']['length'],
+      '%max' => $schema['columns']['title']['length'],
       '%length' => $test_size,
     )));
   }
