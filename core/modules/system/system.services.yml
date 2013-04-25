@@ -5,4 +5,4 @@ services:
       - { name: access_check }
   plugin.manager.system.plugin_ui:
     class: Drupal\system\Plugin\Type\PluginUIManager
-    arguments: ['%container.namespaces%']
+    arguments: ['@container.namespaces']

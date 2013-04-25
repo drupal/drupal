@@ -14,6 +14,7 @@ class PhpUnitErrorTest extends UnitTestCase {
       'name' => 'PHPUnit errors',
       'description' => 'Test PHPUnit errors getting converted to Simpletest errors.',
       'group' => 'Simpletest',
+
     );
   }
 

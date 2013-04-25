@@ -22,17 +22,25 @@ class ViewsHandlerDiscovery extends AnnotatedClassDiscovery {
   protected $type;
 
   /**
+   * An object containing the namespaces to look for plugin implementations.
+   *
+   * @var \Traversable
+   */
+  protected $rootNamespacesIterator;
+
+  /**
    * Constructs a ViewsHandlerDiscovery object.
    *
    * @param string $type
    *   The plugin type, for example filter.
-   * @param array $root_namespaces
-   *   (optional) Array of root paths keyed by the corresponding namespace to
-   *   look for plugin implementations, \Plugin\views\$type will be appended to
-   *   each namespace. Defaults to an empty array.
+   * @param \Traversable $root_namespaces
+   *   An object that implements \Traversable which contains the root paths
+   *   keyed by the corresponding namespace to look for plugin implementations,
    */
-  function __construct($type, array $root_namespaces = array()) {
+  function __construct($type, \Traversable $root_namespaces) {
     $this->type = $type;
+    $this->rootNamespacesIterator = $root_namespaces;
+
     $annotation_namespaces = array(
       'Drupal\Component\Annotation' => DRUPAL_ROOT . '/core/lib',
     );
@@ -53,6 +61,18 @@ class ViewsHandlerDiscovery extends AnnotatedClassDiscovery {
       $definitions[$key]['plugin_type'] = $this->type;
     }
     return $definitions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getPluginNamespaces() {
+    $plugin_namespaces = array();
+    foreach ($this->rootNamespacesIterator as $namespace => $dir) {
+      $plugin_namespaces["$namespace\\Plugin\\views\\{$this->type}"] = array($dir);
+    }
+
+    return $plugin_namespaces;
   }
 
 }

@@ -26,7 +26,7 @@ class ToolkitTest extends ToolkitTestBase {
    * available toolkits.
    */
   function testGetAvailableToolkits() {
-    $manager = new ImageToolkitManager($this->container->getParameter('container.namespaces'));
+    $manager = new ImageToolkitManager($this->container->get('container.namespaces'));
     $toolkits = $manager->getAvailableToolkits();
     $this->assertTrue(isset($toolkits['test']), 'The working toolkit was returned.');
     $this->assertFalse(isset($toolkits['broken']), 'The toolkit marked unavailable was not returned');

@@ -31,7 +31,7 @@ abstract class ToolkitTestBase extends WebTestBase {
     parent::setUp();
 
     // Use the image_test.module's test toolkit.
-    $manager = new ImageToolkitManager($this->container->getParameter('container.namespaces'));
+    $manager = new ImageToolkitManager($this->container->get('container.namespaces'));
     $this->toolkit = $manager->createInstance('test');
 
     // Pick a file for testing.

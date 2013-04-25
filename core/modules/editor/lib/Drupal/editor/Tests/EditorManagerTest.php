@@ -66,7 +66,7 @@ class EditorManagerTest extends DrupalUnitTestBase {
    * Tests the configurable text editor manager.
    */
   function testManager() {
-    $this->editorManager = new EditorManager($this->container->getParameter('container.namespaces'));
+    $this->editorManager = new EditorManager($this->container->get('container.namespaces'));
 
     // Case 1: no text editor available:
     // - listOptions() should return an empty list of options
@@ -79,7 +79,6 @@ class EditorManagerTest extends DrupalUnitTestBase {
     // Enable the Text Editor Test module, which has the Unicorn Editor and
     // clear the editor manager's cache so it is picked up.
     $this->enableModules(array('editor_test'));
-    $this->editorManager = new EditorManager($this->container->getParameter('container.namespaces'));
     $this->editorManager->clearCachedDefinitions();
 
     // Case 2: a text editor available.

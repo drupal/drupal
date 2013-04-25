@@ -41,10 +41,11 @@ class EntityManager extends PluginManagerBase {
   /**
    * Constructs a new Entity plugin manager.
    *
-   * @param array $namespaces
-   *   An array of paths keyed by it's corresponding namespaces.
+   * @param \Traversable $namespaces
+   *   An object that implements \Traversable which contains the root paths
+   *   keyed by the corresponding namespace to look for plugin implementations,
    */
-  public function __construct(array $namespaces) {
+  public function __construct(\Traversable $namespaces) {
     // Allow the plugin definition to be altered by hook_entity_info_alter().
     $annotation_namespaces = array(
       'Drupal\Core\Entity\Annotation' => DRUPAL_ROOT . '/core/lib',

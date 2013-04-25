@@ -1,4 +1,4 @@
 services:
   plugin.manager.ckeditor.plugin:
     class: Drupal\ckeditor\CKEditorPluginManager
-    arguments: ['%container.namespaces%']
+    arguments: ['@container.namespaces']
