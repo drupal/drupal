@@ -108,4 +108,21 @@ class UserPasswordResetTest extends WebTestBase {
 
     return $urls[0];
   }
+
+ /**
+  * Prefill the text box on incorrect login via link to password reset page.
+  */
+  public function testUserResetPasswordTextboxFilled() {
+    $this->drupalGet('user/login');
+    $edit = array(
+      'name' => $this->randomName(),
+      'pass' => $this->randomName(),
+    );
+    $this->drupalPost('user', $edit, t('Log in'));
+    $this->assertRaw(t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>',
+      array('@password' => url('user/password', array('query' => array('name' => $edit['name']))))));
+    unset($edit['pass']);
+    $this->drupalGet('user/password', array('query' => array('name' => $edit['name'])));
+    $this->assertFieldByName('name', $edit['name'], 'User name found.');
+  }
 }

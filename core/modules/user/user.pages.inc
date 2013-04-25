@@ -38,6 +38,9 @@ function user_pass() {
       '#suffix' => '</p>',
     );
   }
+  else {
+    $form['name']['#default_value'] = Drupal::Request()->query->get('name');
+  }
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('E-mail new password'));
 
