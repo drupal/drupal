@@ -8,6 +8,13 @@ $loader->add('Drupal\Component', __DIR__ . "/../../core/lib");
 
 foreach (scandir(__DIR__ . "/../modules") as $module) {
   $loader->add('Drupal\\' . $module, __DIR__ . "/../modules/" . $module . "/lib");
+  // Add test module classes.
+  $test_modules_dir = __DIR__ . "/../modules/$module/tests/modules";
+  if (is_dir($test_modules_dir)) {
+    foreach (scandir($test_modules_dir) as $test_module) {
+      $loader->add('Drupal\\' . $test_module, $test_modules_dir . '/' . $test_module . '/lib');
+    }
+  }
 }
 
 require __DIR__ . "/../../core/lib/Drupal.php";

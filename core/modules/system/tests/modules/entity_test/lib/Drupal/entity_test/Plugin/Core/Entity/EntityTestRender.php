@@ -26,7 +26,8 @@ use Drupal\Core\Annotation\Translation;
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",
- *     "label" = "name"
+ *     "label" = "name",
+ *     "bundle" = "type"
  *   }
  * )
  */

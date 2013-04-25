@@ -18,7 +18,17 @@ use Drupal\Core\Entity\DatabaseStorageControllerNG;
 class EntityTestStorageController extends DatabaseStorageControllerNG {
 
   /**
-   * Implements \Drupal\Core\Entity\DataBaseStorageControllerNG::baseFieldDefinitions().
+   * {@inheritdoc}
+   */
+  public function create(array $values) {
+    if (empty($values['type'])) {
+      $values['type'] = $this->entityType;
+    }
+    return parent::create($values);
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function baseFieldDefinitions() {
     $fields['id'] = array(
@@ -42,6 +52,11 @@ class EntityTestStorageController extends DatabaseStorageControllerNG {
       'description' => t('The name of the test entity.'),
       'type' => 'string_field',
       'translatable' => TRUE,
+    );
+    $fields['type'] = array(
+      'label' => t('Type'),
+      'description' => t('The bundle of the test entity.'),
+      'type' => 'string_field',
     );
     $fields['user_id'] = array(
       'label' => t('User ID'),

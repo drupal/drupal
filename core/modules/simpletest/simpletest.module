@@ -788,7 +788,7 @@ function simpletest_phpunit_find_testcases($suite) {
     if ($testcase->getName() === 'testcase') {
       $testcases[] = $testcase;
     }
-    elseif (isset($testcase->testcase) && $testcase->tests > 0) {
+    elseif (isset($testcase->testcase) && ((int) $testcase->attributes()->tests) > 0) {
       foreach ($testcase->testcase as $childtestcase) {
         $testcases[] = $childtestcase;
       }

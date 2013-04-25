@@ -26,7 +26,8 @@ use Drupal\Core\Annotation\Translation;
  *   label_callback = "entity_test_label_callback",
  *   fieldable = TRUE,
  *   entity_keys = {
- *     "id" = "id"
+ *     "id" = "id",
+ *     "bundle" = "type"
  *   }
  * )
  */

@@ -491,6 +491,8 @@ class EntityFieldTest extends EntityUnitTestBase  {
       $entity->uuid->value,
       LANGUAGE_NOT_SPECIFIED,
       $this->entity_name,
+      // Bundle name.
+      $entity->bundle(),
       $this->entity_field_text,
       // Field format.
       NULL,
