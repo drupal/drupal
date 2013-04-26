@@ -146,11 +146,11 @@ class BreadcrumbTest extends MenuTestBase {
     $trail += array(
       "admin/structure/types/manage/$type/fields" => t('Manage fields'),
     );
-    $this->assertBreadcrumb("admin/structure/types/manage/$type/fields/body", $trail);
+    $this->assertBreadcrumb("admin/structure/types/manage/$type/fields/node.$type.body", $trail);
     $trail += array(
-      "admin/structure/types/manage/$type/fields/body" => t('Body'),
+      "admin/structure/types/manage/$type/fields/node.$type.body" => t('Body'),
     );
-    $this->assertBreadcrumb("admin/structure/types/manage/$type/fields/body/widget-type", $trail);
+    $this->assertBreadcrumb("admin/structure/types/manage/$type/fields/node.$type.body/widget-type", $trail);
 
     // Verify Filter text format administration breadcrumbs.
     $filter_formats = filter_formats();

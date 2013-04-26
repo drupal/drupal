@@ -187,9 +187,7 @@ function custom_block_entity_bundle_info() {
     $bundles['custom_block'][$config->get('id')] = array(
       'label' => $config->get('label'),
       'admin' => array(
-        'path' => 'admin/structure/custom-blocks/manage/%',
         'real path' => 'admin/structure/custom-blocks/manage/' . $config->get('id'),
-        'bundle argument' => 4,
       ),
     );
   }

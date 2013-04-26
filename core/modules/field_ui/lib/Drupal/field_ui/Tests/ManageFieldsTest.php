@@ -123,8 +123,9 @@ class ManageFieldsTest extends FieldUiTestBase {
    * Tests editing an existing field.
    */
   function updateField() {
+    $instance_id = 'node.' . $this->type . '.' . $this->field_name;
     // Go to the field edit page.
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/' . $this->field_name . '/field-settings');
+    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/' . $instance_id . '/field-settings');
 
     // Populate the field settings with new settings.
     $string = 'updated dummy test string';
@@ -134,7 +135,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->drupalPost(NULL, $edit, t('Save field settings'));
 
     // Go to the field instance edit page.
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/' . $this->field_name);
+    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/' . $instance_id);
     $edit = array(
       'instance[settings][test_instance_setting]' => $string,
       'instance[widget][settings][test_widget_setting]' => $string,
@@ -176,7 +177,7 @@ class ManageFieldsTest extends FieldUiTestBase {
    * numeric value. That is tested already in FormTest::testNumber().
    */
   function cardinalitySettings() {
-    $field_edit_path = 'admin/structure/types/manage/article/fields/body/field-settings';
+    $field_edit_path = 'admin/structure/types/manage/article/fields/node.article.body/field-settings';
 
     // Assert the cardinality other field cannot be empty when cardinality is
     // set to other.
@@ -253,10 +254,10 @@ class ManageFieldsTest extends FieldUiTestBase {
       'entity_type' => 'node',
       'bundle' => $this->type,
     );
-    field_create_instance($instance);
+    $instance = field_create_instance($instance);
 
     $langcode = LANGUAGE_NOT_SPECIFIED;
-    $admin_path = 'admin/structure/types/manage/' . $this->type . '/fields/' . $field_name;
+    $admin_path = 'admin/structure/types/manage/' . $this->type . '/fields/' . $instance->id();
     $element_id = "edit-$field_name-$langcode-0-value";
     $element_name = "{$field_name}[$langcode][0][value]";
     $this->drupalGet($admin_path);
@@ -320,7 +321,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->fieldUIAddExistingField($bundle_path2, $edit2);
 
     // Delete the first instance.
-    $this->fieldUIDeleteField($bundle_path1, $this->field_name, $this->field_label, $this->type);
+    $this->fieldUIDeleteField($bundle_path1, "node.$this->type.$this->field_name", $this->field_label, $this->type);
 
     // Reset the fields info.
     field_info_cache_clear();
@@ -330,7 +331,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->assertNotNull(field_info_field($this->field_name), 'Field was not deleted.');
 
     // Delete the second instance.
-    $this->fieldUIDeleteField($bundle_path2, $this->field_name, $this->field_label, $type_name2);
+    $this->fieldUIDeleteField($bundle_path2, "node.$type_name2.$this->field_name", $this->field_label, $type_name2);
 
     // Reset the fields info.
     field_info_cache_clear();
@@ -412,7 +413,7 @@ class ManageFieldsTest extends FieldUiTestBase {
    */
   function testWidgetChange() {
     $url_fields = 'admin/structure/types/manage/article/fields';
-    $url_tags_widget = $url_fields . '/field_tags/widget-type';
+    $url_tags_widget = $url_fields . '/node.article.field_tags/widget-type';
 
     // Check that the field_tags field currently uses the 'options_select'
     // widget.
@@ -463,7 +464,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->fieldUIAddNewField($bundle_path, $edit1);
 
     // Delete the field.
-    $this->fieldUIDeleteField($bundle_path, $this->field_name, $this->field_label, 'Tags');
+    $this->fieldUIDeleteField($bundle_path, "taxonomy_term.tags.$this->field_name", $this->field_label, 'Tags');
 
     // Reset the fields info.
     field_info_cache_clear();

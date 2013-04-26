@@ -2533,7 +2533,7 @@ function user_block_user_action(&$entity, $context = array()) {
  * field instance' form.
  */
 function user_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id) {
-  $instance = $form['#instance'];
+  $instance = $form_state['instance'];
 
   if ($instance['entity_type'] == 'user') {
     $form['instance']['settings']['user_register_form'] = array(

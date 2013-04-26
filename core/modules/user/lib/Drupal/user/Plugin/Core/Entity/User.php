@@ -32,6 +32,7 @@ use Drupal\user\UserInterface;
  *   default_operation = "profile",
  *   base_table = "users",
  *   uri_callback = "user_uri",
+ *   route_base_path = "admin/config/people/accounts",
  *   label_callback = "user_label",
  *   fieldable = TRUE,
  *   translatable = TRUE,

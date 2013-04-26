@@ -226,7 +226,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $edit = array(
       'files[field_settings_default_image]' => drupal_realpath($images[0]->uri),
     );
-    $this->drupalPost("admin/structure/types/manage/article/fields/$field_name/field-settings", $edit, t('Save field settings'));
+    $this->drupalPost("admin/structure/types/manage/article/fields/node.article.$field_name/field-settings", $edit, t('Save field settings'));
     // Clear field info cache so the new default image is detected.
     field_info_cache_clear();
     $field = field_info_field($field_name);
@@ -254,7 +254,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $edit = array(
       'field[settings][default_image][fids]' => 0,
     );
-    $this->drupalPost("admin/structure/types/manage/article/fields/$field_name/field-settings", $edit, t('Save field settings'));
+    $this->drupalPost("admin/structure/types/manage/article/fields/node.article.$field_name/field-settings", $edit, t('Save field settings'));
     // Clear field info cache so the new default image is detected.
     field_info_cache_clear();
     $field = field_info_field($field_name);
@@ -267,7 +267,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $edit = array(
       'files[field_settings_default_image]' => drupal_realpath($images[1]->uri),
     );
-    $this->drupalPost('admin/structure/types/manage/article/fields/' . $private_field_name . '/field-settings', $edit, t('Save field settings'));
+    $this->drupalPost('admin/structure/types/manage/article/fields/node.article.' . $private_field_name . '/field-settings', $edit, t('Save field settings'));
     // Clear field info cache so the new default image is detected.
     field_info_cache_clear();
 

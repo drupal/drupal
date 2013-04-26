@@ -99,7 +99,7 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
     $this->assertEqual(url('block/add/basic', array('absolute' => TRUE)), $this->getUrl(), 'Original machine name was used in URL.');
 
     // Remove the body field.
-    $this->drupalPost('admin/structure/custom-blocks/manage/basic/fields/block_body/delete', array(), t('Delete'));
+    $this->drupalPost('admin/structure/custom-blocks/manage/basic/fields/custom_block.basic.block_body/delete', array(), t('Delete'));
     // Resave the settings for this type.
     $this->drupalPost('admin/structure/custom-blocks/manage/basic', array(), t('Save'));
     // Check that the body field doesn't exist.

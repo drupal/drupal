@@ -63,7 +63,7 @@ class TextTranslationTest extends WebTestBase {
   function testTextField() {
     // Disable text processing for body.
     $edit = array('instance[settings][text_processing]' => 0);
-    $this->drupalPost('admin/structure/types/manage/article/fields/body', $edit, t('Save settings'));
+    $this->drupalPost('admin/structure/types/manage/article/fields/node.article.body', $edit, t('Save settings'));
 
     // Login as translator.
     $this->drupalLogin($this->translator);
@@ -92,7 +92,7 @@ class TextTranslationTest extends WebTestBase {
   function testTextFieldFormatted() {
     // Make node body multiple.
     $edit = array('field[container][cardinality]' => -1);
-    $this->drupalPost('admin/structure/types/manage/article/fields/body/field-settings', $edit, t('Save field settings'));
+    $this->drupalPost('admin/structure/types/manage/article/fields/node.article.body/field-settings', $edit, t('Save field settings'));
     $this->drupalGet('node/add/article');
     $this->assertFieldByXPath("//input[@name='body_add_more']", t('Add another item'), 'Body field cardinality set to multiple.');
 

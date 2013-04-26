@@ -128,9 +128,7 @@ function taxonomy_entity_bundle_info() {
     $bundles['taxonomy_term'][$id] = array(
       'label' => $config->get('name'),
       'admin' => array(
-        'path' => 'admin/structure/taxonomy/%taxonomy_vocabulary',
         'real path' => 'admin/structure/taxonomy/' . $id,
-        'bundle argument' => 3,
       ),
     );
   }

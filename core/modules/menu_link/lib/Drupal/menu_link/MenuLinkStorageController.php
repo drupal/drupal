@@ -81,7 +81,10 @@ class MenuLinkStorageController extends DatabaseStorageController {
     if ($routes) {
       $route_objects = drupal_container()->get('router.route_provider')->getRoutesByNames($routes);
       foreach ($routes as $entity_id => $route) {
-        $menu_links[$entity_id]->setRouteObject($route_objects[$route]);
+        // Not all stored routes will be valid on load.
+        if (isset($route_objects[$route])) {
+          $menu_links[$entity_id]->setRouteObject($route_objects[$route]);
+        }
       }
     }
 

@@ -1,0 +1,10 @@
+services:
+  field_ui.subscriber:
+    class: Drupal\field_ui\Routing\RouteSubscriber
+    arguments: ['@plugin.manager.entity']
+    tags:
+     - { name: event_subscriber }
+  access_check.field_ui.view_mode:
+    class: Drupal\field_ui\Access\ViewModeAccessCheck
+    tags:
+     - { name: access_check }

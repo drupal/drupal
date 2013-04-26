@@ -179,9 +179,7 @@ function contact_entity_bundle_info() {
     $bundles['contact_message'][$config->get('id')] = array(
       'label' => $config->get('label'),
       'admin' => array(
-        'path' => 'admin/structure/contact/manage/%contact_category',
         'real path' => 'admin/structure/contact/manage/' . $config->get('id'),
-        'bundle argument' => 4,
         'access arguments' => array('administer contact forms'),
       ),
     );

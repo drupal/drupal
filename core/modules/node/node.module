@@ -219,9 +219,7 @@ function node_entity_bundle_info() {
     $bundles['node'][$type] = array(
       'label' => $name,
       'admin' => array(
-        'path' => 'admin/structure/types/manage/%node_type',
         'real path' => 'admin/structure/types/manage/' . $type,
-        'bundle argument' => 4,
       ),
     );
   }

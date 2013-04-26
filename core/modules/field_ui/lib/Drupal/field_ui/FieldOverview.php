@@ -15,16 +15,6 @@ use Drupal\field_ui\OverviewBase;
 class FieldOverview extends OverviewBase {
 
   /**
-   * Overrides Drupal\field_ui\OverviewBase::__construct().
-   */
-  public function __construct($entity_type, $bundle, $view_mode = NULL) {
-    $this->entity_type = $entity_type;
-    $this->bundle = $bundle;
-    $this->view_mode = 'form';
-    $this->adminPath = field_ui_bundle_admin_path($this->entity_type, $this->bundle);
-  }
-
-  /**
    * Implements Drupal\field_ui\OverviewBase::getRegions().
    */
   public function getRegions() {
@@ -52,7 +42,10 @@ class FieldOverview extends OverviewBase {
   /**
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, array &$form_state, $entity_type = NULL, $bundle = NULL) {
+    parent::buildForm($form, $form_state, $entity_type, $bundle);
+
+    $this->view_mode = 'form';
     // When displaying the form, make sure the list of fields is up-to-date.
     if (empty($form_state['post'])) {
       field_info_cache_clear();
@@ -94,7 +87,7 @@ class FieldOverview extends OverviewBase {
     // Fields.
     foreach ($instances as $name => $instance) {
       $field = field_info_field($instance['field_name']);
-      $admin_field_path = $this->adminPath . '/fields/' . $instance['field_name'];
+      $admin_field_path = $this->adminPath . '/fields/' . $instance->id();
       $table[$name] = array(
         '#attributes' => array('class' => array('draggable', 'tabledrag-leaf')),
         '#row_type' => 'field',
@@ -570,8 +563,9 @@ class FieldOverview extends OverviewBase {
 
       // Create the field and instance.
       try {
-        field_create_field($field);
-        field_create_instance($instance);
+        $this->entityManager->getStorageController('field_entity')->create($field)->save();
+        $new_instance = $this->entityManager->getStorageController('field_instance')->create($instance);
+        $new_instance->save();
 
         // Make sure the field is displayed in the 'default' view mode (using
         // default formatter and settings). It stays hidden for other view
@@ -582,8 +576,8 @@ class FieldOverview extends OverviewBase {
 
         // Always show the field settings step, as the cardinality needs to be
         // configured for new fields.
-        $destinations[] = $this->adminPath. '/fields/' . $field['field_name'] . '/field-settings';
-        $destinations[] = $this->adminPath . '/fields/' . $field['field_name'];
+        $destinations[] = $this->adminPath. '/fields/' . $new_instance->id() . '/field-settings';
+        $destinations[] = $this->adminPath . '/fields/' . $new_instance->id();
 
         // Store new field information for any additional submit handlers.
         $form_state['fields_added']['_add_new_field'] = $field['field_name'];
@@ -613,7 +607,8 @@ class FieldOverview extends OverviewBase {
         );
 
         try {
-          field_create_instance($instance);
+          $new_instance = $this->entityManager->getStorageController('field_instance')->create($instance);
+          $new_instance->save();
 
           // Make sure the field is displayed in the 'default' view mode (using
           // default formatter and settings). It stays hidden for other view
@@ -622,7 +617,7 @@ class FieldOverview extends OverviewBase {
             ->setComponent($field['field_name'])
             ->save();
 
-          $destinations[] = $this->adminPath . '/fields/' . $instance['field_name'];
+          $destinations[] = $this->adminPath . '/fields/' . $new_instance->id();
           // Store new field information for any additional submit handlers.
           $form_state['fields_added']['_add_existing_field'] = $instance['field_name'];
         }

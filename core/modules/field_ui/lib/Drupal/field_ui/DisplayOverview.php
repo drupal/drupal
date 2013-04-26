@@ -41,7 +41,10 @@ class DisplayOverview extends OverviewBase {
   /**
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, array &$form_state, $entity_type = NULL, $bundle = NULL, $view_mode = NULL) {
+    parent::buildForm($form, $form_state, $entity_type, $bundle);
+
+    $this->view_mode = (isset($view_mode) ? $view_mode : 'default');
     // Gather type information.
     $instances = field_info_instances($this->entity_type, $this->bundle);
     $field_types = field_info_field_types();

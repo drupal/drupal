@@ -68,7 +68,7 @@ class AlterTest extends WebTestBase {
     // Test that field_test_field_widget_properties_alter() sets the size to
     // 42 and that field_test_field_widget_form_alter() reports the correct
     // size when the form is displayed.
-    $this->drupalGet('admin/structure/types/manage/article/fields/alter_test_text');
+    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.alter_test_text');
     $this->assertText('Field size: 42', 'Altered field size is found in hook_field_widget_form_alter().');
     // Test that hook_field_widget_form_alter() registers this is the default
     // value form and sets a message.
@@ -102,11 +102,11 @@ class AlterTest extends WebTestBase {
     // Test that field_test_field_widget_properties_user_alter() replaces
     // the widget and that field_test_field_widget_form_alter() reports the
     // correct widget name when the form is displayed.
-    $this->drupalGet('admin/config/people/accounts/fields/alter_test_options');
+    $this->drupalGet('admin/config/people/accounts/fields/user.user.alter_test_options');
     $this->assertText('Widget type: options_buttons', 'Widget type is altered for users in hook_field_widget_form_alter().');
 
     // Test that the widget is not altered on page nodes.
-    $this->drupalGet('admin/structure/types/manage/page/fields/alter_test_options');
+    $this->drupalGet('admin/structure/types/manage/page/fields/node.page.alter_test_options');
     $this->assertText('Widget type: options_select', 'Widget type is not altered for pages in hook_field_widget_form_alter().');
   }
 }

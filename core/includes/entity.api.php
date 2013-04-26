@@ -97,16 +97,8 @@ function hook_entity_view_mode_info_alter(&$view_modes) {
  *   - admin: An array of information that allows Field UI pages to attach
  *     themselves to the existing administration pages for the bundle.
  *     Elements:
- *     - path: the path of the bundle's main administration page, as defined
- *       in hook_menu(). If the path includes a placeholder for the bundle,
- *       the 'bundle argument', 'bundle helper' and 'real path' keys below
- *       are required.
- *     - bundle argument: The position of the placeholder in 'path', if any.
  *     - real path: The actual path (no placeholder) of the bundle's main
  *       administration page. This will be used to generate links.
- *     - access callback: As in hook_menu(). 'user_access' will be assumed if
- *       no value is provided.
- *     - access arguments: As in hook_menu().
  *   - translatable: (optional) A boolean value specifying whether this bundle
  *     has translation support enabled. Defaults to FALSE.
  *

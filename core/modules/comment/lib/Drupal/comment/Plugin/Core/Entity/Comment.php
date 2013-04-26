@@ -34,6 +34,8 @@ use Drupal\comment\CommentInterface;
  *   fieldable = TRUE,
  *   translatable = TRUE,
  *   static_cache = FALSE,
+ *   route_base_path = "admin/structure/types/manage/{bundle}/comment",
+ *   bundle_prefix = "comment_node_",
  *   entity_keys = {
  *     "id" = "cid",
  *     "bundle" = "node_type",

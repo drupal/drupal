@@ -75,7 +75,7 @@ class NodeAccessFieldTest extends NodeTestBase {
     $default = 'Sometimes words have two meanings';
     $edit["{$this->field_name}[$langcode][0][value]"] = $default;
     $this->drupalPost(
-      "admin/structure/types/manage/page/fields/{$this->field_name}",
+      "admin/structure/types/manage/page/fields/node.page.{$this->field_name}",
       $edit,
       t('Save settings')
     );

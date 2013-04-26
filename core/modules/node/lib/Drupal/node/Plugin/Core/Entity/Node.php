@@ -44,6 +44,7 @@ use Drupal\node\NodeInterface;
  *   bundle_keys = {
  *     "bundle" = "type"
  *   },
+ *   route_base_path = "admin/structure/types/manage/{bundle}",
  *   permission_granularity = "bundle"
  * )
  */

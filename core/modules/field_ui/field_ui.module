@@ -65,128 +65,73 @@ function field_ui_menu() {
 
   // Create tabs for all possible bundles.
   foreach (entity_get_info() as $entity_type => $entity_info) {
-    if ($entity_info['fieldable']) {
-      foreach (entity_get_bundles($entity_type) as $bundle_name => $bundle_info) {
-        if (isset($bundle_info['admin'])) {
-          // Extract path information from the bundle.
-          $path = $bundle_info['admin']['path'];
-          // Different bundles can appear on the same path (e.g. %node_type and
-          // %comment_node_type). To allow field_ui_instance_load() to extract
-          // the actual bundle object from the translated menu router path
-          // arguments, we need to identify the argument position of the bundle
-          // name string ('bundle argument') and pass that position to the menu
-          // loader. The position needs to be casted into a string; otherwise it
-          // would be replaced with the bundle name string.
-          if (isset($bundle_info['admin']['bundle argument'])) {
-            $bundle_arg = $bundle_info['admin']['bundle argument'];
-            $bundle_pos = (string) $bundle_arg;
-          }
-          else {
-            $bundle_arg = $bundle_name;
-            $bundle_pos = '0';
-          }
-          // This is the position of the %field_ui_instance placeholder in the
-          // items below.
-          $field_position = count(explode('/', $path)) + 1;
+    if ($entity_info['fieldable'] && isset($entity_info['route_base_path'])) {
+      // Extract path information from the entity type.
+      $path = $entity_info['route_base_path'];
+      $default_path = preg_replace('/{' . DRUPAL_PHP_FUNCTION_PATTERN . '}/', '%', $path);
+      // This is the position of the %field_ui_instance placeholder in the
+      // items below.
+      $field_position = count(explode('/', $path)) + 1;
 
-          // User access check to be done against the permission to edit
-          // fields or the display per entity type.
-          $access_fields = array(
-            'access callback' => 'user_access',
-            'access arguments' => array('administer ' . $entity_type . ' fields'),
-          );
-          $access_display = array(
-            'access callback' => 'user_access',
-            'access arguments' => array('administer ' . $entity_type . ' display'),
-          );
+      $items["$path/fields"] = array(
+        'title' => 'Manage fields',
+        'type' => MENU_LOCAL_TASK,
+        'route_name' => "field_ui.overview.$entity_type",
+        'weight' => 1,
+      );
+      $items["$path/fields/%"] = array(
+        'title callback' => 'field_ui_instance_title',
+        'title arguments' => array($field_position),
+        'route_name' => "field_ui.instance_edit.$entity_type",
+      );
+      $items["$default_path/fields/%/edit"] = array(
+        'title' => 'Edit',
+        'type' => MENU_DEFAULT_LOCAL_TASK,
+      );
+      $items["$path/fields/%/field-settings"] = array(
+        'title' => 'Field settings',
+        'type' => MENU_LOCAL_TASK,
+        'route_name' => "field_ui.settings.$entity_type",
+      );
+      $items["$path/fields/%/widget-type"] = array(
+        'title' => 'Widget type',
+        'type' => MENU_LOCAL_TASK,
+        'route_name' => "field_ui.widget_type.$entity_type",
+      );
+      $items["$path/fields/%/delete"] = array(
+        'title' => 'Delete',
+        'type' => MENU_VISIBLE_IN_BREADCRUMB,
+        'route_name' => "field_ui.delete.$entity_type",
+        'weight' => 10,
+      );
 
-          $items["$path/fields"] = array(
-            'title' => 'Manage fields',
-            'page callback' => 'field_ui_field_overview',
-            'page arguments' => array($entity_type, $bundle_arg),
-            'type' => MENU_LOCAL_TASK,
-            'weight' => 1,
-            'file' => 'field_ui.admin.inc',
-          ) + $access_fields;
-          $items["$path/fields/%field_ui_instance"] = array(
-            'load arguments' => array($entity_type, $bundle_arg, $bundle_pos, '%map'),
-            'title callback' => 'field_ui_instance_title',
-            'title arguments' => array($field_position),
-            'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_field_edit_form', $field_position),
-            'file' => 'field_ui.admin.inc',
-          ) + $access_fields;
-          $items["$path/fields/%field_ui_instance/edit"] = array(
-            'load arguments' => array($entity_type, $bundle_arg, $bundle_pos, '%map'),
-            'title' => 'Edit',
-            'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_field_edit_form', $field_position),
-            'type' => MENU_DEFAULT_LOCAL_TASK,
-            'file' => 'field_ui.admin.inc',
-          ) + $access_fields;
-          $items["$path/fields/%field_ui_instance/field-settings"] = array(
-            'load arguments' => array($entity_type, $bundle_arg, $bundle_pos, '%map'),
-            'title' => 'Field settings',
-            'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_field_settings_form', $field_position),
-            'type' => MENU_LOCAL_TASK,
-            'file' => 'field_ui.admin.inc',
-          ) + $access_fields;
-          $items["$path/fields/%field_ui_instance/widget-type"] = array(
-            'load arguments' => array($entity_type, $bundle_arg, $bundle_pos, '%map'),
-            'title' => 'Widget type',
-            'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_widget_type_form', $field_position),
-            'type' => MENU_LOCAL_TASK,
-            'file' => 'field_ui.admin.inc',
-          ) + $access_fields;
-          $items["$path/fields/%field_ui_instance/delete"] = array(
-            'load arguments' => array($entity_type, $bundle_arg, $bundle_pos, '%map'),
-            'title' => 'Delete',
-            'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_field_delete_form', $field_position),
-            'type' => MENU_VISIBLE_IN_BREADCRUMB,
-            'weight' => 10,
-            'file' => 'field_ui.admin.inc',
-          ) + $access_fields;
+      // 'Manage display' tab.
+      $items["$path/display"] = array(
+        'title' => 'Manage display',
+        'type' => MENU_LOCAL_TASK,
+        'route_name' => "field_ui.display_overview.$entity_type",
+        'weight' => 2,
+      );
 
-          // 'Manage display' tab.
-          $items["$path/display"] = array(
-            'title' => 'Manage display',
-            'page callback' => 'field_ui_display_overview',
-            'page arguments' => array($entity_type, $bundle_arg, 'default'),
-            'type' => MENU_LOCAL_TASK,
-            'weight' => 2,
-            'file' => 'field_ui.admin.inc',
-          ) + $access_display;
-
-          // View modes secondary tabs.
-          // The same base $path for the menu item (with a placeholder) can be
-          // used for all bundles of a given entity type; but depending on
-          // administrator settings, each bundle has a different set of view
-          // modes available for customisation. So we define menu items for all
-          // view modes, and use an access callback to determine which ones are
-          // actually visible for a given bundle.
-          $weight = 0;
-          $view_modes = array('default' => array('label' => t('Default'))) + entity_get_view_modes($entity_type);
-          foreach ($view_modes as $view_mode => $view_mode_info) {
-            $items["$path/display/$view_mode"] = array(
-              'title' => $view_mode_info['label'],
-              'page callback' => 'field_ui_display_overview',
-              'page arguments' => array($entity_type, $bundle_arg, $view_mode),
-              // The access callback needs to check both the current 'custom
-              // display' setting for the view mode, and the overall access
-              // rules for the bundle admin pages.
-              'access callback' => '_field_ui_view_mode_menu_access',
-              'access arguments' => array($entity_type, $bundle_arg, $view_mode, $access_display['access arguments'][0]),
-              'type' => ($view_mode == 'default' ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK),
-              'file' => 'field_ui.admin.inc',
-            );
-            if ($view_mode != 'default') {
-              $items["$path/display/$view_mode"]['weight'] = $weight++;
-            }
-          }
-        }
+      // View modes secondary tabs.
+      // The same base $path for the menu item (with a placeholder) can be
+      // used for all bundles of a given entity type; but depending on
+      // administrator settings, each bundle has a different set of view
+      // modes available for customisation. So we define menu items for all
+      // view modes, and use a route requirement to determine which ones are
+      // actually visible for a given bundle.
+      $items["$default_path/display/default"] = array(
+        'title' => t('Default'),
+        'type' => MENU_DEFAULT_LOCAL_TASK,
+      );
+      $weight = 0;
+      foreach (entity_get_view_modes($entity_type) as $view_mode => $view_mode_info) {
+        $items["$path/display/$view_mode"] = array(
+          'title' => $view_mode_info['label'],
+          'type' => MENU_LOCAL_TASK,
+          'weight' => $weight++,
+          'route_name' => "field_ui.display_overview.$entity_type.$view_mode",
+        );
       }
     }
   }
@@ -267,25 +212,8 @@ function field_ui_instance_load($field_name, $entity_type, $bundle_name, $bundle
  * @see field_ui_menu()
  */
 function field_ui_instance_title($instance) {
-  return $instance['label'];
-}
-
-/**
- * Access callback: Checks access for the 'view mode display settings' pages.
- *
- * @see field_ui_menu()
- */
-function _field_ui_view_mode_menu_access($entity_type, $bundle, $view_mode, $permission) {
-  // First, determine visibility according to the 'use custom display'
-  // setting for the view mode.
-  $bundle = field_extract_bundle($entity_type, $bundle);
-  $view_mode_settings = field_view_mode_settings($entity_type, $bundle);
-  $visibility = ($view_mode == 'default') || !empty($view_mode_settings[$view_mode]['custom_settings']);
-
-  // Then, determine access according to the $permission parameter.
-  if ($visibility) {
-    return user_access($permission);
-  }
+  $entity = entity_load('field_instance', $instance);
+  return $entity->label();
 }
 
 /**
