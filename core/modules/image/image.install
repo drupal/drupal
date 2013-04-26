@@ -161,11 +161,9 @@ function image_update_8000() {
 }
 
 /**
- * Remove the {image_styles} and {image_effects} tables.
+ * Empty update. See http://drupal.org/node/1980058.
  */
 function image_update_8001() {
-  db_drop_table('image_styles');
-  db_drop_table('image_effects');
 }
 
 /**
