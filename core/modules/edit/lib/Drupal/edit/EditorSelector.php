@@ -41,7 +41,7 @@ class EditorSelector implements EditorSelectorInterface {
   }
 
   /**
-   * Implements \Drupal\edit\EditorSelectorInterface::getEditor().
+   * {@inheritdoc}
    */
   public function getEditor($formatter_type, FieldInstance $instance, array $items) {
     // Build a static cache of the editors that have registered themselves as
@@ -90,24 +90,20 @@ class EditorSelector implements EditorSelectorInterface {
   }
 
   /**
-   * Implements \Drupal\edit\EditorSelectorInterface::getAllEditorAttachments().
-   *
-   * @todo Instead of loading all JS/CSS for all editors, load them lazily when
-   *   needed.
-   * @todo The NestedArray stuff is wonky.
+   * {@inheritdoc}
    */
-  public function getAllEditorAttachments() {
+  public function getEditorAttachments(array $editor_ids) {
     $attachments = array();
-    $definitions = $this->editorManager->getDefinitions();
+    $editor_ids = array_unique($editor_ids);
 
     // Editor plugins' attachments.
-    $editor_ids = array_keys($definitions);
     foreach ($editor_ids as $editor_id) {
       $editor = $this->editorManager->createInstance($editor_id);
-      $attachments[] = $editor->getAttachments();;
+      $attachments[] = $editor->getAttachments();
     }
 
     // JavaScript settings for Edit.
+    $definitions = $this->editorManager->getDefinitions();
     foreach ($definitions as $definition) {
       $attachments[] = array(
         // This will be used in Create.js' propertyEditorWidgetsConfiguration.
@@ -124,4 +120,5 @@ class EditorSelector implements EditorSelectorInterface {
 
     return NestedArray::mergeDeepArray($attachments);
   }
+
 }

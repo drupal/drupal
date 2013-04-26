@@ -16,6 +16,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\edit\Ajax\FieldFormCommand;
 use Drupal\edit\Ajax\FieldFormSavedCommand;
 use Drupal\edit\Ajax\FieldFormValidationErrorsCommand;
+use Drupal\edit\Ajax\MetadataCommand;
 
 /**
  * Returns responses for Edit module routes.
@@ -29,10 +30,12 @@ class EditController extends ContainerAware {
    * entity and field level to determine whether the current user may edit them.
    * Also retrieves other metadata.
    *
-   * @return \Symfony\Component\HttpFoundation\JsonResponse
-   *   The JSON response.
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   The Ajax response.
    */
   public function metadata(Request $request) {
+    $response = new AjaxResponse();
+
     $fields = $request->request->get('fields');
     if (!isset($fields)) {
       throw new NotFoundHttpException();
@@ -63,7 +66,20 @@ class EditController extends ContainerAware {
       $metadata[$field] = $metadataGenerator->generate($entity, $instance, $langcode, $view_mode);
     }
 
-    return new JsonResponse($metadata);
+    $response->addCommand(new MetaDataCommand($metadata));
+
+    // Determine in-place editors and ensure their attachments are loaded.
+    $editors = array();
+    foreach ($metadata as $edit_id => $field_metadata) {
+      if (isset($field_metadata['editor'])) {
+        $editors[] = $field_metadata['editor'];
+      }
+    }
+    $editorSelector = $this->container->get('edit.editor.selector');
+    $elements['#attached'] = $editorSelector->getEditorAttachments($editors);
+    drupal_process_attached($elements);
+
+    return $response;
   }
 
   /**

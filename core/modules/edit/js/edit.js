@@ -57,24 +57,37 @@ Drupal.behaviors.edit = {
 
     if (remainingFieldsToAnnotate.length) {
       $(window).ready(function() {
-        $.ajax({
+        var id = 'edit-load-metadata';
+        // Create a temporary element to be able to use Drupal.ajax.
+        var $el = jQuery('<div id="' + id + '" class="element-hidden"></div>').appendTo('body');
+        // Create a Drupal.ajax instance to load the form.
+        Drupal.ajax[id] = new Drupal.ajax(id, $el, {
           url: drupalSettings.edit.metadataURL,
-          type: 'POST',
-          data: { 'fields[]' : _.pluck(remainingFieldsToAnnotate, 'editID') },
-          dataType: 'json',
-          success: function(results) {
-            // Update the metadata cache.
-            _.each(results, function(metadata, editID) {
-              Drupal.edit.metadataCache[editID] = metadata;
-            });
-
-            // Annotate the remaining fields based on the updated access cache.
-            _.each(remainingFieldsToAnnotate, annotateField);
-
-            // Find editable fields, make them editable.
-            Drupal.edit.app.findEditableProperties($context);
-          }
+          event: 'edit-internal.edit',
+          submit: { 'fields[]' : _.pluck(remainingFieldsToAnnotate, 'editID') },
+          progress: { type : null } // No progress indicator.
         });
+        // Implement a scoped editMetaData AJAX command: calls the callback.
+        Drupal.ajax[id].commands.editMetadata = function(ajax, response, status) {
+          // Update the metadata cache.
+          _.each(response.data, function(metadata, editID) {
+            Drupal.edit.metadataCache[editID] = metadata;
+          });
+
+          // Annotate the remaining fields based on the updated access cache.
+          _.each(remainingFieldsToAnnotate, annotateField);
+
+          // Find editable fields, make them editable.
+          Drupal.edit.app.findEditableProperties($context);
+
+          // Delete the Drupal.ajax instance that called this very function.
+          delete Drupal.ajax[id];
+
+          // Also delete the temporary element.
+          // $el.remove();
+        };
+        // This will ensure our scoped editMetadata AJAX command gets called.
+        $el.trigger('edit-internal.edit');
       });
     }
   }

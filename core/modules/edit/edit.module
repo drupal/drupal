@@ -53,9 +53,7 @@ function edit_contextual_links_view_alter(&$element, $items) {
     return;
   }
 
-  // Include the attachments and settings for all available editors.
-  $attachments = drupal_container()->get('edit.editor.selector')->getAllEditorAttachments();
-  $element['#attached'] = NestedArray::mergeDeep($element['#attached'], $attachments);
+  $element['#attached']['library'][] = array('edit', 'edit');
 }
 
 /**
@@ -65,7 +63,6 @@ function edit_library_info() {
   $path = drupal_get_path('module', 'edit');
   $options = array(
     'scope' => 'footer',
-    'attributes' => array('defer' => TRUE),
   );
   $libraries['edit'] = array(
     'title' => 'Edit: in-place editing',
