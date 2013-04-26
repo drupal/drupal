@@ -1,0 +1,6 @@
+custom_block_add_page:
+  pattern: block/add
+  defaults:
+    _content: 'Drupal\custom_block\Controller\CustomBlockController::add'
+  requirements:
+    _permission: 'administer blocks'

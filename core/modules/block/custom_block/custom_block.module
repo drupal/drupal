@@ -74,9 +74,7 @@ function custom_block_menu() {
 
   $items['block/add'] = array(
     'title' => 'Add custom block',
-    'page callback' => 'custom_block_add_page',
-    'access arguments' => array('administer blocks'),
-    'file' => 'custom_block.pages.inc',
+    'route_name' => 'custom_block_add_page',
   );
   $items['block/add/%custom_block_type'] = array(
     'title callback' => 'entity_page_label',

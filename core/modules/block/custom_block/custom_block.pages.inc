@@ -10,36 +10,6 @@ use Drupal\custom_block\Plugin\Core\Entity\CustomBlock;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * Page callback: Displays add custom block links for available types.
- *
- * @return array
- *   A render array for a list of the custom block types that can be added or
- *   if there is only one custom block type defined for the site, the function
- *   returns the custom block add page for that custom block type.
- *
- * @see custom_block_menu()
- */
-function custom_block_add_page() {
-  $options = array();
-  $request = drupal_container()->get('request');
-  if (($theme = $request->attributes->get('theme')) && in_array($theme, array_keys(list_themes()))) {
-    // We have navigated to this page from the block library and will keep track
-    // of the theme for redirecting the user to the configuration page for the
-    // newly created block in the given theme.
-    $options = array(
-      'query' => array('theme' => $theme)
-    );
-  }
-  $types = entity_load_multiple('custom_block_type');
-  if ($types && count($types) == 1) {
-    $type = reset($types);
-    return custom_block_add($type);
-  }
-
-  return array('#theme' => 'custom_block_add_list', '#content' => $types);
-}
-
-/**
  * Returns HTML for a list of available custom block types for block creation.
  *
  * @param $variables
