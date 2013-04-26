@@ -101,9 +101,7 @@ class Table extends StylePluginBase {
   }
 
   /**
-   * Determine if we should provide sorting based upon $_GET inputs
-   *
-   * @return bool
+   * {@inheritdoc}
    */
   function build_sort() {
     $order = $this->request->query->get('order');
