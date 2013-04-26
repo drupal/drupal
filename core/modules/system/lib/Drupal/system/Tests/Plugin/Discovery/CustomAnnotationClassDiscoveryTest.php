@@ -39,7 +39,7 @@ class CustomAnnotationClassDiscoveryTest extends DiscoveryTestBase {
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\custom_annotation\Example2',
       ),
     );
-    $root_namespaces = array('Drupal\plugin_test' => DRUPAL_ROOT . '/core/modules/system/tests/modules/plugin_test/lib');
+    $root_namespaces = new \ArrayObject(array('Drupal\plugin_test' => DRUPAL_ROOT . '/core/modules/system/tests/modules/plugin_test/lib'));
     $annotation_namespaces = array(
       'Drupal\plugin_test\Plugin\Annotation' => DRUPAL_ROOT . '/core/modules/system/tests/modules/plugin_test/lib',
     );

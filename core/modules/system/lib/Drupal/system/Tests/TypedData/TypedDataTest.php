@@ -388,7 +388,7 @@ class TypedDataTest extends DrupalUnitTestBase {
 
     $properties = $typed_data->getProperties();
     $this->assertEqual(array_keys($properties), array_keys($value));
-    $this->assertIdentical($properties['one'], $typed_data->get('one'));
+    $this->assertIdentical($properties['one'], $typed_data->get('one'), 'Properties are identical.');
 
     $typed_data->setPropertyValues(array('one' => 'eins'));
     $this->assertEqual($typed_data->get('one')->getValue(), 'eins');
@@ -412,10 +412,11 @@ class TypedDataTest extends DrupalUnitTestBase {
 
     // Make sure the difference between NULL (not set) and an empty array is
     // kept.
-    $clone->setValue(array());
     $typed_data->setValue(NULL);
     $this->assertNull($typed_data->getValue());
-    $this->assertIdentical($clone->getValue(), array());
+    $typed_data->setValue(array());
+    $value = $typed_data->getValue();
+    $this->assertTrue(isset($value) && is_array($value));
 
     // Test accessing invalid properties.
     $typed_data->setValue($value);

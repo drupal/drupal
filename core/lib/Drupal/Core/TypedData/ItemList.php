@@ -13,7 +13,7 @@ namespace Drupal\Core\TypedData;
  * This class can serve as list for any type of items.
  * Note: The class cannot be called "List" as list is a reserved PHP keyword.
  */
-class ItemList extends ContextAwareTypedData implements \IteratorAggregate, ListInterface {
+class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
 
   /**
    * Numerically indexed array items.
@@ -41,7 +41,11 @@ class ItemList extends ContextAwareTypedData implements \IteratorAggregate, List
    * @param array|null $values
    *   An array of values of the field items, or NULL to unset the field.
    */
-  public function setValue($values) {
+  public function setValue($values, $notify = TRUE) {
+    // Notify the parent of any changes to be made.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
     if (!isset($values) || $values === array()) {
       $this->list = $values;
     }
@@ -197,15 +201,23 @@ class ItemList extends ContextAwareTypedData implements \IteratorAggregate, List
   }
 
   /**
+   * Implements \Drupal\Core\TypedData\ListInterface::onChange().
+   */
+  public function onChange($delta) {
+    // Notify the parent of changes.
+    if (isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
+  }
+
+  /**
    * Magic method: Implements a deep clone.
    */
   public function __clone() {
     if (isset($this->list)) {
       foreach ($this->list as $delta => $item) {
         $this->list[$delta] = clone $item;
-        if ($item instanceof ContextAwareInterface) {
-          $this->list[$delta]->setContext($delta, $this);
-        }
+        $this->list[$delta]->setContext($delta, $this);
       }
     }
   }

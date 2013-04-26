@@ -31,7 +31,11 @@ class Duration extends TypedData {
   /**
    * Overrides TypedData::setValue().
    */
-  public function setValue($value) {
+  public function setValue($value, $notify = TRUE) {
+    // Notify the parent of any changes to be made.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
     // Catch any exceptions thrown due to invalid values being passed.
     try {
       if ($value instanceof DateInterval || !isset($value)) {

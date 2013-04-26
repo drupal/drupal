@@ -8,7 +8,6 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\TypedData\AccessibleInterface;
-use Drupal\Core\TypedData\ContextAwareInterface;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
 
@@ -28,7 +27,7 @@ use Drupal\Core\TypedData\TranslatableInterface;
  * @see \Drupal\Core\TypedData\TypedDataManager
  * @see \Drupal\Core\Field\FieldInterface
  */
-interface EntityInterface extends ContextAwareInterface, ComplexDataInterface, AccessibleInterface, TranslatableInterface {
+interface EntityInterface extends ComplexDataInterface, AccessibleInterface, TranslatableInterface {
 
   /**
    * Returns the entity identifier (the entity's machine name or numeric ID).

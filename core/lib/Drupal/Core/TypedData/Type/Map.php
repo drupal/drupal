@@ -7,8 +7,9 @@
 
 namespace Drupal\Core\TypedData\Type;
 
-use Drupal\Core\TypedData\ContextAwareTypedData;
+use Drupal\Core\TypedData\TypedData;
 use Drupal\Core\TypedData\ComplexDataInterface;
+use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
  * The "map" data type.
@@ -20,7 +21,7 @@ use Drupal\Core\TypedData\ComplexDataInterface;
  * By default there is no metadata for contained properties. Extending classes
  * may want to override Map::getPropertyDefinitions() to define it.
  */
-class Map extends ContextAwareTypedData implements \IteratorAggregate, ComplexDataInterface {
+class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface {
 
   /**
    * An array of values for the contained properties.
@@ -55,7 +56,14 @@ class Map extends ContextAwareTypedData implements \IteratorAggregate, ComplexDa
   public function getValue() {
     // Update the values and return them.
     foreach ($this->properties as $name => $property) {
-      $this->values[$name] = $property->getValue();
+      $definition = $property->getDefinition();
+      if (empty($definition['computed'])) {
+        $value = $property->getValue();
+        // Only write NULL values if the whole map is not NULL.
+        if (isset($this->values) || isset($value)) {
+          $this->values[$name] = $value;
+        }
+      }
     }
     return $this->values;
   }
@@ -66,12 +74,24 @@ class Map extends ContextAwareTypedData implements \IteratorAggregate, ComplexDa
    * @param array|null $values
    *   An array of property values.
    */
-  public function setValue($values) {
+  public function setValue($values, $notify = TRUE) {
     if (isset($values) && !is_array($values)) {
       throw new \InvalidArgumentException("Invalid values given. Values must be represented as an associative array.");
     }
+    // Notify the parent of any changes to be made.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
     $this->values = $values;
-    $this->properties = array();
+
+    // Update any existing property objects.
+    foreach ($this->properties as $name => $property) {
+      $value = NULL;
+      if (isset($values[$name])) {
+        $value = $values[$name];
+      }
+      $property->setValue($value, FALSE);
+    }
   }
 
   /**
@@ -90,11 +110,13 @@ class Map extends ContextAwareTypedData implements \IteratorAggregate, ComplexDa
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::get().
    */
   public function get($property_name) {
-    if (!$this->getPropertyDefinition($property_name)) {
-      throw new \InvalidArgumentException('Property ' . check_plain($property_name) . ' is unknown.');
-    }
     if (!isset($this->properties[$property_name])) {
-      $this->properties[$property_name] = typed_data()->getPropertyInstance($this, $property_name, isset($this->values[$property_name]) ? $this->values[$property_name] : NULL);
+      $value = NULL;
+      if (isset($this->values[$property_name])) {
+        $value = $this->values[$property_name];
+      }
+      // If the property is unknown, this will throw an exception.
+      $this->properties[$property_name] = typed_data()->getPropertyInstance($this, $property_name, $value);
     }
     return $this->properties[$property_name];
   }
@@ -102,12 +124,16 @@ class Map extends ContextAwareTypedData implements \IteratorAggregate, ComplexDa
   /**
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::set().
    */
-  public function set($property_name, $value) {
-    if (isset($this->properties[$property_name])) {
-      $this->properties[$property_name]->setValue($value);
+  public function set($property_name, $value, $notify = TRUE) {
+    // Notify the parent of any changes to be made.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
+    if ($this->getPropertyDefinition($property_name)) {
+      $this->get($property_name)->setValue($value);
     }
     else {
-      // Just the plain value, so it's possible to add a new entry to the map.
+      // Just set the plain value, which allows adding a new entry to the map.
       $this->values[$property_name] = $value;
     }
   }
@@ -169,9 +195,17 @@ class Map extends ContextAwareTypedData implements \IteratorAggregate, ComplexDa
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::isEmpty().
    */
   public function isEmpty() {
-    foreach ($this->getProperties() as $property) {
-      if ($property->getValue() !== NULL) {
+    foreach ($this->properties as $property) {
+      $definition = $property->getDefinition();
+      if (empty($definition['computed']) && $property->getValue() !== NULL) {
         return FALSE;
+      }
+    }
+    if (isset($this->values)) {
+      foreach ($this->values as $name => $value) {
+        if (isset($value) && !isset($this->properties[$name])) {
+          return FALSE;
+        }
       }
     }
     return TRUE;
@@ -181,11 +215,19 @@ class Map extends ContextAwareTypedData implements \IteratorAggregate, ComplexDa
    * Magic method: Implements a deep clone.
    */
   public function __clone() {
-    foreach ($this->getProperties() as $name => $property) {
+    foreach ($this->properties as $name => $property) {
       $this->properties[$name] = clone $property;
-      if ($property instanceof ContextAwareInterface) {
-        $this->properties[$name]->setContext($name, $this);
-      }
+      $this->properties[$name]->setContext($name, $this);
+    }
+  }
+
+  /**
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::onChange().
+   */
+  public function onChange($property_name) {
+    // Notify the parent of changes.
+    if (isset($this->parent)) {
+      $this->parent->onChange($this->name);
     }
   }
 }

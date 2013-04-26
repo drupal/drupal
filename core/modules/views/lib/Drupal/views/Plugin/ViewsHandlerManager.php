@@ -22,10 +22,11 @@ class ViewsHandlerManager extends PluginManagerBase {
    *
    * @param string $type
    *   The plugin type, for example filter.
-   * @param array $namespaces
-   *   (optional) An array of paths keyed by it's corresponding namespaces.
+   * @param \Traversable $namespaces
+   *   An object that implements \Traversable which contains the root paths
+   *   keyed by the corresponding namespace to look for plugin implementations,
    */
-  public function __construct($type, array $namespaces = array()) {
+  public function __construct($type, \Traversable $namespaces) {
     $this->discovery = new ViewsHandlerDiscovery($type, $namespaces);
     $this->discovery = new CacheDecorator($this->discovery, "views:$type", 'views_info');
 

@@ -89,7 +89,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * EntityInterface::set() implements support for fieldable entities, but
    * configuration entities are not fieldable.
    */
-  public function set($property_name, $value, $langcode = NULL) {
+  public function set($property_name, $value, $langcode = NULL, $notify = TRUE) {
     // @todo: Add support for translatable properties being not fields.
     $this->{$property_name} = $value;
   }

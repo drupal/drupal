@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy\Type;
 
 use Drupal\Core\Entity\Field\FieldItemBase;
+use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
  * Defines the 'taxonomy_term_reference' entity field item.
@@ -49,30 +50,18 @@ class TaxonomyTermReferenceItem extends FieldItemBase {
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\Field\FieldItemBase::setValue().
+   * Overrides \Drupal\Core\Entity\Field\FieldItemBase::get().
    */
-  public function setValue($values) {
-    // Treat the values as property value of the entity field, if no array
-    // is given.
-    if (!is_array($values)) {
+  public function setValue($values, $notify = TRUE) {
+    // Treat the values as property value of the entity property, if no array is
+    // given.
+    if (isset($values) && !is_array($values)) {
       $values = array('entity' => $values);
     }
-
-    // Entity is computed out of the ID, so we only need to update the ID. Only
-    // set the entity field if no ID is given.
-    if (isset($values['tid'])) {
-      $this->properties['tid']->setValue($values['tid']);
+    // Make sure that the 'entity' property gets set as 'tid'.
+    if (isset($values['tid']) && !isset($values['entity'])) {
+      $values['entity'] = $values['tid'];
     }
-    elseif (isset($values['entity'])) {
-      $this->properties['entity']->setValue($values['entity']);
-    }
-    else {
-      $this->properties['entity']->setValue(NULL);
-    }
-    unset($values['entity'], $values['tid']);
-    if ($values) {
-      throw new \InvalidArgumentException('Property ' . key($values) . ' is unknown.');
-    }
+    parent::setValue($values, $notify);
   }
-
 }

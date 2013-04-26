@@ -8,6 +8,7 @@
 namespace Drupal\file\Type;
 
 use Drupal\Core\Entity\Field\FieldItemBase;
+use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
  * Defines the 'file_field' entity field item.
@@ -57,40 +58,18 @@ class FileItem extends FieldItemBase {
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\Field\FieldItemBase::setValue().
+   * Overrides \Drupal\Core\Entity\Field\FieldItemBase::get().
    */
-  public function setValue($values) {
-    // Treat the values as property value of the entity field, if no array
-    // is given.
-    if (!is_array($values)) {
+  public function setValue($values, $notify = TRUE) {
+    // Treat the values as property value of the entity property, if no array is
+    // given.
+    if (isset($values) && !is_array($values)) {
       $values = array('entity' => $values);
     }
-
-    if (isset($values['display'])) {
-      $this->properties['display']->setValue($values['display']);
+    // Make sure that the 'entity' property gets set as 'fid'.
+    if (isset($values['fid']) && !isset($values['entity'])) {
+      $values['entity'] = $values['fid'];
     }
-    if (isset($values['description'])) {
-      $this->properties['description']->setValue($values['description']);
-    }
-
-    // Entity is computed out of the ID, so we only need to update the ID. Only
-    // set the entity field if no ID is given.
-    if (isset($values['fid'])) {
-      $this->properties['fid']->setValue($values['fid']);
-    }
-    elseif (isset($values['entity'])) {
-      $this->properties['entity']->setValue($values['entity']);
-    }
-    else {
-      $this->properties['entity']->setValue(NULL);
-    }
-    unset($values['entity'], $values['fid']);
-    // @todo These properties are sometimes set due to being present in form
-    //   values. Needs to be cleaned up somewhere.
-    unset($values['display'], $values['description'], $values['upload']);
-    if ($values) {
-      throw new \InvalidArgumentException('Property ' . key($values) . ' is unknown.');
-    }
+    parent::setValue($values, $notify);
   }
-
 }

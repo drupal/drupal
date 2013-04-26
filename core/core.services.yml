@@ -143,12 +143,17 @@ services:
     calls:
       - [addSubscriber, ['@http_client_simpletest_subscriber']]
       - [setUserAgent, ['Drupal (+http://drupal.org/)']]
+  container.namespaces:
+    class: ArrayObject
+    arguments: [ '%container.namespaces%' ]
+    tags:
+      - { name: persist }
   plugin.manager.entity:
     class: Drupal\Core\Entity\EntityManager
-    arguments: ['%container.namespaces%']
+    arguments: ['@container.namespaces']
   plugin.manager.archiver:
     class: Drupal\Core\Archiver\ArchiverManager
-    arguments: ['%container.namespaces%']
+    arguments: ['@container.namespaces']
   request:
     class: Symfony\Component\HttpFoundation\Request
   event_dispatcher:
@@ -173,7 +178,7 @@ services:
       - [setValidationConstraintManager, ['@validation.constraint']]
   validation.constraint:
     class: Drupal\Core\Validation\ConstraintManager
-    arguments: ['%container.namespaces%']
+    arguments: ['@container.namespaces']
   lock:
     class: Drupal\Core\Lock\DatabaseLockBackend
   user.tempstore:
@@ -378,7 +383,7 @@ services:
     arguments: ['@database', '@request']
   plugin.manager.condition:
     class: Drupal\Core\Condition\ConditionManager
-    arguments: ['%container.namespaces%']
+    arguments: ['@container.namespaces']
   kernel_destruct_subscriber:
     class: Drupal\Core\EventSubscriber\KernelDestructionSubscriber
     tags:
@@ -391,7 +396,7 @@ services:
       - { name: event_subscriber }
   image.toolkit.manager:
     class: Drupal\system\Plugin\ImageToolkitManager
-    arguments: ['%container.namespaces%']
+    arguments: ['@container.namespaces']
   image.toolkit:
     class: Drupal\system\Plugin\ImageToolkitInterface
     factory_method: getDefaultToolkit

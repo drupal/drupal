@@ -62,25 +62,4 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem {
     return static::$propertyDefinitions[$target_type];
   }
 
-  /**
-   * Overrides \Drupal\Core\Entity\Field\Type\EntityReferenceItem::setValue().
-   */
-  public function setValue($values) {
-    // Treat the values as property value of the entity field, if no array
-    // is given. That way we support setting the field by entity ID or object.
-    if (!is_array($values)) {
-      $values = array('entity' => $values);
-    }
-
-    foreach (array('revision_id', 'access', 'label') as $property) {
-      if (array_key_exists($property, $values)) {
-        $this->properties[$property]->setValue($values[$property]);
-        unset($values[$property]);
-      }
-    }
-
-    // Pass the remaining values through to the parent class.
-    parent::setValue($values);
-  }
-
 }

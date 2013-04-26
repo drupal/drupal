@@ -1,10 +1,10 @@
 services:
   plugin.manager.field.widget:
     class: Drupal\field\Plugin\Type\Widget\WidgetPluginManager
-    arguments: ['%container.namespaces%']
+    arguments: ['@container.namespaces']
   plugin.manager.field.formatter:
     class: Drupal\field\Plugin\Type\Formatter\FormatterPluginManager
-    arguments: ['%container.namespaces%']
+    arguments: ['@container.namespaces']
   field.info:
     class: Drupal\field\FieldInfo
     arguments: ['@cache.field', '@config.factory', '@module_handler']

@@ -64,7 +64,7 @@ class CKEditorTest extends DrupalUnitTestBase {
     $editor->save();
 
     // Create "CKEditor" text editor plugin instance.
-    $manager = new EditorManager($this->container->getParameter('container.namespaces'));
+    $manager = $this->container->get('plugin.manager.editor');
     $this->ckeditor = $manager->createInstance('ckeditor');
   }
 

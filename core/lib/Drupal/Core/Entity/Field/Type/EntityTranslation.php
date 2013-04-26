@@ -9,8 +9,9 @@ namespace Drupal\Core\Entity\Field\Type;
 
 use Drupal\Core\TypedData\AccessibleInterface;
 use Drupal\Core\TypedData\ComplexDataInterface;
-use Drupal\Core\TypedData\ContextAwareTypedData;
+use Drupal\Core\TypedData\TypedData;
 use ArrayIterator;
+use Drupal\Core\TypedData\TypedDataInterface;
 use IteratorAggregate;
 use InvalidArgumentException;
 
@@ -20,7 +21,7 @@ use InvalidArgumentException;
  * Via this object translated entity fields may be read and updated in the same
  * way as untranslatable entity fields on the entity object.
  */
-class EntityTranslation extends ContextAwareTypedData implements IteratorAggregate, AccessibleInterface, ComplexDataInterface {
+class EntityTranslation extends TypedData implements IteratorAggregate, AccessibleInterface, ComplexDataInterface {
 
   /**
    * The array of translated fields, each being an instance of
@@ -71,7 +72,11 @@ class EntityTranslation extends ContextAwareTypedData implements IteratorAggrega
   /**
    * Overrides \Drupal\Core\TypedData\TypedData::setValue().
    */
-  public function setValue($values) {
+  public function setValue($values, $notify = TRUE) {
+    // Notify the parent of any changes to be made.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
     $this->fields = $values;
   }
 
@@ -100,8 +105,8 @@ class EntityTranslation extends ContextAwareTypedData implements IteratorAggrega
   /**
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::set().
    */
-  public function set($property_name, $value) {
-    $this->get($property_name)->setValue($value);
+  public function set($property_name, $value, $notify = TRUE) {
+    $this->get($property_name)->setValue($value, FALSE);
   }
 
   /**
@@ -190,6 +195,16 @@ class EntityTranslation extends ContextAwareTypedData implements IteratorAggrega
       }
     }
     return TRUE;
+  }
+
+  /**
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::onChange().
+   */
+  public function onChange($property_name) {
+    // Notify the parent of changes.
+    if (isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
   }
 
   /**

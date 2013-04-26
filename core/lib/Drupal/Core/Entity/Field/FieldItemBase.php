@@ -7,13 +7,10 @@
 
 namespace Drupal\Core\Entity\Field;
 
-use Drupal\Core\TypedData\ContextAwareTypedData;
-use Drupal\Core\TypedData\ContextAwareInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\TypedData\Type\Map;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\user;
-use ArrayIterator;
-use IteratorAggregate;
-use InvalidArgumentException;
 
 /**
  * An entity field item.
@@ -23,61 +20,20 @@ use InvalidArgumentException;
  *
  * @see \Drupal\Core\Entity\Field\FieldItemInterface
  */
-abstract class FieldItemBase extends ContextAwareTypedData implements IteratorAggregate, FieldItemInterface {
+abstract class FieldItemBase extends Map implements FieldItemInterface {
 
   /**
-   * The array of properties, each implementing the TypedDataInterface.
-   *
-   * Field objects are instantiated during object construction and cannot be
-   * replaced by others, so computed properties can safely store references on
-   * other properties.
-   *
-   * @var array
+   * Overrides \Drupal\Core\TypedData\TypedData::__construct().
    */
-  protected $properties = array();
-
-  /**
-   * Holds any non-property values that get set on the object.
-   *
-   * @todo: Remove or refactor once EntityNG conversion is complete.
-   *
-   * @var array
-   */
-  protected $extraValues = array();
-
-  /**
-   * Overrides ContextAwareTypedData::__construct().
-   */
-  public function __construct(array $definition, $name = NULL, ContextAwareInterface $parent = NULL) {
+  public function __construct(array $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
-
-    // Initialize all property objects, but postpone the creating of computed
-    // properties to a second step. That way computed properties can safely get
-    // references on non-computed properties during construction.
-    $step2 = array();
+    // Initialize computed properties by default, such that they get cloned
+    // with the whole item.
     foreach ($this->getPropertyDefinitions() as $name => $definition) {
-      if (empty($definition['computed'])) {
+      if (!empty($definition['computed'])) {
         $this->properties[$name] = typed_data()->getPropertyInstance($this, $name);
       }
-      else {
-        $step2[] = $name;
-      }
     }
-
-    foreach ($step2 as $name) {
-      $this->properties[$name] = typed_data()->getPropertyInstance($this, $name);
-    }
-  }
-
-  /**
-   * Overrides \Drupal\Core\TypedData\TypedData::getValue().
-   */
-  public function getValue() {
-    $values = array();
-    foreach ($this->getProperties() as $name => $property) {
-      $values[$name] = $property->getValue();
-    }
-    return $values + $this->extraValues;
   }
 
   /**
@@ -86,66 +42,59 @@ abstract class FieldItemBase extends ContextAwareTypedData implements IteratorAg
    * @param array|null $values
    *   An array of property values.
    */
-  public function setValue($values) {
+  public function setValue($values, $notify = TRUE) {
     // Treat the values as property value of the first property, if no array is
     // given.
-    if (!is_array($values)) {
-      $keys = array_keys($this->properties);
+    if (isset($values) && !is_array($values)) {
+      $keys = array_keys($this->getPropertyDefinitions());
       $values = array($keys[0] => $values);
     }
-
+    // Notify the parent of any changes to be made.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
+    $this->values = $values;
+    // Update any existing property objects.
     foreach ($this->properties as $name => $property) {
+      $value = NULL;
       if (isset($values[$name])) {
-        $property->setValue($values[$name]);
+        $value = $values[$name];
       }
-      else {
-        $property->setValue(NULL);
-      }
-      unset($values[$name]);
+      $property->setValue($value, FALSE);
+      unset($this->values[$name]);
     }
-    // @todo: Throw an exception for invalid values once conversion is
-    // totally completed.
-    $this->extraValues = $values;
-  }
-
-  /**
-   * Overrides \Drupal\Core\TypedData\TypedData::getString().
-   */
-  public function getString() {
-    $strings = array();
-    foreach ($this->getProperties() as $property) {
-      $strings[] = $property->getString();
-    }
-    return implode(', ', array_filter($strings));
-  }
-
-  /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::get().
-   */
-  public function get($property_name) {
-    if (!isset($this->properties[$property_name])) {
-      throw new InvalidArgumentException('Field ' . check_plain($property_name) . ' is unknown.');
-    }
-    return $this->properties[$property_name];
-  }
-
-  /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::set().
-   */
-  public function set($property_name, $value) {
-    $this->get($property_name)->setValue($value);
   }
 
   /**
    * Implements \Drupal\Core\Entity\Field\FieldItemInterface::__get().
    */
   public function __get($name) {
-    if (isset($this->properties[$name])) {
+    // There is either a property object or a plain value - possibly for a
+    // not-defined property. If we have a plain value, directly return it.
+    if (isset($this->values[$name])) {
+      return $this->values[$name];
+    }
+    elseif (isset($this->properties[$name])) {
       return $this->properties[$name]->getValue();
     }
-    // The property is unknown, so try to get it from the extra values.
-    elseif (isset($this->extraValues[$name])) {
-      return $this->extraValues[$name];
+  }
+
+  /**
+   * Overrides \Drupal\Core\TypedData\Type\Map::set().
+   */
+  public function set($property_name, $value, $notify = TRUE) {
+    // Notify the parent of any changes to be made.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
+    // For defined properties there is either a property object or a plain
+    // value that needs to be updated.
+    if (isset($this->properties[$property_name])) {
+      $this->properties[$property_name]->setValue($value, FALSE);
+    }
+    // Allow setting plain values for not-defined properties also.
+    else {
+      $this->values[$property_name] = $value;
     }
   }
 
@@ -153,105 +102,38 @@ abstract class FieldItemBase extends ContextAwareTypedData implements IteratorAg
    * Implements \Drupal\Core\Entity\Field\FieldItemInterface::__set().
    */
   public function __set($name, $value) {
-    // Support setting values via property objects.
-    if ($value instanceof TypedDataInterface) {
+    // Support setting values via property objects, but take care in as the
+    // value of the 'entity' property is typed data also.
+    if ($value instanceof TypedDataInterface && !($value instanceof EntityInterface)) {
       $value = $value->getValue();
     }
-    if (isset($this->properties[$name])) {
-      $this->properties[$name]->setValue($value);
-    }
-    else {
-      // The property is unknown, so set it to the extra values.
-      $this->extraValues[$name] = $value;
-    }
+    $this->set($name, $value);
   }
 
   /**
    * Implements \Drupal\Core\Entity\Field\FieldItemInterface::__isset().
    */
   public function __isset($name) {
-    return isset($this->properties[$name]) && $this->properties[$name]->getValue() !== NULL;
+    return isset($this->values[$name]) || (isset($this->properties[$name]) && $this->properties[$name]->getValue() !== NULL);
   }
 
   /**
    * Implements \Drupal\Core\Entity\Field\FieldItemInterface::__unset().
    */
   public function __unset($name) {
-    if (isset($this->properties[$name])) {
-      $this->properties[$name]->setValue(NULL);
-    }
+    $this->set($name, NULL);
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getProperties().
+   * Overrides \Drupal\Core\TypedData\Map::onChange().
    */
-  public function getProperties($include_computed = FALSE) {
-    $properties = array();
-    foreach ($this->getPropertyDefinitions() as $name => $definition) {
-      if ($include_computed || empty($definition['computed'])) {
-        $properties[$name] = $this->properties[$name];
-      }
+  public function onChange($property_name) {
+    // Notify the parent of changes.
+    if (isset($this->parent)) {
+      $this->parent->onChange($this->name);
     }
-    return $properties;
-  }
-
-  /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyValues().
-   */
-  public function getPropertyValues() {
-    return $this->getValue();
-  }
-
-  /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::setPropertyValues().
-   */
-  public function setPropertyValues($values) {
-    foreach ($values as $name => $value) {
-      $this->get($name)->setValue($value);
-    }
-  }
-
-  /**
-   * Implements \IteratorAggregate::getIterator().
-   */
-  public function getIterator() {
-    return new ArrayIterator($this->getProperties());
-  }
-
-  /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinition().
-   */
-  public function getPropertyDefinition($name) {
-    $definitions = $this->getPropertyDefinitions();
-    if (isset($definitions[$name])) {
-      return $definitions[$name];
-    }
-    else {
-      return FALSE;
-    }
-  }
-
-  /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::isEmpty().
-   */
-  public function isEmpty() {
-    foreach ($this->getProperties() as $property) {
-      if ($property->getValue() !== NULL) {
-        return FALSE;
-      }
-    }
-    return TRUE;
-  }
-
-  /**
-   * Magic method: Implements a deep clone.
-   */
-  public function __clone() {
-    foreach ($this->properties as $name => $property) {
-      $this->properties[$name] = clone $property;
-      if ($property instanceof ContextAwareInterface) {
-        $this->properties[$name]->setContext($name, $this);
-      }
-    }
+    // Remove the plain value, such that any further __get() calls go via the
+    // updated property object.
+    unset($this->values[$property_name]);
   }
 }

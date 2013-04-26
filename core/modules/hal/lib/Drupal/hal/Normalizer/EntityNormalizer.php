@@ -73,11 +73,19 @@ class EntityNormalizer extends NormalizerBase {
       throw new UnexpectedValueException('The type link relation must be specified.');
     }
 
-    // Get language.
-    $langcode = isset($data['langcode']) ? $data['langcode'][0]['value'] : LANGUAGE_NOT_SPECIFIED;
-
     // Create the entity.
     $typed_data_ids = $this->getTypedDataIds($data['_links']['type']);
+    // Figure out the language to use.
+    if (isset($data['langcode'])) {
+      $langcode = $data['langcode'][0]['value'];
+    }
+    elseif (module_exists('language')) {
+      $langcode = language_get_default_langcode($typed_data_ids['entity_type'], $typed_data_ids['bundle']);
+    }
+    else {
+      $langcode = LANGUAGE_NOT_SPECIFIED;
+    }
+
     $entity = entity_create($typed_data_ids['entity_type'], array('langcode' => $langcode, 'type' => $typed_data_ids['bundle']));
 
     // Get links and remove from data array.

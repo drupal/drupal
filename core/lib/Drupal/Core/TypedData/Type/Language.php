@@ -9,7 +9,7 @@ namespace Drupal\Core\TypedData\Type;
 
 use InvalidArgumentException;
 use Drupal\Core\Language\Language as LanguageObject;
-use Drupal\Core\TypedData\ContextAwareTypedData;
+use Drupal\Core\TypedData\TypedData;
 
 /**
  * Defines the 'language' data type.
@@ -25,7 +25,7 @@ use Drupal\Core\TypedData\ContextAwareTypedData;
  *  - langcode source: If used as computed property, the langcode property used
  *    to load the language object.
  */
-class Language extends ContextAwareTypedData {
+class Language extends TypedData {
 
   /**
    * The language code of the language if no 'langcode source' is used.
@@ -38,21 +38,13 @@ class Language extends ContextAwareTypedData {
    * Overrides TypedData::getValue().
    */
   public function getValue() {
-    $source = $this->getLanguageCodeSource();
-    $langcode = $source ? $source->getValue() : $this->langcode;
-    if ($langcode) {
-      $language = language_load($langcode);
+    if (!empty($this->definition['settings']['langcode source'])) {
+      $this->langcode = $this->parent->__get($this->definition['settings']['langcode source']);
+    }
+   if ($this->langcode) {
+      $language = language_load($this->langcode);
       return $language ?: new LanguageObject(array('langcode' => $this->langcode));
     }
-  }
-
-  /**
-   * Helper to get the typed data object holding the source language code.
-   *
-   * @return \Drupal\Core\TypedData\TypedDataInterface|FALSE
-   */
-  protected function getLanguageCodeSource() {
-    return !empty($this->definition['settings']['langcode source']) ? $this->parent->get($this->definition['settings']['langcode source']) : FALSE;
   }
 
   /**
@@ -60,7 +52,7 @@ class Language extends ContextAwareTypedData {
    *
    * Both the langcode and the language object may be passed as value.
    */
-  public function setValue($value) {
+  public function setValue($value, $notify = TRUE) {
     // Support passing language objects.
     if (is_object($value)) {
       $value = $value->langcode;
@@ -68,12 +60,15 @@ class Language extends ContextAwareTypedData {
     elseif (isset($value) && !is_scalar($value)) {
       throw new InvalidArgumentException('Value is no valid langcode or language object.');
     }
-    // Now update the value in the source or the local langcode property.
-    $source = $this->getLanguageCodeSource();
-    if ($source) {
-      $source->setValue($value);
+    // Update the 'langcode source' property, if given.
+    if (!empty($this->definition['settings']['langcode source'])) {
+      $this->parent->__set($this->definition['settings']['langcode source'], $value, $notify);
     }
     else {
+      // Notify the parent of any changes to be made.
+      if ($notify && isset($this->parent)) {
+        $this->parent->onChange($this->name);
+      }
       $this->langcode = $value;
     }
   }

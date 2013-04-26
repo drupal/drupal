@@ -9,7 +9,7 @@ namespace Drupal\Core\Entity;
 
 use IteratorAggregate;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\TypedData\ContextAwareInterface;
+use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
  * Provides backwards compatible (BC) access to entity fields.
@@ -229,7 +229,7 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
   /**
    * Forwards the call to the decorated entity.
    */
-  public function set($property_name, $value) {
+  public function set($property_name, $value, $notify = TRUE) {
     // Ensure this works with not yet defined fields.
     if (!isset($this->definitions[$property_name])) {
       return $this->__set($property_name, $value);
@@ -422,6 +422,55 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
   /**
    * Forwards the call to the decorated entity.
    */
+  public function getType() {
+    return $this->decorated->getType();
+  }
+
+  /**
+   * Forwards the call to the decorated entity.
+   */
+  public function getDefinition() {
+    return $this->decorated->getDefinition();
+  }
+
+  /**
+   * Forwards the call to the decorated entity.
+   */
+  public function getValue() {
+    return $this->decorated->getValue();
+  }
+
+  /**
+   * Forwards the call to the decorated entity.
+   */
+  public function setValue($value, $notify = TRUE) {
+    return $this->decorated->setValue($value, $notify);
+  }
+
+  /**
+   * Forwards the call to the decorated entity.
+   */
+  public function getString() {
+    return $this->decorated->getString();
+  }
+
+  /**
+   * Forwards the call to the decorated entity.
+   */
+  public function getConstraints() {
+    return $this->decorated->getConstraints();
+  }
+
+  /**
+   * Forwards the call to the decorated entity.
+   */
+  public function validate() {
+    return $this->decorated->validate();
+  }
+
+  /**
+   * Forwards the call to the decorated entity.
+   */
   public function getName() {
     return $this->decorated->getName();
   }
@@ -450,7 +499,7 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
   /**
    * Forwards the call to the decorated entity.
    */
-  public function setContext($name = NULL, ContextAwareInterface $parent = NULL) {
+  public function setContext($name = NULL, TypedDataInterface $parent = NULL) {
     $this->decorated->setContext($name, $parent);
   }
 
@@ -464,8 +513,14 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
   /**
    * Forwards the call to the decorated entity.
    */
+  public function onChange($property_name) {
+    $this->decorated->onChange($property_name);
+  }
+
+  /**
+   * Forwards the call to the decorated entity.
+   */
   public function isTranslatable() {
     return $this->decorated->isTranslatable();
   }
-
 }

@@ -449,7 +449,8 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $this->assertEqual($field['foreign keys'][$foreign_key_name]['columns'][$foreign_key_name], 'id', t('Foreign key column name modified after update'));
 
     // Now grab the SQL schema and verify that too.
-    $schema = drupal_get_schema(_field_sql_storage_tablename($field), TRUE);
+    $schemas = _field_sql_storage_schema($field);
+    $schema = $schemas[_field_sql_storage_tablename($field)];
     $this->assertEqual(count($schema['foreign keys']), 1, 'There is 1 foreign key in the schema');
     $foreign_key = reset($schema['foreign keys']);
     $foreign_key_column = _field_sql_storage_columnname($field['field_name'], $foreign_key_name);
