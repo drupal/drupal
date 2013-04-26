@@ -1,41 +1,6 @@
-(function ($, Drupal) {
+(function ($, Modernizr, Drupal) {
 
 "use strict";
-
-/**
- * Details feature detection.
- *
- * @todo This is a stop-gap fix only. collapse.js needs to be replaced with a
- *   proper HTML5 details polyfill.
- *
- * @author Mathias Bynens
- * @see http://mathiasbynens.be/notes/html5-details-jquery
- */
-var isDetailsSupported = (function (doc) {
-  var el = doc.createElement('details'),
-      fake,
-      root,
-      diff;
-  if (!('open' in el)) {
-    return false;
-  }
-  root = doc.body || (function () {
-    var de = doc.documentElement;
-    fake = true;
-    return de.insertBefore(doc.createElement('body'), de.firstElementChild || de.firstChild);
-  }());
-  el.innerHTML = '<summary>a</summary>b';
-  el.style.display = 'block';
-  root.appendChild(el);
-  diff = el.offsetHeight;
-  el.open = true;
-  diff = diff !== el.offsetHeight;
-  root.removeChild(el);
-  if (fake) {
-    root.parentNode.removeChild(root);
-  }
-  return diff;
-}(document));
 
 /**
  * The collapsible details object represents a single collapsible details element.
@@ -53,7 +18,7 @@ function CollapsibleDetails(node, settings) {
   // element that is targeted by the URI fragment identifier.
   var anchor = location.hash && location.hash !== '#' ? ', ' + location.hash : '';
   if (this.$node.find('.error' + anchor).length) {
-    this.$node.prop('open', true);
+    this.$node.attr('open', true);
   }
   // Initialize and setup the summary,
   this.setupSummary();
@@ -96,12 +61,12 @@ $.extend(CollapsibleDetails.prototype, {
     var $legend = this.$node.find('> summary');
 
     $('<span class="details-summary-prefix element-invisible"></span>')
-      .append(this.$node.prop('open') ? Drupal.t('Hide') : Drupal.t('Show'))
+      .append(this.$node.attr('open') ? Drupal.t('Hide') : Drupal.t('Show'))
       .prependTo($legend)
       .after(' ');
 
     // .wrapInner() does not retain bound events.
-    var $link = $('<a class="details-title"></a>')
+    $('<a class="details-title"></a>')
       .attr('href', '#' + this.$node.attr('id'))
       .prepend($legend.contents())
       .appendTo($legend)
@@ -130,7 +95,7 @@ $.extend(CollapsibleDetails.prototype, {
     if (this.animating) {
       return;
     }
-    if (!this.$node.prop('open')) {
+    if (!this.$node.attr('open')) {
       var $content = this.$node.find('> .details-wrapper').hide();
       this.$node
         .trigger({ type:'collapsed', value:false })
@@ -154,7 +119,7 @@ $.extend(CollapsibleDetails.prototype, {
    * Completed opening details element.
    */
   onCompleteSlideDown: function () {
-    this.$node.prop('open', true);
+    this.$node.attr('open', true);
     this.$node.trigger('completeSlideDown');
     this.animating = false;
   },
@@ -162,7 +127,7 @@ $.extend(CollapsibleDetails.prototype, {
    * Completed closing details element.
    */
   onCompleteSlideUp: function () {
-    this.$node.prop('open', false);
+    this.$node.attr('open', false);
     this.$node
       .find('> summary span.details-summary-prefix').html(Drupal.t('Show'));
     this.$node.trigger('completeSlideUp');
@@ -172,7 +137,7 @@ $.extend(CollapsibleDetails.prototype, {
 
 Drupal.behaviors.collapse = {
   attach: function (context, settings) {
-    if (isDetailsSupported) {
+    if (Modernizr.details) {
       return;
     }
     var $collapsibleDetails = $(context).find('details').once('collapse');
@@ -187,4 +152,4 @@ Drupal.behaviors.collapse = {
 // Expose constructor in the public space.
 Drupal.CollapsibleDetails = CollapsibleDetails;
 
-})(jQuery, Drupal);
+})(jQuery, Modernizr, Drupal);
