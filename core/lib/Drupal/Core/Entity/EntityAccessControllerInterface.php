@@ -16,10 +16,13 @@ use Drupal\user\Plugin\Core\Entity\User;
 interface EntityAccessControllerInterface {
 
   /**
-   * Checks 'view' access for a given entity or entity translation.
+   * Checks access to an operation on a given entity or entity translation.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity for which to check 'view' access.
+   *   The entity for which to check access.
+   * @param string $operation
+   *   The operation access should be checked for.
+   *   Usually one of "view", "create", "update" or "delete".
    * @param string $langcode
    *   (optional) The language code for which to check access. Defaults to
    *   LANGUAGE_DEFAULT.
@@ -30,61 +33,11 @@ interface EntityAccessControllerInterface {
    * @return bool
    *   TRUE if access was granted, FALSE otherwise.
    */
-  public function viewAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL);
-
-  /**
-   * Checks 'create' access for a given entity or entity translation.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity for which to check 'create' access.
-   * @param string $langcode
-   *   (optional) The language code for which to check access. Defaults to
-   *   LANGUAGE_DEFAULT.
-   * @param \Drupal\user\Plugin\Core\Entity\User $account
-   *   (optional) The user for which to check access, or NULL to check access
-   *   for the current user. Defaults to NULL.
-   *
-   * @return bool
-   *   TRUE if access was granted, FALSE otherwise.
-   */
-  public function createAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL);
-
-  /**
-   * Checks 'update' access for a given entity or entity translation.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity to check 'update' access.
-   * @param string $langcode
-   *   (optional) The language code for which to check access. Defaults to
-   *   LANGUAGE_DEFAULT.
-   * @param \Drupal\user\Plugin\Core\Entity\User $account
-   *   (optional) The user for which to check access, or NULL to check access
-   *   for the current user. Defaults to NULL.
-   *
-   * @return bool
-   *   TRUE if access was granted, FALSE otherwise.
-   */
-  public function updateAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL);
-
-  /**
-   * Checks 'delete' access for a given entity or entity translation.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity for which to check 'delete' access.
-   * @param string $langcode
-   *   (optional) The language code for which to check access. Defaults to
-   *   LANGUAGE_DEFAULT.
-   * @param \Drupal\user\Plugin\Core\Entity\User $account
-   *   (optional) The user for which to check access, or NULL to check access
-   *   for the current user. Defaults to NULL.
-   *
-   * @return bool
-   *   TRUE if access was granted, FALSE otherwise.
-   */
-  public function deleteAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL);
+  public function access(EntityInterface $entity, $operation, $langcode = LANGUAGE_DEFAULT, User $account = NULL);
 
   /**
    * Clears all cached access checks.
    */
   public function resetCache();
+
 }

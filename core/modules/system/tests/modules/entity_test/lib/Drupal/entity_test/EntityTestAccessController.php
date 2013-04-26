@@ -17,34 +17,18 @@ use Drupal\user\Plugin\Core\Entity\User;
 class EntityTestAccessController extends EntityAccessController {
 
   /**
-   * Implements \Drupal\Core\Entity\EntityAccessControllerInterface::viewAccess().
+   * {@inheritdoc}
    */
-  public function viewAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    if ($langcode != LANGUAGE_DEFAULT) {
-      return user_access('view test entity translations', $account);
+  protected function checkAccess(EntityInterface $entity, $operation, $langcode, User $account) {
+    if ($operation === 'view') {
+      if ($langcode != LANGUAGE_DEFAULT) {
+        return user_access('view test entity translations', $account);
+      }
+      return user_access('view test entity', $account);
     }
-    return user_access('view test entity', $account);
-  }
-
-  /**
-   * Implements \Drupal\Core\Entity\EntityAccessControllerInterface::createAccess().
-   */
-  public function createAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return user_access('administer entity_test content', $account);
-  }
-
-  /**
-   * Implements \Drupal\Core\Entity\EntityAccessControllerInterface::updateAccess().
-   */
-  public function updateAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return user_access('administer entity_test content', $account);
-  }
-
-  /**
-   * Implements \Drupal\Core\Entity\EntityAccessControllerInterface::deleteAccess().
-   */
-  public function deleteAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return user_access('administer entity_test content', $account);
+    elseif (in_array($operation, array('create', 'update', 'delete'))) {
+      return user_access('administer entity_test content', $account);
+    }
   }
 
 }

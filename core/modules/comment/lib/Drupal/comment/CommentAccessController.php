@@ -16,45 +16,33 @@ use Drupal\user\Plugin\Core\Entity\User;
  *
  * @see \Drupal\comment\Plugin\Core\Entity\Comment.
  */
-class CommentAccessController extends EntityAccessController implements CommentAccessControllerInterface {
+class CommentAccessController extends EntityAccessController {
 
   /**
-   * Overrides \Drupal\Core\Entity\EntityAccessController::viewAccess().
+   * {@inheritdoc}
    */
-  public function viewAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return user_access('access comments', $account);
-  }
+  protected function checkAccess(EntityInterface $entity, $operation, $langcode, User $account) {
+    switch ($operation) {
+      case 'view':
+        return user_access('access comments', $account);
+        break;
 
-  /**
-   * Overrides \Drupal\Core\Entity\EntityAccessController::createAccess().
-   */
-  public function createAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return user_access('post comments', $account);
-  }
+      case 'create':
+        return user_access('post comments', $account);
+        break;
 
-  /**
-   * Overrides \Drupal\Core\Entity\EntityAccessController::updateAccess().
-   */
-  public function updateAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    // If no user is specified fill in the current one.
-    if (!isset($account)) {
-      $account = $GLOBALS['user'];
+      case 'update':
+        return ($account->uid && $account->uid == $entity->uid->value && $entity->status->value == COMMENT_PUBLISHED && user_access('edit own comments', $account)) || user_access('administer comments', $account);
+        break;
+
+      case 'delete':
+        return user_access('administer comments', $account);
+        break;
+
+      case 'approve':
+        return user_access('administer comments', $account);
+        break;
     }
-    return ($account->uid && $account->uid == $entity->uid->value && $entity->status->value == COMMENT_PUBLISHED && user_access('edit own comments', $account)) || user_access('administer comments', $account);
-  }
-
-  /**
-   * Overrides \Drupal\Core\Entity\EntityAccessController::deleteAccess().
-   */
-  public function deleteAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return user_access('administer comments', $account);
-  }
-
-  /**
-   * Implements \Drupal\comment\CommentAccessControllerInterface::approveAccess().
-   */
-  public function approveAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return user_access('administer comments', $account);
   }
 
 }

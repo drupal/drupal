@@ -17,10 +17,12 @@ use Drupal\user\Plugin\Core\Entity\User;
 class BlockAccessController extends EntityAccessController {
 
   /**
-   * Overrides \Drupal\Core\Entity\EntityAccessController::viewAccess().
+   * {@inheritdoc}
    */
-  public function viewAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return $entity->getPlugin()->access();
+  protected function checkAccess(EntityInterface $entity, $operation, $langcode, User $account) {
+    if ($operation === 'view') {
+      return $entity->getPlugin()->access();
+    }
   }
 
 }

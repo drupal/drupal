@@ -19,12 +19,13 @@ class ShortcutAccessController extends EntityAccessController {
   /**
    * {@inheritdoc}
    */
-  public function deleteAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    if (!user_access('administer shortcuts')) {
-      return FALSE;
+  protected function checkAccess(EntityInterface $entity, $operation, $langcode, User $account) {
+    if ($operation == 'delete') {
+      if (!user_access('administer shortcuts', $account)) {
+        return FALSE;
+      }
+      return $entity->id() != 'default';
     }
-
-    return $entity->id() != 'default';
   }
 
 }

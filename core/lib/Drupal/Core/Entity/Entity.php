@@ -258,10 +258,9 @@ class Entity implements IteratorAggregate, EntityInterface {
    * Implements \Drupal\Core\TypedData\AccessibleInterface::access().
    */
   public function access($operation = 'view', \Drupal\user\Plugin\Core\Entity\User $account = NULL) {
-    $method = $operation . 'Access';
     return drupal_container()->get('plugin.manager.entity')
       ->getAccessController($this->entityType)
-      ->$method($this, LANGUAGE_DEFAULT, $account);
+      ->access($this, $operation, LANGUAGE_DEFAULT, $account);
   }
 
   /**

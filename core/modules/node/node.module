@@ -2546,8 +2546,7 @@ function node_access($op, $node, $account = NULL, $langcode = NULL) {
     $account = user_load($account->uid);
   }
 
-  $method = $op . 'Access';
-  return entity_access_controller('node')->$method($node, $langcode, $account);
+  return entity_access_controller('node')->access($node, $op, $langcode, $account);
 }
 
 /**
