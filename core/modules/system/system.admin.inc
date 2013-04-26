@@ -1105,7 +1105,7 @@ function system_modules_confirm_form($modules, $storage) {
     $items[] = format_plural(count($info['depends']), 'The @module module is missing, so the following module will be disabled: @depends.', 'The @module module is missing, so the following modules will be disabled: @depends.', $t_argument);
   }
 
-  $form['text'] = array('#markup' => theme('item_list', array('items' => $items)));
+  $form['modules'] = array('#theme' => 'item_list', '#items' => $items);
 
     // Set some default form values
   $form = confirm_form(
@@ -1357,7 +1357,8 @@ function system_modules_uninstall_confirm_form($storage) {
   if (isset($uninstall)) {
     $form['#confirmed'] = TRUE;
     $form['uninstall']['#tree'] = TRUE;
-    $form['modules'] = array('#markup' => '<p>' . t('The following modules will be completely uninstalled from your site, and <em>all data from these modules will be lost</em>!') . '</p>' . theme('item_list', array('items' => $uninstall)));
+    $form['text'] = array('#markup' => '<p>' . t('The following modules will be completely uninstalled from your site, and <em>all data from these modules will be lost</em>!') . '</p>');
+    $form['modules'] = array('#theme' => 'item_list', '#items' => $uninstall);
     $form = confirm_form(
       $form,
       t('Confirm uninstall'),
