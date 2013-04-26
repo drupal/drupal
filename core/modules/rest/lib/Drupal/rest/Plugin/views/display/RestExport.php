@@ -216,6 +216,7 @@ class RestExport extends PathPluginBase {
     // Wrap the output in a pre tag if this is for a live preview.
     if (!empty($this->view->live_preview)) {
       $build['#prefix'] = '<pre>';
+      $build['#markup'] = check_plain($build['#markup']);
       $build['#suffix'] = '</pre>';
     }
 

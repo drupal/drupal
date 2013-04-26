@@ -221,4 +221,30 @@ class StyleSerializerTest extends PluginTestBase {
     }
   }
 
+  /**
+   * Tests the preview output for json output.
+   */
+  public function testPreview() {
+    $view = views_get_view('test_serializer_display_entity');
+    $view->setDisplay('rest_export_1');
+    $this->executeView($view);
+
+    // Get the serializer service.
+    $serializer = $this->container->get('serializer');
+
+    $entities = array();
+    foreach ($view->result as $row) {
+      $entities[] = $row->_entity;
+    }
+
+    $expected = check_plain($serializer->serialize($entities, 'hal_json'));
+
+    $view->display_handler->setContentType('hal_json');
+    $view->live_preview = TRUE;
+
+    $build = $view->preview();
+    $rendered_json = $build['#markup'];
+    $this->assertEqual($rendered_json, $expected, 'Ensure the previewed json is escaped.');
+  }
+
 }
