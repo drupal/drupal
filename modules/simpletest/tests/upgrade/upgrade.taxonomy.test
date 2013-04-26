@@ -46,15 +46,15 @@ class UpgradePathTaxonomyTestCase extends UpgradePathTestCase {
    * Basic tests for the taxonomy upgrade.
    */
   public function testTaxonomyUpgrade() {
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Visit the front page to assert for PHP warning and errors.
     $this->drupalGet('');
 
     // Check that taxonomy_vocabulary_node_type and taxonomy_term_node have been
     // removed.
-    $this->assertFalse(db_table_exists('taxonomy_vocabulary_node_type'), t('taxonomy_vocabulary_node_type has been removed.'));
-    $this->assertFalse(db_table_exists('taxonomy_term_node'), t('taxonomy_term_node has been removed.'));
+    $this->assertFalse(db_table_exists('taxonomy_vocabulary_node_type'), 'taxonomy_vocabulary_node_type has been removed.');
+    $this->assertFalse(db_table_exists('taxonomy_term_node'), 'taxonomy_term_node has been removed.');
 
     // Check that the node type 'page' has been associated to a taxonomy
     // reference field for each vocabulary.
@@ -66,7 +66,7 @@ class UpgradePathTaxonomyTestCase extends UpgradePathTestCase {
     $inst_keys = array_keys($instances);
     sort($voc_keys);
     sort($inst_keys);
-    $this->assertEqual($voc_keys, $inst_keys, t('Node type page has instances for every vocabulary.'));
+    $this->assertEqual($voc_keys, $inst_keys, 'Node type page has instances for every vocabulary.');
 
     // Ensure instance variables are getting through.
     foreach ($instances as $instance) {
@@ -80,13 +80,13 @@ class UpgradePathTaxonomyTestCase extends UpgradePathTestCase {
     // the taxonomyextra field.
     $instances = $this->instanceVocabularies('node', 'story');
     $field_names = array_flip($instances);
-    $this->assertEqual(count($field_names), 1, t('Only one taxonomy term field instance exists for story nodes'));
-    $this->assertEqual(key($field_names), 'taxonomyextra', t('Only the excess taxonomy term field is used on story nodes'));
+    $this->assertEqual(count($field_names), 1, 'Only one taxonomy term field instance exists for story nodes');
+    $this->assertEqual(key($field_names), 'taxonomyextra', 'Only the excess taxonomy term field is used on story nodes');
 
     // Check that the node type 'poll' has been associated to no taxonomy
     // reference field.
     $instances = $this->instanceVocabularies('node', 'poll');
-    $this->assertTrue(empty($instances), t('Node type poll has no taxonomy term reference field instances.'));
+    $this->assertTrue(empty($instances), 'Node type poll has no taxonomy term reference field instances.');
 
     // Check that each node of type 'page' and 'story' is associated to all the
     // terms except terms whose ID is equal to the node ID or is equal to the
@@ -147,14 +147,14 @@ class UpgradePathTaxonomyTestCase extends UpgradePathTestCase {
         if (!$should_be_displayed) {
           // Look for any link with the term path.
           $links = $this->xpath('//a[@href=:term_path]', array(':term_path' => $term_path));
-          $this->assertFalse($links, t('Term %name (@field) is not displayed on node %nid', $args));
+          $this->assertFalse($links, format_string('Term %name (@field) is not displayed on node %nid', $args));
         }
         else {
           // Look for a link with the term path inside the correct field.
           // We search for "SPACE + class + SPACE" to avoid matching a substring
           // of the class.
           $links = $this->xpath('//div[contains(concat(" ", normalize-space(@class), " "), :field_class)]//a[@href=:term_path]', array(':field_class' => ' ' . $field_class . ' ', ':term_path' => $term_path));
-          $this->assertTrue($links, t('Term %name (@field) is displayed on node %nid', $args));
+          $this->assertTrue($links, format_string('Term %name (@field) is displayed on node %nid', $args));
         }
       }
 
@@ -162,7 +162,7 @@ class UpgradePathTaxonomyTestCase extends UpgradePathTestCase {
       // ID 0. Make sure we ignored this instead of generating a bogus term.
       if ($node->nid == 1) {
         $link = l($term->name, 'taxonomy/term/0');
-        $this->assertNoRaw($link, t('Bogus term (tid 0) is not displayed on node 1 vid %old_vid.', $args));
+        $this->assertNoRaw($link, format_string('Bogus term (tid 0) is not displayed on node 1 vid %old_vid.', $args));
       }
 
       // The first 12 nodes have two revisions. For nodes with
@@ -170,7 +170,7 @@ class UpgradePathTaxonomyTestCase extends UpgradePathTestCase {
       // to terms whose ID is equal to the node ID or 49 less the node ID.
       $revisions = node_revision_list($node);
       if ($node->nid < 13) {
-        $this->assertEqual(count($revisions), 2, t('Node %nid has two revisions.', $args));
+        $this->assertEqual(count($revisions), 2, format_string('Node %nid has two revisions.', $args));
         $last_rev = end($revisions);
         $args['%old_vid'] = $last_rev->vid;
 
@@ -183,13 +183,13 @@ class UpgradePathTaxonomyTestCase extends UpgradePathTestCase {
 
         $term = $terms[$node->nid];
         $link = l($term->name, 'taxonomy/term/' . $term->tid);
-        $this->assertRaw($link, t('Term %name (@field) is displayed on node %nid vid %old_vid.', $args));
+        $this->assertRaw($link, format_string('Term %name (@field) is displayed on node %nid vid %old_vid.', $args));
         $term = $terms[49-$node->nid];
         $link = l($term->name, 'taxonomy/term/' . $term->tid);
-        $this->assertRaw($link, t('Term %name (@field) is displayed on node %nid %old_vid.', $args));
+        $this->assertRaw($link, format_string('Term %name (@field) is displayed on node %nid %old_vid.', $args));
       }
       else {
-        $this->assertEqual(count($revisions), 1, t('Node %nid has one revision.', $args));
+        $this->assertEqual(count($revisions), 1, format_string('Node %nid has one revision.', $args));
       }
     }
   }

@@ -34,7 +34,7 @@ class FieldUpdatePathTestCase extends UpdatePathTestCase {
    * Tests that the update is successful.
    */
   public function testFilledUpgrade() {
-    $this->assertTrue($this->performUpgrade(), t('The update was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The update was completed successfully.');
     $expected_settings = array(
       'extra_fields' => array(
         'display' => array(

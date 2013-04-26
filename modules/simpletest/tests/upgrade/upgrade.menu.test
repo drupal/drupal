@@ -27,7 +27,7 @@ class MenuUpgradePathTestCase extends UpgradePathTestCase {
    * Test a successful upgrade.
    */
   public function testMenuUpgrade() {
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Test the migration of "Default menu for content" setting to individual
     // node types.

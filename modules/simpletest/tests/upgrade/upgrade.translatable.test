@@ -28,7 +28,7 @@ class TranslatableUpgradePathTestCase extends UpgradePathTestCase {
    * Test a successful upgrade (no negotiation).
    */
   public function testTranslatableUpgrade() {
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // The D6 database contains the english node "First translatable page" with
     // nid 53.
@@ -39,12 +39,12 @@ class TranslatableUpgradePathTestCase extends UpgradePathTestCase {
 
     // Check whether the node displays properly.
     $this->drupalGet("node/$nid");
-    $this->assertText($body, t('Translatable node body displays properly'));
+    $this->assertText($body, 'Translatable node body displays properly');
 
     // Retrieve node object, ensure that both the body and the teaser has
     // survived upgrade properly.
     $node = $this->drupalGetNodeByTitle($title);
-    $this->assertTrue($node != NULL, t('Node @title was loaded', array('@title' => $title)));
+    $this->assertTrue($node != NULL, format_string('Node @title was loaded', array('@title' => $title)));
     $this->assertEqual($node->body[LANGUAGE_NONE][0]['value'], $body, 'Body of the node survived upgrade properly');
     $this->assertEqual($node->body[LANGUAGE_NONE][0]['summary'], $teaser, 'Teaser of the node survived upgrade properly');
   }

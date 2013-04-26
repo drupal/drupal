@@ -29,7 +29,7 @@ class UploadUpgradePathTestCase extends UpgradePathTestCase {
    * Test a successful upgrade.
    */
   public function testUploadUpgrade() {
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node');
     $query->entityCondition('bundle', 'page');

@@ -33,22 +33,22 @@ class ThemeTestCase extends DrupalWebTestCase {
     variable_set('site_frontpage', 'nobody-home');
     $args = array('node', '1', 'edit');
     $suggestions = theme_get_suggestions($args, 'page');
-    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1', 'page__node__edit'), t('Found expected node edit page suggestions'));
+    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1', 'page__node__edit'), 'Found expected node edit page suggestions');
     // Check attack vectors.
     $args = array('node', '\\1');
     $suggestions = theme_get_suggestions($args, 'page');
-    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), t('Removed invalid \\ from suggestions'));
+    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), 'Removed invalid \\ from suggestions');
     $args = array('node', '1/');
     $suggestions = theme_get_suggestions($args, 'page');
-    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), t('Removed invalid / from suggestions'));
+    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), 'Removed invalid / from suggestions');
     $args = array('node', "1\0");
     $suggestions = theme_get_suggestions($args, 'page');
-    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), t('Removed invalid \\0 from suggestions'));
+    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), 'Removed invalid \\0 from suggestions');
     // Define path with hyphens to be used to generate suggestions.
     $args = array('node', '1', 'hyphen-path');
     $result = array('page__node', 'page__node__%', 'page__node__1', 'page__node__hyphen_path');
     $suggestions = theme_get_suggestions($args, 'page');
-    $this->assertEqual($suggestions, $result, t('Found expected page suggestions for paths containing hyphens.'));
+    $this->assertEqual($suggestions, $result, 'Found expected page suggestions for paths containing hyphens.');
   }
 
   /**
@@ -78,7 +78,7 @@ class ThemeTestCase extends DrupalWebTestCase {
     $suggestions = theme_get_suggestions(explode('/', $_GET['q']), 'page');
     // Set it back to not annoy the batch runner.
     $_GET['q'] = $q;
-    $this->assertTrue(in_array('page__front', $suggestions), t('Front page template was suggested.'));
+    $this->assertTrue(in_array('page__front', $suggestions), 'Front page template was suggested.');
   }
 
   /**
@@ -86,7 +86,7 @@ class ThemeTestCase extends DrupalWebTestCase {
    */
   function testAlter() {
     $this->drupalGet('theme-test/alter');
-    $this->assertText('The altered data is test_theme_theme_test_alter_alter was invoked.', t('The theme was able to implement an alter hook during page building before anything was rendered.'));
+    $this->assertText('The altered data is test_theme_theme_test_alter_alter was invoked.', 'The theme was able to implement an alter hook during page building before anything was rendered.');
   }
 
   /**
@@ -101,7 +101,7 @@ class ThemeTestCase extends DrupalWebTestCase {
     // test theme. First we test with CSS aggregation disabled.
     variable_set('preprocess_css', 0);
     $this->drupalGet('theme-test/suggestion');
-    $this->assertNoText('system.base.css', t('The theme\'s .info file is able to override a module CSS file from being added to the page.'));
+    $this->assertNoText('system.base.css', 'The theme\'s .info file is able to override a module CSS file from being added to the page.');
 
     // Also test with aggregation enabled, simply ensuring no PHP errors are
     // triggered during drupal_build_css_cache() when a source file doesn't
@@ -131,19 +131,19 @@ class ThemeTestCase extends DrupalWebTestCase {
   function testListThemes() {
     $themes = list_themes();
     // Check if drupal_theme_access() retrieves enabled themes properly from list_themes().
-    $this->assertTrue(drupal_theme_access('test_theme'), t('Enabled theme detected'));
+    $this->assertTrue(drupal_theme_access('test_theme'), 'Enabled theme detected');
     // Check if list_themes() returns disabled themes.
-    $this->assertTrue(array_key_exists('test_basetheme', $themes), t('Disabled theme detected'));
+    $this->assertTrue(array_key_exists('test_basetheme', $themes), 'Disabled theme detected');
     // Check for base theme and subtheme lists.
     $base_theme_list = array('test_basetheme' => 'Theme test base theme');
     $sub_theme_list = array('test_subtheme' => 'Theme test subtheme');
-    $this->assertIdentical($themes['test_basetheme']->sub_themes, $sub_theme_list, t('Base theme\'s object includes list of subthemes.'));
-    $this->assertIdentical($themes['test_subtheme']->base_themes, $base_theme_list, t('Subtheme\'s object includes list of base themes.'));
+    $this->assertIdentical($themes['test_basetheme']->sub_themes, $sub_theme_list, 'Base theme\'s object includes list of subthemes.');
+    $this->assertIdentical($themes['test_subtheme']->base_themes, $base_theme_list, 'Subtheme\'s object includes list of base themes.');
     // Check for theme engine in subtheme.
-    $this->assertIdentical($themes['test_subtheme']->engine, 'phptemplate', t('Subtheme\'s object includes the theme engine.'));
+    $this->assertIdentical($themes['test_subtheme']->engine, 'phptemplate', 'Subtheme\'s object includes the theme engine.');
     // Check for theme engine prefix.
-    $this->assertIdentical($themes['test_basetheme']->prefix, 'phptemplate', t('Base theme\'s object includes the theme engine prefix.'));
-    $this->assertIdentical($themes['test_subtheme']->prefix, 'phptemplate', t('Subtheme\'s object includes the theme engine prefix.'));
+    $this->assertIdentical($themes['test_basetheme']->prefix, 'phptemplate', 'Base theme\'s object includes the theme engine prefix.');
+    $this->assertIdentical($themes['test_subtheme']->prefix, 'phptemplate', 'Subtheme\'s object includes the theme engine prefix.');
   }
 
   /**
@@ -151,9 +151,9 @@ class ThemeTestCase extends DrupalWebTestCase {
    */
   function testThemeGetSetting() {
     $GLOBALS['theme_key'] = 'test_theme';
-    $this->assertIdentical(theme_get_setting('theme_test_setting'), 'default value', t('theme_get_setting() uses the default theme automatically.'));
-    $this->assertNotEqual(theme_get_setting('subtheme_override', 'test_basetheme'), theme_get_setting('subtheme_override', 'test_subtheme'), t('Base theme\'s default settings values can be overridden by subtheme.'));
-    $this->assertIdentical(theme_get_setting('basetheme_only', 'test_subtheme'), 'base theme value', t('Base theme\'s default settings values are inherited by subtheme.'));
+    $this->assertIdentical(theme_get_setting('theme_test_setting'), 'default value', 'theme_get_setting() uses the default theme automatically.');
+    $this->assertNotEqual(theme_get_setting('subtheme_override', 'test_basetheme'), theme_get_setting('subtheme_override', 'test_subtheme'), 'Base theme\'s default settings values can be overridden by subtheme.');
+    $this->assertIdentical(theme_get_setting('basetheme_only', 'test_subtheme'), 'base theme value', 'Base theme\'s default settings values are inherited by subtheme.');
   }
 }
 
@@ -177,8 +177,8 @@ class ThemeTableTestCase extends DrupalWebTestCase {
     $rows = array(array(1,2,3), array(4,5,6), array(7,8,9));
     $this->content = theme('table', array('header' => $header, 'rows' => $rows));
     $js = drupal_add_js();
-    $this->assertTrue(isset($js['misc/tableheader.js']), t('tableheader.js was included when $sticky = TRUE.'));
-    $this->assertRaw('sticky-enabled',  t('Table has a class of sticky-enabled when $sticky = TRUE.'));
+    $this->assertTrue(isset($js['misc/tableheader.js']), 'tableheader.js was included when $sticky = TRUE.');
+    $this->assertRaw('sticky-enabled', 'Table has a class of sticky-enabled when $sticky = TRUE.');
     drupal_static_reset('drupal_add_js');
   }
 
@@ -193,8 +193,8 @@ class ThemeTableTestCase extends DrupalWebTestCase {
     $colgroups = array();
     $this->content = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => $attributes, 'caption' => $caption, 'colgroups' => $colgroups, 'sticky' => FALSE));
     $js = drupal_add_js();
-    $this->assertFalse(isset($js['misc/tableheader.js']), t('tableheader.js was not included because $sticky = FALSE.'));
-    $this->assertNoRaw('sticky-enabled',  t('Table does not have a class of sticky-enabled because $sticky = FALSE.'));
+    $this->assertFalse(isset($js['misc/tableheader.js']), 'tableheader.js was not included because $sticky = FALSE.');
+    $this->assertNoRaw('sticky-enabled', 'Table does not have a class of sticky-enabled because $sticky = FALSE.');
     drupal_static_reset('drupal_add_js');
   }
 
@@ -211,8 +211,8 @@ class ThemeTableTestCase extends DrupalWebTestCase {
       ),
     );
     $this->content = theme('table', array('header' => $header, 'rows' => array(), 'empty' => t('No strings available.')));
-    $this->assertRaw('<tr class="odd"><td colspan="3" class="empty message">No strings available.</td>', t('Correct colspan was set on empty message.'));
-    $this->assertRaw('<thead><tr><th>Header 1</th>', t('Table header was printed.'));
+    $this->assertRaw('<tr class="odd"><td colspan="3" class="empty message">No strings available.</td>', 'Correct colspan was set on empty message.');
+    $this->assertRaw('<thead><tr><th>Header 1</th>', 'Table header was printed.');
   }
 
 }
@@ -321,14 +321,14 @@ class ThemeLinksTest extends DrupalWebTestCase {
     $html = drupal_render($render_array);
     $dom = new DOMDocument();
     $dom->loadHTML($html);
-    $this->assertEqual($dom->getElementsByTagName('ul')->length, 1, t('One "ul" tag found in the rendered HTML.'));
+    $this->assertEqual($dom->getElementsByTagName('ul')->length, 1, 'One "ul" tag found in the rendered HTML.');
     $list_elements = $dom->getElementsByTagName('li');
-    $this->assertEqual($list_elements->length, 3, t('Three "li" tags found in the rendered HTML.'));
-    $this->assertEqual($list_elements->item(0)->nodeValue, 'Parent link original', t('First expected link found.'));
-    $this->assertEqual($list_elements->item(1)->nodeValue, 'First child link', t('Second expected link found.'));
-    $this->assertEqual($list_elements->item(2)->nodeValue, 'Second child link', t('Third expected link found.'));
-    $this->assertIdentical(strpos($html, 'Parent link copy'), FALSE, t('"Parent link copy" link not found.'));
-    $this->assertIdentical(strpos($html, 'Third child link'), FALSE, t('"Third child link" link not found.'));
+    $this->assertEqual($list_elements->length, 3, 'Three "li" tags found in the rendered HTML.');
+    $this->assertEqual($list_elements->item(0)->nodeValue, 'Parent link original', 'First expected link found.');
+    $this->assertEqual($list_elements->item(1)->nodeValue, 'First child link', 'Second expected link found.');
+    $this->assertEqual($list_elements->item(2)->nodeValue, 'Second child link', 'Third expected link found.');
+    $this->assertIdentical(strpos($html, 'Parent link copy'), FALSE, '"Parent link copy" link not found.');
+    $this->assertIdentical(strpos($html, 'Third child link'), FALSE, '"Third child link" link not found.');
 
     // Now render 'first_child', followed by the rest of the links, and make
     // sure we get two separate <ul>'s with the appropriate links contained
@@ -339,21 +339,21 @@ class ThemeLinksTest extends DrupalWebTestCase {
     // First check the child HTML.
     $dom = new DOMDocument();
     $dom->loadHTML($child_html);
-    $this->assertEqual($dom->getElementsByTagName('ul')->length, 1, t('One "ul" tag found in the rendered child HTML.'));
+    $this->assertEqual($dom->getElementsByTagName('ul')->length, 1, 'One "ul" tag found in the rendered child HTML.');
     $list_elements = $dom->getElementsByTagName('li');
-    $this->assertEqual($list_elements->length, 2, t('Two "li" tags found in the rendered child HTML.'));
-    $this->assertEqual($list_elements->item(0)->nodeValue, 'Parent link copy', t('First expected link found.'));
-    $this->assertEqual($list_elements->item(1)->nodeValue, 'First child link', t('Second expected link found.'));
+    $this->assertEqual($list_elements->length, 2, 'Two "li" tags found in the rendered child HTML.');
+    $this->assertEqual($list_elements->item(0)->nodeValue, 'Parent link copy', 'First expected link found.');
+    $this->assertEqual($list_elements->item(1)->nodeValue, 'First child link', 'Second expected link found.');
     // Then check the parent HTML.
     $dom = new DOMDocument();
     $dom->loadHTML($parent_html);
-    $this->assertEqual($dom->getElementsByTagName('ul')->length, 1, t('One "ul" tag found in the rendered parent HTML.'));
+    $this->assertEqual($dom->getElementsByTagName('ul')->length, 1, 'One "ul" tag found in the rendered parent HTML.');
     $list_elements = $dom->getElementsByTagName('li');
-    $this->assertEqual($list_elements->length, 2, t('Two "li" tags found in the rendered parent HTML.'));
-    $this->assertEqual($list_elements->item(0)->nodeValue, 'Parent link original', t('First expected link found.'));
-    $this->assertEqual($list_elements->item(1)->nodeValue, 'Second child link', t('Second expected link found.'));
-    $this->assertIdentical(strpos($parent_html, 'First child link'), FALSE, t('"First child link" link not found.'));
-    $this->assertIdentical(strpos($parent_html, 'Third child link'), FALSE, t('"Third child link" link not found.'));
+    $this->assertEqual($list_elements->length, 2, 'Two "li" tags found in the rendered parent HTML.');
+    $this->assertEqual($list_elements->item(0)->nodeValue, 'Parent link original', 'First expected link found.');
+    $this->assertEqual($list_elements->item(1)->nodeValue, 'Second child link', 'Second expected link found.');
+    $this->assertIdentical(strpos($parent_html, 'First child link'), FALSE, '"First child link" link not found.');
+    $this->assertIdentical(strpos($parent_html, 'Third child link'), FALSE, '"Third child link" link not found.');
   }
 }
 
@@ -378,8 +378,8 @@ class ThemeHookInitTestCase extends DrupalWebTestCase {
    */
   function testThemeInitializationHookInit() {
     $this->drupalGet('theme-test/hook-init');
-    $this->assertRaw('Themed output generated in hook_init()', t('Themed output generated in hook_init() correctly appears on the page.'));
-    $this->assertRaw('bartik/css/style.css', t("The default theme's CSS appears on the page when the theme system is initialized in hook_init()."));
+    $this->assertRaw('Themed output generated in hook_init()', 'Themed output generated in hook_init() correctly appears on the page.');
+    $this->assertRaw('bartik/css/style.css', "The default theme's CSS appears on the page when the theme system is initialized in hook_init().");
   }
 }
 
@@ -406,7 +406,7 @@ class ThemeFastTestCase extends DrupalWebTestCase {
   function testUserAutocomplete() {
     $this->drupalLogin($this->account);
     $this->drupalGet('user/autocomplete/' . $this->account->name);
-    $this->assertText('registry not initialized', t('The registry was not initialized'));
+    $this->assertText('registry not initialized', 'The registry was not initialized');
   }
 }
 
@@ -428,11 +428,11 @@ class ThemeHtmlTag extends DrupalUnitTestCase {
   function testThemeHtmlTag() {
     // Test auto-closure meta tag generation
     $tag['element'] = array('#tag' => 'meta', '#attributes' => array('name' => 'description', 'content' => 'Drupal test'));
-    $this->assertEqual('<meta name="description" content="Drupal test" />'."\n", theme_html_tag($tag), t('Test auto-closure meta tag generation.'));
+    $this->assertEqual('<meta name="description" content="Drupal test" />'."\n", theme_html_tag($tag), 'Test auto-closure meta tag generation.');
 
     // Test title tag generation
     $tag['element'] = array('#tag' => 'title', '#value' => 'title test');
-    $this->assertEqual('<title>title test</title>'."\n", theme_html_tag($tag), t('Test title tag generation.'));
+    $this->assertEqual('<title>title test</title>'."\n", theme_html_tag($tag), 'Test title tag generation.');
   }
 }
 

@@ -27,7 +27,7 @@ class LocaleUpgradePathTestCase extends UpgradePathTestCase {
    * Test a successful upgrade (no negotiation).
    */
   public function testLocaleUpgrade() {
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // The home page should be in French.
     $this->assertPageInLanguage('', 'fr');
@@ -46,13 +46,13 @@ class LocaleUpgradePathTestCase extends UpgradePathTestCase {
     // LANGUAGE_NEGOTIATION_PATH_DEFAULT.
     $this->variable_set('language_negotiation', 1);
 
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // The home page should be in French.
     $this->assertPageInLanguage('', 'fr');
 
     // The language switcher block should be displayed.
-    $this->assertRaw('block-locale-language', t('The language switcher block is displayed.'));
+    $this->assertRaw('block-locale-language', 'The language switcher block is displayed.');
 
     // The French prefix should not be active because French is the default language.
     $this->drupalGet('fr');
@@ -75,7 +75,7 @@ class LocaleUpgradePathTestCase extends UpgradePathTestCase {
       ->condition('uid', 1)
       ->execute();
 
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Both prefixes should be active.
     $this->assertPageInLanguage('fr', 'fr');
@@ -85,7 +85,7 @@ class LocaleUpgradePathTestCase extends UpgradePathTestCase {
     $this->assertPageInLanguage('', 'en');
 
     // The language switcher block should be displayed.
-    $this->assertRaw('block-locale-language', t('The language switcher block is displayed.'));
+    $this->assertRaw('block-locale-language', 'The language switcher block is displayed.');
   }
 
   /**
@@ -95,13 +95,13 @@ class LocaleUpgradePathTestCase extends UpgradePathTestCase {
     // LANGUAGE_NEGOTIATION_DOMAIN.
     $this->variable_set('language_negotiation', 3);
 
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // The home page should be in French.
     $this->assertPageInLanguage('', 'fr');
 
     // The language switcher block should be displayed.
-    $this->assertRaw('block-locale-language', t('The language switcher block is displayed.'));
+    $this->assertRaw('block-locale-language', 'The language switcher block is displayed.');
 
     // The language switcher block should point to http://en.example.com.
     $language_links = $this->xpath('//ul[contains(@class, :class)]/li/a', array(':class' => 'language-switcher-locale-url'));
@@ -111,7 +111,7 @@ class LocaleUpgradePathTestCase extends UpgradePathTestCase {
         $found_english_link = TRUE;
       }
     }
-    $this->assertTrue($found_english_link, t('The English link points to the correct domain.'));
+    $this->assertTrue($found_english_link, 'The English link points to the correct domain.');
 
     // Both prefixes should be inactive.
     $this->drupalGet('en');

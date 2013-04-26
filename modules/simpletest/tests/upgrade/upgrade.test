@@ -256,7 +256,7 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     // Check if there still are pending updates.
     $this->drupalGet($update_url, array('external' => TRUE));
     $this->drupalPost(NULL, array(), t('Continue'));
-    if (!$this->assertText(t('No pending updates.'), t('No pending updates at the end of the update process.'))) {
+    if (!$this->assertText(t('No pending updates.'), 'No pending updates at the end of the update process.')) {
       return FALSE;
     }
 
@@ -358,14 +358,14 @@ class BasicUpgradePath extends UpgradePathTestCase {
     // Destroy a table that the upgrade process needs.
     db_drop_table('access');
     // Assert that the upgrade fails.
-    $this->assertFalse($this->performUpgrade(FALSE) && $this->pendingUpdates, t('A failed upgrade should return messages.'));
+    $this->assertFalse($this->performUpgrade(FALSE) && $this->pendingUpdates, 'A failed upgrade should return messages.');
   }
 
   /**
    * Test a successful upgrade.
    */
   public function testBasicUpgrade() {
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Hit the frontpage.
     $this->drupalGet('');
@@ -374,7 +374,7 @@ class BasicUpgradePath extends UpgradePathTestCase {
     // Verify that we are still logged in.
     $this->drupalGet('user');
     $this->clickLink(t('Edit'));
-    $this->assertEqual($this->getUrl(), url('user/1/edit', array('absolute' => TRUE)), t('We are still logged in as admin at the end of the upgrade.'));
+    $this->assertEqual($this->getUrl(), url('user/1/edit', array('absolute' => TRUE)), 'We are still logged in as admin at the end of the upgrade.');
 
     // Logout and verify that we can login back in with our initial password.
     $this->drupalLogout();
@@ -394,7 +394,7 @@ class BasicUpgradePath extends UpgradePathTestCase {
     ));
 
     // Test that the site name is correctly displayed.
-    $this->assertText('Drupal 6', t('The site name is correctly displayed.'));
+    $this->assertText('Drupal 6', 'The site name is correctly displayed.');
 
     // Verify that the main admin sections are available.
     $this->drupalGet('admin');
@@ -408,11 +408,11 @@ class BasicUpgradePath extends UpgradePathTestCase {
 
     // Confirm that no {menu_links} entry exists for user/autocomplete.
     $result = db_query('SELECT COUNT(*) FROM {menu_links} WHERE link_path = :user_autocomplete', array(':user_autocomplete' => 'user/autocomplete'))->fetchField();
-    $this->assertFalse($result, t('No {menu_links} entry exists for user/autocomplete'));
+    $this->assertFalse($result, 'No {menu_links} entry exists for user/autocomplete');
 
     // Test that the environment after the upgrade is in a consistent status.
     $update_d6 = variable_get('update_d6', FALSE);
-    $this->assertFalse($update_d6, t('The D6 upgrade flag variable has been correctly disabled.'));
+    $this->assertFalse($update_d6, 'The D6 upgrade flag variable has been correctly disabled.');
   }
 }
 
@@ -446,7 +446,7 @@ class BasicStandardUpdatePath extends UpdatePathTestCase {
    * Tests a successful point release update.
    */
   public function testBasicStandardUpdate() {
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Hit the frontpage.
     $this->drupalGet('');
@@ -455,7 +455,7 @@ class BasicStandardUpdatePath extends UpdatePathTestCase {
     // Verify that we are still logged in.
     $this->drupalGet('user');
     $this->clickLink(t('Edit'));
-    $this->assertEqual($this->getUrl(), url('user/1/edit', array('absolute' => TRUE)), t('We are still logged in as admin at the end of the upgrade.'));
+    $this->assertEqual($this->getUrl(), url('user/1/edit', array('absolute' => TRUE)), 'We are still logged in as admin at the end of the upgrade.');
 
     // Logout and verify that we can login back in with our initial password.
     $this->drupalLogout();
@@ -475,7 +475,7 @@ class BasicStandardUpdatePath extends UpdatePathTestCase {
     ));
 
     // Test that the site name is correctly displayed.
-    $this->assertText('Drupal', t('The site name is correctly displayed.'));
+    $this->assertText('Drupal', 'The site name is correctly displayed.');
 
     // Verify that the main admin sections are available.
     $this->drupalGet('admin');
@@ -489,7 +489,7 @@ class BasicStandardUpdatePath extends UpdatePathTestCase {
 
     // Confirm that no {menu_links} entry exists for user/autocomplete.
     $result = db_query('SELECT COUNT(*) FROM {menu_links} WHERE link_path = :user_autocomplete', array(':user_autocomplete' => 'user/autocomplete'))->fetchField();
-    $this->assertFalse($result, t('No {menu_links} entry exists for user/autocomplete'));
+    $this->assertFalse($result, 'No {menu_links} entry exists for user/autocomplete');
   }
 }
 
@@ -522,7 +522,7 @@ class BasicMinimalUpdatePath extends UpdatePathTestCase {
    * Tests a successful point release update.
    */
   public function testBasicMinimalUpdate() {
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Hit the frontpage.
     $this->drupalGet('');
@@ -531,7 +531,7 @@ class BasicMinimalUpdatePath extends UpdatePathTestCase {
     // Verify that we are still logged in.
     $this->drupalGet('user');
     $this->clickLink(t('Edit'));
-    $this->assertEqual($this->getUrl(), url('user/1/edit', array('absolute' => TRUE)), t('We are still logged in as admin at the end of the upgrade.'));
+    $this->assertEqual($this->getUrl(), url('user/1/edit', array('absolute' => TRUE)), 'We are still logged in as admin at the end of the upgrade.');
 
     // Logout and verify that we can login back in with our initial password.
     $this->drupalLogout();
@@ -551,7 +551,7 @@ class BasicMinimalUpdatePath extends UpdatePathTestCase {
     ));
 
     // Test that the site name is correctly displayed.
-    $this->assertText('Drupal', t('The site name is correctly displayed.'));
+    $this->assertText('Drupal', 'The site name is correctly displayed.');
 
     // Verify that the main admin sections are available.
     $this->drupalGet('admin');
@@ -565,7 +565,7 @@ class BasicMinimalUpdatePath extends UpdatePathTestCase {
 
     // Confirm that no {menu_links} entry exists for user/autocomplete.
     $result = db_query('SELECT COUNT(*) FROM {menu_links} WHERE link_path = :user_autocomplete', array(':user_autocomplete' => 'user/autocomplete'))->fetchField();
-    $this->assertFalse($result, t('No {menu_links} entry exists for user/autocomplete'));
+    $this->assertFalse($result, 'No {menu_links} entry exists for user/autocomplete');
 
     // Confirm that a date format that just differs in the case can be added.
     $admin_date_format = 'j M y';
@@ -613,7 +613,7 @@ class FilledStandardUpdatePath extends UpdatePathTestCase {
    * Tests a successful point release update.
    */
   public function testFilledStandardUpdate() {
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Hit the frontpage.
     $this->drupalGet('');
@@ -622,7 +622,7 @@ class FilledStandardUpdatePath extends UpdatePathTestCase {
     // Verify that we are still logged in.
     $this->drupalGet('user');
     $this->clickLink(t('Edit'));
-    $this->assertEqual($this->getUrl(), url('user/1/edit', array('absolute' => TRUE)), t('We are still logged in as admin at the end of the upgrade.'));
+    $this->assertEqual($this->getUrl(), url('user/1/edit', array('absolute' => TRUE)), 'We are still logged in as admin at the end of the upgrade.');
 
     // Logout and verify that we can login back in with our initial password.
     $this->drupalLogout();
@@ -642,7 +642,7 @@ class FilledStandardUpdatePath extends UpdatePathTestCase {
     ));
 
     // Test that the site name is correctly displayed.
-    $this->assertText('Drupal', t('The site name is correctly displayed.'));
+    $this->assertText('Drupal', 'The site name is correctly displayed.');
 
     // Verify that the main admin sections are available.
     $this->drupalGet('admin');
@@ -656,7 +656,7 @@ class FilledStandardUpdatePath extends UpdatePathTestCase {
 
     // Confirm that no {menu_links} entry exists for user/autocomplete.
     $result = db_query('SELECT COUNT(*) FROM {menu_links} WHERE link_path = :user_autocomplete', array(':user_autocomplete' => 'user/autocomplete'))->fetchField();
-    $this->assertFalse($result, t('No {menu_links} entry exists for user/autocomplete'));
+    $this->assertFalse($result, 'No {menu_links} entry exists for user/autocomplete');
   }
 }
 
@@ -689,7 +689,7 @@ class FilledMinimalUpdatePath extends UpdatePathTestCase {
    * Tests a successful point release update.
    */
   public function testFilledStandardUpdate() {
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Hit the frontpage.
     $this->drupalGet('');
@@ -698,7 +698,7 @@ class FilledMinimalUpdatePath extends UpdatePathTestCase {
     // Verify that we are still logged in.
     $this->drupalGet('user');
     $this->clickLink(t('Edit'));
-    $this->assertEqual($this->getUrl(), url('user/1/edit', array('absolute' => TRUE)), t('We are still logged in as admin at the end of the upgrade.'));
+    $this->assertEqual($this->getUrl(), url('user/1/edit', array('absolute' => TRUE)), 'We are still logged in as admin at the end of the upgrade.');
 
     // Logout and verify that we can login back in with our initial password.
     $this->drupalLogout();
@@ -718,7 +718,7 @@ class FilledMinimalUpdatePath extends UpdatePathTestCase {
     ));
 
     // Test that the site name is correctly displayed.
-    $this->assertText('Drupal', t('The site name is correctly displayed.'));
+    $this->assertText('Drupal', 'The site name is correctly displayed.');
 
     // Verify that the main admin sections are available.
     $this->drupalGet('admin');
@@ -732,6 +732,6 @@ class FilledMinimalUpdatePath extends UpdatePathTestCase {
 
     // Confirm that no {menu_links} entry exists for user/autocomplete.
     $result = db_query('SELECT COUNT(*) FROM {menu_links} WHERE link_path = :user_autocomplete', array(':user_autocomplete' => 'user/autocomplete'))->fetchField();
-    $this->assertFalse($result, t('No {menu_links} entry exists for user/autocomplete'));
+    $this->assertFalse($result, 'No {menu_links} entry exists for user/autocomplete');
   }
 }
