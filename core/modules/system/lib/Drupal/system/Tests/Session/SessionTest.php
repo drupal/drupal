@@ -30,11 +30,11 @@ class SessionTest extends WebTestBase {
    * Tests for drupal_save_session() and drupal_session_regenerate().
    */
   function testSessionSaveRegenerate() {
-    $this->assertFalse(drupal_save_session(),'drupal_save_session() correctly returns FALSE (inside of testing framework) when initially called with no arguments.', t('Session'));
-    $this->assertFalse(drupal_save_session(FALSE), 'drupal_save_session() correctly returns FALSE when called with FALSE.', t('Session'));
-    $this->assertFalse(drupal_save_session(), 'drupal_save_session() correctly returns FALSE when saving has been disabled.', t('Session'));
-    $this->assertTrue(drupal_save_session(TRUE), 'drupal_save_session() correctly returns TRUE when called with TRUE.', t('Session'));
-    $this->assertTrue(drupal_save_session(), 'drupal_save_session() correctly returns TRUE when saving has been enabled.', t('Session'));
+    $this->assertFalse(drupal_save_session(),'drupal_save_session() correctly returns FALSE (inside of testing framework) when initially called with no arguments.', 'Session');
+    $this->assertFalse(drupal_save_session(FALSE), 'drupal_save_session() correctly returns FALSE when called with FALSE.', 'Session');
+    $this->assertFalse(drupal_save_session(), 'drupal_save_session() correctly returns FALSE when saving has been disabled.', 'Session');
+    $this->assertTrue(drupal_save_session(TRUE), 'drupal_save_session() correctly returns TRUE when called with TRUE.', 'Session');
+    $this->assertTrue(drupal_save_session(), 'drupal_save_session() correctly returns TRUE when saving has been enabled.', 'Session');
 
     // Test session hardening code from SA-2008-044.
     $user = $this->drupalCreateUser(array('access content'));
@@ -65,7 +65,7 @@ class SessionTest extends WebTestBase {
     );
     $this->drupalPost('user', $edit, t('Log in'));
     $this->drupalGet('user');
-    $pass = $this->assertText($user->name, format_string('Found name: %name', array('%name' => $user->name)), t('User login'));
+    $pass = $this->assertText($user->name, format_string('Found name: %name', array('%name' => $user->name)), 'User login');
     $this->_logged_in = $pass;
 
     $this->drupalGet('session-test/id');
@@ -88,48 +88,48 @@ class SessionTest extends WebTestBase {
 
     $value_1 = $this->randomName();
     $this->drupalGet('session-test/set/' . $value_1);
-    $this->assertText($value_1, 'The session value was stored.', t('Session'));
+    $this->assertText($value_1, 'The session value was stored.', 'Session');
     $this->drupalGet('session-test/get');
-    $this->assertText($value_1, 'Session correctly returned the stored data for an authenticated user.', t('Session'));
+    $this->assertText($value_1, 'Session correctly returned the stored data for an authenticated user.', 'Session');
 
     // Attempt to write over val_1. If drupal_save_session(FALSE) is working.
     // properly, val_1 will still be set.
     $value_2 = $this->randomName();
     $this->drupalGet('session-test/no-set/' . $value_2);
-    $this->assertText($value_2, 'The session value was correctly passed to session-test/no-set.', t('Session'));
+    $this->assertText($value_2, 'The session value was correctly passed to session-test/no-set.', 'Session');
     $this->drupalGet('session-test/get');
-    $this->assertText($value_1, 'Session data is not saved for drupal_save_session(FALSE).', t('Session'));
+    $this->assertText($value_1, 'Session data is not saved for drupal_save_session(FALSE).', 'Session');
 
     // Switch browser cookie to anonymous user, then back to user 1.
     $this->sessionReset();
     $this->sessionReset($user->uid);
-    $this->assertText($value_1, 'Session data persists through browser close.', t('Session'));
+    $this->assertText($value_1, 'Session data persists through browser close.', 'Session');
 
     // Logout the user and make sure the stored value no longer persists.
     $this->drupalLogout();
     $this->sessionReset();
     $this->drupalGet('session-test/get');
-    $this->assertNoText($value_1, "After logout, previous user's session data is not available.", t('Session'));
+    $this->assertNoText($value_1, "After logout, previous user's session data is not available.", 'Session');
 
     // Now try to store some data as an anonymous user.
     $value_3 = $this->randomName();
     $this->drupalGet('session-test/set/' . $value_3);
-    $this->assertText($value_3, 'Session data stored for anonymous user.', t('Session'));
+    $this->assertText($value_3, 'Session data stored for anonymous user.', 'Session');
     $this->drupalGet('session-test/get');
-    $this->assertText($value_3, 'Session correctly returned the stored data for an anonymous user.', t('Session'));
+    $this->assertText($value_3, 'Session correctly returned the stored data for an anonymous user.', 'Session');
 
     // Try to store data when drupal_save_session(FALSE).
     $value_4 = $this->randomName();
     $this->drupalGet('session-test/no-set/' . $value_4);
-    $this->assertText($value_4, 'The session value was correctly passed to session-test/no-set.', t('Session'));
+    $this->assertText($value_4, 'The session value was correctly passed to session-test/no-set.', 'Session');
     $this->drupalGet('session-test/get');
-    $this->assertText($value_3, 'Session data is not saved for drupal_save_session(FALSE).', t('Session'));
+    $this->assertText($value_3, 'Session data is not saved for drupal_save_session(FALSE).', 'Session');
 
     // Login, the data should persist.
     $this->drupalLogin($user);
     $this->sessionReset($user->uid);
     $this->drupalGet('session-test/get');
-    $this->assertNoText($value_1, 'Session has persisted for an authenticated user after logging out and then back in.', t('Session'));
+    $this->assertNoText($value_1, 'Session has persisted for an authenticated user after logging out and then back in.', 'Session');
 
     // Change session and create another user.
     $user2 = $this->drupalCreateUser(array('access content'));
@@ -280,7 +280,7 @@ class SessionTest extends WebTestBase {
     $this->additionalCurlOptions[CURLOPT_COOKIEFILE] = $this->cookieFile;
     $this->additionalCurlOptions[CURLOPT_COOKIESESSION] = TRUE;
     $this->drupalGet('session-test/get');
-    $this->assertResponse(200, 'Session test module is correctly enabled.', t('Session'));
+    $this->assertResponse(200, 'Session test module is correctly enabled.', 'Session');
   }
 
   /**
