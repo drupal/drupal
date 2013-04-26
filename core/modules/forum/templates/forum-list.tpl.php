@@ -55,8 +55,8 @@
             <span class="element-invisible"><?php print $forum->icon_title; ?></span>
           </div>
           <div class="name"><a href="<?php print $forum->link; ?>"><?php print $forum->label(); ?></a></div>
-          <?php if ($forum->description): ?>
-            <div class="description"><?php print $forum->description; ?></div>
+          <?php if ($forum->description->value): ?>
+            <div class="description"><?php print $forum->description->value; ?></div>
           <?php endif; ?>
         <?php print str_repeat('</div>', $forum->depth); ?>
       </td>

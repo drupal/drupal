@@ -238,7 +238,7 @@ function views_ui_taxonomy_autocomplete_validate($element, &$form_state) {
     foreach ($typed_terms as $typed_term) {
       if ($terms = entity_load_multiple_by_properties('taxonomy_term', array('name' => trim($typed_term), 'vid' => array_keys($vocabularies)))) {
         $term = array_pop($terms);
-        $value['tids'][] = $term->tid;
+        $value['tids'][] = $term->id();
       }
     }
     // Store the term IDs along with the name of the vocabulary. Currently

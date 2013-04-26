@@ -96,9 +96,13 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
    */
   public function create(array $values) {
     // We have to determine the bundle first.
-    // @todo Throw an exception if no bundle is passed and we have a bundle key
-    //   defined.
-    $bundle = $this->bundleKey ? $values[$this->bundleKey] : FALSE;
+    $bundle = FALSE;
+    if ($this->bundleKey) {
+      if (!isset($values[$this->bundleKey])) {
+        throw new EntityStorageException(t('Missing bundle for entity type @type', array('@type' => $this->entityType)));
+      }
+      $bundle = $values[$this->bundleKey];
+    }
     $entity = new $this->entityClass(array(), $this->entityType, $bundle);
 
     // Set all other given values.

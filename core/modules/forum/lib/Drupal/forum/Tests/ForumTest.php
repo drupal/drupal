@@ -240,10 +240,10 @@ class ForumTest extends WebTestBase {
   function testAddOrphanTopic() {
     // Must remove forum topics to test creating orphan topics.
     $vid = config('forum.settings')->get('vocabulary');
-    $tree = taxonomy_get_tree($vid);
-    foreach ($tree as $term) {
-      taxonomy_term_delete($term->tid);
-    }
+    $tids = \Drupal::entityQuery('taxonomy_term')
+      ->condition('vid', $vid)
+      ->execute();
+    taxonomy_term_delete_multiple($tids);
 
     // Create an orphan forum item.
     $this->drupalLogin($this->admin_user);

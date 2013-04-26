@@ -104,47 +104,47 @@ class TermIndexTest extends TaxonomyTestBase {
     $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName();
     $edit["body[$langcode][0][value]"] = $this->randomName();
-    $edit["{$this->field_name_1}[$langcode][]"] = $term_1->tid;
-    $edit["{$this->field_name_2}[$langcode][]"] = $term_1->tid;
+    $edit["{$this->field_name_1}[$langcode][]"] = $term_1->id();
+    $edit["{$this->field_name_2}[$langcode][]"] = $term_1->id();
     $this->drupalPost('node/add/article', $edit, t('Save'));
 
     // Check that the term is indexed, and only once.
     $node = $this->drupalGetNodeByTitle($edit["title"]);
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
       ':nid' => $node->nid,
-      ':tid' => $term_1->tid,
+      ':tid' => $term_1->id(),
     ))->fetchField();
     $this->assertEqual(1, $index_count, 'Term 1 is indexed once.');
 
     // Update the article to change one term.
-    $edit["{$this->field_name_1}[$langcode][]"] = $term_2->tid;
+    $edit["{$this->field_name_1}[$langcode][]"] = $term_2->id();
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
 
     // Check that both terms are indexed.
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
       ':nid' => $node->nid,
-      ':tid' => $term_1->tid,
+      ':tid' => $term_1->id(),
     ))->fetchField();
     $this->assertEqual(1, $index_count, 'Term 1 is indexed.');
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
       ':nid' => $node->nid,
-      ':tid' => $term_2->tid,
+      ':tid' => $term_2->id(),
     ))->fetchField();
     $this->assertEqual(1, $index_count, 'Term 2 is indexed.');
 
     // Update the article to change another term.
-    $edit["{$this->field_name_2}[$langcode][]"] = $term_2->tid;
+    $edit["{$this->field_name_2}[$langcode][]"] = $term_2->id();
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
 
     // Check that only one term is indexed.
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
       ':nid' => $node->nid,
-      ':tid' => $term_1->tid,
+      ':tid' => $term_1->id(),
     ))->fetchField();
     $this->assertEqual(0, $index_count, 'Term 1 is not indexed.');
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
       ':nid' => $node->nid,
-      ':tid' => $term_2->tid,
+      ':tid' => $term_2->id(),
     ))->fetchField();
     $this->assertEqual(1, $index_count, 'Term 2 is indexed once.');
 
@@ -159,44 +159,44 @@ class TermIndexTest extends TaxonomyTestBase {
     // Check that the index was not changed.
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
       ':nid' => $node->nid,
-      ':tid' => $term_1->tid,
+      ':tid' => $term_1->id(),
     ))->fetchField();
     $this->assertEqual(0, $index_count, 'Term 1 is not indexed.');
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
       ':nid' => $node->nid,
-      ':tid' => $term_2->tid,
+      ':tid' => $term_2->id(),
     ))->fetchField();
     $this->assertEqual(1, $index_count, 'Term 2 is indexed once.');
 
     // Update the article to change one term.
-    $node->{$this->field_name_1}[$langcode] = array(array('tid' => $term_1->tid));
+    $node->{$this->field_name_1}[$langcode] = array(array('tid' => $term_1->id()));
     $node->save();
 
     // Check that both terms are indexed.
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
       ':nid' => $node->nid,
-      ':tid' => $term_1->tid,
+      ':tid' => $term_1->id(),
     ))->fetchField();
     $this->assertEqual(1, $index_count, 'Term 1 is indexed.');
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
       ':nid' => $node->nid,
-      ':tid' => $term_2->tid,
+      ':tid' => $term_2->id(),
     ))->fetchField();
     $this->assertEqual(1, $index_count, 'Term 2 is indexed.');
 
     // Update the article to change another term.
-    $node->{$this->field_name_2}[$langcode] = array(array('tid' => $term_1->tid));
+    $node->{$this->field_name_2}[$langcode] = array(array('tid' => $term_1->id()));
     $node->save();
 
     // Check that only one term is indexed.
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
       ':nid' => $node->nid,
-      ':tid' => $term_1->tid,
+      ':tid' => $term_1->id(),
     ))->fetchField();
     $this->assertEqual(1, $index_count, 'Term 1 is indexed once.');
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
       ':nid' => $node->nid,
-      ':tid' => $term_2->tid,
+      ':tid' => $term_2->id(),
     ))->fetchField();
     $this->assertEqual(0, $index_count, 'Term 2 is not indexed.');
   }
@@ -208,11 +208,11 @@ class TermIndexTest extends TaxonomyTestBase {
     // Create two taxonomy terms and set term2 as the parent of term1.
     $term1 = $this->createTerm($this->vocabulary);
     $term2 = $this->createTerm($this->vocabulary);
-    $term1->parent = array($term2->tid);
+    $term1->parent = array($term2->id());
     taxonomy_term_save($term1);
 
     // Verify that the page breadcrumbs include a link to the parent term.
-    $this->drupalGet('taxonomy/term/' . $term1->tid);
-    $this->assertRaw(l($term2->name, 'taxonomy/term/' . $term2->tid), 'Parent term link is displayed when viewing the node.');
+    $this->drupalGet('taxonomy/term/' . $term1->id());
+    $this->assertRaw(l($term2->label(), 'taxonomy/term/' . $term2->id()), 'Parent term link is displayed when viewing the node.');
   }
 }

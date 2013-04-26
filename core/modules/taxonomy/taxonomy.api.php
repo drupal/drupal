@@ -158,7 +158,7 @@ function hook_taxonomy_term_create(\Drupal\taxonomy\Plugin\Core\Entity\Term $ter
 function hook_taxonomy_term_load(array $terms) {
   $result = db_query('SELECT tid, foo FROM {mytable} WHERE tid IN (:tids)', array(':tids' => array_keys($terms)));
   foreach ($result as $record) {
-    $terms[$record->tid]->foo = $record->foo;
+    $terms[$record->id()]->foo = $record->foo;
   }
 }
 
@@ -190,7 +190,7 @@ function hook_taxonomy_term_insert(Drupal\taxonomy\Term $term) {
       if ($synonym) {
         db_insert('taxonomy_term_synonym')
         ->fields(array(
-          'tid' => $term->tid,
+          'tid' => $term->id(),
           'name' => rtrim($synonym),
         ))
         ->execute();
@@ -214,7 +214,7 @@ function hook_taxonomy_term_update(Drupal\taxonomy\Term $term) {
       if ($synonym) {
         db_insert('taxonomy_term_synonym')
         ->fields(array(
-          'tid' => $term->tid,
+          'tid' => $term->id(),
           'name' => rtrim($synonym),
         ))
         ->execute();
@@ -236,7 +236,7 @@ function hook_taxonomy_term_update(Drupal\taxonomy\Term $term) {
  * @see taxonomy_term_delete()
  */
 function hook_taxonomy_term_predelete(Drupal\taxonomy\Term $term) {
-  db_delete('term_synoynm')->condition('tid', $term->tid)->execute();
+  db_delete('term_synoynm')->condition('tid', $term->id())->execute();
 }
 
 /**
@@ -251,7 +251,7 @@ function hook_taxonomy_term_predelete(Drupal\taxonomy\Term $term) {
  * @see taxonomy_term_delete()
  */
 function hook_taxonomy_term_delete(Drupal\taxonomy\Term $term) {
-  db_delete('term_synoynm')->condition('tid', $term->tid)->execute();
+  db_delete('term_synoynm')->condition('tid', $term->id())->execute();
 }
 
 /**

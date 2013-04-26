@@ -11,13 +11,25 @@ use Drupal\taxonomy\Plugin\Core\Entity\Term;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 
 /**
+ * Implements hook_entity_field_alter()
+ */
+function taxonomy_test_entity_field_info_alter(&$info, $entity_type) {
+  $info['definitions']['antonym'] = array(
+    'label' => t('Antonym'),
+    'description' => t('The term antonym.'),
+    'type' => 'string_field',
+    'computed' => TRUE,
+  );
+}
+
+/**
  * Implements hook_taxonomy_term_load().
  */
 function taxonomy_test_taxonomy_term_load(array $terms) {
   foreach ($terms as $term) {
-    $antonym = taxonomy_test_get_antonym($term->tid);
+    $antonym = taxonomy_test_get_antonym($term->id());
     if ($antonym) {
-      $term->antonym = $antonym;
+      $term->antonym->value = $antonym;
     }
   }
 }
@@ -26,11 +38,11 @@ function taxonomy_test_taxonomy_term_load(array $terms) {
  * Implements hook_taxonomy_term_insert().
  */
 function taxonomy_test_taxonomy_term_insert(Term $term) {
-  if (!empty($term->antonym)) {
+  if (!empty($term->antonym->value)) {
     db_insert('taxonomy_term_antonym')
       ->fields(array(
-        'tid' => $term->tid,
-        'name' => trim($term->antonym)
+        'tid' => $term->id(),
+        'name' => trim($term->antonym->value)
       ))
       ->execute();
   }
@@ -40,11 +52,11 @@ function taxonomy_test_taxonomy_term_insert(Term $term) {
  * Implements hook_taxonomy_term_update().
  */
 function taxonomy_test_taxonomy_term_update(Term $term) {
-  if (!empty($term->antonym)) {
+  if (!empty($term->antonym->value)) {
     db_merge('taxonomy_term_antonym')
-      ->key(array('tid' => $term->tid))
+      ->key(array('tid' => $term->id()))
       ->fields(array(
-        'name' => trim($term->antonym)
+        'name' => trim($term->antonym->value)
       ))
       ->execute();
   }
@@ -55,7 +67,7 @@ function taxonomy_test_taxonomy_term_update(Term $term) {
  */
 function taxonomy_test_taxonomy_term_delete(Term $term) {
   db_delete('taxonomy_term_antonym')
-    ->condition('tid', $term->tid)
+    ->condition('tid', $term->id())
     ->execute();
 }
 
@@ -66,7 +78,7 @@ function taxonomy_test_taxonomy_term_view(Term $term, EntityDisplay $display, $v
   if ($view_mode == 'full') {
     $term->content['taxonomy_test_term_view_check'] = array(
       '#prefix' => '<div>',
-      '#markup' => t('The antonym is %antonym', array('%antonym' => $term->antonym)),
+      '#markup' => t('The antonym is %antonym', array('%antonym' => $term->antonym->value)),
       '#suffix' => '</div>',
       '#weight' => 10,
     );
@@ -80,7 +92,7 @@ function taxonomy_test_entity_view($entity, EntityDisplay $display, $view_mode, 
   if ($entity->entityType() == 'taxonomy_term' && $view_mode == 'full') {
     $entity->content['taxonomy_test_entity_view_check'] = array(
       '#prefix' => '<div>',
-      '#markup' => t('The antonym is %antonym', array('%antonym' => $entity->antonym)),
+      '#markup' => t('The antonym is %antonym', array('%antonym' => $entity->antonym->value)),
       '#suffix' => '</div>',
       '#weight' => 20,
     );
@@ -92,7 +104,7 @@ function taxonomy_test_entity_view($entity, EntityDisplay $display, $view_mode, 
  */
 function taxonomy_test_form_taxonomy_term_form_alter(&$form, $form_state, $form_id) {
   $term = $form_state['controller']->getEntity($form_state);
-  $antonym = taxonomy_test_get_antonym($term->tid);
+  $antonym = taxonomy_test_get_antonym($term->id());
   $form['advanced']['antonym'] = array(
     '#type' => 'textfield',
     '#title' => t('Antonym'),

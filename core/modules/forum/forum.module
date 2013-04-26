@@ -168,7 +168,7 @@ function forum_menu_local_tasks(&$data, $router_item, $root_path) {
 
   // Add action link to 'node/add/forum' on 'forum' sub-pages.
   if ($root_path == 'forum' || $root_path == 'forum/%') {
-    $tid = (isset($router_item['page_arguments'][0]) ? $router_item['page_arguments'][0]->tid : 0);
+    $tid = (isset($router_item['page_arguments'][0]) ? $router_item['page_arguments'][0]->id() : 0);
     $forum_term = forum_forum_load($tid);
     if ($forum_term) {
       $links = array();
@@ -180,7 +180,7 @@ function forum_menu_local_tasks(&$data, $router_item, $root_path) {
             '#theme' => 'menu_local_action',
             '#link' => array(
               'title' => t('Add new @node_type', array('@node_type' => node_type_get_label($type))),
-              'href' => 'node/add/' . $type . '/' . $forum_term->tid,
+              'href' => 'node/add/' . $type . '/' . $forum_term->id(),
             ),
           );
         }
@@ -242,7 +242,7 @@ function forum_entity_bundle_info_alter(&$bundles) {
  */
 function forum_uri($forum) {
   return array(
-    'path' => 'forum/' . $forum->tid,
+    'path' => 'forum/' . $forum->id(),
   );
 }
 
@@ -275,7 +275,7 @@ function forum_node_view(EntityInterface $node, EntityDisplay $display, $view_mo
       if ($parents = taxonomy_term_load_parents_all($node->forum_tid)) {
         $parents = array_reverse($parents);
         foreach ($parents as $parent) {
-          $breadcrumb[] = l($parent->label(), 'forum/' . $parent->tid);
+          $breadcrumb[] = l($parent->label(), 'forum/' . $parent->id());
         }
       }
       drupal_set_breadcrumb($breadcrumb);
@@ -310,10 +310,10 @@ function forum_node_validate(EntityInterface $node, $form) {
           continue;
         }
         $used = db_query_range('SELECT 1 FROM {taxonomy_term_data} WHERE tid = :tid AND vid = :vid', 0, 1, array(
-          ':tid' => $term->tid,
+          ':tid' => $term->id(),
           ':vid' => $term->bundle(),
         ))->fetchField();
-        if ($used && in_array($term->tid, $containers)) {
+        if ($used && in_array($term->id(), $containers)) {
           form_set_error('taxonomy_forums', t('The item %forum is a forum container, not a forum. Select one of the forums below instead.', array('%forum' => $term->label())));
         }
       }
@@ -479,7 +479,7 @@ function forum_taxonomy_term_delete(Term $term) {
   // For containers, remove the tid from the forum_containers variable.
   $config = config('forum.settings');
   $containers = $config->get('containers');
-  $key = array_search($term->tid, $containers);
+  $key = array_search($term->id(), $containers);
   if ($key !== FALSE) {
     unset($containers[$key]);
   }
@@ -722,16 +722,17 @@ function forum_forum_load($tid = NULL) {
   elseif ($tid === 0) {
     $forum_term = entity_create('taxonomy_term', array(
       'tid' => 0,
+      'vid' => $vid,
     ));
   }
 
   // Determine if the requested term is a container.
-  if (!$forum_term->tid || in_array($forum_term->tid, $config->get('containers'))) {
+  if (!$forum_term->id() || in_array($forum_term->id(), $config->get('containers'))) {
     $forum_term->container = 1;
   }
 
   // Load parent terms.
-  $forum_term->parents = taxonomy_term_load_parents_all($forum_term->tid);
+  $forum_term->parents = taxonomy_term_load_parents_all($forum_term->id());
 
   // Load the tree below.
   $forums = array();
@@ -754,14 +755,14 @@ function forum_forum_load($tid = NULL) {
 
   foreach ($_forums as $forum) {
     // Determine if the child term is a container.
-    if (in_array($forum->tid, $config->get('containers'))) {
+    if (in_array($forum->id(), $config->get('containers'))) {
       $forum->container = 1;
     }
 
     // Merge in the topic and post counters.
-    if (!empty($counts[$forum->tid])) {
-      $forum->num_topics = $counts[$forum->tid]->topic_count;
-      $forum->num_posts = $counts[$forum->tid]->topic_count + $counts[$forum->tid]->comment_count;
+    if (!empty($counts[$forum->id()])) {
+      $forum->num_topics = $counts[$forum->id()]->topic_count;
+      $forum->num_posts = $counts[$forum->id()]->topic_count + $counts[$forum->id()]->comment_count;
     }
     else {
       $forum->num_topics = 0;
@@ -770,7 +771,7 @@ function forum_forum_load($tid = NULL) {
 
     // Query "Last Post" information for this forum.
     $query = db_select('node', 'n');
-    $query->join('forum', 'f', 'n.vid = f.vid AND f.tid = :tid', array(':tid' => $forum->tid));
+    $query->join('forum', 'f', 'n.vid = f.vid AND f.tid = :tid', array(':tid' => $forum->id()));
     $query->join('node_comment_statistics', 'ncs', 'n.nid = ncs.nid');
     $query->join('users', 'u', 'ncs.last_comment_uid = u.uid');
     $query->addExpression('CASE ncs.last_comment_uid WHEN 0 THEN ncs.last_comment_name ELSE u.name END', 'last_comment_name');
@@ -793,7 +794,7 @@ function forum_forum_load($tid = NULL) {
     }
     $forum->last_post = $last_post;
 
-    $forums[$forum->tid] = $forum;
+    $forums[$forum->id()] = $forum;
   }
 
   // Cache the result, and return the tree.
@@ -1054,8 +1055,8 @@ function template_preprocess_forum_list(&$variables) {
   $row = 0;
   // Sanitize each forum so that the template can safely print the data.
   foreach ($variables['forums'] as $id => $forum) {
-    $variables['forums'][$id]->description = !empty($forum->description) ? filter_xss_admin($forum->description) : '';
-    $variables['forums'][$id]->link = url("forum/$forum->tid");
+    $variables['forums'][$id]->description = filter_xss_admin($forum->description->value);
+    $variables['forums'][$id]->link = url("forum/" . $forum->id());
     $variables['forums'][$id]->name = check_plain($forum->label());
     $variables['forums'][$id]->is_container = !empty($forum->container);
     $variables['forums'][$id]->zebra = $row % 2 == 0 ? 'odd' : 'even';
@@ -1068,10 +1069,10 @@ function template_preprocess_forum_list(&$variables) {
     $variables['forums'][$id]->icon_class = 'default';
     $variables['forums'][$id]->icon_title = t('No new posts');
     if ($user->uid) {
-      $variables['forums'][$id]->new_topics = _forum_topics_unread($forum->tid, $user->uid);
+      $variables['forums'][$id]->new_topics = _forum_topics_unread($forum->id(), $user->uid);
       if ($variables['forums'][$id]->new_topics) {
-        $variables['forums'][$id]->new_text = format_plural($variables['forums'][$id]->new_topics, '1 new post<span class="element-invisible"> in forum %title</span>', '@count new posts<span class="element-invisible"> in forum %title</span>', array('%title' => $variables['forums'][$id]->name));
-        $variables['forums'][$id]->new_url = url("forum/$forum->tid", array('fragment' => 'new'));
+        $variables['forums'][$id]->new_text = format_plural($variables['forums'][$id]->new_topics, '1 new post<span class="element-invisible"> in forum %title</span>', '@count new posts<span class="element-invisible"> in forum %title</span>', array('%title' => $variables['forums'][$id]->label()));
+        $variables['forums'][$id]->new_url = url('forum/' . $forum->id(), array('fragment' => 'new'));
         $variables['forums'][$id]->icon_class = 'new';
         $variables['forums'][$id]->icon_title = t('New posts');
       }

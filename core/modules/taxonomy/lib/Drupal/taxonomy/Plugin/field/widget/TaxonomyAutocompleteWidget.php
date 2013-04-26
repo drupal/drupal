@@ -89,7 +89,7 @@ class TaxonomyAutocompleteWidget extends WidgetBase {
       // otherwise, create a new 'autocreate' term for insert/update.
       if ($possibilities = entity_load_multiple_by_properties('taxonomy_term', array('name' => trim($value), 'vid' => array_keys($vocabularies)))) {
         $term = array_pop($possibilities);
-        $item = array('tid' => $term->tid);
+        $item = array('tid' => $term->id());
       }
       else {
         $vocabulary = reset($vocabularies);

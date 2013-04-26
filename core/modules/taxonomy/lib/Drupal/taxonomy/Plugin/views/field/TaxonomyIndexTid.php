@@ -119,8 +119,8 @@ class TaxonomyIndexTid extends PrerenderList {
       foreach ($result as $term) {
         $this->items[$term->node_nid][$term->tid]['name'] = check_plain($term->name);
         $this->items[$term->node_nid][$term->tid]['tid'] = $term->tid;
-        $this->items[$term->node_nid][$term->tid]['vocabulary_vid'] = $term->bundle();
-        $this->items[$term->node_nid][$term->tid]['vocabulary'] = check_plain($vocabularies[$term->bundle()]->label());
+        $this->items[$term->node_nid][$term->tid]['vocabulary_vid'] = $term->vid;
+        $this->items[$term->node_nid][$term->tid]['vocabulary'] = check_plain($vocabularies[$term->vid]->label());
 
         if (!empty($this->options['link_to_taxonomy'])) {
           $this->items[$term->node_nid][$term->tid]['make_link'] = TRUE;

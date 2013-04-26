@@ -5,28 +5,32 @@
  * Administrative page callbacks for the Forum module.
  */
 
+use Drupal\taxonomy\Plugin\Core\Entity\Term;
+
 /**
  * Page callback: Returns a form for creating a new forum or container.
  *
  * @param $type
  *   What is being added. Possible values are 'forum' and 'container'.
- * @param $edit
- *   (optional) Associative array containing a forum term to be edited.
- *   Defaults to an empty array.
+ * @param \Drupal\taxonomy\Plugin\Core\Entity\Term $term
+ *   (optional) A forum or container term to be edited. Defaults to NULL.
  *
  * @return
  *   A form for creating a new forum or container.
  *
  * @see forum_menu()
  */
-function forum_form_main($type, $edit = array()) {
-  $edit = (array) $edit;
+function forum_form_main($type, Term $term = NULL) {
+  if (!$term) {
+    $term = entity_create('taxonomy_term', array('vid' => config('forum.settings')->get('vocabulary')));
+  }
+
   switch ($type) {
     case 'forum':
-      return drupal_get_form('forum_form_forum', $edit);
+      return drupal_get_form('forum_form_forum', $term);
       break;
     case 'container':
-      return drupal_get_form('forum_form_container', $edit);
+      return drupal_get_form('forum_form_container', $term);
       break;
   }
 }
@@ -34,37 +38,30 @@ function forum_form_main($type, $edit = array()) {
 /**
  * Form constructor for adding and editing a forum.
  *
- * @param $edit
- *   (optional) Associative array containing a forum term to be added or edited.
- *   Defaults to an empty array.
+ * @param \Drupal\taxonomy\Plugin\Core\Entity\Term $term
+ *   A forum term to be edited.
  *
  * @see forum_form_submit()
  * @ingroup forms
  */
-function forum_form_forum($form, &$form_state, $edit = array()) {
-  $edit += array(
-    'name' => '',
-    'description' => '',
-    'tid' => NULL,
-    'weight' => 0,
-  );
+function forum_form_forum($form, &$form_state, Term $term) {
   $form['name'] = array('#type' => 'textfield',
     '#title' => t('Forum name'),
-    '#default_value' => $edit['name'],
+    '#default_value' => $term->name->value,
     '#maxlength' => 255,
     '#description' => t('Short but meaningful name for this collection of threaded discussions.'),
     '#required' => TRUE,
   );
   $form['description'] = array('#type' => 'textarea',
     '#title' => t('Description'),
-    '#default_value' => $edit['description'],
+    '#default_value' => $term->description->value,
     '#description' => t('Description and guidelines for discussions within this forum.'),
   );
   $form['parent']['#tree'] = TRUE;
-  $form['parent'][0] = _forum_parent_select($edit['tid'], t('Parent'), 'forum');
+  $form['parent'][0] = _forum_parent_select($term->id(), t('Parent'), 'forum');
   $form['weight'] = array('#type' => 'weight',
     '#title' => t('Weight'),
-    '#default_value' => $edit['weight'],
+    '#default_value' => $term->weight->value,
     '#description' => t('Forums are displayed in ascending order by weight (forums with equal weights are displayed alphabetically).'),
   );
 
@@ -76,13 +73,13 @@ function forum_form_forum($form, &$form_state, $edit = array()) {
     '#button_type' => 'primary',
     '#submit' => array('forum_form_submit')
   );
-  if ($edit['tid']) {
+  if (!$term->isNew()) {
     $form['actions']['delete'] = array(
       '#type' => 'submit',
       '#value' => t('Delete'),
       '#submit' => array('forum_forum_delete'),
     );
-    $form['tid'] = array('#type' => 'value', '#value' => $edit['tid']);
+    $form['tid'] = array('#type' => 'value', '#value' => $term->id());
   }
   $form['#theme'] = 'forum_form';
 
@@ -111,10 +108,10 @@ function forum_form_submit($form, &$form_state) {
     case SAVED_NEW:
       if ($container) {
         $containers = $config->get('containers');
-        $containers[] = $term->tid;
+        $containers[] = $term->id();
         $config->set('containers', $containers)->save();
       }
-      $form_state['values']['tid'] = $term->tid;
+      $form_state['values']['tid'] = $term->id();
       drupal_set_message(t('Created new @type %term.', array('%term' => $form_state['values']['name'], '@type' => $type)));
       break;
     case SAVED_UPDATED:
@@ -145,26 +142,19 @@ function theme_forum_form($variables) {
 /**
  * Form constructor for adding and editing forum containers.
  *
- * @param $edit
- *   (optional) Associative array containing a container term to be added or edited.
- *   Defaults to an empty array.
+ * @param \Drupal\taxonomy\Plugin\Core\Entity\Term $term
+ *   A container term to be edited.
  *
  * @see forum_form_submit()
  * @ingroup forms
  */
-function forum_form_container($form, &$form_state, $edit = array()) {
+function forum_form_container($form, &$form_state, Term $term) {
   $config = config('forum.settings');
-  $edit += array(
-    'name' => '',
-    'description' => '',
-    'tid' => NULL,
-    'weight' => 0,
-  );
   // Handle a delete operation.
   $form['name'] = array(
     '#title' => t('Container name'),
     '#type' => 'textfield',
-    '#default_value' => $edit['name'],
+    '#default_value' => $term->name->value,
     '#maxlength' => 255,
     '#description' => t('Short but meaningful name for this collection of related forums.'),
     '#required' => TRUE
@@ -173,15 +163,15 @@ function forum_form_container($form, &$form_state, $edit = array()) {
   $form['description'] = array(
     '#type' => 'textarea',
     '#title' => t('Description'),
-    '#default_value' => $edit['description'],
+    '#default_value' => $term->description->value,
     '#description' => t('Description and guidelines for forums within this container.')
   );
   $form['parent']['#tree'] = TRUE;
-  $form['parent'][0] = _forum_parent_select($edit['tid'], t('Parent'), 'container');
+  $form['parent'][0] = _forum_parent_select($term->id(), t('Parent'), 'container');
   $form['weight'] = array(
     '#type' => 'weight',
     '#title' => t('Weight'),
-    '#default_value' => $edit['weight'],
+    '#default_value' => $term->weight->value,
     '#description' => t('Containers are displayed in ascending order by weight (containers with equal weights are displayed alphabetically).')
   );
 
@@ -196,13 +186,13 @@ function forum_form_container($form, &$form_state, $edit = array()) {
     '#button_type' => 'primary',
     '#submit' => array('forum_form_submit'),
   );
-  if ($edit['tid']) {
+  if (!$term->isNew()) {
     $form['actions']['delete'] = array(
       '#type' => 'submit',
       '#value' => t('Delete'),
       '#submit' => array('forum_forum_delete'),
     );
-    $form['tid'] = array('#type' => 'value', '#value' => $edit['tid']);
+    $form['tid'] = array('#type' => 'value', '#value' => $term->id());
   }
   $form['#theme'] = 'forum_form';
 
@@ -240,18 +230,18 @@ function forum_overview($form, &$form_state) {
   foreach (element_children($form['terms']) as $key) {
     if (isset($form['terms'][$key]['#term'])) {
       $term = $form['terms'][$key]['#term'];
-      $form['terms'][$key]['term']['#href'] = 'forum/' . $term['tid'];
+      $form['terms'][$key]['term']['#href'] = 'forum/' . $term->id();
       unset($form['terms'][$key]['operations']['#links']['delete']);
-      if (in_array($form['terms'][$key]['#term']['tid'], $config->get('containers'))) {
+      if (in_array($form['terms'][$key]['#term']->id(), $config->get('containers'))) {
         $form['terms'][$key]['operations']['#links']['edit']['title'] = t('edit container');
-        $form['terms'][$key]['operations']['#links']['edit']['href'] = 'admin/structure/forum/edit/container/' . $term['tid'];
+        $form['terms'][$key]['operations']['#links']['edit']['href'] = 'admin/structure/forum/edit/container/' . $term->id();
         // We don't want the redirect from the link so we can redirect the
         // delete action.
         unset($form['terms'][$key]['operations']['#links']['edit']['query']['destination']);
       }
       else {
         $form['terms'][$key]['operations']['#links']['edit']['title'] = t('edit forum');
-        $form['terms'][$key]['operations']['#links']['edit']['href'] = 'admin/structure/forum/edit/forum/' . $term['tid'];
+        $form['terms'][$key]['operations']['#links']['edit']['href'] = 'admin/structure/forum/edit/forum/' . $term->id();
         // We don't want the redirect from the link so we can redirect the
         // delete action.
         unset($form['terms'][$key]['operations']['#links']['edit']['query']['destination']);
@@ -286,7 +276,7 @@ function _forum_parent_select($tid, $title, $child_type) {
   $parents = taxonomy_term_load_parents($tid);
   if ($parents) {
     $parent = array_shift($parents);
-    $parent = $parent->tid;
+    $parent = $parent->id();
   }
   else {
     $parent = 0;
@@ -297,7 +287,7 @@ function _forum_parent_select($tid, $title, $child_type) {
 
   // A term can't be the child of itself, nor of its children.
   foreach ($children as $child) {
-    $exclude[] = $child->tid;
+    $exclude[] = $child->id();
   }
   $exclude[] = $tid;
 
@@ -305,8 +295,8 @@ function _forum_parent_select($tid, $title, $child_type) {
   $options[0] = '<' . t('root') . '>';
   if ($tree) {
     foreach ($tree as $term) {
-      if (!in_array($term->tid, $exclude)) {
-        $options[$term->tid] = str_repeat(' -- ', $term->depth) . $term->label();
+      if (!in_array($term->id(), $exclude)) {
+        $options[$term->id()] = str_repeat(' -- ', $term->depth) . $term->label();
       }
     }
   }

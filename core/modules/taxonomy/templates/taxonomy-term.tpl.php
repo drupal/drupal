@@ -34,7 +34,7 @@
  * @ingroup themeable
  */
 ?>
-<div id="taxonomy-term-<?php print $term->tid; ?>"<?php print $attributes; ?>>
+<div id="taxonomy-term-<?php print $term->id(); ?>"<?php print $attributes; ?>>
 
   <?php if (!$page): ?>
     <h2><a href="<?php print $url; ?>"><?php print $label; ?></a></h2>

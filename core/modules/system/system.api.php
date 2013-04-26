@@ -1906,7 +1906,7 @@ function hook_mail($key, &$message, $params) {
     $variables += array(
       '%term_name' => $entity->name,
       '%term_description' => $entity->description,
-      '%term_id' => $entity->tid,
+      '%term_id' => $entity->id(),
       '%vocabulary_name' => $vocabulary->name,
       '%vocabulary_description' => $vocabulary->description,
       '%vocabulary_id' => $vocabulary->id(),

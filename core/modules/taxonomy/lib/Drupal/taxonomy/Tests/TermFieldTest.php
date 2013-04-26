@@ -78,7 +78,7 @@ class TermFieldTest extends TaxonomyTestBase {
     $langcode = LANGUAGE_NOT_SPECIFIED;
     $entity = field_test_create_entity();
     $term = $this->createTerm($this->vocabulary);
-    $entity->{$this->field_name}[$langcode][0]['tid'] = $term->tid;
+    $entity->{$this->field_name}[$langcode][0]['tid'] = $term->id();
     try {
       field_attach_validate($entity);
       $this->pass('Correct term does not cause validation error.');
@@ -89,7 +89,7 @@ class TermFieldTest extends TaxonomyTestBase {
 
     $entity = field_test_create_entity();
     $bad_term = $this->createTerm($this->createVocabulary());
-    $entity->{$this->field_name}[$langcode][0]['tid'] = $bad_term->tid;
+    $entity->{$this->field_name}[$langcode][0]['tid'] = $bad_term->id();
     try {
       field_attach_validate($entity);
       $this->fail('Wrong term causes validation error.');
@@ -113,7 +113,7 @@ class TermFieldTest extends TaxonomyTestBase {
 
     // Submit with some value.
     $edit = array(
-      "{$this->field_name}[$langcode]" => array($term->tid),
+      "{$this->field_name}[$langcode]" => array($term->id()),
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);

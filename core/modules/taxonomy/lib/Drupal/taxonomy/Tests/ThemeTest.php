@@ -49,11 +49,11 @@ class ThemeTest extends TaxonomyTestBase {
 
     // Viewing a taxonomy term should use the default theme.
     $term = $this->createTerm($vocabulary);
-    $this->drupalGet('taxonomy/term/' . $term->tid);
+    $this->drupalGet('taxonomy/term/' . $term->id());
     $this->assertRaw('bartik/css/style.css', t("The default theme's CSS appears on the page for viewing a taxonomy term."));
 
     // Editing a taxonomy term should use the same theme as adding one.
-    $this->drupalGet('taxonomy/term/' . $term->tid . '/edit');
+    $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
     $this->assertRaw('seven/style.css', t("The administrative theme's CSS appears on the page for editing a taxonomy term."));
   }
 }

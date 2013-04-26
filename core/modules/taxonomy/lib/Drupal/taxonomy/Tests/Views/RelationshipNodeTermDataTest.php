@@ -29,7 +29,7 @@ class RelationshipNodeTermDataTest extends TaxonomyTestBase {
 
   function testViewsHandlerRelationshipNodeTermData() {
     $view = views_get_view('test_taxonomy_node_term_data');
-    $this->executeView($view, array($this->term1->tid, $this->term2->tid));
+    $this->executeView($view, array($this->term1->id(), $this->term2->id()));
     $resultset = array(
       array(
         'nid' => $this->nodes[0]->nid,

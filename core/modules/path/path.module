@@ -232,13 +232,13 @@ function path_form_taxonomy_term_form_alter(&$form, $form_state) {
   // Make sure this does not show up on the delete confirmation form.
   if (empty($form_state['confirm_delete'])) {
     $term = $form_state['controller']->getEntity($form_state);
-    $path = (isset($term->tid) ? drupal_container()->get('path.crud')->load(array('source' => 'taxonomy/term/' . $term->tid)) : array());
+    $path = ($term->id() ? Drupal::service('path.crud')->load(array('source' => 'taxonomy/term/' . $term->id())) : array());
     if ($path === FALSE) {
       $path = array();
     }
     $path += array(
       'pid' => NULL,
-      'source' => isset($term->tid) ? 'taxonomy/term/' . $term->tid : NULL,
+      'source' => $term->id() ? 'taxonomy/term/' . $term->id() : NULL,
       'alias' => '',
       'langcode' => LANGUAGE_NOT_SPECIFIED,
     );
@@ -262,18 +262,45 @@ function path_form_taxonomy_term_form_alter(&$form, $form_state) {
 }
 
 /**
+ * Implements hook_data_type_info().
+ */
+function path_data_type_info() {
+  $info['path_field'] = array(
+    'label' => t('Path field item'),
+    'description' => t('An entity field containing a path alias and related data.'),
+    'class' => '\Drupal\path\Type\PathItem',
+    'list class' => '\Drupal\Core\Entity\Field\Type\Field',
+  );
+  return $info;
+}
+
+/**
+ * Implements hook_entity_field_info().
+ */
+function path_entity_field_info($entity_type) {
+  if ($entity_type === 'taxonomy_term') {
+    $info['definitions']['path'] = array(
+      'type' => 'path_field',
+      'label' => t('The path alias'),
+      'computed' => TRUE,
+      'list' => TRUE,
+    );
+    return $info;
+  }
+}
+
+/**
  * Implements hook_taxonomy_term_insert().
  */
 function path_taxonomy_term_insert(Term $term) {
   if (isset($term->path)) {
-    $path = $term->path;
-    $path['alias'] = trim($path['alias']);
+    $term->path->alias = trim($term->path->alias);
     // Only save a non-empty alias.
-    if (!empty($path['alias'])) {
+    if (!empty($term->path->alias)) {
       // Ensure fields for programmatic executions.
-      $path['source'] = 'taxonomy/term/' . $term->tid;
-      $path['langcode'] = LANGUAGE_NOT_SPECIFIED;
-      drupal_container()->get('path.crud')->save($path['source'], $path['alias'], $path['langcode']);
+      $source = 'taxonomy/term/' . $term->id();
+      $langcode = LANGUAGE_NOT_SPECIFIED;
+      Drupal::service('path.crud')->save($source, $term->path->alias, $langcode);
     }
   }
 }
@@ -283,19 +310,18 @@ function path_taxonomy_term_insert(Term $term) {
  */
 function path_taxonomy_term_update(Term $term) {
   if (isset($term->path)) {
-    $path = $term->path;
-    $path['alias'] = trim($path['alias']);
+    $term->path->alias = trim($term->path->alias);
     // Delete old alias if user erased it.
-    if (!empty($path['pid']) && empty($path['alias'])) {
-      drupal_container()->get('path.crud')->delete(array('pid' => $path['pid']));
+    if (!empty($term->path->pid) && empty($term->path->alias)) {
+      Drupal::service('path.crud')->delete(array('pid' => $term->path->pid));
     }
     // Only save a non-empty alias.
-    if (!empty($path['alias'])) {
-      $pid = (!empty($path['pid']) ? $path['pid'] : NULL);
+    if ($term->path->alias) {
+      $pid = (!empty($term->path->pid) ? $term->path->pid  : NULL);
       // Ensure fields for programmatic executions.
-      $path['source'] = 'taxonomy/term/' . $term->tid;
-      $path['langcode'] = LANGUAGE_NOT_SPECIFIED;
-      drupal_container()->get('path.crud')->save($path['source'], $path['alias'], $path['langcode'], $pid);
+      $source = 'taxonomy/term/' . $term->id();
+      $langcode = LANGUAGE_NOT_SPECIFIED;
+      Drupal::service('path.crud')->save($source, $term->path->alias, $langcode, $pid);
     }
   }
 }
@@ -305,7 +331,7 @@ function path_taxonomy_term_update(Term $term) {
  */
 function path_taxonomy_term_delete(Term $term) {
   // Delete all aliases associated with this term.
-  drupal_container()->get('path.crud')->delete(array('source' => 'taxonomy/term/' . $term->tid));
+  Drupal::service('path.crud')->delete(array('source' => 'taxonomy/term/' . $term->id()));
 }
 
 /**

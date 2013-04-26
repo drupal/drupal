@@ -8,7 +8,7 @@
 namespace Drupal\taxonomy\Plugin\Core\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\Entity;
+use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
@@ -46,47 +46,47 @@ use Drupal\Core\Annotation\Translation;
  *   permission_granularity = "bundle"
  * )
  */
-class Term extends Entity implements ContentEntityInterface {
+class Term extends EntityNG implements ContentEntityInterface {
 
   /**
    * The taxonomy term ID.
    *
-   * @var integer
+   * @var \Drupal\Core\Entity\Field\FieldInterface
    */
   public $tid;
 
   /**
    * The term UUID.
    *
-   * @var string
+   * @var \Drupal\Core\Entity\Field\FieldInterface
    */
   public $uuid;
 
   /**
    * The taxonomy vocabulary ID this term belongs to.
    *
-   * @var integer
+   * @var \Drupal\Core\Entity\Field\FieldInterface
    */
   public $vid;
 
   /**
    * Name of the term.
    *
-   * @var string
+   * @var \Drupal\Core\Entity\Field\FieldInterface
    */
   public $name;
 
   /**
    * Description of the term.
    *
-   * @var string
+   * @var \Drupal\Core\Entity\Field\FieldInterface
    */
   public $description;
 
   /**
    * The text format name for the term's description.
    *
-   * @var string
+   * @var \Drupal\Core\Entity\Field\FieldInterface
    */
   public $format;
 
@@ -96,9 +96,9 @@ class Term extends Entity implements ContentEntityInterface {
    * This property stores the weight of this term in relation to other terms of
    * the same vocabulary.
    *
-   * @var integer
+   * @var \Drupal\Core\Entity\Field\FieldInterface
    */
-  public $weight = 0;
+  public $weight;
 
   /**
    * The parent term(s) for this term.
@@ -110,21 +110,39 @@ class Term extends Entity implements ContentEntityInterface {
    * term does not have any parents. When omitting this variable during an
    * update, the existing hierarchy for the term remains unchanged.
    *
-   * @var array
+   * @var \Drupal\Core\Entity\Field\FieldInterface
    */
   public $parent;
+
+  /**
+   * Default values for the term.
+   *
+   * @var array
+   */
+  protected $values = array(
+    'langcode' => array(LANGUAGE_DEFAULT => array(0 => array('value' => LANGUAGE_NOT_SPECIFIED))),
+    'weight' => array(LANGUAGE_DEFAULT => array(0 => array('value' => 0))),
+  );
 
   /**
    * Implements Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {
-    return $this->tid;
+    return $this->get('tid')->value;
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::bundle().
+   * Overides \Drupal\Core\Entity\EntityNG::init().
    */
-  public function bundle() {
-    return $this->vid;
+  protected function init() {
+    parent::init();
+    unset($this->tid);
+    unset($this->uuid);
+    unset($this->vid);
+    unset($this->name);
+    unset($this->weight);
+    unset($this->format);
+    unset($this->description);
+    unset($this->parent);
   }
 }

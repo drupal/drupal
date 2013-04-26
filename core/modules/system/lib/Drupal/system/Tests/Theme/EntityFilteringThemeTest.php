@@ -102,7 +102,7 @@ class EntityFilteringThemeTest extends WebTestBase {
       'title' => $this->xss_label,
       'type' => 'article',
       'promote' => NODE_PROMOTED,
-      'field_tags' => array(array('tid' => $this->term->tid)),
+      'field_tags' => array(array('tid' => $this->term->id())),
     ));
 
     // Create a test comment on the test node.
@@ -125,7 +125,7 @@ class EntityFilteringThemeTest extends WebTestBase {
       'user',
       'node',
       'node/' . $this->node->nid,
-      'taxonomy/term/' . $this->term->tid,
+      'taxonomy/term/' . $this->term->id(),
     );
 
     // Check each path in all available themes.

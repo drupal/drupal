@@ -190,12 +190,12 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
 
     // Finally, if we've gotten down this far, we're rendering a term on this page.
     $page_entries++;
-    $term_deltas[$term->tid] = isset($term_deltas[$term->tid]) ? $term_deltas[$term->tid] + 1 : 0;
-    $key = 'tid:' . $term->tid . ':' . $term_deltas[$term->tid];
+    $term_deltas[$term->id()] = isset($term_deltas[$term->id()]) ? $term_deltas[$term->id()] + 1 : 0;
+    $key = 'tid:' . $term->id() . ':' . $term_deltas[$term->id()];
 
     // Keep track of the first term displayed on this page.
     if ($page_entries == 1) {
-      $form['#first_tid'] = $term->tid;
+      $form['#first_tid'] = $term->id();
     }
     // Keep a variable to make sure at least 2 root elements are displayed.
     if ($term->parents[0] == 0) {
@@ -240,25 +240,18 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
     ),
   );
   foreach ($current_page as $key => $term) {
-    // Save the term for the current page so we don't have to load it a second
-    // time.
-    $form['terms'][$key]['#term'] = (array) $term;
-    if (isset($term->parents)) {
-      $form['terms'][$key]['#term']['parent'] = $term->parent = $term->parents[0];
-      unset($form['terms'][$key]['#term']['parents'], $term->parents);
-    }
-
+    $form['terms'][$key]['#term'] = $term;
     $form['terms'][$key]['term'] = array(
-      '#prefix' => isset($term->depth) && $term->depth > 0 ? theme('indentation', array('size' => $term->depth)) : '',
+      '#prefix' => isset($term->depth->value) && $term->depth->value > 0 ? theme('indentation', array('size' => $term->depth->value)) : '',
       '#type' => 'link',
       '#title' => $term->label(),
-      '#href' => "taxonomy/term/$term->tid",
+      '#href' => "taxonomy/term/$term->id()",
     );
     if ($vocabulary->hierarchy != TAXONOMY_HIERARCHY_MULTIPLE && count($tree) > 1) {
       $parent_fields = TRUE;
       $form['terms'][$key]['term']['tid'] = array(
         '#type' => 'hidden',
-        '#value' => $term->tid,
+        '#value' => $term->id(),
         '#attributes' => array(
           'class' => array('term-id'),
         ),
@@ -267,7 +260,7 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
         '#type' => 'hidden',
         // Yes, default_value on a hidden. It needs to be changeable by the
         // javascript.
-        '#default_value' => $term->parent,
+        '#default_value' => $term->parent->value,
         '#attributes' => array(
           'class' => array('term-parent'),
         ),
@@ -287,7 +280,7 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
       '#delta' => $delta,
       '#title_display' => 'invisible',
       '#title' => t('Weight for added term'),
-      '#default_value' => $term->weight,
+      '#default_value' => $term->weight->value,
       '#attributes' => array(
         'class' => array('term-weight'),
       ),
@@ -295,19 +288,19 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
     $operations = array(
       'edit' => array(
         'title' => t('edit'),
-        'href' => 'taxonomy/term/' . $term->tid . '/edit',
+        'href' => 'taxonomy/term/' . $term->id() . '/edit',
         'query' => $destination,
       ),
       'delete' => array(
         'title' => t('delete'),
-        'href' => 'taxonomy/term/' . $term->tid . '/delete',
+        'href' => 'taxonomy/term/' . $term->id() . '/delete',
         'query' => $destination,
       ),
     );
     if (module_invoke('translation_entity', 'translate_access', $term)) {
       $operations['translate'] = array(
         'title' => t('translate'),
-        'href' => 'taxonomy/term/' . $term->tid . '/translations',
+        'href' => 'taxonomy/term/' . $term->id() . '/translations',
         'query' => $destination,
       );
     }
@@ -408,7 +401,7 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
   $hierarchy = TAXONOMY_HIERARCHY_DISABLED;
 
   $changed_terms = array();
-  $tree = taxonomy_get_tree($vocabulary->id());
+  $tree = taxonomy_get_tree($vocabulary->id(), 0, NULL, TRUE);
 
   if (empty($tree)) {
     return;
@@ -416,16 +409,15 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
 
   // Build a list of all terms that need to be updated on previous pages.
   $weight = 0;
-  $term = (array) $tree[0];
-  while ($term['tid'] != $form['#first_tid']) {
-    if ($term['parents'][0] == 0 && $term['weight'] != $weight) {
-      $term['parent'] = $term['parents'][0];
-      $term['weight'] = $weight;
-      $changed_terms[$term['tid']] = $term;
+  $term = $tree[0];
+  while ($term->id() != $form['#first_tid']) {
+    if ($term->parent->value == 0 && $term->weight->value != $weight) {
+      $term->weight->value = $weight;
+      $changed_terms[$term->id()] = $term;
     }
     $weight++;
-    $hierarchy = $term['parents'][0] != 0 ? TAXONOMY_HIERARCHY_SINGLE : $hierarchy;
-    $term = (array) $tree[$weight];
+    $hierarchy = $term->parent->value != 0 ? TAXONOMY_HIERARCHY_SINGLE : $hierarchy;
+    $term = $tree[$weight];
   }
 
   // Renumber the current page weights and assign any new parents.
@@ -434,53 +426,42 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
     if (isset($form['terms'][$tid]['#term'])) {
       $term = $form['terms'][$tid]['#term'];
       // Give terms at the root level a weight in sequence with terms on previous pages.
-      if ($values['term']['parent'] == 0 && $term['weight'] != $weight) {
-        $term['weight'] = $weight;
-        $changed_terms[$term['tid']] = $term;
+      if ($values['term']['parent'] == 0 && $term->weight->value != $weight) {
+        $term->weight->value = $weight;
+        $changed_terms[$term->id()] = $term;
       }
       // Terms not at the root level can safely start from 0 because they're all on this page.
       elseif ($values['term']['parent'] > 0) {
-        $level_weights[$values['term']['parent']] = isset($level_weights[$values['term']['parent']]) ? $level_weights[$values['term']['parent']] + 1 : 0;
-        if ($level_weights[$values['term']['parent']] != $term['weight']) {
-          $term['weight'] = $level_weights[$values['term']['parent']];
-          $changed_terms[$term['tid']] = $term;
+        $level_weights[$values['term']['parent']] = isset($level_weights[$values['term']['parent']]) ? $level_weights[$values['term']->parent->value] + 1 : 0;
+        if ($level_weights[$values['term']['parent']] != $term->weight->value) {
+          $term->weight->value = $level_weights[$values['term']['parent']];
+          $changed_terms[$term->id()] = $term;
         }
       }
       // Update any changed parents.
-      if ($values['term']['parent'] != $term['parent']) {
-        $term['parent'] = $values['term']['parent'];
-        $changed_terms[$term['tid']] = $term;
+      if ($values['term']['parent'] != $term->parent->value) {
+        $term->parent->value = $values['term']['parent'];
+        $changed_terms[$term->id()] = $term;
       }
-      $hierarchy = $term['parent'] != 0 ? TAXONOMY_HIERARCHY_SINGLE : $hierarchy;
+      $hierarchy = $term->parent->value != 0 ? TAXONOMY_HIERARCHY_SINGLE : $hierarchy;
       $weight++;
     }
   }
 
   // Build a list of all terms that need to be updated on following pages.
   for ($weight; $weight < count($tree); $weight++) {
-    $term = (array) $tree[$weight];
-    if ($term['parents'][0] == 0 && $term['weight'] != $weight) {
-      $term['parent'] = $term['parents'][0];
-      $term['weight'] = $weight;
-      $changed_terms[$term['tid']] = $term;
+    $term = $tree[$weight];
+    if ($term->parent->value == 0 && $term->weight->value != $weight) {
+      $term->parent->value = $term->parent->value;
+      $term->weight->value = $weight;
+      $changed_terms[$term->id()] = $term;
     }
-    $hierarchy = $term['parents'][0] != 0 ? TAXONOMY_HIERARCHY_SINGLE : $hierarchy;
+    $hierarchy = $term->parent->value != 0 ? TAXONOMY_HIERARCHY_SINGLE : $hierarchy;
   }
 
   // Save all updated terms.
-  foreach ($changed_terms as $changed) {
-    $term = (object) $changed;
-    // Update term_hierachy and term_data directly since we don't have a
-    // fully populated term object to save.
-    db_update('taxonomy_term_hierarchy')
-      ->fields(array('parent' => $term->parent))
-      ->condition('tid', $term->tid, '=')
-      ->execute();
-
-    db_update('taxonomy_term_data')
-      ->fields(array('weight' => $term->weight))
-      ->condition('tid', $term->tid, '=')
-      ->execute();
+  foreach ($changed_terms as $term) {
+    $term->save();
   }
 
   // Update the vocabulary hierarchy to flat or single hierarchy.
@@ -510,11 +491,11 @@ function taxonomy_term_add($vocabulary) {
  */
 function taxonomy_term_confirm_delete($form, &$form_state, Term $term) {
   // Always provide entity id in the same form key as in the entity edit form.
-  $form['tid'] = array('#type' => 'value', '#value' => $term->tid);
+  $form['tid'] = array('#type' => 'value', '#value' => $term->id());
 
-  $form_state['taxonomy']['vocabulary'] = taxonomy_vocabulary_load($term->bundle());;
+  $form_state['taxonomy']['vocabulary'] = taxonomy_vocabulary_load($term->bundle());
   $form['type'] = array('#type' => 'value', '#value' => 'term');
-  $form['name'] = array('#type' => 'value', '#value' => $term->name);
+  $form['name'] = array('#type' => 'value', '#value' => $term->label());
   $form['vid'] = array('#type' => 'value', '#value' => $term->bundle());
   $form['delete'] = array('#type' => 'value', '#value' => TRUE);
   return confirm_form($form,

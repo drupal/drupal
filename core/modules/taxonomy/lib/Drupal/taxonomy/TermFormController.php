@@ -8,12 +8,12 @@
 namespace Drupal\taxonomy;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Entity\EntityFormControllerNG;
 
 /**
  * Base for controller for taxonomy term edit forms.
  */
-class TermFormController extends EntityFormController {
+class TermFormController extends EntityFormControllerNG {
 
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
@@ -21,14 +21,14 @@ class TermFormController extends EntityFormController {
   public function form(array $form, array &$form_state, EntityInterface $term) {
     $vocabulary = taxonomy_vocabulary_load($term->bundle());
 
-    $parent = array_keys(taxonomy_term_load_parents($term->tid));
+    $parent = array_keys(taxonomy_term_load_parents($term->id()));
     $form_state['taxonomy']['parent'] = $parent;
     $form_state['taxonomy']['vocabulary'] = $vocabulary;
 
     $form['name'] = array(
       '#type' => 'textfield',
       '#title' => t('Name'),
-      '#default_value' => $term->name,
+      '#default_value' => $term->name->value,
       '#maxlength' => 255,
       '#required' => TRUE,
       '#weight' => -5,
@@ -37,8 +37,8 @@ class TermFormController extends EntityFormController {
     $form['description'] = array(
       '#type' => 'text_format',
       '#title' => t('Description'),
-      '#default_value' => $term->description,
-      '#format' => $term->format,
+      '#default_value' => $term->description->value,
+      '#format' => $term->format->value,
       '#weight' => 0,
     );
     $language_configuration = module_invoke('language', 'get_default_configuration', 'taxonomy_term', $vocabulary->id());
@@ -46,7 +46,7 @@ class TermFormController extends EntityFormController {
       '#type' => 'language_select',
       '#title' => t('Language'),
       '#languages' => LANGUAGE_ALL,
-      '#default_value' => $term->langcode,
+      '#default_value' => $term->langcode->value,
       '#access' => !is_null($language_configuration['language_show']) && $language_configuration['language_show'],
     );
 
@@ -62,14 +62,14 @@ class TermFormController extends EntityFormController {
     // before loading the full vocabulary. Contrib modules can then intercept
     // before hook_form_alter to provide scalable alternatives.
     if (!config('taxonomy.settings')->get('override_selector')) {
-      $parent = array_keys(taxonomy_term_load_parents($term->tid));
-      $children = taxonomy_get_tree($vocabulary->id(), $term->tid);
+      $parent = array_keys(taxonomy_term_load_parents($term->id()));
+      $children = taxonomy_get_tree($vocabulary->id(), $term->id());
 
       // A term can't be the child of itself, nor of its children.
       foreach ($children as $child) {
         $exclude[] = $child->tid;
       }
-      $exclude[] = $term->tid;
+      $exclude[] = $term->id();
 
       $tree = taxonomy_get_tree($vocabulary->id());
       $options = array('<' . t('root') . '>');
@@ -95,7 +95,7 @@ class TermFormController extends EntityFormController {
       '#type' => 'textfield',
       '#title' => t('Weight'),
       '#size' => 6,
-      '#default_value' => $term->weight,
+      '#default_value' => $term->weight->value,
       '#description' => t('Terms are displayed in ascending order by weight.'),
       '#required' => TRUE,
     );
@@ -107,10 +107,10 @@ class TermFormController extends EntityFormController {
 
     $form['tid'] = array(
       '#type' => 'value',
-      '#value' => $term->tid,
+      '#value' => $term->id(),
     );
 
-    if (empty($term->tid)) {
+    if ($term->isNew()) {
       $form_state['redirect'] = current_path();
     }
 
@@ -130,18 +130,21 @@ class TermFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::submit().
+   * Overrides Drupal\Core\Entity\EntityFormController::buildEntity().
    */
-  public function submit(array $form, array &$form_state) {
-    $term = parent::submit($form, $form_state);
+  public function buildEntity(array $form, array &$form_state) {
+    $term = parent::buildEntity($form, $form_state);
 
     // Prevent leading and trailing spaces in term names.
-    $term->name = trim($term->name);
+    $term->name->value = trim($term->name->value);
 
     // Convert text_format field into values expected by taxonomy_term_save().
     $description = $form_state['values']['description'];
-    $term->description = $description['value'];
-    $term->format = $description['format'];
+    $term->description->value = $description['value'];
+    $term->format->value = $description['format'];
+
+    // Assign parents with proper delta values starting from 0.
+    $term->parent = array_keys($form_state['values']['parent']);
 
     return $term;
   }
@@ -156,11 +159,11 @@ class TermFormController extends EntityFormController {
     switch ($status) {
       case SAVED_NEW:
         drupal_set_message(t('Created new term %term.', array('%term' => $term->label())));
-        watchdog('taxonomy', 'Created new term %term.', array('%term' => $term->label()), WATCHDOG_NOTICE, l(t('edit'), 'taxonomy/term/' . $term->tid . '/edit'));
+        watchdog('taxonomy', 'Created new term %term.', array('%term' => $term->label()), WATCHDOG_NOTICE, l(t('edit'), 'taxonomy/term/' . $term->id() . '/edit'));
         break;
       case SAVED_UPDATED:
         drupal_set_message(t('Updated term %term.', array('%term' => $term->label())));
-        watchdog('taxonomy', 'Updated term %term.', array('%term' => $term->label()), WATCHDOG_NOTICE, l(t('edit'), 'taxonomy/term/' . $term->tid . '/edit'));
+        watchdog('taxonomy', 'Updated term %term.', array('%term' => $term->label()), WATCHDOG_NOTICE, l(t('edit'), 'taxonomy/term/' . $term->id() . '/edit'));
         // Clear the page and block caches to avoid stale data.
         cache_invalidate_tags(array('content' => TRUE));
         break;
@@ -186,8 +189,8 @@ class TermFormController extends EntityFormController {
       taxonomy_vocabulary_save($form_state['taxonomy']['vocabulary']);
     }
 
-    $form_state['values']['tid'] = $term->tid;
-    $form_state['tid'] = $term->tid;
+    $form_state['values']['tid'] = $term->id();
+    $form_state['tid'] = $term->id();
   }
 
   /**
@@ -200,6 +203,6 @@ class TermFormController extends EntityFormController {
       unset($_GET['destination']);
     }
     $term = $this->getEntity($form_state);
-    $form_state['redirect'] = array('taxonomy/term/' . $term->tid . '/delete', array('query' => $destination));
+    $form_state['redirect'] = array('taxonomy/term/' . $term->id() . '/delete', array('query' => $destination));
   }
 }

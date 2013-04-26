@@ -53,29 +53,29 @@ class HooksTest extends TaxonomyTestBase {
     $this->drupalPost('admin/structure/taxonomy/' . $vocabulary->id() . '/add', $edit, t('Save'));
     $terms = taxonomy_term_load_multiple_by_name($edit['name']);
     $term = reset($terms);
-    $this->assertEqual($term->antonym, $edit['antonym'], 'Antonym was loaded into the term object.');
+    $this->assertEqual($term->antonym->value, $edit['antonym'], 'Antonym was loaded into the term object.');
 
     // Update the term with a different antonym.
     $edit = array(
       'name' => $this->randomName(),
       'antonym' => 'Short',
     );
-    $this->drupalPost('taxonomy/term/' . $term->tid . '/edit', $edit, t('Save'));
+    $this->drupalPost('taxonomy/term/' . $term->id() . '/edit', $edit, t('Save'));
     taxonomy_terms_static_reset();
-    $term = taxonomy_term_load($term->tid);
-    $this->assertEqual($edit['antonym'], $term->antonym, 'Antonym was successfully edited.');
+    $term = taxonomy_term_load($term->id());
+    $this->assertEqual($edit['antonym'], $term->antonym->value, 'Antonym was successfully edited.');
 
     // View the term and ensure that hook_taxonomy_term_view() and
     // hook_entity_view() are invoked.
-    $term = taxonomy_term_load($term->tid);
+    $term = taxonomy_term_load($term->id());
     module_load_include('inc', 'taxonomy', 'taxonomy.pages');
     $term_build = taxonomy_term_page($term);
-    $this->assertFalse(empty($term_build['taxonomy_terms'][$term->tid]['taxonomy_test_term_view_check']), 'hook_taxonomy_term_view() was invoked when viewing the term.');
-    $this->assertFalse(empty($term_build['taxonomy_terms'][$term->tid]['taxonomy_test_entity_view_check']), 'hook_entity_view() was invoked when viewing the term.');
+    $this->assertFalse(empty($term_build['taxonomy_terms'][$term->id()]['taxonomy_test_term_view_check']), 'hook_taxonomy_term_view() was invoked when viewing the term.');
+    $this->assertFalse(empty($term_build['taxonomy_terms'][$term->id()]['taxonomy_test_entity_view_check']), 'hook_entity_view() was invoked when viewing the term.');
 
     // Delete the term.
-    taxonomy_term_delete($term->tid);
-    $antonym = db_query('SELECT tid FROM {taxonomy_term_antonym} WHERE tid = :tid', array(':tid' => $term->tid))->fetchField();
+    $term->delete();
+    $antonym = db_query('SELECT tid FROM {taxonomy_term_antonym} WHERE tid = :tid', array(':tid' => $term->id()))->fetchField();
     $this->assertFalse($antonym, 'The antonym were deleted from the database.');
   }
 }

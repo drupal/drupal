@@ -52,20 +52,20 @@ class LoadMultipleTest extends TaxonomyTestBase {
 
     // Remove one term from the array, then delete it.
     $deleted = array_shift($terms2);
-    taxonomy_term_delete($deleted->tid);
-    $deleted_term = taxonomy_term_load($deleted->tid);
+    $deleted->delete();
+    $deleted_term = taxonomy_term_load($deleted->id());
     $this->assertFalse($deleted_term);
 
     // Load terms from the vocabulary by vid.
     $terms3 = entity_load_multiple_by_properties('taxonomy_term', array('vid' => $vocabulary->id()));
     $this->assertEqual(count($terms3), 4, 'Correct number of terms were loaded.');
-    $this->assertFalse(isset($terms3[$deleted->tid]));
+    $this->assertFalse(isset($terms3[$deleted->id()]));
 
     // Create a single term and load it by name.
     $term = $this->createTerm($vocabulary);
-    $loaded_terms = entity_load_multiple_by_properties('taxonomy_term', array('name' => $term->name));
+    $loaded_terms = entity_load_multiple_by_properties('taxonomy_term', array('name' => $term->name->value));
     $this->assertEqual(count($loaded_terms), 1, 'One term was loaded.');
     $loaded_term = reset($loaded_terms);
-    $this->assertEqual($term->tid, $loaded_term->tid, 'Term loaded by name successfully.');
+    $this->assertEqual($term->id(), $loaded_term->id(), 'Term loaded by name successfully.');
   }
 }

@@ -69,15 +69,14 @@ class UrlAlterFunctionalTest extends WebTestBase {
     $this->assertUrlOutboundAlter('forum', 'community');
     $forum_vid = config('forum.settings')->get('vocabulary');
     $term_name = $this->randomName();
-    $tid = db_insert('taxonomy_term_data')
-      ->fields(array(
-        'name' => $term_name,
-        'vid' => $forum_vid,
-      ))
-      ->execute();
-    $this->drupalGet("community/$tid");
+    $term = entity_create('taxonomy_term', array(
+      'name' => $term_name,
+      'vid' => $forum_vid,
+    ));
+    $term->save();
+    $this->drupalGet("community/" . $term->id());
     $this->assertText($term_name, 'The community/{tid} path gets resolved correctly');
-    $this->assertUrlOutboundAlter("forum/$tid", "community/$tid");
+    $this->assertUrlOutboundAlter("forum/" . $term->id(), "community/" . $term->id());
   }
 
   /**

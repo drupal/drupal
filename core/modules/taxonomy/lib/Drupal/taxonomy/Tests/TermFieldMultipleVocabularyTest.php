@@ -88,7 +88,7 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     $this->drupalGet('test-entity/add/test_bundle');
     $this->assertFieldByName("{$this->field_name}[$langcode][]", '', 'Widget is displayed');
     $edit = array(
-      "{$this->field_name}[$langcode][]" => array($term1->tid, $term2->tid),
+      "{$this->field_name}[$langcode][]" => array($term1->id(), $term2->id()),
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
@@ -102,8 +102,8 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     field_attach_prepare_view('test_entity', $entities, array($entity->bundle() => $display));
     $entity->content = field_attach_view($entity, $display);
     $this->content = drupal_render($entity->content);
-    $this->assertText($term1->name, 'Term 1 name is displayed.');
-    $this->assertText($term2->name, 'Term 2 name is displayed.');
+    $this->assertText($term1->label(), 'Term 1 name is displayed.');
+    $this->assertText($term2->label(), 'Term 2 name is displayed.');
 
     // Delete vocabulary 2.
     taxonomy_vocabulary_delete($this->vocabulary2->id());
@@ -118,8 +118,8 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     $this->content = drupal_render($entity->content);
 
     // Term 1 should still be displayed; term 2 should not be.
-    $this->assertText($term1->name, 'Term 1 name is displayed.');
-    $this->assertNoText($term2->name, 'Term 2 name is not displayed.');
+    $this->assertText($term1->label(), 'Term 1 name is displayed.');
+    $this->assertNoText($term2->label(), 'Term 2 name is not displayed.');
 
     // Verify that field and instance settings are correct.
     $field_info = field_info_field($this->field_name);
@@ -131,7 +131,7 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
 
     // Term 1 should still pass validation.
     $edit = array(
-      "{$this->field_name}[$langcode][]" => array($term1->tid),
+      "{$this->field_name}[$langcode][]" => array($term1->id()),
     );
     $this->drupalPost(NULL, $edit, t('Save'));
   }

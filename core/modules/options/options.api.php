@@ -61,7 +61,7 @@ function hook_options_list($field, $instance, $entity) {
     $terms = taxonomy_get_tree($tree['vid'], $tree['parent'], NULL, TRUE);
     if ($terms) {
       foreach ($terms as $term) {
-        $options[$term->tid] = str_repeat('-', $term->depth) . $term->label();
+        $options[$term->id()] = str_repeat('-', $term->depth) . $term->label();
       }
     }
   }

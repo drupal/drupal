@@ -149,7 +149,7 @@ class IndexTidDepth extends ArgumentPluginBase {
   function title() {
     $term = taxonomy_term_load($this->argument);
     if (!empty($term)) {
-      return check_plain($term->name);
+      return check_plain($term->label());
     }
     // TODO review text
     return t('No name');

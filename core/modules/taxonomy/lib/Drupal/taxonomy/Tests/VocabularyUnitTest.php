@@ -55,9 +55,9 @@ class VocabularyUnitTest extends TaxonomyTestBase {
     }
 
     // Set up hierarchy. term 2 is a child of 1 and 4 a child of 1 and 2.
-    $terms[2]->parent = array($terms[1]->tid);
+    $terms[2]->parent = array($terms[1]->id());
     taxonomy_term_save($terms[2]);
-    $terms[4]->parent = array($terms[1]->tid, $terms[2]->tid);
+    $terms[4]->parent = array($terms[1]->id(), $terms[2]->id());
     taxonomy_term_save($terms[4]);
 
     // Assert that there are now 5 terms.

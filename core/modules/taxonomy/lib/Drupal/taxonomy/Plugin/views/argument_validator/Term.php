@@ -109,7 +109,7 @@ class Term extends ArgumentValidatorPluginBase {
         if (!$term) {
           return FALSE;
         }
-        $this->argument->validated_title = check_plain($term->name);
+        $this->argument->validated_title = check_plain($term->label());
         return empty($vocabularies) || !empty($vocabularies[$term->bundle()]);
 
       case 'tids':
@@ -151,7 +151,7 @@ class Term extends ArgumentValidatorPluginBase {
               return FALSE;
             }
 
-            $titles[] = $validated_cache[$term->id()] = check_plain($term->name);
+            $titles[] = $validated_cache[$term->id()] = check_plain($term->label());
             unset($test[$term->id()]);
           }
         }
@@ -175,7 +175,7 @@ class Term extends ArgumentValidatorPluginBase {
           if ($type == 'convert') {
             $this->argument->argument = $term->id();
           }
-          $this->argument->validated_title = check_plain($term->name);
+          $this->argument->validated_title = check_plain($term->label());
           return TRUE;
         }
         return FALSE;

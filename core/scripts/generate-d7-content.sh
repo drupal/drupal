@@ -151,9 +151,9 @@ for ($i = 0; $i < 24; $i++) {
       'weight' => $i * 3 + $j,
     ));
     taxonomy_term_save($term);
-    $terms[] = $term->tid;
-    $term_vocabs[$term->tid] = 'taxonomy_' . $vocabulary->machine_name;
-    $parents[] = $term->tid;
+    $terms[] = $term->id();
+    $term_vocabs[$term->id()] = 'taxonomy_' . $vocabulary->machine_name;
+    $parents[] = $term->id();
   }
 }
 $node_id = 0;

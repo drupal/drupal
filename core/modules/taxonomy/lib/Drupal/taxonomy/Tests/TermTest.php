@@ -71,27 +71,27 @@ class TermTest extends TaxonomyTestBase {
 
     // Edit $term2, setting $term1 as parent.
     $edit = array();
-    $edit['parent[]'] = array($term1->tid);
-    $this->drupalPost('taxonomy/term/' . $term2->tid . '/edit', $edit, t('Save'));
+    $edit['parent[]'] = array($term1->id());
+    $this->drupalPost('taxonomy/term/' . $term2->id() . '/edit', $edit, t('Save'));
 
     // Check the hierarchy.
-    $children = taxonomy_term_load_children($term1->tid);
-    $parents = taxonomy_term_load_parents($term2->tid);
-    $this->assertTrue(isset($children[$term2->tid]), 'Child found correctly.');
-    $this->assertTrue(isset($parents[$term1->tid]), 'Parent found correctly.');
+    $children = taxonomy_term_load_children($term1->id());
+    $parents = taxonomy_term_load_parents($term2->id());
+    $this->assertTrue(isset($children[$term2->id()]), 'Child found correctly.');
+    $this->assertTrue(isset($parents[$term1->id()]), 'Parent found correctly.');
 
     // Load and save a term, confirming that parents are still set.
-    $term = taxonomy_term_load($term2->tid);
+    $term = taxonomy_term_load($term2->id());
     taxonomy_term_save($term);
-    $parents = taxonomy_term_load_parents($term2->tid);
-    $this->assertTrue(isset($parents[$term1->tid]), 'Parent found correctly.');
+    $parents = taxonomy_term_load_parents($term2->id());
+    $this->assertTrue(isset($parents[$term1->id()]), 'Parent found correctly.');
 
     // Create a third term and save this as a parent of term2.
     $term3 = $this->createTerm($this->vocabulary);
-    $term2->parent = array($term1->tid, $term3->tid);
+    $term2->parent = array($term1->id(), $term3->id());
     taxonomy_term_save($term2);
-    $parents = taxonomy_term_load_parents($term2->tid);
-    $this->assertTrue(isset($parents[$term1->tid]) && isset($parents[$term3->tid]), 'Both parents found successfully.');
+    $parents = taxonomy_term_load_parents($term2->id());
+    $this->assertTrue(isset($parents[$term1->id()]) && isset($parents[$term3->id()]), 'Both parents found successfully.');
   }
 
   /**
@@ -109,31 +109,31 @@ class TermTest extends TaxonomyTestBase {
     $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName();
     $edit["body[$langcode][0][value]"] = $this->randomName();
-    $edit[$this->instance['field_name'] . '[' . $langcode . '][]'] = $term1->tid;
+    $edit[$this->instance['field_name'] . '[' . $langcode . '][]'] = $term1->id();
     $this->drupalPost('node/add/article', $edit, t('Save'));
 
     // Check that the term is displayed when the node is viewed.
     $node = $this->drupalGetNodeByTitle($edit["title"]);
     $this->drupalGet('node/' . $node->nid);
-    $this->assertText($term1->name, 'Term is displayed when viewing the node.');
+    $this->assertText($term1->label(), 'Term is displayed when viewing the node.');
 
     $this->clickLink(t('Edit'));
-    $this->assertText($term1->name, 'Term is displayed when editing the node.');
+    $this->assertText($term1->label(), 'Term is displayed when editing the node.');
     $this->drupalPost(NULL, array(), t('Save'));
-    $this->assertText($term1->name, 'Term is displayed after saving the node with no changes.');
+    $this->assertText($term1->label(), 'Term is displayed after saving the node with no changes.');
 
     // Edit the node with a different term.
-    $edit[$this->instance['field_name'] . '[' . $langcode . '][]'] = $term2->tid;
+    $edit[$this->instance['field_name'] . '[' . $langcode . '][]'] = $term2->id();
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
 
     $this->drupalGet('node/' . $node->nid);
-    $this->assertText($term2->name, 'Term is displayed when viewing the node.');
+    $this->assertText($term2->label(), 'Term is displayed when viewing the node.');
 
     // Preview the node.
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Preview'));
-    $this->assertNoUniqueText($term2->name, 'Term is displayed when previewing the node.');
+    $this->assertNoUniqueText($term2->label(), 'Term is displayed when previewing the node.');
     $this->drupalPost(NULL, NULL, t('Preview'));
-    $this->assertNoUniqueText($term2->name, 'Term is displayed when previewing the node again.');
+    $this->assertNoUniqueText($term2->label(), 'Term is displayed when previewing the node again.');
   }
 
   /**
@@ -194,34 +194,34 @@ class TermTest extends TaxonomyTestBase {
     }
 
     // Delete term 1 from the term edit page.
-    $this->drupalPost('taxonomy/term/' . $term_objects['term1']->tid . '/edit', array(), t('Delete'));
+    $this->drupalPost('taxonomy/term/' . $term_objects['term1']->id() . '/edit', array(), t('Delete'));
     $this->drupalPost(NULL, NULL, t('Delete'));
 
     // Delete term 2 from the term delete page.
-    $this->drupalPost('taxonomy/term/' . $term_objects['term2']->tid . '/delete', array(), t('Delete'));
-    $term_names = array($term_objects['term3']->name, $term_objects['term4']->name);
+    $this->drupalPost('taxonomy/term/' . $term_objects['term2']->id() . '/delete', array(), t('Delete'));
+    $term_names = array($term_objects['term3']->label(), $term_objects['term4']->label());
 
     // Get the node.
     $node = $this->drupalGetNodeByTitle($edit["title"]);
     $this->drupalGet('node/' . $node->nid);
 
     foreach ($term_names as $term_name) {
-      $this->assertText($term_name, format_string('The term %name appears on the node page after two terms, %deleted1 and %deleted2, were deleted', array('%name' => $term_name, '%deleted1' => $term_objects['term1']->name, '%deleted2' => $term_objects['term2']->name)));
+      $this->assertText($term_name, format_string('The term %name appears on the node page after two terms, %deleted1 and %deleted2, were deleted', array('%name' => $term_name, '%deleted1' => $term_objects['term1']->label(), '%deleted2' => $term_objects['term2']->label())));
     }
-    $this->assertNoText($term_objects['term1']->name, format_string('The deleted term %name does not appear on the node page.', array('%name' => $term_objects['term1']->name)));
-    $this->assertNoText($term_objects['term2']->name, format_string('The deleted term %name does not appear on the node page.', array('%name' => $term_objects['term2']->name)));
+    $this->assertNoText($term_objects['term1']->label(), format_string('The deleted term %name does not appear on the node page.', array('%name' => $term_objects['term1']->label())));
+    $this->assertNoText($term_objects['term2']->label(), format_string('The deleted term %name does not appear on the node page.', array('%name' => $term_objects['term2']->label())));
 
     // Test autocomplete on term 3, which contains a comma.
     // The term will be quoted, and the " will be encoded in unicode (\u0022).
-    $input = substr($term_objects['term3']->name, 0, 3);
+    $input = substr($term_objects['term3']->label(), 0, 3);
     $json = $this->drupalGet('taxonomy/autocomplete/taxonomy_' . $this->vocabulary->id(), array('query' => array('q' => $input)));
-    $this->assertEqual($json, '{"\u0022' . $term_objects['term3']->name . '\u0022":"' . $term_objects['term3']->name . '"}', format_string('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term_objects['term3']->name)));
+    $this->assertEqual($json, '{"\u0022' . $term_objects['term3']->label() . '\u0022":"' . $term_objects['term3']->label() . '"}', format_string('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term_objects['term3']->label())));
 
     // Test autocomplete on term 4 - it is alphanumeric only, so no extra
     // quoting.
-    $input = substr($term_objects['term4']->name, 0, 3);
+    $input = substr($term_objects['term4']->label(), 0, 3);
     $this->drupalGet('taxonomy/autocomplete/taxonomy_' . $this->vocabulary->id(), array('query' => array('q' => $input)));
-    $this->assertRaw('{"' . $term_objects['term4']->name . '":"' . $term_objects['term4']->name . '"}', format_string('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term_objects['term4']->name)));
+    $this->assertRaw('{"' . $term_objects['term4']->label() . '":"' . $term_objects['term4']->label() . '"}', format_string('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term_objects['term4']->label())));
 
     // Test taxonomy autocomplete with a nonexistent field.
     $field_name = $this->randomName();
@@ -256,27 +256,27 @@ class TermTest extends TaxonomyTestBase {
     // The result order is not guaranteed, so check each term separately.
     $result = $this->drupalGet($path, array('query' => array('q' => $input)));
     $data = drupal_json_decode($result);
-    $this->assertEqual($data[$first_term->name], check_plain($first_term->name), 'Autocomplete returned the first matching term');
-    $this->assertEqual($data[$second_term->name], check_plain($second_term->name), 'Autocomplete returned the second matching term');
+    $this->assertEqual($data[$first_term->label()], check_plain($first_term->label()), 'Autocomplete returned the first matching term');
+    $this->assertEqual($data[$second_term->label()], check_plain($second_term->label()), 'Autocomplete returned the second matching term');
 
     // Try to autocomplete a term name that matches first term.
     // We should only get the first term in a json encoded string.
     $input = '10/16';
     $path = 'taxonomy/autocomplete/taxonomy_' . $this->vocabulary->id();
     $this->drupalGet($path, array('query' => array('q' => $input)));
-    $target = array($first_term->name => check_plain($first_term->name));
+    $target = array($first_term->label() => check_plain($first_term->label()));
     $this->assertRaw(drupal_json_encode($target), 'Autocomplete returns only the expected matching term.');
 
     // Try to autocomplete a term name with both a comma and a slash.
     $input = '"term with, comma and / a';
     $path = 'taxonomy/autocomplete/taxonomy_' . $this->vocabulary->id();
     $this->drupalGet($path, array('query' => array('q' => $input)));
-    $n = $third_term->name;
+    $n = $third_term->label();
     // Term names containing commas or quotes must be wrapped in quotes.
-    if (strpos($third_term->name, ',') !== FALSE || strpos($third_term->name, '"') !== FALSE) {
-      $n = '"' . str_replace('"', '""', $third_term->name) . '"';
+    if (strpos($third_term->label(), ',') !== FALSE || strpos($third_term->label(), '"') !== FALSE) {
+      $n = '"' . str_replace('"', '""', $third_term->label()) . '"';
     }
-    $target = array($n => check_plain($third_term->name));
+    $target = array($n => check_plain($third_term->label()));
     $this->assertRaw(drupal_json_encode($target), 'Autocomplete returns a term containing a comma and a slash.');
   }
 
@@ -316,7 +316,7 @@ class TermTest extends TaxonomyTestBase {
     );
 
     // Edit the term.
-    $this->drupalPost('taxonomy/term/' . $term->tid . '/edit', $edit, t('Save'));
+    $this->drupalPost('taxonomy/term/' . $term->id() . '/edit', $edit, t('Save'));
 
     // Check that the term is still present at admin UI after edit.
     $this->drupalGet('admin/structure/taxonomy/' . $this->vocabulary->id());
@@ -324,7 +324,7 @@ class TermTest extends TaxonomyTestBase {
     $this->assertLink(t('edit'));
 
     // View the term and check that it is correct.
-    $this->drupalGet('taxonomy/term/' . $term->tid);
+    $this->drupalGet('taxonomy/term/' . $term->id());
     $this->assertText($edit['name'], 'The randomly generated term name is present.');
     $this->assertText($edit['description[value]'], 'The randomly generated term description is present.');
 
@@ -333,22 +333,22 @@ class TermTest extends TaxonomyTestBase {
     // Check that it does NOT show a description when description is blank.
     $term->description = '';
     taxonomy_term_save($term);
-    $this->drupalGet('taxonomy/term/' . $term->tid);
+    $this->drupalGet('taxonomy/term/' . $term->id());
     $this->assertNoPattern('|class="taxonomy-term-description"|', 'Term page did not display the term description when description was blank.');
 
     // Check that the term feed page is working.
-    $this->drupalGet('taxonomy/term/' . $term->tid . '/feed');
+    $this->drupalGet('taxonomy/term/' . $term->id() . '/feed');
 
     // Check that the term edit page does not try to interpret additional path
     // components as arguments for taxonomy_term_form().
-    $this->drupalGet('taxonomy/term/' . $term->tid . '/edit/' . $this->randomName());
+    $this->drupalGet('taxonomy/term/' . $term->id() . '/edit/' . $this->randomName());
 
     // Delete the term.
-    $this->drupalPost('taxonomy/term/' . $term->tid . '/edit', array(), t('Delete'));
+    $this->drupalPost('taxonomy/term/' . $term->id() . '/edit', array(), t('Delete'));
     $this->drupalPost(NULL, NULL, t('Delete'));
 
     // Assert that the term no longer exists.
-    $this->drupalGet('taxonomy/term/' . $term->tid);
+    $this->drupalGet('taxonomy/term/' . $term->id());
     $this->assertResponse(404, 'The taxonomy term page was not found.');
   }
 
@@ -365,7 +365,7 @@ class TermTest extends TaxonomyTestBase {
     drupal_static_reset('taxonomy_get_tree');
     drupal_static_reset('taxonomy_get_treeparent');
     drupal_static_reset('taxonomy_get_treeterms');
-    list($term1, $term2, $term3) = taxonomy_get_tree($this->vocabulary->id());
+    list($term1, $term2, $term3) = taxonomy_get_tree($this->vocabulary->id(), 0, NULL, TRUE);
 
     $this->drupalGet('admin/structure/taxonomy/' . $this->vocabulary->id());
 
@@ -374,18 +374,18 @@ class TermTest extends TaxonomyTestBase {
     // term3, term1 by setting weight property, make term3 a child of term2 by
     // setting the parent and depth properties, and update all hidden fields.
     $edit = array(
-      'terms[tid:' . $term2->tid . ':0][term][tid]' => $term2->tid,
-      'terms[tid:' . $term2->tid . ':0][term][parent]' => 0,
-      'terms[tid:' . $term2->tid . ':0][term][depth]' => 0,
-      'terms[tid:' . $term2->tid . ':0][weight]' => 0,
-      'terms[tid:' . $term3->tid . ':0][term][tid]' => $term3->tid,
-      'terms[tid:' . $term3->tid . ':0][term][parent]' => $term2->tid,
-      'terms[tid:' . $term3->tid . ':0][term][depth]' => 1,
-      'terms[tid:' . $term3->tid . ':0][weight]' => 1,
-      'terms[tid:' . $term1->tid . ':0][term][tid]' => $term1->tid,
-      'terms[tid:' . $term1->tid . ':0][term][parent]' => 0,
-      'terms[tid:' . $term1->tid . ':0][term][depth]' => 0,
-      'terms[tid:' . $term1->tid . ':0][weight]' => 2,
+      'terms[tid:' . $term2->id() . ':0][term][tid]' => $term2->id(),
+      'terms[tid:' . $term2->id() . ':0][term][parent]' => 0,
+      'terms[tid:' . $term2->id() . ':0][term][depth]' => 0,
+      'terms[tid:' . $term2->id() . ':0][weight]' => 0,
+      'terms[tid:' . $term3->id() . ':0][term][tid]' => $term3->id(),
+      'terms[tid:' . $term3->id() . ':0][term][parent]' => $term2->id(),
+      'terms[tid:' . $term3->id() . ':0][term][depth]' => 1,
+      'terms[tid:' . $term3->id() . ':0][weight]' => 1,
+      'terms[tid:' . $term1->id() . ':0][term][tid]' => $term1->id(),
+      'terms[tid:' . $term1->id() . ':0][term][parent]' => 0,
+      'terms[tid:' . $term1->id() . ':0][term][depth]' => 0,
+      'terms[tid:' . $term1->id() . ':0][weight]' => 2,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
 
@@ -393,9 +393,9 @@ class TermTest extends TaxonomyTestBase {
     drupal_static_reset('taxonomy_get_treeparent');
     drupal_static_reset('taxonomy_get_treeterms');
     $terms = taxonomy_get_tree($this->vocabulary->id());
-    $this->assertEqual($terms[0]->tid, $term2->tid, 'Term 2 was moved above term 1.');
-    $this->assertEqual($terms[1]->parents, array($term2->tid), 'Term 3 was made a child of term 2.');
-    $this->assertEqual($terms[2]->tid, $term1->tid, 'Term 1 was moved below term 2.');
+    $this->assertEqual($terms[0]->tid, $term2->id(), 'Term 2 was moved above term 1.');
+    $this->assertEqual($terms[1]->parents, array($term2->id()), 'Term 3 was made a child of term 2.');
+    $this->assertEqual($terms[2]->tid, $term1->id(), 'Term 1 was moved below term 2.');
 
     $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->id(), array(), t('Reset to alphabetical'));
     // Submit confirmation form.
@@ -404,11 +404,11 @@ class TermTest extends TaxonomyTestBase {
     drupal_static_reset('taxonomy_get_tree');
     drupal_static_reset('taxonomy_get_treeparent');
     drupal_static_reset('taxonomy_get_treeterms');
-    $terms = taxonomy_get_tree($this->vocabulary->id());
-    $this->assertEqual($terms[0]->tid, $term1->tid, 'Term 1 was moved to back above term 2.');
-    $this->assertEqual($terms[1]->tid, $term2->tid, 'Term 2 was moved to back below term 1.');
-    $this->assertEqual($terms[2]->tid, $term3->tid, 'Term 3 is still below term 2.');
-    $this->assertEqual($terms[2]->parents, array($term2->tid), 'Term 3 is still a child of term 2.' . var_export($terms[1]->tid, 1));
+    $terms = taxonomy_get_tree($this->vocabulary->id(), 0, NULL, TRUE);
+    $this->assertEqual($terms[0]->id(), $term1->id(), 'Term 1 was moved to back above term 2.');
+    $this->assertEqual($terms[1]->id(), $term2->id(), 'Term 2 was moved to back below term 1.');
+    $this->assertEqual($terms[2]->id(), $term3->id(), 'Term 3 is still below term 2.');
+    $this->assertEqual($terms[2]->parents, array($term2->id()), 'Term 3 is still a child of term 2.' . var_export($terms[1]->id(), 1));
   }
 
   /**
@@ -422,7 +422,7 @@ class TermTest extends TaxonomyTestBase {
     $edit = array(
       'name' => $this->randomName(12),
       'description[value]' => $this->randomName(100),
-      'parent[]' => array(0, $parent->tid),
+      'parent[]' => array(0, $parent->id()),
     );
     // Save the new term.
     $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->id() . '/add', $edit, t('Save'));
@@ -431,13 +431,13 @@ class TermTest extends TaxonomyTestBase {
     $terms = taxonomy_term_load_multiple_by_name($edit['name']);
     $term = reset($terms);
     $this->assertNotNull($term, 'Term found in database.');
-    $this->assertEqual($edit['name'], $term->name, 'Term name was successfully saved.');
-    $this->assertEqual($edit['description[value]'], $term->description, 'Term description was successfully saved.');
+    $this->assertEqual($edit['name'], $term->label(), 'Term name was successfully saved.');
+    $this->assertEqual($edit['description[value]'], $term->description->value, 'Term description was successfully saved.');
     // Check that the parent tid is still there. The other parent (<root>) is
     // not added by taxonomy_term_load_parents().
-    $parents = taxonomy_term_load_parents($term->tid);
+    $parents = taxonomy_term_load_parents($term->id());
     $parent = reset($parents);
-    $this->assertEqual($edit['parent[]'][1], $parent->tid, 'Term parents were successfully saved.');
+    $this->assertEqual($edit['parent[]'][1], $parent->id(), 'Term parents were successfully saved.');
   }
 
   /**
@@ -447,56 +447,56 @@ class TermTest extends TaxonomyTestBase {
     $term = $this->createTerm($this->vocabulary);
 
     // Load the term with the exact name.
-    $terms = taxonomy_term_load_multiple_by_name($term->name);
-    $this->assertTrue(isset($terms[$term->tid]), 'Term loaded using exact name.');
+    $terms = taxonomy_term_load_multiple_by_name($term->label());
+    $this->assertTrue(isset($terms[$term->id()]), 'Term loaded using exact name.');
 
     // Load the term with space concatenated.
-    $terms = taxonomy_term_load_multiple_by_name('  ' . $term->name . '   ');
-    $this->assertTrue(isset($terms[$term->tid]), 'Term loaded with extra whitespace.');
+    $terms = taxonomy_term_load_multiple_by_name('  ' . $term->label() . '   ');
+    $this->assertTrue(isset($terms[$term->id()]), 'Term loaded with extra whitespace.');
 
     // Load the term with name uppercased.
-    $terms = taxonomy_term_load_multiple_by_name(strtoupper($term->name));
-    $this->assertTrue(isset($terms[$term->tid]), 'Term loaded with uppercased name.');
+    $terms = taxonomy_term_load_multiple_by_name(strtoupper($term->label()));
+    $this->assertTrue(isset($terms[$term->id()]), 'Term loaded with uppercased name.');
 
     // Load the term with name lowercased.
-    $terms = taxonomy_term_load_multiple_by_name(strtolower($term->name));
-    $this->assertTrue(isset($terms[$term->tid]), 'Term loaded with lowercased name.');
+    $terms = taxonomy_term_load_multiple_by_name(strtolower($term->label()));
+    $this->assertTrue(isset($terms[$term->id()]), 'Term loaded with lowercased name.');
 
     // Try to load an invalid term name.
     $terms = taxonomy_term_load_multiple_by_name('Banana');
     $this->assertFalse($terms);
 
     // Try to load the term using a substring of the name.
-    $terms = taxonomy_term_load_multiple_by_name(drupal_substr($term->name, 2));
+    $terms = taxonomy_term_load_multiple_by_name(drupal_substr($term->label(), 2));
     $this->assertFalse($terms);
 
     // Create a new term in a different vocabulary with the same name.
     $new_vocabulary = $this->createVocabulary();
     $new_term = entity_create('taxonomy_term', array(
-      'name' => $term->name,
+      'name' => $term->label(),
       'vid' => $new_vocabulary->id(),
     ));
     taxonomy_term_save($new_term);
 
     // Load multiple terms with the same name.
-    $terms = taxonomy_term_load_multiple_by_name($term->name);
+    $terms = taxonomy_term_load_multiple_by_name($term->label());
     $this->assertEqual(count($terms), 2, 'Two terms loaded with the same name.');
 
     // Load single term when restricted to one vocabulary.
-    $terms = taxonomy_term_load_multiple_by_name($term->name, $this->vocabulary->id());
+    $terms = taxonomy_term_load_multiple_by_name($term->label(), $this->vocabulary->id());
     $this->assertEqual(count($terms), 1, 'One term loaded when restricted by vocabulary.');
-    $this->assertTrue(isset($terms[$term->tid]), 'Term loaded using exact name and vocabulary machine name.');
+    $this->assertTrue(isset($terms[$term->id()]), 'Term loaded using exact name and vocabulary machine name.');
 
     // Create a new term with another name.
     $term2 = $this->createTerm($this->vocabulary);
 
     // Try to load a term by name that doesn't exist in this vocabulary but
     // exists in another vocabulary.
-    $terms = taxonomy_term_load_multiple_by_name($term2->name, $new_vocabulary->id());
+    $terms = taxonomy_term_load_multiple_by_name($term2->label(), $new_vocabulary->id());
     $this->assertFalse($terms, 'Invalid term name restricted by vocabulary machine name not loaded.');
 
     // Try to load terms filtering by a non-existing vocabulary.
-    $terms = taxonomy_term_load_multiple_by_name($term2->name, 'non_existing_vocabulary');
+    $terms = taxonomy_term_load_multiple_by_name($term2->label(), 'non_existing_vocabulary');
     $this->assertEqual(count($terms), 0, 'No terms loaded when restricted by a non-existing vocabulary.');
   }
 

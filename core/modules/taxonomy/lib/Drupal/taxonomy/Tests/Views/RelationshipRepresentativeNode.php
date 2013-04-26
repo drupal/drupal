@@ -37,11 +37,11 @@ class RelationshipRepresentativeNode extends TaxonomyTestBase {
     $expected_result = array(
       array(
         'nid' => $this->nodes[1]->nid,
-        'tid' => $this->term2->tid,
+        'tid' => $this->term2->id(),
       ),
       array(
         'nid' => $this->nodes[1]->nid,
-        'tid' => $this->term1->tid,
+        'tid' => $this->term1->id(),
       ),
     );
     $this->assertIdenticalResultset($view, $expected_result, $map);
