@@ -13,7 +13,7 @@ use Drupal\Core\Language\LanguageManager;
 class AliasManager implements AliasManagerInterface {
 
   /**
-   * The database connectino to use for path lookups.
+   * The database connection to use for path lookups.
    *
    * @var \Drupal\Core\Database\Connection
    */
@@ -161,7 +161,7 @@ class AliasManager implements AliasManagerInterface {
   /**
    * Given a Drupal system URL return one of its aliases if such a one exists.
    * Otherwise, return FALSE.
-
+   *
    * @param $path
    *   The path to investigate for corresponding aliases.
    * @param $langcode
