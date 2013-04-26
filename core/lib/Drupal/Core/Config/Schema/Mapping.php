@@ -9,6 +9,7 @@ namespace Drupal\Core\Config\Schema;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\TypedData\ComplexDataInterface;
+use Drupal\Core\TypedData\TypedDataInterface;
 use \InvalidArgumentException;
 
 /**
@@ -51,7 +52,11 @@ class Mapping extends ArrayElement implements ComplexDataInterface {
   /**
    * Implements Drupal\Core\TypedData\ComplexDataInterface::set().
    */
-  public function set($property_name, $value) {
+  public function set($property_name, $value, $notify = TRUE) {
+    // Notify the parent of any changes to be made.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
     // Set the data into the configuration array but behave according to the
     // interface specification when we've got a null value.
     if (isset($value)) {
@@ -120,6 +125,16 @@ class Mapping extends ArrayElement implements ComplexDataInterface {
    */
   public function isEmpty() {
     return empty($this->value);
+  }
+
+  /**
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::onChange().
+   */
+  public function onChange($property_name) {
+    // Notify the parent of changes.
+    if (isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
   }
 
 }

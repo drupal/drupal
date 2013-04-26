@@ -145,7 +145,7 @@ class TypedDataManager extends PluginManagerBase {
   public function create(array $definition, $value = NULL, $name = NULL, $parent = NULL) {
     $wrapper = $this->factory->createInstance($definition['type'], $definition, $name, $parent);
     if (isset($value)) {
-      $wrapper->setValue($value);
+      $wrapper->setValue($value, FALSE);
     }
     return $wrapper;
   }
@@ -156,7 +156,7 @@ class TypedDataManager extends PluginManagerBase {
    * @param array $options
    *   An array of options with the following keys:
    *   - object: The parent typed data object, implementing the
-   *     ContextAwareInterface and either the ListInterface or the
+   *     TypedDataInterface and either the ListInterface or the
    *     ComplexDataInterface.
    *   - property: The name of the property to instantiate, or the delta of the
    *     the list item to instantiate.
@@ -187,8 +187,8 @@ class TypedDataManager extends PluginManagerBase {
    * property path, i.e. all property instances having the same property path
    * and inheriting from the same data type are prototyped.
    *
-   * @param \Drupal\Core\TypedData\ContextAwareInterface $object
-   *   The parent typed data object, implementing the ContextAwareInterface and
+   * @param \Drupal\Core\TypedData\TypedDataInterface $object
+   *   The parent typed data object, implementing the TypedDataInterface and
    *   either the ListInterface or the ComplexDataInterface.
    * @param string $property_name
    *   The name of the property to instantiate, or the delta of an list item.
@@ -204,8 +204,11 @@ class TypedDataManager extends PluginManagerBase {
    *   The new property instance.
    *
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
+   *
+   * @todo: Add type-hinting to $object once entities implement the
+   *   TypedDataInterface.
    */
-  public function getPropertyInstance(ContextAwareInterface $object, $property_name, $value = NULL) {
+  public function getPropertyInstance($object, $property_name, $value = NULL) {
     if ($root = $object->getRoot()) {
       $key = $root->getType() . ':' . $object->getPropertyPath() . '.';
       // If we are creating list items, we always use 0 in the key as all list
@@ -244,11 +247,9 @@ class TypedDataManager extends PluginManagerBase {
     // Clone from the prototype, then update the parent relationship and set the
     // data value if necessary.
     $property = clone $this->prototypes[$key];
-    if ($property instanceof ContextAwareInterface) {
-      $property->setContext($property_name, $object);
-    }
+    $property->setContext($property_name, $object);
     if (isset($value)) {
-      $property->setValue($value);
+      $property->setValue($value, FALSE);
     }
     return $property;
   }

@@ -8,6 +8,7 @@
 namespace Drupal\Core\Entity\Field\Type;
 
 use Drupal\Core\Entity\Field\FieldItemBase;
+use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
  * Defines the 'entity_reference' entity field item.
@@ -59,40 +60,6 @@ class EntityReferenceItem extends FieldItemBase {
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\Field\FieldItemBase::setValue().
-   */
-  public function setValue($values) {
-    // Treat the values as property value of the entity field, if no array
-    // is given. That way we support setting the field by entity ID or object.
-    if (!is_array($values)) {
-      $values = array('entity' => $values);
-    }
-
-    // Entity is computed out of the ID, so we only need to update the ID. Only
-    // set the entity field if no ID is given.
-    if (isset($values['target_id'])) {
-      $this->properties['target_id']->setValue($values['target_id']);
-    }
-    elseif (isset($values['entity'])) {
-      $this->properties['entity']->setValue($values['entity']);
-    }
-    else {
-      $this->properties['entity']->setValue(NULL);
-    }
-    unset($values['entity'], $values['target_id']);
-    if ($values) {
-      throw new \InvalidArgumentException('Property ' . key($values) . ' is unknown.');
-    }
-  }
-
-  /**
-   * Overrides \Drupal\Core\Entity\Field\FieldItemBase::__set().
-   */
-  public function __set($name, $value) {
-    parent::__set($name, $value);
-  }
-
-  /**
    * Overrides \Drupal\Core\Entity\Field\FieldItemBase::__get().
    */
   public function __get($name) {
@@ -116,4 +83,19 @@ class EntityReferenceItem extends FieldItemBase {
     return parent::__isset($property_name);
   }
 
+  /**
+   * Overrides \Drupal\Core\Entity\Field\FieldItemBase::get().
+   */
+  public function setValue($values, $notify = TRUE) {
+    // Treat the values as property value of the entity property, if no array is
+    // given.
+    if (isset($values) && !is_array($values)) {
+      $values = array('entity' => $values);
+    }
+    // Make sure that the 'entity' property gets set as 'target_id'.
+    if (isset($values['target_id']) && !isset($values['entity'])) {
+      $values['entity'] = $values['target_id'];
+    }
+    parent::setValue($values, $notify);
+  }
 }

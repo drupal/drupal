@@ -8,7 +8,6 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Language\Language;
-use Drupal\Core\TypedData\ContextAwareInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Component\Uuid\Uuid;
 use ArrayIterator;
@@ -170,6 +169,7 @@ class EntityNG extends Entity {
         if (isset($this->values[$property_name][$langcode])) {
           $value = $this->values[$property_name][$langcode];
         }
+        // @todo: Make entities implement the TypedDataInterface.
         $this->fields[$property_name][$langcode] = typed_data()->getPropertyInstance($this, $property_name, $value);
       }
     }
@@ -179,8 +179,8 @@ class EntityNG extends Entity {
   /**
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::set().
    */
-  public function set($property_name, $value) {
-    $this->get($property_name)->setValue($value);
+  public function set($property_name, $value, $notify = TRUE) {
+    $this->get($property_name)->setValue($value, FALSE);
   }
 
   /**
@@ -318,9 +318,7 @@ class EntityNG extends Entity {
     );
     $translation = typed_data()->create($translation_definition, $fields);
     $translation->setStrictMode($strict);
-    if ($translation instanceof ContextAwareInterface) {
-      $translation->setContext('@' . $langcode, $this);
-    }
+    $translation->setContext('@' . $langcode, $this);
     return $translation;
   }
 
@@ -435,7 +433,7 @@ class EntityNG extends Entity {
    */
   public function __set($name, $value) {
     // Support setting values via property objects.
-    if ($value instanceof TypedDataInterface) {
+    if ($value instanceof TypedDataInterface && !$value instanceof EntityInterface) {
       $value = $value->getValue();
     }
     // If this is an entity field, handle it accordingly. We first check whether
@@ -508,9 +506,7 @@ class EntityNG extends Entity {
     foreach ($this->fields as $name => $properties) {
       foreach ($properties as $langcode => $property) {
         $this->fields[$name][$langcode] = clone $property;
-        if ($property instanceof ContextAwareInterface) {
-          $this->fields[$name][$langcode]->setContext($name, $this);
-        }
+        $this->fields[$name][$langcode]->setContext($name, $this);
       }
     }
   }

@@ -7,7 +7,7 @@
 
 namespace Drupal\comment;
 
-use Drupal\Core\TypedData\ContextAwareTypedData;
+use Drupal\Core\TypedData\TypedData;
 use Drupal\Core\TypedData\ReadOnlyException;
 use InvalidArgumentException;
 
@@ -16,12 +16,12 @@ use InvalidArgumentException;
  *
  * @todo: Declare the list of allowed values once supported.
  */
-class FieldNewValue extends ContextAwareTypedData {
+class FieldNewValue extends TypedData {
 
   /**
    * Implements \Drupal\Core\TypedData\TypedDataInterface::getValue().
    */
-  public function getValue($langcode = NULL) {
+  public function getValue() {
     if (!isset($this->value)) {
       if (!isset($this->parent)) {
         throw new InvalidArgumentException('Computed properties require context for computation.');
@@ -36,7 +36,7 @@ class FieldNewValue extends ContextAwareTypedData {
   /**
    * Implements \Drupal\Core\TypedData\TypedDataInterface::setValue().
    */
-  public function setValue($value) {
+  public function setValue($value, $notify = TRUE) {
     if (isset($value)) {
       throw new ReadOnlyException('Unable to set a computed property.');
     }

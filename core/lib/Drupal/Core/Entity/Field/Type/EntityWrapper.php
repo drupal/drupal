@@ -8,10 +8,8 @@
 namespace Drupal\Core\Entity\Field\Type;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\TypedData\ComplexDataInterface;
-use Drupal\Core\TypedData\ContextAwareInterface;
-use Drupal\Core\TypedData\ContextAwareTypedData;
+use Drupal\Core\TypedData\TypedData;
 use Drupal\Core\TypedData\TypedDataInterface;
 use ArrayIterator;
 use IteratorAggregate;
@@ -37,7 +35,7 @@ use InvalidArgumentException;
  *  - id source: If used as computed property, the ID property used to load
  *    the entity object.
  */
-class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, ComplexDataInterface {
+class EntityWrapper extends TypedData implements IteratorAggregate, ComplexDataInterface {
 
   /**
    * The referenced entity type.
@@ -61,9 +59,9 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
   protected $newEntity;
 
   /**
-   * Overrides ContextAwareTypedData::__construct().
+   * Overrides TypedData::__construct().
    */
-  public function __construct(array $definition, $name = NULL, ContextAwareInterface $parent = NULL) {
+  public function __construct(array $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
     $this->entityType = isset($this->definition['constraints']['EntityType']) ? $this->definition['constraints']['EntityType'] : NULL;
   }
@@ -75,18 +73,10 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
     if (isset($this->newEntity)) {
       return $this->newEntity;
     }
-    $source = $this->getIdSource();
-    $id = $source ? $source->getValue() : $this->id;
-    return $id ? entity_load($this->entityType, $id) : NULL;
-  }
-
-  /**
-   * Helper to get the typed data object holding the source entity ID.
-   *
-   * @return \Drupal\Core\TypedData\TypedDataInterface|FALSE
-   */
-  protected function getIdSource() {
-    return !empty($this->definition['settings']['id source']) ? $this->parent->get($this->definition['settings']['id source']) : FALSE;
+    if (!empty($this->definition['settings']['id source'])) {
+      $this->id = $this->parent->__get($this->definition['settings']['id source']);
+    }
+    return $this->id ? entity_load($this->entityType, $this->id) : NULL;
   }
 
   /**
@@ -94,7 +84,7 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
    *
    * Both the entity ID and the entity object may be passed as value.
    */
-  public function setValue($value) {
+  public function setValue($value, $notify = TRUE) {
     // Support passing in the entity object. If it's not yet saved we have
     // to store the whole entity such that it could be saved later on.
     if ($value instanceof EntityInterface && $value->isNew()) {
@@ -110,12 +100,15 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
     elseif (isset($value) && !(is_scalar($value) && !empty($this->definition['constraints']['EntityType']))) {
       throw new InvalidArgumentException('Value is not a valid entity.');
     }
-    // Now update the value in the source or the local id property.
-    $source = $this->getIdSource();
-    if ($source) {
-      $source->setValue($value);
+    // Update the 'id source' property, if given.
+    if (!empty($this->definition['settings']['id source'])) {
+      $this->parent->__set($this->definition['settings']['id source'], $value, $notify);
     }
     else {
+      // Notify the parent of any changes to be made.
+      if ($notify && isset($this->parent)) {
+        $this->parent->onChange($this->name);
+      }
       $this->id = $value;
     }
   }
@@ -134,9 +127,7 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
    * Implements \IteratorAggregate::getIterator().
    */
   public function getIterator() {
-    // @todo: Remove check for EntityNG once all entity types are converted.
-    $entity = $this->getValue();
-    if ($entity && $entity instanceof EntityNG) {
+    if ($entity = $this->getValue()) {
       return $entity->getIterator();
     }
     return new ArrayIterator(array());
@@ -155,8 +146,8 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
   /**
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::set().
    */
-  public function set($property_name, $value) {
-    $this->get($property_name)->setValue($value);
+  public function set($property_name, $value, $notify = TRUE) {
+    $this->get($property_name)->setValue($value, FALSE);
   }
 
   /**
@@ -214,5 +205,15 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
    */
   public function isEmpty() {
     return !$this->getValue();
+  }
+
+  /**
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::onChange().
+   */
+  public function onChange($property_name) {
+    // Notify the parent of changes.
+    if (isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
   }
 }

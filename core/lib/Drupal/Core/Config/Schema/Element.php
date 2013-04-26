@@ -7,12 +7,12 @@
 
 namespace Drupal\Core\Config\Schema;
 
-use Drupal\Core\TypedData\ContextAwareTypedData;
+use Drupal\Core\TypedData\TypedData;
 
 /**
  * Defines a generic configuration element.
  */
-abstract class Element extends ContextAwareTypedData {
+abstract class Element extends TypedData {
 
   /**
    * The configuration value.

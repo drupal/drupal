@@ -187,6 +187,13 @@ class Node extends EntityNG implements ContentEntityInterface {
   public $revision_uid;
 
   /**
+   * The node revision log message.
+   *
+   * @var \Drupal\Core\Entity\Field\FieldInterface
+   */
+  public $log;
+
+  /**
    * Overrides \Drupal\Core\Entity\EntityNG::init().
    */
   protected function init() {
