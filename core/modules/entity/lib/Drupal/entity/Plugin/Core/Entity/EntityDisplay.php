@@ -10,6 +10,7 @@ namespace Drupal\entity\Plugin\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\entity\EntityDisplayInterface;
 
 /**
  * Configuration entity that contains display options for all components of a
@@ -29,7 +30,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class EntityDisplay extends ConfigEntityBase {
+class EntityDisplay extends ConfigEntityBase implements EntityDisplayInterface {
 
   /**
    * Unique ID for the config entity.
@@ -142,16 +143,7 @@ class EntityDisplay extends ConfigEntityBase {
   }
 
   /**
-   * Creates a duplicate of the EntityDisplay object on a different view mode.
-   *
-   * The new object necessarily has the same $targetEntityType and $bundle
-   * properties than the original one.
-   *
-   * @param $view_mode
-   *   The view mode for the new object.
-   *
-   * @return \Drupal\entity\Plugin\Core\Entity\EntityDisplay
-   *   The new object.
+   * {@inheritdoc}
    */
   public function createCopy($view_mode) {
     $display = $this->createDuplicate();
@@ -160,10 +152,7 @@ class EntityDisplay extends ConfigEntityBase {
   }
 
   /**
-   * Gets the display options for all components.
-   *
-   * @return array
-   *   The array of display options, keyed by component name.
+   * {@inheritdoc}
    */
   public function getComponents() {
     $result = array();
@@ -177,14 +166,7 @@ class EntityDisplay extends ConfigEntityBase {
   }
 
   /**
-   * Gets the display options set for a component.
-   *
-   * @param string $name
-   *   The name of the component.
-   *
-   * @return array|null
-   *   The display options for the component, or NULL if the component is not
-   *   displayed.
+   * {@inheritdoc}
    */
   public function getComponent($name) {
     // We always store 'extra fields', whether they are visible or hidden.
@@ -222,15 +204,7 @@ class EntityDisplay extends ConfigEntityBase {
   }
 
   /**
-   * Sets the display options for a component.
-   *
-   * @param string $name
-   *   The name of the component.
-   * @param array $options
-   *   The display options.
-   *
-   * @return \Drupal\entity\Plugin\Core\Entity\EntityDisplay
-   *   The EntityDisplay object.
+   * {@inheritdoc}
    */
   public function setComponent($name, array $options = array()) {
     // If no weight specified, make sure the field sinks at the bottom.
@@ -259,13 +233,7 @@ class EntityDisplay extends ConfigEntityBase {
   }
 
   /**
-   * Sets a component to be hidden.
-   *
-   * @param string $name
-   *   The name of the component.
-   *
-   * @return \Drupal\entity\Plugin\Core\Entity\EntityDisplay
-   *   The EntityDisplay object.
+   * {@inheritdoc}
    */
   public function removeComponent($name) {
     $extra_fields = field_info_extra_fields($this->targetEntityType, $this->bundle, 'display');
@@ -287,11 +255,7 @@ class EntityDisplay extends ConfigEntityBase {
   }
 
   /**
-   * Returns the highest weight of the components in the display.
-   *
-   * @return int|null
-   *   The highest weight of the components in the display, or NULL if the
-   *   display is empty.
+   * {@inheritdoc}
    */
   public function getHighestWeight() {
     $weights = array();
@@ -310,14 +274,7 @@ class EntityDisplay extends ConfigEntityBase {
   }
 
   /**
-   * Returns the Formatter plugin for a field.
-   *
-   * @param string $field_name
-   *   The field name.
-   *
-   * @return \Drupal\field\Plugin\Type\Formatter\FormatterInterface
-   *   If the field is not hidden, the Formatter plugin to use for rendering
-   *   it.
+   * {@inheritdoc}
    */
   public function getFormatter($field_name) {
     if (isset($this->formatters[$field_name])) {

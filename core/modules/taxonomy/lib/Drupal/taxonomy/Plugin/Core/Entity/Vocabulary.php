@@ -10,6 +10,7 @@ namespace Drupal\taxonomy\Plugin\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\taxonomy\VocabularyInterface;
 
 /**
  * Defines the taxonomy vocabulary entity.
@@ -32,7 +33,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class Vocabulary extends ConfigEntityBase {
+class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
 
   /**
    * The taxonomy vocabulary ID.

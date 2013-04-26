@@ -18,7 +18,7 @@ use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
  * block settings, and handling for general user-defined block visibility
  * settings.
  */
-abstract class BlockBase extends PluginBase implements BlockInterface {
+abstract class BlockBase extends PluginBase implements BlockPluginInterface {
 
   /**
    * The entity using this plugin.
@@ -118,7 +118,7 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
   }
 
   /**
-   * Implements \Drupal\block\BlockInterface::access().
+   * Implements \Drupal\block\BlockPluginInterface::access().
    *
    * Adds the user-configured per-role, per-path, and per-language visibility
    * settings to all blocks, and invokes hook_block_access().
@@ -212,7 +212,7 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
   }
 
   /**
-   * Implements \Drupal\block\BlockInterface::form().
+   * Implements \Drupal\block\BlockPluginInterface::form().
    *
    * Creates a generic configuration form for all block types. Individual
    * block plugins can add elements to this form by overriding
@@ -419,7 +419,7 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
   }
 
   /**
-   * Implements \Drupal\block\BlockInterface::validate().
+   * Implements \Drupal\block\BlockPluginInterface::validate().
    *
    * Most block plugins should not override this method. To add validation
    * for a specific block type, override BlockBase::blockValdiate().
@@ -459,7 +459,7 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
   public function blockValidate($form, &$form_state) {}
 
   /**
-   * Implements \Drupal\block\BlockInterface::submit().
+   * Implements \Drupal\block\BlockPluginInterface::submit().
    *
    * Most block plugins should not override this method. To add submission
    * handling for a specific block type, override BlockBase::blockSubmit().

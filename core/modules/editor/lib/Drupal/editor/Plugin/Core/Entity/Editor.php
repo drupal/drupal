@@ -10,6 +10,7 @@ namespace Drupal\editor\Plugin\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\editor\EditorInterface;
 
 /**
  * Defines the configured text editor entity.
@@ -28,7 +29,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class Editor extends ConfigEntityBase {
+class Editor extends ConfigEntityBase implements EditorInterface {
 
   /**
    * The machine name of the text format with which this configured text editor

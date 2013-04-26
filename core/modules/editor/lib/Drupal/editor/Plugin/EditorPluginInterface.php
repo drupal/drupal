@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\editor\Plugin\EditorInterface.
+ * Contains \Drupal\editor\Plugin\EditPluginInterface.
  */
 
 namespace Drupal\editor\Plugin;
@@ -17,7 +17,7 @@ use Drupal\editor\Plugin\Core\Entity\Editor;
  * class, which provides default implementations of each method where
  * appropriate.
  */
-interface EditorInterface extends PluginInspectionInterface {
+interface EditorPluginInterface extends PluginInspectionInterface {
 
   /**
    * Returns the default settings for this configurable text editor.

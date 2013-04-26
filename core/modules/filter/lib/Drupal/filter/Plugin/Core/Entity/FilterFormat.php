@@ -10,6 +10,7 @@ namespace Drupal\filter\Plugin\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\filter\FilterFormatInterface;
 
 /**
  * Represents a text format.
@@ -30,7 +31,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class FilterFormat extends ConfigEntityBase {
+class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
 
   /**
    * Unique machine name of the format.
@@ -121,10 +122,7 @@ class FilterFormat extends ConfigEntityBase {
   }
 
   /**
-   * Helper callback for uasort() to sort filters by status, weight, module, and name.
-   *
-   * @see Drupal\filter\FilterFormatStorageController::preSave()
-   * @see filter_list_format()
+   * {@inheritdoc}
    */
   public static function sortFilters($a, $b) {
     if ($a['status'] != $b['status']) {

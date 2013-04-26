@@ -7,10 +7,10 @@
 
 namespace Drupal\custom_block\Plugin\Core\Entity;
 
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\custom_block\CustomBlockInterface;
 
 /**
  * Defines the custom block entity class.
@@ -46,7 +46,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class CustomBlock extends EntityNG implements ContentEntityInterface {
+class CustomBlock extends EntityNG implements CustomBlockInterface {
 
   /**
    * The block ID.
@@ -151,28 +151,14 @@ class CustomBlock extends EntityNG implements ContentEntityInterface {
   }
 
   /**
-   * Sets the theme value.
-   *
-   * When creating a new custom block from the block library, the user is
-   * redirected to the configure form for that block in the given theme. The
-   * theme is stored against the block when the custom block add form is shown.
-   *
-   * @param string $theme
-   *   The theme name.
+   * {@inheritdoc}
    */
   public function setTheme($theme) {
     $this->theme = $theme;
   }
 
   /**
-   * Gets the theme value.
-   *
-   * When creating a new custom block from the block library, the user is
-   * redirected to the configure form for that block in the given theme. The
-   * theme is stored against the block when the custom block add form is shown.
-   *
-   * @return string
-   *   The theme name.
+   * {@inheritdoc}
    */
   public function getTheme() {
     return $this->theme;

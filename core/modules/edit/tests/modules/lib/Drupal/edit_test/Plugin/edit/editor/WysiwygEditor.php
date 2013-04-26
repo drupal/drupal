@@ -24,7 +24,7 @@ use Drupal\field\Plugin\Core\Entity\FieldInstance;
 class WysiwygEditor extends EditorBase {
 
   /**
-   * Implements \Drupal\edit\EditorInterface::isCompatible().
+   * Implements \Drupal\edit\EditPluginInterface::isCompatible().
    */
   function isCompatible(FieldInstance $instance, array $items) {
     $field = field_info_field($instance['field_name']);
@@ -46,7 +46,7 @@ class WysiwygEditor extends EditorBase {
   }
 
   /**
-   * Implements \Drupal\edit\EditorInterface::getMetadata().
+   * Implements \Drupal\edit\EditPluginInterface::getMetadata().
    */
   function getMetadata(FieldInstance $instance, array $items) {
     $format_id = $items[0]['format'];
@@ -55,7 +55,7 @@ class WysiwygEditor extends EditorBase {
   }
 
   /**
-   * Implements \Drupal\edit\EditorInterface::getAttachments().
+   * Implements \Drupal\edit\EditPluginInterface::getAttachments().
    */
   public function getAttachments() {
     return array(

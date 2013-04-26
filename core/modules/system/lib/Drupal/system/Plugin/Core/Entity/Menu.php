@@ -10,6 +10,7 @@ namespace Drupal\system\Plugin\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\system\MenuInterface;
 
 /**
  * Defines the Menu configuration entity class.
@@ -29,7 +30,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class Menu extends ConfigEntityBase {
+class Menu extends ConfigEntityBase implements MenuInterface {
 
   /**
    * The menu machine name.

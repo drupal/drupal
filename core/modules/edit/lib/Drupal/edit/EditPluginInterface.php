@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\edit\EditorInterface.
+ * Contains \Drupal\edit\EditPluginInterface.
  */
 
 namespace Drupal\edit;
@@ -16,7 +16,7 @@ use Drupal\field\Plugin\Core\Entity\FieldInstance;
  * A PropertyEditor widget is a user-facing interface to edit an entity property
  * through Create.js.
  */
-interface EditorInterface extends PluginInspectionInterface {
+interface EditPluginInterface extends PluginInspectionInterface {
 
   /**
    * Checks whether this editor is compatible with a given field instance.

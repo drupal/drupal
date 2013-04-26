@@ -7,10 +7,10 @@
 
 namespace Drupal\taxonomy\Plugin\Core\Entity;
 
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * Defines the taxonomy term entity.
@@ -46,7 +46,7 @@ use Drupal\Core\Annotation\Translation;
  *   permission_granularity = "bundle"
  * )
  */
-class Term extends EntityNG implements ContentEntityInterface {
+class Term extends EntityNG implements TermInterface {
 
   /**
    * The taxonomy term ID.

@@ -8,16 +8,16 @@
 namespace Drupal\edit;
 
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\edit\EditorInterface;
+use Drupal\edit\EditPluginInterface;
 use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
  * Defines a base editor (Create.js PropertyEditor widget) implementation.
  */
-abstract class EditorBase extends PluginBase implements EditorInterface {
+abstract class EditorBase extends PluginBase implements EditPluginInterface {
 
   /**
-   * Implements \Drupal\edit\EditorInterface::getMetadata().
+   * Implements \Drupal\edit\EditPluginInterface::getMetadata().
    */
   function getMetadata(FieldInstance $instance, array $items) {
     return array();

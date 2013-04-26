@@ -10,6 +10,7 @@ namespace Drupal\user\Plugin\Core\Entity;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\user\UserInterface;
 
 /**
  * Defines the user entity class.
@@ -40,7 +41,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class User extends Entity {
+class User extends Entity implements UserInterface {
 
   /**
    * The user ID.

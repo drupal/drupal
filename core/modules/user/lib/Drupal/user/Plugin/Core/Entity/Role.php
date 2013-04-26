@@ -10,6 +10,7 @@ namespace Drupal\user\Plugin\Core\Entity;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\user\RoleInterface;
 
 /**
  * Defines the user role entity class.
@@ -29,7 +30,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *   }
  * )
  */
-class Role extends ConfigEntityBase {
+class Role extends ConfigEntityBase implements RoleInterface {
 
   /**
    * The machine name of this role.

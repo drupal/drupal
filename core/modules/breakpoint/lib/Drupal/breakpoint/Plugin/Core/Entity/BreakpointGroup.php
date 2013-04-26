@@ -8,6 +8,7 @@
 namespace Drupal\breakpoint\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\breakpoint\BreakpointGroupInterface;
 use Drupal\breakpoint\InvalidBreakpointSourceException;
 use Drupal\breakpoint\InvalidBreakpointSourceTypeException;
 use Drupal\Core\Entity\Annotation\EntityType;
@@ -31,7 +32,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class BreakpointGroup extends ConfigEntityBase {
+class BreakpointGroup extends ConfigEntityBase implements BreakpointGroupInterface {
 
   /**
    * The breakpoint group ID.
@@ -118,13 +119,7 @@ class BreakpointGroup extends ConfigEntityBase {
   }
 
   /**
-   * Checks if the breakpoint group is valid.
-   *
-   * @throws Drupal\breakpoint\InvalidBreakpointSourceTypeException
-   * @throws Drupal\breakpoint\InvalidBreakpointSourceException
-   *
-   * @return true
-   *   Returns true if the breakpoint group is valid.
+   * {@inheritdoc}
    */
   public function isValid() {
     // Check for illegal values in breakpoint group source type.
@@ -149,12 +144,7 @@ class BreakpointGroup extends ConfigEntityBase {
   }
 
   /**
-   * Adds a breakpoint using a name and a media query.
-   *
-   * @param string $name
-   *   The name of the breakpoint.
-   * @param string $media_query
-   *   Media query.
+   * {@inheritdoc}
    */
   public function addBreakpointFromMediaQuery($name, $media_query) {
     // Use the existing breakpoint if it exists.
@@ -175,12 +165,7 @@ class BreakpointGroup extends ConfigEntityBase {
   }
 
   /**
-   * Adds one or more breakpoints to this group.
-   *
-   * The breakpoint name is either the machine_name or the id of a breakpoint.
-   *
-   * @param array $breakpoints
-   *   Array containing breakpoints keyed by their id.
+   * {@inheritdoc}
    */
   public function addBreakpoints($breakpoints) {
     foreach ($breakpoints as $breakpoint_name) {
@@ -214,4 +199,5 @@ class BreakpointGroup extends ConfigEntityBase {
       }
     }
   }
+
 }

@@ -10,6 +10,7 @@ namespace Drupal\image\Plugin\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\image\ImageStyleInterface;
 
 /**
  * Defines an image style configuration entity.
@@ -30,7 +31,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class ImageStyle extends ConfigEntityBase {
+class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
 
   /**
    * The name of the image style to use as replacement upon delete.

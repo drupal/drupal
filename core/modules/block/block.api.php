@@ -23,7 +23,7 @@
  *   A renderable array of data, as returned from the build() implementation of
  *   the plugin that defined the block:
  *   - #title: The default localized title of the block.
- * @param \Drupal\block\BlockInterface $block
+ * @param \Drupal\block\BlockPluginInterface $block
  *   The block instance.
  *
  * @see hook_block_view_ID_alter()
@@ -51,7 +51,7 @@ function hook_block_view_alter(array &$build, \Drupal\block\Plugin\Core\Entity\B
  *   A renderable array of data, as returned from the build() implementation of
  *   the plugin that defined the block:
  *   - #title: The default localized title of the block.
- * @param \Drupal\block\BlockInterface $block
+ * @param \Drupal\block\BlockPluginInterface $block
  *   The block instance.
  *
  * @todo Add a more specific example of a block ID, and illustrate how this is
@@ -60,7 +60,7 @@ function hook_block_view_alter(array &$build, \Drupal\block\Plugin\Core\Entity\B
  * @see hook_block_view_alter()
  * @see hook_block_view_NAME_alter()
  */
-function hook_block_view_ID_alter(array &$build, \Drupal\block\BlockInterface $block) {
+function hook_block_view_ID_alter(array &$build, \Drupal\block\BlockPluginInterface $block) {
   // This code will only run for a specific block. For example, if ID
   // in the function definition above is set to "someid", the code
   // will only run on the "someid" block.
@@ -79,7 +79,7 @@ function hook_block_view_ID_alter(array &$build, \Drupal\block\BlockInterface $b
  *   A renderable array of data, as returned from the build() implementation of
  *   the plugin that defined the block:
  *   - #title: The default localized title of the block.
- * @param \Drupal\block\BlockInterface $block
+ * @param \Drupal\block\BlockPluginInterface $block
  *   The block instance.
  *
  * @todo NAME is ambiguous, and so is the example here. Use a more specific
@@ -89,7 +89,7 @@ function hook_block_view_ID_alter(array &$build, \Drupal\block\BlockInterface $b
  * @see hook_block_view_alter()
  * @see hook_block_view_ID_alter()
  */
-function hook_block_view_NAME_alter(array &$build, \Drupal\block\BlockInterface $block) {
+function hook_block_view_NAME_alter(array &$build, \Drupal\block\BlockPluginInterface $block) {
   // This code will only run for a specific block instance. For example, if NAME
   // in the function definition above is set to "someid", the code will only run
   // on the "someid" block.

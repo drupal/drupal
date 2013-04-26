@@ -7,6 +7,7 @@
 namespace Drupal\layout\Config;
 
 use Drupal\layout\Plugin\LayoutInterface;
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 
 /**
  * Interface describing a Display configuration object.
@@ -28,7 +29,7 @@ use Drupal\layout\Plugin\LayoutInterface;
  * @see \Drupal\layout\Config\BoundDisplayInterface
  * @see \Drupal\layout\Config\UnboundDisplayInterface
  */
-interface DisplayInterface {
+interface DisplayInterface extends ConfigEntityInterface {
 
   /**
    * Returns the display-specific configuration of all blocks in this display.

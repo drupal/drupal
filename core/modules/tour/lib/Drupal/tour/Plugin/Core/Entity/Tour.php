@@ -11,6 +11,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\tour\TipsBag;
+use Drupal\tour\TourInterface;
 
 /**
  * Defines the configured tour entity.
@@ -31,7 +32,7 @@ use Drupal\tour\TipsBag;
  *   }
  * )
  */
-class Tour extends ConfigEntityBase {
+class Tour extends ConfigEntityBase implements TourInterface {
 
   /**
    * The name (plugin ID) of the tour.
@@ -85,40 +86,21 @@ class Tour extends ConfigEntityBase {
   }
 
   /**
-   * Returns label of tour.
-   *
-   * @return string
-   *   The label of the tour.
-   */
-  public function getLabel() {
-    return $this->label;
-  }
-
-  /**
-   * The paths that this tour will appear on.
-   *
-   * @return array
-   *   Returns array of paths for the tour.
+   * {@inheritdoc}
    */
   public function getPaths() {
     return $this->paths;
   }
 
   /**
-   * Returns tip plugin.
-   *
-   * @return string
-   *   The identifier of the tip.
+   * {@inheritdoc}
    */
   public function getTip($id) {
     return $this->tipsBag->get($id);
   }
 
   /**
-   * Returns the tips for this tour.
-   *
-   * @return array
-   *   An array of tip plugins.
+   * {@inheritdoc}
    */
   public function getTips() {
     $tips = array();

@@ -11,6 +11,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\block\BlockInterface;
 
 /**
  * Defines a Block configuration entity class.
@@ -38,7 +39,7 @@ use Drupal\Component\Plugin\Exception\PluginException;
  *   }
  * )
  */
-class Block extends ConfigEntityBase {
+class Block extends ConfigEntityBase implements BlockInterface {
 
   /**
    * The ID of the block.
@@ -82,7 +83,7 @@ class Block extends ConfigEntityBase {
   /**
    * The plugin instance.
    *
-   * @var \Drupal\block\BlockInterface
+   * @var \Drupal\block\BlockPluginInterface
    */
   protected $instance;
 
@@ -122,10 +123,7 @@ class Block extends ConfigEntityBase {
   protected $plugin;
 
   /**
-   * Returns the plugin instance.
-   *
-   * @return \Drupal\block\BlockInterface
-   *   The plugin instance for this block.
+   * {@inheritdoc}
    */
   public function getPlugin() {
     if (!$this->instance) {

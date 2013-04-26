@@ -7,10 +7,10 @@
 
 namespace Drupal\node\Plugin\Core\Entity;
 
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\node\NodeInterface;
 
 /**
  * Defines the node entity class.
@@ -47,7 +47,7 @@ use Drupal\Core\Annotation\Translation;
  *   permission_granularity = "bundle"
  * )
  */
-class Node extends EntityNG implements ContentEntityInterface {
+class Node extends EntityNG implements NodeInterface {
 
   /**
    * The node ID.

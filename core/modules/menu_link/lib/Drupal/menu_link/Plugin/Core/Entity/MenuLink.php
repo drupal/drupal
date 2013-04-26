@@ -7,6 +7,7 @@
 
 namespace Drupal\menu_link\Plugin\Core\Entity;
 
+use Drupal\menu_link\MenuLinkInterface;
 use Symfony\Component\Routing\Route;
 
 use Drupal\Core\Entity\Annotation\EntityType;
@@ -38,7 +39,7 @@ use Drupal\Core\Entity\Entity;
  *   }
  * )
  */
-class MenuLink extends Entity implements \ArrayAccess, ContentEntityInterface {
+class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
 
   /**
    * The link's menu name.
@@ -262,10 +263,7 @@ class MenuLink extends Entity implements \ArrayAccess, ContentEntityInterface {
   }
 
   /**
-   * Returns the Route object associated with this link, if any.
-   *
-   * @return \Symfony\Component\Routing\Route|null
-   *   The route object for this menu link, or NULL if there isn't one.
+   * {@inheritdoc}
    */
   public function getRoute() {
     if (!$this->route_name) {
@@ -279,23 +277,14 @@ class MenuLink extends Entity implements \ArrayAccess, ContentEntityInterface {
   }
 
   /**
-   * Sets the route object for this link.
-   *
-   * This should only be called by MenuLinkStorageController when loading
-   * the link object. Calling it at other times could result in unpredictable
-   * behavior.
-   *
-   * @param \Symfony\Component\Routing\Route $route
+   * {@inheritdoc}
    */
   public function setRouteObject(Route $route) {
     $this->routeObject = $route;
   }
 
   /**
-   * Resets a system-defined menu link.
-   *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *   A menu link entity.
+   * {@inheritdoc}
    */
   public function reset() {
     // To reset the link to its original values, we need to retrieve its
@@ -315,13 +304,7 @@ class MenuLink extends Entity implements \ArrayAccess, ContentEntityInterface {
   }
 
   /**
-   * Builds a menu link entity from a router item.
-   *
-   * @param array $item
-   *   A menu router item.
-   *
-   * @return MenuLink
-   *   A menu link entity.
+   * {@inheritdoc}
    */
   public static function buildFromRouterItem(array $item) {
     // Suggested items are disabled by default.

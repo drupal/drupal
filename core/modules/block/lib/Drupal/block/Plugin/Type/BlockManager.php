@@ -20,7 +20,7 @@ use Drupal\block\Plugin\Core\Entity\Block;
  *
  * @todo Add documentation to this class.
  *
- * @see \Drupal\block\BlockInterface
+ * @see \Drupal\block\BlockPluginInterface
  */
 class BlockManager extends PluginManagerBase {
 

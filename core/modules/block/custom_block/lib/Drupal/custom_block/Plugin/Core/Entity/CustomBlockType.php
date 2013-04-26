@@ -10,6 +10,7 @@ namespace Drupal\custom_block\Plugin\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\custom_block\CustomBlockTypeInterface;
 
 /**
  * Defines the custom block type entity.
@@ -33,7 +34,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class CustomBlockType extends ConfigEntityBase {
+class CustomBlockType extends ConfigEntityBase implements CustomBlockTypeInterface {
 
   /**
    * The custom block type ID.

@@ -10,6 +10,7 @@ namespace Drupal\shortcut\Plugin\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\shortcut\ShortcutInterface;
 
 /**
  * Defines the Shortcut configuration entity.
@@ -34,7 +35,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class Shortcut extends ConfigEntityBase {
+class Shortcut extends ConfigEntityBase implements ShortcutInterface {
 
   /**
    * The machine name for the configuration entity.

@@ -22,7 +22,7 @@ class PictureMappingFormController extends EntityFormController {
    *   A nested array form elements comprising the form.
    * @param array $form_state
    *   An associative array containing the current state of the form.
-   * @param \Drupal\picture\PictureMapping $picture_mapping
+   * @param \Drupal\picture\PictureMappingInterface $picture_mapping
    *   The entity being edited.
    *
    * @return array
