@@ -25,3 +25,10 @@ aggregator_feed_add:
     _controller: '\Drupal\aggregator\Routing\AggregatorController::feedAdd'
   requirements:
     _permission: 'administer news feeds'
+
+aggregator_opml_add:
+  pattern: '/admin/config/services/aggregator/add/opml'
+  defaults:
+    _form: '\Drupal\aggregator\Form\OpmlFeedAdd'
+  requirements:
+    _permission: 'administer news feeds'

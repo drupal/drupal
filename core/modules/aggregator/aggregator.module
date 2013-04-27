@@ -112,11 +112,8 @@ function aggregator_menu() {
   );
   $items['admin/config/services/aggregator/add/opml'] = array(
     'title' => 'Import OPML',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('aggregator_form_opml'),
-    'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_ACTION,
-    'file' => 'aggregator.admin.inc',
+    'route_name' => 'aggregator_opml_add',
   );
   $items['admin/config/services/aggregator/remove/%aggregator_feed'] = array(
     'title' => 'Remove items',
