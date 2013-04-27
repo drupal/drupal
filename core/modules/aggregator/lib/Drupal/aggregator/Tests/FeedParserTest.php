@@ -100,6 +100,6 @@ class FeedParserTest extends AggregatorTestBase {
     // Update the feed. Use the UI to be able to check the message easily.
     $this->drupalGet('admin/config/services/aggregator');
     $this->clickLink(t('Update items'));
-    $this->assertRaw(t('The feed from %title seems to be broken because of error "%error"', array('%title' => $feed->label(), '%error' => "[curl] 6: Couldn't resolve host 'http' [url] /")));
+    $this->assertRaw(t('The feed from %title seems to be broken because of error', array('%title' => $feed->label())));
   }
 }
