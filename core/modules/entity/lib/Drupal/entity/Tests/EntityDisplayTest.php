@@ -233,17 +233,17 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     $this->enableModules(array('field_sql_storage', 'field_test'));
 
     // Create a field and an instance.
-    $field = array(
+    $field = entity_create('field_entity', array(
       'field_name' => 'test_field',
       'type' => 'test_field'
-    );
-    field_create_field($field);
-    $instance = array(
+    ));
+    $field->save();
+    $instance = entity_create('field_instance', array(
       'field_name' => $field['field_name'],
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-    );
-    field_create_instance($instance);
+    ));
+    $instance->save();
 
     // Create an entity display.
     $display = entity_create('entity_display', array(
@@ -253,8 +253,7 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     ))->setComponent($field['field_name'])->save();
 
     // Delete the instance.
-    $instance = field_info_instance('entity_test', $field['field_name'], 'entity_test');
-    field_delete_instance($instance);
+    $instance->delete();
 
     // Check that the component has been removed from the entity display.
     $display = entity_get_display('entity_test', 'entity_test', 'default');
