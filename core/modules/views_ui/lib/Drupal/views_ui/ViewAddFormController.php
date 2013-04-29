@@ -7,7 +7,6 @@
 
 namespace Drupal\views_ui;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 use Drupal\views\Plugin\views\wizard\WizardException;
 use Drupal\views\Views;
@@ -18,16 +17,25 @@ use Drupal\views\Views;
 class ViewAddFormController extends ViewFormControllerBase {
 
   /**
+   * {@inheritdoc}
+   */
+  public function init(array &$form_state) {
+    parent::init($form_state);
+
+    drupal_set_title(t('Add new view'));
+  }
+
+  /**
    * Overrides Drupal\Core\Entity\EntityFormController::prepareForm().
    */
-  protected function prepareEntity(EntityInterface $view) {
+  protected function prepareEntity() {
     // Do not prepare the entity while it is being added.
   }
 
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $view) {
+  public function form(array $form, array &$form_state) {
     $form['#attached']['css'] = static::getAdminCSS();
     $form['#attached']['js'][] = drupal_get_path('module', 'views_ui') . '/js/views-admin.js';
     $form['#attributes']['class'] = array('views-admin');

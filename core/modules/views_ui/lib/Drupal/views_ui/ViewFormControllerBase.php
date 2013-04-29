@@ -8,7 +8,6 @@
 namespace Drupal\views_ui;
 
 use Drupal\Core\Entity\EntityFormController;
-use Drupal\Core\Entity\EntityInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -25,25 +24,26 @@ abstract class ViewFormControllerBase extends EntityFormController {
   protected $displayID;
 
   /**
-   * Overrides \Drupal\Core\Entity\EntityFormController::build().
+   * {@inheritdoc}
    */
-  public function build(array $form, array &$form_state, EntityInterface $entity) {
-    if (isset($form_state['display_id'])) {
-      $this->displayID = $form_state['display_id'];
+  public function init(array &$form_state) {
+    parent::init($form_state);
+
+    if ($display_id = \Drupal::request()->attributes->get('display_id')) {
+      $this->displayID = $display_id;
     }
 
     // @todo Remove the need for this.
     form_load_include($form_state, 'inc', 'views_ui', 'admin');
-
-    return parent::build($form, $form_state, $entity);
+    $form_state['view'] = $this->entity;
   }
 
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::prepareForm().
    */
-  protected function prepareEntity(EntityInterface $view) {
+  protected function prepareEntity() {
     // Determine the displays available for editing.
-    if ($tabs = $this->getDisplayTabs($view)) {
+    if ($tabs = $this->getDisplayTabs($this->entity)) {
       // If a display isn't specified, use the first one.
       if (empty($this->displayID)) {
         foreach ($tabs as $id => $tab) {

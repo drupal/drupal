@@ -8,7 +8,7 @@ views_ui.list:
 views_ui.add:
   pattern: '/admin/structure/views/add'
   defaults:
-    _controller: '\Drupal\views_ui\Routing\ViewsUIController::add'
+    _entity_form: 'view.add'
   requirements:
     _permission: 'administer views'
 
@@ -51,7 +51,7 @@ views_ui.operation:
 views_ui.clone:
   pattern: '/admin/structure/views/view/{view}/clone'
   defaults:
-    _controller: '\Drupal\views_ui\Routing\ViewsUIController::cloneForm'
+    _entity_form: 'view.clone'
   requirements:
     _permission: 'administer views'
 
@@ -96,7 +96,7 @@ views_ui.preview:
     tempstore:
       view: 'views'
   defaults:
-    _controller: '\Drupal\views_ui\Routing\ViewsUIController::preview'
+    _entity_form: 'view.preview'
     display_id: NULL
   requirements:
     _permission: 'administer views'

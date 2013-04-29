@@ -86,19 +86,6 @@ class ViewsUIController implements ControllerInterface {
   }
 
   /**
-   * Returns the form to add a new view.
-   *
-   * @return array
-   *   The Views add form.
-   */
-  public function add() {
-    drupal_set_title(t('Add new view'));
-
-    $entity = $this->entityManager->getStorageController('view')->create(array());
-    return entity_get_form($entity, 'add');
-  }
-
-  /**
    * Lists all instances of fields on any views.
    *
    * @return array
@@ -210,20 +197,6 @@ class ViewsUIController implements ControllerInterface {
   }
 
   /**
-   * Returns the form to clone a view.
-   *
-   * @param \Drupal\views\ViewStorageInterface $view
-   *   The view being cloned.
-   *
-   * @return array
-   *   The Views clone form.
-   */
-  public function cloneForm(ViewStorageInterface $view) {
-    drupal_set_title(t('Clone of @label', array('@label' => $view->label())));
-    return entity_get_form($view, 'clone');
-  }
-
-  /**
    * Menu callback for Views tag autocompletion.
    *
    * Like other autocomplete functions, this function inspects the 'q' query
@@ -274,22 +247,6 @@ class ViewsUIController implements ControllerInterface {
     $build['edit'] = entity_get_form($view, 'edit', array('display_id' => $display_id));
     $build['preview'] = entity_get_form($view, 'preview', array('display_id' => $display_id));
     return $build;
-  }
-
-  /**
-   * Returns the form to preview a view.
-   *
-   * @param \Drupal\views_ui\ViewUI $view
-   *   The view being deleted.
-   * @param string|null $display_id
-   *   (optional) The display ID being edited. Defaults to NULL, which will
-   *   load the first available display.
-   *
-   * @return array
-   *   The Views preview form.
-   */
-  public function preview(ViewUI $view, $display_id = NULL) {
-    return entity_get_form($view, 'preview', array('display_id' => $display_id));
   }
 
 }

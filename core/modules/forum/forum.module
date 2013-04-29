@@ -597,7 +597,7 @@ function forum_field_storage_pre_update(EntityInterface $entity, &$skip_fields) 
  */
 function forum_form_taxonomy_vocabulary_form_alter(&$form, &$form_state, $form_id) {
   $vid = config('forum.settings')->get('vocabulary');
-  $vocabulary = $form_state['controller']->getEntity($form_state);
+  $vocabulary = $form_state['controller']->getEntity();
   if ($vid == $vocabulary->id()) {
     $form['help_forum_vocab'] = array(
       '#markup' => t('This is the designated forum vocabulary. Some of the normal vocabulary options have been removed.'),

@@ -318,7 +318,7 @@ function book_get_books() {
  * @see book_pick_book_nojs_submit()
  */
 function book_form_node_form_alter(&$form, &$form_state, $form_id) {
-  $node = $form_state['controller']->getEntity($form_state);
+  $node = $form_state['controller']->getEntity();
   $access = user_access('administer book outlines');
   if (!$access) {
     if (user_access('add content to books') && ((!empty($node->book['mlid']) && !empty($node->nid)) || book_type_is_allowed($node->type))) {
@@ -357,7 +357,7 @@ function book_form_node_form_alter(&$form, &$form_state, $form_id) {
  * @see book_form_node_form_alter()
  */
 function book_pick_book_nojs_submit($form, &$form_state) {
-  $node = $form_state['controller']->getEntity($form_state);
+  $node = $form_state['controller']->getEntity();
   $node->book = $form_state['values']['book'];
   $form_state['rebuild'] = TRUE;
 }

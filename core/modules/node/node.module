@@ -1984,7 +1984,7 @@ function theme_node_recent_content($variables) {
  * Adds node-type specific visibility options to block configuration form.
  */
 function node_form_block_form_alter(&$form, &$form_state) {
-  $block = $form_state['entity'];
+  $block = $form_state['controller']->getEntity();
   $visibility = $block->get('visibility');
   $form['visibility']['node_type'] = array(
     '#type' => 'details',

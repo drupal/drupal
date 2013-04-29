@@ -599,7 +599,7 @@ function translation_entity_permission() {
  * Implements hook_form_alter().
  */
 function translation_entity_form_alter(array &$form, array &$form_state) {
-  if (($form_controller = translation_entity_form_controller($form_state)) && ($entity = $form_controller->getEntity($form_state)) && !$entity->isNew() && $entity->isTranslatable()) {
+  if (($form_controller = translation_entity_form_controller($form_state)) && ($entity = $form_controller->getEntity()) && !$entity->isNew() && $entity->isTranslatable()) {
     $controller = translation_entity_controller($entity->entityType());
     $controller->entityFormAlter($form, $form_state, $entity);
 

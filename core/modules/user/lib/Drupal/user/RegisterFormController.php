@@ -7,8 +7,6 @@
 
 namespace Drupal\user;
 
-use Drupal\Core\Entity\EntityInterface;
-
 /**
  * Form controller for the user register forms.
  */
@@ -17,8 +15,9 @@ class RegisterFormController extends AccountFormController {
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $account) {
+  public function form(array $form, array &$form_state) {
     global $user;
+    $account = $this->entity;
 
     $admin = user_access('administer users');
 
@@ -94,7 +93,7 @@ class RegisterFormController extends AccountFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::submit().
    */
   public function save(array $form, array &$form_state) {
-    $account = $this->getEntity($form_state);
+    $account = $this->entity;
     $pass = $account->pass;
     $admin = $form_state['values']['administer_users'];
     $notify = !empty($form_state['values']['notify']);

@@ -8,7 +8,6 @@
 namespace Drupal\custom_block;
 
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormControllerNG;
 
 /**
@@ -24,7 +23,8 @@ class CustomBlockFormController extends EntityFormControllerNG {
    * Fills in a few default values, and then invokes hook_custom_block_prepare()
    * on all modules.
    */
-  protected function prepareEntity(EntityInterface $block) {
+  protected function prepareEntity() {
+    $block = $this->entity;
     // Set up default values, if required.
     $block_type = entity_load('custom_block_type', $block->type->value);
     // If this is a new custom block, fill in the default values.
@@ -40,7 +40,8 @@ class CustomBlockFormController extends EntityFormControllerNG {
   /**
    * Overrides \Drupal\Core\Entity\EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $block) {
+  public function form(array $form, array &$form_state) {
+    $block = $this->entity;
     // Override the default CSS class name, since the user-defined custom block
     // type name in 'TYPE-block-form' potentially clashes with third-party class
     // names.
@@ -158,7 +159,7 @@ class CustomBlockFormController extends EntityFormControllerNG {
    * Overrides \Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
-    $block = $this->getEntity($form_state);
+    $block = $this->entity;
     $insert = empty($block->id->value);
     $block->save();
     $watchdog_args = array('@type' => $block->bundle(), '%info' => $block->label());

@@ -431,30 +431,6 @@ function entity_form_controller($entity_type, $operation = 'default') {
 }
 
 /**
- * Returns the form id for the given entity and operation.
- *
- * @param EntityInterface $entity
- *   The entity to be created or edited.
- * @param $operation
- *   (optional) The operation for the form to be processed.
- *
- * @return
- *   A string representing the entity form id.
- */
-function entity_form_id(EntityInterface $entity, $operation = 'default') {
-  $entity_type = $entity->entityType();
-  $bundle = $entity->bundle();
-  $form_id = $entity_type;
-  if ($bundle != $entity_type) {
-    $form_id = $bundle . '_' . $form_id;
-  }
-  if ($operation != 'default') {
-    $form_id = $form_id . '_' . $operation;
-  }
-  return $form_id . '_form';
-}
-
-/**
  * Returns the default form state for the given entity and operation.
  *
  * @param EntityInterface $entity
@@ -467,10 +443,11 @@ function entity_form_id(EntityInterface $entity, $operation = 'default') {
  */
 function entity_form_state_defaults(EntityInterface $entity, $operation = 'default') {
   $form_state = array();
-  $controller = drupal_container()->get('plugin.manager.entity')->getFormController($entity->entityType(), $operation);
-  $form_state['build_info']['callback'] = array($controller, 'build');
-  $form_state['build_info']['base_form_id'] = $entity->entityType() . '_form';
-  $form_state['build_info']['args'] = array($entity);
+  $controller = Drupal::service('plugin.manager.entity')->getFormController($entity->entityType(), $operation);
+  $controller->setEntity($entity);
+  $form_state['build_info']['callback_object'] = $controller;
+  $form_state['build_info']['base_form_id'] = $controller->getBaseFormID();
+  $form_state['build_info']['args'] = array();
   return $form_state;
 }
 
@@ -489,7 +466,7 @@ function entity_form_state_defaults(EntityInterface $entity, $operation = 'defau
  */
 function entity_form_submit(EntityInterface $entity, $operation = 'default', &$form_state = array()) {
   $form_state += entity_form_state_defaults($entity, $operation);
-  $form_id = entity_form_id($entity, $operation);
+  $form_id = $form_state['build_info']['callback_object']->getFormID();
   drupal_form_submit($form_id, $form_state);
 }
 
@@ -513,7 +490,7 @@ function entity_form_submit(EntityInterface $entity, $operation = 'default', &$f
  */
 function entity_get_form(EntityInterface $entity, $operation = 'default', array $form_state = array()) {
   $form_state += entity_form_state_defaults($entity, $operation);
-  $form_id = entity_form_id($entity, $operation);
+  $form_id = $form_state['build_info']['callback_object']->getFormID();
   return drupal_build_form($form_id, $form_state);
 }
 

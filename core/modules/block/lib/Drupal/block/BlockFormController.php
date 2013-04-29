@@ -7,7 +7,6 @@
 
 namespace Drupal\block;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormController;
 
 /**
@@ -18,8 +17,8 @@ class BlockFormController extends EntityFormController {
   /**
    * Overrides \Drupal\Core\Entity\EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $entity) {
-    return $entity->getPlugin()->form($form, $form_state);
+  public function form(array $form, array &$form_state) {
+    return $this->entity->getPlugin()->form($form, $form_state);
   }
 
   /**
@@ -37,7 +36,7 @@ class BlockFormController extends EntityFormController {
   public function validate(array $form, array &$form_state) {
     parent::validate($form, $form_state);
 
-    $entity = $this->getEntity($form_state);
+    $entity = $this->entity;
     $entity->getPlugin()->validate($form, $form_state);
   }
 
@@ -47,7 +46,7 @@ class BlockFormController extends EntityFormController {
   public function submit(array $form, array &$form_state) {
     parent::submit($form, $form_state);
 
-    $entity = $this->getEntity($form_state);
+    $entity = $this->entity;
     // Call the plugin submit handler.
     $entity->getPlugin()->submit($form, $form_state);
 

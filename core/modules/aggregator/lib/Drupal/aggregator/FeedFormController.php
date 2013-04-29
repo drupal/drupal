@@ -7,7 +7,6 @@
 
 namespace Drupal\aggregator;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormControllerNG;
 
 /**
@@ -18,7 +17,8 @@ class FeedFormController extends EntityFormControllerNG {
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $feed) {
+  public function form(array $form, array &$form_state) {
+    $feed = $this->entity;
     $period = drupal_map_assoc(array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
     $period[AGGREGATOR_CLEAR_NEVER] = t('Never');
 
@@ -111,7 +111,7 @@ class FeedFormController extends EntityFormControllerNG {
    * Overrides Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
-    $feed = $this->getEntity($form_state);
+    $feed = $this->entity;
     $insert = (bool) $feed->id();
     if (!empty($form_state['values']['category'])) {
       // Store category values for post save operations.
@@ -138,8 +138,7 @@ class FeedFormController extends EntityFormControllerNG {
    * Overrides Drupal\Core\Entity\EntityFormController::delete().
    */
   public function delete(array $form, array &$form_state) {
-    $feed = $this->getEntity($form_state);
-    $form_state['redirect'] = 'admin/config/services/aggregator/delete/feed/' . $feed->id();
+    $form_state['redirect'] = 'admin/config/services/aggregator/delete/feed/' . $this->entity->id();
   }
 
 }

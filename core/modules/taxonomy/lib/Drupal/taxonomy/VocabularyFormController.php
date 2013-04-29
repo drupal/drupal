@@ -7,7 +7,6 @@
 
 namespace Drupal\taxonomy;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormController;
 
 /**
@@ -18,7 +17,8 @@ class VocabularyFormController extends EntityFormController {
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $vocabulary) {
+  public function form(array $form, array &$form_state) {
+    $vocabulary = $this->entity;
 
     // Check whether we need a deletion confirmation form.
     if (isset($form_state['confirm_delete']) && isset($form_state['values']['vid'])) {
@@ -131,7 +131,7 @@ class VocabularyFormController extends EntityFormController {
    * Submit handler to update the bundle for the default language configuration.
    */
   public function languageConfigurationSubmit(array &$form, array &$form_state) {
-    $vocabulary = $this->getEntity($form_state);
+    $vocabulary = $this->entity;
     // Delete the old language settings for the vocabulary, if the machine name
     // is changed.
     if ($vocabulary && $vocabulary->id() && $vocabulary->id() != $form_state['values']['vid']) {
@@ -164,7 +164,7 @@ class VocabularyFormController extends EntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
-    $vocabulary = $this->getEntity($form_state);
+    $vocabulary = $this->entity;
 
     // Prevent leading and trailing spaces in vocabulary names.
     $vocabulary->name = trim($vocabulary->name);

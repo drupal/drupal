@@ -8,7 +8,6 @@
 namespace Drupal\comment;
 
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormControllerNG;
 
 /**
@@ -19,8 +18,9 @@ class CommentFormController extends EntityFormControllerNG {
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $comment) {
+  public function form(array $form, array &$form_state) {
     global $user;
+    $comment = $this->entity;
     $node = $comment->nid->entity;
 
     // Use #comment-form as unique jump target, regardless of node type.
@@ -170,7 +170,7 @@ class CommentFormController extends EntityFormControllerNG {
    */
   protected function actions(array $form, array &$form_state) {
     $element = parent::actions($form, $form_state);
-    $comment = $this->getEntity($form_state);
+    $comment = $this->entity;
     $node = $comment->nid->entity;
     $preview_mode = variable_get('comment_preview_' . $node->type, DRUPAL_OPTIONAL);
 
@@ -299,7 +299,7 @@ class CommentFormController extends EntityFormControllerNG {
    *   A reference to a keyed array containing the current state of the form.
    */
   public function preview(array $form, array &$form_state) {
-    $comment = $this->getEntity($form_state);
+    $comment = $this->entity;
     drupal_set_title(t('Preview comment'), PASS_THROUGH);
     $form_state['comment_preview'] = comment_preview($comment);
     $form_state['rebuild'] = TRUE;
@@ -310,7 +310,7 @@ class CommentFormController extends EntityFormControllerNG {
    */
   public function save(array $form, array &$form_state) {
     $node = node_load($form_state['values']['nid']);
-    $comment = $this->getEntity($form_state);
+    $comment = $this->entity;
 
     if (user_access('post comments') && (user_access('administer comments') || $node->comment == COMMENT_NODE_OPEN)) {
       // Save the anonymous user information to a cookie for reuse.

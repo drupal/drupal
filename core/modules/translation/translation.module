@@ -192,7 +192,7 @@ function translation_node_type_language_translation_enabled_validate($element, &
  * @see node_form()
  */
 function translation_form_node_form_alter(&$form, &$form_state) {
-  $node = $form_state['controller']->getEntity($form_state);
+  $node = $form_state['controller']->getEntity();
   if (translation_supported_type($node->type)) {
     if (!empty($node->translation_source)) {
       // We are creating a translation. Add values and lock language field.
@@ -410,7 +410,7 @@ function translation_node_update(EntityInterface $node) {
  */
 function translation_node_validate(EntityInterface $node, $form, &$form_state) {
   // Only act on translatable nodes with a tnid or translation_source.
-  $form_node = $form_state['controller']->getEntity($form_state);
+  $form_node = $form_state['controller']->getEntity();
   if (translation_supported_type($node->type) && (!empty($node->tnid) || !empty($form_node->translation_source->nid))) {
     $tnid = !empty($node->tnid) ? $node->tnid : $form_node->translation_source->nid;
     $translations = translation_node_get_translations($tnid);

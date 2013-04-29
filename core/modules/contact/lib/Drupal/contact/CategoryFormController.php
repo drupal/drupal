@@ -7,7 +7,6 @@
 
 namespace Drupal\contact;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormController;
 
 /**
@@ -18,9 +17,10 @@ class CategoryFormController extends EntityFormController {
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $category) {
-    $form = parent::form($form, $form_state, $category);
+  public function form(array $form, array &$form_state) {
+    $form = parent::form($form, $form_state);
 
+    $category = $this->entity;
     $default_category = config('contact.settings')->get('default_category');
 
     $form['label'] = array(
@@ -94,7 +94,7 @@ class CategoryFormController extends EntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
-    $category = $this->getEntity($form_state);
+    $category = $this->entity;
     $status = $category->save();
 
     $uri = $category->uri();
@@ -128,7 +128,7 @@ class CategoryFormController extends EntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::delete().
    */
   public function delete(array $form, array &$form_state) {
-    $category = $this->getEntity($form_state);
+    $category = $this->entity;
     $form_state['redirect'] = 'admin/structure/contact/manage/' . $category->id() . '/delete';
   }
 

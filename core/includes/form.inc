@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\BaseFormIdInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Datetime\DrupalDateTime;
@@ -119,6 +120,9 @@ function _drupal_form_id($form_arg, &$form_state) {
   // the callback object and determine the form ID.
   if (is_object($form_arg) && $form_arg instanceof FormInterface) {
     $form_state['build_info']['callback_object'] = $form_arg;
+    if ($form_arg instanceof BaseFormIdInterface) {
+      $form_state['build_info']['base_form_id'] = $form_arg->getBaseFormID();
+    }
     return $form_arg->getFormID();
   }
 
@@ -299,7 +303,8 @@ function drupal_get_form($form_arg) {
  *     recommended way to ensure that the chosen key doesn't conflict with ones
  *     used by the Form API or other modules is to use the module name as the
  *     key name or a prefix for the key name. For example, the entity form
- *     controller classes use $form_state['entity'] in entity forms to store
+ *     controller classes use $this->entity in entity forms, or
+ *     $form_state['controller']->getEntity() outside the controller, to store
  *     information about the entity being edited, and this information stays
  *     available across successive clicks of the "Preview" button (if available)
  *     as well as when the "Save" button is finally clicked.

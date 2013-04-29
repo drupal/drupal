@@ -9,7 +9,6 @@ namespace Drupal\node;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormController;
 
 /**
@@ -25,7 +24,8 @@ class NodeFormController extends EntityFormController {
    *
    * Overrides Drupal\Core\Entity\EntityFormController::prepareEntity().
    */
-  protected function prepareEntity(EntityInterface $node) {
+  protected function prepareEntity() {
+    $node = $this->entity;
     // Set up default values, if required.
     $node_options = variable_get('node_options_' . $node->type, array('status', 'promote'));
     // If this is a new node, fill in the default values.
@@ -55,7 +55,8 @@ class NodeFormController extends EntityFormController {
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $node) {
+  public function form(array $form, array &$form_state) {
+    $node = $this->entity;
 
     $user_config = config('user.settings');
     // Some special stuff when previewing a node.
@@ -236,7 +237,7 @@ class NodeFormController extends EntityFormController {
    */
   protected function actions(array $form, array &$form_state) {
     $element = parent::actions($form, $form_state);
-    $node = $this->getEntity($form_state);
+    $node = $this->entity;
     $preview_mode = variable_get('node_preview_' . $node->type, DRUPAL_OPTIONAL);
 
     $element['submit']['#access'] = $preview_mode != DRUPAL_REQUIRED || (!form_get_errors() && isset($form_state['node_preview']));
@@ -390,7 +391,7 @@ class NodeFormController extends EntityFormController {
     //   classes.
     module_load_include('inc', 'node', 'node.pages');
     drupal_set_title(t('Preview'), PASS_THROUGH);
-    $form_state['node_preview'] = node_preview($this->getEntity($form_state));
+    $form_state['node_preview'] = node_preview($this->entity);
     $form_state['rebuild'] = TRUE;
   }
 
@@ -403,7 +404,7 @@ class NodeFormController extends EntityFormController {
    *   A reference to a keyed array containing the current state of the form.
    */
   public function publish(array $form, array &$form_state) {
-    $node = $this->getEntity($form_state);
+    $node = $this->entity;
     $node->status = 1;
     return $node;
   }
@@ -417,7 +418,7 @@ class NodeFormController extends EntityFormController {
    *   A reference to a keyed array containing the current state of the form.
    */
   public function unpublish(array $form, array &$form_state) {
-    $node = $this->getEntity($form_state);
+    $node = $this->entity;
     $node->status = 0;
     return $node;
   }
@@ -426,7 +427,7 @@ class NodeFormController extends EntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
-    $node = $this->getEntity($form_state);
+    $node = $this->entity;
     $insert = empty($node->nid);
     $node->save();
     $node_link = l(t('view'), 'node/' . $node->nid);
@@ -467,7 +468,7 @@ class NodeFormController extends EntityFormController {
       $destination = drupal_get_destination();
       unset($_GET['destination']);
     }
-    $node = $this->getEntity($form_state);
+    $node = $this->entity;
     $form_state['redirect'] = array('node/' . $node->nid . '/delete', array('query' => $destination));
   }
 

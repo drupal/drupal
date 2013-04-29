@@ -7,25 +7,32 @@
 
 namespace Drupal\views_ui;
 
-use Drupal\Core\Entity\EntityInterface;
-
 /**
  * Form controller for the Views clone form.
  */
 class ViewCloneFormController extends ViewFormControllerBase {
 
   /**
+   * {@inheritdoc}
+   */
+  public function init(array &$form_state) {
+    parent::init($form_state);
+
+    drupal_set_title(t('Clone of @label', array('@label' => $this->entity->label())));
+  }
+
+  /**
    * Overrides \Drupal\Core\Entity\EntityFormController::prepareForm().
    */
-  protected function prepareEntity(EntityInterface $entity) {
+  protected function prepareEntity() {
     // Do not prepare the entity while it is being added.
   }
 
   /**
    * Overrides \Drupal\Core\Entity\EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $entity) {
-    parent::form($form, $form_state, $entity);
+  public function form(array $form, array &$form_state) {
+    parent::form($form, $form_state);
 
     $form['label'] = array(
       '#type' => 'textfield',
@@ -34,7 +41,7 @@ class ViewCloneFormController extends ViewFormControllerBase {
       '#size' => 32,
       '#default_value' => '',
       '#maxlength' => 255,
-      '#default_value' => t('Clone of @label', array('@label' => $entity->label())),
+      '#default_value' => t('Clone of @label', array('@label' => $this->entity->label())),
     );
     $form['id'] = array(
       '#type' => 'machine_name',
@@ -67,14 +74,14 @@ class ViewCloneFormController extends ViewFormControllerBase {
    * Overrides \Drupal\Core\Entity\EntityFormController::form().
    */
   public function submit(array $form, array &$form_state) {
-    $entity = parent::submit($form, $form_state);
-    $entity->setOriginalID(NULL);
-    $entity->save();
+    $this->entity = parent::submit($form, $form_state);
+    $this->entity->setOriginalID(NULL);
+    $this->entity->save();
 
     // Redirect the user to the view admin form.
-    $uri = $entity->uri();
+    $uri = $this->entity->uri();
     $form_state['redirect'] = $uri['path'] . '/edit';
-    return $entity;
+    return $this->entity;
   }
 
 }

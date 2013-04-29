@@ -541,7 +541,7 @@ function _menu_parent_depth_limit($item) {
 function menu_form_node_form_alter(&$form, $form_state) {
   // Generate a list of possible parents (not including this link or descendants).
   // @todo This must be handled in a #process handler.
-  $node = $form_state['controller']->getEntity($form_state);
+  $node = $form_state['controller']->getEntity();
   $link = $node->menu;
   $type = $node->type;
   $options = menu_parent_options(menu_get_menus(), $link, $type);

@@ -7,8 +7,6 @@
 
 namespace Drupal\user;
 
-use Drupal\Core\Entity\EntityInterface;
-
 /**
  * Form controller for the profile forms.
  */
@@ -19,7 +17,7 @@ class ProfileFormController extends AccountFormController {
    */
   protected function actions(array $form, array &$form_state) {
     $element = parent::actions($form, $form_state);
-    $account = $this->getEntity($form_state);
+    $account = $this->entity;
 
     $element['delete']['#type'] = 'submit';
     $element['delete']['#value'] = t('Cancel account');
@@ -43,7 +41,7 @@ class ProfileFormController extends AccountFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
-    $account = $this->getEntity($form_state);
+    $account = $this->entity;
     $account->save();
     $form_state['values']['uid'] = $account->id();
 

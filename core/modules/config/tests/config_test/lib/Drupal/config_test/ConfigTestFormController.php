@@ -7,7 +7,6 @@
 
 namespace Drupal\config_test;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormController;
 
 /**
@@ -18,9 +17,10 @@ class ConfigTestFormController extends EntityFormController {
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $entity) {
-    $form = parent::form($form, $form_state, $entity);
+  public function form(array $form, array &$form_state) {
+    $form = parent::form($form, $form_state);
 
+    $entity = $this->entity;
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => 'Label',
@@ -64,7 +64,7 @@ class ConfigTestFormController extends EntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
-    $entity = $this->getEntity($form_state);
+    $entity = $this->entity;
     $status = $entity->save();
 
     if ($status === SAVED_UPDATED) {
@@ -81,7 +81,7 @@ class ConfigTestFormController extends EntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::delete().
    */
   public function delete(array $form, array &$form_state) {
-    $entity = $this->getEntity($form_state);
+    $entity = $this->entity;
     $form_state['redirect'] = 'admin/structure/config_test/manage/' . $entity->id() . '/delete';
   }
 

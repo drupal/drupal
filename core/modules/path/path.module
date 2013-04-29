@@ -96,7 +96,7 @@ function path_menu() {
  * @see path_form_element_validate()
  */
 function path_form_node_form_alter(&$form, $form_state) {
-  $node = $form_state['controller']->getEntity($form_state);
+  $node = $form_state['controller']->getEntity();
   $path = array();
   if (!empty($node->nid)) {
     $conditions = array('source' => 'node/' . $node->nid);
@@ -231,7 +231,7 @@ function path_node_predelete(EntityInterface $node) {
 function path_form_taxonomy_term_form_alter(&$form, $form_state) {
   // Make sure this does not show up on the delete confirmation form.
   if (empty($form_state['confirm_delete'])) {
-    $term = $form_state['controller']->getEntity($form_state);
+    $term = $form_state['controller']->getEntity();
     $path = ($term->id() ? Drupal::service('path.crud')->load(array('source' => 'taxonomy/term/' . $term->id())) : array());
     if ($path === FALSE) {
       $path = array();

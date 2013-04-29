@@ -7,7 +7,6 @@
 
 namespace Drupal\custom_block;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormController;
 
 /**
@@ -18,9 +17,10 @@ class CustomBlockTypeFormController extends EntityFormController {
   /**
    * Overrides \Drupal\Core\Entity\EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $block_type) {
-    $form = parent::form($form, $form_state, $block_type);
+  public function form(array $form, array &$form_state) {
+    $form = parent::form($form, $form_state);
 
+    $block_type = $this->entity;
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => t('Label'),
@@ -87,7 +87,7 @@ class CustomBlockTypeFormController extends EntityFormController {
    * Overrides \Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
-    $block_type = $this->getEntity($form_state);
+    $block_type = $this->entity;
     $status = $block_type->save();
 
     $uri = $block_type->uri();
@@ -107,7 +107,7 @@ class CustomBlockTypeFormController extends EntityFormController {
    * Overrides \Drupal\Core\Entity\EntityFormController::delete().
    */
   public function delete(array $form, array &$form_state) {
-    $block_type = $this->getEntity($form_state);
+    $block_type = $this->entity;
     $form_state['redirect'] = 'admin/structure/custom-blocks/manage/' . $block_type->id() . '/delete';
   }
 

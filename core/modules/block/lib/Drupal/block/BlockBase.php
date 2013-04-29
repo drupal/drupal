@@ -222,7 +222,7 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
    * @see \Drupal\block\BlockBase::blockForm()
    */
   public function form($form, &$form_state) {
-    $entity = $form_state['entity'];
+    $entity = $form_state['controller']->getEntity();
     $definition = $this->getDefinition();
     $form['id'] = array(
       '#type' => 'value',
@@ -429,13 +429,14 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
    * @see \Drupal\block\BlockBase::blockValidate()
    */
   public function validate($form, &$form_state) {
+    $entity = $form_state['controller']->getEntity();
     if (!empty($form['machine_name']['#disabled'])) {
       $config_id = explode('.', $form_state['values']['machine_name']);
       $form_state['values']['machine_name'] = array_pop($config_id);
     }
     $form_state['values']['visibility']['role']['roles'] = array_filter($form_state['values']['visibility']['role']['roles']);
-    if ($form_state['entity']->isNew()) {
-      form_set_value($form['id'], $form_state['entity']->get('theme') . '.' . $form_state['values']['machine_name'], $form_state);
+    if ($entity->isNew()) {
+      form_set_value($form['id'], $entity->get('theme') . '.' . $form_state['values']['machine_name'], $form_state);
     }
     $this->blockValidate($form, $form_state);
   }
@@ -471,10 +472,11 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
   public function submit($form, &$form_state) {
     if (!form_get_errors()) {
       $this->blockSubmit($form, $form_state);
+      $entity = $form_state['controller']->getEntity();
 
       drupal_set_message(t('The block configuration has been saved.'));
       cache_invalidate_tags(array('content' => TRUE));
-      $form_state['redirect'] = 'admin/structure/block/list/block_plugin_ui:' . $form_state['entity']->get('theme');
+      $form_state['redirect'] = 'admin/structure/block/list/block_plugin_ui:' . $entity->get('theme');
     }
   }
 

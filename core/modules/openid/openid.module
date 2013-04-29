@@ -289,7 +289,7 @@ function openid_form_user_register_form_alter(&$form, &$form_state) {
       $timezone = current($ax_timezone_values);
     }
     if (in_array($timezone, timezone_identifiers_list())) {
-      $account = $form_state['controller']->getEntity($form_state);
+      $account = $form_state['controller']->getEntity();
       $account->timezone = $timezone;
     }
 

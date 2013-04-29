@@ -22,7 +22,8 @@ class EntityFormControllerNG extends EntityFormController {
   /**
    * Overrides EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $entity) {
+  public function form(array $form, array &$form_state) {
+    $entity = $this->entity;
     // @todo Exploit the Field API to generate the default widgets for the
     // entity fields.
     $info = $entity->entityInfo();
@@ -65,7 +66,7 @@ class EntityFormControllerNG extends EntityFormController {
    * Overrides EntityFormController::buildEntity().
    */
   public function buildEntity(array $form, array &$form_state) {
-    $entity = clone $this->getEntity($form_state);
+    $entity = clone $this->entity;
     $entity_type = $entity->entityType();
     $info = entity_get_info($entity_type);
     // @todo Exploit the Field API to process the submitted entity fields.

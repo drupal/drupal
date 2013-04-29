@@ -7,7 +7,6 @@
 
 namespace Drupal\picture;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormController;
 
 /**
@@ -28,7 +27,8 @@ class PictureMappingFormController extends EntityFormController {
    * @return array
    *   The array containing the complete form.
    */
-  public function form(array $form, array &$form_state, EntityInterface $picture_mapping) {
+  public function form(array $form, array &$form_state) {
+    $picture_mapping = $this->entity;
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => t('Label'),
@@ -104,7 +104,7 @@ class PictureMappingFormController extends EntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::validate().
    */
   public function validate(array $form, array &$form_state) {
-    $picture_mapping = $this->getEntity($form_state);
+    $picture_mapping = $this->entity;
 
     // Only validate on edit.
     if (isset($form_state['values']['mappings'])) {
@@ -126,7 +126,7 @@ class PictureMappingFormController extends EntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
-    $picture_mapping = $this->getEntity($form_state);
+    $picture_mapping = $this->entity;
     $picture_mapping->save();
 
     watchdog('picture', 'Picture mapping @label saved.', array('@label' => $picture_mapping->label()), WATCHDOG_NOTICE);

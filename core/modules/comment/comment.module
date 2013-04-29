@@ -1098,7 +1098,7 @@ function comment_translation_configuration_element_submit($form, &$form_state) {
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function comment_form_node_form_alter(&$form, $form_state) {
-  $node = $form_state['controller']->getEntity($form_state);
+  $node = $form_state['controller']->getEntity();
   $form['comment_settings'] = array(
     '#type' => 'details',
     '#access' => user_access('administer comments'),

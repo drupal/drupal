@@ -7,7 +7,6 @@
 
 namespace Drupal\taxonomy;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormControllerNG;
 
 /**
@@ -18,7 +17,8 @@ class TermFormController extends EntityFormControllerNG {
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $term) {
+  public function form(array $form, array &$form_state) {
+    $term = $this->entity;
     $vocabulary = taxonomy_vocabulary_load($term->bundle());
 
     $parent = array_keys(taxonomy_term_load_parents($term->id()));
@@ -153,7 +153,7 @@ class TermFormController extends EntityFormControllerNG {
    * Overrides Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
-    $term = $this->getEntity($form_state);
+    $term = $this->entity;
 
     $status = taxonomy_term_save($term);
     switch ($status) {
@@ -202,7 +202,6 @@ class TermFormController extends EntityFormControllerNG {
       $destination = drupal_get_destination();
       unset($_GET['destination']);
     }
-    $term = $this->getEntity($form_state);
-    $form_state['redirect'] = array('taxonomy/term/' . $term->id() . '/delete', array('query' => $destination));
+    $form_state['redirect'] = array('taxonomy/term/' . $this->entity->id() . '/delete', array('query' => $destination));
   }
 }

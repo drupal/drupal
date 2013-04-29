@@ -7,8 +7,6 @@
 
 namespace Drupal\views_ui;
 
-use Drupal\Core\Entity\EntityInterface;
-
 /**
  * Form controller for the Views preview form.
  */
@@ -17,7 +15,9 @@ class ViewPreviewFormController extends ViewFormControllerBase {
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $view) {
+  public function form(array $form, array &$form_state) {
+    $view = $this->entity;
+
     $form['#prefix'] = '<div id="views-preview-wrapper" class="views-admin clearfix">';
     $form['#suffix'] = '</div>';
     $form['#id'] = 'views-ui-preview-form';
@@ -70,7 +70,7 @@ class ViewPreviewFormController extends ViewFormControllerBase {
    * Overrides Drupal\Core\Entity\EntityFormController::actions().
    */
   protected function actions(array $form, array &$form_state) {
-    $view = $this->getEntity($form_state);
+    $view = $this->entity;
     return array(
       '#attributes' => array(
         'id' => 'preview-submit-wrapper',
@@ -97,7 +97,7 @@ class ViewPreviewFormController extends ViewFormControllerBase {
    */
   public function submitPreview($form, &$form_state) {
     // Rebuild the form with a pristine $view object.
-    $view = $this->getEntity($form_state);
+    $view = $this->entity;
     // Attempt to load the view from temp store, otherwise create a new one.
     if (!$new_view = drupal_container()->get('user.tempstore')->get('views')->get($view->id())) {
       $new_view = new ViewUI($view);

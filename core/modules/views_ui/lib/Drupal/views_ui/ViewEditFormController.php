@@ -10,7 +10,6 @@ namespace Drupal\views_ui;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\views\ViewExecutable;
 
@@ -20,23 +19,10 @@ use Drupal\views\ViewExecutable;
 class ViewEditFormController extends ViewFormControllerBase {
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::getEntity().
-   */
-  public function getEntity(array $form_state) {
-    return isset($form_state['view']) ? $form_state['view'] : NULL;
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\EntityFormController::setEntity().
-   */
-  public function setEntity(EntityInterface $entity, array &$form_state) {
-    $form_state['view'] = $entity;
-  }
-
-  /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $view) {
+  public function form(array $form, array &$form_state) {
+    $view = $this->entity;
     $display_id = $this->displayID;
     // Do not allow the form to be cached, because $form_state['view'] can become
     // stale between page requests.
@@ -198,8 +184,7 @@ class ViewEditFormController extends ViewFormControllerBase {
   public function validate(array $form, array &$form_state) {
     parent::validate($form, $form_state);
 
-    $view = $this->getEntity($form_state);
-
+    $view = $this->entity;
     foreach ($view->get('executable')->validate() as $display_errors) {
       foreach ($display_errors as $error) {
         form_set_error('', $error);
@@ -213,7 +198,7 @@ class ViewEditFormController extends ViewFormControllerBase {
   public function submit(array $form, array &$form_state) {
     parent::submit($form, $form_state);
 
-    $view = $this->getEntity($form_state);
+    $view = $this->entity;
     // Go through and remove displayed scheduled for removal.
     $displays = $view->get('display');
     foreach ($displays as $id => $display) {
@@ -280,7 +265,7 @@ class ViewEditFormController extends ViewFormControllerBase {
    */
   public function cancel(array $form, array &$form_state) {
     // Remove this view from cache so edits will be lost.
-    $view = $this->getEntity($form_state);
+    $view = $this->entity;
     drupal_container()->get('user.tempstore')->get('views')->delete($view->id());
     $form_state['redirect'] = 'admin/structure/views';
   }
@@ -291,7 +276,7 @@ class ViewEditFormController extends ViewFormControllerBase {
   protected function actionsElement(array $form, array &$form_state) {
     $element = parent::actionsElement($form, $form_state);
     $element['#weight'] = 0;
-    $view = $this->getEntity($form_state);
+    $view = $this->entity;
     if (empty($view->changed)) {
       $element['#attributes'] = array(
         'class' => array(
@@ -536,7 +521,7 @@ class ViewEditFormController extends ViewFormControllerBase {
    * Submit handler to add a restore a removed display to a view.
    */
   public function submitDisplayUndoDelete($form, &$form_state) {
-    $view = $this->getEntity($form_state);
+    $view = $this->entity;
     // Create the new display
     $id = $form_state['display_id'];
     $displays = $view->get('display');
@@ -554,7 +539,7 @@ class ViewEditFormController extends ViewFormControllerBase {
    * Submit handler to enable a disabled display.
    */
   public function submitDisplayEnable($form, &$form_state) {
-    $view = $this->getEntity($form_state);
+    $view = $this->entity;
     $id = $form_state['display_id'];
     // setOption doesn't work because this would might affect upper displays
     $view->get('executable')->displayHandlers->get($id)->setOption('enabled', TRUE);
@@ -570,7 +555,7 @@ class ViewEditFormController extends ViewFormControllerBase {
    * Submit handler to disable display.
    */
   public function submitDisplayDisable($form, &$form_state) {
-    $view = $this->getEntity($form_state);
+    $view = $this->entity;
     $id = $form_state['display_id'];
     $view->get('executable')->displayHandlers->get($id)->setOption('enabled', FALSE);
 
@@ -585,7 +570,7 @@ class ViewEditFormController extends ViewFormControllerBase {
    * Submit handler to delete a display from a view.
    */
   public function submitDisplayDelete($form, &$form_state) {
-    $view = $this->getEntity($form_state);
+    $view = $this->entity;
     $display_id = $form_state['display_id'];
 
     // Mark the display for deletion.
@@ -745,7 +730,7 @@ class ViewEditFormController extends ViewFormControllerBase {
    * Submit handler to duplicate a display for a view.
    */
   public function submitDisplayDuplicate($form, &$form_state) {
-    $view = $this->getEntity($form_state);
+    $view = $this->entity;
     $display_id = $this->displayID;
 
     // Create the new display.
@@ -768,7 +753,7 @@ class ViewEditFormController extends ViewFormControllerBase {
    * Submit handler to add a display to a view.
    */
   public function submitDisplayAdd($form, &$form_state) {
-    $view = $this->getEntity($form_state);
+    $view = $this->entity;
     // Create the new display.
     $parents = $form_state['triggering_element']['#parents'];
     $display_type = array_pop($parents);
@@ -786,7 +771,7 @@ class ViewEditFormController extends ViewFormControllerBase {
    * Submit handler to clone a display as another display type.
    */
   public function submitCloneDisplayAsType($form, &$form_state) {
-    $view = $this->getEntity($form_state);
+    $view = $this->entity;
     $display_id = $this->displayID;
 
     // Create the new display.

@@ -61,7 +61,7 @@ class NodeTranslationController extends EntityTranslationController {
     if (isset($form_state['values']['translation_entity'])) {
       $form_controller = translation_entity_form_controller($form_state);
       $translation = &$form_state['values']['translation_entity'];
-      $translation['status'] = $form_controller->getEntity($form_state)->status;
+      $translation['status'] = $form_controller->getEntity()->status;
       $translation['name'] = $form_state['values']['name'];
       $translation['created'] = $form_state['values']['date'];
     }

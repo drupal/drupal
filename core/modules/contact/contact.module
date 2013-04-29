@@ -336,7 +336,7 @@ function contact_form_user_profile_form_alter(&$form, &$form_state) {
     '#title' => t('Contact settings'),
     '#weight' => 5,
   );
-  $account = $form_state['controller']->getEntity($form_state);
+  $account = $form_state['controller']->getEntity();
   $account_data = drupal_container()->get('user.data')->get('contact', $account->id(), 'enabled');
   $form['contact']['contact'] = array(
     '#type' => 'checkbox',

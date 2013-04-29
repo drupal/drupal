@@ -103,7 +103,7 @@ function taxonomy_test_entity_view($entity, EntityDisplay $display, $view_mode, 
  * Implements hook_form_FORM_ID_alter().
  */
 function taxonomy_test_form_taxonomy_term_form_alter(&$form, $form_state, $form_id) {
-  $term = $form_state['controller']->getEntity($form_state);
+  $term = $form_state['controller']->getEntity();
   $antonym = taxonomy_test_get_antonym($term->id());
   $form['advanced']['antonym'] = array(
     '#type' => 'textfield',

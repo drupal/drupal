@@ -7,7 +7,6 @@
 
 namespace Drupal\menu_link;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormController;
 
 /**
@@ -18,7 +17,8 @@ class MenuLinkFormController extends EntityFormController {
   /**
    * Overrides EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $menu_link) {
+  public function form(array $form, array &$form_state) {
+    $menu_link = $this->entity;
     // Since menu_link_load() no longer returns a translated and access checked
     // item, do it here instead.
     _menu_link_translate($menu_link);
@@ -137,7 +137,7 @@ class MenuLinkFormController extends EntityFormController {
   protected function actions(array $form, array &$form_state) {
     $element = parent::actions($form, $form_state);
     $element['submit']['#button_type'] = 'primary';
-    $element['delete']['#access'] = $this->getEntity($form_state)->module == 'menu';
+    $element['delete']['#access'] = $this->entity->module == 'menu';
 
     return $element;
   }
@@ -202,7 +202,7 @@ class MenuLinkFormController extends EntityFormController {
    * Overrides EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
-    $menu_link = $this->getEntity($form_state);
+    $menu_link = $this->entity;
 
     $saved = $menu_link->save();
 
@@ -220,7 +220,7 @@ class MenuLinkFormController extends EntityFormController {
    * Overrides EntityFormController::delete().
    */
   public function delete(array $form, array &$form_state) {
-    $menu_link = $this->getEntity($form_state);
+    $menu_link = $this->entity;
     $form_state['redirect'] = 'admin/structure/menu/item/' . $menu_link->id() . '/delete';
   }
 }

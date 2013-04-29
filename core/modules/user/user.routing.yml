@@ -1,7 +1,7 @@
 user_register:
   pattern: '/user/register'
   defaults:
-    _content: '\Drupal\user\UserRouteController::register'
+    _entity_form: 'user.register'
   requirements:
     _access_user_register: 'TRUE'
 
