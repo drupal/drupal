@@ -430,6 +430,16 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
       // hook_field_delete_instance().
       $module_handler->invokeAll('field_delete_instance', array($this));
 
+      // Remove the instance from the entity displays.
+      $ids = array();
+      $view_modes = array('default' => array()) + entity_get_view_modes($this->entity_type);
+      foreach (array_keys($view_modes) as $view_mode) {
+        $ids[] = $this->entity_type . '.' . $this->bundle . '.' . $view_mode;
+      }
+      foreach (entity_load_multiple('entity_display', $ids) as $display) {
+        $display->removeComponent($this->field->id())->save();
+      }
+
       // Delete the field itself if we just deleted its last instance.
       if ($field_cleanup && count($this->field->getBundles()) == 0) {
         $this->field->delete();
