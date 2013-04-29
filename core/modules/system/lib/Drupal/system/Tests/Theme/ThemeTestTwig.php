@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Theme\ThemeTest.
+ * Contains \Drupal\system\Tests\Theme\ThemeTestTwig.
  */
 
 namespace Drupal\system\Tests\Theme;
@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Theme;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests low-level theme functions.
+ * Tests theme functions with the Twig engine.
  */
 class ThemeTestTwig extends WebTestBase {
 
@@ -19,7 +19,7 @@ class ThemeTestTwig extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('theme_test');
+  public static $modules = array('theme_test', 'twig_theme_test');
 
   public static function getInfo() {
     return array(
@@ -69,4 +69,18 @@ class ThemeTestTwig extends WebTestBase {
     $templates = drupal_find_theme_templates($cache, '.html.twig', drupal_get_path('theme', 'test_theme_twig'));
     $this->assertEqual($templates['node__1']['template'], 'node--1', 'Template node--1.html.twig was found in test_theme_twig.');
   }
+
+  /**
+   * Tests that the Twig engine handles PHP data correctly.
+   */
+  function testTwigVariableDataTypes() {
+    config('system.theme')
+      ->set('default', 'test_theme_twig')
+      ->save();
+    $this->drupalGet('twig-theme-test/php-variables');
+    foreach (_test_theme_twig_php_values() as $type => $value) {
+      $this->assertRaw('<li>' . $type . ': ' . $value['expected'] . '</li>');
+    }
+  }
+
 }
