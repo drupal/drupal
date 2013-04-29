@@ -170,8 +170,8 @@ class UserCancelTest extends WebTestBase {
     $account = user_load($account->uid, TRUE);
     $this->assertTrue($account->status == 0, 'User has been blocked.');
 
-    // Confirm user is logged out.
-    $this->assertNoText($account->name, 'Logged out.');
+    // Confirm that the confirmation message made it through to the end user.
+    $this->assertRaw(t('%name has been disabled.', array('%name' => $account->name)), "Confirmation message displayed to user.");
   }
 
   /**
@@ -214,8 +214,8 @@ class UserCancelTest extends WebTestBase {
     $test_node = node_revision_load($node->vid);
     $this->assertTrue($test_node->status == 0, 'Node revision of the user has been unpublished.');
 
-    // Confirm user is logged out.
-    $this->assertNoText($account->name, 'Logged out.');
+    // Confirm that the confirmation message made it through to the end user.
+    $this->assertRaw(t('%name has been disabled.', array('%name' => $account->name)), "Confirmation message displayed to user.");
   }
 
   /**
@@ -265,8 +265,8 @@ class UserCancelTest extends WebTestBase {
     $test_node = node_load($revision_node->nid, TRUE);
     $this->assertTrue(($test_node->uid != 0 && $test_node->status == 1), "Current revision of the user's node was not attributed to anonymous user.");
 
-    // Confirm that user is logged out.
-    $this->assertNoText($account->name, 'Logged out.');
+    // Confirm that the confirmation message made it through to the end user.
+    $this->assertRaw(t('%name has been deleted.', array('%name' => $account->name)), "Confirmation message displayed to user.");
   }
 
   /**
@@ -329,8 +329,8 @@ class UserCancelTest extends WebTestBase {
     $this->assertTrue(node_load($revision_node->nid, TRUE), "Current revision of the user's node was not deleted.");
     $this->assertFalse(comment_load($comment->id()), 'Comment of the user has been deleted.');
 
-    // Confirm that user is logged out.
-    $this->assertNoText($account->name, 'Logged out.');
+    // Confirm that the confirmation message made it through to the end user.
+    $this->assertRaw(t('%name has been deleted.', array('%name' => $account->name)), "Confirmation message displayed to user.");
   }
 
   /**
