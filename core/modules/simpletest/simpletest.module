@@ -54,11 +54,8 @@ function simpletest_menu() {
   );
   $items['admin/config/development/testing/results/%'] = array(
     'title' => 'Test result',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('simpletest_result_form', 5),
     'description' => 'View result of tests.',
-    'access arguments' => array('administer unit tests'),
-    'file' => 'simpletest.pages.inc',
+    'router_name' => 'simpletest_result_form',
   );
   return $items;
 }
