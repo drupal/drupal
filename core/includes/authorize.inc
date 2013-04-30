@@ -15,7 +15,7 @@
  * @ingroup forms
  */
 function authorize_filetransfer_form($form, &$form_state) {
-  global $base_url, $is_https;
+  global $base_url;
   $form = array();
 
   // If possible, we want to post this form securely via HTTPS.
@@ -28,7 +28,7 @@ function authorize_filetransfer_form($form, &$form_state) {
   }
   $available_backends = $_SESSION['authorize_filetransfer_info'];
 
-  if (!$is_https) {
+  if (!Drupal::request()->isSecure()) {
     $form['information']['https_warning'] = array(
       '#prefix' => '<div class="messages error">',
       '#markup' => t('WARNING: You are not using an encrypted connection, so your password will be sent in plain text. <a href="@https-link">Learn more</a>.', array('@https-link' => 'http://drupal.org/https-information')),

@@ -453,8 +453,6 @@ function language_url_rewrite_url(&$path, &$options) {
       case LANGUAGE_NEGOTIATION_URL_DOMAIN:
         $domains = language_negotiation_url_domains();
         if (is_object($options['language']) && !empty($domains[$options['language']->langcode])) {
-          global $is_https;
-
           // Save the original base URL. If it contains a port, we need to
           // retain it below.
           if (!empty($options['base_url'])) {
@@ -464,7 +462,7 @@ function language_url_rewrite_url(&$path, &$options) {
           }
 
           // Ask for an absolute URL with our modified base URL.
-          $url_scheme = ($is_https) ? 'https://' : 'http://';
+          $url_scheme = Drupal::request()->isSecure() ? 'https://' : 'http://';
           $options['absolute'] = TRUE;
           $options['base_url'] = $url_scheme . $domains[$options['language']->langcode];
 

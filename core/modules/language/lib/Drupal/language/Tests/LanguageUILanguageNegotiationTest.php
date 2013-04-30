@@ -9,6 +9,7 @@ namespace Drupal\language\Tests;
 
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Test UI language negotiation
@@ -59,6 +60,9 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
 
   function setUp() {
     parent::setUp();
+
+    $this->request = Request::create('http://example.com/');
+    $this->container->set('request', $this->request);
 
     require_once DRUPAL_ROOT . '/core/includes/language.inc';
     $admin_user = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages', 'administer blocks'));
@@ -452,12 +456,11 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // Build the link we're going to test.
     $link = 'it.example.com/admin';
 
-    global $is_https;
     // Test URL in another language: http://it.example.com/admin.
     // Base path gives problems on the testbot, so $correct_link is hard-coded.
     // @see UrlAlterFunctionalTest::assertUrlOutboundAlter (path.test).
     $italian_url = url('admin', array('language' => $languages['it'], 'script' => ''));
-    $url_scheme = ($is_https) ? 'https://' : 'http://';
+    $url_scheme = $this->request->isSecure() ? 'https://' : 'http://';
     $correct_link = $url_scheme . $link;
     $this->assertTrue($italian_url == $correct_link, format_string('The url() function returns the right URL (@url) in accordance with the chosen language', array('@url' => $italian_url)));
 
@@ -469,11 +472,11 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $this->settingsSet('mixed_mode_sessions', FALSE);
 
     // Test HTTPS via current URL scheme.
-    $temp_https = $is_https;
-    $is_https = TRUE;
+    $temp_https = $this->request->server->get('HTTPS');
+    $this->request->server->set('HTTPS', 'on');
     $italian_url = url('admin', array('language' => $languages['it'], 'script' => ''));
     $correct_link = 'https://' . $link;
     $this->assertTrue($italian_url == $correct_link, format_string('The url() function returns the right URL (via current URL scheme) (@url) in accordance with the chosen language', array('@url' => $italian_url)));
-    $is_https = $temp_https;
+    $this->request->server->set('HTTPS', $temp_https);
   }
 }

@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Session;
 
 use Drupal\simpletest\WebTestBase;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Ensure that when running under HTTPS two session cookies are generated.
@@ -29,10 +30,14 @@ class SessionHttpsTest extends WebTestBase {
     );
   }
 
-  protected function testHttpsSession() {
-    global $is_https;
+  public function setUp() {
+    parent::setUp();
+    $this->request = Request::create('http://example.com/');
+    $this->container->set('request', $this->request);
+  }
 
-    if ($is_https) {
+  protected function testHttpsSession() {
+    if ($this->request->isSecure()) {
       $secure_session_name = session_name();
       $insecure_session_name = substr(session_name(), 1);
     }
@@ -107,7 +112,7 @@ class SessionHttpsTest extends WebTestBase {
     // Clear browser cookie jar.
     $this->cookies = array();
 
-    if ($is_https) {
+    if ($this->request->isSecure()) {
       // The functionality does not make sense when running on HTTPS.
       return;
     }
@@ -241,6 +246,7 @@ class SessionHttpsTest extends WebTestBase {
    */
   protected function httpsUrl($url) {
     global $base_url;
+    $this->request->server->set('HTTPS', 'on');
     return $base_url . '/core/modules/system/tests/https.php/' . $url;
   }
 
