@@ -26,7 +26,8 @@ class TipPluginManager extends PluginManagerBase {
    *   keyed by the corresponding namespace to look for plugin implementations,
    */
   public function __construct(\Traversable $namespaces) {
-    $this->discovery = new AnnotatedClassDiscovery('tour', 'tip', $namespaces);
+    $annotation_namespaces = array('Drupal\tour\Annotation' => $namespaces['Drupal\tour']);
+    $this->discovery = new AnnotatedClassDiscovery('tour', 'tip', $namespaces, $annotation_namespaces, 'Drupal\tour\Annotation\Tip');
     $this->discovery = new CacheDecorator($this->discovery, 'tour');
 
     $this->factory = new DefaultFactory($this->discovery);

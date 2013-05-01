@@ -7,16 +7,13 @@
 
 namespace Drupal\tour_test\Plugin\tour\tip;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\tour\Annotation\Tip;
 use Drupal\tour\TipPluginBase;
 
 /**
  * Displays an image as a tip.
  *
- * @Plugin(
- *   id = "image",
- *   module = "tour_test"
- * )
+ * @Tip("image")
  */
 class TipPluginImage extends TipPluginBase {
 
