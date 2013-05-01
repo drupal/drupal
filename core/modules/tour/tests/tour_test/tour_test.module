@@ -12,13 +12,11 @@ use Drupal\Core\Entity\EntityInterface;
  */
 function tour_test_menu() {
   $items['tour-test-1'] = array(
-    'page callback' => 'tour_test_1',
-    'access callback' => TRUE,
+    'route_name' => 'tour_test_1',
     'title' => 'Tour test 1'
   );
   $items['tour-test-2/subpath'] = array(
-    'page callback' => 'tour_test_2',
-    'access callback' => TRUE,
+    'route_name' => 'tour_test_2',
     'title' => 'Tour test 2'
   );
   return $items;
@@ -40,41 +38,6 @@ function tour_test_tour_presave($entity) {
   if ($entity->id() == 'tour-entity-create-test-en') {
     $entity->set('label', $entity->label() . ' alter');
   }
-}
-
-/**
- * Page callback: output some content for testing tours.
- */
-function tour_test_1() {
-  return array(
-    'tip-1' => array(
-      '#type' => 'container',
-      '#attributes' => array(
-        'id' => 'tour-test-1',
-      ),
-      '#children' => t('Where does the rain in Spain fail?'),
-    ),
-    'tip-4' => array(
-      '#type' => 'container',
-      '#attributes' => array(
-        'id' => 'tour-test-4',
-      ),
-      '#children' => t('Tip created later?'),
-    ),
-  );
-}
-
-/**
- * Page callback: output some content for testing tours.
- */
-function tour_test_2() {
-  return array(
-    '#type' => 'container',
-    '#attributes' => array(
-      'id' => 'tour-test-2',
-    ),
-    '#children' => t('Pangram example'),
-  );
 }
 
 /**

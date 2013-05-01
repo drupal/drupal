@@ -1,0 +1,13 @@
+tour_test_1:
+  pattern : 'tour-test-1'
+  defaults:
+    _content: '\Drupal\tour_test\Controller\TourTestController::tourTest1'
+  requirements:
+    _access: 'TRUE'
+
+tour_test_2:
+  pattern : 'tour-test-2/subpath'
+  defaults:
+    _content: '\Drupal\tour_test\Controller\TourTestController::tourTest2'
+  requirements:
+    _access: 'TRUE'
