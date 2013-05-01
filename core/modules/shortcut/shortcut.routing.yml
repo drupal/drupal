@@ -11,3 +11,10 @@ shortcut_set_delete:
     _form: 'Drupal\shortcut\Form\SetDelete'
   requirements:
     _entity_access: 'shortcut.delete'
+
+shortcut_set_admin:
+  pattern: '/admin/config/user-interface/shortcut'
+  defaults:
+    _content: 'Drupal\shortcut\Controller\ShortcutController::shortcutSetAdmin'
+  requirements:
+    _permission: 'administer shortcuts'

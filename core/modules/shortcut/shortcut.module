@@ -64,9 +64,7 @@ function shortcut_menu() {
   $items['admin/config/user-interface/shortcut'] = array(
     'title' => 'Shortcuts',
     'description' => 'Add and modify shortcut sets.',
-    'page callback' => 'shortcut_set_admin',
-    'access arguments' => array('administer shortcuts'),
-    'file' => 'shortcut.admin.inc',
+    'route_name' => 'shortcut_set_admin',
   );
   $items['admin/config/user-interface/shortcut/add-set'] = array(
     'title' => 'Add shortcut set',

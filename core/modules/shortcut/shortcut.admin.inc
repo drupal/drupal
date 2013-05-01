@@ -171,13 +171,6 @@ function shortcut_set_switch_submit($form, &$form_state) {
 }
 
 /**
- * Menu page callback: builds the page for administering shortcut sets.
- */
-function shortcut_set_admin() {
-  return entity_list_controller('shortcut')->render();
-}
-
-/**
  * Page callback: provides the shortcut set creation form.
  */
 function shortcut_set_add() {
