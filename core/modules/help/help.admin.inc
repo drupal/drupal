@@ -6,18 +6,6 @@
  */
 
 /**
- * Page callback: Prints a page listing a glossary of Drupal terminology.
- *
- * @see help_menu()
- */
-function help_main() {
-  // Add CSS.
-  drupal_add_css(drupal_get_path('module', 'help') . '/help.css');
-  $output = '<h2>' . t('Help topics') . '</h2><p>' . t('Help is available on the following items:') . '</p>' . help_links_as_list();
-  return $output;
-}
-
-/**
  * Page callback: Prints a page listing general help for a module.
  *
  * @param $name
@@ -50,40 +38,5 @@ function help_page($name) {
       $output .= theme('item_list', array('items' => $links, 'title' => t('@module administration pages', array('@module' => $info[$name]['name']))));
     }
   }
-  return $output;
-}
-
-/**
- * Provides a formatted list of available help topics.
- *
- * @return
- *   A string containing the formatted list.
- */
-function help_links_as_list() {
-  $empty_arg = drupal_help_arg();
-  $module_info = system_rebuild_module_data();
-
-  $modules = array();
-  foreach (module_implements('help') as $module) {
-    if (module_invoke($module, 'help', "admin/help#$module", $empty_arg)) {
-      $modules[$module] = $module_info[$module]->info['name'];
-    }
-  }
-  asort($modules);
-
-  // Output pretty four-column list.
-  $count = count($modules);
-  $break = ceil($count / 4);
-  $output = '<div class="clearfix"><div class="help-items"><ul>';
-  $i = 0;
-  foreach ($modules as $module => $name) {
-    $output .= '<li>' . l($name, 'admin/help/' . $module) . '</li>';
-    if (($i + 1) % $break == 0 && ($i + 1) != $count) {
-      $output .= '</ul></div><div class="help-items' . ($i + 1 == $break * 3 ? ' help-items-last' : '') . '"><ul>';
-    }
-    $i++;
-  }
-  $output .= '</ul></div></div>';
-
   return $output;
 }

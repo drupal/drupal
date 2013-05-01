@@ -12,10 +12,8 @@ function help_menu() {
   $items['admin/help'] = array(
     'title' => 'Help',
     'description' => 'Reference for usage, configuration, and modules.',
-    'page callback' => 'help_main',
-    'access arguments' => array('access administration pages'),
+    'route_name' => 'help_main',
     'weight' => 9,
-    'file' => 'help.admin.inc',
   );
 
   $modules = module_implements('help');
