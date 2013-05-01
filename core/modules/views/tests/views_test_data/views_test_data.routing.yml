@@ -1,0 +1,6 @@
+views_test_data_element:
+  pattern: '/views_test_data_element_form'
+  defaults:
+    _form: '\Drupal\views_test_data\Form\ViewsTestDataElementForm'
+  requirements:
+    _access: 'TRUE'
