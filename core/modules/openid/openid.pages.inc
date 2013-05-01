@@ -104,3 +104,26 @@ function openid_user_add_submit($form, &$form_state) {
   $return_to = url('user/' . arg(1) . '/openid', array('absolute' => TRUE));
   openid_begin($form_state['values']['openid_identifier'], $return_to);
 }
+
+/**
+ * Menu callback; Delete the specified OpenID identity from the system.
+ */
+function openid_user_delete_form($form, $form_state, $account, $aid = 0) {
+  $identifier = db_query("SELECT identifier FROM {openid_identities} WHERE uid = :uid AND aid = :aid", array(
+    ':uid' => $account->uid,
+    ':aid' => $aid,
+  ))
+  ->fetchField();
+  return confirm_form(array(), t('Are you sure you want to delete the OpenID %identifier for %user?', array('%identifier' => $identifier, '%user' => $account->name)), 'user/' . $account->uid . '/openid');
+}
+
+function openid_user_delete_form_submit($form, &$form_state) {
+  $query = db_delete('openid_identities')
+    ->condition('uid', $form_state['build_info']['args'][0]->uid)
+    ->condition('aid', $form_state['build_info']['args'][1])
+    ->execute();
+  if ($query) {
+    drupal_set_message(t('OpenID deleted.'));
+  }
+  $form_state['redirect'] = 'user/' . $form_state['build_info']['args'][0]->uid . '/openid';
+}
