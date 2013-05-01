@@ -36,11 +36,7 @@ function openid_menu() {
   );
   $items['user/%user/openid/delete'] = array(
     'title' => 'Delete OpenID',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('openid_user_delete_form', 1),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(1, 'update'),
-    'file' => 'openid.pages.inc',
+    'route_name' => 'openid_user_delete_form',
   );
   return $items;
 }
