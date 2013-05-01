@@ -59,9 +59,12 @@ class ViewUI implements ViewStorageInterface {
   /**
    * If this view is locked for editing.
    *
-   * @var bool
+   * If this view is locked it will contain the result of
+   * \Drupal\user\TempStore::getMetadata(). Which can be a stdClass or NULL.
+   *
+   * @var stdClass
    */
-  public $locked;
+  public $lock;
 
   /**
    * If this view has been changed.
@@ -201,7 +204,7 @@ class ViewUI implements ViewStorageInterface {
       $display->optionsOverride($form, $form_state);
 
       // Don't execute the normal submit handling but still store the changed view into cache.
-      views_ui_cache_set($this);
+      $this->cacheSet();
       return;
     }
     elseif ($was_defaulted === $is_defaulted) {
@@ -245,7 +248,7 @@ class ViewUI implements ViewStorageInterface {
   public function standardCancel($form, &$form_state) {
     if (!empty($this->changed) && isset($this->form_cache)) {
       unset($this->form_cache);
-      views_ui_cache_set($this);
+      $this->cacheSet();
     }
 
     $form_state['redirect'] = 'admin/structure/views/view/' . $this->id() . '/edit';
@@ -481,7 +484,7 @@ class ViewUI implements ViewStorageInterface {
     }
 
     // Store in cache
-    views_ui_cache_set($this);
+    $this->cacheSet();
   }
 
   /**
@@ -733,6 +736,43 @@ class ViewUI implements ViewStorageInterface {
       }
     }
     return $progress;
+  }
+
+  /**
+   * Sets a cached view object in the user tempstore.
+   */
+  public function cacheSet() {
+    if ($this->isLocked()) {
+      drupal_set_message(t('Changes cannot be made to a locked view.'), 'error');
+      return;
+    }
+
+    // Let any future object know that this view has changed.
+    $this->changed = TRUE;
+
+    $executable = $this->get('executable');
+    if (isset($executable->current_display)) {
+      // Add the knowledge of the changed display, too.
+      $this->changed_display[$executable->current_display] = TRUE;
+      unset($executable->current_display);
+    }
+
+    // Unset handlers; we don't want to write these into the cache.
+    unset($executable->display_handler);
+    unset($executable->default_display);
+    $executable->query = NULL;
+    unset($executable->displayHandlers);
+    \Drupal::service('user.tempstore')->get('views')->set($this->id(), $this);
+  }
+
+  /**
+   * Returns whether the current view is locked.
+   *
+   * @return bool
+   *   TRUE if the view is locked, FALSE otherwise.
+   */
+  public function isLocked() {
+    return is_object($this->lock) && ($this->lock->owner != $GLOBALS['user']->uid);
   }
 
   /**

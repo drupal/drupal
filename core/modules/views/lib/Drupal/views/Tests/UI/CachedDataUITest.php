@@ -31,26 +31,32 @@ class CachedDataUITest extends UITestBase {
    * Tests the user tempstore views data in the UI.
    */
   public function testCacheData() {
-    $view = entity_load('view', 'test_view');
+    $views_admin_user_uid = $this->fullAdminUser->id();
 
     $temp_store = $this->container->get('user.tempstore')->get('views');
-    $view_cache = $temp_store->getMetadata('test_view');
     // The view should not be locked.
-    $this->assertFalse($view_cache, 'The view is not locked.');
+    $this->assertEqual($temp_store->getMetadata('test_view'), NULL, 'The view is not locked.');
 
     $this->drupalGet('admin/structure/views/view/test_view/edit');
     // Make sure we have 'changes' to the view.
     $this->drupalPost('admin/structure/views/nojs/display/test_view/default/title', array(), t('Apply'));
     $this->assertText('You have unsaved changes.');
+    $this->assertEqual($temp_store->getMetadata('test_view')->owner, $views_admin_user_uid, 'View cache has been saved.');
 
     $view_cache = $temp_store->get('test_view');
     // The view should be enabled.
     $this->assertTrue($view_cache->status(), 'The view is enabled.');
     // The view should now be locked.
-    $view_cache = $temp_store->getMetadata('test_view');
-    $this->assertTrue($view_cache, 'The view is locked.');
+    $this->assertEqual($temp_store->getMetadata('test_view')->owner, $views_admin_user_uid, 'The view is locked.');
+
+    // Cancel the view edit and make sure the cache is deleted.
+    $this->drupalPost(NULL, array(), t('Cancel'));
+    $this->assertEqual($temp_store->getMetadata('test_view'), NULL, 'User tempstore data has been removed.');
+    // Test we are redirected to the view listing page.
+    $this->assertUrl('admin/structure/views', array(), 'Redirected back to the view listing page.');
 
     // Login with another user and make sure the view is locked and break.
+    $this->drupalPost('admin/structure/views/nojs/display/test_view/default/title', array(), t('Apply'));
     $this->drupalLogin($this->adminUser);
 
     $this->drupalGet('admin/structure/views/view/test_view/edit');

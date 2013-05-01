@@ -178,7 +178,7 @@ class ConfigItem extends ViewsFormBase {
     }
 
     if ($save_ui_cache) {
-      views_ui_cache_set($view);
+      $view->cacheSet();
     }
 
     return $form;
@@ -245,7 +245,7 @@ class ConfigItem extends ViewsFormBase {
     }
 
     // Write to cache
-    views_ui_cache_set($form_state['view']);
+    $form_state['view']->cacheSet();
   }
 
   /**
@@ -263,7 +263,7 @@ class ConfigItem extends ViewsFormBase {
     $executable->removeItem($form_state['display_id'], $form_state['type'], $form_state['id']);
 
     // Write to cache
-    views_ui_cache_set($form_state['view']);
+    $form_state['view']->cacheSet();
   }
 
 }

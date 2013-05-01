@@ -160,7 +160,7 @@ class Rearrange extends ViewsFormBase {
     $display->setOption($types[$form_state['type']]['plural'], $new_fields);
 
     // Store in cache
-    views_ui_cache_set($form_state['view']);
+    $form_state['view']->cacheSet();
   }
 
 }

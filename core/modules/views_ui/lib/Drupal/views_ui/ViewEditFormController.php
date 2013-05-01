@@ -73,11 +73,11 @@ class ViewEditFormController extends ViewFormControllerBase {
 
     $form['#attributes']['class'] = array('form-edit');
 
-    if (isset($view->locked) && is_object($view->locked) && $view->locked->owner != $GLOBALS['user']->uid) {
+    if ($view->isLocked()) {
       $form['locked'] = array(
         '#type' => 'container',
         '#attributes' => array('class' => array('view-locked', 'messages', 'warning')),
-        '#children' => t('This view is being edited by user !user, and is therefore locked from editing by others. This lock is !age old. Click here to <a href="!break">break this lock</a>.', array('!user' => theme('username', array('account' => user_load($view->locked->owner))), '!age' => format_interval(REQUEST_TIME - $view->locked->updated), '!break' => url('admin/structure/views/view/' . $view->id() . '/break-lock'))),
+        '#children' => t('This view is being edited by user !user, and is therefore locked from editing by others. This lock is !age old. Click here to <a href="!break">break this lock</a>.', array('!user' => theme('username', array('account' => user_load($view->lock->owner))), '!age' => format_interval(REQUEST_TIME - $view->lock->updated), '!break' => url('admin/structure/views/view/' . $view->id() . '/break-lock'))),
         '#weight' => -10,
       );
     }
@@ -529,7 +529,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     $view->set('display', $displays);
 
     // Store in cache
-    views_ui_cache_set($view);
+    $view->cacheSet();
 
     // Redirect to the top-level edit page.
     $form_state['redirect'] = 'admin/structure/views/view/' . $view->id() . '/edit/' . $id;
@@ -545,7 +545,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     $view->get('executable')->displayHandlers->get($id)->setOption('enabled', TRUE);
 
     // Store in cache
-    views_ui_cache_set($view);
+    $view->cacheSet();
 
     // Redirect to the top-level edit page.
     $form_state['redirect'] = 'admin/structure/views/view/' . $view->id() . '/edit/' . $id;
@@ -560,7 +560,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     $view->get('executable')->displayHandlers->get($id)->setOption('enabled', FALSE);
 
     // Store in cache
-    views_ui_cache_set($view);
+    $view->cacheSet();
 
     // Redirect to the top-level edit page.
     $form_state['redirect'] = 'admin/structure/views/view/' . $view->id() . '/edit/' . $id;
@@ -577,7 +577,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     $displays = $view->get('display');
     $displays[$display_id]['deleted'] = TRUE;
     $view->set('display', $displays);
-    views_ui_cache_set($view);
+    $view->cacheSet();
 
     // Redirect to the top-level edit page. The first remaining display will
     // become the active display.
@@ -743,7 +743,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     // By setting the current display the changed marker will appear on the new
     // display.
     $view->get('executable')->current_display = $new_display_id;
-    views_ui_cache_set($view);
+    $view->cacheSet();
 
     // Redirect to the new display's edit page.
     $form_state['redirect'] = 'admin/structure/views/view/' . $view->id() . '/edit/' . $new_display_id;
@@ -761,7 +761,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     // A new display got added so the asterisks symbol should appear on the new
     // display.
     $view->get('executable')->current_display = $display_id;
-    views_ui_cache_set($view);
+    $view->cacheSet();
 
     // Redirect to the new display's edit page.
     $form_state['redirect'] = 'admin/structure/views/view/' . $view->id() . '/edit/' . $display_id;
@@ -793,7 +793,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     // By setting the current display the changed marker will appear on the new
     // display.
     $view->get('executable')->current_display = $new_display_id;
-    views_ui_cache_set($view);
+    $view->cacheSet();
 
     // Redirect to the new display's edit page.
     $form_state['redirect'] = 'admin/structure/views/view/' . $view->id() . '/edit/' . $new_display_id;

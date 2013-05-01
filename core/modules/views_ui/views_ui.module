@@ -205,33 +205,6 @@ function views_ui_library_info() {
 }
 
 /**
- * Specialized cache function to add a flag to our view, include an appropriate
- * include, and cache more easily.
- */
-function views_ui_cache_set(ViewUI $view) {
-  if (isset($view->locked) && is_object($view->locked) && $view->locked->owner != $GLOBALS['user']->uid) {
-    drupal_set_message(t('Changes cannot be made to a locked view.'), 'error');
-    return;
-  }
-
-  $view->changed = TRUE; // let any future object know that this view has changed.
-
-  $executable = $view->get('executable');
-  if (isset($executable->current_display)) {
-    // Add the knowledge of the changed display, too.
-    $view->changed_display[$executable->current_display] = TRUE;
-    unset($executable->current_display);
-  }
-
-  // Unset handlers; we don't want to write these into the cache
-  unset($executable->display_handler);
-  unset($executable->default_display);
-  $executable->query = NULL;
-  unset($executable->displayHandlers);
-  drupal_container()->get('user.tempstore')->get('views')->set($view->id(), $view);
-}
-
-/**
  * Theme preprocess for views-view.tpl.php.
  */
 function views_ui_preprocess_views_view(&$vars) {

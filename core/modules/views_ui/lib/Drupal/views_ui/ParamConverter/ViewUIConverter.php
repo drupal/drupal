@@ -90,7 +90,7 @@ class ViewUIConverter implements ParamConverterInterface {
           else {
             $view->disable();
           }
-          $view->locked = $temp_store->getMetadata($variables[$name]->id());
+          $view->lock = $temp_store->getMetadata($variables[$name]->id());
         }
         // Otherwise, decorate the existing view for use in the UI.
         else {

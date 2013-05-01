@@ -2039,7 +2039,7 @@ abstract class DisplayPluginBase extends PluginBase {
     // This is just a temporary variable.
     $form_state['view']->theme = $form_state['values']['theme'];
 
-    views_ui_cache_set($form_state['view']);
+    $form_state['view']->cacheSet();
     $form_state['rerender'] = TRUE;
     $form_state['rebuild'] = TRUE;
   }

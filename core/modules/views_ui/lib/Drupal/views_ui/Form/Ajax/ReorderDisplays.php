@@ -133,7 +133,7 @@ class ReorderDisplays extends ViewsFormBase {
     $view->set('display', $displays);
 
     // Store in cache
-    views_ui_cache_set($view);
+    $view->cacheSet();
     $form_state['redirect'] = array('admin/structure/views/view/' . $view->id() . '/edit', array('fragment' => 'views-tab-default'));
   }
 

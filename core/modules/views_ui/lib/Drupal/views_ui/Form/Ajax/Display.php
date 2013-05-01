@@ -113,7 +113,7 @@ class Display extends ViewsFormBase {
   public function submitForm(array &$form, array &$form_state) {
     $form_state['view']->get('executable')->displayHandlers->get($form_state['display_id'])->submitOptionsForm($form['options'], $form_state);
 
-    views_ui_cache_set($form_state['view']);
+    $form_state['view']->cacheSet();
   }
 
 }

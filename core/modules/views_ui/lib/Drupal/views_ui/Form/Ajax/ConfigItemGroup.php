@@ -109,7 +109,7 @@ class ConfigItemGroup extends ViewsFormBase {
     $executable->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
 
     // Write to cache
-    views_ui_cache_set($form_state['view']);
+    $form_state['view']->cacheSet();
   }
 
 }

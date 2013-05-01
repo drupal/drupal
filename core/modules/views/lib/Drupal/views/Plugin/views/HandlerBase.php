@@ -836,7 +836,7 @@ abstract class HandlerBase extends PluginBase {
 
     $form_state['view']->addFormToStack($form_state['form_key'], $form_state['display_id'], $form_state['type'], $form_state['id'], TRUE, TRUE);
 
-    views_ui_cache_set($form_state['view']);
+    $form_state['view']->cacheSet();
     $form_state['rerender'] = TRUE;
     $form_state['rebuild'] = TRUE;
     $form_state['force_expose_options'] = TRUE;
@@ -898,7 +898,7 @@ abstract class HandlerBase extends PluginBase {
     $form_state['rerender'] = TRUE;
     $form_state['rebuild'] = TRUE;
     // Write to cache
-    views_ui_cache_set($form_state['view']);
+    $form_state['view']->cacheSet();
   }
 
 }

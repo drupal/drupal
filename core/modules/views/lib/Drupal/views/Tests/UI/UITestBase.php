@@ -15,6 +15,20 @@ use Drupal\views\Tests\ViewTestBase;
 abstract class UITestBase extends ViewTestBase {
 
   /**
+   * An admin user with the 'administer views' permission.
+   *
+   * @var \Drupal\user\Plugin\Core\Entity\User
+   */
+  protected $adminUser;
+
+  /**
+   * An admin user with administrative permissions for views, blocks, and nodes.
+   *
+   * @var \Drupal\user\Plugin\Core\Entity\User
+   */
+  protected $fullAdminUser;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -28,8 +42,8 @@ abstract class UITestBase extends ViewTestBase {
 
     $this->adminUser = $this->drupalCreateUser(array('administer views'));
 
-    $views_admin = $this->drupalCreateUser(array('administer views', 'administer blocks', 'bypass node access', 'access user profiles', 'view all revisions'));
-    $this->drupalLogin($views_admin);
+    $this->fullAdminUser = $this->drupalCreateUser(array('administer views', 'administer blocks', 'bypass node access', 'access user profiles', 'view all revisions'));
+    $this->drupalLogin($this->fullAdminUser);
   }
 
 }
