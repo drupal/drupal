@@ -1,0 +1,6 @@
+layout_page_list:
+  pattern: '/admin/structure/templates'
+  defaults:
+    _content: '\Drupal\layout\Controller\LayoutController::layoutPageList'
+  requirements:
+    _permission: 'administer layouts'

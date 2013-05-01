@@ -12,10 +12,7 @@ function layout_menu() {
   $items['admin/structure/templates'] = array(
     'title' => 'Templates',
     'description' => 'Overview of the list of layout templates available.',
-    'page callback' => 'layout_page_list',
-    'access callback' => 'user_access',
-    'access arguments' => array('administer layouts'),
-    'file' => 'layout.admin.inc',
+    'route_name' => 'layout_page_list',
   );
   $items['admin/structure/templates/manage/%'] = array(
     'title' => 'View template',
