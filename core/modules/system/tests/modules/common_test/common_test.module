@@ -64,12 +64,6 @@ function common_test_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
-  $items['common-test/l-active-class'] = array(
-    'title' => 'Test l() adding of active class',
-    'page callback' => 'common_test_l_active_class',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
   return $items;
 }
 
@@ -339,27 +333,4 @@ function common_test_js_and_css_querystring() {
  */
 function common_test_cron() {
   throw new Exception(t('Uncaught exception'));
-}
-
-/**
- * Page callback: Displays links to the current page, one with a query string.
- */
-function common_test_l_active_class() {
-  return array(
-    'no_query' => array(
-      '#type' => 'link',
-      '#title' => t('Link with no query string'),
-      '#href' => current_path(),
-    ),
-    'with_query' => array(
-      '#type' => 'link',
-      '#title' => t('Link with a query string'),
-      '#href' => current_path(),
-      '#options' => array(
-        'query' => array(
-          'foo' => 'bar',
-        ),
-      ),
-    ),
-  );
 }
