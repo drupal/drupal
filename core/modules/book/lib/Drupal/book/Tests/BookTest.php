@@ -419,13 +419,13 @@ class BookTest extends WebTestBase {
       'book_allowed_types[bar]' => 'bar',
     );
 
-    $this->drupalPost('admin/content/book/settings', $edit, t('Save configuration'));
+    $this->drupalPost('admin/structure/book/settings', $edit, t('Save configuration'));
     $this->assertTrue(book_type_is_allowed('bar'), 'Config book.settings:allowed_types contains the bar node type.');
     $this->assertTrue(book_type_is_allowed('page'), 'Config book.settings:allowed_types contains the page node type.');
 
     // Test the order of the book.settings::allowed_types configuration is as
     // expected. The point of this test is to prove that after changing a node
-    // type going to admin/content/book/settings and pressing save without
+    // type going to admin/structure/book/settings and pressing save without
     // changing anything should not alter the book.settings configuration. The
     // order will be:
     // @code
@@ -435,7 +435,7 @@ class BookTest extends WebTestBase {
     // );
     // @endcode
     $current_config = config('book.settings')->init()->get();
-    $this->drupalPost('admin/content/book/settings', array(), t('Save configuration'));
+    $this->drupalPost('admin/structure/book/settings', array(), t('Save configuration'));
     $this->assertIdentical($current_config, config('book.settings')->init()->get());
 
     // Change the name, machine name and description.
@@ -456,7 +456,7 @@ class BookTest extends WebTestBase {
     // );
     // @endcode
     $current_config = config('book.settings')->init()->get();
-    $this->drupalPost('admin/content/book/settings', array(), t('Save configuration'));
+    $this->drupalPost('admin/structure/book/settings', array(), t('Save configuration'));
     $this->assertIdentical($current_config, config('book.settings')->init()->get());
 
     $edit = array(
@@ -474,7 +474,7 @@ class BookTest extends WebTestBase {
     // );
     // @endcode
     $current_config = config('book.settings')->init()->get();
-    $this->drupalPost('admin/content/book/settings', array(), t('Save configuration'));
+    $this->drupalPost('admin/structure/book/settings', array(), t('Save configuration'));
     $this->assertIdentical($current_config, config('book.settings')->init()->get());
 
     // Ensure that after all the node type changes book.settings:child_type has
@@ -496,7 +496,7 @@ class BookTest extends WebTestBase {
     $plid = $node1->book['mlid'];
 
     // Head to admin screen and attempt to re-order.
-    $this->drupalGet('admin/content/book/' . $book->nid);
+    $this->drupalGet('admin/structure/book/' . $book->nid);
     $edit = array(
       "table[book-admin-{$node1->nid}][weight]" => 1,
       "table[book-admin-{$node2->nid}][weight]" => 2,
