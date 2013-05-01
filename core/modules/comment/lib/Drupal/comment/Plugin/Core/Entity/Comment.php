@@ -33,7 +33,6 @@ use Drupal\comment\CommentInterface;
  *   uri_callback = "comment_uri",
  *   fieldable = TRUE,
  *   translatable = TRUE,
- *   static_cache = FALSE,
  *   route_base_path = "admin/structure/types/manage/{bundle}/comment",
  *   bundle_prefix = "comment_node_",
  *   entity_keys = {

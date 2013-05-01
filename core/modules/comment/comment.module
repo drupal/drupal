@@ -1354,8 +1354,7 @@ function comment_delete_multiple($cids) {
  * @param array $cids
  *   (optional) An array of entity IDs. If omitted, all entities are loaded.
  * @param bool $reset
- *   Whether to reset the internal static entity cache. Note that the static
- *   cache is disabled by default.
+ *   (optional) Whether to reset the internal static entity cache.
  *
  * @return array
  *   An array of comment objects, indexed by comment ID.
@@ -1373,14 +1372,13 @@ function comment_load_multiple(array $cids = NULL, $reset = FALSE) {
  * @param int $cid
  *   The ID of the comment to be loaded.
  * @param bool $reset
- *   Whether to reset the internal static entity cache. Note that the static
- *   cache is disabled by default.
+ *   (optional) Whether to reset the internal static entity cache.
  *
  * @return
  *   The comment object.
  */
 function comment_load($cid, $reset = FALSE) {
-  return entity_load('comment', $cid);
+  return entity_load('comment', $cid, $reset);
 }
 
 /**
