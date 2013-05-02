@@ -135,7 +135,6 @@ function book_menu() {
     'title' => 'Books',
     'description' => "Manage your site's book outlines.",
     'route_name' => 'book_admin',
-    'type' => MENU_LOCAL_TASK,
   );
   $items['admin/structure/book/list'] = array(
     'title' => 'List',
