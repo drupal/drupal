@@ -36,7 +36,7 @@ class MachineNameController implements ControllerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\ControllerInterface::create().
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
