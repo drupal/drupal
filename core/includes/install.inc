@@ -5,6 +5,7 @@
  * API functions for installing modules and themes.
  */
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Drupal\locale\Gettext;
@@ -445,7 +446,7 @@ function drupal_install_config_directories() {
   // Add a randomized config directory name to settings.php, unless it was
   // manually defined in the existing already.
   if (empty($config_directories)) {
-    $config_directories_hash = drupal_hash_base64(drupal_random_bytes(55));
+    $config_directories_hash = Crypt::randomStringHashed(55);
     $settings['config_directories'] = array(
       CONFIG_ACTIVE_DIRECTORY => array(
         'path' => (object) array(

@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Component\Utility\Crypt;
+
 /**
  * Implements hook_menu().
  */
@@ -31,7 +33,7 @@ function aggregator_test_menu() {
  */
 function aggregator_test_feed($use_last_modified = FALSE, $use_etag = FALSE) {
   $last_modified = strtotime('Sun, 19 Nov 1978 05:00:00 GMT');
-  $etag = drupal_hash_base64($last_modified);
+  $etag = Crypt::hashBase64($last_modified);
 
   $if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) : FALSE;
   $if_none_match = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? stripslashes($_SERVER['HTTP_IF_NONE_MATCH']) : FALSE;

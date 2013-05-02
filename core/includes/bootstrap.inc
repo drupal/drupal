@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Settings;
 use Drupal\Component\Utility\String;
@@ -1900,102 +1901,6 @@ function drupal_set_title($title = NULL, $output = CHECK_PLAIN) {
 }
 
 /**
- * Returns a string of highly randomized bytes (over the full 8-bit range).
- *
- * This function is better than simply calling mt_rand() or any other built-in
- * PHP function because it can return a long string of bytes (compared to < 4
- * bytes normally from mt_rand()) and uses the best available pseudo-random
- * source.
- *
- * @param $count
- *   The number of characters (bytes) to return in the string.
- */
-function drupal_random_bytes($count)  {
-  // $random_state does not use drupal_static as it stores random bytes.
-  static $random_state, $bytes, $php_compatible;
-  // Initialize on the first call. The contents of $_SERVER includes a mix of
-  // user-specific and system information that varies a little with each page.
-  if (!isset($random_state)) {
-    $random_state = print_r($_SERVER, TRUE);
-    if (function_exists('getmypid')) {
-      // Further initialize with the somewhat random PHP process ID.
-      $random_state .= getmypid();
-    }
-    $bytes = '';
-  }
-  if (strlen($bytes) < $count) {
-    // PHP versions prior 5.3.4 experienced openssl_random_pseudo_bytes()
-    // locking on Windows and rendered it unusable.
-    if (!isset($php_compatible)) {
-      $php_compatible = version_compare(PHP_VERSION, '5.3.4', '>=');
-    }
-    // /dev/urandom is available on many *nix systems and is considered the
-    // best commonly available pseudo-random source.
-    if ($fh = @fopen('/dev/urandom', 'rb')) {
-      // PHP only performs buffered reads, so in reality it will always read
-      // at least 4096 bytes. Thus, it costs nothing extra to read and store
-      // that much so as to speed any additional invocations.
-      $bytes .= fread($fh, max(4096, $count));
-      fclose($fh);
-    }
-    // openssl_random_pseudo_bytes() will find entropy in a system-dependent
-    // way.
-    elseif ($php_compatible && function_exists('openssl_random_pseudo_bytes')) {
-      $bytes .= openssl_random_pseudo_bytes($count - strlen($bytes));
-    }
-    // If /dev/urandom is not available or returns no bytes, this loop will
-    // generate a good set of pseudo-random bytes on any system.
-    // Note that it may be important that our $random_state is passed
-    // through hash() prior to being rolled into $output, that the two hash()
-    // invocations are different, and that the extra input into the first one -
-    // the microtime() - is prepended rather than appended. This is to avoid
-    // directly leaking $random_state via the $output stream, which could
-    // allow for trivial prediction of further "random" numbers.
-    while (strlen($bytes) < $count) {
-      $random_state = hash('sha256', microtime() . mt_rand() . $random_state);
-      $bytes .= hash('sha256', mt_rand() . $random_state, TRUE);
-    }
-  }
-  $output = substr($bytes, 0, $count);
-  $bytes = substr($bytes, $count);
-  return $output;
-}
-
-/**
- * Calculates a base-64 encoded, URL-safe sha-256 hmac.
- *
- * @param $data
- *   String to be validated with the hmac.
- * @param $key
- *   A secret string key.
- *
- * @return
- *   A base-64 encoded sha-256 hmac, with + replaced with -, / with _ and
- *   any = padding characters removed.
- */
-function drupal_hmac_base64($data, $key) {
-  $hmac = base64_encode(hash_hmac('sha256', $data, $key, TRUE));
-  // Modify the hmac so it's safe to use in URLs.
-  return strtr($hmac, array('+' => '-', '/' => '_', '=' => ''));
-}
-
-/**
- * Calculates a base-64 encoded, URL-safe sha-256 hash.
- *
- * @param $data
- *   String to be hashed.
- *
- * @return
- *   A base-64 encoded sha-256 hash, with + replaced with -, / with _ and
- *   any = padding characters removed.
- */
-function drupal_hash_base64($data) {
-  $hash = base64_encode(hash('sha256', $data, TRUE));
-  // Modify the hash so it's safe to use in URLs.
-  return strtr($hash, array('+' => '-', '/' => '_', '=' => ''));
-}
-
-/**
  * Generates a default anonymous $user object.
  *
  * @return Drupal\user\Plugin\Core\Entity\User
@@ -2579,9 +2484,13 @@ function drupal_valid_test_ua($new_prefix = NULL) {
     // The file properties add more entropy not easily accessible to others.
     $key = drupal_get_hash_salt() . filectime(__FILE__) . fileinode(__FILE__);
     $time_diff = REQUEST_TIME - $time;
+    // We cant use Crypt::hmacBase64() yet because this can be called in very
+    // early bootstrap when autoloader has not been initialized yet.
+    $test_hmac = base64_encode(hash_hmac('sha256', $check_string, $key, TRUE));
+    $test_hmac = strtr($test_hmac, array('+' => '-', '/' => '_', '=' => ''));
     // Since we are making a local request a 5 second time window is allowed,
     // and the HMAC must match.
-    if ($time_diff >= 0 && $time_diff <= 5 && $hmac == drupal_hmac_base64($check_string, $key)) {
+    if ($time_diff >= 0 && $time_diff <= 5 && $hmac == $test_hmac) {
       $test_prefix = $prefix;
       _drupal_load_test_overrides($test_prefix);
       return $test_prefix;
@@ -2644,7 +2553,7 @@ function drupal_generate_test_ua($prefix) {
   // Generate a moderately secure HMAC based on the database credentials.
   $salt = uniqid('', TRUE);
   $check_string = $prefix . ';' . time() . ';' . $salt;
-  return $check_string . ';' . drupal_hmac_base64($check_string, $key);
+  return $check_string . ';' . Crypt::hmacBase64($check_string, $key);
 }
 
 /**

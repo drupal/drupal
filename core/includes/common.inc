@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Cache\Cache;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -2874,7 +2875,7 @@ function drupal_build_css_cache($css) {
 
     // Prefix filename to prevent blocking by firewalls which reject files
     // starting with "ad*".
-    $filename = 'css_' . drupal_hash_base64($data) . '.css';
+    $filename = 'css_' . Crypt::hashBase64($data) . '.css';
     // Create the css/ within the files folder.
     $csspath = 'public://css';
     $uri = $csspath . '/' . $filename;
@@ -4453,7 +4454,7 @@ function drupal_build_js_cache($files) {
     }
     // Prefix filename to prevent blocking by firewalls which reject files
     // starting with "ad*".
-    $filename = 'js_' . drupal_hash_base64($contents) . '.js';
+    $filename = 'js_' . Crypt::hashBase64($contents) . '.js';
     // Create the js/ within the files folder.
     $jspath = 'public://js';
     $uri = $jspath . '/' . $filename;
@@ -4521,7 +4522,7 @@ function drupal_json_decode($var) {
  */
 function drupal_get_private_key() {
   if (!($key = state()->get('system.private_key'))) {
-    $key = drupal_hash_base64(drupal_random_bytes(55));
+    $key = Crypt::randomStringHashed(55);
     state()->set('system.private_key', $key);
   }
   return $key;
@@ -4541,7 +4542,7 @@ function drupal_get_private_key() {
  * @see drupal_get_hash_salt()
  */
 function drupal_get_token($value = '') {
-  return drupal_hmac_base64($value, session_id() . drupal_get_private_key() . drupal_get_hash_salt());
+  return Crypt::hmacBase64($value, session_id() . drupal_get_private_key() . drupal_get_hash_salt());
 }
 
 /**

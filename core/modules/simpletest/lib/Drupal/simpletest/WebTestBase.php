@@ -7,6 +7,7 @@
 
 namespace Drupal\simpletest;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
@@ -657,7 +658,7 @@ abstract class WebTestBase extends TestBase {
    */
   protected function drupalGetToken($value = '') {
     $private_key = drupal_get_private_key();
-    return drupal_hmac_base64($value, $this->session_id . $private_key);
+    return Crypt::hmacBase64($value, $this->session_id . $private_key);
   }
 
   /*

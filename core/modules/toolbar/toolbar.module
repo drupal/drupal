@@ -7,6 +7,7 @@
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\Core\Template\Attribute;
+use Drupal\Component\Utility\Crypt;
 
 /**
  * Implements hook_help().
@@ -666,7 +667,7 @@ function _toolbar_get_subtree_hash() {
   }
   else {
     $subtrees = toolbar_get_rendered_subtrees();
-    $hash = drupal_hash_base64(serialize($subtrees));
+    $hash = Crypt::hashBase64(serialize($subtrees));
     cache('toolbar')->set($cid, $hash);
   }
   return $hash;

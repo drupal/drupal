@@ -8,6 +8,7 @@
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\file\Plugin\Core\Entity\File;
 use Drupal\image\Plugin\Core\Entity\ImageStyle;
@@ -567,7 +568,7 @@ function image_style_deliver($style, $scheme) {
 
   // Don't start generating the image if the derivative already exists or if
   // generation is in progress in another thread.
-  $lock_name = 'image_style_deliver:' . $style->id() . ':' . drupal_hash_base64($image_uri);
+  $lock_name = 'image_style_deliver:' . $style->id() . ':' . Crypt::hashBase64($image_uri);
   if (!file_exists($derivative_uri)) {
     $lock_acquired = lock()->acquire($lock_name);
     if (!$lock_acquired) {
@@ -761,7 +762,7 @@ function image_style_url($style_name, $path) {
  */
 function image_style_path_token($style_name, $uri) {
   // Return the first eight characters.
-  return substr(drupal_hmac_base64($style_name . ':' . $uri, drupal_get_private_key() . drupal_get_hash_salt()), 0, 8);
+  return substr(Crypt::hmacBase64($style_name . ':' . $uri, drupal_get_private_key() . drupal_get_hash_salt()), 0, 8);
 }
 
 /**

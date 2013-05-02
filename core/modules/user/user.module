@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\comment\Plugin\Core\Entity\Comment;
@@ -1541,7 +1542,7 @@ function user_cancel_url($account, $options = array()) {
  *   A string that is safe for use in URLs and SQL statements.
  */
 function user_pass_rehash($password, $timestamp, $login) {
-  return drupal_hmac_base64($timestamp . $login, drupal_get_hash_salt() . $password);
+  return Crypt::hmacBase64($timestamp . $login, drupal_get_hash_salt() . $password);
 }
 
 /**

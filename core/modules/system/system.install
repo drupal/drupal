@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Database;
 
 /**
@@ -531,7 +532,7 @@ function system_install() {
     ->save();
 
   // Populate the cron key state variable.
-  $cron_key = drupal_hash_base64(drupal_random_bytes(55));
+  $cron_key = Crypt::randomStringHashed(55);
   state()->set('system.cron_key', $cron_key);
 }
 

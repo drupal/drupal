@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Upgrade;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Database;
 use Drupal\simpletest\WebTestBase;
 use Exception;
@@ -52,7 +53,7 @@ abstract class UpgradePathTestBase extends WebTestBase {
 
     // Generate and set a D7-compatible session cookie.
     $this->curlInitialize();
-    $sid = drupal_hash_base64(uniqid(mt_rand(), TRUE) . drupal_random_bytes(55));
+    $sid = Crypt::hashBase64(uniqid(mt_rand(), TRUE) . Crypt::randomBytes(55));
     curl_setopt($this->curlHandle, CURLOPT_COOKIE, rawurlencode(session_name()) . '=' . rawurlencode($sid));
 
     // Force our way into the session of the child site.

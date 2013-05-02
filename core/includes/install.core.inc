@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Component\Utility\Crypt;
+
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\CoreBundle;
@@ -1140,11 +1142,11 @@ function install_settings_form_submit($form, &$form_state) {
 
   // Update global settings array and save.
   $settings['databases'] = (object) array(
-    'value'    => array('default' => array('default' => $form_state['storage']['database'])),
+    'value' => array('default' => array('default' => $form_state['storage']['database'])),
     'required' => TRUE,
   );
   $settings['drupal_hash_salt'] = (object) array(
-    'value'    => drupal_hash_base64(drupal_random_bytes(55)),
+    'value' => Crypt::randomStringHashed(55),
     'required' => TRUE,
   );
 

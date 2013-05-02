@@ -6,6 +6,7 @@
  */
 
 use Guzzle\Http\Exception\RequestException;
+use Drupal\Component\Utility\Crypt;
 
 /**
  * Page callback: Checks for updates and displays the update status report.
@@ -145,7 +146,7 @@ function _update_process_fetch_task($project) {
 
   $success = FALSE;
   $available = array();
-  $site_key = drupal_hmac_base64($base_url, drupal_get_private_key());
+  $site_key = Crypt::hmacBase64($base_url, drupal_get_private_key());
   $url = _update_build_fetch_url($project, $site_key);
   $fetch_url_base = _update_get_fetch_url_base($project);
   $project_name = $project['name'];
