@@ -407,6 +407,11 @@ function menu_test_menu() {
   // Controller-based local task.
   $items['foo/%/b'] = array(
     'title' => 'Local task B',
+    'route_name' => 'menu_router_test2',
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['foo/%/c'] = array(
+    'title' => 'Local task C',
     'route_name' => 'menu_router_test3',
     'type' => MENU_LOCAL_TASK,
   );

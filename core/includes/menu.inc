@@ -766,7 +766,18 @@ function _menu_translate(&$router_item, $map, $to_arg = FALSE) {
   $router_item['tab_root_href'] = implode('/', $tab_root_map);
   $router_item['tab_parent_href'] = implode('/', $tab_parent_map);
   $router_item['options'] = array();
-  _menu_check_access($router_item, $map);
+  if (!empty($router_item['route_name'])) {
+    $route_provider = Drupal::getContainer()->get('router.route_provider');
+    $route = $route_provider->getRouteByName($router_item['route_name']);
+    $request = Request::create('/' . $router_item['href']);
+    $request->attributes->set('system_path', $router_item['href']);
+    $request->attributes->add(Drupal::service('router')->matchRequest($request));
+    $router_item['access'] = Drupal::service('access_manager')->check($route, $request);
+  }
+  else {
+    // @todo: Remove once all routes are converted.
+    _menu_check_access($router_item, $map);
+  }
 
   // For performance, don't localize an item the user can't access.
   if ($router_item['access']) {
@@ -3166,6 +3177,7 @@ function _menu_router_build($callbacks, $save = FALSE) {
       'file' => '',
       'file path' => '',
       'include file' => '',
+      'route_name' => '',
     );
 
     // Calculate out the file to be included for each callback, if any.
@@ -3227,6 +3239,7 @@ function _menu_router_save($menu, $masks) {
       'position',
       'weight',
       'include_file',
+      'route_name',
     ));
 
   $num_records = 0;
@@ -3258,6 +3271,7 @@ function _menu_router_save($menu, $masks) {
       'position' => $item['position'],
       'weight' => $item['weight'],
       'include_file' => $item['include file'],
+      'route_name' => $item['route_name'],
     ));
 
     // Execute in batches to avoid the memory overhead of all of those records
