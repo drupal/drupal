@@ -288,6 +288,14 @@ function install_begin_request(&$install_state) {
   // This must go after drupal_bootstrap(), which unsets globals!
   global $conf;
 
+  // If we have a language selected and it is not yet saved in the system
+  // (eg. pre-database data screens we are unable to persistently store
+  // the default language), we should set language_default so the proper
+  // language is used to display installer pages as early as possible.
+  if (!empty($install_state['parameters']['langcode']) && language_default()->langcode != $install_state['parameters']['langcode']) {
+    $GLOBALS['conf']['language_default'] = array('langcode' => $install_state['parameters']['langcode']);
+  }
+
   require_once DRUPAL_ROOT . '/core/modules/system/system.install';
   require_once DRUPAL_ROOT . '/core/includes/common.inc';
   require_once DRUPAL_ROOT . '/core/includes/file.inc';

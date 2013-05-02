@@ -3099,9 +3099,16 @@ function template_preprocess_maintenance_page(&$variables) {
  * @see template_process_html()
  */
 function template_process_maintenance_page(&$variables) {
-  $variables['head']    = drupal_get_html_head();
-  $variables['css']     = drupal_add_css();
-  $variables['styles']  = drupal_get_css();
+  $variables['head'] = drupal_get_html_head();
+
+  // While this code is used in the installer, the language module may not be
+  // enabled yet (even maybe no database set up yet), but an RTL language
+  // selected should result in RTL stylesheets loaded properly already.
+  $variables['css'] = $css = drupal_add_css();
+  include_once DRUPAL_ROOT . '/core/modules/language/language.module';
+  language_css_alter($css);
+  $variables['styles'] = drupal_get_css($css);
+
   $variables['scripts'] = drupal_get_js();
 }
 
