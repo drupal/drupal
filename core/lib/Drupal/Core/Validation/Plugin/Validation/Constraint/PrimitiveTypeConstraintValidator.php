@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Plugin\Validation\Constraint\PrimitiveTypeConstraintValidator.
+ * Contains \Drupal\Core\Validation\Plugin\Validation\Constraint\PrimitiveTypeConstraintValidator.
  */
 
-namespace Drupal\Core\Plugin\Validation\Constraint;
+namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
 use DateInterval;
 use Drupal\Core\TypedData\Primitive;

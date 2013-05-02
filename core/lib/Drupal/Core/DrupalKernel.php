@@ -408,8 +408,16 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
 
     // Get a list of namespaces and put it onto the container.
     $namespaces = $this->getModuleNamespaces($this->getModuleFileNames());
-    $namespaces['Drupal\Core'] = DRUPAL_ROOT . '/core/lib';
-    $namespaces['Drupal\Component'] = DRUPAL_ROOT . '/core/lib';
+    // Add all components in \Drupal\Core and \Drupal\Component that have a
+    // Plugin directory.
+    foreach (array('Core', 'Component') as $parent_directory) {
+      $path = DRUPAL_ROOT . '/core/lib/Drupal/' . $parent_directory;
+      foreach (new \DirectoryIterator($path) as $component) {
+        if (!$component->isDot() && is_dir($component->getPathname() . '/Plugin')) {
+          $namespaces['Drupal\Core\\' . $component->getFilename()] = DRUPAL_ROOT . '/core/lib';
+        }
+      }
+    }
     $container->setParameter('container.namespaces', $namespaces);
 
     // Register synthetic services.

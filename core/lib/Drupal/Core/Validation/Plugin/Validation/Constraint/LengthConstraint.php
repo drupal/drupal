@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Plugin\Validation\Constraint\LengthConstraint.
+ * Contains \Drupal\Core\Validation\Plugin\Validation\Constraint\LengthConstraint.
  */
 
-namespace Drupal\Core\Plugin\Validation\Constraint;
+namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;

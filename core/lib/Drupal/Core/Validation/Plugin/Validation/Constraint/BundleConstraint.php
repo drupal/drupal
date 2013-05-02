@@ -5,7 +5,7 @@
  * Contains \Drupal\Core\Validation\Constraint\BundleConstraint.
  */
 
-namespace Drupal\Core\Plugin\Validation\Constraint;
+namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
 use Symfony\Component\Validator\Constraint;
 use Drupal\Component\Annotation\Plugin;
