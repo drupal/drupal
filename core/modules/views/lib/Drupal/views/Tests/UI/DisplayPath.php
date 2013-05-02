@@ -52,7 +52,7 @@ class DisplayPath extends UITestBase {
     $this->drupalPost(NULL, array(), t('Add Page'));
     $this->drupalPost(NULL, array(), t('delete Page'));
     $this->drupalPost(NULL, array(), t('Save'));
-    $this->assertRaw(format_string('The view %view has been saved.', array('%view' => 'test_view')));
+    $this->assertRaw(t('The view %view has been saved.', array('%view' => 'Test view')));
   }
 
 }

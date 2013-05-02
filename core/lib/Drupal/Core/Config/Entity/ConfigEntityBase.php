@@ -67,7 +67,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * configuration entities but has no effect after saving, since each
    * configuration entity is unique.
    */
-  final public function isNew() {
+  public function isNew() {
     // Configuration entity IDs are strings, and '0' is a valid ID.
     return !empty($this->enforceIsNew) || $this->id() === NULL || $this->id() === '';
   }

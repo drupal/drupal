@@ -143,10 +143,13 @@ class ViewUI implements ViewStorageInterface {
    * @param \Drupal\views\ViewStorageInterface $storage
    *   The View storage object to wrap.
    */
-  public function __construct(ViewStorageInterface $storage) {
+  public function __construct(ViewStorageInterface $storage, ViewExecutable $executable = NULL) {
     $this->entityType = 'view';
     $this->storage = $storage;
-    $this->executable = Views::executableFactory()->get($this);
+    if (!isset($executable)) {
+      $executable = Views::executableFactory()->get($this);
+    }
+    $this->executable = $executable;
   }
 
   /**
@@ -1038,7 +1041,7 @@ class ViewUI implements ViewStorageInterface {
    * Implements \Drupal\Core\Entity\EntityInterface::isTranslatable().
    */
   public function isTranslatable() {
-    return $this->isTranslatable();
+    return $this->storage->isTranslatable();
   }
 
   /**

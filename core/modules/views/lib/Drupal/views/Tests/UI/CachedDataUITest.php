@@ -66,7 +66,7 @@ class CachedDataUITest extends UITestBase {
     $this->clickLink(t('break this lock'));
     // Test we can save the view.
     $this->drupalPost('admin/structure/views/view/test_view/edit', array(), t('Save'));
-    $this->assertText(t('The view test_view has been saved.'));
+    $this->assertRaw(t('The view %view has been saved.', array('%view' => 'Test view')));
   }
 
 }
