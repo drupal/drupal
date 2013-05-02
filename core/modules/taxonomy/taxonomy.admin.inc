@@ -42,15 +42,15 @@ function taxonomy_overview_vocabularies($form) {
     $links = array();
     $links['edit'] = array(
       'title' => t('edit vocabulary'),
-      'href' => "admin/structure/taxonomy/{$vocabulary->id()}/edit",
+      'href' => "admin/structure/taxonomy/manage/{$vocabulary->id()}/edit",
     );
     $links['list'] = array(
       'title' => t('list terms'),
-      'href' => "admin/structure/taxonomy/{$vocabulary->id()}",
+      'href' => "admin/structure/taxonomy/manage/{$vocabulary->id()}",
     );
     $links['add'] = array(
       'title' => t('add terms'),
-      'href' => "admin/structure/taxonomy/{$vocabulary->id()}/add",
+      'href' => "admin/structure/taxonomy/manage/{$vocabulary->id()}/add",
     );
     $form['vocabularies'][$vocabulary->id()]['operations'] = array(
       '#type' => 'operations',
@@ -234,7 +234,7 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
   $form['terms'] = array(
     '#type' => 'table',
     '#header' => array(t('Name'), t('Weight'), t('Operations')),
-    '#empty' => t('No terms available. <a href="@link">Add term</a>.', array('@link' => url('admin/structure/taxonomy/' . $vocabulary->id() . '/add'))),
+    '#empty' => t('No terms available. <a href="@link">Add term</a>.', array('@link' => url('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/add'))),
     '#attributes' => array(
       'id' => 'taxonomy',
     ),
@@ -580,7 +580,7 @@ function taxonomy_vocabulary_confirm_reset_alphabetical($form, &$form_state, $vi
   return confirm_form($form,
     t('Are you sure you want to reset the vocabulary %title to alphabetical order?',
       array('%title' => $vocabulary->label())),
-    'admin/structure/taxonomy/' . $vocabulary->id(),
+    'admin/structure/taxonomy/manage/' . $vocabulary->id(),
     t('Resetting a vocabulary will discard all custom ordering and sort items alphabetically.'),
     t('Reset to alphabetical'),
     t('Cancel'));
@@ -598,5 +598,5 @@ function taxonomy_vocabulary_confirm_reset_alphabetical_submit($form, &$form_sta
     ->execute();
   drupal_set_message(t('Reset vocabulary %name to alphabetical order.', array('%name' => $form_state['values']['name'])));
   watchdog('taxonomy', 'Reset vocabulary %name to alphabetical order.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE);
-  $form_state['redirect'] = 'admin/structure/taxonomy/' . $form_state['values']['vid'];
+  $form_state['redirect'] = 'admin/structure/taxonomy/manage/' . $form_state['values']['vid'];
 }

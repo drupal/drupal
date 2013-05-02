@@ -35,7 +35,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $this->drupalLogin($user);
 
     // Visit the main taxonomy administration page.
-    $this->drupalGet('admin/structure/taxonomy/' . $vocabulary->id() . '/add');
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/add');
     $this->assertResponse(200);
     $this->assertField('edit-name', 'Add taxonomy term form opened successfully.');
 
@@ -71,7 +71,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $this->drupalLogin($user);
 
     // Visit the main taxonomy administration page.
-    $this->drupalGet('admin/structure/taxonomy/' . $vocabulary->id() . '/add');
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/add');
     $this->assertResponse(403, 'Add taxonomy term form open failed.');
 
     // Create a test term.
@@ -95,7 +95,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $this->drupalLogin($user);
 
     // Visit the main taxonomy administration page.
-    $this->drupalGet('admin/structure/taxonomy/' . $vocabulary->id() . '/add');
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/add');
     $this->assertResponse(403, 'Add taxonomy term form open failed.');
 
     // Create a test term.
@@ -118,7 +118,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $this->drupalLogin($user);
 
     // Visit the main taxonomy administration page.
-    $this->drupalGet('admin/structure/taxonomy/' . $vocabulary->id() . '/add');
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/add');
     $this->assertResponse(403, 'Add taxonomy term form open failed.');
 
     // Create a test term.

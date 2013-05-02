@@ -116,12 +116,12 @@ class TermTranslationUITest extends EntityTranslationUITest {
     $untranslatable_tid = $this->createEntity(array(), $this->langcodes[0], $untranslatable_vocabulary->id());
 
     // Verify translation links.
-    $this->drupalGet('admin/structure/taxonomy/' .  $this->vocabulary->id());
+    $this->drupalGet('admin/structure/taxonomy/manage/' .  $this->vocabulary->id());
     $this->assertResponse(200);
     $this->assertLinkByHref('term/' . $translatable_tid . '/translations');
     $this->assertLinkByHref('term/' . $translatable_tid . '/edit');
 
-    $this->drupalGet('admin/structure/taxonomy/' . $untranslatable_vocabulary->id());
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $untranslatable_vocabulary->id());
     $this->assertResponse(200);
     $this->assertLinkByHref('term/' . $untranslatable_tid . '/edit');
     $this->assertNoLinkByHref('term/' . $untranslatable_tid . '/translations');

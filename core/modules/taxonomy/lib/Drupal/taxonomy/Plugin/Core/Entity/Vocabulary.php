@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Plugin\Core\Entity\Vocabulary.
+ * Contains \Drupal\taxonomy\Plugin\Core\Entity\Vocabulary.
  */
 
 namespace Drupal\taxonomy\Plugin\Core\Entity;
@@ -76,9 +76,23 @@ class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
   public $weight = 0;
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::id().
+   * {@inheritdoc}
    */
   public function id() {
     return $this->vid;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function uri() {
+    return array(
+      'path' => 'admin/structure/taxonomy/manage/' . $this->id(),
+      'options' => array(
+        'entity_type' => $this->entityType,
+        'entity' => $this,
+      ),
+    );
+  }
+
 }

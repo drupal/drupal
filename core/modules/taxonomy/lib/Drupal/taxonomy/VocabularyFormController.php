@@ -108,26 +108,6 @@ class VocabularyFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::validate().
-   */
-  public function validate(array $form, array &$form_state) {
-    parent::validate($form, $form_state);
-
-    // Make sure that the machine name of the vocabulary is not in the
-    // disallowed list (names that conflict with menu items, such as 'list'
-    // and 'add').
-    // During the deletion there is no 'vid' key.
-    if (isset($form_state['values']['vid'])) {
-      // Do not allow machine names to conflict with taxonomy path arguments.
-      $vid = $form_state['values']['vid'];
-      $disallowed = array('add', 'list');
-      if (in_array($vid, $disallowed)) {
-        form_set_error('vid', t('The machine-readable name cannot be "add" or "list".'));
-      }
-    }
-  }
-
-  /**
    * Submit handler to update the bundle for the default language configuration.
    */
   public function languageConfigurationSubmit(array &$form, array &$form_state) {
@@ -172,13 +152,13 @@ class VocabularyFormController extends EntityFormController {
     switch (taxonomy_vocabulary_save($vocabulary)) {
       case SAVED_NEW:
         drupal_set_message(t('Created new vocabulary %name.', array('%name' => $vocabulary->name)));
-        watchdog('taxonomy', 'Created new vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l(t('edit'), 'admin/structure/taxonomy/' . $vocabulary->id() . '/edit'));
-        $form_state['redirect'] = 'admin/structure/taxonomy/' . $vocabulary->id();
+        watchdog('taxonomy', 'Created new vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l(t('edit'), 'admin/structure/taxonomy/manage/' . $vocabulary->id() . '/edit'));
+        $form_state['redirect'] = 'admin/structure/taxonomy/manage/' . $vocabulary->id();
         break;
 
       case SAVED_UPDATED:
         drupal_set_message(t('Updated vocabulary %name.', array('%name' => $vocabulary->name)));
-        watchdog('taxonomy', 'Updated vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l(t('edit'), 'admin/structure/taxonomy/' . $vocabulary->id() . '/edit'));
+        watchdog('taxonomy', 'Updated vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l(t('edit'), 'admin/structure/taxonomy/manage/' . $vocabulary->id() . '/edit'));
         $form_state['redirect'] = 'admin/structure/taxonomy';
         break;
     }

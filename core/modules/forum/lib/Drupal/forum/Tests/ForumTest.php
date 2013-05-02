@@ -302,7 +302,7 @@ class ForumTest extends WebTestBase {
     $this->root_forum = $this->createForum('forum');
 
     // Test vocabulary form alterations.
-    $this->drupalGet('admin/structure/taxonomy/forums/edit');
+    $this->drupalGet('admin/structure/taxonomy/manage/forums/edit');
     $this->assertFieldByName('op', t('Save'), 'Save button found.');
     $this->assertNoFieldByName('op', t('Delete'), 'Delete button not found.');
 
@@ -323,11 +323,11 @@ class ForumTest extends WebTestBase {
     ));
     taxonomy_vocabulary_save($vocabulary);
     // Test tags vocabulary form is not affected.
-    $this->drupalGet('admin/structure/taxonomy/tags/edit');
+    $this->drupalGet('admin/structure/taxonomy/manage/tags/edit');
     $this->assertFieldByName('op', t('Save'), 'Save button found.');
     $this->assertFieldByName('op', t('Delete'), 'Delete button found.');
     // Test tags vocabulary term form is not affected.
-    $this->drupalGet('admin/structure/taxonomy/tags/add');
+    $this->drupalGet('admin/structure/taxonomy/manage/tags/add');
     $this->assertField('parent[]', 'Parent field found.');
     // Test relations widget exists.
     $relations_widget = $this->xpath("//details[@id='edit-relations']");
@@ -349,7 +349,7 @@ class ForumTest extends WebTestBase {
     );
 
     // Edit the vocabulary.
-    $this->drupalPost('admin/structure/taxonomy/' . $original_vocabulary->id() . '/edit', $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/manage/' . $original_vocabulary->id() . '/edit', $edit, t('Save'));
     $this->assertResponse(200);
     $this->assertRaw(t('Updated vocabulary %name.', array('%name' => $edit['name'])), 'Vocabulary was edited');
 

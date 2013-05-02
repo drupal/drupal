@@ -63,7 +63,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
     $this->drupalPost(NULL, $edit, t('Save'));
 
     // Check the language on the edit page.
-    $this->drupalGet('admin/structure/taxonomy/' . $vid . '/edit');
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $vid . '/edit');
     $this->assertOptionSelected('edit-langcode', $edit['langcode'], 'The vocabulary language was correctly selected.');
 
     // Change the language and save again.
@@ -72,7 +72,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
     $this->drupalPost(NULL, $edit, t('Save'));
 
     // Check again the language on the edit page.
-    $this->drupalGet('admin/structure/taxonomy/' . $vid . '/edit');
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $vid . '/edit');
     $this->assertOptionSelected('edit-langcode', $edit['langcode'], 'The vocabulary language was correctly selected.');
   }
 
@@ -92,7 +92,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
     $this->drupalPost('admin/structure/taxonomy/add', $edit, t('Save'));
 
     // Check that the vocabulary was actually created.
-    $this->drupalGet('admin/structure/taxonomy/' . $edit['vid'] . '/edit');
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $edit['vid'] . '/edit');
     $this->assertResponse(200, 'The vocabulary has been created.');
 
     // Check that the language settings were saved.
@@ -109,14 +109,14 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
       'default_language[langcode]' => 'aa',
       'default_language[language_show]' => FALSE,
     );
-    $this->drupalPost('admin/structure/taxonomy/' . $vid . '/edit', $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/manage/' . $vid . '/edit', $edit, t('Save'));
 
     // And check again the settings and also the interface.
     $language_settings = language_get_default_configuration('taxonomy_term', $vid);
     $this->assertEqual($language_settings['langcode'], 'aa');
     $this->assertEqual($language_settings['language_show'], FALSE);
 
-    $this->drupalGet('admin/structure/taxonomy/' . $vid . '/edit');
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $vid . '/edit');
     $this->assertOptionSelected('edit-default-language-langcode', 'aa', 'The correct default language for the terms of this vocabulary is selected.');
     $this->assertNoFieldChecked('edit-default-language-language-show', 'Show language selection option is not checked.');
 
@@ -126,7 +126,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
       'default_language[langcode]' => 'authors_default',
       'default_language[language_show]' => FALSE,
     );
-    $this->drupalPost('admin/structure/taxonomy/' . $vid . '/edit', $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/manage/' . $vid . '/edit', $edit, t('Save'));
 
     // Check that we have the new settings.
     $new_settings = language_get_default_configuration('taxonomy_term', $vid);

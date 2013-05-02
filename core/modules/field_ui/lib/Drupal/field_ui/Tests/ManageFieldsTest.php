@@ -115,7 +115,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     // different entity types; e.g. if a field was added in a node entity, it
     // should also appear in the 'taxonomy term' entity.
     $vocabulary = taxonomy_vocabulary_load('tags');
-    $this->drupalGet('admin/structure/taxonomy/' . $vocabulary->id() . '/fields');
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/fields');
     $this->assertTrue($this->xpath('//select[@name="fields[_add_existing_field][field_name]"]//option[@value="' . $this->field_name . '"]'), 'Existing field was found in taxonomy term fields.');
   }
 
@@ -456,7 +456,7 @@ class ManageFieldsTest extends FieldUiTestBase {
    */
   function testDeleteTaxonomyField() {
     // Create a new field.
-    $bundle_path = 'admin/structure/taxonomy/tags';
+    $bundle_path = 'admin/structure/taxonomy/manage/tags';
     $edit1 = array(
       'fields[_add_new_field][label]' => $this->field_label,
       'fields[_add_new_field][field_name]' => $this->field_name_input,

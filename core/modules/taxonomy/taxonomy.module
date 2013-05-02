@@ -68,8 +68,8 @@ function taxonomy_help($path, $arg) {
     case 'admin/structure/taxonomy':
       $output = '<p>' . t('Taxonomy is for categorizing content. Terms are grouped into vocabularies. For example, a vocabulary called "Fruit" would contain the terms "Apple" and "Banana".') . '</p>';
       return $output;
-    case 'admin/structure/taxonomy/%':
-      $vocabulary = taxonomy_vocabulary_load($arg[3]);
+    case 'admin/structure/taxonomy/manage/%':
+      $vocabulary = taxonomy_vocabulary_load($arg[4]);
       switch ($vocabulary->hierarchy) {
         case TAXONOMY_HIERARCHY_DISABLED:
           return '<p>' . t('You can reorganize the terms in %capital_name using their drag-and-drop handles, and group terms under a parent term by sliding them under and to the right of the parent.', array('%capital_name' => drupal_ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
@@ -128,7 +128,7 @@ function taxonomy_entity_bundle_info() {
     $bundles['taxonomy_term'][$id] = array(
       'label' => $config->get('name'),
       'admin' => array(
-        'real path' => 'admin/structure/taxonomy/' . $id,
+        'real path' => 'admin/structure/taxonomy/manage/' . $id,
       ),
     );
   }
@@ -324,35 +324,35 @@ function taxonomy_menu() {
     'file' => 'taxonomy.pages.inc',
   );
 
-  $items['admin/structure/taxonomy/%taxonomy_vocabulary'] = array(
+  $items['admin/structure/taxonomy/manage/%taxonomy_vocabulary'] = array(
     'title callback' => 'entity_page_label',
-    'title arguments' => array(3),
+    'title arguments' => array(4),
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('taxonomy_overview_terms', 3),
+    'page arguments' => array('taxonomy_overview_terms', 4),
     'access callback' => 'entity_page_access',
-    'access arguments' => array(3, 'view'),
+    'access arguments' => array(4, 'view'),
     'file' => 'taxonomy.admin.inc',
   );
-  $items['admin/structure/taxonomy/%taxonomy_vocabulary/list'] = array(
+  $items['admin/structure/taxonomy/manage/%taxonomy_vocabulary/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/structure/taxonomy/%taxonomy_vocabulary/edit'] = array(
+  $items['admin/structure/taxonomy/manage/%taxonomy_vocabulary/edit'] = array(
     'title' => 'Edit',
     'page callback' => 'entity_get_form',
-    'page arguments' => array(3),
+    'page arguments' => array(4),
     'access callback' => 'entity_page_access',
-    'access arguments' => array(3, 'update'),
+    'access arguments' => array(4, 'update'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'taxonomy.admin.inc',
   );
 
-  $items['admin/structure/taxonomy/%taxonomy_vocabulary/add'] = array(
+  $items['admin/structure/taxonomy/manage/%taxonomy_vocabulary/add'] = array(
     'title' => 'Add term',
     'page callback' => 'taxonomy_term_add',
-    'page arguments' => array(3),
+    'page arguments' => array(4),
     'access callback' => 'taxonomy_term_create_access',
-    'access arguments' => array(3),
+    'access arguments' => array(4),
     'type' => MENU_LOCAL_ACTION,
     'file' => 'taxonomy.admin.inc',
   );

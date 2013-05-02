@@ -43,7 +43,7 @@ use Drupal\taxonomy\TermInterface;
  *     "bundle" = "vid"
  *   },
  *   menu_base_path = "taxonomy/term/%taxonomy_term",
- *   route_base_path = "admin/structure/taxonomy/{bundle}",
+ *   route_base_path = "admin/structure/taxonomy/manage/{bundle}",
  *   permission_granularity = "bundle"
  * )
  */

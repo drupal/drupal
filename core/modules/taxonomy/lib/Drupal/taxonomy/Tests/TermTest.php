@@ -293,14 +293,14 @@ class TermTest extends TaxonomyTestBase {
     $edit['parent[]'] = array(0);
 
     // Create the term to edit.
-    $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->id() . '/add', $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add', $edit, t('Save'));
 
     $terms = taxonomy_term_load_multiple_by_name($edit['name']);
     $term = reset($terms);
     $this->assertNotNull($term, 'Term found in database.');
 
     // Submitting a term takes us to the add page; we need the List page.
-    $this->drupalGet('admin/structure/taxonomy/' . $this->vocabulary->id());
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id());
 
     // Test edit link as accessed from Taxonomy administration pages.
     // Because Simpletest creates its own database when running tests, we know
@@ -319,7 +319,7 @@ class TermTest extends TaxonomyTestBase {
     $this->drupalPost('taxonomy/term/' . $term->id() . '/edit', $edit, t('Save'));
 
     // Check that the term is still present at admin UI after edit.
-    $this->drupalGet('admin/structure/taxonomy/' . $this->vocabulary->id());
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id());
     $this->assertText($edit['name'], 'The randomly generated term name is present.');
     $this->assertLink(t('edit'));
 
@@ -367,7 +367,7 @@ class TermTest extends TaxonomyTestBase {
     drupal_static_reset('taxonomy_get_treeterms');
     list($term1, $term2, $term3) = taxonomy_get_tree($this->vocabulary->id(), 0, NULL, TRUE);
 
-    $this->drupalGet('admin/structure/taxonomy/' . $this->vocabulary->id());
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id());
 
     // Each term has four hidden fields, "tid:1:0[tid]", "tid:1:0[parent]",
     // "tid:1:0[depth]", and "tid:1:0[weight]". Change the order to term2,
@@ -397,7 +397,7 @@ class TermTest extends TaxonomyTestBase {
     $this->assertEqual($terms[1]->parents, array($term2->id()), 'Term 3 was made a child of term 2.');
     $this->assertEqual($terms[2]->tid, $term1->id(), 'Term 1 was moved below term 2.');
 
-    $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->id(), array(), t('Reset to alphabetical'));
+    $this->drupalPost('admin/structure/taxonomy/manage/' . $this->vocabulary->id(), array(), t('Reset to alphabetical'));
     // Submit confirmation form.
     $this->drupalPost(NULL, array(), t('Reset to alphabetical'));
 
@@ -425,7 +425,7 @@ class TermTest extends TaxonomyTestBase {
       'parent[]' => array(0, $parent->id()),
     );
     // Save the new term.
-    $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->id() . '/add', $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add', $edit, t('Save'));
 
     // Check that the term was successfully created.
     $terms = taxonomy_term_load_multiple_by_name($edit['name']);

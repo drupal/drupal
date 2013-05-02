@@ -94,13 +94,13 @@ class BreadcrumbTest extends MenuTestBase {
     $trail += array(
       'admin/structure/taxonomy' => t('Taxonomy'),
     );
-    $this->assertBreadcrumb('admin/structure/taxonomy/tags', $trail);
+    $this->assertBreadcrumb('admin/structure/taxonomy/manage/tags', $trail);
     $trail += array(
-      'admin/structure/taxonomy/tags' => t('Tags'),
+      'admin/structure/taxonomy/manage/tags' => t('Tags'),
     );
-    $this->assertBreadcrumb('admin/structure/taxonomy/tags/edit', $trail);
-    $this->assertBreadcrumb('admin/structure/taxonomy/tags/fields', $trail);
-    $this->assertBreadcrumb('admin/structure/taxonomy/tags/add', $trail);
+    $this->assertBreadcrumb('admin/structure/taxonomy/manage/tags/edit', $trail);
+    $this->assertBreadcrumb('admin/structure/taxonomy/manage/tags/fields', $trail);
+    $this->assertBreadcrumb('admin/structure/taxonomy/manage/tags/add', $trail);
 
     // Verify Menu administration breadcrumbs.
     $trail = $admin + array(

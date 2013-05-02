@@ -49,10 +49,10 @@ class TermLanguageTest extends TaxonomyTestBase {
     $edit = array(
       'default_language[language_show]' => TRUE,
     );
-    $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
 
     // Add a term.
-    $this->drupalGet('admin/structure/taxonomy/' . $this->vocabulary->id() . '/add');
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
     // Check that we have the language selector.
     $this->assertField('edit-langcode', t('The language selector field was found on the page'));
     // Submit the term.
@@ -85,8 +85,8 @@ class TermLanguageTest extends TaxonomyTestBase {
       'default_language[langcode]' => 'bb',
       'default_language[language_show]' => TRUE,
     );
-    $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
-    $this->drupalGet('admin/structure/taxonomy/' . $this->vocabulary->id() . '/add');
+    $this->drupalPost('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
     $this->assertOptionSelected('edit-langcode', 'bb');
 
     // Make the default language of the terms to be the current interface.
@@ -94,10 +94,10 @@ class TermLanguageTest extends TaxonomyTestBase {
       'default_language[langcode]' => 'current_interface',
       'default_language[language_show]' => TRUE,
     );
-    $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
-    $this->drupalGet('aa/admin/structure/taxonomy/' . $this->vocabulary->id() . '/add');
+    $this->drupalPost('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
+    $this->drupalGet('aa/admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
     $this->assertOptionSelected('edit-langcode', 'aa');
-    $this->drupalGet('bb/admin/structure/taxonomy/' . $this->vocabulary->id() . '/add');
+    $this->drupalGet('bb/admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
     $this->assertOptionSelected('edit-langcode', 'bb');
 
     // Change the default language of the site and check if the default terms
@@ -112,8 +112,8 @@ class TermLanguageTest extends TaxonomyTestBase {
       'default_language[langcode]' => 'site_default',
       'default_language[language_show]' => TRUE,
     );
-    $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
-    $this->drupalGet('admin/structure/taxonomy/' . $this->vocabulary->id() . '/add');
+    $this->drupalPost('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
     $this->assertOptionSelected('edit-langcode', 'cc');
   }
 }
