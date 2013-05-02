@@ -1,0 +1,174 @@
+# Schema for the configuration files of the Options module.
+
+field.list_integer.settings:
+  type: mapping
+  label: 'List (integer) settings'
+  mapping:
+    allowed_values:
+      type: sequence
+      label: 'Allowed values list'
+      sequence:
+        - type: string
+          label: 'Value'
+    allowed_values_function:
+      type: string
+      label: 'Allowed values function'
+    allowed_values_function_display:
+      type: string
+      label: 'Allowed values function display'
+
+field.list_integer.instance_settings:
+  type: mapping
+  label: 'List (integer)'
+  mapping:
+    user_register_form:
+      type: boolean
+      label: 'Display on user registration form.'
+
+field.list_integer.value:
+  type: sequence
+  label: 'Default value'
+  sequence:
+    - type: mapping
+      label: 'Default'
+      mapping:
+        value:
+          type: integer
+          label: 'Value'
+
+field.list_float.settings:
+  type: mapping
+  label: 'List (float) settings'
+  mapping:
+    allowed_values:
+      type: sequence
+      label: 'Allowed values list'
+      sequence:
+        - type: string
+          label: 'Value'
+    allowed_values_function:
+      type: string
+      label: 'Allowed values function'
+    allowed_values_function_display:
+      type: string
+      label: 'Allowed values function display'
+
+field.list_float.instance_settings:
+  type: mapping
+  label: 'List (float)'
+  mapping:
+    user_register_form:
+      type: boolean
+      label: 'Display on user registration form.'
+
+field.list_float.value:
+  type: sequence
+  label: 'Default value'
+  sequence:
+    - type: mapping
+      label: 'Default'
+      mapping:
+        value:
+          type: string
+          label: 'Value'
+
+field.list_text.settings:
+  type: mapping
+  label: 'List (text) settings'
+  mapping:
+    allowed_values:
+      type: sequence
+      label: 'Allowed values list'
+      sequence:
+        - type: string
+          label: 'Value'
+    allowed_values_function:
+      type: string
+      label: 'Allowed values function'
+    allowed_values_function_display:
+      type: string
+      label: 'Allowed values function display'
+
+field.list_text.instance_settings:
+  type: mapping
+  label: 'List (float)'
+  mapping:
+    user_register_form:
+      type: boolean
+      label: 'Display on user registration form.'
+
+field.list_text.value:
+  type: sequence
+  label: 'Default value'
+  sequence:
+    - type: mapping
+      label: 'Default'
+      mapping:
+        value:
+          type: string
+          label: 'Value'
+
+field.list_boolean.settings:
+  type: mapping
+  label: 'List (boolean) settings'
+  mapping:
+    allowed_values:
+      type: sequence
+      label: 'Allowed values list'
+      sequence:
+        - type: string
+          label: 'Value'
+    allowed_values_function:
+      type: string
+      label: 'Allowed values function'
+    allowed_values_function_display:
+      type: string
+      label: 'Allowed values function display'
+
+field.list_boolean.instance_settings:
+  type: mapping
+  label: 'List (boolean)'
+  mapping:
+    user_register_form:
+      type: boolean
+      label: 'Display on user registration form.'
+
+field.list_boolean.value:
+  type: sequence
+  label: 'Default value'
+  sequence:
+    - type: mapping
+      label: 'Default'
+      mapping:
+        value:
+          type: boolean
+          label: 'Value'
+
+field_widget.options_select.settings:
+  type: sequence
+  label: 'Select list widget settings'
+  sequence:
+    - type: string
+      label: 'Value'
+
+field_widget.options_buttons.settings:
+  type: sequence
+  label: 'Check boxes/radio buttons widget settings'
+  sequence:
+    - type: string
+      label: 'Value'
+
+field_widget.options_onoff.settings:
+  type: mapping
+  label: 'Single on/off checkbox widget settings'
+  mapping:
+    display_label:
+      type: boolean
+      label: 'Use field label instead of the "On value" as label'
+
+field_widget.options_list.settings:
+  type: sequence
+  label: 'Select list widget settings'
+  sequence:
+    - type: string
+      label: 'Value'
