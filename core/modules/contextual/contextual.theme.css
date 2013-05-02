@@ -14,6 +14,14 @@
 }
 
 /**
+ * Contextual region.
+ */
+.contextual-region.focus {
+  outline: 1px dashed #d6d6d6;
+  outline-offset: 1px;
+}
+
+/**
  * Contextual trigger.
  */
 .contextual .trigger {
@@ -34,15 +42,16 @@
   padding: 0 2px;
   position: relative;
   right: 2px; /* LTR */
-  width: 28px;
+  /* Override the .element-focusable height: auto */
+  width: 28px !important;
   text-indent: -9999px;
-  z-index: 2;
   cursor: pointer;
 }
-.contextual-links-active .trigger {
+.contextual.open .trigger {
   border-bottom-color: transparent;
   border-radius: 13px 13px 0 0;
   box-shadow: none;
+  z-index: 2;
 }
 
 /**
@@ -59,10 +68,10 @@
   margin: 0;
   padding: 0.25em 0;
   position: relative;
+  right: 2px; /* LTR */
   text-align: left; /* LTR */
   top: -1px;
   white-space: nowrap;
-  z-index: 1;
 }
 .contextual-region .contextual .contextual-links li {
   background-color: #fff;
