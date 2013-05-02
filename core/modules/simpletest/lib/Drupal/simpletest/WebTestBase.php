@@ -178,7 +178,7 @@ abstract class WebTestBase extends TestBase {
    */
   function drupalGetNodeByTitle($title, $reset = FALSE) {
     if ($reset) {
-      drupal_container()->get('plugin.manager.entity')->getStorageController('node')->resetCache();
+      \Drupal::entityManager()->getStorageController('node')->resetCache();
     }
     $nodes = entity_load_multiple_by_properties('node', array('title' => $title));
     // Load the first node returned from the database.

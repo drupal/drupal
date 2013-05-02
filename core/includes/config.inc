@@ -342,7 +342,7 @@ function config_import_invoke_owner(array $config_changes, StorageInterface $sou
   // higher-level configuration data.
   // First pass deleted, then new, and lastly changed configuration, in order to
   // handle dependencies correctly.
-  $manager = drupal_container()->get('plugin.manager.entity');
+  $manager = Drupal::entityManager();
   foreach (array('delete', 'create', 'change') as $op) {
     foreach ($config_changes[$op] as $key => $name) {
       // Call to the configuration entity's storage controller to handle the
@@ -366,7 +366,7 @@ function config_import_invoke_owner(array $config_changes, StorageInterface $sou
       if (!empty($handled_by_module)) {
         $factory->reset($name);
         // Reset the manifest config object for the config entity.
-        $entity_info = drupal_container()->get('plugin.manager.entity')->getDefinition($entity_type);
+        $entity_info = Drupal::entityManager()->getDefinition($entity_type);
         $factory->reset('manifest.' . $entity_info['config_prefix']);
         unset($config_changes[$op][$key]);
       }

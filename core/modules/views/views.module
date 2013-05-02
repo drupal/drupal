@@ -1040,7 +1040,7 @@ function views_get_applicable_views($type) {
     ->execute();
 
   $result = array();
-  foreach (Drupal::service('plugin.manager.entity')->getStorageController('view')->load($entity_ids) as $view) {
+  foreach (Drupal::entityManager()->getStorageController('view')->load($entity_ids) as $view) {
     // Check each display to see if it meets the criteria and is enabled.
     $executable = $view->get('executable');
     $executable->initDisplay();
@@ -1058,7 +1058,7 @@ function views_get_applicable_views($type) {
  * Returns an array of all views as fully loaded $view objects.
  */
 function views_get_all_views() {
-  return drupal_container()->get('plugin.manager.entity')->getStorageController('view')->load();
+  return Drupal::entityManager()->getStorageController('view')->load();
 }
 
 /**

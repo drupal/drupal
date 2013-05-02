@@ -16,7 +16,7 @@ use Drupal\custom_block\Plugin\Core\Entity\CustomBlockType;
  * @see custom_block_menu()
  */
 function custom_block_type_list() {
-  return drupal_container()->get('plugin.manager.entity')->getListController('custom_block_type')->render();
+  return Drupal::entityManager()->getListController('custom_block_type')->render();
 }
 
 /**

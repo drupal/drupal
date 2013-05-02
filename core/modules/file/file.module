@@ -414,7 +414,7 @@ function file_validate_size(File $file, $file_limit = 0, $user_limit = 0) {
   }
 
   // Save a query by only calling spaceUsed() when a limit is provided.
-  if ($user_limit && (drupal_container()->get('plugin.manager.entity')->getStorageController('file')->spaceUsed($user->uid) + $file->filesize) > $user_limit) {
+  if ($user_limit && (Drupal::entityManager()->getStorageController('file')->spaceUsed($user->uid) + $file->filesize) > $user_limit) {
     $errors[] = t('The file is %filesize which would exceed your disk quota of %quota.', array('%filesize' => format_size($file->filesize), '%quota' => format_size($user_limit)));
   }
 
@@ -716,7 +716,7 @@ function file_file_download($uri, $field_type = 'file') {
  * Implements file_cron()
  */
 function file_cron() {
-  $result = drupal_container()->get('plugin.manager.entity')->getStorageController('file')->retrieveTemporaryFiles();
+  $result = Drupal::entityManager()->getStorageController('file')->retrieveTemporaryFiles();
   foreach ($result as $row) {
     if ($file = file_load($row->fid)) {
       $references = file_usage()->listUsage($file);

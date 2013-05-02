@@ -110,7 +110,7 @@ class MenuLinkFormController extends EntityFormController {
     );
 
     // Get number of items in menu so the weight selector is sized appropriately.
-    $delta = drupal_container()->get('plugin.manager.entity')
+    $delta = \Drupal::entityManager()
       ->getStorageController('menu_link')->countMenuLinks($menu_link->menu_name);
     $form['weight'] = array(
       '#type' => 'weight',

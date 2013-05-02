@@ -581,7 +581,7 @@ function taxonomy_term_is_page(Term $term) {
  * Clear all static cache variables for terms.
  */
 function taxonomy_terms_static_reset() {
-  drupal_container()->get('plugin.manager.entity')->getStorageController('taxonomy_term')->resetCache();
+  Drupal::entityManager()->getStorageController('taxonomy_term')->resetCache();
 }
 
 /**
@@ -591,7 +591,7 @@ function taxonomy_terms_static_reset() {
  *   An array of ids to reset in entity controller cache.
  */
 function taxonomy_vocabulary_static_reset(array $ids = NULL) {
-  drupal_container()->get('plugin.manager.entity')->getStorageController('taxonomy_vocabulary')->resetCache($ids);
+  Drupal::entityManager()->getStorageController('taxonomy_vocabulary')->resetCache($ids);
 }
 
 /**

@@ -29,7 +29,7 @@ function block_admin_demo($theme = NULL) {
  * @see block_menu()
  */
 function block_admin_display($theme) {
-  return drupal_container()->get('plugin.manager.entity')
+  return Drupal::entityManager()
     ->getListController('block')
     ->render($theme);
 }

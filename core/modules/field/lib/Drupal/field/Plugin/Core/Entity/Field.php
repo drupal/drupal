@@ -266,7 +266,7 @@ class Field extends ConfigEntityBase implements FieldInterface {
    */
   public function save() {
     $module_handler = \Drupal::moduleHandler();
-    $storage_controller = \Drupal::service('plugin.manager.entity')->getStorageController($this->entityType);
+    $storage_controller = \Drupal::entityManager()->getStorageController($this->entityType);
 
     // Clear the derived data about the field.
     unset($this->schema, $this->storageDetails);
@@ -295,7 +295,7 @@ class Field extends ConfigEntityBase implements FieldInterface {
       // Disallow reserved field names. This can't prevent all field name
       // collisions with existing entity properties, but some is better than
       // none.
-      foreach (\Drupal::service('plugin.manager.entity')->getDefinitions() as $type => $info) {
+      foreach (\Drupal::entityManager()->getDefinitions() as $type => $info) {
         if (in_array($this->id, $info['entity_keys'])) {
           throw new FieldException(format_string('Attempt to create field %id which is reserved by entity type %type.', array('%id' => $this->id, '%type' => $type)));
         }
@@ -388,7 +388,7 @@ class Field extends ConfigEntityBase implements FieldInterface {
   public function delete() {
     if (!$this->deleted) {
       $module_handler = \Drupal::moduleHandler();
-      $instance_controller = \Drupal::service('plugin.manager.entity')->getStorageController('field_instance');
+      $instance_controller = \Drupal::entityManager()->getStorageController('field_instance');
       $state = \Drupal::state();
 
       // Delete all non-deleted instances.

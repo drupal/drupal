@@ -6090,7 +6090,7 @@ function drupal_flush_all_caches() {
 
   // Clear all non-drupal_static() static caches.
   // @todo Rebuild the kernel/container.
-  drupal_container()->get('plugin.manager.entity')->clearCachedDefinitions();
+  Drupal::entityManager()->clearCachedDefinitions();
 
   // Rebuild module and theme data.
   system_rebuild_module_data();

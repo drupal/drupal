@@ -41,7 +41,7 @@ class MenuDeleteMenuForm extends ConfirmFormBase {
    */
   protected function getDescription() {
     $caption = '';
-    $num_links = drupal_container()->get('plugin.manager.entity')
+    $num_links = \Drupal::entityManager()
       ->getStorageController('menu_link')->countMenuLinks($this->menu->id());
     if ($num_links) {
       $caption .= '<p>' . format_plural($num_links, '<strong>Warning:</strong> There is currently 1 menu link in %title. It will be deleted (system-defined items will be reset).', '<strong>Warning:</strong> There are currently @count menu links in %title. They will be deleted (system-defined links will be reset).', array('%title' => $this->menu->label())) . '</p>';

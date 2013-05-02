@@ -2602,7 +2602,7 @@ function menu_cache_clear_all() {
  * Resets the menu system static cache.
  */
 function menu_reset_static_cache() {
-  drupal_container()->get('plugin.manager.entity')
+  Drupal::entityManager()
     ->getStorageController('menu_link')->resetCache();
   drupal_static_reset('_menu_build_tree');
   drupal_static_reset('menu_tree');
@@ -2749,7 +2749,7 @@ function menu_get_router() {
  */
 function _menu_navigation_links_rebuild($menu) {
   if (module_exists('menu_link')) {
-    $menu_link_controller = drupal_container()->get('plugin.manager.entity')
+    $menu_link_controller = Drupal::entityManager()
       ->getStorageController('menu_link');
   }
   else {

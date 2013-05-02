@@ -321,7 +321,7 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
    */
   public function save() {
     $module_handler = \Drupal::moduleHandler();
-    $entity_manager = \Drupal::service('plugin.manager.entity');
+    $entity_manager = \Drupal::entityManager();
     $instance_controller = $entity_manager->getStorageController($this->entityType);
 
     if ($this->isNew()) {

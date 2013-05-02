@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
  * Menu callback which shows an overview page of all the custom menus and their descriptions.
  */
 function menu_overview_page() {
-  return drupal_container()->get('plugin.manager.entity')
+  return Drupal::entityManager()
     ->getListController('menu')
     ->render();
 }

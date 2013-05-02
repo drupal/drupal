@@ -178,7 +178,7 @@ class EntityWrapper extends TypedData implements IteratorAggregate, ComplexDataI
    */
   public function getPropertyDefinitions() {
     // @todo: Support getting definitions if multiple bundles are specified.
-    return drupal_container()->get('plugin.manager.entity')->getStorageController($this->entityType)->getFieldDefinitions($this->definition['constraints']);
+    return \Drupal::entityManager()->getStorageController($this->entityType)->getFieldDefinitions($this->definition['constraints']);
   }
 
   /**

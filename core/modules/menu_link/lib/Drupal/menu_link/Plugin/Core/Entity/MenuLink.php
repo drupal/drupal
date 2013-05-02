@@ -323,7 +323,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
       'link_path' => $item['path'],
       'options' => empty($item['description']) ? array() : array('attributes' => array('title' => $item['description'])),
     );
-    return drupal_container()->get('plugin.manager.entity')
+    return \Drupal::entityManager()
       ->getStorageController('menu_link')->create($item);
   }
 

@@ -17,7 +17,7 @@ use Drupal\contact\Plugin\Core\Entity\Category;
  */
 function contact_category_list() {
   drupal_set_title(t('Contact form categories'));
-  return drupal_container()->get('plugin.manager.entity')
+  return Drupal::entityManager()
     ->getListController('contact_category')
     ->render();
 }

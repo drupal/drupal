@@ -16,7 +16,7 @@ use \Drupal\picture\PictureMapping;
  * @see picture_menu()
  */
 function picture_mapping_page() {
-  return drupal_container()->get('plugin.manager.entity')
+  return Drupal::entityManager()
     ->getListController('picture_mapping')
     ->render();
 }

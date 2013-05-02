@@ -216,7 +216,7 @@ class EntityTranslation extends TypedData implements IteratorAggregate, Accessib
     // @todo Add a way to set and get the langcode so that's more obvious what
     // we're doing here.
     $langcode = substr($this->getName(), 1);
-    return drupal_container()->get('plugin.manager.entity')
+    return \Drupal::entityManager()
       ->getAccessController($this->parent->entityType())
       ->access($this->parent, $operation, $langcode, $account);
   }
