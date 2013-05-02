@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, Drupal, drupalSettings) {
 
 "use strict";
 
@@ -42,19 +42,19 @@ Drupal.behaviors.machineName = {
 
     function machineNameHandler(e) {
       var data = e.data;
-      machine = self.transliterate($(e.target).val(), data.options);
-      // Set the machine name to the transliterated value.
-      if (machine !== '') {
-        if (machine !== data.options.replace) {
-          data.$target.val(machine);
-          data.$preview.html(data.options.field_prefix + Drupal.checkPlain(machine) + data.options.field_suffix);
-        }
-        data.$suffix.show();
+      var settings = data.options;
+      var baseValue = $(e.target).val();
+
+      var rx = new RegExp(settings.replace_pattern, 'g');
+      var expected = baseValue.toLowerCase().replace(rx, settings.replace).substr(0, settings.maxlength);
+
+      if(baseValue.toLowerCase() !== expected) {
+        self.transliterate(baseValue, settings).done(function (machine) {
+          self.showMachineName(machine.substr(0, settings.maxlength), data);
+        });
       }
       else {
-        data.$suffix.hide();
-        data.$target.val(machine);
-        data.$preview.empty();
+        self.showMachineName(expected, data);
       }
     }
 
@@ -124,6 +124,23 @@ Drupal.behaviors.machineName = {
     }
   },
 
+  showMachineName: function (machine, data) {
+    var settings = data.options;
+    // Set the machine name to the transliterated value.
+    if (machine !== '') {
+      if (machine !== settings.replace) {
+        data.$target.val(machine);
+        data.$preview.html(settings.field_prefix + Drupal.checkPlain(machine) + settings.field_suffix);
+      }
+      data.$suffix.show();
+    }
+    else {
+      data.$suffix.hide();
+      data.$target.val(machine);
+      data.$preview.empty();
+    }
+  },
+
   /**
    * Transliterate a human-readable name to a machine name.
    *
@@ -141,9 +158,14 @@ Drupal.behaviors.machineName = {
    *   The transliterated source string.
    */
   transliterate: function (source, settings) {
-    var rx = new RegExp(settings.replace_pattern, 'g');
-    return source.toLowerCase().replace(rx, settings.replace).substr(0, settings.maxlength);
+    return $.get(drupalSettings.basePath + 'machine_name/transliterate', {
+      text: source,
+      langcode: drupalSettings.langcode,
+      replace_pattern: settings.replace_pattern,
+      replace: settings.replace,
+      lowercase: true
+    });
   }
 };
 
-})(jQuery);
+})(jQuery, Drupal, drupalSettings);

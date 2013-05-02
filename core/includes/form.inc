@@ -3759,6 +3759,9 @@ function form_validate_table($element, &$form_state) {
  *     name must not be changed after initial creation.
  */
 function form_process_machine_name($element, &$form_state) {
+  // We need to pass the langcode to the client.
+  $language = language(LANGUAGE_TYPE_INTERFACE);
+
   // Apply default form element properties.
   $element += array(
     '#title' => t('Machine-readable name'),
@@ -3825,6 +3828,7 @@ function form_process_machine_name($element, &$form_state) {
       'machineName' => array(
         '#' . $source['#id'] => $element['#machine_name'],
       ),
+      'langcode' => $language->langcode,
     ),
   );
   $element['#attached']['library'][] = array('system', 'drupal.machine-name');
