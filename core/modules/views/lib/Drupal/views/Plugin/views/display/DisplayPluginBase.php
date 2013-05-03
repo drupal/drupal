@@ -1135,8 +1135,8 @@ abstract class DisplayPluginBase extends PluginBase {
     if (!isset($this->definition['contextual links locations']) || !empty($this->definition['contextual links locations'])) {
       $options['show_admin_links'] = array(
         'category' => 'other',
-        'title' => t('Display contextual links'),
-        'value' => $this->getOption('show_admin_links') ? t('Yes') : t('No'),
+        'title' => t('Contextual links'),
+        'value' => $this->getOption('show_admin_links') ? t('Shown') : t('Hidden'),
         'desc' => t('Change whether or not to display contextual links for this view.'),
       );
     }
@@ -1408,8 +1408,8 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'show_admin_links':
         $form['#title'] .= t('Show contextual links on this view.');
         $form['show_admin_links'] = array(
-          '#type' => 'radios',
-          '#options' => array(0 => t('No'), 1 => t('Yes')),
+          '#type' => 'checkbox',
+          '#title' => t('Show contextual links'),
           '#default_value' => $this->getOption('show_admin_links'),
         );
       break;
