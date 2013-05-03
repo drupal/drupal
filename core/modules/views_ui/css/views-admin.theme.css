@@ -1111,12 +1111,6 @@ div.messages {
 .dropbutton-multiple .dropbutton-widget {
   padding-right: 1.75em;
 }
-.dropbutton-toggle {
-  width: 1.75em;
-}
-.dropbutton-arrow {
-  top: 0.6667em;
-}
 .dropbutton-wrapper {
   font-size: 11px;
   line-height: 1.4555;
