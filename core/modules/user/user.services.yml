@@ -7,6 +7,10 @@ services:
     class: Drupal\user\Access\RegisterAccessCheck
     tags:
       - { name: access_check }
+  access_check.user.role:
+    class: Drupal\user\Access\RoleAccessCheck
+    tags:
+      - { name: access_check }
   user.data:
     class: Drupal\user\UserData
     arguments: ['@database']
