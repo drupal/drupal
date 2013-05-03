@@ -51,10 +51,7 @@ function config_menu() {
   $items['admin/config/development/sync/diff/%'] = array(
     'title' => 'Configuration file diff',
     'description' => 'Diff between active and staged configuraiton.',
-    'page callback' => 'config_admin_diff_page',
-    'page arguments' => array(5),
-    'access arguments' => array('synchronize configuration'),
-    'file' => 'config.admin.inc',
+    'route_name' => 'config_diff',
   );
   $items['admin/config/development/sync/import'] = array(
     'title' => 'Import',
@@ -62,4 +59,3 @@ function config_menu() {
   );
   return $items;
 }
-

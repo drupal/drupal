@@ -1,0 +1,6 @@
+config_diff:
+  pattern: '/admin/config/development/sync/diff/{config_file}'
+  defaults:
+    _content: '\Drupal\config\Controller\ConfigController::diff'
+  requirements:
+    _permission: 'synchronize configuration'

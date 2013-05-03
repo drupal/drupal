@@ -264,6 +264,16 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@settings']
+  route_enhancer.modal:
+    class: Drupal\Core\Routing\Enhancer\ModalEnhancer
+    arguments: ['@content_negotiation']
+    tags:
+      - { name: route_enhancer, priority: 40 }
+  route_enhancer.dialog:
+    class: Drupal\Core\Routing\Enhancer\DialogEnhancer
+    arguments: ['@content_negotiation']
+    tags:
+      - { name: route_enhancer, priority: 30 }
   route_enhancer.ajax:
     class: Drupal\Core\Routing\Enhancer\AjaxEnhancer
     arguments: ['@content_negotiation']

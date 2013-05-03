@@ -24,9 +24,9 @@ class AjaxSubscriber implements EventSubscriberInterface {
    */
   public function onKernelRequest(GetResponseEvent $event) {
     $request = $event->getRequest();
-    // @todo Refactor 'drupal_ajax' to just 'ajax' once all Ajax is converted to
-    // Drupal 8's API.
     $request->setFormat('drupal_ajax', 'application/vnd.drupal-ajax');
+    $request->setFormat('drupal_dialog', 'application/vnd.drupal-dialog');
+    $request->setFormat('drupal_modal', 'application/vnd.drupal-modal');
   }
 
   /**

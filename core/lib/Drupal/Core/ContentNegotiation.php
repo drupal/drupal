@@ -26,7 +26,7 @@ class ContentNegotiation {
    * @param Symfony\Component\HttpFoundation\Request $request
    *   The request object from which to extract the content type.
    *
-   * @return
+   * @return string
    *   The normalized type of a given request.
    */
   public function getContentType(Request $request) {
@@ -36,11 +36,12 @@ class ContentNegotiation {
       return 'iframeupload';
     }
 
-    // Check all formats, it HTML is found return it.
+    // Check all formats, if priority format is found return it.
     $first_found_format = FALSE;
     foreach ($request->getAcceptableContentTypes() as $mime_type) {
       $format = $request->getFormat($mime_type);
-      if ($format === 'html' || $format === 'drupal_ajax') {
+      $priority = array('html', 'drupal_ajax', 'drupal_modal', 'drupal_dialog');
+      if (in_array($format, $priority, TRUE)) {
         return $format;
       }
       if (!is_null($format) && !$first_found_format) {

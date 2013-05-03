@@ -52,6 +52,8 @@ Drupal.behaviors.AJAX = {
         element_settings.url = $(this).attr('href');
         element_settings.event = 'click';
       }
+      element_settings.accepts = $(this).data('accepts');
+      element_settings.dialog = $(this).data('dialog-options');
       var base = $(this).attr('id');
       Drupal.ajax[base] = new Drupal.ajax(base, this, element_settings);
     });
@@ -200,10 +202,14 @@ Drupal.ajax = function (base, element, element_settings) {
     },
     dataType: 'json',
     accepts: {
-      json: 'application/vnd.drupal-ajax'
+      json: element_settings.accepts || 'application/vnd.drupal-ajax'
     },
     type: 'POST'
   };
+
+  if (element_settings.dialog) {
+    ajax.options.data.dialogOptions = element_settings.dialog;
+  }
 
   // Bind the ajaxSubmit function to the element event.
   $(ajax.element).bind(element_settings.event, function (event) {

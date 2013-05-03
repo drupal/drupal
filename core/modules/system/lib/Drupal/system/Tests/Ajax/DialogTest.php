@@ -11,6 +11,10 @@ namespace Drupal\system\Tests\Ajax;
  * Tests use of dialogs as wrappers for Ajax responses.
  */
 class DialogTest extends AjaxTestBase {
+
+  /**
+   * Declares test info.
+   */
   public static function getInfo() {
     return array(
       'name' => 'AJAX dialogs commands',
@@ -22,7 +26,7 @@ class DialogTest extends AjaxTestBase {
   /**
    * Test sending non-JS and AJAX requests to open and manipulate modals.
    */
-  function testDialog() {
+  public function testDialog() {
     // Ensure the elements render without notices or exceptions.
     $this->drupalGet('ajax-test/dialog');
 
@@ -35,8 +39,8 @@ class DialogTest extends AjaxTestBase {
       'settings' => NULL,
       'data' => $dialog_contents,
       'dialogOptions' => array(
-        'modal' => true,
-        'title' => 'AJAX Dialog',
+        'modal' => TRUE,
+        'title' => 'AJAX Dialog contents',
       ),
     );
     $normal_expected_response = array(
@@ -45,8 +49,8 @@ class DialogTest extends AjaxTestBase {
       'settings' => NULL,
       'data' => $dialog_contents,
       'dialogOptions' => array(
-        'modal' => false,
-        'title' => 'AJAX Dialog',
+        'modal' => FALSE,
+        'title' => 'AJAX Dialog contents',
       ),
     );
     $close_expected_response = array(
@@ -55,20 +59,29 @@ class DialogTest extends AjaxTestBase {
     );
 
     // Check that requesting a modal dialog without JS goes to a page.
-    $this->drupalGet('ajax-test/dialog-contents/nojs/1');
+    $this->drupalGet('ajax-test/dialog-contents');
     $this->assertRaw($dialog_contents, 'Non-JS modal dialog page present.');
 
     // Emulate going to the JS version of the page and check the JSON response.
-    $ajax_result = $this->drupalGetAJAX('ajax-test/dialog-contents/ajax/1');
+    $ajax_result = $this->drupalGetAJAX('ajax-test/dialog-contents', array(), array('Accept: application/vnd.drupal-modal'));
     $this->assertEqual($modal_expected_response, $ajax_result[1], 'Modal dialog JSON response matches.');
 
     // Check that requesting a "normal" dialog without JS goes to a page.
-    $this->drupalGet('ajax-test/dialog-contents/nojs');
+    $this->drupalGet('ajax-test/dialog-contents');
     $this->assertRaw($dialog_contents, 'Non-JS normal dialog page present.');
 
     // Emulate going to the JS version of the page and check the JSON response.
-    $ajax_result = $this->drupalGetAJAX('ajax-test/dialog-contents/ajax');
-    $this->assertEqual($normal_expected_response, $ajax_result[1], 'Normal dialog JSON response matches.');
+    // This needs to use WebTestBase::drupalPostAJAX() so that the correct
+    // dialog options are sent.
+    $ajax_result = $this->drupalPostAJAX('ajax-test/dialog', array(
+        // We have to mock a form element to make drupalPost submit from a link.
+        'textfield' => 'test',
+      ), array(), 'ajax-test/dialog-contents', array(), array('Accept: application/vnd.drupal-dialog'), NULL, array(
+      'submit' => array(
+        'dialogOptions[target]' => 'ajax-test-dialog-wrapper-1',
+      )
+    ));
+    $this->assertEqual($normal_expected_response, $ajax_result[3], 'Normal dialog JSON response matches.');
 
     // Emulate closing the dialog via an AJAX request. There is no non-JS
     // version of this test.
