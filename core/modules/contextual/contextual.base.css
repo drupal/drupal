@@ -1,3 +1,4 @@
+
 /**
  * @file
  * Generic base styles for contextual module.
@@ -6,13 +7,33 @@
 .contextual-region {
   position: relative;
 }
-.contextual .trigger:focus {
-  /* Override the .element-focusable position: static */
-  position: relative !important;
+.touch .contextual .trigger {
+  display: block;
 }
-.contextual-links {
+.contextual .contextual-links {
   display: none;
 }
-.contextual.open .contextual-links {
+.contextual-links-active .contextual-links {
   display: block;
+}
+
+/**
+ * The .element-focusable class extends the .element-invisible class to allow
+ * the element to be focusable when navigated to via the keyboard.
+ *
+ * Add support for hover.
+ */
+.touch .contextual-region .element-invisible.element-focusable,
+.contextual-region:hover .element-invisible.element-focusable  {
+  clip: auto;
+  overflow: visible;
+  height: auto;
+}
+/* Override the position for contextual links. */
+.contextual-region .element-invisible.element-focusable:active,
+.contextual-region .element-invisible.element-focusable:focus,
+.contextual-region:hover .element-invisible.element-focusable,
+.contextual-region-active .element-invisible.element-focusable,
+.touch .contextual-region .element-invisible.element-focusable  {
+  position: relative !important;
 }

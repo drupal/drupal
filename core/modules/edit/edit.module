@@ -14,49 +14,6 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\edit\Form\EditFieldForm;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\field\Plugin\views\field\Field;
-
-/**
- * Implements hook_preprocess_views_view_fields().
- *
- * Still a lot of handwaving for marking up views fields as in-place editable.
- */
-function edit_preprocess_views_view_field(&$variables) {
-  if (user_access('access in-place editing')) {
-    // Early-return if output is empty.
-    if (empty($variables['output'])) {
-      return;
-    }
-
-    $views_field = $variables['field'];
-
-    // If this Views Field is hidden from display, then don't alter its output.
-    if ($views_field->options['exclude']) {
-      return;
-    }
-
-    // Only annotate Field API View Fields
-    if ($views_field instanceof Field) {
-      // Entity/Field metadata.
-      $entity = $variables['row']->_entity;
-      $field_name = $views_field->field_info->id;
-      $langcode = $views_field->field_info->langcode;
-
-      // Views metadata.
-      $view_name = $variables['view']->storage->id;
-      $view_display = $variables['view']->current_display;
-      $view_row = $variables['view']->row_index;
-
-      // Build edit ID; the view mode is now a hybrid that contains the
-      // necessary metadata for Views.
-      $edit_id = $entity->entityType() . '/' . $entity->id() . '/' . $field_name . '/' . $langcode . "/views-$view_name-$view_display-$view_row";
-
-      // @todo Push the rendering of the data-edit-id attribute deeper into the
-      // Views rendering pipeline instead of wrapping content in <span> tags.
-      $variables['output'] = '<span data-edit-id="' . $edit_id . '">' . $variables['output'] . '</span>';
-    }
-  }
-}
 
 /**
  * Implements hook_custom_theme().

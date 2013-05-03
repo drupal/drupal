@@ -91,9 +91,6 @@ function contextual_library_info() {
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'drupal'),
-      array('system', 'drupalSettings'),
-      array('system', 'backbone'),
-      array('system', 'modernizr'),
       array('system', 'jquery.once'),
     ),
   );
@@ -110,9 +107,8 @@ function contextual_library_info() {
     ),
     'dependencies' => array(
       array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'backbone'),
       array('system', 'jquery.once'),
+      array('system', 'backbone'),
       array('system', 'drupal.tabbingmanager'),
       array('system', 'drupal.announce'),
     ),
