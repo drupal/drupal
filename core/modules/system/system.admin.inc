@@ -456,6 +456,12 @@ function system_theme_settings($form, &$form_state, $key = '') {
       '#type' => 'details',
       '#title' => t('Logo image settings'),
       '#attributes' => array('class' => array('theme-settings-bottom')),
+      '#states' => array(
+        // Hide the logo image settings fieldset when logo display is disabled.
+        'invisible' => array(
+          'input[name="toggle_logo"]' => array('checked' => FALSE),
+        ),
+      ),
     );
     $form['logo']['default_logo'] = array(
       '#type' => 'checkbox',
@@ -490,6 +496,13 @@ function system_theme_settings($form, &$form_state, $key = '') {
       '#type' => 'details',
       '#title' => t('Shortcut icon settings'),
       '#description' => t("Your shortcut icon, or 'favicon', is displayed in the address bar and bookmarks of most browsers."),
+      '#states' => array(
+        // Hide the shortcut icon settings fieldset when shortcut icon display
+        // is disabled.
+        'invisible' => array(
+          'input[name="toggle_favicon"]' => array('checked' => FALSE),
+        ),
+      ),
     );
     $form['favicon']['default_favicon'] = array(
       '#type' => 'checkbox',
