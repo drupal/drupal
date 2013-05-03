@@ -899,7 +899,7 @@ function system_menu() {
     'file' => 'system.admin.inc',
   );
   $items['admin/config/regional/date-time'] = array(
-    'title' => 'Formats',
+    'title' => 'Date and time formats',
     'description' => 'Configure display format strings for date and time.',
     'page callback' => 'system_date_time_formats',
     'access arguments' => array('administer site configuration'),
