@@ -521,20 +521,27 @@ function module_disable($module_list, $disable_dependents = TRUE) {
 }
 
 /**
- * Uninstalls a given list of modules.
+ * Uninstalls a given list of disabled modules.
  *
- * @param $module_list
+ * Modules that are still enabled will be silently ignored.
+ *
+ * @param array $module_list
  *   The modules to uninstall.
- * @param $uninstall_dependents
- *   If TRUE, the function will check that all modules which depend on the
- *   passed-in module list either are already uninstalled or contained in the
- *   list, and it will ensure that the modules are uninstalled in the correct
- *   order. This incurs a significant performance cost, so use FALSE if you
- *   know $module_list is already complete and in the correct order.
+ * @param bool $uninstall_dependents
+ *   (optional) If TRUE, the function will check that all modules which depend
+ *   on the passed-in module list either are already uninstalled or contained in
+ *   the list, and it will ensure that the modules are uninstalled in the
+ *   correct order. This incurs a significant performance cost, so use FALSE if
+ *   you know $module_list is already complete and in the correct order.
+ *   Defaults to TRUE.
  *
- * @return
- *   FALSE if one or more dependent modules are missing from the list, TRUE
- *   otherwise.
+ * @return bool
+ *   Returns TRUE if the operation succeeds or FALSE if it aborts due to an
+ *   unsafe condition, namely, $uninstall_dependents is TRUE and a module in
+ *   $module_list has dependents which are not already uninstalled and not also
+ *   included in $module_list).
+ *
+ * @see module_disable()
  */
 function module_uninstall($module_list = array(), $uninstall_dependents = TRUE) {
   if ($uninstall_dependents) {
@@ -546,7 +553,7 @@ function module_uninstall($module_list = array(), $uninstall_dependents = TRUE) 
     $profile = drupal_get_profile();
     while (list($module) = each($module_list)) {
       if (!isset($module_data[$module]) || drupal_get_installed_schema_version($module) == SCHEMA_UNINSTALLED) {
-        // This module doesn't exist or is already uninstalled, skip it.
+        // This module doesn't exist or is already uninstalled. Skip it.
         unset($module_list[$module]);
         continue;
       }
@@ -619,7 +626,7 @@ function module_uninstall($module_list = array(), $uninstall_dependents = TRUE) 
   drupal_get_installed_schema_version(NULL, TRUE);
 
   if (!empty($module_list)) {
-    // Call hook_module_uninstall to let other modules act
+    // Let other modules react.
     module_invoke_all('modules_uninstalled', $module_list);
   }
 
