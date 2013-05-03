@@ -99,6 +99,21 @@ function views_ui_menu() {
 }
 
 /**
+ * Implements hook_entity_info().
+ */
+function views_ui_entity_info(&$entity_info) {
+  $entity_info['view']['controllers'] += array(
+    'list' => 'Drupal\views_ui\ViewListController',
+    'form' => array(
+      'edit' => 'Drupal\views_ui\ViewEditFormController',
+      'add' => 'Drupal\views_ui\ViewAddFormController',
+      'preview' => 'Drupal\views_ui\ViewPreviewFormController',
+      'clone' => 'Drupal\views_ui\ViewCloneFormController',
+    ),
+  );
+}
+
+/**
  * Implements hook_theme().
  */
 function views_ui_theme() {
