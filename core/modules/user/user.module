@@ -1420,6 +1420,11 @@ function user_authenticate($name, $password) {
  *
  * The function records a watchdog message about the new session, saves the
  * login timestamp, calls hook_user_login(), and generates a new session.
+ *
+ * @param array $edit
+ *   The array of form values submitted by the user.
+ *
+ * @see hook_user_login()
  */
 function user_login_finalize(&$edit = array()) {
   global $user;
