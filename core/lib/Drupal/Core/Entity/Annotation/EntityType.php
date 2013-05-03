@@ -94,14 +94,18 @@ class EntityType extends Plugin {
   /**
    * The human-readable name of the type.
    *
-   * @var string
+   * @ingroup plugin_translatable
+   *
+   * @var \Drupal\Core\Annotation\Translation
    */
   public $label;
 
   /**
    * The human-readable name of the entity bundles, e.g. Vocabulary.
    *
-   * @var string
+   * @ingroup plugin_translatable
+   *
+   * @var \Drupal\Core\Annotation\Translation
    */
   public $bundle_label;
 
