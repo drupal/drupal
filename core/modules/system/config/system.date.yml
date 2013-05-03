@@ -24,7 +24,7 @@ formats:
     name: 'HTML Datetime'
     pattern:
       php: 'Y-m-d\TH:i:sO'
-      intl: "yyyy-MM-dd'Tkk:mm:ssZZ"
+      intl: 'yyyy-MM-dd''T''kk:mm:ssZZ'
     locked: 1
   html_date:
     name: 'HTML Date'
@@ -48,7 +48,7 @@ formats:
     name: 'HTML Week'
     pattern:
       php: 'Y-\WW'
-      intl: "Y-'WW"
+      intl: 'Y-''W''WW'
     locked: 1
   html_month:
     name: 'HTML Month'
