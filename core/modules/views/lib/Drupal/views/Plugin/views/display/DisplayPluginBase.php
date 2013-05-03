@@ -2721,7 +2721,7 @@ abstract class DisplayPluginBase extends PluginBase {
   public function getPagerText() {
     return array(
       'items per page title' => t('Items to display'),
-      'items per page description' => t('The number of items to display. Enter 0 for no limit.')
+      'items per page description' => t('Enter 0 for no limit.')
     );
   }
 
