@@ -414,7 +414,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
       $path = DRUPAL_ROOT . '/core/lib/Drupal/' . $parent_directory;
       foreach (new \DirectoryIterator($path) as $component) {
         if (!$component->isDot() && is_dir($component->getPathname() . '/Plugin')) {
-          $namespaces['Drupal\Core\\' . $component->getFilename()] = DRUPAL_ROOT . '/core/lib';
+          $namespaces['Drupal\\' . $parent_directory  .'\\' . $component->getFilename()] = DRUPAL_ROOT . '/core/lib';
         }
       }
     }
