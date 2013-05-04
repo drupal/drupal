@@ -393,9 +393,10 @@ Drupal.getSelection = function (element) {
 };
 
 /**
- * Build an error message from an Ajax response.
+ * Extends Error to provide handling for Errors in AJAX
  */
-Drupal.ajaxError = function (xmlhttp, uri) {
+Drupal.AjaxError = function(xmlhttp, uri) {
+
   var statusCode, statusText, pathText, responseText, readyStateText, message;
   if (xmlhttp.status) {
     statusCode = "\n" + Drupal.t("An AJAX HTTP error occurred.") +  "\n" + Drupal.t("HTTP Result Code: !status", {'!status': xmlhttp.status});
@@ -428,9 +429,12 @@ Drupal.ajaxError = function (xmlhttp, uri) {
   // We don't need readyState except for status == 0.
   readyStateText = xmlhttp.status === 0 ? ("\n" + Drupal.t("ReadyState: !readyState", {'!readyState': xmlhttp.readyState})) : "";
 
-  message = statusCode + pathText + statusText + responseText + readyStateText;
-  return message;
+  this.message = statusCode + pathText + statusText + responseText + readyStateText;
+  this.name = 'AjaxError';
 };
+
+Drupal.AjaxError.prototype = new Error();
+Drupal.AjaxError.prototype.constructor = Drupal.AjaxError;
 
 // Class indicating that JS is enabled; used for styling purpose.
 $('html').addClass('js');

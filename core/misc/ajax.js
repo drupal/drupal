@@ -490,7 +490,6 @@ Drupal.ajax.prototype.getEffect = function (response) {
  * Handler for the form redirection error.
  */
 Drupal.ajax.prototype.error = function (response, uri) {
-  window.alert(Drupal.ajaxError(response, uri));
   // Remove the progress element.
   if (this.progress.element) {
     $(this.progress.element).remove();
@@ -507,6 +506,7 @@ Drupal.ajax.prototype.error = function (response, uri) {
     var settings = response.settings || this.settings || Drupal.settings;
     Drupal.attachBehaviors(this.form, settings);
   }
+  throw new Drupal.AjaxError(response, uri);
 };
 
 /**

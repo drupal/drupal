@@ -88,7 +88,7 @@ $.extend(Drupal.ProgressBar.prototype, {
           pb.timer = setTimeout(function () { pb.sendPing(); }, pb.delay);
         },
         error: function (xmlhttp) {
-          pb.displayError(Drupal.ajaxError(xmlhttp, pb.uri));
+          throw new Drupal.AjaxError(xmlhttp, pb.uri);
         }
       });
     }
