@@ -160,19 +160,12 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
     // Map the loaded stdclass records into entity objects and according fields.
     $queried_entities = $this->mapFromStorageRecords($queried_entities, $load_revision);
 
-    // Activate backward-compatibility mode to attach fields.
     if ($this->entityInfo['fieldable']) {
-      // Prepare BC compatible entities before passing them to the field API.
-      $bc_entities = array();
-      foreach ($queried_entities as $key => $entity) {
-        $bc_entities[$key] = $entity->getBCEntity();
-      }
-
       if ($load_revision) {
-        field_attach_load_revision($this->entityType, $bc_entities);
+        field_attach_load_revision($this->entityType, $queried_entities);
       }
       else {
-        field_attach_load($this->entityType, $bc_entities);
+        field_attach_load($this->entityType, $queried_entities);
       }
     }
 
@@ -423,7 +416,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       $function = 'field_attach_delete_revision';
     }
     if (!empty($this->entityInfo['fieldable']) && function_exists($function)) {
-      $function($entity->getBCEntity());
+      $function($entity);
     }
 
     // Invoke the hook.

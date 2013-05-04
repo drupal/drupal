@@ -822,6 +822,9 @@ function _field_invoke_widget_target() {
  * @see field_form_set_state()
  */
 function field_attach_form(EntityInterface $entity, &$form, &$form_state, $langcode = NULL, array $options = array()) {
+  // Ensure we are working with a BC mode entity.
+  $entity = $entity->getBCEntity();
+
   // Set #parents to 'top-level' by default.
   $form += array('#parents' => array());
 
@@ -891,6 +894,11 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
 
   if (empty($entities)) {
     return;
+  }
+
+  // Ensure we are working with a BC mode entity.
+  foreach ($entities as $id => $entity) {
+    $entities[$id] = $entity->getBCEntity();
   }
 
   // Assume all entities will need to be queried. Entities found in the cache
@@ -1029,6 +1037,9 @@ function field_attach_load_revision($entity_type, $entities, $options = array())
  *   details.
  */
 function field_attach_validate(EntityInterface $entity, array $options = array()) {
+  // Ensure we are working with a BC mode entity.
+  $entity = $entity->getBCEntity();
+
   $errors = array();
   // Check generic, field-type-agnostic errors first.
   $null = NULL;
@@ -1078,6 +1089,9 @@ function field_attach_validate(EntityInterface $entity, array $options = array()
  *   details.
  */
 function field_attach_form_validate(EntityInterface $entity, $form, &$form_state, array $options = array()) {
+  // Ensure we are working with a BC mode entity.
+  $entity = $entity->getBCEntity();
+
   // Perform field_level validation.
   try {
     field_attach_validate($entity, $options);
@@ -1115,6 +1129,9 @@ function field_attach_form_validate(EntityInterface $entity, $form, &$form_state
  *   details.
  */
 function field_attach_extract_form_values(EntityInterface $entity, $form, &$form_state, array $options = array()) {
+  // Ensure we are working with a BC mode entity.
+  $entity = $entity->getBCEntity();
+
   // Extract field values from submitted values.
   field_invoke_method('extractFormValues', _field_invoke_widget_target(), $entity, $form, $form_state, $options);
 
@@ -1136,6 +1153,9 @@ function field_attach_extract_form_values(EntityInterface $entity, $form, &$form
  *   The entity with fields to process.
  */
 function field_attach_presave($entity) {
+  // Ensure we are working with a BC mode entity.
+  $entity = $entity->getBCEntity();
+
   _field_invoke('presave', $entity);
 
   // Let other modules act on presaving the entity.
@@ -1157,6 +1177,9 @@ function field_attach_presave($entity) {
  *   it leaves unspecified.
  */
 function field_attach_insert(EntityInterface $entity) {
+  // Ensure we are working with a BC mode entity.
+  $entity = $entity->getBCEntity();
+
   _field_invoke('insert', $entity);
 
   // Let any module insert field data before the storage engine, accumulating
@@ -1198,6 +1221,9 @@ function field_attach_insert(EntityInterface $entity) {
  *   The entity with fields to save.
  */
 function field_attach_update(EntityInterface $entity) {
+  // Ensure we are working with a BC mode entity.
+  $entity = $entity->getBCEntity();
+
   _field_invoke('update', $entity);
 
   // Let any module update field data before the storage engine, accumulating
@@ -1249,6 +1275,9 @@ function field_attach_update(EntityInterface $entity) {
  *   The entity whose field data to delete.
  */
 function field_attach_delete(EntityInterface $entity) {
+  // Ensure we are working with a BC mode entity.
+  $entity = $entity->getBCEntity();
+
   _field_invoke('delete', $entity);
 
   // Collect the storage backends used by the fields in the entities.
@@ -1282,6 +1311,9 @@ function field_attach_delete(EntityInterface $entity) {
  *   The entity with fields to save.
  */
 function field_attach_delete_revision(EntityInterface $entity) {
+  // Ensure we are working with a BC mode entity.
+  $entity = $entity->getBCEntity();
+
   _field_invoke('delete_revision', $entity);
 
   // Collect the storage backends used by the fields in the entities.
@@ -1338,7 +1370,7 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
   $prepare = array();
   foreach ($entities as $id => $entity) {
     if (empty($entity->_field_view_prepared)) {
-      // Enable BC if necessary.
+      // Ensure we are working with a BC mode entity.
       $entity = $entity->getBCEntity();
 
       // Add this entity to the items to be prepared.
@@ -1415,7 +1447,7 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
  *   A renderable array for the field values.
  */
 function field_attach_view(EntityInterface $entity, EntityDisplay $display, $langcode = NULL, array $options = array()) {
-  // Enable BC if necessary.
+  // Ensure we are working with a BC mode entity.
   $entity = $entity->getBCEntity();
   // Determine the actual language code to display for each field, given the
   // language codes available in the field data.
@@ -1466,7 +1498,7 @@ function field_attach_view(EntityInterface $entity, EntityDisplay $display, $lan
  *   values.
  */
 function field_attach_preprocess(EntityInterface $entity, $element, &$variables) {
-  // Enable BC if necessary.
+  // Ensure we are working with a BC mode entity.
   $entity = $entity->getBCEntity();
   foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
     $field_name = $instance['field_name'];
@@ -1506,6 +1538,9 @@ function field_attach_preprocess(EntityInterface $entity, $element, &$variables)
  *   The source language from which translate.
  */
 function field_attach_prepare_translation(EntityInterface $entity, $langcode, EntityInterface $source_entity, $source_langcode) {
+  // Ensure we are working with a BC mode entity.
+  $entity = $entity->getBCEntity();
+
   $options = array('langcode' => $langcode);
   // Copy source field values into the entity to be prepared.
   _field_invoke_default('prepare_translation', $entity, $source_entity, $source_langcode, $options);
