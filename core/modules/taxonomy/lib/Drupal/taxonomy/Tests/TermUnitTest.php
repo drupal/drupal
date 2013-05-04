@@ -24,12 +24,12 @@ class TermUnitTest extends TaxonomyTestBase {
     $vocabulary = $this->createVocabulary();
     $valid_term = $this->createTerm($vocabulary);
     // Delete a valid term.
-    taxonomy_term_delete($valid_term->id());
+    $valid_term->delete();
     $terms = entity_load_multiple_by_properties('taxonomy_term', array('vid' => $vocabulary->id()));
     $this->assertTrue(empty($terms), 'Vocabulary is empty after deletion');
 
     // Delete an invalid term. Should not throw any notices.
-    taxonomy_term_delete(42);
+    entity_delete_multiple('taxonomy_term', array(42));
   }
 
   /**
@@ -45,13 +45,13 @@ class TermUnitTest extends TaxonomyTestBase {
 
     // $term[2] is a child of 1 and 5.
     $term[2]->parent = array($term[1]->id(), $term[5]->id());
-    taxonomy_term_save($term[2]);
+    $term[2]->save();
     // $term[3] is a child of 2.
     $term[3]->parent = array($term[2]->id());
-    taxonomy_term_save($term[3]);
+    $term[3]->save();
     // $term[5] is a child of 4.
     $term[5]->parent = array($term[4]->id());
-    taxonomy_term_save($term[5]);
+    $term[5]->save();
 
     /**
      * Expected tree:

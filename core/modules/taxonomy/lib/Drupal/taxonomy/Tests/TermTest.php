@@ -82,14 +82,14 @@ class TermTest extends TaxonomyTestBase {
 
     // Load and save a term, confirming that parents are still set.
     $term = taxonomy_term_load($term2->id());
-    taxonomy_term_save($term);
+    $term->save();
     $parents = taxonomy_term_load_parents($term2->id());
     $this->assertTrue(isset($parents[$term1->id()]), 'Parent found correctly.');
 
     // Create a third term and save this as a parent of term2.
     $term3 = $this->createTerm($this->vocabulary);
     $term2->parent = array($term1->id(), $term3->id());
-    taxonomy_term_save($term2);
+    $term2->save();
     $parents = taxonomy_term_load_parents($term2->id());
     $this->assertTrue(isset($parents[$term1->id()]) && isset($parents[$term3->id()]), 'Both parents found successfully.');
   }
@@ -239,15 +239,15 @@ class TermTest extends TaxonomyTestBase {
     // Add a term with a slash in the name.
     $first_term = $this->createTerm($this->vocabulary);
     $first_term->name = '10/16/2011';
-    taxonomy_term_save($first_term);
+    $first_term->save();
     // Add another term that differs after the slash character.
     $second_term = $this->createTerm($this->vocabulary);
     $second_term->name = '10/17/2011';
-    taxonomy_term_save($second_term);
+    $second_term->save();
     // Add another term that has both a comma and a slash character.
     $third_term = $this->createTerm($this->vocabulary);
     $third_term->name = 'term with, a comma and / a slash';
-    taxonomy_term_save($third_term);
+    $third_term->save();
 
     // Try to autocomplete a term name that matches both terms.
     // We should get both term in a json encoded string.
@@ -332,7 +332,7 @@ class TermTest extends TaxonomyTestBase {
     $this->assertPattern('|class="taxonomy-term-description"|', 'Term page displayed the term description element.');
     // Check that it does NOT show a description when description is blank.
     $term->description = '';
-    taxonomy_term_save($term);
+    $term->save();
     $this->drupalGet('taxonomy/term/' . $term->id());
     $this->assertNoPattern('|class="taxonomy-term-description"|', 'Term page did not display the term description when description was blank.');
 
@@ -476,7 +476,7 @@ class TermTest extends TaxonomyTestBase {
       'name' => $term->label(),
       'vid' => $new_vocabulary->id(),
     ));
-    taxonomy_term_save($new_term);
+    $new_term->save();
 
     // Load multiple terms with the same name.
     $terms = taxonomy_term_load_multiple_by_name($term->label());

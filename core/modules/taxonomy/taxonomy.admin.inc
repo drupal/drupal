@@ -84,7 +84,7 @@ function taxonomy_overview_vocabularies_submit($form, &$form_state) {
   foreach ($form_state['values']['vocabularies'] as $vid => $vocabulary) {
     if (isset($form['vocabularies'][$vid]['#vocabulary']) && $form['vocabularies'][$vid]['#vocabulary']->weight != $form_state['values']['vocabularies'][$vid]['weight']) {
       $form['vocabularies'][$vid]['#vocabulary']->weight = $form_state['values']['vocabularies'][$vid]['weight'];
-      taxonomy_vocabulary_save($form['vocabularies'][$vid]['#vocabulary']);
+      $form['vocabularies'][$vid]['#vocabulary']->save();
     }
   }
   drupal_set_message(t('The configuration options have been saved.'));
@@ -467,7 +467,7 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
   // Update the vocabulary hierarchy to flat or single hierarchy.
   if ($vocabulary->hierarchy != $hierarchy) {
     $vocabulary->hierarchy = $hierarchy;
-    taxonomy_vocabulary_save($vocabulary);
+    $vocabulary->save();
   }
   drupal_set_message(t('The configuration options have been saved.'));
 }
@@ -513,7 +513,7 @@ function taxonomy_term_confirm_delete($form, &$form_state, Term $term) {
  * @see taxonomy_term_confirm_delete()
  */
 function taxonomy_term_confirm_delete_submit($form, &$form_state) {
-  taxonomy_term_delete($form_state['values']['tid']);
+  entity_delete_multiple('taxonomy_term', array($form_state['values']['tid']));
   taxonomy_check_vocabulary_hierarchy($form_state['taxonomy']['vocabulary'], $form_state['values']);
   drupal_set_message(t('Deleted term %name.', array('%name' => $form_state['values']['name'])));
   watchdog('taxonomy', 'Deleted term %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE);
@@ -556,7 +556,7 @@ function taxonomy_vocabulary_confirm_delete($form, &$form_state, $vid) {
  * @see taxonomy_vocabulary_confirm_delete()
  */
 function taxonomy_vocabulary_confirm_delete_submit($form, &$form_state) {
-  $status = taxonomy_vocabulary_delete($form_state['values']['vid']);
+  $form_state['taxonomy']['vocabulary']->delete();
   drupal_set_message(t('Deleted vocabulary %name.', array('%name' => $form_state['values']['name'])));
   watchdog('taxonomy', 'Deleted vocabulary %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE);
   $form_state['redirect'] = 'admin/structure/taxonomy';

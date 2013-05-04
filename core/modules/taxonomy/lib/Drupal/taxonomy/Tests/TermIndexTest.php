@@ -209,7 +209,7 @@ class TermIndexTest extends TaxonomyTestBase {
     $term1 = $this->createTerm($this->vocabulary);
     $term2 = $this->createTerm($this->vocabulary);
     $term1->parent = array($term2->id());
-    taxonomy_term_save($term1);
+    $term1->save();
 
     // Verify that the page breadcrumbs include a link to the parent term.
     $this->drupalGet('taxonomy/term/' . $term1->id());

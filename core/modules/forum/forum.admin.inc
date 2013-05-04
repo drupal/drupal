@@ -103,7 +103,7 @@ function forum_form_submit($form, &$form_state) {
   // @todo Set explicit entity properties instead of arbitrary form values.
   form_state_values_clean($form_state);
   $term = entity_create('taxonomy_term', $form_state['values']);
-  $status = taxonomy_term_save($term);
+  $status = $term->save();
   switch ($status) {
     case SAVED_NEW:
       if ($container) {

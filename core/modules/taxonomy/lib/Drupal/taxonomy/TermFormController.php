@@ -138,7 +138,8 @@ class TermFormController extends EntityFormControllerNG {
     // Prevent leading and trailing spaces in term names.
     $term->name->value = trim($term->name->value);
 
-    // Convert text_format field into values expected by taxonomy_term_save().
+    // Convert text_format field into values expected by
+    // \Drupal\Core\Entity\Entity::save() method.
     $description = $form_state['values']['description'];
     $term->description->value = $description['value'];
     $term->format->value = $description['format'];
@@ -155,8 +156,7 @@ class TermFormController extends EntityFormControllerNG {
   public function save(array $form, array &$form_state) {
     $term = $this->entity;
 
-    $status = taxonomy_term_save($term);
-    switch ($status) {
+    switch ($term->save()) {
       case SAVED_NEW:
         drupal_set_message(t('Created new term %term.', array('%term' => $term->label())));
         watchdog('taxonomy', 'Created new term %term.', array('%term' => $term->label()), WATCHDOG_NOTICE, l(t('edit'), 'taxonomy/term/' . $term->id() . '/edit'));
@@ -186,7 +186,7 @@ class TermFormController extends EntityFormControllerNG {
     // hierarchy, update the vocabulary immediately.
     elseif ($current_parent_count > $previous_parent_count && $form_state['taxonomy']['vocabulary']->hierarchy != TAXONOMY_HIERARCHY_MULTIPLE) {
       $form_state['taxonomy']['vocabulary']->hierarchy = $current_parent_count == 1 ? TAXONOMY_HIERARCHY_SINGLE : TAXONOMY_HIERARCHY_MULTIPLE;
-      taxonomy_vocabulary_save($form_state['taxonomy']['vocabulary']);
+      $form_state['taxonomy']['vocabulary']->save();
     }
 
     $form_state['values']['tid'] = $term->id();

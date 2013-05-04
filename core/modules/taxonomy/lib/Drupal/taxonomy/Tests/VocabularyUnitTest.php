@@ -41,7 +41,7 @@ class VocabularyUnitTest extends TaxonomyTestBase {
   function testTaxonomyVocabularyDeleteWithTerms() {
     // Delete any existing vocabularies.
     foreach (taxonomy_vocabulary_load_multiple() as $vocabulary) {
-      taxonomy_vocabulary_delete($vocabulary->id());
+      $vocabulary->delete();
     }
 
     // Assert that there are no terms left.
@@ -56,14 +56,14 @@ class VocabularyUnitTest extends TaxonomyTestBase {
 
     // Set up hierarchy. term 2 is a child of 1 and 4 a child of 1 and 2.
     $terms[2]->parent = array($terms[1]->id());
-    taxonomy_term_save($terms[2]);
+    $terms[2]->save();
     $terms[4]->parent = array($terms[1]->id(), $terms[2]->id());
-    taxonomy_term_save($terms[4]);
+    $terms[4]->save();
 
     // Assert that there are now 5 terms.
     $this->assertEqual(5, db_query('SELECT COUNT(*) FROM {taxonomy_term_data}')->fetchField());
 
-    taxonomy_vocabulary_delete($vocabulary->id());
+    $vocabulary->delete();
 
     // Assert that there are no terms left.
     $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {taxonomy_term_data}')->fetchField());
@@ -81,7 +81,7 @@ class VocabularyUnitTest extends TaxonomyTestBase {
     $vocabulary = $original_vocabulary;
     $vocabulary->name = $this->randomName();
     $vocabulary->description = $this->randomName();
-    taxonomy_vocabulary_save($vocabulary);
+    $vocabulary->save();
 
     // Load the vocabulary.
     $new_vocabulary = taxonomy_vocabulary_load($original_vocabulary->id());
@@ -89,7 +89,7 @@ class VocabularyUnitTest extends TaxonomyTestBase {
     $this->assertEqual($new_vocabulary->name, $vocabulary->name);
 
     // Delete the vocabulary.
-    taxonomy_vocabulary_delete($this->vocabulary->id());
+    $this->vocabulary->delete();
     $vocabularies = taxonomy_vocabulary_load_multiple();
     $this->assertTrue(!isset($vocabularies[$this->vocabulary->id()]), 'The vocabulary was deleted.');
   }
@@ -101,19 +101,19 @@ class VocabularyUnitTest extends TaxonomyTestBase {
 
     // Delete any existing vocabularies.
     foreach (taxonomy_vocabulary_load_multiple() as $vocabulary) {
-      taxonomy_vocabulary_delete($vocabulary->id());
+      $vocabulary->delete();
     }
 
     // Create some vocabularies and assign weights.
     $vocabulary1 = $this->createVocabulary();
     $vocabulary1->weight = 0;
-    taxonomy_vocabulary_save($vocabulary1);
+    $vocabulary1->save();
     $vocabulary2 = $this->createVocabulary();
     $vocabulary2->weight = 1;
-    taxonomy_vocabulary_save($vocabulary2);
+    $vocabulary2->save();
     $vocabulary3 = $this->createVocabulary();
     $vocabulary3->weight = 2;
-    taxonomy_vocabulary_save($vocabulary3);
+    $vocabulary3->save();
 
     // Fetch the names for all vocabularies, confirm that they are keyed by
     // machine name.
@@ -157,7 +157,7 @@ class VocabularyUnitTest extends TaxonomyTestBase {
     $old_name = $this->vocabulary->id();
     $new_name = drupal_strtolower($this->randomName());
     $this->vocabulary->vid = $new_name;
-    taxonomy_vocabulary_save($this->vocabulary);
+    $this->vocabulary->save();
 
     // Check that entity bundles are properly updated.
     $info = entity_get_bundles('taxonomy_term');
@@ -195,7 +195,7 @@ class VocabularyUnitTest extends TaxonomyTestBase {
     // module was uninstalled. Creating a new field with the same name and
     // an instance of this field on the same bundle name should be successful.
     $this->vocabulary->enforceIsNew();
-    taxonomy_vocabulary_save($this->vocabulary);
+    $this->vocabulary->save();
     field_create_field($this->field_definition);
     field_create_instance($this->instance_definition);
   }

@@ -106,7 +106,7 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     $this->assertText($term2->label(), 'Term 2 name is displayed.');
 
     // Delete vocabulary 2.
-    taxonomy_vocabulary_delete($this->vocabulary2->id());
+    $this->vocabulary2->delete();
 
     // Re-render the content.
     $entity = field_test_entity_test_load($id);

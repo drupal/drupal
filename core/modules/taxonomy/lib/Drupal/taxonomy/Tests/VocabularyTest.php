@@ -113,7 +113,7 @@ class VocabularyTest extends TaxonomyTestBase {
     // Delete all vocabularies.
     $vocabularies = taxonomy_vocabulary_load_multiple();
     foreach ($vocabularies as $key => $vocabulary) {
-      taxonomy_vocabulary_delete($key);
+      $vocabulary->delete();
     }
     // Confirm that no vocabularies are found in the database.
     $this->assertFalse(taxonomy_vocabulary_load_multiple(), 'No vocabularies found.');

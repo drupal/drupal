@@ -44,7 +44,7 @@ function forum_enable() {
         'module' => 'forum',
         'weight' => -10,
       ));
-      taxonomy_vocabulary_save($vocabulary);
+      $vocabulary->save();
     }
     $config->set('vocabulary', $vocabulary->id())->save();
   }
@@ -75,7 +75,7 @@ function forum_enable() {
       'parent' => array(0),
       'vid' => $vocabulary->id(),
     ));
-    taxonomy_term_save($term);
+    $term->save();
 
     // Create the instance on the bundle.
     $instance = array(

@@ -95,7 +95,7 @@ class EntityFilteringThemeTest extends WebTestBase {
       'name' => $this->xss_label,
       'vid' => 1,
     ));
-    taxonomy_term_save($this->term);
+    $this->term->save();
 
     // Create a test node tagged with the test term.
     $this->node = $this->drupalCreateNode(array(

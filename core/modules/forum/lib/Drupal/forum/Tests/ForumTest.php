@@ -243,7 +243,7 @@ class ForumTest extends WebTestBase {
     $tids = \Drupal::entityQuery('taxonomy_term')
       ->condition('vid', $vid)
       ->execute();
-    taxonomy_term_delete_multiple($tids);
+    entity_delete_multiple('taxonomy_term', $tids);
 
     // Create an orphan forum item.
     $this->drupalLogin($this->admin_user);
@@ -321,7 +321,7 @@ class ForumTest extends WebTestBase {
       'langcode' => language_default()->langcode,
       'help' => $help,
     ));
-    taxonomy_vocabulary_save($vocabulary);
+    $vocabulary->save();
     // Test tags vocabulary form is not affected.
     $this->drupalGet('admin/structure/taxonomy/manage/tags/edit');
     $this->assertFieldByName('op', t('Save'), 'Save button found.');

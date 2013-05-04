@@ -163,7 +163,7 @@ class DefaultViewsTest extends WebTestBase {
       'vid' => $vocabulary->id(),
       'langcode' => LANGUAGE_NOT_SPECIFIED,
     ));
-    taxonomy_term_save($term);
+    $term->save();
     return $term;
   }
 

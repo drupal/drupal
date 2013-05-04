@@ -130,7 +130,7 @@ class TermFieldTest extends TaxonomyTestBase {
     $this->assertText($term->label(), 'Term label is displayed.');
 
     // Delete the vocabulary and verify that the widget is gone.
-    taxonomy_vocabulary_delete($this->vocabulary->id());
+    $this->vocabulary->delete();
     $this->drupalGet('test-entity/add/test_bundle');
     $this->assertNoFieldByName("{$this->field_name}[$langcode]", '', 'Widget is not displayed');
   }
@@ -159,7 +159,7 @@ class TermFieldTest extends TaxonomyTestBase {
     // Change the machine name.
     $new_name = drupal_strtolower($this->randomName());
     $this->vocabulary->vid = $new_name;
-    taxonomy_vocabulary_save($this->vocabulary);
+    $this->vocabulary->save();
 
     // Check that the field instance is still attached to the vocabulary.
     $field = field_info_field($this->field_name);

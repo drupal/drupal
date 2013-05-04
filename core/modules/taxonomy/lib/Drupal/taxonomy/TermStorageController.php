@@ -70,7 +70,7 @@ class TermStorageController extends DatabaseStorageControllerNG {
       ->execute();
 
     if (!empty($orphans)) {
-      taxonomy_term_delete_multiple($orphans);
+      entity_delete_multiple('taxonomy_term', $orphans);
     }
   }
 

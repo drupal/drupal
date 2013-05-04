@@ -389,37 +389,6 @@ function taxonomy_admin_paths() {
 }
 
 /**
- * Saves a vocabulary.
- *
- * @param Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary
- *   The taxonomy vocabulary entity to be saved.
- */
-function taxonomy_vocabulary_save(Vocabulary $vocabulary) {
-  return $vocabulary->save();
-}
-
-/**
- * Deletes a vocabulary.
- *
- * @param $vid
- *   A vocabulary ID.
- *
- */
-function taxonomy_vocabulary_delete($vid) {
-  taxonomy_vocabulary_delete_multiple(array($vid));
-}
-
-/**
- * Deletes vocabularies.
- *
- * @param $vids
- *   The vocabulary ids.
- */
-function taxonomy_vocabulary_delete_multiple(array $vids) {
-  entity_delete_multiple('taxonomy_vocabulary', $vids);
-}
-
-/**
  * Checks and updates the hierarchy flag of a vocabulary.
  *
  * Checks the current parents of all terms in a vocabulary and updates the
@@ -458,45 +427,10 @@ function taxonomy_check_vocabulary_hierarchy(Vocabulary $vocabulary, $changed_te
   }
   if ($hierarchy != $vocabulary->hierarchy) {
     $vocabulary->hierarchy = $hierarchy;
-    taxonomy_vocabulary_save($vocabulary);
+    $vocabulary->save();
   }
 
   return $hierarchy;
-}
-
-/**
- * Saves a term object to the database.
- *
- * @param Drupal\taxonomy\Plugin\Core\Entity\Term $term
- *   The taxonomy term entity to be saved.
- *
- * @return
- *   Status constant indicating whether term was inserted (SAVED_NEW) or updated
- *   (SAVED_UPDATED). When inserting a new term, $term->id() will contain the
- *   term ID of the newly created term.
- */
-function taxonomy_term_save(Term $term) {
-  return $term->save();
-}
-
-/**
- * Deletes a term.
- *
- * @param $tid
- *   The term ID.
- */
-function taxonomy_term_delete($tid) {
-  taxonomy_term_delete_multiple(array($tid));
-}
-
-/**
- * Deletes taxonomy terms.
- *
- * @param $tids
- *   The term ids to be deleted.
- */
-function taxonomy_term_delete_multiple(array $tids) {
-  entity_delete_multiple('taxonomy_term', $tids);
 }
 
 /**
@@ -1238,7 +1172,7 @@ function taxonomy_field_presave(EntityInterface $entity, $field, $instance, $lan
   foreach ($items as $delta => $item) {
     if (!$item['tid'] && isset($item['entity'])) {
       unset($item['tid']);
-      taxonomy_term_save($item['entity']);
+      $item['entity']->save();
       $items[$delta]['tid'] = $item['entity']->id();
     }
   }

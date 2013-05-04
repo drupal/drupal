@@ -149,7 +149,7 @@ class VocabularyFormController extends EntityFormController {
     // Prevent leading and trailing spaces in vocabulary names.
     $vocabulary->name = trim($vocabulary->name);
 
-    switch (taxonomy_vocabulary_save($vocabulary)) {
+    switch ($vocabulary->save()) {
       case SAVED_NEW:
         drupal_set_message(t('Created new vocabulary %name.', array('%name' => $vocabulary->name)));
         watchdog('taxonomy', 'Created new vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l(t('edit'), 'admin/structure/taxonomy/manage/' . $vocabulary->id() . '/edit'));
