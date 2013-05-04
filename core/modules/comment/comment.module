@@ -247,11 +247,8 @@ function comment_menu() {
   // so we don't end up loading it twice (in the page and access callback).
   $items['comment/%comment/edit'] = array(
     'title' => 'Edit',
-    'page callback' => 'comment_edit_page',
-    'page arguments' => array(1),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(1, 'update'),
     'type' => MENU_LOCAL_TASK,
+    'route_name' => 'comment_edit_page',
   );
   $items['comment/%comment/approve'] = array(
     'title' => 'Approve',
@@ -1478,19 +1475,6 @@ function comment_get_display_page($cid, $node_type) {
   $ordinal = comment_get_display_ordinal($cid, $node_type);
   $comments_per_page = variable_get('comment_default_per_page_' . $node_type, 50);
   return floor($ordinal / $comments_per_page);
-}
-
-/**
- * Page callback: Displays the comment editing form.
- *
- * @param Drupal\comment\Comment $comment
- *   The comment object representing the comment to be edited.
- *
- * @see comment_menu()
- */
-function comment_edit_page(Comment $comment) {
-  drupal_set_title(t('Edit comment %comment', array('%comment' => $comment->subject->value)), PASS_THROUGH);
-  return entity_get_form($comment);
 }
 
 /**

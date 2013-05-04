@@ -1,0 +1,7 @@
+comment_edit_page:
+    pattern: 'comment/{comment}/edit'
+    defaults:
+        _entity_form: comment.default
+    requirements:
+        _entity_access: comment.update
+
