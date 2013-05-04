@@ -23,9 +23,9 @@ interface WidgetInterface extends WidgetBaseInterface {
   /**
    * Returns a form to configure settings for the widget.
    *
-   * Invoked from field_ui_field_edit_form() to allow administrators to
-   * configure the widget. The field_ui module takes care of handling submitted
-   * form values.
+   * Invoked from \Drupal\field_ui\Form\FieldInstanceEditForm to allow
+   * administrators to configure the widget. The field_ui module takes care of
+   * handling submitted form values.
    *
    * @param array $form
    *   The form where the settings form is being included in.

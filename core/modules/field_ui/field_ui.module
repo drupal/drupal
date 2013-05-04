@@ -88,10 +88,10 @@ function field_ui_menu() {
         'title' => 'Edit',
         'type' => MENU_DEFAULT_LOCAL_TASK,
       );
-      $items["$path/fields/%/field-settings"] = array(
+      $items["$path/fields/%/field"] = array(
         'title' => 'Field settings',
         'type' => MENU_LOCAL_TASK,
-        'route_name' => "field_ui.settings.$entity_type",
+        'route_name' => "field_ui.field_edit.$entity_type",
       );
       $items["$path/fields/%/widget-type"] = array(
         'title' => 'Widget type',

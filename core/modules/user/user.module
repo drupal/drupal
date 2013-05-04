@@ -2554,12 +2554,12 @@ function user_block_user_action(&$entity, $context = array()) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for 'field_ui_field_instance_edit_form'.
  *
  * Add a checkbox for the 'user_register_form' instance settings on the 'Edit
  * field instance' form.
  */
-function user_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id) {
+function user_form_field_ui_field_instance_edit_form_alter(&$form, &$form_state, $form_id) {
   $instance = $form_state['instance'];
 
   if ($instance['entity_type'] == 'user') {
@@ -2585,7 +2585,7 @@ function user_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id
       ),
     );
 
-    array_unshift($form['#submit'], 'user_form_field_ui_field_edit_form_submit');
+    array_unshift($form['#submit'], 'user_form_field_ui_field_instance_edit_form_submit');
   }
 }
 
@@ -2594,7 +2594,7 @@ function user_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id
  *
  * Make sure the 'user_register_form' setting is set for required fields.
  */
-function user_form_field_ui_field_edit_form_submit($form, &$form_state) {
+function user_form_field_ui_field_instance_edit_form_submit($form, &$form_state) {
   $instance = $form_state['values']['instance'];
 
   if (!empty($instance['required'])) {

@@ -55,7 +55,7 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
    * {@inheritdoc}
    */
   public function getFormID() {
-    return 'field_ui_field_edit_form';
+    return 'field_ui_field_instance_edit_form';
   }
 
   /**

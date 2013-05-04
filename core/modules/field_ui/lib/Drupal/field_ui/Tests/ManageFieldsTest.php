@@ -125,7 +125,7 @@ class ManageFieldsTest extends FieldUiTestBase {
   function updateField() {
     $instance_id = 'node.' . $this->type . '.' . $this->field_name;
     // Go to the field edit page.
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/' . $instance_id . '/field-settings');
+    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/' . $instance_id . '/field');
 
     // Populate the field settings with new settings.
     $string = 'updated dummy test string';
@@ -177,7 +177,7 @@ class ManageFieldsTest extends FieldUiTestBase {
    * numeric value. That is tested already in FormTest::testNumber().
    */
   function cardinalitySettings() {
-    $field_edit_path = 'admin/structure/types/manage/article/fields/node.article.body/field-settings';
+    $field_edit_path = 'admin/structure/types/manage/article/fields/node.article.body/field';
 
     // Assert the cardinality other field cannot be empty when cardinality is
     // set to other.

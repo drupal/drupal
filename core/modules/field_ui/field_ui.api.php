@@ -13,10 +13,10 @@
 /**
  * Add settings to a field settings form.
  *
- * Invoked from field_ui_field_settings_form() to allow the module defining the
- * field to add global settings (i.e. settings that do not depend on the bundle
- * or instance) to the field settings form. If the field already has data, only
- * include settings that are safe to change.
+ * Invoked from \Drupal\field_ui\Form\FieldInstanceEditForm to allow the module
+ * defining the field to add global settings (i.e. settings that do not depend
+ * on the bundle or instance) to the field settings form. If the field already
+ * has data, only include settings that are safe to change.
  *
  * @todo: Only the field type module knows which settings will affect the
  * field's schema, but only the field storage module knows what schema
@@ -51,8 +51,8 @@ function hook_field_settings_form($field, $instance, $has_data) {
 /**
  * Add settings to an instance field settings form.
  *
- * Invoked from field_ui_field_edit_form() to allow the module defining the
- * field to add settings for a field instance.
+ * Invoked from \Drupal\field_ui\Form\FieldInstanceEditForm to allow the module
+ * defining the field to add settings for a field instance.
  *
  * @param $field
  *   The field structure being configured.

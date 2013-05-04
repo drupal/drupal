@@ -266,7 +266,7 @@ class OptionsFieldUITest extends FieldTestBase {
     );
     field_create_instance($instance);
 
-    $this->admin_path = 'admin/structure/types/manage/' . $this->type . '/fields/node.' . $this->type . '.' . $this->field_name . '/field-settings';
+    $this->admin_path = 'admin/structure/types/manage/' . $this->type . '/fields/node.' . $this->type . '.' . $this->field_name . '/field';
   }
 
   /**

@@ -60,18 +60,18 @@ class RouteSubscriber implements EventSubscriberInterface {
         $collection->add("field_ui.instance_edit.$entity_type", $route);
 
         $route = new Route(
+          "$path/fields/{field_instance}/field",
+          array('_form' => '\Drupal\field_ui\Form\FieldEditForm'),
+          array('_permission' => 'administer ' . $entity_type . ' fields')
+        );
+        $collection->add("field_ui.field_edit.$entity_type", $route);
+
+        $route = new Route(
           "$path/fields/{field_instance}/widget-type",
           array('_form' => '\Drupal\field_ui\Form\FieldWidgetTypeForm'),
           array('_permission' => 'administer ' . $entity_type . ' fields')
         );
         $collection->add("field_ui.widget_type.$entity_type", $route);
-
-        $route = new Route(
-          "$path/fields/{field_instance}/field-settings",
-          array('_form' => '\Drupal\field_ui\Form\FieldSettingsForm'),
-          array('_permission' => 'administer ' . $entity_type . ' fields')
-        );
-        $collection->add("field_ui.settings.$entity_type", $route);
 
         $route = new Route(
           "$path/fields/{field_instance}/delete",

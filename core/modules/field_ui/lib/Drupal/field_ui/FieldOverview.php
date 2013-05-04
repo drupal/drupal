@@ -125,7 +125,7 @@ class FieldOverview extends OverviewBase {
         'type' => array(
           '#type' => 'link',
           '#title' => $field_types[$field['type']]['label'],
-          '#href' => $admin_field_path . '/field-settings',
+          '#href' => $admin_field_path . '/field',
           '#options' => array('attributes' => array('title' => t('Edit field settings.'))),
         ),
         'widget_type' => array(
@@ -576,7 +576,7 @@ class FieldOverview extends OverviewBase {
 
         // Always show the field settings step, as the cardinality needs to be
         // configured for new fields.
-        $destinations[] = $this->adminPath. '/fields/' . $new_instance->id() . '/field-settings';
+        $destinations[] = $this->adminPath. '/fields/' . $new_instance->id() . '/field';
         $destinations[] = $this->adminPath . '/fields/' . $new_instance->id();
 
         // Store new field information for any additional submit handlers.

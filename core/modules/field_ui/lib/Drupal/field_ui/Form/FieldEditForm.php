@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field_ui\Form\FieldSettingsForm.
+ * Contains \Drupal\field_ui\Form\FieldEditForm.
  */
 
 namespace Drupal\field_ui\Form;
@@ -14,7 +14,7 @@ use Drupal\field\Field;
 /**
  * Provides a form for the field settings edit page.
  */
-class FieldSettingsForm implements FormInterface {
+class FieldEditForm implements FormInterface {
 
   /**
    * The field instance being edited.
@@ -27,7 +27,7 @@ class FieldSettingsForm implements FormInterface {
    * {@inheritdoc}
    */
   public function getFormID() {
-    return 'field_ui_field_settings_form';
+    return 'field_ui_field_edit_form';
   }
 
   /**
