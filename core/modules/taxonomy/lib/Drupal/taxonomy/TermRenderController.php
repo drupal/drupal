@@ -54,6 +54,7 @@ class TermRenderController extends EntityRenderController {
   protected function alterBuild(array &$build, EntityInterface $entity, EntityDisplay $display, $view_mode, $langcode = NULL) {
     parent::alterBuild($build, $entity, $display, $view_mode, $langcode);
     $build['#attached']['css'][] = drupal_get_path('module', 'taxonomy') . '/taxonomy.css';
+    $build['#contextual_links']['taxonomy'] = array('taxonomy/term', array($entity->id()));
   }
 
 }

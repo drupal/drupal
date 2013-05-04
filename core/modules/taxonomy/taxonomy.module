@@ -291,6 +291,7 @@ function taxonomy_menu() {
     'access callback' => 'entity_page_access',
     'access arguments' => array(2, 'update'),
     'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'weight' => 10,
     'file' => 'taxonomy.admin.inc',
   );
@@ -301,6 +302,7 @@ function taxonomy_menu() {
     'access callback' => 'entity_page_access',
     'access arguments' => array(2, 'delete'),
     'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_INLINE,
     'weight' => 20,
     'file' => 'taxonomy.admin.inc',
   );
