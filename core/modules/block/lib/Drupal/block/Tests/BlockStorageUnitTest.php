@@ -159,7 +159,7 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
     $expected = array();
     $expected[] = '  <div id="block-test-block"  class="block block-block-test">';
     $expected[] = '';
-    $expected[] = '    <h2 class="">Powered by Bananas</h2>';
+    $expected[] = '    <h2>Powered by Bananas</h2>';
     $expected[] = '  ';
     $expected[] = '  <div class="content">';
     $expected[] = '      </div>';

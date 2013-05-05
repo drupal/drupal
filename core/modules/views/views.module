@@ -481,7 +481,7 @@ function views_preprocess_html(&$variables) {
   // the "contextual-region" class from the <body> tag here and add
   // JavaScript that will insert it back in the correct place.
   if (!empty($variables['page']['#views_contextual_links_info'])) {
-    $key = array_search('contextual-region', $variables['attributes']['class']->value());
+    $key = array_search('contextual-region', $variables['attributes']['class']);
     if ($key !== FALSE) {
       unset($variables['attributes']['class'][$key]);
       // Add the JavaScript, with a group and weight such that it will run

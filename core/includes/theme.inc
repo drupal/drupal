@@ -961,6 +961,7 @@ function drupal_find_base_themes($themes, $key, $used_keys = array()) {
  * @see template_process()
  */
 function theme($hook, $variables = array()) {
+  static $default_attributes;
   // If called before all modules are loaded, we do not necessarily have a full
   // theme registry to work with, and therefore cannot process the theme
   // request properly. See also _theme_load_registry().
@@ -1156,6 +1157,20 @@ function theme($hook, $variables = array()) {
       $default_template_variables = array();
       template_preprocess($default_template_variables, $hook);
       $variables += $default_template_variables;
+    }
+    if (!isset($default_attributes)) {
+      $default_attributes = new Attribute();
+    }
+    foreach (array('attributes', 'title_attributes', 'content_attributes') as $key) {
+      if (isset($variables[$key]) && !($variables[$key] instanceof Attribute)) {
+        if ($variables[$key]) {
+          $variables[$key] = new Attribute($variables[$key]);
+        }
+        else {
+          // Create empty attributes.
+          $variables[$key] = clone $default_attributes;
+        }
+      }
     }
 
     // Render the output using the template file.
@@ -2620,7 +2635,6 @@ function _theme_table_cell($cell, $header = FALSE) {
  */
 function template_preprocess(&$variables, $hook) {
   global $user;
-  static $count = array(), $default_attributes;
 
   // Tell all templates where they are located.
   $variables['directory'] = path_to_theme();
@@ -2636,13 +2650,10 @@ function template_preprocess(&$variables, $hook) {
   if (!isset($default_variables)) {
     $default_variables = _template_preprocess_default_variables();
   }
-  if (!isset($default_attributes)) {
-    $default_attributes = new Attribute(array('class' => array()));
-  }
   $variables += $default_variables + array(
-    'attributes' => clone $default_attributes,
-    'title_attributes' => clone $default_attributes,
-    'content_attributes' => clone $default_attributes,
+    'attributes' => array(),
+    'title_attributes' => array(),
+    'content_attributes' => array(),
   );
 
   // Initialize html class attribute for the current hook.
