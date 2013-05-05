@@ -177,34 +177,6 @@ function overlay_init() {
 }
 
 /**
- * Implements hook_exit().
- *
- * When viewing an overlay child page, check if we need to trigger a refresh of
- * the supplemental regions of the overlay on the next page request.
- */
-function overlay_exit() {
-  // Check that we are in an overlay child page.
-  if (overlay_get_mode() == 'child') {
-    // Load any markup that was stored earlier in the page request, via calls
-    // to overlay_store_rendered_content(). If none was stored, this is not a
-    // page request where we expect any changes to the overlay supplemental
-    // regions to have occurred, so we do not need to proceed any further.
-    $original_markup = overlay_get_rendered_content();
-    if (!empty($original_markup)) {
-      // Compare the original markup to the current markup that we get from
-      // rendering each overlay supplemental region now. If they don't match,
-      // something must have changed, so we request a refresh of that region
-      // within the parent window on the next page request.
-      foreach (overlay_supplemental_regions() as $region) {
-        if (!isset($original_markup[$region]) || $original_markup[$region] != overlay_render_region($region)) {
-          overlay_request_refresh($region);
-        }
-      }
-    }
-  }
-}
-
-/**
  * Implements hook_library_info().
  */
 function overlay_library_info() {
@@ -698,9 +670,10 @@ function overlay_overlay_child_initialize() {
   // have an indication that something in the supplemental regions of the
   // overlay might change during the current page request. We therefore store
   // the initial rendered content of those regions here, so that we can compare
-  // it to the same content rendered in overlay_exit(), at the end of the page
-  // request. This allows us to check if anything actually did change, and, if
-  // so, trigger an immediate Ajax refresh of the parent window.
+  // it to the same content rendered in OverlaySubscriber::onResponse(),
+  // at the end of the page request. This allows us to check if anything
+  // actually did change, and, if so, trigger an immediate Ajax refresh
+  // of the parent window.
   $token = drupal_container()->get('request')->query->get('token');
   if (!empty($_POST) || isset($token)) {
     foreach (overlay_supplemental_regions() as $region) {

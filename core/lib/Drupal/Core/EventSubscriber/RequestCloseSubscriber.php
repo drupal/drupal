@@ -42,7 +42,6 @@ class RequestCloseSubscriber implements EventSubscriberInterface {
    *   The Event to process.
    */
   public function onTerminate(PostResponseEvent $event) {
-    $this->moduleHandler->invokeAll('exit');
     $request_method = $event->getRequest()->getMethod();
     // Check whether we need to write the module implementations cache. We do
     // not want to cache hooks which are only invoked on HTTP POST requests

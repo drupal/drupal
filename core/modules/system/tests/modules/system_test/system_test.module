@@ -140,13 +140,6 @@ function system_test_init() {
 }
 
 /**
- * Implements hook_exit().
- */
-function system_test_exit() {
-  watchdog('system_test', 'hook_exit');
-}
-
-/**
  * Implements hook_system_info_alter().
  */
 function system_test_system_info_alter(&$info, $file, $type) {

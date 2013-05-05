@@ -317,24 +317,6 @@ function hook_element_info_alter(&$type) {
 }
 
 /**
- * Perform cleanup tasks.
- *
- * This hook is run at the end of each non-cached page request. It is often
- * used for page logging and specialized cleanup. This hook MUST NOT print
- * anything because by the time it runs the response is already sent to the
- * browser.
- *
- * This hook is not run on cached pages.
- *
- * @param $destination
- *   If this hook is invoked as part of a drupal_goto() call, then this argument
- *   will be a fully-qualified URL that is the destination of the redirect.
- */
-function hook_exit($destination = NULL) {
-  watchdog('mymodule', 'Page was built for user %name.', array('%name' => user_format_name($GLOBALS['user'])), WATCHDOG_INFO);
-}
-
-/**
  * Perform necessary alterations to the JavaScript before it is presented on
  * the page.
  *
@@ -1349,8 +1331,6 @@ function hook_forms($form_id, $args) {
  * memory.
  *
  * This hook is not run on cached pages.
- *
- * @see hook_exit()
  *
  * Do not use this hook to add CSS/JS to pages, use hook_page_build() instead.
  *
