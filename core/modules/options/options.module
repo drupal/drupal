@@ -24,17 +24,6 @@ function options_help($path, $arg) {
 }
 
 /**
- * Implements hook_theme().
- */
-function options_theme() {
-  return array(
-    'options_none' => array(
-      'variables' => array('instance' => NULL, 'option' => NULL),
-    ),
-  );
-}
-
-/**
  * Implements hook_field_info().
  */
 function options_field_info() {
@@ -444,37 +433,3 @@ function options_options_list($field, $instance, $entity) {
   return options_allowed_values($field, $instance, $entity);
 }
 
-/**
- * Returns HTML for the label for the empty value for non-required options.
- *
- * The default theme will display 'N/A' for a radio list and '- None -' or
- * 'Select a value' for a select.
- *
- * @param $variables
- *   An associative array containing:
- *   - option: A string representing the option that should be displayed. Either
- *     \Drupal\options\Plugin\field\widget\OptionsWidgetBase::OPTIONS_EMPTY_NONE
- *     or
- *     \Drupal\options\Plugin\field\widget\OptionsWidgetBase::OPTIONS_EMPTY_SELECT.
- *   - widget: The widget object requesting the option.
- *   - instance: The instance definition.
- *
- * @ingroup themeable
- */
-function theme_options_none($variables) {
-  $option = $variables['option'];
-  $widget = $variables['widget'];
-
-  $output = '';
-  switch ($widget->getPluginId()) {
-    case 'options_buttons':
-      $output = t('N/A');
-      break;
-
-    case 'options_select':
-      $output = ($option == OptionsWidgetBase::OPTIONS_EMPTY_NONE ? t('- None -') : t('- Select a value -'));
-      break;
-  }
-
-  return $output;
-}
