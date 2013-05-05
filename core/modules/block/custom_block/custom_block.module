@@ -184,12 +184,7 @@ function custom_block_entity_bundle_info() {
   $bundles = array();
   foreach (config_get_storage_names_with_prefix('custom_block.type.') as $config_name) {
     $config = config($config_name);
-    $bundles['custom_block'][$config->get('id')] = array(
-      'label' => $config->get('label'),
-      'admin' => array(
-        'real path' => 'admin/structure/custom-blocks/manage/' . $config->get('id'),
-      ),
-    );
+    $bundles['custom_block'][$config->get('id')]['label'] = $config->get('label');
   }
   return $bundles;
 }

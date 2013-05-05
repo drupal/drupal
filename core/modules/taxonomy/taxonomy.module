@@ -125,12 +125,7 @@ function taxonomy_entity_bundle_info() {
   $bundles = array();
   foreach (taxonomy_vocabulary_get_names() as $id) {
     $config = config('taxonomy.vocabulary.' . $id);
-    $bundles['taxonomy_term'][$id] = array(
-      'label' => $config->get('name'),
-      'admin' => array(
-        'real path' => 'admin/structure/taxonomy/manage/' . $id,
-      ),
-    );
+    $bundles['taxonomy_term'][$id]['label'] = $config->get('name');
   }
   return $bundles;
 }

@@ -143,12 +143,7 @@ function user_entity_view_mode_info() {
  * Implements hook_entity_bundle_info().
  */
 function user_entity_bundle_info() {
-  $bundles['user']['user'] = array(
-    'label' => t('User'),
-    'admin' => array(
-      'path' => 'admin/config/people/accounts',
-    ),
-  );
+  $bundles['user']['user']['label'] = t('User');
   return $bundles;
 }
 

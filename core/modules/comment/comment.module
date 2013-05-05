@@ -118,9 +118,6 @@ function comment_entity_bundle_info() {
       // Provide the node type/bundle name for other modules, so it does not
       // have to be extracted manually from the bundle name.
       'node bundle' => $type,
-      'admin' => array(
-        'real path' => 'admin/structure/types/manage/' . $type . '/comment',
-      ),
     );
   }
   return $bundles;

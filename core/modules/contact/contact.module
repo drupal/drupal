@@ -176,13 +176,7 @@ function contact_entity_bundle_info() {
   $bundles = array();
   foreach (config_get_storage_names_with_prefix('contact.category.') as $config_name) {
     $config = config($config_name);
-    $bundles['contact_message'][$config->get('id')] = array(
-      'label' => $config->get('label'),
-      'admin' => array(
-        'real path' => 'admin/structure/contact/manage/' . $config->get('id'),
-        'access arguments' => array('administer contact forms'),
-      ),
-    );
+    $bundles['contact_message'][$config->get('id')]['label'] = $config->get('label');
   }
   return $bundles;
 }

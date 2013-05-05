@@ -83,7 +83,7 @@ abstract class OverviewBase implements FormInterface, ControllerInterface {
     form_load_include($form_state, 'inc', 'field_ui', 'field_ui.admin');
     $this->entity_type = $entity_type;
     $this->bundle = $bundle;
-    $this->adminPath = field_ui_bundle_admin_path($this->entity_type, $this->bundle);
+    $this->adminPath = $this->entityManager->getAdminPath($this->entity_type, $this->bundle);
   }
 
   /**

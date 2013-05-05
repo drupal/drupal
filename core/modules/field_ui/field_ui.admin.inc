@@ -14,6 +14,7 @@ function field_ui_fields_list() {
   $instances = field_info_instances();
   $field_types = field_info_field_types();
   $bundles = entity_get_bundles();
+  $entity_manager = Drupal::entityManager();
 
   $modules = system_rebuild_module_data();
 
@@ -37,7 +38,7 @@ function field_ui_fields_list() {
         }
 
         // Add the current instance.
-        $admin_path = field_ui_bundle_admin_path($entity_type, $bundle);
+        $admin_path = $entity_manager->getAdminPath($entity_type, $bundle);
         $rows[$field_name]['data'][2][] = $admin_path ? l($bundles[$entity_type][$bundle]['label'], $admin_path . '/fields') : $bundles[$entity_type][$bundle]['label'];
       }
     }
@@ -454,6 +455,6 @@ function field_ui_next_destination($entity_type, $bundle) {
     unset($_REQUEST['destinations']);
     return field_ui_get_destinations($destinations);
   }
-  $admin_path = field_ui_bundle_admin_path($entity_type, $bundle);
+  $admin_path = Drupal::entityManager()->getAdminPath($entity_type, $bundle);
   return $admin_path . '/fields';
 }

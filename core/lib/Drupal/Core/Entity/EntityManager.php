@@ -200,4 +200,31 @@ class EntityManager extends PluginManagerBase {
     return $this->controllers['access'][$entity_type];
   }
 
+  /**
+   * Returns the administration path for an entity type's bundle.
+   *
+   * @param string $entity_type
+   *   The entity type.
+   * @param string $bundle
+   *   The name of the bundle.
+   *
+   * @return string
+   *   The administration path for an entity type bundle, if it exists.
+   */
+  public function getAdminPath($entity_type, $bundle) {
+    $admin_path = '';
+    $entity_info = $this->getDefinition($entity_type);
+    // Check for an entity type's admin base path.
+    if (isset($entity_info['route_base_path'])) {
+      // If the entity type has a bundle prefix, strip it out of the path.
+      if (isset($entity_info['bundle_prefix'])) {
+        $bundle = str_replace($entity_info['bundle_prefix'], '', $bundle);
+      }
+      // Replace any dynamic 'bundle' portion of the path with the actual bundle.
+      $admin_path = str_replace('{bundle}', $bundle, $entity_info['route_base_path']);
+    }
+
+    return $admin_path;
+  }
+
 }

@@ -94,11 +94,6 @@ function hook_entity_view_mode_info_alter(&$view_modes) {
  *     type in the EntityManager, but for the bundle only. When determining
  *     the URI of an entity, if a 'uri_callback' is defined for both the
  *     entity type and the bundle, the one for the bundle is used.
- *   - admin: An array of information that allows Field UI pages to attach
- *     themselves to the existing administration pages for the bundle.
- *     Elements:
- *     - real path: The actual path (no placeholder) of the bundle's main
- *       administration page. This will be used to generate links.
  *   - translatable: (optional) A boolean value specifying whether this bundle
  *     has translation support enabled. Defaults to FALSE.
  *
@@ -106,12 +101,7 @@ function hook_entity_view_mode_info_alter(&$view_modes) {
  * @see hook_entity_bundle_info_alter()
  */
 function hook_entity_bundle_info() {
-  $bundles['user']['user'] = array(
-    'label' => t('User'),
-    'admin' => array(
-      'path' => 'admin/config/people/accounts',
-    ),
-  );
+  $bundles['user']['user']['label'] = t('User');
   return $bundles;
 }
 
