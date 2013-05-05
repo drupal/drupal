@@ -51,8 +51,6 @@ class CoreBundle extends Bundle {
     $container->addCompilerPass(new RegisterRouteFiltersPass());
     // Add a compiler pass for registering event subscribers.
     $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
-    // Add a compiler pass for registering event subscribers.
-    $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
     $container->addCompilerPass(new RegisterAccessChecksPass());
     // Add a compiler pass for upcasting of entity route parameters.
     $container->addCompilerPass(new RegisterParamConvertersPass());
