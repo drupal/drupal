@@ -1369,7 +1369,14 @@ function user_login_final_validate($form, &$form_state) {
     }
     else {
       form_set_error('name', t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password', array('query' => array('name' => $form_state['values']['name']))))));
-      watchdog('user', 'Login attempt failed for %user.', array('%user' => $form_state['values']['name']));
+      if (user_load_by_name($form_state['values']['name'])) {
+        watchdog('user', 'Login attempt failed for %user.', array('%user' => $form_state['values']['name']));
+      }
+      else {
+        // If the username entered is not a valid user,
+        // only store the IP address.
+        watchdog('user', 'Login attempt failed from %ip.', array('%ip' => Drupal::request()->getClientIp()));
+      }
     }
   }
   elseif (isset($form_state['flood_control_user_identifier'])) {
