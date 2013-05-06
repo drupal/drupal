@@ -799,6 +799,8 @@ function language_content_settings_form(array $form, array $form_state, array $s
     }
   }
 
+  asort($labels);
+
   $path = drupal_get_path('module', 'language');
   $form = array(
     '#labels' => $labels,
@@ -816,15 +818,15 @@ function language_content_settings_form(array $form, array $form_state, array $s
 
   $form['settings'] = array('#tree' => TRUE);
 
-  foreach ($supported as $entity_type) {
+  foreach ($labels as $entity_type => $label) {
     $info = $entity_info[$entity_type];
 
     $form['settings'][$entity_type] = array(
-      '#title' => $labels[$entity_type],
+      '#title' => $label,
       '#type' => 'container',
       '#entity_type' => $entity_type,
       '#theme' => 'language_content_settings_table',
-      '#bundle_label' => isset($info['bundle_label']) ? $info['bundle_label'] : $labels[$entity_type],
+      '#bundle_label' => isset($info['bundle_label']) ? $info['bundle_label'] : $label,
       '#states' => array(
         'visible' => array(
           ':input[name="entity_types[' . $entity_type . ']"]' => array('checked' => TRUE),

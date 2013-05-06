@@ -1009,23 +1009,26 @@ function translation_entity_preprocess_language_content_settings_table(&$variabl
 function translation_entity_save_settings($settings) {
   foreach ($settings as $entity_type => $entity_settings) {
     foreach ($entity_settings as $bundle => $bundle_settings) {
-      // Store bundle translatability.
-      translation_entity_set_config($entity_type, $bundle, 'enabled', $bundle_settings['translatable']);
+      // The 'translatable' value is set only if it is possible to enable.
+      if (isset($bundle_settings['translatable'])) {
+        // Store whether a bundle has translation enabled or not.
+        translation_entity_set_config($entity_type, $bundle, 'enabled', $bundle_settings['translatable']);
 
-      // Store column translatability.
-      if (!empty($bundle_settings['columns'])) {
-        foreach ($bundle_settings['columns'] as $field_name => $column_settings) {
-          $field = field_info_field($field_name);
-          $instance = field_info_instance($entity_type, $field_name, $bundle);
-          if ($field['translatable']) {
-            $instance['settings']['translation_sync'] = $column_settings;
+        // Store whether fields have translation enabled or not.
+        if (!empty($bundle_settings['columns'])) {
+          foreach ($bundle_settings['columns'] as $field_name => $column_settings) {
+            $field = field_info_field($field_name);
+            $instance = field_info_instance($entity_type, $field_name, $bundle);
+            if ($field['translatable']) {
+              $instance['settings']['translation_sync'] = $column_settings;
+            }
+            // If the field does not have translatable enabled we need to reset
+            // the sync settings to their defaults.
+            else {
+              unset($instance['settings']['translation_sync']);
+            }
+            field_update_instance($instance);
           }
-          // If the field is untransltable we need to reset the sync settings to
-          // their defaults.
-          else {
-            unset($instance['settings']['translation_sync']);
-          }
-          field_update_instance($instance);
         }
       }
     }

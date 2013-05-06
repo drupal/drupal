@@ -72,32 +72,40 @@ function _translation_entity_form_language_content_settings_form_alter(array &$f
 
   $dependent_options_settings = array();
   foreach ($form['#labels'] as $entity_type => $label) {
+    $entity_info = entity_get_info($entity_type);
     foreach (entity_get_bundles($entity_type) as $bundle => $bundle_info) {
-      $form['settings'][$entity_type][$bundle]['translatable'] = array(
-        '#type' => 'checkbox',
-        '#default_value' => translation_entity_enabled($entity_type, $bundle),
-      );
-
       // Here we do not want the widget to be altered and hold also the "Enable
       // translation" checkbox, which would be redundant. Hence we add this key
       // to be able to skip alterations.
       $form['settings'][$entity_type][$bundle]['settings']['language']['#translation_entity_skip_alter'] = TRUE;
 
-      // @todo Exploit field definitions once all core entities and field types
-      //   are migrated to the Entity Field API.
-      foreach (field_info_instances($entity_type, $bundle) as $field_name => $instance) {
-        $field = field_info_field($field_name);
-        $form['settings'][$entity_type][$bundle]['fields'][$field_name] = array(
-          '#label' => $instance['label'],
-          '#type' => 'checkbox',
-          '#default_value' => $field['translatable'],
-        );
-        $column_element = translation_entity_field_sync_widget($field, $instance);
-        if ($column_element) {
-          $form['settings'][$entity_type][$bundle]['columns'][$field_name] = $column_element;
+      // Only show the checkbox to enable translation if the bundles in the
+      // entity might have fields and if there are fields to translate.
+      if (!empty($entity_info['fieldable'])) {
+        $fields = field_info_instances($entity_type, $bundle);
+        if ($fields) {
+          $form['settings'][$entity_type][$bundle]['translatable'] = array(
+            '#type' => 'checkbox',
+            '#default_value' => translation_entity_enabled($entity_type, $bundle),
+          );
 
-          if(isset($column_element['#options']['file'])) {
-            $dependent_options_settings["settings[{$entity_type}][{$bundle}][columns][{$field_name}]"] = array('file');
+          // @todo Exploit field definitions once all core entities and field
+          // types are migrated to the Entity Field API.
+          foreach ($fields as $field_name => $instance) {
+            $field = field_info_field($field_name);
+            $form['settings'][$entity_type][$bundle]['fields'][$field_name] = array(
+              '#label' => $instance['label'],
+              '#type' => 'checkbox',
+              '#default_value' => $field['translatable'],
+            );
+            $column_element = translation_entity_field_sync_widget($field, $instance);
+            if ($column_element) {
+              $form['settings'][$entity_type][$bundle]['columns'][$field_name] = $column_element;
+
+              if (isset($column_element['#options']['file'])) {
+                $dependent_options_settings["settings[{$entity_type}][{$bundle}][columns][{$field_name}]"] = array('file');
+              }
+            }
           }
         }
       }
@@ -127,16 +135,26 @@ function _translation_entity_preprocess_language_content_settings_table(&$variab
 
   foreach (element_children($element) as $bundle) {
     $field_names = !empty($element[$bundle]['fields']) ? element_children($element[$bundle]['fields']) : array();
-    $checkbox_id = $element[$bundle]['translatable']['#id'];
+    if (!empty($element[$bundle]['translatable'])) {
+      $checkbox_id = $element[$bundle]['translatable']['#id'];
+    }
     $rows[$bundle] = $build['#rows'][$bundle];
 
-    $translatable = array(
-      'data' => $element[$bundle]['translatable'],
-      'class' => array('translatable'),
-    );
-    array_unshift($rows[$bundle]['data'], $translatable);
+    if (!empty($element[$bundle]['translatable'])) {
+      $translatable = array(
+        'data' => $element[$bundle]['translatable'],
+        'class' => array('translatable'),
+      );
+      array_unshift($rows[$bundle]['data'], $translatable);
 
-    $rows[$bundle]['data'][1]['data']['#prefix'] = '<label for="' . $checkbox_id . '">';
+      $rows[$bundle]['data'][1]['data']['#prefix'] = '<label for="' . $checkbox_id . '">';
+    }
+    else {
+      $translatable = array(
+        'class' => array('untranslatable'),
+      );
+      array_unshift($rows[$bundle]['data'], $translatable);
+    }
 
     foreach ($field_names as $field_name) {
       $field_element = &$element[$bundle]['fields'][$field_name];
@@ -259,7 +277,9 @@ function translation_entity_form_language_content_settings_submit(array $form, a
   // all of its fields will be not translatable.
   foreach ($settings as $entity_type => &$entity_settings) {
     foreach ($entity_settings as $bundle => &$bundle_settings) {
-      $bundle_settings['translatable'] = $bundle_settings['translatable'] && $entity_types[$entity_type];
+      if (!empty($bundle_settings['translatable'])) {
+        $bundle_settings['translatable'] = $bundle_settings['translatable'] && $entity_types[$entity_type];
+      }
       if (!empty($bundle_settings['fields'])) {
         foreach ($bundle_settings['fields'] as $field_name => $translatable) {
           $bundle_settings['fields'][$field_name] = $translatable && $bundle_settings['translatable'];
