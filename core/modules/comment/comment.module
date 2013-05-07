@@ -1576,7 +1576,7 @@ function template_preprocess_comment(&$variables) {
     $variables['changed'] = format_date($comment->changed->value);
   }
 
-  if (theme_get_setting('toggle_comment_user_picture')) {
+  if (theme_get_setting('features.comment_user_picture')) {
     // To change user picture settings (e.g., image style), edit the 'compact'
     // view mode on the User entity.
     $variables['user_picture'] = user_view($account, 'compact');

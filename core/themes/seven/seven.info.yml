@@ -11,6 +11,7 @@ stylesheets-override:
   - vertical-tabs-rtl.css
   - jquery.ui.theme.css
 settings:
+  # @todo D8: Remove once themes have to be installed.
   shortcut_module_link: '1'
 regions:
   content: Content

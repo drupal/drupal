@@ -2102,6 +2102,46 @@ function system_update_8054() {
 }
 
 /**
+ * Moves system theme settings from variables to config.
+ */
+function system_update_8054() {
+  // Install the global theme settings from the system module.
+  update_7_to_8_install_default_config('module', 'system.theme.global');
+  // Add the global settings to a map for variable to configuration conversion.
+  $theme_settings_to_config_map = array('theme_settings' => 'system.theme.global');
+
+  // Can only upgrade core themes since if you follow the instructions in
+  // UPGRADE.txt list_themes() would only return core themes at this point.
+  // Therefore limit to a hard coded list to ensure that this update only
+  // applies to core provided themes.
+  $core_themes = array(
+    'bartik',
+    'seven',
+    'stark',
+  );
+
+  // Add the core theme to the variable to configuration conversion map and
+  // install the default configuration.
+  foreach ($core_themes as $theme) {
+    $variable = 'theme_' . $theme . '_settings';
+    $config_name = $theme . '.settings';
+    $theme_settings_to_config_map[$variable] = $config_name;
+    update_7_to_8_install_default_config('theme', $config_name);
+  }
+
+  // Convert array of theme settings from Drupal 7's variable system to Drupal
+  // 8's configuration management system.
+  foreach ($theme_settings_to_config_map as $variable => $config_name) {
+    $config = Drupal::config($config_name);
+    $theme_settings = update_variable_get($variable);
+    if (!empty($theme_settings)) {
+      theme_settings_convert_to_config($theme_settings, $config)->save();
+    }
+    update_variable_del($variable);
+  }
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

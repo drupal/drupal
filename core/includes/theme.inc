@@ -9,8 +9,10 @@
  */
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\Config;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Utility\ThemeRegistry;
+use Drupal\Core\Theme\ThemeSettings;
 
 /**
  * @defgroup content_flags Content markers
@@ -730,7 +732,7 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
  *     the themes' machine names, and the values are the themes' human-readable
  *     names. This element is not set if there are no themes on the system that
  *     declare this theme as their base theme.
-*/
+ */
 function list_themes($refresh = FALSE) {
   $list = &drupal_static(__FUNCTION__, array());
 
@@ -1379,7 +1381,6 @@ function drupal_find_theme_templates($cache, $extension, $path) {
  *
  * The final setting is obtained from the last value found in the following
  * sources:
- * - the default global settings specified in this function
  * - the default theme-specific settings defined in any base theme's .info.yml
  *   file
  * - the default theme-specific settings defined in the theme's .info.yml file
@@ -1405,22 +1406,8 @@ function theme_get_setting($setting_name, $theme = NULL) {
   }
 
   if (empty($cache[$theme])) {
-    // Set the default values for each global setting.
-    // To add new global settings, add their default values below, and then
-    // add form elements to system_theme_settings() in system.admin.inc.
-    $cache[$theme] = array(
-      'default_logo'                     =>  1,
-      'logo_path'                        =>  '',
-      'default_favicon'                  =>  1,
-      'favicon_path'                     =>  '',
-      // Use the IANA-registered MIME type for ICO files as default.
-      'favicon_mimetype'                 =>  'image/vnd.microsoft.icon',
-    );
-    // Turn on all default features.
-    $features = _system_default_theme_features();
-    foreach ($features as $feature) {
-      $cache[$theme]['toggle_' . $feature] = 1;
-    }
+    // Create a theme settings object.
+    $cache[$theme] = new ThemeSettings($theme);
 
     // Get the values for the theme-specific settings from the .info.yml files
     // of the theme and all its base themes.
@@ -1438,59 +1425,103 @@ function theme_get_setting($setting_name, $theme = NULL) {
       }
       foreach ($theme_keys as $theme_key) {
         if (!empty($themes[$theme_key]->info['settings'])) {
-          $cache[$theme] = array_merge($cache[$theme], $themes[$theme_key]->info['settings']);
+          $cache[$theme]->mergeData($themes[$theme_key]->info['settings']);
         }
       }
     }
 
-    // Get the saved global settings from the database.
-    $cache[$theme] = array_merge($cache[$theme], variable_get('theme_settings', array()));
+    // Get the global settings from configuration.
+    $cache[$theme]->mergeData(Drupal::config('system.theme.global')->get());
 
     if ($theme) {
-      // Get the saved theme-specific settings from the database.
-      $cache[$theme] = array_merge($cache[$theme], variable_get('theme_' . $theme . '_settings', array()));
+      // Get the saved theme-specific settings from the configuration system.
+      $cache[$theme]->mergeData(Drupal::config($theme . '.settings')->get());
 
       // If the theme does not support a particular feature, override the global
       // setting and set the value to NULL.
+      //$supports = $cache[$theme]->get('supports');
       if (!empty($theme_object->info['features'])) {
-        foreach ($features as $feature) {
+        foreach (_system_default_theme_features() as $feature) {
           if (!in_array($feature, $theme_object->info['features'])) {
-            $cache[$theme]['toggle_' . $feature] = NULL;
+            $cache[$theme]->set('features.' . $feature, NULL);
           }
         }
       }
 
       // Generate the path to the logo image.
-      if ($cache[$theme]['toggle_logo']) {
-        if ($cache[$theme]['default_logo']) {
-          $cache[$theme]['logo'] = file_create_url(dirname($theme_object->filename) . '/logo.png');
+      if ($cache[$theme]->get('features.logo')) {
+        $logo_path = $cache[$theme]->get('logo.path');
+        if ($cache[$theme]->get('logo.use_default')) {
+          $cache[$theme]->set('logo.url', file_create_url(dirname($theme_object->filename) . '/logo.png'));
         }
-        elseif ($cache[$theme]['logo_path']) {
-          $cache[$theme]['logo'] = file_create_url($cache[$theme]['logo_path']);
+        elseif ($logo_path) {
+          $cache[$theme]->set('logo.url', file_create_url($logo_path));
         }
       }
 
       // Generate the path to the favicon.
-      if ($cache[$theme]['toggle_favicon']) {
-        if ($cache[$theme]['default_favicon']) {
+      if ($cache[$theme]->get('features.favicon')) {
+        $favicon_path = $cache[$theme]->get('favicon.path');
+        if ($cache[$theme]->get('favicon.use_default')) {
           if (file_exists($favicon = dirname($theme_object->filename) . '/favicon.ico')) {
-            $cache[$theme]['favicon'] = file_create_url($favicon);
+            $cache[$theme]->set('favicon.url', file_create_url($favicon));
           }
           else {
-            $cache[$theme]['favicon'] = file_create_url('core/misc/favicon.ico');
+            $cache[$theme]->set('favicon.url', file_create_url('core/misc/favicon.ico'));
           }
         }
-        elseif ($cache[$theme]['favicon_path']) {
-          $cache[$theme]['favicon'] = file_create_url($cache[$theme]['favicon_path']);
+        elseif ($favicon_path) {
+          $cache[$theme]->set('favicon.url', file_create_url($favicon_path));
         }
         else {
-          $cache[$theme]['toggle_favicon'] = FALSE;
+          $cache[$theme]->set('features.favicon', FALSE);
         }
       }
     }
   }
 
-  return isset($cache[$theme][$setting_name]) ? $cache[$theme][$setting_name] : NULL;
+  return $cache[$theme]->get($setting_name);
+}
+
+/**
+ * Converts theme settings to configuration.
+ *
+ * @see system_theme_settings_submit()
+ * @see system_update_8054()
+ *
+ * @param array $theme_settings
+ *   An array of theme settings from system setting form or a Drupal 7 variable.
+ * @param Config $config
+ *   The configuration object to update.
+ *
+ * @return
+ *   The Config object with updated data.
+ */
+function theme_settings_convert_to_config(array $theme_settings, Config $config) {
+  foreach ($theme_settings as $key => $value) {
+    if ($key == 'default_logo') {
+      $config->set('logo.use_default', $value);
+    }
+    else if ($key == 'logo_path') {
+      $config->set('logo.path', $value);
+    }
+    else if ($key == 'default_favicon') {
+      $config->set('favicon.use_default', $value);
+    }
+    else if ($key == 'favicon_path') {
+      $config->set('favicon.path', $value);
+    }
+    else if ($key == 'favicon_mimetype') {
+      $config->set('favicon.mimetype', $value);
+    }
+    else if (substr($key, 0, 7) == 'toggle_') {
+      $config->set('features.' . drupal_substr($key, 7), $value);
+    }
+    else if (!in_array($key, array('theme', 'logo_upload'))) {
+      $config->set($key, $value);
+    }
+  }
+  return $config;
 }
 
 /**
@@ -2747,9 +2778,9 @@ function template_preprocess_html(&$variables) {
   $variables['html_attributes']['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
 
   // Add favicon.
-  if (theme_get_setting('toggle_favicon')) {
-    $favicon = theme_get_setting('favicon');
-    $type = theme_get_setting('favicon_mimetype');
+  if (theme_get_setting('features.favicon')) {
+    $favicon = theme_get_setting('favicon.url');
+    $type = theme_get_setting('favicon.mimetype');
     drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => drupal_strip_dangerous_protocols($favicon), 'type' => $type));
   }
 
@@ -2855,12 +2886,12 @@ function template_preprocess_page(&$variables) {
   $variables['feed_icons']        = drupal_get_feeds();
   $variables['language']          = $language_interface;
   $variables['language']->dir     = $language_interface->direction ? 'rtl' : 'ltr';
-  $variables['logo']              = theme_get_setting('logo');
-  $variables['main_menu']         = theme_get_setting('toggle_main_menu') ? menu_main_menu() : array();
-  $variables['secondary_menu']    = theme_get_setting('toggle_secondary_menu') ? menu_secondary_menu() : array();
+  $variables['logo']              = theme_get_setting('logo.url');
+  $variables['main_menu']         = theme_get_setting('features.main_menu') ? menu_main_menu() : array();
+  $variables['secondary_menu']    = theme_get_setting('features.secondary_menu') ? menu_secondary_menu() : array();
   $variables['action_links']      = menu_local_actions();
-  $variables['site_name']         = (theme_get_setting('toggle_name') ? check_plain($site_config->get('name')) : '');
-  $variables['site_slogan']       = (theme_get_setting('toggle_slogan') ? filter_xss_admin($site_config->get('slogan')) : '');
+  $variables['site_name']         = (theme_get_setting('features.name') ? check_plain($site_config->get('name')) : '');
+  $variables['site_slogan']       = (theme_get_setting('features.slogan') ? filter_xss_admin($site_config->get('slogan')) : '');
   $variables['tabs']              = menu_local_tabs();
 
   if ($node = menu_get_object()) {
@@ -3019,9 +3050,9 @@ function template_preprocess_maintenance_page(&$variables) {
   $regions = $theme_data[$theme]->info['regions'];
 
   // Add favicon
-  if (theme_get_setting('toggle_favicon')) {
-    $favicon = theme_get_setting('favicon');
-    $type = theme_get_setting('favicon_mimetype');
+  if (theme_get_setting('features.favicon')) {
+    $favicon = theme_get_setting('favicon.url');
+    $type = theme_get_setting('favicon.mimetype');
     drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => drupal_strip_dangerous_protocols($favicon), 'type' => $type));
   }
 
@@ -3068,12 +3099,12 @@ function template_preprocess_maintenance_page(&$variables) {
   $variables['help']              = '';
   $variables['language']          = $language_interface;
   $variables['language']->dir     = $language_interface->direction ? 'rtl' : 'ltr';
-  $variables['logo']              = theme_get_setting('logo');
+  $variables['logo']              = theme_get_setting('logo.url');
   $variables['messages']          = $variables['show_messages'] ? theme('status_messages') : '';
   $variables['main_menu']         = array();
   $variables['secondary_menu']    = array();
-  $variables['site_name']         = (theme_get_setting('toggle_name') ? check_plain($site_name) : '');
-  $variables['site_slogan']       = (theme_get_setting('toggle_slogan') ? filter_xss_admin($site_slogan) : '');
+  $variables['site_name']         = (theme_get_setting('features.name') ? check_plain($site_name) : '');
+  $variables['site_slogan']       = (theme_get_setting('features.slogan') ? filter_xss_admin($site_slogan) : '');
   $variables['tabs']              = '';
   $variables['title']             = drupal_get_title();
 

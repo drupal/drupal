@@ -1480,6 +1480,39 @@ function update_config_manifest_add($config_prefix, array $ids) {
 }
 
 /**
+ * Installs a default configuration file into the active store.
+ *
+ * Provide a generalised method to save a default configuration object for an
+ * already enabled module or theme as part of an update from Drupal 7 to Drupal
+ * 8's configuration management system.
+ *
+ * @param string $type
+ *   The extension type; e.g., 'module' or 'theme'.
+ * @param string $config_name
+ *   The configuration object name to retrieve.
+ *
+ * @return boolean
+ *   True on success, false if config file does not exist.
+ */
+function update_7_to_8_install_default_config($type, $config_name) {
+  // Build the new configuration object.
+  $config = Drupal::config($config_name);
+
+  // Extract the extension namespace/owner from the configuration object name.
+  $name = strtok($config_name, '.');
+
+  // Load and set default configuration values.
+  $file = new FileStorage(drupal_get_path($type, $name) . '/config');
+  if (!$file->exists($config_name)) {
+    return FALSE;
+  }
+  $default_data = $file->read($config_name);
+  // Apply and save the default values.
+  $config->setData($file->read($config_name))->save();
+  return TRUE;
+}
+
+/**
  * Updates 7.x variables to state records.
  *
  * Provides a generalized method to migrate variables from 7.x to 8.x's

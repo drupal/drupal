@@ -112,7 +112,7 @@ class InstallStorage extends FileStorage {
     if (!isset($this->folders)) {
       $this->folders = $this->getComponentNames('profile', array(drupal_get_profile()));
       $this->folders += $this->getComponentNames('module', array_keys(drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.module$/', 'modules', 'name', 0)));
-      $this->folders += $this->getComponentNames('theme', array_keys(drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info$/', 'themes')));
+      $this->folders += $this->getComponentNames('theme', array_keys(drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info.yml$/', 'themes')));
     }
     return $this->folders;
   }
