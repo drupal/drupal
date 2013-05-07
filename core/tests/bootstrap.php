@@ -20,3 +20,8 @@ foreach (scandir(__DIR__ . "/../modules") as $module) {
 require __DIR__ . "/../../core/lib/Drupal.php";
 // Look into removing this later.
 define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
+
+// Set sane locale settings, to ensure consistent string, dates, times and
+// numbers handling.
+// @see drupal_environment_initialize()
+setlocale(LC_ALL, 'C');

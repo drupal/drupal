@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\ViewExecutable;
@@ -242,8 +243,6 @@ abstract class HandlerBase extends PluginBase {
    *    The transformed string.
    */
   protected function caseTransform($string, $option) {
-    global $multibyte;
-
     switch ($option) {
       default:
         return $string;
@@ -254,7 +253,7 @@ abstract class HandlerBase extends PluginBase {
       case 'ucfirst':
         return drupal_strtoupper(drupal_substr($string, 0, 1)) . drupal_substr($string, 1);
       case 'ucwords':
-        if ($multibyte == UNICODE_MULTIBYTE) {
+        if (Unicode::getStatus() == Unicode::STATUS_MULTIBYTE) {
           return mb_convert_case($string, MB_CASE_TITLE);
         }
         else {

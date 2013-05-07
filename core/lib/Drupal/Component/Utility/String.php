@@ -32,6 +32,23 @@ class String {
   }
 
   /**
+   * Decodes all HTML entities including numerical ones to regular UTF-8 bytes.
+   *
+   * Double-escaped entities will only be decoded once ("&amp;lt;" becomes
+   * "&lt;", not "<"). Be careful when using this function, as it will revert
+   * previous sanitization efforts (&lt;script&gt; will become <script>).
+   *
+   * @param string $text
+   *   The text to decode entities in.
+   *
+   * @return string
+   *   The input $text, with all HTML entities decoded once.
+   */
+  public static function decodeEntities($text) {
+    return html_entity_decode($text, ENT_QUOTES, 'UTF-8');
+  }
+
+  /**
    * Formats a string for HTML display by replacing variable placeholders.
    *
    * This function replaces variable placeholders in a string with the requested

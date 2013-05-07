@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Component\Utility\Unicode;
 
 /**
  * Matches all 'N' Unicode character classes (numbers)
@@ -447,7 +448,7 @@ function search_simplify($text, $langcode = NULL) {
 
   // With the exception of the rules above, we consider all punctuation,
   // marks, spacers, etc, to be a word boundary.
-  $text = preg_replace('/[' . PREG_CLASS_UNICODE_WORD_BOUNDARY . ']+/u', ' ', $text);
+  $text = preg_replace('/[' . Unicode::PREG_CLASS_WORD_BOUNDARY . ']+/u', ' ', $text);
 
   // Truncate everything to 50 characters.
   $words = explode(' ', $text);
@@ -1102,7 +1103,7 @@ function search_data($keys, $module, $conditions = NULL) {
  */
 function search_excerpt($keys, $text, $langcode = NULL) {
   // We highlight around non-indexable or CJK characters.
-  $boundary = '(?:(?<=[' . PREG_CLASS_UNICODE_WORD_BOUNDARY . PREG_CLASS_CJK . '])|(?=[' . PREG_CLASS_UNICODE_WORD_BOUNDARY . PREG_CLASS_CJK . ']))';
+  $boundary = '(?:(?<=[' . Unicode::PREG_CLASS_WORD_BOUNDARY . PREG_CLASS_CJK . '])|(?=[' . Unicode::PREG_CLASS_WORD_BOUNDARY . PREG_CLASS_CJK . ']))';
 
   // Extract positive keywords and phrases
   preg_match_all('/ ("([^"]+)"|(?!OR)([^" ]+))/', ' ' . $keys, $matches);

@@ -5,6 +5,8 @@
  * Theming for maintenance pages.
  */
 
+use Drupal\Component\Utility\Unicode;
+
 /**
  * Sets up the theming system for maintenance page.
  *
@@ -28,7 +30,7 @@ function _drupal_maintenance_theme() {
   require_once DRUPAL_ROOT . '/core/includes/unicode.inc';
   require_once DRUPAL_ROOT . '/core/includes/file.inc';
   require_once DRUPAL_ROOT . '/core/includes/module.inc';
-  unicode_check();
+  Unicode::check();
 
   // Install and update pages are treated differently to prevent theming overrides.
   if (defined('MAINTENANCE_MODE') && (MAINTENANCE_MODE == 'install' || MAINTENANCE_MODE == 'update')) {
