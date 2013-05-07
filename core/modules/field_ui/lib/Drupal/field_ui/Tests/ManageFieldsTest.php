@@ -342,6 +342,38 @@ class ManageFieldsTest extends FieldUiTestBase {
   }
 
   /**
+   * Tests that Field UI respects locked fields.
+   */
+  function testLockedField() {
+    // Create a locked field and attach it to a bundle. We need to do this
+    // programatically as there's no way to create a locked field through UI.
+    $field = entity_create('field_entity', array(
+      'field_name' => strtolower($this->randomName(8)),
+      'type' => 'test_field',
+      'cardinality' => 1,
+      'locked' => TRUE
+    ));
+    $field->save();
+    entity_create('field_instance', array(
+      'field_uuid' => $field->uuid,
+      'entity_type' => 'node',
+      'bundle' => $this->type,
+      'widget' => array(
+        'type' => 'test_field_widget',
+      )
+    ))->save();
+
+    // Check that the links for edit and delete are not present.
+    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields');
+    $locked = $this->xpath('//tr[@id=:field_name]/td[7]', array(':field_name' => $field->id()));
+    $this->assertTrue(in_array('Locked', $locked), 'Field is marked as Locked in the UI');
+    $edit_link = $this->xpath('//tr[@id=:field_name]/td[7]', array(':field_name' => $field->id()));
+    $this->assertFalse(in_array('edit', $edit_link), 'Edit option for locked field is not present the UI');
+    $delete_link = $this->xpath('//tr[@id=:field_name]/td[8]', array(':field_name' => $field->id()));
+    $this->assertFalse(in_array('delete', $delete_link), 'Delete option for locked field is not present the UI');
+  }
+
+  /**
    * Tests that Field UI respects the 'no_ui' option in hook_field_info().
    */
   function testHiddenFields() {

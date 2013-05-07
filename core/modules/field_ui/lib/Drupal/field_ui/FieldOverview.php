@@ -152,8 +152,8 @@ class FieldOverview extends OverviewBase {
         '#links' => $links,
       );
 
-      if (!empty($instance['locked'])) {
-        $table[$name]['operations'] = array('#value' => t('Locked'));
+      if (!empty($field['locked'])) {
+        $table[$name]['operations'] = array('#markup' => t('Locked'));
         $table[$name]['#attributes']['class'][] = 'menu-disabled';
       }
     }
