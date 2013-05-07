@@ -28,6 +28,14 @@ class PictureMappingFormController extends EntityFormController {
    *   The array containing the complete form.
    */
   public function form(array $form, array &$form_state) {
+    if ($this->operation == 'duplicate') {
+      drupal_set_title(t('<em>Duplicate picture mapping</em> @label', array('@label' => $this->entity->label())), PASS_THROUGH);
+      $this->entity = $this->entity->createDuplicate();
+    }
+    if ($this->operation == 'edit') {
+      drupal_set_title(t('<em>Edit picture mapping</em> @label', array('@label' => $this->entity->label())), PASS_THROUGH);
+    }
+
     $picture_mapping = $this->entity;
     $form['label'] = array(
       '#type' => 'textfield',

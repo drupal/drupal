@@ -28,8 +28,7 @@ function config_test_uri(ConfigTest $config_test) {
 function config_test_menu() {
   $items['admin/structure/config_test'] = array(
     'title' => 'Test configuration',
-    'page callback' => 'config_test_list_page',
-    'access callback' => TRUE,
+    'route_name' => 'config_test_list_page',
   );
   $items['admin/structure/config_test/add'] = array(
     'title' => 'Add test configuration',
@@ -77,15 +76,6 @@ function config_test_menu() {
  */
 function config_test_load($id) {
   return entity_load('config_test', $id);
-}
-
-/**
- * Page callback; Lists available ConfigTest objects.
- */
-function config_test_list_page() {
-  return Drupal::entityManager()
-    ->getListController('config_test')
-    ->render();
 }
 
 /**

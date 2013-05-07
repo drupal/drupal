@@ -23,7 +23,7 @@ use Drupal\picture\PictureMappingInterface;
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "list" = "Drupal\picture\PictureMappingListController",
  *     "form" = {
- *       "default" = "Drupal\picture\PictureMappingFormController",
+ *       "edit" = "Drupal\picture\PictureMappingFormController",
  *       "add" = "Drupal\picture\PictureMappingFormController",
  *       "duplicate" = "Drupal\picture\PictureMappingFormController"
  *     }
