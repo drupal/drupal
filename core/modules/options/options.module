@@ -150,14 +150,11 @@ function options_field_settings_form($field, $instance, $has_data) {
   $form['allowed_values']['#description'] .= '<p>' . t('Allowed HTML tags in labels: @tags', array('@tags' => _field_filter_xss_display_allowed_tags())) . '</p>';
 
   $form['allowed_values_function'] = array(
-    '#type' => 'value',
-    '#value' => $settings['allowed_values_function'],
-  );
-  $form['allowed_values_function_display'] = array(
     '#type' => 'item',
     '#title' => t('Allowed values list'),
     '#markup' => t('The value of this field is being determined by the %function function and may not be changed.', array('%function' => $settings['allowed_values_function'])),
     '#access' => !empty($settings['allowed_values_function']),
+    '#value' => $settings['allowed_values_function'],
   );
 
   return $form;

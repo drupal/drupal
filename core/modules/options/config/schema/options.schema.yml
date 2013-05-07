@@ -13,9 +13,6 @@ field.list_integer.settings:
     allowed_values_function:
       type: string
       label: 'Allowed values function'
-    allowed_values_function_display:
-      type: string
-      label: 'Allowed values function display'
 
 field.list_integer.instance_settings:
   type: mapping
@@ -49,9 +46,6 @@ field.list_float.settings:
     allowed_values_function:
       type: string
       label: 'Allowed values function'
-    allowed_values_function_display:
-      type: string
-      label: 'Allowed values function display'
 
 field.list_float.instance_settings:
   type: mapping
@@ -85,9 +79,6 @@ field.list_text.settings:
     allowed_values_function:
       type: string
       label: 'Allowed values function'
-    allowed_values_function_display:
-      type: string
-      label: 'Allowed values function display'
 
 field.list_text.instance_settings:
   type: mapping
@@ -121,9 +112,6 @@ field.list_boolean.settings:
     allowed_values_function:
       type: string
       label: 'Allowed values function'
-    allowed_values_function_display:
-      type: string
-      label: 'Allowed values function display'
 
 field.list_boolean.instance_settings:
   type: mapping
