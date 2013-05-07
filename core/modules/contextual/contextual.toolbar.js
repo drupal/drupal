@@ -10,12 +10,8 @@
 var options = {
   strings: {
     tabbingReleased: Drupal.t('Tabbing is no longer constrained by the Contextual module.'),
-    tabbingConstrained: Drupal.t('Tabbing is constrained to a set of @contextualsCount and the Edit mode toggle.'),
-    pressEsc: Drupal.t('Press the esc key to exit.'),
-    contextualsCount: {
-      singular: '@count contextual link',
-      plural: '@count contextual links'
-    }
+    tabbingConstrained: Drupal.t('Tabbing is constrained to a set of @contextualsCount and the edit mode toggle.'),
+    pressEsc: Drupal.t('Press the esc key to exit.')
   }
 };
 
@@ -99,8 +95,8 @@ Drupal.contextualToolbar = {
       isViewing: true,
       // Indicates whether the toggle should be visible or hidden.
       isVisible: false,
-      // The set of elements that can be reached via the tab key when edit mode
-      // is enabled.
+      // A TabbingContext object as returned by Drupal.TabbingManager: the set
+      // of tabbable elements when edit mode is enabled.
       tabbingContext: null
     }
   }),
@@ -202,7 +198,7 @@ Drupal.contextualToolbar = {
      * @param bool isViewing
      *   The value of the isViewing attribute in the model.
      */
-    manageTabbing: function (model, isViewing, options) {
+    manageTabbing: function () {
       var tabbingContext = this.model.get('tabbingContext');
       // Always release an existing tabbing context.
       if (tabbingContext) {
@@ -210,7 +206,7 @@ Drupal.contextualToolbar = {
         Drupal.announce(this.options.strings.tabbingReleased);
       }
       // Create a new tabbing context when edit mode is enabled.
-      if (!isViewing) {
+      if (!this.model.get('isViewing')) {
         tabbingContext = Drupal.tabbingManager.constrain($('.contextual-toolbar-tab, .contextual'));
         this.model.set('tabbingContext', tabbingContext);
         this.announceTabbingConstraint();
@@ -223,8 +219,8 @@ Drupal.contextualToolbar = {
      */
     announceTabbingConstraint: function () {
       var strings = this.options.strings;
-      Drupal.announce(Drupal.t(strings.tabbingConstrained, {
-        '@contextualsCount': Drupal.formatPlural(Drupal.contextual.collection.length, strings.contextualsCount.singular, strings.contextualsCount.plural)
+      Drupal.announce(Drupal.formatString(strings.tabbingConstrained, {
+        '@contextualsCount': Drupal.formatPlural(Drupal.contextual.collection.length, '@count contextual link', '@count contextual links')
       }));
       Drupal.announce(strings.pressEsc);
     },
