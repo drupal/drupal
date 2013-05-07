@@ -36,7 +36,7 @@ class WidgetPluginManager extends PluginManagerBase {
    *   keyed by the corresponding namespace to look for plugin implementations,
    */
   public function __construct(\Traversable $namespaces) {
-    $this->discovery = new AnnotatedClassDiscovery('field', 'widget', $namespaces);
+    $this->discovery = new AnnotatedClassDiscovery('field/widget', $namespaces);
     $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
     $this->discovery = new AlterDecorator($this->discovery, 'field_widget_info');
     $this->discovery = new CacheDecorator($this->discovery, 'field_widget_types',  'field');

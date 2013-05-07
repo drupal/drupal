@@ -10,7 +10,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Utility\ModuleInfo;
 use Drupal\Core\TypedData\Primitive;
-use Drupal\system\Plugin\block\block\SystemMenuBlock;
+use Drupal\system\Plugin\Block\SystemMenuBlock;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Guzzle\Http\Exception\BadResponseException;

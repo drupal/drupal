@@ -14,7 +14,7 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\block\Plugin\Core\Entity\Block;
 use Drupal\system\Plugin\Core\Entity\Menu;
-use Drupal\system\Plugin\block\block\SystemMenuBlock;
+use Drupal\system\Plugin\Block\SystemMenuBlock;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
 use Drupal\menu_link\MenuLinkStorageController;

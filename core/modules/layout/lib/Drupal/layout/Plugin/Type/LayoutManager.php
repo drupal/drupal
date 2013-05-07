@@ -19,7 +19,7 @@ use Drupal\Component\Plugin\Factory\ReflectionFactory;
 class LayoutManager extends PluginManagerBase {
 
   protected $defaults = array(
-    'class' => 'Drupal\layout\Plugin\layout\layout\StaticLayout',
+    'class' => 'Drupal\layout\Plugin\Layout\StaticLayout',
   );
 
   /**
@@ -31,7 +31,7 @@ class LayoutManager extends PluginManagerBase {
    */
   public function __construct(\Traversable $namespaces) {
     // Create layout plugin derivatives from declaratively defined layouts.
-    $this->discovery = new AnnotatedClassDiscovery('layout', 'layout', $namespaces);
+    $this->discovery = new AnnotatedClassDiscovery('Layout', $namespaces);
     $this->discovery = new DerivativeDiscoveryDecorator($this->discovery);
     $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
 

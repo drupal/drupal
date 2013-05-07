@@ -8,7 +8,7 @@
 namespace Drupal\block\Tests;
 
 use Drupal\simpletest\DrupalUnitTestBase;
-use Drupal\block_test\Plugin\block\block\TestHtmlIdBlock;
+use Drupal\block_test\Plugin\Block\TestHtmlIdBlock;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\block\BlockStorageController;
 use Drupal\Core\Entity\EntityMalformedException;

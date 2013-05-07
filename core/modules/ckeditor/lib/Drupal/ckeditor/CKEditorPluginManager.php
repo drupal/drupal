@@ -29,7 +29,7 @@ class CKEditorPluginManager extends PluginManagerBase {
    *   keyed by the corresponding namespace to look for plugin implementations,
    */
   public function __construct(\Traversable $namespaces) {
-    $this->discovery = new AnnotatedClassDiscovery('ckeditor', 'plugin', $namespaces);
+    $this->discovery = new AnnotatedClassDiscovery('CKEditorPlugin', $namespaces);
     $this->discovery = new AlterDecorator($this->discovery, 'ckeditor_plugin_info');
     $this->discovery = new CacheDecorator($this->discovery, 'ckeditor_plugin');
     $this->factory = new DefaultFactory($this->discovery);

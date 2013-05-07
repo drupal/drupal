@@ -24,7 +24,7 @@ class ImageToolkitManager extends PluginManagerBase {
    *   keyed by the corresponding namespace to look for plugin implementations,
    */
   public function __construct(\Traversable $namespaces) {
-    $this->discovery = new AnnotatedClassDiscovery('system', 'imagetoolkit', $namespaces);
+    $this->discovery = new AnnotatedClassDiscovery('ImageToolkit', $namespaces);
     $this->factory = new DefaultFactory($this->discovery);
   }
 

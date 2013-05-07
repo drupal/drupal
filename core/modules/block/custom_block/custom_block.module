@@ -7,7 +7,6 @@
 
 use Drupal\custom_block\Plugin\Core\Entity\CustomBlockType;
 use Drupal\custom_block\Plugin\Core\Entity\CustomBlock;
-use Drupal\custom_block\Plugin\block\block\CustomBlockBlock;
 use Drupal\block\Plugin\Core\Entity\Block;
 
 /**

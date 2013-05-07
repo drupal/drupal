@@ -25,7 +25,7 @@ class ArchiverManager extends PluginManagerBase {
    *   keyed by the corresponding namespace to look for plugin implementations,
    */
   public function __construct(\Traversable $namespaces) {
-    $this->discovery = new AnnotatedClassDiscovery('Core', 'Archiver', $namespaces);
+    $this->discovery = new AnnotatedClassDiscovery('Archiver', $namespaces);
     $this->discovery = new AlterDecorator($this->discovery, 'archiver_info');
     $this->discovery = new CacheDecorator($this->discovery, 'archiver_info');
   }

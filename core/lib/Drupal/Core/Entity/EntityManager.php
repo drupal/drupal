@@ -50,7 +50,7 @@ class EntityManager extends PluginManagerBase {
     $annotation_namespaces = array(
       'Drupal\Core\Entity\Annotation' => DRUPAL_ROOT . '/core/lib',
     );
-    $this->discovery = new AnnotatedClassDiscovery('Core', 'Entity', $namespaces, $annotation_namespaces, 'Drupal\Core\Entity\Annotation\EntityType');
+    $this->discovery = new AnnotatedClassDiscovery('Core/Entity', $namespaces, $annotation_namespaces, 'Drupal\Core\Entity\Annotation\EntityType');
     $this->discovery = new InfoHookDecorator($this->discovery, 'entity_info');
     $this->discovery = new AlterDecorator($this->discovery, 'entity_info');
     $this->discovery = new CacheDecorator($this->discovery, 'entity_info:' . language(LANGUAGE_TYPE_INTERFACE)->langcode, 'cache', CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
