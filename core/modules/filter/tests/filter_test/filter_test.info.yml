@@ -1,4 +1,5 @@
 name: 'Filter test module'
+type: module
 description: 'Tests filter hooks and functions.'
 package: Testing
 version: VERSION

@@ -1,4 +1,5 @@
 name: 'Entity CRUD test module'
+type: module
 description: 'Provides entity types based upon the CRUD API.'
 package: Testing
 version: VERSION

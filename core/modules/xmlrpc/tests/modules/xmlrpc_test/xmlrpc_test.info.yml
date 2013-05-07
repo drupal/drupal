@@ -1,4 +1,5 @@
 name: 'XML-RPC Test'
+type: module
 description: 'Support module for XML-RPC tests according to the validator1 specification.'
 package: Testing
 version: VERSION

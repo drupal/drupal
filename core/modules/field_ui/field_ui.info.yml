@@ -1,4 +1,5 @@
 name: 'Field UI'
+type: module
 description: 'User interface for the Field API.'
 package: Core
 version: VERSION

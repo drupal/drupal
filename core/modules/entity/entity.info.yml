@@ -1,4 +1,5 @@
 name: Entity
+type: module
 description: 'Generic entity functionality.'
 package: Core
 version: VERSION

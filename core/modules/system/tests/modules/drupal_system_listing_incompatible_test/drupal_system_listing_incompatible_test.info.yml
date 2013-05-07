@@ -1,4 +1,5 @@
 name: 'Drupal system listing incompatible test'
+type: module
 description: 'Support module for testing the drupal_system_listing function.'
 package: Testing
 version: VERSION

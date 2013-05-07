@@ -1,4 +1,5 @@
 name: 'Views UI'
+type: module
 description: 'Administrative interface for Views.'
 package: Core
 version: VERSION

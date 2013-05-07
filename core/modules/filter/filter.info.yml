@@ -1,4 +1,5 @@
 name: Filter
+type: module
 description: 'Filters content in preparation for display.'
 package: Core
 version: VERSION

@@ -1,4 +1,5 @@
 name: 'Node module access tests language'
+type: module
 description: 'Support module for language-aware node access testing.'
 package: Testing
 version: VERSION

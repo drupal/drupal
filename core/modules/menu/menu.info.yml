@@ -1,4 +1,5 @@
 name: Menu
+type: module
 description: 'Allows administrators to customize the site navigation menu.'
 package: Core
 version: VERSION

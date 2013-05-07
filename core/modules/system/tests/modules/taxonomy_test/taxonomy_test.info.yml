@@ -1,4 +1,5 @@
 name: 'Taxonomy test module'
+type: module
 description: '"Tests functions and hooks not used in core".'
 package: Testing
 version: VERSION

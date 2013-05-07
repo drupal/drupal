@@ -1,4 +1,5 @@
 name: Forum
+type: module
 description: 'Provides discussion forums.'
 dependencies:
   - node

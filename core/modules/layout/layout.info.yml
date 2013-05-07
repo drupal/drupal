@@ -1,4 +1,5 @@
 name: Layout
+type: module
 description: 'Makes it possible to swap different page layouts.'
 package: Core
 version: VERSION

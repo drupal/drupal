@@ -1,4 +1,5 @@
 name: Ban
+type: module
 description: 'Enables banning of IP addresses.'
 package: Core
 version: VERSION

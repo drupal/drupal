@@ -1,4 +1,5 @@
 name: 'Update test subtheme'
+type: theme
 description: 'Test theme which uses update_test_basetheme as the base theme.'
 core: 8.x
 'base theme': update_test_basetheme

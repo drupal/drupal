@@ -1,4 +1,5 @@
 name: E-mail
+type: module
 description: 'Defines a field type for e-mail addresses.'
 package: Core
 version: VERSION

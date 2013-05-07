@@ -1,4 +1,5 @@
 name: Node
+type: module
 description: 'Allows content to be submitted to the site and displayed on pages.'
 package: Core
 version: VERSION

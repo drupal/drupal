@@ -1,4 +1,5 @@
 name: 'RDF module mapping test'
+type: module
 description: 'Test mapping subscriber for RDF mapping tests.'
 package: Testing
 core: 8.x

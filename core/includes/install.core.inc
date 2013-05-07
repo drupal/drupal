@@ -1271,6 +1271,10 @@ function install_select_profile_form($form, &$form_state, $install_state) {
 
   foreach ($install_state['profiles'] as $profile) {
     $details = install_profile_info($profile->name);
+    // Skip this extension if its type is not profile.
+    if (!isset($details['type']) || $details['type'] != 'profile') {
+      continue;
+    }
     // Don't show hidden profiles. This is used by to hide the testing profile,
     // which only exists to speed up test runs.
     if ($details['hidden'] === TRUE) {

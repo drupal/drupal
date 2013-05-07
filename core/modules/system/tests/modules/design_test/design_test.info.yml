@@ -1,4 +1,5 @@
 name: 'Design test'
+type: module
 description: 'Support module for design, markup, JavaScript, and CSS testing.'
 package: Testing
 version: VERSION

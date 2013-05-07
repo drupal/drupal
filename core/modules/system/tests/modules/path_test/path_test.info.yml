@@ -1,4 +1,5 @@
 name: 'Hook path tests'
+type: module
 description: 'Support module for path hook testing.'
 package: Testing
 version: VERSION

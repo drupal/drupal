@@ -1,4 +1,5 @@
 name: Bartik
+type: theme
 description: 'A flexible, recolorable theme with many regions and a responsive, mobile-first layout.'
 package: Core
 version: VERSION

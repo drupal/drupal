@@ -1,4 +1,5 @@
 name: 'Content Translation (deprecated)'
+type: module
 description: 'Allows content to be translated into different languages.'
 dependencies:
   - node

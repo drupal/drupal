@@ -1,4 +1,5 @@
 name: XML-RPC
+type: module
 description: 'Provides XML-RPC functionality.'
 package: Core
 version: VERSION

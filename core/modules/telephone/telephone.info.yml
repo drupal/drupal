@@ -1,4 +1,5 @@
 name: Telephone
+type: module
 description: 'Defines a field type for telephone numbers.'
 package: Core
 version: VERSION

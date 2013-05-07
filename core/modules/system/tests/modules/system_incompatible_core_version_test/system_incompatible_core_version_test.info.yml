@@ -1,4 +1,5 @@
 name: 'System incompatible core version test'
+type: module
 description: 'Support module for testing system dependencies.'
 package: Testing
 version: VERSION

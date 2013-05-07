@@ -1,4 +1,5 @@
 name: User
+type: module
 description: 'Manages the user registration and login system.'
 package: Core
 version: VERSION

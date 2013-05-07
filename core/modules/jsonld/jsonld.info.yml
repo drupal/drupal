@@ -1,4 +1,5 @@
 name: JSON-LD
+type: module
 description: 'Serializes entities using JSON-LD format.'
 package: Core
 version: VERSION

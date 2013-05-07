@@ -1,4 +1,5 @@
 name: Tour
+type: module
 description: Provides guided tours.
 package: Core
 version: VERSION

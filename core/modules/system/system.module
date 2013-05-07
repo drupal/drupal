@@ -2942,8 +2942,8 @@ function _system_rebuild_module_data() {
     // Look for the info file.
     $module->info = drupal_parse_info_file(dirname($module->uri) . '/' . $module->name . '.info.yml');
 
-    // Skip modules that don't provide info.
-    if (empty($module->info)) {
+    // Skip modules/profiles that don't provide info or have the wrong type.
+    if (empty($module->info) || !isset($module->info['type']) || !in_array($module->info['type'], array('module', 'profile'))) {
       unset($modules[$key]);
       continue;
     }
@@ -3084,6 +3084,12 @@ function _system_rebuild_theme_data() {
   foreach ($themes as $key => $theme) {
     $themes[$key]->filename = $theme->uri;
     $themes[$key]->info = drupal_parse_info_file($theme->uri) + $defaults;
+
+    // Skip this extension if its type is not theme.
+    if (!isset($themes[$key]->info['type']) || $themes[$key]->info['type'] != 'theme') {
+      unset($themes[$key]);
+      continue;
+    }
 
     // Add the info file modification time, so it becomes available for
     // contributed modules to use for ordering theme lists.

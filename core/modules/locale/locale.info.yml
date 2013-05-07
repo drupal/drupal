@@ -1,4 +1,5 @@
 name: 'Interface Translation'
+type: module
 description: 'Translates the built-in user interface.'
 package: Multilingual
 version: VERSION

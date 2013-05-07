@@ -1,4 +1,5 @@
 name: Taxonomy
+type: module
 description: 'Enables the categorization of content.'
 package: Core
 version: VERSION

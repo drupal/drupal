@@ -1,4 +1,5 @@
 name: Contact
+type: module
 description: 'Enables the use of both personal and site-wide contact forms.'
 package: Core
 version: VERSION

@@ -1,4 +1,5 @@
 name: Comment
+type: module
 description: 'Allows users to comment on and discuss published content.'
 package: Core
 version: VERSION

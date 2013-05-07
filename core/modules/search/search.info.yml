@@ -1,4 +1,5 @@
 name: Search
+type: module
 description: 'Enables site-wide keyword searching.'
 package: Core
 version: VERSION

@@ -1,4 +1,5 @@
 name: 'Contextual Links'
+type: module
 description: 'Provides contextual links to perform actions related to elements on a page.'
 package: Core
 version: VERSION
