@@ -2104,7 +2104,7 @@ function system_update_8054() {
 /**
  * Moves system theme settings from variables to config.
  */
-function system_update_8054() {
+function system_update_8055() {
   // Install the global theme settings from the system module.
   update_7_to_8_install_default_config('module', 'system.theme.global');
   // Add the global settings to a map for variable to configuration conversion.
