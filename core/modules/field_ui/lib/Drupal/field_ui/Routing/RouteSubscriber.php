@@ -49,6 +49,7 @@ class RouteSubscriber implements EventSubscriberInterface {
   public function routes(RouteBuildEvent $event) {
     $collection = $event->getRouteCollection();
     foreach ($this->manager->getDefinitions() as $entity_type => $entity_info) {
+      $defaults = array();
       if ($entity_info['fieldable'] && isset($entity_info['route_base_path'])) {
         $path = $entity_info['route_base_path'];
 
