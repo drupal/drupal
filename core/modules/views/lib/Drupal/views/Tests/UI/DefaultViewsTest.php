@@ -120,6 +120,10 @@ class DefaultViewsTest extends UITestBase {
     // Ensure the view is no longer listed.
     $this->assertUrl('admin/structure/views');
     $this->assertNoLinkByHref($edit_href);
+    // Ensure the view is no longer available.
+    $this->drupalGet($edit_href);
+    $this->assertResponse(404);
+    $this->assertText('Page not found');
   }
 
   /**

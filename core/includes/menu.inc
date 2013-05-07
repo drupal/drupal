@@ -5,13 +5,13 @@
  * API for the Drupal menu system.
  */
 
-use Symfony\Component\HttpFoundation\Request;
-
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
 use Drupal\menu_link\MenuLinkStorageController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @defgroup menu Menu system
@@ -771,8 +771,15 @@ function _menu_translate(&$router_item, $map, $to_arg = FALSE) {
     $route = $route_provider->getRouteByName($router_item['route_name']);
     $request = Request::create('/' . $router_item['href']);
     $request->attributes->set('system_path', $router_item['href']);
-    $request->attributes->add(Drupal::service('router')->matchRequest($request));
-    $router_item['access'] = Drupal::service('access_manager')->check($route, $request);
+    // Attempt to match this path to provide a fully built request to the
+    // acccess checker.
+    try {
+      $request->attributes->add(Drupal::service('router')->matchRequest($request));
+      $router_item['access'] = Drupal::service('access_manager')->check($route, $request);
+    }
+    catch (NotFoundHttpException $e) {
+      $router_item['access'] = FALSE;
+    }
   }
   else {
     // @todo: Remove once all routes are converted.
