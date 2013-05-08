@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\UI\QueryTest.
+ * Contains \Drupal\views_ui\Tests\QueryTest.
  */
 
-namespace Drupal\views\Tests\UI;
+namespace Drupal\views_ui\Tests;
 
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views_test_data\Plugin\views\query\QueryTest as QueryTestPlugin;

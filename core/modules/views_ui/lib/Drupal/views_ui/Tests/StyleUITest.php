@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\UI\StyleUITest.
+ * Contains \Drupal\views_ui\Tests\StyleUITest.
  */
 
-namespace Drupal\views\Tests\UI;
+namespace Drupal\views_ui\Tests;
 
 /**
  * Tests the UI of style plugins.

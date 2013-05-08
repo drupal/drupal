@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\views\tests\UI\RedirectTest.
+ * Contains \Drupal\views_ui\tests\RedirectTest.
  */
 
-namespace Drupal\views\Tests\UI;
+namespace Drupal\views_ui\Tests;
 
 /**
  * Tests the redirecting after saving a views.

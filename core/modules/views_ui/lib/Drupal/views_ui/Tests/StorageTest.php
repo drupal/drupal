@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\views\tests\UI\StorageTest.
+ * Contains \Drupal\views_ui\tests\StorageTest.
  */
 
-namespace Drupal\views\Tests\UI;
+namespace Drupal\views_ui\Tests;
 
 use Drupal\Core\Language\Language;
 

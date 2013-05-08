@@ -1,11 +1,11 @@
 <?php
 
-  /**
-   * @file
-   * Definition of Drupal\views\Tests\UI\DisplayExtenderUITest.
-   */
+/**
+ * @file
+ * Contains \Drupal\views_ui\Tests\DisplayExtenderUITest.
+ */
 
-namespace Drupal\views\Tests\UI;
+namespace Drupal\views_ui\Tests;
 
 /**
  * Tests the display extender UI.

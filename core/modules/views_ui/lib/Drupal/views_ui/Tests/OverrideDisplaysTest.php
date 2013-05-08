@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\UI\OverrideDisplaysTest.
+ * Contains \Drupal\views_ui\Tests\OverrideDisplaysTest.
  */
 
-namespace Drupal\views\Tests\UI;
+namespace Drupal\views_ui\Tests;
 
 /**
  * Tests that displays can be correctly overridden via the user interface.

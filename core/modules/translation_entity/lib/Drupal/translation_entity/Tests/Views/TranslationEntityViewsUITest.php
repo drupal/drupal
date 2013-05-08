@@ -7,7 +7,7 @@
 
 namespace Drupal\translation_entity\Tests\Views;
 
-use Drupal\views\Tests\UI\UITestBase;
+use Drupal\views_ui\Tests\UITestBase;
 
 /**
  * Tests the views UI when translation_entity is enabled.

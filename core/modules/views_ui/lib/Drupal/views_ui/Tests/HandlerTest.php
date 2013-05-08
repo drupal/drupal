@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\views\Tests\UI\HandlerTest.
+ * Contains \Drupal\views_ui\Tests\HandlerTest.
  */
 
-namespace Drupal\views\Tests\UI;
+namespace Drupal\views_ui\Tests;
 
 use Drupal\views\ViewExecutable;
 

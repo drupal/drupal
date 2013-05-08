@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\views\Tests\ViewsUI\ViewUIObjectTest.
+ * Contains \Drupal\views_ui\Tests\ViewUIObjectTest.
  */
 
-namespace Drupal\views\Tests\ViewsUI;
+namespace Drupal\views_ui\Tests;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\ViewExecutable;

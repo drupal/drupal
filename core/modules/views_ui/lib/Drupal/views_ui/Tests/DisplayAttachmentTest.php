@@ -1,11 +1,11 @@
 <?php
 
-  /**
-   * @file
-   * Contains \Drupal\views\Tests\UI\DisplayAttachmentTest.
-   */
+/**
+ * @file
+ * Contains \Drupal\views_ui\Tests\DisplayAttachmentTest.
+ */
 
-namespace Drupal\views\Tests\UI;
+namespace Drupal\views_ui\Tests;
 
 /**
  * Tests the UI for the attachment display plugin.

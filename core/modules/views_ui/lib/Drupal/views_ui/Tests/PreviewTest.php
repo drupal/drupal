@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\views\Tests\UI\PreviewTest.
+ * Contains \Drupal\views_ui\Tests\PreviewTest.
  */
 
-namespace Drupal\views\Tests\UI;
+namespace Drupal\views_ui\Tests;
 
 /**
  * Tests the preview form in the UI.

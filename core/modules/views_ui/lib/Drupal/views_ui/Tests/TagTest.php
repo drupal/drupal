@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\views\tests\UI\TagTest.
+ * Contains \Drupal\views_ui\tests\TagTest.
  */
 
-namespace Drupal\views\Tests\UI;
+namespace Drupal\views_ui\Tests;
 
 use Drupal\views\Tests\ViewUnitTestBase;
 use Drupal\views_ui\Routing\ViewsUIController;

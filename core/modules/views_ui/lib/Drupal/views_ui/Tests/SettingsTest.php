@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\UI\SettingsTest.
+ * Contains \Drupal\views_ui\Tests\SettingsTest.
  */
 
-namespace Drupal\views\Tests\UI;
+namespace Drupal\views_ui\Tests;
 
 /**
  * Tests the various settings in the views UI.

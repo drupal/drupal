@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\UI\UITestBase.
+ * Contains \Drupal\views_ui\Tests\UITestBase.
  */
 
-namespace Drupal\views\Tests\UI;
+namespace Drupal\views_ui\Tests;
 
 use Drupal\views\Tests\ViewTestBase;
 

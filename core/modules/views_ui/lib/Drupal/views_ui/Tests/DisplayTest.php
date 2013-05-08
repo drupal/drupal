@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\UI\DisplayTest.
+ * Contains \Drupal\views_ui\Tests\DisplayTest.
  */
 
-namespace Drupal\views\Tests\UI;
+namespace Drupal\views_ui\Tests;
 
 /**
  * Tests the handling of displays in the UI, adding removing etc.

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\views\Tests\UI\AnalyzeTest.
+ * Contains \Drupal\views_ui\Tests\AnalyzeTest.
  */
 
-namespace Drupal\views\Tests\UI;
+namespace Drupal\views_ui\Tests;
 
 use Drupal\views\Tests\ViewTestBase;
 

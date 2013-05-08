@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\UI\DefaultViewsTest.
+ * Contains \Drupal\views_ui\Tests\DefaultViewsTest.
  */
 
-namespace Drupal\views\Tests\UI;
+namespace Drupal\views_ui\Tests;
 
 /**
  * Tests enabling, disabling, and reverting default views via the listing page.

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\views\Tests\UI\CustomBooleanTest.
+ * Contains \Drupal\views_ui\Tests\CustomBooleanTest.
  */
 
-namespace Drupal\views\Tests\UI;
+namespace Drupal\views_ui\Tests;
 
 /**
  * Tests the UI and functionality for the Custom boolean field handler options.

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\views\Tests\UI\CachedDataUITest.
+ * Contains \Drupal\views_ui\Tests\CachedDataUITest.
  */
 
-namespace Drupal\views\Tests\UI;
+namespace Drupal\views_ui\Tests;
 
 /**
  * Tests the user tempstore cache in the UI.

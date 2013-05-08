@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\views\Tests\UI\DisplayPath
+ * Contains \Drupal\views_ui\Tests\DisplayPath
  */
 
-namespace Drupal\views\Tests\UI;
+namespace Drupal\views_ui\Tests;
 
 /**
  * Tests the UI of generic display path plugin.
