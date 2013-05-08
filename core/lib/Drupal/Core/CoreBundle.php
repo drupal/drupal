@@ -86,7 +86,7 @@ class CoreBundle extends Bundle {
   /**
    * Registers Twig services.
    *
-   * This is used during install so it needs to stay in PHP (and static too).
+   * This method is public and static so that it can be reused in the installer.
    */
   public static function registerTwig(ContainerBuilder $container) {
     $container->register('twig.loader.filesystem', 'Twig_Loader_Filesystem')
