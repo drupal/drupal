@@ -9,6 +9,7 @@ namespace Drupal\tour;
 
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
+use Drupal\Core\Plugin\Discovery\AlterDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
 use Drupal\Component\Plugin\Discovery\ProcessDecorator;
@@ -28,6 +29,7 @@ class TipPluginManager extends PluginManagerBase {
   public function __construct(\Traversable $namespaces) {
     $annotation_namespaces = array('Drupal\tour\Annotation' => $namespaces['Drupal\tour']);
     $this->discovery = new AnnotatedClassDiscovery('tour/tip', $namespaces, $annotation_namespaces, 'Drupal\tour\Annotation\Tip');
+    $this->discovery = new AlterDecorator($this->discovery, 'tour_tips_info');
     $this->discovery = new CacheDecorator($this->discovery, 'tour');
 
     $this->factory = new DefaultFactory($this->discovery);

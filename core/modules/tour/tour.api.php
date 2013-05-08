@@ -22,6 +22,21 @@ function hook_tour_tips_alter(array &$tour_tips, Drupal\Core\Entity\EntityInterf
 }
 
 /**
+ * Allow modules to alter tip plugin definitions.
+ *
+ * @param array $info
+ *   The array of tip plugin definitions, keyed by plugin ID.
+ *
+ * @see \Drupal\tour\Annotation\Tip
+ */
+function hook_tour_tips_info_alter(&$info) {
+  // Swap out the class used for this tip plugin.
+  if (isset($info['text'])) {
+    $info['class'] = 'Drupal\mymodule\Plugin\tour\tip\MyCustomTipPlugin';
+  }
+}
+
+/**
  * Act on tour objects when loaded.
  *
  * @param array $entities
