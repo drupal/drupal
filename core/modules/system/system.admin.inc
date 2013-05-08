@@ -1418,7 +1418,7 @@ function system_modules_uninstall_submit($form, &$form_state) {
  * Form builder; The general site information form.
  *
  * @ingroup forms
- * @see system_settings_form()
+ * @see system_config_form()
  */
 function system_site_information_settings($form, &$form_state) {
   config_context_enter('config.context.free');
@@ -1773,7 +1773,7 @@ function system_clear_page_cache_submit($form, &$form_state) {
  * Form builder; Configure the site file handling.
  *
  * @ingroup forms
- * @see system_settings_form_sumbit()
+ * @see system_file_system_settings_submit()
  */
 function system_file_system_settings($form, $form_state) {
   $config = config('system.file');

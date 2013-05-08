@@ -142,7 +142,7 @@ function system_theme() {
       'variables' => array('theme_groups' => NULL),
       'file' => 'system.admin.inc',
     ),
-    'system_settings_form' => array(
+    'system_config_form' => array(
       'render element' => 'form',
     ),
     'confirm_form' => array(
@@ -3291,53 +3291,6 @@ function system_default_region($theme) {
 }
 
 /**
- * Add default buttons to a form and set its prefix.
- *
- * @param $form
- *   An associative array containing the structure of the form.
- *
- * @return
- *   The form structure.
- *
- * @see system_settings_form_submit()
- * @ingroup forms
- */
-function system_settings_form($form) {
-  $form['actions']['#type'] = 'actions';
-  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
-
-  if (!empty($_POST) && form_get_errors()) {
-    drupal_set_message(t('The settings have not been saved because of the errors.'), 'error');
-  }
-  $form['#submit'][] = 'system_settings_form_submit';
-  // By default, render the form using theme_system_settings_form().
-  if (!isset($form['#theme'])) {
-    $form['#theme'] = 'system_settings_form';
-  }
-  return $form;
-}
-
-/**
- * Execute the system_settings_form.
- *
- * If you want node type configure style handling of your checkboxes,
- * add an array_filter value to your form.
- */
-function system_settings_form_submit($form, &$form_state) {
-  // Exclude unnecessary elements.
-  form_state_values_clean($form_state);
-
-  foreach ($form_state['values'] as $key => $value) {
-    if (is_array($value) && isset($form_state['values']['array_filter'])) {
-      $value = array_keys(array_filter($value));
-    }
-    variable_set($key, $value);
-  }
-
-  drupal_set_message(t('The configuration options have been saved.'));
-}
-
-/**
  * Adds default behavior to a configuration form.
  *
  * This includes a consistent 'Save configuration' button, theme definition,
@@ -3379,9 +3332,9 @@ function system_config_form($form, &$form_state) {
   }
   $form['#submit'][] = 'system_config_form_submit';
 
-  // By default, render the form using theme_system_settings_form().
+  // By default, render the form using theme_system_config_form().
   if (!isset($form['#theme'])) {
-    $form['#theme'] = 'system_settings_form';
+    $form['#theme'] = 'system_config_form';
   }
   return $form;
 }
@@ -3969,7 +3922,7 @@ function theme_confirm_form($variables) {
  *
  * @ingroup themeable
  */
-function theme_system_settings_form($variables) {
+function theme_system_config_form($variables) {
   return drupal_render_children($variables['form']);
 }
 

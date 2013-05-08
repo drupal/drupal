@@ -59,8 +59,8 @@ abstract class SystemConfigFormBase implements FormInterface, ControllerInterfac
       '#button_type' => 'primary',
     );
 
-    // By default, render the form using theme_system_settings_form().
-    $form['#theme'] = 'system_settings_form';
+    // By default, render the form using theme_system_config_form().
+    $form['#theme'] = 'system_config_form';
 
     return $form;
   }

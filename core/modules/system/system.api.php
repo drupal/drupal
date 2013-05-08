@@ -2774,7 +2774,7 @@ function hook_update_last_removed() {
  * Remove any information that the module sets.
  *
  * The information that the module should remove includes:
- * - variables that the module has set using variable_set() or system_settings_form()
+ * - variables that the module has set using variable_set()
  * - modifications to existing tables
  *
  * The module should not remove its entry from the module configuration.
