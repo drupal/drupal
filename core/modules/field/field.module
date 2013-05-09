@@ -866,6 +866,7 @@ function field_view_field(EntityInterface $entity, $field_name, $display_options
       'entity' => $entity,
       'view_mode' => $view_mode,
       'display_options' => $display_options,
+      'langcode' => $display_langcode,
     );
     drupal_alter('field_attach_view', $result, $context);
 
