@@ -1771,22 +1771,6 @@ function _field_view_formatter_options($field_type = NULL) {
 }
 
 /**
- * Adds one to each key of the array.
- *
- * For example array(0 => 'foo') would be array(1 => 'foo').
- */
-function views_array_key_plus($array) {
-  $keys = array_keys($array);
-  rsort($keys);
-  foreach ($keys as $key) {
-    $array[$key+1] = $array[$key];
-    unset($array[$key]);
-  }
-  asort($array);
-  return $array;
-}
-
-/**
  * Set a cached item in the views cache.
  *
  * This is just a convenience wrapper around cache_set().

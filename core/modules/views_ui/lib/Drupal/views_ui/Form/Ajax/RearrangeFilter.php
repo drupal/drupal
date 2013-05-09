@@ -293,11 +293,11 @@ class RearrangeFilter extends ViewsFormBase {
       // The actual update button was clicked. Remove the empty groups, and
       // renumber them sequentially.
       ksort($remember_groups);
-      $groups['groups'] = views_array_key_plus(array_values(array_intersect_key($groups['groups'], $remember_groups)));
+      $groups['groups'] = static::arrayKeyPlus(array_values(array_intersect_key($groups['groups'], $remember_groups)));
       // Change the 'group' key on each field to match. Here, $mapping is an
       // array whose keys are the old group numbers and whose values are the new
       // (sequentially numbered) ones.
-      $mapping = array_flip(views_array_key_plus(array_keys($remember_groups)));
+      $mapping = array_flip(static::arrayKeyPlus(array_keys($remember_groups)));
       foreach ($new_fields as &$new_field) {
         $new_field['group'] = $mapping[$new_field['group']];
       }
@@ -312,6 +312,31 @@ class RearrangeFilter extends ViewsFormBase {
 
     // Store in cache.
     $form_state['view']->cacheSet();
+  }
+
+  /**
+   * Adds one to each key of an array.
+   *
+   * For example array(0 => 'foo') would be array(1 => 'foo').
+   *
+   * @param array
+   *   The array to increment keys on.
+   *
+   * @return array
+   *   The array with incremented keys.
+   */
+  public static function arrayKeyPlus($array) {
+    $keys = array_keys($array);
+    // Sort the keys in reverse order so incrementing them doesn't overwrite any
+    // existing keys.
+    rsort($keys);
+    foreach ($keys as $key) {
+      $array[$key + 1] = $array[$key];
+      unset($array[$key]);
+    }
+    // Sort the keys back to ascending order.
+    ksort($array);
+    return $array;
   }
 
 }
