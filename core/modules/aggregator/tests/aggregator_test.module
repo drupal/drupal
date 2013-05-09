@@ -58,7 +58,7 @@ function aggregator_test_feed($use_last_modified = FALSE, $use_etag = FALSE) {
   drupal_add_http_header('Content-Type', 'application/rss+xml; charset=utf-8');
 
   // Read actual feed from file.
-  $file_name = DRUPAL_ROOT . '/' . drupal_get_path('module', 'aggregator') . '/tests/aggregator_test_rss091.xml';
+  $file_name = __DIR__ . '/aggregator_test_rss091.xml';
   $handle = fopen($file_name, 'r');
   $feed = fread($handle, filesize($file_name));
   fclose($handle);

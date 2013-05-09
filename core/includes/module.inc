@@ -75,7 +75,7 @@ function system_list($type) {
     foreach ($lists['theme'] as $key => $theme) {
       if (!empty($theme->info['base theme'])) {
         // Make a list of the theme's base themes.
-        require_once DRUPAL_ROOT . '/core/includes/theme.inc';
+        require_once __DIR__ . '/theme.inc';
         $lists['theme'][$key]->base_themes = drupal_find_base_themes($lists['theme'], $key);
         // Don't proceed if there was a problem with the root base theme.
         if (!current($lists['theme'][$key]->base_themes)) {
@@ -154,7 +154,7 @@ function system_register($type, $name, $uri) {
  */
 function module_load_install($module) {
   // Make sure the installation API is available
-  include_once DRUPAL_ROOT . '/core/includes/install.inc';
+  include_once __DIR__ . '/install.inc';
 
   return module_load_include('install', $module);
 }
@@ -282,7 +282,7 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
   }
 
   // Required for module installation checks.
-  include_once DRUPAL_ROOT . '/core/includes/install.inc';
+  include_once __DIR__ . '/install.inc';
 
   $modules_installed = array();
   $modules_enabled = array();

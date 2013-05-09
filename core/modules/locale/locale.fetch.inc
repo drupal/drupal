@@ -10,7 +10,7 @@
  */
 // @todo Combine functions differently in files to avoid unnecessary includes.
 // Follow-up issue http://drupal.org/node/1834298
-require_once DRUPAL_ROOT . '/core/modules/locale/locale.translation.inc';
+require_once __DIR__ . '/locale.translation.inc';
 
 /**
  * Builds a batch to check, download and import project translations.

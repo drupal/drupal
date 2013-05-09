@@ -79,7 +79,7 @@ function drupal_get_complete_schema($rebuild = FALSE) {
       // Load the .install files to get hook_schema.
       drupal_container()->get('module_handler')->loadAllIncludes('install');
 
-      require_once DRUPAL_ROOT . '/core/includes/common.inc';
+      require_once __DIR__ . '/common.inc';
       // Invoke hook_schema for all modules.
       foreach (module_implements('schema') as $module) {
         // Cast the result of hook_schema() to an array, as a NULL return value

@@ -90,8 +90,8 @@ function update_check_incompatibility($name, $type = 'module') {
  * irreversible changes to the database are made here.
  */
 function update_prepare_d8_bootstrap() {
-  include_once DRUPAL_ROOT . '/core/includes/install.inc';
-  include_once DRUPAL_ROOT . '/core/includes/schema.inc';
+  include_once __DIR__ . '/install.inc';
+  include_once __DIR__ . '/schema.inc';
   // Bootstrap to configuration.
   drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
 
@@ -735,7 +735,7 @@ function update_module_enable(array $modules, $schema_version = 0) {
 
     // system_list_reset() is in module.inc but that would only be available
     // once the variable bootstrap is done.
-    require_once DRUPAL_ROOT . '/core/includes/module.inc';
+    require_once __DIR__ . '/module.inc';
     system_list_reset();
     //  @todo: figure out what to do about hook_install() and hook_enable().
   }
@@ -806,7 +806,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
     catch (Exception $e) {
       watchdog_exception('update', $e);
 
-      require_once DRUPAL_ROOT . '/core/includes/errors.inc';
+      require_once __DIR__ . '/errors.inc';
       $variables = _drupal_decode_exception($e);
       unset($variables['backtrace']);
       // The exception message is run through check_plain() by _drupal_decode_exception().

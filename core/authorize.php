@@ -90,10 +90,10 @@ $show_messages = TRUE;
 
 if (authorize_access_allowed()) {
   // Load both the Form API and Batch API.
-  require_once DRUPAL_ROOT . '/core/includes/form.inc';
-  require_once DRUPAL_ROOT . '/core/includes/batch.inc';
+  require_once __DIR__ . '/includes/form.inc';
+  require_once __DIR__ . '/includes/batch.inc';
   // Load the code that drives the authorize process.
-  require_once DRUPAL_ROOT . '/core/includes/authorize.inc';
+  require_once __DIR__ . '/includes/authorize.inc';
 
   if (isset($_SESSION['authorize_operation']['page_title'])) {
     drupal_set_title($_SESSION['authorize_operation']['page_title']);

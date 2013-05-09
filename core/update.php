@@ -432,11 +432,11 @@ if (is_null($op)) {
 // to run updates (since it may expose sensitive information about the site's
 // configuration).
 if (is_null($op) && update_access_allowed()) {
-  require_once DRUPAL_ROOT . '/core/includes/install.inc';
+  require_once __DIR__ . '/includes/install.inc';
   require_once DRUPAL_ROOT . '/core/modules/system/system.install';
 
   // Load module basics.
-  include_once DRUPAL_ROOT . '/core/includes/module.inc';
+  include_once __DIR__ . '/includes/module.inc';
   $module_list['system'] = 'core/modules/system/system.module';
   $module_handler = drupal_container()->get('module_handler');
   $module_handler->setModuleList($module_list);
@@ -471,8 +471,8 @@ ini_set('display_errors', TRUE);
 // Only proceed with updates if the user is allowed to run them.
 if (update_access_allowed()) {
 
-  include_once DRUPAL_ROOT . '/core/includes/install.inc';
-  include_once DRUPAL_ROOT . '/core/includes/batch.inc';
+  include_once __DIR__ . '/includes/install.inc';
+  include_once __DIR__ . '/includes/batch.inc';
   drupal_load_updates();
 
   update_fix_compatibility();

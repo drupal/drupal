@@ -887,7 +887,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
       if (!isset($dirs[$dir][$extension])) {
         $dirs[$dir][$extension] = TRUE;
         if (!function_exists('drupal_system_listing')) {
-          require_once DRUPAL_ROOT . '/core/includes/common.inc';
+          require_once __DIR__ . '/common.inc';
         }
         // Scan the appropriate directories for all files with the requested
         // extension, not just the file we are currently looking for. This
@@ -1617,7 +1617,7 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
      $variables = array();
    }
 
-   require_once DRUPAL_ROOT . '/core/includes/errors.inc';
+   require_once __DIR__ . '/errors.inc';
    $variables += _drupal_decode_exception($exception);
    watchdog($type, $message, $variables, $severity, $link);
 }
@@ -1947,7 +1947,7 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
           break;
 
         case DRUPAL_BOOTSTRAP_CODE:
-          require_once DRUPAL_ROOT . '/core/includes/common.inc';
+          require_once __DIR__ . '/common.inc';
           _drupal_bootstrap_code();
           break;
 
@@ -2053,7 +2053,7 @@ function drupal_get_hash_salt() {
  *   occurred.
  */
 function _drupal_error_handler($error_level, $message, $filename, $line, $context) {
-  require_once DRUPAL_ROOT . '/core/includes/errors.inc';
+  require_once __DIR__ . '/errors.inc';
   _drupal_error_handler_real($error_level, $message, $filename, $line, $context);
 }
 
@@ -2068,7 +2068,7 @@ function _drupal_error_handler($error_level, $message, $filename, $line, $contex
  *   The exception object that was thrown.
  */
 function _drupal_exception_handler($exception) {
-  require_once DRUPAL_ROOT . '/core/includes/errors.inc';
+  require_once __DIR__ . '/errors.inc';
 
   try {
     // Log the message to the watchdog and return an error page to the user.
@@ -2106,7 +2106,7 @@ function _drupal_bootstrap_configuration() {
   Unicode::check();
 
   // Load the procedural configuration system helper functions.
-  require_once DRUPAL_ROOT . '/core/includes/config.inc';
+  require_once __DIR__ . '/config.inc';
 
   // Set the Drupal custom error handler. (requires config())
   set_error_handler('_drupal_error_handler');
@@ -2116,7 +2116,7 @@ function _drupal_bootstrap_configuration() {
   // installed yet (i.e., if no $databases array has been defined in the
   // settings.php file) and we are not already installing.
   if (empty($GLOBALS['databases']) && !drupal_installation_attempted()) {
-    include_once DRUPAL_ROOT . '/core/includes/install.inc';
+    include_once __DIR__ . '/install.inc';
     install_goto('core/install.php');
   }
 }
@@ -2141,7 +2141,7 @@ function _drupal_bootstrap_page_cache() {
 
   // Allow specifying special cache handlers in settings.php, like
   // using memcached or files for storing cache information.
-  require_once DRUPAL_ROOT . '/core/includes/cache.inc';
+  require_once __DIR__ . '/cache.inc';
   foreach (variable_get('cache_backends', array()) as $include) {
     require_once DRUPAL_ROOT . '/' . $include;
   }
@@ -2218,7 +2218,7 @@ function _drupal_initialize_db_test_prefix() {
 function _drupal_bootstrap_database() {
   // Initialize the database system. Note that the connection
   // won't be initialized until it is actually requested.
-  require_once DRUPAL_ROOT . '/core/includes/database.inc';
+  require_once __DIR__ . '/database.inc';
 }
 
 /**
@@ -2230,7 +2230,7 @@ function _drupal_bootstrap_variables() {
   // Load variables from the database, but do not overwrite variables set in settings.php.
   $conf = variable_initialize(isset($conf) ? $conf : array());
   // Load bootstrap modules.
-  require_once DRUPAL_ROOT . '/core/includes/module.inc';
+  require_once __DIR__ . '/module.inc';
   drupal_container()->get('module_handler')->loadBootstrapModules();
 }
 
@@ -2505,7 +2505,7 @@ function drupal_generate_test_ua($prefix) {
  * @see _drupal_maintenance_theme()
  */
 function drupal_maintenance_theme() {
-  require_once DRUPAL_ROOT . '/core/includes/theme.maintenance.inc';
+  require_once __DIR__ . '/theme.maintenance.inc';
   _drupal_maintenance_theme();
 }
 
@@ -3218,7 +3218,7 @@ function _drupal_shutdown_function() {
   catch (Exception $exception) {
     // If we are displaying errors, then do so with no possibility of a further
     // uncaught exception being thrown.
-    require_once DRUPAL_ROOT . '/core/includes/errors.inc';
+    require_once __DIR__ . '/errors.inc';
     if (error_displayable()) {
       print '<h1>Uncaught exception thrown in shutdown function.</h1>';
       print '<p>' . _drupal_render_exception_safe($exception) . '</p><hr />';

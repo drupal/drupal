@@ -134,7 +134,7 @@ function drupal_get_database_types() {
   // We define a driver as a directory in /core/includes/database that in turn
   // contains a database.inc file. That allows us to drop in additional drivers
   // without modifying the installer.
-  require_once DRUPAL_ROOT . '/core/includes/database.inc';
+  require_once __DIR__ . '/database.inc';
   // Allow any valid PHP identifier.
   // @see http://www.php.net/manual/en/language.variables.basics.php.
   $mask = '/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/';
@@ -566,8 +566,8 @@ function install_ensure_config_directory($type) {
  *   The list of modules to install.
  */
 function drupal_verify_profile($install_state) {
-  include_once DRUPAL_ROOT . '/core/includes/file.inc';
-  include_once DRUPAL_ROOT . '/core/includes/common.inc';
+  include_once __DIR__ . '/file.inc';
+  include_once __DIR__ . '/common.inc';
 
   $profile = $install_state['parameters']['profile'];
   $profile_file = $install_state['profiles'][$profile]->uri;
@@ -861,7 +861,7 @@ function drupal_install_fix_file($file, $mask, $message = TRUE) {
  */
 function install_goto($path) {
   global $base_url;
-  include_once DRUPAL_ROOT . '/core/includes/common.inc';
+  include_once __DIR__ . '/common.inc';
   header('Location: ' . $base_url . '/' . $path);
   header('Cache-Control: no-cache'); // Not a permanent redirect.
   drupal_exit();
@@ -968,7 +968,7 @@ function st($string, array $args = array(), array $options = array()) {
     }
   }
 
-  require_once DRUPAL_ROOT . '/core/includes/theme.inc';
+  require_once __DIR__ . '/theme.inc';
   // Transform arguments before inserting them
   foreach ($args as $key => $value) {
     switch ($key[0]) {
@@ -1000,7 +1000,7 @@ function st($string, array $args = array(), array $options = array()) {
  *   Array of the installation profile's requirements.
  */
 function drupal_check_profile($profile, array $install_state) {
-  include_once DRUPAL_ROOT . '/core/includes/file.inc';
+  include_once __DIR__ . '/file.inc';
 
   $profile_file = $install_state['profiles'][$profile]->uri;
 

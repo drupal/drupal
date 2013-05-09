@@ -5161,7 +5161,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
     else {
       // Non-progressive execution: bypass the whole progressbar workflow
       // and execute the batch in one pass.
-      require_once DRUPAL_ROOT . '/core/includes/batch.inc';
+      require_once __DIR__ . '/batch.inc';
       _batch_process();
     }
   }

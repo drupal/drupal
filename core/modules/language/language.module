@@ -707,7 +707,7 @@ function language_language_negotiation_info() {
  */
 function language_negotiation_include() {
   include_once DRUPAL_ROOT . '/core/includes/language.inc';
-  include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'language') . '/language.negotiation.inc';
+  include_once __DIR__ . '/language.negotiation.inc';
 }
 
 /**

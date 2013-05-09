@@ -296,17 +296,17 @@ function install_begin_request(&$install_state) {
     $GLOBALS['conf']['language_default'] = array('langcode' => $install_state['parameters']['langcode']);
   }
 
-  require_once DRUPAL_ROOT . '/core/modules/system/system.install';
-  require_once DRUPAL_ROOT . '/core/includes/common.inc';
-  require_once DRUPAL_ROOT . '/core/includes/file.inc';
-  require_once DRUPAL_ROOT . '/core/includes/install.inc';
-  require_once DRUPAL_ROOT . '/core/includes/schema.inc';
-  require_once DRUPAL_ROOT . '/' . settings()->get('path_inc', 'core/includes/path.inc');
+  require_once __DIR__ . '/../modules/system/system.install';
+  require_once __DIR__ . '/common.inc';
+  require_once __DIR__ . '/file.inc';
+  require_once __DIR__ . '/install.inc';
+  require_once __DIR__ . '/schema.inc';
+  require_once __DIR__ . '/../../' . settings()->get('path_inc', 'core/includes/path.inc');
 
   // Load module basics (needed for hook invokes).
-  include_once DRUPAL_ROOT . '/core/includes/module.inc';
-  include_once DRUPAL_ROOT . '/core/includes/session.inc';
-  require_once DRUPAL_ROOT . '/core/includes/entity.inc';
+  include_once __DIR__ . '/module.inc';
+  include_once __DIR__ . '/session.inc';
+  require_once __DIR__ . '/entity.inc';
 
   // Determine whether the configuration system is ready to operate.
   $install_state['config_verified'] = install_verify_config_directory(CONFIG_ACTIVE_DIRECTORY) && install_verify_config_directory(CONFIG_STAGING_DIRECTORY);
@@ -412,7 +412,7 @@ function install_begin_request(&$install_state) {
   // Set up $language, so t() caller functions will still work.
   drupal_language_initialize();
 
-  require_once DRUPAL_ROOT . '/core/includes/ajax.inc';
+  require_once __DIR__ . '/ajax.inc';
 
   $module_handler = drupal_container()->get('module_handler');
   if (!$module_handler->moduleExists('system')) {
@@ -421,7 +421,7 @@ function install_begin_request(&$install_state) {
   }
   $module_handler->load('system');
 
-  require_once DRUPAL_ROOT . '/core/includes/cache.inc';
+  require_once __DIR__ . '/cache.inc';
 
   // Prepare for themed output. We need to run this at the beginning of the
   // page request to avoid a different theme accidentally getting set. (We also
@@ -433,7 +433,7 @@ function install_begin_request(&$install_state) {
   if ($install_state['database_verified']) {
     // Initialize the database system. Note that the connection
     // won't be initialized until it is actually requested.
-    require_once DRUPAL_ROOT . '/core/includes/database.inc';
+    require_once __DIR__ . '/database.inc';
 
     // Verify the last completed task in the database, if there is one.
     $task = install_verify_completed_task();
@@ -532,7 +532,7 @@ function install_run_task($task, &$install_state) {
   $function = $task['function'];
 
   if ($task['type'] == 'form') {
-    require_once DRUPAL_ROOT . '/core/includes/form.inc';
+    require_once __DIR__ . '/form.inc';
     if ($install_state['interactive']) {
       // For interactive forms, build the form and ensure that it will not
       // redirect, since the installer handles its own redirection only after
@@ -603,7 +603,7 @@ function install_run_task($task, &$install_state) {
     // If we are in the middle of processing this batch, keep sending back
     // any output from the batch process, until the task is complete.
     elseif ($current_batch == $function) {
-      include_once DRUPAL_ROOT . '/core/includes/batch.inc';
+      include_once __DIR__ . '/batch.inc';
       $output = _batch_page();
       // Because Batch API now returns a JSON response for intermediary steps,
       // but the installer doesn't handle Response objects yet, just send the
@@ -1197,7 +1197,7 @@ function install_select_profile(&$install_state) {
       // yet), rather just a convenience method for setting parameters in the
       // URL.
       if ($install_state['interactive']) {
-        include_once DRUPAL_ROOT . '/core/includes/form.inc';
+        include_once __DIR__ . '/form.inc';
         drupal_set_title(st('Select an installation profile'));
         $form = drupal_get_form('install_select_profile_form', $install_state);
         return drupal_render($form);
@@ -1401,7 +1401,7 @@ function install_translation_directory() {
  *   language cannot be chosen automatically.
  */
 function install_select_language(&$install_state) {
-  include_once DRUPAL_ROOT . '/core/includes/standard.inc';
+  include_once __DIR__ . '/standard.inc';
 
   // Find all available translation files.
   $files = install_find_translations();
@@ -1430,7 +1430,7 @@ function install_select_language(&$install_state) {
     // corresponding languages to choose from.
     if ($install_state['interactive']) {
       drupal_set_title(st('Choose language'));
-      include_once DRUPAL_ROOT . '/core/includes/form.inc';
+      include_once __DIR__ . '/form.inc';
       $elements = drupal_get_form('install_select_language_form', count($files) > 1 ? $files : array());
       return drupal_render($elements);
     }
@@ -1460,9 +1460,9 @@ function install_select_language(&$install_state) {
  * @ingroup forms
  */
 function install_select_language_form($form, &$form_state, $files = array()) {
-  include_once DRUPAL_ROOT . '/core/includes/standard.inc';
-  include_once DRUPAL_ROOT . '/core/modules/language/language.module';
-  include_once DRUPAL_ROOT . '/core/modules/language/language.negotiation.inc';
+  include_once __DIR__ . '/standard.inc';
+  include_once __DIR__ . '/../modules/language/language.module';
+  include_once __DIR__ . '/../modules/language/language.negotiation.inc';
 
   $standard_languages = standard_language_list();
   $select_options = array();
@@ -1740,8 +1740,8 @@ function install_profile_modules(&$install_state) {
  *   The batch definition, if there are language files to import.
  */
 function install_import_translations(&$install_state) {
-  include_once DRUPAL_ROOT . '/core/modules/locale/locale.bulk.inc';
-  include_once DRUPAL_ROOT . '/core/includes/standard.inc';
+  include_once __DIR__ . '/../modules/locale/locale.bulk.inc';
+  include_once __DIR__ . '/standard.inc';
 
   $langcode = $install_state['parameters']['langcode'];
   $standard_languages = standard_language_list();
@@ -1957,7 +1957,7 @@ function _install_profile_modules_finished($success, $results, $operations) {
  * Checks installation requirements and reports any errors.
  */
 function install_check_translations($install_state) {
-  include_once DRUPAL_ROOT . '/core/includes/standard.inc';
+  include_once __DIR__ . '/standard.inc';
   $requirements = array();
 
   $readable = FALSE;

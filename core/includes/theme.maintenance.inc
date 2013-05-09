@@ -25,11 +25,11 @@ function _drupal_maintenance_theme() {
   }
 
   require_once DRUPAL_ROOT . '/' . settings()->get('path_inc', 'core/includes/path.inc');
-  require_once DRUPAL_ROOT . '/core/includes/theme.inc';
-  require_once DRUPAL_ROOT . '/core/includes/common.inc';
-  require_once DRUPAL_ROOT . '/core/includes/unicode.inc';
-  require_once DRUPAL_ROOT . '/core/includes/file.inc';
-  require_once DRUPAL_ROOT . '/core/includes/module.inc';
+  require_once __DIR__ . '/theme.inc';
+  require_once __DIR__ . '/common.inc';
+  require_once __DIR__ . '/unicode.inc';
+  require_once __DIR__ . '/file.inc';
+  require_once __DIR__ . '/module.inc';
   Unicode::check();
 
   // Install and update pages are treated differently to prevent theming overrides.
@@ -41,7 +41,7 @@ function _drupal_maintenance_theme() {
     // environment, we need to bootstrap just enough to allow hook invocations
     // to work. See _drupal_log_error().
     if (!class_exists('Drupal\Core\Database\Database', FALSE)) {
-      require_once DRUPAL_ROOT . '/core/includes/database.inc';
+      require_once __DIR__ . '/database.inc';
     }
 
     // We use the default theme as the maintenance theme. If a default theme

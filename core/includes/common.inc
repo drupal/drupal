@@ -1239,7 +1239,7 @@ function filter_xss_bad_protocol($string, $decode = TRUE) {
   //   string that needs decoding.
   if ($decode) {
     if (!function_exists('decode_entities')) {
-      require_once DRUPAL_ROOT . '/core/includes/unicode.inc';
+      require_once __DIR__ . '/unicode.inc';
     }
 
     $string = decode_entities($string);
@@ -4567,20 +4567,20 @@ function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
  * Loads code for subsystems and modules, and registers stream wrappers.
  */
 function _drupal_bootstrap_code() {
-  require_once DRUPAL_ROOT . '/' . settings()->get('path_inc', 'core/includes/path.inc');
-  require_once DRUPAL_ROOT . '/core/includes/theme.inc';
-  require_once DRUPAL_ROOT . '/core/includes/pager.inc';
-  require_once DRUPAL_ROOT . '/' . settings()->get('menu_inc', 'core/includes/menu.inc');
-  require_once DRUPAL_ROOT . '/core/includes/tablesort.inc';
-  require_once DRUPAL_ROOT . '/core/includes/file.inc';
-  require_once DRUPAL_ROOT . '/core/includes/unicode.inc';
-  require_once DRUPAL_ROOT . '/core/includes/image.inc';
-  require_once DRUPAL_ROOT . '/core/includes/form.inc';
-  require_once DRUPAL_ROOT . '/core/includes/mail.inc';
-  require_once DRUPAL_ROOT . '/core/includes/ajax.inc';
-  require_once DRUPAL_ROOT . '/core/includes/errors.inc';
-  require_once DRUPAL_ROOT . '/core/includes/schema.inc';
-  require_once DRUPAL_ROOT . '/core/includes/entity.inc';
+  require_once __DIR__ . '/../../' . settings()->get('path_inc', 'core/includes/path.inc');
+  require_once __DIR__ . '/theme.inc';
+  require_once __DIR__ . '/pager.inc';
+  require_once __DIR__ . '/../../' . settings()->get('menu_inc', 'core/includes/menu.inc');
+  require_once __DIR__ . '/tablesort.inc';
+  require_once __DIR__ . '/file.inc';
+  require_once __DIR__ . '/unicode.inc';
+  require_once __DIR__ . '/image.inc';
+  require_once __DIR__ . '/form.inc';
+  require_once __DIR__ . '/mail.inc';
+  require_once __DIR__ . '/ajax.inc';
+  require_once __DIR__ . '/errors.inc';
+  require_once __DIR__ . '/schema.inc';
+  require_once __DIR__ . '/entity.inc';
 
   // Load all enabled modules
   drupal_container()->get('module_handler')->loadAll();
