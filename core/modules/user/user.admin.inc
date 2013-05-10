@@ -243,6 +243,9 @@ function user_admin_account() {
       '#type' => 'operations',
       '#links' => $links,
     );
+
+    $options[$account->uid]['title']['data']['#title'] = check_plain($account->name);
+
   }
 
   $form['accounts'] = array(
