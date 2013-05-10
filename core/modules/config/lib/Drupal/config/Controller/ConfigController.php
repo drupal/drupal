@@ -94,7 +94,7 @@ class ConfigController implements ControllerInterface {
 
     // @todo Remove use of drupal_set_title() when
     //   http://drupal.org/node/1871596 is in.
-    drupal_set_title('View changes of @config_file', array('@config_file' => $config_file));
+    drupal_set_title(t('View changes of @config_file', array('@config_file' => $config_file)), PASS_THROUGH);
 
     return $output;
   }
