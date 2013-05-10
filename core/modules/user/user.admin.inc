@@ -462,213 +462,31 @@ function theme_user_permission_description($variables) {
 }
 
 /**
- * Form to re-order roles or add a new one.
+ * Page callback: Lists roles and allows to reorder them.
  *
- * @ingroup forms
- * @see theme_user_admin_roles()
+ * @see user_menu()
  */
-function user_admin_roles($form, $form_state) {
-  $roles = user_roles();
-
-  $form['roles'] = array(
-    '#tree' => TRUE,
-  );
-
-  foreach ($roles as $rid => $role) {
-    $form['roles'][$rid]['#role'] = $role;
-    $form['roles'][$rid]['#weight'] = $role->weight;
-    $form['roles'][$rid]['name'] = array(
-      '#markup' => check_plain($role->label()),
-    );
-    $form['roles'][$rid]['weight'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Weight for @title', array('@title' => $role->label())),
-      '#title_display' => 'invisible',
-      '#size' => 4,
-      '#default_value' => $role->weight,
-      '#attributes' => array('class' => array('role-weight')),
-    );
-    $links['edit'] = array(
-      'title' => t('Edit role'),
-      'href' => 'admin/people/roles/edit/' . $rid,
-      'weight' => 0,
-    );
-    $links['permissions'] = array(
-      'title' => t('Edit permissions'),
-      'href' => 'admin/people/permissions/' . $rid,
-      'weight' => 5,
-    );
-    $form['roles'][$rid]['operations'] = array(
-      '#type' => 'operations',
-      '#links' => $links,
-    );
-  }
-
-  // Embed the role add form.
-  $add_role = entity_create('user_role', array(
-    'id' => NULL,
-    'label' => NULL,
-  ));
-  $add_form = user_admin_role(array(), $form_state, $add_role);
-  $add_form['actions']['submit']['#submit'] = array('user_admin_role_submit');
-  $add_form['role']['actions'] = $add_form['actions'];
-  unset($add_form['actions']);
-  $form += $add_form;
-
-  $form['actions']['#type'] = 'actions';
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save order'),
-    // Do not validate the add form when saving the order.
-    '#limit_validation_errors' => array(array('roles')),
-    '#submit' => array('user_admin_roles_order_submit'),
-  );
-
-  return $form;
+function user_admin_roles_list() {
+  return Drupal::entityManager()
+    ->getListController('user_role')->render();
 }
 
 /**
- * Form submit function. Update the role weights.
- */
-function user_admin_roles_order_submit($form, &$form_state) {
-  foreach ($form_state['values']['roles'] as $rid => $role_values) {
-    $role = $form['roles'][$rid]['#role'];
-    $role->weight = $role_values['weight'];
-    $role->save();
-  }
-  drupal_set_message(t('The role settings have been updated.'));
-}
-
-/**
- * Returns HTML for the role order and new role form.
+ * Page callback: Presents the role creation form.
  *
- * @param $variables
- *   An associative array containing:
- *   - form: A render element representing the form.
- *
- * @ingroup themeable
+ * @see user_menu()
  */
-function theme_user_admin_roles($variables) {
-  $form = $variables['form'];
-
-  $header = array(t('Name'), t('Weight'), t('Operations'));
-  foreach (element_children($form['roles']) as $rid) {
-    $row = array();
-    foreach (element_children($form['roles'][$rid]) as $column) {
-      $row[] = drupal_render($form['roles'][$rid][$column]);
-    }
-    $rows[] = array('data' => $row, 'class' => array('draggable'));
-  }
-
-  // Distribute the role add form into table columns.
-  $form['role']['name']['#title_display'] = 'invisible';
-  unset($form['role']['name']['#description']);
-  unset($form['role']['rid']['#description']);
-
-  $actions = $form['role']['actions'];
-  unset($form['role']['actions']);
-  unset($form['role']['weight']);
-  $row = array();
-  $row[] = drupal_render($form['role']);
-  // Empty placeholder for the weight column.
-  $row[] = '';
-  $row[] = array('data' => drupal_render($actions), 'colspan' => 2);
-  $rows[] = array('data' => $row);
-
-  drupal_add_tabledrag('user-roles', 'order', 'sibling', 'role-weight');
-
-  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'user-roles')));
-  $output .= drupal_render_children($form);
-
-  return $output;
-}
-
-/**
- * Form to configure a single role.
- *
- * @ingroup forms
- * @see user_admin_role_submit()
- *
- * @todo Move into a RoleFormController.
- */
-function user_admin_role($form, $form_state, $role) {
-  $form['role'] = array(
-    '#tree' => TRUE,
-    '#parents' => array('role'),
-  );
-  $form['role']['label'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Role name'),
-    '#default_value' => $role->label(),
-    '#size' => 30,
-    '#required' => TRUE,
-    '#maxlength' => 64,
-    '#description' => t('The name for this role. Example: "Moderator", "Editorial board", "Site architect".'),
-  );
-  $form['role']['id'] = array(
-    '#type' => 'machine_name',
-    '#default_value' => $role->id(),
-    '#required' => TRUE,
-    '#disabled' => !$role->isNew(),
-    '#size' => 30,
-    '#maxlength' => 64,
-    '#machine_name' => array(
-      'exists' => 'user_role_load',
-      'source' => array('role', 'label'),
-    ),
-  );
-  // @todo Remove once moved to RoleFormController.
-  $form['role']['langcode'] = array(
-    '#type' => 'value',
-    '#value' => !$role->isNew() ? $role->langcode : language_default()->langcode,
-  );
-  $form['role']['weight'] = array(
-    '#type' => 'value',
-    '#value' => $role->weight,
-  );
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => !$role->isNew() ? t('Save role') : t('Add role'),
-  );
-  $form['actions']['delete'] = array(
-    '#type' => 'submit',
-    '#value' => t('Delete role'),
-    '#access' => !$role->isNew() && !in_array($role->id(), array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID)),
-    '#submit' => array('user_admin_role_delete_submit'),
-  );
-
-  return $form;
-}
-
-/**
- * Form submit handler for the user_admin_role() form.
- */
-function user_admin_role_submit($form, &$form_state) {
-  // Prevent leading and trailing spaces in role names.
-  $form_state['values']['role']['label'] = trim($form_state['values']['role']['label']);
-
-  $role = entity_create('user_role', $form_state['values']['role']);
-  if ($role->save() == SAVED_UPDATED) {
-    drupal_set_message(t('The role has been renamed.'));
-  }
-  else {
-    drupal_set_message(t('The role has been added.'));
-  }
-  $form_state['redirect'] = 'admin/people/roles';
-}
-
-/**
- * Form submit handler for the user_admin_role() form.
- */
-function user_admin_role_delete_submit($form, &$form_state) {
-  $form_state['redirect'] = 'admin/people/roles/delete/' . $form_state['values']['role']['id'];
+function user_admin_role_add() {
+  drupal_set_title(t('Add role'));
+  $role = entity_create('user_role', array());
+  return entity_get_form($role);
 }
 
 /**
  * Form to confirm role delete operation.
  */
 function user_admin_role_delete_confirm($form, &$form_state, $role) {
+  $form_state['user_role'] = $role;
   $form['id'] = array(
     '#type' => 'value',
     '#value' => $role->id(),
@@ -680,7 +498,11 @@ function user_admin_role_delete_confirm($form, &$form_state, $role) {
  * Form submit handler for user_admin_role_delete_confirm().
  */
 function user_admin_role_delete_confirm_submit($form, &$form_state) {
-  entity_delete_multiple('user_role', array($form_state['values']['id']));
-  drupal_set_message(t('The role has been deleted.'));
+  $role = $form_state['user_role'];
+  $role->delete();
+
+  drupal_set_message(t('Role %label has been deleted.', array('%label' => $role->label())));
+  watchdog('user', 'Role %label has been deleted.', array('%label' => $role->label()), WATCHDOG_NOTICE);
+
   $form_state['redirect'] = 'admin/people/roles';
 }

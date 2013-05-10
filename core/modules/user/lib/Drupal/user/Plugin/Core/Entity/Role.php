@@ -20,7 +20,11 @@ use Drupal\user\RoleInterface;
  *   label = @Translation("Role"),
  *   module = "user",
  *   controllers = {
- *     "storage" = "Drupal\user\RoleStorageController"
+ *     "storage" = "Drupal\user\RoleStorageController",
+ *     "list" = "Drupal\user\RoleListController",
+ *     "form" = {
+ *       "default" = "Drupal\user\RoleFormController"
+ *     }
  *   },
  *   config_prefix = "user.role",
  *   entity_keys = {
@@ -59,5 +63,18 @@ class Role extends ConfigEntityBase implements RoleInterface {
    * @var int
    */
   public $weight;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function uri() {
+    return array(
+      'path' => 'admin/people/roles/manage/' . $this->id(),
+      'options' => array(
+        'entity_type' => $this->entityType,
+        'entity' => $this,
+      ),
+    );
+  }
 
 }

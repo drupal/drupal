@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\user\RoleStorageController.
+ * Contains \Drupal\user\RoleStorageController.
  */
 
 namespace Drupal\user;
@@ -16,7 +16,7 @@ use Drupal\Core\Entity\EntityInterface;
 class RoleStorageController extends ConfigStorageController {
 
   /**
-   * Overrides ConfigStorageController::preSave().
+   * {@inheritdoc}
    */
   public function preSave(EntityInterface $entity) {
     if (!isset($entity->weight) && $roles = entity_load_multiple('user_role')) {
@@ -30,7 +30,7 @@ class RoleStorageController extends ConfigStorageController {
   }
 
   /**
-   * Overrides ConfigStorageController::resetCache().
+   * {@inheritdoc}
    */
   public function resetCache(array $ids = NULL) {
     parent::resetCache($ids);
@@ -41,7 +41,7 @@ class RoleStorageController extends ConfigStorageController {
   }
 
   /**
-   * Overrides ConfigStorageController::postDelete().
+   * {@inheritdoc}
    */
   protected function postDelete($entities) {
     $rids = array_keys($entities);
@@ -57,7 +57,7 @@ class RoleStorageController extends ConfigStorageController {
   }
 
   /**
-   * Overrides ConfigStorageController::attachLoad().
+   * {@inheritdoc}
    */
   protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
     // Sort the queried roles by their weight.

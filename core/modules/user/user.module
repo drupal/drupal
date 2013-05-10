@@ -100,10 +100,6 @@ function user_theme() {
       'render element' => 'form',
       'file' => 'user.admin.inc',
     ),
-    'user_admin_roles' => array(
-      'render element' => 'form',
-      'file' => 'user.admin.inc',
-    ),
     'user_permission_description' => array(
       'variables' => array('permission_item' => NULL, 'hide' => NULL),
       'file' => 'user.admin.inc',
@@ -963,23 +959,37 @@ function user_menu() {
   $items['admin/people/roles'] = array(
     'title' => 'Roles',
     'description' => 'List, edit, or add user roles.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('user_admin_roles'),
+    'page callback' => 'user_admin_roles_list',
     'access arguments' => array('administer permissions'),
     'file' => 'user.admin.inc',
     'type' => MENU_LOCAL_TASK,
   );
-  $items['admin/people/roles/edit/%user_role'] = array(
+  $items['admin/people/roles/add'] = array(
+    'title' => 'Add role',
+    'page callback' => 'user_admin_role_add',
+    'access arguments' => array('administer permissions'),
+    'type' => MENU_LOCAL_ACTION,
+    'file' => 'user.admin.inc',
+  );
+
+  $items['admin/people/roles/manage/%user_role'] = array(
     'title' => 'Edit role',
-    'page arguments' => array('user_admin_role', 4),
+    'page callback' => 'entity_get_form',
+    'page arguments' => array(4),
     'access arguments' => array('administer permissions'),
   );
-  $items['admin/people/roles/delete/%user_role'] = array(
+  $items['admin/people/roles/manage/%user_role/edit'] = array(
+    'title' => 'Edit',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/people/roles/manage/%user_role/delete'] = array(
     'title' => 'Delete role',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_admin_role_delete_confirm', 4),
     'access callback' => 'user_role_delete_access',
     'access arguments' => array(4),
+    'weight' => 10,
+    'context' => MENU_CONTEXT_INLINE,
     'file' => 'user.admin.inc',
   );
 
