@@ -34,7 +34,7 @@ class RSSCategoryFormatter extends TaxonomyFormatterBase {
     // Terms whose tid is 'autocreate' do not exist yet and $item['entity'] is
     // not set. Theme such terms as just their name.
     foreach ($items as $item) {
-      if ($item['tid'] != 'autocreate') {
+      if ($item['tid']) {
         $value = $item['entity']->label();
 
         $uri = $item['entity']->uri();
@@ -42,7 +42,7 @@ class RSSCategoryFormatter extends TaxonomyFormatterBase {
         $domain = url($uri['path'], $uri['options']);
       }
       else {
-        $value = $item['name'];
+        $value = $item['entity']->label();
         $domain = '';
       }
       $entity->rss_elements[] = array(

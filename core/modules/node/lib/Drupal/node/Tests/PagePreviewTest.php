@@ -68,7 +68,8 @@ class PagePreviewTest extends NodeTestBase {
             'parent' => '0',
           ),
         ),
-      )
+      ),
+      'cardinality' => '-1',
     );
 
     field_create_field($this->field);
@@ -77,7 +78,7 @@ class PagePreviewTest extends NodeTestBase {
       'entity_type' => 'node',
       'bundle' => 'page',
       'widget' => array(
-        'type' => 'options_select',
+        'type' => 'taxonomy_autocomplete',
       ),
       // Hide on full display but render on teaser.
       'display' => array(
@@ -90,6 +91,9 @@ class PagePreviewTest extends NodeTestBase {
       ),
     );
     field_create_instance($this->instance);
+    entity_get_display('node', 'page', 'default')
+      ->setComponent($this->field_name)
+      ->save();
   }
 
   /**
@@ -105,7 +109,7 @@ class PagePreviewTest extends NodeTestBase {
     $edit = array();
     $edit[$title_key] = $this->randomName(8);
     $edit[$body_key] = $this->randomName(16);
-    $edit[$term_key] = $this->term->id();
+    $edit[$term_key] = $this->term->label();
     $this->drupalPost('node/add/page', $edit, t('Preview'));
 
     // Check that the preview is displaying the title, body and term.
@@ -119,6 +123,49 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertFieldByName($title_key, $edit[$title_key], 'Title field displayed.');
     $this->assertFieldByName($body_key, $edit[$body_key], 'Body field displayed.');
     $this->assertFieldByName($term_key, $edit[$term_key], 'Term field displayed.');
+
+    // Save the node.
+    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $node = $this->drupalGetNodeByTitle($edit[$title_key]);
+
+    // Check the term was displayed on the saved node.
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertText($edit[$term_key], 'Term displayed.');
+
+    // Check the term appears again on the edit form.
+    $this->drupalGet('node/' . $node->nid . '/edit');
+    $this->assertFieldByName($term_key, $edit[$term_key], 'Term field displayed.');
+
+    // Check with two new terms on the edit form, additionally to the existing
+    // one.
+    $edit = array();
+    $newterm1 = $this->randomName(8);
+    $newterm2 = $this->randomName(8);
+    $edit[$term_key] = $this->term->label() . ', ' . $newterm1 . ', ' . $newterm2;
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Preview'));
+    $this->assertRaw('>' . $newterm1 . '<', 'First new term displayed.');
+    $this->assertRaw('>' . $newterm2 . '<', 'Second new term displayed.');
+    // The first term should be displayed as link, the others not.
+    $this->assertLink($this->term->label());
+    $this->assertNoLink($newterm1);
+    $this->assertNoLink($newterm2);
+
+    $this->drupalPost('node/add/page', $edit, t('Save'));
+
+    // Check with one more new term, keeping old terms, removing the existing
+    // one.
+    $edit = array();
+    $newterm3 = $this->randomName(8);
+    $edit[$term_key] = $newterm1 . ', ' . $newterm3 . ', ' . $newterm2;
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Preview'));
+    $this->assertRaw('>' . $newterm1 . '<', 'First existing term displayed.');
+    $this->assertRaw('>' . $newterm2 . '<', 'Second existing term displayed.');
+    $this->assertRaw('>' . $newterm3 . '<', 'Third new term displayed.');
+    $this->assertNoText($this->term->label());
+    $this->assertNoLink($newterm1);
+    $this->assertNoLink($newterm2);
+    $this->assertNoLink($newterm3);
+    $this->drupalPost('node/add/page', $edit, t('Save'));
   }
 
   /**

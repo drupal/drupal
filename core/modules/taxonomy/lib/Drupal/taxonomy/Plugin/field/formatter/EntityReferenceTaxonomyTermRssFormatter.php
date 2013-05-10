@@ -38,9 +38,9 @@ class EntityReferenceTaxonomyTermRssFormatter extends EntityReferenceFormatterBa
     foreach ($items as $delta => $item) {
       $entity->rss_elements[] = array(
         'key' => 'category',
-        'value' => $item['target_id'] != 'autocreate' ? $item['entity']->label() : $item['label'],
+        'value' => $item['entity']->label(),
         'attributes' => array(
-          'domain' => $item['target_id'] != 'autocreate' ? url('taxonomy/term/' . $item['target_id'], array('absolute' => TRUE)) : '',
+          'domain' => $item['target_id'] ? url('taxonomy/term/' . $item['target_id'], array('absolute' => TRUE)) : '',
         ),
       );
     }

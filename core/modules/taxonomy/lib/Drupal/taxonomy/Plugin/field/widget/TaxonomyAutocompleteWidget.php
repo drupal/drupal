@@ -86,7 +86,7 @@ class TaxonomyAutocompleteWidget extends WidgetBase {
     // Translate term names into actual terms.
     foreach($values as $value) {
       // See if the term exists in the chosen vocabulary and return the tid;
-      // otherwise, create a new 'autocreate' term for insert/update.
+      // otherwise, create a new term.
       if ($possibilities = entity_load_multiple_by_properties('taxonomy_term', array('name' => trim($value), 'vid' => array_keys($vocabularies)))) {
         $term = array_pop($possibilities);
         $item = array('tid' => $term->id());

@@ -33,12 +33,11 @@ class LinkFormatter extends TaxonomyFormatterBase {
   public function viewElements(EntityInterface $entity, $langcode, array $items) {
     $elements = array();
 
-    // Terms whose tid is 'autocreate' do not exist yet and $item['entity'] is
-    // not set. Theme such terms as just their name.
+    // Terms without tid do not exist yet, theme such terms as just their name.
     foreach ($items as $delta => $item) {
-      if ($item['tid'] == 'autocreate') {
+      if (!$item['tid']) {
         $elements[$delta] = array(
-          '#markup' => check_plain($item['name']),
+          '#markup' => check_plain($item['entity']->label()),
         );
       }
       else {

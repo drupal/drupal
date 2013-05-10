@@ -30,7 +30,7 @@ abstract class TaxonomyFormatterBase extends FormatterBase {
     foreach ($entities as $id => $entity) {
       foreach ($items[$id] as $delta => $item) {
         // Force the array key to prevent duplicates.
-        if ($item['tid'] != 'autocreate' && $item['tid'] !== FALSE) {
+        if ($item['tid'] !== FALSE) {
           $tids[$item['tid']] = $item['tid'];
         }
       }
@@ -51,7 +51,7 @@ abstract class TaxonomyFormatterBase extends FormatterBase {
             $items[$id][$delta]['entity'] = $terms[$item['tid']];
           }
           // Terms to be created are not in $terms, but are still legitimate.
-          elseif ($item['tid'] == 'autocreate') {
+          elseif ($item['tid'] === FALSE && isset($item['entity'])) {
             // Leave the item in place.
           }
           // Otherwise, unset the instance value, since the term does not exist.
