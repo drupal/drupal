@@ -32,10 +32,7 @@ class BlockTitleXSSTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->drupalPlaceBlock('test_xss_title', array(
-      'label' => '<script>alert("XSS label");</script>',
-      'machine_name' => 'test_xss_block',
-    ));
+    $this->drupalPlaceBlock('test_xss_title', array('label' => '<script>alert("XSS label");</script>'));
   }
 
   /**

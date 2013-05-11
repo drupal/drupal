@@ -1,7 +1,13 @@
 id: bartik.powered
-plugin: system_powered_by_block
+weight: '10'
 status: '1'
+langcode: en
+region: footer
+plugin: system_powered_by_block
 settings:
+  label: 'Powered by Drupal'
+  module: system
+  label_display: '0'
   cache: '-1'
 visibility:
   path:
@@ -14,9 +20,3 @@ visibility:
       article: '0'
       page: '0'
   visibility__active_tab: edit-visibility-path
-label: ''
-module: system
-region: footer
-weight: '10'
-langcode: en
-label_display: visible

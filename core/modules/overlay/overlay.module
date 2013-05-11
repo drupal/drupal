@@ -7,6 +7,8 @@
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Drupal\block\Plugin\Core\Entity\Block;
+use Drupal\user\Plugin\Core\Entity\User;
 
 /**
  * Implements hook_help().
@@ -453,7 +455,7 @@ function theme_overlay_disable_message($variables) {
 /**
  * Implements hook_block_access().
  */
-function overlay_block_access($block) {
+function overlay_block_access(Block $block, $operation, User $account, $langcode) {
   // If we are limiting rendering to a subset of page regions, hide all blocks
   // which appear in regions not on that list. Note that overlay_page_alter()
   // does a more comprehensive job of preventing unwanted regions from being

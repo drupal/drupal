@@ -454,7 +454,7 @@ function shortcut_renderable_links($shortcut_set = NULL) {
  * Implements hook_preprocess_HOOK() for block.tpl.php.
  */
 function shortcut_preprocess_block(&$variables) {
-  if ($variables['block']->module == 'shortcut') {
+  if ($variables['configuration']['module'] == 'shortcut') {
     $variables['attributes']['role'] = 'navigation';
   }
 }

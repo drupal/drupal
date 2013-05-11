@@ -24,9 +24,9 @@ use Drupal\Core\Annotation\Translation;
 class SystemMenuBlock extends BlockBase {
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockAccess().
+   * Overrides \Drupal\block\BlockBase::access().
    */
-  public function blockAccess() {
+  public function access() {
     // @todo The 'Tools' menu should be available to anonymous users.
     list($plugin, $derivative) = explode(':', $this->getPluginId());
     return ($GLOBALS['user']->uid || in_array($derivative, array('menu-main', 'menu-tools', 'menu-footer')));

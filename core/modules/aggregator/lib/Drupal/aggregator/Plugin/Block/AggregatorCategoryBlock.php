@@ -34,9 +34,9 @@ class AggregatorCategoryBlock extends BlockBase {
   }
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockAccess().
+   * Overrides \Drupal\block\BlockBase::access().
    */
-  public function blockAccess() {
+  public function access() {
     // Only grant access to users with the 'access news feeds' permission.
     return user_access('access news feeds');
   }

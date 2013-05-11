@@ -45,12 +45,9 @@ class BlockTemplateSuggestionsUnitTest extends WebTestBase {
 
     $variables = array();
     $variables['elements']['#block'] = $block;
-    $variables['elements']['#block_config'] = $block->getPlugin()->getConfig() + array(
-      'id' => $block->get('plugin'),
-      'region' => $block->get('region'),
-      'module' => $block->get('module'),
-    );
-    $variables['elements']['#children'] = '';
+    $variables['elements']['#configuration'] = $block->getPlugin()->getConfig();
+    $variables['elements']['#plugin_id'] = $block->get('plugin');
+    $variables['elements']['content'] = array();
     // Test adding a class to the block content.
     $variables['content_attributes']['class'][] = 'test-class';
     template_preprocess_block($variables);

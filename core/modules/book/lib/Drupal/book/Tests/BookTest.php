@@ -338,7 +338,7 @@ class BookTest extends WebTestBase {
    */
   function testNavigationBlockOnAccessModuleEnabled() {
     $this->drupalLogin($this->admin_user);
-    $block = $this->drupalPlaceBlock('book_navigation', array(), array('block_mode' => 'book pages'));
+    $block = $this->drupalPlaceBlock('book_navigation', array('block_mode' => 'book pages'));
 
     // Give anonymous users the permission 'node test view'.
     $edit = array();

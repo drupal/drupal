@@ -1,7 +1,13 @@
 id: bartik.search
-plugin: search_form_block
+weight: '-1'
 status: '1'
+langcode: en
+region: sidebar_first
+plugin: search_form_block
 settings:
+  label: Search
+  module: search
+  label_display: visible
   cache: '-1'
 visibility:
   path:
@@ -14,9 +20,3 @@ visibility:
       article: '0'
       page: '0'
   visibility__active_tab: edit-visibility-path
-label: 'Search'
-module: search
-region: sidebar_first
-weight: '-1'
-langcode: en
-label_display: visible

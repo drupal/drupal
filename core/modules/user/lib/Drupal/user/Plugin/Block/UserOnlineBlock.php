@@ -39,9 +39,9 @@ class UserOnlineBlock extends BlockBase {
   }
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockAccess().
+   * Overrides \Drupal\block\BlockBase::access().
    */
-  public function blockAccess() {
+  public function access() {
     return user_access('access content');
   }
 

@@ -24,9 +24,9 @@ use Drupal\Core\Annotation\Translation;
 class LanguageBlock extends BlockBase {
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockAccess().
+   * Overrides \Drupal\block\BlockBase::access().
    */
-  function blockAccess() {
+  function access() {
     return language_multilingual();
   }
 

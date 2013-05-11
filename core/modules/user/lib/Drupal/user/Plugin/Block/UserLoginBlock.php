@@ -23,9 +23,9 @@ use Drupal\Core\Annotation\Translation;
 class UserLoginBlock extends BlockBase {
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockAccess().
+   * Overrides \Drupal\block\BlockBase::access().
    */
-  public function blockAccess() {
+  public function access() {
     return (!$GLOBALS['user']->uid && !(arg(0) == 'user' && !is_numeric(arg(1))));
   }
 

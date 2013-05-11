@@ -560,7 +560,7 @@ function views_contextual_links_view_alter(&$element, $items) {
  * @param $display_id
  *   The ID of the display within $view whose contextual links will be added.
  *
- * @see views_block_view()
+ * @see \Drupal\views\Plugin\block\block\ViewsBlock::addContextualLinks()
  * @see views_page_alter()
  * @see template_preprocess_views_view()
  */

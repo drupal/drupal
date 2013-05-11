@@ -6,6 +6,7 @@
  */
 
 use Guzzle\Http\Exception\RequestException;
+use Drupal\block\BlockPluginInterface;
 
 /**
  * Implements hook_menu().
@@ -160,13 +161,13 @@ function openid_user_logout($account) {
 }
 
 /**
- * Implements hook_block_view_MODULE_DELTA_alter().
+ * Implements hook_block_view_BASE_BLOCK_ID_alter() for 'user_login_block'.
  *
  * Adds the OpenID login form to the user login block.
  *
  * @see \Drupal\user\Plugin\block\block\UserLoginBlock
  */
-function openid_block_view_user_login_block_alter(&$build, $block) {
+function openid_block_view_user_login_block_alter(array &$build, BlockPluginInterface $block) {
   // Only alter the block when it is non-empty, i.e. when no user is logged in.
   if (!isset($build['content']['user_login_form'])) {
     return;

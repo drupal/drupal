@@ -342,8 +342,8 @@ abstract class WebTestBase extends TestBase {
    *
    * @param string $plugin_id
    *   The plugin ID of the block type for this block instance.
-   * @param array $values
-   *   (optional) An associative array of values for the block entity.
+   * @param array $settings
+   *   (optional) An associative array of settings for the block entity.
    *   Override the defaults by specifying the key and value in the array, for
    *   example:
    *   @code
@@ -356,8 +356,7 @@ abstract class WebTestBase extends TestBase {
    *   - machine_name: Random string.
    *   - region: 'sidebar_first'.
    *   - theme: The default theme.
-   * @param array $settings
-   *   (optional) An associative array of plugin-specific settings.
+   *   - visibility: Empty array.
    *
    * @return \Drupal\block\Plugin\Core\Entity\Block
    *   The block entity.
@@ -365,15 +364,20 @@ abstract class WebTestBase extends TestBase {
    * @todo
    *   Add support for creating custom block instances.
    */
-  protected function drupalPlaceBlock($plugin_id, array $values = array(), array $settings = array()) {
-    $values += array(
+  protected function drupalPlaceBlock($plugin_id, array $settings = array()) {
+    $settings += array(
       'plugin' => $plugin_id,
-      'label' => $this->randomName(8),
       'region' => 'sidebar_first',
-      'theme' => config('system.theme')->get('default'),
       'machine_name' => strtolower($this->randomName(8)),
-      'settings' => $settings,
+      'theme' => config('system.theme')->get('default'),
+      'label' => $this->randomName(8),
+      'visibility' => array(),
     );
+    foreach (array('region', 'machine_name', 'theme', 'plugin', 'visibility') as $key) {
+      $values[$key] = $settings[$key];
+      unset($settings[$key]);
+    }
+    $values['settings'] = $settings;
     // Build the ID out of the theme and machine_name.
     $values['id'] = $values['theme'] . '.' . $values['machine_name'];
     $block = entity_create('block', $values);

@@ -55,9 +55,9 @@ class StatisticsPopularBlock extends BlockBase {
   }
 
     /**
-   * Overrides \Drupal\block\BlockBase::blockAccess().
+   * Overrides \Drupal\block\BlockBase::access().
    */
-  public function blockAccess() {
+  public function access() {
     if (user_access('access content')) {
       $daytop = $this->configuration['top_day_num'];
       if (!$daytop || !($result = statistics_title_list('daycount', $daytop)) || !($this->day_list = node_title_list($result, t("Today's:")))) {

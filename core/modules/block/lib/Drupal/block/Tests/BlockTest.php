@@ -34,7 +34,7 @@ class BlockTest extends BlockTestBase {
     $edit = array(
       'machine_name' => strtolower($this->randomName(8)),
       'region' => 'sidebar_first',
-      'label' => $title,
+      'settings[label]' => $title,
     );
     // Set the block to be hidden on any user path, and to be shown only to
     // authenticated users.
@@ -75,7 +75,7 @@ class BlockTest extends BlockTestBase {
     $edit = array(
       'machine_name' => strtolower($this->randomName(8)),
       'region' => 'sidebar_first',
-      'label' => $title,
+      'settings[label]' => $title,
       'visibility[path][visibility]' => BLOCK_VISIBILITY_LISTED,
     );
     // Set the block to be hidden on any user path, and to be shown only to
@@ -102,18 +102,18 @@ class BlockTest extends BlockTestBase {
     // Select the 'Powered by Drupal' block to be configured and moved.
     $block = array();
     $block['id'] = 'system_powered_by_block';
-    $block['label'] = $this->randomName(8);
+    $block['settings[label]'] = $this->randomName(8);
     $block['machine_name'] = strtolower($this->randomName(8));
     $block['theme'] = config('system.theme')->get('default');
     $block['region'] = 'header';
 
     // Set block title to confirm that interface works and override any custom titles.
-    $this->drupalPost('admin/structure/block/add/' . $block['id'] . '/' . $block['theme'], array('label' => $block['label'], 'machine_name' => $block['machine_name'], 'region' => $block['region']), t('Save block'));
+    $this->drupalPost('admin/structure/block/add/' . $block['id'] . '/' . $block['theme'], array('settings[label]' => $block['settings[label]'], 'machine_name' => $block['machine_name'], 'region' => $block['region']), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), 'Block title set.');
     // Check to see if the block was created by checking its configuration.
     $instance = entity_load('block', $block['theme'] . '.' . $block['machine_name']);
 
-    $this->assertEqual($instance->label(), $block['label'], 'Stored block title found.');
+    $this->assertEqual($instance->label(), $block['settings[label]'], 'Stored block title found.');
 
     // Check whether the block can be moved to all available regions.
     foreach ($this->regions as $region) {
@@ -130,7 +130,7 @@ class BlockTest extends BlockTestBase {
 
     // Confirm that the block instance title and markup are not displayed.
     $this->drupalGet('node');
-    $this->assertNoText(t($block['label']));
+    $this->assertNoText(t($block['settings[label]']));
     // Check for <div id="block-my-block-instance-name"> if the machine name
     // is my_block_instance_name.
     $xpath = $this->buildXPathQuery('//div[@id=:id]/*', array(':id' => 'block-' . strtr(strtolower($block['machine_name']), '-', '_')));
@@ -150,7 +150,7 @@ class BlockTest extends BlockTestBase {
     $edit = array(
       'machine_name' => $machine_name,
       'region' => 'sidebar_first',
-      'label' => $title,
+      'settings[label]' => $title,
     );
     $this->drupalPost('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, t('Save block'));
     $this->assertText('The block configuration has been saved.', 'Block was saved');
@@ -159,7 +159,7 @@ class BlockTest extends BlockTestBase {
     $this->assertText($title, 'Block title was displayed by default.');
 
     $edit = array(
-      'label_display' => FALSE,
+      'settings[label_display]' => FALSE,
     );
     $this->drupalPost('admin/structure/block/manage/' . $default_theme . '.' . $machine_name . '/configure', $edit, t('Save block'));
     $this->assertText('The block configuration has been saved.', 'Block was saved');
@@ -192,7 +192,7 @@ class BlockTest extends BlockTestBase {
 
     // Confirm that the block is being displayed.
     $this->drupalGet('');
-    $this->assertText(t($block['label']), 'Block successfully being displayed on the page.');
+    $this->assertText(t($block['settings[label]']), 'Block successfully being displayed on the page.');
 
     // Confirm that the custom block was found at the proper region.
     $xpath = $this->buildXPathQuery('//div[@class=:region-class]//div[@id=:block-id]/*', array(
@@ -225,8 +225,7 @@ class BlockTest extends BlockTestBase {
     $this->assertEqual($settings['cache'], DRUPAL_CACHE_PER_ROLE, 'Test block cache mode defaults to DRUPAL_CACHE_PER_ROLE.');
 
     // Disable caching for this block.
-    $settings['cache'] = DRUPAL_NO_CACHE;
-    $block->set('settings', $settings);
+    $block->getPlugin()->setConfig('cache', DRUPAL_NO_CACHE);
     $block->save();
     // Flushing all caches should call _block_rehash().
     $this->resetAll();
@@ -290,13 +289,13 @@ class BlockTest extends BlockTestBase {
     // Emulate a POST submission rather than using drupalPlaceBlock() to ensure
     // that the form still functions as expected.
     $edit = array(
-      'label' => $this->randomName(8),
+      'settings[label]' => $this->randomName(8),
       'machine_name' => strtolower($this->randomName(8)),
       'region' => 'sidebar_first',
     );
     $this->drupalPost('admin/structure/block/add/system_powered_by_block/stark', $edit, t('Save block'));
     $this->assertText(t('The block configuration has been saved.'));
-    $this->assertText($edit['label']);
+    $this->assertText($edit['settings[label]']);
 
     // Update the weight of a block.
     $edit = array('blocks[stark.' . $edit['machine_name'] . '][weight]' => -1);

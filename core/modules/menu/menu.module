@@ -12,9 +12,8 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\block\Plugin\Core\Entity\Block;
+use Drupal\block\BlockPluginInterface;
 use Drupal\system\Plugin\Core\Entity\Menu;
-use Drupal\system\Plugin\Block\SystemMenuBlock;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
 use Drupal\menu_link\MenuLinkStorageController;
@@ -399,13 +398,13 @@ function _menu_parents_recurse($tree, $menu_name, $indent, &$options, $exclude, 
 }
 
 /**
- * Implements hook_block_view_alter().
+ * Implements hook_block_view_BASE_BLOCK_ID_alter() for 'system_menu_block'.
  */
-function menu_block_view_alter(array &$build, Block $block) {
+function menu_block_view_system_menu_block_alter(array &$build, BlockPluginInterface $block) {
   // Add contextual links for system menu blocks.
-  if ($block->getPlugin() instanceof SystemMenuBlock) {
+  if (isset($build['content'])) {
     foreach (element_children($build['content']) as $key) {
-      $build['#contextual_links']['menu'] = array('admin/structure/menu/manage', array($build['content'][$key]['#original_link']['menu_name']));
+      $build['content']['#contextual_links']['menu'] = array('admin/structure/menu/manage', array($build['content'][$key]['#original_link']['menu_name']));
     }
   }
 }
@@ -717,7 +716,7 @@ function menu_get_menus($all = TRUE) {
  * Implements hook_preprocess_HOOK() for block.tpl.php.
  */
 function menu_preprocess_block(&$variables) {
-  if ($variables['block']->module == 'menu') {
+  if ($variables['configuration']['module'] == 'menu') {
     $variables['attributes']['role'] = 'navigation';
   }
 }

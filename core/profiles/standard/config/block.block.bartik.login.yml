@@ -1,7 +1,13 @@
 id: bartik.login
-whois_new_count: '5'
+weight: '0'
 status: '1'
+langcode: en
+region: sidebar_first
+plugin: user_login_block
 settings:
+  label: 'User login'
+  module: user
+  label_display: visible
   cache: '-1'
 visibility:
   path:
@@ -14,10 +20,3 @@ visibility:
       article: '0'
       page: '0'
   visibility__active_tab: edit-visibility-path
-label: 'User login'
-module: user
-region: sidebar_first
-weight: '0'
-plugin: user_login_block
-langcode: en
-label_display: visible

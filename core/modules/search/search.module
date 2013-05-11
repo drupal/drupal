@@ -135,10 +135,10 @@ function search_permission() {
 }
 
 /**
- * Implements hook_preprocess_block().
+ * Implements hook_preprocess_HOOK() for block.tpl.php.
  */
 function search_preprocess_block(&$variables) {
-  if ($variables['block']->id == 'search_form_block') {
+  if ($variables['plugin_id'] == 'search_form_block') {
     $variables['attributes']['role'] = 'search';
     $variables['content_attributes']['class'][] = 'container-inline';
   }

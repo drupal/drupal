@@ -1,11 +1,20 @@
 id: stark.test_block
-label: ''
-region: '-1'
 weight: ''
-module: block_test
 status: '1'
-visibility: {  }
+langcode: en
+region: '-1'
 plugin: test_html_id
 settings:
+  label: 'Test block html id"'
+  module: block_test
+  label_display: '0'
   cache: '1'
-  admin_label: 'Test block html id'
+visibility:
+  path:
+    visibility: '0'
+    pages: ''
+  role:
+    roles: {  }
+  node_type:
+    types: {  }
+  visibility__active_tab: edit-visibility-path

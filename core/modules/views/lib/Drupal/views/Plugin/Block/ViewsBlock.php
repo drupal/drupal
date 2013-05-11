@@ -8,7 +8,6 @@
 namespace Drupal\views\Plugin\Block;
 
 use Drupal\block\BlockBase;
-use Drupal\block\Plugin\Core\Entity\Block;
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
@@ -41,8 +40,8 @@ class ViewsBlock extends BlockBase {
   /**
    * Overrides \Drupal\Component\Plugin\PluginBase::__construct().
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, Block $entity) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity);
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     list($plugin, $delta) = explode(':', $this->getPluginId());
     list($name, $this->displayID) = explode('-', $delta, 2);
@@ -52,9 +51,9 @@ class ViewsBlock extends BlockBase {
   }
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockAccess().
+   * Overrides \Drupal\block\BlockBase::access().
    */
-  public function blockAccess() {
+  public function access() {
     return $this->view->access($this->displayID);
   }
 
@@ -76,7 +75,7 @@ class ViewsBlock extends BlockBase {
   protected function blockBuild() {
     $output = $this->view->executeDisplay($this->displayID);
     // Set the label to the title configured in the view.
-    $this->entity->set('label', filter_xss_admin($this->view->getTitle()));
+    $this->configuration['label'] = filter_xss_admin($this->view->getTitle());
     // Before returning the block output, convert it to a renderable array
     // with contextual links.
     $this->addContextualLinks($output);

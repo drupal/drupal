@@ -206,6 +206,12 @@ class BlockListController extends ConfigEntityListController implements FormInte
     foreach ($entities as $entity_id => $entity) {
       $entity->set('weight', $form_state['values']['blocks'][$entity_id]['weight']);
       $entity->set('region', $form_state['values']['blocks'][$entity_id]['region']);
+      if ($entity->get('region') == BLOCK_REGION_NONE) {
+        $entity->disable();
+      }
+      else {
+        $entity->enable();
+      }
       $entity->save();
     }
     drupal_set_message(t('The block settings have been updated.'));

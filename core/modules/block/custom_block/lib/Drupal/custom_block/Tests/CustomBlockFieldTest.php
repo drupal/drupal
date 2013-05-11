@@ -101,7 +101,7 @@ class CustomBlockFieldTest extends CustomBlockTestBase {
     // Place the block.
     $instance = array(
       'machine_name' => drupal_strtolower($edit['info']),
-      'label' => $edit['info'],
+      'settings[label]' => $edit['info'],
       'region' => 'sidebar_first',
     );
     $this->drupalPost(NULL, $instance, t('Save block'));

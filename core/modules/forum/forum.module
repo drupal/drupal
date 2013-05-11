@@ -649,7 +649,8 @@ function forum_form_node_form_alter(&$form, &$form_state, $form_id) {
  *
  * This function can be used as a #pre_render callback.
  *
- * @see forum_block_view()
+ * @see \Drupal\forum\Plugin\block\block\NewTopicsBlock::blockBuild()
+ * @see \Drupal\forum\Plugin\block\block\ActiveTopicsBlock::blockBuild()
  */
 function forum_block_view_pre_render($elements) {
   $result = $elements['#query']->execute();
@@ -972,7 +973,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
  * Implements hook_preprocess_HOOK() for block.tpl.php.
  */
 function forum_preprocess_block(&$variables) {
-  if ($variables['block']->module == 'forum') {
+  if ($variables['configuration']['module'] == 'forum') {
     $variables['attributes']['role'] = 'navigation';
   }
 }

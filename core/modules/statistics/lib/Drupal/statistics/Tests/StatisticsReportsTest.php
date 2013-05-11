@@ -41,7 +41,8 @@ class StatisticsReportsTest extends StatisticsTestBase {
     $client->post($stats_path, $headers, $post)->send();
 
     // Configure and save the block.
-    $this->drupalPlaceBlock('statistics_popular_block', array('label' => 'Popular content'), array(
+    $this->drupalPlaceBlock('statistics_popular_block', array(
+      'label' => 'Popular content',
       'top_day_num' => 3,
       'top_all_num' => 3,
       'top_last_num' => 3,

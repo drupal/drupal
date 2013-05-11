@@ -16,7 +16,7 @@ class MenuTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('menu', 'block', 'test_page_test');
+  public static $modules = array('menu', 'block', 'test_page_test', 'contextual');
 
   protected $big_user;
   protected $std_user;
@@ -300,6 +300,17 @@ class MenuTest extends WebTestBase {
     $default_theme = variable_get('theme_default', 'stark');
     $this->drupalget('admin/structure/block/list/block_plugin_ui:' . $default_theme . '/add');
     $this->assertText($edit['label']);
+  }
+
+  /**
+   * Tests the contextual links on a menu block.
+   */
+  public function testBlockContextualLinks() {
+    $this->drupalLogin($this->drupalCreateUser(array('administer menu', 'access contextual links')));
+    $this->addMenuLink();
+    $this->drupalPlaceBlock('system_menu_block:menu-tools', array('label' => 'Tools', 'module' => 'system'));
+    $this->drupalGet('test-page');
+    $this->assertLinkByHref("admin/structure/menu/manage/tools/edit");
   }
 
   /**

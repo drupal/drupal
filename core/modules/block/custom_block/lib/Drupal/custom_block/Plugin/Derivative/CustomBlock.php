@@ -43,9 +43,6 @@ class CustomBlock implements DerivativeInterface {
     $custom_blocks = entity_load_multiple('custom_block');
     foreach ($custom_blocks as $custom_block) {
       $this->derivatives[$custom_block->uuid->value] = $base_plugin_definition;
-      $this->derivatives[$custom_block->uuid->value]['settings'] = array(
-        'info' => $custom_block->info->value,
-      ) + $base_plugin_definition['settings'];
       $this->derivatives[$custom_block->uuid->value]['admin_label'] = $custom_block->info->value;
     }
     return $this->derivatives;

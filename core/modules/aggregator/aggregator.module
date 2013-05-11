@@ -547,7 +547,7 @@ function aggregator_filter_xss($value) {
  * Implements hook_preprocess_HOOK() for block.tpl.php.
  */
 function aggregator_preprocess_block(&$variables) {
-  if ($variables['block']->module == 'aggregator') {
+  if ($variables['configuration']['module'] == 'aggregator') {
     $variables['attributes']['role'] = 'complementary';
   }
 }

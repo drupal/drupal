@@ -69,6 +69,7 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
     // Attempt to create a block without a plugin.
     try {
       $entity = $this->controller->create(array());
+      $entity->getPlugin();
       $this->fail('A block without a plugin was created with no exception thrown.');
     }
     catch (PluginException $e) {
@@ -92,19 +93,18 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
     // Ensure that default values are filled in.
     $expected_properties = array(
       'id' => 'stark.test_block',
-      'label' => '',
-      'label_display' => BLOCK_LABEL_VISIBLE,
-      'region' => '-1',
       'weight' => '',
-      'module' => 'block_test',
       'status' => '1',
-      'visibility' => array(),
+      'langcode' => language_default()->langcode,
+      'region' => '-1',
       'plugin' => 'test_html_id',
       'settings' => array(
         'cache' => '1',
-        'admin_label' => t('Test block html id'),
+        'label' => '',
+        'module' => 'block_test',
+        'label_display' => BLOCK_LABEL_VISIBLE,
       ),
-      'langcode' => language_default()->langcode,
+      'visibility' => '',
     );
     $this->assertIdentical($actual_properties, $expected_properties, 'The block properties are exported correctly.');
 
@@ -124,7 +124,6 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
     $this->assertEqual($entity->get('region'), '-1');
     $this->assertTrue($entity->get('status'));
     $this->assertEqual($entity->get('theme'), 'stark');
-    $this->assertEqual($entity->get('module'), 'block_test');
     $this->assertTrue($entity->uuid());
   }
 
@@ -132,12 +131,8 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
    * Tests the rendering of blocks.
    */
   protected function renderTests() {
-    $entity = $this->controller->create(array(
-      'id' => 'stark.test_block',
-      'plugin' => 'test_html_id',
-    ));
-
     // Test the rendering of a block.
+    $entity = entity_load('block', 'stark.test_block');
     $output = entity_view($entity, 'block');
     $expected = array();
     $expected[] = '  <div id="block-test-block"  class="block block-block-test">';
@@ -154,10 +149,17 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
     drupal_static_reset('drupal_html_id');
 
     // Test the rendering of a block with a given title.
-    $entity->set('label', 'Powered by Bananas');
+    $entity = $this->controller->create(array(
+      'id' => 'stark.test_block2',
+      'plugin' => 'test_html_id',
+      'settings' => array(
+        'label' => 'Powered by Bananas',
+      ),
+    ));
+    $entity->save();
     $output = entity_view($entity, 'block');
     $expected = array();
-    $expected[] = '  <div id="block-test-block"  class="block block-block-test">';
+    $expected[] = '  <div id="block-test-block2"  class="block block-block-test">';
     $expected[] = '';
     $expected[] = '    <h2>Powered by Bananas</h2>';
     $expected[] = '  ';
@@ -167,6 +169,8 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
     $expected[] = '';
     $expected_output = implode("\n", $expected);
     $this->assertEqual(drupal_render($output), $expected_output, 'The block rendered correctly.');
+    // Clean up this entity.
+    $entity->delete();
   }
 
   /**

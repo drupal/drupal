@@ -18,26 +18,20 @@ use Drupal\Core\Annotation\Translation;
  *  id = "custom_block",
  *  admin_label = @Translation("Custom block"),
  *  module = "custom_block",
- *  derivative = "Drupal\custom_block\Plugin\Derivative\CustomBlock",
- *  settings = {
- *    "status" = TRUE,
- *    "info" = "",
- *    "view_mode" = "full"
- *   }
+ *  derivative = "Drupal\custom_block\Plugin\Derivative\CustomBlock"
  * )
  */
 class CustomBlockBlock extends BlockBase {
 
   /**
-   * Overrides \Drupal\block\BlockBase::getConfig().
+   * Overrides \Drupal\block\BlockBase::settings().
    */
-  public function getConfig() {
-    $definition = $this->getDefinition();
-    $this->configuration = parent::getConfig();
-    $this->configuration['status'] = $definition['settings']['status'];
-    $this->configuration['info'] = $definition['settings']['info'];
-    $this->configuration['view_mode'] = $definition['settings']['view_mode'];
-    return $this->configuration;
+  public function settings() {
+    return array(
+      'status' => TRUE,
+      'info' => '',
+      'view_mode' => 'full',
+    );
   }
 
   /**

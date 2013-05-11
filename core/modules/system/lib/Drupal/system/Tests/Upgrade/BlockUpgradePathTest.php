@@ -42,16 +42,16 @@ class BlockUpgradePathTest extends UpgradePathTestBase {
     // Add a block instance with a 255-character title.
     // Confirm that the custom block has been created, and title matches input.
     $settings = array(
-      'label' => $this->randomName(255),
+      'settings[label]' => $this->randomName(255),
       'machine_name' => strtolower($this->randomName(8)),
       'region' => 'sidebar_first',
     );
     $this->drupalPost('admin/structure/block/add/system_powered_by_block/' . config('system.theme')->get('default'), $settings, t('Save block'));
-    $this->assertText($settings['label'], 'Block with title longer than 64 characters successfully created.');
+    $this->assertText($settings['settings[label]'], 'Block with title longer than 64 characters successfully created.');
 
     // Try to add a block with a title over 255 characters.
     $settings = array(
-      'label' => $this->randomName(256),
+      'settings[label]' => $this->randomName(256),
       'machine_name' => strtolower($this->randomName(8)),
       'region' => 'sidebar_first',
     );

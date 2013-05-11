@@ -30,9 +30,9 @@ class SystemHelpBlock extends BlockBase {
   protected $help;
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockAccess().
+   * Overrides \Drupal\block\BlockBase::access().
    */
-  public function blockAccess() {
+  public function access() {
     $this->help = menu_get_active_help();
     return (bool) $this->help;
   }
