@@ -3733,8 +3733,8 @@ function form_validate_table($element, &$form_state) {
  * @param $element
  *   The form element to process. Properties used:
  *   - #machine_name: An associative array containing:
- *     - exists: A function name to invoke for checking whether a submitted
- *       machine name value already exists. The submitted value is passed as
+ *     - exists: A callable to invoke for checking whether a submitted machine
+ *       name value already exists. The submitted value is passed as an
  *       argument. In most cases, an existing API or menu argument loader
  *       function can be re-used. The callback is only invoked, if the submitted
  *       value differs from the element's #default_value.
@@ -3870,7 +3870,7 @@ function form_validate_machine_name(&$element, &$form_state) {
   // Verify that the machine name is unique.
   if ($element['#default_value'] !== $element['#value']) {
     $function = $element['#machine_name']['exists'];
-    if ($function($element['#value'], $element, $form_state)) {
+    if (call_user_func($function, $element['#value'], $element, $form_state)) {
       form_error($element, t('The machine-readable name is already in use. It must be unique.'));
     }
   }
