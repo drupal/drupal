@@ -254,15 +254,15 @@ class SimpletestResultsForm implements FormInterface, ControllerInterface {
       return;
     }
 
+    $form_execute = array();
     $form_state_execute = array('values' => array());
     foreach ($classes as $class) {
       $form_state_execute['values'][$class] = 1;
     }
 
-    // @todo When simpletest_test_form is converted, extend it and remove this.
-    \Drupal::moduleHandler()->loadInclude('simpletest', 'inc', 'simpletest.pages');
-
-    simpletest_test_form_submit(array(), $form_state_execute);
+    // Submit the simpletest test form to rerun the tests.
+    $simpletest_test_form = new SimpletestTestForm();
+    $simpletest_test_form->submitForm($form_execute, $form_state_execute);
     $form_state['redirect'] = $form_state_execute['redirect'];
   }
 
