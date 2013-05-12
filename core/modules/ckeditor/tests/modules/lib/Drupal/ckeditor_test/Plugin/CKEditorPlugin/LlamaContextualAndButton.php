@@ -11,7 +11,7 @@ use Drupal\ckeditor\CKEditorPluginButtonsInterface;
 use Drupal\ckeditor\CKEditorPluginContextualInterface;
 use Drupal\ckeditor\CKEditorPluginConfigurableInterface;
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\ckeditor\Annotation\CKEditorPlugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\editor\Plugin\Core\Entity\Editor;
 
@@ -19,7 +19,7 @@ use Drupal\editor\Plugin\Core\Entity\Editor;
  * Defines a "LlamaContextualAndbutton" plugin, with a contextually OR toolbar
  * builder-enabled "llama" feature.
  *
- * @Plugin(
+ * @CKEditorPlugin(
  *   id = "llama_contextual_and_button",
  *   label = @Translation("Contextual Llama With Button"),
  *   module = "ckeditor_test"

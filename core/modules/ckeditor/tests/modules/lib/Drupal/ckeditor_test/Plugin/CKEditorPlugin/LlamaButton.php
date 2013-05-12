@@ -9,13 +9,13 @@ namespace Drupal\ckeditor_test\Plugin\CKEditorPlugin;
 
 use Drupal\ckeditor\CKEditorPluginButtonsInterface;
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\ckeditor\Annotation\CKEditorPlugin;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines a "LlamaButton" plugin, with a toolbar builder-enabled "llama" feature.
  *
- * @Plugin(
+ * @CKEditorPlugin(
  *   id = "llama_button",
  *   label = @Translation("Llama Button"),
  *   module = "ckeditor_test"

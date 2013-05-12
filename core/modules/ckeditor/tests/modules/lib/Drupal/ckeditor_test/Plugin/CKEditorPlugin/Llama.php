@@ -9,7 +9,7 @@ namespace Drupal\ckeditor_test\Plugin\CKEditorPlugin;
 
 use Drupal\ckeditor\CKEditorPluginInterface;
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\ckeditor\Annotation\CKEditorPlugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\editor\Plugin\Core\Entity\Editor;
 
@@ -25,7 +25,7 @@ use Drupal\editor\Plugin\Core\Entity\Editor;
  * @see MetaButton
  * @see MetaContextualAndButton
  *
- * @Plugin(
+ * @CKEditorPlugin(
  *   id = "llama",
  *   label = @Translation("Llama"),
  *   module = "ckeditor_test"

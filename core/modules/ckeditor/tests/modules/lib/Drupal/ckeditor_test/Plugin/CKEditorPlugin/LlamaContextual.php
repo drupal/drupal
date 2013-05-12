@@ -9,14 +9,14 @@ namespace Drupal\ckeditor_test\Plugin\CKEditorPlugin;
 
 use Drupal\ckeditor\CKEditorPluginContextualInterface;
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\ckeditor\Annotation\CKEditorPlugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\editor\Plugin\Core\Entity\Editor;
 
 /**
  * Defines a "Llama" plugin, with a contextually enabled "llama" feature.
  *
- * @Plugin(
+ * @CKEditorPlugin(
  *   id = "llama_contextual",
  *   label = @Translation("Contextual Llama"),
  *   module = "ckeditor_test"

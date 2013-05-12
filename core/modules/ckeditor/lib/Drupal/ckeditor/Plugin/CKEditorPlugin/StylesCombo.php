@@ -10,14 +10,14 @@ namespace Drupal\ckeditor\Plugin\CKEditorPlugin;
 use Drupal\ckeditor\CKEditorPluginBase;
 use Drupal\ckeditor\CKEditorPluginConfigurableInterface;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\ckeditor\Annotation\CKEditorPlugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\editor\Plugin\Core\Entity\Editor;
 
 /**
  * Defines the "stylescombo" plugin.
  *
- * @Plugin(
+ * @CKEditorPlugin(
  *   id = "stylescombo",
  *   label = @Translation("Styles dropdown"),
  *   module = "ckeditor"
