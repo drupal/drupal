@@ -92,7 +92,7 @@ function hook_options_list($field, $instance, $entity) {
  */
 function hook_options_list_alter(array &$options, array $context) {
   // Check if this is the field we want to change.
-  if ($context['field']->id == 'field_option') {
+  if ($context['field']->id() == 'field_option') {
     // Change the label of the empty option.
     $options['_none'] = t('== Empty ==');
   }
