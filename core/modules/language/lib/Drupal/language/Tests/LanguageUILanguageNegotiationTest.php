@@ -343,7 +343,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
         'message' => 'URL (DOMAIN) > DEFAULT: default domain should get default language',
       ),
       // Language domain specific URL, we set the $_SERVER['HTTP_HOST'] in
-      // language_test.module hook_boot() to simulate this.
+      // \Drupal\language_test\LanguageTestManager to simulate this.
       array(
         'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_SELECTED),
         'language_negotiation_url_part' => LANGUAGE_NEGOTIATION_URL_DOMAIN,

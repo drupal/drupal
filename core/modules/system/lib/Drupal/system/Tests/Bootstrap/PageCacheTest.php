@@ -124,6 +124,15 @@ class PageCacheTest extends WebTestBase {
     $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', 'Expires header was sent.');
     $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
 
+    // Check the omit_vary_cookie setting.
+    $this->drupalLogout();
+    $settings['settings']['omit_vary_cookie'] = (object) array(
+      'value' => TRUE,
+      'required' => TRUE,
+    );
+    $this->writeSettings($settings);
+    $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Foo', 'value' => 'bar')));
+    $this->assertTrue(strpos($this->drupalGetHeader('Vary'), 'Cookie') === FALSE, 'Vary: Cookie header was not sent.');
   }
 
   /**

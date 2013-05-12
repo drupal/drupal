@@ -1369,9 +1369,8 @@ function drupal_serve_page_from_cache(stdClass $cache) {
   // cookie. The Vary header is used to indicates the set of request-header
   // fields that fully determines whether a cache is permitted to use the
   // response to reply to a subsequent request for a given URL without
-  // revalidation. If a Vary header has been set in hook_boot(), it is assumed
-  // that the module knows how to cache the page.
-  if (!isset($boot_headers['vary']) && !settings()->get('cache.page.omit_vary_cookie')) {
+  // revalidation.
+  if (!isset($boot_headers['vary']) && !settings()->get('omit_vary_cookie')) {
     header('Vary: Cookie');
   }
 
