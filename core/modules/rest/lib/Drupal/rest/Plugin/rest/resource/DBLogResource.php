@@ -48,9 +48,9 @@ class DBLogResource extends ResourceBase {
   public function get($id = NULL) {
     if ($id) {
       $record = db_query("SELECT * FROM {watchdog} WHERE wid = :wid", array(':wid' => $id))
-        ->fetchObject();
+        ->fetchAssoc();
       if (!empty($record)) {
-        return new ResourceResponse((array) $record);
+        return new ResourceResponse($record);
       }
     }
     throw new NotFoundHttpException(t('Log entry with ID @id was not found', array('@id' => $id)));
