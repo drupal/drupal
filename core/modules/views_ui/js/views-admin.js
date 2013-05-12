@@ -1098,6 +1098,30 @@ Drupal.viewsUi.resizeModal = function (e, no_shrink) {
 
 };
 
+Drupal.behaviors.viewsUiHandlerRemoveLink = {};
+Drupal.behaviors.viewsUiHandlerRemoveLink.attach = function(context) {
+  var $ = jQuery;
+
+  // Handle handler deletion by looking for the hidden checkbox and hiding the
+  // row.
+  $('a.views-remove-link', context).once('views-processed').click(function(event) {
+    var id = $(this).attr('id').replace('views-remove-link-', '');
+    $('#views-row-' + id, context).hide();
+    $('#views-removed-' + id, context).attr('checked', true);
+    event.preventDefault();
+  });
+
+  // Handle display deletion by looking for the hidden checkbox and hiding the
+  // row.
+  $('a.display-remove-link', context).once('display').click(function(event) {
+    var id = $(this).attr('id').replace('display-remove-link-', '');
+    $('#display-row-' + id, context).hide();
+    $('#display-removed-' + id, context).attr('checked', true);
+    event.preventDefault();
+  });
+
+};
+
 jQuery(function() {
 
   "use strict"
