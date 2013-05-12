@@ -59,7 +59,7 @@ class ViewSubscriber implements EventSubscriberInterface {
         $event->setResponse($this->$method($event));
       }
       else {
-        $event->setResponse(new Response('Unsupported Media Type', 415));
+        $event->setResponse(new Response('Not Acceptable', 406));
       }
     }
     elseif ($request->attributes->get('_legacy')) {

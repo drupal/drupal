@@ -60,7 +60,7 @@ class ReadTest extends RESTTestBase {
 
       // Try to read the entity with an unsupported mime format.
       $response = $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'GET', NULL, 'application/wrongformat');
-      $this->assertResponse(415);
+      $this->assertResponse(406);
 
       // Try to read an entity that does not exist.
       $response = $this->httpRequest('entity/' . $entity_type . '/9999', 'GET', NULL, $this->defaultMimeType);

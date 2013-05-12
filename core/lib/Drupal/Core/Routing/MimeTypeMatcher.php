@@ -8,7 +8,7 @@
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
+use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Cmf\Component\Routing\NestedMatcher\RouteFilterInterface;
 
@@ -41,7 +41,7 @@ class MimeTypeMatcher implements RouteFilterInterface {
     }
 
     if (!count($filtered_collection)) {
-      throw new UnsupportedMediaTypeHttpException();
+      throw new NotAcceptableHttpException();
     }
 
     return $filtered_collection;
