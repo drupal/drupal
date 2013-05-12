@@ -835,6 +835,8 @@ function field_view_field(EntityInterface $entity, $field_name, $display_options
   if ($formatter) {
     $display_langcode = field_language($entity, $field_name, $langcode);
     $items = array();
+    // Ensure the BC entity is used.
+    $entity = $entity->getBCEntity();
     if (isset($entity->{$field_name}[$display_langcode])) {
       $items = $entity->{$field_name}[$display_langcode];
     }

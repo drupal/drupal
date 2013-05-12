@@ -16,7 +16,7 @@ use Drupal\Core\Entity\EntityInterface;
  * Plugin implementation of the 'list_default' formatter.
  *
  * @Plugin(
- *   id = "options_list_default",
+ *   id = "list_default",
  *   module = "options",
  *   label = @Translation("Default"),
  *   field_types = {

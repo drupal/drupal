@@ -321,7 +321,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save and keep published'));
 
     // Check the node page and see if the values are correct.
-    $file_formatters = array('options_list_default', 'options_list_key');
+    $file_formatters = array('list_default', 'list_key');
     foreach ($file_formatters as $formatter) {
       $edit = array(
         "fields[$this->field_name][type]" => $formatter,
@@ -329,7 +329,7 @@ class OptionsFieldUITest extends FieldTestBase {
       $this->drupalPost('admin/structure/types/manage/' . $this->type_name . '/display', $edit, t('Save'));
       $this->drupalGet('node/' . $node->nid);
 
-      if ($formatter == 'options_list_default') {
+      if ($formatter == 'list_default') {
         $output = $on;
       }
       else {
