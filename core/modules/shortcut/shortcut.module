@@ -528,7 +528,7 @@ function shortcut_toolbar() {
     $configure_link = array(
       '#type' => 'link',
       '#title' => t('Edit shortcuts'),
-      '#href' => 'admin/config/user-interface/shortcut/' . $shortcut_set->id(),
+      '#href' => 'admin/config/user-interface/shortcut/manage/' . $shortcut_set->id(),
       '#options' => array('attributes' => array('class' => array('edit-shortcuts'))),
     );
   }
