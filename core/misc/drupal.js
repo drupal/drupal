@@ -369,7 +369,4 @@ Drupal.theme.placeholder = function (str) {
   return '<em class="placeholder">' + Drupal.checkPlain(str) + '</em>';
 };
 
-Drupal.AjaxError.prototype = new Error();
-Drupal.AjaxError.prototype.constructor = Drupal.AjaxError;
-
 })(domready, Drupal, window.drupalSettings);
