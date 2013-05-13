@@ -1601,7 +1601,7 @@ function template_preprocess_comment(&$variables) {
   if ($comment->pid->target_id) {
     // Fetch and store the parent comment information for use in templates.
     $comment_parent = $comment->pid->entity;
-    $account_parent = comment_prepare_author($comment);
+    $account_parent = comment_prepare_author($comment_parent);
     $variables['parent_comment'] = $comment_parent;
     $variables['parent_author'] = theme('username', array('account' => $account_parent));
     $variables['parent_created'] = format_date($comment_parent->created->value);
