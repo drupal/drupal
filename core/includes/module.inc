@@ -523,10 +523,10 @@ function module_disable($module_list, $disable_dependents = TRUE) {
 /**
  * Uninstalls a given list of disabled modules.
  *
- * Modules that are still enabled will be silently ignored.
- *
  * @param array $module_list
- *   The modules to uninstall.
+ *   The modules to uninstall. It is the caller's responsibility to ensure that
+ *   all modules in this list have already been disabled before this function
+ *   is called.
  * @param bool $uninstall_dependents
  *   (optional) If TRUE, the function will check that all modules which depend
  *   on the passed-in module list either are already uninstalled or contained in
