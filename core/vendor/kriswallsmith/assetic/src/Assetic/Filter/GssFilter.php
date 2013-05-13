@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2012 OpenSky Project Inc
+ * (c) 2010-2013 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,7 +13,6 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
-use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Filter for the Google Closure Stylesheets Compiler JAR.
@@ -21,7 +20,7 @@ use Symfony\Component\Process\ProcessBuilder;
  * @link http://code.google.com/p/closure-stylesheets/
  * @author Matthias Krauser <matthias@krauser.eu>
  */
-class GssFilter implements FilterInterface
+class GssFilter extends BaseProcessFilter
 {
     private $jarPath;
     private $javaPath;
@@ -84,7 +83,7 @@ class GssFilter implements FilterInterface
     {
         $cleanup = array();
 
-        $pb = new ProcessBuilder(array(
+        $pb = $this->createProcessBuilder(array(
             $this->javaPath,
             '-jar',
             $this->jarPath,
@@ -129,7 +128,7 @@ class GssFilter implements FilterInterface
         $code = $proc->run();
         array_map('unlink', $cleanup);
 
-        if (0 < $code) {
+        if (0 !== $code) {
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }
 

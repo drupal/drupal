@@ -1,4 +1,4 @@
-# Assetic ![project status](http://stillmaintained.com/kriswallsmith/assetic.png) #
+# Assetic [![Build Status](https://travis-ci.org/kriswallsmith/assetic.png?branch=master)](https://travis-ci.org/kriswallsmith/assetic) ![project status](http://stillmaintained.com/kriswallsmith/assetic.png) #
 
 Assetic is an asset management framework for PHP.
 
@@ -73,24 +73,36 @@ foreach ($css as $leaf) {
 The core provides the following filters in the `Assetic\Filter` namespace:
 
  * `CoffeeScriptFilter`: compiles CoffeeScript into Javascript
+ * `CompassFilter`: Compass CSS authoring framework
  * `CssEmbedFilter`: embeds image data in your stylesheets
  * `CssImportFilter`: inlines imported stylesheets
  * `CssMinFilter`: minifies CSS
  * `CssRewriteFilter`: fixes relative URLs in CSS assets when moving to a new URL
+ * `DartFilter`: compiles Javascript using dart2js
  * `GoogleClosure\CompilerApiFilter`: compiles Javascript using the Google Closure Compiler API
  * `GoogleClosure\CompilerJarFilter`: compiles Javascript using the Google Closure Compiler JAR
+ * `GssFilter`: compliles CSS using the Google Closure Stylesheets Compiler
+ * `HandlebarsFilter`: compiles Handlebars templates into Javascript
  * `JpegoptimFilter`: optimize your JPEGs
  * `JpegtranFilter`: optimize your JPEGs
+ * `JSMinFilter`: minifies Javascript
+ * `JSMinPlusFilter`: minifies Javascript
  * `LessFilter`: parses LESS into CSS (using less.js with node.js)
  * `LessphpFilter`: parses LESS into CSS (using lessphp)
  * `OptiPngFilter`: optimize your PNGs
+ * `PackagerFilter`: parses Javascript for packager tags
  * `PackerFilter`: compresses Javascript using Dean Edwards's Packer
+ * `PhpCssEmbedFilter`: embeds image data in your stylesheet
  * `PngoutFilter`: optimize your PNGs
- * `CompassFilter`: Compass CSS authoring framework
  * `Sass\SassFilter`: parses SASS into CSS
  * `Sass\ScssFilter`: parses SCSS into CSS
+ * `ScssphpFilter`: parses SCSS using scssphp
  * `SprocketsFilter`: Sprockets Javascript dependency management
  * `StylusFilter`: parses STYL into CSS
+ * `TypeScriptFilter`: parses TypeScript into Javascript
+ * `UglifyCssFilter`: minifies CSS
+ * `UglifyJs2Filter`: minifies Javascript
+ * `UglifyJsFilter`: minifies Javascript
  * `Yui\CssCompressorFilter`: compresses CSS using the YUI compressor
  * `Yui\JsCompressorFilter`: compresses Javascript using the YUI compressor
 
@@ -196,6 +208,36 @@ $js = new AssetCache(
 $js->dump();
 $js->dump();
 $js->dump();
+```
+
+Cache Busting
+-------------
+
+You can use the CacheBustingWorker to provide unique names.
+
+Two strategies are provided: CacheBustingWorker::STRATEGY_CONTENT (content based), CacheBustingWorker::STRATEGY_MODIFICATION (modification time based)
+
+``` php
+<?php
+
+use Assetic\Factory\AssetFactory;
+use Assetic\Factory\Worker\CacheBustingWorker;
+
+$factory = new AssetFactory('/path/to/asset/directory/');
+$factory->setAssetManager($am);
+$factory->setFilterManager($fm);
+$factory->setDebug(true);
+$factory->addWorker(new CacheBustingWorker(CacheBustingWorker::STRATEGY_CONTENT));
+
+$css = $factory->createAsset(array(
+    '@reset',         // load the asset manager's "reset" asset
+    'css/src/*.scss', // load every scss files from "/path/to/asset/directory/css/src/"
+), array(
+    'scss',           // filter through the filter manager's "scss" filter
+    '?yui_css',       // don't use this filter in debug mode
+));
+
+echo $css->dump();
 ```
 
 Static Assets

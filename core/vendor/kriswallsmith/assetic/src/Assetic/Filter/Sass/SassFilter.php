@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2012 OpenSky Project Inc
+ * (c) 2010-2013 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,9 +12,8 @@
 namespace Assetic\Filter\Sass;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Filter\FilterInterface;
 use Assetic\Exception\FilterException;
-use Symfony\Component\Process\ProcessBuilder;
+use Assetic\Filter\BaseProcessFilter;
 
 /**
  * Loads SASS files.
@@ -22,7 +21,7 @@ use Symfony\Component\Process\ProcessBuilder;
  * @link http://sass-lang.com/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class SassFilter implements FilterInterface
+class SassFilter extends BaseProcessFilter
 {
     const STYLE_NESTED     = 'nested';
     const STYLE_EXPANDED   = 'expanded';
@@ -106,7 +105,7 @@ class SassFilter implements FilterInterface
             $sassProcessArgs = array_merge(explode(' ', $this->rubyPath), $sassProcessArgs);
         }
 
-        $pb = new ProcessBuilder($sassProcessArgs);
+        $pb = $this->createProcessBuilder($sassProcessArgs);
 
         $root = $asset->getSourceRoot();
         $path = $asset->getSourcePath();
@@ -163,7 +162,7 @@ class SassFilter implements FilterInterface
         $code = $proc->run();
         unlink($input);
 
-        if (0 < $code) {
+        if (0 !== $code) {
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }
 

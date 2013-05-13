@@ -3,11 +3,8 @@
 namespace Symfony\Cmf\Component\Routing\Tests\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
-
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Route;
 
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
 
 use Symfony\Cmf\Component\Routing\Test\CmfUnitTestCase;
@@ -18,6 +15,7 @@ class DynamicRouterTest extends CmfUnitTestCase
     protected $matcher;
     protected $generator;
     protected $enhancer;
+    /** @var DynamicRouter */
     protected $router;
     protected $context;
     protected $request;
@@ -29,7 +27,7 @@ class DynamicRouterTest extends CmfUnitTestCase
         $this->routeDocument = $this->buildMock('Symfony\\Cmf\\Component\\Routing\\Tests\\Routing\\RouteMock', array('getDefaults'));
 
         $this->matcher = $this->buildMock('Symfony\\Component\\Routing\\Matcher\\UrlMatcherInterface');
-        $this->generator = $this->buildMock('Symfony\\Cmf\\Component\\Routing\\VersatileGeneratorInterface', array('supports', 'generate', 'setContext', 'getContext'));
+        $this->generator = $this->buildMock('Symfony\\Cmf\\Component\\Routing\\VersatileGeneratorInterface', array('supports', 'generate', 'setContext', 'getContext', 'getRouteDebugMessage'));
         $this->enhancer = $this->buildMock('Symfony\\Cmf\\Component\\Routing\\Enhancer\\RouteEnhancerInterface', array('enhance'));
 
         $this->context = $this->buildMock('Symfony\\Component\\Routing\\RequestContext');
@@ -54,7 +52,6 @@ class DynamicRouterTest extends CmfUnitTestCase
         $this->assertInstanceOf('Symfony\\Component\\Routing\\RouteCollection', $collection);
         // TODO: once this is implemented, check content of collection
     }
-
 
     /// generator tests ///
 
@@ -97,6 +94,16 @@ class DynamicRouterTest extends CmfUnitTestCase
         $this->assertTrue($this->router->supports($name));
     }
 
+    public function testSupportsNonversatile()
+    {
+        $generator = $this->buildMock('Symfony\Component\Routing\Generator\UrlGeneratorInterface', array('generate', 'setContext', 'getContext'));
+        $router = new DynamicRouter($this->context, $this->matcher, $generator);
+        $this->assertInternalType('string', $router->getRouteDebugMessage('test'));
+
+        $this->assertTrue($router->supports('some string'));
+        $this->assertFalse($router->supports($this));
+    }
+
     /// match tests ///
 
     public function testGetMatcher()
@@ -130,7 +137,6 @@ class DynamicRouterTest extends CmfUnitTestCase
 
         $this->assertEquals($expected, $results);
     }
-
 
     public function testMatchRequestWithUrlMatcher()
     {
@@ -237,5 +243,23 @@ class DynamicRouterTest extends CmfUnitTestCase
     public function testInvalidMatcher()
     {
         new DynamicRouter($this->context, $this, $this->generator);
+    }
+
+    public function testRouteDebugMessage()
+    {
+        $this->generator->expects($this->once())
+            ->method('getRouteDebugMessage')
+            ->with($this->equalTo('test'), $this->equalTo(array()))
+            ->will($this->returnValue('debug message'))
+        ;
+
+        $this->assertEquals('debug message', $this->router->getRouteDebugMessage('test'));
+    }
+
+    public function testRouteDebugMessageNonversatile()
+    {
+        $generator = $this->buildMock('Symfony\Component\Routing\Generator\UrlGeneratorInterface', array('generate', 'setContext', 'getContext'));
+        $router = new DynamicRouter($this->context, $this->matcher, $generator);
+        $this->assertInternalType('string', $router->getRouteDebugMessage('test'));
     }
 }

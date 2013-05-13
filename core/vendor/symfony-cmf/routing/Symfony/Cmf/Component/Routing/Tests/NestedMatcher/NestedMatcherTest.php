@@ -105,8 +105,7 @@ class NestedMatcherTest extends CmfUnitTestCase
         try {
             $matcher->matchRequest($request);
             fail('nested matcher is eating exception');
-        } catch(ResourceNotFoundException $e)
-        {
+        } catch (ResourceNotFoundException $e) {
             // expected
         }
     }

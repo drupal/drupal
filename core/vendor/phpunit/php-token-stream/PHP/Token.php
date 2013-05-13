@@ -2,7 +2,7 @@
 /**
  * php-token-stream
  *
- * Copyright (c) 2009-2013, Sebastian Bergmann <sebastian@phpunit.de>.
+ * Copyright (c) 2009-2012, Sebastian Bergmann <sb@sebastian-bergmann.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,8 +35,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package   PHP_TokenStream
- * @author    Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright 2009-2013 Sebastian Bergmann <sebastian@phpunit.de>
+ * @author    Sebastian Bergmann <sb@sebastian-bergmann.de>
+ * @copyright 2009-2012 Sebastian Bergmann <sb@sebastian-bergmann.de>
  * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @since     File available since Release 1.0.0
  */
@@ -44,8 +44,8 @@
 /**
  * A PHP token.
  *
- * @author    Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright 2009-2013 Sebastian Bergmann <sebastian@phpunit.de>
+ * @author    Sebastian Bergmann <sb@sebastian-bergmann.de>
+ * @copyright 2009-2012 Sebastian Bergmann <sb@sebastian-bergmann.de>
  * @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @version   Release: @package_version@
  * @link      http://github.com/sebastianbergmann/php-token-stream/tree
@@ -175,7 +175,7 @@ abstract class PHP_TokenWithScope extends PHP_Token
                 }
             }
 
-            else if (($this instanceof PHP_Token_FUNCTION ||
+            else if (($this instanceof PHP_Token_FUNCTION || 
                 $this instanceof PHP_Token_NAMESPACE) &&
                 $tokens[$i] instanceof PHP_Token_SEMICOLON) {
                 if ($block === 0) {
@@ -376,7 +376,7 @@ class PHP_Token_FUNCTION extends PHP_TokenWithScopeAndVisibility
         }
 
         $this->arguments = array();
-        $i               = $this->id + 2;
+        $i               = $this->id + 3;
         $tokens          = $this->tokenStream->tokens();
         $typeHint        = NULL;
 

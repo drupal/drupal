@@ -11,12 +11,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 interface VersatileGeneratorInterface extends UrlGeneratorInterface
 {
     /**
-     * If $name preg_match this pattern, the name is valid for symfony core
-     * compatible generators.
-     */
-    const CORE_NAME_PATTERN = '/^[a-z0-9A-Z_.]+$/';
-
-    /**
      * Whether this generator supports the supplied $name.
      *
      * This check does not need to look if the specific instance can be
@@ -28,5 +22,16 @@ interface VersatileGeneratorInterface extends UrlGeneratorInterface
      * @return bool
      */
     public function supports($name);
-}
 
+    /**
+     * Convert a route identifier (name, content object etc) into a string
+     * usable for logging and other debug/error messages
+     *
+     * @param mixed $name
+     * @param array $parameters which should contain a content field containing
+     *                          a RouteAwareInterface object
+     *
+     * @return string
+     */
+    public function getRouteDebugMessage($name, array $parameters = array());
+}

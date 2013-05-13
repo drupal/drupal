@@ -23,6 +23,7 @@ class RouteMock extends SymfonyRoute implements RouteObjectInterface
         if (! is_null($this->locale)) {
             $defaults['_locale'] = $this->locale;
         }
+
         return $defaults;
     }
     public function getRequirement($key)
@@ -30,6 +31,7 @@ class RouteMock extends SymfonyRoute implements RouteObjectInterface
         if (! $key == '_locale') {
             throw new \Exception;
         }
+
         return $this->locale;
     }
     public function getRouteKey()

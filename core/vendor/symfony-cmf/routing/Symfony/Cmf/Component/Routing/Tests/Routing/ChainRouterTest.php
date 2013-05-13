@@ -12,7 +12,7 @@ class ChainRouterTest extends CmfUnitTestCase
 {
     public function setUp()
     {
-        $this->router = new ChainRouter($this->getMock('Symfony\Component\HttpKernel\Log\LoggerInterface'));
+        $this->router = new ChainRouter($this->getMock('Psr\Log\LoggerInterface'));
         $this->context = $this->getMock('Symfony\\Component\\Routing\\RequestContext');
     }
 
@@ -124,7 +124,6 @@ class ChainRouterTest extends CmfUnitTestCase
             ->method('setContext')
             ->with($this->context)
         ;
-
 
         $this->router->add($low, 10);
         $this->router->add($high, 100);
@@ -460,37 +459,6 @@ class ChainRouterTest extends CmfUnitTestCase
     public function testGenerateObjectName()
     {
         $name = new \stdClass();
-        $parameters = array('test' => 'value');
-
-        $defaultRouter = $this->getMock('Symfony\\Component\\Routing\\RouterInterface');
-        $chainedRouter = $this->getMock('Symfony\\Cmf\\Component\\Routing\\ChainedRouterInterface');
-
-        $defaultRouter
-            ->expects($this->never())
-            ->method('generate')
-        ;
-        $chainedRouter
-            ->expects($this->once())
-            ->method('supports')
-            ->will($this->returnValue(true))
-        ;
-        $chainedRouter
-            ->expects($this->once())
-            ->method('generate')
-            ->with($name, $parameters, false)
-            ->will($this->returnValue($name))
-        ;
-
-        $this->router->add($defaultRouter, 200);
-        $this->router->add($chainedRouter, 100);
-
-        $result = $this->router->generate($name, $parameters);
-        $this->assertEquals($name, $result);
-    }
-
-    public function testGenerateNonDefaultStringName()
-    {
-        $name = '/test/this';
         $parameters = array('test' => 'value');
 
         $defaultRouter = $this->getMock('Symfony\\Component\\Routing\\RouterInterface');

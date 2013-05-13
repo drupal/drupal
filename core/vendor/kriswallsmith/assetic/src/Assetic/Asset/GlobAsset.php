@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2012 OpenSky Project Inc
+ * (c) 2010-2013 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -31,6 +31,7 @@ class GlobAsset extends AssetCollection
      * @param string|array $globs   A single glob path or array of paths
      * @param array        $filters An array of filters
      * @param string       $root    The root directory
+     * @param array        $vars
      */
     public function __construct($globs, $filters = array(), $root = null, array $vars = array())
     {
@@ -101,7 +102,9 @@ class GlobAsset extends AssetCollection
 
             if (false !== $paths = glob($glob)) {
                 foreach ($paths as $path) {
-                    $this->add(new FileAsset($path, array(), $this->getSourceRoot()));
+                    if (is_file($path)) {
+                        $this->add(new FileAsset($path, array(), $this->getSourceRoot()));
+                    }
                 }
             }
         }

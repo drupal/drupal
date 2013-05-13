@@ -6,8 +6,7 @@ use Symfony\Component\Routing\Route as SymfonyRoute;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 use Symfony\Component\Routing\Generator\UrlGenerator;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use Psr\Log\LoggerInterface;
 
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 
@@ -44,13 +43,7 @@ class ProviderBasedGenerator extends UrlGenerator implements VersatileGeneratorI
 
         // the Route has a cache of its own and is not recompiled as long as it does not get modified
         $compiledRoute = $route->compile();
-
-        // handle symfony 2.1 and 2.2
-        // getHostTokens exists only since 2.2
-        $hostTokens = null;
-        if (method_exists($compiledRoute, 'getHostTokens')) {
-            $hostTokens = $compiledRoute->getHostTokens();
-        }
+        $hostTokens = $compiledRoute->getHostTokens();
 
         return $this->doGenerate($compiledRoute->getVariables(), $route->getDefaults(), $route->getRequirements(), $compiledRoute->getTokens(), $parameters, $name, $absolute, $hostTokens);
     }
@@ -64,4 +57,21 @@ class ProviderBasedGenerator extends UrlGenerator implements VersatileGeneratorI
     {
         return is_string($name) || $name instanceof SymfonyRoute;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRouteDebugMessage($name, array $parameters = array())
+    {
+        if ($name instanceof RouteObjectInterface) {
+            return 'Route with key ' . $name->getRouteKey();
+        }
+
+        if ($name instanceof SymfonyRoute) {
+            return 'Route with pattern ' . $name->getPattern();
+        }
+
+        return $name;
+    }
+
 }

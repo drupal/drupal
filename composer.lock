@@ -1,5 +1,9 @@
 {
-    "hash": "6b1bf50f976af5d14628f38478885c0f",
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+    ],
+    "hash": "8969a2b9cb8e5b12a6649cadfa010bab",
     "packages": [
         {
             "name": "doctrine/common",
@@ -53,7 +57,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -126,17 +130,17 @@
         },
         {
             "name": "guzzle/common",
-            "version": "v3.1.0",
+            "version": "v3.1.2",
             "target-dir": "Guzzle/Common",
             "source": {
                 "type": "git",
                 "url": "git://github.com/guzzle/common.git",
-                "reference": "v3.1.0"
+                "reference": "v3.1.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/guzzle/common/archive/v3.1.0.zip",
-                "reference": "v3.1.0",
+                "url": "https://github.com/guzzle/common/archive/v3.1.2.zip",
+                "reference": "v3.1.2",
                 "shasum": ""
             },
             "require": {
@@ -166,29 +170,31 @@
                 "event",
                 "exception"
             ],
-            "time": "2013-01-13 05:14:34"
+            "time": "2013-01-28 00:07:40"
         },
         {
             "name": "guzzle/http",
-            "version": "v3.1.0",
+            "version": "v3.1.2",
             "target-dir": "Guzzle/Http",
             "source": {
                 "type": "git",
                 "url": "git://github.com/guzzle/http.git",
-                "reference": "v3.1.0"
+                "reference": "v3.1.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/guzzle/http/archive/v3.1.0.zip",
-                "reference": "v3.1.0",
+                "url": "https://github.com/guzzle/http/archive/v3.1.2.zip",
+                "reference": "v3.1.2",
                 "shasum": ""
             },
             "require": {
-                "ext-curl": "*",
                 "guzzle/common": "self.version",
                 "guzzle/parser": "self.version",
                 "guzzle/stream": "self.version",
                 "php": ">=5.3.2"
+            },
+            "suggest": {
+                "ext-curl": "*"
             },
             "type": "library",
             "extra": {
@@ -221,21 +227,21 @@
                 "http",
                 "http client"
             ],
-            "time": "2013-01-13 05:09:32"
+            "time": "2013-01-26 08:20:43"
         },
         {
             "name": "guzzle/parser",
-            "version": "v3.1.0",
+            "version": "v3.1.2",
             "target-dir": "Guzzle/Parser",
             "source": {
                 "type": "git",
                 "url": "git://github.com/guzzle/parser.git",
-                "reference": "v3.1.0"
+                "reference": "v3.1.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/guzzle/parser/archive/v3.1.0.zip",
-                "reference": "v3.1.0",
+                "url": "https://github.com/guzzle/parser/archive/v3.1.2.zip",
+                "reference": "v3.1.2",
                 "shasum": ""
             },
             "require": {
@@ -269,17 +275,17 @@
         },
         {
             "name": "guzzle/stream",
-            "version": "v3.1.0",
+            "version": "v3.1.2",
             "target-dir": "Guzzle/Stream",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/stream",
-                "reference": "v3.1.0"
+                "reference": "v3.0.7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/guzzle/stream/archive/v3.1.0.zip",
-                "reference": "v3.1.0",
+                "url": "https://github.com/guzzle/stream/archive/v3.0.7.zip",
+                "reference": "v3.0.7",
                 "shasum": ""
             },
             "require": {
@@ -319,31 +325,38 @@
         },
         {
             "name": "kriswallsmith/assetic",
-            "version": "v1.1.0-alpha1",
+            "version": "v1.1.0-alpha4",
             "source": {
                 "type": "git",
-                "url": "http://github.com/kriswallsmith/assetic.git",
-                "reference": "v1.1.0-alpha1"
+                "url": "https://github.com/kriswallsmith/assetic.git",
+                "reference": "v1.1.0-alpha4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/kriswallsmith/assetic/zipball/v1.1.0-alpha1",
-                "reference": "v1.1.0-alpha1",
+                "url": "https://api.github.com/repos/kriswallsmith/assetic/zipball/v1.1.0-alpha4",
+                "reference": "v1.1.0-alpha4",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.1",
-                "symfony/process": "2.1.*"
+                "symfony/process": ">=2.1.0,<2.3-dev"
             },
             "require-dev": {
+                "cssmin/cssmin": "*",
+                "joliclic/javascript-packer": "*",
+                "kamicane/packager": "*",
                 "leafo/lessphp": "*",
                 "leafo/scssphp": "*",
+                "leafo/scssphp-compass": "*",
+                "mrclay/minify": "*",
+                "phpunit/phpunit": "3.7.*",
                 "ptachoire/cssembed": "*",
                 "twig/twig": ">=1.6.0,<2.0"
             },
             "suggest": {
                 "leafo/lessphp": "Assetic provides the integration with the lessphp LESS compiler",
                 "leafo/scssphp": "Assetic provides the integration with the scssphp SCSS compiler",
+                "leafo/scssphp-compass": "Assetic provides the integration with the SCSS compass plugin",
                 "ptachoire/cssembed": "Assetic provides the integration with phpcssembed to embed data uris",
                 "twig/twig": "Assetic provides the integration with the Twig templating engine"
             },
@@ -356,7 +369,10 @@
             "autoload": {
                 "psr-0": {
                     "Assetic": "src/"
-                }
+                },
+                "files": [
+                    "src/functions.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -376,11 +392,11 @@
                 "compression",
                 "minification"
             ],
-            "time": "2012-08-28 05:33:44"
+            "time": "2013-02-24 17:22:20"
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "1.2.x-dev",
+            "version": "1.2.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
@@ -433,16 +449,16 @@
         },
         {
             "name": "phpunit/php-file-iterator",
-            "version": "dev-master",
+            "version": "1.3.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/sebastianbergmann/php-file-iterator.git",
-                "reference": "2deb24c65ea78e126daa8d45b2089ddc29ec1d26"
+                "url": "git://github.com/sebastianbergmann/php-file-iterator.git",
+                "reference": "1.3.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-file-iterator/zipball/2deb24c65ea78e126daa8d45b2089ddc29ec1d26",
-                "reference": "2deb24c65ea78e126daa8d45b2089ddc29ec1d26",
+                "url": "https://github.com/sebastianbergmann/php-file-iterator/zipball/1.3.3",
+                "reference": "1.3.3",
                 "shasum": ""
             },
             "require": {
@@ -469,25 +485,25 @@
                 }
             ],
             "description": "FilterIterator implementation that filters files based on a list of suffixes.",
-            "homepage": "https://github.com/sebastianbergmann/php-file-iterator/",
+            "homepage": "http://www.phpunit.de/",
             "keywords": [
                 "filesystem",
                 "iterator"
             ],
-            "time": "2013-01-07 10:47:05"
+            "time": "2012-10-11 04:44:38"
         },
         {
             "name": "phpunit/php-text-template",
-            "version": "dev-master",
+            "version": "1.1.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/sebastianbergmann/php-text-template.git",
-                "reference": "1eeef106193d2f8c539728e566bb4793071a9e18"
+                "url": "git://github.com/sebastianbergmann/php-text-template.git",
+                "reference": "1.1.4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-text-template/zipball/1eeef106193d2f8c539728e566bb4793071a9e18",
-                "reference": "1eeef106193d2f8c539728e566bb4793071a9e18",
+                "url": "https://github.com/sebastianbergmann/php-text-template/zipball/1.1.4",
+                "reference": "1.1.4",
                 "shasum": ""
             },
             "require": {
@@ -518,20 +534,20 @@
             "keywords": [
                 "template"
             ],
-            "time": "2013-01-07 10:56:17"
+            "time": "2012-10-31 11:15:28"
         },
         {
             "name": "phpunit/php-timer",
-            "version": "1.0.x-dev",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/sebastianbergmann/php-timer.git",
-                "reference": "ecf7920b27003a9412b07dad79dbb5ad1249e6c3"
+                "url": "git://github.com/sebastianbergmann/php-timer.git",
+                "reference": "1.0.4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/ecf7920b27003a9412b07dad79dbb5ad1249e6c3",
-                "reference": "ecf7920b27003a9412b07dad79dbb5ad1249e6c3",
+                "url": "https://github.com/sebastianbergmann/php-timer/zipball/1.0.4",
+                "reference": "1.0.4",
                 "shasum": ""
             },
             "require": {
@@ -558,24 +574,24 @@
                 }
             ],
             "description": "Utility class for timing",
-            "homepage": "https://github.com/sebastianbergmann/php-timer/",
+            "homepage": "http://www.phpunit.de/",
             "keywords": [
                 "timer"
             ],
-            "time": "2013-01-30 06:08:51"
+            "time": "2012-10-11 04:45:58"
         },
         {
             "name": "phpunit/php-token-stream",
-            "version": "dev-master",
+            "version": "1.1.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/sebastianbergmann/php-token-stream.git",
-                "reference": "c25dd88e1592e66dee2553c99ef244203d5a1b98"
+                "url": "git://github.com/sebastianbergmann/php-token-stream.git",
+                "reference": "1.1.5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/c25dd88e1592e66dee2553c99ef244203d5a1b98",
-                "reference": "c25dd88e1592e66dee2553c99ef244203d5a1b98",
+                "url": "https://github.com/sebastianbergmann/php-token-stream/zipball/1.1.5",
+                "reference": "1.1.5",
                 "shasum": ""
             },
             "require": {
@@ -603,24 +619,24 @@
                 }
             ],
             "description": "Wrapper around PHP's tokenizer extension.",
-            "homepage": "https://github.com/sebastianbergmann/php-token-stream/",
+            "homepage": "http://www.phpunit.de/",
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2013-01-07 10:56:35"
+            "time": "2012-10-11 04:47:14"
         },
         {
             "name": "phpunit/phpunit",
-            "version": "3.7.15",
+            "version": "3.7.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "3.7.15"
+                "reference": "3.7.19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3.7.15",
-                "reference": "3.7.15",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3.7.19",
+                "reference": "3.7.19",
                 "shasum": ""
             },
             "require": {
@@ -634,7 +650,7 @@
                 "phpunit/php-text-template": ">=1.1.1",
                 "phpunit/php-timer": ">=1.0.2,<1.1.0",
                 "phpunit/phpunit-mock-objects": ">=1.2.0,<1.3.0",
-                "symfony/yaml": ">=2.2.0"
+                "symfony/yaml": ">=2.0.0,<2.3.0"
             },
             "require-dev": {
                 "pear-pear/pear": "1.9.4"
@@ -681,20 +697,20 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-03-01 11:55:06"
+            "time": "2013-03-25 11:45:06"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
-            "version": "1.2.x-dev",
+            "version": "1.2.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "d49b5683200b5db9b1c64cb06f52f50d147891c4"
+                "url": "git://github.com/sebastianbergmann/phpunit-mock-objects.git",
+                "reference": "1.2.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/d49b5683200b5db9b1c64cb06f52f50d147891c4",
-                "reference": "d49b5683200b5db9b1c64cb06f52f50d147891c4",
+                "url": "https://github.com/sebastianbergmann/phpunit-mock-objects/archive/1.2.3.zip",
+                "reference": "1.2.3",
                 "shasum": ""
             },
             "require": {
@@ -730,7 +746,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2013-02-05 07:46:41"
+            "time": "2013-01-13 10:24:48"
         },
         {
             "name": "psr/log",
@@ -772,28 +788,32 @@
         },
         {
             "name": "symfony-cmf/routing",
-            "version": "dev-master",
+            "version": "1.1.0-alpha1",
             "target-dir": "Symfony/Cmf/Component/Routing",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony-cmf/Routing.git",
-                "reference": "ea4a10"
+                "reference": "1.1.0-alpha1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony-cmf/Routing/zipball/43585d83fb07f9354c098fcae593010567f53d45",
-                "reference": "ea4a10",
+                "url": "https://api.github.com/repos/symfony-cmf/Routing/zipball/1.1.0-alpha1",
+                "reference": "1.1.0-alpha1",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
-                "symfony/http-kernel": ">=2.1,<2.3-dev",
-                "symfony/routing": ">=2.1,<2.3-dev"
+                "psr/log": ">=1.0,<2.0",
+                "symfony/http-kernel": ">=2.2,<2.3-dev",
+                "symfony/routing": ">=2.2,<2.3-dev"
+            },
+            "suggest": {
+                "symfony/http-foundation": "ChainRouter/DynamicRouter have optional support for Request instances, several enhancers require a Request instances, >=2.2,<2.3-dev"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0-dev"
+                    "dev-master": "1.1-dev"
                 }
             },
             "autoload": {
@@ -817,21 +837,21 @@
                 "database",
                 "routing"
             ],
-            "time": "2013-01-21 20:33:16"
+            "time": "2013-05-07 06:30:59"
         },
         {
             "name": "symfony/class-loader",
-            "version": "v2.2.0",
+            "version": "v2.2.1",
             "target-dir": "Symfony/Component/ClassLoader",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ClassLoader.git",
-                "reference": "v2.2.0"
+                "reference": "v2.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ClassLoader/zipball/v2.2.0",
-                "reference": "v2.2.0",
+                "url": "https://api.github.com/repos/symfony/ClassLoader/zipball/v2.2.1",
+                "reference": "v2.2.1",
                 "shasum": ""
             },
             "require": {
@@ -867,21 +887,21 @@
             ],
             "description": "Symfony ClassLoader Component",
             "homepage": "http://symfony.com",
-            "time": "2013-03-01 06:43:14"
+            "time": "2013-03-19 08:32:26"
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v2.2.0",
+            "version": "v2.2.1",
             "target-dir": "Symfony/Component/DependencyInjection",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/DependencyInjection.git",
-                "reference": "v2.2.0-RC3"
+                "reference": "v2.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/v2.2.0-RC3",
-                "reference": "v2.2.0-RC3",
+                "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/v2.2.1",
+                "reference": "v2.2.1",
                 "shasum": ""
             },
             "require": {
@@ -922,21 +942,21 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "http://symfony.com",
-            "time": "2013-02-11 11:43:49"
+            "time": "2013-03-23 07:49:54"
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.2.0",
+            "version": "v2.2.1",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "v2.2.0-RC3"
+                "reference": "v2.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/v2.2.0-RC3",
-                "reference": "v2.2.0-RC3",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/v2.2.1",
+                "reference": "v2.2.1",
                 "shasum": ""
             },
             "require": {
@@ -980,17 +1000,17 @@
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v2.2.0",
+            "version": "v2.2.1",
             "target-dir": "Symfony/Component/HttpFoundation",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpFoundation.git",
-                "reference": "v2.2.0"
+                "reference": "v2.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/v2.2.0",
-                "reference": "v2.2.0",
+                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/v2.2.1",
+                "reference": "v2.2.1",
                 "shasum": ""
             },
             "require": {
@@ -1026,21 +1046,21 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "http://symfony.com",
-            "time": "2013-02-26 09:42:13"
+            "time": "2013-04-06 10:15:43"
         },
         {
             "name": "symfony/http-kernel",
-            "version": "v2.2.0",
+            "version": "v2.2.1",
             "target-dir": "Symfony/Component/HttpKernel",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpKernel.git",
-                "reference": "v2.2.0"
+                "reference": "v2.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpKernel/zipball/v2.2.0",
-                "reference": "v2.2.0",
+                "url": "https://api.github.com/repos/symfony/HttpKernel/zipball/v2.2.1",
+                "reference": "v2.2.1",
                 "shasum": ""
             },
             "require": {
@@ -1095,30 +1115,35 @@
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "http://symfony.com",
-            "time": "2013-03-01 06:52:29"
+            "time": "2013-04-06 10:16:33"
         },
         {
             "name": "symfony/process",
-            "version": "2.1.x-dev",
+            "version": "v2.2.1",
             "target-dir": "Symfony/Component/Process",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Process.git",
-                "reference": "v2.1.8"
+                "reference": "v2.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Process/zipball/v2.1.8",
-                "reference": "v2.1.8",
+                "url": "https://api.github.com/repos/symfony/Process/zipball/v2.2.1",
+                "reference": "v2.2.1",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.2-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
-                    "Symfony\\Component\\Process": ""
+                    "Symfony\\Component\\Process\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1137,21 +1162,21 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "http://symfony.com",
-            "time": "2013-02-18 21:27:57"
+            "time": "2013-03-23 07:49:54"
         },
         {
             "name": "symfony/routing",
-            "version": "v2.2.0",
+            "version": "v2.2.1",
             "target-dir": "Symfony/Component/Routing",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Routing.git",
-                "reference": "v2.2.0-RC3"
+                "reference": "v2.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Routing/zipball/v2.2.0-RC3",
-                "reference": "v2.2.0-RC3",
+                "url": "https://api.github.com/repos/symfony/Routing/zipball/v2.2.1",
+                "reference": "v2.2.1",
                 "shasum": ""
             },
             "require": {
@@ -1195,21 +1220,21 @@
             ],
             "description": "Symfony Routing Component",
             "homepage": "http://symfony.com",
-            "time": "2013-02-11 11:24:47"
+            "time": "2013-03-23 12:03:22"
         },
         {
             "name": "symfony/serializer",
-            "version": "v2.2.0",
+            "version": "v2.2.1",
             "target-dir": "Symfony/Component/Serializer",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Serializer.git",
-                "reference": "v2.2.0-RC3"
+                "reference": "v2.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Serializer/zipball/v2.2.0-RC3",
-                "reference": "v2.2.0-RC3",
+                "url": "https://api.github.com/repos/symfony/Serializer/zipball/v2.2.1",
+                "reference": "v2.2.1",
                 "shasum": ""
             },
             "require": {
@@ -1242,28 +1267,28 @@
             ],
             "description": "Symfony Serializer Component",
             "homepage": "http://symfony.com",
-            "time": "2013-01-19 07:50:02"
+            "time": "2013-03-06 21:43:23"
         },
         {
             "name": "symfony/translation",
-            "version": "dev-master",
+            "version": "v2.2.1",
             "target-dir": "Symfony/Component/Translation",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Translation.git",
-                "reference": "10164d84c407fd9ac5918172f86a4b94bf2b9c0b"
+                "reference": "v2.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Translation/zipball/10164d84c407fd9ac5918172f86a4b94bf2b9c0b",
-                "reference": "10164d84c407fd9ac5918172f86a4b94bf2b9c0b",
+                "url": "https://api.github.com/repos/symfony/Translation/zipball/v2.2.1",
+                "reference": "v2.2.1",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
             "require-dev": {
-                "symfony/config": ">=2.0,<2.4-dev",
+                "symfony/config": ">=2.0,<2.3-dev",
                 "symfony/yaml": ">=2.2,<3.0"
             },
             "suggest": {
@@ -1273,7 +1298,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.3-dev"
+                    "dev-master": "2.2-dev"
                 }
             },
             "autoload": {
@@ -1297,21 +1322,21 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "http://symfony.com",
-            "time": "2013-02-11 10:13:11"
+            "time": "2013-04-01 08:06:05"
         },
         {
             "name": "symfony/validator",
-            "version": "v2.2.0",
+            "version": "v2.2.1",
             "target-dir": "Symfony/Component/Validator",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Validator.git",
-                "reference": "v2.2.0"
+                "reference": "v2.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Validator/zipball/v2.2.0",
-                "reference": "v2.2.0",
+                "url": "https://api.github.com/repos/symfony/Validator/zipball/v2.2.1",
+                "reference": "v2.2.1",
                 "shasum": ""
             },
             "require": {
@@ -1358,21 +1383,21 @@
             ],
             "description": "Symfony Validator Component",
             "homepage": "http://symfony.com",
-            "time": "2013-02-28 14:29:34"
+            "time": "2013-04-01 08:06:05"
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.2.0",
+            "version": "v2.2.1",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "v2.2.0-RC3"
+                "reference": "v2.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/v2.2.0-RC3",
-                "reference": "v2.2.0-RC3",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/v2.2.1",
+                "reference": "v2.2.1",
                 "shasum": ""
             },
             "require": {
@@ -1405,20 +1430,20 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2013-01-27 16:49:19"
+            "time": "2013-03-23 07:49:54"
         },
         {
             "name": "twig/twig",
-            "version": "v1.12.1",
+            "version": "v1.12.3",
             "source": {
                 "type": "git",
-                "url": "git://github.com/fabpot/Twig.git",
-                "reference": "v1.12.1"
+                "url": "https://github.com/fabpot/Twig.git",
+                "reference": "v1.12.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/fabpot/Twig/archive/v1.12.1.zip",
-                "reference": "v1.12.1",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/v1.12.3",
+                "reference": "v1.12.3",
                 "shasum": ""
             },
             "require": {
@@ -1454,7 +1479,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-01-15 20:03:52"
+            "time": "2013-04-08 12:40:11"
         }
     ],
     "packages-dev": [
@@ -1463,10 +1488,16 @@
     "aliases": [
 
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "stability-flags": {
         "kriswallsmith/assetic": 15,
-        "symfony-cmf/routing": 20,
+        "symfony-cmf/routing": 15,
         "easyrdf/easyrdf": 10
-    }
+    },
+    "platform": [
+
+    ],
+    "platform-dev": [
+
+    ]
 }

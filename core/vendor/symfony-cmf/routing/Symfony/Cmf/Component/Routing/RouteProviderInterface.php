@@ -31,7 +31,7 @@ interface RouteProviderInterface
      *
      * @param Request $request A request against which to match.
      *
-     * @return \Symfony\Component\Routing\RouteCollection with all urls that
+     * @return \Symfony\Component\Routing\RouteCollection with all Routes that
      *      could potentially match $request. Empty collection if nothing can
      *      match.
      */
@@ -40,8 +40,8 @@ interface RouteProviderInterface
     /**
      * Find the route using the provided route name (and parameters)
      *
-     * @param string $name the route name to fetch
-     * @param array $parameters the parameters as they are passed to the
+     * @param string $name       the route name to fetch
+     * @param array  $parameters the parameters as they are passed to the
      *      UrlGeneratorInterface::generate call
      *
      * @return \Symfony\Component\Routing\Route
@@ -61,7 +61,7 @@ interface RouteProviderInterface
      * simple implementation could be to just repeatedly call
      * $this->getRouteByName()
      *
-     * @param array $names the list of names to retrieve
+     * @param array $names      the list of names to retrieve
      * @param array $parameters the parameters as they are passed to the
      *      UrlGeneratorInterface::generate call. (Only one array, not one for
      *      each entry in $names.

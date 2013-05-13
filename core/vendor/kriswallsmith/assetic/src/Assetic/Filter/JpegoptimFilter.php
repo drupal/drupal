@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2012 OpenSky Project Inc
+ * (c) 2010-2013 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,7 +13,6 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
-use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Runs assets through Jpegoptim.
@@ -21,7 +20,7 @@ use Symfony\Component\Process\ProcessBuilder;
  * @link   http://www.kokkonen.net/tjko/projects.html
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class JpegoptimFilter implements FilterInterface
+class JpegoptimFilter extends BaseProcessFilter
 {
     private $jpegoptimBin;
     private $stripAll;
@@ -53,7 +52,7 @@ class JpegoptimFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
-        $pb = new ProcessBuilder(array($this->jpegoptimBin));
+        $pb = $this->createProcessBuilder(array($this->jpegoptimBin));
 
         if ($this->stripAll) {
             $pb->add('--strip-all');

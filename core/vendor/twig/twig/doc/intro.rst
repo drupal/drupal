@@ -29,32 +29,10 @@ Twig needs at least **PHP 5.2.4** to run.
 Installation
 ------------
 
-You have multiple ways to install Twig. If you are unsure what to do, go with
-the tarball.
+You have multiple ways to install Twig.
 
-Installing from the tarball release
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-1. Download the most recent tarball from the `download page`_
-2. Unpack the tarball
-3. Move the files somewhere in your project
-
-Installing the development version
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-1. Install Subversion or Git
-2. For Git: ``git clone git://github.com/fabpot/Twig.git``
-3. For Subversion: ``svn co http://svn.twig-project.org/trunk/ twig``
-
-Installing the PEAR package
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-1. Install PEAR
-2. ``pear channel-discover pear.twig-project.org``
-3. ``pear install twig/Twig`` (or ``pear install twig/Twig-beta``)
-
-Installing via Composer
-~~~~~~~~~~~~~~~~~~~~~~~
+Installing via Composer (recommended)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. Install composer in your project:
 
@@ -81,6 +59,27 @@ Installing via Composer
 .. note::
     If you want to learn more about Composer, the ``composer.json`` file syntax
     and its usage, you can read the `online documentation`_.
+
+Installing from the tarball release
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Download the most recent tarball from the `download page`_
+2. Unpack the tarball
+3. Move the files somewhere in your project
+
+Installing the development version
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Install Git
+2. ``git clone git://github.com/fabpot/Twig.git``
+
+Installing the PEAR package
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Install PEAR
+2. ``pear channel-discover pear.twig-project.org``
+3. ``pear install twig/Twig`` (or ``pear install twig/Twig-beta``)
+
 
 Installing the C extension
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -112,7 +111,7 @@ PHP code but only provides an optimized version of the
 
 .. tip::
 
-    On Windows, you can also simply download and install a `pre-build DLL`_.
+    On Windows, you can also simply download and install a `pre-built DLL`_.
 
 Basic API Usage
 ---------------
