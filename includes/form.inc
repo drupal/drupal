@@ -727,8 +727,9 @@ function drupal_retrieve_form($form_id, &$form_state) {
   // Record the filepath of the include file containing the original form, so
   // the form builder callbacks can be loaded when the form is being rebuilt
   // from cache on a different path (such as 'system/ajax'). See
-  // form_get_cache().
-  // $menu_get_item() is not available during installation.
+  // form_get_cache(). Don't do this in maintenance mode as Drupal may not be
+  // fully bootstrapped (i.e. during installation) in which case
+  // menu_get_item() is not available.
   if (!isset($form_state['build_info']['files']['menu']) && !defined('MAINTENANCE_MODE')) {
     $item = menu_get_item();
     if (!empty($item['include_file'])) {
