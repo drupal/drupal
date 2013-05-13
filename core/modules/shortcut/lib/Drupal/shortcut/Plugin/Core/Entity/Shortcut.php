@@ -24,7 +24,8 @@ use Drupal\shortcut\ShortcutInterface;
  *     "access" = "Drupal\shortcut\ShortcutAccessController",
  *     "list" = "Drupal\shortcut\ShortcutListController",
  *     "form" = {
- *       "default" = "Drupal\shortcut\ShortcutFormController"
+ *       "default" = "Drupal\shortcut\ShortcutFormController",
+ *       "edit" = "Drupal\shortcut\ShortcutFormController"
  *     }
  *   },
  *   config_prefix = "shortcut.set",

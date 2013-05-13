@@ -18,3 +18,9 @@ shortcut_set_admin:
     _content: 'Drupal\shortcut\Controller\ShortcutController::shortcutSetAdmin'
   requirements:
     _permission: 'administer shortcuts'
+shortcut_set_edit:
+  pattern: '/admin/config/user-interface/shortcut/manage/{shortcut}/edit'
+  defaults:
+    _entity_form: 'shortcut.edit'
+  requirements:
+    _entity_access: 'shortcut.edit'

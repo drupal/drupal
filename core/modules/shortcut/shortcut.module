@@ -89,12 +89,8 @@ function shortcut_menu() {
   );
   $items['admin/config/user-interface/shortcut/manage/%shortcut_set/edit'] = array(
     'title' => 'Edit set name',
-    'page callback' => 'entity_get_form',
-    'page arguments' => array(5),
-    'access callback' => 'shortcut_set_edit_access',
-    'access arguments' => array(5),
+    'route_name' => 'shortcut_set_edit',
     'type' => MENU_LOCAL_TASK,
-    'file' => 'shortcut.admin.inc',
     'weight' => 10,
   );
   $items['admin/config/user-interface/shortcut/manage/%shortcut_set/delete'] = array(
