@@ -1,11 +1,16 @@
-var Drupal = Drupal || { 'behaviors': {}, 'locale': {} };
+var Drupal = { behaviors: {}, locale: {} };
+
+// Class indicating that JS is enabled; used for styling purpose.
+document.documentElement.className += ' js';
 
 // Allow other JavaScript libraries to use $.
-jQuery.noConflict();
+if (window.jQuery) {
+  jQuery.noConflict();
+}
 
 // JavaScript should be made compatible with libraries other than jQuery by
 // wrapping it in an anonymous closure.
-(function ($, Drupal, drupalSettings) {
+(function (domready, Drupal, drupalSettings) {
 
 "use strict";
 
@@ -93,6 +98,9 @@ Drupal.attachBehaviors = function (context, settings) {
     throw new DrupalBehaviorError(errors, 'attach');
   }
 };
+
+// Attach all behaviors.
+domready(function () { Drupal.attachBehaviors(document, drupalSettings); });
 
 /**
  * Detach registered behaviors from a page element.
@@ -314,6 +322,15 @@ Drupal.formatPlural = function (count, singular, plural, args, options) {
 };
 
 /**
+ * Encodes a Drupal path for use in a URL.
+ *
+ * For aesthetic reasons slashes are not escaped.
+ */
+Drupal.encodePath = function (item) {
+  return window.encodeURIComponent(item).replace(/%2F/g, '/');
+};
+
+/**
  * Generate the themed representation of a Drupal object.
  *
  * All requests for themed output must go through this function. It examines
@@ -341,125 +358,18 @@ Drupal.theme = function (func) {
 };
 
 /**
- * Freeze the current body height (as minimum height). Used to prevent
- * unnecessary upwards scrolling when doing DOM manipulations.
- */
-Drupal.freezeHeight = function () {
-  Drupal.unfreezeHeight();
-  $('<div id="freeze-height"></div>').css({
-    position: 'absolute',
-    top: '0px',
-    left: '0px',
-    width: '1px',
-    height: $('body').css('height')
-  }).appendTo('body');
-};
-
-/**
- * Unfreeze the body height.
- */
-Drupal.unfreezeHeight = function () {
-  $('#freeze-height').remove();
-};
-
-/**
- * Encodes a Drupal path for use in a URL.
+ * Formats text for emphasized display in a placeholder inside a sentence.
  *
- * For aesthetic reasons slashes are not escaped.
+ * @param str
+ *   The text to format (plain-text).
+ * @return
+ *   The formatted text (html).
  */
-Drupal.encodePath = function (item) {
-  return window.encodeURIComponent(item).replace(/%2F/g, '/');
-};
-
-/**
- * Get the text selection in a textarea.
- */
-Drupal.getSelection = function (element) {
-  var range1, range2, start, end;
-  if (typeof element.selectionStart !== 'number' && document.selection) {
-    // The current selection.
-    range1 = document.selection.createRange();
-    range2 = range1.duplicate();
-    // Select all text.
-    range2.moveToElementText(element);
-    // Now move 'dummy' end point to end point of original range.
-    range2.setEndPoint('EndToEnd', range1);
-    // Now we can calculate start and end points.
-    start = range2.text.length - range1.text.length;
-    end = start + range1.text.length;
-    return { 'start': start, 'end': end };
-  }
-  return { 'start': element.selectionStart, 'end': element.selectionEnd };
-};
-
-/**
- * Extends Error to provide handling for Errors in AJAX
- */
-Drupal.AjaxError = function(xmlhttp, uri) {
-
-  var statusCode, statusText, pathText, responseText, readyStateText, message;
-  if (xmlhttp.status) {
-    statusCode = "\n" + Drupal.t("An AJAX HTTP error occurred.") +  "\n" + Drupal.t("HTTP Result Code: !status", {'!status': xmlhttp.status});
-  }
-  else {
-    statusCode = "\n" + Drupal.t("An AJAX HTTP request terminated abnormally.");
-  }
-  statusCode += "\n" + Drupal.t("Debugging information follows.");
-  pathText = "\n" + Drupal.t("Path: !uri", {'!uri': uri} );
-  statusText = '';
-  // In some cases, when statusCode === 0, xmlhttp.statusText may not be defined.
-  // Unfortunately, testing for it with typeof, etc, doesn't seem to catch that
-  // and the test causes an exception. So we need to catch the exception here.
-  try {
-    statusText = "\n" + Drupal.t("StatusText: !statusText", {'!statusText': $.trim(xmlhttp.statusText)});
-  }
-  catch (e) {}
-
-  responseText = '';
-  // Again, we don't have a way to know for sure whether accessing
-  // xmlhttp.responseText is going to throw an exception. So we'll catch it.
-  try {
-    responseText = "\n" + Drupal.t("ResponseText: !responseText", {'!responseText': $.trim(xmlhttp.responseText) } );
-  } catch (e) {}
-
-  // Make the responseText more readable by stripping HTML tags and newlines.
-  responseText = responseText.replace(/<("[^"]*"|'[^']*'|[^'">])*>/gi,"");
-  responseText = responseText.replace(/[\n]+\s+/g,"\n");
-
-  // We don't need readyState except for status == 0.
-  readyStateText = xmlhttp.status === 0 ? ("\n" + Drupal.t("ReadyState: !readyState", {'!readyState': xmlhttp.readyState})) : "";
-
-  this.message = statusCode + pathText + statusText + responseText + readyStateText;
-  this.name = 'AjaxError';
+Drupal.theme.placeholder = function (str) {
+  return '<em class="placeholder">' + Drupal.checkPlain(str) + '</em>';
 };
 
 Drupal.AjaxError.prototype = new Error();
 Drupal.AjaxError.prototype.constructor = Drupal.AjaxError;
 
-// Class indicating that JS is enabled; used for styling purpose.
-$('html').addClass('js');
-
-//Attach all behaviors.
-$(function () {
-  Drupal.attachBehaviors(document, drupalSettings);
-});
-
-/**
- * The default themes.
- */
-$.extend(Drupal.theme, {
-
-  /**
-   * Formats text for emphasized display in a placeholder inside a sentence.
-   *
-   * @param str
-   *   The text to format (plain-text).
-   * @return
-   *   The formatted text (html).
-   */
-  placeholder: function (str) {
-    return '<em class="placeholder">' + Drupal.checkPlain(str) + '</em>';
-  }
-});
-
-})(jQuery, Drupal, window.drupalSettings);
+})(domready, Drupal, window.drupalSettings);

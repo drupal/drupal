@@ -80,6 +80,50 @@ Drupal.behaviors.AJAX = {
 };
 
 /**
+ * Extends Error to provide handling for Errors in AJAX
+ */
+Drupal.AjaxError = function(xmlhttp, uri) {
+
+  var statusCode, statusText, pathText, responseText, readyStateText, message;
+  if (xmlhttp.status) {
+    statusCode = "\n" + Drupal.t("An AJAX HTTP error occurred.") +  "\n" + Drupal.t("HTTP Result Code: !status", {'!status': xmlhttp.status});
+  }
+  else {
+    statusCode = "\n" + Drupal.t("An AJAX HTTP request terminated abnormally.");
+  }
+  statusCode += "\n" + Drupal.t("Debugging information follows.");
+  pathText = "\n" + Drupal.t("Path: !uri", {'!uri': uri} );
+  statusText = '';
+  // In some cases, when statusCode === 0, xmlhttp.statusText may not be defined.
+  // Unfortunately, testing for it with typeof, etc, doesn't seem to catch that
+  // and the test causes an exception. So we need to catch the exception here.
+  try {
+    statusText = "\n" + Drupal.t("StatusText: !statusText", {'!statusText': $.trim(xmlhttp.statusText)});
+  }
+  catch (e) {}
+
+  responseText = '';
+  // Again, we don't have a way to know for sure whether accessing
+  // xmlhttp.responseText is going to throw an exception. So we'll catch it.
+  try {
+    responseText = "\n" + Drupal.t("ResponseText: !responseText", {'!responseText': $.trim(xmlhttp.responseText) } );
+  } catch (e) {}
+
+  // Make the responseText more readable by stripping HTML tags and newlines.
+  responseText = responseText.replace(/<("[^"]*"|'[^']*'|[^'">])*>/gi,"");
+  responseText = responseText.replace(/[\n]+\s+/g,"\n");
+
+  // We don't need readyState except for status == 0.
+  readyStateText = xmlhttp.status === 0 ? ("\n" + Drupal.t("ReadyState: !readyState", {'!readyState': xmlhttp.readyState})) : "";
+
+  this.message = statusCode + pathText + statusText + responseText + readyStateText;
+  this.name = 'AjaxError';
+};
+
+Drupal.AjaxError.prototype = new Error();
+Drupal.AjaxError.prototype.constructor = Drupal.AjaxError;
+
+/**
  * Ajax object.
  *
  * All Ajax objects on a page are accessible through the global Drupal.ajax
@@ -435,8 +479,6 @@ Drupal.ajax.prototype.success = function (response, status) {
   }
   $(this.element).removeClass('progress-disabled').prop('disabled', false);
 
-  Drupal.freezeHeight();
-
   for (var i in response) {
     if (response.hasOwnProperty(i) && response[i].command && this.commands[response[i].command]) {
       this.commands[response[i].command](this, response[i], status);
@@ -451,8 +493,6 @@ Drupal.ajax.prototype.success = function (response, status) {
     var settings = this.settings || Drupal.settings;
     Drupal.attachBehaviors(this.form, settings);
   }
-
-  Drupal.unfreezeHeight();
 
   // Remove any response-specific settings so they don't get used on the next
   // call by mistake.

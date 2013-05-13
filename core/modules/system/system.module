@@ -1222,7 +1222,7 @@ function system_library_info() {
       'core/misc/drupal.js' => array('group' => JS_LIBRARY, 'weight' => -18),
     ),
     'dependencies' => array(
-      array('system', 'jquery'),
+      array('system', 'domready'),
     ),
   );
 
@@ -1458,6 +1458,16 @@ function system_library_info() {
     'dependencies' => array(
       // @todo remove drupal dependency.
       array('system', 'drupal'),
+    ),
+  );
+
+  // domReady.
+  $libraries['domready'] = array(
+    'title' => 'domReady',
+    'website' => 'https://github.com/ded/domready',
+    'version' => 'master',
+    'js' => array(
+      'core/misc/domready/ready.min.js' => array('group' => JS_LIBRARY, 'weight' => -21),
     ),
   );
 
