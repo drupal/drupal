@@ -51,6 +51,10 @@ class ExposedFormTest extends ViewTestBase {
    * Tests whether the reset button works on an exposed form.
    */
   public function testResetButton() {
+    // Test the button is hidden when there is no exposed input.
+    $this->drupalGet('test_reset_button');
+    $this->assertNoField('edit-reset');
+
     $this->drupalGet('test_reset_button', array('query' => array('type' => 'article')));
     // Test that the type has been set.
     $this->assertFieldById('edit-type', 'article', 'Article type filter set.');
@@ -60,14 +64,15 @@ class ExposedFormTest extends ViewTestBase {
     $this->assertResponse(200);
     // Test the type has been reset.
     $this->assertFieldById('edit-type', 'All', 'Article type filter has been reset.');
+
+    // Test the button is hidden after reset.
+    $this->assertNoField('edit-reset');
   }
 
   /**
    * Tests, whether and how the reset button can be renamed.
    */
   public function testRenameResetButton() {
-    // Look at the page and check the label "reset".
-    $this->drupalGet('test_reset_button');
     // Rename the label of the reset button.
     $view = views_get_view('test_reset_button');
     $view->setDisplay();
@@ -80,8 +85,8 @@ class ExposedFormTest extends ViewTestBase {
 
     views_invalidate_cache();
 
-    // Look whether ther reset button label changed.
-    $this->drupalGet('test_reset_button');
+    // Look whether the reset button label changed.
+    $this->drupalGet('test_reset_button', array('query' => array('type' => 'article')));
     $this->assertResponse(200);
 
     $this->helperButtonHasLabel('edit-reset', $expected_label);

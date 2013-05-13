@@ -183,13 +183,6 @@ abstract class ExposedFormPluginBase extends PluginBase {
   public function postExecute() { }
 
   function exposed_form_alter(&$form, &$form_state) {
-    if (!empty($this->options['reset_button'])) {
-      $form['reset'] = array(
-        '#value' => $this->options['reset_button_label'],
-        '#type' => 'submit',
-      );
-    }
-
     $form['submit']['#value'] = $this->options['submit_button'];
     // Check if there is exposed sorts for this view
     $exposed_sorts = array();
@@ -231,8 +224,26 @@ abstract class ExposedFormPluginBase extends PluginBase {
         );
       }
       $form['submit']['#weight'] = 10;
-      if (isset($form['reset'])) {
-        $form['reset']['#weight'] = 10;
+    }
+
+    if (!empty($this->options['reset_button'])) {
+      $form['reset'] = array(
+        '#value' => $this->options['reset_button_label'],
+        '#type' => 'submit',
+        '#weight' => 10,
+      );
+
+      // Get an array of exposed filters, keyed by identifier option.
+      foreach ($this->view->filter as $id => $handler) {
+        if ($handler->canExpose() && $handler->isExposed() && !empty($handler->options['expose']['identifier'])) {
+          $exposed_filters[$handler->options['expose']['identifier']] = $id;
+        }
+      }
+      $all_exposed = array_merge($exposed_sorts, $exposed_filters);
+
+      // Set the access to FALSE if there is no exposed input.
+      if (!array_intersect_key($all_exposed, $this->view->exposed_input)) {
+        $form['reset']['#access'] = FALSE;
       }
     }
 
