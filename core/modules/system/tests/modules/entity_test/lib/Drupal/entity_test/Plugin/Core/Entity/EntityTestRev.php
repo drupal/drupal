@@ -18,12 +18,14 @@ use Drupal\Core\Annotation\Translation;
  *   id = "entity_test_rev",
  *   label = @Translation("Test entity - revisions"),
  *   module = "entity_test",
- *   controller_class = "Drupal\entity_test\EntityTestRevStorageController",
- *   access_controller_class = "Drupal\entity_test\EntityTestAccessController",
- *   form_controller_class = {
- *     "default" = "Drupal\entity_test\EntityTestFormController"
+ *   controllers = {
+ *     "storage" = "Drupal\entity_test\EntityTestRevStorageController",
+ *     "access" = "Drupal\entity_test\EntityTestAccessController",
+ *     "form" = {
+ *       "default" = "Drupal\entity_test\EntityTestFormController"
+ *     },
+ *     "translation" = "Drupal\translation_entity\EntityTranslationControllerNG"
  *   },
- *   translation_controller_class = "Drupal\translation_entity\EntityTranslationControllerNG",
  *   base_table = "entity_test_rev",
  *   revision_table = "entity_test_rev_revision",
  *   fieldable = TRUE,
@@ -31,6 +33,7 @@ use Drupal\Core\Annotation\Translation;
  *     "id" = "id",
  *     "uuid" = "uuid",
  *     "revision" = "revision_id",
+ *     "bundle" = "type"
  *   },
  *   menu_base_path = "entity_test_rev/manage/%entity_test_rev"
  * )

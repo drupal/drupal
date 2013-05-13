@@ -1,0 +1,21 @@
+id: node.article.field_tags
+field_name: field_tags
+entity_type: node
+bundle: article
+label: Tags
+description: 'Enter a comma-separated list of words to describe your content.'
+required: false
+default_value: {  }
+default_value_function: ''
+settings:
+  user_register_form: false
+widget:
+  type: taxonomy_autocomplete
+  weight: -4
+  settings:
+    size: '60'
+    autocomplete_path: taxonomy/autocomplete
+    placeholder: ''
+  module: taxonomy
+status: 1
+langcode: und

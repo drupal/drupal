@@ -21,7 +21,7 @@ use Traversable;
  * When implementing this interface which extends Traversable, make sure to list
  * IteratorAggregate or Iterator before this interface in the implements clause.
  */
-interface ComplexDataInterface extends Traversable  {
+interface ComplexDataInterface extends Traversable, TypedDataInterface  {
 
   /**
    * Gets a property object.
@@ -44,6 +44,10 @@ interface ComplexDataInterface extends Traversable  {
    *   The name of the property to set; e.g., 'title' or 'name'.
    * @param $value
    *   The value to set, or NULL to unset the property.
+   * @param bool $notify
+   *   (optional) Whether to notify the parent object of the change. Defaults to
+   *   TRUE. If the update stems from a parent object, set it to FALSE to avoid
+   *   being notified again.
    *
    * @throws \InvalidArgumentException
    *   If the specified property does not exist.
@@ -51,7 +55,7 @@ interface ComplexDataInterface extends Traversable  {
    * @return \Drupal\Core\TypedData\TypedDataInterface
    *   The property object.
    */
-  public function set($property_name, $value);
+  public function set($property_name, $value, $notify = TRUE);
 
   /**
    * Gets an array of property objects.
@@ -120,4 +124,14 @@ interface ComplexDataInterface extends Traversable  {
    *   TRUE if the data structure is empty, FALSE otherwise.
    */
   public function isEmpty();
+
+  /**
+   * React to changes to a child property.
+   *
+   * Note that this is invoked before any changes are applied.
+   *
+   * @param $property_name
+   *   The name of the property which is changed.
+   */
+  public function onChange($property_name);
 }

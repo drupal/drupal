@@ -298,7 +298,7 @@ ul.tips {
   background: #444;
   background: rgba(0, 0, 0, 0.6);
   color: #fff;
-  display: block;
+  display: inline-block;
   font-size: 0.94em;
   line-height: 1.7;
   padding: 1px 10px 2px 10px;
@@ -343,6 +343,13 @@ h1#site-name {
   float: left; /* LTR */
   margin: 0 10px;
   padding: 0;
+}
+.region-header .block > h2 {
+  /* @extend .element-invisible */
+  position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px);
+  overflow: hidden;
+  height: 1px;
 }
 .region-header .block .content {
   margin: 0;
@@ -876,6 +883,13 @@ ul.links {
 #footer .block .content {
   padding: 0.5em 0;
   margin-top: 0;
+}
+#footer .block > h2 {
+  /* @extend .element-invisible */
+  position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px);
+  overflow: hidden;
+  height: 1px;
 }
 #footer .block h2 {
   margin: 0;

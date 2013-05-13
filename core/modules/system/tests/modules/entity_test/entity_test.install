@@ -58,6 +58,13 @@ function entity_test_schema() {
         'length' => 128,
         'not null' => FALSE,
       ),
+      'type' => array(
+        'description' => 'The bundle of the test entity.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
       'langcode' => array(
         'description' => 'The {language}.langcode of the original variant of this test entity.',
         'type' => 'varchar',
@@ -107,6 +114,13 @@ function entity_test_schema() {
         'type' => 'varchar',
         'length' => 128,
         'not null' => FALSE,
+      ),
+      'type' => array(
+        'description' => 'The bundle of the test entity.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
       ),
       'langcode' => array(
         'description' => 'The {language}.langcode of the original variant of this test entity.',
@@ -190,6 +204,13 @@ function entity_test_schema() {
         'length' => 128,
         'not null' => FALSE,
       ),
+      'type' => array(
+        'description' => 'The bundle of the test entity.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
       'langcode' => array(
         'description' => 'The {language}.langcode of the original variant of this test entity.',
         'type' => 'varchar',
@@ -270,6 +291,13 @@ function entity_test_schema() {
         'type' => 'varchar',
         'length' => 128,
         'not null' => FALSE,
+      ),
+      'type' => array(
+        'description' => 'The bundle of the test entity.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
       ),
       'langcode' => array(
         'description' => 'The {language}.langcode of the original variant of this test entity.',

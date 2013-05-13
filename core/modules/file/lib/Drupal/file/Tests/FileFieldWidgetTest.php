@@ -34,8 +34,6 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $type_name = 'article';
     $field_name = strtolower($this->randomName());
     $this->createFileField($field_name, $type_name);
-    $field = field_info_field($field_name);
-    $instance = field_info_instance('node', $field_name, $type_name);
 
     $test_file = $this->getTestFile('text');
 
@@ -99,12 +97,6 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->createFileField($field_name, $type_name, array('cardinality' => 3));
     $this->createFileField($field_name2, $type_name, array('cardinality' => 3));
 
-    $field = field_info_field($field_name);
-    $instance = field_info_instance('node', $field_name, $type_name);
-
-    $field2 = field_info_field($field_name2);
-    $instance2 = field_info_instance('node', $field_name2, $type_name);
-
     $test_file = $this->getTestFile('text');
 
     foreach (array('nojs', 'js') as $type) {
@@ -119,7 +111,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->drupalGet("node/add/$type_name");
       foreach (array($field_name2, $field_name) as $each_field_name) {
         for ($delta = 0; $delta < 3; $delta++) {
-          $edit = array('files[' . $each_field_name . '_' . LANGUAGE_NOT_SPECIFIED . '_' . $delta . ']' => drupal_realpath($test_file->uri));
+          $edit = array('files[' . $each_field_name . '_' . LANGUAGE_NOT_SPECIFIED . '_' . $delta . '][]' => drupal_realpath($test_file->uri));
           // If the Upload button doesn't exist, drupalPost() will automatically
           // fail with an assertion message.
           $this->drupalPost(NULL, $edit, t('Upload'));
@@ -216,8 +208,6 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $type_name = 'article';
     $field_name = strtolower($this->randomName());
     $this->createFileField($field_name, $type_name);
-    $field = field_info_field($field_name);
-    $instance = field_info_instance('node', $field_name, $type_name);
 
     $test_file = $this->getTestFile('text');
 

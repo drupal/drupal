@@ -31,8 +31,11 @@ class Date extends TypedData {
   /**
    * Overrides TypedData::setValue().
    */
-  public function setValue($value) {
-
+  public function setValue($value, $notify = TRUE) {
+    // Notify the parent of any changes to be made.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
     // Don't try to create a date from an empty value.
     // It would default to the current time.
     if (!isset($value)) {

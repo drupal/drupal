@@ -160,7 +160,7 @@ class CommentFormController extends EntityFormControllerNG {
 
     // Add internal comment properties.
     foreach (array('cid', 'pid', 'entity_id', 'entity_type', 'field_name', 'uid', 'langcode') as $key) {
-      $key_name = key($comment->$key->offsetGet(0)->getProperties());
+      $key_name = key($comment->$key->offsetGet(0)->getPropertyDefinitions());
       $form[$key] = array('#type' => 'value', '#value' => $comment->$key->{$key_name});
     }
 

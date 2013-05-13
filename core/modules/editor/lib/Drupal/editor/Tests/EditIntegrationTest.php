@@ -122,7 +122,7 @@ class EditIntegrationTest extends EditTestBase {
    * format compatibility.
    */
   function testEditorSelection() {
-    $this->editorManager = new EditorManager($this->container->getParameter('container.namespaces'));
+    $this->editorManager = new EditorManager($this->container->get('container.namespaces'));
     $this->editorSelector = new EditorSelector($this->editorManager);
 
     // Pretend there is an entity with these items for the field.
@@ -146,7 +146,7 @@ class EditIntegrationTest extends EditTestBase {
    * Tests (custom) metadata when the "Editor" Create.js editor is used.
    */
   function testMetadata() {
-    $this->editorManager = new EditorManager($this->container->getParameter('container.namespaces'));
+    $this->editorManager = new EditorManager($this->container->get('container.namespaces'));
     $this->accessChecker = new MockEditEntityFieldAccessCheck();
     $this->editorSelector = new EditorSelector($this->editorManager);
     $this->metadataGenerator = new MetadataGenerator($this->accessChecker, $this->editorSelector, $this->editorManager);

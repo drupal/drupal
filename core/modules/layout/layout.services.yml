@@ -1,4 +1,4 @@
 services:
   plugin.manager.layout:
     class: Drupal\layout\Plugin\Type\LayoutManager
-    arguments: ['%container.namespaces%']
+    arguments: ['@container.namespaces']

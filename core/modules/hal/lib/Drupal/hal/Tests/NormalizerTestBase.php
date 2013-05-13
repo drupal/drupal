@@ -62,6 +62,7 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
     $this->installSchema('user', array('users'));
     $this->installSchema('language', array('language'));
     $this->installSchema('entity_test', array('entity_test'));
+    $this->installConfig(array('field'));
 
     // Add English as a language.
     $english = new Language(array(
@@ -128,7 +129,7 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
       new FieldItemNormalizer(),
       new FieldNormalizer(),
     );
-    $link_manager = new LinkManager(new TypeLinkManager(new MemoryBackend('cache')), new RelationLinkManager());
+    $link_manager = new LinkManager(new TypeLinkManager(new MemoryBackend('cache')), new RelationLinkManager(new MemoryBackend('cache')));
     foreach ($normalizers as $normalizer) {
       $normalizer->setLinkManager($link_manager);
     }

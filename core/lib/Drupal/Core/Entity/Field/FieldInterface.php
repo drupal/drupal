@@ -8,9 +8,7 @@
 namespace Drupal\Core\Entity\Field;
 
 use Drupal\Core\TypedData\AccessibleInterface;
-use Drupal\Core\TypedData\ContextAwareInterface;
 use Drupal\Core\TypedData\ListInterface;
-use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
  * Interface for fields, being lists of field items.
@@ -27,7 +25,7 @@ use Drupal\Core\TypedData\TypedDataInterface;
  * When implementing this interface which extends Traversable, make sure to list
  * IteratorAggregate or Iterator before this interface in the implements clause.
  */
-interface FieldInterface extends ListInterface, AccessibleInterface, ContextAwareInterface, TypedDataInterface {
+interface FieldInterface extends ListInterface, AccessibleInterface {
 
   /**
    * Gets a property object from the first field item.

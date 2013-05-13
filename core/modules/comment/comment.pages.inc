@@ -7,8 +7,8 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\comment\Plugin\Core\Entity\Comment;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Form constructor for the comment reply form.
@@ -123,30 +123,28 @@ function comment_reply(EntityInterface $entity, $field_name, $pid = NULL) {
 /**
  * Page callback: Publishes the specified comment.
  *
- * @param $cid
- *   A comment identifier.
+ * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
+ *   A comment entity.
  *
  * @see comment_menu()
  */
-function comment_approve($cid) {
+function comment_approve(Comment $comment) {
   // @todo CSRF tokens are validated in page callbacks rather than access
   //   callbacks, because access callbacks are also invoked during menu link
   //   generation. Add token support to routing: http://drupal.org/node/755584.
   $token = drupal_container()->get('request')->query->get('token');
-  if (!isset($token) || !drupal_valid_token($token, "comment/$cid/approve")) {
+  if (!isset($token) || !drupal_valid_token($token, 'comment/' . $comment->id() . '/approve')) {
     throw new AccessDeniedHttpException();
   }
 
-  if ($comment = comment_load($cid)) {
-    $comment->status->value = COMMENT_PUBLISHED;
-    comment_save($comment);
+  $comment->status->value = COMMENT_PUBLISHED;
+  $comment->save();
 
-    drupal_set_message(t('Comment approved.'));
-    $entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
-    if ($entity) {
-      $uri = $entity->uri();
-      drupal_goto($uri['path']);
-    }
+  drupal_set_message(t('Comment approved.'));
+  $entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
+  if ($entity) {
+    $uri = $entity->uri();
+    drupal_goto($uri['path']);
   }
   throw new NotFoundHttpException();
 }

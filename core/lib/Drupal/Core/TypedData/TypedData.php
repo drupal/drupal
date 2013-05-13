@@ -23,15 +23,37 @@ abstract class TypedData implements TypedDataInterface {
   protected $definition;
 
   /**
-   * Constructs a TypedData object given its definition.
+   * The property name.
+   *
+   * @var string
+   */
+  protected $name;
+
+  /**
+   * The parent typed data object.
+   *
+   * @var \Drupal\Core\TypedData\TypedDataInterface
+   */
+  protected $parent;
+
+  /**
+   * Constructs a TypedData object given its definition and context.
    *
    * @param array $definition
    *   The data definition.
+   * @param string $name
+   *   (optional) The name of the created property, or NULL if it is the root
+   *   of a typed data tree. Defaults to NULL.
+   * @param \Drupal\Core\TypedData\TypedDataInterface $parent
+   *   (optional) The parent object of the data property, or NULL if it is the
+   *   root of a typed data tree. Defaults to NULL.
    *
    * @see Drupal\Core\TypedData\TypedDataManager::create()
    */
-  public function __construct(array $definition) {
+  public function __construct(array $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     $this->definition = $definition;
+    $this->parent = $parent;
+    $this->name = $name;
   }
 
   /**
@@ -58,7 +80,11 @@ abstract class TypedData implements TypedDataInterface {
   /**
    * Implements \Drupal\Core\TypedData\TypedDataInterface::setValue().
    */
-  public function setValue($value) {
+  public function setValue($value, $notify = TRUE) {
+    // Notify the parent of any changes to be made.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
     $this->value = $value;
   }
 
@@ -83,5 +109,58 @@ abstract class TypedData implements TypedDataInterface {
   public function validate() {
     // @todo: Add the typed data manager as proper dependency.
     return typed_data()->getValidator()->validate($this);
+  }
+
+  /**
+   * Implements \Drupal\Core\TypedData\TypedDataInterface::setContext().
+   */
+  public function setContext($name = NULL, TypedDataInterface $parent = NULL) {
+    $this->parent = $parent;
+    $this->name = $name;
+  }
+
+  /**
+   * Implements \Drupal\Core\TypedData\TypedDataInterface::getName().
+   */
+  public function getName() {
+    return $this->name;
+  }
+
+  /**
+   * Implements \Drupal\Core\TypedData\TypedDataInterface::getRoot().
+   */
+  public function getRoot() {
+    if (isset($this->parent)) {
+      return $this->parent->getRoot();
+    }
+    // If no parent is set, this is the root of the data tree.
+    return $this;
+  }
+
+  /**
+   * Implements \Drupal\Core\TypedData\TypedDataInterface::getPropertyPath().
+   */
+  public function getPropertyPath() {
+    if (isset($this->parent)) {
+      // The property path of this data object is the parent's path appended
+      // by this object's name.
+      $prefix = $this->parent->getPropertyPath();
+      return (strlen($prefix) ? $prefix . '.' : '') . $this->name;
+    }
+    // If no parent is set, this is the root of the data tree. Thus the property
+    // path equals the name of this data object.
+    elseif (isset($this->name)) {
+      return $this->name;
+    }
+    return '';
+  }
+
+  /**
+   * Implements \Drupal\Core\TypedData\TypedDataInterface::getParent().
+   *
+   * @return \Drupal\Core\Entity\Field\FieldInterface
+   */
+  public function getParent() {
+    return $this->parent;
   }
 }

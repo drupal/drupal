@@ -18,10 +18,12 @@ use Drupal\Core\Annotation\Translation;
  *   id = "test_entity",
  *   label = @Translation("Test Entity"),
  *   module = "field_test",
- *   controller_class = "Drupal\field_test\TestEntityController",
- *   render_controller_class = "Drupal\Core\Entity\EntityRenderController",
- *   form_controller_class = {
- *     "default" = "Drupal\field_test\TestEntityFormController"
+ *   controllers = {
+ *     "storage" = "Drupal\field_test\TestEntityController",
+ *     "render" = "Drupal\Core\Entity\EntityRenderController",
+ *     "form" = {
+ *       "default" = "Drupal\field_test\TestEntityFormController"
+ *     }
  *   },
  *   field_cache = FALSE,
  *   base_table = "test_entity",

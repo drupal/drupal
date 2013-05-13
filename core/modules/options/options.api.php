@@ -20,8 +20,7 @@
  *   properties to filter out values from a list defined by field level
  *   properties.
  * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity object the field is attached to, or NULL if no entity
- *   exists (e.g. in field settings page).
+ *   The entity object the field is attached to.
  *
  * @return
  *   The array of options for the field. Array keys are the values to be

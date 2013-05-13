@@ -45,8 +45,8 @@ use Drupal\field\FieldException;
  *   - settings: each omitted setting is given the default value defined in
  *     hook_field_info().
  *   - storage:
- *     - type: the storage backend specified in the 'field_storage_default'
- *       system variable.
+ *     - type: the storage backend specified in the
+ *       'field.settings.default_storage' configuration.
  *     - settings: each omitted setting is given the default value specified in
  *       hook_field_storage_info().
  *
@@ -54,6 +54,9 @@ use Drupal\field\FieldException;
  *   The field entity.
  *
  * @throws Drupal\field\FieldException
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   entity_create('field_entity', $definition)->save().
  *
  * See: @link field Field API data structures @endlink.
  */
@@ -82,6 +85,8 @@ function field_create_field(array $field) {
  *   structure.
  *
  * @throws Drupal\field\FieldException
+ *
+ * @deprecated as of Drupal 8.0. Use $field->save().
  *
  * @see field_create_field()
  */
@@ -169,8 +174,8 @@ function field_read_fields($conditions = array(), $include_additional = array())
 
   // Translate "do not include inactive instances" into actual conditions.
   if (!$include_inactive) {
-    $conditions['active'] = 1;
-    $conditions['storage.active'] = 1;
+    $conditions['active'] = TRUE;
+    $conditions['storage.active'] = TRUE;
   }
 
   // Collect matching fields.
@@ -214,6 +219,8 @@ function field_read_fields($conditions = array(), $include_additional = array())
  *
  * @param $field_name
  *   The field name to delete.
+ *
+ * @deprecated as of Drupal 8.0. Use $field->delete().
  */
 function field_delete_field($field_name) {
   if ($field = field_info_field($field_name)) {
@@ -244,6 +251,9 @@ function field_delete_field($field_name) {
  *
  * @throws Drupal\field\FieldException
  *
+ * @deprecated as of Drupal 8.0. Use
+ *   entity_create('field_instance', $definition)->save().
+ *
  * See: @link field Field API data structures @endlink.
  */
 function field_create_instance(array $instance) {
@@ -262,12 +272,26 @@ function field_create_instance(array $instance) {
  *   - entity_type: The type of the entity the field is attached to.
  *   - bundle: The bundle this field belongs to.
  *   - field_name: The name of an existing field.
- *   Read-only ID properties are assigned automatically. Any other properties
- *   properties specified in $instance overwrite the existing values for
- *   the instance.
+ *   The other array elements represent properties of the instance, and all
+ *   properties must be specified or their default values will be used (except
+ *   internal-use properties, which are assigned automatically). To avoid losing
+ *   the previously stored properties of the instance when making a change,
+ *   first load the instance with field_info_instance(), then override the
+ *   values you want to override, and finally save using this function. Example:
+ *   @code
+ *   // Fetch an instance info array.
+ *   $instance_info = field_info_instance($entity_type, $field_name, $bundle_name);
+ *   // Change a single property in the instance definition.
+ *   $instance_info['definition']['required'] = TRUE;
+ *   // Write the changed definition back.
+ *   field_update_instance($instance_info['definition']);
+ *   @endcode
  *
  * @throws Drupal\field\FieldException
  *
+ * @deprecated as of Drupal 8.0. Use $instance->save().
+ *
+ * @see field_info_instance()
  * @see field_create_instance()
  */
 function field_update_instance($instance) {
@@ -360,8 +384,8 @@ function field_read_instances($conditions = array(), $include_additional = array
 
   // Translate "do not include inactive fields" into actual conditions.
   if (!$include_inactive) {
-    $conditions['field.active'] = 1;
-    $conditions['field.storage.active'] = 1;
+    $conditions['field.active'] = TRUE;
+    $conditions['field.storage.active'] = TRUE;
   }
 
   // Collect matching instances.
@@ -372,20 +396,17 @@ function field_read_instances($conditions = array(), $include_additional = array
       continue;
     }
 
-    // Get data from the field. If the field is marked as deleted, we need to
-    // get it from the state storage.
-    $field = entity_load('field_entity', $instance->field_name);
-    if (empty($field) && $include_deleted && isset($deleted_fields[$instance->field_uuid])) {
-      $field = new Field($deleted_fields[$instance->field_uuid]);
-    }
-    if (empty($field)) {
-      continue;
-    }
+    // Some conditions are checked against the field.
+    $field = $instance->getField();
 
     // Only keep the instance if it matches all conditions.
     foreach ($conditions as $key => $value) {
       // Extract the actual value against which the condition is checked.
       switch ($key) {
+        case 'field_name':
+          $checked_value = $field->id;
+          break;
+
         case 'field.active':
           $checked_value = $field->active;
           break;
@@ -426,6 +447,8 @@ function field_read_instances($conditions = array(), $include_additional = array
  *   If TRUE, the field will be deleted as well if its last instance is being
  *   deleted. If FALSE, it is the caller's responsibility to handle the case of
  *   fields left without instances. Defaults to TRUE.
+ *
+ * @deprecated as of Drupal 8.0. Use $instance->delete().
  */
 function field_delete_instance(FieldInstance $instance, $field_cleanup = TRUE) {
   $instance->delete($field_cleanup);
@@ -520,7 +543,7 @@ function field_delete_instance(FieldInstance $instance, $field_cleanup = TRUE) {
 function field_purge_batch($batch_size) {
   // Retrieve all deleted field instances. We cannot use field_info_instances()
   // because that function does not return deleted instances.
-  $instances = field_read_instances(array('deleted' => 1), array('include_deleted' => 1));
+  $instances = field_read_instances(array('deleted' => TRUE), array('include_deleted' => TRUE));
   $factory = Drupal::service('entity.query');
   $info = entity_get_info();
   foreach ($instances as $instance) {

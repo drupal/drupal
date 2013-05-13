@@ -238,6 +238,71 @@ class LocaleImportFunctionalTest extends WebTestBase {
   }
 
   /**
+   * Tests .po file import with configuration translation.
+   */
+  function testConfigPoFile() {
+    // Values for translations to assert. Config key, original string,
+    // translation and config property name.
+    $config_strings = array(
+      'system.maintenance' => array(
+        '@site is currently under maintenance. We should be back shortly. Thank you for your patience.',
+        '@site karbantartás alatt áll. Rövidesen visszatérünk. Köszönjük a türelmet.',
+        'message',
+      ),
+      'user.role.anonymous' => array(
+        'Anonymous user',
+        'Névtelen felhasználó',
+        'label',
+      ),
+    );
+
+    // Add custom language for testing.
+    $langcode = 'xx';
+    $edit = array(
+      'predefined_langcode' => 'custom',
+      'langcode' => $langcode,
+      'name' => $this->randomName(16),
+      'direction' => '0',
+    );
+    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
+
+    // Check for the source strings we are going to translate. Adding the
+    // custom language should have made the process to export configuration
+    // strings to interface translation executed.
+    $locale_storage = locale_storage();
+    foreach ($config_strings as $config_string) {
+      $string = $locale_storage->findString(array('source' => $config_string[0], 'context' => '', 'type' => 'configuration'));
+      $this->assertTrue($string, 'Configuration strings have been created upon installation.');
+    }
+
+    // Import a .po file to translate.
+    $this->importPoFile($this->getPoFileWithConfig(), array(
+      'langcode' => $langcode,
+    ));
+
+    // Translations got recorded in the interface translation system.
+    foreach ($config_strings as $config_string) {
+      $search = array(
+        'string' => $config_string[0],
+        'langcode' => $langcode,
+        'translation' => 'all',
+      );
+      $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
+      $this->assertText($config_string[1], format_string('Translation of @string found.', array('@string' => $config_string[0])));
+    }
+
+    $locale_config = $this->container->get('locale.config.typed');
+    // Translations got recorded in the config system.
+    foreach ($config_strings as $config_key => $config_string) {
+      $wrapper = $locale_config->get($config_key);
+      $translation = $wrapper->getTranslation($langcode);
+      $properties = $translation->getProperties();
+      $this->assertEqual(count($properties), 1, 'Got the right number of properties with strict translation');
+      $this->assertEqual($properties[$config_string[2]]->getValue(), $config_string[1]);
+    }
+  }
+
+  /**
    * Helper function: import a standalone .po file in a given language.
    *
    * @param $contents
@@ -449,6 +514,7 @@ msgstr ""
 
 EOF;
   }
+
   /**
    * Helper function that returns a .po file with an empty last item.
    */
@@ -467,6 +533,28 @@ msgstr "Műveletek"
 
 msgid "Will not appear in Drupal core, so we can ensure the test passes"
 msgstr ""
+
+EOF;
+  }
+
+  /**
+   * Helper function that returns a .po file with configuration translations.
+   */
+  function getPoFileWithConfig() {
+    return <<< EOF
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal 8\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\\n"
+
+msgid "@site is currently under maintenance. We should be back shortly. Thank you for your patience."
+msgstr "@site karbantartás alatt áll. Rövidesen visszatérünk. Köszönjük a türelmet."
+
+msgid "Anonymous user"
+msgstr "Névtelen felhasználó"
 
 EOF;
   }

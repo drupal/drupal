@@ -1,0 +1,22 @@
+id: node.article.default
+targetEntityType: node
+bundle: article
+viewMode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: '0'
+    settings: {  }
+  field_tags:
+    type: taxonomy_term_reference_link
+    weight: '10'
+    label: above
+    settings: {  }
+  field_image:
+    label: hidden
+    type: image
+    settings:
+      image_style: large
+      image_link: ''
+    weight: '-1'

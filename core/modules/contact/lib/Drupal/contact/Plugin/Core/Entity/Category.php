@@ -18,10 +18,12 @@ use Drupal\Core\Annotation\Translation;
  *   id = "contact_category",
  *   label = @Translation("Contact category"),
  *   module = "contact",
- *   controller_class = "Drupal\contact\CategoryStorageController",
- *   list_controller_class = "Drupal\contact\CategoryListController",
- *   form_controller_class = {
- *     "default" = "Drupal\contact\CategoryFormController"
+ *   controllers = {
+ *     "storage" = "Drupal\contact\CategoryStorageController",
+ *     "list" = "Drupal\contact\CategoryListController",
+ *     "form" = {
+ *       "default" = "Drupal\contact\CategoryFormController"
+ *     }
  *   },
  *   uri_callback = "contact_category_uri",
  *   config_prefix = "contact.category",

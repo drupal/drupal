@@ -8,8 +8,6 @@
 namespace Drupal\Core\Entity\Field;
 
 use Drupal\Core\TypedData\ComplexDataInterface;
-use Drupal\Core\TypedData\ContextAwareInterface;
-use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
  * Interface for entity field items.
@@ -23,7 +21,7 @@ use Drupal\Core\TypedData\TypedDataInterface;
  * @see \Drupal\Core\Entity\Field\FieldInterface
  * @see \Drupal\Core\Entity\Field\FieldItemBase
  */
-interface FieldItemInterface extends ComplexDataInterface, ContextAwareInterface, TypedDataInterface {
+interface FieldItemInterface extends ComplexDataInterface {
 
   /**
    * Magic method: Gets a property value.

@@ -619,7 +619,7 @@ function system_theme_settings_validate($form, &$form_state) {
     $validators = array('file_validate_is_image' => array());
 
     // Check for a new uploaded logo.
-    $file = file_save_upload('logo_upload', $validators);
+    $file = file_save_upload('logo_upload', $validators, FALSE, 0);
     if (isset($file)) {
       // File upload was attempted.
       if ($file) {
@@ -635,7 +635,7 @@ function system_theme_settings_validate($form, &$form_state) {
     $validators = array('file_validate_extensions' => array('ico png gif jpg jpeg apng svg'));
 
     // Check for a new uploaded favicon.
-    $file = file_save_upload('favicon_upload', $validators);
+    $file = file_save_upload('favicon_upload', $validators, FALSE, 0);
     if (isset($file)) {
       // File upload was attempted.
       if ($file) {
@@ -1841,37 +1841,32 @@ function system_image_toolkit_settings($form, &$form_state) {
 
   // If we have available toolkits allow the user to select the image toolkit to
   // use and load the settings forms.
-  if (count($toolkits_available)) {
-    $options = array();
-    foreach($toolkits_available as $id => $definition) {
-      $options[$id] = $definition['title'];
-    }
+  $options = array();
+  foreach($toolkits_available as $id => $definition) {
+    $options[$id] = $definition['title'];
+  }
 
-    $form['image_toolkit'] = array(
-      '#type' => 'radios',
-      '#title' => t('Select an image processing toolkit'),
-      '#default_value' => $current_toolkit,
-      '#options' => $options,
+  $form['image_toolkit'] = array(
+    '#type' => 'radios',
+    '#title' => t('Select an image processing toolkit'),
+    '#default_value' => $current_toolkit,
+    '#options' => $options,
+  );
+
+  // Get the toolkit settings forms.
+  foreach ($toolkits_available as $id => $definition) {
+    $toolkit = $manager->createInstance($id);
+    $form['image_toolkit_settings'][$id] = array(
+      '#type' => 'fieldset',
+      '#title' => t('@toolkit settings', array('@toolkit' => $definition['title'])),
+      '#collapsible' => TRUE,
+      '#collapsed' => ($id == $current_toolkit) ? FALSE : TRUE,
+      '#tree' => TRUE,
     );
-
-    // Get the toolkit settings forms.
-    foreach ($toolkits_available as $id => $definition) {
-      $toolkit = $manager->createInstance($id);
-      $form['image_toolkit_settings'][$id] = array(
-        '#type' => 'fieldset',
-        '#title' => t('@toolkit settings', array('@toolkit' => $definition['title'])),
-        '#collapsible' => TRUE,
-        '#collapsed' => ($id == $current_toolkit) ? FALSE : TRUE,
-        '#tree' => TRUE,
-      );
-      $form['image_toolkit_settings'][$id] += $toolkit->settingsForm();
-    }
-
-    $form = system_config_form($form, $form_state);
+    $form['image_toolkit_settings'][$id] += $toolkit->settingsForm();
   }
-  else {
-    form_set_error('image_toolkit', t('There are no image toolkits available. Drupal comes with support for PHP\'s GD image toolkit. This requires that the GD module for PHP be installed and configured properly. For more information see <a href="@url">PHP\'s image documentation</a>.', array('@url' => 'http://php.net/image')));
-  }
+
+  $form = system_config_form($form, $form_state);
 
   return $form;
 }

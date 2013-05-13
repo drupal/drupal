@@ -99,10 +99,8 @@ function aggregator_menu() {
   );
   $items['admin/config/services/aggregator/add/feed'] = array(
     'title' => 'Add feed',
-    'page callback' => 'aggregator_feed_add',
-    'access arguments' => array('administer news feeds'),
+    'route_name' => 'aggregator_feed_add',
     'type' => MENU_LOCAL_ACTION,
-    'file' => 'aggregator.admin.inc',
   );
   $items['admin/config/services/aggregator/add/category'] = array(
     'title' => 'Add category',

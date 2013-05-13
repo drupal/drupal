@@ -7,11 +7,11 @@
 
 namespace Drupal\views\Plugin\views;
 
+use Drupal\Core\Plugin\ContainerFactoryPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\Component\Plugin\PluginBase as ComponentPluginBase;
 use Drupal\views\ViewExecutable;
 
-abstract class PluginBase extends ComponentPluginBase {
+abstract class PluginBase extends ContainerFactoryPluginBase {
 
   /**
    * Options for this plugin will be held here.
@@ -251,13 +251,13 @@ abstract class PluginBase extends ComponentPluginBase {
    * @param string $string
    *   The string to preform the token replacement on.
    * @param array $options
-   *   An array of options, as passed to token_replace.
+   *   An array of options, as passed to \Drupal\Core\Utility\Token::replace().
    *
    * @return string
    *   The tokenized string.
    */
   public function globalTokenReplace($string = '', array $options = array()) {
-    return token_replace($string, array('view' => $this->view), $options);
+    return \Drupal::token()->replace($string, array('view' => $this->view), $options);
   }
 
   /**
@@ -274,7 +274,7 @@ abstract class PluginBase extends ComponentPluginBase {
    *   An array of available token replacement info or tokens, grouped by type.
    */
   public function getAvailableGlobalTokens($prepared = FALSE, array $types = array()) {
-    $info = token_info();
+    $info = \Drupal::token()->getInfo();
     // Site and view tokens should always be available.
     $types += array('site', 'view');
     $available = array_intersect_key($info['tokens'], array_flip($types));

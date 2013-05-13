@@ -134,10 +134,8 @@ function book_menu() {
   $items['admin/content/book'] = array(
     'title' => 'Books',
     'description' => "Manage your site's book outlines.",
-    'page callback' => 'book_admin_overview',
-    'access arguments' => array('administer book outlines'),
+    'route_name' => 'book_admin',
     'type' => MENU_LOCAL_TASK,
-    'file' => 'book.admin.inc',
   );
   $items['admin/content/book/list'] = array(
     'title' => 'List',
@@ -161,10 +159,8 @@ function book_menu() {
   );
   $items['book'] = array(
     'title' => 'Books',
-    'page callback' => 'book_render',
-    'access arguments' => array('access content'),
+    'route_name' => 'book_render',
     'type' => MENU_SUGGESTED_ITEM,
-    'file' => 'book.pages.inc',
   );
   $items['book/export/%/%node'] = array(
     'page callback' => 'book_export',
@@ -273,6 +269,8 @@ function book_entity_view_mode_info() {
 
 /**
  * Returns an array of all books.
+ *
+ * @todo Remove in favor of BookManager Service. http://drupal.org/node/1963894
  *
  * This list may be used for generating a list of all the books, or for building
  * the options for a form select.

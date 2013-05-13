@@ -174,7 +174,7 @@ class RestExport extends PathPluginBase {
 
     unset($categories['page'], $categories['exposed']);
     // Hide some settings, as they aren't useful for pure data output.
-    unset($options['hide_admin_links'], $options['analyze-theme']);
+    unset($options['show_admin_links'], $options['analyze-theme']);
 
     $categories['path'] = array(
       'title' => t('Path settings'),

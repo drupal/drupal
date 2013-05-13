@@ -146,9 +146,9 @@ function menu_menu() {
  * Implements hook_entity_info_alter().
  */
 function menu_entity_info_alter(&$entity_info) {
-  $entity_info['menu']['list_controller_class'] = 'Drupal\menu\MenuListController';
+  $entity_info['menu']['controllers']['list'] = 'Drupal\menu\MenuListController';
   $entity_info['menu']['uri_callback'] = 'menu_uri';
-  $entity_info['menu']['form_controller_class'] = array(
+  $entity_info['menu']['controllers']['form'] = array(
     'default' => 'Drupal\menu\MenuFormController',
   );
 }

@@ -22,7 +22,9 @@ use Drupal\field\FieldException;
  *   id = "field_entity",
  *   label = @Translation("Field"),
  *   module = "field",
- *   controller_class = "Drupal\Core\Config\Entity\ConfigStorageController",
+ *   controllers = {
+ *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
+ *   },
  *   config_prefix = "field.field",
  *   entity_keys = {
  *     "id" = "id",
@@ -31,7 +33,7 @@ use Drupal\field\FieldException;
  *   }
  * )
  */
-class Field extends ConfigEntityBase implements \ArrayAccess {
+class Field extends ConfigEntityBase implements \ArrayAccess, \Serializable {
 
   /**
    * The maximum length of the field ID (machine name), in characters.
@@ -95,7 +97,7 @@ class Field extends ConfigEntityBase implements \ArrayAccess {
    *
    * @var array
    */
-  public $settings;
+  public $settings = array();
 
   /**
    * The field cardinality.
@@ -105,7 +107,7 @@ class Field extends ConfigEntityBase implements \ArrayAccess {
    *
    * @var integer
    */
-  public $cardinality;
+  public $cardinality = 1;
 
   /**
    * Flag indicating whether the field is translatable.
@@ -114,7 +116,7 @@ class Field extends ConfigEntityBase implements \ArrayAccess {
    *
    * @var bool
    */
-  public $translatable;
+  public $translatable = FALSE;
 
   /**
    * The entity types on which the field is allowed to have instances.
@@ -124,7 +126,7 @@ class Field extends ConfigEntityBase implements \ArrayAccess {
    *
    * @var array
    */
-  public $entity_types;
+  public $entity_types = array();
 
   /**
    * Flag indicating whether the field is available for editing.
@@ -138,7 +140,7 @@ class Field extends ConfigEntityBase implements \ArrayAccess {
    *
    * @var bool
    */
-  public $locked;
+  public $locked = FALSE;
 
   /**
    * The field storage definition.
@@ -157,7 +159,7 @@ class Field extends ConfigEntityBase implements \ArrayAccess {
    *
    * @var array
    */
-  public $storage;
+  public $storage = array();
 
   /**
    * The custom storage indexes for the field data storage.
@@ -175,7 +177,7 @@ class Field extends ConfigEntityBase implements \ArrayAccess {
    *
    * @var array
    */
-  public $indexes;
+  public $indexes = array();
 
   /**
    * Flag indicating whether the field is deleted.
@@ -190,7 +192,7 @@ class Field extends ConfigEntityBase implements \ArrayAccess {
    *
    * @var bool
    */
-  public $deleted;
+  public $deleted = FALSE;
 
   /**
    * The field schema.
@@ -228,17 +230,6 @@ class Field extends ConfigEntityBase implements \ArrayAccess {
       throw new FieldException('Attempt to create a field with invalid characters. Only lowercase alphanumeric characters and underscores are allowed, and only lowercase letters and underscore are allowed as the first character');
     }
 
-    // Provide defaults.
-    $values += array(
-      'settings' => array(),
-      'cardinality' => 1,
-      'translatable' => FALSE,
-      'entity_types' => array(),
-      'locked' => FALSE,
-      'deleted' => 0,
-      'storage' => array(),
-      'indexes' => array(),
-    );
     parent::__construct($values, $entity_type);
   }
 
@@ -315,7 +306,7 @@ class Field extends ConfigEntityBase implements \ArrayAccess {
         throw new FieldException(format_string('Attempt to create a field of unknown type %type.', array('%type' => $this->type)));
       }
       $this->module = $field_type['module'];
-      $this->active = 1;
+      $this->active = TRUE;
 
       // Make sure all settings are present, so that a complete field
       // definition is passed to the various hooks and written to config.
@@ -323,7 +314,7 @@ class Field extends ConfigEntityBase implements \ArrayAccess {
 
       // Provide default storage.
       $this->storage += array(
-        'type' => variable_get('field_storage_default', 'field_sql_storage'),
+        'type' => config('field.settings')->get('default_storage'),
         'settings' => array(),
       );
       // Check that the storage type is known.
@@ -332,7 +323,7 @@ class Field extends ConfigEntityBase implements \ArrayAccess {
         throw new FieldException(format_string('Attempt to create a field with unknown storage type %type.', array('%type' => $this->storage['type'])));
       }
       $this->storage['module'] = $storage_type['module'];
-      $this->storage['active'] = 1;
+      $this->storage['active'] = TRUE;
       // Provide default storage settings.
       $this->storage['settings'] += $storage_type['settings'];
 
@@ -596,5 +587,21 @@ class Field extends ConfigEntityBase implements \ArrayAccess {
       unset($this->{$offset});
     }
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function serialize() {
+    // Only store the definition, not external objects or derived data.
+    return serialize($this->getExportProperties());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function unserialize($serialized) {
+    $this->__construct(unserialize($serialized));
+  }
+
 
 }

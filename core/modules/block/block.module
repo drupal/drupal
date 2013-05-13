@@ -147,12 +147,9 @@ function block_menu() {
   );
   $items['admin/structure/block/manage/%block/delete'] = array(
     'title' => 'Delete block',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('block_admin_block_delete', 4),
-    'access arguments' => array('administer blocks'),
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_NONE,
-    'file' => 'block.admin.inc',
+    'route_name' => 'block_admin_block_delete',
   );
   // Block administration is tied to the theme and plugin definition so
   // that the plugin can appropriately attach to this URL structure.
@@ -352,6 +349,12 @@ function _block_get_renderable_region($list = array()) {
     // draw attention on it.
     if (isset($build[$key]) && !in_array($block->get('plugin'), array('system_help_block', 'system_main_block'))) {
       $build[$key]['#contextual_links']['block'] = array('admin/structure/block/manage', array($key));
+
+      // If there are any nested contextual links, move them to the top level.
+      if (isset($build[$key]['content']['#contextual_links'])) {
+        $build[$key]['#contextual_links'] += $build[$key]['content']['#contextual_links'];
+        unset($build[$key]['content']['#contextual_links']);
+      }
     }
   }
   return $build;
@@ -539,14 +542,6 @@ function template_preprocess_block(&$variables) {
     $variables['block']->label = '';
   }
 
-  // All blocks get an independent counter for each region.
-  if (!isset($block_counter[$variables['block']->region])) {
-    $block_counter[$variables['block']->region] = 1;
-  }
-  // Same with zebra striping.
-  $variables['block_zebra'] = ($block_counter[$variables['block']->region] % 2) ? 'odd' : 'even';
-  $variables['block_id'] = $block_counter[$variables['block']->region]++;
-
   // Create the $content variable that templates expect.
   $variables['content'] = $variables['elements']['#children'];
 
@@ -555,7 +550,6 @@ function template_preprocess_block(&$variables) {
   // Add default class for block content.
   $variables['content_attributes']['class'][] = 'content';
 
-  $variables['theme_hook_suggestions'][] = 'block__' . $variables['block']->region;
   $variables['theme_hook_suggestions'][] = 'block__' . $variables['block']->module;
   // Hyphens (-) and underscores (_) play a special role in theme suggestions.
   // Theme suggestions should only contain underscores, because within

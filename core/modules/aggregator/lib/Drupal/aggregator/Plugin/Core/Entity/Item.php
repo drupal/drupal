@@ -19,8 +19,10 @@ use Drupal\Core\Annotation\Translation;
  *   id = "aggregator_item",
  *   label = @Translation("Aggregator feed item"),
  *   module = "aggregator",
- *   controller_class = "Drupal\aggregator\ItemStorageController",
- *   render_controller_class = "Drupal\aggregator\ItemRenderController",
+ *   controllers = {
+ *     "storage" = "Drupal\aggregator\ItemStorageController",
+ *     "render" = "Drupal\aggregator\ItemRenderController"
+ *   },
  *   base_table = "aggregator_item",
  *   fieldable = TRUE,
  *   entity_keys = {

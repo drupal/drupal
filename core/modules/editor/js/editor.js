@@ -96,12 +96,28 @@ Drupal.behaviors.editor = {
 
 Drupal.editorAttach = function (field, format) {
   if (format.editor) {
+    // HTML5 validation cannot ever work for WYSIWYG editors, because WYSIWYG
+    // editors always hide the underlying textarea element, which prevents
+    // browsers from putting the error message bubble in the right location.
+    // Hence: disable HTML5 validation for this element.
+    if ('required' in field.attributes) {
+      field.setAttribute('data-editor-required', true);
+      field.removeAttribute('required');
+    }
+
     Drupal.editors[format.editor].attach(field, format);
   }
 };
 
 Drupal.editorDetach = function (field, format, trigger) {
   if (format.editor) {
+    // Restore the HTML5 validation "required" attribute if it was removed in
+    // Drupal.editorAttach().
+    if ('data-editor-required' in field.attributes) {
+      field.setAttribute('required', 'required');
+      field.removeAttribute('data-editor-required');
+    }
+
     Drupal.editors[format.editor].detach(field, format, trigger);
   }
 };

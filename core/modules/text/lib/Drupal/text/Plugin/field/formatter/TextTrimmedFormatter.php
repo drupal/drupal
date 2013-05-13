@@ -70,10 +70,10 @@ class TextTrimmedFormatter extends FormatterBase {
 
     foreach ($items as $delta => $item) {
       if ($this->getPluginId() == 'text_summary_or_trimmed' && !empty($item['summary'])) {
-        $output = _text_sanitize($this->instance, $langcode, $item, 'summary');
+        $output = text_sanitize($this->instance['settings']['text_processing'], $langcode, $item, 'summary');
       }
       else {
-        $output = _text_sanitize($this->instance, $langcode, $item, 'value');
+        $output = text_sanitize($this->instance['settings']['text_processing'], $langcode, $item, 'value');
         $output = text_summary($output, $this->instance['settings']['text_processing'] ? $item['format'] : NULL, $this->getSetting('trim_length'));
       }
       $elements[$delta] = array('#markup' => $output);

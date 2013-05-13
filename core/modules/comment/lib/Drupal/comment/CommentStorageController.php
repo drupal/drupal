@@ -25,7 +25,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
   protected $threadLock = '';
 
   /**
-   * Overrides DatabaseStorageControllerNG::buildQuery().
+   * {@inheritdoc}
    */
   protected function buildQuery($ids, $revision_id = FALSE) {
     $query = parent::buildQuery($ids, $revision_id);
@@ -37,7 +37,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * Overrides DatabaseStorageControllerNG::attachLoad().
+   * {@inheritdoc}
    */
   protected function attachLoad(&$records, $load_revision = FALSE) {
     // Set up standard comment properties.
@@ -48,7 +48,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * Overrides DatabaseStorageControllerNG::preSave().
+   * {@inheritdoc}
    *
    * @see comment_int_to_alphadecimal()
    * @see comment_alphadecimal_to_int()
@@ -92,6 +92,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
         else {
           // This is a comment with a parent comment, so increase the part of
           // the thread value at the proper depth.
+
           // Get the parent comment:
           $parent = $comment->pid->entity;
           // Strip the "/" from the end of the parent thread.
@@ -148,7 +149,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * Overrides DatabaseStorageControllerNG::postSave().
+   * {@inheritdoc}
    */
   protected function postSave(EntityInterface $comment, $update) {
     $this->releaseThreadLock();
@@ -160,7 +161,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * Overrides DatabaseStorageControllerNG::postDelete().
+   * {@inheritdoc}
    */
   protected function postDelete($comments) {
     // Delete the comments' replies.
@@ -266,7 +267,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * Implements DatabaseStorageControllerNG::basePropertyDefinitions().
+   * {@inheritdoc}
    */
   public function baseFieldDefinitions() {
     $properties['cid'] = array(
@@ -349,14 +350,14 @@ class CommentStorageController extends DatabaseStorageControllerNG {
       'description' => t("The alphadecimal representation of the comment's place in a thread, consisting of a base 36 string prefixed by an integer indicating its length."),
       'type' => 'string_field',
     );
-    $properties['field_name'] = array(
-      'label' => t('Field name'),
-      'description' => t("The comment field name."),
-      'type' => 'string_field',
-    );
     $properties['entity_type'] = array(
       'label' => t('Entity type'),
       'description' => t("The entity type to which this comment is attached."),
+      'type' => 'string_field',
+    );
+    $properties['field_name'] = array(
+      'label' => t('Field name'),
+      'description' => t("The comment field name."),
       'type' => 'string_field',
     );
     $properties['new'] = array(

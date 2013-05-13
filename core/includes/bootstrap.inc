@@ -733,7 +733,7 @@ function drupal_settings_initialize() {
   global $base_url, $base_path, $base_root, $script_path;
 
   // Export these settings.php variables to the global namespace.
-  global $databases, $cookie_domain, $conf, $installed_profile, $db_prefix, $drupal_hash_salt, $is_https, $base_secure_url, $base_insecure_url, $config_directories;
+  global $databases, $cookie_domain, $conf, $db_prefix, $drupal_hash_salt, $is_https, $base_secure_url, $base_insecure_url, $config_directories;
   $conf = array();
 
   // Make conf_path() available as local variable in settings.php.
@@ -2442,9 +2442,13 @@ function module_implements($hook) {
 /**
  * Invokes a hook in a particular module.
  *
+ * All arguments are passed by value. Use drupal_alter() if you need to pass
+ * arguments by reference.
+ *
  * @deprecated as of Drupal 8.0. Use
  *   drupal_container()->get('module_handler')->invoke($module, $hook, $args = array()).
  *
+ * @see drupal_alter()
  * @see \Drupal\Core\Extension\ModuleHandler::invoke()
  */
 function module_invoke($module, $hook) {
@@ -2457,9 +2461,13 @@ function module_invoke($module, $hook) {
 /**
  * Invokes a hook in all enabled modules that implement it.
  *
+ * All arguments are passed by value. Use drupal_alter() if you need to pass
+ * arguments by reference.
+ *
  * @deprecated as of Drupal 8.0. Use
  *   drupal_container()->get('module_handler')->invokeAll($hook).
  *
+ * @see drupal_alter()
  * @see \Drupal\Core\Extension\ModuleHandler::invokeAll()
  */
 function module_invoke_all($hook) {

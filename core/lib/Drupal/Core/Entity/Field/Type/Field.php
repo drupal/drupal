@@ -9,7 +9,7 @@ namespace Drupal\Core\Entity\Field\Type;
 
 use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\user\Plugin\Core\Entity\User;
-use Drupal\Core\TypedData\ContextAwareInterface;
+use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\ItemList;
 
 /**
@@ -34,9 +34,9 @@ class Field extends ItemList implements FieldInterface {
   protected $list = array();
 
   /**
-   * Overrides ContextAwareTypedData::__construct().
+   * Overrides TypedData::__construct().
    */
-  public function __construct(array $definition, $name = NULL, ContextAwareInterface $parent = NULL) {
+  public function __construct(array $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
     // Always initialize one empty item as most times a value for at least one
     // item will be present. That way prototypes created by
@@ -66,7 +66,11 @@ class Field extends ItemList implements FieldInterface {
   /**
    * Overrides \Drupal\Core\TypedData\ItemList::setValue().
    */
-  public function setValue($values) {
+  public function setValue($values, $notify = TRUE) {
+    // Notify the parent of any changes to be made.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
     if (!isset($values) || $values === array()) {
       $this->list = $values;
     }
@@ -90,7 +94,7 @@ class Field extends ItemList implements FieldInterface {
           $this->list[$delta] = $this->createItem($delta, $value);
         }
         else {
-          $this->list[$delta]->setValue($value);
+          $this->list[$delta]->setValue($value, FALSE);
         }
       }
     }
@@ -114,7 +118,7 @@ class Field extends ItemList implements FieldInterface {
    * Implements \Drupal\Core\Entity\Field\FieldInterface::__get().
    */
   public function __get($property_name) {
-    return $this->offsetGet(0)->get($property_name)->getValue();
+    return $this->offsetGet(0)->__get($property_name);
   }
 
   /**

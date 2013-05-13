@@ -62,8 +62,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       'type' => 'list_boolean',
       'cardinality' => 1,
       'settings' => array(
-        // Make sure that 0 works as a 'on' value'.
-        'allowed_values' => array(1 => 'Zero', 0 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>'),
+        'allowed_values' => array(0 => 'Zero', 1 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>'),
       ),
     );
     $this->bool = field_create_field($this->bool);
@@ -458,7 +457,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Submit form: check the option.
     $edit = array("bool[$langcode]" => TRUE);
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertFieldValues($entity_init, 'bool', $langcode, array(0));
+    $this->assertFieldValues($entity_init, 'bool', $langcode, array(1));
 
     // Display form: check that the right options are selected.
     $this->drupalGet('test-entity/manage/' . $entity->ftid . '/edit');
@@ -467,7 +466,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Submit form: uncheck the option.
     $edit = array("bool[$langcode]" => FALSE);
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertFieldValues($entity_init, 'bool', $langcode, array(1));
+    $this->assertFieldValues($entity_init, 'bool', $langcode, array(0));
 
     // Display form: with 'off' value, option is unchecked.
     $this->drupalGet('test-entity/manage/' . $entity->ftid . '/edit');

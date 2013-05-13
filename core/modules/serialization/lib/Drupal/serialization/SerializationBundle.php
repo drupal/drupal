@@ -21,5 +21,7 @@ class SerializationBundle extends Bundle {
   public function build(ContainerBuilder $container) {
     // Add a compiler pass for adding Normalizers and Encoders to Serializer.
     $container->addCompilerPass(new RegisterSerializationClassesCompilerPass());
+    // Add a compiler pass for adding concrete Resolvers to chain Resolver.
+    $container->addCompilerPass(new RegisterEntityResolversCompilerPass());
   }
 }

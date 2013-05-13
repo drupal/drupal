@@ -99,7 +99,7 @@ class ViewEditFormController extends ViewFormControllerBase {
       $form['changed'] = array(
         '#type' => 'container',
         '#attributes' => array('class' => array('view-changed', 'messages', 'warning')),
-        '#children' => t('All changes are stored temporarily. Click "Save" to make your changes permanent. Click "Cancel" to discard your changes.'),
+        '#children' => t('You have unsaved changes.'),
         '#weight' => -10,
       );
       if (empty($view->changed)) {
@@ -957,10 +957,10 @@ class ViewEditFormController extends ViewFormControllerBase {
 
     static $relationships = NULL;
     if (!isset($relationships)) {
-      // Get relationship labels
+      // Get relationship labels.
       $relationships = array();
       foreach ($executable->display_handler->getHandlers('relationship') as $id => $handler) {
-        $relationships[$id] = $handler->label();
+        $relationships[$id] = $handler->adminLabel();
       }
     }
 

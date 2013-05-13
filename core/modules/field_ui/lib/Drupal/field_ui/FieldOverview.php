@@ -131,13 +131,13 @@ class FieldOverview extends OverviewBase {
         ),
         'type' => array(
           '#type' => 'link',
-          '#title' => t($field_types[$field['type']]['label']),
+          '#title' => $field_types[$field['type']]['label'],
           '#href' => $admin_field_path . '/field-settings',
           '#options' => array('attributes' => array('title' => t('Edit field settings.'))),
         ),
         'widget_type' => array(
           '#type' => 'link',
-          '#title' => t($widget_types[$instance['widget']['type']]['label']),
+          '#title' => $widget_types[$instance['widget']['type']]['label'],
           '#href' => $admin_field_path . '/widget-type',
           '#options' => array('attributes' => array('title' => t('Change widget type.'))),
         ),

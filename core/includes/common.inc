@@ -4569,7 +4569,6 @@ function _drupal_bootstrap_code() {
   require_once DRUPAL_ROOT . '/core/includes/form.inc';
   require_once DRUPAL_ROOT . '/core/includes/mail.inc';
   require_once DRUPAL_ROOT . '/core/includes/ajax.inc';
-  require_once DRUPAL_ROOT . '/core/includes/token.inc';
   require_once DRUPAL_ROOT . '/core/includes/errors.inc';
   require_once DRUPAL_ROOT . '/core/includes/schema.inc';
   require_once DRUPAL_ROOT . '/core/includes/entity.inc';
@@ -5165,23 +5164,23 @@ function drupal_render_page($page) {
  * array to be rendered independently and prevents them from being rendered
  * more than once on subsequent calls to drupal_render() (e.g., as part of a
  * larger array). If the same array or array element is passed more than once
- * to drupal_render(), it simply returns a NULL value.
+ * to drupal_render(), it simply returns an empty string.
  *
- * @param $elements
+ * @param array $elements
  *   The structured array describing the data to be rendered.
  *
- * @return
+ * @return string
  *   The rendered HTML.
  */
 function drupal_render(&$elements) {
   // Early-return nothing if user does not have access.
   if (empty($elements) || (isset($elements['#access']) && !$elements['#access'])) {
-    return;
+    return '';
   }
 
   // Do not print elements twice.
   if (!empty($elements['#printed'])) {
-    return;
+    return '';
   }
 
   // Try to fetch the element's markup from cache and return.
@@ -5215,7 +5214,7 @@ function drupal_render(&$elements) {
 
   // Allow #pre_render to abort rendering.
   if (!empty($elements['#printed'])) {
-    return;
+    return '';
   }
 
   // Get the children of the element, sorted by weight.

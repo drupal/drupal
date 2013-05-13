@@ -18,17 +18,20 @@ use Drupal\Core\Annotation\Translation;
  *   id = "entity_test",
  *   label = @Translation("Test entity"),
  *   module = "entity_test",
- *   controller_class = "Drupal\entity_test\EntityTestStorageController",
- *   access_controller_class = "Drupal\entity_test\EntityTestAccessController",
- *   form_controller_class = {
- *     "default" = "Drupal\entity_test\EntityTestFormController"
+ *   controllers = {
+ *     "storage" = "Drupal\entity_test\EntityTestStorageController",
+ *     "access" = "Drupal\entity_test\EntityTestAccessController",
+ *     "form" = {
+ *       "default" = "Drupal\entity_test\EntityTestFormController"
+ *     },
+ *     "translation" = "Drupal\translation_entity\EntityTranslationControllerNG"
  *   },
- *   translation_controller_class = "Drupal\translation_entity\EntityTranslationControllerNG",
  *   base_table = "entity_test",
  *   fieldable = TRUE,
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",
+ *     "bundle" = "type"
  *   },
  *   menu_base_path = "entity-test/manage/%entity_test"
  * )
@@ -48,6 +51,13 @@ class EntityTest extends EntityNG {
    * @var \Drupal\Core\Entity\Field\FieldInterface
    */
   public $uuid;
+
+  /**
+   * The bundle of the test entity.
+   *
+   * @var \Drupal\Core\Entity\Field\FieldInterface
+   */
+  public $type;
 
   /**
    * The name of the test entity.
@@ -73,6 +83,7 @@ class EntityTest extends EntityNG {
     unset($this->uuid);
     unset($this->name);
     unset($this->user_id);
+    unset($this->type);
   }
 
   /**

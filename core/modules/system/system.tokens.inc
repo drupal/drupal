@@ -129,6 +129,8 @@ function system_token_info() {
  * Implements hook_tokens().
  */
 function system_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  $token_service = Drupal::token();
+
   $url_options = array('absolute' => TRUE);
   if (isset($options['langcode'])) {
     $url_options['language'] = language_load($options['langcode']);
@@ -205,7 +207,7 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
       }
     }
 
-    if ($created_tokens = token_find_with_prefix($tokens, 'custom')) {
+    if ($created_tokens = $token_service->findWithPrefix($tokens, 'custom')) {
       foreach ($created_tokens as $name => $original) {
         $replacements[$original] = format_date($date, 'custom', $name, NULL, $langcode);
       }
@@ -256,12 +258,12 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
       }
     }
 
-    if ($date_tokens = token_find_with_prefix($tokens, 'timestamp')) {
-      $replacements += token_generate('date', $date_tokens, array('date' => $file->timestamp), $options);
+    if ($date_tokens = $token_service->findWithPrefix($tokens, 'timestamp')) {
+      $replacements += $token_service->generate('date', $date_tokens, array('date' => $file->timestamp), $options);
     }
 
-    if (($owner_tokens = token_find_with_prefix($tokens, 'owner')) && $account = user_load($file->uid)) {
-      $replacements += token_generate('user', $owner_tokens, array('user' => $account), $options);
+    if (($owner_tokens = $token_service->findWithPrefix($tokens, 'owner')) && $account = user_load($file->uid)) {
+      $replacements += $token_service->generate('user', $owner_tokens, array('user' => $account), $options);
     }
   }
 

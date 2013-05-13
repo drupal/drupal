@@ -98,22 +98,6 @@ function aggregator_view() {
 }
 
 /**
- * Page callback: Presents the aggregator feed creation form.
- *
- * @return array
- *   A form array as expected by drupal_render().
- *
- * @see aggregator_menu()
- */
-function aggregator_feed_add() {
-  $feed = entity_create('aggregator_feed', array(
-    'refresh' => 3600,
-    'block' => 5,
-  ));
-  return entity_get_form($feed);
-}
-
-/**
  * Form constructor for importing feeds from OPML.
  *
  * @ingroup forms
@@ -188,7 +172,7 @@ function aggregator_form_opml_validate($form, &$form_state) {
 function aggregator_form_opml_submit($form, &$form_state) {
   $data = '';
   $validators = array('file_validate_extensions' => array('opml xml'));
-  if ($file = file_save_upload('upload', $validators)) {
+  if ($file = file_save_upload('upload', $validators, FALSE, 0)) {
     $data = file_get_contents($file->uri);
   }
   else {

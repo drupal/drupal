@@ -480,7 +480,7 @@ class Schema extends DatabaseSchema {
     // Truncate comment to maximum comment length.
     if (isset($length)) {
       // Add table prefixes before truncating.
-      $comment = truncate_utf8($this->connection->prefixTables($comment), $length, TRUE, TRUE);
+      $comment = substr($this->connection->prefixTables($comment), 0, $length);
     }
 
     return $this->connection->quote($comment);

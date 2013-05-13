@@ -18,3 +18,11 @@ action_admin_configure:
     _form: '\Drupal\action\Form\ActionAdminConfigureForm'
   requirements:
     _permission: 'administer actions'
+
+action_delete:
+  pattern: 'admin/config/system/actions/delete/{action}'
+  defaults:
+    _form: '\Drupal\action\Form\DeleteForm'
+  requirements:
+    _permission: 'administer actions'
+

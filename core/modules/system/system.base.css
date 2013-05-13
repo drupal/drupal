@@ -246,6 +246,7 @@ input {
   clip: rect(1px, 1px, 1px, 1px);
   overflow: hidden;
   height: 1px;
+  width: 1px;
 }
 
 /**
@@ -258,6 +259,7 @@ input {
   clip: auto;
   overflow: visible;
   height: auto;
+  width: auto;
 }
 
 /**

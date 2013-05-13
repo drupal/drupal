@@ -1,10 +1,10 @@
 services:
   plugin.manager.aggregator.fetcher:
     class: Drupal\aggregator\Plugin\AggregatorPluginManager
-    arguments: [fetcher, '%container.namespaces%']
+    arguments: [fetcher, '@container.namespaces']
   plugin.manager.aggregator.parser:
     class: Drupal\aggregator\Plugin\AggregatorPluginManager
-    arguments: [parser, '%container.namespaces%']
+    arguments: [parser, '@container.namespaces']
   plugin.manager.aggregator.processor:
     class: Drupal\aggregator\Plugin\AggregatorPluginManager
-    arguments: [processor, '%container.namespaces%']
+    arguments: [processor, '@container.namespaces']

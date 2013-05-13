@@ -15,19 +15,6 @@ function views_install() {
 }
 
 /**
- * Implements hook_schema().
- */
-function views_schema() {
-  $schema['cache_views_info'] = drupal_get_schema_unprocessed('system', 'cache');
-
-  $schema['cache_views_results'] = drupal_get_schema_unprocessed('system', 'cache');
-  $schema['cache_views_results']['description'] = 'Cache table for views to store pre-rendered queries, results, and display output.';
-  $schema['cache_views_results']['fields']['serialized']['default'] = 1;
-
-  return $schema;
-}
-
-/**
  * Provide an initial schema.
  *
  * @see update_module_enable().

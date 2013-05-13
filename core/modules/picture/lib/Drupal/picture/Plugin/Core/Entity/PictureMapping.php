@@ -18,13 +18,15 @@ use Drupal\Core\Annotation\Translation;
  *   id = "picture_mapping",
  *   label = @Translation("Picture mapping"),
  *   module = "picture",
- *   controller_class = "Drupal\Core\Config\Entity\ConfigStorageController",
- *   form_controller_class = {
- *     "default" = "Drupal\picture\PictureMappingFormController",
- *     "add" = "Drupal\picture\PictureMappingFormController",
- *     "duplicate" = "Drupal\picture\PictureMappingFormController"
+ *   controllers = {
+ *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
+ *     "list" = "Drupal\picture\PictureMappingListController",
+ *     "form" = {
+ *       "default" = "Drupal\picture\PictureMappingFormController",
+ *       "add" = "Drupal\picture\PictureMappingFormController",
+ *       "duplicate" = "Drupal\picture\PictureMappingFormController"
+ *     }
  *   },
- *   list_controller_class = "Drupal\picture\PictureMappingListController",
  *   list_path = "admin/config/media/picturemapping",
  *   uri_callback = "picture_mapping_uri",
  *   config_prefix = "picture.mappings",

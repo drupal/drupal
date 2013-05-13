@@ -161,7 +161,7 @@ pre {
 #skip-link a,
 #skip-link a:link,
 #skip-link a:visited {
-  display: block;
+  display: inline-block;
   background: #444;
   color: #fff;
   font-size: 0.94em;

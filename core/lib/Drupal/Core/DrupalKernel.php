@@ -342,6 +342,14 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     if (!isset($this->container)) {
       $this->container = $this->buildContainer();
       $this->persistServices($persist);
+
+      // The namespaces are marked as persistent, so objects like the annotated
+      // class discovery still has the right object. We may have updated the
+      // list of modules, so set it.
+      if ($this->container->initialized('container.namespaces')) {
+        $this->container->get('container.namespaces')->exchangeArray($this->container->getParameter('container.namespaces'));
+      }
+
       if ($this->allowDumping) {
         $this->containerNeedsDumping = TRUE;
       }

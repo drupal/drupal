@@ -86,6 +86,8 @@ services:
     arguments: ['@database', config_snapshot]
   config.storage.schema:
     class: Drupal\Core\Config\Schema\SchemaStorage
+  config.storage.installer:
+    class: Drupal\Core\Config\InstallStorage
   config.typed:
     class: Drupal\Core\Config\TypedConfigManager
     arguments: ['@config.storage', '@config.storage.schema']
@@ -141,12 +143,17 @@ services:
     calls:
       - [addSubscriber, ['@http_client_simpletest_subscriber']]
       - [setUserAgent, ['Drupal (+http://drupal.org/)']]
+  container.namespaces:
+    class: ArrayObject
+    arguments: [ '%container.namespaces%' ]
+    tags:
+      - { name: persist }
   plugin.manager.entity:
     class: Drupal\Core\Entity\EntityManager
-    arguments: ['%container.namespaces%']
+    arguments: ['@container.namespaces']
   plugin.manager.archiver:
     class: Drupal\Core\Archiver\ArchiverManager
-    arguments: ['%container.namespaces%']
+    arguments: ['@container.namespaces']
   request:
     class: Symfony\Component\HttpFoundation\Request
   event_dispatcher:
@@ -171,7 +178,7 @@ services:
       - [setValidationConstraintManager, ['@validation.constraint']]
   validation.constraint:
     class: Drupal\Core\Validation\ConstraintManager
-    arguments: ['%container.namespaces%']
+    arguments: ['@container.namespaces']
   lock:
     class: Drupal\Core\Lock\DatabaseLockBackend
   user.tempstore:
@@ -302,6 +309,10 @@ services:
     class: Drupal\Core\Access\DefaultAccessCheck
     tags:
       - { name: access_check }
+  access_check.entity:
+    class: Drupal\Core\Entity\EntityAccessCheck
+    tags:
+      - { name: access_check }
   maintenance_mode_subscriber:
     class: Drupal\Core\EventSubscriber\MaintenanceModeSubscriber
     tags:
@@ -372,7 +383,7 @@ services:
     arguments: ['@database', '@request']
   plugin.manager.condition:
     class: Drupal\Core\Condition\ConditionManager
-    arguments: ['%container.namespaces%']
+    arguments: ['@container.namespaces']
   kernel_destruct_subscriber:
     class: Drupal\Core\EventSubscriber\KernelDestructionSubscriber
     tags:
@@ -385,8 +396,11 @@ services:
       - { name: event_subscriber }
   image.toolkit.manager:
     class: Drupal\system\Plugin\ImageToolkitManager
-    arguments: ['%container.namespaces%']
+    arguments: ['@container.namespaces']
   image.toolkit:
     class: Drupal\system\Plugin\ImageToolkitInterface
     factory_method: getDefaultToolkit
     factory_service: image.toolkit.manager
+  token:
+    class: Drupal\Core\Utility\Token
+    arguments: ['@module_handler']

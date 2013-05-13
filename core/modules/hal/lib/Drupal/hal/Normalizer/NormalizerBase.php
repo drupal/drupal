@@ -7,6 +7,7 @@
 
 namespace Drupal\hal\Normalizer;
 
+use Drupal\serialization\EntityResolver\EntityResolverInterface;
 use Drupal\serialization\Normalizer\NormalizerBase as SerializationNormalizerBase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
@@ -21,6 +22,13 @@ abstract class NormalizerBase extends SerializationNormalizerBase implements Den
    * @var array
    */
   protected $formats = array('hal_json');
+
+  /**
+   * The entity resolver.
+   *
+   * @var \Drupal\serialization\EntityResolver\EntityResolverInterface
+   */
+  protected $entityResolver;
 
   /**
    * The hypermedia link manager.
@@ -62,6 +70,17 @@ abstract class NormalizerBase extends SerializationNormalizerBase implements Den
    */
   public function setLinkManager($link_manager) {
     $this->linkManager = $link_manager;
+  }
+
+  /**
+   * Sets the entity resolver.
+   *
+   * The entity resolver is used to
+   *
+   * @param \Drupal\serialization\EntityResolver\EntityResolverInterface $entity_resolver
+   */
+  public function setEntityResolver(EntityResolverInterface $entity_resolver) {
+    $this->entityResolver = $entity_resolver;
   }
 
 }

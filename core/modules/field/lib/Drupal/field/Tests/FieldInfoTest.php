@@ -18,7 +18,7 @@ class FieldInfoTest extends FieldUnitTestBase {
   }
 
   /**
-   * Test that field types and field definitions are correcly cached.
+   * Test that field types and field definitions are correctly cached.
    */
   function testFieldInfo() {
     // Test that field_test module's fields, widgets, and formatters show up.
@@ -69,7 +69,7 @@ class FieldInfoTest extends FieldUnitTestBase {
       $this->assertEqual($fields[$field['field_name']]['settings'][$key], $val, format_string('Field setting %key has correct default value %value', array('%key' => $key, '%value' => $val)));
     }
     $this->assertEqual($fields[$field['field_name']]['cardinality'], 1, 'info fields contains cardinality 1');
-    $this->assertEqual($fields[$field['field_name']]['active'], 1, 'info fields contains active 1');
+    $this->assertEqual($fields[$field['field_name']]['active'], TRUE, 'info fields contains active 1');
 
     // Create an instance, verify that it shows up
     $instance = array(

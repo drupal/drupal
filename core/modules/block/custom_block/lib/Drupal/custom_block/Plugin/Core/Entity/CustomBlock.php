@@ -20,13 +20,15 @@ use Drupal\Core\Annotation\Translation;
  *   label = @Translation("Custom Block"),
  *   bundle_label = @Translation("Custom Block type"),
  *   module = "custom_block",
- *   controller_class = "Drupal\custom_block\CustomBlockStorageController",
- *   access_controller_class = "Drupal\custom_block\CustomBlockAccessController",
- *   render_controller_class = "Drupal\custom_block\CustomBlockRenderController",
- *   form_controller_class = {
- *     "default" = "Drupal\custom_block\CustomBlockFormController"
+ *   controllers = {
+ *     "storage" = "Drupal\custom_block\CustomBlockStorageController",
+ *     "access" = "Drupal\custom_block\CustomBlockAccessController",
+ *     "render" = "Drupal\custom_block\CustomBlockRenderController",
+ *     "form" = {
+ *       "default" = "Drupal\custom_block\CustomBlockFormController"
+ *     },
+ *     "translation" = "Drupal\custom_block\CustomBlockTranslationController"
  *   },
- *   translation_controller_class = "Drupal\custom_block\CustomBlockTranslationController",
  *   base_table = "custom_block",
  *   revision_table = "custom_block_revision",
  *   menu_base_path = "block/%custom_block",
@@ -118,21 +120,21 @@ class CustomBlock extends EntityNG implements ContentEntityInterface {
   protected $theme;
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::id().
+   * {@inheritdoc}
    */
   public function id() {
     return $this->id->value;
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::bundle().
+   * {@inheritdoc}
    */
   public function bundle() {
     return $this->type->value;
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\Entity::createDuplicate().
+   * {@inheritdoc}
    */
   public function createDuplicate() {
     $duplicate = parent::createDuplicate();
@@ -142,7 +144,7 @@ class CustomBlock extends EntityNG implements ContentEntityInterface {
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\Entity::getRevisionId().
+   * {@inheritdoc}
    */
   public function getRevisionId() {
     return $this->revision_id->value;
@@ -194,7 +196,7 @@ class CustomBlock extends EntityNG implements ContentEntityInterface {
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\Entity::getRevisionId().
+   * {@inheritdoc}
    */
   public function uri() {
     return array(

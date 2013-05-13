@@ -20,13 +20,15 @@ use Drupal\Core\Annotation\Translation;
  *   label = @Translation("Taxonomy term"),
  *   bundle_label = @Translation("Vocabulary"),
  *   module = "taxonomy",
- *   controller_class = "Drupal\taxonomy\TermStorageController",
- *   render_controller_class = "Drupal\taxonomy\TermRenderController",
- *   access_controller_class = "Drupal\taxonomy\TermAccessController",
- *   form_controller_class = {
- *     "default" = "Drupal\taxonomy\TermFormController"
+ *   controllers = {
+ *     "storage" = "Drupal\taxonomy\TermStorageController",
+ *     "render" = "Drupal\taxonomy\TermRenderController",
+ *     "access" = "Drupal\taxonomy\TermAccessController",
+ *     "form" = {
+ *       "default" = "Drupal\taxonomy\TermFormController"
+ *     },
+ *     "translation" = "Drupal\taxonomy\TermTranslationController"
  *   },
- *   translation_controller_class = "Drupal\taxonomy\TermTranslationController",
  *   base_table = "taxonomy_term_data",
  *   uri_callback = "taxonomy_term_uri",
  *   fieldable = TRUE,

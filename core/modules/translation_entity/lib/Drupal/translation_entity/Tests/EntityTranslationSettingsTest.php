@@ -88,9 +88,8 @@ class EntityTranslationSettingsTest extends WebTestBase {
       'settings[comment][comment_node_article][fields][comment_body]' => TRUE,
     );
     $this->assertSettings('comment', 'comment_node_article', TRUE, $edit);
-    // Clear static field cache.
-    drupal_static_reset('_field_info_field_cache');
-    $field = field_info_field('comment_body');
+    // Skip static field cache.
+    $field = field_read_field('comment_body');
     $this->assertTrue($field['translatable'], 'Comment body is translatable.');
 
     // Test that language settings are correctly stored.

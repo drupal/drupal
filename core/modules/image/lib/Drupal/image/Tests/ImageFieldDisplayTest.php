@@ -146,11 +146,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $widget_settings = array(
       'preview_image_style' => 'medium',
     );
-    $field = $this->createImageField($field_name, 'article', array(), $instance_settings, $widget_settings);
-    $field['deleted'] = 0;
-    $table = _field_sql_storage_tablename($field);
-    $schema = drupal_get_schema($table, TRUE);
-    $instance = field_info_instance('node', $field_name, 'article');
+    $instance = $this->createImageField($field_name, 'article', array(), $instance_settings, $widget_settings);
 
     $this->drupalGet('node/add/article');
     $this->assertText(t('Files must be less than 50 KB.'), 'Image widget max file size is displayed on article form.');
@@ -198,12 +194,13 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       $field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][title]' => $this->randomName($test_size),
     );
     $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save and keep published'));
+    $schema = $instance->getField()->getSchema();
     $this->assertRaw(t('Alternate text cannot be longer than %max characters but is currently %length characters long.', array(
-      '%max' => $schema['fields'][$field_name .'_alt']['length'],
+      '%max' => $schema['columns']['alt']['length'],
       '%length' => $test_size,
     )));
     $this->assertRaw(t('Title cannot be longer than %max characters but is currently %length characters long.', array(
-      '%max' => $schema['fields'][$field_name .'_title']['length'],
+      '%max' => $schema['columns']['title']['length'],
       '%length' => $test_size,
     )));
   }
@@ -233,7 +230,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Clear field info cache so the new default image is detected.
     field_info_cache_clear();
     $field = field_info_field($field_name);
-    $image = file_load($field['settings']['default_image']);
+    $image = file_load($field['settings']['default_image'][0]);
     $this->assertTrue($image->status == FILE_STATUS_PERMANENT, 'The default image status is permanent.');
     $default_output = theme('image', array('uri' => $image->uri));
     $this->drupalGet('node/' . $node->nid);
@@ -255,7 +252,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Remove default image from the field and make sure it is no longer used.
     $edit = array(
-      'field[settings][default_image][fid]' => 0,
+      'field[settings][default_image][fids]' => 0,
     );
     $this->drupalPost("admin/structure/types/manage/article/fields/$field_name/field-settings", $edit, t('Save field settings'));
     // Clear field info cache so the new default image is detected.
@@ -275,7 +272,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     field_info_cache_clear();
 
     $private_field = field_info_field($private_field_name);
-    $image = file_load($private_field['settings']['default_image']);
+    $image = file_load($private_field['settings']['default_image'][0]);
     $this->assertEqual('private', file_uri_scheme($image->uri), 'Default image uses private:// scheme.');
     $this->assertTrue($image->status == FILE_STATUS_PERMANENT, 'The default image status is permanent.');
     // Create a new node with no image attached and ensure that default private

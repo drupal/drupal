@@ -19,7 +19,9 @@ use Drupal\Core\Annotation\Translation;
  *   id = "entity_display",
  *   label = @Translation("Entity display"),
  *   module = "entity",
- *   controller_class = "Drupal\Core\Config\Entity\ConfigStorageController",
+ *   controllers = {
+ *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
+ *   },
  *   config_prefix = "entity.display",
  *   entity_keys = {
  *     "id" = "id",

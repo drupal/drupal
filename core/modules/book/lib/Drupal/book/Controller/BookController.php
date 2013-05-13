@@ -1,0 +1,89 @@
+<?php
+/**
+ * @file
+ * Contains \Drupal\book\Controller\BookController.
+ */
+
+namespace Drupal\book\Controller;
+
+use Drupal\Core\ControllerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+use Drupal\book\BookManager;
+
+/**
+ * Controller routines for book routes.
+ */
+class BookController implements ControllerInterface {
+
+  /**
+   * Book Manager Service.
+   *
+   * @var \Drupal\book\BookManager
+   */
+  protected $bookManager;
+
+  /**
+   * Injects BookManager Service.
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('book.manager'));
+  }
+
+  /**
+   * Constructs a BookController object.
+   */
+  public function __construct(BookManager $bookManager) {
+    $this->bookManager = $bookManager;
+  }
+
+  /**
+   * Returns an administrative overview of all books.
+   *
+   * @return string
+   *   A HTML-formatted string with the administrative page content.
+   *
+   */
+  public function adminOverview() {
+    $rows = array();
+
+    $headers = array(t('Book'), t('Operations'));
+
+    // Add any recognized books to the table list.
+    foreach ($this->bookManager->getAllBooks() as $book) {
+      $row = array(
+        l($book['title'], $book['href'], $book['options']),
+      );
+      $links = array();
+      $links['edit'] = array(
+        'title' => t('Edit order and titles'),
+        'href' => 'admin/content/book/' . $book['nid'],
+      );
+      $row[] = array(
+        'data' => array(
+          '#type' => 'operations',
+          '#links' => $links,
+        ),
+      );
+      $rows[] = $row;
+    }
+
+    return theme('table', array('header' => $headers, 'rows' => $rows, 'empty' => t('No books available.')));
+  }
+
+  /**
+   * Prints a listing of all books.
+   *
+   * @return string
+   *   A HTML-formatted string with the listing of all books content.
+   */
+  public function bookRender() {
+    $book_list = array();
+    foreach ($this->bookManager->getAllBooks() as $book) {
+      $book_list[] = l($book['title'], $book['href'], $book['options']);
+    }
+
+    return theme('item_list', array('items' => $book_list));
+  }
+
+}

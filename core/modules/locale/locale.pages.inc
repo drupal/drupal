@@ -452,8 +452,9 @@ function locale_translate_edit_form_submit($form, &$form_state) {
   }
 
   if ($updated) {
-    // Clear cache and force refresh of JavaScript translations.
+    // Clear cache and refresh configuration and JavaScript translations.
     _locale_refresh_translations(array($langcode), $updated);
+    _locale_refresh_configuration(array($langcode), $updated);
   }
 
 }

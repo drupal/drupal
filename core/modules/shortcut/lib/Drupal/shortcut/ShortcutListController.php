@@ -38,7 +38,7 @@ class ShortcutListController extends ConfigEntityListController {
       'options' => $uri['options'],
       'weight' => 10,
     );
-    if (shortcut_set_delete_access($entity)) {
+    if ($entity->access('delete')) {
       $operations['delete'] = array(
         'title' => t('Delete set'),
         'href' => $uri['path'] . '/delete',

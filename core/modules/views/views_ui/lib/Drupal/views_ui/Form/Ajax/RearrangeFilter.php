@@ -65,7 +65,7 @@ class RearrangeFilter extends ViewsFormBase {
     // Get relationship labels
     $relationships = array();
     foreach ($display->getHandlers('relationship') as $id => $handler) {
-      $relationships[$id] = $handler->label();
+      $relationships[$id] = $handler->adminLabel();
     }
 
     $group_options = array();

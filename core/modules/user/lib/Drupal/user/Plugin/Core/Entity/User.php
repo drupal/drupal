@@ -18,15 +18,17 @@ use Drupal\Core\Annotation\Translation;
  *   id = "user",
  *   label = @Translation("User"),
  *   module = "user",
- *   controller_class = "Drupal\user\UserStorageController",
- *   render_controller_class = "Drupal\Core\Entity\EntityRenderController",
- *   access_controller_class = "Drupal\user\UserAccessController",
- *   form_controller_class = {
- *     "profile" = "Drupal\user\ProfileFormController",
- *     "register" = "Drupal\user\RegisterFormController"
+ *   controllers = {
+ *     "storage" = "Drupal\user\UserStorageController",
+ *     "access" = "Drupal\user\UserAccessController",
+ *     "render" = "Drupal\Core\Entity\EntityRenderController",
+ *     "form" = {
+ *       "profile" = "Drupal\user\ProfileFormController",
+ *       "register" = "Drupal\user\RegisterFormController"
+ *     },
+ *     "translation" = "Drupal\user\ProfileTranslationController"
  *   },
  *   default_operation = "profile",
- *   translation_controller_class = "Drupal\user\ProfileTranslationController",
  *   base_table = "users",
  *   uri_callback = "user_uri",
  *   label_callback = "user_label",

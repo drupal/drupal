@@ -8,7 +8,7 @@
 namespace Drupal\Core\Entity\Field\Type;
 
 use Drupal\Core\Entity\Field\FieldItemBase;
-use InvalidArgumentException;
+use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
  * Defines the 'language_field' entity field item.
@@ -47,30 +47,18 @@ class LanguageItem extends FieldItemBase {
   }
 
   /**
-   * Overrides FieldItemBase::setValue().
+   * Overrides \Drupal\Core\Entity\Field\FieldItemBase::get().
    */
-  public function setValue($values) {
-    // Treat the values as property value of the object property, if no array
-    // is given. That way we support setting the field by language code or
-    // object.
-    if (!is_array($values)) {
+  public function setValue($values, $notify = TRUE) {
+    // Treat the values as property value of the language property, if no array
+    // is given.
+    if (isset($values) && !is_array($values)) {
       $values = array('language' => $values);
     }
-
-    // Language is computed out of the langcode, so we only need to update the
-    // langcode. Only set the language property if no langcode is given.
-    if (!empty($values['value'])) {
-      $this->properties['value']->setValue($values['value']);
+    // Make sure that the 'language' property gets set as 'value'.
+    if (isset($values['value']) && !isset($values['language'])) {
+      $values['language'] = $values['value'];
     }
-    elseif (isset($values['language'])) {
-      $this->properties['language']->setValue($values['language']);
-    }
-    else {
-      $this->properties['language']->setValue(NULL);
-    }
-    unset($values['language'], $values['value']);
-    if ($values) {
-      throw new InvalidArgumentException('Property ' . key($values) . ' is unknown.');
-    }
+    parent::setValue($values, $notify);
   }
 }

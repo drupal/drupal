@@ -9,7 +9,7 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Language\Language;
-use Drupal\Core\TypedData\ContextAwareInterface;
+use Drupal\Core\TypedData\TypedDataInterface;
 use IteratorAggregate;
 
 /**
@@ -191,7 +191,7 @@ class Entity implements IteratorAggregate, EntityInterface {
   /**
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::set().
    */
-  public function set($property_name, $value) {
+  public function set($property_name, $value, $notify = TRUE) {
     // @todo: Replace by EntityNG implementation once all entity types have been
     // converted to use the entity field API.
     $this->{$property_name} = $value;
@@ -251,6 +251,7 @@ class Entity implements IteratorAggregate, EntityInterface {
   public function getIterator() {
     // @todo: Replace by EntityNG implementation once all entity types have been
     // converted to use the entity field API.
+    return new \ArrayIterator(array());
   }
 
   /**
@@ -406,37 +407,103 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\ContextAwareInterface::getName().
+   * Implements \Drupal\Core\TypedData\TypedDataInterface::getType().
+   */
+  public function getType() {
+    // @todo: Incorporate the entity type here by making entities proper
+    // typed data. See http://drupal.org/node/1868004.
+    return 'entity';
+  }
+
+  /**
+   * Implements \Drupal\Core\TypedData\TypedDataInterface::getDefinition().
+   */
+  public function getDefinition() {
+    return array(
+      'type' => $this->getType()
+    );
+  }
+
+  /**
+   * Implements \Drupal\Core\TypedData\TypedDataInterface::getValue().
+   */
+  public function getValue() {
+    // @todo: Implement by making entities proper typed data. See
+    // http://drupal.org/node/1868004.
+  }
+
+  /**
+   * Implements \Drupal\Core\TypedData\TypedDataInterface::setValue().
+   */
+  public function setValue($value, $notify = TRUE) {
+    // @todo: Implement by making entities proper typed data. See
+    // http://drupal.org/node/1868004.
+  }
+
+  /**
+   * Implements \Drupal\Core\TypedData\TypedDataInterface::getString().
+   */
+  public function getString() {
+    // @todo: Implement by making entities proper typed data. See
+    // http://drupal.org/node/1868004.
+  }
+
+  /**
+   * Implements \Drupal\Core\TypedData\TypedDataInterface::getConstraints().
+   */
+  public function getConstraints() {
+    // @todo: Implement by making entities proper typed data. See
+    // http://drupal.org/node/1868004.
+    return array();
+  }
+
+  /**
+   * Implements \Drupal\Core\TypedData\TypedDataInterface::validate().
+   */
+  public function validate() {
+    // @todo: Implement by making entities proper typed data. See
+    // http://drupal.org/node/1868004.
+  }
+
+  /**
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::onChange().
+   */
+  public function onChange($property_name) {
+    // Nothing to do.
+  }
+
+  /**
+   * Implements \Drupal\Core\TypedData\TypedDataInterface::getName().
    */
   public function getName() {
     return NULL;
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\ContextAwareInterface::getRoot().
+   * Implements \Drupal\Core\TypedData\TypedDataInterface::getRoot().
    */
   public function getRoot() {
     return $this;
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\ContextAwareInterface::getPropertyPath().
+   * Implements \Drupal\Core\TypedData\TypedDataInterface::getPropertyPath().
    */
   public function getPropertyPath() {
     return '';
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\ContextAwareInterface::getParent().
+   * Implements \Drupal\Core\TypedData\TypedDataInterface::getParent().
    */
   public function getParent() {
     return NULL;
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\ContextAwareInterface::setContext().
+   * Implements \Drupal\Core\TypedData\TypedDataInterface::setContext().
    */
-  public function setContext($name = NULL, ContextAwareInterface $parent = NULL) {
+  public function setContext($name = NULL, TypedDataInterface $parent = NULL) {
     // As entities are always the root of the tree of typed data, we do not need
     // to set any parent or name.
   }

@@ -90,6 +90,8 @@ function node_token_info() {
  * Implements hook_tokens().
  */
 function node_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  $token_service = Drupal::token();
+
   $url_options = array('absolute' => TRUE);
   if (isset($options['langcode'])) {
     $url_options['language'] = language_load($options['langcode']);
@@ -141,11 +143,11 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
 
             // If the summary was requested and is not empty, use it.
             if ($name == 'summary' && !empty($items[0]['summary'])) {
-              $output = $sanitize ? _text_sanitize($instance, $field_langcode, $items[0], 'summary') : $items[0]['summary'];
+              $output = $sanitize ? text_sanitize($instance['settings']['text_processing'], $field_langcode, $items[0], 'summary') : $items[0]['summary'];
             }
             // Attempt to provide a suitable version of the 'body' field.
             else {
-              $output = $sanitize ? _text_sanitize($instance, $field_langcode, $items[0], 'value') : $items[0]['value'];
+              $output = $sanitize ? text_sanitize($instance['settings']['text_processing'], $field_langcode, $items[0], 'value') : $items[0]['value'];
               // A summary was requested.
               if ($name == 'summary') {
                 // Generate an optionally trimmed summary of the body field.
@@ -197,17 +199,17 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
       }
     }
 
-    if ($author_tokens = token_find_with_prefix($tokens, 'author')) {
+    if ($author_tokens = $token_service->findWithPrefix($tokens, 'author')) {
       $author = user_load($node->uid);
-      $replacements += token_generate('user', $author_tokens, array('user' => $author), $options);
+      $replacements += $token_service->generate('user', $author_tokens, array('user' => $author), $options);
     }
 
-    if ($created_tokens = token_find_with_prefix($tokens, 'created')) {
-      $replacements += token_generate('date', $created_tokens, array('date' => $node->created), $options);
+    if ($created_tokens = $token_service->findWithPrefix($tokens, 'created')) {
+      $replacements += $token_service->generate('date', $created_tokens, array('date' => $node->created), $options);
     }
 
-    if ($changed_tokens = token_find_with_prefix($tokens, 'changed')) {
-      $replacements += token_generate('date', $changed_tokens, array('date' => $node->changed), $options);
+    if ($changed_tokens = $token_service->findWithPrefix($tokens, 'changed')) {
+      $replacements += $token_service->generate('date', $changed_tokens, array('date' => $node->changed), $options);
     }
   }
 

@@ -16,14 +16,7 @@ use Symfony\Component\Serializer\Serializer;
 /**
  * Tests entity normalization and serialization of supported core formats.
  */
-class EntitySerializationTest extends DrupalUnitTestBase {
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('serialization', 'system', 'entity', 'field', 'entity_test', 'text', 'field_sql_storage');
+class EntitySerializationTest extends NormalizerTestBase {
 
   /**
    * The test values.
@@ -57,27 +50,6 @@ class EntitySerializationTest extends DrupalUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('entity_test', array('entity_test_mulrev', 'entity_test_mulrev_property_revision', 'entity_test_mulrev_property_data'));
-
-    // Auto-create a field for testing.
-    field_create_field(array(
-      'field_name' => 'field_test_text',
-      'type' => 'text',
-      'cardinality' => 1,
-      'translatable' => FALSE,
-    ));
-    $instance = array(
-      'entity_type' => 'entity_test_mulrev',
-      'field_name' => 'field_test_text',
-      'bundle' => 'entity_test_mulrev',
-      'label' => 'Test text-field',
-      'widget' => array(
-        'type' => 'text_textfield',
-        'weight' => 0,
-      ),
-    );
-    field_create_instance($instance);
-
     // Create a test entity to serialize.
     $this->values = array(
       'name' => $this->randomName(),
@@ -91,6 +63,8 @@ class EntitySerializationTest extends DrupalUnitTestBase {
     $this->entity->save();
 
     $this->serializer = $this->container->get('serializer');
+
+    $this->installConfig(array('field'));
   }
 
   /**
@@ -115,6 +89,9 @@ class EntitySerializationTest extends DrupalUnitTestBase {
       ),
       'name' => array(
         array('value' => $this->values['name']),
+      ),
+      'type' => array(
+        array('value' => 'entity_test_mulrev'),
       ),
       'user_id' => array(
         array('target_id' => $this->values['user_id']),
@@ -164,6 +141,7 @@ class EntitySerializationTest extends DrupalUnitTestBase {
       'langcode' => '<langcode><value>' . LANGUAGE_NOT_SPECIFIED . '</value></langcode>',
       'default_langcode' => '<default_langcode><value/></default_langcode>',
       'name' => '<name><value>' . $this->values['name'] . '</value></name>',
+      'type' => '<type><value>entity_test_mulrev</value></type>',
       'user_id' => '<user_id><target_id>' . $this->values['user_id'] . '</target_id></user_id>',
       'field_test_text' => '<field_test_text><value>' . $this->values['field_test_text']['value'] . '</value><format>' . $this->values['field_test_text']['format'] . '</format></field_test_text>',
     );

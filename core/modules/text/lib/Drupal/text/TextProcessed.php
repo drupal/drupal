@@ -7,8 +7,8 @@
 
 namespace Drupal\text;
 
-use Drupal\Core\TypedData\ContextAwareInterface;
-use Drupal\Core\TypedData\ContextAwareTypedData;
+use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\TypedData\TypedData;
 use Drupal\Core\TypedData\ReadOnlyException;
 use InvalidArgumentException;
 
@@ -18,7 +18,7 @@ use InvalidArgumentException;
  * Required settings (below the definition's 'settings' key) are:
  *  - text source: The text property containing the to be processed text.
  */
-class TextProcessed extends ContextAwareTypedData {
+class TextProcessed extends TypedData {
 
   /**
    * The text property.
@@ -35,9 +35,9 @@ class TextProcessed extends ContextAwareTypedData {
   protected $format;
 
   /**
-   * Overrides ContextAwareTypedData::__construct().
+   * Overrides TypedData::__construct().
    */
-  public function __construct(array $definition, $name = NULL, ContextAwareInterface $parent = NULL) {
+  public function __construct(array $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
 
     if (!isset($definition['settings']['text source'])) {
@@ -46,9 +46,9 @@ class TextProcessed extends ContextAwareTypedData {
   }
 
   /**
-   * Overrides ContextAwareTypedData::setContext().
+   * Overrides TypedData::setContext().
    */
-  public function setContext($name = NULL, ContextAwareInterface $parent = NULL) {
+  public function setContext($name = NULL, TypedDataInterface $parent = NULL) {
     parent::setContext($name, $parent);
     if (isset($parent)) {
       $this->text = $parent->get($this->definition['settings']['text source']);
@@ -81,7 +81,7 @@ class TextProcessed extends ContextAwareTypedData {
   /**
    * Implements \Drupal\Core\TypedData\TypedDataInterface::setValue().
    */
-  public function setValue($value) {
+  public function setValue($value, $notify = TRUE) {
     if (isset($value)) {
       throw new ReadOnlyException('Unable to set a computed property.');
     }

@@ -33,6 +33,7 @@ class FieldNewItem extends IntegerItem {
         'type' => 'integer',
         'label' => t('Integer value'),
         'class' => '\Drupal\comment\FieldNewValue',
+        'computed' => TRUE,
       );
     }
     return static::$propertyDefinitions;

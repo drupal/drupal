@@ -51,6 +51,14 @@ abstract class TwigTemplate extends \Twig_Template {
       return NULL;
     }
 
+    // Return item instead of its reference inside a loop.
+    // @todo 'hide' and 'show' are not supported inside a loop for now.
+    // This should be a non-issue as soon as this lands:
+    // @see http://drupal.org/node/1922304
+    if (isset($context['_seq'])) {
+      return $context[$item];
+    }
+
     // The first test also finds empty / null render arrays
     if (!$context[$item] || isset($this->is_no_reference[$item])) {
       return $context[$item];

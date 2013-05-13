@@ -18,7 +18,9 @@ use Drupal\Core\Annotation\Translation;
  *   id = "filter_format",
  *   label = @Translation("Text format"),
  *   module = "filter",
- *   controller_class = "Drupal\filter\FilterFormatStorageController",
+ *   controllers = {
+ *     "storage" = "Drupal\filter\FilterFormatStorageController"
+ *   },
  *   config_prefix = "filter.format",
  *   entity_keys = {
  *     "id" = "format",

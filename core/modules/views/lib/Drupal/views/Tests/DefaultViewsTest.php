@@ -93,6 +93,8 @@ class DefaultViewsTest extends WebTestBase {
 
     comment_add_default_comment_field('node', 'page');
 
+    $this->container->get('views.views_data')->clear();
+
     for ($i = 0; $i <= 10; $i++) {
       $user = $this->drupalCreateUser();
       $term = $this->createTerm($this->vocabulary);

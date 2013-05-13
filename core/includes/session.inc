@@ -169,7 +169,7 @@ function _drupal_session_write($sid, $value) {
 
     // For performance reasons, do not update the sessions table, unless
     // $_SESSION has changed or more than 180 has passed since the last update.
-    if ($is_changed || !isset($user->timestamp) || REQUEST_TIME - $user->timestamp > variable_get('session_write_interval', 180)) {
+    if ($is_changed || !isset($user->timestamp) || REQUEST_TIME - $user->timestamp > settings()->get('session_write_interval', 180)) {
       // Either ssid or sid or both will be added from $key below.
       $fields = array(
         'uid' => $user->uid,
@@ -206,7 +206,7 @@ function _drupal_session_write($sid, $value) {
     }
 
     // Likewise, do not update access time more than once per 180 seconds.
-    if ($user->uid && REQUEST_TIME - $user->access > variable_get('session_write_interval', 180)) {
+    if ($user->uid && REQUEST_TIME - $user->access > settings()->get('session_write_interval', 180)) {
       db_update('users')
         ->fields(array(
           'access' => REQUEST_TIME

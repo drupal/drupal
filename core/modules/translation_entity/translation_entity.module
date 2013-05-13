@@ -86,7 +86,7 @@ function translation_entity_entity_info_alter(array &$entity_info) {
     // matter if it is enabled for translation or not. As a matter of fact we
     // might need it to correctly switch field translatability when a field is
     // shared accross different entities.
-    $info += array('translation_controller_class' => 'Drupal\translation_entity\EntityTranslationController');
+    $info['controllers'] += array('translation' => 'Drupal\translation_entity\EntityTranslationController');
 
     // If no menu base path is provided we default to the usual
     // "entity_type/%entity_type" pattern.
@@ -504,7 +504,7 @@ function translation_entity_types_translatable() {
 function translation_entity_controller($entity_type) {
   $entity_info = entity_get_info($entity_type);
   // @todo Throw an exception if the key is missing.
-  return new $entity_info['translation_controller_class']($entity_type, $entity_info);
+  return new $entity_info['controllers']['translation']($entity_type, $entity_info);
 }
 
 /**

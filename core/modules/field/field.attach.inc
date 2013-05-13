@@ -22,8 +22,9 @@ use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
  * the data in SQL differently or use a completely different storage mechanism
  * such as a cloud-based database.
  *
- * Each field defines which storage backend it uses. The Drupal system variable
- * 'field_storage_default' identifies the storage backend used by default.
+ * Each field defines which storage backend it uses. The Drupal configuration
+ * 'field.settings.default_storage' identifies the storage backend used by
+ * default.
  *
  * See @link field Field API @endlink for information about the other parts of
  * the Field API.
@@ -1337,11 +1338,11 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
   $prepare = array();
   foreach ($entities as $id => $entity) {
     if (empty($entity->_field_view_prepared)) {
-      // Add this entity to the items to be prepared.
-      $prepare[$id] = $entity;
-
       // Enable BC if necessary.
       $entity = $entity->getBCEntity();
+
+      // Add this entity to the items to be prepared.
+      $prepare[$id] = $entity;
 
       // Determine the actual language code to display for each field, given the
       // language codes available in the field data.
@@ -1565,7 +1566,7 @@ function field_entity_bundle_delete($entity_type, $bundle) {
   // Get the instances on the bundle. field_read_instances() must be used
   // here since field_info_instances() does not return instances for disabled
   // entity types or bundles.
-  $instances = field_read_instances(array('entity_type' => $entity_type, 'bundle' => $bundle), array('include_inactive' => 1));
+  $instances = field_read_instances(array('entity_type' => $entity_type, 'bundle' => $bundle), array('include_inactive' => TRUE));
   foreach ($instances as $instance) {
     field_delete_instance($instance);
   }

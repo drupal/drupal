@@ -72,9 +72,10 @@ abstract class FileFieldTestBase extends WebTestBase {
       'cardinality' => !empty($field_settings['cardinality']) ? $field_settings['cardinality'] : 1,
     );
     $field['settings'] = array_merge($field['settings'], $field_settings);
-    field_create_field($field);
+    $field = field_create_field($field);
 
     $this->attachFileField($name, 'node', $type_name, $instance_settings, $widget_settings);
+    return $field;
   }
 
   /**
@@ -148,7 +149,12 @@ abstract class FileFieldTestBase extends WebTestBase {
     }
 
     // Attach a file to the node.
-    $edit['files[' . $field_name . '_' . $langcode . '_0]'] = drupal_realpath($file->uri);
+    $field = field_info_field($field_name);
+    $name = 'files[' . $field_name . '_' . $langcode . '_0]';
+    if ($field['cardinality'] != 1) {
+      $name .= '[]';
+    }
+    $edit[$name] = drupal_realpath($file->uri);
     $this->drupalPost("node/$nid/edit", $edit, t('Save and keep published'));
 
     return $nid;

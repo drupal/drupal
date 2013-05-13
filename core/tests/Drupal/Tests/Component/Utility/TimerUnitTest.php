@@ -41,13 +41,18 @@ class TimerUnitTest extends UnitTestCase {
     usleep(5000);
     $value4 = Timer::read('test');
 
-    $this->assertGreaterThanOrEqual(5, $value, 'Timer measured at least 5 milliseconds of sleeping while running.');
+    // Although we sleep for 5 milliseconds, we should test that at least 4 ms
+    // have past because usleep() is not reliable on Windows. See
+    // http://php.net/manual/en/function.usleep.php for more information. The
+    // purpose of the test to validate that the Timer class can measure elapsed
+    // time not the granularity of usleep() on a particular OS.
+    $this->assertGreaterThanOrEqual(4, $value, 'Timer measured at least 4 milliseconds of sleeping while running.');
 
-    $this->assertGreaterThanOrEqual($value + 5, $value2, 'Timer measured at least 10 milliseconds of sleeping while running.');
+    $this->assertGreaterThanOrEqual($value + 4, $value2, 'Timer measured at least 8 milliseconds of sleeping while running.');
 
-    $this->assertGreaterThanOrEqual($value2 + 5, $value3, 'Timer measured at least 15 milliseconds of sleeping while running.');
+    $this->assertGreaterThanOrEqual($value2 + 4, $value3, 'Timer measured at least 12 milliseconds of sleeping while running.');
 
-    $this->assertGreaterThanOrEqual($value3 + 5, $value4, 'Timer measured at least 20 milliseconds of sleeping while running.');
+    $this->assertGreaterThanOrEqual($value3 + 4, $value4, 'Timer measured at least 16 milliseconds of sleeping while running.');
   }
 
 }

@@ -26,6 +26,7 @@ abstract class EntityUnitTestBase extends DrupalUnitTestBase {
     $this->installSchema('user', 'users');
     $this->installSchema('system', 'sequences');
     $this->installSchema('entity_test', 'entity_test');
+    $this->installConfig(array('field'));
   }
 
   /**

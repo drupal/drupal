@@ -110,6 +110,8 @@ function comment_token_info() {
  * Implements hook_tokens().
  */
 function comment_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  $token_service = Drupal::token();
+
   $url_options = array('absolute' => TRUE);
   if (isset($options['langcode'])) {
     $url_options['language'] = language_load($options['langcode']);
@@ -216,30 +218,30 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
     }
 
     // Chained token relationships.
-    if ($entity_tokens = token_find_with_prefix($tokens, 'entity')) {
+    if ($entity_tokens = $token_service->findwithPrefix($tokens, 'entity')) {
       $entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
-      $replacements += token_generate($comment->entity_type->value, $entity_tokens, array($comment->entity_type->value => $entity), $options);
+      $replacements += $token_service->generate($comment->entity_type->value, $entity_tokens, array($comment->entity_type->value => $entity), $options);
     }
 
-    if (($node_tokens = token_find_with_prefix($tokens, 'node')) && $comment->entity_type->value == 'node') {
+    if (($node_tokens = $token_service->findwithPrefix($tokens, 'node')) && $comment->entity_type->value == 'node') {
       $node = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
-      $replacements += token_generate('node', $node_tokens, array('node' => $node), $options);
+      $replacements += $token_service->generate('node', $node_tokens, array('node' => $node), $options);
     }
 
-    if ($date_tokens = token_find_with_prefix($tokens, 'created')) {
-      $replacements += token_generate('date', $date_tokens, array('date' => $comment->created->value), $options);
+    if ($date_tokens = $token_service->findwithPrefix($tokens, 'created')) {
+      $replacements += $token_service->generate('date', $date_tokens, array('date' => $comment->created->value), $options);
     }
 
-    if ($date_tokens = token_find_with_prefix($tokens, 'changed')) {
-      $replacements += token_generate('date', $date_tokens, array('date' => $comment->changed->value), $options);
+    if ($date_tokens = $token_service->findwithPrefix($tokens, 'changed')) {
+      $replacements += $token_service->generate('date', $date_tokens, array('date' => $comment->changed->value), $options);
     }
 
-    if (($parent_tokens = token_find_with_prefix($tokens, 'parent')) && $parent = $comment->pid->entity) {
-      $replacements += token_generate('comment', $parent_tokens, array('comment' => $parent), $options);
+    if (($parent_tokens = $token_service->findwithPrefix($tokens, 'parent')) && $parent = $comment->pid->entity) {
+      $replacements += $token_service->generate('comment', $parent_tokens, array('comment' => $parent), $options);
     }
 
-    if (($author_tokens = token_find_with_prefix($tokens, 'author')) && $account = $comment->uid->entity) {
-      $replacements += token_generate('user', $author_tokens, array('user' => $account), $options);
+    if (($author_tokens = $token_service->findwithPrefix($tokens, 'author')) && $account = $comment->uid->entity) {
+      $replacements += $token_service->generate('user', $author_tokens, array('user' => $account), $options);
     }
   }
   elseif ($type == 'entity' & !empty($data['entity'])) {

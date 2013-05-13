@@ -567,7 +567,7 @@ function views_contextual_links_view_alter(&$element, $items) {
 function views_add_contextual_links(&$render_element, $location, ViewExecutable $view, $display_id) {
   // Do not do anything if the view is configured to hide its administrative
   // links.
-  if (empty($view->hide_admin_links)) {
+  if ($view->getShowAdminLinks()) {
     // Also do not do anything if the display plugin has not defined any
     // contextual links that are intended to be displayed in the requested
     // location.
@@ -775,11 +775,12 @@ function &views_set_page_view($view = NULL) {
 }
 
 /**
- * Find out what, if any, page view is currently in use. Please note that
- * this returns a reference, so be careful! You can unintentionally modify the
- * $view object.
+ * Find out what, if any, page view is currently in use.
  *
- * @return Drupal\views\ViewExecutable
+ * Note that this returns a reference, so be careful! You can unintentionally
+ * modify the $view object.
+ *
+ * @return \Drupal\views\ViewExecutable
  *   A fully formed, empty $view object.
  */
 function &views_get_page_view() {
@@ -802,11 +803,13 @@ function &views_set_current_view($view = NULL) {
 }
 
 /**
- * Find out what, if any, current view is currently in use. Please note that
- * this returns a reference, so be careful! You can unintentionally modify the
- * $view object.
+ * Find out what, if any, current view is currently in use.
  *
- * @return Drupal\views\ViewExecutable
+ * Note that this returns a reference, so be careful! You can unintentionally
+ * modify the $view object.
+ *
+ * @return \Drupal\views\ViewExecutable
+ *   The current view object.
  */
 function &views_get_current_view() {
   return views_set_current_view();

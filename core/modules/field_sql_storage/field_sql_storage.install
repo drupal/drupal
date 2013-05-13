@@ -8,32 +8,6 @@
 use Drupal\field\Plugin\Core\Entity\Field;
 
 /**
- * Implements hook_schema().
- */
-function field_sql_storage_schema() {
-  $schema = array();
-
-  // Loading entities within hook_schema() triggers lots of race conditions.
-  // Read definitions for raw storage instead (configuration, and state for
-  // deleted fields).
-  $fields = array();
-  foreach (config_get_storage_names_with_prefix('field.field') as $name) {
-    $fields[] = config($name)->get();
-  }
-  $deleted_fields = Drupal::state()->get('field.field.deleted') ?: array();
-  $fields = array_merge($fields, $deleted_fields);
-
-  foreach ($fields as $field) {
-    if ($field['storage']['type'] == 'field_sql_storage') {
-      $field = new Field($field);
-      $schema += _field_sql_storage_schema($field);
-    }
-  }
-
-  return $schema;
-}
-
-/**
  * Writes field data directly to SQL storage.
  *
  * @ingroup update_api

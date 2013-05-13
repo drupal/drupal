@@ -53,7 +53,7 @@ class ShortcutFormController extends EntityFormController {
   protected function actions(array $form, array &$form_state) {
     // Disable delete of default shortcut set.
     $actions = parent::actions($form, $form_state);
-    $actions['delete']['#access'] = shortcut_set_delete_access($this->getEntity($form_state));
+    $actions['delete']['#access'] = $this->getEntity($form_state)->access('delete');
     return $actions;
   }
 

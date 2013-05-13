@@ -21,10 +21,12 @@ use Drupal\Core\Entity\Entity;
  *   id = "menu_link",
  *   label = @Translation("Menu link"),
  *   module = "menu_link",
- *   controller_class = "Drupal\menu_link\MenuLinkStorageController",
- *   render_controller_class = "Drupal\Core\Entity\EntityRenderController",
- *   form_controller_class = {
- *     "default" = "Drupal\menu_link\MenuLinkFormController"
+ *   controllers = {
+ *     "storage" = "Drupal\menu_link\MenuLinkStorageController",
+ *     "render" = "Drupal\Core\Entity\EntityRenderController",
+ *     "form" = {
+ *       "default" = "Drupal\menu_link\MenuLinkFormController"
+ *     }
  *   },
  *   static_cache = FALSE,
  *   base_table = "menu_links",

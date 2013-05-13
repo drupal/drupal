@@ -218,7 +218,7 @@ class TranslationTest extends FieldUnitTestBase {
     // Enable field translations for nodes.
     field_test_entity_info_translatable('node', TRUE);
     $entity_info = entity_get_info('node');
-    $this->assertTrue(count($entity_info['translation']), 'Nodes are translatable.');
+    $this->assertTrue(count($entity_info['translatable']), 'Nodes are translatable.');
 
     // Prepare the field translations.
     field_test_entity_info_translatable('test_entity', TRUE);

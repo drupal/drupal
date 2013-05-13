@@ -62,6 +62,8 @@ function user_token_info() {
  * Implements hook_tokens().
  */
 function user_tokens($type, $tokens, array $data = array(), array $options = array()) {
+
+  $token_service = Drupal::token();
   $url_options = array('absolute' => TRUE);
   if (isset($options['langcode'])) {
     $url_options['language'] = language_load($options['langcode']);
@@ -113,18 +115,18 @@ function user_tokens($type, $tokens, array $data = array(), array $options = arr
       }
     }
 
-    if ($login_tokens = token_find_with_prefix($tokens, 'last-login')) {
-      $replacements += token_generate('date', $login_tokens, array('date' => $account->login), $options);
+    if ($login_tokens = $token_service->findWithPrefix($tokens, 'last-login')) {
+      $replacements += $token_service->generate('date', $login_tokens, array('date' => $account->login), $options);
     }
 
-    if ($registered_tokens = token_find_with_prefix($tokens, 'created')) {
-      $replacements += token_generate('date', $registered_tokens, array('date' => $account->created), $options);
+    if ($registered_tokens = $token_service->findWithPrefix($tokens, 'created')) {
+      $replacements += $token_service->generate('date', $registered_tokens, array('date' => $account->created), $options);
     }
   }
 
   if ($type == 'current-user') {
     $account = user_load($GLOBALS['user']->uid);
-    $replacements += token_generate('user', $tokens, array('user' => $account), $options);
+    $replacements += $token_service->generate('user', $tokens, array('user' => $account), $options);
   }
 
   return $replacements;

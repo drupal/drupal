@@ -42,6 +42,7 @@ class UserTokenReplaceTest extends WebTestBase {
    * Creates a user, then tests the tokens generated from it.
    */
   function testUserTokenReplacement() {
+    $token_service = \Drupal::token();
     $language_interface = language(LANGUAGE_TYPE_INTERFACE);
     $url_options = array(
       'absolute' => TRUE,
@@ -75,7 +76,7 @@ class UserTokenReplaceTest extends WebTestBase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('user' => $account), array('langcode' => $language_interface->langcode));
+      $output = $token_service->replace($input, array('user' => $account), array('langcode' => $language_interface->langcode));
       $this->assertEqual($output, $expected, format_string('Sanitized user token %token replaced.', array('%token' => $input)));
     }
 
@@ -85,7 +86,7 @@ class UserTokenReplaceTest extends WebTestBase {
     $tests['[current-user:name]'] = user_format_name($global_account);
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('user' => $account), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));
+      $output = $token_service->replace($input, array('user' => $account), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, format_string('Unsanitized user token %token replaced.', array('%token' => $input)));
     }
 
@@ -97,7 +98,7 @@ class UserTokenReplaceTest extends WebTestBase {
     // Generate tokens with interface language.
     $link = url('user', array('absolute' => TRUE));
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('user' => $account), array('langcode' => $language_interface->langcode, 'callback' => 'user_mail_tokens', 'sanitize' => FALSE, 'clear' => TRUE));
+      $output = $token_service->replace($input, array('user' => $account), array('langcode' => $language_interface->langcode, 'callback' => 'user_mail_tokens', 'sanitize' => FALSE, 'clear' => TRUE));
       $this->assertTrue(strpos($output, $link) === 0, 'Generated URL is in interface language.');
     }
 
@@ -106,7 +107,7 @@ class UserTokenReplaceTest extends WebTestBase {
     $account->save();
     $link = url('user', array('language' => language_load($account->preferred_langcode), 'absolute' => TRUE));
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('user' => $account), array('callback' => 'user_mail_tokens', 'sanitize' => FALSE, 'clear' => TRUE));
+      $output = $token_service->replace($input, array('user' => $account), array('callback' => 'user_mail_tokens', 'sanitize' => FALSE, 'clear' => TRUE));
       $this->assertTrue(strpos($output, $link) === 0, "Generated URL is in the user's preferred language.");
     }
 
@@ -114,7 +115,7 @@ class UserTokenReplaceTest extends WebTestBase {
     $link = url('user', array('language' => language_load('de'), 'absolute' => TRUE));
     foreach ($tests as $input => $expected) {
       foreach (array($user1, $user2) as $account) {
-        $output = token_replace($input, array('user' => $account), array('langcode' => 'de', 'callback' => 'user_mail_tokens', 'sanitize' => FALSE, 'clear' => TRUE));
+        $output = $token_service->replace($input, array('user' => $account), array('langcode' => 'de', 'callback' => 'user_mail_tokens', 'sanitize' => FALSE, 'clear' => TRUE));
         $this->assertTrue(strpos($output, $link) === 0, "Generated URL in in the requested language.");
       }
     }

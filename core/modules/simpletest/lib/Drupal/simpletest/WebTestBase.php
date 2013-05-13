@@ -1196,10 +1196,18 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
-   * Retrieve a Drupal path or an absolute path and JSON decode the result.
+   * Requests a Drupal path in JSON format, and JSON decodes the response.
+   */
+  protected function drupalGetJSON($path, array $options = array(), array $headers = array()) {
+    $headers[] = 'Accept: application/json';
+    return drupal_json_decode($this->drupalGet($path, $options, $headers));
+  }
+
+  /**
+   * Requests a Drupal path in drupal_ajax format, and JSON decodes the response.
    */
   protected function drupalGetAJAX($path, array $options = array(), array $headers = array()) {
-    $headers[] = 'X-Requested-With: XMLHttpRequest';
+    $headers[] = 'Accept: application/vnd.drupal-ajax';
     return drupal_json_decode($this->drupalGet($path, $options, $headers));
   }
 
@@ -1420,7 +1428,8 @@ abstract class WebTestBase extends TestBase {
     }
     $content = $this->content;
     $drupal_settings = $this->drupalSettings;
-    $headers[] = 'X-Requested-With: XMLHttpRequest';
+
+    $headers[] = 'Accept: application/vnd.drupal-ajax';
 
     // Get the Ajax settings bound to the triggering element.
     if (!isset($ajax_settings)) {

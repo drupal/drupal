@@ -181,16 +181,6 @@ function node_theme() {
 }
 
 /**
- * Implements hook_entity_info_alter().
- */
-function node_entity_info_alter(&$info) {
-  // Add a translation handler for fields if the language module is enabled.
-  if (module_exists('language')) {
-    $info['node']['translation']['node'] = TRUE;
-  }
-}
-
-/**
  * Implements hook_entity_view_mode_info().
  */
 function node_entity_view_mode_info() {
@@ -1182,7 +1172,8 @@ function template_preprocess_node(&$variables) {
     $variables['submitted'] = t('Submitted by !username on !datetime', array('!username' => $variables['name'], '!datetime' => $variables['date']));
     if (theme_get_setting('toggle_node_user_picture')) {
       // To change user picture settings (e.g. image style), edit the 'compact'
-      // view mode on User entity.
+      // view mode on the User entity. Note that the 'compact' view mode might
+      // not be configured, so remember to always check the theme setting first.
       $variables['user_picture'] = user_view($node->account, 'compact');
     }
     else {
@@ -1240,10 +1231,10 @@ function node_permission() {
       'restrict access' => TRUE,
     ),
     'access content overview' => array(
-      'title' => t('Access the content overview page'),
-      'description' => t('Access the content overview page at <a href="@url">admin/content</a>.', array(
-        '@url' => url('admin/content'),
-      )),
+      'title' => t('Access the Content overview page'),
+      'description' => user_access('access content overview')
+        ? t('Get an overview of <a href="@url">all content</a>.', array('@url' => url('admin/content')))
+        : t('Get an overview of all content.'),
     ),
     'access content' => array(
       'title' => t('View published content'),

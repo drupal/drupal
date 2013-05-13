@@ -105,7 +105,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       $delta = isset($get_delta) ? $get_delta : 0;
       $element = array(
         '#title' => check_plain($instance['label']),
-        '#description' => field_filter_xss(token_replace($instance['description'])),
+        '#description' => field_filter_xss(\Drupal::token()->replace($instance['description'])),
       );
       $element = $this->formSingleElement($entity, $items, $delta, $langcode, $element, $form, $form_state);
 
@@ -196,7 +196,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     $wrapper_id = drupal_html_id($id_prefix . '-add-more-wrapper');
 
     $title = check_plain($instance['label']);
-    $description = field_filter_xss(token_replace($instance['description']));
+    $description = field_filter_xss(\Drupal::token()->replace($instance['description']));
 
     $elements = array();
 

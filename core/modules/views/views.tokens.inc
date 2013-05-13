@@ -67,6 +67,8 @@ function views_token_info() {
  * Implements hook_tokens().
  */
 function views_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  $token_service = Drupal::token();
+
   $url_options = array('absolute' => TRUE);
   if (isset($options['language'])) {
     $url_options['language'] = $options['language'];
@@ -127,9 +129,9 @@ function views_tokens($type, $tokens, array $data = array(), array $options = ar
     }
 
     // [view:url:*] nested tokens. This only works if Token module is installed.
-    if ($url_tokens = token_find_with_prefix($tokens, 'url')) {
+    if ($url_tokens = $token_service->findWithPrefix($tokens, 'url')) {
       if ($path = $view->getUrl()) {
-        $replacements += token_generate('url', $url_tokens, array('path' => $path), $options);
+        $replacements += $token_service->generate('url', $url_tokens, array('path' => $path), $options);
       }
     }
   }

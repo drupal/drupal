@@ -115,12 +115,15 @@ class DatabaseLockBackend extends LockBackendAbstract {
    * Implements Drupal\Core\Lock\LockBackedInterface::releaseAll().
    */
   public function releaseAll($lock_id = NULL) {
-    $this->locks = array();
-    if (empty($lock_id)) {
-      $lock_id = $this->getLockId();
+    // Only attempt to release locks if any were acquired.
+    if (!empty($this->locks)) {
+      $this->locks = array();
+      if (empty($lock_id)) {
+        $lock_id = $this->getLockId();
+      }
+      db_delete('semaphore')
+        ->condition('value', $lock_id)
+        ->execute();
     }
-    db_delete('semaphore')
-      ->condition('value', $lock_id)
-      ->execute();
   }
 }

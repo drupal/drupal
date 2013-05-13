@@ -46,6 +46,7 @@ function ckeditor_library_info() {
       array('system', 'jquery.once'),
       array('system', 'jquery.ui.sortable'),
       array('system', 'jquery.ui.draggable'),
+      array('system', 'jquery.ui.touch-punch'),
     ),
   );
   $libraries['drupal.ckeditor.stylescombo.admin'] = array(
@@ -65,7 +66,9 @@ function ckeditor_library_info() {
     'title' => 'Loads the main CKEditor library.',
     'version' => '4.1',
     'js' => array(
-      'core/misc/ckeditor/ckeditor.js' => array(),
+      'core/misc/ckeditor/ckeditor.js' => array(
+        'preprocess' => FALSE,
+      ),
     ),
   );
 
