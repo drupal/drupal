@@ -8,18 +8,6 @@
 use Drupal\custom_block\Plugin\Core\Entity\CustomBlockType;
 
 /**
- * Page callback: Lists custom block types.
- *
- * @return array
- *   A build array in the format expected by drupal_render().
- *
- * @see custom_block_menu()
- */
-function custom_block_type_list() {
-  return Drupal::entityManager()->getListController('custom_block_type')->render();
-}
-
-/**
  * Page callback: Presents the custom block type creation form.
  *
  * @return array
