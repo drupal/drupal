@@ -8,9 +8,13 @@
 namespace Drupal\aggregator\Routing;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\Core\ControllerInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityManager;
+use Drupal\aggregator\FeedInterface;
 
 /**
  * Returns responses for aggregator module routes.
@@ -68,6 +72,34 @@ class AggregatorController implements ControllerInterface {
         'block' => 5,
       ));
     return entity_get_form($feed);
+  }
+
+  /**
+   * Refreshes a feed, then redirects to the overview page.
+   *
+   * @param \Drupal\aggregator\FeedInterface $aggregator_feed
+   *   An object describing the feed to be refreshed.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request object containing the search string.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   A redirection to the admin overview page.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+   *   If the query token is missing or invalid.
+   */
+  public function feedRefresh(FeedInterface $aggregator_feed, Request $request) {
+    // @todo CSRF tokens are validated in page callbacks rather than access
+    //   callbacks, because access callbacks are also invoked during menu link
+    //   generation. Add token support to routing: http://drupal.org/node/755584.
+    $token = $request->query->get('token');
+    if (!isset($token) || !drupal_valid_token($token, 'aggregator/update/' . $aggregator_feed->id())) {
+      throw new AccessDeniedHttpException();
+    }
+
+    // @todo after https://drupal.org/node/1972246 find a new place for it.
+    aggregator_refresh($aggregator_feed);
+    return new RedirectResponse(url('admin/config/services/aggregator', array('absolute' => TRUE)));
   }
 
   /**

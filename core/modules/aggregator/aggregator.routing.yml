@@ -29,7 +29,14 @@ aggregator_feed_delete:
 aggregator_feed_add:
   pattern: '/admin/config/services/aggregator/add/feed'
   defaults:
-    _controller: '\Drupal\aggregator\Routing\AggregatorController::feedAdd'
+    _content: '\Drupal\aggregator\Routing\AggregatorController::feedAdd'
+  requirements:
+    _permission: 'administer news feeds'
+
+aggregator_feed_refresh:
+  pattern: '/admin/config/services/aggregator/update/{aggregator_feed}'
+  defaults:
+    _controller: '\Drupal\aggregator\Routing\AggregatorController::feedRefresh'
   requirements:
     _permission: 'administer news feeds'
 

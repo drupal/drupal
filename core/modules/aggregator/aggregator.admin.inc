@@ -9,27 +9,6 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\aggregator\Plugin\Core\Entity\Feed;
 
 /**
- * Page callback: Refreshes a feed, then redirects to the overview page.
- *
- * @param \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
- *   An object describing the feed to be refreshed.
- *
- * @see aggregator_menu()
- */
-function aggregator_admin_refresh_feed(Feed $feed) {
-  // @todo CSRF tokens are validated in page callbacks rather than access
-  //   callbacks, because access callbacks are also invoked during menu link
-  //   generation. Add token support to routing: http://drupal.org/node/755584.
-  $token = drupal_container()->get('request')->query->get('token');
-  if (!isset($token) || !drupal_valid_token($token, 'aggregator/update/' . $feed->id())) {
-    throw new AccessDeniedHttpException();
-  }
-
-  aggregator_refresh($feed);
-  drupal_goto('admin/config/services/aggregator');
-}
-
-/**
  * Form constructor to add/edit/delete aggregator categories.
  *
  * @param $edit

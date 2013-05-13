@@ -119,10 +119,7 @@ function aggregator_menu() {
   );
   $items['admin/config/services/aggregator/update/%aggregator_feed'] = array(
     'title' => 'Update items',
-    'page callback' => 'aggregator_admin_refresh_feed',
-    'page arguments' => array(5),
-    'access arguments' => array('administer news feeds'),
-    'file' => 'aggregator.admin.inc',
+    'route_name' => 'aggregator_feed_refresh',
   );
   $items['admin/config/services/aggregator/list'] = array(
     'title' => 'List',
