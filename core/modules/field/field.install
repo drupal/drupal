@@ -240,12 +240,6 @@ function field_update_dependencies() {
     // - The {file_usage}.id column has moved to varchar.
     'file' => 8001,
   );
-  $schema = Drupal::keyValue('system.schema')->getAll();
-  if (!empty($schema['comment']) &&
-      $schema['comment'] !== SCHEMA_UNINSTALLED) {
-    // Node comment status have been turned to fields.
-    $dependencies['comment'] = 8006;
-  }
   return $dependencies;
 }
 

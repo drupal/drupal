@@ -334,6 +334,14 @@ function comment_field_schema($field) {
  */
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function comment_update_dependencies() {
+  // Node comment status have been turned to fields.
+  $dependencies['field'][8003]['comment'] = 8006;
+}
+
+/**
  * Renames {comment}.language to {comment}.langcode.
  */
 function comment_update_8000() {
