@@ -378,6 +378,17 @@ function user_install_picture_field() {
  */
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function user_update_dependencies() {
+  $dependencies['user'][8011] = array(
+    // - Create a UUID column for managed files.
+    'system' => 8015,
+  );
+  return $dependencies;
+}
+
+/**
  * The 'Member for' extra field has moved one level up in the array.
  */
 function user_update_8000() {

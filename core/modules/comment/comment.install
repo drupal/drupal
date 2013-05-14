@@ -334,6 +334,17 @@ function comment_field_schema($field) {
  */
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function comment_update_dependencies() {
+  // Convert Field API to ConfigEntities after:
+  $dependencies['comment'][8006] = array(
+    'field' => 8004,
+  );
+  return $dependencies;
+}
+
+/**
  * Renames {comment}.language to {comment}.langcode.
  */
 function comment_update_8000() {
@@ -566,7 +577,9 @@ function comment_update_8006(&$sandbox) {
     // Make sure field doesn't already exist.
     if (!_update_7000_field_read_fields(array('field_name' => $field['field_name']))) {
       // Create the field.
-      _update_7000_field_create_field($field);
+      $field = entity_create('field_entity', $field);
+      $field->save();
+      //_update_7000_field_create_field($field);
     }
 
     // Add the comment field, setting the instance settings to match those for
@@ -601,7 +614,9 @@ function comment_update_8006(&$sandbox) {
         'weight' => '50',
       ),
     );
-    _update_7000_field_create_instance($field, $instance);
+    $instance = entity_create('field_instance', $instance);
+    $instance->save();
+    //_update_7000_field_create_instance($field, $instance);
 
     // Prepare defaults for the default and full view modes.
     $display_options_default = array(
