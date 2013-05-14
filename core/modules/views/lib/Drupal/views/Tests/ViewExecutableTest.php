@@ -83,6 +83,7 @@ class ViewExecutableTest extends ViewUnitTestBase {
     $this->installSchema('user', array('users', 'role_permission'));
     $this->installSchema('node', array('node_type', 'node'));
     $this->installSchema('comment', array('comment', 'comment_entity_statistics'));
+    $this->installConfig(array('field'));
     comment_add_default_comment_field('node', 'page');
     parent::setUpFixtures();
 
@@ -142,13 +143,6 @@ class ViewExecutableTest extends ViewUnitTestBase {
     $this->assertTrue($view->query instanceof Sql, 'Make sure a reference to the query is set');
     $this->assertEqual(spl_object_hash($view->query->view), $view_hash);
     $this->assertEqual(spl_object_hash($view->query->displayHandler), $display_hash);
-  }
-
-  /**
-   * Overrides Drupal\views\Tests\ViewTestBase::getBasicView().
-   */
-  protected function getBasicView() {
-    return $this->createViewFromConfig('test_destroy');
   }
 
   /**
