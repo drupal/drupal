@@ -23,7 +23,7 @@ use PDOException;
  *
  * @see http://php.net/manual/book.pdo.php
  */
-abstract class Connection extends PDO {
+abstract class Connection implements \Serializable {
 
   /**
    * The database target this connection is for.
@@ -101,6 +101,13 @@ abstract class Connection extends PDO {
   protected $temporaryNameIndex = 0;
 
   /**
+   * The actual PDO connection.
+   *
+   * @var \PDO
+   */
+  protected $connection;
+
+  /**
    * The connection information for this connection object.
    *
    * @var array
@@ -135,21 +142,32 @@ abstract class Connection extends PDO {
    */
   protected $prefixReplace = array();
 
-  function __construct($dsn, $username, $password, $driver_options = array()) {
+  /**
+   * Constructs a Connection object.
+   */
+  public function __construct(PDO $connection, array $connection_options) {
     // Initialize and prepare the connection prefix.
-    $this->setPrefix(isset($this->connectionOptions['prefix']) ? $this->connectionOptions['prefix'] : '');
-
-    // Because the other methods don't seem to work right.
-    $driver_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-
-    // Call PDO::__construct and PDO::setAttribute.
-    parent::__construct($dsn, $username, $password, $driver_options);
+    $this->setPrefix(isset($connection_options['prefix']) ? $connection_options['prefix'] : '');
 
     // Set a Statement class, unless the driver opted out.
     if (!empty($this->statementClass)) {
-      $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array($this->statementClass, array($this)));
+      $connection->setAttribute(PDO::ATTR_STATEMENT_CLASS, array($this->statementClass, array($this)));
     }
+
+    $this->connection = $connection;
+    $this->connectionOptions = $connection_options;
   }
+
+  /**
+   * Opens a PDO connection.
+   *
+   * @param array $connection_options
+   *   The database connection settings array.
+   *
+   * @return \PDO
+   *   A \PDO object.
+   */
+  public static function open(array &$connection_options = array()) { }
 
   /**
    * Destroys this Connection object.
@@ -163,7 +181,7 @@ abstract class Connection extends PDO {
     // Destroy all references to this connection by setting them to NULL.
     // The Statement class attribute only accepts a new value that presents a
     // proper callable, so we reset it to PDOStatement.
-    $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('PDOStatement', array()));
+    $this->connection->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('PDOStatement', array()));
     $this->schema = NULL;
   }
 
@@ -318,8 +336,7 @@ abstract class Connection extends PDO {
   public function prepareQuery($query) {
     $query = $this->prefixTables($query);
 
-    // Call PDO::prepare.
-    return parent::prepare($query);
+    return $this->connection->prepare($query);
   }
 
   /**
@@ -532,7 +549,7 @@ abstract class Connection extends PDO {
         case Database::RETURN_AFFECTED:
           return $stmt->rowCount();
         case Database::RETURN_INSERT_ID:
-          return $this->lastInsertId();
+          return $this->connection->lastInsertId();
         case Database::RETURN_NULL:
           return;
         default:
@@ -921,7 +938,7 @@ abstract class Connection extends PDO {
         $rolled_back_other_active_savepoints = TRUE;
       }
     }
-    parent::rollBack();
+    $this->connection->rollBack();
     if ($rolled_back_other_active_savepoints) {
       throw new TransactionOutOfOrderException();
     }
@@ -949,7 +966,7 @@ abstract class Connection extends PDO {
       $this->query('SAVEPOINT ' . $name);
     }
     else {
-      parent::beginTransaction();
+      $this->connection->beginTransaction();
     }
     $this->transactionLayers[$name] = $name;
   }
@@ -1000,7 +1017,7 @@ abstract class Connection extends PDO {
       // If there are no more layers left then we should commit.
       unset($this->transactionLayers[$name]);
       if (empty($this->transactionLayers)) {
-        if (!parent::commit()) {
+        if (!$this->connection->commit()) {
           throw new TransactionCommitFailedException();
         }
       }
@@ -1084,7 +1101,7 @@ abstract class Connection extends PDO {
    * Returns the version of the database server.
    */
   public function version() {
-    return $this->getAttribute(PDO::ATTR_SERVER_VERSION);
+    return $this->connection->getAttribute(PDO::ATTR_SERVER_VERSION);
   }
 
   /**
@@ -1178,4 +1195,76 @@ abstract class Connection extends PDO {
    *   also larger than the $existing_id if one was passed in.
    */
   abstract public function nextId($existing_id = 0);
+
+  /**
+   * Prepares a statement for execution and returns a statement object
+   *
+   * Emulated prepared statements does not communicate with the database server
+   * so this method does not check the statement.
+   *
+   * @param string $statement
+   *   This must be a valid SQL statement for the target database server.
+   * @param array $driver_options
+   *   (optional) This array holds one or more key=>value pairs to set
+   *   attribute values for the PDOStatement object that this method returns.
+   *   You would most commonly use this to set the \PDO::ATTR_CURSOR value to
+   *   \PDO::CURSOR_SCROLL to request a scrollable cursor. Some drivers have
+   *   driver specific options that may be set at prepare-time. Defaults to an
+   *   empty array.
+   *
+   * @return \PDOStatement|false
+   *   If the database server successfully prepares the statement, returns a
+   *   \PDOStatement object.
+   *   If the database server cannot successfully prepare the statement  returns
+   *   FALSE or emits \PDOException (depending on error handling).
+   *
+   * @throws \PDOException
+   *
+   * @see \PDO::prepare()
+   */
+  public function prepare($statement, array $driver_options = array()) {
+    return $this->connection->prepare($statement, $driver_options);
+  }
+
+  /**
+   * Quotes a string for use in a query.
+   *
+   * @param string $string
+   *   The string to be quoted.
+   * @param int $parameter_type
+   *   (optional) Provides a data type hint for drivers that have alternate
+   *   quoting styles. Defaults to \PDO::PARAM_STR.
+   *
+   * @return string|bool
+   *   A quoted string that is theoretically safe to pass into an SQL statement.
+   *   Returns FALSE if the driver does not support quoting in this way.
+   *
+   * @see \PDO::quote()
+   */
+  public function quote($string, $parameter_type = \PDO::PARAM_STR) {
+    return $this->connection->quote($string, $parameter_type);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function serialize() {
+    $connection = clone $this;
+    // Don't serialize the PDO connection and other lazy-instantiated members.
+    unset($connection->connection, $connection->schema, $connection->driverClasses);
+    return serialize(get_object_vars($connection));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function unserialize($serialized) {
+    $data = unserialize($serialized);
+    foreach ($data as $key => $value) {
+      $this->{$key} = $value;
+    }
+    // Re-establish the PDO connection using the original options.
+    $this->connection = static::open($this->connectionOptions);
+  }
+
 }

@@ -66,7 +66,12 @@ class Connection extends DatabaseConnection {
    */
   var $tableDropped = FALSE;
 
-  public function __construct(array $connection_options = array()) {
+  /**
+   * Constructs a \Drupal\Core\Database\Driver\sqlite\Connection object.
+   */
+  public function __construct(PDO $connection, array $connection_options) {
+    parent::__construct($connection, $connection_options);
+
     // We don't need a specific PDOStatement class here, we simulate it below.
     $this->statementClass = NULL;
 
@@ -74,16 +79,6 @@ class Connection extends DatabaseConnection {
     $this->transactionSupport = $this->transactionalDDLSupport = !isset($connection_options['transactions']) || $connection_options['transactions'] !== FALSE;
 
     $this->connectionOptions = $connection_options;
-
-    // Allow PDO options to be overridden.
-    $connection_options += array(
-      'pdo' => array(),
-    );
-    $connection_options['pdo'] += array(
-      // Convert numeric values to strings when fetching.
-      PDO::ATTR_STRINGIFY_FETCHES => TRUE,
-    );
-    parent::__construct('sqlite:' . $connection_options['database'], '', '', $connection_options['pdo']);
 
     // Attach one database for each registered prefix.
     $prefixes = $this->prefixes;
@@ -107,23 +102,42 @@ class Connection extends DatabaseConnection {
     // Detect support for SAVEPOINT.
     $version = $this->query('SELECT sqlite_version()')->fetchField();
     $this->savepointSupport = (version_compare($version, '3.6.8') >= 0);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function open(array &$connection_options = array()) {
+    // Allow PDO options to be overridden.
+    $connection_options += array(
+      'pdo' => array(),
+    );
+    $connection_options['pdo'] += array(
+      PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+      // Convert numeric values to strings when fetching.
+      PDO::ATTR_STRINGIFY_FETCHES => TRUE,
+    );
+    $pdo = new PDO('sqlite:' . $connection_options['database'], '', '', $connection_options['pdo']);
 
     // Create functions needed by SQLite.
-    $this->sqliteCreateFunction('if', array($this, 'sqlFunctionIf'));
-    $this->sqliteCreateFunction('greatest', array($this, 'sqlFunctionGreatest'));
-    $this->sqliteCreateFunction('pow', 'pow', 2);
-    $this->sqliteCreateFunction('length', 'strlen', 1);
-    $this->sqliteCreateFunction('md5', 'md5', 1);
-    $this->sqliteCreateFunction('concat', array($this, 'sqlFunctionConcat'));
-    $this->sqliteCreateFunction('substring', array($this, 'sqlFunctionSubstring'), 3);
-    $this->sqliteCreateFunction('substring_index', array($this, 'sqlFunctionSubstringIndex'), 3);
-    $this->sqliteCreateFunction('rand', array($this, 'sqlFunctionRand'));
+    $pdo->sqliteCreateFunction('if', array(__CLASS__, 'sqlFunctionIf'));
+    $pdo->sqliteCreateFunction('greatest', array(__CLASS__, 'sqlFunctionGreatest'));
+    $pdo->sqliteCreateFunction('pow', 'pow', 2);
+    $pdo->sqliteCreateFunction('length', 'strlen', 1);
+    $pdo->sqliteCreateFunction('md5', 'md5', 1);
+    $pdo->sqliteCreateFunction('concat', array(__CLASS__, 'sqlFunctionConcat'));
+    $pdo->sqliteCreateFunction('substring', array(__CLASS__, 'sqlFunctionSubstring'), 3);
+    $pdo->sqliteCreateFunction('substring_index', array(__CLASS__, 'sqlFunctionSubstringIndex'), 3);
+    $pdo->sqliteCreateFunction('rand', array(__CLASS__, 'sqlFunctionRand'));
 
     // Execute sqlite init_commands.
     if (isset($connection_options['init_commands'])) {
-      $this->exec(implode('; ', $connection_options['init_commands']));
+      $pdo->exec(implode('; ', $connection_options['init_commands']));
     }
+
+    return $pdo;
   }
+
 
   /**
    * Destructor for the SQLite connection.
@@ -158,14 +172,14 @@ class Connection extends DatabaseConnection {
   /**
    * SQLite compatibility implementation for the IF() SQL function.
    */
-  public function sqlFunctionIf($condition, $expr1, $expr2 = NULL) {
+  public static function sqlFunctionIf($condition, $expr1, $expr2 = NULL) {
     return $condition ? $expr1 : $expr2;
   }
 
   /**
    * SQLite compatibility implementation for the GREATEST() SQL function.
    */
-  public function sqlFunctionGreatest() {
+  public static function sqlFunctionGreatest() {
     $args = func_get_args();
     foreach ($args as $k => $v) {
       if (!isset($v)) {
@@ -183,7 +197,7 @@ class Connection extends DatabaseConnection {
   /**
    * SQLite compatibility implementation for the CONCAT() SQL function.
    */
-  public function sqlFunctionConcat() {
+  public static function sqlFunctionConcat() {
     $args = func_get_args();
     return implode('', $args);
   }
@@ -191,14 +205,14 @@ class Connection extends DatabaseConnection {
   /**
    * SQLite compatibility implementation for the SUBSTRING() SQL function.
    */
-  public function sqlFunctionSubstring($string, $from, $length) {
+  public static function sqlFunctionSubstring($string, $from, $length) {
     return substr($string, $from - 1, $length);
   }
 
   /**
    * SQLite compatibility implementation for the SUBSTRING_INDEX() SQL function.
    */
-  public function sqlFunctionSubstringIndex($string, $delimiter, $count) {
+  public static function sqlFunctionSubstringIndex($string, $delimiter, $count) {
     // If string is empty, simply return an empty string.
     if (empty($string)) {
       return '';
@@ -247,7 +261,7 @@ class Connection extends DatabaseConnection {
    * the world.
    */
   public function PDOPrepare($query, array $options = array()) {
-    return parent::prepare($query, $options);
+    return $this->connection->prepare($query, $options);
   }
 
   public function queryRange($query, $from, $count, array $args = array(), array $options = array()) {
@@ -354,7 +368,7 @@ class Connection extends DatabaseConnection {
       }
     }
     if ($this->supportsTransactions()) {
-      PDO::rollBack();
+      $this->connection->rollBack();
     }
   }
 
@@ -394,9 +408,9 @@ class Connection extends DatabaseConnection {
         // If there was any rollback() we should roll back whole transaction.
         if ($this->willRollback) {
           $this->willRollback = FALSE;
-          PDO::rollBack();
+          $this->connection->rollBack();
         }
-        elseif (!PDO::commit()) {
+        elseif (!$this->connection->commit()) {
           throw new TransactionCommitFailedException();
         }
       }

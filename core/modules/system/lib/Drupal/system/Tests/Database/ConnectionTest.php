@@ -123,4 +123,5 @@ class ConnectionTest extends DatabaseTestBase {
     $connectionOptions = $db->getConnectionOptions();
     $this->assertNotEqual($connection_info['default']['database'], $connectionOptions['database'], 'The test connection info database does not match the current connection options database.');
   }
+
 }
