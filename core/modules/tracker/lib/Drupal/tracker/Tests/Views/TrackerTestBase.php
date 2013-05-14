@@ -28,6 +28,8 @@ abstract class TrackerTestBase extends ViewTestBase {
     ViewTestData::importTestViews(get_class($this), array('tracker_test_views'));
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+    // Add a comment field.
+    comment_add_default_comment_field('node', 'page');
 
     $permissions = array('access comments', 'create page content', 'post comments', 'skip comment approval');
     $account = $this->drupalCreateUser($permissions);
@@ -41,7 +43,9 @@ abstract class TrackerTestBase extends ViewTestBase {
     ));
 
     $this->comment = entity_create('comment', array(
-      'nid' => $this->node->id(),
+      'entity_id' => $this->node->id(),
+      'entity_type' => 'node',
+      'field_name' => 'comment',
       'subject' => $this->randomName(),
       'comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
     ));
