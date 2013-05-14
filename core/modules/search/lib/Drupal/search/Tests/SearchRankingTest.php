@@ -37,9 +37,9 @@ class SearchRankingTest extends SearchTestBase {
     foreach ($node_ranks as $node_rank) {
       $settings = array(
         'type' => 'page',
-        'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array(
-          'status' => COMMENT_HIDDEN
-        ))),
+        'comment' => array(array(
+          'status' => COMMENT_HIDDEN,
+        )),
         'title' => 'Drupal rocks',
         'body' => array(array('value' => "Drupal's search rocks")),
       );
@@ -57,7 +57,7 @@ class SearchRankingTest extends SearchTestBase {
               $settings['created'] = REQUEST_TIME + 3600;
               break;
             case 'comments':
-              $settings['comment'][LANGUAGE_NOT_SPECIFIED][0]['status'] = COMMENT_OPEN;
+              $settings['comment'][0]['status'] = COMMENT_OPEN;
               break;
           }
         }
@@ -126,7 +126,6 @@ class SearchRankingTest extends SearchTestBase {
 
     // Shuffle tags to ensure HTML tags are ranked properly.
     shuffle($shuffled_tags);
-
     $settings = array(
       'type' => 'page',
       'title' => 'Simple node',
