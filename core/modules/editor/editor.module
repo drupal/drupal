@@ -78,12 +78,12 @@ function editor_library_info() {
       array('system', 'jquery.once'),
     ),
   );
-  // Create.js PropertyEditor widget library names begin with "edit.editor".
-  $libraries['edit.editorWidget.editor'] = array(
-    'title' => '"Editor" Create.js PropertyEditor widget',
+
+  $libraries['edit.formattedTextEditor.editor'] = array(
+    'title' => 'Formatted text editor',
     'version' => VERSION,
     'js' => array(
-      $path . '/js/editor.createjs.js' => array(
+      $path . '/js/editor.formattedTextEditor.js' => array(
         'scope' => 'footer',
         'attributes' => array('defer' => TRUE),
       ),

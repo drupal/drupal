@@ -12,11 +12,10 @@ use Drupal\Component\Annotation\Plugin;
 use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
- * Defines the "direct" Create.js PropertyEditor widget.
+ * Defines the direct editor.
  *
  * @Plugin(
  *   id = "direct",
- *   jsClassName = "direct",
  *   module = "edit"
  * )
  */

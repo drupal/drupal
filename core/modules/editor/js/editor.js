@@ -83,8 +83,9 @@ Drupal.behaviors.editor = {
       var $this = $(this);
       var activeFormatID = $this.val();
       var field = behavior.findFieldForFormatSelector($this);
-
-      Drupal.editorDetach(field, settings.editor.formats[activeFormatID], trigger);
+      if (activeFormatID in settings.editor.formats) {
+        Drupal.editorDetach(field, settings.editor.formats[activeFormatID], trigger);
+      }
     });
   },
 

@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 class EditIntegrationTest extends EditTestBase {
 
   /**
-   * The manager for editor (Create.js PropertyEditor widget) plug-ins.
+   * The manager for editor plug-ins.
    *
    * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
@@ -143,7 +143,7 @@ class EditIntegrationTest extends EditTestBase {
   }
 
   /**
-   * Tests (custom) metadata when the "Editor" Create.js editor is used.
+   * Tests (custom) metadata when the formatted text editor is used.
    */
   function testMetadata() {
     $this->editorManager = new EditorManager($this->container->get('container.namespaces'));

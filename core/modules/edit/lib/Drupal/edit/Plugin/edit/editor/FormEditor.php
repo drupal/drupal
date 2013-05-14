@@ -12,11 +12,10 @@ use Drupal\Component\Annotation\Plugin;
 use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
- * Defines the "form" Create.js PropertyEditor widget.
+ * Defines the form editor.
  *
  * @Plugin(
  *   id = "form",
- *   jsClassName = "formEditEditor",
  *   module = "edit"
  * )
  */

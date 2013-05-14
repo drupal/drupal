@@ -12,7 +12,7 @@ use Drupal\edit\EditPluginInterface;
 use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
- * Defines a base editor (Create.js PropertyEditor widget) implementation.
+ * Defines a base editor implementation.
  */
 abstract class EditorBase extends PluginBase implements EditPluginInterface {
 

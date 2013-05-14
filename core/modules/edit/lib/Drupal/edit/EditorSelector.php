@@ -17,7 +17,7 @@ use Drupal\field\Plugin\Core\Entity\FieldInstance;
 class EditorSelector implements EditorSelectorInterface {
 
   /**
-   * The manager for editor (Create.js PropertyEditor widget) plugins.
+   * The manager for editor plugins.
    *
    * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
@@ -34,7 +34,7 @@ class EditorSelector implements EditorSelectorInterface {
    * Constructs a new EditorSelector.
    *
    * @param \Drupal\Component\Plugin\PluginManagerInterface
-   *   The manager for Create.js PropertyEditor widget plugins.
+   *   The manager for editor plugins.
    */
   public function __construct(PluginManagerInterface $editor_manager) {
     $this->editorManager = $editor_manager;
@@ -100,22 +100,6 @@ class EditorSelector implements EditorSelectorInterface {
     foreach ($editor_ids as $editor_id) {
       $editor = $this->editorManager->createInstance($editor_id);
       $attachments[] = $editor->getAttachments();
-    }
-
-    // JavaScript settings for Edit.
-    $definitions = $this->editorManager->getDefinitions();
-    foreach ($definitions as $definition) {
-      $attachments[] = array(
-        // This will be used in Create.js' propertyEditorWidgetsConfiguration.
-        'js' => array(
-          array(
-            'type' => 'setting',
-            'data' => array('edit' => array('editors' => array(
-              $definition['id'] => array('widget' => $definition['jsClassName'])
-            )))
-          )
-        )
-      );
     }
 
     return NestedArray::mergeDeepArray($attachments);

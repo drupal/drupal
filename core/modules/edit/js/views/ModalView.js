@@ -2,13 +2,11 @@
  * @file
  * A Backbone View that provides an interactive modal.
  */
-(function($, Backbone, Drupal) {
+(function ($, Backbone, Drupal) {
 
 "use strict";
 
-Drupal.edit = Drupal.edit || {};
-Drupal.edit.views = Drupal.edit.views || {};
-Drupal.edit.views.ModalView = Backbone.View.extend({
+Drupal.edit.ModalView = Backbone.View.extend({
 
   message: null,
   buttons: null,
@@ -20,29 +18,29 @@ Drupal.edit.views.ModalView = Backbone.View.extend({
   },
 
   /**
-   * Implements Backbone Views' initialize() function.
+   * {@inheritdoc}
    *
-   * @param options
+   * @param Object options
    *   An object with the following keys:
-   *   - message: a message to show in the modal.
-   *   - buttons: a set of buttons with 'action's defined, ready to be passed to
-   *     Drupal.theme.editButtons().
-   *   - callback: a callback that will receive the 'action' of the clicked
-   *     button.
+   *   - String message: a message to show in the modal.
+   *   - Array buttons: a set of buttons with 'action's defined, ready to be
+         passed to Drupal.theme.editButtons().
+   *   - Function callback: a callback that will receive the 'action' of the
+   *     clicked button.
    *
    * @see Drupal.theme.editModal()
    * @see Drupal.theme.editButtons()
    */
-  initialize: function(options) {
+  initialize: function (options) {
     this.message = options.message;
     this.buttons = options.buttons;
     this.callback = options.callback;
   },
 
   /**
-   * Implements Backbone Views' render() function.
+   * {@inheritdoc}
    */
-  render: function() {
+  render: function () {
     this.setElement(Drupal.theme('editModal', {}));
     this.$el.appendTo('body');
     // Template.
@@ -52,18 +50,17 @@ Drupal.edit.views.ModalView = Backbone.View.extend({
 
     // Show the modal with an animation.
     var that = this;
-    setTimeout(function() {
+    setTimeout(function () {
       that.$el.removeClass('edit-animate-invisible');
     }, 0);
   },
 
   /**
-   * When the user clicks on any of the buttons, the modal should be removed
-   * and the result should be passed to the callback.
+   * Passes the clicked button action to the callback; closes the modal.
    *
-   * @param event
+   * @param jQuery event
    */
-  onButtonClick: function(event) {
+  onButtonClick: function (event) {
     event.stopPropagation();
     event.preventDefault();
 
@@ -71,7 +68,7 @@ Drupal.edit.views.ModalView = Backbone.View.extend({
     var that = this;
     this.$el
       .addClass('edit-animate-invisible')
-      .on(Drupal.edit.util.constants.transitionEnd, function(e) {
+      .on(Drupal.edit.util.constants.transitionEnd, function (e) {
         that.remove();
       });
 

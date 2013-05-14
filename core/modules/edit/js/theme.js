@@ -2,35 +2,20 @@
  * @file
  * Provides overridable theme functions for all of Edit's client-side HTML.
  */
-(function($, Drupal) {
+(function ($, Drupal) {
 
 "use strict";
 
 /**
- * Theme function for the overlay of the Edit module.
- *
- * @param settings
- *   An object with the following keys:
- *   - None.
- * @return
- *   The corresponding HTML.
- */
-Drupal.theme.editOverlay = function(settings) {
-  var html = '';
-  html += '<div id="edit_overlay" />';
-  return html;
-};
-
-/**
  * Theme function for a "backstage" for the Edit module.
  *
- * @param settings
+ * @param Object settings
  *   An object with the following keys:
- *   - id: the id to apply to the backstage.
- * @return
+ *   - String id: the id to apply to the backstage.
+ * @return String
  *   The corresponding HTML.
  */
-Drupal.theme.editBackstage = function(settings) {
+Drupal.theme.editBackstage = function (settings) {
   var html = '';
   html += '<div id="' + settings.id + '" />';
   return html;
@@ -39,13 +24,10 @@ Drupal.theme.editBackstage = function(settings) {
 /**
  * Theme function for a modal of the Edit module.
  *
- * @param settings
- *   An object with the following keys:
- *   - None.
- * @return
+ * @return String
  *   The corresponding HTML.
  */
-Drupal.theme.editModal = function(settings) {
+Drupal.theme.editModal = function () {
   var classes = 'edit-animate-slow edit-animate-invisible edit-animate-delay-veryfast';
   var html = '';
   html += '<div id="edit_modal" class="' + classes + '" role="dialog">';
@@ -60,11 +42,11 @@ Drupal.theme.editModal = function(settings) {
  *
  * @param settings
  *   An object with the following keys:
- *   - id: the id to apply to the toolbar container.
- * @return
+ *   - String id: the id to apply to the toolbar container.
+ * @return String
  *   The corresponding HTML.
  */
-Drupal.theme.editToolbarContainer = function(settings) {
+Drupal.theme.editToolbarContainer = function (settings) {
   var html = '';
   html += '<div id="' + settings.id + '" class="edit-toolbar-container">';
   html += '  <div class="edit-toolbar-heightfaker edit-animate-fast">';
@@ -77,15 +59,15 @@ Drupal.theme.editToolbarContainer = function(settings) {
 /**
  * Theme function for a toolbar toolgroup of the Edit module.
  *
- * @param settings
+ * @param Object settings
  *   An object with the following keys:
- *   - id: (optional) the id of the toolgroup
- *   - classes: the class of the toolgroup.
- *   - buttons: @see Drupal.theme.prototype.editButtons().
- * @return
+ *   - String id: (optional) the id of the toolgroup
+ *   - String classes: the class of the toolgroup.
+ *   - Array buttons: @see Drupal.theme.prototype.editButtons().
+ * @return String
  *   The corresponding HTML.
  */
-Drupal.theme.editToolgroup = function(settings) {
+Drupal.theme.editToolgroup = function (settings) {
   var classes = 'edit-toolgroup edit-animate-slow edit-animate-invisible edit-animate-delay-veryfast';
   var html = '';
   html += '<div class="' + classes + ' ' + settings.classes + '"';
@@ -103,17 +85,17 @@ Drupal.theme.editToolgroup = function(settings) {
  *
  * Can be used for the buttons both in the toolbar toolgroups and in the modal.
  *
- * @param settings
+ * @param Object settings
  *   An object with the following keys:
  *   - buttons: an array of objects with the following keys:
- *     - type: the type of the button (defaults to 'button')
- *     - classes: the classes of the button.
- *     - label: the label of the button.
- *     - action: sets a data-edit-modal-action attribute.
- * @return
+ *     - String type: the type of the button (defaults to 'button')
+ *     - Array classes: the classes of the button.
+ *     - String label: the label of the button.
+ *     - String action: sets a data-edit-modal-action attribute.
+ * @return String
  *   The corresponding HTML.
  */
-Drupal.theme.editButtons = function(settings) {
+Drupal.theme.editButtons = function (settings) {
   var html = '';
   for (var i = 0; i < settings.buttons.length; i++) {
     var button = settings.buttons[i];
@@ -133,14 +115,14 @@ Drupal.theme.editButtons = function(settings) {
 /**
  * Theme function for a form container of the Edit module.
  *
- * @param settings
+ * @param Object settings
  *   An object with the following keys:
- *   - id: the id to apply to the toolbar container.
- *   - loadingMsg: The message to show while loading.
- * @return
+ *   - String id: the id to apply to the toolbar container.
+ *   - String loadingMsg: The message to show while loading.
+ * @return String
  *   The corresponding HTML.
  */
-Drupal.theme.editFormContainer = function(settings) {
+Drupal.theme.editFormContainer = function (settings) {
   var html = '';
   html += '<div id="' + settings.id + '" class="edit-form-container">';
   html += '  <div class="edit-form">';

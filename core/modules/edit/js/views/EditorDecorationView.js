@@ -1,17 +1,12 @@
 /**
  * @file
- * A Backbone View that decorates a Property Editor widget.
- *
- * It listens to state changes of the property editor.
+ * A Backbone View that decorates the in-place edited element.
  */
-(function($, Backbone, Drupal) {
+(function ($, Backbone, Drupal) {
 
 "use strict";
 
-Drupal.edit = Drupal.edit || {};
-Drupal.edit.views = Drupal.edit.views || {};
-Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
-
+Drupal.edit.EditorDecorationView = Backbone.View.extend({
   toolbarId: null,
 
   _widthAttributeIsEmpty: null,
@@ -25,40 +20,45 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
   },
 
   /**
-   * Implements Backbone Views' initialize() function.
+   * {@inheritdoc}
    *
-   * @param options
+   * @param Object options
    *   An object with the following keys:
-   *   - editor: the editor object with an 'options' object that has these keys:
-   *      * entity: the VIE entity for the property.
-   *      * property: the predicate of the property.
-   *      * widget: the parent EditableEntity widget.
-   *      * editorName: the name of the PropertyEditor widget
-   *   - toolbarId: the ID attribute of the toolbar as rendered in the DOM.
+   *   - Drupal.edit.EditorView editorView: the editor object view.
+   *   - String toolbarId: the ID attribute of the toolbar as rendered in the
+   *     DOM.
    */
-  initialize: function(options) {
-    this.editor = options.editor;
+  initialize: function (options) {
+    this.editorView = options.editorView;
+
     this.toolbarId = options.toolbarId;
 
-    this.predicate = this.editor.options.property;
-    this.editorName = this.editor.options.editorName;
-
-    // Only start listening to events as soon as we're no longer in the 'inactive' state.
-    this.undelegateEvents();
+    this.model.on('change:state', this.stateChange, this);
   },
 
   /**
-   * Listens to editor state changes.
+   * {@inheritdoc}
    */
-  stateChange: function(from, to) {
+  remove: function () {
+    // The el property is the field, which should not be removed. Remove the
+    // pointer to it, then call Backbone.View.prototype.remove().
+    this.setElement();
+    Backbone.View.prototype.remove.call(this);
+  },
+
+  /**
+   * Determines the actions to take given a change of state.
+   *
+   * @param Drupal.edit.FieldModel model
+   * @param String state
+   *   The state of the associated field. One of Drupal.edit.FieldModel.states.
+   */
+  stateChange: function (model, state) {
+    var from = model.previous('state');
+    var to = state;
     switch (to) {
       case 'inactive':
-        if (from !== null) {
-          this.undecorate();
-          if (from === 'invalid') {
-            this._removeValidationErrors();
-          }
-        }
+        this.undecorate();
         break;
       case 'candidate':
         this.decorate();
@@ -66,9 +66,6 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
           this.stopHighlight();
           if (from !== 'highlighted') {
             this.stopEdit();
-            if (from === 'invalid') {
-              this._removeValidationErrors();
-            }
           }
         }
         break;
@@ -89,9 +86,6 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
       case 'changed':
         break;
       case 'saving':
-        if (from === 'invalid') {
-          this._removeValidationErrors();
-        }
         break;
       case 'saved':
         break;
@@ -101,106 +95,114 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
   },
 
   /**
-   * Starts hover: transition to 'highlight' state.
+   * Starts hover; transitions to 'highlight' state.
    *
-   * @param event
+   * @param jQuery event
    */
-  onMouseEnter: function(event) {
+  onMouseEnter: function (event) {
     var that = this;
     this._ignoreHoveringVia(event, '#' + this.toolbarId, function () {
-      var editableEntity = that.editor.options.widget;
-      editableEntity.setState('highlighted', that.predicate);
+      that.model.set('state', 'highlighted');
       event.stopPropagation();
     });
   },
 
   /**
-   * Stops hover: back to 'candidate' state.
+   * Stops hover; transitions to 'candidate' state.
    *
-   * @param event
+   * @param jQuery event
    */
-  onMouseLeave: function(event) {
+  onMouseLeave: function (event) {
     var that = this;
     this._ignoreHoveringVia(event, '#' + this.toolbarId, function () {
-      var editableEntity = that.editor.options.widget;
-      editableEntity.setState('candidate', that.predicate, { reason: 'mouseleave' });
+      that.model.set('state', 'candidate', { reason: 'mouseleave' });
       event.stopPropagation();
     });
   },
 
   /**
-   * Clicks: transition to 'activating' stage.
+   * Transition to 'activating' stage.
    *
-   * @param event
+   * @param jQuery event
    */
-  onClick: function(event) {
-    var editableEntity = this.editor.options.widget;
-    editableEntity.setState('activating', this.predicate);
+  onClick: function (event) {
+    this.model.set('state', 'activating');
     event.preventDefault();
     event.stopPropagation();
   },
 
+  /**
+   * Adds classes used to indicate an elements editable state.
+   */
   decorate: function () {
     this.$el.addClass('edit-animate-fast edit-candidate edit-editable');
-    this.delegateEvents();
   },
 
+  /**
+   * Removes classes used to indicate an elements editable state.
+   */
   undecorate: function () {
-    this.$el
-      .removeClass('edit-candidate edit-editable edit-highlighted edit-editing');
-    this.undelegateEvents();
+    this.$el.removeClass('edit-candidate edit-editable edit-highlighted edit-editing');
   },
 
+  /**
+   * Adds that class that indicates that an element is highlighted.
+   */
   startHighlight: function () {
     // Animations.
     var that = this;
-    setTimeout(function() {
+    // Use a timeout to grab the next available animation frame.
+    setTimeout(function () {
       that.$el.addClass('edit-highlighted');
     }, 0);
   },
 
-  stopHighlight: function() {
-    this.$el
-      .removeClass('edit-highlighted');
+  /**
+   * Removes the class that indicates that an element is highlighted.
+   */
+  stopHighlight: function () {
+    this.$el.removeClass('edit-highlighted');
   },
 
-  prepareEdit: function() {
+  /**
+   * Removes the class that indicates that an element as editable.
+   */
+  prepareEdit: function () {
     this.$el.addClass('edit-editing');
 
-    // While editing, don't show *any* other editors.
-    // @todo: BLOCKED_ON(Create.js, https://github.com/bergie/create/issues/133)
-    // Revisit this.
+    // While editing, do not show any other editors.
     $('.edit-candidate').not('.edit-editing').removeClass('edit-editable');
   },
 
-  startEdit: function() {
-    if (this.getEditUISetting('padding')) {
+  /**
+   * Updates the display of the editable element once editing has begun.
+   */
+  startEdit: function () {
+    if (this.editorView.getEditUISettings().padding) {
       this._pad();
     }
   },
 
-  stopEdit: function() {
+  /**
+   * Removes the class that indicates that an element is being edited.
+   *
+   * Reapplies the class that indicates that a candidate editable element is
+   * again available to be edited.
+   */
+  stopEdit: function () {
     this.$el.removeClass('edit-highlighted edit-editing');
 
     // Make the other editors show up again.
-    // @todo: BLOCKED_ON(Create.js, https://github.com/bergie/create/issues/133)
-    // Revisit this.
     $('.edit-candidate').addClass('edit-editable');
 
-    if (this.getEditUISetting('padding')) {
+    if (this.editorView.getEditUISettings().padding) {
       this._unpad();
     }
   },
 
   /**
-   * Retrieves a setting of the editor-specific Edit UI integration.
-   *
-   * @see Drupal.edit.util.getEditUISetting().
+   * Adds padding around the editable element in order to make it pop visually.
    */
-  getEditUISetting: function(setting) {
-    return Drupal.edit.util.getEditUISetting(this.editor, setting);
-  },
-
   _pad: function () {
     var self = this;
 
@@ -218,7 +220,7 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
 
     // 2) Add padding; use animations.
     var posProp = this._getPositionProperties(this.$el);
-    setTimeout(function() {
+    setTimeout(function () {
       // Re-enable width animations (padding changes affect width too!).
       self.$el.removeClass('edit-animate-disable-width');
 
@@ -237,6 +239,9 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
     }, 0);
   },
 
+  /**
+   * Removes the padding around the element being edited when editing ceases.
+   */
   _unpad: function () {
     var self = this;
 
@@ -251,7 +256,7 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
     // 2) Remove padding; use animations (these will run simultaneously with)
     // the fading out of the toolbar as its gets removed).
     var posProp = this._getPositionProperties(this.$el);
-    setTimeout(function() {
+    setTimeout(function () {
       // Re-enable width animations (padding changes affect width too!).
       self.$el.removeClass('edit-animate-disable-width');
 
@@ -273,10 +278,9 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
   /**
    * Gets the background color of an element (or the inherited one).
    *
-   * @param $e
-   *   A DOM element.
+   * @param DOM $e
    */
-  _getBgColor: function($e) {
+  _getBgColor: function ($e) {
     var c;
 
     if ($e === null || $e[0].nodeName === 'HTML') {
@@ -293,13 +297,14 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
   },
 
   /**
-   * Gets the top and left properties of an element and convert extraneous
-   * values and information into numbers ready for subtraction.
+   * Gets the top and left properties of an element.
    *
-   * @param $e
-   *   A DOM element.
+   * Convert extraneous values and information into numbers ready for
+   * subtraction.
+   *
+   * @param DOM $e
    */
-  _getPositionProperties: function($e) {
+  _getPositionProperties: function ($e) {
     var p,
         r = {},
         props = [
@@ -319,10 +324,10 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
   /**
    * Replaces blank or 'auto' CSS "position: <value>" values with "0px".
    *
-   * @param pos
-   *   The value for a CSS position declaration.
+   * @param String pos
+   *   (optional) The value for a CSS position declaration.
    */
-  _replaceBlankPosition: function(pos) {
+  _replaceBlankPosition: function (pos) {
     if (pos === 'auto' || !pos) {
       pos = '0px';
     }
@@ -330,34 +335,24 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
   },
 
   /**
-   * Ignores hovering to/from the given closest element, but as soon as a hover
-   * occurs to/from *another* element, then call the given callback.
+   * Ignores hovering to/from the given closest element.
+   *
+   * When a hover occurs to/from another element, invoke the callback.
+   *
+   * @param jQuery event
+   * @param jQuery closest
+   *   A jQuery-wrapped DOM element or compatibale jQuery input. The element
+   *   whose mouseenter and mouseleave events should be ignored.
+   * @param Function callback
    */
-  _ignoreHoveringVia: function(event, closest, callback) {
+  _ignoreHoveringVia: function (event, closest, callback) {
     if ($(event.relatedTarget).closest(closest).length > 0) {
       event.stopPropagation();
     }
     else {
       callback();
     }
-  },
-
-  /**
-   * Removes validation errors' markup changes, if any.
-   *
-   * Note: this only needs to happen for type=direct, because for type=direct,
-   * the property DOM element itself is modified; this is not the case for
-   * type=form.
-   */
-  _removeValidationErrors: function() {
-    if (this.editorName !== 'form') {
-      this.$el
-        .removeClass('edit-validation-error')
-        .next('.edit-validation-errors')
-        .remove();
-    }
   }
-
 });
 
 })(jQuery, Backbone, Drupal);

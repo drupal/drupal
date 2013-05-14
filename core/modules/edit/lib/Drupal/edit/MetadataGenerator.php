@@ -33,7 +33,7 @@ class MetadataGenerator implements MetadataGeneratorInterface {
   protected $editorSelector;
 
   /**
-   * The manager for editor (Create.js PropertyEditor widget) plugins.
+   * The manager for editor plugins.
    *
    * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
