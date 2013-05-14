@@ -12,11 +12,10 @@ use Drupal\Component\Annotation\Plugin;
 use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
- * Defines the "wysiwyg" Create.js PropertyEditor widget.
+ * Defines the wysiwyg editor.
  *
  * @Plugin(
  *   id = "wysiwyg",
- *   jsClassName = "not needed for test",
  *   alternativeTo = {"direct"},
  *   module = "edit_test"
  * )

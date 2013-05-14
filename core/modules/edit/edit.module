@@ -39,21 +39,25 @@ function edit_permission() {
 }
 
 /**
- * Implements hook_contextual_links_view_alter().
+ * Implements hook_page_build().
  *
- * In-place editing builds upon contextual.module, but doesn't actually add its
- * "Quick edit" contextual link in PHP (i.e. here) because:
- *  - that would require to add a local task menu item in the menu system, which
- *    doesn't make any sense, since there is no corresponding page;
- *  - it should only work when JavaScript is enabled, because only then in-place
- *    editing is possible.
+ * Adds the edit library to the page for any user who has the 'access in-place
+ * editing' permission.
  */
-function edit_contextual_links_view_alter(&$element, $items) {
+function edit_page_build(&$page) {
   if (!user_access('access in-place editing')) {
     return;
   }
 
-  $element['#attached']['library'][] = array('edit', 'edit');
+  $page['#attached']['js'][] = array(
+    'type' => 'setting',
+    'data' => array('edit' => array(
+      'metadataURL' => url('edit/metadata'),
+      'fieldFormURL' => url('edit/form/!entity_type/!id/!field_name/!langcode/!view_mode'),
+      'context' => 'body',
+    )),
+  );
+  $page['#attached']['library'][] = array('edit', 'edit');
 }
 
 /**
@@ -66,38 +70,25 @@ function edit_library_info() {
   );
   $libraries['edit'] = array(
     'title' => 'Edit: in-place editing',
-    'website' => 'http://drupal.org/project/edit',
     'version' => VERSION,
     'js' => array(
       // Core.
       $path . '/js/edit.js' => $options,
-      $path . '/js/app.js' => $options,
       // Models.
-      $path . '/js/models/edit-app-model.js' => $options,
+      $path . '/js/models/AppModel.js' => $options,
+      $path . '/js/models/EntityModel.js' => $options,
+      $path . '/js/models/FieldModel.js' => $options,
+      $path . '/js/models/EditorModel.js' => $options,
       // Views.
-      $path . '/js/views/propertyeditordecoration-view.js' => $options,
-      $path . '/js/views/contextuallink-view.js' => $options,
-      $path . '/js/views/modal-view.js' => $options,
-      $path . '/js/views/toolbar-view.js' => $options,
-      // Backbone.sync implementation on top of Drupal forms.
-      $path . '/js/backbone.drupalform.js' => $options,
-      // VIE service.
-      $path . '/js/viejs/EditService.js' => $options,
-      // Create.js subclasses.
-      $path . '/js/createjs/editable.js' => $options,
-      $path . '/js/createjs/storage.js' => $options,
+      $path . '/js/views/AppView.js' => $options,
+      $path . '/js/views/EditorDecorationView.js' => $options,
+      $path . '/js/views/ContextualLinkView.js' => $options,
+      $path . '/js/views/ModalView.js' => $options,
+      $path . '/js/views/FieldToolbarView.js' => $options,
+      $path . '/js/views/EditorView.js' => $options,
       // Other.
       $path . '/js/util.js' => $options,
       $path . '/js/theme.js' => $options,
-      // Basic settings.
-      array(
-        'data' => array('edit' => array(
-          'metadataURL' => url('edit/metadata'),
-          'fieldFormURL' => url('edit/form/!entity_type/!id/!field_name/!langcode/!view_mode'),
-          'context' => 'body',
-        )),
-        'type' => 'setting',
-      ),
     ),
     'css' => array(
       $path . '/css/edit.css' => array(),
@@ -106,8 +97,6 @@ function edit_library_info() {
       array('system', 'jquery'),
       array('system', 'underscore'),
       array('system', 'backbone'),
-      array('system', 'vie.core'),
-      array('system', 'create.editonly'),
       array('system', 'jquery.form'),
       array('system', 'drupal.form'),
       array('system', 'drupal.ajax'),
@@ -115,20 +104,20 @@ function edit_library_info() {
     ),
   );
   $libraries['edit.editorWidget.form'] = array(
-    'title' => '"Form" Create.js PropertyEditor widget',
+    'title' => 'Form in-place editor',
     'version' => VERSION,
     'js' => array(
-      $path . '/js/createjs/editingWidgets/formwidget.js' => $options,
+      $path . '/js/editors/formEditor.js' => $options,
     ),
     'dependencies' => array(
       array('edit', 'edit'),
     ),
   );
   $libraries['edit.editorWidget.direct'] = array(
-    'title' => '"Direct" Create.js PropertyEditor widget',
+    'title' => 'Direct in-place editor',
     'version' => VERSION,
     'js' => array(
-      $path . '/js/createjs/editingWidgets/drupalcontenteditablewidget.js' => $options,
+      $path . '/js/editors/directEditor.js' => $options,
     ),
     'dependencies' => array(
       array('edit', 'edit'),

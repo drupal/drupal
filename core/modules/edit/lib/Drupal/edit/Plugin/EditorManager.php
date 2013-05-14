@@ -17,7 +17,7 @@ use Drupal\Core\Plugin\Discovery\CacheDecorator;
 /**
  * Editor manager.
  *
- * The "Form" Create.js PropertyEditor widget must always be available.
+ * The form editor must always be available.
  */
 class EditorManager extends PluginManagerBase {
 

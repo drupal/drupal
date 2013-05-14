@@ -18,7 +18,7 @@ use Drupal\edit_test\MockEditEntityFieldAccessCheck;
 class MetadataGeneratorTest extends EditTestBase {
 
   /**
-   * The manager for editor (Create.js PropertyEditor widget) plugins.
+   * The manager for editor plugins.
    *
    * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
@@ -128,8 +128,7 @@ class MetadataGeneratorTest extends EditTestBase {
     $this->installSchema('system', 'url_alias');
     $this->enableModules(array('user', 'filter'));
 
-    // Enable edit_test module so that the WYSIWYG Create.js PropertyEditor
-    // widget becomes available.
+    // Enable edit_test module so that the WYSIWYG editor becomes available.
     $this->enableModules(array('edit_test'));
 
     // Create a rich text field.

@@ -16,7 +16,7 @@ use Drupal\edit\EditorSelector;
 class EditorSelectionTest extends EditTestBase {
 
   /**
-   * The manager for editor (Create.js PropertyEditor widget) plugins.
+   * The manager for editor plugins.
    *
    * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
@@ -106,8 +106,7 @@ class EditorSelectionTest extends EditTestBase {
    * processing, but with varying text format compatibility.
    */
   function testTextWysiwyg() {
-    // Enable edit_test module so that the 'wysiwyg' Create.js PropertyEditor
-    // widget becomes available.
+    // Enable edit_test module so that the 'wysiwyg' editor becomes available.
     $this->enableModules(array('edit_test'));
 
     $field_name = 'field_textarea';

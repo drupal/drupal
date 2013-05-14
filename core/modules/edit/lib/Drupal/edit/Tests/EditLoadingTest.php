@@ -110,7 +110,7 @@ class EditLoadingTest extends WebTestBase {
     $this->assertRaw('data-edit-id="node/1/body/und/full"');
 
     // Retrieving the metadata should result in a 200 response, containing:
-    //  1. a settings command with correct in-place editor metadata
+    //  1. a settings command with useless metadata: AjaxController is dumb
     //  2. an insert command that loads the required in-place editors
     //  3. a metadata command with correct per-field metadata
     $response = $this->retrieveMetadata(array('node/1/body/und/full'));
@@ -120,15 +120,10 @@ class EditLoadingTest extends WebTestBase {
 
     // First command: settings.
     $this->assertIdentical('settings', $ajax_commands[0]['command'], 'The first AJAX command is a settings command.');
-    $edit_editors = array(
-      'direct' => array('widget' => 'direct'),
-      'form' => array('widget' => 'formEditEditor'),
-    );
-    $this->assertIdentical($edit_editors, $ajax_commands[0]['settings']['edit']['editors'], 'The settings command contains the expected settings.');
 
     // Second command: insert libraries into DOM.
     $this->assertIdentical('insert', $ajax_commands[1]['command'], 'The second AJAX command is an append command.');
-    $command = new AppendCommand('body', '<script src="' . file_create_url('core/modules/edit/js/createjs/editingWidgets/formwidget.js') . '?v=' . VERSION . '"></script>' . "\n");
+    $command = new AppendCommand('body', '<script src="' . file_create_url('core/modules/edit/js/editors/formEditor.js') . '?v=' . VERSION . '"></script>' . "\n");
     $this->assertIdentical($command->render(), $ajax_commands[1], 'The append command contains the expected data.');
 
     // Third command: actual metadata.

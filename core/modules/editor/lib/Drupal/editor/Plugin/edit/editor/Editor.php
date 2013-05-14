@@ -14,11 +14,10 @@ use Drupal\edit\EditPluginInterface;
 use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
- * Defines the "editor" Create.js PropertyEditor widget.
+ * Defines the formatted text editor.
  *
  * @Plugin(
  *   id = "editor",
- *   jsClassName = "editor",
  *   alternativeTo = {"direct"},
  *   module = "editor"
  * )
@@ -90,8 +89,8 @@ class Editor extends PluginBase implements EditPluginInterface {
     // Get the attachments for all text editors that the user might use.
     $attachments = $manager->getAttachments($formats);
 
-    // Also include editor.module's Create.js PropertyEditor widget.
-    $attachments['library'][] = array('editor', 'edit.editorWidget.editor');
+    // Also include editor.module's formatted text editor.
+    $attachments['library'][] = array('editor', 'edit.formattedTextEditor.editor');
 
     return $attachments;
   }
