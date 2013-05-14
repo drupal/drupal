@@ -7,10 +7,10 @@
 
 namespace Drupal\file\Plugin\Core\Entity;
 
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\file\FileInterface;
 
 /**
  * Defines the file entity class.
@@ -31,7 +31,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class File extends Entity implements ContentEntityInterface {
+class File extends Entity implements FileInterface {
 
   /**
    * The file ID.

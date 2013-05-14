@@ -56,34 +56,21 @@ function picture_menu() {
   $items['admin/config/media/picturemapping'] = array(
     'title' => 'Picture Mappings',
     'description' => 'Manage picture mappings',
-    'access arguments' => array('administer pictures'),
     'weight' => 10,
-    'page callback' => 'picture_mapping_page',
-    'file' => 'picture_mapping.admin.inc',
+    'route_name' => 'picture_mapping_page',
   );
   $items['admin/config/media/picturemapping/add'] = array(
     'title' => 'Add picture mapping',
-    'page callback' => 'picture_mapping_page_add',
-    'access callback' => 'user_access',
-    'access arguments' => array('administer pictures'),
+    'route_name' => 'picture_mapping_page_add',
     'type' => MENU_LOCAL_ACTION,
-    'file' => 'picture_mapping.admin.inc',
   );
   $items['admin/config/media/picturemapping/%picture_mapping/edit'] = array(
     'title' => 'Edit picture mapping',
-    'page callback' => 'picture_mapping_page_edit',
-    'page arguments' => array(4),
-    'access callback' => 'user_access',
-    'access arguments' => array('administer pictures'),
-    'file' => 'picture_mapping.admin.inc',
+    'route_name' => 'picture_mapping_page_edit',
   );
   $items['admin/config/media/picturemapping/%picture_mapping/duplicate'] = array(
     'title' => 'Duplicate picture mapping',
-    'page callback' => 'picture_mapping_page_duplicate',
-    'page arguments' => array(4),
-    'access callback' => 'user_access',
-    'access arguments' => array('administer pictures'),
-    'file' => 'picture_mapping.admin.inc',
+    'route_name' => 'picture_mapping_page_duplicate',
   );
   $items['admin/config/media/picturemapping/%picture_mapping/delete'] = array(
     'title' => 'Delete',

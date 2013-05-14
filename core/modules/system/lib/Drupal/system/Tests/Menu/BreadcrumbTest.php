@@ -94,13 +94,13 @@ class BreadcrumbTest extends MenuTestBase {
     $trail += array(
       'admin/structure/taxonomy' => t('Taxonomy'),
     );
-    $this->assertBreadcrumb('admin/structure/taxonomy/tags', $trail);
+    $this->assertBreadcrumb('admin/structure/taxonomy/manage/tags', $trail);
     $trail += array(
-      'admin/structure/taxonomy/tags' => t('Tags'),
+      'admin/structure/taxonomy/manage/tags' => t('Tags'),
     );
-    $this->assertBreadcrumb('admin/structure/taxonomy/tags/edit', $trail);
-    $this->assertBreadcrumb('admin/structure/taxonomy/tags/fields', $trail);
-    $this->assertBreadcrumb('admin/structure/taxonomy/tags/add', $trail);
+    $this->assertBreadcrumb('admin/structure/taxonomy/manage/tags/edit', $trail);
+    $this->assertBreadcrumb('admin/structure/taxonomy/manage/tags/fields', $trail);
+    $this->assertBreadcrumb('admin/structure/taxonomy/manage/tags/add', $trail);
 
     // Verify Menu administration breadcrumbs.
     $trail = $admin + array(
@@ -144,11 +144,11 @@ class BreadcrumbTest extends MenuTestBase {
     $trail += array(
       "admin/structure/types/manage/$type/fields" => t('Manage fields'),
     );
-    $this->assertBreadcrumb("admin/structure/types/manage/$type/fields/body", $trail);
+    $this->assertBreadcrumb("admin/structure/types/manage/$type/fields/node.$type.body", $trail);
     $trail += array(
-      "admin/structure/types/manage/$type/fields/body" => t('Body'),
+      "admin/structure/types/manage/$type/fields/node.$type.body" => t('Body'),
     );
-    $this->assertBreadcrumb("admin/structure/types/manage/$type/fields/body/widget-type", $trail);
+    $this->assertBreadcrumb("admin/structure/types/manage/$type/fields/node.$type.body/widget-type", $trail);
 
     // Verify Filter text format administration breadcrumbs.
     $filter_formats = filter_formats();
@@ -321,16 +321,16 @@ class BreadcrumbTest extends MenuTestBase {
         $edit = array(
           'parent[]' => array($parent_tid),
         );
-        $this->drupalPost("taxonomy/term/{$term->tid}/edit", $edit, t('Save'));
+        $this->drupalPost("taxonomy/term/{$term->id()}/edit", $edit, t('Save'));
       }
-      $parent_tid = $term->tid;
+      $parent_tid = $term->id();
     }
     $parent_mlid = 0;
     foreach ($tags as $name => $data) {
       $term = $data['term'];
       $edit = array(
         'link_title' => "$name link",
-        'link_path' => "taxonomy/term/{$term->tid}",
+        'link_path' => "taxonomy/term/{$term->id()}",
         'parent' => "$menu:{$parent_mlid}",
       );
       $this->drupalPost("admin/structure/menu/manage/$menu/add", $edit, t('Save'));
@@ -350,7 +350,7 @@ class BreadcrumbTest extends MenuTestBase {
       $tree += array(
         $link['link_path'] => $link['link_title'],
       );
-      $this->assertBreadcrumb($link['link_path'], $trail, $term->name, $tree);
+      $this->assertBreadcrumb($link['link_path'], $trail, $term->label(), $tree);
       $this->assertRaw(check_plain($parent->title), 'Tagged node found.');
 
       // Additionally make sure that this link appears only once; i.e., the
@@ -366,7 +366,7 @@ class BreadcrumbTest extends MenuTestBase {
       // Next iteration should expect this tag as parent link.
       // Note: Term name, not link name, due to taxonomy_term_page().
       $trail += array(
-        $link['link_path'] => $term->name,
+        $link['link_path'] => $term->label(),
       );
     }
 

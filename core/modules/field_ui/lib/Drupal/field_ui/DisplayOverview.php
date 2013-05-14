@@ -41,7 +41,10 @@ class DisplayOverview extends OverviewBase {
   /**
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, array &$form_state, $entity_type = NULL, $bundle = NULL, $view_mode = NULL) {
+    parent::buildForm($form, $form_state, $entity_type, $bundle);
+
+    $this->view_mode = (isset($view_mode) ? $view_mode : 'default');
     // Gather type information.
     $instances = field_info_instances($this->entity_type, $this->bundle);
     $field_types = field_info_field_types();
@@ -483,7 +486,7 @@ class DisplayOverview extends OverviewBase {
           }
 
           $view_mode_label = $view_modes[$view_mode]['label'];
-          $path = field_ui_bundle_admin_path($this->entity_type, $this->bundle) . "/display/$view_mode";
+          $path = $this->entityManager->getAdminPath($this->entity_type, $this->bundle) . "/display/$view_mode";
           drupal_set_message(t('The %view_mode mode now uses custom display settings. You might want to <a href="@url">configure them</a>.', array('%view_mode' => $view_mode_label, '@url' => url($path))));
         }
         $bundle_settings['view_modes'][$view_mode]['custom_settings'] = !empty($value);

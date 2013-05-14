@@ -1,4 +1,5 @@
 name: Number
+type: module
 description: 'Defines numeric field types.'
 package: Core
 version: VERSION

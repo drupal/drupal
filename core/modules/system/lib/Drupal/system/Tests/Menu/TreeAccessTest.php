@@ -67,7 +67,7 @@ class TreeAccessTest extends DrupalUnitTestBase {
           '_controller' => '\Drupal\menu_test\TestController::test'
         ),
         array(
-          '_access' => '1'
+          '_access' => 'TRUE'
         )
       ));
       $route_collection->add('menu_test_2', new Route('/menu_test/test_2',
@@ -75,7 +75,7 @@ class TreeAccessTest extends DrupalUnitTestBase {
           '_controller' => '\Drupal\menu_test\TestController::test'
         ),
         array(
-          '_access' => '0'
+          '_access' => 'FALSE'
         )
       ));
       $this->routeCollection = $route_collection;

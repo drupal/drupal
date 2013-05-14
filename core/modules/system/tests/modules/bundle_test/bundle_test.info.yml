@@ -1,4 +1,5 @@
 name: 'Bundle test'
+type: module
 description: 'Support module for bundle testing.'
 package: Testing
 version: VERSION

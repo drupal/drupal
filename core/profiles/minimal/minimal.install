@@ -13,7 +13,7 @@
  */
 function minimal_install() {
   // Disable the user pictures on nodes.
-  variable_set('theme_settings', array('toggle_node_user_picture' => FALSE));
+  Drupal::config('system.theme.global')->set('features.node_user_picture', FALSE)->save();
 
   // Allow visitor account creation, but with administrative approval.
   config('user.settings')->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save();

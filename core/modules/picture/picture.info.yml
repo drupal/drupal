@@ -1,4 +1,5 @@
 name: Picture
+type: module
 description: 'Provides an image formatter and breakpoint mappings to output responsive images using the HTML5 picture tag.'
 package: Core
 version: VERSION

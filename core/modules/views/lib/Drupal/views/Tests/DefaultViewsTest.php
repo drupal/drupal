@@ -100,7 +100,7 @@ class DefaultViewsTest extends WebTestBase {
       $term = $this->createTerm($this->vocabulary);
 
       $values = array('created' => $time, 'type' => 'page');
-      $values[$this->field_name][]['tid'] = $term->tid;
+      $values[$this->field_name][]['tid'] = $term->id();
 
       // Make every other node promoted.
       if ($i % 2) {
@@ -168,7 +168,7 @@ class DefaultViewsTest extends WebTestBase {
       'vid' => $vocabulary->id(),
       'langcode' => LANGUAGE_NOT_SPECIFIED,
     ));
-    taxonomy_term_save($term);
+    $term->save();
     return $term;
   }
 

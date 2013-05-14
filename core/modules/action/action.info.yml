@@ -1,4 +1,5 @@
 name: Actions
+type: module
 description: 'Perform tasks on specific events triggered within the system.'
 package: Core
 version: VERSION

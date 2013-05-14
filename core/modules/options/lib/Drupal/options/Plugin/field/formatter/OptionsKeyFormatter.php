@@ -16,7 +16,7 @@ use Drupal\Core\Entity\EntityInterface;
  * Plugin implementation of the 'list_key' formatter.
  *
  * @Plugin(
- *   id = "options_list_key",
+ *   id = "list_key",
  *   module = "options",
  *   label = @Translation("Key"),
  *   field_types = {

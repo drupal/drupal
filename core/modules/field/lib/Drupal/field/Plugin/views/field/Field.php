@@ -611,7 +611,7 @@ class Field extends FieldPluginBase {
 
   public function submitGroupByForm(&$form, &$form_state) {
     parent::submitGroupByForm($form, $form_state);
-    $item =& $form_state['handler']->options;
+    $item = &$form_state['handler']->options;
 
     // Add settings for "field API" fields.
     $item['group_column'] = $form_state['values']['options']['group_column'];

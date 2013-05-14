@@ -64,9 +64,7 @@ function shortcut_menu() {
   $items['admin/config/user-interface/shortcut'] = array(
     'title' => 'Shortcuts',
     'description' => 'Add and modify shortcut sets.',
-    'page callback' => 'shortcut_set_admin',
-    'access arguments' => array('administer shortcuts'),
-    'file' => 'shortcut.admin.inc',
+    'route_name' => 'shortcut_set_admin',
   );
   $items['admin/config/user-interface/shortcut/add-set'] = array(
     'title' => 'Add shortcut set',
@@ -91,12 +89,8 @@ function shortcut_menu() {
   );
   $items['admin/config/user-interface/shortcut/manage/%shortcut_set/edit'] = array(
     'title' => 'Edit set name',
-    'page callback' => 'entity_get_form',
-    'page arguments' => array(5),
-    'access callback' => 'shortcut_set_edit_access',
-    'access arguments' => array(5),
+    'route_name' => 'shortcut_set_edit',
     'type' => MENU_LOCAL_TASK,
-    'file' => 'shortcut.admin.inc',
     'weight' => 10,
   );
   $items['admin/config/user-interface/shortcut/manage/%shortcut_set/delete'] = array(
@@ -456,7 +450,7 @@ function shortcut_renderable_links($shortcut_set = NULL) {
  * Implements hook_preprocess_HOOK() for block.tpl.php.
  */
 function shortcut_preprocess_block(&$variables) {
-  if ($variables['block']->module == 'shortcut') {
+  if ($variables['configuration']['module'] == 'shortcut') {
     $variables['attributes']['role'] = 'navigation';
   }
 }
@@ -534,7 +528,7 @@ function shortcut_toolbar() {
     $configure_link = array(
       '#type' => 'link',
       '#title' => t('Edit shortcuts'),
-      '#href' => 'admin/config/user-interface/shortcut/' . $shortcut_set->id(),
+      '#href' => 'admin/config/user-interface/shortcut/manage/' . $shortcut_set->id(),
       '#options' => array('attributes' => array('class' => array('edit-shortcuts'))),
     );
   }

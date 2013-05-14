@@ -735,6 +735,12 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
                 $strict = 'FALSE';
             }
 
+            if (defined('PHPUNIT_COMPOSER_INSTALL')) {
+                $composerAutoload = var_export(PHPUNIT_COMPOSER_INSTALL, TRUE);
+            } else {
+                $composerAutoload = '\'\'';
+            }
+
             $data            = var_export(serialize($this->data), TRUE);
             $dependencyInput = var_export(serialize($this->dependencyInput), TRUE);
             $includePath     = var_export(get_include_path(), TRUE);
@@ -746,6 +752,7 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
 
             $template->setVar(
               array(
+                'composerAutoload'               => $composerAutoload,
                 'filename'                       => $class->getFileName(),
                 'className'                      => $class->getName(),
                 'methodName'                     => $this->name,

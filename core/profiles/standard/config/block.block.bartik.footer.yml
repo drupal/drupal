@@ -1,9 +1,14 @@
 id: bartik.footer
-plugin: 'system_menu_block:menu-footer'
+weight: '0'
 status: '1'
+langcode: en
+region: footer
+plugin: 'system_menu_block:menu-footer'
 settings:
+  label: 'Footer menu'
+  module: system
+  label_display: visible
   cache: '-1'
-label: 'Footer menu'
 visibility:
   path:
     visibility: '0'
@@ -15,8 +20,3 @@ visibility:
       article: '0'
       page: '0'
   visibility__active_tab: edit-visibility-path
-module: system
-region: footer
-weight: '0'
-langcode: en
-label_display: visible

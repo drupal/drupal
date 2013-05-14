@@ -1,7 +1,13 @@
 id: seven.login
-plugin: user_login_block
+weight: '10'
 status: '1'
+langcode: en
+region: content
+plugin: user_login_block
 settings:
+  label: 'User login'
+  module: user
+  label_display: visible
   cache: '-1'
 visibility:
   path:
@@ -14,9 +20,4 @@ visibility:
       article: '0'
       page: '0'
   visibility__active_tab: edit-visibility-path
-label: 'User login'
-module: user
-region: content
-weight: '10'
-langcode: en
-label_display: visible
+

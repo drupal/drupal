@@ -148,6 +148,16 @@ class Drupal {
   }
 
   /**
+   * Retrieves the entity manager service.
+   *
+   * @return \Drupal\Core\Entity\EntityManager
+   *   The entity manager service.
+   */
+  public static function entityManager() {
+    return static::$container->get('plugin.manager.entity');
+  }
+
+  /**
    * Returns the current primary database.
    *
    * @return \Drupal\Core\Database\Connection

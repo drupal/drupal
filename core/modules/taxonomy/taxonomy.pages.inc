@@ -19,21 +19,18 @@ function taxonomy_term_page(Term $term) {
   // Assign the term name as the page title.
   drupal_set_title($term->label());
 
-  // Build breadcrumb based on the hierarchy of the term.
-  $current = (object) array(
-    'tid' => $term->tid,
-  );
   // @todo This overrides any other possible breadcrumb and is a pure hard-coded
   //   presumption. Make this behavior configurable per vocabulary or term.
   $breadcrumb = array();
-  while ($parents = taxonomy_term_load_parents($current->tid)) {
+  $current = $term;
+  while ($parents = taxonomy_term_load_parents($current->id())) {
     $current = array_shift($parents);
-    $breadcrumb[] = l($current->label(), 'taxonomy/term/' . $current->tid);
+    $breadcrumb[] = l($current->label(), 'taxonomy/term/' . $current->id());
   }
   $breadcrumb[] = l(t('Home'), NULL);
   $breadcrumb = array_reverse($breadcrumb);
   drupal_set_breadcrumb($breadcrumb);
-  drupal_add_feed('taxonomy/term/' . $term->tid . '/feed', 'RSS - ' . $term->label());
+  drupal_add_feed('taxonomy/term/' . $term->id() . '/feed', 'RSS - ' . $term->label());
 
   $uri = $term->uri();
 
@@ -43,7 +40,7 @@ function taxonomy_term_page(Term $term) {
   drupal_add_html_head_link(array('rel' => 'shortlink', 'href' => url($uri['path'], array_merge($uri['options'], array('alias' => TRUE)))), TRUE);
 
   $build['taxonomy_terms'] = taxonomy_term_view_multiple(array($term->id() => $term));
-  if ($nids = taxonomy_select_nodes($term->tid, TRUE, config('node.settings')->get('items_per_page'))) {
+  if ($nids = taxonomy_select_nodes($term->id(), TRUE, config('node.settings')->get('items_per_page'))) {
     $nodes = node_load_multiple($nids);
     $build['nodes'] = node_view_multiple($nodes);
     $build['pager'] = array(
@@ -68,12 +65,12 @@ function taxonomy_term_page(Term $term) {
  *   The taxonomy term entity.
  */
 function taxonomy_term_feed(Term $term) {
-  $channel['link'] = url('taxonomy/term/' . $term->tid, array('absolute' => TRUE));
+  $channel['link'] = url('taxonomy/term/' . $term->id(), array('absolute' => TRUE));
   $channel['title'] = config('system.site')->get('name') . ' - ' . $term->label();
   // Only display the description if we have a single term, to avoid clutter and confusion.
   // HTML will be removed from feed description.
-  $channel['description'] = check_markup($term->description, $term->format, '', TRUE);
-  $nids = taxonomy_select_nodes($term->tid, FALSE, config('system.rss')->get('items.limit'));
+  $channel['description'] = check_markup($term->description->value, $term->format->value, '', TRUE);
+  $nids = taxonomy_select_nodes($term->id(), FALSE, config('system.rss')->get('items.limit'));
 
   return node_feed($nids, $channel);
 }

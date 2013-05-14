@@ -7,16 +7,13 @@
 
 namespace Drupal\tour\Plugin\tour\tip;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\tour\Annotation\Tip;
 use Drupal\tour\TipPluginBase;
 
 /**
  * Displays some text as a tip.
  *
- * @Plugin(
- *   id = "text",
- *   module = "tour"
- * )
+ * @Tip("text")
  */
 class TipPluginText extends TipPluginBase {
 

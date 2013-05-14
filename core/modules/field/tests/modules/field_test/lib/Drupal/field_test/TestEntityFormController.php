@@ -7,7 +7,6 @@
 
 namespace Drupal\field_test;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormController;
 
 /**
@@ -18,8 +17,10 @@ class TestEntityFormController extends EntityFormController {
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $entity) {
-    $form = parent::form($form, $form_state, $entity);
+  public function form(array $form, array &$form_state) {
+    $form = parent::form($form, $form_state);
+
+    $entity = $this->entity;
     if (!$entity->isNew()) {
       $form['revision'] = array(
         '#access' => user_access('administer field_test content'),
@@ -36,7 +37,7 @@ class TestEntityFormController extends EntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
-    $entity = $this->getEntity($form_state);
+    $entity = $this->entity;
     $is_new = $entity->isNew();
     $entity->save();
 

@@ -86,7 +86,7 @@ function menu_link_delete_multiple(array $mlids, $force = FALSE, $prevent_repare
     return;
   }
 
-  $controller = drupal_container()->get('plugin.manager.entity')
+  $controller = Drupal::entityManager()
     ->getStorageController('menu_link');
   if (!$force) {
     $entity_query = Drupal::entityQuery('menu_link');
@@ -141,7 +141,7 @@ function menu_link_save(MenuLink $menu_link) {
  *   The insert op returns the mlid of the new item. Others op return NULL.
  */
 function menu_link_maintain($module, $op, $link_path, $link_title = NULL) {
-  $menu_link_controller = drupal_container()->get('plugin.manager.entity')
+  $menu_link_controller = Drupal::entityManager()
     ->getStorageController('menu_link');
   switch ($op) {
     case 'insert':

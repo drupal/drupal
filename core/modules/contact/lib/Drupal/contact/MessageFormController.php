@@ -7,7 +7,6 @@
 
 namespace Drupal\contact;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormController;
 use Drupal\user\Plugin\Core\Entity\User;
 
@@ -19,8 +18,9 @@ class MessageFormController extends EntityFormController {
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $message) {
+  public function form(array $form, array &$form_state) {
     global $user;
+    $message = $this->entity;
     $form = parent::form($form, $form_state, $message);
     $form['#attributes']['class'][] = 'contact-form';
 
@@ -128,7 +128,7 @@ class MessageFormController extends EntityFormController {
    * Form submission handler for the 'preview' action.
    */
   public function preview(array $form, array &$form_state) {
-    $message = $this->getEntity($form_state);
+    $message = $this->entity;
     $message->preview = TRUE;
     $form_state['rebuild'] = TRUE;
   }
@@ -140,7 +140,7 @@ class MessageFormController extends EntityFormController {
     global $user;
 
     $language_interface = language(LANGUAGE_TYPE_INTERFACE);
-    $message = $this->getEntity($form_state);
+    $message = $this->entity;
 
     $sender = clone user_load($user->uid);
     if (!$user->uid) {

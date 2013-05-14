@@ -7,7 +7,6 @@
 
 namespace Drupal\taxonomy;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormController;
 
 /**
@@ -18,7 +17,8 @@ class VocabularyFormController extends EntityFormController {
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $vocabulary) {
+  public function form(array $form, array &$form_state) {
+    $vocabulary = $this->entity;
 
     // Check whether we need a deletion confirmation form.
     if (isset($form_state['confirm_delete']) && isset($form_state['values']['vid'])) {
@@ -108,30 +108,10 @@ class VocabularyFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::validate().
-   */
-  public function validate(array $form, array &$form_state) {
-    parent::validate($form, $form_state);
-
-    // Make sure that the machine name of the vocabulary is not in the
-    // disallowed list (names that conflict with menu items, such as 'list'
-    // and 'add').
-    // During the deletion there is no 'vid' key.
-    if (isset($form_state['values']['vid'])) {
-      // Do not allow machine names to conflict with taxonomy path arguments.
-      $vid = $form_state['values']['vid'];
-      $disallowed = array('add', 'list');
-      if (in_array($vid, $disallowed)) {
-        form_set_error('vid', t('The machine-readable name cannot be "add" or "list".'));
-      }
-    }
-  }
-
-  /**
    * Submit handler to update the bundle for the default language configuration.
    */
   public function languageConfigurationSubmit(array &$form, array &$form_state) {
-    $vocabulary = $this->getEntity($form_state);
+    $vocabulary = $this->entity;
     // Delete the old language settings for the vocabulary, if the machine name
     // is changed.
     if ($vocabulary && $vocabulary->id() && $vocabulary->id() != $form_state['values']['vid']) {
@@ -164,21 +144,21 @@ class VocabularyFormController extends EntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
-    $vocabulary = $this->getEntity($form_state);
+    $vocabulary = $this->entity;
 
     // Prevent leading and trailing spaces in vocabulary names.
     $vocabulary->name = trim($vocabulary->name);
 
-    switch (taxonomy_vocabulary_save($vocabulary)) {
+    switch ($vocabulary->save()) {
       case SAVED_NEW:
         drupal_set_message(t('Created new vocabulary %name.', array('%name' => $vocabulary->name)));
-        watchdog('taxonomy', 'Created new vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l(t('edit'), 'admin/structure/taxonomy/' . $vocabulary->id() . '/edit'));
-        $form_state['redirect'] = 'admin/structure/taxonomy/' . $vocabulary->id();
+        watchdog('taxonomy', 'Created new vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l(t('edit'), 'admin/structure/taxonomy/manage/' . $vocabulary->id() . '/edit'));
+        $form_state['redirect'] = 'admin/structure/taxonomy/manage/' . $vocabulary->id();
         break;
 
       case SAVED_UPDATED:
         drupal_set_message(t('Updated vocabulary %name.', array('%name' => $vocabulary->name)));
-        watchdog('taxonomy', 'Updated vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l(t('edit'), 'admin/structure/taxonomy/' . $vocabulary->id() . '/edit'));
+        watchdog('taxonomy', 'Updated vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l(t('edit'), 'admin/structure/taxonomy/manage/' . $vocabulary->id() . '/edit'));
         $form_state['redirect'] = 'admin/structure/taxonomy';
         break;
     }

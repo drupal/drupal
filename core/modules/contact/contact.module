@@ -176,15 +176,7 @@ function contact_entity_bundle_info() {
   $bundles = array();
   foreach (config_get_storage_names_with_prefix('contact.category.') as $config_name) {
     $config = config($config_name);
-    $bundles['contact_message'][$config->get('id')] = array(
-      'label' => $config->get('label'),
-      'admin' => array(
-        'path' => 'admin/structure/contact/manage/%contact_category',
-        'real path' => 'admin/structure/contact/manage/' . $config->get('id'),
-        'bundle argument' => 4,
-        'access arguments' => array('administer contact forms'),
-      ),
-    );
+    $bundles['contact_message'][$config->get('id')]['label'] = $config->get('label');
   }
   return $bundles;
 }
@@ -338,7 +330,7 @@ function contact_form_user_profile_form_alter(&$form, &$form_state) {
     '#title' => t('Contact settings'),
     '#weight' => 5,
   );
-  $account = $form_state['controller']->getEntity($form_state);
+  $account = $form_state['controller']->getEntity();
   $account_data = drupal_container()->get('user.data')->get('contact', $account->id(), 'enabled');
   $form['contact']['contact'] = array(
     '#type' => 'checkbox',

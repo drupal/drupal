@@ -1,14 +1,14 @@
 
-div.vertical-tabs {
+.vertical-tabs {
   margin-left: 0;
   margin-right: 15em;
 }
-.vertical-tabs ul.vertical-tabs-list {
+.vertical-tabs .vertical-tabs-list {
   margin-left: 0;
   margin-right: -15em;
   float: right;
 }
-.vertical-tabs ul.vertical-tabs-list li.selected {
+.vertical-tabs .vertical-tabs-list .selected {
   border-left-width: 0;
   border-right-width: 1px;
 }

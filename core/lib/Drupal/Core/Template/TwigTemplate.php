@@ -41,8 +41,9 @@ abstract class TwigTemplate extends \Twig_Template {
    */
   final protected function getContextReference(&$context, $item)
   {
-    // Optimized version
-    if (!isset($context[$item])) {
+    // Optimized version. NULL is a valid value for $context[$item], we only
+    // want to error if it hasn't been defined at all.
+    if (!isset($context[$item]) && !array_key_exists($item, $context)) {
       // We don't want to throw an exception, but issue a warning instead.
       // This is the easiest way to do so.
       // @todo Decide based on prod vs. dev setting

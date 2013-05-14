@@ -1,4 +1,5 @@
 name: 'Hook menu tests'
+type: module
 description: 'Support module for menu hook testing.'
 package: Testing
 version: VERSION

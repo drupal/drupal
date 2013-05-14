@@ -1,4 +1,5 @@
 name: 'PHP Filter'
+type: module
 description: 'Allows embedded PHP code/snippets to be evaluated.'
 package: Core
 version: VERSION

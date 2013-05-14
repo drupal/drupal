@@ -5,8 +5,10 @@
  * Functions for form and batch generation and processing.
  */
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\BaseFormIdInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Datetime\DrupalDateTime;
@@ -119,6 +121,9 @@ function _drupal_form_id($form_arg, &$form_state) {
   // the callback object and determine the form ID.
   if (is_object($form_arg) && $form_arg instanceof FormInterface) {
     $form_state['build_info']['callback_object'] = $form_arg;
+    if ($form_arg instanceof BaseFormIdInterface) {
+      $form_state['build_info']['base_form_id'] = $form_arg->getBaseFormID();
+    }
     return $form_arg->getFormID();
   }
 
@@ -299,7 +304,8 @@ function drupal_get_form($form_arg) {
  *     recommended way to ensure that the chosen key doesn't conflict with ones
  *     used by the Form API or other modules is to use the module name as the
  *     key name or a prefix for the key name. For example, the entity form
- *     controller classes use $form_state['entity'] in entity forms to store
+ *     controller classes use $this->entity in entity forms, or
+ *     $form_state['controller']->getEntity() outside the controller, to store
  *     information about the entity being edited, and this information stays
  *     available across successive clicks of the "Preview" button (if available)
  *     as well as when the "Save" button is finally clicked.
@@ -498,7 +504,7 @@ function drupal_rebuild_form($form_id, &$form_state, $old_form = NULL) {
     $form['#build_id'] = $old_form['#build_id'];
   }
   else {
-    $form['#build_id'] = 'form-' . drupal_hash_base64(uniqid(mt_rand(), TRUE) . mt_rand());
+    $form['#build_id'] = 'form-' . Crypt::hashBase64(uniqid(mt_rand(), TRUE) . mt_rand());
   }
 
   // #action defaults to request_uri(), but in case of Ajax and other partial
@@ -763,8 +769,9 @@ function drupal_retrieve_form($form_id, &$form_state) {
   // Record the filepath of the include file containing the original form, so
   // the form builder callbacks can be loaded when the form is being rebuilt
   // from cache on a different path (such as 'system/ajax'). See
-  // form_get_cache().
-  // $menu_get_item() is not available at installation time.
+  // form_get_cache(). Don't do this in maintenance mode as Drupal may not be
+  // fully bootstrapped (i.e. during installation) in which case
+  // menu_get_item() is not available.
   if (!isset($form_state['build_info']['files']['menu']) && !defined('MAINTENANCE_MODE')) {
     $item = menu_get_item();
     if (!empty($item['include_file'])) {
@@ -1023,7 +1030,7 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
   // @see drupal_build_form()
   // @see drupal_rebuild_form()
   if (!isset($form['#build_id'])) {
-    $form['#build_id'] = 'form-' . drupal_hash_base64(uniqid(mt_rand(), TRUE) . mt_rand());
+    $form['#build_id'] = 'form-' . Crypt::hashBase64(uniqid(mt_rand(), TRUE) . mt_rand());
   }
   $form['form_build_id'] = array(
     '#type' => 'hidden',
@@ -3726,8 +3733,8 @@ function form_validate_table($element, &$form_state) {
  * @param $element
  *   The form element to process. Properties used:
  *   - #machine_name: An associative array containing:
- *     - exists: A function name to invoke for checking whether a submitted
- *       machine name value already exists. The submitted value is passed as
+ *     - exists: A callable to invoke for checking whether a submitted machine
+ *       name value already exists. The submitted value is passed as an
  *       argument. In most cases, an existing API or menu argument loader
  *       function can be re-used. The callback is only invoked, if the submitted
  *       value differs from the element's #default_value.
@@ -3753,6 +3760,9 @@ function form_validate_table($element, &$form_state) {
  *     name must not be changed after initial creation.
  */
 function form_process_machine_name($element, &$form_state) {
+  // We need to pass the langcode to the client.
+  $language = language(LANGUAGE_TYPE_INTERFACE);
+
   // Apply default form element properties.
   $element += array(
     '#title' => t('Machine-readable name'),
@@ -3819,6 +3829,7 @@ function form_process_machine_name($element, &$form_state) {
       'machineName' => array(
         '#' . $source['#id'] => $element['#machine_name'],
       ),
+      'langcode' => $language->langcode,
     ),
   );
   $element['#attached']['library'][] = array('system', 'drupal.machine-name');
@@ -3859,7 +3870,7 @@ function form_validate_machine_name(&$element, &$form_state) {
   // Verify that the machine name is unique.
   if ($element['#default_value'] !== $element['#value']) {
     $function = $element['#machine_name']['exists'];
-    if ($function($element['#value'], $element, $form_state)) {
+    if (call_user_func($function, $element['#value'], $element, $form_state)) {
       form_error($element, t('The machine-readable name is already in use. It must be unique.'));
     }
   }
@@ -5150,7 +5161,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
     else {
       // Non-progressive execution: bypass the whole progressbar workflow
       // and execute the batch in one pass.
-      require_once DRUPAL_ROOT . '/core/includes/batch.inc';
+      require_once __DIR__ . '/batch.inc';
       _batch_process();
     }
   }

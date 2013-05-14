@@ -22,12 +22,13 @@ class EntityFormControllerNG extends EntityFormController {
   /**
    * Overrides EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $entity) {
+  public function form(array $form, array &$form_state) {
+    $entity = $this->entity;
     // @todo Exploit the Field API to generate the default widgets for the
     // entity fields.
     $info = $entity->entityInfo();
     if (!empty($info['fieldable'])) {
-      field_attach_form($entity->getBCEntity(), $form, $form_state, $this->getFormLangcode($form_state));
+      field_attach_form($entity, $form, $form_state, $this->getFormLangcode($form_state));
     }
     return $form;
   }
@@ -42,7 +43,7 @@ class EntityFormControllerNG extends EntityFormController {
     $info = $entity->entityInfo();
 
     if (!empty($info['fieldable'])) {
-      field_attach_form_validate($entity->getBCEntity(), $form, $form_state);
+      field_attach_form_validate($entity, $form, $form_state);
     }
 
     // @todo Remove this.
@@ -65,7 +66,7 @@ class EntityFormControllerNG extends EntityFormController {
    * Overrides EntityFormController::buildEntity().
    */
   public function buildEntity(array $form, array &$form_state) {
-    $entity = clone $this->getEntity($form_state);
+    $entity = clone $this->entity;
     $entity_type = $entity->entityType();
     $info = entity_get_info($entity_type);
     // @todo Exploit the Field API to process the submitted entity fields.
@@ -92,7 +93,7 @@ class EntityFormControllerNG extends EntityFormController {
 
     // Invoke field API for copying field values.
     if ($info['fieldable']) {
-      field_attach_extract_form_values($entity->getBCEntity(), $form, $form_state);
+      field_attach_extract_form_values($entity, $form, $form_state);
     }
     return $entity;
   }

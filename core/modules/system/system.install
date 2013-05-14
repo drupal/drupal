@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Database;
 
 /**
@@ -531,7 +532,7 @@ function system_install() {
     ->save();
 
   // Populate the cron key state variable.
-  $cron_key = drupal_hash_base64(drupal_random_bytes(55));
+  $cron_key = Crypt::randomStringHashed(55);
   state()->set('system.cron_key', $cron_key);
 }
 
@@ -857,6 +858,11 @@ function system_schema() {
         'description' => 'The file to include for this element, usually the page callback function lives in this file.',
         'type' => 'text',
         'size' => 'medium',
+      ),
+      'route_name' => array(
+        'description' => 'The machine name of a defined Symfony Route this menu item represents.',
+        'type' => 'varchar',
+        'length' => 255,
       ),
     ),
     'indexes' => array(
@@ -2080,6 +2086,59 @@ function system_update_8052() {
  */
 function system_update_8053() {
   db_drop_table('cache_form');
+}
+
+/**
+ * Adds route_name column to the menu_router table.
+ */
+function system_update_8054() {
+  $spec = array(
+    'description' => 'The machine name of a defined Symfony Route this menu item represents.',
+    'type' => 'varchar',
+    'length' => 255,
+  );
+
+  db_add_field('menu_router', 'route_name', $spec);
+}
+
+/**
+ * Moves system theme settings from variables to config.
+ */
+function system_update_8055() {
+  // Install the global theme settings from the system module.
+  update_7_to_8_install_default_config('module', 'system.theme.global');
+  // Add the global settings to a map for variable to configuration conversion.
+  $theme_settings_to_config_map = array('theme_settings' => 'system.theme.global');
+
+  // Can only upgrade core themes since if you follow the instructions in
+  // UPGRADE.txt list_themes() would only return core themes at this point.
+  // Therefore limit to a hard coded list to ensure that this update only
+  // applies to core provided themes.
+  $core_themes = array(
+    'bartik',
+    'seven',
+    'stark',
+  );
+
+  // Add the core theme to the variable to configuration conversion map and
+  // install the default configuration.
+  foreach ($core_themes as $theme) {
+    $variable = 'theme_' . $theme . '_settings';
+    $config_name = $theme . '.settings';
+    $theme_settings_to_config_map[$variable] = $config_name;
+    update_7_to_8_install_default_config('theme', $config_name);
+  }
+
+  // Convert array of theme settings from Drupal 7's variable system to Drupal
+  // 8's configuration management system.
+  foreach ($theme_settings_to_config_map as $variable => $config_name) {
+    $config = Drupal::config($config_name);
+    $theme_settings = update_variable_get($variable);
+    if (!empty($theme_settings)) {
+      theme_settings_convert_to_config($theme_settings, $config)->save();
+    }
+    update_variable_del($variable);
+  }
 }
 
 /**

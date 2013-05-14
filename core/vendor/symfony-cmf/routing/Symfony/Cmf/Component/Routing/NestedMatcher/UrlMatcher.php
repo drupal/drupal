@@ -28,6 +28,7 @@ class UrlMatcher extends SymfonyUrlMatcher implements FinalMatcherInterface
         $context = new RequestContext();
         $context->fromRequest($request);
         $this->setContext($context);
+
         return $this->match($request->getPathInfo());
     }
 
@@ -41,6 +42,7 @@ class UrlMatcher extends SymfonyUrlMatcher implements FinalMatcherInterface
         }
         $attributes[RouteObjectInterface::ROUTE_NAME] = $name;
         $attributes[RouteObjectInterface::ROUTE_OBJECT] = $route;
+
         return $this->mergeDefaults($attributes, $route->getDefaults());
     }
 }

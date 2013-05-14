@@ -129,34 +129,3 @@ function template_preprocess_views_view_mapping_test(&$variables) {
 function theme_views_view_mapping_test($variables) {
   return drupal_render($variables['element']);
 }
-
-/**
- * Implements hook_menu().
- */
-function views_test_data_menu() {
-  $items = array();
-
-  $items['views_test_data_element_form'] = array(
-    'title' => 'Views test data element form',
-    'description' => 'Views test data element form callback',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('views_test_data_element_form'),
-    'access callback' => TRUE,
-  );
-
-  return $items;
-}
-
-/**
- * Simple form page callback to test the view element.
- */
-function views_test_data_element_form() {
-  $form['view'] = array(
-    '#type' => 'view',
-    '#name' => 'test_view',
-    '#display_id' => 'default',
-    '#arguments' => array(25),
-  );
-
-  return $form;
-}

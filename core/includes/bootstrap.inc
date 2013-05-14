@@ -1,9 +1,11 @@
 <?php
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Settings;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Timer;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -268,22 +270,6 @@ const LANGUAGE_LTR = 0;
  * Language written right to left. Possible value of $language->direction.
  */
 const LANGUAGE_RTL = 1;
-
-/**
- * Indicates an error during check for PHP unicode support.
- */
-const UNICODE_ERROR = -1;
-
-/**
- * Indicates that standard PHP (emulated) unicode support is being used.
- */
-const UNICODE_SINGLEBYTE = 0;
-
-/**
- * Indicates that full unicode support with the PHP mbstring extension is being
- * used.
- */
-const UNICODE_MULTIBYTE = 1;
 
 /**
  * Time of the current request in seconds elapsed since the Unix Epoch.
@@ -666,9 +652,6 @@ function drupal_environment_initialize() {
   // Set sane locale settings, to ensure consistent string, dates, times and
   // numbers handling.
   setlocale(LC_ALL, 'C');
-
-  // Detect string handling method.
-  unicode_check();
 }
 
 /**
@@ -682,58 +665,13 @@ function drupal_valid_http_host($host) {
 }
 
 /**
- * Checks for Unicode support in PHP and sets the proper settings if possible.
- *
- * Because Drupal needs to be able to handle text in various encodings, we do
- * not support mbstring function overloading. HTTP input/output conversion must
- * be disabled for similar reasons.
- *
- * @return string
- *   A string identifier of a failed multibyte extension check, if any.
- *   Otherwise, an empty string.
- */
-function unicode_check() {
-  global $multibyte;
-
-  // Check for mbstring extension.
-  if (!function_exists('mb_strlen')) {
-    $multibyte = UNICODE_SINGLEBYTE;
-    return 'mb_strlen';
-  }
-
-  // Check mbstring configuration.
-  if (ini_get('mbstring.func_overload') != 0) {
-    $multibyte = UNICODE_ERROR;
-    return 'mbstring.func_overload';
-  }
-  if (ini_get('mbstring.encoding_translation') != 0) {
-    $multibyte = UNICODE_ERROR;
-    return 'mbstring.encoding_translation';
-  }
-  if (ini_get('mbstring.http_input') != 'pass') {
-    $multibyte = UNICODE_ERROR;
-    return 'mbstring.http_input';
-  }
-  if (ini_get('mbstring.http_output') != 'pass') {
-    $multibyte = UNICODE_ERROR;
-    return 'mbstring.http_output';
-  }
-
-  // Set appropriate configuration.
-  mb_internal_encoding('utf-8');
-  mb_language('uni');
-  $multibyte = UNICODE_MULTIBYTE;
-  return '';
-}
-
-/**
  * Sets the base URL, cookie domain, and session name from configuration.
  */
 function drupal_settings_initialize() {
   global $base_url, $base_path, $base_root, $script_path;
 
   // Export these settings.php variables to the global namespace.
-  global $databases, $cookie_domain, $conf, $db_prefix, $drupal_hash_salt, $is_https, $base_secure_url, $base_insecure_url, $config_directories;
+  global $databases, $cookie_domain, $conf, $db_prefix, $drupal_hash_salt, $base_secure_url, $base_insecure_url, $config_directories;
   $conf = array();
 
   // Make conf_path() available as local variable in settings.php.
@@ -949,7 +887,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
       if (!isset($dirs[$dir][$extension])) {
         $dirs[$dir][$extension] = TRUE;
         if (!function_exists('drupal_system_listing')) {
-          require_once DRUPAL_ROOT . '/core/includes/common.inc';
+          require_once __DIR__ . '/common.inc';
         }
         // Scan the appropriate directories for all files with the requested
         // extension, not just the file we are currently looking for. This
@@ -1431,9 +1369,8 @@ function drupal_serve_page_from_cache(stdClass $cache) {
   // cookie. The Vary header is used to indicates the set of request-header
   // fields that fully determines whether a cache is permitted to use the
   // response to reply to a subsequent request for a given URL without
-  // revalidation. If a Vary header has been set in hook_boot(), it is assumed
-  // that the module knows how to cache the page.
-  if (!isset($boot_headers['vary']) && !settings()->get('cache.page.omit_vary_cookie')) {
+  // revalidation.
+  if (!isset($boot_headers['vary']) && !settings()->get('omit_vary_cookie')) {
     header('Vary: Cookie');
   }
 
@@ -1679,7 +1616,7 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
      $variables = array();
    }
 
-   require_once DRUPAL_ROOT . '/core/includes/errors.inc';
+   require_once __DIR__ . '/errors.inc';
    $variables += _drupal_decode_exception($exception);
    watchdog($type, $message, $variables, $severity, $link);
 }
@@ -1900,102 +1837,6 @@ function drupal_set_title($title = NULL, $output = CHECK_PLAIN) {
 }
 
 /**
- * Returns a string of highly randomized bytes (over the full 8-bit range).
- *
- * This function is better than simply calling mt_rand() or any other built-in
- * PHP function because it can return a long string of bytes (compared to < 4
- * bytes normally from mt_rand()) and uses the best available pseudo-random
- * source.
- *
- * @param $count
- *   The number of characters (bytes) to return in the string.
- */
-function drupal_random_bytes($count)  {
-  // $random_state does not use drupal_static as it stores random bytes.
-  static $random_state, $bytes, $php_compatible;
-  // Initialize on the first call. The contents of $_SERVER includes a mix of
-  // user-specific and system information that varies a little with each page.
-  if (!isset($random_state)) {
-    $random_state = print_r($_SERVER, TRUE);
-    if (function_exists('getmypid')) {
-      // Further initialize with the somewhat random PHP process ID.
-      $random_state .= getmypid();
-    }
-    $bytes = '';
-  }
-  if (strlen($bytes) < $count) {
-    // PHP versions prior 5.3.4 experienced openssl_random_pseudo_bytes()
-    // locking on Windows and rendered it unusable.
-    if (!isset($php_compatible)) {
-      $php_compatible = version_compare(PHP_VERSION, '5.3.4', '>=');
-    }
-    // /dev/urandom is available on many *nix systems and is considered the
-    // best commonly available pseudo-random source.
-    if ($fh = @fopen('/dev/urandom', 'rb')) {
-      // PHP only performs buffered reads, so in reality it will always read
-      // at least 4096 bytes. Thus, it costs nothing extra to read and store
-      // that much so as to speed any additional invocations.
-      $bytes .= fread($fh, max(4096, $count));
-      fclose($fh);
-    }
-    // openssl_random_pseudo_bytes() will find entropy in a system-dependent
-    // way.
-    elseif ($php_compatible && function_exists('openssl_random_pseudo_bytes')) {
-      $bytes .= openssl_random_pseudo_bytes($count - strlen($bytes));
-    }
-    // If /dev/urandom is not available or returns no bytes, this loop will
-    // generate a good set of pseudo-random bytes on any system.
-    // Note that it may be important that our $random_state is passed
-    // through hash() prior to being rolled into $output, that the two hash()
-    // invocations are different, and that the extra input into the first one -
-    // the microtime() - is prepended rather than appended. This is to avoid
-    // directly leaking $random_state via the $output stream, which could
-    // allow for trivial prediction of further "random" numbers.
-    while (strlen($bytes) < $count) {
-      $random_state = hash('sha256', microtime() . mt_rand() . $random_state);
-      $bytes .= hash('sha256', mt_rand() . $random_state, TRUE);
-    }
-  }
-  $output = substr($bytes, 0, $count);
-  $bytes = substr($bytes, $count);
-  return $output;
-}
-
-/**
- * Calculates a base-64 encoded, URL-safe sha-256 hmac.
- *
- * @param $data
- *   String to be validated with the hmac.
- * @param $key
- *   A secret string key.
- *
- * @return
- *   A base-64 encoded sha-256 hmac, with + replaced with -, / with _ and
- *   any = padding characters removed.
- */
-function drupal_hmac_base64($data, $key) {
-  $hmac = base64_encode(hash_hmac('sha256', $data, $key, TRUE));
-  // Modify the hmac so it's safe to use in URLs.
-  return strtr($hmac, array('+' => '-', '/' => '_', '=' => ''));
-}
-
-/**
- * Calculates a base-64 encoded, URL-safe sha-256 hash.
- *
- * @param $data
- *   String to be hashed.
- *
- * @return
- *   A base-64 encoded sha-256 hash, with + replaced with -, / with _ and
- *   any = padding characters removed.
- */
-function drupal_hash_base64($data) {
-  $hash = base64_encode(hash('sha256', $data, TRUE));
-  // Modify the hash so it's safe to use in URLs.
-  return strtr($hash, array('+' => '-', '/' => '_', '=' => ''));
-}
-
-/**
  * Generates a default anonymous $user object.
  *
  * @return Drupal\user\Plugin\Core\Entity\User
@@ -2105,7 +1946,7 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
           break;
 
         case DRUPAL_BOOTSTRAP_CODE:
-          require_once DRUPAL_ROOT . '/core/includes/common.inc';
+          require_once __DIR__ . '/common.inc';
           _drupal_bootstrap_code();
           break;
 
@@ -2211,7 +2052,7 @@ function drupal_get_hash_salt() {
  *   occurred.
  */
 function _drupal_error_handler($error_level, $message, $filename, $line, $context) {
-  require_once DRUPAL_ROOT . '/core/includes/errors.inc';
+  require_once __DIR__ . '/errors.inc';
   _drupal_error_handler_real($error_level, $message, $filename, $line, $context);
 }
 
@@ -2226,7 +2067,7 @@ function _drupal_error_handler($error_level, $message, $filename, $line, $contex
  *   The exception object that was thrown.
  */
 function _drupal_exception_handler($exception) {
-  require_once DRUPAL_ROOT . '/core/includes/errors.inc';
+  require_once __DIR__ . '/errors.inc';
 
   try {
     // Log the message to the watchdog and return an error page to the user.
@@ -2260,8 +2101,11 @@ function _drupal_bootstrap_configuration() {
   // Start a page timer:
   Timer::start('page');
 
+  // Detect string handling method.
+  Unicode::check();
+
   // Load the procedural configuration system helper functions.
-  require_once DRUPAL_ROOT . '/core/includes/config.inc';
+  require_once __DIR__ . '/config.inc';
 
   // Set the Drupal custom error handler. (requires config())
   set_error_handler('_drupal_error_handler');
@@ -2271,7 +2115,7 @@ function _drupal_bootstrap_configuration() {
   // installed yet (i.e., if no $databases array has been defined in the
   // settings.php file) and we are not already installing.
   if (empty($GLOBALS['databases']) && !drupal_installation_attempted()) {
-    include_once DRUPAL_ROOT . '/core/includes/install.inc';
+    include_once __DIR__ . '/install.inc';
     install_goto('core/install.php');
   }
 }
@@ -2296,7 +2140,7 @@ function _drupal_bootstrap_page_cache() {
 
   // Allow specifying special cache handlers in settings.php, like
   // using memcached or files for storing cache information.
-  require_once DRUPAL_ROOT . '/core/includes/cache.inc';
+  require_once __DIR__ . '/cache.inc';
   foreach (variable_get('cache_backends', array()) as $include) {
     require_once DRUPAL_ROOT . '/' . $include;
   }
@@ -2373,7 +2217,7 @@ function _drupal_initialize_db_test_prefix() {
 function _drupal_bootstrap_database() {
   // Initialize the database system. Note that the connection
   // won't be initialized until it is actually requested.
-  require_once DRUPAL_ROOT . '/core/includes/database.inc';
+  require_once __DIR__ . '/database.inc';
 }
 
 /**
@@ -2385,7 +2229,7 @@ function _drupal_bootstrap_variables() {
   // Load variables from the database, but do not overwrite variables set in settings.php.
   $conf = variable_initialize(isset($conf) ? $conf : array());
   // Load bootstrap modules.
-  require_once DRUPAL_ROOT . '/core/includes/module.inc';
+  require_once __DIR__ . '/module.inc';
   drupal_container()->get('module_handler')->loadBootstrapModules();
 }
 
@@ -2579,9 +2423,13 @@ function drupal_valid_test_ua($new_prefix = NULL) {
     // The file properties add more entropy not easily accessible to others.
     $key = drupal_get_hash_salt() . filectime(__FILE__) . fileinode(__FILE__);
     $time_diff = REQUEST_TIME - $time;
+    // We cant use Crypt::hmacBase64() yet because this can be called in very
+    // early bootstrap when autoloader has not been initialized yet.
+    $test_hmac = base64_encode(hash_hmac('sha256', $check_string, $key, TRUE));
+    $test_hmac = strtr($test_hmac, array('+' => '-', '/' => '_', '=' => ''));
     // Since we are making a local request a 5 second time window is allowed,
     // and the HMAC must match.
-    if ($time_diff >= 0 && $time_diff <= 5 && $hmac == drupal_hmac_base64($check_string, $key)) {
+    if ($time_diff >= 0 && $time_diff <= 5 && $hmac == $test_hmac) {
       $test_prefix = $prefix;
       _drupal_load_test_overrides($test_prefix);
       return $test_prefix;
@@ -2644,7 +2492,7 @@ function drupal_generate_test_ua($prefix) {
   // Generate a moderately secure HMAC based on the database credentials.
   $salt = uniqid('', TRUE);
   $check_string = $prefix . ';' . time() . ';' . $salt;
-  return $check_string . ';' . drupal_hmac_base64($check_string, $key);
+  return $check_string . ';' . Crypt::hmacBase64($check_string, $key);
 }
 
 /**
@@ -2656,7 +2504,7 @@ function drupal_generate_test_ua($prefix) {
  * @see _drupal_maintenance_theme()
  */
 function drupal_maintenance_theme() {
-  require_once DRUPAL_ROOT . '/core/includes/theme.maintenance.inc';
+  require_once __DIR__ . '/theme.maintenance.inc';
   _drupal_maintenance_theme();
 }
 
@@ -3369,7 +3217,7 @@ function _drupal_shutdown_function() {
   catch (Exception $exception) {
     // If we are displaying errors, then do so with no possibility of a further
     // uncaught exception being thrown.
-    require_once DRUPAL_ROOT . '/core/includes/errors.inc';
+    require_once __DIR__ . '/errors.inc';
     if (error_displayable()) {
       print '<h1>Uncaught exception thrown in shutdown function.</h1>';
       print '<p>' . _drupal_render_exception_safe($exception) . '</p><hr />';

@@ -35,13 +35,13 @@ class TaxonomyAttributesTest extends TaxonomyTestBase {
   function testTaxonomyTermRdfaAttributes() {
     $vocabulary = $this->createVocabulary();
     $term = $this->createTerm($vocabulary);
-    $term_uri = url('taxonomy/term/' . $term->tid, array('absolute' => TRUE));
+    $term_uri = url('taxonomy/term/' . $term->id(), array('absolute' => TRUE));
 
     // Parses the term's page and checks that the RDF output is correct.
     $parser = new \EasyRdf_Parser_Rdfa();
     $graph = new \EasyRdf_Graph();
     $base_uri = url('<front>', array('absolute' => TRUE));
-    $parser->parse($graph, $this->drupalGet('taxonomy/term/' . $term->tid), 'rdfa', $base_uri);
+    $parser->parse($graph, $this->drupalGet('taxonomy/term/' . $term->id()), 'rdfa', $base_uri);
 
     // Inspects RDF graph output.
     // Term type.

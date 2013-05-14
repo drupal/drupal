@@ -7,6 +7,8 @@
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Drupal\block\Plugin\Core\Entity\Block;
+use Drupal\user\Plugin\Core\Entity\User;
 
 /**
  * Implements hook_help().
@@ -97,7 +99,7 @@ function overlay_field_extra_fields() {
  * Implements hook_form_FORM_ID_alter().
  */
 function overlay_form_user_profile_form_alter(&$form, &$form_state) {
-  $account = $form_state['controller']->getEntity($form_state);
+  $account = $form_state['controller']->getEntity();
   if (user_access('access overlay', $account)) {
     $account_data = drupal_container()->get('user.data')->get('overlay', $account->id(), 'enabled');
     $form['overlay_control'] = array(
@@ -172,34 +174,6 @@ function overlay_init() {
     elseif (!path_is_admin($current_path)) {
       // Otherwise add overlay parent code and our behavior.
       overlay_set_mode('parent');
-    }
-  }
-}
-
-/**
- * Implements hook_exit().
- *
- * When viewing an overlay child page, check if we need to trigger a refresh of
- * the supplemental regions of the overlay on the next page request.
- */
-function overlay_exit() {
-  // Check that we are in an overlay child page.
-  if (overlay_get_mode() == 'child') {
-    // Load any markup that was stored earlier in the page request, via calls
-    // to overlay_store_rendered_content(). If none was stored, this is not a
-    // page request where we expect any changes to the overlay supplemental
-    // regions to have occurred, so we do not need to proceed any further.
-    $original_markup = overlay_get_rendered_content();
-    if (!empty($original_markup)) {
-      // Compare the original markup to the current markup that we get from
-      // rendering each overlay supplemental region now. If they don't match,
-      // something must have changed, so we request a refresh of that region
-      // within the parent window on the next page request.
-      foreach (overlay_supplemental_regions() as $region) {
-        if (!isset($original_markup[$region]) || $original_markup[$region] != overlay_render_region($region)) {
-          overlay_request_refresh($region);
-        }
-      }
     }
   }
 }
@@ -481,7 +455,7 @@ function theme_overlay_disable_message($variables) {
 /**
  * Implements hook_block_access().
  */
-function overlay_block_access($block) {
+function overlay_block_access(Block $block, $operation, User $account, $langcode) {
   // If we are limiting rendering to a subset of page regions, hide all blocks
   // which appear in regions not on that list. Note that overlay_page_alter()
   // does a more comprehensive job of preventing unwanted regions from being
@@ -698,9 +672,10 @@ function overlay_overlay_child_initialize() {
   // have an indication that something in the supplemental regions of the
   // overlay might change during the current page request. We therefore store
   // the initial rendered content of those regions here, so that we can compare
-  // it to the same content rendered in overlay_exit(), at the end of the page
-  // request. This allows us to check if anything actually did change, and, if
-  // so, trigger an immediate Ajax refresh of the parent window.
+  // it to the same content rendered in OverlaySubscriber::onResponse(),
+  // at the end of the page request. This allows us to check if anything
+  // actually did change, and, if so, trigger an immediate Ajax refresh
+  // of the parent window.
   $token = drupal_container()->get('request')->query->get('token');
   if (!empty($_POST) || isset($token)) {
     foreach (overlay_supplemental_regions() as $region) {

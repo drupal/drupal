@@ -1,9 +1,14 @@
 id: stark.login
-label: 'User login'
-region: sidebar_first
 weight: '0'
-module: user
 status: '1'
+langcode: en
+region: sidebar_first
+plugin: user_login_block
+settings:
+  label: 'User login'
+  module: user
+  label_display: visible
+  cache: '-1'
 visibility:
   path:
     visibility: '0'
@@ -13,7 +18,3 @@ visibility:
   node_type:
     types: {  }
   visibility__active_tab: edit-visibility-path
-plugin: user_login_block
-settings:
-  cache: '-1'
-label_display: visible

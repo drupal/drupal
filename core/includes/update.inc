@@ -90,8 +90,8 @@ function update_check_incompatibility($name, $type = 'module') {
  * irreversible changes to the database are made here.
  */
 function update_prepare_d8_bootstrap() {
-  include_once DRUPAL_ROOT . '/core/includes/install.inc';
-  include_once DRUPAL_ROOT . '/core/includes/schema.inc';
+  include_once __DIR__ . '/install.inc';
+  include_once __DIR__ . '/schema.inc';
   // Bootstrap to configuration.
   drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
 
@@ -735,7 +735,7 @@ function update_module_enable(array $modules, $schema_version = 0) {
 
     // system_list_reset() is in module.inc but that would only be available
     // once the variable bootstrap is done.
-    require_once DRUPAL_ROOT . '/core/includes/module.inc';
+    require_once __DIR__ . '/module.inc';
     system_list_reset();
     //  @todo: figure out what to do about hook_install() and hook_enable().
   }
@@ -806,7 +806,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
     catch (Exception $e) {
       watchdog_exception('update', $e);
 
-      require_once DRUPAL_ROOT . '/core/includes/errors.inc';
+      require_once __DIR__ . '/errors.inc';
       $variables = _drupal_decode_exception($e);
       unset($variables['backtrace']);
       // The exception message is run through check_plain() by _drupal_decode_exception().
@@ -1477,6 +1477,39 @@ function update_config_manifest_add($config_prefix, array $ids) {
 
   // Write manifest to disk.
   $manifest->save();
+}
+
+/**
+ * Installs a default configuration file into the active store.
+ *
+ * Provide a generalised method to save a default configuration object for an
+ * already enabled module or theme as part of an update from Drupal 7 to Drupal
+ * 8's configuration management system.
+ *
+ * @param string $type
+ *   The extension type; e.g., 'module' or 'theme'.
+ * @param string $config_name
+ *   The configuration object name to retrieve.
+ *
+ * @return boolean
+ *   True on success, false if config file does not exist.
+ */
+function update_7_to_8_install_default_config($type, $config_name) {
+  // Build the new configuration object.
+  $config = Drupal::config($config_name);
+
+  // Extract the extension namespace/owner from the configuration object name.
+  $name = strtok($config_name, '.');
+
+  // Load and set default configuration values.
+  $file = new FileStorage(drupal_get_path($type, $name) . '/config');
+  if (!$file->exists($config_name)) {
+    return FALSE;
+  }
+  $default_data = $file->read($config_name);
+  // Apply and save the default values.
+  $config->setData($file->read($config_name))->save();
+  return TRUE;
 }
 
 /**

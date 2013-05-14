@@ -201,7 +201,7 @@ function language_theme() {
 function language_entity_supported() {
   $supported = array();
   foreach (entity_get_info() as $entity_type => $info) {
-    if (!empty($info['fieldable']) && !empty($info['translatable'])) {
+    if (!empty($info['translatable'])) {
       $supported[$entity_type] = $entity_type;
     }
   }
@@ -707,7 +707,7 @@ function language_language_negotiation_info() {
  */
 function language_negotiation_include() {
   include_once DRUPAL_ROOT . '/core/includes/language.inc';
-  include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'language') . '/language.negotiation.inc';
+  include_once __DIR__ . '/language.negotiation.inc';
 }
 
 /**
@@ -763,7 +763,7 @@ function language_language_delete($language) {
  * Implements hook_preprocess_HOOK() for block.tpl.php.
  */
 function language_preprocess_block(&$variables) {
-  if ($variables['block']->module == 'language') {
+  if ($variables['configuration']['module'] == 'language') {
     $variables['attributes']['role'] = 'navigation';
   }
 }

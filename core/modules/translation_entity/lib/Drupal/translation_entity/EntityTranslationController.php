@@ -465,7 +465,7 @@ class EntityTranslationController implements EntityTranslationControllerInterfac
    */
   public function entityFormSourceChange($form, &$form_state) {
     $form_controller = translation_entity_form_controller($form_state);
-    $entity = $form_controller->getEntity($form_state);
+    $entity = $form_controller->getEntity();
     $source = $form_state['values']['source_langcode']['source'];
     $path = $this->getBasePath($entity) . '/translations/add/' . $source . '/' . $form_controller->getFormLangcode($form_state);
     $form_state['redirect'] = array('path' => $path);
@@ -480,7 +480,7 @@ class EntityTranslationController implements EntityTranslationControllerInterfac
    */
   function entityFormDelete($form, &$form_state) {
     $form_controller = translation_entity_form_controller($form_state);
-    $entity = $form_controller->getEntity($form_state);
+    $entity = $form_controller->getEntity();
     if (count($entity->getTranslationLanguages()) > 1) {
       drupal_set_message(t('This will delete all the translations of %label.', array('%label' => $entity->label())), 'warning');
     }
@@ -493,7 +493,7 @@ class EntityTranslationController implements EntityTranslationControllerInterfac
    */
   function entityFormDeleteTranslation($form, &$form_state) {
     $form_controller = translation_entity_form_controller($form_state);
-    $entity = $form_controller->getEntity($form_state);
+    $entity = $form_controller->getEntity();
     $base_path = $this->getBasePath($entity);
     $form_langcode = $form_controller->getFormLangcode($form_state);
     $form_state['redirect'] = $base_path . '/translations/delete/' . $form_langcode;

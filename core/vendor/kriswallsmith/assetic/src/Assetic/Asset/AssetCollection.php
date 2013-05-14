@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2012 OpenSky Project Inc
+ * (c) 2010-2013 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -38,6 +38,7 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
      * @param array  $assets     Assets for the current collection
      * @param array  $filters    Filters for the current collection
      * @param string $sourceRoot The root directory
+     * @param array  $vars
      */
     public function __construct($assets = array(), $filters = array(), $sourceRoot = null, array $vars = array())
     {
@@ -71,7 +72,9 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
                 unset($this->clones[$asset], $this->assets[$i]);
 
                 return true;
-            } elseif ($asset instanceof AssetCollectionInterface && $asset->removeLeaf($needle, true)) {
+            }
+
+            if ($asset instanceof AssetCollectionInterface && $asset->removeLeaf($needle, true)) {
                 return true;
             }
         }
@@ -92,7 +95,9 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
                 $this->assets[$i] = $replacement;
 
                 return true;
-            } elseif ($asset instanceof AssetCollectionInterface && $asset->replaceLeaf($needle, $replacement, true)) {
+            }
+
+            if ($asset instanceof AssetCollectionInterface && $asset->replaceLeaf($needle, $replacement, true)) {
                 return true;
             }
         }

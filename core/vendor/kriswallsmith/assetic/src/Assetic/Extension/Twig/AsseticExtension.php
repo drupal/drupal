@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2012 OpenSky Project Inc
+ * (c) 2010-2013 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -59,7 +59,7 @@ class AsseticExtension extends \Twig_Extension
         return array(
             'assetic' => array(
                 'debug' => $this->factory->isDebug(),
-                'vars'  => null !== $this->valueSupplier ? $this->valueSupplier->getValues() : array(),
+                'vars'  => null !== $this->valueSupplier ? new ValueContainer($this->valueSupplier) : array(),
             ),
         );
     }

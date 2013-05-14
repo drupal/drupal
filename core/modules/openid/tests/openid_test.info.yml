@@ -1,4 +1,5 @@
 name: 'OpenID dummy provider'
+type: module
 description: 'OpenID provider used for testing.'
 package: Testing
 version: VERSION

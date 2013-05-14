@@ -27,7 +27,7 @@ class EditorManager extends PluginManagerBase {
    *   keyed by the corresponding namespace to look for plugin implementations,
    */
   public function __construct(\Traversable $namespaces) {
-    $this->discovery = new AnnotatedClassDiscovery('editor', 'editor', $namespaces);
+    $this->discovery = new AnnotatedClassDiscovery('editor/editor', $namespaces);
     $this->discovery = new AlterDecorator($this->discovery, 'editor_info');
     $this->discovery = new CacheDecorator($this->discovery, 'editor');
     $this->factory = new DefaultFactory($this->discovery);

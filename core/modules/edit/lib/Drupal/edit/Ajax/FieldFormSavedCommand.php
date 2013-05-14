@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\edit\Ajax\FieldFormSavedCommand.
+ * Contains \Drupal\edit\Ajax\FieldFormSavedCommand.
  */
 
 namespace Drupal\edit\Ajax;

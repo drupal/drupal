@@ -115,7 +115,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     // different entity types; e.g. if a field was added in a node entity, it
     // should also appear in the 'taxonomy term' entity.
     $vocabulary = taxonomy_vocabulary_load('tags');
-    $this->drupalGet('admin/structure/taxonomy/' . $vocabulary->id() . '/fields');
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/fields');
     $this->assertTrue($this->xpath('//select[@name="fields[_add_existing_field][field_name]"]//option[@value="' . $this->field_name . '"]'), 'Existing field was found in taxonomy term fields.');
   }
 
@@ -123,8 +123,9 @@ class ManageFieldsTest extends FieldUiTestBase {
    * Tests editing an existing field.
    */
   function updateField() {
+    $instance_id = 'node.' . $this->type . '.' . $this->field_name;
     // Go to the field edit page.
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/' . $this->field_name . '/field-settings');
+    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/' . $instance_id . '/field');
 
     // Populate the field settings with new settings.
     $string = 'updated dummy test string';
@@ -134,7 +135,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->drupalPost(NULL, $edit, t('Save field settings'));
 
     // Go to the field instance edit page.
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/' . $this->field_name);
+    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/' . $instance_id);
     $edit = array(
       'instance[settings][test_instance_setting]' => $string,
       'instance[widget][settings][test_widget_setting]' => $string,
@@ -176,7 +177,7 @@ class ManageFieldsTest extends FieldUiTestBase {
    * numeric value. That is tested already in FormTest::testNumber().
    */
   function cardinalitySettings() {
-    $field_edit_path = 'admin/structure/types/manage/article/fields/body/field-settings';
+    $field_edit_path = 'admin/structure/types/manage/article/fields/node.article.body/field';
 
     // Assert the cardinality other field cannot be empty when cardinality is
     // set to other.
@@ -253,10 +254,10 @@ class ManageFieldsTest extends FieldUiTestBase {
       'entity_type' => 'node',
       'bundle' => $this->type,
     );
-    field_create_instance($instance);
+    $instance = field_create_instance($instance);
 
     $langcode = LANGUAGE_NOT_SPECIFIED;
-    $admin_path = 'admin/structure/types/manage/' . $this->type . '/fields/' . $field_name;
+    $admin_path = 'admin/structure/types/manage/' . $this->type . '/fields/' . $instance->id();
     $element_id = "edit-$field_name-$langcode-0-value";
     $element_name = "{$field_name}[$langcode][0][value]";
     $this->drupalGet($admin_path);
@@ -320,7 +321,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->fieldUIAddExistingField($bundle_path2, $edit2);
 
     // Delete the first instance.
-    $this->fieldUIDeleteField($bundle_path1, $this->field_name, $this->field_label, $this->type);
+    $this->fieldUIDeleteField($bundle_path1, "node.$this->type.$this->field_name", $this->field_label, $this->type);
 
     // Reset the fields info.
     field_info_cache_clear();
@@ -330,7 +331,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->assertNotNull(field_info_field($this->field_name), 'Field was not deleted.');
 
     // Delete the second instance.
-    $this->fieldUIDeleteField($bundle_path2, $this->field_name, $this->field_label, $type_name2);
+    $this->fieldUIDeleteField($bundle_path2, "node.$type_name2.$this->field_name", $this->field_label, $type_name2);
 
     // Reset the fields info.
     field_info_cache_clear();
@@ -338,6 +339,38 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->assertNull(field_info_instance('node', $this->field_name, $type_name2), 'Field instance was deleted.');
     // Check that the field was deleted too.
     $this->assertNull(field_info_field($this->field_name), 'Field was deleted.');
+  }
+
+  /**
+   * Tests that Field UI respects locked fields.
+   */
+  function testLockedField() {
+    // Create a locked field and attach it to a bundle. We need to do this
+    // programatically as there's no way to create a locked field through UI.
+    $field = entity_create('field_entity', array(
+      'field_name' => strtolower($this->randomName(8)),
+      'type' => 'test_field',
+      'cardinality' => 1,
+      'locked' => TRUE
+    ));
+    $field->save();
+    entity_create('field_instance', array(
+      'field_uuid' => $field->uuid,
+      'entity_type' => 'node',
+      'bundle' => $this->type,
+      'widget' => array(
+        'type' => 'test_field_widget',
+      )
+    ))->save();
+
+    // Check that the links for edit and delete are not present.
+    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields');
+    $locked = $this->xpath('//tr[@id=:field_name]/td[7]', array(':field_name' => $field->id()));
+    $this->assertTrue(in_array('Locked', $locked), 'Field is marked as Locked in the UI');
+    $edit_link = $this->xpath('//tr[@id=:field_name]/td[7]', array(':field_name' => $field->id()));
+    $this->assertFalse(in_array('edit', $edit_link), 'Edit option for locked field is not present the UI');
+    $delete_link = $this->xpath('//tr[@id=:field_name]/td[8]', array(':field_name' => $field->id()));
+    $this->assertFalse(in_array('delete', $delete_link), 'Delete option for locked field is not present the UI');
   }
 
   /**
@@ -412,7 +445,7 @@ class ManageFieldsTest extends FieldUiTestBase {
    */
   function testWidgetChange() {
     $url_fields = 'admin/structure/types/manage/article/fields';
-    $url_tags_widget = $url_fields . '/field_tags/widget-type';
+    $url_tags_widget = $url_fields . '/node.article.field_tags/widget-type';
 
     // Check that the field_tags field currently uses the 'options_select'
     // widget.
@@ -455,7 +488,7 @@ class ManageFieldsTest extends FieldUiTestBase {
    */
   function testDeleteTaxonomyField() {
     // Create a new field.
-    $bundle_path = 'admin/structure/taxonomy/tags';
+    $bundle_path = 'admin/structure/taxonomy/manage/tags';
     $edit1 = array(
       'fields[_add_new_field][label]' => $this->field_label,
       'fields[_add_new_field][field_name]' => $this->field_name_input,
@@ -463,7 +496,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->fieldUIAddNewField($bundle_path, $edit1);
 
     // Delete the field.
-    $this->fieldUIDeleteField($bundle_path, $this->field_name, $this->field_label, 'Tags');
+    $this->fieldUIDeleteField($bundle_path, "taxonomy_term.tags.$this->field_name", $this->field_label, 'Tags');
 
     // Reset the fields info.
     field_info_cache_clear();

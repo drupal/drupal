@@ -7,7 +7,6 @@
 
 namespace Drupal\shortcut;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormController;
 
 /**
@@ -18,9 +17,10 @@ class ShortcutFormController extends EntityFormController {
   /**
    * Overrides \Drupal\Core\Entity\EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $entity) {
-    $form = parent::form($form, $form_state, $entity);
+  public function form(array $form, array &$form_state) {
+    $form = parent::form($form, $form_state);
 
+    $entity = $this->entity;
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => t('Set name'),
@@ -53,7 +53,7 @@ class ShortcutFormController extends EntityFormController {
   protected function actions(array $form, array &$form_state) {
     // Disable delete of default shortcut set.
     $actions = parent::actions($form, $form_state);
-    $actions['delete']['#access'] = $this->getEntity($form_state)->access('delete');
+    $actions['delete']['#access'] = $this->entity->access('delete');
     return $actions;
   }
 
@@ -62,7 +62,7 @@ class ShortcutFormController extends EntityFormController {
    */
   public function validate(array $form, array &$form_state) {
     parent::validate($form, $form_state);
-    $entity = $this->getEntity($form_state);
+    $entity = $this->entity;
     // Check to prevent a duplicate title.
     if ($form_state['values']['label'] != $entity->label() && shortcut_set_title_exists($form_state['values']['label'])) {
       form_set_error('label', t('The shortcut set %name already exists. Choose another name.', array('%name' => $form_state['values']['label'])));
@@ -73,7 +73,7 @@ class ShortcutFormController extends EntityFormController {
    * Overrides \Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
-    $entity = $this->getEntity($form_state);
+    $entity = $this->entity;
     $is_new = !$entity->getOriginalID();
     $entity->save();
 
@@ -90,7 +90,7 @@ class ShortcutFormController extends EntityFormController {
    * Overrides \Drupal\Core\Entity\EntityFormController::delete().
    */
   public function delete(array $form, array &$form_state) {
-    $entity = $this->getEntity($form_state);
+    $entity = $this->entity;
     $form_state['redirect'] = 'admin/config/user-interface/shortcut/manage/' . $entity->id() . '/delete';
   }
 

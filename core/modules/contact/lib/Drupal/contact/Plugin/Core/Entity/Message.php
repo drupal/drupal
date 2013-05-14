@@ -10,6 +10,7 @@ namespace Drupal\contact\Plugin\Core\Entity;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\Entity;
+use Drupal\contact\MessageInterface;
 
 /**
  * Defines the contact message entity.
@@ -34,7 +35,7 @@ use Drupal\Core\Entity\Entity;
  *   }
  * )
  */
-class Message extends Entity {
+class Message extends Entity implements MessageInterface {
 
   /**
    * The contact category ID of this message.

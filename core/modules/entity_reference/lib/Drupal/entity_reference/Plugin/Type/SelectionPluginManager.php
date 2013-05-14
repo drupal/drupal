@@ -28,7 +28,7 @@ class SelectionPluginManager extends PluginManagerBase {
    *   keyed by the corresponding namespace to look for plugin implementations,
    */
   public function __construct(\Traversable $namespaces) {
-    $this->baseDiscovery = new AlterDecorator(new AnnotatedClassDiscovery('entity_reference', 'selection', $namespaces), 'entity_reference_selection');
+    $this->baseDiscovery = new AlterDecorator(new AnnotatedClassDiscovery('entity_reference/selection', $namespaces), 'entity_reference_selection');
     $this->discovery = new CacheDecorator($this->baseDiscovery, 'entity_reference_selection');
     $this->factory = new ReflectionFactory($this);
   }

@@ -1,3 +1,32 @@
+picture_mapping_page:
+  pattern: '/admin/config/media/picturemapping'
+  defaults:
+    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
+    entity_type: 'picture_mapping'
+  requirements:
+    _permission: 'administer pictures'
+
+picture_mapping_page_add:
+  pattern: '/admin/config/media/picturemapping/add'
+  defaults:
+    _entity_form: 'picture_mapping.add'
+  requirements:
+    _permission: 'administer pictures'
+
+picture_mapping_page_edit:
+  pattern: '/admin/config/media/picturemapping/{picture_mapping}/edit'
+  defaults:
+    _entity_form: 'picture_mapping.edit'
+  requirements:
+    _permission: 'administer pictures'
+
+picture_mapping_page_duplicate:
+  pattern: '/admin/config/media/picturemapping/{picture_mapping}/duplicate'
+  defaults:
+    _entity_form: 'picture_mapping.duplicate'
+  requirements:
+    _permission: 'administer pictures'
+
 picture_mapping_action_confirm:
   pattern: '/admin/config/media/picturemapping/{picture_mapping}/delete'
   defaults:

@@ -35,7 +35,7 @@ class EfqTest extends TaxonomyTestBase {
     $terms = array();
     for ($i = 0; $i < 5; $i++) {
       $term = $this->createTerm($this->vocabulary);
-      $terms[$term->tid] = $term;
+      $terms[$term->id()] = $term;
     }
     $result = \Drupal::entityQuery('taxonomy_term')->execute();
     sort($result);
@@ -47,14 +47,14 @@ class EfqTest extends TaxonomyTestBase {
       'bundle' => $this->vocabulary->id(),
     );
     $term = _field_create_entity_from_ids($ids);
-    $this->assertEqual($term->tid, $tid, 'Taxonomy term can be created based on the IDs');
+    $this->assertEqual($term->id(), $tid, 'Taxonomy term can be created based on the IDs');
 
     // Create a second vocabulary and five more terms.
     $vocabulary2 = $this->createVocabulary();
     $terms2 = array();
     for ($i = 0; $i < 5; $i++) {
       $term = $this->createTerm($vocabulary2);
-      $terms2[$term->tid] = $term;
+      $terms2[$term->id()] = $term;
     }
 
     $result = \Drupal::entityQuery('taxonomy_term')
@@ -69,6 +69,6 @@ class EfqTest extends TaxonomyTestBase {
       'bundle' => $vocabulary2->id(),
     );
     $term = _field_create_entity_from_ids($ids);
-    $this->assertEqual($term->tid, $tid, 'Taxonomy term can be created based on the IDs');
+    $this->assertEqual($term->id(), $tid, 'Taxonomy term can be created based on the IDs');
   }
 }

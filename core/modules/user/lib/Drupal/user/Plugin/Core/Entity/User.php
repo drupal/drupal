@@ -10,6 +10,7 @@ namespace Drupal\user\Plugin\Core\Entity;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\user\UserInterface;
 
 /**
  * Defines the user entity class.
@@ -31,6 +32,7 @@ use Drupal\Core\Annotation\Translation;
  *   default_operation = "profile",
  *   base_table = "users",
  *   uri_callback = "user_uri",
+ *   route_base_path = "admin/config/people/accounts",
  *   label_callback = "user_label",
  *   fieldable = TRUE,
  *   translatable = TRUE,
@@ -40,7 +42,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class User extends Entity {
+class User extends Entity implements UserInterface {
 
   /**
    * The user ID.

@@ -7,10 +7,10 @@
 
 namespace Drupal\aggregator\Plugin\Core\Entity;
 
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\aggregator\FeedInterface;
 
 /**
  * Defines the aggregator feed entity class.
@@ -34,7 +34,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class Feed extends EntityNG implements ContentEntityInterface {
+class Feed extends EntityNG implements FeedInterface {
 
   /**
    * The feed ID.

@@ -1,0 +1,7 @@
+name: 'Twig theme test'
+type: module
+description: 'Support module for Twig theme system testing.'
+package: Testing
+version: VERSION
+core: 8.x
+hidden: true

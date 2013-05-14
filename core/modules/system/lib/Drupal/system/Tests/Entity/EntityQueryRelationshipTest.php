@@ -111,7 +111,7 @@ class EntityQueryRelationshipTest extends EntityUnitTestBase  {
       $entity->name->value = $this->randomName();
       $index = $i ? 1 : 0;
       $entity->user_id->target_id = $this->accounts[$index]->uid;
-      $entity->{$this->fieldName}->tid = $this->terms[$index]->tid;
+      $entity->{$this->fieldName}->tid = $this->terms[$index]->id();
       $entity->save();
       $this->entities[] = $entity;
     }
@@ -147,18 +147,18 @@ class EntityQueryRelationshipTest extends EntityUnitTestBase  {
     // This returns the 0th entity as that's only one pointing to the 0th
     // term (test without specifying the field column).
     $this->queryResults = $this->factory->get('entity_test')
-      ->condition("$this->fieldName.entity.name", $this->terms[0]->name)
+      ->condition("$this->fieldName.entity.name", $this->terms[0]->name->value)
       ->execute();
     $this->assertResults(array(0));
     // This returns the 0th entity as that's only one pointing to the 0th
     // term (test with specifying the column name).
     $this->queryResults = $this->factory->get('entity_test')
-      ->condition("$this->fieldName.tid.entity.name", $this->terms[0]->name)
+      ->condition("$this->fieldName.tid.entity.name", $this->terms[0]->name->value)
       ->execute();
     $this->assertResults(array(0));
     // This returns the 1st and 2nd entity as those point to the 1st term.
     $this->queryResults = $this->factory->get('entity_test')
-      ->condition("$this->fieldName.entity.name", $this->terms[0]->name, '<>')
+      ->condition("$this->fieldName.entity.name", $this->terms[0]->name->value, '<>')
       ->execute();
     $this->assertResults(array(1, 2));
   }

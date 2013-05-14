@@ -54,7 +54,7 @@ class VocabularyStorageController extends ConfigStorageController {
     parent::preDelete($entities);
     // Only load terms without a parent, child terms will get deleted too.
     $tids = db_query('SELECT t.tid FROM {taxonomy_term_data} t INNER JOIN {taxonomy_term_hierarchy} th ON th.tid = t.tid WHERE t.vid IN (:vids) AND th.parent = 0', array(':vids' => array_keys($entities)))->fetchCol();
-    taxonomy_term_delete_multiple($tids);
+    entity_delete_multiple('taxonomy_term', $tids);
   }
 
   /**

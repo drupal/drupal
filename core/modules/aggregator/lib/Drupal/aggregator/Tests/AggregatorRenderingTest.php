@@ -50,7 +50,7 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     ));
     $this->drupalLogin($admin_user);
 
-    $block = $this->drupalPlaceBlock("aggregator_feed_block:{$feed->id()}", array('label' => 'feed-' . $feed->label()), array('block_count' => 2));
+    $block = $this->drupalPlaceBlock("aggregator_feed_block:{$feed->id()}", array('label' => 'feed-' . $feed->label(), 'block_count' => 2));
 
     // Confirm that the block is now being displayed on pages.
     $this->drupalGet('test-page');

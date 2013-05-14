@@ -16,15 +16,17 @@
  */
 .contextual .trigger {
   float: left;
-  right: 0;
+  right: auto;
   left: 2px;
 }
 
 /**
  * Contextual links.
  */
-.contextual .contextual-links {
+.contextual-region .contextual .contextual-links {
   border-radius: 0 4px 4px 4px;
   float: left;
+  left: 2px;
+  right: auto;
   text-align: right;
 }

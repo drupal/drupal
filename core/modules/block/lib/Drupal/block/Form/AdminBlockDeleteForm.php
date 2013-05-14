@@ -33,7 +33,7 @@ class AdminBlockDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   protected function getQuestion() {
-    return t('Are you sure you want to delete the block %name?', array('%name' => $this->block->label));
+    return t('Are you sure you want to delete the block %name?', array('%name' => $this->block->label()));
   }
 
   /**

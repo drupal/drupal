@@ -411,7 +411,7 @@ function views_taxonomy_set_breadcrumb(&$breadcrumb, &$argument) {
   $parents = taxonomy_get_parents_all($argument->argument);
   foreach (array_reverse($parents) as $parent) {
     // Unfortunately parents includes the current argument. Skip.
-    if ($parent->tid == $argument->argument) {
+    if ($parent->id() == $argument->argument) {
       continue;
     }
     if (!empty($argument->options['use_taxonomy_term_path'])) {
@@ -419,9 +419,9 @@ function views_taxonomy_set_breadcrumb(&$breadcrumb, &$argument) {
       $path = $path['path'];
     }
     else {
-      $args[$argument->position] = $parent->tid;
+      $args[$argument->position] = $parent->id();
       $path = $argument->view->getUrl($args);
     }
-    $breadcrumb[$path] = check_plain($parent->name);
+    $breadcrumb[$path] = check_plain($parent->label());
   }
 }

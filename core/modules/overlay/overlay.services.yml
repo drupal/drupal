@@ -1,0 +1,5 @@
+services:
+  overlay.subscriber:
+    class: Drupal\overlay\EventSubscriber\OverlaySubscriber
+    tags:
+      - { name: event_subscriber }

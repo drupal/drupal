@@ -51,8 +51,6 @@ class CoreBundle extends Bundle {
     $container->addCompilerPass(new RegisterRouteFiltersPass());
     // Add a compiler pass for registering event subscribers.
     $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
-    // Add a compiler pass for registering event subscribers.
-    $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
     $container->addCompilerPass(new RegisterAccessChecksPass());
     // Add a compiler pass for upcasting of entity route parameters.
     $container->addCompilerPass(new RegisterParamConvertersPass());
@@ -88,7 +86,7 @@ class CoreBundle extends Bundle {
   /**
    * Registers Twig services.
    *
-   * This is used during install so it needs to stay in PHP (and static too).
+   * This method is public and static so that it can be reused in the installer.
    */
   public static function registerTwig(ContainerBuilder $container) {
     $container->register('twig.loader.filesystem', 'Twig_Loader_Filesystem')

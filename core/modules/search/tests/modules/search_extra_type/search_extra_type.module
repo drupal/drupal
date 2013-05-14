@@ -17,6 +17,8 @@ function search_extra_type_search_info() {
 }
 
 /**
+ * Implements callback_search_conditions().
+ *
  * Tests the conditions callback for hook_search_info().
  */
 function search_extra_type_conditions() {

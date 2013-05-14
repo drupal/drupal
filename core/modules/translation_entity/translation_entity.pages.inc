@@ -17,6 +17,7 @@ use Drupal\Core\Entity\EntityNG;
  */
 function translation_entity_overview(EntityInterface $entity) {
   $controller = translation_entity_controller($entity->entityType());
+  $entity_manager = Drupal::entityManager();
   $languages = language_list();
   $original = $entity->language()->langcode;
   $translations = $entity->getTranslationLanguages();
@@ -124,7 +125,7 @@ function translation_entity_overview(EntityInterface $entity) {
             $links['add']['title'] = t('Add');
           }
           elseif ($field_ui) {
-            $entity_path = field_ui_bundle_admin_path($entity->entityType(), $entity->bundle());
+            $entity_path = $entity_manager->getAdminPath($entity->entityType(), $entity->bundle());
             // Link directly to the fields tab to make it easier to find the
             // setting to enable translation on fields.
             $path = $entity_path . '/fields';

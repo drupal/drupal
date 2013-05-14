@@ -54,7 +54,7 @@ class PathTaxonomyTermTest extends PathTestBase {
       'description[value]' => $description,
       'path[alias]' => $this->randomName(),
     );
-    $this->drupalPost('admin/structure/taxonomy/' . $vocabulary->id() . '/add', $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/add', $edit, t('Save'));
 
     // Confirm that the alias works.
     $this->drupalGet($edit['path[alias]']);

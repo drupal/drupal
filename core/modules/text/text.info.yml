@@ -1,4 +1,5 @@
 name: Text
+type: module
 description: 'Defines simple text field types.'
 package: Core
 version: VERSION

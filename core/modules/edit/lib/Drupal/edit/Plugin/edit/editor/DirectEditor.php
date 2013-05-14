@@ -23,7 +23,7 @@ use Drupal\field\Plugin\Core\Entity\FieldInstance;
 class DirectEditor extends EditorBase {
 
   /**
-   * Implements \Drupal\edit\EditorInterface::isCompatible().
+   * Implements \Drupal\edit\EditPluginInterface::isCompatible().
    *
    * @todo The processed text logic is too coupled to text fields. Figure out
    *   how to generalize to other textual field types.
@@ -45,7 +45,7 @@ class DirectEditor extends EditorBase {
   }
 
   /**
-   * Implements \Drupal\edit\EditorInterface::getAttachments().
+   * Implements \Drupal\edit\EditPluginInterface::getAttachments().
    */
   public function getAttachments() {
     return array(

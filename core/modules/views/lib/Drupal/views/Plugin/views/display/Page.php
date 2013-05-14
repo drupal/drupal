@@ -56,7 +56,7 @@ class Page extends PathPluginBase {
         'title' => array('default' => '', 'translatable' => FALSE),
         'description' => array('default' => '', 'translatable' => FALSE),
         'weight' => array('default' => 0),
-        'name' => array('default' => variable_get('menu_default_node_menu', 'navigation')),
+        'name' => array('default' => 'navigation'),
         'context' => array('default' => ''),
       ),
     );

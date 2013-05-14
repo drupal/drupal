@@ -15,9 +15,9 @@ use Drupal\Core\Entity\EntityInterface;
  * test helper functions
  */
 
-require_once DRUPAL_ROOT . '/core/modules/field/tests/modules/field_test/field_test.entity.inc';
-require_once DRUPAL_ROOT . '/core/modules/field/tests/modules/field_test/field_test.field.inc';
-require_once DRUPAL_ROOT . '/core/modules/field/tests/modules/field_test/field_test.storage.inc';
+require_once __DIR__ . '/field_test.entity.inc';
+require_once __DIR__ . '/field_test.field.inc';
+require_once __DIR__ . '/field_test.storage.inc';
 
 /**
  * Implements hook_permission().
@@ -192,6 +192,10 @@ function field_test_field_create_field($field) {
 function field_test_field_attach_view_alter(&$output, $context) {
   if (!empty($context['display_options']['settings']['alter'])) {
     $output['test_field'][] = array('#markup' => 'field_test_field_attach_view_alter');
+  }
+
+  if (isset($output['test_field'])) {
+    $output['test_field'][] = array('#markup' => 'field language is ' . $context['langcode']);
   }
 }
 

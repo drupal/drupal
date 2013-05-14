@@ -13,12 +13,12 @@ use Drupal\Core\Template\Attribute;
  * mechanism for auto-loading core APIs, so we have to load them on
  * every page request.
  */
-require_once DRUPAL_ROOT . '/core/modules/field/field.crud.inc';
-require_once DRUPAL_ROOT . '/core/modules/field/field.default.inc';
-require_once DRUPAL_ROOT . '/core/modules/field/field.info.inc';
-require_once DRUPAL_ROOT . '/core/modules/field/field.multilingual.inc';
-require_once DRUPAL_ROOT . '/core/modules/field/field.attach.inc';
-require_once DRUPAL_ROOT . '/core/modules/field/field.form.inc';
+require_once __DIR__ . '/field.crud.inc';
+require_once __DIR__ . '/field.default.inc';
+require_once __DIR__ . '/field.info.inc';
+require_once __DIR__ . '/field.multilingual.inc';
+require_once __DIR__ . '/field.attach.inc';
+require_once __DIR__ . '/field.form.inc';
 
 /**
  * @defgroup field Field API
@@ -836,12 +836,9 @@ function field_view_field(EntityInterface $entity, $field_name, $display_options
   if ($formatter) {
     $display_langcode = field_language($entity, $field_name, $langcode);
     $items = array();
-    // @todo Drop once every entity got converted to entityNG.
-    if ($entity instanceof EntityNG) {
-      $entity_translation = $entity->getTranslation($display_langcode);
-      $items = $entity_translation->get($field_name);
-    }
-    elseif (isset($entity->{$field_name}[$display_langcode])) {
+    // Ensure the BC entity is used.
+    $entity = $entity->getBCEntity();
+    if (isset($entity->{$field_name}[$display_langcode])) {
       $items = $entity->{$field_name}[$display_langcode];
     }
 
@@ -876,6 +873,7 @@ function field_view_field(EntityInterface $entity, $field_name, $display_options
       'entity' => $entity,
       'view_mode' => $view_mode,
       'display_options' => $display_options,
+      'langcode' => $display_langcode,
     );
     drupal_alter('field_attach_view', $result, $context);
 

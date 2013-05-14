@@ -10,7 +10,8 @@ namespace Drupal\block\Plugin\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
-use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\block\BlockPluginBag;
+use Drupal\block\BlockInterface;
 
 /**
  * Defines a Block configuration entity class.
@@ -38,7 +39,7 @@ use Drupal\Component\Plugin\Exception\PluginException;
  *   }
  * )
  */
-class Block extends ConfigEntityBase {
+class Block extends ConfigEntityBase implements BlockInterface {
 
   /**
    * The ID of the block.
@@ -46,24 +47,6 @@ class Block extends ConfigEntityBase {
    * @var string
    */
   public $id;
-
-  /**
-   * The block label.
-   *
-   * @var string
-   */
-  public $label;
-
-  /**
-   * Whether the block label is displayed to end users.
-   *
-   * When this is set to BLOCK_LABEL_VISIBLE (the default value), the label is
-   * rendered as header in the block markup. Otherwise, the label is passed
-   * to the block template as a separate $label_hidden variable.
-   *
-   * @var string
-   */
-  public $label_display = BLOCK_LABEL_VISIBLE;
 
   /**
    * The block UUID.
@@ -80,13 +63,6 @@ class Block extends ConfigEntityBase {
   protected $settings = array();
 
   /**
-   * The plugin instance.
-   *
-   * @var \Drupal\block\BlockInterface
-   */
-  protected $instance;
-
-  /**
    * The region this block is placed in.
    *
    * @var string
@@ -94,25 +70,11 @@ class Block extends ConfigEntityBase {
   protected $region = BLOCK_REGION_NONE;
 
   /**
-   * Settings to control the block visibility.
-   *
-   * @var array
-   */
-  protected $visibility = array();
-
-  /**
-   * The weight of the block.
+   * The block weight.
    *
    * @var int
    */
-  protected $weight;
-
-  /**
-   * The module owning this plugin.
-   *
-   * @var string
-   */
-  protected $module;
+  public $weight;
 
   /**
    * The plugin instance ID.
@@ -122,32 +84,33 @@ class Block extends ConfigEntityBase {
   protected $plugin;
 
   /**
-   * Returns the plugin instance.
+   * The plugin bag that holds the block plugin for this entity.
    *
-   * @return \Drupal\block\BlockInterface
-   *   The plugin instance for this block.
+   * @var \Drupal\block\BlockPluginBag
+   */
+  protected $pluginBag;
+
+  /**
+   * The visibility settings.
+   *
+   * @var array
+   */
+  protected $visibility;
+
+  /**
+   * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::__construct();
+   */
+  public function __construct(array $values, $entity_type) {
+    parent::__construct($values, $entity_type);
+
+    $this->pluginBag = new BlockPluginBag(\Drupal::service('plugin.manager.block'), array($this->plugin), $this);
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function getPlugin() {
-    if (!$this->instance) {
-      // Throw an exception if no plugin string was provided.
-      if (!$this->plugin) {
-        throw new PluginException(format_string("The block '@block' did not specify a plugin.", array('@block' => $this->id())));
-      }
-
-      // Create a plugin instance and store its configuration as settings.
-      try {
-        $this->instance = drupal_container()->get('plugin.manager.block')->createInstance($this->plugin, $this->settings, $this);
-        $this->settings += $this->instance->getConfig();
-      }
-      catch (PluginException $e) {
-        // Ignore blocks belonging to disabled modules, but re-throw valid
-        // exceptions when the module is enabled and the plugin is misconfigured.
-        if (empty($this->module) || module_exists($this->module)) {
-          throw $e;
-        }
-      }
-    }
-    return $this->instance;
+    return $this->pluginBag->get($this->plugin);
   }
 
   /**
@@ -161,6 +124,13 @@ class Block extends ConfigEntityBase {
         'entity' => $this,
       ),
     );
+  }
+  /**
+   * Overrides \Drupal\Core\Entity\Entity::label();
+   */
+  public function label($langcode = NULL) {
+    $settings = $this->get('settings');
+    return $settings['label'];
   }
 
   /**
@@ -179,21 +149,14 @@ class Block extends ConfigEntityBase {
    * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::getExportProperties();
    */
   public function getExportProperties() {
+    $properties = parent::getExportProperties();
     $names = array(
-      'id',
-      'label',
-      'label_display',
-      'uuid',
       'region',
       'weight',
-      'module',
-      'status',
-      'visibility',
       'plugin',
       'settings',
-      'langcode',
+      'visibility',
     );
-    $properties = array();
     foreach ($names as $name) {
       $properties[$name] = $this->get($name);
     }

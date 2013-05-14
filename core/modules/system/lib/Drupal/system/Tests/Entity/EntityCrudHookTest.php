@@ -347,7 +347,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
       'description' => NULL,
       'module' => 'entity_crud_hook_test',
     ));
-    taxonomy_vocabulary_save($vocabulary);
+    $vocabulary->save();
     $_SESSION['entity_crud_hook_test'] = array();
 
     $term = entity_create('taxonomy_term', array(
@@ -364,7 +364,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     ));
 
     $_SESSION['entity_crud_hook_test'] = array();
-    taxonomy_term_save($term);
+    $term->save();
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_taxonomy_term_presave called',
@@ -374,7 +374,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     ));
 
     $_SESSION['entity_crud_hook_test'] = array();
-    $term = taxonomy_term_load($term->tid);
+    $term = taxonomy_term_load($term->id());
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_entity_load called for type taxonomy_term',
@@ -383,7 +383,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
 
     $_SESSION['entity_crud_hook_test'] = array();
     $term->name = 'New name';
-    taxonomy_term_save($term);
+    $term->save();
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_taxonomy_term_presave called',
@@ -393,7 +393,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     ));
 
     $_SESSION['entity_crud_hook_test'] = array();
-    taxonomy_term_delete($term->tid);
+    $term->delete();
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_taxonomy_term_predelete called',
@@ -423,7 +423,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     ));
 
     $_SESSION['entity_crud_hook_test'] = array();
-    taxonomy_vocabulary_save($vocabulary);
+    $vocabulary->save();
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_taxonomy_vocabulary_presave called',
@@ -442,7 +442,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
 
     $_SESSION['entity_crud_hook_test'] = array();
     $vocabulary->name = 'New name';
-    taxonomy_vocabulary_save($vocabulary);
+    $vocabulary->save();
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_taxonomy_vocabulary_presave called',
@@ -452,7 +452,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     ));
 
     $_SESSION['entity_crud_hook_test'] = array();
-    taxonomy_vocabulary_delete($vocabulary->id());
+    $vocabulary->delete();
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_taxonomy_vocabulary_predelete called',

@@ -1,4 +1,5 @@
 name: Image
+type: module
 description: 'Provides image manipulation tools.'
 package: Core
 version: VERSION

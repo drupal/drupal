@@ -89,6 +89,10 @@ class EntityAccessTest extends EntityUnitTestBase  {
    * Ensures that the default controller is used as a fallback.
    */
   function testEntityAccessDefaultController() {
+    // The implementation requires that the global user id can be loaded.
+    global $user;
+    $user = $this->createUser(array('uid' => 2));
+
     // Check that the default access controller is used for entities that don't
     // have a specific access controller defined.
     $controller = $this->container->get('plugin.manager.entity')->getAccessController('entity_test_default_access');

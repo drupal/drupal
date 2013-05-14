@@ -1,4 +1,5 @@
 name: Path
+type: module
 description: 'Allows users to rename URLs.'
 package: Core
 version: VERSION

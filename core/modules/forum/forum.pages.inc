@@ -30,21 +30,21 @@ function forum_page($forum_term = NULL) {
 
   // Breadcrumb navigation.
   $breadcrumb[] = l(t('Home'), NULL);
-  if ($forum_term->tid) {
+  if ($forum_term->id()) {
     // Parent of all forums is the vocabulary name.
     $breadcrumb[] = l($vocabulary->label(), 'forum');
   }
   // Add all parent forums to breadcrumbs.
   if ($forum_term->parents) {
     foreach (array_reverse($forum_term->parents) as $parent) {
-      if ($parent->id() != $forum_term->tid) {
+      if ($parent->id() != $forum_term->id()) {
         $breadcrumb[] = l($parent->label(), 'forum/' . $parent->id());
       }
     }
   }
   drupal_set_breadcrumb($breadcrumb);
 
-  if ($forum_term->tid && array_search($forum_term->tid, $config->get('containers')) === FALSE) {
+  if ($forum_term->id() && array_search($forum_term->id(), $config->get('containers')) === FALSE) {
     // Add RSS feed for forums.
     drupal_add_feed('taxonomy/term/' . $forum_term->id() . '/feed', 'RSS - ' . $forum_term->label());
   }
@@ -58,7 +58,7 @@ function forum_page($forum_term = NULL) {
   $sort_by = $config->get('topics.order');
 
   if (empty($forum_term->container)) {
-    $topics = forum_get_topics($forum_term->tid, $sort_by, $forum_per_page);
+    $topics = forum_get_topics($forum_term->id(), $sort_by, $forum_per_page);
   }
   else {
     $topics = '';
@@ -69,7 +69,7 @@ function forum_page($forum_term = NULL) {
     '#forums' => $forum_term->forums,
     '#topics' => $topics,
     '#parents' => $forum_term->parents,
-    '#tid' => $forum_term->tid,
+    '#tid' => $forum_term->id(),
     '#sortby' => $sort_by,
     '#forums_per_page' => $forum_per_page,
   );

@@ -1,4 +1,5 @@
 name: 'Entity cache test dependency'
+type: module
 description: 'Support dependency module for testing entity cache.'
 package: Testing
 version: VERSION

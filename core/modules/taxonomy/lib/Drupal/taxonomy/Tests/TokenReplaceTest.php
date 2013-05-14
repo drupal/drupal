@@ -72,21 +72,21 @@ class TokenReplaceTest extends TaxonomyTestBase {
     // Edit $term2, setting $term1 as parent.
     $edit = array();
     $edit['name'] = '<blink>Blinking Text</blink>';
-    $edit['parent[]'] = array($term1->tid);
-    $this->drupalPost('taxonomy/term/' . $term2->tid . '/edit', $edit, t('Save'));
+    $edit['parent[]'] = array($term1->id());
+    $this->drupalPost('taxonomy/term/' . $term2->id() . '/edit', $edit, t('Save'));
 
     // Create node with term2.
     $edit = array();
     $node = $this->drupalCreateNode(array('type' => 'article'));
-    $edit[$this->instance['field_name'] . '[' . $this->langcode . '][]'] = $term2->tid;
+    $edit[$this->instance['field_name'] . '[' . $this->langcode . '][]'] = $term2->id();
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
 
     // Generate and test sanitized tokens for term1.
     $tests = array();
-    $tests['[term:tid]'] = $term1->tid;
-    $tests['[term:name]'] = check_plain($term1->name);
-    $tests['[term:description]'] = check_markup($term1->description, $term1->format);
-    $tests['[term:url]'] = url('taxonomy/term/' . $term1->tid, array('absolute' => TRUE));
+    $tests['[term:tid]'] = $term1->id();
+    $tests['[term:name]'] = check_plain($term1->name->value);
+    $tests['[term:description]'] = check_markup($term1->description->value, $term1->format->value);
+    $tests['[term:url]'] = url('taxonomy/term/' . $term1->id(), array('absolute' => TRUE));
     $tests['[term:node-count]'] = 0;
     $tests['[term:parent:name]'] = '[term:parent:name]';
     $tests['[term:vocabulary:name]'] = check_plain($this->vocabulary->name);
@@ -98,13 +98,13 @@ class TokenReplaceTest extends TaxonomyTestBase {
 
     // Generate and test sanitized tokens for term2.
     $tests = array();
-    $tests['[term:tid]'] = $term2->tid;
-    $tests['[term:name]'] = check_plain($term2->name);
-    $tests['[term:description]'] = check_markup($term2->description, $term2->format);
-    $tests['[term:url]'] = url('taxonomy/term/' . $term2->tid, array('absolute' => TRUE));
+    $tests['[term:tid]'] = $term2->id();
+    $tests['[term:name]'] = check_plain($term2->name->value);
+    $tests['[term:description]'] = check_markup($term2->description->value, $term2->format->value);
+    $tests['[term:url]'] = url('taxonomy/term/' . $term2->id(), array('absolute' => TRUE));
     $tests['[term:node-count]'] = 1;
-    $tests['[term:parent:name]'] = check_plain($term1->name);
-    $tests['[term:parent:url]'] = url('taxonomy/term/' . $term1->tid, array('absolute' => TRUE));
+    $tests['[term:parent:name]'] = check_plain($term1->name->value);
+    $tests['[term:parent:url]'] = url('taxonomy/term/' . $term1->id(), array('absolute' => TRUE));
     $tests['[term:parent:parent:name]'] = '[term:parent:parent:name]';
     $tests['[term:vocabulary:name]'] = check_plain($this->vocabulary->name);
 
@@ -117,9 +117,9 @@ class TokenReplaceTest extends TaxonomyTestBase {
     }
 
     // Generate and test unsanitized tokens.
-    $tests['[term:name]'] = $term2->name;
-    $tests['[term:description]'] = $term2->description;
-    $tests['[term:parent:name]'] = $term1->name;
+    $tests['[term:name]'] = $term2->name->value;
+    $tests['[term:description]'] = $term2->description->value;
+    $tests['[term:parent:name]'] = $term1->name->value;
     $tests['[term:vocabulary:name]'] = $this->vocabulary->name;
 
     foreach ($tests as $input => $expected) {

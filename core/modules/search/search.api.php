@@ -34,11 +34,7 @@
  *     the module name if not given.
  *   - path: Path component after 'search/' for searching with this module.
  *     Defaults to the module name if not given.
- *   - conditions_callback: Name of a callback function that is invoked by
- *     search_view() to get an array of additional search conditions to pass to
- *     search_data(). For example, a search module may get additional keywords,
- *     filters, or modifiers for the search from the query string. Sample
- *     callback function: sample_search_conditions_callback().
+ *   - conditions_callback: An implementation of callback_search_conditions().
  *
  * @ingroup search
  */
@@ -46,22 +42,33 @@ function hook_search_info() {
   return array(
     'title' => 'Content',
     'path' => 'node',
-    'conditions_callback' => 'sample_search_conditions_callback',
+    'conditions_callback' => 'callback_search_conditions',
   );
 }
 
 /**
- * An example conditions callback function for search.
+ * Provide search query conditions.
+ *
+ * Callback for hook_search_info().
+ *
+ * This callback is invoked by search_view() to get an array of additional
+ * search conditions to pass to search_data(). For example, a search module
+ * may get additional keywords, filters, or modifiers for the search from
+ * the query string.
  *
  * This example pulls additional search keywords out of the $_REQUEST variable,
  * (i.e. from the query string of the request). The conditions may also be
  * generated internally - for example based on a module's settings.
  *
- * @see hook_search_info()
+ * @param $keys
+ *   The search keywords string.
+ *
+ * @return
+ *   An array of additional conditions, such as filters.
  *
  * @ingroup search
  */
-function sample_search_conditions_callback($keys) {
+function callback_search_conditions($keys) {
   $conditions = array();
 
   if (!empty($_REQUEST['keys'])) {

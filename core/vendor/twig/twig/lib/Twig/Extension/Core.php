@@ -152,11 +152,14 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_SimpleFilter('split', 'twig_split_filter'),
             new Twig_SimpleFilter('sort', 'twig_sort_filter'),
             new Twig_SimpleFilter('merge', 'twig_array_merge'),
+            new Twig_SimpleFilter('batch', 'twig_array_batch'),
 
             // string/array filters
             new Twig_SimpleFilter('reverse', 'twig_reverse_filter', array('needs_environment' => true)),
             new Twig_SimpleFilter('length', 'twig_length_filter', array('needs_environment' => true)),
             new Twig_SimpleFilter('slice', 'twig_slice', array('needs_environment' => true)),
+            new Twig_SimpleFilter('first', 'twig_first', array('needs_environment' => true)),
+            new Twig_SimpleFilter('last', 'twig_last', array('needs_environment' => true)),
 
             // iteration and runtime
             new Twig_SimpleFilter('default', '_twig_default_filter', array('node_class' => 'Twig_Node_Expression_Filter_Default')),
@@ -168,8 +171,8 @@ class Twig_Extension_Core extends Twig_Extension
         );
 
         if (function_exists('mb_get_info')) {
-            $filters['upper'] = new Twig_Filter_Function('twig_upper_filter', array('needs_environment' => true));
-            $filters['lower'] = new Twig_Filter_Function('twig_lower_filter', array('needs_environment' => true));
+            $filters[] = new Twig_SimpleFilter('upper', 'twig_upper_filter', array('needs_environment' => true));
+            $filters[] = new Twig_SimpleFilter('lower', 'twig_lower_filter', array('needs_environment' => true));
         }
 
         return $filters;
@@ -467,13 +470,15 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
 
     $asString = (string) $date;
     if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
-        $date = new DateTime('@'.$date);
-        $date->setTimezone($defaultTimezone);
-
-        return $date;
+        $date = '@'.$date;
     }
 
-    return new DateTime($date, $defaultTimezone);
+    $date = new DateTime($date, $defaultTimezone);
+    if (false !== $timezone) {
+        $date->setTimezone($defaultTimezone);
+    }
+
+    return $date;
 }
 
 /**
@@ -510,15 +515,19 @@ function twig_number_format_filter(Twig_Environment $env, $number, $decimal = nu
 }
 
 /**
- * URL encodes a string.
+ * URL encodes a string as a path segment or an array as a query string.
  *
- * @param string $url A URL
- * @param bool   $raw true to use rawurlencode() instead of urlencode
+ * @param string|array $url A URL or an array of query parameters
+ * @param bool         $raw true to use rawurlencode() instead of urlencode
  *
  * @return string The URL encoded value
  */
 function twig_urlencode_filter($url, $raw = false)
 {
+    if (is_array($url)) {
+        return http_build_query($url, '', '&');
+    }
+
     if ($raw) {
         return rawurlencode($url);
     }
@@ -626,6 +635,36 @@ function twig_slice(Twig_Environment $env, $item, $start, $length = null, $prese
     }
 
     return null === $length ? substr($item, $start) : substr($item, $start, $length);
+}
+
+/**
+ * Returns the first element of the item.
+ *
+ * @param Twig_Environment $env  A Twig_Environment instance
+ * @param mixed            $item A variable
+ *
+ * @return mixed The first element of the item
+ */
+function twig_first(Twig_Environment $env, $item)
+{
+    $elements = twig_slice($env, $item, 0, 1, false);
+
+    return is_string($elements) ? $elements[0] : current($elements);
+}
+
+/**
+ * Returns the last element of the item.
+ *
+ * @param Twig_Environment $env  A Twig_Environment instance
+ * @param mixed            $item A variable
+ *
+ * @return mixed The last element of the item
+ */
+function twig_last(Twig_Environment $env, $item)
+{
+    $elements = twig_slice($env, $item, -1, 1, false);
+
+    return is_string($elements) ? $elements[0] : current($elements);
 }
 
 /**
@@ -1267,10 +1306,39 @@ function twig_include(Twig_Environment $env, $context, $template, $variables = a
  */
 function twig_constant($constant, $object = null)
 {
-    if (!$object) {
-        return constant($constant);
+    if (null !== $object) {
+        $constant = get_class($object).'::'.$constant;
     }
-    $class = get_class($object);
 
-    return constant($class.'::'.$constant);
+    return constant($constant);
+}
+
+/**
+ * Batches item.
+ *
+ * @param array   $items An array of items
+ * @param integer $size  The size of the batch
+ * @param string  $fill  A string to fill missing items
+ *
+ * @return array
+ */
+function twig_array_batch($items, $size, $fill = null)
+{
+    if ($items instanceof Traversable) {
+        $items = iterator_to_array($items, false);
+    }
+
+    $size = ceil($size);
+
+    $result = array_chunk($items, $size, true);
+
+    if (null !== $fill) {
+        $last = count($result) - 1;
+        $result[$last] = array_merge(
+            $result[$last],
+            array_fill(0, $size - count($result[$last]), $fill)
+        );
+    }
+
+    return $result;
 }

@@ -2,7 +2,7 @@
 /**
  * Override of misc/vertical-tabs.css.
  */
-div.vertical-tabs {
+.vertical-tabs {
   background: #fff url(images/fc.png) repeat-y 0 0; /* LTR */
   border: 1px solid #ccc;
   margin: 10px 0;
@@ -13,7 +13,7 @@ div.vertical-tabs {
   padding: 0;
   margin: 0;
 }
-div.vertical-tabs .vertical-tabs-list {
+.vertical-tabs .vertical-tabs-list {
   border-bottom: 1px solid #ccc;
   float: left; /* LTR */
   font-size: 1em;
@@ -22,64 +22,52 @@ div.vertical-tabs .vertical-tabs-list {
   padding: 0;
   width: 240px;
 }
-div.vertical-tabs ul li.vertical-tab-button {
+.vertical-tabs .vertical-tab-button {
   list-style: none;
   list-style-image: none;
   margin: 0;
 }
-div.vertical-tabs ul li.vertical-tab-button a {
+.vertical-tabs .vertical-tab-button a {
   border-top: 1px solid #ccc;
   display: block;
   padding: 10px;
 }
-div.vertical-tabs ul li.first a {
+.vertical-tabs .first a {
   border-top: 0;
 }
-div.vertical-tabs ul li.vertical-tab-button strong {
+.vertical-tabs .vertical-tab-button strong {
   font-size: 0.923em;
 }
-div.vertical-tabs ul li.vertical-tab-button .summary {
+.vertical-tabs .vertical-tab-button .summary {
   color: #666;
   display: block;
   font-size: 0.846em;
   padding-top: 0.4em;
 }
-div.vertical-tabs ul li.vertical-tab-button a:hover,
-div.vertical-tabs ul li.vertical-tab-button a:focus {
+.vertical-tabs .vertical-tab-button a:hover,
+.vertical-tabs .vertical-tab-button a:focus {
   background: #d5d5d5;
   text-decoration: none;
   outline: 0;
 }
-div.vertical-tabs ul li.selected a,
-div.vertical-tabs ul li.selected a:hover,
-div.vertical-tabs ul li.selected a:focus,
-div.vertical-tabs ul li.selected a:active {
+.vertical-tabs .selected a,
+.vertical-tabs .selected a:hover,
+.vertical-tabs .selected a:focus,
+.vertical-tabs .selected a:active {
   background: #fff;
   border-right-color: #fff; /* LTR */
   border-top: 1px solid #ccc;
 }
-div.vertical-tabs ul li.first.selected a,
-div.vertical-tabs ul li.first.selected a:hover {
+.vertical-tabs .first.selected a,
+.vertical-tabs .first.selected a:hover {
   border-top: 0;
 }
-div.vertical-tabs ul li.selected a:focus strong {
+.vertical-tabs .selected a:focus strong {
   text-decoration: underline;
 }
-div.vertical-tabs .vertical-tabs-panes {
+.vertical-tabs .vertical-tabs-panes {
   margin: 0 0 0 245px; /* LTR */
 }
 .vertical-tabs-pane > summary {
   display: none;
-}
-
-/**
- * Prevent text inputs from overflowing when container is too narrow. "width" is
- * applied to override hardcoded cols or size attributes and used in conjunction
- * with "box-sizing" to prevent box model issues from occurring in most browsers.
-*/
-.vertical-tabs .form-type-textfield input {
-  max-width: 100%;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
 }

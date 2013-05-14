@@ -5,13 +5,15 @@
  * Default theme implementation to display a block.
  *
  * Available variables:
- * - $block->label: Block title.
- * - $block->label_hidden: The hidden block title value if the block was
- *    configured to hide the title ($block->label is empty in this case).
+ * - $plugin_id: The ID of the block implementation.
+ * - $label: The configured label of the block if visible.
+ * - $configuration: An array of the block's configuration values.
+ *   - label: The configured label for the block.
+ *   - label_display: The display settings for the label.
+ *   - module: The module that provided this block plugin.
+ *   - cache: The cache settings.
+ *   - Block plugin specific settings will also be stored here.
  * - $content: Block content.
- * - $block->module: Module that generated the block.
- * - $block->delta: An ID for the block, unique within each module.
- * - $block->region: The block region embedding the current block.
  * - $attributes: An instance of Attributes class that can be manipulated as an
  *    array and printed as a string.
  *    It includes the 'class' information, which includes:
@@ -46,12 +48,12 @@
 <?php endif; ?>
 
   <?php print render($title_prefix); ?>
-<?php if ($block->label): ?>
-  <h2<?php print $title_attributes; ?>><?php print $block->label; ?></h2>
+<?php if ($label): ?>
+  <h2<?php print $title_attributes; ?>><?php print $label; ?></h2>
 <?php endif;?>
   <?php print render($title_suffix); ?>
 
   <div<?php print $content_attributes; ?>>
-    <?php print $content ?>
+    <?php print render($content) ?>
   </div>
 </div>

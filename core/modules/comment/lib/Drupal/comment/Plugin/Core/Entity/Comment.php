@@ -7,10 +7,10 @@
 
 namespace Drupal\comment\Plugin\Core\Entity;
 
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\comment\CommentInterface;
 
 /**
  * Defines the comment entity class.
@@ -33,7 +33,8 @@ use Drupal\Core\Annotation\Translation;
  *   uri_callback = "comment_uri",
  *   fieldable = TRUE,
  *   translatable = TRUE,
- *   static_cache = FALSE,
+ *   route_base_path = "admin/structure/comments/{bundle}",
+ *   bundle_prefix = "",
  *   entity_keys = {
  *     "id" = "cid",
  *     "bundle" = "field_name",
@@ -42,7 +43,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class Comment extends EntityNG implements ContentEntityInterface {
+class Comment extends EntityNG implements CommentInterface {
 
   /**
    * The comment ID.

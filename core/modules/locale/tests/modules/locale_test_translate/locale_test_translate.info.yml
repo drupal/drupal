@@ -1,4 +1,5 @@
 name: 'Locale test translate'
+type: module
 description: 'Translation test module for locale module testing.'
 package: Testing
 version: '1.3'

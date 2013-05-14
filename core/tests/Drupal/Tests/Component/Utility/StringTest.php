@@ -41,7 +41,7 @@ class StringTest extends UnitTestCase {
    */
   function testCheckPlain($text, $expected, $message, $ignorewarnings = FALSE) {
     $result = $ignorewarnings ? @String::checkPlain($text) : String::checkPlain($text);
-    $this->assertEquals($result, $expected, $message);
+    $this->assertEquals($expected, $result, $message);
   }
 
   /**
@@ -80,7 +80,7 @@ class StringTest extends UnitTestCase {
    */
   function testFormat($string, $args, $expected, $message) {
     $result = String::format($string, $args);
-    $this->assertEquals($result, $expected, $message);
+    $this->assertEquals($expected, $result, $message);
   }
 
   /**
@@ -104,6 +104,46 @@ class StringTest extends UnitTestCase {
    */
   function testPlaceholder() {
     $this->assertEquals('<em class="placeholder">Some text</em>', String::placeholder('Some text'));
+  }
+
+  /**
+   * Tests String::decodeEntities().
+   *
+   * @dataProvider providerDecodeEntities
+   */
+  public function testDecodeEntities($text, $expected) {
+    $this->assertEquals($expected, String::decodeEntities($text));
+  }
+
+  /**
+   * Data provider for testDecodeEntities().
+   *
+   * @see testCheckPlain()
+   */
+  public function providerDecodeEntities() {
+    return array(
+      array('Drupal', 'Drupal'),
+      array('<script>', '<script>'),
+      array('&lt;script&gt;', '<script>'),
+      array('&#60;script&#62;', '<script>'),
+      array('&amp;lt;script&amp;gt;', '&lt;script&gt;'),
+      array('"', '"'),
+      array('&#34;', '"'),
+      array('&amp;#34;', '&#34;'),
+      array('&quot;', '"'),
+      array('&amp;quot;', '&quot;'),
+      array("'", "'"),
+      array('&#39;', "'"),
+      array('&amp;#39;', '&#39;'),
+      array('©', '©'),
+      array('&copy;', '©'),
+      array('&#169;', '©'),
+      array('→', '→'),
+      array('&#8594;', '→'),
+      array('➼', '➼'),
+      array('&#10172;', '➼'),
+      array('&euro;', '€'),
+    );
   }
 
 }

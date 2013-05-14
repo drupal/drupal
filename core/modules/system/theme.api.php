@@ -89,7 +89,7 @@ function hook_form_system_theme_settings_alter(&$form, &$form_state) {
   $form['toggle_breadcrumb'] = array(
     '#type' => 'checkbox',
     '#title' => t('Display the breadcrumb'),
-    '#default_value' => theme_get_setting('toggle_breadcrumb'),
+    '#default_value' => theme_get_setting('features.breadcrumb'),
     '#description'   => t('Show a trail of links from the homepage to the current page.'),
   );
 }

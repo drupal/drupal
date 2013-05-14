@@ -296,22 +296,6 @@ function template_preprocess_views_view_fields(&$vars) {
 }
 
 /**
- * Display a single views grouping.
- */
-function theme_views_view_grouping($vars) {
-  $view = $vars['view'];
-  $title = $vars['title'];
-  $content = $vars['content'];
-
-  $output = '<div class="view-grouping">';
-  $output .= '<div class="view-grouping-header">' . $title . '</div>';
-  $output .= '<div class="view-grouping-content">' . $content . '</div>' ;
-  $output .= '</div>';
-
-  return $output;
-}
-
-/**
  * Process a single grouping within a view.
  */
 function template_preprocess_views_view_grouping(&$vars) {
@@ -617,6 +601,7 @@ function template_preprocess_views_view_table(&$vars) {
   }
 
   $count = 0;
+  $vars['row_classes'] = array();
   foreach ($vars['rows'] as $num => $row) {
     $vars['row_classes'][$num] = array();
     if ($row_class_special) {
@@ -636,7 +621,9 @@ function template_preprocess_views_view_table(&$vars) {
 
   $vars['attributes']['class'][] = 'views-table';
   if (empty($vars['rows']) && !empty($options['empty_table'])) {
-    $vars['rows'][0][0] = $view->display_handler->renderArea('empty');
+    $build = $view->display_handler->renderArea('empty');
+    $vars['rows'][0][0] = drupal_render($build);
+    $vars['row_classes'][0] = new Attribute();
     // Calculate the amounts of rows with output.
     $vars['field_classes'][0][0] = new Attribute(array(
       'colspan' => count($vars['header']),

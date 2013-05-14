@@ -19,31 +19,26 @@ use Drupal\user\Plugin\Core\Entity\User;
 class TermAccessController extends EntityAccessController {
 
   /**
-   * Implements \Drupal\Core\Entity\EntityAccessControllerInterface::viewAccess().
+   * {@inheritdoc}
    */
-  public function viewAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return user_access('access content', $account);
-  }
+  protected function checkAccess(EntityInterface $entity, $operation, $langcode, User $account) {
+    switch ($operation) {
+      case 'view':
+        return user_access('access content', $account);
+        break;
 
-  /**
-   * Implements \Drupal\Core\Entity\EntityAccessControllerInterface::createAccess().
-   */
-  public function createAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return user_access('administer taxonomy', $account);
-  }
+      case 'create':
+        return user_access('administer taxonomy', $account);
+        break;
 
-  /**
-   * Implements \Drupal\Core\Entity\EntityAccessControllerInterface::updateAccess().
-   */
-  public function updateAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return user_access("edit terms in {$entity->bundle()}", $account) || user_access('administer taxonomy', $account);
-  }
+      case 'update':
+        return user_access("edit terms in {$entity->bundle()}", $account) || user_access('administer taxonomy', $account);
+        break;
 
-  /**
-   * Implements \Drupal\Core\Entity\EntityAccessControllerInterface::deleteAccess().
-   */
-  public function deleteAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return user_access("delete terms in {$entity->bundle()}", $account) || user_access('administer taxonomy', $account);
+      case 'delete':
+        return user_access("delete terms in {$entity->bundle()}", $account) || user_access('administer taxonomy', $account);
+        break;
+    }
   }
 
 }

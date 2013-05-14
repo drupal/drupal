@@ -1,4 +1,5 @@
 name: 'Field API Test'
+type: module
 description: 'Support module for the Field API tests.'
 core: 8.x
 package: Testing

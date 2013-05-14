@@ -16,21 +16,7 @@ use Drupal\Core\Entity\EntityInterface;
 class BlockStorageController extends ConfigStorageController {
 
   /**
-   * Overrides \Drupal\Core\Config\Entity\ConfigStorageController::create().
-   */
-  public function create(array $values) {
-    $entity = parent::create($values);
-
-    if (!$entity->get('module')) {
-      $definition = $entity->getPlugin()->getDefinition();
-      $entity->set('module', $definition['module']);
-    }
-
-    return $entity;
-  }
-
-  /**
-   * Overrides \Drupal\Core\Config\Entity\ConfigStorageController::load().
+   * {@inheritdoc}
    */
   public function load(array $ids = NULL) {
     $entities = parent::load($ids);
@@ -41,7 +27,7 @@ class BlockStorageController extends ConfigStorageController {
   }
 
   /**
-   * Overrides \Drupal\Core\Config\Entity\ConfigStorageController::loadByProperties().
+   * {@inheritdoc}
    */
   public function loadByProperties(array $values = array()) {
     $blocks = $this->load();
@@ -51,6 +37,15 @@ class BlockStorageController extends ConfigStorageController {
       });
     }
     return $blocks;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function preSave(EntityInterface $entity) {
+    parent::preSave($entity);
+
+    $entity->set('settings', $entity->getPlugin()->getConfig());
   }
 
 }

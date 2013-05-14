@@ -2,8 +2,7 @@
 
 namespace Symfony\Cmf\Component\Routing\Tests\Routing;
 
-
-use Symfony\Component\Routing\RouteCollection;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Route;
 
 use Symfony\Cmf\Component\Routing\ProviderBasedGenerator;
@@ -15,6 +14,7 @@ class ProviderBasedGeneratorTest extends CmfUnitTestCase
     protected $routeCompiled;
     protected $provider;
 
+    /** @var ProviderBasedGenerator */
     protected $generator;
     protected $context;
 
@@ -80,6 +80,13 @@ class ProviderBasedGeneratorTest extends CmfUnitTestCase
         $this->assertTrue($this->generator->supports($this->routeDocument));
         $this->assertFalse($this->generator->supports($this));
     }
+
+    public function testGetRouteDebugMessage()
+    {
+        $this->assertContains('/some/key', $this->generator->getRouteDebugMessage(new RouteObject()));
+        $this->assertContains('/de/test', $this->generator->getRouteDebugMessage(new Route('/de/test')));
+        $this->assertContains('/some/route', $this->generator->getRouteDebugMessage('/some/route'));
+    }
 }
 
 /**
@@ -90,5 +97,18 @@ class TestableProviderBasedGenerator extends ProviderBasedGenerator
     protected function doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $absolute, $hostTokens = null)
     {
         return 'result_url';
+    }
+}
+
+class RouteObject implements RouteObjectInterface
+{
+    public function getRouteKey()
+    {
+        return '/some/key';
+    }
+
+    public function getRouteContent()
+    {
+        return null;
     }
 }

@@ -1085,7 +1085,7 @@ function hook_field_attach_purge(\Drupal\Core\Entity\EntityInterface $entity, $f
  *     $display_options argument and the view_mode element is set to '_custom'.
  *     See field_view_field() for more information on what its $display_options
  *     argument contains.
- *   - language: The language code used for rendering.
+ *   - langcode: The language code used for rendering.
  */
 function hook_field_attach_view_alter(&$output, $context) {
   // Append RDF term mappings on displayed taxonomy links.

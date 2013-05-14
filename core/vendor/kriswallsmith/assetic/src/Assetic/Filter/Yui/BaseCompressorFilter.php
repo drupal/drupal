@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2012 OpenSky Project Inc
+ * (c) 2010-2013 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,9 +12,8 @@
 namespace Assetic\Filter\Yui;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Filter\FilterInterface;
 use Assetic\Exception\FilterException;
-use Symfony\Component\Process\ProcessBuilder;
+use Assetic\Filter\BaseProcessFilter;
 
 /**
  * Base YUI compressor filter.
@@ -22,12 +21,13 @@ use Symfony\Component\Process\ProcessBuilder;
  * @link http://developer.yahoo.com/yui/compressor/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-abstract class BaseCompressorFilter implements FilterInterface
+abstract class BaseCompressorFilter extends BaseProcessFilter
 {
     private $jarPath;
     private $javaPath;
     private $charset;
     private $lineBreak;
+    private $stackSize;
 
     public function __construct($jarPath, $javaPath = '/usr/bin/java')
     {
@@ -45,6 +45,11 @@ abstract class BaseCompressorFilter implements FilterInterface
         $this->lineBreak = $lineBreak;
     }
 
+    public function setStackSize($stackSize)
+    {
+        $this->stackSize = $stackSize;
+    }
+
     public function filterLoad(AssetInterface $asset)
     {
     }
@@ -60,11 +65,13 @@ abstract class BaseCompressorFilter implements FilterInterface
      */
     protected function compress($content, $type, $options = array())
     {
-        $pb = new ProcessBuilder(array(
-            $this->javaPath,
-            '-jar',
-            $this->jarPath,
-        ));
+        $pb = $this->createProcessBuilder(array($this->javaPath));
+
+        if (null !== $this->stackSize) {
+            $pb->add('-Xss'.$this->stackSize);
+        }
+
+        $pb->add('-jar')->add($this->jarPath);
 
         foreach ($options as $option) {
             $pb->add($option);
@@ -89,13 +96,15 @@ abstract class BaseCompressorFilter implements FilterInterface
         $code = $proc->run();
         unlink($input);
 
-        if (0 < $code) {
+        if (0 !== $code) {
             if (file_exists($output)) {
                 unlink($output);
             }
 
             throw FilterException::fromProcess($proc)->setInput($content);
-        } elseif (!file_exists($output)) {
+        }
+
+        if (!file_exists($output)) {
             throw new \RuntimeException('Error creating output file.');
         }
 

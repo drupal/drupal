@@ -34,11 +34,13 @@
  * @ingroup themeable
  */
 ?>
-<div id="taxonomy-term-<?php print $term->tid; ?>"<?php print $attributes; ?>>
+<div id="taxonomy-term-<?php print $term->id(); ?>"<?php print $attributes; ?>>
 
+  <?php print render($title_prefix); ?>
   <?php if (!$page): ?>
     <h2><a href="<?php print $url; ?>"><?php print $label; ?></a></h2>
   <?php endif; ?>
+  <?php print render($title_suffix); ?>
 
   <div class="content">
     <?php print render($content); ?>

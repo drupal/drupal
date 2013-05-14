@@ -1,4 +1,5 @@
 name: Bartik
+type: theme
 description: 'A flexible, recolorable theme with many regions and a responsive, mobile-first layout.'
 package: Core
 version: VERSION
@@ -28,5 +29,6 @@ regions:
   footer_thirdcolumn: 'Footer third column'
   footer_fourthcolumn: 'Footer fourth column'
   footer: Footer
+# @todo D8: Remove once themes have to be installed.
 settings:
   shortcut_module_link: '0'

@@ -1,4 +1,5 @@
 name: 'Breakpoint theme test'
+type: module
 description: 'Test breakpoints provided by themes'
 package: Other
 core: 8.x

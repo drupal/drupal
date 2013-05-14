@@ -27,14 +27,6 @@ interface RouteObjectInterface
     const ROUTE_OBJECT = '_route_object';
 
     /**
-     * Constant for the field that is given to the ControllerAliasMapper.
-     * The value must be configured in the controllers_by_alias mapping.
-     *
-     * This is ignored if a _controller default value is provided as well
-     */
-    const CONTROLLER_ALIAS = '_controller_alias';
-
-    /**
      * Field name for an explicit controller name to be used with this route
      */
     const CONTROLLER_NAME = '_controller';

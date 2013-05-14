@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2012 OpenSky Project Inc
+ * (c) 2010-2013 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -21,6 +21,19 @@ use Assetic\Asset\AssetInterface;
  */
 class CompilerApiFilter extends BaseCompilerFilter
 {
+    private $proxy;
+    private $proxyFullUri;
+
+    public function setProxy($proxy)
+    {
+        $this->proxy = $proxy;
+    }
+
+    public function setProxyFullUri($proxyFullUri)
+    {
+        $this->proxyFullUri = $proxyFullUri;
+    }
+
     public function filterDump(AssetInterface $asset)
     {
         $query = array(
@@ -62,16 +75,24 @@ class CompilerApiFilter extends BaseCompilerFilter
         }
 
         if (preg_match('/1|yes|on|true/i', ini_get('allow_url_fopen'))) {
-            $context = stream_context_create(array('http' => array(
+            $contextOptions = array('http' => array(
                 'method'  => 'POST',
                 'header'  => 'Content-Type: application/x-www-form-urlencoded',
                 'content' => http_build_query($query),
-            )));
+            ));
+            if (null !== $this->timeout) {
+                $contextOptions['http']['timeout'] = $this->timeout;
+            }
+            if ($this->proxy) {
+                $contextOptions['http']['proxy'] = $this->proxy;
+                $contextOptions['http']['request_fulluri'] = (Boolean) $this->proxyFullUri;
+            }
+            $context = stream_context_create($contextOptions);
 
             $response = file_get_contents('http://closure-compiler.appspot.com/compile', false, $context);
             $data = json_decode($response);
 
-         } elseif (defined('CURLOPT_POST') && !in_array('curl_init', explode(',', ini_get('disable_functions')))) {
+        } elseif (defined('CURLOPT_POST') && !in_array('curl_init', explode(',', ini_get('disable_functions')))) {
 
             $ch = curl_init('http://closure-compiler.appspot.com/compile');
             curl_setopt($ch, CURLOPT_POST, true);
@@ -79,6 +100,13 @@ class CompilerApiFilter extends BaseCompilerFilter
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+            if (null !== $this->timeout) {
+                curl_setopt($curl, CURLOPT_TIMEOUT, $this->timeout);
+            }
+            if ($this->proxy) {
+                curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, TRUE);
+                curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
+            }
             $response = curl_exec($ch);
             curl_close($ch);
 

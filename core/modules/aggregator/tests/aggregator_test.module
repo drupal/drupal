@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Component\Utility\Crypt;
+
 /**
  * Implements hook_menu().
  */
@@ -31,7 +33,7 @@ function aggregator_test_menu() {
  */
 function aggregator_test_feed($use_last_modified = FALSE, $use_etag = FALSE) {
   $last_modified = strtotime('Sun, 19 Nov 1978 05:00:00 GMT');
-  $etag = drupal_hash_base64($last_modified);
+  $etag = Crypt::hashBase64($last_modified);
 
   $if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) : FALSE;
   $if_none_match = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? stripslashes($_SERVER['HTTP_IF_NONE_MATCH']) : FALSE;
@@ -56,7 +58,7 @@ function aggregator_test_feed($use_last_modified = FALSE, $use_etag = FALSE) {
   drupal_add_http_header('Content-Type', 'application/rss+xml; charset=utf-8');
 
   // Read actual feed from file.
-  $file_name = DRUPAL_ROOT . '/' . drupal_get_path('module', 'aggregator') . '/tests/aggregator_test_rss091.xml';
+  $file_name = __DIR__ . '/aggregator_test_rss091.xml';
   $handle = fopen($file_name, 'r');
   $feed = fread($handle, filesize($file_name));
   fclose($handle);

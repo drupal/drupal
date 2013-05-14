@@ -17,18 +17,43 @@ use Drupal\user\Plugin\Core\Entity\User;
 class UserAccessController extends EntityAccessController {
 
   /**
-   * Implements EntityAccessControllerInterface::viewAccess().
+   * {@inheritdoc}
    */
-  public function viewAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    $uid = $entity->uid;
-    if (!$account) {
-      $account = $GLOBALS['user'];
-    }
+  protected function checkAccess(EntityInterface $entity, $operation, $langcode, User $account) {
+    switch ($operation) {
+      case 'view':
+        return $this->viewAccess($entity, $langcode, $account);
+        break;
 
+      case 'create':
+        return user_access('administer users', $account);
+        break;
+
+      case 'update':
+        // Users can always edit their own account. Users with the 'administer
+        // users' permission can edit any account except the anonymous account.
+        return (($account->uid == $entity->uid) || user_access('administer users', $account)) && $entity->uid > 0;
+        break;
+
+      case 'delete':
+        // Users with 'cancel account' permission can cancel their own account,
+        // users with 'administer users' permission can cancel any account
+        // except the anonymous account.
+        return ((($account->uid == $entity->uid) && user_access('cancel account', $account)) || user_access('administer users', $account)) && $entity->uid > 0;
+        break;
+    }
+  }
+
+  /**
+   * Check view access.
+   *
+   * See EntityAccessControllerInterface::view() for parameters.
+   */
+  protected function viewAccess(EntityInterface $entity, $langcode, User $account) {
     // Never allow access to view the anonymous user account.
-    if ($uid) {
+    if ($entity->uid) {
       // Admins can view all, users can view own profiles at all times.
-      if ($account->uid == $uid || user_access('administer users', $account)) {
+      if ($account->uid == $entity->uid || user_access('administer users', $account)) {
         return TRUE;
       }
       elseif (user_access('access user profiles', $account)) {
@@ -37,38 +62,6 @@ class UserAccessController extends EntityAccessController {
       }
     }
     return FALSE;
-  }
-
-  /**
-   * Implements EntityAccessControllerInterface::createAccess().
-   */
-  public function createAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return user_access('administer users', $account);
-  }
-
-  /**
-   * Implements EntityAccessControllerInterface::updateAccess().
-   */
-  public function updateAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    if (!$account) {
-      $account = $GLOBALS['user'];
-    }
-    // Users can always edit their own account. Users with the 'administer
-    // users' permission can edit any account except the anonymous account.
-    return (($account->uid == $entity->uid) || user_access('administer users', $account)) && $entity->uid > 0;
-  }
-
-  /**
-   * Implements EntityAccessControllerInterface::deleteAccess().
-   */
-  public function deleteAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    if (!$account) {
-      $account = $GLOBALS['user'];
-    }
-    // Users with 'cancel account' permission can cancel their own account,
-    // users with 'administer users' permission can cancel any account except
-    // the anonymous account.
-    return ((($account->uid == $entity->uid) && user_access('cancel account', $account)) || user_access('administer users', $account)) && $entity->uid > 0;
   }
 
 }

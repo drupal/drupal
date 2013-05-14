@@ -11,6 +11,7 @@ use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\field\FieldException;
+use Drupal\field\FieldInterface;
 
 /**
  * Defines the Field entity.
@@ -33,7 +34,7 @@ use Drupal\field\FieldException;
  *   }
  * )
  */
-class Field extends ConfigEntityBase implements \ArrayAccess, \Serializable {
+class Field extends ConfigEntityBase implements FieldInterface {
 
   /**
    * The maximum length of the field ID (machine name), in characters.
@@ -265,7 +266,7 @@ class Field extends ConfigEntityBase implements \ArrayAccess, \Serializable {
    */
   public function save() {
     $module_handler = \Drupal::moduleHandler();
-    $storage_controller = \Drupal::service('plugin.manager.entity')->getStorageController($this->entityType);
+    $storage_controller = \Drupal::entityManager()->getStorageController($this->entityType);
 
     // Clear the derived data about the field.
     unset($this->schema, $this->storageDetails);
@@ -294,7 +295,7 @@ class Field extends ConfigEntityBase implements \ArrayAccess, \Serializable {
       // Disallow reserved field names. This can't prevent all field name
       // collisions with existing entity properties, but some is better than
       // none.
-      foreach (\Drupal::service('plugin.manager.entity')->getDefinitions() as $type => $info) {
+      foreach (\Drupal::entityManager()->getDefinitions() as $type => $info) {
         if (in_array($this->id, $info['entity_keys'])) {
           throw new FieldException(format_string('Attempt to create field %id which is reserved by entity type %type.', array('%id' => $this->id, '%type' => $type)));
         }
@@ -387,7 +388,7 @@ class Field extends ConfigEntityBase implements \ArrayAccess, \Serializable {
   public function delete() {
     if (!$this->deleted) {
       $module_handler = \Drupal::moduleHandler();
-      $instance_controller = \Drupal::service('plugin.manager.entity')->getStorageController('field_instance');
+      $instance_controller = \Drupal::entityManager()->getStorageController('field_instance');
       $state = \Drupal::state();
 
       // Delete all non-deleted instances.
@@ -430,20 +431,7 @@ class Field extends ConfigEntityBase implements \ArrayAccess, \Serializable {
   }
 
   /**
-   * Returns the field schema.
-   *
-   * @return array
-   *   The field schema, as an array of key/value pairs in the format returned
-   *   by hook_field_schema():
-   *   - columns: An array of Schema API column specifications, keyed by column
-   *     name. This specifies what comprises a single value for a given field.
-   *     No assumptions should be made on how storage backends internally use
-   *     the original column name to structure their storage.
-   *   - indexes: An array of Schema API index definitions. Some storage
-   *     backends might not support indexes.
-   *   - foreign keys: An array of Schema API foreign key definitions. Note,
-   *     however, that depending on the storage backend specified for the field,
-   *     the field data is not necessarily stored in SQL.
+   * {@inheritdoc}
    */
   public function getSchema() {
     if (!isset($this->schema)) {
@@ -473,31 +461,7 @@ class Field extends ConfigEntityBase implements \ArrayAccess, \Serializable {
   }
 
   /**
-   * Returns information about how the storage backend stores the field data.
-   *
-   * The content of the returned value depends on the storage backend, and some
-   * storage backends might provide no information.
-   *
-   * It is strongly discouraged to use this information to perform direct write
-   * operations to the field data storage, bypassing the regular field saving
-   * APIs.
-   *
-   * Example return value for the default field_sql_storage backend:
-   * - 'sql'
-   *   - FIELD_LOAD_CURRENT
-   *     - Table name (string).
-   *       - Table schema (array)
-   *   - FIELD_LOAD_REVISION
-   *     - Table name (string).
-   *       - Table schema (array).
-   *
-   * @return array
-   *   The storage details.
-   *    - The first dimension is a store type (sql, solr, etc).
-   *    - The second dimension indicates the age of the values in the store
-   *      FIELD_LOAD_CURRENT or FIELD_LOAD_REVISION.
-   *    - Other dimensions are specific to the field storage backend.
-
+   * {@inheritdoc}
    */
   public function getStorageDetails() {
     if (!isset($this->storageDetails)) {
@@ -516,11 +480,7 @@ class Field extends ConfigEntityBase implements \ArrayAccess, \Serializable {
   }
 
   /**
-   * Returns the list of bundles where the field has instances.
-   *
-   * @return array
-   *   An array keyed by entity type names, whose values are arrays of bundle
-   *   names.
+   * {@inheritdoc}
    */
   public function getBundles() {
     if (empty($this->deleted)) {

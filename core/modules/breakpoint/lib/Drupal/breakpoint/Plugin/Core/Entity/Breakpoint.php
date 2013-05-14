@@ -8,6 +8,7 @@
 namespace Drupal\breakpoint\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\breakpoint\BreakpointInterface;
 use Drupal\breakpoint\InvalidBreakpointException;
 use Drupal\breakpoint\InvalidBreakpointNameException;
 use Drupal\breakpoint\InvalidBreakpointSourceException;
@@ -34,7 +35,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class Breakpoint extends ConfigEntityBase {
+class Breakpoint extends ConfigEntityBase implements BreakpointInterface {
 
   /**
    * Denotes that a breakpoint or breakpoint group is defined by a theme.
@@ -151,14 +152,7 @@ class Breakpoint extends ConfigEntityBase {
   }
 
   /**
-   * Checks if the breakpoint is valid.
-   *
-   * @throws Drupal\breakpoint\InvalidBreakpointSourceTypeException
-   * @throws Drupal\breakpoint\InvalidBreakpointSourceException
-   * @throws Drupal\breakpoint\InvalidBreakpointNameException
-   * @throws Drupal\breakpoint\InvalidBreakpointMediaQueryException
-   *
-   * @see isValidMediaQuery()
+   * {@inheritdoc}
    */
   public function isValid() {
     // Check for illegal values in breakpoint source type.
@@ -183,16 +177,7 @@ class Breakpoint extends ConfigEntityBase {
   }
 
   /**
-   * Checks if a mediaQuery is valid.
-   *
-   * @throws Drupal\breakpoint\InvalidBreakpointMediaQueryException
-   *
-   * @return true
-   *   Returns true if the media query is valid.
-   *
-   * @see http://www.w3.org/TR/css3-mediaqueries/
-   * @see http://www.w3.org/Style/CSS/Test/MediaQueries/20120229/reports/implement-report.html
-   * @see https://github.com/adobe/webkit/blob/master/Source/WebCore/css/
+   * {@inheritdoc}
    */
   public static function isValidMediaQuery($media_query) {
     // Array describing all known media features and the expected value type or

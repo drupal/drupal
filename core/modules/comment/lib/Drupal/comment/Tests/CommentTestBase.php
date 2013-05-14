@@ -149,7 +149,7 @@ abstract class CommentTestBase extends WebTestBase {
     }
 
     if (isset($match[1])) {
-      $entity = comment_load($match[1]);
+      $entity = comment_load($match[1], TRUE);
       return $entity;
     }
   }

@@ -4,3 +4,10 @@ update_settings:
     _form: '\Drupal\update\UpdateSettingsForm'
   requirements:
     _permission: 'administer site configuration'
+
+update_status:
+  pattern: '/admin/reports/updates'
+  defaults:
+    _content: '\Drupal\update\Controller\UpdateController::updateStatus'
+  requirements:
+    _permission: 'administer site configuration'

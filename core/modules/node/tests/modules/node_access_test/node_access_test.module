@@ -183,7 +183,7 @@ function node_access_entity_test_page() {
 function node_access_test_form_node_form_alter(&$form, $form_state) {
   // Only show this checkbox for NodeAccessBaseTableTestCase.
   if (state()->get('node_access_test.private')) {
-    $node = $form_state['controller']->getEntity($form_state);
+    $node = $form_state['controller']->getEntity();
     $form['private'] = array(
       '#type' => 'checkbox',
       '#title' => t('Private'),

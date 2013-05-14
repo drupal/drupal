@@ -29,7 +29,7 @@ class ConditionManager extends PluginManagerBase implements ExecutableManagerInt
    *   keyed by the corresponding namespace to look for plugin implementations,
    */
   public function __construct(\Traversable $namespaces) {
-    $this->discovery = new AnnotatedClassDiscovery('Core', 'Condition', $namespaces);
+    $this->discovery = new AnnotatedClassDiscovery('Condition', $namespaces);
     $this->discovery = new DerivativeDiscoveryDecorator($this->discovery);
     $this->discovery = new AlterDecorator($this->discovery, 'condition_info');
     $this->discovery = new CacheDecorator($this->discovery, 'condition:' . language(LANGUAGE_TYPE_INTERFACE)->langcode);

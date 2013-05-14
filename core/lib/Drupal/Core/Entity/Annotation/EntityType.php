@@ -94,14 +94,18 @@ class EntityType extends Plugin {
   /**
    * The human-readable name of the type.
    *
-   * @var string
+   * @ingroup plugin_translatable
+   *
+   * @var \Drupal\Core\Annotation\Translation
    */
   public $label;
 
   /**
    * The human-readable name of the entity bundles, e.g. Vocabulary.
    *
-   * @var string
+   * @ingroup plugin_translatable
+   *
+   * @var \Drupal\Core\Annotation\Translation
    */
   public $bundle_label;
 
@@ -134,7 +138,10 @@ class EntityType extends Plugin {
   public $static_cache = TRUE;
 
   /**
-   * Boolean indicating whether entities of this type have mutlilingual support.
+   * Boolean indicating whether entities of this type have multilingual support.
+   *
+   * At an entity level, this indicates language support and at a bundle level
+   * this indicates translation support.
    *
    * @var bool (optional)
    */
@@ -192,6 +199,27 @@ class EntityType extends Plugin {
    * @var array
    */
   public $bundle_keys;
+
+  /**
+   * The base router path for the entity type's field administration page.
+   *
+   * If the entity type has a bundle, include {bundle} in the path.
+   *
+   * For example, the node entity type specifies
+   * "admin/structure/types/manage/{bundle}" as its base field admin path.
+   *
+   * @var string (optional)
+   */
+  public $route_base_path;
+
+  /**
+   * The prefix for the bundles of this entity type.
+   *
+   * For example, the comment bundle is prefixed with 'comment_node_'.
+   *
+   * @var string (optional)
+   */
+  public $bundle_prefix;
 
   /**
    * The base menu router path to which the entity admin user interface responds.

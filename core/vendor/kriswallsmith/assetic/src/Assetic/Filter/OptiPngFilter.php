@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2012 OpenSky Project Inc
+ * (c) 2010-2013 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,7 +13,6 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
-use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Runs assets through OptiPNG.
@@ -21,7 +20,7 @@ use Symfony\Component\Process\ProcessBuilder;
  * @link   http://optipng.sourceforge.net/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class OptiPngFilter implements FilterInterface
+class OptiPngFilter extends BaseProcessFilter
 {
     private $optipngBin;
     private $level;
@@ -47,7 +46,7 @@ class OptiPngFilter implements FilterInterface
 
     public function filterDump(AssetInterface $asset)
     {
-        $pb = new ProcessBuilder(array($this->optipngBin));
+        $pb = $this->createProcessBuilder(array($this->optipngBin));
 
         if (null !== $this->level) {
             $pb->add('-o')->add($this->level);
@@ -62,7 +61,7 @@ class OptiPngFilter implements FilterInterface
         $proc = $pb->getProcess();
         $code = $proc->run();
 
-        if (0 < $code) {
+        if (0 !== $code) {
             unlink($input);
             throw FilterException::fromProcess($proc)->setInput($asset->getContent());
         }

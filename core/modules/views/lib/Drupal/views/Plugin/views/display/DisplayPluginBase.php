@@ -1135,8 +1135,8 @@ abstract class DisplayPluginBase extends PluginBase {
     if (!isset($this->definition['contextual links locations']) || !empty($this->definition['contextual links locations'])) {
       $options['show_admin_links'] = array(
         'category' => 'other',
-        'title' => t('Display contextual links'),
-        'value' => $this->getOption('show_admin_links') ? t('Yes') : t('No'),
+        'title' => t('Contextual links'),
+        'value' => $this->getOption('show_admin_links') ? t('Shown') : t('Hidden'),
         'desc' => t('Change whether or not to display contextual links for this view.'),
       );
     }
@@ -1408,8 +1408,8 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'show_admin_links':
         $form['#title'] .= t('Show contextual links on this view.');
         $form['show_admin_links'] = array(
-          '#type' => 'radios',
-          '#options' => array(0 => t('No'), 1 => t('Yes')),
+          '#type' => 'checkbox',
+          '#title' => t('Show contextual links'),
           '#default_value' => $this->getOption('show_admin_links'),
         );
       break;
@@ -2039,7 +2039,7 @@ abstract class DisplayPluginBase extends PluginBase {
     // This is just a temporary variable.
     $form_state['view']->theme = $form_state['values']['theme'];
 
-    views_ui_cache_set($form_state['view']);
+    $form_state['view']->cacheSet();
     $form_state['rerender'] = TRUE;
     $form_state['rebuild'] = TRUE;
   }
@@ -2721,7 +2721,7 @@ abstract class DisplayPluginBase extends PluginBase {
   public function getPagerText() {
     return array(
       'items per page title' => t('Items to display'),
-      'items per page description' => t('The number of items to display. Enter 0 for no limit.')
+      'items per page description' => t('Enter 0 for no limit.')
     );
   }
 

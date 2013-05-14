@@ -11,6 +11,7 @@ use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\field\FieldException;
+use Drupal\field\FieldInstanceInterface;
 
 /**
  * Defines the Field instance entity.
@@ -30,7 +31,7 @@ use Drupal\field\FieldException;
  *   }
  * )
  */
-class FieldInstance extends ConfigEntityBase implements \ArrayAccess, \Serializable {
+class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
 
   /**
    * The instance ID (machine name).
@@ -320,7 +321,7 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess, \Serializa
    */
   public function save() {
     $module_handler = \Drupal::moduleHandler();
-    $entity_manager = \Drupal::service('plugin.manager.entity');
+    $entity_manager = \Drupal::entityManager();
     $instance_controller = $entity_manager->getStorageController($this->entityType);
 
     if ($this->isNew()) {
@@ -429,6 +430,16 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess, \Serializa
       // hook_field_delete_instance().
       $module_handler->invokeAll('field_delete_instance', array($this));
 
+      // Remove the instance from the entity displays.
+      $ids = array();
+      $view_modes = array('default' => array()) + entity_get_view_modes($this->entity_type);
+      foreach (array_keys($view_modes) as $view_mode) {
+        $ids[] = $this->entity_type . '.' . $this->bundle . '.' . $view_mode;
+      }
+      foreach (entity_load_multiple('entity_display', $ids) as $display) {
+        $display->removeComponent($this->field->id())->save();
+      }
+
       // Delete the field itself if we just deleted its last instance.
       if ($field_cleanup && count($this->field->getBundles()) == 0) {
         $this->field->delete();
@@ -436,21 +447,15 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess, \Serializa
     }
   }
 
- /**
-  * Returns the field entity for this instance.
-  *
-  * @return \Drupal\field\Plugin\Core\Entity\Field
-  *   The field entity for this instance.
-  */
+  /**
+   * {@inheritdoc}
+   */
   public function getField() {
     return $this->field;
   }
 
   /**
-   * Returns the Widget plugin for the instance.
-   *
-   * @return Drupal\field\Plugin\Type\Widget\WidgetInterface
-   *   The Widget plugin to be used for the instance.
+   * {@inheritdoc}
    */
   public function getWidget() {
     if (empty($this->widgetPlugin)) {
@@ -480,11 +485,7 @@ class FieldInstance extends ConfigEntityBase implements \ArrayAccess, \Serializa
   }
 
   /**
-   * Allows a bundle to be renamed.
-   *
-   * Renaming a bundle on the instance is allowed when an entity's bundle
-   * is renamed and when field_entity_bundle_rename() does internal
-   * housekeeping.
+   * {@inheritdoc}
    */
   public function allowBundleRename() {
     $this->bundle_rename_allowed = TRUE;

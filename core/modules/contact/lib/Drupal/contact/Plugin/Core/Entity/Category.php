@@ -10,6 +10,7 @@ namespace Drupal\contact\Plugin\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\contact\CategoryInterface;
 
 /**
  * Defines the contact category entity.
@@ -34,7 +35,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class Category extends ConfigEntityBase {
+class Category extends ConfigEntityBase implements CategoryInterface {
 
   /**
    * The category ID.

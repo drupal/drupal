@@ -158,10 +158,8 @@ function update_menu() {
   $items['admin/reports/updates'] = array(
     'title' => 'Available updates',
     'description' => 'Get a status report about available updates for your installed modules and themes.',
-    'page callback' => 'update_status',
-    'access arguments' => array('administer site configuration'),
+    'route_name' => 'update_status',
     'weight' => -50,
-    'file' => 'update.report.inc',
   );
   $items['admin/reports/updates/list'] = array(
     'title' => 'List',
@@ -266,12 +264,15 @@ function update_theme() {
     ),
     'update_report' => array(
       'variables' => array('data' => NULL),
+      'file' => 'update.report.inc',
     ),
     'update_version' => array(
       'variables' => array('version' => NULL, 'tag' => NULL, 'class' => array()),
+      'file' => 'update.report.inc',
     ),
     'update_status_label' => array(
       'variables' => array('status' => NULL),
+      'file' => 'update.report.inc',
     ),
   );
 }

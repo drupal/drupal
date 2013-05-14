@@ -7,6 +7,7 @@
 
 namespace Drupal\simpletest;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
@@ -177,7 +178,7 @@ abstract class WebTestBase extends TestBase {
    */
   function drupalGetNodeByTitle($title, $reset = FALSE) {
     if ($reset) {
-      drupal_container()->get('plugin.manager.entity')->getStorageController('node')->resetCache();
+      \Drupal::entityManager()->getStorageController('node')->resetCache();
     }
     $nodes = entity_load_multiple_by_properties('node', array('title' => $title));
     // Load the first node returned from the database.
@@ -341,8 +342,8 @@ abstract class WebTestBase extends TestBase {
    *
    * @param string $plugin_id
    *   The plugin ID of the block type for this block instance.
-   * @param array $values
-   *   (optional) An associative array of values for the block entity.
+   * @param array $settings
+   *   (optional) An associative array of settings for the block entity.
    *   Override the defaults by specifying the key and value in the array, for
    *   example:
    *   @code
@@ -355,8 +356,7 @@ abstract class WebTestBase extends TestBase {
    *   - machine_name: Random string.
    *   - region: 'sidebar_first'.
    *   - theme: The default theme.
-   * @param array $settings
-   *   (optional) An associative array of plugin-specific settings.
+   *   - visibility: Empty array.
    *
    * @return \Drupal\block\Plugin\Core\Entity\Block
    *   The block entity.
@@ -364,15 +364,20 @@ abstract class WebTestBase extends TestBase {
    * @todo
    *   Add support for creating custom block instances.
    */
-  protected function drupalPlaceBlock($plugin_id, array $values = array(), array $settings = array()) {
-    $values += array(
+  protected function drupalPlaceBlock($plugin_id, array $settings = array()) {
+    $settings += array(
       'plugin' => $plugin_id,
-      'label' => $this->randomName(8),
       'region' => 'sidebar_first',
-      'theme' => config('system.theme')->get('default'),
       'machine_name' => strtolower($this->randomName(8)),
-      'settings' => $settings,
+      'theme' => config('system.theme')->get('default'),
+      'label' => $this->randomName(8),
+      'visibility' => array(),
     );
+    foreach (array('region', 'machine_name', 'theme', 'plugin', 'visibility') as $key) {
+      $values[$key] = $settings[$key];
+      unset($settings[$key]);
+    }
+    $values['settings'] = $settings;
     // Build the ID out of the theme and machine_name.
     $values['id'] = $values['theme'] . '.' . $values['machine_name'];
     $block = entity_create('block', $values);
@@ -657,7 +662,7 @@ abstract class WebTestBase extends TestBase {
    */
   protected function drupalGetToken($value = '') {
     $private_key = drupal_get_private_key();
-    return drupal_hmac_base64($value, $this->session_id . $private_key);
+    return Crypt::hmacBase64($value, $this->session_id . $private_key);
   }
 
   /*
@@ -1196,6 +1201,17 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
+   * Retrieves a Drupal path or an absolute path and JSON decode the result.
+   *
+   * @param string $path
+   *   Path to request AJAX from.
+   * @param array $options
+   *   Array of options to pass to url().
+   * @param array $headers
+   *   Array of headers. Eg array('Accept: application/vnd.drupal-ajax').
+   *
+   * @return array
+   *   Decoded json.
    * Requests a Drupal path in JSON format, and JSON decodes the response.
    */
   protected function drupalGetJSON($path, array $options = array(), array $headers = array()) {

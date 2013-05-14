@@ -92,10 +92,8 @@ function aggregator_menu() {
   $items['admin/config/services/aggregator'] = array(
     'title' => 'Feed aggregator',
     'description' => "Configure which content your site aggregates from other sites, how often it polls them, and how they're categorized.",
-    'page callback' => 'aggregator_admin_overview',
-    'access arguments' => array('administer news feeds'),
+    'route_name' => 'aggregator_admin_overview',
     'weight' => 10,
-    'file' => 'aggregator.admin.inc',
   );
   $items['admin/config/services/aggregator/add/feed'] = array(
     'title' => 'Add feed',
@@ -112,11 +110,8 @@ function aggregator_menu() {
   );
   $items['admin/config/services/aggregator/add/opml'] = array(
     'title' => 'Import OPML',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('aggregator_form_opml'),
-    'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_ACTION,
-    'file' => 'aggregator.admin.inc',
+    'route_name' => 'aggregator_opml_add',
   );
   $items['admin/config/services/aggregator/remove/%aggregator_feed'] = array(
     'title' => 'Remove items',
@@ -124,10 +119,7 @@ function aggregator_menu() {
   );
   $items['admin/config/services/aggregator/update/%aggregator_feed'] = array(
     'title' => 'Update items',
-    'page callback' => 'aggregator_admin_refresh_feed',
-    'page arguments' => array(5),
-    'access arguments' => array('administer news feeds'),
-    'file' => 'aggregator.admin.inc',
+    'route_name' => 'aggregator_feed_refresh',
   );
   $items['admin/config/services/aggregator/list'] = array(
     'title' => 'List',
@@ -552,7 +544,7 @@ function aggregator_filter_xss($value) {
  * Implements hook_preprocess_HOOK() for block.tpl.php.
  */
 function aggregator_preprocess_block(&$variables) {
-  if ($variables['block']->module == 'aggregator') {
+  if ($variables['configuration']['module'] == 'aggregator') {
     $variables['attributes']['role'] = 'complementary';
   }
 }

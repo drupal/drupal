@@ -112,20 +112,39 @@ abstract class OptionsWidgetBase extends WidgetBase {
    */
   protected function getOptions() {
     if (!isset($this->options)) {
+      $module_handler = \Drupal::moduleHandler();
+
       // Get the list of options from the field type module, and sanitize them.
-      $options = (array) module_invoke($this->field['module'], 'options_list', $this->field, $this->instance, $this->entity);
+      $options = (array) $module_handler->invoke($this->field['module'], 'options_list', array($this->field, $this->instance, $this->entity));
+
+      // Add an empty option if the widget needs one.
+      if ($empty_option = $this->getEmptyOption()) {
+        switch ($this->getPluginId()) {
+          case 'options_buttons':
+            $label = t('N/A');
+            break;
+
+          case 'options_select':
+            $label = ($empty_option == static::OPTIONS_EMPTY_NONE ? t('- None -') : t('- Select a value -'));
+            break;
+        }
+
+        $options = array('_none' => $label) + $options;
+      }
+
+      $context = array(
+        'field' => $this->field,
+        'instance' => $this->instance,
+        'entity' => $this->entity,
+      );
+      $module_handler->alter('options_list', $options, $context);
+
       array_walk_recursive($options, array($this, 'sanitizeLabel'));
 
       // Options might be nested ("optgroups"). If the widget does not support
       // nested options, flatten the list.
       if (!$this->supportsGroups()) {
         $options = $this->flattenOptions($options);
-      }
-
-      // Add an empty option if the widget needs one.
-      if ($empty_option = $this->getEmptyOption()) {
-        $label = theme('options_none', array('option' => $empty_option, 'widget' => $this, 'instance' => $this->instance));
-        $options = array('_none' => $label) + $options;
       }
 
       $this->options = $options;

@@ -28,10 +28,10 @@ use Drupal\Core\Entity\EntityInterface;
  */
 function entity_get_info($entity_type = NULL) {
   if (empty($entity_type)) {
-    return drupal_container()->get('plugin.manager.entity')->getDefinitions();
+    return Drupal::entityManager()->getDefinitions();
   }
   else {
-    return drupal_container()->get('plugin.manager.entity')->getDefinition($entity_type);
+    return Drupal::entityManager()->getDefinition($entity_type);
   }
 }
 
@@ -42,7 +42,7 @@ function entity_info_cache_clear() {
   drupal_static_reset('entity_get_view_modes');
   drupal_static_reset('entity_get_bundles');
   // Clear all languages.
-  drupal_container()->get('plugin.manager.entity')->clearCachedDefinitions();
+  Drupal::entityManager()->clearCachedDefinitions();
 }
 
 /**
@@ -185,7 +185,7 @@ function entity_load($entity_type, $id, $reset = FALSE) {
  * @see Drupal\Core\Entity\DatabaseStorageController
  */
 function entity_revision_load($entity_type, $revision_id) {
-  return drupal_container()->get('plugin.manager.entity')
+  return Drupal::entityManager()
     ->getStorageController($entity_type)
     ->loadRevision($revision_id);
 }
@@ -199,7 +199,7 @@ function entity_revision_load($entity_type, $revision_id) {
  *   The revision ID to delete.
  */
 function entity_revision_delete($entity_type, $revision_id) {
-  drupal_container()->get('plugin.manager.entity')
+  Drupal::entityManager()
     ->getStorageController($entity_type)
     ->deleteRevision($revision_id);
 }
@@ -231,7 +231,7 @@ function entity_load_by_uuid($entity_type, $uuid, $reset = FALSE) {
   }
   $uuid_key = $entity_info['entity_keys']['uuid'];
 
-  $controller = drupal_container()->get('plugin.manager.entity')->getStorageController($entity_type);
+  $controller = Drupal::entityManager()->getStorageController($entity_type);
   if ($reset) {
     $controller->resetCache();
   }
@@ -273,7 +273,7 @@ function entity_load_by_uuid($entity_type, $uuid, $reset = FALSE) {
  * @see Drupal\Core\Entity\Query\QueryInterface
  */
 function entity_load_multiple($entity_type, array $ids = NULL, $reset = FALSE) {
-  $controller = drupal_container()->get('plugin.manager.entity')->getStorageController($entity_type);
+  $controller = Drupal::entityManager()->getStorageController($entity_type);
   if ($reset) {
     $controller->resetCache();
   }
@@ -293,7 +293,7 @@ function entity_load_multiple($entity_type, array $ids = NULL, $reset = FALSE) {
  *   An array of entity objects indexed by their ids.
  */
 function entity_load_multiple_by_properties($entity_type, array $values) {
-  return drupal_container()->get('plugin.manager.entity')
+  return Drupal::entityManager()
     ->getStorageController($entity_type)
     ->loadByProperties($values);
 }
@@ -315,7 +315,7 @@ function entity_load_multiple_by_properties($entity_type, array $values) {
  *   The unchanged entity, or FALSE if the entity cannot be loaded.
  */
 function entity_load_unchanged($entity_type, $id) {
-  return drupal_container()->get('plugin.manager.entity')
+  return Drupal::entityManager()
     ->getStorageController($entity_type)
     ->loadUnchanged($id);
 }
@@ -329,7 +329,7 @@ function entity_load_unchanged($entity_type, $id) {
  *   An array of entity IDs of the entities to delete.
  */
 function entity_delete_multiple($entity_type, array $ids) {
-  $controller = drupal_container()->get('plugin.manager.entity')->getStorageController($entity_type);
+  $controller = Drupal::entityManager()->getStorageController($entity_type);
   $entities = $controller->load($ids);
   $controller->delete($entities);
 }
@@ -347,7 +347,7 @@ function entity_delete_multiple($entity_type, array $ids) {
  *   A new entity object.
  */
 function entity_create($entity_type, array $values) {
-  return drupal_container()->get('plugin.manager.entity')
+  return Drupal::entityManager()
     ->getStorageController($entity_type)
     ->create($values);
 }
@@ -360,7 +360,7 @@ function entity_create($entity_type, array $values) {
  * @deprecated Use \Drupal\Core\Entity\EntityManager::getStorageController().
  */
 function entity_get_controller($entity_type) {
-  return drupal_container()->get('plugin.manager.entity')
+  return Drupal::entityManager()
     ->getStorageController($entity_type);
 }
 
@@ -398,7 +398,7 @@ function entity_page_label(EntityInterface $entity, $langcode = NULL) {
  * @deprecated Use \Drupal\Core\Entity\EntityManager::getRenderController().
  */
 function entity_access_controller($entity_type) {
-  return drupal_container()->get('plugin.manager.entity')
+  return Drupal::entityManager()
     ->getAccessController($entity_type);
 }
 
@@ -426,32 +426,8 @@ function entity_access_controller($entity_type) {
  * @deprecated Use \Drupal\Core\Entity\EntityManager::getFormController().
  */
 function entity_form_controller($entity_type, $operation = 'default') {
-  return drupal_container()->get('plugin.manager.entity')
+  return Drupal::entityManager()
     ->getFormController($entity_type, $operation);
-}
-
-/**
- * Returns the form id for the given entity and operation.
- *
- * @param EntityInterface $entity
- *   The entity to be created or edited.
- * @param $operation
- *   (optional) The operation for the form to be processed.
- *
- * @return
- *   A string representing the entity form id.
- */
-function entity_form_id(EntityInterface $entity, $operation = 'default') {
-  $entity_type = $entity->entityType();
-  $bundle = $entity->bundle();
-  $form_id = $entity_type;
-  if ($bundle != $entity_type) {
-    $form_id = $bundle . '_' . $form_id;
-  }
-  if ($operation != 'default') {
-    $form_id = $form_id . '_' . $operation;
-  }
-  return $form_id . '_form';
 }
 
 /**
@@ -467,10 +443,11 @@ function entity_form_id(EntityInterface $entity, $operation = 'default') {
  */
 function entity_form_state_defaults(EntityInterface $entity, $operation = 'default') {
   $form_state = array();
-  $controller = drupal_container()->get('plugin.manager.entity')->getFormController($entity->entityType(), $operation);
-  $form_state['build_info']['callback'] = array($controller, 'build');
-  $form_state['build_info']['base_form_id'] = $entity->entityType() . '_form';
-  $form_state['build_info']['args'] = array($entity);
+  $controller = Drupal::entityManager()->getFormController($entity->entityType(), $operation);
+  $controller->setEntity($entity);
+  $form_state['build_info']['callback_object'] = $controller;
+  $form_state['build_info']['base_form_id'] = $controller->getBaseFormID();
+  $form_state['build_info']['args'] = array();
   return $form_state;
 }
 
@@ -489,7 +466,7 @@ function entity_form_state_defaults(EntityInterface $entity, $operation = 'defau
  */
 function entity_form_submit(EntityInterface $entity, $operation = 'default', &$form_state = array()) {
   $form_state += entity_form_state_defaults($entity, $operation);
-  $form_id = entity_form_id($entity, $operation);
+  $form_id = $form_state['build_info']['callback_object']->getFormID();
   drupal_form_submit($form_id, $form_state);
 }
 
@@ -513,7 +490,7 @@ function entity_form_submit(EntityInterface $entity, $operation = 'default', &$f
  */
 function entity_get_form(EntityInterface $entity, $operation = 'default', array $form_state = array()) {
   $form_state += entity_form_state_defaults($entity, $operation);
-  $form_id = entity_form_id($entity, $operation);
+  $form_id = $form_state['build_info']['callback_object']->getFormID();
   return drupal_build_form($form_id, $form_state);
 }
 
@@ -575,7 +552,7 @@ function entity_form_submit_build_entity($entity_type, $entity, $form, &$form_st
  * @deprecated Use \Drupal\Core\Entity\EntityManager::getFormController().
  */
 function entity_list_controller($entity_type) {
-  return drupal_container()->get('plugin.manager.entity')
+  return Drupal::entityManager()
     ->getListController($entity_type);
 }
 
@@ -591,7 +568,7 @@ function entity_list_controller($entity_type) {
  * @deprecated Use \Drupal\Core\Entity\EntityManager::getFormController().
  */
 function entity_render_controller($entity_type) {
-  return drupal_container()->get('plugin.manager.entity')
+  return Drupal::entityManager()
     ->getRenderController($entity_type);
 }
 
@@ -610,7 +587,7 @@ function entity_render_controller($entity_type) {
  *   A render array for the entity.
  */
 function entity_view(EntityInterface $entity, $view_mode, $langcode = NULL) {
-  return drupal_container()->get('plugin.manager.entity')
+  return Drupal::entityManager()
     ->getRenderController($entity->entityType())
     ->view($entity, $view_mode, $langcode);
 }
@@ -631,7 +608,7 @@ function entity_view(EntityInterface $entity, $view_mode, $langcode = NULL) {
  *   entities array passed in $entities.
  */
 function entity_view_multiple(array $entities, $view_mode, $langcode = NULL) {
-  return drupal_container()->get('plugin.manager.entity')
+  return Drupal::entityManager()
     ->getRenderController(reset($entities)->entityType())
     ->viewMultiple($entities, $view_mode, $langcode);
 }
@@ -763,14 +740,14 @@ function entity_page_access(EntityInterface $entity, $operation = 'view') {
  *   TRUE if the access is granted. FALSE if access is denied.
  */
 function entity_page_create_access($entity_type, $bundle = NULL) {
-  $definition = Drupal::service('plugin.manager.entity')->getDefinition($entity_type);
+  $definition = Drupal::entityManager()->getDefinition($entity_type);
 
   // Pass in the entity bundle if given and required.
   $values = array();
   if ($bundle && isset($definition['entity_keys']['bundle'])) {
     $values[$definition['entity_keys']['bundle']] = $bundle;
   }
-  $entity = drupal_container()->get('plugin.manager.entity')
+  $entity = Drupal::entityManager()
     ->getStorageController($entity_type)
     ->create($values);
   return $entity->access('create');

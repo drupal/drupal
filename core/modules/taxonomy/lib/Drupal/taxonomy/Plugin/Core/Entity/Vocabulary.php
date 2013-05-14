@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Plugin\Core\Entity\Vocabulary.
+ * Contains \Drupal\taxonomy\Plugin\Core\Entity\Vocabulary.
  */
 
 namespace Drupal\taxonomy\Plugin\Core\Entity;
@@ -10,6 +10,7 @@ namespace Drupal\taxonomy\Plugin\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\taxonomy\VocabularyInterface;
 
 /**
  * Defines the taxonomy vocabulary entity.
@@ -32,7 +33,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class Vocabulary extends ConfigEntityBase {
+class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
 
   /**
    * The taxonomy vocabulary ID.
@@ -75,9 +76,23 @@ class Vocabulary extends ConfigEntityBase {
   public $weight = 0;
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::id().
+   * {@inheritdoc}
    */
   public function id() {
     return $this->vid;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function uri() {
+    return array(
+      'path' => 'admin/structure/taxonomy/manage/' . $this->id(),
+      'options' => array(
+        'entity_type' => $this->entityType,
+        'entity' => $this,
+      ),
+    );
+  }
+
 }

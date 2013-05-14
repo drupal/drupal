@@ -2,7 +2,7 @@
 
 namespace Symfony\Cmf\Component\Routing\Tests\Routing;
 
-use Symfony\Component\Routing\Route as SymfonyRoute;
+use Symfony\Cmf\Component\Routing\RouteAwareInterface;
 
 use Symfony\Cmf\Component\Routing\ContentAwareGenerator;
 use Symfony\Cmf\Component\Routing\Test\CmfUnitTestCase;
@@ -14,6 +14,9 @@ class ContentAwareGeneratorTest extends CmfUnitTestCase
     protected $routeCompiled;
     protected $provider;
 
+    /**
+     * @var ContentAwareGenerator
+     */
     protected $generator;
     protected $context;
 
@@ -27,7 +30,6 @@ class ContentAwareGeneratorTest extends CmfUnitTestCase
 
         $this->generator = new TestableContentAwareGenerator($this->provider);
     }
-
 
     public function testGenerateFromContent()
     {
@@ -52,7 +54,7 @@ class ContentAwareGeneratorTest extends CmfUnitTestCase
             ->method('getRouteByName')
         ;
 
-        $contentRepository = $this->buildMock("Symfony\\Cmf\\Component\\Routing\\ContentRepositoryInterface", array('findById'));
+        $contentRepository = $this->buildMock("Symfony\\Cmf\\Component\\Routing\\ContentRepositoryInterface", array('findById', 'getContentId'));
         $contentRepository->expects($this->once())
             ->method('findById')
             ->with('/content/id')
@@ -89,7 +91,7 @@ class ContentAwareGeneratorTest extends CmfUnitTestCase
             ->will($this->returnValue($this->routeCompiled))
         ;
 
-        $this->assertEquals('result_url', $this->generator->generate('', array('content'=>$this->contentDocument)));
+        $this->assertEquals('result_url', $this->generator->generate($this->contentDocument));
     }
 
     public function testGenerateRouteMultilang()
@@ -117,7 +119,6 @@ class ContentAwareGeneratorTest extends CmfUnitTestCase
 
         $this->assertEquals('result_url', $this->generator->generate($route_en, array('_locale' => 'de')));
     }
-
 
     public function testGenerateRouteMultilangNomatch()
     {
@@ -224,7 +225,7 @@ class ContentAwareGeneratorTest extends CmfUnitTestCase
             ->will($this->returnValue($this->routeCompiled))
         ;
 
-        $this->assertEquals('result_url', $this->generator->generate('', array('content'=>$this->contentDocument, '_locale' => 'de')));
+        $this->assertEquals('result_url', $this->generator->generate($this->contentDocument, array('_locale' => 'de')));
     }
 
     /**
@@ -239,8 +240,61 @@ class ContentAwareGeneratorTest extends CmfUnitTestCase
      */
     public function testGenerateInvalidContent()
     {
-        $this->generator->generate('', array('content' => $this));
+        $this->generator->generate($this);
     }
+
+    /**
+     * @expectedException Symfony\Component\Routing\Exception\RouteNotFoundException
+     */
+    public function testGenerateNoContentRepository()
+    {
+        $this->provider->expects($this->never())
+            ->method('getRouteByName')
+        ;
+
+        $this->generator->generate('', array('content_id' => '/content/id'));
+    }
+
+    /**
+     * @expectedException Symfony\Component\Routing\Exception\RouteNotFoundException
+     */
+    public function testGenerateNoContentFoundInRepository()
+    {
+        $this->provider->expects($this->never())
+            ->method('getRouteByName')
+        ;
+
+        $contentRepository = $this->buildMock("Symfony\\Cmf\\Component\\Routing\\ContentRepositoryInterface", array('findById', 'getContentId'));
+        $contentRepository->expects($this->once())
+            ->method('findById')
+            ->with('/content/id')
+            ->will($this->returnValue(null))
+        ;
+        $this->generator->setContentRepository($contentRepository);
+
+        $this->generator->generate('', array('content_id' => '/content/id'));
+    }
+
+    /**
+     * @expectedException Symfony\Component\Routing\Exception\RouteNotFoundException
+     */
+    public function testGenerateWrongContentClassInRepository()
+    {
+        $this->provider->expects($this->never())
+            ->method('getRouteByName')
+        ;
+
+        $contentRepository = $this->buildMock("Symfony\\Cmf\\Component\\Routing\\ContentRepositoryInterface", array('findById', 'getContentId'));
+        $contentRepository->expects($this->once())
+            ->method('findById')
+            ->with('/content/id')
+            ->will($this->returnValue($this))
+        ;
+        $this->generator->setContentRepository($contentRepository);
+
+        $this->generator->generate('', array('content_id' => '/content/id'));
+    }
+
     /**
      * @expectedException Symfony\Component\Routing\Exception\RouteNotFoundException
      */
@@ -250,7 +304,7 @@ class ContentAwareGeneratorTest extends CmfUnitTestCase
             ->method('getRoutes')
             ->will($this->returnValue(array()));
 
-        $this->generator->generate('', array('content'=>$this->contentDocument));
+        $this->generator->generate($this->contentDocument);
     }
     /**
      * @expectedException Symfony\Component\Routing\Exception\RouteNotFoundException
@@ -261,7 +315,7 @@ class ContentAwareGeneratorTest extends CmfUnitTestCase
             ->method('getRoutes')
             ->will($this->returnValue(array($this)));
 
-        $this->generator->generate('', array('content'=>$this->contentDocument));
+        $this->generator->generate($this->contentDocument);
     }
 
     public function testSupports()
@@ -270,6 +324,13 @@ class ContentAwareGeneratorTest extends CmfUnitTestCase
         $this->assertTrue($this->generator->supports(null));
         $this->assertTrue($this->generator->supports($this->contentDocument));
         $this->assertFalse($this->generator->supports($this));
+    }
+
+    public function testGetRouteDebugMessage()
+    {
+        $this->assertContains('/some/content', $this->generator->getRouteDebugMessage(null, array('content_id' => '/some/content')));
+        $this->assertContains('/some/content', $this->generator->getRouteDebugMessage(new RouteAware()));
+        $this->assertContains('/some/content', $this->generator->getRouteDebugMessage('/some/content'));
     }
 }
 
@@ -281,5 +342,17 @@ class TestableContentAwareGenerator extends ContentAwareGenerator
     protected function doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $absolute, $hostTokens = null)
     {
         return 'result_url';
+    }
+}
+
+class RouteAware implements RouteAwareInterface
+{
+    public function getRoutes()
+    {
+        return array();
+    }
+    public function __toString()
+    {
+        return '/some/content';
     }
 }

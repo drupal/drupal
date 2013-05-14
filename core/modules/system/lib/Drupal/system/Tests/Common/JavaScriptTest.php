@@ -219,7 +219,7 @@ class JavaScriptTest extends WebTestBase {
    * Tests adding inline scripts.
    */
   function testAddInline() {
-    drupal_add_library('system', 'drupal');
+    drupal_add_library('system', 'jquery');
     $inline = 'jQuery(function () { });';
     $javascript = drupal_add_js($inline, array('type' => 'inline', 'scope' => 'footer'));
     $this->assertTrue(array_key_exists('core/misc/jquery.js', $javascript), 'jQuery is added when inline scripts are added.');

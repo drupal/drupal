@@ -1,0 +1,10 @@
+name: "Field UI tests"
+type: module
+description: "Support module for Field UI testing."
+package: Testing
+version: VERSION
+core: 8.x
+hidden: TRUE
+
+dependencies:
+  - field_ui

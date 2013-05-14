@@ -72,7 +72,7 @@ class UserAutocompleteController implements ControllerInterface {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   A JSON response containing the autocomplete suggestions for existing users.
    *
-   * @see \Drupal\user\UserRouteController\autocompleteUser
+   * @see \Drupal\user\UserAutocomplete::autocompleteUser()
    */
   public function autocompleteUserAnonymous(Request $request) {
     return $this->autocompleteUser($request, TRUE);

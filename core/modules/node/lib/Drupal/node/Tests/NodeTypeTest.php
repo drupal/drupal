@@ -121,7 +121,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertRaw('Body', 'Body field was found.');
 
     // Remove the body field.
-    $this->drupalPost('admin/structure/types/manage/bar/fields/body/delete', array(), t('Delete'));
+    $this->drupalPost('admin/structure/types/manage/bar/fields/node.bar.body/delete', array(), t('Delete'));
     // Resave the settings for this type.
     $this->drupalPost('admin/structure/types/manage/bar', array(), t('Save content type'));
     // Check that the body field doesn't exist.

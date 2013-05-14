@@ -25,9 +25,9 @@ class TermRenderController extends EntityRenderController {
     foreach ($entities as $entity) {
       // Add the description if enabled.
       $display = $displays[$entity->bundle()];
-      if (!empty($entity->description) && $display->getComponent('description')) {
+      if (!empty($entity->description->value) && $display->getComponent('description')) {
         $entity->content['description'] = array(
-          '#markup' => check_markup($entity->description, $entity->format, '', TRUE),
+          '#markup' => check_markup($entity->description->value, $entity->format->value, '', TRUE),
           '#prefix' => '<div class="taxonomy-term-description">',
           '#suffix' => '</div>',
         );
@@ -54,6 +54,7 @@ class TermRenderController extends EntityRenderController {
   protected function alterBuild(array &$build, EntityInterface $entity, EntityDisplay $display, $view_mode, $langcode = NULL) {
     parent::alterBuild($build, $entity, $display, $view_mode, $langcode);
     $build['#attached']['css'][] = drupal_get_path('module', 'taxonomy') . '/taxonomy.css';
+    $build['#contextual_links']['taxonomy'] = array('taxonomy/term', array($entity->id()));
   }
 
 }

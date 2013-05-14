@@ -10,9 +10,8 @@ namespace Drupal\editor\Plugin\edit\editor;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
-use Drupal\edit\EditorInterface;
+use Drupal\edit\EditPluginInterface;
 use Drupal\field\Plugin\Core\Entity\FieldInstance;
-
 
 /**
  * Defines the "editor" Create.js PropertyEditor widget.
@@ -24,10 +23,10 @@ use Drupal\field\Plugin\Core\Entity\FieldInstance;
  *   module = "editor"
  * )
  */
-class Editor extends PluginBase implements EditorInterface {
+class Editor extends PluginBase implements EditPluginInterface {
 
   /**
-   * Implements \Drupal\edit\Plugin\EditorInterface::isCompatible().
+   * Implements \Drupal\edit\Plugin\EditPluginInterface::isCompatible().
    */
   function isCompatible(FieldInstance $instance, array $items) {
     $field = field_info_field($instance['field_name']);
@@ -53,7 +52,7 @@ class Editor extends PluginBase implements EditorInterface {
   }
 
   /**
-   * Implements \Drupal\edit\Plugin\EditorInterface::getMetadata().
+   * Implements \Drupal\edit\Plugin\EditPluginInterface::getMetadata().
    */
   function getMetadata(FieldInstance $instance, array $items) {
     $format_id = $items[0]['format'];
@@ -70,7 +69,7 @@ class Editor extends PluginBase implements EditorInterface {
   }
 
   /**
-   * Implements \Drupal\edit\EditorInterface::getAttachments().
+   * Implements \Drupal\edit\EditPluginInterface::getAttachments().
    */
   public function getAttachments() {
     global $user;

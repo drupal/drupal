@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\aggregator\Tests\FeedProcessorTest.
+ * Contains \Drupal\aggregator\Tests\FeedProcessorPluginTest.
  */
 
 namespace Drupal\aggregator\Tests;

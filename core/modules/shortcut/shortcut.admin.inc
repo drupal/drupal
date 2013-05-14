@@ -171,13 +171,6 @@ function shortcut_set_switch_submit($form, &$form_state) {
 }
 
 /**
- * Menu page callback: builds the page for administering shortcut sets.
- */
-function shortcut_set_admin() {
-  return entity_list_controller('shortcut')->render();
-}
-
-/**
  * Page callback: provides the shortcut set creation form.
  */
 function shortcut_set_add() {
@@ -290,7 +283,7 @@ function theme_shortcut_set_customize($variables) {
   }
 
   $header = array(t('Name'), t('Weight'), t('Operations'));
-  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'shortcuts'), 'empty' => t('No shortcuts available. <a href="@link">Add a shortcut</a>.', array('@link' => url('admin/config/user-interface/shortcut/' . $form['#shortcut_set_name'] . '/add-link')))));
+  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'shortcuts'), 'empty' => t('No shortcuts available. <a href="@link">Add a shortcut</a>.', array('@link' => url('admin/config/user-interface/shortcut/manage/' . $form['#shortcut_set_name'] . '/add-link')))));
   $output .= drupal_render($form['actions']);
   $output = drupal_render_children($form) . $output;
   return $output;

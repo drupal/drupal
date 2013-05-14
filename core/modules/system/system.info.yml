@@ -1,4 +1,5 @@
 name: System
+type: module
 description: 'Handles general site configuration for administrators.'
 package: Core
 version: VERSION

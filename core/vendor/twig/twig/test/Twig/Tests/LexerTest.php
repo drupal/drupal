@@ -150,7 +150,21 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(922337203685477580700, $node->getValue());
     }
 
-    public function testString()
+    public function testStringWithEscapedDelimiter()
+    {
+        $tests = array(
+            "{{ 'foo \' bar' }}" => 'foo \' bar',
+            '{{ "foo \" bar" }}' => "foo \" bar",
+        );
+        $lexer = new Twig_Lexer(new Twig_Environment());
+        foreach ($tests as $template => $expected) {
+            $stream = $lexer->tokenize($template);
+            $stream->expect(Twig_Token::VAR_START_TYPE);
+            $stream->expect(Twig_Token::STRING_TYPE, $expected);
+        }
+    }
+
+    public function testStringWithInterpolation()
     {
         $template = 'foo {{ "bar #{ baz + 1 }" }}';
 
@@ -245,5 +259,43 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
         $stream->expect(Twig_Token::VAR_START_TYPE);
         $stream->expect(Twig_Token::NUMBER_TYPE, 1);
         $stream->expect(Twig_Token::OPERATOR_TYPE, 'and');
+    }
+
+    /**
+     * @expectedException Twig_Error_Syntax
+     * @expectedExceptionMessage Unclosed "variable" at line 3
+     */
+    public function testUnterminatedVariable()
+    {
+        $template = '
+
+{{
+
+bar
+
+
+';
+
+        $lexer = new Twig_Lexer(new Twig_Environment());
+        $stream = $lexer->tokenize($template);
+    }
+
+    /**
+     * @expectedException Twig_Error_Syntax
+     * @expectedExceptionMessage Unclosed "block" at line 3
+     */
+    public function testUnterminatedBlock()
+    {
+        $template = '
+
+{%
+
+bar
+
+
+';
+
+        $lexer = new Twig_Lexer(new Twig_Environment());
+        $stream = $lexer->tokenize($template);
     }
 }

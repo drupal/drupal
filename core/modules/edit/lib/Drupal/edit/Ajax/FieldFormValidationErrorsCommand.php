@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\edit\Ajax\FieldFormValidationErrorsCommand.
+ * Contains \Drupal\edit\Ajax\FieldFormValidationErrorsCommand.
  */
 
 namespace Drupal\edit\Ajax;

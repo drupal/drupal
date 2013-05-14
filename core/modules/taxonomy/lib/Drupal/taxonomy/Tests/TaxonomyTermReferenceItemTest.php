@@ -80,15 +80,15 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
     $tid = $this->term->id();
     // Just being able to create the entity like this verifies a lot of code.
     $entity = entity_create('entity_test', array());
-    $entity->field_test_taxonomy->tid = $this->term->tid;
+    $entity->field_test_taxonomy->tid = $this->term->id();
     $entity->name->value = $this->randomName();
     $entity->save();
 
     $entity = entity_load('entity_test', $entity->id());
     $this->assertTrue($entity->field_test_taxonomy instanceof FieldInterface, 'Field implements interface.');
     $this->assertTrue($entity->field_test_taxonomy[0] instanceof FieldItemInterface, 'Field item implements interface.');
-    $this->assertEqual($entity->field_test_taxonomy->tid, $this->term->tid);
-    $this->assertEqual($entity->field_test_taxonomy->entity->name, $this->term->name);
+    $this->assertEqual($entity->field_test_taxonomy->tid, $this->term->id());
+    $this->assertEqual($entity->field_test_taxonomy->entity->name->value, $this->term->name->value);
     $this->assertEqual($entity->field_test_taxonomy->entity->id(), $tid);
     $this->assertEqual($entity->field_test_taxonomy->entity->uuid(), $this->term->uuid());
 
@@ -98,19 +98,19 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
     $entity->field_test_taxonomy->entity->save();
     // Verify it is the correct name.
     $term = entity_load('taxonomy_term', $tid);
-    $this->assertEqual($term->name, $new_name);
+    $this->assertEqual($term->name->value, $new_name);
 
     // Make sure the computed term reflects updates to the term id.
     $term2 = entity_create('taxonomy_term', array(
       'name' => $this->randomName(),
-      'vid' => $this->term->vid,
+      'vid' => $this->term->vid->value,
       'langcode' => LANGUAGE_NOT_SPECIFIED,
     ));
     $term2->save();
 
-    $entity->field_test_taxonomy->tid = $term2->tid;
-    $this->assertEqual($entity->field_test_taxonomy->entity->id(), $term2->tid);
-    $this->assertEqual($entity->field_test_taxonomy->entity->name, $term2->name);
+    $entity->field_test_taxonomy->tid = $term2->id();
+    $this->assertEqual($entity->field_test_taxonomy->entity->id(), $term2->id());
+    $this->assertEqual($entity->field_test_taxonomy->entity->name->value, $term2->name->value);
   }
 
 }

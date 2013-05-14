@@ -7,6 +7,7 @@
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\Core\Template\Attribute;
+use Drupal\Component\Utility\Crypt;
 
 /**
  * Implements hook_help().
@@ -54,20 +55,6 @@ function toolbar_theme($existing, $type, $theme, $path) {
   );
   $items['toolbar_tray_heading_wrapper'] = array(
     'render element' => 'element',
-  );
-  return $items;
-}
-
-/**
- * Implements hook_menu().
- */
-function toolbar_menu() {
-  $items['toolbar/subtrees/%'] = array(
-    'page callback' => 'toolbar_subtrees_jsonp',
-    'page arguments' => array(2),
-    'access callback' => '_toolbar_subtrees_access',
-    'access arguments' => array(2),
-    'type' => MENU_CALLBACK,
   );
   return $items;
 }
@@ -122,28 +109,6 @@ function toolbar_element_info() {
     ),
   );
   return $elements;
-}
-
-/**
- * Access callback: Returns if the user has access to the rendered subtree requested by the hash.
- *
- * @see toolbar_menu().
- */
-function _toolbar_subtrees_access($hash) {
-  return user_access('access toolbar') && ($hash == _toolbar_get_subtree_hash());
-}
-
-/**
- * Page callback: Returns the rendered subtree of each top-level toolbar link.
- *
- * @see toolbar_menu().
- */
-function toolbar_subtrees_jsonp($hash) {
-  _toolbar_initialize_page_cache();
-  $subtrees = toolbar_get_rendered_subtrees();
-  $response = new JsonResponse($subtrees);
-  $response->setCallback('Drupal.toolbar.setSubtrees');
-  return $response;
 }
 
 /**
@@ -666,7 +631,7 @@ function _toolbar_get_subtree_hash() {
   }
   else {
     $subtrees = toolbar_get_rendered_subtrees();
-    $hash = drupal_hash_base64(serialize($subtrees));
+    $hash = Crypt::hashBase64(serialize($subtrees));
     cache('toolbar')->set($cid, $hash);
   }
   return $hash;

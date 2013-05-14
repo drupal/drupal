@@ -1,4 +1,5 @@
 name: 'RDF module tests'
+type: module
 description: 'Support module for RDF module testing.'
 package: Testing
 version: VERSION

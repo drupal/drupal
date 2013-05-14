@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Cache\Cache;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -729,7 +730,7 @@ function drupal_goto($path = '', array $options = array(), $http_response_code =
   // The "Location" header sends a redirect status code to the HTTP daemon. In
   // some cases this can be wrong, so we make sure none of the code below the
   // drupal_goto() call gets executed upon redirection.
-  drupal_exit($url);
+  drupal_exit();
 }
 
 /**
@@ -1238,7 +1239,7 @@ function filter_xss_bad_protocol($string, $decode = TRUE) {
   //   string that needs decoding.
   if ($decode) {
     if (!function_exists('decode_entities')) {
-      require_once DRUPAL_ROOT . '/core/includes/unicode.inc';
+      require_once __DIR__ . '/unicode.inc';
     }
 
     $string = decode_entities($string);
@@ -1917,85 +1918,86 @@ function drupal_http_header_attributes(array $attributes = array()) {
  *   An HTML string containing a link to the given path.
  *
  * @see url()
+ * @see theme_link()
  */
 function l($text, $path, array $options = array()) {
-  static $use_theme = NULL;
+  // Build a variables array to keep the structure of the alter consistent with
+  // theme_link().
+  $variables = array(
+    'text' => $text,
+    'path' => $path,
+    'options' => $options,
+  );
 
-  // Merge in defaults.
-  $options += array(
+  // Merge in default options.
+  $variables['options'] += array(
     'attributes' => array(),
     'query' => array(),
     'html' => FALSE,
+    'language' => NULL,
   );
 
-  // Append active class.
-  // The link is only active, if its path corresponds to the current path, the
-  // language of the linked path is equal to the current language, and if the
-  // query parameters of the link equal those of the current request, since the
-  // same request with different query parameters may yield a different page
-  // (e.g., pagers).
-  $is_active = ($path == current_path() || ($path == '<front>' && drupal_is_front_page()));
-  $is_active = $is_active && (empty($options['language']) || $options['language']->langcode == language(LANGUAGE_TYPE_URL)->langcode);
-  $is_active = $is_active && (drupal_container()->get('request')->query->all() == $options['query']);
-  if ($is_active) {
-    $options['attributes']['class'][] = 'active';
+  // Because l() is called very often we statically cache values that require an
+  // extra function call.
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast['active'])) {
+    $drupal_static_fast['active'] = &drupal_static(__FUNCTION__);
+  }
+  $active = &$drupal_static_fast['active'];
+  if (!isset($active)) {
+    $active = array(
+      'path' => current_path(),
+      'front_page' => drupal_is_front_page(),
+      'language' => language(LANGUAGE_TYPE_URL)->langcode,
+      'query' => Drupal::service('request')->query->all(),
+    );
   }
 
-  // Remove all HTML and PHP tags from a tooltip. For best performance, we act only
-  // if a quick strpos() pre-check gave a suspicion (because strip_tags() is expensive).
-  if (isset($options['attributes']['title']) && strpos($options['attributes']['title'], '<') !== FALSE) {
-    $options['attributes']['title'] = strip_tags($options['attributes']['title']);
+  // Determine whether this link is "active', meaning that it links to the
+  // current page. It is important that we stop checking "active" conditions if
+  // we know the link is not active. This helps ensure that l() remains fast.
+  // An active link's path is equal to the current path.
+  $variables['url_is_active'] = ($path == $active['path'] || ($path == '<front>' && $active['front_page']))
+  // The language of an active link is equal to the current language.
+  && (empty($variables['options']['language']) || $variables['options']['language']->langcode == $active['language'])
+  // The query parameters of an active link are equal to the current parameters.
+  && ($variables['options']['query'] == $active['query']);
+
+  // Add the "active" class if appropriate.
+  if ($variables['url_is_active']) {
+    $variables['options']['attributes']['class'][] = 'active';
   }
 
-  // Determine if rendering of the link is to be done with a theme function
-  // or the inline default. Inline is faster, but if the theme system has been
-  // loaded and a module or theme implements a preprocess or process function
-  // or overrides the theme_link() function, then invoke theme(). Preliminary
-  // benchmarks indicate that invoking theme() can slow down the l() function
-  // by 20% or more, and that some of the link-heavy Drupal pages spend more
-  // than 10% of the total page request time in the l() function.
-  if (!isset($use_theme) && function_exists('theme')) {
-    // Allow edge cases to prevent theme initialization and force inline link
-    // rendering.
-    if (config('system.performance')->get('theme_link')) {
-      drupal_theme_initialize();
-      $registry = theme_get_registry(FALSE);
-      // We don't want to duplicate functionality that's in theme(), so any
-      // hint of a module or theme doing anything at all special with the 'link'
-      // theme hook should simply result in theme() being called. This includes
-      // the overriding of theme_link() with an alternate function or template,
-      // the presence of preprocess or process functions, or the presence of
-      // include files.
-      $use_theme = !isset($registry['link']['function']) || ($registry['link']['function'] != 'theme_link');
-      $use_theme = $use_theme || !empty($registry['link']['preprocess functions']) || !empty($registry['link']['process functions']) || !empty($registry['link']['includes']);
-    }
-    else {
-      $use_theme = FALSE;
-    }
+  // Remove all HTML and PHP tags from a tooltip, calling expensive strip_tags()
+  // only when a quick strpos() gives suspicion tags are present.
+  if (isset($variables['options']['attributes']['title']) && strpos($variables['options']['attributes']['title'], '<') !== FALSE) {
+    $variables['options']['attributes']['title'] = strip_tags($variables['options']['attributes']['title']);
   }
-  if ($use_theme) {
-    return theme('link', array('text' => $text, 'path' => $path, 'options' => $options));
-  }
+
+  // Allow other modules to modify the structure of the link.
+  Drupal::service('module_handler')->alter('link', $variables);
+
+  // Move attributes out of options. url() doesn't need them.
+  $attributes = new Attribute($variables['options']['attributes']);
+  unset($variables['options']['attributes']);
+
   // The result of url() is a plain-text URL. Because we are using it here
   // in an HTML argument context, we need to encode it properly.
-  return '<a href="' . check_plain(url($path, $options)) . '"' . new Attribute($options['attributes']) . '>' . ($options['html'] ? $text : check_plain($text)) . '</a>';
+  $url = check_plain(url($variables['path'], $variables['options']));
+
+  // Sanitize the link text if necessary.
+  $text = $variables['options']['html'] ? $variables['text'] : check_plain($variables['text']);
+
+  return '<a href="' . $url . '"' . $attributes . '>' . $text . '</a>';
 }
 
 /**
  * Performs end-of-request tasks.
  *
  * There should rarely be a reason to call exit instead of drupal_exit();
- *
- * @param $destination
- *   If this function is called from drupal_goto(), then this argument
- *   will be a fully-qualified URL that is the destination of the redirect.
- *   This should be passed along to hook_exit() implementations.
  */
-function drupal_exit($destination = NULL) {
+function drupal_exit() {
   if (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL) {
-    if (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update') {
-      module_invoke_all('exit', $destination);
-    }
     drupal_session_commit();
   }
   exit;
@@ -2865,7 +2867,7 @@ function drupal_build_css_cache($css) {
 
     // Prefix filename to prevent blocking by firewalls which reject files
     // starting with "ad*".
-    $filename = 'css_' . drupal_hash_base64($data) . '.css';
+    $filename = 'css_' . Crypt::hashBase64($data) . '.css';
     // Create the css/ within the files folder.
     $csspath = 'public://css';
     $uri = $csspath . '/' . $filename;
@@ -3116,7 +3118,14 @@ function drupal_clean_css_identifier($identifier, $filter = array(' ' => '-', '_
  *   The cleaned class name.
  */
 function drupal_html_class($class) {
-  return drupal_clean_css_identifier(drupal_strtolower($class));
+  // The output of this function will never change, so this uses a normal
+  // static instead of drupal_static().
+  static $classes = array();
+
+  if (!isset($classes[$class])) {
+    $classes[$class] = drupal_clean_css_identifier(drupal_strtolower($class));
+  }
+  return $classes[$class];
 }
 
 /**
@@ -4444,7 +4453,7 @@ function drupal_build_js_cache($files) {
     }
     // Prefix filename to prevent blocking by firewalls which reject files
     // starting with "ad*".
-    $filename = 'js_' . drupal_hash_base64($contents) . '.js';
+    $filename = 'js_' . Crypt::hashBase64($contents) . '.js';
     // Create the js/ within the files folder.
     $jspath = 'public://js';
     $uri = $jspath . '/' . $filename;
@@ -4512,7 +4521,7 @@ function drupal_json_decode($var) {
  */
 function drupal_get_private_key() {
   if (!($key = state()->get('system.private_key'))) {
-    $key = drupal_hash_base64(drupal_random_bytes(55));
+    $key = Crypt::randomStringHashed(55);
     state()->set('system.private_key', $key);
   }
   return $key;
@@ -4532,7 +4541,7 @@ function drupal_get_private_key() {
  * @see drupal_get_hash_salt()
  */
 function drupal_get_token($value = '') {
-  return drupal_hmac_base64($value, session_id() . drupal_get_private_key() . drupal_get_hash_salt());
+  return Crypt::hmacBase64($value, session_id() . drupal_get_private_key() . drupal_get_hash_salt());
 }
 
 /**
@@ -4558,20 +4567,20 @@ function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
  * Loads code for subsystems and modules, and registers stream wrappers.
  */
 function _drupal_bootstrap_code() {
-  require_once DRUPAL_ROOT . '/' . settings()->get('path_inc', 'core/includes/path.inc');
-  require_once DRUPAL_ROOT . '/core/includes/theme.inc';
-  require_once DRUPAL_ROOT . '/core/includes/pager.inc';
-  require_once DRUPAL_ROOT . '/' . settings()->get('menu_inc', 'core/includes/menu.inc');
-  require_once DRUPAL_ROOT . '/core/includes/tablesort.inc';
-  require_once DRUPAL_ROOT . '/core/includes/file.inc';
-  require_once DRUPAL_ROOT . '/core/includes/unicode.inc';
-  require_once DRUPAL_ROOT . '/core/includes/image.inc';
-  require_once DRUPAL_ROOT . '/core/includes/form.inc';
-  require_once DRUPAL_ROOT . '/core/includes/mail.inc';
-  require_once DRUPAL_ROOT . '/core/includes/ajax.inc';
-  require_once DRUPAL_ROOT . '/core/includes/errors.inc';
-  require_once DRUPAL_ROOT . '/core/includes/schema.inc';
-  require_once DRUPAL_ROOT . '/core/includes/entity.inc';
+  require_once __DIR__ . '/../../' . settings()->get('path_inc', 'core/includes/path.inc');
+  require_once __DIR__ . '/theme.inc';
+  require_once __DIR__ . '/pager.inc';
+  require_once __DIR__ . '/../../' . settings()->get('menu_inc', 'core/includes/menu.inc');
+  require_once __DIR__ . '/tablesort.inc';
+  require_once __DIR__ . '/file.inc';
+  require_once __DIR__ . '/unicode.inc';
+  require_once __DIR__ . '/image.inc';
+  require_once __DIR__ . '/form.inc';
+  require_once __DIR__ . '/mail.inc';
+  require_once __DIR__ . '/ajax.inc';
+  require_once __DIR__ . '/errors.inc';
+  require_once __DIR__ . '/schema.inc';
+  require_once __DIR__ . '/entity.inc';
 
   // Load all enabled modules
   drupal_container()->get('module_handler')->loadAll();
@@ -6080,7 +6089,7 @@ function drupal_flush_all_caches() {
 
   // Clear all non-drupal_static() static caches.
   // @todo Rebuild the kernel/container.
-  drupal_container()->get('plugin.manager.entity')->clearCachedDefinitions();
+  Drupal::entityManager()->clearCachedDefinitions();
 
   // Rebuild module and theme data.
   system_rebuild_module_data();

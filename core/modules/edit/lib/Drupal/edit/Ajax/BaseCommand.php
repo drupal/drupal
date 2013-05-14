@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Edit\Ajax\BaseCommand.
+ * Contains \Drupal\edit\Ajax\BaseCommand.
  */
 
 namespace Drupal\edit\Ajax;

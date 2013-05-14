@@ -8,7 +8,6 @@
 namespace Drupal\comment;
 
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormControllerNG;
 
 /**
@@ -19,8 +18,9 @@ class CommentFormController extends EntityFormControllerNG {
   /**
    * Overrides \Drupal\Core\Entity\EntityFormControllerNG::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $comment) {
+  public function form(array $form, array &$form_state) {
     global $user;
+    $comment = $this->entity;
 
     $entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
     $instance = field_info_instance($comment->entity_type->value, $comment->field_name->value, $entity->bundle());
@@ -172,7 +172,7 @@ class CommentFormController extends EntityFormControllerNG {
    */
   protected function actions(array $form, array &$form_state) {
     $element = parent::actions($form, $form_state);
-    $comment = $this->getEntity($form_state);
+    $comment = $this->entity;
     $entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
     $instance = field_info_instance($comment->entity_type->value, $comment->field_name->value, $entity->bundle());
     $preview_mode = $instance['settings']['preview'];
@@ -302,7 +302,7 @@ class CommentFormController extends EntityFormControllerNG {
    *   A reference to a keyed array containing the current state of the form.
    */
   public function preview(array $form, array &$form_state) {
-    $comment = $this->getEntity($form_state);
+    $comment = $this->entity;
     drupal_set_title(t('Preview comment'), PASS_THROUGH);
     $form_state['comment_preview'] = comment_preview($comment);
     $form_state['rebuild'] = TRUE;
@@ -313,7 +313,7 @@ class CommentFormController extends EntityFormControllerNG {
    */
   public function save(array $form, array &$form_state) {
     $entity = entity_load($form_state['values']['entity_type'], $form_state['values']['entity_id']);
-    $comment = $this->getEntity($form_state);
+    $comment = $this->entity;
     $field_name = $form_state['values']['field_name'];
     $instance = field_info_instance($entity->entityType(), $field_name, $entity->bundle());
     $items = field_get_items($entity, $field_name);

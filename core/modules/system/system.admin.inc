@@ -390,20 +390,24 @@ function system_theme_default() {
  * @return
  *   The form structure.
  * @ingroup forms
+ * @see system_theme_settings_validate()
  * @see system_theme_settings_submit()
  */
 function system_theme_settings($form, &$form_state, $key = '') {
   // Default settings are defined in theme_get_setting() in includes/theme.inc
   if ($key) {
     $var = 'theme_' . $key . '_settings';
+    $config_key = $key . '.settings';
     $themes = list_themes();
     $features = $themes[$key]->info['features'];
   }
   else {
     $var = 'theme_settings';
+    $config_key = 'system.theme.global';
   }
 
   $form['var'] = array('#type' => 'hidden', '#value' => $var);
+  $form['config_key'] = array('#type' => 'hidden', '#value' => $config_key);
 
   // Toggle settings
   $toggles = array(
@@ -436,7 +440,7 @@ function system_theme_settings($form, &$form_state, $key = '') {
   );
   foreach ($toggles as $name => $title) {
     if ((!$key) || in_array($name, $features)) {
-      $form['theme_settings']['toggle_' . $name] = array('#type' => 'checkbox', '#title' => $title, '#default_value' => theme_get_setting('toggle_' . $name, $key));
+      $form['theme_settings']['toggle_' . $name] = array('#type' => 'checkbox', '#title' => $title, '#default_value' => theme_get_setting('features.' . $name, $key));
       // Disable checkboxes for features not supported in the current configuration.
       if (isset($disabled['toggle_' . $name])) {
         $form['theme_settings']['toggle_' . $name]['#disabled'] = TRUE;
@@ -456,11 +460,17 @@ function system_theme_settings($form, &$form_state, $key = '') {
       '#type' => 'details',
       '#title' => t('Logo image settings'),
       '#attributes' => array('class' => array('theme-settings-bottom')),
+      '#states' => array(
+        // Hide the logo image settings fieldset when logo display is disabled.
+        'invisible' => array(
+          'input[name="toggle_logo"]' => array('checked' => FALSE),
+        ),
+      ),
     );
     $form['logo']['default_logo'] = array(
       '#type' => 'checkbox',
       '#title' => t('Use the default logo supplied by the theme'),
-      '#default_value' => theme_get_setting('default_logo', $key),
+      '#default_value' => theme_get_setting('logo.use_default', $key),
       '#tree' => FALSE,
     );
     $form['logo']['settings'] = array(
@@ -475,7 +485,7 @@ function system_theme_settings($form, &$form_state, $key = '') {
     $form['logo']['settings']['logo_path'] = array(
       '#type' => 'textfield',
       '#title' => t('Path to custom logo'),
-      '#default_value' => theme_get_setting('logo_path', $key),
+      '#default_value' => theme_get_setting('logo.path', $key),
     );
     $form['logo']['settings']['logo_upload'] = array(
       '#type' => 'file',
@@ -490,11 +500,18 @@ function system_theme_settings($form, &$form_state, $key = '') {
       '#type' => 'details',
       '#title' => t('Shortcut icon settings'),
       '#description' => t("Your shortcut icon, or 'favicon', is displayed in the address bar and bookmarks of most browsers."),
+      '#states' => array(
+        // Hide the shortcut icon settings fieldset when shortcut icon display
+        // is disabled.
+        'invisible' => array(
+          'input[name="toggle_favicon"]' => array('checked' => FALSE),
+        ),
+      ),
     );
     $form['favicon']['default_favicon'] = array(
       '#type' => 'checkbox',
       '#title' => t('Use the default shortcut icon supplied by the theme'),
-      '#default_value' => theme_get_setting('default_favicon', $key),
+      '#default_value' => theme_get_setting('favicon.use_default', $key),
     );
     $form['favicon']['settings'] = array(
       '#type' => 'container',
@@ -508,7 +525,7 @@ function system_theme_settings($form, &$form_state, $key = '') {
     $form['favicon']['settings']['favicon_path'] = array(
       '#type' => 'textfield',
       '#title' => t('Path to custom icon'),
-      '#default_value' => theme_get_setting('favicon_path', $key),
+      '#default_value' => theme_get_setting('favicon.path', $key),
     );
     $form['favicon']['settings']['favicon_upload'] = array(
       '#type' => 'file',
@@ -602,12 +619,7 @@ function system_theme_settings($form, &$form_state, $key = '') {
     }
   }
 
-  $form = system_settings_form($form);
-  // We don't want to call system_settings_form_submit(), so change #submit.
-  array_pop($form['#submit']);
-  $form['#submit'][] = 'system_theme_settings_submit';
-  $form['#validate'][] = 'system_theme_settings_validate';
-  return $form;
+  return system_config_form($form, $form_state);
 }
 
 /**
@@ -702,14 +714,15 @@ function _system_theme_settings_validate_path($path) {
  * Process system_theme_settings form submissions.
  */
 function system_theme_settings_submit($form, &$form_state) {
+  $config = Drupal::config($form_state['values']['config_key']);
+
   // Exclude unnecessary elements before saving.
   form_state_values_clean($form_state);
-  $values = $form_state['values'];
+  $key = $form_state['values']['var'];
+  unset($form_state['values']['var']);
+  unset($form_state['values']['config_key']);
 
-  // Extract the name of the theme from the submitted form values, then
-  // remove it from the array so that it is not saved as part of the variable.
-  $key = $values['var'];
-  unset($values['var']);
+  $values = $form_state['values'];
 
   // If the user uploaded a new logo or favicon, save it to a permanent location
   // and use it in place of the default theme-provided file.
@@ -743,8 +756,7 @@ function system_theme_settings_submit($form, &$form_state) {
     }
   }
 
-  variable_set($key, $values);
-  drupal_set_message(t('The configuration options have been saved.'));
+  theme_settings_convert_to_config($values, $config)->save();
 
   cache_invalidate_tags(array('content' => TRUE));
 }
@@ -1105,7 +1117,7 @@ function system_modules_confirm_form($modules, $storage) {
     $items[] = format_plural(count($info['depends']), 'The @module module is missing, so the following module will be disabled: @depends.', 'The @module module is missing, so the following modules will be disabled: @depends.', $t_argument);
   }
 
-  $form['text'] = array('#markup' => theme('item_list', array('items' => $items)));
+  $form['modules'] = array('#theme' => 'item_list', '#items' => $items);
 
     // Set some default form values
   $form = confirm_form(
@@ -1357,7 +1369,8 @@ function system_modules_uninstall_confirm_form($storage) {
   if (isset($uninstall)) {
     $form['#confirmed'] = TRUE;
     $form['uninstall']['#tree'] = TRUE;
-    $form['modules'] = array('#markup' => '<p>' . t('The following modules will be completely uninstalled from your site, and <em>all data from these modules will be lost</em>!') . '</p>' . theme('item_list', array('items' => $uninstall)));
+    $form['text'] = array('#markup' => '<p>' . t('The following modules will be completely uninstalled from your site, and <em>all data from these modules will be lost</em>!') . '</p>');
+    $form['modules'] = array('#theme' => 'item_list', '#items' => $uninstall);
     $form = confirm_form(
       $form,
       t('Confirm uninstall'),
@@ -1405,7 +1418,7 @@ function system_modules_uninstall_submit($form, &$form_state) {
  * Form builder; The general site information form.
  *
  * @ingroup forms
- * @see system_settings_form()
+ * @see system_config_form()
  */
 function system_site_information_settings($form, &$form_state) {
   config_context_enter('config.context.free');
@@ -1760,7 +1773,7 @@ function system_clear_page_cache_submit($form, &$form_state) {
  * Form builder; Configure the site file handling.
  *
  * @ingroup forms
- * @see system_settings_form_sumbit()
+ * @see system_file_system_settings_submit()
  */
 function system_file_system_settings($form, $form_state) {
   $config = config('system.file');

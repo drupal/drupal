@@ -113,7 +113,7 @@ class VocabularyTest extends TaxonomyTestBase {
     // Delete all vocabularies.
     $vocabularies = taxonomy_vocabulary_load_multiple();
     foreach ($vocabularies as $key => $vocabulary) {
-      taxonomy_vocabulary_delete($key);
+      $vocabulary->delete();
     }
     // Confirm that no vocabularies are found in the database.
     $this->assertFalse(taxonomy_vocabulary_load_multiple(), 'No vocabularies found.');
@@ -142,7 +142,7 @@ class VocabularyTest extends TaxonomyTestBase {
 
     // Delete the vocabulary.
     $edit = array();
-    $this->drupalPost('admin/structure/taxonomy/' . $vocabulary->id() . '/edit', $edit, t('Delete'));
+    $this->drupalPost('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/edit', $edit, t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the vocabulary %name?', array('%name' => $vocabulary->name)), '[confirm deletion] Asks for confirmation.');
     $this->assertText(t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'), '[confirm deletion] Inform that all terms will be deleted.');
 

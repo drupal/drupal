@@ -1,4 +1,5 @@
 name: 'Field SQL Storage'
+type: module
 description: 'Stores field data in an SQL database.'
 package: Core
 version: VERSION

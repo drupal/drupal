@@ -38,9 +38,9 @@ class UserRoleAdminTest extends WebTestBase {
     // correspond to an integer, to test that the role administration pages
     // correctly distinguish between role names and IDs.)
     $role_name = '123';
-    $edit = array('role[label]' => $role_name, 'role[id]' => $role_name);
-    $this->drupalPost('admin/people/roles', $edit, t('Add role'));
-    $this->assertText(t('The role has been added.'), 'The role has been added.');
+    $edit = array('label' => $role_name, 'id' => $role_name);
+    $this->drupalPost('admin/people/roles/add', $edit, t('Save'));
+    $this->assertRaw(t('Role %label has been added.', array('%label' => 123)));
     $role = entity_load('user_role', $role_name);
     $this->assertTrue(is_object($role), 'The role was successfully retrieved from the database.');
 
@@ -48,31 +48,31 @@ class UserRoleAdminTest extends WebTestBase {
     $this->assertEqual($role->langcode, $default_langcode);
 
     // Try adding a duplicate role.
-    $this->drupalPost(NULL, $edit, t('Add role'));
+    $this->drupalPost('admin/people/roles/add', $edit, t('Save'));
     $this->assertRaw(t('The machine-readable name is already in use. It must be unique.'), 'Duplicate role warning displayed.');
 
     // Test renaming a role.
     $old_name = $role_name;
     $role_name = '456';
-    $edit = array('role[label]' => $role_name);
-    $this->drupalPost("admin/people/roles/edit/{$role->id()}", $edit, t('Save role'));
-    $this->assertText(t('The role has been renamed.'), 'The role has been renamed.');
+    $edit = array('label' => $role_name);
+    $this->drupalPost("admin/people/roles/manage/{$role->id()}", $edit, t('Save'));
+    $this->assertRaw(t('Role %label has been updated.', array('%label' => $role_name)));
     $new_role = entity_load('user_role', $old_name);
     $this->assertEqual($new_role->label(), $role_name, 'The role name has been successfully changed.');
 
     // Test deleting a role.
-    $this->drupalPost("admin/people/roles/edit/{$role->id()}", NULL, t('Delete role'));
-    $this->drupalPost(NULL, NULL, t('Delete'));
-    $this->assertText(t('The role has been deleted.'), 'The role has been deleted');
-    $this->assertNoLinkByHref("admin/people/roles/edit/{$role->id()}", 'Role edit link removed.');
+    $this->drupalPost("admin/people/roles/manage/{$role->id()}", array(), t('Delete'));
+    $this->drupalPost(NULL, array(), t('Delete'));
+    $this->assertRaw(t('Role %label has been deleted.', array('%label' => $role_name)));
+    $this->assertNoLinkByHref("admin/people/roles/manage/{$role->id()}", 'Role edit link removed.');
     $this->assertFalse(entity_load('user_role', $role_name), 'A deleted role can no longer be loaded.');
 
     // Make sure that the system-defined roles can be edited via the user
     // interface.
-    $this->drupalGet('admin/people/roles/edit/' . DRUPAL_ANONYMOUS_RID);
+    $this->drupalGet('admin/people/roles/manage/' . DRUPAL_ANONYMOUS_RID);
     $this->assertResponse(200, 'Access granted when trying to edit the built-in anonymous role.');
     $this->assertNoText(t('Delete role'), 'Delete button for the anonymous role is not present.');
-    $this->drupalGet('admin/people/roles/edit/' . DRUPAL_AUTHENTICATED_RID);
+    $this->drupalGet('admin/people/roles/manage/' . DRUPAL_AUTHENTICATED_RID);
     $this->assertResponse(200, 'Access granted when trying to edit the built-in authenticated role.');
     $this->assertNoText(t('Delete role'), 'Delete button for the authenticated role is not present.');
   }
@@ -90,7 +90,7 @@ class UserRoleAdminTest extends WebTestBase {
     // Change the role weights to make the roles in reverse order.
     $edit = array();
     foreach ($roles as $role) {
-      $edit['roles['. $role->id() .'][weight]'] =  $weight;
+      $edit['entities['. $role->id() .'][weight]'] =  $weight;
       $new_role_weights[$role->id()] = $weight;
       $saved_rids[] = $role->id;
       $weight--;

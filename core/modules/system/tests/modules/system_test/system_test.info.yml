@@ -1,4 +1,5 @@
 name: 'System test'
+type: module
 description: 'Support module for system testing.'
 package: Testing
 version: VERSION

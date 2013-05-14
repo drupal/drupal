@@ -1,4 +1,5 @@
 name: 'Custom Block'
+type: module
 description: 'Allows the creation of custom blocks through the user interface.'
 package: Core
 version: VERSION

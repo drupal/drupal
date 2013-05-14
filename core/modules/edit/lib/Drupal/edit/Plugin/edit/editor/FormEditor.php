@@ -23,14 +23,14 @@ use Drupal\field\Plugin\Core\Entity\FieldInstance;
 class FormEditor extends EditorBase {
 
   /**
-   * Implements \Drupal\edit\EditorInterface::isCompatible().
+   * Implements \Drupal\edit\EditPluginInterface::isCompatible().
    */
   function isCompatible(FieldInstance $instance, array $items) {
     return TRUE;
   }
 
   /**
-   * Implements \Drupal\edit\EditorInterface::getAttachments().
+   * Implements \Drupal\edit\EditPluginInterface::getAttachments().
    */
   public function getAttachments() {
     return array(

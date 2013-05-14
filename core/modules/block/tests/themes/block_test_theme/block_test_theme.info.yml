@@ -1,4 +1,5 @@
 name: 'Block test theme'
+type: theme
 description: 'Theme for testing the block system'
 core: 8.x
 hidden: true

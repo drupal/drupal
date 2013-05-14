@@ -260,11 +260,6 @@ function comment_entity_bundle_info() {
   foreach (comment_get_comment_fields() as $field_name => $field_info) {
     $bundles['comment'][$field_name] = array(
       'label' => $field_name,
-      'admin' => array(
-        'path' => 'admin/structure/comments/%comment_field_name',
-        'bundle argument' => 3,
-        'real path' => 'admin/structure/comments/' . $field_name,
-      ),
     );
   }
   return $bundles;
@@ -394,11 +389,8 @@ function comment_menu() {
   // so we don't end up loading it twice (in the page and access callback).
   $items['comment/%comment/edit'] = array(
     'title' => 'Edit',
-    'page callback' => 'comment_edit_page',
-    'page arguments' => array(1),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(1, 'update'),
     'type' => MENU_LOCAL_TASK,
+    'route_name' => 'comment_edit_page',
   );
   $items['comment/%comment/approve'] = array(
     'title' => 'Approve',
@@ -1285,7 +1277,6 @@ function comment_user_predelete($account) {
 }
 
 /**
-<<<<<<< HEAD
  * Determines whether the current user has access to a particular comment.
  *
  * Authenticated users can edit their comments as long they have not been
@@ -1310,8 +1301,6 @@ function comment_access($op, Comment $comment) {
 }
 
 /**
-=======
->>>>>>> 26697707dca68cc90be8af4d4a267bdd6bcc7ecc
  * Accepts a submission of new or changed comment content.
  *
  * @param \Drupal\comment\Plugin\Core\Entity\comment $comment
@@ -1350,8 +1339,7 @@ function comment_delete_multiple($cids) {
  * @param array $cids
  *   (optional) An array of entity IDs. If omitted, all entities are loaded.
  * @param bool $reset
- *   Whether to reset the internal static entity cache. Note that the static
- *   cache is disabled by default.
+ *   (optional) Whether to reset the internal static entity cache.
  *
  * @return array
  *   An array of comment objects, indexed by comment ID.
@@ -1369,14 +1357,13 @@ function comment_load_multiple(array $cids = NULL, $reset = FALSE) {
  * @param int $cid
  *   The ID of the comment to be loaded.
  * @param bool $reset
- *   Whether to reset the internal static entity cache. Note that the static
- *   cache is disabled by default.
+ *   (optional) Whether to reset the internal static entity cache.
  *
  * @return
  *   The comment object.
  */
 function comment_load($cid, $reset = FALSE) {
-  return entity_load('comment', $cid);
+  return entity_load('comment', $cid, $reset);
 }
 
 /**
@@ -1505,19 +1492,6 @@ function comment_get_display_page($cid, $instance) {
 }
 
 /**
- * Page callback: Displays the comment editing form.
- *
- * @param \Drupal\comment\Plugin\Core\Entity\comment $comment
- *   The comment object representing the comment to be edited.
- *
- * @see comment_menu()
- */
-function comment_edit_page(Comment $comment) {
-  drupal_set_title(t('Edit comment %comment', array('%comment' => $comment->subject->value)), PASS_THROUGH);
-  return entity_get_form($comment);
-}
-
-/**
  * Generates a comment preview.
  *
  * @param \Drupal\comment\Plugin\Core\Entity\comment $comment
@@ -1581,7 +1555,7 @@ function comment_preview(Comment $comment) {
  * Implements hook_preprocess_HOOK() for block.tpl.php.
  */
 function comment_preprocess_block(&$variables) {
-  if ($variables['block']->module == 'comment') {
+  if ($variables['configuration']['module'] == 'comment') {
     $variables['attributes']['role'] = 'navigation';
   }
 }
@@ -1627,7 +1601,7 @@ function template_preprocess_comment(&$variables) {
     $variables['changed'] = format_date($comment->changed->value);
   }
 
-  if (theme_get_setting('toggle_comment_user_picture')) {
+  if (theme_get_setting('features.comment_user_picture')) {
     // To change user picture settings (e.g., image style), edit the 'compact'
     // view mode on the User entity.
     $variables['user_picture'] = user_view($account, 'compact');
@@ -1652,7 +1626,7 @@ function template_preprocess_comment(&$variables) {
   if ($comment->pid->target_id) {
     // Fetch and store the parent comment information for use in templates.
     $comment_parent = $comment->pid->entity;
-    $account_parent = comment_prepare_author($comment);
+    $account_parent = comment_prepare_author($comment_parent);
     $variables['parent_comment'] = $comment_parent;
     $variables['parent_author'] = theme('username', array('account' => $account_parent));
     $variables['parent_created'] = format_date($comment_parent->created->value);

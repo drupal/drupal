@@ -98,6 +98,11 @@ function twig_render_var($arg) {
     $arg = &$arg->getReference();
   }
 
+  // Check for numeric zero.
+  if ($arg === 0) {
+    return 0;
+  }
+
   // == is true also for empty arrays
   if ($arg == NULL) {
     return NULL;

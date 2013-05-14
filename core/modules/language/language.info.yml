@@ -1,4 +1,5 @@
 name: Language
+type: module
 description: 'Allows users to configure languages and apply them to content.'
 package: Multilingual
 version: VERSION

@@ -519,6 +519,7 @@ function ajax_process_form($element, &$form_state) {
  *   - #ajax['wrapper']
  *   - #ajax['parameters']
  *   - #ajax['effect']
+ *   - #ajax['accepts']
  *
  * @return
  *   The processed element with the necessary JavaScript attached to it.
@@ -607,6 +608,7 @@ function ajax_pre_render_element($element) {
     $settings += array(
       'path' => isset($settings['callback']) ? 'system/ajax' : NULL,
       'options' => array(),
+      'accepts' => 'application/vnd.drupal-ajax'
     );
 
     // @todo Legacy support. Remove in Drupal 8.

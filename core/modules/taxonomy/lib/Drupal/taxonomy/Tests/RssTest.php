@@ -92,22 +92,22 @@ class RssTest extends TaxonomyTestBase {
     $edit = array();
     $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName();
-    $edit[$this->instance['field_name'] . '[' . $langcode . '][]'] = $term1->tid;
+    $edit[$this->instance['field_name'] . '[' . $langcode . '][]'] = $term1->id();
     $this->drupalPost('node/add/article', $edit, t('Save'));
 
     // Check that the term is displayed when the RSS feed is viewed.
     $this->drupalGet('rss.xml');
     $test_element = array(
       'key' => 'category',
-      'value' => $term1->name,
+      'value' => $term1->name->value,
       'attributes' => array(
-        'domain' => url('taxonomy/term/' . $term1->tid, array('absolute' => TRUE)),
+        'domain' => url('taxonomy/term/' . $term1->id(), array('absolute' => TRUE)),
       ),
     );
     $this->assertRaw(format_xml_elements(array($test_element)), 'Term is displayed when viewing the rss feed.');
 
     // Test that the feed page exists for the term.
-    $this->drupalGet("taxonomy/term/{$term1->tid}/feed");
+    $this->drupalGet("taxonomy/term/{$term1->id()}/feed");
     $this->assertRaw('<rss version="2.0"', "Feed page is RSS.");
   }
 }

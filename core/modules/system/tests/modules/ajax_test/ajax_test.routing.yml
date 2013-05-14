@@ -1,0 +1,6 @@
+ajax_test_dialog_contents:
+  pattern: ajax-test/dialog-contents
+  defaults:
+    _content: '\Drupal\ajax_test\AjaxTestController::dialogContents'
+  requirements:
+    _access: 'TRUE'

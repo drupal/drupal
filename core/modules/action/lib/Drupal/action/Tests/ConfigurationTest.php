@@ -7,6 +7,7 @@
 
 namespace Drupal\action\Tests;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -39,7 +40,7 @@ class ConfigurationTest extends WebTestBase {
 
     // Make a POST request to admin/config/system/actions.
     $edit = array();
-    $edit['action'] = drupal_hash_base64('action_goto_action');
+    $edit['action'] = Crypt::hashBase64('action_goto_action');
     $this->drupalPost('admin/config/system/actions', $edit, t('Create'));
 
     // Make a POST request to the individual action configuration page.
@@ -47,7 +48,7 @@ class ConfigurationTest extends WebTestBase {
     $action_label = $this->randomName();
     $edit['action_label'] = $action_label;
     $edit['url'] = 'admin';
-    $this->drupalPost('admin/config/system/actions/configure/' . drupal_hash_base64('action_goto_action'), $edit, t('Save'));
+    $this->drupalPost('admin/config/system/actions/configure/' . Crypt::hashBase64('action_goto_action'), $edit, t('Save'));
 
     // Make sure that the new complex action was saved properly.
     $this->assertText(t('The action has been successfully saved.'), "Make sure we get a confirmation that we've successfully saved the complex action.");

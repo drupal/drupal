@@ -1,7 +1,13 @@
 id: bartik.help
-plugin: system_help_block
+weight: '0'
 status: '1'
+langcode: en
+region: help
+plugin: system_help_block
 settings:
+  label: 'System Help'
+  module: system
+  label_display: '0'
   cache: '-1'
 visibility:
   path:
@@ -14,9 +20,3 @@ visibility:
       article: '0'
       page: '0'
   visibility__active_tab: edit-visibility-path
-label: ''
-module: system
-region: help
-weight: '0'
-langcode: en
-label_display: visible

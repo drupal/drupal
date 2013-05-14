@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2012 OpenSky Project Inc
+ * (c) 2010-2013 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -73,7 +73,7 @@ class CssRewriteFilter extends BaseCssFilter
                 return $matches[0];
             }
 
-            if ('/' == $matches['url'][0]) {
+            if (isset($matches['url'][0]) && '/' == $matches['url'][0]) {
                 // root relative
                 return str_replace($matches['url'], $host.$matches['url'], $matches[0]);
             }

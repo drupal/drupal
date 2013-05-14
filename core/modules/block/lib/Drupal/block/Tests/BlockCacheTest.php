@@ -192,9 +192,7 @@ class BlockCacheTest extends WebTestBase {
    * Private helper method to set the test block's cache mode.
    */
   private function setCacheMode($cache_mode) {
-    $settings = $this->block->get('settings');
-    $settings['cache'] = $cache_mode;
-    $this->block->set('settings', $settings);
+    $this->block->getPlugin()->setConfig('cache', $cache_mode);
     $this->block->save();
   }
 

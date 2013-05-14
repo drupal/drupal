@@ -41,7 +41,6 @@ class RouteContentEnhancerTest extends CmfUnitTestCase
         $this->assertEquals($expected, $this->mapper->enhance($defaults, $this->request));
     }
 
-
     public function testFieldAlreadyThere()
     {
         $this->document->expects($this->never())

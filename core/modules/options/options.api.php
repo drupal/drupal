@@ -61,10 +61,39 @@ function hook_options_list($field, $instance, $entity) {
     $terms = taxonomy_get_tree($tree['vid'], $tree['parent'], NULL, TRUE);
     if ($terms) {
       foreach ($terms as $term) {
-        $options[$term->tid] = str_repeat('-', $term->depth) . $term->label();
+        $options[$term->id()] = str_repeat('-', $term->depth) . $term->label();
       }
     }
   }
 
   return $options;
+}
+
+/**
+ * Alters the list of options to be displayed for a field.
+ *
+ * This hook can notably be used to change the label of the empty option.
+ *
+ * @param array $options
+ *   The array of options for the field, as returned by hook_options_list(). An
+ *   empty option (_none) might have been added, depending on the field
+ *   properties.
+ *
+ * @param array $context
+ *   An associative array containing:
+ *   - field: The field definition (\Drupal\field\Plugin\Core\Entity\Field).
+ *   - instance: The instance definition. It is recommended to only use instance
+ *     level properties to filter out values from a list defined by field level
+ *     properties (Drupal\field\Plugin\Core\Entity\FieldInstance).
+ *   - entity: The entity object the field is attached to
+ *     (\Drupal\Core\Entity\EntityInterface).
+ *
+ * @see hook_options_list()
+ */
+function hook_options_list_alter(array &$options, array $context) {
+  // Check if this is the field we want to change.
+  if ($context['field']->id() == 'field_option') {
+    // Change the label of the empty option.
+    $options['_none'] = t('== Empty ==');
+  }
 }

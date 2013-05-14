@@ -19,30 +19,9 @@ use Drupal\user\Plugin\Core\Entity\User;
 class VocabularyAccessController extends EntityAccessController {
 
   /**
-   * Implements \Drupal\Core\Entity\EntityAccessControllerInterface::viewAccess().
+   * {@inheritdoc}
    */
-  public function viewAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return user_access('administer taxonomy', $account);
-  }
-
-  /**
-   * Implements \Drupal\Core\Entity\EntityAccessControllerInterface::createAccess().
-   */
-  public function createAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return user_access('administer taxonomy', $account);
-  }
-
-  /**
-   * Implements \Drupal\Core\Entity\EntityAccessControllerInterface::updateAccess().
-   */
-  public function updateAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return user_access('administer taxonomy', $account);
-  }
-
-  /**
-   * Implements \Drupal\Core\Entity\EntityAccessControllerInterface::deleteAccess().
-   */
-  public function deleteAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
+  protected function checkAccess(EntityInterface $entity, $operation, $langcode, User $account) {
     return user_access('administer taxonomy', $account);
   }
 

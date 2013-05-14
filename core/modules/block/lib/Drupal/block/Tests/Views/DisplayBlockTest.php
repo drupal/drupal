@@ -90,13 +90,13 @@ class DisplayBlockTest extends ViewTestBase {
   protected function testDeleteBlockDisplay() {
     // To test all combinations possible we first place create two instances
     // of the block display of the first view.
-    $block_1 = $this->drupalPlaceBlock('views_block:test_view_block-block_1', array(), array('title' => 'test_view_block-block_1:1'));
-    $block_2 = $this->drupalPlaceBlock('views_block:test_view_block-block_1', array(), array('title' => 'test_view_block-block_1:2'));
+    $block_1 = $this->drupalPlaceBlock('views_block:test_view_block-block_1', array('title' => 'test_view_block-block_1:1'));
+    $block_2 = $this->drupalPlaceBlock('views_block:test_view_block-block_1', array('title' => 'test_view_block-block_1:2'));
 
     // Then we add one instance of blocks for each of the two displays of the
     // second view.
-    $block_3 = $this->drupalPlaceBlock('views_block:test_view_block2-block_1', array(), array('title' => 'test_view_block2-block_1'));
-    $block_4 = $this->drupalPlaceBlock('views_block:test_view_block2-block_2', array(), array('title' => 'test_view_block2-block_2'));
+    $block_3 = $this->drupalPlaceBlock('views_block:test_view_block2-block_1', array('title' => 'test_view_block2-block_1'));
+    $block_4 = $this->drupalPlaceBlock('views_block:test_view_block2-block_2', array('title' => 'test_view_block2-block_2'));
 
     $this->drupalGet('test-page');
     $this->assertBlockAppears($block_1);

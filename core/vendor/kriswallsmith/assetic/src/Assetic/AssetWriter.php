@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2012 OpenSky Project Inc
+ * (c) 2010-2013 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -30,6 +30,9 @@ class AssetWriter
      * Constructor.
      *
      * @param string $dir The base web directory
+     * @param array  $varValues
+     *
+     * @throws \InvalidArgumentException if a variable value is not a string
      */
     public function __construct($dir, array $varValues = array())
     {

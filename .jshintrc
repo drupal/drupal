@@ -12,6 +12,7 @@
   "predef"    : [
     "Drupal",
     "drupalSettings",
+    "domready",
     "jQuery",
     "_",
     "matchMedia",

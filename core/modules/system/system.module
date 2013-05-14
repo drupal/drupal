@@ -10,7 +10,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Utility\ModuleInfo;
 use Drupal\Core\TypedData\Primitive;
-use Drupal\system\Plugin\block\block\SystemMenuBlock;
+use Drupal\system\Plugin\Block\SystemMenuBlock;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Guzzle\Http\Exception\BadResponseException;
@@ -142,7 +142,7 @@ function system_theme() {
       'variables' => array('theme_groups' => NULL),
       'file' => 'system.admin.inc',
     ),
-    'system_settings_form' => array(
+    'system_config_form' => array(
       'render element' => 'form',
     ),
     'confirm_form' => array(
@@ -899,7 +899,7 @@ function system_menu() {
     'file' => 'system.admin.inc',
   );
   $items['admin/config/regional/date-time'] = array(
-    'title' => 'Formats',
+    'title' => 'Date and time formats',
     'description' => 'Configure display format strings for date and time.',
     'page callback' => 'system_date_time_formats',
     'access arguments' => array('administer site configuration'),
@@ -1201,7 +1201,7 @@ function _system_batch_theme() {
   // Retrieve the current state of the batch.
   $batch = &batch_get();
   if (!$batch && isset($_REQUEST['id'])) {
-    require_once DRUPAL_ROOT . '/core/includes/batch.inc';
+    require_once __DIR__ . '/../../includes/batch.inc';
     $batch = batch_load($_REQUEST['id']);
   }
   // Use the same theme as the page that started the batch.
@@ -1222,7 +1222,7 @@ function system_library_info() {
       'core/misc/drupal.js' => array('group' => JS_LIBRARY, 'weight' => -18),
     ),
     'dependencies' => array(
-      array('system', 'jquery'),
+      array('system', 'domready'),
     ),
   );
 
@@ -1395,10 +1395,11 @@ function system_library_info() {
     ),
     'dependencies' => array(
       array('system', 'jquery'),
+      array('system', 'modernizr'),
       array('system', 'drupal'),
-      array('system', 'drupalSettings'),
       // collapse.js relies on drupalGetSummary in form.js
       array('system', 'drupal.form'),
+      array('system', 'jquery.once'),
     ),
   );
 
@@ -1457,6 +1458,16 @@ function system_library_info() {
     'dependencies' => array(
       // @todo remove drupal dependency.
       array('system', 'drupal'),
+    ),
+  );
+
+  // domReady.
+  $libraries['domready'] = array(
+    'title' => 'domReady',
+    'website' => 'https://github.com/ded/domready',
+    'version' => 'master',
+    'js' => array(
+      'core/misc/domready/ready.min.js' => array('group' => JS_LIBRARY, 'weight' => -21),
     ),
   );
 
@@ -2693,7 +2704,7 @@ function system_user_login($account) {
 function system_user_timezone(&$form, &$form_state) {
   global $user;
 
-  $account = $form_state['controller']->getEntity($form_state);
+  $account = $form_state['controller']->getEntity();
   $form['timezone'] = array(
     '#type' => 'details',
     '#title' => t('Locale settings'),
@@ -2717,20 +2728,18 @@ function system_user_timezone(&$form, &$form_state) {
  * Implements hook_preprocess_HOOK() for block.tpl.php.
  */
 function system_preprocess_block(&$variables) {
-  switch ($variables['block']->id) {
+  // Derive the base plugin ID.
+  list($plugin_id) = explode(':', $variables['plugin_id'] . ':');
+  switch ($plugin_id) {
     case 'system_powered_by_block':
       $variables['attributes_array']['role'] = 'complementary';
       break;
     case 'system_help_block':
       $variables['attributes_array']['role'] = 'complementary';
       break;
-
-    // System menu blocks should get the same class as menu module blocks.
-    default:
-      if ($variables['elements']['#block']->getPlugin() instanceof SystemMenuBlock) {
-        $variables['attributes_array']['role'] = 'navigation';
-        $variables['classes_array'][] = 'block-menu';
-      }
+    case 'system_menu_block':
+      $variables['attributes']['role'] = 'navigation';
+      $variables['attributes']['classes'][] = 'block-menu';
   }
 }
 
@@ -2941,8 +2950,8 @@ function _system_rebuild_module_data() {
     // Look for the info file.
     $module->info = drupal_parse_info_file(dirname($module->uri) . '/' . $module->name . '.info.yml');
 
-    // Skip modules that don't provide info.
-    if (empty($module->info)) {
+    // Skip modules/profiles that don't provide info or have the wrong type.
+    if (empty($module->info) || !isset($module->info['type']) || !in_array($module->info['type'], array('module', 'profile'))) {
       unset($modules[$key]);
       continue;
     }
@@ -3083,6 +3092,12 @@ function _system_rebuild_theme_data() {
   foreach ($themes as $key => $theme) {
     $themes[$key]->filename = $theme->uri;
     $themes[$key]->info = drupal_parse_info_file($theme->uri) + $defaults;
+
+    // Skip this extension if its type is not theme.
+    if (!isset($themes[$key]->info['type']) || $themes[$key]->info['type'] != 'theme') {
+      unset($themes[$key]);
+      continue;
+    }
 
     // Add the info file modification time, so it becomes available for
     // contributed modules to use for ordering theme lists.
@@ -3284,53 +3299,6 @@ function system_default_region($theme) {
 }
 
 /**
- * Add default buttons to a form and set its prefix.
- *
- * @param $form
- *   An associative array containing the structure of the form.
- *
- * @return
- *   The form structure.
- *
- * @see system_settings_form_submit()
- * @ingroup forms
- */
-function system_settings_form($form) {
-  $form['actions']['#type'] = 'actions';
-  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
-
-  if (!empty($_POST) && form_get_errors()) {
-    drupal_set_message(t('The settings have not been saved because of the errors.'), 'error');
-  }
-  $form['#submit'][] = 'system_settings_form_submit';
-  // By default, render the form using theme_system_settings_form().
-  if (!isset($form['#theme'])) {
-    $form['#theme'] = 'system_settings_form';
-  }
-  return $form;
-}
-
-/**
- * Execute the system_settings_form.
- *
- * If you want node type configure style handling of your checkboxes,
- * add an array_filter value to your form.
- */
-function system_settings_form_submit($form, &$form_state) {
-  // Exclude unnecessary elements.
-  form_state_values_clean($form_state);
-
-  foreach ($form_state['values'] as $key => $value) {
-    if (is_array($value) && isset($form_state['values']['array_filter'])) {
-      $value = array_keys(array_filter($value));
-    }
-    variable_set($key, $value);
-  }
-
-  drupal_set_message(t('The configuration options have been saved.'));
-}
-
-/**
  * Adds default behavior to a configuration form.
  *
  * This includes a consistent 'Save configuration' button, theme definition,
@@ -3372,9 +3340,9 @@ function system_config_form($form, &$form_state) {
   }
   $form['#submit'][] = 'system_config_form_submit';
 
-  // By default, render the form using theme_system_settings_form().
+  // By default, render the form using theme_system_config_form().
   if (!isset($form['#theme'])) {
-    $form['#theme'] = 'system_settings_form';
+    $form['#theme'] = 'system_config_form';
   }
   return $form;
 }
@@ -3962,7 +3930,7 @@ function theme_confirm_form($variables) {
  *
  * @ingroup themeable
  */
-function theme_system_settings_form($variables) {
+function theme_system_config_form($variables) {
   return drupal_render_children($variables['form']);
 }
 
@@ -4017,7 +3985,7 @@ function system_admin_paths() {
  *   An array of all country code => country name pairs.
  */
 function country_get_list() {
-  include_once DRUPAL_ROOT . '/core/includes/standard.inc';
+  include_once __DIR__ . '/../../includes/standard.inc';
   $countries = standard_country_list();
   // Allow other modules to modify the country list.
   drupal_alter('countries', $countries);

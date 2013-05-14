@@ -105,8 +105,8 @@ class BlockLanguageTest extends WebTestBase {
 
     // Check that we have the language in config after saving the setting.
     $visibility = $block->get('visibility');
-    $setting = $visibility['language']['langcodes']['fr'];
-    $this->assertTrue('fr' === $setting, 'Language is set in the block configuration.');
+    $language = $visibility['language']['langcodes']['fr'];
+    $this->assertTrue('fr' === $language, 'Language is set in the block configuration.');
 
     // Delete the language.
     $this->drupalPost('admin/config/regional/language/delete/fr', array(), t('Delete'));

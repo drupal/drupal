@@ -57,7 +57,7 @@ class BookController implements ControllerInterface {
       $links = array();
       $links['edit'] = array(
         'title' => t('Edit order and titles'),
-        'href' => 'admin/content/book/' . $book['nid'],
+        'href' => 'admin/structure/book/' . $book['nid'],
       );
       $row[] = array(
         'data' => array(

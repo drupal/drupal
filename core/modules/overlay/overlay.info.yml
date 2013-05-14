@@ -1,4 +1,5 @@
 name: Overlay
+type: module
 description: 'Displays the Drupal administration interface in an overlay.'
 package: Core
 version: VERSION

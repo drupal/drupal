@@ -5,13 +5,13 @@
  * API for the Drupal menu system.
  */
 
-use Symfony\Component\HttpFoundation\Request;
-
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
 use Drupal\menu_link\MenuLinkStorageController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @defgroup menu Menu system
@@ -766,7 +766,25 @@ function _menu_translate(&$router_item, $map, $to_arg = FALSE) {
   $router_item['tab_root_href'] = implode('/', $tab_root_map);
   $router_item['tab_parent_href'] = implode('/', $tab_parent_map);
   $router_item['options'] = array();
-  _menu_check_access($router_item, $map);
+  if (!empty($router_item['route_name'])) {
+    $route_provider = Drupal::getContainer()->get('router.route_provider');
+    $route = $route_provider->getRouteByName($router_item['route_name']);
+    $request = Request::create('/' . $router_item['href']);
+    $request->attributes->set('system_path', $router_item['href']);
+    // Attempt to match this path to provide a fully built request to the
+    // acccess checker.
+    try {
+      $request->attributes->add(Drupal::service('router')->matchRequest($request));
+      $router_item['access'] = Drupal::service('access_manager')->check($route, $request);
+    }
+    catch (NotFoundHttpException $e) {
+      $router_item['access'] = FALSE;
+    }
+  }
+  else {
+    // @todo: Remove once all routes are converted.
+    _menu_check_access($router_item, $map);
+  }
 
   // For performance, don't localize an item the user can't access.
   if ($router_item['access']) {
@@ -2591,7 +2609,7 @@ function menu_cache_clear_all() {
  * Resets the menu system static cache.
  */
 function menu_reset_static_cache() {
-  drupal_container()->get('plugin.manager.entity')
+  Drupal::entityManager()
     ->getStorageController('menu_link')->resetCache();
   drupal_static_reset('_menu_build_tree');
   drupal_static_reset('menu_tree');
@@ -2738,7 +2756,7 @@ function menu_get_router() {
  */
 function _menu_navigation_links_rebuild($menu) {
   if (module_exists('menu_link')) {
-    $menu_link_controller = drupal_container()->get('plugin.manager.entity')
+    $menu_link_controller = Drupal::entityManager()
       ->getStorageController('menu_link');
   }
   else {
@@ -3166,6 +3184,7 @@ function _menu_router_build($callbacks, $save = FALSE) {
       'file' => '',
       'file path' => '',
       'include file' => '',
+      'route_name' => '',
     );
 
     // Calculate out the file to be included for each callback, if any.
@@ -3227,6 +3246,7 @@ function _menu_router_save($menu, $masks) {
       'position',
       'weight',
       'include_file',
+      'route_name',
     ));
 
   $num_records = 0;
@@ -3258,6 +3278,7 @@ function _menu_router_save($menu, $masks) {
       'position' => $item['position'],
       'weight' => $item['weight'],
       'include_file' => $item['include file'],
+      'route_name' => $item['route_name'],
     ));
 
     // Execute in batches to avoid the memory overhead of all of those records

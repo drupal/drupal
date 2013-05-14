@@ -9,8 +9,3 @@ services:
     class: Drupal\rdf\EventSubscriber\MappingSubscriber
     tags:
       - { name: event_subscriber }
-  rdf.route_subscriber:
-    class: Drupal\rdf\EventSubscriber\RouteSubscriber
-    tags:
-      - { name: event_subscriber }
-    arguments: ['@rdf.site_schema_manager']

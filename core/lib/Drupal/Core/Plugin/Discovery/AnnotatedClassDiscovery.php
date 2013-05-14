@@ -38,14 +38,12 @@ class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
   /**
    * Constructs an AnnotatedClassDiscovery object.
    *
-   * @param string $owner
-   *   The module name that defines the plugin type.
-   * @param string $type
-   *   The plugin type, for example filter.
+   * @param string $subdir
+   *   The plugin's subdirectory, for example views/filter.
    * @param \Traversable $root_namespaces
    *   An object that implements \Traversable which contains the root paths
    *   keyed by the corresponding namespace to look for plugin implementations,
-   *   \Plugin\$owner\$type will be appended to each namespace.
+   *   \Plugin\$subdir will be appended to each namespace.
    * @param array $annotation_namespaces
    *   (optional) The namespaces of classes that can be used as annotations.
    *   Defaults to an empty array.
@@ -53,9 +51,8 @@ class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
    *   (optional) The name of the annotation that contains the plugin definition.
    *   Defaults to 'Drupal\Component\Annotation\Plugin'.
    */
-  function __construct($owner, $type, \Traversable $root_namespaces, $annotation_namespaces = array(), $plugin_definition_annotation_name = 'Drupal\Component\Annotation\Plugin') {
-    $this->owner = $owner;
-    $this->type = $type;
+  function __construct($subdir, \Traversable $root_namespaces, $annotation_namespaces = array(), $plugin_definition_annotation_name = 'Drupal\Component\Annotation\Plugin') {
+    $this->subdir = str_replace('/', '\\', $subdir);
     $this->rootNamespacesIterator = $root_namespaces;
     $annotation_namespaces += array(
       'Drupal\Component\Annotation' => DRUPAL_ROOT . '/core/lib',
@@ -71,7 +68,7 @@ class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
   protected function getPluginNamespaces() {
     $plugin_namespaces = array();
     foreach ($this->rootNamespacesIterator as $namespace => $dir) {
-      $plugin_namespaces["$namespace\\Plugin\\{$this->owner}\\{$this->type}"] = array($dir);
+      $plugin_namespaces["$namespace\\Plugin\\{$this->subdir}"] = array($dir);
     }
 
     return $plugin_namespaces;

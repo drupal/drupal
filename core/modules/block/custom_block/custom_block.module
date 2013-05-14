@@ -7,8 +7,6 @@
 
 use Drupal\custom_block\Plugin\Core\Entity\CustomBlockType;
 use Drupal\custom_block\Plugin\Core\Entity\CustomBlock;
-use Drupal\custom_block\Plugin\block\block\CustomBlockBlock;
-use Drupal\block\Plugin\Core\Entity\Block;
 
 /**
  * Implements hook_menu_local_tasks().
@@ -36,9 +34,7 @@ function custom_block_menu() {
   $items['admin/structure/custom-blocks'] = array(
     'title' => 'Custom block types',
     'description' => 'Manage custom block types.',
-    'page callback' => 'custom_block_type_list',
-    'access arguments' => array('administer blocks'),
-    'file' => 'custom_block.admin.inc',
+    'route_name' => 'custom_block_type_list',
   );
   $items['admin/structure/custom-blocks/add'] = array(
     'title' => 'Add custom block type',
@@ -74,9 +70,7 @@ function custom_block_menu() {
 
   $items['block/add'] = array(
     'title' => 'Add custom block',
-    'page callback' => 'custom_block_add_page',
-    'access arguments' => array('administer blocks'),
-    'file' => 'custom_block.pages.inc',
+    'route_name' => 'custom_block_add_page',
   );
   $items['block/add/%custom_block_type'] = array(
     'title callback' => 'entity_page_label',
@@ -186,14 +180,7 @@ function custom_block_entity_bundle_info() {
   $bundles = array();
   foreach (config_get_storage_names_with_prefix('custom_block.type.') as $config_name) {
     $config = config($config_name);
-    $bundles['custom_block'][$config->get('id')] = array(
-      'label' => $config->get('label'),
-      'admin' => array(
-        'path' => 'admin/structure/custom-blocks/manage/%',
-        'real path' => 'admin/structure/custom-blocks/manage/' . $config->get('id'),
-        'bundle argument' => 4,
-      ),
-    );
+    $bundles['custom_block'][$config->get('id')]['label'] = $config->get('label');
   }
   return $bundles;
 }

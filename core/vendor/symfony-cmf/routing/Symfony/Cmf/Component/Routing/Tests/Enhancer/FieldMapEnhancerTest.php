@@ -46,7 +46,6 @@ class FieldMapEnhancerTest extends CmfUnitTestCase
         $this->assertEquals($defaults, $this->enhancer->enhance($defaults, $this->request));
     }
 
-
     public function testNoType()
     {
         $defaults = array();

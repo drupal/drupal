@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\ViewExecutable;
@@ -242,8 +243,6 @@ abstract class HandlerBase extends PluginBase {
    *    The transformed string.
    */
   protected function caseTransform($string, $option) {
-    global $multibyte;
-
     switch ($option) {
       default:
         return $string;
@@ -254,7 +253,7 @@ abstract class HandlerBase extends PluginBase {
       case 'ucfirst':
         return drupal_strtoupper(drupal_substr($string, 0, 1)) . drupal_substr($string, 1);
       case 'ucwords':
-        if ($multibyte == UNICODE_MULTIBYTE) {
+        if (Unicode::getStatus() == Unicode::STATUS_MULTIBYTE) {
           return mb_convert_case($string, MB_CASE_TITLE);
         }
         else {
@@ -836,7 +835,7 @@ abstract class HandlerBase extends PluginBase {
 
     $form_state['view']->addFormToStack($form_state['form_key'], $form_state['display_id'], $form_state['type'], $form_state['id'], TRUE, TRUE);
 
-    views_ui_cache_set($form_state['view']);
+    $form_state['view']->cacheSet();
     $form_state['rerender'] = TRUE;
     $form_state['rebuild'] = TRUE;
     $form_state['force_expose_options'] = TRUE;
@@ -898,7 +897,7 @@ abstract class HandlerBase extends PluginBase {
     $form_state['rerender'] = TRUE;
     $form_state['rebuild'] = TRUE;
     // Write to cache
-    views_ui_cache_set($form_state['view']);
+    $form_state['view']->cacheSet();
   }
 
 }

@@ -6,7 +6,6 @@
 
 namespace Drupal\entity_test;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormControllerNG;
 
 /**
@@ -17,9 +16,10 @@ class EntityTestFormController extends EntityFormControllerNG {
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $entity) {
-    $form = parent::form($form, $form_state, $entity);
+  public function form(array $form, array &$form_state) {
+    $form = parent::form($form, $form_state);
 
+    $entity = $this->entity;
     $langcode = $this->getFormLangcode($form_state);
     $translation = $entity->getTranslation($langcode);
 
@@ -57,7 +57,7 @@ class EntityTestFormController extends EntityFormControllerNG {
    * Overrides Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
-    $entity = $this->getEntity($form_state);
+    $entity = $this->entity;
     $is_new = $entity->isNew();
     $entity->save();
 
@@ -83,7 +83,7 @@ class EntityTestFormController extends EntityFormControllerNG {
    * Overrides Drupal\Core\Entity\EntityFormController::delete().
    */
   public function delete(array $form, array &$form_state) {
-    $entity = $this->getEntity($form_state);
+    $entity = $this->entity;
     $entity->delete();
     drupal_set_message(t('%entity_type @id has been deleted.', array('@id' => $entity->id(), '%entity_type' => $entity->entityType())));
     $form_state['redirect'] = '<front>';

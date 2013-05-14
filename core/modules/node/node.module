@@ -213,17 +213,10 @@ function node_entity_view_mode_info() {
 function node_entity_bundle_info() {
   $bundles = array();
   // Bundles must provide a human readable name so we can create help and error
-  // messages, and the path to attach Field admin pages to.
+  // messages.
   node_type_cache_reset();
   foreach (node_type_get_names() as $type => $name) {
-    $bundles['node'][$type] = array(
-      'label' => $name,
-      'admin' => array(
-        'path' => 'admin/structure/types/manage/%node_type',
-        'real path' => 'admin/structure/types/manage/' . $type,
-        'bundle argument' => 4,
-      ),
-    );
+    $bundles['node'][$type]['label'] = $name;
   }
   return $bundles;
 }
@@ -1106,8 +1099,8 @@ function node_is_page(EntityInterface $node) {
  * Implements hook_preprocess_HOOK() for block.tpl.php.
  */
 function node_preprocess_block(&$variables) {
-  if ($variables['block']->module == 'node') {
-    switch ($variables['block']->id) {
+  if ($variables['configuration']['module'] == 'node') {
+    switch ($variables['elements']['#plugin_id']) {
       case 'node_syndicate_block':
         $variables['attributes']['role'] = 'complementary';
         break;
@@ -1170,7 +1163,7 @@ function template_preprocess_node(&$variables) {
   if (variable_get('node_submitted_' . $node->type, TRUE)) {
     $variables['display_submitted'] = TRUE;
     $variables['submitted'] = t('Submitted by !username on !datetime', array('!username' => $variables['name'], '!datetime' => $variables['date']));
-    if (theme_get_setting('toggle_node_user_picture')) {
+    if (theme_get_setting('features.node_user_picture')) {
       // To change user picture settings (e.g. image style), edit the 'compact'
       // view mode on the User entity. Note that the 'compact' view mode might
       // not be configured, so remember to always check the theme setting first.
@@ -1983,7 +1976,7 @@ function theme_node_recent_content($variables) {
  * Adds node-type specific visibility options to block configuration form.
  */
 function node_form_block_form_alter(&$form, &$form_state) {
-  $block = $form_state['entity'];
+  $block = $form_state['controller']->getEntity();
   $visibility = $block->get('visibility');
   $form['visibility']['node_type'] = array(
     '#type' => 'details',
@@ -2543,8 +2536,7 @@ function node_access($op, $node, $account = NULL, $langcode = NULL) {
     $account = user_load($account->uid);
   }
 
-  $method = $op . 'Access';
-  return entity_access_controller('node')->$method($node, $langcode, $account);
+  return entity_access_controller('node')->access($node, $op, $langcode, $account);
 }
 
 /**

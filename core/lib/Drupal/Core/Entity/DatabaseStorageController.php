@@ -8,6 +8,7 @@
 namespace Drupal\Core\Entity;
 
 use PDO;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Component\Utility\NestedArray;
@@ -677,32 +678,39 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
    * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::getFieldDefinitions().
    */
   public function getFieldDefinitions(array $constraints) {
-    // @todo: Add caching for $this->entityFieldInfo.
     if (!isset($this->entityFieldInfo)) {
-      $this->entityFieldInfo = array(
-        'definitions' => $this->baseFieldDefinitions(),
-        // Contains definitions of optional (per-bundle) fields.
-        'optional' => array(),
-        // An array keyed by bundle name containing the optional fields added by
-        // the bundle.
-        'bundle map' => array(),
-      );
-
-      // Invoke hooks.
-      $result = module_invoke_all($this->entityType . '_property_info');
-      $this->entityFieldInfo = NestedArray::mergeDeep($this->entityFieldInfo, $result);
-      $result = module_invoke_all('entity_field_info', $this->entityType);
-      $this->entityFieldInfo = NestedArray::mergeDeep($this->entityFieldInfo, $result);
-
-      $hooks = array('entity_field_info', $this->entityType . '_property_info');
-      drupal_alter($hooks, $this->entityFieldInfo, $this->entityType);
-
-      // Enforce fields to be multiple by default.
-      foreach ($this->entityFieldInfo['definitions'] as &$definition) {
-        $definition['list'] = TRUE;
+      // First, try to load from cache.
+      $cid = 'entity_field_definitions:' . $this->entityType . ':' . language(LANGUAGE_TYPE_INTERFACE)->langcode;
+      if ($cache = cache()->get($cid)) {
+        $this->entityFieldInfo = $cache->data;
       }
-      foreach ($this->entityFieldInfo['optional'] as &$definition) {
-        $definition['list'] = TRUE;
+      else {
+        $this->entityFieldInfo = array(
+          'definitions' => $this->baseFieldDefinitions(),
+          // Contains definitions of optional (per-bundle) fields.
+          'optional' => array(),
+          // An array keyed by bundle name containing the optional fields added
+          // by the bundle.
+          'bundle map' => array(),
+        );
+
+        // Invoke hooks.
+        $result = module_invoke_all($this->entityType . '_property_info');
+        $this->entityFieldInfo = NestedArray::mergeDeep($this->entityFieldInfo, $result);
+        $result = module_invoke_all('entity_field_info', $this->entityType);
+        $this->entityFieldInfo = NestedArray::mergeDeep($this->entityFieldInfo, $result);
+
+        $hooks = array('entity_field_info', $this->entityType . '_property_info');
+        drupal_alter($hooks, $this->entityFieldInfo, $this->entityType);
+
+        // Enforce fields to be multiple by default.
+        foreach ($this->entityFieldInfo['definitions'] as &$definition) {
+          $definition['list'] = TRUE;
+        }
+        foreach ($this->entityFieldInfo['optional'] as &$definition) {
+          $definition['list'] = TRUE;
+        }
+        cache()->set($cid, $this->entityFieldInfo, CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
       }
     }
 

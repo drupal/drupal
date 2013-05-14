@@ -112,8 +112,8 @@ function views_theme($existing, $type, $theme, $path) {
     'variables' => array('view' => NULL, 'field' => NULL, 'row' => NULL),
   );
   $hooks['views_view_grouping'] = $base + array(
-    'pattern' => 'views_view_grouping__',
     'variables' => array('view' => NULL, 'grouping' => NULL, 'grouping_level' => NULL, 'rows' => NULL, 'title' => NULL),
+    'template' => 'views-view-grouping',
   );
 
   $plugins = views_get_plugin_definitions();
@@ -481,7 +481,7 @@ function views_preprocess_html(&$variables) {
   // the "contextual-region" class from the <body> tag here and add
   // JavaScript that will insert it back in the correct place.
   if (!empty($variables['page']['#views_contextual_links_info'])) {
-    $key = array_search('contextual-region', $variables['attributes']['class']->value());
+    $key = array_search('contextual-region', $variables['attributes']['class']);
     if ($key !== FALSE) {
       unset($variables['attributes']['class'][$key]);
       // Add the JavaScript, with a group and weight such that it will run
@@ -560,7 +560,7 @@ function views_contextual_links_view_alter(&$element, $items) {
  * @param $display_id
  *   The ID of the display within $view whose contextual links will be added.
  *
- * @see views_block_view()
+ * @see \Drupal\views\Plugin\block\block\ViewsBlock::addContextualLinks()
  * @see views_page_alter()
  * @see template_preprocess_views_view()
  */
@@ -1040,7 +1040,7 @@ function views_get_applicable_views($type) {
     ->execute();
 
   $result = array();
-  foreach (Drupal::service('plugin.manager.entity')->getStorageController('view')->load($entity_ids) as $view) {
+  foreach (Drupal::entityManager()->getStorageController('view')->load($entity_ids) as $view) {
     // Check each display to see if it meets the criteria and is enabled.
     $executable = $view->get('executable');
     $executable->initDisplay();
@@ -1058,7 +1058,7 @@ function views_get_applicable_views($type) {
  * Returns an array of all views as fully loaded $view objects.
  */
 function views_get_all_views() {
-  return drupal_container()->get('plugin.manager.entity')->getStorageController('view')->load();
+  return Drupal::entityManager()->getStorageController('view')->load();
 }
 
 /**
@@ -1768,22 +1768,6 @@ function _field_view_formatter_options($field_type = NULL) {
     return !empty($options[$field_type]) ? $options[$field_type] : array();
   }
   return $options;
-}
-
-/**
- * Adds one to each key of the array.
- *
- * For example array(0 => 'foo') would be array(1 => 'foo').
- */
-function views_array_key_plus($array) {
-  $keys = array_keys($array);
-  rsort($keys);
-  foreach ($keys as $key) {
-    $array[$key+1] = $array[$key];
-    unset($array[$key]);
-  }
-  asort($array);
-  return $array;
 }
 
 /**

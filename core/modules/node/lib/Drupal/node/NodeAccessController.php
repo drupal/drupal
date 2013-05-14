@@ -18,39 +18,22 @@ use Drupal\Core\Entity\EntityNG;
 class NodeAccessController extends EntityAccessController {
 
   /**
-   * Overrides \Drupal\Core\Entity\EntityAccessController::viewAccess().
+   * {@inheritdoc}
    */
-  public function viewAccess(EntityInterface $node, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    if (($cached = $this->getCache($node, 'view', $langcode, $account)) !== NULL ) {
-      return $cached;
-    }
-
-    if (($access = $this->access($node, 'view', $langcode, $account)) !== NULL) {
-      return $this->setCache((bool) $access, $node, 'view', $langcode, $account);
-    };
-
-    // If no modules implement hook_node_grants(), the default behavior is to
-    // allow all users to view published nodes, so reflect that here.
-    $status = $node instanceof EntityNG ? $node->getTranslation($langcode, FALSE)->status->value : $node->status;
-    return $this->setCache($status, $node, 'view', $langcode, $account);
-  }
-
-  /**
-   * Overrides \Drupal\Core\Entity\EntityAccessController::access().
-   */
-  protected function access(EntityInterface $node, $operation, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
+  public function access(EntityInterface $entity, $operation, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
     if (user_access('bypass node access', $account)) {
       return TRUE;
     }
-
     if (!user_access('access content', $account)) {
       return FALSE;
     }
+    return parent::access($entity, $operation, $langcode, $account);
+  }
 
-    if (($access = parent::access($node, $operation, $langcode, $account)) !== NULL) {
-      return (bool) $access;
-    };
-
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkAccess(EntityInterface $node, $operation, $langcode, User $account) {
     // Fetch information from the node object if possible.
     $status = isset($node->status) ? $node->status : NULL;
     $uid = isset($node->uid) ? $node->uid : NULL;
@@ -61,11 +44,7 @@ class NodeAccessController extends EntityAccessController {
     }
 
     // Check if authors can view their own unpublished nodes.
-    if ($operation == 'view' && !$status && user_access('view own unpublished content', $account)) {
-      // @todo Remove this once we can rely on $account.
-      if (!$account) {
-        $account = user_load($GLOBALS['user']->uid);
-      }
+    if ($operation === 'view' && !$status && user_access('view own unpublished content', $account)) {
 
       if ($account->id() != 0 && $account->id() == $uid) {
         return TRUE;
@@ -75,31 +54,35 @@ class NodeAccessController extends EntityAccessController {
     // If no module specified either allow or deny, we fall back to the
     // node_access table.
     if (($grants = $this->accessGrants($node, $operation, $langcode, $account)) !== NULL) {
-      return (bool) $grants;
+      return $grants;
+    }
+
+    // If no modules implement hook_node_grants(), the default behavior is to
+    // allow all users to view published nodes, so reflect that here.
+    if ($operation === 'view') {
+      return $status;
     }
   }
 
   /**
    * Determines access to nodes based on node grants.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\EntityInterface $node
    *   The entity for which to check 'create' access.
    * @param string $operation
    *   The entity operation. Usually one of 'view', 'edit', 'create' or
    *   'delete'.
    * @param string $langcode
-   *   (optional) The language code for which to check access. Defaults to
-   *   LANGUAGE_DEFAULT.
+   *   The language code for which to check access.
    * @param \Drupal\user\Plugin\Core\Entity\User $account
-   *   (optional) The user for which to check access, or NULL to check access
-   *   for the current user. Defaults to NULL.
+   *   The user for which to check access.
    *
    * @return bool|null
    *   TRUE if access was granted, FALSE if access was denied or NULL if no
    *   module implements hook_node_grants(), the node does not (yet) have an id
    *   or none of the implementing modules explicitly granted or denied access.
    */
-  protected function accessGrants(EntityInterface $node, $operation, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
+  protected function accessGrants(EntityInterface $node, $operation, $langcode, User $account) {
     // If no module implements the hook or the node does not have an id there is
     // no point in querying the database for access grants.
     if (!module_implements('node_grants') || !$node->id()) {

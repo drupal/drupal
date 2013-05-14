@@ -7,30 +7,12 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Form\BaseFormIdInterface;
+
 /**
  * Defines a common interface for entity form controller classes.
  */
-interface EntityFormControllerInterface {
-
-  /**
-   * Builds an entity form.
-   *
-   * This is the entity form builder which is invoked via drupal_build_form()
-   * to retrieve the form.
-   *
-   * @param array $form
-   *   A nested array form elements comprising the form.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
-   * @param string $entity_type
-   *   The type of the entity being edited.
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity being edited.
-   *
-   * @return array
-   *   The array containing the complete form.
-   */
-  public function build(array $form, array &$form_state, EntityInterface $entity);
+interface EntityFormControllerInterface extends BaseFormIdInterface {
 
   /**
    * Returns the code identifying the active form language.
@@ -73,7 +55,7 @@ interface EntityFormControllerInterface {
    * @return \Drupal\Core\Entity\EntityInterface
    *   The current form entity.
    */
-  public function getEntity(array $form_state);
+  public function getEntity();
 
   /**
    * Sets the form entity.
@@ -86,10 +68,8 @@ interface EntityFormControllerInterface {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity the current form should operate upon.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
    */
-  public function setEntity(EntityInterface $entity, array &$form_state);
+  public function setEntity(EntityInterface $entity);
 
   /**
    * Builds an updated entity object based upon the submitted form values.

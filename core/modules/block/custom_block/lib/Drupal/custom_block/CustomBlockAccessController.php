@@ -17,31 +17,15 @@ use Drupal\Core\Entity\EntityAccessController;
 class CustomBlockAccessController extends EntityAccessController {
 
   /**
-   * Implements EntityAccessControllerInterface::viewAccess().
+   * {@inheritdoc}
    */
-  public function viewAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return TRUE;
-  }
-
-  /**
-   * Implements EntityAccessControllerInterface::createAccess().
-   */
-  public function createAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return user_access('administer blocks', $account);
-  }
-
-  /**
-   * Implements EntityAccessControllerInterface::updateAccess().
-   */
-  public function updateAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return user_access('administer blocks', $account);
-  }
-
-  /**
-   * Implements EntityAccessControllerInterface::deleteAccess().
-   */
-  public function deleteAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return user_access('administer blocks', $account);
+  protected function checkAccess(EntityInterface $entity, $operation, $langcode, User $account) {
+    if ($operation === 'view') {
+      return TRUE;
+    }
+    elseif (in_array($operation, array('create', 'update', 'delete'))) {
+      return user_access('administer blocks', $account);
+    }
   }
 
 }

@@ -7,7 +7,6 @@
 
 namespace Drupal\user;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormController;
 
 /**
@@ -18,7 +17,8 @@ abstract class AccountFormController extends EntityFormController {
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
-  public function form(array $form, array &$form_state, EntityInterface $account) {
+  public function form(array $form, array &$form_state) {
+    $account = $this->entity;
     global $user;
     $config = config('user.settings');
 
@@ -230,7 +230,7 @@ abstract class AccountFormController extends EntityFormController {
   public function validate(array $form, array &$form_state) {
     parent::validate($form, $form_state);
 
-    $account = $this->getEntity($form_state);
+    $account = $this->entity;
     // Validate new or changing username.
     if (isset($form_state['values']['name'])) {
       if ($error = user_validate_name($form_state['values']['name'])) {

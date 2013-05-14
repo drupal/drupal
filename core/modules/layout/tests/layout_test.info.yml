@@ -1,4 +1,5 @@
 name: 'Layout test'
+type: module
 description: 'Helps with testing layouts.'
 package: Testing
 version: VERSION

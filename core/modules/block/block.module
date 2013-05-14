@@ -331,10 +331,9 @@ function _block_get_renderable_region($list = array()) {
       $build[$key] = array(
         '#block' => $block,
         '#weight' => $block->get('weight'),
-        '#theme_wrappers' => array('block'),
         '#pre_render' => array('_block_get_renderable_block'),
         '#cache' => array(
-          'keys' => array($id, $block->get('module')),
+          'keys' => array($id, $settings['module']),
           'granularity' => $settings['cache'],
           'bin' => 'block',
           'tags' => array('content' => TRUE),
@@ -535,22 +534,17 @@ function block_rebuild() {
 function template_preprocess_block(&$variables) {
   $block_counter = &drupal_static(__FUNCTION__, array());
 
-  $variables['block'] = (object) $variables['elements']['#block_config'];
-  // If the block title is configured to be hidden, set it to an empty string.
-  if (empty($variables['elements']['#block']->label_display)) {
-    $variables['block']->label_hidden = $variables['block']->label;
-    $variables['block']->label = '';
-  }
+  $variables['configuration'] = $variables['elements']['#configuration'];
+  $variables['plugin_id'] = $variables['elements']['#plugin_id'];
+  $variables['label'] = !empty($variables['configuration']['label_display']) ? $variables['configuration']['label'] : '';
+  $variables['content'] = $variables['elements']['content'];
 
-  // Create the $content variable that templates expect.
-  $variables['content'] = $variables['elements']['#children'];
-
-  $variables['attributes']['class'][] = drupal_html_class('block-' . $variables['block']->module);
+  $variables['attributes']['class'][] = drupal_html_class('block-' . $variables['configuration']['module']);
 
   // Add default class for block content.
   $variables['content_attributes']['class'][] = 'content';
 
-  $variables['theme_hook_suggestions'][] = 'block__' . $variables['block']->module;
+  $variables['theme_hook_suggestions'][] = 'block__' . $variables['configuration']['module'];
   // Hyphens (-) and underscores (_) play a special role in theme suggestions.
   // Theme suggestions should only contain underscores, because within
   // drupal_find_theme_templates(), underscores are converted to hyphens to
@@ -562,7 +556,7 @@ function template_preprocess_block(&$variables) {
 
   // We can safely explode on : because we know the Block plugin type manager
   // enforces that delimiter for all derivatives.
-  $parts = explode(':', $variables['elements']['#block']->get('plugin'));
+  $parts = explode(':', $variables['plugin_id']);
   $suggestion = 'block';
   while ($part = array_shift($parts)) {
     $variables['theme_hook_suggestions'][] = $suggestion .= '__' . strtr($part, '-', '_');

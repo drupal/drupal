@@ -258,10 +258,9 @@ class Entity implements IteratorAggregate, EntityInterface {
    * Implements \Drupal\Core\TypedData\AccessibleInterface::access().
    */
   public function access($operation = 'view', \Drupal\user\Plugin\Core\Entity\User $account = NULL) {
-    $method = $operation . 'Access';
-    return drupal_container()->get('plugin.manager.entity')
+    return \Drupal::entityManager()
       ->getAccessController($this->entityType)
-      ->$method($this, LANGUAGE_DEFAULT, $account);
+      ->access($this, $operation, LANGUAGE_DEFAULT, $account);
   }
 
   /**
@@ -332,7 +331,7 @@ class Entity implements IteratorAggregate, EntityInterface {
    * Implements \Drupal\Core\Entity\EntityInterface::save().
    */
   public function save() {
-    return drupal_container()->get('plugin.manager.entity')->getStorageController($this->entityType)->save($this);
+    return \Drupal::entityManager()->getStorageController($this->entityType)->save($this);
   }
 
   /**
@@ -340,7 +339,7 @@ class Entity implements IteratorAggregate, EntityInterface {
    */
   public function delete() {
     if (!$this->isNew()) {
-      drupal_container()->get('plugin.manager.entity')->getStorageController($this->entityType)->delete(array($this->id() => $this));
+      \Drupal::entityManager()->getStorageController($this->entityType)->delete(array($this->id() => $this));
     }
   }
 

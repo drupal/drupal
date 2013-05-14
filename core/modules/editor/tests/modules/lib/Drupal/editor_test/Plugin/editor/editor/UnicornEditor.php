@@ -25,14 +25,14 @@ use Drupal\editor\Plugin\Core\Entity\Editor;
 class UnicornEditor extends EditorBase {
 
   /**
-   * Implements \Drupal\editor\Plugin\EditorInterface::getDefaultSettings().
+   * Implements \Drupal\editor\Plugin\EditPluginInterface::getDefaultSettings().
    */
   function getDefaultSettings() {
     return array('ponies too' => TRUE);
   }
 
   /**
-   * Implements \Drupal\editor\Plugin\EditorInterface::settingsForm().
+   * Implements \Drupal\editor\Plugin\EditPluginInterface::settingsForm().
    */
   function settingsForm(array $form, array &$form_state, Editor $editor) {
     $form['foo'] = array('#type' => 'textfield', '#default_value' => 'bar');
@@ -40,7 +40,7 @@ class UnicornEditor extends EditorBase {
   }
 
   /**
-   * Implements \Drupal\editor\Plugin\EditorInterface::getJSSettings().
+   * Implements \Drupal\editor\Plugin\EditPluginInterface::getJSSettings().
    */
   function getJSSettings(Editor $editor) {
     $settings = array();
@@ -51,7 +51,7 @@ class UnicornEditor extends EditorBase {
   }
 
   /**
-   * Implements \Drupal\editor\Plugin\EditorInterface::getLibraries().
+   * Implements \Drupal\editor\Plugin\EditPluginInterface::getLibraries().
    */
   public function getLibraries(Editor $editor) {
     return array(

@@ -46,7 +46,7 @@ class CommentBlockTest extends CommentTestBase {
    */
   function testRecentCommentBlock() {
     $this->drupalLogin($this->admin_user);
-    $block = $this->drupalPlaceBlock('recent_comments', array(), array('block_count' => 2));
+    $block = $this->drupalPlaceBlock('recent_comments', array('block_count' => 2));
 
     // Add some test comments, one without a subject.
     $comment1 = $this->postComment($this->node, $this->randomName(), $this->randomName());
@@ -78,7 +78,7 @@ class CommentBlockTest extends CommentTestBase {
     $this->assertTrue(strpos($this->drupalGetContent(), $comment3->comment_body->value) < strpos($this->drupalGetContent(), $comment2->subject->value), 'Comments were ordered correctly in block.');
 
     // Set the number of recent comments to show to 10.
-    $block->set('settings', array('block_count' => 10));
+    $block->getPlugin()->setConfig('block_count', 10);
     $block->save();
 
     // Post an additional comment.

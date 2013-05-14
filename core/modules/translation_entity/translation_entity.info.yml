@@ -1,4 +1,5 @@
 name: 'Content Translation'
+type: module
 description: 'Allows users to translate content entities.'
 dependencies:
   - language

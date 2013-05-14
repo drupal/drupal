@@ -89,15 +89,13 @@ function hook_taxonomy_vocabulary_update(Drupal\taxonomy\Plugin\Core\Entity\Voca
 /**
  * Act before taxonomy vocabulary deletion.
  *
- * This hook is invoked from taxonomy_vocabulary_delete() before
- * entity_bundle_delete() is called and before the vocabulary is actually
- * removed from the database.
+ * This hook is invoked before entity_bundle_delete() is called and before
+ * the vocabulary is actually removed.
  *
  * @param Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary
  *   The taxonomy vocabulary entity that is about to be deleted.
  *
  * @see hook_taxonomy_vocabulary_delete()
- * @see taxonomy_vocabulary_delete()
  */
 function hook_taxonomy_vocabulary_predelete(Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary) {
   if (variable_get('taxonomy_' . $vocabulary->id() . '_synonyms', FALSE)) {
@@ -108,15 +106,13 @@ function hook_taxonomy_vocabulary_predelete(Drupal\taxonomy\Plugin\Core\Entity\V
 /**
  * Respond to taxonomy vocabulary deletion.
  *
- * This hook is invoked from taxonomy_vocabulary_delete() after
- * entity_bundle_delete() has been called and after the vocabulary has
- * been removed from the database.
+ * This hook is invoked after entity_bundle_delete() has been called and after
+ * the vocabulary has been removed.
  *
  * @param Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary
  *   The taxonomy vocabulary entity that has been deleted.
  *
  * @see hook_taxonomy_vocabulary_predelete()
- * @see taxonomy_vocabulary_delete()
  */
 function hook_taxonomy_vocabulary_delete(Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary) {
   if (variable_get('taxonomy_' . $vocabulary->id() . '_synonyms', FALSE)) {
@@ -158,7 +154,7 @@ function hook_taxonomy_term_create(\Drupal\taxonomy\Plugin\Core\Entity\Term $ter
 function hook_taxonomy_term_load(array $terms) {
   $result = db_query('SELECT tid, foo FROM {mytable} WHERE tid IN (:tids)', array(':tids' => array_keys($terms)));
   foreach ($result as $record) {
-    $terms[$record->tid]->foo = $record->foo;
+    $terms[$record->id()]->foo = $record->foo;
   }
 }
 
@@ -190,7 +186,7 @@ function hook_taxonomy_term_insert(Drupal\taxonomy\Term $term) {
       if ($synonym) {
         db_insert('taxonomy_term_synonym')
         ->fields(array(
-          'tid' => $term->tid,
+          'tid' => $term->id(),
           'name' => rtrim($synonym),
         ))
         ->execute();
@@ -214,7 +210,7 @@ function hook_taxonomy_term_update(Drupal\taxonomy\Term $term) {
       if ($synonym) {
         db_insert('taxonomy_term_synonym')
         ->fields(array(
-          'tid' => $term->tid,
+          'tid' => $term->id(),
           'name' => rtrim($synonym),
         ))
         ->execute();
@@ -226,32 +222,28 @@ function hook_taxonomy_term_update(Drupal\taxonomy\Term $term) {
 /**
  * Act before taxonomy term deletion.
  *
- * This hook is invoked from taxonomy_term_delete() before
+ * This hook is invoked from taxonomy term deletion before
  * field_attach_delete() is called and before the term is actually removed from
  * the database.
  *
  * @param Drupal\taxonomy\Term $term
  *   The taxonomy term entity that is about to be deleted.
- *
- * @see taxonomy_term_delete()
  */
 function hook_taxonomy_term_predelete(Drupal\taxonomy\Term $term) {
-  db_delete('term_synoynm')->condition('tid', $term->tid)->execute();
+  db_delete('term_synoynm')->condition('tid', $term->id())->execute();
 }
 
 /**
  * Respond to taxonomy term deletion.
  *
- * This hook is invoked from taxonomy_term_delete() after field_attach_delete()
+ * This hook is invoked from taxonomy term deletion after field_attach_delete()
  * has been called and after the term has been removed from the database.
  *
  * @param Drupal\taxonomy\Term $term
  *   The taxonomy term entity that has been deleted.
- *
- * @see taxonomy_term_delete()
  */
 function hook_taxonomy_term_delete(Drupal\taxonomy\Term $term) {
-  db_delete('term_synoynm')->condition('tid', $term->tid)->execute();
+  db_delete('term_synoynm')->condition('tid', $term->id())->execute();
 }
 
 /**

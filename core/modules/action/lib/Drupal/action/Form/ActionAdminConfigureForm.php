@@ -6,6 +6,7 @@
 
 namespace Drupal\action\Form;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Form\FormInterface;
 
 /**
@@ -39,7 +40,7 @@ class ActionAdminConfigureForm implements FormInterface {
       $edit['action_label'] = $data->label;
       $edit['action_type'] = $data->type;
       $function = $data->callback;
-      $action = drupal_hash_base64($data->callback);
+      $action = Crypt::hashBase64($data->callback);
       $params = unserialize($data->parameters);
       if ($params) {
         foreach ($params as $name => $val) {

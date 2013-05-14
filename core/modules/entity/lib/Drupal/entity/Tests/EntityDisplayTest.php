@@ -226,4 +226,38 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     $this->assertFalse($display);
   }
 
+  /**
+   * Tests deleting field instance.
+   */
+  public function testDeleteFieldInstance() {
+    $this->enableModules(array('field_sql_storage', 'field_test'));
+
+    // Create a field and an instance.
+    $field = entity_create('field_entity', array(
+      'field_name' => 'test_field',
+      'type' => 'test_field'
+    ));
+    $field->save();
+    $instance = entity_create('field_instance', array(
+      'field_name' => $field['field_name'],
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
+    ));
+    $instance->save();
+
+    // Create an entity display.
+    $display = entity_create('entity_display', array(
+      'targetEntityType' => 'entity_test',
+      'bundle' => 'entity_test',
+      'viewMode' => 'default',
+    ))->setComponent($field['field_name'])->save();
+
+    // Delete the instance.
+    $instance->delete();
+
+    // Check that the component has been removed from the entity display.
+    $display = entity_get_display('entity_test', 'entity_test', 'default');
+    $this->assertFalse($display->getComponent($field['field_name']));
+  }
+
 }

@@ -27,7 +27,7 @@ chdir('..');
  * Global flag to identify update.php and authorize.php runs.
  *
  * Identifies update.php and authorize.php runs, avoiding unwanted operations
- * such as hook_init() and hook_exit() invokes, css/js preprocessing and
+ * such as hook_init() invocations, css/js preprocessing and
  * translation, and solves some theming issues. The flag is checked in other
  * places in Drupal code (not just authorize.php).
  */
@@ -90,10 +90,10 @@ $show_messages = TRUE;
 
 if (authorize_access_allowed()) {
   // Load both the Form API and Batch API.
-  require_once DRUPAL_ROOT . '/core/includes/form.inc';
-  require_once DRUPAL_ROOT . '/core/includes/batch.inc';
+  require_once __DIR__ . '/includes/form.inc';
+  require_once __DIR__ . '/includes/batch.inc';
   // Load the code that drives the authorize process.
-  require_once DRUPAL_ROOT . '/core/includes/authorize.inc';
+  require_once __DIR__ . '/includes/authorize.inc';
 
   if (isset($_SESSION['authorize_operation']['page_title'])) {
     drupal_set_title($_SESSION['authorize_operation']['page_title']);

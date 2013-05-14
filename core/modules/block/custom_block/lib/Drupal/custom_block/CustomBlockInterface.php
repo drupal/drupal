@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * @file
+ * Contains \Drupal\custom_block\Plugin\Core\Entity\CustomBlockInterface.
+ */
+
+namespace Drupal\custom_block;
+
+use Drupal\Core\Entity\ContentEntityInterface;
+
+/**
+ * Provides an interface defining a custom block entity.
+ */
+interface CustomBlockInterface extends ContentEntityInterface {
+
+  /**
+   * Sets the theme value.
+   *
+   * When creating a new custom block from the block library, the user is
+   * redirected to the configure form for that block in the given theme. The
+   * theme is stored against the block when the custom block add form is shown.
+   *
+   * @param string $theme
+   *   The theme name.
+   */
+  public function setTheme($theme);
+
+  /**
+   * Gets the theme value.
+   *
+   * When creating a new custom block from the block library, the user is
+   * redirected to the configure form for that block in the given theme. The
+   * theme is stored against the block when the custom block add form is shown.
+   *
+   * @return string
+   *   The theme name.
+   */
+  public function getTheme();
+
+}

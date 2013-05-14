@@ -1,0 +1,6 @@
+toolbar_subtrees:
+  pattern: '/toolbar/subtrees/{hash}'
+  defaults:
+    _controller: '\Drupal\toolbar\Routing\ToolbarController::subtreesJsonp'
+  requirements:
+    _access_toolbar_subtree: 'TRUE'

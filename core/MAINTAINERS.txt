@@ -255,9 +255,6 @@ Help module
 Image module
 - Nathan Haug 'quicksketch' http://drupal.org/user/35821
 
-JSON-LD module
-- Lin Clark 'linclark' http://drupal.org/user/396253
-
 Locale module
 - Gábor Hojtsy 'Gábor Hojtsy' http://drupal.org/user/4166
 

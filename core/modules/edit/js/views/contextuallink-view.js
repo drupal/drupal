@@ -12,8 +12,16 @@ Drupal.edit.views.ContextualLinkView = Backbone.View.extend({
 
   entity: null,
 
-  events: {
-    'click': 'onClick'
+  events: function () {
+    // Prevents delay and simulated mouse events.
+    function touchEndToClick (event) {
+      event.preventDefault();
+      event.target.click();
+    }
+    return {
+      'click a': 'onClick',
+      'touchEnd a': touchEndToClick
+    };
   },
 
   /**
@@ -46,7 +54,7 @@ Drupal.edit.views.ContextualLinkView = Backbone.View.extend({
     event.preventDefault();
 
     var that = this;
-    var updateActiveEntity = function() {
+    function updateActiveEntity () {
       // The active entity is the current entity, i.e. stop editing the current
       // entity.
       if (that.model.get('activeEntity') === that.entity) {
@@ -57,7 +65,7 @@ Drupal.edit.views.ContextualLinkView = Backbone.View.extend({
       else {
         that.model.set('activeEntity', that.entity);
       }
-    };
+    }
 
     // If there's an active editor, attempt to set its state to 'candidate', and
     // only then do what the user asked.
@@ -67,7 +75,7 @@ Drupal.edit.views.ContextualLinkView = Backbone.View.extend({
     if (activeEditor) {
       var editableEntity = activeEditor.options.widget;
       var predicate = activeEditor.options.property;
-      editableEntity.setState('candidate', predicate, { reason: 'stop or switch' }, function(accepted) {
+      editableEntity.setState('candidate', predicate, { reason: 'stop or switch' }, function (accepted) {
         if (accepted) {
           updateActiveEntity();
         }
@@ -88,7 +96,7 @@ Drupal.edit.views.ContextualLinkView = Backbone.View.extend({
   render: function () {
     var activeEntity = this.model.get('activeEntity');
     var string = (activeEntity !== this.entity) ? Drupal.t('Quick edit') : Drupal.t('Stop quick edit');
-    this.$el.html('<a href="">' + string + '</a>');
+    this.$el.find('a').text(string);
     return this;
   },
 

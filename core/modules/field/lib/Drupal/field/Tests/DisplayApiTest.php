@@ -99,6 +99,7 @@ class DisplayApiTest extends FieldUnitTestBase {
     $setting = $display['settings']['test_formatter_setting_multiple'];
     $this->assertNoText($this->label, 'Label was not displayed.');
     $this->assertText('field_test_field_attach_view_alter', 'Alter fired, display passed.');
+    $this->assertText('field language is ' . LANGUAGE_NOT_SPECIFIED, 'Language is placed onto the context.');
     $array = array();
     foreach ($this->values as $delta => $value) {
       $array[] = $delta . ':' . $value['value'];
@@ -209,5 +210,37 @@ class DisplayApiTest extends FieldUnitTestBase {
       $this->content = drupal_render($output);
       $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
+  }
+
+  /**
+   * Tests that the prepareView() formatter method still fires for empty values.
+   */
+  function testFieldEmpty() {
+    // Uses \Drupal\field_test\Plugin\field\formatter\TestFieldEmptyFormatter.
+    $display = array(
+      'label' => 'hidden',
+      'type' => 'field_empty_test',
+      'settings' => array(
+        'test_empty_string' => '**EMPTY FIELD**' . $this->randomName(),
+      ),
+    );
+    // $this->entity is set by the setUp() method and by default contains 4
+    // numeric values.  We only want to test the display of this one field.
+    $output = field_view_field($this->entity, $this->field_name, $display);
+    $view = drupal_render($output);
+    $this->content = $view;
+    // The test field by default contains values, so should not display the
+    // default "empty" text.
+    $this->assertNoText($display['settings']['test_empty_string']);
+
+    // Now remove the values from the test field and retest.
+    $this->entity->{$this->field_name}[LANGUAGE_NOT_SPECIFIED] = array();
+    field_test_entity_save($this->entity);
+    $output = field_view_field($this->entity, $this->field_name, $display);
+    $view = drupal_render($output);
+    $this->content = $view;
+    // This time, as the field values have been removed, we *should* show the
+    // default "empty" text.
+    $this->assertText($display['settings']['test_empty_string']);
   }
 }

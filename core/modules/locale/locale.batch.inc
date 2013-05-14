@@ -13,7 +13,7 @@ use Guzzle\Http\Exception\RequestException;
  */
 // @todo Combine functions differently in files to avoid unnecessary includes.
 // Follow-up issue http://drupal.org/node/1834298
-require_once DRUPAL_ROOT . '/core/modules/locale/locale.translation.inc';
+require_once __DIR__ . '/locale.translation.inc';
 
 /**
  * Batch operation callback: Check the availability of a remote po file.

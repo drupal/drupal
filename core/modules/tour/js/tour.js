@@ -177,7 +177,7 @@ Drupal.tour.views.ToggleTourView = Backbone.View.extend({
         var $this = $(this);
         var itemId = $this.attr('data-id');
         var itemClass = $this.attr('data-class');
-        if ($document.find('#' + itemId + ', .' + itemClass).length === 0) {
+        if ((itemId || itemClass) && $document.find('#' + itemId + ', .' + itemClass).length === 0) {
           removals = true;
           $this.remove();
         }

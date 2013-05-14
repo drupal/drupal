@@ -151,6 +151,7 @@ class ConfigImportUITest extends WebTestBase {
 
     // Load the diff UI and verify that the diff reflects the change.
     $this->drupalGet('admin/config/development/sync/diff/' . $config_name);
+    $this->assertTitle(format_string('View changes of @config_name | Drupal', array('@config_name' => $config_name)));
 
     // Reset data back to original, and remove a key
     $staging_data = $original_data;

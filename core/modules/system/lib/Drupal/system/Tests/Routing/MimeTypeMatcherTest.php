@@ -11,7 +11,7 @@ use Drupal\Core\Routing\MimeTypeMatcher;
 use Drupal\simpletest\UnitTestBase;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
+use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 /**
  * Basic tests for the MimeTypeMatcher class.
@@ -91,7 +91,7 @@ class MimeTypeMatcherTest extends UnitTestBase {
       $routes = $matcher->filter($routes, $request);
       $this->fail(t('No exception was thrown.'));
     }
-    catch (UnsupportedMediaTypeHttpException $e) {
+    catch (NotAcceptableHttpException $e) {
       $this->pass('The correct exception was thrown.');
     }
   }

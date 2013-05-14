@@ -25,7 +25,7 @@ use Drupal\editor\Plugin\Core\Entity\Editor;
 class CKEditor extends EditorBase {
 
   /**
-   * Implements \Drupal\editor\Plugin\EditorInterface::getDefaultSettings().
+   * Implements \Drupal\editor\Plugin\EditPluginInterface::getDefaultSettings().
    */
   public function getDefaultSettings() {
     return array(
@@ -45,7 +45,7 @@ class CKEditor extends EditorBase {
   }
 
   /**
-   * Implements \Drupal\editor\Plugin\EditorInterface::settingsForm().
+   * Implements \Drupal\editor\Plugin\EditPluginInterface::settingsForm().
    */
   public function settingsForm(array $form, array &$form_state, Editor $editor) {
     $module_path = drupal_get_path('module', 'ckeditor');
@@ -87,7 +87,7 @@ class CKEditor extends EditorBase {
   }
 
   /**
-   * Implements \Drupal\editor\Plugin\EditorInterface::settingsFormSubmit().
+   * Implements \Drupal\editor\Plugin\EditPluginInterface::settingsFormSubmit().
    */
   public function settingsFormSubmit(array $form, array &$form_state) {
     // Modify the toolbar settings by reference. The values in
@@ -104,7 +104,7 @@ class CKEditor extends EditorBase {
   }
 
   /**
-   * Implements \Drupal\editor\Plugin\EditorInterface::getJSSettings().
+   * Implements \Drupal\editor\Plugin\EditPluginInterface::getJSSettings().
    */
   public function getJSSettings(Editor $editor) {
     $language_interface = language(LANGUAGE_TYPE_INTERFACE);
@@ -143,7 +143,7 @@ class CKEditor extends EditorBase {
   }
 
   /**
-   * Implements \Drupal\editor\Plugin\EditorInterface::getLibraries().
+   * Implements \Drupal\editor\Plugin\EditPluginInterface::getLibraries().
    */
   public function getLibraries(Editor $editor) {
     return array(

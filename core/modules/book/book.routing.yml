@@ -6,14 +6,14 @@ book_render:
     _permission: 'access content'
 
 book_admin:
-  pattern: '/admin/content/book'
+  pattern: '/admin/structure/book'
   defaults:
     _content: '\Drupal\book\Controller\BookController::adminOverview'
   requirements:
     _permission: 'administer book outlines'
 
 book_settings:
-  pattern: '/admin/content/book/settings'
+  pattern: '/admin/structure/book/settings'
   defaults:
     _form: 'Drupal\book\BookSettingsForm'
   requirements:

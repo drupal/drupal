@@ -23,17 +23,9 @@ use Drupal\Core\Annotation\Translation;
  *   label = @Translation("View"),
  *   module = "views",
  *   controllers = {
- *     "storage" = "Drupal\views\ViewStorageController",
- *     "list" = "Drupal\views_ui\ViewListController",
- *     "form" = {
- *       "edit" = "Drupal\views_ui\ViewEditFormController",
- *       "add" = "Drupal\views_ui\ViewAddFormController",
- *       "preview" = "Drupal\views_ui\ViewPreviewFormController",
- *       "clone" = "Drupal\views_ui\ViewCloneFormController"
- *     }
+ *     "storage" = "Drupal\views\ViewStorageController"
  *   },
  *   config_prefix = "views.view",
- *   fieldable = FALSE,
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",

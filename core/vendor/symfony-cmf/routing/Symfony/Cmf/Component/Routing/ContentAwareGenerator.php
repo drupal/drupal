@@ -3,13 +3,8 @@
 namespace Symfony\Cmf\Component\Routing;
 
 use Symfony\Component\Routing\Route as SymfonyRoute;
-use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\Generator\UrlGenerator;
-
-use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 
 /**
  * A generator that tries to generate routes from object, route names or
@@ -46,8 +41,8 @@ class ContentAwareGenerator extends ProviderBasedGenerator
      *
      * @param string $name       ignored
      * @param array  $parameters must either contain the field 'route' with a
-     *      RouteObjectInterface or the field 'content' with the document
-     *      instance to get the route for (implementing RouteAwareInterface)
+     *      RouteObjectInterface or the field 'content_id' with a document
+     *      id to get the route for (implementing RouteAwareInterface)
      *
      * @throws RouteNotFoundException If there is no such route in the database
      */
@@ -65,6 +60,8 @@ class ContentAwareGenerator extends ProviderBasedGenerator
             $hint = is_object($route) ? get_class($route) : gettype($route);
             throw new RouteNotFoundException('Route of this document is not an instance of Symfony\Component\Routing\Route but: '.$hint);
         }
+
+        $this->unsetLocaleIfNotNeeded($route, $parameters);
 
         return parent::generate($route, $parameters, $absolute);
     }
@@ -120,7 +117,9 @@ class ContentAwareGenerator extends ProviderBasedGenerator
     }
 
     /**
-     * Get the route based on the content field in parameters
+     * Get the route based on the $name that is a RouteAwareInterface or a
+     * RouteAwareInterface content found in the content repository with the
+     * content_id specified in parameters.
      *
      * Called in generate when there is no route given in the parameters.
      *
@@ -128,42 +127,44 @@ class ContentAwareGenerator extends ProviderBasedGenerator
      * first one that matches the _locale (provided in $parameters or otherwise
      * defaulting to the request locale).
      *
-     * If none is found, falls back to just return the first route.
+     * If no route with matching locale is found, falls back to just return the
+     * first route.
      *
      * @param mixed $name
      * @param array $parameters which should contain a content field containing a RouteAwareInterface object
      *
      * @return SymfonyRoute the route instance
      *
-     * @throws RouteNotFoundException if there is no content field in the
-     *      parameters or its not possible to build a route from that object
+     * @throws RouteNotFoundException if no route can be determined
      */
     protected function getRouteByContent($name, &$parameters)
     {
         if ($name instanceof RouteAwareInterface) {
             $content = $name;
-        } elseif (isset($parameters['content_id']) && null !== $this->contentRepository) {
+        } elseif (isset($parameters['content_id'])
+            && null !== $this->contentRepository
+        ) {
             $content = $this->contentRepository->findById($parameters['content_id']);
-        } elseif (isset($parameters['content'])) {
-            $content = $parameters['content'];
-        }
-
-        unset($parameters['content'], $parameters['content_id']);
-
-        if (empty($content)) {
-            throw new RouteNotFoundException('Neither the route name, nor a parameter "content" or "content_id" could be resolved to an content instance');
-        }
-
-        if (!$content instanceof RouteAwareInterface) {
-            $hint = is_object($content) ? get_class($content) : gettype($content);
-            throw new RouteNotFoundException('The content does not implement RouteAwareInterface: ' . $hint);
+            if (empty($content)) {
+                throw new RouteNotFoundException('The content repository found nothing at id ' . $parameters['content_id']);
+            }
+            if (!$content instanceof RouteAwareInterface) {
+                throw new RouteNotFoundException('Content repository did not return a RouteAwareInterface for id ' . $parameters['content_id']);
+            }
+        } else {
+            $hint = is_object($name) ? get_class($name) : gettype($name);
+            throw new RouteNotFoundException("The route name argument '$hint' is not RouteAwareInterface and there is no 'content_id' parameter");
         }
 
         $routes = $content->getRoutes();
         if (empty($routes)) {
-            $hint = method_exists($content, 'getPath') ? $content->getPath() : get_class($content);
-            throw new RouteNotFoundException('Document has no route: ' . $hint);
+            $hint = ($this->contentRepository && $this->contentRepository->getContentId($content))
+                ? $this->contentRepository->getContentId($content)
+                : get_class($content);
+            throw new RouteNotFoundException('Content document has no route: ' . $hint);
         }
+
+        unset($parameters['content_id']);
 
         $route = $this->getRouteByLocale($routes, $this->getLocale($parameters));
         if ($route) {
@@ -199,7 +200,8 @@ class ContentAwareGenerator extends ProviderBasedGenerator
      * @param SymfonyRoute $route
      * @param string       $locale
      *
-     * @return bool TRUE if there is either no _locale, no _locale requirement or if the two match
+     * @return bool TRUE if there is either no $locale, no _locale requirement
+     *      on the route or if the requirement and the passed $locale match.
      */
     private function checkLocaleRequirement(SymfonyRoute $route, $locale)
     {
@@ -232,5 +234,40 @@ class ContentAwareGenerator extends ProviderBasedGenerator
     public function supports($name)
     {
         return ! $name || parent::supports($name) || $name instanceof RouteAwareInterface;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRouteDebugMessage($name, array $parameters = array())
+    {
+        if (empty($name) && isset($parameters['content_id'])) {
+            return 'Content id ' . $parameters['content_id'];
+        }
+
+        if ($name instanceof RouteAwareInterface) {
+            return 'Route aware content ' . $name;
+        }
+
+        return parent::getRouteDebugMessage($name, $parameters);
+    }
+
+    /**
+     * Unset the _locale parameter if it is there and not needed
+     *
+     * @param SymfonyRoute $route
+     * @param array $parameters
+     */
+    protected  function unsetLocaleIfNotNeeded(SymfonyRoute $route, array &$parameters)
+    {
+        $locale = $this->getLocale($parameters);
+        if (null !== $locale) {
+            if (preg_match('/'.$route->getRequirement('_locale').'/', $locale) && $locale == $route->getDefault('_locale')) {
+                $compiledRoute = $route->compile();
+                if (!in_array('_locale', $compiledRoute->getVariables())) {
+                    unset($parameters['_locale']);
+                }
+            }
+        }
     }
 }

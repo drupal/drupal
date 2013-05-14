@@ -240,10 +240,10 @@ class ForumTest extends WebTestBase {
   function testAddOrphanTopic() {
     // Must remove forum topics to test creating orphan topics.
     $vid = config('forum.settings')->get('vocabulary');
-    $tree = taxonomy_get_tree($vid);
-    foreach ($tree as $term) {
-      taxonomy_term_delete($term->tid);
-    }
+    $tids = \Drupal::entityQuery('taxonomy_term')
+      ->condition('vid', $vid)
+      ->execute();
+    entity_delete_multiple('taxonomy_term', $tids);
 
     // Create an orphan forum item.
     $this->drupalLogin($this->admin_user);
@@ -302,7 +302,7 @@ class ForumTest extends WebTestBase {
     $this->root_forum = $this->createForum('forum');
 
     // Test vocabulary form alterations.
-    $this->drupalGet('admin/structure/taxonomy/forums/edit');
+    $this->drupalGet('admin/structure/taxonomy/manage/forums/edit');
     $this->assertFieldByName('op', t('Save'), 'Save button found.');
     $this->assertNoFieldByName('op', t('Delete'), 'Delete button not found.');
 
@@ -321,13 +321,13 @@ class ForumTest extends WebTestBase {
       'langcode' => language_default()->langcode,
       'help' => $help,
     ));
-    taxonomy_vocabulary_save($vocabulary);
+    $vocabulary->save();
     // Test tags vocabulary form is not affected.
-    $this->drupalGet('admin/structure/taxonomy/tags/edit');
+    $this->drupalGet('admin/structure/taxonomy/manage/tags/edit');
     $this->assertFieldByName('op', t('Save'), 'Save button found.');
     $this->assertFieldByName('op', t('Delete'), 'Delete button found.');
     // Test tags vocabulary term form is not affected.
-    $this->drupalGet('admin/structure/taxonomy/tags/add');
+    $this->drupalGet('admin/structure/taxonomy/manage/tags/add');
     $this->assertField('parent[]', 'Parent field found.');
     // Test relations widget exists.
     $relations_widget = $this->xpath("//details[@id='edit-relations']");
@@ -349,7 +349,7 @@ class ForumTest extends WebTestBase {
     );
 
     // Edit the vocabulary.
-    $this->drupalPost('admin/structure/taxonomy/' . $original_vocabulary->id() . '/edit', $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/manage/' . $original_vocabulary->id() . '/edit', $edit, t('Save'));
     $this->assertResponse(200);
     $this->assertRaw(t('Updated vocabulary %name.', array('%name' => $edit['name'])), 'Vocabulary was edited');
 

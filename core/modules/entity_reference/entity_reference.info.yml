@@ -1,4 +1,5 @@
 name: 'Entity Reference'
+type: module
 description: 'Provides a field that can reference other entities.'
 package: Core
 version: VERSION

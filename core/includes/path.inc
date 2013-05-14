@@ -3,10 +3,6 @@
 /**
  * @file
  * Functions to handle paths in Drupal.
- *
- * These functions are not loaded for cached pages, but modules that need
- * to use them in hook exit() can make them available, by executing
- * "drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);".
  */
 
 use Symfony\Component\HttpFoundation\Request;

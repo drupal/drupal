@@ -495,7 +495,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     field_create_instance($instance);
 
     // Go to the edit page and check if the default settings works as expected
-    $fieldEditUrl = 'admin/structure/types/manage/page/fields/bool';
+    $fieldEditUrl = 'admin/structure/types/manage/page/fields/node.page.bool';
     $this->drupalGet($fieldEditUrl);
 
     $this->assertText(

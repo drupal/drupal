@@ -1,7 +1,13 @@
 id: bartik.tools
-plugin: 'system_menu_block:menu-tools'
+weight: '0'
 status: '1'
+langcode: en
+region: sidebar_first
+plugin: 'system_menu_block:menu-tools'
 settings:
+  label: Tools
+  module: system
+  label_display: visible
   cache: '-1'
 visibility:
   path:
@@ -14,9 +20,3 @@ visibility:
       article: '0'
       page: '0'
   visibility__active_tab: edit-visibility-path
-label: 'Tools'
-module: system
-region: sidebar_first
-weight: '0'
-langcode: en
-label_display: visible

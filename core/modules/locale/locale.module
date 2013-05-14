@@ -16,6 +16,7 @@ use Drupal\locale\SourceString;
 use Drupal\locale\StringDatabaseStorage;
 use Drupal\locale\TranslationsStream;
 use Drupal\Core\Database\Database;
+use Drupal\Component\Utility\Crypt;
 
 /**
  * Regular expression pattern used to localize JavaScript strings.
@@ -1276,7 +1277,7 @@ function _locale_rebuild_js($langcode = NULL) {
     }
 
     $data .= "'strings': " . drupal_json_encode($translations) . " };";
-    $data_hash = drupal_hash_base64($data);
+    $data_hash = Crypt::hashBase64($data);
   }
 
   // Construct the filepath where JS translation files are stored.

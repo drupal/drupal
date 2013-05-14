@@ -8,12 +8,12 @@
 namespace Drupal\taxonomy;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\translation_entity\EntityTranslationController;
+use Drupal\translation_entity\EntityTranslationControllerNG;
 
 /**
  * Defines the translation controller class for terms.
  */
-class TermTranslationController extends EntityTranslationController {
+class TermTranslationController extends EntityTranslationControllerNG {
 
   /**
    * Overrides EntityTranslationController::entityFormAlter().
@@ -32,7 +32,7 @@ class TermTranslationController extends EntityTranslationController {
    */
   function entityFormSave(array $form, array &$form_state) {
     if ($this->getSourceLangcode($form_state)) {
-      $entity = translation_entity_form_controller($form_state)->getEntity($form_state);
+      $entity = translation_entity_form_controller($form_state)->getEntity();
       // We need a redirect here, otherwise we would get an access denied page,
       // since the current URL would be preserved and we would try to add a
       // translation for a language that already has a translation.

@@ -1,0 +1,104 @@
+base_table: views_test_data
+core: '8'
+description: ''
+status: '1'
+display:
+  default:
+    display_options:
+      defaults:
+        fields: '0'
+        pager: '0'
+        pager_options: '0'
+        sorts: '0'
+      fields:
+        age:
+          field: age
+          id: age
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+        name:
+          field: name
+          id: name
+          relationship: none
+          table: views_test_data
+          plugin_id: string
+      pager:
+        options:
+          offset: '0'
+        type: none
+      pager_options: {  }
+      sorts:
+        id:
+          field: id
+          id: id
+          order: ASC
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+      style:
+        type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: '1'
+          row_class_special: '1'
+          override: '1'
+          sticky: '0'
+          summary: ''
+          columns:
+            age: age
+            id: id
+            name: name
+          info:
+            age:
+              sortable: '0'
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: '0'
+              responsive: ''
+            id:
+              sortable: '1'
+              default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: '0'
+              responsive: ''
+            name:
+              sortable: '1'
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: '0'
+              responsive: ''
+          default: 'id'
+          empty_table: '1'
+      row:
+        type: fields
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          empty: '1'
+          content: 'custom text'
+          tokenize: '0'
+          plugin_id: text_custom
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+label: ''
+id: test_table
+tag: ''

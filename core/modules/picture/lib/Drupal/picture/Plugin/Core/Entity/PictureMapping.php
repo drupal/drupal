@@ -10,6 +10,7 @@ namespace Drupal\picture\Plugin\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\picture\PictureMappingInterface;
 
 /**
  * Defines the Picture entity.
@@ -22,7 +23,7 @@ use Drupal\Core\Annotation\Translation;
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "list" = "Drupal\picture\PictureMappingListController",
  *     "form" = {
- *       "default" = "Drupal\picture\PictureMappingFormController",
+ *       "edit" = "Drupal\picture\PictureMappingFormController",
  *       "add" = "Drupal\picture\PictureMappingFormController",
  *       "duplicate" = "Drupal\picture\PictureMappingFormController"
  *     }
@@ -37,7 +38,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class PictureMapping extends ConfigEntityBase {
+class PictureMapping extends ConfigEntityBase implements PictureMappingInterface {
 
   /**
    * The picture ID (machine name).
@@ -147,7 +148,7 @@ class PictureMapping extends ConfigEntityBase {
   }
 
   /**
-   * Checks if there's at least one mapping defined.
+   * {@inheritdoc}
    */
   public function hasMappings() {
     $mapping_found = FALSE;
@@ -160,4 +161,5 @@ class PictureMapping extends ConfigEntityBase {
     }
     return $mapping_found;
   }
+
 }

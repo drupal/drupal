@@ -46,24 +46,12 @@ class HtmlFormController implements ContainerAwareInterface {
    *   A response object.
    */
   public function content(Request $request, $_form) {
-    // If this is a class, instantiate it.
-    if (class_exists($_form)) {
-      if (in_array('Drupal\Core\ControllerInterface', class_implements($_form))) {
-        $form_arg = $_form::create($this->container);
-      }
-      else {
-        $form_arg = new $_form();
-      }
-    }
-    // Otherwise, it is a service.
-    else {
-      $form_arg = $this->container->get($_form);
-    }
+    $form_object = $this->getFormObject($request, $_form);
 
     // Using reflection, find all of the parameters needed by the form in the
     // request attributes, skipping $form and $form_state.
     $attributes = $request->attributes->all();
-    $reflection = new \ReflectionMethod($form_arg, 'buildForm');
+    $reflection = new \ReflectionMethod($form_object, 'buildForm');
     $params = $reflection->getParameters();
     $args = array();
     foreach (array_splice($params, 2) as $param) {
@@ -73,9 +61,34 @@ class HtmlFormController implements ContainerAwareInterface {
     }
     $form_state['build_info']['args'] = $args;
 
-    $form_id = _drupal_form_id($form_arg, $form_state);
+    $form_id = _drupal_form_id($form_object, $form_state);
     $form = drupal_build_form($form_id, $form_state);
     return new Response(drupal_render_page($form));
+  }
+
+  /**
+   * Returns the object used to build the form.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request using this form.
+   * @param string $form_arg
+   *   Either a class name or a service ID.
+   *
+   * @return \Drupal\Core\Form\FormInterface
+   *   The form object to use.
+   */
+  protected function getFormObject(Request $request, $form_arg) {
+    // If this is a class, instantiate it.
+    if (class_exists($form_arg)) {
+      if (in_array('Drupal\Core\ControllerInterface', class_implements($form_arg))) {
+        return $form_arg::create($this->container);
+      }
+
+      return new $form_arg();
+    }
+
+    // Otherwise, it is a service.
+    return $this->container->get($form_arg);
   }
 
 }

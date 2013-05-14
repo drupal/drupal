@@ -50,7 +50,7 @@ class EntityManager extends PluginManagerBase {
     $annotation_namespaces = array(
       'Drupal\Core\Entity\Annotation' => DRUPAL_ROOT . '/core/lib',
     );
-    $this->discovery = new AnnotatedClassDiscovery('Core', 'Entity', $namespaces, $annotation_namespaces, 'Drupal\Core\Entity\Annotation\EntityType');
+    $this->discovery = new AnnotatedClassDiscovery('Core/Entity', $namespaces, $annotation_namespaces, 'Drupal\Core\Entity\Annotation\EntityType');
     $this->discovery = new InfoHookDecorator($this->discovery, 'entity_info');
     $this->discovery = new AlterDecorator($this->discovery, 'entity_info');
     $this->discovery = new CacheDecorator($this->discovery, 'entity_info:' . language(LANGUAGE_TYPE_INTERFACE)->langcode, 'cache', CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
@@ -198,6 +198,33 @@ class EntityManager extends PluginManagerBase {
       $this->controllers['access'][$entity_type] = new $class($entity_type);
     }
     return $this->controllers['access'][$entity_type];
+  }
+
+  /**
+   * Returns the administration path for an entity type's bundle.
+   *
+   * @param string $entity_type
+   *   The entity type.
+   * @param string $bundle
+   *   The name of the bundle.
+   *
+   * @return string
+   *   The administration path for an entity type bundle, if it exists.
+   */
+  public function getAdminPath($entity_type, $bundle) {
+    $admin_path = '';
+    $entity_info = $this->getDefinition($entity_type);
+    // Check for an entity type's admin base path.
+    if (isset($entity_info['route_base_path'])) {
+      // If the entity type has a bundle prefix, strip it out of the path.
+      if (isset($entity_info['bundle_prefix'])) {
+        $bundle = str_replace($entity_info['bundle_prefix'], '', $bundle);
+      }
+      // Replace any dynamic 'bundle' portion of the path with the actual bundle.
+      $admin_path = str_replace('{bundle}', $bundle, $entity_info['route_base_path']);
+    }
+
+    return $admin_path;
   }
 
 }
