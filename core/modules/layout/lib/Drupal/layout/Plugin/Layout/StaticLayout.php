@@ -82,6 +82,9 @@ class StaticLayout extends PluginBase implements LayoutInterface {
     $build = array(
       '#theme' => $definition['theme'],
       '#content' => array(),
+      '#attributes' => array(
+        'class' => drupal_html_class($definition['theme']),
+      ),
     );
 
     // Render all regions needed for this layout.

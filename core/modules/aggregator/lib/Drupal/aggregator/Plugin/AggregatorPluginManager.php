@@ -27,7 +27,17 @@ class AggregatorPluginManager extends PluginManagerBase {
    *   keyed by the corresponding namespace to look for plugin implementations,
    */
   public function __construct($type, \Traversable $namespaces) {
-    $this->discovery = new AnnotatedClassDiscovery("aggregator/$type", $namespaces);
+    $type_annotations = array(
+      'fetcher' => 'Drupal\aggregator\Annotation\AggregatorFetcher',
+      'parser' => 'Drupal\aggregator\Annotation\AggregatorParser',
+      'processor' => 'Drupal\aggregator\Annotation\AggregatorProcessor',
+    );
+
+    $annotation_namespaces = array(
+      'Drupal\aggregator\Annotation' => DRUPAL_ROOT . '/core/modules/aggregator/lib',
+    );
+
+    $this->discovery = new AnnotatedClassDiscovery("aggregator/$type", $namespaces, $annotation_namespaces, $type_annotations[$type]);
     $this->discovery = new CacheDecorator($this->discovery, "aggregator_$type:" . language(LANGUAGE_TYPE_INTERFACE)->langcode);
     $this->factory = new DefaultFactory($this->discovery);
   }

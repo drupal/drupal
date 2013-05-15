@@ -38,7 +38,7 @@ class FormEnhancer implements RouteEnhancerInterface {
    */
   public function enhance(array $defaults, Request $request) {
     if (empty($defaults['_controller']) && !empty($defaults['_form']) && $this->negotiation->getContentType($request) === 'html') {
-      $defaults['_controller'] = '\Drupal\Core\HtmlFormController::content';
+      $defaults['_controller'] = '\Drupal\Core\Controller\HtmlFormController::content';
     }
     return $defaults;
   }

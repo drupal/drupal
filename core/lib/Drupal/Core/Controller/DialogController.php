@@ -2,22 +2,36 @@
 
 /**
  * @file
- * Contains \Drupal\core\Ajax\DialogController
+ * Contains \Drupal\core\Controller\DialogController.
  */
 
-namespace Drupal\core\Ajax;
+namespace Drupal\core\Controller;
 
-use Drupal\Core\ControllerInterface;
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Ajax\OpenDialogCommand;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Defines a default controller for dialog requests.
  */
-class DialogController extends ContainerAware {
+class DialogController {
+
+  /**
+   * The HttpKernel object to use for subrequests.
+   *
+   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
+   */
+  protected $httpKernel;
+
+  /**
+   * Constructs a new HtmlPageController.
+   *
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $kernel
+   */
+  public function __construct(HttpKernelInterface $kernel) {
+    $this->httpKernel = $kernel;
+  }
 
   /**
    * Forwards request to a subrequest.
@@ -45,7 +59,7 @@ class DialogController extends ContainerAware {
     // controller.
     $request->headers->remove('accept');
 
-    return $this->container->get('http_kernel')->forward($content, $attributes->all(), $request->query->all());
+    return $this->httpKernel->forward($content, $attributes->all(), $request->query->all());
   }
 
   /**

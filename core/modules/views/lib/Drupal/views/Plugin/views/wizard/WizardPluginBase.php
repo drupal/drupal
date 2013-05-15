@@ -692,8 +692,9 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * Adds the array of display options to the view, with appropriate overrides.
    */
   protected function addDisplays(View $view, $display_options, $form, $form_state) {
-    // Initialize the view executable to get the display plugin instances.
-    $view->get('executable');
+    // Initialize and store the view executable to get the display plugin
+    // instances.
+    $executable = $view->get('executable');
 
     // Display: Master
     $default_display = $view->newDisplay('default', 'Master', 'default');
@@ -728,6 +729,9 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
         $this->set_override_options($display_options['block'], $display, $default_display);
       }
     }
+
+    // Initialize displays and merge all plugin default values.
+    $executable->mergeDefaults();
   }
 
   /**
@@ -748,6 +752,11 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $display_options['pager']['type'] = 'full';
     $display_options['style']['type'] = 'default';
     $display_options['row']['type'] = 'fields';
+
+    // Add default options array to each plugin type.
+    foreach ($display_options as &$options) {
+      $options['options'] = array();
+    }
 
     // Add a least one field so the view validates and the user has a preview.
     // The base field can provide a default in its base settings; otherwise,

@@ -120,12 +120,16 @@ class StyleSerializerTest extends PluginTestBase {
 
     $actual_json = $this->drupalGet('test/serialize/entity', array(), array('Accept: application/json'));
     $this->assertResponse(200);
-
     $this->assertIdentical($actual_json, $expected, 'The expected JSON output was found.');
 
     $expected = $serializer->serialize($entities, 'hal_json');
     $actual_json = $this->drupalGet('test/serialize/entity', array(), array('Accept: application/hal+json'));
     $this->assertIdentical($actual_json, $expected, 'The expected HAL output was found.');
+
+    // Test that the default output will be JSON if html is requested.
+    $expected = $serializer->serialize($entities, 'json');
+    $actual = $this->drupalGet('test/serialize/entity');
+    $this->assertIdentical($actual, $expected, 'By default json output is returned.');
   }
 
   /**
@@ -237,9 +241,9 @@ class StyleSerializerTest extends PluginTestBase {
       $entities[] = $row->_entity;
     }
 
-    $expected = check_plain($serializer->serialize($entities, 'hal_json'));
+    $expected = check_plain($serializer->serialize($entities, 'json'));
 
-    $view->display_handler->setContentType('hal_json');
+    $view->display_handler->setContentType('json');
     $view->live_preview = TRUE;
 
     $build = $view->preview();

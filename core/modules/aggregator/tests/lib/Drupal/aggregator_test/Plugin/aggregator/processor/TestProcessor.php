@@ -10,7 +10,7 @@ namespace Drupal\aggregator_test\Plugin\aggregator\processor;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\aggregator\Plugin\ProcessorInterface;
 use Drupal\aggregator\Plugin\Core\Entity\Feed;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\aggregator\Annotation\AggregatorProcessor;
 use Drupal\Core\Annotation\Translation;
 
 /**
@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * Creates lightweight records from feed items.
  *
- * @Plugin(
+ * @AggregatorProcessor(
  *   id = "aggregator_test_processor",
  *   title = @Translation("Test processor"),
  *   description = @Translation("Test generic processor functionality.")

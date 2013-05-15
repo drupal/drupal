@@ -150,4 +150,32 @@ class BasicTest extends WizardTestBase {
     $result = $this->xpath('//small[@id = "edit-label-machine-name-suffix"]');
     $this->assertTrue(count($result), 'Ensure that the machine name is applied to the name field.');
   }
+
+  /**
+   * Tests default plugin values are populated from the wizard form.
+   *
+   * @see \Drupal\views\Plugin\views\display\DisplayPluginBase::mergeDefaults().
+   */
+  public function testWizardDefaultValues() {
+    $random_id = strtolower($this->randomName(16));
+    // Create a basic view.
+    $view = array();
+    $view['label'] = $this->randomName(16);
+    $view['id'] = $random_id;
+    $view['description'] = $this->randomName(16);
+    $view['page[create]'] = FALSE;
+    $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
+
+    // Make sure the plugin types that should not have empty options don't have.
+    // Test against all values is unit tested.
+    // @see \Drupal\views\Tests\Plugin\DisplayUnitTest
+    $view = views_get_view($random_id);
+    $displays = $view->storage->get('display');
+    foreach (array('query', 'exposed_form', 'pager', 'style', 'row') as $type) {
+      foreach ($displays as $display) {
+        $this->assertFalse(empty($display['display_options'][$type]['options']), format_string('Default options found for @plugin.', array('@plugin' => $type)));
+      }
+    }
+
+  }
 }

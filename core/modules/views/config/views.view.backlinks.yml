@@ -14,16 +14,44 @@ display:
         type: views_query
         options:
           query_comment: '0'
+          disable_sql_rewrite: '0'
+          distinct: '0'
+          slave: '0'
+          query_tags: {  }
       access:
         type: none
+        options: {  }
       cache:
         type: none
+        options: {  }
       exposed_form:
         type: basic
+        options:
+          submit_button: Apply
+          reset_button: '0'
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: '1'
+          sort_asc_label: Asc
+          sort_desc_label: Desc
       pager:
         type: mini
         options:
           items_per_page: '30'
+          offset: '0'
+          id: '0'
+          total_pages: ''
+          expose:
+            items_per_page: '0'
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 20, 40, 60'
+            items_per_page_options_all: '0'
+            items_per_page_options_all_label: '- All -'
+            offset: '0'
+            offset_label: Offset
+          tags:
+            previous: ‹‹
+            next: ››
       empty:
         text:
           id: area
@@ -33,6 +61,10 @@ display:
           content: 'No backlinks found.'
           format: '1'
           plugin_id: text
+          relationship: none
+          group_type: group
+          admin_label: ''
+          tokenize: '0'
       fields:
         title:
           id: title
@@ -41,6 +73,49 @@ display:
           label: ''
           link_to_node: '1'
           plugin_id: node
+          relationship: none
+          group_type: group
+          admin_label: ''
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
       arguments:
         nid:
           id: nid
@@ -69,8 +144,24 @@ display:
         type: html_list
         options:
           type: ol
+          grouping: {  }
+          row_class: ''
+          default_row_class: '1'
+          row_class_special: '1'
+          uses_fields: '0'
+          class: ''
+          wrapper_class: item-list
       row:
         type: fields
+        options:
+          inline: {  }
+          separator: ''
+          hide_empty: '0'
+          default_field_elements: '1'
+      header: {  }
+      footer: {  }
+      relationships: {  }
+      sorts: {  }
   page_1:
     id: page_1
     display_title: Page

@@ -1,3 +1,23 @@
+== HEAD
+
+== 2.1.2 (May 11, 2013)
+
+* Revert root `color` and `background` normalizations.
+
+== 2.1.1 (April 8, 2013)
+
+* Normalize root `color` and `background` to counter the effects of system
+  color schemes.
+
+== 2.1.0 (January 21, 2013)
+
+* Normalize `text-transform` for `button` and `select`.
+* Normalize `h1` margin when within HTML5 sectioning elements.
+* Normalize `hr` element.
+* Remove unnecessary `pre` styles.
+* Add `main` element to HTML5 display definitions.
+* Fix cursor style for disabled button `input`.
+
 == 2.0.1 (August 20, 2012)
 
 * Remove stray IE 6/7 `inline-block` hack from HTML5 display settings.

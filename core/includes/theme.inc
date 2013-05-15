@@ -1646,6 +1646,10 @@ function template_preprocess_datetime(&$variables) {
       $variables['html'] = FALSE;
     }
   }
+
+  // Add a 'datetime' class.
+  $variables['attributes']['class'][] = 'datetime';
+
   $variables['attributes'] = new Attribute($variables['attributes']);
 }
 
@@ -2686,9 +2690,6 @@ function template_preprocess(&$variables, $hook) {
     'title_attributes' => array(),
     'content_attributes' => array(),
   );
-
-  // Initialize html class attribute for the current hook.
-  $variables['attributes']['class'][] = drupal_html_class($hook);
 }
 
 /**
@@ -2732,6 +2733,7 @@ function template_preprocess_html(&$variables) {
 
   // Compile a list of classes that are going to be applied to the body element.
   // This allows advanced theming based on context (home page, node of certain type, etc.).
+  $variables['attributes']['class'][] = 'html';
   // Add a class that tells us whether we're on the front page or not.
   $variables['attributes']['class'][] = $variables['is_front'] ? 'front' : 'not-front';
   // Add a class that tells us whether the page is viewed by an authenticated user or not.
@@ -3109,6 +3111,7 @@ function template_preprocess_maintenance_page(&$variables) {
   $variables['title']             = drupal_get_title();
 
   // Compile a list of classes that are going to be applied to the body element.
+  $variables['attributes']['class'][] = 'maintenance-page';
   $variables['attributes']['class'][] = 'in-maintenance';
   if (isset($variables['db_is_active']) && !$variables['db_is_active']) {
     $variables['attributes']['class'][] = 'db-offline';
@@ -3169,6 +3172,7 @@ function template_preprocess_region(&$variables) {
   $variables['content'] = $variables['elements']['#children'];
   $variables['region'] = $variables['elements']['#region'];
 
+  $variables['attributes']['class'][] = 'region';
   $variables['attributes']['class'][] = drupal_region_class($variables['region']);
   $variables['theme_hook_suggestions'][] = 'region__' . $variables['region'];
 }

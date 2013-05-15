@@ -9,7 +9,7 @@ namespace Drupal\aggregator\Plugin\aggregator\fetcher;
 
 use Drupal\aggregator\Plugin\FetcherInterface;
 use Drupal\aggregator\Plugin\Core\Entity\Feed;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\aggregator\Annotation\AggregatorFetcher;
 use Drupal\Core\Annotation\Translation;
 use Guzzle\Http\Exception\BadResponseException;
 use Guzzle\Http\Exception\RequestException;
@@ -19,7 +19,7 @@ use Guzzle\Http\Exception\RequestException;
  *
  * Uses the http_default_client service to download the feed.
  *
- * @Plugin(
+ * @AggregatorFetcher(
  *   id = "aggregator",
  *   title = @Translation("Default fetcher"),
  *   description = @Translation("Downloads data from a URL using Drupal's HTTP request handler.")

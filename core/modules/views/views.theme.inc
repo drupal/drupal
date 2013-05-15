@@ -620,6 +620,7 @@ function template_preprocess_views_view_table(&$vars) {
   }
 
   $vars['attributes']['class'][] = 'views-table';
+  $vars['attributes']['class'][] = 'views-view-table';
   if (empty($vars['rows']) && !empty($options['empty_table'])) {
     $build = $view->display_handler->renderArea('empty');
     $vars['rows'][0][0] = drupal_render($build);

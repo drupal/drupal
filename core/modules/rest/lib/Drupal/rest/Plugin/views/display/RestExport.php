@@ -59,7 +59,7 @@ class RestExport extends PathPluginBase {
    *
    * @var string
    */
-  protected $contentType;
+  protected $contentType = 'json';
 
   /**
    * The mime type for the response.
@@ -78,7 +78,13 @@ class RestExport extends PathPluginBase {
     $negotiation = $container->get('content_negotiation');
     $request = $container->get('request');
 
-    $this->setContentType($negotiation->getContentType($request));
+    $request_content_type = $negotiation->getContentType($request);
+    // Only use the requested content type if it's not 'html'. If it is then
+    // default to 'json' to aid debugging.
+    if ($request_content_type !== 'html') {
+      $this->setContentType($request_content_type);
+    }
+
     $this->setMimeType($request->getMimeType($this->contentType));
   }
 

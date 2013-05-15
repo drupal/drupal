@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\Core\ControllerResolver.
+ * Contains \Drupal\Core\Controller\ControllerResolver.
  */
 
-namespace Drupal\Core;
+namespace Drupal\Core\Controller;
 
 use Symfony\Component\HttpKernel\Controller\ControllerResolver as BaseControllerResolver;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
@@ -79,7 +79,8 @@ class ControllerResolver extends BaseControllerResolver {
       if (!class_exists($class)) {
         throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
       }
-      if (in_array('Drupal\Core\ControllerInterface', class_implements($class))) {
+      // @todo Remove the second in_array() once that interface has been removed.
+      if (in_array('Drupal\Core\Controller\ControllerInterface', class_implements($class)) || in_array('Drupal\Core\ControllerInterface', class_implements($class))) {
         $controller = $class::create($this->container);
       }
       else {

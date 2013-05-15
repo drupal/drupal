@@ -9,7 +9,7 @@ namespace Drupal\aggregator\Plugin\aggregator\parser;
 
 use Drupal\aggregator\Plugin\ParserInterface;
 use Drupal\aggregator\Plugin\Core\Entity\Feed;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\aggregator\Annotation\AggregatorParser;
 use Drupal\Core\Annotation\Translation;
 
 /**
@@ -17,7 +17,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * Parses RSS, Atom and RDF feeds.
  *
- * @Plugin(
+ * @AggregatorParser(
  *   id = "aggregator",
  *   title = @Translation("Default parser"),
  *   description = @Translation("Default parser for RSS, Atom and RDF feeds.")

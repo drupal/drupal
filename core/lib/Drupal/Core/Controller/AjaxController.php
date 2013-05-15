@@ -2,18 +2,16 @@
 
 /**
  * @file
- * Contains \Drupal\Core\AjaxController.
+ * Contains \Drupal\Core\Controller\AjaxController.
  */
 
-namespace Drupal\Core;
+namespace Drupal\Core\Controller;
 
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\InsertCommand;
 use Drupal\Core\Ajax\PrependCommand;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Default controller for ajax requests.

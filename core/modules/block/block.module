@@ -539,6 +539,7 @@ function template_preprocess_block(&$variables) {
   $variables['label'] = !empty($variables['configuration']['label_display']) ? $variables['configuration']['label'] : '';
   $variables['content'] = $variables['elements']['content'];
 
+  $variables['attributes']['class'][] = 'block';
   $variables['attributes']['class'][] = drupal_html_class('block-' . $variables['configuration']['module']);
 
   // Add default class for block content.

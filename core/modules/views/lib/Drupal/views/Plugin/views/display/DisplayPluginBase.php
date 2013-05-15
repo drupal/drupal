@@ -554,42 +554,49 @@ abstract class DisplayPluginBase extends PluginBase {
           'type' => array('default' => 'none'),
           'options' => array('default' => array()),
         ),
+        'merge_defaults' => array($this, 'mergePlugin'),
       ),
       'cache' => array(
         'contains' => array(
           'type' => array('default' => 'none'),
           'options' => array('default' => array()),
         ),
+        'merge_defaults' => array($this, 'mergePlugin'),
       ),
       'query' => array(
         'contains' => array(
           'type' => array('default' => 'views_query'),
           'options' => array('default' => array()),
          ),
+        'merge_defaults' => array($this, 'mergePlugin'),
       ),
       'exposed_form' => array(
         'contains' => array(
           'type' => array('default' => 'basic'),
           'options' => array('default' => array()),
          ),
+        'merge_defaults' => array($this, 'mergePlugin'),
       ),
       'pager' => array(
         'contains' => array(
           'type' => array('default' => 'mini'),
           'options' => array('default' => array()),
          ),
+        'merge_defaults' => array($this, 'mergePlugin'),
       ),
       'style' => array(
         'contains' => array(
           'type' => array('default' => 'default'),
           'options' => array('default' => array()),
         ),
+        'merge_defaults' => array($this, 'mergePlugin'),
       ),
       'row' => array(
         'contains' => array(
           'type' => array('default' => 'fields'),
           'options' => array('default' => array()),
         ),
+        'merge_defaults' => array($this, 'mergePlugin'),
       ),
 
       'exposed_block' => array(
@@ -598,27 +605,34 @@ abstract class DisplayPluginBase extends PluginBase {
 
       'header' => array(
         'default' => array(),
+        'merge_defaults' => array($this, 'mergeHandler'),
       ),
       'footer' => array(
         'default' => array(),
+        'merge_defaults' => array($this, 'mergeHandler'),
       ),
       'empty' => array(
         'default' => array(),
+        'merge_defaults' => array($this, 'mergeHandler'),
       ),
 
       // We want these to export last.
       // These are the 5 handler types.
       'relationships' => array(
         'default' => array(),
+        'merge_defaults' => array($this, 'mergeHandler'),
       ),
       'fields' => array(
         'default' => array(),
+        'merge_defaults' => array($this, 'mergeHandler'),
       ),
       'sorts' => array(
         'default' => array(),
+        'merge_defaults' => array($this, 'mergeHandler'),
       ),
       'arguments' => array(
         'default' => array(),
+        'merge_defaults' => array($this, 'mergeHandler'),
       ),
       'filter_groups' => array(
         'contains' => array(
@@ -2723,6 +2737,65 @@ abstract class DisplayPluginBase extends PluginBase {
       'items per page title' => t('Items to display'),
       'items per page description' => t('Enter 0 for no limit.')
     );
+  }
+
+  /**
+   * Merges default values for all plugin types.
+   */
+  public function mergeDefaults() {
+    $defined_options = $this->defineOptions();
+
+    // Build a map of plural => singular for handler types.
+    $type_map = array();
+    foreach (ViewExecutable::viewsHandlerTypes() as $type => $info) {
+      $type_map[$info['plural']] = $type;
+    }
+
+    // Find all defined options, that have specified a merge_defaults callback.
+    foreach ($defined_options as $type => $definition) {
+      if (!isset($definition['merge_defaults']) || !is_callable($definition['merge_defaults'])) {
+        continue;
+      }
+      // Switch the type to singular, if it's a plural handler.
+      if (isset($type_map[$type])) {
+        $type = $type_map[$type];
+      }
+
+      call_user_func($definition['merge_defaults'], $type);
+    }
+  }
+
+  /**
+   * Merges plugins default values.
+   *
+   * @param string $type
+   *   The name of the plugin type option.
+   */
+  protected function mergePlugin($type) {
+    if (($options = $this->getOption($type)) && isset($options['options'])) {
+      $plugin = $this->getPlugin($type);
+      $options['options'] = $options['options'] + $plugin->options;
+      $this->setOption($type, $options);
+    }
+  }
+
+  /**
+   * Merges handlers default values.
+   *
+   * @param string $type
+   *   The name of the handler type option.
+   */
+  protected function mergeHandler($type) {
+    $types = ViewExecutable::viewsHandlerTypes();
+
+    $options = $this->getOption($types[$type]['plural']);
+    foreach ($this->getHandlers($type) as $id => $handler) {
+      if (isset($options[$id])) {
+        $options[$id] = $options[$id] + $handler->options;
+      }
+    }
+
+    $this->setOption($types[$type]['plural'], $options);
   }
 
 }

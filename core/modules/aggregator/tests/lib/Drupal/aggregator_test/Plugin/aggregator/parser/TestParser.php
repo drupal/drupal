@@ -10,7 +10,7 @@ namespace Drupal\aggregator_test\Plugin\aggregator\parser;
 use Drupal\aggregator\Plugin\ParserInterface;
 use Drupal\aggregator\Plugin\Core\Entity\Feed;
 use Drupal\aggregator\Plugin\aggregator\parser\DefaultParser;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\aggregator\Annotation\AggregatorParser;
 use Drupal\Core\Annotation\Translation;
 
 /**
@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * Parses RSS, Atom and RDF feeds.
  *
- * @Plugin(
+ * @AggregatorParser(
  *   id = "aggregator_test_parser",
  *   title = @Translation("Test parser"),
  *   description = @Translation("Dummy parser for testing purposes.")
