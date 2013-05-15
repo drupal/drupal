@@ -226,4 +226,64 @@ class ConnectionUnitTest extends UnitTestBase {
     $this->assertNoConnection($id);
   }
 
+  /**
+   * Tests the serialization and unserialization of a database connection.
+   */
+  public function testConnectionSerialization() {
+    $db = Database::getConnection('default', 'default');
+
+    try {
+      $serialized = serialize($db);
+      $this->pass('The database connection can be serialized.');
+
+      $unserialized = unserialize($serialized);
+      $this->assertTrue(get_class($unserialized) === get_class($db));
+    }
+    catch (\Exception $e) {
+      $this->fail('The database connection cannot be serialized.');
+    }
+
+    // Ensure that all properties on the unserialized object are the same.
+    $db_reflection = new \ReflectionObject($db);
+    $unserialized_reflection = new \ReflectionObject($unserialized);
+    foreach ($db_reflection->getProperties() as $value) {
+      // Skip the pdo connection object.
+      if ($value->getName() == 'connection') {
+        continue;
+      }
+      $value->setAccessible(TRUE);
+      $unserialized_property = $unserialized_reflection->getProperty($value->getName());
+      $unserialized_property->setAccessible(TRUE);
+      $this->assertEqual($unserialized_property->getValue($unserialized), $value->getValue($db));
+    }
+
+  }
+
+  /**
+   * Tests pdo options override.
+   */
+  public function testConnectionOpen() {
+    $connection = Database::getConnection('default');
+    $reflection = new \ReflectionObject($connection);
+    $connection_property = $reflection->getProperty('connection');
+    $connection_property->setAccessible(TRUE);
+    $error_mode = $connection_property->getValue($connection)
+      ->getAttribute(\PDO::ATTR_ERRMODE);
+    $this->assertEqual($error_mode, \PDO::ERRMODE_EXCEPTION, 'Ensure the default error mode is set to exception.');
+
+    $connection = Database::getConnectionInfo('default');
+    $connection['default']['pdo'][\PDO::ATTR_ERRMODE] = \PDO::ERRMODE_SILENT;
+    Database::addConnectionInfo('test', 'default', $connection['default']);
+    $connection = Database::getConnection('default', 'test');
+
+    $reflection = new \ReflectionObject($connection);
+    $connection_property = $reflection->getProperty('connection');
+    $connection_property->setAccessible(TRUE);
+    $error_mode = $connection_property->getValue($connection)
+      ->getAttribute(\PDO::ATTR_ERRMODE);
+    $this->assertEqual($error_mode, \PDO::ERRMODE_SILENT, 'Ensure PDO connection options can be overridden.');
+
+    Database::removeConnection('test');
+  }
+
 }

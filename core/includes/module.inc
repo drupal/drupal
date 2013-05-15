@@ -344,9 +344,6 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
       // Flush theme info caches, since (testing) modules can implement
       // hook_system_theme_info() to register additional themes.
       system_list_reset();
-      // Refresh the list of modules that implement bootstrap hooks.
-      // @see bootstrap_hooks()
-      _system_update_bootstrap_status();
 
       // Update the kernel to include it.
       // This reboots the kernel to register the module's bundle and its
@@ -357,6 +354,10 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
       if ($kernel = drupal_container()->get('kernel', ContainerInterface::NULL_ON_INVALID_REFERENCE)) {
         $kernel->updateModules($module_filenames, $module_filenames);
       }
+
+      // Refresh the list of modules that implement bootstrap hooks.
+      // @see bootstrap_hooks()
+      _system_update_bootstrap_status();
 
       // Refresh the schema to include it.
       drupal_get_schema(NULL, TRUE);

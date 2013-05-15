@@ -381,7 +381,9 @@ abstract class Database {
       // Fallback for Drupal 7 settings.php.
       $driver_class = "Drupal\\Core\\Database\\Driver\\{$driver}\\Connection";
     }
-    $new_connection = new $driver_class(self::$databaseInfo[$key][$target]);
+
+    $pdo_connection = $driver_class::open(self::$databaseInfo[$key][$target]);
+    $new_connection = new $driver_class($pdo_connection, self::$databaseInfo[$key][$target]);
     $new_connection->setTarget($target);
     $new_connection->setKey($key);
 

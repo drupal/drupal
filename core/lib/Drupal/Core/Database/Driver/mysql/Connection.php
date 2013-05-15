@@ -36,7 +36,12 @@ class Connection extends DatabaseConnection {
    */
   protected $needsCleanup = FALSE;
 
-  public function __construct(array $connection_options = array()) {
+  /**
+   * Constructs a Connection object.
+   */
+  public function __construct(PDO $connection, array $connection_options = array()) {
+    parent::__construct($connection, $connection_options);
+
     // This driver defaults to transaction support, except if explicitly passed FALSE.
     $this->transactionSupport = !isset($connection_options['transactions']) || ($connection_options['transactions'] !== FALSE);
 
@@ -44,7 +49,12 @@ class Connection extends DatabaseConnection {
     $this->transactionalDDLSupport = FALSE;
 
     $this->connectionOptions = $connection_options;
+  }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function open(array &$connection_options = array()) {
     // The DSN should use either a socket or a host/port.
     if (isset($connection_options['unix_socket'])) {
       $dsn = 'mysql:unix_socket=' . $connection_options['unix_socket'];
@@ -61,22 +71,23 @@ class Connection extends DatabaseConnection {
       'pdo' => array(),
     );
     $connection_options['pdo'] += array(
+      PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
       // So we don't have to mess around with cursors and unbuffered queries by default.
       PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => TRUE,
       // Because MySQL's prepared statements skip the query cache, because it's dumb.
       PDO::ATTR_EMULATE_PREPARES => TRUE,
     );
 
-    parent::__construct($dsn, $connection_options['username'], $connection_options['password'], $connection_options['pdo']);
+    $pdo = new PDO($dsn, $connection_options['username'], $connection_options['password'], $connection_options['pdo']);
 
     // Force MySQL to use the UTF-8 character set. Also set the collation, if a
     // certain one has been set; otherwise, MySQL defaults to 'utf8_general_ci'
     // for UTF-8.
     if (!empty($connection_options['collation'])) {
-      $this->exec('SET NAMES utf8 COLLATE ' . $connection_options['collation']);
+      $pdo->exec('SET NAMES utf8 COLLATE ' . $connection_options['collation']);
     }
     else {
-      $this->exec('SET NAMES utf8');
+      $pdo->exec('SET NAMES utf8');
     }
 
     // Set MySQL init_commands if not already defined.  Default Drupal's MySQL
@@ -94,7 +105,9 @@ class Connection extends DatabaseConnection {
       'sql_mode' => "SET sql_mode = 'ANSI,STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER'",
     );
     // Set connection options.
-    $this->exec(implode('; ', $connection_options['init_commands']));
+    $pdo->exec(implode('; ', $connection_options['init_commands']));
+
+    return $pdo;
   }
 
   public function __destruct() {
@@ -135,8 +148,8 @@ class Connection extends DatabaseConnection {
 
     try {
       // Create the database and set it as active.
-      $this->exec("CREATE DATABASE $database");
-      $this->exec("USE $database");
+      $this->connection->exec("CREATE DATABASE $database");
+      $this->connection->exec("USE $database");
     }
     catch (\Exception $e) {
       throw new DatabaseNotFoundException($e->getMessage());
@@ -204,7 +217,7 @@ class Connection extends DatabaseConnection {
       // If there are no more layers left then we should commit.
       unset($this->transactionLayers[$name]);
       if (empty($this->transactionLayers)) {
-        if (!PDO::commit()) {
+        if (!$this->connection->commit()) {
           throw new TransactionCommitFailedException();
         }
       }
@@ -227,7 +240,7 @@ class Connection extends DatabaseConnection {
             $this->transactionLayers = array();
             // We also have to explain to PDO that the transaction stack has
             // been cleaned-up.
-            PDO::commit();
+            $this->connection->commit();
           }
           else {
             throw $e;

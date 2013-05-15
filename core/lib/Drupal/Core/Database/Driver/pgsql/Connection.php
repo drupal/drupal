@@ -34,7 +34,12 @@ class Connection extends DatabaseConnection {
    */
   const DATABASE_NOT_FOUND = 7;
 
-  public function __construct(array $connection_options = array()) {
+  /**
+   * Constructs a connection object.
+   */
+  public function __construct(PDO $connection, array $connection_options) {
+    parent::__construct($connection, $connection_options);
+
     // This driver defaults to transaction support, except if explicitly passed FALSE.
     $this->transactionSupport = !isset($connection_options['transactions']) || ($connection_options['transactions'] !== FALSE);
 
@@ -42,6 +47,21 @@ class Connection extends DatabaseConnection {
     // but we'll only enable it if standard transactions are.
     $this->transactionalDDLSupport = $this->transactionSupport;
 
+    $this->connectionOptions = $connection_options;
+
+    // Force PostgreSQL to use the UTF-8 character set by default.
+    $this->connection->exec("SET NAMES 'UTF8'");
+
+    // Execute PostgreSQL init_commands.
+    if (isset($connection_options['init_commands'])) {
+      $this->connection->exec(implode('; ', $connection_options['init_commands']));
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function open(array &$connection_options = array()) {
     // Default to TCP connection on port 5432.
     if (empty($connection_options['port'])) {
       $connection_options['port'] = 5432;
@@ -61,8 +81,6 @@ class Connection extends DatabaseConnection {
       $connection_options['password'] = str_replace('\\', '\\\\', $connection_options['password']);
     }
 
-    $this->connectionOptions = $connection_options;
-
     $connection_options['database'] = (!empty($connection_options['database']) ? $connection_options['database'] : 'template1');
     $dsn = 'pgsql:host=' . $connection_options['host'] . ' dbname=' . $connection_options['database'] . ' port=' . $connection_options['port'];
 
@@ -71,6 +89,7 @@ class Connection extends DatabaseConnection {
       'pdo' => array(),
     );
     $connection_options['pdo'] += array(
+      PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
       // Prepared statements are most effective for performance when queries
       // are recycled (used several times). However, if they are not re-used,
       // prepared statements become ineffecient. Since most of Drupal's
@@ -81,16 +100,11 @@ class Connection extends DatabaseConnection {
       // Convert numeric values to strings when fetching.
       PDO::ATTR_STRINGIFY_FETCHES => TRUE,
     );
-    parent::__construct($dsn, $connection_options['username'], $connection_options['password'], $connection_options['pdo']);
+    $pdo = new PDO($dsn, $connection_options['username'], $connection_options['password'], $connection_options['pdo']);
 
-    // Force PostgreSQL to use the UTF-8 character set by default.
-    $this->exec("SET NAMES 'UTF8'");
-
-    // Execute PostgreSQL init_commands.
-    if (isset($connection_options['init_commands'])) {
-      $this->exec(implode('; ', $connection_options['init_commands']));
-    }
+    return $pdo;
   }
+
 
   public function query($query, array $args = array(), $options = array()) {
 
@@ -124,7 +138,7 @@ class Connection extends DatabaseConnection {
         case Database::RETURN_AFFECTED:
           return $stmt->rowCount();
         case Database::RETURN_INSERT_ID:
-          return $this->lastInsertId($options['sequence_name']);
+          return $this->connection->lastInsertId($options['sequence_name']);
         case Database::RETURN_NULL:
           return;
         default:

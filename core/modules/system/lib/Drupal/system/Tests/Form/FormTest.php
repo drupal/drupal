@@ -664,4 +664,13 @@ class FormTest extends WebTestBase {
     $this->assertFieldByXpath('//input[@id="edit-name" and contains(@class, "error")]', NULL, 'Error input form element class found for first element.');
     $this->assertNoFieldByXpath('//input[@id="edit-name--2" and contains(@class, "error")]', NULL, 'No error input form element class found for second element.');
   }
+
+  /**
+   * Tests a form with a form state storing a database connection.
+   */
+  public function testFormStateDatabaseConnection() {
+    $this->assertNoText('Database connection found');
+    $this->drupalPost('form-test/form_state-database', array(), t('Submit'));
+    $this->assertText('Database connection found');
+  }
 }
