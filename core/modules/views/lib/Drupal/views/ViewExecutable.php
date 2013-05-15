@@ -2122,4 +2122,15 @@ class ViewExecutable {
     return $this->showAdminLinks;
   }
 
+  /**
+   * Merges all plugin default values for each display.
+   */
+  public function mergeDefaults() {
+    $this->initDisplay();
+    // Initialize displays and merge all plugin defaults.
+    foreach ($this->displayHandlers as $display) {
+      $display->mergeDefaults();
+    }
+  }
+
 }

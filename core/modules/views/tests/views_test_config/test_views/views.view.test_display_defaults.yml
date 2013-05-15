@@ -1,0 +1,49 @@
+base_field: id
+base_table: views_test_data
+core: 8.x
+description: ''
+status: '1'
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: ''
+    display_options:
+      access:
+        type: none
+        options: {  }
+      cache:
+        type: none
+        options: {  }
+      query:
+        type: views_query
+        options: {  }
+      exposed_form:
+        type: basic
+        options: {  }
+      pager:
+        type: full
+        options: {  }
+      style:
+        type: default
+        options: {  }
+      row:
+        type: fields
+        options: {  }
+      fields:
+        name:
+          id: name
+          table: views_test_data
+          field: name
+      sorts:
+        created:
+          id: created
+          table: views_test_data
+          field: created
+          order: DESC
+label: ''
+module: views
+id: test_display_defaults
+tag: ''
+langcode: en

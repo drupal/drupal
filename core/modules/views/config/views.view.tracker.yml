@@ -14,34 +14,157 @@ display:
         type: views_query
         options:
           query_comment: '0'
+          disable_sql_rewrite: '0'
+          distinct: '0'
+          slave: '0'
+          query_tags: {  }
       title: 'Recent posts'
       access:
         type: none
+        options: {  }
       cache:
         type: none
+        options: {  }
       exposed_form:
         type: basic
+        options:
+          submit_button: Apply
+          reset_button: '0'
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: '1'
+          sort_asc_label: Asc
+          sort_desc_label: Desc
       pager:
         type: mini
         options:
           items_per_page: '25'
+          offset: '0'
+          id: '0'
+          total_pages: ''
+          expose:
+            items_per_page: '0'
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 20, 40, 60'
+            items_per_page_options_all: '0'
+            items_per_page_options_all_label: '- All -'
+            offset: '0'
+            offset_label: Offset
+          tags:
+            previous: ‹‹
+            next: ››
       relationships:
         uid:
           id: uid
           table: node
           field: uid
           plugin_id: standard
+          relationship: none
+          group_type: group
+          admin_label: author
+          required: '0'
       fields:
         type:
           id: type
           table: node
           field: type
           plugin_id: node_type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Type
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          link_to_node: '0'
+          machine_name: '0'
         title:
           id: title
           table: node
           field: title
           plugin_id: node
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Title
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          link_to_node: '1'
         name:
           id: name
           table: users
@@ -49,18 +172,162 @@ display:
           relationship: uid
           label: Author
           plugin_id: user_name
+          group_type: group
+          admin_label: ''
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          link_to_user: '1'
+          overwrite_anonymous: '0'
+          anonymous_text: ''
+          format_username: '1'
         comment_count:
           id: comment_count
           table: node_comment_statistics
           field: comment_count
           label: Replies
           plugin_id: numeric
+          relationship: none
+          group_type: group
+          admin_label: ''
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          set_precision: '0'
+          precision: '0'
+          decimal: .
+          separator: ','
+          format_plural: '0'
+          format_plural_singular: '1'
+          format_plural_plural: '@count'
+          prefix: ''
+          suffix: ''
         last_comment_timestamp:
           id: last_comment_timestamp
           table: node_comment_statistics
           field: last_comment_timestamp
           label: 'Last Post'
           plugin_id: comment_last_timestamp
+          relationship: none
+          group_type: group
+          admin_label: ''
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          date_format: small
+          custom_date_format: ''
+          timezone: ''
         timestamp:
           id: timestamp
           table: history
@@ -69,6 +336,49 @@ display:
           link_to_node: '0'
           comments: '1'
           plugin_id: node_history_user_timestamp
+          relationship: none
+          group_type: group
+          admin_label: ''
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
         new_comments:
           id: new_comments
           table: node
@@ -78,12 +388,70 @@ display:
           suffix: ' new'
           link_to_comment: '1'
           plugin_id: node_new_comments
+          relationship: none
+          group_type: group
+          admin_label: ''
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          set_precision: '0'
+          precision: '0'
+          decimal: .
+          separator: ','
+          format_plural: '0'
+          format_plural_singular: '1'
+          format_plural_plural: '@count'
+          prefix: ''
       sorts:
         last_comment_timestamp:
           id: last_comment_timestamp
           table: node_comment_statistics
           field: last_comment_timestamp
           plugin_id: date
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: ASC
+          exposed: '0'
+          expose:
+            label: ''
+          granularity: second
       arguments:
         uid_touch:
           id: uid_touch
@@ -98,6 +466,19 @@ display:
             format: default_summary
           specify_validation: '1'
           plugin_id: argument_comment_user_uid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          default_action: ignore
+          breadcrumb_enable: '0'
+          breadcrumb: ''
+          default_argument_options: {  }
+          default_argument_skip_url: '0'
+          summary_options: {  }
+          validate:
+            type: none
+            fail: 'not found'
+          validate_options: {  }
       filters:
         status:
           id: status
@@ -142,6 +523,24 @@ display:
               separator: ''
           override: '1'
           order: desc
+          grouping: {  }
+          row_class: ''
+          default_row_class: '1'
+          row_class_special: '1'
+          uses_fields: '0'
+          sticky: '0'
+          summary: ''
+          empty_table: '0'
+      row:
+        type: fields
+        options:
+          inline: {  }
+          separator: ''
+          hide_empty: '0'
+          default_field_elements: '1'
+      header: {  }
+      footer: {  }
+      empty: {  }
   page_1:
     id: page_1
     display_title: Page

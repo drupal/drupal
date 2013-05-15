@@ -14,15 +14,45 @@ display:
         type: views_query
         options:
           query_comment: '0'
+          disable_sql_rewrite: '0'
+          distinct: '0'
+          slave: '0'
+          query_tags: {  }
       title: 'Monthly archive'
       access:
         type: none
+        options: {  }
       cache:
         type: none
+        options: {  }
       exposed_form:
         type: basic
+        options:
+          submit_button: Apply
+          reset_button: '0'
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: '1'
+          sort_asc_label: Asc
+          sort_desc_label: Desc
       pager:
         type: mini
+        options:
+          items_per_page: '10'
+          offset: '0'
+          id: '0'
+          total_pages: ''
+          expose:
+            items_per_page: '0'
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 20, 40, 60'
+            items_per_page_options_all: '0'
+            items_per_page_options_all_label: '- All -'
+            offset: '0'
+            offset_label: Offset
+          tags:
+            previous: ‹‹
+            next: ››
       sorts:
         created:
           id: created
@@ -30,6 +60,13 @@ display:
           field: created
           order: DESC
           plugin_id: date
+          relationship: none
+          group_type: group
+          admin_label: ''
+          exposed: '0'
+          expose:
+            label: ''
+          granularity: second
       arguments:
         created_year_month:
           id: created_year_month
@@ -61,8 +98,23 @@ display:
           plugin_id: boolean
       style:
         type: default
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: '1'
+          row_class_special: '1'
+          uses_fields: '0'
       row:
         type: node
+        options:
+          view_mode: teaser
+          links: '1'
+          comments: '0'
+      header: {  }
+      footer: {  }
+      empty: {  }
+      relationships: {  }
+      fields: {  }
   page_1:
     id: page_1
     display_title: Page
