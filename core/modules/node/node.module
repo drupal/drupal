@@ -2006,31 +2006,34 @@ function node_form_block_form_alter(&$form, &$form_state) {
 function node_block_access($block) {
   $visibility = $block->get('visibility');
   if (!empty($visibility)) {
-    $allowed_types = array();
+    if (!empty($visibility['node_type']['types'])) {
+      $allowed_types = array_filter($visibility['node_type']['types']);
+    }
+    if (empty($allowed_types)) {
+      // There are no node types selected in visibility settings so there is
+      // nothing to do.
+      // @see node_form_block_form_alter()
+      return;
+    }
     $node = menu_get_object();
     $node_types = node_type_get_types();
     if (arg(0) == 'node' && arg(1) == 'add' && arg(2)) {
       $node_add_arg = strtr(arg(2), '-', '_');
     }
-    if (!empty($visibility['node_type']['types'])) {
-      $allowed_types = array_filter($visibility['node_type']['types']);
+
+    // For blocks with node types associated, if the node type does not match
+    // the settings from this block, deny access to it.
+    if (!empty($node)) {
+      // This is a node or node edit page.
+      return in_array($node->type, $allowed_types);
     }
-    // If a block has no node types associated, it is displayed for every type.
-    // For blocks with node types associated, if the node type does not match the
-    // settings from this block, deny access to it.
-    if ($allowed_types) {
-      if (!empty($node)) {
-        // This is a node or node edit page.
-        return in_array($node->type, $allowed_types);
-      }
-      elseif (isset($node_add_arg) && isset($node_types[$node_add_arg])) {
-        // This is a node creation page
-        return in_array($node_add_arg, $allowed_types);
-      }
-      else {
-        // This is not a node page, remove the block.
-        return FALSE;
-      }
+    elseif (isset($node_add_arg) && isset($node_types[$node_add_arg])) {
+      // This is a node creation page
+      return in_array($node_add_arg, $allowed_types);
+    }
+    else {
+      // This page does not match the $allowed_types so deny access.
+      return FALSE;
     }
   }
 }
