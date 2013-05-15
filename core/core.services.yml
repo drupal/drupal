@@ -160,7 +160,7 @@ services:
     class: Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher
     arguments: ['@service_container']
   controller_resolver:
-    class: Drupal\Core\ControllerResolver
+    class: Drupal\Core\Controller\ControllerResolver
     arguments: ['@service_container']
   http_kernel:
     class: Drupal\Core\HttpKernel
@@ -264,13 +264,8 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@settings']
-  route_enhancer.modal:
-    class: Drupal\Core\Routing\Enhancer\ModalEnhancer
-    arguments: ['@content_negotiation']
-    tags:
-      - { name: route_enhancer, priority: 40 }
-  route_enhancer.dialog:
-    class: Drupal\Core\Routing\Enhancer\DialogEnhancer
+  route_enhancer.content_controller:
+    class: Drupal\Core\Routing\Enhancer\ContentControllerEnhancer
     arguments: ['@content_negotiation']
     tags:
       - { name: route_enhancer, priority: 30 }
@@ -290,11 +285,12 @@ services:
     arguments: ['@content_negotiation']
     tags:
       - { name: route_enhancer, priority: 10 }
-  route_enhancer.page:
-    class: Drupal\Core\Routing\Enhancer\PageEnhancer
-    arguments: ['@content_negotiation']
-    tags:
-      - { name: route_enhancer, priority: 0 }
+  controller.page:
+    class: Drupal\Core\Controller\HtmlPageController
+    arguments: ['@http_kernel']
+  controller.dialog:
+    class: Drupal\Core\Controller\DialogController
+    arguments: ['@http_kernel']
   router_listener:
     class: Symfony\Component\HttpKernel\EventListener\RouterListener
     tags:
@@ -366,7 +362,7 @@ services:
       - { name: event_subscriber }
     arguments: ['@language_manager']
   exception_controller:
-    class: Drupal\Core\ExceptionController
+    class: Drupal\Core\Controller\ExceptionController
     arguments: ['@content_negotiation']
     calls:
       - [setContainer, ['@service_container']]

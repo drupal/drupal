@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\HtmlFormController;
+use Drupal\Core\Controller\HtmlFormController;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 class HtmlEntityFormController extends HtmlFormController {
 
   /**
-   * Overrides \Drupal\Core\HtmlFormController::content().
+   * {@inheritdoc}
    *
    * Due to reflection, the argument must be named $_entity_form. The parent
    * method has $request and $_form, but the parameter must match the route.
@@ -26,7 +26,7 @@ class HtmlEntityFormController extends HtmlFormController {
   }
 
   /**
-   * Overrides \Drupal\Core\HtmlFormController::getFormObject().
+   * {@inheritdoc}
    *
    * Instead of a class name or service ID, $form_arg will be a string
    * representing the entity and operation being performed.

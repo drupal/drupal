@@ -7,7 +7,7 @@
 namespace Drupal\system\Tests\System;
 
 use \Drupal\Core\ContentNegotiation;
-use \Drupal\Core\ExceptionController;
+use \Drupal\Core\Controller\ExceptionController;
 use \Drupal\simpletest\UnitTestBase;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpKernel\Exception\FlattenException;

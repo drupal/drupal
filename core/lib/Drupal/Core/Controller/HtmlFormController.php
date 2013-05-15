@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\HtmlFormController.
+ * Contains \Drupal\Core\Controller\HtmlFormController.
  */
 
-namespace Drupal\Core;
+namespace Drupal\Core\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

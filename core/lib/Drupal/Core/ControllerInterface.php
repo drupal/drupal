@@ -2,28 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\Core\ControllerInterface.
+ * Contains \Drupal\Core\ControllerInterface;
  */
 
 namespace Drupal\Core;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Controller\ControllerInterface as BaseInterface;
 
 /**
- * Defines a common interface for route controllers.
+ * BC shiv for controllers using the old interface name.
+ *
+ * @deprecated Use \Drupal\Core\Controller\ControllerInterface instead.
  */
-interface ControllerInterface {
-
-  /**
-   * Instantiates a new instance of this controller.
-   *
-   * This is a factory method that returns a new instance of this object. The
-   * factory should pass any needed dependencies into the constructor of this
-   * object, but not the container itself. Every call to this method must return
-   * a new instance of this object; that is, it may not implement a singleton.
-   *
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *   The service container this object should use.
-   */
-  public static function create(ContainerInterface $container);
+interface ControllerInterface extends BaseInterface {
 }

@@ -2,36 +2,34 @@
 
 /**
  * @file
- * Definition of Drupal\Core\HtmlPageController.
+ * Contains \Drupal\Core\Controller\HtmlPageController.
  */
 
-namespace Drupal\Core;
+namespace Drupal\Core\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Default controller for most HTML pages.
  */
-class HtmlPageController implements ContainerAwareInterface {
+class HtmlPageController {
 
   /**
-   * The injection container for this object.
+   * The HttpKernel object to use for subrequests.
    *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
+   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
    */
-  protected $container;
+  protected $httpKernel;
 
   /**
-   * Injects the service container used by this object.
+   * Constructs a new HtmlPageController.
    *
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *   The service container this object should use.
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $kernel
    */
-  public function setContainer(ContainerInterface $container = NULL) {
-    $this->container = $container;
+  public function __construct(HttpKernelInterface $kernel) {
+    $this->httpKernel = $kernel;
   }
 
   /**
@@ -60,7 +58,7 @@ class HtmlPageController implements ContainerAwareInterface {
     $attributes->remove('system_path');
     $attributes->remove('_content');
 
-    $response = $this->container->get('http_kernel')->forward($controller, $attributes->all(), $request->query->all());
+    $response = $this->httpKernel->forward($controller, $attributes->all(), $request->query->all());
 
     // For successful (HTTP status 200) responses, decorate with blocks.
     if ($response->isOk()) {

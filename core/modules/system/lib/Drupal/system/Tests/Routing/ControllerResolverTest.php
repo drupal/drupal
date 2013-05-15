@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Routing;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 
-use Drupal\Core\ControllerResolver;
+use Drupal\Core\Controller\ControllerResolver;
 use Drupal\simpletest\UnitTestBase;
 
 /**
