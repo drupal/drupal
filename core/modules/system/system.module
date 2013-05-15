@@ -1618,7 +1618,7 @@ function system_library_info() {
   $libraries['normalize'] = array(
     'title' => 'normalize.css',
     'website' => 'http://git.io/normalize',
-    'version' => '2.0.1',
+    'version' => '2.1.2',
     'css' => array(
       'core/misc/normalize/normalize.css' => array(
         'every_page' => TRUE,

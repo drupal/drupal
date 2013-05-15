@@ -1,11 +1,19 @@
-# normalize.css v2.0.1
+# normalize.css v2
 
 Normalize.css is a customisable CSS file that makes browsers render all
 elements more consistently and in line with modern standards. We researched the
 differences between default browser styles in order to precisely target only
 the styles that need normalizing.
 
-[Check out the demo](http://necolas.github.com/normalize.css/2.0.1/test.html)
+[Check out the demo](http://necolas.github.io/normalize.css/latest/test.html)
+
+[Legacy browser support is available in v1](https://github.com/necolas/normalize.css/tree/v1)
+
+## Install
+
+Download from the [project page](http://necolas.github.io/normalize.css/).
+
+Install with [Bower](http://bower.io/): `bower install --save normalize-css`
 
 ## What does it do?
 
@@ -33,10 +41,9 @@ override the defaults later in your CSS.
 
 ## Contribute
 
-Please read my [issue
-guidelines](https://github.com/necolas/issue-guidelines).
+Please read the CONTRIBUTING.md
 
 ## Acknowledgements
 
-Normalize.css is a project by [Nicolas Gallagher](http://github.com/necolas)
-and [Jonathan Neal](http://github.com/jonathantneal).
+Normalize.css is a project by [Nicolas Gallagher](https://github.com/necolas),
+co-created with [Jonathan Neal](https://github.com/jonathantneal).
