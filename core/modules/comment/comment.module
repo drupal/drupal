@@ -1646,6 +1646,7 @@ function template_preprocess_comment(&$variables) {
   }
 
   // Gather comment classes.
+  $variables['attributes']['class'][] = 'comment';
   // 'published' class is not needed, it is either 'preview' or 'unpublished'.
   if ($variables['status'] != 'published') {
     $variables['attributes']['class'][] = $variables['status'];
@@ -1724,6 +1725,9 @@ function template_preprocess_comment_wrapper(&$variables) {
   $variables['display_mode'] = variable_get('comment_default_mode_' . $variables['node']->type, COMMENT_MODE_THREADED);
   // The comment form is optional and may not exist.
   $variables['content'] += array('comment_form' => array());
+
+  // Add a comment wrapper class.
+  $variables['attributes']['class'][] = 'comment-wrapper';
 }
 
 /**

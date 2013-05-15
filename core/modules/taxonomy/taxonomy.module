@@ -490,6 +490,7 @@ function template_preprocess_taxonomy_term(&$variables) {
   field_attach_preprocess($term, $variables['content'], $variables);
 
   // Gather classes, and clean up name so there are no underscores.
+  $variables['attributes']['class'][] = 'taxonomy-term';
   $vocabulary_name_css = str_replace('_', '-', $term->bundle());
   $variables['attributes']['class'][] = 'vocabulary-' . $vocabulary_name_css;
 

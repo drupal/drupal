@@ -1186,6 +1186,7 @@ function template_preprocess_node(&$variables) {
   $variables['attributes']['role'] = 'article';
 
   // Gather node classes.
+  $variables['attributes']['class'][] = 'node';
   $variables['attributes']['class'][] = drupal_html_class('node-' . $node->type);
   if ($node->promote) {
     $variables['attributes']['class'][] = 'promoted';

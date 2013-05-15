@@ -519,6 +519,10 @@ function template_preprocess_overlay(&$variables) {
   $variables['tabs'] = menu_primary_local_tasks();
   $variables['title'] = drupal_get_title();
   $variables['disable_overlay'] = overlay_disable_message();
+
+  // Add atrributes for the overlay container.
+  $variables['attributes']['class'][] = 'overlay';
+  // Add attributes for the overlay content.
   $variables['content_attributes']['class'][] = 'clearfix';
 }
 

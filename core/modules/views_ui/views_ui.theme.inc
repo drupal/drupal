@@ -24,6 +24,8 @@ function template_preprocess_views_ui_display_tab_setting(&$variables) {
   array_unshift($variables['settings_links'], $variables['link']);
   $variables['settings_links'] = implode('<span class="label">&nbsp;|&nbsp;</span>', $variables['settings_links']);
 
+  $variables['attributes']['class'][] = 'views-ui-display-tab-setting';
+
   if (!empty($variables['defaulted'])) {
     $variables['attributes']['class'][] = 'defaulted';
   }
@@ -40,6 +42,8 @@ function template_preprocess_views_ui_display_tab_setting(&$variables) {
 
 function template_preprocess_views_ui_display_tab_bucket(&$variables) {
   $element = $variables['element'];
+
+  $variables['attributes']['class'][] = 'views-ui-display-tab-bucket';
 
   if (!empty($element['#name'])) {
     $variables['attributes']['class'][] = drupal_html_class($element['#name']);
