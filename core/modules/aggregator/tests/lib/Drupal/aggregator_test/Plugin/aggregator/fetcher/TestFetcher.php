@@ -10,7 +10,7 @@ namespace Drupal\aggregator_test\Plugin\aggregator\fetcher;
 use Drupal\aggregator\Plugin\FetcherInterface;
 use Drupal\aggregator\Plugin\aggregator\fetcher\DefaultFetcher;
 use Drupal\aggregator\Plugin\Core\Entity\Feed;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\aggregator\Annotation\AggregatorFetcher;
 use Drupal\Core\Annotation\Translation;
 use Guzzle\Http\Exception\BadResponseException;
 
@@ -19,7 +19,7 @@ use Guzzle\Http\Exception\BadResponseException;
  *
  * Uses http_default_client class to download the feed.
  *
- * @Plugin(
+ * @AggregatorFetcher(
  *   id = "aggregator_test_fetcher",
  *   title = @Translation("Test fetcher"),
  *   description = @Translation("Dummy fetcher for testing purposes.")
