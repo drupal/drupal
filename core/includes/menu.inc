@@ -2672,6 +2672,13 @@ function menu_router_build($save = FALSE) {
     $router_items = call_user_func($module . '_menu');
     if (isset($router_items) && is_array($router_items)) {
       foreach (array_keys($router_items) as $path) {
+        // If the menu item is a default local task and incorrectly references a
+        // route, remove it.
+        // @todo This may be removed later depending on the outcome of
+        // http://drupal.org/node/1889790
+        if (isset($router_items[$path]['type']) && $router_items[$path]['type'] == MENU_DEFAULT_LOCAL_TASK) {
+          unset($router_items[$path]['route_name']);
+        }
         // If the menu item references a route, normalize the route information
         // into the old structure. Note that routes are keyed by name, not path,
         // so the path of the route takes precedence.
