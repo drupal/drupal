@@ -98,4 +98,32 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $this->assertEqual($entity->field_test_taxonomy->entity->id(), $term2->id());
     $this->assertEqual($entity->field_test_taxonomy->entity->name->value, $term2->name->value);
   }
+
+  /**
+   * Tests foreign key support.
+   */
+  public function testEntityReferenceFieldSchema() {
+    $field = field_info_field('field_test_taxonomy');
+    $foreign_key_column_name = 'target_id';
+
+    // Grab the SQL schema and verify that the 'foreign keys' are present.
+    $schemas = _field_sql_storage_schema($field);
+    $schema = $schemas[_field_sql_storage_tablename($field)];
+    $this->assertEqual(count($schema['foreign keys']), 1, 'There is 1 foreign key in the schema.');
+
+    $foreign_key = reset($schema['foreign keys']);
+    $foreign_key_column = _field_sql_storage_columnname($field['field_name'], $foreign_key_column_name);
+    $this->assertEqual($foreign_key['table'], 'taxonomy_term_data', 'Foreign key table name preserved in the schema.');
+    $this->assertEqual($foreign_key['columns'][$foreign_key_column], 'tid', 'Foreign key column name preserved in the schema.');
+
+    // Create a field that references a config entity type and check that no
+    // foreign key is present.
+    $field_name = 'field_test_vocabulary';
+    entity_reference_create_instance('entity_test', 'entity_test', $field_name, 'Test vocabulary reference', 'taxonomy_vocabulary');
+    $field = field_info_field($field_name);
+
+    $schemas = _field_sql_storage_schema($field);
+    $schema = $schemas[_field_sql_storage_tablename($field)];
+    $this->assertFalse(isset($schema['foreign keys']), 'There is no foreign key in the schema.');
+  }
 }
