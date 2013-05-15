@@ -2030,9 +2030,8 @@ function comment_file_download_access($field, EntityInterface $entity, File $fil
   if ($entity->entityType() == 'comment') {
     if (user_access('access comments') && $entity->status->value == COMMENT_PUBLISHED || user_access('administer comments')) {
       $commented_entity = entity_load($entity->entity_type->value, $entity->entity_id->value);
-      if ($commented_entity instanceof AccessibleInterface) {
-        return $commented_entity->access('view');
-      }
+      // Check access to parent entity.
+      return comment_reply_access($commented_entity);
     }
     return FALSE;
   }
