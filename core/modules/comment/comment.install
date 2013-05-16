@@ -582,12 +582,11 @@ function comment_update_8006(&$sandbox) {
     }
     _update_7000_field_create_field($field);
 
-    $existing_instance = db_select('field_config_instance', 'f')
-      ->condition('field_name', $field['field_name'])
-      ->condition('bundle', $node_type)
-      ->condition('entity_type', 'node')
-      ->execute()
-      ->fetch();
+    $existing_instance = (bool) db_query_range('SELECT 1 FROM {field_config_instance} WHERE field_name = :field_name AND bundle = :bundle AND entity_type = :entity_type', 0, 1, array(
+      'field_name' => $field['field_name'],
+      'bundle' => $node_type,
+      'entity_type' => 'node',
+    ))->fetchField();
     if (!$existing_instance) {
       // Add the comment field, setting the instance settings to match those for
       // the given node_type.
