@@ -33,12 +33,15 @@ use Drupal\comment\CommentInterface;
  *   uri_callback = "comment_uri",
  *   fieldable = TRUE,
  *   translatable = TRUE,
- *   route_base_path = "admin/structure/comments/{bundle}",
+ *   route_base_path = "admin/structure/comments/manage/{bundle}",
  *   entity_keys = {
  *     "id" = "cid",
  *     "bundle" = "field_name",
  *     "label" = "subject",
  *     "uuid" = "uuid"
+ *   },
+ *   bundle_keys = {
+ *     "bundle" = "field_name"
  *   }
  * )
  */
@@ -217,13 +220,6 @@ class Comment extends EntityNG implements CommentInterface {
     unset($this->thread);
     unset($this->entity_type);
     unset($this->new);
-  }
-
-  /**
-   * Implements Drupal\Core\Entity\EntityInterface::bundle().
-   */
-  public function bundle() {
-    return $this->get('field_name')->value;
   }
 
   /**

@@ -342,6 +342,11 @@ function comment_menu() {
     'description' => 'Manage fields and displays settings for comment forms.',
     'route_name' => 'comment_overview_bundles',
   );
+  // @todo remove once routing start work with tabs.
+  $items['admin/structure/comments/manage/%'] = array(
+    'title' => 'Comment form stub',
+    'access callback' => FALSE,
+  );
   $items['admin/content/comment'] = array(
     'title' => 'Comments',
     'description' => 'List and edit site comments and the comment approval queue.',

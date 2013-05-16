@@ -127,12 +127,12 @@ class AdminController implements ControllerInterface {
         // @todo Check proper permissions for operations.
         $links['fields'] = array(
           'title' => t('manage fields'),
-          'href' => 'admin/structure/comments/' . $field_name . '/fields',
+          'href' => 'admin/structure/comments/manage/' . $field_name . '/fields',
           'weight' => 5,
         );
         $links['display'] = array(
           'title' => t('manage display'),
-          'href' => 'admin/structure/comments/' . $field_name . '/display',
+          'href' => 'admin/structure/comments/manage/' . $field_name . '/display',
           'weight' => 10,
         );
 
