@@ -123,20 +123,6 @@ class CustomBlock extends EntityNG implements CustomBlockInterface {
   /**
    * {@inheritdoc}
    */
-  public function id() {
-    return $this->id->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function bundle() {
-    return $this->type->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function createDuplicate() {
     $duplicate = parent::createDuplicate();
     $duplicate->revision_id->value = NULL;
