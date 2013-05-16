@@ -257,7 +257,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       'fields[_add_new_field][widget_type]' => 'file_generic',
     );
     comment_add_default_comment_field('node', 'article');
-    $this->drupalPost('admin/structure/comments/comment/fields', $edit, t('Save'));
+    $this->drupalPost('admin/structure/comments/manage/comment/fields', $edit, t('Save'));
     $edit = array('field[settings][uri_scheme]' => 'private');
     $this->drupalPost(NULL, $edit, t('Save field settings'));
     $this->drupalPost(NULL, array(), t('Save settings'));

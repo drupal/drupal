@@ -100,7 +100,7 @@ class CommentFieldsTest extends CommentTestBase {
     // Disable text processing for comments.
     $this->drupalLogin($this->admin_user);
     $edit = array('instance[settings][text_processing]' => 0);
-    $this->drupalPost('admin/structure/comments/comment/fields/comment.comment.comment_body', $edit, t('Save settings'));
+    $this->drupalPost('admin/structure/comments/manage/comment/fields/comment.comment.comment_body', $edit, t('Save settings'));
 
     // Post a comment without an explicit subject.
     $this->drupalLogin($this->web_user);

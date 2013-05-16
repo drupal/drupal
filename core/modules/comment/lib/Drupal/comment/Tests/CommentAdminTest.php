@@ -159,8 +159,8 @@ class CommentAdminTest extends CommentTestBase {
     // Manage fields.
     $this->clickLink('manage fields');
     $this->assertResponse(200);
-    // Make sure field is shown.
-    $this->assertText('Title');
+    // Make sure comment_body field is shown.
+    $this->assertText('comment_body');
     // Rest from here on in is field_ui.
   }
 
