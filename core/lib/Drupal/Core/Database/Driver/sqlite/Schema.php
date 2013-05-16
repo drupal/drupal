@@ -11,9 +11,6 @@ use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\Schema as DatabaseSchema;
 
-use Exception;
-
-
 /**
  * @ingroup schemaapi
  * @{
@@ -451,7 +448,7 @@ class Schema extends DatabaseSchema {
         }
       }
       else {
-        new Exception("Unable to parse the column type " . $row->type);
+        new \Exception("Unable to parse the column type " . $row->type);
       }
     }
     $indexes = array();

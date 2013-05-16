@@ -10,7 +10,6 @@ namespace Drupal\system\Tests\Database;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\TransactionOutOfOrderException;
 use Drupal\Core\Database\TransactionNoActiveException;
-use Exception;
 
 /**
  * Tests transaction support, particularly nesting.
@@ -176,7 +175,7 @@ class TransactionTest extends DatabaseTestBase {
       $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DanielB'))->fetchField();
       $this->assertNotIdentical($saved_age, '19', 'Cannot retrieve DanielB row after commit.');
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $this->fail($e->getMessage());
     }
   }
@@ -202,7 +201,7 @@ class TransactionTest extends DatabaseTestBase {
       $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DanielB'))->fetchField();
       $this->assertIdentical($saved_age, '19', 'DanielB not rolled back, since transactions are not supported.');
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $this->fail($e->getMessage());
     }
   }
@@ -224,7 +223,7 @@ class TransactionTest extends DatabaseTestBase {
       $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DanielA'))->fetchField();
       $this->assertIdentical($saved_age, '19', 'Can retrieve DanielA row after commit.');
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $this->fail($e->getMessage());
     }
   }

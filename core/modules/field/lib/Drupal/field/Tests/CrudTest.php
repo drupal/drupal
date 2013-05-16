@@ -8,7 +8,6 @@
 namespace Drupal\field\Tests;
 
 use Drupal\field\FieldException;
-use Exception;
 
 class CrudTest extends FieldUnitTestBase {
 
@@ -168,7 +167,7 @@ class CrudTest extends FieldUnitTestBase {
       $field = field_create_field($field_definition);
       $this->assertTrue(FALSE, 'Field creation (correctly) fails.');
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $this->assertTrue(TRUE, 'Field creation (correctly) fails.');
     }
 

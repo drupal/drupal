@@ -8,7 +8,6 @@
 namespace Drupal\node\Tests;
 
 use Drupal\Core\Database\Database;
-use Exception;
 
 /**
  * Tests creating and saving a node.
@@ -75,7 +74,7 @@ class NodeCreationTest extends NodeTestBase {
       entity_create('node', $edit)->save();
       $this->fail(t('Expected exception has not been thrown.'));
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $this->pass(t('Expected exception has been thrown.'));
     }
 

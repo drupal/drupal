@@ -10,8 +10,6 @@ namespace Drupal\system\Tests\Database;
 use Drupal\Core\Database\Database;
 use Drupal\simpletest\UnitTestBase;
 
-use Exception;
-
 /**
  * Tests the Schema API.
  */
@@ -141,7 +139,7 @@ class SchemaTest extends UnitTestBase {
     try {
       db_create_table('test_timestamp', $table_specification);
     }
-    catch (Exception $e) {}
+    catch (\Exception $e) {}
     $this->assertTrue(db_table_exists('test_timestamp'), 'Table with database specific datatype was created.');
   }
 
@@ -161,7 +159,7 @@ class SchemaTest extends UnitTestBase {
          ->execute();
       return TRUE;
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       return FALSE;
     }
   }
@@ -233,7 +231,7 @@ class SchemaTest extends UnitTestBase {
          ->execute();
       return TRUE;
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       return FALSE;
     }
   }

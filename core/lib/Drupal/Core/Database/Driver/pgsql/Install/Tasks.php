@@ -12,8 +12,6 @@ use Drupal\Core\Database\Install\Tasks as InstallTasks;
 use Drupal\Core\Database\Driver\pgsql\Connection;
 use Drupal\Core\Database\DatabaseNotFoundException;
 
-use Exception;
-
 /**
  * PostgreSQL specific install functions
  */
@@ -55,7 +53,7 @@ class Tasks extends InstallTasks {
       Database::getConnection();
       $this->pass('Drupal can CONNECT to the database ok.');
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
     // Attempt to create the database if it is not found.
       if ($e->getCode() == Connection::DATABASE_NOT_FOUND) {
         // Remove the database string from connection info.
@@ -118,7 +116,7 @@ class Tasks extends InstallTasks {
         $this->fail(st($text, $replacements));
       }
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $this->fail(st('Drupal could not determine the encoding of the database was set to UTF-8'));
     }
   }
@@ -145,7 +143,7 @@ class Tasks extends InstallTasks {
         try {
           db_query($query);
         }
-        catch (Exception $e) {
+        catch (\Exception $e) {
           // Ignore possible errors when the user doesn't have the necessary
           // privileges to ALTER the database.
         }
@@ -233,7 +231,7 @@ class Tasks extends InstallTasks {
 
       $this->pass(st('PostgreSQL has initialized itself.'));
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $this->fail(st('Drupal could not be correctly setup with the existing database. Revise any errors.'));
     }
   }

@@ -10,7 +10,6 @@ namespace Drupal\locale;
 use Drupal\Component\Gettext\PoStreamReader;
 use Drupal\Component\Gettext\PoMemoryWriter;
 use Drupal\locale\PoDatabaseWriter;
-use Exception;
 
 /**
  * Static class providing Drupal specific Gettext functionality.
@@ -89,13 +88,13 @@ class Gettext {
     try {
       $reader->open();
     }
-    catch (Exception $exception) {
+    catch (\Exception $exception) {
       throw $exception;
     }
 
     $header = $reader->getHeader();
     if (!$header) {
-      throw new Exception('Missing or malformed header.');
+      throw new \Exception('Missing or malformed header.');
     }
 
     // Initialize the database writer.
@@ -115,7 +114,7 @@ class Gettext {
       }
       $writer->writeItems($reader, $options['items']);
     }
-    catch (Exception $exception) {
+    catch (\Exception $exception) {
       throw $exception;
     }
 

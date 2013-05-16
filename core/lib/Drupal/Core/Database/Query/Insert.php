@@ -9,8 +9,6 @@ namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Database;
 
-use Exception;
-
 /**
  * General class for an abstracted INSERT query.
  */
@@ -220,7 +218,7 @@ class Insert extends Query {
         $last_insert_id = $this->connection->query($sql, $insert_values, $this->queryOptions);
       }
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       // One of the INSERTs failed, rollback the whole batch.
       $transaction->rollback();
       // Rethrow the exception for the calling code.
