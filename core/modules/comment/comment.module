@@ -342,10 +342,9 @@ function comment_menu() {
     'description' => 'Manage fields and displays settings for comment forms.',
     'route_name' => 'comment_overview_bundles',
   );
-  // @todo Decide on better UX http://drupal.org/node/1901110
   $items['admin/structure/comments/manage/%'] = array(
-    'title' => 'Comment form stub',
-    'access callback' => FALSE,
+    'title' => 'Comment form',
+    'route_name' => 'comment_bundle',
   );
   $items['admin/content/comment'] = array(
     'title' => 'Comments',

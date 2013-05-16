@@ -153,4 +153,48 @@ class AdminController implements ControllerInterface {
     return $build;
   }
 
+  /**
+   * Returns markup help text of comment bundle.
+   *
+   * @param string $field_name
+   *   The comment field to attach fields.
+   *
+   * @return array
+   *   Renderable array.
+   */
+  public function bundleInfo($field_name) {
+    // @todo Decide on better UX http://drupal.org/node/1901110
+    $build['usage'] = array(
+      '#theme' => 'item_list',
+      '#items' => array(),
+    );
+    // @todo remove when entity_get_bundles() is a method on the entity manager.
+    $entity_bundles = entity_get_bundles();
+    $entity_types = $this->entityManager->getDefinitions();
+    $field_ui = $this->moduleHandler->moduleExists('field_ui');
+
+    $field_info = $this->fieldInfo->getField($field_name);
+    foreach ($field_info['bundles'] as $entity_type => $field_bundles) {
+      $bundles = array();
+      foreach ($field_bundles as $bundle) {
+        if (isset($entity_bundles[$entity_type][$bundle])) {
+          // Add the current instance.
+          if ($field_ui && ($path = $this->entityManager->getAdminPath($entity_type, $bundle))) {
+            $bundles[] = l($entity_bundles[$entity_type][$bundle]['label'], $path . '/fields');
+          }
+          else {
+            $bundles[] = $entity_bundles[$entity_type][$bundle]['label'];
+          }
+        }
+      }
+      // Format used entity bundles.
+      $build['usage']['#items'][] = t('@entity_type: !bundles', array(
+        '@entity_type' => $entity_types[$entity_type]['label'],
+        '!bundles' => implode(', ', $bundles),
+      ));
+    }
+
+    return $build;
+  }
+
 }

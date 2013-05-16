@@ -10,3 +10,9 @@ comment_overview_bundles:
     _content: 'Drupal\comment\Controller\AdminController::overviewBundles'
   requirements:
     _permission: 'administer comments'
+comment_bundle:
+  pattern: '/admin/structure/comments/manage/{field_name}'
+  defaults:
+    _content: 'Drupal\comment\Controller\AdminController::bundleInfo'
+  requirements:
+    _permission: 'administer comments'
