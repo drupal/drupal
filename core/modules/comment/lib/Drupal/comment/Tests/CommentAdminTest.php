@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Tests\CommentApprovalTest.
+ * Definition of Drupal\comment\Tests\CommentAdminTest.
  */
 
 namespace Drupal\comment\Tests;
@@ -10,11 +10,11 @@ namespace Drupal\comment\Tests;
 /**
  * Tests comment approval functionality.
  */
-class CommentApprovalTest extends CommentTestBase {
+class CommentAdminTest extends CommentTestBase {
   public static function getInfo() {
     return array(
-      'name' => 'Comment approval',
-      'description' => 'Test comment approval functionality.',
+      'name' => 'Comment admin',
+      'description' => 'Test comment admin functionality.',
       'group' => 'Comment',
     );
   }
@@ -143,4 +143,25 @@ class CommentApprovalTest extends CommentTestBase {
     $this->drupalGet('node/' . $this->node->nid);
     $this->assertTrue($this->commentExists($anonymous_comment4), 'Anonymous comment visible.');
   }
+
+  /**
+   * Tests comment bundle admin.
+   */
+  public function testCommentAdmin() {
+    // Login.
+    $this->drupalLogin($this->admin_user);
+    // Browse to comment bundle overview.
+    $this->drupalGet('admin/structure/comments');
+    $this->assertResponse(200);
+    // Make sure titles visible.
+    $this->assertText('Field name');
+    $this->assertText('Used in');
+    // Manage fields.
+    $this->clickLink('manage fields');
+    $this->assertResponse(200);
+    // Make sure field is shown.
+    $this->assertText('Title');
+    // Rest from here on in is field_ui.
+  }
+
 }

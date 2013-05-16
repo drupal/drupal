@@ -560,7 +560,7 @@ function comment_update_8006(&$sandbox) {
   $node_types = array_keys(_update_7000_node_get_types());
   foreach ($node_types as $node_type) {
     // COMMENT_OPEN
-    $default_value = variable_get('comment_' . $node_type, 2);
+    $default_value = update_variable_get('comment_' . $node_type, 2);
     // Add a default comment field for existing node comments.
     $field = array(
       'cardinality' => '1',
@@ -572,44 +572,57 @@ function comment_update_8006(&$sandbox) {
       'type' => 'comment',
     );
     // Make sure field doesn't already exist.
-    if (!_update_7000_field_read_fields(array('field_name' => $field['field_name']))) {
-      // Create the field.
-      _update_7000_field_create_field($field);
+    $original_name = $field['field_name'];
+    $index = 0;
+    while (_update_7000_field_read_fields(array('field_name' => $field['field_name']))) {
+      // Append a numeric index.
+      $field['field_name'] = $original_name . '_' . $index;
+      // Increment index.
+      $index++;
     }
+    _update_7000_field_create_field($field);
 
-    // Add the comment field, setting the instance settings to match those for
-    // the given node_type.
-    $instance_settings = array(
-      // COMMENT_MODE_THREADED
-      'default_mode' => variable_get('comment_default_mode_' . $node_type, 1),
-      'per_page' => variable_get('comment_default_per_page_' . $node_type, 50),
-      // COMMENT_FORM_BELOW
-      'form_location' => variable_get('comment_form_location' . $node_type, 1),
-      // COMMENT_ANONYMOUS_MAYNOT_CONTACT
-      'anonymous' => variable_get('comment_anonymous_' . $node_type, 0),
-      'subject' => variable_get('comment_subject_field_' . $node_type, 1),
-      // DRUPAL_OPTIONAL
-      'preview' => variable_get('comment_preview_' . $node_type, 1),
-    );
-    $instance = array(
-      'bundle' => $node_type,
-      'default_value' => array(array('status' => $default_value)),
-      'deleted' => '0',
-      'description' => '',
-      'entity_type' => 'node',
-      'field_name' => $field['field_name'],
-      'label' => 'Comment settings',
-      'required' => 1,
-      'settings' => $instance_settings,
-      'widget' => array(
-        'active' => 0,
-        'module' => 'comment',
-        'settings' => array(),
-        'type' => 'comment_default',
-        'weight' => '50',
-      ),
-    );
-    _update_7000_field_create_instance($field, $instance);
+    $existing_instance = db_select('field_config_instance', 'f')
+      ->condition('field_name', $field['field_name'])
+      ->condition('bundle', $node_type)
+      ->condition('entity_type', 'node')
+      ->execute()
+      ->fetch();
+    if (!$existing_instance) {
+      // Add the comment field, setting the instance settings to match those for
+      // the given node_type.
+      $instance_settings = array(
+        // COMMENT_MODE_THREADED
+        'default_mode' => update_variable_get('comment_default_mode_' . $node_type, 1),
+        'per_page' => update_variable_get('comment_default_per_page_' . $node_type, 50),
+        // COMMENT_FORM_BELOW
+        'form_location' => update_variable_get('comment_form_location' . $node_type, 1),
+        // COMMENT_ANONYMOUS_MAYNOT_CONTACT
+        'anonymous' => update_variable_get('comment_anonymous_' . $node_type, 0),
+        'subject' => update_variable_get('comment_subject_field_' . $node_type, 1),
+        // DRUPAL_OPTIONAL
+        'preview' => update_variable_get('comment_preview_' . $node_type, 1),
+      );
+      $instance = array(
+        'bundle' => $node_type,
+        'default_value' => array(array('status' => $default_value)),
+        'deleted' => '0',
+        'description' => '',
+        'entity_type' => 'node',
+        'field_name' => $field['field_name'],
+        'label' => 'Comment settings',
+        'required' => 1,
+        'settings' => $instance_settings,
+        'widget' => array(
+          'active' => 0,
+          'module' => 'comment',
+          'settings' => array(),
+          'type' => 'comment_default',
+          'weight' => '50',
+        ),
+      );
+      _update_7000_field_create_instance($field, $instance);
+    }
 
     // Prepare defaults for the default and full view modes.
     $display_options_default = array(

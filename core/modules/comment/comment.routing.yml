@@ -1,7 +1,13 @@
 comment_edit_page:
-    pattern: 'comment/{comment}/edit'
-    defaults:
-        _entity_form: comment.default
-    requirements:
-        _entity_access: comment.update
-
+  pattern: '/comment/{comment}/edit'
+  defaults:
+    _entity_form: 'comment.default'
+  requirements:
+    _entity_access: 'comment.update'
+comment_overview_bundles:
+  pattern: '/admin/structure/comments/{bundle}'
+  defaults:
+    _content: 'Drupal\comment\Controller\AdminController::overviewBundles'
+    bundle: NULL
+  requirements:
+    _permission: 'administer comments'

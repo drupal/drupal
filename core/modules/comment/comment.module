@@ -350,9 +350,7 @@ function comment_menu() {
   $items['admin/structure/comments'] = array(
     'title' => 'Comment forms',
     'description' => 'Manage fields and displays settings for comment forms.',
-    'page callback' => 'comment_overview_bundles',
-    'access arguments' => array('administer comments'),
-    'file' => 'comment.admin.inc',
+    'route_name' => 'comment_overview_bundles',
   );
   $items['admin/content/comment'] = array(
     'title' => 'Comments',
@@ -1037,6 +1035,22 @@ function comment_form_field_ui_field_edit_form_alter(&$form, $form_state) {
     // Hide required checkbox.
     $form['instance']['required']['#access'] = FALSE;
   }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for field_ui_field_overview_form().
+ */
+function comment_form_field_ui_field_overview_form_alter(&$form, $form_state) {
+  // @todo Remove when http://drupal.org/node/1981644 is in.
+  drupal_set_title(t('Manage Fields: %field_name', array('%field_name' => $form['#bundle'])), TRUE);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for field_ui_display_overview_form().
+ */
+function comment_form_field_ui_display_overview_form_alter(&$form, $form_state) {
+  // @todo Remove when http://drupal.org/node/1981644 is in.
+  drupal_set_title(t('Manage Display: %field_name', array('%field_name' => $form['#bundle'])), TRUE);
 }
 
 /**
