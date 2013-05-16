@@ -96,12 +96,14 @@ jQuery.fn.fieldUIPopulateOptions = function (options, selected) {
     var previousSelectedText = this.options[this.selectedIndex].text;
 
     var html = '';
-    jQuery.each(options, function (value, text) {
-      // Figure out which value should be selected. The 'selected' param
-      // takes precedence.
-      var is_selected = ((typeof selected !== 'undefined' && value === selected) || (typeof selected === 'undefined' && text === previousSelectedText));
-      html += '<option value="' + value + '"' + (is_selected ? ' selected="selected"' : '') + '>' + text + '</option>';
-    });
+    for (var value in options) {
+      if (options.hasOwnProperty(value)) {
+        // Figure out which value should be selected. The 'selected' param
+        // takes precedence.
+        var is_selected = ((typeof selected !== 'undefined' && value === selected) || (typeof selected === 'undefined' && options[value] === previousSelectedText));
+        html += '<option value="' + value + '"' + (is_selected ? ' selected="selected"' : '') + '>' + options[value] + '</option>';
+      }
+    }
 
     $(this).html(html).prop('disabled', disabled);
   });
