@@ -1,0 +1,4 @@
+id: custom_block.full
+label: Full
+status: '0'
+targetEntityType: custom_block

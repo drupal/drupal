@@ -806,20 +806,14 @@ function system_menu() {
   $items['admin/config/media/file-system'] = array(
     'title' => 'File system',
     'description' => 'Tell Drupal where to store uploaded files and how they are accessed.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_file_system_settings'),
-    'access arguments' => array('administer site configuration'),
+    'route_name' => 'system_file_system_settings',
     'weight' => -10,
-    'file' => 'system.admin.inc',
   );
   $items['admin/config/media/image-toolkit'] = array(
     'title' => 'Image toolkit',
     'description' => 'Choose which image toolkit to use if you have installed optional toolkits.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_image_toolkit_settings'),
-    'access arguments' => array('administer site configuration'),
+    'route_name' => 'system_image_toolkit_settings',
     'weight' => 20,
-    'file' => 'system.admin.inc',
   );
 
   // Service settings.
@@ -835,10 +829,7 @@ function system_menu() {
   $items['admin/config/services/rss-publishing'] = array(
     'title' => 'RSS publishing',
     'description' => 'Configure the site description, the number of items per feed and whether feeds should be titles/teasers/full-text.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_rss_feeds_settings'),
-    'access arguments' => array('administer site configuration'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_rss_feeds_settings',
   );
 
   // Development settings.
@@ -854,28 +845,19 @@ function system_menu() {
   $items['admin/config/development/maintenance'] = array(
     'title' => 'Maintenance mode',
     'description' => 'Take the site offline for maintenance or bring it back online.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_site_maintenance_mode'),
-    'access arguments' => array('administer site configuration'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_site_maintenance_mode',
     'weight' => -10,
   );
   $items['admin/config/development/performance'] = array(
     'title' => 'Performance',
     'description' => 'Enable or disable page caching for anonymous users and set CSS and JS bandwidth optimization options.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_performance_settings'),
-    'access arguments' => array('administer site configuration'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_performance_settings',
     'weight' => -20,
   );
   $items['admin/config/development/logging'] = array(
     'title' => 'Logging and errors',
     'description' => "Settings for logging and alerts modules. Various modules can route Drupal's system events to different destinations, such as syslog, database, email, etc.",
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_logging_settings'),
-    'access arguments' => array('administer site configuration'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_logging_settings',
     'weight' => -15,
   );
 
@@ -892,11 +874,8 @@ function system_menu() {
   $items['admin/config/regional/settings'] = array(
     'title' => 'Regional settings',
     'description' => "Settings for the site's default time zone and country.",
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_regional_settings'),
-    'access arguments' => array('administer site configuration'),
+    'route_name' => 'system_regional_settings',
     'weight' => -20,
-    'file' => 'system.admin.inc',
   );
   $items['admin/config/regional/date-time'] = array(
     'title' => 'Date and time formats',
@@ -964,19 +943,13 @@ function system_menu() {
   $items['admin/config/system/site-information'] = array(
     'title' => 'Site information',
     'description' => 'Change site name, e-mail address, slogan, default front page, and number of posts per page, error pages.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_site_information_settings'),
-    'access arguments' => array('administer site configuration'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_site_information_settings',
     'weight' => -20,
   );
   $items['admin/config/system/cron'] = array(
     'title' => 'Cron',
     'description' => 'Manage automatic site maintenance tasks.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_cron_settings'),
-    'access arguments' => array('administer site configuration'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_cron_settings',
     'weight' => 20,
   );
   // Additional categories

@@ -10,7 +10,6 @@ namespace Drupal\field_sql_storage\Tests;
 use Drupal\Core\Database\Database;
 use Drupal\field\FieldException;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
-use Exception;
 use PDO;
 
 /**
@@ -339,7 +338,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
       field_update_field($field);
       $this->fail(t('Update succeeded.'));
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $this->pass(t('Update properly failed.'));
     }
 

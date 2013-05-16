@@ -1,0 +1,4 @@
+id: comment.full
+label: Full comment
+status: '0'
+targetEntityType: comment

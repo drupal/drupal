@@ -10,7 +10,6 @@ namespace Drupal\Core\Database\Install;
 use Drupal\Core\Database\Database;
 
 use PDO;
-use Exception;
 
 /**
  * Database installer structure.
@@ -166,7 +165,7 @@ abstract class Tasks {
       Database::getConnection();
       $this->pass('Drupal can CONNECT to the database ok.');
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $this->fail(st('Failed to connect to your database server. The server reports the following message: %error.<ul><li>Is the database server running?</li><li>Does the database exist, and have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname?</li></ul>', array('%error' => $e->getMessage())));
       return FALSE;
     }
@@ -181,7 +180,7 @@ abstract class Tasks {
       db_query($query);
       $this->pass(st($pass));
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $this->fail(st($fail, array('%query' => $query, '%error' => $e->getMessage(), '%name' => $this->name())));
       return !$fatal;
     }

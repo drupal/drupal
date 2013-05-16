@@ -42,8 +42,6 @@
 
 namespace Drupal\Component\Archiver;
 
-use Exception;
-
 //require_once 'PEAR.php';
 //
 //
@@ -636,7 +634,7 @@ class ArchiveTar // extends PEAR
     {
         // ----- To be completed
 //        $this->raiseError($p_message);
-        throw new Exception($p_message);
+        throw new \Exception($p_message);
     }
     // }}}
 
@@ -645,7 +643,7 @@ class ArchiveTar // extends PEAR
     {
         // ----- To be completed
 //        $this->raiseError($p_message);
-        throw new Exception($p_message);
+        throw new \Exception($p_message);
     }
     // }}}
 

@@ -10,7 +10,6 @@ namespace Drupal\system\Tests\Upgrade;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Database;
 use Drupal\simpletest\WebTestBase;
-use Exception;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -188,7 +187,7 @@ abstract class UpgradePathTestBase extends WebTestBase {
     }
     // Since cache_bootstrap won't exist in a Drupal 6 site, ignore the
     // exception if the above fails.
-    catch (Exception $e) {}
+    catch (\Exception $e) {}
   }
 
   /**
@@ -220,12 +219,12 @@ abstract class UpgradePathTestBase extends WebTestBase {
     // Load the first update screen.
     $this->getUpdatePhp();
     if (!$this->assertResponse(200)) {
-      throw new Exception('Initial GET to update.php did not return HTTP 200 status.');
+      throw new \Exception('Initial GET to update.php did not return HTTP 200 status.');
     }
 
     // Ensure that the first update screen appeared correctly.
     if (!$this->assertFieldByXPath('//input[@type="submit"]')) {
-      throw new Exception('An error was encountered during the first access to update.php.');
+      throw new \Exception('An error was encountered during the first access to update.php.');
     }
 
     // Initialize config directories and rebuild the service container after
@@ -236,7 +235,7 @@ abstract class UpgradePathTestBase extends WebTestBase {
     // Continue.
     $this->drupalPost(NULL, array(), t('Continue'));
     if (!$this->assertResponse(200)) {
-      throw new Exception('POST to continue update.php did not return HTTP 200 status.');
+      throw new \Exception('POST to continue update.php did not return HTTP 200 status.');
     }
 
     // The test should pass if there are no pending updates.
@@ -250,12 +249,12 @@ abstract class UpgradePathTestBase extends WebTestBase {
     // Go!
     $this->drupalPost(NULL, array(), t('Apply pending updates'));
     if (!$this->assertResponse(200)) {
-      throw new Exception('POST to update.php to apply pending updates did not return HTTP 200 status.');
+      throw new \Exception('POST to update.php to apply pending updates did not return HTTP 200 status.');
     }
 
     if (!$this->assertNoText(t('An unrecoverable error has occurred.'))) {
       // Error occured during update process.
-      throw new Exception('POST to update.php to apply pending updates detected an unrecoverable error.');
+      throw new \Exception('POST to update.php to apply pending updates detected an unrecoverable error.');
     }
 
     // Check for errors during the update process.
@@ -269,7 +268,7 @@ abstract class UpgradePathTestBase extends WebTestBase {
     if (!empty($this->upgradeErrors)) {
       // Upgrade failed, the installation might be in an inconsistent state,
       // don't process.
-      throw new Exception('Errors during update process.');
+      throw new \Exception('Errors during update process.');
     }
 
     // Allow tests to check the completion page.
@@ -279,7 +278,7 @@ abstract class UpgradePathTestBase extends WebTestBase {
     $this->getUpdatePhp();
     $this->drupalPost(NULL, array(), t('Continue'));
     if (!$this->assertText(t('No pending updates.'), 'No pending updates at the end of the update process.')) {
-      throw new Exception('update.php still shows pending updates after execution.');
+      throw new \Exception('update.php still shows pending updates after execution.');
     }
 
     // Upgrade succeed, rebuild the environment so that we can call the API

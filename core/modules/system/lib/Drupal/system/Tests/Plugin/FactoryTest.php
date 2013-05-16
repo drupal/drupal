@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\Plugin;
 
 use Drupal\Component\Plugin\Exception\ExceptionInterface;
-use Exception;
 
 /**
  * Tests that plugins are correctly instantiated.
@@ -41,7 +40,7 @@ class FactoryTest extends PluginTestBase {
     catch (ExceptionInterface $e) {
       $this->pass('Drupal\Component\Plugin\Exception\ExceptionInterface expected and caught.');
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $this->fail('Drupal\Component\Plugin\Exception\ExceptionInterface expected, but ' . get_class($e) . ' was thrown.');
     }
   }
@@ -78,7 +77,7 @@ class FactoryTest extends PluginTestBase {
       catch (ExceptionInterface $e) {
         $this->pass('Drupal\Component\Plugin\Exception\ExceptionInterface expected and caught.');
       }
-      catch (Exception $e) {
+      catch (\Exception $e) {
         $this->fail('An unexpected Exception of type "' . get_class($e) . '" was thrown with message ' . $e->getMessage());
       }
     }

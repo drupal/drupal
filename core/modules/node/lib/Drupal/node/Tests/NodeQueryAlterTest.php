@@ -7,8 +7,6 @@
 
 namespace Drupal\node\Tests;
 
-use Exception;
-
 /**
  * Tests node_query_node_access_alter().
  */
@@ -100,7 +98,7 @@ class NodeQueryAlterTest extends NodeTestBase {
       $result = $query->execute()->fetchAll();
       $this->assertEqual(count($result), 4, 'User with access can see correct nodes');
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $this->fail(t('Altered query is malformed'));
     }
   }
@@ -123,7 +121,7 @@ class NodeQueryAlterTest extends NodeTestBase {
       $result = $query->execute()->fetchAll();
       $this->assertEqual(count($result), 0, 'User with no access cannot see nodes');
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $this->fail(t('Altered query is malformed'));
     }
   }
@@ -146,7 +144,7 @@ class NodeQueryAlterTest extends NodeTestBase {
       $result = $query->execute()->fetchAll();
       $this->assertEqual(count($result), 0, 'User with view-only access cannot edit nodes');
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $this->fail($e->getMessage());
       $this->fail((string) $query);
       $this->fail(t('Altered query is malformed'));
@@ -186,7 +184,7 @@ class NodeQueryAlterTest extends NodeTestBase {
       $result = $query->execute()->fetchAll();
       $this->assertEqual(count($result), 0, 'User view privileges are not overridden');
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $this->fail(t('Altered query is malformed'));
     }
 
@@ -208,7 +206,7 @@ class NodeQueryAlterTest extends NodeTestBase {
       $result = $query->execute()->fetchAll();
       $this->assertEqual(count($result), 4, 'User view privileges are overridden');
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $this->fail(t('Altered query is malformed'));
     }
     state()->delete('node_access_test.no_access_uid');

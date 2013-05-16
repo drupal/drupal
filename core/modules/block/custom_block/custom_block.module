@@ -186,16 +186,6 @@ function custom_block_entity_bundle_info() {
 }
 
 /**
- * Implements hook_entity_view_mode_info().
- */
-function custom_block_entity_view_mode_info() {
-  $view_modes['custom_block']['full'] = array(
-    'label' => t('Full'),
-  );
-  return $view_modes;
-}
-
-/**
  * Adds the default body field to a custom block type.
  *
  * @param string $block_type_id

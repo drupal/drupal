@@ -18,8 +18,6 @@ use Drupal\Core\Routing\RouteProvider;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Routing\MatcherDumper;
 
-use Exception;
-
 /**
  * Basic tests for the RouteProvider.
  */
@@ -329,7 +327,7 @@ class RouteProviderTest extends UnitTestBase {
       $routes = $provider->getRouteCollectionForRequest($request);
       $this->fail(t('No exception was thrown.'));
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $this->assertTrue($e instanceof ResourceNotFoundException, 'The correct exception was thrown.');
     }
   }

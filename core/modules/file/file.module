@@ -91,16 +91,6 @@ function file_element_info() {
 }
 
 /**
- * Implements hook_entity_view_mode_info().
- */
-function file_entity_view_mode_info() {
-  $view_modes['file']['full'] = array(
-    'label' => t('File default'),
-  );
-  return $view_modes;
-}
-
-/**
  * Loads file entities from the database.
  *
  * @param array $fids

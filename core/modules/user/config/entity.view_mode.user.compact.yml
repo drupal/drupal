@@ -1,0 +1,4 @@
+id: user.compact
+label: Compact
+status: '1'
+targetEntityType: user

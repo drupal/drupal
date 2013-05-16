@@ -7,9 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
-use Exception;
-
 /**
  * Defines an exception thrown when a malformed entity is passed.
  */
-class EntityMalformedException extends Exception { }
+class EntityMalformedException extends \Exception { }

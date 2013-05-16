@@ -16,7 +16,6 @@ use Drupal\Core\Database\Driver\sqlite\Statement;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 
 use PDO;
-use Exception;
 use SplFileInfo;
 
 /**
@@ -161,7 +160,7 @@ class Connection extends DatabaseConnection {
             unlink($this->connectionOptions['database'] . '-' . $prefix);
           }
         }
-        catch (Exception $e) {
+        catch (\Exception $e) {
           // Ignore the exception and continue. There is nothing we can do here
           // to report the error or fail safe.
         }

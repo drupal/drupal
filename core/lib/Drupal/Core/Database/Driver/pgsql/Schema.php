@@ -13,8 +13,6 @@ use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\Schema as DatabaseSchema;
 
-use Exception;
-
 /**
  * @addtogroup schemaapi
  * @{

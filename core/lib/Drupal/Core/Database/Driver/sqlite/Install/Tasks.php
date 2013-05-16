@@ -12,8 +12,6 @@ use Drupal\Core\Database\Driver\sqlite\Connection;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\Install\Tasks as InstallTasks;
 
-use Exception;
-
 class Tasks extends InstallTasks {
   protected $pdoDriver = 'sqlite';
 
@@ -56,7 +54,7 @@ class Tasks extends InstallTasks {
       Database::getConnection();
       $this->pass('Drupal can CONNECT to the database ok.');
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       // Attempt to create the database if it is not found.
       if ($e->getCode() == Connection::DATABASE_NOT_FOUND) {
         // Remove the database string from connection info.

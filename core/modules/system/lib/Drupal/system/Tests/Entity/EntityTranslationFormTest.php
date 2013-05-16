@@ -7,8 +7,6 @@
 
 namespace Drupal\system\Tests\Entity;
 
-use Exception;
-use InvalidArgumentException;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
 

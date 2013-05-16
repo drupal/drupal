@@ -562,7 +562,7 @@ function image_style_deliver($style, $scheme) {
 
   // Don't try to generate file if source is missing.
   if (!file_exists($image_uri)) {
-    watchdog('image', 'Unable to generate the derived image from image at %path.', array('%path' => $derivative_uri));
+    watchdog('image', 'Source image at %source_image_path not found while trying to generate derivative image at %derivative_path.',  array('%source_image_path' => $image_uri, '%derivative_path' => $derivative_uri));
     return new Response(t('Error generating image, missing source file.'), 404);
   }
 

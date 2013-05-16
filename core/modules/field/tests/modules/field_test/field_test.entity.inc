@@ -38,11 +38,11 @@ function field_test_entity_view_mode_info_alter(&$view_modes) {
       $view_modes[$entity_type] = array(
         'full' => array(
           'label' => t('Full object'),
-          'custom_settings' => TRUE,
+          'status' => TRUE,
         ),
         'teaser' => array(
           'label' => t('Teaser'),
-          'custom_settings' => TRUE,
+          'status' => TRUE,
         ),
       );
     }

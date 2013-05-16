@@ -122,20 +122,6 @@ function user_page_build(&$page) {
 }
 
 /**
- * Implements hook_entity_view_mode_info().
- */
-function user_entity_view_mode_info() {
-  $view_modes['user']['full'] = array(
-    'label' => t('User account'),
-  );
-  $view_modes['user']['compact'] = array(
-    'label' => t('Compact'),
-    'custom_settings' => TRUE,
-  );
-  return $view_modes;
-}
-
-/**
  * Implements hook_entity_bundle_info().
  */
 function user_entity_bundle_info() {

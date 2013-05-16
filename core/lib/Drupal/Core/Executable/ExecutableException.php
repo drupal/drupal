@@ -6,11 +6,9 @@
 
 namespace Drupal\Core\Executable;
 
-use Exception;
 use Drupal\Component\Plugin\Exception\ExceptionInterface;
 
 /**
  * Generic executable plugin exception class.
  */
-class ExecutableException extends Exception implements ExceptionInterface {
-}
+class ExecutableException extends \Exception implements ExceptionInterface {}

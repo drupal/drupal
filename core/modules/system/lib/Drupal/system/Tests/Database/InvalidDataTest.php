@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\Database;
 
 use Drupal\Core\Database\IntegrityConstraintViolationException;
-use Exception;
 
 /**
  * Tests invalid data handling.

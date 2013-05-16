@@ -32,7 +32,7 @@ class ViewModeAccessCheck implements AccessCheckInterface {
       $view_mode = $request->attributes->get('view_mode');
 
       $view_mode_settings = field_view_mode_settings($entity_type, $bundle);
-      $visibility = ($view_mode == 'default') || !empty($view_mode_settings[$view_mode]['custom_settings']);
+      $visibility = ($view_mode == 'default') || !empty($view_mode_settings[$view_mode]['status']);
       if ($visibility) {
         $permission = $route->getRequirement('_field_ui_view_mode_access');
         return user_access($permission);

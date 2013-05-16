@@ -1,0 +1,4 @@
+id: user.full
+label: User account
+status: '0'
+targetEntityType: user

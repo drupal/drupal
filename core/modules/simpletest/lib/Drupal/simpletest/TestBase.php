@@ -14,7 +14,6 @@ use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\DrupalKernel;
 use ReflectionMethod;
 use ReflectionObject;
-use Exception;
 
 /**
  * Base class for Drupal tests.
@@ -733,7 +732,7 @@ abstract class TestBase {
               $this->$method();
               // Finish up.
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
               $this->exceptionHandler($e);
             }
             $this->tearDown();

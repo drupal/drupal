@@ -9,7 +9,6 @@ namespace Drupal\Core\Config;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
-use Exception;
 
 /**
  * Defines the Database storage controller.
@@ -81,7 +80,7 @@ class DatabaseStorage implements StorageInterface {
         $data = $this->decode($raw);
       }
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
     }
     return $data;
   }

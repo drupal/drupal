@@ -361,7 +361,7 @@ class DisplayOverview extends OverviewBase {
         $view_mode_settings = field_view_mode_settings($this->entity_type, $this->bundle);
         foreach ($view_modes as $view_mode_name => $view_mode_info) {
           $options[$view_mode_name] = $view_mode_info['label'];
-          if (!empty($view_mode_settings[$view_mode_name]['custom_settings'])) {
+          if (!empty($view_mode_settings[$view_mode_name]['status'])) {
             $default[] = $view_mode_name;
           }
         }
@@ -476,7 +476,7 @@ class DisplayOverview extends OverviewBase {
       $view_mode_settings = field_view_mode_settings($this->entity_type, $this->bundle);
 
       foreach ($form_values['view_modes_custom'] as $view_mode => $value) {
-        if (!empty($value) && empty($view_mode_settings[$view_mode]['custom_settings'])) {
+        if (!empty($value) && empty($view_mode_settings[$view_mode]['status'])) {
           // If no display exists for the newly enabled view mode, initialize
           // it with those from the 'default' view mode, which were used so
           // far.
@@ -489,7 +489,7 @@ class DisplayOverview extends OverviewBase {
           $path = $this->entityManager->getAdminPath($this->entity_type, $this->bundle) . "/display/$view_mode";
           drupal_set_message(t('The %view_mode mode now uses custom display settings. You might want to <a href="@url">configure them</a>.', array('%view_mode' => $view_mode_label, '@url' => url($path))));
         }
-        $bundle_settings['view_modes'][$view_mode]['custom_settings'] = !empty($value);
+        $bundle_settings['view_modes'][$view_mode]['status'] = !empty($value);
       }
 
       // Save updated bundle settings.

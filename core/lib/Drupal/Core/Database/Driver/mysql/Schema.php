@@ -13,8 +13,6 @@ use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\Schema as DatabaseSchema;
 
-use Exception;
-
 /**
  * @addtogroup schemaapi
  * @{
@@ -516,7 +514,7 @@ class Schema extends DatabaseSchema {
       $this->connection->queryRange("SELECT 1 FROM {" . $table . "}", 0, 1);
       return TRUE;
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       return FALSE;
     }
   }
@@ -533,7 +531,7 @@ class Schema extends DatabaseSchema {
       $this->connection->queryRange("SELECT $column FROM {" . $table . "}", 0, 1);
       return TRUE;
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       return FALSE;
     }
   }
