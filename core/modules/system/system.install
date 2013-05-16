@@ -2142,6 +2142,57 @@ function system_update_8055() {
 }
 
 /**
+ * Moves entity view modes to config.
+ *
+ * @ingroup config_upgrade
+ */
+function system_update_8056() {
+  // We cannot call entity_get_info() in an update hook, so we hardcode the view
+  // modes. Only the node entity type's teaser view mode is set to custom by
+  // default, we check specifically for that below. The only way to add custom
+  // view modes in Drupal 7 was hook_entity_info_alter(), which still works in
+  // Drupal 8.
+  $entity_view_modes = array(
+    'node' => array(
+      'full' => 'Full content',
+      'teaser' => 'Teaser',
+      'rss' => 'RSS',
+      'search_index' => 'Search index',
+      'search_result' => 'Search result',
+      'print' => 'Print',
+    ),
+    'file' => array(
+      'full' => 'File default',
+    ),
+    'comment' => array(
+      'full' => 'Full comment',
+    ),
+    'user' => array(
+      'full' => 'User account',
+      'compact' => 'Compact',
+    ),
+    'taxonomy_term' => array(
+      'full' => 'Taxonomy term page',
+    ),
+    'taxonomy_vocabulary' => array(
+      'full' => 'Taxonomy vocabulary',
+    ),
+  );
+
+  foreach ($entity_view_modes as $entity_type => $view_modes) {
+    foreach ($view_modes as $key => $name) {
+      $status = in_array($key, array('teaser', 'compact'));
+      config("entity.view_mode.$entity_type.$key")
+        ->set('id', "$entity_type.$key")
+        ->set('label', $name)
+        ->set('targetEntityType', $entity_type)
+        ->set('status', $status)
+        ->save();
+    }
+  }
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

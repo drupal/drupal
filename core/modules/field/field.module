@@ -574,9 +574,9 @@ function _field_sort_items_value_helper($a, $b) {
  *   elements:
  *   - view_modes: An associative array keyed by view mode, with the following
  *     key/value pairs:
- *     - custom_settings: Boolean specifying whether the view mode uses a
- *       dedicated set of display options (TRUE), or the 'default' options
- *       (FALSE). Defaults to FALSE.
+ *     - status: Boolean specifying whether the view mode uses a dedicated set
+ *       of display options (TRUE), or the 'default' options (FALSE). Defaults
+ *       to FALSE.
  *   - extra_fields: An associative array containing the form and display
  *     settings for extra fields (also known as pseudo-fields):
  *     - form: An associative array whose keys are the names of extra fields,
@@ -623,9 +623,9 @@ function field_bundle_settings($entity_type, $bundle, $settings = NULL) {
  *
  * @return
  *   An array keyed by view mode, with the following key/value pairs:
- *   - custom_settings: Boolean specifying whether the view mode uses a
- *     dedicated set of display options (TRUE), or the 'default' options
- *     (FALSE). Defaults to FALSE.
+ *   - status: Boolean specifying whether the view mode uses a dedicated set of
+ *     display options (TRUE), or the 'default' options (FALSE). Defaults to
+ *     FALSE.
  */
 function field_view_mode_settings($entity_type, $bundle) {
   $cache = &drupal_static(__FUNCTION__, array());
@@ -638,8 +638,8 @@ function field_view_mode_settings($entity_type, $bundle) {
     // settings by default.
     $view_modes = entity_get_view_modes($entity_type);
     foreach ($view_modes as $view_mode => $view_mode_info) {
-      if (!isset($settings[$view_mode]['custom_settings']) && $view_mode_info['custom_settings']) {
-        $settings[$view_mode]['custom_settings'] = TRUE;
+      if (!isset($settings[$view_mode]['status']) && $view_mode_info['status']) {
+        $settings[$view_mode]['status'] = TRUE;
       }
     }
     $cache[$entity_type][$bundle] = $settings;

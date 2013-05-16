@@ -1,0 +1,4 @@
+id: taxonomy_term.full
+label: Taxonomy term page
+status: '0'
+targetEntityType: taxonomy_term

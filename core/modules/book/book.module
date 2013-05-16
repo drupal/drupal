@@ -256,17 +256,6 @@ function book_admin_paths() {
 }
 
 /**
- * Implements hook_entity_view_mode_info().
- */
-function book_entity_view_mode_info() {
-  // Add the 'Print' view mode for nodes.
-  $view_modes['node']['print'] = array(
-    'label' => t('Print'),
-  );
-  return $view_modes;
-}
-
-/**
  * Returns an array of all books.
  *
  * @todo Remove in favor of BookManager Service. http://drupal.org/node/1963894

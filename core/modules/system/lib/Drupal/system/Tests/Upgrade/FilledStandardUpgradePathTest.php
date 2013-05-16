@@ -99,6 +99,13 @@ class FilledStandardUpgradePathTest extends UpgradePathTestBase {
     $this->assertEqual($blog_type->module, 'node', "Content type 'blog' has been reassigned from the blog module to the node module.");
     $this->assertEqual($blog_type->base, 'node_content', "The base string used to construct callbacks corresponding to content type 'Blog' has been reassigned to 'node_content'.");
 
+    // Each entity type has a 'full' view mode, ensure it was migrated.
+    $all_view_modes = entity_get_view_modes();
+    $this->assertTrue(!empty($all_view_modes), 'The view modes have been migrated.');
+    foreach ($all_view_modes as $entity_view_modes) {
+      $this->assertTrue(isset($entity_view_modes['full']));
+    }
+
     // Check that user data has been migrated correctly.
     $query = db_query('SELECT * FROM {users_data}');
 

@@ -1,8 +1,11 @@
 <?php
+
 /**
  * @file
  * Allows administrators to attach custom fields to fieldable types.
  */
+
+use Drupal\entity\EntityViewModeInterface;
 
 /**
  * Implements hook_help().
@@ -346,4 +349,18 @@ function field_ui_library_info() {
   );
 
   return $libraries;
+}
+
+/**
+ * Implements hook_view_mode_presave().
+ */
+function field_ui_view_mode_presave(EntityViewModeInterface $view_mode) {
+  state()->set('menu_rebuild_needed', TRUE);
+}
+
+/**
+ * Implements hook_view_mode_delete().
+ */
+function field_ui_view_mode_delete(EntityViewModeInterface $view_mode) {
+  state()->set('menu_rebuild_needed', TRUE);
 }

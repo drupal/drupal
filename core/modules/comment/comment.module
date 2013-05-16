@@ -98,16 +98,6 @@ function comment_help($path, $arg) {
 }
 
 /**
- * Implements hook_entity_view_mode_info().
- */
-function comment_entity_view_mode_info() {
-  $view_modes['comment']['full'] = array(
-    'label' => t('Full comment'),
-  );
-  return $view_modes;
-}
-
-/**
  * Implements hook_entity_bundle_info().
  */
 function comment_entity_bundle_info() {

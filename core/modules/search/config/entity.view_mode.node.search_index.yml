@@ -1,0 +1,4 @@
+id: node.search_index
+label: Search index
+status: '0'
+targetEntityType: node

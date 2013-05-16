@@ -106,19 +106,6 @@ function taxonomy_permission() {
 }
 
 /**
- * Implements hook_entity_view_mode_info().
- */
-function taxonomy_entity_view_mode_info() {
-  $view_modes['taxonomy_term']['full'] = array(
-    'label' => t('Taxonomy term page'),
-  );
-  $view_modes['taxonomy_vocabulary']['full'] = array(
-    'label' => t('Taxonomy vocabulary'),
-  );
-  return $view_modes;
-}
-
-/**
  * Implements hook_entity_bundle_info().
  */
 function taxonomy_entity_bundle_info() {
