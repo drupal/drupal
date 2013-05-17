@@ -29,7 +29,7 @@ abstract class ViewUnitTestBase extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('views', 'views_test_config', 'views_test_data');
+  public static $modules = array('system', 'views', 'views_test_config', 'views_test_data');
 
   protected function setUp() {
     parent::setUp();
@@ -62,6 +62,9 @@ abstract class ViewUnitTestBase extends DrupalUnitTestBase {
     }
     $query->execute();
 
+    // Tests implementing ViewUnitTestBase depend on the theme system being
+    // properly configured.
+    $this->installConfig(array('system'));
     ViewTestData::importTestViews(get_class($this), array('views_test_config'));
   }
 

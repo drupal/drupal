@@ -96,15 +96,13 @@ class ConfigFactory {
    */
   public function reset($name = NULL) {
     if ($name) {
-      // Reinitialize the configuration object in all contexts.
+      // Clear the cached configuration object in all contexts.
       foreach ($this->getCacheKeys($name) as $cache_key) {
-        $this->cache[$cache_key]->init();
+        unset($this->cache[$cache_key]);
       }
     }
     else {
-      foreach ($this->cache as $config) {
-        $config->init();
-      }
+      $this->cache = array();
     }
     return $this;
   }

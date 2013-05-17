@@ -5,9 +5,12 @@
  * Admin page callbacks for the config module.
  */
 
-use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
+use Drupal\Core\Config\ConfigException;
+use Drupal\Core\Config\ConfigImporter;
+use Drupal\Core\Config\StorageComparerManifest;
+use Drupal\Core\Config\StorageInterface;
 
 /**
  * Helper function to construct the storage changes in a configuration synchronization form.
@@ -16,12 +19,13 @@ use Drupal\Core\Ajax\OpenModalDialogCommand;
  *   The form structure to add to. Passed by reference.
  * @param array $form_state
  *   The current state of the form. Passed by reference.
- * @param Drupal\Core\Config\StorageInterface $source_storage
+ * @param \Drupal\Core\Config\StorageInterface $source_storage
  *   The source storage to retrieve differences from.
- * @param Drupal\Core\Config\StorageInterface $target_storage
- *   The target storage to compare differences to.
+ *
+ * @return array
+ *   The form with the configuration storage changes.
  */
-function config_admin_sync_form(array &$form, array &$form_state, StorageInterface $source_storage, StorageInterface $target_storage) {
+function config_admin_sync_form(array &$form, array &$form_state, StorageInterface $source_storage) {
   $source_list = $source_storage->listAll();
   if (empty($source_list)) {
     $form['no_changes'] = array(
@@ -31,18 +35,23 @@ function config_admin_sync_form(array &$form, array &$form_state, StorageInterfa
     return $form;
   }
 
-  $config_changes = config_sync_get_changes($source_storage, $target_storage);
-  if (empty($config_changes)) {
+  $config_comparer = new StorageComparerManifest(Drupal::service('config.storage.staging'), Drupal::service('config.storage'));
+  if (!$config_comparer->createChangelist()->hasChanges()) {
     $form['no_changes'] = array(
       '#markup' => t('There are no configuration changes.'),
     );
+    $form['actions']['#access'] = FALSE;
     return $form;
+  }
+  else {
+    // Store the comparer for use in the submit.
+    $form_state['storage_comparer'] = $config_comparer;
   }
 
   // Add the AJAX library to the form for dialog support.
   $form['#attached']['library'][] = array('system', 'drupal.ajax');
 
-  foreach ($config_changes as $config_change_type => $config_files) {
+  foreach ($config_comparer->getChangelist() as $config_change_type => $config_files) {
     if (empty($config_files)) {
       continue;
     }
@@ -58,7 +67,7 @@ function config_admin_sync_form(array &$form, array &$form_state, StorageInterfa
         $form[$config_change_type]['heading']['#value'] = format_plural(count($config_files), '@count new', '@count new');
         break;
 
-      case 'change':
+      case 'update':
         $form[$config_change_type]['heading']['#value'] = format_plural(count($config_files), '@count changed', '@count changed');
         break;
 
@@ -122,23 +131,37 @@ function config_admin_import_form($form, &$form_state) {
  * Form submission handler for config_admin_import_form().
  */
 function config_admin_import_form_submit($form, &$form_state) {
-  if (!lock()->lockMayBeAvailable(CONFIG_IMPORT_LOCK)) {
+  $config_importer = new ConfigImporter(
+    $form_state['storage_comparer'],
+    Drupal::service('event_dispatcher'),
+    Drupal::service('config.factory'),
+    Drupal::entityManager(),
+    Drupal::lock()
+  );
+  if ($config_importer->alreadyImporting()) {
     drupal_set_message(t('Another request may be synchronizing configuration already.'));
   }
-  else if (config_import()) {
-    // Once a sync completes, we empty the staging directory. This prevents
-    // changes from being accidentally overwritten by stray files getting
-    // imported later.
-    $source_storage = drupal_container()->get('config.storage.staging');
-    foreach ($source_storage->listAll() as $name) {
-      $source_storage->delete($name);
+  else{
+    try {
+      $config_importer->import();
+      drupal_flush_all_caches();
+      drupal_set_message(t('The configuration was imported successfully.'));
+
+      // Once a sync completes, we empty the staging directory. This prevents
+      // changes from being accidentally overwritten by stray files getting
+      // imported later.
+      $source_storage = $config_importer->getStorageComparer()->getSourceStorage();
+      foreach ($source_storage->listAll() as $name) {
+        $source_storage->delete($name);
+      }
     }
-
-    drupal_flush_all_caches();
-
-    drupal_set_message(t('The configuration was imported successfully.'));
-  }
-  else {
-    drupal_set_message(t('The import failed due to an error. Any errors have been logged.'), 'error');
+    catch (ConfigException $e) {
+      // Return a negative result for UI purposes. We do not differentiate between
+      // an actual synchronization error and a failed lock, because concurrent
+      // synchronizations are an edge-case happening only when multiple developers
+      // or site builders attempt to do it without coordinating.
+      watchdog_exception('config_import', $e);
+      drupal_set_message(t('The import failed due to an error. Any errors have been logged.'), 'error');
+    }
   }
 }

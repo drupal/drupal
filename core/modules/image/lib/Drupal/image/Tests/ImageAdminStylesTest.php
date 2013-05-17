@@ -367,7 +367,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     unset($manifest_data[$style_name]);
     $staging = $this->container->get('config.storage.staging');
     $staging->write('manifest.image.style', $manifest_data);
-    config_import();
+    $this->configImporter()->import();
 
     $this->assertFalse(entity_load('image_style', $style_name), 'Style deleted after config import.');
     $this->assertEqual($this->getImageCount($style), 0, 'Image style was flushed after being deleted by config import.');

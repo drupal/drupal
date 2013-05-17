@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests;
 
 use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Config\StorageComparer;
 
 /**
  * Provides tests view data and the base test schema with sample data records.
@@ -39,13 +40,6 @@ class ViewTestData {
       $class = get_parent_class($class);
     }
     if (!empty($views)) {
-      $target_storage = drupal_container()->get('config.storage');
-      $config_changes = array(
-        'delete' => array(),
-        'create' => array(),
-        'change' => array(),
-      );
-
       $module_handler = \Drupal::moduleHandler();
       foreach ($modules as $module) {
         $config_dir = drupal_get_path('module', $module) . '/test_views';
@@ -54,16 +48,27 @@ class ViewTestData {
         }
 
         $source_storage = new FileStorage($config_dir);
+        // Only import views used by test.
+        $views_to_import = array();
         foreach ($source_storage->listAll('views.view.') as $config_name) {
           $id = str_replace('views.view.', '', $config_name);
           if (in_array($id, $views)) {
-            $config_changes['create'][] = $config_name;
+            $views_to_import[] = $config_name;
           }
         }
-      }
-      if (!empty($config_changes['create'])) {
-        $remaining_changes = config_import_invoke_owner($config_changes, $source_storage, $target_storage);
-        config_sync_changes($remaining_changes, $source_storage, $target_storage);
+        $storage_comparer = new StorageComparer(
+          $source_storage,
+          \Drupal::service('config.storage')
+        );
+        $storage_comparer->addChangelist('create', $views_to_import);
+        $installer = new ViewTestConfigInstaller(
+          $storage_comparer,
+          \Drupal::service('event_dispatcher'),
+          \Drupal::service('config.factory'),
+          \Drupal::entityManager(),
+          \Drupal::lock()
+        );
+        $installer->import();
       }
     }
   }

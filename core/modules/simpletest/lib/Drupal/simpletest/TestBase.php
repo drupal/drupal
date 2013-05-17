@@ -9,6 +9,8 @@ namespace Drupal\simpletest;
 
 use Drupal\Core\Database\Database;
 use Drupal\Component\Utility\Settings;
+use Drupal\Core\Config\ConfigImporter;
+use Drupal\Core\Config\StorageComparerManifest;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\DrupalKernel;
@@ -166,6 +168,13 @@ abstract class TestBase {
    * @var \Symfony\Component\DependencyInjection\ContainerInterface
    */
   protected $container;
+
+  /**
+   * The config importer that can used in a test.
+   *
+   * @var \Drupal\Core\Config\ConfigImporter
+   */
+  protected $configImporter;
 
   /**
    * Constructor for Test.
@@ -1271,5 +1280,29 @@ abstract class TestBase {
    */
   public static function filePreDeleteCallback($path) {
     chmod($path, 0700);
+  }
+
+  /**
+   * Returns a ConfigImporter object to import test importing of configuration.
+   *
+   * @return \Drupal\Core\Config\ConfigImporter
+   *   The ConfigImporter object.
+   */
+  public function configImporter() {
+    if (!$this->configImporter) {
+      // Set up the ConfigImporter object for testing.
+      $config_comparer = new StorageComparerManifest(
+        $this->container->get('config.storage.staging'),
+        $this->container->get('config.storage'));
+      $this->configImporter = new ConfigImporter(
+        $config_comparer,
+        $this->container->get('event_dispatcher'),
+        $this->container->get('config.factory'),
+        $this->container->get('plugin.manager.entity'),
+        $this->container->get('lock')
+      );
+    }
+    // Always recalculate the changelist when called.
+    return $this->configImporter->reset();
   }
 }

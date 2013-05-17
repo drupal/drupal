@@ -2,17 +2,26 @@
 
 /**
  * @file
- * Definition of Drupal\config\Tests\ConfigImportTest.
+ * Contains \Drupal\config\Tests\ConfigImporterTest.
  */
 
 namespace Drupal\config\Tests;
 
+use Drupal\Core\Config\ConfigImporter;
+use Drupal\Core\Config\StorageComparerManifest;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests importing configuration from files into active configuration.
  */
-class ConfigImportTest extends DrupalUnitTestBase {
+class ConfigImporterTest extends DrupalUnitTestBase {
+
+  /**
+   * Config Importer object used for testing.
+   *
+   * @var \Drupal\Core\Config\ConfigImporter
+   */
+  protected $configImporter;
 
   /**
    * Modules to enable.
@@ -39,6 +48,18 @@ class ConfigImportTest extends DrupalUnitTestBase {
     // variable being used for recording hook invocations by this test already,
     // so it has to be cleared out manually.
     unset($GLOBALS['hook_config_test']);
+
+    // Set up the ConfigImporter object for testing.
+    $config_comparer = new StorageComparerManifest(
+      $this->container->get('config.storage.staging'),
+      $this->container->get('config.storage'));
+    $this->configImporter = new ConfigImporter(
+      $config_comparer->createChangelist(),
+      $this->container->get('event_dispatcher'),
+      $this->container->get('config.factory'),
+      $this->container->get('plugin.manager.entity'),
+      $this->container->get('lock')
+    );
   }
 
   /**
@@ -70,7 +91,7 @@ class ConfigImportTest extends DrupalUnitTestBase {
     // Create an empty manifest to delete the configuration object.
     $staging->write('manifest.config_test.dynamic', array());
     // Import.
-    config_import();
+    $this->configImporter->reset()->import();
 
     // Verify the values have disappeared.
     $this->assertIdentical($storage->read($dynamic_name), FALSE);
@@ -87,7 +108,7 @@ class ConfigImportTest extends DrupalUnitTestBase {
     $this->assertTrue(isset($GLOBALS['hook_config_test']['delete']));
 
     // Verify that there is nothing more to import.
-    $this->assertFalse(config_sync_get_changes($staging, $storage));
+    $this->assertFalse($this->configImporter->hasUnprocessedChanges());
   }
 
   /**
@@ -123,7 +144,7 @@ class ConfigImportTest extends DrupalUnitTestBase {
     $this->assertIdentical($staging->exists($dynamic_name), TRUE, $dynamic_name . ' found.');
 
     // Import.
-    config_import();
+    $this->configImporter->reset()->import();
 
     // Verify the values appeared.
     $config = config($dynamic_name);
@@ -138,7 +159,7 @@ class ConfigImportTest extends DrupalUnitTestBase {
     $this->assertFalse(isset($GLOBALS['hook_config_test']['delete']));
 
     // Verify that there is nothing more to import.
-    $this->assertFalse(config_sync_get_changes($staging, $storage));
+    $this->assertFalse($this->configImporter->hasUnprocessedChanges());
   }
 
   /**
@@ -174,7 +195,7 @@ class ConfigImportTest extends DrupalUnitTestBase {
     $this->assertIdentical($config->get('label'), 'Default');
 
     // Import.
-    config_import();
+    $this->configImporter->reset()->import();
 
     // Verify the values were updated.
     $config = config($name);
@@ -195,7 +216,7 @@ class ConfigImportTest extends DrupalUnitTestBase {
     $this->assertFalse(isset($GLOBALS['hook_config_test']['delete']));
 
     // Verify that there is nothing more to import.
-    $this->assertFalse(config_sync_get_changes($staging, $storage));
+    $this->assertFalse($this->configImporter->hasUnprocessedChanges());
   }
 
 }

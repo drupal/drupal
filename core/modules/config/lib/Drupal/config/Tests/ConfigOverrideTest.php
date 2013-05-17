@@ -8,7 +8,6 @@
 namespace Drupal\config\Tests;
 
 use Drupal\simpletest\DrupalUnitTestBase;
-use Drupal\Core\Config\Context\ConfigContext;
 
 /**
  * Tests configuration overrides via $conf in settings.php.
@@ -118,7 +117,7 @@ class ConfigOverrideTest extends DrupalUnitTestBase {
     $staging->write('config_test.system', $expected_new_data);
 
     // Import changed data from staging to active.
-    config_import();
+    $this->configImporter()->import();
     $data = $active->read('config_test.system');
 
     // Verify that the new configuration data exists. Have to read storage

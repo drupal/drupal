@@ -69,7 +69,7 @@ class FieldImportCreateTest extends FieldUnitTestBase {
     $staging->write($instance_manifest_name, $instance_manifest);
 
     // Import the content of the staging directory.
-    config_import();
+    $this->configImporter()->import();
 
     // Check that the field and instance were created.
     $field = entity_load('field_entity', $field_id);
