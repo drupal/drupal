@@ -10,6 +10,7 @@ namespace Drupal\edit\Tests;
 use Drupal\simpletest\WebTestBase;
 use Drupal\edit\Ajax\MetadataCommand;
 use Drupal\Core\Ajax\AppendCommand;
+use Drupal\Component\Utility\Unicode;
 
 /**
  * Tests loading of Edit and lazy-loading of in-place editors.
@@ -137,6 +138,15 @@ class EditLoadingTest extends WebTestBase {
       )
     ));
     $this->assertIdentical($command->render(), $ajax_commands[2], 'The Edit metadata command contains the expected metadata.');
+
+    // Retrieving the form for this field should result in a 200 response,
+    // containing only an editFieldForm command.
+    $response = $this->retrieveFieldForm('node/1/body/und/full');
+    $this->assertResponse(200);
+    $ajax_commands = drupal_json_decode($response);
+    $this->assertIdentical(1, count($ajax_commands), 'The field form HTTP request results in three AJAX commands.');
+    $this->assertIdentical('editFieldForm', $ajax_commands[0]['command'], 'The first AJAX command is an editFieldForm command.');
+    $this->assertIdentical('<form ', Unicode::substr($ajax_commands[0]['data'], 0, 6), 'The editFieldForm command contains a form.');
   }
 
   /**
@@ -165,7 +175,51 @@ class EditLoadingTest extends WebTestBase {
     }
     $post = implode('&', $post);
 
-    // Add extra information to the POST data as ajax.js does.
+    // Perform HTTP request.
+    return $this->curlExec(array(
+      CURLOPT_URL => url('edit/metadata', array('absolute' => TRUE)),
+      CURLOPT_POST => TRUE,
+      CURLOPT_POSTFIELDS => $post . $this->getAjaxPageStatePostData(),
+      CURLOPT_HTTPHEADER => array(
+        'Accept: application/json',
+        'Content-Type: application/x-www-form-urlencoded',
+      ),
+    ));
+  }
+
+  /**
+   * Retrieve field form from the server. May also result in additional
+   * JavaScript settings and CSS/JS being loaded.
+   *
+   * @param string $field_id
+   *   An Edit field ID.
+   *
+   * @return string
+   *   The response body.
+   */
+  protected function retrieveFieldForm($field_id) {
+    // Build & serialize POST value.
+    $post = urlencode('nocssjs') . '=' . urlencode('true');
+
+    // Perform HTTP request.
+    return $this->curlExec(array(
+      CURLOPT_URL => url('edit/form/' . $field_id, array('absolute' => TRUE)),
+      CURLOPT_POST => TRUE,
+      CURLOPT_POSTFIELDS => $post . $this->getAjaxPageStatePostData(),
+      CURLOPT_HTTPHEADER => array(
+        'Accept: application/json',
+        'Content-Type: application/x-www-form-urlencoded',
+      ),
+    ));
+  }
+
+  /**
+   * Get extra information to the POST data as ajax.js does.
+   *
+   * @return string
+   *   Additional post data.
+   */
+  protected function getAjaxPageStatePostData() {
     $extra_post = '';
     $drupal_settings = $this->drupalSettings;
     if (isset($drupal_settings['ajaxPageState'])) {
@@ -178,16 +232,6 @@ class EditLoadingTest extends WebTestBase {
         $extra_post .= '&' . urlencode("ajax_page_state[js][$key]") . '=1';
       }
     }
-
-    // Perform HTTP request.
-    return $this->curlExec(array(
-      CURLOPT_URL => url('edit/metadata', array('absolute' => TRUE)),
-      CURLOPT_POST => TRUE,
-      CURLOPT_POSTFIELDS => $post . $extra_post,
-      CURLOPT_HTTPHEADER => array(
-        'Accept: application/json',
-        'Content-Type: application/x-www-form-urlencoded',
-      ),
-    ));
-   }
+    return $extra_post;
+  }
 }
