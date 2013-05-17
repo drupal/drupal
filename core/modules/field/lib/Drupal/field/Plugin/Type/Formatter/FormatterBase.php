@@ -78,7 +78,7 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::view().
+   * {@inheritdoc}
    */
   public function view(EntityInterface $entity, $langcode, array $items) {
     $field = $this->field;
@@ -113,21 +113,21 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
     return array();
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsSummary().
+   * {@inheritdoc}
    */
   public function settingsSummary() {
-    return '';
+    return array();
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::prepareView().
+   * {@inheritdoc}
    */
   public function prepareView(array $entities, $langcode, array &$items) { }
 

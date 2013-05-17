@@ -32,7 +32,7 @@ use Drupal\Core\Template\Attribute;
 class DateTimeDefaultFormatter extends FormatterBase {
 
   /**
-   * Implements \Drupal\field\Plugin\Type\Formatter\FormatterInterface::viewElements().
+   * {@inheritdoc}
    */
   public function viewElements(EntityInterface $entity, $langcode, array $items) {
 
@@ -93,7 +93,7 @@ class DateTimeDefaultFormatter extends FormatterBase {
   }
 
   /**
-   * Implements \Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
 
@@ -119,15 +119,13 @@ class DateTimeDefaultFormatter extends FormatterBase {
   }
 
   /**
-   * Implements \Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsSummary().
+   * {@inheritdoc}
    */
   public function settingsSummary() {
-
+    $summary = array();
     $date = new DrupalDateTime();
-    $output = array();
-    $output[] = t('Format: @display', array('@display' => $this->dateFormat($date, FALSE)));
-    return implode('<br />', $output);
-
+    $summary[] = t('Format: @display', array('@display' => $this->dateFormat($date, FALSE)));
+    return $summary;
   }
 
 }

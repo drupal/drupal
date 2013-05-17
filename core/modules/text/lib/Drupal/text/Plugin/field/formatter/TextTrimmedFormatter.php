@@ -3,7 +3,7 @@
 /**
  * @file
  *
- * Definition of Drupal\text\Plugin\field\formatter\TextTrimmedFormatter.
+ * Contains \Drupal\text\Plugin\field\formatter\TextTrimmedFormatter.
  */
 namespace Drupal\text\Plugin\field\formatter;
 
@@ -40,7 +40,7 @@ use Drupal\Core\Entity\EntityInterface;
 class TextTrimmedFormatter extends FormatterBase {
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
     $element['trim_length'] = array(
@@ -54,16 +54,16 @@ class TextTrimmedFormatter extends FormatterBase {
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsSummary().
+   * {@inheritdoc}
    */
   public function settingsSummary() {
-    return t('Trim length: @trim_length', array(
-      '@trim_length' => $this->getSetting('trim_length'),
-    ));
+    $summary = array();
+    $summary[] = t('Trim length: @trim_length', array('@trim_length' => $this->getSetting('trim_length')));
+    return $summary;
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::viewElements().
+   * {@inheritdoc}
    */
   public function viewElements(EntityInterface $entity, $langcode, array $items) {
     $elements = array();

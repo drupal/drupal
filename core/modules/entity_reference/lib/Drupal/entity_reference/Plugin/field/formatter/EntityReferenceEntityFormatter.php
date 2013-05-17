@@ -33,7 +33,7 @@ use Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase;
 class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
 
   /**
-   * Overrides \Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
     $view_modes = entity_get_view_modes($this->field['settings']['target_type']);
@@ -60,7 +60,7 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
   }
 
   /**
-   * Overrides \Drupal\field\Plugin\Type\Formatter\FormatterBase::settingsSummary().
+   * {@inheritdoc}
    */
   public function settingsSummary() {
     $summary = array();
@@ -70,11 +70,11 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
     $summary[] = t('Rendered as @mode', array('@mode' => isset($view_modes[$view_mode]['label']) ? $view_modes[$view_mode]['label'] : $view_mode));
     $summary[] = $this->getSetting('links') ? t('Display links') : t('Do not display links');
 
-    return implode('<br />', $summary);
+    return $summary;
   }
 
   /**
-   * Overrides \Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase::viewElements().
+   * {@inheritdoc}
    */
   public function viewElements(EntityInterface $entity, $langcode, array $items) {
     // Remove un-accessible items.

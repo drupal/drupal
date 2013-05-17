@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\picture\Plugin\field\formatter\PictureFormatter.
+ * Contains \Drupal\picture\Plugin\field\formatter\PictureFormatter.
  */
 
 namespace Drupal\picture\Plugin\field\formatter;
@@ -32,7 +32,7 @@ use Drupal\Core\Entity\EntityInterface;
 class PictureFormatter extends FormatterBase {
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
     $picture_options = array();
@@ -78,7 +78,7 @@ class PictureFormatter extends FormatterBase {
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsSummary() {
     $summary = array();
@@ -109,11 +109,11 @@ class PictureFormatter extends FormatterBase {
       $summary[] = t('Select a picture mapping.');
     }
 
-    return implode('<br />', $summary);
+    return $summary;
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::viewElements().
+   * {@inheritdoc}
    */
   public function viewElements(EntityInterface $entity, $langcode, array $items) {
     $elements = array();

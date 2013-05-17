@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\field_test\Plugin\field\formatter\TestFieldPrepareViewFormatter.
+ * Contains \Drupal\field_test\Plugin\field\formatter\TestFieldPrepareViewFormatter.
  */
 
 namespace Drupal\field_test\Plugin\field\formatter;
@@ -31,7 +31,7 @@ use Drupal\Core\Entity\EntityInterface;
 class TestFieldPrepareViewFormatter extends FormatterBase {
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
     $element['test_formatter_setting_additional'] = array(
@@ -45,14 +45,16 @@ class TestFieldPrepareViewFormatter extends FormatterBase {
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsSummary() {
-    return t('@setting: @value', array('@setting' => 'test_formatter_setting_additional', '@value' => $this->getSetting('test_formatter_setting_additional')));
+    $summary = array();
+    $summary[] = t('@setting: @value', array('@setting' => 'test_formatter_setting_additional', '@value' => $this->getSetting('test_formatter_setting_additional')));
+    return $summary;
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::prepareView().
+   * {@inheritdoc}
    */
   public function prepareView(array $entities, $langcode, array &$items) {
     foreach ($items as $id => $item) {
@@ -66,7 +68,7 @@ class TestFieldPrepareViewFormatter extends FormatterBase {
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::viewElements().
+   * {@inheritdoc}
    */
   public function viewElements(EntityInterface $entity, $langcode, array $items) {
     $elements = array();

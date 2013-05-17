@@ -30,7 +30,7 @@ use Drupal\Core\Entity\EntityInterface;
 class TelephoneLinkFormatter extends FormatterBase {
 
   /**
-   * Implements \Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
     $elements['title'] = array(
@@ -43,23 +43,24 @@ class TelephoneLinkFormatter extends FormatterBase {
   }
 
   /**
-   * Implements \Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsSummary().
+   * {@inheritdoc}
    */
   public function settingsSummary() {
+    $summary = array();
     $settings = $this->getSettings();
 
     if (!empty($settings['title'])) {
-      $summary = t('Link using text: @title', array('@title' => $settings['title']));
+      $summary[] = t('Link using text: @title', array('@title' => $settings['title']));
     }
     else {
-      $summary = t('Link using provided telephone number.');
+      $summary[] = t('Link using provided telephone number.');
     }
 
     return $summary;
   }
 
   /**
-   * Implements \Drupal\field\Plugin\Type\Formatter\FormatterInterface::prepareView().
+   * {@inheritdoc}
    */
   public function prepareView(array $entities, $langcode, array &$items) {
     $settings = $this->getSettings();
@@ -79,7 +80,7 @@ class TelephoneLinkFormatter extends FormatterBase {
   }
 
   /**
-   * Implements \Drupal\field\Plugin\Type\Formatter\FormatterInterface::viewElements().
+   * {@inheritdoc}
    */
   public function viewElements(EntityInterface $entity, $langcode, array $items) {
     $element = array();
