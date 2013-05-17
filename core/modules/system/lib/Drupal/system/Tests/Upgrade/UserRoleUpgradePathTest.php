@@ -39,8 +39,10 @@ class UserRoleUpgradePathTest extends UpgradePathTestBase {
 
     // Check that "gärtner" has been converted to "4" and that the role
     // edit page for it exists.
-    $this->drupalGet('admin/people/roles/edit/4');
+    $this->drupalGet('admin/people/roles/manage/4');
     $this->assertResponse(200, 'Role edit page for "gärtner" was found.');
+    $this->assertField('label', 'Role edit page for "gärtner" was found.');
+    $this->assertRaw('gärtner', 'Role edit page for "gärtner" was found.');
 
     // Check that the anonymous user role ID has been converted from "1" to
     // "anonymous".

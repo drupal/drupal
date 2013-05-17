@@ -481,28 +481,3 @@ function user_admin_role_add() {
   $role = entity_create('user_role', array());
   return entity_get_form($role);
 }
-
-/**
- * Form to confirm role delete operation.
- */
-function user_admin_role_delete_confirm($form, &$form_state, $role) {
-  $form_state['user_role'] = $role;
-  $form['id'] = array(
-    '#type' => 'value',
-    '#value' => $role->id(),
-  );
-  return confirm_form($form, t('Are you sure you want to delete the role %name ?', array('%name' => $role->label())), 'admin/people/roles', t('This action cannot be undone.'), t('Delete'));
-}
-
-/**
- * Form submit handler for user_admin_role_delete_confirm().
- */
-function user_admin_role_delete_confirm_submit($form, &$form_state) {
-  $role = $form_state['user_role'];
-  $role->delete();
-
-  drupal_set_message(t('Role %label has been deleted.', array('%label' => $role->label())));
-  watchdog('user', 'Role %label has been deleted.', array('%label' => $role->label()), WATCHDOG_NOTICE);
-
-  $form_state['redirect'] = 'admin/people/roles';
-}
