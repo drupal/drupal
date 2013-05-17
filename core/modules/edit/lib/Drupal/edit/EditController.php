@@ -91,12 +91,12 @@ class EditController extends ContainerAware {
    *   The name of the field that is being edited.
    * @param string $langcode
    *   The name of the language for which the field is being edited.
-   * @param string $view_mode
+   * @param string $view_mode_id
    *   The view mode the field should be rerendered in.
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   The Ajax response.
    */
-  public function fieldForm(EntityInterface $entity, $field_name, $langcode, $view_mode) {
+  public function fieldForm(EntityInterface $entity, $field_name, $langcode, $view_mode_id) {
     $response = new AjaxResponse();
 
     $form_state = array(
@@ -112,7 +112,7 @@ class EditController extends ContainerAware {
       $entity = entity_load($form_state['entity']->entityType(), $form_state['entity']->id(), TRUE);
       // @todo Remove when http://drupal.org/node/1346214 is complete.
       $entity = $entity->getBCEntity();
-      $output = field_view_field($entity, $field_name, $view_mode, $langcode);
+      $output = field_view_field($entity, $field_name, $view_mode_id, $langcode);
 
       $response->addCommand(new FieldFormSavedCommand(drupal_render($output)));
     }
