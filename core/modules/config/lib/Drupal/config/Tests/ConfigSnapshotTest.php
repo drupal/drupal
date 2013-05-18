@@ -7,6 +7,7 @@
 
 namespace Drupal\config\Tests;
 
+use Drupal\Core\Config\StorageComparer;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -45,21 +46,24 @@ class ConfigSnapshotTest extends DrupalUnitTestBase {
     $config_key = 'foo';
     $new_data = 'foobar';
 
+    $active_snapshot_comparer = new StorageComparer($active, $snapshot);
+    $staging_snapshot_comparer = new StorageComparer($staging, $snapshot);
+
     // Verify that we have an initial snapshot that matches the active
     // configuration. This has to be true as no config should be installed.
-    $this->assertFalse(config_sync_get_changes($snapshot, $active, FALSE));
+    $this->assertFalse($active_snapshot_comparer->createChangelist()->hasChanges());
 
     // Install the default config.
     config_install_default_config('module', 'config_test');
     // Although we have imported config this has not affected the snapshot.
-    $this->assertTrue(config_sync_get_changes($snapshot, $active, FALSE));
+    $this->assertTrue($active_snapshot_comparer->reset()->hasChanges());
 
     // Update the config snapshot.
     config_import_create_snapshot($active, $snapshot);
 
     // The snapshot and active config should now contain the same config
     // objects.
-    $this->assertFalse(config_sync_get_changes($snapshot, $active, FALSE));
+    $this->assertFalse($active_snapshot_comparer->reset()->hasChanges());
 
     // Change a configuration value in staging.
     $staging_data = config($config_name)->get();
@@ -67,20 +71,19 @@ class ConfigSnapshotTest extends DrupalUnitTestBase {
     $staging->write($config_name, $staging_data);
 
     // Verify that active and snapshot match, and that staging doesn't match
-    // either of them.
-    $this->assertFalse(config_sync_get_changes($snapshot, $active, FALSE));
-    $this->assertTrue(config_sync_get_changes($snapshot, $staging, FALSE));
-    $this->assertTrue(config_sync_get_changes($staging, $active, FALSE));
+    // active.
+    $this->assertFalse($active_snapshot_comparer->reset()->hasChanges());
+    $this->assertTrue($staging_snapshot_comparer->createChangelist()->hasChanges());
 
     // Import changed data from staging to active.
-    config_import();
+    $this->configImporter()->import();
 
     // Verify changed config was properly imported.
     $this->assertIdentical(config($config_name)->get($config_key), $new_data);
 
     // Verify that a new snapshot was created which and that it matches
     // the active config.
-    $this->assertFalse(config_sync_get_changes($snapshot, $active, FALSE));
+    $this->assertFalse($active_snapshot_comparer->reset()->hasChanges());
   }
 
 }

@@ -31,7 +31,7 @@ use Drupal\Core\Entity\EntityInterface;
 class ImageFormatter extends FormatterBase {
 
   /**
-   * Implements \Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
     $image_styles = image_style_options(FALSE);
@@ -59,7 +59,7 @@ class ImageFormatter extends FormatterBase {
   }
 
   /**
-   * Implements \Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsSummary().
+   * {@inheritdoc}
    */
   public function settingsSummary() {
     $summary = array();
@@ -87,11 +87,11 @@ class ImageFormatter extends FormatterBase {
       $summary[] = $link_types[$image_link_setting];
     }
 
-    return implode('<br />', $summary);
+    return $summary;
   }
 
   /**
-   * Implements \Drupal\field\Plugin\Type\Formatter\FormatterInterface::viewElements().
+   * {@inheritdoc}
    */
   public function viewElements(EntityInterface $entity, $langcode, array $items) {
     $elements = array();

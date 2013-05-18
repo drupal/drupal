@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\field_test\Plugin\field\formatter\TestFieldMultipleFormatter.
+ * Contains \Drupal\field_test\Plugin\field\formatter\TestFieldMultipleFormatter.
  */
 
 namespace Drupal\field_test\Plugin\field\formatter;
@@ -31,7 +31,7 @@ use Drupal\Core\Entity\EntityInterface;
 class TestFieldMultipleFormatter extends FormatterBase {
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
     $element['test_formatter_setting_multiple'] = array(
@@ -45,14 +45,16 @@ class TestFieldMultipleFormatter extends FormatterBase {
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsSummary() {
-    return t('@setting: @value', array('@setting' => 'test_formatter_setting_multiple', '@value' => $this->getSetting('test_formatter_setting_multiple')));
+    $summary = array();
+    $summary[] = t('@setting: @value', array('@setting' => 'test_formatter_setting_multiple', '@value' => $this->getSetting('test_formatter_setting_multiple')));
+    return $summary;
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::viewElements().
+   * {@inheritdoc}
    */
   public function viewElements(EntityInterface $entity, $langcode, array $items) {
     $elements = array();

@@ -945,24 +945,18 @@ function user_menu() {
   $items['admin/people/roles'] = array(
     'title' => 'Roles',
     'description' => 'List, edit, or add user roles.',
-    'page callback' => 'user_admin_roles_list',
-    'access arguments' => array('administer permissions'),
-    'file' => 'user.admin.inc',
+    'route_name' => 'user_role_list',
     'type' => MENU_LOCAL_TASK,
   );
   $items['admin/people/roles/add'] = array(
     'title' => 'Add role',
-    'page callback' => 'user_admin_role_add',
-    'access arguments' => array('administer permissions'),
+    'route_name' => 'user_role_add',
     'type' => MENU_LOCAL_ACTION,
-    'file' => 'user.admin.inc',
   );
 
   $items['admin/people/roles/manage/%user_role'] = array(
     'title' => 'Edit role',
-    'page callback' => 'entity_get_form',
-    'page arguments' => array(4),
-    'access arguments' => array('administer permissions'),
+    'route_name' => 'user_role_edit',
   );
   $items['admin/people/roles/manage/%user_role/edit'] = array(
     'title' => 'Edit',
@@ -970,13 +964,9 @@ function user_menu() {
   );
   $items['admin/people/roles/manage/%user_role/delete'] = array(
     'title' => 'Delete role',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('user_admin_role_delete_confirm', 4),
-    'access callback' => 'user_role_delete_access',
-    'access arguments' => array(4),
+    'route_name' => 'user_role_delete',
     'weight' => 10,
     'context' => MENU_CONTEXT_INLINE,
-    'file' => 'user.admin.inc',
   );
 
   $items['admin/people/create'] = array(
@@ -1883,18 +1873,6 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
  */
 function user_role_load($rid) {
   return entity_load('user_role', $rid);
-}
-
-/**
- * Menu access callback for user role deletion.
- */
-function user_role_delete_access($role) {
-  // Prevent the system-defined roles from being removed.
-  if ($role->id() == DRUPAL_ANONYMOUS_RID || $role->id() == DRUPAL_AUTHENTICATED_RID) {
-    return FALSE;
-  }
-
-  return user_access('administer permissions');
 }
 
 /**

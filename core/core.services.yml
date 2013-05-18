@@ -356,6 +356,15 @@ services:
     class: Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber
     tags:
       - { name: event_subscriber }
+  config_import_subscriber:
+    class: Drupal\Core\EventSubscriber\ConfigImportSubscriber
+    tags:
+      - { name: event_subscriber }
+  config_snapshot_subscriber:
+    class: Drupal\Core\EventSubscriber\ConfigSnapshotSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@config.storage', '@config.storage.snapshot']
   language_request_subscriber:
     class: Drupal\Core\EventSubscriber\LanguageRequestSubscriber
     tags:

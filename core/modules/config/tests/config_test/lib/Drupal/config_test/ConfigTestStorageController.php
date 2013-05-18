@@ -26,13 +26,13 @@ class ConfigTestStorageController extends ConfigStorageController {
   }
 
   /**
-   * Overrides \Drupal\Core\Config\Entity\ConfigStorageController::importChange().
+   * Overrides \Drupal\Core\Config\Entity\ConfigStorageController::importUpdate().
    */
-  public function importChange($name, Config $new_config, Config $old_config) {
+  public function importUpdate($name, Config $new_config, Config $old_config) {
     // Set a global value we can check in test code.
     $GLOBALS['hook_config_import'] = __METHOD__;
 
-    return parent::importChange($name, $new_config, $old_config);
+    return parent::importUpdate($name, $new_config, $old_config);
   }
 
   /**

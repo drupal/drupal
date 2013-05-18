@@ -521,7 +521,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
   }
 
   /**
-   * Update configuration upon synchronizing configuration changes.
+   * Updates configuration upon synchronizing configuration changes.
    *
    * This callback is invoked when configuration is synchronized between storages
    * and allows a module to take over the synchronization of configuration data.
@@ -533,7 +533,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
    * @param \Drupal\Core\Config\Config $old_config
    *   A configuration object containing the old configuration data.
    */
-  public function importChange($name, Config $new_config, Config $old_config) {
+  public function importUpdate($name, Config $new_config, Config $old_config) {
     $id = static::getIDFromConfigName($name, $this->entityInfo['config_prefix']);
     $entities = $this->load(array($id));
     $entity = $entities[$id];

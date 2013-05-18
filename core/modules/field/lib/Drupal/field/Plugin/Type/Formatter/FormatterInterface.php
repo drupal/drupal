@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\field\Plugin\Type\Formatter\FormatterInterface.
+ * Contains \Drupal\field\Plugin\Type\Formatter\FormatterInterface.
  */
 
 namespace Drupal\field\Plugin\Type\Formatter;
@@ -40,8 +40,8 @@ interface FormatterInterface extends PluginSettingsInterface {
    * configurable settings, and no UI will be provided to display a settings
    * form.
    *
-   * @return string
-   *   A short summary of the formatter settings..
+   * @return array()
+   *   A short summary of the formatter settings.
    */
   public function settingsSummary();
 

@@ -265,9 +265,9 @@ class DisplayOverview extends OverviewBase {
           );
           drupal_alter('field_formatter_settings_summary', $summary, $context);
 
-          if ($summary) {
+          if (!empty($summary)) {
             $table[$name]['settings_summary'] = array(
-              '#markup' => '<div class="field-formatter-summary">' . $summary . '</div>',
+              '#markup' => '<div class="field-formatter-summary">' . implode('<br />', $summary) . '</div>',
               '#cell_attributes' => array('class' => array('field-formatter-summary-cell')),
             );
             $table[$name]['settings_edit'] = $base_button + array(

@@ -25,7 +25,7 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity', 'field', 'field_sql_storage', 'text', 'field_test');
+  public static $modules = array('system', 'entity', 'field', 'field_sql_storage', 'text', 'field_test');
 
   /**
    * Contains rendered content.
@@ -45,7 +45,8 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->installConfig(array('field'));
+    // Configure the theme system.
+    $this->installConfig(array('system', 'field'));
 
     // @todo Add helper methods for all of the following.
 

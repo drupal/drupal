@@ -14,6 +14,14 @@ use Drupal\simpletest\DrupalUnitTestBase;
  * Tests CRUD operations on configuration objects.
  */
 class ConfigCRUDTest extends DrupalUnitTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('system');
+
   public static function getInfo() {
     return array(
       'name' => 'CRUD operations',
@@ -193,8 +201,15 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
     $manifest_data['new']['name'] = 'invalid';
     $staging->write('manifest.invalid_object_name', $manifest_data);
 
-    // Assert that config_import returns false indicating a failure.
-    $this->assertFalse(config_import(), "Config import failed when trying to importing an object with an invalid name");
+    // Verify that an exception is thrown when importing.
+    $message = 'Expected ConfigNameException was thrown when attempting to sync invalid configuration.';
+    try {
+      $this->configImporter()->import();
+      $this->fail($message);
+    }
+    catch (ConfigNameException $e) {
+      $this->pass($message);
+    }
   }
 
 }

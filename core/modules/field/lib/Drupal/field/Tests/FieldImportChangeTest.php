@@ -54,7 +54,7 @@ class FieldImportChangeTest extends FieldUnitTestBase {
     $staging->write($instance_config_name, $instance);
 
     // Import the content of the staging directory.
-    config_import();
+    $this->configImporter()->import();
 
     // Check that the updated config was correctly imported.
     $instance = entity_load('field_instance', $instance_id);

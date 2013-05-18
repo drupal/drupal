@@ -276,7 +276,8 @@ function field_test_field_formatter_settings_form_alter(&$element, &$form_state,
  * Implements hook_field_formatter_settings_summary_alter().
  */
 function field_test_field_formatter_settings_summary_alter(&$summary, $context) {
-  $summary .= '<br />field_test_field_formatter_settings_summary_alter';
+  $summary[] = 'field_test_field_formatter_settings_summary_alter';
+  return $summary;
 }
 
 /**

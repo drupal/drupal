@@ -31,7 +31,7 @@ use Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase;
 class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
 
   /**
-   * Overrides \Drupal\field\Plugin\Type\Formatter\FormatterBase::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
     $elements['link'] = array(
@@ -44,17 +44,16 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
   }
 
   /**
-   * Overrides \Drupal\field\Plugin\Type\Formatter\FormatterBase::settingsSummary().
+   * {@inheritdoc}
    */
   public function settingsSummary() {
     $summary = array();
     $summary[] = $this->getSetting('link') ? t('Link to the referenced entity') : t('No link');
-
-    return implode('<br />', $summary);
+    return $summary;
   }
 
   /**
-   * Overrides \Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase::viewElements().
+   * {@inheritdoc}
    */
   public function viewElements(EntityInterface $entity, $langcode, array $items) {
     // Remove un-accessible items.

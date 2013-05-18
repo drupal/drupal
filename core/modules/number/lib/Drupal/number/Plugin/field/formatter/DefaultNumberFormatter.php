@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\number\Plugin\field\formatter\DefaultNumberFormatter.
+ * Contains \Drupal\number\Plugin\field\formatter\DefaultNumberFormatter.
  */
 
 namespace Drupal\number\Plugin\field\formatter;
@@ -18,7 +18,7 @@ use Drupal\Core\Entity\EntityInterface;
 abstract class DefaultNumberFormatter extends FormatterBase {
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
     $options = array(
@@ -48,7 +48,7 @@ abstract class DefaultNumberFormatter extends FormatterBase {
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsSummary() {
     $summary = array();
@@ -58,11 +58,11 @@ abstract class DefaultNumberFormatter extends FormatterBase {
       $summary[] = t('Display with prefix and suffix.');
     }
 
-    return implode('<br />', $summary);
+    return $summary;
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::viewElements().
+   * {@inheritdoc}
    */
   public function viewElements(EntityInterface $entity, $langcode, array $items) {
     $elements = array();

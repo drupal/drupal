@@ -109,7 +109,7 @@ class LinkFormatter extends FormatterBase {
       $summary[] = t('Open link in new window');
     }
 
-    return implode('<br />', $summary);
+    return $summary;
   }
 
   /**

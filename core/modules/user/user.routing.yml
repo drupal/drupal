@@ -25,3 +25,32 @@ user_account_settings:
     _form: '\Drupal\user\AccountSettingsForm'
   requirements:
     _permission: 'administer users'
+
+user_role_list:
+  pattern: '/admin/people/roles'
+  defaults:
+    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
+    entity_type: 'user_role'
+  requirements:
+    _permission: 'administer permissions'
+
+user_role_add:
+  pattern: '/admin/people/roles/add'
+  defaults:
+    _entity_form: user_role.default
+  requirements:
+    _permission: 'administer permissions'
+
+user_role_edit:
+  pattern: '/admin/people/roles/manage/{user_role}'
+  defaults:
+    _entity_form: user_role.default
+  requirements:
+    _entity_access: user_role.update
+
+user_role_delete:
+  pattern: '/admin/people/roles/manage/{user_role}/delete'
+  defaults:
+    _form: '\Drupal\user\Form\UserRoleDelete'
+  requirements:
+    _entity_access: user_role.delete

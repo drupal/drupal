@@ -93,10 +93,10 @@ function hook_field_instance_settings_form($field, $instance, $form_state) {
 }
 
 /**
- * Alter the formatter settings form.
+ * Alters the formatter settings form.
  *
  * @param $element
- *   Form array as returned by hook_field_formatter_settings_form().
+ *   Form array.
  * @param $form_state
  *   The form state of the (entire) configuration form.
  * @param $context
@@ -106,6 +106,8 @@ function hook_field_instance_settings_form($field, $instance, $form_state) {
  *   - instance: The instance structure being configured.
  *   - view_mode: The view mode being configured.
  *   - form: The (entire) configuration form array.
+ *
+ * @see \Drupal\field_ui\DisplayOverView.
  */
 function hook_field_formatter_settings_form_alter(&$element, &$form_state, $context) {
   // Add a 'mysetting' checkbox to the settings form for 'foo_field' fields.
@@ -119,23 +121,25 @@ function hook_field_formatter_settings_form_alter(&$element, &$form_state, $cont
 }
 
 /**
- * Alter the field formatter settings summary.
+ * Alters the field formatter settings summary.
  *
  * @param $summary
- *   The summary as returned by hook_field_formatter_settings_summary().
+ *   The summary.
  * @param $context
  *   An associative array with the following elements:
  *   - formatter: The formatter object.
  *   - field: The field structure being configured.
  *   - instance: The instance structure being configured.
  *   - view_mode: The view mode being configured.
+ *
+ * @see \Drupal\field_ui\DisplayOverView.
  */
 function hook_field_formatter_settings_summary_alter(&$summary, $context) {
   // Append a message to the summary when an instance of foo_field has
   // mysetting set to TRUE for the current view mode.
   if ($context['field']['type'] == 'foo_field') {
     if ($context['formatter']->getSetting('mysetting')) {
-      $summary .= '<br />' . t('My setting enabled.');
+      $summary[] = t('My setting enabled.');
     }
   }
 }

@@ -21,6 +21,7 @@ use Drupal\user\RoleInterface;
  *   module = "user",
  *   controllers = {
  *     "storage" = "Drupal\user\RoleStorageController",
+ *     "access" = "Drupal\user\RoleAccessController",
  *     "list" = "Drupal\user\RoleListController",
  *     "form" = {
  *       "default" = "Drupal\user\RoleFormController"
