@@ -10,6 +10,8 @@
  * book page, user etc.
  */
 
+use Drupal\comment\CommentInterface;
+use Drupal\comment\Plugin\Core\Entity\Comment;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\file\Plugin\Core\Entity\File;
 use Drupal\Core\Entity\EntityInterface;
@@ -19,7 +21,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 // Load all Field module hooks for Comment.
-require_once DRUPAL_ROOT . '/core/modules/comment/comment.field.inc';
+require __DIR__ . '/comment.field.inc';
 
 /**
  * Comment is awaiting approval.
@@ -100,8 +102,6 @@ const COMMENT_ACCESS_DENY = 'deny';
  * @todo remove when http://drupal.org/node/1029708 lands.
  */
 define('COMMENT_NEW_LIMIT', REQUEST_TIME - 30 * 24 * 60 * 60);
-
-use Drupal\comment\Plugin\Core\Entity\Comment;
 
 /**
  * Implements hook_help().
@@ -458,21 +458,10 @@ function comment_entity_reply_load($entity_id, $args) {
  *   TRUE or FALSE if the user has access
  */
 function comment_reply_access(EntityInterface $entity) {
-  $function = $entity->entityType() . '_access';
-  // @todo replace this with entity access controls once generic access
-  // controller lands.
-  // @see http://drupal.org/node/1696660
-  if (function_exists($function)) {
-    switch ($function) {
-      case 'user_access':
-        return $entity->access('view');
-
-      case 'taxonomy_term_access':
-        return user_access('access content');
-
-      default:
-        return $function('view', $entity);
-    }
+  $access = $entity->access('view');
+  if (isset($access)) {
+    // Inherit view access of parent entity.
+    return $access;
   }
 
   // We can't know how to control access to this entity, invoke
@@ -570,13 +559,13 @@ function comment_permission() {
  * calculates the page number based on current comment settings and returns
  * the full comment view with the pager set dynamically.
  *
- * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
+ * @param \Drupal\comment\CommentInterface $comment
  *   A comment entity.
  *
  * @return
  *   The comment listing set to the page on which the comment appears.
  */
-function comment_permalink(Comment $comment) {
+function comment_permalink(CommentInterface $comment) {
   if ($entity = entity_load($comment->entity_type->value, $comment->entity_id->value)) {
     $instance = field_info_instance($entity->entityType(), $comment->field_name->value, $entity->bundle());
     // Find the current display page for this comment.
@@ -911,7 +900,7 @@ function comment_prepare_thread(&$comments) {
 /**
  * Generates an array for rendering a comment.
  *
- * @param \Drupal\comment\Plugin\Core\Entity\comment $comment
+ * @param \Drupal\comment\CommentInterface $comment
  *   The comment object.
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity the comment is attached to.
@@ -924,14 +913,14 @@ function comment_prepare_thread(&$comments) {
  * @return
  *   An array as expected by drupal_render().
  */
-function comment_view(Comment $comment, $view_mode = 'full', $langcode = NULL) {
+function comment_view(CommentInterface $comment, $view_mode = 'full', $langcode = NULL) {
   return entity_view($comment, $view_mode, $langcode);
 }
 
 /**
  * Adds reply, edit, delete, etc. links, depending on user permissions.
  *
- * @param \Drupal\comment\Plugin\Core\Entity\comment $comment
+ * @param \Drupal\comment\CommentInterface $comment
  *   The comment object.
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity the comment is attached to.
@@ -941,7 +930,7 @@ function comment_view(Comment $comment, $view_mode = 'full', $langcode = NULL) {
  * @return
  *   A structured array of links.
  */
-function comment_links(Comment $comment, EntityInterface $entity, $field_name) {
+function comment_links(CommentInterface $comment, EntityInterface $entity, $field_name) {
   $links = array();
   $status = _comment_get_default_status(field_get_items($entity, $field_name));
   if ($status == COMMENT_OPEN) {
@@ -1122,7 +1111,7 @@ function comment_entity_insert(EntityInterface $entity) {
   // Allow bulk updates and inserts to temporarily disable the
   // maintenance of the {comment_entity_statistics} table.
   $fields = comment_get_comment_fields($entity->entityType());
-  if ($fields && state()->get('comment.maintain_entity_statistics', TRUE)) {
+  if ($fields && state()->get('comment.maintain_entity_statistics')) {
     $query = db_insert('comment_entity_statistics')
      ->fields(array(
       'entity_id',
@@ -1285,36 +1274,12 @@ function comment_user_predelete($account) {
 }
 
 /**
- * Determines whether the current user has access to a particular comment.
- *
- * Authenticated users can edit their comments as long they have not been
- * replied to. This prevents people from changing or revising their statements
- * based on the replies to their posts.
- *
- * @param $op
- *   The operation that is to be performed on the comment. Only 'edit' is
- *   recognized now.
- * @param \Drupal\comment\Plugin\Core\Entity\comment $comment
- *   The comment object.
- *
- * @return
- *   TRUE if the current user has acces to the comment, FALSE otherwise.
- */
-function comment_access($op, Comment $comment) {
-  global $user;
-
-  if ($op == 'edit') {
-    return ($user->uid && $user->uid == $comment->uid->target_id && $comment->status->value == COMMENT_PUBLISHED && user_access('edit own comments')) || user_access('administer comments');
-  }
-}
-
-/**
  * Accepts a submission of new or changed comment content.
  *
- * @param \Drupal\comment\Plugin\Core\Entity\comment $comment
+ * @param \Drupal\comment\CommentInterface $comment
  *   A comment object.
  */
-function comment_save(Comment $comment) {
+function comment_save(CommentInterface $comment) {
   $comment->save();
 }
 
@@ -1502,9 +1467,9 @@ function comment_get_display_page($cid, $instance) {
 /**
  * Generates a comment preview.
  *
- * @param \Drupal\comment\Plugin\Core\Entity\comment $comment
+ * @param \Drupal\comment\CommentInterface $comment
  */
-function comment_preview(Comment $comment) {
+function comment_preview(CommentInterface $comment) {
   global $user;
   $preview_build = array();
   $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
@@ -1574,10 +1539,13 @@ function comment_preprocess_block(&$variables) {
  * This helper handles anonymous authors in addition to registered comment
  * authors.
  *
+ * @param \Drupal\comment\CommentInterface $comment
+ *   The comment to provide author.
+ *
  * @return \Drupal\user\Plugin\Core\Entity\User
  *   A user account, for use with theme_username() or the user_picture template.
  */
-function comment_prepare_author(Comment $comment) {
+function comment_prepare_author(CommentInterface $comment) {
   // The account has been pre-loaded by CommentRenderController::buildContent().
   $account = $comment->uid->entity;
   if (!$account) {
@@ -1854,7 +1822,7 @@ function comment_action_info() {
 /**
  * Publishes a comment.
  *
- * @param \Drupal\comment\Plugin\Core\Entity\comment $comment
+ * @param \Drupal\comment\CommentInterface $comment
  *   (optional) A comment object to publish.
  * @param array $context
  *   Array with components:
@@ -1862,7 +1830,7 @@ function comment_action_info() {
  *
  * @ingroup actions
  */
-function comment_publish_action(Comment $comment = NULL, $context = array()) {
+function comment_publish_action(CommentInterface $comment = NULL, $context = array()) {
   if (isset($comment->subject->value)) {
     $subject = $comment->subject->value;
     $comment->status->value = COMMENT_PUBLISHED;
@@ -1881,7 +1849,7 @@ function comment_publish_action(Comment $comment = NULL, $context = array()) {
 /**
  * Unpublishes a comment.
  *
- * @param \Drupal\comment\Plugin\Core\Entity\comment|null $comment
+ * @param \Drupal\comment\CommentInterface|null $comment
  *   (optional) A comment object to unpublish.
  * @param array $context
  *   Array with components:
@@ -1889,7 +1857,7 @@ function comment_publish_action(Comment $comment = NULL, $context = array()) {
  *
  * @ingroup actions
  */
-function comment_unpublish_action(Comment $comment = NULL, $context = array()) {
+function comment_unpublish_action(CommentInterface $comment = NULL, $context = array()) {
   if (isset($comment->subject->value)) {
     $subject = $comment->subject->value;
     $comment->status->value = COMMENT_NOT_PUBLISHED;
@@ -1908,7 +1876,7 @@ function comment_unpublish_action(Comment $comment = NULL, $context = array()) {
 /**
  * Unpublishes a comment if it contains certain keywords.
  *
- * @param \Drupal\comment\Plugin\Core\Entity\comment $comment
+ * @param \Drupal\comment\CommentInterface $comment
  *   Comment object to modify.
  * @param array $context
  *   Array with components:
@@ -1919,7 +1887,7 @@ function comment_unpublish_action(Comment $comment = NULL, $context = array()) {
  * @see comment_unpublish_by_keyword_action_form()
  * @see comment_unpublish_by_keyword_action_submit()
  */
-function comment_unpublish_by_keyword_action(Comment $comment, $context) {
+function comment_unpublish_by_keyword_action(CommentInterface $comment, $context) {
   $build = comment_view($comment);
   $text = drupal_render($build);
   foreach ($context['keywords'] as $keyword) {
@@ -1961,11 +1929,11 @@ function comment_unpublish_by_keyword_action_submit($form, $form_state) {
 /**
  * Saves a comment.
  *
- * @param \Drupal\comment\Plugin\Core\Entity\comment $comment
+ * @param \Drupal\comment\CommentInterface $comment
  *
  * @ingroup actions
  */
-function comment_save_action(Comment $comment) {
+function comment_save_action(CommentInterface $comment) {
   comment_save($comment);
   cache_invalidate_tags(array('content' => TRUE));
   watchdog('action', 'Saved comment %title', array('%title' => $comment->subject->value));
@@ -2099,13 +2067,13 @@ function comment_get_comment_fields($entity_type = NULL) {
 /**
  * Decide on the type of marker to be shown for a comment.
  *
- * @param Comment $comment
+ * @param \Drupal\comment\CommentInterface $comment
  *   The comment for which the marker is to be shown.
  *
  * @return int
  *   The type of marker to be shown one of MARK_READ, MARK_UPDATED or MARK_NEW.
  */
-function comment_mark(Comment $comment) {
+function comment_mark(CommentInterface $comment) {
   global $user;
   $cache = &drupal_static(__FUNCTION__, array());
   $cid = $comment->entity_id->value . '__' . $comment->entity_type->value;

@@ -82,7 +82,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
   $query = db_select('comment', 'c')
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
     ->extend('Drupal\Core\Database\Query\TableSortExtender');
-  if (module_exists('node')) {
+  if (Drupal::moduleHandler()->moduleExists('node')) {
     // Special case to ensure node access works.
     $query->leftJoin('node', 'n', "n.nid = c.entity_id AND c.entity_type = 'node'");
     $query->addTag('node_access');
