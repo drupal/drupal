@@ -40,7 +40,7 @@ class CommentFormController extends EntityFormControllerNG {
     // If not replying to a comment, use our dedicated page callback for new
     // comments on entities.
     if (!$comment->id() && empty($comment->pid->target_id)) {
-      $form['#action'] = url('comment/reply/' . $comment->entity_type->value . '/' . $comment->entity_id->target_id . '/' . $comment->field_name->value);
+      $form['#action'] = url('comment/reply/' . $comment->entity_type->value . '/' . $comment->entity_id->value . '/' . $comment->field_name->value);
     }
 
     if (isset($form_state['comment_preview'])) {

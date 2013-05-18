@@ -41,7 +41,7 @@ class CommentRenderController extends EntityRenderController {
     $comment_entity_ids = array();
     $comment_entities = array();
     foreach ($entities as $entity) {
-      $comment_entity_ids[$entity->entity_type->value][] = $entity->entity_id->target_id;
+      $comment_entity_ids[$entity->entity_type->value][] = $entity->entity_id->value;
     }
     // Load entities in bulk, this is more performant than using
     // $comment->entity_id->value as we can load them in bulk per-type.
@@ -50,8 +50,8 @@ class CommentRenderController extends EntityRenderController {
     }
 
     foreach ($entities as $entity) {
-      if (isset($comment_entities[$entity->entity_type->value][$entity->entity_id->target_id])) {
-        $comment_entity = $comment_entities[$entity->entity_type->value][$entity->entity_id->target_id];
+      if (isset($comment_entities[$entity->entity_type->value][$entity->entity_id->value])) {
+        $comment_entity = $comment_entities[$entity->entity_type->value][$entity->entity_id->value];
       }
       else {
         throw new \InvalidArgumentException(t('Invalid entity for comment.'));
@@ -82,7 +82,7 @@ class CommentRenderController extends EntityRenderController {
     parent::alterBuild($build, $comment, $display, $view_mode, $langcode);
     if (empty($comment->in_preview)) {
       $prefix = '';
-      $comment_entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
+      $comment_entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
       $instance = field_info_instance($comment_entity->entityType(), $comment->field_name->value, $comment_entity->bundle());
       $is_threaded = isset($comment->divs)
         && $instance['settings']['default_mode'] == COMMENT_MODE_THREADED;

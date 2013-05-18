@@ -76,7 +76,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
           // This is a comment with no parent comment (depth 0): we start
           // by retrieving the maximum thread level.
           $query = db_select('comment', 'c')
-            ->condition('entity_id', $comment->entity_id->target_id)
+            ->condition('entity_id', $comment->entity_id->value)
             ->condition('field_name', $comment->field_name->value)
             ->condition('entity_type', $comment->entity_type->value);
           $query->addExpression('MAX(thread)', 'thread');
@@ -100,7 +100,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
           $prefix = $parent->thread->value . '.';
           // Get the max value in *this* thread.
           $query = db_select('comment', 'c')
-            ->condition('entity_id', $comment->entity_id->target_id)
+            ->condition('entity_id', $comment->entity_id->value)
             ->condition('field_name', $comment->field_name->value)
             ->condition('entity_type', $comment->entity_type->value)
             ->condition('thread', $parent->thread->value . '.%', 'LIKE');
@@ -128,7 +128,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
         // has the lock, just move to the next integer.
         do {
           $thread = $prefix . comment_int_to_alphadecimal(++$n) . '/';
-        } while (!lock()->acquire("comment:{$comment->entity_id->target_id}:{$comment->entity_type->value}:$thread"));
+        } while (!lock()->acquire("comment:{$comment->entity_id->value}:{$comment->entity_type->value}:$thread"));
         $this->threadLock = $thread;
       }
       if (empty($comment->created->value)) {

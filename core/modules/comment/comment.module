@@ -962,7 +962,7 @@ function comment_links(Comment $comment, EntityInterface $entity, $field_name) {
     if ($comment->access('create')) {
       $links['comment-reply'] = array(
         'title' => t('reply'),
-        'href' => "comment/reply/{$comment->entity_type->value}/{$comment->entity_id->target_id}/{$comment->field_name->value}/{$comment->id()}",
+        'href' => "comment/reply/{$comment->entity_type->value}/{$comment->entity_id->value}/{$comment->field_name->value}/{$comment->id()}",
         'html' => TRUE,
       );
     }
@@ -1593,7 +1593,7 @@ function comment_prepare_author(Comment $comment) {
  */
 function template_preprocess_comment(&$variables) {
   $comment = $variables['elements']['#comment'];
-  $comment_entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
+  $comment_entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
   $variables['comment'] = $comment;
   $variables['comment_entity'] = $comment_entity;
 

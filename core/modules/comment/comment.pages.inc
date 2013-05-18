@@ -67,7 +67,7 @@ function comment_reply(EntityInterface $entity, $field_name, $pid = NULL) {
         if ($comment->status->value == COMMENT_PUBLISHED) {
           // If that comment exists, make sure that the current comment and the
           // parent comment both belong to the same parent node.
-          if ($comment->entity_id->target_id != $entity->id() ||
+          if ($comment->entity_id->value != $entity->id() ||
               $comment->field_name->value != $field_name ||
               $comment->entity_type->value != $entity->entityType()) {
             // Attempting to reply to a comment not belonging to the current entity.
@@ -141,7 +141,7 @@ function comment_approve(Comment $comment) {
   $comment->save();
 
   drupal_set_message(t('Comment approved.'));
-  $entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
+  $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
   if ($entity) {
     $uri = $entity->uri();
     drupal_goto($uri['path']);

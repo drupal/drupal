@@ -116,7 +116,7 @@ class DefaultViewRecentComments extends ViewTestBase {
     );
     $expected_result = array();
     foreach (array_values($this->commentsCreated) as $key => $comment) {
-      $expected_result[$key]['entity_id'] = $comment->entity_id->target_id;
+      $expected_result[$key]['entity_id'] = $comment->entity_id->value;
       $expected_result[$key]['subject'] = $comment->subject->value;
       $expected_result[$key]['cid'] = $comment->id();
       $expected_result[$key]['changed'] = $comment->changed->value;
@@ -148,7 +148,7 @@ class DefaultViewRecentComments extends ViewTestBase {
     );
     $expected_result = array();
     foreach (array_values($this->commentsCreated) as $key => $comment) {
-      $expected_result[$key]['entity_id'] = $comment->entity_id->target_id;
+      $expected_result[$key]['entity_id'] = $comment->entity_id->value;
       $expected_result[$key]['subject'] = $comment->subject->value;
       $expected_result[$key]['changed'] = $comment->changed->value;
       $expected_result[$key]['created'] = $comment->created->value;

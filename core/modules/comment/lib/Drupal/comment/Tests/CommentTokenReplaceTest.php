@@ -64,7 +64,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:changed:since]'] = format_interval(REQUEST_TIME - $comment->changed->value, 2, $language_interface->langcode);
     $tests['[comment:parent:cid]'] = $comment->pid->target_id;
     $tests['[comment:parent:title]'] = check_plain($parent_comment->subject->value);
-    $tests['[comment:node:nid]'] = $comment->entity_id->target_id;
+    $tests['[comment:node:nid]'] = $comment->entity_id->value;
     $tests['[comment:node:title]'] = check_plain($node->title);
     $tests['[comment:author:uid]'] = $comment->uid->target_id;
     $tests['[comment:author:name]'] = check_plain($this->admin_user->name);

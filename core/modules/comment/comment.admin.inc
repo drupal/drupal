@@ -321,7 +321,7 @@ function comment_confirm_delete_submit($form, &$form_state) {
   // Clear the cache so an anonymous user sees that his comment was deleted.
   cache_invalidate_tags(array('content' => TRUE));
 
-  $entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
+  $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
   $uri = $entity->uri();
   $form_state['redirect'] = $uri['path'];
 }

@@ -199,14 +199,14 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'entity':
-          $entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
+          $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
           $title = $entity->label();
           $replacements[$original] = $sanitize ? filter_xss($title) : $title;
           break;
 
         case 'node':
           if ($comment->entity_type->value == 'node') {
-            $entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
+            $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
             $title = $entity->label();
             $replacements[$original] = $sanitize ? filter_xss($title) : $title;
           }
@@ -219,12 +219,12 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
 
     // Chained token relationships.
     if ($entity_tokens = $token_service->findwithPrefix($tokens, 'entity')) {
-      $entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
+      $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
       $replacements += $token_service->generate($comment->entity_type->value, $entity_tokens, array($comment->entity_type->value => $entity), $options);
     }
 
     if (($node_tokens = $token_service->findwithPrefix($tokens, 'node')) && $comment->entity_type->value == 'node') {
-      $node = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
+      $node = entity_load($comment->entity_type->value, $comment->entity_id->value);
       $replacements += $token_service->generate('node', $node_tokens, array('node' => $node), $options);
     }
 
