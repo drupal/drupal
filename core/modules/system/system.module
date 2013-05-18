@@ -1338,6 +1338,7 @@ function system_library_info() {
     ),
     'dependencies' => array(
       array('system', 'jquery'),
+      array('system', 'modernizr'),
       array('system', 'drupal'),
       array('system', 'drupalSettings'),
       array('system', 'jquery.once'),
