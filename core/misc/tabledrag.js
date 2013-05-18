@@ -120,10 +120,17 @@ Drupal.tableDrag = function (table, tableSettings) {
   // manipulate form elements directly, rather than using drag-and-drop..
   self.initColumns();
 
-  // Add mouse bindings to the document. The self variable is passed along
+  // Add event bindings to the document. The self variable is passed along
   // as event handlers do not have direct access to the tableDrag object.
-  $(document).bind('mousemove', function (event) { return self.dragRow(event, self); });
-  $(document).bind('mouseup', function (event) { return self.dropRow(event, self); });
+  if (Modernizr.touch) {
+    $(document).bind('touchmove', function (event) { return self.dragRow(event.originalEvent.touches[0], self); });
+    $(document).bind('touchend', function (event) { return self.dropRow(event.originalEvent.touches[0], self); });
+  }
+  else {
+    $(document).bind('mousemove', function (event) { return self.dragRow(event, self); });
+    $(document).bind('mouseup', function (event) { return self.dropRow(event, self); });
+  }
+
   // React to localStorage event showing or hiding weight columns.
   $(window).bind('storage', $.proxy(function (e) {
     // Only react to 'Drupal.tableDrag.showWeight' value change.
@@ -302,7 +309,8 @@ Drupal.tableDrag.prototype.rowSettings = function (group, row) {
 Drupal.tableDrag.prototype.makeDraggable = function (item) {
   var self = this;
   var $item = $(item);
-
+  //Add a class to the title link
+  $item.find('td:first a').addClass('menu-item__link');
   // Create the handle.
   var handle = $('<a href="#" class="tabledrag-handle"><div class="handle">&nbsp;</div></a>').attr('title', Drupal.t('Drag to re-order'));
   // Insert the handle after indentations (if any).
@@ -316,68 +324,33 @@ Drupal.tableDrag.prototype.makeDraggable = function (item) {
     $item.find('td:first').prepend(handle);
   }
 
-  // Add hover action for the handle.
-  handle.hover(function () {
-    self.dragObject === null ? $(this).addClass('tabledrag-handle-hover') : null;
-  }, function () {
-    self.dragObject === null ? $(this).removeClass('tabledrag-handle-hover') : null;
-  });
-
-  // Add the mousedown action for the handle.
-  handle.mousedown(function (event) {
-    event.preventDefault();
-    // Create a new dragObject recording the event information.
-    self.dragObject = {};
-    self.dragObject.initMouseOffset = self.getMouseOffset(item, event);
-    self.dragObject.initMouseCoords = self.mouseCoords(event);
-    if (self.indentEnabled) {
-      self.dragObject.indentMousePos = self.dragObject.initMouseCoords;
-    }
-
-    // If there's a lingering row object from the keyboard, remove its focus.
-    if (self.rowObject) {
-      $(self.rowObject.element).find('a.tabledrag-handle').blur();
-    }
-
-    // Create a new rowObject for manipulation of this row.
-    self.rowObject = new self.row(item, 'mouse', self.indentEnabled, self.maxDepth, true);
-
-    // Save the position of the table.
-    self.table.topY = $(self.table).offset().top;
-    self.table.bottomY = self.table.topY + self.table.offsetHeight;
-
-    // Add classes to the handle and row.
-    $(this).addClass('tabledrag-handle-hover');
-    $(item).addClass('drag');
-
-    // Set the document to use the move cursor during drag.
-    $('body').addClass('drag');
-    if (self.oldRowElement) {
-      $(self.oldRowElement).removeClass('drag-previous');
-    }
-
-    // Hack for Konqueror, prevent the blur handler from firing.
-    // Konqueror always gives links focus, even after returning false on mousedown.
-    self.safeBlur = false;
-
-    // Call optional placeholder function.
-    self.onDrag();
-  });
+  if (Modernizr.touch) {
+    handle.on('touchstart', function (event) {
+      event.preventDefault();
+      event = event.originalEvent.touches[0];
+      self.dragStart(event, self, item);
+    });
+  }
+  else {
+    handle.mousedown(function (event) {
+      event.preventDefault();
+      self.dragStart(event, self, item);
+    });
+  }
 
   // Prevent the anchor tag from jumping us to the top of the page.
   handle.click(function (e) {
     e.preventDefault();
   });
 
-  // Similar to the hover event, add a class when the handle is focused.
+  // Set blur cleanup when a handle is focused.
   handle.focus(function () {
-    $(this).addClass('tabledrag-handle-hover');
     self.safeBlur = true;
   });
 
-  // Remove the handle class on blur and fire the same function as a mouseup.
+  // On blur, fire the same function as a touchend/mouseup. This is used to
+  // update values after a row has been moved through the keyboard support.
   handle.blur(function (event) {
-    $(this).removeClass('tabledrag-handle-hover');
     if (self.rowObject && self.safeBlur) {
       self.dropRow(event, self);
     }
@@ -511,14 +484,54 @@ Drupal.tableDrag.prototype.makeDraggable = function (item) {
 };
 
 /**
- * Mousemove event handler, bound to document.
+ * Pointer event initiator, creates drag object and information.
+ *
+ * @param jQuery.Event event
+ *   The event object that trigger the drag.
+ * @param Drupal.tableDrag self
+ *   The drag handle.
+ * @param DOM item
+ *   The item that that is being dragged.
+ */
+Drupal.tableDrag.prototype.dragStart = function (event, self, item) {
+  // Create a new dragObject recording the pointer information.
+  self.dragObject = {};
+  self.dragObject.initOffset = self.getPointerOffset(item, event);
+  self.dragObject.initPointerCoords = self.pointerCoords(event);
+  if (self.indentEnabled) {
+    self.dragObject.indentPointerPos = self.dragObject.initPointerCoords;
+  }
+
+  // If there's a lingering row object from the keyboard, remove its focus.
+  if (self.rowObject) {
+    $(self.rowObject.element).find('a.tabledrag-handle').blur();
+  }
+
+  // Create a new rowObject for manipulation of this row.
+  self.rowObject = new self.row(item, 'pointer', self.indentEnabled, self.maxDepth, true);
+
+  // Save the position of the table.
+  self.table.topY = $(self.table).offset().top;
+  self.table.bottomY = self.table.topY + self.table.offsetHeight;
+
+  // Add classes to the handle and row.
+  $(item).addClass('drag');
+
+  // Set the document to use the move cursor during drag.
+  $('body').addClass('drag');
+  if (self.oldRowElement) {
+    $(self.oldRowElement).removeClass('drag-previous');
+  }
+}
+
+/**
+ * Pointer movement handler, bound to document.
  */
 Drupal.tableDrag.prototype.dragRow = function (event, self) {
   if (self.dragObject) {
-    self.currentMouseCoords = self.mouseCoords(event);
-
-    var y = self.currentMouseCoords.y - self.dragObject.initMouseOffset.y;
-    var x = self.currentMouseCoords.x - self.dragObject.initMouseOffset.x;
+    self.currentPointerCoords = self.pointerCoords(event);
+    var y = self.currentPointerCoords.y - self.dragObject.initOffset.y;
+    var x = self.currentPointerCoords.x - self.dragObject.initOffset.x;
 
     // Check for row swapping and vertical scrolling.
     if (y !== self.oldY) {
@@ -526,7 +539,7 @@ Drupal.tableDrag.prototype.dragRow = function (event, self) {
       self.oldY = y; // Update the old value.
 
       // Check if the window should be scrolled (and how fast).
-      var scrollAmount = self.checkScroll(self.currentMouseCoords.y);
+      var scrollAmount = self.checkScroll(self.currentPointerCoords.y);
       // Stop any current scrolling.
       clearInterval(self.scrollInterval);
       // Continue scrolling if the mouse has moved in the scroll direction.
@@ -549,14 +562,14 @@ Drupal.tableDrag.prototype.dragRow = function (event, self) {
 
     // Similar to row swapping, handle indentations.
     if (self.indentEnabled) {
-      var xDiff = self.currentMouseCoords.x - self.dragObject.indentMousePos.x;
-      // Set the number of indentations the mouse has been moved left or right.
+      var xDiff = self.currentPointerCoords.x - self.dragObject.indentPointerPos.x;
+      // Set the number of indentations the pointer has been moved left or right.
       var indentDiff = Math.round(xDiff / self.indentAmount * self.rtl);
       // Indent the row with our estimated diff, which may be further
       // restricted according to the rows around this row.
       var indentChange = self.rowObject.indent(indentDiff);
-      // Update table and mouse indentations.
-      self.dragObject.indentMousePos.x += self.indentAmount * indentChange * self.rtl;
+      // Update table and pointer indentations.
+      self.dragObject.indentPointerPos.x += self.indentAmount * indentChange * self.rtl;
       self.indentCount = Math.max(self.indentCount, self.rowObject.indents);
     }
 
@@ -565,13 +578,12 @@ Drupal.tableDrag.prototype.dragRow = function (event, self) {
 };
 
 /**
- * Mouseup event handler, bound to document.
- * Blur event handler, bound to drag handle for keyboard support.
+ * Pointerup behaviour.
  */
 Drupal.tableDrag.prototype.dropRow = function (event, self) {
   var droppedRow, $droppedRow;
 
-  // Drop row functionality shared between mouseup and blur events.
+  // Drop row functionality.
   if (self.rowObject !== null) {
     droppedRow = self.rowObject.element;
     $droppedRow = $(droppedRow);
@@ -614,10 +626,8 @@ Drupal.tableDrag.prototype.dropRow = function (event, self) {
     self.rowObject = null;
   }
 
-  // Functionality specific only to mouseup event.
+  // Functionality specific only to pointerup events.
   if (self.dragObject !== null) {
-    $droppedRow.find('.tabledrag-handle').removeClass('tabledrag-handle-hover');
-
     self.dragObject = null;
     $('body').removeClass('drag');
     clearInterval(self.scrollInterval);
@@ -625,9 +635,9 @@ Drupal.tableDrag.prototype.dropRow = function (event, self) {
 };
 
 /**
- * Get the mouse coordinates from the event (allowing for browser differences).
+ * Get the coordinates from the event (allowing for browser differences).
  */
-Drupal.tableDrag.prototype.mouseCoords = function (event) {
+Drupal.tableDrag.prototype.pointerCoords = function (event) {
   if (event.pageX || event.pageY) {
     return { x: event.pageX, y: event.pageY };
   }
@@ -638,13 +648,13 @@ Drupal.tableDrag.prototype.mouseCoords = function (event) {
 };
 
 /**
- * Given a target element and a mouse event, get the mouse offset from that
- * element. To do this we need the element's position and the mouse position.
+ * Given a target element and a pointer event, get the event offset from that
+ * element. To do this we need the element's position and the target position.
  */
-Drupal.tableDrag.prototype.getMouseOffset = function (target, event) {
-  var docPos   = $(target).offset();
-  var mousePos = this.mouseCoords(event);
-  return { x: mousePos.x - docPos.left, y: mousePos.y - docPos.top };
+Drupal.tableDrag.prototype.getPointerOffset = function (target, event) {
+  var docPos = $(target).offset();
+  var pointerPos = this.pointerCoords(event);
+  return { x: pointerPos.x - docPos.left, y: pointerPos.y - docPos.top };
 };
 
 /**
@@ -903,7 +913,7 @@ Drupal.tableDrag.prototype.setScroll = function (scrollAmount) {
 
   this.scrollInterval = setInterval(function () {
     // Update the scroll values stored in the object.
-    self.checkScroll(self.currentMouseCoords.y);
+    self.checkScroll(self.currentPointerCoords.y);
     var aboveTable = self.scrollY > self.table.topY;
     var belowTable = self.scrollY + self.windowHeight < self.table.bottomY;
     if (scrollAmount > 0 && belowTable || scrollAmount < 0 && aboveTable) {
