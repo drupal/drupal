@@ -3,8 +3,6 @@
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Cache\Cache;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Yaml\Parser;
 use Drupal\Component\PhpStorage\PhpStorageFactory;
 use Drupal\Component\Utility\NestedArray;
@@ -6069,10 +6067,11 @@ function drupal_implode_tags($tags) {
  *   requests.
  */
 function drupal_flush_all_caches() {
+  $module_handler = Drupal::moduleHandler();
   // Flush all persistent caches.
   // This is executed based on old/previously known information, which is
   // sufficient, since new extensions cannot have any primed caches yet.
-  module_invoke_all('cache_flush');
+  $module_handler->invokeAll('cache_flush');
   foreach (Cache::getBins() as $service_id => $cache_backend) {
     if ($service_id != 'cache.menu') {
       $cache_backend->deleteAll();
@@ -6088,16 +6087,32 @@ function drupal_flush_all_caches() {
   drupal_static_reset();
 
   // Clear all non-drupal_static() static caches.
-  // @todo Rebuild the kernel/container.
   Drupal::entityManager()->clearCachedDefinitions();
 
+  // Wipe the PHP Storage caches.
+  PhpStorageFactory::get('service_container')->deleteAll();
+  PhpStorageFactory::get('twig')->deleteAll();
+
   // Rebuild module and theme data.
-  system_rebuild_module_data();
+  $module_data = system_rebuild_module_data();
   system_rebuild_theme_data();
+
+  // Rebuild and reboot a new kernel. A simple DrupalKernel reboot is not
+  // sufficient, since the list of enabled modules might have been adjusted
+  // above due to changed code.
+  $files = array();
+  foreach ($module_data as $module => $data) {
+    if (isset($data->uri) && $data->status) {
+      $files[$module] = $data->uri;
+    }
+  }
+  Drupal::service('kernel')->updateModules($module_handler->getModuleList(), $files);
+  // New container, new module handler.
+  $module_handler = Drupal::moduleHandler();
 
   // Ensure that all modules that are currently supposed to be enabled are
   // actually loaded.
-  drupal_container()->get('module_handler')->loadAll();
+  $module_handler->loadAll();
 
   // Update the list of bootstrap modules.
   // Allows developers to get new bootstrap hooks implementations registered
@@ -6113,17 +6128,13 @@ function drupal_flush_all_caches() {
   drupal_get_schema(NULL, TRUE);
 
   // Rebuild all information based on new module data.
-  module_invoke_all('rebuild');
+  $module_handler->invokeAll('rebuild');
 
   // Rebuild the menu router based on all rebuilt data.
   // Important: This rebuild must happen last, so the menu router is guaranteed
   // to be based on up to date information.
-  drupal_container()->get('router.builder')->rebuild();
+  Drupal::service('router.builder')->rebuild();
   menu_router_rebuild();
-
-  // Wipe the PHP Storage caches.
-  PhpStorageFactory::get('service_container')->deleteAll();
-  PhpStorageFactory::get('twig')->deleteAll();
 
   // Re-initialize the maintenance theme, if the current request attempted to
   // use it. Unlike regular usages of this function, the installer and update
