@@ -98,6 +98,36 @@ class ConfigEntityListTest extends WebTestBase {
     );
     $actual_items = $controller->buildRow($entity);
     $this->assertIdentical($expected_items, $actual_items, 'Return value from buildRow matches expected.');
+
+    // Test that config entities that do not support status, do not have
+    // enable/disable operations.
+    $controller = $this->container->get('plugin.manager.entity')
+      ->getListController('config_test_no_status');
+
+    $list = $controller->load();
+    $entity = $list['default'];
+
+    // Test getOperations() method.
+    $uri = $entity->uri();
+    $expected_operations = array(
+      'edit' => array(
+        'title' => t('Edit'),
+        'href' => $uri['path'] . '/edit',
+        'options' => $uri['options'],
+        'weight' => 10,
+      ),
+      'delete' => array(
+        'title' => t('Delete'),
+        'href' => $uri['path'] . '/delete',
+        'options' => $uri['options'],
+        'weight' => 100,
+      ),
+    );
+
+    $actual_operations = $controller->getOperations($entity);
+    // Sort the operations to normalize link order.
+    uasort($actual_operations, 'drupal_sort_weight');
+    $this->assertIdentical($expected_operations, $actual_operations);
   }
 
   /**

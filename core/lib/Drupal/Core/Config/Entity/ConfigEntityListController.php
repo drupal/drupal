@@ -31,21 +31,23 @@ class ConfigEntityListController extends EntityListController {
     $operations = parent::getOperations($entity);
     $uri = $entity->uri();
 
-    if (!$entity->status()) {
-      $operations['enable'] = array(
-        'title' => t('Enable'),
-        'href' => $uri['path'] . '/enable',
-        'options' => $uri['options'],
-        'weight' => -10,
-      );
-    }
-    else {
-      $operations['disable'] = array(
-        'title' => t('Disable'),
-        'href' => $uri['path'] . '/disable',
-        'options' => $uri['options'],
-        'weight' => 20,
-      );
+    if (isset($this->entityInfo['entity_keys']['status'])) {
+      if (!$entity->status()) {
+        $operations['enable'] = array(
+          'title' => t('Enable'),
+          'href' => $uri['path'] . '/enable',
+          'options' => $uri['options'],
+          'weight' => -10,
+        );
+      }
+      else {
+        $operations['disable'] = array(
+          'title' => t('Disable'),
+          'href' => $uri['path'] . '/disable',
+          'options' => $uri['options'],
+          'weight' => 20,
+        );
+      }
     }
 
     return $operations;
