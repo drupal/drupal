@@ -17,6 +17,9 @@ function theme_test_theme($existing, $type, $theme, $path) {
   $items['theme_test_foo'] = array(
     'variables' => array('foo' => NULL),
   );
+  $items['theme_test_render_element_children'] = array(
+    'render element' => 'element',
+  );
   return $items;
 }
 
@@ -172,3 +175,17 @@ function theme_theme_test_foo($variables) {
   return $variables['foo'];
 }
 
+/**
+ * Theme function for testing rendering of child elements via drupal_render().
+ *
+ * Theme hooks defining a 'render element' add an internal '#render_children'
+ * property. When this property is found, drupal_render() avoids calling theme()
+ * on the top-level element to prevent infinite recursion.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ */
+function theme_theme_test_render_element_children($variables) {
+  return drupal_render($variables['element']);
+}

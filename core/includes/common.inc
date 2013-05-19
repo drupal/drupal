@@ -5233,8 +5233,10 @@ function drupal_render(&$elements) {
     $elements['#children'] = '';
   }
   // Call the element's #theme function if it is set. Then any children of the
-  // element have to be rendered there.
-  if (isset($elements['#theme'])) {
+  // element have to be rendered there. If the internal #render_children
+  // property is set, do not call the #theme function to prevent infinite
+  // recursion.
+  if (isset($elements['#theme']) && !isset($elements['#render_children'])) {
     $elements['#children'] = theme($elements['#theme'], $elements);
   }
   // If #theme was not set and the element has children, render them now.
@@ -5272,7 +5274,9 @@ function drupal_render(&$elements) {
   // the #type 'page' render array from drupal_render_page() would render the
   // $page and wrap it into the html.tpl.php template without the attached
   // assets otherwise.
-  if (isset($elements['#theme_wrappers'])) {
+  // If the internal #render_children property is set, do not call the
+  // #theme_wrappers function(s) to prevent infinite recursion.
+  if (isset($elements['#theme_wrappers']) && !isset($elements['#render_children'])) {
     foreach ($elements['#theme_wrappers'] as $theme_wrapper) {
       $elements['#children'] = theme($theme_wrapper, $elements);
     }

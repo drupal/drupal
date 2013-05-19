@@ -194,6 +194,27 @@ class ThemeTest extends WebTestBase {
   }
 
   /**
+   * Tests child element rendering for 'render element' theme hooks.
+   */
+  function testDrupalRenderChildren() {
+    $element = array(
+      '#theme' => 'theme_test_render_element_children',
+      'child' => array(
+        '#markup' => 'Foo',
+      ),
+    );
+    $this->assertIdentical(theme('theme_test_render_element_children', $element), 'Foo', 'drupal_render() avoids #theme recursion loop when rendering a render element.');
+
+    $element = array(
+      '#theme_wrappers' => array('theme_test_render_element_children'),
+      'child' => array(
+        '#markup' => 'Foo',
+      ),
+    );
+    $this->assertIdentical(theme('theme_test_render_element_children', $element), 'Foo', 'drupal_render() avoids #theme_wrappers recursion loop when rendering a render element.');
+  }
+
+  /**
    * Tests theme can provide classes.
    */
   function testClassLoading() {

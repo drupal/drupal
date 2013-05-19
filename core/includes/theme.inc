@@ -1036,6 +1036,8 @@ function theme($hook, $variables = array()) {
     }
     else {
       $variables[$info['render element']] = $element;
+      // Give a hint to render engines to prevent infinite recursion.
+      $variables[$info['render element']]['#render_children'] = TRUE;
     }
   }
 
