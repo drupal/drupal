@@ -428,62 +428,67 @@ ul.tabs {
 /**
  * Styles for system messages.
  */
-div.messages {
-  background-position: 8px 8px; /* LTR */
-  background-repeat: no-repeat;
+.messages {
+  background: no-repeat 10px 18px;  /* LTR */
   border: 1px solid;
-  margin: 6px 0;
-  padding: 10px 10px 10px 50px; /* LTR */
+  border-width: 1px 1px 1px 8px;  /* LTR */
+  border-radius: 2px;
+  padding: 15px 20px 15px 35px; /* LTR */
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
-
-.messages.status {
-  background-image: url(../../misc/message-24-ok.png);
-  border-color: #be7;
+.messages + .messages {
+  margin-top: 1.538em;
 }
-.messages.status,
-.ok {
-  color: #234600;
-}
-.messages.status,
-table tr.ok {
-  background-color: #f8fff0;
-}
-
-.messages.warning {
-  background-image: url(../../misc/message-24-warning.png);
-  border-color: #ed5;
-}
-.messages.warning,
-.warning {
-  color: #840;
-}
-.messages.warning,
-table tr.warning {
-  background-color: #fffce5;
-}
-
-.messages.error {
-  background-image: url(../../misc/message-24-error.png);
-  border-color: #ed541d;
-}
-.messages.error,
-.error {
-  color: #8c2e0b;
-}
-.messages.error,
-table tr.error {
-  background-color: #fef5f1;
-}
-.messages.error p.error {
-  color: #333;
-}
-
-div.messages ul {
-  margin: 0 0 0 1em; /* LTR */
+.messages ul {
+  list-style: none;
   padding: 0;
+  margin: 0;
 }
-div.messages ul li {
-  list-style-image: none;
+.messages li + li {
+  margin-top: .769em;
+}
+
+/* @TODO Separate tables and messages styling */
+.messages--status {
+  border-color: #c9e1bd #c9e1bd #c9e1bd #77b259;  /* LTR */
+  background-image: url(../../misc/message-16-ok.png);
+  background-position: 12px 19px;  /* LTR */
+}
+.messages--status,
+.ok {
+  color: #325e1c;
+}
+.messages--status,
+table tr.ok {
+  background-color: #f3faef;
+}
+
+.messages--warning {
+  background-image: url(../../misc/message-16-warning.png);
+  border-color: #f4daa6 #f4daa6 #f4daa6 #e09600;  /* LTR */
+}
+.messages--warning,
+.warning {
+  color: #734c00;
+}
+.messages--warning,
+table tr.warning {
+  background-color: #fdf8ed;
+}
+
+.messages--error {
+  background-image: url(../../misc/message-16-error.png);
+  border-color: #f9c9bf #f9c9bf #f9c9bf #e62600;  /* LTR */
+}
+.messages--error,
+.error {
+  color: #a51b00;
+}
+.messages--error,
+table tr.error {
+  background-color: #fcf4f2;
+}
+.messages--error p.error {
+  color: #a51b00;
 }

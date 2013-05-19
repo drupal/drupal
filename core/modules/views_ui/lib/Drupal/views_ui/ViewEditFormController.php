@@ -76,7 +76,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     if ($view->isLocked()) {
       $form['locked'] = array(
         '#type' => 'container',
-        '#attributes' => array('class' => array('view-locked', 'messages', 'warning')),
+        '#attributes' => array('class' => array('view-locked', 'messages', 'messages--warning')),
         '#children' => t('This view is being edited by user !user, and is therefore locked from editing by others. This lock is !age old. Click here to <a href="!break">break this lock</a>.', array('!user' => theme('username', array('account' => user_load($view->lock->owner))), '!age' => format_interval(REQUEST_TIME - $view->lock->updated), '!break' => url('admin/structure/views/view/' . $view->id() . '/break-lock'))),
         '#weight' => -10,
       );
@@ -84,7 +84,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     else {
       $form['changed'] = array(
         '#type' => 'container',
-        '#attributes' => array('class' => array('view-changed', 'messages', 'warning')),
+        '#attributes' => array('class' => array('view-changed', 'messages', 'messages--warning')),
         '#children' => t('You have unsaved changes.'),
         '#weight' => -10,
       );

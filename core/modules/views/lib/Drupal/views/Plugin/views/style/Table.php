@@ -224,7 +224,7 @@ class Table extends StylePluginBase {
     $handlers = $this->displayHandler->getHandlers('field');
     if (empty($handlers)) {
       $form['error_markup'] = array(
-        '#markup' => '<div class="error messages">' . t('You need at least one field before you can configure your table settings') . '</div>',
+        '#markup' => '<div class="messages messages--error">' . t('You need at least one field before you can configure your table settings') . '</div>',
       );
       return;
     }

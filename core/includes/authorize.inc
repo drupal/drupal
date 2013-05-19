@@ -30,7 +30,7 @@ function authorize_filetransfer_form($form, &$form_state) {
 
   if (!Drupal::request()->isSecure()) {
     $form['information']['https_warning'] = array(
-      '#prefix' => '<div class="messages error">',
+      '#prefix' => '<div class="messages messages--error">',
       '#markup' => t('WARNING: You are not using an encrypted connection, so your password will be sent in plain text. <a href="@https-link">Learn more</a>.', array('@https-link' => 'http://drupal.org/https-information')),
       '#suffix' => '</div>',
     );

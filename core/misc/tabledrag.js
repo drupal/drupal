@@ -1254,7 +1254,7 @@ $.extend(Drupal.theme, {
     return '<div class="indentation">&nbsp;</div>';
   },
   tableDragChangedWarning: function () {
-    return '<div class="tabledrag-changed-warning messages warning" role="alert">' + Drupal.theme('tableDragChangedMarker') + ' ' + Drupal.t('You have unsaved changes.') + '</div>';
+    return '<div class="tabledrag-changed-warning messages messages--warning" role="alert">' + Drupal.theme('tableDragChangedMarker') + ' ' + Drupal.t('You have unsaved changes.') + '</div>';
   }
 });
 

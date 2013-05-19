@@ -82,7 +82,7 @@ function update_script_selection_form($form, &$form_state) {
         '#type' => 'item',
         '#title' => $module . ' module',
         '#markup'  => $update['warning'],
-        '#prefix' => '<div class="messages warning">',
+        '#prefix' => '<div class="messages messages--warning">',
         '#suffix' => '</div>',
       );
       $incompatible_updates_exist = TRUE;

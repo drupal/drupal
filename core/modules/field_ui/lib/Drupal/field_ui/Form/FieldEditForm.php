@@ -52,7 +52,7 @@ class FieldEditForm implements FormInterface {
     // If so, prevent changes to the field settings.
     $has_data = field_has_data($field);
     if ($has_data) {
-      $form['field']['#prefix'] = '<div class="messages error">' . t('There is data for this field in the database. The field settings can no longer be changed.') . '</div>' . $form['field']['#prefix'];
+      $form['field']['#prefix'] = '<div class="messages messages--error">' . t('There is data for this field in the database. The field settings can no longer be changed.') . '</div>' . $form['field']['#prefix'];
     }
 
     // Build the configurable field values.

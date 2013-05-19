@@ -95,11 +95,21 @@ ul.menu {
 /**
  * RTL Styles for system messages.
  */
+.messages {
+  border-width: 1px 8px 1px 1px;
+  background-position-x: 99%;
+  padding-left: 20px;
+  padding-right: 35px;
+  text-align: right;
+}
+.messages--status {
+  background-position: 99.3% 19px;
+  border-color: #c9e1bd #77b259 #c9e1bd #c9e1bd;
+}
+.messages--warning {
+  border-color: #f4daa6 #e09600 #f4daa6 #f4daa6;
+}
+.messages--error {
+  border-color: #f9c9bf #e62600 #f9c9bf #f9c9bf;
+}
 
-div.messages {
-  background-position: 99% 8px;
-  padding: 10px 50px 10px 10px;
-}
-div.messages ul {
-  margin: 0 1em 0 0;
-}
