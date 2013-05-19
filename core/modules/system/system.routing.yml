@@ -73,3 +73,17 @@ system_site_maintenance_mode:
     _form: 'Drupal\system\Form\SiteMaintenanceModeForm'
   requirements:
     _permission: 'administer site configuration'
+
+date_format_delete:
+  pattern: 'admin/config/regional/date-time/formats/{format_id}/delete'
+  defaults:
+    _form: '\Drupal\system\Form\DateFormatDeleteForm'
+  requirements:
+    _permission: 'administer site configuration'
+
+date_format_localize_reset:
+  pattern: 'admin/config/regional/date-time/locale/{langcode}/reset'
+  defaults:
+    _form: '\Drupal\system\Form\DateFormatLocalizeResetForm'
+  requirements:
+    _permission: 'administer site configuration'

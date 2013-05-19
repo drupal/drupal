@@ -906,10 +906,7 @@ function system_menu() {
   $items['admin/config/regional/date-time/formats/%system_date_format/delete'] = array(
     'title' => 'Delete date format',
     'description' => 'Allow users to delete a configured date format.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_date_delete_format_form', 5),
-    'access arguments' => array('administer site configuration'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'date_format_delete',
   );
   $items['admin/config/regional/date-time/formats/lookup'] = array(
     'title' => 'Date and time lookup',
@@ -1045,10 +1042,7 @@ function system_menu() {
     $items['admin/config/regional/date-time/locale/%/reset'] = array(
       'title' => 'Reset date formats',
       'description' => 'Reset localized date formats to global defaults',
-      'page callback' => 'drupal_get_form',
-      'page arguments' => array('system_date_format_localize_reset_form', 5),
-      'access arguments' => array('administer site configuration'),
-      'file' => 'system.admin.inc',
+      'route_name' => 'date_format_localize_reset',
     );
   }
 
