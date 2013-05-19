@@ -91,7 +91,7 @@ class TextTranslationTest extends WebTestBase {
    */
   function testTextFieldFormatted() {
     // Make node body multiple.
-    $edit = array('field[container][cardinality]' => -1);
+    $edit = array('field[cardinality]' => FIELD_CARDINALITY_UNLIMITED);
     $this->drupalPost('admin/structure/types/manage/article/fields/node.article.body/field', $edit, t('Save field settings'));
     $this->drupalGet('node/add/article');
     $this->assertFieldByXPath("//input[@name='body_add_more']", t('Add another item'), 'Body field cardinality set to multiple.');

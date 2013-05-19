@@ -57,38 +57,39 @@ class FieldEditForm implements FormInterface {
 
     // Build the configurable field values.
     $cardinality = $field['cardinality'];
-    $form['field']['container'] = array(
+    $form['field']['cardinality_container'] = array(
       // We can't use the container element because it doesn't support the title
       // or description properties.
       '#type' => 'item',
+      // Reset #parents to 'field', so the additional container does not appear.
+      '#parents' => array('field'),
       '#field_prefix' => '<div class="container-inline">',
       '#field_suffix' => '</div>',
-      '#title' => t('Maximum number of values users can enter'),
+      '#title' => t('Allowed number of values'),
     );
-    $form['field']['container']['cardinality'] = array(
+    $form['field']['cardinality_container']['cardinality'] = array(
       '#type' => 'select',
-      '#options' => drupal_map_assoc(range(1, 5)) + array(FIELD_CARDINALITY_UNLIMITED => t('Unlimited')) + array('other' => t('More')),
-      '#default_value' => ($cardinality < 6) ? $cardinality : 'other',
-    );
-    // @todo Convert when http://drupal.org/node/1207060 gets in.
-    $form['field']['container']['cardinality_other'] = array(
-      '#type' => 'number',
-      '#default_value' => $cardinality > 5 ? $cardinality : 6,
-      '#min' => 1,
-      '#title' => t('Custom value'),
+      '#title' => t('Allowed number of values'),
       '#title_display' => 'invisible',
+      '#options' => array(
+        'number' => t('Limited'),
+        FIELD_CARDINALITY_UNLIMITED => t('Unlimited'),
+      ),
+      '#default_value' => ($cardinality == FIELD_CARDINALITY_UNLIMITED) ? FIELD_CARDINALITY_UNLIMITED : 'number',
+    );
+    $form['field']['cardinality_container']['cardinality_number'] = array(
+      '#type' => 'number',
+      '#default_value' => $cardinality != FIELD_CARDINALITY_UNLIMITED ? $cardinality : 1,
+      '#min' => 1,
+      '#title' => t('Limit'),
+      '#title_display' => 'invisible',
+      '#size' => 2,
       '#states' => array(
         'visible' => array(
-         ':input[name="field[container][cardinality]"]' => array('value' => 'other'),
+         ':input[name="field[cardinality]"]' => array('value' => 'number'),
         ),
       ),
     );
-    if (field_behaviors_widget('multiple values', $this->instance) == FIELD_BEHAVIOR_DEFAULT) {
-      $form['field']['container']['#description'] = t('%unlimited will provide an %add-more button so users can add as many values as they like.', array(
-        '%unlimited' => t('Unlimited'),
-        '%add-more' => t('Add another item'),
-      ));
-    }
 
     // Build the non-configurable field values.
     $form['field']['field_name'] = array('#type' => 'value', '#value' => $field['field_name']);
@@ -117,10 +118,10 @@ class FieldEditForm implements FormInterface {
    */
   public function validateForm(array &$form, array &$form_state) {
     // Validate field cardinality.
-    $cardinality = $form_state['values']['field']['container']['cardinality'];
-    $cardinality_other = $form_state['values']['field']['container']['cardinality_other'];
-    if ($cardinality == 'other' && empty($cardinality_other)) {
-      form_error($form['field']['container']['cardinality_other'], t('Number of values is required.'));
+    $cardinality = $form_state['values']['field']['cardinality'];
+    $cardinality_number = $form_state['values']['field']['cardinality_number'];
+    if ($cardinality === 'number' && empty($cardinality_number)) {
+      form_error($form['field']['cardinality_container']['cardinality_number'], t('Number of values is required.'));
     }
   }
 
@@ -133,11 +134,10 @@ class FieldEditForm implements FormInterface {
     $field_values = $form_values['field'];
 
     // Save field cardinality.
-    $cardinality = $field_values['container']['cardinality'];
-    $cardinality_other = $field_values['container']['cardinality_other'];
-    $cardinality_other = $form_state['values']['field']['container']['cardinality_other'];
-    if ($cardinality == 'other') {
-      $cardinality = $cardinality_other;
+    $cardinality = $field_values['cardinality'];
+    $cardinality_number = $field_values['cardinality_number'];
+    if ($cardinality === 'number') {
+      $cardinality = $cardinality_number;
     }
     $field_values['cardinality'] = $cardinality;
     unset($field_values['container']);

@@ -180,37 +180,34 @@ class ManageFieldsTest extends FieldUiTestBase {
     $field_edit_path = 'admin/structure/types/manage/article/fields/node.article.body/field';
 
     // Assert the cardinality other field cannot be empty when cardinality is
-    // set to other.
+    // set to 'number'.
     $edit = array(
-      'field[container][cardinality]' => 'other',
-      'field[container][cardinality_other]' => '',
+      'field[cardinality]' => 'number',
+      'field[cardinality_number]' => '',
     );
     $this->drupalPost($field_edit_path, $edit, t('Save field settings'));
     $this->assertText('Number of values is required.');
 
-    // Assert the cardinality field is set to 'Other' when the value is greater
-    // than 5.
+    // Submit a custom number.
     $edit = array(
-      'field[container][cardinality]' => 'other',
-      'field[container][cardinality_other]' => 16,
+      'field[cardinality]' => 'number',
+      'field[cardinality_number]' => 6,
     );
     $this->drupalPost($field_edit_path, $edit, t('Save field settings'));
     $this->assertText('Updated field Body field settings.');
     $this->drupalGet($field_edit_path);
-    $this->assertFieldByXPath("//select[@name='field[container][cardinality]']", 'other');
-    $this->assertFieldByXPath("//input[@name='field[container][cardinality_other]']", 16);
+    $this->assertFieldByXPath("//select[@name='field[cardinality]']", 'number');
+    $this->assertFieldByXPath("//input[@name='field[cardinality_number]']", 6);
 
-    // Assert the cardinality other field is set back to 6 after changing the
-    // cardinality to less than 6.
+    // Set to unlimited.
     $edit = array(
-      'field[container][cardinality]' => 3,
-      'field[container][cardinality_other]' => 16,
+      'field[cardinality]' => FIELD_CARDINALITY_UNLIMITED,
     );
     $this->drupalPost($field_edit_path, $edit, t('Save field settings'));
     $this->assertText('Updated field Body field settings.');
     $this->drupalGet($field_edit_path);
-    $this->assertFieldByXPath("//select[@name='field[container][cardinality]']", 3);
-    $this->assertFieldByXPath("//input[@name='field[container][cardinality_other]']", 6);
+    $this->assertFieldByXPath("//select[@name='field[cardinality]']", FIELD_CARDINALITY_UNLIMITED);
+    $this->assertFieldByXPath("//input[@name='field[cardinality_number]']", 1);
   }
 
   /**

@@ -4303,14 +4303,14 @@ function form_pre_render_tel($element) {
  * @param array $element
  *   An associative array containing the properties of the element.
  *   Properties used: #title, #value, #description, #min, #max, #placeholder,
- *   #required, #attributes, #step.
+ *   #required, #attributes, #step, #size.
  *
  * @return array
  *   The $element with prepared variables ready for theme_input().
  */
 function form_pre_render_number($element) {
   $element['#attributes']['type'] = 'number';
-  element_set_attributes($element, array('id', 'name', 'value', 'step', 'min', 'max', 'placeholder'));
+  element_set_attributes($element, array('id', 'name', 'value', 'step', 'min', 'max', 'placeholder', 'size'));
   _form_set_attributes($element, array('form-number'));
 
   return $element;
