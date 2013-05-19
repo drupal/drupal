@@ -3,15 +3,15 @@
   margin: 1em 0 1em 15em; /* LTR */
   border: 1px solid #ccc;
 }
-.vertical-tabs .vertical-tabs-list {
-  width: 15em;
-  list-style: none;
-  border-top: 1px solid #ccc;
-  padding: 0;
-  margin: -1px 0 -1px -15em; /* LTR */
+.vertical-tabs-list {
   float: left; /* LTR */
+  width: 15em;
+  margin: -1px 0 -1px -15em; /* LTR */
+  padding: 0;
+  border-top: 1px solid #ccc;
+  list-style: none;
 }
-.vertical-tabs .vertical-tabs-pane {
+.vertical-tabs-pane {
   margin: 0;
   border: 0;
 }
@@ -20,37 +20,35 @@
 }
 
 /* Layout of each tab */
-.vertical-tabs .vertical-tabs-list li {
-  background: #eee;
+.vertical-tab-button {
+  margin: 0;
+  padding: 0;
   border: 1px solid #ccc;
   border-top: 0;
-  padding: 0;
-  margin: 0;
+  background: #eee;
 }
-.vertical-tabs .vertical-tabs-list a {
+.vertical-tab-button a {
   display: block;
-  text-decoration: none;
   padding: 0.5em 0.6em;
+  text-decoration: none;
 }
-.vertical-tabs .vertical-tabs-list a:focus strong,
-.vertical-tabs .vertical-tabs-list a:active strong,
-.vertical-tabs .vertical-tabs-list a:hover strong {
+.vertical-tab-button a:focus strong,
+.vertical-tab-button a:active strong,
+.vertical-tab-button a:hover strong {
   text-decoration: underline;
 }
-.vertical-tabs .vertical-tabs-list a:hover {
+.vertical-tab-button a:hover {
   outline: 1px dotted;
 }
-.vertical-tabs .vertical-tabs-list .selected {
-  background-color: #fff;
+.vertical-tab-button.selected {
   border-right-width: 0; /* LTR */
+  background-color: #fff;
 }
-.vertical-tabs .vertical-tabs-list .selected strong {
+.vertical-tab-button.selected strong {
   color: #000;
 }
-.vertical-tabs .vertical-tabs-list .summary {
+.vertical-tab-button .summary {
   display: block;
-}
-.vertical-tabs .vertical-tabs .vertical-tabs-list .summary {
-  line-height: normal;
   margin-bottom: 0;
+  line-height: normal;
 }

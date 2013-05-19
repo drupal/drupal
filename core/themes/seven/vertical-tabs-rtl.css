@@ -1,20 +1,14 @@
-
 /**
  * Override of misc/vertical-tabs-rtl.css.
  */
-.vertical-tabs {
-  background: #fff url(images/fc-rtl.png) repeat-y right 0;
-}
-.vertical-tabs .vertical-tabs-list {
+.vertical-tabs-list {
   float: right;
   margin: 0 0 -1px -100%;
 }
-.vertical-tabs .selected a,
-.vertical-tabs .selected a:hover,
-.vertical-tabs .selected a:focus,
-.vertical-tabs .selected a:active {
-  border-left-color: #fff;
+.vertical-tab-button.selected {
+  border-left: 1px solid #fcfcfa;
 }
-.vertical-tabs .vertical-tabs-panes {
-  margin: 0 245px 0 0;
+.vertical-tabs-panes {
+  margin: 0 240px 0 0;
+  border-right: 1px solid #a6a5a1;
 }

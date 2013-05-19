@@ -1,72 +1,93 @@
-
 /**
  * Override of misc/vertical-tabs.css.
  */
 .vertical-tabs {
-  background: #fff url(images/fc.png) repeat-y 0 0; /* LTR */
-  border: 1px solid #ccc;
-  margin: 10px 0;
   position: relative;
+  overflow: hidden;
+  margin: 10px 0;
+  border: 1px solid #bdbdbd;
+  border-radius: 4px;
+  background: #e6e5e1;
 }
-.vertical-tabs-pane {
-  border: 0;
-  padding: 0;
-  margin: 0;
-}
-.vertical-tabs .vertical-tabs-list {
-  border-bottom: 1px solid #ccc;
+.vertical-tabs-list {
   float: left; /* LTR */
-  font-size: 1em;
-  line-height: 1;
+  width: 240px;
   margin: 0 -100% -1px 0; /* LTR */
   padding: 0;
-  width: 240px;
+  border-bottom: 1px solid #ccc;
+  line-height: 1;
 }
-.vertical-tabs .vertical-tab-button {
+.vertical-tab-button {
+  position: relative;
+  margin: 0;
   list-style: none;
   list-style-image: none;
-  margin: 0;
 }
-.vertical-tabs .vertical-tab-button a {
-  border-top: 1px solid #ccc;
+.vertical-tab-button.selected {
+  z-index: 1;
+  overflow-x: hidden;
+  width: 100%;
+  border-right: 1px solid #fcfcfa; /* LTR */
+  box-shadow: 0 5px 5px -5px hsla(0, 0%, 0%, 0.3);
+}
+.vertical-tab-button:focus,
+.vertical-tab-button:active {
+  z-index: 2;
+}
+.vertical-tab-button a {
   display: block;
-  padding: 10px;
+  padding: 10px 15px 15px;
+  border-bottom: 1px solid #b3b2ad;
+  background-color: #f2f2f0;
+  text-shadow: 0 1px hsla(0, 0%, 100%, 0.6);
+  text-decoration: none;
 }
-.vertical-tabs .first a {
-  border-top: 0;
+.vertical-tab-button.last a {
+  border-bottom: 0;
 }
-.vertical-tabs .vertical-tab-button strong {
+.vertical-tab-button.selected a,
+.vertical-tab-button a:hover,
+.vertical-tab-button a:focus {
+  background: #fcfcfa;
+  text-shadow: none;
+  text-decoration: none;
+}
+.vertical-tab-button.selected a {
+  border-bottom-color: #b3b2ad;
+  color: #004f80;
+}
+.vertical-tab-button.selected a:hover,
+.vertical-tab-button.selected a:focus {
+  color: #007ecc;
+}
+.vertical-tabs-panes {
+  margin: 0 0 0 240px; /* LTR */
+  padding: 10px 15px 10px 15px;
+  border-left: 1px solid #a6a5a1; /* LTR */
+  background-color: #fcfcfa;
+}
+.vertical-tabs-panes:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.vertical-tabs-pane {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: #595959;
+}
+.vertical-tab-button strong {
   font-size: 0.923em;
 }
-.vertical-tabs .vertical-tab-button .summary {
-  color: #666;
+.vertical-tab-button .summary {
   display: block;
-  font-size: 0.846em;
   padding-top: 0.4em;
+  color: #666;
+  font-size: 0.846em;
 }
-.vertical-tabs .vertical-tab-button a:hover,
-.vertical-tabs .vertical-tab-button a:focus {
-  background: #d5d5d5;
-  text-decoration: none;
-  outline: 0;
-}
-.vertical-tabs .selected a,
-.vertical-tabs .selected a:hover,
-.vertical-tabs .selected a:focus,
-.vertical-tabs .selected a:active {
-  background: #fff;
-  border-right-color: #fff; /* LTR */
-  border-top: 1px solid #ccc;
-}
-.vertical-tabs .first.selected a,
-.vertical-tabs .first.selected a:hover {
-  border-top: 0;
-}
-.vertical-tabs .selected a:focus strong {
+.vertical-tab-button.selected a:focus strong {
   text-decoration: underline;
-}
-.vertical-tabs .vertical-tabs-panes {
-  margin: 0 0 0 245px; /* LTR */
 }
 .vertical-tabs-pane > summary {
   display: none;
