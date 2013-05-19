@@ -42,10 +42,8 @@ function dblog_menu() {
   $items['admin/reports/dblog'] = array(
     'title' => 'Recent log messages',
     'description' => 'View events that have recently been logged.',
-    'page callback' => 'dblog_overview',
-    'access arguments' => array('access site reports'),
+    'route_name' => 'dblog_overview',
     'weight' => -1,
-    'file' => 'dblog.admin.inc',
   );
   $items['admin/reports/page-not-found'] = array(
     'title' => "Top 'page not found' errors",
