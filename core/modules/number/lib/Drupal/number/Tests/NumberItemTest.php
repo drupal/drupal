@@ -45,9 +45,6 @@ class NumberItemTest extends FieldUnitTestBase {
         'entity_type' => 'entity_test',
         'field_name' => 'field_' . $type,
         'bundle' => 'entity_test',
-        'widget' => array(
-          'type' => 'number',
-        ),
       );
       field_create_instance($this->instance[$type]);
     }

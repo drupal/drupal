@@ -53,6 +53,10 @@ class TranslationWebTest extends FieldTestBase {
     field_create_instance($instance);
     $this->instance = field_read_instance('test_entity', $this->field_name, 'test_bundle');
 
+    entity_get_form_display($this->entity_type, 'test_bundle', 'default')
+      ->setComponent($this->field_name)
+      ->save();
+
     for ($i = 0; $i < 3; ++$i) {
       $language = new Language(array(
         'langcode' => 'l' . $i,

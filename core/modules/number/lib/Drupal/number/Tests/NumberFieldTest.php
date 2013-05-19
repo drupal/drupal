@@ -57,16 +57,21 @@ class NumberFieldTest extends WebTestBase {
       'field_name' => $this->field['field_name'],
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
-      'widget' => array(
+    );
+    field_create_instance($this->instance);
+
+    entity_get_form_display('test_entity', 'test_bundle', 'default')
+      ->setComponent($this->field['field_name'], array(
         'type' => 'number',
         'settings' => array(
           'placeholder' => '0.00'
         ),
-      ),
-    );
-    field_create_instance($this->instance);
+      ))
+      ->save();
     entity_get_display('test_entity', 'test_bundle', 'default')
-      ->setComponent($this->field['field_name'])
+      ->setComponent($this->field['field_name'], array(
+        'type' => 'number_decimal',
+      ))
       ->save();
 
     // Display creation form.

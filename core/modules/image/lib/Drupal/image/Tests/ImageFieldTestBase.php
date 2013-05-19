@@ -85,15 +85,16 @@ abstract class ImageFieldTestBase extends WebTestBase {
       'required' => !empty($instance_settings['required']),
       'description' => !empty($instance_settings['description']) ? $instance_settings['description'] : '',
       'settings' => array(),
-      'widget' => array(
-        'type' => 'image_image',
-        'settings' => array(),
-      ),
     );
     $instance['settings'] = array_merge($instance['settings'], $instance_settings);
-    $instance['widget']['settings'] = array_merge($instance['widget']['settings'], $widget_settings);
-
     $field_instance = field_create_instance($instance);
+
+    entity_get_form_display('node', $type_name, 'default')
+      ->setComponent($field['field_name'], array(
+        'type' => 'image_image',
+        'settings' => $widget_settings,
+      ))
+      ->save();
 
     entity_get_display('node', $type_name, 'default')
       ->setComponent($field['field_name'])

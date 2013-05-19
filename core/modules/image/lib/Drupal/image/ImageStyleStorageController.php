@@ -76,7 +76,7 @@ class ImageStyleStorageController extends ConfigStorageController {
       $instances = field_read_instances();
       // Loop through all fields searching for image fields.
       foreach ($instances as $instance) {
-        if ($instance['widget']['module'] == 'image') {
+        if ($instance->getField()->type == 'image') {
           $view_modes = entity_get_view_modes($instance['entity_type']);
           $view_modes = array('default') + array_keys($view_modes);
           foreach ($view_modes as $view_mode) {
@@ -92,9 +92,12 @@ class ImageStyleStorageController extends ConfigStorageController {
                 ->save();
             }
           }
-          if ($instance['widget']['settings']['preview_image_style'] == $style->getOriginalID()) {
-            $instance['widget']['settings']['preview_image_style'] = $style->id();
-            field_update_instance($instance);
+          $entity_form_display = entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default');
+          $widget_configuration = $entity_form_display->getComponent($instance['field_name']);
+          if ($widget_configuration['settings']['preview_image_style'] == $style->getOriginalID()) {
+            $widget_options['settings']['preview_image_style'] = $style->id();
+            $entity_form_display->setComponent($instance['field_name'], $widget_options)
+              ->save();
           }
         }
       }

@@ -54,16 +54,14 @@ class MultiStepNodeFormBasicOptionsTest extends NodeTestBase {
       'settings' => array(
         'text_processing' => TRUE,
       ),
-      'widget' => array(
-        'type' => 'text_textfield',
-      ),
-      'display' => array(
-        'full' => array(
-          'type' => 'text_default',
-        ),
-      ),
     );
     field_create_instance($this->instance);
+    entity_get_form_display('node', 'page', 'default')
+      ->setComponent($this->field_name, array(
+        'type' => 'text_textfield',
+      ))
+      ->save();
+
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     $edit = array(

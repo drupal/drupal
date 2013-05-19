@@ -74,11 +74,14 @@ class TaggedWithTest extends WizardTestBase {
       'field_name' => 'field_views_testing_tags',
       'entity_type' => 'node',
       'bundle' => $this->node_type_with_tags->type,
-      'widget' => array(
-        'type' => 'taxonomy_autocomplete',
-      ),
     );
     field_create_instance($this->tag_instance);
+
+    entity_get_form_display('node', $this->node_type_with_tags->type, 'default')
+      ->setComponent('field_views_testing_tags', array(
+        'type' => 'taxonomy_autocomplete',
+      ))
+      ->save();
 
     entity_get_display('node', $this->node_type_with_tags->type, 'default')
       ->setComponent('field_views_testing_tags', array(
@@ -185,6 +188,12 @@ class TaggedWithTest extends WizardTestBase {
     $instance = $this->tag_instance;
     $instance['bundle'] = $this->node_type_without_tags->type;
     field_create_instance($instance);
+    entity_get_form_display('node', $this->node_type_without_tags->type, 'default')
+      ->setComponent('field_views_testing_tags', array(
+        'type' => 'taxonomy_autocomplete',
+      ))
+      ->save();
+
     $view['show[type]'] = $this->node_type_with_tags->type;
     $this->drupalPost('admin/structure/views/add', $view, t('Update "of type" choice'));
     $this->assertFieldByXpath($tags_xpath);

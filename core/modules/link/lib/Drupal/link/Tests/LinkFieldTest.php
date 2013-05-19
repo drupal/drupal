@@ -56,14 +56,16 @@ class LinkFieldTest extends WebTestBase {
       'settings' => array(
         'title' => DRUPAL_DISABLED,
       ),
-      'widget' => array(
+    );
+    field_create_instance($this->instance);
+    entity_get_form_display('test_entity', 'test_bundle', 'default')
+      ->setComponent($this->field['field_name'], array(
         'type' => 'link_default',
         'settings' => array(
           'placeholder_url' => 'http://example.com',
         ),
-      ),
-    );
-    field_create_instance($this->instance);
+      ))
+      ->save();
     entity_get_display('test_entity', 'test_bundle', 'full')
       ->setComponent($this->field['field_name'], array(
         'type' => 'link',
@@ -125,15 +127,17 @@ class LinkFieldTest extends WebTestBase {
       'settings' => array(
         'title' => DRUPAL_OPTIONAL,
       ),
-      'widget' => array(
+    );
+    field_create_instance($this->instance);
+    entity_get_form_display('test_entity', 'test_bundle', 'default')
+      ->setComponent($this->field['field_name'], array(
         'type' => 'link_default',
         'settings' => array(
           'placeholder_url' => 'http://example.com',
           'placeholder_title' => 'Enter a title for this link',
         ),
-      ),
-    );
-    field_create_instance($this->instance);
+      ))
+      ->save();
     entity_get_display('test_entity', 'test_bundle', 'full')
       ->setComponent($this->field['field_name'], array(
         'type' => 'link',
@@ -238,15 +242,17 @@ class LinkFieldTest extends WebTestBase {
       'settings' => array(
         'title' => DRUPAL_OPTIONAL,
       ),
-      'widget' => array(
-        'type' => 'link_default',
-      ),
     );
     $display_options = array(
       'type' => 'link',
       'label' => 'hidden',
     );
     field_create_instance($this->instance);
+    entity_get_form_display('test_entity', 'test_bundle', 'default')
+      ->setComponent($this->field['field_name'], array(
+        'type' => 'link_default',
+      ))
+      ->save();
     entity_get_display('test_entity', 'test_bundle', 'full')
       ->setComponent($this->field['field_name'], $display_options)
       ->save();
@@ -376,15 +382,17 @@ class LinkFieldTest extends WebTestBase {
       'settings' => array(
         'title' => DRUPAL_OPTIONAL,
       ),
-      'widget' => array(
-        'type' => 'link_default',
-      ),
     );
     $display_options = array(
       'type' => 'link_separate',
       'label' => 'hidden',
     );
     field_create_instance($this->instance);
+    entity_get_form_display('test_entity', 'test_bundle', 'default')
+      ->setComponent($this->field['field_name'], array(
+        'type' => 'link_default',
+      ))
+      ->save();
     entity_get_display('test_entity', 'test_bundle', 'full')
       ->setComponent($this->field['field_name'], $display_options)
       ->save();

@@ -432,20 +432,8 @@ class Field extends FieldPluginBase {
       'entity_type' => 'views_fake',
       'bundle' => 'views_fake',
 
-      // Use the default field settings for settings and widget.
+      // Use the default field settings.
       'settings' => field_info_instance_settings($field['type']),
-      'widget' => array(
-        'type' => $field_type['default_widget'],
-        'settings' => array(),
-      ),
-
-      // Build a dummy display mode.
-      'display' => array(
-        '_custom' => array(
-          'type' => $formatter,
-          'settings' => $formatter_settings,
-        ),
-      ),
 
       // Set the other fields to their default values.
       'required' => FALSE,

@@ -70,6 +70,7 @@ class FieldWidgetTypeForm implements FormInterface, ControllerInterface {
     $entity_type = $this->instance['entity_type'];
     $field_name = $this->instance['field_name'];
 
+    $entity_form_display = entity_get_form_display($entity_type, $bundle, 'default');
     $field = $this->instance->getField();
     $bundles = entity_get_bundles();
     $bundle_label = $bundles[$entity_type][$bundle]['label'];
@@ -78,6 +79,7 @@ class FieldWidgetTypeForm implements FormInterface, ControllerInterface {
       '#bundle' => $bundle,
       '#entity_type' => $entity_type,
       '#field_name' => $field_name,
+      '#instance' => $this->instance,
     );
 
     $form['widget_type'] = array(
@@ -85,7 +87,7 @@ class FieldWidgetTypeForm implements FormInterface, ControllerInterface {
       '#title' => t('Widget type'),
       '#required' => TRUE,
       '#options' => field_ui_widget_type_options($field['type']),
-      '#default_value' => $this->instance->getWidget()->getPluginId(),
+      '#default_value' => $entity_form_display->getWidget($field_name)->getPluginId(),
       '#description' => t('The type of form element you would like to present to the user when creating this field in the %type type.', array('%type' => $bundle_label)),
     );
 
@@ -109,19 +111,15 @@ class FieldWidgetTypeForm implements FormInterface, ControllerInterface {
     $bundle = $form['#bundle'];
     $entity_type = $form['#entity_type'];
     $field_name = $form['#field_name'];
+    $instance = $form['#instance'];
 
-    // Retrieve the stored instance settings to merge with the incoming values.
-    $instance = field_read_instance($entity_type, $field_name, $bundle);
-
-    // Set the right module information.
-    $widget_type = $this->widgetManager->getDefinition($form_values['widget_type']);
-    $widget_module = $widget_type['module'];
-
-    $instance['widget']['type'] = $form_values['widget_type'];
-    $instance['widget']['module'] = $widget_module;
+    $entity_form_display = entity_get_form_display($entity_type, $bundle, 'default')
+      ->setComponent($field_name, array(
+        'type' => $form_values['widget_type'],
+      ));
 
     try {
-      $instance->save();
+      $entity_form_display->save();
       drupal_set_message(t('Changed the widget for field %label.', array('%label' => $instance['label'])));
 
       if ($instance['required'] && empty($instance['default_value']) && empty($instance['default_value_function']) && $instance['widget']['type'] == 'field_hidden') {

@@ -72,12 +72,15 @@ class OptionsFieldUnitTestBase extends FieldUnitTestBase {
       'field_name' => $this->fieldName,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-      'widget' => array(
-        'type' => 'options_buttons',
-      ),
     );
     $this->instance = entity_create('field_instance', $instance);
     $this->instance->save();
+
+    entity_get_form_display('entity_test', 'entity_test', 'default')
+      ->setComponent($this->fieldName, array(
+        'type' => 'options_buttons',
+      ))
+      ->save();
   }
 
 }

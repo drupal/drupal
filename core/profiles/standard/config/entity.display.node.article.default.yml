@@ -1,7 +1,7 @@
 id: node.article.default
 targetEntityType: node
 bundle: article
-viewMode: default
+mode: default
 content:
   body:
     label: hidden

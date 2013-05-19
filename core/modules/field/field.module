@@ -603,10 +603,6 @@ function field_bundle_settings($entity_type, $bundle, $settings = NULL) {
     $settings = variable_get('field_bundle_settings_' . $entity_type . '__' . $bundle, array());
     $settings += array(
       'view_modes' => array(),
-      'extra_fields' => array(),
-    );
-    $settings['extra_fields'] += array(
-      'form' => array(),
     );
 
     return $settings;
@@ -646,23 +642,6 @@ function field_view_mode_settings($entity_type, $bundle) {
   }
 
   return $cache[$entity_type][$bundle];
-}
-
-/**
- * Pre-render callback: Adjusts weights and visibility of non-field elements.
- */
-function _field_extra_fields_pre_render($elements) {
-  $entity_type = $elements['#entity_type'];
-  $bundle = $elements['#bundle'];
-
-  $extra_fields = field_info_extra_fields($entity_type, $bundle, 'form');
-  foreach ($extra_fields as $name => $settings) {
-    if (isset($elements[$name])) {
-      $elements[$name]['#weight'] = $settings['weight'];
-    }
-  }
-
-  return $elements;
 }
 
 /**

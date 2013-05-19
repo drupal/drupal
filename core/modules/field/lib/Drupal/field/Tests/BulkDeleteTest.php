@@ -117,9 +117,6 @@ class BulkDeleteTest extends FieldUnitTestBase {
           'field_name' => $field['field_name'],
           'entity_type' => $this->entity_type,
           'bundle' => $bundle,
-          'widget' => array(
-            'type' => 'test_field_widget',
-          )
         );
         $this->instances[] = field_create_instance($instance);
       }

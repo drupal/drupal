@@ -66,6 +66,12 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
     );
 
     field_create_instance($instance);
+
+    entity_get_form_display('node', $referencing->type, 'default')
+      ->setComponent('test_field', array(
+        'type' => 'entity_reference_autocomplete',
+      ))
+      ->save();
   }
 
   /**

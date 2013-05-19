@@ -44,12 +44,12 @@ class DisplayOverview extends OverviewBase {
   public function buildForm(array $form, array &$form_state, $entity_type = NULL, $bundle = NULL, $view_mode = NULL) {
     parent::buildForm($form, $form_state, $entity_type, $bundle);
 
-    $this->view_mode = (isset($view_mode) ? $view_mode : 'default');
+    $this->mode = (isset($view_mode) ? $view_mode : 'default');
     // Gather type information.
     $instances = field_info_instances($this->entity_type, $this->bundle);
     $field_types = field_info_field_types();
     $extra_fields = field_info_extra_fields($this->entity_type, $this->bundle, 'display');
-    $entity_display = entity_get_display($this->entity_type, $this->bundle, $this->view_mode);
+    $entity_display = entity_get_display($this->entity_type, $this->bundle, $this->mode);
 
     $form_state += array(
       'formatter_settings_edit' => NULL,
@@ -58,7 +58,7 @@ class DisplayOverview extends OverviewBase {
     $form += array(
       '#entity_type' => $this->entity_type,
       '#bundle' => $this->bundle,
-      '#view_mode' => $this->view_mode,
+      '#view_mode' => $this->mode,
       '#fields' => array_keys($instances),
       '#extra' => array_keys($extra_fields),
     );
@@ -176,7 +176,7 @@ class DisplayOverview extends OverviewBase {
       if ($display_options && $display_options['type'] != 'hidden') {
         $formatter = drupal_container()->get('plugin.manager.field.formatter')->getInstance(array(
           'instance' => $instance,
-          'view_mode' => $this->view_mode,
+          'view_mode' => $this->mode,
           'configuration' => $display_options
         ));
       }
@@ -209,7 +209,7 @@ class DisplayOverview extends OverviewBase {
             'formatter' => $formatter,
             'field' => $field,
             'instance' => $instance,
-            'view_mode' => $this->view_mode,
+            'view_mode' => $this->mode,
             'form' => $form,
           );
           drupal_alter('field_formatter_settings_form', $settings_form, $form_state, $context);
@@ -261,7 +261,7 @@ class DisplayOverview extends OverviewBase {
             'formatter' => $formatter,
             'field' => $field,
             'instance' => $instance,
-            'view_mode' => $this->view_mode,
+            'view_mode' => $this->mode,
           );
           drupal_alter('field_formatter_settings_summary', $summary, $context);
 
@@ -345,7 +345,7 @@ class DisplayOverview extends OverviewBase {
     $form['fields'] = $table;
 
     // Custom display settings.
-    if ($this->view_mode == 'default') {
+    if ($this->mode == 'default') {
       $view_modes = entity_get_view_modes($this->entity_type);
       // Only show the settings if there is more than one view mode.
       if (count($view_modes) > 1) {
@@ -414,7 +414,7 @@ class DisplayOverview extends OverviewBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     $form_values = $form_state['values'];
-    $display = entity_get_display($this->entity_type, $this->bundle, $this->view_mode);
+    $display = entity_get_display($this->entity_type, $this->bundle, $this->mode);
 
     // Collect data for 'regular' fields.
     foreach ($form['#fields'] as $field_name) {
@@ -469,7 +469,7 @@ class DisplayOverview extends OverviewBase {
     $display->save();
 
     // Handle the 'view modes' checkboxes if present.
-    if ($this->view_mode == 'default' && !empty($form_values['view_modes_custom'])) {
+    if ($this->mode == 'default' && !empty($form_values['view_modes_custom'])) {
       $entity_info = entity_get_info($this->entity_type);
       $view_modes = entity_get_view_modes($this->entity_type);
       $bundle_settings = field_bundle_settings($this->entity_type, $this->bundle);

@@ -32,11 +32,11 @@ abstract class OverviewBase implements FormInterface, ControllerInterface {
   protected $bundle = '';
 
   /**
-   * The entity view mode.
+   * The entity view or form mode.
    *
    * @var string
    */
-  protected $view_mode = '';
+  protected $mode = '';
 
   /**
    * The admin path of the overview page.

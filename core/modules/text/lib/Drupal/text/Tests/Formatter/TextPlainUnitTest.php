@@ -62,9 +62,6 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
       'text_processing' => FALSE,
     );
 
-    $this->widget_type = 'text_textarea';
-    $this->widget_settings = array();
-
     $this->formatter_type = 'text_plain';
     $this->formatter_settings = array();
 
@@ -81,10 +78,6 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
       'field_name' => $this->field_name,
       'label' => $this->randomName(),
       'settings' => $this->instance_settings,
-      'widget' => array(
-        'type' => $this->widget_type,
-        'settings' => $this->widget_settings,
-      ),
     );
     $this->instance = field_create_instance($this->instance);
 

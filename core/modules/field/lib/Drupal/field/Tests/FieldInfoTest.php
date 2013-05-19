@@ -79,11 +79,7 @@ class FieldInfoTest extends FieldUnitTestBase {
       'label' => $this->randomName(),
       'description' => $this->randomName(),
       'weight' => mt_rand(0, 127),
-      // test_field has no instance settings
-      'widget' => array(
-        'type' => 'test_field_widget',
-        'settings' => array(
-          'test_setting' => 999)));
+    );
     field_create_instance($instance);
 
     $info = entity_get_info('test_entity');
@@ -181,12 +177,6 @@ class FieldInfoTest extends FieldUnitTestBase {
     // Check that all expected instance settings are in place.
     $field_type = field_info_field_types($field_definition['type']);
     $this->assertEqual($instance['settings'], $field_type['instance_settings'] , 'All expected instance settings are present.');
-
-    // Check that the default widget is used and expected settings are in place.
-    $widget = $instance->getWidget();
-    $this->assertIdentical($widget->getPluginId(), $field_type['default_widget'], 'Unavailable widget replaced with default widget.');
-    $widget_type = $widget->getDefinition();
-    $this->assertIdentical($widget->getSettings(), $widget_type['settings'] , 'All expected widget settings are present.');
   }
 
   /**

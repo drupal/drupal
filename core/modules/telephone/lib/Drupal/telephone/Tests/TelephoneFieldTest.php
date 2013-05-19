@@ -64,14 +64,17 @@ class TelephoneFieldTest extends WebTestBase {
       'label' => 'Telephone Number',
       'entity_type' => 'node',
       'bundle' => 'article',
-      'widget' => array(
+    );
+    field_create_instance($instance);
+
+    entity_get_form_display('node', 'article', 'default')
+      ->setComponent('field_telephone', array(
         'type' => 'telephone_default',
         'settings' => array(
           'placeholder' => '123-456-7890',
         ),
-      ),
-    );
-    field_create_instance($instance);
+      ))
+      ->save();
 
     entity_get_display('node', 'article', 'default')
       ->setComponent('field_telephone', array(

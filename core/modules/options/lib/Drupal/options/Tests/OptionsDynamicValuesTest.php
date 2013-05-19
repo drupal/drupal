@@ -40,11 +40,14 @@ class OptionsDynamicValuesTest extends FieldTestBase {
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
       'required' => TRUE,
-      'widget' => array(
-        'type' => 'options_select',
-      ),
     );
     $this->instance = field_create_instance($this->instance);
+    entity_get_form_display('test_entity', 'test_bundle', 'default')
+      ->setComponent($this->field_name, array(
+        'type' => 'options_select',
+      ))
+      ->save();
+
     $this->test = array(
       'id' => mt_rand(1, 10),
       // Make sure this does not equal the ID so that

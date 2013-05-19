@@ -42,10 +42,10 @@ class FieldOverview extends OverviewBase {
   /**
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
-  public function buildForm(array $form, array &$form_state, $entity_type = NULL, $bundle = NULL) {
+  public function buildForm(array $form, array &$form_state, $entity_type = NULL, $bundle = NULL, $form_mode = NULL) {
     parent::buildForm($form, $form_state, $entity_type, $bundle);
 
-    $this->view_mode = 'form';
+    $this->mode = (isset($form_mode) ? $form_mode : 'default');
     // When displaying the form, make sure the list of fields is up-to-date.
     if (empty($form_state['post'])) {
       field_info_cache_clear();
@@ -56,6 +56,7 @@ class FieldOverview extends OverviewBase {
     $field_types = field_info_field_types();
     $widget_types = field_info_widget_types();
     $extra_fields = field_info_extra_fields($this->entity_type, $this->bundle, 'form');
+    $entity_form_display = entity_get_form_display($this->entity_type, $this->bundle, $this->mode);
 
     $form += array(
       '#entity_type' => $this->entity_type,
@@ -87,6 +88,7 @@ class FieldOverview extends OverviewBase {
     // Fields.
     foreach ($instances as $name => $instance) {
       $field = field_info_field($instance['field_name']);
+      $widget_configuration = $entity_form_display->getComponent($instance['field_name']);
       $admin_field_path = $this->adminPath . '/fields/' . $instance->id();
       $table[$name] = array(
         '#attributes' => array('class' => array('draggable', 'tabledrag-leaf')),
@@ -99,7 +101,7 @@ class FieldOverview extends OverviewBase {
           '#type' => 'textfield',
           '#title' => t('Weight for @title', array('@title' => $instance['label'])),
           '#title_display' => 'invisible',
-          '#default_value' => $instance['widget']['weight'],
+          '#default_value' => $widget_configuration ? $widget_configuration['weight'] : '0',
           '#size' => 3,
           '#attributes' => array('class' => array('field-weight')),
          ),
@@ -130,7 +132,7 @@ class FieldOverview extends OverviewBase {
         ),
         'widget_type' => array(
           '#type' => 'link',
-          '#title' => $widget_types[$instance['widget']['type']]['label'],
+          '#title' => $widget_configuration ? $widget_types[$widget_configuration['type']]['label'] : $widget_types['hiden']['label'],
           '#href' => $admin_field_path . '/widget-type',
           '#options' => array('attributes' => array('title' => t('Change widget type.'))),
         ),
@@ -205,7 +207,7 @@ class FieldOverview extends OverviewBase {
     }
 
     // Additional row: add new field.
-    $max_weight = field_info_max_weight($this->entity_type, $this->bundle, 'form');
+    $max_weight = $entity_form_display->getHighestWeight();
     $field_type_options = field_ui_field_type_options();
     $widget_type_options = field_ui_widget_type_options(NULL, TRUE);
     if ($field_type_options && $widget_type_options) {
@@ -521,27 +523,29 @@ class FieldOverview extends OverviewBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     $form_values = $form_state['values']['fields'];
+    $entity_form_display = entity_get_form_display($this->entity_type, $this->bundle, $this->mode);
 
-    $bundle_settings = field_bundle_settings($this->entity_type, $this->bundle);
+    // Collect data for 'regular' fields.
+    foreach ($form['#fields'] as $field_name) {
+      $options = $entity_form_display->getComponent($field_name);
+      $options['weight'] = $form_values[$field_name]['weight'];
 
-    // Update field weights.
-    foreach ($form_values as $key => $values) {
-      if (in_array($key, $form['#fields'])) {
-        $instance = field_read_instance($this->entity_type, $key, $this->bundle);
-        $instance['widget']['weight'] = $values['weight'];
-        field_update_instance($instance);
-      }
-      elseif (in_array($key, $form['#extra'])) {
-        $bundle_settings['extra_fields']['form'][$key]['weight'] = $values['weight'];
-      }
+      $entity_form_display->setComponent($field_name, $options);
     }
 
-    field_bundle_settings($this->entity_type, $this->bundle, $bundle_settings);
+    // Collect data for 'extra' fields.
+    foreach ($form['#extra'] as $field_name) {
+      $entity_form_display->setComponent($field_name, array(
+        'weight' => $form_values[$field_name]['weight'],
+      ));
+    }
+
+    // Save the form display.
+    $entity_form_display->save();
 
     $destinations = array();
 
     // Create new field.
-    $field = array();
     if (!empty($form_values['_add_new_field']['field_name'])) {
       $values = $form_values['_add_new_field'];
 
@@ -555,10 +559,6 @@ class FieldOverview extends OverviewBase {
         'entity_type' => $this->entity_type,
         'bundle' => $this->bundle,
         'label' => $values['label'],
-        'widget' => array(
-          'type' => $values['widget_type'],
-          'weight' => $values['weight'],
-        ),
       );
 
       // Create the field and instance.
@@ -566,6 +566,15 @@ class FieldOverview extends OverviewBase {
         $this->entityManager->getStorageController('field_entity')->create($field)->save();
         $new_instance = $this->entityManager->getStorageController('field_instance')->create($instance);
         $new_instance->save();
+
+        // Make sure the field is displayed in the 'default' form mode (using
+        // the configured widget and default settings).
+        entity_get_form_display($this->entity_type, $this->bundle, 'default')
+          ->setComponent($field['field_name'], array(
+            'type' => $values['widget_type'],
+            'weight' => $values['weight'],
+          ))
+          ->save();
 
         // Make sure the field is displayed in the 'default' view mode (using
         // default formatter and settings). It stays hidden for other view
@@ -582,7 +591,7 @@ class FieldOverview extends OverviewBase {
         // Store new field information for any additional submit handlers.
         $form_state['fields_added']['_add_new_field'] = $field['field_name'];
       }
-      catch (Exception $e) {
+      catch (\Exception $e) {
         drupal_set_message(t('There was a problem creating field %label: !message', array('%label' => $instance['label'], '!message' => $e->getMessage())), 'error');
       }
     }
@@ -600,15 +609,20 @@ class FieldOverview extends OverviewBase {
           'entity_type' => $this->entity_type,
           'bundle' => $this->bundle,
           'label' => $values['label'],
-          'widget' => array(
-            'type' => $values['widget_type'],
-            'weight' => $values['weight'],
-          ),
         );
 
         try {
           $new_instance = $this->entityManager->getStorageController('field_instance')->create($instance);
           $new_instance->save();
+
+          // Make sure the field is displayed in the 'default' form mode (using
+          // the configured widget and default settings).
+          entity_get_form_display($this->entity_type, $this->bundle, 'default')
+            ->setComponent($field['field_name'], array(
+              'type' => $values['widget_type'],
+              'weight' => $values['weight'],
+            ))
+            ->save();
 
           // Make sure the field is displayed in the 'default' view mode (using
           // default formatter and settings). It stays hidden for other view
@@ -621,7 +635,7 @@ class FieldOverview extends OverviewBase {
           // Store new field information for any additional submit handlers.
           $form_state['fields_added']['_add_existing_field'] = $instance['field_name'];
         }
-        catch (Exception $e) {
+        catch (\Exception $e) {
           drupal_set_message(t('There was a problem creating field instance %label: @message.', array('%label' => $instance['label'], '@message' => $e->getMessage())), 'error');
         }
       }

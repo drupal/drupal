@@ -452,6 +452,27 @@ function hook_entity_display_alter(\Drupal\entity\Plugin\Core\Entity\EntityDispl
 }
 
 /**
+ * Alters the settings used for displaying an entity form.
+ *
+ * @param \Drupal\entity\Plugin\Core\Entity\EntityFormDisplay $form_display
+ *   The entity_form_display object that will be used to display the entity form
+ *   components.
+ * @param array $context
+ *   An associative array containing:
+ *   - entity_type: The entity type, e.g., 'node' or 'user'.
+ *   - bundle: The bundle, e.g., 'page' or 'article'.
+ *   - form_mode: The form mode, e.g. 'default', 'profile', 'register'...
+ */
+function hook_entity_form_display_alter(\Drupal\entity\Plugin\Core\Entity\EntityFormDisplay $form_display, array $context) {
+  // Hide the 'user_picture' field from the register form.
+  if ($context['entity_type'] == 'user' && $context['form_mode'] == 'register') {
+    $form_display->setComponent('user_picture', array(
+      'type' => 'hidden',
+    ));
+  }
+}
+
+/**
  * Define custom entity properties.
  *
  * @param string $entity_type

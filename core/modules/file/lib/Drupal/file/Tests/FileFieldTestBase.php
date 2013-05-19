@@ -102,14 +102,16 @@ abstract class FileFieldTestBase extends WebTestBase {
       'bundle' => $bundle,
       'required' => !empty($instance_settings['required']),
       'settings' => array(),
-      'widget' => array(
-        'type' => 'file_generic',
-        'settings' => array(),
-      ),
     );
     $instance['settings'] = array_merge($instance['settings'], $instance_settings);
-    $instance['widget']['settings'] = array_merge($instance['widget']['settings'], $widget_settings);
     field_create_instance($instance);
+
+    entity_get_form_display($entity_type, $bundle, 'default')
+      ->setComponent($name, array(
+        'type' => 'file_generic',
+        'settings' => $widget_settings,
+      ))
+      ->save();
   }
 
   /**
@@ -118,9 +120,14 @@ abstract class FileFieldTestBase extends WebTestBase {
   function updateFileField($name, $type_name, $instance_settings = array(), $widget_settings = array()) {
     $instance = field_info_instance('node', $name, $type_name);
     $instance['settings'] = array_merge($instance['settings'], $instance_settings);
-    $instance['widget']['settings'] = array_merge($instance['widget']['settings'], $widget_settings);
 
     field_update_instance($instance);
+
+    entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default')
+      ->setComponent($instance['field_name'], array(
+        'settings' => $widget_settings,
+      ))
+      ->save();
   }
 
   /**

@@ -437,6 +437,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     // When generating form for all fields.
     $form = array();
     $form_state = form_state_defaults();
+    $form_state['form_display'] = entity_get_form_display($entity_type, $this->instance['bundle'], 'default');
     field_attach_form($entity, $form, $form_state);
 
     $this->assertEqual($form[$this->field_name][$langcode]['#title'], $this->instance['label'], "First field's form title is {$this->instance['label']}");
@@ -454,6 +455,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $options = array('field_name' => $this->field_name_2);
     $form = array();
     $form_state = form_state_defaults();
+    $form_state['form_display'] = entity_get_form_display($entity_type, $this->instance['bundle'], 'default');
     field_attach_form($entity, $form, $form_state, NULL, $options);
 
     $this->assertFalse(isset($form[$this->field_name]), 'The first field does not exist in the form');
@@ -477,6 +479,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     // Build the form for all fields.
     $form = array();
     $form_state = form_state_defaults();
+    $form_state['form_display'] = entity_get_form_display($entity_type, $this->instance['bundle'], 'default');
     field_attach_form($entity_init, $form, $form_state);
 
     // Simulate incoming values.

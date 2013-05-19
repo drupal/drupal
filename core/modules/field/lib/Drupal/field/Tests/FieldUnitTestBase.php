@@ -69,15 +69,17 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
       'settings' => array(
         'test_instance_setting' => $this->randomName(),
       ),
-      'widget' => array(
+    );
+    field_create_instance($this->$instance);
+
+    entity_get_form_display('test_entity', 'test_bundle', 'default')
+      ->setComponent($this->$field_name, array(
         'type' => 'test_field_widget',
-        'label' => 'Test Field',
         'settings' => array(
           'test_widget_setting' => $this->randomName(),
         )
-      )
-    );
-    field_create_instance($this->$instance);
+      ))
+      ->save();
   }
 
   /**

@@ -223,6 +223,10 @@ class OptionsFieldUITest extends FieldTestBase {
     );
     $this->drupalPost($this->admin_path, $edit, t('Save field settings'));
     $this->assertRaw(t('Updated field %label field settings.', array('%label' => $this->field_name)));
+
+    // Clear field cache.
+    field_info_cache_clear();
+
     // Test the allowed_values on the field settings form.
     $this->drupalGet($this->admin_path);
     $this->assertFieldByName('on', $on, t("The 'On' value is stored correctly."));
@@ -265,6 +269,8 @@ class OptionsFieldUITest extends FieldTestBase {
       'bundle' => $this->type,
     );
     field_create_instance($instance);
+
+    entity_get_form_display('node', $this->type, 'default')->setComponent($this->field_name)->save();
 
     $this->admin_path = 'admin/structure/types/manage/' . $this->type . '/fields/node.' . $this->type . '.' . $this->field_name . '/field';
   }

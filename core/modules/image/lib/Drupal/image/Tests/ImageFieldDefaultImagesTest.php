@@ -65,10 +65,14 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
       'settings' => array(
         'default_image' => array($default_images['instance2']->fid),
       ),
-      'widget' => $instance['widget'],
     );
     field_create_instance($instance2);
     $instance2 = field_info_instance('node', $field_name, 'page');
+
+    $widget_settings = entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default')->getComponent($field['field_name']);
+    entity_get_form_display('node', 'page', 'default')
+      ->setComponent($field['field_name'], $widget_settings)
+      ->save();
     entity_get_display('node', 'page', 'default')
       ->setComponent($field['field_name'])
       ->save();

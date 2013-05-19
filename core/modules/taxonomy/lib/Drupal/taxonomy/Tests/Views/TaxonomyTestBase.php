@@ -100,12 +100,15 @@ abstract class TaxonomyTestBase extends ViewTestBase {
       'entity_type' => 'node',
       'label' => 'Tags',
       'bundle' => 'article',
-      'widget' => array(
-        'type' => 'taxonomy_autocomplete',
-        'weight' => -4,
-      ),
     );
     field_create_instance($instance);
+
+    entity_get_form_display('node', 'article', 'default')
+      ->setComponent($instance['field_name'], array(
+        'type' => 'taxonomy_autocomplete',
+        'weight' => -4,
+      ))
+      ->save();
 
     entity_get_display('node', 'article', 'default')
       ->setComponent($instance['field_name'], array(

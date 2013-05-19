@@ -36,23 +36,12 @@ use Drupal\datetime\DateHelper;
 class DateTimeDatelistWidget extends WidgetBase {
 
   /**
-   * Constructs a DateTimeDatelist Widget object.
-   *
-   * @param array $plugin_id
-   *   The plugin_id for the widget.
-   * @param array $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\field\Plugin\Core\Entity\FieldInstance $instance
-   *   The field instance to which the widget is associated.
-   * @param array $settings
-   *   The widget settings.
-   * @param int $weight
-   *   The widget weight.
+   * {@inheritdoc}
    */
-  public function __construct($plugin_id, array $plugin_definition, FieldInstance $instance, array $settings, $weight) {
+  public function __construct($plugin_id, array $plugin_definition, FieldInstance $instance, array $settings) {
     // Identify the function used to set the default value.
     $instance['default_value_function'] = $this->defaultValueFunction();
-    parent::__construct($plugin_id, $plugin_definition, $instance, $settings, $weight);
+    parent::__construct($plugin_id, $plugin_definition, $instance, $settings);
   }
 
   /**

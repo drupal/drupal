@@ -70,13 +70,16 @@ class EditTestBase extends DrupalUnitTestBase {
       'description' => $label,
       'weight' => mt_rand(0, 127),
       'settings' => $instance_settings,
-      'widget' => array(
+    );
+    field_create_instance($this->$instance);
+
+    entity_get_form_display('entity_test', 'entity_test', 'default')
+      ->setComponent($field_name, array(
         'type' => $widget_type,
         'label' => $label,
         'settings' => $widget_settings,
-      ),
-    );
-    field_create_instance($this->$instance);
+      ))
+      ->save();
 
     entity_get_display('entity_test', 'entity_test', 'default')
       ->setComponent($field_name, array(

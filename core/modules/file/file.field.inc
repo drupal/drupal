@@ -451,7 +451,6 @@ function file_field_widget_process($element, &$form_state, $form) {
 
   $field = field_widget_field($element, $form_state);
   $instance = field_widget_instance($element, $form_state);
-  $settings = $instance['widget']['settings'];
 
   $element['#theme'] = 'file_widget';
 

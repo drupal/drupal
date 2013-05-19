@@ -170,12 +170,14 @@ abstract class EntityTranslationTestBase extends WebTestBase {
       'field_name' => $this->fieldName,
       'bundle' => $this->bundle,
       'label' => 'Test translatable text-field',
-      'widget' => array(
-        'type' => 'text_textfield',
-        'weight' => 0,
-      ),
     );
     field_create_instance($instance);
+    entity_get_form_display($this->entityType, $this->bundle, 'default')
+      ->setComponent($this->fieldName, array(
+        'type' => 'text_textfield',
+        'weight' => 0,
+      ))
+      ->save();
   }
 
   /**

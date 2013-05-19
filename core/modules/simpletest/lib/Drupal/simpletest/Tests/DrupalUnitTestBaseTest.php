@@ -229,7 +229,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $display = entity_create('entity_display', array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
-      'viewMode' => 'default',
+      'mode' => 'default',
     ));
     $field = array(
       'field_name' => 'test_field',

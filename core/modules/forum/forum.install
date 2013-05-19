@@ -84,11 +84,15 @@ function forum_enable() {
       'label' => $vocabulary->name,
       'bundle' => 'forum',
       'required' => TRUE,
-      'widget' => array(
-        'type' => 'options_select',
-      ),
     );
     field_create_instance($instance);
+
+    // Assign form display settings for the 'default' form mode.
+    entity_get_form_display('node', 'forum', 'default')
+      ->setComponent('taxonomy_forums', array(
+        'type' => 'options_select',
+      ))
+      ->save();
 
     // Assign display settings for the 'default' and 'teaser' view modes.
     entity_get_display('node', 'forum', 'default')
