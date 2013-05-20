@@ -458,15 +458,26 @@ function comment_entity_reply_load($entity_id, $args) {
  *   TRUE or FALSE if the user has access
  */
 function comment_reply_access(EntityInterface $entity) {
-  $access = $entity->access('view');
-  if (isset($access)) {
-    // Inherit view access of parent entity.
-    return $access;
+  $function = $entity->entityType() . '_access';
+  // @todo replace this with entity access controls once generic access
+  // controller lands.
+  // @see http://drupal.org/node/1696660
+  if (function_exists($function)) {
+    switch ($function) {
+      case 'user_access':
+        return $entity->access('view');
+
+      case 'taxonomy_term_access':
+        return user_access('access content');
+
+      default:
+        return $function('view', $entity);
+    }
   }
 
   // We can't know how to control access to this entity, invoke
   // hook_comment_access and if no other modules object, grant access.
-  $access = module_invoke_all('comment_access', $entity);
+  $access = Drupal::moduleHandler()->invokeAll('comment_access', $entity);
   return !in_array(COMMENT_ACCESS_DENY, $access, TRUE);
 }
 
