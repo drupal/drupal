@@ -27,7 +27,9 @@ Drupal.editors.ckeditor = {
     var editor = CKEDITOR.dom.element.get(element).getEditor();
     if (editor) {
       var changed = function () {
-        callback(editor.getData());
+        window.setTimeout(function () {
+          callback(editor.getData());
+        }, 0);
       };
       // @todo Make this more elegant once http://dev.ckeditor.com/ticket/9794
       // is fixed.

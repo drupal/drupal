@@ -2,20 +2,20 @@
 
 /**
  * @file
- * Contains \Drupal\ckeditor\Plugin\editor\editor\CKEditor.
+ * Contains \Drupal\ckeditor\Plugin\Editor\CKEditor.
  */
 
-namespace Drupal\ckeditor\Plugin\editor\editor;
+namespace Drupal\ckeditor\Plugin\Editor;
 
 use Drupal\editor\Plugin\EditorBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\editor\Annotation\Editor;
 use Drupal\Core\Annotation\Translation;
-use Drupal\editor\Plugin\Core\Entity\Editor;
+use Drupal\editor\Plugin\Core\Entity\Editor as EditorEntity;
 
 /**
  * Defines a CKEditor-based text editor for Drupal.
  *
- * @Plugin(
+ * @Editor(
  *   id = "ckeditor",
  *   label = @Translation("CKEditor"),
  *   module = "ckeditor",
@@ -47,7 +47,7 @@ class CKEditor extends EditorBase {
   /**
    * Implements \Drupal\editor\Plugin\EditPluginInterface::settingsForm().
    */
-  public function settingsForm(array $form, array &$form_state, Editor $editor) {
+  public function settingsForm(array $form, array &$form_state, EditorEntity $editor) {
     $module_path = drupal_get_path('module', 'ckeditor');
     $manager = drupal_container()->get('plugin.manager.ckeditor.plugin');
 
@@ -106,7 +106,7 @@ class CKEditor extends EditorBase {
   /**
    * Implements \Drupal\editor\Plugin\EditPluginInterface::getJSSettings().
    */
-  public function getJSSettings(Editor $editor) {
+  public function getJSSettings(EditorEntity $editor) {
     $language_interface = language(LANGUAGE_TYPE_INTERFACE);
 
     $settings = array();
@@ -145,7 +145,7 @@ class CKEditor extends EditorBase {
   /**
    * Implements \Drupal\editor\Plugin\EditPluginInterface::getLibraries().
    */
-  public function getLibraries(Editor $editor) {
+  public function getLibraries(EditorEntity $editor) {
     return array(
       array('ckeditor', 'drupal.ckeditor'),
     );
@@ -161,7 +161,7 @@ class CKEditor extends EditorBase {
    * @return array
    *   An array containing the "toolbar" configuration.
    */
-  public function buildToolbarJSSetting(Editor $editor) {
+  public function buildToolbarJSSetting(EditorEntity $editor) {
     $toolbar = array();
     foreach ($editor->settings['toolbar']['buttons'] as $row_number => $row) {
       $button_group = array();
@@ -192,7 +192,7 @@ class CKEditor extends EditorBase {
    * @return array
    *   An array containing the "contentsCss" configuration.
    */
-  public function buildContentsCssJSSetting(Editor $editor) {
+  public function buildContentsCssJSSetting(EditorEntity $editor) {
     $css = array(
       drupal_get_path('module', 'ckeditor') . '/css/ckeditor-iframe.css',
     );

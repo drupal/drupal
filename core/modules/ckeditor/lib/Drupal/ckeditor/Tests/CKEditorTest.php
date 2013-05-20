@@ -9,7 +9,7 @@ namespace Drupal\ckeditor\Tests;
 
 use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\editor\Plugin\EditorManager;
-use Drupal\ckeditor\Plugin\editor\editor\CKEditor;
+use Drupal\ckeditor\Plugin\Editor\CKEditor;
 
 /**
  * Tests for the 'CKEditor' text editor plugin.
@@ -26,7 +26,7 @@ class CKEditorTest extends DrupalUnitTestBase {
   /**
    * An instance of the "CKEditor" text editor plugin.
    *
-   * @var \Drupal\ckeditor\Plugin\editor\editor\CKEditor;
+   * @var \Drupal\ckeditor\Plugin\Editor\CKEditor;
    */
   protected $ckeditor;
 

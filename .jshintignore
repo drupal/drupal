@@ -7,10 +7,12 @@ core/misc/jquery.ba-bbq.js
 core/misc/jquery.form.js
 core/misc/jquery.js
 core/misc/jquery.once.js
+core/misc/jquery.ui.touch-punch.js
 core/misc/modernizr
 core/misc/normalize
 core/misc/ui
 core/misc/underscore
+core/misc/domready
 core/misc/vie
 core/modules/tour/js/jquery.joyride-2.0.3.js
 core/vendor
