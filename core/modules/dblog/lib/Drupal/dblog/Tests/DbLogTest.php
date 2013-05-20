@@ -2,18 +2,19 @@
 
 /**
  * @file
- * Definition of Drupal\dblog\Tests\DBLogTest.
+ * Contains \Drupal\dblog\Tests\DbLogTest.
  */
 
 namespace Drupal\dblog\Tests;
 
+use Drupal\dblog\Controller\DbLogController;
 use Drupal\simpletest\WebTestBase;
 use SimpleXMLElement;
 
 /**
  * Tests logging messages to the database.
  */
-class DBLogTest extends WebTestBase {
+class DbLogTest extends WebTestBase {
 
   /**
    * Modules to enable.
@@ -38,9 +39,9 @@ class DBLogTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'DBLog functionality',
+      'name' => 'DbLog functionality',
       'description' => 'Generate events and verify dblog entries; verify user access to log reports based on persmissions.',
-      'group' => 'DBLog',
+      'group' => 'DbLog',
     );
   }
 
@@ -59,7 +60,7 @@ class DBLogTest extends WebTestBase {
    * Database Logging module functionality through both the admin and user
    * interfaces.
    */
-  function testDBLog() {
+  function testDbLog() {
     // Login the admin user.
     $this->drupalLogin($this->big_user);
 
@@ -375,14 +376,14 @@ class DBLogTest extends WebTestBase {
           "taxonomy_forums[$langcode]" => array(1),
           "body[$langcode][0][value]" => $this->randomName(32),
         );
-      break;
+        break;
 
       default:
         $content = array(
           "title" => $this->randomName(8),
           "body[$langcode][0][value]" => $this->randomName(32),
         );
-      break;
+        break;
     }
     return $content;
   }
@@ -575,17 +576,7 @@ class DBLogTest extends WebTestBase {
    *   The watchdog severity constant or NULL if not found.
    */
   protected function getSeverityConstant($class) {
-    // Reversed array from dblog_overview().
-    $map = array(
-      'dblog-debug' => WATCHDOG_DEBUG,
-      'dblog-info' => WATCHDOG_INFO,
-      'dblog-notice' => WATCHDOG_NOTICE,
-      'dblog-warning' => WATCHDOG_WARNING,
-      'dblog-error' => WATCHDOG_ERROR,
-      'dblog-critical' => WATCHDOG_CRITICAL,
-      'dblog-alert' => WATCHDOG_ALERT,
-      'dblog-emergency' => WATCHDOG_EMERGENCY,
-    );
+    $map = array_flip(DbLogController::getLogLevelClassMap());
 
     // Find the class that contains the severity.
     $classes = explode(' ', $class);

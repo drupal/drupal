@@ -48,6 +48,9 @@ class NodeAccessFieldTest extends NodeTestBase {
     entity_get_display('node', 'page', 'default')
       ->setComponent($this->field_name)
       ->save();
+    entity_get_form_display('node', 'page', 'default')
+      ->setComponent($this->field_name)
+      ->save();
   }
 
   /**

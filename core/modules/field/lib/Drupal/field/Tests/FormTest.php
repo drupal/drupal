@@ -43,13 +43,6 @@ class FormTest extends FieldTestBase {
       'settings' => array(
         'test_instance_setting' => $this->randomName(),
       ),
-      'widget' => array(
-        'type' => 'test_field_widget',
-        'label' => 'Test Field',
-        'settings' => array(
-          'test_widget_setting' => $this->randomName(),
-        )
-      )
     );
   }
 
@@ -59,6 +52,9 @@ class FormTest extends FieldTestBase {
     $this->instance['field_name'] = $this->field_name;
     field_create_field($this->field);
     field_create_instance($this->instance);
+    entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
+      ->setComponent($this->field_name)
+      ->save();
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Display creation form.
@@ -125,6 +121,9 @@ class FormTest extends FieldTestBase {
     $this->instance['default_value'] = array(array('value' => $default));
     field_create_field($this->field);
     field_create_instance($this->instance);
+    entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
+      ->setComponent($this->field_name)
+      ->save();
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Display creation form.
@@ -149,6 +148,9 @@ class FormTest extends FieldTestBase {
     $this->instance['required'] = TRUE;
     field_create_field($this->field);
     field_create_instance($this->instance);
+    entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
+      ->setComponent($this->field_name)
+      ->save();
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Submit with missing required value.
@@ -187,6 +189,9 @@ class FormTest extends FieldTestBase {
     $this->instance['field_name'] = $this->field_name;
     field_create_field($this->field);
     field_create_instance($this->instance);
+    entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
+      ->setComponent($this->field_name)
+      ->save();
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Display creation form -> 1 widget.
@@ -267,6 +272,9 @@ class FormTest extends FieldTestBase {
     $this->instance['field_name'] = $this->field_name;
     field_create_field($this->field);
     field_create_instance($this->instance);
+    entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
+      ->setComponent($this->field_name)
+      ->save();
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Add a required radio field.
@@ -282,11 +290,13 @@ class FormTest extends FieldTestBase {
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
       'required' => TRUE,
-      'widget' => array(
-        'type' => 'options_buttons',
-      ),
     );
     field_create_instance($instance);
+    entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default')
+      ->setComponent($instance['field_name'], array(
+        'type' => 'options_buttons',
+      ))
+      ->save();
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test_bundle');
@@ -309,6 +319,9 @@ class FormTest extends FieldTestBase {
     $this->instance['field_name'] = $this->field_name;
     field_create_field($this->field);
     field_create_instance($this->instance);
+    entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
+      ->setComponent($this->field_name)
+      ->save();
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Display creation form -> 1 widget.
@@ -366,9 +379,13 @@ class FormTest extends FieldTestBase {
     $this->field = $this->field_multiple;
     $this->field_name = $this->field['field_name'];
     $this->instance['field_name'] = $this->field_name;
-    $this->instance['widget']['type'] = 'test_field_widget_multiple';
     field_create_field($this->field);
     field_create_instance($this->instance);
+    entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
+      ->setComponent($this->field_name, array(
+        'type' => 'test_field_widget_multiple',
+      ))
+      ->save();
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Display creation form.
@@ -408,6 +425,9 @@ class FormTest extends FieldTestBase {
     $instance['field_name'] = $field_name;
     field_create_field($field);
     field_create_instance($instance);
+    entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
+      ->setComponent($field_name)
+      ->save();
 
     // Create a field with no edit access - see field_test_field_access().
     $field_no_access = array(
@@ -423,6 +443,9 @@ class FormTest extends FieldTestBase {
     );
     field_create_field($field_no_access);
     field_create_instance($instance_no_access);
+    entity_get_form_display($instance_no_access['entity_type'], $instance_no_access['bundle'], 'default')
+      ->setComponent($field_name_no_access)
+      ->save();
 
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
@@ -433,6 +456,7 @@ class FormTest extends FieldTestBase {
 
     $form = array();
     $form_state = form_state_defaults();
+    $form_state['form_display'] = entity_get_form_display($entity_type, $this->instance['bundle'], 'default');
     field_attach_form($entity, $form, $form_state);
 
     $this->assertEqual($form[$field_name_no_access][$langcode][0]['value']['#entity_type'], $entity_type, 'The correct entity type is set in the field structure.');
@@ -479,9 +503,15 @@ class FormTest extends FieldTestBase {
     $this->instance['field_name'] = 'field_single';
     $this->instance['label'] = 'Single field';
     field_create_instance($this->instance);
+    entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
+      ->setComponent($this->instance['field_name'])
+      ->save();
     $this->instance['field_name'] = 'field_unlimited';
     $this->instance['label'] = 'Unlimited field';
     field_create_instance($this->instance);
+    entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
+      ->setComponent($this->instance['field_name'])
+      ->save();
 
     // Create two entities.
     $entity_1 = field_test_create_entity(1, 1);
@@ -585,10 +615,14 @@ class FormTest extends FieldTestBase {
     $this->field = $this->field_single;
     $this->field_name = $this->field['field_name'];
     $this->instance['field_name'] = $this->field_name;
-    $this->instance['widget']['type'] = 'hidden';
     $this->instance['default_value'] = array(0 => array('value' => 99));
     field_create_field($this->field);
     field_create_instance($this->instance);
+    entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
+      ->setComponent($this->instance['field_name'], array(
+        'type' => 'hidden',
+      ))
+      ->save();
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Display the entity creation form.
@@ -607,8 +641,12 @@ class FormTest extends FieldTestBase {
     // Update the instance to remove the default value and switch to the
     // default widget.
     $this->instance['default_value'] = NULL;
-    $this->instance['widget']['type'] = 'test_field_widget';
     field_update_instance($this->instance);
+    entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
+      ->setComponent($this->instance['field_name'], array(
+        'type' => 'test_field_widget',
+      ))
+      ->save();
 
     // Display edit form.
     $this->drupalGet('test-entity/manage/' . $id . '/edit');
@@ -623,9 +661,12 @@ class FormTest extends FieldTestBase {
     $entity = field_test_entity_test_load($id);
     $this->assertEqual($entity->{$this->field_name}[$langcode][0]['value'], $value, 'Field value was updated');
 
-    // Update the instance and switch to the Hidden widget again.
-    $this->instance['widget']['type'] = 'hidden';
-    field_update_instance($this->instance);
+    // Update the form display and switch to the Hidden widget again.
+    entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
+      ->setComponent($this->instance['field_name'], array(
+        'type' => 'hidden',
+      ))
+      ->save();
 
     // Create a new revision.
     $edit = array('revision' => TRUE);

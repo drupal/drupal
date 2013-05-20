@@ -55,17 +55,14 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     $config = \Drupal::config('field.instance.' . $instance->id())->get();
 
     $field_type = field_info_field_types($this->field['type']);
-    $widget_type = field_info_widget_types($field_type['default_widget']);
 
     // Check that default values are set.
     $this->assertEqual($config['required'], FALSE, 'Required defaults to false.');
     $this->assertIdentical($config['label'], $this->instance_definition['field_name'], 'Label defaults to field name.');
     $this->assertIdentical($config['description'], '', 'Description defaults to empty string.');
-    $this->assertIdentical($config['widget']['type'], $field_type['default_widget'], 'Default widget has been written.');
 
     // Check that default settings are set.
     $this->assertEqual($config['settings'], $field_type['instance_settings'] , 'Default instance settings have been written.');
-    $this->assertIdentical($config['widget']['settings'], $widget_type['settings'] , 'Default widget settings have been written.');
 
     // Guarantee that the field/bundle combination is unique.
     try {
@@ -147,26 +144,12 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     $instance['label'] = $this->randomName();
     $instance['description'] = $this->randomName();
     $instance['settings']['test_instance_setting'] = $this->randomName();
-    $instance['widget']['settings']['test_widget_setting'] =$this->randomName();
-    $instance['widget']['weight']++;
     field_update_instance($instance);
 
     $instance_new = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
     $this->assertEqual($instance['required'], $instance_new['required'], '"required" change is saved');
     $this->assertEqual($instance['label'], $instance_new['label'], '"label" change is saved');
     $this->assertEqual($instance['description'], $instance_new['description'], '"description" change is saved');
-    $this->assertEqual($instance['widget']['settings']['test_widget_setting'], $instance_new['widget']['settings']['test_widget_setting'], 'Widget setting change is saved');
-    $this->assertEqual($instance['widget']['weight'], $instance_new['widget']['weight'], 'Widget weight change is saved');
-
-    // Check that changing the widget type updates the default settings.
-    $instance = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
-    $instance['widget']['type'] = 'test_field_widget_multiple';
-    field_update_instance($instance);
-
-    $instance_new = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
-    $this->assertEqual($instance['widget']['type'], $instance_new['widget']['type'] , 'Widget type change is saved.');
-    $settings = field_info_widget_settings($instance_new['widget']['type']);
-    $this->assertIdentical($settings, array_intersect_key($instance_new['widget']['settings'], $settings) , 'Widget type change updates default settings.');
 
     // TODO: test failures.
   }

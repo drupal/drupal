@@ -28,7 +28,12 @@ $value = array(
     ),
   ),
   'extra_fields' => array(
-    'form' => array(),
+    'form' => array(
+      'title' => array(
+        'weight' => -5,
+        'visible' => 1,
+      ),
+    ),
     'display' => array(
       'language' => array(
         'default' => array(

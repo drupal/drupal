@@ -48,7 +48,6 @@ class RoleListController extends ConfigEntityListController implements FormInter
     // Built-in roles could not be deleted or disabled.
     if (in_array($entity->id(), array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
       unset($operations['delete']);
-      unset($operations['disable']);
     }
     return $operations;
   }

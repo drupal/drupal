@@ -515,6 +515,15 @@ function _comment_body_field_create($entity_type, $bundle, $field_name) {
       'required' => TRUE,
     );
     field_create_instance($instance);
+
+    // Assign widget settings for the 'default' form mode.
+    entity_get_form_display('comment', $field_name, 'default')
+      ->setComponent('comment_body', array(
+        'type' => 'text_textarea',
+      ))
+      ->save();
+
+    // Assign display settings for the 'default' view mode.
     entity_get_display('comment', $field_name, 'default')
       ->setComponent('comment_body', array(
         'label' => 'hidden',

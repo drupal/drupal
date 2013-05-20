@@ -43,9 +43,6 @@ class ShapeItemTest extends FieldUnitTestBase {
       'entity_type' => 'entity_test',
       'field_name' => 'field_shape',
       'bundle' => 'entity_test',
-      'widget' => array(
-        'type' => 'test_field_widget',
-      ),
     );
     field_create_instance($this->instance);
   }

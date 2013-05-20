@@ -227,6 +227,7 @@ function field_test_entity_nested_form($form, &$form_state, $entity_1, $entity_2
       '#value' => $entity_1->$key,
     );
   }
+  $form_state['form_display'] = entity_get_form_display($entity_1->entityType(), $entity_1->bundle(), 'default');
   field_attach_form($entity_1, $form, $form_state);
 
   // Second entity.
@@ -243,6 +244,7 @@ function field_test_entity_nested_form($form, &$form_state, $entity_1, $entity_2
       '#value' => $entity_2->$key,
     );
   }
+  $form_state['form_display'] = entity_get_form_display($entity_1->entityType(), $entity_1->bundle(), 'default');
   field_attach_form($entity_2, $form['entity_2'], $form_state);
 
   $form['save'] = array(

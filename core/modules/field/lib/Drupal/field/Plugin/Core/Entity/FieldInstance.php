@@ -172,24 +172,6 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   public $default_value_function = '';
 
   /**
-   * The widget definition.
-   *
-   * An array of key/value pairs identifying the Form API input widget for
-   * the field when used by this bundle.
-   *   - type: (string) The plugin ID of the widget, such as text_textfield.
-   *   - settings: (array) A sub-array of key/value pairs of settings. The keys
-   *     and default values are defined by the widget plugin in the 'settings'
-   *     entry of its "plugin definition" (typycally plugin class annotations).
-   *   - weight: (float) The weight of the widget relative to the other
-   *     elements in entity edit forms.
-   *   - module: (string, read-only) The name of the module that provides the
-   *     widget plugin.
-   *
-   * @var array
-   */
-  public $widget = array();
-
-  /**
    * Flag indicating whether the instance is deleted.
    *
    * The delete() method marks the instance as "deleted" and removes the
@@ -210,13 +192,6 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
    * @var \Drupal\field\Plugin\Core\Entity\Field
    */
   protected $field;
-
-  /**
-   * The widget plugin used for this instance.
-   *
-   * @var \Drupal\field\Plugin\Type\Widget\WidgetInterface
-   */
-  protected $widgetPlugin;
 
   /**
    * Flag indicating whether the bundle name can be renamed or not.
@@ -302,7 +277,6 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
       'default_value',
       'default_value_function',
       'settings',
-      'widget',
     );
     $properties = array();
     foreach ($names as $name) {
@@ -367,22 +341,6 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
     // Set the default instance settings.
     $this->settings += $field_type_info['instance_settings'];
 
-    // Set the default widget and settings.
-    $this->widget += array(
-      'type' => $field_type_info['default_widget'],
-      'settings' => array(),
-    );
-    // Get the widget module and settings from the widget type.
-    if ($widget_type_info = \Drupal::service('plugin.manager.field.widget')->getDefinition($this->widget['type'])) {
-      $this->widget['module'] = $widget_type_info['module'];
-      $this->widget['settings'] += $widget_type_info['settings'];
-    }
-    // If no weight is specified, make sure the field sinks to the bottom.
-    if (!isset($this->widget['weight'])) {
-      $max_weight = field_info_max_weight($this->entity_type, $this->bundle, 'form');
-      $this->widget['weight'] = isset($max_weight) ? $max_weight + 1 : 0;
-    }
-
     // Save the configuration.
     $result = parent::save();
     field_cache_clear();
@@ -430,6 +388,11 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
       // hook_field_delete_instance().
       $module_handler->invokeAll('field_delete_instance', array($this));
 
+      // Remove the instance from the entity form displays.
+      if ($form_display = entity_load('entity_form_display', $this->entity_type . '.' . $this->bundle . '.default')) {
+        $form_display->removeComponent($this->field->id())->save();
+      }
+
       // Remove the instance from the entity displays.
       $ids = array();
       $view_modes = array('default' => array()) + entity_get_view_modes($this->entity_type);
@@ -452,36 +415,6 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
    */
   public function getField() {
     return $this->field;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getWidget() {
-    if (empty($this->widgetPlugin)) {
-      $widget_properties = $this->widget;
-
-      // Let modules alter the widget properties.
-      $context = array(
-        'entity_type' => $this->entity_type,
-        'bundle' => $this->bundle,
-        'field' => $this->field,
-        'instance' => $this,
-      );
-      // Invoke hook_field_widget_properties_alter() and
-      // hook_field_widget_properties_ENTITY_TYPE_alter().
-      drupal_alter(array('field_widget_properties', 'field_widget_properties_' . $this->entity_type), $widget_properties, $context);
-
-      $options = array(
-        'instance' => $this,
-        'type' => $widget_properties['type'],
-        'settings' => $widget_properties['settings'],
-        'weight' => $widget_properties['weight'],
-      );
-      $this->widgetPlugin = \Drupal::service('plugin.manager.field.widget')->getInstance($options);
-    }
-
-    return $this->widgetPlugin;
   }
 
   /**

@@ -12,10 +12,4 @@ default_value_function: ''
 settings:
   text_processing: '0'
   user_register_form: '0'
-widget:
-  type: text_textfield
-  weight: '-3'
-  settings:
-    size: '60'
-  module: text
 field_type: text

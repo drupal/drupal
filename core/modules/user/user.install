@@ -335,17 +335,20 @@ function user_install_picture_field() {
       'min_resolution' => '',
       'default_image' => 0,
     ),
-    'widget' => array(
-      'module' => 'image',
+  );
+  field_create_instance($instance);
+
+  // Assign form display settings for the 'default' view mode.
+  entity_get_form_display('user', 'user', 'default')
+    ->setComponent('user_picture', array(
       'type' => 'image_image',
       'settings' => array(
         'progress_indicator' => 'throbber',
         'preview_image_style' => 'thumbnail',
       ),
       'weight' => -1,
-    ),
-  );
-  field_create_instance($instance);
+    ))
+    ->save();
 
   // Assign display settings for the 'default' and 'compact' view modes.
   entity_get_display('user', 'user', 'default')
@@ -731,29 +734,32 @@ function user_update_8011() {
       'min_resolution' => '',
       'default_image' => !empty($default_image_fid) ? $default_image_fid : 0,
     ),
-    'widget' => array(
-      'module' => 'image',
-      'type' => 'image_image',
+  );
+  _update_7000_field_create_instance($field, $instance);
+
+  module_load_install('entity');
+  if (update_variable_get('user_pictures', 0)) {
+    $formatter = 'image';
+    $widget = 'image_image';
+  }
+  else {
+    $formatter = $widget = 'hidden';
+  }
+
+  // Assign form settings for the 'default' form mode.
+  $form_display = _update_8000_entity_get_form_display('user', 'user', 'default');
+  $form_display->set('content.user_picture', array(
+      'type' => $widget,
       'settings' => array(
         'progress_indicator' => 'throbber',
         'preview_image_style' => 'thumbnail',
       ),
       'weight' => -1,
-    ),
-  );
-  _update_7000_field_create_instance($field, $instance);
+    ))
+    ->save();
+  update_config_manifest_add('entity.form_display', array($form_display->get('id')));
 
-  // Assign display settings for the 'default' and 'compact' view modes. In D7,
-  // user pictures did not require Image module to work. Image module only
-  // allowed usage of an image style to format user pictures in the output.
-  // The 'user_pictures' variable had a global effect on the presence of the
-  // user picture functionality before. The new user picture image field is
-  // created regardless of that global setting, which means the field appears
-  // on the user account form after migration, even if user pictures were
-  // disabled previously. The picture is only hidden in the output.
-  $formatter = update_variable_get('user_pictures', 0) ? 'image' : 'hidden';
-  module_load_install('entity');
-
+  // Assign display settings for the 'default' and 'compact' view modes.
   $display = _update_8000_entity_get_display('user', 'user', 'default');
   $display->set('content.user_picture', array(
       'label' => 'hidden',

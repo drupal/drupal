@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\entity\Plugin\Core\Entity\EntityFormDisplay;
 
 /**
  * Filter that limits test entity list to revisable ones.
@@ -363,5 +364,18 @@ function entity_test_entity_field_access_alter(array &$grants, array $context) {
   $field = $context['field'];
   if ($field->getName() == 'field_test_text' && $field->value == 'access alter value') {
     $grants[':default'] = FALSE;
+  }
+}
+
+/**
+ * Implements hook_entity_form_display_alter().
+ */
+function entity_test_entity_form_display_alter(EntityFormDisplay $form_display, $context) {
+  // Make the field_test_text field 42 characters for entity_test_mul.
+  if ($context['entity_type'] == 'entity_test') {
+    if ($component_options = $form_display->getComponent('field_test_text')) {
+      $component_options['settings']['size'] = 42;
+      $form_display->setComponent('field_test_text', $component_options);
+    }
   }
 }

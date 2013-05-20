@@ -39,13 +39,6 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   protected $settings;
 
   /**
-   * The widget weight.
-   *
-   * @var int
-   */
-  protected $weight;
-
-  /**
    * Constructs a WidgetBase object.
    *
    * @param array $plugin_id
@@ -56,16 +49,13 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    *   The field instance to which the widget is associated.
    * @param array $settings
    *   The widget settings.
-   * @param int $weight
-   *   The widget weight.
    */
-  public function __construct($plugin_id, array $plugin_definition, FieldInstance $instance, array $settings, $weight) {
+  public function __construct($plugin_id, array $plugin_definition, FieldInstance $instance, array $settings) {
     parent::__construct(array(), $plugin_id, $plugin_definition);
 
     $this->instance = $instance;
     $this->field = field_info_field($instance['field_name']);
     $this->settings = $settings;
-    $this->weight = $weight;
   }
 
   /**
@@ -140,7 +130,6 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
           'field-widget-' . drupal_html_class($this->getPluginId()),
         ),
       ),
-      '#weight' => $this->weight,
     );
 
     // Populate the 'array_parents' information in $form_state['field'] after

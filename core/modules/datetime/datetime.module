@@ -134,9 +134,7 @@ function datetime_field_settings_form($field, $instance, $has_data) {
  * Implements hook_field_instance_settings_form().
  */
 function datetime_field_instance_settings_form($field, $instance) {
-  $widget = $instance['widget'];
   $settings = $instance['settings'];
-  $widget_settings = $instance['widget']['settings'];
 
   $form['default_value'] = array(
     '#type' => 'select',

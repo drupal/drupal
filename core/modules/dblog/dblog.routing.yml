@@ -1,0 +1,6 @@
+dblog_overview:
+  pattern: '/admin/reports/dblog'
+  defaults:
+    _content: '\Drupal\dblog\Controller\DbLogController::overview'
+  requirements:
+    _permission: 'access site reports'

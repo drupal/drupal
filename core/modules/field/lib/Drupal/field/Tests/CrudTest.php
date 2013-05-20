@@ -283,9 +283,6 @@ class CrudTest extends FieldUnitTestBase {
       'field_name' => $this->field['field_name'],
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
-      'widget' => array(
-        'type' => 'test_field_widget',
-      ),
     );
     field_create_instance($this->instance_definition);
     $this->another_instance_definition = $this->instance_definition;

@@ -62,14 +62,8 @@ class TextFieldTest extends WebTestBase {
       'field_name' => $this->field['field_name'],
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
-      'widget' => array(
-        'type' => 'text_textfield',
-      ),
     );
     field_create_instance($this->instance);
-    entity_get_display('test_entity', 'test_bundle', 'default')
-      ->setComponent($this->field['field_name'])
-      ->save();
 
     // Test valid and invalid values with field_attach_validate().
     $entity = field_test_create_entity();
@@ -111,14 +105,16 @@ class TextFieldTest extends WebTestBase {
       'settings' => array(
         'text_processing' => TRUE,
       ),
-      'widget' => array(
+    );
+    field_create_instance($this->instance);
+    entity_get_form_display('test_entity', 'test_bundle', 'default')
+      ->setComponent($this->field_name, array(
         'type' => $widget_type,
         'settings' => array(
           'placeholder' => 'A placeholder on ' . $widget_type,
         ),
-      ),
-    );
-    field_create_instance($this->instance);
+      ))
+      ->save();
     entity_get_display('test_entity', 'test_bundle', 'full')
       ->setComponent($this->field_name)
       ->save();
@@ -174,11 +170,13 @@ class TextFieldTest extends WebTestBase {
       'settings' => array(
         'text_processing' => TRUE,
       ),
-      'widget' => array(
-        'type' => $widget_type,
-      ),
     );
     field_create_instance($this->instance);
+    entity_get_form_display('test_entity', 'test_bundle', 'default')
+      ->setComponent($this->field_name, array(
+        'type' => $widget_type,
+      ))
+      ->save();
     entity_get_display('test_entity', 'test_bundle', 'full')
       ->setComponent($this->field_name)
       ->save();

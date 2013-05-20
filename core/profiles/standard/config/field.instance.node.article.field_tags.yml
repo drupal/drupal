@@ -9,13 +9,5 @@ default_value: {  }
 default_value_function: ''
 settings:
   user_register_form: false
-widget:
-  type: taxonomy_autocomplete
-  weight: -4
-  settings:
-    size: '60'
-    autocomplete_path: taxonomy/autocomplete
-    placeholder: ''
-  module: taxonomy
 status: 1
 langcode: und

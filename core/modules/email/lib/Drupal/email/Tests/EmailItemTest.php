@@ -44,11 +44,15 @@ class EmailItemTest extends FieldUnitTestBase {
       'entity_type' => 'entity_test',
       'field_name' => 'field_email',
       'bundle' => 'entity_test',
-      'widget' => array(
-        'type' => 'email_default',
-      ),
     );
     field_create_instance($this->instance);
+
+    // Create a form display for the default form mode.
+    entity_get_form_display('entity_test', 'entity_test', 'default')
+      ->setComponent('field_email', array(
+        'type' => 'email_default',
+      ))
+      ->save();
   }
 
   /**

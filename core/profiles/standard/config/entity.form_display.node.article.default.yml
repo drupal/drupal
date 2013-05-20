@@ -1,0 +1,25 @@
+id: node.article.default
+targetEntityType: node
+bundle: article
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: '0'
+    settings:
+      rows: '9'
+      summary_rows: '3'
+      placeholder: ''
+  field_tags:
+    type: taxonomy_autocomplete
+    weight: '-4'
+    settings:
+      size: '60'
+      autocomplete_path: taxonomy/autocomplete
+      placeholder: ''
+  field_image:
+    type: image_image
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    weight: '-1'

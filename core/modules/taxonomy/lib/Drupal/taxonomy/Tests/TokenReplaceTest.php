@@ -46,11 +46,13 @@ class TokenReplaceTest extends TaxonomyTestBase {
       'field_name' => 'taxonomy_' . $this->vocabulary->id(),
       'bundle' => 'article',
       'entity_type' => 'node',
-      'widget' => array(
-        'type' => 'options_select',
-      ),
     );
     field_create_instance($this->instance);
+    entity_get_form_display('node', 'article', 'default')
+      ->setComponent('taxonomy_' . $this->vocabulary->id(), array(
+        'type' => 'options_select',
+      ))
+      ->save();
     entity_get_display('node', 'article', 'default')
       ->setComponent('taxonomy_' . $this->vocabulary->id(), array(
         'type' => 'taxonomy_term_reference_link',

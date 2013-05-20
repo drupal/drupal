@@ -1036,6 +1036,8 @@ function theme($hook, $variables = array()) {
     }
     else {
       $variables[$info['render element']] = $element;
+      // Give a hint to render engines to prevent infinite recursion.
+      $variables[$info['render element']]['#render_children'] = TRUE;
     }
   }
 
@@ -1711,7 +1713,7 @@ function theme_status_messages($variables) {
     'warning' => t('Warning message'),
   );
   foreach (drupal_get_messages($display) as $type => $messages) {
-    $output .= "<div class=\"messages $type\">\n";
+    $output .= "<div class=\"messages messages--$type\">\n";
     if (!empty($status_heading[$type])) {
       $output .= '<h2 class="element-invisible">' . $status_heading[$type] . "</h2>\n";
     }

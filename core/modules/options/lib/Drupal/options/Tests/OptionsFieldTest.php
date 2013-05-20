@@ -86,11 +86,13 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
       'field_name' => $this->fieldName,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-      'widget' => array(
-        'type' => 'options_buttons',
-      ),
     );
     field_create_instance($this->instance);
+    entity_get_form_display('entity_test', 'entity_test', 'default')
+      ->setComponent($this->fieldName, array(
+        'type' => 'options_buttons',
+      ))
+      ->save();
     $entity = entity_create('entity_test', array());
     $form = entity_get_form($entity);
     $this->assertTrue(!empty($form[$this->fieldName][$langcode][1]), 'Option 1 exists');

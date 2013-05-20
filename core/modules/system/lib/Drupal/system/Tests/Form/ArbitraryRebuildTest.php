@@ -42,16 +42,21 @@ class ArbitraryRebuildTest extends WebTestBase {
     field_create_field($field);
 
     $instance = array(
-      'entity_type' => 'node',
+      'entity_type' => 'user',
       'field_name' => 'test_multiple',
-      'bundle' => 'page',
+      'bundle' => 'user',
       'label' => 'Test a multiple valued field',
-      'widget' => array(
-        'type' => 'text_textfield',
-        'weight' => 0,
+      'settings' => array(
+        'user_register_form' => TRUE,
       ),
     );
     field_create_instance($instance);
+    entity_get_form_display('user', 'user', 'default')
+      ->setComponent('test_multiple', array(
+        'type' => 'text_textfield',
+        'weight' => 0,
+      ))
+      ->save();
   }
 
   /**

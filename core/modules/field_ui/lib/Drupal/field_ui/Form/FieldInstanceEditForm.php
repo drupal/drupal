@@ -67,6 +67,7 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
     $bundle = $this->instance['bundle'];
     $entity_type = $this->instance['entity_type'];
     $field = $this->instance->getField();
+    $entity_form_display = entity_get_form_display($entity_type, $bundle, 'default');
     $bundles = entity_get_bundles();
 
     drupal_set_title(t('%instance settings for %bundle', array(
@@ -75,6 +76,7 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
     )), PASS_THROUGH);
 
     $form['#field'] = $field;
+    $form['#entity_form_display'] = $entity_form_display;
     // Create an arbitrary entity object (used by the 'default value' widget).
     $ids = (object) array('entity_type' => $this->instance['entity_type'], 'bundle' => $this->instance['bundle'], 'entity_id' => NULL);
     $form['#entity'] = _field_create_entity_from_ids($ids);
@@ -86,8 +88,6 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
       );
       return $form;
     }
-
-    $widget_type = $this->widgetManager->getDefinition($this->instance['widget']['type']);
 
     // Create a form structure for the instance values.
     $form['instance'] = array(
@@ -106,10 +106,6 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
     $form['instance']['bundle'] = array(
       '#type' => 'value',
       '#value' => $bundle,
-    );
-    $form['instance']['widget']['weight'] = array(
-      '#type' => 'value',
-      '#value' => !empty($this->instance['widget']['weight']) ? $this->instance['widget']['weight'] : 0,
     );
 
     // Build the configurable instance values.
@@ -137,12 +133,6 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
       '#weight' => -5,
     );
 
-    // Build the widget component of the instance.
-    $form['instance']['widget']['type'] = array(
-      '#type' => 'value',
-      '#value' => $this->instance['widget']['type'],
-    );
-
     // Add additional field instance settings from the field module.
     $additions = \Drupal::moduleHandler()->invoke($field['module'], 'field_instance_settings_form', array($field, $this->instance, $form_state));
     if (is_array($additions)) {
@@ -151,7 +141,7 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
     }
 
     // Add widget settings for the widget type.
-    $additions = $this->instance->getWidget()->settingsForm($form, $form_state);
+    $additions = $entity_form_display->getWidget($this->instance->getField()->id)->settingsForm($form, $form_state);
     $form['instance']['widget']['settings'] = $additions ?: array('#type' => 'value', '#value' => array());
     $form['instance']['widget']['#weight'] = 20;
 
@@ -181,13 +171,14 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
     // value' gets validated using the instance settings being submitted.
     $field_name = $this->instance['field_name'];
     $entity = $form['#entity'];
+    $entity_form_display = $form['#entity_form_display'];
 
     if (isset($form['instance']['default_value_widget'])) {
       $element = $form['instance']['default_value_widget'];
 
       // Extract the 'default value'.
       $items = array();
-      $this->instance->getWidget()->extractFormValues($entity, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
+      $entity_form_display->getWidget($this->instance->getField()->id)->extractFormValues($entity, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
 
       // Grab the field definition from $form_state.
       $field_state = field_form_get_state($element['#parents'], $field_name, LANGUAGE_NOT_SPECIFIED, $form_state);
@@ -207,7 +198,7 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
         field_form_set_state($element['#parents'], $field_name, LANGUAGE_NOT_SPECIFIED, $form_state, $field_state);
 
         // Assign reported errors to the correct form element.
-        $this->instance->getWidget()->flagErrors($entity, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
+        $entity_form_display->getWidget($this->instance->getField()->id)->flagErrors($entity, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
       }
     }
   }
@@ -217,8 +208,8 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
    */
   public function submitForm(array &$form, array &$form_state) {
     form_load_include($form_state, 'inc', 'field_ui', 'field_ui.admin');
-    $field = $form['#field'];
     $entity = $form['#entity'];
+    $entity_form_display = $form['#entity_form_display'];
 
     // Handle the default value.
     if (isset($form['instance']['default_value_widget'])) {
@@ -226,10 +217,16 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
 
       // Extract field values.
       $items = array();
-      $this->instance->getWidget()->extractFormValues($entity, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
+      $entity_form_display->getWidget($this->instance->getField()->id)->extractFormValues($entity, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
 
       $this->instance['default_value'] = $items ? $items : NULL;
     }
+
+    // Handle widget settings.
+    $options = $entity_form_display->getComponent($this->instance->getField()->id);
+    $options['settings'] = $form_state['values']['instance']['widget']['settings'];
+    $entity_form_display->setComponent($this->instance->getField()->id, $options)->save();
+    unset($form_state['values']['instance']['widget']);
 
     // Merge incoming values into the instance.
     foreach ($form_state['values']['instance'] as $key => $value) {
@@ -262,8 +259,8 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
    * Builds the default value widget for a given field instance.
    */
   protected function getDefaultValueWidget($field, array &$form, &$form_state) {
-    $field_name = $field['field_name'];
     $entity = $form['#entity'];
+    $entity_form_display = $form['#entity_form_display'];
 
     $element = array(
       '#type' => 'details',
@@ -300,7 +297,7 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
     if (!empty($this->instance['default_value'])) {
       $items = (array) $this->instance['default_value'];
     }
-    $element += $this->instance->getWidget()->form($entity, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
+    $element += $entity_form_display->getWidget($this->instance->getField()->id)->form($entity, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
 
     return $element;
   }

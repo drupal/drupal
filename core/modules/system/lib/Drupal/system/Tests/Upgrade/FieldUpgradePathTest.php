@@ -88,6 +88,45 @@ class FieldUpgradePathTest extends UpgradePathTestBase {
   }
 
   /**
+   * Tests upgrade of entity form displays.
+   */
+  public function testEntityFormDisplayUpgrade() {
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
+
+    // Check that the configuration entries were created.
+    $form_display = config('entity.form_display.node.article.default')->get();
+    $this->assertTrue(!empty($form_display));
+
+    // Check that manifest entries for the 'article' node type were correctly
+    // created.
+    $manifest = config('manifest.entity.form_display');
+    $data = $manifest->get();
+    $this->assertEqual($data['node.article.default'], array('name' => 'entity.form_display.node.article.default'));
+
+    // Check that the 'body' field is configured as expected.
+    $expected = array(
+      'type' => 'text_textarea_with_summary',
+      'weight' => -4,
+      'settings' => array(
+        'rows' => '20',
+        'summary_rows' => '5',
+      ),
+    );
+    $this->assertEqual($form_display['content']['body'], $expected);
+
+    // Check that the display key in the instance data was removed.
+    $body_instance = field_info_instance('node', 'body', 'article');
+    $this->assertTrue(!isset($body_instance['widget']));
+
+    // Check that the 'title' extra field is configured as expected.
+    $expected = array(
+      'weight' => -5,
+      'visible' => 1,
+    );
+    $this->assertEqual($form_display['content']['title'], $expected);
+  }
+
+  /**
    * Tests migration of field and instance definitions to config.
    */
   function testFieldUpgradeToConfig() {
@@ -149,15 +188,6 @@ class FieldUpgradePathTest extends UpgradePathTestBase {
           'display_summary' => TRUE,
           'text_processing' => 1,
           'user_register_form' => FALSE,
-        ),
-        'widget' => array(
-          'type' => 'text_textarea_with_summary',
-          'module' => 'text',
-          'settings' => array(
-            'rows' => 20,
-            'summary_rows' => 5,
-          ),
-          'weight' => -4,
         ),
         'status' => 1,
         'langcode' => 'und',

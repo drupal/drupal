@@ -44,9 +44,6 @@ class TelephoneItemTest extends FieldUnitTestBase {
       'entity_type' => 'entity_test',
       'field_name' => 'field_test',
       'bundle' => 'entity_test',
-      'widget' => array(
-        'type' => 'telephone_default',
-      ),
     );
     field_create_instance($this->instance);
   }

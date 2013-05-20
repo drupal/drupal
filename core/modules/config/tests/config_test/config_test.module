@@ -181,4 +181,9 @@ function config_test_entity_info_alter(&$entity_info) {
   // case we can safely do it because we set it once and we do not change it for
   // all the duration of the test session.
   $entity_info['config_test']['translatable'] = Drupal::service('state')->get('config_test.translatable');
+
+  // Create a clone of config_test that does not have a status.
+  $entity_info['config_test_no_status'] = $entity_info['config_test'];
+  unset($entity_info['config_test_no_status']['entity_keys']['status']);
+  $entity_info['config_test_no_status']['config_prefix'] = 'config_test.no_status';
 }

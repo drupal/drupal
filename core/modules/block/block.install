@@ -259,10 +259,18 @@ function block_update_8008() {
       'entity_type' => 'custom_block',
       'bundle' => 'basic',
       'label' => 'Block body',
-      'widget' => array('type' => 'text_textarea_with_summary'),
       'settings' => array('display_summary' => FALSE),
     );
     _update_7000_field_create_instance($body_field, $instance);
+
+    module_load_install('entity');
+    // Assign form settings for the 'default' form mode.
+    $form_display = _update_8000_entity_get_form_display('custom_block', 'basic', 'default');
+    $form_display->set('content.user_picture', array(
+        'type' => 'text_textarea_with_summary',
+      ))
+      ->save();
+    update_config_manifest_add('entity.form_display', array($form_display->get('id')));
 
     // Initialize state for future calls.
     $sandbox['last'] = 0;

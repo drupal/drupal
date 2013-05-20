@@ -36,8 +36,8 @@ abstract class OptionsWidgetBase extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct($plugin_id, array $plugin_definition, FieldInstance $instance, array $settings, $weight) {
-    parent::__construct($plugin_id, $plugin_definition, $instance, $settings, $weight);
+  public function __construct($plugin_id, array $plugin_definition, FieldInstance $instance, array $settings) {
+    parent::__construct($plugin_id, $plugin_definition, $instance, $settings);
 
     // Reset internal pointer since we're dealing with objects now.
     reset($this->field['columns']);

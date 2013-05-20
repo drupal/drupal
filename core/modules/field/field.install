@@ -250,12 +250,12 @@ function field_update_8001() {
 }
 
 /**
- * Migrate all instance display settings to configuration.
+ * Migrate all instance widget and display settings to configuration.
  *
  * @ingroup config_upgrade
  */
 function field_update_8002() {
-  $displays = array();
+  $form_displays = $displays = array();
   module_load_install('entity');
 
   $query = db_select('field_config_instance', 'fc')->fields('fc');
@@ -266,28 +266,46 @@ function field_update_8002() {
 
     // Skip field instances that were created directly with the new API earlier
     // in the upgrade path.
-    if (!isset($data['display'])) {
+    if (!isset($data['widget']) && !isset($data['display'])) {
       continue;
     }
 
-    foreach ($data['display'] as $view_mode => $display_options) {
-      // Determine name and create initial entry in the $displays array if it
-      // does not exist yet.
-      $display_id = $record->entity_type . '.' . $record->bundle . '.' . $view_mode;
-      if (!isset($displays[$display_id])) {
-        $displays[$display_id] = _update_8000_entity_get_display($record->entity_type, $record->bundle, $view_mode);
+    // Migrate 'widget' settings.
+    if (isset($data['widget'])) {
+      $widget_options = $data['widget'];
+      // Determine name and create initial entry in the $form_displays array.
+      $form_display_id = $record->entity_type . '.' . $record->bundle . '.default';
+      if (!isset($form_displays[$form_display_id])) {
+        $form_displays[$form_display_id] = _update_8000_entity_get_form_display($record->entity_type, $record->bundle, 'default');
       }
 
-      // The display object does not store hidden fields.
-      if ($display_options['type'] != 'hidden') {
-        // We do not need the 'module' key anymore.
-        unset($display_options['module']);
-        $displays[$display_id]->set("content.$record->field_name", $display_options);
+      // We do not need the 'module' key anymore.
+      unset($widget_options['module']);
+      $form_displays[$form_display_id]->set("content.$record->field_name", $widget_options);
+    }
+
+    // Migrate 'display' settings.
+    if (isset($data['display'])) {
+      foreach ($data['display'] as $view_mode => $display_options) {
+        // Determine name and create initial entry in the $displays array if it
+        // does not exist yet.
+        $display_id = $record->entity_type . '.' . $record->bundle . '.' . $view_mode;
+        if (!isset($displays[$display_id])) {
+          $displays[$display_id] = _update_8000_entity_get_display($record->entity_type, $record->bundle, $view_mode);
+        }
+
+        // The display object does not store hidden fields.
+        if ($display_options['type'] != 'hidden') {
+          // We do not need the 'module' key anymore.
+          unset($display_options['module']);
+          $displays[$display_id]->set("content.$record->field_name", $display_options);
+        }
       }
     }
 
-    // Remove the 'display' key and save the record back into the table.
-    unset($data['display']);
+    // Remove the 'widget' and 'display' keys and save the record back into the
+    // table.
+    unset($data['display'], $data['widget']);
     db_update('field_config_instance')
       ->condition('id', $record->id)
       ->fields(array(
@@ -302,8 +320,26 @@ function field_update_8002() {
   $variables = array_map('unserialize', db_query("SELECT name, value FROM {variable} WHERE name LIKE '%field_bundle_settings_%'")->fetchAllKeyed());
   foreach ($variables as $variable_name => $variable_value) {
     if (preg_match('/field_bundle_settings_(.*)__(.*)/', $variable_name, $matches)) {
+      $variable_needs_update = FALSE;
       $entity_type = $matches[1];
       $bundle = $matches[2];
+
+      if (isset($variable_value['extra_fields']['form'])) {
+        foreach ($variable_value['extra_fields']['form'] as $field_name => $field_settings) {
+          // Determine name and create initial entry in the $form_displays
+          // array if it does not exist yet.
+          $form_display_id = $entity_type . '.' . $bundle . '.default';
+          if (!isset($form_displays[$form_display_id])) {
+            $form_displays[$form_display_id] = _update_8000_entity_get_form_display($entity_type, $bundle, 'default');
+          }
+          $form_displays[$form_display_id]->set("content.$field_name", $field_settings);
+        }
+
+        // Remove the old entry.
+        unset($variable_value['extra_fields']['form']);
+        $variable_needs_update = TRUE;
+      }
+
       if (isset($variable_value['extra_fields']['display'])) {
         foreach ($variable_value['extra_fields']['display'] as $field_name => $field_settings) {
           foreach ($field_settings as $view_mode => $display_options) {
@@ -322,15 +358,25 @@ function field_update_8002() {
               $new_options['weight'] = $display_options['weight'];
             }
             $displays[$display_id]->set("content.$field_name", $new_options);
-
-            // Remove the old entry.
-            unset($variable_value['extra_fields']['display']);
-            variable_set($variable_name, $variable_value);
           }
         }
+
+        // Remove the old entry.
+        unset($variable_value['extra_fields']['display']);
+        $variable_needs_update = TRUE;
+      }
+
+      if ($variable_needs_update) {
+        variable_set($variable_name, $variable_value);
       }
     }
   }
+
+  // Save the form displays to configuration.
+  foreach ($form_displays as $config) {
+    $config->save();
+  }
+  update_config_manifest_add('entity.form_display', array_keys($form_displays));
 
   // Save the displays to configuration.
   foreach ($displays as $config) {
@@ -437,7 +483,6 @@ function field_update_8003() {
       'default_value' => isset($record['data']['default_value']) ? $record['data']['default_value'] : array(),
       'default_value_function' => isset($record['data']['default_value_function']) ? $record['data']['default_value_function'] : '',
       'settings' => $record['data']['settings'],
-      'widget' => $record['data']['widget'],
       'status' => 1,
       'langcode' => 'und',
     );

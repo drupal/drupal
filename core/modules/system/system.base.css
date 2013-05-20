@@ -101,7 +101,26 @@ a.tabledrag-handle .handle {
   padding: 0.42em 0.5em; /* LTR */
   width: 13px;
 }
-a.tabledrag-handle-hover .handle {
+.touch .draggable td {
+  padding: 0 10px;
+}
+.touch .draggable .menu-item__link {
+  display: inline-block;
+  padding: 10px 0;
+}
+.touch a.tabledrag-handle {
+  height: 44px;
+  width: 40px;
+}
+.touch a.tabledrag-handle .handle {
+  background-position: 40% 19px;
+  height: 21px;
+}
+.touch .draggable.drag a.tabledrag-handle .handle {
+  background-position: 50% -32px;
+}
+.no-touch a.tabledrag-handle:hover .handle,
+.no-touch a.tabledrag-handle:focus .handle {
   background-position: 6px -11px;
 }
 div.indentation {

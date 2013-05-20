@@ -59,6 +59,20 @@ class EditFieldForm {
 
     $form_state['entity'] = $entity;
     $form_state['field_name'] = $field_name;
+
+    // @todo Allow the usage of different form modes by exposing a hook and the
+    // UI for them.
+    $form_display = entity_get_render_form_display($entity, 'default');
+
+    // Let modules alter the form display.
+    $form_display_context = array(
+      'entity_type' => $entity->entityType(),
+      'bundle' => $entity->bundle(),
+      'form_mode' => 'default',
+    );
+    \Drupal::moduleHandler()->alter('entity_form_display', $form_display, $form_display_context);
+
+    $form_state['form_display'] = $form_display;
   }
 
   /**

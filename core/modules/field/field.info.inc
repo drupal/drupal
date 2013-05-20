@@ -130,20 +130,23 @@ function _field_info_collate_types_reset() {
 /**
  * Determines the behavior of a widget with respect to an operation.
  *
- * @param $op
- *   The name of the operation. Currently supported: 'default value', 'multiple
- *   values'.
- * @param $instance
+ * @param string $op
+ *   The name of the operation. Currently supported: 'default_value',
+ *   'multiple_values'.
+ * @param array $instance
  *   The field instance array.
  *
- * @return
+ * @return int
  *   One of these values:
  *   - FIELD_BEHAVIOR_NONE: Do nothing for this operation.
  *   - FIELD_BEHAVIOR_CUSTOM: Use the widget's callback function.
  *   - FIELD_BEHAVIOR_DEFAULT: Use field.module default behavior.
  */
 function field_behaviors_widget($op, $instance) {
-  $info = field_info_widget_types($instance['widget']['type']);
+  $info = array();
+  if ($component = entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default')->getComponent($instance['field_name'])) {
+    $info = field_info_widget_types($component['type']);
+  }
   return isset($info[$op]) ? $info[$op] : FIELD_BEHAVIOR_DEFAULT;
 }
 
@@ -475,40 +478,6 @@ function field_info_extra_fields($entity_type, $bundle, $context) {
   $info = Field::fieldInfo()->getBundleExtraFields($entity_type, $bundle);
 
   return isset($info[$context]) ? $info[$context] : array();
-}
-
-/**
- * Returns the maximum weight of all the components in a form entity.
- *
- * This includes fields, 'extra_fields', and other components added by
- * third-party modules (e.g. field_group).
- *
- * @param $entity_type
- *   The type of entity; e.g. 'node' or 'user'.
- * @param $bundle
- *   The bundle name.
- *
- * @return
- *   The maximum weight of the entity's components, or NULL if no components
- *   were found.
- */
-function field_info_max_weight($entity_type, $bundle) {
-  $weights = array();
-
-  // Collect weights for fields.
-  foreach (field_info_instances($entity_type, $bundle) as $instance) {
-    $weights[] = $instance['widget']['weight'];
-  }
-  // Collect weights for extra fields.
-  foreach (field_info_extra_fields($entity_type, $bundle, 'form') as $extra) {
-    $weights[] = $extra['weight'];
-  }
-
-  // Let other modules feedback about their own additions.
-  $weights = array_merge($weights, module_invoke_all('field_info_max_weight', $entity_type, $bundle, 'form'));
-  $max_weight = $weights ? max($weights) : NULL;
-
-  return $max_weight;
 }
 
 /**

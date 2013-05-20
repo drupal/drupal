@@ -36,7 +36,7 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     $display = entity_create('entity_display', array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
-      'viewMode' => 'default',
+      'mode' => 'default',
     ));
 
     $expected = array();
@@ -81,7 +81,7 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     $new_display = entity_load('entity_display', $new_display->id());
     $this->assertEqual($new_display->targetEntityType, $display->targetEntityType);
     $this->assertEqual($new_display->bundle, $display->bundle);
-    $this->assertEqual($new_display->viewMode, 'other_view_mode');
+    $this->assertEqual($new_display->mode, 'other_view_mode');
     $this->assertEqual($new_display->getComponents(), $display->getComponents());
   }
 
@@ -112,7 +112,7 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     $display = entity_create('entity_display', array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
-      'viewMode' => 'default',
+      'mode' => 'default',
     ));
 
     // Check that the default visibility taken into account for extra fields
@@ -136,7 +136,7 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     $display = entity_create('entity_display', array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
-      'viewMode' => 'default',
+      'mode' => 'default',
     ));
 
     // Create a field and an instance.
@@ -175,7 +175,7 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     $random_value = $this->randomString();
     $formatter->randomValue = $random_value;
     $formatter = $display->getFormatter($field['field_name']);
-    $this->assertEqual($formatter->randomValue, $random_value );
+    $this->assertEqual($formatter->randomValue, $random_value);
 
     // Check that changing the definition creates a new formatter.
     $display->setComponent($field['field_name'], array(

@@ -60,9 +60,6 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
       'entity_type' => 'entity_test',
       'field_name' => 'field_test_taxonomy',
       'bundle' => 'entity_test',
-      'widget' => array(
-        'type' => 'options_select',
-      ),
     );
     field_create_instance($instance);
     $this->term = entity_create('taxonomy_term', array(

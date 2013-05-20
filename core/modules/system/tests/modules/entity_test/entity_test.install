@@ -30,12 +30,12 @@ function entity_test_install() {
       'field_name' => 'field_test_text',
       'bundle' => $entity_type,
       'label' => 'Test text-field',
-      'widget' => array(
-        'type' => 'text_textfield',
-        'weight' => 0,
-      ),
     );
     field_create_instance($instance);
+
+    entity_get_form_display($entity_type, $entity_type, 'default')
+      ->setComponent('field_test_text', array('type' => 'text_text'))
+      ->save();
   }
 }
 

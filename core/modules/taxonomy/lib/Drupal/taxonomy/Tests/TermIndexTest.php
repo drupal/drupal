@@ -49,11 +49,13 @@ class TermIndexTest extends TaxonomyTestBase {
       'field_name' => $this->field_name_1,
       'bundle' => 'article',
       'entity_type' => 'node',
-      'widget' => array(
-        'type' => 'options_select',
-      ),
     );
     field_create_instance($this->instance_1);
+    entity_get_form_display('node', 'article', 'default')
+      ->setComponent($this->field_name_1, array(
+        'type' => 'options_select',
+      ))
+      ->save();
     entity_get_display('node', 'article', 'default')
       ->setComponent($this->field_name_1, array(
         'type' => 'taxonomy_term_reference_link',
@@ -79,11 +81,13 @@ class TermIndexTest extends TaxonomyTestBase {
       'field_name' => $this->field_name_2,
       'bundle' => 'article',
       'entity_type' => 'node',
-      'widget' => array(
-        'type' => 'options_select',
-      ),
     );
     field_create_instance($this->instance_2);
+    entity_get_form_display('node', 'article', 'default')
+      ->setComponent($this->field_name_2, array(
+        'type' => 'options_select',
+      ))
+      ->save();
     entity_get_display('node', 'article', 'default')
       ->setComponent($this->field_name_2, array(
         'type' => 'taxonomy_term_reference_link',

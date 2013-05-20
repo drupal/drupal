@@ -662,7 +662,7 @@ function entity_get_display($entity_type, $bundle, $view_mode) {
     $display = entity_create('entity_display', array(
       'targetEntityType' => $entity_type,
       'bundle' => $bundle,
-      'viewMode' => $view_mode,
+      'mode' => $view_mode,
     ));
   }
 
@@ -691,7 +691,7 @@ function entity_get_display($entity_type, $bundle, $view_mode) {
  * @return \Drupal\entity\Plugin\Core\Entity\EntityDisplay
  *   The display object that should be used to render the entity.
  *
- * @see entity_get_render_display().
+ * @see entity_get_display().
  */
 function entity_get_render_display(EntityInterface $entity, $view_mode) {
   $entity_type = $entity->entityType();
@@ -704,9 +704,96 @@ function entity_get_render_display(EntityInterface $entity, $view_mode) {
   $render_view_mode = !empty($view_mode_settings[$view_mode]['status']) ? $view_mode : 'default';
 
   $display = entity_get_display($entity_type, $bundle, $render_view_mode);
-  $display->originalViewMode = $view_mode;
+  $display->originalMode = $view_mode;
 
   return $display;
+}
+
+/**
+ * Returns the entity_form_display object associated to a bundle and form mode.
+ *
+ * The function reads the entity_form_display object from the current
+ * configuration, or returns a ready-to-use empty one if configuration entry
+ * exists yet for this bundle and form mode. This streamlines manipulation of
+ * EntityFormDisplay objects by always returning a consistent object that
+ * reflects the current state of the configuration.
+ *
+ * Example usage:
+ * - Set the 'body' field to be displayed with the 'text_textarea_with_summary'
+ *   widget and the 'field_image' field to be hidden on article nodes in the
+ *  'default' form mode.
+ * @code
+ * entity_get_form_display('node', 'article', 'default')
+ *   ->setComponent('body', array(
+ *     'type' => 'text_textarea_with_summary',
+ *     'weight' => 1,
+ *   ))
+ *   ->setComponent('field_image', array(
+ *     'type' => 'hidden',
+ *   ))
+ *   ->save();
+ * @endcode
+ *
+ * @param string $entity_type
+ *   The entity type.
+ * @param string $bundle
+ *   The bundle.
+ * @param string $form_mode
+ *   The form mode.
+ *
+ * @return \Drupal\entity\Plugin\Core\Entity\EntityFormDisplay
+ *   The EntityFormDisplay object associated to the form mode.
+ */
+function entity_get_form_display($entity_type, $bundle, $form_mode) {
+  // Try loading the entity from configuration.
+  $entity_form_display = entity_load('entity_form_display', $entity_type . '.' . $bundle . '.' . $form_mode);
+
+  // If not found, create a fresh entity object. We do not preemptively create
+  // new EntityFormDisplay configuration entries for each existing entity type
+  // and bundle whenever a new form mode becomes available. Instead,
+  // configuration entries are only created when a EntityFormDisplay object is
+  // explicitly configured and saved.
+  if (!$entity_form_display) {
+    $entity_form_display = entity_create('entity_form_display', array(
+      'targetEntityType' => $entity_type,
+      'bundle' => $bundle,
+      'mode' => $form_mode,
+    ));
+  }
+
+  return $entity_form_display;
+}
+
+/**
+ * Returns the entity_form_display object used to render an entity form.
+ *
+ * This function should only be used internally when rendering an entity form.
+ * When assigning suggested form display options for a component in a given form
+ * mode, entity_get_form_display() should be used instead, in order to avoid
+ * inadvertently modifying the output of other form modes that might happen to
+ * use the 'default' form display too. Those options will then be effectively
+ * applied only if the form mode is configured to use them.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity for which the form is being rendered.
+ * @param string $form_mode
+ *   The form mode being rendered.
+ *
+ * @return \Drupal\entity\Plugin\Core\Entity\EntityFormDisplay
+ *   The form display object that should be used to render the entity form.
+ *
+ * @see entity_get_form_display().
+ */
+function entity_get_render_form_display(EntityInterface $entity, $form_mode) {
+  $entity_type = $entity->entityType();
+  $bundle = $entity->bundle();
+
+  // @todo Form modes don't have custom settings yet, so just return the display
+  // for the form mode that was requested.
+  $form_display = entity_get_form_display($entity_type, $bundle, $form_mode);
+  $form_display->originalMode = $form_mode;
+
+  return $form_display;
 }
 
 /**

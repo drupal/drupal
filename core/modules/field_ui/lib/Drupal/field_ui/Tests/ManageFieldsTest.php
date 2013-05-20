@@ -52,6 +52,10 @@ class ManageFieldsTest extends FieldUiTestBase {
       'bundle' => 'article',
     );
     field_create_instance($instance);
+
+    entity_get_form_display('node', 'article', 'default')
+      ->setComponent('field_' . $vocabulary->id())
+      ->save();
   }
 
   /**
@@ -180,37 +184,34 @@ class ManageFieldsTest extends FieldUiTestBase {
     $field_edit_path = 'admin/structure/types/manage/article/fields/node.article.body/field';
 
     // Assert the cardinality other field cannot be empty when cardinality is
-    // set to other.
+    // set to 'number'.
     $edit = array(
-      'field[container][cardinality]' => 'other',
-      'field[container][cardinality_other]' => '',
+      'field[cardinality]' => 'number',
+      'field[cardinality_number]' => '',
     );
     $this->drupalPost($field_edit_path, $edit, t('Save field settings'));
     $this->assertText('Number of values is required.');
 
-    // Assert the cardinality field is set to 'Other' when the value is greater
-    // than 5.
+    // Submit a custom number.
     $edit = array(
-      'field[container][cardinality]' => 'other',
-      'field[container][cardinality_other]' => 16,
+      'field[cardinality]' => 'number',
+      'field[cardinality_number]' => 6,
     );
     $this->drupalPost($field_edit_path, $edit, t('Save field settings'));
     $this->assertText('Updated field Body field settings.');
     $this->drupalGet($field_edit_path);
-    $this->assertFieldByXPath("//select[@name='field[container][cardinality]']", 'other');
-    $this->assertFieldByXPath("//input[@name='field[container][cardinality_other]']", 16);
+    $this->assertFieldByXPath("//select[@name='field[cardinality]']", 'number');
+    $this->assertFieldByXPath("//input[@name='field[cardinality_number]']", 6);
 
-    // Assert the cardinality other field is set back to 6 after changing the
-    // cardinality to less than 6.
+    // Set to unlimited.
     $edit = array(
-      'field[container][cardinality]' => 3,
-      'field[container][cardinality_other]' => 16,
+      'field[cardinality]' => FIELD_CARDINALITY_UNLIMITED,
     );
     $this->drupalPost($field_edit_path, $edit, t('Save field settings'));
     $this->assertText('Updated field Body field settings.');
     $this->drupalGet($field_edit_path);
-    $this->assertFieldByXPath("//select[@name='field[container][cardinality]']", 3);
-    $this->assertFieldByXPath("//input[@name='field[container][cardinality_other]']", 6);
+    $this->assertFieldByXPath("//select[@name='field[cardinality]']", FIELD_CARDINALITY_UNLIMITED);
+    $this->assertFieldByXPath("//input[@name='field[cardinality_number]']", 1);
   }
 
   /**
@@ -235,7 +236,10 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Assert instance and widget settings.
     $instance = field_info_instance($entity_type, $field_name, $bundle);
     $this->assertTrue($instance['settings']['test_instance_setting'] == $string, 'Field instance settings were found.');
-    $this->assertTrue($instance['widget']['settings']['test_widget_setting'] == $string, 'Field widget settings were found.');
+
+    // Assert widget settings.
+    $widget_configuration = entity_get_form_display($entity_type, $bundle, 'default')->getComponent($field_name);
+    $this->assertTrue($widget_configuration['settings']['test_widget_setting'] == $string, 'Field widget settings were found.');
   }
 
   /**
@@ -256,6 +260,10 @@ class ManageFieldsTest extends FieldUiTestBase {
     );
     $instance = field_create_instance($instance);
 
+    entity_get_form_display('node', $this->type, 'default')
+      ->setComponent($field_name)
+      ->save();
+
     $langcode = LANGUAGE_NOT_SPECIFIED;
     $admin_path = 'admin/structure/types/manage/' . $this->type . '/fields/' . $instance->id();
     $element_id = "edit-$field_name-$langcode-0-value";
@@ -272,6 +280,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $edit = array($element_name => '1');
     $this->drupalPost($admin_path, $edit, t('Save settings'));
     $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
+    field_info_cache_clear();
     $instance = field_info_instance('node', $field_name, $this->type);
     $this->assertEqual($instance['default_value'], array(array('value' => 1)), 'The default value was correctly saved.');
 
@@ -288,8 +297,11 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->assertEqual($instance['default_value'], NULL, 'The default value was correctly saved.');
 
     // Change the widget to TestFieldWidgetNoDefault.
-    $instance['widget']['type'] = 'test_field_widget_no_default';
-    field_update_instance($instance);
+    entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default')
+      ->setComponent($field_name, array(
+        'type' => 'test_field_widget_no_default',
+      ))
+      ->save();
 
     $this->drupalGet($admin_path);
     $this->assertNoFieldById($element_id, '', t('No default value was possible for widget that disables default value.'));
@@ -358,10 +370,12 @@ class ManageFieldsTest extends FieldUiTestBase {
       'field_uuid' => $field->uuid,
       'entity_type' => 'node',
       'bundle' => $this->type,
-      'widget' => array(
-        'type' => 'test_field_widget',
-      )
     ))->save();
+    entity_get_form_display('node', $this->type, 'default')
+      ->setComponent($field->id, array(
+        'type' => 'test_field_widget',
+      ))
+      ->save();
 
     // Check that the links for edit and delete are not present.
     $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields');
@@ -391,9 +405,11 @@ class ManageFieldsTest extends FieldUiTestBase {
       'bundle' => $this->type,
       'entity_type' => 'node',
       'label' => t('Hidden field'),
-      'widget' => array('type' => 'test_field_widget'),
     );
     field_create_instance($instance);
+    entity_get_form_display('node', $this->type, 'default')
+      ->setComponent($field_name)
+      ->save();
     $this->assertTrue(field_read_instance('node', $field_name, $this->type), format_string('An instance of the field %field was created programmatically.', array('%field' => $field_name)));
 
     // Check that the newly added instance appears on the 'Manage Fields'
@@ -449,8 +465,8 @@ class ManageFieldsTest extends FieldUiTestBase {
 
     // Check that the field_tags field currently uses the 'options_select'
     // widget.
-    $instance = field_info_instance('node', 'field_tags', 'article');
-    $this->assertEqual($instance['widget']['type'], 'options_select');
+    $entity_form_display = entity_get_form_display('node', 'article', 'default')->getComponent('field_tags');
+    $this->assertEqual($entity_form_display['type'], 'options_select');
 
     // Check that the "Manage fields" page shows the correct widget type.
     $this->drupalGet($url_fields);
@@ -474,8 +490,8 @@ class ManageFieldsTest extends FieldUiTestBase {
 
     // Check that the field uses the newly set widget.
     field_cache_clear();
-    $instance = field_info_instance('node', 'field_tags', 'article');
-    $this->assertEqual($instance['widget']['type'], 'options_buttons');
+    $widget_configuration = entity_get_form_display('node', 'article', 'default')->getComponent('field_tags');
+    $this->assertEqual($widget_configuration['type'], 'options_buttons');
 
     // Go to the 'Widget type' form and check that the correct widget is
     // selected.

@@ -19,12 +19,5 @@ settings:
   title_field_required: 0
   default_image: 0
   user_register_form: false
-widget:
-  type: image_image
-  settings:
-    progress_indicator: throbber
-    preview_image_style: thumbnail
-  weight: -1
-  module: image
 status: 1
 langcode: und

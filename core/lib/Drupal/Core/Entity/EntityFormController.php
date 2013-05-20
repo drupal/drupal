@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\entity\EntityFormDisplayInterface;
+
 /**
  * Base class for entity form controllers.
  */
@@ -117,6 +119,20 @@ class EntityFormController implements EntityFormControllerInterface {
     // module-provided form handlers there.
     $form_state['controller'] = $this;
     $this->prepareEntity();
+
+    // @todo Allow the usage of different form modes by exposing a hook and the
+    // UI for them.
+    $form_display = entity_get_render_form_display($this->entity, 'default');
+
+    // Let modules alter the form display.
+    $form_display_context = array(
+      'entity_type' => $this->entity->entityType(),
+      'bundle' => $this->entity->bundle(),
+      'form_mode' => 'default',
+    );
+    \Drupal::moduleHandler()->alter('entity_form_display', $form_display, $form_display_context);
+
+    $this->setFormDisplay($form_display, $form_state);
   }
 
   /**
@@ -132,6 +148,14 @@ class EntityFormController implements EntityFormControllerInterface {
     if (!empty($info['fieldable'])) {
       field_attach_form($entity, $form, $form_state, $this->getFormLangcode($form_state));
     }
+
+    // Assign the weights configured in the form display.
+    foreach ($this->getFormDisplay($form_state)->getComponents() as $name => $options) {
+      if (isset($form[$name])) {
+        $form[$name]['#weight'] = $options['weight'];
+      }
+    }
+
     if (!isset($form['langcode'])) {
       // If the form did not specify otherwise, default to keeping the existing
       // language of the entity or defaulting to the site default language for
@@ -391,6 +415,21 @@ class EntityFormController implements EntityFormControllerInterface {
    */
   protected function prepareEntity() {
     // @todo Perform common prepare operations and add a hook.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormDisplay(array $form_state) {
+    return isset($form_state['form_display']) ? $form_state['form_display'] : NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setFormDisplay(EntityFormDisplayInterface $form_display, array &$form_state) {
+    $form_state['form_display'] = $form_display;
+    return $this;
   }
 
   /**

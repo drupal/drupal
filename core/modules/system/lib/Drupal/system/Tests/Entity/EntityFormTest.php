@@ -46,6 +46,17 @@ class EntityFormTest extends WebTestBase {
   }
 
   /**
+   * Tests hook_entity_form_display_alter().
+   *
+   * @see entity_test_entity_form_display_alter()
+   */
+  function testEntityFormDisplayAlter() {
+    $this->drupalGet('entity_test/add');
+    $altered_field = $this->xpath('//input[@name="field_test_text[und][0][value]" and @size="42"]');
+    $this->assertTrue(count($altered_field) === 1, 'The altered field has the correct size value.');
+  }
+
+  /**
    * Executes the form CRUD tests for the given entity type.
    *
    * @param string $entity_type

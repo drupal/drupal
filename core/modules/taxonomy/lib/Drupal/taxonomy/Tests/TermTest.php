@@ -45,11 +45,13 @@ class TermTest extends TaxonomyTestBase {
       'field_name' => 'taxonomy_' . $this->vocabulary->id(),
       'bundle' => 'article',
       'entity_type' => 'node',
-      'widget' => array(
-        'type' => 'options_select',
-      ),
     );
     field_create_instance($this->instance);
+    entity_get_form_display('node', 'article', 'default')
+      ->setComponent('taxonomy_' . $this->vocabulary->id(), array(
+        'type' => 'options_select',
+      ))
+      ->save();
     entity_get_display('node', 'article', 'default')
       ->setComponent($this->instance['field_name'], array(
         'type' => 'taxonomy_term_reference_link',
@@ -142,13 +144,14 @@ class TermTest extends TaxonomyTestBase {
   function testNodeTermCreationAndDeletion() {
     // Enable tags in the vocabulary.
     $instance = $this->instance;
-    $instance['widget'] = array(
-      'type' => 'taxonomy_autocomplete',
-      'settings' => array(
-        'placeholder' => 'Start typing here.',
-      ),
-    );
-    field_update_instance($instance);
+    entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default')
+      ->setComponent($instance['field_name'], array(
+        'type' => 'taxonomy_autocomplete',
+        'settings' => array(
+          'placeholder' => 'Start typing here.',
+        ),
+      ))
+      ->save();
     $terms = array(
       'term1' => $this->randomName(),
       'term2' => $this->randomName(),
@@ -506,8 +509,11 @@ class TermTest extends TaxonomyTestBase {
   function testReSavingTags() {
     // Enable tags in the vocabulary.
     $instance = $this->instance;
-    $instance['widget'] = array('type' => 'taxonomy_autocomplete');
-    field_update_instance($instance);
+    entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default')
+      ->setComponent($instance['field_name'], array(
+        'type' => 'taxonomy_autocomplete',
+      ))
+      ->save();
 
     // Create a term and a node using it.
     $term = $this->createTerm($this->vocabulary);

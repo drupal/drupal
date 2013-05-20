@@ -20,6 +20,6 @@ class WidgetFactory extends DefaultFactory {
   public function createInstance($plugin_id, array $configuration) {
     $plugin_definition = $this->discovery->getDefinition($plugin_id);
     $plugin_class = static::getPluginClass($plugin_id, $plugin_definition);
-    return new $plugin_class($plugin_id, $plugin_definition, $configuration['instance'], $configuration['settings'], $configuration['weight']);
+    return new $plugin_class($plugin_id, $plugin_definition, $configuration['instance'], $configuration['settings']);
   }
 }

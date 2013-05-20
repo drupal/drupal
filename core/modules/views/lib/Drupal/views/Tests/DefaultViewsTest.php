@@ -77,16 +77,8 @@ class DefaultViewsTest extends WebTestBase {
       'field_name' => $this->field_name,
       'entity_type' => 'node',
       'bundle' => 'page',
-      'widget' => array(
-        'type' => 'options_select',
-      ),
     );
     field_create_instance($this->instance);
-    entity_get_display('node', 'page', 'full')
-      ->setComponent($this->field_name, array(
-        'type' => 'taxonomy_term_reference_link',
-      ))
-      ->save();
 
     // Create a time in the past for the archive.
     $time = time() - 3600;

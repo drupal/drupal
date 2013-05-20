@@ -77,22 +77,25 @@ class PagePreviewTest extends NodeTestBase {
       'field_name' => $this->field_name,
       'entity_type' => 'node',
       'bundle' => 'page',
-      'widget' => array(
-        'type' => 'taxonomy_autocomplete',
-      ),
-      // Hide on full display but render on teaser.
-      'display' => array(
-        'default' => array(
-          'type' => 'hidden',
-        ),
-        'teaser' => array(
-          'type' => 'taxonomy_term_reference_link',
-        ),
-      ),
     );
     field_create_instance($this->instance);
+
+    entity_get_form_display('node', 'page', 'default')
+      ->setComponent($this->field['field_name'], array(
+        'type' => 'taxonomy_autocomplete',
+      ))
+      ->save();
+
+    // Show on default display and teaser.
     entity_get_display('node', 'page', 'default')
-      ->setComponent($this->field_name)
+      ->setComponent($this->field['field_name'], array(
+        'type' => 'taxonomy_term_reference_link',
+      ))
+      ->save();
+    entity_get_display('node', 'page', 'teaser')
+      ->setComponent($this->field['field_name'], array(
+        'type' => 'taxonomy_term_reference_link',
+      ))
       ->save();
   }
 

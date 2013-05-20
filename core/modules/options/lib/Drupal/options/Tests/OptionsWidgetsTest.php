@@ -81,11 +81,14 @@ class OptionsWidgetsTest extends FieldTestBase {
       'field_name' => $this->card_1['field_name'],
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
-      'widget' => array(
-        'type' => 'options_buttons',
-      ),
     );
     $instance = field_create_instance($instance);
+    entity_get_form_display('test_entity', 'test_bundle', 'default')
+      ->setComponent($this->card_1['field_name'], array(
+        'type' => 'options_buttons',
+      ))
+      ->save();
+
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Create an entity.
@@ -135,11 +138,14 @@ class OptionsWidgetsTest extends FieldTestBase {
       'field_name' => $this->card_2['field_name'],
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
-      'widget' => array(
-        'type' => 'options_buttons',
-      ),
     );
     $instance = field_create_instance($instance);
+    entity_get_form_display('test_entity', 'test_bundle', 'default')
+      ->setComponent($this->card_2['field_name'], array(
+        'type' => 'options_buttons',
+      ))
+      ->save();
+
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Create an entity.
@@ -223,11 +229,14 @@ class OptionsWidgetsTest extends FieldTestBase {
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
       'required' => TRUE,
-      'widget' => array(
-        'type' => 'options_select',
-      ),
     );
     $instance = field_create_instance($instance);
+    entity_get_form_display('test_entity', 'test_bundle', 'default')
+      ->setComponent($this->card_1['field_name'], array(
+        'type' => 'options_select',
+      ))
+      ->save();
+
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Create an entity.
@@ -319,11 +328,14 @@ class OptionsWidgetsTest extends FieldTestBase {
       'field_name' => $this->card_2['field_name'],
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
-      'widget' => array(
-        'type' => 'options_select',
-      ),
     );
     $instance = field_create_instance($instance);
+    entity_get_form_display('test_entity', 'test_bundle', 'default')
+      ->setComponent($this->card_2['field_name'], array(
+        'type' => 'options_select',
+      ))
+      ->save();
+
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Create an entity.
@@ -436,11 +448,14 @@ class OptionsWidgetsTest extends FieldTestBase {
       'field_name' => $this->bool['field_name'],
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
-      'widget' => array(
-        'type' => 'options_onoff',
-      ),
     );
     $instance = field_create_instance($instance);
+    entity_get_form_display('test_entity', 'test_bundle', 'default')
+      ->setComponent($this->bool['field_name'], array(
+        'type' => 'options_onoff',
+      ))
+      ->save();
+
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Create an entity.
@@ -487,12 +502,14 @@ class OptionsWidgetsTest extends FieldTestBase {
       'field_name' => $this->bool['field_name'],
       'entity_type' => 'node',
       'bundle' => 'page',
-      'widget' => array(
-        'type' => 'options_onoff',
-        'module' => 'options',
-      ),
     );
     field_create_instance($instance);
+
+    entity_get_form_display('node', 'page', 'default')
+      ->setComponent($this->bool['field_name'], array(
+        'type' => 'options_onoff',
+      ))
+      ->save();
 
     // Go to the edit page and check if the default settings works as expected
     $fieldEditUrl = 'admin/structure/types/manage/page/fields/node.page.bool';

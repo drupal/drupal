@@ -46,9 +46,6 @@ class FieldAccessTest extends FieldTestBase {
       'field_name' => $this->field['field_name'],
       'entity_type' => 'node',
       'bundle' => $this->content_type,
-      'widget' => array(
-        'type' => 'text_textfield',
-      ),
     );
     field_create_instance($this->instance);
 

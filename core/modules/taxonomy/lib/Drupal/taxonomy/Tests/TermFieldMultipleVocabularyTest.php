@@ -63,11 +63,13 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
       'field_name' => $this->field_name,
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
-      'widget' => array(
-        'type' => 'options_select',
-      ),
     );
     field_create_instance($this->instance);
+    entity_get_form_display('test_entity', 'test_bundle', 'default')
+      ->setComponent($this->field_name, array(
+        'type' => 'options_select',
+      ))
+      ->save();
     entity_get_display('test_entity', 'test_bundle', 'full')
       ->setComponent($this->field_name, array(
         'type' => 'taxonomy_term_reference_link',

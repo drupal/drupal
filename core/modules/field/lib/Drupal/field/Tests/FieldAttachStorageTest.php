@@ -495,11 +495,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
       'label' => $this->randomName() . '_label',
       'description' => $this->randomName() . '_description',
       'weight' => mt_rand(0, 127),
-      // test_field has no instance settings
-      'widget' => array(
-        'type' => 'test_field_widget',
-        'settings' => array(
-          'size' => mt_rand(0, 255))));
+    );
     field_create_instance($instance);
 
     // Save an entity with data for both fields

@@ -98,7 +98,7 @@ $.extend(Drupal.ProgressBar.prototype, {
    * Display errors on the page.
    */
   displayError: function (string) {
-    var error = $('<div class="messages error"></div>').html(string);
+    var error = $('<div class="messages messages--error"></div>').html(string);
     $(this.element).before(error).hide();
 
     if (this.errorCallback) {

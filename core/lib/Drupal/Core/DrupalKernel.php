@@ -431,7 +431,19 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     foreach ($this->bundles as $bundle) {
       $bundle->build($container);
     }
-    $container->setParameter('persistIds', array_keys($container->findTaggedServiceIds('persist')));
+
+    // Identify all services whose instances should be persisted when rebuilding
+    // the container during the lifetime of the kernel (e.g., during a kernel
+    // reboot). Include synthetic services, because by definition, they cannot
+    // be automatically reinstantiated. Also include services tagged to persist.
+    $persist_ids = array();
+    foreach ($container->getDefinitions() as $id => $definition) {
+      if ($definition->isSynthetic() || $definition->getTag('persist')) {
+        $persist_ids[] = $id;
+      }
+    }
+    $container->setParameter('persistIds', $persist_ids);
+
     $container->compile();
     return $container;
   }

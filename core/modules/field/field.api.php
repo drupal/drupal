@@ -21,10 +21,9 @@ use Drupal\field\FieldUpdateForbiddenException;
  * in a #pre_render callback added by field_attach_form() and
  * field_attach_view().
  *
- * @see _field_extra_fields_pre_render()
  * @see hook_field_extra_fields_alter()
  *
- * @return
+ * @return array
  *   A nested array of 'pseudo-field' elements. Each list is nested within the
  *   following keys: entity type, bundle name, context (either 'form' or
  *   'display'). The keys are the name of the elements as appearing in the
@@ -33,8 +32,8 @@ use Drupal\field\FieldUpdateForbiddenException;
  *   - label: The human readable name of the element.
  *   - description: A short description of the element contents.
  *   - weight: The default weight of the element.
- *   - visible: The default visibility of the element. Only for 'display'
- *     context.
+ *   - visible: (optional) The default visibility of the element.  Only for
+ *    'display' context. Defaults to TRUE.
  *   - edit: (optional) String containing markup (normally a link) used as the
  *     element's 'edit' operation in the administration interface. Only for
  *     'form' context.
@@ -781,38 +780,6 @@ function hook_field_widget_WIDGET_TYPE_form_alter(&$element, &$form_state, $cont
   // hook_field_widget_mymodule_autocomplete_form_alter() will only act on
   // widgets of type 'mymodule_autocomplete'.
   $element['#autocomplete_path'] = 'mymodule/autocomplete_path';
-}
-
-/**
- * Alters the widget properties of a field instance before it gets displayed.
- *
- * Note that instead of hook_field_widget_properties_alter(), which is called
- * for all fields on all entity types,
- * hook_field_widget_properties_ENTITY_TYPE_alter() may be used to alter widget
- * properties for fields on a specific entity type only.
- *
- * This hook is called once per field per added or edit entity. If the result
- * of the hook involves reading from the database, it is highly recommended to
- * statically cache the information.
- *
- * @param array $widget_properties
- *   The instance's widget properties.
- * @param array $context
- *   An associative array containing:
- *   - entity_type: The entity type, e.g., 'node' or 'user'.
- *   - bundle: The bundle, e.g., 'page' or 'article'.
- *   - field: The field that the widget belongs to.
- *   - instance: The instance of the field.
- *
- * @see hook_field_widget_properties_ENTITY_TYPE_alter()
- */
-function hook_field_widget_properties_alter(array &$widget_properties, array $context) {
-  // Change a widget's type according to the time of day.
-  $field = $context['field'];
-  if ($context['entity_type'] == 'node' && $field['field_name'] == 'field_foo') {
-    $time = date('H');
-    $widget_properties['type'] = $time < 12 ? 'widget_am' : 'widget_pm';
-  }
 }
 
 /**
@@ -1819,57 +1786,28 @@ function hook_field_storage_pre_update(\Drupal\Core\Entity\EntityInterface $enti
  * Field API takes care of fields and 'extra_fields'. This hook is intended for
  * third-party modules adding other entity components (e.g. field_group).
  *
- * @param $entity_type
+ * @param string $entity_type
  *   The type of entity; e.g. 'node' or 'user'.
- * @param $bundle
+ * @param string $bundle
  *   The bundle name.
- * @param $context
- *   The context for which the maximum weight is requested. Either 'form', or
- *   the name of a view mode.
- * @return
+ * @param string $context
+ *   The context for which the maximum weight is requested. Either 'form' or
+ *   'display'.
+ * @param string $context_mode
+ *   The view or form mode name.
+ *
+ * @return int
  *   The maximum weight of the entity's components, or NULL if no components
  *   were found.
  */
-function hook_field_info_max_weight($entity_type, $bundle, $context) {
+function hook_field_info_max_weight($entity_type, $bundle, $context, $context_mode) {
   $weights = array();
 
-  foreach (my_module_entity_additions($entity_type, $bundle, $context) as $addition) {
+  foreach (my_module_entity_additions($entity_type, $bundle, $context, $context_mode) as $addition) {
     $weights[] = $addition['weight'];
   }
 
   return $weights ? max($weights) : NULL;
-}
-
-/**
- * Alters the widget properties of a field instance on a given entity type
- * before it gets displayed.
- *
- * Modules can implement hook_field_widget_properties_ENTITY_TYPE_alter() to
- * alter the widget properties for fields on a specific entity type, rather than
- * implementing hook_field_widget_properties_alter().
- *
- * This hook is called once per field per displayed widget entity. If the result
- * of the hook involves reading from the database, it is highly recommended to
- * statically cache the information.
- *
- * @param array $widget_properties
- *   The instance's widget properties.
- * @param array $context
- *   An associative array containing:
- *   - entity_type: The entity type, e.g., 'node' or 'user'.
- *   - bundle: The bundle, e.g., 'page' or 'article'.
- *   - field: The field that the widget belongs to.
- *   - instance: The instance of the field.
- *
- * @see hook_field_widget_properties_alter()
- */
-function hook_field_widget_properties_ENTITY_TYPE_alter(array &$widget_properties, array $context) {
-  // Change a widget's type according to the time of day.
-  $field = $context['field'];
-  if ($field['field_name'] == 'field_foo') {
-    $time = date('H');
-    $widget_properties['type'] = $time < 12 ? 'widget_am' : 'widget_pm';
-  }
 }
 
 /**

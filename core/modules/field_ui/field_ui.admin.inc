@@ -417,12 +417,13 @@ function field_ui_existing_field_options($entity_type, $bundle) {
             && !field_info_instance($entity_type, $field['field_name'], $bundle)
             && (empty($field['entity_types']) || in_array($entity_type, $field['entity_types']))
             && empty($field_types[$field['type']]['no_ui'])) {
+            $widget = entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default')->getComponent($instance['field_name']);
             $info[$instance['field_name']] = array(
               'type' => $field['type'],
               'type_label' => $field_types[$field['type']]['label'],
               'field' => $field['field_name'],
               'label' => $instance['label'],
-              'widget_type' => $instance['widget']['type'],
+              'widget_type' => $widget['type'],
             );
           }
         }

@@ -77,17 +77,18 @@ class CustomBlockFieldTest extends CustomBlockTestBase {
       'settings' => array(
         'title' => DRUPAL_OPTIONAL,
       ),
-      'widget' => array(
-        'type' => 'link_default',
-      ),
-    );
-    $display_options = array(
-      'type' => 'link',
-      'label' => 'hidden',
     );
     field_create_instance($this->instance);
+    entity_get_form_display('custom_block', 'link', 'default')
+      ->setComponent($this->field['field_name'], array(
+        'type' => 'link_default',
+      ))
+      ->save();
     entity_get_display('custom_block', 'link', 'default')
-      ->setComponent($this->field['field_name'], $display_options)
+      ->setComponent($this->field['field_name'], array(
+        'type' => 'link',
+        'label' => 'hidden',
+      ))
       ->save();
 
     // Create a block.

@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\system\Form\ModulesInstallConfirmForm;
+use Drupal\system\Form\ModulesUninstallConfirmForm;
 
 /**
  * Menu callback; Provide the administration overview page.
@@ -789,7 +791,7 @@ function _system_is_incompatible(&$incompatible, $files, $file) {
 }
 
 /**
- * Menu callback; provides module enable/disable interface.
+ * Form constructor for the module enable/disable interface.
  *
  * The list of modules gets populated by module.info.yml files, which contain
  * each module's name, description, and information about which modules it
@@ -800,15 +802,11 @@ function _system_is_incompatible(&$incompatible, $files, $file) {
  * - can not be enabled if there are disabled modules it requires.
  * - can not be disabled if there are enabled modules which depend on it.
  *
- * @param $form_state
- *   An associative array containing the current state of the form.
- *
- * @return
- *   The form array.
- *
- * @ingroup forms
+ * @see system_menu()
  * @see theme_system_modules()
  * @see system_modules_submit()
+ *
+ * @ingroup forms
  */
 function system_modules($form, $form_state = array()) {
   // Get current list of modules.
@@ -829,7 +827,10 @@ function system_modules($form, $form_state = array()) {
   // filled, triggering a rebuild. In this case we need to display a
   // confirmation form.
   if (!empty($form_state['storage'])) {
-    return system_modules_confirm_form($visible_files, $form_state['storage']);
+    // Contents of confirm form is injected here because already in form
+    // building function.
+    $confirm_form = new ModulesInstallConfirmForm();
+    return $confirm_form->buildForm($form, $form_state, $visible_files, $form_state['storage']);
   }
 
   // JS-only table filters.
@@ -1085,53 +1086,6 @@ function _system_modules_build_row($info, $extra) {
 }
 
 /**
- * Display confirmation form for required modules.
- *
- * @param $modules
- *   Array of module file objects as returned from system_rebuild_module_data().
- * @param $storage
- *   The contents of $form_state['storage']; an array with two
- *   elements: the list of required modules and the list of status
- *   form field values from the previous screen.
- * @ingroup forms
- */
-function system_modules_confirm_form($modules, $storage) {
-  $items = array();
-
-  $form['validation_modules'] = array('#type' => 'value', '#value' => $modules);
-  $form['status']['#tree'] = TRUE;
-
-  foreach ($storage['more_required'] as $info) {
-    $t_argument = array(
-      '@module' => $info['name'],
-      '@required' => implode(', ', $info['requires']),
-    );
-    $items[] = format_plural(count($info['requires']), 'You must enable the @required module to install @module.', 'You must enable the @required modules to install @module.', $t_argument);
-  }
-
-  foreach ($storage['missing_modules'] as $name => $info) {
-    $t_argument = array(
-      '@module' => $name,
-      '@depends' => implode(', ', $info['depends']),
-    );
-    $items[] = format_plural(count($info['depends']), 'The @module module is missing, so the following module will be disabled: @depends.', 'The @module module is missing, so the following modules will be disabled: @depends.', $t_argument);
-  }
-
-  $form['modules'] = array('#theme' => 'item_list', '#items' => $items);
-
-    // Set some default form values
-  $form = confirm_form(
-    $form,
-    t('Some required modules must be enabled'),
-    'admin/modules',
-    t('Would you like to continue with the above?'),
-    t('Continue'),
-    t('Cancel'));
-
-  return $form;
-}
-
-/**
  * Submit callback; handles modules form submission.
  */
 function system_modules_submit($form, &$form_state) {
@@ -1272,23 +1226,24 @@ function system_modules_submit($form, &$form_state) {
  */
 
 /**
- * Builds a form of currently disabled modules.
+ * Form constructor for the uninstalling disabled modules form.
  *
- * @ingroup forms
+ * @see system_menu()
  * @see system_modules_uninstall_validate()
  * @see system_modules_uninstall_submit()
- * @param $form_state['values']
- *   Submitted form values.
- * @return
- *   A form array representing the currently disabled modules.
+ *
+ * @ingroup forms
  */
 function system_modules_uninstall($form, $form_state = NULL) {
   // Make sure the install API is available.
   include_once DRUPAL_ROOT . '/core/includes/install.inc';
 
   // Display the confirm form if any modules have been submitted.
-  if (!empty($form_state['storage']) && $confirm_form = system_modules_uninstall_confirm_form($form_state['storage'])) {
-    return $confirm_form;
+  if (!empty($form_state['storage']['uninstall']) && $modules = array_filter($form_state['storage']['uninstall'])) {
+    // Contents of confirm form is injected here because already in form
+    // building function.
+    $confirm_form = new ModulesUninstallConfirmForm();
+    return $confirm_form->buildForm($form, $form_state, $modules);
   }
 
   // Get a list of disabled, installed modules.
@@ -1339,47 +1294,6 @@ function system_modules_uninstall($form, $form_state = NULL) {
   }
 
   return $form;
-}
-
-/**
- * Confirm uninstall of selected modules.
- *
- * @ingroup forms
- * @param $storage
- *   An associative array of modules selected to be uninstalled.
- * @return
- *   A form array representing modules to confirm.
- */
-function system_modules_uninstall_confirm_form($storage) {
-  // Nothing to build.
-  if (empty($storage)) {
-    return;
-  }
-
-  // Construct the hidden form elements and list items.
-  foreach (array_filter($storage['uninstall']) as $module => $value) {
-    $info = drupal_parse_info_file(drupal_get_path('module', $module) . '/' . $module . '.info.yml');
-    $uninstall[] = $info['name'];
-    $form['uninstall'][$module] = array('#type' => 'hidden',
-      '#value' => 1,
-    );
-  }
-
-  // Display a confirm form if modules have been selected.
-  if (isset($uninstall)) {
-    $form['#confirmed'] = TRUE;
-    $form['uninstall']['#tree'] = TRUE;
-    $form['text'] = array('#markup' => '<p>' . t('The following modules will be completely uninstalled from your site, and <em>all data from these modules will be lost</em>!') . '</p>');
-    $form['modules'] = array('#theme' => 'item_list', '#items' => $uninstall);
-    $form = confirm_form(
-      $form,
-      t('Confirm uninstall'),
-      'admin/modules/uninstall',
-      t('Would you like to continue with uninstalling the above?'),
-      t('Uninstall'),
-      t('Cancel'));
-    return $form;
-  }
 }
 
 /**
@@ -1917,41 +1831,6 @@ function theme_system_themes_page($variables) {
 }
 
 /**
- * Menu callback; present a form for deleting a date format.
- *
- * @param string $date_format_id
- *   The machine name for the date format that may be deleted.
- */
-function system_date_delete_format_form($form, &$form_state, $date_format_id) {
-  $form['date_format_id'] = array(
-    '#type' => 'value',
-    '#value' => $date_format_id,
-  );
-  $format = system_get_date_formats($date_format_id);
-  $output = confirm_form($form,
-    t('Are you sure you want to remove the format %name : %format?', array('%name' => $format['name'], '%format' => format_date(REQUEST_TIME, $date_format_id))),
-    'admin/config/regional/date-time/formats',
-    t('This action cannot be undone.'),
-    t('Remove'), t('Cancel'),
-    'confirm'
-  );
-
-  return $output;
-}
-
-/**
- * Delete a configured date format.
- */
-function system_date_delete_format_form_submit($form, &$form_state) {
-  if ($form_state['values']['confirm']) {
-    $format = system_get_date_formats($form_state['values']['date_format_id']);
-    system_date_format_delete($form_state['values']['date_format_id']);
-    drupal_set_message(t('Removed date format %format.', array('%format' => $format['name'])));
-    $form_state['redirect'] = 'admin/config/regional/date-time/formats';
-  }
-}
-
-/**
  * Displays the date format strings overview page.
  */
 function system_date_time_formats() {
@@ -2300,34 +2179,6 @@ function theme_system_date_format_localize_form($variables) {
   $output .= drupal_render_children($form);
 
   return $output;
-}
-
-/**
- * Form constructor for the reset date format form.
- *
- * @param $langcode
- *   Language code, e.g. 'en'.
- *
- * @see locale_menu()
- * @see system_date_format_localize_reset_form_submit()
- * @ingroup forms
- */
-function system_date_format_localize_reset_form($form, &$form_state, $langcode) {
-  $form['langcode'] = array('#type' => 'value', '#value' => $langcode);
-  return confirm_form($form,
-    t('Are you sure you want to reset the date formats for %language to the global defaults?', array('%language' => language_load($langcode)->name)),
-    'admin/config/regional/date-time/locale',
-    t('Resetting will remove all localized date formats for this language. This action cannot be undone.'),
-    t('Reset'), t('Cancel'));
-}
-
-/**
- * Form submission handler for locale_date_format_reset_form().
- */
-function system_date_format_localize_reset_form_submit($form, &$form_state) {
-  config('locale.config.' . $form['langcode']['#value'] . '.system.date')
-    ->delete();
-  $form_state['redirect'] = 'admin/config/regional/date-time/locale';
 }
 
 /**

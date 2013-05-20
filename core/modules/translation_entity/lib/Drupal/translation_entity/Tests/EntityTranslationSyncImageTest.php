@@ -69,10 +69,6 @@ class EntityTranslationSyncImageTest extends EntityTranslationTestBase {
       'field_name' => $this->fieldName,
       'bundle' => $this->entityType,
       'label' => 'Test translatable image field',
-      'widget' => array(
-        'type' => 'image_image',
-        'weight' => 0,
-      ),
       'settings' => array(
         'translation_sync' => array(
           'file' => FALSE,

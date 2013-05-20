@@ -57,13 +57,16 @@ class DatetimeFieldTest extends WebTestBase {
       'field_name' => $this->field['field_name'],
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
-      'widget' => array(
-        'type' => 'datetime_default',
-      ),
       'settings' => array(
         'default_value' => 'blank',
       ),
     ));
+
+    entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
+      ->setComponent($this->field['field_name'], array(
+        'type' => 'datetime_default',
+      ))
+      ->save();
 
     $this->display_options = array(
       'type' => 'datetime_default',
@@ -217,17 +220,16 @@ class DatetimeFieldTest extends WebTestBase {
     field_update_field($this->field);
 
     // Change the widget to a datelist widget.
-    $increment = 1;
-    $date_order = 'YMD';
-    $time_type = '12';
-
-    $this->instance['widget']['type'] = 'datetime_datelist';
-    $this->instance['widget']['settings'] = array(
-      'increment' => $increment,
-      'date_order' => $date_order,
-      'time_type' => $time_type,
-    );
-    field_update_instance($this->instance);
+    entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
+      ->setComponent($this->instance['field_name'], array(
+        'type' => 'datetime_datelist',
+        'settings' => array(
+          'increment' => 1,
+          'date_order' => 'YMD',
+          'time_type' => '12',
+        ),
+      ))
+      ->save();
     field_cache_clear();
 
     // Display creation form.

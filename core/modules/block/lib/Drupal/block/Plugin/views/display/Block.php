@@ -150,7 +150,7 @@ class Block extends DisplayPluginBase {
         if (!$this->usesExposed() && parent::usesExposed()) {
           $form['exposed_form_options']['warning'] = array(
             '#weight' => -10,
-            '#markup' => '<div class="messages warning">' . t('Exposed filters in block displays require "Use AJAX" to be set to work correctly.') . '</div>',
+            '#markup' => '<div class="messages messages--warning">' . t('Exposed filters in block displays require "Use AJAX" to be set to work correctly.') . '</div>',
           );
         }
     }

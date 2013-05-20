@@ -53,9 +53,6 @@ class ImageItemTest extends FieldUnitTestBase {
       'entity_type' => 'entity_test',
       'field_name' => 'image_test',
       'bundle' => 'entity_test',
-      'widget' => array(
-        'type' => 'image_image',
-      ),
     );
     field_create_instance($instance);
     file_unmanaged_copy(DRUPAL_ROOT . '/core/misc/druplicon.png', 'public://example.jpg');

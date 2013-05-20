@@ -30,6 +30,14 @@ class EntityFormControllerNG extends EntityFormController {
     if (!empty($info['fieldable'])) {
       field_attach_form($entity, $form, $form_state, $this->getFormLangcode($form_state));
     }
+
+    // Assign the weights configured in the form display.
+    foreach ($this->getFormDisplay($form_state)->getComponents() as $name => $options) {
+      if (isset($form[$name])) {
+        $form[$name]['#weight'] = $options['weight'];
+      }
+    }
+
     return $form;
   }
 

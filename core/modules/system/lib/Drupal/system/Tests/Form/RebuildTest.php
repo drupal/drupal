@@ -83,6 +83,9 @@ class RebuildTest extends WebTestBase {
       'bundle' => 'page',
     );
     field_create_instance($instance);
+    entity_get_form_display('node', 'page', 'default')
+      ->setComponent($field_name, array('type' => 'text_test'))
+      ->save();
 
     // Log in a user who can create 'page' nodes.
     $this->web_user = $this->drupalCreateUser(array('create page content'));

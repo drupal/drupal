@@ -8,6 +8,7 @@
 use Drupal\field\FieldValidationException;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
+use Drupal\entity\Plugin\Core\Entity\EntityFormDisplay;
 
 /**
  * @defgroup field_storage Field Storage API
@@ -705,12 +706,15 @@ function _field_invoke_get_instances($entity_type, $bundle, $options) {
  *
  * Used to invoke methods on an instance's widget.
  *
+ * @param \Drupal\entity\Plugin\Core\Entity\EntityFormDisplay $form_display
+ *   An EntityFormDisplay object.
+ *
  * @return callable $target_function
  *   A 'target function' for field_invoke_method().
  */
-function _field_invoke_widget_target() {
-  return function ($instance) {
-    return $instance->getWidget();
+function _field_invoke_widget_target($form_display) {
+  return function ($instance) use ($form_display) {
+    return $form_display->getWidget($instance['field_name']);
   };
 }
 
@@ -828,12 +832,13 @@ function field_attach_form(EntityInterface $entity, &$form, &$form_state, $langc
   // Set #parents to 'top-level' by default.
   $form += array('#parents' => array());
 
+  // Get the entity_form_display object for this form.
+  $form_display = $form_state['form_display'];
+
   // If no language is provided use the default site language.
   $options['langcode'] = field_valid_language($langcode);
-  $form += (array) field_invoke_method('form', _field_invoke_widget_target(), $entity, $form, $form_state, $options);
+  $form += (array) field_invoke_method('form', _field_invoke_widget_target($form_display), $entity, $form, $form_state, $options);
 
-  // Add custom weight handling.
-  $form['#pre_render'][] = '_field_extra_fields_pre_render';
   $form['#entity_type'] = $entity->entityType();
   $form['#bundle'] = $entity->bundle();
 
@@ -1106,7 +1111,8 @@ function field_attach_form_validate(EntityInterface $entity, $form, &$form_state
         field_form_set_state($form['#parents'], $field_name, $langcode, $form_state, $field_state);
       }
     }
-    field_invoke_method('flagErrors', _field_invoke_widget_target(), $entity, $form, $form_state, $options);
+    $form_display = $form_state['form_display'];
+    field_invoke_method('flagErrors', _field_invoke_widget_target($form_display), $entity, $form, $form_state, $options);
   }
 }
 
@@ -1133,7 +1139,8 @@ function field_attach_extract_form_values(EntityInterface $entity, $form, &$form
   $entity = $entity->getBCEntity();
 
   // Extract field values from submitted values.
-  field_invoke_method('extractFormValues', _field_invoke_widget_target(), $entity, $form, $form_state, $options);
+  $form_display = $form_state['form_display'];
+  field_invoke_method('extractFormValues', _field_invoke_widget_target($form_display), $entity, $form, $form_state, $options);
 
   // Let other modules act on submitting the entity.
   // Avoid module_invoke_all() to let $form_state be taken by reference.
@@ -1464,7 +1471,7 @@ function field_attach_view(EntityInterface $entity, EntityDisplay $display, $lan
   $entity = $entity->getNGEntity();
 
   // Let other modules alter the renderable array.
-  $view_mode = $display->originalViewMode;
+  $view_mode = $display->originalMode;
   $context = array(
     'entity' => $entity,
     'view_mode' => $view_mode,
