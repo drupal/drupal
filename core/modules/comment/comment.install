@@ -612,13 +612,6 @@ function comment_update_8006(&$sandbox) {
         'label' => 'Comment settings',
         'required' => 1,
         'settings' => $instance_settings,
-        'widget' => array(
-          'active' => 0,
-          'module' => 'comment',
-          'settings' => array(),
-          'type' => 'comment_default',
-          'weight' => '50',
-        ),
       );
       _update_7000_field_create_instance($field, $instance);
     }
@@ -643,6 +636,17 @@ function comment_update_8006(&$sandbox) {
     $display->set('content.' . $field['field_name'], $display_options_default)
       ->save();
     update_config_manifest_add('entity.display', array($display->get('id')));
+
+    // Assign widget settings for the 'default' form mode.
+    $display_options_default = array(
+      'type' => 'comment_default',
+      'settings' => array(),
+      'weight' => 1,
+    );
+    $display = _update_8000_entity_get_form_display('node', $node_type, 'default');
+    $display->set('content.' . $field['field_name'], $display_options_default)
+      ->save();
+    update_config_manifest_add('entity.form_display', array($display->get('id')));
 
     // Clean up old variables.
     variable_del('comment_' . $node_type);
