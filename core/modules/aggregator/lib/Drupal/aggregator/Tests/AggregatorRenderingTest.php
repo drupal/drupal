@@ -91,6 +91,11 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     $feed = $this->createFeed();
     $this->updateFeedItems($feed, 30);
 
+    // Check for presence of an aggregator pager.
+    $this->drupalGet('aggregator');
+    $elements = $this->xpath("//ul[@class=:class]", array(':class' => 'pager'));
+    $this->assertTrue(!empty($elements), 'Individual source page contains a pager.');
+
     // Check for the presence of a pager.
     $this->drupalGet('aggregator/sources/' . $feed->id());
     $elements = $this->xpath("//ul[@class=:class]", array(':class' => 'pager'));
