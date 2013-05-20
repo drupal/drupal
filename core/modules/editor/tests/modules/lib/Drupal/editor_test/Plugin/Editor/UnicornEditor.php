@@ -2,20 +2,20 @@
 
 /**
  * @file
- * Contains \Drupal\editor_test\Plugin\editor\editor\UnicornEditor.
+ * Contains \Drupal\editor_test\Plugin\Editor\UnicornEditor.
  */
 
-namespace Drupal\editor_test\Plugin\editor\editor;
+namespace Drupal\editor_test\Plugin\Editor;
 
 use Drupal\editor\Plugin\EditorBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\editor\Annotation\Editor;
 use Drupal\Core\Annotation\Translation;
-use Drupal\editor\Plugin\Core\Entity\Editor;
+use Drupal\editor\Plugin\Core\Entity\Editor as EditorEntity;
 
 /**
  * Defines a Unicorn-powered text editor for Drupal.
  *
- * @Plugin(
+ * @Editor(
  *   id = "unicorn",
  *   label = @Translation("Unicorn Editor"),
  *   module = "editor_test",
@@ -34,7 +34,7 @@ class UnicornEditor extends EditorBase {
   /**
    * Implements \Drupal\editor\Plugin\EditPluginInterface::settingsForm().
    */
-  function settingsForm(array $form, array &$form_state, Editor $editor) {
+  function settingsForm(array $form, array &$form_state, EditorEntity $editor) {
     $form['foo'] = array('#type' => 'textfield', '#default_value' => 'bar');
     return $form;
   }
@@ -42,7 +42,7 @@ class UnicornEditor extends EditorBase {
   /**
    * Implements \Drupal\editor\Plugin\EditPluginInterface::getJSSettings().
    */
-  function getJSSettings(Editor $editor) {
+  function getJSSettings(EditorEntity $editor) {
     $settings = array();
     if ($editor->settings['ponies too']) {
       $settings['ponyModeEnabled'] = TRUE;
@@ -53,7 +53,7 @@ class UnicornEditor extends EditorBase {
   /**
    * Implements \Drupal\editor\Plugin\EditPluginInterface::getLibraries().
    */
-  public function getLibraries(Editor $editor) {
+  public function getLibraries(EditorEntity $editor) {
     return array(
       array('edit_test', 'unicorn'),
     );
