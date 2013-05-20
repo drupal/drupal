@@ -6,6 +6,19 @@
  */
 
 /**
+ * Implements hook_custom_theme().
+ *
+ * @todo Add an event subscriber to the Ajax system to automatically set the
+ *   base page theme for all Ajax requests, and then remove this one off.
+ *   See http://drupal.org/node/1954892.
+ */
+function contextual_custom_theme() {
+  if (substr(current_path(), 0, 11) === 'contextual/') {
+    return ajax_base_page_theme();
+  }
+}
+
+/**
  * Implements hook_toolbar().
  */
 function contextual_toolbar() {
@@ -24,8 +37,6 @@ function contextual_toolbar() {
         'role' => 'button',
         'aria-pressed' => 'false',
       ),
-      // @todo remove this once http://drupal.org/node/1908906 lands.
-      '#options' => array('attributes' => array()),
     ),
     '#wrapper_attributes' => array(
       'class' => array('element-hidden', 'contextual-toolbar-tab'),
@@ -38,6 +49,22 @@ function contextual_toolbar() {
   );
 
   return $tab;
+}
+
+/**
+ * Implements hook_page_build().
+ *
+ * Adds the drupal.contextual-links library to the page for any user who has the
+ * 'access contextual links' permission.
+ *
+ * @see contextual_preprocess()
+ */
+function contextual_page_build(&$page) {
+  if (!user_access('access contextual links')) {
+    return;
+  }
+
+  $page['#attached']['library'][] = array('contextual', 'drupal.contextual-links');
 }
 
 /**
@@ -115,6 +142,7 @@ function contextual_library_info() {
       array('system', 'jquery.once'),
       array('system', 'drupal.tabbingmanager'),
       array('system', 'drupal.announce'),
+      array('contextual', 'drupal.contextual-links')
     ),
   );
 
@@ -125,6 +153,10 @@ function contextual_library_info() {
  * Implements hook_element_info().
  */
 function contextual_element_info() {
+  $types['contextual_links_placeholder'] = array(
+    '#pre_render' => array('contextual_pre_render_placeholder'),
+    '#id' => NULL,
+  );
   $types['contextual_links'] = array(
     '#pre_render' => array('contextual_pre_render_links'),
     '#theme' => 'links__contextual',
@@ -142,14 +174,11 @@ function contextual_element_info() {
 /**
  * Implements hook_preprocess().
  *
- * @see contextual_pre_render_links()
+ * @see contextual_pre_render_placeholder()
+ * @see contextual_page_build()
+ * @see \Drupal\contextual\ContextualController::render()
  */
 function contextual_preprocess(&$variables, $hook) {
-  // Nothing to do here if the user is not permitted to access contextual links.
-  if (!user_access('access contextual links')) {
-    return;
-  }
-
   $hooks = theme_get_registry(FALSE);
 
   // Determine the primary theme function argument.
@@ -165,15 +194,40 @@ function contextual_preprocess(&$variables, $hook) {
   }
 
   if (isset($element) && is_array($element) && !empty($element['#contextual_links'])) {
-    // Initialize the template variable as a renderable array.
-    $variables['title_suffix']['contextual_links'] = array(
-      '#type' => 'contextual_links',
-      '#contextual_links' => $element['#contextual_links'],
-      '#element' => $element,
-    );
     // Mark this element as potentially having contextual links attached to it.
     $variables['attributes']['class'][] = 'contextual-region';
+
+    // Renders a contextual links placeholder unconditionally, thus not breaking
+    // the render cache. Although the empty placeholder is rendered for all
+    // users, contextual_page_build() only adds the drupal.contextual-links
+    // library for users with the 'access contextual links' permission, thus
+    // preventing unnecessary HTTP requests for users without that permission.
+    $variables['title_suffix']['contextual_links'] = array(
+      '#type' => 'contextual_links_placeholder',
+      '#id' => _contextual_links_to_id($element['#contextual_links']),
+    );
   }
+}
+
+/**
+ * Pre-render callback: Renders a contextual links placeholder into #markup.
+ *
+ * Renders an empty (hence invisible) placeholder div with a data-attribute that
+ * contains an identifier ("contextual id"), which allows the JavaScript of the
+ * drupal.contextual-links library to dynamically render contextual links.
+ *
+ * @param $element
+ *   A structured array with #id containing a "contextual id".
+ *
+ * @return
+ *   The passed-in element with a contextual link placeholder in '#markup'.
+ *
+ * @see _contextual_links_to_id()
+ * @see contextual_element_info()
+ */
+function contextual_pre_render_placeholder($element) {
+  $element['#markup'] = '<div data-contextual-id="' . $element['#id'] . '"></div>';
+  return $element;
 }
 
 /**
@@ -230,3 +284,73 @@ function contextual_pre_render_links($element) {
   return $element;
 }
 
+/**
+ * Implements hook_contextual_links_view_alter().
+ *
+ * @see \Drupal\contextual\Plugin\views\field\ContextualLinks::render()
+ */
+function contextual_contextual_links_view_alter(&$element, $items) {
+  if (isset($element['#contextual_links']['contextual'])) {
+    $encoded_links = $element['#contextual_links']['contextual'][2]['contextual-views-field-links'];
+    $element['#links'] = drupal_json_decode(rawurldecode($encoded_links));
+  }
+}
+
+/**
+ * Serializes #contextual_links property value array to a string.
+ *
+ * Examples:
+ *  - node:node:1:
+ *  - views_ui:admin/structure/views/view:frontpage:location=page&view_name=frontpage&view_display_id=page_1
+ *  - menu:admin/structure/menu/manage:tools:|block:admin/structure/block/manage:bartik.tools:
+ *
+ * So, expressed in a pattern:
+ *  <module name>:<parent path>:<path args>:<options>
+ *
+ * The (dynamic) path args are joined with slashes. The options are encoded as a
+ * query string.
+ *
+ * @param array $contextual_links
+ *   The $element['#contextual_links'] value for some render element.
+ *
+ * @return string
+ *   A serialized representation of a #contextual_links property value array for
+ *   use in a data- attribute.
+ */
+function _contextual_links_to_id($contextual_links) {
+  $id = '';
+  foreach ($contextual_links as $module => $args) {
+    $parent_path = $args[0];
+    $path_args = implode('/', $args[1]);
+    $metadata = drupal_http_build_query((isset($args[2])) ? $args[2] : array());
+
+    if (drupal_strlen($id) > 0) {
+      $id .= '|';
+    }
+    $id .= $module . ':' . $parent_path . ':' . $path_args . ':' . $metadata;
+  }
+  return $id;
+}
+
+/**
+ * Unserializes the result of _contextual_links_to_id().
+ *
+ * @see _contextual_links_to_id
+ *
+ * @param string $id
+ *   A serialized representation of a #contextual_links property value array.
+ *
+ * @return array
+ *   The value for a #contextual_links property.
+ */
+function _contextual_id_to_links($id) {
+  $contextual_links = array();
+  $contexts = explode('|', $id);
+  foreach ($contexts as $context) {
+    list($module, $parent_path, $path_args, $metadata_raw) = explode(':', $context);
+    $path_args = explode('/', $path_args);
+    $metadata = drupal_get_query_array($metadata_raw);
+    $contextual_links[$module] = array($parent_path, $path_args, $metadata);
+  }
+  return $contextual_links;
+}

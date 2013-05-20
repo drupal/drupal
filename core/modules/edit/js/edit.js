@@ -271,9 +271,9 @@ function fetchMissingMetadata (callback) {
  *   An object with the following properties:
  *     - String entity: an Edit entity identifier, e.g. "node/1" or
  *       "custom_block/5".
- *     - jQuery $el: element pointing to the contextual links for this entity.
- *     - jQuery $region: element pointing to the contextual region for this
+ *     - DOM el: element pointing to the contextual links placeholder for this
  *       entity.
+ *     - DOM region: element pointing to the contextual region for this entity.
  * @return Boolean
  *   Returns true when a contextual the given contextual link metadata can be
  *   removed from the queue (either because the contextual link has been set up
@@ -324,8 +324,9 @@ function initializeEntityContextualLink (contextualLink) {
     fieldsAvailableQueue = _.difference(fieldsAvailableQueue, fields);
 
     // Set up contextual link view.
+    var $links = $(contextualLink.el).find('.contextual-links');
     var contextualLinkView = new Drupal.edit.ContextualLinkView($.extend({
-      el: $('<li class="quick-edit"><a href=""></a></li>').prependTo(contextualLink.el),
+      el: $('<li class="quick-edit"><a href=""></a></li>').prependTo($links),
       model: entityModel,
       appModel: Drupal.edit.app.model
     }, options));

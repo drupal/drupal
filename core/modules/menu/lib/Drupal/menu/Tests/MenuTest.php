@@ -306,11 +306,30 @@ class MenuTest extends WebTestBase {
    * Tests the contextual links on a menu block.
    */
   public function testBlockContextualLinks() {
-    $this->drupalLogin($this->drupalCreateUser(array('administer menu', 'access contextual links')));
+    $this->drupalLogin($this->drupalCreateUser(array('administer menu', 'access contextual links', 'administer blocks')));
     $this->addMenuLink();
-    $this->drupalPlaceBlock('system_menu_block:menu-tools', array('label' => 'Tools', 'module' => 'system'));
+    $block = $this->drupalPlaceBlock('system_menu_block:menu-tools', array('label' => 'Tools', 'module' => 'system'));
     $this->drupalGet('test-page');
-    $this->assertLinkByHref("admin/structure/menu/manage/tools/edit");
+
+    $id = 'block:admin/structure/block/manage:' . $block->id() . ':|menu:admin/structure/menu/manage:tools:';
+    // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:assertContextualLinkPlaceHolder()
+    $this->assertRaw('<div data-contextual-id="'. $id . '"></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
+
+    // Get server-rendered contextual links.
+    // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:renderContextualLinks()
+    $post = urlencode('ids[0]') . '=' . urlencode($id);
+    $response = $this->curlExec(array(
+      CURLOPT_URL => url('contextual/render', array('absolute' => TRUE, 'query' => array('destination' => 'test-page'))),
+      CURLOPT_POST => TRUE,
+      CURLOPT_POSTFIELDS => $post,
+      CURLOPT_HTTPHEADER => array(
+        'Accept: application/json',
+        'Content-Type: application/x-www-form-urlencoded',
+      ),
+    ));
+    $this->assertResponse(200);
+    $json = drupal_json_decode($response);
+    $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="block-configure odd first"><a href="' . base_path() . 'admin/structure/block/manage/' . $block->id() . '/configure?destination=test-page">Configure block</a></li><li class="menu-edit even last"><a href="' . base_path() . 'admin/structure/menu/manage/tools/edit?destination=test-page">Edit menu</a></li></ul>');
   }
 
   /**
