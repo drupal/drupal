@@ -7,14 +7,16 @@
 
 namespace Drupal\aggregator\Routing;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Drupal\aggregator\FeedInterface;
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\ControllerInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityManager;
-use Drupal\aggregator\FeedInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Returns responses for aggregator module routes.
@@ -36,16 +38,36 @@ class AggregatorController implements ControllerInterface {
   protected $database;
 
   /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $configFactory;
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs a \Drupal\aggregator\Routing\AggregatorController object.
    *
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   The Entity manager.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The config factory.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    */
-  public function __construct(EntityManager $entity_manager, Connection $database) {
+  public function __construct(EntityManager $entity_manager, Connection $database, ConfigFactory $config_factory, ModuleHandlerInterface $module_handler) {
     $this->entityManager = $entity_manager;
     $this->database = $database;
+    $this->configFactory = $config_factory;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -54,7 +76,9 @@ class AggregatorController implements ControllerInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('plugin.manager.entity'),
-      $container->get('database')
+      $container->get('database'),
+      $container->get('config.factory'),
+      $container->get('module_handler')
     );
   }
 
@@ -185,4 +209,22 @@ class AggregatorController implements ControllerInterface {
     return $build;
   }
 
+  /**
+   * Displays the most recent items gathered from any feed.
+   *
+   * @return string
+   *   The rendered list of items for the feed.
+   */
+  public function pageLast() {
+    drupal_add_feed('aggregator/rss', $this->configFactory->get('system.site')->get('name') . ' ' . t('aggregator'));
+
+    // @todo Refactor this function once after all controller conversions are
+    // done.
+    $this->moduleHandler->loadInclude('aggregator', 'inc', 'aggregator.pages');
+    $items = aggregator_load_feed_items('sum');
+
+    // @todo Refactor this function once after all controller conversions are
+    // done.
+    return _aggregator_page_list($items, arg(1));
+  }
 }

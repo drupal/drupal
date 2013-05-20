@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views\ViewsDataCache.
+ * Contains \Drupal\views\ViewsData.
  */
 
 namespace Drupal\views;
@@ -19,7 +19,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
  * the requested table based on this cached data. Table data is only rebuilt
  * when no cache entry for all table data can be retrieved.
  */
-class ViewsDataCache {
+class ViewsData {
 
   /**
    * The base cache ID to use.
@@ -71,7 +71,7 @@ class ViewsDataCache {
   protected $moduleHandler;
 
   /**
-   * Constructs this ViewsDataCache object.
+   * Constructs this ViewsData object.
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend to use.

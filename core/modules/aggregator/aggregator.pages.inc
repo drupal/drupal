@@ -9,22 +9,6 @@ use Drupal\aggregator\Plugin\Core\Entity\Feed;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Page callback: Displays the most recent items gathered from any feed.
- *
- * @return string
- *   The rendered list of items for the feed.
- *
- * @see aggregator_menu()
- */
-function aggregator_page_last() {
-  drupal_add_feed('aggregator/rss', config('system.site')->get('name') . ' ' . t('aggregator'));
-
-  $items = aggregator_load_feed_items('sum');
-
-  return _aggregator_page_list($items, arg(1));
-}
-
-/**
  * Page callback: Displays all the items captured from the particular feed.
  *
  * @param \Drupal\aggregator\Plugin\Core\Entity\Feed $feed

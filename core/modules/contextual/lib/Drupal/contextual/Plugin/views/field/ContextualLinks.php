@@ -64,6 +64,9 @@ class ContextualLinks extends FieldPluginBase {
 
   /**
    * Render the contextual fields.
+   *
+   * @see contextual_preprocess()
+   * @see contextual_contextual_links_view_alter()
    */
   function render($values) {
     $links = array();
@@ -92,19 +95,23 @@ class ContextualLinks extends FieldPluginBase {
       }
     }
 
+    // Renders a contextual links placeholder.
     if (!empty($links)) {
-      $build = array(
-        '#prefix' => '<div class="contextual">',
-        '#suffix' => '</div>',
-        '#theme' => 'links__contextual',
-        '#links' => $links,
-        '#attributes' => array('class' => array('contextual-links')),
-        '#attached' => array(
-          'library' => array(array('contextual', 'contextual-links')),
-        ),
-        '#access' => user_access('access contextual links'),
+      $contextual_links = array(
+        'contextual' => array(
+          '',
+          array(),
+          array(
+            'contextual-views-field-links' => drupal_encode_path(drupal_json_encode($links)),
+          )
+        )
       );
-      return drupal_render($build);
+
+      $element = array(
+        '#type' => 'contextual_links_placeholder',
+        '#id' => _contextual_links_to_id($contextual_links),
+      );
+      return drupal_render($element);
     }
     else {
       return '';

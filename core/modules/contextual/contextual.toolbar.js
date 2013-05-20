@@ -23,10 +23,7 @@ var options = {
  */
 function initContextualToolbar (context) {
   var contextualToolbar = Drupal.contextualToolbar;
-  var model = contextualToolbar.model = new contextualToolbar.Model({
-    isViewing: true,
-    isVisible: false
-  });
+  var model = contextualToolbar.model = new contextualToolbar.Model();
 
   var viewOptions = $.extend({
     el: $('.js .toolbar .bar .contextual-toolbar-tab'),
@@ -38,26 +35,32 @@ function initContextualToolbar (context) {
   // Update the model based on overlay events.
   $(document).on({
     'drupalOverlayOpen.contextualToolbar': function () {
-      model.set('isVisible', false);
+      model.set('overlayIsOpen', true);
     },
     'drupalOverlayClose.contextualToolbar': function () {
-      model.set('isVisible', true);
+      model.set('overlayIsOpen', false);
     }
   });
 
   // Show the edit tab while there's >=1 contextual link.
-  var collection = Drupal.contextual.collection;
-  var updateVisibility = function () {
-    model.set('isVisible', collection.length > 0);
-  };
-  collection.on('reset remove add', updateVisibility);
-  updateVisibility();
+  var contextualCollection = Drupal.contextual.collection;
+  function trackContextualCount () {
+    model.set('contextualCount', contextualCollection.length);
+  }
+  contextualCollection.on('reset remove add', trackContextualCount);
+  trackContextualCount();
 
-  // Whenever edit mode is toggled, update all contextual links.
+  // Whenever edit mode is toggled, lock all contextual links.
   model.on('change:isViewing', function() {
-    collection.each(function (contextualModel) {
+    contextualCollection.each(function (contextualModel) {
       contextualModel.set('isLocked', !model.get('isViewing'));
     });
+  });
+  // When a new contextual link is added and edit mode is enabled, lock it.
+  contextualCollection.on('add', function (contextualModel) {
+    if (!model.get('isViewing')) {
+      contextualModel.set('isLocked', true);
+    }
   });
 
   // Checks whether localStorage indicates we should start in edit mode
@@ -93,11 +96,21 @@ Drupal.contextualToolbar = {
     defaults: {
       // Indicates whether the toggle is currently in "view" or "edit" mode.
       isViewing: true,
-      // Indicates whether the toggle should be visible or hidden.
+      // Indicates whether the toggle should be visible or hidden. Automatically
+      // calculated, depends on overlayIsOpen and contextualCount.
       isVisible: false,
+      // Indicates whether the overlay is open or not.
+      overlayIsOpen: false,
+      // Tracks how many contextual links exist on the page.
+      contextualCount: 0,
       // A TabbingContext object as returned by Drupal.TabbingManager: the set
       // of tabbable elements when edit mode is enabled.
       tabbingContext: null
+    },
+    initialize: function () {
+      this.on('change:overlayIsOpen change:contextualCount', function (model) {
+        model.set('isVisible', !model.get('overlayIsOpen') && model.get('contextualCount') > 0);
+      });
     }
   }),
 

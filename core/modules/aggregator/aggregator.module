@@ -134,10 +134,8 @@ function aggregator_menu() {
   );
   $items['aggregator'] = array(
     'title' => 'Feed aggregator',
-    'page callback' => 'aggregator_page_last',
-    'access arguments' => array('access news feeds'),
     'weight' => 5,
-    'file' => 'aggregator.pages.inc',
+    'route_name' => 'aggregator_page_last',
   );
   $items['aggregator/sources'] = array(
     'title' => 'Sources',

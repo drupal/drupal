@@ -468,6 +468,11 @@ function views_page_alter(&$page) {
  * Implements MODULE_preprocess_HOOK().
  */
 function views_preprocess_html(&$variables) {
+  // Early-return to prevent adding unnecessary JavaScript.
+  if (!user_access('access contextual links')) {
+    return;
+  }
+
   // If the page contains a view as its main content, contextual links may have
   // been attached to the page as a whole; for example, by views_page_alter().
   // This allows them to be associated with the page and rendered by default
@@ -480,26 +485,15 @@ function views_preprocess_html(&$variables) {
   // page.tpl.php, so we can only find it using JavaScript. We therefore remove
   // the "contextual-region" class from the <body> tag here and add
   // JavaScript that will insert it back in the correct place.
-  if (!empty($variables['page']['#views_contextual_links_info'])) {
+  if (!empty($variables['page']['#views_contextual_links'])) {
     $key = array_search('contextual-region', $variables['attributes']['class']);
     if ($key !== FALSE) {
       unset($variables['attributes']['class'][$key]);
+      $variables['attributes']['data-views-page-contextual-id'] = $variables['title_suffix']['contextual_links']['#id'];
       // Add the JavaScript, with a group and weight such that it will run
       // before modules/contextual/contextual.js.
       drupal_add_library('views', 'views.contextual-links');
     }
-  }
-}
-
-/**
- * Implements hook_contextual_links_view_alter().
- */
-function views_contextual_links_view_alter(&$element, $items) {
-  // If we are rendering views-related contextual links attached to the overall
-  // page array, add a class to the list of contextual links. This will be used
-  // by the JavaScript added in views_preprocess_html().
-  if (!empty($element['#element']['#views_contextual_links_info']) && !empty($element['#element']['#type']) && $element['#element']['#type'] == 'page') {
-    $element['#attributes']['class'][] = 'views-contextual-links-page';
   }
 }
 
@@ -612,12 +606,15 @@ function views_add_contextual_links(&$render_element, $location, ViewExecutable 
         // If the link was valid, attach information about it to the renderable
         // array.
         if ($valid) {
-          $render_element['#contextual_links'][$module] = array($link['parent path'], $args);
-          $render_element['#views_contextual_links_info'][$module] = array(
-            'location' => $location,
-            'view' => $view,
-            'view_name' => $view->storage->id(),
-            'view_display_id' => $display_id,
+          $render_element['#views_contextual_links'] = TRUE;
+          $render_element['#contextual_links'][$module] = array(
+            $link['parent path'],
+            $args,
+            array(
+              'location' => $location,
+              'name' => $view->storage->id(),
+              'display_id' => $display_id,
+            )
           );
         }
       }

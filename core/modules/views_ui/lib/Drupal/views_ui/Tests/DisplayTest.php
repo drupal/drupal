@@ -284,8 +284,27 @@ class DisplayTest extends UITestBase {
     $this->drupalLogin($this->drupalCreateUser(array('administer views', 'access contextual links')));
     $view = entity_load('view', 'test_display');
     $view->enable()->save();
+
     $this->drupalGet('test-display');
-    $this->assertLinkByHref("admin/structure/views/view/{$view->id()}/edit/page_1");
+    $id = 'views_ui:admin/structure/views/view:test_display:location=page&name=test_display&display_id=page_1';
+    // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:assertContextualLinkPlaceHolder()
+    $this->assertRaw('<div data-contextual-id="'. $id . '"></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
+
+    // Get server-rendered contextual links.
+    // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:renderContextualLinks()
+    $post = urlencode('ids[0]') . '=' . urlencode($id);
+    $response = $this->curlExec(array(
+      CURLOPT_URL => url('contextual/render', array('absolute' => TRUE, 'query' => array('destination' => 'test-display'))),
+      CURLOPT_POST => TRUE,
+      CURLOPT_POSTFIELDS => $post,
+      CURLOPT_HTTPHEADER => array(
+        'Accept: application/json',
+        'Content-Type: application/x-www-form-urlencoded',
+      ),
+    ));
+    $this->assertResponse(200);
+    $json = drupal_json_decode($response);
+    $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="views-ui-edit odd first last"><a href="' . base_path() . 'admin/structure/views/view/test_display/edit/page_1?destination=test-display">Edit view</a></li></ul>');
   }
 
 }

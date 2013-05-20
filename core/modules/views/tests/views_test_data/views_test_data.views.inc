@@ -16,7 +16,7 @@ function views_test_data_views_data() {
   $state->set('views_hook_test_views_data', TRUE);
   // We use a state variable to keep track of how many times this function is
   // called so we can assert that calls to
-  // \Drupal\views\ViewsDataCache::delete() trigger a rebuild of views data.
+  // \Drupal\views\ViewsData::delete() trigger a rebuild of views data.
   if (!($count = $state->get('views_test_data_views_data_count'))) {
     $count = 0;
   }
