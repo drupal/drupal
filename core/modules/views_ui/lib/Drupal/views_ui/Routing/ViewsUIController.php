@@ -10,7 +10,7 @@ namespace Drupal\views_ui\Routing;
 use Drupal\views\ViewExecutable;
 use Drupal\views\ViewStorageInterface;
 use Drupal\views_ui\ViewUI;
-use Drupal\views\ViewsDataCache;
+use Drupal\views\ViewsData;
 use Drupal\user\TempStore;
 use Drupal\user\TempStoreFactory;
 use Drupal\Core\ControllerInterface;
@@ -37,7 +37,7 @@ class ViewsUIController implements ControllerInterface {
   /**
    * Stores the Views data cache object.
    *
-   * @var \Drupal\views\ViewsDataCache
+   * @var \Drupal\views\ViewsData
    */
   protected $viewsData;
 
@@ -53,12 +53,12 @@ class ViewsUIController implements ControllerInterface {
    *
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   The Entity manager.
-   * @param \Drupal\views\ViewsDataCache views_data
+   * @param \Drupal\views\ViewsData views_data
    *   The Views data cache object.
    * @param \Drupal\user\TempStoreFactory $temp_store_factory
    *   The factory for the temp store object.
    */
-  public function __construct(EntityManager $entity_manager, ViewsDataCache $views_data, TempStoreFactory $temp_store_factory) {
+  public function __construct(EntityManager $entity_manager, ViewsData $views_data, TempStoreFactory $temp_store_factory) {
     $this->entityManager = $entity_manager;
     $this->viewsData = $views_data;
     $this->tempStore = $temp_store_factory->get('views');

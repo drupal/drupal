@@ -17,7 +17,7 @@ class Views {
   /**
    * Returns the views data service.
    *
-   * @return \Drupal\views\ViewsDataCache
+   * @return \Drupal\views\ViewsData
    *   Returns a views data cache object.
    */
   public static function viewsData() {
