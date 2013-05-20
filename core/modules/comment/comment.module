@@ -412,17 +412,6 @@ function comment_menu() {
     'access arguments' => array(3),
     'file' => 'comment.pages.inc',
   );
-  // Legacy redirect handler for links of form comment/reply/%nid
-  if (module_exists('node')) {
-    $items['comment/reply/%node'] = array(
-      'title' => 'Add new comment',
-      'page callback' => 'comment_node_redirect',
-      'page arguments' => array(2),
-      'access callback' => 'node_access',
-      'access arguments' => array('view', 2),
-      'file' => 'comment.pages.inc',
-    );
-  }
 
   return $items;
 }
