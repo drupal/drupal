@@ -29,19 +29,6 @@ class BlockStorageController extends ConfigStorageController {
   /**
    * {@inheritdoc}
    */
-  public function loadByProperties(array $values = array()) {
-    $blocks = $this->load();
-    foreach ($values as $key => $value) {
-      $blocks = array_filter($blocks, function($block) use ($key, $value) {
-        return $value === $block->get($key);
-      });
-    }
-    return $blocks;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function preSave(EntityInterface $entity) {
     parent::preSave($entity);
 
