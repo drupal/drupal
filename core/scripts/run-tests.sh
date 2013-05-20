@@ -29,6 +29,8 @@ else {
 
 // Bootstrap to perform initial validation or other operations.
 drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
+simpletest_classloader_register();
+
 if (!module_exists('simpletest')) {
   simpletest_script_print_error("The simpletest module must be enabled before this script can run.");
   exit;
@@ -343,7 +345,7 @@ function simpletest_script_get_all_tests() {
  */
 function simpletest_script_execute_batch($test_classes) {
   global $args, $test_ids;
-  simpletest_classloader_register();
+
   // Multi-process execution.
   $children = array();
   while (!empty($test_classes) || !empty($children)) {
