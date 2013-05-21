@@ -50,4 +50,12 @@ class TextItem extends FieldItemBase {
     }
     return static::$propertyDefinitions;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isEmpty() {
+    $value = $this->get('value')->getValue();
+    return $value === NULL || $value === '';
+  }
 }

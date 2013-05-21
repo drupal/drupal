@@ -47,4 +47,12 @@ class TextSummaryItem extends TextItem {
     }
     return static::$propertyDefinitions;
   }
+
+  /**
+   * Overrides \Drupal\text\Type\TextItem::isEmpty().
+   */
+  public function isEmpty() {
+    $value = $this->get('summary')->getValue();
+    return parent::isEmpty() && ($value === NULL || $value === '');
+  }
 }

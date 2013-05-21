@@ -334,10 +334,13 @@ function forum_node_presave(EntityInterface $node) {
     $langcode = key($node->taxonomy_forums);
     if (!empty($node->taxonomy_forums[$langcode])) {
       $node->forum_tid = $node->taxonomy_forums[$langcode][0]['tid'];
-      $old_tid = db_query_range("SELECT f.tid FROM {forum} f INNER JOIN {node} n ON f.vid = n.vid WHERE n.nid = :nid ORDER BY f.vid DESC", 0, 1, array(':nid' => $node->nid))->fetchField();
-      if ($old_tid && isset($node->forum_tid) && ($node->forum_tid != $old_tid) && !empty($node->shadow)) {
-        // A shadow copy needs to be created. Retain new term and add old term.
-        $node->taxonomy_forums[$langcode][] = array('tid' => $old_tid);
+      // Only do a shadow copy check if this is not a new node.
+      if (!$node->isNew()) {
+        $old_tid = db_query_range("SELECT f.tid FROM {forum} f INNER JOIN {node} n ON f.vid = n.vid WHERE n.nid = :nid ORDER BY f.vid DESC", 0, 1, array(':nid' => $node->nid))->fetchField();
+        if ($old_tid && isset($node->forum_tid) && ($node->forum_tid != $old_tid) && !empty($node->shadow)) {
+          // A shadow copy needs to be created. Retain new term and add old term.
+          $node->taxonomy_forums[$langcode][] = array('tid' => $old_tid);
+        }
       }
     }
   }

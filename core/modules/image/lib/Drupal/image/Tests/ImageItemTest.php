@@ -108,6 +108,11 @@ class ImageItemTest extends FieldUnitTestBase {
     // Check that the image item can be set to the referenced file directly.
     $entity->image_test = $this->image;
     $this->assertEqual($entity->image_test->fid, $this->image->id());
+
+    // Delete the image and try to save the entity again.
+    $this->image->delete();
+    $entity = entity_create('entity_test', array('mame' => $this->randomName()));
+    $entity->save();
   }
 
 }

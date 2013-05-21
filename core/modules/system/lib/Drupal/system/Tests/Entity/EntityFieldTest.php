@@ -253,7 +253,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->assertTrue($entity->name->isEmpty(), format_string('%entity_type: Name field is empty.', array('%entity_type' => $entity_type)));
     $this->assertEqual(count($entity->name), 1, format_string('%entity_type: Empty item is considered when counting.', array('%entity_type' => $entity_type)));
     $this->assertEqual(count(iterator_to_array($entity->name->getIterator())), count($entity->name), format_string('%entity_type: Count matches iterator count.', array('%entity_type' => $entity_type)));
-    $this->assertTrue($entity->name->getValue() === array(0 => NULL), format_string('%entity_type: Name field value contains a NULL value.', array('%entity_type' => $entity_type)));
+    $this->assertTrue($entity->name->getValue() === array(0 => array('value' => NULL)), format_string('%entity_type: Name field value contains a NULL value.', array('%entity_type' => $entity_type)));
 
     // Test removing all list items by assigning an empty array.
     $entity->name = array();
