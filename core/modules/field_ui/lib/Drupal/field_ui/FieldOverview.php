@@ -132,7 +132,7 @@ class FieldOverview extends OverviewBase {
         ),
         'widget_type' => array(
           '#type' => 'link',
-          '#title' => $widget_configuration ? $widget_types[$widget_configuration['type']]['label'] : $widget_types['hiden']['label'],
+          '#title' => $widget_configuration ? $widget_types[$widget_configuration['type']]['label'] : $widget_types['hidden']['label'],
           '#href' => $admin_field_path . '/widget-type',
           '#options' => array('attributes' => array('title' => t('Change widget type.'))),
         ),
