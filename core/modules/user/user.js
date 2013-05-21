@@ -53,7 +53,7 @@ Drupal.behaviors.password = {
           }
 
           // Only show the description box if a weakness exists in the password.
-          result.strength === 100 ? passwordDescription.hide() : passwordDescription.show();
+          passwordDescription.toggle(result.strength !== 100);
 
           // Adjust the length of the strength indicator.
           innerWrapper.find('.indicator')
