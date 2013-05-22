@@ -142,7 +142,7 @@ Drupal.overlayChild.behaviors.loading = function (context, settings) {
 
   $(document).bind('drupalOverlayBeforeLoad.drupal-overlay.drupal-overlay-child-loading', function () {
     $title = $('#overlay-title').text(text);
-    var id = setInterval(function () {
+    setInterval(function () {
       dots = (dots.length > 10) ? '' : dots + '.';
       $title.text(text + dots);
     }, 500);
