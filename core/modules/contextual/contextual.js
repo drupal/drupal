@@ -30,7 +30,7 @@ function initContextual ($contextual) {
     // positioning and behavior attachment context.
     .addClass('contextual')
     // Ensure a trigger element exists before the actual contextual links.
-    .prepend(Drupal.theme('contextualTrigger'))
+    .prepend(Drupal.theme('contextualTrigger'));
 
   // Create a model and the appropriate views.
   var model = new contextual.Model({

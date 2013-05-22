@@ -11,6 +11,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\filter\FilterFormatInterface;
+use Drupal\filter\FilterBag;
 
 /**
  * Represents a text format.
@@ -98,24 +99,30 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
    * Configured filters for this text format.
    *
    * An associative array of filters assigned to the text format, keyed by the
-   * ID of each filter (prefixed with module name) and using the properties:
+   * instance ID of each filter and using the properties:
+   * - plugin_id: The plugin ID of the filter plugin instance.
    * - module: The name of the module providing the filter.
    * - status: (optional) A Boolean indicating whether the filter is
-   *   enabled in the text format. Defaults to disabled.
-   * - weight: (optional) The weight of the filter in the text format. If
-   *   omitted, the default value is determined in the following order:
-   *   - if any, the currently stored weight is retained.
-   *   - if any, the default weight from hook_filter_info() is taken over.
-   *   - otherwise, a default weight of 10, which usually sorts it last.
+   *   enabled in the text format. Defaults to FALSE.
+   * - weight: (optional) The weight of the filter in the text format. Defaults
+   *   to 0.
    * - settings: (optional) An array of configured settings for the filter.
-   *   See hook_filter_info() for details.
+   *
+   * Use FilterFormat::filters() to access the actual filters.
    *
    * @var array
    */
-  public $filters = array();
+  protected $filters = array();
 
   /**
-   * Overrides \Drupal\Core\Entity\Entity::id().
+   * Holds the collection of filters that are attached to this format.
+   *
+   * @var \Drupal\filter\FilterBag
+   */
+  protected $filterBag;
+
+  /**
+   * {@inheritdoc}
    */
   public function id() {
     return $this->format;
@@ -124,21 +131,40 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
   /**
    * {@inheritdoc}
    */
-  public static function sortFilters($a, $b) {
-    if ($a['status'] != $b['status']) {
-      return !empty($a['status']) ? -1 : 1;
+  public function filters($instance_id = NULL) {
+    if (!isset($this->filterBag)) {
+      $this->filterBag = new FilterBag(\Drupal::service('plugin.manager.filter'), $this->filters);
     }
-    if ($a['weight'] != $b['weight']) {
-      return ($a['weight'] < $b['weight']) ? -1 : 1;
+    if (isset($instance_id)) {
+      return $this->filterBag->get($instance_id);
     }
-    if ($a['module'] != $b['module']) {
-      return strnatcasecmp($a['module'], $b['module']);
-    }
-    return strnatcasecmp($a['name'], $b['name']);
+    return $this->filterBag;
   }
 
   /**
-   * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::disable().
+   * {@inheritdoc}
+   */
+  public function setFilterConfig($instance_id, array $configuration) {
+    $this->filters[$instance_id] = $configuration;
+    if (isset($this->filterBag)) {
+      $this->filterBag->setConfig($instance_id, $configuration);
+    }
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getExportProperties() {
+    $properties = parent::getExportProperties();
+    // Sort and export the configuration of all filters.
+    $properties['filters'] = $this->filters()->sort()->export();
+
+    return $properties;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function disable() {
     parent::disable();

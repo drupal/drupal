@@ -42,7 +42,7 @@ class FilterDefaultConfigTest extends DrupalUnitTestBase {
   function testInstallation() {
     // Verify that the format was installed correctly.
     $format = filter_format_load('filter_test');
-    $this->assertTrue($format);
+    $this->assertTrue((bool) $format);
     $this->assertEqual($format->id(), 'filter_test');
     $this->assertEqual($format->label(), 'Test format');
     $this->assertEqual($format->get('weight'), 2);
@@ -75,14 +75,6 @@ class FilterDefaultConfigTest extends DrupalUnitTestBase {
     $this->assertEqual($filters['filter_url']['settings'], array(
       'filter_url_length' => 72,
     ));
-
-    // Verify disabled filters.
-    $this->assertEqual($filters['filter_html']['status'], 0);
-    $this->assertEqual($filters['filter_html']['weight'], -10);
-    $this->assertEqual($filters['filter_html']['module'], 'filter');
-    $this->assertEqual($filters['filter_htmlcorrector']['status'], 0);
-    $this->assertEqual($filters['filter_htmlcorrector']['weight'], 10);
-    $this->assertEqual($filters['filter_htmlcorrector']['module'], 'filter');
   }
 
   /**

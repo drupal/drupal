@@ -9,4 +9,6 @@ filters:
   filter_htmlcorrector:
     module: filter
     status: '1'
+    weight: '10'
+    settings: {  }
 langcode: en

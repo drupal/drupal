@@ -22,45 +22,17 @@ class FilterFormatStorageController extends ConfigStorageController {
     parent::preSave($entity);
 
     $entity->name = trim($entity->label());
-    $entity->cache = _filter_format_is_cacheable($entity);
-    $filter_info = filter_get_filters();
-    foreach ($filter_info as $name => $filter) {
-      // Merge the actual filter definition into the filter default definition.
-      $defaults = array(
-        'module' => $filter['module'],
-        // The filter ID has to be temporarily injected into the properties, in
-        // order to sort all filters below.
-        // @todo Rethink filter sorting to remove dependency on filter IDs.
-        'name' => $name,
-        // Unless explicitly enabled, all filters are disabled by default.
-        'status' => 0,
-        // If no explicit weight was defined for a filter, assign either the
-        // default weight defined in hook_filter_info() or the default of 0 by
-        // filter_get_filters().
-        'weight' => $filter['weight'],
-        'settings' => $filter['default settings'],
-      );
-      // All available filters are saved for each format, in order to retain all
-      // filter properties regardless of whether a filter is currently enabled
-      // or not, since some filters require extensive configuration.
-      // @todo Do not save disabled filters whose properties are identical to
-      //   all default properties.
-      if (isset($entity->filters[$name])) {
-        $entity->filters[$name] = array_merge($defaults, $entity->filters[$name]);
-      }
-      else {
-        $entity->filters[$name] = $defaults;
-      }
-      // The module definition from hook_filter_info() always takes precedence
-      // and needs to be updated in case it changes.
-      $entity->filters[$name]['module'] = $filter['module'];
-    }
 
-    // Sort all filters.
-    uasort($entity->filters, 'Drupal\filter\Plugin\Core\Entity\FilterFormat::sortFilters');
-    // Remove the 'name' property from all filters that was added above.
-    foreach ($entity->filters as &$filter) {
-      unset($filter['name']);
+    // @todo Do not save disabled filters whose properties are identical to
+    //   all default properties.
+
+    // Determine whether the format can be cached.
+    // @todo This is a derived/computed definition, not configuration.
+    $entity->cache = TRUE;
+    foreach ($entity->filters() as $filter) {
+      if ($filter->status && !$filter->cache) {
+        $entity->cache = FALSE;
+      }
     }
   }
 

@@ -40,7 +40,7 @@ abstract class PhpTestBase extends WebTestBase {
 
     // Verify that the format has the PHP code filter enabled.
     $filters = filter_list_format($php_format_id);
-    $this->assertTrue($filters['php_code']->status, 'PHP code filter is enabled.');
+    $this->assertTrue($filters->get('php_code')->status, 'PHP code filter is enabled.');
 
     // Verify that the format exists on the administration page.
     $this->drupalGet('admin/config/content/formats');

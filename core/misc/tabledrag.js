@@ -522,7 +522,7 @@ Drupal.tableDrag.prototype.dragStart = function (event, self, item) {
   if (self.oldRowElement) {
     $(self.oldRowElement).removeClass('drag-previous');
   }
-}
+};
 
 /**
  * Pointer movement handler, bound to document.
@@ -671,7 +671,6 @@ Drupal.tableDrag.prototype.findDropTargetRow = function (x, y) {
   for (var n = 0; n < rows.length; n++) {
     var row = rows[n];
     var $row = $(row);
-    var indentDiff = 0;
     var rowY = $row.offset().top;
     var rowHeight;
     // Because Safari does not report offsetHeight on table rows, but does on

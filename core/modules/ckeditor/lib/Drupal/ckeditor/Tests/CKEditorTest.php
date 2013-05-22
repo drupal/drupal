@@ -107,7 +107,7 @@ class CKEditorTest extends DrupalUnitTestBase {
     // Change the allowed HTML tags; the "format_tags" setting for CKEditor
     // should automatically be updated as well.
     $format = entity_load('filter_format', 'filtered_html');
-    $format->filters['filter_html']['settings']['allowed_html'] .= '<pre> <h3>';
+    $format->filters('filter_html')->settings['allowed_html'] .= '<pre> <h3>';
     $format->save();
     $expected_config['format_tags'] = 'p;h3;h4;h5;h6;pre';
     $this->assertEqual($expected_config, $this->ckeditor->getJSSettings($editor), 'Generated JS settings are correct for customized configuration.');

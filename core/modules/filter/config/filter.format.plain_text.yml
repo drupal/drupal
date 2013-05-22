@@ -15,12 +15,19 @@ filters:
   filter_html_escape:
     module: filter
     status: '1'
+    weight: '-10'
+    settings: {  }
   # Convert URLs into links.
   filter_url:
     module: filter
     status: '1'
+    weight: '0'
+    settings:
+      filter_url_length: '72'
   # Convert linebreaks into paragraphs.
   filter_autop:
     module: filter
     status: '1'
+    weight: '0'
+    settings: {  }
 langcode: und

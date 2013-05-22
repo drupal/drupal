@@ -13,7 +13,6 @@
  *      some_element.appendChild(pb.element);
  */
 Drupal.ProgressBar = function (id, updateCallback, method, errorCallback) {
-  var pb = this;
   this.id = id;
   this.method = method || 'GET';
   this.updateCallback = updateCallback;

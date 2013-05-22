@@ -17,7 +17,6 @@ Drupal.behaviors.ckeditorAdmin = {
      */
     function adminToolbarMoveButton (event) {
       var $target = $(event.currentTarget);
-      var label = Drupal.t('@label button', { '@label': $target.attr('aria-label') });
       var $button = $target.parent();
       var $currentRow = $button.closest('.ckeditor-buttons');
       var $destinationRow = null;
