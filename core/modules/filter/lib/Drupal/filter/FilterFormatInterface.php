@@ -15,11 +15,28 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 interface FilterFormatInterface extends ConfigEntityInterface {
 
   /**
-   * Helper callback for uasort() to sort filters by status, weight, module, and name.
+   * Returns the collection of filter pugin instances or an individual plugin instance.
    *
-   * @see Drupal\filter\FilterFormatStorageController::preSave()
-   * @see filter_list_format()
+   * @param string $instance_id
+   *   (optional) The ID of a filter plugin instance to return.
+   *
+   * @return \Drupal\filter\FilterBag|\Drupal\filter\Plugin\FilterInterface
+   *   Either the filter bag or a specific filter plugin instance.
    */
-  public static function sortFilters($a, $b);
+  public function filters($instance_id = NULL);
+
+  /**
+   * Sets the configuration for a filter plugin instance.
+   *
+   * Sets or replaces the configuration of a filter plugin in $this->filters,
+   * and if instantianted already, also ensures that the actual filter plugin on
+   * the FilterBag contains the identical configuration.
+   *
+   * @param string $instance_id
+   *   The ID of a filter plugin to set the configuration for.
+   * @param array $configuration
+   *   The filter plugin configuration to set.
+   */
+  public function setFilterConfig($instance_id, array $configuration);
 
 }

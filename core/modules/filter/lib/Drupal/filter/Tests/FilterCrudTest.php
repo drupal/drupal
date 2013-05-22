@@ -7,20 +7,19 @@
 
 namespace Drupal\filter\Tests;
 
-use Drupal\simpletest\WebTestBase;
-use stdClass;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests for text format and filter CRUD operations.
  */
-class FilterCrudTest extends WebTestBase {
+class FilterCrudTest extends DrupalUnitTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('filter_test');
+  public static $modules = array('filter', 'filter_test');
 
   public static function getInfo() {
     return array(
@@ -46,28 +45,32 @@ class FilterCrudTest extends WebTestBase {
     $format = entity_create('filter_format', array());
     $format->format = 'custom_format';
     $format->name = 'Custom format';
-    $format->filters = array(
-      'filter_url' => array(
-        'status' => 1,
-        'settings' => array(
-          'filter_url_length' => 30,
-        ),
+    $format->setFilterConfig('filter_url', array(
+      'status' => 1,
+      'settings' => array(
+        'filter_url_length' => 30,
       ),
-    );
+    ));
     $format->save();
     $this->verifyTextFormat($format);
     $this->verifyFilters($format);
 
     // Alter some text format properties and save again.
     $format->name = 'Altered format';
-    $format->filters['filter_url']['status'] = 0;
-    $format->filters['filter_autop']['status'] = 1;
+    $format->setFilterConfig('filter_url', array(
+      'status' => 0,
+    ));
+    $format->setFilterConfig('filter_autop', array(
+      'status' => 1,
+    ));
     $format->save();
     $this->verifyTextFormat($format);
     $this->verifyFilters($format);
 
     // Add a uncacheable filter and save again.
-    $format->filters['filter_test_uncacheable']['status'] = 1;
+    $format->setFilterConfig('filter_test_uncacheable', array(
+      'status' => 1,
+    ));
     $format->save();
     $this->verifyTextFormat($format);
     $this->verifyFilters($format);
@@ -96,13 +99,12 @@ class FilterCrudTest extends WebTestBase {
     $this->assertEqual($format->langcode, $default_langcode, format_string('filter_format_load: Proper language code for text format %format.', $t_args));
 
     // Verify the 'cache' text format property according to enabled filters.
-    $filter_info = filter_get_filters();
     $filters = filter_list_format($filter_format->format);
     $cacheable = TRUE;
     foreach ($filters as $name => $filter) {
       // If this filter is not cacheable, update $cacheable accordingly, so we
       // can verify $format->cache after iterating over all filters.
-      if ($filter->status && isset($filter_info[$name]['cache']) && !$filter_info[$name]['cache']) {
+      if ($filter->status && !$filter->cache) {
         $cacheable = FALSE;
         break;
       }
@@ -114,28 +116,21 @@ class FilterCrudTest extends WebTestBase {
    * Verifies that filters are properly stored for a text format.
    */
   function verifyFilters($format) {
-    $format_filters = $format->filters;
-
-    // Verify filter_list_format().
     $filters = filter_list_format($format->format);
-    $format_filters = $format->filters;
+    $format_filters = $format->filters();
     foreach ($filters as $name => $filter) {
       $t_args = array('%format' => $format->name, '%filter' => $name);
 
       // Verify that filter status is properly stored.
-      $this->assertEqual($filter->status, $format_filters[$name]['status'], format_string('filter_list_format: Proper status for %filter in text format %format.', $t_args));
+      $this->assertEqual($filter->status, $format_filters->get($name)->status, format_string('filter_list_format: Proper status for %filter in text format %format.', $t_args));
 
       // Verify that filter settings were properly stored.
-      $this->assertEqual($filter->settings, isset($format_filters[$name]['settings']) ? $format_filters[$name]['settings'] : array(), format_string('filter_list_format: Proper filter settings for %filter in text format %format.', $t_args));
+      $this->assertEqual($filter->settings, $format_filters->get($name)->settings, format_string('filter_list_format: Proper filter settings for %filter in text format %format.', $t_args));
 
       // Verify that each filter has a module name assigned.
       $this->assertTrue(!empty($filter->module), format_string('filter_list_format: Proper module name for %filter in text format %format.', $t_args));
-
-      // Remove the filter from the copy of saved $format to check whether all
-      // filters have been processed later.
-      unset($format_filters[$name]);
     }
-    // Verify that all filters have been processed.
-    $this->assertTrue(empty($format_filters), 'filter_list_format: Loaded filters contain values for all filters in the saved format.');
+    $this->assertEqual(count($filters), count($format_filters), 'filter_list_format: All filters for the format are present.');
   }
+
 }

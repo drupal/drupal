@@ -272,14 +272,22 @@ function text_summary($text, $format = NULL, $size = NULL) {
     return substr($text, 0, $delimiter);
   }
 
+  // Retrieve the filters of the specified text format, if any.
+  if (isset($format)) {
+    $filters = filter_list_format($format);
+    // If the specified format does not exist, return nothing. $text is already
+    // filtered text, but the remainder of this function will not be able to
+    // ensure a sane and secure summary.
+    if (!$filters) {
+      return '';
+    }
+  }
+
   // We check for the presence of the PHP evaluator filter in the current
   // format. If the body contains PHP code, we do not split it up to prevent
   // parse errors.
-  if (isset($format)) {
-    $filters = filter_list_format($format);
-    if (isset($filters['php_code']) && $filters['php_code']->status && strpos($text, '<?') !== FALSE) {
-      return $text;
-    }
+  if (isset($format) && $filters->has('php_code') && $filters->get('php_code')->status && strpos($text, '<?') !== FALSE) {
+    return $text;
   }
 
   // If we have a short body, the entire body is the summary.
@@ -316,7 +324,7 @@ function text_summary($text, $format = NULL, $size = NULL) {
   $line_breaks = array('<br />' => 6, '<br>' => 4);
   // Newline only indicates a line break if line break converter
   // filter is present.
-  if (isset($filters['filter_autop'])) {
+  if (isset($format) && $filters->has('filter_autop') && $filters->get('filter_autop')->status) {
     $line_breaks["\n"] = 1;
   }
   $break_points[] = $line_breaks;
@@ -344,7 +352,7 @@ function text_summary($text, $format = NULL, $size = NULL) {
   }
 
   // If the htmlcorrector filter is present, apply it to the generated summary.
-  if (isset($filters['filter_htmlcorrector'])) {
+  if (isset($format) && $filters->has('filter_htmlcorrector') && $filters->get('filter_htmlcorrector')->status) {
     $summary = _filter_htmlcorrector($summary);
   }
 

@@ -7,13 +7,14 @@
 
 namespace Drupal\text\Tests;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests the text field summary.
  */
-class TextSummaryTest extends WebTestBase {
-  protected $profile = 'standard';
+class TextSummaryTest extends DrupalUnitTestBase {
+
+  public static $modules = array('system', 'user', 'filter', 'text');
 
   public static function getInfo() {
     return array(
@@ -25,7 +26,10 @@ class TextSummaryTest extends WebTestBase {
 
   function setUp() {
     parent::setUp();
-    $this->article_creator = $this->drupalCreateUser(array('create article content', 'edit own article content'));
+
+    $this->installSchema('system', 'url_alias');
+    $this->installSchema('user', 'role_permission');
+    $this->installConfig(array('text'));
   }
 
   /**
@@ -36,7 +40,7 @@ class TextSummaryTest extends WebTestBase {
   function testFirstSentenceQuestion() {
     $text = 'A question? A sentence. Another sentence.';
     $expected = 'A question? A sentence.';
-    $this->callTextSummary($text, $expected, NULL, 30);
+    $this->assertTextSummary($text, $expected, NULL, 30);
   }
 
   /**
@@ -51,133 +55,174 @@ class TextSummaryTest extends WebTestBase {
                 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ' .
                 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.';
     // First three sentences add up to: 336, so add one for space and then 3 to get half-way into next word.
-    $this->callTextSummary($text, $expected, NULL, 340);
+    $this->assertTextSummary($text, $expected, NULL, 340);
   }
 
   /**
    * Test various summary length edge cases.
    */
   function testLength() {
+    entity_create('filter_format', array(
+      'format' => 'autop',
+      'filters' => array(
+        'filter_autop' => array(
+          'status' => 1,
+        ),
+      ),
+    ))->save();
+    entity_create('filter_format', array(
+      'format' => 'autop_correct',
+      'filters' => array(
+        'filter_autop' => array(
+          'status' => 1,
+        ),
+        'filter_htmlcorrector' => array(
+          'status' => 1,
+        ),
+      ),
+    ))->save();
+
     // This string tests a number of edge cases.
     $text = "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>";
 
     // The summaries we expect text_summary() to return when $size is the index
     // of each array item.
     // Using no text format:
-    $expected = array(
-      "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
-      "<",
-      "<p",
-      "<p>",
-      "<p>\n",
-      "<p>\nH",
-      "<p>\nHi",
-      "<p>\nHi\n",
-      "<p>\nHi\n<",
-      "<p>\nHi\n</",
-      "<p>\nHi\n</p",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
-      "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
-      "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
-    );
+    $format = NULL;
+    $i = 0;
+    $this->assertTextSummary($text, "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<", $format, $i++);
+    $this->assertTextSummary($text, "<p", $format, $i++);
+    $this->assertTextSummary($text, "<p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\n", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nH", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n<", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>", $format, $i++);
 
-    // And using a text format WITH the line-break and htmlcorrector filters.
-    $expected_lb = array(
-      "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
-      "",
-      "<p></p>",
-      "<p></p>",
-      "<p></p>",
-      "<p></p>",
-      "<p></p>",
-      "<p>\nHi</p>",
-      "<p>\nHi</p>",
-      "<p>\nHi</p>",
-      "<p>\nHi</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>",
-      "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
-      "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
-      "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
-    );
+    // Using a text format with filter_autop enabled.
+    $format = 'autop';
+    $i = 0;
+    $this->assertTextSummary($text, "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<", $format, $i++);
+    $this->assertTextSummary($text, "<p", $format, $i++);
+    $this->assertTextSummary($text, "<p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>", $format, $i++);
 
-    // Test text_summary() for different sizes.
-    for ($i = 0; $i <= 37; $i++) {
-      $this->callTextSummary($text, $expected[$i],    NULL, $i);
-      $this->callTextSummary($text, $expected_lb[$i], 'plain_text', $i);
-      $this->callTextSummary($text, $expected_lb[$i], 'basic_html', $i);
-    }
+    // Using a text format with filter_autop and filter_htmlcorrector enabled.
+    $format = 'autop_correct';
+    $i = 0;
+    $this->assertTextSummary($text, "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "", $format, $i++);
+    $this->assertTextSummary($text, "<p></p>", $format, $i++);
+    $this->assertTextSummary($text, "<p></p>", $format, $i++);
+    $this->assertTextSummary($text, "<p></p>", $format, $i++);
+    $this->assertTextSummary($text, "<p></p>", $format, $i++);
+    $this->assertTextSummary($text, "<p></p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>", $format, $i++);
+    $this->assertTextSummary($text, "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>", $format, $i++);
   }
 
   /**
    * Calls text_summary() and asserts that the expected teaser is returned.
    */
-  function callTextSummary($text, $expected, $format = NULL, $size = NULL) {
+  function assertTextSummary($text, $expected, $format = NULL, $size = NULL) {
     $summary = text_summary($text, $format, $size);
-    $this->assertIdentical($summary, $expected, t('Generated summary "@summary" matches expected "@expected".', array('@summary' => $summary, '@expected' => $expected)));
+    $this->assertIdentical($summary, $expected, format_string('<pre style="white-space: pre-wrap">@actual</pre> is identical to <pre style="white-space: pre-wrap">@expected</pre>', array(
+      '@actual' => $summary,
+      '@expected' => $expected,
+    )));
   }
 
-  /**
-   * Test sending only summary.
-   */
-  function testOnlyTextSummary() {
-    // Login as article creator.
-    $this->drupalLogin($this->article_creator);
-    // Create article with summary but empty body.
-    $summary = $this->randomName();
-    $edit = array(
-      "title" => $this->randomName(),
-      "body[und][0][summary]" => $summary,
-    );
-    $this->drupalPost('node/add/article', $edit, t('Save'));
-    $node = $this->drupalGetNodeByTitle($edit['title']);
-
-    $this->assertIdentical($node->body['und'][0]['summary'], $summary, 'Article with with summary and no body has been submitted.');
-  }
 }

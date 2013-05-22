@@ -197,25 +197,9 @@ function filter_admin_format_form($form, &$form_state, $format) {
     $form['roles']['#default_value'] = array($admin_role);
   }
 
-  // Retrieve available filters and load all configured filters for existing
-  // text formats.
-  $filter_info = filter_get_filters();
-  $filters = !empty($format->format) ? filter_list_format($format->format) : array();
-
-  // Prepare filters for form sections.
-  foreach ($filter_info as $name => $filter) {
-    // Create an empty filter object for new/unconfigured filters.
-    if (!isset($filters[$name])) {
-      $filters[$name] = new stdClass();
-      $filters[$name]->format = $format->format;
-      $filters[$name]->module = $filter['module'];
-      $filters[$name]->name = $name;
-      $filters[$name]->status = 0;
-      $filters[$name]->weight = $filter['weight'];
-      $filters[$name]->settings = array();
-    }
-  }
-  $form['#filters'] = $filters;
+  // Create filter plugin instances for all available filters, including both
+  // enabled/configured ones as well as new and not yet unconfigured ones.
+  $filters = $format->filters()->sort();
 
   // Filter status.
   $form['filters']['status'] = array(
@@ -228,17 +212,6 @@ function filter_admin_format_form($form, &$form_state, $format) {
     // @see http://drupal.org/node/1829202
     '#input' => FALSE,
   );
-  foreach ($filter_info as $name => $filter) {
-    $form['filters']['status'][$name] = array(
-      '#type' => 'checkbox',
-      '#title' => $filter['title'],
-      '#default_value' => $filters[$name]->status,
-      '#parents' => array('filters', $name, 'status'),
-      '#description' => $filter['description'],
-      '#weight' => $filter['weight'],
-    );
-  }
-
   // Filter order (tabledrag).
   $form['filters']['order'] = array(
     '#type' => 'table',
@@ -252,48 +225,54 @@ function filter_admin_format_form($form, &$form_state, $format) {
     '#input' => FALSE,
     '#theme_wrappers' => array('form_element'),
   );
-  foreach ($filter_info as $name => $filter) {
-    $form['filters']['order'][$name]['#attributes']['class'][] = 'draggable';
-    $form['filters']['order'][$name]['#weight'] = $filters[$name]->weight;
-    $form['filters']['order'][$name]['filter'] = array(
-      '#markup' => $filter['title'],
-    );
-    $form['filters']['order'][$name]['weight'] = array(
-      '#type' => 'weight',
-      '#title' => t('Weight for @title', array('@title' => $filter['title'])),
-      '#title_display' => 'invisible',
-      '#delta' => 50,
-      '#default_value' => $filters[$name]->weight,
-      '#parents' => array('filters', $name, 'weight'),
-      '#attributes' => array('class' => array('filter-order-weight')),
-    );
-  }
-  // Make sure filters are in the correct order, since filter_get_filters()
-  // doesn't return sorted filters.
-  uasort($form['filters']['order'], 'element_sort');
-
   // Filter settings.
   $form['filter_settings'] = array(
     '#type' => 'vertical_tabs',
     '#title' => t('Filter settings'),
   );
 
-  foreach ($filter_info as $name => $filter) {
-    if (isset($filter['settings callback'])) {
-      $function = $filter['settings callback'];
-      // Pass along stored filter settings and default settings, but also the
-      // format object and all filters to allow for complex implementations.
-      $settings_form = $function($form, $form_state, $filters[$name], $format, $filter['default settings'], $filters);
-      if (!empty($settings_form)) {
-        $form['filters']['settings'][$name] = array(
-          '#type' => 'details',
-          '#title' => $filter['title'],
-          '#parents' => array('filters', $name, 'settings'),
-          '#weight' => $filter['weight'],
-          '#group' => 'filter_settings',
-        );
-        $form['filters']['settings'][$name] += $settings_form;
-      }
+  foreach ($filters as $name => $filter) {
+    $form['filters']['status'][$name] = array(
+      '#type' => 'checkbox',
+      '#title' => $filter->getLabel(),
+      '#default_value' => $filter->status,
+      '#parents' => array('filters', $name, 'status'),
+      '#description' => $filter->getDescription(),
+      '#weight' => $filter->weight,
+    );
+
+    $form['filters']['order'][$name]['#attributes']['class'][] = 'draggable';
+    $form['filters']['order'][$name]['#weight'] = $filter->weight;
+    $form['filters']['order'][$name]['filter'] = array(
+      '#markup' => $filter->getLabel(),
+    );
+    $form['filters']['order'][$name]['weight'] = array(
+      '#type' => 'weight',
+      '#title' => t('Weight for @title', array('@title' => $filter->getLabel())),
+      '#title_display' => 'invisible',
+      '#delta' => 50,
+      '#default_value' => $filter->weight,
+      '#parents' => array('filters', $name, 'weight'),
+      '#attributes' => array('class' => array('filter-order-weight')),
+    );
+
+    // Retrieve the settings form of the filter plugin. The plugin should not be
+    // aware of the text format. Therefore, it only receives a set of minimal
+    // base properties to allow advanced implementations to work.
+    $settings_form = array(
+      '#parents' => array('filters', $name, 'settings'),
+      '#tree' => TRUE,
+    );
+    $settings_form = $filter->settingsForm($settings_form, $form_state);
+    if (!empty($settings_form)) {
+      $form['filters']['settings'][$name] = array(
+        '#type' => 'details',
+        '#title' => $filter->getLabel(),
+        '#weight' => $filter->weight,
+        '#parents' => array('filters', $name, 'settings'),
+        '#group' => 'filter_settings',
+      );
+      $form['filters']['settings'][$name] += $settings_form;
     }
   }
 
@@ -337,7 +316,14 @@ function filter_admin_format_form_submit($form, &$form_state) {
   // Add the submitted form values to the text format, and save it.
   $format = $form['#format'];
   foreach ($form_state['values'] as $key => $value) {
-    $format->set($key, $value);
+    if ($key != 'filters') {
+      $format->set($key, $value);
+    }
+    else {
+      foreach ($value as $instance_id => $config) {
+        $format->setFilterConfig($instance_id, $config);
+      }
+    }
   }
   $status = $format->save();
 

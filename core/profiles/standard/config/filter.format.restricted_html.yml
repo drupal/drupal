@@ -6,18 +6,28 @@ roles:
   - anonymous
 cache: '1'
 filters:
-  filter_url:
-    module: filter
-    status: '1'
   filter_html:
     module: filter
     status: '1'
-    setttings:
-      filter_html_nofollow: '1'
+    weight: '-10'
+    settings:
+      allowed_html: '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd> <h4> <h5> <h6>'
+      filter_html_help: '1'
+      filter_html_nofollow: '0'
   filter_autop:
     module: filter
     status: '1'
+    weight: '0'
+    settings: {  }
+  filter_url:
+    module: filter
+    status: '1'
+    weight: '0'
+    settings:
+      filter_url_length: '72'
   filter_htmlcorrector:
     module: filter
     status: '1'
+    weight: '10'
+    settings: {  }
 langcode: en

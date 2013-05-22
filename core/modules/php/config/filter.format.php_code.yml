@@ -7,4 +7,6 @@ filters:
   php_code:
     module: php
     status: '1'
+    weight: '0'
+    settings: {  }
 langcode: und
