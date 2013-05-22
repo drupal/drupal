@@ -46,20 +46,13 @@ class Field extends ItemList implements FieldInterface {
   }
 
   /**
-   * Overrides \Drupal\Core\TypedData\ItemList::getValue().
+   * {@inheritdoc}
    */
-  public function getValue() {
+  public function filterEmptyValues() {
     if (isset($this->list)) {
-      $values = array();
-      foreach ($this->list as $delta => $item) {
-        if (!$item->isEmpty()) {
-          $values[$delta] = $item->getValue();
-        }
-        else {
-          $values[$delta] = NULL;
-        }
-      }
-      return $values;
+      $this->list = array_values(array_filter($this->list, function($item) {
+        return !$item->isEmpty();
+      }));
     }
   }
 

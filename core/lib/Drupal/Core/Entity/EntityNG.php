@@ -387,6 +387,7 @@ class EntityNG extends Entity {
     foreach ($this->getPropertyDefinitions() as $name => $definition) {
       if (empty($definition['computed']) && !empty($this->fields[$name])) {
         foreach ($this->fields[$name] as $langcode => $field) {
+          $field->filterEmptyValues();
           $this->values[$name][$langcode] = $field->getValue();
         }
       }

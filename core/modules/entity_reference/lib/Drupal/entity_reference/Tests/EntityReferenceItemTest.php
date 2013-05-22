@@ -97,6 +97,12 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $entity->field_test_taxonomy->target_id = $term2->id();
     $this->assertEqual($entity->field_test_taxonomy->entity->id(), $term2->id());
     $this->assertEqual($entity->field_test_taxonomy->entity->name->value, $term2->name->value);
+
+    // Delete terms so we have nothing to reference and try again
+    $term->delete();
+    $term2->delete();
+    $entity = entity_create('entity_test', array('name' => $this->randomName()));
+    $entity->save();
   }
 
   /**

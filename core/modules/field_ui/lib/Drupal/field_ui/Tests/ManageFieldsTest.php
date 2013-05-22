@@ -422,6 +422,15 @@ class ManageFieldsTest extends FieldUiTestBase {
     $bundle_path = 'admin/structure/types/manage/article/fields/';
     $this->drupalGet($bundle_path);
     $this->assertFalse($this->xpath('//select[@id="edit-add-existing-field-field-name"]//option[@value=:field_name]', array(':field_name' => $field_name)), "The 're-use existing field' select respects field types 'no_ui' property.");
+
+    // Remove the form display component to check the fallback label.
+    entity_get_form_display('node', $this->type, 'default')
+      ->removeComponent($field_name)
+      ->save();
+
+    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/');
+    $this->assertLinkByHref(url('admin/structure/types/manage/' . $this->type . '/fields/node.' . $this->type . '.'  . $field_name . '/widget-type'));
+    $this->assertLink('- Hidden -');
   }
 
   /**

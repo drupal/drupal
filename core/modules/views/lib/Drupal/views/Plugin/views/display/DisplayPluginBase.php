@@ -321,7 +321,7 @@ abstract class DisplayPluginBase extends PluginBase {
    */
   public function useMoreAlways() {
     if ($this->usesMore()) {
-      return $this->getOption('useMoreAlways');
+      return $this->getOption('use_more_always');
     }
     return FALSE;
   }
@@ -331,7 +331,7 @@ abstract class DisplayPluginBase extends PluginBase {
    */
   public function useMoreText() {
     if ($this->usesMore()) {
-      return $this->getOption('useMoreText');
+      return $this->getOption('use_more_text');
     }
     return FALSE;
   }
@@ -1450,7 +1450,7 @@ abstract class DisplayPluginBase extends PluginBase {
           '#type' => 'textfield',
           '#title' => t('More link text'),
           '#description' => t("The text to display for the more link."),
-          '#default_value' => $this->getOption('useMoreText'),
+          '#default_value' => $this->getOption('use_more_text'),
           '#states' => array(
             'visible' => array(
               ':input[name="use_more"]' => array('checked' => TRUE),

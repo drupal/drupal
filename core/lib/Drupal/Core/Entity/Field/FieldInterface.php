@@ -28,6 +28,11 @@ use Drupal\Core\TypedData\ListInterface;
 interface FieldInterface extends ListInterface, AccessibleInterface {
 
   /**
+   * Filters out empty field items and re-numbers the item deltas.
+   */
+  public function filterEmptyValues();
+
+  /**
    * Gets a property object from the first field item.
    *
    * @see \Drupal\Core\Entity\Field\FieldItemInterface::get()

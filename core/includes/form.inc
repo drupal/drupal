@@ -1750,7 +1750,7 @@ function form_error(&$element, $message = '') {
  *   adds the attributes and JavaScript needed to make the details work in older
  *   browsers. The #process functions are called in preorder traversal, meaning
  *   they are called for the parent element first, then for the child elements.
- * - $element['#after_build']: An array of functions called after form_builder()
+ * - $element['#after_build']: An array of callables called after form_builder()
  *   is done with its processing of the element. These are called in postorder
  *   traversal, meaning they are called for the child elements first, then for
  *   the parent element.
@@ -1939,8 +1939,8 @@ function form_builder($form_id, &$element, &$form_state) {
   // The #after_build flag allows any piece of a form to be altered
   // after normal input parsing has been completed.
   if (isset($element['#after_build']) && !isset($element['#after_build_done'])) {
-    foreach ($element['#after_build'] as $function) {
-      $element = $function($element, $form_state);
+    foreach ($element['#after_build'] as $callable) {
+      $element = call_user_func_array($callable, array($element, &$form_state));
     }
     $element['#after_build_done'] = TRUE;
   }

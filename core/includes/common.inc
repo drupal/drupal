@@ -5214,8 +5214,8 @@ function drupal_render(&$elements) {
   // that the $element or the children can be altered or corrected before the
   // element is rendered into the final text.
   if (isset($elements['#pre_render'])) {
-    foreach ($elements['#pre_render'] as $function) {
-      $elements = $function($elements);
+    foreach ($elements['#pre_render'] as $callable) {
+      $elements = call_user_func($callable, $elements);
     }
   }
 
@@ -5286,8 +5286,8 @@ function drupal_render(&$elements) {
   // content is sent to the browser. The changes are made on $content
   // which allows the output'ed text to be filtered.
   if (isset($elements['#post_render'])) {
-    foreach ($elements['#post_render'] as $function) {
-      $elements['#children'] = $function($elements['#children'], $elements);
+    foreach ($elements['#post_render'] as $callable) {
+      $elements['#children'] = call_user_func($callable, $elements['#children'], $elements);
     }
   }
 
