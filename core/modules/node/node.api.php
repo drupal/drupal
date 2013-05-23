@@ -683,8 +683,8 @@ function hook_node_access($node, $op, $account, $langcode) {
  * @ingroup node_api_hooks
  */
 function hook_node_prepare(\Drupal\Core\Entity\EntityInterface $node) {
-  if (!isset($node->comment)) {
-    $node->comment = variable_get("comment_$node->type", COMMENT_NODE_OPEN);
+  if (!isset($node->widgets)) {
+    $node->widgets = config("widgets_{$node->type}")->get('per_page');
   }
 }
 
