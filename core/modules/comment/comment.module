@@ -137,15 +137,12 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
     //   http://drupal.org/node/1901110
     return;
   }
-  $fields = field_info_instances($entity->entityType(), $entity->bundle());
-  foreach ($fields as $field_name => $instance) {
+  $fields = comment_get_comment_fields('node');
+  foreach ($fields as $field_name => $detail) {
     $links = array();
-    $field = field_info_field($field_name);
-    if ($field['type'] != 'comment') {
-      continue;
-    }
     $commenting_status = _comment_get_default_status(field_get_items($entity, $field_name));
     if ($commenting_status) {
+      $instance = field_info_instance('node', $field_name, $entity->bundle());
       // Entity have commenting open or close.
       $uri = $entity->uri();
       if ($view_mode == 'rss') {
