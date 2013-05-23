@@ -1067,9 +1067,8 @@ function hook_node_type_insert($info) {
  */
 function hook_node_type_update($info) {
   if (!empty($info->old_type) && $info->old_type != $info->type) {
-    $setting = variable_get('comment_' . $info->old_type, COMMENT_NODE_OPEN);
-    variable_del('comment_' . $info->old_type);
-    variable_set('comment_' . $info->type, $setting);
+    language_save_default_configuration('node', $info->type, language_get_default_configuration('node', $info->old_type));
+    language_clear_default_configuration('node', $info->old_type);
   }
 }
 
