@@ -86,6 +86,11 @@ class CommentInterfaceTest extends CommentTestBase {
     // Reply to comment #2 creating comment #3 with optional preview and no
     // subject though field enabled.
     $this->drupalLogin($this->web_user);
+    // Deliberately use the wrong url to test
+    // \Drupal\comment\Controller\CommentController::redirectNode().
+    $this->drupalGet('comment/' . $this->node->nid . '/reply');
+    // Verify we were correctly redirected.
+    $this->assertUrl(url('comment/reply/node/' . $this->node->nid . '/comment', array('absolute' => TRUE)));
     $this->drupalGet('comment/reply/node/' . $this->node->nid . '/comment/' . $comment->id());
     $this->assertText($subject_text, 'Individual comment-reply subject found.');
     $this->assertText($comment_text, 'Individual comment-reply body found.');

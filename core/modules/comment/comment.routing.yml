@@ -16,9 +16,3 @@ comment_bundle:
     _content: 'Drupal\comment\Controller\AdminController::bundleInfo'
   requirements:
     _permission: 'administer comments'
-comment_node_redirect:
-  pattern: '/comment/{node}/reply'
-  defaults:
-    _content: 'Drupal\comment\Controller\CommentController::redirectNode'
-  requirements:
-    _entity_access: 'node.view'

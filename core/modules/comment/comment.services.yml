@@ -1,0 +1,6 @@
+services:
+  comment.subscriber:
+    class: Drupal\comment\Routing\RouteSubscriber
+    arguments: ['@module_handler']
+    tags:
+     - { name: event_subscriber }
