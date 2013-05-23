@@ -51,7 +51,7 @@ class UpdateTestHelper extends DrupalWebTestCase {
    */
   protected function standardTests() {
     $this->assertRaw('<h3>' . t('Drupal core') . '</h3>');
-    $this->assertRaw(l(t('Drupal'), 'http://example.com/project/drupal'), t('Link to the Drupal project appears.'));
+    $this->assertRaw(l(t('Drupal'), 'http://example.com/project/drupal'), 'Link to the Drupal project appears.');
     $this->assertNoText(t('No available releases found'));
   }
 
@@ -98,9 +98,9 @@ class UpdateCoreTestCase extends UpdateTestHelper {
     $this->assertNoText(t('Up to date'));
     $this->assertText(t('Update available'));
     $this->assertNoText(t('Security update required!'));
-    $this->assertRaw(l('7.1', 'http://example.com/drupal-7-1-release'), t('Link to release appears.'));
-    $this->assertRaw(l(t('Download'), 'http://example.com/drupal-7-1.tar.gz'), t('Link to download appears.'));
-    $this->assertRaw(l(t('Release notes'), 'http://example.com/drupal-7-1-release'), t('Link to release notes appears.'));
+    $this->assertRaw(l('7.1', 'http://example.com/drupal-7-1-release'), 'Link to release appears.');
+    $this->assertRaw(l(t('Download'), 'http://example.com/drupal-7-1.tar.gz'), 'Link to download appears.');
+    $this->assertRaw(l(t('Release notes'), 'http://example.com/drupal-7-1-release'), 'Link to release notes appears.');
   }
 
   /**
@@ -113,9 +113,9 @@ class UpdateCoreTestCase extends UpdateTestHelper {
     $this->assertNoText(t('Up to date'));
     $this->assertNoText(t('Update available'));
     $this->assertText(t('Security update required!'));
-    $this->assertRaw(l('7.2', 'http://example.com/drupal-7-2-release'), t('Link to release appears.'));
-    $this->assertRaw(l(t('Download'), 'http://example.com/drupal-7-2.tar.gz'), t('Link to download appears.'));
-    $this->assertRaw(l(t('Release notes'), 'http://example.com/drupal-7-2-release'), t('Link to release notes appears.'));
+    $this->assertRaw(l('7.2', 'http://example.com/drupal-7-2-release'), 'Link to release appears.');
+    $this->assertRaw(l(t('Download'), 'http://example.com/drupal-7-2.tar.gz'), 'Link to download appears.');
+    $this->assertRaw(l(t('Release notes'), 'http://example.com/drupal-7-2-release'), 'Link to release notes appears.');
   }
 
   /**
@@ -346,7 +346,7 @@ class UpdateTestContribCase extends UpdateTestHelper {
     $this->assertText(t('Up to date'));
     $this->assertRaw('<h3>' . t('Modules') . '</h3>');
     $this->assertNoText(t('Update available'));
-    $this->assertRaw(l(t('AAA Update test'), 'http://example.com/project/aaa_update_test'), t('Link to aaa_update_test project appears.'));
+    $this->assertRaw(l(t('AAA Update test'), 'http://example.com/project/aaa_update_test'), 'Link to aaa_update_test project appears.');
   }
 
   /**
@@ -407,10 +407,10 @@ class UpdateTestContribCase extends UpdateTestHelper {
     $this->assertText(t('CCC Update test'));
     // We want aaa_update_test included in the ccc_update_test project, not as
     // its own project on the report.
-    $this->assertNoRaw(l(t('AAA Update test'), 'http://example.com/project/aaa_update_test'), t('Link to aaa_update_test project does not appear.'));
+    $this->assertNoRaw(l(t('AAA Update test'), 'http://example.com/project/aaa_update_test'), 'Link to aaa_update_test project does not appear.');
     // The other two should be listed as projects.
-    $this->assertRaw(l(t('BBB Update test'), 'http://example.com/project/bbb_update_test'), t('Link to bbb_update_test project appears.'));
-    $this->assertRaw(l(t('CCC Update test'), 'http://example.com/project/ccc_update_test'), t('Link to bbb_update_test project appears.'));
+    $this->assertRaw(l(t('BBB Update test'), 'http://example.com/project/bbb_update_test'), 'Link to bbb_update_test project appears.');
+    $this->assertRaw(l(t('CCC Update test'), 'http://example.com/project/ccc_update_test'), 'Link to bbb_update_test project appears.');
 
     // We want to make sure we see the BBB project before the CCC project.
     // Instead of just searching for 'BBB Update test' or something, we want
@@ -459,7 +459,7 @@ class UpdateTestContribCase extends UpdateTestHelper {
     );
     $this->refreshUpdateStatus($xml_mapping);
     $this->assertText(t('Security update required!'));
-    $this->assertRaw(l(t('Update test base theme'), 'http://example.com/project/update_test_basetheme'), t('Link to the Update test base theme project appears.'));
+    $this->assertRaw(l(t('Update test base theme'), 'http://example.com/project/update_test_basetheme'), 'Link to the Update test base theme project appears.');
   }
 
   /**
@@ -512,13 +512,13 @@ class UpdateTestContribCase extends UpdateTestHelper {
       $this->assertNoText(t('Themes'));
       if ($check_disabled) {
         $this->assertText(t('Disabled themes'));
-        $this->assertRaw($base_theme_project_link, t('Link to the Update test base theme project appears.'));
-        $this->assertRaw($sub_theme_project_link, t('Link to the Update test subtheme project appears.'));
+        $this->assertRaw($base_theme_project_link, 'Link to the Update test base theme project appears.');
+        $this->assertRaw($sub_theme_project_link, 'Link to the Update test subtheme project appears.');
       }
       else {
         $this->assertNoText(t('Disabled themes'));
-        $this->assertNoRaw($base_theme_project_link, t('Link to the Update test base theme project does not appear.'));
-        $this->assertNoRaw($sub_theme_project_link, t('Link to the Update test subtheme project does not appear.'));
+        $this->assertNoRaw($base_theme_project_link, 'Link to the Update test base theme project does not appear.');
+        $this->assertNoRaw($sub_theme_project_link, 'Link to the Update test subtheme project does not appear.');
       }
     }
   }
@@ -574,9 +574,9 @@ class UpdateTestContribCase extends UpdateTestHelper {
     $this->assertUniqueText(t('Failed to get available update data for one project.'));
 
     // The other two should be listed as projects.
-    $this->assertRaw(l(t('AAA Update test'), 'http://example.com/project/aaa_update_test'), t('Link to aaa_update_test project appears.'));
-    $this->assertNoRaw(l(t('BBB Update test'), 'http://example.com/project/bbb_update_test'), t('Link to bbb_update_test project does not appear.'));
-    $this->assertRaw(l(t('CCC Update test'), 'http://example.com/project/ccc_update_test'), t('Link to bbb_update_test project appears.'));
+    $this->assertRaw(l(t('AAA Update test'), 'http://example.com/project/aaa_update_test'), 'Link to aaa_update_test project appears.');
+    $this->assertNoRaw(l(t('BBB Update test'), 'http://example.com/project/bbb_update_test'), 'Link to bbb_update_test project does not appear.');
+    $this->assertRaw(l(t('CCC Update test'), 'http://example.com/project/ccc_update_test'), 'Link to bbb_update_test project appears.');
   }
 
   /**
@@ -618,7 +618,7 @@ class UpdateTestContribCase extends UpdateTestHelper {
     $this->drupalGet('admin/reports/updates');
     $this->assertRaw('<h3>' . t('Modules') . '</h3>');
     $this->assertText(t('Security update required!'));
-    $this->assertRaw(l(t('AAA Update test'), 'http://example.com/project/aaa_update_test'), t('Link to aaa_update_test project appears.'));
+    $this->assertRaw(l(t('AAA Update test'), 'http://example.com/project/aaa_update_test'), 'Link to aaa_update_test project appears.');
 
     // Visit the reports page again without the altering and make sure the
     // status is back to normal.
@@ -626,7 +626,7 @@ class UpdateTestContribCase extends UpdateTestHelper {
     $this->drupalGet('admin/reports/updates');
     $this->assertRaw('<h3>' . t('Modules') . '</h3>');
     $this->assertNoText(t('Security update required!'));
-    $this->assertRaw(l(t('AAA Update test'), 'http://example.com/project/aaa_update_test'), t('Link to aaa_update_test project appears.'));
+    $this->assertRaw(l(t('AAA Update test'), 'http://example.com/project/aaa_update_test'), 'Link to aaa_update_test project appears.');
 
     // Turn the altering back on and visit the Update manager UI.
     variable_set('update_test_update_status', $update_status);
@@ -695,9 +695,9 @@ class UpdateTestUploadCase extends UpdateTestHelper {
   function testFileNameExtensionMerging() {
     $this->drupalGet('admin/modules/install');
     // Make sure the bogus extension supported by update_test.module is there.
-    $this->assertPattern('/file extensions are supported:.*update-test-extension/', t("Found 'update-test-extension' extension"));
+    $this->assertPattern('/file extensions are supported:.*update-test-extension/', "Found 'update-test-extension' extension");
     // Make sure it didn't clobber the first option from core.
-    $this->assertPattern('/file extensions are supported:.*tar/', t("Found 'tar' extension"));
+    $this->assertPattern('/file extensions are supported:.*tar/', "Found 'tar' extension");
   }
 
   /**
