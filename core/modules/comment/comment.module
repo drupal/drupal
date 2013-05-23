@@ -125,11 +125,16 @@ function comment_help($path, $arg) {
 /**
  * Implements hook_entity_view().
  *
- * @todo Make node links as comment_links formatter http://drupal.org/node/1901110
+ * @todo Make node links as comment_links formatter
+ *   http://drupal.org/node/1901110
  */
 function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $view_mode, $langcode) {
   if ($entity->entityType() != 'node') {
-    // Only content needs comment links.
+    // Comment links are only added to node entity type for backwards
+    // compatability. Should you require comment links for other entity types
+    // you can do-so by implementing a new field formatter.
+    // @todo Make this configurable from the formatter see
+    //   http://drupal.org/node/1901110
     return;
   }
   $fields = field_info_instances($entity->entityType(), $entity->bundle());
