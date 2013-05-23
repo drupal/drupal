@@ -21,20 +21,20 @@ class PHPTestCase extends DrupalWebTestCase {
     // Verify that the PHP code text format was inserted.
     $php_format_id = 'php_code';
     $this->php_code_format = filter_format_load($php_format_id);
-    $this->assertEqual($this->php_code_format->name, 'PHP code', t('PHP code text format was created.'));
+    $this->assertEqual($this->php_code_format->name, 'PHP code', 'PHP code text format was created.');
 
     // Verify that the format has the PHP code filter enabled.
     $filters = filter_list_format($php_format_id);
-    $this->assertTrue($filters['php_code']->status, t('PHP code filter is enabled.'));
+    $this->assertTrue($filters['php_code']->status, 'PHP code filter is enabled.');
 
     // Verify that the format exists on the administration page.
     $this->drupalGet('admin/config/content/formats');
-    $this->assertText('PHP code', t('PHP code text format was created.'));
+    $this->assertText('PHP code', 'PHP code text format was created.');
 
     // Verify that anonymous and authenticated user roles do not have access.
     $this->drupalGet('admin/config/content/formats/' . $php_format_id);
-    $this->assertFieldByName('roles[' . DRUPAL_ANONYMOUS_RID . ']', FALSE, t('Anonymous users do not have access to PHP code format.'));
-    $this->assertFieldByName('roles[' . DRUPAL_AUTHENTICATED_RID . ']', FALSE, t('Authenticated users do not have access to PHP code format.'));
+    $this->assertFieldByName('roles[' . DRUPAL_ANONYMOUS_RID . ']', FALSE, 'Anonymous users do not have access to PHP code format.');
+    $this->assertFieldByName('roles[' . DRUPAL_AUTHENTICATED_RID . ']', FALSE, 'Authenticated users do not have access to PHP code format.');
   }
 
   /**
@@ -73,18 +73,18 @@ class PHPFilterTestCase extends PHPTestCase {
 
     // Make sure that the PHP code shows up as text.
     $this->drupalGet('node/' . $node->nid);
-    $this->assertText('print "SimpleTest PHP was executed!"', t('PHP code is displayed.'));
+    $this->assertText('print "SimpleTest PHP was executed!"', 'PHP code is displayed.');
 
     // Change filter to PHP filter and see that PHP code is evaluated.
     $edit = array();
     $langcode = LANGUAGE_NONE;
     $edit["body[$langcode][0][format]"] = $this->php_code_format->format;
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
-    $this->assertRaw(t('Basic page %title has been updated.', array('%title' => $node->title)), t('PHP code filter turned on.'));
+    $this->assertRaw(t('Basic page %title has been updated.', array('%title' => $node->title)), 'PHP code filter turned on.');
 
     // Make sure that the PHP code shows up as text.
-    $this->assertNoText('print "SimpleTest PHP was executed!"', t("PHP code isn't displayed."));
-    $this->assertText('SimpleTest PHP was executed!', t('PHP code has been evaluated.'));
+    $this->assertNoText('print "SimpleTest PHP was executed!"', "PHP code isn't displayed.");
+    $this->assertText('SimpleTest PHP was executed!', 'PHP code has been evaluated.');
   }
 }
 
@@ -111,10 +111,10 @@ class PHPAccessTestCase extends PHPTestCase {
 
     // Make sure that the PHP code shows up as text.
     $this->drupalGet('node/' . $node->nid);
-    $this->assertText('print', t('PHP code was not evaluated.'));
+    $this->assertText('print', 'PHP code was not evaluated.');
 
     // Make sure that user doesn't have access to filter.
     $this->drupalGet('node/' . $node->nid . '/edit');
-    $this->assertNoRaw('<option value="' . $this->php_code_format->format . '">', t('PHP code format not available.'));
+    $this->assertNoRaw('<option value="' . $this->php_code_format->format . '">', 'PHP code format not available.');
   }
 }
