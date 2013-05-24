@@ -40,6 +40,16 @@ function template_preprocess_views_ui_display_tab_setting(&$variables) {
   }
 }
 
+/**
+ * Prepares variables for Views UI display tab bucket templates.
+ *
+ * Default template: views-ui-display-tab-bucket.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #name, #overridden, #children, #title, #actions.
+ */
 function template_preprocess_views_ui_display_tab_bucket(&$variables) {
   $element = $variables['element'];
 
@@ -50,12 +60,12 @@ function template_preprocess_views_ui_display_tab_bucket(&$variables) {
   }
   if (!empty($element['#overridden'])) {
     $variables['attributes']['class'][] = 'overridden';
-    $variables['attributes_array']['title'][] = t('Overridden');
+    $variables['attributes']['title'][] = t('Overridden');
   }
 
   $variables['content'] = $element['#children'];
   $variables['title'] = $element['#title'];
-  $variables['actions'] = !empty($element['#actions']) ? render($element['#actions']) : '';
+  $variables['actions'] = !empty($element['#actions']) ? $element['#actions'] : array();
 }
 
 /**
