@@ -1,0 +1,44 @@
+{#
+/**
+ * @file
+ * Default theme implementation to present a feed item in an aggregator page.
+ *
+ * Available variables:
+ * - feed_url: URL to the originating feed item.
+ * - feed_title: Title of the feed item.
+ * - source_url: Link to the local source section.
+ * - source_title: Title of the remote source.
+ * - source_date: Date the feed was posted on the remote source.
+ * - content: Feed item content.
+ * - categories: Linked categories assigned to the feed.
+ *
+ * @see template_preprocess()
+ * @see template_preprocess_aggregator_item()
+ *
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes }}>
+  <h3 class="feed-item-title">
+    <a href="{{ feed_url }}">{{ feed_title }}</a>
+  </h3>
+
+  <div class="feed-item-meta">
+    {% if source_url %}
+      <a href="{{ source_url }}" class="feed-item-source">{{ source_title }}</a> -
+    {% endif %}
+    <span class="feed-item-date">{{ source_date }}</span>
+  </div>
+
+  {% if content %}
+    <div class="feed-item-body">
+      {{ content }}
+    </div>
+  {% endif %}
+
+  {% if categories %}
+    <div class="feed-item-categories">
+      {{ 'Categories'|t }}: {{ categories|join(', ') }}
+    </div>
+  {% endif %}
+</div>
