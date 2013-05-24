@@ -957,7 +957,9 @@ function book_preprocess_block(&$variables) {
 }
 
 /**
- * Processes variables for book-all-books-block.tpl.php.
+ * Prepares variables for book listing block templates.
+ *
+ * Default template: book-all-books-block.html.twig.
  *
  * All non-renderable elements are removed so that the template has full access
  * to the structured data but can also simply iterate over all elements and
@@ -965,9 +967,8 @@ function book_preprocess_block(&$variables) {
  *
  * @param array $variables
  *   An associative array containing the following key:
- *   - book_menus
- *
- * @see book-all-books-block.tpl.php
+ *   - book_menus: An associative array containing renderable menu links for all
+ *     book menus.
  */
 function template_preprocess_book_all_books_block(&$variables) {
   // Remove all non-renderable elements.
@@ -979,13 +980,14 @@ function template_preprocess_book_all_books_block(&$variables) {
 }
 
 /**
- * Processes variables for book-navigation.tpl.php.
+ * Prepares variables for book navigation templates.
+ *
+ * Default template: book-navigation.html.twig.
  *
  * @param array $variables
  *   An associative array containing the following key:
- *   - book_link
- *
- * @see book-navigation.tpl.php
+ *   - book_link: An associative array of book link properties.
+ *     Properties used: bid, link_title, depth, plid, mlid.
  */
 function template_preprocess_book_navigation(&$variables) {
   drupal_add_css(drupal_get_path('module', 'book') . '/book.theme.css');
@@ -1101,15 +1103,15 @@ function book_toc($bid, $depth_limit, $exclude = array()) {
 }
 
 /**
- * Preprocesses variables for book-export-html.tpl.php.
+ * Prepares variables for book export templates.
+ *
+ * Default template: book-export-html.html.twig.
  *
  * @param array $variables
- *   An associative array containing the following keys:
- *   - title
- *   - contents
- *   - depth
- *
- * @see book-export-html.tpl.php
+ *   An associative array containing:
+ *   - title: The title of the book.
+ *   - contents: Output of each book page.
+ *   - depth: The max depth of the book.
  */
 function template_preprocess_book_export_html(&$variables) {
   global $base_url;
@@ -1191,14 +1193,15 @@ function book_node_export(EntityInterface $node, $children = '') {
 }
 
 /**
- * Processes variables for book-node-export-html.tpl.php.
+ * Prepares variables for single node export templates.
+ *
+ * Default template: book-node-export-html.html.twig.
  *
  * @param array $variables
  *   An associative array containing the following keys:
- *   - node
- *   - children
- *
- * @see book-node-export-html.tpl.php
+ *   - node: The node that will be output.
+ *   - children: All the rendered child nodes within the current node. Defaults
+ *     to an empty string.
  */
 function template_preprocess_book_node_export_html(&$variables) {
   $variables['depth'] = $variables['node']->book['depth'];
