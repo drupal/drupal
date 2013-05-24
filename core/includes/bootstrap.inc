@@ -1697,8 +1697,8 @@ function watchdog($type, $message, array $variables = NULL, $severity = WATCHDOG
 /**
  * Sets a message to display to the user.
  *
- * Messages are stored in a session variable and displayed in page.tpl.php via
- * the $messages theme variable.
+ * Messages are stored in a session variable and displayed in the page template
+ * via the $messages theme variable.
  *
  * Example usage:
  * @code

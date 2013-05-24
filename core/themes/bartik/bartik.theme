@@ -40,7 +40,21 @@ function bartik_process_html(&$variables) {
 }
 
 /**
- * Implements hook_process_HOOK() for page.tpl.php.
+ * Implements hook_preprocess_HOOK() for page.html.twig.
+ */
+function bartik_preprocess_page(&$variables) {
+  // Pass the main menu and secondary menu to the template as render arrays.
+  if (!empty($variables['main_menu'])) {
+    $variables['main_menu']['#attributes']['id'] = 'main-menu-links';
+    $variables['main_menu']['#attributes']['class'] = array('links', 'clearfix');
+  }
+  if (!empty($variables['secondary_menu'])) {
+    $variables['secondary_menu']['#attributes']['id'] = 'secondary-menu-links';
+  }
+}
+
+/**
+ * Implements hook_process_HOOK() for page.html.twig.
  */
 function bartik_process_page(&$variables) {
   $site_config = config('system.site');

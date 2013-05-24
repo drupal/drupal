@@ -5065,7 +5065,7 @@ function drupal_pre_render_dropbutton($element) {
  *   A string or array representing the content of a page. The array consists of
  *   the following keys:
  *   - #type: Value is always 'page'. This pushes the theming through
- *     page.tpl.php (required).
+ *     the page template (required).
  *   - #show_messages: Suppress drupal_get_message() items. Used by Batch
  *     API (optional).
  *

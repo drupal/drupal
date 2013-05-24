@@ -2852,10 +2852,12 @@ function template_preprocess_html(&$variables) {
 }
 
 /**
- * Preprocess variables for page.tpl.php
+ * Prepares variables for the page template.
  *
- * Most themes utilize their own copy of page.tpl.php. The default is located
- * inside "modules/system/page.tpl.php". Look in there for the full list of
+ * Default template: page.html.twig.
+ *
+ * Most themes utilize their own copy of page.html.twig. The default is located
+ * inside "modules/system/page.html.twig". Look in there for the full list of
  * variables.
  *
  * Uses the arg() function to generate a series of page template suggestions
@@ -2866,7 +2868,6 @@ function template_preprocess_html(&$variables) {
  *
  * @see drupal_render_page()
  * @see template_process_page()
- * @see page.tpl.php
  */
 function template_preprocess_page(&$variables) {
   $language_interface = language(LANGUAGE_TYPE_INTERFACE);
@@ -2903,6 +2904,36 @@ function template_preprocess_page(&$variables) {
   $variables['site_slogan']       = (theme_get_setting('features.slogan') ? filter_xss_admin($site_config->get('slogan')) : '');
   $variables['tabs']              = menu_local_tabs();
 
+  // Pass the main menu and secondary menu to the template as render arrays.
+  if (!empty($variables['main_menu'])) {
+    $variables['main_menu'] = array(
+      '#theme' =>'links__system_main_menu',
+      '#links' => $variables['main_menu'],
+      '#attributes' => array(
+        'id' => 'main-menu',
+        'class' => array('links', 'inline', 'clearfix'),
+      ),
+      '#heading' => array(
+        'text' => t('Main menu'),
+        'class' => array('element-invisible'),
+      )
+    );
+  }
+  if (!empty($variables['secondary_menu'])) {
+    $variables['secondary_menu'] = array(
+      '#theme' =>'links__system_secondary_menu',
+      '#links' => $variables['secondary_menu'],
+      '#attributes' => array(
+        'id' => 'secondary-menu',
+        'class' => array('links', 'inline', 'clearfix'),
+      ),
+      '#heading' => array(
+        'text' => t('Secondary menu'),
+        'class' => array('element-invisible'),
+      )
+    );
+  }
+
   if ($node = menu_get_object()) {
     $variables['node'] = $node;
   }
@@ -2914,13 +2945,12 @@ function template_preprocess_page(&$variables) {
 }
 
 /**
- * Process variables for page.tpl.php
+ * Processes variables for page.html.twig.
  *
  * Perform final addition of variables before passing them into the template.
  * To customize these variables, simply set them in an earlier step.
  *
  * @see template_preprocess_page()
- * @see page.tpl.php
  */
 function template_process_page(&$variables) {
   if (!isset($variables['breadcrumb'])) {
@@ -2928,7 +2958,10 @@ function template_process_page(&$variables) {
     // re-use the cache of an already rendered menu containing the active link
     // for the current page.
     // @see menu_tree_page_data()
-    $variables['breadcrumb'] = theme('breadcrumb', array('breadcrumb' => drupal_get_breadcrumb()));
+    $variables['breadcrumb'] = array(
+      '#theme' => 'breadcrumb',
+      '#breadcrumb' => drupal_get_breadcrumb(),
+    );
   }
   if (!isset($variables['title'])) {
     $variables['title'] = drupal_get_title();
@@ -2937,7 +2970,7 @@ function template_process_page(&$variables) {
   // Generate messages last in order to capture as many as possible for the
   // current page.
   if (!isset($variables['messages'])) {
-    $variables['messages'] = $variables['show_messages'] ? theme('status_messages') : '';
+    $variables['messages'] = $variables['show_messages'] ? array('#theme' => 'status_messages') : '';
   }
 }
 
