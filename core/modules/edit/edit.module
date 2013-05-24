@@ -157,7 +157,7 @@ function edit_preprocess_taxonomy_term(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for block.tpl.php.
+ * Implements hook_preprocess_HOOK() for block.html.twig.
  *
  * @todo Remove this, handle in generic way: http://drupal.org/node/1972514.
  */

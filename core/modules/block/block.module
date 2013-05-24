@@ -515,21 +515,23 @@ function block_rebuild() {
 }
 
 /**
- * Processes variables for block.tpl.php.
+ * Prepares variables for block templates.
+ *
+ * Default template: block.html.twig.
  *
  * Prepares the values passed to the theme_block function to be passed
  * into a pluggable template engine. Uses block properties to generate a
  * series of template file suggestions. If none are found, the default
- * block.tpl.php is used.
+ * block.html.twig is used.
  *
- * Most themes utilize their own copy of block.tpl.php. The default is located
- * inside "modules/block/block.tpl.php". Look in there for the full list of
- * variables.
+ * Most themes use their own copy of block.html.twig. The default is located
+ * inside "core/modules/block/templates/block.html.twig". Look in there for the
+ * full list of available variables.
  *
- * The $variables array contains the following arguments:
- * - $block
- *
- * @see block.tpl.php
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the properties of the element.
+ *     Properties used: #block, #configuration, #children, #plugin_id.
  */
 function template_preprocess_block(&$variables) {
   $block_counter = &drupal_static(__FUNCTION__, array());
@@ -566,7 +568,7 @@ function template_preprocess_block(&$variables) {
   if ($id = $variables['elements']['#block']->id()) {
     $config_id = explode('.', $id);
     $machine_name = array_pop($config_id);
-    $variables['block_html_id'] = drupal_html_id('block-' . $machine_name);
+    $variables['attributes']['id'] = drupal_html_id('block-' . $machine_name);
     $variables['theme_hook_suggestions'][] = 'block__' . $machine_name;
   }
 }
