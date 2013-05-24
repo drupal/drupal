@@ -2725,10 +2725,15 @@ function _template_preprocess_default_variables() {
 }
 
 /**
- * Preprocess variables for html.tpl.php
+ * Prepares variables for HTML document templates.
+ *
+ * Default template: html.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - page: A render element representing the page.
  *
  * @see system_elements()
- * @see html.tpl.php
  */
 function template_preprocess_html(&$variables) {
   $language_interface = language(LANGUAGE_TYPE_INTERFACE);
@@ -2937,22 +2942,21 @@ function template_process_page(&$variables) {
 }
 
 /**
- * Process variables for html.tpl.php
+ * Processes variables for html.html.twig.
  *
  * Perform final addition and modification of variables before passing into
  * the template. To customize these variables, call drupal_render() on elements
  * in $variables['page'] during THEME_preprocess_page().
  *
  * @see template_preprocess_html()
- * @see html.tpl.php
  */
 function template_process_html(&$variables) {
   drupal_add_library('system', 'html5shiv', TRUE);
   // Render page_top and page_bottom into top level variables.
-  $variables['page_top'] = drupal_render($variables['page']['page_top']);
-  $variables['page_bottom'] = drupal_render($variables['page']['page_bottom']);
+  $variables['page_top'] = isset($variables['page']['page_top']) ? drupal_render($variables['page']['page_top']) : '';
+  $variables['page_bottom'] = isset($variables['page']['page_bottom']) ? drupal_render($variables['page']['page_bottom']) : '';
   // Place the rendered HTML for the page body into a top level variable.
-  $variables['page']              = $variables['page']['#children'];
+  $variables['page'] = $variables['page']['#children'];
   $variables['page_bottom'] .= drupal_get_js('footer');
 
   $variables['head']    = drupal_get_html_head();
