@@ -15,14 +15,34 @@ function theme_views_ui_container($variables) {
   return '<div' . new Attribute($element['#attributes']) . '>' . $element['#children'] . '</div>';
 }
 
+/**
+ * Prepares variables for Views UI display tab setting templates.
+ *
+ * Default template: views-ui-display-tab-setting.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - link: The setting's primary link.
+ *   - settings_links: An array of links for this setting.
+ *   - defaulted: A boolean indicating the setting is in its default state.
+ *   - overridden: A boolean indicating the setting has been overridden from
+ *     the default.
+ *   - description: The setting's description.
+ *   - description_separator: A boolean indicating a separator colon should be
+ *     appended to the setting's description.
+ */
 function template_preprocess_views_ui_display_tab_setting(&$variables) {
   static $zebra = 0;
-  $variables['zebra'] = ($zebra % 2 === 0 ? 'odd' : 'even');
+
+  // Add default class attributes.
+  $variables['attributes']['class'][] = 'views-display-setting';
+  $variables['attributes']['class'][] = ($zebra % 2 === 0 ? 'odd' : 'even');
+  $variables['attributes']['class'][] = 'clearfix';
+
   $zebra++;
 
-  // Put the main link to the left side
+  // Put the primary link to the left side.
   array_unshift($variables['settings_links'], $variables['link']);
-  $variables['settings_links'] = implode('<span class="label">&nbsp;|&nbsp;</span>', $variables['settings_links']);
 
   $variables['attributes']['class'][] = 'views-ui-display-tab-setting';
 
@@ -31,7 +51,7 @@ function template_preprocess_views_ui_display_tab_setting(&$variables) {
   }
   if (!empty($variables['overridden'])) {
     $variables['attributes']['class'][] = 'overridden';
-    $variables['attributes_array']['title'][] = t('Overridden');
+    $variables['attributes']['title'][] = t('Overridden');
   }
 
   // Append a colon to the description, if requested.
