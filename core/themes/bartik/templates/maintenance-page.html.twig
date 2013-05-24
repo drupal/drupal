@@ -1,0 +1,66 @@
+{#
+/**
+ * @file
+ * Bartik's theme implementation to display a single Drupal page while offline.
+ *
+ * All of the available variables are mirrored in page.html.twig.
+ *
+ * @see template_preprocess()
+ * @see template_preprocess_maintenance_page()
+ * @see bartik_process_maintenance_page()
+ *
+ * @ingroup themeable
+ */
+ #}
+<!DOCTYPE html>
+<html lang="{{ language.langcode }}" dir="{{ language.dir }}">
+<head>
+  {{ head }}
+  <title>{{ head_title }}</title>
+  {{ styles }}
+  {{ scripts }}
+</head>
+<body class="{{ attributes.class }}"{{ attributes }}>
+
+  <div id="skip-link">
+    <a href="#main-content" class="element-invisible element-focusable">{{ 'Skip to main content'|t }}</a>
+  </div>
+
+  <div id="page-wrapper"><div id="page">
+
+    <header id="header" role="banner"><div class="section clearfix">
+      {% if site_name or site_slogan %}
+        <div id="name-and-slogan"{{ hide_site_name and hide_site_slogan ? ' class="element-invisible"' }}>
+          {% if site_name %}
+            <div id="site-name"{{ hide_site_name ? ' class="element-invisible"' }}>
+              <strong>
+                <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home"><span>{{ site_name }}</span></a>
+              </strong>
+            </div>
+          {% endif %}
+          {% if site_slogan %}
+            <div id="site-slogan"{{ hide_site_slogan ? ' class="element-invisible"' }}>
+              {{ site_slogan }}
+            </div>
+          {% endif %}
+        </div> <!-- /#name-and-slogan -->
+      {% endif %}
+    </div></header> <!-- /.section, /#header -->
+
+    <div id="main-wrapper"><div id="main" class="clearfix">
+      <main id="content" class="column" role="main"><section class="section">
+        <a id="main-content"></a>
+        {% if title %}<h1 class="title" id="page-title">{{ title }}</h1>{% endif %}
+        {{ content }}
+        {% if messages %}
+          <div id="messages"><div class="section clearfix">
+            {{ messages }}
+          </div></div> <!-- /.section, /#messages -->
+        {% endif %}
+      </section></main> <!-- /.section, /#content -->
+    </div></div> <!-- /#main, /#main-wrapper -->
+
+  </div></div> <!-- /#page, /#page-wrapper -->
+
+</body>
+</html>

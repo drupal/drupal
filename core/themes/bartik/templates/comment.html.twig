@@ -1,0 +1,130 @@
+{#
+/**
+ * @file
+ * Bartik's theme implementation for comments.
+ *
+ * Available variables:
+ * - author: Comment author. Can be a link or plain text.
+ * - content: The content-related items for the comment display. Use
+ *   {{ content }} to print them all, or print a subset such as
+ *   {{ content.field_example }}. Use hide(content.field_example) to temporarily
+ *   suppress the printing of a given element.
+ * - created: Formatted date and time for when the comment was created.
+ *   Preprocess functions can reformat it by calling format_date() with the
+ *   desired parameters on the 'comment.created' variable.
+ * - changed: Formatted date and time for when the comment was last changed.
+ *   Preprocess functions can reformat it by calling format_date() with the
+ *   desired parameters on the 'comment.changed' variable.
+ * - new: New comment marker.
+ * - permalink: Comment permalink.
+ * - submitted: Submission information created from author and created
+ *   during template_preprocess_comment().
+ * - user_picture: The comment author's profile picture.
+ * - signature: The comment author's signature.
+ * - status: Comment status. Possible values are:
+ *   unpublished, published, or preview.
+ * - title: Comment title, linked to the comment.
+ * - attributes.class: List of classes that can be used to style contextually
+ *   through CSS. The default values can be one or more of the following:
+ *   - comment: The current template type; e.g., 'theming hook'.
+ *   - by-anonymous: Comment by an unregistered user.
+ *   - by-node-author: Comment by the author of the parent node.
+ *   - preview: When previewing a new or edited comment.
+ *   The following applies only to viewers who are registered users:
+ *   - unpublished: An unpublished comment visible only to administrators.
+ *   - by-viewer: Comment by the user currently viewing the page.
+ *   - new: New comment since the last visit.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ * - content_attributes: List of classes for the styling of the comment content.
+ *
+ * These variables are provided to give context about the parent comment (if
+ * any):
+ * - comment_parent: Full parent comment entity (if any).
+ * - parent_author: Equivalent to author for the parent comment.
+ * - parent_created: Equivalent to created for the parent comment.
+ * - parent_changed: Equivalent to changed for the parent comment.
+ * - parent_title: Equivalent to title for the parent comment.
+ * - parent_permalink: Equivalent to permalink for the parent comment.
+ * - parent: A text string of parent comment submission information created from
+ *   'parent_author' and 'parent_created' during template_preprocess_comment().
+ *   This information is presented to help screen readers follow lengthy
+ *   discussion threads. You can hide this from sighted users using the class
+ *   element-invisible.
+ *
+ * These two variables are provided for context:
+ * - comment: Full comment object.
+ * - node: Node entity the comments are attached to.
+ *
+ * @see template_preprocess()
+ * @see template_preprocess_comment()
+ *
+ * @ingroup themeable
+ */
+#}
+<article class="{{ attributes.class }} clearfix"{{ attributes }} role="article">
+
+  <header class="comment-header">
+
+    <div class="attribution">
+      {{ user_picture }}
+
+      <div class="submitted">
+        <p class="commenter-name">
+          {{ author }}
+        </p>
+        <p class="comment-time">
+          {{ created }}
+        </p>
+        <p class="comment-permalink">
+          {{ permalink }}
+        </p>
+        {#
+          // Indicate the semantic relationship between parent and child comments
+          // for accessibility. The list is difficult to navigate in a screen
+          // reader without this information.
+        #}
+        {% if parent %}
+        <p class="comment-parent element-invisible">
+          {{ parent }}
+        </p>
+        {% endif %}
+      </div>
+    </div> <!-- /.attribution -->
+
+    <div class="comment-text">
+      <div class="comment-arrow"></div>
+
+      {% if new %}
+        <span class="new">{{ new }}</span>
+      {% endif %}
+
+      {{ title_prefix }}
+      <h3{{ title_attributes }}>{{ title }}</h3>
+      {{ title_suffix }}
+    </div> <!-- /.comment-text -->
+
+  </header> <!-- /.comment-header -->
+
+  <div{{ content_attributes }}>
+    {# We hide the links now so that we can render them later. #}
+    {% hide(content.links) %}
+    {{ content }}
+
+  </div> <!-- /.content -->
+
+  <footer class="comment-footer">
+    {% if signature %}
+    <div class="user-signature clearfix">
+      {{ signature }}
+    </div>
+    {% endif %}
+
+    <nav>
+      {{ content.links }}
+    </nav>
+  </footer> <!-- /.comment-footer -->
+
+</article>

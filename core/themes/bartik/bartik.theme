@@ -92,7 +92,7 @@ function bartik_process_page(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for maintenance-page.tpl.php.
+ * Implements hook_preprocess_HOOK() for maintenance-page.html.twig.
  */
 function bartik_preprocess_maintenance_page(&$variables) {
   // By default, site_name is set to Drupal if no db connection is available
@@ -106,7 +106,7 @@ function bartik_preprocess_maintenance_page(&$variables) {
 }
 
 /**
- * Implements hook_process_HOOK() for maintenance-page.tpl.php.
+ * Implements hook_process_HOOK() for maintenance-page.html.twig.
  */
 function bartik_process_maintenance_page(&$variables) {
   $site_config = config('system.site');
@@ -121,6 +121,17 @@ function bartik_process_maintenance_page(&$variables) {
   if ($variables['hide_site_slogan']) {
     // If toggle_site_slogan is FALSE, the site_slogan will be empty, so we rebuild it.
     $variables['site_slogan'] = filter_xss_admin($site_config->get('slogan'));
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for node.html.twig.
+ */
+function bartik_preprocess_node(&$variables) {
+  // Remove the "Add new comment" link on teasers or when the comment form is
+  // displayed on the page.
+  if ($variables['teaser'] || !empty($variables['content']['comments']['comment_form'])) {
+    unset($variables['content']['links']['comment']['#links']['comment-add']);
   }
 }
 
