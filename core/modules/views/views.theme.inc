@@ -328,11 +328,16 @@ function theme_views_view_field($vars) {
 }
 
 /**
- * Process a single field within a view.
+ * Prepares variables for views field templates.
  *
- * This preprocess function isn't normally run, as a function is used by
- * default, for performance. However, by creating a template, this
- * preprocess should get picked up.
+ * Default template: views-view-field.html.twig.
+ *
+ * @param array $vars
+ *   An associative array containing:
+ *   - field: The field handler object for the current field.
+ *   - row: Object representing the raw result of the SQL query for the current
+ *     field.
+ *   - view: Instance of the ViewExecutable object for the parent view.
  */
 function template_preprocess_views_view_field(&$vars) {
   $vars['output'] = $vars['field']->advanced_render($vars['row']);
