@@ -935,49 +935,57 @@ function template_preprocess_views_view_row_rss(&$vars) {
 }
 
 /**
- * Default theme function for all filter forms.
+ * Prepares variables for views exposed form templates.
+ *
+ * Default template: views-exposed-form.html.twig.
+ *
+ * @param array $vars
+ *   An associative array containing:
+ *   - form: A render element representing the form.
  */
 function template_preprocess_views_exposed_form(&$vars) {
   $form = &$vars['form'];
 
   // Put all single checkboxes together in the last spot.
-  $checkboxes = '';
+  $checkboxes = array();
 
   if (!empty($form['q'])) {
-    $vars['q'] = drupal_render($form['q']);
+    $vars['q'] = $form['q'];
   }
 
   $vars['widgets'] = array();
   foreach ($form['#info'] as $id => $info) {
     // Set aside checkboxes.
     if (isset($form[$info['value']]['#type']) && $form[$info['value']]['#type'] == 'checkbox') {
-      $checkboxes .= drupal_render($form[$info['value']]);
+      $checkboxes[] = $form[$info['value']];
       continue;
     }
     $widget = new stdClass();
     // set up defaults so that there's always something there.
-    $widget->label = $widget->operator = $widget->widget = $widget->description = NULL;
+    $widget->label = $widget->operator = $widget->widget = $widget->description = '';
 
     $widget->id = isset($form[$info['value']]['#id']) ? $form[$info['value']]['#id'] : '';
 
     if (!empty($info['label'])) {
       $widget->label = check_plain($info['label']);
     }
-    if (!empty($info['operator'])) {
-      $widget->operator = drupal_render($form[$info['operator']]);
+    if (!empty($info['operator']) && isset($form[$info['operator']])) {
+      $widget->operator = $form[$info['operator']];
     }
 
-    $widget->widget = drupal_render($form[$info['value']]);
+    $widget->widget = $form[$info['value']];
 
     if (!empty($info['description'])) {
       $widget->description = check_plain($info['description']);
     }
 
     $vars['widgets'][$id] = $widget;
+    // Unset the widget, so that it doesn't get rendered twice.
+    unset($form[$info['value']]);
   }
 
   // Wrap up all the checkboxes we set aside into a widget.
-  if ($checkboxes) {
+  if (!empty($checkboxes)) {
     $widget = new stdClass();
     // set up defaults so that there's always something there.
     $widget->label = $widget->operator = $widget->widget = NULL;
@@ -985,22 +993,6 @@ function template_preprocess_views_exposed_form(&$vars) {
     $widget->widget = $checkboxes;
     $vars['widgets']['checkboxes'] = $widget;
   }
-
-  if (isset($form['sort_by'])) {
-    $vars['sort_by'] = drupal_render($form['sort_by']);
-    $vars['sort_order'] = drupal_render($form['sort_order']);
-  }
-  if (isset($form['items_per_page'])) {
-    $vars['items_per_page'] = drupal_render($form['items_per_page']);
-  }
-  if (isset($form['offset'])) {
-    $vars['offset'] = drupal_render($form['offset']);
-  }
-  if (isset($form['reset'])) {
-    $vars['reset_button'] = drupal_render($form['reset']);
-  }
-  // This includes the submit button.
-  $vars['button'] = drupal_render_children($form);
 }
 
 /**
