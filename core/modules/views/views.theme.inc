@@ -782,7 +782,14 @@ function template_preprocess_views_view_grid(&$vars) {
 }
 
 /**
- * Display the simple view of rows one after another
+ * Prepares variables for views unformatted rows templates.
+ *
+ * Default template: views-view-unformatted.html.twig.
+ *
+ * @param array $vars
+ *   An associative array containing:
+ *   - view: The view object.
+ *   - rows: An array of row items. Each row is an array of content.
  */
 function template_preprocess_views_view_unformatted(&$vars) {
   $view = $vars['view'];
@@ -1108,7 +1115,7 @@ function theme_views_mini_pager($vars) {
  * example, arguments which provide a summary view might change the style to
  * one of the special summary styles.
  *
- * The default style for all views is views-view-unformatted.tpl.php
+ * The default style for all views is views-view-unformatted.html.twig.
  *
  * Many styles will then farm out the actual display of each row to a row
  * style; the default row style is views-view-fields.tpl.php.
@@ -1123,10 +1130,10 @@ function theme_views_mini_pager($vars) {
  * - views-view--foobar.tpl.php
  * - views-view.tpl.php
  *
- * - views-view-unformatted--foobar--page.tpl.php
- * - views-view-unformatted--page.tpl.php
- * - views-view-unformatted--foobar.tpl.php
- * - views-view-unformatted.tpl.php
+ * - views-view-unformatted--foobar--page.html.twig
+ * - views-view-unformatted--page.html.twig
+ * - views-view-unformatted--foobar.html.twig
+ * - views-view-unformatted.html.twig
  *
  * - views-view-fields--foobar--page.tpl.php
  * - views-view-fields--page.tpl.php
