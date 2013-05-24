@@ -846,16 +846,22 @@ function template_preprocess_views_view_list(&$vars) {
 }
 
 /**
- * Preprocess an RSS feed
- */
+ * Prepares variables for RSS feed templates.
+ *
+ * Default template: views-view-rss.html.twig.
+ *
+ * @param array $vars
+ *   An associative array containing:
+ *   - view: A ViewExecutable object.
+ *   - rows: The raw row data.
+*/
 function template_preprocess_views_view_rss(&$vars) {
   global $base_url;
 
-  $view     = &$vars['view'];
-  $options  = &$vars['options'];
-  $items    = &$vars['rows'];
+  $view = $vars['view'];
+  $items = $vars['rows'];
 
-  $style    = &$view->style_plugin;
+  $style = $view->style_plugin;
 
   $config = config('system.site');
 
@@ -875,8 +881,8 @@ function template_preprocess_views_view_rss(&$vars) {
   }
   $vars['title'] = check_plain($title);
 
-  // Figure out which display which has a path we're using for this feed. If there isn't
-  // one, use the global $base_url
+  // Figure out which display which has a path we're using for this feed. If
+  // there isn't one, use the global $base_url
   $link_display_id = $view->display_handler->getLinkDisplay();
   if ($link_display_id && $display = $view->displayHandlers->get($link_display_id)) {
     $path = $view->displayHandlers->get($link_display_id)->getPath();
@@ -889,7 +895,8 @@ function template_preprocess_views_view_rss(&$vars) {
       $url_options['query'] = $view->exposed_raw_input;
     }
 
-    // Compare the link to the default home page; if it's the default home page, just use $base_url.
+    // Compare the link to the default home page; if it's the default home page,
+    // just use $base_url.
     if ($path == $config->get('page.front')) {
       $path = '';
     }
