@@ -492,7 +492,7 @@ function rdf_preprocess_html(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for node.tpl.php.
+ * Implements hook_preprocess_HOOK() for node.html.twig.
  */
 function rdf_preprocess_node(&$variables) {
   // Adds RDFa markup to the node container. The about attribute specifies the
@@ -509,7 +509,7 @@ function rdf_preprocess_node(&$variables) {
   $variables['title_attributes']['property'] = empty($variables['node']->rdf_mapping['title']['predicates']) ? NULL : $variables['node']->rdf_mapping['title']['predicates'];
   $variables['title_attributes']['datatype'] = '';
 
-  // In full node mode, the title is not displayed by node.tpl.php so it is
+  // In full node mode, the title is not displayed by node.html.twig so it is
   // added in the <head> tag of the HTML page.
   if ($variables['page']) {
     $element = array(
@@ -557,7 +557,7 @@ function rdf_preprocess_node(&$variables) {
       $variables['content']['links']['comment']['#links']['comment-comments']['attributes'] += $comment_count_attributes;
     }
     // In full node view, the number of comments is not displayed by
-    // node.tpl.php so it is expressed in RDFa in the <head> tag of the HTML
+    // node.html.twig so it is expressed in RDFa in the <head> tag of the HTML
     // page.
     if ($variables['page'] && user_access('access comments')) {
       $element = array(
@@ -843,8 +843,8 @@ function rdf_preprocess_image(&$variables) {
  *   - context: An array of context information about the content to be wrapped:
  *     - hook: The theme hook that will use the wrapped content. This
  *       corresponds to the key within the theme registry for this template.
- *       For example, if this content is about to be used in node.tpl.php or
- *       node-[type].tpl.php, then the 'hook' is 'node'.
+ *       For example, if this content is about to be used in node.html.twig or
+ *       node-[type].html.twig, then the 'hook' is 'node'.
  *     - variable_name: The name of the variable by which the template will
  *       refer to this content. Each template file has documentation about
  *       the variables it uses. For example, if this function is called in

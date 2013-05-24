@@ -174,7 +174,6 @@ function node_theme() {
     ),
     'node_edit_form' => array(
       'render element' => 'form',
-      'path' => drupal_get_path('module', 'node') . '/templates',
       'template' => 'node-edit-form',
     ),
   );
@@ -1091,19 +1090,19 @@ function node_preprocess_block(&$variables) {
 }
 
 /**
- * Processes variables for node.tpl.php.
+ * Prepares variables for node templates.
  *
- * Most themes utilize their own copy of node.tpl.php. The default is located
- * inside "modules/node/node.tpl.php". Look in there for the full list of
- * variables.
+ * Default template: node.html.twig.
  *
- * @param $variables
+ * Most themes utilize their own copy of node.html.twig. The default is located
+ * inside "/core/modules/node/templates/node.html.twig". Look in there for the full
+ * list of variables.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - elements: An array of elements to display in view mode.
  *   - node: The node object.
  *   - view_mode: View mode; e.g., 'full', 'teaser'...
- *
- * @see node.tpl.php
  */
 function template_preprocess_node(&$variables) {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
@@ -1112,25 +1111,18 @@ function template_preprocess_node(&$variables) {
   $variables['node'] = $variables['elements']['#node'];
   $node = $variables['node'];
 
-  $variables['date']      = format_date($node->created);
-  $variables['name']      = theme('username', array(
+  $variables['date'] = format_date($node->created);
+  // @todo Change 'name' to 'author' and also convert to a render array pending
+  //   http://drupal.org/node/1941286.
+  $variables['name'] = theme('username', array(
     'account' => $node,
     'link_attributes' => array('rel' => 'author'),
   ));
 
   $uri = $node->uri();
   $variables['node_url']  = url($uri['path'], $uri['options']);
-  $variables['label']     = check_plain($node->label());
-  $variables['page']      = $variables['view_mode'] == 'full' && node_is_page($node);
-
-  // Make useful flags and node data available.
-  // @todo: The comment properties only exist if comment.module is enabled, but
-  //   are documented in node.tpl.php, so we make sure that they are set.
-  //   Consider removing them.
-  $properties = array('type', 'comment_count', 'uid', 'created', 'promote', 'sticky', 'status', 'comment');
-  foreach ($properties as $property) {
-    $variables[$property] = isset($node->$property) ? $node->$property : NULL;
-  }
+  $variables['label'] = check_plain($node->label());
+  $variables['page'] = $variables['view_mode'] == 'full' && node_is_page($node);
 
   // Helpful $content variable for templates.
   $variables += array('content' => array());
@@ -1186,6 +1178,8 @@ function template_preprocess_node(&$variables) {
   // Clean up name so there are no underscores.
   $variables['theme_hook_suggestions'][] = 'node__' . $node->type;
   $variables['theme_hook_suggestions'][] = 'node__' . $node->nid;
+
+  $variables['content_attributes']['class'][] = 'content';
 }
 
 /**

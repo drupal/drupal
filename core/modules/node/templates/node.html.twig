@@ -4,8 +4,25 @@
  * Default theme implementation to display a node.
  *
  * Available variables:
- * - label: the title of the node.
- * - content: node items. Use {{ content }} to print them all,
+ * - node: Full node entity.
+ *   - type: The type of the node, for example, "page" or "article".
+ *   - uid: The user ID of the node author.
+ *   - created: Formatted creation date. Preprocess functions can reformat it by
+ *     calling format_date() with the desired parameters on
+ *     $variables['node']->created.
+ *   - promote: Whether the node is promoted to the front page.
+ *   - sticky: Whether the node is 'sticky'. Sticky nodes are ordered above
+ *     other non-sticky nodes in teaser listings
+ *   - status: Whether the node is published.
+ *   - comment: A value representing the comment status of the current node. May
+ *     be one of the following:
+ *     - 0: The comment form and any existing comments are hidden.
+ *     - 1: Comments are closed. No new comments may be posted, but existing
+ *       comments are displayed.
+ *     - 2: Comments are open on this node.
+ *   - comment_count: Number of comments attached to the node.
+ * - label: The title of the node.
+ * - content: All node items. Use {{ content }} to print them all,
  *   or print a subset such as {{ content.field_example }}. Use
  *   {% hide(content.field_example) %} to temporarily suppress the printing
  *   of a given element.
@@ -18,40 +35,28 @@
  * - display_submitted: Whether submission information should be displayed.
  * - submitted: Submission information created from name and date during
  *   template_preprocess_node().
- * - attributes: HTML attributes for the surrounding element.
- *    Attributes include the 'class' information, which contains:
- *   - node: The current template type; for example, "theming hook".
+ * - attributes: HTML attributes for the containing element.
+ *   The attributes.class element may contain one or more of the following
+ *   classes:
+ *   - node: The current template type (also known as a "theming hook").
  *   - node-[type]: The current node type. For example, if the node is a
  *     "Article" it would result in "node-article". Note that the machine
  *     name will often be in a short form of the human readable label.
- *   - view-mode-[view_mode]: The View Mode of the node; for example, "teaser"
- *     or "full".
- *   - preview: Nodes in preview mode.
+ *   - view-mode-[view_mode]: The View Mode of the node; for example, a teaser
+ *     would result in: "view-mode-teaser", and full: "view-mode-full".
+ *   - preview: Whether a node is in preview mode.
  *   The following are controlled through the node publishing options.
- *   - promoted: Nodes promoted to the front page.
- *   - sticky: Nodes ordered above other non-sticky nodes in teaser
+ *   - promoted: Appears on nodes promoted to the front page.
+ *   - sticky: Appears on nodes ordered above other non-sticky nodes in teaser
  *     listings.
- *   - unpublished: Unpublished nodes visible only to administrators.
+ *   - unpublished: Appears on unpublished nodes visible only to site admins.
  * - title_prefix: Additional output populated by modules, intended to be
  *   displayed in front of the main title tag that appears in the template.
  * - title_suffix: Additional output populated by modules, intended to be
  *   displayed after the main title tag that appears in the template.
- *
- * Other variables:
- * - node: Fully loaded node entity.
- * - type: Node type; for example, page, article, etc.
- * - comment_count: Number of comments attached to the node.
- * - uid: User ID of the node author.
- * - created: Time the node was published formatted as a Unix timestamp.
- *
- * Node status variables:
  * - view_mode: View mode; for example, "teaser" or "full".
  * - teaser: Flag for the teaser state. Will be true if view_mode is 'teaser'.
  * - page: Flag for the full page state. Will be true if view_mode is 'full'.
- * - promote: Flag for front page promotion state.
- * - sticky: Flag for sticky post setting.
- * - status: Flag for published status.
- * - comment: State of comment settings for the node.
  * - readmore: Flag for more state. Will be true if the teaser content of the
  *   node cannot hold the main body content.
  * - is_front: Flag for front. Will be true when presented on the front page.
@@ -60,15 +65,19 @@
  * - is_admin: Flag for admin user status. Will be true when the current user
  *   is an administrator.
  *
- * Field variables: for each field instance attached to the node a corresponding
- * variable is defined; for example, $node->body becomes body. When needing to
+ * In field variables, each field instance attached to the node a corresponding
+ * variable is defined; for example, 'node.body' becomes 'body'. When needing to
  * access a field's raw values, developers/themers are strongly encouraged to
  * use these variables. Otherwise they will have to explicitly specify the
- * desired field language; for example, $node->body['en'], thus overriding any
- * language negotiation rule that was previously applied.
+ * desired field language; for example, 'node.body.en', thus overriding any
+ * language negotiation rule that may have been applied previously.
  *
  * @see template_preprocess()
  * @see template_preprocess_node()
+ *
+ * @todo Remove the id attribute (or make it a class), because if that gets
+ *   rendered twice on a page this is invalid CSS for example: two lists
+ *   in different view modes.
  *
  * @ingroup themeable
  */
@@ -90,7 +99,7 @@
     </footer>
   {% endif %}
 
-  <div class="content"{{ content_attributes }}>
+  <div{{ content_attributes }}>
     {# We hide the comments and links now so that we can render them later. #}
     {% hide(content.comments) %}
     {% hide(content.links) %}
