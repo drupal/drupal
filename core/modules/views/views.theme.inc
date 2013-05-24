@@ -910,12 +910,16 @@ function template_preprocess_views_view_rss(&$vars) {
 }
 
 /**
- * Default theme function for all RSS rows.
+ * Prepares variables for views RSS item templates.
+ *
+ * Default template: views-view-row-rss.html.twig.
+ *
+ * @param array $vars
+ *   An associative array containing:
+ *   - row: The raw results rows.
  */
 function template_preprocess_views_view_row_rss(&$vars) {
-  $view     = &$vars['view'];
-  $options  = &$vars['options'];
-  $item     = &$vars['row'];
+  $item = $vars['row'];
 
   $vars['title'] = check_plain($item->title);
   $vars['link'] = check_url($item->link);
