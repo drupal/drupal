@@ -1,0 +1,57 @@
+{#
+/**
+ * @file
+ * Seven's theme implementation to display a single Drupal page while offline.
+ *
+ * All of the available variables are mirrored in page.html.twig.
+ *
+ * @see template_preprocess()
+ * @see template_preprocess_maintenance_page()
+ * @see seven_preprocess_maintenance_page()
+ *
+ * @ingroup themeable
+ */
+#}
+<!DOCTYPE html>
+<html lang="{{ language.langcode }}" dir="{{ language.dir }}">
+  <head>
+    <title>{{ head_title }}</title>
+    {{ head }}
+    {{ styles }}
+    {{ scripts }}
+  </head>
+  <body{{ attributes }}>
+
+  {{ page_top }}
+
+  <header id="branding">
+    {% if title %}<h1 class="page-title">{{ title }}</h1>{% endif %}
+  </header>
+
+  <div id="page">
+    <div id="sidebar-first" class="sidebar">
+      {% if logo %}
+        <img id="logo" src="{{ logo }}" alt="{{ site_name }}" />
+      {% endif %}
+      {{ sidebar_first }}
+    </div>
+
+    <main id="content" class="clearfix">
+      {% if messages %}
+        <div id="console">{{ messages }}</div>
+      {% endif %}
+      {% if help %}
+        <div id="help">
+          {{ help }}
+        </div>
+      {% endif %}
+      {{ content }}
+    </main>
+  </div>
+
+  <footer role="contentinfo">
+    {{ page_bottom }}
+  </footer>
+
+  </body>
+</html>
