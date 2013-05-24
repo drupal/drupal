@@ -396,11 +396,20 @@ function template_preprocess_views_view_summary(&$vars) {
 }
 
 /**
- * Template preprocess theme function to print summary basically
- * unformatted.
+ * Prepares variables for unformatted summary view templates.
+ *
+ * Default template: views-view-summary-unformatted.html.twig.
+ *
+ * @param array $vars
+ *   An associative array containing:
+ *   - view: A ViewExecutable object.
+ *   - rows: The raw row data.
+ *   - options: An array of options. Each option contains:
+ *     - separator: A string to be placed between inline fields to keep them
+ *       visually distinct.
  */
 function template_preprocess_views_view_summary_unformatted(&$vars) {
-  $view     = $vars['view'];
+  $view = $vars['view'];
   $argument = $view->argument[$view->build_info['summary_level']];
   $vars['row_classes'] = array();
 
@@ -412,12 +421,15 @@ function template_preprocess_views_view_summary_unformatted(&$vars) {
 
   $count = 0;
   $active_urls = drupal_map_assoc(array(
-    url(current_path(), array('alias' => TRUE)), // force system path
-    url(current_path()), // could be an alias
+    // Force system path.
+    url(current_path(), array('alias' => TRUE)),
+    // Could be an alias.
+    url(current_path()),
   ));
 
-  // Collect all arguments foreach row, to be able to alter them for example by the validator.
-  // This is not done per single argument value, because this could cause performance problems.
+  // Collect all arguments for each row, to be able to alter them for example
+  // by the validator. This is not done per single argument value, because
+  // this could cause performance problems.
   $row_args = array();
   foreach ($vars['rows'] as $id => $row) {
     $row_args[$id] = $argument->summary_argument($row);
@@ -425,7 +437,7 @@ function template_preprocess_views_view_summary_unformatted(&$vars) {
   $argument->process_summary_arguments($row_args);
 
   foreach ($vars['rows'] as $id => $row) {
-    // only false on first time:
+    // Only false on first time.
     if ($count++) {
       $vars['rows'][$id]->separator = filter_xss_admin($vars['options']['separator']);
     }
