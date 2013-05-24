@@ -1553,9 +1553,14 @@ function comment_prepare_author(Comment $comment) {
 }
 
 /**
- * Preprocesses variables for comment.tpl.php.
+ * Prepares variables for comment templates.
  *
- * @see comment.tpl.php
+ * Default template: comment.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the comment and node objects.
+ *     Array keys: #comment, #node.
  */
 function template_preprocess_comment(&$variables) {
   $comment = $variables['elements']['#comment'];
@@ -1564,6 +1569,7 @@ function template_preprocess_comment(&$variables) {
   $variables['node'] = $node;
 
   $account = comment_prepare_author($comment);
+  // @todo Do not call theme() here. We do this for purposes of t().
   $variables['author'] = theme('username', array('account' => $account));
   $variables['new'] = $comment->new->value ? t('new') : '';
   $variables['created'] = format_date($comment->created->value);
@@ -1583,6 +1589,7 @@ function template_preprocess_comment(&$variables) {
   else {
     $variables['user_picture'] = array();
   }
+
   if (config('user.settings')->get('signatures') && !empty($account->signature)) {
     $variables['signature'] = check_markup($account->signature, $account->signature_format, '', TRUE) ;
   }
@@ -1602,6 +1609,7 @@ function template_preprocess_comment(&$variables) {
     $comment_parent = $comment->pid->entity;
     $account_parent = comment_prepare_author($comment_parent);
     $variables['parent_comment'] = $comment_parent;
+    // @todo Do not call theme() here. We do this for purposes of t().
     $variables['parent_author'] = theme('username', array('account' => $account_parent));
     $variables['parent_created'] = format_date($comment_parent->created->value);
     // Avoid calling format_date() twice on the same timestamp.
@@ -1664,6 +1672,10 @@ function template_preprocess_comment(&$variables) {
       $variables['attributes']['class'][] = 'by-viewer';
     }
   }
+  // Add clearfix class.
+  $variables['attributes']['class'][] = 'clearfix';
+
+  $variables['content_attributes']['class'][] = 'content';
 }
 
 /**
@@ -1714,19 +1726,31 @@ function theme_comment_post_forbidden($variables) {
 }
 
 /**
- * Preprocesses variables for comment-wrapper.tpl.php.
+ * Prepares variables for comment wrapper templates.
  *
- * @see comment-wrapper.tpl.php
+ * Default template: comment-wrapper.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - content: An associative array containing render arrays for the list of
+ *     comments, and the comment form. Array keys: comments, comment_form.
  */
 function template_preprocess_comment_wrapper(&$variables) {
   // Provide contextual information.
   $variables['node'] = $variables['content']['#node'];
   $variables['display_mode'] = variable_get('comment_default_mode_' . $variables['node']->type, COMMENT_MODE_THREADED);
+
   // The comment form is optional and may not exist.
   $variables['content'] += array('comment_form' => array());
 
+  $variables['attributes']['id'] = 'comments';
+
   // Add a comment wrapper class.
   $variables['attributes']['class'][] = 'comment-wrapper';
+
+  // Create separate variables for the comments and comment form.
+  $variables['comments'] = $variables['content']['comments'];
+  $variables['form'] = $variables['content']['comment_form'];
 }
 
 /**

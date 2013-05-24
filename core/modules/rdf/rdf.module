@@ -701,7 +701,7 @@ function rdf_preprocess_username(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for comment.tpl.php.
+ * Implements hook_preprocess_HOOK() for comment.html.twig.
  */
 function rdf_preprocess_comment(&$variables) {
   $comment = $variables['comment'];
@@ -848,7 +848,7 @@ function rdf_preprocess_image(&$variables) {
  *     - variable_name: The name of the variable by which the template will
  *       refer to this content. Each template file has documentation about
  *       the variables it uses. For example, if this function is called in
- *       preparing the $author variable for comment.tpl.php, then the
+ *       preparing the $author variable for comment.html.twig, then the
  *       'variable_name' is 'author'.
  *     - variables: The full array of variables about to be passed to the
  *       template.
