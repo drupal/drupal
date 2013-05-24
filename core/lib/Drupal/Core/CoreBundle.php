@@ -99,7 +99,9 @@ class CoreBundle extends Bundle {
         // This is saved / loaded via drupal_php_storage().
         // All files can be refreshed by clearing caches.
         // @todo ensure garbage collection of expired files.
-        'cache' => settings()->get('twig_cache', TRUE),
+        // When in the installer, twig_cache must be FALSE until we know the
+        // files folder is writable.
+        'cache' => ((MAINTENANCE_MODE != 'install') ? settings()->get('twig_cache', TRUE) : FALSE),
         'base_template_class' => 'Drupal\Core\Template\TwigTemplate',
         // @todo Remove in followup issue
         // @see http://drupal.org/node/1712444.
