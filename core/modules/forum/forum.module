@@ -982,9 +982,11 @@ function forum_preprocess_block(&$variables) {
 }
 
 /**
- * Preprocesses variables for forums.tpl.php.
+ * Prepares variables for forums templates.
  *
- * @param $variables
+ * Default template: forums.html.twig.
+ *
+ * @param array $variables
  *   An array containing the following elements:
  *   - forums: An array of all forum objects to display for the given taxonomy
  *     term ID. If tid = 0 then all the top-level forums are displayed.
@@ -998,23 +1000,32 @@ function forum_preprocess_block(&$variables) {
  *     - 3: Posts with the most comments first.
  *     - 4: Posts with the least comments first.
  *   - forum_per_page: The maximum number of topics to display per page.
- *
- * @see forums.tpl.php
  */
 function template_preprocess_forums(&$variables) {
   if ($variables['forums_defined'] = count($variables['forums']) || count($variables['parents'])) {
     if (!empty($variables['forums'])) {
-      $variables['forums'] = theme('forum_list', $variables);
+      $variables['forums'] = array(
+        '#theme' => 'forum_list',
+        '#forums' => $variables['forums'],
+        '#parents' => $variables['parents'],
+        '#tid' => $variables['tid'],
+      );
     }
     else {
-      $variables['forums'] = '';
+      $variables['forums'] = array();
     }
 
     if ($variables['tid'] && array_search($variables['tid'], config('forum.settings')->get('containers')) === FALSE) {
-      $variables['topics'] = theme('forum_topic_list', $variables);
+      $variables['topics'] = array(
+        '#theme' => 'forum_topic_list',
+        '#tid' => $variables['tid'],
+        '#topics' => $variables['topics'],
+        '#sortby' => $variables['sortby'],
+        '#forum_per_page' => $variables['forum_per_page'],
+      );
     }
     else {
-      $variables['topics'] = '';
+      $variables['topics'] = array();
     }
 
     // Provide separate template suggestions based on what's being output. Topic id is also accounted for.
@@ -1035,24 +1046,23 @@ function template_preprocess_forums(&$variables) {
 
   }
   else {
-    $variables['forums'] = '';
-    $variables['topics'] = '';
+    $variables['forums'] = array();
+    $variables['topics'] = array();
   }
 }
 
 /**
- * Preprocesses variables for forum-list.tpl.php.
+ * Prepares variables for forum list templates.
  *
- * @param $variables
+ * Default template: forum-list.html.twig.
+ *
+ * @param array $variables
  *   An array containing the following elements:
  *   - forums: An array of all forum objects to display for the given taxonomy
  *     term ID. If tid = 0 then all the top-level forums are displayed.
  *   - parents: An array of taxonomy term objects that are ancestors of the
  *     current term ID.
  *   - tid: Taxonomy term ID of the current forum.
- *
- * @see forum-list.tpl.php
- * @see theme_forum_list()
  */
 function template_preprocess_forum_list(&$variables) {
   global $user;
@@ -1084,22 +1094,26 @@ function template_preprocess_forum_list(&$variables) {
     }
     $variables['forums'][$id]->last_reply = theme('forum_submitted', array('topic' => $forum->last_post));
   }
-  // Give meaning to $tid for themers. $tid actually stands for term id.
+
+  $variables['pager'] = array(
+   '#theme' => 'pager',
+  );
+
+  // Give meaning to $tid for themers. $tid actually stands for term ID.
   $variables['forum_id'] = $variables['tid'];
   unset($variables['tid']);
 }
 
 /**
- * Preprocesses variables for forum-topic-list.tpl.php.
+ * Prepares variables for forum topic list templates.
  *
- * @param $variables
+ * Default template: forum-topic-list.html.twig.
+ *
+ * @param array $variables
  *   An array containing the following elements:
  *   - tid: Taxonomy term ID of the current forum.
  *   - topics: An array of all the topics in the current forum.
  *   - forum_per_page: The maximum number of topics to display per page.
- *
- * @see forum-topic-list.tpl.php
- * @see theme_forum_topic_list()
  */
 function template_preprocess_forum_topic_list(&$variables) {
   global $forum_topic_list_header;
@@ -1116,7 +1130,14 @@ function template_preprocess_forum_topic_list(&$variables) {
   if (!empty($variables['topics'])) {
     $row = 0;
     foreach ($variables['topics'] as $id => $topic) {
-      $variables['topics'][$id]->icon = theme('forum_icon', array('new_posts' => $topic->new, 'num_posts' => $topic->comment_count, 'comment_mode' => $topic->comment_mode, 'sticky' => $topic->sticky, 'first_new' => $topic->first_new));
+      $variables['topics'][$id]->icon = array(
+        '#theme' => 'forum_icon',
+        '#new_posts' => $topic->new,
+        '#num_posts' => $topic->comment_count,
+        '#comment_mode' => $topic->comment_mode,
+        '#sticky' => $topic->sticky,
+        '#first_new' => $topic->first_new,
+      );
       $variables['topics'][$id]->zebra = $row % 2 == 0 ? 'odd' : 'even';
       $row++;
 
@@ -1153,13 +1174,17 @@ function template_preprocess_forum_topic_list(&$variables) {
   $variables['topic_id'] = $variables['tid'];
   unset($variables['tid']);
 
-  $variables['pager'] = theme('pager');
+  $variables['pager'] = array(
+    '#theme' => 'pager',
+  );
 }
 
 /**
- * Preprocesses variables for forum-icon.tpl.php.
+ * Prepares variables for forum icon templates.
  *
- * @param $variables
+ * Default template: forum-icon.html.twig.
+ *
+ * @param array $variables
  *   An array containing the following elements:
  *   - new_posts: Indicates whether or not the topic contains new posts.
  *   - num_posts: The total number of posts in all topics.
@@ -1167,44 +1192,45 @@ function template_preprocess_forum_topic_list(&$variables) {
  *     or hidden.
  *   - sticky: Indicates whether the topic is sticky.
  *   - first_new: Indicates whether this is the first topic with new posts.
- *
- * @see forum-icon.tpl.php
- * @see theme_forum_icon()
  */
 function template_preprocess_forum_icon(&$variables) {
   $variables['hot_threshold'] = config('forum.settings')->get('topics.hot_threshold');
+
   if ($variables['num_posts'] > $variables['hot_threshold']) {
-    $variables['icon_class'] = $variables['new_posts'] ? 'hot-new' : 'hot';
+    $icon_status_class = $variables['new_posts'] ? 'hot-new' : 'hot';
     $variables['icon_title'] = $variables['new_posts'] ? t('Hot topic, new comments') : t('Hot topic');
   }
   else {
-    $variables['icon_class'] = $variables['new_posts'] ? 'new' : 'default';
+    $icon_status_class = $variables['new_posts'] ? 'new' : 'default';
     $variables['icon_title'] = $variables['new_posts'] ? t('New comments') : t('Normal topic');
   }
 
   if ($variables['comment_mode'] == COMMENT_NODE_CLOSED || $variables['comment_mode'] == COMMENT_NODE_HIDDEN) {
-    $variables['icon_class'] = 'closed';
+    $icon_status_class = 'closed';
     $variables['icon_title'] = t('Closed topic');
   }
 
   if ($variables['sticky'] == 1) {
-    $variables['icon_class'] = 'sticky';
+    $icon_status_class = 'sticky';
     $variables['icon_title'] = t('Sticky topic');
   }
+
+  $variables['attributes']['class'][] = 'icon';
+  $variables['attributes']['class'][] = 'topic-status-' . $icon_status_class;
+  $variables['attributes']['title'] = $variables['icon_title'];
 }
 
 /**
- * Preprocesses variables for forum-submitted.tpl.php.
+ * Prepares variables for forum submission information templates.
  *
  * The submission information will be displayed in the forum list and topic
  * list.
  *
- * @param $variables
+ * Default template: forum-submitted.html.twig.
+ *
+ * @param array $variables
  *   An array containing the following elements:
  *   - topic: The topic object.
- *
- * @see forum-submitted.tpl.php
- * @see theme_forum_submitted()
  */
 function template_preprocess_forum_submitted(&$variables) {
   $variables['author'] = isset($variables['topic']->uid) ? theme('username', array('account' => $variables['topic'])) : '';
