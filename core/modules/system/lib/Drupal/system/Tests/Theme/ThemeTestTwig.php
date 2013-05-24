@@ -63,8 +63,8 @@ class ThemeTestTwig extends WebTestBase {
     $this->assertEqual($cache['node']['template_file'], 'core/modules/node/templates/node.html.twig', 'Node is using node.html.twig as template file');
     $this->assertEqual($cache['node']['engine'], 'twig', 'Node is using twig engine');
 
-    $this->assertEqual($cache['theme_test_template_test']['template_file'], 'core/modules/system/tests/modules/theme_test/templates/theme_test.template_test.tpl.php', 'theme_test is using theme_test.template_test.tpl.php as template file');
-    $this->assertEqual($cache['theme_test_template_test']['engine'], 'phptemplate', 'theme_test is using phptemplate as engine.');
+    $this->assertEqual($cache['theme_test_template_test']['template_file'], 'core/modules/system/tests/modules/theme_test/templates/theme_test.template_test.html.twig', 'theme_test is using theme_test.template_test.html.twig as template file');
+    $this->assertEqual($cache['theme_test_template_test']['engine'], 'twig', 'theme_test is using twig as engine.');
 
     $templates = drupal_find_theme_templates($cache, '.html.twig', drupal_get_path('theme', 'test_theme_twig'));
     $this->assertEqual($templates['node__1']['template'], 'node--1', 'Template node--1.html.twig was found in test_theme_twig.');
