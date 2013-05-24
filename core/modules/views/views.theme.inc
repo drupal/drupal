@@ -328,10 +328,19 @@ function template_preprocess_views_view_field(&$vars) {
 }
 
 /**
- * Preprocess theme function to print a single record from a row, with fields
+ * Prepares variables for views summary templates.
+ *
+ * The summary prints a single record from a row, with fields.
+ *
+ * Default template: views-view-summary.html.twig.
+ *
+ * @param array $vars
+ *   An associative array containing:
+ *   - view: A ViewExecutable object.
+ *   - rows: The raw row data.
  */
 function template_preprocess_views_view_summary(&$vars) {
-  $view     = $vars['view'];
+  $view = $vars['view'];
   $argument = $view->argument[$view->build_info['summary_level']];
   $vars['row_classes'] = array();
 
@@ -346,8 +355,9 @@ function template_preprocess_views_view_summary(&$vars) {
     url(current_path()), // could be an alias
   ));
 
-  // Collect all arguments foreach row, to be able to alter them for example by the validator.
-  // This is not done per single argument value, because this could cause performance problems.
+  // Collect all arguments foreach row, to be able to alter them for example
+  // by the validator. This is not done per single argument value, because this
+  // could cause performance problems.
   $row_args = array();
 
   foreach ($vars['rows'] as $id => $row) {
@@ -356,7 +366,6 @@ function template_preprocess_views_view_summary(&$vars) {
   $argument->process_summary_arguments($row_args);
 
   foreach ($vars['rows'] as $id => $row) {
-
     $vars['rows'][$id]->link = $argument->summary_name($row);
     $args = $view->args;
     $args[$argument->position] = $row_args[$id];
@@ -367,7 +376,6 @@ function template_preprocess_views_view_summary(&$vars) {
     }
     $vars['rows'][$id]->url = url($view->getUrl($args, $base_path), $url_options);
     $vars['rows'][$id]->count = intval($row->{$argument->count_alias});
-
     $vars['row_classes'][$id] = array();
     if (isset($active_urls[$vars['rows'][$id]->url])) {
       $vars['row_classes'][$id]['class'][] = 'active';
