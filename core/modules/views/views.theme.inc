@@ -829,10 +829,16 @@ function template_preprocess_views_view_unformatted(&$vars) {
 }
 
 /**
- * Display the view as an HTML list element
+ * Prepares variables for Views HTML list templates.
+ *
+ * Default template: views-view-list.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - view: A View object.
  */
-function template_preprocess_views_view_list(&$vars) {
-  $handler  = $vars['view']->style_plugin;
+function template_preprocess_views_view_list(&$variables) {
+  $handler  = $variables['view']->style_plugin;
 
   // Fetch classes from handler options.
   $class = explode(' ', $handler->options['class']);
@@ -842,20 +848,16 @@ function template_preprocess_views_view_list(&$vars) {
   $wrapper_class = explode(' ', $handler->options['wrapper_class']);
   $wrapper_class = array_map('drupal_clean_css_identifier', $wrapper_class);
 
-  // Initialize a new attribute class for $class.
-  $attributes = new Attribute(array('class' => $class));
-
   // Initialize a new attribute class for $wrapper_class.
   if ($wrapper_class) {
-    $wrapper_class = new Attribute(array('class' => $wrapper_class));
-    $vars['wrapper_prefix'] = '<div' . $wrapper_class . '>';
-    $vars['wrapper_suffix'] = '</div>';
+    $variables['wrapper_attributes'] = new Attribute(array('class' => $wrapper_class));
   }
 
-  $vars['list_type_prefix'] = '<' . $handler->options['type'] . $attributes . '>';
-  $vars['list_type_suffix'] = '</' . $handler->options['type'] . '>';
+  // Initialize a new attribute class for $class.
+  $variables['list']['attributes'] = new Attribute(array('class' => $class));
+  $variables['list']['type'] = $handler->options['type'];
 
-  template_preprocess_views_view_unformatted($vars);
+  template_preprocess_views_view_unformatted($variables);
 }
 
 /**
