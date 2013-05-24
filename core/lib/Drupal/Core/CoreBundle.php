@@ -101,7 +101,7 @@ class CoreBundle extends Bundle {
         // @todo ensure garbage collection of expired files.
         // When in the installer, twig_cache must be FALSE until we know the
         // files folder is writable.
-        'cache' => ((MAINTENANCE_MODE != 'install') ? settings()->get('twig_cache', TRUE) : FALSE),
+        'cache' => drupal_installation_attempted() ? FALSE : settings()->get('twig_cache', TRUE),
         'base_template_class' => 'Drupal\Core\Template\TwigTemplate',
         // @todo Remove in followup issue
         // @see http://drupal.org/node/1712444.
