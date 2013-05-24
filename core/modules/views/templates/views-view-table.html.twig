@@ -1,0 +1,54 @@
+{#
+/**
+ * @file
+ * Default theme implementation for displaying a view as a table.
+ *
+ * Available variables:
+ * - attributes: Remaining HTML attributes for the element.
+ *   - class: HTML classes that can be used to style contextually through CSS.
+ * - title : The title of this group of rows.
+ * - header: Header labels.
+ * - header_classes: HTML classes to apply to each header cell, indexed by
+ *   the header's key.
+ * - rows: Table row items. Rows are keyed by row number, fields within rows
+ *   are keyed by field ID.
+ *   - field: Table data field ID.
+ *   - content: Table data content.
+ * - row_classes: HTML classes to apply to each row, indexed by row number.
+ *   This matches the index in rows.
+ * - field_classes: HTML classes to apply to each row, indexed by row number.
+ *   This matches the index in columns and rows.
+ *
+ * @see template_preprocess()
+ * @see template_preprocess_views_view_table()
+ *
+ * @ingroup themeable
+ */
+#}
+<table{{ attributes }}>
+  {% if title is not empty %}
+    <caption>{{ title }}</caption>
+  {% endif %}
+  {% if header %}
+    <thead>
+      <tr>
+        {% for key, field in header %}
+          <th{{ header_classes[key] }} scope="col">
+            {{ field }}
+          </th>
+        {% endfor %}
+      </tr>
+    </thead>
+  {% endif %}
+  <tbody>
+    {% for row_count, row in rows %}
+      <tr{{ row_classes[row_count] }}>
+        {% for field, content in row %}
+          <td{{ field_classes[field][row_count] }}>
+            {{ content }}
+          </td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
