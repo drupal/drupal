@@ -328,6 +328,10 @@ class TermTest extends TaxonomyTestBase {
     $this->assertText($edit['name'], 'The randomly generated term name is present.');
     $this->assertLink(t('edit'));
 
+    // Check the term link can be clicked through to the term page.
+    $this->clickLink($edit['name']);
+    $this->assertResponse(200, 'Term page can be accessed via the listing link.');
+
     // View the term and check that it is correct.
     $this->drupalGet('taxonomy/term/' . $term->id());
     $this->assertText($edit['name'], 'The randomly generated term name is present.');
