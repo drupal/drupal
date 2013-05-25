@@ -465,10 +465,6 @@ function block_list($region) {
     $blocks[$region] = array();
   }
 
-  uasort($blocks[$region], function($first, $second) {
-    return $first->weight < $second->weight ? ($first->weight === $second->weight ? 0 : -1) : 1;
-  });
-
   return $blocks[$region];
 }
 
