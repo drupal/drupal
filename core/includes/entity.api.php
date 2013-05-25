@@ -344,7 +344,7 @@ function hook_entity_view(\Drupal\Core\Entity\EntityInterface $entity, \Drupal\e
  * If a module wishes to act on the rendered HTML of the entity rather than the
  * structured content array, it may use this hook to add a #post_render
  * callback. Alternatively, it could also implement hook_preprocess_HOOK() for
- * the particular entity type template, if there is one (e.g., node.tpl.php).
+ * the particular entity type template, if there is one (e.g., node.html.twig).
  * See drupal_render() and theme() for details.
  *
  * @param $build

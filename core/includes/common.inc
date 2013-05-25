@@ -4994,14 +4994,14 @@ function drupal_pre_render_link($element) {
  *
  * In this example, the links are grouped by functionality, which can be
  * helpful to themers who want to display certain kinds of links independently.
- * For example, adding this code to node.tpl.php will result in the comment
+ * For example, adding this code to node.html.twig will result in the comment
  * links being rendered as a single list:
  * @code
  * print render($content['links']['comment']);
  * @endcode
  *
  * (where $node->content has been transformed into $content before handing
- * control to the node.tpl.php template).
+ * control to the node.html.twig template).
  *
  * The pre_render function defined here allows the above flexibility, but also
  * allows the following code to be used to render all remaining links into a

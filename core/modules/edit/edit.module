@@ -137,7 +137,7 @@ function edit_preprocess_field(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for node.tpl.php.
+ * Implements hook_preprocess_HOOK() for node.html.twig.
  *
  * @todo Remove this, handle in generic way: http://drupal.org/node/1972514.
  */
