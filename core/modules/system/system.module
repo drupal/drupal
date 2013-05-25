@@ -1538,6 +1538,9 @@ function system_library_info() {
     'js' => array(
       'core/misc/matchmedia.js' => array(),
     ),
+    'dependencies' => array(
+      array('system', 'drupal.debounce'),
+    ),
   );
 
   // Farbtastic.
