@@ -2683,16 +2683,16 @@ function system_preprocess_block(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for system-plugin-ui-form.tpl.php.
+ * Prepares variables for system plugin UI form templates.
  *
- * The $variables array contains the following arguments:
- * - $form
- */
+ * Default template: system-plugin-ui-form.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - form: The plugin form elements.
+*/
 function template_preprocess_system_plugin_ui_form(&$variables) {
   drupal_add_css(drupal_get_path('module', 'system') . '/system.plugin.ui.css');
-  $variables['left'] = drupal_render($variables['form']['left']);
-  $variables['right'] = drupal_render($variables['form']['right']);
-  $variables['form_submit'] = drupal_render_children($variables['form']);
 }
 
 /**
