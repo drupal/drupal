@@ -1,9 +1,0 @@
-name: 'Taxonomy test module'
-type: module
-description: '"Tests functions and hooks not used in core".'
-package: Testing
-version: VERSION
-core: 8.x
-hidden: true
-dependencies:
-  - taxonomy

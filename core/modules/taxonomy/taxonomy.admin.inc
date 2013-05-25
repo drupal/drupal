@@ -245,7 +245,7 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
       '#prefix' => isset($term->depth->value) && $term->depth->value > 0 ? theme('indentation', array('size' => $term->depth->value)) : '',
       '#type' => 'link',
       '#title' => $term->label(),
-      '#href' => "taxonomy/term/$term->id()",
+      '#href' => "taxonomy/term/" . $term->id(),
     );
     if ($vocabulary->hierarchy != TAXONOMY_HIERARCHY_MULTIPLE && count($tree) > 1) {
       $parent_fields = TRUE;
