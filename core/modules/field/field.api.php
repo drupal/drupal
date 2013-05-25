@@ -970,7 +970,7 @@ function hook_field_attach_update(\Drupal\Core\Entity\EntityInterface $entity) {
 /**
  * Alter field_attach_preprocess() variables.
  *
- * This hook is invoked while preprocessing the field.tpl.php template file in
+ * This hook is invoked while preprocessing field templates in
  * field_attach_preprocess().
  *
  * @param $variables

@@ -1,0 +1,26 @@
+{#
+/**
+ * @file
+ * Default theme implementation for each "box" on the display query edit screen.
+ *
+ * Available variables:
+ * - attributes: HTML attributes to apply to the container element.
+ * - actions: Action links such as "Add", "And/Or, Rearrange" for the content.
+ * - title: The title of the bucket, e.g. "Fields", "Filter Criteria", etc.
+ * - content: Content items such as fields or settings in this container.
+ *
+ * @see template_preprocess()
+ * @see template_preprocess_views_ui_display_tab_bucket()
+ *
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes }}>
+  {% if title -%}
+    <h3>{{ title }}</h3>
+  {%- endif %}
+  {{ content }}
+  {% if actions -%}
+    {{ actions }}
+  {%- endif %}
+</div>

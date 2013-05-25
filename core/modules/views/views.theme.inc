@@ -296,8 +296,19 @@ function template_preprocess_views_view_fields(&$vars) {
 }
 
 /**
- * Process a single grouping within a view.
- */
+ * Prepares variables for views single grouping templates.
+ *
+ * Default template: views-view-grouping.html.twig.
+ *
+ * @param array $vars
+ *   An associative array containing:
+ *   - view: The view object.
+ *   - rows: The rows returned from the view.
+ *   - grouping_level: Integer indicating the hierarchical level of the
+ *     grouping.
+ *   - content: The content to be grouped.
+ *   - title: The group heading.
+  */
 function template_preprocess_views_view_grouping(&$vars) {
   $vars['content'] = $vars['view']->style_plugin->render_grouping_sets($vars['rows'], $vars['grouping_level']);
 }
@@ -317,21 +328,35 @@ function theme_views_view_field($vars) {
 }
 
 /**
- * Process a single field within a view.
+ * Prepares variables for views field templates.
  *
- * This preprocess function isn't normally run, as a function is used by
- * default, for performance. However, by creating a template, this
- * preprocess should get picked up.
+ * Default template: views-view-field.html.twig.
+ *
+ * @param array $vars
+ *   An associative array containing:
+ *   - field: The field handler object for the current field.
+ *   - row: Object representing the raw result of the SQL query for the current
+ *     field.
+ *   - view: Instance of the ViewExecutable object for the parent view.
  */
 function template_preprocess_views_view_field(&$vars) {
   $vars['output'] = $vars['field']->advanced_render($vars['row']);
 }
 
 /**
- * Preprocess theme function to print a single record from a row, with fields
+ * Prepares variables for views summary templates.
+ *
+ * The summary prints a single record from a row, with fields.
+ *
+ * Default template: views-view-summary.html.twig.
+ *
+ * @param array $vars
+ *   An associative array containing:
+ *   - view: A ViewExecutable object.
+ *   - rows: The raw row data.
  */
 function template_preprocess_views_view_summary(&$vars) {
-  $view     = $vars['view'];
+  $view = $vars['view'];
   $argument = $view->argument[$view->build_info['summary_level']];
   $vars['row_classes'] = array();
 
@@ -346,8 +371,9 @@ function template_preprocess_views_view_summary(&$vars) {
     url(current_path()), // could be an alias
   ));
 
-  // Collect all arguments foreach row, to be able to alter them for example by the validator.
-  // This is not done per single argument value, because this could cause performance problems.
+  // Collect all arguments foreach row, to be able to alter them for example
+  // by the validator. This is not done per single argument value, because this
+  // could cause performance problems.
   $row_args = array();
 
   foreach ($vars['rows'] as $id => $row) {
@@ -356,7 +382,6 @@ function template_preprocess_views_view_summary(&$vars) {
   $argument->process_summary_arguments($row_args);
 
   foreach ($vars['rows'] as $id => $row) {
-
     $vars['rows'][$id]->link = $argument->summary_name($row);
     $args = $view->args;
     $args[$argument->position] = $row_args[$id];
@@ -367,7 +392,6 @@ function template_preprocess_views_view_summary(&$vars) {
     }
     $vars['rows'][$id]->url = url($view->getUrl($args, $base_path), $url_options);
     $vars['rows'][$id]->count = intval($row->{$argument->count_alias});
-
     $vars['row_classes'][$id] = array();
     if (isset($active_urls[$vars['rows'][$id]->url])) {
       $vars['row_classes'][$id]['class'][] = 'active';
@@ -377,11 +401,20 @@ function template_preprocess_views_view_summary(&$vars) {
 }
 
 /**
- * Template preprocess theme function to print summary basically
- * unformatted.
+ * Prepares variables for unformatted summary view templates.
+ *
+ * Default template: views-view-summary-unformatted.html.twig.
+ *
+ * @param array $vars
+ *   An associative array containing:
+ *   - view: A ViewExecutable object.
+ *   - rows: The raw row data.
+ *   - options: An array of options. Each option contains:
+ *     - separator: A string to be placed between inline fields to keep them
+ *       visually distinct.
  */
 function template_preprocess_views_view_summary_unformatted(&$vars) {
-  $view     = $vars['view'];
+  $view = $vars['view'];
   $argument = $view->argument[$view->build_info['summary_level']];
   $vars['row_classes'] = array();
 
@@ -393,12 +426,15 @@ function template_preprocess_views_view_summary_unformatted(&$vars) {
 
   $count = 0;
   $active_urls = drupal_map_assoc(array(
-    url(current_path(), array('alias' => TRUE)), // force system path
-    url(current_path()), // could be an alias
+    // Force system path.
+    url(current_path(), array('alias' => TRUE)),
+    // Could be an alias.
+    url(current_path()),
   ));
 
-  // Collect all arguments foreach row, to be able to alter them for example by the validator.
-  // This is not done per single argument value, because this could cause performance problems.
+  // Collect all arguments for each row, to be able to alter them for example
+  // by the validator. This is not done per single argument value, because
+  // this could cause performance problems.
   $row_args = array();
   foreach ($vars['rows'] as $id => $row) {
     $row_args[$id] = $argument->summary_argument($row);
@@ -406,7 +442,7 @@ function template_preprocess_views_view_summary_unformatted(&$vars) {
   $argument->process_summary_arguments($row_args);
 
   foreach ($vars['rows'] as $id => $row) {
-    // only false on first time:
+    // Only false on first time.
     if ($count++) {
       $vars['rows'][$id]->separator = filter_xss_admin($vars['options']['separator']);
     }
@@ -429,44 +465,52 @@ function template_preprocess_views_view_summary_unformatted(&$vars) {
 }
 
 /**
- * Display a view as a table style.
+ * Prepares variables for views table templates.
+ *
+ * Default template: views-view-table.html.twig.
+ *
+ * @param array $vars
+ *   An associative array containing:
+ *   - view: A ViewExecutable object.
+ *   - rows: The raw row data.
  */
 function template_preprocess_views_view_table(&$vars) {
-  $view     = $vars['view'];
+  $view = $vars['view'];
 
-  // We need the raw data for this grouping, which is passed in as $vars['rows'].
+  // We need the raw data for this grouping, which is passed in
+  // as $vars['rows'].
   // However, the template also needs to use for the rendered fields.  We
   // therefore swap the raw data out to a new variable and reset $vars['rows']
   // so that it can get rebuilt.
   // Store rows so that they may be used by further preprocess functions.
-  $result   = $vars['result'] = $vars['rows'];
+  $result = $vars['result'] = $vars['rows'];
   $vars['rows'] = array();
   $vars['field_classes'] = array();
   $vars['header'] = array();
 
-  $options  = $view->style_plugin->options;
-  $handler  = $view->style_plugin;
+  $options = $view->style_plugin->options;
+  $handler = $view->style_plugin;
 
   $default_row_class = isset($options['default_row_class']) ? $options['default_row_class'] : TRUE;
   $row_class_special = isset($options['row_class_special']) ? $options['row_class_special'] : TRUE;
 
-  $fields   = &$view->field;
-  $columns  = $handler->sanitize_columns($options['columns'], $fields);
+  $fields = &$view->field;
+  $columns = $handler->sanitize_columns($options['columns'], $fields);
 
-  $active   = !empty($handler->active) ? $handler->active : '';
-  $order    = !empty($handler->order) ? $handler->order : 'asc';
+  $active = !empty($handler->active) ? $handler->active : '';
+  $order = !empty($handler->order) ? $handler->order : 'asc';
 
   // A boolean variable which stores whether the table has a responsive class.
   $responsive = FALSE;
 
-  $query    = tablesort_get_query_parameters();
+  $query = tablesort_get_query_parameters();
   if (isset($view->exposed_raw_input)) {
     $query += $view->exposed_raw_input;
   }
 
   foreach ($columns as $field => $column) {
-    // Create a second variable so we can easily find what fields we have and what the
-    // CSS classes should be.
+    // Create a second variable so we can easily find what fields we have and
+    // what the CSS classes should be.
     $vars['fields'][$field] = drupal_clean_css_identifier($field);
     if ($active == $field) {
       $vars['fields'][$field] .= ' active';
@@ -516,11 +560,10 @@ function template_preprocess_views_view_table(&$vars) {
         $vars['header_classes'][$field]['class'][] = $options['info'][$field]['responsive'];
         $responsive = TRUE;
       }
-      // Add a CSS align class to each field if one was set
+      // Add a CSS align class to each field if one was set.
       if (!empty($options['info'][$field]['align'])) {
         $vars['header_classes'][$field]['class'][] = drupal_clean_css_identifier($options['info'][$field]['align']);
       }
-
       // Add a header label wrapper if one was selected.
       if ($vars['header'][$field]) {
         $element_label_type = $fields[$field]->element_label_type(TRUE, TRUE);
@@ -528,17 +571,16 @@ function template_preprocess_views_view_table(&$vars) {
           $vars['header'][$field] = '<' . $element_label_type . '>' . $vars['header'][$field] . '</' . $element_label_type . '>';
         }
       }
-
     }
 
-    // Add a CSS align class to each field if one was set
+    // Add a CSS align class to each field if one was set.
     if (!empty($options['info'][$field]['align'])) {
       $vars['fields'][$field] .= ' ' . drupal_clean_css_identifier($options['info'][$field]['align']);
     }
 
     // Render each field into its appropriate column.
     foreach ($result as $num => $row) {
-      // Add field classes
+      // Add field classes.
       $vars['field_classes'][$field][$num] = array();
       if ($fields[$field]->options['element_default_classes']) {
         $vars['field_classes'][$field][$num]['class'][] = 'views-field';
@@ -575,12 +617,12 @@ function template_preprocess_views_view_table(&$vars) {
         else {
           $vars['rows'][$num][$column] = '';
         }
-
         $vars['rows'][$num][$column] .= $field_output;
       }
     }
 
-    // Remove columns if the option is hide empty column is checked and the field is not empty.
+    // Remove columns if the option is hide empty column is checked and the
+    // field is not empty.
     if (!empty($options['info'][$field]['empty_column'])) {
       $empty = TRUE;
       foreach ($vars['rows'] as $num => $columns) {
@@ -639,7 +681,7 @@ function template_preprocess_views_view_table(&$vars) {
   $vars['attributes']['class'][] = 'cols-' . count($vars['header']);
 
   if (!empty($handler->options['summary'])) {
-    $vars['attributes_array'] = array('summary' => $handler->options['summary']);
+    $vars['attributes']['summary'] = $handler->options['summary'];
   }
   // If the table has headers and it should react responsively to columns hidden
   // with the classes represented by the constants RESPONSIVE_PRIORITY_MEDIUM
@@ -653,17 +695,23 @@ function template_preprocess_views_view_table(&$vars) {
 }
 
 /**
- * Display a view as a grid style.
+ * Prepares variables for views grid style templates.
+ *
+ * Default template: views-view-grid.html.twig.
+ *
+ * @param array $vars
+ *   An associative array containing:
+ *   - view: The view object.
+ *   - rows: An array of row items. Each row is an array of content.
  */
 function template_preprocess_views_view_grid(&$vars) {
-  $view     = $vars['view'];
-  $result   = $view->result;
-  $options  = $view->style_plugin->options;
-  $handler  = $view->style_plugin;
+  $view = $vars['view'];
+  $options = $view->style_plugin->options;
+  $handler = $view->style_plugin;
   $default_row_class = isset($options['default_row_class']) ? $options['default_row_class'] : TRUE;
   $row_class_special = isset($options['row_class_special']) ? $options['row_class_special'] : TRUE;
 
-  $columns  = $options['columns'];
+  $columns = $options['columns'];
   $vars['attributes']['class'][] = 'views-view-grid cols-' . $columns;
 
   $rows = array();
@@ -718,14 +766,14 @@ function template_preprocess_views_view_grid(&$vars) {
       }
     }
     for ($i = 0; $i < count($rows[0]); $i++) {
-      // This should be string so that's okay :)
+      // This should be a string so this is ok.
       if (!isset($rows[count($rows) - 1][$i])) {
         $rows[count($rows) - 1][$i] = '';
       }
     }
   }
 
-  // Apply the row classes
+  // Apply the row classes.
   foreach ($rows as $row_number => $row) {
     $row_classes = array();
     if ($default_row_class) {
@@ -762,21 +810,19 @@ function template_preprocess_views_view_grid(&$vars) {
   }
   $vars['rows'] = $rows;
   if (!empty($handler->options['summary'])) {
-    $vars['attributes_array'] = array('summary' => $handler->options['summary']);
-  }
-  // If the table has headers and it should react responsively to columns hidden
-  // with the classes represented by the constants RESPONSIVE_PRIORITY_MEDIUM
-  // and RESPONSIVE_PRIORITY_LOW, add the tableresponsive behaviors.
-  if (count($vars['header']) && $responsive) {
-    $vars['view']->element['#attached']['library'][] = array('system', 'drupal.tableresponsive');
-    // Add 'responsive-enabled' class to the table to identify it for JS.
-    // This is needed to target tables constructed by this function.
-    $vars['attributes']['class'][] = 'responsive-enabled';
+    $vars['attributes']['summary'] = $handler->options['summary'];
   }
 }
 
 /**
- * Display the simple view of rows one after another
+ * Prepares variables for views unformatted rows templates.
+ *
+ * Default template: views-view-unformatted.html.twig.
+ *
+ * @param array $vars
+ *   An associative array containing:
+ *   - view: The view object.
+ *   - rows: An array of row items. Each row is an array of content.
  */
 function template_preprocess_views_view_unformatted(&$vars) {
   $view = $vars['view'];
@@ -816,10 +862,16 @@ function template_preprocess_views_view_unformatted(&$vars) {
 }
 
 /**
- * Display the view as an HTML list element
+ * Prepares variables for Views HTML list templates.
+ *
+ * Default template: views-view-list.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - view: A View object.
  */
-function template_preprocess_views_view_list(&$vars) {
-  $handler  = $vars['view']->style_plugin;
+function template_preprocess_views_view_list(&$variables) {
+  $handler  = $variables['view']->style_plugin;
 
   // Fetch classes from handler options.
   $class = explode(' ', $handler->options['class']);
@@ -829,33 +881,35 @@ function template_preprocess_views_view_list(&$vars) {
   $wrapper_class = explode(' ', $handler->options['wrapper_class']);
   $wrapper_class = array_map('drupal_clean_css_identifier', $wrapper_class);
 
-  // Initialize a new attribute class for $class.
-  $attributes = new Attribute(array('class' => $class));
-
   // Initialize a new attribute class for $wrapper_class.
   if ($wrapper_class) {
-    $wrapper_class = new Attribute(array('class' => $wrapper_class));
-    $vars['wrapper_prefix'] = '<div' . $wrapper_class . '>';
-    $vars['wrapper_suffix'] = '</div>';
+    $variables['wrapper_attributes'] = new Attribute(array('class' => $wrapper_class));
   }
 
-  $vars['list_type_prefix'] = '<' . $handler->options['type'] . $attributes . '>';
-  $vars['list_type_suffix'] = '</' . $handler->options['type'] . '>';
+  // Initialize a new attribute class for $class.
+  $variables['list']['attributes'] = new Attribute(array('class' => $class));
+  $variables['list']['type'] = $handler->options['type'];
 
-  template_preprocess_views_view_unformatted($vars);
+  template_preprocess_views_view_unformatted($variables);
 }
 
 /**
- * Preprocess an RSS feed
- */
+ * Prepares variables for RSS feed templates.
+ *
+ * Default template: views-view-rss.html.twig.
+ *
+ * @param array $vars
+ *   An associative array containing:
+ *   - view: A ViewExecutable object.
+ *   - rows: The raw row data.
+*/
 function template_preprocess_views_view_rss(&$vars) {
   global $base_url;
 
-  $view     = &$vars['view'];
-  $options  = &$vars['options'];
-  $items    = &$vars['rows'];
+  $view = $vars['view'];
+  $items = $vars['rows'];
 
-  $style    = &$view->style_plugin;
+  $style = $view->style_plugin;
 
   $config = config('system.site');
 
@@ -875,8 +929,8 @@ function template_preprocess_views_view_rss(&$vars) {
   }
   $vars['title'] = check_plain($title);
 
-  // Figure out which display which has a path we're using for this feed. If there isn't
-  // one, use the global $base_url
+  // Figure out which display which has a path we're using for this feed. If
+  // there isn't one, use the global $base_url
   $link_display_id = $view->display_handler->getLinkDisplay();
   if ($link_display_id && $display = $view->displayHandlers->get($link_display_id)) {
     $path = $view->displayHandlers->get($link_display_id)->getPath();
@@ -889,7 +943,8 @@ function template_preprocess_views_view_rss(&$vars) {
       $url_options['query'] = $view->exposed_raw_input;
     }
 
-    // Compare the link to the default home page; if it's the default home page, just use $base_url.
+    // Compare the link to the default home page; if it's the default home page,
+    // just use $base_url.
     if ($path == $config->get('page.front')) {
       $path = '';
     }
@@ -910,12 +965,16 @@ function template_preprocess_views_view_rss(&$vars) {
 }
 
 /**
- * Default theme function for all RSS rows.
+ * Prepares variables for views RSS item templates.
+ *
+ * Default template: views-view-row-rss.html.twig.
+ *
+ * @param array $vars
+ *   An associative array containing:
+ *   - row: The raw results rows.
  */
 function template_preprocess_views_view_row_rss(&$vars) {
-  $view     = &$vars['view'];
-  $options  = &$vars['options'];
-  $item     = &$vars['row'];
+  $item = $vars['row'];
 
   $vars['title'] = check_plain($item->title);
   $vars['link'] = check_url($item->link);
@@ -924,49 +983,57 @@ function template_preprocess_views_view_row_rss(&$vars) {
 }
 
 /**
- * Default theme function for all filter forms.
+ * Prepares variables for views exposed form templates.
+ *
+ * Default template: views-exposed-form.html.twig.
+ *
+ * @param array $vars
+ *   An associative array containing:
+ *   - form: A render element representing the form.
  */
 function template_preprocess_views_exposed_form(&$vars) {
   $form = &$vars['form'];
 
   // Put all single checkboxes together in the last spot.
-  $checkboxes = '';
+  $checkboxes = array();
 
   if (!empty($form['q'])) {
-    $vars['q'] = drupal_render($form['q']);
+    $vars['q'] = $form['q'];
   }
 
   $vars['widgets'] = array();
   foreach ($form['#info'] as $id => $info) {
     // Set aside checkboxes.
     if (isset($form[$info['value']]['#type']) && $form[$info['value']]['#type'] == 'checkbox') {
-      $checkboxes .= drupal_render($form[$info['value']]);
+      $checkboxes[] = $form[$info['value']];
       continue;
     }
     $widget = new stdClass();
     // set up defaults so that there's always something there.
-    $widget->label = $widget->operator = $widget->widget = $widget->description = NULL;
+    $widget->label = $widget->operator = $widget->widget = $widget->description = '';
 
     $widget->id = isset($form[$info['value']]['#id']) ? $form[$info['value']]['#id'] : '';
 
     if (!empty($info['label'])) {
       $widget->label = check_plain($info['label']);
     }
-    if (!empty($info['operator'])) {
-      $widget->operator = drupal_render($form[$info['operator']]);
+    if (!empty($info['operator']) && isset($form[$info['operator']])) {
+      $widget->operator = $form[$info['operator']];
     }
 
-    $widget->widget = drupal_render($form[$info['value']]);
+    $widget->widget = $form[$info['value']];
 
     if (!empty($info['description'])) {
       $widget->description = check_plain($info['description']);
     }
 
     $vars['widgets'][$id] = $widget;
+    // Unset the widget, so that it doesn't get rendered twice.
+    unset($form[$info['value']]);
   }
 
   // Wrap up all the checkboxes we set aside into a widget.
-  if ($checkboxes) {
+  if (!empty($checkboxes)) {
     $widget = new stdClass();
     // set up defaults so that there's always something there.
     $widget->label = $widget->operator = $widget->widget = NULL;
@@ -974,22 +1041,6 @@ function template_preprocess_views_exposed_form(&$vars) {
     $widget->widget = $checkboxes;
     $vars['widgets']['checkboxes'] = $widget;
   }
-
-  if (isset($form['sort_by'])) {
-    $vars['sort_by'] = drupal_render($form['sort_by']);
-    $vars['sort_order'] = drupal_render($form['sort_order']);
-  }
-  if (isset($form['items_per_page'])) {
-    $vars['items_per_page'] = drupal_render($form['items_per_page']);
-  }
-  if (isset($form['offset'])) {
-    $vars['offset'] = drupal_render($form['offset']);
-  }
-  if (isset($form['reset'])) {
-    $vars['reset_button'] = drupal_render($form['reset']);
-  }
-  // This includes the submit button.
-  $vars['button'] = drupal_render_children($form);
 }
 
 /**
@@ -1099,7 +1150,7 @@ function theme_views_mini_pager($vars) {
  * example, arguments which provide a summary view might change the style to
  * one of the special summary styles.
  *
- * The default style for all views is views-view-unformatted.tpl.php
+ * The default style for all views is views-view-unformatted.html.twig.
  *
  * Many styles will then farm out the actual display of each row to a row
  * style; the default row style is views-view-fields.tpl.php.
@@ -1114,10 +1165,10 @@ function theme_views_mini_pager($vars) {
  * - views-view--foobar.tpl.php
  * - views-view.tpl.php
  *
- * - views-view-unformatted--foobar--page.tpl.php
- * - views-view-unformatted--page.tpl.php
- * - views-view-unformatted--foobar.tpl.php
- * - views-view-unformatted.tpl.php
+ * - views-view-unformatted--foobar--page.html.twig
+ * - views-view-unformatted--page.html.twig
+ * - views-view-unformatted--foobar.html.twig
+ * - views-view-unformatted.html.twig
  *
  * - views-view-fields--foobar--page.tpl.php
  * - views-view-fields--page.tpl.php

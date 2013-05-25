@@ -1,0 +1,48 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a field.
+ *
+ * To override output, copy the "field.html.twig" from the templates directory
+ * to your theme's directory and customize it, just like customizing other
+ * Drupal templates such as page.html.twig or node.html.twig.
+ *
+ * For example, for a field named 'body' displayed on the 'article' content
+ * type, any of the following templates will override this default
+ * implementation. The first of these templates that exists is used:
+ * - field--body--article.html.twig
+ * - field--article.html.twig
+ * - field--body.html.twig
+ * - field.html.twig
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the containing element.
+ * - label_hidden: Whether to show the field label or not.
+ * - title_attributes: HTML attributes for the title.
+ * - label: The label for the field.
+ * - content_attributes: HTML attributes for the content.
+ * - items: List of all the field items.
+ * - item_attributes: List of HTML attributes for each item.
+ *
+ * @see template_preprocess_field()
+ * @see theme_field()
+ *
+ * @ingroup themeable
+ */
+#}
+<!--
+THIS FILE IS NOT USED AND IS HERE AS A STARTING POINT FOR CUSTOMIZATION ONLY.
+See http://api.drupal.org/api/function/theme_field/8 for details.
+After copying this file to your theme's folder and customizing it, remove this
+HTML comment.
+-->
+<div{{ attributes }}>
+  {% if not label_hidden %}
+    <div class="field-label"{{ title_attributes }}>{{ label }}:&nbsp;</div>
+  {% endif %}
+  <div class="field-items"{{ content_attributes }}>
+    {% for delta, item in items %}
+      <div class="field-item {{ cycle(["even", "odd"], delta) }}"{{ item_attributes[delta] }}>{{ item }}</div>
+    {% endfor %}
+  </div>
+</div>

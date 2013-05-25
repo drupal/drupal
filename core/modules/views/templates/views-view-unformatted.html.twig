@@ -1,0 +1,24 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a view of unformatted rows.
+ *
+ * Available variables:
+ * - title: The title of this group of rows. May be empty.
+ * - rows: A list of the view's row items.
+ * - row_classes: A list of row class attributes keyed by the row's ID.
+ *
+ * @see template_preprocess()
+ * @see template_preprocess_views_view_unformatted()
+ *
+ * @ingroup themeable
+ */
+#}
+{% if title %}
+  <h3>{{ title }}</h3>
+{% endif %}
+{% for id, row in rows %}
+  <div{{ row_classes[id] }}>
+    {{ row }}
+  </div>
+{% endfor %}

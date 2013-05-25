@@ -1,0 +1,36 @@
+{#
+/**
+ * @file
+ * Default theme implementation for views to display rows in a grid.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the table element.
+ * - title: The title of this group of rows.
+ * - rows: A list of rows. Each row contains a list of columns.
+ * - row_classes: HTML classes for each row including the row number and first
+ *   or last.
+ * - column_classes: HTML classes for each column including the row number and
+ *   first or last.
+ *
+ * @see template_preprocess()
+ * @see template_preprocess_views_view_grid()
+ *
+ * @ingroup themeable
+ */
+#}
+{% if title %}
+  <h3>{{ title }}</h3>
+{% endif %}
+<table{{ attributes }}>
+  <tbody>
+    {% for row_number, columns in rows %}
+      <tr{{ row_classes[row_number] }}>
+        {% for column_number, item in columns %}
+          <td{{ column_classes[row_number][column_number] }}>
+            {{ item }}
+          </td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

@@ -59,7 +59,7 @@ class LanguageSwitchingTest extends WebTestBase {
     $this->assertText($block->label(), 'Language switcher block found.');
 
     // Assert that only the current language is marked as active.
-    list($language_switcher) = $this->xpath('//div[@id=:id]/div[@class="content"]', array(':id' => 'block-test-language-block'));
+    list($language_switcher) = $this->xpath('//div[@id=:id]/div[contains(@class, "content")]', array(':id' => 'block-test-language-block'));
     $links = array(
       'active' => array(),
       'inactive' => array(),

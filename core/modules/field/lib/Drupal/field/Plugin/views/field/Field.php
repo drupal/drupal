@@ -371,7 +371,7 @@ class Field extends FieldPluginBase {
       '#title' => t('Use field template'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['field_api_classes'],
-      '#description' => t('If checked, field api classes will be added using field.tpl.php (or equivalent). This is not recommended unless your CSS depends upon these classes. If not checked, template will not be used.'),
+      '#description' => t('If checked, field api classes will be added by field templates. This is not recommended unless your CSS depends upon these classes. If not checked, template will not be used.'),
       '#fieldset' => 'style_settings',
       '#weight' => 20,
     );

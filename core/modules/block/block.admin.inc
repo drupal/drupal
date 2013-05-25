@@ -6,6 +6,7 @@
  */
 
 use Drupal\block\Plugin\Core\Entity\Block;
+use Drupal\Core\Template\Attribute;
 
 /**
  * Page callback: Attaches CSS for the block region demo.
@@ -84,13 +85,13 @@ function block_admin_edit(Block $entity) {
 }
 
 /**
- * Processes variables for block-admin-display-form.tpl.php.
+ * Prepares variables for block admin display form templates.
  *
- * The $variables array contains the following arguments:
- * - $form
+ * Default template: block-admin-display-form.html.twig.
  *
- * @see block-admin-display.tpl.php
- * @see theme_block_admin_display()
+ * @param array $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
  */
 function template_preprocess_block_admin_display_form(&$variables) {
   $variables['block_regions'] = $variables['form']['block_regions']['#value'];
@@ -102,6 +103,9 @@ function template_preprocess_block_admin_display_form(&$variables) {
     // Initialize an empty array for the region.
     $variables['block_listing'][$key] = array();
   }
+
+  $default_attributes = new Attribute(array('class' => array('draggable')));
+  $row = 0;
 
   // Initialize disabled blocks array.
   $variables['block_listing'][BLOCK_REGION_NONE] = array();
@@ -118,14 +122,28 @@ function template_preprocess_block_admin_display_form(&$variables) {
     $block['weight']['#attributes']['class'] = array('block-weight', 'block-weight-' . $region);
 
     $variables['block_listing'][$region][$i] = new stdClass();
+    $variables['block_listing'][$region][$i]->attributes = clone $default_attributes;
+    $variables['block_listing'][$region][$i]->attributes['class'][] = $row % 2 == 0 ? 'odd' : 'even';
+    $row++;
+    if(!empty($block['#attributes']['class'])) {
+      $variables['block_listing'][$region][$i]->attributes['class'][] = implode(' ', $block['#attributes']['class']);
+    }
+
     $variables['block_listing'][$region][$i]->row_class = !empty($block['#attributes']['class']) ? implode(' ', $block['#attributes']['class']) : '';
     $variables['block_listing'][$region][$i]->block_modified = !empty($block['#attributes']['class']) && in_array('block-modified', $block['#attributes']['class']);
-    $variables['block_listing'][$region][$i]->block_title = drupal_render($block['info']);
-    $variables['block_listing'][$region][$i]->region_select = drupal_render($block['region']) . drupal_render($block['theme']);
-    $variables['block_listing'][$region][$i]->weight_select = drupal_render($block['weight']);
-    $variables['block_listing'][$region][$i]->operations = drupal_render($block['operations']);
+    $variables['block_listing'][$region][$i]->block_title = $block['info'];
+    $variables['block_listing'][$region][$i]->region_select = array(
+      'region' => array(
+        'data' => $block['region'],
+        '#weight' => 1,
+      ),
+      'theme' => array(
+        'data' => $block['theme'],
+        '#weight' => 2,
+      ),
+    );
+    $variables['block_listing'][$region][$i]->weight_select = $block['weight'];
+    $variables['block_listing'][$region][$i]->operations = $block['operations'];
     $variables['block_listing'][$region][$i]->printed = FALSE;
   }
-
-  $variables['form_submit'] = drupal_render_children($variables['form']);
 }
