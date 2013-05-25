@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Utility;
 
+use Drupal\Component\Utility\Unicode;
+
 /**
  * Performs color conversions.
  */
@@ -28,7 +30,7 @@ class Color {
     // Hash prefix is optional.
     $hex = ltrim($hex, '#');
     // Must be either RGB or RRGGBB.
-    $length = drupal_strlen($hex);
+    $length = Unicode::strlen($hex);
     $valid = $valid && ($length === 3 || $length === 6);
     // Must be a valid hex value.
     $valid = $valid && ctype_xdigit($hex);
@@ -98,4 +100,5 @@ class Color {
 
     return '#' . str_pad(dechex($out), 6, 0, STR_PAD_LEFT);
   }
+
 }
