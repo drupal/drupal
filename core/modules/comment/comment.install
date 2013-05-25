@@ -621,7 +621,7 @@ function comment_update_8006(&$sandbox) {
       'label' => 'hidden',
       'type' => 'comment_default',
       'settings' => array(),
-      'weight' => 1,
+      'weight' => 20,
     );
 
     // Assign display settings for the 'default' and 'full' view modes.
@@ -641,7 +641,7 @@ function comment_update_8006(&$sandbox) {
     $display_options_default = array(
       'type' => 'comment_default',
       'settings' => array(),
-      'weight' => 50,
+      'weight' => 20,
     );
     $display = _update_8000_entity_get_form_display('node', $node_type, 'default');
     $display->set('content.' . $field['field_name'], $display_options_default)
