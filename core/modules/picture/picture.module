@@ -268,7 +268,7 @@ function theme_picture($variables) {
         );
       }
       else {
-        // Mutliple images, use srcset.
+        // Multiple images, use srcset.
         $srcset = array();
         foreach ($new_sources as $new_source) {
           $srcset[] = image_style_url($new_source['style_name'], $new_source['uri']) . ' ' . $new_source['#multiplier'];
