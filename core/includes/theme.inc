@@ -3069,18 +3069,19 @@ function theme_get_suggestions($args, $base, $delimiter = '__') {
 }
 
 /**
- * Process variables for maintenance-page.tpl.php.
+ * Prepare variables for maintenance page templates.
+ *
+ * Default template: maintenance-page.html.twig.
  *
  * The variables array generated here is a mirror of
  * template_preprocess_page(). This preprocessor will run its course when
  * theme_maintenance_page() is invoked. An alternate template file of
- * maintenance-page--offline.tpl.php can be used when the database is offline to
- * hide errors and completely replace the content.
+ * maintenance-page--offline.html.twig can be used when the database is offline
+ * to hide errors and completely replace the content.
  *
- * The $variables array contains the following arguments:
- * - $content
- *
- * @see maintenance-page.tpl.php
+ * @param array $variables
+ *   An associative array containing:
+ *   - content - An array of page content.
  */
 function template_preprocess_maintenance_page(&$variables) {
   global $theme;
@@ -3178,7 +3179,7 @@ function template_preprocess_maintenance_page(&$variables) {
  * The variables array generated here is a mirror of template_process_html().
  * This processor will run its course when theme_maintenance_page() is invoked.
  *
- * @see maintenance-page.tpl.php
+ * @see maintenance-page.html.twig
  * @see template_process_html()
  */
 function template_process_maintenance_page(&$variables) {

@@ -497,7 +497,7 @@ function overlay_preprocess_html(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for maintenance-page.tpl.php.
+ * Implements hook_preprocess_HOOK() for maintenance-page.html.twig.
  *
  * If the current page request is inside the overlay, add appropriate classes
  * to the <body> element, and simplify the page title.
@@ -520,9 +520,13 @@ function template_preprocess_overlay(&$variables) {
   $variables['title'] = drupal_get_title();
   $variables['disable_overlay'] = overlay_disable_message();
 
-  // Add atrributes for the overlay container.
+  // Add attributes for the overlay container.
+  $variables['attributes']['id'] = 'overlay';
   $variables['attributes']['class'][] = 'overlay';
+  // Add attributes for the overlay title.
+  $variables['title_attributes']['id'] = 'overlay-title';
   // Add attributes for the overlay content.
+  $variables['content_attributes']['id'] = 'overlay-content';
   $variables['content_attributes']['class'][] = 'clearfix';
 }
 
