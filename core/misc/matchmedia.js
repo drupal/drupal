@@ -12,7 +12,7 @@
  * This polyfill triggers tests on window resize and orientationchange.
  */
 
-window.matchMedia = window.matchMedia || (function (doc, window) {
+window.matchMedia = window.matchMedia || (function (doc, window, Drupal) {
 
   "use strict";
 
@@ -79,7 +79,7 @@ window.matchMedia = window.matchMedia || (function (doc, window) {
             debounced.call(mql, mql);
           }
         };
-      }(this, debounce(callback, 250)));
+      }(this, Drupal.debounce(callback, 250)));
       this.listeners.push({
         'callback': callback,
         'handler': handler
@@ -121,32 +121,6 @@ window.matchMedia = window.matchMedia || (function (doc, window) {
   };
 
   /**
-   * Limits the invocations of a function in a given time frame.
-   *
-   * @param {Function} callback
-   *   The function to be invoked.
-   *
-   * @param {Number} wait
-   *   The time period within which the callback function should only be
-   *   invoked once. For example if the wait period is 250ms, then the callback
-   *   will only be called at most 4 times per second.
-   */
-  function debounce (callback, wait) {
-    var timeout, result;
-    return function () {
-      var context = this;
-      var args = arguments;
-      var later = function () {
-        timeout = null;
-        result = callback.apply(context, args);
-      };
-      window.clearTimeout(timeout);
-      timeout = window.setTimeout(later, wait);
-      return result;
-    };
-  }
-
-  /**
    * Return a MediaQueryList.
    *
    * @param {String} q
@@ -157,4 +131,4 @@ window.matchMedia = window.matchMedia || (function (doc, window) {
     // Build a new MediaQueryList object with the result of the check.
     return new MediaQueryList(q);
   };
-}(document, window));
+}(document, window, Drupal));
