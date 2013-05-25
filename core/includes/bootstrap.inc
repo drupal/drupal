@@ -188,90 +188,6 @@ const DRUPAL_AUTHENTICATED_RID = 'authenticated';
 const DRUPAL_KILOBYTE = 1024;
 
 /**
- * Special system language code (only applicable to UI language).
- *
- * Refers to the language used in Drupal and module/theme source code. Drupal
- * uses the built-in text for English by default, but if configured to allow
- * translation/customization of English, we need to differentiate between the
- * built-in language and the English translation.
- */
-const LANGUAGE_SYSTEM = 'system';
-
-/**
- * The language code used when no language is explicitly assigned (yet).
- *
- * Should be used when language information is not available or cannot be
- * determined. This special language code is useful when we know the data
- * might have linguistic information, but we don't know the language.
- *
- * See http://www.w3.org/International/questions/qa-no-language#undetermined.
- */
-const LANGUAGE_NOT_SPECIFIED = 'und';
-
-/**
- * The language code used when the marked object has no linguistic content.
- *
- * Should be used when we explicitly know that the data referred has no
- * linguistic content.
- *
- * See http://www.w3.org/International/questions/qa-no-language#nonlinguistic.
- */
-const LANGUAGE_NOT_APPLICABLE = 'zxx';
-
-/**
- * Language code referring to the default language of data, e.g. of an entity.
- *
- * @todo: Change value to differ from LANGUAGE_NOT_SPECIFIED once field API
- * leverages the property API.
- */
-const LANGUAGE_DEFAULT = 'und';
-
-/**
- * The language state when referring to configurable languages.
- */
-const LANGUAGE_CONFIGURABLE = 1;
-
-/**
- * The language state when referring to locked languages.
- */
-const LANGUAGE_LOCKED = 2;
-
-/**
- * The language state used when referring to all languages.
- */
-const LANGUAGE_ALL = 3;
-
-/**
- * The language state used when referring to the site's default language.
- */
-const LANGUAGE_SITE_DEFAULT = 4;
-
-/**
- * The type of language used to define the content language.
- */
-const LANGUAGE_TYPE_CONTENT = 'language_content';
-
-/**
- * The type of language used to select the user interface.
- */
-const LANGUAGE_TYPE_INTERFACE = 'language_interface';
-
-/**
- * The type of language used for URLs.
- */
-const LANGUAGE_TYPE_URL = 'language_url';
-
-/**
- * Language written left to right. Possible value of $language->direction.
- */
-const LANGUAGE_LTR = 0;
-
-/**
- * Language written right to left. Possible value of $language->direction.
- */
-const LANGUAGE_RTL = 1;
-
-/**
  * Time of the current request in seconds elapsed since the Unix Epoch.
  *
  * This differs from $_SERVER['REQUEST_TIME'], which is stored as a float
@@ -1465,7 +1381,7 @@ function t($string, array $args = array(), array $options = array()) {
 
   // Merge in default.
   if (empty($options['langcode'])) {
-    $options['langcode'] = language(LANGUAGE_TYPE_INTERFACE)->langcode;
+    $options['langcode'] = language(Language::TYPE_INTERFACE)->langcode;
   }
   if (empty($options['context'])) {
     $options['context'] = '';
@@ -1483,7 +1399,7 @@ function t($string, array $args = array(), array $options = array()) {
     $string = $custom_strings[$options['langcode']][$options['context']][$string];
   }
   // Translate with locale module if enabled.
-  elseif ($options['langcode'] != LANGUAGE_SYSTEM && ($options['langcode'] != 'en' || variable_get('locale_translate_english', FALSE)) && function_exists('locale')) {
+  elseif ($options['langcode'] != Language::LANGCODE_SYSTEM && ($options['langcode'] != 'en' || variable_get('locale_translate_english', FALSE)) && function_exists('locale')) {
     $string = locale($string, $options['context'], $options['langcode']);
   }
   if (empty($args)) {
@@ -2571,7 +2487,7 @@ function drupal_language_initialize() {
  * @see Drupal\Core\Language\LanguageManager
  *
  * @param string $type
- *   The type of language object needed, e.g. LANGUAGE_TYPE_INTERFACE.
+ *   The type of language object needed, e.g. Language::TYPE_INTERFACE.
  */
 function language($type) {
   $container = drupal_container();
@@ -2606,9 +2522,9 @@ function language_types_get_all() {
  */
 function language_types_get_default() {
   return array(
-    LANGUAGE_TYPE_INTERFACE => TRUE,
-    LANGUAGE_TYPE_CONTENT => FALSE,
-    LANGUAGE_TYPE_URL => FALSE,
+    Language::TYPE_INTERFACE => TRUE,
+    Language::TYPE_CONTENT => FALSE,
+    Language::TYPE_URL => FALSE,
   );
 }
 
@@ -2630,13 +2546,14 @@ function language_multilingual() {
  *
  * @param $flags
  *   (optional) Specifies the state of the languages that have to be returned.
- *   It can be: LANGUAGE_CONFIGURABLE, LANGUAGE_LOCKED, LANGUAGE_ALL.
+ *   It can be: Language::STATE_CONFIGURABLE, Language::STATE_LOCKED,
+ *   Language::STATE_ALL.
  *
  * @return array
  *   An associative array of languages, keyed by the language code, ordered by
  *   weight ascending and name ascending.
  */
-function language_list($flags = LANGUAGE_CONFIGURABLE) {
+function language_list($flags = Language::STATE_CONFIGURABLE) {
 
   $languages = &drupal_static(__FUNCTION__);
 
@@ -2672,7 +2589,7 @@ function language_list($flags = LANGUAGE_CONFIGURABLE) {
   $filtered_languages = array();
 
   // Add the site's default language if flagged as allowed value.
-  if ($flags & LANGUAGE_SITE_DEFAULT) {
+  if ($flags & Language::STATE_SITE_DEFAULT) {
     $default = isset($default) ? $default : language_default();
     // Rename the default language.
     $default->name = t("Site's default language (@lang_name)", array('@lang_name' => $default->name));
@@ -2680,7 +2597,7 @@ function language_list($flags = LANGUAGE_CONFIGURABLE) {
   }
 
   foreach ($languages as $langcode => $language) {
-    if (($language->locked && !($flags & LANGUAGE_LOCKED)) || (!$language->locked && !($flags & LANGUAGE_CONFIGURABLE))) {
+    if (($language->locked && !($flags & Language::STATE_LOCKED)) || (!$language->locked && !($flags & Language::STATE_CONFIGURABLE))) {
       continue;
      }
     $filtered_languages[$langcode] = $language;
@@ -2707,13 +2624,13 @@ function language_default_locked_languages($weight = 0) {
   );
 
   $languages = array();
-  $languages[LANGUAGE_NOT_SPECIFIED] = new Language(array(
-    'langcode' => LANGUAGE_NOT_SPECIFIED,
+  $languages[Language::LANGCODE_NOT_SPECIFIED] = new Language(array(
+    'langcode' => Language::LANGCODE_NOT_SPECIFIED,
     'name' => t('Not specified'),
     'weight' => ++$weight,
   ) + $locked_language);
-  $languages[LANGUAGE_NOT_APPLICABLE] = new Language(array(
-    'langcode' => LANGUAGE_NOT_APPLICABLE,
+  $languages[Language::LANGCODE_NOT_APPLICABLE] = new Language(array(
+    'langcode' => Language::LANGCODE_NOT_APPLICABLE,
     'name' => t('Not applicable'),
     'weight' => ++$weight,
   ) + $locked_language);
@@ -2730,7 +2647,7 @@ function language_default_locked_languages($weight = 0) {
  *   A fully-populated language object or FALSE.
  */
 function language_load($langcode) {
-  $languages = language_list(LANGUAGE_ALL);
+  $languages = language_list(Language::STATE_ALL);
   return isset($languages[$langcode]) ? $languages[$langcode] : FALSE;
 }
 
@@ -2744,7 +2661,7 @@ function language_load($langcode) {
  *   The printed name of the language.
  */
 function language_name($langcode) {
-  if ($langcode == LANGUAGE_NOT_SPECIFIED) {
+  if ($langcode == Language::LANGCODE_NOT_SPECIFIED) {
     return t('None');
   }
 

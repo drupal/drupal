@@ -76,7 +76,7 @@ class LanguageManager {
    * Returns a language object for the given type.
    *
    * @param string $type
-   *   The language type, e.g. LANGUAGE_TYPE_INTERFACE.
+   *   The language type, e.g. Language::TYPE_INTERFACE.
    *
    * @return \Drupal\Core\Language\Language
    *   A language object for the given type.
@@ -115,8 +115,8 @@ class LanguageManager {
    *
    * @param string|null $type
    *   (optional) The language type to reset as a string, e.g.,
-   *   LANGUAGE_TYPE_INTERFACE, or NULL to reset all language types. Defaults to
-   *   NULL.
+   *   Language::TYPE_INTERFACE, or NULL to reset all language types. Defaults
+   *   to NULL.
    */
   public function reset($type = NULL) {
     if (!isset($type)) {

@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Language\Language;
 use PDO;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
@@ -680,7 +681,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
   public function getFieldDefinitions(array $constraints) {
     if (!isset($this->entityFieldInfo)) {
       // First, try to load from cache.
-      $cid = 'entity_field_definitions:' . $this->entityType . ':' . language(LANGUAGE_TYPE_INTERFACE)->langcode;
+      $cid = 'entity_field_definitions:' . $this->entityType . ':' . language(Language::TYPE_INTERFACE)->langcode;
       if ($cache = cache()->get($cid)) {
         $this->entityFieldInfo = $cache->data;
       }

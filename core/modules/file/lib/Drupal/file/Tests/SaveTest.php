@@ -7,6 +7,8 @@
 
 namespace Drupal\file\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests saving files.
  */
@@ -43,7 +45,7 @@ class SaveTest extends FileManagedTestBase {
     $this->assertEqual($loaded_file->status, $file->status, t("Status was saved correctly."));
     $this->assertEqual($file->filesize, filesize($file->uri), t("File size was set correctly."), 'File');
     $this->assertTrue($file->timestamp > 1, t("File size was set correctly."), 'File');
-    $this->assertEqual($loaded_file->langcode, LANGUAGE_NOT_SPECIFIED, t("Langcode was defaulted correctly."));
+    $this->assertEqual($loaded_file->langcode, Language::LANGCODE_NOT_SPECIFIED, t("Langcode was defaulted correctly."));
 
     // Resave the file, updating the existing record.
     file_test_reset();

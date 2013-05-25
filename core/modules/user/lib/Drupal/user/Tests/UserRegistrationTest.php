@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 class UserRegistrationTest extends WebTestBase {
@@ -243,7 +244,7 @@ class UserRegistrationTest extends WebTestBase {
     // Check user fields.
     $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
     $new_user = reset($accounts);
-    $this->assertEqual($new_user->test_user_field[LANGUAGE_NOT_SPECIFIED][0]['value'], $value, 'The field value was correclty saved.');
+    $this->assertEqual($new_user->test_user_field[Language::LANGCODE_NOT_SPECIFIED][0]['value'], $value, 'The field value was correclty saved.');
 
     // Check that the 'add more' button works.
     $field['cardinality'] = FIELD_CARDINALITY_UNLIMITED;
@@ -271,9 +272,9 @@ class UserRegistrationTest extends WebTestBase {
       // Check user fields.
       $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
       $new_user = reset($accounts);
-      $this->assertEqual($new_user->test_user_field[LANGUAGE_NOT_SPECIFIED][0]['value'], $value, format_string('@js : The field value was correclty saved.', array('@js' => $js)));
-      $this->assertEqual($new_user->test_user_field[LANGUAGE_NOT_SPECIFIED][1]['value'], $value + 1, format_string('@js : The field value was correclty saved.', array('@js' => $js)));
-      $this->assertEqual($new_user->test_user_field[LANGUAGE_NOT_SPECIFIED][2]['value'], $value + 2, format_string('@js : The field value was correclty saved.', array('@js' => $js)));
+      $this->assertEqual($new_user->test_user_field[Language::LANGCODE_NOT_SPECIFIED][0]['value'], $value, format_string('@js : The field value was correclty saved.', array('@js' => $js)));
+      $this->assertEqual($new_user->test_user_field[Language::LANGCODE_NOT_SPECIFIED][1]['value'], $value + 1, format_string('@js : The field value was correclty saved.', array('@js' => $js)));
+      $this->assertEqual($new_user->test_user_field[Language::LANGCODE_NOT_SPECIFIED][2]['value'], $value + 2, format_string('@js : The field value was correclty saved.', array('@js' => $js)));
     }
   }
 }

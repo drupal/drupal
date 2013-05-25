@@ -8,6 +8,7 @@
 namespace Drupal\Core\Path;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
 
 class AliasManager implements AliasManagerInterface {
@@ -102,7 +103,7 @@ class AliasManager implements AliasManagerInterface {
     // language. If we used a language different from the one conveyed by the
     // requested URL, we might end up being unable to check if there is a path
     // alias matching the URL path.
-    $path_language = $path_language ?: $this->languageManager->getLanguage(LANGUAGE_TYPE_URL)->langcode;
+    $path_language = $path_language ?: $this->languageManager->getLanguage(Language::TYPE_URL)->langcode;
     $original_path = $path;
     // Lookup the path alias first.
     if (!empty($path) && $source = $this->lookupPathSource($path, $path_language)) {
@@ -120,7 +121,7 @@ class AliasManager implements AliasManagerInterface {
     // language. If we used a language different from the one conveyed by the
     // requested URL, we might end up being unable to check if there is a path
     // alias matching the URL path.
-    $path_language = $path_language ?: $this->languageManager->getLanguage(LANGUAGE_TYPE_URL)->langcode;
+    $path_language = $path_language ?: $this->languageManager->getLanguage(Language::TYPE_URL)->langcode;
     $result = $path;
     if (!empty($path) && $alias = $this->lookupPathAlias($path, $path_language)) {
       $result = $alias;
@@ -184,7 +185,7 @@ class AliasManager implements AliasManagerInterface {
         $args = array(
           ':system' => $this->preloadedPathLookups,
           ':langcode' => $langcode,
-          ':langcode_undetermined' => LANGUAGE_NOT_SPECIFIED,
+          ':langcode_undetermined' => Language::LANGCODE_NOT_SPECIFIED,
         );
         // Always get the language-specific alias before the language-neutral
         // one. For example 'de' is less than 'und' so the order needs to be
@@ -193,12 +194,12 @@ class AliasManager implements AliasManagerInterface {
         // the most recently created alias for each source. Subsequent queries
         // using fetchField() must use pid DESC to have the same effect.
         // For performance reasons, the query builder is not used here.
-        if ($langcode == LANGUAGE_NOT_SPECIFIED) {
+        if ($langcode == Language::LANGCODE_NOT_SPECIFIED) {
           // Prevent PDO from complaining about a token the query doesn't use.
           unset($args[':langcode']);
           $result = $this->connection->query('SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND langcode = :langcode_undetermined ORDER BY pid ASC', $args);
         }
-        elseif ($langcode < LANGUAGE_NOT_SPECIFIED) {
+        elseif ($langcode < Language::LANGCODE_NOT_SPECIFIED) {
           $result = $this->connection->query('SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND langcode IN (:langcode, :langcode_undetermined) ORDER BY langcode ASC, pid ASC', $args);
         }
         else {
@@ -224,14 +225,14 @@ class AliasManager implements AliasManagerInterface {
       $args = array(
         ':source' => $path,
         ':langcode' => $langcode,
-        ':langcode_undetermined' => LANGUAGE_NOT_SPECIFIED,
+        ':langcode_undetermined' => Language::LANGCODE_NOT_SPECIFIED,
       );
       // See the queries above.
-      if ($langcode == LANGUAGE_NOT_SPECIFIED) {
+      if ($langcode == Language::LANGCODE_NOT_SPECIFIED) {
         unset($args[':langcode']);
         $alias = $this->connection->query("SELECT alias FROM {url_alias} WHERE source = :source AND langcode = :langcode_undetermined ORDER BY pid DESC", $args)->fetchField();
       }
-      elseif ($langcode > LANGUAGE_NOT_SPECIFIED) {
+      elseif ($langcode > Language::LANGCODE_NOT_SPECIFIED) {
         $alias = $this->connection->query("SELECT alias FROM {url_alias} WHERE source = :source AND langcode IN (:langcode, :langcode_undetermined) ORDER BY langcode DESC, pid DESC", $args)->fetchField();
       }
       else {
@@ -265,14 +266,14 @@ class AliasManager implements AliasManagerInterface {
         $args = array(
           ':alias' => $path,
           ':langcode' => $langcode,
-          ':langcode_undetermined' => LANGUAGE_NOT_SPECIFIED,
+          ':langcode_undetermined' => Language::LANGCODE_NOT_SPECIFIED,
         );
         // See the queries above.
-        if ($langcode == LANGUAGE_NOT_SPECIFIED) {
+        if ($langcode == Language::LANGCODE_NOT_SPECIFIED) {
           unset($args[':langcode']);
           $result = $this->connection->query("SELECT source FROM {url_alias} WHERE alias = :alias AND langcode = :langcode_undetermined ORDER BY pid DESC", $args);
         }
-        elseif ($langcode > LANGUAGE_NOT_SPECIFIED) {
+        elseif ($langcode > Language::LANGCODE_NOT_SPECIFIED) {
           $result = $this->connection->query("SELECT source FROM {url_alias} WHERE alias = :alias AND langcode IN (:langcode, :langcode_undetermined) ORDER BY langcode DESC, pid DESC", $args);
         }
         else {

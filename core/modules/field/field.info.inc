@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Language\Language;
 use Drupal\field\Plugin\Core\Entity\FieldInstance;
 use Drupal\field\Field;
 
@@ -58,7 +59,7 @@ function field_info_cache_clear() {
  * @see _field_info_collate_types_reset()
  */
 function _field_info_collate_types() {
-  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(Language::TYPE_INTERFACE);
 
   // Use the advanced drupal_static() pattern, since this is called very often.
   static $drupal_static_fast;

@@ -7,6 +7,8 @@
 
 namespace Drupal\custom_block\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests the block edit functionality.
  */
@@ -29,7 +31,7 @@ class PageEditTest extends CustomBlockTestBase {
   public function testPageEdit() {
     $this->drupalLogin($this->adminUser);
 
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $title_key = 'info';
     $body_key = "block_body[$langcode][0][value]";
     // Create block to edit.

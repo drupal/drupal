@@ -97,7 +97,7 @@ class TranslationTest extends FieldUnitTestBase {
     $this->field['translatable'] = FALSE;
     field_update_field($this->field);
     $available_langcodes = field_available_languages($this->entity_type, $this->field);
-    $this->assertTrue(count($available_langcodes) == 1 && $available_langcodes[0] === LANGUAGE_NOT_SPECIFIED, 'For untranslatable fields only LANGUAGE_NOT_SPECIFIED is available.');
+    $this->assertTrue(count($available_langcodes) == 1 && $available_langcodes[0] === Language::LANGCODE_NOT_SPECIFIED, 'For untranslatable fields only Language::LANGCODE_NOT_SPECIFIED is available.');
   }
 
   /**
@@ -343,12 +343,12 @@ class TranslationTest extends FieldUnitTestBase {
       $entity->{$field_name}[$langcode] = $this->_generateTestFieldValues($field['cardinality']);
       // If the langcode is one of the locked languages, then that one
       // will also be used for display. Otherwise, the default one should be
-      // used, which is LANGUAGE_NOT_SPECIFIED.
+      // used, which is Language::LANGCODE_NOT_SPECIFIED.
       if (language_is_locked($langcode)) {
         $locked_languages[$field_name] = $langcode;
       }
       else {
-        $locked_languages[$field_name] = LANGUAGE_NOT_SPECIFIED;
+        $locked_languages[$field_name] = Language::LANGCODE_NOT_SPECIFIED;
       }
     }
 

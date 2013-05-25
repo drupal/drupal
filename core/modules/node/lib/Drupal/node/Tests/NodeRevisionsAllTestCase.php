@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests actions against revisions for user with access to all revisions.
  */
@@ -96,7 +98,7 @@ class NodeRevisionsAllTestCase extends NodeTestBase {
 
     // Confirm the correct revision text appears on "view revisions" page.
     $this->drupalGet("node/$node->nid/revisions/$node->vid/view");
-    $this->assertText($node->body[LANGUAGE_NOT_SPECIFIED][0]['value'], t('Correct text displays for version.'));
+    $this->assertText($node->body[Language::LANGCODE_NOT_SPECIFIED][0]['value'], t('Correct text displays for version.'));
 
     // Confirm the correct log message appears on "revisions overview" page.
     $this->drupalGet("node/$node->nid/revisions");
@@ -117,7 +119,7 @@ class NodeRevisionsAllTestCase extends NodeTestBase {
       )),
       'Revision reverted.');
     $reverted_node = node_load($node->nid, TRUE);
-    $this->assertTrue(($nodes[1]->body[LANGUAGE_NOT_SPECIFIED][0]['value'] == $reverted_node->body[LANGUAGE_NOT_SPECIFIED][0]['value']), t('Node reverted correctly.'));
+    $this->assertTrue(($nodes[1]->body[Language::LANGCODE_NOT_SPECIFIED][0]['value'] == $reverted_node->body[Language::LANGCODE_NOT_SPECIFIED][0]['value']), t('Node reverted correctly.'));
 
     // Confirm that this is not the current version.
     $node = node_revision_load($node->vid);

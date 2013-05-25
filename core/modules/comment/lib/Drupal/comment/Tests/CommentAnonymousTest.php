@@ -7,6 +7,8 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests anonymous commenting.
  */
@@ -66,7 +68,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->assertTrue($this->commentExists($anonymous_comment2), 'Anonymous comment with contact info (optional) found.');
 
     // Ensure anonymous users cannot post in the name of registered users.
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit = array(
       'name' => $this->admin_user->name,
       'mail' => $this->randomName() . '@example.com',

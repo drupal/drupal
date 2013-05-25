@@ -7,6 +7,8 @@
 
 namespace Drupal\file\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests that formatters are working properly.
  */
@@ -58,12 +60,12 @@ class FileFieldDisplayTest extends FileFieldTestBase {
 
     // Check that the default formatter is displaying with the file name.
     $node = node_load($nid, TRUE);
-    $node_file = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
+    $node_file = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']);
     $default_output = theme('file_link', array('file' => $node_file));
     $this->assertRaw($default_output, t('Default formatter displaying correctly on full node view.'));
 
     // Turn the "display" option off and check that the file is no longer displayed.
-    $edit = array($field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][display]' => FALSE);
+    $edit = array($field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][display]' => FALSE);
     $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save and keep published'));
 
     $this->assertNoRaw($default_output, t('Field is hidden when "display" option is unchecked.'));
@@ -71,8 +73,8 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     // Add a description and make sure that it is displayed.
     $description = $this->randomName();
     $edit = array(
-      $field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][description]' => $description,
-      $field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][display]' => TRUE,
+      $field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][description]' => $description,
+      $field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][display]' => TRUE,
     );
     $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save and keep published'));
     $this->assertText($description);

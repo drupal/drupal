@@ -7,6 +7,7 @@
 
 namespace Drupal\forum\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -54,7 +55,7 @@ class ForumNodeAccessTest extends WebTestBase {
     $this->drupalLogin($admin_user);
 
     // Create a private node.
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $private_node_title = $this->randomName(20);
     $edit = array(
       'title' => $private_node_title,

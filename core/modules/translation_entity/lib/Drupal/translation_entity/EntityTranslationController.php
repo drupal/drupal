@@ -8,6 +8,7 @@
 namespace Drupal\translation_entity;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Language\Language;
 
 /**
  * Base class for entity translation controllers.
@@ -171,7 +172,7 @@ class EntityTranslationController implements EntityTranslationControllerInterfac
           '#submit' => array(array($this, 'entityFormSourceChange')),
         ),
       );
-      foreach (language_list(LANGUAGE_CONFIGURABLE) as $language) {
+      foreach (language_list(Language::STATE_CONFIGURABLE) as $language) {
         if (isset($translations[$language->langcode])) {
           $form['source_langcode']['source']['#options'][$language->langcode] = $language->name;
         }
@@ -184,7 +185,7 @@ class EntityTranslationController implements EntityTranslationControllerInterfac
     $language_widget = isset($form['langcode']) && $form['langcode']['#type'] == 'language_select';
     if ($language_widget && $has_translations) {
       $form['langcode']['#options'] = array();
-      foreach (language_list(LANGUAGE_CONFIGURABLE) as $language) {
+      foreach (language_list(Language::STATE_CONFIGURABLE) as $language) {
         if (empty($translations[$language->langcode]) || $language->langcode == $entity_langcode) {
           $form['langcode']['#options'][$language->langcode] = $language->name;
         }

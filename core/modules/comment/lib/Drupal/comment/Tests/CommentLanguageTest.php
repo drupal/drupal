@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -89,7 +90,7 @@ class CommentLanguageTest extends WebTestBase {
     // language and interface language do not influence comment language, as
     // only content language has to.
     foreach (language_list() as $node_langcode => $node_language) {
-      $langcode_not_specified = LANGUAGE_NOT_SPECIFIED;
+      $langcode_not_specified = Language::LANGCODE_NOT_SPECIFIED;
 
       // Create "Article" content.
       $title = $this->randomName();

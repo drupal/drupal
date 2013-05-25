@@ -9,6 +9,8 @@ namespace Drupal\system\Tests\Upgrade;
 
 use Drupal\Core\Database\DatabaseException;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests upgrading a filled database with language data.
  *
@@ -42,7 +44,7 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
 
     // Ensure Catalan was properly upgraded to be the new default language.
     $this->assertTrue(language_default()->langcode == 'ca', 'Catalan is the default language');
-    $languages = language_list(LANGUAGE_ALL);
+    $languages = language_list(Language::STATE_ALL);
     foreach ($languages as $language) {
       $this->assertTrue($language->default == ($language->langcode == 'ca'), format_string('@language default property properly set', array('@language' => $language->name)));
     }
@@ -69,7 +71,7 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
     $translation_source_nid = 52;
     $translation_nid = 53;
     // Check directly for the $node->langcode property.
-    $this->assertEqual(node_load($language_none_nid)->langcode, LANGUAGE_NOT_SPECIFIED, "'language' property was renamed to 'langcode' for LANGUAGE_NOT_SPECIFIED node.");
+    $this->assertEqual(node_load($language_none_nid)->langcode, Language::LANGCODE_NOT_SPECIFIED, "'language' property was renamed to 'langcode' for Language::LANGCODE_NOT_SPECIFIED node.");
     $this->assertEqual(node_load($spanish_nid)->langcode, 'ca', "'language' property was renamed to 'langcode' for Catalan node.");
     // Check that the translation table works correctly.
     $this->drupalGet("node/$translation_source_nid/translate");
@@ -98,9 +100,9 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
     $this->assertEqual($term->langcode, 'ca');
 
     // A langcode property was added to files. Check that existing files got
-    // assigned LANGUAGE_NOT_SPECIFIED.
+    // assigned Language::LANGCODE_NOT_SPECIFIED.
     $file = db_query('SELECT * FROM {file_managed} WHERE fid = :fid', array(':fid' => 1))->fetchObject();
-    $this->assertEqual($file->langcode, LANGUAGE_NOT_SPECIFIED);
+    $this->assertEqual($file->langcode, Language::LANGCODE_NOT_SPECIFIED);
 
     // Check if language negotiation weights were renamed properly. This is a
     // reproduction of the previous weights from the dump.

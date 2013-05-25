@@ -7,6 +7,7 @@
 
 namespace Drupal\language\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -54,7 +55,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
     // negotiation settings with the proper flag enabled.
     state()->set('language_test.content_language_type', TRUE);
     $this->languageNegotiationUpdate();
-    $type = LANGUAGE_TYPE_CONTENT;
+    $type = Language::TYPE_CONTENT;
     $language_types = variable_get('language_types', language_types_get_default());
     $this->assertTrue($language_types[$type], 'Content language type is configurable.');
 
@@ -96,7 +97,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
     $last = state()->get('language_test.language_negotiation_last');
     foreach (language_types_get_all() as $type) {
       $langcode = $last[$type];
-      $value = $type == LANGUAGE_TYPE_CONTENT || strpos($type, 'test') !== FALSE ? 'it' : 'en';
+      $value = $type == Language::TYPE_CONTENT || strpos($type, 'test') !== FALSE ? 'it' : 'en';
       $this->assertEqual($langcode, $value, format_string('The negotiated language for %type is %language', array('%type' => $type, '%language' => $langcode)));
     }
 

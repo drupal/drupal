@@ -7,6 +7,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 
+use Drupal\Core\Language\Language;
 use Drupal\taxonomy\Plugin\Core\Entity\Term;
 
 /**
@@ -100,7 +101,7 @@ function path_form_node_form_alter(&$form, $form_state) {
   $path = array();
   if (!empty($node->nid)) {
     $conditions = array('source' => 'node/' . $node->nid);
-    if ($node->langcode != LANGUAGE_NOT_SPECIFIED) {
+    if ($node->langcode != Language::LANGCODE_NOT_SPECIFIED) {
       $conditions['langcode'] = $node->langcode;
     }
     $path = drupal_container()->get('path.crud')->load($conditions);
@@ -112,7 +113,7 @@ function path_form_node_form_alter(&$form, $form_state) {
     'pid' => NULL,
     'source' => isset($node->nid) ? 'node/' . $node->nid : NULL,
     'alias' => '',
-    'langcode' => isset($node->langcode) ? $node->langcode : LANGUAGE_NOT_SPECIFIED,
+    'langcode' => isset($node->langcode) ? $node->langcode : Language::LANGCODE_NOT_SPECIFIED,
   );
 
   $form['path'] = array(
@@ -190,7 +191,7 @@ function path_node_insert(EntityInterface $node) {
     if (!empty($alias)) {
       // Ensure fields for programmatic executions.
       $source = 'node/' . $node->nid;
-      $langcode = isset($node->langcode) ? $node->langcode : LANGUAGE_NOT_SPECIFIED;
+      $langcode = isset($node->langcode) ? $node->langcode : Language::LANGCODE_NOT_SPECIFIED;
       drupal_container()->get('path.crud')->save($source, $alias, $langcode);
     }
   }
@@ -211,7 +212,7 @@ function path_node_update(EntityInterface $node) {
     if (!empty($path['alias'])) {
       // Ensure fields for programmatic executions.
       $source = 'node/' . $node->nid;
-      $langcode = isset($node->langcode) ? $node->langcode : LANGUAGE_NOT_SPECIFIED;
+      $langcode = isset($node->langcode) ? $node->langcode : Language::LANGCODE_NOT_SPECIFIED;
       drupal_container()->get('path.crud')->save($source, $alias, $langcode, $path['pid']);
     }
   }
@@ -240,7 +241,7 @@ function path_form_taxonomy_term_form_alter(&$form, $form_state) {
       'pid' => NULL,
       'source' => $term->id() ? 'taxonomy/term/' . $term->id() : NULL,
       'alias' => '',
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
     );
     $form['path'] = array(
       '#access' => user_access('create url aliases') || user_access('administer url aliases'),
@@ -299,7 +300,7 @@ function path_taxonomy_term_insert(Term $term) {
     if (!empty($term->path->alias)) {
       // Ensure fields for programmatic executions.
       $source = 'taxonomy/term/' . $term->id();
-      $langcode = LANGUAGE_NOT_SPECIFIED;
+      $langcode = Language::LANGCODE_NOT_SPECIFIED;
       Drupal::service('path.crud')->save($source, $term->path->alias, $langcode);
     }
   }
@@ -320,7 +321,7 @@ function path_taxonomy_term_update(Term $term) {
       $pid = (!empty($term->path->pid) ? $term->path->pid  : NULL);
       // Ensure fields for programmatic executions.
       $source = 'taxonomy/term/' . $term->id();
-      $langcode = LANGUAGE_NOT_SPECIFIED;
+      $langcode = Language::LANGCODE_NOT_SPECIFIED;
       Drupal::service('path.crud')->save($source, $term->path->alias, $langcode, $pid);
     }
   }

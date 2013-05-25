@@ -7,6 +7,7 @@
 
 namespace Drupal\tracker\Tests\Views;
 
+use Drupal\Core\Language\Language;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 
@@ -43,7 +44,7 @@ abstract class TrackerTestBase extends ViewTestBase {
     $this->comment = entity_create('comment', array(
       'nid' => $this->node->id(),
       'subject' => $this->randomName(),
-      'comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
+      'comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
     ));
 
   }

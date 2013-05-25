@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Plugin\views\field;
 
+use Drupal\Core\Language\Language;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -185,11 +186,11 @@ class Field extends FieldPluginBase {
       $field = $this->field_info;
       if (field_is_translatable($entity_type, $field) && !empty($this->view->display_handler->options['field_langcode_add_to_query'])) {
         $column = $this->tableAlias . '.langcode';
-        // By the same reason as field_language the field might be LANGUAGE_NOT_SPECIFIED in reality so allow it as well.
+        // By the same reason as field_language the field might be Language::LANGCODE_NOT_SPECIFIED in reality so allow it as well.
         // @see this::field_langcode()
         $default_langcode = language_default()->langcode;
         $langcode = str_replace(array('***CURRENT_LANGUAGE***', '***DEFAULT_LANGUAGE***'),
-                                array(drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode, $default_langcode),
+                                array(drupal_container()->get(Language::TYPE_CONTENT)->langcode, $default_langcode),
                                 $this->view->display_handler->options['field_langcode']);
         $placeholder = $this->placeholder();
         $langcode_fallback_candidates = array($langcode);
@@ -198,7 +199,7 @@ class Field extends FieldPluginBase {
           $langcode_fallback_candidates = array_merge($langcode_fallback_candidates, language_fallback_get_candidates());
         }
         else {
-          $langcode_fallback_candidates[] = LANGUAGE_NOT_SPECIFIED;
+          $langcode_fallback_candidates[] = Language::LANGCODE_NOT_SPECIFIED;
         }
         $this->query->add_where_expression(0, "$column IN($placeholder) OR $column IS NULL", array($placeholder => $langcode_fallback_candidates));
       }
@@ -830,11 +831,11 @@ class Field extends FieldPluginBase {
     if (field_is_translatable($entity->entityType(), $this->field_info)) {
       $default_langcode = language_default()->langcode;
       $langcode = str_replace(array('***CURRENT_LANGUAGE***', '***DEFAULT_LANGUAGE***'),
-                              array(drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode, $default_langcode),
+                              array(drupal_container()->get(Language::TYPE_CONTENT)->langcode, $default_langcode),
                               $this->view->display_handler->options['field_language']);
 
       // Give the Field Language API a chance to fallback to a different language
-      // (or LANGUAGE_NOT_SPECIFIED), in case the field has no data for the selected language.
+      // (or Language::LANGCODE_NOT_SPECIFIED), in case the field has no data for the selected language.
       // field_view_field() does this as well, but since the returned language code
       // is used before calling it, the fallback needs to happen explicitly.
       $langcode = field_language($entity, $this->field_info['field_name'], $langcode);
@@ -842,7 +843,7 @@ class Field extends FieldPluginBase {
       return $langcode;
     }
     else {
-      return LANGUAGE_NOT_SPECIFIED;
+      return Language::LANGCODE_NOT_SPECIFIED;
     }
   }
 

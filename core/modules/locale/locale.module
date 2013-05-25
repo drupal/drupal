@@ -10,6 +10,7 @@
  * object files are supported.
  */
 
+use Drupal\Core\Language\Language;
 use Drupal\locale\LocaleLookup;
 use Drupal\locale\LocaleConfigSubscriber;
 use Drupal\locale\SourceString;
@@ -362,7 +363,7 @@ function locale_translatable_language_list() {
  *   Language code to use for the lookup.
  */
 function locale($string = NULL, $context = NULL, $langcode = NULL) {
-  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(Language::TYPE_INTERFACE);
 
   // Use the advanced drupal_static() pattern, since this is called very often.
   static $drupal_static_fast;
@@ -436,7 +437,7 @@ function locale_storage() {
  *   plural formula.
  */
 function locale_get_plural($count, $langcode = NULL) {
-  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(Language::TYPE_INTERFACE);
 
   // Used to locally cache the plural formulas for all languages.
   $plural_formulas = &drupal_static(__FUNCTION__, array());
@@ -600,7 +601,7 @@ function locale_system_remove($components) {
  */
 function locale_js_alter(&$javascript) {
 
-  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(Language::TYPE_INTERFACE);
 
   $dir = 'public://' . config('local.settings')->get('javascript.directory');
   $parsed = state()->get('system.javascript_parsed') ?: array();
@@ -692,7 +693,7 @@ function locale_library_info() {
  */
 function locale_library_info_alter(&$libraries, $module) {
   if ($module == 'system' && isset($libraries['jquery.ui.datepicker'])) {
-    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language(Language::TYPE_INTERFACE);
     // locale.datepicker.js should be added in the JS_LIBRARY group, so that
     // this attach behavior will execute early. JS_LIBRARY is the default for
     // hook_library_info_alter(), thus does not have to be specified explicitly.
@@ -702,7 +703,7 @@ function locale_library_info_alter(&$libraries, $module) {
         'jquery' => array(
           'ui' => array(
             'datepicker' => array(
-              'isRTL' => $language_interface->direction == LANGUAGE_RTL,
+              'isRTL' => $language_interface->direction == Language::DIRECTION_RTL,
               'firstDay' => config('system.date')->get('first_day'),
             ),
           ),
@@ -873,8 +874,8 @@ function locale_system_file_system_settings_submit(&$form, $form_state) {
  * Implements hook_preprocess_HOOK() for node.html.twig.
  */
 function locale_preprocess_node(&$variables) {
-  if ($variables['node']->langcode != LANGUAGE_NOT_SPECIFIED) {
-    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+  if ($variables['node']->langcode != Language::LANGCODE_NOT_SPECIFIED) {
+    $language_interface = language(Language::TYPE_INTERFACE);
 
     $node_language = language_load($variables['node']->langcode);
     if ($node_language->langcode != $language_interface->langcode) {
@@ -1245,7 +1246,7 @@ function _locale_invalidate_js($langcode = NULL) {
 function _locale_rebuild_js($langcode = NULL) {
   $config = config('locale.settings');
   if (!isset($langcode)) {
-    $language = language(LANGUAGE_TYPE_INTERFACE);
+    $language = language(Language::TYPE_INTERFACE);
   }
   else {
     // Get information about the locale.

@@ -9,6 +9,7 @@ namespace Drupal\filter;
 
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
+use Drupal\Core\Language\Language;
 use Drupal\Core\Plugin\Discovery\AlterDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
@@ -31,7 +32,7 @@ class FilterPluginManager extends PluginManagerBase {
     $annotation_namespaces = array('Drupal\filter\Annotation' => $namespaces['Drupal\filter']);
     $this->discovery = new AnnotatedClassDiscovery('Filter', $namespaces, $annotation_namespaces, 'Drupal\filter\Annotation\Filter');
     $this->discovery = new AlterDecorator($this->discovery, 'filter_info');
-    $this->discovery = new CacheDecorator($this->discovery, 'filter_plugins:' . language(LANGUAGE_TYPE_INTERFACE)->langcode, 'cache', array(
+    $this->discovery = new CacheDecorator($this->discovery, 'filter_plugins:' . language(Language::TYPE_INTERFACE)->langcode, 'cache', array(
       'filter_formats' => TRUE,
     ));
   }

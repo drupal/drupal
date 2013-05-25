@@ -7,6 +7,7 @@
 
 namespace Drupal\entity_reference\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -112,6 +113,6 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
 
     $referencing_nid = key($result);
     $referencing_node = node_load($referencing_nid);
-    $this->assertEqual($referenced_nid, $referencing_node->test_field[LANGUAGE_NOT_SPECIFIED][0]['target_id'], 'Newly created node is referenced from the referencing node.');
+    $this->assertEqual($referenced_nid, $referencing_node->test_field[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'], 'Newly created node is referenced from the referencing node.');
   }
 }

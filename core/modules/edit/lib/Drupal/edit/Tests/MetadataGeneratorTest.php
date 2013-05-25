@@ -7,6 +7,7 @@
 
 namespace Drupal\edit\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\edit\EditorSelector;
 use Drupal\edit\MetadataGenerator;
 use Drupal\edit\Plugin\EditorManager;
@@ -103,7 +104,7 @@ class MetadataGeneratorTest extends EditTestBase {
 
     // Verify metadata for field 1.
     $instance_1 = field_info_instance($entity->entityType(), $field_1_name, $entity->bundle());
-    $metadata_1 = $this->metadataGenerator->generate($entity, $instance_1, LANGUAGE_NOT_SPECIFIED, 'default');
+    $metadata_1 = $this->metadataGenerator->generate($entity, $instance_1, Language::LANGCODE_NOT_SPECIFIED, 'default');
     $expected_1 = array(
       'access' => TRUE,
       'label' => 'Simple text field',
@@ -114,7 +115,7 @@ class MetadataGeneratorTest extends EditTestBase {
 
     // Verify metadata for field 2.
     $instance_2 = field_info_instance($entity->entityType(), $field_2_name, $entity->bundle());
-    $metadata_2 = $this->metadataGenerator->generate($entity, $instance_2, LANGUAGE_NOT_SPECIFIED, 'default');
+    $metadata_2 = $this->metadataGenerator->generate($entity, $instance_2, Language::LANGCODE_NOT_SPECIFIED, 'default');
     $expected_2 = array(
       'access' => TRUE,
       'label' => 'Simple number field',
@@ -166,7 +167,7 @@ class MetadataGeneratorTest extends EditTestBase {
 
     // Verify metadata.
     $instance = field_info_instance($entity->entityType(), $field_name, $entity->bundle());
-    $metadata = $this->metadataGenerator->generate($entity, $instance, LANGUAGE_NOT_SPECIFIED, 'default');
+    $metadata = $this->metadataGenerator->generate($entity, $instance, Language::LANGCODE_NOT_SPECIFIED, 'default');
     $expected = array(
       'access' => TRUE,
       'label' => 'Rich text field',

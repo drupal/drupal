@@ -9,6 +9,7 @@ namespace Drupal\file;
 
 use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Language\Language;
 
 /**
  * File storage controller for files.
@@ -42,7 +43,7 @@ class FileStorageController extends DatabaseStorageController {
       // neutral more often than language dependent. Until we have better
       // flexible settings.
       // @todo See http://drupal.org/node/258785 and followups.
-      $entity->langcode = LANGUAGE_NOT_SPECIFIED;
+      $entity->langcode = Language::LANGCODE_NOT_SPECIFIED;
     }
   }
 

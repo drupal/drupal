@@ -7,6 +7,8 @@
 
 namespace Drupal\search\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Test config page.
  */
@@ -42,7 +44,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     $this->search_node = $node;
     // Link the node to itself to test that it's only indexed once. The content
     // also needs the word "pizza" so we can use it as the search keyword.
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $body_key = "body[$langcode][0][value]";
     $edit[$body_key] = l($node->label(), 'node/' . $node->nid) . ' pizza sandwich';
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save and keep published'));

@@ -2,6 +2,7 @@
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Language\Language;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Yaml\Parser;
 use Drupal\Component\PhpStorage\PhpStorageFactory;
@@ -1261,7 +1262,7 @@ function filter_xss_bad_protocol($string, $decode = TRUE) {
  * Arbitrary elements may be added using the $args associative array.
  */
 function format_rss_channel($title, $link, $description, $items, $langcode = NULL, $args = array()) {
-  $langcode = $langcode ? $langcode : language(LANGUAGE_TYPE_CONTENT)->langcode;
+  $langcode = $langcode ? $langcode : language(Language::TYPE_CONTENT)->langcode;
 
   $output = "<channel>\n";
   $output .= ' <title>' . check_plain($title) . "</title>\n";
@@ -1563,7 +1564,7 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
   }
 
   if (empty($langcode)) {
-    $langcode = language(LANGUAGE_TYPE_INTERFACE)->langcode;
+    $langcode = language(Language::TYPE_INTERFACE)->langcode;
   }
 
   // Create a DrupalDateTime object from the timestamp and timezone.
@@ -1711,7 +1712,7 @@ function datetime_default_format_type() {
  *   - 'language': An optional language object. If the path being linked to is
  *     internal to the site, $options['language'] is used to look up the alias
  *     for the URL. If $options['language'] is omitted, the language will be
- *     obtained from language(LANGUAGE_TYPE_URL).
+ *     obtained from language(Language::TYPE_URL).
  *   - 'https': Whether this URL should point to a secure location. If not
  *     defined, the current scheme is used, so the user stays on HTTP or HTTPS
  *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP, but HTTPS can
@@ -1946,7 +1947,7 @@ function l($text, $path, array $options = array()) {
     $active = array(
       'path' => current_path(),
       'front_page' => drupal_is_front_page(),
-      'language' => language(LANGUAGE_TYPE_URL)->langcode,
+      'language' => language(Language::TYPE_URL)->langcode,
       'query' => Drupal::service('request')->query->all(),
     );
   }

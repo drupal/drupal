@@ -7,14 +7,6 @@
 
 namespace Drupal\Tests\Core\Entity;
 
-// @todo Remove once http://drupal.org/node/1620010 is committed.
-if (!defined('LANGUAGE_DEFAULT')) {
-  define('LANGUAGE_DEFAULT', 'und');
-}
-if (!defined('LANGUAGE_NOT_SPECIFIED')) {
-  define('LANGUAGE_NOT_SPECIFIED', 'und');
-}
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Drupal\Core\Entity\EntityAccessCheck;

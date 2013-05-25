@@ -7,6 +7,8 @@ use Drupal\Core\Entity\EntityInterface;
  * Functions implementing Field API multilingual support.
  */
 
+use Drupal\Core\Language\Language;
+
 /**
  * @defgroup field_language Field Language API
  * @{
@@ -19,10 +21,10 @@ use Drupal\Core\Entity\EntityInterface;
  * @endcode
  * Every field can hold a single or multiple value for each language code
  * belonging to the available language codes set:
- * - For untranslatable fields this set only contains LANGUAGE_NOT_SPECIFIED.
+ * - For untranslatable fields this set only contains Language::LANGCODE_NOT_SPECIFIED.
  * - For translatable fields this set can contain any language code. By default
  *   it is the list returned by field_content_languages(), which contains all
- *   installed languages with the addition of LANGUAGE_NOT_SPECIFIED. This
+ *   installed languages with the addition of Language::LANGCODE_NOT_SPECIFIED. This
  *   default can be altered by modules implementing
  *   hook_field_available_languages_alter().
  *
@@ -67,7 +69,7 @@ use Drupal\Core\Entity\EntityInterface;
  * Collects the available language codes for the given entity type and field.
  *
  * If the given field has language support enabled, an array of available
- * language codes will be returned, otherwise only LANGUAGE_NOT_SPECIFIED will
+ * language codes will be returned, otherwise only Language::LANGCODE_NOT_SPECIFIED will
  * be returned. Since the default value for a 'translatable' entity property is
  * FALSE, we ensure that only entities that are able to handle translations
  * actually get translatable fields.
@@ -90,7 +92,7 @@ function field_available_languages($entity_type, $field) {
 
   if (!isset($field_langcodes[$entity_type][$field_name])) {
     // If the field has language support enabled we retrieve an (alterable) list
-    // of enabled languages, otherwise we return just LANGUAGE_NOT_SPECIFIED.
+    // of enabled languages, otherwise we return just Language::LANGCODE_NOT_SPECIFIED.
     if (field_is_translatable($entity_type, $field)) {
       $langcodes = field_content_languages();
       // Let other modules alter the available languages.
@@ -99,7 +101,7 @@ function field_available_languages($entity_type, $field) {
       $field_langcodes[$entity_type][$field_name] = $langcodes;
     }
     else {
-      $field_langcodes[$entity_type][$field_name] = array(LANGUAGE_NOT_SPECIFIED);
+      $field_langcodes[$entity_type][$field_name] = array(Language::LANGCODE_NOT_SPECIFIED);
     }
   }
 
@@ -147,7 +149,7 @@ function _field_language_suggestion($available_langcodes, $langcode_suggestion, 
  *   An array of language codes.
  */
 function field_content_languages() {
-  return array_keys(language_list(LANGUAGE_ALL));
+  return array_keys(language_list(Language::STATE_ALL));
 }
 
 /**
@@ -219,7 +221,7 @@ function field_valid_language($langcode, $default = TRUE) {
   if (in_array($langcode, $languages)) {
     return $langcode;
   }
-  return $default ? language_default()->langcode : language(LANGUAGE_TYPE_CONTENT)->langcode;
+  return $default ? language_default()->langcode : language(Language::TYPE_CONTENT)->langcode;
 }
 
 /**
@@ -230,7 +232,7 @@ function field_valid_language($langcode, $default = TRUE) {
  * requested language code and the actual data available in the fields
  * themselves.
  * If there is no registered translation handler for the given entity type, the
- * display language code to be used is just LANGUAGE_NOT_SPECIFIED, as no other
+ * display language code to be used is just Language::LANGCODE_NOT_SPECIFIED, as no other
  * language code is allowed by field_available_languages().
  *
  * If translation handlers are found, we let modules provide alternative display
@@ -271,9 +273,9 @@ function field_language(EntityInterface $entity, $field_name = NULL, $langcode =
       else {
         // If the field has a value for one of the locked languages, then use
         // that language for display. If not, the default one will be
-        // LANGUAGE_NOT_SPECIFIED.
-        $display_langcode[$instance['field_name']] = LANGUAGE_NOT_SPECIFIED;
-        foreach (language_list(LANGUAGE_LOCKED) as $language_locked) {
+        // Language::LANGCODE_NOT_SPECIFIED.
+        $display_langcode[$instance['field_name']] = Language::LANGCODE_NOT_SPECIFIED;
+        foreach (language_list(Language::STATE_LOCKED) as $language_locked) {
           if (isset($entity->{$instance['field_name']}[$language_locked->langcode])) {
             $display_langcode[$instance['field_name']] = $language_locked->langcode;
             break;

@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy;
 
 use Drupal\Core\Entity\EntityFormControllerNG;
+use Drupal\Core\Language\Language;
 
 /**
  * Base for controller for taxonomy term edit forms.
@@ -45,7 +46,7 @@ class TermFormController extends EntityFormControllerNG {
     $form['langcode'] = array(
       '#type' => 'language_select',
       '#title' => t('Language'),
-      '#languages' => LANGUAGE_ALL,
+      '#languages' => Language::STATE_ALL,
       '#default_value' => $term->langcode->value,
       '#access' => !is_null($language_configuration['language_show']) && $language_configuration['language_show'],
     );

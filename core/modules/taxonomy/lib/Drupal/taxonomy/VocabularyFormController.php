@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy;
 
 use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Language\Language;
 
 /**
  * Base form controller for vocabulary edit forms.
@@ -53,7 +54,7 @@ class VocabularyFormController extends EntityFormController {
     $form['langcode'] = array(
       '#type' => 'language_select',
       '#title' => t('Vocabulary language'),
-      '#languages' => LANGUAGE_ALL,
+      '#languages' => Language::STATE_ALL,
       '#default_value' => $vocabulary->langcode,
     );
     if (module_exists('language')) {

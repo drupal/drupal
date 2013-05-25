@@ -10,6 +10,7 @@ namespace Drupal\file\Plugin\Core\Entity;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Language\Language;
 use Drupal\file\FileInterface;
 
 /**
@@ -52,7 +53,7 @@ class File extends Entity implements FileInterface {
    *
    * @var string
    */
-  public $langcode = LANGUAGE_NOT_SPECIFIED;
+  public $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
   /**
    * The uid of the user who is associated with the file.

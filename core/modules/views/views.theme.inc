@@ -5,6 +5,7 @@
  * Preprocessors and helper functions to make theming easier.
  */
 
+use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
 use Drupal\views\ViewExecutable;
 
@@ -1007,7 +1008,7 @@ function template_preprocess_views_view_rss(&$vars) {
     $vars['link'] = check_url(url($path, $url_options));
   }
 
-  $vars['langcode'] = check_plain(language(LANGUAGE_TYPE_INTERFACE)->langcode);
+  $vars['langcode'] = check_plain(language(Language::TYPE_INTERFACE)->langcode);
   $vars['namespaces'] = new Attribute($style->namespaces);
   $vars['items'] = $items;
   $vars['channel_elements'] = format_xml_elements($style->channel_elements);

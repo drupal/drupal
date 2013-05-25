@@ -10,6 +10,7 @@ namespace Drupal\views;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Language\Language;
 
 /**
  * Class to manage and lazy load cached views data.
@@ -84,7 +85,7 @@ class ViewsData {
     $this->cacheBackend = $cache_backend;
     $this->moduleHandler = $module_handler;
 
-    $this->langcode = language(LANGUAGE_TYPE_INTERFACE)->langcode;
+    $this->langcode = language(Language::TYPE_INTERFACE)->langcode;
     $this->skipCache = $config->get('views.settings')->get('skip_cache');
   }
 

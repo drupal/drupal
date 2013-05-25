@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests related to node type initial language.
  */
@@ -98,7 +100,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
    * Tests language field visibility features.
    */
   function testLanguageFieldVisibility() {
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Creates a node to test Language field visibility feature.
     $edit = array(

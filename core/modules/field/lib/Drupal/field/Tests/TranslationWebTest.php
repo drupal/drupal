@@ -78,7 +78,7 @@ class TranslationWebTest extends FieldTestBase {
     $eid = 1;
     $entity = field_test_create_entity($eid, $eid, $this->instance['bundle']);
     $available_langcodes = array_flip(field_available_languages($this->entity_type, $this->field));
-    unset($available_langcodes[LANGUAGE_NOT_SPECIFIED]);
+    unset($available_langcodes[Language::LANGCODE_NOT_SPECIFIED]);
     $field_name = $this->field['field_name'];
 
     // Store the field translations.

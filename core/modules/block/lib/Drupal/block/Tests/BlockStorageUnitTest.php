@@ -7,6 +7,7 @@
 
 namespace Drupal\block\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\block_test\Plugin\Block\TestHtmlIdBlock;
 use Drupal\Component\Plugin\Exception\PluginException;

@@ -143,7 +143,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $this->drupalPost('admin/config/regional/translate/translate', $edit, t('Save translations'));
 
     // Configure URL language rewrite.
-    variable_set('language_negotiation_url_type', LANGUAGE_TYPE_INTERFACE);
+    variable_set('language_negotiation_url_type', Language::TYPE_INTERFACE);
 
     // Configure selected language negotiation to use zh-hans.
     $edit = array('selected_langcode' => $langcode);
@@ -235,7 +235,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     }
 
     // Unknown language prefix should return 404.
-    variable_set('language_negotiation_' . LANGUAGE_TYPE_INTERFACE, language_language_negotiation_info());
+    variable_set('language_negotiation_' . Language::TYPE_INTERFACE, language_language_negotiation_info());
     $this->drupalGet("$langcode_unknown/admin/config", array(), $http_header_browser_fallback);
     $this->assertResponse(404, "Unknown language path prefix should return 404");
 
@@ -364,7 +364,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
   protected function runTest($test) {
     if (!empty($test['language_negotiation'])) {
       $method_weights = array_flip($test['language_negotiation']);
-      language_negotiation_set(LANGUAGE_TYPE_INTERFACE, $method_weights);
+      language_negotiation_set(Language::TYPE_INTERFACE, $method_weights);
     }
     if (!empty($test['language_negotiation_url_part'])) {
       config('language.negotiation')
@@ -408,7 +408,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $this->drupalGet('admin/config/regional/language/detection');
 
     // Enable the language switcher block.
-    $this->drupalPlaceBlock('language_block:' . LANGUAGE_TYPE_INTERFACE, array('machine_name' => 'test_language_block'));
+    $this->drupalPlaceBlock('language_block:' . Language::TYPE_INTERFACE, array('machine_name' => 'test_language_block'));
 
     // Access the front page without specifying any valid URL language prefix
     // and having as browser language preference a non-default language.

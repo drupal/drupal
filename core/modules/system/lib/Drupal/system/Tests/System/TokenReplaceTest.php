@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\System;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -32,7 +33,7 @@ class TokenReplaceTest extends WebTestBase {
     $node = $this->drupalCreateNode(array('uid' => $account->uid));
     $node->title = '<blink>Blinking Text</blink>';
     global $user;
-    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language(Language::TYPE_INTERFACE);
 
     $source  = '[node:title]';         // Title of the node we passed in
     $source .= '[node:author:name]';   // Node author's name
@@ -78,7 +79,7 @@ class TokenReplaceTest extends WebTestBase {
    */
   function testSystemTokenRecognition() {
     $token_service = \Drupal::token();
-    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language(Language::TYPE_INTERFACE);
 
     // Generate prefixes and suffixes for the token context.
     $tests = array(
@@ -108,7 +109,7 @@ class TokenReplaceTest extends WebTestBase {
    */
   function testSystemSiteTokenReplacement() {
     $token_service = \Drupal::token();
-    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language(Language::TYPE_INTERFACE);
     $url_options = array(
       'absolute' => TRUE,
       'language' => $language_interface,
@@ -152,7 +153,7 @@ class TokenReplaceTest extends WebTestBase {
    */
   function testSystemDateTokenReplacement() {
     $token_service = \Drupal::token();
-    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language(Language::TYPE_INTERFACE);
 
     // Set time to one hour before request.
     $date = REQUEST_TIME - 3600;

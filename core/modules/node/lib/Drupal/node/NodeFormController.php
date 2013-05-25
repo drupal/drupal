@@ -10,6 +10,7 @@ namespace Drupal\node;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Language\Language;
 
 /**
  * Form controller for the node edit forms.
@@ -107,7 +108,7 @@ class NodeFormController extends EntityFormController {
       '#title' => t('Language'),
       '#type' => 'language_select',
       '#default_value' => $node->langcode,
-      '#languages' => LANGUAGE_ALL,
+      '#languages' => Language::STATE_ALL,
       '#access' => isset($language_configuration['language_show']) && $language_configuration['language_show'],
     );
 

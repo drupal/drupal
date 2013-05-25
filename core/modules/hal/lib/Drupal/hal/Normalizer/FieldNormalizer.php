@@ -8,6 +8,8 @@
 namespace Drupal\hal\Normalizer;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Language\Language;
+
 use Symfony\Component\Serializer\Exception\LogicException;
 
 /**
@@ -43,7 +45,7 @@ class FieldNormalizer extends NormalizerBase {
     // to the field item values.
     else {
       foreach ($entity->getTranslationLanguages() as $lang) {
-        $context['langcode'] = $lang->langcode == 'und' ? LANGUAGE_DEFAULT : $lang->langcode;
+        $context['langcode'] = $lang->langcode == 'und' ? Language::LANGCODE_DEFAULT : $lang->langcode;
         $translation = $entity->getTranslation($lang->langcode);
         $translated_field = $translation->get($field_name);
         $normalized_field_items = array_merge($normalized_field_items, $this->normalizeFieldItems($translated_field, $format, $context));

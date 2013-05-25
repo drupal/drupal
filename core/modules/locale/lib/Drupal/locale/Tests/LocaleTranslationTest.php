@@ -156,7 +156,7 @@ class LocaleTranslationTest extends WebTestBase {
     locale_reset();
     // Now we should get the proper fresh translation from t().
     $this->assertTrue($name != $translation_to_en && t($name, array(), array('langcode' => 'en')) == $translation_to_en, t('t() works for English.'));
-    $this->assertTrue(t($name, array(), array('langcode' => LANGUAGE_SYSTEM)) == $name, t('t() works for LANGUAGE_SYSTEM.'));
+    $this->assertTrue(t($name, array(), array('langcode' => Language::LANGCODE_SYSTEM)) == $name, 't() works for Language::LANGCODE_SYSTEM.');
 
     $search = array(
       'string' => $name,

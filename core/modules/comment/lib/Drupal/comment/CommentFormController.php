@@ -9,6 +9,7 @@ namespace Drupal\comment;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityFormControllerNG;
+use Drupal\Core\Language\Language;
 
 /**
  * Base for controller for comment forms.
@@ -152,7 +153,7 @@ class CommentFormController extends EntityFormControllerNG {
     // Make the comment inherit the current content language unless specifically
     // set.
     if ($comment->isNew()) {
-      $language_content = language(LANGUAGE_TYPE_CONTENT);
+      $language_content = language(Language::TYPE_CONTENT);
       $comment->langcode->value = $language_content->langcode;
     }
 

@@ -5,6 +5,8 @@
  * Install, update, and uninstall functions for the Locale module.
  */
 
+use Drupal\Core\Language\Language;
+
 /**
  * Implements hook_install().
  */
@@ -663,9 +665,9 @@ function locale_update_8007() {
   // Add all language type weight variables. As the function language_types()
   // is not available its functionality is rebuild.
   $language_types = update_variable_get('language_types', array(
-    LANGUAGE_TYPE_INTERFACE => TRUE,
-    LANGUAGE_TYPE_CONTENT => FALSE,
-    LANGUAGE_TYPE_URL => FALSE,
+    Language::TYPE_INTERFACE => TRUE,
+    Language::TYPE_CONTENT => FALSE,
+    Language::TYPE_URL => FALSE,
   ));
   foreach ($language_types as $language_type => $configurable) {
     $variable_names[] = 'language_negotiation_methods_weight_' . $language_type;

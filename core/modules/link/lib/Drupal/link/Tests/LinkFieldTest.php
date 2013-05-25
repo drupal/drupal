@@ -7,6 +7,7 @@
 
 namespace Drupal\link\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -72,7 +73,7 @@ class LinkFieldTest extends WebTestBase {
       ))
       ->save();
 
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test_bundle');
@@ -145,7 +146,7 @@ class LinkFieldTest extends WebTestBase {
       ))
       ->save();
 
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Verify that the title field works according to the field setting.
     foreach (array(DRUPAL_DISABLED, DRUPAL_REQUIRED, DRUPAL_OPTIONAL) as $title_setting) {
@@ -257,7 +258,7 @@ class LinkFieldTest extends WebTestBase {
       ->setComponent($this->field['field_name'], $display_options)
       ->save();
 
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Create an entity with two link field values:
     // - The first field item uses a URL only.
@@ -397,7 +398,7 @@ class LinkFieldTest extends WebTestBase {
       ->setComponent($this->field['field_name'], $display_options)
       ->save();
 
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Create an entity with two link field values:
     // - The first field item uses a URL only.

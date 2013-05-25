@@ -9,6 +9,7 @@ namespace Drupal\hal\Normalizer;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Language\Language;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 /**
@@ -83,7 +84,7 @@ class EntityNormalizer extends NormalizerBase {
       $langcode = language_get_default_langcode($typed_data_ids['entity_type'], $typed_data_ids['bundle']);
     }
     else {
-      $langcode = LANGUAGE_NOT_SPECIFIED;
+      $langcode = Language::LANGCODE_NOT_SPECIFIED;
     }
 
     $entity = entity_create($typed_data_ids['entity_type'], array('langcode' => $langcode, 'type' => $typed_data_ids['bundle']));

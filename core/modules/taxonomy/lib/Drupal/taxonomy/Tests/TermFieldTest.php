@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\field\FieldValidationException;
 
 /**
@@ -77,7 +78,7 @@ class TermFieldTest extends TaxonomyTestBase {
    */
   function testTaxonomyTermFieldValidation() {
     // Test valid and invalid values with field_attach_validate().
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $entity = field_test_create_entity();
     $term = $this->createTerm($this->vocabulary);
     $entity->{$this->field_name}[$langcode][0]['tid'] = $term->id();
@@ -109,7 +110,7 @@ class TermFieldTest extends TaxonomyTestBase {
     $term = $this->createTerm($this->vocabulary);
 
     // Display creation form.
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $this->drupalGet('test-entity/add/test_bundle');
     $this->assertFieldByName("{$this->field_name}[$langcode]", '', 'Widget is displayed.');
 

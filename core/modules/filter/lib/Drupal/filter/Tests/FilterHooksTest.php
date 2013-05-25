@@ -7,6 +7,7 @@
 
 namespace Drupal\filter\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -64,7 +65,7 @@ class FilterHooksTest extends WebTestBase {
     $this->assertText('hook_filter_format_update invoked.');
 
     // Use the format created.
-    $language_not_specified = LANGUAGE_NOT_SPECIFIED;
+    $language_not_specified = Language::LANGCODE_NOT_SPECIFIED;
     $title = $this->randomName(8);
     $edit = array(
       "title" => $title,

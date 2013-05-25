@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Language\Language;
 use PDO;
 
 use Drupal\Core\Entity\Query\QueryInterface;
@@ -202,7 +203,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
         // Skip the item delta and item value levels but let the field assign
         // the value as suiting. This avoids unnecessary array hierarchies and
         // saves memory here.
-        $values[$name][LANGUAGE_DEFAULT] = $value;
+        $values[$name][Language::LANGCODE_DEFAULT] = $value;
       }
       $bundle = $this->bundleKey ? $record->{$this->bundleKey} : FALSE;
       // Turn the record into an entity class.
@@ -242,9 +243,9 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
 
       foreach ($data as $values) {
         $id = $values[$this->idKey];
-        // Field values in default language are stored with LANGUAGE_DEFAULT as
-        // key.
-        $langcode = empty($values['default_langcode']) ? $values['langcode'] : LANGUAGE_DEFAULT;
+        // Field values in default language are stored with
+        // Language::LANGCODE_DEFAULT as key.
+        $langcode = empty($values['default_langcode']) ? $values['langcode'] : Language::LANGCODE_DEFAULT;
         $translation = $entities[$id]->getTranslation($langcode);
 
         foreach ($field_definition as $name => $definition) {

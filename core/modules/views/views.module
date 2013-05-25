@@ -11,6 +11,7 @@
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Language\Language;
 use Drupal\views\ViewExecutable;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\views\Plugin\Core\Entity\View;
@@ -621,14 +622,15 @@ function views_add_contextual_links(&$render_element, $location, ViewExecutable 
  *   array.
  * @param int $flags
  *   (optional) Specifies the state of the languages that have to be returned.
- *   It can be: LANGUAGE_CONFIGURABLE, LANGUAGE_LOCKED, LANGUAGE_ALL.
+ *   It can be: Language::STATE_CONFIGURABLE, Language::STATE_LOCKED,
+ *   Language::STATE_ALL.
  *
  * @return array
  *   An array of language names (or $field) keyed by the langcode.
  *
  * @see locale_language_list()
  */
-function views_language_list($field = 'name', $flags = LANGUAGE_ALL) {
+function views_language_list($field = 'name', $flags = Language::STATE_ALL) {
   $languages = language_list($flags);
   $list = array();
   foreach ($languages as $language) {
@@ -1718,7 +1720,7 @@ function views_cache_set($cid, $data, $use_language = FALSE) {
     return;
   }
   if ($use_language) {
-    $cid .= ':' . language(LANGUAGE_TYPE_INTERFACE)->langcode;
+    $cid .= ':' . language(Language::TYPE_INTERFACE)->langcode;
   }
 
   cache('views_info')->set($cid, $data);
@@ -1742,7 +1744,7 @@ function views_cache_get($cid, $use_language = FALSE) {
     return FALSE;
   }
   if ($use_language) {
-    $cid .= ':' . language(LANGUAGE_TYPE_INTERFACE)->langcode;
+    $cid .= ':' . language(Language::TYPE_INTERFACE)->langcode;
   }
 
   return cache('views_info')->get($cid);

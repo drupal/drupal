@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests node_query_entity_field_access_alter().
  */
@@ -44,7 +46,7 @@ class NodeEntityFieldQueryAlterTest extends NodeTestBase {
     // Creating 4 nodes with an entity field so we can test that sort of query
     // alter. All field values starts with 'A' so we can identify and fetch them
     // in the node_access_test module.
-    $settings = array('langcode' => LANGUAGE_NOT_SPECIFIED);
+    $settings = array('langcode' => Language::LANGCODE_NOT_SPECIFIED);
     for ($i = 0; $i < 4; $i++) {
       $body = array(
         'value' => 'A' . $this->randomName(32),

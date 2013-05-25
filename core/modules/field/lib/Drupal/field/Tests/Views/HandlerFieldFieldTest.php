@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests\Views;
 
+use Drupal\Core\Language\Language;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -104,7 +105,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
       for ($key = 0; $key < 2; $key++) {
         $field = $this->fields[$key];
         $rendered_field = $view->style_plugin->get_field($i, $field['field_name']);
-        $expected_field = $this->nodes[$i]->{$field['field_name']}[LANGUAGE_NOT_SPECIFIED][0]['value'];
+        $expected_field = $this->nodes[$i]->{$field['field_name']}[Language::LANGCODE_NOT_SPECIFIED][0]['value'];
         $this->assertEqual($rendered_field, $expected_field);
       }
     }
@@ -143,7 +144,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     for ($i = 0; $i < 3; $i++) {
       $rendered_field = $view->style_plugin->get_field($i, $field_name);
       $items = array();
-      $pure_items = $this->nodes[$i]->{$field_name}[LANGUAGE_NOT_SPECIFIED];
+      $pure_items = $this->nodes[$i]->{$field_name}[Language::LANGCODE_NOT_SPECIFIED];
       $pure_items = array_splice($pure_items, 0, 3);
       foreach ($pure_items as $j => $item) {
         $items[] = $pure_items[$j]['value'];
@@ -166,7 +167,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     for ($i = 0; $i < 3; $i++) {
       $rendered_field = $view->style_plugin->get_field($i, $field_name);
       $items = array();
-      $pure_items = $this->nodes[$i]->{$field_name}[LANGUAGE_NOT_SPECIFIED];
+      $pure_items = $this->nodes[$i]->{$field_name}[Language::LANGCODE_NOT_SPECIFIED];
       $pure_items = array_splice($pure_items, 1, 3);
       foreach ($pure_items as $j => $item) {
         $items[] = $pure_items[$j]['value'];
@@ -186,7 +187,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     for ($i = 0; $i < 3; $i++) {
       $rendered_field = $view->style_plugin->get_field($i, $field_name);
       $items = array();
-      $pure_items = $this->nodes[$i]->{$field_name}[LANGUAGE_NOT_SPECIFIED];
+      $pure_items = $this->nodes[$i]->{$field_name}[Language::LANGCODE_NOT_SPECIFIED];
       array_splice($pure_items, 0, -3);
       $pure_items = array_reverse($pure_items);
       foreach ($pure_items as $j => $item) {
@@ -207,7 +208,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     for ($i = 0; $i < 3; $i++) {
       $rendered_field = $view->style_plugin->get_field($i, $field_name);
       $items = array();
-      $pure_items = $this->nodes[$i]->{$field_name}[LANGUAGE_NOT_SPECIFIED];
+      $pure_items = $this->nodes[$i]->{$field_name}[Language::LANGCODE_NOT_SPECIFIED];
       $items[] = $pure_items[0]['value'];
       $items[] = $pure_items[4]['value'];
       $this->assertEqual($rendered_field, implode(', ', $items), 'Take sure that the amount of items are limited.');
@@ -225,7 +226,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     for ($i = 0; $i < 3; $i++) {
       $rendered_field = $view->style_plugin->get_field($i, $field_name);
       $items = array();
-      $pure_items = $this->nodes[$i]->{$field_name}[LANGUAGE_NOT_SPECIFIED];
+      $pure_items = $this->nodes[$i]->{$field_name}[Language::LANGCODE_NOT_SPECIFIED];
       $pure_items = array_splice($pure_items, 0, 3);
       foreach ($pure_items as $j => $item) {
         $items[] = $pure_items[$j]['value'];

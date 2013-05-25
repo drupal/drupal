@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 use Drupal\views\ViewExecutable;
 
@@ -51,7 +52,7 @@ class DefaultViewsTest extends WebTestBase {
       'name' => $this->randomName(),
       'description' => $this->randomName(),
       'vid' => drupal_strtolower($this->randomName()),
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
       'help' => '',
       'nodes' => array('page' => 'page'),
       'weight' => mt_rand(0, 10),
@@ -98,7 +99,7 @@ class DefaultViewsTest extends WebTestBase {
 
       $node = $this->drupalCreateNode($values);
 
-      search_index($node->nid, 'node', $node->body[LANGUAGE_NOT_SPECIFIED][0]['value'], LANGUAGE_NOT_SPECIFIED);
+      search_index($node->nid, 'node', $node->body[Language::LANGCODE_NOT_SPECIFIED][0]['value'], Language::LANGCODE_NOT_SPECIFIED);
 
       $comment = array(
         'uid' => $user->uid,
@@ -153,7 +154,7 @@ class DefaultViewsTest extends WebTestBase {
       // Use the first available text format.
       'format' => $format->format,
       'vid' => $vocabulary->id(),
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
     ));
     $term->save();
     return $term;

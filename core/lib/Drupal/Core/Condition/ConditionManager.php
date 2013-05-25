@@ -12,6 +12,7 @@ use Drupal\Core\Executable\ExecutableManagerInterface;
 use Drupal\Core\Executable\ExecutableInterface;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Component\Plugin\Discovery\DerivativeDiscoveryDecorator;
+use Drupal\Core\Language\Language;
 use Drupal\Core\Plugin\Discovery\AlterDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
@@ -32,7 +33,7 @@ class ConditionManager extends PluginManagerBase implements ExecutableManagerInt
     $this->discovery = new AnnotatedClassDiscovery('Condition', $namespaces);
     $this->discovery = new DerivativeDiscoveryDecorator($this->discovery);
     $this->discovery = new AlterDecorator($this->discovery, 'condition_info');
-    $this->discovery = new CacheDecorator($this->discovery, 'condition:' . language(LANGUAGE_TYPE_INTERFACE)->langcode);
+    $this->discovery = new CacheDecorator($this->discovery, 'condition:' . language(Language::TYPE_INTERFACE)->langcode);
 
     $this->factory = new DefaultFactory($this);
   }

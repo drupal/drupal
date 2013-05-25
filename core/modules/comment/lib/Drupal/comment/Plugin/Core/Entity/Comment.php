@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\comment\CommentInterface;
+use Drupal\Core\Language\Language;
 
 /**
  * Defines the comment entity class.
@@ -183,9 +184,9 @@ class Comment extends EntityNG implements CommentInterface {
    * @var array
    */
   protected $values = array(
-    'langcode' => array(LANGUAGE_DEFAULT => array(0 => array('value' => LANGUAGE_NOT_SPECIFIED))),
-    'name' => array(LANGUAGE_DEFAULT => array(0 => array('value' => ''))),
-    'uid' => array(LANGUAGE_DEFAULT => array(0 => array('target_id' => 0))),
+    'langcode' => array(Language::LANGCODE_DEFAULT => array(0 => array('value' => Language::LANGCODE_NOT_SPECIFIED))),
+    'name' => array(Language::LANGCODE_DEFAULT => array(0 => array('value' => ''))),
+    'uid' => array(Language::LANGCODE_DEFAULT => array(0 => array('target_id' => 0))),
   );
 
   /**

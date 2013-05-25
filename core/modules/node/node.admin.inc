@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Language\Language;
 
 /**
  * Page callback: Form constructor for the permission rebuild confirmation form.
@@ -110,7 +111,7 @@ function node_filters() {
 
   // Language filter if language support is present.
   if (language_multilingual()) {
-    $languages = language_list(LANGUAGE_ALL);
+    $languages = language_list(Language::STATE_ALL);
     foreach ($languages as $langcode => $language) {
       // Make locked languages appear special in the list.
       $language_options[$langcode] = $language->locked ? t('- @name -', array('@name' => $language->name)) : $language->name;
@@ -517,7 +518,7 @@ function node_admin_nodes() {
   $nodes = node_load_multiple($nids);
 
   // Prepare the list of nodes.
-  $languages = language_list(LANGUAGE_ALL);
+  $languages = language_list(Language::STATE_ALL);
   $destination = drupal_get_destination();
   $form['nodes'] = array(
     '#type' => 'table',
@@ -525,7 +526,7 @@ function node_admin_nodes() {
     '#empty' => t('No content available.'),
   );
   foreach ($nodes as $node) {
-    $l_options = $node->langcode != LANGUAGE_NOT_SPECIFIED && isset($languages[$node->langcode]) ? array('language' => $languages[$node->langcode]) : array();
+    $l_options = $node->langcode != Language::LANGCODE_NOT_SPECIFIED && isset($languages[$node->langcode]) ? array('language' => $languages[$node->langcode]) : array();
     $form['nodes'][$node->nid]['title'] = array(
       '#type' => 'link',
       '#title' => $node->label(),

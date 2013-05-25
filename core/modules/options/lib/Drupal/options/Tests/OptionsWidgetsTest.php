@@ -7,6 +7,7 @@
 
 namespace Drupal\options\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\field\Tests\FieldTestBase;
 
 /**
@@ -89,7 +90,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       ))
       ->save();
 
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Create an entity.
     $entity_init = field_test_create_entity();
@@ -146,7 +147,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       ))
       ->save();
 
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Create an entity.
     $entity_init = field_test_create_entity();
@@ -237,7 +238,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       ))
       ->save();
 
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Create an entity.
     $entity_init = field_test_create_entity();
@@ -336,7 +337,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       ))
       ->save();
 
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Create an entity.
     $entity_init = field_test_create_entity();
@@ -456,7 +457,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       ))
       ->save();
 
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Create an entity.
     $entity_init = field_test_create_entity();

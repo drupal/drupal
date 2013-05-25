@@ -5,6 +5,7 @@
  * Exposes global functionality for creating image styles.
  */
 
+use Drupal\Core\Language\Language;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -803,7 +804,7 @@ function image_style_path($style_name, $uri) {
  * @see image_effect_definition_load()
  */
 function image_effect_definitions() {
-  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(Language::TYPE_INTERFACE);
 
   // hook_image_effect_info() includes translated strings, so each language is
   // cached separately.

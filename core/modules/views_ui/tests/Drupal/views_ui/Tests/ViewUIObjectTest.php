@@ -7,16 +7,11 @@
 
 namespace Drupal\views_ui\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\ViewExecutable;
 use Drupal\views_ui\ViewUI;
 use Symfony\Component\DependencyInjection\Container;
-
-// Needed because the Entity class uses this constant.
-// @todo Remove once http://drupal.org/node/1620010 is in.
-if (!defined('LANGUAGE_NOT_SPECIFIED')) {
-  define('LANGUAGE_NOT_SPECIFIED', 'und');
-}
 
 if (!defined('DRUPAL_CORE_COMPATIBILITY')) {
   define('DRUPAL_CORE_COMPATIBILITY', '8.x');
@@ -46,7 +41,7 @@ class ViewUIObjectTest extends UnitTestCase {
     $method_args['setStatus'] = array(TRUE);
     $method_args['setNewRevision'] = array(FALSE);
     $method_args['enforceIsNew'] = array(FALSE);
-    $method_args['label'] = array(LANGUAGE_NOT_SPECIFIED);
+    $method_args['label'] = array(Language::LANGCODE_NOT_SPECIFIED);
     $method_args['isDefaultRevision'] = array(TRUE);
 
     $reflection = new \ReflectionClass('Drupal\Core\Config\Entity\ConfigEntityInterface');

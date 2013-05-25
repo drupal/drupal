@@ -7,6 +7,7 @@
 
 namespace Drupal\rdf\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -102,7 +103,7 @@ class RdfaMarkupTest extends WebTestBase {
     $admin_user = $this->drupalCreateUser(array('edit own article content', 'revert article revisions', 'administer content types'));
     $this->drupalLogin($admin_user);
 
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $bundle_name = "article";
 
     $field_name = 'file_test';
@@ -163,7 +164,7 @@ class RdfaMarkupTest extends WebTestBase {
     $tag1 = $this->randomName(8);
     $tag2 = $this->randomName(8);
     $edit = array();
-    $edit['field_tags[' . LANGUAGE_NOT_SPECIFIED . ']'] = "$tag1, $tag2";
+    $edit['field_tags[' . Language::LANGCODE_NOT_SPECIFIED . ']'] = "$tag1, $tag2";
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     $term_1_id = key(taxonomy_term_load_multiple_by_name($tag1));
     $taxonomy_term_1_uri = url('taxonomy/term/' . $term_1_id, array('absolute' => TRUE));

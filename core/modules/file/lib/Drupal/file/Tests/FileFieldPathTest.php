@@ -7,6 +7,8 @@
 
 namespace Drupal\file\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests that files are uploaded to proper locations.
  */
@@ -33,7 +35,7 @@ class FileFieldPathTest extends FileFieldTestBase {
 
     // Check that the file was uploaded to the file root.
     $node = node_load($nid, TRUE);
-    $node_file = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
+    $node_file = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']);
     $this->assertPathMatch('public://' . $test_file->filename, $node_file->uri, t('The file %file was uploaded to the correct path.', array('%file' => $node_file->uri)));
 
     // Change the path to contain multiple subdirectories.
@@ -44,7 +46,7 @@ class FileFieldPathTest extends FileFieldTestBase {
 
     // Check that the file was uploaded into the subdirectory.
     $node = node_load($nid, TRUE);
-    $node_file = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
+    $node_file = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']);
     $this->assertPathMatch('public://foo/bar/baz/' . $test_file->filename, $node_file->uri, t('The file %file was uploaded to the correct path.', array('%file' => $node_file->uri)));
 
     // Check the path when used with tokens.
@@ -56,7 +58,7 @@ class FileFieldPathTest extends FileFieldTestBase {
 
     // Check that the file was uploaded into the subdirectory.
     $node = node_load($nid, TRUE);
-    $node_file = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
+    $node_file = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']);
     // Do token replacement using the same user which uploaded the file, not
     // the user running the test case.
     $data = array('user' => $this->admin_user);

@@ -8,6 +8,7 @@
 namespace Drupal\translation\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -105,7 +106,7 @@ class TranslationTest extends WebTestBase {
     // Attempt a resubmission of the form - this emulates using the back button
     // to return to the page then resubmitting the form without a refresh.
     $edit = array();
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName();
     $edit["body[$langcode][0][value]"] = $this->randomName();
     $this->drupalPost('node/add/page', $edit, t('Save'), array('query' => array('translation' => $node->nid, 'language' => 'es')));
@@ -114,7 +115,7 @@ class TranslationTest extends WebTestBase {
 
     // Update original and mark translation as outdated.
     $node_body = $this->randomName();
-    $node->body[LANGUAGE_NOT_SPECIFIED][0]['value'] = $node_body;
+    $node->body[Language::LANGCODE_NOT_SPECIFIED][0]['value'] = $node_body;
     $edit = array();
     $edit["body[$langcode][0][value]"] = $node_body;
     $edit['translation[retranslate]'] = TRUE;
@@ -135,9 +136,9 @@ class TranslationTest extends WebTestBase {
     // Confirm that language neutral is an option for translators when there are
     // disabled languages.
     $this->drupalGet('node/add/page');
-    $this->assertFieldByXPath('//select[@name="langcode"]//option', LANGUAGE_NOT_SPECIFIED, 'Language neutral is available in language selection with disabled languages.');
-    $node2 = $this->createPage($this->randomName(), $this->randomName(), LANGUAGE_NOT_SPECIFIED);
-    $this->assertRaw($node2->body[LANGUAGE_NOT_SPECIFIED][0]['value'], 'Language neutral content created with disabled languages available.');
+    $this->assertFieldByXPath('//select[@name="langcode"]//option', Language::LANGCODE_NOT_SPECIFIED, 'Language neutral is available in language selection with disabled languages.');
+    $node2 = $this->createPage($this->randomName(), $this->randomName(), Language::LANGCODE_NOT_SPECIFIED);
+    $this->assertRaw($node2->body[Language::LANGCODE_NOT_SPECIFIED][0]['value'], 'Language neutral content created with disabled languages available.');
 
     // Leave just one language installed and check that the translation overview
     // page is still accessible.
@@ -215,7 +216,7 @@ class TranslationTest extends WebTestBase {
 
     // Create a language neutral node and check that the language switcher is
     // left untouched.
-    $node2 = $this->createPage($this->randomName(), $this->randomName(), LANGUAGE_NOT_SPECIFIED);
+    $node2 = $this->createPage($this->randomName(), $this->randomName(), Language::LANGCODE_NOT_SPECIFIED);
     $node2_en = (object) array('nid' => $node2->nid, 'langcode' => 'en');
     $node2_es = (object) array('nid' => $node2->nid, 'langcode' => 'es');
     $node2_it = (object) array('nid' => $node2->nid, 'langcode' => 'it');
@@ -324,7 +325,7 @@ class TranslationTest extends WebTestBase {
     }
     else {
       // It's installed. No need to do anything.
-      $this->assertTrue(true, 'Language [' . $langcode . '] already installed.');
+      $this->assertTrue(TRUE, 'Language [' . $langcode . '] already installed.');
     }
   }
 
@@ -343,7 +344,7 @@ class TranslationTest extends WebTestBase {
    */
   function createPage($title, $body, $langcode = NULL) {
     $edit = array();
-    $field_langcode = LANGUAGE_NOT_SPECIFIED;
+    $field_langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit["title"] = $title;
     $edit["body[$field_langcode][0][value]"] = $body;
     if (!empty($langcode)) {
@@ -377,10 +378,10 @@ class TranslationTest extends WebTestBase {
   function createTranslation(EntityInterface $node, $title, $body, $langcode) {
     $this->drupalGet('node/add/page', array('query' => array('translation' => $node->nid, 'target' => $langcode)));
 
-    $field_langcode = LANGUAGE_NOT_SPECIFIED;
+    $field_langcode = Language::LANGCODE_NOT_SPECIFIED;
     $body_key = "body[$field_langcode][0][value]";
     $this->assertFieldByXPath('//input[@id="edit-title"]', $node->label(), "Original title value correctly populated.");
-    $this->assertFieldByXPath("//textarea[@name='$body_key']", $node->body[LANGUAGE_NOT_SPECIFIED][0]['value'], "Original body value correctly populated.");
+    $this->assertFieldByXPath("//textarea[@name='$body_key']", $node->body[Language::LANGCODE_NOT_SPECIFIED][0]['value'], "Original body value correctly populated.");
 
     $edit = array();
     $edit["title"] = $title;

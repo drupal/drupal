@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\node\Tests\Views;
+use Drupal\Core\Language\Language;
 
 /**
  * Tests the node row plugin.
@@ -116,8 +117,8 @@ class RowPluginTest extends NodeTestBase {
     $output = drupal_render($output);
     foreach ($this->nodes as $node) {
       $body = $node->body;
-      $teaser = $body[LANGUAGE_NOT_SPECIFIED][0]['summary'];
-      $full = $body[LANGUAGE_NOT_SPECIFIED][0]['value'];
+      $teaser = $body[Language::LANGCODE_NOT_SPECIFIED][0]['summary'];
+      $full = $body[Language::LANGCODE_NOT_SPECIFIED][0]['value'];
       $this->assertFalse(strpos($output, $teaser) !== FALSE, 'Make sure the teaser appears in the output of the view.');
       $this->assertTrue(strpos($output, $full) !== FALSE, 'Make sure the full text appears in the output of the view.');
     }
@@ -128,8 +129,8 @@ class RowPluginTest extends NodeTestBase {
     $output = drupal_render($output);
     foreach ($this->nodes as $node) {
       $body = $node->body;
-      $teaser = $body[LANGUAGE_NOT_SPECIFIED][0]['summary'];
-      $full = $body[LANGUAGE_NOT_SPECIFIED][0]['value'];
+      $teaser = $body[Language::LANGCODE_NOT_SPECIFIED][0]['summary'];
+      $full = $body[Language::LANGCODE_NOT_SPECIFIED][0]['value'];
       $this->assertTrue(strpos($output, $teaser) !== FALSE, 'Make sure the teaser appears in the output of the view.');
       $this->assertFalse(strpos($output, $full) !== FALSE, 'Make sure the full text does not appears in the output of the view if teaser is set as viewmode.');
     }

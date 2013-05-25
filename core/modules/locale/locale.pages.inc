@@ -5,6 +5,7 @@
  * Interface translation summary, editing and deletion user interfaces.
  */
 
+use Drupal\Core\Language\Language;
 use Drupal\locale\SourceString;
 use Drupal\locale\TranslationString;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -107,7 +108,7 @@ function locale_translate_filters() {
   }
 
   // Pick the current interface language code for the filter.
-  $default_langcode = language(LANGUAGE_TYPE_INTERFACE)->langcode;
+  $default_langcode = language(Language::TYPE_INTERFACE)->langcode;
   if (!isset($language_options[$default_langcode])) {
     $available_langcodes = array_keys($language_options);
     $default_langcode = array_shift($available_langcodes);

@@ -7,6 +7,7 @@
 
 namespace Drupal\forum\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 
@@ -98,7 +99,7 @@ class ForumBlockTest extends WebTestBase {
 
     // Comment on the first 5 topics.
     $date = new DrupalDateTime();
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     for ($index = 0; $index < 5; $index++) {
       // Get the node from the topic title.
       $node = $this->drupalGetNodeByTitle($topics[$index]);
@@ -168,7 +169,7 @@ class ForumBlockTest extends WebTestBase {
       // changing the date.
       $date->modify('+1 minute');
 
-      $langcode = LANGUAGE_NOT_SPECIFIED;
+      $langcode = Language::LANGCODE_NOT_SPECIFIED;
       $edit = array(
         'title' => $title,
         "body[$langcode][0][value]" => $body,

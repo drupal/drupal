@@ -148,7 +148,7 @@ class AliasTest extends PathUnitTestBase {
     // Test the situation where the alias and language are the same, but
     // the source differs. The newer alias record should be returned.
     $pathObject->save('user/2', 'bar');
-    $this->assertEqual($aliasManager->getSystemPath('bar'), 'user/2', 'Newer alias record is returned when comparing two LANGUAGE_NOT_SPECIFIED paths with the same alias.');
+    $this->assertEqual($aliasManager->getSystemPath('bar'), 'user/2', 'Newer alias record is returned when comparing two Language::LANGCODE_NOT_SPECIFIED paths with the same alias.');
   }
 
   /**

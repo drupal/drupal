@@ -7,6 +7,8 @@
 
 namespace Drupal\file\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests that formatters are working properly.
  */
@@ -65,7 +67,7 @@ class FileFieldRSSContentTest extends FileFieldTestBase {
 
     // Get the uploaded file from the node.
     $node = node_load($nid, TRUE);
-    $node_file = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
+    $node_file = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']);
 
     // Check that the RSS enclosure appears in the RSS feed.
     $this->drupalGet('rss.xml');

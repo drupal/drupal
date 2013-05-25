@@ -7,6 +7,8 @@
 
 namespace Drupal\taxonomy\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests a taxonomy term reference field that allows multiple vocabularies.
  */
@@ -86,7 +88,7 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     $term2 = $this->createTerm($this->vocabulary2);
 
     // Submit an entity with both terms.
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $this->drupalGet('test-entity/add/test_bundle');
     $this->assertFieldByName("{$this->field_name}[$langcode][]", '', 'Widget is displayed');
     $edit = array(

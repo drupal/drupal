@@ -7,6 +7,8 @@
 
 namespace Drupal\taxonomy\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Test taxonomy token replacement in strings.
  */
@@ -25,7 +27,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
     $this->admin_user = $this->drupalCreateUser(array('administer taxonomy', 'bypass node access'));
     $this->drupalLogin($this->admin_user);
     $this->vocabulary = $this->createVocabulary();
-    $this->langcode = LANGUAGE_NOT_SPECIFIED;
+    $this->langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     $field = array(
       'field_name' => 'taxonomy_' . $this->vocabulary->id(),
@@ -65,7 +67,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
    */
   function testTaxonomyTokenReplacement() {
     $token_service = \Drupal::token();
-    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language(Language::TYPE_INTERFACE);
 
     // Create two taxonomy terms.
     $term1 = $this->createTerm($this->vocabulary);

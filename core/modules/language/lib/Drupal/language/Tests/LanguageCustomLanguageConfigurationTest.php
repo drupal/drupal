@@ -57,7 +57,7 @@ class LanguageCustomLanguageConfigurationTest extends WebTestBase {
       'predefined_langcode' => 'custom',
       'langcode' => 'white space',
       'name' => '<strong>evil markup</strong>',
-      'direction' => LANGUAGE_LTR,
+      'direction' => Language::DIRECTION_LTR,
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
     $this->assertRaw(t('%field may only contain characters a-z, underscores, or hyphens.', array('%field' => t('Language code'))));
@@ -69,7 +69,7 @@ class LanguageCustomLanguageConfigurationTest extends WebTestBase {
       'predefined_langcode' => 'custom',
       'langcode' => 'de',
       'name' => 'German',
-      'direction' => LANGUAGE_LTR,
+      'direction' => Language::DIRECTION_LTR,
     );
 
     // Add the language the first time.

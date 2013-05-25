@@ -7,6 +7,8 @@
 
 namespace Drupal\field_ui\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests the functionality of the 'Manage fields' screen.
  */
@@ -35,7 +37,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => 'Tags',
       'vid' => 'tags',
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
     ));
     $vocabulary->save();
 
@@ -264,7 +266,7 @@ class ManageFieldsTest extends FieldUiTestBase {
       ->setComponent($field_name)
       ->save();
 
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $admin_path = 'admin/structure/types/manage/' . $this->type . '/fields/' . $instance->id();
     $element_id = "edit-$field_name-$langcode-0-value";
     $element_name = "{$field_name}[$langcode][0][value]";

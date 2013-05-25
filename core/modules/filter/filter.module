@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
 use Drupal\filter\Plugin\Core\Entity\FilterFormat;
 
@@ -275,7 +276,7 @@ function filter_permission_name($format) {
  * @see filter_formats_reset()
  */
 function filter_formats($account = NULL) {
-  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(Language::TYPE_INTERFACE);
   $formats = &drupal_static(__FUNCTION__, array());
 
   // All available formats are cached for performance.

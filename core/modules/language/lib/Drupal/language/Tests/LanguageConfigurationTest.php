@@ -7,6 +7,7 @@
 
 namespace Drupal\language\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -145,7 +146,7 @@ class LanguageConfigurationTest extends WebTestBase {
     drupal_static_reset('language_list');
     $max_configurable_language_weight = $this->getHighestConfigurableLanguageWeight();
     $replacements = array('@event' => $state);
-    foreach (language_list(LANGUAGE_LOCKED) as $locked_language) {
+    foreach (language_list(Language::STATE_LOCKED) as $locked_language) {
       $replacements['%language'] = $locked_language->name;
       $this->assertTrue($locked_language->weight > $max_configurable_language_weight, format_string('System language %language has higher weight than configurable languages @event', $replacements));
     }

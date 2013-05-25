@@ -7,6 +7,7 @@
 
 namespace Drupal\tracker\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -110,7 +111,7 @@ class TrackerTest extends WebTestBase {
     ));
     $comment = array(
       'subject' => $this->randomName(),
-      'comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
+      'comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
     );
     $this->drupalPost('comment/reply/' . $other_published_my_comment->nid, $comment, t('Save'));
 
@@ -170,7 +171,7 @@ class TrackerTest extends WebTestBase {
     // Add a comment to the page.
     $comment = array(
       'subject' => $this->randomName(),
-      'comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
+      'comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
     );
     // The new comment is automatically viewed by the current user.
     $this->drupalPost('comment/reply/' . $node->nid, $comment, t('Save'));
@@ -183,7 +184,7 @@ class TrackerTest extends WebTestBase {
     // Add another comment as other_user.
     $comment = array(
       'subject' => $this->randomName(),
-      'comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
+      'comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
     );
     // If the comment is posted in the same second as the last one then Drupal
     // can't tell the difference, so we wait one second here.
@@ -216,7 +217,7 @@ class TrackerTest extends WebTestBase {
     $this->drupalLogin($this->other_user);
     $comment = array(
       'subject' => $this->randomName(),
-      'comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
+      'comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
     );
     $this->drupalPost('comment/reply/' . $nodes[3]->nid, $comment, t('Save'));
 

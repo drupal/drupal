@@ -9,6 +9,7 @@ namespace Drupal\custom_block;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityFormControllerNG;
+use Drupal\Core\Language\Language;
 
 /**
  * Form controller for the custom block edit forms.
@@ -77,7 +78,7 @@ class CustomBlockFormController extends EntityFormControllerNG {
       '#title' => t('Language'),
       '#type' => 'language_select',
       '#default_value' => $block->langcode->value,
-      '#languages' => LANGUAGE_ALL,
+      '#languages' => Language::STATE_ALL,
       '#access' => isset($language_configuration['language_show']) && $language_configuration['language_show'],
     );
 

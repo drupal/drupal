@@ -7,6 +7,7 @@
 
 namespace Drupal\translation_entity\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -69,7 +70,7 @@ class EntityTranslationSettingsTest extends WebTestBase {
     // language is set as default and the language selector is hidden.
     $edit = array(
       'entity_types[comment]' => TRUE,
-      'settings[comment][comment_node_article][settings][language][langcode]' => LANGUAGE_NOT_SPECIFIED,
+      'settings[comment][comment_node_article][settings][language][langcode]' => Language::LANGCODE_NOT_SPECIFIED,
       'settings[comment][comment_node_article][settings][language][language_show]' => FALSE,
       'settings[comment][comment_node_article][translatable]' => TRUE,
       'settings[comment][comment_node_article][fields][comment_body]' => TRUE,

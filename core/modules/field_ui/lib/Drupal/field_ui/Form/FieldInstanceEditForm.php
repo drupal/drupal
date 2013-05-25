@@ -9,6 +9,7 @@ namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\ControllerInterface;
+use Drupal\Core\Language\Language;
 use Drupal\field\Plugin\Core\Entity\FieldInstance;
 use Drupal\field\Plugin\Type\Widget\WidgetPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -178,27 +179,27 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
 
       // Extract the 'default value'.
       $items = array();
-      $entity_form_display->getWidget($this->instance->getField()->id)->extractFormValues($entity, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
+      $entity_form_display->getWidget($this->instance->getField()->id)->extractFormValues($entity, Language::LANGCODE_NOT_SPECIFIED, $items, $element, $form_state);
 
       // Grab the field definition from $form_state.
-      $field_state = field_form_get_state($element['#parents'], $field_name, LANGUAGE_NOT_SPECIFIED, $form_state);
+      $field_state = field_form_get_state($element['#parents'], $field_name, Language::LANGCODE_NOT_SPECIFIED, $form_state);
       $field = $field_state['field'];
 
       // Validate the value.
       $errors = array();
       $function = $field['module'] . '_field_validate';
       if (function_exists($function)) {
-        $function(NULL, $field, $this->instance, LANGUAGE_NOT_SPECIFIED, $items, $errors);
+        $function(NULL, $field, $this->instance, Language::LANGCODE_NOT_SPECIFIED, $items, $errors);
       }
 
       // Report errors.
-      if (isset($errors[$field_name][LANGUAGE_NOT_SPECIFIED])) {
+      if (isset($errors[$field_name][Language::LANGCODE_NOT_SPECIFIED])) {
         // Store reported errors in $form_state.
-        $field_state['errors'] = $errors[$field_name][LANGUAGE_NOT_SPECIFIED];
-        field_form_set_state($element['#parents'], $field_name, LANGUAGE_NOT_SPECIFIED, $form_state, $field_state);
+        $field_state['errors'] = $errors[$field_name][Language::LANGCODE_NOT_SPECIFIED];
+        field_form_set_state($element['#parents'], $field_name, Language::LANGCODE_NOT_SPECIFIED, $form_state, $field_state);
 
         // Assign reported errors to the correct form element.
-        $entity_form_display->getWidget($this->instance->getField()->id)->flagErrors($entity, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
+        $entity_form_display->getWidget($this->instance->getField()->id)->flagErrors($entity, Language::LANGCODE_NOT_SPECIFIED, $items, $element, $form_state);
       }
     }
   }
@@ -217,7 +218,7 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
 
       // Extract field values.
       $items = array();
-      $entity_form_display->getWidget($this->instance->getField()->id)->extractFormValues($entity, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
+      $entity_form_display->getWidget($this->instance->getField()->id)->extractFormValues($entity, Language::LANGCODE_NOT_SPECIFIED, $items, $element, $form_state);
 
       $this->instance['default_value'] = $items ? $items : NULL;
     }
@@ -297,7 +298,7 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
     if (!empty($this->instance['default_value'])) {
       $items = (array) $this->instance['default_value'];
     }
-    $element += $entity_form_display->getWidget($this->instance->getField()->id)->form($entity, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
+    $element += $entity_form_display->getWidget($this->instance->getField()->id)->form($entity, Language::LANGCODE_NOT_SPECIFIED, $items, $element, $form_state);
 
     return $element;
   }

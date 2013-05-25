@@ -65,7 +65,7 @@ function translation_entity_module_implements_alter(&$implementations, $hook) {
 function translation_entity_language_types_info_alter(array &$language_types) {
   // Make content language negotiation configurable by removing its predefined
   // configuration.
-  unset($language_types[LANGUAGE_TYPE_CONTENT]['fixed']);
+  unset($language_types[Language::TYPE_CONTENT]['fixed']);
 }
 
 /**
@@ -312,7 +312,7 @@ function translation_entity_view_access(EntityInterface $entity, $langcode, $acc
  */
 function translation_entity_add_access(EntityInterface $entity, Language $source = NULL, Language $target = NULL) {
   $source = !empty($source) ? $source : $entity->language();
-  $target = !empty($target) ? $target : language(LANGUAGE_TYPE_CONTENT);
+  $target = !empty($target) ? $target : language(Language::TYPE_CONTENT);
   $translations = $entity->getTranslationLanguages();
   $languages = language_list();
   return $source->langcode != $target->langcode && isset($languages[$source->langcode]) && isset($languages[$target->langcode]) && !isset($translations[$target->langcode]) && translation_entity_access($entity, 'create');
@@ -328,7 +328,7 @@ function translation_entity_add_access(EntityInterface $entity, Language $source
  *   content language.
  */
 function translation_entity_edit_access(EntityInterface $entity, Language $language = NULL) {
-  $language = !empty($language) ? $language : language(LANGUAGE_TYPE_CONTENT);
+  $language = !empty($language) ? $language : language(Language::TYPE_CONTENT);
   $translations = $entity->getTranslationLanguages();
   $languages = language_list();
   return isset($languages[$language->langcode]) && $language->langcode != $entity->language()->langcode && isset($translations[$language->langcode]) && translation_entity_access($entity, 'update');
@@ -344,7 +344,7 @@ function translation_entity_edit_access(EntityInterface $entity, Language $langu
  *   content language.
  */
 function translation_entity_delete_access(EntityInterface $entity, Language $language = NULL) {
-  $language = !empty($language) ? $language : language(LANGUAGE_TYPE_CONTENT);
+  $language = !empty($language) ? $language : language(Language::TYPE_CONTENT);
   $translations = $entity->getTranslationLanguages();
   $languages = language_list();
   return isset($languages[$language->langcode]) && $language->langcode != $entity->language()->langcode && isset($translations[$language->langcode]) && translation_entity_access($entity, 'delete');
@@ -649,14 +649,14 @@ function translation_entity_field_language_alter(&$display_language, $context) {
     foreach ($entity->translation as $langcode => $translation) {
       if ($langcode == $context['langcode'] || !translation_entity_view_access($entity, $langcode)) {
         // Unset unaccessible field translations: if the field is untranslatable
-        // unsetting a language different from LANGUAGE_NOT_SPECIFIED has no
+        // unsetting a language different from Language::LANGCODE_NOT_SPECIFIED has no
         // effect.
         foreach ($instances as $instance) {
           // @todo BC entities have the same value accessibile both with the
-          //   entity language and with LANGUAGE_DEFAULT. We need need to unset
+          //   entity language and with Language::LANGCODE_DEFAULT. We need need to unset
           //   both until we remove the BC layer.
           if ($langcode == $entity_langcode) {
-            unset($entity->{$instance['field_name']}[LANGUAGE_DEFAULT]);
+            unset($entity->{$instance['field_name']}[Language::LANGCODE_DEFAULT]);
           }
           unset($entity->{$instance['field_name']}[$langcode]);
         }
@@ -947,7 +947,7 @@ function translation_entity_language_configuration_element_validate($element, ar
   $key = $form_state['translation_entity']['key'];
   $values = $form_state['values'][$key];
   if (language_is_locked($values['langcode']) && !$values['language_show'] && $values['translation_entity']) {
-    foreach (language_list(LANGUAGE_LOCKED) as $language) {
+    foreach (language_list(Language::STATE_LOCKED) as $language) {
       $locked_languages[] = $language->name;
     }
     // @todo Set the correct form element name as soon as the element parents

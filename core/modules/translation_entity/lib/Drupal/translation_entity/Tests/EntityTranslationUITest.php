@@ -9,6 +9,7 @@ namespace Drupal\translation_entity\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Language\Language;
 use Drupal\Core\TypedData\ComplexDataInterface;
 
 /**
@@ -223,7 +224,7 @@ abstract class EntityTranslationUITest extends EntityTranslationTestBase {
    */
   protected function getEditValues($values, $langcode, $new = FALSE) {
     $edit = $values[$langcode];
-    $langcode = $new ? LANGUAGE_NOT_SPECIFIED : $langcode;
+    $langcode = $new ? Language::LANGCODE_NOT_SPECIFIED : $langcode;
     foreach ($values[$langcode] as $property => $value) {
       if (is_array($value)) {
         $edit["{$property}[$langcode][0][value]"] = $value[0]['value'];

@@ -157,7 +157,7 @@ function locale_translate_export_form($form, &$form_state) {
   if (empty($language_options)) {
     $form['langcode'] = array(
       '#type' => 'value',
-      '#value' => LANGUAGE_SYSTEM,
+      '#value' => Language::LANGCODE_SYSTEM,
     );
     $form['langcode_text'] = array(
       '#type' => 'item',
@@ -172,7 +172,7 @@ function locale_translate_export_form($form, &$form_state) {
       '#options' => $language_options,
       '#default_value' => $language_default->langcode,
       '#empty_option' => t('Source text only, no translations'),
-      '#empty_value' => LANGUAGE_SYSTEM,
+      '#empty_value' => Language::LANGCODE_SYSTEM,
     );
     $form['content_options'] = array(
       '#type' => 'details',
@@ -181,7 +181,7 @@ function locale_translate_export_form($form, &$form_state) {
       '#tree' => TRUE,
       '#states' => array(
         'invisible' => array(
-          ':input[name="langcode"]' => array('value' => LANGUAGE_SYSTEM),
+          ':input[name="langcode"]' => array('value' => Language::LANGCODE_SYSTEM),
         ),
       ),
     );
@@ -217,7 +217,7 @@ function locale_translate_export_form($form, &$form_state) {
  */
 function locale_translate_export_form_submit($form, &$form_state) {
   // If template is required, language code is not given.
-  if ($form_state['values']['langcode'] != LANGUAGE_SYSTEM) {
+  if ($form_state['values']['langcode'] != Language::LANGCODE_SYSTEM) {
     $language = language_load($form_state['values']['langcode']);
   }
   else {
@@ -423,7 +423,7 @@ function locale_translate_batch_build($files, $options) {
  *
  * @param object $file
  *   A file object of the gettext file to be imported. The file object must
- *   contain a language parameter (other than LANGUAGE_NOT_SPECIFIED). This
+ *   contain a language parameter (other than Language::LANGCODE_NOT_SPECIFIED). This
  *   is used as the language of the import.
  *
  * @param array $options
@@ -448,7 +448,7 @@ function locale_translate_batch_import($file, $options, &$context) {
     'customized' => LOCALE_NOT_CUSTOMIZED,
   );
 
-  if (isset($file->langcode) && $file->langcode != LANGUAGE_NOT_SPECIFIED) {
+  if (isset($file->langcode) && $file->langcode != Language::LANGCODE_NOT_SPECIFIED) {
 
     try {
       if (empty($context['sandbox'])) {
@@ -707,7 +707,7 @@ function locale_translate_file_attach_properties($file, $options = array()) {
     $file->langcode = isset($options['langcode']) ? $options['langcode'] : $matches[5];
   }
   else {
-    $file->langcode = LANGUAGE_NOT_SPECIFIED;
+    $file->langcode = Language::LANGCODE_NOT_SPECIFIED;
   }
   return $file;
 }

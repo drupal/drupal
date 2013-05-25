@@ -9,6 +9,7 @@ namespace Drupal\entity_reference\Tests;
 
 use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\Core\Entity\Field\FieldItemInterface;
+use Drupal\Core\Language\Language;
 use Drupal\field\Tests\FieldUnitTestBase;
 
 /**
@@ -43,14 +44,14 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => $this->randomName(),
       'vid' => drupal_strtolower($this->randomName()),
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
     ));
     $vocabulary->save();
 
     $this->term = entity_create('taxonomy_term', array(
       'name' => $this->randomName(),
       'vid' => $vocabulary->id(),
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
     ));
     $this->term->save();
 
@@ -90,7 +91,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $term2 = entity_create('taxonomy_term', array(
       'name' => $this->randomName(),
       'vid' => $this->term->bundle(),
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
     ));
     $term2->save();
 

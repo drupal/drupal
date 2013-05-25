@@ -17,12 +17,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-// Needed because the Entity class uses this constant.
-// @todo Remove once http://drupal.org/node/1620010 is in.
-if (!defined('LANGUAGE_NOT_SPECIFIED')) {
-  define('LANGUAGE_NOT_SPECIFIED', 'und');
-}
-
 /**
  * Defines tests for role based access in routes.
  *

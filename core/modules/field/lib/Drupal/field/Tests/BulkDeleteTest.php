@@ -9,6 +9,8 @@ namespace Drupal\field\Tests;
 
 use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Unit test class for field bulk delete and batch purge functionality.
  */
@@ -124,7 +126,7 @@ class BulkDeleteTest extends FieldUnitTestBase {
       for ($i = 0; $i < 10; $i++) {
         $entity = field_test_create_entity($id, $id, $bundle);
         foreach ($this->fields as $field) {
-          $entity->{$field['field_name']}[LANGUAGE_NOT_SPECIFIED] = $this->_generateTestFieldValues($field['cardinality']);
+          $entity->{$field['field_name']}[Language::LANGCODE_NOT_SPECIFIED] = $this->_generateTestFieldValues($field['cardinality']);
         }
         $entity->save();
         $id++;

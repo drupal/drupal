@@ -7,6 +7,8 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests the 'new' marker on comments.
  */
@@ -53,8 +55,8 @@ class CommentNewIndicatorTest extends CommentTestBase {
       'status' => COMMENT_PUBLISHED,
       'subject' => $this->randomName(),
       'hostname' => '127.0.0.1',
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
-      'comment_body' => array(LANGUAGE_NOT_SPECIFIED => array($this->randomName())),
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+      'comment_body' => array(Language::LANGCODE_NOT_SPECIFIED => array($this->randomName())),
     ));
     comment_save($comment);
     $this->drupalLogout();

@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\comment\Plugin\Core\Entity\Comment;
 use Drupal\simpletest\WebTestBase;
 
@@ -91,7 +92,7 @@ abstract class CommentTestBase extends WebTestBase {
    *   array of values to set contact info.
    */
   function postComment($node, $comment, $subject = '', $contact = NULL) {
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit = array();
     $edit['comment_body[' . $langcode . '][0][value]'] = $comment;
 

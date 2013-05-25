@@ -7,6 +7,8 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests comment threading.
  */
@@ -23,7 +25,7 @@ class CommentThreadingTest extends CommentTestBase {
    * Tests the comment threading.
    */
   function testCommentThreading() {
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     // Set comments to have a subject with preview disabled.
     $this->drupalLogin($this->admin_user);
     $this->setCommentPreview(DRUPAL_DISABLED);

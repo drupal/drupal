@@ -7,6 +7,8 @@
 
 namespace Drupal\image\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Test class to check that formatters and display settings are working.
  */
@@ -56,7 +58,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $node = node_load($nid, TRUE);
 
     // Test that the default formatter is being used.
-    $image_uri = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri;
+    $image_uri = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid'])->uri;
     $image_info = array(
       'uri' => $image_uri,
       'width' => 40,
@@ -157,13 +159,13 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // and title fields do not display until the image has been attached.
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
     $this->drupalGet('node/' . $nid . '/edit');
-    $this->assertFieldByName($field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][alt]', '', 'Alt field displayed on article form.');
-    $this->assertFieldByName($field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][title]', '', 'Title field displayed on article form.');
+    $this->assertFieldByName($field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][alt]', '', 'Alt field displayed on article form.');
+    $this->assertFieldByName($field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][title]', '', 'Title field displayed on article form.');
     // Verify that the attached image is being previewed using the 'medium'
     // style.
     $node = node_load($nid, TRUE);
     $image_info = array(
-      'uri' => file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri,
+      'uri' => file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid'])->uri,
       'width' => 220,
       'height' => 110,
       'style_name' => 'medium',
@@ -173,15 +175,15 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Add alt/title fields to the image and verify that they are displayed.
     $image_info = array(
-      'uri' => file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri,
+      'uri' => file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid'])->uri,
       'alt' => $this->randomName(),
       'title' => $this->randomName(),
       'width' => 40,
       'height' => 20,
     );
     $edit = array(
-      $field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][alt]' => $image_info['alt'],
-      $field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][title]' => $image_info['title'],
+      $field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][alt]' => $image_info['alt'],
+      $field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][title]' => $image_info['title'],
     );
     $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save and keep published'));
     $default_output = theme('image', $image_info);
@@ -190,8 +192,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Verify that alt/title longer than allowed results in a validation error.
     $test_size = 2000;
     $edit = array(
-      $field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][alt]' => $this->randomName($test_size),
-      $field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][title]' => $this->randomName($test_size),
+      $field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][alt]' => $this->randomName($test_size),
+      $field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][title]' => $this->randomName($test_size),
     );
     $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save and keep published'));
     $schema = $instance->getField()->getSchema();
@@ -241,7 +243,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $nid = $this->uploadNodeImage($images[1], $field_name, 'article');
     $node = node_load($nid, TRUE);
     $image_info = array(
-      'uri' => file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri,
+      'uri' => file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid'])->uri,
       'width' => 40,
       'height' => 20,
     );

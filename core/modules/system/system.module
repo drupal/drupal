@@ -7,6 +7,7 @@
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Language\Language;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Utility\ModuleInfo;
 use Drupal\Core\TypedData\Primitive;
@@ -484,7 +485,7 @@ function system_element_info() {
   );
   $types['language_select'] = array(
     '#input' => TRUE,
-    '#default_value' => LANGUAGE_NOT_SPECIFIED,
+    '#default_value' => Language::LANGCODE_NOT_SPECIFIED,
   );
   $types['weight'] = array(
     '#input' => TRUE,

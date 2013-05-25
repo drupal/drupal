@@ -8,6 +8,8 @@
 namespace Drupal\Core\Entity;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Base class for entity view controllers.
  */
@@ -94,7 +96,7 @@ class EntityRenderController implements EntityRenderControllerInterface {
    */
   public function viewMultiple(array $entities = array(), $view_mode = 'full', $langcode = NULL) {
     if (!isset($langcode)) {
-      $langcode = language(LANGUAGE_TYPE_CONTENT)->langcode;
+      $langcode = language(Language::TYPE_CONTENT)->langcode;
     }
 
     // Build the view modes and display objects.

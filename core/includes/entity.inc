@@ -8,6 +8,7 @@
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Language\Language;
 
 /**
  * Gets the entity definition for an entity type.
@@ -58,7 +59,7 @@ function entity_info_cache_clear() {
 function entity_get_bundles($entity_type = NULL) {
   $bundles = &drupal_static(__FUNCTION__);
   if (!$bundles) {
-    $langcode = language(LANGUAGE_TYPE_INTERFACE)->langcode;
+    $langcode = language(Language::TYPE_INTERFACE)->langcode;
     if ($cache = cache()->get("entity_bundle_info:$langcode")) {
       $bundles = $cache->data;
     }
@@ -116,7 +117,7 @@ function entity_invoke_bundle_hook($hook, $entity_type, $bundle, $bundle_new = N
 function entity_get_view_modes($entity_type = NULL) {
   $view_modes = &drupal_static(__FUNCTION__);
   if (!$view_modes) {
-    $langcode = language(LANGUAGE_TYPE_INTERFACE)->langcode;
+    $langcode = language(Language::TYPE_INTERFACE)->langcode;
     if ($cache = cache()->get("entity_view_mode_info:$langcode")) {
       $view_modes = $cache->data;
     }

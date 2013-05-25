@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Common;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -90,7 +91,7 @@ class FormatDateTest extends WebTestBase {
   function testFormatDate() {
     global $user;
 
-    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language(Language::TYPE_INTERFACE);
 
     $timestamp = strtotime('2007-03-26T00:00:00+00:00');
     $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'America/Los_Angeles', 'en'), 'Sunday, 25-Mar-07 17:00:00 PDT', 'Test all parameters.');
@@ -107,7 +108,7 @@ class FormatDateTest extends WebTestBase {
       'predefined_langcode' => 'custom',
       'langcode' => self::LANGCODE,
       'name' => self::LANGCODE,
-      'direction' => LANGUAGE_LTR,
+      'direction' => Language::DIRECTION_LTR,
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
 
