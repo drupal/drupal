@@ -220,7 +220,7 @@ function views_ui_library_info() {
 }
 
 /**
- * Theme preprocess for views-view.tpl.php.
+ * Implements hook_preprocess_HOOK() for views-view.html.twig.
  */
 function views_ui_preprocess_views_view(&$vars) {
   $view = $vars['view'];
@@ -232,11 +232,11 @@ function views_ui_preprocess_views_view(&$vars) {
           '#theme' => 'views_ui_view_preview_section',
           '#view' => $view,
           '#section' => $section,
-          '#content' => is_array($vars[$section]) ? drupal_render($vars[$section]) : $vars[$section],
+          '#content' => $vars[$section],
           '#theme_wrappers' => array('views_ui_container'),
           '#attributes' => array('class' => 'contextual-region'),
         );
-        $vars[$section] = drupal_render($vars[$section]);
+        $vars[$section] = $vars[$section];
       }
     }
   }
