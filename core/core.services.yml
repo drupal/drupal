@@ -150,7 +150,7 @@ services:
       - { name: persist }
   plugin.manager.entity:
     class: Drupal\Core\Entity\EntityManager
-    arguments: ['@container.namespaces']
+    arguments: ['@container.namespaces', '@service_container']
   plugin.manager.archiver:
     class: Drupal\Core\Archiver\ArchiverManager
     arguments: ['@container.namespaces']

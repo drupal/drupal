@@ -15,6 +15,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Component\Uuid\Uuid;
+use Drupal\Core\Database\Connection;
 
 /**
  * Implements Field API specific enhancements to the DatabaseStorageController class.
@@ -52,8 +53,8 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
   /**
    * Overrides DatabaseStorageController::__construct().
    */
-  public function __construct($entityType) {
-    parent::__construct($entityType);
+  public function __construct($entity_type, array $entity_info, Connection $database) {
+    parent::__construct($entity_type,$entity_info, $database);
     $this->bundleKey = !empty($this->entityInfo['entity_keys']['bundle']) ? $this->entityInfo['entity_keys']['bundle'] : FALSE;
     $this->entityClass = $this->entityInfo['class'];
 
@@ -223,7 +224,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
    */
   protected function attachPropertyData(array &$entities, $load_revision = FALSE) {
     if ($this->dataTable) {
-      $query = db_select($this->dataTable, 'data', array('fetch' => PDO::FETCH_ASSOC))
+      $query = $this->database->select($this->dataTable, 'data', array('fetch' => PDO::FETCH_ASSOC))
         ->fields('data')
         ->condition($this->idKey, array_keys($entities))
         ->orderBy('data.' . $this->idKey);
@@ -271,7 +272,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
    * Added mapping from entities to storage records before saving.
    */
   public function save(EntityInterface $entity) {
-    $transaction = db_transaction();
+    $transaction = $this->database->startTransaction();
     try {
       // Ensure we are dealing with the actual entity.
       $entity = $entity->getNGEntity();
@@ -364,7 +365,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
     if ($entity->isNewRevision()) {
       drupal_write_record($this->revisionTable, $record);
       if ($entity->isDefaultRevision()) {
-        db_update($this->entityInfo['base_table'])
+        $this->database->update($this->entityInfo['base_table'])
           ->fields(array($this->revisionKey => $record->{$this->revisionKey}))
           ->condition($this->idKey, $record->{$this->idKey})
           ->execute();
@@ -387,11 +388,11 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
    */
   protected function savePropertyData(EntityInterface $entity) {
     // Delete and insert to handle removed values.
-    db_delete($this->dataTable)
+    $this->database->delete($this->dataTable)
       ->condition($this->idKey, $entity->id())
       ->execute();
 
-    $query = db_insert($this->dataTable);
+    $query = $this->database->insert($this->dataTable);
 
     foreach ($entity->getTranslationLanguages() as $langcode => $language) {
       $record = $this->mapToDataStorageRecord($entity, $langcode);
@@ -498,7 +499,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       return;
     }
 
-    $transaction = db_transaction();
+    $transaction = $this->database->startTransaction();
     try {
       // Ensure we are dealing with the actual entities.
       foreach ($entities as $id => $entity) {
@@ -511,18 +512,18 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       }
       $ids = array_keys($entities);
 
-      db_delete($this->entityInfo['base_table'])
+      $this->database->delete($this->entityInfo['base_table'])
         ->condition($this->idKey, $ids)
         ->execute();
 
       if ($this->revisionKey) {
-        db_delete($this->revisionTable)
+        $this->database->delete($this->revisionTable)
           ->condition($this->idKey, $ids)
           ->execute();
       }
 
       if ($this->dataTable) {
-        db_delete($this->dataTable)
+        $this->database->delete($this->dataTable)
           ->condition($this->idKey, $ids)
           ->execute();
       }

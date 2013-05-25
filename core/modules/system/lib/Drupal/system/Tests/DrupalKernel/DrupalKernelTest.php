@@ -113,4 +113,16 @@ class DrupalKernelTest extends UnitTestBase {
     $modules = $container->getParameter('container.modules');
     $this->assertEqual($modules['bundle_test'], drupal_get_filename('module', 'bundle_test'));
   }
+
+  /**
+   * Tests kernel serialization/unserialization.
+   */
+  public function testSerialization() {
+    $classloader = drupal_classloader();
+    $kernel = new DrupalKernel('testing', FALSE, $classloader);
+
+    $string = serialize($kernel);
+    $unserialized_kernel = unserialize($string);
+    $this->assertTrue($unserialized_kernel instanceof DrupalKernel);
+  }
 }

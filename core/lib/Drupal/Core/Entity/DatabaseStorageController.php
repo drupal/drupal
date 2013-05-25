@@ -13,7 +13,9 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Database\Connection;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a base entity controller class.
@@ -23,7 +25,7 @@ use Drupal\Component\Utility\NestedArray;
  * This class can be used as-is by most simple entity types. Entity types
  * requiring special handling can extend the class.
  */
-class DatabaseStorageController implements EntityStorageControllerInterface {
+class DatabaseStorageController implements EntityStorageControllerInterface, EntityControllerInterface {
 
   /**
    * Static cache of entities.
@@ -114,16 +116,38 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
    */
   protected $cache;
 
+  /**
+   * Active database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+    return new static(
+      $entity_type,
+      $entity_info,
+      $container->get('database')
+    );
+  }
 
   /**
    * Constructs a DatabaseStorageController object.
    *
-   * @param string $entityType
+   * @param string $entity_type
    *   The entity type for which the instance is created.
+   * @param array $entity_info
+   *   An array of entity info for the entity type.
+   * @param \Drupal\Core\Database\Connection $database
+   *   The database connection to be used.
    */
-  public function __construct($entityType) {
-    $this->entityType = $entityType;
-    $this->entityInfo = entity_get_info($entityType);
+  public function __construct($entity_type, array $entity_info, Connection $database) {
+    $this->database = $database;
+    $this->entityType = $entity_type;
+    $this->entityInfo = $entity_info;
     $this->entityCache = array();
     $this->hookLoadArguments = array();
 
@@ -280,7 +304,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
         throw new EntityStorageException('Default revision can not be deleted');
       }
 
-      db_delete($this->revisionTable)
+      $this->database->delete($this->revisionTable)
         ->condition($this->revisionKey, $revision->getRevisionId())
         ->execute();
       $this->invokeHook('revision_delete', $revision);
@@ -334,7 +358,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
    *   A SelectQuery object for loading the entity.
    */
   protected function buildQuery($ids, $revision_id = FALSE) {
-    $query = db_select($this->entityInfo['base_table'], 'base');
+    $query = $this->database->select($this->entityInfo['base_table'], 'base');
 
     $query->addTag($this->entityType . '_load_multiple');
 
@@ -476,7 +500,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
       // If no IDs or invalid IDs were passed, do nothing.
       return;
     }
-    $transaction = db_transaction();
+    $transaction = $this->database->startTransaction();
 
     try {
       $this->preDelete($entities);
@@ -485,12 +509,12 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
       }
       $ids = array_keys($entities);
 
-      db_delete($this->entityInfo['base_table'])
+      $this->database->delete($this->entityInfo['base_table'])
         ->condition($this->idKey, $ids, 'IN')
         ->execute();
 
       if ($this->revisionKey) {
-        db_delete($this->revisionTable)
+        $this->database->delete($this->revisionTable)
           ->condition($this->idKey, $ids, 'IN')
           ->execute();
       }
@@ -516,7 +540,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
    * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::save().
    */
   public function save(EntityInterface $entity) {
-    $transaction = db_transaction();
+    $transaction = $this->database->startTransaction();
     try {
       // Load the stored entity, if any.
       if (!$entity->isNew() && !isset($entity->original)) {
@@ -594,7 +618,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
     if ($entity->isNewRevision()) {
       drupal_write_record($this->revisionTable, $record);
       if ($entity->isDefaultRevision()) {
-        db_update($this->entityInfo['base_table'])
+        $this->database->update($this->entityInfo['base_table'])
           ->fields(array($this->revisionKey => $record[$this->revisionKey]))
           ->condition($this->idKey, $entity->id())
           ->execute();

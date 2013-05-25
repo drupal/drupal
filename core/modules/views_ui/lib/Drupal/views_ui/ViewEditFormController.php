@@ -12,11 +12,57 @@ use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\views\ViewExecutable;
+use Drupal\Core\Entity\EntityControllerInterface;
+use Drupal\user\TempStoreFactory;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form controller for the Views edit form.
  */
-class ViewEditFormController extends ViewFormControllerBase {
+class ViewEditFormController extends ViewFormControllerBase implements EntityControllerInterface {
+
+  /**
+   * The views temp store.
+   *
+   * @var \Drupal\user\TempStore
+   */
+  protected $tempStore;
+
+  /**
+   * The request object.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected $request;
+
+  /**
+   * Constructs a new ViewEditFormController object.
+   *
+   * @param string $operation
+   *   The name of the current operation.
+   * @param \Drupal\user\TempStoreFactory $temp_store_factory
+   *   The factory for the temp store object.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   */
+  public function __construct($operation, TempStoreFactory $temp_store_factory, Request $request) {
+    parent::__construct($operation);
+
+    $this->tempStore = $temp_store_factory->get('views');
+    $this->request = $request;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info, $operation = NULL) {
+    return new static(
+      $operation,
+      $container->get('user.tempstore'),
+      $container->get('request')
+    );
+  }
 
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
@@ -222,10 +268,10 @@ class ViewEditFormController extends ViewFormControllerBase {
     }
     $view->set('display', $displays);
 
-    // Direct the user to the right url, if the path of the display has changed.
-    $query = drupal_container()->get('request')->query;
     // @todo: Revisit this when http://drupal.org/node/1668866 is in.
+    $query = $this->request->query;
     $destination = $query->get('destination');
+
     if (!empty($destination)) {
       // Find out the first display which has a changed path and redirect to this url.
       $old_view = views_get_view($view->id());
@@ -252,7 +298,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     drupal_set_message(t('The view %name has been saved.', array('%name' => $view->label())));
 
     // Remove this view from cache so we can edit it properly.
-    drupal_container()->get('user.tempstore')->get('views')->delete($view->id());
+    $this->tempStore->delete($view->id());
   }
 
   /**
@@ -266,7 +312,7 @@ class ViewEditFormController extends ViewFormControllerBase {
   public function cancel(array $form, array &$form_state) {
     // Remove this view from cache so edits will be lost.
     $view = $this->entity;
-    drupal_container()->get('user.tempstore')->get('views')->delete($view->id());
+    $this->tempStore->delete($view->id());
     $form_state['redirect'] = 'admin/structure/views';
   }
 
@@ -707,7 +753,7 @@ class ViewEditFormController extends ViewFormControllerBase {
    * should not yet redirect to the destination.
    */
   public function submitDelayDestination($form, &$form_state) {
-    $query = \Drupal::request()->query;
+    $query = $this->request->query;
     // @todo: Revisit this when http://drupal.org/node/1668866 is in.
     $destination = $query->get('destination');
     if (isset($destination) && $form_state['redirect'] !== FALSE) {

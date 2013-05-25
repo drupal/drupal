@@ -9,9 +9,13 @@ namespace Drupal\Core\Config\Entity;
 
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Config\Config;
+use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\StorageInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines the storage controller class for configuration entities.
@@ -28,7 +32,7 @@ use Drupal\Core\Config\Config;
  *   after the config_prefix in a config name forms the entity ID. Additional or
  *   custom suffixes are not possible.
  */
-class ConfigStorageController implements EntityStorageControllerInterface {
+class ConfigStorageController implements EntityStorageControllerInterface, EntityControllerInterface {
 
   /**
    * Entity type for this controller instance.
@@ -77,13 +81,34 @@ class ConfigStorageController implements EntityStorageControllerInterface {
   protected $statusKey = 'status';
 
   /**
-   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::__construct().
+   * The config factory service.
    *
-   * Sets basic variables.
+   * @var \Drupal\Core\Config\ConfigFactory
    */
-  public function __construct($entityType) {
-    $this->entityType = $entityType;
-    $this->entityInfo = entity_get_info($entityType);
+  protected $configFactory;
+
+  /**
+   * The config storage service.
+   *
+   * @var \Drupal\Core\Config\StorageInterface
+   */
+  protected $configStorage;
+
+  /**
+   * Constructs a ConfigStorageController object.
+   *
+   * @param string $entity_type
+   *   The entity type for which the instance is created.
+   * @param array $entity_info
+   *   An array of entity info for the entity type.
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The config factory service.
+   * @param \Drupal\Core\Config\StorageInterface $config_storage
+   *   The config storage service.
+   */
+  public function __construct($entity_type, array $entity_info, ConfigFactory $config_factory, StorageInterface $config_storage) {
+    $this->entityType = $entity_type;
+    $this->entityInfo = $entity_info;
     $this->hookLoadArguments = array();
     $this->idKey = $this->entityInfo['entity_keys']['id'];
 
@@ -93,6 +118,21 @@ class ConfigStorageController implements EntityStorageControllerInterface {
     else {
       $this->statusKey = FALSE;
     }
+
+    $this->configFactory = $config_factory;
+    $this->configStorage = $config_storage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+    return new static(
+      $entity_type,
+      $entity_info,
+      $container->get('config.factory'),
+      $container->get('config.storage')
+    );
   }
 
   /**
@@ -231,10 +271,10 @@ class ConfigStorageController implements EntityStorageControllerInterface {
 
     // Load all of the configuration entities.
     if ($ids === NULL) {
-      $names = drupal_container()->get('config.storage')->listAll($prefix);
+      $names = $this->configStorage->listAll($prefix);
       $result = array();
       foreach ($names as $name) {
-        $config = config($name);
+        $config = $this->configFactory->get($name);
         $result[$config->get($this->idKey)] = new $config_class($config->get(), $this->entityType);
       }
       return $result;
@@ -243,7 +283,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
       $result = array();
       foreach ($ids as $id) {
         // Add the prefix to the ID to serve as the configuration object name.
-        $config = config($prefix . $id);
+        $config = $this->configFactory->get($prefix . $id);
         if (!$config->isNew()) {
           $result[$id] = new $config_class($config->get(), $this->entityType);
         }
@@ -331,13 +371,13 @@ class ConfigStorageController implements EntityStorageControllerInterface {
     }
 
     foreach ($entities as $id => $entity) {
-      $config = config($this->getConfigPrefix() . $entity->id());
+      $config = $this->configFactory->get($this->getConfigPrefix() . $entity->id());
       $config->delete();
 
       // Remove the entity from the manifest file. Entity IDs can contain a dot
       // so we can not use Config::clear() to remove the entity from the
       // manifest.
-      $manifest = config('manifest.' . $this->entityInfo['config_prefix']);
+      $manifest = $this->configFactory->get('manifest.' . $this->entityInfo['config_prefix']);
       $manifest_data = $manifest->get();
       unset($manifest_data[$entity->id()]);
       $manifest->setData($manifest_data);
@@ -370,7 +410,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
     if ($entity->getOriginalID() !== NULL) {
       $id = $entity->getOriginalID();
     }
-    $config = config($prefix . $id);
+    $config = $this->configFactory->get($prefix . $id);
     $is_new = $config->isNew();
 
     if (!$is_new && !isset($entity->original)) {
@@ -384,7 +424,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
       // - Storage controller needs to access the original object.
       // - The object needs to be renamed/copied in ConfigFactory and reloaded.
       // - All instances of the object need to be renamed.
-      drupal_container()->get('config.factory')->rename($prefix . $id, $prefix . $entity->id());
+      $this->configFactory->rename($prefix . $id, $prefix . $entity->id());
     }
 
     $this->preSave($entity);
@@ -413,7 +453,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
     }
 
     $update_manifest = FALSE;
-    $config = config('manifest.' . $this->entityInfo['config_prefix']);
+    $config = $this->configFactory->get('manifest.' . $this->entityInfo['config_prefix']);
     $manifest = $config->get();
     // If the save operation resulted in a rename remove the old entity id from
     // the manifest file.

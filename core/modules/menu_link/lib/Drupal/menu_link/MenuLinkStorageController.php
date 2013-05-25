@@ -10,6 +10,9 @@ namespace Drupal\menu_link;
 use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Database\Connection;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -35,14 +38,44 @@ class MenuLinkStorageController extends DatabaseStorageController {
   protected static $routerItemFields = array();
 
   /**
-   * Overrides DatabaseStorageController::__construct().
+   * The route provider service.
+   *
+   * @var \Symfony\Cmf\Component\Routing\RouteProviderInterface
    */
-  public function __construct($entityType) {
-    parent::__construct($entityType);
+  protected $routeProvider;
+
+  /**
+   * Overrides DatabaseStorageController::__construct().
+   *
+   * @param string $entity_type
+   *   The entity type for which the instance is created.
+   * @param array $entity_info
+   *   An array of entity info for the entity type.
+   * @param \Drupal\Core\Database\Connection $database
+   *   The database connection to be used.
+   * @param \Symfony\Cmf\Component\Routing\RouteProviderInterface $route_provider
+   *   The route provider service.
+   */
+  public function __construct($entity_type, array $entity_info, Connection $database, RouteProviderInterface $route_provider) {
+    parent::__construct($entity_type, $entity_info, $database);
+
+    $this->routeProvider = $route_provider;
 
     if (empty(static::$routerItemFields)) {
       static::$routerItemFields = array_diff(drupal_schema_fields_sql('menu_router'), array('weight'));
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+    return new static(
+      $entity_type,
+      $entity_info,
+      $container->get('database'),
+      $container->get('router.route_provider')
+    );
   }
 
   /**
@@ -80,7 +113,7 @@ class MenuLinkStorageController extends DatabaseStorageController {
 
     // Now mass-load any routes needed and associate them.
     if ($routes) {
-      $route_objects = drupal_container()->get('router.route_provider')->getRoutesByNames($routes);
+      $route_objects = $this->routeProvider->getRoutesByNames($routes);
       foreach ($routes as $entity_id => $route) {
         // Not all stored routes will be valid on load.
         if (isset($route_objects[$route])) {
@@ -101,7 +134,7 @@ class MenuLinkStorageController extends DatabaseStorageController {
     // would be confusing in that situation.
     $return = SAVED_UPDATED;
 
-    $transaction = db_transaction();
+    $transaction = $this->database->startTransaction();
     try {
       // Load the stored entity, if any.
       if (!$entity->isNew() && !isset($entity->original)) {
@@ -109,7 +142,7 @@ class MenuLinkStorageController extends DatabaseStorageController {
       }
 
       if ($entity->isNew()) {
-        $entity->mlid = db_insert($this->entityInfo['base_table'])->fields(array('menu_name' => 'tools'))->execute();
+        $entity->mlid = $this->database->insert($this->entityInfo['base_table'])->fields(array('menu_name' => 'tools'))->execute();
         $entity->enforceIsNew();
       }
 
@@ -395,7 +428,7 @@ class MenuLinkStorageController extends DatabaseStorageController {
       }
 
       $parent_has_children = ((bool) $query->execute()) ? 1 : 0;
-      db_update('menu_links')
+      $this->database->update('menu_links')
         ->fields(array('has_children' => $parent_has_children))
         ->condition('mlid', $entity->plid)
         ->execute();
@@ -526,7 +559,7 @@ class MenuLinkStorageController extends DatabaseStorageController {
   public function findChildrenRelativeDepth(EntityInterface $entity) {
     // @todo Since all we need is a specific field from the base table, does it
     // make sense to convert to EFQ?
-    $query = db_select('menu_links');
+    $query = $this->database->select('menu_links');
     $query->addField('menu_links', 'depth');
     $query->condition('menu_name', $entity->menu_name);
     $query->orderBy('depth', 'DESC');
@@ -554,7 +587,7 @@ class MenuLinkStorageController extends DatabaseStorageController {
    *   A menu link entity.
    */
   protected function moveChildren(EntityInterface $entity) {
-    $query = db_update($this->entityInfo['base_table']);
+    $query = $this->database->update($this->entityInfo['base_table']);
 
     $query->fields(array('menu_name' => $entity->menu_name));
 

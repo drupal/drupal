@@ -134,6 +134,21 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function serialize() {
+    return serialize(array($this->environment, $this->debug, $this->classLoader, $this->allowDumping));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function unserialize($data) {
+    list($environment, $debug, $class_loader, $allow_dumping) = unserialize($data);
+    $this->__construct($environment, $debug, $class_loader, $allow_dumping);
+  }
+
+  /**
    * Overrides Kernel::init().
    */
   public function init() {
