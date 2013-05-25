@@ -7,10 +7,45 @@
 
 namespace Drupal\views_ui;
 
+use Drupal\Core\Entity\EntityControllerInterface;
+use Drupal\user\TempStoreFactory;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 /**
  * Form controller for the Views preview form.
  */
-class ViewPreviewFormController extends ViewFormControllerBase {
+class ViewPreviewFormController extends ViewFormControllerBase implements EntityControllerInterface {
+
+  /**
+   * The views temp store.
+   *
+   * @var \Drupal\user\TempStore
+   */
+  protected $tempStore;
+
+  /**
+   * Constructs a new ViewPreviewFormController object.
+   *
+   * @param string $operation
+   *   The name of the current operation.
+   * @param \Drupal\user\TempStoreFactory $temp_store_factory
+   *   The factory for the temp store object.
+   */
+  public function __construct($operation, TempStoreFactory $temp_store_factory) {
+    parent::__construct($operation);
+
+    $this->tempStore = $temp_store_factory->get('views');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info, $operation = NULL) {
+    return new static(
+      $operation,
+      $container->get('user.tempstore')
+    );
+  }
 
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
@@ -99,7 +134,7 @@ class ViewPreviewFormController extends ViewFormControllerBase {
     // Rebuild the form with a pristine $view object.
     $view = $this->entity;
     // Attempt to load the view from temp store, otherwise create a new one.
-    if (!$new_view = drupal_container()->get('user.tempstore')->get('views')->get($view->id())) {
+    if (!$new_view = $this->tempStore->get($view->id())) {
       $new_view = new ViewUI($view);
     }
     $form_state['build_info']['args'][0] = $new_view;

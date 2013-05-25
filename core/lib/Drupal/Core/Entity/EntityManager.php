@@ -15,6 +15,7 @@ use Drupal\Core\Plugin\Discovery\CacheDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\InfoHookDecorator;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Manages entity type plugin definitions.
@@ -33,6 +34,13 @@ use Drupal\Core\Cache\CacheBackendInterface;
 class EntityManager extends PluginManagerBase {
 
   /**
+   * The injection container that should be passed into the controller factory.
+   *
+   * @var \Symfony\Component\DependencyInjection\ContainerInterface
+   */
+  protected $container;
+
+  /**
    * Contains instantiated controllers keyed by controller type and entity type.
    *
    * @var array
@@ -45,8 +53,10 @@ class EntityManager extends PluginManagerBase {
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
    *   keyed by the corresponding namespace to look for plugin implementations,
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The service container this object should use.
    */
-  public function __construct(\Traversable $namespaces) {
+  public function __construct(\Traversable $namespaces, ContainerInterface $container) {
     // Allow the plugin definition to be altered by hook_entity_info_alter().
     $annotation_namespaces = array(
       'Drupal\Core\Entity\Annotation' => DRUPAL_ROOT . '/core/lib',
@@ -57,6 +67,7 @@ class EntityManager extends PluginManagerBase {
     $this->discovery = new CacheDecorator($this->discovery, 'entity_info:' . language(Language::TYPE_INTERFACE)->langcode, 'cache', CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
 
     $this->factory = new DefaultFactory($this->discovery);
+    $this->container = $container;
   }
 
   /**
@@ -126,7 +137,12 @@ class EntityManager extends PluginManagerBase {
   public function getStorageController($entity_type) {
     if (!isset($this->controllers['storage'][$entity_type])) {
       $class = $this->getControllerClass($entity_type, 'storage');
-      $this->controllers['storage'][$entity_type] = new $class($entity_type);
+      if (in_array('Drupal\Core\Entity\EntityControllerInterface', class_implements($class))) {
+        $this->controllers['storage'][$entity_type] = $class::createInstance($this->container, $entity_type, $this->getDefinition($entity_type));
+      }
+      else {
+        $this->controllers['storage'][$entity_type] = new $class($entity_type);
+      }
     }
     return $this->controllers['storage'][$entity_type];
   }
@@ -143,7 +159,12 @@ class EntityManager extends PluginManagerBase {
   public function getListController($entity_type) {
     if (!isset($this->controllers['listing'][$entity_type])) {
       $class = $this->getControllerClass($entity_type, 'list');
-      $this->controllers['listing'][$entity_type] = new $class($entity_type, $this->getStorageController($entity_type));
+      if (in_array('Drupal\Core\Entity\EntityControllerInterface', class_implements($class))) {
+        $this->controllers['listing'][$entity_type] = $class::createInstance($this->container, $entity_type, $this->getDefinition($entity_type));
+      }
+      else {
+        $this->controllers['listing'][$entity_type] = new $class($entity_type, $this->getStorageController($entity_type));
+      }
     }
     return $this->controllers['listing'][$entity_type];
   }
@@ -162,7 +183,12 @@ class EntityManager extends PluginManagerBase {
   public function getFormController($entity_type, $operation) {
     if (!isset($this->controllers['form'][$operation][$entity_type])) {
       $class = $this->getControllerClass($entity_type, 'form', $operation);
-      $this->controllers['form'][$operation][$entity_type] = new $class($operation);
+      if (in_array('Drupal\Core\Entity\EntityControllerInterface', class_implements($class))) {
+        $this->controllers['form'][$operation][$entity_type] = $class::createInstance($this->container, $entity_type, $this->getDefinition($entity_type));
+      }
+      else {
+        $this->controllers['form'][$operation][$entity_type] = new $class($operation);
+      }
     }
     return $this->controllers['form'][$operation][$entity_type];
   }
@@ -179,7 +205,12 @@ class EntityManager extends PluginManagerBase {
   public function getRenderController($entity_type) {
     if (!isset($this->controllers['render'][$entity_type])) {
       $class = $this->getControllerClass($entity_type, 'render');
-      $this->controllers['render'][$entity_type] = new $class($entity_type);
+      if (in_array('Drupal\Core\Entity\EntityControllerInterface', class_implements($class))) {
+        $this->controllers['render'][$entity_type] = $class::createInstance($this->container, $entity_type, $this->getDefinition($entity_type));
+      }
+      else {
+        $this->controllers['render'][$entity_type] = new $class($entity_type);
+      }
     }
     return $this->controllers['render'][$entity_type];
   }
@@ -196,7 +227,12 @@ class EntityManager extends PluginManagerBase {
   public function getAccessController($entity_type) {
     if (!isset($this->controllers['access'][$entity_type])) {
       $class = $this->getControllerClass($entity_type, 'access');
-      $this->controllers['access'][$entity_type] = new $class($entity_type);
+      if (in_array('Drupal\Core\Entity\EntityControllerInterface', class_implements($class))) {
+        $this->controllers['access'][$entity_type] = $class::createInstance($this->container, $entity_type, $this->getDefinition($entity_type));
+      }
+      else {
+        $this->controllers['access'][$entity_type] = new $class($entity_type);
+      }
     }
     return $this->controllers['access'][$entity_type];
   }

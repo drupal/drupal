@@ -10,6 +10,10 @@ namespace Drupal\user;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\DatabaseStorageController;
+use Drupal\Core\Password\PasswordInterface;
+use Drupal\Core\Database\Connection;
+use Drupal\user\UserDataInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller class for users.
@@ -18,6 +22,54 @@ use Drupal\Core\Entity\DatabaseStorageController;
  * required special handling for user objects.
  */
 class UserStorageController extends DatabaseStorageController {
+
+  /**
+   * Provides the password hashing service object.
+   *
+   * @var \Drupal\Core\Password\PasswordInterface
+   */
+  protected $password;
+
+  /**
+   * Provides the user data service object.
+   *
+   * @var \Drupal\user\UserDataInterface
+   */
+  protected $userData;
+
+  /**
+   * Constructs a new UserStorageController object.
+   *
+   * @param string $entityType
+   *   The entity type for which the instance is created.
+   * @param array $entity_info
+   *   An array of entity info for the entity type.
+   * @param \Drupal\Core\Database\Connection $database
+   *   The database connection to be used.
+   * @param \Drupal\Core\Password\PasswordInterface $password
+   *   The password hashing service.
+   * @param \Drupal\user\UserDataInterface $user_data
+   *   The user data service.
+   */
+  public function __construct($entity_type, $entity_info, Connection $database, PasswordInterface $password, UserDataInterface $user_data) {
+    parent::__construct($entity_type, $entity_info, $database);
+
+    $this->password = $password;
+    $this->userData = $user_data;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+    return new static(
+      $entity_type,
+      $entity_info,
+      $container->get('database'),
+      $container->get('password'),
+      $container->get('user.data')
+    );
+  }
 
   /**
    * Overrides Drupal\Core\Entity\DatabaseStorageController::attachLoad().
@@ -62,7 +114,7 @@ class UserStorageController extends DatabaseStorageController {
    */
   public function save(EntityInterface $entity) {
     if (empty($entity->uid)) {
-      $entity->uid = db_next_id(db_query('SELECT MAX(uid) FROM {users}')->fetchField());
+      $entity->uid = $this->database->nextId(db_query('SELECT MAX(uid) FROM {users}')->fetchField());
       $entity->enforceIsNew();
     }
     parent::save($entity);
@@ -75,7 +127,7 @@ class UserStorageController extends DatabaseStorageController {
     // Update the user password if it has changed.
     if ($entity->isNew() || (!empty($entity->pass) && $entity->pass != $entity->original->pass)) {
       // Allow alternate password hashing schemes.
-      $entity->pass = drupal_container()->get('password')->hash(trim($entity->pass));
+      $entity->pass = $this->password->hash(trim($entity->pass));
       // Abort if the hashing failed and returned FALSE.
       if (!$entity->pass) {
         throw new EntityMalformedException('The entity does not have a password.');
@@ -98,7 +150,7 @@ class UserStorageController extends DatabaseStorageController {
     // Store account cancellation information.
     foreach (array('user_cancel_method', 'user_cancel_notify') as $key) {
       if (isset($entity->{$key})) {
-        drupal_container()->get('user.data')->set('user', $entity->id(), substr($key, 5), $entity->{$key});
+        $this->userData->set('user', $entity->id(), substr($key, 5), $entity->{$key});
       }
     }
   }
@@ -123,11 +175,11 @@ class UserStorageController extends DatabaseStorageController {
 
       // Reload user roles if provided.
       if ($entity->roles != $entity->original->roles) {
-        db_delete('users_roles')
+        $this->database->delete('users_roles')
           ->condition('uid', $entity->uid)
           ->execute();
 
-        $query = db_insert('users_roles')->fields(array('uid', 'rid'));
+        $query = $this->database->insert('users_roles')->fields(array('uid', 'rid'));
         foreach (array_keys($entity->roles) as $rid) {
           if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
             $query->values(array(
@@ -154,7 +206,7 @@ class UserStorageController extends DatabaseStorageController {
     else {
       // Save user roles.
       if (count($entity->roles) > 1) {
-        $query = db_insert('users_roles')->fields(array('uid', 'rid'));
+        $query = $this->database->insert('users_roles')->fields(array('uid', 'rid'));
         foreach (array_keys($entity->roles) as $rid) {
           if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
             $query->values(array(
@@ -172,9 +224,9 @@ class UserStorageController extends DatabaseStorageController {
    * Overrides Drupal\Core\Entity\DatabaseStorageController::postDelete().
    */
   protected function postDelete($entities) {
-    db_delete('users_roles')
+    $this->database->delete('users_roles')
       ->condition('uid', array_keys($entities), 'IN')
       ->execute();
-    drupal_container()->get('user.data')->delete(NULL, array_keys($entities));
+    $this->userData->delete(NULL, array_keys($entities));
   }
 }

@@ -9,11 +9,45 @@ namespace Drupal\menu_link;
 
 use Drupal\Core\Entity\EntityFormController;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Entity\EntityControllerInterface;
+use Drupal\Core\Path\AliasManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form controller for the node edit forms.
  */
-class MenuLinkFormController extends EntityFormController {
+class MenuLinkFormController extends EntityFormController implements EntityControllerInterface {
+
+  /**
+   * The path alias manager.
+   *
+   * @var \Drupal\Core\Path\AliasManagerInterface
+   */
+  protected $pathAliasManager;
+
+  /**
+   * Constructs a new MenuLinkFormController object.
+   *
+   * @param string $operation
+   *   The name of the current operation.
+   * @param \Drupal\Core\Path\AliasManagerInterface $path_alias_manager
+   *   The path alias manager.
+   */
+  public function __construct($operation, AliasManagerInterface $path_alias_manager) {
+    parent::__construct($operation);
+
+    $this->pathAliasManager = $path_alias_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info, $operation = NULL) {
+    return new static(
+      $operation,
+      $container->get('path.alias_manager.cached')
+    );
+  }
 
   /**
    * Overrides EntityFormController::form().
@@ -149,7 +183,7 @@ class MenuLinkFormController extends EntityFormController {
   public function validate(array $form, array &$form_state) {
     $menu_link = $this->buildEntity($form, $form_state);
 
-    $normal_path = drupal_container()->get('path.alias_manager.cached')->getSystemPath($menu_link->link_path);
+    $normal_path = $this->pathAliasManager->getSystemPath($menu_link->link_path);
     if ($menu_link->link_path != $normal_path) {
       drupal_set_message(t('The menu system stores system paths only, but will use the URL alias for display. %link_path has been stored as %normal_path', array('%link_path' => $menu_link->link_path, '%normal_path' => $normal_path)));
       $menu_link->link_path = $normal_path;
