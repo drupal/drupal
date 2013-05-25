@@ -4,6 +4,7 @@
  * @file
  * Install, update and uninstall functions for the aggregator module.
  */
+use Drupal\Core\Language\Language;
 
 /**
  * Implements hook_requirements().
@@ -319,7 +320,7 @@ function aggregator_update_8001() {
     'length' => 12,
     'not null' => TRUE,
     'default' => '',
-    'initial' => LANGUAGE_DEFAULT,
+    'initial' => Language::LANGCODE_DEFAULT,
   ));
   db_add_field('aggregator_item', 'langcode', array(
     'description' => 'The {language}.langcode of this feed item.',
@@ -327,6 +328,6 @@ function aggregator_update_8001() {
     'length' => 12,
     'not null' => TRUE,
     'default' => '',
-    'initial' => LANGUAGE_DEFAULT,
+    'initial' => Language::LANGCODE_DEFAULT,
   ));
 }

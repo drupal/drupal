@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Uuid\Uuid;
+use Drupal\Core\Language\Language;
 
 /**
  * Implements hook_schema().
@@ -689,7 +690,7 @@ function user_update_8011() {
         'status' => FILE_STATUS_PERMANENT,
         'filename' => drupal_basename($destination),
         'uuid' => $uuid->generate(),
-        'langcode' => LANGUAGE_NOT_SPECIFIED,
+        'langcode' => Language::LANGCODE_NOT_SPECIFIED,
         'filesize' => filesize($destination),
         'filemime' => file_get_mimetype($destination),
         'timestamp' => REQUEST_TIME,
@@ -838,7 +839,7 @@ function user_update_8012(&$sandbox) {
           'bundle' => 'user',
           'entity_id' => $uid,
           'revision_id' => $uid,
-          'langcode' => LANGUAGE_NOT_SPECIFIED,
+          'langcode' => Language::LANGCODE_NOT_SPECIFIED,
           'delta' => 0,
           'user_picture_fid' => $fid,
         ))
@@ -849,7 +850,7 @@ function user_update_8012(&$sandbox) {
           'bundle' => 'user',
           'entity_id' => $uid,
           'revision_id' => $uid,
-          'langcode' => LANGUAGE_NOT_SPECIFIED,
+          'langcode' => Language::LANGCODE_NOT_SPECIFIED,
           'delta' => 0,
           'user_picture_fid' => $fid,
         ))
@@ -1047,7 +1048,7 @@ function user_update_8017() {
       ->set('uuid', $uuid->generate())
       ->set('label', $role->name)
       ->set('weight', $role->weight)
-      ->set('langcode', LANGUAGE_NOT_SPECIFIED)
+      ->set('langcode', Language::LANGCODE_NOT_SPECIFIED)
       ->save();
   }
 

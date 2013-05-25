@@ -14,6 +14,7 @@ use Drupal\Core\Config\StorageComparerManifest;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Language\Language;
 use ReflectionMethod;
 use ReflectionObject;
 
@@ -846,7 +847,7 @@ abstract class TestBase {
    */
   protected function prepareEnvironment() {
     global $user, $conf;
-    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language(Language::TYPE_INTERFACE);
 
     // When running the test runner within a test, back up the original database
     // prefix and re-set the new/nested prefix in drupal_valid_test_ua().

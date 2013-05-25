@@ -7,6 +7,7 @@
 
 namespace Drupal\locale\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -107,7 +108,7 @@ class LocalePathTest extends WebTestBase {
     $edit = array(
       'source'   => 'node/' . $node->nid,
       'alias'    => $custom_path,
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
     );
     drupal_container()->get('path.crud')->save($edit['source'], $edit['alias'], $edit['langcode']);
     $lookup_path = drupal_container()->get('path.alias_manager')->getPathAlias('node/' . $node->nid, 'en');
@@ -129,11 +130,11 @@ class LocalePathTest extends WebTestBase {
     );
     drupal_container()->get('path.crud')->save($edit['source'], $edit['alias'], $edit['langcode']);
 
-    // Assign a custom path alias to second node with LANGUAGE_NOT_SPECIFIED.
+    // Assign a custom path alias to second node with Language::LANGCODE_NOT_SPECIFIED.
     $edit = array(
       'source'   => 'node/' . $second_node->nid,
       'alias'    => $custom_path,
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
     );
     drupal_container()->get('path.crud')->save($edit['source'], $edit['alias'], $edit['langcode']);
 

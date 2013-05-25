@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\System;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -51,7 +52,7 @@ class DateFormatsLanguageTest extends WebTestBase {
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Set language negotiation.
-    $language_type = LANGUAGE_TYPE_INTERFACE;
+    $language_type = Language::TYPE_INTERFACE;
     $edit = array(
       "{$language_type}[enabled][language-url]" => TRUE,
     );

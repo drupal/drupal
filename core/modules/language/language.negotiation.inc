@@ -7,6 +7,8 @@ use \Symfony\Component\HttpFoundation\Request;
  * Language negotiation functions.
  */
 
+use Drupal\Core\Language\Language;
+
 /**
  * The language is determined using path prefix or domain.
  */
@@ -59,7 +61,7 @@ const LANGUAGE_NEGOTIATION_URL_DOMAIN = 'domain';
  *   The current interface language code.
  */
 function language_from_interface() {
-  return language(LANGUAGE_TYPE_INTERFACE)->langcode;
+  return language(Language::TYPE_INTERFACE)->langcode;
 }
 
 /**
@@ -352,7 +354,7 @@ function language_from_url($languages, Request $request = NULL) {
  * @return
  *   A valid language code.
  */
-function language_url_fallback($language = NULL, $request = NULL, $language_type = LANGUAGE_TYPE_INTERFACE) {
+function language_url_fallback($language = NULL, $request = NULL, $language_type = Language::TYPE_INTERFACE) {
   $default = language_default();
   $prefix = (config('language.negotiation')->get('url.source') == LANGUAGE_NEGOTIATION_URL_PREFIX);
 
@@ -439,7 +441,7 @@ function language_url_rewrite_url(&$path, &$options) {
 
   // Language can be passed as an option, or we go for current URL language.
   if (!isset($options['language'])) {
-    $language_url = language(LANGUAGE_TYPE_URL);
+    $language_url = language(Language::TYPE_URL);
     $options['language'] = $language_url;
   }
   // We allow only enabled languages here.

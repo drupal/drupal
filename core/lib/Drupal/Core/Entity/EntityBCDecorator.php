@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Language\Language;
 use IteratorAggregate;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
@@ -118,28 +119,29 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
     // an entity field, provide direct access to the plain value. This makes it
     // possible to use the BC-decorator with properties; e.g., $node->title.
     if (isset($this->definitions[$name]) && empty($this->definitions[$name]['configurable'])) {
-      if (!isset($this->decorated->values[$name][LANGUAGE_DEFAULT])) {
-        $this->decorated->values[$name][LANGUAGE_DEFAULT][0]['value'] = NULL;
+      if (!isset($this->decorated->values[$name][Language::LANGCODE_DEFAULT])) {
+        $this->decorated->values[$name][Language::LANGCODE_DEFAULT][0]['value'] = NULL;
       }
-      if (is_array($this->decorated->values[$name][LANGUAGE_DEFAULT])) {
+      if (is_array($this->decorated->values[$name][Language::LANGCODE_DEFAULT])) {
         // This will work with all defined properties that have a single value.
         // We need to ensure the key doesn't matter. Mostly it's 'value' but
         // e.g. EntityReferenceItem uses target_id.
-        if (isset($this->decorated->values[$name][LANGUAGE_DEFAULT][0]) && count($this->decorated->values[$name][LANGUAGE_DEFAULT][0]) == 1) {
-          return $this->decorated->values[$name][LANGUAGE_DEFAULT][0][key($this->decorated->values[$name][LANGUAGE_DEFAULT][0])];
+        if (isset($this->decorated->values[$name][Language::LANGCODE_DEFAULT][0]) && count($this->decorated->values[$name][Language::LANGCODE_DEFAULT][0]) == 1) {
+          return $this->decorated->values[$name][Language::LANGCODE_DEFAULT][0][key($this->decorated->values[$name][Language::LANGCODE_DEFAULT][0])];
         }
       }
-      return $this->decorated->values[$name][LANGUAGE_DEFAULT];
+      return $this->decorated->values[$name][Language::LANGCODE_DEFAULT];
     }
     else {
       // Allow accessing field values in an entity default language other than
-      // LANGUAGE_DEFAULT by mapping the values to LANGUAGE_DEFAULT. This is
-      // necessary as EntityNG always keys default language values with
-      // LANGUAGE_DEFAULT while field API expects them to be keyed by langcode.
+      // Language::LANGCODE_DEFAULT by mapping the values to
+      // Language::LANGCODE_DEFAULT. This is necessary as EntityNG always keys
+      // default language values with Language::LANGCODE_DEFAULT while field API
+      // expects them to be keyed by langcode.
       $langcode = $this->decorated->language()->langcode;
-      if ($langcode != LANGUAGE_DEFAULT && isset($this->decorated->values[$name]) && is_array($this->decorated->values[$name])) {
-        if (isset($this->decorated->values[$name][LANGUAGE_DEFAULT]) && !isset($this->decorated->values[$name][$langcode])) {
-          $this->decorated->values[$name][$langcode] = &$this->decorated->values[$name][LANGUAGE_DEFAULT];
+      if ($langcode != Language::LANGCODE_DEFAULT && isset($this->decorated->values[$name]) && is_array($this->decorated->values[$name])) {
+        if (isset($this->decorated->values[$name][Language::LANGCODE_DEFAULT]) && !isset($this->decorated->values[$name][$langcode])) {
+          $this->decorated->values[$name][$langcode] = &$this->decorated->values[$name][Language::LANGCODE_DEFAULT];
         }
       }
       if (!isset($this->decorated->values[$name])) {
@@ -160,18 +162,18 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
     // an entity field, directly write to the plain value. This makes it
     // possible to use the BC-decorator with properties; e.g., $node->title.
     if ($defined && empty($this->definitions[$name]['configurable'])) {
-      $this->decorated->values[$name][LANGUAGE_DEFAULT] = $value;
+      $this->decorated->values[$name][Language::LANGCODE_DEFAULT] = $value;
     }
     else {
       if ($defined && is_array($value)) {
         // If field API sets a value with a langcode in entity language, move it
-        // to LANGUAGE_DEFAULT.
+        // to Language::LANGCODE_DEFAULT.
         // This is necessary as EntityNG always keys default language values
-        // with LANGUAGE_DEFAULT while field API expects them to be keyed by
-        // langcode.
+        // with Language::LANGCODE_DEFAULT while field API expects them to be
+        // keyed by langcode.
         foreach ($value as $langcode => $data) {
-          if ($langcode != LANGUAGE_DEFAULT && $langcode == $this->decorated->language()->langcode) {
-            $value[LANGUAGE_DEFAULT] = $data;
+          if ($langcode != Language::LANGCODE_DEFAULT && $langcode == $this->decorated->language()->langcode) {
+            $value[Language::LANGCODE_DEFAULT] = $data;
             unset($value[$langcode]);
           }
         }

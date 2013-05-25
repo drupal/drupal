@@ -7,6 +7,8 @@
 
 namespace Drupal\custom_block\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests block save related functionality.
  */
@@ -49,7 +51,7 @@ class CustomBlockSaveTest extends CustomBlockTestBase {
     $info = $this->randomName(8);
     $block = array(
       'info' => $info,
-      'block_body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => $this->randomName(32)))),
+      'block_body' => array(Language::LANGCODE_NOT_SPECIFIED => array(array('value' => $this->randomName(32)))),
       'type' => 'basic',
       'id' => $test_id
     );

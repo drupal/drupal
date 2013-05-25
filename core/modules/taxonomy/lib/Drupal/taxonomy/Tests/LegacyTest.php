@@ -9,6 +9,8 @@ namespace Drupal\taxonomy\Tests;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Test for legacy node bug.
  */
@@ -35,7 +37,7 @@ class LegacyTest extends TaxonomyTestBase {
    */
   function testTaxonomyLegacyNode() {
     // Posts an article with a taxonomy term and a date prior to 1970.
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $date = new DrupalDateTime('1969-01-01 00:00:00');
     $edit = array();
     $edit['title'] = $this->randomName();

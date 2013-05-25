@@ -8,13 +8,15 @@
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Implements hook_init().
  */
 function language_test_init() {
   language_test_store_language_negotiation();
-  if (isset(language(LANGUAGE_TYPE_INTERFACE)->langcode) && isset(language(LANGUAGE_TYPE_INTERFACE)->method_id)) {
-    drupal_set_message(t('Language negotiation method: @name', array('@name' => language(LANGUAGE_TYPE_INTERFACE)->method_id)));
+  if (isset(language(Language::TYPE_INTERFACE)->langcode) && isset(language(Language::TYPE_INTERFACE)->method_id)) {
+    drupal_set_message(t('Language negotiation method: @name', array('@name' => language(Language::TYPE_INTERFACE)->method_id)));
   }
 }
 
@@ -40,7 +42,7 @@ function language_test_language_types_info() {
  */
 function language_test_language_types_info_alter(array &$language_types) {
   if (state()->get('language_test.content_language_type')) {
-    unset($language_types[LANGUAGE_TYPE_CONTENT]['fixed']);
+    unset($language_types[Language::TYPE_CONTENT]['fixed']);
   }
 }
 
@@ -61,7 +63,7 @@ function language_test_language_negotiation_info() {
     return array(
       'test_language_negotiation_method' => array(
         'name' => t('Test'),
-        'types' => array(LANGUAGE_TYPE_CONTENT, 'test_language_type', 'fixed_test_language_type'),
+        'types' => array(Language::TYPE_CONTENT, 'test_language_type', 'fixed_test_language_type'),
       ) + $info,
       'test_language_negotiation_method_ts' => array(
         'name' => t('Type-specific test'),

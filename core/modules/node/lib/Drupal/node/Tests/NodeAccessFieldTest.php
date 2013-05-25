@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests the interaction of the node access system with fields.
  */
@@ -58,7 +60,7 @@ class NodeAccessFieldTest extends NodeTestBase {
    */
   function testNodeAccessAdministerField() {
     // Create a page node.
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $field_data = array();
     $value = $field_data[0]['value'] = $this->randomName();
     $node = $this->drupalCreateNode(array($this->field_name => $field_data));

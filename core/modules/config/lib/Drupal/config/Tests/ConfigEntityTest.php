@@ -8,6 +8,7 @@
 namespace Drupal\config\Tests;
 
 use Drupal\Core\Entity\EntityMalformedException;
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**

@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\System;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 class PageTitleFilteringTest extends WebTestBase {
@@ -69,7 +70,7 @@ class PageTitleFilteringTest extends WebTestBase {
     drupal_set_title($title, PASS_THROUGH);
     $this->assertTrue(strpos(drupal_get_title(), '<em>') !== FALSE, 'Tags in title are not converted to entities when $output is PASS_THROUGH.');
     // Generate node content.
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit = array(
       "title" => '!SimpleTest! ' . $title . $this->randomName(20),
       "body[$langcode][0][value]" => '!SimpleTest! test body' . $this->randomName(200),

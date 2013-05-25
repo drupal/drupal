@@ -7,6 +7,7 @@
 
 namespace Drupal\text\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\field\FieldValidationException;
 use Drupal\simpletest\WebTestBase;
 
@@ -67,7 +68,7 @@ class TextFieldTest extends WebTestBase {
 
     // Test valid and invalid values with field_attach_validate().
     $entity = field_test_create_entity();
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     for ($i = 0; $i <= $max_length + 2; $i++) {
       $entity->{$this->field['field_name']}[$langcode][0]['value'] = str_repeat('x', $i);
       try {
@@ -119,7 +120,7 @@ class TextFieldTest extends WebTestBase {
       ->setComponent($this->field_name)
       ->save();
 
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test_bundle');
@@ -181,7 +182,7 @@ class TextFieldTest extends WebTestBase {
       ->setComponent($this->field_name)
       ->save();
 
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Disable all text formats besides the plain text fallback format.
     $this->drupalLogin($this->admin_user);

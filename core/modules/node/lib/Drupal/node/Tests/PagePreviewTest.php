@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests the node entity preview functionality.
  */
@@ -38,7 +40,7 @@ class PagePreviewTest extends NodeTestBase {
       'name' => $this->randomName(),
       'description' => $this->randomName(),
       'vid' => $this->randomName(),
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
       'help' => '',
     ));
     $vocabulary->save();
@@ -50,7 +52,7 @@ class PagePreviewTest extends NodeTestBase {
       'name' => $this->randomName(),
       'description' => $this->randomName(),
       'vid' => $this->vocabulary->id(),
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
     ));
     $term->save();
 
@@ -103,7 +105,7 @@ class PagePreviewTest extends NodeTestBase {
    * Checks the node preview functionality.
    */
   function testPagePreview() {
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $title_key = "title";
     $body_key = "body[$langcode][0][value]";
     $term_key = "{$this->field_name}[$langcode]";
@@ -175,7 +177,7 @@ class PagePreviewTest extends NodeTestBase {
    * Checks the node preview functionality, when using revisions.
    */
   function testPagePreviewWithRevisions() {
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $title_key = "title";
     $body_key = "body[$langcode][0][value]";
     $term_key = "{$this->field_name}[$langcode]";

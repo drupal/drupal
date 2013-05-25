@@ -8,6 +8,7 @@
 namespace Drupal\custom_block\Tests;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Language\Language;
 
 /**
  * Tests creating and saving a block.
@@ -48,7 +49,7 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
   public function testCustomBlockCreation() {
     // Create a block.
     $edit = array();
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit['info'] = $this->randomName(8);
     $edit["block_body[$langcode][0][value]"] = $this->randomName(16);
     $this->drupalPost('block/add/basic', $edit, t('Save'));

@@ -5,6 +5,7 @@
  * Administration toolbar for quick access to top level administration items.
  */
 
+use Drupal\Core\Language\Language;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\Core\Template\Attribute;
 use Drupal\Component\Utility\Crypt;
@@ -625,7 +626,7 @@ function toolbar_library_info() {
  */
 function _toolbar_get_subtree_hash() {
   global $user;
-  $cid = $user->uid . ':' . language(LANGUAGE_TYPE_INTERFACE)->langcode;
+  $cid = $user->uid . ':' . language(Language::TYPE_INTERFACE)->langcode;
   if ($cache = cache('toolbar')->get($cid)) {
     $hash = $cache->data;
   }

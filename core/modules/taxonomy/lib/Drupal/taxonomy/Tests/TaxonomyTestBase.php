@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -39,7 +40,7 @@ abstract class TaxonomyTestBase extends WebTestBase {
       'name' => $this->randomName(),
       'description' => $this->randomName(),
       'vid' => drupal_strtolower($this->randomName()),
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
       'weight' => mt_rand(0, 10),
     ));
     $vocabulary->save();
@@ -58,7 +59,7 @@ abstract class TaxonomyTestBase extends WebTestBase {
       // Use the first available text format.
       'format' => $format->format,
       'vid' => $vocabulary->id(),
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
     ));
     $term->save();
     return $term;

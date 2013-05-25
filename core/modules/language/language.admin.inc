@@ -196,7 +196,7 @@ function _language_admin_common_controls(&$form, $language = NULL) {
     '#required' => TRUE,
     '#description' => t('Direction that text in this language is presented.'),
     '#default_value' => @$language->direction,
-    '#options' => array(LANGUAGE_LTR => t('Left to right'), LANGUAGE_RTL => t('Right to left')),
+    '#options' => array(Language::DIRECTION_LTR => t('Left to right'), Language::DIRECTION_RTL => t('Right to left')),
   );
   return $form;
 }

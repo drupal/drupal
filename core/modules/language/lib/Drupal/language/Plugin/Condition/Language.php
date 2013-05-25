@@ -10,6 +10,7 @@ namespace Drupal\language\Plugin\Condition;
 use Drupal\Core\Condition\ConditionPluginBase;
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Language\Language as Lang;
 
 /**
  * Provides a 'Language' condition.
@@ -34,7 +35,7 @@ class Language extends ConditionPluginBase {
     $form = parent::buildForm($form, $form_state);
     if (language_multilingual()) {
       // Fetch languages.
-      $languages = language_list(LANGUAGE_ALL);
+      $languages = language_list(Lang::STATE_ALL);
       $langcodes_options = array();
       foreach ($languages as $language) {
         // @todo $language->name is not wrapped with t(), it should be replaced
@@ -70,7 +71,7 @@ class Language extends ConditionPluginBase {
    * {@inheritdoc}
    */
   public function summary() {
-    $language_list = language_list(LANGUAGE_ALL);
+    $language_list = language_list(Lang::STATE_ALL);
     $selected = $this->configuration['langcodes'];
     // Reduce the language list to an array of language names.
     $language_names = array_reduce($language_list, function(&$result, $item) use ($selected) {

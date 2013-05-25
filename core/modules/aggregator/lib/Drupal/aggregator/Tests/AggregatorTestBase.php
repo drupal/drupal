@@ -7,6 +7,7 @@
 
 namespace Drupal\aggregator\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 use Drupal\aggregator\Plugin\Core\Entity\Feed;
 
@@ -355,7 +356,7 @@ EOF;
    *   (optional) The number of nodes to generate. Defaults to five.
    */
   function createSampleNodes($count = 5) {
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     // Post $count article nodes.
     for ($i = 0; $i < $count; $i++) {
       $edit = array();

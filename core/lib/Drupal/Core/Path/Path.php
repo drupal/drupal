@@ -9,6 +9,7 @@ namespace Drupal\Core\Path;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Language\Language;
 
 /**
  * Defines a class for CRUD operations on path aliases.
@@ -63,7 +64,7 @@ class Path {
    *   - pid: Unique path alias identifier.
    *   - langcode: The language code of the alias.
    */
-  public function save($source, $alias, $langcode = LANGUAGE_NOT_SPECIFIED, $pid = NULL) {
+  public function save($source, $alias, $langcode = Language::LANGCODE_NOT_SPECIFIED, $pid = NULL) {
 
     $fields = array(
       'source' => $source,

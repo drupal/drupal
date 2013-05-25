@@ -8,6 +8,7 @@
 namespace Drupal\aggregator;
 
 use Drupal\Core\Entity\EntityFormControllerNG;
+use Drupal\Core\Language\Language;
 
 /**
  * Form controller for the aggregator feed edit forms.
@@ -35,7 +36,7 @@ class FeedFormController extends EntityFormControllerNG {
       '#title' => t('Language'),
       '#type' => 'language_select',
       '#default_value' => $feed->language()->langcode,
-      '#languages' => LANGUAGE_ALL,
+      '#languages' => Language::STATE_ALL,
     );
 
     $form['url'] = array(

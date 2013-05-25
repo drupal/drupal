@@ -10,6 +10,7 @@ namespace Drupal\entity_test\Plugin\Core\Entity;
 use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Language\Language;
 
 /**
  * Defines the test entity class.
@@ -89,7 +90,7 @@ class EntityTest extends EntityNG {
   /**
    * Overrides Drupal\entity\Entity::label().
    */
-  public function label($langcode = LANGUAGE_DEFAULT) {
+  public function label($langcode = Language::LANGCODE_DEFAULT) {
     $info = $this->entityInfo();
     if (isset($info['entity_keys']['label']) && $info['entity_keys']['label'] == 'name') {
       return $this->getTranslation($langcode)->name->value;

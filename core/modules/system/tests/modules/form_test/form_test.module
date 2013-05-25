@@ -7,6 +7,7 @@
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Language\Language;
 use Drupal\form_test\Callbacks;
 use Drupal\form_test\FormTestObject;
 use Drupal\form_test\SystemConfigFormTestForm;
@@ -1334,26 +1335,26 @@ function form_test_language_select() {
 
   $form['languages_all'] = array(
     '#type' => 'language_select',
-    '#languages' => LANGUAGE_ALL,
+    '#languages' => Language::STATE_ALL,
     '#default_value' => 'xx',
   );
   $form['languages_configurable'] = array(
     '#type' => 'language_select',
-    '#languages' => LANGUAGE_CONFIGURABLE,
+    '#languages' => Language::STATE_CONFIGURABLE,
     '#default_value' => 'en',
   );
   $form['languages_locked'] = array(
     '#type' => 'language_select',
-    '#languages' => LANGUAGE_LOCKED,
+    '#languages' => Language::STATE_LOCKED,
   );
   $form['languages_config_and_locked'] = array(
     '#type' => 'language_select',
-    '#languages' => LANGUAGE_CONFIGURABLE | LANGUAGE_LOCKED,
+    '#languages' => Language::STATE_CONFIGURABLE | Language::STATE_LOCKED,
     '#default_value' => 'dummy_value',
   );
   $form['language_custom_options'] = array(
     '#type' => 'language_select',
-    '#languages' => LANGUAGE_CONFIGURABLE | LANGUAGE_LOCKED,
+    '#languages' => Language::STATE_CONFIGURABLE | Language::STATE_LOCKED,
     '#options' => array('opt1' => 'First option', 'opt2' => 'Second option', 'opt3' => 'Third option'),
     '#default_value' => 'opt2',
   );
@@ -2264,7 +2265,7 @@ function form_test_two_instances() {
     'uid' => $user->uid,
     'name' => (isset($user->name) ? $user->name : ''),
     'type' => 'page',
-    'langcode' => LANGUAGE_NOT_SPECIFIED,
+    'langcode' => Language::LANGCODE_NOT_SPECIFIED,
   ));
   $node2 = clone($node1);
   $return['node_form_1'] = entity_get_form($node1);

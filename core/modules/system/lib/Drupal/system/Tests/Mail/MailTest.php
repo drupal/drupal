@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Mail;
 
+use Drupal\Core\Language\Language;
 use Drupal\Core\Mail\MailInterface;
 use Drupal\simpletest\WebTestBase;
 
@@ -49,7 +50,7 @@ class MailTest extends WebTestBase implements MailInterface {
    * Assert that the pluggable mail system is functional.
    */
   public function testPluggableFramework() {
-    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language(Language::TYPE_INTERFACE);
 
     // Use MailTestCase for sending a message.
     $message = drupal_mail('simpletest', 'mail_test', 'testing@example.com', $language_interface->langcode);
@@ -64,7 +65,7 @@ class MailTest extends WebTestBase implements MailInterface {
    * @see simpletest_mail_alter()
    */
   public function testCancelMessage() {
-    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language(Language::TYPE_INTERFACE);
 
     // Reset the class variable holding a copy of the last sent message.
     self::$sent_message = NULL;

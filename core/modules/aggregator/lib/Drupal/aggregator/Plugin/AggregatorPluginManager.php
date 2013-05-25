@@ -9,6 +9,7 @@ namespace Drupal\aggregator\Plugin;
 
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
+use Drupal\Core\Language\Language;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
 
@@ -38,7 +39,7 @@ class AggregatorPluginManager extends PluginManagerBase {
     );
 
     $this->discovery = new AnnotatedClassDiscovery("aggregator/$type", $namespaces, $annotation_namespaces, $type_annotations[$type]);
-    $this->discovery = new CacheDecorator($this->discovery, "aggregator_$type:" . language(LANGUAGE_TYPE_INTERFACE)->langcode);
+    $this->discovery = new CacheDecorator($this->discovery, "aggregator_$type:" . language(Language::TYPE_INTERFACE)->langcode);
     $this->factory = new DefaultFactory($this->discovery);
   }
 }

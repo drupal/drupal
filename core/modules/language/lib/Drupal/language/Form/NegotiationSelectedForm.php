@@ -7,6 +7,7 @@
 
 namespace Drupal\language\Form;
 
+use Drupal\Core\Language\Language;
 use Drupal\system\SystemConfigFormBase;
 
 /**
@@ -29,7 +30,7 @@ class NegotiationSelectedForm extends SystemConfigFormBase {
     $form['selected_langcode'] = array(
       '#type' => 'language_select',
       '#title' => t('Language'),
-      '#languages' => LANGUAGE_CONFIGURABLE | LANGUAGE_SITE_DEFAULT,
+      '#languages' => Language::STATE_CONFIGURABLE | Language::STATE_SITE_DEFAULT,
       '#default_value' => $config->get('selected_langcode'),
     );
 

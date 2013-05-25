@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Language\Language;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\Core\Template\Attribute;
 use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
@@ -1115,12 +1116,12 @@ function book_toc($bid, $depth_limit, $exclude = array()) {
  */
 function template_preprocess_book_export_html(&$variables) {
   global $base_url;
-  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(Language::TYPE_INTERFACE);
 
   $variables['title'] = check_plain($variables['title']);
   $variables['base_url'] = $base_url;
   $variables['language'] = $language_interface;
-  $variables['language_rtl'] = ($language_interface->direction == LANGUAGE_RTL);
+  $variables['language_rtl'] = ($language_interface->direction == Language::DIRECTION_RTL);
   $variables['head'] = drupal_get_html_head();
 
   // HTML element attributes.

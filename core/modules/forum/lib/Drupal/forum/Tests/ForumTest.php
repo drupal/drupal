@@ -7,6 +7,7 @@
 
 namespace Drupal\forum\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\simpletest\WebTestBase;
 
@@ -211,7 +212,7 @@ class ForumTest extends WebTestBase {
     // Test adding a comment to a forum topic.
     $node = $this->createForumTopic($this->forum, FALSE);
     $edit = array();
-    $edit['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]'] = $this->randomName();
+    $edit['comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]'] = $this->randomName();
     $this->drupalPost("node/$node->nid", $edit, t('Save'));
     $this->assertResponse(200);
 
@@ -247,7 +248,7 @@ class ForumTest extends WebTestBase {
 
     // Create an orphan forum item.
     $this->drupalLogin($this->admin_user);
-    $this->drupalPost('node/add/forum', array('title' => $this->randomName(10), 'body[' . LANGUAGE_NOT_SPECIFIED .'][0][value]' => $this->randomName(120)), t('Save'));
+    $this->drupalPost('node/add/forum', array('title' => $this->randomName(10), 'body[' . Language::LANGCODE_NOT_SPECIFIED .'][0][value]' => $this->randomName(120)), t('Save'));
 
     $nid_count = db_query('SELECT COUNT(nid) FROM {node}')->fetchField();
     $this->assertEqual(0, $nid_count, 'A forum node was not created when missing a forum vocabulary.');
@@ -477,7 +478,7 @@ class ForumTest extends WebTestBase {
     // Post a reply to the topic.
     $edit = array();
     $edit['subject'] = $this->randomName();
-    $edit['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]'] = $this->randomName();
+    $edit['comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]'] = $this->randomName();
     $this->drupalPost("node/$node->nid", $edit, t('Save'));
     $this->assertResponse(200);
 
@@ -504,7 +505,7 @@ class ForumTest extends WebTestBase {
     $title = $this->randomName(20);
     $body = $this->randomName(200);
 
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit = array(
       "title" => $title,
       "body[$langcode][0][value]" => $body,
@@ -528,7 +529,7 @@ class ForumTest extends WebTestBase {
     // Retrieve node object, ensure that the topic was created and in the proper forum.
     $node = $this->drupalGetNodeByTitle($title);
     $this->assertTrue($node != NULL, format_string('Node @title was loaded', array('@title' => $title)));
-    $this->assertEqual($node->taxonomy_forums[LANGUAGE_NOT_SPECIFIED][0]['tid'], $tid, 'Saved forum topic was in the expected forum');
+    $this->assertEqual($node->taxonomy_forums[Language::LANGCODE_NOT_SPECIFIED][0]['tid'], $tid, 'Saved forum topic was in the expected forum');
 
     // View forum topic.
     $this->drupalGet('node/' . $node->nid);
@@ -590,7 +591,7 @@ class ForumTest extends WebTestBase {
     if ($response == 200) {
       // Edit forum node (including moving it to another forum).
       $edit = array();
-      $langcode = LANGUAGE_NOT_SPECIFIED;
+      $langcode = Language::LANGCODE_NOT_SPECIFIED;
       $edit["title"] = 'node/' . $node->nid;
       $edit["body[$langcode][0][value]"] = $this->randomName(256);
       // Assume the topic is initially associated with $forum.

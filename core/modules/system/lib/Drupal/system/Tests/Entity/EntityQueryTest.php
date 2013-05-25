@@ -7,6 +7,8 @@
 
 namespace Drupal\system\Tests\Entity;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests the basic Entity API.
  */
@@ -83,11 +85,11 @@ class EntityQueryTest extends EntityUnitTestBase {
       $bundles[] = $bundle;
     }
     // Each unit is a list of field name, langcode and a column-value array.
-    $units[] = array($figures, LANGUAGE_NOT_SPECIFIED, array(
+    $units[] = array($figures, Language::LANGCODE_NOT_SPECIFIED, array(
       'color' => 'red',
       'shape' => 'triangle',
     ));
-    $units[] = array($figures, LANGUAGE_NOT_SPECIFIED, array(
+    $units[] = array($figures, Language::LANGCODE_NOT_SPECIFIED, array(
       'color' => 'blue',
       'shape' => 'circle',
     ));

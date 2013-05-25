@@ -8,6 +8,7 @@
 namespace Drupal\contact;
 
 use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Language\Language;
 use Drupal\user\Plugin\Core\Entity\User;
 
 /**
@@ -139,7 +140,7 @@ class MessageFormController extends EntityFormController {
   public function save(array $form, array &$form_state) {
     global $user;
 
-    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language(Language::TYPE_INTERFACE);
     $message = $this->entity;
 
     $sender = clone user_load($user->uid);

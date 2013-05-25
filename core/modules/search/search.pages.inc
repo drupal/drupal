@@ -5,6 +5,8 @@
  * User page callbacks for the Search module.
  */
 
+use Drupal\Core\Language\Language;
+
 /**
  * Page callback: Presents the search form and/or search results.
  *
@@ -122,12 +124,12 @@ function template_preprocess_search_results(&$variables) {
  *   - content_attributes: HTML attributes for the content.
  */
 function template_preprocess_search_result(&$variables) {
-  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(Language::TYPE_INTERFACE);
 
   $result = $variables['result'];
   $variables['url'] = check_url($result['link']);
   $variables['title'] = check_plain($result['title']);
-  if (isset($result['language']) && $result['language'] != $language_interface->langcode && $result['language'] != LANGUAGE_NOT_SPECIFIED) {
+  if (isset($result['language']) && $result['language'] != $language_interface->langcode && $result['language'] != Language::LANGCODE_NOT_SPECIFIED) {
     $variables['title_attributes']['lang'] = $result['language'];
     $variables['content_attributes']['lang'] = $result['language'];
   }

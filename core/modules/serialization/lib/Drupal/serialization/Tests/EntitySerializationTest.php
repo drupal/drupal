@@ -7,6 +7,7 @@
 
 namespace Drupal\serialization\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\serialization\Encoder\JsonEncoder;
 use Drupal\serialization\Normalizer\ComplexDataNormalizer;
 use Drupal\serialization\Normalizer\TypedDataNormalizer;
@@ -82,7 +83,7 @@ class EntitySerializationTest extends NormalizerTestBase {
         array('value' => $this->entity->uuid()),
       ),
       'langcode' => array(
-        array('value' => LANGUAGE_NOT_SPECIFIED),
+        array('value' => Language::LANGCODE_NOT_SPECIFIED),
       ),
       'default_langcode' => array(
         array('value' => NULL),
@@ -138,7 +139,7 @@ class EntitySerializationTest extends NormalizerTestBase {
       'id' => '<id><value>' . $this->entity->id() . '</value></id>',
       'revision_id' => '<revision_id><value>' . $this->entity->getRevisionId() . '</value></revision_id>',
       'uuid' => '<uuid><value>' . $this->entity->uuid() . '</value></uuid>',
-      'langcode' => '<langcode><value>' . LANGUAGE_NOT_SPECIFIED . '</value></langcode>',
+      'langcode' => '<langcode><value>' . Language::LANGCODE_NOT_SPECIFIED . '</value></langcode>',
       'default_langcode' => '<default_langcode><value/></default_langcode>',
       'name' => '<name><value>' . $this->values['name'] . '</value></name>',
       'type' => '<type><value>entity_test_mulrev</value></type>',

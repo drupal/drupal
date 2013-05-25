@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Test node token replacement in strings.
  */
@@ -24,7 +26,7 @@ class NodeTokenReplaceTest extends NodeTestBase {
    */
   function testNodeTokenReplacement() {
     $token_service = \Drupal::token();
-    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language(Language::TYPE_INTERFACE);
     $url_options = array(
       'absolute' => TRUE,
       'language' => $language_interface,

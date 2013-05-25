@@ -7,6 +7,8 @@
 
 namespace Drupal\file\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests the file token replacement in strings.
  */
@@ -24,7 +26,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
    */
   function testFileTokenReplacement() {
     $token_service = \Drupal::token();
-    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language(Language::TYPE_INTERFACE);
     $url_options = array(
       'absolute' => TRUE,
       'language' => $language_interface,
@@ -45,7 +47,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
 
     // Load the node and the file.
     $node = node_load($nid, TRUE);
-    $file = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
+    $file = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']);
 
     // Generate and test sanitized tokens.
     $tests = array();

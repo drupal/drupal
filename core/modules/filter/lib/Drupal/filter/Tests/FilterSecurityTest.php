@@ -7,6 +7,7 @@
 
 namespace Drupal\filter\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -71,8 +72,8 @@ class FilterSecurityTest extends WebTestBase {
   function testDisableFilterModule() {
     // Create a new node.
     $node = $this->drupalCreateNode(array('promote' => 1));
-    $body_raw = $node->body[LANGUAGE_NOT_SPECIFIED][0]['value'];
-    $format_id = $node->body[LANGUAGE_NOT_SPECIFIED][0]['format'];
+    $body_raw = $node->body[Language::LANGCODE_NOT_SPECIFIED][0]['value'];
+    $format_id = $node->body[Language::LANGCODE_NOT_SPECIFIED][0]['format'];
     $this->drupalGet('node/' . $node->nid);
     $this->assertText($body_raw, 'Node body found.');
 

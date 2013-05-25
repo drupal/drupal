@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Language\Language;
 use Drupal\field\Plugin\Core\Entity\Field;
 use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
@@ -253,7 +254,7 @@ function translation_entity_form_language_content_settings_validate(array $form,
 
         $values = $bundle_settings['settings']['language'];
         if (language_is_locked($values['langcode']) && empty($values['language_show'])) {
-          foreach (language_list(LANGUAGE_LOCKED) as $language) {
+          foreach (language_list(Language::STATE_LOCKED) as $language) {
             $locked_languages[] = $language->name;
           }
           form_set_error($name, t('Translation is not supported if language is always one of: @locked_languages', array('@locked_languages' => implode(', ', $locked_languages))));
@@ -336,9 +337,9 @@ function _translation_entity_update_field_translatability($settings) {
     $field = field_info_field($field_name);
     if ($field['translatable'] != $translatable) {
       // If a field is untranslatable, it can have no data except under
-      // LANGUAGE_NOT_SPECIFIED. Thus we need a field to be translatable before
+      // Language::LANGCODE_NOT_SPECIFIED. Thus we need a field to be translatable before
       // we convert data to the entity language. Conversely we need to switch
-      // data back to LANGUAGE_NOT_SPECIFIED before making a field
+      // data back to Language::LANGCODE_NOT_SPECIFIED before making a field
       // untranslatable lest we lose information.
       $field_operations = array(
         array('translation_entity_translatable_switch', array($translatable, $field_name)),
@@ -398,7 +399,7 @@ function translation_entity_translatable_form(array $form, array &$form_state, $
  * This submit handler maintains consistency between the translatability of an
  * entity and the language under which the field data is stored. When a field is
  * marked as translatable, all the data in
- * $entity->{field_name}[LANGUAGE_NOT_SPECIFIED] is moved to
+ * $entity->{field_name}[Language::LANGCODE_NOT_SPECIFIED] is moved to
  * $entity->{field_name}[$entity_language]. When a field is marked as
  * untranslatable the opposite process occurs. Note that marking a field as
  * untranslatable will cause all of its translations to be permanently removed,
@@ -421,9 +422,9 @@ function translation_entity_translatable_form_submit(array $form, array $form_st
   }
 
   // If a field is untranslatable, it can have no data except under
-  // LANGUAGE_NOT_SPECIFIED. Thus we need a field to be translatable before we
+  // Language::LANGCODE_NOT_SPECIFIED. Thus we need a field to be translatable before we
   // convert data to the entity language. Conversely we need to switch data back
-  // to LANGUAGE_NOT_SPECIFIED before making a field untranslatable lest we lose
+  // to Language::LANGCODE_NOT_SPECIFIED before making a field untranslatable lest we lose
   // information.
   $operations = array(
     array('translation_entity_translatable_batch', array(!$translatable, $field_name)),
@@ -464,7 +465,7 @@ function translation_entity_translatable_switch($translatable, $field_name) {
 }
 
 /**
- * Batch callback: Converts field data to or from LANGUAGE_NOT_SPECIFIED.
+ * Batch callback: Converts field data to or from Language::LANGCODE_NOT_SPECIFIED.
  *
  * @param bool $translatable
  *   Indicator of whether the field should be made translatable (TRUE) or
@@ -535,7 +536,7 @@ function translation_entity_translatable_batch($translatable, $field_name, &$con
       $langcode = $entity->language()->langcode;
 
       // Skip process for language neutral entities.
-      if ($langcode == LANGUAGE_NOT_SPECIFIED) {
+      if ($langcode == Language::LANGCODE_NOT_SPECIFIED) {
         continue;
       }
 
@@ -545,27 +546,27 @@ function translation_entity_translatable_batch($translatable, $field_name, &$con
       // we need to store the new translations and only after we can remove the
       // old ones. Otherwise we might have data loss, since the removal of the
       // old translations might occur before the new ones are stored.
-      if ($translatable && isset($entity->{$field_name}[LANGUAGE_NOT_SPECIFIED])) {
+      if ($translatable && isset($entity->{$field_name}[Language::LANGCODE_NOT_SPECIFIED])) {
         // If the field is being switched to translatable and has data for
-        // LANGUAGE_NOT_SPECIFIED then we need to move the data to the right
+        // Language::LANGCODE_NOT_SPECIFIED then we need to move the data to the right
         // language.
-        $entity->{$field_name}[$langcode] = $entity->{$field_name}[LANGUAGE_NOT_SPECIFIED];
+        $entity->{$field_name}[$langcode] = $entity->{$field_name}[Language::LANGCODE_NOT_SPECIFIED];
         // Store the original value.
         _translation_entity_update_field($entity_type, $entity, $field_name);
-        $entity->{$field_name}[LANGUAGE_NOT_SPECIFIED] = array();
+        $entity->{$field_name}[Language::LANGCODE_NOT_SPECIFIED] = array();
         // Remove the language neutral value.
         _translation_entity_update_field($entity_type, $entity, $field_name);
       }
       elseif (!$translatable && isset($entity->{$field_name}[$langcode])) {
         // The field has been marked untranslatable and has data in the entity
-        // language: we need to move it to LANGUAGE_NOT_SPECIFIED and drop the
+        // language: we need to move it to Language::LANGCODE_NOT_SPECIFIED and drop the
         // other translations.
-        $entity->{$field_name}[LANGUAGE_NOT_SPECIFIED] = $entity->{$field_name}[$langcode];
+        $entity->{$field_name}[Language::LANGCODE_NOT_SPECIFIED] = $entity->{$field_name}[$langcode];
         // Store the original value.
         _translation_entity_update_field($entity_type, $entity, $field_name);
         // Remove translations.
         foreach ($entity->{$field_name} as $langcode => $items) {
-          if ($langcode != LANGUAGE_NOT_SPECIFIED) {
+          if ($langcode != Language::LANGCODE_NOT_SPECIFIED) {
             $entity->{$field_name}[$langcode] = array();
           }
         }

@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\system\Tests\Upgrade;
+use Drupal\Core\Language\Language;
 
 /**
  * Tests upgrade of system variables.
@@ -235,7 +236,7 @@ class FieldUpgradePathTest extends UpgradePathTestBase {
     ));
     field_attach_load('node', array(2 => $entity), FIELD_LOAD_CURRENT, array('field_id' => $deleted_field['uuid'], 'deleted' => 1));
     $deleted_value = $entity->get('test_deleted_field');
-    $this->assertEqual($deleted_value[LANGUAGE_NOT_SPECIFIED][0]['value'], 'Some deleted value');
+    $this->assertEqual($deleted_value[Language::LANGCODE_NOT_SPECIFIED][0]['value'], 'Some deleted value');
 
     // Check that creation of a new node works as expected.
     $value = $this->randomName();

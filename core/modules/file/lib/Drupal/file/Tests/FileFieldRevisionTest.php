@@ -7,6 +7,8 @@
 
 namespace Drupal\file\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests file handling with node revisions.
  */
@@ -45,7 +47,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
 
     // Check that the file exists on disk and in the database.
     $node = node_load($nid, TRUE);
-    $node_file_r1 = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
+    $node_file_r1 = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']);
     $node_vid_r1 = $node->vid;
     $this->assertFileExists($node_file_r1, t('New file saved to disk on node creation.'));
     $this->assertFileEntryExists($node_file_r1, t('File entry exists in database on node creation.'));
@@ -54,7 +56,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     // Upload another file to the same node in a new revision.
     $this->replaceNodeFile($test_file, $field_name, $nid);
     $node = node_load($nid, TRUE);
-    $node_file_r2 = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
+    $node_file_r2 = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']);
     $node_vid_r2 = $node->vid;
     $this->assertFileExists($node_file_r2, t('Replacement file exists on disk after creating new revision.'));
     $this->assertFileEntryExists($node_file_r2, t('Replacement file entry exists in database after creating new revision.'));
@@ -62,7 +64,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
 
     // Check that the original file is still in place on the first revision.
     $node = node_revision_load($node_vid_r1);
-    $this->assertEqual($node_file_r1, file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']), t('Original file still in place after replacing file in new revision.'));
+    $this->assertEqual($node_file_r1, file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']), t('Original file still in place after replacing file in new revision.'));
     $this->assertFileExists($node_file_r1, t('Original file still in place after replacing file in new revision.'));
     $this->assertFileEntryExists($node_file_r1, t('Original file entry still in place after replacing file in new revision'));
     $this->assertFileIsPermanent($node_file_r1, t('Original file is still permanent.'));
@@ -71,7 +73,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     // Check that the file is still the same as the previous revision.
     $this->drupalPost('node/' . $nid . '/edit', array('revision' => '1'), t('Save and keep published'));
     $node = node_load($nid, TRUE);
-    $node_file_r3 = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
+    $node_file_r3 = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']);
     $node_vid_r3 = $node->vid;
     $this->assertEqual($node_file_r2, $node_file_r3, t('Previous revision file still in place after creating a new revision without a new file.'));
     $this->assertFileIsPermanent($node_file_r3, t('New revision file is permanent.'));
@@ -79,7 +81,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     // Revert to the first revision and check that the original file is active.
     $this->drupalPost('node/' . $nid . '/revisions/' . $node_vid_r1 . '/revert', array(), t('Revert'));
     $node = node_load($nid, TRUE);
-    $node_file_r4 = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
+    $node_file_r4 = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']);
     $node_vid_r4 = $node->vid;
     $this->assertEqual($node_file_r1, $node_file_r4, t('Original revision file still in place after reverting to the original revision.'));
     $this->assertFileIsPermanent($node_file_r4, t('Original revision file still permanent after reverting to the original revision.'));
@@ -93,8 +95,8 @@ class FileFieldRevisionTest extends FileFieldTestBase {
 
     // Attach the second file to a user.
     $user = $this->drupalCreateUser();
-    $user->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'] = $node_file_r3->fid;
-    $user->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['display'] = 1;
+    $user->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid'] = $node_file_r3->fid;
+    $user->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['display'] = 1;
     $user->save();
     $this->drupalGet('user/' . $user->uid . '/edit');
 

@@ -7,6 +7,8 @@
 
 namespace Drupal\search\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests that numbers can be searched.
  */
@@ -53,7 +55,7 @@ class SearchNumbersTest extends SearchTestBase {
       $info = array(
         'body' => array(array('value' => $num)),
         'type' => 'page',
-        'language' => LANGUAGE_NOT_SPECIFIED,
+        'language' => Language::LANGCODE_NOT_SPECIFIED,
         'title' => $doc . ' number',
       );
       $this->nodes[$doc] = $this->drupalCreateNode($info);

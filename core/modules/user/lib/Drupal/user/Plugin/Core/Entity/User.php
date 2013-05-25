@@ -10,6 +10,7 @@ namespace Drupal\user\Plugin\Core\Entity;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Language\Language;
 use Drupal\user\UserInterface;
 
 /**
@@ -142,21 +143,21 @@ class User extends Entity implements UserInterface {
    *
    * @var string
    */
-  public $langcode = LANGUAGE_NOT_SPECIFIED;
+  public $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
   /**
    * The user's preferred langcode for receiving emails and viewing the site.
    *
    * @var string
    */
-  public $preferred_langcode = LANGUAGE_NOT_SPECIFIED;
+  public $preferred_langcode = Language::LANGCODE_NOT_SPECIFIED;
 
   /**
    * The user's preferred langcode for viewing administration pages.
    *
    * @var string
    */
-  public $preferred_admin_langcode = LANGUAGE_NOT_SPECIFIED;
+  public $preferred_admin_langcode = Language::LANGCODE_NOT_SPECIFIED;
 
   /**
    * The email address used for initial account creation.

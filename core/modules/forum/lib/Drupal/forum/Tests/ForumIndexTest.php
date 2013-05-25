@@ -7,6 +7,7 @@
 
 namespace Drupal\forum\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -42,7 +43,7 @@ class ForumIndexTest extends WebTestBase {
    */
   function testForumIndexStatus() {
 
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // The forum ID to use.
     $tid = 1;

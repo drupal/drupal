@@ -5,6 +5,8 @@
  * Add language handling functionality to Drupal.
  */
 
+use Drupal\Core\Language\Language;
+
 /**
  * Implements hook_help().
  */
@@ -224,7 +226,7 @@ function language_element_info_alter(&$type) {
     $type['language_select']['#process'] = array_merge($type['language_select']['#process'], array('language_process_language_select', 'form_process_select', 'ajax_process_form'));
     $type['language_select']['#theme'] = 'select';
     $type['language_select']['#theme_wrappers'] = array_merge($type['language_select']['#theme_wrappers'], array('form_element'));
-    $type['language_select']['#languages'] = LANGUAGE_CONFIGURABLE;
+    $type['language_select']['#languages'] = Language::STATE_CONFIGURABLE;
     $type['language_select']['#multiple'] = FALSE;
   }
 }
@@ -271,7 +273,7 @@ function language_element_info() {
 function language_configuration_element_default_options() {
   $language_options = array();
 
-  $languages = language_list(LANGUAGE_ALL);
+  $languages = language_list(Language::STATE_ALL);
   foreach ($languages as $langcode => $language) {
     $language_options[$langcode] = $language->locked ? t('- @name -', array('@name' => $language->name)) : $language->name;
   }
@@ -436,7 +438,7 @@ function language_get_default_langcode($entity_type, $bundle) {
   }
 
   $default_value = NULL;
-  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(Language::TYPE_INTERFACE);
   switch ($configuration['langcode']) {
     case 'site_default':
       $default_value = language_default()->langcode;
@@ -534,7 +536,7 @@ function language_update_count() {
  *   TRUE if language is successfully deleted. Otherwise FALSE.
  */
 function language_delete($langcode) {
-  $languages = language_list(LANGUAGE_ALL);
+  $languages = language_list(Language::STATE_ALL);
   if (isset($languages[$langcode]) && !$languages[$langcode]->locked) {
     $language = $languages[$langcode];
 
@@ -566,10 +568,10 @@ function language_delete($langcode) {
  * and checks to see if a related right to left CSS file should be included.
  */
 function language_css_alter(&$css) {
-  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(Language::TYPE_INTERFACE);
 
   // If the current language is RTL, add the CSS file with the RTL overrides.
-  if ($language_interface->direction == LANGUAGE_RTL) {
+  if ($language_interface->direction == Language::DIRECTION_RTL) {
     foreach ($css as $data => $item) {
       // Only provide RTL overrides for files.
       if ($item['type'] == 'file') {
@@ -604,16 +606,16 @@ function language_language_types_info() {
   language_negotiation_include();
 
   return array(
-    LANGUAGE_TYPE_INTERFACE => array(
+    Language::TYPE_INTERFACE => array(
       'name' => t('User interface text'),
       'description' => t('Order of language detection methods for user interface text. If a translation of user interface text is available in the detected language, it will be displayed.'),
     ),
-    LANGUAGE_TYPE_CONTENT => array(
+    Language::TYPE_CONTENT => array(
       'name' => t('Content'),
       'description' => t('Order of language detection methods for content. If a version of content is available in the detected language, it will be displayed.'),
       'fixed' => array(LANGUAGE_NEGOTIATION_INTERFACE),
     ),
-    LANGUAGE_TYPE_URL => array(
+    Language::TYPE_URL => array(
       'fixed' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_URL_FALLBACK),
     ),
   );
@@ -628,7 +630,7 @@ function language_language_negotiation_info() {
 
   $negotiation_info = array();
   $negotiation_info[LANGUAGE_NEGOTIATION_URL] = array(
-    'types' => array(LANGUAGE_TYPE_CONTENT, LANGUAGE_TYPE_INTERFACE, LANGUAGE_TYPE_URL),
+    'types' => array(Language::TYPE_CONTENT, Language::TYPE_INTERFACE, Language::TYPE_URL),
     'callbacks' => array(
       'negotiation' => 'language_from_url',
       'language_switch' => 'language_switcher_url',
@@ -673,7 +675,7 @@ function language_language_negotiation_info() {
   );
 
   $negotiation_info[LANGUAGE_NEGOTIATION_INTERFACE] = array(
-    'types' => array(LANGUAGE_TYPE_CONTENT),
+    'types' => array(Language::TYPE_CONTENT),
     'callbacks' => array('negotiation' => 'language_from_interface'),
     'file' => $file,
     'weight' => 8,
@@ -682,7 +684,7 @@ function language_language_negotiation_info() {
   );
 
   $negotiation_info[LANGUAGE_NEGOTIATION_URL_FALLBACK] = array(
-    'types' => array(LANGUAGE_TYPE_URL),
+    'types' => array(Language::TYPE_URL),
     'callbacks' => array('negotiation' => 'language_url_fallback'),
     'file' => $file,
     'weight' => 8,
@@ -691,7 +693,7 @@ function language_language_negotiation_info() {
   );
 
   $negotiation_info[LANGUAGE_NEGOTIATION_USER_ADMIN] = array(
-    'types' => array(LANGUAGE_TYPE_INTERFACE),
+    'types' => array(Language::TYPE_INTERFACE),
     'callbacks' => array('negotiation' => 'language_from_user_admin'),
     'file' => $file,
     'weight' => 10,
@@ -853,7 +855,7 @@ function language_update_locked_weights() {
   // Get maximum weight to update the system languages to keep them on bottom.
   $max_weight = db_query('SELECT MAX(weight) FROM {language} WHERE locked = 0')->fetchField();
   // Loop locked languages to maintain the existing order.
-  foreach (language_list(LANGUAGE_LOCKED) as $language) {
+  foreach (language_list(Language::STATE_LOCKED) as $language) {
     $max_weight++;
     // Update system languages weight.
     db_update('language')

@@ -7,6 +7,8 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\Core\Language\Language;
+
 class FormTest extends FieldTestBase {
 
   /**
@@ -55,7 +57,7 @@ class FormTest extends FieldTestBase {
     entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
       ->setComponent($this->field_name)
       ->save();
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test_bundle');
@@ -124,7 +126,7 @@ class FormTest extends FieldTestBase {
     entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
       ->setComponent($this->field_name)
       ->save();
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test_bundle');
@@ -151,7 +153,7 @@ class FormTest extends FieldTestBase {
     entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
       ->setComponent($this->field_name)
       ->save();
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Submit with missing required value.
     $edit = array();
@@ -192,7 +194,7 @@ class FormTest extends FieldTestBase {
     entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
       ->setComponent($this->field_name)
       ->save();
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Display creation form -> 1 widget.
     $this->drupalGet('test-entity/add/test_bundle');
@@ -275,7 +277,7 @@ class FormTest extends FieldTestBase {
     entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
       ->setComponent($this->field_name)
       ->save();
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Add a required radio field.
     field_create_field(array(
@@ -322,7 +324,7 @@ class FormTest extends FieldTestBase {
     entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
       ->setComponent($this->field_name)
       ->save();
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Display creation form -> 1 widget.
     $this->drupalGet('test-entity/add/test_bundle');
@@ -386,7 +388,7 @@ class FormTest extends FieldTestBase {
         'type' => 'test_field_widget_multiple',
       ))
       ->save();
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test_bundle');
@@ -447,7 +449,7 @@ class FormTest extends FieldTestBase {
       ->setComponent($field_name_no_access)
       ->save();
 
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Test that the form structure includes full information for each delta
     // apart from #access.
@@ -516,14 +518,14 @@ class FormTest extends FieldTestBase {
     // Create two entities.
     $entity_1 = field_test_create_entity(1, 1);
     $entity_1->is_new = TRUE;
-    $entity_1->field_single[LANGUAGE_NOT_SPECIFIED][] = array('value' => 0);
-    $entity_1->field_unlimited[LANGUAGE_NOT_SPECIFIED][] = array('value' => 1);
+    $entity_1->field_single[Language::LANGCODE_NOT_SPECIFIED][] = array('value' => 0);
+    $entity_1->field_unlimited[Language::LANGCODE_NOT_SPECIFIED][] = array('value' => 1);
     field_test_entity_save($entity_1);
 
     $entity_2 = field_test_create_entity(2, 2);
     $entity_2->is_new = TRUE;
-    $entity_2->field_single[LANGUAGE_NOT_SPECIFIED][] = array('value' => 10);
-    $entity_2->field_unlimited[LANGUAGE_NOT_SPECIFIED][] = array('value' => 11);
+    $entity_2->field_single[Language::LANGCODE_NOT_SPECIFIED][] = array('value' => 10);
+    $entity_2->field_unlimited[Language::LANGCODE_NOT_SPECIFIED][] = array('value' => 11);
     field_test_entity_save($entity_2);
 
     // Display the 'combined form'.
@@ -546,10 +548,10 @@ class FormTest extends FieldTestBase {
     field_cache_clear();
     $entity_1 = field_test_create_entity(1);
     $entity_2 = field_test_create_entity(2);
-    $this->assertFieldValues($entity_1, 'field_single', LANGUAGE_NOT_SPECIFIED, array(1));
-    $this->assertFieldValues($entity_1, 'field_unlimited', LANGUAGE_NOT_SPECIFIED, array(2, 3));
-    $this->assertFieldValues($entity_2, 'field_single', LANGUAGE_NOT_SPECIFIED, array(11));
-    $this->assertFieldValues($entity_2, 'field_unlimited', LANGUAGE_NOT_SPECIFIED, array(12, 13));
+    $this->assertFieldValues($entity_1, 'field_single', Language::LANGCODE_NOT_SPECIFIED, array(1));
+    $this->assertFieldValues($entity_1, 'field_unlimited', Language::LANGCODE_NOT_SPECIFIED, array(2, 3));
+    $this->assertFieldValues($entity_2, 'field_single', Language::LANGCODE_NOT_SPECIFIED, array(11));
+    $this->assertFieldValues($entity_2, 'field_unlimited', Language::LANGCODE_NOT_SPECIFIED, array(12, 13));
 
     // Submit invalid values and check that errors are reported on the
     // correct widgets.
@@ -577,8 +579,8 @@ class FormTest extends FieldTestBase {
     );
     $this->drupalPost('test-entity/nested/1/2', $edit, t('Save'));
     field_cache_clear();
-    $this->assertFieldValues($entity_1, 'field_unlimited', LANGUAGE_NOT_SPECIFIED, array(3, 2));
-    $this->assertFieldValues($entity_2, 'field_unlimited', LANGUAGE_NOT_SPECIFIED, array(13, 12));
+    $this->assertFieldValues($entity_1, 'field_unlimited', Language::LANGCODE_NOT_SPECIFIED, array(3, 2));
+    $this->assertFieldValues($entity_2, 'field_unlimited', Language::LANGCODE_NOT_SPECIFIED, array(13, 12));
 
     // Test the 'add more' buttons. Only Ajax submission is tested, because
     // the two 'add more' buttons present in the form have the same #value,
@@ -604,8 +606,8 @@ class FormTest extends FieldTestBase {
     // Save the form and check values are saved correclty.
     $this->drupalPost(NULL, array(), t('Save'));
     field_cache_clear();
-    $this->assertFieldValues($entity_1, 'field_unlimited', LANGUAGE_NOT_SPECIFIED, array(3, 2));
-    $this->assertFieldValues($entity_2, 'field_unlimited', LANGUAGE_NOT_SPECIFIED, array(13, 14, 15));
+    $this->assertFieldValues($entity_1, 'field_unlimited', Language::LANGCODE_NOT_SPECIFIED, array(3, 2));
+    $this->assertFieldValues($entity_2, 'field_unlimited', Language::LANGCODE_NOT_SPECIFIED, array(13, 14, 15));
   }
 
   /**
@@ -623,7 +625,7 @@ class FormTest extends FieldTestBase {
         'type' => 'hidden',
       ))
       ->save();
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Display the entity creation form.
     $this->drupalGet('test-entity/add/test_bundle');

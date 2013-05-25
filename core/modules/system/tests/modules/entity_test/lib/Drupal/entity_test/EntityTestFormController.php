@@ -7,6 +7,7 @@
 namespace Drupal\entity_test;
 
 use Drupal\Core\Entity\EntityFormControllerNG;
+use Drupal\Core\Language\Language;
 
 /**
  * Form controller for the test entity edit forms.
@@ -47,7 +48,7 @@ class EntityTestFormController extends EntityFormControllerNG {
       '#title' => t('Language'),
       '#type' => 'language_select',
       '#default_value' => $entity->language()->langcode,
-      '#languages' => LANGUAGE_ALL,
+      '#languages' => Language::STATE_ALL,
     );
 
     return $form;

@@ -7,6 +7,7 @@
 
 namespace Drupal\text\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -69,7 +70,7 @@ class TextTranslationTest extends WebTestBase {
     $this->drupalLogin($this->translator);
 
     // Create content.
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $body = $this->randomName();
     $edit = array(
       'title' => $this->randomName(),
@@ -112,7 +113,7 @@ class TextTranslationTest extends WebTestBase {
     // Populate the body field: the first item gets the "Full HTML" input
     // format, the second one "Basic HTML".
     $formats = array('full_html', 'basic_html');
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     foreach ($body as $delta => $value) {
       $edit = array(
         "body[$langcode][$delta][value]" => $value,

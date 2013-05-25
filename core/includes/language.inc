@@ -7,6 +7,8 @@
  * @see http://drupal.org/node/1497272
  */
 
+use Drupal\Core\Language\Language;
+
 /**
  * No language negotiation. The default language is used.
  */
@@ -46,7 +48,7 @@ const LANGUAGE_NEGOTIATION_SELECTED = 'language-selected';
  * configurable:
  * @code
  * function mymodule_language_types_info_alter(&$language_types) {
- *   unset($language_types[LANGUAGE_TYPE_CONTENT]['fixed']);
+ *   unset($language_types[Language::TYPE_CONTENT]['fixed']);
  * }
  * @endcode
  *
@@ -528,18 +530,18 @@ function language_url_split_prefix($path, $languages) {
  * Returns the possible fallback languages ordered by language weight.
  *
  * @param
- *   (optional) The language type. Defaults to LANGUAGE_TYPE_CONTENT.
+ *   (optional) The language type. Defaults to Language::TYPE_CONTENT.
  *
  * @return
  *   An array of language codes.
  */
-function language_fallback_get_candidates($type = LANGUAGE_TYPE_CONTENT) {
+function language_fallback_get_candidates($type = Language::TYPE_CONTENT) {
   $fallback_candidates = &drupal_static(__FUNCTION__);
 
   if (!isset($fallback_candidates)) {
-    // Get languages ordered by weight, add LANGUAGE_NOT_SPECIFIED at the end.
+    // Get languages ordered by weight, add Language::LANGCODE_NOT_SPECIFIED at the end.
     $fallback_candidates = array_keys(language_list());
-    $fallback_candidates[] = LANGUAGE_NOT_SPECIFIED;
+    $fallback_candidates[] = Language::LANGCODE_NOT_SPECIFIED;
 
     // Let other modules hook in and add/change candidates.
     drupal_alter('language_fallback_candidates', $fallback_candidates);

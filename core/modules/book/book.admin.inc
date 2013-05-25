@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Language\Language;
 
 /**
  * Form constructor for administering a single book's hierarchy.
@@ -78,7 +79,7 @@ function book_admin_edit_submit($form, &$form_state) {
       // Update the title if changed.
       if ($row['title']['#default_value'] != $values['title']) {
         $node = node_load($values['nid']);
-        $langcode = LANGUAGE_NOT_SPECIFIED;
+        $langcode = Language::LANGCODE_NOT_SPECIFIED;
         $node->title = $values['title'];
         $node->book['link_title'] = $values['title'];
         $node->setNewRevision();

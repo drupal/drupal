@@ -5,6 +5,7 @@
  * Callbacks and theming for the CKEditor toolbar configuration UI.
  */
 
+use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
 
 /**
@@ -12,7 +13,7 @@ use Drupal\Core\Template\Attribute;
  */
 function template_preprocess_ckeditor_settings_toolbar(&$variables) {
   // Simplify the language direction information for toolbar buttons.
-  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(Language::TYPE_INTERFACE);
   $variables['language_direction'] = $language_interface->direction ? 'rtl' : 'ltr';
 
   // Create lists of active and disabled buttons.

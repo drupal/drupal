@@ -9,6 +9,8 @@ namespace Drupal\Core\Entity;
 
 use Drupal\entity\EntityFormDisplayInterface;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Base class for entity form controllers.
  */
@@ -316,7 +318,7 @@ class EntityFormController implements EntityFormControllerInterface {
       // If no form langcode was provided we default to the current content
       // language and inspect existing translations to find a valid fallback,
       // if any.
-      $langcode = language(LANGUAGE_TYPE_CONTENT)->langcode;
+      $langcode = language(Language::TYPE_CONTENT)->langcode;
       $fallback = language_multilingual() ? language_fallback_get_candidates() : array();
       while (!empty($langcode) && !isset($translations[$langcode])) {
         $langcode = array_shift($fallback);

@@ -181,10 +181,10 @@ class LanguageListTest extends WebTestBase {
     $expected_all_languages = array('l4' => 'l4', 'l3' => 'l3', 'l2' => 'l2', 'l1' => 'l1', 'en' => 'en', 'und' => 'und', 'zxx' => 'zxx');
     $expected_conf_languages = array('l3' => 'l3', 'l1' => 'l1', 'en' => 'en');
 
-    $locked_languages = language_list(LANGUAGE_LOCKED);
+    $locked_languages = language_list(Language::STATE_LOCKED);
     $this->assertEqual(array_diff_key($expected_locked_languages, $locked_languages), array(), 'Locked languages loaded correctly.');
 
-    $all_languages = language_list(LANGUAGE_ALL);
+    $all_languages = language_list(Language::STATE_ALL);
     $this->assertEqual(array_diff_key($expected_all_languages, $all_languages), array(), 'All languages loaded correctly.');
 
     $conf_languages = language_list();

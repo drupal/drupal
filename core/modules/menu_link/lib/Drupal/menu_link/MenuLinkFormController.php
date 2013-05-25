@@ -8,6 +8,7 @@
 namespace Drupal\menu_link;
 
 use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Language\Language;
 
 /**
  * Form controller for the node edit forms.
@@ -124,7 +125,7 @@ class MenuLinkFormController extends EntityFormController {
     $form['langcode'] = array(
       '#type' => 'language_select',
       '#title' => t('Language'),
-      '#languages' => LANGUAGE_ALL,
+      '#languages' => Language::STATE_ALL,
       '#default_value' => $menu_link->langcode,
     );
 

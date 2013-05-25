@@ -10,6 +10,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\BaseFormIdInterface;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Utility\Color;
@@ -3761,7 +3762,7 @@ function form_validate_table($element, &$form_state) {
  */
 function form_process_machine_name($element, &$form_state) {
   // We need to pass the langcode to the client.
-  $language = language(LANGUAGE_TYPE_INTERFACE);
+  $language = language(Language::TYPE_INTERFACE);
 
   // Apply default form element properties.
   $element += array(

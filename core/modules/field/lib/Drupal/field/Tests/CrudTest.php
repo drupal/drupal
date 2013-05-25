@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\field\FieldException;
 
 class CrudTest extends FieldUnitTestBase {
@@ -329,7 +330,7 @@ class CrudTest extends FieldUnitTestBase {
 
     // Save an entity with data for the field
     $entity = field_test_create_entity(0, 0, $instance['bundle']);
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $values[0]['value'] = mt_rand(1, 127);
     $entity->{$field['field_name']}[$langcode] = $values;
     $entity_type = 'test_entity';
@@ -383,17 +384,17 @@ class CrudTest extends FieldUnitTestBase {
       $entity = field_test_create_entity($id, $id, $instance['bundle']);
       // Fill in the entity with more values than $cardinality.
       for ($i = 0; $i < 20; $i++) {
-        $entity->field_update[LANGUAGE_NOT_SPECIFIED][$i]['value'] = $i;
+        $entity->field_update[Language::LANGCODE_NOT_SPECIFIED][$i]['value'] = $i;
       }
       // Save the entity.
       field_attach_insert($entity);
       // Load back and assert there are $cardinality number of values.
       $entity = field_test_create_entity($id, $id, $instance['bundle']);
       field_attach_load('test_entity', array($id => $entity));
-      $this->assertEqual(count($entity->field_update[LANGUAGE_NOT_SPECIFIED]), $field['cardinality'], 'Cardinality is kept');
+      $this->assertEqual(count($entity->field_update[Language::LANGCODE_NOT_SPECIFIED]), $field['cardinality'], 'Cardinality is kept');
       // Now check the values themselves.
       for ($delta = 0; $delta < $cardinality; $delta++) {
-        $this->assertEqual($entity->field_update[LANGUAGE_NOT_SPECIFIED][$delta]['value'], $delta, 'Value is kept');
+        $this->assertEqual($entity->field_update[Language::LANGCODE_NOT_SPECIFIED][$delta]['value'], $delta, 'Value is kept');
       }
       // Increase $cardinality and set the field cardinality to the new value.
       $field['cardinality'] = ++$cardinality;

@@ -7,6 +7,7 @@
 
 namespace Drupal\datetime\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 
@@ -85,7 +86,7 @@ class DatetimeFieldTest extends WebTestBase {
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test_bundle');
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value][date]", '', 'Date element found.');
     $this->assertNoFieldByName("{$this->field['field_name']}[$langcode][0][value][time]", '', 'Time element not found.');
 
@@ -154,7 +155,7 @@ class DatetimeFieldTest extends WebTestBase {
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test_bundle');
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value][date]", '', 'Date element found.');
     $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value][time]", '', 'Time element found.');
 
@@ -235,7 +236,7 @@ class DatetimeFieldTest extends WebTestBase {
     // Display creation form.
     $this->drupalGet('test-entity/add/test_bundle');
     $field_name = $this->field['field_name'];
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-$langcode-0-value-year\"]", NULL, 'Year element found.');
     $this->assertOptionSelected("edit-$field_name-$langcode-0-value-year", '', 'No year selected.');
@@ -293,7 +294,7 @@ class DatetimeFieldTest extends WebTestBase {
     $date = new DrupalDateTime();
     $date_format = 'Y-m-d';
     $this->drupalGet('test-entity/add/test_bundle');
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // See if current date is set. We cannot test for the precise time because
     // it may be a few seconds between the time the comparison date is created
@@ -327,7 +328,7 @@ class DatetimeFieldTest extends WebTestBase {
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test_bundle');
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value][date]", '', 'Date element found.');
     $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value][time]", '', 'Time element found.');
 

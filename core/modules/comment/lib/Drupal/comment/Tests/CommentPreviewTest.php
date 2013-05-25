@@ -9,6 +9,8 @@ namespace Drupal\comment\Tests;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests previewing comments.
  */
@@ -33,7 +35,7 @@ class CommentPreviewTest extends CommentTestBase {
    * Tests comment preview.
    */
   function testCommentPreview() {
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // As admin user, configure comment settings.
     $this->drupalLogin($this->admin_user);
@@ -78,7 +80,7 @@ class CommentPreviewTest extends CommentTestBase {
    * Tests comment edit, preview, and save.
    */
   function testCommentEditPreviewSave() {
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'skip comment approval'));
     $this->drupalLogin($this->admin_user);
     $this->setCommentPreview(DRUPAL_OPTIONAL);

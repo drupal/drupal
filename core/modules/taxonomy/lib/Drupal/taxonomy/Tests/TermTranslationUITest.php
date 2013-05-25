@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\translation_entity\Tests\EntityTranslationUITest;
 
 /**
@@ -59,7 +60,7 @@ class TermTranslationUITest extends EntityTranslationUITest {
       'name' => $this->bundle,
       'description' => $this->randomName(),
       'vid' => $this->bundle,
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
       'weight' => mt_rand(0, 10),
     ));
     $this->vocabulary->save();
@@ -108,7 +109,7 @@ class TermTranslationUITest extends EntityTranslationUITest {
       'name' => 'untranslatable_voc',
       'description' => $this->randomName(),
       'vid' => 'untranslatable_voc',
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
       'weight' => mt_rand(0, 10),
     ));
     $untranslatable_vocabulary->save();

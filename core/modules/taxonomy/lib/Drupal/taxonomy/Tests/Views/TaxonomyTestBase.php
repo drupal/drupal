@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Tests\Views;
 
+use Drupal\Core\Language\Language;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 
@@ -139,7 +140,7 @@ abstract class TaxonomyTestBase extends ViewTestBase {
       // Use the first available text format.
       'format' => $format->format,
       'vid' => $this->vocabulary->id(),
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
     ));
     $term->save();
     return $term;

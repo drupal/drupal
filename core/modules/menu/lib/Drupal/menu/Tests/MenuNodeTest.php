@@ -7,6 +7,7 @@
 
 namespace Drupal\menu\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -61,7 +62,7 @@ class MenuNodeTest extends WebTestBase {
 
     // Create a node.
     $node_title = $this->randomName();
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit = array(
       "title" => $node_title,
       "body[$langcode][0][value]" => $this->randomString(),

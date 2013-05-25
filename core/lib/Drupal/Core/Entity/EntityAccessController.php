@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Language\Language;
 use Drupal\user\Plugin\Core\Entity\User;
 
 /**
@@ -24,7 +25,7 @@ class EntityAccessController implements EntityAccessControllerInterface {
   /**
    * {@inheritdoc}
    */
-  public function access(EntityInterface $entity, $operation, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
+  public function access(EntityInterface $entity, $operation, $langcode = Language::LANGCODE_DEFAULT, User $account = NULL) {
 
     // @todo Remove this once we can rely on $account.
     if (!$account) {

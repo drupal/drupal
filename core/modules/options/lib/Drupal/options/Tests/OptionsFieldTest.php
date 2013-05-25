@@ -7,6 +7,7 @@
 
 namespace Drupal\options\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\field\FieldException;
 
 /**
@@ -33,7 +34,7 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
    * Test that allowed values can be updated.
    */
   function testUpdateAllowedValues() {
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // All three options appear.
     $entity = entity_create('entity_test', array());

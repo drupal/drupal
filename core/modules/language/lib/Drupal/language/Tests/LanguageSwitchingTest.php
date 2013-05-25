@@ -7,6 +7,7 @@
 
 namespace Drupal\language\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -42,7 +43,7 @@ class LanguageSwitchingTest extends WebTestBase {
    */
   function testLanguageBlock() {
     // Enable the language switching block.
-    $block = $this->drupalPlaceBlock('language_block:' . LANGUAGE_TYPE_INTERFACE, array('machine_name' => 'test_language_block'));
+    $block = $this->drupalPlaceBlock('language_block:' . Language::TYPE_INTERFACE, array('machine_name' => 'test_language_block'));
 
     // Add language.
     $edit = array(

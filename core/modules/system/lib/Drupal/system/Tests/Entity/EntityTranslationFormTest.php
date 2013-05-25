@@ -58,9 +58,9 @@ class EntityTranslationFormTest extends WebTestBase {
     $web_user = $this->drupalCreateUser(array('create page content', 'edit own page content', 'administer content types'));
     $this->drupalLogin($web_user);
 
-    // Create a node with language LANGUAGE_NOT_SPECIFIED.
+    // Create a node with language Language::LANGCODE_NOT_SPECIFIED.
     $edit = array();
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName(8);
     $edit["body[$langcode][0][value]"] = $this->randomName(16);
 
@@ -85,14 +85,14 @@ class EntityTranslationFormTest extends WebTestBase {
 
     // Enable language selector.
     $this->drupalGet('admin/structure/types/manage/page');
-    $edit = array('language_configuration[language_show]' => TRUE, 'language_configuration[langcode]' => LANGUAGE_NOT_SPECIFIED);
+    $edit = array('language_configuration[language_show]' => TRUE, 'language_configuration[langcode]' => Language::LANGCODE_NOT_SPECIFIED);
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), 'Basic page content type has been updated.');
 
     // Create a node with language.
     $edit = array();
     $langcode = $this->langcodes[0];
-    $field_langcode = LANGUAGE_NOT_SPECIFIED;
+    $field_langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName(8);
     $edit["body[$field_langcode][0][value]"] = $this->randomName(16);
     $edit['langcode'] = $langcode;

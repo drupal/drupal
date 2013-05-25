@@ -12,6 +12,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\ConnectionNotDefinedException;
+use Drupal\Core\Language\Language;
 use PDO;
 use stdClass;
 use DOMDocument;
@@ -215,7 +216,7 @@ abstract class WebTestBase extends TestBase {
    *   - status: NODE_PUBLISHED.
    *   - sticky: NODE_NOT_STICKY.
    *   - type: 'page'.
-   *   - langcode: LANGUAGE_NOT_SPECIFIED.
+   *   - langcode: Language::LANGCODE_NOT_SPECIFIED.
    *   - uid: The currently logged in user, or the user running test.
    *   - revision: 1. (Backwards-compatible binary flag indicating whether a
    *     new revision should be created; use 1 to specify a new revision.)
@@ -235,7 +236,7 @@ abstract class WebTestBase extends TestBase {
       'status'    => NODE_PUBLISHED,
       'sticky'    => NODE_NOT_STICKY,
       'type'      => 'page',
-      'langcode'  => LANGUAGE_NOT_SPECIFIED,
+      'langcode'  => Language::LANGCODE_NOT_SPECIFIED,
     );
 
     // Add in comment settings for nodes.

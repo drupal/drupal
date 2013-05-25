@@ -7,6 +7,8 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests the comment module administrative and end-user-facing interfaces.
  */
@@ -24,7 +26,7 @@ class CommentInterfaceTest extends CommentTestBase {
    * Tests the comment interface.
    */
   function testCommentInterface() {
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     // Set comments to have subject and preview disabled.
     $this->drupalLogin($this->admin_user);
     $this->setCommentPreview(DRUPAL_DISABLED);

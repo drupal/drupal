@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Common;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -207,8 +208,8 @@ class CascadingStylesheetsTest extends WebTestBase {
    */
   function testAlter() {
     // Switch the language to a right to left language and add system.base.css.
-    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
-    $language_interface->direction = LANGUAGE_RTL;
+    $language_interface = language(Language::TYPE_INTERFACE);
+    $language_interface->direction = Language::DIRECTION_RTL;
     $path = drupal_get_path('module', 'system');
     drupal_add_css($path . '/system.base.css');
 
@@ -217,7 +218,7 @@ class CascadingStylesheetsTest extends WebTestBase {
     $this->assert(strpos($styles, $path . '/system.base-rtl.css') !== FALSE, 'CSS is alterable as right to left overrides are added.');
 
     // Change the language back to left to right.
-    $language_interface->direction = LANGUAGE_LTR;
+    $language_interface->direction = Language::DIRECTION_LTR;
   }
 
   /**

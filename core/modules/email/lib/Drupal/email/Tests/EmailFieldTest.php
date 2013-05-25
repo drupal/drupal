@@ -7,6 +7,7 @@
 
 namespace Drupal\email\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -75,7 +76,7 @@ class EmailFieldTest extends WebTestBase {
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test_bundle');
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value]", '', 'Widget found.');
     $this->assertRaw('placeholder="example@example.com"');
 

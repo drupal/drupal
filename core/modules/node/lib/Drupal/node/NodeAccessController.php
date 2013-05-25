@@ -7,6 +7,7 @@
 
 namespace Drupal\node;
 
+use Drupal\Core\Language\Language;
 use Drupal\user\Plugin\Core\Entity\User;
 use Drupal\Core\Entity\EntityAccessController;
 use Drupal\Core\Entity\EntityInterface;
@@ -20,7 +21,7 @@ class NodeAccessController extends EntityAccessController {
   /**
    * {@inheritdoc}
    */
-  public function access(EntityInterface $entity, $operation, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
+  public function access(EntityInterface $entity, $operation, $langcode = Language::LANGCODE_DEFAULT, User $account = NULL) {
     if (user_access('bypass node access', $account)) {
       return TRUE;
     }

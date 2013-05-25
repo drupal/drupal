@@ -7,6 +7,8 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Unit test class for storage-related field_attach_* functions.
  *
@@ -38,7 +40,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     // field_test_field_load() in field_test.module).
     $this->instance['settings']['test_hook_field_load'] = TRUE;
     field_update_instance($this->instance);
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     $entity_type = 'test_entity';
     $values = array();
@@ -95,7 +97,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
    */
   function testFieldAttachLoadMultiple() {
     $entity_type = 'test_entity';
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Define 2 bundles.
     $bundles = array(
@@ -171,7 +173,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
    */
   function testFieldAttachSaveLoadDifferentStorage() {
     $entity_type = 'test_entity';
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Create two fields using different storage backends, and their instances.
     $fields = array(
@@ -265,7 +267,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
   function testFieldAttachSaveMissingData() {
     $entity_type = 'test_entity';
     $entity_init = field_test_create_entity();
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Insert: Field is missing.
     $entity = clone($entity_init);
@@ -348,7 +350,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     // Verify that fields are populated with default values.
     $entity_type = 'test_entity';
     $entity_init = field_test_create_entity();
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $default = field_test_default_value($entity_init, $this->field, $this->instance);
     $this->assertEqual($entity_init->{$this->field_name}[$langcode], $default, 'Default field value correctly populated.');
 
@@ -383,7 +385,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
    */
   function testFieldAttachDelete() {
     $entity_type = 'test_entity';
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $rev[0] = field_test_create_entity(0, 0, $this->instance['bundle']);
 
     // Create revision 0
@@ -447,7 +449,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
 
     // Save an entity with data in the field.
     $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
     $entity->{$this->field_name}[$langcode] = $values;
     $entity_type = 'test_entity';
@@ -500,7 +502,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
 
     // Save an entity with data for both fields
     $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
     $entity->{$this->field_name}[$langcode] = $values;
     $entity->{$field_name}[$langcode] = $this->_generateTestFieldValues(1);

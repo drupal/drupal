@@ -7,6 +7,7 @@
 
 namespace Drupal\entity_reference\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -390,7 +391,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         'pid' => 0,
         'status' => COMMENT_PUBLISHED,
         'subject' => 'Comment Published <&>',
-        'language' => LANGUAGE_NOT_SPECIFIED,
+        'language' => Language::LANGCODE_NOT_SPECIFIED,
       ),
       'published_unpublished' => array(
         'entity_id' => $nodes['published']->nid,
@@ -401,7 +402,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         'pid' => 0,
         'status' => COMMENT_NOT_PUBLISHED,
         'subject' => 'Comment Unpublished <&>',
-        'language' => LANGUAGE_NOT_SPECIFIED,
+        'language' => Language::LANGCODE_NOT_SPECIFIED,
       ),
       'unpublished_published' => array(
         'entity_id' => $nodes['unpublished']->nid,
@@ -412,7 +413,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         'pid' => 0,
         'status' => COMMENT_NOT_PUBLISHED,
         'subject' => 'Comment Published on Unpublished node <&>',
-        'language' => LANGUAGE_NOT_SPECIFIED,
+        'language' => Language::LANGCODE_NOT_SPECIFIED,
       ),
     );
 

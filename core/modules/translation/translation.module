@@ -20,6 +20,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Language\Language;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 
 /**
@@ -85,7 +86,7 @@ function translation_menu() {
  * @see translation_menu()
  */
 function _translation_tab_access($node) {
-  if ($node->langcode != LANGUAGE_NOT_SPECIFIED && translation_supported_type($node->type) && node_access('view', $node)) {
+  if ($node->langcode != Language::LANGCODE_NOT_SPECIFIED && translation_supported_type($node->type) && node_access('view', $node)) {
     return translation_user_can_translate_node($node);
   }
   return FALSE;
@@ -176,7 +177,7 @@ function translation_form_node_type_form_alter(&$form, &$form_state) {
  */
 function translation_node_type_language_translation_enabled_validate($element, &$form_state, $form) {
   if (language_is_locked($form_state['values']['language_configuration']['langcode']) && !$form_state['values']['language_configuration']['language_show'] && $form_state['values']['node_type_language_translation_enabled']) {
-    foreach (language_list(LANGUAGE_LOCKED) as $language) {
+    foreach (language_list(Language::STATE_LOCKED) as $language) {
       $locked_languages[] = $language->name;
     }
     form_set_error('node_type_language_translation_enabled', t('Translation is not supported if language is always one of: @locked_languages', array('@locked_languages' => implode(", ", $locked_languages))));
@@ -203,7 +204,7 @@ function translation_form_node_form_alter(&$form, &$form_state) {
       // Disable languages for existing translations, so it is not possible
       // to switch this node to some language which is already in the
       // translation set. Also remove the language neutral option.
-      unset($form['langcode']['#options'][LANGUAGE_NOT_SPECIFIED]);
+      unset($form['langcode']['#options'][Language::LANGCODE_NOT_SPECIFIED]);
       foreach (translation_node_get_translations($node->tnid) as $langcode => $translation) {
         if ($translation->nid != $node->nid) {
           unset($form['langcode']['#options'][$langcode]);
@@ -252,7 +253,7 @@ function translation_node_view(EntityInterface $node, EntityDisplay $display, $v
   // If the site has no translations or is not multilingual we have no content
   // translation links to display.
   if (isset($node->tnid) && language_multilingual() && $translations = translation_node_get_translations($node->tnid)) {
-    $languages = language_list(LANGUAGE_ALL);
+    $languages = language_list(Language::STATE_ALL);
 
     // There might be a language provider enabled defining custom language
     // switch links which need to be taken into account while generating the
@@ -547,7 +548,7 @@ function translation_language_switch_links_alter(array &$links, $type, $path) {
       // have translations it might be a language neutral node, in which case we
       // must leave the language switch links unaltered. This is true also for
       // nodes not having translation support enabled.
-      if (empty($node) || $node->langcode == LANGUAGE_NOT_SPECIFIED || !translation_supported_type($node->type)) {
+      if (empty($node) || $node->langcode == Language::LANGCODE_NOT_SPECIFIED || !translation_supported_type($node->type)) {
         return;
       }
       $translations = array($node->langcode => $node);

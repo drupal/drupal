@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Entity;
 
+use Drupal\Core\Language\Language;
 use Drupal\Core\Database\Database;
 
 /**
@@ -141,7 +142,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
       'status' => 1,
       'promote' => 0,
       'sticky' => 0,
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
       'created' => REQUEST_TIME,
       'changed' => REQUEST_TIME,
     ));
@@ -160,7 +161,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
       'created' => REQUEST_TIME,
       'changed' => REQUEST_TIME,
       'status' => 1,
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
     ));
 
     $this->assertHookMessageOrder(array(
@@ -284,7 +285,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
       'status' => 1,
       'promote' => 0,
       'sticky' => 0,
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
       'created' => REQUEST_TIME,
       'changed' => REQUEST_TIME,
     ));
@@ -343,7 +344,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => 'Test vocabulary',
       'vid' => 'test',
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
       'description' => NULL,
       'module' => 'entity_crud_hook_test',
     ));
@@ -353,7 +354,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     $term = entity_create('taxonomy_term', array(
       'vid' => $vocabulary->id(),
       'name' => 'Test term',
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
       'description' => NULL,
       'format' => 1,
     ));
@@ -412,7 +413,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => 'Test vocabulary',
       'vid' => 'test',
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
       'description' => NULL,
       'module' => 'entity_crud_hook_test',
     ));

@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Uuid\Uuid;
+use Drupal\Core\Language\Language;
 
 /**
  * Implements hook_install().
@@ -75,7 +76,7 @@ function contact_update_8001() {
       ->set('recipients', explode(',', $category->recipients))
       ->set('reply', $category->reply)
       ->set('weight', $category->weight)
-      ->set('langcode', LANGUAGE_NOT_SPECIFIED)
+      ->set('langcode', Language::LANGCODE_NOT_SPECIFIED)
       ->save();
   }
 

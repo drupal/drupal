@@ -12,6 +12,7 @@ use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Discovery\StaticDiscoveryDecorator;
 use Drupal\Component\Plugin\Discovery\DerivativeDiscoveryDecorator;
 use Drupal\Component\Plugin\Discovery\ProcessDecorator;
+use Drupal\Core\Language\Language;
 use Drupal\Core\Plugin\Discovery\AlterDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
@@ -49,7 +50,7 @@ class ConstraintManager extends PluginManagerBase {
     $this->discovery = new DerivativeDiscoveryDecorator($this->discovery);
     $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
     $this->discovery = new AlterDecorator($this->discovery, 'validation_constraint');
-    $this->discovery = new CacheDecorator($this->discovery, 'validation_constraints:' . language(LANGUAGE_TYPE_INTERFACE)->langcode);
+    $this->discovery = new CacheDecorator($this->discovery, 'validation_constraints:' . language(Language::TYPE_INTERFACE)->langcode);
 
     $this->factory = new DefaultFactory($this);
   }

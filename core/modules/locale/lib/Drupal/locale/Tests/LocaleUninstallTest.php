@@ -62,7 +62,7 @@ class LocaleUninstallTest extends WebTestBase {
     $language_manager->init();
     // Check the UI language.
 
-    $this->assertEqual(language(LANGUAGE_TYPE_INTERFACE)->langcode, $this->langcode, t('Current language: %lang', array('%lang' => language(LANGUAGE_TYPE_INTERFACE)->langcode)));
+    $this->assertEqual(language(Language::TYPE_INTERFACE)->langcode, $this->langcode, t('Current language: %lang', array('%lang' => language(Language::TYPE_INTERFACE)->langcode)));
 
     // Enable multilingual workflow option for articles.
     language_save_default_configuration('node', 'article', array('langcode' => 'site_default', 'language_show' => TRUE));
@@ -91,9 +91,9 @@ class LocaleUninstallTest extends WebTestBase {
     // Change language negotiation options.
     drupal_load('module', 'locale');
     variable_set('language_types', language_types_get_default() + array('language_custom' => TRUE));
-    variable_set('language_negotiation_' . LANGUAGE_TYPE_INTERFACE, language_language_negotiation_info());
-    variable_set('language_negotiation_' . LANGUAGE_TYPE_CONTENT, language_language_negotiation_info());
-    variable_set('language_negotiation_' . LANGUAGE_TYPE_URL, language_language_negotiation_info());
+    variable_set('language_negotiation_' . Language::TYPE_INTERFACE, language_language_negotiation_info());
+    variable_set('language_negotiation_' . Language::TYPE_CONTENT, language_language_negotiation_info());
+    variable_set('language_negotiation_' . Language::TYPE_URL, language_language_negotiation_info());
 
     // Change language negotiation settings.
     config('language.negotiation')
@@ -109,7 +109,7 @@ class LocaleUninstallTest extends WebTestBase {
     // Visit the front page.
     $this->drupalGet('');
     // Check the init language logic.
-    $this->assertEqual(language(LANGUAGE_TYPE_INTERFACE)->langcode, 'en', t('Language after uninstall: %lang', array('%lang' => language(LANGUAGE_TYPE_INTERFACE)->langcode)));
+    $this->assertEqual(language(Language::TYPE_INTERFACE)->langcode, 'en', t('Language after uninstall: %lang', array('%lang' => language(Language::TYPE_INTERFACE)->langcode)));
 
     // Check JavaScript files deletion.
     $this->assertTrue($result = !file_exists($js_file), t('JavaScript file deleted: %file', array('%file' => $result ? $js_file : t('found'))));
@@ -121,11 +121,11 @@ class LocaleUninstallTest extends WebTestBase {
     // Check language negotiation.
     require_once DRUPAL_ROOT . '/core/includes/language.inc';
     $this->assertTrue(count(language_types_get_all()) == count(language_types_get_default()), t('Language types reset'));
-    $language_negotiation = language_negotiation_method_get_first(LANGUAGE_TYPE_INTERFACE) == LANGUAGE_NEGOTIATION_SELECTED;
+    $language_negotiation = language_negotiation_method_get_first(Language::TYPE_INTERFACE) == LANGUAGE_NEGOTIATION_SELECTED;
     $this->assertTrue($language_negotiation, t('Interface language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
-    $language_negotiation = language_negotiation_method_get_first(LANGUAGE_TYPE_CONTENT) == LANGUAGE_NEGOTIATION_SELECTED;
+    $language_negotiation = language_negotiation_method_get_first(Language::TYPE_CONTENT) == LANGUAGE_NEGOTIATION_SELECTED;
     $this->assertTrue($language_negotiation, t('Content language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
-    $language_negotiation = language_negotiation_method_get_first(LANGUAGE_TYPE_URL) == LANGUAGE_NEGOTIATION_SELECTED;
+    $language_negotiation = language_negotiation_method_get_first(Language::TYPE_URL) == LANGUAGE_NEGOTIATION_SELECTED;
     $this->assertTrue($language_negotiation, t('URL language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
 
     // Check language negotiation method settings.

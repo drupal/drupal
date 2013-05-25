@@ -5,6 +5,8 @@
  * Installation functions for Entity Translation module.
  */
 
+use Drupal\Core\Language\Language;
+
 /**
  * Implements hook_schema().
  */
@@ -84,7 +86,7 @@ function translation_entity_install() {
   // hook_module_implements_alter() is run among the last ones.
   module_set_weight('translation_entity', 10);
   language_negotiation_include();
-  language_negotiation_set(LANGUAGE_TYPE_CONTENT, array(LANGUAGE_NEGOTIATION_URL => 0));
+  language_negotiation_set(Language::TYPE_CONTENT, array(LANGUAGE_NEGOTIATION_URL => 0));
 }
 
 /**

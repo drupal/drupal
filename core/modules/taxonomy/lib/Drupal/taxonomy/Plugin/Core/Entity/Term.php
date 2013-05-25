@@ -10,6 +10,7 @@ namespace Drupal\taxonomy\Plugin\Core\Entity;
 use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Language\Language;
 use Drupal\taxonomy\TermInterface;
 
 /**
@@ -121,8 +122,8 @@ class Term extends EntityNG implements TermInterface {
    * @var array
    */
   protected $values = array(
-    'langcode' => array(LANGUAGE_DEFAULT => array(0 => array('value' => LANGUAGE_NOT_SPECIFIED))),
-    'weight' => array(LANGUAGE_DEFAULT => array(0 => array('value' => 0))),
+    'langcode' => array(Language::LANGCODE_DEFAULT => array(0 => array('value' => Language::LANGCODE_NOT_SPECIFIED))),
+    'weight' => array(Language::LANGCODE_DEFAULT => array(0 => array('value' => 0))),
   );
 
   /**

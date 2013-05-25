@@ -5,6 +5,8 @@
  * Provides a list of countries and languages based on web standards.
  */
 
+use Drupal\Core\Language\Language;
+
 /**
  * Get an array of all country code => country name pairs.
  *
@@ -306,7 +308,7 @@ function standard_language_list() {
   return array(
     'af' => array('Afrikaans', 'Afrikaans'),
     'am' => array('Amharic', 'አማርኛ'),
-    'ar' => array('Arabic', /* Left-to-right marker "‭" */ 'العربية', LANGUAGE_RTL),
+    'ar' => array('Arabic', /* Left-to-right marker "‭" */ 'العربية', Language::DIRECTION_RTL),
     'ast' => array('Asturian', 'Asturianu'),
     'az' => array('Azerbaijani', 'Azərbaycanca'),
     'be' => array('Belarusian', 'Беларуская'),
@@ -326,7 +328,7 @@ function standard_language_list() {
     'es' => array('Spanish', 'Español'),
     'et' => array('Estonian', 'Eesti'),
     'eu' => array('Basque', 'Euskera'),
-    'fa' => array('Persian, Farsi', /* Left-to-right marker "‭" */ 'فارسی', LANGUAGE_RTL),
+    'fa' => array('Persian, Farsi', /* Left-to-right marker "‭" */ 'فارسی', Language::DIRECTION_RTL),
     'fi' => array('Finnish', 'Suomi'),
     'fil' => array('Filipino', 'Filipino'),
     'fo' => array('Faeroese', 'Føroyskt'),
@@ -335,7 +337,7 @@ function standard_language_list() {
     'gl' => array('Galician', 'Galego'),
     'gsw-berne' => array('Swiss German', 'Schwyzerdütsch'),
     'gu' => array('Gujarati', 'ગુજરાતી'),
-    'he' => array('Hebrew', /* Left-to-right marker "‭" */ 'עברית', LANGUAGE_RTL),
+    'he' => array('Hebrew', /* Left-to-right marker "‭" */ 'עברית', Language::DIRECTION_RTL),
     'hi' => array('Hindi', 'हिन्दी'),
     'hr' => array('Croatian', 'Hrvatski'),
     'ht' => array('Haitian Creole', 'Kreyòl ayisyen'),
@@ -387,7 +389,7 @@ function standard_language_list() {
     'tyv' => array('Tuvan', 'Тыва дыл'),
     'ug' => array('Uyghur', 'Уйғур'),
     'uk' => array('Ukrainian', 'Українська'),
-    'ur' => array('Urdu', /* Left-to-right marker "‭" */ 'اردو', LANGUAGE_RTL),
+    'ur' => array('Urdu', /* Left-to-right marker "‭" */ 'اردو', Language::DIRECTION_RTL),
     'vi' => array('Vietnamese', 'Tiếng Việt'),
     'xx-lolspeak' => array('Lolspeak', 'Lolspeak'),
     'zh-hans' => array('Chinese, Simplified', '简体中文'),

@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\field\FieldValidationException;
 
 /**
@@ -34,7 +35,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
 
     $entity_type = 'test_entity';
     $entity_init = field_test_create_entity();
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $options = array('field_name' => $this->field_name_2);
 
     // Populate values to be displayed.
@@ -181,7 +182,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
    */
   function testFieldAttachPrepareViewMultiple() {
     $entity_type = 'test_entity';
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Set the instance to be hidden.
     $display = entity_get_display('test_entity', 'test_bundle', 'full')
@@ -237,7 +238,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
   function testFieldAttachCache() {
     // Initialize random values and a test entity.
     $entity_init = field_test_create_entity(1, 1, $this->instance['bundle']);
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
 
     // Non-cacheable entity type.
@@ -340,7 +341,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
 
     $entity_type = 'test_entity';
     $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Set up all but one values of the first field to generate errors.
     $values = array();
@@ -432,7 +433,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
 
     $entity_type = 'test_entity';
     $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // When generating form for all fields.
     $form = array();
@@ -474,7 +475,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
 
     $entity_type = 'test_entity';
     $entity_init = field_test_create_entity(0, 0, $this->instance['bundle']);
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Build the form for all fields.
     $form = array();

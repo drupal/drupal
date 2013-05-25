@@ -10,6 +10,7 @@
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Config;
+use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Utility\ThemeRegistry;
 use Drupal\Core\Theme\ThemeSettings;
@@ -1790,7 +1791,7 @@ function theme_link($variables) {
  *     http://www.w3.org/TR/WCAG-TECHS/H42.html for more information.
  */
 function theme_links($variables) {
-  $language_url = language(LANGUAGE_TYPE_URL);
+  $language_url = language(Language::TYPE_URL);
 
   $links = $variables['links'];
   $attributes = $variables['attributes'];
@@ -2736,7 +2737,7 @@ function _template_preprocess_default_variables() {
  * @see system_elements()
  */
 function template_preprocess_html(&$variables) {
-  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(Language::TYPE_INTERFACE);
 
   // Compile a list of classes that are going to be applied to the body element.
   // This allows advanced theming based on context (home page, node of certain type, etc.).
@@ -2870,7 +2871,7 @@ function template_preprocess_html(&$variables) {
  * @see template_process_page()
  */
 function template_preprocess_page(&$variables) {
-  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(Language::TYPE_INTERFACE);
   $site_config = config('system.site');
 
   // Move some variables to the top level for themer convenience and template cleanliness.
@@ -3085,7 +3086,7 @@ function theme_get_suggestions($args, $base, $delimiter = '__') {
  */
 function template_preprocess_maintenance_page(&$variables) {
   global $theme;
-  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(Language::TYPE_INTERFACE);
   // Retrieve the theme data to list all available regions.
   $theme_data = list_themes();
   $regions = $theme_data[$theme]->info['regions'];

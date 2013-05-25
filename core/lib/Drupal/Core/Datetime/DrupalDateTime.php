@@ -7,6 +7,7 @@
 namespace Drupal\Core\Datetime;
 
 use Drupal\Component\Datetime\DateTimePlus;
+use Drupal\Core\Language\Language;
 
 /**
  * Extends DateTimePlus().
@@ -59,7 +60,7 @@ class DrupalDateTime extends DateTimePlus {
   public function __construct($time = 'now', $timezone = NULL, $format = NULL, $settings = array()) {
 
     // We can set the langcode and country using Drupal values.
-    $settings['langcode'] = !empty($settings['langcode']) ? $settings['langcode'] : language(LANGUAGE_TYPE_INTERFACE)->langcode;
+    $settings['langcode'] = !empty($settings['langcode']) ? $settings['langcode'] : language(Language::TYPE_INTERFACE)->langcode;
     $settings['country'] = !empty($settings['country']) ? $settings['country'] : config('system.date')->get('country.default');
 
     // Instantiate the parent class.

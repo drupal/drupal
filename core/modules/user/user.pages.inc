@@ -5,6 +5,7 @@
  * User page callback file for the user module.
  */
 
+use Drupal\Core\Language\Language;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -67,7 +68,7 @@ function user_pass_validate($form, &$form_state) {
 }
 
 function user_pass_submit($form, &$form_state) {
-  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(Language::TYPE_INTERFACE);
 
   $account = $form_state['values']['account'];
   // Mail one time login URL and instructions using current language.

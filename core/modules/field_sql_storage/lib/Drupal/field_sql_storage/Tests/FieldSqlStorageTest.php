@@ -8,6 +8,7 @@
 namespace Drupal\field_sql_storage\Tests;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Language\Language;
 use Drupal\field\FieldException;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 use PDO;
@@ -60,7 +61,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
   function testFieldAttachLoad() {
     $entity_type = 'test_entity';
     $eid = 0;
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     $columns = array('entity_type', 'entity_id', 'revision_id', 'delta', 'langcode', $this->field_name . '_value');
 
@@ -129,7 +130,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
   function testFieldAttachInsertAndUpdate() {
     $entity_type = 'test_entity';
     $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Test insert.
     $values = array();
@@ -210,7 +211,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
   function testFieldAttachSaveMissingData() {
     $entity_type = 'test_entity';
     $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Insert: Field is missing
     field_attach_insert($entity);
@@ -309,7 +310,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $instance = array('field_name' => 'decimal52', 'entity_type' => 'test_entity', 'bundle' => 'test_bundle');
     $instance = field_create_instance($instance);
     $entity = field_test_create_entity(0, 0, $instance['bundle']);
-    $entity->decimal52[LANGUAGE_NOT_SPECIFIED][0]['value'] = '1.235';
+    $entity->decimal52[Language::LANGCODE_NOT_SPECIFIED][0]['value'] = '1.235';
     $entity->save();
 
     // Attempt to update the field in a way that would work without data.
@@ -369,7 +370,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
 
     // Add data so the table cannot be dropped.
     $entity = field_test_create_entity(1, 1, $instance['bundle']);
-    $entity->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['value'] = 'field data';
+    $entity->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['value'] = 'field data';
     $entity->save();
 
     // Add an index
@@ -390,7 +391,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     // Verify that the tables were not dropped.
     $entity = field_test_create_entity(1, 1, $instance['bundle']);
     field_attach_load('test_entity', array(1 => $entity));
-    $this->assertEqual($entity->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['value'], 'field data', t("Index changes performed without dropping the tables"));
+    $this->assertEqual($entity->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['value'], 'field data', t("Index changes performed without dropping the tables"));
   }
 
   /**

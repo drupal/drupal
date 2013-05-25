@@ -7,6 +7,7 @@
 
 namespace Drupal\book\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\simpletest\WebTestBase;
 
@@ -205,7 +206,7 @@ class BookTest extends WebTestBase {
     // Check printer friendly version.
     $this->drupalGet('book/export/html/' . $node->nid);
     $this->assertText($node->label(), 'Printer friendly title found.');
-    $this->assertRaw(check_markup($node->body[LANGUAGE_NOT_SPECIFIED][0]['value'], $node->body[LANGUAGE_NOT_SPECIFIED][0]['format']), 'Printer friendly body found.');
+    $this->assertRaw(check_markup($node->body[Language::LANGCODE_NOT_SPECIFIED][0]['value'], $node->body[Language::LANGCODE_NOT_SPECIFIED][0]['format']), 'Printer friendly body found.');
 
     $number++;
   }
@@ -242,7 +243,7 @@ class BookTest extends WebTestBase {
     static $number = 0; // Used to ensure that when sorted nodes stay in same order.
 
     $edit = array();
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit["title"] = $number . ' - SimpleTest test node ' . $this->randomName(10);
     $edit["body[$langcode][0][value]"] = 'SimpleTest test body ' . $this->randomName(32) . ' ' . $this->randomName(32);
     $edit['book[bid]'] = $book_nid;
@@ -280,7 +281,7 @@ class BookTest extends WebTestBase {
     // Make sure each part of the book is there.
     foreach ($nodes as $node) {
       $this->assertText($node->label(), 'Node title found in printer friendly version.');
-      $this->assertRaw(check_markup($node->body[LANGUAGE_NOT_SPECIFIED][0]['value'], $node->body[LANGUAGE_NOT_SPECIFIED][0]['format']), 'Node body found in printer friendly version.');
+      $this->assertRaw(check_markup($node->body[Language::LANGCODE_NOT_SPECIFIED][0]['value'], $node->body[Language::LANGCODE_NOT_SPECIFIED][0]['format']), 'Node body found in printer friendly version.');
     }
 
     // Make sure we can't export an unsupported format.

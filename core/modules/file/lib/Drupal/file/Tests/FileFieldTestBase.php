@@ -7,6 +7,7 @@
 
 namespace Drupal\file\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -134,7 +135,7 @@ abstract class FileFieldTestBase extends WebTestBase {
    * Uploads a file to a node.
    */
   function uploadNodeFile($file, $field_name, $nid_or_type, $new_revision = TRUE, $extras = array()) {
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit = array(
       "title" => $this->randomName(),
       'revision' => (string) (int) $new_revision,
@@ -186,7 +187,7 @@ abstract class FileFieldTestBase extends WebTestBase {
    */
   function replaceNodeFile($file, $field_name, $nid, $new_revision = TRUE) {
     $edit = array(
-      'files[' . $field_name . '_' . LANGUAGE_NOT_SPECIFIED . '_0]' => drupal_realpath($file->uri),
+      'files[' . $field_name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_0]' => drupal_realpath($file->uri),
       'revision' => (string) (int) $new_revision,
     );
 

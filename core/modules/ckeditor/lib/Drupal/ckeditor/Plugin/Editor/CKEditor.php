@@ -7,6 +7,7 @@
 
 namespace Drupal\ckeditor\Plugin\Editor;
 
+use Drupal\Core\Language\Language;
 use Drupal\editor\Plugin\EditorBase;
 use Drupal\editor\Annotation\Editor;
 use Drupal\Core\Annotation\Translation;
@@ -107,7 +108,7 @@ class CKEditor extends EditorBase {
    * Implements \Drupal\editor\Plugin\EditPluginInterface::getJSSettings().
    */
   public function getJSSettings(EditorEntity $editor) {
-    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language(Language::TYPE_INTERFACE);
 
     $settings = array();
     $manager = drupal_container()->get('plugin.manager.ckeditor.plugin');

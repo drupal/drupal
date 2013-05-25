@@ -8,6 +8,7 @@
  * API pattern.
  */
 
+use Drupal\Core\Language\Language;
 use Symfony\Component\HttpFoundation\Response;
 
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -677,7 +678,7 @@ function node_type_update_nodes($old_type, $type) {
  *   type object by $type->disabled being set to TRUE.
  */
 function _node_types_build($rebuild = FALSE) {
-  $cid = 'node_types:' . language(LANGUAGE_TYPE_INTERFACE)->langcode;
+  $cid = 'node_types:' . language(Language::TYPE_INTERFACE)->langcode;
 
   if (!$rebuild) {
     $_node_types = &drupal_static(__FUNCTION__);
@@ -2039,7 +2040,7 @@ function node_block_access($block) {
  */
 function node_feed($nids = FALSE, $channel = array()) {
   global $base_url;
-  $language_content = language(LANGUAGE_TYPE_CONTENT);
+  $language_content = language(Language::TYPE_CONTENT);
   $rss_config = config('system.rss');
 
   if ($nids === FALSE) {
@@ -2292,7 +2293,7 @@ function node_form_search_form_alter(&$form, $form_state) {
 
     // Languages:
     $language_options = array();
-    foreach (language_list(LANGUAGE_ALL) as $langcode => $language) {
+    foreach (language_list(Language::STATE_ALL) as $langcode => $language) {
       // Make locked languages appear special in the list.
       $language_options[$langcode] = $language->locked ? t('- @name -', array('@name' => $language->name)) : $language->name;
     }
@@ -2502,7 +2503,7 @@ function node_access($op, $node, $account = NULL, $langcode = NULL) {
       // Load languages the node exists in.
       $node_translations = $node->getTranslationLanguages();
       // Load the language from content negotiation.
-      $content_negotiation_langcode = language(LANGUAGE_TYPE_CONTENT)->langcode;
+      $content_negotiation_langcode = language(Language::TYPE_CONTENT)->langcode;
       // If there is a translation available, use it.
       if (isset($node_translations[$content_negotiation_langcode])) {
         $langcode = $content_negotiation_langcode;

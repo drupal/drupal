@@ -5,6 +5,7 @@
  * Install, update and uninstall functions for the block module.
  */
 use Drupal\Component\Uuid\Uuid;
+use Drupal\Core\Language\Language;
 
 /**
  * Implements hook_install().
@@ -215,7 +216,7 @@ function block_update_8007() {
       'uuid' => $uuid->generate(),
       'info' => $block->info,
       'revision_id' => $block->bid,
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
       'type' => 'basic'
     );
     $revision = array(
@@ -301,7 +302,7 @@ function block_update_8008() {
         $found = TRUE;
 
         $data = array(
-          LANGUAGE_NOT_SPECIFIED => array(
+          Language::LANGCODE_NOT_SPECIFIED => array(
             array(
               'format' => $block->format,
               'value' => $block->body

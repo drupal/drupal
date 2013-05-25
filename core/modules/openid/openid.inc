@@ -5,6 +5,8 @@
  * OpenID utility functions.
  */
 
+use Drupal\Core\Language\Language;
+
 /**
  * Diffie-Hellman Key Exchange Default Value.
  *
@@ -83,7 +85,7 @@ function openid_redirect_http($url, $message) {
  * Creates a js auto-submit redirect for (for the 2.x protocol)
  */
 function openid_redirect($url, $message) {
-  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(Language::TYPE_INTERFACE);
 
   $output = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' . "\n";
   $output .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="' . $language_interface->langcode . '" lang="' . $language_interface->langcode . '">' . "\n";

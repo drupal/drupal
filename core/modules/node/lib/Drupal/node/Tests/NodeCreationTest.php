@@ -8,6 +8,7 @@
 namespace Drupal\node\Tests;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Language\Language;
 
 /**
  * Tests creating and saving a node.
@@ -44,7 +45,7 @@ class NodeCreationTest extends NodeTestBase {
   function testNodeCreation() {
     // Create a node.
     $edit = array();
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName(8);
     $edit["body[$langcode][0][value]"] = $this->randomName(16);
     $this->drupalPost('node/add/page', $edit, t('Save'));
@@ -66,7 +67,7 @@ class NodeCreationTest extends NodeTestBase {
       'uid'      => $this->loggedInUser->uid,
       'name'     => $this->loggedInUser->name,
       'type'     => 'page',
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
       'title'    => 'testing_transaction_exception',
     );
 
@@ -111,7 +112,7 @@ class NodeCreationTest extends NodeTestBase {
     // Create a node.
     $edit = array();
     $edit["title"] = $this->randomName(8);
-    $edit["body[" . LANGUAGE_NOT_SPECIFIED . "][0][value]"] = $this->randomName(16);
+    $edit["body[" . Language::LANGCODE_NOT_SPECIFIED . "][0][value]"] = $this->randomName(16);
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
     // Check that the user was redirected to the home page.

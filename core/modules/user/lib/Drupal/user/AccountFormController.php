@@ -8,6 +8,7 @@
 namespace Drupal\user;
 
 use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Language\Language;
 
 /**
  * Form controller for the user account forms.
@@ -22,7 +23,7 @@ abstract class AccountFormController extends EntityFormController {
     global $user;
     $config = config('user.settings');
 
-    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language(Language::TYPE_INTERFACE);
     $register = empty($account->uid);
     $admin = user_access('administer users');
 
@@ -180,7 +181,7 @@ abstract class AccountFormController extends EntityFormController {
 
     // Is default the interface language?
     include_once DRUPAL_ROOT . '/core/includes/language.inc';
-    $interface_language_is_default = language_negotiation_method_get_first(LANGUAGE_TYPE_INTERFACE) != LANGUAGE_NEGOTIATION_SELECTED;
+    $interface_language_is_default = language_negotiation_method_get_first(Language::TYPE_INTERFACE) != LANGUAGE_NEGOTIATION_SELECTED;
     $form['language'] = array(
       '#type' => language_multilingual() ? 'details' : 'container',
       '#title' => t('Language settings'),
@@ -192,7 +193,7 @@ abstract class AccountFormController extends EntityFormController {
     $form['language']['preferred_langcode'] = array(
       '#type' => 'language_select',
       '#title' => t('Site language'),
-      '#languages' => LANGUAGE_CONFIGURABLE,
+      '#languages' => Language::STATE_CONFIGURABLE,
       '#default_value' => $user_preferred_langcode,
       '#description' => $interface_language_is_default ? t("This account's preferred language for e-mails and site presentation.") : t("This account's preferred language for e-mails."),
     );
@@ -200,7 +201,7 @@ abstract class AccountFormController extends EntityFormController {
     $form['language']['preferred_admin_langcode'] = array(
       '#type' => 'language_select',
       '#title' => t('Administration pages language'),
-      '#languages' => LANGUAGE_CONFIGURABLE,
+      '#languages' => Language::STATE_CONFIGURABLE,
       '#default_value' => $user_preferred_admin_langcode,
       '#access' => user_access('access administration pages', $account),
     );

@@ -7,6 +7,8 @@
 
 namespace Drupal\path\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests URL aliases for translated nodes.
  */
@@ -74,7 +76,7 @@ class PathLanguageTest extends PathTestBase {
     $this->drupalGet('node/' . $english_node->nid . '/translate');
     $this->clickLink(t('Add translation'));
     $edit = array();
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName();
     $edit["body[$langcode][0][value]"] = $this->randomName();
     $french_alias = $this->randomName();

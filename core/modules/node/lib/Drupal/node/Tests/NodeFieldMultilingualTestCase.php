@@ -99,7 +99,7 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
     $this->assertTrue($node->language()->langcode == $langcode && $node->body->value == $body_value, 'Field language correctly changed.');
 
     // Enable content language URL detection.
-    language_negotiation_set(LANGUAGE_TYPE_CONTENT, array(LANGUAGE_NEGOTIATION_URL => 0));
+    language_negotiation_set(Language::TYPE_CONTENT, array(LANGUAGE_NEGOTIATION_URL => 0));
 
     // Test multilingual field language fallback logic.
     $this->drupalGet("it/node/{$node->id()}");

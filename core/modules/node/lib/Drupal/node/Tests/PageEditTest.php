@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests the node edit functionality.
  */
@@ -35,7 +37,7 @@ class PageEditTest extends NodeTestBase {
   function testPageEdit() {
     $this->drupalLogin($this->web_user);
 
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $title_key = "title";
     $body_key = "body[$langcode][0][value]";
     // Create node to edit.
@@ -103,7 +105,7 @@ class PageEditTest extends NodeTestBase {
     $this->drupalLogin($this->admin_user);
 
     // Create node to edit.
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $body_key = "body[$langcode][0][value]";
     $edit = array();
     $edit['title'] = $this->randomName(8);

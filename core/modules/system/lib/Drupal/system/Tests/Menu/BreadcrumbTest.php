@@ -7,6 +7,8 @@
 
 namespace Drupal\system\Tests\Menu;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Menu breadcrumbs related tests.
  */
@@ -60,7 +62,7 @@ class BreadcrumbTest extends MenuTestBase {
     $admin = $home + array('admin' => t('Administration'));
     $config = $admin + array('admin/config' => t('Configuration'));
     $type = 'article';
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Verify breadcrumbs for default local tasks.
     $expected = array(

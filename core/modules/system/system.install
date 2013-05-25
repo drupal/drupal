@@ -2,6 +2,7 @@
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Language\Language;
 
 /**
  * @file
@@ -1308,8 +1309,8 @@ function system_update_8004() {
     // Files can be language-specific (e.g., a scanned document) or not (e.g.,
     // a photograph). For a site being updated, Drupal does not have a way to
     // determine which existing files are language-specific and in what
-    // language. Our best guess is to set all of them to LANGUAGE_NOT_SPECIFIED.
-    $langcode_field['initial'] = LANGUAGE_NOT_SPECIFIED;
+    // language. Our best guess is to set all of them to Language::LANGCODE_NOT_SPECIFIED.
+    $langcode_field['initial'] = Language::LANGCODE_NOT_SPECIFIED;
     db_add_field('file_managed', 'langcode', $langcode_field);
   }
 }

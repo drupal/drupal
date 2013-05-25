@@ -8,6 +8,7 @@
 namespace Drupal\block;
 
 use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Language\Language;
 
 /**
  * Provides form controller for block instance forms.
@@ -111,7 +112,7 @@ class BlockFormController extends EntityFormController {
       $configurable_language_types = language_types_get_configurable();
 
       // Fetch languages.
-      $languages = language_list(LANGUAGE_ALL);
+      $languages = language_list(Language::STATE_ALL);
       foreach ($languages as $language) {
         // @todo $language->name is not wrapped with t(), it should be replaced
         //   by CMI translation implementation.

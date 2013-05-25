@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Entity;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -63,7 +64,7 @@ class EntityFormTest extends WebTestBase {
    *   The entity type to run the tests with.
    */
   protected function assertFormCRUD($entity_type) {
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $name1 = $this->randomName(8);
     $name2 = $this->randomName(10);
 

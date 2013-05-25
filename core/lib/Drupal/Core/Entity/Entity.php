@@ -27,7 +27,7 @@ class Entity implements IteratorAggregate, EntityInterface {
    *
    * @var string
    */
-  public $langcode = LANGUAGE_NOT_SPECIFIED;
+  public $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
   /**
    * The entity type.
@@ -260,7 +260,7 @@ class Entity implements IteratorAggregate, EntityInterface {
   public function access($operation = 'view', \Drupal\user\Plugin\Core\Entity\User $account = NULL) {
     return \Drupal::entityManager()
       ->getAccessController($this->entityType)
-      ->access($this, $operation, LANGUAGE_DEFAULT, $account);
+      ->access($this, $operation, Language::LANGCODE_DEFAULT, $account);
   }
 
   /**
@@ -272,7 +272,7 @@ class Entity implements IteratorAggregate, EntityInterface {
     $language = language_load($this->langcode);
     if (!$language) {
       // Make sure we return a proper language object.
-      $language = new Language(array('langcode' => LANGUAGE_NOT_SPECIFIED));
+      $language = new Language(array('langcode' => Language::LANGCODE_NOT_SPECIFIED));
     }
     return $language;
   }
@@ -317,7 +317,7 @@ class Entity implements IteratorAggregate, EntityInterface {
           }
         }
       }
-      $languages = array_intersect_key(language_list(LANGUAGE_ALL), $languages);
+      $languages = array_intersect_key(language_list(Language::STATE_ALL), $languages);
     }
 
     if (empty($include_default)) {

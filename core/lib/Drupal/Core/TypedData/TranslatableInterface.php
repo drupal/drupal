@@ -40,8 +40,8 @@ interface TranslatableInterface {
    * AccessibleInterface, the translation object has to implement both as well.
    *
    * @param $langcode
-   *   The language code of the translation to get or LANGUAGE_DEFAULT to get
-   *   the data in default language.
+   *   The language code of the translation to get or Language::LANGCODE_DEFAULT
+   *   to get the data in default language.
    * @param $strict
    *   (optional) If the data is complex, whether the translation should include
    *   only translatable properties. If set to FALSE, untranslatable properties

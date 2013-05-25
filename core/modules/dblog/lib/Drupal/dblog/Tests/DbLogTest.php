@@ -7,6 +7,7 @@
 
 namespace Drupal\dblog\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\dblog\Controller\DbLogController;
 use Drupal\simpletest\WebTestBase;
 use SimpleXMLElement;
@@ -310,7 +311,7 @@ class DbLogTest extends WebTestBase {
     // Create a node using the form in order to generate an add content event
     // (which is not triggered by drupalCreateNode).
     $edit = $this->getContent($type);
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $title = $edit["title"];
     $this->drupalPost('node/add/' . $type, $edit, t('Save'));
     $this->assertResponse(200);
@@ -368,7 +369,7 @@ class DbLogTest extends WebTestBase {
    *   Random content needed by various node types.
    */
   private function getContent($type) {
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     switch ($type) {
       case 'forum':
         $content = array(
@@ -398,7 +399,7 @@ class DbLogTest extends WebTestBase {
    *   Random content needed by various node types.
    */
   private function getContentUpdate($type) {
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $content = array(
       "body[$langcode][0][value]" => $this->randomName(32),
     );

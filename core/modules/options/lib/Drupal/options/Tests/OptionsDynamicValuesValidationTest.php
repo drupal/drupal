@@ -7,6 +7,7 @@
 
 namespace Drupal\options\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\field\FieldValidationException;
 
 /**
@@ -27,7 +28,7 @@ class OptionsDynamicValuesValidationTest extends OptionsDynamicValuesTest {
   function testDynamicAllowedValues() {
     // Verify that the test passes against every value we had.
     foreach ($this->test as $key => $value) {
-      $this->entity->test_options[LANGUAGE_NOT_SPECIFIED][0]['value'] = $value;
+      $this->entity->test_options[Language::LANGCODE_NOT_SPECIFIED][0]['value'] = $value;
       try {
         field_attach_validate($this->entity);
         $this->pass("$key should pass");
@@ -39,7 +40,7 @@ class OptionsDynamicValuesValidationTest extends OptionsDynamicValuesTest {
     }
     // Now verify that the test does not pass against anything else.
     foreach ($this->test as $key => $value) {
-      $this->entity->test_options[LANGUAGE_NOT_SPECIFIED][0]['value'] = is_numeric($value) ? (100 - $value) : ('X' . $value);
+      $this->entity->test_options[Language::LANGCODE_NOT_SPECIFIED][0]['value'] = is_numeric($value) ? (100 - $value) : ('X' . $value);
       $pass = FALSE;
       try {
         field_attach_validate($this->entity);

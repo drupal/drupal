@@ -7,6 +7,7 @@
 
 namespace Drupal\number\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -76,7 +77,7 @@ class NumberFieldTest extends WebTestBase {
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test_bundle');
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value]", '', 'Widget is displayed');
     $this->assertRaw('placeholder="0.00"');
 
