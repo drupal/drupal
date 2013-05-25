@@ -1,4 +1,4 @@
-var Drupal = { behaviors: {}, locale: {} };
+window.Drupal = { behaviors: {}, locale: {} };
 
 // Class indicating that JS is enabled; used for styling purpose.
 document.documentElement.className += ' js';
