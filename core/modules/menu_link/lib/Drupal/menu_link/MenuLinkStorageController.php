@@ -10,6 +10,7 @@ namespace Drupal\menu_link;
 use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Controller class for menu links.
@@ -216,6 +217,36 @@ class MenuLinkStorageController extends DatabaseStorageController {
         $entity->router_path = _menu_find_router_path($entity->link_path);
       }
     }
+    // Find the route_name.
+    if (!isset($entity->route_name)) {
+      $entity->route_name = $this->findRouteName($entity->link_path);
+    }
+  }
+
+  /**
+   * Returns the route_name matching a URL.
+   *
+   * @param string $link_path
+   *   The link path to find a route name for.
+   *
+   * @return string
+   *   The route name.
+   */
+  protected function findRouteName($link_path) {
+    // Look up the route_name used for the given path.
+    $request = Request::create('/' . $link_path);
+    $request->attributes->set('system_path', $link_path);
+    try {
+      // Use router.dynamic instead of router, because router will call the
+      // legacy router which will call hook_menu() and you will get back to
+      // this method.
+      $result = \Drupal::service('router.dynamic')->matchRequest($request);
+      return isset($result['_route']) ? $result['_route'] : '';
+    }
+    catch (\Exception $e) {
+      return '';
+    }
+
   }
 
   /**

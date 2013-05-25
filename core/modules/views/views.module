@@ -354,16 +354,6 @@ function views_menu_alter(&$callbacks) {
           // overriding) one that we removed above.
           $callbacks[$path] = $item;
         }
-        else {
-          // This item already exists, so it must be one that we added.
-          // We change the various callback arguments to pass an array
-          // of possible display IDs instead of a single ID.
-          $callbacks[$path]['page arguments'][1] = (array)$callbacks[$path]['page arguments'][1];
-          $callbacks[$path]['page arguments'][1][] = $display_id;
-          $callbacks[$path]['access arguments'][] = $item['access arguments'][0];
-          $callbacks[$path]['load arguments'][1] = (array)$callbacks[$path]['load arguments'][1];
-          $callbacks[$path]['load arguments'][1][] = $display_id;
-        }
         $our_paths[$path] = TRUE;
       }
     }
@@ -654,7 +644,6 @@ function views_field_create_instance($instance) {
   cache('views_info')->deleteAll();
   cache('views_results')->deleteAll();
 }
-
 /**
  * Implements hook_field_update_instance.
  */
@@ -686,6 +675,13 @@ function views_invalidate_cache() {
 
   $module_handler = Drupal::moduleHandler();
 
+  // Set the router to be rebuild.
+  // @todo Figure out why the cache rebuild is trigged but the route table
+  //   does not exist yet.
+  if (db_table_exists('router')) {
+    Drupal::service('router.builder')->rebuild();
+  }
+
   // Invalidate the block cache to update views block derivatives.
   if ($module_handler->moduleExists('block')) {
     Drupal::service('plugin.manager.block')->clearCachedDefinitions();
@@ -693,68 +689,6 @@ function views_invalidate_cache() {
 
   // Allow modules to respond to the Views cache being cleared.
   $module_handler->invokeAll('views_invalidate_cache');
-}
-
-/**
- * Determine if the logged in user has access to a view.
- *
- * This function should only be called from a menu hook or some other
- * embedded source. Each argument is the result of a call to
- * views_plugin_access::get_access_callback() which is then used
- * to determine if that display is accessible. If *any* argument
- * is accessible, then the view is accessible.
- */
-function views_access() {
-  $args = func_get_args();
-  foreach ($args as $arg) {
-    if ($arg === TRUE) {
-      return TRUE;
-    }
-
-    if (!is_array($arg)) {
-      continue;
-    }
-
-    list($callback, $arguments) = $arg;
-    $arguments = $arguments ? $arguments : array();
-    // Bring dynamic arguments to the access callback.
-    foreach ($arguments as $key => $value) {
-      if (is_int($value) && isset($args[$value])) {
-        $arguments[$key] = $args[$value];
-      }
-    }
-    if (function_exists($callback) && call_user_func_array($callback, $arguments)) {
-      return TRUE;
-    }
-  }
-
-  return FALSE;
-}
-
-/**
- * Access callback for the views_plugin_access_perm access plugin.
- *
- * Determine if the specified user has access to a view on the basis of
- * permissions. If the $account argument is omitted, the current user
- * is used.
- */
-function views_check_perm($perm, $account = NULL) {
-  return user_access($perm, $account) || user_access('access all views', $account);
-}
-
-/**
- * Access callback for the views_plugin_access_role access plugin.
-
- * Determine if the specified user has access to a view on the basis of any of
- * the requested roles. If the $account argument is omitted, the current user
- * is used.
- */
-function views_check_roles($rids, $account = NULL) {
-  global $user;
-  $account = isset($account) ? $account : $user;
-  $roles = array_keys($account->roles);
-  $roles[] = $account->uid ? DRUPAL_AUTHENTICATED_RID : DRUPAL_ANONYMOUS_RID;
-  return user_access('access all views', $account) || array_intersect(array_filter($rids), $roles);
 }
 
 /**

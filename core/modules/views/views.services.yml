@@ -78,3 +78,12 @@ services:
     factory_method: get
     factory_service: cache_factory
     arguments: [views_results]
+  views.route_subscriber:
+    class: Drupal\views\EventSubscriber\RouteSubscriber
+    arguments: ['@config.factory']
+    tags:
+      - { name: 'event_subscriber' }
+  views.route_access_check:
+    class: Drupal\views\ViewsAccessCheck
+    tags:
+      - { name: 'access_check' }

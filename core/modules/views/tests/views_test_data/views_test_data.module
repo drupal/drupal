@@ -19,14 +19,6 @@ function views_test_data_permission() {
   );
 }
 
-function views_test_data_test_static_access_callback($access) {
-  return $access;
-}
-
-function views_test_data_test_dynamic_access_callback($access, $argument1, $argument2) {
-  return $access && $argument1 == state()->get('test_dynamic_access_argument1') && $argument2 == state()->get('test_dynamic_access_argument2');
-}
-
 /**
  * Access callback for the generic handler test.
  *

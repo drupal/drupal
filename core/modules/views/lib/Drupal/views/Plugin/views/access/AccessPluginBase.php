@@ -9,13 +9,14 @@ namespace Drupal\views\Plugin\views\access;
 
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\ViewExecutable;
+use Symfony\Component\Routing\Route;
 
 /**
  * @defgroup views_access_plugins Views access plugins
  * @{
  * The base plugin to handle access to a view.
  *
- * Therefore it primarily has to implement the access and the get_access_callback
+ * Therefore it primarily has to implement the access and the alterRouteDefinition
  * method.
  */
 
@@ -65,18 +66,15 @@ abstract class AccessPluginBase extends PluginBase {
   abstract public function access($account);
 
   /**
-   * Determine the access callback and arguments.
+   * Allows access plugins to alter the route definition of a view.
    *
-   * This information will be embedded in the menu in order to reduce
-   * performance hits during menu item access testing, which happens
-   * a lot.
+   * Likely the access plugin will add new requirements, so its custom access
+   * checker can be applied.
    *
-   * @return array
-   *   The first item of the array should be the function to call,and the
-   *   second item should be an array of arguments. The first item may also be
-   *   TRUE (bool only) which will indicate no access control.
+   * @param \Symfony\Component\Routing\Route $route
+   *   The route to change.
    */
-  abstract function get_access_callback();
+  abstract public function alterRouteDefinition(Route $route);
 
 }
 

@@ -23,7 +23,7 @@ use Drupal\views\Plugin\views\display\PathPluginBase;
  *   module = "rest",
  *   title = @Translation("REST export"),
  *   help = @Translation("Create a REST export resource."),
- *   uses_hook_menu = TRUE,
+ *   uses_route = TRUE,
  *   admin = @Translation("REST export")
  * )
  */

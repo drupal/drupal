@@ -14,6 +14,10 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class TestControllers {
 
+  public function test() {
+    return new Response('test');
+  }
+
   public function test1() {
     return new Response('test1');
   }

@@ -72,10 +72,6 @@ class NodeRSSContentTest extends NodeTestBase {
     // viewing node.
     $this->drupalGet("node/$node->nid");
     $this->assertNoText($rss_only_content, 'Node content designed for RSS does not appear when viewing node.');
-
-    // Check that the node feed page does not try to interpret additional path
-    // components as arguments for node_feed() and returns default content.
-    $this->drupalGet('rss.xml/' . $this->randomName() . '/' . $this->randomName());
-    $this->assertText($rss_only_content, 'Ignore page arguments when delivering rss.xml.');
   }
+
 }
