@@ -175,7 +175,23 @@ function template_preprocess_views_view(&$vars) {
 }
 
 /**
- * Preprocess theme function to print a single record from a row, with fields
+ * Prepares variables for views fields templates.
+ *
+ * Default template: views-view-fields.html.twig.
+ *
+ * @param array $vars
+ *   An associative array containing:
+ *   - view: The view object.
+ *   - options: An array of options. Each option contains:
+ *     - inline: An array that contains the fields that are to be
+ *       displayed inline.
+ *     - default_field_elements: If default field wrapper
+ *       elements are to be provided.
+ *     - hide_empty: Whether the field is to be hidden if empty.
+ *     - element_default_classes: If the default classes are to be added.
+ *     - separator: A string to be placed between inline fields to keep them
+ *       visually distinct.
+ *    - row: An array containing information about the current row.
  */
 function template_preprocess_views_view_fields(&$vars) {
   $view = $vars['view'];
@@ -293,6 +309,39 @@ function template_preprocess_views_view_fields(&$vars) {
     }
   }
 
+}
+
+/**
+* Returns HTML for multiple views fields.
+*
+* @param $variables
+*   An associative array containing:
+*   - fields: An array of field objects. Each field object contains:
+*     - separator: A string that separates the fields.
+*     - wrapper_suffix: A string added to the beginning of the fields.
+*     - label_html: An HTML string that labels the fields.
+*     - content: The fields.
+*     - wrapper_suffix: A string added to the end of the fields.
+*
+* @see template_preprocess_views_view_fields()
+*/
+function theme_views_view_fields($variables) {
+  $fields = $variables['fields'];
+  $output = '';
+
+  foreach ($fields as $id => $field) {
+    if (!empty($field->separator)) {
+      $output .= $field->separator;
+    }
+
+    $output .= $field->wrapper_prefix;
+    $output .= $field->label_html;
+    $output .= $field->content;
+
+    $output .= $field->wrapper_suffix;
+  }
+
+  return $output;
 }
 
 /**

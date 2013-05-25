@@ -1,0 +1,42 @@
+{#
+/**
+ * @file
+ * Default view template to display all the fields in a row.
+ *
+ * Available variables:
+ * - view: The view in use.
+ * - fields: A list of fields, each one contains:
+ *   - content: The output of the field.
+ *   - raw: The raw data for the field, if it exists. This is NOT output safe.
+ *   - class: The safe class ID to use.
+ *   - handler: The Views field handler controlling this field.
+ *   - inline: Whether or not the field should be inline.
+ *   - inline_html: Either div or span based on the 'inline' flag.
+ *   - wrapper_prefix: A complete wrapper containing the inline_html to use.
+ *   - wrapper_suffix: The closing tag for the wrapper.
+ *   - separator: An optional separator that may appear before a field.
+ *   - label: The field's label text.
+ *   - label_html: The full HTML of the label to use including configured
+ *     element type.
+ * - row: The raw result from the query, with all data it fetched.
+ *
+ * @see template_preprocess()
+ * @see template_preprocess_views_view_fields()
+ *
+ * @ingroup themeable
+ */
+#}
+<!--
+THIS FILE IS NOT USED AND IS HERE AS A STARTING POINT FOR CUSTOMIZATION ONLY.
+See http://api.drupal.org/api/function/theme_views_view_fields/8 for details.
+After copying this file to your theme's folder and customizing it, remove this
+HTML comment.
+-->
+{% for field in fields %}
+  {{ field.separator }}
+
+  {{ field.wrapper_prefix }}
+    {{ field.label_html }}
+    {{ field.content }}
+  {{ field.wrapper_suffix }}
+{% endfor %}
