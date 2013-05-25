@@ -452,7 +452,18 @@ function taxonomy_term_view_multiple(array $terms, $view_mode = 'full', $langcod
 }
 
 /**
- * Process variables for taxonomy-term.tpl.php.
+ * Prepares variables for taxonomy term templates.
+ *
+ * Default template: taxonomy-term.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the taxonomy term and any
+ *     fields attached to the term. Properties used:
+ *     - #term: The term object.
+ *     - #view_mode: The current view mode for this taxonomy term, e.g.
+ *       'full' or 'teaser'.
+ *   - attributes: HTML attributes for the containing element.
  */
 function template_preprocess_taxonomy_term(&$variables) {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
@@ -461,8 +472,9 @@ function template_preprocess_taxonomy_term(&$variables) {
 
   $uri = $term->uri();
   $variables['url']  = url($uri['path'], $uri['options']);
-  $variables['label'] = check_plain($term->label());
-  $variables['page']      = $variables['view_mode'] == 'full' && taxonomy_term_is_page($term);
+  // We use name here because that is what appears in the UI.
+  $variables['name'] = check_plain($term->label());
+  $variables['page'] = $variables['view_mode'] == 'full' && taxonomy_term_is_page($term);
 
   // Helpful $content variable for templates.
   $variables['content'] = array();

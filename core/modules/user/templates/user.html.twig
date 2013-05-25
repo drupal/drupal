@@ -1,0 +1,31 @@
+{#
+/**
+ * @file
+ * Default theme implementation to present all user data.
+ *
+ * This template is used when viewing a registered user's page,
+ * e.g., example.com/user/123. 123 being the user's ID.
+ *
+ * Available variables:
+ * - content: A list of content items. Use 'content' to print all content, or
+ *   print a subset such as 'content.field_example'.
+ * - Field variables: For each field instance attached to the user a
+ *   corresponding variable is defined; e.g., account.field_example has a
+ *   variable 'field_example' defined. When needing to access a field's raw
+ *   values, developers/themers are strongly encouraged to use these
+ *   variables. Otherwise they will have to explicitly specify the desired
+ *   field language, e.g. account.field_example.en, thus overriding any
+ *   language negotiation rule that was previously applied.
+ * - attributes: HTML attributes for the container element.
+ *
+ * @see template_preprocess()
+ * @see template_preprocess_user()
+ *
+ * @ingroup themeable
+ */
+#}
+<article{{ attributes }}>
+  {% if content %}
+    {{- content -}}
+  {% endif %}
+</article>

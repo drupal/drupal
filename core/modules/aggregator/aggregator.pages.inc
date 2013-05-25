@@ -281,9 +281,14 @@ function theme_aggregator_summary_item($variables) {
 }
 
 /**
- * Processes variables for aggregator-item.tpl.php.
+ * Prepares variables for aggregator item templates.
  *
- * @see aggregator-item.tpl.php
+ * Default template: aggregator-item.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - aggregator_item: An individual feed item for display on the aggregator
+ *     page.
  */
 function template_preprocess_aggregator_item(&$variables) {
   $item = $variables['aggregator_item'];
@@ -309,6 +314,8 @@ function template_preprocess_aggregator_item(&$variables) {
   foreach ($item->categories as $category) {
     $variables['categories'][$category->cid] = l($category->title, 'aggregator/categories/' . $category->cid);
   }
+
+  $variables['attributes']['class'][] = 'feed-item';
 }
 
 /**
@@ -515,9 +522,15 @@ function theme_aggregator_page_opml($variables) {
 }
 
 /**
- * Processes variables for aggregator-summary-items.tpl.php.
+ * Prepares variables for aggregator summary templates.
  *
- * @see aggregator-summary-items.tpl.php
+ * Default template: aggregator-summary-items.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - source: A Drupal\aggregator\Plugin\Core\Entity\Feed instance representing
+ *     the feed source.
+ *   - summary_items: An array of feed items.
  */
 function template_preprocess_aggregator_summary_items(&$variables) {
   $variables['title'] = check_plain($variables['source'] instanceof EntityInterface ? $variables['source']->label() : $variables['source']->title);
@@ -533,9 +546,14 @@ function template_preprocess_aggregator_summary_items(&$variables) {
 }
 
 /**
- * Processes variables for aggregator-summary-item.tpl.php.
+ * Processes variables for aggregator summary item templates.
  *
- * @see aggregator-summary-item.tpl.php
+ * Default template: aggregator-summary-item.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - aggregator_item: The feed item.
+ *   - view_mode: How the item is being displayed.
  */
 function template_preprocess_aggregator_summary_item(&$variables) {
   $item = $variables['aggregator_item'];
@@ -556,9 +574,14 @@ function template_preprocess_aggregator_summary_item(&$variables) {
 }
 
 /**
- * Processes variables for aggregator-feed-source.tpl.php.
+ * Prepares variables for aggregator feed source templates.
  *
- * @see aggregator-feed-source.tpl.php
+ * Default template: aggregator-feed-source.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - aggregator_feed: A Drupal\aggregator\Plugin\Core\Entity\Feed instance
+ *     representing the feed source.
  */
 function template_preprocess_aggregator_feed_source(&$variables) {
   $feed = $variables['aggregator_feed'];
@@ -584,4 +607,6 @@ function template_preprocess_aggregator_feed_source(&$variables) {
   if (user_access('administer news feeds')) {
     $variables['last_checked'] = l($variables['last_checked'], 'admin/config/services/aggregator');
   }
+
+  $variables['attributes']['class'][] = 'feed-source';
 }

@@ -1,5 +1,4 @@
-<?php
-
+{#
 /**
  * @file
  * Default theme implementation for rendering book outlines within a block.
@@ -8,16 +7,18 @@
  * pages", which presents multiple independent books on all pages.
  *
  * Available variables:
- * - $book_menus: Array of book outlines keyed to the parent book ID. Call
- *   render() on each to print it as an unordered list.
+ * - book_menus: Book outlines.
+ *   - book_id: The parent book ID.
+ *   - menu: The top-level book links.
  *
+ * @see template_preprocess()
  * @see template_preprocess_book_all_books_block()
  *
  * @ingroup themeable
  */
-?>
-<?php foreach ($book_menus as $book_id => $menu): ?>
-  <nav id="book-block-menu-<?php print $book_id; ?>" class="book-block-menu">
-    <?php print render($menu); ?>
+#}
+{% for book_id, menu in book_menus %}
+  <nav id="book-block-menu-{{ book_id }}" class="book-block-menu">
+    {{ menu }}
   </nav>
-<?php endforeach; ?>
+{% endfor %}

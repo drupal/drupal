@@ -93,8 +93,8 @@ function user_theme() {
   return array(
     'user' => array(
       'render element' => 'elements',
-      'template' => 'user',
       'file' => 'user.pages.inc',
+      'template' => 'user',
     ),
     'user_admin_permissions' => array(
       'render element' => 'form',

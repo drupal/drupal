@@ -179,12 +179,13 @@ function user_logout() {
 }
 
 /**
- * Process variables for user.tpl.php.
+ * Prepares variables for user templates.
  *
- * The $variables array contains the following arguments:
- * - $account
+ * Default template: user.html.twig.
  *
- * @see user.tpl.php
+ * @param array $variables
+ *   An associative array containing:
+ *   - account: The user account.
  */
 function template_preprocess_user(&$variables) {
   $account = $variables['elements']['#user'];
@@ -196,6 +197,9 @@ function template_preprocess_user(&$variables) {
 
   // Preprocess fields.
   field_attach_preprocess($account, $variables['elements'], $variables);
+
+  // Set up attributes.
+  $variables['attributes']['class'][] = 'profile';
 }
 
 /**
