@@ -22,6 +22,7 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("Page"),
  *   help = @Translation("Display the view as a page, with a URL and menu links."),
  *   uses_hook_menu = TRUE,
+ *   uses_route = TRUE,
  *   contextual_links_locations = {"page"},
  *   theme = "views_view",
  *   admin = @Translation("Page")
@@ -92,7 +93,10 @@ class Page extends PathPluginBase {
     // And the title, which is much easier.
     drupal_set_title(filter_xss_admin($this->view->getTitle()), PASS_THROUGH);
 
-    return $render;
+    $response = $this->view->getResponse();
+    $response->setContent(drupal_render_page($render));
+
+    return $response;
   }
 
   /**

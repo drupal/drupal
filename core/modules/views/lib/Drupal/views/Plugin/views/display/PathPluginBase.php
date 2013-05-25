@@ -8,13 +8,16 @@
 namespace Drupal\views\Plugin\views\display;
 
 use Drupal\views\Views;
+
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * The base display plugin for path/callbacks. This is used for pages and feeds.
  */
-abstract class PathPluginBase extends DisplayPluginBase {
+abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouterInterface {
 
   /**
    * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::hasPath().
@@ -31,6 +34,69 @@ abstract class PathPluginBase extends DisplayPluginBase {
     $options['path'] = array('default' => '');
 
     return $options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function collectRoutes(RouteCollection $collection) {
+    $view_id = $this->view->storage->id();
+    $display_id = $this->display['id'];
+
+    $defaults = array(
+      '_controller' => 'Drupal\views\Routing\ViewPageController::handle',
+      'view_id' => $view_id,
+      'display_id' => $display_id,
+    );
+
+    // @todo How do we apply argument validation?
+    $bits = explode('/', $this->getOption('path'));
+    // @todo Figure out validation/argument loading.
+    // Replace % with %views_arg for menu autoloading and add to the
+    // page arguments so the argument actually comes through.
+    $arg_counter = 0;
+
+    $this->view->initHandlers();
+    $view_arguments = $this->view->argument;
+
+    $argument_ids = array_keys($view_arguments);
+    $total_arguments = count($argument_ids);
+
+    // Replace arguments in the views UI (defined via %) with parameters in
+    // routes (defined via {}). As a name for the parameter use arg_$key, so
+    // it can be pulled in the views controller from the request.
+    foreach ($bits as $pos => $bit) {
+      if ($bit == '%') {
+        // Generate the name of the parameter using the key of the argument
+        // handler.
+        $arg_id = 'arg_' . $argument_ids[$arg_counter++];
+        $bits[$pos] = '{' . $arg_id . '}';
+      }
+    }
+
+    // Add missing arguments not defined in the path, but added as handler.
+    while (($total_arguments - $arg_counter) > 0) {
+      $arg_id = 'arg_' . $argument_ids[$arg_counter++];
+      $bit = '{' . $arg_id . '}';
+      // In contrast to the previous loop add the defaults here, as % was not
+      // specified, which means the argument is optional.
+      $defaults[$arg_id] = NULL;
+      $bits[] = $bit;
+    }
+
+    $route_path = '/' . implode('/', $bits);
+
+    $route = new Route($route_path, $defaults);
+
+    // Add access check parameters to the route.
+    $access_plugin = $this->getPlugin('access');
+    if (!isset($access_plugin)) {
+      // @todo Do we want to support a default plugin in getPlugin itself?
+      $access_plugin = Views::pluginManager('access')->createInstance('none');
+    }
+    $access_plugin->alterRouteDefinition($route);
+
+    $collection->add("view.$view_id.$display_id", $route);
   }
 
   /**
@@ -60,49 +126,9 @@ abstract class PathPluginBase extends DisplayPluginBase {
 
     $path = implode('/', $bits);
 
-    $access_plugin = $this->getPlugin('access');
-    if (!isset($access_plugin)) {
-      $access_plugin = Views::pluginManager('access')->createInstance('none');
-    }
-
-    // Get access callback might return an array of the callback + the dynamic
-    // arguments.
-    $access_plugin_callback = $access_plugin->get_access_callback();
-
-    if (is_array($access_plugin_callback)) {
-      $access_arguments = array();
-
-      // Find the plugin arguments.
-      $access_plugin_method = array_shift($access_plugin_callback);
-      $access_plugin_arguments = array_shift($access_plugin_callback);
-      if (!is_array($access_plugin_arguments)) {
-        $access_plugin_arguments = array();
-      }
-
-      $access_arguments[0] = array($access_plugin_method, &$access_plugin_arguments);
-
-      // Move the plugin arguments to the access arguments array.
-      $i = 1;
-      foreach ($access_plugin_arguments as $key => $value) {
-        if (is_int($value)) {
-          $access_arguments[$i] = $value;
-          $access_plugin_arguments[$key] = $i;
-          $i++;
-        }
-      }
-    }
-    else {
-      $access_arguments = array($access_plugin_callback);
-    }
-
     if ($path) {
       $items[$path] = array(
-        // Default views page entry.
-        'page callback' => 'views_page',
-        'page arguments' => $page_arguments,
-        // Default access check (per display).
-        'access callback' => 'views_access',
-        'access arguments' => $access_arguments,
+        'route_name' => "view.{$this->view->storage->id()}.{$this->display['id']}",
         // Identify URL embedded arguments and correlate them to a handler.
         'load arguments'  => array($this->view->storage->id(), $this->display['id'], '%index'),
       );
@@ -159,11 +185,6 @@ abstract class PathPluginBase extends DisplayPluginBase {
             $default_path = implode('/', $bits);
             $items[$default_path] = array(
               // Default views page entry.
-              'page callback' => 'views_page',
-              'page arguments' => $page_arguments,
-              // Default access check (per display).
-              'access callback' => 'views_access',
-              'access arguments' => $access_arguments,
               // Identify URL embedded arguments and correlate them to a
               // handler.
               'load arguments'  => array($this->view->storage->id(), $this->display['id'], '%index'),

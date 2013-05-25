@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\views\ViewExecutable;
 
 /**
  * Defines a base class for Views testing in the full web test environment.
@@ -31,6 +32,10 @@ abstract class ViewTestBase extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
+    // Ensure that the plugin definitions are cleared.
+    foreach (ViewExecutable::getPluginTypes() as $plugin_type) {
+      $this->container->get("plugin.manager.views.$plugin_type")->clearCachedDefinitions();
+    }
     ViewTestData::importTestViews(get_class($this), array('views_test_config'));
   }
 
@@ -47,6 +52,8 @@ abstract class ViewTestBase extends WebTestBase {
 
     module_enable(array('views_test_data'));
     $this->resetAll();
+    $this->rebuildContainer();
+    $this->container->get('module_handler')->reload();
 
     // Load the test dataset.
     $data_set = $this->dataSet();

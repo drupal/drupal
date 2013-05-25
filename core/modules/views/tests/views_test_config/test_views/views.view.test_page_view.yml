@@ -1,7 +1,7 @@
 base_table: views_test_data
 core: '8'
 description: ''
-status: '1'
+disabled: '0'
 display:
   default:
     display_options:
@@ -22,26 +22,9 @@ display:
     id: default
     position: '0'
   page_1:
-    display_options:
-      path: test_page_display_403
     display_plugin: page
-    display_title: Page
+    display_title: Test page view
     id: page_1
-    position: '1'
-  page_2:
-    display_options:
-      path: test_page_display_404
-    display_plugin: page
-    display_title: Page
-    id: page_2
-    position: '2'
-  page_3:
-    display_options:
-      path: test_page_display_200
-    display_plugin: page
-    display_title: Page
-    id: page_3
-    position: '3'
-label: ''
-id: test_page_display
+human_name: ''
+id: test_page_view
 tag: ''

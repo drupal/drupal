@@ -10,6 +10,7 @@ namespace Drupal\views_test_data\Plugin\views\access;
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
+use Symfony\Component\Routing\Route;
 
 /**
  * Tests a static access plugin.
@@ -33,8 +34,13 @@ class StaticTest extends AccessPluginBase {
     return !empty($this->options['access']);
   }
 
-  function get_access_callback() {
-    return array('views_test_data_test_static_access_callback', array(!empty($options['access'])));
+  /**
+   * {@inheritdoc}
+   */
+  public function alterRouteDefinition(Route $route) {
+    if (!empty($this->options['access'])) {
+      $route->setRequirement('_access', 'TRUE');
+    }
   }
 
 }

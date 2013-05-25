@@ -10,6 +10,7 @@ namespace Drupal\user\Plugin\views\access;
 use Drupal\Component\Annotation\Plugin;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
 use Drupal\Core\Annotation\Translation;
+use Symfony\Component\Routing\Route;
 
 /**
  * Access plugin that provides permission-based access control.
@@ -30,11 +31,14 @@ class Permission extends AccessPluginBase {
   protected $usesOptions = TRUE;
 
   public function access($account) {
-    return views_check_perm($this->options['perm'], $account);
+    return user_access($this->options['perm'], $account) || user_access('access all views', $account);
   }
 
-  function get_access_callback() {
-    return array('views_check_perm', array($this->options['perm']));
+  /**
+   * {@inheritdoc}
+   */
+  public function alterRouteDefinition(Route $route) {
+    $route->setRequirement('_permission', $this->options['perm']);
   }
 
   public function summaryTitle() {
