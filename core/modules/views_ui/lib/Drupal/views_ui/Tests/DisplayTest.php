@@ -127,8 +127,8 @@ class DisplayTest extends UITestBase {
 
     // Put the block display in front of the page display.
     $edit = array(
-      'page_1[weight]' => 2,
-      'block_1[weight]' => 1
+      'displays[page_1][weight]' => 2,
+      'displays[block_1][weight]' => 1
     );
     $this->drupalPost(NULL, $edit, t('Apply'));
     $this->drupalPost(NULL, array(), t('Save'));

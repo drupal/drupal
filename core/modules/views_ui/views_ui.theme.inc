@@ -219,64 +219,6 @@ function theme_views_ui_build_group_filter_form($variables) {
 }
 
 /**
- * Turn the reorder form into a proper table
- */
-function theme_views_ui_reorder_displays_form($vars) {
-  $form = $vars['form'];
-  $rows = array();
-  foreach (element_children($form) as $key) {
-    if (isset($form[$key]['#display'])) {
-      $display = &$form[$key];
-
-      $row = array();
-      $row[] = drupal_render($display['title']);
-      $form[$key]['weight']['#attributes']['class'] = array('weight');
-      $row[] = drupal_render($form[$key]['weight']);
-      if (isset($display['removed'])) {
-        $row[] = drupal_render($form[$key]['removed']) .
-          l('<span>' . t('Remove') . '</span>',
-            'javascript:void()',
-            array(
-              'attributes' => array(
-                'id' => 'display-remove-link-' . $key,
-                'class' => array('views-button-remove display-remove-link'),
-                'alt' => t('Remove this display'),
-                'title' => t('Remove this display')),
-              'html' => TRUE));
-      }
-      else {
-        $row[] = '';
-      }
-      $class = array();
-      $styles = array();
-      if (isset($form[$key]['weight']['#type'])) {
-        $class[] = 'draggable';
-      }
-      if (isset($form[$key]['deleted']['#value']) && $form[$key]['deleted']['#value']) {
-        $styles[] = 'display: none;';
-      }
-      $rows[] = array('data' => $row, 'class' => $class, 'id' => 'display-row-' . $key, 'style' => $styles);
-    }
-  }
-
-  $header = array(t('Display'), t('Weight'), t('Remove'));
-  $output = '';
-  drupal_add_tabledrag('reorder-displays', 'order', 'sibling', 'weight');
-
-  $output = drupal_render($form['override']);
-  $output .= '<div class="scroll">';
-  $output .= theme('table',
-    array('header' => $header,
-    'rows' => $rows,
-    'attributes' => array('id' => 'reorder-displays'),
-  ));
-  $output .= '</div>';
-  $output .= drupal_render_children($form);
-
-  return $output;
-}
-
-/**
  * Turn the rearrange form into a proper table
  */
 function theme_views_ui_rearrange_filter_form(&$vars) {
