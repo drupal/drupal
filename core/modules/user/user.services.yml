@@ -11,6 +11,10 @@ services:
     class: Drupal\user\Access\RoleAccessCheck
     tags:
       - { name: access_check }
+  access_check.user.login_status:
+    class: Drupal\user\Access\LoginStatusCheck
+    tags:
+      - { name: access_check }
   user.data:
     class: Drupal\user\UserData
     arguments: ['@database']
