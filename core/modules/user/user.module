@@ -1225,6 +1225,9 @@ function user_login_form($form, &$form_state) {
     '#description' => t('Enter your @s username.', array('@s' => config('system.site')->get('name'))),
     '#required' => TRUE,
     '#attributes' => array(
+      'autocorrect' => 'off',
+      'autocapitalize' => 'off',
+      'spellcheck' => 'false',
       'autofocus' => 'autofocus',
     ),
   );
