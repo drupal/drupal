@@ -92,11 +92,11 @@ class SearchCommentCountToggleTest extends SearchTestBase {
 
     // Test comment count display for nodes with comment status set to Closed
     $this->searchable_nodes['0 comments']->comment = array(
-      LANGUAGE_NOT_SPECIFIED => array(array('status' => COMMENT_CLOSED))
+      Language::LANGCODE_NOT_SPECIFIED => array(array('status' => COMMENT_CLOSED))
     );
     node_save($this->searchable_nodes['0 comments']);
     $this->searchable_nodes['1 comment']->comment = array(
-      LANGUAGE_NOT_SPECIFIED => array(array('status' => COMMENT_CLOSED))
+      Language::LANGCODE_NOT_SPECIFIED => array(array('status' => COMMENT_CLOSED))
     );
     node_save($this->searchable_nodes['1 comment']);
 
@@ -106,11 +106,11 @@ class SearchCommentCountToggleTest extends SearchTestBase {
 
     // Test comment count display for nodes with comment status set to Hidden
     $this->searchable_nodes['0 comments']->comment = array(
-      LANGUAGE_NOT_SPECIFIED => array(array('status' => COMMENT_HIDDEN))
+      Language::LANGCODE_NOT_SPECIFIED => array(array('status' => COMMENT_HIDDEN))
     );;
     node_save($this->searchable_nodes['0 comments']);
     $this->searchable_nodes['1 comment']->comment = array(
-      LANGUAGE_NOT_SPECIFIED => array(array('status' => COMMENT_HIDDEN))
+      Language::LANGCODE_NOT_SPECIFIED => array(array('status' => COMMENT_HIDDEN))
     );;
     node_save($this->searchable_nodes['1 comment']);
 

@@ -84,7 +84,7 @@ class SearchCommentTest extends SearchTestBase {
     $edit_comment['subject'] = 'Test comment subject';
     $edit_comment['comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]'] = '<h1>' . $comment_body . '</h1>';
     $full_html_format_id = 'full_html';
-    $edit_comment['comment_body[' . Language::LANGUAGE_NOT_SPECIFIED . '][0][format]'] = $full_html_format_id;
+    $edit_comment['comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][format]'] = $full_html_format_id;
     $this->drupalPost('comment/reply/node/' . $node->nid .'/comment', $edit_comment, t('Save'));
 
     // Invoke search index update.
@@ -146,7 +146,7 @@ class SearchCommentTest extends SearchTestBase {
     // Post a comment using 'Full HTML' text format.
     $edit_comment = array();
     $edit_comment['subject'] = $this->comment_subject;
-    $edit_comment['comment_body[' . Language::LANGUAGE_NOT_SPECIFIED . '][0][value]'] = '<h1>' . $comment_body . '</h1>';
+    $edit_comment['comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]'] = '<h1>' . $comment_body . '</h1>';
     $this->drupalPost('comment/reply/node/' . $this->node->nid . '/comment', $edit_comment, t('Save'));
 
     $this->drupalLogout();

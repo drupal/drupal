@@ -9,6 +9,7 @@ use Drupal\node\Plugin\Core\Entity\Node;
 use Drupal\comment\Plugin\Core\Entity\Comment;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\CoreBundle;
+use Drupal\Core\Language\Language;
 
 /**
  * Implements hook_uninstall().
@@ -727,7 +728,7 @@ function comment_update_8007(&$sandbox) {
         'bundle' => $sandbox['node_type'],
         'entity_id' => $nid,
         'revision_id' => $node->vid,
-        'langcode' => LANGUAGE_NOT_SPECIFIED,
+        'langcode' => Language::LANGCODE_NOT_SPECIFIED,
         'delta' => 0,
         'comment_node_' . $sandbox['node_type'] . '_status' => $node->comment,
       ));
@@ -736,7 +737,7 @@ function comment_update_8007(&$sandbox) {
         'bundle' => $sandbox['node_type'],
         'entity_id' => $nid,
         'revision_id' => $node->vid,
-        'langcode' => LANGUAGE_NOT_SPECIFIED,
+        'langcode' => Language::LANGCODE_NOT_SPECIFIED,
         'delta' => 0,
         'comment_node_' . $sandbox['node_type'] . '_status' => $node->comment,
       ));

@@ -19,6 +19,7 @@ use Drupal\Core\Entity\EntityNG;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Drupal\Core\Language\Language;
 
 // Load all Field module hooks for Comment.
 require __DIR__ . '/comment.field.inc';
@@ -1523,7 +1524,7 @@ function comment_preview(CommentInterface $comment) {
     // loop.
     $values = $entity->{$comment->field_name->value};
     $entity->{$comment->field_name->value} = array(
-      LANGUAGE_NOT_SPECIFIED => array(array('status' => COMMENT_HIDDEN)),
+      Language::LANGCODE_NOT_SPECIFIED => array(array('status' => COMMENT_HIDDEN)),
     );
     $build = entity_view($entity, 'full');
     $entity->{$comment->field_name->value} = $values;

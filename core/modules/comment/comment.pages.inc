@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\Plugin\Core\Entity\Node;
 use Drupal\comment\Plugin\Core\Entity\Comment;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Drupal\Core\Language\Language;
 
 /**
  * Form constructor for the comment reply form.
@@ -96,7 +97,7 @@ function comment_reply(EntityInterface $entity, $field_name, $pid = NULL) {
       // We make sure the field value isn't set so we don't end up with a redirect loop.
       $original = $entity->{$field_name};
       $entity->{$field_name} = array(
-        LANGUAGE_NOT_SPECIFIED => array(array('status' => COMMENT_HIDDEN)),
+        Language::LANGCODE_NOT_SPECIFIED => array(array('status' => COMMENT_HIDDEN)),
       );
       $build['comment_entity'] = entity_view($entity, 'full');
       $entity->{$field_name} = $original;

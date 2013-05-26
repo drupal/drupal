@@ -9,6 +9,7 @@ namespace Drupal\comment\Tests;
 
 use Drupal\comment\Plugin\Core\Entity\Comment;
 use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Language\Language;
 
 /**
  * Tests basic comment functionality against a user entity.
@@ -100,7 +101,7 @@ class CommentUserTest extends WebTestBase {
    *   array of values to set contact info.
    */
   function postComment($account, $comment, $subject = '', $contact = NULL) {
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit = array();
     $edit['comment_body[' . $langcode . '][0][value]'] = $comment;
 
@@ -305,7 +306,7 @@ class CommentUserTest extends WebTestBase {
     $this->drupalGet('comment/reply/user/' . $this->web_user->uid . '/comment');
     $this->assertText('You are not authorized to post comments', 'Error attempting to post comment.');
     $this->assertNoFieldByName('subject', '', 'Subject field not found.');
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $this->assertNoFieldByName("comment_body[$langcode][0][value]", '', 'Comment field not found.');
 
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(

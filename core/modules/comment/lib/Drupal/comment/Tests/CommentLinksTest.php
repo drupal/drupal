@@ -169,8 +169,8 @@ class CommentLinksTest extends CommentTestBase {
     // Change comment settings.
     $this->setCommentSettings('form_location', $info['form'], 'Set comment form location');
     $this->setCommentAnonymous($info['contact']);
-    if ($this->node->comment[LANGUAGE_NOT_SPECIFIED][0]['status'] != $info['comments']) {
-      $this->node->comment[LANGUAGE_NOT_SPECIFIED][0]['status'] = $info['comments'];
+    if ($this->node->comment[Language::LANGCODE_NOT_SPECIFIED][0]['status'] != $info['comments']) {
+      $this->node->comment[Language::LANGCODE_NOT_SPECIFIED][0]['status'] = $info['comments'];
       node_save($this->node);
     }
 
