@@ -4,16 +4,16 @@
  */
 
 /* Tab appearance. */
-.js .toolbar .bar .tour-toolbar-tab.tab {
+.js .toolbar .tour-toolbar-tab.tab {
   float: right; /* LTR */
 }
-.js .toolbar .bar .tour-toolbar-tab button {
+.js .toolbar .tour-toolbar-tab button {
   padding-bottom: 1em;
   padding-top: 1em;
   color: #fff;
   font-weight: bold;
 }
-.js .toolbar .bar .tour-toolbar-tab button.active {
+.js .toolbar .tour-toolbar-tab button.active {
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
   background-image: linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
 }
@@ -34,6 +34,6 @@
 }
 
 /* @todo Remove once http://drupal.org/node/1916690 is resolved. */
-.js .toolbar .bar .tour-toolbar-tab.tab.element-hidden {
+.js .toolbar .tour-toolbar-tab.tab.element-hidden {
   display: none;
 }

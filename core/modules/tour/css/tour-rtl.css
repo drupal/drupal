@@ -3,7 +3,7 @@
  * RTL styling for tour module.
  */
 
-.js .toolbar .bar .tour-toolbar-tab.tab {
+.js .toolbar .tour-toolbar-tab.tab {
   float: left;
 }
 
