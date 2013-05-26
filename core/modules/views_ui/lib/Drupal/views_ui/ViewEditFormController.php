@@ -396,7 +396,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
         if (!$is_enabled) {
           $build['top']['actions']['enable'] = array(
             '#type' => 'submit',
-            '#value' => t('enable @display_title', array('@display_title' => $display_title)),
+            '#value' => t('Enable @display_title', array('@display_title' => $display_title)),
             '#limit_validation_errors' => array(),
             '#submit' => array(array($this, 'submitDisplayEnable'), array($this, 'submitDelayDestination')),
             '#prefix' => '<li class="enable">',
@@ -410,7 +410,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
           if ($path && (strpos($path, '%') === FALSE)) {
             $build['top']['actions']['path'] = array(
               '#type' => 'link',
-              '#title' => t('view @display', array('@display' => $display['display_title'])),
+              '#title' => t('View @display', array('@display' => $display['display_title'])),
               '#options' => array('alt' => array(t("Go to the real page for this display"))),
               '#href' => $path,
               '#prefix' => '<li class="view">',
@@ -421,7 +421,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
         if (!$is_default) {
           $build['top']['actions']['duplicate'] = array(
             '#type' => 'submit',
-            '#value' => t('clone @display_title', array('@display_title' => $display_title)),
+            '#value' => t('Clone @display_title', array('@display_title' => $display_title)),
             '#limit_validation_errors' => array(),
             '#submit' => array(array($this, 'submitDisplayDuplicate'), array($this, 'submitDelayDestination')),
             '#prefix' => '<li class="duplicate">',
@@ -431,7 +431,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
         // Always allow a display to be deleted.
         $build['top']['actions']['delete'] = array(
           '#type' => 'submit',
-          '#value' => t('delete @display_title', array('@display_title' => $display_title)),
+          '#value' => t('Delete @display_title', array('@display_title' => $display_title)),
           '#limit_validation_errors' => array(),
           '#submit' => array(array($this, 'submitDisplayDelete'), array($this, 'submitDelayDestination')),
           '#prefix' => '<li class="delete">',
@@ -445,7 +445,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
 
           $build['top']['actions']['clone_as'][$type] = array(
             '#type' => 'submit',
-            '#value' => t('clone as @type', array('@type' => $label)),
+            '#value' => t('Clone as @type', array('@type' => $label)),
             '#limit_validation_errors' => array(),
             '#submit' => array(array($this, 'submitCloneDisplayAsType'), array($this, 'submitDelayDestination')),
             '#prefix' => '<li class="duplicate">',
@@ -456,7 +456,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
       else {
         $build['top']['actions']['undo_delete'] = array(
           '#type' => 'submit',
-          '#value' => t('undo delete of @display_title', array('@display_title' => $display_title)),
+          '#value' => t('Undo delete of @display_title', array('@display_title' => $display_title)),
           '#limit_validation_errors' => array(),
           '#submit' => array(array($this, 'submitDisplayUndoDelete'), array($this, 'submitDelayDestination')),
           '#prefix' => '<li class="undo-delete">',
@@ -466,7 +466,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
       if ($is_enabled) {
         $build['top']['actions']['disable'] = array(
           '#type' => 'submit',
-          '#value' => t('disable @display_title', array('@display_title' => $display_title)),
+          '#value' => t('Disable @display_title', array('@display_title' => $display_title)),
           '#limit_validation_errors' => array(),
           '#submit' => array(array($this, 'submitDisplayDisable'), array($this, 'submitDelayDestination')),
           '#prefix' => '<li class="disable">',
@@ -674,21 +674,21 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
       ),
       '#links' => array(
         'edit-details' => array(
-          'title' => t('edit view name/description'),
+          'title' => t('Edit view name/description'),
           'href' => "admin/structure/views/nojs/edit-details/{$view->id()}/$display_id",
           'attributes' => array('class' => array('views-ajax-link')),
         ),
         'analyze' => array(
-          'title' => t('analyze view'),
+          'title' => t('Analyze view'),
           'href' => "admin/structure/views/nojs/analyze/{$view->id()}/$display_id",
           'attributes' => array('class' => array('views-ajax-link')),
         ),
         'clone' => array(
-          'title' => t('clone view'),
+          'title' => t('Clone view'),
           'href' => "admin/structure/views/view/{$view->id()}/clone",
         ),
         'reorder' => array(
-          'title' => t('reorder displays'),
+          'title' => t('Reorder displays'),
           'href' => "admin/structure/views/nojs/reorder-displays/{$view->id()}/$display_id",
           'attributes' => array('class' => array('views-ajax-link')),
         ),
@@ -701,14 +701,14 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
     if (isset($view->type) && $view->type != t('Default')) {
       if ($view->type == t('Overridden')) {
         $element['extra_actions']['#links']['revert'] = array(
-          'title' => t('revert view'),
+          'title' => t('Revert view'),
           'href' => "admin/structure/views/view/{$view->id()}/revert",
           'query' => array('destination' => "admin/structure/views/view/{$view->id()}"),
         );
       }
       else {
         $element['extra_actions']['#links']['delete'] = array(
-          'title' => t('delete view'),
+          'title' => t('Delete view'),
           'href' => "admin/structure/views/view/{$view->id()}/delete",
         );
       }
