@@ -633,10 +633,10 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       // Ignore slave server temporarily.
       db_ignore_slave();
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $transaction->rollback();
       watchdog_exception($this->entityType, $e);
-      throw new EntityStorageException($e->getMessage, $e->getCode, $e);
+      throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
     }
   }
 }

@@ -379,3 +379,21 @@ function entity_test_entity_form_display_alter(EntityFormDisplay $form_display, 
     }
   }
 }
+
+/**
+ * Implements hook_entity_presave()
+ */
+function entity_test_entity_presave(EntityInterface $entity) {
+  if (isset($GLOBALS['entity_test_throw_exception'])) {
+    throw new Exception('Entity presave exception', 1);
+  }
+}
+
+/**
+ * Implements hook_entity_predelete()
+ */
+function entity_test_entity_predelete(EntityInterface $entity) {
+  if (isset($GLOBALS['entity_test_throw_exception'])) {
+    throw new Exception('Entity predelete exception', 2);
+  }
+}
