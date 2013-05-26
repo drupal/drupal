@@ -4,3 +4,25 @@ contact_category_delete:
     _form: '\Drupal\contact\Form\DeleteForm'
   requirements:
     _permission: 'administer contact forms'
+
+contact_category_list:
+  pattern: '/admin/structure/contact'
+  defaults:
+    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
+    entity_type: 'contact_category'
+  requirements:
+    _permission: 'administer contact forms'
+
+contact_category_add:
+  pattern: '/admin/structure/contact/add'
+  defaults:
+    _entity_form: contact_category.add
+  requirements:
+    _permission: 'administer contact forms'
+
+contact_category_edit:
+  pattern: '/admin/structure/contact/manage/{contact_category}'
+  defaults:
+    _entity_form: contact_category.edit
+  requirements:
+    _permission: 'administer contact forms'

@@ -276,7 +276,7 @@ class ContactSitewideTest extends WebTestBase {
     $edit['recipients'] = $recipients;
     $edit['reply'] = $reply;
     $edit['selected'] = ($selected ? TRUE : FALSE);
-    $this->drupalPost("admin/structure/contact/manage/$id/edit", $edit, t('Save'));
+    $this->drupalPost("admin/structure/contact/manage/$id", $edit, t('Save'));
   }
 
   /**

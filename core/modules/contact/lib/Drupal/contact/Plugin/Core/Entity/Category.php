@@ -23,7 +23,8 @@ use Drupal\contact\CategoryInterface;
  *     "storage" = "Drupal\contact\CategoryStorageController",
  *     "list" = "Drupal\contact\CategoryListController",
  *     "form" = {
- *       "default" = "Drupal\contact\CategoryFormController"
+ *       "add" = "Drupal\contact\CategoryFormController",
+ *       "edit" = "Drupal\contact\CategoryFormController"
  *     }
  *   },
  *   uri_callback = "contact_category_uri",
