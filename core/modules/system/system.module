@@ -703,20 +703,6 @@ function system_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'file' => 'system.admin.inc',
   );
-  $items['admin/appearance/enable'] = array(
-    'title' => 'Enable theme',
-    'page callback' => 'system_theme_enable',
-    'access arguments' => array('administer themes'),
-    'type' => MENU_CALLBACK,
-    'file' => 'system.admin.inc',
-  );
-  $items['admin/appearance/disable'] = array(
-    'title' => 'Disable theme',
-    'page callback' => 'system_theme_disable',
-    'access arguments' => array('administer themes'),
-    'type' => MENU_CALLBACK,
-    'file' => 'system.admin.inc',
-  );
   $items['admin/appearance/default'] = array(
     'title' => 'Set default theme',
     'page callback' => 'system_theme_default',
