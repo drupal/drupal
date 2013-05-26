@@ -286,56 +286,6 @@ function system_themes_admin_form_submit($form, &$form_state) {
 }
 
 /**
- * Menu callback; Enables a theme.
- */
-function system_theme_enable() {
-  if (isset($_REQUEST['theme']) && isset($_REQUEST['token']) && drupal_valid_token($_REQUEST['token'], 'system-theme-operation-link')) {
-    $theme = $_REQUEST['theme'];
-    // Get current list of themes.
-    $themes = list_themes();
-
-    // Check if the specified theme is one recognized by the system.
-    if (!empty($themes[$theme])) {
-      theme_enable(array($theme));
-      drupal_set_message(t('The %theme theme has been enabled.', array('%theme' => $themes[$theme]->info['name'])));
-    }
-    else {
-      drupal_set_message(t('The %theme theme was not found.', array('%theme' => $theme)), 'error');
-    }
-    drupal_goto('admin/appearance');
-  }
-  throw new AccessDeniedHttpException();
-}
-
-/**
- * Menu callback; Disables a theme.
- */
-function system_theme_disable() {
-  if (isset($_REQUEST['theme']) && isset($_REQUEST['token']) && drupal_valid_token($_REQUEST['token'], 'system-theme-operation-link')) {
-    $theme = $_REQUEST['theme'];
-    // Get current list of themes.
-    $themes = list_themes();
-
-    // Check if the specified theme is one recognized by the system.
-    if (!empty($themes[$theme])) {
-      // Do not disable the default or admin theme.
-      if ($theme === config('system.theme')->get('default') || $theme === config('system.theme')->get('admin')) {
-        drupal_set_message(t('%theme is the default theme and cannot be disabled.', array('%theme' => $themes[$theme]->info['name'])), 'error');
-      }
-      else {
-        theme_disable(array($theme));
-        drupal_set_message(t('The %theme theme has been disabled.', array('%theme' => $themes[$theme]->info['name'])));
-      }
-    }
-    else {
-      drupal_set_message(t('The %theme theme was not found.', array('%theme' => $theme)), 'error');
-    }
-    drupal_goto('admin/appearance');
-  }
-  throw new AccessDeniedHttpException();
-}
-
-/**
  * Menu callback; Set the default theme.
  */
 function system_theme_default() {

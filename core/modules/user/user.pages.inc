@@ -164,7 +164,7 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
 }
 
 /**
- * Menu callback; logs the current user out, and redirects to the home page.
+ * Logs the current user out, and redirects to the home page.
  */
 function user_logout() {
   global $user;

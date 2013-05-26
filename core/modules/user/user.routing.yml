@@ -5,17 +5,24 @@ user_register:
   requirements:
     _access_user_register: 'TRUE'
 
+user_logout:
+  pattern: '/user/logout'
+  defaults:
+    _controller: '\Drupal\user\Controller\UserController::logout'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+
 user_autocomplete:
   pattern: '/user/autocomplete'
   defaults:
-    _controller: '\Drupal\user\UserAutocompleteController::autocompleteUser'
+    _controller: '\Drupal\user\Controller\UserAutocompleteController::autocompleteUser'
   requirements:
     _permission: 'access user profiles'
 
 user_autocomplete_anonymous:
   pattern: '/user/autocomplete/anonymous'
   defaults:
-    _controller: '\Drupal\user\UserAutocompleteController::autocompleteUserAnonymous'
+    _controller: '\Drupal\user\Controller\UserAutocompleteController::autocompleteUserAnonymous'
   requirements:
     _permission: 'access user profiles'
 

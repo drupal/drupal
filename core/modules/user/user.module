@@ -906,11 +906,9 @@ function user_menu() {
 
   $items['user/logout'] = array(
     'title' => 'Log out',
-    'access callback' => 'user_is_logged_in',
-    'page callback' => 'user_logout',
+    'route_name' => 'user_logout',
     'weight' => 10,
     'menu_name' => 'account',
-    'file' => 'user.pages.inc',
   );
 
   // User listing pages.

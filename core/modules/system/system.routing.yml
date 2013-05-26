@@ -87,3 +87,17 @@ date_format_localize_reset:
     _form: '\Drupal\system\Form\DateFormatLocalizeResetForm'
   requirements:
     _permission: 'administer site configuration'
+
+system_theme_disable:
+  pattern: '/admin/appearance/disable'
+  defaults:
+    _controller: 'Drupal\system\Controller\ThemeController::disable'
+  requirements:
+    _permission: 'administer themes'
+
+system_theme_enable:
+  pattern: '/admin/appearance/enable'
+  defaults:
+    _controller: 'Drupal\system\Controller\ThemeController::enable'
+  requirements:
+    _permission: 'administer themes'

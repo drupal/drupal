@@ -2,15 +2,16 @@
 
 /**
  * @file
- * Contains \Drupal\user\UserAutocompleteController.
+ * Contains \Drupal\user\Controller\UserAutocompleteController.
  */
-namespace Drupal\user;
+namespace Drupal\user\Controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Drupal\Core\ControllerInterface;
+use Drupal\user\UserAutocomplete;
 
 /**
  * Controller routines for taxonomy user routes.
@@ -79,4 +80,3 @@ class UserAutocompleteController implements ControllerInterface {
   }
 
 }
-
