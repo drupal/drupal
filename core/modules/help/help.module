@@ -21,11 +21,8 @@ function help_menu() {
   foreach ($modules as $module) {
     $items['admin/help/' . $module] = array(
       'title' => $module,
-      'page callback' => 'help_page',
-      'page arguments' => array(2),
-      'access arguments' => array('access administration pages'),
+      'route_name' => 'help_page',
       'type' => MENU_VISIBLE_IN_BREADCRUMB,
-      'file' => 'help.admin.inc',
     );
   }
 

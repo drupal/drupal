@@ -4,3 +4,9 @@ help_main:
     _content: '\Drupal\help\Controller\HelpController::helpMain'
   requirements:
     _permission: 'access administration pages'
+help_page:
+  pattern: 'admin/help/{name}'
+  defaults:
+    _content: '\Drupal\help\Controller\HelpController::helpPage'
+  requirements:
+    _permission: 'access administration pages'
