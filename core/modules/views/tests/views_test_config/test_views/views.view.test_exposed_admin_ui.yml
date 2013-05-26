@@ -21,7 +21,7 @@ display:
             use_operator: '1'
           field: type
           id: type
-          table: node
+          table: node_field_data
           plugin_id: node_type
         body_value:
           id: body_value
@@ -69,7 +69,7 @@ display:
         created:
           field: created
           id: created
-          table: node
+          table: node_field_data
           plugin_id: date
       style:
         type: default

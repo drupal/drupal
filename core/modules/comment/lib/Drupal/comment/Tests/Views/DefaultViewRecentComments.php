@@ -84,11 +84,19 @@ class DefaultViewRecentComments extends ViewTestBase {
       $comment->comment_body->value = 'Test body ' . $i;
       $comment->comment_body->format = 'full_html';
 
+      // Ensure comments are sorted in ascending order.
+      $time = REQUEST_TIME + ($this->masterDisplayResults - $i);
+      $comment->created->value = $time;
+      $comment->changed->value = $time;
+
       comment_save($comment);
     }
 
     // Store all the nodes just created to access their properties on the tests.
     $this->commentsCreated = entity_load_multiple('comment');
+
+    // Sort created comments in ascending order.
+    ksort($this->commentsCreated, SORT_NUMERIC);
   }
 
   /**

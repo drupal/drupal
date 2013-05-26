@@ -55,7 +55,7 @@ display:
       sorts:
         sticky:
           id: sticky
-          table: node
+          table: node_field_data
           field: sticky
           order: DESC
           plugin_id: standard
@@ -67,7 +67,7 @@ display:
             label: ''
         created:
           id: created
-          table: node
+          table: node_field_data
           field: created
           order: DESC
           plugin_id: date
@@ -137,7 +137,7 @@ display:
       filters:
         status_extra:
           id: status_extra
-          table: node
+          table: node_field_data
           field: status_extra
           group: '0'
           expose:

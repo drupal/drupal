@@ -35,21 +35,21 @@ display:
           field: created_day
           id: created_day
           style_plugin: default_summary
-          table: node
+          table: node_field_data
           plugin_id: date_day
         created_fulldate:
           default_argument_type: fixed
           field: created_fulldate
           id: created_fulldate
           style_plugin: default_summary
-          table: node
+          table: node_field_data
           plugin_id: date_fulldate
         created_month:
           default_argument_type: fixed
           field: created_month
           id: created_month
           style_plugin: default_summary
-          table: node
+          table: node_field_data
           plugin_id: date_month
       cache:
         type: none
@@ -72,7 +72,7 @@ display:
         created:
           field: created
           id: created
-          table: node
+          table: node_field_data
           plugin_id: date
         nid:
           field: nid
@@ -93,12 +93,12 @@ display:
         status:
           field: status
           id: status
-          table: node
+          table: node_field_data
           plugin_id: boolean
         title:
           field: title
           id: title
-          table: node
+          table: node_field_data
           plugin_id: string
       footer:
         area:

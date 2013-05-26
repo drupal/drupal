@@ -743,7 +743,7 @@ function forum_forum_load($tid = NULL) {
   $_forums = taxonomy_get_tree($vid, $tid, NULL, TRUE);
 
   if (count($_forums)) {
-    $query = db_select('node', 'n');
+    $query = db_select('node_field_data', 'n');
     $query->join('node_comment_statistics', 'ncs', 'n.nid = ncs.nid');
     $query->join('forum', 'f', 'n.vid = f.vid');
     $query->addExpression('COUNT(n.nid)', 'topic_count');
@@ -751,6 +751,9 @@ function forum_forum_load($tid = NULL) {
     $counts = $query
       ->fields('f', array('tid'))
       ->condition('n.status', 1)
+      // @todo This should be actually filtering on the desired node status
+      //   field language and just fall back to the default language.
+      ->condition('n.default_langcode', 1)
       ->groupBy('tid')
       ->addTag('node_access')
       ->execute()
@@ -774,7 +777,7 @@ function forum_forum_load($tid = NULL) {
     }
 
     // Query "Last Post" information for this forum.
-    $query = db_select('node', 'n');
+    $query = db_select('node_field_data', 'n');
     $query->join('forum', 'f', 'n.vid = f.vid AND f.tid = :tid', array(':tid' => $forum->id()));
     $query->join('node_comment_statistics', 'ncs', 'n.nid = ncs.nid');
     $query->join('users', 'u', 'ncs.last_comment_uid = u.uid');
@@ -783,6 +786,9 @@ function forum_forum_load($tid = NULL) {
     $topic = $query
       ->fields('ncs', array('last_comment_timestamp', 'last_comment_uid'))
       ->condition('n.status', 1)
+      // @todo This should be actually filtering on the desired node status
+      //   field language and just fall back to the default language.
+      ->condition('n.default_langcode', 1)
       ->orderBy('last_comment_timestamp', 'DESC')
       ->range(0, 1)
       ->addTag('node_access')
@@ -821,12 +827,15 @@ function forum_forum_load($tid = NULL) {
  *   The number of new posts in the forum that have not been read by the user.
  */
 function _forum_topics_unread($term, $uid) {
-  $query = db_select('node', 'n');
+  $query = db_select('node_field_data', 'n');
   $query->join('forum', 'f', 'n.vid = f.vid AND f.tid = :tid', array(':tid' => $term));
   $query->leftJoin('history', 'h', 'n.nid = h.nid AND h.uid = :uid', array(':uid' => $uid));
   $query->addExpression('COUNT(n.nid)', 'count');
   return $query
     ->condition('status', 1)
+    // @todo This should be actually filtering on the desired node status field
+    //   language and just fall back to the default language.
+    ->condition('n.default_langcode', 1)
     ->condition('n.created', HISTORY_READ_LIMIT, '>')
     ->isNull('h.nid')
     ->addTag('node_access')
@@ -894,7 +903,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   if ($nids) {
     $nodes = node_load_multiple($nids);
 
-    $query = db_select('node', 'n')
+    $query = db_select('node_field_data', 'n')
       ->extend('Drupal\Core\Database\Query\TableSortExtender');
     $query->fields('n', array('nid'));
 
@@ -914,7 +923,10 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
     $query
       ->orderBy('f.sticky', 'DESC')
       ->orderByHeader($forum_topic_list_header)
-      ->condition('n.nid', $nids);
+      ->condition('n.nid', $nids)
+      // @todo This should be actually filtering on the desired node language
+      //   and just fall back to the default language.
+      ->condition('n.default_langcode', 1);
 
     $result = array();
     foreach ($query->execute() as $row) {
@@ -1320,7 +1332,9 @@ function _forum_update_forum_index($nid) {
   }
   else {
     // Comments do not exist.
-    $node = db_query('SELECT uid, created FROM {node} WHERE nid = :nid', array(':nid' => $nid))->fetchObject();
+    // @todo This should be actually filtering on the desired node language and
+    //   just fall back to the default language.
+    $node = db_query('SELECT uid, created FROM {node_field_data} WHERE nid = :nid AND default_langcode = 1', array(':nid' => $nid))->fetchObject();
     db_update('forum_index')
       ->fields( array(
         'comment_count' => 0,

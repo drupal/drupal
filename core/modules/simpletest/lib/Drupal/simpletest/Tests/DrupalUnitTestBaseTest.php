@@ -110,7 +110,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     // Install Node module.
     $this->enableModules(array('field_sql_storage', 'field', 'node'));
 
-    $this->installSchema('node', array('node_type', 'node'));
+    $this->installSchema('node', array('node_type', 'node', 'node_field_data'));
     // Perform an entity query against node.
     $query = \Drupal::entityQuery('node');
     // Disable node access checks, since User module is not enabled.

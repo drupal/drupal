@@ -58,7 +58,7 @@ class Comment extends WizardPluginBase {
     ),
     'status_node' => array(
       'value' => TRUE,
-      'table' => 'node',
+      'table' => 'node_field_data',
       'field' => 'status',
       'relationship' => 'nid'
     )

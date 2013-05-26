@@ -27,7 +27,7 @@ class RevisionLink extends Link {
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
 
-    $this->additional_fields['node_vid'] = array('table' => 'node_revision', 'field' => 'vid');
+    $this->additional_fields['node_vid'] = array('table' => 'node_field_revision', 'field' => 'vid');
   }
 
   public function access() {
@@ -42,7 +42,7 @@ class RevisionLink extends Link {
 
     // Current revision uses the node view path.
     $path = 'node/' . $node->nid;
-    if ($node->vid != $vid) {
+    if (!$node->isDefaultRevision()) {
       $path .= "/revisions/$vid/view";
     }
 
@@ -67,7 +67,7 @@ class RevisionLink extends Link {
    */
   function get_revision_entity($values, $op) {
     $vid = $this->get_value($values, 'node_vid');
-    $node = $this->get_value($values);
+    $node = $this->get_entity($values);
     // Unpublished nodes ignore access control.
     $node->status = 1;
     // Ensure user has access to perform the operation on this node.

@@ -44,7 +44,7 @@ class NodeAdminTest extends NodeTestBase {
     }
 
     // Test that the default sort by node.changed DESC actually fires properly.
-    $nodes_query = db_select('node', 'n')
+    $nodes_query = db_select('node_field_data', 'n')
       ->fields('n', array('nid'))
       ->orderBy('changed', 'DESC')
       ->execute()
@@ -59,7 +59,7 @@ class NodeAdminTest extends NodeTestBase {
 
     // Compare the rendered HTML node list to a query for the nodes ordered by
     // title to account for possible database-dependent sort order.
-    $nodes_query = db_select('node', 'n')
+    $nodes_query = db_select('node_field_data', 'n')
       ->fields('n', array('nid'))
       ->orderBy('title')
       ->execute()

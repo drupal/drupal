@@ -74,13 +74,13 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $node3 = $this->drupalCreateNode($default_settings);
 
     // Change the changed time for node so that we can test ordering.
-    db_update('node')
+    db_update('node_field_data')
       ->fields(array(
         'changed' => $node1->changed + 100,
       ))
       ->condition('nid', $node2->nid)
       ->execute();
-    db_update('node')
+    db_update('node_field_data')
       ->fields(array(
         'changed' => $node1->changed + 200,
       ))

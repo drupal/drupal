@@ -30,7 +30,8 @@ use Drupal\node\NodeInterface;
  *     "translation" = "Drupal\node\NodeTranslationController"
  *   },
  *   base_table = "node",
- *   revision_table = "node_revision",
+ *   data_table = "node_field_data",
+ *   revision_table = "node_field_revision",
  *   uri_callback = "node_uri",
  *   fieldable = TRUE,
  *   translatable = TRUE,

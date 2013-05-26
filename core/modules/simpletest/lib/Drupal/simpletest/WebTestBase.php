@@ -275,11 +275,6 @@ abstract class WebTestBase extends TestBase {
     }
     $node->save();
 
-    // Small hack to link revisions to our test user.
-    db_update('node_revision')
-      ->fields(array('uid' => $node->uid))
-      ->condition('vid', $node->vid)
-      ->execute();
     return $node;
   }
 

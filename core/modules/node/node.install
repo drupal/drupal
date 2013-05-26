@@ -29,7 +29,7 @@ function node_schema() {
       // Defaults to NULL in order to avoid a brief period of potential
       // deadlocks on the index.
       'vid' => array(
-        'description' => 'The current {node_revision}.vid version identifier.',
+        'description' => 'The current {node_field_revision}.vid version identifier.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => FALSE,
@@ -49,6 +49,76 @@ function node_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
+      // @todo Remove the following columns when removing the legacy Content
+      //   Translation module. See http://drupal.org/node/1952062.
+      'tnid' => array(
+        'description' => 'The translation set ID for this node, which equals the node ID of the source post in each set.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'translate' => array(
+        'description' => 'A boolean indicating whether this translation page needs to be updated.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'indexes' => array(
+      'node_type' => array(array('type', 4)),
+      'tnid' => array('tnid'),
+      'translate' => array('translate'),
+    ),
+    'unique keys' => array(
+      'vid' => array('vid'),
+      'uuid' => array('uuid'),
+    ),
+    'foreign keys' => array(
+      'node_revision' => array(
+        'table' => 'node_field_revision',
+        'columns' => array('vid' => 'vid'),
+      ),
+    ),
+    'primary key' => array('nid'),
+  );
+
+  // Node field storage.
+  $schema['node_field_data'] = array(
+    'description' => 'Base table for node properties.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'The primary identifier for a node.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'vid' => array(
+        'description' => 'The current {node_field_revision}.vid version identifier.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'The {node_type}.type of this node.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'langcode' => array(
+        'description' => 'The {language}.langcode of these node property values.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'default_langcode' => array(
+        'description' => 'Boolean indicating whether the property values are in the {language}.langcode of this node.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
       'title' => array(
         'description' => 'The title of this node, always treated as non-markup plain text.',
         'type' => 'varchar',
@@ -64,7 +134,131 @@ function node_schema() {
         'default' => 0,
       ),
       'status' => array(
-        'description' => 'Boolean indicating whether the node is published (visible to non-administrators).',
+        'description' => 'Boolean indicating whether the node translation is published (visible to non-administrators).',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the node translation was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'changed' => array(
+        'description' => 'The Unix timestamp when the node translation was most recently saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'comment' => array(
+        'description' => 'Whether comments are allowed on this node translation: 0 = no, 1 = closed (read only), 2 = open (read/write).',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'promote' => array(
+        'description' => 'Boolean indicating whether the node translation should be displayed on the front page.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'sticky' => array(
+        'description' => 'Boolean indicating whether the node translation should be displayed at the top of lists in which it appears.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'indexes' => array(
+      'node_changed' => array('changed'),
+      'node_created' => array('created'),
+      'node_default_langcode' => array('default_langcode'),
+      'node_langcode' => array('langcode'),
+      'node_frontpage' => array('promote', 'status', 'sticky', 'created'),
+      'node_status_type' => array('status', 'type', 'nid'),
+      'node_title_type' => array('title', array('type', 4)),
+      'node_type' => array(array('type', 4)),
+      'nid' => array('nid'),
+      'vid' => array('vid'),
+      'uid' => array('uid'),
+    ),
+    'foreign keys' => array(
+      'node_base' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+      'node_author' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
+    'primary key' => array('nid', 'vid', 'langcode'),
+  );
+
+  $schema['node_field_revision'] = array(
+    'description' => 'Stores information about each saved version of a {node}.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'The {node} this version belongs to.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'vid' => array(
+        'description' => 'The primary identifier for this version.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'langcode' => array(
+        'description' => 'The {language}.langcode of this version.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'default_langcode' => array(
+        'description' => 'Boolean indicating whether the property values of this version are in the {language}.langcode of this node.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'log' => array(
+        'description' => 'The log entry explaining the changes in this version.',
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+      ),
+      'revision_timestamp' => array(
+        'description' => 'The Unix timestamp when the version was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'revision_uid' => array(
+        'description' => 'The {users}.uid that created this version.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'title' => array(
+        'description' => 'The title of this version, always treated as non-markup plain text.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'uid' => array(
+        'description' => 'The {users}.uid that created this node.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'status' => array(
+        'description' => 'Boolean indicating whether the node (at the time of this revision) is published (visible to non-administrators).',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 1,
@@ -76,69 +270,49 @@ function node_schema() {
         'default' => 0,
       ),
       'changed' => array(
-        'description' => 'The Unix timestamp when the node was most recently saved.',
+        'description' => 'The Unix timestamp when the version was most recently saved.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
       ),
       'comment' => array(
-        'description' => 'Whether comments are allowed on this node: 0 = no, 1 = closed (read only), 2 = open (read/write).',
+        'description' => 'Whether comments are allowed on this node (at the time of this revision): 0 = no, 1 = closed (read only), 2 = open (read/write).',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
       ),
       'promote' => array(
-        'description' => 'Boolean indicating whether the node should be displayed on the front page.',
+        'description' => 'Boolean indicating whether the node (at the time of this revision) should be displayed on the front page.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
       ),
       'sticky' => array(
-        'description' => 'Boolean indicating whether the node should be displayed at the top of lists in which it appears.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'tnid' => array(
-        'description' => 'The translation set id for this node, which equals the node id of the source post in each set.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'translate' => array(
-        'description' => 'A boolean indicating whether this translation page needs to be updated.',
+        'description' => 'Boolean indicating whether the node (at the time of this revision) should be displayed at the top of lists in which it appears.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
       ),
     ),
     'indexes' => array(
-      'node_changed'        => array('changed'),
-      'node_created'        => array('created'),
-      'node_frontpage'      => array('promote', 'status', 'sticky', 'created'),
-      'node_status_type'    => array('status', 'type', 'nid'),
-      'node_title_type'     => array('title', array('type', 4)),
-      'node_type'           => array(array('type', 4)),
-      'uid'                 => array('uid'),
-      'tnid'                => array('tnid'),
-      'translate'           => array('translate'),
-    ),
-    'unique keys' => array(
+      'nid' => array('nid'),
+      'uid' => array('uid'),
+      'revision_uid' => array('revision_uid'),
       'vid' => array('vid'),
-      'uuid' => array('uuid'),
+      'node_default_langcode' => array('default_langcode'),
+      'node_langcode' => array('langcode'),
     ),
     'foreign keys' => array(
-      'node_revision' => array(
-        'table' => 'node_revision',
-        'columns' => array('vid' => 'vid'),
+      'versioned_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
       ),
-      'node_author' => array(
+      'version_author' => array(
         'table' => 'users',
         'columns' => array('uid' => 'uid'),
       ),
     ),
-    'primary key' => array('nid'),
+    'primary key' => array('nid', 'vid', 'langcode'),
   );
 
   $schema['node_access'] = array(
@@ -209,90 +383,6 @@ function node_schema() {
       'affected_node' => array(
         'table' => 'node',
         'columns' => array('nid' => 'nid'),
-      ),
-     ),
-  );
-
-  $schema['node_revision'] = array(
-    'description' => 'Stores information about each saved version of a {node}.',
-    'fields' => array(
-      'nid' => array(
-        'description' => 'The {node} this version belongs to.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'vid' => array(
-        'description' => 'The primary identifier for this version.',
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'uid' => array(
-        'description' => 'The {users}.uid that created this version.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'title' => array(
-        'description' => 'The title of this version.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'log' => array(
-        'description' => 'The log entry explaining the changes in this version.',
-        'type' => 'text',
-        'not null' => TRUE,
-        'size' => 'big',
-      ),
-      'timestamp' => array(
-        'description' => 'A Unix timestamp indicating when this version was created.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'status' => array(
-        'description' => 'Boolean indicating whether the node (at the time of this revision) is published (visible to non-administrators).',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 1,
-      ),
-      'comment' => array(
-        'description' => 'Whether comments are allowed on this node (at the time of this revision): 0 = no, 1 = closed (read only), 2 = open (read/write).',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'promote' => array(
-        'description' => 'Boolean indicating whether the node (at the time of this revision) should be displayed on the front page.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'sticky' => array(
-        'description' => 'Boolean indicating whether the node (at the time of this revision) should be displayed at the top of lists in which it appears.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'indexes' => array(
-      'nid' => array('nid'),
-      'uid' => array('uid'),
-    ),
-    'primary key' => array('vid'),
-    'foreign keys' => array(
-      'versioned_node' => array(
-        'table' => 'node',
-        'columns' => array('nid' => 'nid'),
-      ),
-      'version_author' => array(
-        'table' => 'users',
-        'columns' => array('uid' => 'uid'),
       ),
     ),
   );
@@ -377,7 +467,7 @@ function node_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'size' => 'tiny'
+        'size' => 'tiny',
       ),
       'orig_type' => array(
         'description' => 'The original machine-readable name of this node type. This may be different from the current type name if the locked field is 0.',
@@ -751,6 +841,309 @@ function node_update_8015() {
 
   db_drop_primary_key('node_access');
   db_add_primary_key('node_access', array('nid', 'gid', 'realm', 'langcode'));
+}
+
+/**
+ * Upgrade node schema to the standard entity SQL schema: schema definition.
+ */
+function _node_update_8016_schema() {
+  $schema = array();
+
+  $schema['node_field_data'] = array(
+    'description' => 'Base table for node properties.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'The primary identifier for a node.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'vid' => array(
+        'description' => 'The current {node_field_revision}.vid version identifier.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'The {node_type}.type of this node.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'langcode' => array(
+        'description' => 'The {language}.langcode of these node property values.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'default_langcode' => array(
+        'description' => 'Boolean indicating whether the property values are in the {language}.langcode of this node.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'title' => array(
+        'description' => 'The title of this node, always treated as non-markup plain text.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'uid' => array(
+        'description' => 'The {users}.uid that owns this node; initially, this is the user that created it.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'status' => array(
+        'description' => 'Boolean indicating whether the node translation is published (visible to non-administrators).',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the node translation was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'changed' => array(
+        'description' => 'The Unix timestamp when the node translation was most recently saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'comment' => array(
+        'description' => 'Whether comments are allowed on this node translation: 0 = no, 1 = closed (read only), 2 = open (read/write).',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'promote' => array(
+        'description' => 'Boolean indicating whether the node translation should be displayed on the front page.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'sticky' => array(
+        'description' => 'Boolean indicating whether the node translation should be displayed at the top of lists in which it appears.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'indexes' => array(
+      'node_changed' => array('changed'),
+      'node_created' => array('created'),
+      'node_frontpage' => array('promote', 'status', 'sticky', 'created'),
+      'node_status_type' => array('status', 'type', 'nid'),
+      'node_title_type' => array('title', array('type', 4)),
+      'node_type' => array(array('type', 4)),
+      'nid' => array('nid'),
+      'vid' => array('vid'),
+      'uid' => array('uid'),
+    ),
+    'foreign keys' => array(
+      'node_base' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+      'node_author' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
+    'primary key' => array('nid', 'vid', 'langcode'),
+  );
+
+  $schema['node_field_revision'] = array(
+    'description' => 'Stores information about each saved version of a {node}.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'The {node} this version belongs to.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'vid' => array(
+        'description' => 'The primary identifier for this version.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'langcode' => array(
+        'description' => 'The {language}.langcode of this version.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'default_langcode' => array(
+        'description' => 'Boolean indicating whether the property values of this version are in the {language}.langcode of this node.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'log' => array(
+        'description' => 'The log entry explaining the changes in this version.',
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+      ),
+      'revision_timestamp' => array(
+        'description' => 'The Unix timestamp when the version was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'revision_uid' => array(
+        'description' => 'The {users}.uid that created this version.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'title' => array(
+        'description' => 'The title of this version, always treated as non-markup plain text.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'uid' => array(
+        'description' => 'The {users}.uid that created this node.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'status' => array(
+        'description' => 'Boolean indicating whether the node (at the time of this revision) is published (visible to non-administrators).',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the node was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'changed' => array(
+        'description' => 'The Unix timestamp when the version was most recently saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'comment' => array(
+        'description' => 'Whether comments are allowed on this node (at the time of this revision): 0 = no, 1 = closed (read only), 2 = open (read/write).',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'promote' => array(
+        'description' => 'Boolean indicating whether the node (at the time of this revision) should be displayed on the front page.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'sticky' => array(
+        'description' => 'Boolean indicating whether the node (at the time of this revision) should be displayed at the top of lists in which it appears.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'indexes' => array(
+      'nid' => array('nid'),
+      'uid' => array('uid'),
+      'revision_uid' => array('revision_uid'),
+      'vid' => array('vid'),
+    ),
+    'foreign keys' => array(
+      'versioned_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+      'version_author' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
+    'primary key' => array('nid', 'vid', 'langcode'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Upgrade node schema to the standard entity SQL schema: create new tables.
+ */
+function node_update_8016() {
+  foreach (_node_update_8016_schema() as $table => $table_schema) {
+    db_create_table($table, $table_schema);
+  }
+}
+
+/**
+ * Upgrade node schema to the standard entity SQL schema: migrate data.
+ */
+function node_update_8017(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    // Initialize the batch status.
+    $sandbox['progress'] = 0;
+    $sandbox['max'] = db_query('SELECT COUNT(vid) FROM {node_revision}')->fetchField();
+  }
+
+  // Prepare the new records.
+  $queries = array();
+  $schema = _node_update_8016_schema();
+  $result = db_query_range('SELECT nr.*, nr.timestamp AS revision_timestamp, nr.uid as revision_uid, 1 AS default_langcode, n.langcode, n.vid = nr.vid AS default_revision, n.uid, n.changed, n.created, n.type FROM {node_revision} nr JOIN {node} n ON nr.nid = n.nid ORDER BY nr.nid ASC, nr.vid ASC', $sandbox['progress'], 50);
+
+  foreach ($result as $row) {
+    $sandbox['progress']++;
+    foreach ($schema as $table => $table_schema) {
+      // We need to store the data table record only when dealing with the
+      // default revision.
+      if ($row->default_revision || $table == 'node_field_revision') {
+        $fields = array_keys($table_schema['fields']);
+        $record = array();
+        foreach ($fields as $field) {
+          if (isset($row->{$field})) {
+            $record[$field] = $row->{$field};
+          }
+        }
+        if (!isset($queries[$table])) {
+          $queries[$table] = db_insert($table)->fields($fields);
+        }
+        $queries[$table]->values($record);
+      }
+    }
+  }
+
+  // Store the new records.
+  foreach ($queries as $query) {
+    $query->execute();
+  }
+
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+}
+
+/**
+ * Upgrade node schema to the standard entity SQL schema: delete old fields.
+ */
+function node_update_8018() {
+  $indexes = array('node_changed', 'node_created', 'node_frontpage', 'node_status_type', 'node_title_type', 'uid');
+  foreach ($indexes as $index) {
+    db_drop_index('node', $index);
+  }
+  $fields = array('title', 'uid', 'status', 'created', 'changed', 'comment', 'promote', 'sticky');
+  foreach ($fields as $field) {
+    db_drop_field('node', $field);
+  }
 }
 
 /**

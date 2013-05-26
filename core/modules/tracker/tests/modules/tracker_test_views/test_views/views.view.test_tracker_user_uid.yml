@@ -47,7 +47,7 @@ display:
       fields:
         title:
           id: title
-          table: node
+          table: node_field_data
           field: title
           relationship: none
           group_type: group

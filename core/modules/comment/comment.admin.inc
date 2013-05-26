@@ -82,24 +82,27 @@ function comment_admin_overview($form, &$form_state, $arg) {
   $query = db_select('comment', 'c')
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
     ->extend('Drupal\Core\Database\Query\TableSortExtender');
-  $query->join('node', 'n', 'n.nid = c.nid');
-  $query->addField('n', 'title', 'node_title');
+  $query->join('node_field_data', 'n', 'n.nid = c.nid');
   $query->addTag('node_access');
   $result = $query
-    ->fields('c', array('cid', 'subject', 'name', 'changed'))
+    ->fields('c', array('cid', 'nid', 'subject', 'name', 'changed'))
     ->condition('c.status', $status)
     ->limit(50)
     ->orderByHeader($header)
     ->execute();
 
+  $nids = array();
   $cids = array();
 
   // We collect a sorted list of node_titles during the query to attach to the
   // comments later.
   foreach ($result as $row) {
+    $nids[] = $row->nid;
     $cids[] = $row->cid;
-    $node_titles[] = $row->node_title;
   }
+  // Ensure all nodes are statically cached so that we do not have to load them
+  // individually when getting their labels below.
+  node_load_multiple($nids);
   $comments = comment_load_multiple($cids);
 
   // Build a table listing the appropriate comments.
@@ -109,7 +112,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
   foreach ($comments as $comment) {
     // Remove the first node title from the node_titles array and attach to
     // the comment.
-    $node_title = array_shift($node_titles);
+    $node_title = $comment->nid->entity->label();
     $options[$comment->id()] = array(
       'subject' => array(
         'data' => array(

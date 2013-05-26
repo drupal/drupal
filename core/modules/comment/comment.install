@@ -37,8 +37,8 @@ function comment_uninstall() {
  */
 function comment_enable() {
   // Insert records into the node_comment_statistics for nodes that are missing.
-  $query = db_select('node', 'n');
-  $query->leftJoin('node_comment_statistics', 'ncs', 'ncs.nid = n.nid');
+  $query = db_select('node_field_data', 'n');
+  $query->leftJoin('node_comment_statistics', 'ncs', 'ncs.nid = n.nid AND n.default_langcode = 1');
   $query->addField('n', 'created', 'last_comment_timestamp');
   $query->addField('n', 'uid', 'last_comment_uid');
   $query->addField('n', 'nid');

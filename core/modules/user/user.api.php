@@ -119,7 +119,7 @@ function hook_user_cancel($edit, $account, $method) {
     case 'user_cancel_block_unpublish':
       // Unpublish nodes (current revisions).
       module_load_include('inc', 'node', 'node.admin');
-      $nodes = db_select('node', 'n')
+      $nodes = db_select('node_field_data', 'n')
         ->fields('n', array('nid'))
         ->condition('uid', $account->uid)
         ->execute()
@@ -130,14 +130,14 @@ function hook_user_cancel($edit, $account, $method) {
     case 'user_cancel_reassign':
       // Anonymize nodes (current revisions).
       module_load_include('inc', 'node', 'node.admin');
-      $nodes = db_select('node', 'n')
+      $nodes = db_select('node_field_data', 'n')
         ->fields('n', array('nid'))
         ->condition('uid', $account->uid)
         ->execute()
         ->fetchCol();
       node_mass_update($nodes, array('uid' => 0));
       // Anonymize old revisions.
-      db_update('node_revision')
+      db_update('node_field_revision')
         ->fields(array('uid' => 0))
         ->condition('uid', $account->uid)
         ->execute();

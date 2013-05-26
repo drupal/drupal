@@ -25,9 +25,9 @@ class Vid extends Numeric {
   function title_query() {
     $titles = array();
 
-    $results = db_select('node_revision', 'nr')
-      ->fields('nr', array('vid', 'nid', 'title'))
-      ->condition('nr.vid', $this->value)
+    $results = db_select('node_field_revision', 'npr')
+      ->fields('npr', array('vid', 'nid', 'title'))
+      ->condition('npr.vid', $this->value)
       ->execute()
       ->fetchAllAssoc('vid', PDO::FETCH_ASSOC);
     $nids = array();

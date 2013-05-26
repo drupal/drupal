@@ -41,7 +41,7 @@ class FilterUidRevisionTest extends NodeTestBase {
     $expected_result[] = array('nid' => $node->id());
     // Create one node of which an additional revision author will be the
     // author.
-    $node = $this->drupalCreateNode(array('uid' => $no_author->id()));
+    $node = $this->drupalCreateNode(array('revision_uid' => $no_author->id()));
     $expected_result[] = array('nid' => $node->id());
     $revision = clone $node;
     // Force to add a new revision.

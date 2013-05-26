@@ -319,7 +319,7 @@ class NodeFormController extends EntityFormController {
   public function validate(array $form, array &$form_state) {
     $node = $this->buildEntity($form, $form_state);
 
-    if (isset($node->nid) && (node_last_changed($node->nid) > $node->changed)) {
+    if (isset($node->nid) && (node_last_changed($node->nid, $this->getFormLangcode($form_state)) > $node->changed)) {
       form_set_error('changed', t('The content on this page has either been modified by another user, or you have already submitted modifications using this form. As a result, your changes cannot be saved.'));
     }
 

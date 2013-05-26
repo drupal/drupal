@@ -232,7 +232,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
     }
     else {
       // Comments do not exist.
-      $node = db_query('SELECT uid, created FROM {node} WHERE nid = :nid', array(':nid' => $nid))->fetchObject();
+      $node = db_query('SELECT uid, created FROM {node_field_data} WHERE nid = :nid LIMIT 1', array(':nid' => $nid))->fetchObject();
       db_update('node_comment_statistics')
         ->fields(array(
           'cid' => 0,

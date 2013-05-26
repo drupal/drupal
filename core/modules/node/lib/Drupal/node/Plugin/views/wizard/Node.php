@@ -31,7 +31,7 @@ class Node extends WizardPluginBase {
   /**
    * Set the created column.
    */
-  protected $createdColumn = 'created';
+  protected $createdColumn = 'node_field_data-created';
 
   /**
    * Set default values for the path field options.
@@ -54,7 +54,7 @@ class Node extends WizardPluginBase {
   protected $filters = array(
     'status' => array(
       'value' => TRUE,
-      'table' => 'node',
+      'table' => 'node_field_data',
       'field' => 'status'
     )
   );
@@ -67,7 +67,7 @@ class Node extends WizardPluginBase {
   public function getAvailableSorts() {
     // You can't execute functions in properties, so override the method
     return array(
-      'title:DESC' => t('Title')
+      'node_field_data-title:DESC' => t('Title')
     );
   }
 
@@ -146,7 +146,7 @@ class Node extends WizardPluginBase {
     // to a row style that uses fields.
     /* Field: Content: Title */
     $display_options['fields']['title']['id'] = 'title';
-    $display_options['fields']['title']['table'] = 'node';
+    $display_options['fields']['title']['table'] = 'node_field_data';
     $display_options['fields']['title']['field'] = 'title';
     $display_options['fields']['title']['label'] = '';
     $display_options['fields']['title']['alter']['alter_text'] = 0;

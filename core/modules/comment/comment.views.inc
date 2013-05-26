@@ -503,7 +503,7 @@ function comment_views_data_alter(&$data) {
     ),
   );
 
-  $data['node']['comment'] = array(
+  $data['node_field_data']['comment'] = array(
     'title' => t('Comment status'),
     'help' => t('Whether comments are enabled or disabled on the node.'),
     'field' => array(
@@ -517,7 +517,7 @@ function comment_views_data_alter(&$data) {
     ),
   );
 
-  $data['node']['uid_touch'] = array(
+  $data['node_field_data']['uid_touch'] = array(
     'title' => t('User posted or commented'),
     'help' => t('Display nodes only if a user posted the node or commented on the node.'),
     'argument' => array(

@@ -45,7 +45,7 @@ class ItemsPerPageTest extends WizardTestBase {
     $view['description'] = $this->randomName(16);
     $view['show[wizard_key]'] = 'node';
     $view['show[type]'] = 'article';
-    $view['show[sort]'] = 'created:DESC';
+    $view['show[sort]'] = 'node_field_data-created:DESC';
     $view['page[create]'] = 1;
     $view['page[title]'] = $this->randomName(16);
     $view['page[path]'] = $this->randomName(16);

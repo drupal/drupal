@@ -58,7 +58,7 @@ class QueryGroupByTest extends ViewTestBase {
     $types = array();
     foreach ($view->result as $item) {
       // num_records is a alias for nid.
-      $types[$item->node_type] = $item->num_records;
+      $types[$item->node_field_data_type] = $item->num_records;
     }
 
     $this->assertEqual($types[$type1->type], 4);
@@ -101,7 +101,7 @@ class QueryGroupByTest extends ViewTestBase {
     $this->assertEqual(count($view->result), 2, 'Make sure the count of items is right.');
     // Group by nodetype to identify the right count.
     foreach ($view->result as $item) {
-      $results[$item->node_type] = $item->nid;
+      $results[$item->node_field_data_type] = $item->nid;
     }
     $this->assertEqual($results[$type1->type], $values[0]);
     $this->assertEqual($results[$type2->type], $values[1]);

@@ -22,7 +22,7 @@ display:
           exposed: '1'
           field: type
           id: type
-          table: node
+          table: node_field_data
           plugin_id: string
       pager:
         type: full

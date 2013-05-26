@@ -452,13 +452,16 @@ function comment_permalink(Comment $comment) {
  */
 function comment_get_recent($number = 10) {
   $query = db_select('comment', 'c');
-  $query->innerJoin('node', 'n', 'n.nid = c.nid');
+  $query->innerJoin('node_field_data', 'n', 'n.nid = c.nid');
   $query->addTag('node_access');
   $query->addMetaData('base_table', 'comment');
   $comments = $query
     ->fields('c')
     ->condition('c.status', COMMENT_PUBLISHED)
     ->condition('n.status', NODE_PUBLISHED)
+    // @todo This should be actually filtering on the desired node status field
+    //   language and just fall back to the default language.
+    ->condition('n.default_langcode', 1)
     ->orderBy('c.created', 'DESC')
     // Additionally order by cid to ensure that comments with the same timestamp
     // are returned in the exact order posted.

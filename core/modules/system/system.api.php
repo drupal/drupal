@@ -2398,7 +2398,7 @@ function hook_schema() {
         'not null' => TRUE,
       ),
       'vid' => array(
-        'description' => 'The current {node_revision}.vid version identifier.',
+        'description' => 'The current {node_field_revision}.vid version identifier.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
@@ -2429,7 +2429,7 @@ function hook_schema() {
     ),
     'foreign keys' => array(
       'node_revision' => array(
-        'table' => 'node_revision',
+        'table' => 'node_field_revision',
         'columns' => array('vid' => 'vid'),
       ),
       'node_author' => array(

@@ -21,7 +21,7 @@ use Drupal\Core\Annotation\Translation;
  * @Plugin(
  *   id = "node_revision",
  *   module = "node",
- *   base_table = "node_revision",
+ *   base_table = "node_field_revision",
  *   title = @Translation("Content revisions")
  * )
  */
@@ -37,7 +37,7 @@ class NodeRevision extends WizardPluginBase {
    */
   protected $pathField = array(
     'id' => 'vid',
-    'table' => 'node_revision',
+    'table' => 'node_field_revision',
     'field' => 'vid',
     'exclude' => TRUE,
     'alter' => array(
@@ -65,7 +65,7 @@ class NodeRevision extends WizardPluginBase {
   protected $filters = array(
     'status' => array(
       'value' => TRUE,
-      'table' => 'node_revision',
+      'table' => 'node_field_revision',
       'field' => 'status'
     )
   );
@@ -97,7 +97,7 @@ class NodeRevision extends WizardPluginBase {
 
     /* Field: Content revision: Created date */
     $display_options['fields']['timestamp']['id'] = 'timestamp';
-    $display_options['fields']['timestamp']['table'] = 'node_revision';
+    $display_options['fields']['timestamp']['table'] = 'node_field_revision';
     $display_options['fields']['timestamp']['field'] = 'timestamp';
     $display_options['fields']['timestamp']['alter']['alter_text'] = 0;
     $display_options['fields']['timestamp']['alter']['make_link'] = 0;
@@ -112,7 +112,7 @@ class NodeRevision extends WizardPluginBase {
 
     /* Field: Content revision: Title */
     $display_options['fields']['title']['id'] = 'title';
-    $display_options['fields']['title']['table'] = 'node_revision';
+    $display_options['fields']['title']['table'] = 'node_field_revision';
     $display_options['fields']['title']['field'] = 'title';
     $display_options['fields']['title']['label'] = '';
     $display_options['fields']['title']['alter']['alter_text'] = 0;

@@ -30,7 +30,7 @@ class RevisionLinkRevert extends RevisionLink {
     }
 
     // Current revision cannot be reverted.
-    if ($node->vid == $vid) {
+    if ($node->isDefaultRevision()) {
       return;
     }
 

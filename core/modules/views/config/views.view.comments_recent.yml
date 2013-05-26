@@ -156,8 +156,8 @@ display:
           custom_date_format: ''
           timezone: ''
       sorts:
-        timestamp:
-          id: timestamp
+        changed:
+          id: changed
           table: comment
           field: changed
           order: DESC
@@ -172,7 +172,7 @@ display:
       filters:
         status_extra:
           id: status_extra
-          table: node
+          table: node_field_data
           field: status_extra
           relationship: nid
           group: '0'
@@ -217,7 +217,7 @@ display:
       fields:
         title:
           id: title
-          table: node
+          table: node_field_data
           field: title
           relationship: nid
           label: 'Reply to'

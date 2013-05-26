@@ -28,7 +28,7 @@ display:
           id: title
           label: ''
           link_to_node: '1'
-          table: node
+          table: node_field_data
           plugin_id: node
       filters:
         status:
@@ -37,7 +37,7 @@ display:
           field: status
           group: '1'
           id: status
-          table: node
+          table: node_field_data
           value: '1'
           plugin_id: boolean
       pager:
@@ -57,7 +57,7 @@ display:
           field: created
           id: created
           order: DESC
-          table: node
+          table: node_field_data
           plugin_id: date
       style:
         type: default

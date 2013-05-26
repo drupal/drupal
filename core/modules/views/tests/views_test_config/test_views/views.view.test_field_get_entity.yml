@@ -52,7 +52,7 @@ display:
           label: author
           relationship: nid
           required: '0'
-          table: node
+          table: node_field_data
           plugin_id: standard
       sorts: {  }
       style:

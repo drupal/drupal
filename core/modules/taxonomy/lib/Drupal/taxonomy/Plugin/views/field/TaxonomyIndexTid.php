@@ -28,8 +28,8 @@ class TaxonomyIndexTid extends PrerenderList {
     parent::init($view, $display, $options);
 
     // @todo: Wouldn't it be possible to use $this->base_table and no if here?
-    if ($view->storage->get('base_table') == 'node_revision') {
-      $this->additional_fields['nid'] = array('table' => 'node_revision', 'field' => 'nid');
+    if ($view->storage->get('base_table') == 'node_field_revision') {
+      $this->additional_fields['nid'] = array('table' => 'node_field_revision', 'field' => 'nid');
     }
     else {
       $this->additional_fields['nid'] = array('table' => 'node', 'field' => 'nid');

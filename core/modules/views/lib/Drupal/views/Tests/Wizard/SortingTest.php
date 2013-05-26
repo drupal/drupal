@@ -35,7 +35,7 @@ class SortingTest extends WizardTestBase {
     $view1['label'] = $this->randomName(16);
     $view1['id'] = strtolower($this->randomName(16));
     $view1['description'] = $this->randomName(16);
-    $view1['show[sort]'] = 'created:ASC';
+    $view1['show[sort]'] = 'node_field_data-created:ASC';
     $view1['page[create]'] = 1;
     $view1['page[title]'] = $this->randomName(16);
     $view1['page[path]'] = $this->randomName(16);
@@ -60,7 +60,7 @@ class SortingTest extends WizardTestBase {
     $view2['label'] = $this->randomName(16);
     $view2['id'] = strtolower($this->randomName(16));
     $view2['description'] = $this->randomName(16);
-    $view2['show[sort]'] = 'created:DESC';
+    $view2['show[sort]'] = 'node_field_data-created:DESC';
     $view2['page[create]'] = 1;
     $view2['page[title]'] = $this->randomName(16);
     $view2['page[path]'] = $this->randomName(16);

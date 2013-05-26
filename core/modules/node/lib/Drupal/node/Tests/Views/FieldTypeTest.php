@@ -31,11 +31,11 @@ class FieldTypeTest extends NodeTestBase {
     $node = $this->drupalCreateNode();
     $expected_result[] = array(
       'nid' => $node->id(),
-      'node_type' => $node->bundle(),
+      'node_field_data_type' => $node->bundle(),
     );
     $column_map = array(
       'nid' => 'nid',
-      'node_type' => 'node_type',
+      'node_field_data_type' => 'node_field_data_type',
     );
 
     $view = views_get_view('test_field_type');

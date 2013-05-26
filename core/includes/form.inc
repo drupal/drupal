@@ -4921,26 +4921,26 @@ function _form_set_attributes(&$element, $class = array()) {
  *   $context['message'] = check_plain($node->label());
  * }
  *
- * // More advanced example: multi-step operation - load all nodes, five by five
+ * // A more advanced example is a multi-step operation that loads all rows,
+ * // five by five.
  * function my_function_2(&$context) {
  *   if (empty($context['sandbox'])) {
  *     $context['sandbox']['progress'] = 0;
- *     $context['sandbox']['current_node'] = 0;
- *     $context['sandbox']['max'] = db_query('SELECT COUNT(DISTINCT nid) FROM {node}')->fetchField();
+ *     $context['sandbox']['current_id'] = 0;
+ *     $context['sandbox']['max'] = db_query('SELECT COUNT(DISTINCT id) FROM {example}')->fetchField();
  *   }
  *   $limit = 5;
- *   $result = db_select('node')
- *     ->fields('node', array('nid'))
- *     ->condition('nid', $context['sandbox']['current_node'], '>')
- *     ->orderBy('nid')
+ *   $result = db_select('example')
+ *     ->fields('example', array('id'))
+ *     ->condition('id', $context['sandbox']['current_id'], '>')
+ *     ->orderBy('id')
  *     ->range(0, $limit)
  *     ->execute();
  *   foreach ($result as $row) {
- *     $node = node_load($row->nid, TRUE);
- *     $context['results'][] = $node->nid . ' : ' . check_plain($node->label());
+ *     $context['results'][] = $row->id . ' : ' . check_plain($row->title);
  *     $context['sandbox']['progress']++;
- *     $context['sandbox']['current_node'] = $node->nid;
- *     $context['message'] = check_plain($node->label());
+ *     $context['sandbox']['current_id'] = $row->id;
+ *     $context['message'] = check_plain($row->title);
  *   }
  *   if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
  *     $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];

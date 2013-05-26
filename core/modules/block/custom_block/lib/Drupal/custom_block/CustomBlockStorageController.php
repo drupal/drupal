@@ -35,14 +35,12 @@ class CustomBlockStorageController extends DatabaseStorageControllerNG {
         $record->log = '';
       }
     }
-    elseif (!isset($record->log) || $record->log === '') {
+    elseif (isset($entity->original) && (!isset($record->log) || $record->log === '')) {
       // If we are updating an existing custom_block without adding a new
-      // revision, we need to make sure $entity->log is unset whenever it is
-      // empty. As long as $entity->log is unset, drupal_write_record() will not
-      // attempt to update the existing database column when re-saving the
-      // revision; therefore, this code allows us to avoid clobbering an
-      // existing log entry with an empty one.
-      unset($record->log);
+      // revision, we need to make sure $entity->log is reset whenever it is
+      // empty. Therefore, this code allows us to avoid clobbering an existing
+      // log entry with an empty one.
+      $record->log = $entity->original->log->value;
     }
   }
 

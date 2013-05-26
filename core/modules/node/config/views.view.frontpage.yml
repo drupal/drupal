@@ -91,7 +91,7 @@ display:
           is_grouped: '0'
           operator: '='
           relationship: none
-          table: node
+          table: node_field_data
           value: '1'
           plugin_id: boolean
         status:
@@ -100,7 +100,7 @@ display:
           field: status
           group: '1'
           id: status
-          table: node
+          table: node_field_data
           value: '1'
           plugin_id: boolean
       pager:
@@ -150,13 +150,13 @@ display:
           id: sticky
           order: DESC
           relationship: none
-          table: node
+          table: node_field_data
           plugin_id: boolean
         created:
           field: created
           id: created
           order: DESC
-          table: node
+          table: node_field_data
           plugin_id: date
           relationship: none
           group_type: group

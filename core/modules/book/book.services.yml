@@ -1,4 +1,4 @@
 services:
   book.manager:
     class: Drupal\book\BookManager
-    arguments: ['@database']
+    arguments: ['@database', '@plugin.manager.entity']

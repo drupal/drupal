@@ -51,7 +51,7 @@ class CommentSelection extends SelectionBase {
     // The Comment module doesn't implement any proper comment access,
     // and as a consequence doesn't make sure that comments cannot be viewed
     // when the user doesn't have access to the node.
-    $node_alias = $query->innerJoin('node', 'n', '%alias.nid = ' . $base_table . '.nid');
+    $node_alias = $query->innerJoin('node_field_data', 'n', '%alias.nid = ' . $base_table . '.nid');
     // Pass the query to the node access control.
     $this->reAlterQuery($query, 'node_access', $node_alias);
 

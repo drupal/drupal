@@ -84,7 +84,9 @@ function tracker_cron() {
   if ($max_nid > 0) {
     $batch_size = config('tracker.settings')->get('cron_index_limit');
     $last_nid = FALSE;
-    $result = db_query_range('SELECT nid, uid, status FROM {node} WHERE nid <= :max_nid ORDER BY nid DESC', 0, $batch_size, array(':max_nid' => $max_nid), array('target' => 'slave'));
+    // @todo This should be actually filtering on the desired language and just
+    //   fall back to the default language.
+    $result = db_query_range('SELECT nid, uid, status FROM {node_field_data} WHERE nid <= :max_nid AND default_langcode = 1 ORDER BY nid DESC', 0, $batch_size, array(':max_nid' => $max_nid), array('target' => 'slave'));
 
     $count = 0;
 
@@ -269,7 +271,9 @@ function tracker_comment_delete($comment) {
  *   The node updated timestamp or comment timestamp.
  */
 function _tracker_add($nid, $uid, $changed) {
-  $node = db_query('SELECT nid, status, uid, changed FROM {node} WHERE nid = :nid', array(':nid' => $nid))->fetchObject();
+  // @todo This should be actually filtering on the desired language and just
+  //   fall back to the default language.
+  $node = db_query('SELECT nid, status, uid, changed FROM {node_field_data} WHERE nid = :nid AND default_langcode = 1 ORDER BY changed DESC, status DESC', array(':nid' => $nid))->fetchObject();
 
   // Adding a comment can only increase the changed timestamp, so our
   // calculation here is simple.
@@ -308,7 +312,9 @@ function _tracker_add($nid, $uid, $changed) {
  *  is the greatest.
  */
 function _tracker_calculate_changed($nid) {
-  $changed = db_query('SELECT changed FROM {node} WHERE nid = :nid', array(':nid' => $nid), array('target' => 'slave'))->fetchField();
+  // @todo This should be actually filtering on the desired language and just
+  //   fall back to the default language.
+  $changed = db_query('SELECT changed FROM {node_field_data} WHERE nid = :nid AND default_langcode = 1 ORDER BY changed DESC', array(':nid' => $nid), array('target' => 'slave'))->fetchField();
   $latest_comment = db_query_range('SELECT cid, changed FROM {comment} WHERE nid = :nid AND status = :status ORDER BY changed DESC', 0, 1, array(
     ':nid' => $nid,
     ':status' => COMMENT_PUBLISHED,
@@ -330,7 +336,9 @@ function _tracker_calculate_changed($nid) {
  *   The last changed timestamp of the node.
  */
 function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
-  $node = db_query('SELECT nid, status, uid, changed FROM {node} WHERE nid = :nid', array(':nid' => $nid))->fetchObject();
+  // @todo This should be actually filtering on the desired language and just
+  //   fall back to the default language.
+  $node = db_query('SELECT nid, status, uid, changed FROM {node_field_data} WHERE nid = :nid AND default_langcode = 1 ORDER BY changed DESC, status DESC', array(':nid' => $nid))->fetchObject();
 
   // The user only keeps his or her subscription if both of the following are true:
   //   (1) The node exists.

@@ -138,4 +138,5 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
     ));
     $this->assertEqual(current($body), $node->body['en'][0]['value'], 'Node body found.');
   }
+
 }

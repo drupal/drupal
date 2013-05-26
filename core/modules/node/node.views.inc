@@ -32,6 +32,14 @@ function node_views_data() {
   $data['node']['table']['entity type'] = 'node';
   $data['node']['table']['wizard_id'] = 'node';
 
+  $data['node_field_data']['table']['group'] = t('Content');
+  $data['node_field_data']['table']['entity type'] = 'node';
+  $data['node_field_data']['table']['join']['node'] = array(
+    'type' => 'INNER',
+    'left_field' => 'nid',
+    'field' => 'nid',
+  );
+
   $data['node']['nid'] = array(
     'title' => t('Nid'),
     'help' => t('The node ID.'),
@@ -53,7 +61,7 @@ function node_views_data() {
   );
 
   // This definition has more items in it than it needs to as an example.
-  $data['node']['title'] = array(
+  $data['node_field_data']['title'] = array(
     'title' => t('Title'),
     'help' => t('The content title.'),
     'field' => array(
@@ -75,7 +83,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node']['created'] = array(
+  $data['node_field_data']['created'] = array(
     'title' => t('Post date'),
     'help' => t('The date the content was posted.'),
     'field' => array(
@@ -89,7 +97,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node']['changed'] = array(
+  $data['node_field_data']['changed'] = array(
     'title' => t('Updated date'),
     'help' => t('The date the content was last updated.'),
     'field' => array(
@@ -103,7 +111,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node']['type'] = array(
+  $data['node_field_data']['type'] = array(
     'title' => t('Type'),
     'help' => t('The content type (for example, "blog entry", "forum post", "story", etc).'),
     'field' => array(
@@ -120,7 +128,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node']['status'] = array(
+  $data['node_field_data']['status'] = array(
     'title' => t('Published status'),
     'help' => t('Whether or not the content is published.'),
     'field' => array(
@@ -141,7 +149,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node']['status_extra'] = array(
+  $data['node_field_data']['status_extra'] = array(
     'title' => t('Published status or admin user'),
     'help' => t('Filters out unpublished content if the current user cannot view it.'),
     'filter' => array(
@@ -151,7 +159,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node']['promote'] = array(
+  $data['node_field_data']['promote'] = array(
     'title' => t('Promoted to front page status'),
     'help' => t('Whether or not the content is promoted to the front page.'),
     'field' => array(
@@ -170,7 +178,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node']['sticky'] = array(
+  $data['node_field_data']['sticky'] = array(
     'title' => t('Sticky status'),
     'help' => t('Whether or not the content is sticky.'),
     'field' => array(
@@ -261,7 +269,7 @@ function node_views_data() {
 
   // Bogus fields for aliasing purposes.
 
-  $data['node']['created_fulldate'] = array(
+  $data['node_field_data']['created_fulldate'] = array(
     'title' => t('Created date'),
     'help' => t('Date in the form of CCYYMMDD.'),
     'argument' => array(
@@ -270,7 +278,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node']['date_year_month'] = array(
+  $data['node_field_data']['date_year_month'] = array(
     'title' => t('Created year + month'),
     'help' => t('Date in the form of YYYYMM.'),
     'argument' => array(
@@ -279,7 +287,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node']['created_year'] = array(
+  $data['node_field_data']['created_year'] = array(
     'title' => t('Created year'),
     'help' => t('Date in the form of YYYY.'),
     'argument' => array(
@@ -288,7 +296,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node']['created_month'] = array(
+  $data['node_field_data']['created_month'] = array(
     'title' => t('Created month'),
     'help' => t('Date in the form of MM (01 - 12).'),
     'argument' => array(
@@ -297,7 +305,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node']['created_day'] = array(
+  $data['node_field_data']['created_day'] = array(
     'title' => t('Created day'),
     'help' => t('Date in the form of DD (01 - 31).'),
     'argument' => array(
@@ -306,7 +314,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node']['created_week'] = array(
+  $data['node_field_data']['created_week'] = array(
     'title' => t('Created week'),
     'help' => t('Date in the form of WW (01 - 53).'),
     'argument' => array(
@@ -315,7 +323,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node']['changed_fulldate'] = array(
+  $data['node_field_data']['changed_fulldate'] = array(
     'title' => t('Updated date'),
     'help' => t('Date in the form of CCYYMMDD.'),
     'argument' => array(
@@ -324,7 +332,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node']['changed_year_month'] = array(
+  $data['node_field_data']['changed_year_month'] = array(
     'title' => t('Updated year + month'),
     'help' => t('Date in the form of YYYYMM.'),
     'argument' => array(
@@ -333,7 +341,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node']['changed_year'] = array(
+  $data['node_field_data']['changed_year'] = array(
     'title' => t('Updated year'),
     'help' => t('Date in the form of YYYY.'),
     'argument' => array(
@@ -342,7 +350,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node']['changed_month'] = array(
+  $data['node_field_data']['changed_month'] = array(
     'title' => t('Updated month'),
     'help' => t('Date in the form of MM (01 - 12).'),
     'argument' => array(
@@ -351,7 +359,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node']['changed_day'] = array(
+  $data['node_field_data']['changed_day'] = array(
     'title' => t('Updated day'),
     'help' => t('Date in the form of DD (01 - 31).'),
     'argument' => array(
@@ -360,7 +368,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node']['changed_week'] = array(
+  $data['node_field_data']['changed_week'] = array(
     'title' => t('Updated week'),
     'help' => t('Date in the form of WW (01 - 53).'),
     'argument' => array(
@@ -369,7 +377,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node']['uid'] = array(
+  $data['node_field_data']['uid'] = array(
     'title' => t('Author uid'),
     'help' => t('The user authoring the content. If you need more fields than the uid add the content: author relationship'),
     'relationship' => array(
@@ -399,7 +407,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node']['uid_revision'] = array(
+  $data['node_field_data']['uid_revision'] = array(
     'title' => t('User has a revision'),
     'help' => t('All nodes where a certain user has a revision'),
     'real field' => 'nid',
@@ -411,15 +419,15 @@ function node_views_data() {
     ),
   );
 
-  $data['node_revision']['table']['entity type'] = 'node';
+  $data['node_field_revision']['table']['entity type'] = 'node';
   // Define the base group of this table. Fields that don't have a group defined
   // will go into this field by default.
-  $data['node_revision']['table']['group']  = t('Content revision');
-  $data['node_revision']['table']['wizard_id'] = 'node_revision';
+  $data['node_field_revision']['table']['group']  = t('Content revision');
+  $data['node_field_revision']['table']['wizard_id'] = 'node_revision';
 
 
   // Advertise this table as a possible base table.
-  $data['node_revision']['table']['base'] = array(
+  $data['node_field_revision']['table']['base'] = array(
     'field' => 'vid',
     'title' => t('Content revision'),
     'help' => t('Content revision is a history of changes to content.'),
@@ -429,14 +437,14 @@ function node_views_data() {
   );
 
   // For other base tables, explain how we join.
-  $data['node_revision']['table']['join'] = array(
+  $data['node_field_revision']['table']['join'] = array(
     'node' => array(
       'left_field' => 'vid',
       'field' => 'vid',
     ),
   );
 
-  $data['node_revision']['uid'] = array(
+  $data['node_field_revision']['revision_uid'] = array(
     'title' => t('User'),
     'help' => t('Relate a content revision to the user who created the revision.'),
     'relationship' => array(
@@ -447,7 +455,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node_revision']['nid'] = array(
+  $data['node_field_revision']['nid'] = array(
     'title' => t('Nid'),
     'help' => t('The revision NID of the content revision.'),
     'field' => array(
@@ -472,7 +480,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node_revision']['vid'] = array(
+  $data['node_field_revision']['vid'] = array(
     'title' => t('Vid'),
     'help' => t('The revision ID of the content revision.'),
     'field' => array(
@@ -497,7 +505,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node_revision']['status'] = array(
+  $data['node_field_revision']['status'] = array(
     'title' => t('Published'),
     'help' => t('Whether or not the content is published.'),
     'field' => array(
@@ -518,7 +526,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node_revision']['title'] = array(
+  $data['node_field_revision']['title'] = array(
     'title' => t('Title'),
     'help' => t('The content title.'),
     'field' => array(
@@ -536,7 +544,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node_revision']['log'] = array(
+  $data['node_field_revision']['log'] = array(
     'title' => t('Log message'),
     'help' => t('The log message entered when the revision was created.'),
     'field' => array(
@@ -547,7 +555,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node_revision']['timestamp'] = array(
+  $data['node_field_revision']['changed'] = array(
     'title' => t('Updated date'),
     'help' => t('The date the node was last updated.'),
     'field' => array(
@@ -561,7 +569,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node_revision']['link_to_revision'] = array(
+  $data['node_field_revision']['link_to_revision'] = array(
     'field' => array(
       'title' => t('Link to revision'),
       'help' => t('Provide a simple link to the revision.'),
@@ -570,7 +578,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node_revision']['revert_revision'] = array(
+  $data['node_field_revision']['revert_revision'] = array(
     'field' => array(
       'title' => t('Link to revert revision'),
       'help' => t('Provide a simple link to revert to the revision.'),
@@ -579,7 +587,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node_revision']['delete_revision'] = array(
+  $data['node_field_revision']['delete_revision'] = array(
     'field' => array(
       'title' => t('Link to delete revision'),
       'help' => t('Provide a simple link to delete the content revision.'),

@@ -12,7 +12,7 @@ display:
           default_action: default
           field: uid
           id: uid
-          table: node
+          table: node_field_data
           plugin_id: numeric
       cache:
         type: none
@@ -33,7 +33,7 @@ display:
           hide_empty: '0'
           id: title
           link_to_node: '0'
-          table: node
+          table: node_field_data
           plugin_id: node
       pager:
         options:

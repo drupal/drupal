@@ -975,6 +975,7 @@ function node_submit(EntityInterface $node) {
   // If a new revision is created, save the current user as revision author.
   if ($node->isNewRevision()) {
     $node->revision_uid = $user->uid;
+    $node->revision_timestamp = REQUEST_TIME;
   }
 
   $node->created = !empty($node->date) && $node->date instanceOf DrupalDateTime ? $node->date->getTimestamp() : REQUEST_TIME;
@@ -1327,7 +1328,7 @@ function node_search_execute($keys = NULL, $conditions = NULL) {
   $query = db_select('search_index', 'i', array('target' => 'slave'))
     ->extend('Drupal\search\SearchQuery')
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
-  $query->join('node', 'n', 'n.nid = i.sid');
+  $query->join('node_field_data', 'n', 'n.nid = i.sid');
   $query
     ->condition('n.status', 1)
     ->addTag('node_access')
@@ -1428,7 +1429,8 @@ function node_user_cancel($edit, $account, $method) {
     case 'user_cancel_block_unpublish':
       // Unpublish nodes (current revisions).
       module_load_include('inc', 'node', 'node.admin');
-      $nodes = db_select('node', 'n')
+      $nodes = db_select('node_field_data', 'n')
+        ->distinct()
         ->fields('n', array('nid'))
         ->condition('uid', $account->uid)
         ->execute()
@@ -1439,14 +1441,15 @@ function node_user_cancel($edit, $account, $method) {
     case 'user_cancel_reassign':
       // Anonymize nodes (current revisions).
       module_load_include('inc', 'node', 'node.admin');
-      $nodes = db_select('node', 'n')
+      $nodes = db_select('node_field_data', 'n')
+        ->distinct()
         ->fields('n', array('nid'))
         ->condition('uid', $account->uid)
         ->execute()
         ->fetchCol();
       node_mass_update($nodes, array('uid' => 0));
       // Anonymize old revisions.
-      db_update('node_revision')
+      db_update('node_field_revision')
         ->fields(array('uid' => 0))
         ->condition('uid', $account->uid)
         ->execute();
@@ -1460,14 +1463,15 @@ function node_user_cancel($edit, $account, $method) {
 function node_user_predelete($account) {
   // Delete nodes (current revisions).
   // @todo Introduce node_mass_delete() or make node_mass_update() more flexible.
-  $nodes = db_select('node', 'n')
+  $nodes = db_select('node_field_data', 'n')
+    ->distinct()
     ->fields('n', array('nid'))
     ->condition('uid', $account->uid)
     ->execute()
     ->fetchCol();
   node_delete_multiple($nodes);
   // Delete old revisions.
-  $revisions = db_query('SELECT vid FROM {node_revision} WHERE uid = :uid', array(':uid' => $account->uid))->fetchCol();
+  $revisions = db_query('SELECT DISTINCT vid FROM {node_field_revision} WHERE uid = :uid', array(':uid' => $account->uid))->fetchCol();
   foreach ($revisions as $revision) {
     node_revision_delete($revision);
   }
@@ -1567,7 +1571,7 @@ function _node_revision_access(EntityInterface $node, $op = 'view', $account = N
     // different revisions so there is no need for a separate database check.
     // Also, if you try to revert to or delete the default revision, that's
     // not good.
-    if ($node->isDefaultRevision() && (db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid', array(':nid' => $node->nid))->fetchField() == 1 || $op == 'update' || $op == 'delete')) {
+    if ($node->isDefaultRevision() && (db_query('SELECT COUNT(*) FROM {node_field_revision} WHERE nid = :nid AND default_langcode = 1', array(':nid' => $node->nid))->fetchField() == 1 || $op == 'update' || $op == 'delete')) {
       $access[$cid] = FALSE;
     }
     elseif (user_access('administer nodes', $account)) {
@@ -1813,12 +1817,17 @@ function node_page_title(EntityInterface $node) {
  *
  * @param $nid
  *   The ID of a node.
+ * @param string $langcode
+ *   (optional) The language the node has been last modified in. Defaults to the
+ *   node language.
  *
- * @return
+ * @return string
  *   A unix timestamp indicating the last time the node was changed.
  */
-function node_last_changed($nid) {
-  return db_query('SELECT changed FROM {node} WHERE nid = :nid', array(':nid' => $nid))->fetch()->changed;
+function node_last_changed($nid, $langcode = NULL) {
+  $language_clause = isset($langcode) ? 'langcode = :langcode' : 'default_langcode = 1';
+  $result = db_query('SELECT changed FROM {node_field_data} WHERE nid = :nid AND ' . $language_clause, array(':nid' => $nid, ':langcode' => $langcode))->fetch();
+  return is_object($result) ? $result->changed : FALSE;
 }
 
 /**
@@ -1832,7 +1841,7 @@ function node_last_changed($nid) {
  */
 function node_revision_list(EntityInterface $node) {
   $revisions = array();
-  $result = db_query('SELECT r.vid, r.title, r.log, r.uid, n.vid AS current_vid, r.timestamp, u.name FROM {node_revision} r LEFT JOIN {node} n ON n.vid = r.vid INNER JOIN {users} u ON u.uid = r.uid WHERE r.nid = :nid ORDER BY r.vid DESC', array(':nid' => $node->nid));
+  $result = db_query('SELECT nfr.vid, nfr.title, nfr.log, nfr.revision_uid AS uid, n.vid AS current_vid, nfr.revision_timestamp, u.name FROM {node_field_revision} nfr LEFT JOIN {node} n ON n.vid = nfr.vid INNER JOIN {users} u ON u.uid = nfr.revision_uid WHERE nfr.nid = :nid AND nfr.default_langcode = 1 ORDER BY nfr.vid DESC', array(':nid' => $node->nid));
   foreach ($result as $revision) {
     $revisions[$revision->vid] = $revision;
   }
@@ -1851,13 +1860,13 @@ function node_revision_list(EntityInterface $node) {
  *   visible to the current user.
  */
 function node_get_recent($number = 10) {
-  $query = db_select('node', 'n');
+  $query = db_select('node_field_data', 'n');
 
   if (!user_access('bypass node access')) {
     // If the user is able to view their own unpublished nodes, allow them
     // to see these in addition to published nodes. Check that they actually
     // have some unpublished nodes to view before adding the condition.
-    if (user_access('view own unpublished content') && $own_unpublished = db_query('SELECT nid FROM {node} WHERE uid = :uid AND status = :status', array(':uid' => $GLOBALS['user']->uid, ':status' => NODE_NOT_PUBLISHED))->fetchCol()) {
+    if (user_access('view own unpublished content') && $own_unpublished = db_query('SELECT DISTINCT nid FROM {node_field_data} WHERE uid = :uid AND status = :status', array(':uid' => $GLOBALS['user']->uid, ':status' => NODE_NOT_PUBLISHED))->fetchCol()) {
       $query->condition(db_or()
         ->condition('n.status', NODE_PUBLISHED)
         ->condition('n.nid', $own_unpublished, 'IN')
@@ -1869,6 +1878,7 @@ function node_get_recent($number = 10) {
     }
   }
   $nids = $query
+    ->distinct()
     ->fields('n', array('nid'))
     ->orderBy('n.changed', 'DESC')
     ->range(0, $number)
@@ -2044,8 +2054,9 @@ function node_feed($nids = FALSE, $channel = array()) {
   $rss_config = config('system.rss');
 
   if ($nids === FALSE) {
-    $nids = db_select('node', 'n')
-      ->fields('n', array('nid', 'created'))
+    $nids = db_select('node_field_data', 'n')
+      ->distinct()
+      ->fields('n', array('nid'))
       ->condition('n.promote', 1)
       ->condition('n.status', 1)
       ->orderBy('n.created', 'DESC')
@@ -2766,7 +2777,7 @@ function node_query_node_access_alter(AlterableInterface $query) {
       if (!($table_info instanceof SelectInterface)) {
         $table = $table_info['table'];
         // If the node table is in the query, it wins immediately.
-        if ($table == 'node') {
+        if ($table == 'node' || $table == 'node_field_data') {
           $base_table = $table;
           break;
         }

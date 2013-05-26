@@ -488,11 +488,13 @@ function translation_node_get_translations($tnid) {
 
     if (!isset($translations[$tnid])) {
       $translations[$tnid] = array();
-      $result = db_select('node', 'n')
-        ->fields('n', array('nid', 'type', 'uid', 'status', 'title', 'langcode'))
-        ->condition('n.tnid', $tnid)
-        ->addTag('node_access')
-        ->execute();
+      $query = db_select('node_field_data', 'n');
+      $query->innerJoin('node', 'nb', 'nb.nid = n.nid AND nb.langcode = n.langcode');
+      $query->fields('n', array('nid', 'uid', 'status', 'title', 'langcode'))
+        ->fields('nb', array('type'))
+        ->condition('nb.tnid', $tnid)
+        ->addTag('node_access');
+      $result = $query->execute();
 
       foreach ($result as $node) {
         $translations[$tnid][$node->langcode] = $node;
