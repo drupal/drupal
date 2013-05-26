@@ -74,6 +74,20 @@ system_site_maintenance_mode:
   requirements:
     _permission: 'administer site configuration'
 
+date_format_add:
+  pattern: '/admin/config/regional/date-time/formats/add'
+  defaults:
+    _form: '\Drupal\system\Form\DateFormatAddForm'
+  requirements:
+    _permission: 'administer site configuration'
+
+date_format_edit:
+  pattern: '/admin/config/regional/date-time/formats/{date_format_id}/edit'
+  defaults:
+    _form: '\Drupal\system\Form\DateFormatEditForm'
+  requirements:
+    _permission: 'administer site configuration'
+
 date_format_delete:
   pattern: 'admin/config/regional/date-time/formats/{format_id}/delete'
   defaults:

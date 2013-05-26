@@ -876,13 +876,10 @@ function system_menu() {
     'title' => 'Add format',
     'description' => 'Allow users to add additional date formats.',
     'type' => MENU_LOCAL_ACTION,
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_configure_date_formats_form'),
-    'access arguments' => array('administer site configuration'),
+    'route_name' => 'date_format_add',
     'weight' => -10,
-    'file' => 'system.admin.inc',
   );
-  $items['admin/config/regional/date-time/formats/%system_date_format/edit'] = array(
+  $items['admin/config/regional/date-time/formats/%/edit'] = array(
     'title' => 'Edit date format',
     'description' => 'Allow users to edit a configured date format.',
     'page callback' => 'drupal_get_form',
@@ -890,7 +887,7 @@ function system_menu() {
     'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
-  $items['admin/config/regional/date-time/formats/%system_date_format/delete'] = array(
+  $items['admin/config/regional/date-time/formats/%/delete'] = array(
     'title' => 'Delete date format',
     'description' => 'Allow users to delete a configured date format.',
     'route_name' => 'date_format_delete',
@@ -3701,10 +3698,7 @@ function system_run_automated_cron() {
 /**
  * Gets the list of defined date formats and attributes.
  *
- * @param $date_format_id
- *   (optional) The date type name.
- *
- * @return
+ * @return array
  *   An associative array of date formats. The top-level keys are the
  *   machine-readable names of the date formats. The values are associative
  *   arrays with the following keys:
@@ -3712,32 +3706,9 @@ function system_run_automated_cron() {
  *   - pattern: An associative array of patterns that will modify the format
  *     of the date, keyed with 'php' for normal PHP date pattern and 'intl'
  *     for the alternate pattern used by the IntlDateFormatter.
- *
- *   If $date_format_id was defined, only the date formats associated with the
- *   given machine name are returned, in an associative array keyed by format
- *   string.
  */
-function system_get_date_formats($date_format_id = NULL) {
-  $date_formats = config('system.date')->get('formats');
-
-  // Return either the specific format or all formats.
-  return empty($date_format_id) ? $date_formats : $date_formats[$date_format_id];
-}
-
-/**
- * Menu loader function for a date format.
- *
- * @param $date_format_id
- *   The date type name.
- *
- * @return
- *   The date format id if it exists and is not locked, FALSE otherwise.
- */
-function system_date_format_load($date_format_id) {
-  if (($format = system_get_date_formats($date_format_id)) && empty($format['locked'])) {
-    return $date_format_id;
-  }
-  return FALSE;
+function system_get_date_formats() {
+  return config('system.date')->get('formats');
 }
 
 /**
