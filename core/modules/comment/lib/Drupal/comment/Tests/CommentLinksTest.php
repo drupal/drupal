@@ -93,8 +93,7 @@ class CommentLinksTest extends CommentTestBase {
    *       USER_REGISTER_VISITORS.
    *     - contact: COMMENT_ANONYMOUS_MAY_CONTACT or
    *       COMMENT_ANONYMOUS_MAYNOT_CONTACT.
-   *     - comments: COMMENT_OPEN, COMMENT_CLOSED, or
-   *       COMMENT_HIDDEN.
+   *     - comments: COMMENT_OPEN, COMMENT_CLOSED, or COMMENT_HIDDEN.
    *   - User permissions:
    *     These are granted or revoked for the user, according to the
    *     'authenticated' flag above. Pass 0 or 1 as parameter values. See

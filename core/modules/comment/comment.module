@@ -612,20 +612,18 @@ function comment_get_recent($number = 10) {
   $query->addMetaData('base_table', 'comment');
   $query->fields('c')
     ->condition('c.status', COMMENT_PUBLISHED);
-  if (module_exists('node')) {
+  if (Drupal::moduleHandler()->moduleExists('node')) {
     // Special case to filter by published content.
-    $query->leftJoin('node_field_data', 'n', "n.nid = c.entity_id AND c.entity_type = 'node'");
+    $query->innerJoin('node_field_data', 'n', "n.nid = c.entity_id AND c.entity_type = 'node'");
     $query->addTag('node_access');
     // @todo This should be actually filtering on the desired node status field
     //   language and just fall back to the default language.
-    $query->condition(db_or()
-      ->condition('n.default_langcode', 1)
+    $query
       ->condition('n.status', NODE_PUBLISHED)
-      ->orderBy('c.created', 'DESC')
-      ->isNull('n.status')
-    );
+      ->condition('n.default_langcode', 1);
   }
-  $comments = $query->orderBy('c.created', 'DESC')
+  $comments = $query
+    ->orderBy('c.created', 'DESC')
     // Additionally order by cid to ensure that comments with the same timestamp
     // are returned in the exact order posted.
     ->orderBy('c.cid', 'DESC')

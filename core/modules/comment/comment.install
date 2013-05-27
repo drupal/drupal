@@ -5,10 +5,6 @@
  * Install, update and uninstall functions for the Comment module.
  */
 
-use Drupal\node\Plugin\Core\Entity\Node;
-use Drupal\comment\Plugin\Core\Entity\Comment;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\CoreBundle;
 use Drupal\Core\Language\Language;
 
 /**

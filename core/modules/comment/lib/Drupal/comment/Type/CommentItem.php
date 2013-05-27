@@ -24,7 +24,7 @@ class CommentItem extends FieldItemBase {
   static $propertyDefinitions;
 
   /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
+   * {@inheritdoc}
    */
   public function getPropertyDefinitions() {
 

@@ -26,7 +26,7 @@ use Drupal\field\Plugin\Type\Widget\WidgetBase;
 class CommentWidget extends WidgetBase {
 
   /**
-   * Implements \Drupal\field\Plugin\Type\Widget\WidgetInterface::formElement().
+   * {@inheritdoc}
    */
   public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     $field = $this->field;

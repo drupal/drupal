@@ -27,7 +27,7 @@ use Drupal\Core\Entity\EntityInterface;
 class CommentDefaultFormatter extends FormatterBase {
 
   /**
-   * Implements \Drupal\field\Plugin\Type\Formatter\FormatterInterface::viewElements().
+   * {@inheritdoc}
    */
   public function viewElements(EntityInterface $entity, $langcode, array $items) {
     $elements = array();

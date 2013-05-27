@@ -8,17 +8,14 @@
 namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Handler for showing comment module's entity links.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "comment_entity_link",
- *   module = "comment"
- * )
+ * @PluginID("comment_entity_link")
  */
 class EntityLink extends FieldPluginBase {
 

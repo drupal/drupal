@@ -149,26 +149,3 @@ function comment_approve(Comment $comment) {
   }
   throw new NotFoundHttpException();
 }
-
-/**
- * Page callback: Legacy handler to redirect old comment reply urls to new url.
- *
- * @param \Drupal\node\Plugin\Core\Entity\Node $node
- *   The node to which the comments are attached.
- * @param int $pid
- *   (optional) Some comments are replies to other comments. In those cases,
- *   $pid is the parent comment's comment ID. Defaults to NULL.
- *
- * @throw \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
- *   When there are no comment fields attached to the node.
- */
-function comment_node_redirect(Node $node, $pid = NULL) {
-  $fields = comment_get_comment_fields('node');
-  foreach ($fields as $field_name => $detail) {
-    // Pick the first comment field found on the node.
-    if (in_array($node->bundle(), $detail['bundles']['node'], TRUE)) {
-      drupal_goto('comment/reply/node/' . $node->id() . '/' . $field_name);
-    }
-  }
-  throw new NotFoundHttpException();
-}
