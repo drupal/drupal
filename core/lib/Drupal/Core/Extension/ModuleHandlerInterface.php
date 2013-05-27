@@ -262,4 +262,77 @@ interface ModuleHandlerInterface {
    */
   public function alter($type, &$data, &$context1 = NULL, &$context2 = NULL);
 
+  /**
+   * Enables or installs a given list of modules.
+   *
+   * Definitions:
+   * - "Enabling" is the process of activating a module for use by Drupal.
+   * - "Disabling" is the process of deactivating a module.
+   * - "Installing" is the process of enabling it for the first time or after it
+   *   has been uninstalled.
+   * - "Uninstalling" is the process of removing all traces of a module.
+   *
+   * Order of events:
+   * - Gather and add module dependencies to $module_list (if applicable).
+   * - For each module that is being enabled:
+   *   - Install module schema and update system registries and caches.
+   *   - If the module is being enabled for the first time or had been
+   *     uninstalled, invoke hook_install() and add it to the list of installed
+   *     modules.
+   *   - Invoke hook_enable().
+   * - Invoke hook_modules_installed().
+   * - Invoke hook_modules_enabled().
+   *
+   * @param $module_list
+   *   An array of module names.
+   * @param $enable_dependencies
+   *   If TRUE, dependencies will automatically be added and enabled in the
+   *   correct order. This incurs a significant performance cost, so use FALSE
+   *   if you know $module_list is already complete and in the correct order.
+   *
+   * @return
+   *   FALSE if one or more dependencies are missing, TRUE otherwise.
+   *
+   * @see hook_install()
+   * @see hook_enable()
+   * @see hook_modules_installed()
+   * @see hook_modules_enabled()
+   */
+  public function enable($module_list, $enable_dependencies = TRUE);
+
+  /**
+   * Disables a given set of modules.
+   *
+   * @param $module_list
+   *   An array of module names.
+   * @param $disable_dependents
+   *   If TRUE, dependent modules will automatically be added and disabled in the
+   *   correct order. This incurs a significant performance cost, so use FALSE
+   *   if you know $module_list is already complete and in the correct order.
+   */
+  public function disable($module_list, $disable_dependents = TRUE);
+
+  /**
+   * Uninstalls a given list of disabled modules.
+   *
+   * @param array $module_list
+   *   The modules to uninstall. It is the caller's responsibility to ensure that
+   *   all modules in this list have already been disabled before this function
+   *   is called.
+   * @param bool $uninstall_dependents
+   *   (optional) If TRUE, the function will check that all modules which depend
+   *   on the passed-in module list either are already uninstalled or contained in
+   *   the list, and it will ensure that the modules are uninstalled in the
+   *   correct order. This incurs a significant performance cost, so use FALSE if
+   *   you know $module_list is already complete and in the correct order.
+   *   Defaults to TRUE.
+   *
+   * @return bool
+   *   Returns TRUE if the operation succeeds or FALSE if it aborts due to an
+   *   unsafe condition, namely, $uninstall_dependents is TRUE and a module in
+   *   $module_list has dependents which are not already uninstalled and not also
+   *   included in $module_list).
+   */
+  public function uninstall($module_list = array(), $uninstall_dependents = TRUE);
+
 }
