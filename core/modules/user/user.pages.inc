@@ -29,6 +29,12 @@ function user_pass() {
     '#size' => 60,
     '#maxlength' => max(USERNAME_MAX_LENGTH, EMAIL_MAX_LENGTH),
     '#required' => TRUE,
+    '#attributes' => array(
+      'autocorrect' => 'off',
+      'autocapitalize' => 'off',
+      'spellcheck' => 'false',
+      'autofocus' => 'autofocus',
+    ),
   );
   // Allow logged in users to request this also.
   if ($user->uid > 0) {

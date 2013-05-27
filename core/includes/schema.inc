@@ -433,20 +433,8 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
 
     // Type cast to proper datatype, except when the value is NULL and the
     // column allows this.
-    //
-    // MySQL PDO silently casts e.g. FALSE and '' to 0 when inserting the value
-    // into an integer column, but PostgreSQL PDO does not. Also type cast NULL
-    // when the column does not allow this.
     if (isset($object->$field) || !empty($info['not null'])) {
-      if ($info['type'] == 'int' || $info['type'] == 'serial') {
-        $fields[$field] = (int) $fields[$field];
-      }
-      elseif ($info['type'] == 'float') {
-        $fields[$field] = (float) $fields[$field];
-      }
-      else {
-        $fields[$field] = (string) $fields[$field];
-      }
+      $fields[$field] = drupal_schema_get_field_value($info, $fields[$field]);
     }
   }
 
@@ -519,6 +507,34 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
   }
 
   return $return;
+}
+
+/**
+ * Typecasts values to proper datatypes.
+ *
+ * MySQL PDO silently casts, e.g. FALSE and '' to 0, when inserting the value
+ * into an integer column, but PostgreSQL PDO does not. Look up the schema
+ * information and use that to correctly typecast the value.
+ *
+ * @param array $info
+ *   An array describing the schema field info.
+ * @param mixed $value
+ *   The value to be converted.
+ *
+ * @return mixed
+ *   The converted value.
+ */
+function drupal_schema_get_field_value(array $info, $value) {
+  if ($info['type'] == 'int' || $info['type'] == 'serial') {
+    $value = (int) $value;
+  }
+  elseif ($info['type'] == 'float') {
+    $value = (float) $value;
+  }
+  else {
+    $value = (string) $value;
+  }
+  return $value;
 }
 
 /**

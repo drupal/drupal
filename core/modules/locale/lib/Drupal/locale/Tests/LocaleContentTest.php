@@ -47,6 +47,7 @@ class LocaleContentTest extends WebTestBase {
     $edit = array();
     $edit['predefined_langcode'] = 'ar';
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    drupal_static_reset('language_list');
 
     $edit = array(
       'site_default_language' => 'ar',
@@ -85,6 +86,7 @@ class LocaleContentTest extends WebTestBase {
       'direction' => '0',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
+    drupal_static_reset('language_list');
 
     // Set the content type to use multilingual support.
     $this->drupalGet("admin/structure/types/manage/{$type2->type}");
@@ -156,6 +158,7 @@ class LocaleContentTest extends WebTestBase {
     $edit = array();
     $edit['predefined_langcode'] = 'es';
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    drupal_static_reset('language_list');
 
     // Set the content type to use multilingual support.
     $this->drupalGet("admin/structure/types/manage/{$type->type}");
@@ -218,6 +221,7 @@ class LocaleContentTest extends WebTestBase {
     // Enable multiple languages.
     $this->drupalPost('admin/config/regional/language/edit/en', array('locale_translate_english' => TRUE), t('Save language'));
     $this->drupalPost('admin/config/regional/language/add', array('predefined_langcode' => 'zh-hant'), t('Add language'));
+    drupal_static_reset('language_list');
 
     // Create two nodes: English and Chinese.
     $node_en = $this->drupalCreateNode(array('langcode' => 'en'));

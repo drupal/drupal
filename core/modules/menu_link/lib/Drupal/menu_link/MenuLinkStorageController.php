@@ -104,6 +104,9 @@ class MenuLinkStorageController extends DatabaseStorageController {
       // Use the weight property from the menu link.
       $menu_link->router_item['weight'] = $menu_link->weight;
 
+      // By default use the menu_name as type.
+      $menu_link->bundle = $menu_link->menu_name;
+
       // For all links that have an associated route, load the route object now
       // and save it on the object. That way we avoid a select N+1 problem later.
       if ($menu_link->route_name) {

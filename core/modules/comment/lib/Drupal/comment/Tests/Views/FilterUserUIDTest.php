@@ -36,11 +36,11 @@ class FilterUserUIDTest extends CommentTestBase {
 
     $options = array(
       'id' => 'uid_touch',
-      'table' => 'node',
+      'table' => 'node_field_data',
       'field' => 'uid_touch',
       'value' => array($this->loggedInUser->uid),
     );
-    $view->addItem('default', 'filter', 'node', 'uid_touch', $options);
+    $view->addItem('default', 'filter', 'node_field_data', 'uid_touch', $options);
     $this->executeView($view, array($this->account->uid));
     $result_set = array(
       array(

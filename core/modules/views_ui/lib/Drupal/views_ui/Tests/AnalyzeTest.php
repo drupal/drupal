@@ -52,10 +52,10 @@ class AnalyzeTest extends ViewTestBase {
     $this->drupalLogin($this->admin);
 
     $this->drupalGet('admin/structure/views/view/test_view/edit');
-    $this->assertLink(t('analyze view'));
+    $this->assertLink(t('Analyze view'));
 
     // This redirects the user to the analyze form.
-    $this->clickLink(t('analyze view'));
+    $this->clickLink(t('Analyze view'));
     $this->assertText(t('View analysis'));
 
     foreach (array('ok', 'warning', 'error') as $type) {

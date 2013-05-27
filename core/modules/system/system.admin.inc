@@ -1834,92 +1834,6 @@ function system_date_time_formats() {
 }
 
 /**
- * Allow users to add additional date formats.
- *
- * @param string $date_format_id
- *   (optional) When present, provides the machine name of the date format that
- *   is being modified. Defaults to an empty string.
- */
-function system_configure_date_formats_form($form, &$form_state, $date_format_id = '') {
-  $formats = system_get_date_formats();
-  $format_info = config('system.date')->get('formats.' . $date_format_id);
-  $patterns = $format_info['pattern'];
-  $date = new DrupalDateTime;
-  $pattern = $date->canUseIntl() ? $patterns[DrupalDateTime::INTL] : $patterns[DrupalDateTime::PHP];
-
-  $form['date_format_name'] = array(
-    '#type' => 'textfield',
-    '#title' => 'Name',
-    '#maxlength' => 100,
-    '#description' => t('Name of the date format'),
-    '#default_value' => empty($format_info['name']) ? '' : $format_info['name']
-  );
-
-  $now = !empty($date_format_id) ? t('Displayed as %date', array('%date' => format_date(REQUEST_TIME, $date_format_id))) : '';
-
-  $form['date_format_id'] = array(
-    '#type' => 'machine_name',
-    '#title' => t('Machine-readable name'),
-    '#description' => t('A unique machine-readable name. Can only contain lowercase letters, numbers, and underscores.'),
-    '#disabled' => !empty($date_format_id),
-    '#default_value' => $date_format_id,
-    '#machine_name' => array(
-      'exists' => 'system_date_format_exists',
-      'source' => array('date_format_name'),
-    ),
-  );
-
-  if (class_exists('intlDateFormatter')) {
-    $description = t('A user-defined date format. See the <a href="@url">PHP manual</a> for available options.', array('@url' => 'http://userguide.icu-project.org/formatparse/datetime'));
-  }
-  else {
-    $description = t('A user-defined date format. See the <a href="@url">PHP manual</a> for available options.', array('@url' => 'http://php.net/manual/function.date.php'));
-  }
-  $form['date_format_pattern'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Format string'),
-    '#maxlength' => 100,
-    '#description' => $description,
-    '#default_value' => empty($pattern) ? '' : $pattern,
-    '#field_suffix' => ' <small id="edit-date-format-suffix">' . $now . '</small>',
-    '#ajax' => array(
-      'callback' => 'system_date_time_lookup',
-      'event' => 'keyup',
-      'progress' => array('type' => 'throbber', 'message' => NULL),
-    ),
-    '#required' => TRUE,
-  );
-
-  $languages = language_list();
-
-  $options = array();
-  foreach ($languages as $langcode => $data) {
-    $options[$langcode] = $data->name;
-  }
-
-  if (!empty($options)) {
-    $form['date_langcode'] = array(
-      '#title' => t('Select localizations'),
-      '#type' => 'select',
-      '#options' => $options,
-      '#multiple' => TRUE,
-      '#default_value' => empty($format_info['locales']) ? '' : $format_info['locales']
-    );
-  }
-
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['update'] = array(
-    '#type' => 'submit',
-    '#value' => (!empty($date_format_id) ? t('Save format') : t('Add format')),
-  );
-
-  $form['#validate'][] = 'system_date_formats_form_validate';
-  $form['#submit'][] = 'system_date_formats_form_submit';
-
-  return $form;
-}
-
-/**
  * Checks if the chosen machine_name exists or not.
  */
 function system_date_format_exists($candidate_machine_name) {
@@ -1927,45 +1841,6 @@ function system_date_format_exists($candidate_machine_name) {
     return array_key_exists($candidate_machine_name, $formats);
   }
   return FALSE;
-}
-
-/**
- * Validate date format string submission.
- */
-function system_date_formats_form_validate($form, &$form_state) {
-  $formats = system_get_date_formats();
-  $format = trim($form_state['values']['date_format_pattern']);
-
-  // The machine name field should already check to see if the requested
-  // machine name is available. Regardless of machine_name or human readable
-  // name, check to see if the provided pattern exists.
-  if (!empty($formats) && in_array($format, array_values($formats)) && (!isset($form_state['values']['date_format_id']) || $form_state['values']['date_format_id'] != $formats[$format]['date_format_id'])) {
-    form_set_error('date_format', t('This format already exists. Enter a unique format string.'));
-  }
-}
-
-/**
- * Process date format string submission.
- */
-function system_date_formats_form_submit($form, &$form_state) {
-  $date = new DrupalDateTime;
-  $pattern_type = $date->canUseIntl() ? DrupalDateTime::INTL : DrupalDateTime::PHP;
-  $format = array();
-  $format['name'] = check_plain($form_state['values']['date_format_name']);
-  $format['pattern'][$pattern_type] = trim($form_state['values']['date_format_pattern']);
-  $format['locales'] = !empty($form_state['values']['date_langcode']) ? $form_state['values']['date_langcode'] : array();
-  // Formats created in the UI are not locked.
-  $format['locked'] = 0;
-
-  system_date_format_save($form_state['values']['date_format_id'], $format);
-  if (!empty($form_state['values']['date_format_id'])) {
-    drupal_set_message(t('Custom date format updated.'));
-  }
-  else {
-    drupal_set_message(t('Custom date format added.'));
-  }
-
-  $form_state['redirect'] = 'admin/config/regional/date-time/formats';
 }
 
 /**

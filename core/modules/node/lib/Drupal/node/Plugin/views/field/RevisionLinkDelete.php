@@ -30,7 +30,7 @@ class RevisionLinkDelete extends RevisionLink {
     }
 
     // Current revision cannot be deleted.
-    if ($node->vid == $vid) {
+    if ($node->isDefaultRevision()) {
       return;
     }
 

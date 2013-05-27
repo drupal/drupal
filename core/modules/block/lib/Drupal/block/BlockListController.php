@@ -113,10 +113,6 @@ class BlockListController extends ConfigEntityListController implements FormInte
     // Add a last region for disabled blocks.
     $block_regions_with_disabled = $this->regions + array(BLOCK_REGION_NONE => BLOCK_REGION_NONE);
 
-    foreach ($block_regions_with_disabled as $region => $title) {
-      $form['#attached']['drupal_add_tabledrag'][] = array('blocks', 'match', 'sibling', 'block-region-select', 'block-region-' . $region, NULL, FALSE);
-      $form['#attached']['drupal_add_tabledrag'][] = array('blocks', 'order', 'sibling', 'block-weight', 'block-weight-' . $region);
-    }
     $form['block_regions'] = array(
       '#type' => 'value',
       '#value' => $block_regions_with_disabled,
@@ -132,46 +128,131 @@ class BlockListController extends ConfigEntityListController implements FormInte
       '#type' => 'value',
       '#value' => $this->theme,
     );
-    $form['blocks'] = array();
-    $form['#tree'] = TRUE;
+    $form['blocks'] = array(
+      '#type' => 'table',
+      '#header' => array(
+        t('Block'),
+        t('Region'),
+        t('Weight'),
+        t('Operations'),
+      ),
+      '#attributes' => array(
+        'id' => 'blocks',
+      ),
+    );
 
+    // Build blocks first for each region.
     foreach ($entities as $entity_id => $entity) {
       $info = $entity->getPlugin()->getDefinition();
-      $form['blocks'][$entity_id]['info'] = array(
-        '#markup' => check_plain($info['admin_label']),
-      );
-      $form['blocks'][$entity_id]['theme'] = array(
-        '#type' => 'hidden',
-        '#value' => $this->theme,
-      );
-      $form['blocks'][$entity_id]['weight'] = array(
-        '#type' => 'weight',
-        '#default_value' => $entity->get('weight'),
-        '#delta' => $weight_delta,
-        '#title_display' => 'invisible',
-        '#title' => t('Weight for @block block', array('@block' => $info['admin_label'])),
-      );
-      $form['blocks'][$entity_id]['region'] = array(
-        '#type' => 'select',
-        '#default_value' => $entity->get('region') != BLOCK_REGION_NONE ? $entity->get('region') : NULL,
-        '#empty_value' => BLOCK_REGION_NONE,
-        '#title_display' => 'invisible',
-        '#title' => t('Region for @block block', array('@block' => $info['admin_label'])),
-        '#options' => $this->regions,
-      );
-      $links['configure'] = array(
-        'title' => t('configure'),
-        'href' => 'admin/structure/block/manage/' . $entity_id . '/configure',
-      );
-      $links['delete'] = array(
-        'title' => t('delete'),
-        'href' => 'admin/structure/block/manage/' . $entity_id . '/delete',
-      );
-      $form['blocks'][$entity_id]['operations'] = array(
-        '#type' => 'operations',
-        '#links' => $links,
-      );
+      $info['entity_id'] = $entity_id;
+      $blocks[$entity->get('region')][] = $info;
     }
+
+    // Loop over each region and build blocks.
+    foreach ($block_regions_with_disabled as $region => $title) {
+      $form['blocks']['#tabledrag'][] = array(
+        'match',
+        'sibling',
+        'block-region-select',
+        'block-region-' . $region,
+        NULL,
+        FALSE,
+      );
+      $form['blocks']['#tabledrag'][] = array(
+        'order',
+        'sibling',
+        'block-weight',
+        'block-weight-' . $region,
+      );
+
+      $form['blocks'][$region] = array(
+        '#attributes' => array(
+          'class' => array('region-title', 'region-title-' . $region, 'odd'),
+          'no_striping' => TRUE,
+        ),
+      );
+      $form['blocks'][$region]['title'] = array(
+        '#markup' => $region != BLOCK_REGION_NONE ? $title : t('Disabled'),
+        '#wrapper_attributes' => array(
+          'colspan' => 5,
+        ),
+      );
+
+      $form['blocks'][$region . '-message'] = array(
+        '#attributes' => array(
+          'class' => array(
+            'region-message',
+            'region-' . $region . '-message',
+            empty($blocks[$region]) ? 'region-empty' : 'region-populated',
+          ),
+        ),
+      );
+      $form['blocks'][$region . '-message']['message'] = array(
+        '#markup' => '<em>' . t('No blocks in this region') . '</em>',
+        '#wrapper_attributes' => array(
+          'colspan' => 5,
+        ),
+      );
+
+      if (isset($blocks[$region])) {
+        foreach ($blocks[$region] as $info) {
+          $entity_id = $info['entity_id'];
+
+          $form['blocks'][$entity_id] = array(
+            '#attributes' => array(
+              'class' => array('draggable'),
+            ),
+          );
+
+          $form['blocks'][$entity_id]['info'] = array(
+            '#markup' => check_plain($info['admin_label']),
+            '#wrapper_attributes' => array(
+              'class' => array('block'),
+            ),
+          );
+          $form['blocks'][$entity_id]['region-theme']['region'] = array(
+            '#type' => 'select',
+            '#default_value' => $region,
+            '#empty_value' => BLOCK_REGION_NONE,
+            '#title_display' => 'invisible',
+            '#title' => t('Region for @block block', array('@block' => $info['admin_label'])),
+            '#options' => $this->regions,
+            '#attributes' => array(
+              'class' => array('block-region-select', 'block-region-' . $region),
+            ),
+            '#parents' => array('blocks', $entity_id, 'region'),
+          );
+          $form['blocks'][$entity_id]['region-theme']['theme'] = array(
+            '#type' => 'hidden',
+            '#value' => $this->theme,
+            '#parents' => array('blocks', $entity_id, 'theme'),
+          );
+          $form['blocks'][$entity_id]['weight'] = array(
+            '#type' => 'weight',
+            '#default_value' => $entity->get('weight'),
+            '#delta' => $weight_delta,
+            '#title_display' => 'invisible',
+            '#title' => t('Weight for @block block', array('@block' => $info['admin_label'])),
+            '#attributes' => array(
+              'class' => array('block-weight', 'block-weight-' . $region),
+            ),
+          );
+          $links['configure'] = array(
+            'title' => t('configure'),
+            'href' => 'admin/structure/block/manage/' . $entity_id . '/configure',
+          );
+          $links['delete'] = array(
+            'title' => t('delete'),
+            'href' => 'admin/structure/block/manage/' . $entity_id . '/delete',
+          );
+          $form['blocks'][$entity_id]['operations'] = array(
+            '#type' => 'operations',
+            '#links' => $links,
+          );
+        }
+      }
+    }
+
     // Do not allow disabling the main system content block when it is present.
     if (isset($form['blocks']['system_main']['region'])) {
       $form['blocks']['system_main']['region']['#required'] = TRUE;

@@ -27,7 +27,7 @@ class UidRevision extends Name {
     $args = array_values($this->value);
 
     $this->query->add_where_expression($this->options['group'], "$this->tableAlias.uid IN($placeholder) OR
-      ((SELECT COUNT(*) FROM {node_revision} nr WHERE nr.uid IN($placeholder) AND nr.nid = $this->tableAlias.nid) > 0)", array($placeholder => $args),
+      ((SELECT COUNT(DISTINCT vid) FROM {node_field_revision} nfr WHERE nfr.revision_uid IN ($placeholder) AND nfr.nid = $this->tableAlias.nid) > 0)", array($placeholder => $args),
       $args);
   }
 

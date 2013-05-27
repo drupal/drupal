@@ -68,7 +68,7 @@ display:
       fields:
         title:
           id: title
-          table: node
+          table: node_field_data
           field: title
           label: ''
           link_to_node: '1'
@@ -133,7 +133,7 @@ display:
       filters:
         status:
           id: status
-          table: node
+          table: node_field_data
           field: status
           value: '1'
           group: '0'

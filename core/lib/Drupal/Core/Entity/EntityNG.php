@@ -328,6 +328,7 @@ class EntityNG extends Entity {
    */
   public function getTranslationLanguages($include_default = TRUE) {
     $translations = array();
+    $definitions = $this->getPropertyDefinitions();
     // Build an array with the translation langcodes set as keys. Empty
     // translations should not be included and must be skipped.
     foreach ($this->getProperties() as $name => $property) {
@@ -339,7 +340,7 @@ class EntityNG extends Entity {
           foreach ($this->values[$name] as $langcode => $values) {
             // If a value is there but the field object is empty, it has been
             // unset, so we need to skip the field also.
-            if ($values && !(isset($this->fields[$name][$langcode]) && $this->fields[$name][$langcode]->isEmpty())) {
+            if ($values && !empty($definitions[$name]['translatable']) && !(isset($this->fields[$name][$langcode]) && $this->fields[$name][$langcode]->isEmpty())) {
               $translations[$langcode] = TRUE;
             }
           }

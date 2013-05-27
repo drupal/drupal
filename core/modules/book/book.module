@@ -40,6 +40,29 @@ function book_help($path, $arg) {
 }
 
 /**
+ * Implements hook_entity_bundle_info().
+ */
+function book_entity_bundle_info() {
+  $bundles['menu_link']['book-toc'] = array(
+    'label' => t('Book'),
+    'translatable' => FALSE,
+  );
+  return $bundles;
+}
+
+/**
+ * Implements hook_TYPE_load().
+ */
+function book_menu_link_load($entities) {
+  foreach ($entities as $entity) {
+    // Change the bundle of menu links related to a book.
+    if (strpos($entity->menu_name, 'book-toc-') === 0) {
+      $entity->bundle = 'book-toc';
+    }
+  }
+}
+
+/**
  * Implements hook_theme().
  */
 function book_theme() {
@@ -268,35 +291,7 @@ function book_admin_paths() {
  *   An array of all books.
  */
 function book_get_books() {
-  $all_books = &drupal_static(__FUNCTION__);
-
-  if (!isset($all_books)) {
-    $all_books = array();
-    $nids = db_query("SELECT DISTINCT(bid) FROM {book}")->fetchCol();
-
-    if ($nids) {
-      $query = db_select('book', 'b', array('fetch' => PDO::FETCH_ASSOC));
-      $query->join('node', 'n', 'b.nid = n.nid');
-      $query->join('menu_links', 'ml', 'b.mlid = ml.mlid');
-      $query->addField('n', 'type', 'type');
-      $query->addField('n', 'title', 'title');
-      $query->fields('b');
-      $query->fields('ml');
-      $query->condition('n.nid', $nids, 'IN');
-      $query->condition('n.status', 1);
-      $query->orderBy('ml.weight');
-      $query->orderBy('ml.link_title');
-      $query->addTag('node_access');
-      $result2 = $query->execute();
-      foreach ($result2 as $link) {
-        $link['href'] = $link['link_path'];
-        $link['options'] = unserialize($link['options']);
-        $all_books[$link['bid']] = $link;
-      }
-    }
-  }
-
-  return $all_books;
+  return Drupal::service('book.manager')->getAllBooks();
 }
 
 /**

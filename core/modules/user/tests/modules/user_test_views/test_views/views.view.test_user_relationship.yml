@@ -53,7 +53,7 @@ display:
           id: title
           label: ''
           link_to_node: '1'
-          table: node
+          table: node_field_data
           plugin_id: node
         uid:
           alter:

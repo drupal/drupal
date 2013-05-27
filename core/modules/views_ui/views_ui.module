@@ -150,12 +150,6 @@ function views_ui_theme() {
       'file' => 'views_ui.theme.inc',
     ),
 
-    // Reordering displays.
-    'views_ui_reorder_displays_form' => array(
-      'render element' => 'form',
-      'file' => 'views_ui.theme.inc',
-    ),
-
     // On behalf of a plugin
     'views_ui_style_plugin_table' => array(
       'render element' => 'form',

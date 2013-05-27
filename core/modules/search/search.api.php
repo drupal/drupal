@@ -88,8 +88,8 @@ function hook_search_reset() {
  * @ingroup search
  */
 function hook_search_status() {
-  $total = db_query('SELECT COUNT(*) FROM {node} WHERE status = 1')->fetchField();
-  $remaining = db_query("SELECT COUNT(*) FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE n.status = 1 AND d.sid IS NULL OR d.reindex <> 0")->fetchField();
+  $total = db_query('SELECT COUNT(DISTINCT nid) FROM {node_field_data} WHERE status = 1')->fetchField();
+  $remaining = db_query("SELECT COUNT(DISTINCT nid) FROM {node_field_data} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE n.status = 1 AND d.sid IS NULL OR d.reindex <> 0")->fetchField();
   return array('remaining' => $remaining, 'total' => $total);
 }
 
@@ -175,7 +175,7 @@ function hook_search_execute($keys = NULL, $conditions = NULL) {
   $query = db_select('search_index', 'i', array('target' => 'slave'))
     ->extend('Drupal\search\SearchQuery')
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
-  $query->join('node', 'n', 'n.nid = i.sid');
+  $query->join('node_field_data', 'n', 'n.nid = i.sid');
   $query
     ->condition('n.status', 1)
     ->addTag('node_access')
@@ -197,6 +197,9 @@ function hook_search_execute($keys = NULL, $conditions = NULL) {
 
   // Load results.
   $find = $query
+    // Add the language code of the indexed item to the result of the query,
+    // since the node will be rendered using the respective language.
+    ->fields('i', array('langcode'))
     ->limit(10)
     ->execute();
   $results = array();
@@ -219,7 +222,7 @@ function hook_search_execute($keys = NULL, $conditions = NULL) {
       'type' => check_plain(node_get_type_label($node)),
       'title' => $node->label($item->langcode),
       'user' => theme('username', array('account' => $node)),
-      'date' => $node->get('changed', $item->langcode),
+      'date' => $node->changed,
       'node' => $node,
       'extra' => $extra,
       'score' => $item->calculated_score,

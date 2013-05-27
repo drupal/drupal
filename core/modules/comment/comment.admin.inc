@@ -84,7 +84,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
     ->extend('Drupal\Core\Database\Query\TableSortExtender');
   if (Drupal::moduleHandler()->moduleExists('node')) {
     // Special case to ensure node access works.
-    $query->leftJoin('node', 'n', "n.nid = c.entity_id AND c.entity_type = 'node'");
+    $query->leftJoin('node_field_data', 'n', "n.nid = c.entity_id AND c.entity_type = 'node'");
     $query->addTag('node_access');
   }
   $result = $query
@@ -94,6 +94,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
     ->orderByHeader($header)
     ->execute();
 
+  $nids = array();
   $cids = array();
   $entity_ids = array();
   $entities = array();
@@ -107,6 +108,9 @@ function comment_admin_overview($form, &$form_state, $arg) {
   foreach ($entity_ids as $entity_type => $ids) {
     $entities[$entity_type] = entity_load_multiple($entity_type, $ids);
   }
+  // Ensure all nodes are statically cached so that we do not have to load them
+  // individually when getting their labels below.
+  node_load_multiple($nids);
   $comments = comment_load_multiple($cids);
 
   // Build a table listing the appropriate comments.

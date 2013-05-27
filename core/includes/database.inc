@@ -34,20 +34,20 @@ use Drupal\Core\Database\Query\Condition;
  * results that need to be presented on multiple pages, and the Tablesort
  * Extender for generating appropriate queries for sortable tables.
  *
- * For example, one might wish to return a list of the most recent 10 nodes
+ * For example, one might wish to return a list of the most recent 10 rows
  * authored by a given user. Instead of directly issuing the SQL query
  * @code
- * SELECT n.nid, n.title, n.created FROM node n WHERE n.uid = $uid LIMIT 0, 10;
+ * SELECT e.id, e.title, e.created FROM example e WHERE e.uid = $uid LIMIT 0, 10;
  * @endcode
  * one would instead call the Drupal functions:
  * @code
- * $result = db_query_range('SELECT n.nid, n.title, n.created
- *   FROM {node} n WHERE n.uid = :uid', 0, 10, array(':uid' => $uid));
+ * $result = db_query_range('SELECT e.id, e.title, e.created
+ *   FROM {example} e WHERE e.uid = :uid', 0, 10, array(':uid' => $uid));
  * foreach ($result as $record) {
  *   // Perform operations on $record->title, etc. here.
  * }
  * @endcode
- * Curly braces are used around "node" to provide table prefixing via
+ * Curly braces are used around "example" to provide table prefixing via
  * DatabaseConnection::prefixTables(). The explicit use of a user ID is pulled
  * out into an argument passed to db_query() so that SQL injection attacks
  * from user input can be caught and nullified. The LIMIT syntax varies between
@@ -69,7 +69,7 @@ use Drupal\Core\Database\Query\Condition;
  *
  * Named placeholders begin with a colon followed by a unique string. Example:
  * @code
- * SELECT nid, title FROM {node} WHERE uid=:uid;
+ * SELECT id, title FROM {example} WHERE uid=:uid;
  * @endcode
  *
  * ":uid" is a placeholder that will be replaced with a literal value when
@@ -81,7 +81,7 @@ use Drupal\Core\Database\Query\Condition;
  *
  * Unnamed placeholders are simply a question mark. Example:
  * @code
- * SELECT nid, title FROM {node} WHERE uid=?;
+ * SELECT id, title FROM {example} WHERE uid=?;
  * @endcode
  *
  * In this case, the array of arguments must be an indexed array of values to
@@ -91,11 +91,11 @@ use Drupal\Core\Database\Query\Condition;
  * running a LIKE query the SQL wildcard character, %, should be part of the
  * value, not the query itself. Thus, the following is incorrect:
  * @code
- * SELECT nid, title FROM {node} WHERE title LIKE :title%;
+ * SELECT id, title FROM {example} WHERE title LIKE :title%;
  * @endcode
  * It should instead read:
  * @code
- * SELECT nid, title FROM {node} WHERE title LIKE :title;
+ * SELECT id, title FROM {example} WHERE title LIKE :title;
  * @endcode
  * and the value for :title should include a % as appropriate. Again, note the
  * lack of quotation marks around :title. Because the value is not inserted
@@ -109,7 +109,7 @@ use Drupal\Core\Database\Query\Condition;
  * object-oriented API for defining a query structurally. For example, rather
  * than:
  * @code
- * INSERT INTO node (nid, title, body) VALUES (1, 'my title', 'my body');
+ * INSERT INTO {example} (id, uid, path, name) VALUES (1, 2, 'home', 'Home path');
  * @endcode
  * one would instead write:
  * @code

@@ -37,7 +37,14 @@ class BulkFormTest extends WebTestBase {
   public function testBulkForm() {
     $nodes = array();
     for ($i = 0; $i < 10; $i++) {
-      $nodes[] = $this->drupalCreateNode(array('sticky' => FALSE));
+      // Ensure nodes are sorted in the same order they are inserted in the
+      // array.
+      $timestamp = REQUEST_TIME - $i;
+      $nodes[] = $this->drupalCreateNode(array(
+        'sticky' => FALSE,
+        'created' => $timestamp,
+        'changed' => $timestamp,
+      ));
     }
 
     $this->drupalGet('test_bulk_form');

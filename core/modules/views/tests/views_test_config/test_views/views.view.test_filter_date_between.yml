@@ -21,7 +21,7 @@ display:
         created:
           field: created
           id: created
-          table: node
+          table: node_field_data
           plugin_id: date
       pager:
         type: full

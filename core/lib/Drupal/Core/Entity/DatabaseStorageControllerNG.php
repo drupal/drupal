@@ -14,6 +14,7 @@ use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Database\Connection;
 
@@ -154,6 +155,55 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function buildQuery($ids, $revision_id = FALSE) {
+    $query = $this->database->select($this->entityInfo['base_table'], 'base');
+    $is_revision_query = $this->revisionKey && ($revision_id || !$this->dataTable);
+
+    $query->addTag($this->entityType . '_load_multiple');
+
+    if ($revision_id) {
+      $query->join($this->revisionTable, 'revision', "revision.{$this->idKey} = base.{$this->idKey} AND revision.{$this->revisionKey} = :revisionId", array(':revisionId' => $revision_id));
+    }
+    elseif ($is_revision_query) {
+      $query->join($this->revisionTable, 'revision', "revision.{$this->revisionKey} = base.{$this->revisionKey}");
+    }
+
+    // Add fields from the {entity} table.
+    $entity_fields = drupal_schema_fields_sql($this->entityInfo['base_table']);
+
+    if ($is_revision_query) {
+      // Add all fields from the {entity_revision} table.
+      $entity_revision_fields = drupal_map_assoc(drupal_schema_fields_sql($this->entityInfo['revision_table']));
+      // The ID field is provided by entity, so remove it.
+      unset($entity_revision_fields[$this->idKey]);
+
+      // Remove all fields from the base table that are also fields by the same
+      // name in the revision table.
+      $entity_field_keys = array_flip($entity_fields);
+      foreach ($entity_revision_fields as $key => $name) {
+        if (isset($entity_field_keys[$name])) {
+          unset($entity_fields[$entity_field_keys[$name]]);
+        }
+      }
+      $query->fields('revision', $entity_revision_fields);
+
+      // Compare revision ID of the base and revision table, if equal then this
+      // is the default revision.
+      $query->addExpression('base.' . $this->revisionKey . ' = revision.' . $this->revisionKey, 'isDefaultRevision');
+    }
+
+    $query->fields('base', $entity_fields);
+
+    if ($ids) {
+      $query->condition("base.{$this->idKey}", $ids, 'IN');
+    }
+
+    return $query;
+  }
+
+  /**
    * Overrides DatabaseStorageController::attachLoad().
    *
    * Added mapping from storage records to entities.
@@ -199,16 +249,20 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
   protected function mapFromStorageRecords(array $records, $load_revision = FALSE) {
     $entities = array();
     foreach ($records as $id => $record) {
-      $values = array();
+      $entities[$id] = array();
       foreach ($record as $name => $value) {
         // Skip the item delta and item value levels but let the field assign
         // the value as suiting. This avoids unnecessary array hierarchies and
         // saves memory here.
-        $values[$name][Language::LANGCODE_DEFAULT] = $value;
+        $entities[$id][$name][Language::LANGCODE_DEFAULT] = $value;
       }
-      $bundle = $this->bundleKey ? $record->{$this->bundleKey} : FALSE;
-      // Turn the record into an entity class.
-      $entities[$id] = new $this->entityClass($values, $this->entityType, $bundle);
+      // If we have no multilingual values we can instantiate entity objecs
+      // right now, otherwise we need to collect all the field values first.
+      if (!$this->dataTable) {
+        $bundle = $this->bundleKey ? $record->{$this->bundleKey} : FALSE;
+        // Turn the record into an entity class.
+        $entities[$id] = new $this->entityClass($entities[$id], $this->entityType, $bundle);
+      }
     }
     $this->attachPropertyData($entities, $load_revision);
     return $entities;
@@ -219,49 +273,64 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
    *
    * @param array &$entities
    *   Associative array of entities, keyed on the entity ID.
-   * @param boolean $load_revision
-   *   (optional) TRUE if the revision should be loaded, defaults to FALSE.
+   * @param int $revision_id
+   *   (optional) The revision to be loaded. Defaults to FALSE.
    */
-  protected function attachPropertyData(array &$entities, $load_revision = FALSE) {
+  protected function attachPropertyData(array &$entities, $revision_id = FALSE) {
     if ($this->dataTable) {
-      $query = $this->database->select($this->dataTable, 'data', array('fetch' => PDO::FETCH_ASSOC))
+      // If a revision table is available, we need all the properties of the
+      // latest revision. Otherwise we fall back to the data table.
+      $table = $this->revisionTable ?: $this->dataTable;
+      $query = $this->database->select($table, 'data', array('fetch' => PDO::FETCH_ASSOC))
         ->fields('data')
         ->condition($this->idKey, array_keys($entities))
         ->orderBy('data.' . $this->idKey);
-      if ($load_revision) {
-        // Get revision ID's.
-        $revision_ids = array();
-        foreach ($entities as $id => $entity) {
-          $revision_ids[] = $entity->get($this->revisionKey)->value;
-        }
-        $query->condition($this->revisionKey, $revision_ids);
-      }
-      $data = $query->execute();
 
-      // Fetch the field definitions to check which field is translatable.
+      if ($this->revisionTable) {
+        if ($revision_id) {
+          $query->condition($this->revisionKey, $revision_id);
+        }
+        else {
+          // Get the revision IDs.
+          $revision_ids = array();
+          foreach ($entities as $id => $values) {
+            $revision_ids[] = $values[$this->revisionKey];
+          }
+          $query->condition($this->revisionKey, $revision_ids);
+        }
+      }
+
+      $data = $query->execute();
       $field_definition = $this->getFieldDefinitions(array());
-      $data_fields = array_flip(drupal_schema_fields_sql($this->entityInfo['data_table']));
+      if ($this->revisionTable) {
+        $data_fields = array_flip(array_diff(drupal_schema_fields_sql($this->entityInfo['revision_table']), drupal_schema_fields_sql($this->entityInfo['base_table'])));
+      }
+      else {
+        $data_fields = array_flip(drupal_schema_fields_sql($this->entityInfo['data_table']));
+      }
 
       foreach ($data as $values) {
         $id = $values[$this->idKey];
+
         // Field values in default language are stored with
         // Language::LANGCODE_DEFAULT as key.
         $langcode = empty($values['default_langcode']) ? $values['langcode'] : Language::LANGCODE_DEFAULT;
-        $translation = $entities[$id]->getTranslation($langcode);
 
         foreach ($field_definition as $name => $definition) {
-          // Set translatable properties only.
-          if (isset($data_fields[$name]) && !empty($definition['translatable'])) {
-            // @todo Figure out how to determine which property has to be set.
-            // Currently it's guessing, and guessing is evil!
-            $property_definition = $translation->{$name}->getPropertyDefinitions();
-            $translation->{$name}->{key($property_definition)} = $values[$name];
-          }
-          // Avoid initializing configurable fields before loading them.
-          elseif (!empty($definition['configurable'])) {
-            unset($entities[$id]->fields[$name]);
+          // Set only translatable properties, unless we are dealing with a
+          // revisable entity, in which case we did not load the untranslatable
+          // data before.
+          $translatable = !empty($definition['translatable']);
+          if (isset($data_fields[$name]) && ($this->revisionTable || $translatable)) {
+            $entities[$id][$name][$langcode] = $values[$name];
           }
         }
+      }
+
+      foreach ($entities as $id => $values) {
+        $bundle = $this->bundleKey ? $values[$this->bundleKey][Language::LANGCODE_DEFAULT] : FALSE;
+        // Turn the record into an entity class.
+        $entities[$id] = new $this->entityClass($values, $this->entityType, $bundle);
       }
     }
   }
@@ -352,32 +421,53 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
    *   The revision id.
    */
   protected function saveRevision(EntityInterface $entity) {
-    $record = $this->mapToRevisionStorageRecord($entity);
+    $return = $entity->id();
+    $default_langcode = $entity->language()->langcode;
 
-    // When saving a new revision, set any existing revision ID to NULL so as to
-    // ensure that a new revision will actually be created.
-    if ($entity->isNewRevision() && isset($record->{$this->revisionKey})) {
-      $record->{$this->revisionKey} = NULL;
+    if (!$entity->isNewRevision()) {
+      // Delete to handle removed values.
+      $this->database->delete($this->revisionTable)
+        ->condition($this->idKey, $entity->id())
+        ->condition($this->revisionKey, $entity->getRevisionId())
+        ->execute();
     }
 
-    $this->preSaveRevision($record, $entity);
+    $languages = $this->dataTable ? $entity->getTranslationLanguages(TRUE) : array($default_langcode => $entity->language());
+    foreach ($languages as $langcode => $language) {
+      $translation = $entity->getTranslation($langcode, FALSE);
+      $record = $this->mapToRevisionStorageRecord($translation);
+      $record->langcode = $langcode;
+      $record->default_langcode = $langcode == $default_langcode;
 
-    if ($entity->isNewRevision()) {
-      drupal_write_record($this->revisionTable, $record);
-      if ($entity->isDefaultRevision()) {
-        $this->database->update($this->entityInfo['base_table'])
-          ->fields(array($this->revisionKey => $record->{$this->revisionKey}))
-          ->condition($this->idKey, $record->{$this->idKey})
-          ->execute();
+      // When saving a new revision, set any existing revision ID to NULL so as
+      // to ensure that a new revision will actually be created.
+      if ($entity->isNewRevision() && isset($record->{$this->revisionKey})) {
+        $record->{$this->revisionKey} = NULL;
       }
-      $entity->setNewRevision(FALSE);
+
+      $this->preSaveRevision($record, $entity);
+
+      if ($entity->isNewRevision()) {
+        drupal_write_record($this->revisionTable, $record);
+        if ($entity->isDefaultRevision()) {
+          $this->database->update($this->entityInfo['base_table'])
+            ->fields(array($this->revisionKey => $record->{$this->revisionKey}))
+            ->condition($this->idKey, $record->{$this->idKey})
+            ->execute();
+        }
+        $entity->setNewRevision(FALSE);
+      }
+      else {
+        // @todo Use multiple insertions to improve performance.
+        drupal_write_record($this->revisionTable, $record);
+      }
+
+      // Make sure to update the new revision key for the entity.
+      $entity->{$this->revisionKey}->value = $record->{$this->revisionKey};
+      $return = $record->{$this->revisionKey};
     }
-    else {
-      drupal_write_record($this->revisionTable, $record, $this->revisionKey);
-    }
-    // Make sure to update the new revision key for the entity.
-    $entity->{$this->revisionKey}->value = $record->{$this->revisionKey};
-    return $record->{$this->revisionKey};
+
+    return $return;
   }
 
   /**
@@ -453,10 +543,11 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
    * @return \stdClass
    *   The record to store.
    */
-  protected function mapToRevisionStorageRecord(EntityInterface $entity) {
+  protected function mapToRevisionStorageRecord(ComplexDataInterface $entity) {
     $record = new \stdClass();
+    $definitions = $entity->getPropertyDefinitions();
     foreach (drupal_schema_fields_sql($this->entityInfo['revision_table']) as $name) {
-      if (isset($entity->$name->value)) {
+      if (isset($definitions[$name]) && isset($entity->$name->value)) {
         $record->$name = $entity->$name->value;
       }
     }
@@ -479,10 +570,14 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
     // Don't use strict mode, this way there's no need to do checks here, as
     // non-translatable properties are replicated for each language.
     $translation = $entity->getTranslation($langcode, FALSE);
+    $definitions = $translation->getPropertyDefinitions();
+    $schema = drupal_get_schema($this->entityInfo['data_table']);
 
     $record = new \stdClass();
     foreach (drupal_schema_fields_sql($this->entityInfo['data_table']) as $name) {
-      $record->$name = $translation->$name->value;
+      $info = $schema['fields'][$name];
+      $value = isset($definitions[$name]) && isset($translation->$name->value) ? $translation->$name->value : NULL;
+      $record->$name = drupal_schema_get_field_value($info, $value);
     }
     $record->langcode = $langcode;
     $record->default_langcode = intval($default_langcode == $langcode);
@@ -538,10 +633,10 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       // Ignore slave server temporarily.
       db_ignore_slave();
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $transaction->rollback();
       watchdog_exception($this->entityType, $e);
-      throw new EntityStorageException($e->getMessage, $e->getCode, $e);
+      throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
     }
   }
 }

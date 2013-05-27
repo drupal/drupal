@@ -614,10 +614,14 @@ function comment_get_recent($number = 10) {
     ->condition('c.status', COMMENT_PUBLISHED);
   if (module_exists('node')) {
     // Special case to filter by published content.
-    $query->leftJoin('node', 'n', "n.nid = c.entity_id AND c.entity_type = 'node'");
+    $query->leftJoin('node_field_data', 'n', "n.nid = c.entity_id AND c.entity_type = 'node'");
     $query->addTag('node_access');
+    // @todo This should be actually filtering on the desired node status field
+    //   language and just fall back to the default language.
     $query->condition(db_or()
+      ->condition('n.default_langcode', 1)
       ->condition('n.status', NODE_PUBLISHED)
+      ->orderBy('c.created', 'DESC')
       ->isNull('n.status')
     );
   }

@@ -9,7 +9,7 @@ display:
         type:
           field: type
           id: type
-          table: node
+          table: node_field_data
     display_plugin: default
     display_title: Master
     id: default

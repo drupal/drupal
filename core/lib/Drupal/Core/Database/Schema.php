@@ -32,7 +32,7 @@ use Drupal\Core\Database\Query\PlaceholderInterface;
  * The following keys are defined:
  *   - 'description': A string in non-markup plain text describing this table
  *     and its purpose. References to other tables should be enclosed in
- *     curly-brackets. For example, the node_revisions table
+ *     curly-brackets. For example, the node_field_revision table
  *     description field might contain "Stores per-revision title and
  *     body data for each {node}."
  *   - 'fields': An associative array ('fieldname' => specification)
@@ -42,7 +42,7 @@ use Drupal\Core\Database\Query\PlaceholderInterface;
  *       and its purpose. References to other tables should be enclosed in
  *       curly-brackets. For example, the node table vid field
  *       description might contain "Always holds the largest (most
- *       recent) {node_revision}.vid value for this nid."
+ *       recent) {node_field_revision}.vid value for this nid."
  *     - 'type': The generic datatype: 'char', 'varchar', 'text', 'blob', 'int',
  *       'float', 'numeric', or 'serial'. Most types just map to the according
  *       database engine specific datatypes. Use 'serial' for auto incrementing
@@ -150,7 +150,7 @@ use Drupal\Core\Database\Query\PlaceholderInterface;
  *   ),
  *   'foreign keys' => array(
  *     'node_revision' => array(
- *       'table' => 'node_revision',
+ *       'table' => 'node_field_revision',
  *       'columns' => array('vid' => 'vid'),
  *      ),
  *     'node_author' => array(

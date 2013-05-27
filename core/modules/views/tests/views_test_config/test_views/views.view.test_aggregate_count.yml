@@ -15,7 +15,7 @@ display:
           id: type
           summary:
             format: default_summary
-          table: node
+          table: node_field_data
           plugin_id: node_type
       cache:
         type: none

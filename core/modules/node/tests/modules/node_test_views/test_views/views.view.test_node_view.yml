@@ -121,7 +121,7 @@ display:
       filters:
         status:
           value: '1'
-          table: node
+          table: node_field_data
           field: status
           id: status
           expose:
@@ -130,7 +130,7 @@ display:
       sorts:
         created:
           id: created
-          table: node
+          table: node_field_data
           field: created
           order: DESC
           relationship: none
@@ -148,7 +148,7 @@ display:
       arguments:
         type:
           id: type
-          table: node
+          table: node_field_data
           field: type
           relationship: none
           group_type: group

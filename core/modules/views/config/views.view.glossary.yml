@@ -56,7 +56,7 @@ display:
       fields:
         title:
           id: title
-          table: node
+          table: node_field_data
           field: title
           link_to_node: '1'
           plugin_id: node
@@ -159,7 +159,7 @@ display:
           format_username: '1'
         changed:
           id: changed
-          table: node
+          table: node_field_data
           field: changed
           label: 'Last update'
           date_format: long
@@ -212,7 +212,7 @@ display:
       arguments:
         title:
           id: title
-          table: node
+          table: node_field_data
           field: title
           default_action: default
           exception:
@@ -246,7 +246,7 @@ display:
       relationships:
         uid:
           id: uid
-          table: node
+          table: node_field_data
           field: uid
           plugin_id: standard
           relationship: none
@@ -325,7 +325,7 @@ display:
       arguments:
         title:
           id: title
-          table: node
+          table: node_field_data
           field: title
           default_action: summary
           exception:

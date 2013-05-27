@@ -35,7 +35,11 @@ use Drupal\Core\Entity\Entity;
  *   entity_keys = {
  *     "id" = "mlid",
  *     "label" = "link_title",
- *     "uuid" = "uuid"
+ *     "uuid" = "uuid",
+ *     "bundle" = "bundle"
+ *   },
+ *   bundle_keys = {
+ *     "bundle" = "bundle"
  *   }
  * )
  */
@@ -47,6 +51,13 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
    * @var string
    */
   public $menu_name = 'tools';
+
+  /**
+   * The link's bundle.
+   *
+   * @var string
+   */
+  public $bundle = 'tools';
 
   /**
    * The menu link ID.
@@ -251,6 +262,13 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
    */
   public function id() {
     return $this->mlid;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function bundle() {
+    return $this->bundle;
   }
 
   /**

@@ -38,7 +38,12 @@ class Link extends FieldPluginBase {
     $form['alter']['external'] = array('#access' => FALSE);
   }
 
-  public function query() {}
+  /**
+   * {@inheritdoc}
+   */
+  public function query() {
+    $this->add_additional_fields();
+  }
 
   function render($values) {
     if ($entity = $this->get_entity($values)) {

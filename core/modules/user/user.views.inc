@@ -48,7 +48,7 @@ function user_views_data() {
       'title' => t('Content authored'),
       'help' => t('Relate content to the user who created it. This relationship will create one record for each content item created by the user.'),
       'id' => 'standard',
-      'base' => 'node',
+      'base' => 'node_field_data',
       'base field' => 'uid',
       'field' => 'uid',
       'label' => t('nodes'),
@@ -76,7 +76,7 @@ function user_views_data() {
       'argument field' => 'uid',
       'base' => 'node',
       'field' => 'nid',
-      'relationship' => 'node:uid'
+      'relationship' => 'node_field_data:uid'
     ),
   );
 

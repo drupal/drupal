@@ -116,7 +116,7 @@ class SettingsTest extends UITestBase {
     $xpath = $this->xpath('//div[@class="views-query-info"]//pre');
     $this->assertEqual(count($xpath), 1, 'The views sql is shown.');
     $this->assertFalse(strpos($xpath[0], 'db_condition_placeholder') !== FALSE, 'No placeholders are shown in the views sql.');
-    $this->assertTrue(strpos($xpath[0], "node.status = '1'") !== FALSE, 'The placeholders in the views sql is replace by the actual value.');
+    $this->assertTrue(strpos($xpath[0], "node_field_data.status = '1'") !== FALSE, 'The placeholders in the views sql is replace by the actual value.');
   }
 
 }

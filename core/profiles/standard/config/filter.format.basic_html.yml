@@ -24,4 +24,4 @@ filters:
     status: '1'
     weight: '10'
     settings: {  }
-langcode: und
+langcode: en

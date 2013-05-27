@@ -119,7 +119,7 @@ function statistics_cron() {
  */
 function statistics_title_list($dbfield, $dbrows) {
   if (in_array($dbfield, array('totalcount', 'daycount', 'timestamp'))) {
-    $query = db_select('node', 'n');
+    $query = db_select('node_field_data', 'n');
     $query->addTag('node_access');
     $query->join('node_counter', 's', 'n.nid = s.nid');
     $query->join('users', 'u', 'n.uid = u.uid');
@@ -129,6 +129,9 @@ function statistics_title_list($dbfield, $dbrows) {
       ->fields('u', array('uid', 'name'))
       ->condition($dbfield, 0, '<>')
       ->condition('n.status', 1)
+      // @todo This should be actually filtering on the desired node status
+      //   field language and just fall back to the default language.
+      ->condition('n.default_langcode', 1)
       ->orderBy($dbfield, 'DESC')
       ->range(0, $dbrows)
       ->execute();

@@ -26,7 +26,7 @@ display:
           hide_empty: '0'
           id: type
           link_to_node: '0'
-          table: node
+          table: node_field_data
           plugin_id: node_type
       filters:
         nid:

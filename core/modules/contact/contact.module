@@ -58,28 +58,19 @@ function contact_permission() {
  */
 function contact_menu() {
   $items['admin/structure/contact'] = array(
-    'title' => 'Contact form',
+    'title' => 'Contact form categories',
     'description' => 'Create a system contact form and set up categories for the form to use.',
-    'page callback' => 'contact_category_list',
-    'access arguments' => array('administer contact forms'),
-    'file' => 'contact.admin.inc',
+    'route_name' => 'contact_category_list',
   );
   $items['admin/structure/contact/add'] = array(
     'title' => 'Add category',
-    'page callback' => 'contact_category_add',
-    'access arguments' => array('administer contact forms'),
+    'route_name' => 'contact_category_add',
     'type' => MENU_LOCAL_ACTION,
     'weight' => 1,
-    'file' => 'contact.admin.inc',
   );
   $items['admin/structure/contact/manage/%contact_category'] = array(
     'title' => 'Edit contact category',
-    'title callback' => 'entity_page_label',
-    'title arguments' => array(4),
-    'page callback' => 'contact_category_edit',
-    'page arguments' => array(4),
-    'access arguments' => array('administer contact forms'),
-    'file' => 'contact.admin.inc',
+    'route_name' => 'contact_category_edit',
   );
   $items['admin/structure/contact/manage/%contact_category/edit'] = array(
     'title' => 'Edit',

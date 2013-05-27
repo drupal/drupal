@@ -378,8 +378,6 @@ function file_validate_extensions(File $file, $extensions) {
 /**
  * Checks that the file's size is below certain limits.
  *
- * This check is not enforced for the user #1.
- *
  * @param Drupal\file\File $file
  *   A file entity.
  * @param $file_limit

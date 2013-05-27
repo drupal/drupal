@@ -6,8 +6,9 @@
 
 namespace Drupal\book;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\EntityManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Book Manager Service.
@@ -22,6 +23,13 @@ class BookManager {
   protected $database;
 
   /**
+   * Entity manager Service Object.
+   *
+   * @var \Drupal\Core\Entity\EntityManager
+   */
+  protected $entityManager;
+
+  /**
    * Books Array.
    *
    * @var array
@@ -31,8 +39,9 @@ class BookManager {
   /**
    * Constructs a BookManager object.
    */
-  public function __construct(Connection $database) {
+  public function __construct(Connection $database, EntityManager $entityManager) {
     $this->database = $database;
+    $this->entityManager = $entityManager;
   }
 
   /**
@@ -57,24 +66,30 @@ class BookManager {
   protected function loadBooks() {
     $this->books = array();
     $nids = $this->database->query("SELECT DISTINCT(bid) FROM {book}")->fetchCol();
+
     if ($nids) {
       $query = $this->database->select('book', 'b', array('fetch' => \PDO::FETCH_ASSOC));
-      $query->join('node', 'n', 'b.nid = n.nid');
       $query->join('menu_links', 'ml', 'b.mlid = ml.mlid');
-      $query->addField('n', 'type', 'type');
-      $query->addField('n', 'title', 'title');
       $query->fields('b');
       $query->fields('ml');
-      $query->condition('n.nid', $nids, 'IN');
-      $query->condition('n.status', 1);
+      $query->condition('b.nid', $nids);
       $query->orderBy('ml.weight');
       $query->orderBy('ml.link_title');
       $query->addTag('node_access');
+      $query->addMetaData('base_table', 'book');
       $book_links = $query->execute();
+
+      $nodes = $this->entityManager->getStorageController('node')->load($nids);
+
       foreach ($book_links as $link) {
-        $link['href'] = $link['link_path'];
-        $link['options'] = unserialize($link['options']);
-        $this->books[$link['bid']] = $link;
+        $nid = $link['nid'];
+        if (isset($nodes[$nid]) && $nodes[$nid]->status) {
+          $link['href'] = $link['link_path'];
+          $link['options'] = unserialize($link['options']);
+          $link['title'] = $nodes[$nid]->label();
+          $link['type'] = $nodes[$nid]->bundle();
+          $this->books[$link['bid']] = $link;
+        }
       }
     }
   }

@@ -35,57 +35,103 @@ class ReorderDisplays extends ViewsFormBase {
     $view = $form_state['view'];
     $display_id = $form_state['display_id'];
 
-    $form['view'] = array('#type' => 'value', '#value' => $view);
-
-    $form['#tree'] = TRUE;
-
-    $count = count($view->get('display'));
+    $form['#title'] = t('Reorder displays');
+    $form['#section'] = 'reorder';
+    $form['#action'] = url('admin/structure/views/nojs/reorder-displays/' . $view->id() . '/' . $display_id);
+    $form['view'] = array(
+      '#type' => 'value',
+      '#value' => $view
+    );
 
     $displays = $view->get('display');
-    foreach ($displays as $display) {
-      $form[$display['id']] = array(
-        'title'  => array('#markup' => $display['display_title']),
-        'weight' => array(
-          '#type' => 'weight',
-          '#value' => $display['position'],
-          '#delta' => $count,
-          '#title' => t('Weight for @display', array('@display' => $display['display_title'])),
-          '#title_display' => 'invisible',
-        ),
-        '#tree' => TRUE,
+    $count = count($displays);
+
+    // Sort the displays.
+    uasort($displays, function ($display1, $display2) {
+      if ($display1['position'] != $display2['position']) {
+        return $display1['position'] < $display2['position'] ? -1 : 1;
+      }
+      return 0;
+    });
+
+    $form['displays'] = array(
+      '#type' => 'table',
+      '#id' => 'reorder-displays',
+      '#header' => array(t('Display'), t('Weight'), t('Remove')),
+      '#empty' => t('No displays available.'),
+      '#tabledrag' => array(
+        array('order', 'sibling', 'weight'),
+      ),
+      '#tree' => TRUE,
+      '#prefix' => '<div class="scroll">',
+      '#suffix' => '</div>',
+    );
+
+    foreach ($displays as $id => $display) {
+      $form['displays'][$id] = array(
         '#display' => $display,
-        'removed' => array(
-          '#type' => 'checkbox',
-          '#id' => 'display-removed-' . $display['id'],
-          '#attributes' => array('class' => array('views-remove-checkbox')),
-          '#default_value' => isset($display['deleted']),
+        '#attributes' => array(
+          'id' => 'display-row-' . $id,
+        ),
+        '#weight' => $display['position'],
+      );
+
+      // Only make row draggable if it's not the default display.
+      if ($id !== 'default') {
+        $form['displays'][$id]['#attributes']['class'][] = 'draggable';
+      }
+
+      $form['displays'][$id]['title'] = array(
+        '#markup' => $display['display_title'],
+      );
+
+      $form['displays'][$id]['weight'] = array(
+        '#type' => 'weight',
+        '#value' => $display['position'],
+        '#delta' => $count,
+        '#title' => t('Weight for @display', array('@display' => $display['display_title'])),
+        '#title_display' => 'invisible',
+        '#attributes' => array(
+          'class' => array('weight'),
         ),
       );
 
-      if (isset($display['deleted']) && $display['deleted']) {
-        $form[$display['id']]['deleted'] = array('#type' => 'value', '#value' => TRUE);
-      }
-      if ($display['id'] === 'default') {
-        unset($form[$display['id']]['weight']);
-        unset($form[$display['id']]['removed']);
+      $form['displays'][$id]['removed'] = array(
+        'checkbox' => array(
+          '#type' => 'checkbox',
+          '#id' => 'display-removed-' . $id,
+          '#attributes' => array(
+            'class' => array('views-remove-checkbox'),
+          ),
+          '#default_value' => !empty($display['deleted']),
+        ),
+        'link' => array(
+          '#type' => 'link',
+          '#title' => '<span>' . t('Remove') . '</span>',
+          '#href' => 'javascript:void()',
+          '#options' => array(
+            'html' => TRUE,
+          ),
+          '#attributes' => array(
+            'id' => 'display-remove-link-' . $id,
+            'class' => array('views-button-remove', 'display-remove-link'),
+            'alt' => t('Remove this display'),
+            'title' => t('Remove this display'),
+          ),
+        ),
+        '#access' => ($id !== 'default'),
+      );
+
+      if (!empty($display['deleted'])) {
+        $form['displays'][$id]['deleted'] = array(
+          '#type' => 'value',
+          '#value' => TRUE,
+        );
+
+        $form['displays'][$id]['#attributes']['class'][] = 'element-hidden';
       }
 
     }
-
-    $form['#title'] = t('Displays Reorder');
-    $form['#section'] = 'reorder';
-
-    // Add javascript settings that will be added via $.extend for tabledragging
-    $form['#js']['tableDrag']['reorder-displays']['weight'][0] = array(
-      'target' => 'weight',
-      'source' => NULL,
-      'relationship' => 'sibling',
-      'action' => 'order',
-      'hidden' => TRUE,
-      'limit' => 0,
-    );
-
-    $form['#action'] = url('admin/structure/views/nojs/reorder-displays/' . $view->id() . '/' . $display_id);
 
     $view->getStandardButtons($form, $form_state, 'views_ui_reorder_displays_form');
 
@@ -97,42 +143,46 @@ class ReorderDisplays extends ViewsFormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     $view = $form_state['view'];
-    foreach ($form_state['input'] as $display => $info) {
-      // add each value that is a field with a weight to our list, but only if
+    $order = array();
+
+    foreach ($form_state['input']['displays'] as $display => $info) {
+      // Add each value that is a field with a weight to our list, but only if
       // it has had its 'removed' checkbox checked.
-      if (is_array($info) && isset($info['weight']) && empty($info['removed'])) {
+      if (is_array($info) && isset($info['weight']) && empty($info['removed']['checkbox'])) {
         $order[$display] = $info['weight'];
       }
     }
 
-    // Sort the order array
+    // Sort the order array.
     asort($order);
 
-    // Fixing up positions
+    // Remove the default display from ordering.
+    unset($order['default']);
+    // Increment up positions.
     $position = 1;
 
     foreach (array_keys($order) as $display) {
       $order[$display] = $position++;
     }
 
-    // Setting up position and removing deleted displays
+    // Setting up position and removing deleted displays.
     $displays = $view->get('display');
-    foreach ($displays as $display_id => $display) {
-      // Don't touch the default !!!
+    foreach ($displays as $display_id => &$display) {
+      // Don't touch the default.
       if ($display_id === 'default') {
-        $displays[$display_id]['position'] = 0;
+        $display['position'] = 0;
         continue;
       }
       if (isset($order[$display_id])) {
-        $displays[$display_id]['position'] = $order[$display_id];
+        $display['position'] = $order[$display_id];
       }
       else {
-        $displays[$display_id]['deleted'] = TRUE;
+        $display['deleted'] = TRUE;
       }
     }
     $view->set('display', $displays);
 
-    // Store in cache
+    // Store in cache.
     $view->cacheSet();
     $form_state['redirect'] = array('admin/structure/views/view/' . $view->id() . '/edit', array('fragment' => 'views-tab-default'));
   }

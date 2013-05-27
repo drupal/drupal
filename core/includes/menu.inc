@@ -1468,9 +1468,12 @@ function menu_tree_collect_node_links(&$tree, &$node_links) {
 function menu_tree_check_access(&$tree, $node_links = array()) {
   if ($node_links) {
     $nids = array_keys($node_links);
-    $select = db_select('node', 'n');
+    $select = db_select('node_field_data', 'n');
     $select->addField('n', 'nid');
+    // @todo This should be actually filtering on the desired node status field
+    //   language and just fall back to the default language.
     $select->condition('n.status', 1);
+
     $select->condition('n.nid', $nids, 'IN');
     $select->addTag('node_access');
     $nids = $select->execute()->fetchCol();

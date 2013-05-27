@@ -277,14 +277,17 @@ function node_filter_form_submit($form, &$form_state) {
  * @param array $updates
  *   Array of key/value pairs with node field names and the value to update that
  *   field to.
+ * @param string $langcode
+ *   (optional) The language updates should be applied to. If none is specified
+ *   all available languages are processed.
  */
-function node_mass_update($nodes, $updates) {
+function node_mass_update($nodes, $updates, $langcode = NULL) {
   // We use batch processing to prevent timeout when updating a large number
   // of nodes.
   if (count($nodes) > 10) {
     $batch = array(
       'operations' => array(
-        array('_node_mass_update_batch_process', array($nodes, $updates))
+        array('_node_mass_update_batch_process', array($nodes, $updates, $langcode))
       ),
       'finished' => '_node_mass_update_batch_finished',
       'title' => t('Processing'),
@@ -300,7 +303,7 @@ function node_mass_update($nodes, $updates) {
   }
   else {
     foreach ($nodes as $nid) {
-      _node_mass_update_helper($nid, $updates);
+      _node_mass_update_helper($nid, $updates, $langcode);
     }
     drupal_set_message(t('The update has been performed.'));
   }
@@ -313,18 +316,24 @@ function node_mass_update($nodes, $updates) {
  *   ID of node to update.
  * @param $updates
  *   Associative array of updates.
+ * @param string $langcode
+ *   (optional) The language updates should be applied to. If none is specified
+ *   all available languages are processed.
  *
  * @return object
  *   An updated node object.
  *
  * @see node_mass_update()
  */
-function _node_mass_update_helper($nid, $updates) {
+function _node_mass_update_helper($nid, $updates, $langcode = NULL) {
   $node = node_load($nid, TRUE);
+  $langcodes = isset($langcode) ? array($langcode) : array_keys($node->getTranslationLanguages());
   // For efficiency manually save the original node before applying any changes.
   $node->original = clone $node;
-  foreach ($updates as $name => $value) {
-    $node->$name = $value;
+  foreach ($langcodes as $langcode) {
+    foreach ($updates as $name => $value) {
+      $node->getTranslation($langcode, FALSE)->$name = $value;
+    }
   }
   $node->save();
   return $node;
@@ -488,7 +497,7 @@ function node_admin_nodes() {
   }
   $header['operations'] = array('data' => t('Operations'));
 
-  $query = db_select('node', 'n')
+  $query = db_select('node_field_data', 'n')
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
     ->extend('Drupal\Core\Database\Query\TableSortExtender');
   node_build_filter_query($query);
@@ -497,7 +506,7 @@ function node_admin_nodes() {
     // If the user is able to view their own unpublished nodes, allow them
     // to see these in addition to published nodes. Check that they actually
     // have some unpublished nodes to view before adding the condition.
-    if (user_access('view own unpublished content') && $own_unpublished = db_query('SELECT nid FROM {node} WHERE uid = :uid AND status = :status', array(':uid' => $GLOBALS['user']->uid, ':status' => 0))->fetchCol()) {
+    if (user_access('view own unpublished content') && $own_unpublished = db_query('SELECT DISTINCT nid FROM {node_field_data} WHERE uid = :uid AND status = :status', array(':uid' => $GLOBALS['user']->uid, ':status' => 0))->fetchCol()) {
       $query->condition(db_or()
         ->condition('n.status', 1)
         ->condition('n.nid', $own_unpublished, 'IN')
@@ -509,7 +518,8 @@ function node_admin_nodes() {
     }
   }
   $nids = $query
-    ->fields('n',array('nid'))
+    ->distinct()
+    ->fields('n', array('nid'))
     ->limit(50)
     ->orderByHeader($header)
     ->addTag('node_access')
@@ -569,7 +579,7 @@ function node_admin_nodes() {
         'query' => $destination,
       );
     }
-    if (module_invoke('translation_entity', 'enabled', 'node', $node->bundle())) {
+    if ($node->isTranslatable()) {
       $operations['translate'] = array(
         'title' => t('Translate'),
         'href' => 'node/' . $node->nid . '/translations',
@@ -656,14 +666,14 @@ function node_admin_nodes_submit($form, &$form_state) {
  */
 function node_multiple_delete_confirm($form, &$form_state, $nodes) {
   $form['nodes'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
+  $node_entities = node_load_multiple(array_keys($nodes));
   // array_filter returns only elements with TRUE values
   foreach ($nodes as $nid => $value) {
-    $title = db_query('SELECT title FROM {node} WHERE nid = :nid', array(':nid' => $nid))->fetchField();
     $form['nodes'][$nid] = array(
       '#type' => 'hidden',
       '#value' => $nid,
       '#prefix' => '<li>',
-      '#suffix' => check_plain($title) . "</li>\n",
+      '#suffix' => check_plain($node_entities[$nid]->label()) . "</li>\n",
     );
   }
   $form['operation'] = array('#type' => 'hidden', '#value' => 'delete');

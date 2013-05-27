@@ -17,7 +17,7 @@ display:
           relationship: none
         type:
           id: type
-          table: node
+          table: node_field_data
           field: type
           relationship: none
           group_type: group
@@ -69,7 +69,7 @@ display:
       filters:
         type:
           id: type
-          table: node
+          table: node_field_data
           field: type
           relationship: none
           value:

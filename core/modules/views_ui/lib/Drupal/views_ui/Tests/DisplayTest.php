@@ -63,14 +63,14 @@ class DisplayTest extends UITestBase {
     $path_prefix = 'admin/structure/views/view/' . $view['id'] .'/edit';
 
     $this->drupalGet($path_prefix . '/default');
-    $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-delete', 'delete Page', 'Make sure there is no delete button on the default display.');
+    $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-delete', 'Delete Page', 'Make sure there is no delete button on the default display.');
 
     $this->drupalGet($path_prefix . '/page_1');
-    $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-delete', 'delete Page', 'Make sure there is a delete button on the page display.');
+    $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-delete', 'Delete Page', 'Make sure there is a delete button on the page display.');
 
     // Delete the page, so we can test the undo process.
-    $this->drupalPost($path_prefix . '/page_1', array(), 'delete Page');
-    $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-undo-delete', 'undo delete of Page', 'Make sure there a undo button on the page display after deleting.');
+    $this->drupalPost($path_prefix . '/page_1', array(), 'Delete Page');
+    $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-undo-delete', 'Undo delete of Page', 'Make sure there a undo button on the page display after deleting.');
     $element = $this->xpath('//a[contains(@href, :href) and contains(@class, :class)]', array(':href' => $path_prefix . '/page_1', ':class' => 'views-display-deleted-link'));
     $this->assertTrue(!empty($element), 'Make sure the display link is marked as to be deleted.');
 
@@ -78,12 +78,12 @@ class DisplayTest extends UITestBase {
     $this->assertTrue(!empty($element), 'Make sure the display link is marked as to be deleted.');
 
     // Undo the deleting of the display.
-    $this->drupalPost($path_prefix . '/page_1', array(), 'undo delete of Page');
-    $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-undo-delete', 'undo delete of Page', 'Make sure there is no undo button on the page display after reverting.');
-    $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-delete', 'delete Page', 'Make sure there is a delete button on the page display after the reverting.');
+    $this->drupalPost($path_prefix . '/page_1', array(), 'Undo delete of Page');
+    $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-undo-delete', 'Undo delete of Page', 'Make sure there is no undo button on the page display after reverting.');
+    $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-delete', 'Delete Page', 'Make sure there is a delete button on the page display after the reverting.');
 
     // Now delete again and save the view.
-    $this->drupalPost($path_prefix . '/page_1', array(), 'delete Page');
+    $this->drupalPost($path_prefix . '/page_1', array(), 'Delete Page');
     $this->drupalPost(NULL, array(), t('Save'));
 
     $this->assertNoLinkByHref($path_prefix . '/page_1', 'Make sure there is no display tab for the deleted display.');
@@ -120,15 +120,15 @@ class DisplayTest extends UITestBase {
     $view = $this->randomView($view);
     $path_prefix = 'admin/structure/views/view/' . $view['id'] .'/edit';
 
-    $this->clickLink(t('reorder displays'));
+    $this->clickLink(t('Reorder displays'));
     $this->assertTrue($this->xpath('//tr[@id="display-row-default"]'), 'Make sure the default display appears on the reorder listing');
     $this->assertTrue($this->xpath('//tr[@id="display-row-page_1"]'), 'Make sure the page display appears on the reorder listing');
     $this->assertTrue($this->xpath('//tr[@id="display-row-block_1"]'), 'Make sure the block display appears on the reorder listing');
 
     // Put the block display in front of the page display.
     $edit = array(
-      'page_1[weight]' => 2,
-      'block_1[weight]' => 1
+      'displays[page_1][weight]' => 2,
+      'displays[block_1][weight]' => 1
     );
     $this->drupalPost(NULL, $edit, t('Apply'));
     $this->drupalPost(NULL, array(), t('Save'));
@@ -157,7 +157,7 @@ class DisplayTest extends UITestBase {
     $path_prefix = 'admin/structure/views/view/' . $view['id'] .'/edit';
 
     $this->drupalGet($path_prefix);
-    $this->drupalPost(NULL, array(), 'clone Page');
+    $this->drupalPost(NULL, array(), 'Clone Page');
     $this->assertLinkByHref($path_prefix . '/page_2', 0, 'Make sure after cloning the new display appears in the UI');
     $this->assertUrl($path_prefix . '/page_2', array(), 'The user got redirected to the new display.');
 
@@ -168,7 +168,7 @@ class DisplayTest extends UITestBase {
     $this->drupalPost("admin/structure/views/nojs/display/{$view['id']}/page_2/css_class", array('override[dropdown]' => 'page_2', 'css_class' => $random_css), t('Apply'));
 
     // Clone as a different display type.
-    $this->drupalPost(NULL, array(), 'clone as Block');
+    $this->drupalPost(NULL, array(), 'Clone as Block');
     $this->assertLinkByHref($path_prefix . '/block_1', 0, 'Make sure after cloning the new display appears in the UI');
     $this->assertUrl($path_prefix . '/block_1', array(), 'The user got redirected to the new display.');
     $this->assertText(t('Block settings'));
@@ -201,12 +201,12 @@ class DisplayTest extends UITestBase {
 
     $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-disable', '', 'Make sure the disable button is visible.');
     $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-enable', '', 'Make sure the enable button is not visible.');
-    $this->drupalPost(NULL, array(), 'disable Page');
+    $this->drupalPost(NULL, array(), 'Disable Page');
     $this->assertTrue($this->xpath('//div[contains(@class, :class)]', array(':class' => 'views-display-disabled')), 'Make sure the disabled display css class appears once the display is marked as such.');
 
     $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-disable', '', 'Make sure the disable button is not visible.');
     $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-enable', '', 'Make sure the enable button is visible.');
-    $this->drupalPost(NULL, array(), 'enable Page');
+    $this->drupalPost(NULL, array(), 'Enable Page');
     $this->assertFalse($this->xpath('//div[contains(@class, :class)]', array(':class' => 'views-display-disabled')), 'Make sure the disabled display css class does not appears once the display is enabled again.');
   }
 

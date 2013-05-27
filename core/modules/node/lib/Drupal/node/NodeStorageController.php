@@ -80,21 +80,6 @@ class NodeStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::buildQuery().
-   */
-  protected function buildQuery($ids, $revision_id = FALSE) {
-    // Ensure that uid is taken from the {node} table,
-    // alias timestamp to revision_timestamp and add revision_uid.
-    $query = parent::buildQuery($ids, $revision_id);
-    $fields =& $query->getFields();
-    unset($fields['timestamp']);
-    $query->addField('revision', 'timestamp', 'revision_timestamp');
-    $fields['uid']['table'] = 'base';
-    $query->addField('revision', 'uid', 'revision_uid');
-    return $query;
-  }
-
-  /**
    * Overrides Drupal\Core\Entity\DatabaseStorageController::invokeHook().
    */
   protected function invokeHook($hook, EntityInterface $node) {
@@ -129,6 +114,16 @@ class NodeStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function mapToDataStorageRecord(EntityInterface $entity, $langcode) {
+    // @todo Remove this once comment is a regular entity field.
+    $record = parent::mapToDataStorageRecord($entity, $langcode);
+    $record->comment = isset($record->comment) ? intval($record->comment) : 0;
+    return $record;
+  }
+
+  /**
    * Overrides Drupal\Core\Entity\DatabaseStorageController::preSave().
    */
   protected function preSave(EntityInterface $node) {
@@ -142,30 +137,23 @@ class NodeStorageController extends DatabaseStorageControllerNG {
   protected function preSaveRevision(\stdClass $record, EntityInterface $entity) {
     if ($entity->isNewRevision()) {
       // When inserting either a new node or a new node revision, $node->log
-      // must be set because {node_revision}.log is a text column and therefore
-      // cannot have a default value. However, it might not be set at this
-      // point (for example, if the user submitting a node form does not have
-      // permission to create revisions), so we ensure that it is at least an
-      // empty string in that case.
-      // @todo: Make the {node_revision}.log column nullable so that we can
-      // remove this check.
+      // must be set because {node_field_revision}.log is a text column and
+      // therefore cannot have a default value. However, it might not be set at
+      // this point (for example, if the user submitting a node form does not
+      // have permission to create revisions), so we ensure that it is at least
+      // an empty string in that case.
+      // @todo Make the {node_field_revision}.log column nullable so that we
+      //   can remove this check.
       if (!isset($record->log)) {
         $record->log = '';
       }
     }
-    elseif (!isset($record->log) || $record->log === '') {
+    elseif (isset($entity->original) && (!isset($record->log) || $record->log === '')) {
       // If we are updating an existing node without adding a new revision, we
-      // need to make sure $node->log is unset whenever it is empty. As long as
-      // $node->log is unset, drupal_write_record() will not attempt to update
-      // the existing database column when re-saving the revision; therefore,
-      // this code allows us to avoid clobbering an existing log entry with an
-      // empty one.
-      unset($record->log);
-    }
-
-    if ($entity->isNewRevision()) {
-      $record->timestamp = REQUEST_TIME;
-      $record->uid = isset($entity->revision_uid->value) ? $entity->revision_uid->value : $GLOBALS['user']->uid;
+      // need to make sure $entity->log is reset whenever it is empty.
+      // Therefore, this code allows us to avoid clobbering an existing log
+      // entry with an empty one.
+      $record->log = $entity->original->log;
     }
   }
 

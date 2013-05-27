@@ -19,7 +19,7 @@ display:
             number_of_records: '0'
           summary_options:
             items_per_page: '25'
-          table: node
+          table: node_field_data
           plugin_id: string
       cache:
         type: none
@@ -30,7 +30,7 @@ display:
           field: title
           id: title
           label: ''
-          table: node
+          table: node_field_data
           plugin_id: node
       pager:
         type: full
