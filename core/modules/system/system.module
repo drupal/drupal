@@ -1109,8 +1109,8 @@ function system_plugin_autocomplete($plugin_id) {
   $string = drupal_strtolower(array_pop($string_typed));
   $matches = array();
   if ($string) {
-    $plugin_ui = drupal_container()->get('plugin.manager.system.plugin_ui')->getDefinition($plugin_id);
-    $manager = new $plugin_ui['manager']();
+    $plugin_ui = Drupal::service('plugin.manager.system.plugin_ui')->getDefinition($plugin_id);
+    $manager = Drupal::service($plugin_ui['manager']);
     $titles = array();
     foreach($manager->getDefinitions() as $plugin_id => $plugin) {
       $titles[$plugin_id] = $plugin[$plugin_ui['title_attribute']];
