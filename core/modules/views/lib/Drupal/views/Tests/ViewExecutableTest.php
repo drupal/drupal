@@ -213,14 +213,12 @@ class ViewExecutableTest extends ViewUnitTestBase {
     $view->initStyle();
     $this->assertTrue($view->style_plugin instanceof DefaultStyle);
     $this->assertTrue($view->rowPlugin instanceof Fields);
-    $this->assertEqual($view->plugin_name, 'default');
 
     $view->setDisplay('page_2');
     $view->initStyle();
     $this->assertTrue($view->style_plugin instanceof Grid);
     // @todo Change this rowPlugin type too.
     $this->assertTrue($view->rowPlugin instanceof Fields);
-    $this->assertEqual($view->plugin_name, 'grid');
   }
 
   /**

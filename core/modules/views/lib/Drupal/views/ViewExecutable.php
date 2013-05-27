@@ -208,7 +208,7 @@ class ViewExecutable {
   /**
    * The current used style plugin.
    *
-   * @var Drupal\views\Plugin\views\style\StylePluginBase
+   * @var \Drupal\views\Plugin\views\style\StylePluginBase
    */
   public $style_plugin;
 
@@ -340,24 +340,6 @@ class ViewExecutable {
    * @var bool
    */
   public $inited;
-
-  /**
-   * The name of the active style plugin of the view.
-   *
-   * @todo remove this and just use $this->style_plugin
-   *
-   * @var string
-   */
-  public $plugin_name;
-
-  /**
-   * The options used by the style plugin of this running view.
-   *
-   * @todo To be able to remove it, Drupal\views\Plugin\views\argument\ArgumentPluginBase::default_summary()
-   *   should instantiate the style plugin.
-   * @var array
-   */
-  public $style_options;
 
   /**
    * The rendered output of the exposed form.
@@ -709,23 +691,15 @@ class ViewExecutable {
    */
   public function initStyle() {
     if (isset($this->style_plugin)) {
-      return is_object($this->style_plugin);
+      return TRUE;
     }
 
-    if (!isset($this->plugin_name)) {
-      $style = $this->display_handler->getOption('style');
-      $this->plugin_name = $style['type'];
-      $this->style_options = $style['options'];
-    }
-
-    $this->style_plugin = Views::pluginManager("style")->createInstance($this->plugin_name);
+    $this->style_plugin = $this->display_handler->getPlugin('style');
 
     if (empty($this->style_plugin)) {
       return FALSE;
     }
 
-    // init the new style handler with data.
-    $this->style_plugin->init($this, $this->display_handler, $this->style_options);
     return TRUE;
   }
 
