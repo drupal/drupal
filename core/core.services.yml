@@ -424,3 +424,6 @@ services:
   token:
     class: Drupal\Core\Utility\Token
     arguments: ['@module_handler']
+  batch.storage:
+    class: Drupal\Core\Utility\BatchStorage
+    arguments: ['@database']

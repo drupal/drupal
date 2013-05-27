@@ -1152,8 +1152,7 @@ function _system_batch_theme() {
   // Retrieve the current state of the batch.
   $batch = &batch_get();
   if (!$batch && isset($_REQUEST['id'])) {
-    require_once __DIR__ . '/../../includes/batch.inc';
-    $batch = batch_load($_REQUEST['id']);
+    $batch = Drupal::service('batch.storage')->load($_REQUEST['id']);
   }
   // Use the same theme as the page that started the batch.
   if (!empty($batch['theme'])) {
@@ -3505,10 +3504,7 @@ function system_cron() {
     $cache_backend->garbageCollection();
   }
 
-  // Cleanup the batch table and the queue for failed batches.
-  db_delete('batch')
-    ->condition('timestamp', REQUEST_TIME - 864000, '<')
-    ->execute();
+  // Cleanup the queue for failed batches.
   db_delete('queue')
     ->condition('created', REQUEST_TIME - 864000, '<')
     ->condition('name', 'drupal_batch:%', 'LIKE')
