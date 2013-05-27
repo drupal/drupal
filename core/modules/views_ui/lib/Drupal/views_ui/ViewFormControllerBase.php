@@ -109,6 +109,7 @@ abstract class ViewFormControllerBase extends EntityFormController {
     foreach ($displays as $id => $display) {
       $tabs[$id] = array(
         '#theme' => 'menu_local_task',
+        '#weight' => $display['position'],
         '#link' => array(
           'title' => $this->getDisplayLabel($view, $id),
           'href' => 'admin/structure/views/view/' . $view->id() . '/edit/' . $id,
