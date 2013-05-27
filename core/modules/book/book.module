@@ -40,6 +40,29 @@ function book_help($path, $arg) {
 }
 
 /**
+ * Implements hook_entity_bundle_info().
+ */
+function book_entity_bundle_info() {
+  $bundles['menu_link']['book-toc'] = array(
+    'label' => t('Book'),
+    'translatable' => FALSE,
+  );
+  return $bundles;
+}
+
+/**
+ * Implements hook_TYPE_load().
+ */
+function book_menu_link_load($entities) {
+  foreach ($entities as $entity) {
+    // Change the bundle of menu links related to a book.
+    if (strpos($entity->menu_name, 'book-toc-') === 0) {
+      $entity->bundle = 'book-toc';
+    }
+  }
+}
+
+/**
  * Implements hook_theme().
  */
 function book_theme() {

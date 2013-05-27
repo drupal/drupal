@@ -153,6 +153,22 @@ function menu_entity_info_alter(&$entity_info) {
 }
 
 /**
+ * Implements hook_entity_bundle_info().
+ */
+function menu_entity_bundle_info() {
+  $bundles = array();
+  $config_names = config_get_storage_names_with_prefix('menu.menu.');
+  foreach ($config_names as $config_name) {
+    $config = config($config_name);
+    $bundles['menu_link'][$config->get('id')] = array(
+      'label' => $config->get('label'),
+    );
+  }
+
+  return $bundles;
+}
+
+/**
  * Entity URI callback.
  *
  * @param \Drupal\system\Plugin\Core\Entity\Menu $menu

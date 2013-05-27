@@ -39,6 +39,29 @@ function shortcut_help($path, $arg) {
 }
 
 /**
+ * Implements hook_entity_bundle_info().
+ */
+function shortcut_entity_bundle_info() {
+  $bundles['menu_link']['shortcut'] = array(
+    'label' => t('Shortcut'),
+    'translatable' => FALSE,
+  );
+  return $bundles;
+}
+
+/**
+ * Implements hook_TYPE_load().
+ */
+function shortcut_menu_link_load($entities) {
+  foreach ($entities as $entity) {
+    // Change the bundle of menu links related to a shortcut.
+    if (strpos($entity->menu_name, 'shortcut-') === 0) {
+      $entity->bundle = 'shortcut';
+    }
+  }
+}
+
+/**
  * Implements hook_permission().
  */
 function shortcut_permission() {

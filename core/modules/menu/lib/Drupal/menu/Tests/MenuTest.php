@@ -333,6 +333,30 @@ class MenuTest extends WebTestBase {
   }
 
   /**
+   * Tests menu link bundles.
+   */
+  public function testMenuBundles() {
+    $this->drupalLogin($this->big_user);
+    $menu = $this->addCustomMenu();
+    $bundles = entity_get_bundles('menu_link');
+    $this->assertTrue($bundles[$menu->id()]);
+    $menus = menu_list_system_menus();
+    $menus[$menu->id()] = $menu->label();
+    ksort($menus);
+    $this->assertIdentical(array_keys($bundles), array_keys($menus));
+
+    // Test if moving a menu link between menus changes the bundle.
+    $node = $this->drupalCreateNode(array('type' => 'article'));
+    $item = $this->addMenuLink(0, 'node/' . $node->nid, 'tools');
+    $this->moveMenuLink($item, 0, $menu->id());
+    $this->assertEqual($item->bundle(), 'tools', 'Menu link bundle matches the menu');
+
+    $moved_item = entity_load('menu_link', $item->id(), TRUE);
+    $this->assertNotEqual($moved_item->bundle(), $item->bundle(), 'Menu link bundle was changed');
+    $this->assertEqual($moved_item->bundle(), $menu->id(), 'Menu link bundle matches the menu');
+  }
+
+  /**
    * Add a menu link using the menu module UI.
    *
    * @param integer $plid Parent menu link id.
