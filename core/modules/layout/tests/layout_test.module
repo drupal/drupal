@@ -6,43 +6,6 @@
  */
 
 /**
- * Implementation of hook_menu().
- */
-function layout_test_menu() {
-  $items = array();
-  $items['layout-test'] = array(
-    'title' => 'Layout test',
-    'page callback' => 'layout_test_page',
-    'access callback' => TRUE,
-  );
-  return $items;
-}
-
-/**
- * Page callback for layout testing.
- */
-function layout_test_page() {
-  // Hack to enable and apply the theme to this page and manually invoke its
-  // layout plugin and render it.
-  global $theme;
-  $theme = 'layout_test_theme';
-  theme_enable(array($theme));
-
-  $display = entity_load('display', 'test_twocol');
-  $layout = $display->getLayoutInstance();
-
-  // @todo This tests that the layout can render its regions, but does not test
-  //   block rendering: http://drupal.org/node/1812720.
-  // Add sample content in the regions that is looked for in the tests.
-  $regions = $layout->getRegions();
-  foreach ($regions as $region => $info) {
-    $regions[$region] = '<h3>' . $info['label'] . '</h3>';
-  }
-
-  return $layout->renderLayout(FALSE, $regions);
-}
-
-/**
  * Implements hook_system_theme_info().
  */
 function layout_test_system_theme_info() {
