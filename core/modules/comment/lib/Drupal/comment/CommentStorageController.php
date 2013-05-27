@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\comment\CommentStorageController.
+ * Definition of Drupal\comment\CommentStorageController.
  */
 
 namespace Drupal\comment;
@@ -15,7 +15,7 @@ use LogicException;
 /**
  * Defines the controller class for comments.
  *
- * This extends the Drupal\Core\Entity\DatabaseStorageControllerNG class, adding
+ * This extends the Drupal\Core\Entity\DatabaseStorageController class, adding
  * required special handling for comment entities.
  */
 class CommentStorageController extends DatabaseStorageControllerNG {
@@ -25,7 +25,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
   protected $threadLock = '';
 
   /**
-   * {@inheritdoc}
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::buildQuery().
    */
   protected function buildQuery($ids, $revision_id = FALSE) {
     $query = parent::buildQuery($ids, $revision_id);
@@ -37,7 +37,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * {@inheritdoc}
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::attachLoad().
    */
   protected function attachLoad(&$records, $load_revision = FALSE) {
     // Set up standard comment properties.
@@ -48,7 +48,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * {@inheritdoc}
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::preSave().
    *
    * @see comment_int_to_alphadecimal()
    * @see comment_alphadecimal_to_int()
@@ -161,7 +161,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * {@inheritdoc}
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::postDelete().
    */
   protected function postDelete($comments) {
     // Delete the comments' replies.
@@ -267,7 +267,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * {@inheritdoc}
+   * Implements \Drupal\Core\Entity\DataBaseStorageControllerNG::basePropertyDefinitions().
    */
   public function baseFieldDefinitions() {
     $properties['cid'] = array(

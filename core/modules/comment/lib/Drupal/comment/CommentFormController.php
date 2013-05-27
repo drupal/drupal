@@ -17,7 +17,7 @@ use Drupal\Core\Language\Language;
 class CommentFormController extends EntityFormControllerNG {
 
   /**
-   * Overrides \Drupal\Core\Entity\EntityFormControllerNG::form().
+   * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
   public function form(array $form, array &$form_state) {
     global $user;

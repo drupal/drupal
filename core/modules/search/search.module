@@ -254,12 +254,7 @@ function search_get_info($all = FALSE) {
   }
 
   // Return only modules that are set to active in search settings.
-  $active = config('search.settings')->get('active_modules');
-  if (empty($active)) {
-    // No active search modules.
-    return array();
-  }
-  return array_intersect_key($search_hooks, array_flip($active));
+  return array_intersect_key($search_hooks, array_flip(config('search.settings')->get('active_modules')));
 }
 
 /**

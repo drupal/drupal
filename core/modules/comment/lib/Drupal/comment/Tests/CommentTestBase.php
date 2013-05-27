@@ -26,21 +26,21 @@ abstract class CommentTestBase extends WebTestBase {
   /**
    * An administrative user with permission to configure comment settings.
    *
-   * @var \Drupal\user\Plugin\Core\Entity\User
+   * @var Drupal\user\User
    */
   protected $admin_user;
 
   /**
    * A normal user with permission to post comments.
    *
-   * @var \Drupal\user\Plugin\Core\Entity\User
+   * @var Drupal\user\User
    */
   protected $web_user;
 
   /**
    * A test node to which comments will be posted.
    *
-   * @var \Drupal\node\Plugin\Core\Entity\Node
+   * @var Drupal\node\Node
    */
   protected $node;
 
@@ -65,11 +65,11 @@ abstract class CommentTestBase extends WebTestBase {
       'access content',
      ));
     $this->web_user = $this->drupalCreateUser(array(
+      'access comments',
+      'post comments',
       'create article content',
       'edit own comments',
       'skip comment approval',
-      'post comments',
-      'access comments',
       'access content',
     ));
 
@@ -158,7 +158,7 @@ abstract class CommentTestBase extends WebTestBase {
   /**
    * Checks current page for specified comment.
    *
-   * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
+   * @param Drupal\comment\Comment $comment
    *   The comment object.
    * @param boolean $reply
    *   Boolean indicating whether the comment is a reply to another comment.
@@ -184,7 +184,7 @@ abstract class CommentTestBase extends WebTestBase {
   /**
    * Deletes a comment.
    *
-   * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
+   * @param Drupal\comment\Comment $comment
    *   Comment to delete.
    */
   function deleteComment(Comment $comment) {
@@ -272,7 +272,7 @@ abstract class CommentTestBase extends WebTestBase {
   function setCommentSettings($name, $value, $message) {
     $instance = field_info_instance('node', 'comment', 'article');
     $instance['settings'][$name] = $value;
-    field_update_instance($instance);
+    $instance->save();
     // Display status message.
     $this->pass($message);
   }
