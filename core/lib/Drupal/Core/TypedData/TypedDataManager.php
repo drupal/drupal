@@ -130,7 +130,7 @@ class TypedDataManager extends PluginManagerBase {
    * @return \Drupal\Core\TypedData\TypedDataInterface
    *   The instantiated typed data object.
    *
-   * @see typed_data()
+   * @see \Drupal::typedData()
    * @see \Drupal\Core\TypedData\TypedDataManager::getPropertyInstance()
    * @see \Drupal\Core\TypedData\Type\Integer
    * @see \Drupal\Core\TypedData\Type\Float

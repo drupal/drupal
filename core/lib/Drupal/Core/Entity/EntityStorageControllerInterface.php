@@ -147,7 +147,7 @@ interface EntityStorageControllerInterface {
    * @return array
    *   An array of field definitions of entity fields, keyed by field
    *   name. In addition to the typed data definition keys as described at
-   *   typed_data()->create() the follow keys are supported:
+   *   \Drupal::typedData()->create() the follow keys are supported:
    *   - queryable: Whether the field is queryable via QueryInterface.
    *     Defaults to TRUE if 'computed' is FALSE or not set, to FALSE otherwise.
    *   - translatable: Whether the field is translatable. Defaults to FALSE.
@@ -155,7 +155,7 @@ interface EntityStorageControllerInterface {
    *     via field.module. Defaults to FALSE.
    *
    * @see Drupal\Core\TypedData\TypedDataManager::create()
-   * @see typed_data()
+   * @see \Drupal::typedData()
    */
   public function getFieldDefinitions(array $constraints);
 

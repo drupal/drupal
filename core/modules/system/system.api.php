@@ -167,7 +167,7 @@ function hook_cron() {
  *   - constraints: An array of validation constraints for this type. See
  *     \Drupal\Core\TypedData\TypedDataManager::getConstraints() for details.
  *
- * @see typed_data()
+ * @see \Drupal::typedData()
  * @see Drupal\Core\TypedData\TypedDataManager::create()
  * @see hook_data_type_info_alter()
  */
