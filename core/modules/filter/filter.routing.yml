@@ -4,3 +4,17 @@ filter_admin_disable:
     _form: '\Drupal\filter\Form\DisableForm'
   requirements:
     _filter_disable_format_access: 'TRUE'
+
+filter_tips_all:
+  pattern: '/filter/tips'
+  defaults:
+    _content: '\Drupal\filter\Controller\FilterController::filterTips'
+  requirements:
+    _access: 'TRUE'
+
+filter_tips:
+  pattern: '/filter/tips/{filter_format}'
+  defaults:
+    _content: '\Drupal\filter\Controller\FilterController::filterTips'
+  requirements:
+    _filter_access: 'TRUE'

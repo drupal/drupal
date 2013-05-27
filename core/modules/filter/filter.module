@@ -116,18 +116,12 @@ function filter_element_info() {
 function filter_menu() {
   $items['filter/tips'] = array(
     'title' => 'Compose tips',
-    'page callback' => 'filter_tips_long',
-    'access callback' => TRUE,
     'type' => MENU_SUGGESTED_ITEM,
-    'file' => 'filter.pages.inc',
+    'route_name' => 'filter_tips_all',
   );
   $items['filter/tips/%filter_format'] = array(
     'title' => 'Compose tips',
-    'page callback' => 'filter_tips_long',
-    'page arguments' => array(2),
-    'access callback' => 'filter_access',
-    'access arguments' => array(2),
-    'file' => 'filter.pages.inc',
+    'route_name' => 'filter_tips',
   );
   $items['admin/config/content/formats'] = array(
     'title' => 'Text formats',
