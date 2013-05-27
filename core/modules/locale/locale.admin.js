@@ -69,8 +69,8 @@ Drupal.behaviors.hideUpdateInformation = {
           }
         });
       });
+      $table.find('.requirements, .links').hide();
     }
-    $table.find('.requirements, .links').hide();
   }
 };
 
