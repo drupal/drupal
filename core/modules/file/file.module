@@ -777,7 +777,8 @@ function file_ajax_upload() {
     $form['#suffix'] .= '<span class="ajax-new-content"></span>';
   }
 
-  $output = theme('status_messages') . drupal_render($form);
+  $form['#prefix'] .= theme('status_messages');
+  $output = drupal_render($form);
   $js = drupal_add_js();
   $settings = drupal_merge_js_settings($js['settings']['data']);
 
