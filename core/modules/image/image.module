@@ -693,9 +693,10 @@ function image_style_transform_dimensions($style_name, array &$dimensions) {
  *   An image style array.
  */
 function image_style_flush($style) {
-  $style_directory = drupal_realpath(file_default_scheme() . '://styles/' . $style->id());
-  if (is_dir($style_directory)) {
-    file_unmanaged_delete_recursive($style_directory);
+  // Delete the style directory in each registered wrapper.
+  $wrappers = file_get_stream_wrappers(STREAM_WRAPPERS_WRITE_VISIBLE);
+  foreach ($wrappers as $wrapper => $wrapper_data) {
+    file_unmanaged_delete_recursive($wrapper . '://styles/' . $style->id());
   }
 
   // Let other modules update as necessary on flush.

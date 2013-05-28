@@ -31,7 +31,7 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
     // with the whole item.
     foreach ($this->getPropertyDefinitions() as $name => $definition) {
       if (!empty($definition['computed'])) {
-        $this->properties[$name] = typed_data()->getPropertyInstance($this, $name);
+        $this->properties[$name] = \Drupal::typedData()->getPropertyInstance($this, $name);
       }
     }
   }

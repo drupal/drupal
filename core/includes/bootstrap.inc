@@ -2289,27 +2289,6 @@ function state() {
 }
 
 /**
- * Returns the typed data manager service.
- *
- * Use the typed data manager service for creating typed data objects.
- *
- * @see Drupal\Core\TypedData\TypedDataManager::create()
- *
- * @return Drupal\Core\TypedData\TypedDataManager
- */
-function typed_data() {
-  // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static_fast;
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['manager'] = &drupal_static(__FUNCTION__);
-  }
-  if (!isset($drupal_static_fast['manager'])) {
-    $drupal_static_fast['manager'] = drupal_container()->get('typed_data');
-  }
-  return $drupal_static_fast['manager'];
-}
-
-/**
  * Returns the test prefix if this is an internal request from SimpleTest.
  *
  * @param string $new_prefix

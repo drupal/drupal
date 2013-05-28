@@ -167,7 +167,7 @@ function hook_cron() {
  *   - constraints: An array of validation constraints for this type. See
  *     \Drupal\Core\TypedData\TypedDataManager::getConstraints() for details.
  *
- * @see typed_data()
+ * @see \Drupal::typedData()
  * @see Drupal\Core\TypedData\TypedDataManager::create()
  * @see hook_data_type_info_alter()
  */
@@ -862,6 +862,31 @@ function hook_menu() {
   );
 
   return $items;
+}
+
+/**
+ * Define route-based local actions.
+ *
+ * Instead of using MENU_LOCAL_ACTION in hook_menu(), implement
+ * hook_local_actions().
+ *
+ * @return array
+ *   An associative array containing the following keys:
+ *   - route_name: The machine name of the local action route.
+ *   - title: The title of the local action.
+ *   - appears_on: An array of route names for this action to be display on.
+ */
+function hook_local_actions() {
+  return array(
+    array(
+      'route_name' => 'mymodule.route.action',
+      'title' => t('Perform local action'),
+      'appears_on' => array(
+        'mymodule.other_route',
+        'mymodule.other_other_route',
+      ),
+    ),
+  );
 }
 
 /**

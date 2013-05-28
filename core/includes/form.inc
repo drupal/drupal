@@ -5143,14 +5143,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
       }
 
       // Store the batch.
-      db_insert('batch')
-        ->fields(array(
-          'bid' => $batch['id'],
-          'timestamp' => REQUEST_TIME,
-          'token' => drupal_get_token($batch['id']),
-          'batch' => serialize($batch),
-        ))
-        ->execute();
+      Drupal::service('batch.storage')->create($batch);
 
       // Set the batch number in the session to guarantee that it will stay alive.
       $_SESSION['batches'][$batch['id']] = TRUE;

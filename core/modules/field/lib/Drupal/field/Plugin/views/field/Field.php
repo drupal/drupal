@@ -68,6 +68,13 @@ class Field extends FieldPluginBase {
   public $instance;
 
   /**
+   * An array of formatter options.
+   *
+   * @var array
+   */
+  protected $formatterOptions;
+
+  /**
    * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::init().
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
@@ -330,7 +337,7 @@ class Field extends FieldPluginBase {
     parent::buildOptionsForm($form, $form_state);
 
     $field = $this->field_info;
-    $formatters = _field_view_formatter_options($field['type']);
+    $formatters = $this->formatterOptions($field['type']);
     $column_names = array_keys($field['columns']);
 
     // If this is a multiple value field, add its options.
@@ -845,6 +852,39 @@ class Field extends FieldPluginBase {
     else {
       return Language::LANGCODE_NOT_SPECIFIED;
     }
+  }
+
+  /**
+   * Returns an array of formatter options for a field type.
+   *
+   * Borrowed from field_ui.
+   *
+   * @param string $field_type
+   *   (optional) The field type to get options for.
+   *
+   * @return array
+   *   An array of formatter options.
+   *
+   * @see field_ui_formatter_options().
+   */
+  protected function formatterOptions($field_type = NULL) {
+    if (!isset($this->formatterOptions)) {
+      $field_types = field_info_field_types();
+      $this->formatterOptions = array();
+      foreach (field_info_formatter_types() as $name => $formatter) {
+        foreach ($formatter['field_types'] as $formatter_field_type) {
+          // Check that the field type exists.
+          if (isset($field_types[$formatter_field_type])) {
+            $this->formatterOptions[$formatter_field_type][$name] = $formatter['label'];
+          }
+        }
+      }
+    }
+
+    if ($field_type) {
+      return !empty($this->formatterOptions[$field_type]) ? $this->formatterOptions[$field_type] : array();
+    }
+    return $options;
   }
 
 }

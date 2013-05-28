@@ -83,6 +83,18 @@ abstract class StylePluginBase extends PluginBase {
   protected $rendered_fields;
 
   /**
+   * The theme function used to render the grouping set.
+   *
+   * Plugins may override this attribute if they wish to use some other theme
+   * function to render the grouping set.
+   *
+   * @var string
+   *
+   * @see StylePluginBase::render_grouping_sets()
+   */
+  protected $groupingTheme = 'views_view_grouping';
+
+  /**
    * Overrides \Drupal\views\Plugin\views\PluginBase::init().
    *
    * The style options might come externally as the style can be sourced from at
@@ -365,7 +377,7 @@ abstract class StylePluginBase extends PluginBase {
    * @param string $display_type
    *   The display type, either block or page.
    */
-  function wizard_submit(&$form, &$form_state, WizardInterface $wizard, &$display_options, $display_type) {
+  public function wizardSubmit(&$form, &$form_state, WizardInterface $wizard, &$display_options, $display_type) {
   }
 
   /**
@@ -445,7 +457,7 @@ abstract class StylePluginBase extends PluginBase {
    */
   function render_grouping_sets($sets, $level = 0) {
     $output = array();
-    $theme_functions = views_theme_functions('views_view_grouping', $this->view, $this->view->display_handler->display);
+    $theme_functions = views_theme_functions($this->groupingTheme, $this->view, $this->view->display_handler->display);
     foreach ($sets as $set) {
       $row = reset($set['rows']);
       // Render as a grouping set.

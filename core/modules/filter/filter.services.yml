@@ -10,6 +10,10 @@ services:
     class: Drupal\filter\Access\FormatDisableCheck
     tags:
       - { name: access_check }
+  access_check.filter_access:
+    class: Drupal\filter\Access\FilterAccessCheck
+    tags:
+      - { name: access_check }
   plugin.manager.filter:
     class: Drupal\filter\FilterPluginManager
     arguments: ['@container.namespaces']

@@ -358,7 +358,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
       ),
       'label' => 'Test entity',
     );
-    $wrapped_entity = typed_data()->create($definition);
+    $wrapped_entity = $this->container->get('typed_data')->create($definition);
     $definitions = $wrapped_entity->getPropertyDefinitions($definition);
     $this->assertEqual($definitions['name']['type'], 'string_field', $entity_type .': Name field found.');
     $this->assertEqual($definitions['user_id']['type'], 'entity_reference_field', $entity_type .': User field found.');
@@ -478,7 +478,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
       ),
       'label' => 'Test entity',
     );
-    $wrapped_entity = typed_data()->create($entity_definition, $entity);
+    $wrapped_entity = $this->container->get('typed_data')->create($entity_definition, $entity);
 
     // Test using the whole tree of typed data by navigating through the tree of
     // contained properties and getting all contained strings, limited by a
@@ -539,7 +539,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
       ),
       'label' => 'Test entity',
     );
-    $wrapped_entity = typed_data()->create($entity_definition, $entity);
+    $wrapped_entity = $this->container->get('typed_data')->create($entity_definition, $entity);
 
     // Test validation the typed data object.
     $violations = $wrapped_entity->validate();
@@ -567,7 +567,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
       ),
       'label' => 'Test node',
     );
-    $wrapped_entity = typed_data()->create($entity_definition, $node);
+    $wrapped_entity = $this->container->get('typed_data')->create($entity_definition, $node);
 
     $violations = $wrapped_entity->validate();
     $this->assertEqual($violations->count(), 1);

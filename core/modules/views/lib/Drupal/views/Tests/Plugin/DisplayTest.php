@@ -70,9 +70,28 @@ class DisplayTest extends PluginTestBase {
       'display_plugin' => 'display_test',
       'id' => 'display_test_1',
       'display_title' => 'Display test',
-      'position' => NULL,
+      'position' => 1,
     );
     $this->assertEqual($displays['display_test_1'], $options);
+
+    // Add another one to ensure that position is counted up.
+    $view->storage->addDisplay('display_test');
+    $displays = $view->storage->get('display');
+    $options = array(
+      'display_options' => array(),
+      'display_plugin' => 'display_test',
+      'id' => 'display_test_2',
+      'display_title' => 'Display test 2',
+      'position' => 2,
+    );
+    $this->assertEqual($displays['display_test_2'], $options);
+
+    // Move the second display before the first one in order to test custom
+    // sorting.
+    $displays['display_test_1']['position'] = 2;
+    $displays['display_test_2']['position'] = 1;
+    $view->storage->set('display', $displays);
+    $view->save();
 
     $view->setDisplay('display_test_1');
 
@@ -88,8 +107,8 @@ class DisplayTest extends PluginTestBase {
 
     // Change this option and check the title of out output.
     $view->display_handler->overrideOption('test_option', 'Test option title');
-
     $view->save();
+
     $output = $view->preview();
     $output = drupal_render($output);
 
@@ -99,6 +118,10 @@ class DisplayTest extends PluginTestBase {
     // Test that the display category/summary is in the UI.
     $this->drupalGet('admin/structure/views/view/test_view/edit/display_test_1');
     $this->assertText('Display test settings');
+    // Ensure that the order is as expected.
+    $result = $this->xpath('//ul[@id="views-display-menu-tabs"]/li');
+    $this->assertEqual((string) $result[0]->a, 'Display test 2');
+    $this->assertEqual((string) $result[1]->a, 'Display test');
 
     $this->clickLink('Test option title');
 

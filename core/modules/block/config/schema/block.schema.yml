@@ -16,9 +16,6 @@ block.block.*.*:
     label_display:
       type: string
       label: 'Display title'
-    uuid:
-      type: string
-      label: 'UUID'
     region:
       type: string
       label: 'Region'

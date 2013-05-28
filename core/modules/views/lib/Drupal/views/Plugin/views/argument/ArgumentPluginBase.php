@@ -774,8 +774,8 @@ abstract class ArgumentPluginBase extends HandlerBase {
 
     // Change the display style to the summary style for this
     // argument.
-    $this->view->plugin_name = $this->options['summary']['format'];
-    $this->view->style_options = $this->options['summary_options'];
+    $this->view->style_plugin = Views::pluginManager("style")->createInstance($this->options['summary']['format']);
+    $this->view->style_plugin->init($this->view, $this->displayHandler, $this->options['summary_options']);
 
     // Clear out the normal primary field and whatever else may have
     // been added and let the summary do the work.

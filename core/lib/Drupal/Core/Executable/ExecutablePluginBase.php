@@ -95,7 +95,7 @@ abstract class ExecutablePluginBase extends ContextAwarePluginBase implements Ex
    */
   public function setConfig($key, $value) {
     if ($definition = $this->getConfigDefinition($key)) {
-      $typed_data = typed_data()->create($definition, $value);
+      $typed_data = \Drupal::typedData()->create($definition, $value);
 
       if ($typed_data->validate()->count() > 0) {
         throw new PluginException("The provided configuration value does not pass validation.");

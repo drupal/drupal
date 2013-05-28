@@ -170,8 +170,7 @@ class EntityNG extends Entity {
         if (isset($this->values[$property_name][$langcode])) {
           $value = $this->values[$property_name][$langcode];
         }
-        // @todo: Make entities implement the TypedDataInterface.
-        $this->fields[$property_name][$langcode] = typed_data()->getPropertyInstance($this, $property_name, $value);
+        $this->fields[$property_name][$langcode] = \Drupal::typedData()->getPropertyInstance($this, $property_name, $value);
       }
     }
     return $this->fields[$property_name][$langcode];
@@ -317,7 +316,7 @@ class EntityNG extends Entity {
         'bundle' => $this->bundle(),
       ),
     );
-    $translation = typed_data()->create($translation_definition, $fields);
+    $translation = \Drupal::typedData()->create($translation_definition, $fields);
     $translation->setStrictMode($strict);
     $translation->setContext('@' . $langcode, $this);
     return $translation;

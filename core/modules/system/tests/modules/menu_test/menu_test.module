@@ -416,7 +416,34 @@ function menu_test_menu() {
     'type' => MENU_LOCAL_TASK,
   );
 
+  $items['menu-test-local-action'] = array(
+    'title' => 'Local action parent',
+    'route_name' => 'menu_test_local_action1',
+  );
+
+  $items['menu-test-local-action/hook_menu'] = array(
+    'title' => 'My hook_menu action',
+    'route_name' => 'menu_test_local_action2',
+    'weight' => -10,
+    'type' => MENU_LOCAL_ACTION,
+  );
+
   return $items;
+}
+
+/**
+ * Implements hook_local_actions().
+ */
+function menu_test_local_actions() {
+  return array(
+    array(
+      'route_name' => 'menu_test_local_action3',
+      'title' => t('My routing action'),
+      'appears_on' => array(
+        'menu_test_local_action1',
+      ),
+    ),
+  );
 }
 
 /**

@@ -167,7 +167,7 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
    *
    * Query plugins that don't support entities can leave the method empty.
    */
-  function load_entities(&$results) {}
+  function loadEntities(&$results) {}
 
   /**
    * Returns a Unix timestamp to database native timestamp expression.

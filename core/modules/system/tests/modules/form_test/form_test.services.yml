@@ -1,3 +1,7 @@
 services:
   form_test.form.serviceform:
     class: Drupal\form_test\FormTestServiceObject
+  form_test.event_subscriber:
+    class: Drupal\form_test\EventSubscriber\FormTestEventSubscriber
+    tags:
+      - { name: event_subscriber }

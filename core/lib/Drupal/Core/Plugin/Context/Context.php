@@ -49,7 +49,7 @@ class Context extends ComponentContext {
   public function setContextValue($value) {
     // Make sure the value set is a typed data object.
     if (!empty($this->contextDefinition['type']) && !$value instanceof TypedDataInterface) {
-      $value = typed_data()->create($this->contextDefinition, $value);
+      $value = \Drupal::typedData()->create($this->contextDefinition, $value);
     }
     parent::setContextValue($value);
   }

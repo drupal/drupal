@@ -42,7 +42,7 @@ class TypedDataTest extends DrupalUnitTestBase {
     parent::setup();
 
     $this->installSchema('file', array('file_managed', "file_usage"));
-    $this->typedData = typed_data();
+    $this->typedData = $this->container->get('typed_data');
   }
 
   /**
@@ -54,7 +54,7 @@ class TypedDataTest extends DrupalUnitTestBase {
     // Save the type that was passed in so we can compare with it later.
     $type = $definition['type'];
     // Construct the object.
-    $data = typed_data()->create($definition, $value, $name);
+    $data = $this->typedData->create($definition, $value, $name);
     // Assert the definition of the wrapper.
     $this->assertTrue($data instanceof \Drupal\Core\TypedData\TypedDataInterface, 'Typed data object is an instance of the typed data interface.');
     $definition = $data->getDefinition();
