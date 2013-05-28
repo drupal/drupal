@@ -243,7 +243,7 @@ abstract class PagerPluginBase extends PluginBase {
 
   function exposed_form_validate(&$form, &$form_state) { }
 
-  function exposed_form_submit(&$form, &$form_state, &$exclude) { }
+  public function exposedFormSubmit(&$form, &$form_state, &$exclude) { }
 
   function uses_exposed() {
     return FALSE;

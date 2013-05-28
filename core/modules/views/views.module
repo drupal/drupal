@@ -1460,7 +1460,7 @@ function views_exposed_form_submit(&$form, &$form_state) {
 
   $exclude = array('submit', 'form_build_id', 'form_id', 'form_token', 'exposed_form_plugin', '', 'reset');
   $exposed_form_plugin = $form_state['exposed_form_plugin'];
-  $exposed_form_plugin->exposed_form_submit($form, $form_state, $exclude);
+  $exposed_form_plugin->exposedFormSubmit($form, $form_state, $exclude);
 
   foreach ($form_state['values'] as $key => $value) {
     if (!in_array($key, $exclude)) {

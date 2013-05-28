@@ -271,12 +271,12 @@ abstract class ExposedFormPluginBase extends PluginBase {
   *   Nested array of keys to exclude of insert into
   *   $view->exposed_raw_input
   */
-  function exposed_form_submit(&$form, &$form_state, &$exclude) {
+  public function exposedFormSubmit(&$form, &$form_state, &$exclude) {
     if (!empty($form_state['values']['op']) && $form_state['values']['op'] == $this->options['reset_button_label']) {
       $this->reset_form($form, $form_state);
     }
     if (isset($form_state['pager_plugin'])) {
-      $form_state['pager_plugin']->exposed_form_submit($form, $form_state, $exclude);
+      $form_state['pager_plugin']->exposedFormSubmit($form, $form_state, $exclude);
       $exclude[] = 'pager_plugin';
     }
   }
