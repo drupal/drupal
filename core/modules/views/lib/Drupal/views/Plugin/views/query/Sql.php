@@ -1148,7 +1148,7 @@ class Sql extends QueryPluginBase {
    * @return array
    *   An array of the fieldnames which are non-aggregates.
    */
-  function get_non_aggregates() {
+  protected function getNonAggregates() {
     $non_aggregates = array();
     foreach ($this->fields as $field) {
       $string = '';
@@ -1307,7 +1307,7 @@ class Sql extends QueryPluginBase {
 
     // Assemble the groupby clause, if any.
     $this->has_aggregate = FALSE;
-    $non_aggregates = $this->get_non_aggregates();
+    $non_aggregates = $this->getNonAggregates();
     if (count($this->having)) {
       $this->has_aggregate = TRUE;
     }
