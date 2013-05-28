@@ -444,7 +444,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     $defaults = array(
       'ignore' => array(
         'title' => t('Display all results for the specified field'),
-        'method' => 'default_ignore',
+        'method' => 'defaultIgnore',
         'breadcrumb' => TRUE, // generate a breadcrumb to here
       ),
       'default' => array(
@@ -681,7 +681,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * If an argument was expected and was not given, in this case, simply
    * ignore the argument entirely.
    */
-  function default_ignore() {
+  public function defaultIgnore() {
     return TRUE;
   }
 
