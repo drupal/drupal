@@ -249,7 +249,7 @@ abstract class PagerPluginBase extends PluginBase {
     return FALSE;
   }
 
-  function items_per_page_exposed() {
+  protected function itemsPerPageExposed() {
     return FALSE;
   }
 
