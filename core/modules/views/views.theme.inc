@@ -711,7 +711,7 @@ function template_preprocess_views_view_table(&$vars) {
         $vars['row_classes'][$num]['class'][] = 'views-row-last';
       }
     }
-    if ($row_class = $handler->get_row_class($num)) {
+    if ($row_class = $handler->getRowClass($num)) {
       $vars['row_classes'][$num]['class'][] = $row_class;
     }
     $vars['row_classes'][$num] = new Attribute($vars['row_classes'][$num]);
@@ -858,7 +858,7 @@ function template_preprocess_views_view_grid(&$vars) {
           $vars['column_classes'][$row_number][$column_number]['class'][] = 'col-last';
         }
       }
-      if (isset($row_indexes[$row_number][$column_number]) && $column_class = $view->style_plugin->get_row_class($row_indexes[$row_number][$column_number])) {
+      if (isset($row_indexes[$row_number][$column_number]) && $column_class = $view->style_plugin->getRowClass($row_indexes[$row_number][$column_number])) {
         $vars['column_classes'][$row_number][$column_number]['class'][] = $column_class;
       }
       $vars['column_classes'][$row_number][$column_number] = new Attribute($vars['column_classes'][$row_number][$column_number]);
@@ -910,7 +910,7 @@ function template_preprocess_views_view_unformatted(&$vars) {
       }
     }
 
-    if ($row_class = $view->style_plugin->get_row_class($id)) {
+    if ($row_class = $view->style_plugin->getRowClass($id)) {
       $vars['row_classes'][$id]['class'][] = $row_class;
     }
     $vars['row_classes'][$id] = new Attribute($vars['row_classes'][$id]);

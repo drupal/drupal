@@ -182,7 +182,7 @@ abstract class StylePluginBase extends PluginBase {
   /**
    * Return the token replaced row class for the specified row.
    */
-  function get_row_class($row_index) {
+  public function getRowClass($row_index) {
     if ($this->usesRowClass()) {
       $class = $this->options['row_class'];
       if ($this->usesFields() && $this->view->field) {
