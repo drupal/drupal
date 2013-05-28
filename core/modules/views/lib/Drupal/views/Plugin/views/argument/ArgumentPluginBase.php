@@ -324,7 +324,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
 
       // If we decide this validator is ok, add it to the list.
       if ($valid) {
-        $plugin = $this->get_plugin('argument_validator', $id);
+        $plugin = $this->getPlugin('argument_validator', $id);
         if ($plugin) {
           if ($plugin->access() || $this->options['validate']['type'] == $id) {
             $form['validate']['options'][$id] = array(
@@ -373,20 +373,20 @@ abstract class ArgumentPluginBase extends HandlerBase {
 
     // Let the plugins do validation.
     $default_id = $form_state['values']['options']['default_argument_type'];
-    $plugin = $this->get_plugin('argument_default', $default_id);
+    $plugin = $this->getPlugin('argument_default', $default_id);
     if ($plugin) {
       $plugin->validateOptionsForm($form['argument_default'][$default_id], $form_state, $form_state['values']['options']['argument_default'][$default_id]);
     }
 
     // summary plugin
     $summary_id = $form_state['values']['options']['summary']['format'];
-    $plugin = $this->get_plugin('style', $summary_id);
+    $plugin = $this->getPlugin('style', $summary_id);
     if ($plugin) {
       $plugin->validateOptionsForm($form['summary']['options'][$summary_id], $form_state, $form_state['values']['options']['summary']['options'][$summary_id]);
     }
 
     $validate_id = $form_state['values']['options']['validate']['type'];
-    $plugin = $this->get_plugin('argument_validator', $validate_id);
+    $plugin = $this->getPlugin('argument_validator', $validate_id);
     if ($plugin) {
       $plugin->validateOptionsForm($form['validate']['options'][$default_id], $form_state, $form_state['values']['options']['validate']['options'][$validate_id]);
     }
@@ -400,7 +400,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
 
     // Let the plugins make submit modifications if necessary.
     $default_id = $form_state['values']['options']['default_argument_type'];
-    $plugin = $this->get_plugin('argument_default', $default_id);
+    $plugin = $this->getPlugin('argument_default', $default_id);
     if ($plugin) {
       $options = &$form_state['values']['options']['argument_default'][$default_id];
       $plugin->submitOptionsForm($form['argument_default'][$default_id], $form_state, $options);
@@ -410,7 +410,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
 
     // summary plugin
     $summary_id = $form_state['values']['options']['summary']['format'];
-    $plugin = $this->get_plugin('style', $summary_id);
+    $plugin = $this->getPlugin('style', $summary_id);
     if ($plugin) {
       $options = &$form_state['values']['options']['summary']['options'][$summary_id];
       $plugin->submitOptionsForm($form['summary']['options'][$summary_id], $form_state, $options);
@@ -419,7 +419,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     }
 
     $validate_id = $form_state['values']['options']['validate']['type'];
-    $plugin = $this->get_plugin('argument_validator', $validate_id);
+    $plugin = $this->getPlugin('argument_validator', $validate_id);
     if ($plugin) {
       $options = &$form_state['values']['options']['validate']['options'][$validate_id];
       $plugin->submitOptionsForm($form['validate']['options'][$validate_id], $form_state, $options);
@@ -529,7 +529,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       if (!empty($info['no_ui'])) {
         continue;
       }
-      $plugin = $this->get_plugin('argument_default', $id);
+      $plugin = $this->getPlugin('argument_default', $id);
       if ($plugin) {
         if ($plugin->access() || $this->options['default_argument_type'] == $id) {
           $form['argument_default']['#argument_option'] = 'default';
@@ -617,7 +617,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     );
 
     foreach ($summary_plugins as $id => $info) {
-      $plugin = $this->get_plugin('style', $id);
+      $plugin = $this->getPlugin('style', $id);
       if (!$plugin->usesOptions()) {
         continue;
       }
@@ -742,7 +742,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * Get a default argument, if available.
    */
   function get_default_argument() {
-    $plugin = $this->get_plugin('argument_default');
+    $plugin = $this->getPlugin('argument_default');
     if ($plugin) {
       return $plugin->get_argument();
     }
@@ -756,7 +756,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    */
   function process_summary_arguments(&$args) {
     if ($this->options['validate']['type'] != 'none') {
-      if (isset($this->validator) || $this->validator = $this->get_plugin('argument_validator')) {
+      if (isset($this->validator) || $this->validator = $this->getPlugin('argument_validator')) {
         $this->validator->process_summary_arguments($args);
       }
     }
@@ -949,7 +949,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       return $this->argument_validated = TRUE;
     }
 
-    $plugin = $this->get_plugin('argument_validator');
+    $plugin = $this->getPlugin('argument_validator');
     return $this->argument_validated = $plugin->validate_argument($arg);
   }
 
@@ -1031,7 +1031,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
   /**
    * Get the display or row plugin, if it exists.
    */
-  function get_plugin($type = 'argument_default', $name = NULL) {
+  public function getPlugin($type = 'argument_default', $name = NULL) {
     $options = array();
     switch ($type) {
       case 'argument_default':
