@@ -992,7 +992,7 @@ abstract class DisplayPluginBase extends PluginBase {
   /**
    * Returns to tokens for arguments.
    *
-   * This function is similar to views_handler_field::get_render_tokens()
+   * This function is similar to views_handler_field::getRenderTokens()
    * but without fields tokens.
    */
   public function getArgumentsTokens() {

@@ -638,7 +638,7 @@ abstract class StylePluginBase extends PluginBase {
             $this->rendered_fields[$count][$id] = $this->view->field[$id]->theme($row);
           }
 
-          $this->row_tokens[$count] = $this->view->field[$id]->get_render_tokens(array());
+          $this->row_tokens[$count] = $this->view->field[$id]->getRenderTokens(array());
         }
       }
       unset($this->view->row_index);
