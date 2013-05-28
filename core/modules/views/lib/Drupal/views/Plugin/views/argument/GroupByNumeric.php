@@ -23,7 +23,7 @@ class GroupByNumeric extends ArgumentPluginBase {
     $field = $this->getField();
     $placeholder = $this->placeholder();
 
-    $this->query->add_having_expression(0, "$field = $placeholder", array($placeholder => $this->argument));
+    $this->query->addHavingExpression(0, "$field = $placeholder", array($placeholder => $this->argument));
   }
 
   public function adminLabel($short = FALSE) {

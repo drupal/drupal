@@ -953,7 +953,7 @@ class Sql extends QueryPluginBase {
    *
    * @see QueryConditionInterface::having()
    */
-  function add_having_expression($group, $snippet, $args = array()) {
+  public function addHavingExpression($group, $snippet, $args = array()) {
     // Ensure all variants of 0 are actually 0. Thus '', 0 and NULL are all
     // the default group.
     if (empty($group)) {

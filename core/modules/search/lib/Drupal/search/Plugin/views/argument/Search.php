@@ -106,7 +106,7 @@ class Search extends ArgumentPluginBase {
       $this->query->add_groupby("$search_index.sid");
       $matches = $this->search_query->matches();
       $placeholder = $this->placeholder();
-      $this->query->add_having_expression(0, "COUNT(*) >= $placeholder", array($placeholder => $matches));
+      $this->query->addHavingExpression(0, "COUNT(*) >= $placeholder", array($placeholder => $matches));
     }
   }
 
