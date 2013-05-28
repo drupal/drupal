@@ -186,7 +186,7 @@ class Search extends FilterPluginBase {
       $this->query->add_groupby("$search_index.sid");
       $matches = $this->search_query->matches();
       $placeholder = $this->placeholder();
-      $this->query->add_having_expression($this->options['group'], "COUNT(*) >= $placeholder", array($placeholder => $matches));
+      $this->query->addHavingExpression($this->options['group'], "COUNT(*) >= $placeholder", array($placeholder => $matches));
     }
     // Set to NULL to prevent PDO exception when views object is cached.
     $this->search_query = NULL;

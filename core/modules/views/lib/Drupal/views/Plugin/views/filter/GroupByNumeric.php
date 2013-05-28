@@ -31,17 +31,17 @@ class GroupByNumeric extends Numeric {
     $placeholder_min = $this->placeholder();
     $placeholder_max = $this->placeholder();
     if ($this->operator == 'between') {
-      $this->query->add_having_expression($this->options['group'], "$field >= $placeholder_min", array($placeholder_min => $this->value['min']));
-      $this->query->add_having_expression($this->options['group'], "$field <= $placeholder_max", array($placeholder_max => $this->value['max']));
+      $this->query->addHavingExpression($this->options['group'], "$field >= $placeholder_min", array($placeholder_min => $this->value['min']));
+      $this->query->addHavingExpression($this->options['group'], "$field <= $placeholder_max", array($placeholder_max => $this->value['max']));
     }
     else {
-      $this->query->add_having_expression($this->options['group'], "$field <= $placeholder_min OR $field >= $placeholder_max", array($placeholder_min => $this->value['min'], $placeholder_max => $this->value['max']));
+      $this->query->addHavingExpression($this->options['group'], "$field <= $placeholder_min OR $field >= $placeholder_max", array($placeholder_min => $this->value['min'], $placeholder_max => $this->value['max']));
     }
   }
 
   function op_simple($field) {
     $placeholder = $this->placeholder();
-    $this->query->add_having_expression($this->options['group'], "$field $this->operator $placeholder", array($placeholder => $this->value['value']));
+    $this->query->addHavingExpression($this->options['group'], "$field $this->operator $placeholder", array($placeholder => $this->value['value']));
   }
 
   function op_empty($field) {
@@ -52,7 +52,7 @@ class GroupByNumeric extends Numeric {
       $operator = "IS NOT NULL";
     }
 
-    $this->query->add_having_expression($this->options['group'], "$field $operator");
+    $this->query->addHavingExpression($this->options['group'], "$field $operator");
   }
 
   public function adminLabel($short = FALSE) {
