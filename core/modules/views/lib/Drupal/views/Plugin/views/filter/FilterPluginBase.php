@@ -209,7 +209,7 @@ abstract class FilterPluginBase extends HandlerBase {
           '#markup' => '<div class="clearfix">',
         );
         // Render the build group form.
-        $this->show_build_group_form($form, $form_state);
+        $this->showBuildGroupForm($form, $form_state);
         $form['clear_markup_end'] = array(
           '#markup' => '</div>',
         );
@@ -343,7 +343,7 @@ abstract class FilterPluginBase extends HandlerBase {
   /**
    * Shortcut to display the exposed options form.
    */
-  function show_build_group_form(&$form, &$form_state) {
+  public function showBuildGroupForm(&$form, &$form_state) {
     if (empty($this->options['is_grouped'])) {
       return;
     }
