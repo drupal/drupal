@@ -1,6 +1,9 @@
 <?php
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\UrlValidator;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
 use Symfony\Component\DependencyInjection\Container;
@@ -806,29 +809,11 @@ function valid_email_address($mail) {
  *
  * @return
  *   TRUE if the URL is in a valid format.
+ *
+ * @see \Drupal\Component\Utility\UrlValidator::isValid()
  */
 function valid_url($url, $absolute = FALSE) {
-  if ($absolute) {
-    return (bool)preg_match("
-      /^                                                      # Start at the beginning of the text
-      (?:ftp|https?|feed):\/\/                                # Look for ftp, http, https or feed schemes
-      (?:                                                     # Userinfo (optional) which is typically
-        (?:(?:[\w\.\-\+!$&'\(\)*\+,;=]|%[0-9a-f]{2})+:)*      # a username or a username and password
-        (?:[\w\.\-\+%!$&'\(\)*\+,;=]|%[0-9a-f]{2})+@          # combination
-      )?
-      (?:
-        (?:[a-z0-9\-\.]|%[0-9a-f]{2})+                        # A domain name or a IPv4 address
-        |(?:\[(?:[0-9a-f]{0,4}:)*(?:[0-9a-f]{0,4})\])         # or a well formed IPv6 address
-      )
-      (?::[0-9]+)?                                            # Server port number (optional)
-      (?:[\/|\?]
-        (?:[\w#!:\.\?\+=&@$'~*,;\/\(\)\[\]\-]|%[0-9a-f]{2})   # The path and query (optional)
-      *)?
-    $/xi", $url);
-  }
-  else {
-    return (bool)preg_match("/^(?:[\w#!:\.\?\+=&@$'~*,;\/\(\)\[\]\-]|%[0-9a-f]{2})+$/i", $url);
-  }
+  return UrlValidator::isValid($url, $absolute);
 }
 
 /**
@@ -910,40 +895,10 @@ function valid_number_step($value, $step, $offset = 0.0) {
  *   check_plain() being called on it. However, it can be passed to functions
  *   expecting plain-text strings.
  *
- * @see check_url()
+ * @see \Drupal\Component\Utility\Url::stripDangerousProtocols()
  */
 function drupal_strip_dangerous_protocols($uri) {
-  static $allowed_protocols;
-
-  if (!isset($allowed_protocols)) {
-    // filter_xss_admin() is called by the installer and update.php, in which
-    // case the configuration may not exist (yet). Provide a minimal default set
-    // of allowed protocols for these cases.
-    $allowed_protocols = array_flip(config('system.filter')->get('protocols') ?: array('http', 'https'));
-  }
-
-  // Iteratively remove any invalid protocol found.
-  do {
-    $before = $uri;
-    $colonpos = strpos($uri, ':');
-    if ($colonpos > 0) {
-      // We found a colon, possibly a protocol. Verify.
-      $protocol = substr($uri, 0, $colonpos);
-      // If a colon is preceded by a slash, question mark or hash, it cannot
-      // possibly be part of the URL scheme. This must be a relative URL, which
-      // inherits the (safe) protocol of the base document.
-      if (preg_match('![/?#]!', $protocol)) {
-        break;
-      }
-      // Check if this is a disallowed protocol. Per RFC2616, section 3.2.3
-      // (URI Comparison) scheme comparison must be case-insensitive.
-      if (!isset($allowed_protocols[strtolower($protocol)])) {
-        $uri = substr($uri, $colonpos + 1);
-      }
-    }
-  } while ($before != $uri);
-
-  return $uri;
+  return UrlValidator::stripDangerousProtocols($uri);
 }
 
 /**
@@ -961,10 +916,11 @@ function drupal_strip_dangerous_protocols($uri) {
  *   Drupal\Core\Template\Attribute, call drupal_strip_dangerous_protocols()
  *   instead.
  *
- * @see drupal_strip_dangerous_protocols()
+ * @see \Drupal\Component\Utility\Url::stripDangerousProtocols()
+ * @see \Drupal\Component\Utility\String::checkPlain()
  */
 function check_url($uri) {
-  return check_plain(drupal_strip_dangerous_protocols($uri));
+  return String::checkPlain(UrlValidator::stripDangerousProtocols($uri));
 }
 
 /**
@@ -976,9 +932,17 @@ function check_url($uri) {
  *
  * Allows all tags that can be used inside an HTML body, save
  * for scripts and styles.
+ *
+ * @param string $string
+ *   The string to apply the filter to.
+ *
+ * @return string
+ *   The filtered string.
+ *
+ * @see \Drupal\Component\Utility\Xss::filterAdmin()
  */
 function filter_xss_admin($string) {
-  return filter_xss($string, array('a', 'abbr', 'acronym', 'address', 'article', 'aside', 'b', 'bdi', 'bdo', 'big', 'blockquote', 'br', 'caption', 'cite', 'code', 'col', 'colgroup', 'command', 'dd', 'del', 'details', 'dfn', 'div', 'dl', 'dt', 'em', 'figcaption', 'figure', 'footer', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'hr', 'i', 'img', 'ins', 'kbd', 'li', 'mark', 'menu', 'meter', 'nav', 'ol', 'output', 'p', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'section', 'small', 'span', 'strong', 'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'time', 'tr', 'tt', 'u', 'ul', 'var', 'wbr'));
+  return Xss::filterAdmin($string);
 }
 
 /**
@@ -1004,246 +968,27 @@ function filter_xss_admin($string) {
  *   An XSS safe version of $string, or an empty string if $string is not
  *   valid UTF-8.
  *
- * @see drupal_validate_utf8()
+ * @see \Drupal\Component\Utility\Xss::filter()
+ *
  * @ingroup sanitization
  */
 function filter_xss($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 'blockquote', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd')) {
-  // Only operate on valid UTF-8 strings. This is necessary to prevent cross
-  // site scripting issues on Internet Explorer 6.
-  if (!drupal_validate_utf8($string)) {
-    return '';
-  }
-  // Store the text format.
-  _filter_xss_split($allowed_tags, TRUE);
-  // Remove NULL characters (ignored by some browsers).
-  $string = str_replace(chr(0), '', $string);
-  // Remove Netscape 4 JS entities.
-  $string = preg_replace('%&\s*\{[^}]*(\}\s*;?|$)%', '', $string);
-
-  // Defuse all HTML entities.
-  $string = str_replace('&', '&amp;', $string);
-  // Change back only well-formed entities in our whitelist:
-  // Decimal numeric entities.
-  $string = preg_replace('/&amp;#([0-9]+;)/', '&#\1', $string);
-  // Hexadecimal numeric entities.
-  $string = preg_replace('/&amp;#[Xx]0*((?:[0-9A-Fa-f]{2})+;)/', '&#x\1', $string);
-  // Named entities.
-  $string = preg_replace('/&amp;([A-Za-z][A-Za-z0-9]*;)/', '&\1', $string);
-
-  return preg_replace_callback('%
-    (
-    <(?=[^a-zA-Z!/])  # a lone <
-    |                 # or
-    <!--.*?-->        # a comment
-    |                 # or
-    <[^>]*(>|$)       # a string that starts with a <, up until the > or the end of the string
-    |                 # or
-    >                 # just a >
-    )%x', '_filter_xss_split', $string);
-}
-
-/**
- * Processes an HTML tag.
- *
- * @param $m
- *   An array with various meaning depending on the value of $store.
- *   If $store is TRUE then the array contains the allowed tags.
- *   If $store is FALSE then the array has one element, the HTML tag to process.
- * @param $store
- *   Whether to store $m.
- *
- * @return
- *   If the element isn't allowed, an empty string. Otherwise, the cleaned up
- *   version of the HTML element.
- */
-function _filter_xss_split($m, $store = FALSE) {
-  static $allowed_html;
-
-  if ($store) {
-    $allowed_html = array_flip($m);
-    return;
-  }
-
-  $string = $m[1];
-
-  if (substr($string, 0, 1) != '<') {
-    // We matched a lone ">" character.
-    return '&gt;';
-  }
-  elseif (strlen($string) == 1) {
-    // We matched a lone "<" character.
-    return '&lt;';
-  }
-
-  if (!preg_match('%^<\s*(/\s*)?([a-zA-Z0-9]+)([^>]*)>?|(<!--.*?-->)$%', $string, $matches)) {
-    // Seriously malformed.
-    return '';
-  }
-
-  $slash = trim($matches[1]);
-  $elem = &$matches[2];
-  $attrlist = &$matches[3];
-  $comment = &$matches[4];
-
-  if ($comment) {
-    $elem = '!--';
-  }
-
-  if (!isset($allowed_html[strtolower($elem)])) {
-    // Disallowed HTML element.
-    return '';
-  }
-
-  if ($comment) {
-    return $comment;
-  }
-
-  if ($slash != '') {
-    return "</$elem>";
-  }
-
-  // Is there a closing XHTML slash at the end of the attributes?
-  $attrlist = preg_replace('%(\s?)/\s*$%', '\1', $attrlist, -1, $count);
-  $xhtml_slash = $count ? ' /' : '';
-
-  // Clean up attributes.
-  $attr2 = implode(' ', _filter_xss_attributes($attrlist));
-  $attr2 = preg_replace('/[<>]/', '', $attr2);
-  $attr2 = strlen($attr2) ? ' ' . $attr2 : '';
-
-  return "<$elem$attr2$xhtml_slash>";
-}
-
-/**
- * Processes a string of HTML attributes.
- *
- * @return
- *   Cleaned up version of the HTML attributes.
- */
-function _filter_xss_attributes($attr) {
-  $attrarr = array();
-  $mode = 0;
-  $attrname = '';
-
-  while (strlen($attr) != 0) {
-    // Was the last operation successful?
-    $working = 0;
-
-    switch ($mode) {
-      case 0:
-        // Attribute name, href for instance.
-        if (preg_match('/^([-a-zA-Z]+)/', $attr, $match)) {
-          $attrname = strtolower($match[1]);
-          $skip = ($attrname == 'style' || substr($attrname, 0, 2) == 'on');
-          $working = $mode = 1;
-          $attr = preg_replace('/^[-a-zA-Z]+/', '', $attr);
-        }
-        break;
-
-      case 1:
-        // Equals sign or valueless ("selected").
-        if (preg_match('/^\s*=\s*/', $attr)) {
-          $working = 1; $mode = 2;
-          $attr = preg_replace('/^\s*=\s*/', '', $attr);
-          break;
-        }
-
-        if (preg_match('/^\s+/', $attr)) {
-          $working = 1; $mode = 0;
-          if (!$skip) {
-            $attrarr[] = $attrname;
-          }
-          $attr = preg_replace('/^\s+/', '', $attr);
-        }
-        break;
-
-      case 2:
-        // Attribute value, a URL after href= for instance.
-        if (preg_match('/^"([^"]*)"(\s+|$)/', $attr, $match)) {
-          $thisval = filter_xss_bad_protocol($match[1]);
-
-          if (!$skip) {
-            $attrarr[] = "$attrname=\"$thisval\"";
-          }
-          $working = 1;
-          $mode = 0;
-          $attr = preg_replace('/^"[^"]*"(\s+|$)/', '', $attr);
-          break;
-        }
-
-        if (preg_match("/^'([^']*)'(\s+|$)/", $attr, $match)) {
-          $thisval = filter_xss_bad_protocol($match[1]);
-
-          if (!$skip) {
-            $attrarr[] = "$attrname='$thisval'";
-          }
-          $working = 1; $mode = 0;
-          $attr = preg_replace("/^'[^']*'(\s+|$)/", '', $attr);
-          break;
-        }
-
-        if (preg_match("%^([^\s\"']+)(\s+|$)%", $attr, $match)) {
-          $thisval = filter_xss_bad_protocol($match[1]);
-
-          if (!$skip) {
-            $attrarr[] = "$attrname=\"$thisval\"";
-          }
-          $working = 1; $mode = 0;
-          $attr = preg_replace("%^[^\s\"']+(\s+|$)%", '', $attr);
-        }
-        break;
-    }
-
-    if ($working == 0) {
-      // Not well formed; remove and try again.
-      $attr = preg_replace('/
-        ^
-        (
-        "[^"]*("|$)     # - a string that starts with a double quote, up until the next double quote or the end of the string
-        |               # or
-        \'[^\']*(\'|$)| # - a string that starts with a quote, up until the next quote or the end of the string
-        |               # or
-        \S              # - a non-whitespace character
-        )*              # any number of the above three
-        \s*             # any number of whitespaces
-        /x', '', $attr);
-      $mode = 0;
-    }
-  }
-
-  // The attribute list ends with a valueless attribute like "selected".
-  if ($mode == 1 && !$skip) {
-    $attrarr[] = $attrname;
-  }
-  return $attrarr;
+  return Xss::filter($string, $allowed_tags);
 }
 
 /**
  * Processes an HTML attribute value and strips dangerous protocols from URLs.
  *
- * @param $string
+ * @param string $string
  *   The string with the attribute value.
- * @param $decode
- *   (deprecated) Whether to decode entities in the $string. Set to FALSE if the
- *   $string is in plain text, TRUE otherwise. Defaults to TRUE. This parameter
- *   is deprecated and will be removed in Drupal 8. To process a plain-text URI,
- *   call drupal_strip_dangerous_protocols() or check_url() instead.
  *
- * @return
+ * @return string
  *   Cleaned up and HTML-escaped version of $string.
+ *
+ * @see \Drupal\Component\Utility\Url::filterBadProtocol()
  */
-function filter_xss_bad_protocol($string, $decode = TRUE) {
-  // Get the plain text representation of the attribute value (i.e. its meaning).
-  // @todo Remove the $decode parameter in Drupal 8, and always assume an HTML
-  //   string that needs decoding.
-  if ($decode) {
-    if (!function_exists('decode_entities')) {
-      require_once __DIR__ . '/unicode.inc';
-    }
-
-    $string = decode_entities($string);
-  }
-  return check_plain(drupal_strip_dangerous_protocols($string));
+function filter_xss_bad_protocol($string) {
+  return UrlValidator::filterBadProtocol($string);
 }
 
 /**
@@ -4594,6 +4339,16 @@ function _drupal_bootstrap_code() {
     ini_set('log_errors', 1);
     ini_set('error_log', 'public://error.log');
   }
+
+  // Set the allowed protocols once we have the config available.
+  $allowed_protocols = \Drupal::config('system.filter')->get('protocols');
+  if (!isset($allowed_protocols)) {
+    // filter_xss_admin() is called by the installer and update.php, in which
+    // case the configuration may not exist (yet). Provide a minimal default set
+    // of allowed protocols for these cases.
+    $allowed_protocols = array('http', 'https');
+  }
+  UrlValidator::setAllowedProtocols($allowed_protocols);
 }
 
 /**

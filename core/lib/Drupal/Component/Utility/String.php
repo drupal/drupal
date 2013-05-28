@@ -25,6 +25,7 @@ class String {
    *   valid UTF-8.
    *
    * @see drupal_validate_utf8()
+   *
    * @ingroup sanitization
    */
   public static function checkPlain($text) {

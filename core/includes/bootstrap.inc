@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Settings;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Timer;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Component\Utility\UrlValidator;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -1455,15 +1456,11 @@ function check_plain($text) {
  *
  * @return
  *   TRUE if the text is valid UTF-8, FALSE if not.
+ *
+ * @see \Drupal\Component\Utility\Unicode::validateUtf8()
  */
 function drupal_validate_utf8($text) {
-  if (strlen($text) == 0) {
-    return TRUE;
-  }
-  // With the PCRE_UTF8 modifier 'u', preg_match() fails silently on strings
-  // containing invalid UTF-8 byte sequences. It does not reject character
-  // codes above U+10FFFF (represented by 4 or more octets), though.
-  return (preg_match('/^./us', $text) == 1);
+  return Unicode::validateUtf8($text);
 }
 
 /**
