@@ -10,6 +10,7 @@ namespace Drupal\form_test;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\ControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a test form object.
@@ -34,8 +35,11 @@ class FormTestControllerObject implements FormInterface, ControllerInterface {
   /**
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, array &$form_state, $custom_attributes = NULL, Request $request = NULL) {
     $form['element'] = array('#markup' => 'The FormTestControllerObject::buildForm() method was used for this form.');
+
+    $form['custom_attribute']['#markup'] = $custom_attributes;
+    $form['request_attribute']['#markup'] = $request->attributes->get('request_attribute');
 
     $form['bananas'] = array(
       '#type' => 'textfield',

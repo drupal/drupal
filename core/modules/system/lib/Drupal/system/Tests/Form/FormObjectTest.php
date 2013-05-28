@@ -45,6 +45,8 @@ class FormObjectTest extends SystemConfigFormTestBase {
 
   /**
    * Tests using an object as the form callback.
+   *
+   * @see \Drupal\form_test\EventSubscriber\FormTestEventSubscriber::onKernelRequest()
    */
   function testObjectFormCallback() {
     $config_factory = $this->container->get('config.factory');
@@ -84,6 +86,8 @@ class FormObjectTest extends SystemConfigFormTestBase {
     $this->assertText('The FormTestControllerObject::buildForm() method was used for this form.');
     $elements = $this->xpath('//form[@id="form-test-form-test-controller-object"]');
     $this->assertTrue(!empty($elements), 'The correct form ID was used.');
+    $this->assertText('custom_value', 'Ensure parameters are injected from request attributes.');
+    $this->assertText('request_value', 'Ensure the request object is injected.');
     $this->drupalPost(NULL, array('bananas' => 'black'), t('Save'));
     $this->assertText('The FormTestControllerObject::validateForm() method was used for this form.');
     $this->assertText('The FormTestControllerObject::submitForm() method was used for this form.');

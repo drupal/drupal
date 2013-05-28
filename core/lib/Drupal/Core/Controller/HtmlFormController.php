@@ -50,15 +50,16 @@ class HtmlFormController implements ContainerAwareInterface {
 
     // Using reflection, find all of the parameters needed by the form in the
     // request attributes, skipping $form and $form_state.
-    $attributes = $request->attributes->all();
-    $reflection = new \ReflectionMethod($form_object, 'buildForm');
-    $params = $reflection->getParameters();
-    $args = array();
-    foreach (array_splice($params, 2) as $param) {
-      if (array_key_exists($param->name, $attributes)) {
-        $args[] = $attributes[$param->name];
-      }
-    }
+
+    // At the form and form_state to trick the getArguments method of the
+    // controller resolver.
+    $form_state = array();
+    $request->attributes->set('form', array());
+    $request->attributes->set('form_state', $form_state);
+    $args = $this->container->get('controller_resolver')->getArguments($request, array($form_object, 'buildForm'));
+    unset($args[0], $args[1]);
+    $request->attributes->remove('form');
+    $request->attributes->remove('form_state');
     $form_state['build_info']['args'] = $args;
 
     $form_id = _drupal_form_id($form_object, $form_state);
@@ -80,7 +81,7 @@ class HtmlFormController implements ContainerAwareInterface {
   protected function getFormObject(Request $request, $form_arg) {
     // If this is a class, instantiate it.
     if (class_exists($form_arg)) {
-      if (in_array('Drupal\Core\ControllerInterface', class_implements($form_arg))) {
+      if (in_array('Drupal\Core\Controller\ControllerInterface', class_implements($form_arg))) {
         return $form_arg::create($this->container);
       }
 
