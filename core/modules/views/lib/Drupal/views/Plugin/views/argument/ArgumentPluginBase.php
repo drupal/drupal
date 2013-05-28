@@ -474,7 +474,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       ),
       'access denied' => array(
         'title' => t('Display "Access Denied"'),
-        'method' => 'default_access_denied',
+        'method' => 'defaultAccessDenied',
         'breadcrumb' => FALSE, // generate a breadcrumb to here
       ),
     );
@@ -703,7 +703,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * If an argument was expected and was not given, in this case, report
    * the view as 'access denied'.
    */
-  function default_access_denied() {
+  public function defaultAccessDenied() {
     $this->view->build_info['denied'] = TRUE;
     return FALSE;
   }
