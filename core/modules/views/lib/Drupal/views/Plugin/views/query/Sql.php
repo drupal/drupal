@@ -1643,7 +1643,7 @@ class Sql extends QueryPluginBase {
     }
   }
 
-  function add_signature(ViewExecutable $view) {
+  public function addSignature(ViewExecutable $view) {
     $view->query->add_field(NULL, "'" . $view->storage->id() . ':' . $view->current_display . "'", 'view_name');
   }
 

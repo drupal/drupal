@@ -79,7 +79,7 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
    * @param view $view
    *   The view which is executed.
    */
-  function add_signature(ViewExecutable $view) { }
+  public function addSignature(ViewExecutable $view) { }
 
   /**
    * Get aggregation info for group by queries.
