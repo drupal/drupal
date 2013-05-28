@@ -684,7 +684,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     foreach ($display_options as $display_type => $options) {
       // Allow style plugins to hook in and provide some settings.
       $style_plugin = Views::pluginManager('style')->createInstance($options['style']['type']);
-      $style_plugin->wizard_submit($form, $form_state, $this, $display_options, $display_type);
+      $style_plugin->wizardSubmit($form, $form_state, $this, $display_options, $display_type);
     }
   }
 
