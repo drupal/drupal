@@ -260,7 +260,7 @@ class GroupwiseMax extends RelationshipPluginBase {
       $tables[$table_name]['alias'] .= $this->subquery_namespace;
       // Namespace the join on every table.
       if (isset($tables[$table_name]['condition'])) {
-        $tables[$table_name]['condition'] = $this->condition_namespace($tables[$table_name]['condition']);
+        $tables[$table_name]['condition'] = $this->conditionNamespace($tables[$table_name]['condition']);
       }
     }
     // Namespace fields.
@@ -314,7 +314,7 @@ class GroupwiseMax extends RelationshipPluginBase {
       // Skip the #conjunction element.
       if (is_numeric($condition_id)) {
         if (is_string($condition['field'])) {
-          $condition['field'] = $this->condition_namespace($condition['field']);
+          $condition['field'] = $this->conditionNamespace($condition['field']);
         }
         elseif (is_object($condition['field'])) {
           $sub_conditions =& $condition['field']->conditions();
@@ -329,7 +329,7 @@ class GroupwiseMax extends RelationshipPluginBase {
    *
    * Turns 'foo.bar' into 'foo_NAMESPACE.bar'.
    */
-  function condition_namespace($string) {
+  protected function conditionNamespace($string) {
     return str_replace('.', $this->subquery_namespace . '.', $string);
   }
 
