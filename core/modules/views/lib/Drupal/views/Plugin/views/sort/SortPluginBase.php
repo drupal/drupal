@@ -79,7 +79,7 @@ abstract class SortPluginBase extends HandlerBase {
       $this->showExposeButton($form, $form_state);
     }
     $form['op_val_start'] = array('#value' => '<div class="clearfix">');
-    $this->show_sort_form($form, $form_state);
+    $this->showSortForm($form, $form_state);
     $form['op_val_end'] = array('#value' => '</div>');
     if ($this->canExpose()) {
       $this->showExposeForm($form, $form_state);
@@ -160,7 +160,7 @@ abstract class SortPluginBase extends HandlerBase {
   /**
    * Shortcut to display the value form.
    */
-  function show_sort_form(&$form, &$form_state) {
+  function showSortForm(&$form, &$form_state) {
     $options = $this->sort_options();
     if (!empty($options)) {
       $form['order'] = array(
