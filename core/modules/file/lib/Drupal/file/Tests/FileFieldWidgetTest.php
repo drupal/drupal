@@ -327,7 +327,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $test_file_text = $this->getTestFile('text');
       $test_file_image = $this->getTestFile('image');
       $field = field_info_field($field_name);
-      $name = 'files[' . $field_name . '_' . LANGUAGE_NOT_SPECIFIED . '_0]';
+      $name = 'files[' . $field_name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_0]';
 
       // Upload file with incorrect extension, check for validation error.
       $edit[$name] = drupal_realpath($test_file_image->uri);
