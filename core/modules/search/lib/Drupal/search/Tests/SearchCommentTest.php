@@ -62,7 +62,7 @@ class SearchCommentTest extends SearchTestBase {
     // Make preview optional.
     $instance = field_info_instance('node', 'comment', 'article');
     $instance['settings']['preview'] = DRUPAL_OPTIONAL;
-    field_update_instance($instance);
+    $instance->save();
     // Enable check_plain() for 'Basic HTML' text format.
     $basic_html_format_id = 'basic_html';
     $edit = array(
@@ -114,7 +114,7 @@ class SearchCommentTest extends SearchTestBase {
 
     // Hide comments.
     $this->drupalLogin($this->admin_user);
-    $node->comment = 0;
+    $node->set('comment', COMMENT_HIDDEN);
     $node->save();
 
     // Invoke search index update.
@@ -140,7 +140,7 @@ class SearchCommentTest extends SearchTestBase {
     // Make preview optional.
     $instance = field_info_instance('node', 'comment', 'article');
     $instance['settings']['preview'] = DRUPAL_OPTIONAL;
-    field_update_instance($instance);
+    $instance->save();
     $this->node = $this->drupalCreateNode(array('type' => 'article'));
 
     // Post a comment using 'Full HTML' text format.
