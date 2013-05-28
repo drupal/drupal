@@ -660,8 +660,8 @@ function language_language_negotiation_info() {
     'callbacks' => array('negotiation' => 'language_from_user'),
     'file' => $file,
     'weight' => -4,
-    'name' => t('Account'),
-    'description' => t('Account site language setting.'),
+    'name' => t('Account preference for site'),
+    'description' => t("The language setting for the site in the user's account."),
   );
 
   $negotiation_info[LANGUAGE_NEGOTIATION_BROWSER] = array(
@@ -697,8 +697,8 @@ function language_language_negotiation_info() {
     'callbacks' => array('negotiation' => 'language_from_user_admin'),
     'file' => $file,
     'weight' => 10,
-    'name' => t('Account administration pages'),
-    'description' => t('Account administration pages language setting.'),
+    'name' => t('Account preference for administration pages'),
+    'description' => t("The language setting for account administration pages in the user's account."),
   );
 
   return $negotiation_info;
