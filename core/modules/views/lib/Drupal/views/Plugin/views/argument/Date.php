@@ -95,11 +95,11 @@ class Date extends Formula {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\argument\Formula::get_formula().
+   * Overrides \Drupal\views\Plugin\views\argument\Formula::getFormula().
    */
-  function get_formula() {
+  public function getFormula() {
     $this->formula = $this->getDateFormat($this->argFormat);
-    return parent::get_formula();
+    return parent::getFormula();
   }
 
 }

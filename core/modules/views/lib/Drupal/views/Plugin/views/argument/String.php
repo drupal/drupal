@@ -161,7 +161,7 @@ class String extends ArgumentPluginBase {
     }
     else {
       // Add the field.
-      $formula = $this->get_formula();
+      $formula = $this->getFormula();
       $this->base_alias = $this->query->add_field(NULL, $formula, $this->field . '_truncated');
       $this->query->set_count_field(NULL, $formula, $this->field, $this->field . '_truncated');
     }
@@ -175,7 +175,7 @@ class String extends ArgumentPluginBase {
    *
    * $this->ensureMyTable() MUST have been called prior to this.
    */
-  function get_formula() {
+  public function getFormula() {
     return "SUBSTRING($this->tableAlias.$this->realField, 1, " . intval($this->options['limit']) . ")";
   }
 
@@ -212,7 +212,7 @@ class String extends ArgumentPluginBase {
     }
     else {
       $formula = TRUE;
-      $field = $this->get_formula();
+      $field = $this->getFormula();
     }
 
     if (count($this->value) > 1) {
