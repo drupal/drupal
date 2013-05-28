@@ -72,9 +72,9 @@ class Node extends WizardPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::row_style_options().
+   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::rowStyleOptions().
    */
-  protected function row_style_options() {
+  protected function rowStyleOptions() {
     $options = array();
     $options['teasers'] = t('teasers');
     $options['full_posts'] = t('full posts');

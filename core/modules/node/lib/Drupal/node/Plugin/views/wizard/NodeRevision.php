@@ -71,12 +71,12 @@ class NodeRevision extends WizardPluginBase {
   );
 
   /**
-   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::row_style_options().
+   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::rowStyleOptions().
    *
    * Node revisions do not support full posts or teasers, so remove them.
    */
-  protected function row_style_options() {
-    $options = parent::row_style_options();
+  protected function rowStyleOptions() {
+    $options = parent::rowStyleOptions();
     unset($options['teasers']);
     unset($options['full_posts']);
     return $options;
