@@ -66,13 +66,13 @@ class NodeNewComments extends Numeric {
     $nids = array();
     $ids = array();
     foreach ($values as $id => $result) {
-      $nids[] = $result->{$this->aliases['entity_id']};
+      $nids[] = $result->{$this->aliases['nid']};
       $values[$id]->{$this->field_alias} = 0;
       // Create a reference so we can find this record in the values again.
-      if (empty($ids[$result->{$this->aliases['entity_id']}])) {
-        $ids[$result->{$this->aliases['entity_id']}] = array();
+      if (empty($ids[$result->{$this->aliases['nid']}])) {
+        $ids[$result->{$this->aliases['nid']}] = array();
       }
-      $ids[$result->{$this->aliases['entity_id']}][] = $id;
+      $ids[$result->{$this->aliases['nid']}][] = $id;
     }
 
     if ($nids) {
