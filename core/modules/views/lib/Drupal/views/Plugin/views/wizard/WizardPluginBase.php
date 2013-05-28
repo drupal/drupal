@@ -510,7 +510,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $style = $style_form['style_plugin']['#default_value'];
     $style_plugin = Views::pluginManager('style')->createInstance($style);
     if (isset($style_plugin) && $style_plugin->usesRowPlugin()) {
-      $options = $this->row_style_options();
+      $options = $this->rowStyleOptions();
       $style_form['row_plugin'] = array(
         '#type' => 'select',
         '#title' => t('of'),
@@ -542,7 +542,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * @return array
    *   Returns the plugin names available for the base table of the wizard.
    */
-  protected function row_style_options() {
+  protected function rowStyleOptions() {
     // Get all available row plugins by default.
     $options = views_fetch_plugin_names('row', 'normal', array($this->base_table));
     return $options;
@@ -962,7 +962,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $display_options['style'] = array('type' => $page['style']['style_plugin']);
     // Not every style plugin supports row style plugins.
     // Make sure that the selected row plugin is a valid one.
-    $options = $this->row_style_options();
+    $options = $this->rowStyleOptions();
     $display_options['row'] = array('type' => (isset($page['style']['row_plugin']) && isset($options[$page['style']['row_plugin']])) ? $page['style']['row_plugin'] : 'fields');
 
     // If the specific 0 items per page, use no pager.
