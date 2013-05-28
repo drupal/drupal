@@ -38,7 +38,7 @@ class Formula extends ArgumentPluginBase {
     }
   }
 
-  function get_formula() {
+  public function getFormula() {
     return str_replace('***table***', $this->tableAlias, $this->formula);
   }
 
@@ -48,7 +48,7 @@ class Formula extends ArgumentPluginBase {
   function summary_query() {
     $this->ensureMyTable();
     // Now that our table is secure, get our formula.
-    $formula = $this->get_formula();
+    $formula = $this->getFormula();
 
     // Add the field.
     $this->base_alias = $this->name_alias = $this->query->add_field(NULL, $formula, $this->field);
@@ -64,7 +64,7 @@ class Formula extends ArgumentPluginBase {
     $this->ensureMyTable();
     // Now that our table is secure, get our formula.
     $placeholder = $this->placeholder();
-    $formula = $this->get_formula() .' = ' . $placeholder;
+    $formula = $this->getFormula() .' = ' . $placeholder;
     $placeholders = array(
       $placeholder => $this->argument,
     );

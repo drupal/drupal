@@ -174,7 +174,7 @@ abstract class HandlerBase extends PluginBase {
   public function getField($field = NULL) {
     if (!isset($field)) {
       if (!empty($this->formula)) {
-        $field = $this->get_formula();
+        $field = $this->getFormula();
       }
       else {
         $field = $this->tableAlias . '.' . $this->realField;

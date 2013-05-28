@@ -46,11 +46,11 @@ class ManyToOneHelper {
   /**
    * Sometimes the handler might want us to use some kind of formula, so give
    * it that option. If it wants us to do this, it must set $helper->formula = TRUE
-   * and implement handler->get_formula();
+   * and implement handler->getFormula();
    */
   public function getField() {
     if (!empty($this->formula)) {
-      return $this->handler->get_formula();
+      return $this->handler->getFormula();
     }
     else {
       return $this->handler->tableAlias . '.' . $this->handler->realField;
