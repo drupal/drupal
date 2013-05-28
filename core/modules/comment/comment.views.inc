@@ -351,7 +351,7 @@ function comment_views_data() {
     ),
   );
 
-  $entities_info = Drupal::service('plugin.manager.entity')->getDefinitions();
+  $entities_info = Drupal::entityManager()->getDefinitions();
 
   // Provide a relationship for each entity type except comment.
   foreach ($entities_info as $type => $entity_info) {
@@ -602,7 +602,7 @@ function comment_views_data_alter(&$data) {
   );
 
   // Provide a integration for each entity type.
-  foreach (Drupal::service('plugin.manager.entity')->getDefinitions() as $entity_type => $entity_info) {
+  foreach (Drupal::entityManager()->getDefinitions() as $entity_type => $entity_info) {
     if (!isset($entity_info['base_table'])) {
       continue;
     }
@@ -619,7 +619,14 @@ function comment_views_data_alter(&$data) {
         ),
       );
 
-      $data[$base_table]['uid_touch'] = array(
+      if (Drupal::moduleHandler()->moduleExists('node')) {
+        // Node properties lives in data_table.
+        $table = $entity_info['data_table'];
+      }
+      else {
+        $table = $base_table;
+      }
+      $data[$table]['uid_touch'] = array(
         'title' => t('User posted or commented'),
         'help' => t('Display nodes only if a user posted the @entity_type or commented on the @entity_type.', $args),
         'argument' => array(
