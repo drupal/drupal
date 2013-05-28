@@ -7,12 +7,12 @@
 namespace Drupal\views\Tests;
 
 use Drupal\views\ViewExecutable;
-use Drupal\simpletest\UnitTestBase;
+use Drupal\Tests\UnitTestCase;
 
 /**
  * Class for plugin list testing.
  */
-class PluginTypeListTest extends UnitTestBase {
+class PluginTypeListTest extends UnitTestCase {
 
   public static function getInfo() {
     return array(
