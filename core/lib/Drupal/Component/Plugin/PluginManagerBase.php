@@ -18,21 +18,21 @@ abstract class PluginManagerBase implements PluginManagerInterface, CachedDiscov
   /**
    * The object that discovers plugins managed by this manager.
    *
-   * @var Drupal\Component\Plugin\Discovery\DiscoveryInterface
+   * @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface
    */
   protected $discovery;
 
   /**
    * The object that instantiates plugins managed by this manager.
    *
-   * @var Drupal\Component\Plugin\Factory\FactoryInterface
+   * @var \Drupal\Component\Plugin\Factory\FactoryInterface
    */
   protected $factory;
 
   /**
    * The object that returns the preconfigured plugin instance appropriate for a particular runtime condition.
    *
-   * @var Drupal\Component\Plugin\Mapper\MapperInterface
+   * @var \Drupal\Component\Plugin\Mapper\MapperInterface
    */
   protected $mapper;
 
@@ -46,21 +46,21 @@ abstract class PluginManagerBase implements PluginManagerInterface, CachedDiscov
   protected $defaults = array();
 
   /**
-   * Implements Drupal\Component\Plugin\PluginManagerInterface::getDefinition().
+   * {@inheritdoc}
    */
   public function getDefinition($plugin_id) {
-    return $this->discovery->getDefinition($plugin_id);;
+    return $this->discovery->getDefinition($plugin_id);
   }
 
   /**
-   * Implements Drupal\Component\Plugin\PluginManagerInterface::getDefinitions().
+   * {@inheritdoc}
    */
   public function getDefinitions() {
     return $this->discovery->getDefinitions();
   }
 
   /**
-   * Implements \Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface::clearCachedDefinitions().
+   * {@inheritdoc}
    */
   public function clearCachedDefinitions() {
     if ($this->discovery instanceof CachedDiscoveryInterface) {
@@ -69,14 +69,14 @@ abstract class PluginManagerBase implements PluginManagerInterface, CachedDiscov
   }
 
   /**
-   * Implements Drupal\Component\Plugin\PluginManagerInterface::createInstance().
+   * {@inheritdoc}
    */
   public function createInstance($plugin_id, array $configuration = array()) {
     return $this->factory->createInstance($plugin_id, $configuration);
   }
 
   /**
-   * Implements Drupal\Component\Plugin\PluginManagerInterface::getInstance().
+   * {@inheritdoc}
    */
   public function getInstance(array $options) {
     return $this->mapper->getInstance($options);
