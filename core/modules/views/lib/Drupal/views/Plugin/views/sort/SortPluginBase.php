@@ -79,7 +79,7 @@ abstract class SortPluginBase extends HandlerBase {
       $this->showExposeButton($form, $form_state);
     }
     $form['op_val_start'] = array('#value' => '<div class="clearfix">');
-    $this->show_sort_form($form, $form_state);
+    $this->showSortForm($form, $form_state);
     $form['op_val_end'] = array('#value' => '</div>');
     if ($this->canExpose()) {
       $this->showExposeForm($form, $form_state);
@@ -151,7 +151,7 @@ abstract class SortPluginBase extends HandlerBase {
    */
   public function submitOptionsForm(&$form, &$form_state) {
     unset($form_state['values']['expose_button']); // don't store this.
-    $this->sort_submit($form, $form_state);
+    $this->sortSubmit($form, $form_state);
     if (!empty($this->options['exposed'])) {
       $this->submitExposeForm($form, $form_state);
     }
@@ -160,7 +160,7 @@ abstract class SortPluginBase extends HandlerBase {
   /**
    * Shortcut to display the value form.
    */
-  function show_sort_form(&$form, &$form_state) {
+  function showSortForm(&$form, &$form_state) {
     $options = $this->sort_options();
     if (!empty($options)) {
       $form['order'] = array(
@@ -173,7 +173,7 @@ abstract class SortPluginBase extends HandlerBase {
 
   function sort_validate(&$form, &$form_state) { }
 
-  function sort_submit(&$form, &$form_state) { }
+  public function sortSubmit(&$form, &$form_state) { }
 
   /**
    * Provide a list of options for the default sort form.

@@ -463,7 +463,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       'summary' => array(
         'title' => t('Display a summary'),
         'method' => 'default_summary',
-        'form method' => 'default_summary_form',
+        'form method' => 'defaultSummaryForm',
         'style plugin' => TRUE,
         'breadcrumb' => TRUE, // generate a breadcrumb to here
       ),
@@ -562,7 +562,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * Provide a form for selecting further summary options when the
    * default action is set to display one.
    */
-  function default_summary_form(&$form, &$form_state) {
+  public function defaultSummaryForm(&$form, &$form_state) {
     $style_plugins = Views::pluginManager('style')->getDefinitions();
     $summary_plugins = array();
     $format_options = array();
@@ -733,7 +733,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
   /**
    * Determine if the argument is set to provide a default argument.
    */
-  function has_default_argument() {
+  function hasDefaultArgument() {
     $info = $this->default_actions($this->options['default_action']);
     return !empty($info['has default argument']);
   }
@@ -1014,7 +1014,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     // Clone ourselves so that we don't break things when we're really
     // processing the arguments.
     $argument = clone $this;
-    if (!isset($arg) && $argument->has_default_argument()) {
+    if (!isset($arg) && $argument->hasDefaultArgument()) {
       $arg = $argument->get_default_argument();
 
       // remember that this argument was computed, not passed on the URL.

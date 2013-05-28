@@ -855,7 +855,7 @@ class ViewExecutable {
       $arg = isset($this->args[$position]) ? $this->args[$position] : NULL;
       $argument->position = $position;
 
-      if (isset($arg) || $argument->has_default_argument()) {
+      if (isset($arg) || $argument->hasDefaultArgument()) {
         if (!isset($arg)) {
           $arg = $argument->get_default_argument();
           // make sure default args get put back.

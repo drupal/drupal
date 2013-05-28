@@ -151,7 +151,7 @@ function template_preprocess_views_view(&$vars) {
             'view_dom_id' => $vars['dom_id'],
             // To fit multiple views on a page, the programmer may have
             // overridden the display's pager_element.
-            'pager_element' => isset($view->pager) ? $view->pager->get_pager_id() : 0,
+            'pager_element' => isset($view->pager) ? $view->pager->getPagerId() : 0,
           ),
         ),
       ),

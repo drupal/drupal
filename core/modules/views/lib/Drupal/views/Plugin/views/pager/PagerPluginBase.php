@@ -133,7 +133,7 @@ abstract class PagerPluginBase extends PluginBase {
   /**
    * Get the pager id, if it exists
    */
-  function get_pager_id() {
+  public function getPagerId() {
     return isset($this->options['id']) ? $this->options['id'] : 0;
   }
 
