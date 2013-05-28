@@ -876,7 +876,7 @@ class ViewExecutable {
           $arg_title = $argument->exception_title();
         }
         else {
-          $arg_title = $argument->get_title();
+          $arg_title = $argument->getTitle();
           $argument->query($this->display_handler->useGroupBy());
         }
 

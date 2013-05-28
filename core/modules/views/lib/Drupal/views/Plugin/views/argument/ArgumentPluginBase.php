@@ -106,7 +106,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
   function exception_title() {
     // If title overriding is off for the exception, return the normal title.
     if (empty($this->options['exception']['title_enable'])) {
-      return $this->get_title();
+      return $this->getTitle();
     }
     return $this->options['exception']['title'];
   }
@@ -926,7 +926,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * Called by the view object to get the title. This may be set by a
    * validator so we don't necessarily call through to title().
    */
-  function get_title() {
+  public function getTitle() {
     if (isset($this->validated_title)) {
       return $this->validated_title;
     }
