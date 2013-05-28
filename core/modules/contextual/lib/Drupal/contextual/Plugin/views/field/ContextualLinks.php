@@ -82,7 +82,7 @@ class ContextualLinks extends FieldPluginBase {
       }
       if (!empty($title) && !empty($path)) {
         // Make sure that tokens are replaced for this paths as well.
-        $tokens = $this->get_render_tokens(array());
+        $tokens = $this->getRenderTokens(array());
         $path = strip_tags(decode_entities(strtr($path, $tokens)));
 
         $links[$field] = array(

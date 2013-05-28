@@ -321,7 +321,7 @@ abstract class FieldPluginBase extends HandlerBase {
           $tokens = $last_field->last_tokens;
         }
         else {
-          $tokens = $last_field->get_render_tokens($fake_item);
+          $tokens = $last_field->getRenderTokens($fake_item);
         }
       }
 
@@ -1207,7 +1207,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
     $value = $this->last_render;
 
     if (!empty($alter['alter_text']) && $alter['text'] !== '') {
-      $tokens = $this->get_render_tokens($alter);
+      $tokens = $this->getRenderTokens($alter);
       $value = $this->render_altered($alter, $tokens);
     }
 
@@ -1242,7 +1242,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
       $length = strlen($value);
       $value = $this->render_trim_text($alter, $value);
       if ($this->options['alter']['more_link'] && strlen($value) < $length) {
-        $tokens = $this->get_render_tokens($alter);
+        $tokens = $this->getRenderTokens($alter);
         $more_link_text = $this->options['alter']['more_link_text'] ? $this->options['alter']['more_link_text'] : t('more');
         $more_link_text = strtr(filter_xss_admin($more_link_text), $tokens);
         $more_link_path = $this->options['alter']['more_link_path'];
@@ -1268,7 +1268,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
 
     if (!empty($alter['make_link']) && !empty($alter['path'])) {
       if (!isset($tokens)) {
-        $tokens = $this->get_render_tokens($alter);
+        $tokens = $this->getRenderTokens($alter);
       }
       $value = $this->render_as_link($alter, $value, $tokens);
     }
@@ -1457,7 +1457,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
    * are available and gets their values. This will then be
    * used in one giant str_replace().
    */
-  function get_render_tokens($item) {
+  public function getRenderTokens($item) {
     $tokens = array();
     if (!empty($this->view->build_info['substitutions'])) {
       $tokens = $this->view->build_info['substitutions'];
