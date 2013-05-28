@@ -66,7 +66,10 @@ class UserUid extends ArgumentPluginBase {
     $this->query->add_where(0, $condition);
   }
 
-  function get_sort_name() {
+  /**
+   * {@inheritdoc}
+   */
+  public function getSortName() {
     return t('Numerical', array(), array('context' => 'Sort order'));
   }
 

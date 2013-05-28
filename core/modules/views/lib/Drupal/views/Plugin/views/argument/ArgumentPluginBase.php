@@ -594,7 +594,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       '#title' => t('Sort by'),
       '#default_value' => $this->options['summary']['number_of_records'],
       '#options' => array(
-        0 => $this->get_sort_name(),
+        0 => $this->getSortName(),
         1 => t('Number of records')
       ),
       '#states' => array(
@@ -1075,7 +1075,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * Subclasses should override this to specify what the default sort order of
    * their argument is (e.g. alphabetical, numeric, date).
    */
-  function get_sort_name() {
+  public function getSortName() {
     return t('Default sort', array(), array('context' => 'Sort order'));
   }
 

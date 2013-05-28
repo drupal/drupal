@@ -87,7 +87,10 @@ class Date extends Formula {
     return parent::get_default_argument($raw);
   }
 
-  function get_sort_name() {
+  /**
+   * {@inheritdoc}
+   */
+  public function getSortName() {
     return t('Date', array(), array('context' => 'Sort order'));
   }
 
