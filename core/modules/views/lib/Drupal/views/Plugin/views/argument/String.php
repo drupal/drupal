@@ -249,7 +249,10 @@ class String extends ArgumentPluginBase {
     return $value;
   }
 
-  function get_sort_name() {
+  /**
+   * {@inheritdoc}
+   */
+  public function getSortName() {
     return t('Alphabetical', array(), array('context' => 'Sort order'));
   }
 

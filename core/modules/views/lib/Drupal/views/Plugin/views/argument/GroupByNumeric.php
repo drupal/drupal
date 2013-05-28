@@ -30,7 +30,10 @@ class GroupByNumeric extends ArgumentPluginBase {
     return $this->getField(parent::adminLabel($short));
   }
 
-  function get_sort_name() {
+  /**
+   * {@inheritdoc}
+   */
+  public function getSortName() {
     return t('Numerical', array(), array('context' => 'Sort order'));
   }
 

@@ -75,7 +75,10 @@ class UserUid extends ArgumentPluginBase {
     }
   }
 
-  function get_sort_name() {
+  /**
+   * {@inheritdoc}
+   */
+  public function getSortName() {
     return t('Numerical', array(), array('context' => 'Sort order'));
   }
 
