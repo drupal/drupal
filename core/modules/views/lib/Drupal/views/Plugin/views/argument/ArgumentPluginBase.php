@@ -463,7 +463,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       'summary' => array(
         'title' => t('Display a summary'),
         'method' => 'default_summary',
-        'form method' => 'default_summary_form',
+        'form method' => 'defaultSummaryForm',
         'style plugin' => TRUE,
         'breadcrumb' => TRUE, // generate a breadcrumb to here
       ),
@@ -562,7 +562,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * Provide a form for selecting further summary options when the
    * default action is set to display one.
    */
-  function default_summary_form(&$form, &$form_state) {
+  public function defaultSummaryForm(&$form, &$form_state) {
     $style_plugins = Views::pluginManager('style')->getDefinitions();
     $summary_plugins = array();
     $format_options = array();
