@@ -1213,7 +1213,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * checkboxes widget, and this function will be called for each item
    * choosed in the checkboxes.
    */
-  function convert_exposed_input(&$input, $selected_group_id = NULL) {
+  public function convertExposedInput(&$input, $selected_group_id = NULL) {
     if ($this->isAGroup()) {
       // If it is already defined the selected group, use it. Only valid
       // when the filter uses checkboxes for widget.
