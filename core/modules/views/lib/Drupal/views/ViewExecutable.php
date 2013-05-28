@@ -1071,7 +1071,7 @@ class ViewExecutable {
     }
 
     if (config('views.settings')->get('sql_signature')) {
-      $this->query->add_signature($this);
+      $this->query->addSignature($this);
     }
 
     // Let modules modify the query just prior to finalizing it.
