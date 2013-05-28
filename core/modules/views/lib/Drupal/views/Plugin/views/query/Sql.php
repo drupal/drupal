@@ -1504,7 +1504,7 @@ class Sql extends QueryPluginBase {
         }
 
         // Load all entities contained in the results.
-        $this->load_entities($view->result);
+        $this->loadEntities($view->result);
       }
       catch (DatabaseExceptionWrapper $e) {
         $view->result = array();
@@ -1581,7 +1581,7 @@ class Sql extends QueryPluginBase {
    * $result->_entity. Otherwise, it gets stored in
    * $result->_relationship_entities[$relationship_id];
    */
-  function load_entities(&$results) {
+  function loadEntities(&$results) {
     $entity_tables = $this->get_entity_tables();
     // No entity tables found, nothing else to do here.
     if (empty($entity_tables)) {
