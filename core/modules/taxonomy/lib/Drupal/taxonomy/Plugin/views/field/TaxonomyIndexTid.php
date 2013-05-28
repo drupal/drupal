@@ -141,7 +141,7 @@ class TaxonomyIndexTid extends PrerenderList {
     $tokens['[' . $this->options['id'] . '-vocabulary' . ']'] = t('The name for the vocabulary the term belongs to.');
   }
 
-  function add_self_tokens(&$tokens, $item) {
+  protected function addSelfTokens(&$tokens, $item) {
     foreach (array('tid', 'name', 'vocabulary_vid', 'vocabulary') as $token) {
       // Replace _ with - for the vocabulary vid.
       $tokens['[' . $this->options['id'] . '-' . str_replace('_', '-', $token) . ']'] = isset($item[$token]) ? $item[$token] : '';

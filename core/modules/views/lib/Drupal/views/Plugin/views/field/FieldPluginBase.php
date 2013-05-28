@@ -1497,7 +1497,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
     $this->view->style_plugin->render_tokens[$this->view->row_index] = $tokens;
     $this->last_tokens = $tokens;
     if (!empty($item)) {
-      $this->add_self_tokens($tokens, $item);
+      $this->addSelfTokens($tokens, $item);
     }
 
     return $tokens;
@@ -1572,12 +1572,12 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
    * where token is the field ID and subtoken is the field. If the
    * field ID is terms, then the tokens might be [terms-tid] and [terms-name].
    */
-  function add_self_tokens(&$tokens, $item) { }
+  protected function addSelfTokens(&$tokens, $item) { }
 
   /**
    * Document any special tokens this field might use for itself.
    *
-   * @see add_self_tokens()
+   * @see addSelfTokens()
    */
   function document_self_tokens(&$tokens) { }
 

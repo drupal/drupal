@@ -80,7 +80,7 @@ class Permissions extends PrerenderList {
     $tokens['[' . $this->options['id'] . '-rid' . ']'] = t('The role ID of the role.');
   }
 
-  function add_self_tokens(&$tokens, $item) {
+  protected function addSelfTokens(&$tokens, $item) {
     $tokens['[' . $this->options['id'] . '-role' . ']'] = $item['role'];
     $tokens['[' . $this->options['id'] . '-rid' . ']'] = $item['rid'];
   }
