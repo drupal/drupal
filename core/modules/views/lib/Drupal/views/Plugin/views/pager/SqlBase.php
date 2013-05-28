@@ -276,7 +276,7 @@ abstract class SqlBase extends PagerPluginBase {
     $this->current_page = max(0, intval($pager_page_array[$this->options['id']]));
   }
 
-  function get_pager_total() {
+  public function getPagerTotal() {
     if ($items_per_page = intval($this->get_items_per_page())) {
       return ceil($this->total_items / $items_per_page);
     }
@@ -309,7 +309,7 @@ abstract class SqlBase extends PagerPluginBase {
       // Set the item count for the pager.
       $pager_total_items[$this->options['id']] = $this->total_items;
       // Calculate and set the count of available pages.
-      $pager_total[$this->options['id']] = $this->get_pager_total();
+      $pager_total[$this->options['id']] = $this->getPagerTotal();
 
       // See if the requested page was within range:
       if ($this->current_page >= $pager_total[$this->options['id']]) {
