@@ -61,7 +61,7 @@ class ArgumentDefaultTest extends PluginTestBase {
     );
     $id = $view->addItem('default', 'argument', 'views_test_data', 'name', $options);
     $view->initHandlers();
-    $plugin = $view->argument[$id]->get_plugin('argument_default');
+    $plugin = $view->argument[$id]->getPlugin('argument_default');
     $this->assertTrue($plugin instanceof ArgumentDefaultTestPlugin, 'The correct argument default plugin is used.');
 
     // Check that the value of the default argument is as expected.
