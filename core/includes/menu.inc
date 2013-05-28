@@ -195,6 +195,14 @@ define('MENU_DEFAULT_LOCAL_TASK', MENU_IS_LOCAL_TASK | MENU_LINKS_TO_PARENT | ME
 define('MENU_LOCAL_ACTION', MENU_IS_LOCAL_TASK | MENU_IS_LOCAL_ACTION | MENU_VISIBLE_IN_BREADCRUMB);
 
 /**
+ * Menu type -- A task specific to the parent, which is never rendered.
+ *
+ * Sibling local tasks are not rendered themselves, but affect the breadcrumb
+ * trail and need their sibling tasks rendered as tabs.
+ */
+define('MENU_SIBLING_LOCAL_TASK', MENU_IS_LOCAL_TASK | MENU_IS_LOCAL_ACTION | MENU_VISIBLE_IN_BREADCRUMB);
+
+/**
  * @} End of "defgroup menu_item_types".
  */
 
@@ -2217,8 +2225,24 @@ function menu_secondary_local_tasks() {
 /**
  * Returns the rendered local actions at the current level.
  */
-function menu_local_actions() {
+function menu_get_local_actions() {
   $links = menu_local_tasks();
+  $router_item = menu_get_item();
+  // @todo Consider storing the results of hook_local_actions() in a static.
+  foreach (Drupal::moduleHandler()->invokeAll('local_actions') as $route_info) {
+    if (in_array($router_item['route_name'], $route_info['appears_on'])) {
+      $route_path = _menu_router_translate_route($route_info['route_name']);
+      $action_router_item = menu_get_item($route_path);
+      $links['actions'][$route_path] = array(
+        '#theme' => 'menu_local_action',
+        '#link' => array(
+          'title' => $route_info['title'],
+          'href' => $route_path,
+        ),
+        '#access' => $action_router_item['access'],
+      );
+    }
+  }
   return $links['actions'];
 }
 
@@ -2688,8 +2712,9 @@ function menu_router_build($save = FALSE) {
         // so the path of the route takes precedence.
         if (isset($router_items[$path]['route_name'])) {
           $router_item = $router_items[$path];
-          $router_item = _menu_router_merge_route($router_item, $path);
-          $new_path = $router_item['path'];
+          $router_item['page callback'] = 'USES_ROUTE';
+          $router_item['access callback'] = TRUE;
+          $new_path = _menu_router_translate_route($router_item['route_name']);
           unset($router_items[$path]);
           $router_items[$new_path] = $router_item;
           $path = $new_path;
@@ -2708,32 +2733,20 @@ function menu_router_build($save = FALSE) {
 }
 
 /**
- * Merges a legacy menu router item with its referenced route.
+ * Translates a route name to its router item path.
  *
- * @param array $router_item
- *   The router item to modify.
- * @param string $path
- *   The path this router item is for.
+ * @param string $route_name
+ *   The route name to translate.
  *
- * @return array
- *   The modified router item, including the path pattern from the route in the
- *   'path' key.
+ * @return string
+ *   The translated path pattern from the route.
  */
-function _menu_router_merge_route(array $router_item, $path) {
-  $router_item['path'] = $path;
-
-  $route_provider = drupal_container()->get('router.route_provider');
-
-  $route = $route_provider->getRouteByName($router_item['route_name']);
-  $router_item['path'] = trim($route->getPattern(), '/');
-
-  $router_item['page callback'] = 'USES_ROUTE';
-  $router_item['access callback'] = TRUE;
+function _menu_router_translate_route($route_name) {
+  $route = Drupal::service('router.route_provider')->getRouteByName($route_name);
+  $path = trim($route->getPattern(), '/');
 
   // Translate placeholders, e.g. {foo} -> %.
-  $router_item['path'] = preg_replace('/{' . DRUPAL_PHP_FUNCTION_PATTERN . '}/', '%', $router_item['path']);
-
-  return $router_item;
+  return preg_replace('/{' . DRUPAL_PHP_FUNCTION_PATTERN . '}/', '%', $path);
 }
 
 /**

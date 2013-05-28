@@ -31,9 +31,8 @@ function views_ui_menu() {
   );
 
   $items['admin/structure/views/add'] = array(
-    'title' => 'Add new view',
     'route_name' => 'views_ui.add',
-    'type' => MENU_LOCAL_ACTION,
+    'type' => MENU_SIBLING_LOCAL_TASK,
   );
 
   $items['admin/structure/views/settings'] = array(
@@ -109,6 +108,21 @@ function views_ui_entity_info(&$entity_info) {
       'add' => 'Drupal\views_ui\ViewAddFormController',
       'preview' => 'Drupal\views_ui\ViewPreviewFormController',
       'clone' => 'Drupal\views_ui\ViewCloneFormController',
+    ),
+  );
+}
+
+/**
+ * Implements hook_local_actions().
+ */
+function views_ui_local_actions() {
+  return array(
+    array(
+      'route_name' => 'views_ui.add',
+      'title' => t('Add new view'),
+      'appears_on' => array(
+        'views_ui.list',
+      ),
     ),
   );
 }

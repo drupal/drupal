@@ -16,3 +16,24 @@ menu_router_test3:
     _content: '\Drupal\menu_test\TestControllers::test2'
   requirements:
     _access: 'FALSE'
+
+menu_test_local_action1:
+  pattern: '/menu-test-local-action'
+  defaults:
+    _content: '\Drupal\menu_test\TestControllers::test1'
+  requirements:
+    _access: 'TRUE'
+
+menu_test_local_action2:
+  pattern: '/menu-test-local-action/hook_menu'
+  defaults:
+    _content: '\Drupal\menu_test\TestControllers::test2'
+  requirements:
+    _access: 'TRUE'
+
+menu_test_local_action3:
+  pattern: '/menu-test-local-action/routing'
+  defaults:
+    _content: '\Drupal\menu_test\TestControllers::test2'
+  requirements:
+    _access: 'TRUE'

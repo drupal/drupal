@@ -2900,7 +2900,7 @@ function template_preprocess_page(&$variables) {
   $variables['logo']              = theme_get_setting('logo.url');
   $variables['main_menu']         = theme_get_setting('features.main_menu') ? menu_main_menu() : array();
   $variables['secondary_menu']    = theme_get_setting('features.secondary_menu') ? menu_secondary_menu() : array();
-  $variables['action_links']      = menu_local_actions();
+  $variables['action_links']      = menu_get_local_actions();
   $variables['site_name']         = (theme_get_setting('features.name') ? check_plain($site_config->get('name')) : '');
   $variables['site_slogan']       = (theme_get_setting('features.slogan') ? filter_xss_admin($site_config->get('slogan')) : '');
   $variables['tabs']              = menu_local_tabs();
