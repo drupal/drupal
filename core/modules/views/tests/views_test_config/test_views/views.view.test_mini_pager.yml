@@ -84,6 +84,19 @@ display:
     position: ''
     display_options:
       path: test_mini_pager
+  page_2:
+    display_plugin: page
+    id: page_2
+    display_title: Page
+    position: ''
+    display_options:
+      path: test_mini_pager_one
+      defaults:
+        pager: '0'
+      pager:
+        type: mini
+        options:
+          items_per_page: '1'
 base_field: nid
 status: '1'
 module: views
