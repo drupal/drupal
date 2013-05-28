@@ -34,7 +34,7 @@ class CommentController implements ControllerInterface {
   }
 
   /**
-   * Constructs a CustomBlock object.
+   * Constructs a CommentController object.
    *
    * @param \Drupal\field\FieldInfo $field_info
    *   Field Info service.
