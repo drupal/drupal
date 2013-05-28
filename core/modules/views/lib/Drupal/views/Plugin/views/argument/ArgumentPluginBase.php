@@ -733,7 +733,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
   /**
    * Determine if the argument is set to provide a default argument.
    */
-  function has_default_argument() {
+  function hasDefaultArgument() {
     $info = $this->default_actions($this->options['default_action']);
     return !empty($info['has default argument']);
   }
@@ -1014,7 +1014,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     // Clone ourselves so that we don't break things when we're really
     // processing the arguments.
     $argument = clone $this;
-    if (!isset($arg) && $argument->has_default_argument()) {
+    if (!isset($arg) && $argument->hasDefaultArgument()) {
       $arg = $argument->get_default_argument();
 
       // remember that this argument was computed, not passed on the URL.
