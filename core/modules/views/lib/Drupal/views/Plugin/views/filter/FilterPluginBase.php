@@ -794,7 +794,7 @@ abstract class FilterPluginBase extends HandlerBase {
         unset($form[$operator]['#title']);
       }
 
-      $this->exposed_translate($form[$operator], 'operator');
+      $this->exposedTranslate($form[$operator], 'operator');
 
       unset($form['operator']);
     }
@@ -809,7 +809,7 @@ abstract class FilterPluginBase extends HandlerBase {
         unset($form[$value]['#title']);
       }
 
-      $this->exposed_translate($form[$value], 'value');
+      $this->exposedTranslate($form[$value], 'value');
 
       if (!empty($form['#type']) && ($form['#type'] == 'checkboxes' || ($form['#type'] == 'select' && !empty($form['#multiple'])))) {
         unset($form[$value]['#default_value']);
@@ -1106,7 +1106,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * Make some translations to a form item to make it more suitable to
    * exposing.
    */
-  function exposed_translate(&$form, $type) {
+  protected function exposedTranslate(&$form, $type) {
     if (!isset($form['#type'])) {
       return;
     }
