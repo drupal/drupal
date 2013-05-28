@@ -151,7 +151,7 @@ abstract class SortPluginBase extends HandlerBase {
    */
   public function submitOptionsForm(&$form, &$form_state) {
     unset($form_state['values']['expose_button']); // don't store this.
-    $this->sort_submit($form, $form_state);
+    $this->sortSubmit($form, $form_state);
     if (!empty($this->options['exposed'])) {
       $this->submitExposeForm($form, $form_state);
     }
@@ -173,7 +173,7 @@ abstract class SortPluginBase extends HandlerBase {
 
   function sort_validate(&$form, &$form_state) { }
 
-  function sort_submit(&$form, &$form_state) { }
+  public function sortSubmit(&$form, &$form_state) { }
 
   /**
    * Provide a list of options for the default sort form.
