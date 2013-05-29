@@ -61,7 +61,7 @@ class TextCustom extends AreaPluginBase {
   public function renderTextarea($value) {
     if ($value) {
       if ($this->options['tokenize']) {
-        $value = $this->view->style_plugin->tokenize_value($value, 0);
+        $value = $this->view->style_plugin->tokenizeValue($value, 0);
       }
       return $this->sanitizeValue($this->globalTokenReplace($value), 'xss_admin');
     }

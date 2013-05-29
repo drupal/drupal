@@ -290,7 +290,7 @@ abstract class FieldPluginBase extends HandlerBase {
   function element_classes($row_index = NULL) {
     $classes = explode(' ', $this->options['element_class']);
     foreach ($classes as &$class) {
-      $class = $this->tokenize_value($class, $row_index);
+      $class = $this->tokenizeValue($class, $row_index);
       $class = drupal_clean_css_identifier($class);
     }
     return implode(' ', $classes);
@@ -302,7 +302,7 @@ abstract class FieldPluginBase extends HandlerBase {
    * This function actually figures out which field was last and uses its
    * tokens so they will all be available.
    */
-  function tokenize_value($value, $row_index = NULL) {
+  public function tokenizeValue($value, $row_index = NULL) {
     if (strpos($value, '[') !== FALSE || strpos($value, '!') !== FALSE || strpos($value, '%') !== FALSE) {
       $fake_item = array(
         'alter_text' => TRUE,
@@ -340,7 +340,7 @@ abstract class FieldPluginBase extends HandlerBase {
   public function elementLabelClasses($row_index = NULL) {
     $classes = explode(' ', $this->options['element_label_class']);
     foreach ($classes as &$class) {
-      $class = $this->tokenize_value($class, $row_index);
+      $class = $this->tokenizeValue($class, $row_index);
       $class = drupal_clean_css_identifier($class);
     }
     return implode(' ', $classes);
@@ -352,7 +352,7 @@ abstract class FieldPluginBase extends HandlerBase {
   public function elementWrapperClasses($row_index = NULL) {
     $classes = explode(' ', $this->options['element_wrapper_class']);
     foreach ($classes as &$class) {
-      $class = $this->tokenize_value($class, $row_index);
+      $class = $this->tokenizeValue($class, $row_index);
       $class = drupal_clean_css_identifier($class);
     }
     return implode(' ', $classes);

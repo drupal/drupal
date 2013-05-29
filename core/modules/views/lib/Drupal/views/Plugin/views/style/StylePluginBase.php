@@ -186,7 +186,7 @@ abstract class StylePluginBase extends PluginBase {
     if ($this->usesRowClass()) {
       $class = $this->options['row_class'];
       if ($this->usesFields() && $this->view->field) {
-        $class = strip_tags($this->tokenize_value($class, $row_index));
+        $class = strip_tags($this->tokenizeValue($class, $row_index));
       }
 
       $classes = explode(' ', $class);
@@ -200,7 +200,7 @@ abstract class StylePluginBase extends PluginBase {
   /**
    * Take a value and apply token replacement logic to it.
    */
-  function tokenize_value($value, $row_index) {
+  public function tokenizeValue($value, $row_index) {
     if (strpos($value, '[') !== FALSE || strpos($value, '!') !== FALSE || strpos($value, '%') !== FALSE) {
       $fake_item = array(
         'alter_text' => TRUE,

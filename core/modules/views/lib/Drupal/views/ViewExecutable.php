@@ -1529,7 +1529,7 @@ class ViewExecutable {
 
     // Allow substitutions from the first row.
     if ($this->initStyle()) {
-      $title = $this->style_plugin->tokenize_value($title, 0);
+      $title = $this->style_plugin->tokenizeValue($title, 0);
     }
     return $title;
   }
