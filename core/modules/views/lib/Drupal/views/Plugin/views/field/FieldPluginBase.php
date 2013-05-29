@@ -337,7 +337,7 @@ abstract class FieldPluginBase extends HandlerBase {
   /**
    * Return the class of the field's label.
    */
-  function element_label_classes($row_index = NULL) {
+  public function elementLabelClasses($row_index = NULL) {
     $classes = explode(' ', $this->options['element_label_class']);
     foreach ($classes as &$class) {
       $class = $this->tokenize_value($class, $row_index);
