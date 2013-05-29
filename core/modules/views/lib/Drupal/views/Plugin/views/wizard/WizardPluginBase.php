@@ -657,7 +657,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       'sorts' => array(),
     );
     $display_options['default']['filters'] += $this->default_display_filters($form, $form_state);
-    $display_options['default']['sorts'] += $this->default_display_sorts($form, $form_state);
+    $display_options['default']['sorts'] += $this->defaultDisplaySorts($form, $form_state);
 
     // Display: Page
     if (!empty($form_state['values']['page']['create'])) {
@@ -881,7 +881,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   An array of sort arrays keyed by ID. A sort array contains the options
    *   accepted by a sort handler.
    */
-  protected function default_display_sorts($form, $form_state) {
+  protected function defaultDisplaySorts($form, $form_state) {
     $sorts = array();
 
     // Add any sorts provided by the plugin.
