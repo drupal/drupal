@@ -215,7 +215,7 @@ function template_preprocess_views_view_fields(&$vars) {
       $object->handler = &$view->field[$id];
       $object->inline = !empty($vars['options']['inline'][$id]);
 
-      $object->element_type = $object->handler->element_type(TRUE, !$vars['options']['default_field_elements'], $object->inline);
+      $object->element_type = $object->handler->elementType(TRUE, !$vars['options']['default_field_elements'], $object->inline);
       if ($object->element_type) {
         $attributes = array();
         if ($object->handler->options['element_default_classes']) {
@@ -654,7 +654,7 @@ function template_preprocess_views_view_table(&$vars) {
 
       if (!empty($fields[$field]) && empty($fields[$field]->options['exclude'])) {
         $field_output = $handler->get_field($num, $field);
-        $element_type = $fields[$field]->element_type(TRUE, TRUE);
+        $element_type = $fields[$field]->elementType(TRUE, TRUE);
         if ($element_type) {
           $field_output = '<' . $element_type . '>' . $field_output . '</' . $element_type . '>';
         }

@@ -198,7 +198,7 @@ abstract class FieldPluginBase extends HandlerBase {
   /**
    * Return an HTML element based upon the field's element type.
    */
-  function element_type($none_supported = FALSE, $default_empty = FALSE, $inline = FALSE) {
+  public function elementType($none_supported = FALSE, $default_empty = FALSE, $inline = FALSE) {
     if ($none_supported) {
       if ($this->options['element_type'] === '0') {
         return '';
