@@ -269,7 +269,7 @@ function template_preprocess_views_view_fields(&$vars) {
           $attributes['class'][] = 'views-field-' . $object->class;
         }
 
-        if ($classes = $object->handler->element_wrapper_classes($view->row_index)) {
+        if ($classes = $object->handler->elementWrapperClasses($view->row_index)) {
           $attributes['class'][] = $classes;
         }
         $attributes = new Attribute($attributes);

@@ -349,7 +349,7 @@ abstract class FieldPluginBase extends HandlerBase {
   /**
    * Return the class of the field's wrapper.
    */
-  function element_wrapper_classes($row_index = NULL) {
+  public function elementWrapperClasses($row_index = NULL) {
     $classes = explode(' ', $this->options['element_wrapper_class']);
     foreach ($classes as &$class) {
       $class = $this->tokenize_value($class, $row_index);
