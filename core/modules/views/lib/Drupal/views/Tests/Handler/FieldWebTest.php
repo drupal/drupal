@@ -405,7 +405,7 @@ class FieldWebTest extends HandlerTestBase {
     }
 
     // Tests the available html elements.
-    $element_types = $id_field->get_elements();
+    $element_types = $id_field->getElements();
     $expected_elements = array(
       '',
       0,

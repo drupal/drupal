@@ -270,7 +270,7 @@ abstract class FieldPluginBase extends HandlerBase {
    * elements available, though this seems like it would be an incredibly
    * rare occurence.
    */
-  function get_elements() {
+  public function getElements() {
     static $elements = NULL;
     if (!isset($elements)) {
       // @todo Add possible html5 elements.
@@ -546,7 +546,7 @@ abstract class FieldPluginBase extends HandlerBase {
     );
     $form['element_type'] = array(
       '#title' => t('HTML element'),
-      '#options' => $this->get_elements(),
+      '#options' => $this->getElements(),
       '#type' => 'select',
       '#default_value' => $this->options['element_type'],
       '#description' => t('Choose the HTML element to wrap around this field, e.g. H1, H2, etc.'),
@@ -591,7 +591,7 @@ abstract class FieldPluginBase extends HandlerBase {
     );
     $form['element_label_type'] = array(
       '#title' => t('Label HTML element'),
-      '#options' => $this->get_elements(FALSE),
+      '#options' => $this->getElements(FALSE),
       '#type' => 'select',
       '#default_value' => $this->options['element_label_type'],
       '#description' => t('Choose the HTML element to wrap around this label, e.g. H1, H2, etc.'),
@@ -635,7 +635,7 @@ abstract class FieldPluginBase extends HandlerBase {
     );
     $form['element_wrapper_type'] = array(
       '#title' => t('Wrapper HTML element'),
-      '#options' => $this->get_elements(FALSE),
+      '#options' => $this->getElements(FALSE),
       '#type' => 'select',
       '#default_value' => $this->options['element_wrapper_type'],
       '#description' => t('Choose the HTML element to wrap around this field and label, e.g. H1, H2, etc. This may not be used if the field and label are not rendered together, such as with a table.'),
