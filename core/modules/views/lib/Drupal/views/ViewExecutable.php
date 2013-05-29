@@ -525,7 +525,7 @@ class ViewExecutable {
    */
   public function usePager() {
     if (!empty($this->pager)) {
-      return $this->pager->use_pager();
+      return $this->pager->usePager();
     }
   }
 
@@ -726,7 +726,7 @@ class ViewExecutable {
     if (!isset($this->pager)) {
       $this->pager = $this->display_handler->getPlugin('pager');
 
-      if ($this->pager->use_pager()) {
+      if ($this->pager->usePager()) {
         $this->pager->set_current_page($this->current_page);
       }
 
@@ -746,7 +746,7 @@ class ViewExecutable {
    * Render the pager, if necessary.
    */
   public function renderPager($exposed_input) {
-    if (!empty($this->pager) && $this->pager->use_pager()) {
+    if (!empty($this->pager) && $this->pager->usePager()) {
       return $this->pager->render($exposed_input);
     }
 
@@ -1176,7 +1176,7 @@ class ViewExecutable {
       $cache = $this->display_handler->getPlugin('cache');
     }
     if ($cache->cache_get('results')) {
-      if ($this->pager->use_pager()) {
+      if ($this->pager->usePager()) {
         $this->pager->total_items = $this->total_rows;
         $this->pager->update_page_info();
       }

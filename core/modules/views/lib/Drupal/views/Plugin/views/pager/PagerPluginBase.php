@@ -160,7 +160,7 @@ abstract class PagerPluginBase extends PluginBase {
    *
    * Only a couple of very specific pagers will set this to false.
    */
-  function use_pager() {
+  public function usePager() {
     return TRUE;
   }
 

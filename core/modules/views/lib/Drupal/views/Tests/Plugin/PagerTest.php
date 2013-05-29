@@ -140,7 +140,7 @@ class PagerTest extends PluginTestBase {
     $this->assertEqual(count($view->result), 8, 'Make sure that every item beside the first three is returned in the result');
 
     // Check some public functions.
-    $this->assertFalse($view->pager->use_pager());
+    $this->assertFalse($view->pager->usePager());
     $this->assertFalse($view->pager->use_count_query());
     $this->assertEqual($view->pager->get_items_per_page(), 0);
   }
@@ -186,7 +186,7 @@ class PagerTest extends PluginTestBase {
     $this->assertEqual(count($view->result), 3, 'Make sure that only a certain count of items is returned');
 
     // Check some public functions.
-    $this->assertFalse($view->pager->use_pager());
+    $this->assertFalse($view->pager->usePager());
     $this->assertFalse($view->pager->use_count_query());
   }
 

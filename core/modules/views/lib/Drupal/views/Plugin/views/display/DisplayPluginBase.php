@@ -283,7 +283,7 @@ abstract class DisplayPluginBase extends PluginBase {
     if ($this->usesPager()) {
       $pager = $this->getPlugin('pager');
       if ($pager) {
-        return $pager->use_pager();
+        return $pager->usePager();
       }
     }
     return FALSE;
