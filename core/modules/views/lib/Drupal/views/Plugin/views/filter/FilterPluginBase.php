@@ -423,7 +423,7 @@ abstract class FilterPluginBase extends HandlerBase {
 
     // If necessary, set new defaults:
     if ($item['is_grouped']) {
-      $this->build_group_options();
+      $this->buildGroupOptions();
     }
 
     $form_state['view']->get('executable')->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
@@ -714,7 +714,7 @@ abstract class FilterPluginBase extends HandlerBase {
    /**
    * Provide default options for exposed filters.
    */
-  function build_group_options() {
+  protected function buildGroupOptions() {
     $this->options['group_info'] = array(
       'label' => $this->definition['title'],
       'description' => NULL,
