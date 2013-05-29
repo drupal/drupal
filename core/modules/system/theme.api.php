@@ -39,12 +39,8 @@
  * default implementations of theme hooks are named theme_HOOK. Default
  * template implementations are stored in the module directory.
  *
- * Drupal's default template renderer is a simple PHP parsing engine that
- * includes the template and stores the output. Drupal's theme engines
- * can provide alternate template engines, such as XTemplate, Smarty and
- * PHPTal. The most common template engine is PHPTemplate (included with
- * Drupal and implemented in phptemplate.engine, which uses Drupal's default
- * template renderer.
+ * Drupal's default template renderer is Twig. Drupal's theme engines can
+ * provide alternate template engines, such as XTemplate, Smarty and PHPTal.
  *
  * In order to create theme-specific implementations of these hooks, themes can
  * implement their own version of theme hooks, either as functions or templates.
@@ -53,10 +49,9 @@
  * its own version of hook_theme() to tell Drupal what it is implementing;
  * themes utilizing an engine will have their well-named theming functions
  * automatically registered for them. While this can vary based upon the theme
- * engine, the standard set by phptemplate is that theme functions should be
- * named THEMENAME_HOOK. For example, for Drupal's default theme (Bartik) to
- * implement the 'table' hook, the phptemplate.engine would find
- * bartik_table().
+ * engine, the standard is that theme functions should be named THEMENAME_HOOK.
+ * For example, for Drupal's default theme (Bartik) to implement the 'table'
+ * hook, the theme function should be called bartik_table().
  *
  * The theme system is described and defined in theme.inc.
  *

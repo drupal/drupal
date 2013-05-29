@@ -30,7 +30,7 @@ function theme_test_system_theme_info() {
   $themes['test_theme'] = drupal_get_path('module', 'system') . '/tests/themes/test_theme/test_theme.info.yml';
   $themes['test_basetheme'] = drupal_get_path('module', 'system') . '/tests/themes/test_basetheme/test_basetheme.info.yml';
   $themes['test_subtheme'] = drupal_get_path('module', 'system') . '/tests/themes/test_subtheme/test_subtheme.info.yml';
-  $themes['test_theme_twig'] = drupal_get_path('module', 'system') . '/tests/themes/test_theme_twig/test_theme_twig.info.yml';
+  $themes['test_theme_phptemplate'] = drupal_get_path('module', 'system') . '/tests/themes/test_theme_phptemplate/test_theme_phptemplate.info.yml';
   return $themes;
 }
 

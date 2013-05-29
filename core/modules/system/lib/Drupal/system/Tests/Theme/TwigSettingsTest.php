@@ -77,9 +77,9 @@ class TwigSettingsTest extends WebTestBase {
    */
   function testTwigCacheOverride() {
     $extension = twig_extension();
-    theme_enable(array('test_theme_twig'));
+    theme_enable(array('test_theme'));
     config('system.theme')
-      ->set('default', 'test_theme_twig')
+      ->set('default', 'test_theme')
       ->save();
 
     $cache = array();
@@ -89,7 +89,7 @@ class TwigSettingsTest extends WebTestBase {
     }
 
     // Load array of Twig templates.
-    $templates = drupal_find_theme_templates($cache, $extension, drupal_get_path('theme', 'test_theme_twig'));
+    $templates = drupal_find_theme_templates($cache, $extension, drupal_get_path('theme', 'test_theme'));
 
     // Get the template filename and the cache filename for
     // theme_test.template_test.html.twig.

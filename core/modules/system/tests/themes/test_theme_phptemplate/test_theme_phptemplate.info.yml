@@ -1,0 +1,6 @@
+name: 'Test theme PHPTemplate'
+type: theme
+description: 'Theme for testing the theme system with the PHPTemplate engine'
+core: 8.x
+engine: phptemplate
+hidden: true

@@ -1778,7 +1778,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
         // If there's a theme engine involved, we also need to know its extension
         // so we can give the proper filename.
-        $this->theme_extension = '.tpl.php';
+        $this->theme_extension = '.html.twig';
         if (isset($theme_engine)) {
           $extension_function = $theme_engine . '_extension';
           if (function_exists($extension_function)) {

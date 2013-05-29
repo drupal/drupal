@@ -10,7 +10,9 @@ use Drupal\Core\Template\TwigReference;
  * Implements hook_theme().
  */
 function twig_theme($existing, $type, $theme, $path) {
-  return drupal_find_theme_templates($existing, '.html.twig', $path);
+  $templates = drupal_find_theme_functions($existing, array($theme));
+  $templates += drupal_find_theme_templates($existing, '.html.twig', $path);
+  return $templates;
 }
 
 /**

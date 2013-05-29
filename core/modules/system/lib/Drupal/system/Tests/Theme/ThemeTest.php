@@ -154,10 +154,10 @@ class ThemeTest extends WebTestBase {
     $this->assertIdentical($themes['test_basetheme']->sub_themes, $sub_theme_list, 'Base theme\'s object includes list of subthemes.');
     $this->assertIdentical($themes['test_subtheme']->base_themes, $base_theme_list, 'Subtheme\'s object includes list of base themes.');
     // Check for theme engine in subtheme.
-    $this->assertIdentical($themes['test_subtheme']->engine, 'phptemplate', 'Subtheme\'s object includes the theme engine.');
+    $this->assertIdentical($themes['test_subtheme']->engine, 'twig', 'Subtheme\'s object includes the theme engine.');
     // Check for theme engine prefix.
-    $this->assertIdentical($themes['test_basetheme']->prefix, 'phptemplate', 'Base theme\'s object includes the theme engine prefix.');
-    $this->assertIdentical($themes['test_subtheme']->prefix, 'phptemplate', 'Subtheme\'s object includes the theme engine prefix.');
+    $this->assertIdentical($themes['test_basetheme']->prefix, 'twig', 'Base theme\'s object includes the theme engine prefix.');
+    $this->assertIdentical($themes['test_subtheme']->prefix, 'twig', 'Subtheme\'s object includes the theme engine prefix.');
   }
 
   /**
@@ -232,7 +232,7 @@ class ThemeTest extends WebTestBase {
       _theme_process_registry($cache, $module, 'module', $module, drupal_get_path('module', $module));
     }
 
-    $templates = drupal_find_theme_templates($cache, '.tpl.php', drupal_get_path('theme', 'test_theme'));
-    $this->assertEqual($templates['node__1']['template'], 'node--1', 'Template node--1.tpl.php was found in test_theme.');
+    $templates = drupal_find_theme_templates($cache, '.html.twig', drupal_get_path('theme', 'test_theme'));
+    $this->assertEqual($templates['node__1']['template'], 'node--1', 'Template node--1.html.twig was found in test_theme.');
   }
 }
