@@ -809,7 +809,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     $this->base_alias = $this->query->add_field($this->tableAlias, $this->realField);
 
     $this->summary_name_field();
-    return $this->summary_basics();
+    return $this->summaryBasics();
   }
 
   /**
@@ -851,7 +851,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * Some basic summary behavior that doesn't need to be repeated as much as
    * code that goes into summary_query()
    */
-  function summary_basics($count_field = TRUE) {
+  public function summaryBasics($count_field = TRUE) {
     // Add the number of nodes counter
     $distinct = ($this->view->display_handler->getOption('distinct') && empty($this->query->no_distinct));
 

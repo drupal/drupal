@@ -167,7 +167,7 @@ class String extends ArgumentPluginBase {
     }
 
     $this->summary_name_field();
-    return $this->summary_basics(FALSE);
+    return $this->summaryBasics(FALSE);
   }
 
   /**
