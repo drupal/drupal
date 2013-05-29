@@ -1320,7 +1320,7 @@ class Sql extends QueryPluginBase {
 
     // Make sure each entity table has the base field added so that the
     // entities can be loaded.
-    $entity_tables = $this->get_entity_tables();
+    $entity_tables = $this->getEntityTables();
     if ($entity_tables) {
       $params = array();
       if ($groupby) {
@@ -1539,7 +1539,7 @@ class Sql extends QueryPluginBase {
    * @return array
    *   An array of table information, keyed by table alias.
    */
-  function get_entity_tables() {
+  public function getEntityTables() {
     // Start with the base table.
     $entity_tables = array();
     $views_data = Views::viewsData();
@@ -1584,7 +1584,7 @@ class Sql extends QueryPluginBase {
    * $result->_relationship_entities[$relationship_id];
    */
   function loadEntities(&$results) {
-    $entity_tables = $this->get_entity_tables();
+    $entity_tables = $this->getEntityTables();
     // No entity tables found, nothing else to do here.
     if (empty($entity_tables)) {
       return;
