@@ -251,7 +251,7 @@ abstract class FilterPluginBase extends HandlerBase {
     unset($form_state['values']['expose_button']); // don't store this.
     unset($form_state['values']['group_button']); // don't store this.
     if (!$this->isAGroup()) {
-      $this->operator_submit($form, $form_state);
+      $this->operatorSubmit($form, $form_state);
       $this->value_submit($form, $form_state);
     }
     if (!empty($this->options['exposed'])) {
@@ -306,7 +306,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * Perform any necessary changes to the form values prior to storage.
    * There is no need for this function to actually store the data.
    */
-  function operator_submit($form, &$form_state) { }
+  public function operatorSubmit($form, &$form_state) { }
 
   /**
    * Shortcut to display the value form.
