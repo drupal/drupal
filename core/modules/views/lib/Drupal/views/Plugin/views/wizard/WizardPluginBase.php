@@ -207,7 +207,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     // Add filters and sorts which apply to the view as a whole.
     $this->buildFilters($form, $form_state);
-    $this->build_sorts($form, $form_state);
+    $this->buildSorts($form, $form_state);
 
     $form['displays']['page'] = array(
       '#type' => 'fieldset',
@@ -584,7 +584,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * By default, this adds a "sorted by [date]" filter (when it is available).
    */
-  protected function build_sorts(&$form, &$form_state) {
+  protected function buildSorts(&$form, &$form_state) {
     $sorts = array(
       'none' => t('Unsorted'),
     );
