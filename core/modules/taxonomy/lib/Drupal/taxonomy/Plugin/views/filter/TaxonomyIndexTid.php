@@ -165,7 +165,7 @@ class TaxonomyIndexTid extends ManyToOne {
         $identifier = $this->options['expose']['identifier'];
 
         if (!empty($this->options['expose']['reduce'])) {
-          $options = $this->reduce_value_options($options);
+          $options = $this->reduceValueOptions($options);
 
           if (!empty($this->options['expose']['multiple']) && empty($this->options['expose']['required'])) {
             $default_value = array();
