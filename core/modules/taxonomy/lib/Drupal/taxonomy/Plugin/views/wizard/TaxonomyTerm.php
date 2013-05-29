@@ -38,10 +38,10 @@ class TaxonomyTerm extends WizardPluginBase {
   );
 
   /**
-   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::default_display_options().
+   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::defaultDisplayOptions().
    */
-  protected function default_display_options() {
-    $display_options = parent::default_display_options();
+  protected function defaultDisplayOptions() {
+    $display_options = parent::defaultDisplayOptions();
 
     // Add permission-based access control.
     $display_options['access']['type'] = 'perm';

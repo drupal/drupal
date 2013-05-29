@@ -651,7 +651,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    */
   protected function build_display_options($form, $form_state) {
     // Display: Master
-    $display_options['default'] = $this->default_display_options();
+    $display_options['default'] = $this->defaultDisplayOptions();
     $display_options['default'] += array(
       'filters' => array(),
       'sorts' => array(),
@@ -743,7 +743,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * @return array
    *   Returns an array of display options.
    */
-  protected function default_display_options() {
+  protected function defaultDisplayOptions() {
     $display_options = array();
     $display_options['access']['type'] = 'none';
     $display_options['cache']['type'] = 'none';
