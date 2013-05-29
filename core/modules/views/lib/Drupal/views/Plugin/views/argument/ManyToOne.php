@@ -181,7 +181,7 @@ class ManyToOne extends ArgumentPluginBase {
 
     $this->summary_name_field();
 
-    return $this->summary_basics();
+    return $this->summaryBasics();
   }
 
   function summary_argument($data) {
