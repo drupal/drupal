@@ -569,7 +569,7 @@ abstract class StylePluginBase extends PluginBase {
               }
             }
             else {
-              $grouping = $this->get_field_value($index, $field);
+              $grouping = $this->getFieldValue($index, $field);
               // Not all field handlers return a scalar value,
               // e.g. views_handler_field_field.
               if (!is_scalar($grouping)) {
@@ -674,7 +674,7 @@ abstract class StylePluginBase extends PluginBase {
   * @param $field
   *    The id of the field.
   */
-  function get_field_value($index, $field) {
+  protected function getFieldValue($index, $field) {
     $this->view->row_index = $index;
     $value = $this->view->field[$field]->get_value($this->view->result[$index]);
     unset($this->view->row_index);
