@@ -486,6 +486,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
     $build['columns']['third'] = array(
       '#type' => 'details',
       '#title' => t('Advanced'),
+      '#collapsed' => TRUE,
       '#theme_wrappers' => array('details', 'container'),
       '#attributes' => array(
         'class' => array(
@@ -496,7 +497,9 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
     );
 
     // Collapse the details by default.
-    $build['columns']['third']['#open'] = config('views.settings')->get('ui.show.advanced_column');
+    if (config('views.settings')->get('ui.show.advanced_column')) {
+      $build['columns']['third']['#collapsed'] = FALSE;
+    }
 
     // Each option (e.g. title, access, display as grid/table/list) fits into one
     // of several "buckets," or boxes (Format, Fields, Sort, and so on).

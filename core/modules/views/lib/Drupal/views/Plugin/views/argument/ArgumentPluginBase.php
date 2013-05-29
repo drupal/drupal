@@ -193,6 +193,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     $form['exception'] = array(
       '#type' => 'details',
       '#title' => t('Exceptions'),
+      '#collapsed' => TRUE,
       '#fieldset' => 'no_argument',
     );
     $form['exception']['value'] = array(

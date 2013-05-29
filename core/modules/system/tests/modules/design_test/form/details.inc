@@ -13,7 +13,7 @@ function design_test_form_details($form, &$form_state) {
     '#type' => 'details',
     '#title' => 'Collapsible details',
     '#description' => 'Details description',
-    '#open' => TRUE,
+    '#collapsed' => FALSE,
     '#states' => array(
       'collapsed' => array(
         ':input[name="states-trigger"]' => array('checked' => TRUE),
@@ -25,6 +25,7 @@ function design_test_form_details($form, &$form_state) {
     '#type' => 'details',
     '#title' => 'Collapsed details',
     '#description' => 'Details description',
+    '#collapsed' => TRUE,
   );
   $form['collapsed']['textfield'] = array(
     '#type' => 'textfield',
@@ -45,17 +46,19 @@ function design_test_form_details($form, &$form_state) {
     '#type' => 'details',
     '#title' => 'Details',
     '#description' => 'Details description',
+    '#collapsed' => TRUE,
   );
   $form['collapsed2']['collapsible'] = array(
     '#type' => 'details',
     '#title' => 'Collapsible details',
     '#description' => 'Details description',
-    '#open' => TRUE,
+    '#collapsed' => FALSE,
   );
   $form['collapsed2']['collapsed'] = array(
     '#type' => 'details',
     '#title' => 'Collapsed details',
     '#description' => 'Details description',
+    '#collapsed' => TRUE,
   );
   $form['collapsed2']['regular'] = array(
     '#type' => 'details',

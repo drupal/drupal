@@ -46,6 +46,7 @@ class SimpletestSettingsForm extends SystemConfigFormBase {
       '#type' => 'details',
       '#title' => t('HTTP authentication'),
       '#description' => t('HTTP auth settings to be used by the SimpleTest browser during testing. Useful when the site requires basic HTTP authentication.'),
+      '#collapsed' => TRUE,
     );
     $form['httpauth']['simpletest_httpauth_method'] = array(
       '#type' => 'select',

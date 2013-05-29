@@ -290,6 +290,7 @@ abstract class HandlerBase extends PluginBase {
     $form['more'] = array(
       '#type' => 'details',
       '#title' => t('More'),
+      '#collapsed' => TRUE,
       '#weight' => 150,
     );
     // Allow to alter the default values brought into the form.

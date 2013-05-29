@@ -41,6 +41,10 @@ class SimpletestTestForm implements FormInterface {
     $form_state['storage']['PHPUnit'] = $groups['PHPUnit'];
 
     foreach ($groups as $group => $tests) {
+      $form['tests']['table'][$group] = array(
+        '#collapsed' => TRUE,
+      );
+
       foreach ($tests as $class => $info) {
         $form['tests']['table'][$group][$class] = array(
           '#type' => 'checkbox',

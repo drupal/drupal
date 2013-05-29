@@ -157,6 +157,7 @@ class EntityTranslationController implements EntityTranslationControllerInterfac
       $form['source_langcode'] = array(
         '#type' => 'details',
         '#title' => t('Source language: @language', array('@language' => $languages[$source_langcode]->name)),
+        '#collapsed' => TRUE,
         '#tree' => TRUE,
         '#weight' => -100,
         '#multilingual' => TRUE,
@@ -224,6 +225,7 @@ class EntityTranslationController implements EntityTranslationControllerInterfac
       $form['translation_entity'] = array(
         '#type' => 'details',
         '#title' => t('Translation'),
+        '#collapsed' => TRUE,
         '#tree' => TRUE,
         '#weight' => 10,
         '#access' => $this->getTranslationAccess($entity, $source_langcode ? 'create' : 'update'),

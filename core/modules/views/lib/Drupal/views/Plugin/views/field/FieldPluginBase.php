@@ -535,6 +535,7 @@ abstract class FieldPluginBase extends HandlerBase {
     $form['style_settings'] = array(
       '#type' => 'details',
       '#title' => t('Style settings'),
+      '#collapsed' => TRUE,
       '#weight' => 99,
     );
 
@@ -683,6 +684,7 @@ abstract class FieldPluginBase extends HandlerBase {
     $form['alter'] = array(
       '#title' => t('Rewrite results'),
       '#type' => 'details',
+      '#collapsed' => TRUE,
       '#weight' => 100,
     );
 
@@ -883,6 +885,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
       $form['alter']['help'] = array(
         '#type' => 'details',
         '#title' => t('Replacement patterns'),
+        '#collapsed' => TRUE,
         '#value' => $output,
         '#states' => array(
           'visible' => array(
@@ -1021,6 +1024,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
     $form['empty_field_behavior'] = array(
       '#type' => 'details',
       '#title' => t('No results behavior'),
+      '#collapsed' => TRUE,
       '#weight' => 100,
     );
 

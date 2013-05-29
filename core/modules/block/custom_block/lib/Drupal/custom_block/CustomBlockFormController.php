@@ -94,7 +94,7 @@ class CustomBlockFormController extends EntityFormControllerNG {
       '#title' => t('Revision information'),
       '#collapsible' => TRUE,
       // Collapsed by default when "Create new revision" is unchecked.
-      '#open' => $block->isNewRevision(),
+      '#collapsed' => !$block->isNewRevision(),
       '#group' => 'advanced',
       '#attributes' => array(
         'class' => array('custom-block-form-revision-information'),
