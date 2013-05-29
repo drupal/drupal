@@ -635,7 +635,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     // Allow the fully built options to be altered. This happens before adding
     // the options to the view, so that once they are eventually added we will
     // be able to get all the overrides correct.
-    $this->alter_display_options($display_options, $form, $form_state);
+    $this->alterDisplayOptions($display_options, $form, $form_state);
 
     $this->addDisplays($view, $display_options, $form, $form_state);
 
@@ -680,7 +680,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   /**
    * Alters the full array of display options before they are added to the view.
    */
-  protected function alter_display_options(&$display_options, $form, $form_state) {
+  protected function alterDisplayOptions(&$display_options, $form, $form_state) {
     foreach ($display_options as $display_type => $options) {
       // Allow style plugins to hook in and provide some settings.
       $style_plugin = Views::pluginManager('style')->createInstance($options['style']['type']);
