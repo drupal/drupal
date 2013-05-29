@@ -2704,7 +2704,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
     if ($this->usesExposed() && $this->getOption('exposed_block')) {
       $exposed_form = $this->getPlugin('exposed_form');
-      return $exposed_form->render_exposed_form(TRUE);
+      return $exposed_form->renderExposedForm(TRUE);
     }
   }
 

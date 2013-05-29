@@ -997,7 +997,7 @@ class ViewExecutable {
 
     if ($this->display_handler->usesExposed()) {
       $exposed_form = $this->display_handler->getPlugin('exposed_form');
-      $this->exposed_widgets = $exposed_form->render_exposed_form();
+      $this->exposed_widgets = $exposed_form->renderExposedForm();
       if (form_set_error() || !empty($this->build_info['abort'])) {
         $this->built = TRUE;
         // Don't execute the query, but rendering will still be executed to display the empty text.
