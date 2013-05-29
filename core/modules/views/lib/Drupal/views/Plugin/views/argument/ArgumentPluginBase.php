@@ -828,7 +828,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
         if ($j) {
           $join = clone $j;
           $join->leftTable = $this->tableAlias;
-          $this->name_table_alias = $this->query->add_table($this->name_table, $this->relationship, $join);
+          $this->name_table_alias = $this->query->addTable($this->name_table, $this->relationship, $join);
         }
       }
       else {

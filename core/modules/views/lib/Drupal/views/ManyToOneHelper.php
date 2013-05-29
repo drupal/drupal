@@ -65,7 +65,7 @@ class ManyToOneHelper {
    * link point and adds *that* as a new relationship and then adds the table to
    * the relationship, if necessary.
    */
-  function add_table($join = NULL, $alias = NULL) {
+  public function addTable($join = NULL, $alias = NULL) {
     // This is used for lookups in the many_to_one table.
     $field = $this->handler->relationship . '_' . $this->handler->table . '.' . $this->handler->field;
 
@@ -97,7 +97,7 @@ class ManyToOneHelper {
     }
 
     // And now add our table, using the new relationship if one was used.
-    $alias = $this->handler->query->add_table($this->handler->table, $relationship, $join, $alias);
+    $alias = $this->handler->query->addTable($this->handler->table, $relationship, $join, $alias);
 
     // Store what values are used by this table chain so that other chains can
     // automatically discard those values.
@@ -148,7 +148,7 @@ class ManyToOneHelper {
           );
         }
       }
-      return $this->add_table($join);
+      return $this->addTable($join);
     }
   }
 
@@ -188,7 +188,7 @@ class ManyToOneHelper {
             }
           }
 
-          $this->handler->tableAlias = $this->add_table($join);
+          $this->handler->tableAlias = $this->addTable($join);
         }
 
         return $this->handler->tableAlias;
@@ -220,7 +220,7 @@ class ManyToOneHelper {
             }
             $this->handler->view->many_to_one_aliases[$field][$value] = $this->handler->table . '_value_' . ($this->handler->view->many_to_one_count[$this->handler->table]++);
           }
-          $alias = $this->handler->tableAliases[$value] = $this->add_table($join, $this->handler->view->many_to_one_aliases[$field][$value]);
+          $alias = $this->handler->tableAliases[$value] = $this->addTable($join, $this->handler->view->many_to_one_aliases[$field][$value]);
 
           // and set table_alias to the first of these.
           if (empty($this->handler->tableAlias)) {
@@ -244,7 +244,7 @@ class ManyToOneHelper {
           );
         }
 
-        $this->handler->tableAlias = $this->add_table($join);
+        $this->handler->tableAlias = $this->addTable($join);
       }
     }
     return $this->handler->tableAlias;

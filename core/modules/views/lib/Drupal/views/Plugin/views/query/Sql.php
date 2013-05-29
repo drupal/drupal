@@ -364,7 +364,7 @@ class Sql extends QueryPluginBase {
    *   adding parts to the query. Or FALSE if the table was not able to be
    *   added.
    */
-  function add_table($table, $relationship = NULL, JoinPluginBase $join = NULL, $alias = NULL) {
+  public function addTable($table, $relationship = NULL, JoinPluginBase $join = NULL, $alias = NULL) {
     if (!$this->ensure_path($table, $relationship, $join)) {
       return FALSE;
     }
@@ -379,7 +379,7 @@ class Sql extends QueryPluginBase {
   /**
    * Add a table to the query without ensuring the path.
    *
-   * This is a pretty internal function to Views and add_table() or
+   * This is a pretty internal function to Views and addTable() or
    * ensure_table() should be used instead of this one, unless you are
    * absolutely sure this is what you want.
    *
@@ -554,7 +554,7 @@ class Sql extends QueryPluginBase {
       //
       // This can be done safely here but not lower down in
       // queue_table(), because queue_table() is also used by
-      // add_table() which requires the ability to intentionally add
+      // addTable() which requires the ability to intentionally add
       // the same table with the same join multiple times.  For
       // example, a view that filters on 3 taxonomy terms using AND
       // needs to join taxonomy_term_data 3 times with the same join.
