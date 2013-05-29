@@ -217,7 +217,7 @@ abstract class FilterPluginBase extends HandlerBase {
     }
     else {
       // Add the subform from operator_form().
-      $this->show_operator_form($form, $form_state);
+      $this->showOperatorForm($form, $form_state);
       // Add the subform from value_form().
       $this->show_value_form($form, $form_state);
       $form['clear_markup_end'] = array(
@@ -265,7 +265,7 @@ abstract class FilterPluginBase extends HandlerBase {
   /**
    * Shortcut to display the operator form.
    */
-  function show_operator_form(&$form, &$form_state) {
+  public function showOperatorForm(&$form, &$form_state) {
     $this->operator_form($form, $form_state);
     $form['operator']['#prefix'] = '<div class="views-group-box views-left-30">';
     $form['operator']['#suffix'] = '</div>';
