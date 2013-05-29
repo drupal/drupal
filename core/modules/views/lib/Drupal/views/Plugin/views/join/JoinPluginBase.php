@@ -192,7 +192,7 @@ class JoinPluginBase extends ContainerFactoryPluginBase {
     }
 
     if ($this->leftTable) {
-      $left = $view_query->get_table_info($this->leftTable);
+      $left = $view_query->getTableInfo($this->leftTable);
       $left_field = "$left[alias].$this->leftField";
     }
     else {

@@ -707,7 +707,7 @@ class Sql extends QueryPluginBase {
    * If you need the alias of a table with a particular relationship, use
    * ensure_table().
    */
-  function get_table_info($table) {
+  public function getTableInfo($table) {
     if (!empty($this->table_queue[$table])) {
       return $this->table_queue[$table];
     }
