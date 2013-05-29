@@ -1015,7 +1015,6 @@ function install_verify_database_settings() {
  */
 function install_settings_form($form, &$form_state, &$install_state) {
   global $databases;
-  $profile = $install_state['parameters']['profile'];
 
   drupal_static_reset('conf_path');
   $conf_path = './' . conf_path(FALSE);
@@ -1585,7 +1584,7 @@ function install_retrieve_file($uri, $destination) {
 function install_check_localization_server($uri) {
   try {
     $request = Drupal::httpClient()->head($uri);
-    $response = $request->send();
+    $request->send();
     return TRUE;
   }
   catch (RequestException $e) {
@@ -1967,8 +1966,6 @@ function install_check_translations($install_state) {
   $translations_directory = conf_path() . '/files/translations';
   $translations_directory_exists = FALSE;
   $online = FALSE;
-  $server_available = FALSE;
-  $translation_available = FALSE;
 
   // First attempt to create or make writable the files directory.
   file_prepare_directory($files_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
@@ -2003,10 +2000,9 @@ function install_check_translations($install_state) {
   // server can be reached, or in other words if we have an internet connection.
   if ($translation_available = install_check_localization_server($translation_url)) {
     $online = TRUE;
-    $server_available = TRUE;
   }
   else {
-    if ($server_available = install_check_localization_server($server_url)) {
+    if (install_check_localization_server($server_url)) {
       $online = TRUE;
     }
   }
