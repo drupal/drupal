@@ -469,7 +469,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       ),
       'empty' => array(
         'title' => t('Display contents of "No results found"'),
-        'method' => 'default_empty',
+        'method' => 'defaultEmpty',
         'breadcrumb' => TRUE, // generate a breadcrumb to here
       ),
       'access denied' => array(
@@ -714,7 +714,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * If an argument was expected and was not given, in this case, display
    * the view's empty text
    */
-  function default_empty() {
+  public function defaultEmpty() {
     // We return with no query; this will force the empty text.
     $this->view->built = TRUE;
     $this->view->executed = TRUE;
