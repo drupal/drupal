@@ -53,7 +53,7 @@ class DisplayExtenderTest extends PluginTestBase {
     $this->assertTrue($display_extender instanceof \Drupal\views_test_data\Plugin\views\display_extender\DisplayExtenderTest, 'Make sure the right class got initialized.');
 
     $view->preExecute();
-    $this->assertTrue($display_extender->testState['pre_execute'], 'Make sure the display extender was able to react on preExecute.');
+    $this->assertTrue($display_extender->testState['preExecute'], 'Make sure the display extender was able to react on preExecute.');
     $view->execute();
     $this->assertTrue($display_extender->testState['query'], 'Make sure the display extender was able to react on query.');
   }

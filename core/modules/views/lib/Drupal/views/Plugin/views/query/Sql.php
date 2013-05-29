@@ -1484,7 +1484,7 @@ class Sql extends QueryPluginBase {
         }
 
         // Let the pager modify the query to add limits.
-        $view->pager->pre_execute($query);
+        $view->pager->preExecute($query);
 
         if (!empty($this->limit) || !empty($this->offset)) {
           // We can't have an offset without a limit, so provide a very large limit instead.

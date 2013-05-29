@@ -2531,11 +2531,11 @@ abstract class DisplayPluginBase extends PluginBase {
     $this->view->initHandlers();
     if ($this->usesExposed()) {
       $exposed_form = $this->getPlugin('exposed_form');
-      $exposed_form->pre_execute();
+      $exposed_form->preExecute();
     }
 
     foreach ($this->extender as $extender) {
-      $extender->pre_execute();
+      $extender->preExecute();
     }
 
     $this->view->setShowAdminLinks($this->getOption('show_admin_links'));

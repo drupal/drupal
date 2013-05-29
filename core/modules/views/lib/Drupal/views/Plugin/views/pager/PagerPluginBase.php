@@ -205,7 +205,7 @@ abstract class PagerPluginBase extends PluginBase {
   /**
    * Perform any needed actions just prior to the query executing.
    */
-  function pre_execute(&$query) { }
+  public function preExecute(&$query) { }
 
   /**
    * Perform any needed actions just after the query executing.
