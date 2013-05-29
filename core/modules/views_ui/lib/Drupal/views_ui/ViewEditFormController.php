@@ -317,23 +317,6 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::actionsElement().
-   */
-  protected function actionsElement(array $form, array &$form_state) {
-    $element = parent::actionsElement($form, $form_state);
-    $element['#weight'] = 0;
-    $view = $this->entity;
-    if (empty($view->changed)) {
-      $element['#attributes'] = array(
-        'class' => array(
-          'js-hide',
-        ),
-      );
-    }
-    return $element;
-  }
-
-  /**
    * Returns a renderable array representing the edit page for one display.
    */
   public function getDisplayTab($view) {
