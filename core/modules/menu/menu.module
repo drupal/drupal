@@ -569,7 +569,7 @@ function menu_form_node_form_alter(&$form, $form_state) {
     '#type' => 'details',
     '#title' => t('Menu settings'),
     '#access' => user_access('administer menu'),
-    '#collapsed' => !$link['link_title'],
+    '#open' => !empty($link['link_title']),
     '#group' => 'advanced',
     '#attached' => array(
       'library' => array(array('menu', 'drupal.menu')),
@@ -669,7 +669,6 @@ function menu_form_node_type_form_alter(&$form, $form_state) {
   $form['menu'] = array(
     '#type' => 'details',
     '#title' => t('Menu settings'),
-    '#collapsed' => TRUE,
     '#attached' => array(
       'library' => array(array('menu', 'drupal.menu.admin')),
     ),

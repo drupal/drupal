@@ -352,7 +352,6 @@ class DisplayOverview extends OverviewBase {
         $form['modes'] = array(
           '#type' => 'details',
           '#title' => t('Custom display settings'),
-          '#collapsed' => TRUE,
         );
         // Collect options and default values for the 'Custom display settings'
         // checkboxes.

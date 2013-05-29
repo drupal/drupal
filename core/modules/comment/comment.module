@@ -993,7 +993,6 @@ function comment_form_node_type_form_alter(&$form, $form_state) {
     $form['comment'] = array(
       '#type' => 'details',
       '#title' => t('Comment settings'),
-      '#collapsed' => TRUE,
       '#group' => 'additional_settings',
       '#attributes' => array(
         'class' => array('comment-node-type-settings-form'),
@@ -1099,7 +1098,6 @@ function comment_form_node_form_alter(&$form, $form_state) {
     '#type' => 'details',
     '#access' => user_access('administer comments'),
     '#title' => t('Comment settings'),
-    '#collapsed' => TRUE,
     '#group' => 'advanced',
     '#attributes' => array(
       'class' => array('comment-node-settings-form'),

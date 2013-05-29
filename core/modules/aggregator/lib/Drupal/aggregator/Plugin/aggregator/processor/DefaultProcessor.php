@@ -45,7 +45,7 @@ class DefaultProcessor extends PluginBase implements ProcessorInterface {
         '#type' => 'details',
         '#title' => t('Default processor settings'),
         '#description' => $info['description'],
-        '#collapsed' => !in_array($info['id'], $processors),
+        '#open' => in_array($info['id'], $processors),
       );
     }
 

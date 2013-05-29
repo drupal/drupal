@@ -416,7 +416,6 @@ function _book_add_form_elements(&$form, &$form_state, EntityInterface $node) {
     '#type' => 'details',
     '#title' => t('Book outline'),
     '#weight' => 10,
-    '#collapsed' => TRUE,
     '#group' => 'advanced',
     '#attributes' => array(
       'class' => array('book-outline-form'),

@@ -177,7 +177,6 @@ function locale_translate_export_form($form, &$form_state) {
     $form['content_options'] = array(
       '#type' => 'details',
       '#title' => t('Export options'),
-      '#collapsed' => TRUE,
       '#tree' => TRUE,
       '#states' => array(
         'invisible' => array(

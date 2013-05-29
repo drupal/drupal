@@ -56,8 +56,6 @@ class CustomBlockTypeFormController extends EntityFormController {
       $form['language'] = array(
         '#type' => 'details',
         '#title' => t('Language settings'),
-        '#collapsible' => TRUE,
-        '#collapsed' => TRUE,
         '#group' => 'additional_settings',
       );
 
