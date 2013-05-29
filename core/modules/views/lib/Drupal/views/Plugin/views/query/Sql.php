@@ -1044,9 +1044,11 @@ class Sql extends QueryPluginBase {
   /**
    * Returns the alias for the given field added to $table.
    *
+   * @access protected
+   *
    * @see views_plugin_query_default::add_field()
    */
-  function get_field_alias($table_alias, $field) {
+  protected function getFieldAlias($table_alias, $field) {
     return isset($this->field_aliases[$table_alias][$field]) ? $this->field_aliases[$table_alias][$field] : FALSE;
   }
 
@@ -1600,7 +1602,7 @@ class Sql extends QueryPluginBase {
       $entity_type = $table['entity_type'];
       $info = entity_get_info($entity_type);
       $id_key = empty($table['revision']) ? $info['entity_keys']['id'] : $info['entity_keys']['revision'];
-      $id_alias = $this->get_field_alias($table_alias, $id_key);
+      $id_alias = $this->getFieldAlias($table_alias, $id_key);
 
       foreach ($results as $index => $result) {
         // Store the entity id if it was found.
