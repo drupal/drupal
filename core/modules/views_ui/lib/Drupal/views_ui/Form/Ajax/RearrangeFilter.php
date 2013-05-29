@@ -142,7 +142,7 @@ class RearrangeFilter extends ViewsFormBase {
       }
 
       $handler = $display->getHandler($type, $id);
-      if ($grouping && $handler && !$handler->can_group()) {
+      if ($grouping && $handler && !$handler->canGroup()) {
         $field['group'] = 'ungroupable';
       }
 

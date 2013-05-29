@@ -1429,7 +1429,7 @@ abstract class FilterPluginBase extends HandlerBase {
    *
    * @return bool
    */
-   function can_group() {
+   public function canGroup() {
      return TRUE;
    }
 

@@ -59,6 +59,6 @@ class GroupByNumeric extends Numeric {
     return $this->getField(parent::adminLabel($short));
   }
 
-  function can_group() { return FALSE; }
+  public function canGroup() { return FALSE; }
 
 }
