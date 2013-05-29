@@ -154,7 +154,7 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
    * @param $type
    *   Either 'AND' or 'OR'
    */
-  function set_group_operator($type = 'AND') {
+  public function setGroupOperator($type = 'AND') {
     $this->group_operator = strtoupper($type);
   }
 

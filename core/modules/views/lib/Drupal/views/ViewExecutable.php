@@ -1013,7 +1013,7 @@ class ViewExecutable {
     if (!empty($this->filter)) {
       $filter_groups = $this->display_handler->getOption('filter_groups');
       if ($filter_groups) {
-        $this->query->set_group_operator($filter_groups['operator']);
+        $this->query->setGroupOperator($filter_groups['operator']);
         foreach ($filter_groups['groups'] as $id => $operator) {
           $this->query->set_where_group($operator, $id);
         }
