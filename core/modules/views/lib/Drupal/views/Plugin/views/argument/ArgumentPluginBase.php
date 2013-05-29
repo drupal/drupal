@@ -783,7 +783,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     $this->summary_query();
 
     $by = $this->options['summary']['number_of_records'] ? 'num_records' : NULL;
-    $this->summary_sort($this->options['summary']['sort_order'], $by);
+    $this->summarySort($this->options['summary']['sort_order'], $by);
 
     // Summaries have their own sorting and fields, so tell the View not
     // to build these.
@@ -872,7 +872,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * @param $order
    *   The order selected in the UI.
    */
-  function summary_sort($order, $by = NULL) {
+  public function summarySort($order, $by = NULL) {
     $this->query->add_orderby(NULL, NULL, $order, (!empty($by) ? $by : $this->name_alias));
   }
 
