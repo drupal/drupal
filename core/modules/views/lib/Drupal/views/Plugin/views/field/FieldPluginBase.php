@@ -246,7 +246,7 @@ abstract class FieldPluginBase extends HandlerBase {
   /**
    * Return an HTML element for the wrapper based upon the field's element type.
    */
-  function element_wrapper_type($none_supported = FALSE, $default_empty = FALSE) {
+  public function elementWrapperType($none_supported = FALSE, $default_empty = FALSE) {
     if ($none_supported) {
       if ($this->options['element_wrapper_type'] === '0') {
         return 0;

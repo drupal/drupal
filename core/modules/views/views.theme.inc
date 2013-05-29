@@ -253,7 +253,7 @@ function template_preprocess_views_view_fields(&$vars) {
       $object->class = drupal_clean_css_identifier($id);
 
       $previous_inline = $object->inline;
-      $object->inline_html = $object->handler->element_wrapper_type(TRUE, TRUE);
+      $object->inline_html = $object->handler->elementWrapperType(TRUE, TRUE);
       if ($object->inline_html === '' && $vars['options']['default_field_elements']) {
         $object->inline_html = $object->inline ? 'span' : 'div';
       }
