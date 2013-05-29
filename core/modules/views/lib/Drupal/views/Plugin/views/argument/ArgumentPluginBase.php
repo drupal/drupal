@@ -449,7 +449,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       'default' => array(
         'title' => t('Provide default value'),
         'method' => 'default_default',
-        'form method' => 'default_argument_form',
+        'form method' => 'defaultArgumentForm',
         'has default argument' => TRUE,
         'default only' => TRUE, // this can only be used for missing argument, not validation failure
         'breadcrumb' => TRUE, // generate a breadcrumb to here
@@ -496,7 +496,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * Provide a form for selecting the default argument when the
    * default action is set to provide default argument.
    */
-  function default_argument_form(&$form, &$form_state) {
+  public function defaultArgumentForm(&$form, &$form_state) {
     $plugins = Views::pluginManager('argument_default')->getDefinitions();
     $options = array();
 
