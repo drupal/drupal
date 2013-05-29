@@ -268,11 +268,8 @@ function _drupal_theme_initialize($theme, $base_theme = array(), $registry_callb
       include_once DRUPAL_ROOT . '/' . $theme->owner;
     }
   }
-  // Load twig as secondary always available engine.
-  // @todo Make twig the default engine and remove this. This is required
-  // because (by design) the theme system doesn't allow modules to register more
-  // than one type of extension. We need a temporary backwards compatibility
-  // layer to allow us to perform core-wide .tpl.php to .html.twig conversion.
+
+  // Always include Twig as the default theme engine.
   include_once DRUPAL_ROOT . '/core/themes/engines/twig/twig.engine';
 
   if (isset($registry_callback)) {
@@ -513,28 +510,6 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
         if (!isset($info['path'])) {
           $result[$hook]['template'] = $path . '/templates/' . $info['template'];
         }
-        if ($type == 'module' || $type == 'theme_engine') {
-          // Add two render engines for modules and theme engines.
-          // @todo Remove and make twig the default engine.
-          $render_engines = array(
-            '.html.twig' => 'twig',
-            '.tpl.php' => 'phptemplate'
-          );
-
-          // Find the best engine for this template.
-          foreach ($render_engines as $extension => $engine) {
-            // Render the output using the template file.
-            $template_file = $result[$hook]['template'] . $extension;
-            if (isset($info['path'])) {
-              $template_file = $info['path'] . '/' . $template_file;
-            }
-            if (file_exists($template_file)) {
-              $result[$hook]['template_file'] = $template_file;
-              $result[$hook]['engine'] = $engine;
-              break;
-            }
-          }
-        }
       }
 
       // Allow variable processors for all theming hooks, whether the hook is
@@ -664,12 +639,6 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
   // And then the same thing, but for the theme.
   if ($theme_engine) {
     _theme_process_registry($cache, $theme_engine, 'theme_engine', $theme->name, dirname($theme->filename));
-  }
-
-  if ($theme_engine == 'phptemplate') {
-    // Check for Twig templates if this is a PHPTemplate theme.
-    // @todo Remove this once all core themes are converted to Twig.
-    _theme_process_registry($cache, 'twig', 'theme_engine', $theme->name, dirname($theme->filename));
   }
 
   // Finally, hooks provided by the theme itself.
@@ -847,7 +816,7 @@ function drupal_find_base_themes($themes, $key, $used_keys = array()) {
  * theme_HOOK() (e.g., theme_taxonomy_term()) or via a template file named
  * according to the value of the 'template' key registered with the theme hook
  * (see hook_theme() for details). Default templates are implemented with the
- * PHPTemplate rendering engine and are named the same as the theme hook, with
+ * Twig rendering engine and are named the same as the theme hook, with
  * underscores changed to hyphens, so for the 'taxonomy_term' theme hook, the
  * default template is 'taxonomy-term.tpl.php'.
  *
@@ -859,9 +828,9 @@ function drupal_find_base_themes($themes, $key, $used_keys = array()) {
  * default implementation of the 'menu_tree' theme hook by implementing a
  * bartik_menu_tree() function), or by adding a template file within its folder
  * structure that follows the template naming structure used by the theme's
- * rendering engine (for example, since the Bartik theme uses the PHPTemplate
- * rendering engine, it overrides the default implementation of the 'page' theme
- * hook by containing a 'page.tpl.php' file within its folder structure).
+ * rendering engine (for example, since the Bartik theme uses the Twig rendering
+ * engine, it overrides the default implementation of the 'page' theme hook by
+ * containing a 'page.html.twig' file within its folder structure).
  *
  * If the implementation is a template file, several functions are called
  * before the template file is invoked, to modify the $variables array. These
@@ -1123,9 +1092,8 @@ function theme($hook, $variables = array()) {
     }
   }
   else {
-    // Default render function and extension.
-    $render_function = 'theme_render_template';
-    $extension = '.tpl.php';
+    $render_function = 'twig_render_template';
+    $extension = '.html.twig';
 
     // The theme engine may use a different extension and a different renderer.
     global $theme_engine;
@@ -1137,13 +1105,6 @@ function theme($hook, $variables = array()) {
         $extension_function = $theme_engine . '_extension';
         if (function_exists($extension_function)) {
           $extension = $extension_function();
-        }
-      }
-      // @todo Change this 'if' back to 'elseif' once Twig conversion is
-      // complete. Normally only modules have this key set.
-      if (isset($info['engine'])) {
-        if (function_exists($info['engine'] . '_render_template')) {
-          $render_function = $info['engine'] . '_render_template';
         }
       }
     }
@@ -1183,12 +1144,6 @@ function theme($hook, $variables = array()) {
     if (isset($info['path'])) {
       $template_file = $info['path'] . '/' . $template_file;
     }
-
-    // Modules can override this.
-    if (isset($info['template_file'])) {
-      $template_file = $info['template_file'];
-    }
-
     $output = $render_function($template_file, $variables);
   }
 
@@ -1525,31 +1480,6 @@ function theme_settings_convert_to_config(array $theme_settings, Config $config)
     }
   }
   return $config;
-}
-
-/**
- * Renders a system default template, which is essentially a PHP template.
- *
- * @param $template_file
- *   The filename of the template to render.
- * @param $variables
- *   A keyed array of variables that will appear in the output.
- *
- * @return
- *   The output generated by the template.
- */
-function theme_render_template($template_file, $variables) {
-  // Extract the variables to a local namespace
-  extract($variables, EXTR_SKIP);
-
-  // Start output buffering
-  ob_start();
-
-  // Include the template file
-  include DRUPAL_ROOT . '/' . $template_file;
-
-  // End buffering and return its contents
-  return ob_get_clean();
 }
 
 /**

@@ -1614,8 +1614,8 @@ function hook_permission() {
  *   - template: If specified, this theme implementation is a template, and
  *     this is the template file without an extension. Do not put .tpl.php on
  *     this file; that extension will be added automatically by the default
- *     rendering engine (which is PHPTemplate). If 'path', above, is specified,
- *     the template should also be in this path.
+ *     rendering engine (which is Twig). If 'path' above is specified, the
+ *     template should also be in this path.
  *   - function: If specified, this will be the function name to invoke for
  *     this implementation. If neither 'template' nor 'function' is specified,
  *     a default function name will be assumed. For example, if a module
@@ -1636,8 +1636,8 @@ function hook_permission() {
  *   - preprocess functions: A list of functions used to preprocess this data.
  *     Ordinarily this won't be used; it's automatically filled in. By default,
  *     for a module this will be filled in as template_preprocess_HOOK. For
- *     a theme this will be filled in as phptemplate_preprocess and
- *     phptemplate_preprocess_HOOK as well as themename_preprocess and
+ *     a theme this will be filled in as twig_preprocess and
+ *     twig_preprocess_HOOK as well as themename_preprocess and
  *     themename_preprocess_HOOK.
  *   - override preprocess functions: Set to TRUE when a theme does NOT want
  *     the standard preprocess functions to run. This can be used to give a

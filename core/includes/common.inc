@@ -5671,7 +5671,7 @@ function element_set_attributes(array &$element, array $map) {
  * - name: The real name of the theme for display purposes.
  * - description: Brief description.
  * - screenshot: Path to screenshot relative to the theme's .info.yml file.
- * - engine: Theme engine; typically phptemplate.
+ * - engine: Theme engine; typically twig.
  * - base theme: Name of a base theme, if applicable.
  * - regions: Listed regions.
  * - features: Features available.

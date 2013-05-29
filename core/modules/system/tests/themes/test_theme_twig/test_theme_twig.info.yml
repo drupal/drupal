@@ -1,6 +1,0 @@
-name: 'Test theme for Twig'
-type: theme
-description: 'Theme for testing the theme system with twig engine'
-engine: twig
-core: 8.x
-hidden: true
