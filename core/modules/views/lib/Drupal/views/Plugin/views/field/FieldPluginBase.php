@@ -1240,7 +1240,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
     $suffix = '';
     if (!empty($alter['trim']) && !empty($alter['max_length'])) {
       $length = strlen($value);
-      $value = $this->render_trim_text($alter, $value);
+      $value = $this->renderTrimText($alter, $value);
       if ($this->options['alter']['more_link'] && strlen($value) < $length) {
         $tokens = $this->getRenderTokens($alter);
         $more_link_text = $this->options['alter']['more_link_text'] ? $this->options['alter']['more_link_text'] : t('more');
@@ -1290,7 +1290,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
   /**
    * Trim the field down to the specified length.
    */
-  function render_trim_text($alter, $value) {
+  public function renderTrimText($alter, $value) {
     if (!empty($alter['strip_tags'])) {
       // NOTE: It's possible that some external fields might override the
       // element type.
