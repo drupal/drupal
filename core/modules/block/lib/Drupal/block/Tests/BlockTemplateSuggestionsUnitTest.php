@@ -52,7 +52,7 @@ class BlockTemplateSuggestionsUnitTest extends WebTestBase {
     $variables['content_attributes']['class'][] = 'test-class';
     template_preprocess_block($variables);
     $this->assertEqual($variables['theme_hook_suggestions'], array('block__system', 'block__system_menu_block', 'block__system_menu_block__menu_admin', 'block__machinename'));
-    $this->assertEqual($variables['content_attributes']['class'], array('test-class', 'content'), 'Default .content class added to block content_attributes_array');
+    $this->assertEqual($variables['content_attributes']['class'], array('test-class', 'content'), 'Default .content class added to block content_attributes');
   }
 
 }
