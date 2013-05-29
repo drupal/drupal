@@ -891,7 +891,7 @@ function drupal_find_base_themes($themes, $key, $used_keys = array()) {
  *   created in this function are derived from ones created by
  *   template_preprocess(), but potentially altered by the other preprocess
  *   functions listed above. For example, any preprocess function can add to or
- *   modify the $variables['attributes_array'] variable, and after all of them
+ *   modify the $variables['attributes'] variable, and after all of them
  *   have finished executing, template_process() flattens it into a
  *   $variables['attributes'] string for convenient use by templates.
  * - template_process_HOOK(&$variables): Should be implemented by the module

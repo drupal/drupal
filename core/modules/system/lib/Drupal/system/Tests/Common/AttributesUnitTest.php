@@ -48,8 +48,7 @@ class AttributesUnitTest extends UnitTestBase {
     // Verify empty attributes array is rendered.
     $this->assertIdentical((string) new Attribute(array()), '', 'Empty attributes array.');
 
-    $attributes_array = array('key1' => 'value1');
-    $attribute = new Attribute($attributes_array);
+    $attribute = new Attribute(array('key1' => 'value1'));
     foreach($attribute as $value) {
       $this->assertIdentical((string) $value, 'value1', 'Iterate over attribute.');
     }
