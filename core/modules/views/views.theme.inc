@@ -298,7 +298,7 @@ function template_preprocess_views_view_fields(&$vars) {
             $attributes['class'][] = 'views-label-' . $object->class;
           }
 
-          $element_label_class = $object->handler->element_label_classes($view->row_index);
+          $element_label_class = $object->handler->elementLabelClasses($view->row_index);
           if ($element_label_class) {
             $attributes['class'][] = $element_label_class;
           }
@@ -607,7 +607,7 @@ function template_preprocess_views_view_table(&$vars) {
         $vars['header_classes'][$field]['class'][] = 'views-field-' . $vars['fields'][$field];
       }
       $vars['header_classes'][$field] = new Attribute($vars['header_classes'][$field]);
-      $class = $fields[$field]->element_label_classes(0);
+      $class = $fields[$field]->elementLabelClasses(0);
       if ($class) {
         $vars['header_classes'][$field]['class'][] = $class;
       }
@@ -972,7 +972,7 @@ function template_preprocess_views_view_rss(&$vars) {
   // The RSS 2.0 "spec" doesn't indicate HTML can be used in the description.
   // We strip all HTML tags, but need to prevent double encoding from properly
   // escaped source data (such as &amp becoming &amp;amp;).
-  $vars['description'] = check_plain(decode_entities(strip_tags($style->get_description())));
+  $vars['description'] = check_plain(decode_entities(strip_tags($style->getDescription())));
 
   if ($view->display_handler->getOption('sitename_title')) {
     $title = $config->get('name');

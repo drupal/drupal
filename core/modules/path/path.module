@@ -119,7 +119,7 @@ function path_form_node_form_alter(&$form, $form_state) {
   $form['path'] = array(
     '#type' => 'details',
     '#title' => t('URL path settings'),
-    '#collapsed' => empty($path['alias']),
+    '#open' => !empty($path['alias']),
     '#group' => 'advanced',
     '#attributes' => array(
       'class' => array('path-form'),

@@ -56,7 +56,6 @@ class CommentFormController extends EntityFormControllerNG {
       $form['author'] += array(
         '#type' => 'details',
         '#title' => t('Administration'),
-        '#collapsed' => TRUE,
       );
     }
 

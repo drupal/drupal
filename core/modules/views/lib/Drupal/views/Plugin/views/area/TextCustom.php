@@ -48,7 +48,7 @@ class TextCustom extends AreaPluginBase {
   function render($empty = FALSE) {
     if (!$empty || !empty($this->options['empty'])) {
       return array(
-        '#markup' => $this->render_textarea($this->options['content']),
+        '#markup' => $this->renderTextarea($this->options['content']),
       );
     }
 
@@ -58,7 +58,7 @@ class TextCustom extends AreaPluginBase {
   /**
    * Render a text area with filter_xss_admin.
    */
-  function render_textarea($value) {
+  public function renderTextarea($value) {
     if ($value) {
       if ($this->options['tokenize']) {
         $value = $this->view->style_plugin->tokenize_value($value, 0);

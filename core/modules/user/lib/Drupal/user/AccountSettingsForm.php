@@ -182,7 +182,7 @@ class AccountSettingsForm extends SystemConfigFormBase {
     $form['email_admin_created'] = array(
       '#type' => 'details',
       '#title' => t('Welcome (new user created by administrator)'),
-      '#collapsed' => ($config->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY),
+      '#open' => ($config->get('register') == USER_REGISTER_ADMINISTRATORS_ONLY),
       '#description' => t('Edit the welcome e-mail messages sent to new member accounts created by an administrator.') . ' ' . $email_token_help,
       '#group' => 'email',
     );
@@ -202,7 +202,7 @@ class AccountSettingsForm extends SystemConfigFormBase {
     $form['email_pending_approval'] = array(
       '#type' => 'details',
       '#title' => t('Welcome (awaiting approval)'),
-      '#collapsed' => ($config->get('register') != USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL),
+      '#open' => ($config->get('register') == USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL),
       '#description' => t('Edit the welcome e-mail messages sent to new members upon registering, when administrative approval is required.') . ' ' . $email_token_help,
       '#group' => 'email',
     );
@@ -222,7 +222,7 @@ class AccountSettingsForm extends SystemConfigFormBase {
     $form['email_pending_approval_admin'] = array(
       '#type' => 'details',
       '#title' => t('Admin (user awaiting approval)'),
-      '#collapsed' => ($config->get('register') != USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL),
+      '#open' => ($config->get('register') == USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL),
       '#description' => t('Edit the e-mail notifying the site administrator that there are new members awaiting administrative approval.') . ' ' . $email_token_help,
       '#group' => 'email',
     );
@@ -242,7 +242,7 @@ class AccountSettingsForm extends SystemConfigFormBase {
     $form['email_no_approval_required'] = array(
       '#type' => 'details',
       '#title' => t('Welcome (no approval required)'),
-      '#collapsed' => ($config->get('register') != USER_REGISTER_VISITORS),
+      '#open' => ($config->get('register') == USER_REGISTER_VISITORS),
       '#description' => t('Edit the welcome e-mail messages sent to new members upon registering, when no administrator approval is required.') . ' ' . $email_token_help,
       '#group' => 'email',
     );
@@ -262,7 +262,6 @@ class AccountSettingsForm extends SystemConfigFormBase {
     $form['email_password_reset'] = array(
       '#type' => 'details',
       '#title' => t('Password recovery'),
-      '#collapsed' => TRUE,
       '#description' => t('Edit the e-mail messages sent to users who request a new password.') . ' ' . $email_token_help,
       '#group' => 'email',
       '#weight' => 10,
@@ -283,7 +282,6 @@ class AccountSettingsForm extends SystemConfigFormBase {
     $form['email_activated'] = array(
       '#type' => 'details',
       '#title' => t('Account activation'),
-      '#collapsed' => TRUE,
       '#description' => t('Enable and edit e-mail messages sent to users upon account activation (when an administrator activates an account of a user who has already registered, on a site where administrative approval is required).') . ' ' . $email_token_help,
       '#group' => 'email',
     );
@@ -317,7 +315,6 @@ class AccountSettingsForm extends SystemConfigFormBase {
     $form['email_blocked'] = array(
       '#type' => 'details',
       '#title' => t('Account blocked'),
-      '#collapsed' => TRUE,
       '#description' => t('Enable and edit e-mail messages sent to users when their accounts are blocked.') . ' ' . $email_token_help,
       '#group' => 'email',
     );
@@ -351,7 +348,6 @@ class AccountSettingsForm extends SystemConfigFormBase {
     $form['email_cancel_confirm'] = array(
       '#type' => 'details',
       '#title' => t('Account cancellation confirmation'),
-      '#collapsed' => TRUE,
       '#description' => t('Edit the e-mail messages sent to users when they attempt to cancel their accounts.') . ' ' . $email_token_help,
       '#group' => 'email',
     );
@@ -371,7 +367,6 @@ class AccountSettingsForm extends SystemConfigFormBase {
     $form['email_canceled'] = array(
       '#type' => 'details',
       '#title' => t('Account canceled'),
-      '#collapsed' => TRUE,
       '#description' => t('Enable and edit e-mail messages sent to users when their accounts are canceled.') . ' ' . $email_token_help,
       '#group' => 'email',
     );

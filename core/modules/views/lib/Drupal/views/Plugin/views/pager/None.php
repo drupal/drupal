@@ -63,7 +63,7 @@ class None extends PagerPluginBase {
     );
   }
 
-  function use_pager() {
+  public function usePager() {
     return FALSE;
   }
 

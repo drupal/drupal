@@ -80,10 +80,10 @@ class ImageToolkitForm extends SystemConfigFormBase {
       $definition = $toolkit->getDefinition();
       $form['image_toolkit']['#options'][$id] = $definition['title'];
       $form['image_toolkit_settings'][$id] = array(
-        '#type' => 'fieldset',
+        '#type' => 'details',
         '#title' => t('@toolkit settings', array('@toolkit' => $definition['title'])),
         '#collapsible' => TRUE,
-        '#collapsed' => ($id == $current_toolkit) ? FALSE : TRUE,
+        '#open' => ($id == $current_toolkit),
         '#tree' => TRUE,
       );
       $form['image_toolkit_settings'][$id] += $toolkit->settingsForm();

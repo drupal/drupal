@@ -53,7 +53,7 @@ class MenuHierarchy extends SortPluginBase {
         );
         $join = Views::pluginManager('join')->createInstance('standard', $definition);
 
-        $menu_links = $this->query->add_table('menu_links', NULL, $join);
+        $menu_links = $this->query->addTable('menu_links', NULL, $join);
         $this->query->add_orderby($menu_links, 'weight', $this->options['order']);
         $this->query->add_orderby($menu_links, 'link_title', $this->options['order']);
       }

@@ -364,7 +364,7 @@ class Sql extends QueryPluginBase {
    *   adding parts to the query. Or FALSE if the table was not able to be
    *   added.
    */
-  function add_table($table, $relationship = NULL, JoinPluginBase $join = NULL, $alias = NULL) {
+  public function addTable($table, $relationship = NULL, JoinPluginBase $join = NULL, $alias = NULL) {
     if (!$this->ensure_path($table, $relationship, $join)) {
       return FALSE;
     }
@@ -379,7 +379,7 @@ class Sql extends QueryPluginBase {
   /**
    * Add a table to the query without ensuring the path.
    *
-   * This is a pretty internal function to Views and add_table() or
+   * This is a pretty internal function to Views and addTable() or
    * ensure_table() should be used instead of this one, unless you are
    * absolutely sure this is what you want.
    *
@@ -554,7 +554,7 @@ class Sql extends QueryPluginBase {
       //
       // This can be done safely here but not lower down in
       // queue_table(), because queue_table() is also used by
-      // add_table() which requires the ability to intentionally add
+      // addTable() which requires the ability to intentionally add
       // the same table with the same join multiple times.  For
       // example, a view that filters on 3 taxonomy terms using AND
       // needs to join taxonomy_term_data 3 times with the same join.
@@ -1055,7 +1055,7 @@ class Sql extends QueryPluginBase {
    *
    * @see SelectQuery::addTag()
    */
-  function add_tag($tag) {
+  public function addTag($tag) {
     $this->tags[] = $tag;
   }
 
@@ -1084,7 +1084,7 @@ class Sql extends QueryPluginBase {
    * @param $where
    *   'where' or 'having'.
    */
-  function build_condition($where = 'where') {
+  protected function buildCondition($where = 'where') {
     $has_condition = FALSE;
     $has_arguments = FALSE;
     $has_filter = FALSE;
@@ -1343,7 +1343,7 @@ class Sql extends QueryPluginBase {
       foreach ($groupby as $field) {
         $query->groupBy($field);
       }
-      if (!empty($this->having) && $condition = $this->build_condition('having')) {
+      if (!empty($this->having) && $condition = $this->buildCondition('having')) {
         $query->havingCondition($condition);
       }
     }
@@ -1362,7 +1362,7 @@ class Sql extends QueryPluginBase {
       }
     }
 
-    if (!empty($this->where) && $condition = $this->build_condition('where')) {
+    if (!empty($this->where) && $condition = $this->buildCondition('where')) {
       $query->condition($condition);
     }
 
@@ -1667,7 +1667,7 @@ class Sql extends QueryPluginBase {
       ),
       'count_distinct' => array(
         'title' => t('Count DISTINCT'),
-        'method' => 'aggregation_method_distinct',
+        'method' => 'aggregationMethodDistinct',
         'handler' => array(
           'argument' => 'groupby_numeric',
           'field' => 'numeric',
@@ -1732,7 +1732,7 @@ class Sql extends QueryPluginBase {
     return strtoupper($group_type) . '(' . $field . ')';
   }
 
-  function aggregation_method_distinct($group_type, $field) {
+  public function aggregationMethodDistinct($group_type, $field) {
     $group_type = str_replace('_distinct', '', $group_type);
     return strtoupper($group_type) . '(DISTINCT ' . $field . ')';
   }

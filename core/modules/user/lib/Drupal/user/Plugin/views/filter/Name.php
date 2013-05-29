@@ -146,7 +146,7 @@ class Name extends InOperator {
   }
 
   // Override to do nothing.
-  function get_value_options() { }
+  public function getValueOptions() { }
 
   public function adminSummary() {
     // set up $this->value_options for the parent summary

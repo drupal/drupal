@@ -74,8 +74,8 @@ class Comment extends WizardPluginBase {
     return $options;
   }
 
-  protected function build_form_style(array &$form, array &$form_state, $type) {
-    parent::build_form_style($form, $form_state, $type);
+  protected function buildFormStyle(array &$form, array &$form_state, $type) {
+    parent::buildFormStyle($form, $form_state, $type);
     $style_form =& $form['displays'][$type]['options']['style'];
     // Some style plugins don't support row plugins so stop here if that's the
     // case.
@@ -134,10 +134,10 @@ class Comment extends WizardPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::default_display_options().
+   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::defaultDisplayOptions().
    */
-  protected function default_display_options() {
-    $display_options = parent::default_display_options();
+  protected function defaultDisplayOptions() {
+    $display_options = parent::defaultDisplayOptions();
 
     // Add permission-based access control.
     $display_options['access']['type'] = 'perm';

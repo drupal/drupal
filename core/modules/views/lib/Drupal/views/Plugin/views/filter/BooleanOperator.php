@@ -69,7 +69,7 @@ class BooleanOperator extends FilterPluginBase {
    * dynamic for some reason, child classes should use a guard to reduce
    * database hits as much as possible.
    */
-  function get_value_options() {
+  public function getValueOptions() {
     if (isset($this->definition['type'])) {
       if ($this->definition['type'] == 'yes-no') {
         $this->value_options = array(1 => t('Yes'), 0 => t('No'));
@@ -103,7 +103,7 @@ class BooleanOperator extends FilterPluginBase {
   function value_form(&$form, &$form_state) {
     if (empty($this->value_options)) {
       // Initialize the array of possible values for this filter.
-      $this->get_value_options();
+      $this->getValueOptions();
     }
     if (!empty($form_state['exposed'])) {
       // Exposed filter: use a select box to save space.
@@ -149,7 +149,7 @@ class BooleanOperator extends FilterPluginBase {
       return t('exposed');
     }
     if (empty($this->value_options)) {
-      $this->get_value_options();
+      $this->getValueOptions();
     }
     // Now that we have the valid options for this filter, just return the
     // human-readable label based on the current value.  The value_options

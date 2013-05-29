@@ -19,7 +19,7 @@ use Drupal\Component\Annotation\PluginID;
  */
 class FieldList extends ManyToOne {
 
-  function get_value_options() {
+  public function getValueOptions() {
     $field = field_info_field($this->definition['field_name']);
     $this->value_options = list_allowed_values($field);
   }

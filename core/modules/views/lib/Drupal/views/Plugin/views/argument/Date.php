@@ -47,8 +47,8 @@ class Date extends Formula {
   /**
    * Add an option to set the default value to the current date.
    */
-  function default_argument_form(&$form, &$form_state) {
-    parent::default_argument_form($form, $form_state);
+  public function defaultArgumentForm(&$form, &$form_state) {
+    parent::defaultArgumentForm($form, $form_state);
     $form['default_argument_type']['#options'] += array('date' => t('Current date'));
     $form['default_argument_type']['#options'] += array('node_created' => t("Current node's creation time"));
     $form['default_argument_type']['#options'] += array('node_changed' => t("Current node's update time"));  }

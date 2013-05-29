@@ -54,7 +54,7 @@ class TermFormController extends EntityFormControllerNG {
     $form['relations'] = array(
       '#type' => 'details',
       '#title' => t('Relations'),
-      '#collapsed' => ($vocabulary->hierarchy != TAXONOMY_HIERARCHY_MULTIPLE),
+      '#open' => ($vocabulary->hierarchy == TAXONOMY_HIERARCHY_MULTIPLE),
       '#weight' => 10,
     );
 

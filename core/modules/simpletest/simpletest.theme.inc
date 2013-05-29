@@ -46,8 +46,8 @@ function theme_simpletest_test_table($variables) {
 
     // Select the right "expand"/"collapse" image, depending on whether the
     // category is expanded (at least one test selected) or not.
-    $collapsed = !empty($element['#collapsed']);
-    $image_index = $collapsed ? 0 : 1;
+    $open = !empty($element['#open']);
+    $image_index = $open ? 1 : 0;
 
     // Place-holder for checkboxes to select group of tests.
     $row[] = array('id' => $test_class, 'class' => array('simpletest-select-all'));
@@ -107,7 +107,7 @@ function theme_simpletest_test_table($variables) {
         'class' => array('simpletest-test-description'),
       );
 
-      $rows[] = array('data' => $row, 'class' => array($test_class . '-test', ($collapsed ? 'js-hide' : '')));
+      $rows[] = array('data' => $row, 'class' => array($test_class . '-test', ($open ? '' : 'js-hide')));
     }
     $js['simpletest-test-group-' . $test_class] = $current_js;
     unset($table[$key]);

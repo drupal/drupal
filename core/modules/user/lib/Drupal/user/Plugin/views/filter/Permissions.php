@@ -19,7 +19,7 @@ use Drupal\views\Plugin\views\filter\ManyToOne;
  */
 class Permissions extends ManyToOne {
 
-  function get_value_options() {
+  public function getValueOptions() {
     $module_info = system_get_info('module');
 
     // Get a list of all the modules implementing a hook_permission() and sort by

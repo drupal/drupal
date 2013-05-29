@@ -170,7 +170,7 @@ function locale_translate_filter_form($form, &$form_state) {
   $form['filters'] = array(
     '#type' => 'details',
     '#title' => t('Filter translatable strings'),
-    '#collapsed' => FALSE,
+    '#open' => TRUE,
   );
   foreach ($filters as $key => $filter) {
     // Special case for 'string' filter.

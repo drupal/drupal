@@ -176,7 +176,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * Only exposed filters with operators available can be converted into groups.
    */
   function can_build_group() {
-    return $this->isExposed() && (count($this->operator_options()) > 0);
+    return $this->isExposed() && (count($this->operatorOptions()) > 0);
   }
 
   /**
@@ -217,7 +217,7 @@ abstract class FilterPluginBase extends HandlerBase {
     }
     else {
       // Add the subform from operator_form().
-      $this->show_operator_form($form, $form_state);
+      $this->showOperatorForm($form, $form_state);
       // Add the subform from value_form().
       $this->show_value_form($form, $form_state);
       $form['clear_markup_end'] = array(
@@ -265,7 +265,7 @@ abstract class FilterPluginBase extends HandlerBase {
   /**
    * Shortcut to display the operator form.
    */
-  function show_operator_form(&$form, &$form_state) {
+  public function showOperatorForm(&$form, &$form_state) {
     $this->operator_form($form, $form_state);
     $form['operator']['#prefix'] = '<div class="views-group-box views-left-30">';
     $form['operator']['#suffix'] = '</div>';
@@ -280,7 +280,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * @see buildOptionsForm()
    */
   function operator_form(&$form, &$form_state) {
-    $options = $this->operator_options();
+    $options = $this->operatorOptions();
     if (!empty($options)) {
       $form['operator'] = array(
         '#type' => count($options) < 10 ? 'radios' : 'select',
@@ -295,7 +295,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * Provide a list of options for the default operator form.
    * Should be overridden by classes that don't override operator_form
    */
-  function operator_options() { return array(); }
+  public function operatorOptions() { return array(); }
 
   /**
    * Validate the operator form.
@@ -1252,7 +1252,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * as widget, and therefore has to be applied several times, one per
    * item selected.
    */
-  function group_multiple_exposed_input(&$input) {
+  public function groupMultipleExposedInput(&$input) {
     if (!empty($input[$this->options['group_info']['identifier']])) {
     return array_filter($input[$this->options['group_info']['identifier']]);
     }
@@ -1429,7 +1429,7 @@ abstract class FilterPluginBase extends HandlerBase {
    *
    * @return bool
    */
-   function can_group() {
+   public function canGroup() {
      return TRUE;
    }
 

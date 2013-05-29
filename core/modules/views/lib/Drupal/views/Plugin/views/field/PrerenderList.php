@@ -114,7 +114,7 @@ class PrerenderList extends FieldPluginBase {
    * By default, advanced rendering will NOT be allowed if the class
    * inheriting from this does not implement a 'render_items' method.
    */
-  function allow_advanced_render() {
+  protected function allowAdvancedRender() {
     // Note that the advanced render bits also use the presence of
     // this method to determine if it needs to render items as a list.
     return method_exists($this, 'render_item');

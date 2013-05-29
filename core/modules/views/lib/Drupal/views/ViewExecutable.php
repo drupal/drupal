@@ -525,7 +525,7 @@ class ViewExecutable {
    */
   public function usePager() {
     if (!empty($this->pager)) {
-      return $this->pager->use_pager();
+      return $this->pager->usePager();
     }
   }
 
@@ -726,7 +726,7 @@ class ViewExecutable {
     if (!isset($this->pager)) {
       $this->pager = $this->display_handler->getPlugin('pager');
 
-      if ($this->pager->use_pager()) {
+      if ($this->pager->usePager()) {
         $this->pager->set_current_page($this->current_page);
       }
 
@@ -746,7 +746,7 @@ class ViewExecutable {
    * Render the pager, if necessary.
    */
   public function renderPager($exposed_input) {
-    if (!empty($this->pager) && $this->pager->use_pager()) {
+    if (!empty($this->pager) && $this->pager->usePager()) {
       return $this->pager->render($exposed_input);
     }
 
@@ -867,7 +867,7 @@ class ViewExecutable {
         }
 
         // Set the argument, which will also validate that the argument can be set.
-        if (!$argument->set_argument($arg)) {
+        if (!$argument->setArgument($arg)) {
           $status = $argument->validateFail($arg);
           break;
         }
@@ -886,7 +886,7 @@ class ViewExecutable {
 
         // Since we're really generating the breadcrumb for the item above us,
         // check the default action of this argument.
-        if ($this->display_handler->usesBreadcrumb() && $argument->uses_breadcrumb()) {
+        if ($this->display_handler->usesBreadcrumb() && $argument->usesBreadcrumb()) {
           $path = $this->getUrl($breadcrumb_args);
           if (strpos($path, '%') === FALSE) {
             if (!empty($argument->options['breadcrumb_enable']) && !empty($argument->options['breadcrumb'])) {
@@ -1013,7 +1013,7 @@ class ViewExecutable {
     if (!empty($this->filter)) {
       $filter_groups = $this->display_handler->getOption('filter_groups');
       if ($filter_groups) {
-        $this->query->set_group_operator($filter_groups['operator']);
+        $this->query->setGroupOperator($filter_groups['operator']);
         foreach ($filter_groups['groups'] as $id => $operator) {
           $this->query->set_where_group($operator, $id);
         }
@@ -1111,7 +1111,7 @@ class ViewExecutable {
       if (!empty($handlers[$id]) && is_object($handlers[$id])) {
         $multiple_exposed_input = array(0 => NULL);
         if ($handlers[$id]->multipleExposedInput()) {
-          $multiple_exposed_input = $handlers[$id]->group_multiple_exposed_input($this->exposed_data);
+          $multiple_exposed_input = $handlers[$id]->groupMultipleExposedInput($this->exposed_data);
         }
         foreach ($multiple_exposed_input as $group_id) {
           // Give this handler access to the exposed filter input.
@@ -1176,7 +1176,7 @@ class ViewExecutable {
       $cache = $this->display_handler->getPlugin('cache');
     }
     if ($cache->cache_get('results')) {
-      if ($this->pager->use_pager()) {
+      if ($this->pager->usePager()) {
         $this->pager->total_items = $this->total_rows;
         $this->pager->update_page_info();
       }

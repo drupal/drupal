@@ -93,7 +93,7 @@ class FilterEntityBundleTest extends ViewTestBase {
     foreach ($this->entityBundles as $key => $info) {
       $expected[$key] = $info['label'];
     }
-    $this->assertIdentical($view->filter['type']->get_value_options(), $expected);
+    $this->assertIdentical($view->filter['type']->getValueOptions(), $expected);
 
     $view->destroy();
 

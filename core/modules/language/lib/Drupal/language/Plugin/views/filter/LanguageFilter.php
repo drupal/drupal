@@ -19,7 +19,7 @@ use Drupal\Component\Annotation\PluginID;
  */
 class LanguageFilter extends InOperator {
 
-  function get_value_options() {
+  public function getValueOptions() {
     if (!isset($this->value_options)) {
       $this->value_title = t('Language');
       $languages = array(

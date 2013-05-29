@@ -49,7 +49,7 @@ class Counter extends FieldPluginBase {
     $count = is_numeric($this->options['counter_start']) ? $this->options['counter_start'] - 1 : 0;
     $pager = $this->view->pager;
     // Get the base count of the pager.
-    if ($pager->use_pager()) {
+    if ($pager->usePager()) {
       $count += ($pager->get_items_per_page() * $pager->get_current_page() + $pager->set_offset());
     }
     // Add the counter for the current site.

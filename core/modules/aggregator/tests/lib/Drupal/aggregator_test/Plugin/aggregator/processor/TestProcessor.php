@@ -38,7 +38,7 @@ class TestProcessor extends PluginBase implements ProcessorInterface {
       '#type' => 'details',
       '#title' => t('Test processor settings'),
       '#description' => $info['description'],
-      '#collapsed' => !in_array($info['id'], $processors),
+      '#open' => in_array($info['id'], $processors),
     );
     // Add some dummy settings to verify settingsForm is called.
     $form['processors'][$info['id']]['dummy_length'] = array(

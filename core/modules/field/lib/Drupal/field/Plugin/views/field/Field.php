@@ -460,7 +460,6 @@ class Field extends FieldPluginBase {
     $form['multiple_field_settings'] = array(
       '#type' => 'details',
       '#title' => t('Multiple field settings'),
-      '#collapsed' => TRUE,
       '#weight' => 5,
     );
 

@@ -912,6 +912,7 @@ function system_modules($form, $form_state = array()) {
       '#type' => 'details',
       '#title' => t($package),
       '#theme' => 'system_modules_details',
+      '#open' => TRUE,
       '#header' => array(
         array('data' => t('<span class="element-invisible">Enabled</span>'), 'class' => array('checkbox')),
         array('data' => t('Name'), 'class' => array('name')),

@@ -91,7 +91,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    *
    * @return TRUE/FALSE
    */
-  function uses_breadcrumb() {
+  public function usesBreadcrumb() {
     $info = $this->default_actions($this->options['default_action']);
     return !empty($info['breadcrumb']);
   }
@@ -193,7 +193,6 @@ abstract class ArgumentPluginBase extends HandlerBase {
     $form['exception'] = array(
       '#type' => 'details',
       '#title' => t('Exceptions'),
-      '#collapsed' => TRUE,
       '#fieldset' => 'no_argument',
     );
     $form['exception']['value'] = array(
@@ -450,7 +449,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       'default' => array(
         'title' => t('Provide default value'),
         'method' => 'default_default',
-        'form method' => 'default_argument_form',
+        'form method' => 'defaultArgumentForm',
         'has default argument' => TRUE,
         'default only' => TRUE, // this can only be used for missing argument, not validation failure
         'breadcrumb' => TRUE, // generate a breadcrumb to here
@@ -497,7 +496,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * Provide a form for selecting the default argument when the
    * default action is set to provide default argument.
    */
-  function default_argument_form(&$form, &$form_state) {
+  public function defaultArgumentForm(&$form, &$form_state) {
     $plugins = Views::pluginManager('argument_default')->getDefinitions();
     $options = array();
 
@@ -828,7 +827,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
         if ($j) {
           $join = clone $j;
           $join->leftTable = $this->tableAlias;
-          $this->name_table_alias = $this->query->add_table($this->name_table, $this->relationship, $join);
+          $this->name_table_alias = $this->query->addTable($this->name_table, $this->relationship, $join);
         }
       }
       else {
@@ -983,7 +982,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    *
    * @return TRUE if it successfully validates; FALSE if it does not.
    */
-  function set_argument($arg) {
+  public function setArgument($arg) {
     $this->argument = $arg;
     return $this->validateArgument($arg);
   }
@@ -1021,7 +1020,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       $this->is_default = TRUE;
     }
     // Set the argument, which will also validate that the argument can be set.
-    if ($argument->set_argument($arg)) {
+    if ($argument->setArgument($arg)) {
       $value = $argument->argument;
     }
     unset($argument);

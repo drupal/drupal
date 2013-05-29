@@ -79,7 +79,7 @@ class Search extends ArgumentPluginBase {
       $search_condition->condition("$search_index.type", $base_table);
 
       if (!$this->search_query->simple()) {
-        $search_dataset = $this->query->add_table('search_dataset');
+        $search_dataset = $this->query->addTable('search_dataset');
         $conditions = $this->search_query->conditions();
         $condition_conditions =& $conditions->conditions();
         foreach ($condition_conditions  as $key => &$condition) {

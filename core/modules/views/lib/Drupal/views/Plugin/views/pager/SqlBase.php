@@ -75,7 +75,7 @@ abstract class SqlBase extends PagerPluginBase {
 
     $form['tags'] = array(
       '#type' => 'details',
-      '#collapsed' => FALSE,
+      '#open' => TRUE,
       '#tree' => TRUE,
       '#title' => t('Pager link labels'),
       '#input' => TRUE,
@@ -95,7 +95,7 @@ abstract class SqlBase extends PagerPluginBase {
 
     $form['expose'] = array(
       '#type' => 'details',
-      '#collapsed' => FALSE,
+      '#open' => TRUE,
       '#tree' => TRUE,
       '#title' => t('Exposed options'),
       '#input' => TRUE,

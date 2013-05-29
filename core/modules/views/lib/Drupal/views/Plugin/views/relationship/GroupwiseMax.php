@@ -187,7 +187,7 @@ class GroupwiseMax extends RelationshipPluginBase {
    * @return
    *    The subquery SQL string, ready for use in the main query.
    */
-  function left_query($options) {
+  protected function leftQuery($options) {
     // Either load another view, or create one on the fly.
     if ($options['subquery_view']) {
       $temp_view = views_get_view($options['subquery_view']);
@@ -357,7 +357,7 @@ class GroupwiseMax extends RelationshipPluginBase {
 
     if ($this->options['subquery_regenerate']) {
       // For testing only, regenerate the subquery each time.
-      $def['left_query'] = $this->left_query($this->options);
+      $def['left_query'] = $this->leftQuery($this->options);
     }
     else {
       // Get the stored subquery SQL string.
@@ -367,7 +367,7 @@ class GroupwiseMax extends RelationshipPluginBase {
         $def['left_query'] = $cache->data;
       }
       else {
-        $def['left_query'] = $this->left_query($this->options);
+        $def['left_query'] = $this->leftQuery($this->options);
         cache('views_results')->set($cid, $def['left_query']);
       }
     }

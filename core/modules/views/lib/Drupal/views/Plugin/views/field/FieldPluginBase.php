@@ -19,19 +19,19 @@ use Drupal\views\ViewExecutable;
  */
 
 /**
- * Indicator of the render_text() method for rendering a single item.
+ * Indicator of the renderText() method for rendering a single item.
  * (If no render_item() is present).
  */
 define('VIEWS_HANDLER_RENDER_TEXT_PHASE_SINGLE_ITEM', 0);
 
 /**
- * Indicator of the render_text() method for rendering the whole element.
+ * Indicator of the renderText() method for rendering the whole element.
  * (if no render_item() method is available).
  */
 define('VIEWS_HANDLER_RENDER_TEXT_PHASE_COMPLETELY', 1);
 
 /**
- * Indicator of the render_text() method for rendering the empty text.
+ * Indicator of the renderText() method for rendering the empty text.
  */
 define('VIEWS_HANDLER_RENDER_TEXT_PHASE_EMPTY', 2);
 
@@ -89,7 +89,7 @@ abstract class FieldPluginBase extends HandlerBase {
    * Fields can set this to FALSE if they do not wish to allow
    * token based rewriting or link-making.
    */
-  function allow_advanced_render() {
+  protected function allowAdvancedRender() {
     return TRUE;
   }
 
@@ -270,7 +270,7 @@ abstract class FieldPluginBase extends HandlerBase {
    * elements available, though this seems like it would be an incredibly
    * rare occurence.
    */
-  function get_elements() {
+  public function getElements() {
     static $elements = NULL;
     if (!isset($elements)) {
       // @todo Add possible html5 elements.
@@ -337,7 +337,7 @@ abstract class FieldPluginBase extends HandlerBase {
   /**
    * Return the class of the field's label.
    */
-  function element_label_classes($row_index = NULL) {
+  public function elementLabelClasses($row_index = NULL) {
     $classes = explode(' ', $this->options['element_label_class']);
     foreach ($classes as &$class) {
       $class = $this->tokenize_value($class, $row_index);
@@ -402,7 +402,7 @@ abstract class FieldPluginBase extends HandlerBase {
    * @return bool
    *  TRUE if this field handler is groupable, otherwise FALSE.
    */
-  function use_string_group_by() {
+  public function useStringGroupBy() {
     return TRUE;
   }
 
@@ -535,7 +535,6 @@ abstract class FieldPluginBase extends HandlerBase {
     $form['style_settings'] = array(
       '#type' => 'details',
       '#title' => t('Style settings'),
-      '#collapsed' => TRUE,
       '#weight' => 99,
     );
 
@@ -547,7 +546,7 @@ abstract class FieldPluginBase extends HandlerBase {
     );
     $form['element_type'] = array(
       '#title' => t('HTML element'),
-      '#options' => $this->get_elements(),
+      '#options' => $this->getElements(),
       '#type' => 'select',
       '#default_value' => $this->options['element_type'],
       '#description' => t('Choose the HTML element to wrap around this field, e.g. H1, H2, etc.'),
@@ -592,7 +591,7 @@ abstract class FieldPluginBase extends HandlerBase {
     );
     $form['element_label_type'] = array(
       '#title' => t('Label HTML element'),
-      '#options' => $this->get_elements(FALSE),
+      '#options' => $this->getElements(FALSE),
       '#type' => 'select',
       '#default_value' => $this->options['element_label_type'],
       '#description' => t('Choose the HTML element to wrap around this label, e.g. H1, H2, etc.'),
@@ -636,7 +635,7 @@ abstract class FieldPluginBase extends HandlerBase {
     );
     $form['element_wrapper_type'] = array(
       '#title' => t('Wrapper HTML element'),
-      '#options' => $this->get_elements(FALSE),
+      '#options' => $this->getElements(FALSE),
       '#type' => 'select',
       '#default_value' => $this->options['element_wrapper_type'],
       '#description' => t('Choose the HTML element to wrap around this field and label, e.g. H1, H2, etc. This may not be used if the field and label are not rendered together, such as with a table.'),
@@ -684,11 +683,10 @@ abstract class FieldPluginBase extends HandlerBase {
     $form['alter'] = array(
       '#title' => t('Rewrite results'),
       '#type' => 'details',
-      '#collapsed' => TRUE,
       '#weight' => 100,
     );
 
-    if ($this->allow_advanced_render()) {
+    if ($this->allowAdvancedRender()) {
       $form['alter']['#tree'] = TRUE;
       $form['alter']['alter_text'] = array(
         '#type' => 'checkbox',
@@ -885,7 +883,6 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
       $form['alter']['help'] = array(
         '#type' => 'details',
         '#title' => t('Replacement patterns'),
-        '#collapsed' => TRUE,
         '#value' => $output,
         '#states' => array(
           'visible' => array(
@@ -1024,7 +1021,6 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
     $form['empty_field_behavior'] = array(
       '#type' => 'details',
       '#title' => t('No results behavior'),
-      '#collapsed' => TRUE,
       '#weight' => 100,
     );
 
@@ -1109,7 +1105,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
    * text-replacement rendering is necessary.
    */
   function advanced_render($values) {
-    if ($this->allow_advanced_render() && method_exists($this, 'render_item')) {
+    if ($this->allowAdvancedRender() && method_exists($this, 'render_item')) {
       $raw_items = $this->get_items($values);
       // If there are no items, set the original value to NULL.
       if (empty($raw_items)) {
@@ -1125,7 +1121,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
       $this->original_value = $value;
     }
 
-    if ($this->allow_advanced_render()) {
+    if ($this->allowAdvancedRender()) {
       $tokens = NULL;
       if (method_exists($this, 'render_item')) {
         $items = array();
@@ -1139,14 +1135,14 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
 
           $alter = $item + $this->options['alter'];
           $alter['phase'] = VIEWS_HANDLER_RENDER_TEXT_PHASE_SINGLE_ITEM;
-          $items[] = $this->render_text($alter);
+          $items[] = $this->renderText($alter);
         }
 
         $value = $this->render_items($items);
       }
       else {
         $alter = array('phase' => VIEWS_HANDLER_RENDER_TEXT_PHASE_COMPLETELY) + $this->options['alter'];
-        $value = $this->render_text($alter);
+        $value = $this->renderText($alter);
       }
 
       if (is_array($value)) {
@@ -1163,7 +1159,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
         $alter['alter_text'] = 1;
         $alter['text'] = $this->options['empty'];
         $alter['phase'] = VIEWS_HANDLER_RENDER_TEXT_PHASE_EMPTY;
-        $this->last_render = $this->render_text($alter);
+        $this->last_render = $this->renderText($alter);
       }
     }
 
@@ -1203,7 +1199,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
    * This is separated out as some fields may render lists, and this allows
    * each item to be handled individually.
    */
-  function render_text($alter) {
+  public function renderText($alter) {
     $value = $this->last_render;
 
     if (!empty($alter['alter_text']) && $alter['text'] !== '') {
@@ -1676,3 +1672,4 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
 /**
  * @}
  */
+

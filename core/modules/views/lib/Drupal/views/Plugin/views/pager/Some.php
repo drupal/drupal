@@ -60,7 +60,7 @@ class Some extends PagerPluginBase {
     );
   }
 
-  function use_pager() {
+  public function usePager() {
     return FALSE;
   }
 
