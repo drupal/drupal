@@ -1055,7 +1055,7 @@ class Sql extends QueryPluginBase {
    *
    * @see SelectQuery::addTag()
    */
-  function add_tag($tag) {
+  public function addTag($tag) {
     $this->tags[] = $tag;
   }
 

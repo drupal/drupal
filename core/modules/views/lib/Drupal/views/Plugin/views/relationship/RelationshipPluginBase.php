@@ -140,7 +140,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
     // Add access tags if the base table provide it.
     if (empty($this->query->options['disable_sql_rewrite']) && isset($table_data['table']['base']['access query tag'])) {
       $access_tag = $table_data['table']['base']['access query tag'];
-      $this->query->add_tag($access_tag);
+      $this->query->addTag($access_tag);
     }
   }
 
