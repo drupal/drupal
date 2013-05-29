@@ -146,7 +146,7 @@ class String extends FilterPluginBase {
   /**
    * Build strings from the operators() for 'select' options
    */
-  function operator_options($which = 'title') {
+  public function operatorOptions($which = 'title') {
     $options = array();
     foreach ($this->operators() as $id => $info) {
       $options[$id] = $info[$which];
@@ -163,7 +163,7 @@ class String extends FilterPluginBase {
       return t('exposed');
     }
 
-    $options = $this->operator_options('short');
+    $options = $this->operatorOptions('short');
     $output = '';
     if (!empty($options[$this->operator])) {
       $output = check_plain($options[$this->operator]);

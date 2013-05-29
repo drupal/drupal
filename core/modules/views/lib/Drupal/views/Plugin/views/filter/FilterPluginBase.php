@@ -176,7 +176,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * Only exposed filters with operators available can be converted into groups.
    */
   function can_build_group() {
-    return $this->isExposed() && (count($this->operator_options()) > 0);
+    return $this->isExposed() && (count($this->operatorOptions()) > 0);
   }
 
   /**
@@ -280,7 +280,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * @see buildOptionsForm()
    */
   function operator_form(&$form, &$form_state) {
-    $options = $this->operator_options();
+    $options = $this->operatorOptions();
     if (!empty($options)) {
       $form['operator'] = array(
         '#type' => count($options) < 10 ? 'radios' : 'select',
@@ -295,7 +295,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * Provide a list of options for the default operator form.
    * Should be overridden by classes that don't override operator_form
    */
-  function operator_options() { return array(); }
+  public function operatorOptions() { return array(); }
 
   /**
    * Validate the operator form.

@@ -21,7 +21,7 @@ use Drupal\Component\Annotation\PluginID;
  */
 class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
 
-  function operator_options($which = 'title') {
+  public function operatorOptions($which = 'title') {
     return array(
       'or' => t('Is one of'),
     );

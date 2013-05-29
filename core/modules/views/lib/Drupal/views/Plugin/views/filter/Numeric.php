@@ -123,7 +123,7 @@ class Numeric extends FilterPluginBase {
   /**
    * Provide a list of all the numeric operators
    */
-  function operator_options($which = 'title') {
+  public function operatorOptions($which = 'title') {
     $options = array();
     foreach ($this->operators() as $id => $info) {
       $options[$id] = $info[$which];
@@ -287,7 +287,7 @@ class Numeric extends FilterPluginBase {
       return t('exposed');
     }
 
-    $options = $this->operator_options('short');
+    $options = $this->operatorOptions('short');
     $output = check_plain($options[$this->operator]);
     if (in_array($this->operator, $this->operator_values(2))) {
       $output .= ' ' . t('@min and @max', array('@min' => $this->value['min'], '@max' => $this->value['max']));

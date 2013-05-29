@@ -24,7 +24,7 @@ class Equality extends FilterPluginBase {
   /**
    * Provide simple equality operator
    */
-  function operator_options() {
+  public function operatorOptions() {
     return array(
       '=' => t('Is equal to'),
       '!=' => t('Is not equal to'),
