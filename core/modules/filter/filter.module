@@ -83,9 +83,6 @@ function filter_theme() {
     'text_format_wrapper' => array(
       'render element' => 'element',
     ),
-    'filter_tips_more_info' => array(
-      'variables' => array(),
-    ),
     'filter_guidelines' => array(
       'variables' => array('format' => NULL),
     ),
@@ -754,8 +751,8 @@ function filter_process_format($element) {
 
   $element['format']['help'] = array(
     '#type' => 'container',
-    '#theme' => 'filter_tips_more_info',
     '#attributes' => array('class' => array('filter-help')),
+    '#markup' => l(t('More information about text formats'), 'filter/tips', array('attributes' => array('target' => '_blank'))),
     '#weight' => 0,
   );
 
@@ -1008,15 +1005,6 @@ function filter_dom_serialize_escape_cdata_element($dom_document, $dom_element, 
       $dom_element->removeChild($node);
     }
   }
-}
-
-/**
- * Returns HTML for a link to the more extensive filter tips.
- *
- * @ingroup themeable
- */
-function theme_filter_tips_more_info() {
-  return '<p>' . l(t('More information about text formats'), 'filter/tips', array('attributes' => array('target' => '_blank'))) . '</p>';
 }
 
 /**
