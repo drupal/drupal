@@ -126,7 +126,7 @@ abstract class PagerPluginBase extends PluginBase {
    *
    * If NULL, we do not yet know what the total number of items are.
    */
-  function get_total_items() {
+  public function getTotalItems() {
     return $this->total_items;
   }
 

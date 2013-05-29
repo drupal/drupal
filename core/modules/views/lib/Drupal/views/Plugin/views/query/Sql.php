@@ -1500,7 +1500,7 @@ class Sql extends QueryPluginBase {
 
         $view->pager->postExecute($view->result);
         if ($view->pager->use_count_query() || !empty($view->get_total_rows)) {
-          $view->total_rows = $view->pager->get_total_items();
+          $view->total_rows = $view->pager->getTotalItems();
         }
 
         // Load all entities contained in the results.
