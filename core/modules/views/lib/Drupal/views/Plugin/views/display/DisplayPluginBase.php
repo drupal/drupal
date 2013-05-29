@@ -2422,7 +2422,7 @@ abstract class DisplayPluginBase extends PluginBase {
    * Render the 'more' link
    */
   public function renderMoreLink() {
-    if ($this->usesMore() && ($this->useMoreAlways() || (!empty($this->view->pager) && $this->view->pager->has_more_records()))) {
+    if ($this->usesMore() && ($this->useMoreAlways() || (!empty($this->view->pager) && $this->view->pager->hasMoreRecords()))) {
       $path = $this->getPath();
 
       if ($this->getOption('link_display') == 'custom_url' && $override_path = $this->getOption('link_url')) {
