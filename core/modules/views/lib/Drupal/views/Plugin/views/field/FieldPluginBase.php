@@ -19,19 +19,19 @@ use Drupal\views\ViewExecutable;
  */
 
 /**
- * Indicator of the render_text() method for rendering a single item.
+ * Indicator of the renderText() method for rendering a single item.
  * (If no render_item() is present).
  */
 define('VIEWS_HANDLER_RENDER_TEXT_PHASE_SINGLE_ITEM', 0);
 
 /**
- * Indicator of the render_text() method for rendering the whole element.
+ * Indicator of the renderText() method for rendering the whole element.
  * (if no render_item() method is available).
  */
 define('VIEWS_HANDLER_RENDER_TEXT_PHASE_COMPLETELY', 1);
 
 /**
- * Indicator of the render_text() method for rendering the empty text.
+ * Indicator of the renderText() method for rendering the empty text.
  */
 define('VIEWS_HANDLER_RENDER_TEXT_PHASE_EMPTY', 2);
 
@@ -1139,14 +1139,14 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
 
           $alter = $item + $this->options['alter'];
           $alter['phase'] = VIEWS_HANDLER_RENDER_TEXT_PHASE_SINGLE_ITEM;
-          $items[] = $this->render_text($alter);
+          $items[] = $this->renderText($alter);
         }
 
         $value = $this->render_items($items);
       }
       else {
         $alter = array('phase' => VIEWS_HANDLER_RENDER_TEXT_PHASE_COMPLETELY) + $this->options['alter'];
-        $value = $this->render_text($alter);
+        $value = $this->renderText($alter);
       }
 
       if (is_array($value)) {
@@ -1163,7 +1163,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
         $alter['alter_text'] = 1;
         $alter['text'] = $this->options['empty'];
         $alter['phase'] = VIEWS_HANDLER_RENDER_TEXT_PHASE_EMPTY;
-        $this->last_render = $this->render_text($alter);
+        $this->last_render = $this->renderText($alter);
       }
     }
 
@@ -1203,7 +1203,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
    * This is separated out as some fields may render lists, and this allows
    * each item to be handled individually.
    */
-  function render_text($alter) {
+  public function renderText($alter) {
     $value = $this->last_render;
 
     if (!empty($alter['alter_text']) && $alter['text'] !== '') {
