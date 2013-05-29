@@ -1659,7 +1659,7 @@ class Sql extends QueryPluginBase {
       ),
       'count' => array(
         'title' => t('Count'),
-        'method' => 'aggregation_method_simple',
+        'method' => 'aggregationMethodSimple',
         'handler' => array(
           'argument' => 'groupby_numeric',
           'field' => 'numeric',
@@ -1679,7 +1679,7 @@ class Sql extends QueryPluginBase {
       ),
       'sum' => array(
         'title' => t('Sum'),
-        'method' => 'aggregation_method_simple',
+        'method' => 'aggregationMethodSimple',
         'handler' => array(
           'argument' => 'groupby_numeric',
           'field' => 'numeric',
@@ -1689,7 +1689,7 @@ class Sql extends QueryPluginBase {
       ),
       'avg' => array(
         'title' => t('Average'),
-        'method' => 'aggregation_method_simple',
+        'method' => 'aggregationMethodSimple',
         'handler' => array(
           'argument' => 'groupby_numeric',
           'field' => 'numeric',
@@ -1699,7 +1699,7 @@ class Sql extends QueryPluginBase {
       ),
       'min' => array(
         'title' => t('Minimum'),
-        'method' => 'aggregation_method_simple',
+        'method' => 'aggregationMethodSimple',
         'handler' => array(
           'argument' => 'groupby_numeric',
           'field' => 'numeric',
@@ -1709,7 +1709,7 @@ class Sql extends QueryPluginBase {
       ),
       'max' => array(
         'title' => t('Maximum'),
-        'method' => 'aggregation_method_simple',
+        'method' => 'aggregationMethodSimple',
         'handler' => array(
           'argument' => 'groupby_numeric',
           'field' => 'numeric',
@@ -1719,7 +1719,7 @@ class Sql extends QueryPluginBase {
       ),
       'stddev_pop' => array(
         'title' => t('Standard deviation'),
-        'method' => 'aggregation_method_simple',
+        'method' => 'aggregationMethodSimple',
         'handler' => array(
           'argument' => 'groupby_numeric',
           'field' => 'numeric',
@@ -1730,7 +1730,7 @@ class Sql extends QueryPluginBase {
     );
   }
 
-  function aggregation_method_simple($group_type, $field) {
+  public function aggregationMethodSimple($group_type, $field) {
     return strtoupper($group_type) . '(' . $field . ')';
   }
 
