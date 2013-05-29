@@ -19,7 +19,7 @@ use Drupal\Component\Annotation\PluginID;
  */
 class NodeComment extends InOperator {
 
-  function get_value_options() {
+  public function getValueOptions() {
     $this->value_options = array(
       COMMENT_NODE_HIDDEN => t('Hidden'),
       COMMENT_NODE_CLOSED => t('Closed'),

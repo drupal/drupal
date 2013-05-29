@@ -37,7 +37,7 @@ class TaxonomyIndexTid extends ManyToOne {
 
   public function hasExtraOptions() { return TRUE; }
 
-  function get_value_options() { /* don't overwrite the value options */ }
+  public function getValueOptions() { /* don't overwrite the value options */ }
 
   protected function defineOptions() {
     $options = parent::defineOptions();

@@ -53,7 +53,7 @@ class InOperator extends FilterPluginBase {
    * @return
    *   Return the stored values in $this->value_options if someone expects it.
    */
-  function get_value_options() {
+  public function getValueOptions() {
     if (isset($this->value_options)) {
       return;
     }
@@ -173,7 +173,7 @@ class InOperator extends FilterPluginBase {
       $options = array('all' => t('Select all'));
     }
 
-    $this->get_value_options();
+    $this->getValueOptions();
     $options += $this->value_options;
     $default_value = (array) $this->value;
 
@@ -316,7 +316,7 @@ class InOperator extends FilterPluginBase {
     }
     $info = $this->operators();
 
-    $this->get_value_options();
+    $this->getValueOptions();
 
     if (!is_array($this->value)) {
       return;
@@ -400,7 +400,7 @@ class InOperator extends FilterPluginBase {
   }
 
   public function validate() {
-    $this->get_value_options();
+    $this->getValueOptions();
     $errors = array();
 
     // If the operator is an operator which doesn't require a value, there is
