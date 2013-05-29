@@ -432,7 +432,7 @@ abstract class StylePluginBase extends PluginBase {
     }
 
     // Group the rows according to the grouping instructions, if specified.
-    $sets = $this->render_grouping(
+    $sets = $this->renderGrouping(
       $this->view->result,
       $this->options['grouping'],
       TRUE
@@ -531,7 +531,7 @@ abstract class StylePluginBase extends PluginBase {
    *   )
    *   @endcode
    */
-  function render_grouping($records, $groupings = array(), $group_rendered = NULL) {
+  public function renderGrouping($records, $groupings = array(), $group_rendered = NULL) {
     // This is for backward compability, when $groupings was a string containing
     // the ID of a single field.
     if (is_string($groupings)) {
