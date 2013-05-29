@@ -1111,7 +1111,7 @@ class ViewExecutable {
       if (!empty($handlers[$id]) && is_object($handlers[$id])) {
         $multiple_exposed_input = array(0 => NULL);
         if ($handlers[$id]->multipleExposedInput()) {
-          $multiple_exposed_input = $handlers[$id]->group_multiple_exposed_input($this->exposed_data);
+          $multiple_exposed_input = $handlers[$id]->groupMultipleExposedInput($this->exposed_data);
         }
         foreach ($multiple_exposed_input as $group_id) {
           // Give this handler access to the exposed filter input.

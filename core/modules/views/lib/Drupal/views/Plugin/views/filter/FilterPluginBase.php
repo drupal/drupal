@@ -1252,7 +1252,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * as widget, and therefore has to be applied several times, one per
    * item selected.
    */
-  function group_multiple_exposed_input(&$input) {
+  public function groupMultipleExposedInput(&$input) {
     if (!empty($input[$this->options['group_info']['identifier']])) {
     return array_filter($input[$this->options['group_info']['identifier']]);
     }
