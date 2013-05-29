@@ -188,7 +188,7 @@ abstract class EntityTranslationUITest extends EntityTranslationTestBase {
     $edit = array(
       // User names have by default length 8.
       'translation_entity[name]' => $this->randomName(12),
-      'translation_entity[created]' => $this->randomName(),
+      'translation_entity[created]' => '19/11/1978',
     );
     $this->drupalPost($path, $edit, $this->getFormSubmitAction($entity));
     $this->assertTrue($this->xpath('//div[@id="messages"]//div[contains(@class, "error")]//ul'), 'Invalid values generate a list of form errors.');
