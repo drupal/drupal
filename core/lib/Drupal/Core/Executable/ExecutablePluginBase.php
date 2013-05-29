@@ -24,7 +24,7 @@ abstract class ExecutablePluginBase extends ContextAwarePluginBase implements Ex
   protected $executableManager;
 
   /**
-   * Implements \Drupal\Core\Executable\ExecutableInterace::setExecutableManager().
+   * {@inheritdoc}
    */
   public function setExecutableManager(ExecutableManagerInterface $executableManager) {
     $this->executableManager = $executableManager;
