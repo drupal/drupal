@@ -438,7 +438,7 @@ function template_preprocess_views_view_summary(&$vars) {
   $argument->process_summary_arguments($row_args);
 
   foreach ($vars['rows'] as $id => $row) {
-    $vars['rows'][$id]->link = $argument->summary_name($row);
+    $vars['rows'][$id]->link = $argument->summaryName($row);
     $args = $view->args;
     $args[$argument->position] = $row_args[$id];
 
@@ -502,7 +502,7 @@ function template_preprocess_views_view_summary_unformatted(&$vars) {
     if ($count++) {
       $vars['rows'][$id]->separator = filter_xss_admin($vars['options']['separator']);
     }
-    $vars['rows'][$id]->link = $argument->summary_name($row);
+    $vars['rows'][$id]->link = $argument->summaryName($row);
     $args = $view->args;
     $args[$argument->position] = $row_args[$id];
 

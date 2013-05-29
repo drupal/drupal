@@ -18,10 +18,10 @@ use Drupal\Component\Annotation\PluginID;
 class Type extends String {
 
   /**
-   * Override the behavior of summary_name(). Get the user friendly version
+   * Override the behavior of summaryName(). Get the user friendly version
    * of the node type.
    */
-  function summary_name($data) {
+  public function summaryName($data) {
     return $this->node_type($data->{$this->name_alias});
   }
 

@@ -20,16 +20,16 @@ use Drupal\Component\Annotation\PluginID;
 class LanguageArgument extends ArgumentPluginBase {
 
   /**
-   * Overrides \Drupal\views\Plugin\views\argument\ArgumentPluginBase::summary_name().
+   * Overrides \Drupal\views\Plugin\views\argument\ArgumentPluginBase::summaryName().
    *
    * Gets the user-friendly version of the language name.
    */
-  function summary_name($data) {
+  public function summaryName($data) {
     return $this->language($data->{$this->name_alias});
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\argument\ArgumentPluginBase::summary_name().
+   * Overrides \Drupal\views\Plugin\views\argument\ArgumentPluginBase::summaryName().
    *
    * Gets the user friendly version of the language name for display as a
    * title placeholder.

@@ -895,7 +895,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * @param $data
    *   The query results for the row.
    */
-  function summary_name($data) {
+  public function summaryName($data) {
     $value = $data->{$this->name_alias};
     if (empty($value) && !empty($this->definition['empty field name'])) {
       $value = $this->definition['empty field name'];
