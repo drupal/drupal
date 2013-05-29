@@ -359,7 +359,7 @@ abstract class StylePluginBase extends PluginBase {
    * @param string $type
    *    The display type, either block or page.
    */
-  function wizard_form(&$form, &$form_state, $type) {
+  public function wizardForm(&$form, &$form_state, $type) {
   }
 
   /**
