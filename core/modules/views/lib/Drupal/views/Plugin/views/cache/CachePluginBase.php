@@ -180,7 +180,7 @@ abstract class CachePluginBase extends PluginBase {
    * We're just going to nuke anything related to the view, regardless of display,
    * to be sure that we catch everything. Maybe that's a bad idea.
    */
-  function cache_flush() {
+  public function cacheFlush() {
     cache($this->table)->deleteTags(array($this->view->storage->id() => TRUE));
   }
 

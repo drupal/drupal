@@ -2146,7 +2146,7 @@ abstract class DisplayPluginBase extends PluginBase {
     // Not sure I like this being here, but it seems (?) like a logical place.
     $cache_plugin = $this->getPlugin('cache');
     if ($cache_plugin) {
-      $cache_plugin->cache_flush();
+      $cache_plugin->cacheFlush();
     }
 
     $section = $form_state['section'];
