@@ -97,18 +97,18 @@ class Time extends CachePluginBase {
   }
 
   public function summaryTitle() {
-    $results_lifespan = $this->get_lifespan('results');
-    $output_lifespan = $this->get_lifespan('output');
+    $results_lifespan = $this->getLifespan('results');
+    $output_lifespan = $this->getLifespan('output');
     return format_interval($results_lifespan, 1) . '/' . format_interval($output_lifespan, 1);
   }
 
-  function get_lifespan($type) {
+  protected function getLifespan($type) {
     $lifespan = $this->options[$type . '_lifespan'] == 'custom' ? $this->options[$type . '_lifespan_custom'] : $this->options[$type . '_lifespan'];
     return $lifespan;
   }
 
   function cache_expire($type) {
-    $lifespan = $this->get_lifespan($type);
+    $lifespan = $this->getLifespan($type);
     if ($lifespan) {
       $cutoff = REQUEST_TIME - $lifespan;
       return $cutoff;
@@ -119,7 +119,7 @@ class Time extends CachePluginBase {
   }
 
   function cache_set_expire($type) {
-    $lifespan = $this->get_lifespan($type);
+    $lifespan = $this->getLifespan($type);
     if ($lifespan) {
       return time() + $lifespan;
     }
