@@ -263,7 +263,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     // AJAX.
     views_ui_add_ajax_trigger($style_form, 'style_plugin', array('displays', 'page', 'options'));
 
-    $this->build_form_style($form, $form_state, 'page');
+    $this->buildFormStyle($form, $form_state, 'page');
     $form['displays']['page']['options']['items_per_page'] = array(
       '#title' => t('Items to display'),
       '#type' => 'number',
@@ -400,7 +400,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     // AJAX.
     views_ui_add_ajax_trigger($style_form, 'style_plugin', array('displays', 'block', 'options'));
 
-    $this->build_form_style($form, $form_state, 'block');
+    $this->buildFormStyle($form, $form_state, 'block');
     $form['displays']['block']['options']['items_per_page'] = array(
       '#title' => t('Items per page'),
       '#type' => 'number',
@@ -505,7 +505,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * @param string $type
    *   The display ID (e.g. 'page' or 'block').
    */
-  protected function build_form_style(array &$form, array &$form_state, $type) {
+  protected function buildFormStyle(array &$form, array &$form_state, $type) {
     $style_form =& $form['displays'][$type]['options']['style'];
     $style = $style_form['style_plugin']['#default_value'];
     $style_plugin = Views::pluginManager('style')->createInstance($style);
