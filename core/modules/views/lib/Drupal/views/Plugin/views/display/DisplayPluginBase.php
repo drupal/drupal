@@ -878,7 +878,7 @@ abstract class DisplayPluginBase extends PluginBase {
           if (empty($this->view->query)) {
             $this->view->initQuery();
           }
-          $aggregate = $this->view->query->get_aggregation_info();
+          $aggregate = $this->view->query->getAggregationInfo();
           if (!empty($aggregate[$info['group_type']]['handler'][$type])) {
             $override = $aggregate[$info['group_type']]['handler'][$type];
           }
@@ -1191,7 +1191,7 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     $this->view->initQuery();
-    if ($this->view->query->get_aggregation_info()) {
+    if ($this->view->query->getAggregationInfo()) {
       $options['group_by'] = array(
         'category' => 'other',
         'title' => t('Use aggregation'),

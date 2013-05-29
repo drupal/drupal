@@ -86,7 +86,7 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
    *
    * If NULL, aggregation is not allowed.
    */
-  function get_aggregation_info() { }
+  public function getAggregationInfo() { }
 
   public function validateOptionsForm(&$form, &$form_state) { }
 

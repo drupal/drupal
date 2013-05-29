@@ -217,7 +217,7 @@ class ConfigItem extends ViewsFormBase {
       if (empty($executable->query)) {
         $executable->initQuery();
       }
-      $aggregate = $executable->query->get_aggregation_info();
+      $aggregate = $executable->query->getAggregationInfo();
       if (!empty($aggregate[$item['group_type']]['handler'][$type])) {
         $override = $aggregate[$item['group_type']]['handler'][$type];
       }

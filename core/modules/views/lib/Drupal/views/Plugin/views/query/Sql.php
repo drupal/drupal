@@ -1204,7 +1204,7 @@ class Sql extends QueryPluginBase {
       }
 
       if (!empty($field['function'])) {
-        $info = $this->get_aggregation_info();
+        $info = $this->getAggregationInfo();
         if (!empty($info[$field['function']]['method']) && is_callable(array($this, $info[$field['function']]['method']))) {
           $string = $this::$info[$field['function']]['method']($field['function'], $string);
           $placeholders = !empty($field['placeholders']) ? $field['placeholders'] : array();
@@ -1647,7 +1647,7 @@ class Sql extends QueryPluginBase {
     $view->query->add_field(NULL, "'" . $view->storage->id() . ':' . $view->current_display . "'", 'view_name');
   }
 
-  function get_aggregation_info() {
+  public function getAggregationInfo() {
     // @todo -- need a way to get database specific and customized aggregation
     // functions into here.
     return array(

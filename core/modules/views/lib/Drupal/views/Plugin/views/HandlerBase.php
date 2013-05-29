@@ -185,7 +185,7 @@ abstract class HandlerBase extends PluginBase {
     if ($this->view->display_handler->useGroupBy()) {
       $this->view->initQuery();
       if ($this->query) {
-        $info = $this->query->get_aggregation_info();
+        $info = $this->query->getAggregationInfo();
         if (!empty($info[$this->options['group_type']]['method'])) {
           $method = $info[$this->options['group_type']]['method'];
           if (method_exists($this->query, $method)) {
@@ -322,7 +322,7 @@ abstract class HandlerBase extends PluginBase {
     $form['#section'] = $display_id . '-' . $type . '-' . $id;
 
     $this->view->initQuery();
-    $info = $this->view->query->get_aggregation_info();
+    $info = $this->view->query->getAggregationInfo();
     foreach ($info as $id => $aggregate) {
       $group_types[$id] = $aggregate['title'];
     }
@@ -864,7 +864,7 @@ abstract class HandlerBase extends PluginBase {
       if (empty($executable->query)) {
         $executable->initQuery();
       }
-      $aggregate = $executable->query->get_aggregation_info();
+      $aggregate = $executable->query->getAggregationInfo();
       if (!empty($aggregate[$item['group_type']]['handler'][$type])) {
         $override = $aggregate[$item['group_type']]['handler'][$type];
       }
