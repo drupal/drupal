@@ -91,7 +91,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    *
    * @return TRUE/FALSE
    */
-  function uses_breadcrumb() {
+  public function usesBreadcrumb() {
     $info = $this->default_actions($this->options['default_action']);
     return !empty($info['breadcrumb']);
   }
