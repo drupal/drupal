@@ -166,7 +166,7 @@ class ViewsSelection implements SelectionInterface {
    */
   public function countReferencableEntities($match = NULL, $match_operator = 'CONTAINS') {
     $this->getReferencableEntities($match, $match_operator);
-    return $this->view->pager->get_total_items();
+    return $this->view->pager->getTotalItems();
   }
 
   /**
