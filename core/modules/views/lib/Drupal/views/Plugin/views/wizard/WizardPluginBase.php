@@ -1118,7 +1118,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * @return Drupal\views_ui\ViewUI $view
    *   The validated view object.
    */
-  protected function retrieve_validated_view(array $form, array &$form_state, $unset = TRUE) {
+  protected function retrieveValidatedView(array $form, array &$form_state, $unset = TRUE) {
     // @todo Figure out why all this hashing is done. Wouldn't it be easier to
     //   store a single entry and that's it?
     $key = hash('sha256', serialize($form_state['values']));
@@ -1164,7 +1164,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * Implements Drupal\views\Plugin\views\wizard\WizardInterface::create_view().
    */
   function create_view(array $form, array &$form_state) {
-    $view = $this->retrieve_validated_view($form, $form_state);
+    $view = $this->retrieveValidatedView($form, $form_state);
     if (empty($view)) {
       throw new WizardException('Attempted to create_view with values that have not been validated.');
     }
