@@ -1478,7 +1478,7 @@ class Sql extends QueryPluginBase {
 
       try {
         if ($view->pager->use_count_query() || !empty($view->get_total_rows)) {
-          $view->pager->execute_count_query($count_query);
+          $view->pager->executeCountQuery($count_query);
         }
 
         // Let the pager modify the query to add limits.

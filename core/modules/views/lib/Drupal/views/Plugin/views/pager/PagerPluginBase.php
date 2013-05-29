@@ -177,7 +177,7 @@ abstract class PagerPluginBase extends PluginBase {
    * Execute the count query, which will be done just prior to the query
    * itself being executed.
    */
-  function execute_count_query(&$count_query) {
+  public function executeCountQuery(&$count_query) {
     $this->total_items = $count_query->execute()->fetchField();
     if (!empty($this->options['offset'])) {
       $this->total_items -= $this->options['offset'];
