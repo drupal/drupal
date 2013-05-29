@@ -713,7 +713,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       // Display: Feed (attached to the page).
       if (isset($display_options['feed'])) {
         $display = $view->newDisplay('feed', 'Feed', 'feed_1');
-        $this->set_override_options($display_options['feed'], $display, $default_display);
+        $this->setOverrideOptions($display_options['feed'], $display, $default_display);
       }
     }
 
@@ -726,7 +726,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
         $this->setDefaultOptions($display_options['block'], $display, $default_display);
       }
       else {
-        $this->set_override_options($display_options['block'], $display, $default_display);
+        $this->setOverrideOptions($display_options['block'], $display, $default_display);
       }
     }
 
@@ -1091,7 +1091,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * @param Drupal\views\View\plugin\display\DisplayPluginBase $default_display
    *   The default display handler, which will store the options when possible.
    */
-  protected function set_override_options(array $options, DisplayPluginBase $display, DisplayPluginBase $default_display) {
+  protected function setOverrideOptions(array $options, DisplayPluginBase $display, DisplayPluginBase $default_display) {
     foreach ($options as $option => $value) {
       // Only override the default value if it is different from the value that
       // was provided.
