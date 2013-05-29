@@ -1308,21 +1308,6 @@ function system_status($check = FALSE) {
 }
 
 /**
- * Menu callback: run cron manually.
- */
-function system_run_cron() {
-  // Run cron manually
-  if (drupal_cron_run()) {
-    drupal_set_message(t('Cron ran successfully.'));
-  }
-  else {
-    drupal_set_message(t('Cron run failed.'), 'error');
-  }
-
-  drupal_goto('admin/reports/status');
-}
-
-/**
  * Menu callback: return information about PHP.
  */
 function system_php() {

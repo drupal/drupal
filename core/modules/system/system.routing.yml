@@ -88,6 +88,13 @@ date_format_edit:
   requirements:
     _permission: 'administer site configuration'
 
+system_run_cron:
+  pattern: '/admin/reports/status/run-cron'
+  defaults:
+    _controller: '\Drupal\system\CronController::runManually'
+  requirements:
+    _permission: 'administer site configuration'
+
 date_format_delete:
   pattern: 'admin/config/regional/date-time/formats/{format_id}/delete'
   defaults:
