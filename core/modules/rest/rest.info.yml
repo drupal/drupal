@@ -6,4 +6,3 @@ version: VERSION
 core: 8.x
 dependencies:
   - serialization
-configure: admin/config/services/rest
