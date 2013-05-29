@@ -665,7 +665,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
       // Display: Feed (attached to the page)
       if (!empty($form_state['values']['page']['feed'])) {
-        $display_options['feed'] = $this->page_feed_display_options($form, $form_state);
+        $display_options['feed'] = $this->pageFeedDisplayOptions($form, $form_state);
       }
     }
 
@@ -1022,7 +1022,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * @return array
    *   Returns an array of display options.
    */
-  protected function page_feed_display_options($form, $form_state) {
+  protected function pageFeedDisplayOptions($form, $form_state) {
     $display_options = array();
     $display_options['pager']['type'] = 'some';
     $display_options['style'] = array('type' => 'rss');
