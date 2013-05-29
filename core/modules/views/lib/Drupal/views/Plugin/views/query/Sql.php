@@ -1084,7 +1084,7 @@ class Sql extends QueryPluginBase {
    * @param $where
    *   'where' or 'having'.
    */
-  function build_condition($where = 'where') {
+  protected function buildCondition($where = 'where') {
     $has_condition = FALSE;
     $has_arguments = FALSE;
     $has_filter = FALSE;
@@ -1343,7 +1343,7 @@ class Sql extends QueryPluginBase {
       foreach ($groupby as $field) {
         $query->groupBy($field);
       }
-      if (!empty($this->having) && $condition = $this->build_condition('having')) {
+      if (!empty($this->having) && $condition = $this->buildCondition('having')) {
         $query->havingCondition($condition);
       }
     }
@@ -1362,7 +1362,7 @@ class Sql extends QueryPluginBase {
       }
     }
 
-    if (!empty($this->where) && $condition = $this->build_condition('where')) {
+    if (!empty($this->where) && $condition = $this->buildCondition('where')) {
       $query->condition($condition);
     }
 
