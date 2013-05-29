@@ -20,8 +20,9 @@
 function tracker_page($account = NULL, $set_title = FALSE) {
   if ($account) {
     $query = db_select('tracker_user', 't')
-      ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
-    $query->condition('t.uid', $account->uid);
+      ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+      ->addMetaData('base_table', 'tracker_user')
+      ->condition('t.uid', $account->uid);
 
     if ($set_title) {
       // When viewed from user/%user/track, display the name of the user
@@ -32,14 +33,14 @@ function tracker_page($account = NULL, $set_title = FALSE) {
   }
   else {
     $query = db_select('tracker_node', 't', array('target' => 'slave'))
-      ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
+      ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+      ->addMetaData('base_table', 'tracker_node');
   }
 
   // This array acts as a placeholder for the data selected later
   // while keeping the correct order.
   $tracker_data = $query
     ->addTag('node_access')
-    ->addMetaData('base_table', 'tracker_node')
     ->fields('t', array('nid', 'changed'))
     ->condition('t.published', 1)
     ->orderBy('t.changed', 'DESC')
