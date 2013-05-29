@@ -867,7 +867,7 @@ class ViewExecutable {
         }
 
         // Set the argument, which will also validate that the argument can be set.
-        if (!$argument->set_argument($arg)) {
+        if (!$argument->setArgument($arg)) {
           $status = $argument->validateFail($arg);
           break;
         }

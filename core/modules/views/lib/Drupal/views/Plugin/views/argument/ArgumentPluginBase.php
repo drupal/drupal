@@ -983,7 +983,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    *
    * @return TRUE if it successfully validates; FALSE if it does not.
    */
-  function set_argument($arg) {
+  public function setArgument($arg) {
     $this->argument = $arg;
     return $this->validateArgument($arg);
   }
@@ -1021,7 +1021,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       $this->is_default = TRUE;
     }
     // Set the argument, which will also validate that the argument can be set.
-    if ($argument->set_argument($arg)) {
+    if ($argument->setArgument($arg)) {
       $value = $argument->argument;
     }
     unset($argument);
