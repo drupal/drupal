@@ -1130,7 +1130,7 @@ abstract class FilterPluginBase extends HandlerBase {
 
     // Cleanup in case the translated element's (radios or checkboxes) display value contains html.
     if ($form['#type'] == 'select') {
-      $this->prepare_filter_select_options($form['#options']);
+      $this->prepareFilterSelectOptions($form['#options']);
     }
 
     if ($type == 'value' && empty($this->always_required) && empty($this->options['expose']['required']) && $form['#type'] == 'select' && empty($form['#multiple'])) {
@@ -1151,16 +1151,16 @@ abstract class FilterPluginBase extends HandlerBase {
    *
    * The function is recursive to support optgroups.
    */
-  function prepare_filter_select_options(&$options) {
+  protected function prepareFilterSelectOptions(&$options) {
     foreach ($options as $value => $label) {
       // Recurse for optgroups.
       if (is_array($label)) {
-        $this->prepare_filter_select_options($options[$value]);
+        $this->prepareFilterSelectOptions($options[$value]);
       }
       // FAPI has some special value to allow hierarchy.
       // @see _form_options_flatten
       elseif (is_object($label)) {
-        $this->prepare_filter_select_options($options[$value]->option);
+        $this->prepareFilterSelectOptions($options[$value]->option);
       }
       else {
         $options[$value] = strip_tags(decode_entities($label));
