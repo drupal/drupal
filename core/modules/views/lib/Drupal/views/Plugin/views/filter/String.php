@@ -41,13 +41,13 @@ class String extends FilterPluginBase {
       '=' => array(
         'title' => t('Is equal to'),
         'short' => t('='),
-        'method' => 'op_equal',
+        'method' => 'opEqual',
         'values' => 1,
       ),
       '!=' => array(
         'title' => t('Is not equal to'),
         'short' => t('!='),
-        'method' => 'op_equal',
+        'method' => 'opEqual',
         'values' => 1,
       ),
       'contains' => array(
@@ -260,7 +260,7 @@ class String extends FilterPluginBase {
     }
   }
 
-  function op_equal($field) {
+  public function opEqual($field) {
     $this->query->add_where($this->options['group'], $field, $this->value, $this->operator());
   }
 

@@ -87,10 +87,10 @@ class Combine extends String {
     }
   }
 
-  // By default things like op_equal uses add_where, that doesn't support
+  // By default things like opEqual uses add_where, that doesn't support
   // complex expressions, so override all operators.
 
-  function op_equal($expression) {
+  function opEqual($expression) {
     $placeholder = $this->placeholder();
     $operator = $this->operator();
     $this->query->add_where_expression($this->options['group'], "$expression $operator $placeholder", array($placeholder => $this->value));
