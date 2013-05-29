@@ -99,7 +99,7 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
   /**
    * Set a LIMIT on the query, specifying a maximum number of results.
    */
-  function set_limit($limit) {
+  public function setLimit($limit) {
     $this->limit = $limit;
   }
 

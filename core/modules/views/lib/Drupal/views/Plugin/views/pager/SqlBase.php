@@ -237,7 +237,7 @@ abstract class SqlBase extends PagerPluginBase {
       }
     }
 
-    $this->view->query->set_limit($limit);
+    $this->view->query->setLimit($limit);
     $this->view->query->set_offset($offset);
   }
 

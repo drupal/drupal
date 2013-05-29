@@ -80,7 +80,7 @@ class QueryTest extends ViewUnitTestBase {
     $view->initQuery();
     $this->assertFalse($view->query->getLimit(), 'Default to an empty limit.');
     $rand_number = rand(5, 10);
-    $view->query->set_limit($rand_number);
+    $view->query->setLimit($rand_number);
     $this->assertEqual($view->query->getLimit(), $rand_number, 'set_limit adapts the amount of items.');
   }
 
