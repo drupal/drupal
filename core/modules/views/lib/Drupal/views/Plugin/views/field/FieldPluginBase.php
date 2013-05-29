@@ -1476,7 +1476,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
     }
 
     // Get flattened set of tokens for any array depth in $_GET parameters.
-    $tokens += $this->get_token_values_recursive(drupal_container()->get('request')->query->all());
+    $tokens += $this->getTokenValuesRecursive(drupal_container()->get('request')->query->all());
 
     // Now add replacements for our fields.
     foreach ($this->view->display_handler->getHandlers('field') as $field => $handler) {
@@ -1537,7 +1537,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
    * @return
    *   An array of available tokens, with nested keys representative of the array structure.
    */
-  function get_token_values_recursive(array $array, array $parent_keys = array()) {
+  protected function getTokenValuesRecursive(array $array, array $parent_keys = array()) {
     $tokens = array();
 
     foreach ($array as $param => $val) {
@@ -1547,7 +1547,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
         $child_parent_keys = $parent_keys;
         $child_parent_keys[] = $param;
         // Get the child tokens.
-        $child_tokens = $this->get_token_values_recursive($val, $child_parent_keys);
+        $child_tokens = $this->getTokenValuesRecursive($val, $child_parent_keys);
         // Add them to the current tokens array.
         $tokens += $child_tokens;
       }
