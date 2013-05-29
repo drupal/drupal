@@ -200,6 +200,30 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
       $this->assertResponse(200, 'Existing image was accessible at the URL wih an invalid token.');
     }
 
+    // Allow insecure image derivatives to be created for the remainder of this
+    // test.
+    config('image.settings')->set('allow_insecure_derivatives', TRUE)->save();
+
+    // Create another working copy of the file.
+    $files = $this->drupalGetTestFiles('image');
+    $file = array_shift($files);
+    $image_info = image_get_info($file->uri);
+    $original_uri = file_unmanaged_copy($file->uri, $scheme . '://', FILE_EXISTS_RENAME);
+    // Let the image_module_test module know about this file, so it can claim
+    // ownership in hook_file_download().
+    state()->set('image.test_file_download', $original_uri);
+
+    // Suppress the security token in the URL, then get the URL of a file that
+    // has not been created and try to create it. Check that the security token
+    // is not present in the URL but that the image is still accessible.
+    config('image.settings')->set('suppress_itok_output', TRUE)->save();
+    $generated_uri = image_style_path($this->style_name, $original_uri);
+    $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
+    $generate_url = image_style_url($this->style_name, $original_uri);
+    $this->assertIdentical(strpos($generate_url, IMAGE_DERIVATIVE_TOKEN . '='), FALSE, 'The security token does not appear in the image style URL.');
+    $this->drupalGet($generate_url);
+    $this->assertResponse(200, 'Image was accessible at the URL with a missing token.');
+
     $GLOBALS['script_path'] = $script_path_original;
   }
 }
