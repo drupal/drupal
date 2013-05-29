@@ -1667,7 +1667,7 @@ class Sql extends QueryPluginBase {
       ),
       'count_distinct' => array(
         'title' => t('Count DISTINCT'),
-        'method' => 'aggregation_method_distinct',
+        'method' => 'aggregationMethodDistinct',
         'handler' => array(
           'argument' => 'groupby_numeric',
           'field' => 'numeric',
@@ -1732,7 +1732,7 @@ class Sql extends QueryPluginBase {
     return strtoupper($group_type) . '(' . $field . ')';
   }
 
-  function aggregation_method_distinct($group_type, $field) {
+  public function aggregationMethodDistinct($group_type, $field) {
     $group_type = str_replace('_distinct', '', $group_type);
     return strtoupper($group_type) . '(DISTINCT ' . $field . ')';
   }
