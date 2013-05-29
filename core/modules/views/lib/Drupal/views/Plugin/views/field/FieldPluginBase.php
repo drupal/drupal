@@ -89,7 +89,7 @@ abstract class FieldPluginBase extends HandlerBase {
    * Fields can set this to FALSE if they do not wish to allow
    * token based rewriting or link-making.
    */
-  function allow_advanced_render() {
+  protected function allowAdvancedRender() {
     return TRUE;
   }
 
@@ -688,7 +688,7 @@ abstract class FieldPluginBase extends HandlerBase {
       '#weight' => 100,
     );
 
-    if ($this->allow_advanced_render()) {
+    if ($this->allowAdvancedRender()) {
       $form['alter']['#tree'] = TRUE;
       $form['alter']['alter_text'] = array(
         '#type' => 'checkbox',
@@ -1109,7 +1109,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
    * text-replacement rendering is necessary.
    */
   function advanced_render($values) {
-    if ($this->allow_advanced_render() && method_exists($this, 'render_item')) {
+    if ($this->allowAdvancedRender() && method_exists($this, 'render_item')) {
       $raw_items = $this->get_items($values);
       // If there are no items, set the original value to NULL.
       if (empty($raw_items)) {
@@ -1125,7 +1125,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
       $this->original_value = $value;
     }
 
-    if ($this->allow_advanced_render()) {
+    if ($this->allowAdvancedRender()) {
       $tokens = NULL;
       if (method_exists($this, 'render_item')) {
         $items = array();
