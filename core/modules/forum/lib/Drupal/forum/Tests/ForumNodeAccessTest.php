@@ -22,10 +22,6 @@ class ForumNodeAccessTest extends WebTestBase {
    */
   public static $modules = array('node', 'comment', 'forum', 'taxonomy', 'tracker', 'node_access_test', 'block');
 
-  protected $access_user;
-  protected $admin_user;
-  protected $no_access_user;
-
   public static function getInfo() {
     return array(
       'name' => 'Forum private node access test',

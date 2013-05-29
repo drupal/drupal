@@ -2793,9 +2793,11 @@ function node_query_node_access_alter(AlterableInterface $query) {
   // more than once in the query, and could be aliased. Join each one to
   // the node_access table.
   $grants = node_access_grants($op, $account);
+  $base_table_found = FALSE;
   foreach ($tables as $nalias => $tableinfo) {
     $table = $tableinfo['table'];
     if (!($table instanceof SelectInterface) && $table == $base_table) {
+      $base_table_found = TRUE;
       // Set the subquery.
       $subquery = db_select('node_access', 'na')
        ->fields('na', array('nid'));
@@ -2837,6 +2839,12 @@ function node_query_node_access_alter(AlterableInterface $query) {
 
       $query->exists($subquery);
     }
+  }
+
+  // If we reached this point and did not find the defined base table, throw
+  // an exception.
+  if (!$base_table_found) {
+    throw new Exception(t('Query tagged for node access but the defined base_table @base_table was not found', array('@base_table' => $base_table)));
   }
 }
 
