@@ -206,7 +206,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $path_prefix = url(NULL, array('absolute' => TRUE));
 
     // Add filters and sorts which apply to the view as a whole.
-    $this->build_filters($form, $form_state);
+    $this->buildFilters($form, $form_state);
     $this->build_sorts($form, $form_state);
 
     $form['displays']['page'] = array(
@@ -554,7 +554,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * By default, this adds "of type" and "tagged with" filters (when they are
    * available).
    */
-  protected function build_filters(&$form, &$form_state) {
+  protected function buildFilters(&$form, &$form_state) {
     module_load_include('inc', 'views_ui', 'admin');
 
     $bundles = entity_get_bundles($this->entity_type);

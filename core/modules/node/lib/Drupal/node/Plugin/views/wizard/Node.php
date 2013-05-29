@@ -242,12 +242,12 @@ class Node extends WizardPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::build_filters().
+   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::buildFilters().
    *
    * Add some options for filter by taxonomy terms.
    */
-  protected function build_filters(&$form, &$form_state) {
-    parent::build_filters($form, $form_state);
+  protected function buildFilters(&$form, &$form_state) {
+    parent::buildFilters($form, $form_state);
 
     $selected_bundle = static::getSelected($form_state, array('show', 'type'), 'all', $form['displays']['show']['type']);
 
