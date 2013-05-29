@@ -193,7 +193,7 @@ class InOperator extends FilterPluginBase {
       }
 
       if (!empty($this->options['expose']['reduce'])) {
-        $options = $this->reduce_value_options();
+        $options = $this->reduceValueOptions();
 
         if (!empty($this->options['expose']['multiple']) && empty($this->options['expose']['required'])) {
           $default_value = array();
@@ -247,7 +247,7 @@ class InOperator extends FilterPluginBase {
   /**
    * When using exposed filters, we may be required to reduce the set.
    */
-  function reduce_value_options($input = NULL) {
+  public function reduceValueOptions($input = NULL) {
     if (!isset($input)) {
       $input = $this->value_options;
     }
@@ -258,7 +258,7 @@ class InOperator extends FilterPluginBase {
     $options = array();
     foreach ($input as $id => $option) {
       if (is_array($option)) {
-        $options[$id] = $this->reduce_value_options($option);
+        $options[$id] = $this->reduceValueOptions($option);
         continue;
       }
       elseif (is_object($option)) {
