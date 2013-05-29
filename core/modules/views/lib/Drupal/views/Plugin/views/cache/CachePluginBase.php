@@ -166,7 +166,7 @@ abstract class CachePluginBase extends PluginBase {
           if (!$cutoff || $cache->created > $cutoff) {
             $this->storage = $cache->data;
             $this->view->display_handler->output = $cache->data['output'];
-            $this->restore_headers();
+            $this->restoreHeaders();
             return TRUE;
           }
         }
@@ -239,7 +239,7 @@ abstract class CachePluginBase extends PluginBase {
   /**
    * Restore out of band data saved to cache. Copied from Panels.
    */
-  function restore_headers() {
+  public function restoreHeaders() {
     if (!empty($this->storage['head'])) {
       drupal_add_html_head($this->storage['head']);
     }
