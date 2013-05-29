@@ -779,7 +779,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
 
     // Clear out the normal primary field and whatever else may have
     // been added and let the summary do the work.
-    $this->query->clear_fields();
+    $this->query->clearFields();
     $this->summary_query();
 
     $by = $this->options['summary']['number_of_records'] ? 'num_records' : NULL;

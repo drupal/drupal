@@ -796,7 +796,7 @@ class Sql extends QueryPluginBase {
    * Remove all fields that may've been added; primarily used for summary
    * mode where we're changing the query because we didn't get data we needed.
    */
-  function clear_fields() {
+  public function clearFields() {
     $this->fields = array();
   }
 
