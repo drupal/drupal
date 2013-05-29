@@ -916,7 +916,7 @@ abstract class DisplayPluginBase extends PluginBase {
    *
    * @param bool $groupable_only
    *   (optional) TRUE to only return an array of field labels from handlers
-   *   that support the use_string_group_by method, defaults to FALSE.
+   *   that support the useStringGroupBy method, defaults to FALSE.
    *
    * @return array
    *   An array of applicable field options, keyed by ID.
@@ -928,7 +928,7 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     foreach ($this->getHandlers('field') as $id => $handler) {
-      if ($groupable_only && !$handler->use_string_group_by()) {
+      if ($groupable_only && !$handler->useStringGroupBy()) {
         // Continue to next handler if it's not groupable.
         continue;
       }

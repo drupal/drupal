@@ -402,7 +402,7 @@ abstract class FieldPluginBase extends HandlerBase {
    * @return bool
    *  TRUE if this field handler is groupable, otherwise FALSE.
    */
-  function use_string_group_by() {
+  public function useStringGroupBy() {
     return TRUE;
   }
 
@@ -1672,3 +1672,4 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
 /**
  * @}
  */
+
