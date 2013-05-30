@@ -115,7 +115,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
    * also assign data to the appropriate handlers for use in building the
    * query.
    */
-  function render_exposed_form($block = FALSE) {
+  public function renderExposedForm($block = FALSE) {
     // Deal with any exposed filters we may have, before building.
     $form_state = array(
       'view' => &$this->view,
@@ -178,7 +178,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
 
   function post_render(&$output) { }
 
-  function pre_execute() { }
+  public function preExecute() { }
 
   public function postExecute() { }
 

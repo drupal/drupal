@@ -131,7 +131,7 @@ class SettingsForm extends SystemConfigFormBase {
         '#type' => 'details',
         '#title' => t('Basic configuration'),
         '#description' => t('For most aggregation tasks, the default settings are fine.'),
-        '#open' => TRUE,
+        '#collapsed' => FALSE,
       );
       $form['basic_conf'] += $basic_conf;
     }

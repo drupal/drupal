@@ -29,7 +29,7 @@ class YearMonthDate extends Date {
   /**
    * Provide a link to the next level of the view
    */
-  function summary_name($data) {
+  public function summaryName($data) {
     $created = $data->{$this->name_alias};
     return format_date(strtotime($created . "15" . " 00:00:00 UTC"), 'custom', $this->format, 'UTC');
   }

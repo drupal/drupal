@@ -67,7 +67,7 @@ class Text extends AreaPluginBase {
   public function renderTextarea($value, $format) {
     if ($value) {
       if ($this->options['tokenize']) {
-        $value = $this->view->style_plugin->tokenize_value($value, 0);
+        $value = $this->view->style_plugin->tokenizeValue($value, 0);
       }
       return check_markup($this->globalTokenReplace($value), $format, '', FALSE);
     }

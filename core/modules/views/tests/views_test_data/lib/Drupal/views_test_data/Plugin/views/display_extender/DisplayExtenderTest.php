@@ -102,10 +102,10 @@ class DisplayExtenderTest extends DisplayExtenderPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\display\DisplayExtenderPluginBase::pre_execute().
+   * Overrides Drupal\views\Plugin\views\display\DisplayExtenderPluginBase::preExecute().
    */
-  public function pre_execute() {
-    $this->testState['pre_execute'] = TRUE;
+  public function preExecute() {
+    $this->testState['preExecute'] = TRUE;
   }
 
 }

@@ -50,7 +50,7 @@ class InputRequired extends ExposedFormPluginBase {
     parent::submitOptionsForm($form, $form_state);
   }
 
-  function exposed_filter_applied() {
+  protected function exposedFilterApplied() {
     static $cache = NULL;
     if (!isset($cache)) {
       $view = $this->view;
@@ -72,7 +72,7 @@ class InputRequired extends ExposedFormPluginBase {
   }
 
   function pre_render($values) {
-    if (!$this->exposed_filter_applied()) {
+    if (!$this->exposedFilterApplied()) {
       $options = array(
         'id' => 'area',
         'table' => 'views',
@@ -93,7 +93,7 @@ class InputRequired extends ExposedFormPluginBase {
   }
 
   public function query() {
-    if (!$this->exposed_filter_applied()) {
+    if (!$this->exposedFilterApplied()) {
       // We return with no query; this will force the empty text.
       $this->view->built = TRUE;
       $this->view->executed = TRUE;

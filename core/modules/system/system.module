@@ -555,7 +555,7 @@ function system_element_info() {
     '#theme_wrappers' => array('fieldset'),
   );
   $types['details'] = array(
-    '#open' => FALSE,
+    '#collapsed' => FALSE,
     '#value' => NULL,
     '#process' => array('form_process_group', 'ajax_process_form'),
     '#pre_render' => array('form_pre_render_details', 'form_pre_render_group'),

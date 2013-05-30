@@ -205,7 +205,7 @@ abstract class PagerPluginBase extends PluginBase {
   /**
    * Perform any needed actions just prior to the query executing.
    */
-  function pre_execute(&$query) { }
+  public function preExecute(&$query) { }
 
   /**
    * Perform any needed actions just after the query executing.
@@ -234,7 +234,7 @@ abstract class PagerPluginBase extends PluginBase {
    *
    * This is primarily used to control the display of a more link.
    */
-  function has_more_records() {
+  public function hasMoreRecords() {
     return $this->get_items_per_page()
       && $this->total_items > (intval($this->current_page) + 1) * $this->get_items_per_page();
   }

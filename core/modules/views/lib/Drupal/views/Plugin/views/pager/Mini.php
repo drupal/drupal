@@ -62,7 +62,7 @@ class Mini extends SqlBase {
       // there is another page.
       $limit = $this->view->query->getLimit();
       $limit += 1;
-      $this->view->query->set_limit($limit);
+      $this->view->query->setLimit($limit);
     }
   }
 

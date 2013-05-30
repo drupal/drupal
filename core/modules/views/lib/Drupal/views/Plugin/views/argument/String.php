@@ -288,8 +288,8 @@ class String extends ArgumentPluginBase {
     return drupal_map_assoc($this->value, 'check_plain');
   }
 
-  function summary_name($data) {
-    return $this->caseTransform(parent::summary_name($data), $this->options['case']);
+  public function summaryName($data) {
+    return $this->caseTransform(parent::summaryName($data), $this->options['case']);
   }
 
 }

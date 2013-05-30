@@ -102,7 +102,7 @@ class Rss extends StylePluginBase {
     $description = $this->options['description'];
 
     // Allow substitutions from the first row.
-    $description = $this->tokenize_value($description, 0);
+    $description = $this->tokenizeValue($description, 0);
 
     return $description;
   }

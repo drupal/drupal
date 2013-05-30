@@ -67,6 +67,7 @@ function update_script_selection_form($form, &$form_state) {
   $form['start'] = array(
     '#tree' => TRUE,
     '#type' => 'details',
+    '#collapsed' => TRUE,
   );
 
   // Ensure system.module's updates appear first.

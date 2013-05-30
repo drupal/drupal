@@ -96,7 +96,7 @@ class Entity extends AreaPluginBase {
     if (!$empty || !empty($this->options['empty'])) {
       $entity_id = $this->options['entity_id'];
       if ($this->options['tokenize']) {
-        $entity_id = $this->view->style_plugin->tokenize_value($entity_id, 0);
+        $entity_id = $this->view->style_plugin->tokenizeValue($entity_id, 0);
       }
       $entity_id = $this->globalTokenReplace($entity_id);
       if ($entity = entity_load($this->entityType, $entity_id)) {

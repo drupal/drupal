@@ -207,7 +207,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     // Add filters and sorts which apply to the view as a whole.
     $this->buildFilters($form, $form_state);
-    $this->build_sorts($form, $form_state);
+    $this->buildSorts($form, $form_state);
 
     $form['displays']['page'] = array(
       '#type' => 'fieldset',
@@ -584,7 +584,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * By default, this adds a "sorted by [date]" filter (when it is available).
    */
-  protected function build_sorts(&$form, &$form_state) {
+  protected function buildSorts(&$form, &$form_state) {
     $sorts = array(
       'none' => t('Unsorted'),
     );
@@ -1139,7 +1139,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * @param Drupal\views_ui\ViewUI $view
    *   The validated view object.
    */
-  protected function set_validated_view(array $form, array &$form_state, ViewUI $view) {
+  protected function setValidatedView(array $form, array &$form_state, ViewUI $view) {
     $key = hash('sha256', serialize($form_state['values']));
     $this->validated_views[$key] = $view;
   }
@@ -1154,7 +1154,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $errors = $view->get('executable')->validate();
 
     if (empty($errors)) {
-      $this->set_validated_view($form, $form_state, $view);
+      $this->setValidatedView($form, $form_state, $view);
     }
 
     return $errors;

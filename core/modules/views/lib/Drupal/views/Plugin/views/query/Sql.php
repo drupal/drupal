@@ -796,7 +796,7 @@ class Sql extends QueryPluginBase {
    * Remove all fields that may've been added; primarily used for summary
    * mode where we're changing the query because we didn't get data we needed.
    */
-  function clear_fields() {
+  public function clearFields() {
     $this->fields = array();
   }
 
@@ -1044,9 +1044,11 @@ class Sql extends QueryPluginBase {
   /**
    * Returns the alias for the given field added to $table.
    *
+   * @access protected
+   *
    * @see views_plugin_query_default::add_field()
    */
-  function get_field_alias($table_alias, $field) {
+  protected function getFieldAlias($table_alias, $field) {
     return isset($this->field_aliases[$table_alias][$field]) ? $this->field_aliases[$table_alias][$field] : FALSE;
   }
 
@@ -1204,7 +1206,7 @@ class Sql extends QueryPluginBase {
       }
 
       if (!empty($field['function'])) {
-        $info = $this->get_aggregation_info();
+        $info = $this->getAggregationInfo();
         if (!empty($info[$field['function']]['method']) && is_callable(array($this, $info[$field['function']]['method']))) {
           $string = $this::$info[$field['function']]['method']($field['function'], $string);
           $placeholders = !empty($field['placeholders']) ? $field['placeholders'] : array();
@@ -1318,7 +1320,7 @@ class Sql extends QueryPluginBase {
 
     // Make sure each entity table has the base field added so that the
     // entities can be loaded.
-    $entity_tables = $this->get_entity_tables();
+    $entity_tables = $this->getEntityTables();
     if ($entity_tables) {
       $params = array();
       if ($groupby) {
@@ -1482,7 +1484,7 @@ class Sql extends QueryPluginBase {
         }
 
         // Let the pager modify the query to add limits.
-        $view->pager->pre_execute($query);
+        $view->pager->preExecute($query);
 
         if (!empty($this->limit) || !empty($this->offset)) {
           // We can't have an offset without a limit, so provide a very large limit instead.
@@ -1537,7 +1539,7 @@ class Sql extends QueryPluginBase {
    * @return array
    *   An array of table information, keyed by table alias.
    */
-  function get_entity_tables() {
+  public function getEntityTables() {
     // Start with the base table.
     $entity_tables = array();
     $views_data = Views::viewsData();
@@ -1582,7 +1584,7 @@ class Sql extends QueryPluginBase {
    * $result->_relationship_entities[$relationship_id];
    */
   function loadEntities(&$results) {
-    $entity_tables = $this->get_entity_tables();
+    $entity_tables = $this->getEntityTables();
     // No entity tables found, nothing else to do here.
     if (empty($entity_tables)) {
       return;
@@ -1600,7 +1602,7 @@ class Sql extends QueryPluginBase {
       $entity_type = $table['entity_type'];
       $info = entity_get_info($entity_type);
       $id_key = empty($table['revision']) ? $info['entity_keys']['id'] : $info['entity_keys']['revision'];
-      $id_alias = $this->get_field_alias($table_alias, $id_key);
+      $id_alias = $this->getFieldAlias($table_alias, $id_key);
 
       foreach ($results as $index => $result) {
         // Store the entity id if it was found.
@@ -1647,7 +1649,7 @@ class Sql extends QueryPluginBase {
     $view->query->add_field(NULL, "'" . $view->storage->id() . ':' . $view->current_display . "'", 'view_name');
   }
 
-  function get_aggregation_info() {
+  public function getAggregationInfo() {
     // @todo -- need a way to get database specific and customized aggregation
     // functions into here.
     return array(
@@ -1657,7 +1659,7 @@ class Sql extends QueryPluginBase {
       ),
       'count' => array(
         'title' => t('Count'),
-        'method' => 'aggregation_method_simple',
+        'method' => 'aggregationMethodSimple',
         'handler' => array(
           'argument' => 'groupby_numeric',
           'field' => 'numeric',
@@ -1677,7 +1679,7 @@ class Sql extends QueryPluginBase {
       ),
       'sum' => array(
         'title' => t('Sum'),
-        'method' => 'aggregation_method_simple',
+        'method' => 'aggregationMethodSimple',
         'handler' => array(
           'argument' => 'groupby_numeric',
           'field' => 'numeric',
@@ -1687,7 +1689,7 @@ class Sql extends QueryPluginBase {
       ),
       'avg' => array(
         'title' => t('Average'),
-        'method' => 'aggregation_method_simple',
+        'method' => 'aggregationMethodSimple',
         'handler' => array(
           'argument' => 'groupby_numeric',
           'field' => 'numeric',
@@ -1697,7 +1699,7 @@ class Sql extends QueryPluginBase {
       ),
       'min' => array(
         'title' => t('Minimum'),
-        'method' => 'aggregation_method_simple',
+        'method' => 'aggregationMethodSimple',
         'handler' => array(
           'argument' => 'groupby_numeric',
           'field' => 'numeric',
@@ -1707,7 +1709,7 @@ class Sql extends QueryPluginBase {
       ),
       'max' => array(
         'title' => t('Maximum'),
-        'method' => 'aggregation_method_simple',
+        'method' => 'aggregationMethodSimple',
         'handler' => array(
           'argument' => 'groupby_numeric',
           'field' => 'numeric',
@@ -1717,7 +1719,7 @@ class Sql extends QueryPluginBase {
       ),
       'stddev_pop' => array(
         'title' => t('Standard deviation'),
-        'method' => 'aggregation_method_simple',
+        'method' => 'aggregationMethodSimple',
         'handler' => array(
           'argument' => 'groupby_numeric',
           'field' => 'numeric',
@@ -1728,7 +1730,7 @@ class Sql extends QueryPluginBase {
     );
   }
 
-  function aggregation_method_simple($group_type, $field) {
+  public function aggregationMethodSimple($group_type, $field) {
     return strtoupper($group_type) . '(' . $field . ')';
   }
 

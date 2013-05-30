@@ -160,7 +160,7 @@ class GroupwiseMax extends RelationshipPluginBase {
    *
    * We use this to obtain our subquery SQL.
    */
-  function get_temporary_view() {
+  protected function getTemporaryView() {
     $view = entity_create('view', array('base_table' => $this->definition['base']));
     $view->addDisplay('default');
     return $view->get('executable');
@@ -197,7 +197,7 @@ class GroupwiseMax extends RelationshipPluginBase {
     else {
       // Create a new view object on the fly, which we use to generate a query
       // object and then get the SQL we need for the subquery.
-      $temp_view = $this->get_temporary_view();
+      $temp_view = $this->getTemporaryView();
 
       // Add the sort from the options to the default display.
       // This is broken, in that the sort order field also gets added as a

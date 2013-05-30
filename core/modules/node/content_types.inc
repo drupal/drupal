@@ -192,6 +192,7 @@ function node_type_form($form, &$form_state, $type = NULL) {
   $form['workflow'] = array(
     '#type' => 'details',
     '#title' => t('Publishing options'),
+    '#collapsed' => TRUE,
     '#group' => 'additional_settings',
   );
   $form['workflow']['node_options'] = array('#type' => 'checkboxes',
@@ -209,6 +210,7 @@ function node_type_form($form, &$form_state, $type = NULL) {
     $form['language'] = array(
       '#type' => 'details',
       '#title' => t('Language settings'),
+      '#collapsed' => TRUE,
       '#group' => 'additional_settings',
     );
 
@@ -227,6 +229,7 @@ function node_type_form($form, &$form_state, $type = NULL) {
   $form['display'] = array(
     '#type' => 'details',
     '#title' => t('Display settings'),
+    '#collapsed' => TRUE,
     '#group' => 'additional_settings',
   );
   $form['display']['node_submitted'] = array(

@@ -1699,42 +1699,6 @@ details.fieldset-no-legend {
   background: none;
   border: none;
 }
-.form-actions .button {
-  background: #fefefe;
-  background-image: -webkit-linear-gradient(top, #fefefe, #e0e0e0);
-  background-image: -moz-linear-gradient(top, #fefefe, #e0e0e0);
-  background-image: -o-linear-gradient(top, #fefefe, #e0e0e0);
-  background-image: linear-gradient(to bottom, #fefefe, #e0e0e0);
-  border: 1px solid #c8c8c8;
-  border-radius: 3px;
-  text-decoration: none;
-  padding: 6px 17px 6px 17px;
-}
-.form-actions .button:focus,
-.form-actions .button:hover {
-  background: #fefefe;
-  background-image: -webkit-linear-gradient(top, #fefefe, #eaeaea);
-  background-image: -moz-linear-gradient(top, #fefefe, #eaeaea);
-  background-image: -o-linear-gradient(top, #fefefe, #eaeaea);
-  background-image: linear-gradient(to bottom, #fefefe, #eaeaea);
-  -webkit-box-shadow: 1px 1px 3px rgba(50, 50, 50, 0.1);
-  box-shadow: 1px 1px 3px rgba(50, 50, 50, 0.1);
-  color: #2e2e2e;
-  text-decoration: none;
-}
-.form-actions .button:active {
-  border: 1px solid #c8c8c8;
-  background: #fefefe;
-  background-image: -webkit-linear-gradient(top, #eaeaea, #fefefe);
-  background-image: -moz-linear-gradient(top, #eaeaea, #fefefe);
-  background-image: -o-linear-gradient(top, #eaeaea, #fefefe);
-  background-image: linear-gradient(to bottom, #eaeaea, #fefefe);
-  -webkit-box-shadow: 1px 1px 3px rgba(50, 50, 50, 0.1);
-  box-shadow: 1px 1px 3px rgba(50, 50, 50, 0.1);
-  color: #2e2e2e;
-  text-decoration: none;
-  text-shadow: none;
-}
 /* Delete button */
 .form-actions .button-danger {
   color: #c72100;

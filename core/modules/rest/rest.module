@@ -6,24 +6,6 @@
  */
 
 /**
- * Implements hook_menu().
- *
- * @todo for now we use this hook for our admin page until
- * http://drupal.org/node/1801570 is sorted out.
- */
-function rest_menu() {
-  $items['admin/config/services/rest'] = array(
-    'title' => 'RESTful web services',
-    'description' => 'Configure resources and entities that are exposed as web API.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('rest_admin_form'),
-    'access arguments' => array('administer site configuration'),
-    'file' => 'rest.admin.inc',
-  );
-  return $items;
-}
-
-/**
  * Implements hook_permission().
  */
 function rest_permission() {
@@ -51,21 +33,33 @@ function rest_help($path, $arg) {
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The REST module provides a framework for exposing Drupal\'s data structures as RESTful web services. It can be used to read and write resources remotely, such as entity types like nodes or users. For more information, see the online handbook entry for the <a href="@rest">RESTful web services module</a>.', array('@rest' => 'http://drupal.org/documentation/modules/rest')) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h3>' . t('Configuration') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Enabling serialization modules') . '</dt>';
+      $output .= '<dd>' . t('REST module depends on the serialization module, which provides JSON and XML representations by default. To get other serializations, you can enable modules such as the HAL module.') . '</dd>';
+      $output .= '</dl>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Exposing resources') . '</dt>';
-      $output .= '<dd>' . t('Visit the <a href="@admin-rest">configuration page</a> to display a list of available resources and to enable them individually.', array('@admin-rest' => url('admin/config/services/rest'))) . '</dd>';
+      if (module_exists('config')) {
+        $output .= '<dd>' . t('Copy the following example settings to <em>rest.settings.yml</em> in the staging configuration directory, edit as needed and <a href="!url">import the new configuration</a>.', array(
+          '!url' => url('admin/config/development/sync'),
+        )) . '</dd>';
+      }
+      else {
+        $output .= '<dd>' . t('Copy the following example settings to <em>rest.settings.yml</em> in the staging configuration directory, edit as needed and import the new configuration.') . '</dd>';
+      }
+      $output .= "<dd><pre># Example configuration for enabling REST resources.
+resources:
+  # Enable the node resource.
+  'entity:node':
+    # Enable reading nodes in all formats known.
+    GET: { }
+</pre></dd>";
       $output .= '</dl>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Granting permissions') . '</dt>';
       $output .= '<dd>' . t('The <a href="@permission-rest">permissions page</a> allows you to determine what user roles may access a web service operation.', array('@permission-rest' => url('admin/people/permissions', array('fragment' => 'module-rest')))) . '</dd>';
       $output .= '</dl>';
-      return $output;
-
-    // Help for the configuration page.
-    case 'admin/config/services/rest':
-      $output = '';
-      $output .= '<p>' . t('This page allows you to expose resources using Drupal\'s REST API. That enables external clients to interact with your Drupal installation via a machine readable interface. All entity types are available for such operations while contributed modules can provide more.') . '</p>';
       $output .= '<h3>' . t('Example uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('An HTTP GET request can be used to get a node') . '</dt>';

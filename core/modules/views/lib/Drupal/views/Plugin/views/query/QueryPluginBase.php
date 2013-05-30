@@ -86,7 +86,7 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
    *
    * If NULL, aggregation is not allowed.
    */
-  function get_aggregation_info() { }
+  public function getAggregationInfo() { }
 
   public function validateOptionsForm(&$form, &$form_state) { }
 
@@ -99,7 +99,7 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
   /**
    * Set a LIMIT on the query, specifying a maximum number of results.
    */
-  function set_limit($limit) {
+  public function setLimit($limit) {
     $this->limit = $limit;
   }
 

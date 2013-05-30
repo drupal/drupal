@@ -41,7 +41,7 @@ abstract class DisplayExtenderPluginBase extends PluginBase {
   /**
    * Set up any variables on the view prior to execution.
    */
-  public function pre_execute() { }
+  public function preExecute() { }
 
   /**
    * Inject anything into the query that the display_extender handler needs.

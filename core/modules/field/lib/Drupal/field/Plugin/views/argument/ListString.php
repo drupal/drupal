@@ -63,7 +63,7 @@ class ListString extends String {
   }
 
 
-  function summary_name($data) {
+  public function summaryName($data) {
     $value = $data->{$this->name_alias};
     // If the list element has a human readable name show it,
     if (isset($this->allowed_values[$value]) && !empty($this->options['summary']['human'])) {

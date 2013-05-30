@@ -2859,8 +2859,8 @@ function form_get_options($element, $key) {
  * @param $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *     Properties used: #attributes, #children, #description, #id, #title,
- *     #value.
+ *     Properties used: #attributes, #children, #collapsed, #description, #id,
+ *     #title, #value.
  *
  * @ingroup themeable
  */
@@ -2905,8 +2905,8 @@ function theme_fieldset($variables) {
  * @param $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *     Properties used: #attributes, #children, #description, #id, #title,
- *     #value.
+ *     Properties used: #attributes, #children, #collapsed, #description, #id,
+ *     #title, #value.
  *
  * @ingroup themeable
  */
@@ -2923,7 +2923,7 @@ function theme_details($variables) {
     if (!empty($element['#attributes']['id'])) {
       $summary_attributes['aria-controls'] = $element['#attributes']['id'];
     }
-    $summary_attributes['aria-expanded'] = !empty($element['#attributes']['open']);
+    $summary_attributes['aria-expanded'] = empty($element['#attributes']['open']) ? FALSE : TRUE;
     $summary_attributes['aria-pressed'] = $summary_attributes['aria-expanded'];
     $output .= '<summary' . $summary_attributes . '>' . $element['#title'] . '</summary>';
   }
@@ -3930,7 +3930,7 @@ function form_pre_render_details($element) {
 
   // Collapsible details.
   $element['#attached']['library'][] = array('system', 'drupal.collapse');
-  if (!empty($element['#open'])) {
+  if (empty($element['#collapsed'])) {
     $element['#attributes']['open'] = 'open';
   }
 

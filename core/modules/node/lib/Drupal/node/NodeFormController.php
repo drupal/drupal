@@ -125,7 +125,7 @@ class NodeFormController extends EntityFormController {
       '#group' => 'advanced',
       '#title' => t('Revision information'),
       // Collapsed by default when "Create new revision" is unchecked.
-      '#open' => $node->isNewRevision(),
+      '#collapsed' => !$node->isNewRevision(),
       '#attributes' => array(
         'class' => array('node-form-revision-information'),
       ),
@@ -161,6 +161,7 @@ class NodeFormController extends EntityFormController {
       '#type' => 'details',
       '#access' => user_access('administer nodes'),
       '#title' => t('Authoring information'),
+      '#collapsed' => TRUE,
       '#group' => 'advanced',
       '#attributes' => array(
         'class' => array('node-form-author'),
@@ -199,6 +200,7 @@ class NodeFormController extends EntityFormController {
       '#type' => 'details',
       '#access' => user_access('administer nodes'),
       '#title' => t('Promotion options'),
+      '#collapsed' => TRUE,
       '#group' => 'advanced',
       '#attributes' => array(
         'class' => array('node-form-options'),

@@ -878,7 +878,7 @@ abstract class DisplayPluginBase extends PluginBase {
           if (empty($this->view->query)) {
             $this->view->initQuery();
           }
-          $aggregate = $this->view->query->get_aggregation_info();
+          $aggregate = $this->view->query->getAggregationInfo();
           if (!empty($aggregate[$info['group_type']]['handler'][$type])) {
             $override = $aggregate[$info['group_type']]['handler'][$type];
           }
@@ -1191,7 +1191,7 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     $this->view->initQuery();
-    if ($this->view->query->get_aggregation_info()) {
+    if ($this->view->query->getAggregationInfo()) {
       $options['group_by'] = array(
         'category' => 'other',
         'title' => t('Use aggregation'),
@@ -2422,7 +2422,7 @@ abstract class DisplayPluginBase extends PluginBase {
    * Render the 'more' link
    */
   public function renderMoreLink() {
-    if ($this->usesMore() && ($this->useMoreAlways() || (!empty($this->view->pager) && $this->view->pager->has_more_records()))) {
+    if ($this->usesMore() && ($this->useMoreAlways() || (!empty($this->view->pager) && $this->view->pager->hasMoreRecords()))) {
       $path = $this->getPath();
 
       if ($this->getOption('link_display') == 'custom_url' && $override_path = $this->getOption('link_url')) {
@@ -2531,11 +2531,11 @@ abstract class DisplayPluginBase extends PluginBase {
     $this->view->initHandlers();
     if ($this->usesExposed()) {
       $exposed_form = $this->getPlugin('exposed_form');
-      $exposed_form->pre_execute();
+      $exposed_form->preExecute();
     }
 
     foreach ($this->extender as $extender) {
-      $extender->pre_execute();
+      $extender->preExecute();
     }
 
     $this->view->setShowAdminLinks($this->getOption('show_admin_links'));
@@ -2704,7 +2704,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
     if ($this->usesExposed() && $this->getOption('exposed_block')) {
       $exposed_form = $this->getPlugin('exposed_form');
-      return $exposed_form->render_exposed_form(TRUE);
+      return $exposed_form->renderExposedForm(TRUE);
     }
   }
 

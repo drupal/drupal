@@ -198,7 +198,7 @@ abstract class FieldPluginBase extends HandlerBase {
   /**
    * Return an HTML element based upon the field's element type.
    */
-  function element_type($none_supported = FALSE, $default_empty = FALSE, $inline = FALSE) {
+  public function elementType($none_supported = FALSE, $default_empty = FALSE, $inline = FALSE) {
     if ($none_supported) {
       if ($this->options['element_type'] === '0') {
         return '';
@@ -290,7 +290,7 @@ abstract class FieldPluginBase extends HandlerBase {
   function element_classes($row_index = NULL) {
     $classes = explode(' ', $this->options['element_class']);
     foreach ($classes as &$class) {
-      $class = $this->tokenize_value($class, $row_index);
+      $class = $this->tokenizeValue($class, $row_index);
       $class = drupal_clean_css_identifier($class);
     }
     return implode(' ', $classes);
@@ -302,7 +302,7 @@ abstract class FieldPluginBase extends HandlerBase {
    * This function actually figures out which field was last and uses its
    * tokens so they will all be available.
    */
-  function tokenize_value($value, $row_index = NULL) {
+  public function tokenizeValue($value, $row_index = NULL) {
     if (strpos($value, '[') !== FALSE || strpos($value, '!') !== FALSE || strpos($value, '%') !== FALSE) {
       $fake_item = array(
         'alter_text' => TRUE,
@@ -340,7 +340,7 @@ abstract class FieldPluginBase extends HandlerBase {
   public function elementLabelClasses($row_index = NULL) {
     $classes = explode(' ', $this->options['element_label_class']);
     foreach ($classes as &$class) {
-      $class = $this->tokenize_value($class, $row_index);
+      $class = $this->tokenizeValue($class, $row_index);
       $class = drupal_clean_css_identifier($class);
     }
     return implode(' ', $classes);
@@ -352,7 +352,7 @@ abstract class FieldPluginBase extends HandlerBase {
   public function elementWrapperClasses($row_index = NULL) {
     $classes = explode(' ', $this->options['element_wrapper_class']);
     foreach ($classes as &$class) {
-      $class = $this->tokenize_value($class, $row_index);
+      $class = $this->tokenizeValue($class, $row_index);
       $class = drupal_clean_css_identifier($class);
     }
     return implode(' ', $classes);
@@ -535,6 +535,7 @@ abstract class FieldPluginBase extends HandlerBase {
     $form['style_settings'] = array(
       '#type' => 'details',
       '#title' => t('Style settings'),
+      '#collapsed' => TRUE,
       '#weight' => 99,
     );
 
@@ -683,6 +684,7 @@ abstract class FieldPluginBase extends HandlerBase {
     $form['alter'] = array(
       '#title' => t('Rewrite results'),
       '#type' => 'details',
+      '#collapsed' => TRUE,
       '#weight' => 100,
     );
 
@@ -883,6 +885,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
       $form['alter']['help'] = array(
         '#type' => 'details',
         '#title' => t('Replacement patterns'),
+        '#collapsed' => TRUE,
         '#value' => $output,
         '#states' => array(
           'visible' => array(
@@ -1021,6 +1024,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
     $form['empty_field_behavior'] = array(
       '#type' => 'details',
       '#title' => t('No results behavior'),
+      '#collapsed' => TRUE,
       '#weight' => 100,
     );
 
@@ -1236,7 +1240,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
     $suffix = '';
     if (!empty($alter['trim']) && !empty($alter['max_length'])) {
       $length = strlen($value);
-      $value = $this->render_trim_text($alter, $value);
+      $value = $this->renderTrimText($alter, $value);
       if ($this->options['alter']['more_link'] && strlen($value) < $length) {
         $tokens = $this->getRenderTokens($alter);
         $more_link_text = $this->options['alter']['more_link_text'] ? $this->options['alter']['more_link_text'] : t('more');
@@ -1286,7 +1290,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
   /**
    * Trim the field down to the specified length.
    */
-  function render_trim_text($alter, $value) {
+  public function renderTrimText($alter, $value) {
     if (!empty($alter['strip_tags'])) {
       // NOTE: It's possible that some external fields might override the
       // element type.

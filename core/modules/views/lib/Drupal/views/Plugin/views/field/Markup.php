@@ -54,7 +54,7 @@ class Markup extends FieldPluginBase {
     }
   }
 
-  function element_type($none_supported = FALSE, $default_empty = FALSE, $inline = FALSE) {
+  public function elementType($none_supported = FALSE, $default_empty = FALSE, $inline = FALSE) {
     if ($inline) {
       return 'span';
     }

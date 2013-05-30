@@ -317,23 +317,6 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::actionsElement().
-   */
-  protected function actionsElement(array $form, array &$form_state) {
-    $element = parent::actionsElement($form, $form_state);
-    $element['#weight'] = 0;
-    $view = $this->entity;
-    if (empty($view->changed)) {
-      $element['#attributes'] = array(
-        'class' => array(
-          'js-hide',
-        ),
-      );
-    }
-    return $element;
-  }
-
-  /**
    * Returns a renderable array representing the edit page for one display.
    */
   public function getDisplayTab($view) {
@@ -503,6 +486,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
     $build['columns']['third'] = array(
       '#type' => 'details',
       '#title' => t('Advanced'),
+      '#collapsed' => TRUE,
       '#theme_wrappers' => array('details', 'container'),
       '#attributes' => array(
         'class' => array(
@@ -513,7 +497,9 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
     );
 
     // Collapse the details by default.
-    $build['columns']['third']['#open'] = config('views.settings')->get('ui.show.advanced_column');
+    if (config('views.settings')->get('ui.show.advanced_column')) {
+      $build['columns']['third']['#collapsed'] = FALSE;
+    }
 
     // Each option (e.g. title, access, display as grid/table/list) fits into one
     // of several "buckets," or boxes (Format, Fields, Sort, and so on).
