@@ -15,7 +15,6 @@
  * @ingroup forms
  */
 function authorize_filetransfer_form($form, &$form_state) {
-  global $base_url;
   $form = array();
 
   // If possible, we want to post this form securely via HTTPS.
@@ -226,7 +225,6 @@ function authorize_filetransfer_form_validate($form, &$form_state) {
  * @see authorize_filetransfer_validate()
  */
 function authorize_filetransfer_form_submit($form, &$form_state) {
-  global $base_url;
   switch ($form_state['triggering_element']['#name']) {
     case 'process_updates':
 
