@@ -713,7 +713,6 @@ function list_themes($refresh = FALSE) {
 
   if (empty($list)) {
     $list = array();
-    $themes = array();
     // Extract from the database only when it is available.
     // Also check that the site is not in the middle of an install or update.
     if (!defined('MAINTENANCE_MODE')) {
@@ -2108,7 +2107,7 @@ function theme_table($variables) {
 
   // Format the table columns:
   if (count($colgroups)) {
-    foreach ($colgroups as $number => $colgroup) {
+    foreach ($colgroups as $colgroup) {
       $attributes = array();
 
       // Check if we're dealing with a simple or complex column
@@ -2129,7 +2128,6 @@ function theme_table($variables) {
       // Build colgroup
       if (is_array($cols) && count($cols)) {
         $output .= ' <colgroup' . new Attribute($attributes) . '>';
-        $i = 0;
         foreach ($cols as $col) {
           $output .= ' <col' . new Attribute($col) . ' />';
         }
@@ -2192,7 +2190,7 @@ function theme_table($variables) {
     $output .= "<tbody>\n";
     $flip = array('even' => 'odd', 'odd' => 'even');
     $class = 'even';
-    foreach ($rows as $number => $row) {
+    foreach ($rows as $row) {
       // Check if we're dealing with a simple or complex row
       if (isset($row['data'])) {
         $cells = $row['data'];
@@ -2602,8 +2600,6 @@ function _theme_table_cell($cell, $header = FALSE) {
  * @see template_process()
  */
 function template_preprocess(&$variables, $hook) {
-  global $user;
-
   // Tell all templates where they are located.
   $variables['directory'] = path_to_theme();
 
