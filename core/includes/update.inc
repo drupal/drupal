@@ -438,7 +438,7 @@ function update_prepare_stored_includes() {
   // Update language negotiation settings.
   foreach (language_types_get_all() as $language_type) {
     $negotiation = variable_get("language_negotiation_$language_type", array());
-    foreach ($negotiation as $method_id => &$method) {
+    foreach ($negotiation as &$method) {
       if (isset($method['file']) && $method['file'] == 'includes/locale.inc') {
         $method['file'] = 'core/modules/language/language.negotiation.inc';
       }
@@ -627,8 +627,6 @@ function update_prepare_d8_language() {
  * made which make it impossible to continue using the prior version.
  */
 function update_fix_d8_requirements() {
-  global $conf;
-
   if (drupal_get_installed_schema_version('system') < 8000 && !update_variable_get('update_d8_requirements', FALSE)) {
 
     // Make sure that file.module is enabled as it is required for the user
@@ -1506,7 +1504,7 @@ function update_7_to_8_install_default_config($type, $config_name) {
   if (!$file->exists($config_name)) {
     return FALSE;
   }
-  $default_data = $file->read($config_name);
+
   // Apply and save the default values.
   $config->setData($file->read($config_name))->save();
   return TRUE;
