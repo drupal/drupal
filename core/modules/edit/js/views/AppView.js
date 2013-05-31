@@ -267,7 +267,7 @@ Drupal.edit.AppView = Backbone.View.extend({
           that.model.set('activeModal', null);
           // Set the state that matches the user's action.
           var targetState = (action === 'discard') ? 'candidate' : 'saving';
-          that.model.get('activeEditor').set('state', 'candidate', { confirmed: true });
+          that.model.get('activeEditor').set('state', targetState, { confirmed: true });
         }
       });
       this.model.set('activeModal', modal);
