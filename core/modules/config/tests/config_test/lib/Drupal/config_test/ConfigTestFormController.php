@@ -35,6 +35,11 @@ class ConfigTestFormController extends EntityFormController {
         'exists' => 'config_test_load',
       ),
     );
+    $form['weight'] = array(
+      '#type' => 'weight',
+      '#title' => 'Weight',
+      '#default_value' => $entity->get('weight'),
+    );
     $form['style'] = array(
       '#type' => 'select',
       '#title' => 'Image style',

@@ -98,6 +98,28 @@ class ConfigEntityListTest extends WebTestBase {
     );
     $actual_items = $controller->buildRow($entity);
     $this->assertIdentical($expected_items, $actual_items, 'Return value from buildRow matches expected.');
+    // Test sorting.
+    $storage_controller = $controller->getStorageController();
+    $entity = $storage_controller->create(array(
+      'id' => 'alpha',
+      'label' => 'Alpha',
+      'weight' => 1,
+    ));
+    $entity->save();
+    $entity = $storage_controller->create(array(
+      'id' => 'omega',
+      'label' => 'Omega',
+      'weight' => 1,
+    ));
+    $entity->save();
+    $entity = $storage_controller->create(array(
+      'id' => 'beta',
+      'label' => 'Beta',
+      'weight' => 0,
+    ));
+    $entity->save();
+    $list = $controller->load();
+    $this->assertIdentical(array_keys($list), array('beta', 'dotted.default', 'alpha', 'omega'));
 
     // Test that config entities that do not support status, do not have
     // enable/disable operations.
@@ -172,7 +194,11 @@ class ConfigEntityListTest extends WebTestBase {
     $this->assertLink('Add test configuration');
     $this->clickLink('Add test configuration');
     $this->assertResponse(200);
-    $edit = array('label' => 'Antelope', 'id' => 'antelope');
+    $edit = array(
+      'label' => 'Antelope',
+      'id' => 'antelope',
+      'weight' => 1,
+    );
     $this->drupalPost(NULL, $edit, t('Save'));
 
     // Ensure that the entity's sort method was called.
@@ -185,8 +211,8 @@ class ConfigEntityListTest extends WebTestBase {
     $this->assertFieldByXpath('//td', 'antelope', "Machine name found for added 'Antelope' entity.");
 
     // Edit the entity using the operations link.
-    $this->assertLink('Edit');
-    $this->clickLink('Edit');
+    $this->assertLinkByHref('admin/structure/config_test/manage/antelope/edit');
+    $this->clickLink('Edit', 1);
     $this->assertResponse(200);
     $this->assertTitle('Edit Antelope | Drupal');
     $edit = array('label' => 'Albatross', 'id' => 'albatross');
@@ -199,8 +225,8 @@ class ConfigEntityListTest extends WebTestBase {
     $this->assertFieldByXpath('//td', 'albatross', "Machine name found for updated 'Albatross' entity.");
 
     // Delete the added entity using the operations link.
-    $this->assertLink('Delete');
-    $this->clickLink('Delete');
+    $this->assertLinkByHref('admin/structure/config_test/manage/albatross/delete');
+    $this->clickLink('Delete', 1);
     $this->assertResponse(200);
     $this->assertTitle('Are you sure you want to delete Albatross | Drupal');
     $this->drupalPost(NULL, array(), t('Delete'));
