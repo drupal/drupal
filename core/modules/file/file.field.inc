@@ -788,7 +788,7 @@ function theme_file_upload_help($variables) {
   $descriptions = array();
 
   if (strlen($description)) {
-    $descriptions[] = _filter_htmlcorrector($description);
+    $descriptions[] = $description;
   }
   if (isset($upload_validators['file_validate_size'])) {
     $descriptions[] = t('Files must be less than !size.', array('!size' => '<strong>' . format_size($upload_validators['file_validate_size'][0]) . '</strong>'));
