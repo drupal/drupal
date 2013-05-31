@@ -1781,7 +1781,6 @@ function _form_test_disabled_elements($form, &$form_state) {
   $form['color'] = array(
     '#type' => 'color',
     '#title' => 'color',
-    '#disabled' => TRUE,
     '#default_value' => '#0000ff',
     '#test_hijack_value' => '#ff0000',
     '#disabled' => TRUE,
