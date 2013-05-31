@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\core\Controller\DialogController.
+ * Contains \Drupal\Core\Controller\DialogController.
  */
 
-namespace Drupal\core\Controller;
+namespace Drupal\Core\Controller;
 
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenDialogCommand;
