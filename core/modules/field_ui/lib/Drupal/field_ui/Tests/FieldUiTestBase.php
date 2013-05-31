@@ -20,13 +20,13 @@ abstract class FieldUiTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'field_ui', 'field_test', 'taxonomy');
+  public static $modules = array('node', 'field_ui', 'field_test', 'taxonomy', 'image');
 
   function setUp() {
     parent::setUp();
 
     // Create test user.
-    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer node fields', 'administer node display', 'administer taxonomy', 'administer taxonomy_term fields', 'administer taxonomy_term display', 'administer users', 'administer user display'));
+    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer node fields', 'administer node display', 'administer taxonomy', 'administer taxonomy_term fields', 'administer taxonomy_term display', 'administer users', 'administer user display', 'bypass node access'));
     $this->drupalLogin($admin_user);
 
     // Create content type, with underscores.

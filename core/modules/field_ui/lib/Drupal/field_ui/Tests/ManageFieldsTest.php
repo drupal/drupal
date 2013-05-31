@@ -533,4 +533,35 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->assertNull(field_info_field($this->field_name), 'Field was deleted.');
   }
 
+  /**
+   * Tests that help descriptions render valid HTML.
+   */
+  function testHelpDescriptions() {
+    // Create an image field
+    entity_create('field_entity', array(
+      'field_name' => 'field_image',
+      'type' => 'image',
+    ))->save();
+
+    entity_create('field_instance', array(
+      'field_name' => 'field_image',
+      'entity_type' => 'node',
+      'label' => 'Image',
+      'bundle' => 'article',
+    ))->save();
+
+    $edit = array(
+      'instance[description]' => '<strong>Test with an upload field.',
+    );
+    $this->drupalPost('admin/structure/types/manage/article/fields/node.article.field_image', $edit, t('Save settings'));
+
+    $edit = array(
+      'instance[description]' => '<em>Test with a non upload field.',
+    );
+    $this->drupalPost('admin/structure/types/manage/article/fields/node.article.field_tags', $edit, t('Save settings'));
+
+    $this->drupalGet('node/add/article');
+    $this->assertRaw('<strong>Test with an upload field.</strong>');
+    $this->assertRaw('<em>Test with a non upload field.</em>');
+  }
 }
