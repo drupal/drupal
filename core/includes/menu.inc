@@ -13,6 +13,7 @@ use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
 use Drupal\menu_link\MenuLinkStorageController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Route;
 
 /**
  * @defgroup menu Menu system
@@ -778,17 +779,7 @@ function _menu_translate(&$router_item, $map, $to_arg = FALSE) {
   if (!empty($router_item['route_name'])) {
     $route_provider = Drupal::getContainer()->get('router.route_provider');
     $route = $route_provider->getRouteByName($router_item['route_name']);
-    $request = Request::create('/' . $router_item['href']);
-    $request->attributes->set('system_path', $router_item['href']);
-    // Attempt to match this path to provide a fully built request to the
-    // acccess checker.
-    try {
-      $request->attributes->add(Drupal::service('router.dynamic')->matchRequest($request));
-      $router_item['access'] = Drupal::service('access_manager')->check($route, $request);
-    }
-    catch (NotFoundHttpException $e) {
-      $router_item['access'] = FALSE;
-    }
+    $router_item['access'] = menu_item_route_access($route, $router_item['href']);
   }
   else {
     // @todo: Remove once all routes are converted.
@@ -926,8 +917,7 @@ function _menu_link_translate(&$item, $translate = FALSE) {
     // menu_tree_check_access() may set this ahead of time for links to nodes.
     if (!isset($item['access'])) {
       if ($route = $item->getRoute()) {
-        $request = Request::create('/' . $item['path']);
-        $item['access'] = drupal_container()->get('access_manager')->check($route, $request);
+        $item['access'] = menu_item_route_access($route, $item['href']);
       }
       elseif (!empty($item['load_functions']) && !_menu_load_objects($item, $map)) {
         // An error occurred loading an object.
@@ -954,6 +944,32 @@ function _menu_link_translate(&$item, $translate = FALSE) {
   }
 
   return $map;
+}
+
+/**
+ * Checks access to a menu item by mocking a request for a path.
+ *
+ * @param \Symfony\Component\Routing\Route $route
+ *   Router for the given menu item.
+ * @param string $href
+ *   Menu path as returned by $item['href'] of menu_get_item().
+ *
+ * @return bool
+ *   TRUE if the user has access or FALSE if the user should be presented
+ *   with access denied.
+ */
+function menu_item_route_access(Route $route, $href) {
+  $request = Request::create('/' . $href);
+  $request->attributes->set('system_path', $href);
+  // Attempt to match this path to provide a fully built request to the
+  // access checker.
+  try {
+    $request->attributes->add(Drupal::service('router.dynamic')->matchRequest($request));
+    return Drupal::service('access_manager')->check($route, $request);
+  }
+  catch (NotFoundHttpException $e) {
+    return FALSE;
+  }
 }
 
 /**

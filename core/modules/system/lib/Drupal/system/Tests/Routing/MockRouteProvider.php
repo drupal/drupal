@@ -37,10 +37,11 @@ class MockRouteProvider implements RouteProviderInterface {
   /**
    * Implements \Symfony\Cmf\Component\Routing\RouteProviderInterface::getRouteCollectionForRequest().
    *
-   * Not implemented at present as it is not needed.
+   * Simply return all routes to prevent
+   * \Symfony\Component\Routing\Exception\ResourceNotFoundException.
    */
   public function getRouteCollectionForRequest(Request $request) {
-
+    return $this->routes;
   }
 
   /**
