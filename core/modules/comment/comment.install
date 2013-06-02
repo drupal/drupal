@@ -336,6 +336,7 @@ function comment_field_schema($field) {
 function comment_update_dependencies() {
   // Node comment status have been turned to fields.
   $dependencies['field'][8003]['comment'] = 8006;
+  return $dependencies;
 }
 
 /**
