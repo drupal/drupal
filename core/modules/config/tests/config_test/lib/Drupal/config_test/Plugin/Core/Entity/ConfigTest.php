@@ -59,6 +59,13 @@ class ConfigTest extends ConfigEntityBase {
   public $label;
 
   /**
+   * The weight of the configuration entity.
+   *
+   * @var int
+   */
+  public $weight = 0;
+
+  /**
    * The image style to use.
    *
    * @var string

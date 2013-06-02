@@ -872,7 +872,7 @@ function views_get_handler($item, $type, $override = NULL) {
   }
 
   if (!$optional) {
-    debug(t("Missing handler: @table @field @type", array('@table' => $table, '@field' => $field, '@type' => $type)));
+    //debug(t("Missing handler: @table @field @type", array('@table' => $table, '@field' => $field, '@type' => $type)));
   }
 
   // Finally, use the 'broken' handler.

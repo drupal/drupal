@@ -46,9 +46,12 @@ class HelpController implements ControllerInterface {
    *   An HTML string representing the contents of help page.
    */
   public function helpMain() {
-    // Add CSS.
-    drupal_add_css(drupal_get_path('module', 'help') . '/help.css');
-    $output = '<h2>' . t('Help topics') . '</h2><p>' . t('Help is available on the following items:') . '</p>' . $this->helpLinksAsList();
+    $output = array(
+      '#attached' => array(
+        'css' => array(drupal_get_path('module', 'help') . '/help.css'),
+      ),
+      '#markup' => '<h2>' . t('Help topics') . '</h2><p>' . t('Help is available on the following items:') . '</p>' . $this->helpLinksAsList(),
+    );
     return $output;
   }
 

@@ -1385,9 +1385,9 @@ abstract class WebTestBase extends TestBase {
         $this->fail(t('Failed to set field @name to @value', array('@name' => $name, '@value' => $value)));
       }
       if (!$ajax && isset($submit)) {
-        $this->assertTrue($submit_matches, t('Found the @submit button', array('@submit' => $submit)));
+        $this->assertTrue($submit_matches, format_string('Found the @submit button', array('@submit' => $submit)));
       }
-      $this->fail(t('Found the requested form fields at @path', array('@path' => $path)));
+      $this->fail(format_string('Found the requested form fields at @path', array('@path' => $path)));
     }
   }
 

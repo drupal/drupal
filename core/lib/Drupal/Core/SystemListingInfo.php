@@ -28,7 +28,7 @@ class SystemListingInfo extends SystemListing {
     // For SimpleTest to be able to test modules packaged together with a
     // distribution we need to include the profile of the parent site (in
     // which test runs are triggered).
-    if (drupal_valid_test_ua()) {
+    if (drupal_valid_test_ua() && !drupal_installation_attempted()) {
       $testing_profile = config('simpletest.settings')->get('parent_profile');
       if ($testing_profile && $testing_profile != $profile) {
         $searchdir[] = drupal_get_path('profile', $testing_profile) . '/' . $directory;

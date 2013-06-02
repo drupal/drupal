@@ -64,12 +64,9 @@ class SimpleTestTest extends WebTestBase {
       )));
       $this->assertNoTitle('Foo');
 
-      // Make sure that we are locked out of the installer when prefixing
-      // using the user-agent header. This is an important security check.
       global $base_url;
-
-      $this->drupalGet($base_url . '/core/install.php', array('external' => TRUE));
-      $this->assertResponse(403, 'Cannot access install.php with a "simpletest" user-agent header.');
+      $this->drupalGet(url($base_url . '/core/install.php', array('external' => TRUE, 'absolute' => TRUE)));
+      $this->assertResponse(403, 'Cannot access install.php.');
 
       $user = $this->drupalCreateUser();
       $this->drupalLogin($user);

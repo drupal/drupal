@@ -1383,7 +1383,7 @@ function system_library_info() {
     'title' => 'Drupal tabbing manager',
     'version' => VERSION,
     'js' => array(
-      'core/misc/tabbingmanager.js' => array('group', JS_LIBRARY),
+      'core/misc/tabbingmanager.js' => array('group' => JS_LIBRARY),
     ),
     'dependencies' => array(
       array('system', 'jquery'),
@@ -2658,7 +2658,7 @@ function system_preprocess_block(&$variables) {
       break;
     case 'system_menu_block':
       $variables['attributes']['role'] = 'navigation';
-      $variables['attributes']['classes'][] = 'block-menu';
+      $variables['attributes']['class'][] = 'block-menu';
   }
 }
 
