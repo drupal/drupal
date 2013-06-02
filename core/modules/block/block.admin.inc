@@ -14,8 +14,11 @@ use Drupal\Core\Template\Attribute;
  * @see block_menu()
  */
 function block_admin_demo($theme = NULL) {
-  drupal_add_css(drupal_get_path('module', 'block') . '/block.admin.css');
-  return '';
+  return array(
+    '#attached' => array(
+      'css' => array(drupal_get_path('module', 'block') . '/block.admin.css'),
+    ),
+  );
 }
 
 /**
