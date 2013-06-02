@@ -134,11 +134,16 @@ class UrlTest extends WebTestBase {
   }
 
   /**
-   * Tests that theme_link() supports render arrays in 'text' parameter.
+   * Tests that link functions support render arrays as 'text'.
    */
-  function testLinkNestedRenderArrays() {
+  function testLinkRenderArrayText() {
     // Build a link with l() for reference.
     $l = l('foo', 'http://drupal.org');
+
+    // Test a renderable array passed to l().
+    $renderable_text = array('#markup' => 'foo');
+    $l_renderable_text = l($renderable_text, 'http://drupal.org');
+    $this->assertEqual($l_renderable_text, $l);
 
     // Test a themed link with plain text 'text'.
     $theme_link_plain_array = array(

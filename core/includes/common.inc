@@ -1631,8 +1631,8 @@ function drupal_http_header_attributes(array $attributes = array()) {
  * This keeps the context of the link title ('settings' in the example) for
  * translators.
  *
- * @param string $text
- *   The translated link text for the anchor tag.
+ * @param string|array $text
+ *   The link text for the anchor tag as a translated string or render array.
  * @param string $path
  *   The internal path or external URL being linked to, such as "node/34" or
  *   "http://example.com/foo". After the url() function is called to construct
@@ -1665,10 +1665,9 @@ function drupal_http_header_attributes(array $attributes = array()) {
  * @see theme_link()
  */
 function l($text, $path, array $options = array()) {
-  // Build a variables array to keep the structure of the alter consistent with
-  // theme_link().
+  // Start building a structured representation of our link to be altered later.
   $variables = array(
-    'text' => $text,
+    'text' => is_array($text) ? drupal_render($text) : $text,
     'path' => $path,
     'options' => $options,
   );

@@ -1673,14 +1673,12 @@ function theme_status_messages($variables) {
  *
  * @param $variables
  *   An associative array containing the keys 'text', 'path', and 'options'.
- *   See the l() function for information about these variables. However, unlike
- *   'text' in l(), both render arrays and strings are supported here.
+ *   See the l() function for information about these variables.
  *
  * @see l()
  */
 function theme_link($variables) {
-  $rendered_text = is_array($variables['text']) ? drupal_render($variables['text']) : $variables['text'];
-  return l($rendered_text, $variables['path'], $variables['options']);
+  return l($variables['text'], $variables['path'], $variables['options']);
 }
 
 /**
