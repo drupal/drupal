@@ -1116,7 +1116,7 @@ function node_update_8018() {
   foreach ($indexes as $index) {
     db_drop_index('node', $index);
   }
-  $fields = array('title', 'uid', 'status', 'created', 'changed', 'comment', 'promote', 'sticky');
+  $fields = array('title', 'uid', 'status', 'created', 'changed', 'promote', 'sticky');
   foreach ($fields as $field) {
     db_drop_field('node', $field);
   }
