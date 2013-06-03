@@ -5,7 +5,10 @@
  * Exposes global functionality for creating image styles.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\Language;
+use Drupal\field\Plugin\Core\Entity\Field;
+use Drupal\field\Plugin\Core\Entity\FieldInstance;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -369,7 +372,7 @@ function image_field_update_field($field, $prior_field, $has_data) {
   $fid_new = (isset($field['settings']['default_image']['fids']) ? $field['settings']['default_image']['fids'] : $field['settings']['default_image']);
   $fid_old = (isset($prior_field['settings']['default_image']['fids']) ? $prior_field['settings']['default_image']['fids'] : $prior_field['settings']['default_image']);
 
-  $file_new = $fid_new ? file_load($fid_new[0]) : FALSE;
+  $file_new = $fid_new ? file_load($fid_new) : FALSE;
 
   if ($fid_new != $fid_old) {
 
@@ -1043,4 +1046,27 @@ function image_filter_keyword($value, $current_pixels, $new_pixels) {
  */
 function _image_effect_definitions_sort($a, $b) {
   return strcasecmp($a['name'], $b['name']);
+}
+
+/**
+ * Implements hook_entity_presave().
+ *
+ * Transforms default image of image field from array into single value at save.
+ */
+function image_entity_presave(EntityInterface $entity, $type) {
+  $field = FALSE;
+  if ($entity instanceof FieldInstance) {
+    $field = $entity->getField();
+  }
+  elseif ($entity instanceof Field) {
+    $field = $entity;
+  }
+  if ($field && $field->type == 'image' && is_array($entity->settings['default_image'])) {
+    if (!empty($entity->settings['default_image'][0])) {
+      $entity->settings['default_image'] = $entity->settings['default_image'][0];
+    }
+    else {
+      $entity->settings['default_image'] = 0;
+    }
+  }
 }

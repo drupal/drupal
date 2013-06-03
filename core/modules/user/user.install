@@ -733,7 +733,7 @@ function user_update_8011() {
       'title_field' => 0,
       'max_resolution' => update_variable_get('user_picture_dimensions', '85x85'),
       'min_resolution' => '',
-      'default_image' => !empty($default_image_fid) ? $default_image_fid : 0,
+      'default_image' => !empty($default_image_fid) ? array($default_image_fid) : array(),
     ),
   );
   _update_7000_field_create_instance($field, $instance);

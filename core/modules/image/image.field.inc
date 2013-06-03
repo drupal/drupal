@@ -18,7 +18,7 @@ function image_field_info() {
       'description' => t('This field stores the ID of an image file as an integer value.'),
       'settings' => array(
         'uri_scheme' => file_default_scheme(),
-        'default_image' => array(),
+        'default_image' => 0,
         'column_groups' => array(
           'file' => array(
             'label' => t('File'),
@@ -44,7 +44,7 @@ function image_field_info() {
         'title_field_required' => 0,
         'max_resolution' => '',
         'min_resolution' => '',
-        'default_image' => array(),
+        'default_image' => 0,
       ),
       'default_widget' => 'image_image',
       'default_formatter' => 'image',
@@ -79,7 +79,7 @@ function image_field_settings_form($field, $instance) {
     '#title' => t('Default image'),
     '#type' => 'managed_file',
     '#description' => t('If no image is uploaded, this image will be shown on display.'),
-    '#default_value' => $field['settings']['default_image'],
+    '#default_value' => empty($field['settings']['default_image']) ? array() : array($field['settings']['default_image']),
     '#upload_location' => $settings['uri_scheme'] . '://default_images/',
   );
 
@@ -197,7 +197,7 @@ function image_field_instance_settings_form($field, $instance) {
     '#title' => t('Default image'),
     '#type' => 'managed_file',
     '#description' => t("If no image is uploaded, this image will be shown on display and will override the field's default image."),
-    '#default_value' => $settings['default_image'],
+    '#default_value' => empty($settings['default_image']) ? array() : array($settings['default_image']),
     '#upload_location' => $field['settings']['uri_scheme'] . '://default_images/',
   );
 
@@ -234,11 +234,11 @@ function image_field_prepare_view($entity_type, $entities, $field, $instances, $
       $fid = array();
       // Use the default for the instance if one is available.
       if (!empty($instances[$id]['settings']['default_image'])) {
-        $fid = $instances[$id]['settings']['default_image'];
+        $fid = array($instances[$id]['settings']['default_image']);
       }
       // Otherwise, use the default for the field.
       elseif (!empty($field['settings']['default_image'])) {
-        $fid = $field['settings']['default_image'];
+        $fid = array($field['settings']['default_image']);
       }
 
       // Add the default image if one is found.
