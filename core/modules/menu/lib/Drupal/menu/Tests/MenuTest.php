@@ -329,7 +329,7 @@ class MenuTest extends WebTestBase {
     ));
     $this->assertResponse(200);
     $json = drupal_json_decode($response);
-    $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="block-configure odd first"><a href="' . base_path() . 'admin/structure/block/manage/' . $block->id() . '/configure?destination=test-page">Configure block</a></li><li class="menu-edit even last"><a href="' . base_path() . 'admin/structure/menu/manage/tools/edit?destination=test-page">Edit menu</a></li></ul>');
+    $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="block-configure odd first"><a href="' . base_path() . 'admin/structure/block/manage/' . $block->id() . '?destination=test-page">Configure block</a></li><li class="menu-edit even last"><a href="' . base_path() . 'admin/structure/menu/manage/tools?destination=test-page">Edit menu</a></li></ul>');
   }
 
   /**

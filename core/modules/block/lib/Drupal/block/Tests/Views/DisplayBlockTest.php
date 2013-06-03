@@ -174,7 +174,7 @@ class DisplayBlockTest extends ViewTestBase {
     ));
     $this->assertResponse(200);
     $json = drupal_json_decode($response);
-    $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="block-configure odd first"><a href="' . base_path() . 'admin/structure/block/manage/' . $block->id() . '/configure?destination=test-page">Configure block</a></li><li class="views-ui-edit even last"><a href="' . base_path() . 'admin/structure/views/view/test_view_block/edit/block_1?destination=test-page">Edit view</a></li></ul>');
+    $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="block-configure odd first"><a href="' . base_path() . 'admin/structure/block/manage/' . $block->id() . '?destination=test-page">Configure block</a></li><li class="views-ui-edit even last"><a href="' . base_path() . 'admin/structure/views/view/test_view_block/edit/block_1?destination=test-page">Edit view</a></li></ul>');
   }
 
 }
