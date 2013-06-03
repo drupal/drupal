@@ -224,7 +224,7 @@ function node_delete_confirm($form, &$form_state, $node) {
 function node_delete_confirm_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {
     $node = node_load($form_state['values']['nid']);
-    node_delete($form_state['values']['nid']);
+    $node->delete();
     watchdog('content', '@type: deleted %title.', array('@type' => $node->type, '%title' => $node->label()));
     drupal_set_message(t('@type %title has been deleted.', array('@type' => node_get_type_label($node), '%title' => $node->label())));
   }

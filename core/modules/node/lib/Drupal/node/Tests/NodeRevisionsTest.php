@@ -140,7 +140,7 @@ class NodeRevisionsTest extends NodeTestBase {
     // Save this as a non-default revision.
     $new_node_revision->setNewRevision();
     $new_node_revision->isDefaultRevision = FALSE;
-    node_save($new_node_revision);
+    $new_node_revision->save();
 
     $this->drupalGet("node/$node->nid");
     $this->assertNoText($new_body, 'Revision body text is not present on default version of node.');

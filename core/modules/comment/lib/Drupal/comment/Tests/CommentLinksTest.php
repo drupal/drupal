@@ -170,7 +170,7 @@ class CommentLinksTest extends CommentTestBase {
     $this->setCommentAnonymous($info['contact']);
     if ($this->node->comment[Language::LANGCODE_NOT_SPECIFIED][0]['status'] != $info['comments']) {
       $this->node->comment[Language::LANGCODE_NOT_SPECIFIED][0]['status'] = $info['comments'];
-      node_save($this->node);
+      $this->node->save();
     }
 
     // Change user settings.

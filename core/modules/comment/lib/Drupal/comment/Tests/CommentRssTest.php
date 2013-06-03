@@ -7,8 +7,6 @@
 
 namespace Drupal\comment\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests for Comment module integration with RSS feeds.
  */
@@ -41,8 +39,8 @@ class CommentRssTest extends CommentTestBase {
     $this->assertRaw($raw, 'Comments as part of RSS feed.');
 
     // Hide comments from RSS feed and check presence.
-    $this->node->comment = array(Language::LANGCODE_NOT_SPECIFIED => array(array('status' => COMMENT_HIDDEN)));
-    node_save($this->node);
+    $this->node->set('comment', COMMENT_HIDDEN);
+    $this->node->save();
     $this->drupalGet('rss.xml');
     $this->assertNoRaw($raw, 'Hidden comments is not a part of RSS feed.');
   }

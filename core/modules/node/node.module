@@ -985,40 +985,6 @@ function node_submit(EntityInterface $node) {
 }
 
 /**
- * Saves changes to a node or adds a new node.
- *
- * @param \Drupal\Core\Entity\EntityInterface $node
- *   The $node entity to be saved. If $node->nid is
- *   omitted (or $node->is_new is TRUE), a new node will be added.
- */
-function node_save(EntityInterface $node) {
-  $node->save();
-}
-
-/**
- * Deletes a node.
- *
- * @param $nid
- *   A node ID.
- */
-function node_delete($nid) {
-  node_delete_multiple(array($nid));
-}
-
-/**
- * Deletes multiple nodes.
- *
- * @param $nids
- *   An array of node IDs.
- *
- * @see hook_node_predelete()
- * @see hook_node_delete()
- */
-function node_delete_multiple($nids) {
-  entity_delete_multiple('node', $nids);
-}
-
-/**
  * Deletes a node revision.
  *
  * @param $revision_id
@@ -1469,7 +1435,7 @@ function node_user_predelete($account) {
     ->condition('uid', $account->uid)
     ->execute()
     ->fetchCol();
-  node_delete_multiple($nodes);
+  entity_delete_multiple('node', $nodes);
   // Delete old revisions.
   $revisions = db_query('SELECT DISTINCT vid FROM {node_field_revision} WHERE uid = :uid', array(':uid' => $account->uid))->fetchCol();
   foreach ($revisions as $revision) {

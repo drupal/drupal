@@ -91,28 +91,20 @@ class SearchCommentCountToggleTest extends SearchTestBase {
     $this->assertText(t('1 comment'), 'Non-empty comment count displays for nodes with comment status set to Open');
 
     // Test comment count display for nodes with comment status set to Closed
-    $this->searchable_nodes['0 comments']->comment = array(
-      Language::LANGCODE_NOT_SPECIFIED => array(array('status' => COMMENT_CLOSED))
-    );
-    node_save($this->searchable_nodes['0 comments']);
-    $this->searchable_nodes['1 comment']->comment = array(
-      Language::LANGCODE_NOT_SPECIFIED => array(array('status' => COMMENT_CLOSED))
-    );
-    node_save($this->searchable_nodes['1 comment']);
+    $this->searchable_nodes['0 comments']->set('comment', COMMENT_CLOSED);
+    $this->searchable_nodes['0 comments']->save();
+    $this->searchable_nodes['1 comment']->set('comment', COMMENT_CLOSED);
+    $this->searchable_nodes['1 comment']->save();
 
     $this->drupalPost('', $edit, t('Search'));
     $this->assertNoText(t('0 comments'), 'Empty comment count does not display for nodes with comment status set to Closed');
     $this->assertText(t('1 comment'), 'Non-empty comment count displays for nodes with comment status set to Closed');
 
     // Test comment count display for nodes with comment status set to Hidden
-    $this->searchable_nodes['0 comments']->comment = array(
-      Language::LANGCODE_NOT_SPECIFIED => array(array('status' => COMMENT_HIDDEN))
-    );;
-    node_save($this->searchable_nodes['0 comments']);
-    $this->searchable_nodes['1 comment']->comment = array(
-      Language::LANGCODE_NOT_SPECIFIED => array(array('status' => COMMENT_HIDDEN))
-    );;
-    node_save($this->searchable_nodes['1 comment']);
+    $this->searchable_nodes['0 comments']->set('comment', COMMENT_HIDDEN);
+    $this->searchable_nodes['0 comments']->save();
+    $this->searchable_nodes['1 comment']->set('comment', COMMENT_HIDDEN);
+    $this->searchable_nodes['1 comment']->save();
 
     $this->drupalPost('', $edit, t('Search'));
     $this->assertNoText(t('0 comments'), 'Empty comment count does not display for nodes with comment status set to Hidden');

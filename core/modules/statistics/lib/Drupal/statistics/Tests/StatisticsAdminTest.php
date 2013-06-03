@@ -122,7 +122,7 @@ class StatisticsAdminTest extends WebTestBase {
       ->fetchAssoc();
     $this->assertEqual($result['nid'], $this->test_node->nid, 'Verifying that the node counter is incremented.');
 
-    node_delete($this->test_node->nid);
+    $this->test_node->delete();
 
     $result = db_select('node_counter', 'n')
       ->fields('n', array('nid'))
