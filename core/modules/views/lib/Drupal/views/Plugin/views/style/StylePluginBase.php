@@ -75,7 +75,7 @@ abstract class StylePluginBase extends PluginBase {
   /**
     * Stores the rendered field values, keyed by the row index and field name.
     *
-    * @see \Drupal\views\Plugin\views\style\StylePluginBase::render_fields()
+    * @see \Drupal\views\Plugin\views\style\StylePluginBase::renderFields()
     * @see \Drupal\views\Plugin\views\style\StylePluginBase::get_field()
     *
     * @var array|null
@@ -540,7 +540,7 @@ abstract class StylePluginBase extends PluginBase {
     }
 
     // Make sure fields are rendered
-    $this->render_fields($this->view->result);
+    $this->renderFields($this->view->result);
     $sets = array();
     if ($groupings) {
       foreach ($records as $index => $row) {
@@ -619,7 +619,7 @@ abstract class StylePluginBase extends PluginBase {
    * @param array $result
    *   The result array from $view->result
    */
-  protected function render_fields(array $result) {
+  protected function renderFields(array $result) {
     if (!$this->usesFields()) {
       return;
     }
@@ -658,7 +658,7 @@ abstract class StylePluginBase extends PluginBase {
    */
   public function get_field($index, $field) {
     if (!isset($this->rendered_fields)) {
-      $this->render_fields($this->view->result);
+      $this->renderFields($this->view->result);
     }
 
     if (isset($this->rendered_fields[$index][$field])) {
