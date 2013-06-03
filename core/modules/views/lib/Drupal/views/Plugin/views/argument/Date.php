@@ -57,7 +57,7 @@ class Date extends Formula {
    * Set the empty argument value to the current date,
    * formatted appropriately for this argument.
    */
-  function get_default_argument($raw = FALSE) {
+  public function getDefaultArgument($raw = FALSE) {
     if (!$raw && $this->options['default_argument_type'] == 'date') {
       return date($this->argFormat, REQUEST_TIME);
     }
@@ -74,7 +74,7 @@ class Date extends Formula {
       }
 
       if (empty($node)) {
-        return parent::get_default_argument();
+        return parent::getDefaultArgument();
       }
       elseif ($this->options['default_argument_type'] == 'node_created') {
         return date($this->argFormat, $node->created);
@@ -84,7 +84,7 @@ class Date extends Formula {
       }
     }
 
-    return parent::get_default_argument($raw);
+    return parent::getDefaultArgument($raw);
   }
 
   /**

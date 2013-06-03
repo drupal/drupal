@@ -741,7 +741,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
   /**
    * Get a default argument, if available.
    */
-  function get_default_argument() {
+  public function getDefaultArgument() {
     $plugin = $this->getPlugin('argument_default');
     if ($plugin) {
       return $plugin->get_argument();
@@ -1015,7 +1015,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     // processing the arguments.
     $argument = clone $this;
     if (!isset($arg) && $argument->hasDefaultArgument()) {
-      $arg = $argument->get_default_argument();
+      $arg = $argument->getDefaultArgument();
 
       // remember that this argument was computed, not passed on the URL.
       $this->is_default = TRUE;
