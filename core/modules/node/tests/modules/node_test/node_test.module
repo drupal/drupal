@@ -177,6 +177,6 @@ function node_test_node_insert(EntityInterface $node) {
   // Set the node title to the node ID and save.
   if ($node->title == 'new') {
     $node->title = 'Node '. $node->nid;
-    node_save($node);
+    $node->save();
   }
 }

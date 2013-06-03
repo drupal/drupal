@@ -90,9 +90,9 @@ class SearchCommentCountToggleTest extends SearchTestBase {
 
     // Test comment count display for nodes with comment status set to Closed
     $this->searchable_nodes['0 comments']->comment = COMMENT_NODE_CLOSED;
-    node_save($this->searchable_nodes['0 comments']);
+    $this->searchable_nodes['0 comments']->save();
     $this->searchable_nodes['1 comment']->comment = COMMENT_NODE_CLOSED;
-    node_save($this->searchable_nodes['1 comment']);
+    $this->searchable_nodes['1 comment']->save();
 
     $this->drupalPost('', $edit, t('Search'));
     $this->assertNoText(t('0 comments'), 'Empty comment count does not display for nodes with comment status set to Closed');
@@ -100,9 +100,9 @@ class SearchCommentCountToggleTest extends SearchTestBase {
 
     // Test comment count display for nodes with comment status set to Hidden
     $this->searchable_nodes['0 comments']->comment = COMMENT_NODE_HIDDEN;
-    node_save($this->searchable_nodes['0 comments']);
+    $this->searchable_nodes['0 comments']->save();
     $this->searchable_nodes['1 comment']->comment = COMMENT_NODE_HIDDEN;
-    node_save($this->searchable_nodes['1 comment']);
+    $this->searchable_nodes['1 comment']->save();
 
     $this->drupalPost('', $edit, t('Search'));
     $this->assertNoText(t('0 comments'), 'Empty comment count does not display for nodes with comment status set to Hidden');

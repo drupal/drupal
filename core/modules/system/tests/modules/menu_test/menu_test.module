@@ -14,7 +14,7 @@ function menu_test_menu() {
   // The name of the menu changes during the course of the test. Using a $_GET.
   $items['menu_name_test'] = array(
     'title' => 'Test menu_name router item',
-    'page callback' => 'node_save',
+    'page callback' => 'menu_test_callback',
     'menu_name' => menu_test_menu_name(),
   );
   // This item is of type MENU_CALLBACK with no parents to test title.

@@ -51,7 +51,7 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
         $revision = clone $nodes[$type];
         $revision->setNewRevision();
         $revision->log = $this->randomName(32);
-        node_save($revision);
+        $revision->save();
         $this->node_revisions[$type][] = $revision;
       }
     }

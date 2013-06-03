@@ -229,7 +229,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->assertFieldByXpath('//input[@id="edit-field-settings-uri-scheme-public" and @disabled="disabled"]', 'public', t('Upload destination setting disabled.'));
 
     // Delete node and confirm that setting could be changed.
-    node_delete($nid);
+    $node->delete();
     $this->drupalGet("admin/structure/types/manage/$type_name/fields/$instance->id/field");
     $this->assertFieldByXpath('//input[@id="edit-field-settings-uri-scheme-public" and not(@disabled)]', 'public', t('Upload destination setting enabled.'));
   }

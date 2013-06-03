@@ -95,7 +95,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $this->assertAllowedValuesInput("0|Zero", 'some values are being removed while currently in use', 'Values in use cannot be removed.');
 
     // Delete the node, remove the value.
-    node_delete($node->nid);
+    $node->delete();
     $string = "0|Zero";
     $array = array('0' => 'Zero');
     $this->assertAllowedValuesInput($string, $array, 'Values not in use can be removed.');
@@ -145,7 +145,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $this->assertAllowedValuesInput("0|Zero", 'some values are being removed while currently in use', 'Values in use cannot be removed.');
 
     // Delete the node, remove the value.
-    node_delete($node->nid);
+    $node->delete();
     $string = "0|Zero";
     $array = array('0' => 'Zero');
     $this->assertAllowedValuesInput($string, $array, 'Values not in use can be removed.');
@@ -200,7 +200,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $this->assertAllowedValuesInput("Zero", 'some values are being removed while currently in use', 'Values in use cannot be removed.');
 
     // Delete the node, remove the value.
-    node_delete($node->nid);
+    $node->delete();
     $string = "Zero";
     $array = array('Zero' => 'Zero');
     $this->assertAllowedValuesInput($string, $array, 'Values not in use can be removed.');

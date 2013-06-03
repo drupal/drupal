@@ -188,7 +188,7 @@ class SearchRankingTest extends SearchTestBase {
       $this->assertEqual($set[0]['node']->nid, $node->nid, 'Search tag ranking for "&lt;' . $tag . '&gt;" order.');
 
       // Delete node so it doesn't show up in subsequent search results.
-      node_delete($node->nid);
+      $node->delete();
     }
   }
 

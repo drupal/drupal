@@ -170,7 +170,7 @@ class CommentLinksTest extends CommentTestBase {
     variable_set('comment_anonymous_' . $this->node->type, $info['contact']);
     if ($this->node->comment != $info['comments']) {
       $this->node->comment = $info['comments'];
-      node_save($this->node);
+      $this->node->save();
     }
 
     // Change user settings.

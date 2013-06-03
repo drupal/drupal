@@ -40,7 +40,7 @@ class CommentRssTest extends CommentTestBase {
 
     // Hide comments from RSS feed and check presence.
     $this->node->comment = COMMENT_NODE_HIDDEN;
-    node_save($this->node);
+    $this->node->save();
     $this->drupalGet('rss.xml');
     $this->assertNoRaw($raw, 'Hidden comments is not a part of RSS feed.');
   }

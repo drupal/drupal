@@ -324,7 +324,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     ));
 
     $_SESSION['entity_crud_hook_test'] = array();
-    node_delete($node->nid);
+    $node->delete();
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_node_predelete called',

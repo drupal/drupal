@@ -78,7 +78,7 @@ class TrackerTest extends WebTestBase {
     $this->assertLink(t('My recent content'), 0, 'User tab shows up on the global tracker page.');
 
     // Delete a node and ensure it no longer appears on the tracker.
-    node_delete($published->nid);
+    $published->delete();
     $this->drupalGet('tracker');
     $this->assertNoText($published->label(), 'Deleted node do not show up in the tracker listing.');
   }

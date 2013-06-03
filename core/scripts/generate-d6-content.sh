@@ -131,7 +131,7 @@ for ($i = 0; $i < 24; $i++) {
   else {
     $node->taxonomy = $node_terms;
   }
-  node_save($node);
+  $node->save();
   path_set_alias("node/$node->nid", "content/$node->created");
   if ($node->revision) {
     $user = user_load($uid + 3);
@@ -140,7 +140,7 @@ for ($i = 0; $i < 24; $i++) {
     $node->body = str_repeat("node revision body ($node->type) - $i", 100);
     $node->log = "added $i revision";
     $node->taxonomy = $node_terms;
-    node_save($node);
+    $node->save();
   }
 }
 
@@ -171,7 +171,7 @@ for ($i = 0; $i < 12; $i++) {
   for ($c = 0; $c < $nbchoices; $c++) {
     $node->choice[] = array('chtext' => "Choice $c for poll $i");
   }
-  node_save($node);
+  $node->save();
   path_set_alias("node/$node->nid", "content/poll/$i");
   path_set_alias("node/$node->nid/results", "content/poll/$i/results");
 
@@ -202,5 +202,5 @@ $node->revision = 0;
 $node->promote = 0;
 $node->created = 1263769200;
 $node->log = "added $i node";
-node_save($node);
+$node->save();
 path_set_alias("node/$node->nid", "content/1263769200");

@@ -384,7 +384,7 @@ class BookTest extends WebTestBase {
      foreach ($nodes as $node) {
        $nids[] = $node->nid;
      }
-     node_delete_multiple($nids);
+     entity_delete_multiple('node', $nids);
      $this->drupalPost('node/' . $this->book->nid . '/outline/remove', $edit, t('Remove'));
      $node = node_load($this->book->nid, TRUE);
      $this->assertTrue(empty($node->book), 'Deleting childless top-level book node properly allowed.');

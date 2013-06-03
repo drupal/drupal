@@ -1188,7 +1188,7 @@ function taxonomy_build_node_index($node) {
   // only data for current, published nodes.
   $status = NULL;
   if (config('taxonomy.settings')->get('maintain_index_table')) {
-    // If a node property is not set in the node object when node_save() is
+    // If a node property is not set in the node object when $node->save() is
     // called, the old value from $node->original is used.
     if (!empty($node->original)) {
       $status = (int)(!empty($node->status) || (!isset($node->status) && !empty($node->original->status)));
@@ -1207,7 +1207,7 @@ function taxonomy_build_node_index($node) {
       $field_name = $instance['field_name'];
       $field = field_info_field($field_name);
       if ($field['module'] == 'taxonomy' && $field['storage']['type'] == 'field_sql_storage') {
-        // If a field value is not set in the node object when node_save() is
+        // If a field value is not set in the node object when $node->save() is
         // called, the old value from $node->original is used.
         if (isset($node->{$field_name})) {
           $items = $node->{$field_name};

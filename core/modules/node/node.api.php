@@ -39,7 +39,7 @@ use Drupal\Core\Entity\EntityInterface;
  * - Instantiating a new node:
  *   - hook_node_create() (all)
  *   - hook_entity_create() (all)
- * - Creating a new node (calling node_save() on a new node):
+ * - Creating a new node (calling $node->save() on a new node):
  *   - field_attach_presave()
  *   - hook_node_presave() (all)
  *   - hook_entity_presave() (all)
@@ -50,7 +50,7 @@ use Drupal\Core\Entity\EntityInterface;
  *   - hook_entity_insert() (all)
  *   - hook_node_access_records() (all)
  *   - hook_node_access_records_alter() (all)
- * - Updating an existing node (calling node_save() on an existing node):
+ * - Updating an existing node (calling $node->save() on an existing node):
  *   - field_attach_presave()
  *   - hook_node_presave() (all)
  *   - hook_entity_presave() (all)
@@ -89,7 +89,7 @@ use Drupal\Core\Entity\EntityInterface;
  *   - hook_entity_view() (all)
  *   - hook_node_view_alter() (all)
  *   - hook_entity_view_alter() (all)
- * - Deleting a node (calling node_delete() or node_delete_multiple()):
+ * - Deleting a node (calling $node->delete() or entity_delete_multiple()):
  *   - Node is loaded (see Loading section above)
  *   - hook_delete() (node-type-specific)
  *   - hook_node_predelete() (all)
@@ -462,7 +462,7 @@ function hook_node_operations() {
 /**
  * Act before node deletion.
  *
- * This hook is invoked from node_delete_multiple() after the type-specific
+ * This hook is invoked from entity_delete_multiple() after the type-specific
  * hook_delete() has been invoked, but before hook_entity_predelete() and
  * field_attach_delete() are called, and before the node is removed from the
  * node table in the database.
@@ -471,7 +471,7 @@ function hook_node_operations() {
  *   The node that is about to be deleted.
  *
  * @see hook_node_predelete()
- * @see node_delete_multiple()
+ * @see entity_delete_multiple()
  * @ingroup node_api_hooks
  */
 function hook_node_predelete(\Drupal\Core\Entity\EntityInterface $node) {
@@ -483,14 +483,14 @@ function hook_node_predelete(\Drupal\Core\Entity\EntityInterface $node) {
 /**
  * Respond to node deletion.
  *
- * This hook is invoked from node_delete_multiple() after field_attach_delete()
+ * This hook is invoked from entity_delete_multiple() after field_attach_delete()
  * has been called and after the node has been removed from the database.
  *
  * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node that has been deleted.
  *
  * @see hook_node_predelete()
- * @see node_delete_multiple()
+ * @see entity_delete_multiple()
  * @ingroup node_api_hooks
  */
 function hook_node_delete(\Drupal\Core\Entity\EntityInterface $node) {
@@ -518,7 +518,7 @@ function hook_node_revision_delete(\Drupal\Core\Entity\EntityInterface $node) {
 /**
  * Respond to creation of a new node.
  *
- * This hook is invoked from node_save() after the database query that will
+ * This hook is invoked from $node->save() after the database query that will
  * insert the node into the node table is scheduled for execution, after the
  * type-specific hook_insert() is invoked, and after field_attach_insert() is
  * called.
@@ -526,10 +526,10 @@ function hook_node_revision_delete(\Drupal\Core\Entity\EntityInterface $node) {
  * Note that when this hook is invoked, the changes have not yet been written to
  * the database, because a database transaction is still in progress. The
  * transaction is not finalized until the save operation is entirely completed
- * and node_save() goes out of scope. You should not rely on data in the
+ * and $node->save() goes out of scope. You should not rely on data in the
  * database at this time as it is not updated yet. You should also note that any
  * write/update database queries executed from this hook are also not committed
- * immediately. Check node_save() and db_transaction() for more info.
+ * immediately. Check $node->save() and db_transaction() for more info.
  *
  * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node that is being created.
@@ -718,7 +718,7 @@ function hook_node_search_result(\Drupal\Core\Entity\EntityInterface $node, $lan
 /**
  * Act on a node being inserted or updated.
  *
- * This hook is invoked from node_save() before the node is saved to the
+ * This hook is invoked from $node->save() before the node is saved to the
  * database.
  *
  * @param \Drupal\Core\Entity\EntityInterface $node
@@ -738,7 +738,7 @@ function hook_node_presave(\Drupal\Core\Entity\EntityInterface $node) {
 /**
  * Respond to updates to a node.
  *
- * This hook is invoked from node_save() after the database query that will
+ * This hook is invoked from $node->save() after the database query that will
  * update node in the node table is scheduled for execution, after the
  * type-specific hook_update() is invoked, and after field_attach_update() is
  * called.
@@ -746,10 +746,10 @@ function hook_node_presave(\Drupal\Core\Entity\EntityInterface $node) {
  * Note that when this hook is invoked, the changes have not yet been written to
  * the database, because a database transaction is still in progress. The
  * transaction is not finalized until the save operation is entirely completed
- * and node_save() goes out of scope. You should not rely on data in the
+ * and $node->save() goes out of scope. You should not rely on data in the
  * database at this time as it is not updated yet. You should also note that any
  * write/update database queries executed from this hook are also not committed
- * immediately. Check node_save() and db_transaction() for more info.
+ * immediately. Check $node->save() and db_transaction() for more info.
  *
  * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node that is being updated.
@@ -1092,7 +1092,7 @@ function hook_node_type_delete($info) {
  * This hook is invoked only on the module that defines the node's content type
  * (use hook_node_delete() to respond to all node deletions).
  *
- * This hook is invoked from node_delete_multiple() after the node has been
+ * This hook is invoked from entity_delete_multiple() after the node has been
  * removed from the node table in the database, before hook_node_delete() is
  * invoked, and before field_attach_delete() is called.
  *
@@ -1200,7 +1200,7 @@ function hook_form(\Drupal\Core\Entity\EntityInterface $node, &$form_state) {
  * This hook is invoked only on the module that defines the node's content type
  * (use hook_node_insert() to act on all node insertions).
  *
- * This hook is invoked from node_save() after the node is inserted into the
+ * This hook is invoked from $node->save() after the node is inserted into the
  * node table in the database, before field_attach_insert() is called, and
  * before hook_node_insert() is invoked.
  *
@@ -1259,7 +1259,7 @@ function hook_load($nodes) {
  * This hook is invoked only on the module that defines the node's content type
  * (use hook_node_update() to act on all node updates).
  *
- * This hook is invoked from node_save() after the node is updated in the
+ * This hook is invoked from $node->save() after the node is updated in the
  * node table in the database, before field_attach_update() is called, and
  * before hook_node_update() is invoked.
  *
