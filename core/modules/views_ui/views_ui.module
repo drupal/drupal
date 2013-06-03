@@ -349,7 +349,7 @@ function views_ui_contextual_links_view_alter(&$element, $items) {
   // screen.
   elseif (!empty($element['#links']['views-ui-edit'])) {
     $display_id = $element['#contextual_links']['views_ui'][2]['display_id'];
-    $element['#links']['views-ui-edit']['href'] .= '/' . $display_id;
+    $element['#links']['views-ui-edit']['href'] .= '/edit/' . $display_id;
   }
 }
 

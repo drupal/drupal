@@ -2202,6 +2202,13 @@ function menu_contextual_links($module, $parent_path, $args) {
     if (!$item['access']) {
       continue;
     }
+
+    // If this item is a default local task, rewrite the href to link to its
+    // parent item.
+    if ($item['type'] == MENU_DEFAULT_LOCAL_TASK) {
+      $item['href'] = $item['tab_parent_href'];
+    }
+
     // All contextual links are keyed by the actual "task" path argument,
     // prefixed with the name of the implementing module.
     $links[$module . '-' . $key] = $item;

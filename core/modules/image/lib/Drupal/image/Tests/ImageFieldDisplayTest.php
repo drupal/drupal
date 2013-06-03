@@ -232,7 +232,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Clear field info cache so the new default image is detected.
     field_info_cache_clear();
     $field = field_info_field($field_name);
-    $image = file_load($field['settings']['default_image'][0]);
+    $image = file_load($field['settings']['default_image']);
     $this->assertTrue($image->status == FILE_STATUS_PERMANENT, 'The default image status is permanent.');
     $default_output = theme('image', array('uri' => $image->uri));
     $this->drupalGet('node/' . $node->nid);
@@ -274,7 +274,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     field_info_cache_clear();
 
     $private_field = field_info_field($private_field_name);
-    $image = file_load($private_field['settings']['default_image'][0]);
+    $image = file_load($private_field['settings']['default_image']);
     $this->assertEqual('private', file_uri_scheme($image->uri), 'Default image uses private:// scheme.');
     $this->assertTrue($image->status == FILE_STATUS_PERMANENT, 'The default image status is permanent.');
     // Create a new node with no image attached and ensure that default private

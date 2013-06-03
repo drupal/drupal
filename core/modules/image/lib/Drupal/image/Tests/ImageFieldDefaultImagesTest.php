@@ -43,10 +43,10 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     // Create an image field and add an instance to the article content type.
     $field_name = strtolower($this->randomName());
     $field_settings = array(
-      'default_image' => array($default_images['field']->fid),
+      'default_image' => $default_images['field']->fid,
     );
     $instance_settings = array(
-      'default_image' => array($default_images['instance']->fid),
+      'default_image' => $default_images['instance']->fid,
     );
     $widget_settings = array(
       'preview_image_style' => 'medium',
@@ -63,7 +63,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
       'label' => $instance['label'],
       'required' => $instance['required'],
       'settings' => array(
-        'default_image' => array($default_images['instance2']->fid),
+        'default_image' => $default_images['instance2']->fid,
       ),
     );
     field_create_instance($instance2);
@@ -179,7 +179,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     );
 
     // Upload a new default for the article's field instance.
-    $instance['settings']['default_image'] = array($default_images['instance_new']->fid);
+    $instance['settings']['default_image'] = $default_images['instance_new']->fid;
     field_update_instance($instance);
 
     // Confirm the new field instance default is used on the article field
@@ -218,7 +218,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     );
 
     // Remove the instance default from articles.
-    $instance['settings']['default_image'] = NULL;
+    $instance['settings']['default_image'] = 0;
     field_update_instance($instance);
 
     // Confirm the article field instance default has been removed.

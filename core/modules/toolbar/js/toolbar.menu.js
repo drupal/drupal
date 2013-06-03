@@ -34,8 +34,6 @@ var activeItem = drupalSettings.basePath + drupalSettings.currentPath;
       // Close open sibling menus.
       var $openItems = $item.siblings().filter('.open');
       toggleList($openItems, false);
-      // Save link of the closest open item through a unique selector.
-      var href = $toggle.siblings('a[href]').attr('href');
     }
     /**
      * Toggle the open/close state of a list is a menu.

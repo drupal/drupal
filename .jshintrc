@@ -19,7 +19,6 @@
     "matchMedia",
     "Backbone",
     "Modernizr",
-    "VIE",
     "CKEDITOR"
   ]
 }

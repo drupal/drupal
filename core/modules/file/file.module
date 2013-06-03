@@ -1134,7 +1134,11 @@ function file_managed_file_submit($form, &$form_state) {
       $fids = array_diff($fids, $remove_fids);
     }
     else {
+      // If we deal with single upload element remove the file and set
+      // element's value to empty array (file could not be removed from
+      // element if we don't do that).
       $remove_fids = $fids;
+      $fids = array();
     }
 
     foreach ($remove_fids as $fid) {
