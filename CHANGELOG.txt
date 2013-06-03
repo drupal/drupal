@@ -1,6 +1,9 @@
 
 Drupal 7.23, xxxx-xx-xx (development version)
 -----------------------
+- Moved the drupal_get_hash_salt() function to bootstrap.inc and used it in
+  additional places in the code, for added security in the case where there is
+  no hash salt in settings.php.
 - Fixed a regression in Drupal 7.22 that caused internal server errors for
   sites running on very old Apache 1.x web servers.
 

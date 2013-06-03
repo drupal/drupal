@@ -2233,6 +2233,19 @@ function drupal_get_user_timezone() {
 }
 
 /**
+ * Gets a salt useful for hardening against SQL injection.
+ *
+ * @return
+ *   A salt based on information in settings.php, not in the database.
+ */
+function drupal_get_hash_salt() {
+  global $drupal_hash_salt, $databases;
+  // If the $drupal_hash_salt variable is empty, a hash of the serialized
+  // database credentials is used as a fallback salt.
+  return empty($drupal_hash_salt) ? hash('sha256', serialize($databases)) : $drupal_hash_salt;
+}
+
+/**
  * Provides custom PHP error handling.
  *
  * @param $error_level
@@ -2452,7 +2465,6 @@ function drupal_get_bootstrap_phase() {
  *   HMAC and timestamp.
  */
 function drupal_valid_test_ua() {
-  global $drupal_hash_salt;
   // No reason to reset this.
   static $test_prefix;
 
@@ -2466,7 +2478,7 @@ function drupal_valid_test_ua() {
     // We use the salt from settings.php to make the HMAC key, since
     // the database is not yet initialized and we can't access any Drupal variables.
     // The file properties add more entropy not easily accessible to others.
-    $key = $drupal_hash_salt . filectime(__FILE__) . fileinode(__FILE__);
+    $key = drupal_get_hash_salt() . filectime(__FILE__) . fileinode(__FILE__);
     $time_diff = REQUEST_TIME - $time;
     // Since we are making a local request a 5 second time window is allowed,
     // and the HMAC must match.
@@ -2484,14 +2496,13 @@ function drupal_valid_test_ua() {
  * Generates a user agent string with a HMAC and timestamp for simpletest.
  */
 function drupal_generate_test_ua($prefix) {
-  global $drupal_hash_salt;
   static $key;
 
   if (!isset($key)) {
     // We use the salt from settings.php to make the HMAC key, since
     // the database is not yet initialized and we can't access any Drupal variables.
     // The file properties add more entropy not easily accessible to others.
-    $key = $drupal_hash_salt . filectime(__FILE__) . fileinode(__FILE__);
+    $key = drupal_get_hash_salt() . filectime(__FILE__) . fileinode(__FILE__);
   }
   // Generate a moderately secure HMAC based on the database credentials.
   $salt = uniqid('', TRUE);

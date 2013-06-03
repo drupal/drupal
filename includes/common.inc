@@ -5035,19 +5035,6 @@ function drupal_json_output($var = NULL) {
 }
 
 /**
- * Gets a salt useful for hardening against SQL injection.
- *
- * @return
- *   A salt based on information in settings.php, not in the database.
- */
-function drupal_get_hash_salt() {
-  global $drupal_hash_salt, $databases;
-  // If the $drupal_hash_salt variable is empty, a hash of the serialized
-  // database credentials is used as a fallback salt.
-  return empty($drupal_hash_salt) ? hash('sha256', serialize($databases)) : $drupal_hash_salt;
-}
-
-/**
  * Ensures the private key variable used to generate tokens is set.
  *
  * @return
@@ -5069,8 +5056,10 @@ function drupal_get_private_key() {
  *
  * @return string
  *   A 43-character URL-safe token for validation, based on the user session ID,
- *   the global $drupal_hash_salt variable from settings.php, and the
+ *   the hash salt provided from drupal_get_hash_salt(), and the
  *   'drupal_private_key' configuration variable.
+ *
+ * @see drupal_get_hash_salt()
  */
 function drupal_get_token($value = '') {
   return drupal_hmac_base64($value, session_id() . drupal_get_private_key() . drupal_get_hash_salt());
