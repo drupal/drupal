@@ -9,6 +9,7 @@ namespace Drupal\views\Tests;
 
 use Drupal\simpletest\WebTestBase;
 use Drupal\views\ViewExecutable;
+use Drupal\block\Plugin\Core\Entity\Block;
 
 /**
  * Defines a base class for Views testing in the full web test environment.
@@ -228,6 +229,43 @@ abstract class ViewTestBase extends WebTestBase {
     $view->preExecute($args);
     $view->execute();
     $this->verbose('<pre>Executed view: ' . ((string) $view->build_info['query']) . '</pre>');
+  }
+
+  /**
+   * Checks to see whether a block appears on the page.
+   *
+   * @param \Drupal\block\Plugin\Core\Entity\Block $block
+   *   The block entity to find on the page.
+   */
+  protected function assertBlockAppears(Block $block) {
+    $result = $this->findBlockInstance($block);
+    $this->assertTrue(!empty($result), format_string('Ensure the block @id appears on the page', array('@id' => $block->id())));
+  }
+
+  /**
+   * Checks to see whether a block does not appears on the page.
+   *
+   * @param \Drupal\block\Plugin\Core\Entity\Block $block
+   *   The block entity to find on the page.
+   */
+  protected function assertNoBlockAppears(Block $block) {
+    $result = $this->findBlockInstance($block);
+    $this->assertFalse(!empty($result), format_string('Ensure the block @id does not appear on the page', array('@id' => $block->id())));
+  }
+
+  /**
+   * Find a block instance on the page.
+   *
+   * @param \Drupal\block\Plugin\Core\Entity\Block $block
+   *   The block entity to find on the page.
+   *
+   * @return array
+   *   The result from the xpath query.
+   */
+  protected function findBlockInstance(Block $block) {
+    $config_id = explode('.', $block->id());
+    $machine_name = array_pop($config_id);
+    return $this->xpath('//div[@id = :id]', array(':id' => 'block-' . $machine_name));
   }
 
   /**

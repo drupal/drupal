@@ -41,7 +41,7 @@ class ArgumentDefaultTest extends UserTestBase {
     $view = views_get_view('test_plugin_argument_default_current_user');
     $view->initHandlers();
 
-    $this->assertEqual($view->argument['null']->get_default_argument(), $account->uid, 'Uid of the current user is used.');
+    $this->assertEqual($view->argument['null']->getDefaultArgument(), $account->uid, 'Uid of the current user is used.');
     // Switch back.
     $user = $admin;
     drupal_save_session(TRUE);

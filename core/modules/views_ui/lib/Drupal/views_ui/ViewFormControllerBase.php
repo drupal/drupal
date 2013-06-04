@@ -101,12 +101,20 @@ abstract class ViewFormControllerBase extends EntityFormController {
    *   The display_id which is edited on the current request.
    */
   public function getDisplayTabs(ViewUI $view) {
+    $executable = $view->get('executable');
+    $executable->initDisplay();
     $display_id = $this->displayID;
     $tabs = array();
 
     // Create a tab for each display.
-    $displays = $view->get('display');
-    foreach ($displays as $id => $display) {
+    foreach ($view->get('display') as $id => $display) {
+      // Get an instance of the display plugin, to make sure it will work in the
+      // UI.
+      $display_plugin = $executable->displayHandlers->get($id);
+      if (empty($display_plugin)) {
+        continue;
+      }
+
       $tabs[$id] = array(
         '#theme' => 'menu_local_task',
         '#weight' => $display['position'],
@@ -130,7 +138,7 @@ abstract class ViewFormControllerBase extends EntityFormController {
     }
 
     // Mark the display tab as red to show validation errors.
-    $errors = $view->get('executable')->validate();
+    $errors = $executable->validate();
     foreach ($view->get('display') as $id => $display) {
       if (!empty($errors[$id])) {
         // Always show the tab.

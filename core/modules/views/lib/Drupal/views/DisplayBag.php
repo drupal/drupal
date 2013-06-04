@@ -7,6 +7,7 @@
 
 namespace Drupal\views;
 
+use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Plugin\PluginBag;
 use Drupal\Component\Plugin\PluginManagerInterface;
 
@@ -59,7 +60,7 @@ class DisplayBag extends PluginBag {
    * Overrides \Drupal\Component\Plugin\PluginBag::clear().
    */
   public function clear() {
-    foreach ($this->pluginInstances as $display_id => $display) {
+    foreach (array_filter($this->pluginInstances) as $display_id => $display) {
       $display->destroy();
     }
 
@@ -77,11 +78,20 @@ class DisplayBag extends PluginBag {
 
     // Retrieve and initialize the new display handler with data.
     $display = &$this->view->storage->getDisplay($display_id);
-    $this->pluginInstances[$display_id] = $this->manager->createInstance($display['display_plugin']);
+
+    try {
+      $this->pluginInstances[$display_id] = $this->manager->createInstance($display['display_plugin']);
+    }
+    // Catch any plugin exceptions that are thrown. So we can fail nicely if a
+    // display plugin isn't found.
+    catch (PluginException $e) {
+      $message = $e->getMessage();
+      drupal_set_message(t('!message', array('!message' => $message)), 'warning');
+    }
+
+    // If no plugin instance has been created, return NULL.
     if (empty($this->pluginInstances[$display_id])) {
-      // Provide a 'default' handler as an emergency. This won't work well but
-      // it will keep things from crashing.
-      $this->pluginInstances[$display_id] = $this->manager->createInstance('default');
+      return NULL;
     }
 
     $this->pluginInstances[$display_id]->initDisplay($this->view, $display);

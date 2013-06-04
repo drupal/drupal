@@ -65,7 +65,7 @@ class ArgumentDefaultTest extends PluginTestBase {
     $this->assertTrue($plugin instanceof ArgumentDefaultTestPlugin, 'The correct argument default plugin is used.');
 
     // Check that the value of the default argument is as expected.
-    $this->assertEqual($view->argument[$id]->get_default_argument(), 'John', 'The correct argument default value is returned.');
+    $this->assertEqual($view->argument[$id]->getDefaultArgument(), 'John', 'The correct argument default value is returned.');
     // Don't pass in a value for the default argument and make sure the query
     // just returns John.
     $this->executeView($view);
@@ -118,7 +118,7 @@ class ArgumentDefaultTest extends PluginTestBase {
     $view->display_handler->overrideOption('arguments', $options);
     $view->initHandlers();
 
-    $this->assertEqual($view->argument['null']->get_default_argument(), $random, 'Fixed argument should be used by default.');
+    $this->assertEqual($view->argument['null']->getDefaultArgument(), $random, 'Fixed argument should be used by default.');
 
     // Make sure that a normal argument provided is used
     $random_string = $this->randomName();

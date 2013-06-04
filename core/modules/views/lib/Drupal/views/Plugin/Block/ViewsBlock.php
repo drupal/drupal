@@ -47,7 +47,6 @@ class ViewsBlock extends BlockBase {
     list($name, $this->displayID) = explode('-', $delta, 2);
     // Load the view.
     $this->view = views_get_view($name);
-    $this->view->setDisplay($this->displayID);
   }
 
   /**
@@ -73,15 +72,19 @@ class ViewsBlock extends BlockBase {
    * Implements \Drupal\block\BlockBase::blockBuild().
    */
   protected function blockBuild() {
-    $output = $this->view->executeDisplay($this->displayID);
-    // Set the label to the title configured in the view.
-    $this->configuration['label'] = filter_xss_admin($this->view->getTitle());
-    // Before returning the block output, convert it to a renderable array
-    // with contextual links.
-    $this->addContextualLinks($output);
+    if ($output = $this->view->executeDisplay($this->displayID)) {
+      $output = $this->view->executeDisplay($this->displayID);
+      // Set the label to the title configured in the view.
+      $this->configuration['label'] = filter_xss_admin($this->view->getTitle());
+      // Before returning the block output, convert it to a renderable array
+      // with contextual links.
+      $this->addContextualLinks($output);
 
-    $this->view->destroy();
-    return $output;
+      $this->view->destroy();
+      return $output;
+    }
+
+    return array();
   }
 
   /**

@@ -1,0 +1,35 @@
+api_version: '3.0'
+base_table: node
+core: '8'
+description: ''
+status: '1'
+display:
+  default:
+    display_options:
+      row:
+        type: fields
+      fields:
+        id:
+          id: nid
+          table: node
+          field: nid
+          plugin_id: numeric
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+  page_1:
+    display_options:
+      path: test_display_invalid
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: '0'
+  block_1:
+    display_plugin: block
+    id: block_1
+    display_title: Block
+    position: '1'
+label: ''
+id: test_display_invalid
+tag: ''
