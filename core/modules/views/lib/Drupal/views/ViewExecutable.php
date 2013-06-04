@@ -677,10 +677,13 @@ class ViewExecutable {
       $this->rowPlugin = NULL;
     }
 
-    // Set a shortcut.
-    $this->display_handler = $this->displayHandlers->get($display_id);
+    if ($display = $this->displayHandlers->get($display_id)) {
+      // Set a shortcut.
+      $this->display_handler = $display;
+      return TRUE;
+    }
 
-    return TRUE;
+    return FALSE;
   }
 
   /**
@@ -1476,7 +1479,7 @@ class ViewExecutable {
     $displays = (array)$displays;
     foreach ($displays as $display_id) {
       if ($this->displayHandlers->has($display_id)) {
-        if ($this->displayHandlers->get($display_id)->access($account)) {
+        if (($display = $this->displayHandlers->get($display_id)) && $display->access($account)) {
           return TRUE;
         }
       }

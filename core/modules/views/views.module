@@ -435,10 +435,15 @@ function views_page($name, $display_id) {
 
   // Load the view and render it.
   if ($view = views_get_view($name)) {
-    return $view->executeDisplay($display_id, $args);
+    if ($output = $view->executeDisplay($display_id, $args)) {
+      return $output;
+    }
+    else {
+      return array();
+    }
   }
 
-  // Fallback; if we get here no view was found or handler was not valid.
+  // Fallback if we get here no view was found.
   return MENU_NOT_FOUND;
 }
 

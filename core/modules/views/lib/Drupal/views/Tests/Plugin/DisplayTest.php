@@ -19,14 +19,14 @@ class DisplayTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_filter_groups', 'test_get_attach_displays', 'test_view', 'test_display_more');
+  public static $testViews = array('test_filter_groups', 'test_get_attach_displays', 'test_view', 'test_display_more', 'test_display_invalid');
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('views_ui');
+  public static $modules = array('views_ui', 'node', 'block');
 
   public static function getInfo() {
     return array(
@@ -195,6 +195,54 @@ class DisplayTest extends PluginTestBase {
     // tested.
     $more_text = $view->display_handler->useMoreText();
     $this->assertEqual($more_text, $expected_more_text, 'The right more text is chosen.');
+  }
+
+  /**
+   * Tests invalid display plugins.
+   */
+  public function testInvalidDisplayPlugins() {
+    $this->drupalGet('test_display_invalid');
+    $this->assertResponse(200);
+
+    // Change the page plugin id to an invalid one. Bypass the entity system
+    // so no menu rebuild was executed (so the path is still available).
+    $config = config('views.view.test_display_invalid');
+    $config->set('display.page_1.display_plugin', 'invalid');
+    $config->save();
+
+    $this->drupalGet('test_display_invalid');
+    $this->assertResponse(200);
+    $this->assertText(t('The plugin (invalid) did not specify an instance class.'));
+
+    // Rebuild the menu, and ensure that the path is not accessible anymore.
+    menu_router_rebuild();
+
+    $this->drupalGet('test_display_invalid');
+    $this->assertResponse(404);
+
+    // Change the display plugin ID back to the correct ID.
+    $config = config('views.view.test_display_invalid');
+    $config->set('display.page_1.display_plugin', 'page');
+    $config->save();
+
+    // Place the block display.
+    $block = $this->drupalPlaceBlock('views_block:test_display_invalid-block_1', array(), array('title' => 'Invalid display'));
+
+    $this->drupalGet('<front>');
+    $this->assertResponse(200);
+    $this->assertBlockAppears($block);
+
+    // Change the block plugin ID to an invalid one.
+    $config = config('views.view.test_display_invalid');
+    $config->set('display.block_1.display_plugin', 'invalid');
+    $config->save();
+
+    // Test the page is still displayed, the block not present, and has the
+    // plugin warning message.
+    $this->drupalGet('<front>');
+    $this->assertResponse(200);
+    $this->assertText(t('The plugin (invalid) did not specify an instance class.'));
+    $this->assertNoBlockAppears($block);
   }
 
 }
