@@ -2585,16 +2585,8 @@ function drupal_build_css_cache($css) {
       if ($stylesheet['type'] == 'file') {
         $contents = drupal_load_stylesheet($stylesheet['data'], TRUE);
 
-        // Build the base URL of this CSS file: start with the full URL.
-        $css_base_url = file_create_url($stylesheet['data']);
-        // Move to the parent.
-        $css_base_url = substr($css_base_url, 0, strrpos($css_base_url, '/'));
-        // Simplify to a relative URL if the stylesheet URL starts with the
-        // base URL of the website.
-        if (substr($css_base_url, 0, strlen($GLOBALS['base_root'])) == $GLOBALS['base_root']) {
-          $css_base_url = substr($css_base_url, strlen($GLOBALS['base_root']));
-        }
-
+        // Get the parent directory of this file, relative to the Drupal root.
+        $css_base_url = substr($stylesheet['data'], 0, strrpos($stylesheet['data'], '/'));
         _drupal_build_css_path(NULL, $css_base_url . '/');
         // Anchor all paths in the CSS with its base URL, ignoring external and absolute paths.
         $data .= preg_replace_callback('/url\(\s*[\'"]?(?![a-z]+:|\/+)([^\'")]+)[\'"]?\s*\)/i', '_drupal_build_css_path', $contents);
@@ -2656,7 +2648,7 @@ function _drupal_build_css_path($matches, $base = NULL) {
     $last = $path;
     $path = preg_replace('`(^|/)(?!\.\./)([^/]+)/\.\./`', '$1', $path);
   }
-  return 'url(' . $path . ')';
+  return 'url(' . file_create_url($path) . ')';
 }
 
 /**

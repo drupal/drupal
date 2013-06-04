@@ -150,14 +150,6 @@ ol.task-list li.active {
   padding: 0 0 5px 5px;
 }
 
-/* User login block */
-#user-login-form .openid-links {
-  margin-right: 0;
-}
-#user-login-form .openid-links .user-link {
-  margin-right: 1.5em;
-}
-
 /**
  * Improve spacing of cancel link.
  */

@@ -1,9 +1,0 @@
-# Schema for the configuration files of the openid module.
-
-openid.settings:
-  type: mapping
-  label: 'OpenID settings'
-  mapping:
-    xri_proxy_resolver:
-      type: string
-      label: 'Proxy resolver for XRI'
