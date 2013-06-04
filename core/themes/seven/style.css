@@ -1108,14 +1108,6 @@ h1#overlay-title {
   padding: 0 5px 5px 0; /* LTR */
 }
 
-/* User login block */
-#user-login-form .openid-links {
-  margin-left: 0; /* LTR */
-}
-#user-login-form .openid-links .user-link {
-  margin-left: 1.5em; /* LTR */
-}
-
 /* Dropbutton */
 .js .dropbutton-widget {
   background-color: #fff;

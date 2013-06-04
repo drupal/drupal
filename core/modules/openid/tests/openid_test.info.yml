@@ -1,9 +1,0 @@
-name: 'OpenID dummy provider'
-type: module
-description: 'OpenID provider used for testing.'
-package: Testing
-version: VERSION
-core: 8.x
-dependencies:
-  - openid
-hidden: true

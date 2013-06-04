@@ -36,6 +36,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
       modules with similar functionality are available:
       * Blog
       * Dashboard
+      * OpenID
       * Poll
       * Profile
       * Trigger

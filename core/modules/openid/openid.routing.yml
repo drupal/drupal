@@ -1,9 +1,0 @@
-openid_user_delete_form:
-  pattern: '/user/{account}/openid/delete/{aid}'
-  options:
-    converters:
-      account: 'user'
-  defaults:
-    _form: 'Drupal\openid\Form\UserDeleteForm'
-  requirements:
-    _entity_access: 'account.update'

@@ -58,15 +58,6 @@ ul.tips {
   padding-left: 0;
   padding-right: 0.5em;
 }
-.region-header #block-user-login ul.openid-links li.last {
-  padding-right: 0;
-}
-.region-header #user-login-form li.openid-link a,
-.region-header #user-login li.openid-link a {
-  background-position: right -3px;
-  padding-left: 0;
-  padding-right: 20px;
-}
 
 /* --------------- Main Menu ------------ */
 

@@ -441,13 +441,6 @@ h1#site-name {
 .region-header #block-user-login .item-list li.last {
   padding-left: 0.5em; /* LTR */
 }
-.region-header #block-user-login ul.openid-links li.last {
-  padding-left: 0; /* LTR */
-}
-.region-header #user-login-form li.openid-link a,
-.region-header #user-login li.openid-link a {
-  padding-left: 20px; /* LTR */
-}
 .region-header #block-user-login .form-actions {
   margin: 4px 0 0;
   padding: 0;
