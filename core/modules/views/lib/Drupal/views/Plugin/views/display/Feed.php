@@ -258,7 +258,7 @@ class Feed extends PathPluginBase {
     $clone->setDisplay($this->display['id']);
     $clone->buildTitle();
     if ($plugin = $clone->display_handler->getPlugin('style')) {
-      $plugin->attach_to($display_id, $this->getPath(), $clone->getTitle());
+      $plugin->attachTo($display_id, $this->getPath(), $clone->getTitle());
     }
 
     // Clean up.
