@@ -43,11 +43,7 @@ class RequestCloseSubscriber implements EventSubscriberInterface {
    */
   public function onTerminate(PostResponseEvent $event) {
     $request_method = $event->getRequest()->getMethod();
-    // Check whether we need to write the module implementations cache. We do
-    // not want to cache hooks which are only invoked on HTTP POST requests
-    // since these do not need to be optimized as tightly, and not doing so
-    // keeps the cache entry smaller.
-    if (($request_method == 'GET' || $request_method == 'HEAD') && $this->moduleHandler instanceof CachedModuleHandlerInterface) {
+    if ($this->moduleHandler instanceof CachedModuleHandlerInterface) {
       $this->moduleHandler->writeCache();
     }
     system_run_automated_cron();
