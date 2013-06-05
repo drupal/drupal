@@ -481,7 +481,7 @@ h1#site-name {
   font-size: 0.929em;
   margin: 0 5px;
   padding: 0;
-  text-align: left;
+  text-align: left; /* LTR */
 }
 #main-menu-links li {
   float: none;
@@ -500,7 +500,7 @@ h1#site-name {
   text-shadow: 0 1px #eee;
   border-radius: 8px;
   margin-bottom: 4px;
-  padding: 0.9em 0 0.9em 10px;
+  padding: 0.9em 0 0.9em 10px; /* LTR */
 }
 #main-menu-links a:hover,
 #main-menu-links a:focus {
@@ -1552,14 +1552,14 @@ div.admin-panel .description {
     text-align: center;
   }
   #main-menu-links li {
-    float: left;
-    margin-right: 5px;
+    float: left; /* LTR */
+    margin-right: 5px; /* LTR */
     padding: 0;
     display: inline-block;
     width: 32.75%;
   }
   #main-menu-links li:nth-child(3n) {
-    margin-right: -5px;
+    margin-right: -5px; /* LTR */
   }
   #main-menu-links a {
     float: none;
@@ -1606,8 +1606,8 @@ div.admin-panel .description {
   }
   .featured #main-menu-links li a:active,
   .featured #main-menu-links li a.active {
-  background: #f0f0f0;
-  background: rgba(240, 240, 240, 1.0);
+    background: #f0f0f0;
+    background: rgba(240, 240, 240, 1.0);
   }
 }
 
