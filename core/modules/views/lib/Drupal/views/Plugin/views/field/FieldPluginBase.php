@@ -1158,7 +1158,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
     }
 
     if (empty($this->last_render)) {
-      if ($this->is_value_empty($this->last_render, $this->options['empty_zero'], FALSE)) {
+      if ($this->isValueEmpty($this->last_render, $this->options['empty_zero'], FALSE)) {
         $alter = $this->options['alter'];
         $alter['alter_text'] = 1;
         $alter['text'] = $this->options['empty'];
@@ -1183,7 +1183,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
    * @return bool
    * TRUE if the value is considered empty, FALSE otherwise.
    */
-  function is_value_empty($value, $empty_zero, $no_skip_empty = TRUE) {
+  public function isValueEmpty($value, $empty_zero, $no_skip_empty = TRUE) {
     if (!isset($value)) {
       $empty = TRUE;
     }
@@ -1216,14 +1216,14 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
     }
 
     // Check if there should be no further rewrite for empty values.
-    $no_rewrite_for_empty = $this->options['hide_alter_empty'] && $this->is_value_empty($this->original_value, $this->options['empty_zero']);
+    $no_rewrite_for_empty = $this->options['hide_alter_empty'] && $this->isValueEmpty($this->original_value, $this->options['empty_zero']);
 
     // Check whether the value is empty and return nothing, so the field isn't rendered.
     // First check whether the field should be hidden if the value(hide_alter_empty = TRUE) /the rewrite is empty (hide_alter_empty = FALSE).
     // For numeric values you can specify whether "0"/0 should be empty.
     if ((($this->options['hide_empty'] && empty($value))
         || ($alter['phase'] != VIEWS_HANDLER_RENDER_TEXT_PHASE_EMPTY && $no_rewrite_for_empty))
-      && $this->is_value_empty($value, $this->options['empty_zero'], FALSE)) {
+      && $this->isValueEmpty($value, $this->options['empty_zero'], FALSE)) {
       return '';
     }
     // Only in empty phase.

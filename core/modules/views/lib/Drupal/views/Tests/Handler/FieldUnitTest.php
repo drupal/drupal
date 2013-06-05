@@ -499,25 +499,25 @@ class FieldUnitTest extends ViewUnitTestBase {
   }
 
   /**
-   * Tests views_handler_field::is_value_empty().
+   * Tests views_handler_field::isValueEmpty().
    */
   function testIsValueEmpty() {
     $view = views_get_view('test_view');
     $view->initHandlers();
     $field = $view->field['name'];
 
-    $this->assertFalse($field->is_value_empty("not empty", TRUE), 'A normal string is not empty.');
-    $this->assertTrue($field->is_value_empty("not empty", TRUE, FALSE), 'A normal string which skips empty() can be seen as empty.');
+    $this->assertFalse($field->isValueEmpty("not empty", TRUE), 'A normal string is not empty.');
+    $this->assertTrue($field->isValueEmpty("not empty", TRUE, FALSE), 'A normal string which skips empty() can be seen as empty.');
 
-    $this->assertTrue($field->is_value_empty("", TRUE), '"" is considered as empty.');
+    $this->assertTrue($field->isValueEmpty("", TRUE), '"" is considered as empty.');
 
-    $this->assertTrue($field->is_value_empty('0', TRUE), '"0" is considered as empty if empty_zero is TRUE.');
-    $this->assertTrue($field->is_value_empty(0, TRUE), '0 is considered as empty if empty_zero is TRUE.');
-    $this->assertFalse($field->is_value_empty('0', FALSE), '"0" is considered not as empty if empty_zero is FALSE.');
-    $this->assertFalse($field->is_value_empty(0, FALSE), '0 is considered not as empty if empty_zero is FALSE.');
+    $this->assertTrue($field->isValueEmpty('0', TRUE), '"0" is considered as empty if empty_zero is TRUE.');
+    $this->assertTrue($field->isValueEmpty(0, TRUE), '0 is considered as empty if empty_zero is TRUE.');
+    $this->assertFalse($field->isValueEmpty('0', FALSE), '"0" is considered not as empty if empty_zero is FALSE.');
+    $this->assertFalse($field->isValueEmpty(0, FALSE), '0 is considered not as empty if empty_zero is FALSE.');
 
-    $this->assertTrue($field->is_value_empty(NULL, TRUE, TRUE), 'Null should be always seen as empty, regardless of no_skip_empty.');
-    $this->assertTrue($field->is_value_empty(NULL, TRUE, FALSE), 'Null should be always seen as empty, regardless of no_skip_empty.');
+    $this->assertTrue($field->isValueEmpty(NULL, TRUE, TRUE), 'Null should be always seen as empty, regardless of no_skip_empty.');
+    $this->assertTrue($field->isValueEmpty(NULL, TRUE, FALSE), 'Null should be always seen as empty, regardless of no_skip_empty.');
   }
 
   /**
