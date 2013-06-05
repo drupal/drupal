@@ -43,25 +43,27 @@ function initContextualToolbar (context) {
   });
 
   // Show the edit tab while there's >=1 contextual link.
-  var contextualCollection = Drupal.contextual.collection;
-  function trackContextualCount () {
-    model.set('contextualCount', contextualCollection.length);
-  }
-  contextualCollection.on('reset remove add', trackContextualCount);
-  trackContextualCount();
+  if (Drupal.contextual && Drupal.contextual.collection) {
+    var contextualCollection = Drupal.contextual.collection;
+    var trackContextualCount = function () {
+      model.set('contextualCount', contextualCollection.length);
+    };
+    contextualCollection.on('reset remove add', trackContextualCount);
+    trackContextualCount();
 
-  // Whenever edit mode is toggled, lock all contextual links.
-  model.on('change:isViewing', function() {
-    contextualCollection.each(function (contextualModel) {
-      contextualModel.set('isLocked', !model.get('isViewing'));
+    // Whenever edit mode is toggled, lock all contextual links.
+    model.on('change:isViewing', function() {
+      contextualCollection.each(function (contextualModel) {
+        contextualModel.set('isLocked', !model.get('isViewing'));
+      });
     });
-  });
-  // When a new contextual link is added and edit mode is enabled, lock it.
-  contextualCollection.on('add', function (contextualModel) {
-    if (!model.get('isViewing')) {
-      contextualModel.set('isLocked', true);
-    }
-  });
+    // When a new contextual link is added and edit mode is enabled, lock it.
+    contextualCollection.on('add', function (contextualModel) {
+      if (!model.get('isViewing')) {
+        contextualModel.set('isLocked', true);
+      }
+    });
+  }
 
   // Checks whether localStorage indicates we should start in edit mode
   // rather than view mode.
