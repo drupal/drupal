@@ -348,7 +348,7 @@ abstract class FilterPluginBase extends HandlerBase {
       return;
     }
 
-    $this->build_group_form($form, $form_state);
+    $this->buildExposedFiltersGroupForm($form, $form_state);
 
     // When we click the expose button, we add new gadgets to the form but they
     // have no data in $_POST so their defaults get wiped out. This prevents
@@ -829,7 +829,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * Build the form to let users create the group of exposed filters.
    * This form is displayed when users click on button 'Build group'
    */
-  function build_group_form(&$form, &$form_state) {
+  protected function buildExposedFiltersGroupForm(&$form, &$form_state) {
     if (empty($this->options['exposed']) || empty($this->options['is_grouped'])) {
       return;
     }
