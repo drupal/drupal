@@ -210,7 +210,7 @@ abstract class DisplayPluginBase extends PluginBase {
         }
       }
       $pager = $this->getPlugin('pager');
-      if (isset($pager) && $pager->uses_exposed()) {
+      if (isset($pager) && $pager->usesExposed()) {
         $this->has_exposed = TRUE;
         return TRUE;
       }

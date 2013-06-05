@@ -323,7 +323,7 @@ abstract class SqlBase extends PagerPluginBase {
     }
   }
 
-  function uses_exposed() {
+  public function usesExposed() {
     return $this->itemsPerPageExposed() || $this->offset_exposed();
   }
 

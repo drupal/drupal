@@ -245,7 +245,7 @@ abstract class PagerPluginBase extends PluginBase {
 
   public function exposedFormSubmit(&$form, &$form_state, &$exclude) { }
 
-  function uses_exposed() {
+  public function usesExposed() {
     return FALSE;
   }
 
