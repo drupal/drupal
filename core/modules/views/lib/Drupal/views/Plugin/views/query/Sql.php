@@ -892,50 +892,6 @@ class Sql extends QueryPluginBase {
   }
 
   /**
-   * Add a simple HAVING clause to the query.
-   *
-   * The caller is responsible for ensuring that all fields are fully qualified
-   * (TABLE.FIELD) and that the table and an appropriate GROUP BY already exist in the query.
-   * Internally the dbtng method "havingCondition" is used.
-   *
-   * @param $group
-   *   The HAVING group to add these to; groups are used to create AND/OR
-   *   sections. Groups cannot be nested. Use 0 as the default group.
-   *   If the group does not yet exist it will be created as an AND group.
-   * @param $field
-   *   The name of the field to check.
-   * @param $value
-   *   The value to test the field against. In most cases, this is a scalar. For more
-   *   complex options, it is an array. The meaning of each element in the array is
-   *   dependent on the $operator.
-   * @param $operator
-   *   The comparison operator, such as =, <, or >=. It also accepts more complex
-   *   options such as IN, LIKE, or BETWEEN. Defaults to IN if $value is an array
-   *   = otherwise.  If $field is a string you have to use 'formula' here.
-   *
-   * @see SelectQueryInterface::havingCondition()
-   */
-  function add_having($group, $field, $value = NULL, $operator = NULL) {
-    // Ensure all variants of 0 are actually 0. Thus '', 0 and NULL are all
-    // the default group.
-    if (empty($group)) {
-      $group = 0;
-    }
-
-    // Check for a group.
-    if (!isset($this->having[$group])) {
-      $this->set_where_group('AND', $group, 'having');
-    }
-
-    // Add the clause and the args.
-    $this->having[$group]['conditions'][] = array(
-      'field' => $field,
-      'value' => $value,
-      'operator' => $operator,
-    );
-  }
-
-  /**
    * Add a complex HAVING clause to the query.
    * The caller is responsible for ensuring that all fields are fully qualified
    * (TABLE.FIELD) and that the table and an appropriate GROUP BY already exist in the query.
