@@ -183,7 +183,7 @@ abstract class PagerPluginBase extends PluginBase {
       $this->total_items -= $this->options['offset'];
     }
 
-    $this->update_page_info();
+    $this->updatePageInfo();
     return $this->total_items;
   }
 
@@ -191,7 +191,7 @@ abstract class PagerPluginBase extends PluginBase {
    * If there are pagers that need global values set, this method can
    * be used to set them. It will be called when the count query is run.
    */
-  function update_page_info() {
+  public function updatePageInfo() {
 
   }
 

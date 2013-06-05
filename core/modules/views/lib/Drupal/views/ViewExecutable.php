@@ -1181,7 +1181,7 @@ class ViewExecutable {
     if ($cache->cache_get('results')) {
       if ($this->pager->usePager()) {
         $this->pager->total_items = $this->total_rows;
-        $this->pager->update_page_info();
+        $this->pager->updatePageInfo();
       }
     }
     else {

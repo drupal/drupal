@@ -292,7 +292,7 @@ abstract class SqlBase extends PagerPluginBase {
    * items available and to update the current page if the requested
    * page is out of range.
    */
-  function update_page_info() {
+  public function updatePageInfo() {
     if (!empty($this->options['total_pages'])) {
       if (($this->options['total_pages'] * $this->options['items_per_page']) < $this->total_items) {
         $this->total_items = $this->options['total_pages'] * $this->options['items_per_page'];
