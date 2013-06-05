@@ -111,7 +111,7 @@ class Numeric extends FilterPluginBase {
         'regular_expression' => array(
           'title' => t('Regular expression'),
           'short' => t('regex'),
-          'method' => 'op_regex',
+          'method' => 'opRegex',
           'values' => 1,
         ),
       );
@@ -275,7 +275,7 @@ class Numeric extends FilterPluginBase {
     $this->query->add_where($this->options['group'], $field, NULL, $operator);
   }
 
-  function op_regex($field) {
+  protected function opRegex($field) {
     $this->query->add_where($this->options['group'], $field, $this->value, 'RLIKE');
   }
 
