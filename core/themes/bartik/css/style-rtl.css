@@ -61,9 +61,11 @@ ul.tips {
 
 /* --------------- Main Menu ------------ */
 
-#main-menu ul.links li,
-#main-menu ul.links li a {
-  float: right;
+#main-menu-links {
+  text-align: right;
+}
+#main-menu-links a {
+  padding: 0.9em 10px 0.9em 0;
 }
 
 /* --------------- Secondary Menu ------------ */
@@ -238,6 +240,45 @@ ul.tips {
 .color-form #palette .lock {
   right: -20px;
   left: 0;
+}
+
+/* ----------- media queries ------------------------------- */
+
+@media all and (min-width: 461px) and (max-width: 900px) {
+ /* ------------ Header and Menus -------------------------- */
+
+  #logo {
+    padding: 5px 5px 0 0;
+  }
+  #main-menu-links li {
+    float: right;
+    margin-left: 5px;
+    margin-right: 0;
+  }
+  #main-menu-links li:nth-child(3n) {
+    margin-left: -5px;
+    margin-right: 0;
+  }
+}
+
+@media all and (min-width: 901px) {
+
+  #logo {
+    padding: 15px 10px 15px 15px;
+  }
+
+  #name-and-slogan {
+    margin: 0 15px 30px 0;
+  }
+
+  #main-menu-links li {
+    float: right;
+  }
+
+  #main-menu-links a {
+    float: right;
+    padding: 0.7em 0.8em;
+  }
 }
 
 /* ---------- Views styling ---------- */

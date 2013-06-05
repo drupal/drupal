@@ -41,8 +41,10 @@ function translation_entity_field_sync_widget(Field $field, FieldInstance $insta
       '#options' => $options,
       '#default_value' => !empty($instance['settings']['translation_sync']) ? $instance['settings']['translation_sync'] : $default,
       '#attached' => array(
+        'library' => array(
+          array('translation_entity', 'drupal.translation_entity.admin'),
+        ),
         'js' => array(
-          array('data' => drupal_get_path('module', 'translation_entity') . '/translation_entity.admin.js', 'type' => 'file'),
           array('data' => array('translationEntityDependentOptions' => $settings), 'type' => 'setting'),
         ),
       ),

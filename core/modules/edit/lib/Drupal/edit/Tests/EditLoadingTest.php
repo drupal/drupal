@@ -110,34 +110,35 @@ class EditLoadingTest extends WebTestBase {
     $this->assertRaw('data-edit-entity="node/1"');
     $this->assertRaw('data-edit-id="node/1/body/und/full"');
 
-    // Retrieving the metadata should result in a 200 response, containing:
-    //  1. a settings command with useless metadata: AjaxController is dumb
-    //  2. an insert command that loads the required in-place editors
-    //  3. a metadata command with correct per-field metadata
+    // Retrieving the metadata should result in a 200 JSON response.
+    $htmlPageDrupalSettings = $this->drupalSettings;
     $response = $this->retrieveMetadata(array('node/1/body/und/full'));
     $this->assertResponse(200);
-    $ajax_commands = drupal_json_decode($response);
-    $this->assertIdentical(3, count($ajax_commands), 'The metadata HTTP request results in three AJAX commands.');
-
-    // First command: settings.
-    $this->assertIdentical('settings', $ajax_commands[0]['command'], 'The first AJAX command is a settings command.');
-
-    // Second command: insert libraries into DOM.
-    $this->assertIdentical('insert', $ajax_commands[1]['command'], 'The second AJAX command is an append command.');
-    $command = new AppendCommand('body', '<script src="' . file_create_url('core/modules/edit/js/editors/formEditor.js') . '?v=' . VERSION . '"></script>' . "\n");
-    $this->assertIdentical($command->render(), $ajax_commands[1], 'The append command contains the expected data.');
-
-    // Third command: actual metadata.
-    $this->assertIdentical('editMetadata', $ajax_commands[2]['command'], 'The third AJAX command is an Edit metadata command.');
-    $command = new MetadataCommand(array(
+    $expected = array(
       'node/1/body/und/full' => array(
         'label' => 'Body',
         'access' => TRUE,
         'editor' => 'form',
-        'aria' => 'Entity node 1, field Body'
+        'aria' => 'Entity node 1, field Body',
       )
-    ));
-    $this->assertIdentical($command->render(), $ajax_commands[2], 'The Edit metadata command contains the expected metadata.');
+    );
+    $this->assertIdentical(drupal_json_decode($response), $expected, 'The metadata HTTP request answers with the correct JSON response.');
+    // Restore drupalSettings to build the next requests; simpletest wipes them
+    // after a JSON response.
+    $this->drupalSettings = $htmlPageDrupalSettings;
+
+    // Retrieving the attachments should result in a 200 response, containing:
+    //  1. a settings command with useless metadata: AjaxController is dumb
+    //  2. an insert command that loads the required in-place editors
+    $response = $this->retrieveAttachments(array('form'));
+    $ajax_commands = drupal_json_decode($response);
+    $this->assertIdentical(2, count($ajax_commands), 'The attachments HTTP request results in two AJAX commands.');
+    // First command: settings.
+    $this->assertIdentical('settings', $ajax_commands[0]['command'], 'The first AJAX command is a settings command.');
+    // Second command: insert libraries into DOM.
+    $this->assertIdentical('insert', $ajax_commands[1]['command'], 'The second AJAX command is an append command.');
+    $command = new AppendCommand('body', '<script src="' . file_create_url('core/modules/edit/js/editors/formEditor.js') . '?v=' . VERSION . '"></script>' . "\n");
+    $this->assertIdentical($command->render(), $ajax_commands[1], 'The append command contains the expected data.');
 
     // Retrieving the form for this field should result in a 200 response,
     // containing only an editFieldForm command.
@@ -188,6 +189,43 @@ class EditLoadingTest extends WebTestBase {
   }
 
   /**
+   * Retrieves AJAX commands to load attachments for the given in-place editors.
+   *
+   * @param array $editors
+   *   An array of in-place editor ids.
+   *
+   * @return string
+   *   The response body.
+   */
+  protected function retrieveAttachments($editors) {
+    // Build POST values.
+    $post = array();
+    for ($i = 0; $i < count($editors); $i++) {
+      $post['editors[' . $i . ']'] = $editors[$i];
+    }
+
+    // Serialize POST values.
+    foreach ($post as $key => $value) {
+      // Encode according to application/x-www-form-urlencoded
+      // Both names and values needs to be urlencoded, according to
+      // http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.1
+      $post[$key] = urlencode($key) . '=' . urlencode($value);
+    }
+    $post = implode('&', $post);
+
+    // Perform HTTP request.
+    return $this->curlExec(array(
+      CURLOPT_URL => url('edit/attachments', array('absolute' => TRUE)),
+      CURLOPT_POST => TRUE,
+      CURLOPT_POSTFIELDS => $post . $this->getAjaxPageStatePostData(),
+      CURLOPT_HTTPHEADER => array(
+        'Accept: application/vnd.drupal-ajax',
+        'Content-Type: application/x-www-form-urlencoded',
+      ),
+    ));
+  }
+
+  /**
    * Retrieve field form from the server. May also result in additional
    * JavaScript settings and CSS/JS being loaded.
    *
@@ -207,7 +245,7 @@ class EditLoadingTest extends WebTestBase {
       CURLOPT_POST => TRUE,
       CURLOPT_POSTFIELDS => $post . $this->getAjaxPageStatePostData(),
       CURLOPT_HTTPHEADER => array(
-        'Accept: application/json',
+        'Accept: application/vnd.drupal-ajax',
         'Content-Type: application/x-www-form-urlencoded',
       ),
     ));

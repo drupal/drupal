@@ -5,6 +5,13 @@ edit_metadata:
   requirements:
     _permission: 'access in-place editing'
 
+edit_attachments:
+  pattern: '/edit/attachments'
+  defaults:
+    _controller: '\Drupal\edit\EditController::attachments'
+  requirements:
+    _permission: 'access in-place editing'
+
 edit_field_form:
   pattern: '/edit/form/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode_id}'
   defaults:
