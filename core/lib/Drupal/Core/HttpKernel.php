@@ -64,18 +64,21 @@ class HttpKernel extends BaseHttpKernel
     /**
      * Forwards the request to another controller.
      *
-     * @param string $controller The controller name (a string like BlogBundle:Post:index)
-     * @param array  $attributes An array of request attributes
-     * @param array  $query      An array of request query parameters
+     * @param string|NULL $controller
+     *   The controller name (a string like BlogBundle:Post:index).
+     * @param array $attributes
+     *   An array of request attributes.
+     * @param array $query
+     *   An array of request query parameters.
      *
-     * @return Response A Response instance
+     * @return Response
+     *   A Response instance
      */
     public function forward($controller, array $attributes = array(), array $query = array())
     {
-        $attributes['_controller'] = $controller;
-        $subRequest = $this->container->get('request')->duplicate($query, null, $attributes);
+      $subrequest = $this->setupSubrequest($controller, $attributes, $query);
 
-        return $this->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+      return $this->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
     }
 
     /**
@@ -240,4 +243,29 @@ class HttpKernel extends BaseHttpKernel
     {
         return $this->esiSupport;
     }
+
+  /**
+   * Creates a request object for a subrequest.
+   *
+   * @param string $controller
+   *   The controller name (a string like BlogBundle:Post:index)
+   * @param array $attributes
+   *   An array of request attributes.
+   * @param array $query
+   *   An array of request query parameters.
+   *
+   * @return \Symfony\Component\HttpFoundation\Request
+   *   Returns the new request.
+   */
+  public function setupSubrequest($controller, array $attributes, array $query) {
+    // Don't override the controller if it's NULL.
+    if (isset($controller)) {
+      $attributes['_controller'] = $controller;
+    }
+    else {
+      unset($attributes['_controller']);
+    }
+    return $this->container->get('request')->duplicate($query, NULL, $attributes);
+  }
+
 }

@@ -65,4 +65,18 @@ class PreviewTest extends UITestBase {
     $this->assertEqual(count($elements), 0);
   }
 
+  /**
+   * Tests the actual preview response.
+   */
+  public function testPreviewController() {
+    $result = $this->drupalGetAJAX('admin/structure/views/view/test_preview/preview/default');
+
+    $result_commands = array();
+    // Build a list of the result commands keyed by the js command.
+    foreach ($result as $command) {
+      $result_commands[$command['command']] = $command;
+    }
+    $this->assertTrue(isset($result_commands['insert']));
+  }
+
 }

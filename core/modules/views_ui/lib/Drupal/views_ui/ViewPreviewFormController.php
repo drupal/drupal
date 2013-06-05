@@ -88,7 +88,7 @@ class ViewPreviewFormController extends ViewFormControllerBase implements Entity
       $args = explode('/', $form_state['values']['view_args']);
     }
 
-    if ($view->renderPreview) {
+    if (!empty($form_state['show_preview'])) {
       $form['preview'] = array(
         '#weight' => 110,
         '#theme_wrappers' => array('container'),
@@ -138,7 +138,6 @@ class ViewPreviewFormController extends ViewFormControllerBase implements Entity
       $new_view = new ViewUI($view);
     }
     $form_state['build_info']['args'][0] = $new_view;
-    $view->renderPreview = TRUE;
     $form_state['show_preview'] = TRUE;
     $form_state['rebuild'] = TRUE;
   }
