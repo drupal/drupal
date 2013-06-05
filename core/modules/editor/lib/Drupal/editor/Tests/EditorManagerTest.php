@@ -113,7 +113,7 @@ class EditorManagerTest extends DrupalUnitTestBase {
 
     // Case 4: a text editor available associated, but now with its JS settings
     // being altered via hook_editor_js_settings_alter().
-    state()->set('editor_test_js_settings_alter_enabled', TRUE);
+    \Drupal::state()->set('editor_test_js_settings_alter_enabled', TRUE);
     $expected['js'][0]['data']['editor']['formats']['full_html']['editorSettings']['ponyModeEnabled'] = FALSE;
     $this->assertIdentical($expected, $this->editorManager->getAttachments(array('filtered_html', 'full_html')), 'hook_editor_js_settings_alter() works correctly.');
   }

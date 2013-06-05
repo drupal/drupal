@@ -106,9 +106,9 @@ class TestToolkit extends PluginBase implements ImageToolkitInterface {
    * @see \Drupal\system\Tests\Image\ToolkitTestBase::imageTestGetAllCalls()
    */
   protected function logCall($op, $args) {
-    $results = state()->get('image_test.results') ?: array();
+    $results = \Drupal::state()->get('image_test.results') ?: array();
     $results[$op][] = $args;
-    state()->set('image_test.results', $results);
+    \Drupal::state()->set('image_test.results', $results);
   }
 
   /**

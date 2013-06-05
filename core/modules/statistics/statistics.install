@@ -10,8 +10,8 @@
  */
 function statistics_uninstall() {
   // Remove states.
-  state()->delete('statistics.node_counter_scale');
-  state()->delete('statistics.day_timestamp');
+  Drupal::state()->delete('statistics.node_counter_scale');
+  Drupal::state()->delete('statistics.day_timestamp');
 }
 
 /**

@@ -280,7 +280,7 @@ function locale_translate_edit_form($form, &$form_state) {
   if (isset($langcode)) {
     $strings = locale_translate_filter_load_strings();
 
-    $plural_formulas = state()->get('locale.translation.plurals') ?: array();
+    $plural_formulas = Drupal::state()->get('locale.translation.plurals') ?: array();
 
     foreach ($strings as $string) {
       // Cast into source string, will do for our purposes.
@@ -501,7 +501,7 @@ function locale_translation_status_form($form, &$form_state) {
   $project_data = locale_translation_build_projects();
   $languages = locale_translatable_language_list();
   $projects = locale_translation_get_projects();
-  $status = state()->get('locale.translation_status');
+  $status = Drupal::state()->get('locale.translation_status');
 
   // Prepare information about projects which have available translation
   // updates.
@@ -544,7 +544,7 @@ function locale_translation_status_form($form, &$form_state) {
     uasort($options, 'drupal_sort_title');
   }
 
-  $last_checked = state()->get('locale.translation_last_checked');
+  $last_checked = Drupal::state()->get('locale.translation_last_checked');
   $form['last_checked'] = array(
     '#markup' => '<p>' . theme('locale_translation_last_check', array('last' => $last_checked)) . '</p>',
   );
@@ -621,7 +621,7 @@ function locale_translation_status_form_submit($form, &$form_state) {
   // If the status was updated recently we can immediately start fetching the
   // translation updates. If the status is expired we clear it an run a batch to
   // update the status and then fetch the translation updates.
-  $last_checked = state()->get('locale.translation_last_checked');
+  $last_checked = Drupal::state()->get('locale.translation_last_checked');
   if ($last_checked < REQUEST_TIME - LOCALE_TRANSLATION_STATUS_TTL) {
     locale_translation_clear_status();
     $batch = locale_translation_batch_update_build(array(), $langcodes, $options);

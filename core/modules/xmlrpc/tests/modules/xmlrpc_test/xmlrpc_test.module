@@ -68,7 +68,7 @@ function xmlrpc_test_xmlrpc() {
  * Hide (or not) the system.methodSignature() service depending on a variable.
  */
 function xmlrpc_test_xmlrpc_alter(&$services) {
-  $xmlprc_alter = state()->get('xmlrpc_test.alter') ?: FALSE;
+  $xmlprc_alter = Drupal::state()->get('xmlrpc_test.alter') ?: FALSE;
   if ($xmlprc_alter) {
     $remove = NULL;
     foreach ($services as $key => $value) {

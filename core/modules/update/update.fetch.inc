@@ -189,7 +189,7 @@ function _update_process_fetch_task($project) {
   Drupal::keyValueExpirable('update')->setWithExpire('fetch_failures', $fail, $request_time_difference + (60 * 5));
 
   // Whether this worked or not, we did just (try to) check for updates.
-  state()->set('update.last_check', REQUEST_TIME + $request_time_difference);
+  Drupal::state()->set('update.last_check', REQUEST_TIME + $request_time_difference);
 
   // Now that we processed the fetch task for this project, clear out the
   // record for this task so we're willing to fetch again.
@@ -364,7 +364,7 @@ function _update_cron_notify() {
         // Track when the last mail was successfully sent to avoid sending
         // too many e-mails.
         if ($message['result']) {
-          state()->set('update.last_email_notification', REQUEST_TIME);
+          Drupal::state()->set('update.last_email_notification', REQUEST_TIME);
         }
       }
     }

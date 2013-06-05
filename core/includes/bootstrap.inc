@@ -768,7 +768,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
         }
       }
       try {
-        $file_list = state()->get('system.' . $type . '.files');
+        $file_list = Drupal::state()->get('system.' . $type . '.files');
         if ($file_list && isset($file_list[$name]) && file_exists(DRUPAL_ROOT . '/' . $file_list[$name])) {
           $files[$type][$name] = $file_list[$name];
         }
@@ -2268,21 +2268,6 @@ function module_exists($module) {
  */
 function module_hook($module, $hook) {
   return Drupal::moduleHandler()->implementsHook($module, $hook);
-}
-
-/**
- * Returns the state storage service.
- *
- * Use this to store machine-generated data, local to a specific environment
- * that does not need deploying and does not need human editing; for example,
- * the last time cron was run. Data which needs to be edited by humans and
- * needs to be the same across development, production, etc. environments
- * (for example, the system maintenance message) should use config() instead.
- *
- * @return Drupal\Core\KeyValueStore\KeyValueStoreInterface
- */
-function state() {
-  return drupal_container()->get('keyvalue')->get('state');
 }
 
 /**

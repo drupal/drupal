@@ -61,7 +61,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     $this->assertRaw(t('One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.', array('%number' => 8, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
 
     // This import should have saved plural forms to have 2 variants.
-    $locale_plurals = state()->get('locale.translation.plurals') ?: array();
+    $locale_plurals = \Drupal::state()->get('locale.translation.plurals') ?: array();
     $this->assert($locale_plurals['fr']['plurals'] == 2, t('Plural number initialized.'));
 
     // Ensure we were redirected correctly.
@@ -115,7 +115,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     $this->assertText(t('No strings available.'), t('String not overwritten by imported string.'));
 
     // This import should not have changed number of plural forms.
-    $locale_plurals = state()->get('locale.translation.plurals') ?: array();
+    $locale_plurals = \Drupal::state()->get('locale.translation.plurals') ?: array();
     $this->assert($locale_plurals['fr']['plurals'] == 2, t('Plural numbers untouched.'));
 
     // Try importing a .po file with overriding strings, and ensure existing
@@ -136,7 +136,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     $this->assertNoText(t('No strings available.'), t('String overwritten by imported string.'));
     // This import should have changed number of plural forms.
-    $locale_plurals = state()->get('locale.translation.plurals') ?: array();
+    $locale_plurals = \Drupal::state()->get('locale.translation.plurals') ?: array();
     $this->assert($locale_plurals['fr']['plurals'] == 3, t('Plural numbers changed.'));
 
     // Importing a .po file and mark its strings as customized strings.

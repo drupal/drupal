@@ -132,7 +132,7 @@ class DependencyTest extends ModuleTestBase {
     module_enable(array('module_test'), FALSE);
     $this->resetAll();
     $this->assertModules(array('module_test'), TRUE);
-    state()->set('module_test.dependency', 'dependency');
+    \Drupal::state()->set('module_test.dependency', 'dependency');
     // module_test creates a dependency chain:
     // - forum depends on taxonomy, comment, history, and ban (via module_test)
     // - taxonomy depends on options
@@ -159,7 +159,7 @@ class DependencyTest extends ModuleTestBase {
     $this->assertModules(array('forum', 'ban', 'php', 'comment', 'history', 'taxonomy', 'options', 'number'), TRUE);
 
     // Check the actual order which is saved by module_test_modules_enabled().
-    $module_order = state()->get('system_test.module_enable_order') ?: array();
+    $module_order = \Drupal::state()->get('system_test.module_enable_order') ?: array();
     $this->assertIdentical($module_order, $expected_order);
   }
 

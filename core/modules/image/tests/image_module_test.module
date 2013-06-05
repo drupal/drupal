@@ -6,7 +6,7 @@
  */
 
 function image_module_test_file_download($uri) {
-  $default_uri = state()->get('image.test_file_download') ?: FALSE;
+  $default_uri = Drupal::state()->get('image.test_file_download') ?: FALSE;
   if ($default_uri == $uri) {
     return array('X-Image-Owned-By' => 'image_module_test');
   }

@@ -9,7 +9,7 @@
  * Implements hook_schema().
  */
 function views_test_data_schema() {
-  return state()->get('views_test_data_schema');
+  return Drupal::state()->get('views_test_data_schema');
 }
 
 /**

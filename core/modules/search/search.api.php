@@ -340,7 +340,7 @@ function hook_update_index() {
 
     // Save the changed time of the most recent indexed node, for the search
     // results half-life calculation.
-    state()->set('node.cron_last', $node->changed);
+    \Drupal::state()->set('node.cron_last', $node->changed);
 
     // Render the node.
     $build = node_view($node, 'search_index');

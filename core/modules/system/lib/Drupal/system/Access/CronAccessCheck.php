@@ -28,7 +28,7 @@ class CronAccessCheck implements AccessCheckInterface {
    */
   public function access(Route $route, Request $request) {
     $key = $request->attributes->get('key');
-    if ($key != state()->get('system.cron_key')) {
+    if ($key != \Drupal::state()->get('system.cron_key')) {
       watchdog('cron', 'Cron could not run because an invalid key was used.', array(), WATCHDOG_NOTICE);
       return FALSE;
     }

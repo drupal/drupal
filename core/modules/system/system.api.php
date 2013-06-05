@@ -113,11 +113,11 @@ function hook_admin_paths_alter(&$paths) {
 function hook_cron() {
   // Short-running operation example, not using a queue:
   // Delete all expired records since the last cron run.
-  $expires = state()->get('mymodule.cron_last_run') ?: REQUEST_TIME;
+  $expires = \Drupal::state()->get('mymodule.cron_last_run') ?: REQUEST_TIME;
   db_delete('mymodule_table')
     ->condition('expires', $expires, '>=')
     ->execute();
-  state()->set('mymodule.cron_last_run', REQUEST_TIME);
+  \Drupal::state()->set('mymodule.cron_last_run', REQUEST_TIME);
 
   // Long-running operation example, leveraging a queue:
   // Fetch feeds from other sites.
@@ -2342,7 +2342,7 @@ function hook_requirements($phase) {
 
   // Report cron status
   if ($phase == 'runtime') {
-    $cron_last = state()->get('system.cron_last');
+    $cron_last = \Drupal::state()->get('system.cron_last');
 
     if (is_numeric($cron_last)) {
       $requirements['cron']['value'] = $t('Last run !time ago', array('!time' => format_interval(REQUEST_TIME - $cron_last)));

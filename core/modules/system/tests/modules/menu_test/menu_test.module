@@ -524,7 +524,7 @@ function menu_test_callback() {
  * Callback that test menu_test_menu_tree_set_path().
  */
 function menu_test_menu_trail_callback() {
-  $menu_path = state()->get('menu_test.menu_tree_set_path') ?: array();
+  $menu_path = Drupal::state()->get('menu_test.menu_tree_set_path') ?: array();
   if (!empty($menu_path)) {
     menu_tree_set_path($menu_path['menu_name'], $menu_path['path']);
   }
@@ -538,8 +538,8 @@ function menu_test_custom_403_404_callback() {
   // When requested by one of the MenuTrailTestCase tests, record the final
   // active trail now that the user has been redirected to the custom 403 or
   // 404 page. See menu_test_init().
-  if (state()->get('menu_test.record_active_trail') ?: FALSE) {
-    state()->set('menu_test.active_trail_final', menu_get_active_trail());
+  if (Drupal::state()->get('menu_test.record_active_trail') ?: FALSE) {
+    Drupal::state()->set('menu_test.active_trail_final', menu_get_active_trail());
   }
 
   return 'This is menu_test_custom_403_404_callback().';
@@ -605,13 +605,13 @@ function menu_test_custom_theme() {
   // When requested by one of the MenuTrailTestCase tests, record the initial
   // active trail during Drupal's bootstrap (before the user is redirected to a
   // custom 403 or 404 page). See menu_test_custom_403_404_callback().
-  if (state()->get('menu_test.record_active_trail') ?: FALSE) {
-    state()->set('menu_test.active_trail_initial', menu_get_active_trail());
+  if (Drupal::state()->get('menu_test.record_active_trail') ?: FALSE) {
+    Drupal::state()->set('menu_test.active_trail_initial', menu_get_active_trail());
   }
   // If an appropriate variable has been set in the database, request the theme
   // that is stored there. Otherwise, do not attempt to dynamically set the
   // theme.
-  if ($theme = state()->get('menu_test.hook_custom_theme_name') ?: FALSE) {
+  if ($theme = Drupal::state()->get('menu_test.hook_custom_theme_name') ?: FALSE) {
     return $theme;
   }
 }

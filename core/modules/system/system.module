@@ -2899,7 +2899,7 @@ function system_rebuild_module_data() {
 
     // Store filenames to allow system_list() and drupal_get_filename() to
     // retrieve them without having to rebuild or scan the filesystem.
-    state()->set('system.module.files', $files);
+    Drupal::state()->set('system.module.files', $files);
   }
   return $modules_cache;
 }
@@ -2918,7 +2918,7 @@ function _system_update_bootstrap_status() {
       $bootstrap_modules[$module] = drupal_get_filename('module', $module);
     }
   }
-  state()->set('system.module.bootstrap', $bootstrap_modules);
+  Drupal::state()->set('system.module.bootstrap', $bootstrap_modules);
 }
 
 /**
@@ -3063,11 +3063,11 @@ function system_rebuild_theme_data() {
   }
   // Replace last known theme data state.
   // @todo Obsolete with proper installation status for themes.
-  state()->set('system.theme.data', $themes);
+  Drupal::state()->set('system.theme.data', $themes);
 
   // Store filenames to allow system_list() and drupal_get_filename() to
   // retrieve them without having to rebuild or scan the filesystem.
-  state()->set('system.theme.files', $files);
+  Drupal::state()->set('system.theme.files', $files);
 
   return $themes;
 }
@@ -3625,7 +3625,7 @@ function system_run_automated_cron() {
   // Otherwise it could be triggered prematurely by Ajax requests during
   // installation.
   if (($threshold = config('system.cron')->get('threshold.autorun')) > 0 && variable_get('install_task') == 'done') {
-    $cron_last = state()->get('system.cron_last') ?: NULL;
+    $cron_last = Drupal::state()->get('system.cron_last') ?: NULL;
     if (!isset($cron_last) || (REQUEST_TIME - $cron_last > $threshold)) {
       drupal_cron_run();
     }

@@ -41,7 +41,7 @@ class DisplayAttachmentTest extends PluginTestBase {
    */
   protected function testAttachment() {
     // @todo Remove that once http://drupal.org/node/1828444 got in.
-    state()->set('menu_rebuild_needed', TRUE);
+    \Drupal::state()->set('menu_rebuild_needed', TRUE);
 
     $this->drupalGet('test-display-attachment');
 

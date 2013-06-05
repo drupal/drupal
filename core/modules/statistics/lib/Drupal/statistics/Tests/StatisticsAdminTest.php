@@ -139,7 +139,7 @@ class StatisticsAdminTest extends WebTestBase {
     config('statistics.settings')
       ->set('count_content_views', 1)
       ->save();
-    state()->set('statistics.day_timestamp', 8640000);
+    \Drupal::state()->set('statistics.day_timestamp', 8640000);
 
     $this->drupalGet('node/' . $this->test_node->nid);
     // Manually calling statistics.php, simulating ajax behavior.

@@ -17,7 +17,7 @@
 function theme_update_report($variables) {
   $data = $variables['data'];
 
-  $last = state()->get('update.last_check') ?: 0;
+  $last = Drupal::state()->get('update.last_check') ?: 0;
   $output = theme('update_last_check', array('last' => $last));
 
   if (!is_array($data)) {

@@ -79,9 +79,9 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
   protected function setUp() {
     // Copy/prime extension file lists once to avoid filesystem scans.
     if (!isset($this->moduleFiles)) {
-      $this->moduleFiles = state()->get('system.module.files') ?: array();
-      $this->themeFiles = state()->get('system.theme.files') ?: array();
-      $this->themeData = state()->get('system.theme.data') ?: array();
+      $this->moduleFiles = \Drupal::state()->get('system.module.files') ?: array();
+      $this->themeFiles = \Drupal::state()->get('system.theme.files') ?: array();
+      $this->themeData = \Drupal::state()->get('system.theme.data') ?: array();
     }
 
     $this->keyValueFactory = new KeyValueMemoryFactory();
@@ -92,9 +92,9 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
     // Make sure it survives kernel rebuilds.
     $GLOBALS['conf']['container_bundles'][] = 'Drupal\simpletest\TestBundle';
 
-    state()->set('system.module.files', $this->moduleFiles);
-    state()->set('system.theme.files', $this->themeFiles);
-    state()->set('system.theme.data', $this->themeData);
+    \Drupal::state()->set('system.module.files', $this->moduleFiles);
+    \Drupal::state()->set('system.theme.files', $this->themeFiles);
+    \Drupal::state()->set('system.theme.data', $this->themeData);
 
     // Bootstrap the kernel.
     // No need to dump it; this test runs in-memory.
@@ -163,11 +163,16 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
       // a kernel is overridden then there's no need to re-register the keyvalue
       // service but when a test is happy with the superminimal container put
       // together here, it still might a keyvalue storage for anything (for
-      // eg. module_enable) using state() -- that's why a memory service was
-      // added in the first place.
+      // eg. module_enable) using \Drupal::state() -- that's why a memory
+      // service was added in the first place.
       $container
         ->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueFactory')
         ->addArgument(new Reference('service_container'));
+
+      $container->register('state', 'Drupal\Core\KeyValueStore\KeyValueStoreInterface')
+        ->setFactoryService(new Reference('keyvalue'))
+        ->setFactoryMethod('get')
+        ->addArgument('state');
     }
   }
 

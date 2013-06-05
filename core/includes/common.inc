@@ -2567,7 +2567,7 @@ function drupal_pre_render_styles($elements) {
 function drupal_build_css_cache($css) {
   $data = '';
   $uri = '';
-  $map = state()->get('drupal_css_cache_files') ?: array();
+  $map = Drupal::state()->get('drupal_css_cache_files') ?: array();
   // Create a new array so that only the file names are used to create the hash.
   // This prevents new aggregates from being created unnecessarily.
   $css_data = array();
@@ -2627,7 +2627,7 @@ function drupal_build_css_cache($css) {
     }
     // Save the updated map.
     $map[$key] = $uri;
-    state()->set('drupal_css_cache_files', $map);
+    Drupal::state()->set('drupal_css_cache_files', $map);
   }
   return $uri;
 }
@@ -2792,7 +2792,7 @@ function _drupal_load_stylesheet($matches) {
  * Deletes old cached CSS files.
  */
 function drupal_clear_css_cache() {
-  state()->delete('drupal_css_cache_files');
+  Drupal::state()->delete('drupal_css_cache_files');
   file_scan_directory('public://css', '/.*/', array('callback' => 'drupal_delete_file_if_stale'));
 }
 
@@ -4167,7 +4167,7 @@ function drupal_add_tabledrag($table_id, $action, $relationship, $group, $subgro
 function drupal_build_js_cache($files) {
   $contents = '';
   $uri = '';
-  $map = state()->get('system.js_cache_files') ?: array();
+  $map = Drupal::state()->get('system.js_cache_files') ?: array();
   // Create a new array so that only the file names are used to create the hash.
   // This prevents new aggregates from being created unnecessarily.
   $js_data = array();
@@ -4212,7 +4212,7 @@ function drupal_build_js_cache($files) {
       }
     }
     $map[$key] = $uri;
-    state()->set('system.js_cache_files', $map);
+    Drupal::state()->set('system.js_cache_files', $map);
   }
   return $uri;
 }
@@ -4221,8 +4221,8 @@ function drupal_build_js_cache($files) {
  * Deletes old cached JavaScript files and variables.
  */
 function drupal_clear_js_cache() {
-  state()->delete('system.javascript_parsed');
-  state()->delete('system.js_cache_files');
+  Drupal::state()->delete('system.javascript_parsed');
+  Drupal::state()->delete('system.js_cache_files');
   file_scan_directory('public://js', '/.*/', array('callback' => 'drupal_delete_file_if_stale'));
 }
 
@@ -4256,9 +4256,9 @@ function drupal_json_decode($var) {
  *   The private key.
  */
 function drupal_get_private_key() {
-  if (!($key = state()->get('system.private_key'))) {
+  if (!($key = Drupal::state()->get('system.private_key'))) {
     $key = Crypt::randomStringHashed(55);
-    state()->set('system.private_key', $key);
+    Drupal::state()->set('system.private_key', $key);
   }
   return $key;
 }
@@ -4483,7 +4483,7 @@ function drupal_cron_run() {
     }
 
     // Record cron time.
-    state()->set('system.cron_last', REQUEST_TIME);
+    Drupal::state()->set('system.cron_last', REQUEST_TIME);
     watchdog('cron', 'Cron run completed.', array(), WATCHDOG_NOTICE);
 
     // Release cron lock.

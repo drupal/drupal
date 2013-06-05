@@ -337,7 +337,7 @@ function menu_get_ancestors($parts) {
   $ancestors = array();
   $length =  $number_parts - 1;
   $end = (1 << $number_parts) - 1;
-  $masks = state()->get('menu.masks');
+  $masks = Drupal::state()->get('menu.masks');
   // If the optimized menu.masks array is not available use brute force to get
   // the correct $ancestors and $placeholders returned. Do not use this as the
   // default value of the menu.masks variable to avoid building such a big
@@ -471,7 +471,7 @@ function menu_get_item($path = NULL, $router_item = NULL) {
   if (!isset($router_items[$path])) {
     // Rebuild if we know it's needed, or if the menu masks are missing which
     // occurs rarely, likely due to a race condition of multiple rebuilds.
-    if (state()->get('menu_rebuild_needed') || !state()->get('menu.masks')) {
+    if (Drupal::state()->get('menu_rebuild_needed') || !Drupal::state()->get('menu.masks')) {
       menu_router_rebuild();
     }
     $original_map = arg(NULL, $path);
@@ -1313,7 +1313,7 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
           }
           $parents = $active_trail;
 
-          $expanded = state()->get('menu_expanded');
+          $expanded = Drupal::state()->get('menu_expanded');
           // Check whether the current menu has any links set to be expanded.
           if (!$only_active_trail && $expanded && in_array($menu_name, $expanded)) {
             // Collect all the links set to be expanded, and then add all of
@@ -2698,7 +2698,7 @@ function menu_router_rebuild() {
     menu_cache_clear_all();
     _menu_clear_page_cache();
     // Indicate that the menu has been successfully rebuilt.
-    state()->delete('menu_rebuild_needed');
+    Drupal::state()->delete('menu_rebuild_needed');
   }
   catch (Exception $e) {
     $transaction->rollback();
@@ -2974,7 +2974,7 @@ function _menu_clear_page_cache() {
  */
 function _menu_set_expanded_menus() {
   $names = db_query("SELECT menu_name FROM {menu_links} WHERE expanded <> 0 GROUP BY menu_name")->fetchCol();
-  state()->set('menu_expanded', $names);
+  Drupal::state()->set('menu_expanded', $names);
 }
 
 /**
@@ -3249,8 +3249,8 @@ function _menu_router_build($callbacks, $save = FALSE) {
     $path_roots = array_values($path_roots);
     // Update the path roots variable and reset the path alias whitelist cache
     // if the list has changed.
-    if ($path_roots != state()->get('menu_path_roots')) {
-      state()->set('menu_path_roots', array_values($path_roots));
+    if ($path_roots != Drupal::state()->get('menu_path_roots')) {
+      Drupal::state()->set('menu_path_roots', array_values($path_roots));
       drupal_container()->get('path.alias_manager')->cacheClear();
     }
     _menu_router_save($menu, $masks);
@@ -3338,7 +3338,7 @@ function _menu_router_save($menu, $masks) {
   // Insert any remaining records.
   $insert->execute();
   // Store the masks.
-  state()->set('menu.masks', $masks);
+  Drupal::state()->set('menu.masks', $masks);
 
   return $menu;
 }

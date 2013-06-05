@@ -24,7 +24,7 @@ function language_test_page_build() {
  * Implements hook_language_types_info().
  */
 function language_test_language_types_info() {
-  if (state()->get('language_test.language_types')) {
+  if (Drupal::state()->get('language_test.language_types')) {
     return array(
       'test_language_type' => array(
         'name' => t('Test'),
@@ -41,7 +41,7 @@ function language_test_language_types_info() {
  * Implements hook_language_types_info_alter().
  */
 function language_test_language_types_info_alter(array &$language_types) {
-  if (state()->get('language_test.content_language_type')) {
+  if (Drupal::state()->get('language_test.content_language_type')) {
     unset($language_types[Language::TYPE_CONTENT]['fixed']);
   }
 }
@@ -50,7 +50,7 @@ function language_test_language_types_info_alter(array &$language_types) {
  * Implements hook_language_negotiation_info().
  */
 function language_test_language_negotiation_info() {
-  if (state()->get('language_test.language_negotiation_info')) {
+  if (Drupal::state()->get('language_test.language_negotiation_info')) {
     $info = array(
       'callbacks' => array(
         'negotiation' => 'language_test_language_negotiation_method',
@@ -77,7 +77,7 @@ function language_test_language_negotiation_info() {
  * Implements hook_language_negotiation_info_alter().
  */
 function language_test_language_negotiation_info_alter(array &$negotiation_info) {
-  if (state()->get('language_test.language_negotiation_info_alter')) {
+  if (Drupal::state()->get('language_test.language_negotiation_info_alter')) {
     unset($negotiation_info[LANGUAGE_NEGOTIATION_INTERFACE]);
   }
 }
@@ -90,7 +90,7 @@ function language_test_store_language_negotiation() {
   foreach (language_types_get_all() as $type) {
     $last[$type] = language($type)->langcode;
   }
-  state()->set('language_test.language_negotiation_last', $last);
+  Drupal::state()->set('language_test.language_negotiation_last', $last);
 }
 
 /**

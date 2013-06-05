@@ -59,9 +59,9 @@ class LocaleUpdateInterfaceTest extends WebTestBase {
     // Drupal core is probably in 8.x, but tests may also be executed with
     // stable releases. As this is an uncontrolled factor in the test, we will
     // ignore Drupal core here and continue with the prepared modules.
-    $status = state()->get('locale.translation_status');
+    $status = \Drupal::state()->get('locale.translation_status');
     unset($status['drupal']);
-    state()->set('locale.translation_status', $status);
+    \Drupal::state()->set('locale.translation_status', $status);
 
     // One language added, all translations up to date.
     $this->drupalGet('admin/reports/status');
@@ -71,9 +71,9 @@ class LocaleUpdateInterfaceTest extends WebTestBase {
     $this->assertText(t('All translations up to date.'), 'Translations up to date');
 
     // Set locale_test_translate module to have a local translation available.
-    $status = state()->get('locale.translation_status');
+    $status = \Drupal::state()->get('locale.translation_status');
     $status['locale_test_translate']['de']->type = 'local';
-    state()->set('locale.translation_status', $status);
+    \Drupal::state()->set('locale.translation_status', $status);
 
     // Check if updates are available for German.
     $this->drupalGet('admin/reports/status');
@@ -84,10 +84,10 @@ class LocaleUpdateInterfaceTest extends WebTestBase {
 
     // Set locale_test_translate module to have a dev release and no
     // translation found.
-    $status = state()->get('locale.translation_status');
+    $status = \Drupal::state()->get('locale.translation_status');
     $status['locale_test_translate']['de']->version = '1.3-dev';
     unset($status['locale_test_translate']['de']->type);
-    state()->set('locale.translation_status', $status);
+    \Drupal::state()->set('locale.translation_status', $status);
 
     // Check if no updates were found.
     $this->drupalGet('admin/reports/status');

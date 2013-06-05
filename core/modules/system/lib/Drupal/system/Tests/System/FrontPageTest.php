@@ -40,7 +40,7 @@ class FrontPageTest extends WebTestBase {
     // Configure 'node' as front page.
     config('system.site')->set('page.front', 'node')->save();
     // Enable front page logging in system_test.module.
-    state()->set('system_test.front_page_output', 1);
+    \Drupal::state()->set('system_test.front_page_output', 1);
   }
 
   /**

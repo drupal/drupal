@@ -274,7 +274,7 @@ function system_requirements($phase) {
     $help = $t('For more information, see the online handbook entry for <a href="@cron-handbook">configuring cron jobs</a>.', array('@cron-handbook' => 'http://drupal.org/cron'));
 
     // Determine when cron last ran.
-    $cron_last = state()->get('system.cron_last');
+    $cron_last = Drupal::state()->get('system.cron_last');
     if (!is_numeric($cron_last)) {
       $cron_last = variable_get('install_time', 0);
     }
@@ -296,7 +296,7 @@ function system_requirements($phase) {
     }
 
     $description .= ' ' . $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron')));
-    $description .= '<br />' . $t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url('cron/' . state()->get('system.cron_key'), array('absolute' => TRUE))));
+    $description .= '<br />' . $t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url('cron/' . Drupal::state()->get('system.cron_key'), array('absolute' => TRUE))));
 
     $requirements['cron'] = array(
       'title' => $t('Cron maintenance tasks'),
@@ -534,7 +534,7 @@ function system_install() {
 
   // Populate the cron key state variable.
   $cron_key = Crypt::randomStringHashed(55);
-  state()->set('system.cron_key', $cron_key);
+  Drupal::state()->set('system.cron_key', $cron_key);
 }
 
 /**
@@ -642,7 +642,7 @@ function system_schema() {
   );
 
   $schema['key_value'] = array(
-    'description' => 'Generic key-value storage table. See state() for an example.',
+    'description' => 'Generic key-value storage table. See the state system for an example.',
     'fields' => array(
       'collection' => array(
         'description' => 'A named collection of key and value pairs.',
@@ -1697,7 +1697,7 @@ function system_update_8028() {
  */
 function system_update_8029() {
   if ($value = update_variable_get('path_alias_whitelist', FALSE)) {
-    state()->set('system.path_alias_whitelist', $value);
+    Drupal::state()->set('system.path_alias_whitelist', $value);
   }
   update_variable_del('path_alias_whitelist');
 }

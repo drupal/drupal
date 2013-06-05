@@ -57,7 +57,7 @@ function entity_test_entity_types($filter = NULL) {
  */
 function entity_test_entity_info_alter(&$info) {
   // Optionally specify a translation handler for testing translations.
-  if (state()->get('entity_test.translation')) {
+  if (Drupal::state()->get('entity_test.translation')) {
     foreach(entity_test_entity_types() as $entity_type) {
       $info[$entity_type]['translation'][$entity_type] = TRUE;
     }
@@ -217,7 +217,7 @@ function entity_test_menu() {
  */
 function entity_test_form_node_form_alter(&$form, &$form_state, $form_id) {
   $langcode = $form_state['controller']->getFormLangcode($form_state);
-  state()->set('entity_test.form_langcode', $langcode);
+  Drupal::state()->set('entity_test.form_langcode', $langcode);
 }
 
 /**

@@ -15,7 +15,7 @@ function module_test_permission() {
  * Manipulate module dependencies to test dependency chains.
  */
 function module_test_system_info_alter(&$info, $file, $type) {
-  if (state()->get('module_test.dependency') == 'missing dependency') {
+  if (Drupal::state()->get('module_test.dependency') == 'missing dependency') {
     if ($file->name == 'forum') {
       // Make forum module depend on ban.
       $info['dependencies'][] = 'ban';
@@ -25,7 +25,7 @@ function module_test_system_info_alter(&$info, $file, $type) {
       $info['dependencies'][] = 'foo';
     }
   }
-  elseif (state()->get('module_test.dependency') == 'dependency') {
+  elseif (Drupal::state()->get('module_test.dependency') == 'dependency') {
     if ($file->name == 'forum') {
       // Make the forum module depend on ban.
       $info['dependencies'][] = 'ban';
@@ -35,7 +35,7 @@ function module_test_system_info_alter(&$info, $file, $type) {
       $info['dependencies'][] = 'php';
     }
   }
-  elseif (state()->get('module_test.dependency') == 'version dependency') {
+  elseif (Drupal::state()->get('module_test.dependency') == 'version dependency') {
     if ($file->name == 'forum') {
       // Make the forum module depend on ban.
       $info['dependencies'][] = 'ban';
@@ -155,7 +155,7 @@ function module_test_class_loading() {
 function module_test_modules_enabled($modules) {
   // Record the ordered list of modules that were passed in to this hook so we
   // can check that the modules were enabled in the correct sequence.
-  state()->set('system_test.module_enable_order', $modules);
+  Drupal::state()->set('system_test.module_enable_order', $modules);
 }
 
 /**
@@ -164,7 +164,7 @@ function module_test_modules_enabled($modules) {
 function module_test_modules_disabled($modules) {
   // Record the ordered list of modules that were passed in to this hook so we
   // can check that the modules were disabled in the correct sequence.
-  state()->set('module_test.disable_order', $modules);
+  Drupal::state()->set('module_test.disable_order', $modules);
 }
 
 /**
@@ -173,5 +173,5 @@ function module_test_modules_disabled($modules) {
 function module_test_modules_uninstalled($modules) {
   // Record the ordered list of modules that were passed in to this hook so we
   // can check that the modules were uninstalled in the correct sequence.
-  state()->set('module_test.uninstall_order', $modules);
+  Drupal::state()->set('module_test.uninstall_order', $modules);
 }

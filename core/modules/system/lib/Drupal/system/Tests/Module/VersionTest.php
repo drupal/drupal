@@ -62,7 +62,7 @@ class VersionTest extends ModuleTestBase {
       // Testing extra version. Incompatible.
       'common_test (>2.4-rc0)',
     );
-    state()->set('system_test.dependencies', $dependencies);
+    \Drupal::state()->set('system_test.dependencies', $dependencies);
     $n = count($dependencies);
     for ($i = 0; $i < $n; $i++) {
       $this->drupalGet('admin/modules');

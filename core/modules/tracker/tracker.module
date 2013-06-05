@@ -79,7 +79,7 @@ function tracker_menu() {
  * process, 'tracker.index_nid' will be 0.
  */
 function tracker_cron() {
-  $state = state();
+  $state = Drupal::state();
   $max_nid = $state->get('tracker.index_nid') ?: 0;
   if ($max_nid > 0) {
     $batch_size = config('tracker.settings')->get('cron_index_limit');

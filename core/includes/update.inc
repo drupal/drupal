@@ -170,7 +170,7 @@ function update_prepare_d8_bootstrap() {
     if ($has_required_schema) {
       if (!db_table_exists('key_value')) {
         $specs = array(
-          'description' => 'Generic key-value storage table. See state() for an example.',
+          'description' => 'Generic key-value storage table. See the state system for an example.',
           'fields' => array(
             'collection' => array(
               'description' => 'A named collection of key and value pairs.',
@@ -468,8 +468,8 @@ function update_prepare_d8_language() {
       $prefixes[$language->language] = $language->prefix;
       $domains[$language->language] = $language->domain;
     }
-    state()->set('locale.translation.plurals', $plurals);
-    state()->set('locale.translation.javascript', $javascript);
+    Drupal::state()->set('locale.translation.plurals', $plurals);
+    Drupal::state()->set('locale.translation.javascript', $javascript);
     config('language.negotiation')
       ->set('url.prefixes', $prefixes)
       ->set('url.domains', $domains)
@@ -1514,7 +1514,7 @@ function update_7_to_8_install_default_config($type, $config_name) {
  * Updates 7.x variables to state records.
  *
  * Provides a generalized method to migrate variables from 7.x to 8.x's
- * state() system.
+ * Drupal::state() system.
  *
  * @param array $variable_map
  *   An associative array that maps old variables names to new state record
@@ -1529,7 +1529,7 @@ function update_7_to_8_install_default_config($type, $config_name) {
 function update_variables_to_state(array $variable_map) {
   foreach ($variable_map as $variable_name => $state_name) {
     if (NULL !== $value = update_variable_get($variable_name)) {
-      state()->set($state_name, $value);
+      Drupal::state()->set($state_name, $value);
     }
   }
 

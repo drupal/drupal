@@ -372,7 +372,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
         ->save();
     }
     if (!empty($test['language_test_domain'])) {
-      state()->set('language_test.domain', $test['language_test_domain']);
+      \Drupal::state()->set('language_test.domain', $test['language_test_domain']);
     }
     $this->container->get('language_manager')->reset();
     $this->drupalGet($test['path'], array(), $test['http_header']);

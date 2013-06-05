@@ -678,7 +678,7 @@ function views_invalidate_cache() {
   Cache::deleteTags(array('content' => TRUE));
 
   // Set the menu as needed to be rebuilt.
-  state()->set('menu_rebuild_needed', TRUE);
+  Drupal::state()->set('menu_rebuild_needed', TRUE);
 
   $module_handler = Drupal::moduleHandler();
 

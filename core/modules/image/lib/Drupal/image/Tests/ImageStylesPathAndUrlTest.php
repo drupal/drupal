@@ -123,7 +123,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
     $original_uri = file_unmanaged_copy($file->uri, $scheme . '://', FILE_EXISTS_RENAME);
     // Let the image_module_test module know about this file, so it can claim
     // ownership in hook_file_download().
-    state()->set('image.test_file_download', $original_uri);
+    \Drupal::state()->set('image.test_file_download', $original_uri);
     $this->assertNotIdentical(FALSE, $original_uri, 'Created the generated image file.');
 
     // Get the URL of a file that has not been generated and try to create it.
@@ -170,7 +170,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
 
       // Make sure that access is denied for existing style files if we do not
       // have access.
-      state()->delete('image.test_file_download');
+      \Drupal::state()->delete('image.test_file_download');
       $this->drupalGet($generate_url);
       $this->assertResponse(403, 'Confirmed that access is denied for the private image style.');
 
@@ -211,7 +211,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
     $original_uri = file_unmanaged_copy($file->uri, $scheme . '://', FILE_EXISTS_RENAME);
     // Let the image_module_test module know about this file, so it can claim
     // ownership in hook_file_download().
-    state()->set('image.test_file_download', $original_uri);
+    \Drupal::state()->set('image.test_file_download', $original_uri);
 
     // Suppress the security token in the URL, then get the URL of a file that
     // has not been created and try to create it. Check that the security token

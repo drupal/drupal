@@ -81,7 +81,7 @@ class LocaleUninstallTest extends WebTestBase {
     $this->drupalPost('admin/config/regional/translate', $edit, t('Save translations'));
     _locale_rebuild_js('fr');
     $config = config('locale.settings');
-    $locale_javascripts = state()->get('locale.translation.javascript') ?: array();
+    $locale_javascripts = \Drupal::state()->get('locale.translation.javascript') ?: array();
     $js_file = 'public://' . $config->get('javascript.directory') . '/fr_' . $locale_javascripts['fr'] . '.js';
     $this->assertTrue($result = file_exists($js_file), t('JavaScript file created: %file', array('%file' => $result ? $js_file : t('none'))));
 
@@ -133,7 +133,7 @@ class LocaleUninstallTest extends WebTestBase {
     $this->assertFalse(config('language.negotiation')->get('session.parameter'), t('Visit language negotiation method settings cleared.'));
 
     // Check JavaScript parsed.
-    $javascript_parsed_count = count(state()->get('system.javascript_parsed') ?: array());
+    $javascript_parsed_count = count(\Drupal::state()->get('system.javascript_parsed') ?: array());
     $this->assertEqual($javascript_parsed_count, 0, t('JavaScript parsed count: %count', array('%count' => $javascript_parsed_count)));
   }
 }

@@ -28,7 +28,7 @@ function locale_uninstall() {
   $locale_js_directory = 'public://' . $config->get('javascript.directory');
 
   if (is_dir($locale_js_directory)) {
-    $locale_javascripts = state()->get('locale.translation.javascript') ?: array();
+    $locale_javascripts = Drupal::state()->get('locale.translation.javascript') ?: array();
     foreach ($locale_javascripts as $langcode => $file_suffix) {
       if (!empty($file_suffix)) {
         file_unmanaged_delete($locale_js_directory . '/' . $langcode . '_' . $file_suffix . '.js');
@@ -41,9 +41,9 @@ function locale_uninstall() {
   }
 
   // Clear variables.
-  state()->delete('system.javascript_parsed');
-  state()->delete('locale.translation.plurals');
-  state()->delete('locale.translation.javascript');
+  Drupal::state()->delete('system.javascript_parsed');
+  Drupal::state()->delete('locale.translation.plurals');
+  Drupal::state()->delete('locale.translation.javascript');
 
   // Remove all node type language variables. Node module might have been
   // enabled, but may be disabled, so use a wildcard delete.
@@ -297,7 +297,7 @@ function locale_requirements($phase) {
 
     if ($languages) {
       // Determine the status of the translation updates per lanuage.
-      $status = state()->get('locale.translation_status');
+      $status = Drupal::state()->get('locale.translation_status');
       if ($status) {
         foreach ($status as $project_id => $project) {
           foreach ($project as $langcode => $project_info) {

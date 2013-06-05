@@ -371,11 +371,11 @@ class JavaScriptTest extends WebTestBase {
     ));
 
     // Store the expected key for the first item in the cache.
-    $cache = array_keys(state()->get('system.js_cache_files') ?: array());
+    $cache = array_keys(\Drupal::state()->get('system.js_cache_files') ?: array());
     $expected_key = $cache[0];
 
     // Reset variables and add a file in a different scope first.
-    state()->delete('system.js_cache_files');
+    \Drupal::state()->delete('system.js_cache_files');
     drupal_static_reset('drupal_add_js');
     drupal_add_library('system', 'drupal');
     drupal_add_js('some/custom/javascript_file.js', array('scope' => 'footer'));
@@ -390,7 +390,7 @@ class JavaScriptTest extends WebTestBase {
     ));
 
     // Compare the expected key for the first file to the current one.
-    $cache = array_keys(state()->get('system.js_cache_files') ?: array());
+    $cache = array_keys(\Drupal::state()->get('system.js_cache_files') ?: array());
     $key = $cache[0];
     $this->assertEqual($key, $expected_key, 'JavaScript aggregation is not affected by ordering in different scopes.');
   }

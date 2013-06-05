@@ -36,7 +36,7 @@ class NodeAccessLanguageTest extends NodeTestBase {
     node_access_rebuild();
 
     // Enable the private node feature of the node_access_test module.
-    state()->set('node_access_test.private', TRUE);
+    \Drupal::state()->set('node_access_test.private', TRUE);
 
     // Add Hungarian and Catalan.
     $language = new Language(array(
@@ -153,7 +153,7 @@ class NodeAccessLanguageTest extends NodeTestBase {
 
     // Reset the node access cache and turn on our test node_access() code.
     entity_access_controller('node')->resetCache();
-    state()->set('node_access_test_secret_catalan', 1);
+    \Drupal::state()->set('node_access_test_secret_catalan', 1);
 
     // Tests that access is not granted if requested with no language.
     $this->assertNodeAccess($expected_node_access_no_access, $node_private_no_language, $web_user);

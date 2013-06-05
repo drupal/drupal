@@ -19,7 +19,7 @@ require_once __DIR__ . '/locale.translation.inc';
  */
 function locale_translation_flush_projects() {
   // Followup issue: http://drupal.org/node/1842362
-  // Replace {locale_project} table by state() variable(s).
+  // Replace {locale_project} table by Drupal::state() variable(s).
   db_truncate('locale_project')->execute();
 }
 

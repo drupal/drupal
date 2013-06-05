@@ -44,7 +44,7 @@ function system_list($type) {
     //   system.theme.data state will go away entirely as soon as themes have
     //   a proper installation status.
     // @see http://drupal.org/node/1067408
-    $theme_data = state()->get('system.theme.data');
+    $theme_data = Drupal::state()->get('system.theme.data');
     if (empty($theme_data)) {
       // @todo: system_list() may be called from _drupal_bootstrap_code(), in
       // which case system.module is not loaded yet.
@@ -119,7 +119,7 @@ function system_list_reset() {
   // will cause system_list_reset() to be called, but theme data is not
   // necessarily rebuilt afterwards.
   // @todo Obsolete with proper installation status for themes.
-  state()->delete('system.theme.data');
+  Drupal::state()->delete('system.theme.data');
 }
 
 /**

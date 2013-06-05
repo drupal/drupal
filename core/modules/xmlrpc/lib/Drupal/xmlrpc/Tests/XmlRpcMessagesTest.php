@@ -48,12 +48,12 @@ class XmlRpcMessagesTest extends WebTestBase {
    */
   protected function testAlterListMethods() {
     // Ensure xmlrpc_test.alter() is disabled and retrieve regular list of methods.
-    state()->set('xmlrpc_test.alter', FALSE);
+    \Drupal::state()->set('xmlrpc_test.alter', FALSE);
     $url = url('xmlrpc.php', array('absolute' => TRUE));
     $methods1 = xmlrpc($url, array('system.listMethods' => array()));
 
     // Enable the alter hook and retrieve the list of methods again.
-    state()->set('xmlrpc_test.alter', TRUE);
+    \Drupal::state()->set('xmlrpc_test.alter', TRUE);
     $methods2 = xmlrpc($url, array('system.listMethods' => array()));
 
     $diff = array_diff($methods1, $methods2);

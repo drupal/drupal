@@ -1376,7 +1376,7 @@ function node_ranking() {
   );
 
   // Add relevance based on creation or changed date.
-  if ($node_cron_last = state()->get('node.cron_last')) {
+  if ($node_cron_last = Drupal::state()->get('node.cron_last')) {
     $ranking['recent'] = array(
       'title' => t('Recently posted'),
       // Exponential decay with half-life of 6 months, starting at last indexed node
@@ -2180,7 +2180,7 @@ function _node_index_node(EntityInterface $node) {
 
   // Save the changed time of the most recent indexed node, for the search
   // results half-life calculation.
-  state()->set('node.cron_last', $node->changed);
+  Drupal::state()->set('node.cron_last', $node->changed);
 
   $languages = $node->getTranslationLanguages();
 
@@ -2932,13 +2932,13 @@ function _node_access_write_grants(EntityInterface $node, $grants, $realm = NULL
  */
 function node_access_needs_rebuild($rebuild = NULL) {
   if (!isset($rebuild)) {
-    return state()->get('node.node_access_needs_rebuild') ?: FALSE;
+    return Drupal::state()->get('node.node_access_needs_rebuild') ?: FALSE;
   }
   elseif ($rebuild) {
-    state()->set('node.node_access_needs_rebuild', TRUE);
+    Drupal::state()->set('node.node_access_needs_rebuild', TRUE);
   }
   else {
-    state()->delete('node.node_access_needs_rebuild');
+    Drupal::state()->delete('node.node_access_needs_rebuild');
   }
 }
 

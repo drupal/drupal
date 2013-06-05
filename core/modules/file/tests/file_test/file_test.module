@@ -158,14 +158,14 @@ function file_test_reset() {
     'move' => array(),
     'delete' => array(),
   );
-  state()->set('file_test.results', $results);
+  Drupal::state()->set('file_test.results', $results);
 
   // These hooks will return these values, see file_test_set_return().
   $return = array(
     'validate' => array(),
     'download' => NULL,
   );
-  state()->set('file_test.return', $return);
+  Drupal::state()->set('file_test.return', $return);
 }
 
 /**
@@ -183,7 +183,7 @@ function file_test_reset() {
  * @see file_test_reset()
  */
 function file_test_get_calls($op) {
-  $results = state()->get('file_test.results') ?: array();
+  $results = Drupal::state()->get('file_test.results') ?: array();
   return $results[$op];
 }
 
@@ -196,7 +196,7 @@ function file_test_get_calls($op) {
  *   passed to each call.
  */
 function file_test_get_all_calls() {
-  return state()->get('file_test.results') ?: array();
+  return Drupal::state()->get('file_test.results') ?: array();
 }
 
 /**
@@ -212,9 +212,9 @@ function file_test_get_all_calls() {
  * @see file_test_reset()
  */
 function _file_test_log_call($op, $args) {
-  $results = state()->get('file_test.results') ?: array();
+  $results = Drupal::state()->get('file_test.results') ?: array();
   $results[$op][] = $args;
-  state()->set('file_test.results', $results);
+  Drupal::state()->set('file_test.results', $results);
 }
 
 /**
@@ -230,7 +230,7 @@ function _file_test_log_call($op, $args) {
  * @see file_test_reset()
  */
 function _file_test_get_return($op) {
-  $return = state()->get('file_test.return') ?: array($op => NULL);
+  $return = Drupal::state()->get('file_test.return') ?: array($op => NULL);
   return $return[$op];
 }
 
@@ -246,9 +246,9 @@ function _file_test_get_return($op) {
  * @see file_test_reset()
  */
 function file_test_set_return($op, $value) {
-  $return = state()->get('file_test.return') ?: array();
+  $return = Drupal::state()->get('file_test.return') ?: array();
   $return[$op] = $value;
-  state()->set('file_test.return', $return);
+  Drupal::state()->set('file_test.return', $return);
 }
 
 /**
@@ -320,7 +320,7 @@ function file_test_file_predelete(File $file) {
 function file_test_file_url_alter(&$uri) {
   // Only run this hook when this variable is set. Otherwise, we'd have to add
   // another hidden test module just for this hook.
-  $alter_mode = state()->get('file_test.hook_file_url_alter');
+  $alter_mode = Drupal::state()->get('file_test.hook_file_url_alter');
   if (!$alter_mode) {
     return;
   }

@@ -94,7 +94,7 @@ abstract class ToolkitTestBase extends WebTestBase {
       'crop' => array(),
       'desaturate' => array(),
     );
-    state()->set('image_test.results', $results);
+    \Drupal::state()->set('image_test.results', $results);
   }
 
   /**
@@ -106,6 +106,6 @@ abstract class ToolkitTestBase extends WebTestBase {
    *   passed to each call.
    */
   function imageTestGetAllCalls() {
-    return state()->get('image_test.results') ?: array();
+    return \Drupal::state()->get('image_test.results') ?: array();
   }
 }

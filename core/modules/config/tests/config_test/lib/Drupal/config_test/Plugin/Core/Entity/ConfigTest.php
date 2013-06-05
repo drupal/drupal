@@ -97,7 +97,7 @@ class ConfigTest extends ConfigEntityBase {
    * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::sort().
    */
   public static function sort($a, $b) {
-    state()->set('config_entity_sort', TRUE);
+    \Drupal::state()->set('config_entity_sort', TRUE);
     return parent::sort($a, $b);
   }
 

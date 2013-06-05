@@ -10,6 +10,6 @@
  */
 function locale_test_uninstall() {
   // Clear variables.
-  state()->delete('locale.test_system_info_alter');
-  state()->delete('locale.test_projects_alter');
+  Drupal::state()->delete('locale.test_system_info_alter');
+  Drupal::state()->delete('locale.test_projects_alter');
 }

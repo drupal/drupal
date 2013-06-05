@@ -16,7 +16,7 @@ function locale_test_system_info_alter(&$info, $file, $type) {
   // By default the locale_test modules are hidden and have a project specified.
   // To test the module detection proces by locale_project_list() the
   // test modules should mimic a custom module. I.e. be non-hidden.
-  if (state()->get('locale.test_system_info_alter')) {
+  if (Drupal::state()->get('locale.test_system_info_alter')) {
     if ($file->name == 'locale_test' || $file->name == 'locale_test_translate') {
       // Don't hide the module.
       $info['hidden'] = FALSE;
@@ -37,7 +37,7 @@ function locale_test_system_info_alter(&$info, $file, $type) {
  * test script in order for this hook to take effect.
  */
 function locale_test_locale_translation_projects_alter(&$projects) {
-  if (state()->get('locale.test_projects_alter')) {
+  if (Drupal::state()->get('locale.test_projects_alter')) {
 
     // Instead of the default ftp.drupal.org we use the file system of the test
     // instance to simulate a remote file location.

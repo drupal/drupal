@@ -48,8 +48,8 @@ abstract class ViewTestBase extends WebTestBase {
    */
   protected function enableViewsTestModule() {
     // Define the schema and views data variable before enabling the test module.
-    state()->set('views_test_data_schema', $this->schemaDefinition());
-    state()->set('views_test_data_views_data', $this->viewsData());
+    \Drupal::state()->set('views_test_data_schema', $this->schemaDefinition());
+    \Drupal::state()->set('views_test_data_views_data', $this->viewsData());
 
     module_enable(array('views_test_data'));
     $this->resetAll();

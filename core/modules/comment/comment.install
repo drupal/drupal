@@ -29,7 +29,7 @@ function comment_uninstall() {
   }
 
   // Remove states.
-  state()->delete('comment.node_comment_statistics_scale');
+  Drupal::state()->delete('comment.node_comment_statistics_scale');
 }
 
 /**

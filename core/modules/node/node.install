@@ -530,12 +530,12 @@ function node_uninstall() {
   variable_del('node_rank_recent');
 
   // Delete remaining general module variables.
-  state()->delete('node.node_access_needs_rebuild');
+  Drupal::state()->delete('node.node_access_needs_rebuild');
   variable_del('node_admin_theme');
   variable_del('node_recent_block_count');
 
   // Delete any stored state.
-  state()->delete('node.cron_last');
+  Drupal::state()->delete('node.cron_last');
 }
 
 /**

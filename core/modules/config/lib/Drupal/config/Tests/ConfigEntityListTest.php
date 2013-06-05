@@ -202,7 +202,7 @@ class ConfigEntityListTest extends WebTestBase {
     $this->drupalPost(NULL, $edit, t('Save'));
 
     // Ensure that the entity's sort method was called.
-    $this->assertTrue(state()->get('config_entity_sort'), 'ConfigTest::sort() was called.');
+    $this->assertTrue(\Drupal::state()->get('config_entity_sort'), 'ConfigTest::sort() was called.');
 
     // Confirm that the user is returned to the listing, and verify that the
     // text of the label and machine name appears in the list (versus elsewhere

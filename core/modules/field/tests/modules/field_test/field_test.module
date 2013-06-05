@@ -106,7 +106,7 @@ function field_test_field_test_op_multiple($entity_type, $entities, $field, $ins
  * Implements hook_field_available_languages_alter().
  */
 function field_test_field_available_languages_alter(&$langcodes, $context) {
-  if (state()->get('field_test.field_available_languages_alter')) {
+  if (Drupal::state()->get('field_test.field_available_languages_alter')) {
     // Add an unavailable language code.
     $langcodes[] = 'xx';
     // Remove an available language code.
@@ -119,7 +119,7 @@ function field_test_field_available_languages_alter(&$langcodes, $context) {
  * Implements hook_field_language_alter().
  */
 function field_test_field_language_alter(&$display_langcode, $context) {
-  if (state()->get('field_test.language_fallback') ?: TRUE) {
+  if (Drupal::state()->get('field_test.language_fallback') ?: TRUE) {
     field_language_fallback($display_langcode, $context['entity'], $context['langcode']);
   }
 }
