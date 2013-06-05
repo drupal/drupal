@@ -1272,7 +1272,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * This function is similar to storeExposedInput but modified to
    * work properly when the filter is a group.
    */
-  function store_group_input($input, $status) {
+  public function storeGroupInput($input, $status) {
     if (!$this->isAGroup() || empty($this->options['group_info']['identifier'])) {
       return TRUE;
     }

@@ -1122,7 +1122,7 @@ class ViewExecutable {
             $converted = FALSE;
             if ($handlers[$id]->isAGroup()) {
               $converted = $handlers[$id]->convertExposedInput($this->exposed_data, $group_id);
-              $handlers[$id]->store_group_input($this->exposed_data, $converted);
+              $handlers[$id]->storeGroupInput($this->exposed_data, $converted);
               if (!$converted) {
                 continue;
               }
