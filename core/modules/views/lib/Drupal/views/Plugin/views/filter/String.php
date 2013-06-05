@@ -77,7 +77,7 @@ class String extends FilterPluginBase {
       'not_starts' => array(
         'title' => t('Does not start with'),
         'short' => t('not_begins'),
-        'method' => 'op_not_starts',
+        'method' => 'opNotStartsWith',
         'values' => 1,
       ),
       'ends' => array(
@@ -305,7 +305,7 @@ class String extends FilterPluginBase {
     $this->query->add_where($this->options['group'], $field, db_like($this->value) . '%', 'LIKE');
   }
 
-  function op_not_starts($field) {
+  protected function opNotStartsWith($field) {
     $this->query->add_where($this->options['group'], $field, db_like($this->value) . '%', 'NOT LIKE');
   }
 
