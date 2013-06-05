@@ -59,13 +59,13 @@ class String extends FilterPluginBase {
       'word' => array(
         'title' => t('Contains any word'),
         'short' => t('has word'),
-        'method' => 'op_word',
+        'method' => 'opContainsWord',
         'values' => 1,
       ),
       'allwords' => array(
         'title' => t('Contains all words'),
         'short' => t('has all'),
-        'method' => 'op_word',
+        'method' => 'opContainsWord',
         'values' => 1,
       ),
       'starts' => array(
@@ -268,7 +268,7 @@ class String extends FilterPluginBase {
     $this->query->add_where($this->options['group'], $field, '%' . db_like($this->value) . '%', 'LIKE');
   }
 
-  function op_word($field) {
+  protected function opContainsWord($field) {
     $where = $this->operator == 'word' ? db_or() : db_and();
 
     // Don't filter on empty strings.
