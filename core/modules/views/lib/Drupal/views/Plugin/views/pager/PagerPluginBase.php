@@ -103,7 +103,7 @@ abstract class PagerPluginBase extends PluginBase {
    *
    * If NULL, we do not know what the current page is.
    */
-  function get_current_page() {
+  public function getCurrentPage() {
     return $this->current_page;
   }
 

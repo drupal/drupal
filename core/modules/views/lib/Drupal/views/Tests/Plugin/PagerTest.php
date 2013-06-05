@@ -284,7 +284,7 @@ class PagerTest extends PluginTestBase {
     $this->assertEqual($view->getCurrentPage(), NULL, 'If the pager is not initialized and no manual override there is no current page.');
     $rand_number = rand(1, 5);
     $view->setCurrentPage($rand_number);
-    $this->assertEqual($view->getCurrentPage(), $rand_number, 'Make sure get_current_page uses the settings of set_current_page.');
+    $this->assertEqual($view->getCurrentPage(), $rand_number, 'Make sure getCurrentPage uses the settings of set_current_page.');
 
     $view->destroy();
 
@@ -312,7 +312,7 @@ class PagerTest extends PluginTestBase {
     $view->setCurrentPage($rand_number);
     $rand_number = rand(6, 11);
     $view->pager->set_current_page($rand_number);
-    $this->assertEqual($view->getCurrentPage(), $rand_number, 'Make sure get_current_page uses the settings of set_current_page.');
+    $this->assertEqual($view->getCurrentPage(), $rand_number, 'Make sure getCurrentPage uses the settings of set_current_page.');
 
     // Set an invalid page and make sure the method takes care about it.
     $view->setCurrentPage(-1);

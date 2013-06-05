@@ -460,7 +460,7 @@ class ViewExecutable {
   public function getCurrentPage() {
     // If the pager is already initialized, pass it through to the pager.
     if (!empty($this->pager)) {
-      return $this->pager->get_current_page();
+      return $this->pager->getCurrentPage();
     }
 
     if (isset($this->current_page)) {
