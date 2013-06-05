@@ -82,7 +82,7 @@ class Numeric extends ArgumentPluginBase {
       return !empty($this->definition['invalid input']) ? $this->definition['invalid input'] : t('Invalid input');
     }
 
-    return implode($this->operator == 'or' ? ' + ' : ', ', $this->title_query());
+    return implode($this->operator == 'or' ? ' + ' : ', ', $this->titleQuery());
   }
 
   /**
@@ -90,7 +90,7 @@ class Numeric extends ArgumentPluginBase {
    * @return array
    *    Returns all titles, if it's just one title it's an array with one entry.
    */
-  function title_query() {
+  public function titleQuery() {
     return $this->value;
   }
 

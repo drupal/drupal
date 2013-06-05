@@ -43,7 +43,7 @@ class IndexTid extends ManyToOne {
     return views_taxonomy_set_breadcrumb($breadcrumb, $this);
   }
 
-  function title_query() {
+  public function titleQuery() {
     $titles = array();
     $result = db_select('taxonomy_term_data', 'td')
       ->fields('td', array('name'))

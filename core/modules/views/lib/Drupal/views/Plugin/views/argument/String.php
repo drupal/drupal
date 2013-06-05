@@ -278,13 +278,13 @@ class String extends ArgumentPluginBase {
       return !empty($this->definition['invalid input']) ? $this->definition['invalid input'] : t('Invalid input');
     }
 
-    return implode($this->operator == 'or' ? ' + ' : ', ', $this->title_query());
+    return implode($this->operator == 'or' ? ' + ' : ', ', $this->titleQuery());
   }
 
   /**
    * Override for specific title lookups.
    */
-  function title_query() {
+  public function titleQuery() {
     return drupal_map_assoc($this->value, 'check_plain');
   }
 

@@ -22,7 +22,7 @@ class Vid extends Numeric {
   /**
    * Override the behavior of title(). Get the title of the revision.
    */
-  function title_query() {
+  public function titleQuery() {
     $titles = array();
 
     $results = db_select('node_field_revision', 'npr')

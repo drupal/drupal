@@ -25,7 +25,7 @@ class Uid extends Numeric {
    * @return array
    *    A list of usernames.
    */
-  function title_query() {
+  public function titleQuery() {
     if (!$this->argument) {
       return array(config('user.settings')->get('anonymous'));
     }
