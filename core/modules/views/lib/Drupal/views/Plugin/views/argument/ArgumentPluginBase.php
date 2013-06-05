@@ -462,7 +462,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       ),
       'summary' => array(
         'title' => t('Display a summary'),
-        'method' => 'default_summary',
+        'method' => 'defaultSummary',
         'form method' => 'defaultSummaryForm',
         'style plugin' => TRUE,
         'breadcrumb' => TRUE, // generate a breadcrumb to here
@@ -768,7 +768,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * If an argument was expected and was not given, in this case, display
    * a summary query.
    */
-  function default_summary() {
+  protected function defaultSummary() {
     $this->view->build_info['summary'] = TRUE;
     $this->view->build_info['summary_level'] = $this->options['id'];
 
