@@ -59,7 +59,7 @@ class WizardPluginBaseUnitTest extends ViewUnitTestBase {
   public function testCreateView() {
     $form = array();
     $form_state = array();
-    $form = $this->wizard->build_form($form, $form_state);
+    $form = $this->wizard->buildForm($form, $form_state);
     $random_id = strtolower($this->randomName());
     $random_label = $this->randomName();
     $random_description = $this->randomName();

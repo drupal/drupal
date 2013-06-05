@@ -198,9 +198,9 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   }
 
   /**
-   * Implements Drupal\views\Plugin\views\wizard\WizardInterface::build_form().
+   * {@inheritdoc} Drupal\views\Plugin\views\wizard\WizardInterface::buildForm().
    */
-  function build_form(array $form, array &$form_state) {
+  public function buildForm(array $form, array &$form_state) {
     $style_options = views_fetch_plugin_names('style', 'normal', array($this->base_table));
     $feed_row_options = views_fetch_plugin_names('row', 'feed', array($this->base_table));
     $path_prefix = url(NULL, array('absolute' => TRUE));
