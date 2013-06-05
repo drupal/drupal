@@ -169,7 +169,7 @@ abstract class PagerPluginBase extends PluginBase {
    *
    * If a pager needs a count query, a simple query
    */
-  function use_count_query() {
+  public function useCountQuery() {
     return TRUE;
   }
 

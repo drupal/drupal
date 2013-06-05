@@ -1435,7 +1435,7 @@ class Sql extends QueryPluginBase {
       $start = microtime(TRUE);
 
       try {
-        if ($view->pager->use_count_query() || !empty($view->get_total_rows)) {
+        if ($view->pager->useCountQuery() || !empty($view->get_total_rows)) {
           $view->pager->executeCountQuery($count_query);
         }
 
@@ -1457,7 +1457,7 @@ class Sql extends QueryPluginBase {
         }
 
         $view->pager->postExecute($view->result);
-        if ($view->pager->use_count_query() || !empty($view->get_total_rows)) {
+        if ($view->pager->useCountQuery() || !empty($view->get_total_rows)) {
           $view->total_rows = $view->pager->getTotalItems();
         }
 

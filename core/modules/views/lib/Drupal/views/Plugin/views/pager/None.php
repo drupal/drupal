@@ -67,7 +67,7 @@ class None extends PagerPluginBase {
     return FALSE;
   }
 
-  function use_count_query() {
+  public function useCountQuery() {
     return FALSE;
   }
 

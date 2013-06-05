@@ -67,9 +67,9 @@ class Mini extends SqlBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\pager\PagerPluginBase::use_count_query().
+   * Overrides \Drupal\views\Plugin\views\pager\PagerPluginBase::useCountQuery().
    */
-  public function use_count_query() {
+  public function useCountQuery() {
     return FALSE;
   }
 

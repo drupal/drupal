@@ -141,7 +141,7 @@ class PagerTest extends PluginTestBase {
 
     // Check some public functions.
     $this->assertFalse($view->pager->usePager());
-    $this->assertFalse($view->pager->use_count_query());
+    $this->assertFalse($view->pager->useCountQuery());
     $this->assertEqual($view->pager->get_items_per_page(), 0);
   }
 
@@ -187,7 +187,7 @@ class PagerTest extends PluginTestBase {
 
     // Check some public functions.
     $this->assertFalse($view->pager->usePager());
-    $this->assertFalse($view->pager->use_count_query());
+    $this->assertFalse($view->pager->useCountQuery());
   }
 
   /**
