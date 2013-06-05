@@ -102,9 +102,9 @@ class EntityReference extends StylePluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\style\StylePluginBase\StylePluginBase::even_empty().
+   * {@inheritdoc}
    */
-  function even_empty() {
+  public function evenEmpty() {
     return TRUE;
   }
 }

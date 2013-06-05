@@ -387,8 +387,8 @@ class Table extends StylePluginBase {
     );
   }
 
-  function even_empty() {
-    return parent::even_empty() || !empty($this->options['empty_table']);
+  public function evenEmpty() {
+    return parent::evenEmpty() || !empty($this->options['empty_table']);
   }
 
   public function wizardSubmit(&$form, &$form_state, WizardInterface $wizard, &$display_options, $display_type) {

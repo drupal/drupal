@@ -99,7 +99,7 @@ class EntityReference extends DisplayPluginBase {
    * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::render().
    */
   public function render() {
-    if (!empty($this->view->result) && $this->view->style_plugin->even_empty()) {
+    if (!empty($this->view->result) && $this->view->style_plugin->evenEmpty()) {
       return $this->view->style_plugin->render($this->view->result);
     }
     return '';

@@ -224,7 +224,7 @@ abstract class StylePluginBase extends PluginBase {
   /**
    * Should the output of the style plugin be rendered even if it's a empty view.
    */
-  function even_empty() {
+  public function evenEmpty() {
     return !empty($this->definition['even empty']);
   }
 

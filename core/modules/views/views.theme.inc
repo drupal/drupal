@@ -54,7 +54,7 @@ function template_preprocess_views_view(&$vars) {
 
   $view = $vars['view'];
 
-  $vars['rows'] = (!empty($view->result) || $view->style_plugin->even_empty()) ? $view->style_plugin->render($view->result) : array();
+  $vars['rows'] = (!empty($view->result) || $view->style_plugin->evenEmpty()) ? $view->style_plugin->render($view->result) : array();
   // Force a render array so CSS/JS can be added.
   if (!is_array($vars['rows'])) {
     $vars['rows'] = array('#markup' => $vars['rows']);
