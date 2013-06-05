@@ -365,7 +365,7 @@ class Sql extends QueryPluginBase {
    *   added.
    */
   public function addTable($table, $relationship = NULL, JoinPluginBase $join = NULL, $alias = NULL) {
-    if (!$this->ensure_path($table, $relationship, $join)) {
+    if (!$this->ensurePath($table, $relationship, $join)) {
       return FALSE;
     }
 
@@ -545,7 +545,7 @@ class Sql extends QueryPluginBase {
     // join to a link point, not the base table.
     $join = $this->adjust_join($join, $relationship);
 
-    if ($this->ensure_path($table, $relationship, $join)) {
+    if ($this->ensurePath($table, $relationship, $join)) {
       // Attempt to eliminate redundant joins.  If this table's
       // relationship and join exactly matches an existing table's
       // relationship and join, we do not have to join to it again;
@@ -587,7 +587,7 @@ class Sql extends QueryPluginBase {
    * query they will be added, but additional copies will NOT be added
    * if the table is already there.
    */
-  function ensure_path($table, $relationship = NULL, $join = NULL, $traced = array(), $add = array()) {
+  protected function ensurePath($table, $relationship = NULL, $join = NULL, $traced = array(), $add = array()) {
     if (!isset($relationship)) {
       $relationship = $this->view->storage->get('base_table');
     }
@@ -632,7 +632,7 @@ class Sql extends QueryPluginBase {
 
     // Keep looking.
     $traced[$join->leftTable] = TRUE;
-    return $this->ensure_path($join->leftTable, $relationship, $left_join, $traced, $add);
+    return $this->ensurePath($join->leftTable, $relationship, $left_join, $traced, $add);
   }
 
   /**
