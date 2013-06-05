@@ -40,11 +40,11 @@ class None extends CachePluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\cache\CachePluginBase::cache_set().
+   * {@inheritdoc}
    *
-   * Replace the cache set logic so it does set a cache item at all.
+   * Replace the cache set logic so it does not set a cache item at all.
    */
-  function cache_set($type) {
+  public function cacheSet($type) {
   }
 
 }

@@ -115,7 +115,7 @@ abstract class CachePluginBase extends PluginBase {
    *
    * A plugin should override this to provide specialized caching behavior.
    */
-  function cache_set($type) {
+  public function cacheSet($type) {
     switch ($type) {
       case 'query':
         // Not supported currently, but this is certainly where we'd put it.

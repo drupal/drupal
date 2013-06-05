@@ -1190,7 +1190,7 @@ class ViewExecutable {
       // views_plugin_query::execute().
       $this->result = array_values($this->result);
       $this->_postExecute();
-      $cache->cache_set('results');
+      $cache->cacheSet('results');
     }
 
     // Let modules modify the view just after executing it.
@@ -1294,7 +1294,7 @@ class ViewExecutable {
 
       $this->display_handler->output = $this->display_handler->render();
       if ($cache) {
-        $cache->cache_set('output');
+        $cache->cacheSet('output');
       }
     }
 
