@@ -1,0 +1,14 @@
+ban_admin_page:
+  pattern: '/admin/config/people/ban/{default_ip}'
+  defaults:
+    _form: '\Drupal\ban\Form\BanAdmin'
+    default_ip: ''
+  requirements:
+    _permission: 'ban IP addresses'
+
+ban_delete:
+  pattern: '/admin/config/people/ban/delete/{ban_id}'
+  defaults:
+    _form: '\Drupal\ban\Form\BanDelete'
+  requirements:
+    _permission: 'ban IP addresses'

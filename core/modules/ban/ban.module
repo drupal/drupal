@@ -44,30 +44,12 @@ function ban_menu() {
   $items['admin/config/people/ban'] = array(
     'title' => 'IP address bans',
     'description' => 'Manage banned IP addresses.',
-    'page callback' => 'ban_admin_page',
-    'access arguments' => array('ban IP addresses'),
-    'file' => 'ban.admin.inc',
+    'route_name' => 'ban_admin_page',
     'weight' => 10,
   );
-  $items['admin/config/people/ban/delete/%ban_ip'] = array(
+  $items['admin/config/people/ban/delete/%'] = array(
     'title' => 'Delete IP address',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('ban_ip_delete_form', 5),
-    'access arguments' => array('ban IP addresses'),
-    'file' => 'ban.admin.inc',
+    'route_name' => 'ban_delete',
   );
   return $items;
-}
-
-/**
- * Loads a banned IP address record from the database.
- *
- * @param int $iid
- *   The ID of the banned IP address to retrieve.
- *
- * @return array
- *   The banned IP address record from the database as an array.
- */
-function ban_ip_load($iid) {
-  return db_query("SELECT * FROM {ban_ip} WHERE iid = :iid", array(':iid' => $iid))->fetchAssoc();
 }
