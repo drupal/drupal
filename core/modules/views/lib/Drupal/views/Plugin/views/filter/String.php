@@ -53,7 +53,7 @@ class String extends FilterPluginBase {
       'contains' => array(
         'title' => t('Contains'),
         'short' => t('contains'),
-        'method' => 'op_contains',
+        'method' => 'opContains',
         'values' => 1,
       ),
       'word' => array(
@@ -264,7 +264,7 @@ class String extends FilterPluginBase {
     $this->query->add_where($this->options['group'], $field, $this->value, $this->operator());
   }
 
-  function op_contains($field) {
+  protected function opContains($field) {
     $this->query->add_where($this->options['group'], $field, '%' . db_like($this->value) . '%', 'LIKE');
   }
 

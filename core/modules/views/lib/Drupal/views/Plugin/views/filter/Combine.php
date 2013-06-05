@@ -96,7 +96,7 @@ class Combine extends String {
     $this->query->add_where_expression($this->options['group'], "$expression $operator $placeholder", array($placeholder => $this->value));
   }
 
-  function op_contains($expression) {
+  protected function opContains($expression) {
     $placeholder = $this->placeholder();
     $this->query->add_where_expression($this->options['group'], "$expression LIKE $placeholder", array($placeholder => '%' . db_like($this->value) . '%'));
   }
