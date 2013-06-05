@@ -808,7 +808,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     // Add the field.
     $this->base_alias = $this->query->add_field($this->tableAlias, $this->realField);
 
-    $this->summary_name_field();
+    $this->summaryNameField();
     return $this->summaryBasics();
   }
 
@@ -816,7 +816,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * Add the name field, which is the field displayed in summary queries.
    * This is often used when the argument is numeric.
    */
-  function summary_name_field() {
+  protected function summaryNameField() {
     // Add the 'name' field. For example, if this is a uid argument, the
     // name field would be 'name' (i.e, the username).
 

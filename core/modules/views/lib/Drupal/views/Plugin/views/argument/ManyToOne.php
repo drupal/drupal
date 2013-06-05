@@ -179,7 +179,7 @@ class ManyToOne extends ArgumentPluginBase {
     // Add the field.
     $this->base_alias = $this->query->add_field($this->tableAlias, $this->realField);
 
-    $this->summary_name_field();
+    $this->summaryNameField();
 
     return $this->summaryBasics();
   }

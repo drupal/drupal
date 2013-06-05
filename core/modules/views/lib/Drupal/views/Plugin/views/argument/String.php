@@ -166,7 +166,7 @@ class String extends ArgumentPluginBase {
       $this->query->set_count_field(NULL, $formula, $this->field, $this->field . '_truncated');
     }
 
-    $this->summary_name_field();
+    $this->summaryNameField();
     return $this->summaryBasics(FALSE);
   }
 
