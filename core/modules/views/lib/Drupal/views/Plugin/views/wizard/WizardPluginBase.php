@@ -1161,12 +1161,12 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   }
 
   /**
-   * Implements Drupal\views\Plugin\views\wizard\WizardInterface::create_view().
+   * {@inheritDoc}
    */
-  function create_view(array $form, array &$form_state) {
+  public function createView(array $form, array &$form_state) {
     $view = $this->retrieveValidatedView($form, $form_state);
     if (empty($view)) {
-      throw new WizardException('Attempted to create_view with values that have not been validated.');
+      throw new WizardException('Attempted to create a view with values that have not been validated.');
     }
     return $view;
   }

@@ -80,7 +80,7 @@ class WizardPluginBaseUnitTest extends ViewUnitTestBase {
     );
 
     $this->wizard->validateView($form, $form_state);
-    $view = $this->wizard->create_view($form, $form_state);
+    $view = $this->wizard->createView($form, $form_state);
     $this->assertTrue($view instanceof ViewUI, 'The created view is a ViewUI object.');
     $this->assertEqual($view->get('id'), $random_id);
     $this->assertEqual($view->get('label'), $random_label);

@@ -55,6 +55,6 @@ interface WizardInterface {
    *
    * @throws Drupal\views\Plugin\views\wizard\WizardException
    */
-  function create_view(array $form, array &$form_state);
+  public function createView(array $form, array &$form_state);
 
 }

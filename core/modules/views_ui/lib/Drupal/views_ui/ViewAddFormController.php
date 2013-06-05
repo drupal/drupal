@@ -194,7 +194,7 @@ class ViewAddFormController extends ViewFormControllerBase implements EntityCont
    */
   public function submit(array $form, array &$form_state) {
     try {
-      $view = $form_state['wizard_instance']->create_view($form, $form_state);
+      $view = $form_state['wizard_instance']->createView($form, $form_state);
     }
     // @todo Figure out whether it really makes sense to throw and catch exceptions on the wizard.
     catch (WizardException $e) {
