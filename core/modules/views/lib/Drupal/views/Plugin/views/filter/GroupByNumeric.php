@@ -39,7 +39,7 @@ class GroupByNumeric extends Numeric {
     }
   }
 
-  function op_simple($field) {
+  protected function opSimple($field) {
     $placeholder = $this->placeholder();
     $this->query->addHavingExpression($this->options['group'], "$field $this->operator $placeholder", array($placeholder => $this->value['value']));
   }

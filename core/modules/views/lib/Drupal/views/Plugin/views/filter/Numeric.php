@@ -39,37 +39,37 @@ class Numeric extends FilterPluginBase {
     $operators = array(
       '<' => array(
         'title' => t('Is less than'),
-        'method' => 'op_simple',
+        'method' => 'opSimple',
         'short' => t('<'),
         'values' => 1,
       ),
       '<=' => array(
         'title' => t('Is less than or equal to'),
-        'method' => 'op_simple',
+        'method' => 'opSimple',
         'short' => t('<='),
         'values' => 1,
       ),
       '=' => array(
         'title' => t('Is equal to'),
-        'method' => 'op_simple',
+        'method' => 'opSimple',
         'short' => t('='),
         'values' => 1,
       ),
       '!=' => array(
         'title' => t('Is not equal to'),
-        'method' => 'op_simple',
+        'method' => 'opSimple',
         'short' => t('!='),
         'values' => 1,
       ),
       '>=' => array(
         'title' => t('Is greater than or equal to'),
-        'method' => 'op_simple',
+        'method' => 'opSimple',
         'short' => t('>='),
         'values' => 1,
       ),
       '>' => array(
         'title' => t('Is greater than'),
-        'method' => 'op_simple',
+        'method' => 'opSimple',
         'short' => t('>'),
         'values' => 1,
       ),
@@ -260,7 +260,7 @@ class Numeric extends FilterPluginBase {
     }
   }
 
-  function op_simple($field) {
+  protected function opSimple($field) {
     $this->query->add_where($this->options['group'], $field, $this->value['value'], $this->operator);
   }
 

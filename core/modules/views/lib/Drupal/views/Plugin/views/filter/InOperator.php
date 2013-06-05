@@ -109,14 +109,14 @@ class InOperator extends FilterPluginBase {
         'title' => t('Is one of'),
         'short' => t('in'),
         'short_single' => t('='),
-        'method' => 'op_simple',
+        'method' => 'opSimple',
         'values' => 1,
       ),
       'not in' => array(
         'title' => t('Is not one of'),
         'short' => t('not in'),
         'short_single' => t('<>'),
-        'method' => 'op_simple',
+        'method' => 'opSimple',
         'values' => 1,
       ),
     );
@@ -376,7 +376,7 @@ class InOperator extends FilterPluginBase {
     }
   }
 
-  function op_simple() {
+  protected function opSimple() {
     if (empty($this->value)) {
       return;
     }

@@ -178,7 +178,7 @@ class Date extends Numeric {
     $this->query->add_where_expression($this->options['group'], "$field $operator $a AND $b");
   }
 
-  function op_simple($field) {
+  protected function opSimple($field) {
     $value = intval(strtotime($this->value['value'], 0));
     if (!empty($this->value['type']) && $this->value['type'] == 'offset') {
       $value = '***CURRENT_TIME***' . sprintf('%+d', $value); // keep sign
