@@ -856,7 +856,7 @@ abstract class FieldPluginBase extends HandlerBase {
         $options[t('Arguments')]['!' . $count] = t('@argument input', array('@argument' => $handler->adminLabel()));
       }
 
-      $this->document_self_tokens($options[t('Fields')]);
+      $this->documentSelfTokens($options[t('Fields')]);
 
       // Default text.
       $output = t('<p>You must add some additional fields to this display before using this field. These fields may be marked as <em>Exclude from display</em> if you prefer. Note that due to rendering order, you cannot use fields that come after this field; if you need a field not listed here, rearrange your fields.</p>');
@@ -1579,7 +1579,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
    *
    * @see addSelfTokens()
    */
-  function document_self_tokens(&$tokens) { }
+  protected function documentSelfTokens(&$tokens) { }
 
   /**
    * Call out to the theme() function, which probably just calls render() but

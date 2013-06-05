@@ -71,7 +71,7 @@ class Roles extends PrerenderList {
     return $item['role'];
   }
 
-  function document_self_tokens(&$tokens) {
+  protected function documentSelfTokens(&$tokens) {
     $tokens['[' . $this->options['id'] . '-role' . ']'] = t('The name of the role.');
     $tokens['[' . $this->options['id'] . '-rid' . ']'] = t('The role machine-name of the role.');
   }

@@ -801,7 +801,7 @@ class Field extends FieldPluginBase {
     return render($item['rendered']);
   }
 
-  function document_self_tokens(&$tokens) {
+  protected function documentSelfTokens(&$tokens) {
     $field = $this->field_info;
     foreach ($field['columns'] as $id => $column) {
       $tokens['[' . $this->options['id'] . '-' . $id . ']'] = t('Raw @column', array('@column' => $id));
