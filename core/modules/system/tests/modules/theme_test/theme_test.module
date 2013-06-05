@@ -52,8 +52,8 @@ function theme_test_menu() {
     'theme callback' => '_theme_custom_theme',
     'type' => MENU_CALLBACK,
   );
-  $items['theme-test/hook-init'] = array(
-    'page callback' => 'theme_test_hook_init_page_callback',
+  $items['theme-test/request-listener'] = array(
+    'page callback' => 'theme_test_request_listener_page_callback',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
@@ -71,28 +71,6 @@ function theme_test_menu() {
 }
 
 /**
- * Implements hook_init().
- */
-function theme_test_init() {
-  if (arg(0) == 'theme-test' && arg(1) == 'hook-init') {
-    // First, force the theme registry to be rebuilt on this page request. This
-    // allows us to test a full initialization of the theme system in the code
-    // below.
-    drupal_theme_rebuild();
-    // Next, initialize the theme system by storing themed text in a global
-    // variable. We will use this later in theme_test_hook_init_page_callback()
-    // to test that even when the theme system is initialized this early, it is
-    // still capable of returning output and theming the page as a whole.
-    $GLOBALS['theme_test_output'] = theme('more_link', array('url' => 'user', 'title' => 'Themed output generated in hook_init()'));
-  }
-  if (arg(0) == 'user' && arg(1) == 'autocomplete') {
-    // Register a fake registry loading callback. If it gets called by
-    // theme_get_registry(), the registry has not been initialized yet.
-    _theme_registry_callback('_theme_test_load_registry', array());
-  }
-}
-
-/**
  * Fake registry loading callback.
  */
 function _theme_test_load_registry() {
@@ -101,9 +79,9 @@ function _theme_test_load_registry() {
 }
 
 /**
- * Menu callback for testing themed output generated in hook_init().
+ * Menu callback for testing themed output generated in a request listener.
  */
-function theme_test_hook_init_page_callback() {
+function theme_test_request_listener_page_callback() {
   return $GLOBALS['theme_test_output'];
 }
 

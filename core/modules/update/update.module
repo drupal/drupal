@@ -96,9 +96,9 @@ function update_help($path, $arg) {
 }
 
 /**
- * Implements hook_init().
+ * Implements hook_page_build().
  */
-function update_init() {
+function update_page_build() {
   if (arg(0) == 'admin' && user_access('administer site configuration')) {
     switch (current_path()) {
       // These pages don't need additional nagging.

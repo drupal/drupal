@@ -427,3 +427,7 @@ services:
   batch.storage:
     class: Drupal\Core\Utility\BatchStorage
     arguments: ['@database']
+  slave_database_ignore__subscriber:
+    class: Drupal\Core\EventSubscriber\SlaveDatabaseIgnoreSubscriber
+    tags:
+      - {name: event_subscriber}

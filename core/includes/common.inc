@@ -1888,7 +1888,7 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  * all typical visitors and most pages of a site. It is critical that all
  * preprocessed files are added unconditionally on every page, even if the
  * files do not happen to be needed on a page. This is normally done by calling
- * drupal_add_css() in a hook_init() implementation.
+ * drupal_add_css() in a hook_page_build() implementation.
  *
  * Non-preprocessed files should only be added to the page when they are
  * actually needed.
@@ -1943,14 +1943,15 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  *     enabled, this should be set to TRUE if the stylesheet is present on every
  *     page of the website for users for whom it is present at all. This
  *     defaults to FALSE. It is set to TRUE for stylesheets added via module and
- *     theme .info.yml files. Modules that add stylesheets within hook_init()
- *     implementations, or from other code that ensures that the stylesheet is
- *     added to all website pages, should also set this flag to TRUE. All
- *     stylesheets within the same group that have the 'every_page' flag set to
- *     TRUE and do not have 'preprocess' set to FALSE are aggregated together
- *     into a single aggregate file, and that aggregate file can be reused
- *     across a user's entire site visit, leading to faster navigation between
- *     pages. However, stylesheets that are only needed on pages less frequently
+ *     theme .info.yml files. Modules that add stylesheets within
+ *     hook_page_build() implementations, or from other code that ensures that
+ *     the stylesheet is added to all website pages, should also set this flag
+ *     to TRUE. All stylesheets within the same group that have the 'every_page'
+ *     flag set to TRUE and do not have 'preprocess' set to FALSE are aggregated
+ *     together into a single aggregate file, and that aggregate file can be
+ *     reused across a user's entire site visit, leading to faster navigation
+ *     between pages.
+ *     However, stylesheets that are only needed on pages less frequently
  *     visited, can be added by code that only runs for those particular pages,
  *     and that code should not set the 'every_page' flag. This minimizes the
  *     size of the aggregate file that the user needs to download when first
@@ -3036,7 +3037,7 @@ function drupal_region_class($region) {
  * all typical visitors and most pages of a site. It is critical that all
  * preprocessed files are added unconditionally on every page, even if the
  * files are not needed on a page. This is normally done by calling
- * drupal_add_js() in a hook_init() implementation.
+ * drupal_add_js() in a hook_page_build() implementation.
  *
  * Non-preprocessed files should only be added to the page when they are
  * actually needed.
@@ -3079,9 +3080,9 @@ function drupal_region_class($region) {
  *     page of the website for users for whom it is present at all. This
  *     defaults to FALSE. It is set to TRUE for JavaScript files that are added
  *     via module and theme .info.yml files. Modules that add JavaScript within
- *     hook_init() implementations, or from other code that ensures that the
- *     JavaScript is added to all website pages, should also set this flag to
- *     TRUE. All JavaScript files within the same group and that have the
+ *     hook_page_build() implementations, or from other code that ensures that
+ *     the JavaScript is added to all website pages, should also set this flag
+ *     to TRUE. All JavaScript files within the same group and that have the
  *     'every_page' flag set to TRUE and do not have 'preprocess' set to FALSE
  *     are aggregated together into a single aggregate file, and that aggregate
  *     file can be reused across a user's entire site visit, leading to faster
@@ -4365,16 +4366,8 @@ function _drupal_bootstrap_full($skip = FALSE) {
   // Let all modules take action before the menu system handles the request.
   // We do not want this while running update.php.
   if (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update') {
-    // Prior to invoking hook_init(), initialize the theme (potentially a custom
-    // one for this page), so that:
-    // - Modules with hook_init() implementations that call theme() or
-    //   theme_get_registry() don't initialize the incorrect theme.
-    // - The theme can have hook_*_alter() implementations affect page building
-    //   (e.g., hook_form_alter(), hook_node_view_alter(), hook_page_alter()),
-    //   ahead of when rendering starts.
     menu_set_custom_theme();
     drupal_theme_initialize();
-    module_invoke_all('init');
   }
 }
 

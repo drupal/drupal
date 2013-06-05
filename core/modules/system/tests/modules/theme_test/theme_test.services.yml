@@ -1,0 +1,5 @@
+services:
+  theme_test.subscriber:
+    class: Drupal\theme_test\EventSubscriber\ThemeTestSubscriber
+    tags:
+      - { name: event_subscriber }

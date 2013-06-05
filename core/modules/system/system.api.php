@@ -1348,23 +1348,6 @@ function hook_forms($form_id, $args) {
 }
 
 /**
- * Perform setup tasks for non-cached page requests.
- *
- * This hook is run at the beginning of the page request. It is typically
- * used to set up global parameters that are needed later in the request.
- * When this hook is called, the theme and all modules are already loaded in
- * memory.
- *
- * This hook is not run on cached pages.
- *
- * Do not use this hook to add CSS/JS to pages, use hook_page_build() instead.
- *
- * @see hook_page_build()
- */
-function hook_init() {
-}
-
-/**
  * Alter an email message created with the drupal_mail() function.
  *
  * hook_mail_alter() allows modification of email messages created and sent

@@ -532,18 +532,6 @@ function menu_test_menu_trail_callback() {
 }
 
 /**
- * Implements hook_init().
- */
-function menu_test_init() {
-  // When requested by one of the MenuTrailTestCase tests, record the initial
-  // active trail during Drupal's bootstrap (before the user is redirected to a
-  // custom 403 or 404 page). See menu_test_custom_403_404_callback().
-  if (state()->get('menu_test.record_active_trail') ?: FALSE) {
-    state()->set('menu_test.active_trail_initial', menu_get_active_trail());
-  }
-}
-
-/**
  * Callback for our custom 403 and 404 pages.
  */
 function menu_test_custom_403_404_callback() {
@@ -614,6 +602,12 @@ function menu_test_theme_callback($argument) {
  *   The name of the custom theme to use for the current page.
  */
 function menu_test_custom_theme() {
+  // When requested by one of the MenuTrailTestCase tests, record the initial
+  // active trail during Drupal's bootstrap (before the user is redirected to a
+  // custom 403 or 404 page). See menu_test_custom_403_404_callback().
+  if (state()->get('menu_test.record_active_trail') ?: FALSE) {
+    state()->set('menu_test.active_trail_initial', menu_get_active_trail());
+  }
   // If an appropriate variable has been set in the database, request the theme
   // that is stored there. Otherwise, do not attempt to dynamically set the
   // theme.

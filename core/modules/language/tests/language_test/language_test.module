@@ -11,9 +11,9 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Drupal\Core\Language\Language;
 
 /**
- * Implements hook_init().
+ * Implements hook_page_build().
  */
-function language_test_init() {
+function language_test_page_build() {
   language_test_store_language_negotiation();
   if (isset(language(Language::TYPE_INTERFACE)->langcode) && isset(language(Language::TYPE_INTERFACE)->method_id)) {
     drupal_set_message(t('Language negotiation method: @name', array('@name' => language(Language::TYPE_INTERFACE)->method_id)));

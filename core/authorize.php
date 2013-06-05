@@ -27,9 +27,8 @@ chdir('..');
  * Global flag to identify update.php and authorize.php runs.
  *
  * Identifies update.php and authorize.php runs, avoiding unwanted operations
- * such as hook_init() invocations, css/js preprocessing and
- * translation, and solves some theming issues. The flag is checked in other
- * places in Drupal code (not just authorize.php).
+ * such as css/js preprocessing and translation, and solves some theming issues.
+ * The flag is checked in other places in Drupal code (not just authorize.php).
  */
 const MAINTENANCE_MODE = 'update';
 
