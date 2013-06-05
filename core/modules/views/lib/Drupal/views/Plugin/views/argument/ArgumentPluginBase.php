@@ -96,7 +96,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     return !empty($info['breadcrumb']);
   }
 
-  function is_exception($arg = NULL) {
+  public function isException($arg = NULL) {
     if (!isset($arg)) {
       $arg = isset($this->argument) ? $this->argument : NULL;
     }
@@ -945,7 +945,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       return $this->argument_validated;
     }
 
-    if ($this->is_exception($arg)) {
+    if ($this->isException($arg)) {
       return $this->argument_validated = TRUE;
     }
 

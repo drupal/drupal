@@ -875,7 +875,7 @@ class ViewExecutable {
           break;
         }
 
-        if ($argument->is_exception()) {
+        if ($argument->isException()) {
           $arg_title = $argument->exception_title();
         }
         else {
