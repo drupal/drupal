@@ -671,7 +671,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     // Display: Block
     if (!empty($form_state['values']['block']['create'])) {
-      $display_options['block'] = $this->block_display_options($form, $form_state);
+      $display_options['block'] = $this->blockDisplayOptions($form, $form_state);
     }
 
     return $display_options;
@@ -1000,7 +1000,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * @return array
    *   Returns an array of display options.
    */
-  protected function block_display_options(array $form, array &$form_state) {
+  protected function blockDisplayOptions(array $form, array &$form_state) {
     $display_options = array();
     $block = $form_state['values']['block'];
     $display_options['title'] = $block['title'];
