@@ -32,9 +32,9 @@ class ArgumentDefaultTest extends ArgumentDefaultPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase::get_argument().
+   * {@inheritdoc}
    */
-  public function get_argument() {
+  public function getArgument() {
     return $this->options['value'];
   }
 

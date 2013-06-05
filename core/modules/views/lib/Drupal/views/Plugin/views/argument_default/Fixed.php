@@ -41,7 +41,7 @@ class Fixed extends ArgumentDefaultPluginBase {
   /**
    * Return the default argument.
    */
-  function get_argument() {
+  public function getArgument() {
     return $this->options['argument'];
   }
 

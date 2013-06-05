@@ -744,7 +744,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
   public function getDefaultArgument() {
     $plugin = $this->getPlugin('argument_default');
     if ($plugin) {
-      return $plugin->get_argument();
+      return $plugin->getArgument();
     }
   }
 

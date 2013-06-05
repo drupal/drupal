@@ -50,7 +50,7 @@ class Php extends ArgumentDefaultPluginBase {
     return user_access('use PHP for settings');
   }
 
-  function get_argument() {
+  public function getArgument() {
     // set up variables to make it easier to reference during the argument.
     $view = &$this->view;
     $argument = &$this->argument;

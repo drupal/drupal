@@ -49,7 +49,7 @@ class Raw extends ArgumentDefaultPluginBase {
     );
   }
 
-  function get_argument() {
+  public function getArgument() {
     $path = NULL;
     if ($this->options['use_alias']) {
       $path = drupal_get_path_alias();
