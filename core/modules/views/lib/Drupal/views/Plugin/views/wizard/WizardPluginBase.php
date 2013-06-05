@@ -890,7 +890,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     }
 
     // Add any sorts specified by the user when filling out the wizard.
-    $sorts = array_merge($sorts, $this->default_display_sorts_user($form, $form_state));
+    $sorts = array_merge($sorts, $this->defaultDisplaySortsUser($form, $form_state));
 
     return $sorts;
   }
@@ -907,7 +907,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   An array of sort arrays keyed by ID. A sort array contains the options
    *   accepted by a sort handler.
    */
-  protected function default_display_sorts_user($form, $form_state) {
+  protected function defaultDisplaySortsUser($form, $form_state) {
     $sorts = array();
 
     // Don't add a sort if there is no form value or the user set the sort to
