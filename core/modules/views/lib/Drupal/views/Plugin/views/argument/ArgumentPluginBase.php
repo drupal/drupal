@@ -103,7 +103,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     return !empty($this->options['exception']['value']) && $this->options['exception']['value'] === $arg;
   }
 
-  function exception_title() {
+  public function exceptionTitle() {
     // If title overriding is off for the exception, return the normal title.
     if (empty($this->options['exception']['title_enable'])) {
       return $this->getTitle();
