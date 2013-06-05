@@ -60,9 +60,9 @@ function views_test_data_handler_test_access_callback_argument($argument = FALSE
  */
 function views_test_data_preprocess_views_view_table(&$variables) {
   if ($variables['view']->storage->id() == 'test_view_render') {
-    $views_render_test = state()->get('views_render.test');
+    $views_render_test = Drupal::state()->get('views_render.test');
     $views_render_test++;
-    state()->set('views_render.test', $views_render_test);
+    Drupal::state()->set('views_render.test', $views_render_test);
   }
 }
 

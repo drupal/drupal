@@ -63,6 +63,22 @@ class ContactPersonalTest extends WebTestBase {
   }
 
   /**
+   * Tests that mails for contact messages are correctly sent.
+   */
+  function testSendPersonalContactMessage() {
+    $this->drupalLogin($this->web_user);
+
+    $message = $this->submitPersonalContact($this->contact_user);
+    $mails = $this->drupalGetMails();
+    $this->assertEqual(1, count($mails));
+    $mail = $mails[0];
+    $this->assertEqual($mail['to'], $this->contact_user->mail);
+    $this->assertEqual($mail['from'], $this->web_user->mail);
+    $this->assertTrue(strpos($mail['subject'], $message['subject']) !== FALSE, 'Subject is in sent message.');
+    $this->assertTrue(strpos($mail['body'], $message['message']) !== FALSE, 'Subject is in sent message.');
+  }
+
+  /**
    * Tests access to the personal contact form.
    */
   function testPersonalContactAccess() {
@@ -188,5 +204,6 @@ class ContactPersonalTest extends WebTestBase {
       'message' => $this->randomName(64),
     );
     $this->drupalPost('user/' . $account->uid . '/contact', $message, t('Send message'));
+    return $message;
   }
 }

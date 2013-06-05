@@ -11,7 +11,7 @@
  * @see update_test_2_update_dependencies()
  */
 function update_test_1_update_dependencies() {
-  state()->set('update_test_1_update_dependencies_run', TRUE);
+  Drupal::state()->set('update_test_1_update_dependencies_run', TRUE);
   // These dependencies are used in combination with those declared in
   // update_test_2_update_dependencies() for the sole purpose of testing that
   // the results of hook_update_dependencies() are collected correctly and have

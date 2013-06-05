@@ -460,24 +460,3 @@ function theme_user_permission_description($variables) {
     }
   }
 }
-
-/**
- * Page callback: Lists roles and allows to reorder them.
- *
- * @see user_menu()
- */
-function user_admin_roles_list() {
-  return Drupal::entityManager()
-    ->getListController('user_role')->render();
-}
-
-/**
- * Page callback: Presents the role creation form.
- *
- * @see user_menu()
- */
-function user_admin_role_add() {
-  drupal_set_title(t('Add role'));
-  $role = entity_create('user_role', array());
-  return entity_get_form($role);
-}

@@ -292,7 +292,7 @@ abstract class SqlBase extends PagerPluginBase {
    * items available and to update the current page if the requested
    * page is out of range.
    */
-  function update_page_info() {
+  public function updatePageInfo() {
     if (!empty($this->options['total_pages'])) {
       if (($this->options['total_pages'] * $this->options['items_per_page']) < $this->total_items) {
         $this->total_items = $this->options['total_pages'] * $this->options['items_per_page'];
@@ -323,7 +323,7 @@ abstract class SqlBase extends PagerPluginBase {
     }
   }
 
-  function uses_exposed() {
+  public function usesExposed() {
     return $this->itemsPerPageExposed() || $this->offset_exposed();
   }
 
@@ -335,7 +335,7 @@ abstract class SqlBase extends PagerPluginBase {
     return !empty($this->options['expose']['offset']);
   }
 
-  function exposed_form_alter(&$form, &$form_state) {
+  public function exposedFormAlter(&$form, &$form_state) {
     if ($this->itemsPerPageExposed()) {
       $options = explode(',', $this->options['expose']['items_per_page_options']);
       $sanitized_options = array();
@@ -361,7 +361,7 @@ abstract class SqlBase extends PagerPluginBase {
         '#size' => 10,
         '#maxlength' => 10,
         '#title' => $this->options['expose']['offset_label'],
-        '#default_value' => $this->get_offset(),
+        '#default_value' => $this->getOffset(),
       );
     }
   }

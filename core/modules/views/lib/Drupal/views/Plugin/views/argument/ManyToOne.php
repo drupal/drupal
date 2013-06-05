@@ -158,7 +158,7 @@ class ManyToOne extends ArgumentPluginBase {
       return !empty($this->definition['invalid input']) ? $this->definition['invalid input'] : t('Invalid input');
     }
 
-    return implode($this->operator == 'or' ? ' + ' : ', ', $this->title_query());
+    return implode($this->operator == 'or' ? ' + ' : ', ', $this->titleQuery());
   }
 
   function summary_query() {
@@ -179,12 +179,12 @@ class ManyToOne extends ArgumentPluginBase {
     // Add the field.
     $this->base_alias = $this->query->add_field($this->tableAlias, $this->realField);
 
-    $this->summary_name_field();
+    $this->summaryNameField();
 
     return $this->summaryBasics();
   }
 
-  function summary_argument($data) {
+  public function summaryArgument($data) {
     $value = $data->{$this->base_alias};
     if (empty($value)) {
       $value = 0;
@@ -196,7 +196,7 @@ class ManyToOne extends ArgumentPluginBase {
   /**
    * Override for specific title lookups.
    */
-  function title_query() {
+  public function titleQuery() {
     return $this->value;
   }
 

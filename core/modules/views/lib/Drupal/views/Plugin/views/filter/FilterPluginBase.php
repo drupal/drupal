@@ -175,7 +175,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * Determine if a filter can be converted into a group.
    * Only exposed filters with operators available can be converted into groups.
    */
-  function can_build_group() {
+  protected function canBuildGroup() {
     return $this->isExposed() && (count($this->operatorOptions()) > 0);
   }
 
@@ -197,14 +197,14 @@ abstract class FilterPluginBase extends HandlerBase {
     if ($this->canExpose()) {
       $this->showExposeButton($form, $form_state);
     }
-    if ($this->can_build_group()) {
+    if ($this->canBuildGroup()) {
       $this->show_build_group_button($form, $form_state);
     }
     $form['clear_markup_start'] = array(
       '#markup' => '<div class="clearfix">',
     );
     if ($this->isAGroup()) {
-      if ($this->can_build_group()) {
+      if ($this->canBuildGroup()) {
         $form['clear_markup_start'] = array(
           '#markup' => '<div class="clearfix">',
         );
@@ -218,7 +218,7 @@ abstract class FilterPluginBase extends HandlerBase {
     else {
       // Add the subform from operator_form().
       $this->showOperatorForm($form, $form_state);
-      // Add the subform from value_form().
+      // Add the subform from valueForm().
       $this->show_value_form($form, $form_state);
       $form['clear_markup_end'] = array(
         '#markup' => '</div>',
@@ -235,12 +235,12 @@ abstract class FilterPluginBase extends HandlerBase {
    */
   public function validateOptionsForm(&$form, &$form_state) {
     $this->operator_validate($form, $form_state);
-    $this->value_validate($form, $form_state);
+    $this->valueValidate($form, $form_state);
     if (!empty($this->options['exposed']) && !$this->isAGroup()) {
       $this->validateExposeForm($form, $form_state);
     }
     if ($this->isAGroup()) {
-      $this->build_group_validate($form, $form_state);
+      $this->buildGroupValidate($form, $form_state);
     }
   }
 
@@ -258,7 +258,7 @@ abstract class FilterPluginBase extends HandlerBase {
       $this->submitExposeForm($form, $form_state);
     }
     if ($this->isAGroup()) {
-      $this->build_group_submit($form, $form_state);
+      $this->buildGroupSubmit($form, $form_state);
     }
   }
 
@@ -312,7 +312,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * Shortcut to display the value form.
    */
   function show_value_form(&$form, &$form_state) {
-    $this->value_form($form, $form_state);
+    $this->valueForm($form, $form_state);
     if (empty($this->no_operator)) {
       $form['value']['#prefix'] = '<div class="views-group-box views-right-70">' . (isset($form['value']['#prefix']) ? $form['value']['#prefix'] : '');
       $form['value']['#suffix'] = (isset($form['value']['#suffix']) ? $form['value']['#suffix'] : '') . '</div>';
@@ -327,12 +327,12 @@ abstract class FilterPluginBase extends HandlerBase {
    *
    * @see buildOptionsForm()
    */
-  function value_form(&$form, &$form_state) { $form['value'] = array(); }
+  protected function valueForm(&$form, &$form_state) { $form['value'] = array(); }
 
   /**
    * Validate the options form.
    */
-  function value_validate($form, &$form_state) { }
+  protected function valueValidate($form, &$form_state) { }
 
   /**
    * Perform any necessary changes to the form values prior to storage.
@@ -348,7 +348,7 @@ abstract class FilterPluginBase extends HandlerBase {
       return;
     }
 
-    $this->build_group_form($form, $form_state);
+    $this->buildExposedFiltersGroupForm($form, $form_state);
 
     // When we click the expose button, we add new gadgets to the form but they
     // have no data in $_POST so their defaults get wiped out. This prevents
@@ -619,7 +619,7 @@ abstract class FilterPluginBase extends HandlerBase {
    /**
    * Validate the build group options form.
    */
-  function build_group_validate($form, &$form_state) {
+  protected function buildGroupValidate($form, &$form_state) {
     if (!empty($form_state['values']['options']['group_info'])) {
       if (empty($form_state['values']['options']['group_info']['identifier'])) {
         form_error($form['group_info']['identifier'], t('The identifier is required if the filter is exposed.'));
@@ -665,7 +665,7 @@ abstract class FilterPluginBase extends HandlerBase {
   /**
    * Save new group items, re-enumerates and remove groups marked to delete.
    */
-  function build_group_submit($form, &$form_state) {
+  protected function buildGroupSubmit($form, &$form_state) {
     $groups = array();
     uasort($form_state['values']['options']['group_info']['group_items'], 'drupal_sort_weight');
     // Filter out removed items.
@@ -802,7 +802,7 @@ abstract class FilterPluginBase extends HandlerBase {
     // Build the form and set the value based on the identifier.
     if (!empty($this->options['expose']['identifier'])) {
       $value = $this->options['expose']['identifier'];
-      $this->value_form($form, $form_state);
+      $this->valueForm($form, $form_state);
       $form[$value] = $form['value'];
 
       if (isset($form[$value]['#title']) && !empty($form[$value]['#type']) && $form[$value]['#type'] != 'checkbox') {
@@ -829,7 +829,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * Build the form to let users create the group of exposed filters.
    * This form is displayed when users click on button 'Build group'
    */
-  function build_group_form(&$form, &$form_state) {
+  protected function buildExposedFiltersGroupForm(&$form, &$form_state) {
     if (empty($this->options['exposed']) || empty($this->options['is_grouped'])) {
       return;
     }
@@ -967,7 +967,7 @@ abstract class FilterPluginBase extends HandlerBase {
       // radios and they occupy a lot of space in a table row.
       $row['operator']['#type'] = 'select';
       $row['operator']['#title'] = '';
-      $this->value_form($row, $form_state);
+      $this->valueForm($row, $form_state);
 
       // Fix the dependencies to update value forms when operators
       // changes. This is needed because forms are inside a new form and
@@ -1272,7 +1272,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * This function is similar to storeExposedInput but modified to
    * work properly when the filter is a group.
    */
-  function store_group_input($input, $status) {
+  public function storeGroupInput($input, $status) {
     if (!$this->isAGroup() || empty($this->options['group_info']['identifier'])) {
       return TRUE;
     }

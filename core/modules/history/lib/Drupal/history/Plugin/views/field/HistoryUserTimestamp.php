@@ -76,10 +76,10 @@ class HistoryUserTimestamp extends Node {
     $mark = MARK_READ;
     global $user;
     if ($user->uid) {
-      $last_read = $this->get_value($values);
-      $changed = $this->get_value($values, 'changed');
+      $last_read = $this->getValue($values);
+      $changed = $this->getValue($values, 'changed');
 
-      $last_comment = module_exists('comment') && !empty($this->options['comments']) ?  $this->get_value($values, 'last_comment') : 0;
+      $last_comment = module_exists('comment') && !empty($this->options['comments']) ?  $this->getValue($values, 'last_comment') : 0;
 
       if (!$last_read && $changed > HISTORY_READ_LIMIT) {
         $mark = MARK_NEW;

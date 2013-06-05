@@ -196,7 +196,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
     global $user;
     // Allow bulk updates and inserts to temporarily disable the
     // maintenance of the {comment_entity_statistics} table.
-    if (!state()->get('comment.maintain_entity_statistics')) {
+    if (!\Drupal::state()->get('comment.maintain_entity_statistics')) {
       return;
     }
 

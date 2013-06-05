@@ -53,7 +53,7 @@ class NodeNewComments extends Numeric {
 
   public function query() {
     $this->ensureMyTable();
-    $this->add_additional_fields();
+    $this->addAdditionalFields();
     $this->field_alias = $this->table . '_' . $this->field;
   }
 
@@ -97,12 +97,12 @@ class NodeNewComments extends Numeric {
   function render_link($data, $values) {
     if (!empty($this->options['link_to_comment']) && $data !== NULL && $data !== '') {
       $node = entity_create('node', array(
-        'nid' => $this->get_value($values, 'nid'),
-        'type' => $this->get_value($values, 'type'),
+        'nid' => $this->getValue($values, 'nid'),
+        'type' => $this->getValue($values, 'type'),
       ));
       $this->options['alter']['make_link'] = TRUE;
       $this->options['alter']['path'] = 'node/' . $node->nid;
-      $this->options['alter']['query'] = comment_new_page_count($this->get_value($values, 'comment_count'), $this->get_value($values), $node);
+      $this->options['alter']['query'] = comment_new_page_count($this->getValue($values, 'comment_count'), $this->getValue($values), $node);
       $this->options['alter']['fragment'] = 'new';
     }
 
@@ -110,7 +110,7 @@ class NodeNewComments extends Numeric {
   }
 
   function render($values) {
-    $value = $this->get_value($values);
+    $value = $this->getValue($values);
     if (!empty($value)) {
       return $this->render_link(parent::render($values), $values);
     }

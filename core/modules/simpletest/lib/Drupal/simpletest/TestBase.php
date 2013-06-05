@@ -1023,7 +1023,7 @@ abstract class TestBase {
     // log to pick up any fatal errors.
     simpletest_log_read($this->testId, $this->databasePrefix, get_class($this), TRUE);
     if (($container = drupal_container()) && $container->has('keyvalue')) {
-      $captured_emails = state()->get('system.test_email_collector') ?: array();
+      $captured_emails = \Drupal::state()->get('system.test_email_collector') ?: array();
       $emailCount = count($captured_emails);
       if ($emailCount) {
         $message = format_plural($emailCount, '1 e-mail was sent during this test.', '@count e-mails were sent during this test.');

@@ -54,6 +54,16 @@ abstract class WebTestBase extends TestBase {
   protected $headers;
 
   /**
+   * Indicates that headers should be dumped if verbose output is enabled.
+   *
+   * Headers are dumped to verbose by drupalGet(), drupalHead(), and
+   * drupalPost().
+   *
+   * @var bool
+   */
+  protected $dumpHeaders = FALSE;
+
+  /**
    * The content of the page currently loaded in the internal browser.
    *
    * @var string
@@ -1191,9 +1201,15 @@ abstract class WebTestBase extends TestBase {
     if ($new = $this->checkForMetaRefresh()) {
       $out = $new;
     }
-    $this->verbose('GET request to: ' . $path .
-                   '<hr />Ending URL: ' . $this->getUrl() .
-                   '<hr />' . $out);
+
+    $verbose = 'GET request to: ' . $path .
+               '<hr />Ending URL: ' . $this->getUrl();
+    if ($this->dumpHeaders) {
+      $verbose .= '<hr />Headers: <pre>' . check_plain(var_export(array_map('trim', $this->headers), TRUE)) . '</pre>';
+    }
+    $verbose .= '<hr />' . $out;
+
+    $this->verbose($verbose);
     return $out;
   }
 
@@ -1373,10 +1389,16 @@ abstract class WebTestBase extends TestBase {
           if ($new = $this->checkForMetaRefresh()) {
             $out = $new;
           }
-          $this->verbose('POST request to: ' . $path .
-                         '<hr />Ending URL: ' . $this->getUrl() .
-                         '<hr />Fields: ' . highlight_string('<?php ' . var_export($post_array, TRUE), TRUE) .
-                         '<hr />' . $out);
+
+          $verbose = 'POST request to: ' . $path;
+          $verbose .= '<hr />Ending URL: ' . $this->getUrl();
+          if ($this->dumpHeaders) {
+            $verbose .= '<hr />Headers: <pre>' . check_plain(var_export(array_map('trim', $this->headers), TRUE)) . '</pre>';
+          }
+          $verbose .= '<hr />Fields: ' . highlight_string('<?php ' . var_export($post_array, TRUE), TRUE);
+          $verbose .= '<hr />' . $out;
+
+          $this->verbose($verbose);
           return $out;
         }
       }
@@ -1591,7 +1613,7 @@ abstract class WebTestBase extends TestBase {
    * Runs cron in the Drupal installed by Simpletest.
    */
   protected function cronRun() {
-    $this->drupalGet('cron/' . state()->get('system.cron_key'));
+    $this->drupalGet('cron/' . \Drupal::state()->get('system.cron_key'));
   }
 
   /**
@@ -1633,6 +1655,13 @@ abstract class WebTestBase extends TestBase {
     $options['absolute'] = TRUE;
     $out = $this->curlExec(array(CURLOPT_NOBODY => TRUE, CURLOPT_URL => url($path, $options), CURLOPT_HTTPHEADER => $headers));
     $this->refreshVariables(); // Ensure that any changes to variables in the other thread are picked up.
+
+    if ($this->dumpHeaders) {
+      $this->verbose('GET request to: ' . $path .
+                     '<hr />Ending URL: ' . $this->getUrl() .
+                     '<hr />Headers: <pre>' . check_plain(var_export(array_map('trim', $this->headers), TRUE)) . '</pre>');
+    }
+
     return $out;
   }
 
@@ -2164,7 +2193,7 @@ abstract class WebTestBase extends TestBase {
    *   An array containing e-mail messages captured during the current test.
    */
   protected function drupalGetMails($filter = array()) {
-    $captured_emails = state()->get('system.test_email_collector') ?: array();
+    $captured_emails = \Drupal::state()->get('system.test_email_collector') ?: array();
     $filtered_emails = array();
 
     foreach ($captured_emails as $message) {
@@ -3133,7 +3162,7 @@ abstract class WebTestBase extends TestBase {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertMail($name, $value = '', $message = '', $group = 'E-mail') {
-    $captured_emails = state()->get('system.test_email_collector') ?: array();
+    $captured_emails = \Drupal::state()->get('system.test_email_collector') ?: array();
     $email = end($captured_emails);
     return $this->assertTrue($email && isset($email[$name]) && $email[$name] == $value, $message, $group);
   }

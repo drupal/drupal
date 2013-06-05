@@ -96,9 +96,9 @@ function update_help($path, $arg) {
 }
 
 /**
- * Implements hook_init().
+ * Implements hook_page_build().
  */
-function update_init() {
+function update_page_build() {
   if (arg(0) == 'admin' && user_access('administer site configuration')) {
     switch (current_path()) {
       // These pages don't need additional nagging.
@@ -284,7 +284,7 @@ function update_cron() {
   $update_config = config('update.settings');
   $frequency = $update_config->get('check.interval_days');
   $interval = 60 * 60 * 24 * $frequency;
-  $last_check = state()->get('update.last_check') ?: 0;
+  $last_check = Drupal::state()->get('update.last_check') ?: 0;
   if ((REQUEST_TIME - $last_check) > $interval) {
     // If the configured update interval has elapsed, we want to invalidate
     // the data for all projects, attempt to re-fetch, and trigger any
@@ -297,7 +297,7 @@ function update_cron() {
     // missing data, and if so, try to fetch the data.
     update_get_available(TRUE);
   }
-  $last_email_notice = state()->get('update.last_email_notification') ?: 0;
+  $last_email_notice = Drupal::state()->get('update.last_email_notification') ?: 0;
   if ((REQUEST_TIME - $last_email_notice) > $interval) {
     // If configured time between notifications elapsed, send email about
     // updates possibly available.

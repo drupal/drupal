@@ -37,7 +37,7 @@ class ModulesDisabledUpgradePathTest extends UpgradePathTestBase {
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Get enabled modules.
-    $enabled = drupal_container()->get('module_handler')->getModuleList();
+    $enabled = \Drupal::moduleHandler()->getModuleList();
     // Get all available modules.
     $available = system_rebuild_module_data();
     // Filter out hidden test modules.
@@ -53,6 +53,6 @@ class ModulesDisabledUpgradePathTest extends UpgradePathTestBase {
     require_once DRUPAL_ROOT . '/core/includes/install.inc';
     $updates = update_get_update_list();
     $this->assertEqual($updates, array(), 'No pending updates after enabling all modules.');
-    $this->assertTrue(state()->get('update_test_1_update_dependencies_run'), 'Module update dependencies resolved for disabled modules');
+    $this->assertTrue(\Drupal::state()->get('update_test_1_update_dependencies_run'), 'Module update dependencies resolved for disabled modules');
   }
 }

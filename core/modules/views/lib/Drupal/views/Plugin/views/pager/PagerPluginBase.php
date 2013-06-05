@@ -87,7 +87,7 @@ abstract class PagerPluginBase extends PluginBase {
    * Even pagers that don't actually page can skip items at the beginning,
    * so few pagers will need to override this method.
    */
-  function get_offset() {
+  public function getOffset() {
     return isset($this->options['offset']) ? $this->options['offset'] : 0;
   }
 
@@ -103,7 +103,7 @@ abstract class PagerPluginBase extends PluginBase {
    *
    * If NULL, we do not know what the current page is.
    */
-  function get_current_page() {
+  public function getCurrentPage() {
     return $this->current_page;
   }
 
@@ -169,7 +169,7 @@ abstract class PagerPluginBase extends PluginBase {
    *
    * If a pager needs a count query, a simple query
    */
-  function use_count_query() {
+  public function useCountQuery() {
     return TRUE;
   }
 
@@ -183,7 +183,7 @@ abstract class PagerPluginBase extends PluginBase {
       $this->total_items -= $this->options['offset'];
     }
 
-    $this->update_page_info();
+    $this->updatePageInfo();
     return $this->total_items;
   }
 
@@ -191,7 +191,7 @@ abstract class PagerPluginBase extends PluginBase {
    * If there are pagers that need global values set, this method can
    * be used to set them. It will be called when the count query is run.
    */
-  function update_page_info() {
+  public function updatePageInfo() {
 
   }
 
@@ -239,13 +239,13 @@ abstract class PagerPluginBase extends PluginBase {
       && $this->total_items > (intval($this->current_page) + 1) * $this->get_items_per_page();
   }
 
-  function exposed_form_alter(&$form, &$form_state) { }
+  public function exposedFormAlter(&$form, &$form_state) { }
 
   function exposed_form_validate(&$form, &$form_state) { }
 
   public function exposedFormSubmit(&$form, &$form_state, &$exclude) { }
 
-  function uses_exposed() {
+  public function usesExposed() {
     return FALSE;
   }
 

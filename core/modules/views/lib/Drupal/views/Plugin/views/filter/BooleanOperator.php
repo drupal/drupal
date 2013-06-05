@@ -100,7 +100,7 @@ class BooleanOperator extends FilterPluginBase {
     $form['operator'] = array();
   }
 
-  function value_form(&$form, &$form_state) {
+  protected function valueForm(&$form, &$form_state) {
     if (empty($this->value_options)) {
       // Initialize the array of possible values for this filter.
       $this->getValueOptions();
@@ -135,7 +135,7 @@ class BooleanOperator extends FilterPluginBase {
     }
   }
 
-  function value_validate($form, &$form_state) {
+  protected function valueValidate($form, &$form_state) {
     if ($form_state['values']['options']['value'] == 'All' && !empty($form_state['values']['options']['expose']['required'])) {
       form_set_error('value', t('You must select a value unless this is an non-required exposed filter.'));
     }

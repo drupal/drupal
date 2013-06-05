@@ -59,14 +59,14 @@ class File extends FieldPluginBase {
   function render_link($data, $values) {
     if (!empty($this->options['link_to_file']) && $data !== NULL && $data !== '') {
       $this->options['alter']['make_link'] = TRUE;
-      $this->options['alter']['path'] = file_create_url($this->get_value($values, 'uri'));
+      $this->options['alter']['path'] = file_create_url($this->getValue($values, 'uri'));
     }
 
     return $data;
   }
 
   function render($values) {
-    $value = $this->get_value($values);
+    $value = $this->getValue($values);
     return $this->render_link($this->sanitizeValue($value), $values);
   }
 

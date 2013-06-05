@@ -44,7 +44,7 @@ function system_list($type) {
     //   system.theme.data state will go away entirely as soon as themes have
     //   a proper installation status.
     // @see http://drupal.org/node/1067408
-    $theme_data = state()->get('system.theme.data');
+    $theme_data = Drupal::state()->get('system.theme.data');
     if (empty($theme_data)) {
       // @todo: system_list() may be called from _drupal_bootstrap_code(), in
       // which case system.module is not loaded yet.
@@ -119,7 +119,7 @@ function system_list_reset() {
   // will cause system_list_reset() to be called, but theme data is not
   // necessarily rebuilt afterwards.
   // @todo Obsolete with proper installation status for themes.
-  state()->delete('system.theme.data');
+  Drupal::state()->delete('system.theme.data');
 }
 
 /**
@@ -333,7 +333,7 @@ function module_set_weight($module, $weight) {
 
     // Prepare the new module list, sorted by weight, including filenames.
     // @see module_enable()
-    $module_handler = drupal_container()->get('module_handler');
+    $module_handler = Drupal::moduleHandler();
     $current_module_filenames = $module_handler->getModuleList();
     $current_modules = array_fill_keys(array_keys($current_module_filenames), 0);
     $current_modules = module_config_sort(array_merge($current_modules, $module_config->get('enabled')));

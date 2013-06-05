@@ -142,7 +142,7 @@ function config_test_cache_flush() {
  * Implements hook_ENTITY_TYPE_create().
  */
 function config_test_config_test_create(ConfigTest $config_test) {
-  if (state()->get('config_test.prepopulate')) {
+  if (Drupal::state()->get('config_test.prepopulate')) {
     $config_test->set('foo', 'baz');
   }
 }

@@ -155,10 +155,10 @@ class Node extends WizardPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::default_display_filters_user().
+   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::defaultDisplayFiltersUser().
    */
-  protected function default_display_filters_user(array $form, array &$form_state) {
-    $filters = parent::default_display_filters_user($form, $form_state);
+  protected function defaultDisplayFiltersUser(array $form, array &$form_state) {
+    $filters = parent::defaultDisplayFiltersUser($form, $form_state);
 
     if (!empty($form_state['values']['show']['tagged_with']['tids'])) {
       $filters['tid'] = array(
@@ -195,8 +195,8 @@ class Node extends WizardPluginBase {
   /**
    * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::page_display_options().
    */
-  protected function block_display_options(array $form, array &$form_state) {
-    $display_options = parent::block_display_options($form, $form_state);
+  protected function blockDisplayOptions(array $form, array &$form_state) {
+    $display_options = parent::blockDisplayOptions($form, $form_state);
     $row_plugin = isset($form_state['values']['block']['style']['row_plugin']) ? $form_state['values']['block']['style']['row_plugin'] : NULL;
     $row_options = isset($form_state['values']['block']['style']['row_options']) ? $form_state['values']['block']['style']['row_options'] : array();
     $this->display_options_row($display_options, $row_plugin, $row_options);

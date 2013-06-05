@@ -20,9 +20,9 @@ use Drupal\views\Plugin\views\argument\Numeric;
 class Fid extends Numeric {
 
   /**
-   * Override the behavior of title_query(). Get the filenames.
+   * Override the behavior of titleQuery(). Get the filenames.
    */
-  function title_query() {
+  public function titleQuery() {
     $titles = db_select('file_managed', 'f')
       ->fields('f', array('filename'))
       ->condition('fid', $this->value)

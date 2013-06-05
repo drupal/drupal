@@ -9,6 +9,7 @@ namespace Drupal\field_sql_storage\Entity;
 
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\Query\QueryException;
+use Drupal\field\Plugin\Core\Entity\Field;
 
 /**
  * Adds tables and fields to the SQL entity query.
@@ -118,7 +119,7 @@ class Tables {
         if ($key < $count) {
           $next = $specifiers[$key + 1];
           // Is this a field column?
-          if (isset($field['columns'][$next]) || in_array($next, field_reserved_columns())) {
+          if (isset($field['columns'][$next]) || in_array($next, Field::getReservedColumns())) {
             // Use it.
             $column = $next;
             // Do not process it again.

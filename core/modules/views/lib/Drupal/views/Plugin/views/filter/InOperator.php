@@ -109,14 +109,14 @@ class InOperator extends FilterPluginBase {
         'title' => t('Is one of'),
         'short' => t('in'),
         'short_single' => t('='),
-        'method' => 'op_simple',
+        'method' => 'opSimple',
         'values' => 1,
       ),
       'not in' => array(
         'title' => t('Is not one of'),
         'short' => t('not in'),
         'short_single' => t('<>'),
-        'method' => 'op_simple',
+        'method' => 'opSimple',
         'values' => 1,
       ),
     );
@@ -153,7 +153,7 @@ class InOperator extends FilterPluginBase {
     return $options;
   }
 
-  function operator_values($values = 1) {
+  protected function operatorValues($values = 1) {
     $options = array();
     foreach ($this->operators() as $id => $info) {
       if (isset($info['values']) && $info['values'] == $values) {
@@ -164,7 +164,7 @@ class InOperator extends FilterPluginBase {
     return $options;
   }
 
-  function value_form(&$form, &$form_state) {
+  protected function valueForm(&$form, &$form_state) {
     $form['value'] = array();
     $options = array();
 
@@ -186,7 +186,7 @@ class InOperator extends FilterPluginBase {
 
       if (empty($this->options['expose']['use_operator']) || empty($this->options['expose']['operator_id'])) {
         // exposed and locked.
-        $which = in_array($this->operator, $this->operator_values(1)) ? 'value' : 'none';
+        $which = in_array($this->operator, $this->operatorValues(1)) ? 'value' : 'none';
       }
       else {
         $source = ':input[name="' . $this->options['expose']['operator_id'] . '"]';
@@ -235,7 +235,7 @@ class InOperator extends FilterPluginBase {
           $form['value']['#suffix'] = '</div>';
         }
         // Setup #states for all operators with one value.
-        foreach ($this->operator_values(1) as $operator) {
+        foreach ($this->operatorValues(1) as $operator) {
           $form['value']['#states']['visible'][] = array(
             $source => array('value' => $operator),
           );
@@ -324,7 +324,7 @@ class InOperator extends FilterPluginBase {
 
     $operator = check_plain($info[$this->operator]['short']);
     $values = '';
-    if (in_array($this->operator, $this->operator_values(1))) {
+    if (in_array($this->operator, $this->operatorValues(1))) {
       // Remove every element which is not known.
       foreach ($this->value as $value) {
         if (!isset($this->value_options[$value])) {
@@ -376,7 +376,7 @@ class InOperator extends FilterPluginBase {
     }
   }
 
-  function op_simple() {
+  protected function opSimple() {
     if (empty($this->value)) {
       return;
     }
@@ -405,11 +405,11 @@ class InOperator extends FilterPluginBase {
 
     // If the operator is an operator which doesn't require a value, there is
     // no need for additional validation.
-    if (in_array($this->operator, $this->operator_values(0))) {
+    if (in_array($this->operator, $this->operatorValues(0))) {
       return array();
     }
 
-    if (!in_array($this->operator, $this->operator_values(1))) {
+    if (!in_array($this->operator, $this->operatorValues(1))) {
       $errors[] = t('The operator is invalid on filter: @filter.', array('@filter' => $this->adminLabel(TRUE)));
     }
     if (is_array($this->value)) {

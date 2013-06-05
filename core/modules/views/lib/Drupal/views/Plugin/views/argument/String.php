@@ -166,7 +166,7 @@ class String extends ArgumentPluginBase {
       $this->query->set_count_field(NULL, $formula, $this->field, $this->field . '_truncated');
     }
 
-    $this->summary_name_field();
+    $this->summaryNameField();
     return $this->summaryBasics(FALSE);
   }
 
@@ -241,7 +241,7 @@ class String extends ArgumentPluginBase {
     }
   }
 
-  function summary_argument($data) {
+  public function summaryArgument($data) {
     $value = $this->caseTransform($data->{$this->base_alias}, $this->options['path_case']);
     if (!empty($this->options['transform_dash'])) {
       $value = strtr($value, ' ', '-');
@@ -278,13 +278,13 @@ class String extends ArgumentPluginBase {
       return !empty($this->definition['invalid input']) ? $this->definition['invalid input'] : t('Invalid input');
     }
 
-    return implode($this->operator == 'or' ? ' + ' : ', ', $this->title_query());
+    return implode($this->operator == 'or' ? ' + ' : ', ', $this->titleQuery());
   }
 
   /**
    * Override for specific title lookups.
    */
-  function title_query() {
+  public function titleQuery() {
     return drupal_map_assoc($this->value, 'check_plain');
   }
 

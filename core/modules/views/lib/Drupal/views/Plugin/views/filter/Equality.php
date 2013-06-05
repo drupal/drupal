@@ -34,7 +34,7 @@ class Equality extends FilterPluginBase {
   /**
    * Provide a simple textfield for equality
    */
-  function value_form(&$form, &$form_state) {
+  protected function valueForm(&$form, &$form_state) {
     $form['value'] = array(
       '#type' => 'textfield',
       '#title' => t('Value'),

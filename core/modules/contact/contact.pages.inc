@@ -76,6 +76,7 @@ function contact_personal_page($recipient) {
 
   $message = entity_create('contact_message', array(
     'recipient' => $recipient,
+    'category' => 'personal',
   ));
   return entity_get_form($message);
 }

@@ -77,7 +77,7 @@ function field_sql_storage_update_dependencies() {
  * Renames the 'language' column to 'langcode' in field data tables.
  */
 function field_sql_storage_update_8000(&$sandbox) {
-  // Get field definitions from config, and deleted fields from state().
+  // Get field definitions from config, and deleted fields from state system.
   $config_names = config_get_storage_names_with_prefix('field.field');
   $deleted_fields = Drupal::state()->get('field.field.deleted') ?: array();
   // Ditch UUID keys, we will iterate through deleted fields using a numeric

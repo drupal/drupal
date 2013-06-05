@@ -5,16 +5,16 @@
  * Definition of Drupal\system\Tests\Database\EmptyStatementTest.
  */
 
-namespace Drupal\system\Tests\Database;
+namespace Drupal\Tests\Core\Database;
 
 use Drupal\Core\Database\StatementEmpty;
 use Drupal\Core\Database\StatementInterface;
-use Drupal\simpletest\UnitTestBase;
+use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests the empty pseudo-statement class.
  */
-class EmptyStatementTest extends UnitTestBase {
+class EmptyStatementTest extends UnitTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Empty statement',
@@ -43,8 +43,6 @@ class EmptyStatementTest extends UnitTestBase {
       $this->fail('Iterating empty result set should not iterate.');
       return;
     }
-
-    $this->pass('Iterating empty result set skipped iteration.');
   }
 
   /**
@@ -53,6 +51,6 @@ class EmptyStatementTest extends UnitTestBase {
   function testEmptyFetchAll() {
     $result = new StatementEmpty();
 
-    $this->assertEqual($result->fetchAll(), array(), 'Empty array returned from empty result set.');
+    $this->assertEquals($result->fetchAll(), array(), 'Empty array returned from empty result set.');
   }
 }

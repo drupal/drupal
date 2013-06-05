@@ -461,5 +461,5 @@ function template_preprocess_views_ui_view_preview_section(&$vars) {
 function theme_views_ui_view_preview_section($vars) {
   return '<h1 class="section-title">' . $vars['title'] . '</h1>'
   . $vars['links']
-  . '<div class="preview-section">'. $vars['content'] . '</div>';
+  . '<div class="preview-section">'. drupal_render($vars['content']) . '</div>';
 }

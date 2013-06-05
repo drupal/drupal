@@ -188,6 +188,7 @@ class Xss {
     $attributes_array = array();
     $mode = 0;
     $attribute_name = '';
+    $skip = FALSE;
 
     while (strlen($attributes) != 0) {
       // Was the last operation successful?

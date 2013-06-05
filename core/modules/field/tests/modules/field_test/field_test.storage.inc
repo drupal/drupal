@@ -71,10 +71,10 @@ function field_test_field_storage_details_alter(&$details, $field) {
  */
 function _field_test_storage_data($data = NULL) {
   if (!isset($data)) {
-    return state()->get('field_test.storage_data');
+    return Drupal::state()->get('field_test.storage_data');
   }
   else {
-    state()->set('field_test.storage_data', $data);
+    Drupal::state()->set('field_test.storage_data', $data);
   }
 }
 

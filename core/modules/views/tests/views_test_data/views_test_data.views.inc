@@ -30,14 +30,14 @@ function views_test_data_views_data() {
  * Implements hook_views_data_alter().
  */
 function views_test_data_views_data_alter() {
-  state()->set('views_hook_test_views_data_alter', TRUE);
+  Drupal::state()->set('views_hook_test_views_data_alter', TRUE);
 }
 
 /**
  * Implements hook_views_analyze().
  */
 function views_test_data_views_analyze(ViewExecutable $view) {
-  state()->set('views_hook_test_views_analyze', TRUE);
+  Drupal::state()->set('views_hook_test_views_analyze', TRUE);
 
   $ret = array();
 
@@ -52,5 +52,5 @@ function views_test_data_views_analyze(ViewExecutable $view) {
  * Implements hook_views_invalidate_cache().
  */
 function views_test_data_views_invalidate_cache() {
-  state()->set('views_hook_test_views_invalidate_cache', TRUE);
+  Drupal::state()->set('views_hook_test_views_invalidate_cache', TRUE);
 }

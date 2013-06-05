@@ -88,7 +88,7 @@ class TaxonomyIndexTid extends PrerenderList {
    * Add this term to the query
    */
   public function query() {
-    $this->add_additional_fields();
+    $this->addAdditionalFields();
   }
 
   function pre_render(&$values) {
@@ -134,7 +134,7 @@ class TaxonomyIndexTid extends PrerenderList {
     return $item['name'];
   }
 
-  function document_self_tokens(&$tokens) {
+  protected function documentSelfTokens(&$tokens) {
     $tokens['[' . $this->options['id'] . '-tid' . ']'] = t('The taxonomy term ID for the term.');
     $tokens['[' . $this->options['id'] . '-name' . ']'] = t('The taxonomy term name for the term.');
     $tokens['[' . $this->options['id'] . '-vocabulary-vid' . ']'] = t('The machine name for the vocabulary the term belongs to.');

@@ -39,7 +39,7 @@ class Php extends ArgumentDefaultPluginBase {
     );
 
     // Only do this if using one simple standard form gadget
-    $this->check_access($form, 'code');
+    $this->checkAccess($form, 'code');
   }
 
   /**

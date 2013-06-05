@@ -158,7 +158,7 @@ class Sql extends QueryPluginBase {
    * @param bool $value
    *   Should the view by distincted.
    */
-  function set_distinct($value = TRUE) {
+  protected function setDistinct($value = TRUE) {
     if (!(isset($this->no_distinct) && $value)) {
       $this->distinct = $value;
     }
@@ -339,7 +339,7 @@ class Sql extends QueryPluginBase {
    *
    * This function will test to ensure that the path back to the primary
    * table is valid and exists; if you do not wish for this testing to
-   * occur, use $query->queue_table() instead.
+   * occur, use $query->queueTable() instead.
    *
    * @param $table
    *   The name of the table to add. It needs to exist in the global table
@@ -365,7 +365,7 @@ class Sql extends QueryPluginBase {
    *   added.
    */
   public function addTable($table, $relationship = NULL, JoinPluginBase $join = NULL, $alias = NULL) {
-    if (!$this->ensure_path($table, $relationship, $join)) {
+    if (!$this->ensurePath($table, $relationship, $join)) {
       return FALSE;
     }
 
@@ -373,7 +373,7 @@ class Sql extends QueryPluginBase {
       $join = $this->adjust_join($join, $relationship);
     }
 
-    return $this->queue_table($table, $relationship, $join, $alias);
+    return $this->queueTable($table, $relationship, $join, $alias);
   }
 
   /**
@@ -403,7 +403,7 @@ class Sql extends QueryPluginBase {
    *   adding parts to the query. Or FALSE if the table was not able to be
    *   added.
    */
-  function queue_table($table, $relationship = NULL, JoinPluginBase $join = NULL, $alias = NULL) {
+  public function queueTable($table, $relationship = NULL, JoinPluginBase $join = NULL, $alias = NULL) {
     // If the alias is set, make sure it doesn't already exist.
     if (isset($this->table_queue[$alias])) {
       return $alias;
@@ -432,7 +432,7 @@ class Sql extends QueryPluginBase {
       return $alias;
     }
 
-    $alias = $this->mark_table($table, $relationship, $alias);
+    $alias = $this->markTable($table, $relationship, $alias);
 
     // If no alias is specified, give it the default.
     if (!isset($alias)) {
@@ -442,12 +442,12 @@ class Sql extends QueryPluginBase {
     // If this is a relationship based table, add a marker with
     // the relationship as a primary table for the alias.
     if ($table != $alias) {
-      $this->mark_table($alias, $this->view->storage->get('base_table'), $alias);
+      $this->markTable($alias, $this->view->storage->get('base_table'), $alias);
     }
 
     // If no join is specified, pull it from the table data.
     if (!isset($join)) {
-      $join = $this->get_join_data($table, $this->relationships[$relationship]['base']);
+      $join = $this->getJoinData($table, $this->relationships[$relationship]['base']);
       if (empty($join)) {
         return FALSE;
       }
@@ -466,7 +466,7 @@ class Sql extends QueryPluginBase {
     return $alias;
   }
 
-  function mark_table($table, $relationship, $alias) {
+  protected function markTable($table, $relationship, $alias) {
     // Mark that this table has been added.
     if (empty($this->tables[$relationship][$table])) {
       if (!isset($alias)) {
@@ -532,7 +532,7 @@ class Sql extends QueryPluginBase {
 
     // If we do not have join info, fetch it.
     if (!isset($join)) {
-      $join = $this->get_join_data($table, $this->relationships[$relationship]['base']);
+      $join = $this->getJoinData($table, $this->relationships[$relationship]['base']);
     }
 
     // If it can't be fetched, this won't work.
@@ -545,7 +545,7 @@ class Sql extends QueryPluginBase {
     // join to a link point, not the base table.
     $join = $this->adjust_join($join, $relationship);
 
-    if ($this->ensure_path($table, $relationship, $join)) {
+    if ($this->ensurePath($table, $relationship, $join)) {
       // Attempt to eliminate redundant joins.  If this table's
       // relationship and join exactly matches an existing table's
       // relationship and join, we do not have to join to it again;
@@ -553,7 +553,7 @@ class Sql extends QueryPluginBase {
       // http://groups.drupal.org/node/11288 for details.
       //
       // This can be done safely here but not lower down in
-      // queue_table(), because queue_table() is also used by
+      // queueTable(), because queueTable() is also used by
       // addTable() which requires the ability to intentionally add
       // the same table with the same join multiple times.  For
       // example, a view that filters on 3 taxonomy terms using AND
@@ -576,7 +576,7 @@ class Sql extends QueryPluginBase {
         }
       }
 
-      return $this->queue_table($table, $relationship, $join);
+      return $this->queueTable($table, $relationship, $join);
     }
   }
 
@@ -587,7 +587,7 @@ class Sql extends QueryPluginBase {
    * query they will be added, but additional copies will NOT be added
    * if the table is already there.
    */
-  function ensure_path($table, $relationship = NULL, $join = NULL, $traced = array(), $add = array()) {
+  protected function ensurePath($table, $relationship = NULL, $join = NULL, $traced = array(), $add = array()) {
     if (!isset($relationship)) {
       $relationship = $this->view->storage->get('base_table');
     }
@@ -598,7 +598,7 @@ class Sql extends QueryPluginBase {
 
     // If we do not have join info, fetch it.
     if (!isset($join)) {
-      $join = $this->get_join_data($table, $this->relationships[$relationship]['base']);
+      $join = $this->getJoinData($table, $this->relationships[$relationship]['base']);
     }
 
     // If it can't be fetched, this won't work.
@@ -613,7 +613,7 @@ class Sql extends QueryPluginBase {
 
       // Make sure that we're linking to the correct table for our relationship.
       foreach (array_reverse($add) as $table => $path_join) {
-        $this->queue_table($table, $relationship, $this->adjust_join($path_join, $relationship));
+        $this->queueTable($table, $relationship, $this->adjust_join($path_join, $relationship));
       }
       return TRUE;
     }
@@ -625,14 +625,14 @@ class Sql extends QueryPluginBase {
     }
 
     // Do we have to add this table?
-    $left_join = $this->get_join_data($join->leftTable, $this->relationships[$relationship]['base']);
+    $left_join = $this->getJoinData($join->leftTable, $this->relationships[$relationship]['base']);
     if (!isset($this->tables[$relationship][$join->leftTable])) {
       $add[$join->leftTable] = $left_join;
     }
 
     // Keep looking.
     $traced[$join->leftTable] = TRUE;
-    return $this->ensure_path($join->leftTable, $relationship, $left_join, $traced, $add);
+    return $this->ensurePath($join->leftTable, $relationship, $left_join, $traced, $add);
   }
 
   /**
@@ -692,7 +692,7 @@ class Sql extends QueryPluginBase {
    * @return Drupal\views\Plugin\views\join\JoinPluginBase
    *   A Join object or child object, if one exists.
    */
-  function get_join_data($table, $base_table) {
+  public function getJoinData($table, $base_table) {
     // Check to see if we're linking to a known alias. If so, get the real
     // table's data instead.
     if (!empty($this->table_queue[$table])) {
@@ -888,50 +888,6 @@ class Sql extends QueryPluginBase {
       'field' => $snippet,
       'value' => $args,
       'operator' => 'formula',
-    );
-  }
-
-  /**
-   * Add a simple HAVING clause to the query.
-   *
-   * The caller is responsible for ensuring that all fields are fully qualified
-   * (TABLE.FIELD) and that the table and an appropriate GROUP BY already exist in the query.
-   * Internally the dbtng method "havingCondition" is used.
-   *
-   * @param $group
-   *   The HAVING group to add these to; groups are used to create AND/OR
-   *   sections. Groups cannot be nested. Use 0 as the default group.
-   *   If the group does not yet exist it will be created as an AND group.
-   * @param $field
-   *   The name of the field to check.
-   * @param $value
-   *   The value to test the field against. In most cases, this is a scalar. For more
-   *   complex options, it is an array. The meaning of each element in the array is
-   *   dependent on the $operator.
-   * @param $operator
-   *   The comparison operator, such as =, <, or >=. It also accepts more complex
-   *   options such as IN, LIKE, or BETWEEN. Defaults to IN if $value is an array
-   *   = otherwise.  If $field is a string you have to use 'formula' here.
-   *
-   * @see SelectQueryInterface::havingCondition()
-   */
-  function add_having($group, $field, $value = NULL, $operator = NULL) {
-    // Ensure all variants of 0 are actually 0. Thus '', 0 and NULL are all
-    // the default group.
-    if (empty($group)) {
-      $group = 0;
-    }
-
-    // Check for a group.
-    if (!isset($this->having[$group])) {
-      $this->set_where_group('AND', $group, 'having');
-    }
-
-    // Add the clause and the args.
-    $this->having[$group]['conditions'][] = array(
-      'field' => $field,
-      'value' => $value,
-      'operator' => $operator,
     );
   }
 
@@ -1191,7 +1147,7 @@ class Sql extends QueryPluginBase {
    * @param Drupal\Core\Database\Query\SelectInterface $query
    *   The drupal query object.
    */
-  function compile_fields($query) {
+  protected function compileFields($query) {
     foreach ($this->fields as $field) {
       $string = '';
       if (!empty($field['table'])) {
@@ -1338,7 +1294,7 @@ class Sql extends QueryPluginBase {
     }
 
     // Add all fields to the query.
-    $this->compile_fields($query);
+    $this->compileFields($query);
 
     // Add groupby.
     if ($groupby) {
@@ -1413,7 +1369,7 @@ class Sql extends QueryPluginBase {
   function build(ViewExecutable $view) {
     // Make the query distinct if the option was set.
     if (!empty($this->options['distinct'])) {
-      $this->set_distinct(TRUE);
+      $this->setDistinct(TRUE);
     }
 
     // Store the view in the object to be able to use it later.
@@ -1479,7 +1435,7 @@ class Sql extends QueryPluginBase {
       $start = microtime(TRUE);
 
       try {
-        if ($view->pager->use_count_query() || !empty($view->get_total_rows)) {
+        if ($view->pager->useCountQuery() || !empty($view->get_total_rows)) {
           $view->pager->executeCountQuery($count_query);
         }
 
@@ -1501,7 +1457,7 @@ class Sql extends QueryPluginBase {
         }
 
         $view->pager->postExecute($view->result);
-        if ($view->pager->use_count_query() || !empty($view->get_total_rows)) {
+        if ($view->pager->useCountQuery() || !empty($view->get_total_rows)) {
           $view->total_rows = $view->pager->getTotalItems();
         }
 

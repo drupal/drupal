@@ -22,7 +22,7 @@ function node_access_test_node_grants($account, $op) {
     $grants['node_access_test'] = array(8888, 8889);
   }
 
-  $no_access_uid = state()->get('node_access_test.no_access_uid') ?: 0;
+  $no_access_uid = Drupal::state()->get('node_access_test.no_access_uid') ?: 0;
   if ($op == 'view' && $account->uid == $no_access_uid) {
     $grants['node_access_all'] = array(0);
   }
@@ -35,7 +35,7 @@ function node_access_test_node_grants($account, $op) {
 function node_access_test_node_access_records(EntityInterface $node) {
   $grants = array();
   // For NodeAccessBaseTableTestCase, only set records for private nodes.
-  if (!state()->get('node_access_test.private') || $node->private) {
+  if (!Drupal::state()->get('node_access_test.private') || $node->private) {
     $grants[] = array(
       'realm' => 'node_access_test',
       'gid' => 8888,
@@ -182,8 +182,8 @@ function node_access_entity_test_page() {
  */
 function node_access_test_form_node_form_alter(&$form, $form_state) {
   // Only show this checkbox for NodeAccessBaseTableTestCase.
-  if (state()->get('node_access_test.private')) {
-    $node = $form_state['controller']->getEntity();
+  if (Drupal::state()->get('node_access_test.private')) {
+    $node = $form_state['controller']->getEntity($form_state);
     $form['private'] = array(
       '#type' => 'checkbox',
       '#title' => t('Private'),
@@ -241,7 +241,7 @@ function _node_access_test_node_write(EntityInterface $node) {
  * Implements hook_node_access().
  */
 function node_access_test_node_access($node, $op, $account, $langcode) {
-  $secret_catalan = state()->get('node_access_test_secret_catalan') ?: 0;
+  $secret_catalan = Drupal::state()->get('node_access_test_secret_catalan') ?: 0;
   if ($secret_catalan && $langcode == 'ca') {
     // Make all Catalan content secret.
     return NODE_ACCESS_DENY;

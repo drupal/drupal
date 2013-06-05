@@ -93,7 +93,7 @@ class FieldDateTest extends ViewUnitTestBase {
       else {
         $message = t('Value %value in %format format matches.', $t_args);
       }
-      $actual_result = $view->field['created']->advanced_render($view->result[0]);
+      $actual_result = $view->field['created']->advancedRender($view->result[0]);
       $this->assertEqual($expected_result, $actual_result, $message);
     }
   }

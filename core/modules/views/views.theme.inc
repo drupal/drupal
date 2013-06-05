@@ -54,7 +54,7 @@ function template_preprocess_views_view(&$vars) {
 
   $view = $vars['view'];
 
-  $vars['rows'] = (!empty($view->result) || $view->style_plugin->even_empty()) ? $view->style_plugin->render($view->result) : array();
+  $vars['rows'] = (!empty($view->result) || $view->style_plugin->evenEmpty()) ? $view->style_plugin->render($view->result) : array();
   // Force a render array so CSS/JS can be added.
   if (!is_array($vars['rows'])) {
     $vars['rows'] = array('#markup' => $vars['rows']);
@@ -209,7 +209,7 @@ function template_preprocess_views_view_fields(&$vars) {
   foreach ($view->field as $id => $field) {
     // render this even if set to exclude so it can be used elsewhere.
     $field_output = $view->style_plugin->get_field($view->row_index, $id);
-    $empty = $field->is_value_empty($field_output, $field->options['empty_zero']);
+    $empty = $field->isValueEmpty($field_output, $field->options['empty_zero']);
     if (empty($field->options['exclude']) && (!$empty || (empty($field->options['hide_empty']) && empty($vars['options']['hide_empty'])))) {
       $object = new stdClass();
       $object->handler = &$view->field[$id];
@@ -366,7 +366,7 @@ function theme_views_view_fields($variables) {
  *   - title: The group heading.
   */
 function template_preprocess_views_view_grouping(&$vars) {
-  $vars['content'] = $vars['view']->style_plugin->render_grouping_sets($vars['rows'], $vars['grouping_level']);
+  $vars['content'] = $vars['view']->style_plugin->renderGroupingSets($vars['rows'], $vars['grouping_level']);
 }
 
 /**
@@ -396,7 +396,7 @@ function theme_views_view_field($vars) {
  *   - view: Instance of the ViewExecutable object for the parent view.
  */
 function template_preprocess_views_view_field(&$vars) {
-  $vars['output'] = $vars['field']->advanced_render($vars['row']);
+  $vars['output'] = $vars['field']->advancedRender($vars['row']);
 }
 
 /**
@@ -433,7 +433,7 @@ function template_preprocess_views_view_summary(&$vars) {
   $row_args = array();
 
   foreach ($vars['rows'] as $id => $row) {
-    $row_args[$id] = $argument->summary_argument($row);
+    $row_args[$id] = $argument->summaryArgument($row);
   }
   $argument->process_summary_arguments($row_args);
 
@@ -493,7 +493,7 @@ function template_preprocess_views_view_summary_unformatted(&$vars) {
   // this could cause performance problems.
   $row_args = array();
   foreach ($vars['rows'] as $id => $row) {
-    $row_args[$id] = $argument->summary_argument($row);
+    $row_args[$id] = $argument->summaryArgument($row);
   }
   $argument->process_summary_arguments($row_args);
 
@@ -551,7 +551,7 @@ function template_preprocess_views_view_table(&$vars) {
   $row_class_special = isset($options['row_class_special']) ? $options['row_class_special'] : TRUE;
 
   $fields = &$view->field;
-  $columns = $handler->sanitize_columns($options['columns'], $fields);
+  $columns = $handler->sanitizeColumns($options['columns'], $fields);
 
   $active = !empty($handler->active) ? $handler->active : '';
   $order = !empty($handler->order) ? $handler->order : 'asc';

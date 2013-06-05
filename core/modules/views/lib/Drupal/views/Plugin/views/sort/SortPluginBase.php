@@ -160,7 +160,7 @@ abstract class SortPluginBase extends HandlerBase {
   /**
    * Shortcut to display the value form.
    */
-  function showSortForm(&$form, &$form_state) {
+  protected function showSortForm(&$form, &$form_state) {
     $options = $this->sort_options();
     if (!empty($options)) {
       $form['order'] = array(

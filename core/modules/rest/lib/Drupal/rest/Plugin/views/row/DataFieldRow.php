@@ -140,7 +140,7 @@ class DataFieldRow extends RowPluginBase {
       // If this is not unknown and the raw output option has been set, just get
       // the raw value.
       if (($field->field_alias != 'unknown') && !empty($this->rawOutputOptions[$id])) {
-        $value = $field->sanitizeValue($field->get_value($row), 'xss_admin');
+        $value = $field->sanitizeValue($field->getValue($row), 'xss_admin');
       }
       // Otherwise, pass this through the field render() method.
       else {

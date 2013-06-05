@@ -62,9 +62,8 @@ class MessageFormController extends EntityFormController {
       $form['mail']['#markup'] = check_plain($user->mail);
     }
 
-    // The user contact form only has a recipient, not a category.
-    // @todo Convert user contact form into a locked contact category.
-    if ($message->recipient instanceof User) {
+    // The user contact form has a preset recipient.
+    if ($message->isPersonal()) {
       $form['recipient'] = array(
         '#type' => 'item',
         '#title' => t('To'),
@@ -160,7 +159,7 @@ class MessageFormController extends EntityFormController {
     $params['contact_message'] = $message;
     $params['sender'] = $sender;
 
-    if ($message->category) {
+    if (!$message->isPersonal()) {
       // Send to the category recipient(s), using the site's default language.
       $category = entity_load('contact_category', $message->category);
       $params['contact_category'] = $category;
@@ -186,14 +185,14 @@ class MessageFormController extends EntityFormController {
     }
 
     // If configured, send an auto-reply, using the current language.
-    if ($message->category && $category->reply) {
+    if (!$message->isPersonal() && $category->reply) {
       // User contact forms do not support an auto-reply message, so this
       // message always originates from the site.
       drupal_mail('contact', 'page_autoreply', $sender->mail, $language_interface->langcode, $params);
     }
 
     \Drupal::service('flood')->register('contact', config('contact.settings')->get('flood.interval'));
-    if ($message->category) {
+    if (!$message->isPersonal()) {
       watchdog('contact', '%sender-name (@sender-from) sent an e-mail regarding %category.', array(
         '%sender-name' => $sender->name,
         '@sender-from' => $sender->mail,

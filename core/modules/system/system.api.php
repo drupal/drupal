@@ -113,11 +113,11 @@ function hook_admin_paths_alter(&$paths) {
 function hook_cron() {
   // Short-running operation example, not using a queue:
   // Delete all expired records since the last cron run.
-  $expires = state()->get('mymodule.cron_last_run') ?: REQUEST_TIME;
+  $expires = \Drupal::state()->get('mymodule.cron_last_run') ?: REQUEST_TIME;
   db_delete('mymodule_table')
     ->condition('expires', $expires, '>=')
     ->execute();
-  state()->set('mymodule.cron_last_run', REQUEST_TIME);
+  \Drupal::state()->set('mymodule.cron_last_run', REQUEST_TIME);
 
   // Long-running operation example, leveraging a queue:
   // Fetch feeds from other sites.
@@ -1348,23 +1348,6 @@ function hook_forms($form_id, $args) {
 }
 
 /**
- * Perform setup tasks for non-cached page requests.
- *
- * This hook is run at the beginning of the page request. It is typically
- * used to set up global parameters that are needed later in the request.
- * When this hook is called, the theme and all modules are already loaded in
- * memory.
- *
- * This hook is not run on cached pages.
- *
- * Do not use this hook to add CSS/JS to pages, use hook_page_build() instead.
- *
- * @see hook_page_build()
- */
-function hook_init() {
-}
-
-/**
  * Alter an email message created with the drupal_mail() function.
  *
  * hook_mail_alter() allows modification of email messages created and sent
@@ -2359,7 +2342,7 @@ function hook_requirements($phase) {
 
   // Report cron status
   if ($phase == 'runtime') {
-    $cron_last = state()->get('system.cron_last');
+    $cron_last = \Drupal::state()->get('system.cron_last');
 
     if (is_numeric($cron_last)) {
       $requirements['cron']['value'] = $t('Last run !time ago', array('!time' => format_interval(REQUEST_TIME - $cron_last)));

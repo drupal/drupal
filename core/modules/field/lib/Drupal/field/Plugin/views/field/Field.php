@@ -187,7 +187,7 @@ class Field extends FieldPluginBase {
     // Add additional fields (and the table join itself) if needed.
     if ($this->add_field_table($use_groupby)) {
       $this->ensureMyTable();
-      $this->add_additional_fields($fields);
+      $this->addAdditionalFields($fields);
 
       // Filter by langcode, if field translation is enabled.
       $field = $this->field_info;
@@ -248,7 +248,7 @@ class Field extends FieldPluginBase {
   /**
    * Called to determine what to tell the clicksorter.
    */
-  function click_sort($order) {
+  public function clickSort($order) {
     // No column selected, can't continue.
     if (empty($this->options['click_sort_column'])) {
       return;
@@ -801,7 +801,7 @@ class Field extends FieldPluginBase {
     return render($item['rendered']);
   }
 
-  function document_self_tokens(&$tokens) {
+  protected function documentSelfTokens(&$tokens) {
     $field = $this->field_info;
     foreach ($field['columns'] as $id => $column) {
       $tokens['[' . $this->options['id'] . '-' . $id . ']'] = t('Raw @column', array('@column' => $id));

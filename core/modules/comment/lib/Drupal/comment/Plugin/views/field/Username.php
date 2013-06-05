@@ -51,9 +51,9 @@ class Username extends FieldPluginBase {
   function render_link($data, $values) {
     if (!empty($this->options['link_to_user'])) {
       $account = entity_create('user', array());
-      $account->uid = $this->get_value($values, 'uid');
-      $account->name = $this->get_value($values);
-      $account->homepage = $this->get_value($values, 'homepage');
+      $account->uid = $this->getValue($values, 'uid');
+      $account->name = $this->getValue($values);
+      $account->homepage = $this->getValue($values, 'homepage');
 
       return theme('username', array(
         'account' => $account
@@ -65,7 +65,7 @@ class Username extends FieldPluginBase {
   }
 
   function render($values) {
-    $value = $this->get_value($values);
+    $value = $this->getValue($values);
     return $this->render_link($this->sanitizeValue($value), $values);
   }
 

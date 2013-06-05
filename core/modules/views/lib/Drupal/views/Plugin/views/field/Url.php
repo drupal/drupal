@@ -39,7 +39,7 @@ class Url extends FieldPluginBase {
   }
 
   function render($values) {
-    $value = $this->get_value($values);
+    $value = $this->getValue($values);
     if (!empty($this->options['display_as_link'])) {
       return l($this->sanitizeValue($value), $value, array('html' => TRUE));
     }

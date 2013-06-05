@@ -82,7 +82,7 @@ class TranslationTest extends FieldUnitTestBase {
     field_test_entity_info_translatable('test_entity', TRUE);
 
     // Test hook_field_languages() invocation on a translatable field.
-    state()->set('field_test.field_available_languages_alter', TRUE);
+    \Drupal::state()->set('field_test.field_available_languages_alter', TRUE);
     $langcodes = field_content_languages();
     $available_langcodes = field_available_languages($this->entity_type, $this->field);
     foreach ($available_langcodes as $delta => $langcode) {
@@ -381,7 +381,7 @@ class TranslationTest extends FieldUnitTestBase {
     $this->assertTrue(isset($entity->{$this->field_name}[$langcode]) && $langcode != $requested_langcode, format_string('The display language for the (single) field %field_name is %language.', array('%field_name' => $field_name, '%language' => $langcode)));
 
     // Test field_language() basic behavior without language fallback.
-    state()->set('field_test.language_fallback', FALSE);
+    \Drupal::state()->set('field_test.language_fallback', FALSE);
     $entity->{$this->field_name}[$requested_langcode] = mt_rand(1, 127);
     drupal_static_reset('field_language');
     $display_langcode = field_language($entity, $this->field_name, $requested_langcode);

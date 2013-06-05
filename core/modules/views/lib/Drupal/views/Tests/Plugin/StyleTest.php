@@ -238,7 +238,7 @@ class StyleTest extends ViewTestBase {
       $this->assertTrue(strpos($class, $random_name) !== FALSE, 'Take sure that a custom css class is added to the output.');
 
       // Check token replacement.
-      $name = $view->field['name']->get_value($view->result[$count]);
+      $name = $view->field['name']->getValue($view->result[$count]);
       $this->assertTrue(strpos($class, "test-token-$name") !== FALSE, 'Take sure that a token in custom css class is replaced.');
 
       $count++;

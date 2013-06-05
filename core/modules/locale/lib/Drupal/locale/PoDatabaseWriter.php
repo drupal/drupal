@@ -156,7 +156,7 @@ class PoDatabaseWriter implements PoWriterInterface {
   function setHeader(PoHeader $header) {
     $this->_header = $header;
     $config = config('locale.settings');
-    $locale_plurals = state()->get('locale.translation.plurals') ?: array();
+    $locale_plurals = \Drupal::state()->get('locale.translation.plurals') ?: array();
 
     // Check for options.
     $options = $this->getOptions();
@@ -180,7 +180,7 @@ class PoDatabaseWriter implements PoWriterInterface {
           'plurals' => $nplurals,
           'formula' => $formula,
         );
-        state()->set('locale.translation.plurals', $locale_plurals);
+        \Drupal::state()->set('locale.translation.plurals', $locale_plurals);
       }
     }
   }

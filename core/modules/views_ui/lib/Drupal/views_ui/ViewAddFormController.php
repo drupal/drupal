@@ -150,7 +150,7 @@ class ViewAddFormController extends ViewFormControllerBase implements EntityCont
     // Build the rest of the form based on the currently selected wizard plugin.
     $wizard_key = $show_form['wizard_key']['#default_value'];
     $wizard_instance = $this->wizardManager->createInstance($wizard_key);
-    $form = $wizard_instance->build_form($form, $form_state);
+    $form = $wizard_instance->buildForm($form, $form_state);
 
     return $form;
   }
@@ -194,7 +194,7 @@ class ViewAddFormController extends ViewFormControllerBase implements EntityCont
    */
   public function submit(array $form, array &$form_state) {
     try {
-      $view = $form_state['wizard_instance']->create_view($form, $form_state);
+      $view = $form_state['wizard_instance']->createView($form, $form_state);
     }
     // @todo Figure out whether it really makes sense to throw and catch exceptions on the wizard.
     catch (WizardException $e) {

@@ -50,11 +50,11 @@ class Path extends FieldPluginBase {
 
   public function query() {
     $this->ensureMyTable();
-    $this->add_additional_fields();
+    $this->addAdditionalFields();
   }
 
   function render($values) {
-    $nid = $this->get_value($values, 'nid');
+    $nid = $this->getValue($values, 'nid');
     return url("node/$nid", array('absolute' => $this->options['absolute']));
   }
 

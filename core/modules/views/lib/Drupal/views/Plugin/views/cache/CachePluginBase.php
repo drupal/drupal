@@ -94,7 +94,7 @@ abstract class CachePluginBase extends PluginBase {
    * @param $type
    *   The cache type, either 'query', 'result' or 'output'.
    */
-  function cache_expire($type) { }
+  protected function cacheExpire($type) { }
 
    /**
     * Determine expiration time in the cache table of the cache type
@@ -115,7 +115,7 @@ abstract class CachePluginBase extends PluginBase {
    *
    * A plugin should override this to provide specialized caching behavior.
    */
-  function cache_set($type) {
+  public function cacheSet($type) {
     switch ($type) {
       case 'query':
         // Not supported currently, but this is certainly where we'd put it.
@@ -143,7 +143,7 @@ abstract class CachePluginBase extends PluginBase {
    * A plugin should override this to provide specialized caching behavior.
    */
   function cache_get($type) {
-    $cutoff = $this->cache_expire($type);
+    $cutoff = $this->cacheExpire($type);
     switch ($type) {
       case 'query':
         // Not supported currently, but this is certainly where we'd put it.
@@ -215,7 +215,7 @@ abstract class CachePluginBase extends PluginBase {
    *
    * @see drupal_add_html_head()
    */
-  function cache_start() {
+  public function cacheStart() {
     $this->storage['head'] = drupal_add_html_head();
   }
 

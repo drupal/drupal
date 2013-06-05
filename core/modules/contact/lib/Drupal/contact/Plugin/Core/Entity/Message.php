@@ -69,9 +69,8 @@ class Message extends Entity implements MessageInterface {
    * @see Drupal\contact\MessageFormController::form()
    * @see Drupal\contact\MessageFormController::save()
    *
-   * @todo Convert user contact form into a locked contact category, and replace
-   *   Category::$recipients with the user account's e-mail address upon
-   *   Entity::create().
+   * @todo Replace Category::$recipients with the user account's e-mail address
+   *   upon Entity::create().
    *
    * @var Drupal\user\Plugin\Core\Entity\User
    */
@@ -113,17 +112,10 @@ class Message extends Entity implements MessageInterface {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\Entity::entityInfo().
+   * {@inheritdoc}
    */
-  public function entityInfo() {
-    // The user contact form is not a category/bundle currently, so it is not
-    // fieldable. Prevent EntityFormController from calling into Field Attach
-    // functions, since those will throw errors without a bundle name.
-    $info = entity_get_info($this->entityType);
-    if (isset($this->recipient)) {
-      $info['fieldable'] = FALSE;
-    }
-    return $info;
+  public function isPersonal() {
+    return $this->bundle() == 'personal';
   }
 
 }

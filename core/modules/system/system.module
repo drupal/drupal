@@ -8,7 +8,6 @@
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Utility\ModuleInfo;
 use Drupal\Core\TypedData\Primitive;
 use Drupal\system\Plugin\Block\SystemMenuBlock;
@@ -975,17 +974,7 @@ function system_menu() {
   $items['admin/reports/status'] = array(
     'title' => 'Status report',
     'description' => "Get a status report about your site's operation and any detected problems.",
-    'page callback' => 'system_status',
-    'weight' => -60,
-    'access arguments' => array('administer site configuration'),
-    'file' => 'system.admin.inc',
-  );
-  $items['admin/reports/status/php'] = array(
-    'title' => 'PHP',
-    'page callback' => 'system_php',
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_CALLBACK,
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_status',
   );
 
   // Default page for batch operations.
@@ -2504,34 +2493,6 @@ function system_filetransfer_info() {
 }
 
 /**
- * Implements hook_init().
- */
-function system_init() {
-  // Ignore slave database servers for this request.
-  //
-  // In Drupal's distributed database structure, new data is written to the
-  // master and then propagated to the slave servers.  This means there is a
-  // lag between when data is written to the master and when it is available on
-  // the slave. At these times, we will want to avoid using a slave server
-  // temporarily. For example, if a user posts a new node then we want to
-  // disable the slave server for that user temporarily to allow the slave
-  // server to catch up. That way, that user will see their changes immediately
-  // while for other users we still get the benefits of having a slave server,
-  // just with slightly stale data.  Code that wants to disable the slave
-  // server should use the db_ignore_slave() function to set
-  // $_SESSION['ignore_slave_server'] to the timestamp after which the slave
-  // can be re-enabled.
-  if (isset($_SESSION['ignore_slave_server'])) {
-    if ($_SESSION['ignore_slave_server'] >= REQUEST_TIME) {
-      Database::ignoreTarget('default', 'slave');
-    }
-    else {
-      unset($_SESSION['ignore_slave_server']);
-    }
-  }
-}
-
-/**
  * Implements hook_page_build().
  */
 function system_page_build(&$page) {
@@ -2790,7 +2751,7 @@ function system_get_info($type, $name = NULL) {
   $info = array();
   if ($type == 'module') {
     $data = system_rebuild_module_data();
-    foreach (drupal_container()->get('module_handler')->getModuleList() as $module => $filename) {
+    foreach (Drupal::moduleHandler()->getModuleList() as $module => $filename) {
       $info[$module] = $data[$module]->info;
     }
   }
@@ -2933,12 +2894,12 @@ function system_rebuild_module_data() {
       $record->schema_version = SCHEMA_UNINSTALLED;
       $files[$module] = $record->filename;
     }
-    $modules = drupal_container()->get('module_handler')->buildModuleDependencies($modules);
+    $modules = Drupal::moduleHandler()->buildModuleDependencies($modules);
     $modules_cache = $modules;
 
     // Store filenames to allow system_list() and drupal_get_filename() to
     // retrieve them without having to rebuild or scan the filesystem.
-    state()->set('system.module.files', $files);
+    Drupal::state()->set('system.module.files', $files);
   }
   return $modules_cache;
 }
@@ -2957,7 +2918,7 @@ function _system_update_bootstrap_status() {
       $bootstrap_modules[$module] = drupal_get_filename('module', $module);
     }
   }
-  state()->set('system.module.bootstrap', $bootstrap_modules);
+  Drupal::state()->set('system.module.bootstrap', $bootstrap_modules);
 }
 
 /**
@@ -3102,11 +3063,11 @@ function system_rebuild_theme_data() {
   }
   // Replace last known theme data state.
   // @todo Obsolete with proper installation status for themes.
-  state()->set('system.theme.data', $themes);
+  Drupal::state()->set('system.theme.data', $themes);
 
   // Store filenames to allow system_list() and drupal_get_filename() to
   // retrieve them without having to rebuild or scan the filesystem.
-  state()->set('system.theme.files', $files);
+  Drupal::state()->set('system.theme.files', $files);
 
   return $themes;
 }
@@ -3273,19 +3234,6 @@ function system_config_form($form, &$form_state) {
  */
 function system_config_form_submit($form, &$form_state) {
   drupal_set_message(t('The configuration options have been saved.'));
-}
-
-/**
- * Helper function to sort requirements.
- */
-function _system_sort_requirements($a, $b) {
-  if (!isset($a['weight'])) {
-    if (!isset($b['weight'])) {
-      return strcmp($a['title'], $b['title']);
-    }
-    return -$b['weight'];
-  }
-  return isset($b['weight']) ? $a['weight'] - $b['weight'] : $a['weight'];
 }
 
 /**
@@ -3677,7 +3625,7 @@ function system_run_automated_cron() {
   // Otherwise it could be triggered prematurely by Ajax requests during
   // installation.
   if (($threshold = config('system.cron')->get('threshold.autorun')) > 0 && variable_get('install_task') == 'done') {
-    $cron_last = state()->get('system.cron_last') ?: NULL;
+    $cron_last = Drupal::state()->get('system.cron_last') ?: NULL;
     if (!isset($cron_last) || (REQUEST_TIME - $cron_last > $threshold)) {
       drupal_cron_run();
     }

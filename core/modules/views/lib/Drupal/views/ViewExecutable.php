@@ -460,7 +460,7 @@ class ViewExecutable {
   public function getCurrentPage() {
     // If the pager is already initialized, pass it through to the pager.
     if (!empty($this->pager)) {
-      return $this->pager->get_current_page();
+      return $this->pager->getCurrentPage();
     }
 
     if (isset($this->current_page)) {
@@ -500,7 +500,7 @@ class ViewExecutable {
   public function getOffset() {
     // If the pager is already initialized, pass it through to the pager.
     if (!empty($this->pager)) {
-      return $this->pager->get_offset();
+      return $this->pager->getOffset();
     }
 
     if (isset($this->offset)) {
@@ -875,7 +875,7 @@ class ViewExecutable {
           break;
         }
 
-        if ($argument->is_exception()) {
+        if ($argument->isException()) {
           $arg_title = $argument->exception_title();
         }
         else {
@@ -903,7 +903,7 @@ class ViewExecutable {
         }
 
         // Allow the argument to muck with this breadcrumb.
-        $argument->set_breadcrumb($this->build_info['breadcrumb']);
+        $argument->setBreadcrumb($this->build_info['breadcrumb']);
 
         // Test to see if we should use this argument's title
         if (!empty($argument->options['title_enable']) && !empty($argument->options['title'])) {
@@ -1122,7 +1122,7 @@ class ViewExecutable {
             $converted = FALSE;
             if ($handlers[$id]->isAGroup()) {
               $converted = $handlers[$id]->convertExposedInput($this->exposed_data, $group_id);
-              $handlers[$id]->store_group_input($this->exposed_data, $converted);
+              $handlers[$id]->storeGroupInput($this->exposed_data, $converted);
               if (!$converted) {
                 continue;
               }
@@ -1181,7 +1181,7 @@ class ViewExecutable {
     if ($cache->cache_get('results')) {
       if ($this->pager->usePager()) {
         $this->pager->total_items = $this->total_rows;
-        $this->pager->update_page_info();
+        $this->pager->updatePageInfo();
       }
     }
     else {
@@ -1190,7 +1190,7 @@ class ViewExecutable {
       // views_plugin_query::execute().
       $this->result = array_values($this->result);
       $this->_postExecute();
-      $cache->cache_set('results');
+      $cache->cacheSet('results');
     }
 
     // Let modules modify the view just after executing it.
@@ -1242,7 +1242,7 @@ class ViewExecutable {
     }
     else {
       if ($cache) {
-        $cache->cache_start();
+        $cache->cacheStart();
       }
 
       // Run pre_render for the pager as it might change the result.
@@ -1294,7 +1294,7 @@ class ViewExecutable {
 
       $this->display_handler->output = $this->display_handler->render();
       if ($cache) {
-        $cache->cache_set('output');
+        $cache->cacheSet('output');
       }
     }
 

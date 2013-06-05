@@ -45,8 +45,8 @@ abstract class ViewUnitTestBase extends DrupalUnitTestBase {
    */
   protected function setUpFixtures() {
     // Define the schema and views data variable before enabling the test module.
-    state()->set('views_test_data_schema', $this->schemaDefinition());
-    state()->set('views_test_data_views_data', $this->viewsData());
+    \Drupal::state()->set('views_test_data_schema', $this->schemaDefinition());
+    \Drupal::state()->set('views_test_data_views_data', $this->viewsData());
 
     $this->installConfig(array('views', 'views_test_config', 'views_test_data'));
     foreach ($this->schemaDefinition() as $table => $schema) {

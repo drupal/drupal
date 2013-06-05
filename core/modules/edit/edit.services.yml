@@ -1,6 +1,6 @@
 services:
   plugin.manager.edit.editor:
-    class: Drupal\edit\Plugin\EditorManager
+    class: Drupal\edit\Plugin\InPlaceEditorManager
     arguments: ['@container.namespaces']
   access_check.edit.entity_field:
     class: Drupal\edit\Access\EditEntityFieldAccessCheck

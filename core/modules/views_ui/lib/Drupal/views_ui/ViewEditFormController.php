@@ -1017,6 +1017,8 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
       $link_attributes = array('class' => array('views-ajax-link'));
       if (!empty($field['exclude'])) {
         $link_attributes['class'][] = 'views-field-excluded';
+        // Add a [hidden] marker, if the field is excluded.
+        $link_text .= ' [' . t('hidden') . ']';
       }
       $build['fields'][$id]['#link'] = l($link_text, "admin/structure/views/nojs/config-item/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => $link_attributes, 'html' => TRUE));
       $build['fields'][$id]['#class'][] = drupal_clean_css_identifier($display['id']. '-' . $type . '-' . $id);

@@ -65,15 +65,15 @@ class Comment extends FieldPluginBase {
   function render_link($data, $values) {
     if (!empty($this->options['link_to_comment'])) {
       $this->options['alter']['make_link'] = TRUE;
-      $cid = $this->get_value($values, 'cid');
+      $cid = $this->getValue($values, 'cid');
       if (!empty($cid)) {
         $this->options['alter']['path'] = "comment/" . $cid;
         $this->options['alter']['fragment'] = "comment-" . $cid;
       }
       // If there is no comment link to the node.
       elseif ($this->options['link_to_entity']) {
-        $entity_id = $this->get_value($values, 'entity_id');
-        $entity_type = $this->get_value($values, 'entity_type');
+        $entity_id = $this->getValue($values, 'entity_id');
+        $entity_type = $this->getValue($values, 'entity_type');
         $entity = entity_load($entity_type, $entity_id);
         $uri = $entity->uri();
         $this->options['alter']['path'] = $uri['path'];
@@ -84,7 +84,7 @@ class Comment extends FieldPluginBase {
   }
 
   function render($values) {
-    $value = $this->get_value($values);
+    $value = $this->getValue($values);
     return $this->render_link($this->sanitizeValue($value), $values);
   }
 

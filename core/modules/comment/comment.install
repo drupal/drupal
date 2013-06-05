@@ -28,7 +28,7 @@ function comment_uninstall() {
   }
 
   // Remove states.
-  state()->delete('comment.node_comment_statistics_scale');
+  Drupal::state()->delete('comment.node_comment_statistics_scale');
 }
 
 /**
@@ -80,7 +80,7 @@ function comment_enable() {
     }
   }
   // Set default value of comment.maintain_entity_statistics.
-  state()->set('comment.maintain_entity_statistics', TRUE);
+  Drupal::state()->set('comment.maintain_entity_statistics', TRUE);
 }
 
 /**

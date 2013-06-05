@@ -24,7 +24,7 @@ class LinkApprove extends Link {
   }
 
   function render_link($data, $values) {
-    $status = $this->get_value($values, 'status');
+    $status = $this->getValue($values, 'status');
 
     // Don't show an approve link on published nodes.
     if ($status == COMMENT_PUBLISHED) {

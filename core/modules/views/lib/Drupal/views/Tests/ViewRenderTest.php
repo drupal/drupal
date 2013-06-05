@@ -37,14 +37,14 @@ class ViewRenderTest extends ViewTestBase {
    * Tests render functionality.
    */
   public function testRender() {
-    state()->set('views_render.test', 0);
+    \Drupal::state()->set('views_render.test', 0);
 
     // Make sure that the rendering just calls the preprocess function once.
     $view = views_get_view('test_view_render');
     $output = $view->preview();
     drupal_render($output);
 
-    $this->assertEqual(state()->get('views_render.test'), 1);
+    $this->assertEqual(\Drupal::state()->get('views_render.test'), 1);
   }
 
 }

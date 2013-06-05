@@ -53,7 +53,7 @@ class Link extends FieldPluginBase {
 
   public function query() {
     $this->ensureMyTable();
-    $this->add_additional_fields();
+    $this->addAdditionalFields();
   }
 
   /**

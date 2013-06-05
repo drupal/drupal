@@ -81,7 +81,7 @@ class StateSystemUpgradePathTest extends UpgradePathTestBase {
     );
 
     foreach ($expected_state as $name => $data) {
-      $this->assertIdentical(state()->get($name), $data['value']);
+      $this->assertIdentical(\Drupal::state()->get($name), $data['value']);
       $deleted = !db_query('SELECT value FROM {variable} WHERE name = :name', array(':name' => $data['variable_name']))->fetchField();
       $this->assertTrue($deleted, format_string('Variable !name has been deleted.', array('!name' => $data['variable_name'])));
     }

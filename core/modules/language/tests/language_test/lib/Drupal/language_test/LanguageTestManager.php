@@ -19,7 +19,7 @@ class LanguageTestManager extends LanguageManager {
    * Overrides \Drupal\Core\Language\LanguageManager::init().
    */
   public function init() {
-    if ($test_domain = state()->get('language_test.domain')) {
+    if ($test_domain = \Drupal::state()->get('language_test.domain')) {
       $_SERVER['HTTP_HOST'] = $test_domain;
     }
     return parent::init();

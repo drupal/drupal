@@ -61,7 +61,7 @@ class BlockCacheTest extends WebTestBase {
 
     // Enable our test block. Set some content for it to display.
     $current_content = $this->randomName();
-    state()->set('block_test.content', $current_content);
+    \Drupal::state()->set('block_test.content', $current_content);
     $this->drupalLogin($this->normal_user);
     $this->drupalGet('');
     $this->assertText($current_content, 'Block content displays.');
@@ -69,7 +69,7 @@ class BlockCacheTest extends WebTestBase {
     // Change the content, but the cached copy should still be served.
     $old_content = $current_content;
     $current_content = $this->randomName();
-    state()->set('block_test.content', $current_content);
+    \Drupal::state()->set('block_test.content', $current_content);
     $this->drupalGet('');
     $this->assertText($old_content, 'Block is served from the cache.');
 
@@ -82,7 +82,7 @@ class BlockCacheTest extends WebTestBase {
     // Test whether the cached data is served for the correct users.
     $old_content = $current_content;
     $current_content = $this->randomName();
-    state()->set('block_test.content', $current_content);
+    \Drupal::state()->set('block_test.content', $current_content);
     $this->drupalLogout();
     $this->drupalGet('');
     $this->assertNoText($old_content, 'Anonymous user does not see content cached per-role for normal user.');
@@ -106,14 +106,14 @@ class BlockCacheTest extends WebTestBase {
   function testCacheGlobal() {
     $this->setCacheMode(DRUPAL_CACHE_GLOBAL);
     $current_content = $this->randomName();
-    state()->set('block_test.content', $current_content);
+    \Drupal::state()->set('block_test.content', $current_content);
 
     $this->drupalGet('');
     $this->assertText($current_content, 'Block content displays.');
 
     $old_content = $current_content;
     $current_content = $this->randomName();
-    state()->set('block_test.content', $current_content);
+    \Drupal::state()->set('block_test.content', $current_content);
 
     $this->drupalLogout();
     $this->drupalGet('user');
@@ -126,7 +126,7 @@ class BlockCacheTest extends WebTestBase {
   function testNoCache() {
     $this->setCacheMode(DRUPAL_NO_CACHE);
     $current_content = $this->randomName();
-    state()->set('block_test.content', $current_content);
+    \Drupal::state()->set('block_test.content', $current_content);
 
     // If DRUPAL_NO_CACHE has no effect, the next request would be cached.
     $this->drupalGet('');
@@ -134,7 +134,7 @@ class BlockCacheTest extends WebTestBase {
 
     // A cached copy should not be served.
     $current_content = $this->randomName();
-    state()->set('block_test.content', $current_content);
+    \Drupal::state()->set('block_test.content', $current_content);
     $this->drupalGet('');
     $this->assertText($current_content, 'DRUPAL_NO_CACHE prevents blocks from being cached.');
   }
@@ -145,7 +145,7 @@ class BlockCacheTest extends WebTestBase {
   function testCachePerUser() {
     $this->setCacheMode(DRUPAL_CACHE_PER_USER);
     $current_content = $this->randomName();
-    state()->set('block_test.content', $current_content);
+    \Drupal::state()->set('block_test.content', $current_content);
     $this->drupalLogin($this->normal_user);
 
     $this->drupalGet('');
@@ -153,7 +153,7 @@ class BlockCacheTest extends WebTestBase {
 
     $old_content = $current_content;
     $current_content = $this->randomName();
-    state()->set('block_test.content', $current_content);
+    \Drupal::state()->set('block_test.content', $current_content);
 
     $this->drupalGet('');
     $this->assertText($old_content, 'Block is served from per-user cache.');
@@ -173,14 +173,14 @@ class BlockCacheTest extends WebTestBase {
   function testCachePerPage() {
     $this->setCacheMode(DRUPAL_CACHE_PER_PAGE);
     $current_content = $this->randomName();
-    state()->set('block_test.content', $current_content);
+    \Drupal::state()->set('block_test.content', $current_content);
 
     $this->drupalGet('node');
     $this->assertText($current_content, 'Block content displays on the node page.');
 
     $old_content = $current_content;
     $current_content = $this->randomName();
-    state()->set('block_test.content', $current_content);
+    \Drupal::state()->set('block_test.content', $current_content);
 
     $this->drupalGet('user');
     $this->assertNoText($old_content, 'Block content cached for the node page does not show up for the user page.');

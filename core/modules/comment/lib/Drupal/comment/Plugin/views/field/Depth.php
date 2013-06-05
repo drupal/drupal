@@ -23,7 +23,7 @@ class Depth extends FieldPluginBase {
    * Work out the depth of this comment
    */
   function render($values) {
-    $comment_thread = $this->get_value($values);
+    $comment_thread = $this->getValue($values);
     return count(explode('.', $comment_thread)) - 1;
   }
 

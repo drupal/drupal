@@ -57,7 +57,7 @@ class FormCacheTest extends DrupalUnitTestBase {
     // Test that the form cache isn't loaded when the session/token has changed.
     // Change the private key. (We cannot change the session ID because this
     // will break the parent site test runner batch.)
-    state()->set('system.private_key', 'invalid');
+    \Drupal::state()->set('system.private_key', 'invalid');
     $cached_form_state = form_state_defaults();
     $cached_form = form_get_cache($this->form_build_id, $cached_form_state);
     $this->assertFalse($cached_form, 'No form returned from cache');

@@ -641,7 +641,7 @@ function drupal_install_system() {
     ->save();
 
   // Update the module list to include it.
-  drupal_container()->get('module_handler')->setModuleList(array('system' => $system_path . '/system.module'));
+  Drupal::moduleHandler()->setModuleList(array('system' => $system_path . '/system.module'));
 
   config_install_default_config('module', 'system');
 

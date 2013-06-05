@@ -198,9 +198,9 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   }
 
   /**
-   * Implements Drupal\views\Plugin\views\wizard\WizardInterface::build_form().
+   * {@inheritdoc} Drupal\views\Plugin\views\wizard\WizardInterface::buildForm().
    */
-  function build_form(array $form, array &$form_state) {
+  public function buildForm(array $form, array &$form_state) {
     $style_options = views_fetch_plugin_names('style', 'normal', array($this->base_table));
     $feed_row_options = views_fetch_plugin_names('row', 'feed', array($this->base_table));
     $path_prefix = url(NULL, array('absolute' => TRUE));
@@ -630,7 +630,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $view = entity_create('view', $values);
 
     // Build all display options for this view.
-    $display_options = $this->build_display_options($form, $form_state);
+    $display_options = $this->buildDisplayOptions($form, $form_state);
 
     // Allow the fully built options to be altered. This happens before adding
     // the options to the view, so that once they are eventually added we will
@@ -649,7 +649,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   An array whose keys are the names of each display and whose values are
    *   arrays of options for that display.
    */
-  protected function build_display_options($form, $form_state) {
+  protected function buildDisplayOptions($form, $form_state) {
     // Display: Master
     $display_options['default'] = $this->defaultDisplayOptions();
     $display_options['default'] += array(
@@ -671,7 +671,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     // Display: Block
     if (!empty($form_state['values']['block']['create'])) {
-      $display_options['block'] = $this->block_display_options($form, $form_state);
+      $display_options['block'] = $this->blockDisplayOptions($form, $form_state);
     }
 
     return $display_options;
@@ -805,7 +805,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     }
 
     // Add any filters specified by the user when filling out the wizard.
-    $filters = array_merge($filters, $this->default_display_filters_user($form, $form_state));
+    $filters = array_merge($filters, $this->defaultDisplayFiltersUser($form, $form_state));
 
     return $filters;
   }
@@ -822,7 +822,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   An array of filter arrays keyed by ID. A sort array contains the options
    *   accepted by a filter handler.
    */
-  protected function default_display_filters_user(array $form, array &$form_state) {
+  protected function defaultDisplayFiltersUser(array $form, array &$form_state) {
     $filters = array();
 
     if (!empty($form_state['values']['show']['type']) && $form_state['values']['show']['type'] != 'all') {
@@ -890,7 +890,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     }
 
     // Add any sorts specified by the user when filling out the wizard.
-    $sorts = array_merge($sorts, $this->default_display_sorts_user($form, $form_state));
+    $sorts = array_merge($sorts, $this->defaultDisplaySortsUser($form, $form_state));
 
     return $sorts;
   }
@@ -907,7 +907,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   An array of sort arrays keyed by ID. A sort array contains the options
    *   accepted by a sort handler.
    */
-  protected function default_display_sorts_user($form, $form_state) {
+  protected function defaultDisplaySortsUser($form, $form_state) {
     $sorts = array();
 
     // Don't add a sort if there is no form value or the user set the sort to
@@ -1000,7 +1000,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * @return array
    *   Returns an array of display options.
    */
-  protected function block_display_options(array $form, array &$form_state) {
+  protected function blockDisplayOptions(array $form, array &$form_state) {
     $display_options = array();
     $block = $form_state['values']['block'];
     $display_options['title'] = $block['title'];
@@ -1161,12 +1161,12 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   }
 
   /**
-   * Implements Drupal\views\Plugin\views\wizard\WizardInterface::create_view().
+   * {@inheritDoc}
    */
-  function create_view(array $form, array &$form_state) {
+  public function createView(array $form, array &$form_state) {
     $view = $this->retrieveValidatedView($form, $form_state);
     if (empty($view)) {
-      throw new WizardException('Attempted to create_view with values that have not been validated.');
+      throw new WizardException('Attempted to create a view with values that have not been validated.');
     }
     return $view;
   }

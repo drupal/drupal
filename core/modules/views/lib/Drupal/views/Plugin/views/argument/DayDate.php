@@ -43,7 +43,7 @@ class DayDate extends Date {
     return format_date(strtotime("2005" . "05" . $day . " 00:00:00 UTC"), 'custom', $this->format, 'UTC');
   }
 
-  function summary_argument($data) {
+  public function summaryArgument($data) {
     // Make sure the argument contains leading zeroes.
     return str_pad($data->{$this->base_alias}, 2, '0', STR_PAD_LEFT);
   }

@@ -19,7 +19,7 @@ use Drupal\views\Plugin\views\argument\ManyToOne;
  */
 class RolesRid extends ManyToOne {
 
-  function title_query() {
+  public function titleQuery() {
     return array(entity_load('user_role', $this->value)->label());
   }
 

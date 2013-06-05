@@ -20,9 +20,12 @@ function action_loop_test_watchdog(array $log_entry) {
 }
 
 /**
- * Implements hook_init().
+ * Implements hook_custom_theme().
+ *
+ * We need to check wheter a loop should be triggered and we do this as early
+ * possible, in the first hook that fires.
  */
-function action_loop_test_init() {
+function action_loop_test_custom_theme() {
   if (!empty($_GET['trigger_action_on_watchdog'])) {
     watchdog_skip_semaphore('action_loop_test', 'Triggering action loop');
   }

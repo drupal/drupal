@@ -21,7 +21,7 @@ class Name extends InOperator {
 
   var $always_multiple = TRUE;
 
-  function value_form(&$form, &$form_state) {
+  protected function valueForm(&$form, &$form_state) {
     $values = array();
     if ($this->value) {
       $result = entity_load_multiple_by_properties('user', array('uid' => $this->value));
@@ -50,7 +50,7 @@ class Name extends InOperator {
     }
   }
 
-  function value_validate($form, &$form_state) {
+  protected function valueValidate($form, &$form_state) {
     $values = drupal_explode_tags($form_state['values']['options']['value']);
     $uids = $this->validate_user_strings($form['value'], $values);
 

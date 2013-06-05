@@ -84,7 +84,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * The breadcrumb will be in the form of an array, with the keys being
    * the path and the value being the already sanitized title of the path.
    */
-  function set_breadcrumb(&$breadcrumb) { }
+  public function setBreadcrumb(&$breadcrumb) { }
 
   /**
    * Determine if the argument can generate a breadcrumb
@@ -96,7 +96,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     return !empty($info['breadcrumb']);
   }
 
-  function is_exception($arg = NULL) {
+  public function isException($arg = NULL) {
     if (!isset($arg)) {
       $arg = isset($this->argument) ? $this->argument : NULL;
     }
@@ -462,7 +462,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       ),
       'summary' => array(
         'title' => t('Display a summary'),
-        'method' => 'default_summary',
+        'method' => 'defaultSummary',
         'form method' => 'defaultSummaryForm',
         'style plugin' => TRUE,
         'breadcrumb' => TRUE, // generate a breadcrumb to here
@@ -768,7 +768,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * If an argument was expected and was not given, in this case, display
    * a summary query.
    */
-  function default_summary() {
+  protected function defaultSummary() {
     $this->view->build_info['summary'] = TRUE;
     $this->view->build_info['summary_level'] = $this->options['id'];
 
@@ -808,7 +808,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     // Add the field.
     $this->base_alias = $this->query->add_field($this->tableAlias, $this->realField);
 
-    $this->summary_name_field();
+    $this->summaryNameField();
     return $this->summaryBasics();
   }
 
@@ -816,7 +816,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * Add the name field, which is the field displayed in summary queries.
    * This is often used when the argument is numeric.
    */
-  function summary_name_field() {
+  protected function summaryNameField() {
     // Add the 'name' field. For example, if this is a uid argument, the
     // name field would be 'name' (i.e, the username).
 
@@ -884,7 +884,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * @param $data
    *   The query results for the row.
    */
-  function summary_argument($data) {
+ public function summaryArgument($data) {
     return $data->{$this->base_alias};
   }
 
@@ -945,7 +945,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       return $this->argument_validated;
     }
 
-    if ($this->is_exception($arg)) {
+    if ($this->isException($arg)) {
       return $this->argument_validated = TRUE;
     }
 
@@ -991,7 +991,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
   /**
    * Get the value of this argument.
    */
-  function get_value() {
+  public function getValue() {
     // If we already processed this argument, we're done.
     if (isset($this->argument)) {
       return $this->argument;

@@ -25,7 +25,7 @@ class AggregatorCronTest extends AggregatorTestBase {
   public function testCron() {
     // Create feed and test basic updating on cron.
     global $base_url;
-    $key = state()->get('system.cron_key');
+    $key = \Drupal::state()->get('system.cron_key');
     $this->createSampleNodes();
     $feed = $this->createFeed();
     $this->cronRun();

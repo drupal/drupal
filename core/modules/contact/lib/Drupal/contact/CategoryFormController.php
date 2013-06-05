@@ -128,8 +128,7 @@ class CategoryFormController extends EntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::delete().
    */
   public function delete(array $form, array &$form_state) {
-    $category = $this->entity;
-    $form_state['redirect'] = 'admin/structure/contact/manage/' . $category->id() . '/delete';
+    $form_state['redirect'] = 'admin/structure/contact/manage/' . $this->entity->id() . '/delete';
   }
 
 }

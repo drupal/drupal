@@ -17,7 +17,7 @@ use Drupal\Component\Annotation\PluginID;
  * such as terms (many terms per node) or roles (many roles per user).
  *
  * The construct method needs to be overridden to provide a list of options;
- * alternately, the value_form and adminSummary methods need to be overriden
+ * alternately, the valueForm and adminSummary methods need to be overriden
  * to provide something that isn't just a select list.
  *
  * @ingroup views_filter_handlers
@@ -108,8 +108,8 @@ class ManyToOne extends InOperator {
   }
 
   var $value_form_type = 'select';
-  function value_form(&$form, &$form_state) {
-    parent::value_form($form, $form_state);
+  protected function valueForm(&$form, &$form_state) {
+    parent::valueForm($form, $form_state);
 
     if (empty($form_state['exposed'])) {
       $this->helper->buildOptionsForm($form, $form_state);

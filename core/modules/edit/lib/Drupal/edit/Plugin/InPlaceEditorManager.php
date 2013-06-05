@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\edit\Plugin\EditorManager.
+ * Contains \Drupal\edit\Plugin\InPlaceEditorManager.
  */
 
 namespace Drupal\edit\Plugin;
@@ -19,7 +19,7 @@ use Drupal\Core\Plugin\Discovery\CacheDecorator;
  *
  * The form editor must always be available.
  */
-class EditorManager extends PluginManagerBase {
+class InPlaceEditorManager extends PluginManagerBase {
 
   /**
    * Overrides \Drupal\Component\Plugin\PluginManagerBase::__construct().
@@ -29,7 +29,8 @@ class EditorManager extends PluginManagerBase {
    *   keyed by the corresponding namespace to look for plugin implementations,
    */
   public function __construct(\Traversable $namespaces) {
-    $this->discovery = new AnnotatedClassDiscovery('edit/editor', $namespaces);
+    $annotation_namespaces = array('Drupal\edit\Annotation' => $namespaces['Drupal\edit']);
+    $this->discovery = new AnnotatedClassDiscovery('InPlaceEditor', $namespaces, $annotation_namespaces, 'Drupal\edit\Annotation\InPlaceEditor');
     $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
     $this->discovery = new AlterDecorator($this->discovery, 'edit_editor');
     $this->discovery = new CacheDecorator($this->discovery, 'edit:editor');

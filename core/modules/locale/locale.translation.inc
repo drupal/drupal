@@ -104,7 +104,7 @@ function locale_translation_load_sources($projects = NULL, $langcodes = NULL) {
   $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
 
   // Load source data from locale_translation_status cache.
-  $status = state()->get('locale.translation_status');
+  $status = Drupal::state()->get('locale.translation_status');
 
   // Use only the selected projects and languages for update.
   foreach($projects as $project) {

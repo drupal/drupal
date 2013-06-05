@@ -33,7 +33,7 @@ class TrackerNodeAccessTest extends WebTestBase {
     parent::setUp();
     node_access_rebuild();
     comment_add_default_comment_field('node', 'page', 'comment', COMMENT_OPEN);
-    state()->set('node_access_test.private', TRUE);
+    \Drupal::state()->set('node_access_test.private', TRUE);
   }
 
   /**

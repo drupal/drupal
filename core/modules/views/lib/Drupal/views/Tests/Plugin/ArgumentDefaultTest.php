@@ -69,14 +69,14 @@ class ArgumentDefaultTest extends PluginTestBase {
     // Don't pass in a value for the default argument and make sure the query
     // just returns John.
     $this->executeView($view);
-    $this->assertEqual($view->argument[$id]->get_value(), 'John', 'The correct argument value is used.');
+    $this->assertEqual($view->argument[$id]->getValue(), 'John', 'The correct argument value is used.');
     $expected_result = array(array('name' => 'John'));
     $this->assertIdenticalResultset($view, $expected_result, array('views_test_data_name' => 'name'));
 
     // Pass in value as argument to be sure that not the default value is used.
     $view->destroy();
     $this->executeView($view, array('George'));
-    $this->assertEqual($view->argument[$id]->get_value(), 'George', 'The correct argument value is used.');
+    $this->assertEqual($view->argument[$id]->getValue(), 'George', 'The correct argument value is used.');
     $expected_result = array(array('name' => 'George'));
     $this->assertIdenticalResultset($view, $expected_result, array('views_test_data_name' => 'name'));
   }

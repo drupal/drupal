@@ -446,7 +446,7 @@ class Field extends ConfigEntityBase implements FieldInterface {
       $schema += array('columns' => array(), 'indexes' => array(), 'foreign keys' => array());
 
       // Check that the schema does not include forbidden column names.
-      if (array_intersect(array_keys($schema['columns']), field_reserved_columns())) {
+      if (array_intersect(array_keys($schema['columns']), static::getReservedColumns())) {
         throw new FieldException('Illegal field type columns.');
       }
 
@@ -563,5 +563,13 @@ class Field extends ConfigEntityBase implements FieldInterface {
     $this->__construct(unserialize($serialized));
   }
 
+  /**
+   * A list of columns that can not be used as field type columns.
+   *
+   * @return array
+   */
+  public static function getReservedColumns() {
+    return array('deleted');
+  }
 
 }

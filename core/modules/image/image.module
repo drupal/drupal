@@ -273,7 +273,7 @@ function image_form_system_file_system_settings_alter(&$form, &$form_state) {
  */
 function image_system_file_system_settings_submit($form, &$form_state) {
   if ($form['file_public_path']['#default_value'] !== $form_state['values']['file_public_path']) {
-    state()->set('menu_rebuild_needed', TRUE);
+    Drupal::state()->set('menu_rebuild_needed', TRUE);
   }
 }
 

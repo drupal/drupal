@@ -62,11 +62,11 @@ class Revision extends Node {
   function render_link($data, $values) {
     if (!empty($this->options['link_to_node_revision']) && $data !== NULL && $data !== '') {
       $this->options['alter']['make_link'] = TRUE;
-      $nid = $this->get_value($values, 'nid');
-      $vid = $this->get_value($values, 'vid');
+      $nid = $this->getValue($values, 'nid');
+      $vid = $this->getValue($values, 'vid');
       $this->options['alter']['path'] = "node/" . $nid . '/revisions/' . $vid . '/view';
       if (module_exists('translation')) {
-        $langcode = $this->get_value($values, 'langcode');
+        $langcode = $this->getValue($values, 'langcode');
         $languages = language_list();
         if (isset($languages[$langcode])) {
           $this->options['alter']['langcode'] = $languages[$langcode];

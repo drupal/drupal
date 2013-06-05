@@ -252,7 +252,7 @@ class MenuRouterTest extends WebTestBase {
   function testHookCustomTheme() {
     // Trigger hook_custom_theme() to dynamically request the Stark theme for
     // the requested page.
-    state()->set('menu_test.hook_custom_theme_name', $this->alternate_theme);
+    \Drupal::state()->set('menu_test.hook_custom_theme_name', $this->alternate_theme);
     theme_enable(array($this->alternate_theme, $this->admin_theme));
 
     // Visit a page that does not implement a theme callback. The above request
@@ -268,7 +268,7 @@ class MenuRouterTest extends WebTestBase {
   function testThemeCallbackHookCustomTheme() {
     // Trigger hook_custom_theme() to dynamically request the Stark theme for
     // the requested page.
-    state()->set('menu_test.hook_custom_theme_name', $this->alternate_theme);
+    \Drupal::state()->set('menu_test.hook_custom_theme_name', $this->alternate_theme);
     theme_enable(array($this->alternate_theme, $this->admin_theme));
 
     // The menu "theme callback" should take precedence over a value set in
@@ -461,7 +461,7 @@ class MenuRouterTest extends WebTestBase {
    * Test menu_get_item() with empty ancestors.
    */
   function testMenuGetItemNoAncestors() {
-    state()->set('menu.masks', array());
+    \Drupal::state()->set('menu.masks', array());
     $this->drupalGet('');
   }
 

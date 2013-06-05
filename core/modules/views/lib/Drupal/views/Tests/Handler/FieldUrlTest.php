@@ -58,7 +58,7 @@ class FieldUrlTest extends ViewUnitTestBase {
 
     $this->executeView($view);
 
-    $this->assertEqual('John', $view->field['name']->advanced_render($view->result[0]));
+    $this->assertEqual('John', $view->field['name']->advancedRender($view->result[0]));
 
     // Make the url a link.
     $view->destroy();
@@ -75,7 +75,7 @@ class FieldUrlTest extends ViewUnitTestBase {
 
     $this->executeView($view);
 
-    $this->assertEqual(l('John', 'John'), $view->field['name']->advanced_render($view->result[0]));
+    $this->assertEqual(l('John', 'John'), $view->field['name']->advancedRender($view->result[0]));
   }
 
 }

@@ -534,6 +534,7 @@ class ViewUI implements ViewStorageInterface {
     $output = '';
 
     $errors = $this->executable->validate();
+    $this->executable->destroy();
     if (empty($errors)) {
       $this->ajax = TRUE;
       $this->executable->live_preview = TRUE;

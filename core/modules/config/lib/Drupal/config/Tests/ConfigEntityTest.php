@@ -191,7 +191,7 @@ class ConfigEntityTest extends WebTestBase {
     }
 
     // Test config entity prepopulation.
-    state()->set('config_test.prepopulate', TRUE);
+    \Drupal::state()->set('config_test.prepopulate', TRUE);
     $config_test = entity_create('config_test', array('foo' => 'bar'));
     $this->assertEqual($config_test->get('foo'), 'baz', 'Initial value correctly populated');
   }

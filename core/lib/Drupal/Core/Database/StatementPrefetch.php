@@ -37,11 +37,18 @@ class StatementPrefetch implements Iterator, StatementInterface {
   /**
    * Reference to the database connection object for this statement.
    *
-   * The name $dbh is inherited from PDOStatement.
+   * This is part of the public interface of PDOStatement.
+   *
+   * @var PDO
+   */
+  public $dbh;
+
+  /**
+   * Reference to the Drupal database connection object for this statement.
    *
    * @var Drupal\Core\Database\Connection
    */
-  public $dbh;
+  protected $connection;
 
   /**
    * Main data store.
@@ -124,8 +131,9 @@ class StatementPrefetch implements Iterator, StatementInterface {
     'column' => 0,
   );
 
-  public function __construct(Connection $connection, $query, array $driver_options = array()) {
-    $this->dbh = $connection;
+  public function __construct(PDO $dbh, Connection $connection, $query, array $driver_options = array()) {
+    $this->dbh = $dbh;
+    $this->connection = $connection;
     $this->queryString = $query;
     $this->driverOptions = $driver_options;
   }
@@ -153,7 +161,7 @@ class StatementPrefetch implements Iterator, StatementInterface {
       }
     }
 
-    $logger = $this->dbh->getLogger();
+    $logger = $this->connection->getLogger();
     if (!empty($logger)) {
       $query_start = microtime(TRUE);
     }

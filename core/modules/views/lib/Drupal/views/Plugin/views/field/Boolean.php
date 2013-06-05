@@ -101,7 +101,7 @@ class Boolean extends FieldPluginBase {
   }
 
   function render($values) {
-    $value = $this->get_value($values);
+    $value = $this->getValue($values);
     if (!empty($this->options['not'])) {
       $value = !$value;
     }

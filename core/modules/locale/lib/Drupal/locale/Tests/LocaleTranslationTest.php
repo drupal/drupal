@@ -259,7 +259,7 @@ class LocaleTranslationTest extends WebTestBase {
     // Trigger JavaScript translation parsing and building.
     _locale_rebuild_js($langcode);
 
-    $locale_javascripts = state()->get('locale.translation.javascript') ?: array();
+    $locale_javascripts = \Drupal::state()->get('locale.translation.javascript') ?: array();
     $js_file = 'public://' . $config->get('javascript.directory') . '/' . $langcode . '_' . $locale_javascripts[$langcode] . '.js';
     $this->assertTrue($result = file_exists($js_file), t('JavaScript file created: %file', array('%file' => $result ? $js_file : t('not found'))));
 

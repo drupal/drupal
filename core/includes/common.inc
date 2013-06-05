@@ -1718,7 +1718,7 @@ function l($text, $path, array $options = array()) {
   }
 
   // Allow other modules to modify the structure of the link.
-  Drupal::service('module_handler')->alter('link', $variables);
+  Drupal::moduleHandler()->alter('link', $variables);
 
   // Move attributes out of options. url() doesn't need them.
   $attributes = new Attribute($variables['options']['attributes']);
@@ -1888,7 +1888,7 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  * all typical visitors and most pages of a site. It is critical that all
  * preprocessed files are added unconditionally on every page, even if the
  * files do not happen to be needed on a page. This is normally done by calling
- * drupal_add_css() in a hook_init() implementation.
+ * drupal_add_css() in a hook_page_build() implementation.
  *
  * Non-preprocessed files should only be added to the page when they are
  * actually needed.
@@ -1943,14 +1943,15 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  *     enabled, this should be set to TRUE if the stylesheet is present on every
  *     page of the website for users for whom it is present at all. This
  *     defaults to FALSE. It is set to TRUE for stylesheets added via module and
- *     theme .info.yml files. Modules that add stylesheets within hook_init()
- *     implementations, or from other code that ensures that the stylesheet is
- *     added to all website pages, should also set this flag to TRUE. All
- *     stylesheets within the same group that have the 'every_page' flag set to
- *     TRUE and do not have 'preprocess' set to FALSE are aggregated together
- *     into a single aggregate file, and that aggregate file can be reused
- *     across a user's entire site visit, leading to faster navigation between
- *     pages. However, stylesheets that are only needed on pages less frequently
+ *     theme .info.yml files. Modules that add stylesheets within
+ *     hook_page_build() implementations, or from other code that ensures that
+ *     the stylesheet is added to all website pages, should also set this flag
+ *     to TRUE. All stylesheets within the same group that have the 'every_page'
+ *     flag set to TRUE and do not have 'preprocess' set to FALSE are aggregated
+ *     together into a single aggregate file, and that aggregate file can be
+ *     reused across a user's entire site visit, leading to faster navigation
+ *     between pages.
+ *     However, stylesheets that are only needed on pages less frequently
  *     visited, can be added by code that only runs for those particular pages,
  *     and that code should not set the 'every_page' flag. This minimizes the
  *     size of the aggregate file that the user needs to download when first
@@ -2566,7 +2567,7 @@ function drupal_pre_render_styles($elements) {
 function drupal_build_css_cache($css) {
   $data = '';
   $uri = '';
-  $map = state()->get('drupal_css_cache_files') ?: array();
+  $map = Drupal::state()->get('drupal_css_cache_files') ?: array();
   // Create a new array so that only the file names are used to create the hash.
   // This prevents new aggregates from being created unnecessarily.
   $css_data = array();
@@ -2626,7 +2627,7 @@ function drupal_build_css_cache($css) {
     }
     // Save the updated map.
     $map[$key] = $uri;
-    state()->set('drupal_css_cache_files', $map);
+    Drupal::state()->set('drupal_css_cache_files', $map);
   }
   return $uri;
 }
@@ -2791,7 +2792,7 @@ function _drupal_load_stylesheet($matches) {
  * Deletes old cached CSS files.
  */
 function drupal_clear_css_cache() {
-  state()->delete('drupal_css_cache_files');
+  Drupal::state()->delete('drupal_css_cache_files');
   file_scan_directory('public://css', '/.*/', array('callback' => 'drupal_delete_file_if_stale'));
 }
 
@@ -3036,7 +3037,7 @@ function drupal_region_class($region) {
  * all typical visitors and most pages of a site. It is critical that all
  * preprocessed files are added unconditionally on every page, even if the
  * files are not needed on a page. This is normally done by calling
- * drupal_add_js() in a hook_init() implementation.
+ * drupal_add_js() in a hook_page_build() implementation.
  *
  * Non-preprocessed files should only be added to the page when they are
  * actually needed.
@@ -3079,9 +3080,9 @@ function drupal_region_class($region) {
  *     page of the website for users for whom it is present at all. This
  *     defaults to FALSE. It is set to TRUE for JavaScript files that are added
  *     via module and theme .info.yml files. Modules that add JavaScript within
- *     hook_init() implementations, or from other code that ensures that the
- *     JavaScript is added to all website pages, should also set this flag to
- *     TRUE. All JavaScript files within the same group and that have the
+ *     hook_page_build() implementations, or from other code that ensures that
+ *     the JavaScript is added to all website pages, should also set this flag
+ *     to TRUE. All JavaScript files within the same group and that have the
  *     'every_page' flag set to TRUE and do not have 'preprocess' set to FALSE
  *     are aggregated together into a single aggregate file, and that aggregate
  *     file can be reused across a user's entire site visit, leading to faster
@@ -4166,7 +4167,7 @@ function drupal_add_tabledrag($table_id, $action, $relationship, $group, $subgro
 function drupal_build_js_cache($files) {
   $contents = '';
   $uri = '';
-  $map = state()->get('system.js_cache_files') ?: array();
+  $map = Drupal::state()->get('system.js_cache_files') ?: array();
   // Create a new array so that only the file names are used to create the hash.
   // This prevents new aggregates from being created unnecessarily.
   $js_data = array();
@@ -4211,7 +4212,7 @@ function drupal_build_js_cache($files) {
       }
     }
     $map[$key] = $uri;
-    state()->set('system.js_cache_files', $map);
+    Drupal::state()->set('system.js_cache_files', $map);
   }
   return $uri;
 }
@@ -4220,8 +4221,8 @@ function drupal_build_js_cache($files) {
  * Deletes old cached JavaScript files and variables.
  */
 function drupal_clear_js_cache() {
-  state()->delete('system.javascript_parsed');
-  state()->delete('system.js_cache_files');
+  Drupal::state()->delete('system.javascript_parsed');
+  Drupal::state()->delete('system.js_cache_files');
   file_scan_directory('public://js', '/.*/', array('callback' => 'drupal_delete_file_if_stale'));
 }
 
@@ -4255,9 +4256,9 @@ function drupal_json_decode($var) {
  *   The private key.
  */
 function drupal_get_private_key() {
-  if (!($key = state()->get('system.private_key'))) {
+  if (!($key = Drupal::state()->get('system.private_key'))) {
     $key = Crypt::randomStringHashed(55);
-    state()->set('system.private_key', $key);
+    Drupal::state()->set('system.private_key', $key);
   }
   return $key;
 }
@@ -4318,7 +4319,7 @@ function _drupal_bootstrap_code() {
   require_once __DIR__ . '/entity.inc';
 
   // Load all enabled modules
-  drupal_container()->get('module_handler')->loadAll();
+  Drupal::moduleHandler()->loadAll();
 
   // Make sure all stream wrappers are registered.
   file_get_stream_wrappers();
@@ -4365,16 +4366,8 @@ function _drupal_bootstrap_full($skip = FALSE) {
   // Let all modules take action before the menu system handles the request.
   // We do not want this while running update.php.
   if (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update') {
-    // Prior to invoking hook_init(), initialize the theme (potentially a custom
-    // one for this page), so that:
-    // - Modules with hook_init() implementations that call theme() or
-    //   theme_get_registry() don't initialize the incorrect theme.
-    // - The theme can have hook_*_alter() implementations affect page building
-    //   (e.g., hook_form_alter(), hook_node_view_alter(), hook_page_alter()),
-    //   ahead of when rendering starts.
     menu_set_custom_theme();
     drupal_theme_initialize();
-    module_invoke_all('init');
   }
 }
 
@@ -4490,7 +4483,7 @@ function drupal_cron_run() {
     }
 
     // Record cron time.
-    state()->set('system.cron_last', REQUEST_TIME);
+    Drupal::state()->set('system.cron_last', REQUEST_TIME);
     watchdog('cron', 'Cron run completed.', array(), WATCHDOG_NOTICE);
 
     // Release cron lock.

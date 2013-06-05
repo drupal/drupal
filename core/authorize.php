@@ -27,9 +27,8 @@ chdir('..');
  * Global flag to identify update.php and authorize.php runs.
  *
  * Identifies update.php and authorize.php runs, avoiding unwanted operations
- * such as hook_init() invocations, css/js preprocessing and
- * translation, and solves some theming issues. The flag is checked in other
- * places in Drupal code (not just authorize.php).
+ * such as css/js preprocessing and translation, and solves some theming issues.
+ * The flag is checked in other places in Drupal code (not just authorize.php).
  */
 const MAINTENANCE_MODE = 'update';
 
@@ -75,9 +74,9 @@ global $conf;
 // display errors via the maintenance theme.
 $module_list['system'] = 'core/modules/system/system.module';
 $module_list['user'] = 'core/modules/user/user.module';
-drupal_container()->get('module_handler')->setModuleList($module_list);
-drupal_container()->get('module_handler')->load('system');
-drupal_container()->get('module_handler')->load('user');
+Drupal::moduleHandler()->setModuleList($module_list);
+Drupal::moduleHandler()->load('system');
+Drupal::moduleHandler()->load('user');
 
 // Initialize the language system.
 drupal_language_initialize();

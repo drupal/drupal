@@ -52,7 +52,7 @@ class CommentLanguageTest extends WebTestBase {
     $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
 
     // Enable content language negotiation UI.
-    state()->set('language_test.content_language_type', TRUE);
+    \Drupal::state()->set('language_test.content_language_type', TRUE);
 
     // Set interface language detection to user and content language detection
     // to URL. Disable inheritance from interface language to ensure content

@@ -39,7 +39,7 @@ class LanguageField extends FieldPluginBase {
   function render($values) {
     // @todo: Drupal Core dropped native language until config translation is
     // ready, see http://drupal.org/node/1616594.
-    $value = $this->get_value($values);
+    $value = $this->getValue($values);
     $language = language_load($value);
     return $language ? $language->name : '';
   }

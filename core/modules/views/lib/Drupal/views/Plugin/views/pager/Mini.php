@@ -57,7 +57,7 @@ class Mini extends SqlBase {
 
     // Don't query for the next page if we have a pager that has a limited
     // amount of pages.
-    if (empty($this->options['total_pages']) || ($this->get_current_page() < $this->options['total_pages'])) {
+    if (empty($this->options['total_pages']) || ($this->getCurrentPage() < $this->options['total_pages'])) {
       // Increase the items in the query in order to be able to find out whether
       // there is another page.
       $limit = $this->view->query->getLimit();
@@ -67,9 +67,9 @@ class Mini extends SqlBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\pager\PagerPluginBase::use_count_query().
+   * Overrides \Drupal\views\Plugin\views\pager\PagerPluginBase::useCountQuery().
    */
-  public function use_count_query() {
+  public function useCountQuery() {
     return FALSE;
   }
 

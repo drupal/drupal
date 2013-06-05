@@ -26,7 +26,7 @@ interface WizardInterface {
    * @return array
    *   Returns the changed wizard form.
    */
-  function build_form(array $form, array &$form_state);
+  public function buildForm(array $form, array &$form_state);
 
   /**
    * Validate form and values.
@@ -55,6 +55,6 @@ interface WizardInterface {
    *
    * @throws Drupal\views\Plugin\views\wizard\WizardException
    */
-  function create_view(array $form, array &$form_state);
+  public function createView(array $form, array &$form_state);
 
 }

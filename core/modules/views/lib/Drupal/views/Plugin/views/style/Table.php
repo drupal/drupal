@@ -158,7 +158,7 @@ class Table extends StylePluginBase {
     $this->active = $sort;
 
     // Tell the field to click sort.
-    $this->view->field[$sort]->click_sort($this->order);
+    $this->view->field[$sort]->clickSort($this->order);
   }
 
   /**
@@ -185,7 +185,7 @@ class Table extends StylePluginBase {
    * @return array
    *    An array of all the sanitized columns.
    */
-  function sanitize_columns($columns, $fields = NULL) {
+  public function sanitizeColumns($columns, $fields = NULL) {
     $sanitized = array();
     if ($fields === NULL) {
       $fields = $this->displayHandler->getOption('fields');
@@ -254,7 +254,7 @@ class Table extends StylePluginBase {
     // will have to register your theme handlers if you do stuff like this.
     $form['#theme'] = 'views_ui_style_plugin_table';
 
-    $columns = $this->sanitize_columns($this->options['columns']);
+    $columns = $this->sanitizeColumns($this->options['columns']);
 
     // Create an array of allowed columns from the data we know:
     $field_names = $this->displayHandler->getFieldLabels();
@@ -387,8 +387,8 @@ class Table extends StylePluginBase {
     );
   }
 
-  function even_empty() {
-    return parent::even_empty() || !empty($this->options['empty_table']);
+  public function evenEmpty() {
+    return parent::evenEmpty() || !empty($this->options['empty_table']);
   }
 
   public function wizardSubmit(&$form, &$form_state, WizardInterface $wizard, &$display_options, $display_type) {

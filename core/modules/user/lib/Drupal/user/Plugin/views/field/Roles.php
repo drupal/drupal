@@ -31,7 +31,7 @@ class Roles extends PrerenderList {
   }
 
   public function query() {
-    $this->add_additional_fields();
+    $this->addAdditionalFields();
     $this->field_alias = $this->aliases['uid'];
   }
 
@@ -40,7 +40,7 @@ class Roles extends PrerenderList {
     $this->items = array();
 
     foreach ($values as $result) {
-      $uids[] = $this->get_value($result);
+      $uids[] = $this->getValue($result);
     }
 
     if ($uids) {
@@ -71,7 +71,7 @@ class Roles extends PrerenderList {
     return $item['role'];
   }
 
-  function document_self_tokens(&$tokens) {
+  protected function documentSelfTokens(&$tokens) {
     $tokens['[' . $this->options['id'] . '-role' . ']'] = t('The name of the role.');
     $tokens['[' . $this->options['id'] . '-rid' . ']'] = t('The role machine-name of the role.');
   }

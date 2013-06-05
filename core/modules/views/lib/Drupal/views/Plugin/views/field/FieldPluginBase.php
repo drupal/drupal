@@ -102,7 +102,7 @@ abstract class FieldPluginBase extends HandlerBase {
     $params = $this->options['group_type'] != 'group' ? array('function' => $this->options['group_type']) : array();
     $this->field_alias = $this->query->add_field($this->tableAlias, $this->realField, NULL, $params);
 
-    $this->add_additional_fields();
+    $this->addAdditionalFields();
   }
 
   /**
@@ -115,7 +115,7 @@ abstract class FieldPluginBase extends HandlerBase {
    * form of
    * @code array('table' => $tablename, 'field' => $fieldname) @endcode
    */
-  function add_additional_fields($fields = NULL) {
+  protected function addAdditionalFields($fields = NULL) {
     if (!isset($fields)) {
       // notice check
       if (empty($this->additional_fields)) {
@@ -165,7 +165,7 @@ abstract class FieldPluginBase extends HandlerBase {
   /**
    * Called to determine what to tell the clicksorter.
    */
-  function click_sort($order) {
+  public function clickSort($order) {
     if (isset($this->field_alias)) {
       // Since fields should always have themselves already added, just
       // add a sort on the field.
@@ -325,7 +325,7 @@ abstract class FieldPluginBase extends HandlerBase {
         }
       }
 
-      $value = strip_tags($this->render_altered($fake_item, $tokens));
+      $value = strip_tags($this->renderAltered($fake_item, $tokens));
       if (!empty($this->options['alter']['trim_whitespace'])) {
         $value = trim($value);
       }
@@ -388,7 +388,7 @@ abstract class FieldPluginBase extends HandlerBase {
    * @param $field
    *   Optional name of the field where the value is stored.
    */
-  function get_value($values, $field = NULL) {
+  public function getValue($values, $field = NULL) {
     $alias = isset($field) ? $this->aliases[$field] : $this->field_alias;
     if (isset($values->{$alias})) {
       return $values->{$alias};
@@ -856,7 +856,7 @@ abstract class FieldPluginBase extends HandlerBase {
         $options[t('Arguments')]['!' . $count] = t('@argument input', array('@argument' => $handler->adminLabel()));
       }
 
-      $this->document_self_tokens($options[t('Fields')]);
+      $this->documentSelfTokens($options[t('Fields')]);
 
       // Default text.
       $output = t('<p>You must add some additional fields to this display before using this field. These fields may be marked as <em>Exclude from display</em> if you prefer. Note that due to rendering order, you cannot use fields that come after this field; if you need a field not listed here, rearrange your fields.</p>');
@@ -1098,7 +1098,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
    *   The values retrieved from the database.
    */
   function render($values) {
-    $value = $this->get_value($values);
+    $value = $this->getValue($values);
     return $this->sanitizeValue($value);
   }
 
@@ -1108,7 +1108,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
    * This renders a field normally, then decides if render-as-link and
    * text-replacement rendering is necessary.
    */
-  function advanced_render($values) {
+  public function advancedRender($values) {
     if ($this->allowAdvancedRender() && method_exists($this, 'render_item')) {
       $raw_items = $this->get_items($values);
       // If there are no items, set the original value to NULL.
@@ -1152,13 +1152,13 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
       if (is_array($value)) {
         $value = drupal_render($value);
       }
-      // This happens here so that render_as_link can get the unaltered value of
+      // This happens here so that renderAsLink can get the unaltered value of
       // this field as a token rather than the altered value.
       $this->last_render = $value;
     }
 
     if (empty($this->last_render)) {
-      if ($this->is_value_empty($this->last_render, $this->options['empty_zero'], FALSE)) {
+      if ($this->isValueEmpty($this->last_render, $this->options['empty_zero'], FALSE)) {
         $alter = $this->options['alter'];
         $alter['alter_text'] = 1;
         $alter['text'] = $this->options['empty'];
@@ -1183,7 +1183,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
    * @return bool
    * TRUE if the value is considered empty, FALSE otherwise.
    */
-  function is_value_empty($value, $empty_zero, $no_skip_empty = TRUE) {
+  public function isValueEmpty($value, $empty_zero, $no_skip_empty = TRUE) {
     if (!isset($value)) {
       $empty = TRUE;
     }
@@ -1208,7 +1208,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
 
     if (!empty($alter['alter_text']) && $alter['text'] !== '') {
       $tokens = $this->getRenderTokens($alter);
-      $value = $this->render_altered($alter, $tokens);
+      $value = $this->renderAltered($alter, $tokens);
     }
 
     if (!empty($this->options['alter']['trim_whitespace'])) {
@@ -1216,14 +1216,14 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
     }
 
     // Check if there should be no further rewrite for empty values.
-    $no_rewrite_for_empty = $this->options['hide_alter_empty'] && $this->is_value_empty($this->original_value, $this->options['empty_zero']);
+    $no_rewrite_for_empty = $this->options['hide_alter_empty'] && $this->isValueEmpty($this->original_value, $this->options['empty_zero']);
 
     // Check whether the value is empty and return nothing, so the field isn't rendered.
     // First check whether the field should be hidden if the value(hide_alter_empty = TRUE) /the rewrite is empty (hide_alter_empty = FALSE).
     // For numeric values you can specify whether "0"/0 should be empty.
     if ((($this->options['hide_empty'] && empty($value))
         || ($alter['phase'] != VIEWS_HANDLER_RENDER_TEXT_PHASE_EMPTY && $no_rewrite_for_empty))
-      && $this->is_value_empty($value, $this->options['empty_zero'], FALSE)) {
+      && $this->isValueEmpty($value, $this->options['empty_zero'], FALSE)) {
       return '';
     }
     // Only in empty phase.
@@ -1270,7 +1270,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
       if (!isset($tokens)) {
         $tokens = $this->getRenderTokens($alter);
       }
-      $value = $this->render_as_link($alter, $value, $tokens);
+      $value = $this->renderAsLink($alter, $value, $tokens);
     }
 
     return $value . $suffix;
@@ -1279,7 +1279,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
   /**
    * Render this field as altered text, from a fieldset set by the user.
    */
-  function render_altered($alter, $tokens) {
+  protected function renderAltered($alter, $tokens) {
     // Filter this right away as our substitutions are already sanitized.
     $value = filter_xss_admin($alter['text']);
     $value = strtr($value, $tokens);
@@ -1303,7 +1303,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
    * Render this field as a link, with the info from a fieldset set by
    * the user.
    */
-  function render_as_link($alter, $text, $tokens) {
+  protected function renderAsLink($alter, $text, $tokens) {
     $value = '';
 
     if (!empty($alter['prefix'])) {
@@ -1579,7 +1579,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
    *
    * @see addSelfTokens()
    */
-  function document_self_tokens(&$tokens) { }
+  protected function documentSelfTokens(&$tokens) { }
 
   /**
    * Call out to the theme() function, which probably just calls render() but

@@ -36,7 +36,7 @@ class BlockHtmlIdTest extends WebTestBase {
 
     // Make sure the block has some content so it will appear.
     $current_content = $this->randomName();
-    state()->set('block_test.content', $current_content);
+    \Drupal::state()->set('block_test.content', $current_content);
 
     // Enable our test blocks.
     $this->drupalPlaceBlock('system_menu_block:menu-tools');

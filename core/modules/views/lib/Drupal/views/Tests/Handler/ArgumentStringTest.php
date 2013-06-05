@@ -47,13 +47,13 @@ class ArgumentStringTest extends HandlerTestBase {
 
     $count_field = 'nid';
     foreach ($view->result as &$row) {
-      if (strpos($view->field['title']->get_value($row), 'a') === 0) {
+      if (strpos($view->field['title']->getValue($row), 'a') === 0) {
         $this->assertEqual(1, $row->{$count_field});
       }
-      if (strpos($view->field['title']->get_value($row), 'b') === 0) {
+      if (strpos($view->field['title']->getValue($row), 'b') === 0) {
         $this->assertEqual(2, $row->{$count_field});
       }
-      if (strpos($view->field['title']->get_value($row), 'c') === 0) {
+      if (strpos($view->field['title']->getValue($row), 'c') === 0) {
         $this->assertEqual(3, $row->{$count_field});
       }
     }

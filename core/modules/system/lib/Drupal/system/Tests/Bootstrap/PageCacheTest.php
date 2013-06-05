@@ -14,6 +14,8 @@ use Drupal\simpletest\WebTestBase;
  */
 class PageCacheTest extends WebTestBase {
 
+  protected $dumpHeaders = TRUE;
+
   /**
    * Modules to enable.
    *

@@ -182,7 +182,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
 
   public function postExecute() { }
 
-  function exposed_form_alter(&$form, &$form_state) {
+  public function exposedFormAlter(&$form, &$form_state) {
     $form['submit']['#value'] = $this->options['submit_button'];
     // Check if there is exposed sorts for this view
     $exposed_sorts = array();
@@ -249,7 +249,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
 
     $pager = $this->view->display_handler->getPlugin('pager');
     if ($pager) {
-      $pager->exposed_form_alter($form, $form_state);
+      $pager->exposedFormAlter($form, $form_state);
       $form_state['pager_plugin'] = $pager;
     }
   }
@@ -273,7 +273,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
   */
   public function exposedFormSubmit(&$form, &$form_state, &$exclude) {
     if (!empty($form_state['values']['op']) && $form_state['values']['op'] == $this->options['reset_button_label']) {
-      $this->reset_form($form, $form_state);
+      $this->resetForm($form, $form_state);
     }
     if (isset($form_state['pager_plugin'])) {
       $form_state['pager_plugin']->exposedFormSubmit($form, $form_state, $exclude);
@@ -281,7 +281,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
     }
   }
 
-  function reset_form(&$form, &$form_state) {
+  public function resetForm(&$form, &$form_state) {
     // _SESSION is not defined for users who are not logged in.
 
     // If filters are not overridden, store the 'remember' settings on the

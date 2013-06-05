@@ -21,6 +21,7 @@ use Drupal\contact\CategoryInterface;
  *   module = "contact",
  *   controllers = {
  *     "storage" = "Drupal\contact\CategoryStorageController",
+ *     "access" = "Drupal\contact\CategoryAccessController",
  *     "list" = "Drupal\contact\CategoryListController",
  *     "form" = {
  *       "add" = "Drupal\contact\CategoryFormController",

@@ -10,7 +10,7 @@ namespace Drupal\editor\Tests;
 use Drupal\Core\Language\Language;
 use Drupal\edit\EditorSelector;
 use Drupal\edit\MetadataGenerator;
-use Drupal\edit\Plugin\EditorManager;
+use Drupal\edit\Plugin\InPlaceEditorManager;
 use Drupal\edit\Tests\EditTestBase;
 use Drupal\edit_test\MockEditEntityFieldAccessCheck;
 use Drupal\editor\EditorController;
@@ -123,7 +123,7 @@ class EditIntegrationTest extends EditTestBase {
    * format compatibility.
    */
   function testEditorSelection() {
-    $this->editorManager = new EditorManager($this->container->get('container.namespaces'));
+    $this->editorManager = new InPlaceEditorManager($this->container->get('container.namespaces'));
     $this->editorSelector = new EditorSelector($this->editorManager);
 
     // Pretend there is an entity with these items for the field.
@@ -147,7 +147,7 @@ class EditIntegrationTest extends EditTestBase {
    * Tests (custom) metadata when the formatted text editor is used.
    */
   function testMetadata() {
-    $this->editorManager = new EditorManager($this->container->get('container.namespaces'));
+    $this->editorManager = new InPlaceEditorManager($this->container->get('container.namespaces'));
     $this->accessChecker = new MockEditEntityFieldAccessCheck();
     $this->editorSelector = new EditorSelector($this->editorManager);
     $this->metadataGenerator = new MetadataGenerator($this->accessChecker, $this->editorSelector, $this->editorManager);

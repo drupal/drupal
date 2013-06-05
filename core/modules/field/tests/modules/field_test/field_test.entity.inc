@@ -14,7 +14,7 @@ use Drupal\field_test\Plugin\Core\Entity\TestEntity;
 function field_test_entity_info() {
   // If requested, clear the field cache while this is being called. See
   // Drupal\field\Tests\FieldInfoTest::testFieldInfoCache().
-  if (state()->get('field_test.clear_info_cache_in_hook_entity_info')) {
+  if (Drupal::state()->get('field_test.clear_info_cache_in_hook_entity_info')) {
     field_info_cache_clear();
   }
 }
@@ -56,7 +56,7 @@ function field_test_entity_bundle_info_alter(&$bundles) {
   $entity_info = entity_get_info();
   foreach ($bundles as $entity_type => $info) {
     if ($entity_info[$entity_type]['module'] == 'field_test') {
-      $bundles[$entity_type] = state()->get('field_test_bundles') ?: array('test_bundle' => array('label' => 'Test Bundle'));
+      $bundles[$entity_type] = Drupal::state()->get('field_test_bundles') ?: array('test_bundle' => array('label' => 'Test Bundle'));
       if ($entity_type == 'test_entity_bundle') {
         $bundles[$entity_type] += array('test_entity_2' => array('label' => 'Test entity 2'));
       }
@@ -90,9 +90,9 @@ function field_test_entity_info_translatable($entity_type = NULL, $translatable 
  *   name will be used.
  */
 function field_test_create_bundle($bundle, $text = NULL) {
-  $bundles = state()->get('field_test.bundles') ?: array('test_bundle' => array('label' => 'Test Bundle'));
+  $bundles = Drupal::state()->get('field_test.bundles') ?: array('test_bundle' => array('label' => 'Test Bundle'));
   $bundles += array($bundle => array('label' => $text ? $text : $bundle));
-  state()->set('field_test.bundles', $bundles);
+  Drupal::state()->set('field_test.bundles', $bundles);
 
   $info = entity_get_info();
   foreach ($info as $type => $type_info) {
@@ -111,10 +111,10 @@ function field_test_create_bundle($bundle, $text = NULL) {
  *   The new machine-readable name of the bundle.
  */
 function field_test_rename_bundle($bundle_old, $bundle_new) {
-  $bundles = state()->get('field_test.bundles') ?: array('test_bundle' => array('label' => 'Test Bundle'));
+  $bundles = Drupal::state()->get('field_test.bundles') ?: array('test_bundle' => array('label' => 'Test Bundle'));
   $bundles[$bundle_new] = $bundles[$bundle_old];
   unset($bundles[$bundle_old]);
-  state()->set('field_test.bundles', $bundles);
+  Drupal::state()->set('field_test.bundles', $bundles);
 
   $info = entity_get_info();
   foreach ($info as $type => $type_info) {
@@ -131,9 +131,9 @@ function field_test_rename_bundle($bundle_old, $bundle_new) {
  *   The machine-readable name of the bundle to delete.
  */
 function field_test_delete_bundle($bundle) {
-  $bundles = state()->get('field_test.bundles') ?: array('test_bundle' => array('label' => 'Test Bundle'));
+  $bundles = Drupal::state()->get('field_test.bundles') ?: array('test_bundle' => array('label' => 'Test Bundle'));
   unset($bundles[$bundle]);
-  state()->set('field_test.bundles', $bundles);
+  Drupal::state()->set('field_test.bundles', $bundles);
 
   $info = entity_get_info();
   foreach ($info as $type => $type_info) {

@@ -41,9 +41,9 @@ class Markup extends FieldPluginBase {
   }
 
   function render($values) {
-    $value = $this->get_value($values);
+    $value = $this->getValue($values);
     if (is_array($this->format)) {
-      $format = $this->get_value($values, 'format');
+      $format = $this->getValue($values, 'format');
     }
     else {
       $format = $this->format;

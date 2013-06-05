@@ -103,7 +103,7 @@ class ModuleApiTest extends WebTestBase {
     // cache, as that is expected to happen implicitly by setting the module
     // list. This verifies that the hook implementation cache is cleared
     // whenever setModuleList() is called.
-    $module_handler = drupal_container()->get('module_handler');
+    $module_handler = \Drupal::moduleHandler();
     $module_handler->invokeAll('test');
 
     // Make sure group include files are detected properly even when the file is
@@ -164,7 +164,7 @@ class ModuleApiTest extends WebTestBase {
 
     // First, create a fake missing dependency. Forum depends on ban, which
     // depends on a made-up module, foo. Nothing should be installed.
-    state()->set('module_test.dependency', 'missing dependency');
+    \Drupal::state()->set('module_test.dependency', 'missing dependency');
     drupal_static_reset('system_rebuild_module_data');
     $result = module_enable(array('forum'));
     $this->assertFalse($result, 'module_enable() returns FALSE if dependencies are missing.');
@@ -172,7 +172,7 @@ class ModuleApiTest extends WebTestBase {
 
     // Now, fix the missing dependency. Forum module depends on ban, but ban
     // depends on the PHP module. module_enable() should work.
-    state()->set('module_test.dependency', 'dependency');
+    \Drupal::state()->set('module_test.dependency', 'dependency');
     drupal_static_reset('system_rebuild_module_data');
     $result = module_enable(array('forum'));
     $this->assertTrue($result, 'module_enable() returns the correct value.');
@@ -181,7 +181,7 @@ class ModuleApiTest extends WebTestBase {
     // Verify that the original module was installed.
     $this->assertTrue(module_exists('forum'), 'Module installation with unlisted dependencies succeeded.');
     // Finally, verify that the modules were enabled in the correct order.
-    $module_order = state()->get('system_test.module_enable_order') ?: array();
+    $module_order = \Drupal::state()->get('system_test.module_enable_order') ?: array();
     $this->assertEqual($module_order, array('php', 'ban', 'forum'), 'Modules were enabled in the correct order by module_enable().');
 
     // Now, disable the PHP module. Both forum and ban should be disabled as
@@ -189,7 +189,7 @@ class ModuleApiTest extends WebTestBase {
     module_disable(array('php'));
     $this->assertTrue(!module_exists('forum') && !module_exists('ban'), 'Depedency chain was disabled by module_disable().');
     $this->assertFalse(module_exists('php'), 'Disabling a module with unlisted dependents succeeded.');
-    $disabled_modules = state()->get('module_test.disable_order') ?: array();
+    $disabled_modules = \Drupal::state()->get('module_test.disable_order') ?: array();
     $this->assertEqual($disabled_modules, array('forum', 'ban', 'php'), 'Modules were disabled in the correct order by module_disable().');
 
     // Disable a module that is listed as a dependency by the installation
@@ -201,7 +201,7 @@ class ModuleApiTest extends WebTestBase {
     $this->assertTrue(module_exists('comment'), 'Comment module is enabled.');
     module_disable(array('comment'));
     $this->assertFalse(module_exists('comment'), 'Comment module was disabled.');
-    $disabled_modules = state()->get('module_test.disable_order') ?: array();
+    $disabled_modules = \Drupal::state()->get('module_test.disable_order') ?: array();
     $this->assertTrue(in_array('comment', $disabled_modules), 'Comment module is in the list of disabled modules.');
     $this->assertFalse(in_array($profile, $disabled_modules), 'The installation profile is not in the list of disabled modules.');
 
@@ -222,7 +222,7 @@ class ModuleApiTest extends WebTestBase {
     foreach (array('forum', 'ban', 'php') as $module) {
       $this->assertEqual(drupal_get_installed_schema_version($module), SCHEMA_UNINSTALLED, format_string('The @module module was uninstalled.', array('@module' => $module)));
     }
-    $uninstalled_modules = state()->get('module_test.uninstall_order') ?: array();
+    $uninstalled_modules = \Drupal::state()->get('module_test.uninstall_order') ?: array();
     $this->assertEqual($uninstalled_modules, array('forum', 'ban', 'php'), 'Modules were uninstalled in the correct order by module_uninstall().');
 
     // Uninstall the profile module from above, and make sure that the profile
@@ -230,7 +230,7 @@ class ModuleApiTest extends WebTestBase {
     $result = module_uninstall(array('comment'));
     $this->assertTrue($result, 'module_uninstall() returns the correct value.');
     $this->assertEqual(drupal_get_installed_schema_version('comment'), SCHEMA_UNINSTALLED, 'Comment module was uninstalled.');
-    $uninstalled_modules = state()->get('module_test.uninstall_order') ?: array();
+    $uninstalled_modules = \Drupal::state()->get('module_test.uninstall_order') ?: array();
     $this->assertTrue(in_array('comment', $uninstalled_modules), 'Comment module is in the list of uninstalled modules.');
     $this->assertFalse(in_array($profile, $uninstalled_modules), 'The installation profile is not in the list of uninstalled modules.');
 
@@ -238,7 +238,7 @@ class ModuleApiTest extends WebTestBase {
     // php module. But, this time do it with ban module declaring a dependency
     // on a specific version of php module in its info file. Make sure that
     // module_enable() still works.
-    state()->set('module_test.dependency', 'version dependency');
+    \Drupal::state()->set('module_test.dependency', 'version dependency');
     drupal_static_reset('system_rebuild_module_data');
     $result = module_enable(array('forum'));
     $this->assertTrue($result, 'module_enable() returns the correct value.');
@@ -247,7 +247,7 @@ class ModuleApiTest extends WebTestBase {
     // Verify that the original module was installed.
     $this->assertTrue(module_exists('forum'), 'Module installation with version dependencies succeeded.');
     // Finally, verify that the modules were enabled in the correct order.
-    $enable_order = state()->get('system_test.module_enable_order') ?: array();
+    $enable_order = \Drupal::state()->get('system_test.module_enable_order') ?: array();
     $php_position = array_search('php', $enable_order);
     $ban_position = array_search('ban', $enable_order);
     $forum_position = array_search('forum', $enable_order);

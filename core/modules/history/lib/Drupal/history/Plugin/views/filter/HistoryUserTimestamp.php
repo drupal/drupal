@@ -33,7 +33,7 @@ class HistoryUserTimestamp extends FilterPluginBase {
     unset($form['expose']['remember']);
   }
 
-  function value_form(&$form, &$form_state) {
+  protected function valueForm(&$form, &$form_state) {
     // Only present a checkbox for the exposed filter itself. There's no way
     // to tell the difference between not checked and the default value, so
     // specifying the default value via the views UI is meaningless.
