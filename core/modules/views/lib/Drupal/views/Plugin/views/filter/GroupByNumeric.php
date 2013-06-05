@@ -27,7 +27,7 @@ class GroupByNumeric extends Numeric {
       $this->{$info[$this->operator]['method']}($field);
     }
   }
-  function op_between($field) {
+  protected function opBetween($field) {
     $placeholder_min = $this->placeholder();
     $placeholder_max = $this->placeholder();
     if ($this->operator == 'between') {

@@ -164,7 +164,7 @@ class Date extends Numeric {
     return $rc;
   }
 
-  function op_between($field) {
+  protected function opBetween($field) {
     $a = intval(strtotime($this->value['min'], 0));
     $b = intval(strtotime($this->value['max'], 0));
 

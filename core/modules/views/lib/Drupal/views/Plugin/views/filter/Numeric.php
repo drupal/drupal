@@ -75,13 +75,13 @@ class Numeric extends FilterPluginBase {
       ),
       'between' => array(
         'title' => t('Is between'),
-        'method' => 'op_between',
+        'method' => 'opBetween',
         'short' => t('between'),
         'values' => 2,
       ),
       'not between' => array(
         'title' => t('Is not between'),
-        'method' => 'op_between',
+        'method' => 'opBetween',
         'short' => t('not between'),
         'values' => 2,
       ),
@@ -251,7 +251,7 @@ class Numeric extends FilterPluginBase {
     }
   }
 
-  function op_between($field) {
+  protected function opBetween($field) {
     if ($this->operator == 'between') {
       $this->query->add_where($this->options['group'], $field, array($this->value['min'], $this->value['max']), 'BETWEEN');
     }
