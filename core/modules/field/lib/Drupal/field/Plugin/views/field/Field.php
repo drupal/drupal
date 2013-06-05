@@ -248,7 +248,7 @@ class Field extends FieldPluginBase {
   /**
    * Called to determine what to tell the clicksorter.
    */
-  function click_sort($order) {
+  public function clickSort($order) {
     // No column selected, can't continue.
     if (empty($this->options['click_sort_column'])) {
       return;

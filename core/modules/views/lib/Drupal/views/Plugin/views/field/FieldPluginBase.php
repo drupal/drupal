@@ -165,7 +165,7 @@ abstract class FieldPluginBase extends HandlerBase {
   /**
    * Called to determine what to tell the clicksorter.
    */
-  function click_sort($order) {
+  public function clickSort($order) {
     if (isset($this->field_alias)) {
       // Since fields should always have themselves already added, just
       // add a sort on the field.

@@ -158,7 +158,7 @@ class Table extends StylePluginBase {
     $this->active = $sort;
 
     // Tell the field to click sort.
-    $this->view->field[$sort]->click_sort($this->order);
+    $this->view->field[$sort]->clickSort($this->order);
   }
 
   /**
