@@ -50,7 +50,7 @@ class LinkEdit extends FieldPluginBase {
 
   public function query() {
     $this->ensureMyTable();
-    $this->add_additional_fields();
+    $this->addAdditionalFields();
   }
 
   function render($values) {

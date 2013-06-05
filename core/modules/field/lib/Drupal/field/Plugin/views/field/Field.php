@@ -187,7 +187,7 @@ class Field extends FieldPluginBase {
     // Add additional fields (and the table join itself) if needed.
     if ($this->add_field_table($use_groupby)) {
       $this->ensureMyTable();
-      $this->add_additional_fields($fields);
+      $this->addAdditionalFields($fields);
 
       // Filter by langcode, if field translation is enabled.
       $field = $this->field_info;

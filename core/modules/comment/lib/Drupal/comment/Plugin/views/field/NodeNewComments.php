@@ -53,7 +53,7 @@ class NodeNewComments extends Numeric {
 
   public function query() {
     $this->ensureMyTable();
-    $this->add_additional_fields();
+    $this->addAdditionalFields();
     $this->field_alias = $this->table . '_' . $this->field;
   }
 

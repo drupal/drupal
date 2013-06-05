@@ -31,7 +31,7 @@ class Roles extends PrerenderList {
   }
 
   public function query() {
-    $this->add_additional_fields();
+    $this->addAdditionalFields();
     $this->field_alias = $this->aliases['uid'];
   }
 

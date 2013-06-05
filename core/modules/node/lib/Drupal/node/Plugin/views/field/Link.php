@@ -42,7 +42,7 @@ class Link extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function query() {
-    $this->add_additional_fields();
+    $this->addAdditionalFields();
   }
 
   function render($values) {

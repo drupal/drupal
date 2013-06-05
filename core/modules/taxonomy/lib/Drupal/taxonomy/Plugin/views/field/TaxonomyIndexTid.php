@@ -88,7 +88,7 @@ class TaxonomyIndexTid extends PrerenderList {
    * Add this term to the query
    */
   public function query() {
-    $this->add_additional_fields();
+    $this->addAdditionalFields();
   }
 
   function pre_render(&$values) {

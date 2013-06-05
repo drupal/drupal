@@ -102,7 +102,7 @@ abstract class FieldPluginBase extends HandlerBase {
     $params = $this->options['group_type'] != 'group' ? array('function' => $this->options['group_type']) : array();
     $this->field_alias = $this->query->add_field($this->tableAlias, $this->realField, NULL, $params);
 
-    $this->add_additional_fields();
+    $this->addAdditionalFields();
   }
 
   /**
@@ -115,7 +115,7 @@ abstract class FieldPluginBase extends HandlerBase {
    * form of
    * @code array('table' => $tablename, 'field' => $fieldname) @endcode
    */
-  function add_additional_fields($fields = NULL) {
+  protected function addAdditionalFields($fields = NULL) {
     if (!isset($fields)) {
       // notice check
       if (empty($this->additional_fields)) {
