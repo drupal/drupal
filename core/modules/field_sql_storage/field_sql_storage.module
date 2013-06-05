@@ -8,6 +8,7 @@
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\FieldUpdateForbiddenException;
+use Drupal\field\Plugin\Core\Entity\Field;
 
 /**
  * Implements hook_help().
@@ -93,7 +94,7 @@ function _field_sql_storage_revision_tablename($field) {
  *   unique among all other fields.
  */
 function _field_sql_storage_columnname($name, $column) {
-  return in_array($column, field_reserved_columns()) ? $column : $name . '_' . $column;
+  return in_array($column, Field::getReservedColumns()) ? $column : $name . '_' . $column;
 }
 
 /**

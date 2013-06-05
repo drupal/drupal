@@ -1185,15 +1185,6 @@ function _field_create_entity_from_ids($ids) {
 }
 
 /**
- * A list of columns that can not be used as field type columns.
- *
- * @return array
- */
-function field_reserved_columns() {
-  return array('deleted');
-}
-
-/**
  * Implements hook_hook_info().
  */
 function field_hook_info() {
