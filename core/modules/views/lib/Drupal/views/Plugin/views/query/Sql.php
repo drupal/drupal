@@ -339,7 +339,7 @@ class Sql extends QueryPluginBase {
    *
    * This function will test to ensure that the path back to the primary
    * table is valid and exists; if you do not wish for this testing to
-   * occur, use $query->queue_table() instead.
+   * occur, use $query->queueTable() instead.
    *
    * @param $table
    *   The name of the table to add. It needs to exist in the global table
@@ -373,7 +373,7 @@ class Sql extends QueryPluginBase {
       $join = $this->adjust_join($join, $relationship);
     }
 
-    return $this->queue_table($table, $relationship, $join, $alias);
+    return $this->queueTable($table, $relationship, $join, $alias);
   }
 
   /**
@@ -403,7 +403,7 @@ class Sql extends QueryPluginBase {
    *   adding parts to the query. Or FALSE if the table was not able to be
    *   added.
    */
-  function queue_table($table, $relationship = NULL, JoinPluginBase $join = NULL, $alias = NULL) {
+  public function queueTable($table, $relationship = NULL, JoinPluginBase $join = NULL, $alias = NULL) {
     // If the alias is set, make sure it doesn't already exist.
     if (isset($this->table_queue[$alias])) {
       return $alias;
@@ -553,7 +553,7 @@ class Sql extends QueryPluginBase {
       // http://groups.drupal.org/node/11288 for details.
       //
       // This can be done safely here but not lower down in
-      // queue_table(), because queue_table() is also used by
+      // queueTable(), because queueTable() is also used by
       // addTable() which requires the ability to intentionally add
       // the same table with the same join multiple times.  For
       // example, a view that filters on 3 taxonomy terms using AND
@@ -576,7 +576,7 @@ class Sql extends QueryPluginBase {
         }
       }
 
-      return $this->queue_table($table, $relationship, $join);
+      return $this->queueTable($table, $relationship, $join);
     }
   }
 
@@ -613,7 +613,7 @@ class Sql extends QueryPluginBase {
 
       // Make sure that we're linking to the correct table for our relationship.
       foreach (array_reverse($add) as $table => $path_join) {
-        $this->queue_table($table, $relationship, $this->adjust_join($path_join, $relationship));
+        $this->queueTable($table, $relationship, $this->adjust_join($path_join, $relationship));
       }
       return TRUE;
     }
