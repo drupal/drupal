@@ -107,7 +107,7 @@ class Time extends CachePluginBase {
     return $lifespan;
   }
 
-  function cache_expire($type) {
+  protected function cacheExpire($type) {
     $lifespan = $this->getLifespan($type);
     if ($lifespan) {
       $cutoff = REQUEST_TIME - $lifespan;
