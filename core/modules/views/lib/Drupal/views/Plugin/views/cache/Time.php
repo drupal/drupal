@@ -118,7 +118,7 @@ class Time extends CachePluginBase {
     }
   }
 
-  function cache_set_expire($type) {
+  protected function cacheSetExpire($type) {
     $lifespan = $this->getLifespan($type);
     if ($lifespan) {
       return time() + $lifespan;

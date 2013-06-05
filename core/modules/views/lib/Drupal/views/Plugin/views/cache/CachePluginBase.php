@@ -105,7 +105,7 @@ abstract class CachePluginBase extends PluginBase {
     * @param $type
     *   The cache type, either 'query', 'result' or 'output'.
     */
-  function cache_set_expire($type) {
+  protected function cacheSetExpire($type) {
     return CacheBackendInterface::CACHE_PERMANENT;
   }
 
@@ -126,12 +126,12 @@ abstract class CachePluginBase extends PluginBase {
           'total_rows' => isset($this->view->total_rows) ? $this->view->total_rows : 0,
           'current_page' => $this->view->getCurrentPage(),
         );
-        cache($this->table)->set($this->generateResultsKey(), $data, $this->cache_set_expire($type));
+        cache($this->table)->set($this->generateResultsKey(), $data, $this->cacheSetExpire($type));
         break;
       case 'output':
         $this->storage['output'] = $this->view->display_handler->output;
         $this->gather_headers();
-        cache($this->table)->set($this->generateOutputKey(), $this->storage, $this->cache_set_expire($type));
+        cache($this->table)->set($this->generateOutputKey(), $this->storage, $this->cacheSetExpire($type));
         break;
     }
   }
