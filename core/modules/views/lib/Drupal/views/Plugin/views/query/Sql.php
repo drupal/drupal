@@ -432,7 +432,7 @@ class Sql extends QueryPluginBase {
       return $alias;
     }
 
-    $alias = $this->mark_table($table, $relationship, $alias);
+    $alias = $this->markTable($table, $relationship, $alias);
 
     // If no alias is specified, give it the default.
     if (!isset($alias)) {
@@ -442,7 +442,7 @@ class Sql extends QueryPluginBase {
     // If this is a relationship based table, add a marker with
     // the relationship as a primary table for the alias.
     if ($table != $alias) {
-      $this->mark_table($alias, $this->view->storage->get('base_table'), $alias);
+      $this->markTable($alias, $this->view->storage->get('base_table'), $alias);
     }
 
     // If no join is specified, pull it from the table data.
@@ -466,7 +466,7 @@ class Sql extends QueryPluginBase {
     return $alias;
   }
 
-  function mark_table($table, $relationship, $alias) {
+  protected function markTable($table, $relationship, $alias) {
     // Mark that this table has been added.
     if (empty($this->tables[$relationship][$table])) {
       if (!isset($alias)) {
