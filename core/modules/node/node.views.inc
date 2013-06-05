@@ -278,7 +278,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node_field_data']['created_year_month'] = array(
+  $data['node_field_data']['date_year_month'] = array(
     'title' => t('Created year + month'),
     'help' => t('Date in the form of YYYYMM.'),
     'argument' => array(

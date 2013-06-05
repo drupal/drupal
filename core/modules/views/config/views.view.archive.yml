@@ -85,7 +85,7 @@ display:
             override: '1'
             items_per_page: '30'
           specify_validation: '1'
-          plugin_id: date_year_month
+          plugin_id: node_created_year_month
       filters:
         status:
           id: status
