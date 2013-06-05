@@ -52,7 +52,6 @@ function edit_page_build(&$page) {
   $page['#attached']['js'][] = array(
     'type' => 'setting',
     'data' => array('edit' => array(
-      'metadataURL' => url('edit/metadata'),
       'fieldFormURL' => url('edit/form/!entity_type/!id/!field_name/!langcode/!view_mode'),
       'context' => 'body',
     )),

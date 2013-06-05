@@ -234,34 +234,70 @@ function fetchMissingMetadata (callback) {
     var fieldElementsWithoutMetadata = _.pluck(fieldsMetadataQueue, 'el');
     fieldsMetadataQueue = [];
 
-    $(window).ready(function () {
-      var id = 'edit-load-metadata';
-      // Create a temporary element to be able to use Drupal.ajax.
-      var $el = $('<div id="' + id + '" class="element-hidden"></div>').appendTo('body');
-      // Create a Drupal.ajax instance to load the form.
-      Drupal.ajax[id] = new Drupal.ajax(id, $el, {
-        url: drupalSettings.edit.metadataURL,
-        event: 'edit-internal.edit',
-        submit: { 'fields[]': fieldIDs },
-        // No progress indicator.
-        progress: { type: null }
-      });
-      // Implement a scoped editMetaData AJAX command: calls the callback.
-      Drupal.ajax[id].commands.editMetadata = function (ajax, response, status) {
+    $.ajax({
+      url: Drupal.url('edit/metadata'),
+      type: 'POST',
+      data: { 'fields[]' : fieldIDs },
+      dataType: 'json',
+      success: function(results) {
         // Store the metadata.
-        _.each(response.data, function (fieldMetadata, fieldID) {
+        _.each(results, function (fieldMetadata, fieldID) {
           Drupal.edit.metadata.add(fieldID, fieldMetadata);
         });
-        // Clean-up.
-        delete Drupal.ajax[id];
-        $el.remove();
 
         callback(fieldElementsWithoutMetadata);
-      };
-      // This will ensure our scoped editMetadata AJAX command gets called.
-      $el.trigger('edit-internal.edit');
+      }
     });
   }
+}
+
+/**
+ * Loads missing in-place editor's attachments (JavaScript and CSS files).
+ *
+ * Missing in-place editors are those whose fields are actively being used on
+ * the page but don't have
+ *
+ * @param Function callback
+ *   Callback function to be called when the missing in-place editors (if any)
+ *   have been inserted into the DOM. i.e. they may still be loading.
+ */
+function loadMissingEditors (callback) {
+  var loadedEditors = _.keys(Drupal.edit.editors);
+  var missingEditors = [];
+  Drupal.edit.collections.fields.each(function (fieldModel) {
+    var id = fieldModel.id;
+    var metadata = Drupal.edit.metadata.get(id);
+    if (metadata.access && _.indexOf(loadedEditors, metadata.editor) === -1) {
+      missingEditors.push(metadata.editor);
+    }
+  });
+  missingEditors = _.uniq(missingEditors);
+  if (missingEditors.length === 0) {
+    callback();
+  }
+
+  // @todo Simplify this once https://drupal.org/node/1533366 lands.
+  var id = 'edit-load-editors';
+  // Create a temporary element to be able to use Drupal.ajax.
+  var $el = $('<div id="' + id + '" class="element-hidden"></div>').appendTo('body');
+  // Create a Drupal.ajax instance to load the form.
+  Drupal.ajax[id] = new Drupal.ajax(id, $el, {
+    url: Drupal.url('edit/attachments'),
+    event: 'edit-internal.edit',
+    submit: { 'editors[]': missingEditors },
+    // No progress indicator.
+    progress: { type: null }
+  });
+  // Implement a scoped insert AJAX command: calls the callback after all AJAX
+  // command functions have been executed (hence the deferred calling).
+  var realInsert = Drupal.ajax.prototype.commands.insert;
+  Drupal.ajax[id].commands.insert = function (ajax, response, status) {
+    _.defer(function() { callback(); });
+    realInsert(ajax, response, status);
+  };
+  // Trigger the AJAX request, which will should return AJAX commands to insert
+  // any missing attachments.
+  $el.trigger('edit-internal.edit');
 }
 
 /**
@@ -323,14 +359,16 @@ function initializeEntityContextualLink (contextualLink) {
     });
     fieldsAvailableQueue = _.difference(fieldsAvailableQueue, fields);
 
-    // Set up contextual link view.
-    var $links = $(contextualLink.el).find('.contextual-links');
-    var contextualLinkView = new Drupal.edit.ContextualLinkView($.extend({
-      el: $('<li class="quick-edit"><a href=""></a></li>').prependTo($links),
-      model: entityModel,
-      appModel: Drupal.edit.app.model
-    }, options));
-    entityModel.set('contextualLinkView', contextualLinkView);
+    // Set up contextual link view after loading any missing in-place editors.
+    loadMissingEditors(function () {
+      var $links = $(contextualLink.el).find('.contextual-links');
+      var contextualLinkView = new Drupal.edit.ContextualLinkView($.extend({
+        el: $('<li class="quick-edit"><a href=""></a></li>').prependTo($links),
+        model: entityModel,
+        appModel: Drupal.edit.app.model
+      }, options));
+      entityModel.set('contextualLinkView', contextualLinkView);
+    });
 
     return true;
   }

@@ -30,12 +30,10 @@ class EditController extends ContainerAware {
    * entity and field level to determine whether the current user may edit them.
    * Also retrieves other metadata.
    *
-   * @return \Drupal\Core\Ajax\AjaxResponse
-   *   The Ajax response.
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   *   The JSON response.
    */
   public function metadata(Request $request) {
-    $response = new AjaxResponse();
-
     $fields = $request->request->get('fields');
     if (!isset($fields)) {
       throw new NotFoundHttpException();
@@ -66,15 +64,25 @@ class EditController extends ContainerAware {
       $metadata[$field] = $metadataGenerator->generate($entity, $instance, $langcode, $view_mode);
     }
 
-    $response->addCommand(new MetaDataCommand($metadata));
+    return new JsonResponse($metadata);
+  }
 
-    // Determine in-place editors and ensure their attachments are loaded.
-    $editors = array();
-    foreach ($metadata as $edit_id => $field_metadata) {
-      if (isset($field_metadata['editor'])) {
-        $editors[] = $field_metadata['editor'];
-      }
+  /**
+   * Returns AJAX commands to load in-place editors' attachments.
+   *
+   * Given a list of in-place editor IDs as POST parameters, render AJAX
+   * commands to load those in-place editors.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   The Ajax response.
+   */
+  public function attachments(Request $request) {
+    $response = new AjaxResponse();
+    $editors = $request->request->get('editors');
+    if (!isset($editors)) {
+      throw new NotFoundHttpException();
     }
+
     $editorSelector = $this->container->get('edit.editor.selector');
     $elements['#attached'] = $editorSelector->getEditorAttachments($editors);
     drupal_process_attached($elements);
