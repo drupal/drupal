@@ -69,7 +69,7 @@ class IndexTidDepth extends ArgumentPluginBase {
     parent::buildOptionsForm($form, $form_state);
   }
 
-  function set_breadcrumb(&$breadcrumb) {
+  public function setBreadcrumb(&$breadcrumb) {
     if (empty($this->options['set_breadcrumb']) || !is_numeric($this->argument)) {
       return;
     }

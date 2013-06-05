@@ -35,7 +35,7 @@ class IndexTid extends ManyToOne {
     );
   }
 
-  function set_breadcrumb(&$breadcrumb) {
+  public function setBreadcrumb(&$breadcrumb) {
     if (empty($this->options['set_breadcrumb']) || !is_numeric($this->argument)) {
       return;
     }

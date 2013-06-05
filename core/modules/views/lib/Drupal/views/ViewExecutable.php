@@ -903,7 +903,7 @@ class ViewExecutable {
         }
 
         // Allow the argument to muck with this breadcrumb.
-        $argument->set_breadcrumb($this->build_info['breadcrumb']);
+        $argument->setBreadcrumb($this->build_info['breadcrumb']);
 
         // Test to see if we should use this argument's title
         if (!empty($argument->options['title_enable']) && !empty($argument->options['title'])) {

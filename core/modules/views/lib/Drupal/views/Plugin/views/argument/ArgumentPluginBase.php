@@ -84,7 +84,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * The breadcrumb will be in the form of an array, with the keys being
    * the path and the value being the already sanitized title of the path.
    */
-  function set_breadcrumb(&$breadcrumb) { }
+  public function setBreadcrumb(&$breadcrumb) { }
 
   /**
    * Determine if the argument can generate a breadcrumb
