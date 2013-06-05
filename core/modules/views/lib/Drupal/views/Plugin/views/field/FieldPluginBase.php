@@ -1108,7 +1108,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
    * This renders a field normally, then decides if render-as-link and
    * text-replacement rendering is necessary.
    */
-  function advanced_render($values) {
+  public function advancedRender($values) {
     if ($this->allowAdvancedRender() && method_exists($this, 'render_item')) {
       $raw_items = $this->get_items($values);
       // If there are no items, set the original value to NULL.

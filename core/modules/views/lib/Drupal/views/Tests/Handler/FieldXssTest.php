@@ -66,7 +66,7 @@ class FieldXssTest extends ViewUnitTestBase {
     $counter = 0;
     foreach ($this->dataHelper() as $input => $expected_result) {
       $view->result[$counter]->views_test_data_name = $input;
-      $this->assertEqual($view->field['name']->advanced_render($view->result[$counter]), $expected_result);
+      $this->assertEqual($view->field['name']->advancedRender($view->result[$counter]), $expected_result);
       $counter++;
     }
   }

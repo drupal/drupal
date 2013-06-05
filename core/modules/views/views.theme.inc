@@ -396,7 +396,7 @@ function theme_views_view_field($vars) {
  *   - view: Instance of the ViewExecutable object for the parent view.
  */
 function template_preprocess_views_view_field(&$vars) {
-  $vars['output'] = $vars['field']->advanced_render($vars['row']);
+  $vars['output'] = $vars['field']->advancedRender($vars['row']);
 }
 
 /**

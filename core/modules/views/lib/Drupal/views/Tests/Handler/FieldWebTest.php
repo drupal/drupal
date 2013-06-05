@@ -442,18 +442,18 @@ class FieldWebTest extends HandlerTestBase {
     $row = $view->result[0];
 
     $name_field->options['alter']['strip_tags'] = TRUE;
-    $output = $name_field->advanced_render($row);
+    $output = $name_field->advancedRender($row);
     $this->assertSubString($output, $random_text, 'Find text without html if stripping of views field output is enabled.');
     $this->assertNotSubString($output, $html_text, 'Find no text with the html if stripping of views field output is enabled.');
 
     // Tests preserving of html tags.
     $name_field->options['alter']['preserve_tags'] = '<div>';
-    $output = $name_field->advanced_render($row);
+    $output = $name_field->advancedRender($row);
     $this->assertSubString($output, $random_text, 'Find text without html if stripping of views field output is enabled but a div is allowed.');
     $this->assertSubString($output, $html_text, 'Find text with the html if stripping of views field output is enabled but a div is allowed.');
 
     $name_field->options['alter']['strip_tags'] = FALSE;
-    $output = $name_field->advanced_render($row);
+    $output = $name_field->advancedRender($row);
     $this->assertSubString($output, $random_text, 'Find text without html if stripping of views field output is disabled.');
     $this->assertSubString($output, $html_text, 'Find text with the html if stripping of views field output is disabled.');
 
@@ -462,13 +462,13 @@ class FieldWebTest extends HandlerTestBase {
     $views_test_data_name = $row->views_test_data_name;
     $row->views_test_data_name = '  ' . $views_test_data_name . '     ';
     $name_field->options['alter']['trim_whitespace'] = TRUE;
-    $output = $name_field->advanced_render($row);
+    $output = $name_field->advancedRender($row);
 
     $this->assertSubString($output, $views_test_data_name, 'Make sure the trimmed text can be found if trimming is enabled.');
     $this->assertNotSubString($output, $row->views_test_data_name, 'Make sure the untrimmed text can be found if trimming is enabled.');
 
     $name_field->options['alter']['trim_whitespace'] = FALSE;
-    $output = $name_field->advanced_render($row);
+    $output = $name_field->advancedRender($row);
     $this->assertSubString($output, $views_test_data_name, 'Make sure the trimmed text can be found if trimming is disabled.');
     $this->assertSubString($output, $row->views_test_data_name, 'Make sure the untrimmed text can be found  if trimming is disabled.');
 
@@ -481,12 +481,12 @@ class FieldWebTest extends HandlerTestBase {
     $name_field->options['alter']['max_length'] = 5;
     $trimmed_name = drupal_substr($row->views_test_data_name, 0, 5);
 
-    $output = $name_field->advanced_render($row);
+    $output = $name_field->advancedRender($row);
     $this->assertSubString($output, $trimmed_name, format_string('Make sure the trimmed output (!trimmed) appears in the rendered output (!output).', array('!trimmed' => $trimmed_name, '!output' => $output)));
     $this->assertNotSubString($output, $row->views_test_data_name, format_string("Make sure the untrimmed value (!untrimmed) shouldn't appear in the rendered output (!output).", array('!untrimmed' => $row->views_test_data_name, '!output' => $output)));
 
     $name_field->options['alter']['max_length'] = 9;
-    $output = $name_field->advanced_render($row);
+    $output = $name_field->advancedRender($row);
     $this->assertSubString($output, $trimmed_name, format_string('Make sure the untrimmed (!untrimmed) output appears in the rendered output  (!output).', array('!trimmed' => $trimmed_name, '!output' => $output)));
 
     // Take word_boundary into account for the tests.
@@ -526,7 +526,7 @@ class FieldWebTest extends HandlerTestBase {
 
     foreach ($touples as $touple) {
       $row->views_test_data_name = $touple['value'];
-      $output = $name_field->advanced_render($row);
+      $output = $name_field->advancedRender($row);
 
       if ($touple['trimmed']) {
         $this->assertNotSubString($output, $touple['value'], format_string('The untrimmed value (!untrimmed) should not appear in the trimmed output (!output).', array('!untrimmed' => $touple['value'], '!output' => $output)));
@@ -543,22 +543,22 @@ class FieldWebTest extends HandlerTestBase {
     $name_field->options['alter']['more_link_text'] = $more_text = $this->randomName();
     $name_field->options['alter']['more_link_path'] = $more_path = $this->randomName();
 
-    $output = $name_field->advanced_render($row);
+    $output = $name_field->advancedRender($row);
     $this->assertSubString($output, $more_text, 'Make sure a read more text is displayed if the output got trimmed');
     $this->assertTrue($this->xpathContent($output, '//a[contains(@href, :path)]', array(':path' => $more_path)), 'Make sure the read more link points to the right destination.');
 
     $name_field->options['alter']['more_link'] = FALSE;
-    $output = $name_field->advanced_render($row);
+    $output = $name_field->advancedRender($row);
     $this->assertNotSubString($output, $more_text, 'Make sure no read more text appears.');
     $this->assertFalse($this->xpathContent($output, '//a[contains(@href, :path)]', array(':path' => $more_path)), 'Make sure no read more link appears.');
 
     // Check for the ellipses.
     $row->views_test_data_name = $this->randomName(8);
     $name_field->options['alter']['max_length'] = 5;
-    $output = $name_field->advanced_render($row);
+    $output = $name_field->advancedRender($row);
     $this->assertSubString($output, '...', 'An ellipsis should appear if the output is trimmed');
     $name_field->options['alter']['max_length'] = 10;
-    $output = $name_field->advanced_render($row);
+    $output = $name_field->advancedRender($row);
     $this->assertNotSubString($output, '...', 'No ellipsis should appear if the output is not trimmed');
   }
 
