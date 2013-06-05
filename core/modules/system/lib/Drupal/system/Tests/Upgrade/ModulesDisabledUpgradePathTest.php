@@ -37,7 +37,7 @@ class ModulesDisabledUpgradePathTest extends UpgradePathTestBase {
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Get enabled modules.
-    $enabled = drupal_container()->get('module_handler')->getModuleList();
+    $enabled = \Drupal::moduleHandler()->getModuleList();
     // Get all available modules.
     $available = system_rebuild_module_data();
     // Filter out hidden test modules.

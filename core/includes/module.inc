@@ -333,7 +333,7 @@ function module_set_weight($module, $weight) {
 
     // Prepare the new module list, sorted by weight, including filenames.
     // @see module_enable()
-    $module_handler = drupal_container()->get('module_handler');
+    $module_handler = Drupal::moduleHandler();
     $current_module_filenames = $module_handler->getModuleList();
     $current_modules = array_fill_keys(array_keys($current_module_filenames), 0);
     $current_modules = module_config_sort(array_merge($current_modules, $module_config->get('enabled')));

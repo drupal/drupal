@@ -114,7 +114,7 @@ class Tour extends ConfigEntityBase implements TourInterface {
       return ($a->getWeight() < $b->getWeight()) ? -1 : 1;
     });
 
-    drupal_container()->get('module_handler')->alter('tour_tips', $tips, $this);
+    \Drupal::moduleHandler()->alter('tour_tips', $tips, $this);
     return array_values($tips);
   }
 

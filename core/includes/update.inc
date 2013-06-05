@@ -354,7 +354,7 @@ function update_prepare_d8_bootstrap() {
       // Populate a fixed module list (again, why did it get lost?) to avoid
       // errors due to the drupal_alter() in _system_rebuild_module_data().
       $module_list['system'] = 'core/modules/system/system.module';
-      drupal_container()->get('module_handler')->setModuleList($module_list);
+      Drupal::moduleHandler()->setModuleList($module_list);
       $module_data = _system_rebuild_module_data();
 
       // Migrate each extension into configuration, varying by the extension's
@@ -384,7 +384,7 @@ function update_prepare_d8_bootstrap() {
       foreach (array_keys($sorted_modules) as $m) {
         $sorted_with_filenames[$m] = drupal_get_filename('module', $m);
       }
-      drupal_container()->get('module_handler')->setModuleList($sorted_with_filenames);
+      Drupal::moduleHandler()->setModuleList($sorted_with_filenames);
       $disabled_modules->save();
       $theme_config->save();
       $disabled_themes->save();

@@ -103,7 +103,7 @@ class ModuleApiTest extends WebTestBase {
     // cache, as that is expected to happen implicitly by setting the module
     // list. This verifies that the hook implementation cache is cleared
     // whenever setModuleList() is called.
-    $module_handler = drupal_container()->get('module_handler');
+    $module_handler = \Drupal::moduleHandler();
     $module_handler->invokeAll('test');
 
     // Make sure group include files are detected properly even when the file is

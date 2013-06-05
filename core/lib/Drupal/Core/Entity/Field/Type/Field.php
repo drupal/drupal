@@ -155,7 +155,7 @@ class Field extends ItemList implements FieldInterface {
     // Invoke hook and collect grants/denies for field access from other
     // modules. Our default access flag is masked under the ':default' key.
     $grants = array(':default' => $access);
-    $hook_implementations = drupal_container()->get('module_handler')->getImplementations('entity_field_access');
+    $hook_implementations = \Drupal::moduleHandler()->getImplementations('entity_field_access');
     foreach ($hook_implementations as $module) {
       $grants = array_merge($grants, array($module => module_invoke($module, 'entity_field_access', $operation, $this, $account)));
     }

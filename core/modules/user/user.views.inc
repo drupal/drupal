@@ -281,7 +281,7 @@ function user_views_data() {
     ),
   );
 
-  if (drupal_container()->get('module_handler')->moduleExists('translation_entity')) {
+  if (Drupal::moduleHandler()->moduleExists('translation_entity')) {
     $data['users']['translation_link'] = array(
       'title' => t('Translation link'),
       'help' => t('Provide a link to the translations overview for users.'),

@@ -418,7 +418,7 @@ function install_begin_request(&$install_state) {
 
   require_once __DIR__ . '/ajax.inc';
 
-  $module_handler = drupal_container()->get('module_handler');
+  $module_handler = Drupal::moduleHandler();
   if (!$module_handler->moduleExists('system')) {
     // Override the module list with a minimal set of modules.
     $module_handler->setModuleList(array('system' => 'core/modules/system/system.module'));

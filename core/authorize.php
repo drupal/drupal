@@ -75,9 +75,9 @@ global $conf;
 // display errors via the maintenance theme.
 $module_list['system'] = 'core/modules/system/system.module';
 $module_list['user'] = 'core/modules/user/user.module';
-drupal_container()->get('module_handler')->setModuleList($module_list);
-drupal_container()->get('module_handler')->load('system');
-drupal_container()->get('module_handler')->load('user');
+Drupal::moduleHandler()->setModuleList($module_list);
+Drupal::moduleHandler()->load('system');
+Drupal::moduleHandler()->load('user');
 
 // Initialize the language system.
 drupal_language_initialize();

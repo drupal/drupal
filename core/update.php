@@ -329,7 +329,7 @@ function update_access_allowed() {
   // Calls to user_access() might fail during the Drupal 6 to 7 update process,
   // so we fall back on requiring that the user be logged in as user #1.
   try {
-    $module_handler = drupal_container()->get('module_handler');
+    $module_handler = Drupal::moduleHandler();
     $module_filenames = $module_handler->getModuleList();
     $module_filenames['user'] = 'core/modules/user/user.module';
     $module_handler->setModuleList($module_filenames);
@@ -438,7 +438,7 @@ if (is_null($op) && update_access_allowed()) {
   // Load module basics.
   include_once __DIR__ . '/includes/module.inc';
   $module_list['system'] = 'core/modules/system/system.module';
-  $module_handler = drupal_container()->get('module_handler');
+  $module_handler = Drupal::moduleHandler();
   $module_handler->setModuleList($module_list);
   $module_handler->load('system');
 

@@ -2097,7 +2097,7 @@ function menu_local_tasks($level = 0) {
     $data['tabs'] = $tabs;
 
     // Allow modules to dynamically add further tasks.
-    $module_handler = drupal_container()->get('module_handler');
+    $module_handler = Drupal::moduleHandler();
     foreach ($module_handler->getImplementations('menu_local_tasks') as $module) {
       $function = $module . '_menu_local_tasks';
       $function($data, $router_item, $root_path);

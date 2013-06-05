@@ -1718,7 +1718,7 @@ function l($text, $path, array $options = array()) {
   }
 
   // Allow other modules to modify the structure of the link.
-  Drupal::service('module_handler')->alter('link', $variables);
+  Drupal::moduleHandler()->alter('link', $variables);
 
   // Move attributes out of options. url() doesn't need them.
   $attributes = new Attribute($variables['options']['attributes']);
@@ -4318,7 +4318,7 @@ function _drupal_bootstrap_code() {
   require_once __DIR__ . '/entity.inc';
 
   // Load all enabled modules
-  drupal_container()->get('module_handler')->loadAll();
+  Drupal::moduleHandler()->loadAll();
 
   // Make sure all stream wrappers are registered.
   file_get_stream_wrappers();

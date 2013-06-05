@@ -77,7 +77,7 @@ function drupal_get_complete_schema($rebuild = FALSE) {
     else {
       $schema = array();
       // Load the .install files to get hook_schema.
-      drupal_container()->get('module_handler')->loadAllIncludes('install');
+      Drupal::moduleHandler()->loadAllIncludes('install');
 
       require_once __DIR__ . '/common.inc';
       // Invoke hook_schema for all modules.
@@ -121,7 +121,7 @@ function drupal_get_schema_versions($module) {
   $updates = &drupal_static(__FUNCTION__, NULL);
   if (!isset($updates[$module])) {
     $updates = array();
-    foreach (drupal_container()->get('module_handler')->getModuleList() as $loaded_module => $filename) {
+    foreach (Drupal::moduleHandler()->getModuleList() as $loaded_module => $filename) {
       $updates[$loaded_module] = array();
     }
 

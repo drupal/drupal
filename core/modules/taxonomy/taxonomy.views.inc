@@ -177,7 +177,7 @@ function taxonomy_views_data() {
   );
 
   // Entity translation field.
-  if (drupal_container()->get('module_handler')->moduleExists('translation_entity')) {
+  if (Drupal::moduleHandler()->moduleExists('translation_entity')) {
     $data['taxonomy_term_data']['translation_link'] = array(
       'title' => t('Translation link'),
       'help' => t('Provide a link to the translations overview for taxonomy terms.'),
