@@ -270,7 +270,7 @@ class GroupwiseMax extends RelationshipPluginBase {
     }
     // Namespace conditions.
     $where =& $subquery->conditions();
-    $this->alter_subquery_condition($subquery, $where);
+    $this->alterSubqueryCondition($subquery, $where);
     // Not sure why, but our sort order clause doesn't have a table.
     // TODO: the call to add_item() above to add the sort handler is probably
     // wrong -- needs attention from someone who understands it.
@@ -309,7 +309,7 @@ class GroupwiseMax extends RelationshipPluginBase {
    *
    * (Though why is the condition we get in a simple query 3 levels deep???)
    */
-  function alter_subquery_condition(AlterableInterface $query, &$conditions) {
+  protected function alterSubqueryCondition(AlterableInterface $query, &$conditions) {
     foreach ($conditions as $condition_id => &$condition) {
       // Skip the #conjunction element.
       if (is_numeric($condition_id)) {
@@ -318,7 +318,7 @@ class GroupwiseMax extends RelationshipPluginBase {
         }
         elseif (is_object($condition['field'])) {
           $sub_conditions =& $condition['field']->conditions();
-          $this->alter_subquery_condition($query, $sub_conditions);
+          $this->alterSubqueryCondition($query, $sub_conditions);
         }
       }
     }
