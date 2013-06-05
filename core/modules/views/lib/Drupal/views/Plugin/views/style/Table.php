@@ -185,7 +185,7 @@ class Table extends StylePluginBase {
    * @return array
    *    An array of all the sanitized columns.
    */
-  function sanitize_columns($columns, $fields = NULL) {
+  public function sanitizeColumns($columns, $fields = NULL) {
     $sanitized = array();
     if ($fields === NULL) {
       $fields = $this->displayHandler->getOption('fields');
@@ -254,7 +254,7 @@ class Table extends StylePluginBase {
     // will have to register your theme handlers if you do stuff like this.
     $form['#theme'] = 'views_ui_style_plugin_table';
 
-    $columns = $this->sanitize_columns($this->options['columns']);
+    $columns = $this->sanitizeColumns($this->options['columns']);
 
     // Create an array of allowed columns from the data we know:
     $field_names = $this->displayHandler->getFieldLabels();

@@ -551,7 +551,7 @@ function template_preprocess_views_view_table(&$vars) {
   $row_class_special = isset($options['row_class_special']) ? $options['row_class_special'] : TRUE;
 
   $fields = &$view->field;
-  $columns = $handler->sanitize_columns($options['columns'], $fields);
+  $columns = $handler->sanitizeColumns($options['columns'], $fields);
 
   $active = !empty($handler->active) ? $handler->active : '';
   $order = !empty($handler->order) ? $handler->order : 'asc';
