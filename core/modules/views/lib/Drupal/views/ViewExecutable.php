@@ -1242,7 +1242,7 @@ class ViewExecutable {
     }
     else {
       if ($cache) {
-        $cache->cache_start();
+        $cache->cacheStart();
       }
 
       // Run pre_render for the pager as it might change the result.

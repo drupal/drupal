@@ -215,7 +215,7 @@ abstract class CachePluginBase extends PluginBase {
    *
    * @see drupal_add_html_head()
    */
-  function cache_start() {
+  public function cacheStart() {
     $this->storage['head'] = drupal_add_html_head();
   }
 
