@@ -447,7 +447,7 @@ class Sql extends QueryPluginBase {
 
     // If no join is specified, pull it from the table data.
     if (!isset($join)) {
-      $join = $this->get_join_data($table, $this->relationships[$relationship]['base']);
+      $join = $this->getJoinData($table, $this->relationships[$relationship]['base']);
       if (empty($join)) {
         return FALSE;
       }
@@ -532,7 +532,7 @@ class Sql extends QueryPluginBase {
 
     // If we do not have join info, fetch it.
     if (!isset($join)) {
-      $join = $this->get_join_data($table, $this->relationships[$relationship]['base']);
+      $join = $this->getJoinData($table, $this->relationships[$relationship]['base']);
     }
 
     // If it can't be fetched, this won't work.
@@ -598,7 +598,7 @@ class Sql extends QueryPluginBase {
 
     // If we do not have join info, fetch it.
     if (!isset($join)) {
-      $join = $this->get_join_data($table, $this->relationships[$relationship]['base']);
+      $join = $this->getJoinData($table, $this->relationships[$relationship]['base']);
     }
 
     // If it can't be fetched, this won't work.
@@ -625,7 +625,7 @@ class Sql extends QueryPluginBase {
     }
 
     // Do we have to add this table?
-    $left_join = $this->get_join_data($join->leftTable, $this->relationships[$relationship]['base']);
+    $left_join = $this->getJoinData($join->leftTable, $this->relationships[$relationship]['base']);
     if (!isset($this->tables[$relationship][$join->leftTable])) {
       $add[$join->leftTable] = $left_join;
     }
@@ -692,7 +692,7 @@ class Sql extends QueryPluginBase {
    * @return Drupal\views\Plugin\views\join\JoinPluginBase
    *   A Join object or child object, if one exists.
    */
-  function get_join_data($table, $base_table) {
+  public function getJoinData($table, $base_table) {
     // Check to see if we're linking to a known alias. If so, get the real
     // table's data instead.
     if (!empty($this->table_queue[$table])) {
