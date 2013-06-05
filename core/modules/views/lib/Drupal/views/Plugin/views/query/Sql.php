@@ -1191,7 +1191,7 @@ class Sql extends QueryPluginBase {
    * @param Drupal\Core\Database\Query\SelectInterface $query
    *   The drupal query object.
    */
-  function compile_fields($query) {
+  protected function compileFields($query) {
     foreach ($this->fields as $field) {
       $string = '';
       if (!empty($field['table'])) {
@@ -1338,7 +1338,7 @@ class Sql extends QueryPluginBase {
     }
 
     // Add all fields to the query.
-    $this->compile_fields($query);
+    $this->compileFields($query);
 
     // Add groupby.
     if ($groupby) {
