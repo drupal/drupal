@@ -107,7 +107,7 @@ class String extends FilterPluginBase {
       'longerthan' => array(
         'title' => t('Length is longer than'),
         'short' => t('longer than'),
-        'method' => 'op_longer',
+        'method' => 'opLongerThan',
         'values' => 1,
       ),
     );
@@ -326,7 +326,7 @@ class String extends FilterPluginBase {
     $this->query->add_where_expression($this->options['group'], "LENGTH($field) < $placeholder", array($placeholder => $this->value));
   }
 
-  function op_longer($field) {
+  protected function opLongerThan($field) {
     $placeholder = $this->placeholder();
     $this->query->add_where_expression($this->options['group'], "LENGTH($field) > $placeholder", array($placeholder => $this->value));
   }
