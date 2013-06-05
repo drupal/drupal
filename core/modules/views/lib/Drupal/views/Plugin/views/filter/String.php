@@ -101,7 +101,7 @@ class String extends FilterPluginBase {
       'shorterthan' => array(
         'title' => t('Length is shorter than'),
         'short' => t('shorter than'),
-        'method' => 'op_shorter',
+        'method' => 'opShorterThan',
         'values' => 1,
       ),
       'longerthan' => array(
@@ -321,7 +321,7 @@ class String extends FilterPluginBase {
     $this->query->add_where($this->options['group'], $field, '%' . db_like($this->value) . '%', 'NOT LIKE');
   }
 
-  function op_shorter($field) {
+  protected function opShorterThan($field) {
     $placeholder = $this->placeholder();
     $this->query->add_where_expression($this->options['group'], "LENGTH($field) < $placeholder", array($placeholder => $this->value));
   }
