@@ -188,7 +188,7 @@ class String extends FilterPluginBase {
   /**
    * Provide a simple textfield for equality
    */
-  function value_form(&$form, &$form_state) {
+  protected function valueForm(&$form, &$form_state) {
     // We have to make some choices when creating this as an exposed
     // filter form. For example, if the operator is locked and thus
     // not rendered, we can't render dependencies; instead we only

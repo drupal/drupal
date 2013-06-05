@@ -30,7 +30,7 @@ class Date extends Numeric {
   /**
    * Add a type selector to the value form
    */
-  function value_form(&$form, &$form_state) {
+  protected function valueForm(&$form, &$form_state) {
     if (empty($form_state['exposed'])) {
       $form['value']['type'] = array(
         '#type' => 'radios',
@@ -42,7 +42,7 @@ class Date extends Numeric {
         '#default_value' => !empty($this->value['type']) ? $this->value['type'] : 'date',
       );
     }
-    parent::value_form($form, $form_state);
+    parent::valueForm($form, $form_state);
   }
 
   public function validateOptionsForm(&$form, &$form_state) {

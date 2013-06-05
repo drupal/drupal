@@ -100,7 +100,7 @@ class BooleanOperator extends FilterPluginBase {
     $form['operator'] = array();
   }
 
-  function value_form(&$form, &$form_state) {
+  protected function valueForm(&$form, &$form_state) {
     if (empty($this->value_options)) {
       // Initialize the array of possible values for this filter.
       $this->getValueOptions();

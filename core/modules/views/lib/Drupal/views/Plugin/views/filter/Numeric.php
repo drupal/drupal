@@ -145,7 +145,7 @@ class Numeric extends FilterPluginBase {
   /**
    * Provide a simple textfield for equality
    */
-  function value_form(&$form, &$form_state) {
+  protected function valueForm(&$form, &$form_state) {
     $form['value']['#tree'] = TRUE;
 
     // We have to make some choices when creating this as an exposed

@@ -164,7 +164,7 @@ class InOperator extends FilterPluginBase {
     return $options;
   }
 
-  function value_form(&$form, &$form_state) {
+  protected function valueForm(&$form, &$form_state) {
     $form['value'] = array();
     $options = array();
 

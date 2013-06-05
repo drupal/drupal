@@ -218,7 +218,7 @@ abstract class FilterPluginBase extends HandlerBase {
     else {
       // Add the subform from operator_form().
       $this->showOperatorForm($form, $form_state);
-      // Add the subform from value_form().
+      // Add the subform from valueForm().
       $this->show_value_form($form, $form_state);
       $form['clear_markup_end'] = array(
         '#markup' => '</div>',
@@ -312,7 +312,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * Shortcut to display the value form.
    */
   function show_value_form(&$form, &$form_state) {
-    $this->value_form($form, $form_state);
+    $this->valueForm($form, $form_state);
     if (empty($this->no_operator)) {
       $form['value']['#prefix'] = '<div class="views-group-box views-right-70">' . (isset($form['value']['#prefix']) ? $form['value']['#prefix'] : '');
       $form['value']['#suffix'] = (isset($form['value']['#suffix']) ? $form['value']['#suffix'] : '') . '</div>';
@@ -327,7 +327,7 @@ abstract class FilterPluginBase extends HandlerBase {
    *
    * @see buildOptionsForm()
    */
-  function value_form(&$form, &$form_state) { $form['value'] = array(); }
+  protected function valueForm(&$form, &$form_state) { $form['value'] = array(); }
 
   /**
    * Validate the options form.
@@ -802,7 +802,7 @@ abstract class FilterPluginBase extends HandlerBase {
     // Build the form and set the value based on the identifier.
     if (!empty($this->options['expose']['identifier'])) {
       $value = $this->options['expose']['identifier'];
-      $this->value_form($form, $form_state);
+      $this->valueForm($form, $form_state);
       $form[$value] = $form['value'];
 
       if (isset($form[$value]['#title']) && !empty($form[$value]['#type']) && $form[$value]['#type'] != 'checkbox') {
@@ -967,7 +967,7 @@ abstract class FilterPluginBase extends HandlerBase {
       // radios and they occupy a lot of space in a table row.
       $row['operator']['#type'] = 'select';
       $row['operator']['#title'] = '';
-      $this->value_form($row, $form_state);
+      $this->valueForm($row, $form_state);
 
       // Fix the dependencies to update value forms when operators
       // changes. This is needed because forms are inside a new form and

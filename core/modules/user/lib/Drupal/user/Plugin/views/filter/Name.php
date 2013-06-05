@@ -21,7 +21,7 @@ class Name extends InOperator {
 
   var $always_multiple = TRUE;
 
-  function value_form(&$form, &$form_state) {
+  protected function valueForm(&$form, &$form_state) {
     $values = array();
     if ($this->value) {
       $result = entity_load_multiple_by_properties('user', array('uid' => $this->value));

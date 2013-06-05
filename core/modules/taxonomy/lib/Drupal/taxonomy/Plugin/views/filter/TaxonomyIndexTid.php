@@ -95,7 +95,7 @@ class TaxonomyIndexTid extends ManyToOne {
     );
   }
 
-  function value_form(&$form, &$form_state) {
+  protected function valueForm(&$form, &$form_state) {
     $vocabulary = entity_load('taxonomy_vocabulary', $this->options['vid']);
     if (empty($vocabulary) && $this->options['limit']) {
       $form['markup'] = array(
