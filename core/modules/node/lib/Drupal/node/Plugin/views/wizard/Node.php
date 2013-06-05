@@ -165,10 +165,10 @@ class Node extends WizardPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::default_display_filters_user().
+   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::defaultDisplayFiltersUser().
    */
-  protected function default_display_filters_user(array $form, array &$form_state) {
-    $filters = parent::default_display_filters_user($form, $form_state);
+  protected function defaultDisplayFiltersUser(array $form, array &$form_state) {
+    $filters = parent::defaultDisplayFiltersUser($form, $form_state);
 
     if (!empty($form_state['values']['show']['tagged_with']['tids'])) {
       $filters['tid'] = array(

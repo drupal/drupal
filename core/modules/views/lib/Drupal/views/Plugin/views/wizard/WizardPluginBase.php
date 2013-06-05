@@ -805,7 +805,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     }
 
     // Add any filters specified by the user when filling out the wizard.
-    $filters = array_merge($filters, $this->default_display_filters_user($form, $form_state));
+    $filters = array_merge($filters, $this->defaultDisplayFiltersUser($form, $form_state));
 
     return $filters;
   }
@@ -822,7 +822,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   An array of filter arrays keyed by ID. A sort array contains the options
    *   accepted by a filter handler.
    */
-  protected function default_display_filters_user(array $form, array &$form_state) {
+  protected function defaultDisplayFiltersUser(array $form, array &$form_state) {
     $filters = array();
 
     if (!empty($form_state['values']['show']['type']) && $form_state['values']['show']['type'] != 'all') {
