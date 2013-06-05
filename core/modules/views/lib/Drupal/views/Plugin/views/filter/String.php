@@ -168,13 +168,13 @@ class String extends FilterPluginBase {
     if (!empty($options[$this->operator])) {
       $output = check_plain($options[$this->operator]);
     }
-    if (in_array($this->operator, $this->operator_values(1))) {
+    if (in_array($this->operator, $this->operatorValues(1))) {
       $output .= ' ' . check_plain($this->value);
     }
     return $output;
   }
 
-  function operator_values($values = 1) {
+  protected function operatorValues($values = 1) {
     $options = array();
     foreach ($this->operators() as $id => $info) {
       if (isset($info['values']) && $info['values'] == $values) {
@@ -202,7 +202,7 @@ class String extends FilterPluginBase {
 
       if (empty($this->options['expose']['use_operator']) || empty($this->options['expose']['operator_id'])) {
         // exposed and locked.
-        $which = in_array($this->operator, $this->operator_values(1)) ? 'value' : 'none';
+        $which = in_array($this->operator, $this->operatorValues(1)) ? 'value' : 'none';
       }
       else {
         $source = ':input[name="' . $this->options['expose']['operator_id'] . '"]';
@@ -222,7 +222,7 @@ class String extends FilterPluginBase {
 
       if ($which == 'all') {
         // Setup #states for all operators with one value.
-        foreach ($this->operator_values(1) as $operator) {
+        foreach ($this->operatorValues(1) as $operator) {
           $form['value']['#states']['visible'][] = array(
             $source => array('value' => $operator),
           );

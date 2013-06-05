@@ -132,7 +132,7 @@ class Numeric extends FilterPluginBase {
     return $options;
   }
 
-  function operator_values($values = 1) {
+  protected function operatorValues($values = 1) {
     $options = array();
     foreach ($this->operators() as $id => $info) {
       if ($info['values'] == $values) {
@@ -162,7 +162,7 @@ class Numeric extends FilterPluginBase {
 
       if (empty($this->options['expose']['use_operator']) || empty($this->options['expose']['operator_id'])) {
         // exposed and locked.
-        $which = in_array($this->operator, $this->operator_values(2)) ? 'minmax' : 'value';
+        $which = in_array($this->operator, $this->operatorValues(2)) ? 'minmax' : 'value';
       }
       else {
         $source = ':input[name="' . $this->options['expose']['operator_id'] . '"]';
@@ -177,7 +177,7 @@ class Numeric extends FilterPluginBase {
         '#default_value' => $this->value['value'],
       );
       // Setup #states for all operators with one value.
-      foreach ($this->operator_values(1) as $operator) {
+      foreach ($this->operatorValues(1) as $operator) {
         $form['value']['value']['#states']['visible'][] = array(
           $source => array('value' => $operator),
         );
@@ -216,7 +216,7 @@ class Numeric extends FilterPluginBase {
       if ($which == 'all') {
         $states = array();
         // Setup #states for all operators with two values.
-        foreach ($this->operator_values(2) as $operator) {
+        foreach ($this->operatorValues(2) as $operator) {
           $states['#states']['visible'][] = array(
             $source => array('value' => $operator),
           );
@@ -289,10 +289,10 @@ class Numeric extends FilterPluginBase {
 
     $options = $this->operatorOptions('short');
     $output = check_plain($options[$this->operator]);
-    if (in_array($this->operator, $this->operator_values(2))) {
+    if (in_array($this->operator, $this->operatorValues(2))) {
       $output .= ' ' . t('@min and @max', array('@min' => $this->value['min'], '@max' => $this->value['max']));
     }
-    elseif (in_array($this->operator, $this->operator_values(1))) {
+    elseif (in_array($this->operator, $this->operatorValues(1))) {
       $output .= ' ' . check_plain($this->value['value']);
     }
     return $output;
