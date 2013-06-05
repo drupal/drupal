@@ -37,7 +37,7 @@ class Extension extends FieldPluginBase {
       '#type' => 'checkbox',
       '#title' => t('Detect if tar is part of the extension'),
       '#description' => t("See if the previous extension is '.tar' and if so, add that, so we see 'tar.gz' or 'tar.bz2' instead of just 'gz'."),
-      '#default_value' => $this->options['fileextension_max_extension_parts'],
+      '#default_value' => $this->options['extension_detect_tar'],
     );
   }
 
