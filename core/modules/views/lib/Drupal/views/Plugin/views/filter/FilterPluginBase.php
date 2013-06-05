@@ -258,7 +258,7 @@ abstract class FilterPluginBase extends HandlerBase {
       $this->submitExposeForm($form, $form_state);
     }
     if ($this->isAGroup()) {
-      $this->build_group_submit($form, $form_state);
+      $this->buildGroupSubmit($form, $form_state);
     }
   }
 
@@ -665,7 +665,7 @@ abstract class FilterPluginBase extends HandlerBase {
   /**
    * Save new group items, re-enumerates and remove groups marked to delete.
    */
-  function build_group_submit($form, &$form_state) {
+  protected function buildGroupSubmit($form, &$form_state) {
     $groups = array();
     uasort($form_state['values']['options']['group_info']['group_items'], 'drupal_sort_weight');
     // Filter out removed items.
