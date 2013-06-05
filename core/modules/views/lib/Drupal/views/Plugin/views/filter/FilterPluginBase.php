@@ -175,7 +175,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * Determine if a filter can be converted into a group.
    * Only exposed filters with operators available can be converted into groups.
    */
-  function can_build_group() {
+  protected function canBuildGroup() {
     return $this->isExposed() && (count($this->operatorOptions()) > 0);
   }
 
@@ -197,14 +197,14 @@ abstract class FilterPluginBase extends HandlerBase {
     if ($this->canExpose()) {
       $this->showExposeButton($form, $form_state);
     }
-    if ($this->can_build_group()) {
+    if ($this->canBuildGroup()) {
       $this->show_build_group_button($form, $form_state);
     }
     $form['clear_markup_start'] = array(
       '#markup' => '<div class="clearfix">',
     );
     if ($this->isAGroup()) {
-      if ($this->can_build_group()) {
+      if ($this->canBuildGroup()) {
         $form['clear_markup_start'] = array(
           '#markup' => '<div class="clearfix">',
         );
