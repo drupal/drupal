@@ -279,7 +279,7 @@ class PagerTest extends PluginTestBase {
     $this->assertEqual($view->getOffset(), NULL, 'If the pager is not initialized and no manual override there is no offset.');
     $rand_number = rand(1, 5);
     $view->setOffset($rand_number);
-    $this->assertEqual($view->getOffset(), $rand_number, 'Make sure get_offset uses the settings of set_offset.');
+    $this->assertEqual($view->getOffset(), $rand_number, 'Make sure getOffset uses the settings of set_offset.');
 
     $this->assertEqual($view->getCurrentPage(), NULL, 'If the pager is not initialized and no manual override there is no current page.');
     $rand_number = rand(1, 5);
@@ -305,7 +305,7 @@ class PagerTest extends PluginTestBase {
     $view->setOffset($rand_number);
     $rand_number = rand(6, 11);
     $view->pager->set_offset($rand_number);
-    $this->assertEqual($view->getOffset(), $rand_number, 'Make sure get_offset uses the settings of set_offset.');
+    $this->assertEqual($view->getOffset(), $rand_number, 'Make sure getOffset uses the settings of set_offset.');
 
     $this->assertEqual($view->getCurrentPage(), 0, 'Per default the current page is 0.');
     $rand_number = rand(1, 5);

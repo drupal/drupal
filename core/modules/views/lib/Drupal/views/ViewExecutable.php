@@ -500,7 +500,7 @@ class ViewExecutable {
   public function getOffset() {
     // If the pager is already initialized, pass it through to the pager.
     if (!empty($this->pager)) {
-      return $this->pager->get_offset();
+      return $this->pager->getOffset();
     }
 
     if (isset($this->offset)) {

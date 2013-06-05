@@ -361,7 +361,7 @@ abstract class SqlBase extends PagerPluginBase {
         '#size' => 10,
         '#maxlength' => 10,
         '#title' => $this->options['expose']['offset_label'],
-        '#default_value' => $this->get_offset(),
+        '#default_value' => $this->getOffset(),
       );
     }
   }

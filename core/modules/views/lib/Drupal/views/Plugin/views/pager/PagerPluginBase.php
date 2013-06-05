@@ -87,7 +87,7 @@ abstract class PagerPluginBase extends PluginBase {
    * Even pagers that don't actually page can skip items at the beginning,
    * so few pagers will need to override this method.
    */
-  function get_offset() {
+  public function getOffset() {
     return isset($this->options['offset']) ? $this->options['offset'] : 0;
   }
 
