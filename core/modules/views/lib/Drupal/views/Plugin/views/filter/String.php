@@ -83,7 +83,7 @@ class String extends FilterPluginBase {
       'ends' => array(
         'title' => t('Ends with'),
         'short' => t('ends'),
-        'method' => 'op_ends',
+        'method' => 'opEndsWith',
         'values' => 1,
       ),
       'not_ends' => array(
@@ -309,7 +309,7 @@ class String extends FilterPluginBase {
     $this->query->add_where($this->options['group'], $field, db_like($this->value) . '%', 'NOT LIKE');
   }
 
-  function op_ends($field) {
+  protected function opEndsWith($field) {
     $this->query->add_where($this->options['group'], $field, '%' . db_like($this->value), 'LIKE');
   }
 
