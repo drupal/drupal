@@ -240,7 +240,7 @@ abstract class FilterPluginBase extends HandlerBase {
       $this->validateExposeForm($form, $form_state);
     }
     if ($this->isAGroup()) {
-      $this->build_group_validate($form, $form_state);
+      $this->buildGroupValidate($form, $form_state);
     }
   }
 
@@ -619,7 +619,7 @@ abstract class FilterPluginBase extends HandlerBase {
    /**
    * Validate the build group options form.
    */
-  function build_group_validate($form, &$form_state) {
+  protected function buildGroupValidate($form, &$form_state) {
     if (!empty($form_state['values']['options']['group_info'])) {
       if (empty($form_state['values']['options']['group_info']['identifier'])) {
         form_error($form['group_info']['identifier'], t('The identifier is required if the filter is exposed.'));

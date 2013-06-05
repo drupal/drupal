@@ -105,7 +105,7 @@ class Date extends Numeric {
   /**
    * Validate the build group options form.
    */
-  function build_group_validate($form, &$form_state) {
+  protected function buildGroupValidate($form, &$form_state) {
     // Special case to validate grouped date filters, this is because the
     // $group['value'] array contains the type of filter (date or offset)
     // and therefore the number of items the comparission has to be done
