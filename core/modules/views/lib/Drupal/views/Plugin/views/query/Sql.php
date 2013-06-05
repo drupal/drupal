@@ -158,7 +158,7 @@ class Sql extends QueryPluginBase {
    * @param bool $value
    *   Should the view by distincted.
    */
-  function set_distinct($value = TRUE) {
+  protected function setDistinct($value = TRUE) {
     if (!(isset($this->no_distinct) && $value)) {
       $this->distinct = $value;
     }
@@ -1369,7 +1369,7 @@ class Sql extends QueryPluginBase {
   function build(ViewExecutable $view) {
     // Make the query distinct if the option was set.
     if (!empty($this->options['distinct'])) {
-      $this->set_distinct(TRUE);
+      $this->setDistinct(TRUE);
     }
 
     // Store the view in the object to be able to use it later.
