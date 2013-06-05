@@ -325,7 +325,7 @@ abstract class FieldPluginBase extends HandlerBase {
         }
       }
 
-      $value = strip_tags($this->render_altered($fake_item, $tokens));
+      $value = strip_tags($this->renderAltered($fake_item, $tokens));
       if (!empty($this->options['alter']['trim_whitespace'])) {
         $value = trim($value);
       }
@@ -1208,7 +1208,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
 
     if (!empty($alter['alter_text']) && $alter['text'] !== '') {
       $tokens = $this->getRenderTokens($alter);
-      $value = $this->render_altered($alter, $tokens);
+      $value = $this->renderAltered($alter, $tokens);
     }
 
     if (!empty($this->options['alter']['trim_whitespace'])) {
@@ -1279,7 +1279,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
   /**
    * Render this field as altered text, from a fieldset set by the user.
    */
-  function render_altered($alter, $tokens) {
+  protected function renderAltered($alter, $tokens) {
     // Filter this right away as our substitutions are already sanitized.
     $value = filter_xss_admin($alter['text']);
     $value = strtr($value, $tokens);
