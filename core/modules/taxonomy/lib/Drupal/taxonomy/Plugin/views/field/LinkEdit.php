@@ -55,7 +55,7 @@ class LinkEdit extends FieldPluginBase {
 
   function render($values) {
     // Check there is an actual value, as on a relationship there may not be.
-    if ($tid = $this->get_value($values, 'tid')) {
+    if ($tid = $this->getValue($values, 'tid')) {
       // Mock a term object for taxonomy_term_access(). Use machine name and
       // vid to ensure compatibility with vid based and machine name based
       // access checks. See http://drupal.org/node/995156

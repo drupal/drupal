@@ -69,11 +69,11 @@ class Taxonomy extends FieldPluginBase {
    * Data should be made XSS safe prior to calling this function.
    */
   function render_link($data, $values) {
-    $tid = $this->get_value($values, 'tid');
+    $tid = $this->getValue($values, 'tid');
     if (!empty($this->options['link_to_taxonomy']) && !empty($tid) && $data !== NULL && $data !== '') {
       $term = entity_create('taxonomy_term', array(
         'tid' => $tid,
-        'vid' => $this->get_value($values, 'vid'),
+        'vid' => $this->getValue($values, 'vid'),
       ));
       $this->options['alter']['make_link'] = TRUE;
       $uri = $term->uri();
@@ -88,7 +88,7 @@ class Taxonomy extends FieldPluginBase {
   }
 
   function render($values) {
-    $value = $this->get_value($values);
+    $value = $this->getValue($values);
     return $this->render_link($this->sanitizeValue($value), $values);
   }
 

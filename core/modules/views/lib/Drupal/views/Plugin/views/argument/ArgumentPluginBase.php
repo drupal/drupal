@@ -991,7 +991,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
   /**
    * Get the value of this argument.
    */
-  function get_value() {
+  public function getValue() {
     // If we already processed this argument, we're done.
     if (isset($this->argument)) {
       return $this->argument;

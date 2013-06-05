@@ -51,7 +51,7 @@ class Type extends Node {
   }
 
   function render($values) {
-    $value = $this->get_value($values);
+    $value = $this->getValue($values);
     return $this->render_link($this->render_name($value, $values), $values);
   }
 

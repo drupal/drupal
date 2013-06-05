@@ -24,7 +24,7 @@ class LinkApprove extends Link {
   }
 
   function render_link($data, $values) {
-    $status = $this->get_value($values, 'status');
+    $status = $this->getValue($values, 'status');
 
     // Don't show an approve link on published nodes.
     if ($status == COMMENT_PUBLISHED) {
@@ -32,7 +32,7 @@ class LinkApprove extends Link {
     }
 
     $text = !empty($this->options['text']) ? $this->options['text'] : t('approve');
-    $cid =  $this->get_value($values, 'cid');
+    $cid =  $this->getValue($values, 'cid');
 
     $this->options['alter']['make_link'] = TRUE;
     $this->options['alter']['path'] = "comment/" . $cid . "/approve";

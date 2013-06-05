@@ -67,10 +67,10 @@ class Node extends FieldPluginBase {
     if (!empty($this->options['link_to_node']) && !empty($this->additional_fields['nid'])) {
       if ($data !== NULL && $data !== '') {
         $this->options['alter']['make_link'] = TRUE;
-        $this->options['alter']['path'] = "node/" . $this->get_value($values, 'nid');
+        $this->options['alter']['path'] = "node/" . $this->getValue($values, 'nid');
         if (isset($this->aliases['langcode'])) {
           $languages = language_list();
-          $langcode = $this->get_value($values, 'langcode');
+          $langcode = $this->getValue($values, 'langcode');
           if (isset($languages[$langcode])) {
             $this->options['alter']['language'] = $languages[$langcode];
           }
@@ -87,7 +87,7 @@ class Node extends FieldPluginBase {
   }
 
   function render($values) {
-    $value = $this->get_value($values);
+    $value = $this->getValue($values);
     return $this->render_link($this->sanitizeValue($value), $values);
   }
 

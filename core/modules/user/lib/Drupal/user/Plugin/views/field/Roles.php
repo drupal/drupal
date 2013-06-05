@@ -40,7 +40,7 @@ class Roles extends PrerenderList {
     $this->items = array();
 
     foreach ($values as $result) {
-      $uids[] = $this->get_value($result);
+      $uids[] = $this->getValue($result);
     }
 
     if ($uids) {

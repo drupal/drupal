@@ -20,7 +20,7 @@ class Language extends Taxonomy {
    * Overrides Drupal\taxonomy\Plugin\views\field\Taxonomy::render().
    */
   public function render($values) {
-    $value = $this->get_value($values);
+    $value = $this->getValue($values);
     $language = language_load($value);
     $value = $language ? $language->name : '';
 

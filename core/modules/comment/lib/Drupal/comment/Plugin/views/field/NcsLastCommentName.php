@@ -60,14 +60,14 @@ class NcsLastCommentName extends FieldPluginBase {
   function render($values) {
     if (!empty($this->options['link_to_user'])) {
       $account = entity_create('user', array());
-      $account->name = $this->get_value($values);
+      $account->name = $this->getValue($values);
       $account->uid = $values->{$this->uid};
       return theme('username', array(
         'account' => $account
       ));
     }
     else {
-      return $this->sanitizeValue($this->get_value($values));
+      return $this->sanitizeValue($this->getValue($values));
     }
   }
 

@@ -78,7 +78,7 @@ class UserData extends FieldPluginBase {
    * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::render().
    */
   function render($values) {
-    $uid = $this->get_value($values);
+    $uid = $this->getValue($values);
     $data = $this->userData->get($this->options['module'], $uid, $this->options['name']);
 
     // Don't sanitize if no value was found.

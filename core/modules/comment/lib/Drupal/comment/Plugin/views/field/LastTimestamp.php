@@ -31,7 +31,7 @@ class LastTimestamp extends Date {
   }
 
   function render($values) {
-    $comment_count = $this->get_value($values, 'comment_count');
+    $comment_count = $this->getValue($values, 'comment_count');
     if (empty($this->options['empty_zero']) || $comment_count) {
       return parent::render($values);
     }

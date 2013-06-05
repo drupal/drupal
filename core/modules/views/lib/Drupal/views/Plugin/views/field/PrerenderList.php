@@ -100,7 +100,7 @@ class PrerenderList extends FieldPluginBase {
    * should also be in this array.
    */
   function get_items($values) {
-    $field = $this->get_value($values);
+    $field = $this->getValue($values);
     if (!empty($this->items[$field])) {
       return $this->items[$field];
     }

@@ -20,7 +20,7 @@ use Drupal\Component\Annotation\PluginID;
 class NodeComment extends FieldPluginBase {
 
   function render($values) {
-    $value = $this->get_value($values);
+    $value = $this->getValue($values);
     switch ($value) {
       case COMMENT_NODE_HIDDEN:
       default:

@@ -25,8 +25,8 @@ class LinkReply extends Link {
 
   function render_link($data, $values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('reply');
-    $nid =  $this->get_value($values, 'nid');
-    $cid =  $this->get_value($values, 'cid');
+    $nid =  $this->getValue($values, 'nid');
+    $cid =  $this->getValue($values, 'cid');
 
     $this->options['alter']['make_link'] = TRUE;
     $this->options['alter']['path'] = "comment/reply/" . $nid . '/' . $cid;

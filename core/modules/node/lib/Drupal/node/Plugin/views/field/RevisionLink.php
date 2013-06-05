@@ -66,7 +66,7 @@ class RevisionLink extends Link {
    *   revision ID for this row.
    */
   function get_revision_entity($values, $op) {
-    $vid = $this->get_value($values, 'node_vid');
+    $vid = $this->getValue($values, 'node_vid');
     $node = $this->get_entity($values);
     // Unpublished nodes ignore access control.
     $node->status = 1;

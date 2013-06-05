@@ -388,7 +388,7 @@ abstract class FieldPluginBase extends HandlerBase {
    * @param $field
    *   Optional name of the field where the value is stored.
    */
-  function get_value($values, $field = NULL) {
+  public function getValue($values, $field = NULL) {
     $alias = isset($field) ? $this->aliases[$field] : $this->field_alias;
     if (isset($values->{$alias})) {
       return $values->{$alias};
@@ -1098,7 +1098,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
    *   The values retrieved from the database.
    */
   function render($values) {
-    $value = $this->get_value($values);
+    $value = $this->getValue($values);
     return $this->sanitizeValue($value);
   }
 

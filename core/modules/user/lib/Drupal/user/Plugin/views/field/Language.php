@@ -19,9 +19,9 @@ use Drupal\Component\Annotation\PluginID;
 class Language extends User {
 
   function render_link($data, $values) {
-    $uid = $this->get_value($values, 'uid');
+    $uid = $this->getValue($values, 'uid');
     if (!empty($this->options['link_to_user'])) {
-      $uid = $this->get_value($values, 'uid');
+      $uid = $this->getValue($values, 'uid');
       if (user_access('access user profiles') && $uid) {
         $this->options['alter']['make_link'] = TRUE;
         $this->options['alter']['path'] = 'user/' . $uid;
@@ -39,7 +39,7 @@ class Language extends User {
   }
 
   function render($values) {
-    $value = $this->get_value($values);
+    $value = $this->getValue($values);
     return $this->render_link($this->sanitizeValue($value), $values);
   }
 

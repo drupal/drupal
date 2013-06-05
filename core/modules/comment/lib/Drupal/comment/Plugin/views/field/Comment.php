@@ -64,8 +64,8 @@ class Comment extends FieldPluginBase {
   function render_link($data, $values) {
     if (!empty($this->options['link_to_comment'])) {
       $this->options['alter']['make_link'] = TRUE;
-      $nid = $this->get_value($values, 'nid');
-      $cid = $this->get_value($values, 'cid');
+      $nid = $this->getValue($values, 'nid');
+      $cid = $this->getValue($values, 'cid');
       if (!empty($cid)) {
         $this->options['alter']['path'] = "comment/" . $cid;
         $this->options['alter']['fragment'] = "comment-" . $cid;
@@ -80,7 +80,7 @@ class Comment extends FieldPluginBase {
   }
 
   function render($values) {
-    $value = $this->get_value($values);
+    $value = $this->getValue($values);
     return $this->render_link($this->sanitizeValue($value), $values);
   }
 

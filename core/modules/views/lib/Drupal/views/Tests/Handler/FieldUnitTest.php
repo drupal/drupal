@@ -85,13 +85,13 @@ class FieldUnitTest extends ViewUnitTestBase {
     $this->assertEqual($id_field->aliases['created_test'], 'views_test_data_created');
 
     $this->executeView($view);
-    // Tests the get_value method with and without a field aliases.
+    // Tests the getValue method with and without a field aliases.
     foreach ($this->dataSet() as $key => $row) {
       $id = $key + 1;
       $result = $view->result[$key];
-      $this->assertEqual($id_field->get_value($result), $id);
-      $this->assertEqual($id_field->get_value($result, 'job'), $row['job']);
-      $this->assertEqual($id_field->get_value($result, 'created_test'), $row['created']);
+      $this->assertEqual($id_field->getValue($result), $id);
+      $this->assertEqual($id_field->getValue($result, 'job'), $row['job']);
+      $this->assertEqual($id_field->getValue($result, 'created_test'), $row['created']);
     }
   }
 

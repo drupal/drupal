@@ -676,7 +676,7 @@ abstract class StylePluginBase extends PluginBase {
   */
   protected function getFieldValue($index, $field) {
     $this->view->row_index = $index;
-    $value = $this->view->field[$field]->get_value($this->view->result[$index]);
+    $value = $this->view->field[$field]->getValue($this->view->result[$index]);
     unset($this->view->row_index);
     return $value;
   }
