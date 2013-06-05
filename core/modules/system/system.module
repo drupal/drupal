@@ -974,17 +974,7 @@ function system_menu() {
   $items['admin/reports/status'] = array(
     'title' => 'Status report',
     'description' => "Get a status report about your site's operation and any detected problems.",
-    'page callback' => 'system_status',
-    'weight' => -60,
-    'access arguments' => array('administer site configuration'),
-    'file' => 'system.admin.inc',
-  );
-  $items['admin/reports/status/php'] = array(
-    'title' => 'PHP',
-    'page callback' => 'system_php',
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_CALLBACK,
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_status',
   );
 
   // Default page for batch operations.
@@ -3244,19 +3234,6 @@ function system_config_form($form, &$form_state) {
  */
 function system_config_form_submit($form, &$form_state) {
   drupal_set_message(t('The configuration options have been saved.'));
-}
-
-/**
- * Helper function to sort requirements.
- */
-function _system_sort_requirements($a, $b) {
-  if (!isset($a['weight'])) {
-    if (!isset($b['weight'])) {
-      return strcmp($a['title'], $b['title']);
-    }
-    return -$b['weight'];
-  }
-  return isset($b['weight']) ? $a['weight'] - $b['weight'] : $a['weight'];
 }
 
 /**

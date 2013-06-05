@@ -19,7 +19,8 @@ use Drupal\system\Form\ModulesUninstallConfirmForm;
  */
 function system_admin_config_page() {
   // Check for status report errors.
-  if (system_status(TRUE) && user_access('administer site configuration')) {
+  // @todo Use depedancy injection in http://drupal.org/node/1987810.
+  if (Drupal::service('system.manager')->checkRequirements() && user_access('administer site configuration')) {
     drupal_set_message(t('One or more problems were detected with your Drupal installation. Check the <a href="@status">status report</a> for more information.', array('@status' => url('admin/reports/status'))), 'error');
   }
   $blocks = array();
@@ -1276,43 +1277,6 @@ function system_modules_uninstall_submit($form, &$form_state) {
     $form_state['storage'] = $form_state['values'];
     $form_state['rebuild'] = TRUE;
   }
-}
-
-/**
- * Menu callback: displays the site status report. Can also be used as a pure check.
- *
- * @param $check
- *   If true, only returns a boolean whether there are system status errors.
- */
-function system_status($check = FALSE) {
-  // Load .install files
-  include_once DRUPAL_ROOT . '/core/includes/install.inc';
-  drupal_load_updates();
-
-  // Check run-time requirements and status information.
-  $requirements = module_invoke_all('requirements', 'runtime');
-  usort($requirements, '_system_sort_requirements');
-
-  if ($check) {
-    return drupal_requirements_severity($requirements) == REQUIREMENT_ERROR;
-  }
-  // MySQL import might have set the uid of the anonymous user to autoincrement
-  // value. Let's try fixing it. See http://drupal.org/node/204411
-  db_update('users')
-    ->expression('uid', 'uid - uid')
-    ->condition('name', '')
-    ->condition('pass', '')
-    ->condition('status', 0)
-    ->execute();
-  return theme('status_report', array('requirements' => $requirements));
-}
-
-/**
- * Menu callback: return information about PHP.
- */
-function system_php() {
-  phpinfo();
-  drupal_exit();
 }
 
 /**

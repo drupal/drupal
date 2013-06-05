@@ -122,3 +122,18 @@ system_theme_enable:
     _controller: 'Drupal\system\Controller\ThemeController::enable'
   requirements:
     _permission: 'administer themes'
+
+system_status:
+  pattern: '/admin/reports/status'
+  defaults:
+    _controller: 'Drupal\system\Controller\SystemInfoController::status'
+  requirements:
+    _permission: 'administer site configuration'
+
+system_php:
+  pattern: '/admin/reports/status/php'
+  defaults:
+    _controller: 'Drupal\system\Controller\SystemInfoController::php'
+  requirements:
+    _permission: 'administer site configuration'
+

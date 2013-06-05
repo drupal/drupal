@@ -6,3 +6,6 @@ services:
   plugin.manager.system.plugin_ui:
     class: Drupal\system\Plugin\Type\PluginUIManager
     arguments: ['@container.namespaces']
+  system.manager:
+    class: Drupal\system\SystemManager
+    arguments: ['@module_handler', '@database']
