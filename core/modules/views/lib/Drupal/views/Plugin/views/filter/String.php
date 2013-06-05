@@ -71,7 +71,7 @@ class String extends FilterPluginBase {
       'starts' => array(
         'title' => t('Starts with'),
         'short' => t('begins'),
-        'method' => 'op_starts',
+        'method' => 'opStartsWith',
         'values' => 1,
       ),
       'not_starts' => array(
@@ -301,7 +301,7 @@ class String extends FilterPluginBase {
     $this->query->add_where($this->options['group'], $where);
   }
 
-  function op_starts($field) {
+  protected function opStartsWith($field) {
     $this->query->add_where($this->options['group'], $field, db_like($this->value) . '%', 'LIKE');
   }
 
