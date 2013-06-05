@@ -884,7 +884,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * @param $data
    *   The query results for the row.
    */
-  function summary_argument($data) {
+ public function summaryArgument($data) {
     return $data->{$this->base_alias};
   }
 

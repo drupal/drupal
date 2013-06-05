@@ -14,7 +14,7 @@ use Drupal\views\ViewExecutable;
 /**
  * Abstract argument handler for simple formulae.
  *
- * Child classes of this object should implement summary_argument, at least.
+ * Child classes of this object should implement summaryArgument, at least.
  *
  * Definition terms:
  * - formula: The formula to use for this handler.

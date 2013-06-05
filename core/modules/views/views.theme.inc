@@ -433,7 +433,7 @@ function template_preprocess_views_view_summary(&$vars) {
   $row_args = array();
 
   foreach ($vars['rows'] as $id => $row) {
-    $row_args[$id] = $argument->summary_argument($row);
+    $row_args[$id] = $argument->summaryArgument($row);
   }
   $argument->process_summary_arguments($row_args);
 
@@ -493,7 +493,7 @@ function template_preprocess_views_view_summary_unformatted(&$vars) {
   // this could cause performance problems.
   $row_args = array();
   foreach ($vars['rows'] as $id => $row) {
-    $row_args[$id] = $argument->summary_argument($row);
+    $row_args[$id] = $argument->summaryArgument($row);
   }
   $argument->process_summary_arguments($row_args);
 

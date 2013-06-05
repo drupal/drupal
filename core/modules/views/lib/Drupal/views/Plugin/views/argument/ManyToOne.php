@@ -184,7 +184,7 @@ class ManyToOne extends ArgumentPluginBase {
     return $this->summaryBasics();
   }
 
-  function summary_argument($data) {
+  public function summaryArgument($data) {
     $value = $data->{$this->base_alias};
     if (empty($value)) {
       $value = 0;
