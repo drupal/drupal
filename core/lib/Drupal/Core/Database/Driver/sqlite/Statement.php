@@ -16,10 +16,11 @@ use PDOException;
 /**
  * Specific SQLite implementation of DatabaseConnection.
  *
- * See DatabaseConnection_sqlite::PDOPrepare() for reasons why we must prefetch
- * the data instead of using PDOStatement.
- *
- * @see DatabaseConnection_sqlite::PDOPrepare()
+ * The PDO SQLite driver only closes SELECT statements when the PDOStatement
+ * destructor is called and SQLite does not allow data change (INSERT,
+ * UPDATE etc) on a table which has open SELECT statements. This is a
+ * user-space mock of PDOStatement that buffers all the data and doesn't
+ * have those limitations.
  */
 class Statement extends StatementPrefetch implements Iterator, StatementInterface {
 
@@ -86,7 +87,7 @@ class Statement extends StatementPrefetch implements Iterator, StatementInterfac
       }
     }
 
-    return $this->dbh->PDOPrepare($query);
+    return $this->dbh->prepare($query);
   }
 
   public function execute($args = array(), $options = array()) {

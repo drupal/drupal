@@ -229,7 +229,7 @@ class Connection extends DatabaseConnection {
   /**
    * SQLite compatibility implementation for the RAND() SQL function.
    */
-  public function sqlFunctionRand($seed = NULL) {
+  public static function sqlFunctionRand($seed = NULL) {
     if (isset($seed)) {
       mt_srand($seed);
     }
@@ -243,24 +243,8 @@ class Connection extends DatabaseConnection {
    * a Statement object, that will create a PDOStatement
    * using the semi-private PDOPrepare() method below.
    */
-  public function prepare($query, $options = array()) {
-    return new Statement($this, $query, $options);
-  }
-
-  /**
-   * NEVER CALL THIS FUNCTION: YOU MIGHT DEADLOCK YOUR PHP PROCESS.
-   *
-   * This is a wrapper around the parent PDO::prepare method. However, as
-   * the PDO SQLite driver only closes SELECT statements when the PDOStatement
-   * destructor is called and SQLite does not allow data change (INSERT,
-   * UPDATE etc) on a table which has open SELECT statements, you should never
-   * call this function and keep a PDOStatement object alive as that can lead
-   * to a deadlock. This really, really should be private, but as Statement
-   * needs to call it, we have no other choice but to expose this function to
-   * the world.
-   */
-  public function PDOPrepare($query, array $options = array()) {
-    return $this->connection->prepare($query, $options);
+  public function prepare($statement, array $driver_options = array()) {
+    return new Statement($this->connection, $this, $statement, $driver_options);
   }
 
   public function queryRange($query, $from, $count, array $args = array(), array $options = array()) {
@@ -310,10 +294,6 @@ class Connection extends DatabaseConnection {
       'NOT LIKE' => array('postfix' => " ESCAPE '\\'"),
     );
     return isset($specials[$operator]) ? $specials[$operator] : NULL;
-  }
-
-  public function prepareQuery($query) {
-    return $this->prepare($this->prefixTables($query));
   }
 
   public function nextId($existing_id = 0) {
@@ -382,7 +362,7 @@ class Connection extends DatabaseConnection {
       throw new TransactionNameNonUniqueException($name . " is already in use.");
     }
     if (!$this->inTransaction()) {
-      PDO::beginTransaction();
+      $this->connection->beginTransaction();
     }
     $this->transactionLayers[$name] = $name;
   }
