@@ -630,7 +630,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $view = entity_create('view', $values);
 
     // Build all display options for this view.
-    $display_options = $this->build_display_options($form, $form_state);
+    $display_options = $this->buildDisplayOptions($form, $form_state);
 
     // Allow the fully built options to be altered. This happens before adding
     // the options to the view, so that once they are eventually added we will
@@ -649,7 +649,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   An array whose keys are the names of each display and whose values are
    *   arrays of options for that display.
    */
-  protected function build_display_options($form, $form_state) {
+  protected function buildDisplayOptions($form, $form_state) {
     // Display: Master
     $display_options['default'] = $this->defaultDisplayOptions();
     $display_options['default'] += array(
