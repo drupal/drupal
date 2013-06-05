@@ -2,19 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\edit\Plugin\edit\editor\DirectEditor.
+ * Contains \Drupal\edit\Plugin\InPlaceEditor\DirectEditor.
  */
 
-namespace Drupal\edit\Plugin\edit\editor;
+namespace Drupal\edit\Plugin\InPlaceEditor;
 
 use Drupal\edit\EditorBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\edit\Annotation\InPlaceEditor;
 use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
  * Defines the direct editor.
  *
- * @Plugin(
+ * @InPlaceEditor(
  *   id = "direct",
  *   module = "edit"
  * )

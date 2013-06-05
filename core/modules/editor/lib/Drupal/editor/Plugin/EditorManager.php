@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\editor\Plugin\EditorManager.
+ * Contains \Drupal\editor\Plugin\InPlaceEditorManager.
  */
 
 namespace Drupal\editor\Plugin;

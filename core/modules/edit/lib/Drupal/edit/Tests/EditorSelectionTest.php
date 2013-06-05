@@ -7,7 +7,7 @@
 
 namespace Drupal\edit\Tests;
 
-use Drupal\edit\Plugin\EditorManager;
+use Drupal\edit\Plugin\InPlaceEditorManager;
 use Drupal\edit\EditorSelector;
 
 /**

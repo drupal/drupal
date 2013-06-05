@@ -2,19 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\edit\Plugin\edit\editor\FormEditor.
+ * Contains \Drupal\edit\Plugin\InPlaceEditor\FormEditor.
  */
 
-namespace Drupal\edit\Plugin\edit\editor;
+namespace Drupal\edit\Plugin\InPlaceEditor;
 
 use Drupal\edit\EditorBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\edit\Annotation\InPlaceEditor;
 use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
  * Defines the form editor.
  *
- * @Plugin(
+ * @InPlaceEditor(
  *   id = "form",
  *   module = "edit"
  * )

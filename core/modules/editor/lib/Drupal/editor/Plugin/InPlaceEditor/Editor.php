@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\editor\Plugin\edit\editor\Editor.
+ * Contains \Drupal\editor\Plugin\InPlaceEditor\Editor.
  */
 
-namespace Drupal\editor\Plugin\edit\editor;
+namespace Drupal\editor\Plugin\InPlaceEditor;
 
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\edit\Annotation\InPlaceEditor;
 use Drupal\Core\Annotation\Translation;
 use Drupal\edit\EditPluginInterface;
 use Drupal\field\Plugin\Core\Entity\FieldInstance;
@@ -16,7 +16,7 @@ use Drupal\field\Plugin\Core\Entity\FieldInstance;
 /**
  * Defines the formatted text editor.
  *
- * @Plugin(
+ * @InPlaceEditor(
  *   id = "editor",
  *   alternativeTo = {"direct"},
  *   module = "editor"

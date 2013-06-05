@@ -2,19 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\edit_test\Plugin\edit\editor\WysiwygEditor.
+ * Contains \Drupal\edit_test\Plugin\InPlaceEditor\WysiwygEditor.
  */
 
-namespace Drupal\edit_test\Plugin\edit\editor;
+namespace Drupal\edit_test\Plugin\InPlaceEditor;
 
 use Drupal\edit\EditorBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\edit\Annotation\InPlaceEditor;
 use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
  * Defines the wysiwyg editor.
  *
- * @Plugin(
+ * @InPlaceEditor(
  *   id = "wysiwyg",
  *   alternativeTo = {"direct"},
  *   module = "edit_test"

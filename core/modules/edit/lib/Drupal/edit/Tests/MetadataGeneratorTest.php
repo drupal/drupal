@@ -10,7 +10,7 @@ namespace Drupal\edit\Tests;
 use Drupal\Core\Language\Language;
 use Drupal\edit\EditorSelector;
 use Drupal\edit\MetadataGenerator;
-use Drupal\edit\Plugin\EditorManager;
+use Drupal\edit\Plugin\InPlaceEditorManager;
 use Drupal\edit_test\MockEditEntityFieldAccessCheck;
 
 /**
