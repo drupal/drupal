@@ -1152,7 +1152,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
       if (is_array($value)) {
         $value = drupal_render($value);
       }
-      // This happens here so that render_as_link can get the unaltered value of
+      // This happens here so that renderAsLink can get the unaltered value of
       // this field as a token rather than the altered value.
       $this->last_render = $value;
     }
@@ -1270,7 +1270,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
       if (!isset($tokens)) {
         $tokens = $this->getRenderTokens($alter);
       }
-      $value = $this->render_as_link($alter, $value, $tokens);
+      $value = $this->renderAsLink($alter, $value, $tokens);
     }
 
     return $value . $suffix;
@@ -1303,7 +1303,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
    * Render this field as a link, with the info from a fieldset set by
    * the user.
    */
-  function render_as_link($alter, $text, $tokens) {
+  protected function renderAsLink($alter, $text, $tokens) {
     $value = '';
 
     if (!empty($alter['prefix'])) {
