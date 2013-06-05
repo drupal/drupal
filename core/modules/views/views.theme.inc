@@ -366,7 +366,7 @@ function theme_views_view_fields($variables) {
  *   - title: The group heading.
   */
 function template_preprocess_views_view_grouping(&$vars) {
-  $vars['content'] = $vars['view']->style_plugin->render_grouping_sets($vars['rows'], $vars['grouping_level']);
+  $vars['content'] = $vars['view']->style_plugin->renderGroupingSets($vars['rows'], $vars['grouping_level']);
 }
 
 /**

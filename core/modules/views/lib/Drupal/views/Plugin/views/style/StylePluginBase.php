@@ -90,7 +90,7 @@ abstract class StylePluginBase extends PluginBase {
    *
    * @var string
    *
-   * @see StylePluginBase::render_grouping_sets()
+   * @see StylePluginBase::renderGroupingSets()
    */
   protected $groupingTheme = 'views_view_grouping';
 
@@ -438,7 +438,7 @@ abstract class StylePluginBase extends PluginBase {
       TRUE
     );
 
-    return $this->render_grouping_sets($sets);
+    return $this->renderGroupingSets($sets);
   }
 
   /**
@@ -455,7 +455,7 @@ abstract class StylePluginBase extends PluginBase {
    * @return string
    *   Rendered output of given grouping sets.
    */
-  function render_grouping_sets($sets, $level = 0) {
+  public function renderGroupingSets($sets, $level = 0) {
     $output = array();
     $theme_functions = views_theme_functions($this->groupingTheme, $this->view, $this->view->display_handler->display);
     foreach ($sets as $set) {
