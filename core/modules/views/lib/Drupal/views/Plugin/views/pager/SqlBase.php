@@ -335,7 +335,7 @@ abstract class SqlBase extends PagerPluginBase {
     return !empty($this->options['expose']['offset']);
   }
 
-  function exposed_form_alter(&$form, &$form_state) {
+  public function exposedFormAlter(&$form, &$form_state) {
     if ($this->itemsPerPageExposed()) {
       $options = explode(',', $this->options['expose']['items_per_page_options']);
       $sanitized_options = array();

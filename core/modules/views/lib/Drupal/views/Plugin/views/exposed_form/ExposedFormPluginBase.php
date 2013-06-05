@@ -182,7 +182,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
 
   public function postExecute() { }
 
-  function exposed_form_alter(&$form, &$form_state) {
+  public function exposedFormAlter(&$form, &$form_state) {
     $form['submit']['#value'] = $this->options['submit_button'];
     // Check if there is exposed sorts for this view
     $exposed_sorts = array();
@@ -249,7 +249,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
 
     $pager = $this->view->display_handler->getPlugin('pager');
     if ($pager) {
-      $pager->exposed_form_alter($form, $form_state);
+      $pager->exposedFormAlter($form, $form_state);
       $form_state['pager_plugin'] = $pager;
     }
   }

@@ -239,7 +239,7 @@ abstract class PagerPluginBase extends PluginBase {
       && $this->total_items > (intval($this->current_page) + 1) * $this->get_items_per_page();
   }
 
-  function exposed_form_alter(&$form, &$form_state) { }
+  public function exposedFormAlter(&$form, &$form_state) { }
 
   function exposed_form_validate(&$form, &$form_state) { }
 

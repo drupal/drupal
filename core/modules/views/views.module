@@ -1416,7 +1416,7 @@ function views_exposed_form($form, &$form_state) {
 //  $form['#attributes']['class'] = array('views-exposed-form');
 
   $exposed_form_plugin = $form_state['exposed_form_plugin'];
-  $exposed_form_plugin->exposed_form_alter($form, $form_state);
+  $exposed_form_plugin->exposedFormAlter($form, $form_state);
 
   // Save the form
   views_exposed_form_cache($view->storage->id(), $view->current_display, $form);
