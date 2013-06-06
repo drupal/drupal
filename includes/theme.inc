@@ -1819,7 +1819,9 @@ function theme_breadcrumb($variables) {
  *     - "data": The localized title of the table column.
  *     - "field": The database field represented in the table column (required
  *       if user is to be able to sort on this column).
- *     - "sort": A default sort order for this column ("asc" or "desc").
+ *     - "sort": A default sort order for this column ("asc" or "desc"). Only
+ *       one column should be given a default sort order because table sorting
+ *       only applies to one column at a time.
  *     - Any HTML attributes, such as "colspan", to apply to the column header
  *       cell.
  *   - rows: An array of table rows. Every row is an array of cells, or an
