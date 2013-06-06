@@ -9,7 +9,7 @@ namespace Drupal\contact;
 
 use Drupal\Core\Entity\EntityFormController;
 use Drupal\Core\Language\Language;
-use Drupal\user\Plugin\Core\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * Form controller for contact message forms.
@@ -167,7 +167,7 @@ class MessageFormController extends EntityFormController {
       $to = implode(', ', $category->recipients);
       $recipient_langcode = language_default()->langcode;
     }
-    elseif ($message->recipient instanceof User) {
+    elseif ($message->recipient instanceof UserInterface) {
       // Send to the user in the user's preferred language.
       $to = $message->recipient->mail;
       $recipient_langcode = user_preferred_langcode($message->recipient);
@@ -211,7 +211,7 @@ class MessageFormController extends EntityFormController {
 
     // To avoid false error messages caused by flood control, redirect away from
     // the contact form; either to the contacted user account or the front page.
-    if ($message->recipient instanceof User && user_access('access user profiles')) {
+    if ($message->recipient instanceof UserInterface && user_access('access user profiles')) {
       $uri = $message->recipient->uri();
       $form_state['redirect'] = array($uri['path'], $uri['options']);
     }

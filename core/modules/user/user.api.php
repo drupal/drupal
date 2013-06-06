@@ -18,7 +18,7 @@ use Drupal\Core\Entity\EntityInterface;
  * This hook runs after a new user object has just been instantiated. It can be
  * used to set initial values, e.g. to provide defaults.
  *
- * @param \Drupal\user\Plugin\Core\Entity\User $user
+ * @param \Drupal\user\UserInterface $user
  *   The user object.
  */
 function hook_user_create(\Drupal\user\Plugin\Core\Entity\User $user) {
@@ -346,7 +346,7 @@ function hook_user_logout($account) {
  * The module should format its custom additions for display and add them to the
  * $account->content array.
  *
- * @param \Drupal\user\Plugin\Core\Entity\User $account
+ * @param \Drupal\user\UserInterface $account
  *   The user object on which the operation is being performed.
  * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
  *   The entity_display object holding the display options configured for the
@@ -359,7 +359,7 @@ function hook_user_logout($account) {
  * @see hook_user_view_alter()
  * @see hook_entity_view()
  */
-function hook_user_view(\Drupal\user\Plugin\Core\Entity\User $account, \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display, $view_mode, $langcode) {
+function hook_user_view(\Drupal\user\UserInterface $account, \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display, $view_mode, $langcode) {
   // Only do the extra work if the component is configured to be displayed.
   // This assumes a 'mymodule_addition' extra field has been defined for the
   // user entity type in hook_field_extra_fields().
@@ -386,7 +386,7 @@ function hook_user_view(\Drupal\user\Plugin\Core\Entity\User $account, \Drupal\e
  *
  * @param $build
  *   A renderable array representing the user.
- * @param \Drupal\user\Plugin\Core\Entity\User $account
+ * @param \Drupal\user\UserInterface $account
  *   The user account being rendered.
  * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
  *   The entity_display object holding the display options configured for the

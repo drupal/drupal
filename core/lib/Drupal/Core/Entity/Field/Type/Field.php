@@ -8,7 +8,7 @@
 namespace Drupal\Core\Entity\Field\Type;
 
 use Drupal\Core\Entity\Field\FieldInterface;
-use Drupal\user\Plugin\Core\Entity\User;
+use Drupal\user\UserInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\ItemList;
 
@@ -145,7 +145,7 @@ class Field extends ItemList implements FieldInterface {
   /**
    * Implements \Drupal\Core\TypedData\AccessibleInterface::access().
    */
-  public function access($operation = 'view', User $account = NULL) {
+  public function access($operation = 'view', UserInterface $account = NULL) {
     global $user;
     if (!isset($account) && $user->uid) {
       $account = user_load($user->uid);
@@ -190,7 +190,7 @@ class Field extends ItemList implements FieldInterface {
    * @return bool
    *   TRUE if access to this field is allowed per default, FALSE otherwise.
    */
-  public function defaultAccess($operation = 'view', User $account = NULL) {
+  public function defaultAccess($operation = 'view', UserInterface $account = NULL) {
     // Grant access per default.
     return TRUE;
   }

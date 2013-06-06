@@ -303,7 +303,7 @@ function user_admin_permissions($form, $form_state, $rid = NULL) {
     $role_names = array($rid => $role_names[$rid]);
   }
   // Fetch permissions for all roles or the one selected role.
-  $role_permissions = user_role_permissions($role_names);
+  $role_permissions = user_role_permissions(array_keys($role_names));
 
   // Store $role_names for use when saving the data.
   $form['role_names'] = array(

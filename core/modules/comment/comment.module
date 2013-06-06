@@ -1552,7 +1552,7 @@ function comment_prepare_author(Comment $comment) {
   if (!$account) {
     $account = entity_create('user', array('uid' => 0, 'name' => $comment->name->value, 'homepage' => $comment->homepage->value));
   }
-  return $account;
+  return $account->getBCEntity();
 }
 
 /**

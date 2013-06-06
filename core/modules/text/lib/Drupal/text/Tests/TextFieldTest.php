@@ -230,9 +230,7 @@ class TextFieldTest extends WebTestBase {
     $format = filter_format_load($edit['format']);
     $format_id = $format->format;
     $permission = filter_permission_name($format);
-    $roles = $this->web_user->roles;
-    unset($roles[DRUPAL_AUTHENTICATED_RID]);
-    $rid = key($roles);
+    $rid = $this->web_user->roles[0];
     user_role_grant_permissions($rid, array($permission));
     $this->drupalLogin($this->web_user);
 

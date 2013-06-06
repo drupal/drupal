@@ -60,8 +60,8 @@ class UserAdminTest extends WebTestBase {
 
     // Filter the users by role. Grab the system-generated role name for User C.
     $roles = $user_c->roles;
-    unset($roles[DRUPAL_AUTHENTICATED_RID]);
-    $edit['role'] = key($roles);
+    unset($roles[array_search(DRUPAL_AUTHENTICATED_RID, $roles)]);
+    $edit['role'] = reset($roles);
     $this->drupalPost('admin/people', $edit, t('Refine'));
 
     // Check if the correct users show up when filtered by role.

@@ -57,7 +57,7 @@ abstract class AccessPluginBase extends PluginBase {
   /**
    * Determine if the current user has access or not.
    *
-   * @param Drupal\user\User $account
+   * @param \Drupal\user\UserInterface $account
    *   The user who wants to access this view.
    *
    * @return TRUE

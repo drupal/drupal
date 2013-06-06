@@ -118,19 +118,19 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->assertTrue($entity->user_id[0] instanceof FieldItemInterface, format_string('%entity_type: Field item implements interface', array('%entity_type' => $entity_type)));
 
     $this->assertEqual($this->entity_user->uid, $entity->user_id->target_id, format_string('%entity_type: User id can be read.', array('%entity_type' => $entity_type)));
-    $this->assertEqual($this->entity_user->name, $entity->user_id->entity->name, format_string('%entity_type: User name can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($this->entity_user->name, $entity->user_id->entity->name->value, format_string('%entity_type: User name can be read.', array('%entity_type' => $entity_type)));
 
     // Change the assigned user by entity.
     $new_user = $this->createUser();
     $entity->user_id->entity = $new_user;
     $this->assertEqual($new_user->uid, $entity->user_id->target_id, format_string('%entity_type: Updated user id can be read.', array('%entity_type' => $entity_type)));
-    $this->assertEqual($new_user->name, $entity->user_id->entity->name, format_string('%entity_type: Updated user name value can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($new_user->name, $entity->user_id->entity->name->value, format_string('%entity_type: Updated user name value can be read.', array('%entity_type' => $entity_type)));
 
     // Change the assigned user by id.
     $new_user = $this->createUser();
     $entity->user_id->target_id = $new_user->uid;
     $this->assertEqual($new_user->uid, $entity->user_id->target_id, format_string('%entity_type: Updated user id can be read.', array('%entity_type' => $entity_type)));
-    $this->assertEqual($new_user->name, $entity->user_id->entity->name, format_string('%entity_type: Updated user name value can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($new_user->name, $entity->user_id->entity->name->value, format_string('%entity_type: Updated user name value can be read.', array('%entity_type' => $entity_type)));
 
     // Try unsetting a field.
     $entity->name->value = NULL;
@@ -218,7 +218,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
     ));
     $this->assertEqual($this->entity_name, $entity->name->value, format_string('%entity_type: Name value can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual($this->entity_user->uid, $entity->user_id->target_id, format_string('%entity_type: User id can be read.', array('%entity_type' => $entity_type)));
-    $this->assertEqual($this->entity_user->name, $entity->user_id->entity->name, format_string('%entity_type: User name can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($this->entity_user->name, $entity->user_id->entity->name->value, format_string('%entity_type: User name can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual($this->entity_field_text, $entity->field_test_text->value, format_string('%entity_type: Text field can be read.', array('%entity_type' => $entity_type)));
 
     // Test copying field values.
@@ -329,7 +329,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->assertEqual(Language::LANGCODE_NOT_SPECIFIED, $entity->langcode->value, format_string('%entity_type: Language code can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual(language_load(Language::LANGCODE_NOT_SPECIFIED), $entity->langcode->language, format_string('%entity_type: Language object can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual($this->entity_user->uid, $entity->user_id->target_id, format_string('%entity_type: User id can be read.', array('%entity_type' => $entity_type)));
-    $this->assertEqual($this->entity_user->name, $entity->user_id->entity->name, format_string('%entity_type: User name can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($this->entity_user->name, $entity->user_id->entity->name->value, format_string('%entity_type: User name can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual($this->entity_field_text, $entity->field_test_text->value, format_string('%entity_type: Text field can be read.', array('%entity_type' => $entity_type)));
   }
 

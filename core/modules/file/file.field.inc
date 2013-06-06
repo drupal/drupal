@@ -249,7 +249,7 @@ function file_field_update(EntityInterface $entity, $field, $instance, $langcode
   }
 
   // Compare the original field values with the ones that are being saved.
-  $original = $entity->original;
+  $original = $entity->original->getBCEntity();
   $original_fids = array();
   if (!empty($original->{$field['field_name']}[$langcode])) {
     foreach ($original->{$field['field_name']}[$langcode] as $original_item) {

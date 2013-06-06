@@ -54,11 +54,11 @@ abstract class AccessTestBase extends UserTestBase {
 
     $this->adminUser = $this->drupalCreateUser(array('access all views'));
     $this->webUser = $this->drupalCreateUser();
-    $this->webRole = current($this->webUser->roles);
+    $this->webRole = $this->webUser->roles[0];
 
     $this->normalRole = $this->drupalCreateRole(array());
     $this->normalUser = $this->drupalCreateUser(array('views_test_data test permission'));
-    $this->normalUser->roles[$this->normalRole] = $this->normalRole;
+    $this->normalUser->getNGEntity()->roles[2] = $this->normalRole;
     // @todo when all the plugin information is cached make a reset function and
     // call it here.
   }

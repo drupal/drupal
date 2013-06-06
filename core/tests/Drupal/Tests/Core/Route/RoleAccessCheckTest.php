@@ -106,17 +106,26 @@ class RoleAccessCheckTest extends UnitTestCase {
 
     // Setup one user with the first role, one with the second, one with both
     // and one final without any of these two roles.
-    $account_1 = new User(array('uid' => 1), 'user');
-    $account_1->roles[$rid_1] = $rid_1;
 
-    $account_2 = new User(array('uid' => 2), 'user');
-    $account_2->roles[$rid_2] = $rid_2;
+    $account_1 = (object) array(
+      'uid' => 1,
+      'roles' => array($rid_1),
+    );
 
-    $account_12 = new User(array('uid' => 3), 'user');
-    $account_12->roles[$rid_1] = $rid_1;
-    $account_12->roles[$rid_2] = $rid_2;
+    $account_2 = (object) array(
+      'uid' => 2,
+      'roles' => array($rid_2),
+    );
 
-    $account_none = new User(array('uid' => 4), 'user');
+    $account_12 = (object) array(
+      'uid' => 3,
+      'roles' => array($rid_1, $rid_2),
+    );
+
+    $account_none = (object) array(
+      'uid' => 1,
+      'roles' => array(),
+    );
 
     // Setup expected values; specify which paths can be accessed by which user.
     return array(
@@ -162,7 +171,7 @@ class RoleAccessCheckTest extends UnitTestCase {
       $GLOBALS['user'] = $account;
 
       $subrequest = Request::create($path, 'GET');
-      $message = sprintf('Access denied for user %s with the roles %s on path: %s', $account->id(), implode(', ', $account->roles), $path);
+      $message = sprintf('Access denied for user %s with the roles %s on path: %s', $account->uid, implode(', ', $account->roles), $path);
       $has_access = $role_access_check->access($collection->get($path), $subrequest);
       $this->assertEmpty($has_access , $message);
     }

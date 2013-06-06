@@ -20,7 +20,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\file\Plugin\Core\Entity\File;
-use Drupal\user\Plugin\Core\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * Denotes that the node is not published.
@@ -2490,7 +2490,7 @@ function node_access($op, $node, $account = NULL, $langcode = NULL) {
 
   // Make sure that if an account is passed, that it is a fully loaded user
   // object.
-  if ($account && !($account instanceof User)) {
+  if ($account && !($account instanceof UserInterface)) {
     $account = user_load($account->uid);
   }
 

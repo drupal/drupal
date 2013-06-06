@@ -8,7 +8,7 @@
 namespace Drupal\user;
 
 use Drupal\Core\Config\Context\ConfigContext;
-use Drupal\user\Plugin\Core\Entity\User;
+use Drupal\user\UserInterfaceInterface;
 
 
 /**
@@ -29,13 +29,13 @@ class UserConfigContext extends ConfigContext {
   /**
    * Creates the configuration context for user accounts.
    *
-   * @param \Drupal\user\Plugin\Core\Entity\User $account
+   * @param \Drupal\user\UserInterface $account
    *   The account to add to the config context.
    *
    * @return \Drupal\user\UserConfigContext
    *   The user config context object.
    */
-  public function setAccount(User $account) {
+  public function setAccount(UserInterface $account) {
     $this->set(self::USER_KEY, $account);
     // Re-initialize since the user change changes the context fundamentally.
     $this->init();

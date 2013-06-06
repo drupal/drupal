@@ -1367,7 +1367,7 @@ abstract class FilterPluginBase extends HandlerBase {
     // Check if we store exposed value for current user.
     global $user;
     $allowed_rids = empty($this->options['expose']['remember_roles']) ? array() : array_filter($this->options['expose']['remember_roles']);
-    $intersect_rids = array_intersect_key($allowed_rids, $user->roles);
+    $intersect_rids = array_intersect(array_keys($allowed_rids), $user->roles);
     if (empty($intersect_rids)) {
       return;
     }

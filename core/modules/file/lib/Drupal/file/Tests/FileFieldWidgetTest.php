@@ -241,7 +241,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $user = $this->drupalCreateUser(array('access comments'));
 
     // Grant the admin user required comment permissions.
-    user_role_grant_permissions(key($this->admin_user->roles), array('administer comment fields'));
+    user_role_grant_permissions($this->admin_user->roles[1], array('administer comment fields'));
 
     // Revoke access comments permission from anon user, grant post to
     // authenticated.

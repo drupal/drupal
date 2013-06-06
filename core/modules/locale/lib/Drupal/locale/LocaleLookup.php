@@ -46,7 +46,7 @@ class LocaleLookup extends CacheArray {
     // Add the current user's role IDs to the cache key, this ensures that, for
     // example, strings for admin menu items and settings forms are not cached
     // for anonymous users.
-    $rids = implode(':', array_keys($GLOBALS['user']->roles));
+    $rids = implode(':', $GLOBALS['user']->roles);
     parent::__construct("locale:$langcode:$context:$rids", 'cache', array('locale' => TRUE));
   }
 

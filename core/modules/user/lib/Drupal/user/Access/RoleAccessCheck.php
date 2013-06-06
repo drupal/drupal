@@ -40,14 +40,14 @@ class RoleAccessCheck implements AccessCheckInterface {
 
     $explode_and = array_filter(array_map('trim', explode('+', $rid_string)));
     if (count($explode_and) > 1) {
-      $diff = array_diff($explode_and, array_keys($account->roles));
+      $diff = array_diff($explode_and, $account->roles);
       if (empty($diff)) {
         return TRUE;
       }
     }
     else {
       $explode_or = array_filter(array_map('trim', explode(',', $rid_string)));
-      $intersection = array_intersect($explode_or, array_keys($account->roles));
+      $intersection = array_intersect($explode_or, $account->roles);
       if (!empty($intersection)) {
         return TRUE;
       }

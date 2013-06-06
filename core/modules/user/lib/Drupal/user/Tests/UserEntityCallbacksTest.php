@@ -33,7 +33,7 @@ class UserEntityCallbacksTest extends WebTestBase {
     parent::setUp();
 
     $this->account = $this->drupalCreateUser();
-    $this->anonymous = drupal_anonymous_user();
+    $this->anonymous = entity_create('user', (array) drupal_anonymous_user());
   }
 
   /**

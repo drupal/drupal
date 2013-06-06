@@ -492,7 +492,7 @@ abstract class WebTestBase extends TestBase {
     $edit['pass']   = user_password();
     $edit['status'] = 1;
     if ($rid) {
-      $edit['roles'] = array($rid => $rid);
+      $edit['roles'] = array($rid);
     }
 
     $account = entity_create('user', $edit);
@@ -624,7 +624,7 @@ abstract class WebTestBase extends TestBase {
    *   $account->pass_raw = $pass_raw;
    * @endcode
    *
-   * @param \Drupal\user\Plugin\Core\Entity\User $account
+   * @param \Drupal\user\UserInterface $account
    *   User object representing the user to log in.
    *
    * @see drupalCreateUser()
@@ -653,7 +653,7 @@ abstract class WebTestBase extends TestBase {
   /**
    * Returns whether a given user account is logged in.
    *
-   * @param \Drupal\user\User $account
+   * @param \Drupal\user\UserInterface $account
    *   The user account object to check.
    */
   protected function drupalUserIsLoggedIn($account) {

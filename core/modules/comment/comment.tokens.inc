@@ -218,7 +218,7 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
     }
 
     if (($author_tokens = $token_service->findwithPrefix($tokens, 'author')) && $account = $comment->uid->entity) {
-      $replacements += $token_service->generate('user', $author_tokens, array('user' => $account), $options);
+      $replacements += $token_service->generate('user', $author_tokens, array('user' => $account->getBCEntity()), $options);
     }
   }
   elseif ($type == 'node' & !empty($data['node'])) {

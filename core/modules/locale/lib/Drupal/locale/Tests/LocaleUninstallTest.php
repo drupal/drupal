@@ -62,6 +62,12 @@ class LocaleUninstallTest extends WebTestBase {
     $language_manager->init();
     // Check the UI language.
 
+    // @todo: If the global user is an EntityBCDecorator, getting the roles
+    // from it within LocaleLookup results in a loop that invokes LocaleLookup
+    // again.
+    global $user;
+    $user = drupal_anonymous_user();
+
     $this->assertEqual(language(Language::TYPE_INTERFACE)->langcode, $this->langcode, t('Current language: %lang', array('%lang' => language(Language::TYPE_INTERFACE)->langcode)));
 
     // Enable multilingual workflow option for articles.

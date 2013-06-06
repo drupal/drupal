@@ -9,7 +9,7 @@ namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Language\Language;
 use Drupal\Core\TypedData\AccessibleInterface;
-use Drupal\user\Plugin\Core\Entity\User;
+use Drupal\user\UserInterface;
 use Drupal\Core\Entity\EntityAccessController;
 
 /**
@@ -45,7 +45,7 @@ class EntityAccessTest extends EntityUnitTestBase  {
   /**
    * Asserts entity access correctly grants or denies access.
    */
-  function assertEntityAccess($ops, AccessibleInterface $object, User $account = NULL) {
+  function assertEntityAccess($ops, AccessibleInterface $object, UserInterface $account = NULL) {
     foreach ($ops as $op => $result) {
       $message = format_string("Entity access returns @result with operation '@op'.", array(
         '@result' => !isset($result) ? 'null' : ($result ? 'true' : 'false'),

@@ -11,6 +11,7 @@ use Drupal\Core\Language\Language;
 use IteratorAggregate;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Provides backwards compatible (BC) access to entity fields.
@@ -213,7 +214,7 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
   /**
    * Forwards the call to the decorated entity.
    */
-  public function access($operation = 'view', \Drupal\user\Plugin\Core\Entity\User $account = NULL) {
+  public function access($operation = 'view', UserInterface $account = NULL) {
     return $this->decorated->access($operation, $account);
   }
 

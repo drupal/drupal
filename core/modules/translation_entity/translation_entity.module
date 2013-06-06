@@ -289,7 +289,7 @@ function translation_entity_translate_access(EntityInterface $entity) {
  *   The entity whose translation overview should be displayed.
  * @param $langcode
  *   The language code of the translation to be displayed.
- * @param \Drupal\user\Plugin\Core\Entity\User $account
+ * @param \Drupal\user\UserInterface $account
  *   (optional) The account for which view access should be checked. Defaults to
  *   the current user.
  */
