@@ -1,0 +1,6 @@
+node_multiple_delete_confirm:
+  pattern: '/admin/content/node/delete'
+  defaults:
+    _form: '\Drupal\node\Form\DeleteMultiple'
+  requirements:
+    _permission: 'administer nodes'

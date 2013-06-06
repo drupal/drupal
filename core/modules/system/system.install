@@ -2197,6 +2197,32 @@ function system_update_8056() {
 }
 
 /**
+ * Convert actions to configuration.
+ *
+ * @ingroup config_upgrade
+ */
+function system_update_8057() {
+  $actions = db_query("SELECT * FROM {actions}")->fetchAllAssoc('aid', PDO::FETCH_ASSOC);
+  $action_plugins = Drupal::service('plugin.manager.action')->getDefinitions();
+  foreach ($actions as $action) {
+    if (isset($action_plugins[$action['callback']])) {
+      if (is_numeric($action['aid'])) {
+        $action['aid'] = $action['callback'] . '_' . $action['aid'];
+      }
+      $configuration = unserialize($action['parameters']) ?: array();
+      config('action.action.' . $action['aid'])
+        ->set('id', $action['aid'])
+        ->set('label', $action['label'])
+        ->set('status', '1')
+        ->set('type', $action['type'])
+        ->set('plugin', $action['callback'])
+        ->set('configuration', $configuration)
+        ->save();
+    }
+  }
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

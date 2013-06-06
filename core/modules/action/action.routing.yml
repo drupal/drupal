@@ -1,26 +1,27 @@
 action_admin:
   pattern: '/admin/config/system/actions'
   defaults:
-    _content: '\Drupal\action\Controller\ActionController::adminManage'
+    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
+    entity_type: 'action'
   requirements:
     _permission: 'administer actions'
 
-action_admin_orphans_remove:
-  pattern: '/admin/config/system/actions/orphan'
+action_admin_add:
+  pattern: '/admin/config/system/actions/add/{action_id}'
   defaults:
-    _content: '\Drupal\action\Controller\ActionController::adminRemoveOrphans'
+    _entity_form: 'action.add'
   requirements:
     _permission: 'administer actions'
 
 action_admin_configure:
   pattern: '/admin/config/system/actions/configure/{action}'
   defaults:
-    _form: '\Drupal\action\Form\ActionAdminConfigureForm'
+    _entity_form: 'action.edit'
   requirements:
     _permission: 'administer actions'
 
 action_delete:
-  pattern: 'admin/config/system/actions/delete/{action}'
+  pattern: 'admin/config/system/actions/configure/{action}/delete'
   defaults:
     _form: '\Drupal\action\Form\DeleteForm'
   requirements:

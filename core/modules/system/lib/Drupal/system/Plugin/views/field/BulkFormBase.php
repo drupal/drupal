@@ -7,14 +7,47 @@
 
 namespace Drupal\system\Plugin\views\field;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\EntityManager;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\style\Table;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a generic bulk operation form element.
  */
 abstract class BulkFormBase extends FieldPluginBase {
+
+  /**
+   * An array of actions that can be executed.
+   *
+   * @var array
+   */
+  protected $actions = array();
+
+  /**
+   * Constructs a new BulkForm object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin ID for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityManager $manager
+   *   The entity manager.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManager $manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->actions = $manager->getStorageController('action')->load();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('plugin.manager.entity'));
+  }
 
   /**
    * Overrides \Drupal\views\Plugin\views\Plugin\field\FieldPluginBase::render().
@@ -104,7 +137,25 @@ abstract class BulkFormBase extends FieldPluginBase {
    * @param array $form_state
    *   An associative array containing the current state of the form.
    */
-  abstract public function views_form_submit(&$form, &$form_state);
+  public function views_form_submit(&$form, &$form_state) {
+    if ($form_state['step'] == 'views_form_views_form') {
+      // Filter only selected checkboxes.
+      $selected = array_filter($form_state['values'][$this->options['id']]);
+      $entities = array();
+      foreach (array_intersect_key($this->view->result, $selected) as $row) {
+        $entity = $this->get_entity($row);
+        $entities[$entity->id()] = $entity;
+      }
+
+      $action = $this->actions[$form_state['values']['action']];
+      $action->execute($entities);
+
+      $operation_definition = $action->getPluginDefinition();
+      if (!empty($operation_definition['confirm_form_path'])) {
+        $form_state['confirm_form_path'] = $operation_definition['confirm_form_path'];
+      }
+    }
+  }
 
   /**
    * Overrides \Drupal\views\Plugin\views\Plugin\field\FieldPluginBase::query().

@@ -9,6 +9,7 @@ use Drupal\file\Plugin\Core\Entity\File;
 use Drupal\user\Plugin\Core\Entity\User;
 use Drupal\user\UserInterface;
 use Drupal\user\UserRole;
+use Drupal\user\RoleInterface;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
@@ -986,6 +987,13 @@ function user_menu() {
     'access arguments' => array('administer users'),
     'type' => MENU_LOCAL_ACTION,
   );
+  $items['admin/people/cancel'] = array(
+    'title' => 'Cancel user',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('user_multiple_cancel_confirm'),
+    'access arguments' => array('administer users'),
+    'file' => 'user.admin.inc',
+  );
 
   // Administration pages.
   $items['admin/config/people'] = array(
@@ -1833,6 +1841,55 @@ function user_role_names($membersonly = FALSE, $permission = NULL) {
 }
 
 /**
+ * Implements hook_user_role_insert().
+ */
+function user_user_role_insert(RoleInterface $role) {
+  // Ignore the authenticated and anonymous roles.
+  if (in_array($role->id(), array(DRUPAL_AUTHENTICATED_RID, DRUPAL_ANONYMOUS_RID))) {
+    return;
+  }
+
+  $action = entity_create('action', array(
+    'id' => 'user_add_role_action.' . $role->id(),
+    'type' => 'user',
+    'label' => t('Add the @label role to the selected users', array('@label' => $role->label())),
+    'configuration' => array(
+      'rid' => $role->id(),
+    ),
+    'plugin' => 'user_add_role_action',
+  ));
+  $action->save();
+  $action = entity_create('action', array(
+    'id' => 'user_remove_role_action.' . $role->id(),
+    'type' => 'user',
+    'label' => t('Remove the @label role from the selected users', array('@label' => $role->label())),
+    'configuration' => array(
+      'rid' => $role->id(),
+    ),
+    'plugin' => 'user_remove_role_action',
+  ));
+  $action->save();
+}
+
+/**
+ * Implements hook_user_role_delete().
+ */
+function user_user_role_delete(RoleInterface $role) {
+  // Ignore the authenticated and anonymous roles.
+  if (in_array($role->id(), array(DRUPAL_AUTHENTICATED_RID, DRUPAL_ANONYMOUS_RID))) {
+    return;
+  }
+
+  $actions = entity_load_multiple('action', array(
+    'user_add_role_action.' . $role->id(),
+    'user_remove_role_action.' . $role->id(),
+  ));
+  foreach ($actions as $action) {
+    $action->delete();
+  }
+}
+
+/**
  * Retrieve an array of roles matching specified conditions.
  *
  * @param $membersonly
@@ -2005,149 +2062,14 @@ function user_role_revoke_permissions($rid, array $permissions = array()) {
   drupal_static_reset('user_role_permissions');
 }
 
-/**
- * Implements hook_user_operations().
- */
-function user_user_operations($form = array(), $form_state = array()) {
-  $operations = array(
-    'unblock' => array(
-      'label' => t('Unblock the selected users'),
-      'callback' => 'user_user_operations_unblock',
-    ),
-    'block' => array(
-      'label' => t('Block the selected users'),
-      'callback' => 'user_user_operations_block',
-    ),
-    'cancel' => array(
-      'label' => t('Cancel the selected user accounts'),
-    ),
-  );
-
-  if (user_access('administer permissions')) {
-    $roles = user_role_names(TRUE);
-    unset($roles[DRUPAL_AUTHENTICATED_RID]);  // Can't edit authenticated role.
-
-    $add_roles = array();
-    foreach ($roles as $key => $value) {
-      $add_roles['add_role-' . $key] = $value;
-    }
-
-    $remove_roles = array();
-    foreach ($roles as $key => $value) {
-      $remove_roles['remove_role-' . $key] = $value;
-    }
-
-    if (count($roles)) {
-      $role_operations = array(
-        t('Add a role to the selected users') => array(
-          'label' => $add_roles,
-        ),
-        t('Remove a role from the selected users') => array(
-          'label' => $remove_roles,
-        ),
-      );
-
-      $operations += $role_operations;
-    }
-  }
-
-  // If the form has been posted, we need to insert the proper data for
-  // role editing if necessary.
-  if (!empty($form_state['submitted'])) {
-    $operation_rid = explode('-', $form_state['values']['operation']);
-    $operation = $operation_rid[0];
-    if ($operation == 'add_role' || $operation == 'remove_role') {
-      $rid = $operation_rid[1];
-      if (user_access('administer permissions')) {
-        $operations[$form_state['values']['operation']] = array(
-          'callback' => 'user_multiple_role_edit',
-          'callback arguments' => array($operation, $rid),
-        );
-      }
-      else {
-        watchdog('security', 'Detected malicious attempt to alter protected user fields.', array(), WATCHDOG_WARNING);
-        return;
-      }
-    }
-  }
-
-  return $operations;
-}
-
-/**
- * Callback function for admin mass unblocking users.
- */
-function user_user_operations_unblock($accounts) {
-  $accounts = user_load_multiple($accounts);
-  foreach ($accounts as $account) {
-    // Skip unblocking user if they are already unblocked.
-    if ($account !== FALSE && $account->status == 0) {
-      $account->status = 1;
-      $account->save();
-    }
-  }
-}
-
-/**
- * Callback function for admin mass blocking users.
- */
-function user_user_operations_block($accounts) {
-  $accounts = user_load_multiple($accounts);
-  foreach ($accounts as $account) {
-    // Skip blocking user if they are already blocked.
-    if ($account !== FALSE && $account->status == 1) {
-      // For efficiency manually save the original account before applying any
-      // changes.
-      $account->original = clone $account;
-      $account->status = 0;
-      $account->save();
-    }
-  }
-}
-
-/**
- * Callback function for admin mass adding/deleting a user role.
- */
-function user_multiple_role_edit($accounts, $operation, $rid) {
-  $role_name = entity_load('user_role', $rid)->label();
-
-  switch ($operation) {
-    case 'add_role':
-      $accounts = user_load_multiple($accounts);
-      foreach ($accounts as $account) {
-        // Skip adding the role to the user if they already have it.
-        if ($account !== FALSE && !in_array($rid, $account->roles)) {
-          // For efficiency manually save the original account before applying
-          // any changes.
-          $account->original = clone $account;
-          $account->roles[] = $rid;
-          $account->save();
-        }
-      }
-      break;
-    case 'remove_role':
-      $accounts = user_load_multiple($accounts);
-      foreach ($accounts as $account) {
-        // Skip removing the role from the user if they already don't have it.
-        if ($account !== FALSE && in_array($rid, $account->roles)) {
-          $roles = array_diff($account->roles, array($rid));
-          // For efficiency manually save the original account before applying
-          // any changes.
-          $account->original = clone $account;
-          $account->roles = $roles;
-          $account->save();
-        }
-      }
-      break;
-  }
-}
-
 function user_multiple_cancel_confirm($form, &$form_state) {
   $edit = $form_state['input'];
 
+  // Retrieve the accounts to be canceled from the temp store.
+  $accounts = Drupal::service('user.tempstore')->get('user_user_operations_cancel')->get($GLOBALS['user']->uid);
   $form['accounts'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
-  $accounts = user_load_multiple(array_keys(array_filter($edit['accounts'])));
-  foreach ($accounts as $uid => $account) {
+  foreach ($accounts as $account) {
+    $uid = $account->id();
     // Prevent user 1 from being canceled.
     if ($uid <= 1) {
       continue;
@@ -2156,14 +2078,14 @@ function user_multiple_cancel_confirm($form, &$form_state) {
       '#type' => 'hidden',
       '#value' => $uid,
       '#prefix' => '<li>',
-      '#suffix' => check_plain($account->name) . "</li>\n",
+      '#suffix' => check_plain($account->name->value) . "</li>\n",
     );
   }
 
   // Output a notice that user 1 cannot be canceled.
   if (isset($accounts[1])) {
     $redirect = (count($accounts) == 1);
-    $message = t('The user account %name cannot be cancelled.', array('%name' => $accounts[1]->name));
+    $message = t('The user account %name cannot be cancelled.', array('%name' => $accounts[1]->name->value));
     drupal_set_message($message, $redirect ? 'error' : 'warning');
     // If only user 1 was selected, redirect to the overview.
     if ($redirect) {
@@ -2211,6 +2133,8 @@ function user_multiple_cancel_confirm($form, &$form_state) {
 function user_multiple_cancel_confirm_submit($form, &$form_state) {
   global $user;
 
+  // Clear out the accounts from the temp store.
+  Drupal::service('user.tempstore')->get('user_user_operations_cancel')->delete($user->uid);
   if ($form_state['values']['confirm']) {
     foreach ($form_state['values']['accounts'] as $uid => $value) {
       // Prevent programmatic form submissions from cancelling user 1.
@@ -2507,44 +2431,6 @@ function user_node_load($nodes, $types) {
   foreach ($uids as $nid => $uid) {
     $nodes[$nid]->name = $user_names[$uid];
   }
-}
-
-/**
- * Implements hook_action_info().
- */
-function user_action_info() {
-  return array(
-    'user_block_user_action' => array(
-      'label' => t('Block current user'),
-      'type' => 'user',
-      'configurable' => FALSE,
-      'triggers' => array('any'),
-    ),
-  );
-}
-
-/**
- * Blocks the current user.
- *
- * @ingroup actions
- */
-function user_block_user_action(&$entity, $context = array()) {
-  // First priority: If there is a $entity->uid, block that user.
-  // This is most likely a user object or the author if a node or comment.
-  if (isset($entity->uid)) {
-    $uid = $entity->uid;
-  }
-  elseif (isset($context['uid'])) {
-    $uid = $context['uid'];
-  }
-  // If neither of those are valid, then block the current user.
-  else {
-    $uid = $GLOBALS['user']->uid;
-  }
-  $account = user_load($uid);
-  $account->status = 0;
-  $account->save();
-  watchdog('action', 'Blocked user %name.', array('%name' => $account->name));
 }
 
 /**

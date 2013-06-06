@@ -206,40 +206,6 @@ function hook_user_format_name_alter(&$name, $account) {
 }
 
 /**
- * Add mass user operations.
- *
- * This hook enables modules to inject custom operations into the mass operations
- * dropdown found at admin/people, by associating a callback function with
- * the operation, which is called when the form is submitted. The callback function
- * receives one initial argument, which is an array of the checked users.
- *
- * @return
- *   An array of operations. Each operation is an associative array that may
- *   contain the following key-value pairs:
- *   - "label": Required. The label for the operation, displayed in the dropdown menu.
- *   - "callback": Required. The function to call for the operation.
- *   - "callback arguments": Optional. An array of additional arguments to pass to
- *     the callback function.
- *
- */
-function hook_user_operations() {
-  $operations = array(
-    'unblock' => array(
-      'label' => t('Unblock the selected users'),
-      'callback' => 'user_user_operations_unblock',
-    ),
-    'block' => array(
-      'label' => t('Block the selected users'),
-      'callback' => 'user_user_operations_block',
-    ),
-    'cancel' => array(
-      'label' => t('Cancel the selected user accounts'),
-    ),
-  );
-  return $operations;
-}
-
-/**
  * Act on a user account being inserted or updated.
  *
  * This hook is invoked before the user account is saved to the database.

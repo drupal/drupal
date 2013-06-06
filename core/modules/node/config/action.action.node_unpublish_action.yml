@@ -1,0 +1,6 @@
+id: node_unpublish_action
+label: 'Unpublish content'
+status: '1'
+langcode: en
+type: node
+plugin: node_unpublish_action

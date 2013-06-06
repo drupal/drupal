@@ -8,7 +8,7 @@
 namespace Drupal\views\Plugin;
 
 use Drupal\Component\Plugin\PluginManagerBase;
-use Drupal\Component\Plugin\Factory\DefaultFactory;
+use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
 use Drupal\views\Plugin\Discovery\ViewsHandlerDiscovery;
 
@@ -30,7 +30,7 @@ class ViewsHandlerManager extends PluginManagerBase {
     $this->discovery = new ViewsHandlerDiscovery($type, $namespaces);
     $this->discovery = new CacheDecorator($this->discovery, "views:$type", 'views_info');
 
-    $this->factory = new DefaultFactory($this->discovery);
+    $this->factory = new ContainerFactory($this);
   }
 
 }

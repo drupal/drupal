@@ -190,12 +190,13 @@ function user_admin_account() {
     '#attributes' => array('class' => array('container-inline')),
   );
   $options = array();
-  foreach (module_invoke_all('user_operations') as $operation => $array) {
-    $options[$operation] = $array['label'];
+  $actions = entity_load_multiple_by_properties('action', array('type' => 'user'));
+  foreach ($actions as $id => $action) {
+    $options[$id] = $action->label();
   }
   $form['options']['operation'] = array(
     '#type' => 'select',
-    '#title' => t('Operation'),
+    '#title' => t('Action'),
     '#title_display' => 'invisible',
     '#options' => $options,
     '#default_value' => 'unblock',
@@ -263,20 +264,13 @@ function user_admin_account() {
  * Submit the user administration update form.
  */
 function user_admin_account_submit($form, &$form_state) {
-  $operations = module_invoke_all('user_operations', $form, $form_state);
-  $operation = $operations[$form_state['values']['operation']];
-  // Filter out unchecked accounts.
-  $accounts = array_filter($form_state['values']['accounts']);
-  if ($function = $operation['callback']) {
-    // Add in callback arguments if present.
-    if (isset($operation['callback arguments'])) {
-      $args = array_merge(array($accounts), $operation['callback arguments']);
+  if ($action = entity_load('action', $form_state['values']['operation'])) {
+    $accounts = entity_load_multiple('user', array_filter($form_state['values']['accounts']));
+    $action->execute($accounts);
+    $operation_definition = $action->getPluginDefinition();
+    if (!empty($operation_definition['confirm_form_path'])) {
+      $form_state['redirect'] = $operation_definition['confirm_form_path'];
     }
-    else {
-      $args = array($accounts);
-    }
-    call_user_func_array($function, $args);
-
     drupal_set_message(t('The update has been performed.'));
   }
 }

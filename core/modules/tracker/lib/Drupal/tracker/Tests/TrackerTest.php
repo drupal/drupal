@@ -271,7 +271,7 @@ class TrackerTest extends WebTestBase {
 
     // Unpublish the node and ensure that it's no longer displayed.
     $edit = array(
-      'operation' => 'unpublish',
+      'operation' => 'node_unpublish_action',
       'nodes[' . $node->nid . ']' => $node->nid,
     );
     $this->drupalPost('admin/content', $edit, t('Update'));

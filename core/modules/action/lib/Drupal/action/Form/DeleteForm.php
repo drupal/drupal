@@ -8,6 +8,7 @@
 namespace Drupal\action\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\system\ActionConfigEntityInterface;
 
 /**
  * Builds a form to delete an action.
@@ -17,7 +18,7 @@ class DeleteForm extends ConfirmFormBase {
   /**
    * The action to be deleted.
    *
-   * @var \stdClass
+   * @var \Drupal\system\ActionConfigEntityInterface
    */
   protected $action;
 
@@ -25,7 +26,7 @@ class DeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   protected function getQuestion() {
-    return t('Are you sure you want to delete the action %action?', array('%action' => $this->action->label));
+    return t('Are you sure you want to delete the action %action?', array('%action' => $this->action->label()));
   }
 
   /**
@@ -40,7 +41,7 @@ class DeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   protected function getCancelPath() {
-    return 'admin/config/system/actions/manage';
+    return 'admin/config/system/actions';
   }
 
   /**
@@ -53,9 +54,8 @@ class DeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $action = NULL) {
-
-    $this->action = action_load($action);
+  public function buildForm(array $form, array &$form_state, ActionConfigEntityInterface $action = NULL) {
+    $this->action = $action;
 
     return parent::buildForm($form, $form_state);
   }
@@ -64,13 +64,12 @@ class DeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
+    $this->action->delete();
 
-    action_delete($this->action->aid);
+    watchdog('user', 'Deleted action %aid (%action)', array('%aid' => $this->action->id(), '%action' => $this->action->label()));
+    drupal_set_message(t('Action %action was deleted', array('%action' => $this->action->label())));
 
-    watchdog('user', 'Deleted action %aid (%action)', array('%aid' => $this->action->aid, '%action' => $this->action->label));
-    drupal_set_message(t('Action %action was deleted', array('%action' => $this->action->label)));
-
-    $form_state['redirect'] = 'admin/config/system/actions/manage';
+    $form_state['redirect'] = 'admin/config/system/actions';
   }
 
 }

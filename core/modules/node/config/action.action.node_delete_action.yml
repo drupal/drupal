@@ -1,0 +1,6 @@
+id: node_delete_action
+label: 'Delete selected content'
+status: '1'
+langcode: en
+type: node
+plugin: node_delete_action

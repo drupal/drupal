@@ -1,0 +1,6 @@
+id: user_cancel_user_action
+label: 'Cancel the selected user account(s)'
+status: '1'
+langcode: en
+type: user
+plugin: user_cancel_user_action

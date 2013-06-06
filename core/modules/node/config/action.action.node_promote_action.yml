@@ -1,0 +1,6 @@
+id: node_promote_action
+label: 'Promote content to front page'
+status: '1'
+langcode: en
+type: node
+plugin: node_promote_action

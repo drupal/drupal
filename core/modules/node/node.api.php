@@ -402,64 +402,6 @@ function hook_node_grants_alter(&$grants, $account, $op) {
 }
 
 /**
- * Add mass node operations.
- *
- * This hook enables modules to inject custom operations into the mass
- * operations dropdown found at admin/content, by associating a callback
- * function with the operation, which is called when the form is submitted. The
- * callback function receives one initial argument, which is an array of the
- * checked nodes.
- *
- * @return
- *   An array of operations. Each operation is an associative array that may
- *   contain the following key-value pairs:
- *   - label: (required) The label for the operation, displayed in the dropdown
- *     menu.
- *   - callback: (required) The function to call for the operation.
- *   - callback arguments: (optional) An array of additional arguments to pass
- *     to the callback function.
- */
-function hook_node_operations() {
-  $operations = array(
-    'publish' => array(
-      'label' => t('Publish selected content'),
-      'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('status' => NODE_PUBLISHED)),
-    ),
-    'unpublish' => array(
-      'label' => t('Unpublish selected content'),
-      'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('status' => NODE_NOT_PUBLISHED)),
-    ),
-    'promote' => array(
-      'label' => t('Promote selected content to front page'),
-      'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('status' => NODE_PUBLISHED, 'promote' => NODE_PROMOTED)),
-    ),
-    'demote' => array(
-      'label' => t('Demote selected content from front page'),
-      'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('promote' => NODE_NOT_PROMOTED)),
-    ),
-    'sticky' => array(
-      'label' => t('Make selected content sticky'),
-      'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('status' => NODE_PUBLISHED, 'sticky' => NODE_STICKY)),
-    ),
-    'unsticky' => array(
-      'label' => t('Make selected content not sticky'),
-      'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('sticky' => NODE_NOT_STICKY)),
-    ),
-    'delete' => array(
-      'label' => t('Delete selected content'),
-      'callback' => NULL,
-    ),
-  );
-  return $operations;
-}
-
-/**
  * Act before node deletion.
  *
  * This hook is invoked from entity_delete_multiple() after the type-specific

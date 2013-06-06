@@ -88,7 +88,7 @@ class UserCancelTest extends WebTestBase {
     $this->admin_user = $this->drupalCreateUser(array('administer users'));
     $this->drupalLogin($this->admin_user);
     $edit = array(
-      'operation' => 'cancel',
+      'operation' => 'user_cancel_user_action',
       'accounts[1]' => TRUE,
     );
     $this->drupalPost('admin/people', $edit, t('Update'));
@@ -408,7 +408,7 @@ class UserCancelTest extends WebTestBase {
 
     // Cancel user accounts, including own one.
     $edit = array();
-    $edit['operation'] = 'cancel';
+    $edit['operation'] = 'user_cancel_user_action';
     foreach ($users as $uid => $account) {
       $edit['accounts[' . $uid . ']'] = TRUE;
     }

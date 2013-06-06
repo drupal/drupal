@@ -2929,16 +2929,12 @@ function drupal_classloader_register($name, $path) {
  *
  * Example:
  * @code
- * function actions_do(...) {
- *   // $stack tracks the number of recursive calls.
- *   static $stack;
- *   $stack++;
- *   if ($stack > variable_get('action_max_stack', 35)) {
- *     ...
- *     return;
+ * function system_get_module_info($property) {
+ *   static $info;
+ *   if (!isset($info)) {
+ *     $info = new ModuleInfo('system_info', 'cache');
  *   }
- *   ...
- *   $stack--;
+ *   return $info[$property];
  * }
  * @endcode
  *

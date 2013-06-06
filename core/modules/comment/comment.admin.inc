@@ -59,7 +59,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
 
   $form['options']['operation'] = array(
     '#type' => 'select',
-    '#title' => t('Operation'),
+    '#title' => t('Action'),
     '#title_display' => 'invisible',
     '#options' => $options,
     '#default_value' => 'publish',
