@@ -1375,7 +1375,7 @@ function book_link_load($mlid) {
  *   A fully loaded menu link.
  *
  * @return
- *   An subtree of menu links in an array, in the order they should be rendered.
+ *   A subtree of menu links in an array, in the order they should be rendered.
  */
 function book_menu_subtree_data($link) {
   $tree = &drupal_static(__FUNCTION__, array());
