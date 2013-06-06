@@ -361,7 +361,7 @@ display:
           break_phrase: '0'
       displays:
         default: default
-        page: page_1
+        page_1: page_1
       inherit_arguments: '0'
 label: Glossary
 module: node
