@@ -5486,9 +5486,9 @@ function element_set_attributes(array &$element, array $map) {
  * Parses Drupal module and theme .info.yml files.
  *
  * Info files are NOT for placing arbitrary theme and module-specific settings.
- * Use variable_get() and variable_set() for that. Info files are formatted as
- * YAML. If the 'version' key is set to 'VERSION' in any info file, then the
- * value will be substituted with the current version of Drupal core.
+ * Use Config::get() and Config::set()->save() for that. Info files are
+ * formatted as YAML. If the 'version' key is set to 'VERSION' in any info file,
+ * then the value will be substituted with the current version of Drupal core.
  *
  * Information stored in a module .info.yml file:
  * - name: The real name of the module for display purposes.
