@@ -111,7 +111,7 @@ class LinkFieldTest extends WebTestBase {
   }
 
   /**
-   * Tests the title settings of a link field.
+   * Tests the link title settings of a link field.
    */
   function testLinkTitle() {
     // Create a field with settings to validate.
@@ -135,7 +135,7 @@ class LinkFieldTest extends WebTestBase {
         'type' => 'link_default',
         'settings' => array(
           'placeholder_url' => 'http://example.com',
-          'placeholder_title' => 'Enter a title for this link',
+          'placeholder_title' => 'Enter the text for this link',
         ),
       ))
       ->save();
@@ -148,9 +148,9 @@ class LinkFieldTest extends WebTestBase {
 
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
-    // Verify that the title field works according to the field setting.
+    // Verify that the link text field works according to the field setting.
     foreach (array(DRUPAL_DISABLED, DRUPAL_REQUIRED, DRUPAL_OPTIONAL) as $title_setting) {
-      // Update the title field setting.
+      // Update the link title field setting.
       $this->instance['settings']['title'] = $title_setting;
       field_update_instance($this->instance);
 
@@ -162,41 +162,41 @@ class LinkFieldTest extends WebTestBase {
       $this->assertRaw('placeholder="http://example.com"');
 
       if ($title_setting === DRUPAL_DISABLED) {
-        $this->assertNoFieldByName("{$this->field['field_name']}[$langcode][0][title]", '', 'Title field not found.');
-        $this->assertNoRaw('placeholder="Enter a title for this link"');
+        $this->assertNoFieldByName("{$this->field['field_name']}[$langcode][0][title]", '', 'Link text field not found.');
+        $this->assertNoRaw('placeholder="Enter the text for this link"');
       }
       else {
-        $this->assertRaw('placeholder="Enter a title for this link"');
+        $this->assertRaw('placeholder="Enter the text for this link"');
 
-        $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][title]", '', 'Title field found.');
+        $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][title]", '', 'Link text field found.');
         if ($title_setting === DRUPAL_REQUIRED) {
-          // Verify that the title is required, if the URL is non-empty.
+          // Verify that the link text is required, if the URL is non-empty.
           $edit = array(
             "{$this->field['field_name']}[$langcode][0][url]" => 'http://www.example.com',
           );
           $this->drupalPost(NULL, $edit, t('Save'));
-          $this->assertText(t('!name field is required.', array('!name' => t('Title'))));
+          $this->assertText(t('!name field is required.', array('!name' => t('Link text'))));
 
-          // Verify that the title is not required, if the URL is empty.
+          // Verify that the link text is not required, if the URL is empty.
           $edit = array(
             "{$this->field['field_name']}[$langcode][0][url]" => '',
           );
           $this->drupalPost(NULL, $edit, t('Save'));
-          $this->assertNoText(t('!name field is required.', array('!name' => t('Title'))));
+          $this->assertNoText(t('!name field is required.', array('!name' => t('Link text'))));
 
-          // Verify that a URL and title meets requirements.
+          // Verify that a URL and link text meets requirements.
           $this->drupalGet('test-entity/add/test_bundle');
           $edit = array(
             "{$this->field['field_name']}[$langcode][0][url]" => 'http://www.example.com',
             "{$this->field['field_name']}[$langcode][0][title]" => 'Example',
           );
           $this->drupalPost(NULL, $edit, t('Save'));
-          $this->assertNoText(t('!name field is required.', array('!name' => t('Title'))));
+          $this->assertNoText(t('!name field is required.', array('!name' => t('Link text'))));
         }
       }
     }
 
-    // Verify that a link without title is rendered using the URL as link text.
+    // Verify that a link without link text is rendered using the URL as text.
     $value = 'http://www.example.com/';
     $edit = array(
       "{$this->field['field_name']}[$langcode][0][url]" => $value,
@@ -211,7 +211,7 @@ class LinkFieldTest extends WebTestBase {
     $expected_link = l($value, $value);
     $this->assertRaw($expected_link);
 
-    // Verify that a link with title is rendered using the title as link text.
+    // Verify that a link with text is rendered using the link text.
     $title = $this->randomName();
     $edit = array(
       "{$this->field['field_name']}[$langcode][0][title]" => $title,
@@ -262,7 +262,7 @@ class LinkFieldTest extends WebTestBase {
 
     // Create an entity with two link field values:
     // - The first field item uses a URL only.
-    // - The second field item uses a URL and title.
+    // - The second field item uses a URL and link text.
     // For consistency in assertion code below, the URL is assigned to the title
     // variable for the first field.
     $this->drupalGet('test-entity/add/test_bundle');
@@ -402,7 +402,7 @@ class LinkFieldTest extends WebTestBase {
 
     // Create an entity with two link field values:
     // - The first field item uses a URL only.
-    // - The second field item uses a URL and title.
+    // - The second field item uses a URL and link text.
     // For consistency in assertion code below, the URL is assigned to the title
     // variable for the first field.
     $this->drupalGet('test-entity/add/test_bundle');

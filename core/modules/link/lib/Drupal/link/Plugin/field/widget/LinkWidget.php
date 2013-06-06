@@ -45,7 +45,7 @@ class LinkWidget extends WidgetBase {
     );
     $element['title'] = array(
       '#type' => 'textfield',
-      '#title' => t('Title'),
+      '#title' => t('Link text'),
       '#placeholder' => $this->getSetting('placeholder_title'),
       '#default_value' => isset($items[$delta]['title']) ? $items[$delta]['title'] : NULL,
       '#maxlength' => 255,
@@ -93,7 +93,7 @@ class LinkWidget extends WidgetBase {
     );
     $elements['placeholder_title'] = array(
       '#type' => 'textfield',
-      '#title' => t('Placeholder for link title'),
+      '#title' => t('Placeholder for link text'),
       '#default_value' => $this->getSetting('placeholder_title'),
       '#description' => t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),
       '#states' => array(

@@ -35,7 +35,7 @@ class LinkItem extends FieldItemBase {
       );
       self::$propertyDefinitions['title'] = array(
         'type' => 'string',
-        'label' => t('Title'),
+        'label' => t('Link text'),
       );
       self::$propertyDefinitions['attributes'] = array(
         'type' => 'map',
