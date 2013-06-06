@@ -4,7 +4,7 @@
  */
 
 /* Tab appearance. */
-.js .toolbar .tour-toolbar-tab.tab {
+.js .toolbar .bar .tour-toolbar-tab.tab {
   float: right; /* LTR */
 }
 .js .toolbar .tour-toolbar-tab button {
