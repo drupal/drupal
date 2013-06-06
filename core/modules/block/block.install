@@ -247,22 +247,22 @@ function block_update_8008() {
 
     // First, create the body field.
     $body_field = array(
-      'field_name' => 'block_body',
+      'id' => 'block_body',
       'type' => 'text_with_summary',
       'entity_types' => array('custom_block'),
       'module' => 'text',
       'cardinality' => 1,
     );
-    _update_7000_field_create_field($body_field);
+    _update_8003_field_create_field($body_field);
 
     $instance = array(
-      'field_name' => 'block_body',
+      'id' => 'custom_block.basic.block_body',
       'entity_type' => 'custom_block',
       'bundle' => 'basic',
       'label' => 'Block body',
       'settings' => array('display_summary' => FALSE),
     );
-    _update_7000_field_create_instance($body_field, $instance);
+    _update_8003_field_create_instance($body_field, $instance);
 
     module_load_install('entity');
     // Assign form settings for the 'default' form mode.
@@ -311,7 +311,7 @@ function block_update_8008() {
         );
         // This is a core update and no contrib modules are enabled yet, so
         // we can assume default field storage for a faster update.
-        _update_7000_field_sql_storage_write('custom_block', 'basic', $block->bid, $block->bid, 'block_body', $data);
+        _update_8000_field_sql_storage_write('custom_block', 'basic', $block->bid, $block->bid, 'block_body', $data);
 
         $sandbox['last'] = $block->bid;
         $sandbox['count'] += 1;

@@ -377,6 +377,18 @@ function user_install_picture_field() {
 }
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function user_update_dependencies() {
+  // Convert user picture to field after the fields and instances are converted
+  // to ConfigEntities.
+  $dependencies['user'][8011] = array(
+    'field' => 8003,
+  );
+  return $dependencies;
+}
+
+/**
  * @addtogroup updates-7.x-to-8.x
  * @{
  */
@@ -699,7 +711,7 @@ function user_update_8011() {
 
   // Create the field and instance.
   $field = array(
-    'field_name' => 'user_picture',
+    'id' => 'user_picture',
     'module' => 'image',
     'type' => 'image',
     'cardinality' => 1,
@@ -709,15 +721,11 @@ function user_update_8011() {
       'uri_scheme' => 'public',
       'default_image' => FALSE,
     ),
-    'storage' => array(
-      'type' => 'field_sql_storage',
-      'settings' => array(),
-    ),
   );
-  _update_7000_field_create_field($field);
+  _update_8003_field_create_field($field);
 
   $instance = array(
-    'field_name' => 'user_picture',
+    'id' => 'user.user.user_picture',
     'entity_type' => 'user',
     'label' => 'Picture',
     'bundle' => 'user',
@@ -734,7 +742,7 @@ function user_update_8011() {
       'default_image' => !empty($default_image_fid) ? array($default_image_fid) : array(),
     ),
   );
-  _update_7000_field_create_instance($field, $instance);
+  _update_8003_field_create_instance($field, $instance);
 
   module_load_install('entity');
   if (update_variable_get('user_pictures', 0)) {
@@ -781,8 +789,11 @@ function user_update_8011() {
         'image_link' => 'content',
       ),
       'weight' => 0,
-    ))
-    ->save();
+    ));
+  $display->set('content.member_for', array(
+      'visible' => FALSE,
+    ));
+  $display->save();
   update_config_manifest_add('entity.display', array($display->get('id')));
 
   // Add file usage for the default field.
@@ -792,19 +803,11 @@ function user_update_8011() {
         'fid' => $default_image_fid,
         'module' => 'image',
         'type' => 'default_image',
-        'id' => $field['id'],
+        'id' => $field['uuid'],
         'count' => 1,
       ))
       ->execute();
   }
-
-  // Update the user bundle settings and hide the member_for extra field.
-  $settings = update_variable_get('field_bundle_settings_user__user');
-  $settings['extra_fields']['display']['member_for']['compact'] = array(
-    'weight' => 0,
-    'visible' => FALSE,
-  );
-  update_variable_set('field_bundle_settings_user__user', $settings);
 
   // Delete old variables.
   update_variable_del('user_pictures');

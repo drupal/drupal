@@ -9,239 +9,95 @@ use Drupal\Component\Uuid\Uuid;
 use Drupal\field\Plugin\Core\Entity\Field;
 
 /**
- * Creates a field by writing directly to the database.
+ * Creates a field by writing directly to configuration.
+ *
+ * Upgrades using this function need to use hook_update_dependencies() to ensure
+ * they get executed after field_update_8003().
+ *
+ * @param array $field_config
+ *   An array of field properties.
  *
  * @ingroup update_api
  */
-function _update_7000_field_create_field(&$field) {
-  // Merge in default values.`
-  $field += array(
+function _update_8003_field_create_field(array &$field_config) {
+  $uuid = new Uuid();
+
+  // Merge in default values.
+  $field_config += array(
+    'uuid' => $uuid->generate(),
     'entity_types' => array(),
     'cardinality' => 1,
     'translatable' => FALSE,
     'locked' => FALSE,
     'settings' => array(),
     'indexes' => array(),
-    'deleted' => FALSE,
     'active' => TRUE,
+    'status' => 1,
+    'langcode' => 'und',
   );
 
-  // Set storage.
-  $field['storage'] = array(
+  // Set the storage.
+  $field_config['storage'] = array(
     'type' => 'field_sql_storage',
-    'settings' => array(),
     'module' => 'field_sql_storage',
     'active' => TRUE,
+    'settings' => array(),
   );
 
-  // Fetch the field schema to initialize columns and indexes. The field module
-  // is not guaranteed to be loaded at this point.
-  module_load_install($field['module']);
-  $schema = (array) module_invoke($field['module'], 'field_schema', $field);
-  $schema += array('columns' => array(), 'indexes' => array());
-  // 'columns' are hardcoded in the field type.
-  $field['columns'] = $schema['columns'];
-  // 'indexes' can be both hardcoded in the field type, and specified in the
-  // incoming $field definition.
-  $field['indexes'] += $schema['indexes'];
-
-  // The serialized 'data' column contains everything from $field that does not
-  // have its own column and is not automatically populated when the field is
-  // read.
-  $data = $field;
-  unset($data['columns'], $data['field_name'], $data['type'], $data['active'], $data['module'], $data['storage_type'], $data['storage_active'], $data['storage_module'], $data['locked'], $data['cardinality'], $data['deleted']);
-  // Additionally, do not save the 'bundles' property populated by
-  // field_info_field().
-  unset($data['bundles']);
-
-  // Write the field to the database.
-  $record = array(
-    'field_name' => $field['field_name'],
-    'type' => $field['type'],
-    'module' => $field['module'],
-    'active' => (int) $field['active'],
-    'storage_type' => $field['storage']['type'],
-    'storage_module' => $field['storage']['module'],
-    'storage_active' => (int) $field['storage']['active'],
-    'locked' => (int) $field['locked'],
-    'data' => serialize($data),
-    'cardinality' => $field['cardinality'],
-    'translatable' => (int) $field['translatable'],
-    'deleted' => (int) $field['deleted'],
-  );
-  // We don't use drupal_write_record() here because it depends on the schema.
-  $field_id = db_insert('field_config')
-    ->fields($record)
-    ->execute();
+  // Save in config.
+  Drupal::config('field.field.' . $field_config['id'])
+    ->setData($field_config)
+    ->save();
+  update_config_manifest_add('field.field', array($field_config['id']));
 
   // Create storage for the field. This requires a field entity, but cannot use
   // the regular entity_create() function here.
-  $field_entity = new Field($field);
+  $field_entity = new Field($field_config);
   field_sql_storage_field_storage_create_field($field_entity);
-
-  $field['id'] = $field_id;
 }
 
 /**
- * Deletes a field stored in SQL storage directly from the database.
+ * Writes a field instance directly to configuration.
  *
- * To protect user data, this function can only be used to delete fields once
- * all information it stored is gone. Delete all data from the
- * field_data_$field_name table before calling by either manually issuing
- * delete queries against it or using _update_7000_field_delete_instance().
+ * Upgrades using this function need to use hook_update_dependencies() to ensure
+  * they get executed after field_update_8003().
  *
- * @param $field_name
- *   The field name to delete.
- *
- * @ingroup update_api
- */
-function _update_7000_field_delete_field($field_name) {
-  $table_name = 'field_data_' . $field_name;
-  if (db_select($table_name)->range(0, 1)->countQuery()->execute()->fetchField()) {
-    $t = get_t();
-    throw new Exception($t('This function can only be used to delete fields without data'));
-  }
-  // Delete all instances.
-  db_delete('field_config_instance')
-    ->condition('field_name', $field_name)
-    ->execute();
-
-  // Nuke field data and revision tables.
-  db_drop_table($table_name);
-  db_drop_table('field_revision_' . $field_name);
-
-  // Delete the field.
-  db_delete('field_config')
-    ->condition('field_name', $field_name)
-    ->execute();
-}
-
-/**
- * Deletes an instance and all its data of a field stored in SQL Storage.
- *
- * BEWARE: This function deletes user data from the field storage tables.
+ * @param array $field_config
+ *   An array of field properties.
+ * @param array $instance_config
+ *   An array of field instance properties.
  *
  * @ingroup update_api
  */
-function _update_7000_field_delete_instance($field_name, $entity_type, $bundle) {
-  // Delete field instance configuration data.
-  db_delete('field_config_instance')
-    ->condition('field_name', $field_name)
-    ->condition('entity_type', $entity_type)
-    ->condition('bundle', $bundle)
-    ->execute();
+function _update_8003_field_create_instance(array $field_config, array &$instance_config) {
+  $uuid = new Uuid();
 
-  // Nuke data.
-  db_delete('field_data_' . $field_name)
-    ->condition('entity_type', $entity_type)
-    ->condition('bundle', $bundle)
-    ->execute();
-  db_delete('field_revision_' . $field_name)
-    ->condition('entity_type', $entity_type)
-    ->condition('bundle', $bundle)
-    ->execute();
-}
-
-/**
- * Fetches all of the field definitions from the database.
- *
- * Warning: Unlike the field_read_fields() API function, this function returns
- * all fields by default, including deleted and inactive fields, unless
- * specified otherwise in the $conditions parameter.
- *
- * @param $conditions
- *   An array of conditions to limit the select query to.
- * @param $key
- *   The name of the field property the return array is indexed by. Using
- *   anything else than 'id' might cause incomplete results if the $conditions
- *   do not filter out deleted fields.
- *
- * @return
- *   An array of fields matching $conditions, keyed by the property specified
- *   by the $key parameter.
- * @ingroup update_api
- */
-function _update_7000_field_read_fields(array $conditions = array(), $key = 'id') {
-  $fields = array();
-  $query = db_select('field_config', 'fc', array('fetch' => PDO::FETCH_ASSOC))
-    ->fields('fc');
-  foreach ($conditions as $column => $value) {
-    $query->condition($column, $value);
-  }
-  foreach ($query->execute() as $record) {
-    $field = unserialize($record['data']);
-    $field['id'] = $record['id'];
-    $field['field_name'] = $record['field_name'];
-    $field['type'] = $record['type'];
-    $field['module'] = $record['module'];
-    $field['active'] = $record['active'];
-    $field['storage']['type'] = $record['storage_type'];
-    $field['storage']['module'] = $record['storage_module'];
-    $field['storage']['active'] = $record['storage_active'];
-    $field['locked'] = $record['locked'];
-    $field['cardinality'] = $record['cardinality'];
-    $field['translatable'] = $record['translatable'];
-    $field['deleted'] = $record['deleted'];
-
-    $fields[$field[$key]] = $field;
-  }
-  return $fields;
-}
-
-/**
- * Writes a field instance directly to the database.
- *
- * @ingroup update_api
- */
-function _update_7000_field_create_instance($field, &$instance) {
   // Merge in defaults.
-  $instance += array(
-    'field_id' => $field['id'],
-    'field_name' => $field['field_name'],
-    'deleted' => FALSE,
+  $instance_config += array(
     'description' => '',
     'required' => FALSE,
+    'uuid' => $uuid->generate(),
+    'field_uuid' => $field_config['uuid'],
+    'field_type' => $field_config['type'],
+    'default_value' => array(),
+    'default_value_function' => '',
+    'settings' => array(),
+    'widget' => array(),
+    'status' => 1,
+    'langcode' => 'und',
   );
 
-  // The serialized 'data' column contains everything from $instance that does
-  // not have its own column and is not automatically populated when the
-  // instance is read.
-  $data = $instance;
-  unset($data['id'], $data['field_id'], $data['field_name'], $data['entity_type'], $data['bundle'], $data['deleted']);
-
-  $record = array(
-    'field_id' => $instance['field_id'],
-    'field_name' => $instance['field_name'],
-    'entity_type' => $instance['entity_type'],
-    'bundle' => $instance['bundle'],
-    'data' => serialize($data),
-    'deleted' => (int) $instance['deleted'],
-  );
-  $instance['id'] = db_insert('field_config_instance')
-    ->fields($record)
-    ->execute();
+  // Save in config.
+  Drupal::config('field.instance.' . $instance_config['id'])
+    ->setData($instance_config)
+    ->save();
+  update_config_manifest_add('field.instance', array($instance_config['id']));
 }
 
 /**
  * @addtogroup updates-7.x-to-8.x
  * @{
  */
-
-/**
- * Implements hook_update_dependencies().
- */
-function field_update_dependencies() {
-  // Convert Field API to ConfigEntities after:
-  $dependencies['field'][8003] = array(
-    // - Custom block bodies have been turned to fields.
-    'block' => 8008,
-    // - User pictures have been turned to fields.
-    'user' => 8011,
-    // - The {file_usage}.id column has moved to varchar.
-    'file' => 8001,
-  );
-  return $dependencies;
-}
 
 /**
  * Empty update - moved into field_update_8003().
