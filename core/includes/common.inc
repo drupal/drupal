@@ -8,6 +8,8 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Yaml\Parser;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Drupal\Component\PhpStorage\PhpStorageFactory;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -4232,15 +4234,15 @@ function _drupal_bootstrap_full($skip = FALSE) {
  *
  * @see drupal_page_header()
  */
-function drupal_page_set_cache($body) {
+function drupal_page_set_cache(Response $response, Request $request) {
   global $base_root;
 
   if (drupal_page_is_cacheable()) {
     $cache = (object) array(
-      'cid' => $base_root . request_uri(),
+      'cid' => $base_root . $request->getRequestUri(),
       'data' => array(
-        'path' => current_path(),
-        'body' => $body,
+        'path' => $request->attributes->get('system_path'),
+        'body' => $response->getContent(),
         'title' => drupal_get_title(),
         'headers' => array(),
       ),
@@ -4249,16 +4251,18 @@ function drupal_page_set_cache($body) {
       'created' => REQUEST_TIME,
     );
 
-    // Restore preferred header names based on the lower-case names returned
-    // by drupal_get_http_header().
-    $header_names = _drupal_set_preferred_header_name();
-    foreach (drupal_get_http_header() as $name_lower => $value) {
-      $cache->data['headers'][$header_names[$name_lower]] = $value;
-      if ($name_lower == 'expires') {
-        // Use the actual timestamp from an Expires header if available.
-        $date = new DrupalDateTime($value);
-        $cache->expire = $date->getTimestamp();
-      }
+    $cache->data['headers'] = $response->headers->all();
+
+    // Hack: exclude the x-drupal-cache header; it may make it in here because
+    // of awkwardness in how we defer sending it over in _drupal_page_get_cache.
+    if (isset($cache->data['headers']['x-drupal-cache'])) {
+      unset($cache->data['headers']['x-drupal-cache']);
+    }
+
+     // Use the actual timestamp from an Expires header, if available.
+    if ($date = $response->getExpires()) {
+      $date = new DrupalDateTime($date);
+      $cache->expire = $date->getTimestamp();
     }
 
     if ($cache->data['body']) {

@@ -9,6 +9,7 @@ use Drupal\Core\Language\Language;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\Core\Template\Attribute;
 use Drupal\Component\Utility\Crypt;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Implements hook_help().
@@ -129,19 +130,23 @@ function _toolbar_initialize_page_cache() {
   // @see _drupal_bootstrap_page_cache()
   $cache = drupal_page_get_cache();
   if (is_object($cache)) {
-    header('X-Drupal-Cache: HIT');
+    $response = new Response();
+    $request = \Drupal::request();
+    $response->headers->set('X-Drupal-Cache', 'HIT');
     // Restore the metadata cached with the page.
     $_GET['q'] = $cache->data['path'];
     date_default_timezone_set(drupal_get_user_timezone());
 
-    drupal_serve_page_from_cache($cache);
+    drupal_serve_page_from_cache($cache, $response, $request);
 
+    $response->prepare($request);
+    $response->send();
     // We are done.
     exit;
   }
 
   // Otherwise, create a new page response (that will be cached).
-  header('X-Drupal-Cache: MISS');
+  drupal_add_http_header('X-Drupal-Cache', 'MISS');
 
   // The Expires HTTP header is the heart of the client-side HTTP caching. The
   // additional server-side page cache only takes effect when the client

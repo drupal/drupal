@@ -18,6 +18,8 @@ class SessionTest extends WebTestBase {
    */
   public static $modules = array('session_test');
 
+  protected $dumpHeaders = TRUE;
+
   public static function getInfo() {
     return array(
       'name' => 'Session tests',

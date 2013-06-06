@@ -92,21 +92,25 @@ class PageCacheTest extends WebTestBase {
     $config = config('system.performance');
     $config->set('cache.page.use_internal', 1);
     $config->set('cache.page.max_age', 300);
+    $config->set('response.gzip', 1);
     $config->save();
 
     // Fill the cache.
     $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Foo', 'value' => 'bar')));
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
-    $this->assertEqual($this->drupalGetHeader('Vary'), 'Cookie,Accept-Encoding', 'Vary header was sent.');
-    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'public, max-age=300', 'Cache-Control header was sent.');
+    $this->assertEqual(strtolower($this->drupalGetHeader('Vary')), 'cookie,accept-encoding', 'Vary header was sent.');
+    // Symfony's Response logic determines a specific order for the subvalues
+    // of the Cache-Control header, even if they are explicitly passed in to
+    // the response header bag in a different order.
+    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'max-age=300, public', 'Cache-Control header was sent.');
     $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', 'Expires header was sent.');
     $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
 
     // Check cache.
     $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Foo', 'value' => 'bar')));
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
-    $this->assertEqual($this->drupalGetHeader('Vary'), 'Cookie,Accept-Encoding', 'Vary: Cookie header was sent.');
-    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'public, max-age=300', 'Cache-Control header was sent.');
+    $this->assertEqual(strtolower($this->drupalGetHeader('Vary')), 'cookie,accept-encoding', 'Vary: Cookie header was sent.');
+    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'max-age=300, public', 'Cache-Control header was sent.');
     $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', 'Expires header was sent.');
     $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
 
@@ -114,14 +118,14 @@ class PageCacheTest extends WebTestBase {
     $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Expires', 'value' => 'Fri, 19 Nov 2008 05:00:00 GMT')));
     $this->assertEqual($this->drupalGetHeader('Expires'), 'Fri, 19 Nov 2008 05:00:00 GMT', 'Default header was replaced.');
     $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Vary', 'value' => 'User-Agent')));
-    $this->assertEqual($this->drupalGetHeader('Vary'), 'User-Agent,Accept-Encoding', 'Default header was replaced.');
+    $this->assertEqual(strtolower($this->drupalGetHeader('Vary')), 'user-agent,accept-encoding', 'Default header was replaced.');
 
     // Check that authenticated users bypass the cache.
     $user = $this->drupalCreateUser();
     $this->drupalLogin($user);
     $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Foo', 'value' => 'bar')));
     $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), 'Caching was bypassed.');
-    $this->assertTrue(strpos($this->drupalGetHeader('Vary'), 'Cookie') === FALSE, 'Vary: Cookie header was not sent.');
+    $this->assertTrue(strpos(strtolower($this->drupalGetHeader('Vary')), 'cookie') === FALSE, 'Vary: Cookie header was not sent.');
     $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'must-revalidate, no-cache, post-check=0, pre-check=0, private', 'Cache-Control header was sent.');
     $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', 'Expires header was sent.');
     $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
@@ -148,6 +152,7 @@ class PageCacheTest extends WebTestBase {
     $config = config('system.performance');
     $config->set('cache.page.use_internal', 1);
     $config->set('cache.page.max_age', 300);
+    $config->set('response.gzip', 1);
     $config->save();
 
     // Fill the cache and verify that output is compressed.

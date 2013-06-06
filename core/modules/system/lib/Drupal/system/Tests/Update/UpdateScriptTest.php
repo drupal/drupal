@@ -21,6 +21,8 @@ class UpdateScriptTest extends WebTestBase {
    */
   public static $modules = array('update_script_test', 'dblog');
 
+  protected $dumpHeaders = TRUE;
+
   private $update_url;
   private $update_user;
 

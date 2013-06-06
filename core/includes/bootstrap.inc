@@ -17,6 +17,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException as DependencyInjectionRuntimeException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Lock\DatabaseLockBackend;
 use Drupal\Core\Lock\LockBackendInterface;
@@ -1068,6 +1069,8 @@ function drupal_load($type, $name) {
  *   reason phrase, e.g. "404 Not Found".
  * @param $append
  *   Whether to append the value to an existing header or to replace it.
+ *
+ * @deprecated Header handling is being shifted to a Symfony response object.
  */
 function drupal_add_http_header($name, $value, $append = FALSE) {
   // The headers as name/value pairs.
@@ -1087,7 +1090,6 @@ function drupal_add_http_header($name, $value, $append = FALSE) {
   else {
     $headers[$name_lower] = $value;
   }
-  drupal_send_headers(array($name => $headers[$name_lower]), TRUE);
 }
 
 /**
@@ -1100,6 +1102,8 @@ function drupal_add_http_header($name, $value, $append = FALSE) {
  * @return
  *   A string containing the header value, or FALSE if the header has been set,
  *   or NULL if the header has not been set.
+ *
+ * @deprecated Header handling is being shifted to a Symfony response object.
  */
 function drupal_get_http_header($name = NULL) {
   $headers = &drupal_static('drupal_http_headers', array());
@@ -1116,7 +1120,9 @@ function drupal_get_http_header($name = NULL) {
  * Sets the preferred name for the HTTP header.
  *
  * Header names are case-insensitive, but for maximum compatibility they should
- * follow "common form" (see RFC 2617, section 4.2).
+ * follow "common form" (see RFC 2616, section 4.2).
+ *
+ * @deprecated Header handling is being shifted to a Symfony response object.
  */
 function _drupal_set_preferred_header_name($name = NULL) {
   static $header_names = array();
@@ -1138,6 +1144,8 @@ function _drupal_set_preferred_header_name($name = NULL) {
  * @param bool $only_default
  *   (optional) If TRUE and headers have already been sent, send only the
  *   specified headers.
+ *
+ * @deprecated Header handling is being shifted to a Symfony response object.
  */
 function drupal_send_headers($default_headers = array(), $only_default = FALSE) {
   $headers_sent = &drupal_static(__FUNCTION__, FALSE);
@@ -1192,6 +1200,8 @@ function drupal_send_headers($default_headers = array(), $only_default = FALSE) 
  * identical.
  *
  * @see drupal_page_set_cache()
+ *
+ * @deprecated Header handling is being shifted to a Symfony response object.
  */
 function drupal_page_header() {
   $headers_sent = &drupal_static(__FUNCTION__, FALSE);
@@ -1220,26 +1230,24 @@ function drupal_page_header() {
  * and the conditions match those currently in the cache, a 304 Not Modified
  * response is sent.
  */
-function drupal_serve_page_from_cache(stdClass $cache) {
+function drupal_serve_page_from_cache(stdClass $cache, Response $response, Request $request) {
   $config = config('system.performance');
+
+  // First half: we must determine if we should be returning a 304.
 
   // Negotiate whether to use compression.
   $page_compression = $config->get('response.gzip') && extension_loaded('zlib');
-  $return_compressed = $page_compression && isset($_SERVER['HTTP_ACCEPT_ENCODING']) && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE;
+  $return_compressed = $page_compression && $request->server->has('HTTP_ACCEPT_ENCODING') && strpos($request->server->get('HTTP_ACCEPT_ENCODING'), 'gzip') !== FALSE;
 
   // Get headers. Keys are lower-case.
   $boot_headers = drupal_get_http_header();
-
-  // Headers generated in this function, that may be replaced or unset using
-  // drupal_add_http_headers(). Keys are mixed-case.
-  $default_headers = array();
 
   foreach ($cache->data['headers'] as $name => $value) {
     // In the case of a 304 response, certain headers must be sent, and the
     // remaining may not (see RFC 2616, section 10.3.5).
     $name_lower = strtolower($name);
     if (in_array($name_lower, array('content-location', 'expires', 'cache-control', 'vary')) && !isset($boot_headers[$name_lower])) {
-      drupal_add_http_header($name, $value);
+      $response->headers->set($name, $value);
       unset($cache->data['headers'][$name]);
     }
   }
@@ -1248,39 +1256,40 @@ function drupal_serve_page_from_cache(stdClass $cache) {
   // to that one particular client due to Vary: Cookie. Thus, do not set
   // max-age > 0, allowing the page to be cached by external proxies, when a
   // session cookie is present unless the Vary header has been replaced.
-  $max_age = !isset($_COOKIE[session_name()]) || isset($boot_headers['vary']) ? $config->get('cache.page.max_age') : 0;
-  $default_headers['Cache-Control'] = 'public, max-age=' . $max_age;
+  $max_age = !$request->cookies->has(session_name()) || isset($boot_headers['vary']) ? $config->get('cache.page.max_age') : 0;
+  $response->headers->set('Cache-Control', 'public, max-age=' . $max_age);
 
   // Entity tag should change if the output changes.
-  $etag = '"' . $cache->created . '-' . intval($return_compressed) . '"';
-  header('Etag: ' . $etag);
+  $response->setEtag($cache->created);
 
   // See if the client has provided the required HTTP headers.
-  $if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) : FALSE;
-  $if_none_match = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? stripslashes($_SERVER['HTTP_IF_NONE_MATCH']) : FALSE;
+  $if_modified_since = $request->server->has('HTTP_IF_MODIFIED_SINCE') ? strtotime($request->server->get('HTTP_IF_MODIFIED_SINCE')) : FALSE;
+  $if_none_match = $request->server->has('HTTP_IF_NONE_MATCH') ? stripslashes($request->server->get('HTTP_IF_NONE_MATCH')) : FALSE;
 
   if ($if_modified_since && $if_none_match
-      && $if_none_match == $etag // etag must match
+      && $if_none_match == $response->headers->get('etag') // etag must match
       && $if_modified_since == $cache->created) {  // if-modified-since must match
-    header($_SERVER['SERVER_PROTOCOL'] . ' 304 Not Modified');
-    drupal_send_headers($default_headers);
+    $response->setStatusCode(304);
     return;
   }
 
+  // Second half: we're not returning a 304, so put in other headers.
+
   // Send the remaining headers.
   foreach ($cache->data['headers'] as $name => $value) {
+    $response->headers->set($name, $value);
     drupal_add_http_header($name, $value);
   }
 
-  $default_headers['Last-Modified'] = gmdate(DATE_RFC1123, $cache->created);
+  $response->setLastModified(\DateTime::createFromFormat('U', $cache->created));
 
   // HTTP/1.0 proxies does not support the Vary header, so prevent any caching
   // by sending an Expires date in the past. HTTP/1.1 clients ignores the
   // Expires header if a Cache-Control: max-age= directive is specified (see RFC
   // 2616, section 14.9.3).
-  $default_headers['Expires'] = 'Sun, 19 Nov 1978 05:00:00 GMT';
-
-  drupal_send_headers($default_headers);
+  if (!$response->getExpires()) {
+    $response->setExpires(\DateTime::createFromFormat('j-M-Y H:i:s T', '19-Nov-1978 05:00:00 GMT'));
+  }
 
   // Allow HTTP proxies to cache pages for anonymous users without a session
   // cookie. The Vary header is used to indicates the set of request-header
@@ -1288,17 +1297,17 @@ function drupal_serve_page_from_cache(stdClass $cache) {
   // response to reply to a subsequent request for a given URL without
   // revalidation.
   if (!isset($boot_headers['vary']) && !settings()->get('omit_vary_cookie')) {
-    header('Vary: Cookie');
+    $response->setVary('Cookie', FALSE);
   }
 
   if ($page_compression) {
-    header('Vary: Accept-Encoding', FALSE);
+    $response->setVary('accept-encoding', FALSE);
     // If page_compression is enabled, the cache contains gzipped data.
     if ($return_compressed) {
       // $cache->data['body'] is already gzip'ed, so make sure
       // zlib.output_compression does not compress it once more.
       ini_set('zlib.output_compression', '0');
-      header('Content-Encoding: gzip');
+      $response->headers->set('content-encoding', 'gzip');
     }
     else {
       // The client does not support compression, so unzip the data in the
@@ -1307,8 +1316,7 @@ function drupal_serve_page_from_cache(stdClass $cache) {
     }
   }
 
-  // Print the page.
-  print $cache->data['body'];
+  $response->setContent($cache->data['body']);
 }
 
 /**
@@ -2066,27 +2074,34 @@ function _drupal_bootstrap_page_cache() {
     $config = config('system.performance');
     $cache_enabled = $config->get('cache.page.use_internal');
   }
+
+  // @todo this is *criminal*. but, necessary, until we fix bootstrap ordering.
+  $request = Request::createFromGlobals();
   // If there is no session cookie and cache is enabled (or forced), try
   // to serve a cached page.
-  if (!isset($_COOKIE[session_name()]) && $cache_enabled) {
+  if (!$request->cookies->has(session_name()) && $cache_enabled) {
     // Make sure there is a user object because its timestamp will be checked.
     $user = drupal_anonymous_user();
     // Get the page from the cache.
     $cache = drupal_page_get_cache();
     // If there is a cached page, display it.
     if (is_object($cache)) {
-      header('X-Drupal-Cache: HIT');
+      $response = new Response();
+      $response->headers->set('X-Drupal-Cache', 'HIT');
       // Restore the metadata cached with the page.
       _current_path($cache->data['path']);
       drupal_set_title($cache->data['title'], PASS_THROUGH);
       date_default_timezone_set(drupal_get_user_timezone());
 
-      drupal_serve_page_from_cache($cache);
+      drupal_serve_page_from_cache($cache, $response, $request);
+
       // We are done.
+      $response->prepare($request);
+      $response->send();
       exit;
     }
     else {
-      header('X-Drupal-Cache: MISS');
+      drupal_add_http_header('X-Drupal-Cache', 'MISS');
     }
   }
 }
