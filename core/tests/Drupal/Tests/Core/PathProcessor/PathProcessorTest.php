@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\PathProcessor;
 
+use Drupal\Component\Utility\Settings;
 use Drupal\Core\PathProcessor\PathProcessorAlias;
 use Drupal\Core\PathProcessor\PathProcessorDecode;
 use Drupal\Core\PathProcessor\PathProcessorFront;
@@ -22,6 +23,7 @@ use Drupal\Tests\UnitTestCase;
 class PathProcessorTest extends UnitTestCase {
 
   protected $languages;
+  protected $languageManager;
 
   public static function getInfo() {
     return array(
@@ -43,6 +45,13 @@ class PathProcessorTest extends UnitTestCase {
     }
     $this->languages = $languages;
 
+    // Create a language manager stub.
+    $language_manager = $this->getMock('Drupal\Core\Language\LanguageManager');
+    $language_manager->expects($this->any())
+      ->method('getLanguage')
+      ->will($this->returnValue($languages['en']));
+
+    $this->languageManager = $language_manager;
   }
 
   /**
@@ -86,7 +95,7 @@ class PathProcessorTest extends UnitTestCase {
     $alias_processor = new PathProcessorAlias($alias_manager);
     $decode_processor = new PathProcessorDecode();
     $front_processor = new PathProcessorFront($config_factory_stub);
-    $language_processor = new PathProcessorLanguage($config_factory_stub, $this->languages);
+    $language_processor = new PathProcessorLanguage($config_factory_stub, new Settings(array()), $this->languageManager, $this->languages);
 
     // First, test the processor manager with the processors in the incorrect
     // order. The alias processor will run before the language processor, meaning

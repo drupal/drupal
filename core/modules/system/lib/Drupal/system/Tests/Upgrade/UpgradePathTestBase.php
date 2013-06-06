@@ -9,6 +9,8 @@ namespace Drupal\system\Tests\Upgrade;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Database;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\DrupalKernel;
 use Drupal\simpletest\WebTestBase;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +19,11 @@ use Symfony\Component\HttpFoundation\Request;
  * Perform end-to-end tests of the upgrade path.
  */
 abstract class UpgradePathTestBase extends WebTestBase {
+
+  /**
+   * @var array
+   */
+  protected $configDirectories;
 
   /**
    * The file path(s) to the dumped database(s) to load into the child site.
@@ -102,6 +109,12 @@ abstract class UpgradePathTestBase extends WebTestBase {
     // Reset all statics and variables to perform tests in a clean environment.
     $conf = array();
     drupal_static_reset();
+
+
+    // Build a minimal, partially mocked environment for unit tests.
+    $this->containerBuild(drupal_container());
+    // Make sure it survives kernel rebuilds.
+    $conf['container_bundles'][] = 'Drupal\simpletest\TestBundle';
 
     // Change the database prefix.
     // All static variables need to be reset before the database prefix is
@@ -298,6 +311,27 @@ abstract class UpgradePathTestBase extends WebTestBase {
     $this->resetAll();
 
     return TRUE;
+  }
+
+  /**
+   * Overrides some core services for the upgrade tests.
+   */
+  public function containerBuild(ContainerBuilder $container) {
+    // Keep the container object around for tests.
+    $this->container = $container;
+
+    $container
+      ->register('config.storage', 'Drupal\Core\Config\FileStorage')
+      ->addArgument($this->configDirectories[CONFIG_ACTIVE_DIRECTORY]);
+
+    if ($this->container->hasDefinition('path_processor_alias')) {
+      // Prevent the alias-based path processor, which requires a url_alias db
+      // table, from being registered to the path processor manager. We do this
+      // by removing the tags that the compiler pass looks for. This means the
+      // url generator can safely be used within upgrade path tests.
+      $definition = $this->container->getDefinition('path_processor_alias');
+      $definition->clearTag('path_processor_inbound')->clearTag('path_processor_outbound');
+    }
   }
 
   /**

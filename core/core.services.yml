@@ -198,12 +198,16 @@ services:
     arguments: ['@router.route_provider']
     calls:
       - [setFinalMatcher, ['@router.matcher.final_matcher']]
-  router.generator:
+  url_generator:
     class: Drupal\Core\Routing\UrlGenerator
-    arguments: ['@router.route_provider', '@path.alias_manager.cached']
+    arguments: ['@router.route_provider', '@path_processor_manager', '@config.factory', '@settings']
+    calls:
+      - [setRequest, ['@?request']]
+    tags:
+      - { name: persist }
   router.dynamic:
     class: Symfony\Cmf\Component\Routing\DynamicRouter
-    arguments: ['@router.request_context', '@router.matcher', '@router.generator']
+    arguments: ['@router.request_context', '@router.matcher', '@url_generator']
   legacy_generator:
     class: Drupal\Core\Routing\NullGenerator
   legacy_url_matcher:
@@ -390,11 +394,13 @@ services:
     class: Drupal\Core\PathProcessor\PathProcessorFront
     tags:
       - { name: path_processor_inbound, priority: 200 }
+      - { name: path_processor_outbound, priority: 200 }
     arguments: ['@config.factory']
   path_processor_alias:
     class: Drupal\Core\PathProcessor\PathProcessorAlias
     tags:
       - { name: path_processor_inbound, priority: 100 }
+      - { name: path_processor_outbound, priority: 300 }
     arguments: ['@path.alias_manager']
   transliteration:
     class: Drupal\Core\Transliteration\PHPTransliteration

@@ -46,7 +46,8 @@ class UrlAlterFunctionalTest extends WebTestBase {
 
     // Test that a path always uses its alias.
     $path = array('source' => "user/$uid/test1", 'alias' => 'alias/test1');
-    drupal_container()->get('path.crud')->save($path['source'], $path['alias']);
+    $this->container->get('path.crud')->save($path['source'], $path['alias']);
+    $this->rebuildContainer();
     $this->assertUrlInboundAlter('alias/test1', "user/$uid/test1");
     $this->assertUrlOutboundAlter("user/$uid/test1", 'alias/test1');
 
@@ -100,7 +101,7 @@ class UrlAlterFunctionalTest extends WebTestBase {
    */
   protected function assertUrlOutboundAlter($original, $final) {
     // Test outbound altering.
-    $result = url($original);
+    $result = $this->container->get('url_generator')->generateFromPath($original);
     $base_path = base_path() . $GLOBALS['script_path'];
     $result = substr($result, strlen($base_path));
     $this->assertIdentical($result, $final, format_string('Altered outbound URL %original, expected %final, and got %result.', array('%original' => $original, '%final' => $final, '%result' => $result)));

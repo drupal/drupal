@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\Core\Routing;
+
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -13,17 +14,23 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 /**
  * No-op implementation of a Url Generator, needed for backward compatibility.
  */
-class NullGenerator implements UrlGeneratorInterface {
+class NullGenerator extends UrlGenerator {
 
   /**
-   * Implements Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate();
+   * Override the parent constructor.
+   */
+  public function __construct() {
+  }
+
+  /**
+   * Overrides Drupal\Core\Routing\UrlGenerator::generate();
    */
   public function generate($name, $parameters = array(), $absolute = FALSE) {
     throw new RouteNotFoundException();
   }
 
   /**
-   * Implements Symfony\Component\Routing\RequestContextAwareInterface::setContext();
+   * Overrides Drupal\Core\Routing\UrlGenerator::setContext();
    */
   public function setContext(RequestContext $context) {
   }
@@ -32,5 +39,12 @@ class NullGenerator implements UrlGeneratorInterface {
    * Implements Symfony\Component\Routing\RequestContextAwareInterface::getContext();
    */
   public function getContext() {
+  }
+
+  /**
+   * Overrides Drupal\Core\Routing\UrlGenerator::processPath().
+   */
+  protected function processPath($path, &$options = array()) {
+    return $path;
   }
 }

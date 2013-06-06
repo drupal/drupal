@@ -452,6 +452,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
       'domain[it]' => 'it.example.com',
     );
     $this->drupalPost('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
+    $this->rebuildContainer();
 
     // Build the link we're going to test.
     $link = 'it.example.com/admin';
@@ -466,17 +467,19 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
 
     // Test HTTPS via options.
     $this->settingsSet('mixed_mode_sessions', TRUE);
+    $this->rebuildContainer();
+
     $italian_url = url('admin', array('https' => TRUE, 'language' => $languages['it'], 'script' => ''));
     $correct_link = 'https://' . $link;
     $this->assertTrue($italian_url == $correct_link, format_string('The url() function returns the right HTTPS URL (via options) (@url) in accordance with the chosen language', array('@url' => $italian_url)));
     $this->settingsSet('mixed_mode_sessions', FALSE);
 
     // Test HTTPS via current URL scheme.
-    $temp_https = $this->request->server->get('HTTPS');
-    $this->request->server->set('HTTPS', 'on');
+    $generator = $this->container->get('url_generator');
+    $request = Request::create('', 'GET', array(), array(), array(), array('HTTPS' => 'on'));
+    $generator->setRequest($request);
     $italian_url = url('admin', array('language' => $languages['it'], 'script' => ''));
     $correct_link = 'https://' . $link;
     $this->assertTrue($italian_url == $correct_link, format_string('The url() function returns the right URL (via current URL scheme) (@url) in accordance with the chosen language', array('@url' => $italian_url)));
-    $this->request->server->set('HTTPS', $temp_https);
   }
 }

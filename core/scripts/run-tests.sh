@@ -285,8 +285,10 @@ function simpletest_script_init($server_software) {
   if (!empty($args['url'])) {
     $parsed_url = parse_url($args['url']);
     $host = $parsed_url['host'] . (isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '');
-    $path = isset($parsed_url['path']) ? $parsed_url['path'] : '';
-
+    $path = isset($parsed_url['path']) ? rtrim($parsed_url['path']) : '';
+    if ($path == '/') {
+      $path = '';
+    }
     // If the passed URL schema is 'https' then setup the $_SERVER variables
     // properly so that testing will run under HTTPS.
     if ($parsed_url['scheme'] == 'https') {

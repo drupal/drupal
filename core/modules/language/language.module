@@ -634,7 +634,6 @@ function language_language_negotiation_info() {
     'callbacks' => array(
       'negotiation' => 'language_from_url',
       'language_switch' => 'language_switcher_url',
-      'url_rewrite' => 'language_url_rewrite_url',
     ),
     'file' => $file,
     'weight' => -8,
@@ -767,56 +766,6 @@ function language_language_delete($language) {
 function language_preprocess_block(&$variables) {
   if ($variables['configuration']['module'] == 'language') {
     $variables['attributes']['role'] = 'navigation';
-  }
-}
-
-/**
- * Implements hook_url_outbound_alter().
- *
- * Rewrite outbound URLs with language based prefixes.
- */
-function language_url_outbound_alter(&$path, &$options, $original_path) {
-  // Only modify internal URLs.
-  if (!$options['external'] && language_multilingual()) {
-    static $drupal_static_fast;
-    if (!isset($drupal_static_fast)) {
-      $drupal_static_fast['callbacks'] = &drupal_static(__FUNCTION__);
-    }
-    $callbacks = &$drupal_static_fast['callbacks'];
-
-    if (!isset($callbacks)) {
-      $callbacks = array();
-      include_once DRUPAL_ROOT . '/core/includes/language.inc';
-
-      foreach (language_types_get_configurable() as $type) {
-        // Get URL rewriter callbacks only from enabled language methods.
-        $negotiation = variable_get("language_negotiation_$type", array());
-
-        foreach ($negotiation as $method_id => $method) {
-          if (isset($method['callbacks']['url_rewrite'])) {
-            if (isset($method['file'])) {
-              require_once DRUPAL_ROOT . '/' . $method['file'];
-            }
-            // Avoid duplicate callback entries.
-            $callbacks[$method['callbacks']['url_rewrite']] = TRUE;
-          }
-        }
-      }
-
-      $callbacks = array_keys($callbacks);
-    }
-
-    // No language dependent path allowed in this mode.
-    if (empty($callbacks)) {
-      unset($options['language']);
-      return;
-    }
-
-    foreach ($callbacks as $callback) {
-      if (function_exists($callback)) {
-        $callback($path, $options);
-      }
-    }
   }
 }
 

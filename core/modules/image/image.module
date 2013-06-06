@@ -723,12 +723,14 @@ function image_style_flush($style) {
  *   The name of the style to be used with this image.
  * @param $path
  *   The path to the image.
+ * @param $clean_urls
+ *   (optional) Whether clean URLs are in use.
  * @return
  *   The absolute URL where a style image can be downloaded, suitable for use
  *   in an <img> tag. Requesting the URL will cause the image to be created.
  * @see image_style_deliver()
  */
-function image_style_url($style_name, $path) {
+function image_style_url($style_name, $path, $clean_urls = NULL) {
   $uri = image_style_path($style_name, $path);
   // The token query is added even if the
   // 'image.settings:allow_insecure_derivatives' configuration is TRUE, so that
@@ -743,11 +745,22 @@ function image_style_url($style_name, $path) {
     $token_query = array(IMAGE_DERIVATIVE_TOKEN => image_style_path_token($style_name, file_stream_wrapper_uri_normalize($path)));
   }
 
+  if ($clean_urls === NULL) {
+    // Assume clean URLs unless the request tells us otherwise.
+    $clean_urls = TRUE;
+    try {
+      $request = Drupal::request();
+      $clean_urls = $request->attributes->get('clean_urls');
+    }
+    catch (ServiceNotFoundException $e) {
+    }
+  }
+
   // If not using clean URLs, the image derivative callback is only available
   // with the script path. If the file does not exist, use url() to ensure
   // that it is included. Once the file exists it's fine to fall back to the
   // actual file path, this avoids bootstrapping PHP once the files are built.
-  if ($GLOBALS['script_path'] && file_uri_scheme($uri) == 'public' && !file_exists($uri)) {
+  if ($clean_urls === FALSE && file_uri_scheme($uri) == 'public' && !file_exists($uri)) {
     $directory_path = file_stream_wrapper_get_instance_by_uri($uri)->getDirectoryPath();
     return url($directory_path . '/' . file_uri_target($uri), array('absolute' => TRUE, 'query' => $token_query));
   }

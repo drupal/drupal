@@ -410,6 +410,8 @@ function install_begin_request(&$install_state) {
     // Register Twig template engine for use during install.
     CoreBundle::registerTwig($container);
 
+    $container->register('url_generator', 'Drupal\Core\Routing\NullGenerator');
+
     Drupal::setContainer($container);
   }
 
@@ -1948,7 +1950,14 @@ function install_finished(&$install_state) {
 
   $messages = drupal_set_message();
   $output = '<p>' . st('Congratulations, you installed @drupal!', array('@drupal' => drupal_install_profile_distribution_name())) . '</p>';
-  $output .= '<p>' . (isset($messages['error']) ? st('Review the messages above before visiting <a href="@url">your new site</a>.', array('@url' => url(''))) : st('<a href="@url">Visit your new site</a>.', array('@url' => url('')))) . '</p>';
+  // Ensure the URL that is generated for the home page does not have 'install.php'
+  // in it.
+  $request = Request::createFromGlobals();
+  $generator = Drupal::urlGenerator();
+  $generator->setBasePath(str_replace('/core', '', $request->getBasePath()) . '/');
+  $generator->setScriptPath('');
+  $url = $generator->generateFromPath('');
+  $output .= '<p>' . (isset($messages['error']) ? st('Review the messages above before visiting <a href="@url">your new site</a>.', array('@url' => $url)) : st('<a href="@url">Visit your new site</a>.', array('@url' => $url))) . '</p>';
 
   // Run cron to populate update status tables (if available) so that users
   // will be warned if they've installed an out of date Drupal version.

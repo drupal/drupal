@@ -47,7 +47,6 @@ class SiteSchemaTest extends WebTestBase {
       'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' => 'http://www.w3.org/2000/01/rdf-schema#class',
       'http://www.w3.org/2000/01/rdf-schema#subClassOf' => url("$schema_path$entity_type", array('absolute' => TRUE)),
     );
-
     $this->assertEqual($bundle_schema->getUri(), $bundle_uri, 'Bundle term URI is generated correctly.');
     $this->assertEqual($bundle_schema->getProperties(), $bundle_properties, 'Bundle term properties are generated correctly.');
   }

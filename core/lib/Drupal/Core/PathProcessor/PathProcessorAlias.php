@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Processes the inbound path using path alias lookups.
  */
-class PathProcessorAlias implements InboundPathProcessorInterface {
+class PathProcessorAlias implements InboundPathProcessorInterface, OutboundPathProcessorInterface {
 
   /**
    * An alias manager for looking up the system path.
@@ -40,4 +40,12 @@ class PathProcessorAlias implements InboundPathProcessorInterface {
     return $path;
   }
 
+  /**
+   * Implements Drupal\Core\PathProcessor\OutboundPathProcessorInterface::processOutbound().
+   */
+  public function processOutbound($path, &$options = array(), Request $request = NULL) {
+    $langcode = isset($options['language']) ? $options['language']->langcode : NULL;
+    $path = $this->aliasManager->getPathAlias($path, $langcode);
+    return $path;
+  }
 }

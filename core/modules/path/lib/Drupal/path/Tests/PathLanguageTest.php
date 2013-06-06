@@ -97,10 +97,10 @@ class PathLanguageTest extends PathTestBase {
     // Confirm that the alias is returned by url(). Languages are cached on
     // many levels, and we need to clear those caches.
     drupal_static_reset('language_list');
-    drupal_static_reset('language_url_outbound_alter');
-    drupal_static_reset('language_url_rewrite_url');
+    $this->rebuildContainer();
     $languages = language_list();
-    $url = url('node/' . $french_node->nid, array('language' => $languages[$french_node->langcode]));
+    $url = $this->container->get('url_generator')->generateFromPath('node/' . $french_node->nid, array('language' => $languages[$french_node->langcode]));
+
     $this->assertTrue(strpos($url, $edit['path[alias]']), 'URL contains the path alias.');
 
     // Confirm that the alias works even when changing language negotiation

@@ -3,6 +3,9 @@
 /**
  * @file
  * Fake an HTTPS request, for use during testing.
+ *
+ * @todo Fix this to use a new request rather than modifying server variables,
+ *   see http.php.
  */
 
 // Set a global variable to indicate a mock HTTPS request.

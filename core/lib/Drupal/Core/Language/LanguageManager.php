@@ -134,7 +134,7 @@ class LanguageManager {
    * @return bool
    *   TRUE if more than one language is enabled, FALSE otherwise.
    */
-  protected function isMultilingual() {
+  public function isMultilingual() {
     return variable_get('language_count', 1) > 1;
   }
 

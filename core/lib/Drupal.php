@@ -361,4 +361,14 @@ class Drupal {
     return static::$container->get('token');
   }
 
+  /**
+   * Returns the url generator service.
+   *
+   * @return \Drupal\Core\Routing\UrlGenerator
+   *   The url generator service.
+   */
+  public static function urlGenerator() {
+    return static::$container->get('url_generator');
+  }
+
 }

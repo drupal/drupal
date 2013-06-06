@@ -82,6 +82,10 @@ abstract class EntityTranslationTestBase extends WebTestBase {
     $this->setupTestFields();
 
     $this->controller = translation_entity_controller($this->entityType);
+
+    // Rebuild the container so that the new languages are picked up by services
+    // that hold a list of languages.
+    $this->rebuildContainer();
   }
 
   /**
