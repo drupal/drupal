@@ -194,4 +194,19 @@ class Field extends ItemList implements FieldInterface {
     // Grant access per default.
     return TRUE;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConstraints() {
+    // Constraints usually apply to the field item, but required does make
+    // sense on the field only. So we special-case it to apply to the field for
+    // now.
+    // @todo: Separate list and list item definitions to separate constraints.
+    $constraints = array();
+    if (!empty($this->definition['required'])) {
+      $constraints[] = \Drupal::typedData()->getValidationConstraintManager()->create('NotNull', array());
+    }
+    return $constraints;
+  }
 }

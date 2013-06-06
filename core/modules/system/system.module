@@ -2280,6 +2280,11 @@ function system_data_type_info() {
       'description' => t('An entity field referencing a language.'),
       'class' => '\Drupal\Core\Entity\Field\Type\LanguageItem',
       'list class' => '\Drupal\Core\Entity\Field\Type\Field',
+      'constraints' => array(
+        'ComplexData' => array(
+          'value' => array('Length' => array('max' => 12)),
+        ),
+      ),
     ),
     'entity_reference_field' => array(
       'label' => t('Entity reference field item'),

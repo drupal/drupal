@@ -304,28 +304,6 @@ class TypedDataManager extends PluginManagerBase {
   }
 
   /**
-   * Creates a validation constraint plugin.
-   *
-   * @param string $name
-   *   The name or plugin id of the constraint.
-   * @param mixed $options
-   *   The options to pass to the constraint class. Required and supported
-   *   options depend on the constraint class.
-   *
-   * @return \Symfony\Component\Validator\Constraint
-   *   A validation constraint plugin.
-   */
-  public function createValidationConstraint($name, $options) {
-    if (!is_array($options)) {
-      // Plugins need an array as configuration, so make sure we have one.
-      // The constraint classes support passing the options as part of the
-      // 'value' key also.
-      $options = array('value' => $options);
-    }
-    return $this->getValidationConstraintManager()->createInstance($name, $options);
-  }
-
-  /**
    * Gets configured constraints from a data definition.
    *
    * Any constraints defined for the data type, i.e. below the 'constraint' key
@@ -365,29 +343,28 @@ class TypedDataManager extends PluginManagerBase {
    */
   public function getConstraints($definition) {
     $constraints = array();
-    // @todo: Figure out how to handle nested constraint structures as
-    // collections.
+    $validation_manager = $this->getValidationConstraintManager();
+
     $type_definition = $this->getDefinition($definition['type']);
     // Auto-generate a constraint for the primitive type if we have a mapping.
     if (isset($type_definition['primitive type'])) {
-      $constraints[] = $this->getValidationConstraintManager()->
-        createInstance('PrimitiveType', array('type' => $type_definition['primitive type']));
+      $constraints[] = $validation_manager->create('PrimitiveType', array('type' => $type_definition['primitive type']));
     }
     // Add in constraints specified by the data type.
     if (isset($type_definition['constraints'])) {
       foreach ($type_definition['constraints'] as $name => $options) {
-        $constraints[] = $this->createValidationConstraint($name, $options);
+        $constraints[] = $validation_manager->create($name, $options);
       }
     }
     // Add any constraints specified as part of the data definition.
     if (isset($definition['constraints'])) {
       foreach ($definition['constraints'] as $name => $options) {
-        $constraints[] = $this->createValidationConstraint($name, $options);
+        $constraints[] = $validation_manager->create($name, $options);
       }
     }
     // Add the NotNull constraint for required data.
     if (!empty($definition['required']) && empty($definition['constraints']['NotNull'])) {
-      $constraints[] = $this->createValidationConstraint('NotNull', array());
+      $constraints[] = $validation_manager->create('NotNull', array());
     }
     return $constraints;
   }
