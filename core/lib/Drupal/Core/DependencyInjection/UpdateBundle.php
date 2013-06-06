@@ -32,6 +32,12 @@ class UpdateBundle extends Bundle {
     $container
       ->register('config.storage', 'Drupal\Core\Config\FileStorage')
       ->addArgument(config_get_config_directory(CONFIG_ACTIVE_DIRECTORY));
+    $container->register('module_handler', 'Drupal\Core\Extension\UpdateModuleHandler')
+      ->addArgument('%container.modules%');
+    $container
+      ->register("cache_factory", 'Drupal\Core\Cache\MemoryBackendFactory');
+    $container
+      ->register('router.builder', 'Drupal\Core\Routing\RouteBuilderStatic');
   }
 
 }

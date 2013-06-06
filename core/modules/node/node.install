@@ -789,7 +789,7 @@ function node_update_8011() {
  */
 function node_update_8012() {
   // Enable the history module without re-installing the schema.
-  update_module_enable(array('history'));
+  module_enable(array('history'));
 }
 
 /**
@@ -812,7 +812,7 @@ function node_update_8013() {
  */
 function node_update_8014() {
   // Enable the datetime module.
-  update_module_enable(array('datetime'));
+  module_enable(array('datetime'));
 }
 
 /**

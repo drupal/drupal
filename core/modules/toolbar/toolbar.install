@@ -18,7 +18,7 @@
  */
 function toolbar_update_8000() {
   // Enable the modules without re-installing the schema.
-  update_module_enable(array('breakpoint'));
+  module_enable(array('breakpoint'));
 }
 
 /**

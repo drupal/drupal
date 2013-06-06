@@ -1,13 +1,13 @@
 <?php
 
-use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Database\Database;
-use Drupal\Core\Language\Language;
-
 /**
  * @file
  * Install, update and uninstall functions for the system module.
  */
+use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Database\Database;
+use Drupal\Core\Language\Language;
 
 /**
  * Test and report Drupal installation requirements.
@@ -1539,7 +1539,7 @@ function system_update_8020() {
       ->condition('aid', 'system_block_ip_action')
       ->execute();
     // Enable the new Ban module.
-    update_module_enable(array('ban'));
+    module_enable(array('ban'));
   }
   else {
     // Drop old table.
@@ -1552,7 +1552,7 @@ function system_update_8020() {
  */
 function system_update_8021() {
   // Enable the module without re-installing the schema.
-  update_module_enable(array('action'));
+  module_enable(array('action'));
   // Rename former System module actions.
   $map = array(
     'system_message_action' => 'action_message_action',
@@ -1857,7 +1857,7 @@ function system_update_8041() {
  * Enable the new Entity module.
  */
 function system_update_8042() {
-  update_module_enable(array('entity'));
+  module_enable(array('entity'));
 }
 
 /**
@@ -1922,18 +1922,21 @@ function system_update_8045() {
 function system_update_8046() {
   $front_page = config('system.site')->get('page.front');
   if (!isset($front_page) || $front_page == 'node') {
-    update_module_enable(array('views'));
-
-    // Register views to the container, so views can use it's services.
-    $module_list = drupal_container()->getParameter('container.modules');
-    drupal_load('module', 'views');
-
-    drupal_container()->get('kernel')->updateModules($module_list, array('views' => 'core/modules/views/views.module'));
-
-    // This does not fire a hook just calls views.
-    config_install_default_config('module', 'views');
     // This imports the node frontpage view.
-    config_install_default_config('module', 'node');
+    $module = 'node';
+    $config_name = 'views.view.frontpage';
+    $module_config_path = drupal_get_path('module', $module) . '/config';
+    $module_filestorage = new FileStorage($module_config_path);
+    $config_storage = drupal_container()->get('config.storage');
+    // If this file already exists, something in the upgrade path went
+    // completely wrong and we want to know.
+    if ($config_storage->exists($config_name)) {
+      throw new ConfigException(format_string('Default configuration file @name of @module module unexpectedly exists already before the module was installed.', array(
+        '@module' => $module,
+        '@name' => $config_name,
+      )));
+    }
+    $config_storage->write($config_name, $module_filestorage->read($config_name));
   }
 }
 
@@ -1960,7 +1963,7 @@ function system_update_8047() {
  */
 function system_update_8048() {
   // Enable the module without re-installing the schema.
-  update_module_enable(array('menu_link'));
+  module_enable(array('menu_link'));
 
   // Add the langcode column if it doesn't exist.
   if (!db_field_exists('menu_inks', 'langcode')) {
