@@ -641,7 +641,7 @@ function module_disable($module_list, $disable_dependents = TRUE) {
   * @see hooks
   * @see themeable
   *
-  * @} End of "defgroup callbacks".
+  * @}
   */
 
 /**
