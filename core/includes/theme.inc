@@ -2003,7 +2003,9 @@ function drupal_pre_render_table(array $element) {
  *     - "data": The localized title of the table column.
  *     - "field": The database field represented in the table column (required
  *       if user is to be able to sort on this column).
- *     - "sort": A default sort order for this column ("asc" or "desc").
+ *     - "sort": A default sort order for this column ("asc" or "desc"). Only
+ *        one column should be given a default sort order because table sorting
+ *        only applies to one column at a time.
  *     - "class": An array of values for the 'class' attribute. In particular,
  *        the least important columns that can be hidden on narrow and medium
  *        width screens should have a 'priority-low' class, referenced with the
