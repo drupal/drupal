@@ -92,7 +92,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * @return TRUE/FALSE
    */
   public function usesBreadcrumb() {
-    $info = $this->default_actions($this->options['default_action']);
+    $info = $this->defaultActions($this->options['default_action']);
     return !empty($info['breadcrumb']);
   }
 
@@ -117,8 +117,8 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * @return TRUE/FALSE
    */
   public function needsStylePlugin() {
-    $info = $this->default_actions($this->options['default_action']);
-    $validate_info = $this->default_actions($this->options['validate']['fail']);
+    $info = $this->defaultActions($this->options['default_action']);
+    $validate_info = $this->defaultActions($this->options['validate']['fail']);
     return !empty($info['style plugin']) || !empty($validate_info['style plugin']);
   }
 
@@ -223,7 +223,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     );
 
     $options = array();
-    $defaults = $this->default_actions();
+    $defaults = $this->defaultActions();
     $validate_options = array();
     foreach ($defaults as $id => $info) {
       $options[$id] = $info['title'];
@@ -440,7 +440,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    *
    * Override this method to provide additional (or fewer) default behaviors.
    */
-  function default_actions($which = NULL) {
+  protected function defaultActions($which = NULL) {
     $defaults = array(
       'ignore' => array(
         'title' => t('Display all results for the specified field'),
@@ -653,7 +653,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    */
   function default_action($info = NULL) {
     if (!isset($info)) {
-      $info = $this->default_actions($this->options['default_action']);
+      $info = $this->defaultActions($this->options['default_action']);
     }
 
     if (!$info) {
@@ -672,7 +672,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * How to act if validation failes
    */
   public function validateFail() {
-    $info = $this->default_actions($this->options['validate']['fail']);
+    $info = $this->defaultActions($this->options['validate']['fail']);
     return $this->default_action($info);
   }
   /**
@@ -734,7 +734,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * Determine if the argument is set to provide a default argument.
    */
   function hasDefaultArgument() {
-    $info = $this->default_actions($this->options['default_action']);
+    $info = $this->defaultActions($this->options['default_action']);
     return !empty($info['has default argument']);
   }
 
@@ -961,7 +961,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * then validation cannot actually fail.
    */
   function validate_argument($arg) {
-    $validate_info = $this->default_actions($this->options['validate']['fail']);
+    $validate_info = $this->defaultActions($this->options['validate']['fail']);
     if (empty($validate_info['hard fail'])) {
       return TRUE;
     }
@@ -970,7 +970,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
 
     // If the validator has changed the validate fail condition to a
     // soft fail, deal with that:
-    $validate_info = $this->default_actions($this->options['validate']['fail']);
+    $validate_info = $this->defaultActions($this->options['validate']['fail']);
     if (empty($validate_info['hard fail'])) {
       return TRUE;
     }
