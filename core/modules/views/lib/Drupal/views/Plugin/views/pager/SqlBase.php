@@ -249,7 +249,7 @@ abstract class SqlBase extends PagerPluginBase {
    *   If provided, the page number will be set to this. If NOT provided,
    *   the page number will be set from the global page array.
    */
-  function set_current_page($number = NULL) {
+  public function setCurrentPage($number = NULL) {
     if (isset($number)) {
       $this->current_page = max(0, $number);
       return;
@@ -314,7 +314,7 @@ abstract class SqlBase extends PagerPluginBase {
       // See if the requested page was within range:
       if ($this->current_page >= $pager_total[$this->options['id']]) {
         // Pages are numbered from 0 so if there are 10 pages, the last page is 9.
-        $this->set_current_page($pager_total[$this->options['id']] - 1);
+        $this->setCurrentPage($pager_total[$this->options['id']] - 1);
       }
 
       // Put this number in to guarantee that we do not generate notices when the pager

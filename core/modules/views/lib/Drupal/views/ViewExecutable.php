@@ -450,7 +450,7 @@ class ViewExecutable {
 
     // If the pager is already initialized, pass it through to the pager.
     if (!empty($this->pager)) {
-      return $this->pager->set_current_page($page);
+      return $this->pager->setCurrentPage($page);
     }
   }
 
@@ -730,7 +730,7 @@ class ViewExecutable {
       $this->pager = $this->display_handler->getPlugin('pager');
 
       if ($this->pager->usePager()) {
-        $this->pager->set_current_page($this->current_page);
+        $this->pager->setCurrentPage($this->current_page);
       }
 
       // These overrides may have been set earlier via $view->set_*

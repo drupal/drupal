@@ -311,7 +311,7 @@ class PagerTest extends PluginTestBase {
     $rand_number = rand(1, 5);
     $view->setCurrentPage($rand_number);
     $rand_number = rand(6, 11);
-    $view->pager->set_current_page($rand_number);
+    $view->pager->setCurrentPage($rand_number);
     $this->assertEqual($view->getCurrentPage(), $rand_number, 'Make sure getCurrentPage uses the settings of set_current_page.');
 
     // Set an invalid page and make sure the method takes care about it.
