@@ -71,7 +71,7 @@ function menu_overview_form($form, &$form_state) {
   $form['#theme'] = 'menu_overview_form';
   $form_state += array('menu_overview_form_parents' => array());
 
-  $form['#attached']['css'] = array(drupal_get_path('module', 'menu') . '/menu.admin.css');
+  $form['#attached']['css'] = array(drupal_get_path('module', 'menu') . '/css/menu.admin.css');
 
   $links = array();
   $query = Drupal::entityQuery('menu_link')

@@ -322,7 +322,7 @@ function book_form_node_form_alter(&$form, &$form_state, $form_id) {
       '#submit' => array('book_pick_book_nojs_submit'),
       '#weight' => 20,
       '#attached' => array(
-        'css' => array(drupal_get_path('module', 'book') . '/book.admin.css'),
+        'css' => array(drupal_get_path('module', 'book') . '/css/book.admin.css'),
       ),
     );
   }
@@ -986,7 +986,7 @@ function template_preprocess_book_all_books_block(&$variables) {
  *     Properties used: bid, link_title, depth, plid, mlid.
  */
 function template_preprocess_book_navigation(&$variables) {
-  drupal_add_css(drupal_get_path('module', 'book') . '/book.theme.css');
+  drupal_add_css(drupal_get_path('module', 'book') . '/css/book.theme.css');
   $book_link = $variables['book_link'];
 
   // Provide extra variables for themers. Not needed by default.

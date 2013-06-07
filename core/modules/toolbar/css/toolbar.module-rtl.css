@@ -1,0 +1,78 @@
+/**
+ * @file toolbar.module-rtl.css
+ */
+html.js .toolbar {
+  left: auto;
+  right: 0;
+}
+.js .toolbar .bar .tab {
+  float: right;
+}
+
+/**
+ * Administration menu.
+ */
+.js .toolbar .bar {
+  left: auto;
+  right: 0;
+}
+@media only screen {
+  .js .toolbar .bar .tab,
+  .js .toolbar .tray li {
+    float: none;
+  }
+}
+@media only screen and (min-width: 16.5em) {
+  .js .toolbar .bar .tab,
+  .js .toolbar .horizontal li {
+    float: right;
+  }
+}
+
+/**
+ * Toolbar tray.
+ */
+.toolbar .vertical {
+  left: auto;
+  right: -100%;
+}
+.toolbar .horizontal {
+  left: auto;
+  right: 0;
+}
+.toolbar .vertical > .lining {
+  left: auto;
+  right: -100%;
+}
+.toolbar .vertical.active,
+.toolbar .vertical.active > .lining {
+  left: auto;
+  right: 0;
+}
+@media only screen and (min-width: 16.5em) {
+  .toolbar .vertical.active > .lining:before {
+    left: auto;
+    right: -1px;
+  }
+}
+
+/**
+ * At larger screen sizes, the tray pushes the page content.
+ */
+@media only screen and (min-width: 38.125em) {
+  body.toolbar-tray-open.toolbar-vertical {
+    margin-left: 0;
+    margin-right: 240px;
+    margin-right: 15rem;
+  }
+}
+/**
+ * ToolBar tray orientation toggle.
+ */
+.toolbar .horizontal .toggle-orientation {
+  left: 0;
+  right: auto;
+}
+.toolbar .vertical .toggle-orientation {
+  float: left;
+}

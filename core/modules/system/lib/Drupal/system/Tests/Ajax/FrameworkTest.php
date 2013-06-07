@@ -47,8 +47,8 @@ class FrameworkTest extends AjaxTestBase {
     // Expected commands, in a very specific order.
     $expected_commands[0] = new SettingsCommand(array('ajax' => 'test'), TRUE);
     drupal_static_reset('drupal_add_css');
-    drupal_add_css($path . '/system.admin.css');
-    drupal_add_css($path . '/system.maintenance.css');
+    drupal_add_css($path . '/css/system.admin.css');
+    drupal_add_css($path . '/css/system.maintenance.css');
     $expected_commands[1] = new AddCssCommand(drupal_get_css(drupal_add_css(), TRUE));
     drupal_static_reset('drupal_add_js');
     drupal_add_js($path . '/system.js');
@@ -99,7 +99,7 @@ class FrameworkTest extends AjaxTestBase {
     $expected = array(
       'setting_name' => 'ajax_forms_test_lazy_load_form_submit',
       'setting_value' => 'executed',
-      'css' => drupal_get_path('module', 'system') . '/system.admin.css',
+      'css' => drupal_get_path('module', 'system') . '/css/system.admin.css',
       'js' => drupal_get_path('module', 'system') . '/system.js',
     );
     // CSS files are stored by basename, see drupal_add_css().
@@ -188,7 +188,7 @@ class FrameworkTest extends AjaxTestBase {
    * Tests that overridden CSS files are not added during lazy load.
    */
   function testLazyLoadOverriddenCSS() {
-    // The test theme overrides system.base.css without an implementation,
+    // The test theme overrides system.module.css without an implementation,
     // thereby removing it.
     theme_enable(array('test_theme'));
     config('system.theme')
@@ -204,6 +204,6 @@ class FrameworkTest extends AjaxTestBase {
     // information about the file; we only really care about whether it appears
     // in a LINK or STYLE tag, for which Drupal always adds a query string for
     // cache control.
-    $this->assertNoText('system.base.css?', 'Ajax lazy loading does not add overridden CSS files.');
+    $this->assertNoText('system.module.css?', 'Ajax lazy loading does not add overridden CSS files.');
   }
 }

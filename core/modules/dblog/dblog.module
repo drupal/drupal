@@ -88,7 +88,7 @@ function dblog_menu() {
  */
 function dblog_page_build(&$page) {
   if (arg(0) == 'admin' && arg(1) == 'reports') {
-    $page['#attached']['css'][] = drupal_get_path('module', 'dblog') . '/dblog.css';
+    $page['#attached']['css'][] = drupal_get_path('module', 'dblog') . '/css/dblog.module.css';
   }
 }
 

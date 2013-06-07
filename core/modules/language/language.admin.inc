@@ -805,7 +805,7 @@ function language_content_settings_form(array $form, array $form_state, array $s
   $form = array(
     '#labels' => $labels,
     '#attached' => array(
-      'css' => array($path . '/language.admin.css'),
+      'css' => array($path . '/css/language.admin.css'),
     ),
   );
 

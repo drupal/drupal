@@ -106,7 +106,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
    */
   public function buildForm(array $form, array &$form_state) {
     $entities = $this->load();
-    $form['#attached']['css'][] = drupal_get_path('module', 'block') . '/block.admin.css';
+    $form['#attached']['css'][] = drupal_get_path('module', 'block') . '/css/block.admin.css';
     $form['#attached']['library'][] = array('system', 'drupal.tableheader');
     $form['#attached']['library'][] = array('block', 'drupal.block');
 

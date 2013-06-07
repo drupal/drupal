@@ -86,7 +86,7 @@ class CommentRenderController extends EntityRenderController {
 
       // Add indentation div or close open divs as needed.
       if ($is_threaded) {
-        $build['#attached']['css'][] = drupal_get_path('module', 'comment') . '/comment.theme.css';
+        $build['#attached']['css'][] = drupal_get_path('module', 'comment') . '/css/comment.theme.css';
         $prefix .= $comment->divs <= 0 ? str_repeat('</div>', abs($comment->divs)) : "\n" . '<div class="indented">';
       }
 

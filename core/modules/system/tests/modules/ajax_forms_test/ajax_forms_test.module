@@ -540,7 +540,7 @@ function ajax_forms_test_lazy_load_form($form, &$form_state) {
 function ajax_forms_test_lazy_load_form_submit($form, &$form_state) {
   if ($form_state['values']['add_files']) {
     drupal_add_js(array('ajax_forms_test_lazy_load_form_submit' => 'executed'), 'setting');
-    drupal_add_css(drupal_get_path('module', 'system') . '/system.admin.css');
+    drupal_add_css(drupal_get_path('module', 'system') . '/css/system.admin.css');
     drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
   }
   $form_state['rebuild'] = TRUE;

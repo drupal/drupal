@@ -1552,7 +1552,7 @@ details.fieldset-no-legend {
  * Widescreen
  *
  * Both of the following media queries must *exactly* match what is in
- * node.edit.admin.css. This is rather crazy.
+ * node.module.css. This is rather crazy.
  *
  * @todo Figure out how to reduce media query duplication across files
  *       and modules. Layout styles only allowed in themes?

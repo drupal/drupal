@@ -63,7 +63,7 @@ class ConfigController implements ControllerInterface {
    */
   public function diff($config_file) {
     // Add the CSS for the inline diff.
-    $output['#attached']['css'][] = drupal_get_path('module', 'system') . '/system.diff.css';
+    $output['#attached']['css'][] = drupal_get_path('module', 'system') . '/css/system.diff.css';
 
     $diff = config_diff($this->targetStorage, $this->sourceStorage, $config_file);
     $formatter = new \DrupalDiffFormatter();

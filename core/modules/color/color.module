@@ -194,7 +194,7 @@ function color_scheme_form($complete_form, &$form_state, $theme) {
       ),
       // Add custom CSS.
       'css' => array(
-        $base . '/color.admin.css' => array(),
+        $base . '/css/color.admin.css' => array(),
       ),
       // Add custom JavaScript.
       'js' => array(

@@ -45,7 +45,7 @@ function tour_library_info() {
     'title' => 'Tour',
     'version' => VERSION,
     'css' => array(
-      $path . '/css/tour.css' => array('media' => 'screen'),
+      $path . '/css/tour.module.css' => array('media' => 'screen'),
     )
   );
 

@@ -316,7 +316,7 @@ function common_test_library_info() {
 function common_test_js_and_css_querystring() {
    drupal_add_library('system', 'drupalSettings');
    drupal_add_js(drupal_get_path('module', 'node') . '/node.js');
-   drupal_add_css(drupal_get_path('module', 'node') . '/node.admin.css');
+   drupal_add_css(drupal_get_path('module', 'node') . '/css/node.admin.css');
    // A relative URI may have a query string.
    drupal_add_css('/' . drupal_get_path('module', 'node') . '/node-fake.css?arg1=value1&arg2=value2');
    return '';

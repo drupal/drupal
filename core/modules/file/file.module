@@ -1651,7 +1651,7 @@ function file_library_info() {
       drupal_get_path('module', 'file') . '/file.js' => array(),
     ),
     'css' => array(
-      drupal_get_path('module', 'file') . '/file.admin.css'
+      drupal_get_path('module', 'file') . '/css/file.admin.css'
     ),
     'dependencies' => array(
       array('system', 'jquery'),

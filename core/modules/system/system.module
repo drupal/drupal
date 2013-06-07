@@ -1464,7 +1464,7 @@ function system_library_info() {
       'core/misc/dropbutton/dropbutton.js' => array(),
     ),
     'css' => array(
-      'core/misc/dropbutton/dropbutton.base.css' => array(),
+      'core/misc/dropbutton/dropbutton.css' => array(),
       'core/misc/dropbutton/dropbutton.theme.css' => array(),
     ),
     'dependencies' => array(
@@ -2503,11 +2503,11 @@ function system_filetransfer_info() {
 function system_page_build(&$page) {
   $path = drupal_get_path('module', 'system');
   // Use the CSS_AGGREGATE_SYSTEM group to load these early.
-  $page['#attached']['css'][$path . '/system.base.css'] = array('group' => CSS_AGGREGATE_SYSTEM, 'every_page' => TRUE);
+  $page['#attached']['css'][$path . '/css/system.module.css'] = array('group' => CSS_AGGREGATE_SYSTEM, 'every_page' => TRUE);
   if (path_is_admin(current_path())) {
-    $page['#attached']['css'][$path . '/system.admin.css'] = array('group' => CSS_AGGREGATE_SYSTEM);
+    $page['#attached']['css'][$path . '/css/system.admin.css'] = array('group' => CSS_AGGREGATE_SYSTEM);
   }
-  $page['#attached']['css'][$path . '/system.theme.css'] = array('group' => CSS_AGGREGATE_SYSTEM, 'every_page' => TRUE);
+  $page['#attached']['css'][$path . '/css/system.theme.css'] = array('group' => CSS_AGGREGATE_SYSTEM, 'every_page' => TRUE);
 }
 
 /**
@@ -2638,7 +2638,7 @@ function system_preprocess_block(&$variables) {
  *   - form: The plugin form elements.
 */
 function template_preprocess_system_plugin_ui_form(&$variables) {
-  drupal_add_css(drupal_get_path('module', 'system') . '/system.plugin.ui.css');
+  drupal_add_css(drupal_get_path('module', 'system') . '/css/system.plugin.ui.css');
 }
 
 /**

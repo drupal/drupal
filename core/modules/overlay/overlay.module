@@ -140,7 +140,7 @@ function overlay_library_info() {
       $module_path . '/overlay-parent.js' => array(),
     ),
     'css' => array(
-      $module_path . '/overlay-parent.css' => array(),
+      $module_path . '/css/overlay-parent.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'jquery'),
@@ -162,7 +162,7 @@ function overlay_library_info() {
       $module_path . '/overlay-child.js' => array(),
     ),
     'css' => array(
-      $module_path . '/overlay-child.css' => array(),
+      $module_path . '/css/overlay-child.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'jquery'),

@@ -16,7 +16,7 @@ use Drupal\Core\Template\Attribute;
 function block_admin_demo($theme = NULL) {
   return array(
     '#attached' => array(
-      'css' => array(drupal_get_path('module', 'block') . '/block.admin.css'),
+      'css' => array(drupal_get_path('module', 'block') . '/css/block.admin.css'),
     ),
   );
 }
@@ -86,4 +86,3 @@ function block_admin_edit(Block $entity) {
 
   return entity_get_form($entity);
 }
-

@@ -145,7 +145,7 @@ function seven_form_node_form_alter(&$form, &$form_state) {
 
   $form['#theme'] = array('node_edit_form');
   $form['#attached'] = array(
-    'css' => array(drupal_get_path('module', 'node') . '/node.edit.admin.css'),
+    'css' => array(drupal_get_path('module', 'node') . '/css/node.module.css'),
   );
 
   $form['advanced']['#type'] = 'container';

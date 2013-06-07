@@ -48,7 +48,7 @@ class HelpController implements ControllerInterface {
   public function helpMain() {
     $output = array(
       '#attached' => array(
-        'css' => array(drupal_get_path('module', 'help') . '/help.css'),
+        'css' => array(drupal_get_path('module', 'help') . '/css/help.module.css'),
       ),
       '#markup' => '<h2>' . t('Help topics') . '</h2><p>' . t('Help is available on the following items:') . '</p>' . $this->helpLinksAsList(),
     );

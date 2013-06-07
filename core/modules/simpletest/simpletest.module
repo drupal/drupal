@@ -154,7 +154,7 @@ function simpletest_run_tests($test_list, $reporter = 'drupal') {
     ),
     'finished' => '_simpletest_batch_finished',
     'progress_message' => '',
-    'css' => array(drupal_get_path('module', 'simpletest') . '/simpletest.css'),
+    'css' => array(drupal_get_path('module', 'simpletest') . '/css/simpletest.module.css'),
     'init_message' => t('Processing test @num of @max - %test.', array('%test' => $info['name'], '@num' => '1', '@max' => count($test_list))),
   );
   batch_set($batch);
@@ -692,7 +692,7 @@ function simpletest_library_info() {
       drupal_get_path('module', 'simpletest') . '/simpletest.js' => array(),
     ),
     'css' => array(
-      drupal_get_path('module', 'simpletest') . '/simpletest.css' => array(),
+      drupal_get_path('module', 'simpletest') . '/css/simpletest.module.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'jquery'),

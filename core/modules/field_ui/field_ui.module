@@ -338,7 +338,7 @@ function field_ui_library_info() {
       drupal_get_path('module', 'field_ui') . '/field_ui.js' => array(),
     ),
     'css' => array(
-      drupal_get_path('module', 'field_ui') . '/field_ui.admin.css' => array(),
+      drupal_get_path('module', 'field_ui') . '/css/field_ui.admin.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'jquery'),

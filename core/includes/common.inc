@@ -3475,7 +3475,7 @@ function drupal_aggregate_js(&$js_groups) {
  * @code
  * $build['#attached'] = array(
  *   'library' => array(array('taxonomy', 'taxonomy')),
- *   'css' => array(drupal_get_path('module', 'taxonomy') . '/taxonomy.css'),
+ *   'css' => array(drupal_get_path('module', 'taxonomy') . '/css/taxonomy.module.css'),
  * );
  * @endcode
  *

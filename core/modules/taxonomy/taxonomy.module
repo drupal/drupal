@@ -1297,7 +1297,7 @@ function taxonomy_library_info() {
       drupal_get_path('module', 'taxonomy') . '/taxonomy.js' => array(),
     ),
     'css' => array(
-      drupal_get_path('module', 'taxonomy') . '/taxonomy.css' => array(),
+      drupal_get_path('module', 'taxonomy') . '/css/taxonomy.module.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'jquery'),

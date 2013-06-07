@@ -14,6 +14,6 @@ description: 'Theme for testing the theme system'
 core: 8.x
 hidden: true
 stylesheets-remove:
-  - system.base.css
+  - system.module.css
 settings:
   theme_test_setting: 'default value'

@@ -73,6 +73,6 @@ function forum_page($forum_term = NULL) {
     '#sortby' => $sort_by,
     '#forums_per_page' => $forum_per_page,
   );
-  $build['#attached']['css'][] = drupal_get_path('module', 'forum') . '/forum.css';
+  $build['#attached']['css'][] = drupal_get_path('module', 'forum') . '/css/forum.module.css';
   return $build;
 }

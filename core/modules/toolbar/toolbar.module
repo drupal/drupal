@@ -591,7 +591,7 @@ function toolbar_library_info() {
       drupal_get_path('module', 'toolbar') . '/js/toolbar.js' => array(),
     ),
     'css' => array(
-      drupal_get_path('module', 'toolbar') . '/css/toolbar.base.css',
+      drupal_get_path('module', 'toolbar') . '/css/toolbar.module.css',
       drupal_get_path('module', 'toolbar') . '/css/toolbar.theme.css',
       drupal_get_path('module', 'toolbar') . '/css/toolbar.icons.css',
     ),

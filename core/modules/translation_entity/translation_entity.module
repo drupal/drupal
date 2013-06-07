@@ -362,7 +362,7 @@ function translation_entity_library_info() {
       $path . '/translation_entity.admin.js' => array(),
     ),
     'css' => array(
-      $path . '/translation_entity.admin.css' => array(),
+      $path . '/css/translation_entity.admin.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'jquery'),

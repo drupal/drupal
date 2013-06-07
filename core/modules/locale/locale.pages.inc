@@ -164,7 +164,7 @@ function locale_translate_filter_form($form, &$form_state) {
   $filter_values = locale_translate_filter_values();
 
   $form['#attached']['css'] = array(
-    drupal_get_path('module', 'locale') . '/locale.admin.css',
+    drupal_get_path('module', 'locale') . '/css/locale.admin.css',
   );
 
   $form['filters'] = array(
@@ -261,7 +261,7 @@ function locale_translate_edit_form($form, &$form_state) {
 
   $path = drupal_get_path('module', 'locale');
   $form['#attached']['css'] = array(
-    $path . '/locale.admin.css',
+    $path . '/css/locale.admin.css',
   );
   $form['#attached']['library'][] = array('locale', 'drupal.locale.admin');
 
@@ -584,7 +584,7 @@ function locale_translation_status_form($form, &$form_state) {
   );
 
   $form['#attached']['library'][] = array('locale', 'drupal.locale.admin');
-  $form['#attached']['css'] = array(drupal_get_path('module', 'locale') . '/locale.admin.css');
+  $form['#attached']['css'] = array(drupal_get_path('module', 'locale') . '/css/locale.admin.css');
 
   $form['actions'] = array('#type' => 'actions');
   if ($languages_update) {

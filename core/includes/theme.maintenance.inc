@@ -95,10 +95,10 @@ function _drupal_maintenance_theme() {
   // These are usually added from system_init() -except maintenance.css.
   // When the database is inactive it's not called so we add it here.
   $path = drupal_get_path('module', 'system');
-  drupal_add_css($path . '/system.base.css');
-  drupal_add_css($path . '/system.admin.css');
-  drupal_add_css($path . '/system.theme.css');
-  drupal_add_css($path . '/system.maintenance.css');
+  drupal_add_css($path . '/css/system.module.css');
+  drupal_add_css($path . '/css/system.theme.css');
+  drupal_add_css($path . '/css/system.admin.css');
+  drupal_add_css($path . '/css/system.maintenance.css');
 }
 
 /**

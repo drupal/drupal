@@ -316,7 +316,7 @@ function image_field_widget_process($element, &$form_state, $form) {
   $item['fids'] = $element['fids']['#value'];
 
   $element['#theme'] = 'image_widget';
-  $element['#attached']['css'][] = drupal_get_path('module', 'image') . '/image.theme.css';
+  $element['#attached']['css'][] = drupal_get_path('module', 'image') . '/css/image.theme.css';
 
   // Add the image preview.
   if (!empty($element['#files']) && $element['#preview_image_style']) {

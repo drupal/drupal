@@ -90,7 +90,7 @@ function edit_library_info() {
       $path . '/js/theme.js' => $options,
     ),
     'css' => array(
-      $path . '/css/edit.css' => array(),
+      $path . '/css/edit.module.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'jquery'),

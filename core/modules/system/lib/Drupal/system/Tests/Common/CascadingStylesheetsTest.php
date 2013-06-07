@@ -47,9 +47,9 @@ class CascadingStylesheetsTest extends WebTestBase {
    * Tests adding a file stylesheet.
    */
   function testAddFile() {
-    $path = drupal_get_path('module', 'simpletest') . '/simpletest.css';
+    $path = drupal_get_path('module', 'simpletest') . '/css/simpletest.module.css';
     $css = drupal_add_css($path);
-    $this->assertEqual($css['simpletest.css']['data'], $path);
+    $this->assertEqual($css['simpletest.module.css']['data'], $path);
   }
 
   /**
@@ -73,7 +73,7 @@ class CascadingStylesheetsTest extends WebTestBase {
    * Tests rendering the stylesheets.
    */
   function testRenderFile() {
-    $css = drupal_get_path('module', 'simpletest') . '/simpletest.css';
+    $css = drupal_get_path('module', 'simpletest') . '/css/simpletest.module.css';
     drupal_add_css($css);
     $styles = drupal_get_css();
     $this->assertTrue(strpos($styles, $css) > 0, 'Rendered CSS includes the added stylesheet.');
@@ -154,18 +154,17 @@ class CascadingStylesheetsTest extends WebTestBase {
    */
   function testRenderOrder() {
     // A module CSS file.
-    drupal_add_css(drupal_get_path('module', 'simpletest') . '/simpletest.css');
+    drupal_add_css(drupal_get_path('module', 'simpletest') . '/css/simpletest.module.css');
     // A few system CSS files, ordered in a strange way.
     $system_path = drupal_get_path('module', 'system');
-    drupal_add_css($system_path . '/system.base.css', array('group' => CSS_AGGREGATE_SYSTEM, 'weight' => -10));
-    drupal_add_css($system_path . '/system.theme.css', array('group' => CSS_AGGREGATE_SYSTEM));
+    drupal_add_css($system_path . '/css/system.module.css', array('group' => CSS_AGGREGATE_SYSTEM, 'weight' => -10));
+    drupal_add_css($system_path . '/css/system.theme.css', array('group' => CSS_AGGREGATE_SYSTEM));
 
     $expected = array(
-      $system_path . '/system.base.css',
-      $system_path . '/system.theme.css',
-      drupal_get_path('module', 'simpletest') . '/simpletest.css',
+      $system_path . '/css/system.module.css',
+      $system_path . '/css/system.theme.css',
+      drupal_get_path('module', 'simpletest') . '/css/simpletest.module.css',
     );
-
 
     $styles = drupal_get_css();
     // Stylesheet URL may be the href of a LINK tag or in an @import statement
@@ -186,36 +185,36 @@ class CascadingStylesheetsTest extends WebTestBase {
   function testRenderOverride() {
     $system = drupal_get_path('module', 'system');
 
-    drupal_add_css($system . '/system.base.css');
-    drupal_add_css($system . '/tests/system.base.css');
+    drupal_add_css($system . '/css/system.module.css');
+    drupal_add_css($system . '/tests/css/system.module.css');
 
     // The dummy stylesheet should be the only one included.
     $styles = drupal_get_css();
-    $this->assert(strpos($styles, $system . '/tests/system.base.css') !== FALSE, 'The overriding CSS file is output.');
-    $this->assert(strpos($styles, $system . '/system.base.css') === FALSE, 'The overridden CSS file is not output.');
+    $this->assert(strpos($styles, $system . '/tests/css/system.module.css') !== FALSE, 'The overriding CSS file is output.');
+    $this->assert(strpos($styles, $system . '/css/system.module.css') === FALSE, 'The overridden CSS file is not output.');
 
-    drupal_add_css($system . '/tests/system.base.css');
-    drupal_add_css($system . '/system.base.css');
+    drupal_add_css($system . '/tests/css/system.module.css');
+    drupal_add_css($system . '/css/system.module.css');
 
     // The standard stylesheet should be the only one included.
     $styles = drupal_get_css();
-    $this->assert(strpos($styles, $system . '/system.base.css') !== FALSE, 'The overriding CSS file is output.');
-    $this->assert(strpos($styles, $system . '/tests/system.base.css') === FALSE, 'The overridden CSS file is not output.');
+    $this->assert(strpos($styles, $system . '/css/system.module.css') !== FALSE, 'The overriding CSS file is output.');
+    $this->assert(strpos($styles, $system . '/tests/css/system.module.css') === FALSE, 'The overridden CSS file is not output.');
   }
 
   /**
    * Tests Locale module's CSS Alter to include RTL overrides.
    */
   function testAlter() {
-    // Switch the language to a right to left language and add system.base.css.
+    // Switch the language to a right to left language and add system.module.css.
     $language_interface = language(Language::TYPE_INTERFACE);
     $language_interface->direction = Language::DIRECTION_RTL;
     $path = drupal_get_path('module', 'system');
-    drupal_add_css($path . '/system.base.css');
+    drupal_add_css($path . '/css/system.module.css');
 
-    // Check to see if system.base-rtl.css was also added.
+    // Check to see if system.module-rtl.css was also added.
     $styles = drupal_get_css();
-    $this->assert(strpos($styles, $path . '/system.base-rtl.css') !== FALSE, 'CSS is alterable as right to left overrides are added.');
+    $this->assert(strpos($styles, $path . '/css/system.module-rtl.css') !== FALSE, 'CSS is alterable as right to left overrides are added.');
 
     // Change the language back to left to right.
     $language_interface->direction = Language::DIRECTION_LTR;
@@ -227,7 +226,7 @@ class CascadingStylesheetsTest extends WebTestBase {
   function testAddCssFileWithQueryString() {
     $this->drupalGet('common-test/query-string');
     $query_string = variable_get('css_js_query_string', '0');
-    $this->assertRaw(drupal_get_path('module', 'node') . '/node.admin.css?' . $query_string, 'Query string was appended correctly to css.');
+    $this->assertRaw(drupal_get_path('module', 'node') . '/css/node.admin.css?' . $query_string, 'Query string was appended correctly to css.');
     $this->assertRaw(drupal_get_path('module', 'node') . '/node-fake.css?arg1=value1&amp;arg2=value2', 'Query string not escaped on a URI.');
   }
 }
