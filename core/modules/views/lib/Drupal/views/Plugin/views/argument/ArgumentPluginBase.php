@@ -457,7 +457,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       ),
       'not found' => array(
         'title' => t('Hide view'),
-        'method' => 'default_not_found',
+        'method' => 'defaultNotFound',
         'hard fail' => TRUE, // This is a hard fail condition
       ),
       'summary' => array(
@@ -691,7 +691,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * If an argument was expected and was not given, in this case, report
    * the view as 'not found' or hide it.
    */
-  function default_not_found() {
+  protected function defaultNotFound() {
     // Set a failure condition and let the display manager handle it.
     $this->view->build_info['fail'] = TRUE;
     return FALSE;
