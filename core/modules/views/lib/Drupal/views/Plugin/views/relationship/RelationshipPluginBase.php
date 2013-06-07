@@ -135,7 +135,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
     // use a short alias for this:
     $alias = $def['table'] . '_' . $this->table;
 
-    $this->alias = $this->query->add_relationship($alias, $join, $this->definition['base'], $this->relationship);
+    $this->alias = $this->query->addRelationship($alias, $join, $this->definition['base'], $this->relationship);
 
     // Add access tags if the base table provide it.
     if (empty($this->query->options['disable_sql_rewrite']) && isset($table_data['table']['base']['access query tag'])) {

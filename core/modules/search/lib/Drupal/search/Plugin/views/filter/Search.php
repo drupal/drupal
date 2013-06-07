@@ -147,7 +147,7 @@ class Search extends FilterPluginBase {
       );
       $join = drupal_container()->get('plugin.manager.views.join')->createInstance('standard', $definition);
 
-      $search_total = $this->query->add_relationship('search_total', $join, $search_index);
+      $search_total = $this->query->addRelationship('search_total', $join, $search_index);
 
       $this->search_score = $this->query->add_field('', "SUM($search_index.score * $search_total.count)", 'score', array('aggregate' => TRUE));
 

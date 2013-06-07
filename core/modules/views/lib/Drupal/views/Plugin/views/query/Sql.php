@@ -290,7 +290,7 @@ class Sql extends QueryPluginBase {
    *   might have a relationship to an 'album' node, which might
    *   have a relationship to an 'artist' node.
    */
-  function add_relationship($alias, JoinPluginBase $join, $base, $link_point = NULL) {
+  public function addRelationship($alias, JoinPluginBase $join, $base, $link_point = NULL) {
     if (empty($link_point)) {
       $link_point = $this->view->storage->get('base_table');
     }
