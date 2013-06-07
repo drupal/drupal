@@ -32,7 +32,7 @@ class UserUid extends FilterPluginBase {
       ->condition("$this->tableAlias.uid", $this->value, $this->operator)
       ->exists($subselect);
 
-    $this->query->add_where($this->options['group'], $condition);
+    $this->query->addWhere($this->options['group'], $condition);
   }
 
 }

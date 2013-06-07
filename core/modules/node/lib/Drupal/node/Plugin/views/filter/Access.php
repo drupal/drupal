@@ -41,8 +41,8 @@ class Access extends FilterPluginBase {
         }
       }
 
-      $this->query->add_where('AND', $grants);
-      $this->query->add_where('AND', $table . '.grant_view', 1, '>=');
+      $this->query->addWhere('AND', $grants);
+      $this->query->addWhere('AND', $table . '.grant_view', 1, '>=');
     }
   }
 

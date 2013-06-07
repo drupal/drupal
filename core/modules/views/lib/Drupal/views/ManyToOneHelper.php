@@ -325,7 +325,7 @@ class ManyToOneHelper {
       }
 
       // implode on either AND or OR.
-      $this->handler->query->add_where($options['group'], $clause);
+      $this->handler->query->addWhere($options['group'], $clause);
     }
   }
 

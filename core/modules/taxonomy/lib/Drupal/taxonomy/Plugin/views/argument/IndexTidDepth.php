@@ -143,7 +143,7 @@ class IndexTidDepth extends ArgumentPluginBase {
     }
 
     $subquery->condition($where);
-    $this->query->add_where(0, "$this->tableAlias.$this->realField", $subquery, 'IN');
+    $this->query->addWhere(0, "$this->tableAlias.$this->realField", $subquery, 'IN');
   }
 
   function title() {

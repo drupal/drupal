@@ -174,18 +174,18 @@ class BooleanOperator extends FilterPluginBase {
         $or = db_or()
           ->condition($field, 0, '=')
           ->condition($field, NULL, 'IS NULL');
-        $this->query->add_where($this->options['group'], $or);
+        $this->query->addWhere($this->options['group'], $or);
       }
       else {
-        $this->query->add_where($this->options['group'], $field, 0, '=');
+        $this->query->addWhere($this->options['group'], $field, 0, '=');
       }
     }
     else {
       if (!empty($this->definition['use_equal'])) {
-        $this->query->add_where($this->options['group'], $field, 1, '=');
+        $this->query->addWhere($this->options['group'], $field, 1, '=');
       }
       else {
-        $this->query->add_where($this->options['group'], $field, 0, '<>');
+        $this->query->addWhere($this->options['group'], $field, 0, '<>');
       }
     }
   }

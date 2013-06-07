@@ -63,7 +63,7 @@ class UserUid extends ArgumentPluginBase {
       ->condition("$this->tableAlias.uid", $this->argument, '=')
       ->exists($subselect);
 
-    $this->query->add_where(0, $condition);
+    $this->query->addWhere(0, $condition);
   }
 
   /**

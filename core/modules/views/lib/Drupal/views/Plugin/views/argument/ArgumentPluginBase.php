@@ -910,7 +910,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    */
   public function query($group_by = FALSE) {
     $this->ensureMyTable();
-    $this->query->add_where(0, "$this->tableAlias.$this->realField", $this->argument);
+    $this->query->addWhere(0, "$this->tableAlias.$this->realField", $this->argument);
   }
 
   /**

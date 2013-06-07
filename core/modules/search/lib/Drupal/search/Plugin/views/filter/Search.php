@@ -130,7 +130,7 @@ class Search extends FilterPluginBase {
     }
     if ($required) {
       if ($this->operator == 'required') {
-        $this->query->add_where($this->options['group'], 'FALSE');
+        $this->query->addWhere($this->options['group'], 'FALSE');
       }
     }
     else {
@@ -182,7 +182,7 @@ class Search extends FilterPluginBase {
         $search_condition->condition($or);
       }
 
-      $this->query->add_where($this->options['group'], $search_condition);
+      $this->query->addWhere($this->options['group'], $search_condition);
       $this->query->add_groupby("$search_index.sid");
       $matches = $this->search_query->matches();
       $placeholder = $this->placeholder();

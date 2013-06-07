@@ -253,15 +253,15 @@ class Numeric extends FilterPluginBase {
 
   protected function opBetween($field) {
     if ($this->operator == 'between') {
-      $this->query->add_where($this->options['group'], $field, array($this->value['min'], $this->value['max']), 'BETWEEN');
+      $this->query->addWhere($this->options['group'], $field, array($this->value['min'], $this->value['max']), 'BETWEEN');
     }
     else {
-      $this->query->add_where($this->options['group'], db_or()->condition($field, $this->value['min'], '<=')->condition($field, $this->value['max'], '>='));
+      $this->query->addWhere($this->options['group'], db_or()->condition($field, $this->value['min'], '<=')->condition($field, $this->value['max'], '>='));
     }
   }
 
   protected function opSimple($field) {
-    $this->query->add_where($this->options['group'], $field, $this->value['value'], $this->operator);
+    $this->query->addWhere($this->options['group'], $field, $this->value['value'], $this->operator);
   }
 
   function op_empty($field) {
@@ -272,11 +272,11 @@ class Numeric extends FilterPluginBase {
       $operator = "IS NOT NULL";
     }
 
-    $this->query->add_where($this->options['group'], $field, NULL, $operator);
+    $this->query->addWhere($this->options['group'], $field, NULL, $operator);
   }
 
   protected function opRegex($field) {
-    $this->query->add_where($this->options['group'], $field, $this->value, 'RLIKE');
+    $this->query->addWhere($this->options['group'], $field, $this->value, 'RLIKE');
   }
 
   public function adminSummary() {

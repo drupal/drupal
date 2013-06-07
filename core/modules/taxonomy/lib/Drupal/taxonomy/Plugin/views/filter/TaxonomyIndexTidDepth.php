@@ -102,7 +102,7 @@ class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
     }
 
     $subquery->condition($where);
-    $this->query->add_where($this->options['group'], "$this->tableAlias.$this->realField", $subquery, 'IN');
+    $this->query->addWhere($this->options['group'], "$this->tableAlias.$this->realField", $subquery, 'IN');
   }
 
 }

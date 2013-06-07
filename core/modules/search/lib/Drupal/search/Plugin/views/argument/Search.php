@@ -50,7 +50,7 @@ class Search extends ArgumentPluginBase {
     }
     if ($required) {
       if ($this->operator == 'required') {
-        $this->query->add_where(0, 'FALSE');
+        $this->query->addWhere(0, 'FALSE');
       }
     }
     else {
@@ -102,7 +102,7 @@ class Search extends ArgumentPluginBase {
         $search_condition->condition($or);
       }
 
-      $this->query->add_where(0, $search_condition);
+      $this->query->addWhere(0, $search_condition);
       $this->query->add_groupby("$search_index.sid");
       $matches = $this->search_query->matches();
       $placeholder = $this->placeholder();
