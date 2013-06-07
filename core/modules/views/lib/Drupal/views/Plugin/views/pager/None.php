@@ -86,7 +86,7 @@ class None extends PagerPluginBase {
   public function query() {
     // The only query modifications we might do are offsets.
     if (!empty($this->options['offset'])) {
-      $this->view->query->set_offset($this->options['offset']);
+      $this->view->query->setOffset($this->options['offset']);
     }
   }
 

@@ -50,7 +50,7 @@ class Counter extends FieldPluginBase {
     $pager = $this->view->pager;
     // Get the base count of the pager.
     if ($pager->usePager()) {
-      $count += ($pager->get_items_per_page() * $pager->getCurrentPage() + $pager->set_offset());
+      $count += ($pager->get_items_per_page() * $pager->getCurrentPage() + $pager->setOffset());
     }
     // Add the counter for the current site.
     $count += $this->view->row_index + 1;

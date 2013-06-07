@@ -106,7 +106,7 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
   /**
    * Set an OFFSET on the query, specifying a number of results to skip
    */
-  function set_offset($offset) {
+  public function setOffset($offset) {
     $this->offset = $offset;
   }
 

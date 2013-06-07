@@ -94,7 +94,7 @@ abstract class PagerPluginBase extends PluginBase {
   /**
    * Set the page offset, or how many items to skip.
    */
-  function set_offset($offset) {
+  public function setOffset($offset) {
     $this->options['offset'] = $offset;
   }
 
