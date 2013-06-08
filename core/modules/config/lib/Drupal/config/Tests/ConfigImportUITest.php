@@ -29,6 +29,7 @@ class ConfigImportUITest extends WebTestBase {
 
     $this->web_user = $this->drupalCreateUser(array('synchronize configuration'));
     $this->drupalLogin($this->web_user);
+    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.staging'));
   }
 
   /**
@@ -40,13 +41,8 @@ class ConfigImportUITest extends WebTestBase {
     $storage = $this->container->get('config.storage');
     $staging = $this->container->get('config.storage.staging');
 
-    // Verify the configuration to create and update does not exist yet.
-    $this->assertIdentical($staging->exists($name), FALSE, $name . ' not found.');
-    $this->assertIdentical($staging->exists($dynamic_name), FALSE, $dynamic_name . ' not found.');
-
-    // Verify that the import UI recognises that the staging folder is empty.
     $this->drupalGet('admin/config/development/sync');
-    $this->assertText('There is no configuration to import.');
+    $this->assertText('There are no configuration changes.');
     $this->assertNoFieldById('edit-submit', t('Import all'));
 
     // Create updated configuration object.
@@ -66,15 +62,9 @@ class ConfigImportUITest extends WebTestBase {
       'protected_property' => '',
     );
     $staging->write($dynamic_name, $original_dynamic_data);
-
-    // Create manifest for new config entity.
-    $manifest_data = config('manifest.config_test.dynamic')->get();
-    $manifest_data[$original_dynamic_data['id']]['name'] = 'config_test.dynamic.' . $original_dynamic_data['id'];
-    $staging->write('manifest.config_test.dynamic', $manifest_data);
-
     $this->assertIdentical($staging->exists($dynamic_name), TRUE, $dynamic_name . ' found.');
 
-    // Verify that both appear as new.
+    // Verify that both appear as ready to import.
     $this->drupalGet('admin/config/development/sync');
     $this->assertText($name);
     $this->assertText($dynamic_name);
@@ -82,13 +72,12 @@ class ConfigImportUITest extends WebTestBase {
 
     // Import and verify that both do not appear anymore.
     $this->drupalPost(NULL, array(), t('Import all'));
-    $this->assertUrl('admin/config/development/sync');
     $this->assertNoText($name);
     $this->assertNoText($dynamic_name);
     $this->assertNoFieldById('edit-submit', t('Import all'));
 
     // Verify that there are no further changes to import.
-    $this->assertText(t('There is no configuration to import.'));
+    $this->assertText(t('There are no configuration changes.'));
 
     // Verify site name has changed.
     $this->assertIdentical($new_site_name, config('system.site')->get('name'));
@@ -118,7 +107,6 @@ class ConfigImportUITest extends WebTestBase {
 
     // Attempt to import configuration and verify that an error message appears.
     $this->drupalPost(NULL, array(), t('Import all'));
-    $this->assertUrl('admin/config/development/sync');
     $this->assertText(t('Another request may be synchronizing configuration already.'));
 
     // Release the lock, just to keep testing sane.

@@ -64,10 +64,6 @@ class ContactUpgradePathTest extends UpgradePathTestBase {
 
     // Check that no default config imported on upgrade.
     $this->assertFalse(entity_load('contact_category', 'feedback'));
-
-    // Assert that manifest has been created and contains the expected records.
-    $manifest = config('manifest.contact.category');
-    $this->assertEqual($manifest->get('1.name'), 'contact.category.1');
-    $this->assertEqual($manifest->get('2.name'), 'contact.category.2');
   }
 }
+

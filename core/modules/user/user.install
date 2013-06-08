@@ -764,7 +764,6 @@ function user_update_8011() {
       'weight' => -1,
     ))
     ->save();
-  update_config_manifest_add('entity.form_display', array($form_display->get('id')));
 
   // Assign display settings for the 'default' and 'compact' view modes.
   $display = _update_8000_entity_get_display('user', 'user', 'default');
@@ -778,7 +777,6 @@ function user_update_8011() {
       'weight' => 0,
     ))
     ->save();
-  update_config_manifest_add('entity.display', array($display->get('id')));
 
   $display = _update_8000_entity_get_display('user', 'user', 'compact');
   $display->set('content.user_picture', array(
@@ -794,7 +792,6 @@ function user_update_8011() {
       'visible' => FALSE,
     ));
   $display->save();
-  update_config_manifest_add('entity.display', array($display->get('id')));
 
   // Add file usage for the default field.
   if (!empty($default_image_fid)) {
@@ -1052,10 +1049,6 @@ function user_update_8017() {
       ->set('langcode', Language::LANGCODE_NOT_SPECIFIED)
       ->save();
   }
-
-  update_config_manifest_add('user.role', array_map(function ($role) {
-    return $role->rid;
-  }, $roles));
 }
 
 /**

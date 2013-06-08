@@ -9,7 +9,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Config\ConfigException;
 use Drupal\Core\Config\ConfigImporter;
-use Drupal\Core\Config\StorageComparerManifest;
+use Drupal\Core\Config\StorageComparer;
 use Drupal\Core\Config\StorageInterface;
 
 /**
@@ -27,16 +27,8 @@ use Drupal\Core\Config\StorageInterface;
  */
 function config_admin_sync_form(array &$form, array &$form_state, StorageInterface $source_storage) {
   $source_list = $source_storage->listAll();
-  if (empty($source_list)) {
-    $form['no_changes'] = array(
-      '#markup' => t('There is no configuration to import.'),
-    );
-    $form['actions']['#access'] = FALSE;
-    return $form;
-  }
-
-  $config_comparer = new StorageComparerManifest(Drupal::service('config.storage.staging'), Drupal::service('config.storage'));
-  if (!$config_comparer->createChangelist()->hasChanges()) {
+  $config_comparer = new StorageComparer(Drupal::service('config.storage.staging'), Drupal::service('config.storage'));
+  if (empty($source_list) || !$config_comparer->createChangelist()->hasChanges()) {
     $form['no_changes'] = array(
       '#markup' => t('There are no configuration changes.'),
     );
@@ -146,14 +138,6 @@ function config_admin_import_form_submit($form, &$form_state) {
       $config_importer->import();
       drupal_flush_all_caches();
       drupal_set_message(t('The configuration was imported successfully.'));
-
-      // Once a sync completes, we empty the staging directory. This prevents
-      // changes from being accidentally overwritten by stray files getting
-      // imported later.
-      $source_storage = $config_importer->getStorageComparer()->getSourceStorage();
-      foreach ($source_storage->listAll() as $name) {
-        $source_storage->delete($name);
-      }
     }
     catch (ConfigException $e) {
       // Return a negative result for UI purposes. We do not differentiate between

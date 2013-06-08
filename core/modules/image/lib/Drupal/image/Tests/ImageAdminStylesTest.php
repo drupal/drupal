@@ -364,11 +364,11 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->drupalGet('node/' . $nid);
     $this->assertRaw(image_style_url($style_name, file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid'])->uri), format_string('Image displayed using style @style.', array('@style' => $style_name)));
 
-    // Write empty manifest to staging.
-    $manifest_data = config('manifest.image.style')->get();
-    unset($manifest_data[$style_name]);
+    // Copy config to staging, and delete the image style.
     $staging = $this->container->get('config.storage.staging');
-    $staging->write('manifest.image.style', $manifest_data);
+    $active = $this->container->get('config.storage');
+    $this->copyConfig($active, $staging);
+    $staging->delete('image.style.' . $style_name);
     $this->configImporter()->import();
 
     $this->assertFalse(entity_load('image_style', $style_name), 'Style deleted after config import.');

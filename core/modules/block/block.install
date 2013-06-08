@@ -271,7 +271,6 @@ function block_update_8008() {
         'type' => 'text_textarea_with_summary',
       ))
       ->save();
-    update_config_manifest_add('entity.form_display', array($form_display->get('id')));
 
     // Initialize state for future calls.
     $sandbox['last'] = 0;

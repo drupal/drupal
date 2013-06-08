@@ -22,12 +22,6 @@ use Symfony\Component\Yaml\Dumper;
  *   The name of the module or theme to install default configuration for.
  */
 function config_install_default_config($type, $name) {
-  // If this module defines any ConfigEntity types then create an empty
-  // manifest file for each of them.
-  foreach (config_get_module_config_entities($name) as $entity_info) {
-    config('manifest.' . $entity_info['config_prefix'])->save();
-  }
-
   $config_dir = drupal_get_path($type, $name) . '/config';
   if (is_dir($config_dir)) {
     $source_storage = new FileStorage($config_dir);
@@ -59,12 +53,6 @@ function config_uninstall_default_config($type, $name) {
   $config_names = $storage->listAll($name . '.');
   foreach ($config_names as $config_name) {
     config($config_name)->delete();
-  }
-
-  // If this module defines any ConfigEntity types, then delete the manifest
-  // file for each of them.
-  foreach (config_get_module_config_entities($name) as $entity_type) {
-    config('manifest.' . $entity_info['config_prefix'])->delete();
   }
 }
 

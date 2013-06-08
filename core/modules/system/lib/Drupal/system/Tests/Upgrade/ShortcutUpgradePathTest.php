@@ -47,11 +47,6 @@ class ShortcutUpgradePathTest extends UpgradePathTestBase {
     $set = entity_load('shortcut', 'shortcut-set-2');
     $this->assertTrue($set->uuid(), 'Converted set has a UUID');
     $this->assertEqual($set->label(), 'Custom shortcut set');
-
-    // Assert that manifest has been created and contains the expected records.
-    $manifest = config('manifest.shortcut.set');
-    $this->assertEqual($manifest->get('default.name'), 'shortcut.set.default');
-    $this->assertEqual($manifest->get('shortcut-set-2.name'), 'shortcut.set.shortcut-set-2');
   }
-
 }
+

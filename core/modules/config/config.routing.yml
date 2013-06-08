@@ -4,3 +4,21 @@ config_diff:
     _content: '\Drupal\config\Controller\ConfigController::diff'
   requirements:
     _permission: 'synchronize configuration'
+config_export_download:
+  pattern: '/admin/config/development/export-download'
+  defaults:
+    _controller: '\Drupal\config\Controller\ConfigController::downloadExport'
+  requirements:
+    _permission: 'export configuration'
+config_export:
+  pattern: '/admin/config/development/export'
+  defaults:
+    _form: '\Drupal\config\Form\ConfigExportForm'
+  requirements:
+    _permission: 'export configuration'
+config_import:
+  pattern: '/admin/config/development/import'
+  defaults:
+    _form: '\Drupal\config\Form\ConfigImportForm'
+  requirements:
+    _permission: 'import configuration'

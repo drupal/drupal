@@ -52,7 +52,6 @@ function filter_update_8001() {
     $config = config('filter.format.' . $id);
     $config->setData($format);
     $config->save();
-    update_config_manifest_add('filter.format', array($id));
   }
 }
 

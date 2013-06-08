@@ -49,24 +49,14 @@ class FieldImportCreateTest extends FieldUnitTestBase {
     $field_config_name = "field.field.$field_id";
     $instance_config_name = "field.instance.$instance_id";
 
-    // Simulate config data to import:
+    $active = $this->container->get('config.storage');
+    $staging = $this->container->get('config.storage.staging');
+    $this->copyConfig($active, $staging);
+
+    // Add the new files to the staging directory.
     $src_dir = drupal_get_path('module', 'field_test_config') . '/staging';
     $this->assertTrue(file_unmanaged_copy("$src_dir/$field_config_name.yml", "public://config_staging/$field_config_name.yml"));
     $this->assertTrue(file_unmanaged_copy("$src_dir/$instance_config_name.yml", "public://config_staging/$instance_config_name.yml"));
-
-    // Add the coresponding entries to the current manifest data.
-    $field_manifest_name = 'manifest.field.field';
-    $instance_manifest_name = 'manifest.field.instance';
-    $active = $this->container->get('config.storage');
-    $field_manifest = $active->read($field_manifest_name);
-    $field_manifest[$field_id] = array('name' => $field_config_name);
-    $instance_manifest = $active->read($instance_manifest_name);
-    $instance_manifest[$instance_id] = array('name' => $instance_config_name);
-
-    // Save the manifests as files in the the staging directory.
-    $staging = $this->container->get('config.storage.staging');
-    $staging->write($field_manifest_name, $field_manifest);
-    $staging->write($instance_manifest_name, $instance_manifest);
 
     // Import the content of the staging directory.
     $this->configImporter()->import();
@@ -77,5 +67,5 @@ class FieldImportCreateTest extends FieldUnitTestBase {
     $instance = entity_load('field_instance', $instance_id);
     $this->assertTrue($instance, 'Test import field instance from staging exists');
   }
-
 }
+

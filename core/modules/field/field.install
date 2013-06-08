@@ -48,7 +48,6 @@ function _update_8003_field_create_field(array &$field_config) {
   Drupal::config('field.field.' . $field_config['id'])
     ->setData($field_config)
     ->save();
-  update_config_manifest_add('field.field', array($field_config['id']));
 
   // Create storage for the field. This requires a field entity, but cannot use
   // the regular entity_create() function here.
@@ -91,7 +90,6 @@ function _update_8003_field_create_instance(array $field_config, array &$instanc
   Drupal::config('field.instance.' . $instance_config['id'])
     ->setData($instance_config)
     ->save();
-  update_config_manifest_add('field.instance', array($instance_config['id']));
 }
 
 /**
@@ -232,13 +230,11 @@ function field_update_8002() {
   foreach ($form_displays as $config) {
     $config->save();
   }
-  update_config_manifest_add('entity.form_display', array_keys($form_displays));
 
   // Save the displays to configuration.
   foreach ($displays as $config) {
     $config->save();
   }
-  update_config_manifest_add('entity.display', array_keys($displays));
 }
 
 /**
@@ -246,7 +242,6 @@ function field_update_8002() {
  */
 function field_update_8003() {
   $uuid = new Uuid();
-  $manifest_ids = array('fields' => array(), 'instances' => array());
 
   $state = Drupal::state();
   $deleted_fields = $state->get('field.field.deleted') ?: array();
@@ -291,7 +286,6 @@ function field_update_8003() {
       Drupal::config('field.field.' . $config['id'])
         ->setData($config)
         ->save();
-      $manifest_ids['fields'][] = $config['id'];
     }
     else {
       $config['deleted'] = TRUE;
@@ -348,7 +342,6 @@ function field_update_8003() {
       Drupal::config('field.instance.' . $config['id'])
         ->setData($config)
         ->save();
-      $manifest_ids['instances'][] = $config['id'];
     }
     else {
       $config['deleted'] = TRUE;
@@ -366,10 +359,6 @@ function field_update_8003() {
         ->execute();
     }
   }
-
-  // Create the manifest files.
-  update_config_manifest_add('field.field', $manifest_ids['fields']);
-  update_config_manifest_add('field.instance', $manifest_ids['instances']);
 
   // Save the deleted fields and instances in state.
   $state->set('field.field.deleted', $deleted_fields);

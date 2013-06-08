@@ -9,6 +9,7 @@ namespace Drupal\config\Controller;
 
 use Drupal\Core\ControllerInterface;
 use Drupal\Core\Config\StorageInterface;
+use Drupal\Component\Archiver\ArchiveTar;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -50,6 +51,20 @@ class ConfigController implements ControllerInterface {
   public function __construct(StorageInterface $target_storage, StorageInterface $source_storage) {
     $this->targetStorage = $target_storage;
     $this->sourceStorage = $source_storage;
+  }
+
+  /**
+   * Downloads a tarball of the site configuration.
+   */
+  public function downloadExport() {
+    $archiver = new ArchiveTar(file_directory_temp() . '/config.tar.gz', 'gz');
+    $config_dir = config_get_config_directory();
+    $config_files = array();
+    foreach (\Drupal::service('config.storage')->listAll() as $config_name) {
+      $config_files[] = $config_dir . '/' . $config_name . '.yml';
+    }
+    $archiver->createModify($config_files, '', config_get_config_directory());
+    return file_download('temporary', 'config.tar.gz');
   }
 
   /**
