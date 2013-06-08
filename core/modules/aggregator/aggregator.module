@@ -139,9 +139,7 @@ function aggregator_menu() {
   );
   $items['aggregator/sources'] = array(
     'title' => 'Sources',
-    'page callback' => 'aggregator_page_sources',
-    'access arguments' => array('access news feeds'),
-    'file' => 'aggregator.pages.inc',
+    'route_name' => 'aggregator_sources',
   );
   $items['aggregator/categories'] = array(
     'title' => 'Categories',

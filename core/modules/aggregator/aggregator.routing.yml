@@ -53,3 +53,10 @@ aggregator_page_last:
     _controller: '\Drupal\aggregator\Routing\AggregatorController::pageLast'
   requirements:
     _permission: 'access news feeds'
+
+aggregator_sources:
+  pattern: '/aggregator/sources'
+  defaults:
+    _content: '\Drupal\aggregator\Routing\AggregatorController::sources'
+  requirements:
+    _permission: 'access news feeds'

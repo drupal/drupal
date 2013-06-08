@@ -9,7 +9,7 @@ namespace Drupal\aggregator\Routing;
 
 use Drupal\aggregator\FeedInterface;
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\ControllerInterface;
+use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -31,18 +31,18 @@ class AggregatorController implements ControllerInterface {
   protected $entityManager;
 
   /**
+   * The configuration factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $configFactory;
+
+  /**
    * The database connection.
    *
    * @var \Drupal\Core\Database\Connection;
    */
   protected $database;
-
-  /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactory
-   */
-  protected $configFactory;
 
   /**
    * The module handler.
@@ -56,6 +56,8 @@ class AggregatorController implements ControllerInterface {
    *
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   The Entity manager.
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The config factory.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
@@ -227,4 +229,53 @@ class AggregatorController implements ControllerInterface {
     // done.
     return _aggregator_page_list($items, arg(1));
   }
+
+  /**
+   * Displays all the feeds used by the Aggregator module.
+   *
+   * @return array
+   *   A render array as expected by drupal_render().
+   */
+  public function sources() {
+
+    $feeds = $this->entityManager->getStorageController('aggregator_feed')->load();
+
+    $build = array(
+      '#type' => 'container',
+      '#attributes' => array('class' => array('aggregator-wrapper')),
+      '#sorted' => TRUE,
+    );
+
+    // @todo remove this once aggregator_load_feed_items() is refactored after
+    // http://drupal.org/node/15266 is in.
+    $this->moduleHandler->loadInclude('aggregator', 'inc', 'aggregator.pages');
+
+    foreach ($feeds as $feed) {
+      // Most recent items:
+      $summary_items = array();
+      $aggregator_summary_items = $this->configFactory
+        ->get('aggregator.settings')
+        ->get('source.list_max');
+      if ($aggregator_summary_items) {
+        if ($items = aggregator_load_feed_items('source', $feed, $aggregator_summary_items)) {
+          $summary_items = $this->entityManager
+            ->getRenderController('aggregator_item')
+            ->viewMultiple($items, 'summary');
+        }
+      }
+      $feed->url = url('aggregator/sources/' . $feed->id());
+      $build[$feed->id()] = array(
+        '#theme' => 'aggregator_summary_items',
+        '#summary_items' => $summary_items,
+        '#source' => $feed,
+      );
+    }
+    $build['feed_icon'] = array(
+      '#theme' => 'feed_icon',
+      '#url' => 'aggregator/opml',
+      '#title' => t('OPML feed'),
+    );
+    return $build;
+  }
+
 }
