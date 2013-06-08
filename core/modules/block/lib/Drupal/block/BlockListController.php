@@ -143,9 +143,12 @@ class BlockListController extends ConfigEntityListController implements FormInte
 
     // Build blocks first for each region.
     foreach ($entities as $entity_id => $entity) {
-      $info = $entity->getPlugin()->getDefinition();
-      $info['entity_id'] = $entity_id;
-      $blocks[$entity->get('region')][] = $info;
+      $definition = $entity->getPlugin()->getDefinition();
+      $blocks[$entity->get('region')][$entity_id] = array(
+        'admin_label' => $definition['admin_label'],
+        'entity_id' => $entity_id,
+        'weight' => $entity->get('weight'),
+      );
     }
 
     // Loop over each region and build blocks.
@@ -229,7 +232,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
           );
           $form['blocks'][$entity_id]['weight'] = array(
             '#type' => 'weight',
-            '#default_value' => $entity->get('weight'),
+            '#default_value' => $info['weight'],
             '#delta' => $weight_delta,
             '#title_display' => 'invisible',
             '#title' => t('Weight for @block block', array('@block' => $info['admin_label'])),
