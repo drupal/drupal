@@ -110,20 +110,32 @@ class UpdateTest extends DatabaseTestBase {
    * Tests updating with expressions.
    */
   function testExpressionUpdate() {
-    // Set age = 1 for a single row for this test to work.
-    db_update('test')
-      ->condition('id', 1)
-      ->fields(array('age' => 1))
-      ->execute();
-
-    // Ensure that expressions are handled properly.  This should set every
-    // record's age to a square of itself, which will change only three of the
-    // four records in the table since 1*1 = 1. That means only three records
-    // are modified, so we should get back 3, not 4, from execute().
+    // Ensure that expressions are handled properly. This should set every
+    // record's age to a square of itself.
     $num_rows = db_update('test')
       ->expression('age', 'age * age')
       ->execute();
-    $this->assertIdentical($num_rows, 3, 'Number of affected rows are returned.');
+    $this->assertIdentical($num_rows, 4, 'Updated 4 records.');
+
+    $saved_name = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => pow(26, 2)))->fetchField();
+    $this->assertIdentical($saved_name, 'Paul', t('Successfully updated values using an algebraic expression.'));
+  }
+
+  /**
+   * Tests return value on update.
+   */
+  function testUpdateAffectedRows() {
+    // At 5am in the morning, all band members but those with a priority 1 task
+    // are sleeping. So we set their tasks to 'sleep'. 5 records match the
+    // condition and therefore are affected by the query, even though two of
+    // them actually don't have to be changed because their value was already
+    // 'sleep'. Still, execute() should return 5 affected rows, not only 3,
+    // because that's cross-db expected behaviour.
+    $num_rows = db_update('test_task')
+      ->condition('priority', 1, '<>')
+      ->fields(array('task' => 'sleep'))
+      ->execute();
+    $this->assertIdentical($num_rows, 5, 'Correctly returned 5 affected rows.');
   }
 
   /**

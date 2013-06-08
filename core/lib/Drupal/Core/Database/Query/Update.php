@@ -200,10 +200,10 @@ class Update extends Query implements ConditionInterface {
    * Executes the UPDATE query.
    *
    * @return
-   *   The number of rows affected by the update.
+   *   The number of rows matched by the update query. This includes rows that
+   *   actually didn't have to be updated because the values didn't change.
    */
   public function execute() {
-
     // Expressions take priority over literal fields, so we process those first
     // and remove any literal fields that conflict.
     $fields = $this->fields;
