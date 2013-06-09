@@ -1669,18 +1669,6 @@ function views_element_validate_tags($element, &$form_state) {
 }
 
 /**
- * Prerender function to move the textarea to the top.
- */
-function views_handler_field_custom_pre_render_move_text($form) {
-  $form['text'] = $form['alter']['text'];
-  $form['help'] = $form['alter']['help'];
-  unset($form['alter']['text']);
-  unset($form['alter']['help']);
-
-  return $form;
-}
-
-/**
  * Set a cached item in the views cache.
  *
  * This is just a convenience wrapper around cache_set().
