@@ -51,7 +51,7 @@ function config_admin_sync_form(array &$form, array &$form_state, StorageInterfa
     // @todo A table caption would be more appropriate, but does not have the
     //   visual importance of a heading.
     $form[$config_change_type]['heading'] = array(
-      '#theme' => 'html_tag__h3',
+      '#type' => 'html_tag',
       '#tag' => 'h3',
     );
     switch ($config_change_type) {

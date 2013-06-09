@@ -329,7 +329,7 @@ function drupal_get_breadcrumb() {
  * @return
  *   An array of all stored HEAD elements.
  *
- * @see theme_html_tag()
+ * @see drupal_pre_render_html_tag()
  */
 function drupal_add_html_head($data = NULL, $key = NULL) {
   $stored_head = &drupal_static(__FUNCTION__);
@@ -4461,6 +4461,44 @@ function drupal_pre_render_conditional_comments($elements) {
   }
 
   return $elements;
+}
+
+/**
+ * Pre-render callback: Renders a generic HTML tag with attributes into #markup.
+ *
+ * @param array $element
+ *   An associative array containing:
+ *   - #tag: The tag name to output. Typical tags added to the HTML HEAD:
+ *     - meta: To provide meta information, such as a page refresh.
+ *     - link: To refer to stylesheets and other contextual information.
+ *     - script: To load JavaScript.
+ *   - #attributes: (optional) An array of HTML attributes to apply to the
+ *     tag.
+ *   - #value: (optional) A string containing tag content, such as inline
+ *     CSS.
+ *   - #value_prefix: (optional) A string to prepend to #value, e.g. a CDATA
+ *     wrapper prefix.
+ *   - #value_suffix: (optional) A string to append to #value, e.g. a CDATA
+ *     wrapper suffix.
+ */
+function drupal_pre_render_html_tag($element) {
+  $attributes = isset($element['#attributes']) ? new Attribute($element['#attributes']) : '';
+  if (!isset($element['#value'])) {
+    $markup = '<' . $element['#tag'] . $attributes . " />\n";
+  }
+  else {
+    $markup = '<' . $element['#tag'] . $attributes . '>';
+    if (isset($element['#value_prefix'])) {
+      $markup .= $element['#value_prefix'];
+    }
+    $markup .= $element['#value'];
+    if (isset($element['#value_suffix'])) {
+      $markup .= $element['#value_suffix'];
+    }
+    $markup .= '</' . $element['#tag'] . ">\n";
+  }
+  $element['#markup'] = $markup;
+  return $element;
 }
 
 /**
