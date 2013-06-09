@@ -29,6 +29,7 @@ function color_theme() {
   return array(
     'color_scheme_form' => array(
       'render element' => 'form',
+      'template' => 'color-scheme-form',
     ),
   );
 }
@@ -233,15 +234,15 @@ function color_scheme_form($complete_form, &$form_state, $theme) {
 }
 
 /**
- * Returns HTML for a theme's color form.
+ * Prepares variables for color scheme form templates.
  *
- * @param $variables
+ * Default template: color-scheme-form.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - form: A render element representing the form.
- *
- * @ingroup themeable
  */
-function theme_color_scheme_form($variables) {
+function template_preprocess_color_scheme_form(&$variables) {
   $form = $variables['form'];
 
   $theme = $form['theme']['#value'];
@@ -254,26 +255,9 @@ function theme_color_scheme_form($variables) {
   // Add the JS at a weight below color.js.
   drupal_add_js($preview_js_path, array('weight' => -1));
 
-  $output  = '';
-  $output .= '<div class="color-form clearfix">';
-  // Color schemes
-  $output .= drupal_render($form['scheme']);
-  // Palette
-  $output .= '<div id="palette" class="clearfix">';
-  foreach (element_children($form['palette']) as $name) {
-    $output .= drupal_render($form['palette'][$name]);
-  }
-  $output .= '</div>';
-  // Preview
-  $output .= drupal_render_children($form);
-  $output .= '<h2>' . t('Preview') . '</h2>';
   // Attempt to load preview HTML if the theme provides it.
   $preview_html_path = DRUPAL_ROOT . '/' . (isset($info['preview_html']) ? drupal_get_path('theme', $theme) . '/' . $info['preview_html'] : drupal_get_path('module', 'color') . '/preview.html');
-  $output .= file_get_contents($preview_html_path);
-  // Close the wrapper div.
-  $output .= '</div>';
-
-  return $output;
+  $variables['html_preview'] = file_get_contents($preview_html_path);
 }
 
 /**
