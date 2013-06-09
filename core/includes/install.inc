@@ -617,10 +617,7 @@ function drupal_install_system() {
   // Create tables.
   drupal_install_schema('system');
 
-  if (drupal_container()->has('kernel')) {
-    $kernel = drupal_container()->get('kernel');
-  }
-  else {
+  if (!drupal_container()->has('kernel')) {
     // Immediately boot a kernel to have real services ready.
     $kernel = new DrupalKernel('install', FALSE, drupal_classloader(), FALSE);
     $kernel->boot();
