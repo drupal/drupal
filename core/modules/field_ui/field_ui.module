@@ -226,6 +226,7 @@ function field_ui_theme() {
   return array(
     'field_ui_table' => array(
       'render element' => 'elements',
+      'file' => 'field_ui.admin.inc',
     ),
   );
 }
@@ -237,7 +238,6 @@ function field_ui_element_info() {
   return array(
     'field_ui_table' => array(
       '#theme' => 'field_ui_table',
-      '#pre_render' => array('field_ui_table_pre_render'),
       '#regions' => array('' => array()),
     ),
   );
@@ -259,40 +259,6 @@ function field_ui_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
   // When a bundle is renamed, the menu needs to be rebuilt to add our
   // menu item tabs.
   Drupal::state()->set('menu_rebuild_needed', TRUE);
-}
-
-/**
- * Identifies inactive fields within a bundle.
- */
-function field_ui_inactive_instances($entity_type, $bundle_name = NULL) {
-  $params = array('entity_type' => $entity_type);
-
-  if (empty($bundle_name)) {
-    $active = field_info_instances($entity_type);
-    $inactive = array();
-  }
-  else {
-    // Restrict to the specified bundle. For consistency with the case where
-    // $bundle_name is NULL, the $active and  $inactive arrays are keyed by
-    // bundle name first.
-    $params['bundle'] = $bundle_name;
-    $active = array($bundle_name => field_info_instances($entity_type, $bundle_name));
-    $inactive = array($bundle_name => array());
-  }
-
-  // Iterate on existing definitions, and spot those that do not appear in the
-  // $active list collected earlier.
-  $all_instances = field_read_instances($params, array('include_inactive' => TRUE));
-  foreach ($all_instances as $instance) {
-    if (!isset($active[$instance['bundle']][$instance['field_name']])) {
-      $inactive[$instance['bundle']][$instance['field_name']] = $instance;
-    }
-  }
-
-  if (!empty($bundle_name)) {
-    return $inactive[$bundle_name];
-  }
-  return $inactive;
 }
 
 /**

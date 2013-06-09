@@ -8,11 +8,45 @@
 namespace Drupal\field_ui;
 
 use Drupal\field_ui\OverviewBase;
+use Drupal\Core\Entity\EntityManager;
+use Drupal\field\Plugin\Type\Formatter\FormatterPluginManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Field UI display overview form.
  */
 class DisplayOverview extends OverviewBase {
+
+  /**
+   * The formatter plugin manager.
+   *
+   * @var \Drupal\field\Plugin\Type\Formatter\FormatterPluginManager
+   */
+  protected $formatterManager;
+
+  /**
+   * Constructs a new DisplayOverview.
+   *
+   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   *   The entity manager.
+   * @param \Drupal\field\Plugin\Type\Formatter\FormatterPluginManager $formatter_manager
+   *   The formatter plugin manager.
+   */
+  public function __construct(EntityManager $entity_manager, FormatterPluginManager $formatter_manager) {
+    parent::__construct($entity_manager);
+
+    $this->formatterManager = $formatter_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('plugin.manager.entity'),
+      $container->get('plugin.manager.field.formatter')
+    );
+  }
 
   /**
    * Implements Drupal\field_ui\OverviewBase::getRegions().
@@ -70,6 +104,7 @@ class DisplayOverview extends OverviewBase {
 
     $table = array(
       '#type' => 'field_ui_table',
+      '#pre_render' => array(array($this, 'tablePreRender')),
       '#tree' => TRUE,
       '#header' => array(
         t('Field'),
@@ -107,7 +142,7 @@ class DisplayOverview extends OverviewBase {
       $table[$name] = array(
         '#attributes' => array('class' => array('draggable', 'tabledrag-leaf')),
         '#row_type' => 'field',
-        '#region_callback' => 'field_ui_display_overview_row_region',
+        '#region_callback' => array($this, 'getRowRegion'),
         '#js_settings' => array(
           'rowHandler' => 'field',
           'defaultFormatter' => $field_types[$field['type']]['default_formatter'],
@@ -148,7 +183,7 @@ class DisplayOverview extends OverviewBase {
         ),
       );
 
-      $formatter_options = field_ui_formatter_options($field['type']);
+      $formatter_options = $this->formatterManager->getOptions($field['type']);
       $formatter_options['hidden'] = '<' . t('Hidden') . '>';
       $table[$name]['format'] = array(
         'type' => array(
@@ -174,7 +209,7 @@ class DisplayOverview extends OverviewBase {
 
       // Get the corresponding formatter object.
       if ($display_options && $display_options['type'] != 'hidden') {
-        $formatter = drupal_container()->get('plugin.manager.field.formatter')->getInstance(array(
+        $formatter = $this->formatterManager->getInstance(array(
           'instance' => $instance,
           'view_mode' => $this->mode,
           'configuration' => $display_options
@@ -294,7 +329,7 @@ class DisplayOverview extends OverviewBase {
       $table[$name] = array(
         '#attributes' => array('class' => array('draggable', 'tabledrag-leaf')),
         '#row_type' => 'extra_field',
-        '#region_callback' => 'field_ui_display_overview_row_region',
+        '#region_callback' => array($this, 'getRowRegion'),
         '#js_settings' => array('rowHandler' => 'field'),
         'human_name' => array(
           '#markup' => check_plain($extra_field['label']),
@@ -576,4 +611,22 @@ class DisplayOverview extends OverviewBase {
     // Return the whole table.
     return $form['fields'];
   }
+
+  /**
+   * Returns the region to which a row in the display overview belongs.
+   *
+   * @param array $row
+   *   The row element.
+   *
+   * @return string|null
+   *   The region name this row belongs to.
+   */
+  public function getRowRegion($row) {
+    switch ($row['#row_type']) {
+      case 'field':
+      case 'extra_field':
+        return ($row['format']['type']['#value'] == 'hidden' ? 'hidden' : 'content');
+    }
+  }
+
 }

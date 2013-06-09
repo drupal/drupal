@@ -8,11 +8,45 @@
 namespace Drupal\field_ui;
 
 use Drupal\field_ui\OverviewBase;
+use Drupal\Core\Entity\EntityManager;
+use Drupal\field\Plugin\Type\Widget\WidgetPluginManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Field UI field overview form.
  */
 class FieldOverview extends OverviewBase {
+
+  /**
+   * The widget plugin manager.
+   *
+   * @var \Drupal\field\Plugin\Type\Widget\WidgetPluginManager
+   */
+  protected $widgetManager;
+
+  /**
+   * Constructs a new DisplayOverview.
+   *
+   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   *   The entity manager.
+   * @param \Drupal\field\Plugin\Type\Widget\WidgetPluginManager $widget_manager
+   *   The widget plugin manager.
+   */
+  public function __construct(EntityManager $entity_manager, WidgetPluginManager $widget_manager) {
+    parent::__construct($entity_manager);
+
+    $this->widgetManager = $widget_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('plugin.manager.entity'),
+      $container->get('plugin.manager.field.widget')
+    );
+  }
 
   /**
    * Implements Drupal\field_ui\OverviewBase::getRegions().
@@ -67,6 +101,7 @@ class FieldOverview extends OverviewBase {
 
     $table = array(
       '#type' => 'field_ui_table',
+      '#pre_render' => array(array($this, 'tablePreRender')),
       '#tree' => TRUE,
       '#header' => array(
         t('Label'),
@@ -93,7 +128,7 @@ class FieldOverview extends OverviewBase {
       $table[$name] = array(
         '#attributes' => array('class' => array('draggable', 'tabledrag-leaf')),
         '#row_type' => 'field',
-        '#region_callback' => 'field_ui_field_overview_row_region',
+        '#region_callback' => array($this, 'getRowRegion'),
         'label' => array(
           '#markup' => check_plain($instance['label']),
         ),
@@ -165,7 +200,7 @@ class FieldOverview extends OverviewBase {
       $table[$name] = array(
         '#attributes' => array('class' => array('draggable', 'tabledrag-leaf')),
         '#row_type' => 'extra_field',
-        '#region_callback' => 'field_ui_field_overview_row_region',
+        '#region_callback' => array($this, 'getRowRegion'),
         'label' => array(
           '#markup' => check_plain($extra_field['label']),
         ),
@@ -208,14 +243,31 @@ class FieldOverview extends OverviewBase {
 
     // Additional row: add new field.
     $max_weight = $entity_form_display->getHighestWeight();
-    $field_type_options = field_ui_field_type_options();
-    $widget_type_options = field_ui_widget_type_options(NULL, TRUE);
+
+    // Prepare the widget types to be display as options.
+    $widget_options = $this->widgetManager->getOptions();
+    $widget_type_options = array();
+    foreach ($widget_options as $field_type => $widgets) {
+      $widget_type_options[$field_types[$field_type]['label']] = $widgets;
+    }
+
+    // Gather valid field types.
+    $field_type_options = array();
+    foreach ($field_types as $name => $field_type) {
+      // Skip field types which have no widget types, or should not be added via
+      // user interface.
+      if (isset($widget_options[$name]) && empty($field_type['no_ui'])) {
+        $field_type_options[$name] = $field_type['label'];
+      }
+    }
+    asort($field_type_options);
+
     if ($field_type_options && $widget_type_options) {
       $name = '_add_new_field';
       $table[$name] = array(
         '#attributes' => array('class' => array('draggable', 'tabledrag-leaf', 'add-new')),
         '#row_type' => 'add_new_field',
-        '#region_callback' => 'field_ui_field_overview_row_region',
+        '#region_callback' => array($this, 'getRowRegion'),
         'label' => array(
           '#type' => 'textfield',
           '#title' => t('New field label'),
@@ -265,7 +317,7 @@ class FieldOverview extends OverviewBase {
           '#prefix' => '<div class="add-new-placeholder">&nbsp;</div>',
           '#machine_name' => array(
             'source' => array('fields', $name, 'label'),
-            'exists' => '_field_ui_field_name_exists',
+            'exists' => array($this, 'fieldNameExists'),
             'standalone' => TRUE,
             'label' => '',
           ),
@@ -302,7 +354,7 @@ class FieldOverview extends OverviewBase {
     }
 
     // Additional row: re-use existing field.
-    $existing_fields = field_ui_existing_field_options($this->entity_type, $this->bundle);
+    $existing_fields = $this->getExistingFieldOptions();
     if ($existing_fields && $widget_type_options) {
       // Build list of options.
       $existing_field_options = array();
@@ -319,7 +371,7 @@ class FieldOverview extends OverviewBase {
       $table[$name] = array(
         '#attributes' => array('class' => array('draggable', 'tabledrag-leaf', 'add-new')),
         '#row_type' => 'add_new_field',
-        '#region_callback' => 'field_ui_field_overview_row_region',
+        '#region_callback' => array($this, 'getRowRegion'),
         'label' => array(
           '#type' => 'textfield',
           '#title' => t('Existing field label'),
@@ -404,7 +456,7 @@ class FieldOverview extends OverviewBase {
 
     $form['#attached']['js'][] = array(
       'type' => 'setting',
-      'data' => array('fields' => $js_fields, 'fieldWidgetTypes' => field_ui_widget_type_options()),
+      'data' => array('fields' => $js_fields, 'fieldWidgetTypes' => $widget_options),
     );
 
     // Add tabledrag behavior.
@@ -466,7 +518,7 @@ class FieldOverview extends OverviewBase {
       }
       // Wrong widget type.
       elseif ($field['type']) {
-        $widget_types = field_ui_widget_type_options($field['type']);
+        $widget_types = $this->widgetManager->getOptions($field['type']);
         if (!isset($widget_types[$field['widget_type']])) {
           form_set_error('fields][_add_new_field][widget_type', t('Add new field: invalid widget.'));
         }
@@ -509,7 +561,7 @@ class FieldOverview extends OverviewBase {
         }
         // Wrong widget type.
         elseif ($field['field_name'] && ($existing_field = field_info_field($field['field_name']))) {
-          $widget_types = field_ui_widget_type_options($existing_field['type']);
+          $widget_types = $this->widgetManager->getOptions($existing_field['type']);
           if (!isset($widget_types[$field['widget_type']])) {
             form_set_error('fields][_add_existing_field][widget_type', t('Re-use existing field: invalid widget.'));
           }
@@ -645,10 +697,95 @@ class FieldOverview extends OverviewBase {
       $destination = drupal_get_destination();
       $destinations[] = $destination['destination'];
       unset($_GET['destination']);
-      $form_state['redirect'] = field_ui_get_destinations($destinations);
+      $path = array_shift($destinations);
+      $options = drupal_parse_url($path);
+      $options['query']['destinations'] = $destinations;
+      $form_state['redirect'] = array($options['path'], $options);
     }
     else {
       drupal_set_message(t('Your settings have been saved.'));
     }
   }
+
+  /**
+   * Returns the region to which a row in the display overview belongs.
+   *
+   * @param array $row
+   *   The row element.
+   *
+   * @return string|null
+   *   The region name this row belongs to.
+   */
+  public function getRowRegion($row) {
+    switch ($row['#row_type']) {
+      case 'field':
+      case 'extra_field':
+        return 'content';
+      case 'add_new_field':
+        // If no input in 'label', assume the row has not been dragged out of the
+        // 'add new' section.
+        return (!empty($row['label']['#value']) ? 'content' : 'hidden');
+    }
+  }
+
+  /**
+   * Returns an array of existing fields to be added to a bundle.
+   *
+   * @return array
+   *   An array of existing fields keyed by field name.
+   */
+  protected function getExistingFieldOptions() {
+    $info = array();
+    $field_types = field_info_field_types();
+
+    foreach (field_info_instances() as $existing_entity_type => $bundles) {
+      foreach ($bundles as $existing_bundle => $instances) {
+        // No need to look in the current bundle.
+        if (!($existing_bundle == $this->bundle && $existing_entity_type == $this->entity_type)) {
+          foreach ($instances as $instance) {
+            $field = field_info_field($instance['field_name']);
+            // Don't show
+            // - locked fields,
+            // - fields already in the current bundle,
+            // - fields that cannot be added to the entity type,
+            // - fields that should not be added via user interface.
+
+            if (empty($field['locked'])
+              && !field_info_instance($this->entity_type, $field['field_name'], $this->bundle)
+              && (empty($field['entity_types']) || in_array($this->entity_type, $field['entity_types']))
+              && empty($field_types[$field['type']]['no_ui'])) {
+              $widget = entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default')->getComponent($instance['field_name']);
+              $info[$instance['field_name']] = array(
+                'type' => $field['type'],
+                'type_label' => $field_types[$field['type']]['label'],
+                'field' => $field['field_name'],
+                'label' => $instance['label'],
+                'widget_type' => $widget['type'],
+              );
+            }
+          }
+        }
+      }
+    }
+    return $info;
+  }
+
+  /**
+   * Checks if a field machine name is taken.
+   *
+   * @param string $value
+   *   The machine name, not prefixed with 'field_'.
+   *
+   * @return bool
+   *   Whether or not the field machine name is taken.
+   */
+  public function fieldNameExists($value) {
+    // Prefix with 'field_'.
+    $field_name = 'field_' . $value;
+
+    // We need to check inactive fields as well, so we can't use
+    // field_info_fields().
+    return (bool) field_read_fields(array('field_name' => $field_name), array('include_inactive' => TRUE));
+  }
+
 }

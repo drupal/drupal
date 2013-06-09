@@ -20,6 +20,13 @@ use Drupal\field\Plugin\Core\Entity\FieldInstance;
 class FormatterPluginManager extends PluginManagerBase {
 
   /**
+   * An array of formatter options for each field type.
+   *
+   * @var array
+   */
+  protected $formatterOptions;
+
+  /**
    * Overrides Drupal\Component\Plugin\PluginManagerBase:$defaults.
    */
   protected $defaults = array(
@@ -123,6 +130,36 @@ class FormatterPluginManager extends PluginManagerBase {
     $configuration['settings'] += field_info_formatter_settings($configuration['type']);
 
     return $configuration;
+  }
+
+  /**
+   * Returns an array of formatter options for a field type.
+   *
+   * @param string|null $field_type
+   *   (optional) The name of a field type, or NULL to retrieve all formatters.
+   *
+   * @return array
+   *   If no field type is provided, returns a nested array of all formatters,
+   *   keyed by field type.
+   */
+  public function getOptions($field_type = NULL) {
+    if (!isset($this->formatterOptions)) {
+      $field_types = field_info_field_types();
+      $options = array();
+      foreach ($this->getDefinitions() as $name => $formatter) {
+        foreach ($formatter['field_types'] as $formatter_field_type) {
+          // Check that the field type exists.
+          if (isset($field_types[$formatter_field_type])) {
+            $options[$formatter_field_type][$name] = $formatter['label'];
+          }
+        }
+      }
+      $this->formatterOptions = $options;
+    }
+    if ($field_type) {
+      return !empty($this->formatterOptions[$field_type]) ? $this->formatterOptions[$field_type] : array();
+    }
+    return $this->formatterOptions;
   }
 
 }

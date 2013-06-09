@@ -19,6 +19,13 @@ use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 class WidgetPluginManager extends PluginManagerBase {
 
   /**
+   * An array of widget options for each field type.
+   *
+   * @var array
+   */
+  protected $widgetOptions;
+
+  /**
    * Overrides Drupal\Component\Plugin\PluginManagerBase:$defaults.
    */
   protected $defaults = array(
@@ -120,4 +127,39 @@ class WidgetPluginManager extends PluginManagerBase {
 
     return $configuration;
   }
+
+  /**
+   * Returns an array of widget type options for a field type.
+   *
+   * @param string|null $field_type
+   *   (optional) The name of a field type, or NULL to retrieve all widget
+   *   options. Defaults to NULL.
+   *
+   * @return array
+   *   If no field type is provided, returns a nested array of all widget types,
+   *   keyed by field type human name.
+   */
+  public function getOptions($field_type = NULL) {
+    if (!isset($this->widgetOptions)) {
+      $options = array();
+      $field_types = field_info_field_types();
+      $widget_types = $this->getDefinitions();
+      uasort($widget_types, 'drupal_sort_weight');
+      foreach ($widget_types as $name => $widget_type) {
+        foreach ($widget_type['field_types'] as $widget_field_type) {
+          // Check that the field type exists.
+          if (isset($field_types[$widget_field_type])) {
+            $options[$widget_field_type][$name] = $widget_type['label'];
+          }
+        }
+      }
+      $this->widgetOptions = $options;
+    }
+    if (isset($field_type)) {
+      return !empty($this->widgetOptions[$field_type]) ? $this->widgetOptions[$field_type] : array();
+    }
+
+    return $this->widgetOptions;
+  }
+
 }

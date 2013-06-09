@@ -107,7 +107,7 @@ class FieldDeleteForm extends ConfirmFormBase implements ControllerInterface {
     }
 
     $admin_path = $this->entityManager->getAdminPath($this->instance->entity_type, $this->instance->bundle);
-    $form_state['redirect'] = field_ui_get_destinations(array($admin_path . '/fields'));
+    $form_state['redirect'] = "$admin_path/fields";
 
     // Fields are purged on cron. However field module prevents disabling modules
     // when field types they provided are used in a field until it is fully
