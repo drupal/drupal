@@ -125,11 +125,49 @@ class StyleSerializerTest extends PluginTestBase {
     $expected = $serializer->serialize($entities, 'hal_json');
     $actual_json = $this->drupalGet('test/serialize/entity', array(), array('Accept: application/hal+json'));
     $this->assertIdentical($actual_json, $expected, 'The expected HAL output was found.');
+  }
 
-    // Test that the default output will be JSON if html is requested.
-    $expected = $serializer->serialize($entities, 'json');
-    $actual = $this->drupalGet('test/serialize/entity');
-    $this->assertIdentical($actual, $expected, 'By default json output is returned.');
+  /**
+   * Tests the response format configuration.
+   */
+  public function testReponseFormatConfiguration() {
+    $this->drupalLogin($this->adminUser);
+
+    $style_options = 'admin/structure/views/nojs/display/test_serializer_display_field/rest_export_1/style_options';
+
+    // Select only 'xml' as an accepted format.
+    $this->drupalPost($style_options, array('style_options[formats][xml]' => 'xml'), t('Apply'));
+    $this->drupalPost(NULL, array(), t('Save'));
+
+    // Should return a 406.
+    $this->drupalGet('test/serialize/field', array(), array('Accept: application/json'));
+    $this->assertResponse(406, 'A 406 response was returned when JSON was requested.');
+     // Should return a 200.
+    $this->drupalGet('test/serialize/field', array(), array('Accept: application/xml'));
+    $this->assertResponse(200, 'A 200 response was returned when XML was requested.');
+
+    // Add 'json' as an accepted format, so we have multiple.
+    $this->drupalPost($style_options, array('style_options[formats][json]' => 'json'), t('Apply'));
+    $this->drupalPost(NULL, array(), t('Save'));
+
+    // Should return a 200.
+    // @todo This should be fixed when we have better content negotiation.
+    $this->drupalGet('test/serialize/field', array(), array('Accept: */*'));
+    $this->assertResponse(200, 'A 200 response was returned when any format was requested.');
+
+    // Should return a 200. Emulates a sample Firefox header.
+    $this->drupalGet('test/serialize/field', array(), array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'));
+    $this->assertResponse(200, 'A 200 response was returned when a browser accept header was requested.');
+
+    // Should return a 200.
+    $this->drupalGet('test/serialize/field', array(), array('Accept: application/json'));
+    $this->assertResponse(200, 'A 200 response was returned when JSON was requested.');
+    // Should return a 200.
+    $this->drupalGet('test/serialize/field', array(), array('Accept: application/xml'));
+    $this->assertResponse(200, 'A 200 response was returned when XML was requested');
+    // Should return a 406.
+    $this->drupalGet('test/serialize/field', array(), array('Accept: application/html'));
+    $this->assertResponse(406, 'A 406 response was returned when HTML was requested.');
   }
 
   /**
