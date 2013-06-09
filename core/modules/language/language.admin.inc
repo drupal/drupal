@@ -514,12 +514,13 @@ function theme_language_negotiation_configure_form($variables) {
       $header[] = array('data' => t('Operations'));
     }
 
-    $variables = array(
-      'header' => $header,
-      'rows' => $rows,
-      'attributes' => array('id' => "language-negotiation-methods-$type"),
+    $build = array(
+      '#theme' => 'table',
+      '#header' => $header,
+      '#rows' => $rows,
+      '#attributes' => array('id' => "language-negotiation-methods-$type"),
     );
-    $table  = theme('table', $variables);
+    $table  = drupal_render($build);
     $table .= drupal_render_children($form[$type]);
 
     drupal_add_tabledrag("language-negotiation-methods-$type", 'order', 'sibling', "language-method-weight-$type");
@@ -683,7 +684,13 @@ function theme_language_negotiation_configure_browser_form_table($variables) {
     t('Operations'),
   );
 
-  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'lang-neg-browser')));
+  $table = array(
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+    '#attributes' => array('id' => 'lang-neg-browser'),
+  );
+  $output = drupal_render($table);
 
   return $output;
 }
