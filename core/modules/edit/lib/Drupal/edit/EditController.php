@@ -132,7 +132,10 @@ class EditController extends ContainerAware {
 
       $errors = form_get_errors();
       if (count($errors)) {
-        $response->addCommand(new FieldFormValidationErrorsCommand(theme('status_messages')));
+        $status_messages = array(
+          '#theme' => 'status_messages'
+        );
+        $response->addCommand(new FieldFormValidationErrorsCommand(drupal_render($status_messages)));
       }
     }
 
