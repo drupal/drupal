@@ -81,6 +81,14 @@ class DisplayPageTest extends ViewUnitTestBase {
     $subrequest = Request::create('/test_page_display_200', 'GET');
     $response = $this->container->get('http_kernel')->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
     $this->assertEqual($response->getStatusCode(), 200);
+
+    // Test accessing a disabled page for a view.
+    $view = views_get_view('test_page_display');
+    // Disable the view, rebuild menu, and request the page again.
+    $view->storage->disable()->save();
+    $subrequest = Request::create('/test_page_display_200', 'GET');
+    $response = $this->container->get('http_kernel')->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
+    $this->assertEqual($response->getStatusCode(), 404);
   }
 
   /**
