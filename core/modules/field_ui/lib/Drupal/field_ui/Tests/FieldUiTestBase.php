@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\field_ui\Tests\FieldUiTestBase.
+ * Contains \Drupal\field_ui\Tests\FieldUiTestBase.
  */
 
 namespace Drupal\field_ui\Tests;

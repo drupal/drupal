@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\field_ui\Tests\ManageFieldsTest.
+ * Contains \Drupal\field_ui\Tests\ManageFieldsTest.
  */
 
 namespace Drupal\field_ui\Tests;

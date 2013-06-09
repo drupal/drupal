@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\field_ui\FieldOverview.
+ * Contains \Drupal\field_ui\FieldOverview.
  */
 
 namespace Drupal\field_ui;
