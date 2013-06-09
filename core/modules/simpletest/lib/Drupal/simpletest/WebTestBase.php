@@ -1642,7 +1642,7 @@ abstract class WebTestBase extends TestBase {
       if (!empty($refresh)) {
         // Parse the content attribute of the meta tag for the format:
         // "[delay]: URL=[page_to_redirect_to]".
-        if (preg_match('/\d+;\s*URL=(?P<url>.*)/i', $refresh[0]['content'], $match)) {
+        if (preg_match('/\d+;\s*URL=(?<url>.*)/i', $refresh[0]['content'], $match)) {
           return $this->drupalGet($this->getAbsoluteUrl(decode_entities($match['url'])));
         }
       }

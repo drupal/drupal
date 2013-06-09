@@ -126,7 +126,7 @@ function drupal_get_schema_versions($module) {
     }
 
     // Prepare regular expression to match all possible defined hook_update_N().
-    $regexp = '/^(?P<module>.+)_update_(?P<version>\d+)$/';
+    $regexp = '/^(?<module>.+)_update_(?<version>\d+)$/';
     $functions = get_defined_functions();
     // Narrow this down to functions ending with an integer, since all
     // hook_update_N() functions end this way, and there are other
