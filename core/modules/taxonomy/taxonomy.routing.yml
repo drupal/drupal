@@ -1,0 +1,7 @@
+taxonomy_vocabulary_list:
+  pattern: '/admin/structure/taxonomy'
+  defaults:
+    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
+    entity_type: 'taxonomy_vocabulary'
+  requirements:
+    _permission: 'administer taxonomy'

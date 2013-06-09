@@ -22,6 +22,7 @@ use Drupal\taxonomy\VocabularyInterface;
  *   controllers = {
  *     "storage" = "Drupal\taxonomy\VocabularyStorageController",
  *     "access" = "Drupal\taxonomy\VocabularyAccessController",
+ *     "list" = "Drupal\taxonomy\VocabularyListController",
  *     "form" = {
  *       "default" = "Drupal\taxonomy\VocabularyFormController"
  *     }
@@ -29,7 +30,8 @@ use Drupal\taxonomy\VocabularyInterface;
  *   config_prefix = "taxonomy.vocabulary",
  *   entity_keys = {
  *     "id" = "vid",
- *     "label" = "name"
+ *     "label" = "name",
+ *     "uuid" = "uuid"
  *   }
  * )
  */
@@ -41,6 +43,13 @@ class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
    * @var string
    */
   public $vid;
+
+  /**
+   * The vocabulary UUID.
+   *
+   * @var string
+   */
+  public $uuid;
 
   /**
    * Name of the vocabulary.

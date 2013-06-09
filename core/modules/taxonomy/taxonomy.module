@@ -232,10 +232,7 @@ function taxonomy_menu() {
   $items['admin/structure/taxonomy'] = array(
     'title' => 'Taxonomy',
     'description' => 'Manage tagging, categorization, and classification of your content.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('taxonomy_overview_vocabularies'),
-    'access arguments' => array('administer taxonomy'),
-    'file' => 'taxonomy.admin.inc',
+    'route_name' => 'taxonomy_vocabulary_list',
   );
   $items['admin/structure/taxonomy/list'] = array(
     'title' => 'List',
