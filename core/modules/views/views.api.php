@@ -609,6 +609,215 @@ function hook_views_invalidate_cache() {
 }
 
 /**
+ * Modify the list of available views access plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_access_alter(array &$plugins) {
+  // Remove the available plugin because the users should not have access to it.
+  unset($plugins['role']);
+}
+
+/**
+ * Modify the list of available views default argument plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_argument_default_alter(array &$plugins) {
+  // Remove the available plugin because the users should not have access to it.
+  unset($plugins['php']);
+}
+
+/**
+ * Modify the list of available views argument validation plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_argument_validator_alter(array &$plugins) {
+  // Remove the available plugin because the users should not have access to it.
+  unset($plugins['php']);
+}
+
+/**
+ * Modify the list of available views cache plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_cache_alter(array &$plugins) {
+  // Change the title.
+  $plugins['time']['title'] = t('Custom title');
+}
+
+/**
+ * Modify the list of available views display extender plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_display_extenders_alter(array &$plugins) {
+  // Alter the title of an existing plugin.
+  $plugins['time']['title'] = t('Custom title');
+}
+
+/**
+ * Modify the list of available views display plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_display_alter(array &$plugins) {
+  // Alter the title of an existing plugin.
+  $plugins['rest_export']['title'] = t('Export');
+}
+
+/**
+ * Modify the list of available views exposed form plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_exposed_form_alter(array &$plugins) {
+  // Remove the available plugin because the users should not have access to it.
+  unset($plugins['input_required']);
+}
+
+/**
+ * Modify the list of available views join plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_join_alter(array &$plugins) {
+  // Print out all join plugin names for debugging purposes.
+  debug($plugins);
+}
+
+/**
+ * Modify the list of available views join plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_pager_alter(array &$plugins) {
+  // Remove the sql based plugin to force good performance.
+  unset($plugins['full']);
+}
+
+/**
+ * Modify the list of available views query plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_query_alter(array &$plugins) {
+  // Print out all query plugin names for debugging purposes.
+  debug($plugins);
+}
+
+/**
+ * Modify the list of available views row plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_row_alter(array &$plugins) {
+  // Change the used class of a plugin.
+  $plugins['entity:node']['class'] = 'Drupal\node\Plugin\views\row\NodeRow';
+  $plugins['entity:node']['module'] = 'node';
+}
+
+/**
+ * Modify the list of available views style plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_style_alter(array &$plugins) {
+  // Change the theme hook of a plugin.
+  $plugins['html_list']['theme'] = 'custom_views_view_list';
+}
+
+/**
+ * Modify the list of available views wizard plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_wizard_alter(array &$plugins) {
+  // Change the title of a plugin.
+  $plugins['node_revision']['title'] = t('Node revision wizard');
+}
+
+/**
  * @}
  */
 
@@ -618,3 +827,4 @@ function hook_views_invalidate_cache() {
  * Handlers exposed by various modules to Views.
  * @}
  */
+

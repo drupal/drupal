@@ -253,7 +253,7 @@ function views_preprocess_node(&$vars) {
   }
 
   // Allow to alter comments and links based on the settings in the row plugin.
-  if (!empty($vars['view']->rowPlugin) && $vars['view']->rowPlugin->getPluginId() == 'node') {
+  if (!empty($vars['view']->rowPlugin) && $vars['view']->rowPlugin->getPluginId() == 'entity:node') {
     node_row_node_view_preprocess_node($vars);
   }
 }
@@ -764,6 +764,13 @@ function views_hook_info() {
     'views_analyze',
     'views_invalidate_cache',
   ), array('group' => 'views'));
+
+  // Register a views_plugins alter hook for all plugin types.
+  foreach (ViewExecutable::getPluginTypes() as $type) {
+    $hooks['views_plugins_' . $type . '_alter'] = array(
+      'group' => 'views',
+    );
+  }
 
   $hooks += array_fill_keys(array(
     'views_query_substitutions',

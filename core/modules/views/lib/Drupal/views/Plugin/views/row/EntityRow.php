@@ -2,17 +2,24 @@
 
 /**
  * @file
- * Definition of Drupal\system\Plugin\views\row\EntityRow.
+ * Contains \Drupal\views\Plugin\views\row\EntityRow.
  */
 
-namespace Drupal\system\Plugin\views\row;
+namespace Drupal\views\Plugin\views\row;
 
-use Drupal\views\Plugin\views\row\RowPluginBase;
+use Drupal\Core\Entity\EntityManager;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
+use Drupal\Component\Annotation\Plugin;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Generic entity row plugin to provide a common base for all entity types.
+ *
+ * @Plugin(
+ *   id = "entity",
+ *   derivative = "Drupal\views\Plugin\Derivative\ViewsEntityRow"
+ * )
  */
 class EntityRow extends RowPluginBase {
 
@@ -52,15 +59,34 @@ class EntityRow extends RowPluginBase {
   protected $build = array();
 
   /**
-   * Overrides Drupal\views\Plugin\views\PluginBase::init().
+   * {@inheritdoc}
+   *
+   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   *   The entity manager.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManager $entity_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->entityManager = $entity_manager;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
 
     $this->entityType = $this->definition['entity_type'];
-    $this->entityInfo = entity_get_info($this->entityType);
+    $this->entityInfo = $this->entityManager->getDefinition($this->entityType);
     $this->base_table = $this->entityInfo['base_table'];
     $this->base_field = $this->entityInfo['entity_keys']['id'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('plugin.manager.entity'));
   }
 
   /**
@@ -107,7 +133,12 @@ class EntityRow extends RowPluginBase {
    */
   public function summaryTitle() {
     $options = $this->buildViewModeOptions();
-    return check_plain($options[$this->options['view_mode']]);
+    if (isset($options[$this->options['view_mode']])) {
+      return check_plain($options[$this->options['view_mode']]);
+    }
+    else {
+      return t('No view mode selected');
+    }
   }
 
   /**

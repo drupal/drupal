@@ -51,7 +51,7 @@ display:
           build_mode: teaser
           comments: '0'
           links: '1'
-        type: node
+        type: 'entity:node'
       sorts:
         created:
           field: created

@@ -1,0 +1,29 @@
+base_table: taxonomy_term_data
+core: '8'
+description: ''
+status: '1'
+display:
+  default:
+    display_options:
+      defaults:
+        fields: '0'
+        pager: '0'
+        pager_options: '0'
+        sorts: '0'
+      pager:
+        options:
+          offset: '0'
+        type: none
+      pager_options: {  }
+      row:
+        type: 'entity:taxonomy_term'
+        options:
+          relationship: none
+          view_mode: full
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+label: ''
+id: test_entity_row
+tag: ''

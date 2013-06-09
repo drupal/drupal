@@ -74,7 +74,7 @@ display:
       style:
         type: default
       row:
-        type: node
+        type: 'entity:node'
         options:
           comments: '0'
           links: '1'

@@ -2,15 +2,12 @@
 
 /**
  * @file
- * Definition of Drupal\node\Plugin\views\row\NodeRow.
+ * Contains \Drupal\node\Plugin\views\row\NodeRow.
  */
 
 namespace Drupal\node\Plugin\views\row;
 
-use Drupal\views\ViewExecutable;
-use Drupal\Component\Annotation\Plugin;
-use Drupal\Core\Annotation\Translation;
-use Drupal\system\Plugin\views\row\EntityRow;
+use Drupal\views\Plugin\views\row\EntityRow;
 
 /**
  * Plugin which performs a node_view on the resulting object.
@@ -18,21 +15,11 @@ use Drupal\system\Plugin\views\row\EntityRow;
  * Most of the code on this object is in the theme function.
  *
  * @ingroup views_row_plugins
- *
- * @Plugin(
- *   id = "node",
- *   module = "node",
- *   title = @Translation("Content"),
- *   help = @Translation("Display the content with standard node view."),
- *   base = {"node"},
- *   entity_type = "node",
- *   display_types = {"normal"}
- * )
  */
 class NodeRow extends EntityRow {
 
   /**
-   * Overrides Drupal\system\Plugin\views\row\Entity::defineOptions().
+   * {@inheritdoc}
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -46,7 +33,7 @@ class NodeRow extends EntityRow {
   }
 
   /**
-   * Overrides Drupal\system\Plugin\views\row\Entity::buildOptionsForm().
+   * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);

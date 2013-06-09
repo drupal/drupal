@@ -20,7 +20,7 @@ display:
       style:
         type: default
       row:
-        type: node
+        type: 'entity:node'
     display_plugin: default
     display_title: Master
     id: default
