@@ -101,10 +101,13 @@ class EditController extends ContainerAware {
    *   The name of the language for which the field is being edited.
    * @param string $view_mode_id
    *   The view mode the field should be rerendered in.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request object containing the search string.
+   *
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   The Ajax response.
    */
-  public function fieldForm(EntityInterface $entity, $field_name, $langcode, $view_mode_id) {
+  public function fieldForm(EntityInterface $entity, $field_name, $langcode, $view_mode_id, Request $request) {
     $response = new AjaxResponse();
 
     $form_state = array(
@@ -134,7 +137,7 @@ class EditController extends ContainerAware {
     }
 
     // When working with a hidden form, we don't want any CSS or JS to be loaded.
-    if (isset($_POST['nocssjs']) && $_POST['nocssjs'] === 'true') {
+    if ($request->request->get('nocssjs') === 'true') {
       drupal_static_reset('drupal_add_css');
       drupal_static_reset('drupal_add_js');
     }
