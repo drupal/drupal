@@ -555,10 +555,10 @@ function hook_views_query_alter(ViewExecutable &$view, QueryPluginBase &$query) 
  *
  * @param array $rows
  *   An associative array with two keys:
- *   - query: An array of rows suitable for theme('table'), containing
+ *   - query: An array of rows suitable for '#theme' => 'table', containing
  *     information about the query and the display title and path.
- *   - statistics: An array of rows suitable for theme('table'), containing
- *     performance statistics.
+ *   - statistics: An array of rows suitable for '#theme' => 'table',
+ *     containing performance statistics.
  * @param \Drupal\views\ViewExecutable $view
  *   The view object.
  *
@@ -579,7 +579,8 @@ function hook_views_preview_info_alter(array &$rows, ViewExecutable $view) {
  *
  * @param array $links
  *   A renderable array of links which will be displayed at the top of the
- *   view edit form. Each entry will be in a form suitable for theme('link').
+ *   view edit form. Each entry will be in a form suitable for
+ *   '#theme' => 'link'.
  * @param \Drupal\views\ViewExecutable $view
  *   The view object being edited.
  * @param string $display_id

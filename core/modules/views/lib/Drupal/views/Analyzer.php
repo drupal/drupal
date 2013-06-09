@@ -79,7 +79,11 @@ class Analyzer {
       $type .= ' messages';
       $message = '';
       if (count($messages) > 1) {
-        $message = theme('item_list', array('items' => $messages));
+        $item_list = array(
+          '#theme' => 'item_list',
+          '#items' => $messages,
+        );
+        $message = drupal_render($item_list);
       }
       elseif ($messages) {
         $message = array_shift($messages);

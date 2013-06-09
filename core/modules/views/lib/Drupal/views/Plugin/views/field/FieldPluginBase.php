@@ -870,11 +870,12 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
             foreach ($options[$type] as $key => $value) {
               $items[] = $key . ' == ' . $value;
             }
-            $output .= theme('item_list',
-              array(
-                'items' => $items,
-                'type' => $type
-              ));
+            $item_list = array(
+              '#theme' => 'item_list',
+              '#items' => $items,
+              '#type' => $type,
+            );
+            $output .= drupal_render($item_list);
           }
         }
       }

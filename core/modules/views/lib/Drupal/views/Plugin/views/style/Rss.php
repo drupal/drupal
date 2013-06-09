@@ -51,8 +51,12 @@ class Rss extends StylePluginBase {
       if (empty($this->view->feed_icon)) {
         $this->view->feed_icon = '';
       }
-
-      $this->view->feed_icon .= theme('feed_icon', array('url' => $url, 'title' => $title));
+      $feed_icon = array(
+        '#theme' => 'feed_icon',
+        '#url' => $url,
+        '#title' => $title,
+      );
+      $this->view->feed_icon .= drupal_render($feed_icon);
       drupal_add_html_head_link(array(
         'rel' => 'alternate',
         'type' => 'application/rss+xml',

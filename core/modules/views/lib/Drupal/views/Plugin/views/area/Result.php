@@ -31,8 +31,9 @@ class Result extends AreaPluginBase {
 
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
-    $variables = array(
-      'items' => array(
+    $item_list = array(
+      '#theme' => 'item_list',
+      '#items' => array(
         '@start -- the initial record number in the set',
         '@end -- the last record number in the set',
         '@total -- the total records in the set',
@@ -43,7 +44,7 @@ class Result extends AreaPluginBase {
         '@page_count -- the total page count',
       ),
     );
-    $list = theme('item_list', $variables);
+    $list = drupal_render($item_list);
     $form['content'] = array(
       '#title' => t('Display'),
       '#type' => 'textarea',

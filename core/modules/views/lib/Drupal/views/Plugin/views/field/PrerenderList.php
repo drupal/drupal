@@ -79,12 +79,13 @@ class PrerenderList extends FieldPluginBase {
         return implode($this->sanitizeValue($this->options['separator'], 'xss_admin'), $items);
       }
       else {
-        return theme('item_list',
-          array(
-            'items' => $items,
-            'title' => NULL,
-            'type' => $this->options['type']
-          ));
+        $item_list = array(
+          '#theme' => 'item_list',
+          '#items' => $items,
+          '#title' => NULL,
+          '#type' => $this->options['type'],
+        );
+        return drupal_render($item_list);
       }
     }
   }

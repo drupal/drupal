@@ -587,7 +587,11 @@ function template_preprocess_views_view_table(&$vars) {
 
         $title = t('sort by @s', array('@s' => $label));
         if ($active == $field) {
-          $label .= theme('tablesort_indicator', array('style' => $initial));
+          $tablesort_indicator = array(
+            '#theme' => 'tablesort_indicator',
+            '#style' => $initial,
+          );
+          $label .= drupal_render($tablesort_indicator);
         }
 
         $query['order'] = $field;
@@ -1181,14 +1185,16 @@ function theme_views_mini_pager($vars) {
     '#wrapper_attributes' => array('class' => array('pager-next')),
   ) + $li_next;
 
-  return theme('item_list',
-    array(
-      'items' => $items,
-      'title' => NULL,
-      'type' => 'ul',
-      'attributes' => array('class' => array('pager')),
-    )
+  $item_list = array(
+    '#theme' => 'item_list',
+    '#items' => $items,
+    '#title' => NULL,
+    '#type' => 'ul',
+    '#attributes' => array(
+      'class' => array('pager'),
+    ),
   );
+  return drupal_render($item_list);
 }
 
 /**

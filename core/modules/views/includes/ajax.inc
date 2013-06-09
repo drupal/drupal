@@ -117,7 +117,8 @@ function views_ajax_form_wrapper($form_id, &$form_state) {
     $response = new AjaxResponse();
 
     $display = '';
-    if ($messages = theme('status_messages')) {
+    $status_messages = array('#theme' => 'status_messages');
+    if ($messages = drupal_render($status_messages)) {
       $display = '<div class="views-messages">' . $messages . '</div>';
     }
     $display .= $output;
