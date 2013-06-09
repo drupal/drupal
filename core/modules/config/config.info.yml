@@ -1,4 +1,4 @@
-name: 'Configuration manager'
+name: 'Configuration Manager'
 type: module
 description: 'Allows administrators to manage configuration changes.'
 package: Core
