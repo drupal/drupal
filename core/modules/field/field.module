@@ -670,7 +670,7 @@ function field_cache_clear() {
  *   UTF-8.
  */
 function field_filter_xss($string) {
-  return filter_xss($string, _field_filter_xss_allowed_tags());
+  return _filter_htmlcorrector(filter_xss($string, _field_filter_xss_allowed_tags()));
 }
 
 /**
