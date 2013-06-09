@@ -118,14 +118,26 @@ function seven_admin_block_content($variables) {
  * gray.
  */
 function seven_tablesort_indicator($variables) {
-  $style = $variables['style'];
   $theme_path = drupal_get_path('theme', 'seven');
-  if ($style == 'asc') {
-    return theme('image', array('uri' => $theme_path . '/images/arrow-asc.png', 'alt' => t('sort ascending'), 'width' => 13, 'height' => 13, 'title' => t('sort ascending')));
+
+  if($variables['style'] == 'asc') {
+    $image_uri = $theme_path . '/images/arrow-asc.png';
+    $text = t('sort ascending');
   }
   else {
-    return theme('image', array('uri' => $theme_path . '/images/arrow-desc.png', 'alt' => t('sort descending'), 'width' => 13, 'height' => 13, 'title' => t('sort descending')));
+    $image_uri = $theme_path . '/images/arrow-desc.png';
+    $text = t('sort descending');
   }
+
+  $image = array(
+    '#theme' => 'image',
+    '#uri' => $image_uri,
+    '#alt' => $text,
+    '#width' => 13,
+    '#height' => 13,
+    '#title' => $text,
+  );
+  return drupal_render($image);
 }
 
 /**
