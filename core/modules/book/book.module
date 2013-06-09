@@ -776,6 +776,11 @@ function book_node_view(EntityInterface $node, EntityDisplay $display, $view_mod
       $node->content['book_navigation'] = array(
         '#markup' => theme('book_navigation', array('book_link' => $node->book)),
         '#weight' => 100,
+        '#attached' => array(
+          'css' => array(
+            drupal_get_path('module', 'book') . '/css/book.theme.css',
+          ),
+        ),
       );
     }
   }
@@ -986,7 +991,6 @@ function template_preprocess_book_all_books_block(&$variables) {
  *     Properties used: bid, link_title, depth, plid, mlid.
  */
 function template_preprocess_book_navigation(&$variables) {
-  drupal_add_css(drupal_get_path('module', 'book') . '/css/book.theme.css');
   $book_link = $variables['book_link'];
 
   // Provide extra variables for themers. Not needed by default.
