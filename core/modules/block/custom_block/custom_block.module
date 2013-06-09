@@ -115,26 +115,12 @@ function custom_block_menu() {
  */
 function custom_block_theme($existing, $type, $theme, $path) {
   return array(
-    'custom_block_block' => array(
-      'variables' => array('body' => NULL, 'format' => NULL),
-    ),
     'custom_block_add_list' => array(
       'variables' => array('content' => NULL),
       'file' => 'custom_block.pages.inc',
+      'template' => 'custom-block-add-list',
     ),
   );
-}
-
-/**
- * Returns HTML for a custom block.
- *
- * @ingroup themeable
- */
-function theme_custom_block_block($variables) {
-  $body = $variables['body'];
-  $format = $variables['format'];
-
-  return check_markup($body, $format);
 }
 
 /**
