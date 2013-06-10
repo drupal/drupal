@@ -449,7 +449,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       ),
       'default' => array(
         'title' => t('Provide default value'),
-        'method' => 'default_default',
+        'method' => 'defaultDefault',
         'form method' => 'defaultArgumentForm',
         'has default argument' => TRUE,
         'default only' => TRUE, // this can only be used for missing argument, not validation failure
@@ -726,7 +726,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * This just returns true. The view argument builder will know where
    * to find the argument from.
    */
-  function default_default() {
+  protected function defaultDefault() {
     return TRUE;
   }
 
