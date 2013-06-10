@@ -10,6 +10,7 @@ namespace Drupal\config_test\Plugin\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\config_test\ConfigTestInterface;
 
 /**
  * Defines the ConfigTest configuration entity.
@@ -35,7 +36,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class ConfigTest extends ConfigEntityBase {
+class ConfigTest extends ConfigEntityBase implements ConfigTestInterface {
 
   /**
    * The machine name for the configuration entity.

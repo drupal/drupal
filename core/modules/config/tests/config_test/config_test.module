@@ -32,15 +32,11 @@ function config_test_menu() {
   );
   $items['admin/structure/config_test/add'] = array(
     'title' => 'Add test configuration',
-    'page callback' => 'config_test_add_page',
-    'access callback' => TRUE,
-    'type' => MENU_LOCAL_ACTION,
+    'route_name' => 'config_test_entity_add',
+    'type' => MENU_SIBLING_LOCAL_TASK,
   );
   $items['admin/structure/config_test/manage/%config_test'] = array(
-    'title' => 'Edit test configuration',
-    'page callback' => 'config_test_edit_page',
-    'page arguments' => array(4),
-    'access callback' => TRUE,
+    'route_name' => 'config_test_entity_edit',
   );
   $items['admin/structure/config_test/manage/%config_test/edit'] = array(
     'title' => 'Edit',
@@ -48,24 +44,32 @@ function config_test_menu() {
   );
   $items['admin/structure/config_test/manage/%config_test/delete'] = array(
     'title' => 'Delete',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('config_test_delete_form', 4),
-    'access callback' => TRUE,
-    'type' => MENU_LOCAL_TASK,
+    'route_name' => 'config_test_entity_delete',
   );
   $items['admin/structure/config_test/manage/%config_test/enable'] = array(
     'title' => 'Enable',
-    'page callback' => 'config_test_entity_enable',
-    'page arguments' => array(4),
-    'access callback' => TRUE,
+    'route_name' => 'config_test_entity_enable',
   );
   $items['admin/structure/config_test/manage/%config_test/disable'] = array(
     'title' => 'Disable',
-    'page callback' => 'config_test_entity_disable',
-    'page arguments' => array(4),
-    'access callback' => TRUE,
+    'route_name' => 'config_test_entity_disable',
   );
   return $items;
+}
+
+/**
+ * Implements hook_local_actions()
+ */
+function config_test_local_actions() {
+  return array(
+    array(
+      'route_name' => 'config_test_entity_add',
+      'title' => t('Add test configuration'),
+      'appears_on' => array(
+        'config_test_list_page',
+      ),
+    ),
+  );
 }
 
 /**
@@ -76,58 +80,6 @@ function config_test_menu() {
  */
 function config_test_load($id) {
   return entity_load('config_test', $id);
-}
-
-/**
- * Page callback: Presents the ConfigTest creation form.
- *
- * @return array
- *   A form array as expected by drupal_render().
- */
-function config_test_add_page() {
-  $entity = entity_create('config_test', array());
-  return entity_get_form($entity);
-}
-
-/**
- * Page callback: Presents the ConfigTest edit form.
- *
- * @param Drupal\config_test\Plugin\Core\Entity\ConfigTest $config_test
- *   The ConfigTest object to edit.
- *
- * @return array
- *   A form array as expected by drupal_render().
- */
-function config_test_edit_page(ConfigTest $config_test) {
-  drupal_set_title(format_string('Edit %label', array('%label' => $config_test->label())), PASS_THROUGH);
-  return entity_get_form($config_test);
-}
-
-/**
- * Form constructor to delete a ConfigTest object.
- *
- * @param Drupal\config_test\Plugin\Core\Entity\ConfigTest $config_test
- *   The ConfigTest object to delete.
- */
-function config_test_delete_form($form, &$form_state, ConfigTest $config_test) {
-  $form_state['config_test'] = $config_test;
-
-  $form['id'] = array('#type' => 'value', '#value' => $config_test->id());
-  return confirm_form($form,
-    format_string('Are you sure you want to delete %label', array('%label' => $config_test->label())),
-    'admin/structure/config_test',
-    NULL,
-    'Delete'
-  );
-}
-
-/**
- * Form submission handler for config_test_delete_form().
- */
-function config_test_delete_form_submit($form, &$form_state) {
-  $form_state['config_test']->delete();
-  drupal_set_message(format_string('%label configuration has been deleted.', array('%label' => $form_state['config_test']->label())));
-  $form_state['redirect'] = 'admin/structure/config_test';
 }
 
 /**
@@ -145,32 +97,6 @@ function config_test_config_test_create(ConfigTest $config_test) {
   if (Drupal::state()->get('config_test.prepopulate')) {
     $config_test->set('foo', 'baz');
   }
-}
-
-/**
- * Enables a ConfigTest object.
- *
- * @param Drupal\config_test\ConfigTest $config_test
- *   The ConfigTest object to enable.
- *
- * @return \Symfony\Component\HttpFoundation\RedirectResponse.
- */
-function config_test_entity_enable(ConfigTest $config_test) {
-  $config_test->enable()->save();
-  return new RedirectResponse(url('admin/structure/config_test', array('absolute' => TRUE)));
-}
-
-/**
- * Disables a ConfigTest object.
- *
- * @param Drupal\config_test\ConfigTest $config_test
- *   The ConfigTest object to disable.
- *
- * @return \Symfony\Component\HttpFoundation\RedirectResponse.
- */
-function config_test_entity_disable(ConfigTest $config_test) {
-  $config_test->disable()->save();
-  return new RedirectResponse(url('admin/structure/config_test', array('absolute' => TRUE)));
 }
 
 /**
