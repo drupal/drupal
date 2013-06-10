@@ -20,7 +20,7 @@ class TermFieldTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = array('field_test');
+  public static $modules = array('entity_test');
 
   protected $instance;
   protected $vocabulary;
@@ -36,7 +36,11 @@ class TermFieldTest extends TaxonomyTestBase {
   function setUp() {
     parent::setUp();
 
-    $web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content', 'administer taxonomy'));
+    $web_user = $this->drupalCreateUser(array(
+      'view test entity',
+      'administer entity_test content',
+      'administer taxonomy',
+    ));
     $this->drupalLogin($web_user);
     $this->vocabulary = $this->createVocabulary();
 
@@ -57,16 +61,16 @@ class TermFieldTest extends TaxonomyTestBase {
     field_create_field($this->field);
     $this->instance = array(
       'field_name' => $this->field_name,
-      'entity_type' => 'test_entity',
-      'bundle' => 'test_bundle',
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
     );
     field_create_instance($this->instance);
-    entity_get_form_display('test_entity', 'test_bundle', 'default')
+    entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($this->field_name, array(
         'type' => 'options_select',
       ))
       ->save();
-    entity_get_display('test_entity', 'test_bundle', 'full')
+    entity_get_display('entity_test', 'entity_test', 'full')
       ->setComponent($this->field_name, array(
         'type' => 'taxonomy_term_reference_link',
       ))
@@ -79,9 +83,9 @@ class TermFieldTest extends TaxonomyTestBase {
   function testTaxonomyTermFieldValidation() {
     // Test valid and invalid values with field_attach_validate().
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $entity = field_test_create_entity();
+    $entity = entity_create('entity_test', array());
     $term = $this->createTerm($this->vocabulary);
-    $entity->{$this->field_name}[$langcode][0]['tid'] = $term->id();
+    $entity->{$this->field_name}->tid = $term->id();
     try {
       field_attach_validate($entity);
       $this->pass('Correct term does not cause validation error.');
@@ -90,9 +94,9 @@ class TermFieldTest extends TaxonomyTestBase {
       $this->fail('Correct term does not cause validation error.');
     }
 
-    $entity = field_test_create_entity();
+    $entity = entity_create('entity_test', array());
     $bad_term = $this->createTerm($this->createVocabulary());
-    $entity->{$this->field_name}[$langcode][0]['tid'] = $bad_term->id();
+    $entity->{$this->field_name}->tid = $bad_term->id();
     try {
       field_attach_validate($entity);
       $this->fail('Wrong term causes validation error.');
@@ -111,30 +115,32 @@ class TermFieldTest extends TaxonomyTestBase {
 
     // Display creation form.
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $this->drupalGet('test-entity/add/test_bundle');
+    $this->drupalGet('entity_test/add');
     $this->assertFieldByName("{$this->field_name}[$langcode]", '', 'Widget is displayed.');
 
     // Submit with some value.
     $edit = array(
+      'user_id' => 1,
+      'name' => $this->randomName(),
       "{$this->field_name}[$langcode]" => array($term->id()),
     );
     $this->drupalPost(NULL, $edit, t('Save'));
-    preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
-    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), 'Entity was created.');
+    $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
 
     // Display the object.
-    $entity = field_test_entity_test_load($id);
+    $entity = entity_load('entity_test', $id);
     $entities = array($id => $entity);
     $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
-    field_attach_prepare_view('test_entity', $entities, array($entity->bundle() => $display));
+    field_attach_prepare_view('entity_test', $entities, array($entity->bundle() => $display));
     $entity->content = field_attach_view($entity, $display);
     $this->content = drupal_render($entity->content);
     $this->assertText($term->label(), 'Term label is displayed.');
 
     // Delete the vocabulary and verify that the widget is gone.
     $this->vocabulary->delete();
-    $this->drupalGet('test-entity/add/test_bundle');
+    $this->drupalGet('entity_test/add');
     $this->assertNoFieldByName("{$this->field_name}[$langcode]", '', 'Widget is not displayed');
   }
 

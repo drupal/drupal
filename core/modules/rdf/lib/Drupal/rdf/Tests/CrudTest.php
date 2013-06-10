@@ -34,7 +34,7 @@ class CrudTest extends WebTestBase {
    */
   function testCRUD() {
     // Verify loading of a default mapping.
-    $mapping = _rdf_mapping_load('test_entity', 'test_bundle');
+    $mapping = _rdf_mapping_load('entity_test', 'entity_test');
     $this->assertTrue(count($mapping), 'Default mapping was found.');
 
     // Verify saving a mapping.

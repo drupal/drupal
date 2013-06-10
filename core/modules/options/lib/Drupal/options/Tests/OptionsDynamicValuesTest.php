@@ -19,7 +19,14 @@ class OptionsDynamicValuesTest extends FieldTestBase {
    *
    * @var array
    */
-  public static $modules = array('options', 'field_test', 'options_test');
+  public static $modules = array('options', 'entity_test', 'options_test');
+
+  /**
+   * The created entity.
+   *
+   * @var \Drupal\Core\Entity\Entity
+   */
+  protected $entity;
 
   function setUp() {
     parent::setUp();
@@ -37,25 +44,31 @@ class OptionsDynamicValuesTest extends FieldTestBase {
 
     $this->instance = array(
       'field_name' => $this->field_name,
-      'entity_type' => 'test_entity',
-      'bundle' => 'test_bundle',
+      'entity_type' => 'entity_test_rev',
+      'bundle' => 'entity_test_rev',
       'required' => TRUE,
     );
     $this->instance = field_create_instance($this->instance);
-    entity_get_form_display('test_entity', 'test_bundle', 'default')
+    entity_get_form_display('entity_test_rev', 'entity_test_rev', 'default')
       ->setComponent($this->field_name, array(
         'type' => 'options_select',
       ))
       ->save();
 
-    $this->test = array(
-      'id' => mt_rand(1, 10),
-      // Make sure this does not equal the ID so that
-      // options_test_dynamic_values_callback() always returns 4 values.
-      'vid' => mt_rand(20, 30),
-      'bundle' => 'test_bundle',
-      'label' => $this->randomName(),
+    // Create an entity and prepare test data that will be used by
+    // options_test_dynamic_values_callback().
+    $values = array(
+      'user_id' => mt_rand(1, 10),
+      'name' => $this->randomName(),
     );
-    $this->entity = call_user_func_array('field_test_create_entity', $this->test);
+    $this->entity = entity_create('entity_test_rev', $values);
+    $this->entity->save();
+    $uri = $this->entity->uri();
+    $this->test = array(
+      'label' => $this->entity->label(),
+      'uuid' => $this->entity->uuid(),
+      'bundle' => $this->entity->bundle(),
+      'uri' => $uri['path'],
+    );
   }
 }

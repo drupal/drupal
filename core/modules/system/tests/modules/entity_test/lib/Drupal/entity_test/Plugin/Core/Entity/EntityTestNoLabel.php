@@ -23,7 +23,7 @@ use Drupal\Core\Annotation\Translation;
  *   field_cache = FALSE,
  *   base_table = "entity_test",
  *   entity_keys = {
- *     "id" = "ftid",
+ *     "id" = "id",
  *     "bundle" = "type"
  *   }
  * )

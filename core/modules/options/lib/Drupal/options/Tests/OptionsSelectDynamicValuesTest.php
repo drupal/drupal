@@ -27,11 +27,11 @@ class OptionsSelectDynamicValuesTest extends OptionsDynamicValuesTest {
     $this->entity->save();
 
     // Create a web user.
-    $web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content'));
+    $web_user = $this->drupalCreateUser(array('view test entity', 'administer entity_test content'));
     $this->drupalLogin($web_user);
 
     // Display form.
-    $this->drupalGet('test-entity/manage/' . $this->entity->ftid . '/edit');
+    $this->drupalGet('entity_test_rev/manage/' . $this->entity->id() . '/edit');
     $options = $this->xpath('//select[@id="edit-test-options-und"]/option');
     $this->assertEqual(count($options), count($this->test) + 1);
     foreach ($options as $option) {

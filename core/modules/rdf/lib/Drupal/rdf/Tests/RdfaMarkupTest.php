@@ -20,7 +20,7 @@ class RdfaMarkupTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('rdf', 'field_test', 'rdf_test');
+  public static $modules = array('rdf', 'entity_test', 'rdf_test');
 
   protected $profile = 'standard';
 
@@ -40,7 +40,7 @@ class RdfaMarkupTest extends WebTestBase {
     $expected_attributes = array(
       'property' => array('dc:title'),
     );
-    $mapping = rdf_mapping_load('test_entity', 'test_bundle');
+    $mapping = rdf_mapping_load('entity_test', 'entity_test');
     $attributes = rdf_rdfa_attributes($mapping['title']);
     ksort($expected_attributes);
     ksort($attributes);
@@ -54,7 +54,7 @@ class RdfaMarkupTest extends WebTestBase {
       'property' => array('dc:created'),
       'content' => $isoDate,
     );
-    $mapping = rdf_mapping_load('test_entity', 'test_bundle');
+    $mapping = rdf_mapping_load('entity_test', 'entity_test');
     $attributes = rdf_rdfa_attributes($mapping['created'], $date);
     ksort($expected_attributes);
     ksort($attributes);
@@ -65,7 +65,7 @@ class RdfaMarkupTest extends WebTestBase {
       'datatype' => 'foo:bar1type',
       'property' => array('foo:bar1'),
     );
-    $mapping = rdf_mapping_load('test_entity', 'test_bundle');
+    $mapping = rdf_mapping_load('entity_test', 'entity_test');
     $attributes = rdf_rdfa_attributes($mapping['foobar1']);
     ksort($expected_attributes);
     ksort($attributes);
@@ -75,7 +75,7 @@ class RdfaMarkupTest extends WebTestBase {
     $expected_attributes = array(
       'rel' => array('sioc:has_creator', 'dc:creator'),
     );
-    $mapping = rdf_mapping_load('test_entity', 'test_bundle');
+    $mapping = rdf_mapping_load('entity_test', 'entity_test');
     $attributes = rdf_rdfa_attributes($mapping['foobar_objproperty1']);
     ksort($expected_attributes);
     ksort($attributes);
@@ -85,7 +85,7 @@ class RdfaMarkupTest extends WebTestBase {
     $expected_attributes = array(
       'rev' => array('sioc:reply_of'),
     );
-    $mapping = rdf_mapping_load('test_entity', 'test_bundle');
+    $mapping = rdf_mapping_load('entity_test', 'entity_test');
     $attributes = rdf_rdfa_attributes($mapping['foobar_objproperty2']);
     ksort($expected_attributes);
     ksort($attributes);

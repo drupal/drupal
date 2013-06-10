@@ -19,7 +19,7 @@ class MappingHookTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('rdf', 'rdf_test', 'field_test');
+  public static $modules = array('rdf', 'rdf_test', 'entity_test');
 
   public static function getInfo() {
     return array(
@@ -34,7 +34,7 @@ class MappingHookTest extends WebTestBase {
    */
   function testMapping() {
     // Test that the mapping is returned correctly by the hook.
-    $mapping = rdf_mapping_load('test_entity', 'test_bundle');
+    $mapping = rdf_mapping_load('entity_test', 'entity_test');
     $this->assertIdentical($mapping['rdftype'], array('sioc:Post'), 'Mapping for rdftype is sioc:Post.');
     $this->assertIdentical($mapping['title'], array('predicates' => array('dc:title')), 'Mapping for title is dc:title.');
     $this->assertIdentical($mapping['created'], array(
@@ -44,7 +44,7 @@ class MappingHookTest extends WebTestBase {
     ), 'Mapping for created is dc:created with datatype xsd:dateTime and callback date_iso8601.');
     $this->assertIdentical($mapping['uid'], array('predicates' => array('sioc:has_creator', 'dc:creator'), 'type' => 'rel'), 'Mapping for uid is sioc:has_creator and dc:creator, and type is rel.');
 
-    $mapping = rdf_mapping_load('test_entity', 'test_bundle_no_mapping');
+    $mapping = rdf_mapping_load('entity_test', 'test_bundle_no_mapping');
     $this->assertEqual($mapping, array(), 'Empty array returned when an entity type, bundle pair has no mapping.');
   }
 }

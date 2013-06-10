@@ -11,8 +11,8 @@
 function rdf_test_rdf_mapping() {
   return array(
     array(
-      'type' => 'test_entity',
-      'bundle' => 'test_bundle',
+      'type' => 'entity_test',
+      'bundle' => 'entity_test',
       'mapping' => array(
         'rdftype' => array('sioc:Post'),
         'title' => array(

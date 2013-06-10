@@ -20,7 +20,7 @@ class EmailFieldTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'field_test', 'email', 'field_ui');
+  public static $modules = array('node', 'entity_test', 'email', 'field_ui');
 
   public static function getInfo() {
     return array(
@@ -34,8 +34,8 @@ class EmailFieldTest extends WebTestBase {
     parent::setUp();
 
     $this->web_user = $this->drupalCreateUser(array(
-      'access field_test content',
-      'administer field_test content',
+      'view test entity',
+      'administer entity_test content',
       'administer content types',
     ));
     $this->drupalLogin($this->web_user);
@@ -53,13 +53,13 @@ class EmailFieldTest extends WebTestBase {
     field_create_field($this->field);
     $this->instance = array(
       'field_name' => $this->field['field_name'],
-      'entity_type' => 'test_entity',
-      'bundle' => 'test_bundle',
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
     );
     field_create_instance($this->instance);
 
     // Create a form display for the default form mode.
-    entity_get_form_display('test_entity', 'test_bundle', 'default')
+    entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($this->field['field_name'], array(
         'type' => 'email_default',
         'settings' => array(
@@ -68,14 +68,14 @@ class EmailFieldTest extends WebTestBase {
       ))
       ->save();
     // Create a display for the full view mode.
-    entity_get_display('test_entity', 'test_bundle', 'full')
+    entity_get_display('entity_test', 'entity_test', 'full')
       ->setComponent($this->field['field_name'], array(
         'type' => 'email_mailto',
       ))
       ->save();
 
     // Display creation form.
-    $this->drupalGet('test-entity/add/test_bundle');
+    $this->drupalGet('entity_test/add');
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value]", '', 'Widget found.');
     $this->assertRaw('placeholder="example@example.com"');
@@ -83,16 +83,18 @@ class EmailFieldTest extends WebTestBase {
     // Submit a valid e-mail address and ensure it is accepted.
     $value = 'test@example.com';
     $edit = array(
+      'user_id' => 1,
+      'name' => $this->randomName(),
       "{$this->field['field_name']}[$langcode][0][value]" => $value,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
-    preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
-    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)));
+    $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
     $this->assertRaw($value);
 
     // Verify that a mailto link is displayed.
-    $entity = field_test_entity_test_load($id);
+    $entity = entity_load('entity_test', $id);
     $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
     $entity->content = field_attach_view($entity, $display);
     $this->drupalSetContent(drupal_render($entity->content));
