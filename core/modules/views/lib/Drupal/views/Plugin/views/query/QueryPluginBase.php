@@ -131,7 +131,7 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
    * @return $group
    *   The group ID generated.
    */
-  function set_where_group($type = 'AND', $group = NULL, $where = 'where') {
+  public function setWhereGroup($type = 'AND', $group = NULL, $where = 'where') {
     // Set an alias.
     $groups = &$this->$where;
 

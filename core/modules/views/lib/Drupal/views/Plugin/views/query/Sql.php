@@ -843,7 +843,7 @@ class Sql extends QueryPluginBase {
 
     // Check for a group.
     if (!isset($this->where[$group])) {
-      $this->set_where_group('AND', $group);
+      $this->setWhereGroup('AND', $group);
     }
 
     $this->where[$group]['conditions'][] = array(
@@ -881,7 +881,7 @@ class Sql extends QueryPluginBase {
 
     // Check for a group.
     if (!isset($this->where[$group])) {
-      $this->set_where_group('AND', $group);
+      $this->setWhereGroup('AND', $group);
     }
 
     $this->where[$group]['conditions'][] = array(
@@ -918,7 +918,7 @@ class Sql extends QueryPluginBase {
 
     // Check for a group.
     if (!isset($this->having[$group])) {
-      $this->set_where_group('AND', $group, 'having');
+      $this->setWhereGroup('AND', $group, 'having');
     }
 
     // Add the clause and the args.

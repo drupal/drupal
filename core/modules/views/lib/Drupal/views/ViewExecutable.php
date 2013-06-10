@@ -1018,7 +1018,7 @@ class ViewExecutable {
       if ($filter_groups) {
         $this->query->setGroupOperator($filter_groups['operator']);
         foreach ($filter_groups['groups'] as $id => $operator) {
-          $this->query->set_where_group($operator, $id);
+          $this->query->setWhereGroup($operator, $id);
         }
       }
     }
