@@ -38,4 +38,12 @@ interface CustomBlockInterface extends ContentEntityInterface {
    */
   public function getTheme();
 
+  /**
+   * Gets the configured instances of this custom block.
+   *
+   * @return array
+   *   Array of Drupal\block\Core\Plugin\Entity\Block entities.
+   */
+  public function getInstances();
+
 }
