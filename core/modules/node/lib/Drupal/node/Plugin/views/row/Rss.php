@@ -168,12 +168,13 @@ class Rss extends RowPluginBase {
     $item->link = $node->link;
     $item->elements = $node->rss_elements;
     $item->nid = $node->nid;
-
-    return theme($this->themeFunctions(), array(
-      'view' => $this->view,
-      'options' => $this->options,
-      'row' => $item
-    ));
+    $theme_function = array(
+      '#theme' => $this->themeFunctions(),
+      '#view' => $this->view,
+      '#options' => $this->options,
+      '#row' => $item,
+    );
+    return drupal_render($theme_function);
   }
 
 }

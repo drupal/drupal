@@ -1082,10 +1082,12 @@ function template_preprocess_node(&$variables) {
   $variables['date'] = format_date($node->created);
   // @todo Change 'name' to 'author' and also convert to a render array pending
   //   http://drupal.org/node/1941286.
-  $variables['name'] = theme('username', array(
-    'account' => $node,
-    'link_attributes' => array('rel' => 'author'),
-  ));
+  $username = array(
+    '#theme' => 'username',
+    '#account' => $node,
+    '#link_attributes' => array('rel' => 'author'),
+  );
+  $variables['name'] = drupal_render($username);
 
   $uri = $node->uri();
   $variables['node_url']  = url($uri['path'], $uri['options']);
@@ -1336,11 +1338,15 @@ function node_search_execute($keys = NULL, $conditions = NULL) {
 
     $language = language_load($item->langcode);
     $uri = $node->uri();
+    $username = array(
+      '#theme' => 'username',
+      '#account' => $node,
+    );
     $results[] = array(
       'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE, 'language' => $language))),
       'type' => check_plain(node_get_type_label($node)),
       'title' => $node->label($item->langcode),
-      'user' => theme('username', array('account' => $node)),
+      'user' => drupal_render($username),
       'date' => $node->changed,
       'node' => $node,
       'extra' => $extra,
@@ -1466,7 +1472,12 @@ function theme_node_search_admin($variables) {
     $row[] = drupal_render($form['factors'][$key]);
     $rows[] = $row;
   }
-  $output .= theme('table', array('header' => $header, 'rows' => $rows));
+  $table = array(
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+  );
+  $output .= drupal_render($table);
 
   $output .= drupal_render_children($form);
   return $output;
@@ -1873,8 +1884,12 @@ function theme_node_recent_block($variables) {
   $l_options = array('query' => drupal_get_destination());
   foreach ($variables['nodes'] as $node) {
     $row = array();
+    $node_recent_content = array(
+      '#theme' => 'node_recent_content',
+      '#node' => $node,
+    );
     $row[] = array(
-      'data' => theme('node_recent_content', array('node' => $node)),
+      'data' => drupal_render($node_recent_content),
       'class' => 'title-author',
     );
     if (node_access('update', $node)) {
@@ -1893,9 +1908,18 @@ function theme_node_recent_block($variables) {
   }
 
   if ($rows) {
-    $output = theme('table', array('rows' => $rows));
+    $table = array(
+      '#theme' => 'table',
+      '#rows' => $rows,
+    );
+    $output = drupal_render($table);
     if (user_access('access content overview')) {
-      $output .= theme('more_link', array('url' => 'admin/content', 'title' => t('Show more content')));
+      $more_link = array(
+        '#theme' => 'more_link',
+        '#url' => 'admin/content',
+        '#title' => t('Show more content'),
+      );
+      $output .= drupal_render($more_link);
     }
   }
 
@@ -1916,9 +1940,17 @@ function theme_node_recent_content($variables) {
 
   $output = '<div class="node-title">';
   $output .= l($node->label(), 'node/' . $node->nid);
-  $output .= theme('mark', array('type' => node_mark($node->nid, $node->changed)));
+  $mark = array(
+    '#theme' => 'mark',
+    '#type' => node_mark($node->nid, $node->changed),
+  );
+  $output .= drupal_render($mark);
   $output .= '</div><div class="node-author">';
-  $output .= theme('username', array('account' => user_load($node->uid)));
+  $username = array(
+    '#theme' => 'username',
+    '#account' => user_load($node->uid),
+  );
+  $output .= drupal_render($username);
   $output .= '</div>';
 
   return $output;

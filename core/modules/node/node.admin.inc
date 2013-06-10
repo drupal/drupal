@@ -352,7 +352,11 @@ function _node_mass_update_batch_finished($success, $results, $operations) {
   else {
     drupal_set_message(t('An error occurred and processing did not complete.'), 'error');
     $message = format_plural(count($results), '1 item successfully processed:', '@count items successfully processed:');
-    $message .= theme('item_list', array('items' => $results));
+    $item_list = array(
+      '#theme' => 'item_list',
+      '#items' => $results,
+    );
+    $message .= drupal_render($item_list);
     drupal_set_message($message);
   }
 }
@@ -495,12 +499,16 @@ function node_admin_nodes() {
   );
   foreach ($nodes as $node) {
     $l_options = $node->langcode != Language::LANGCODE_NOT_SPECIFIED && isset($languages[$node->langcode]) ? array('language' => $languages[$node->langcode]) : array();
+    $mark = array(
+      '#theme' => 'mark',
+      '#type' => node_mark($node->nid, $node->changed),
+    );
     $form['nodes'][$node->nid]['title'] = array(
       '#type' => 'link',
       '#title' => $node->label(),
       '#href' => 'node/' . $node->nid,
       '#options' => $l_options,
-      '#suffix' => ' ' . theme('mark', array('type' => node_mark($node->nid, $node->changed))),
+      '#suffix' => ' ' . drupal_render($mark),
     );
     $form['nodes'][$node->nid]['type'] = array(
       '#markup' => check_plain(node_get_type_label($node)),
