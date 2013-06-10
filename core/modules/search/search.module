@@ -7,6 +7,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Utility\Unicode;
+use Drupal\search\SearchExpression;
 
 /**
  * Matches all 'N' Unicode character classes (numbers)
@@ -867,9 +868,8 @@ function search_comment_unpublish($comment) {
  *   if any. Trailing spaces in values will not be included.
  */
 function search_expression_extract($expression, $option) {
-  if (preg_match('/(^| )' . $option . ':([^ ]*)( |$)/i', $expression, $matches)) {
-    return $matches[2];
-  }
+  $expression = new SearchExpression($expression);
+  return $expression->extract($option);
 }
 
 /**
@@ -896,14 +896,8 @@ function search_expression_extract($expression, $option) {
  *   a new $option:$value pair added if $value was provided.
  */
 function search_expression_insert($expression, $option, $value = NULL) {
-  // Remove any previous values stored with $option.
-  $expression = trim(preg_replace('/(^| )' . $option . ':[^ ]*/i', '', $expression));
-
-  // Set new value, if provided.
-  if (isset($value)) {
-    $expression .= ' ' . $option . ':' . trim($value);
-  }
-  return $expression;
+  $expression = new SearchExpression($expression);
+  return $expression->insert($option, $value)->getExpression();
 }
 
 /**
