@@ -2616,10 +2616,10 @@ function system_preprocess_block(&$variables) {
   list($plugin_id) = explode(':', $variables['plugin_id'] . ':');
   switch ($plugin_id) {
     case 'system_powered_by_block':
-      $variables['attributes_array']['role'] = 'complementary';
+      $variables['attributes']['role'] = 'complementary';
       break;
     case 'system_help_block':
-      $variables['attributes_array']['role'] = 'complementary';
+      $variables['attributes']['role'] = 'complementary';
       break;
     case 'system_menu_block':
       $variables['attributes']['role'] = 'navigation';
