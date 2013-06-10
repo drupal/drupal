@@ -277,7 +277,7 @@ abstract class SqlBase extends PagerPluginBase {
   }
 
   public function getPagerTotal() {
-    if ($items_per_page = intval($this->get_items_per_page())) {
+    if ($items_per_page = intval($this->getItemsPerPage())) {
       return ceil($this->total_items / $items_per_page);
     }
     else {
@@ -300,7 +300,7 @@ abstract class SqlBase extends PagerPluginBase {
     }
 
     // Don't set pager settings for items per page = 0.
-    $items_per_page = $this->get_items_per_page();
+    $items_per_page = $this->getItemsPerPage();
     if (!empty($items_per_page)) {
       // Dump information about what we already know into the globals.
       global $pager_page_array, $pager_total, $pager_total_items, $pager_limits;
@@ -350,7 +350,7 @@ abstract class SqlBase extends PagerPluginBase {
           '#type' => 'select',
           '#title' => $this->options['expose']['items_per_page_label'],
           '#options' => $sanitized_options,
-          '#default_value' => $this->get_items_per_page(),
+          '#default_value' => $this->getItemsPerPage(),
         );
       }
     }

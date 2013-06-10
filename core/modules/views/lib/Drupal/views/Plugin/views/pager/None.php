@@ -71,7 +71,7 @@ class None extends PagerPluginBase {
     return FALSE;
   }
 
-  function get_items_per_page() {
+  public function getItemsPerPage() {
     return 0;
   }
 

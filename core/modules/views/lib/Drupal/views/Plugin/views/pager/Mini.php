@@ -79,12 +79,12 @@ class Mini extends SqlBase {
   public function postExecute(&$result) {
     // In query() one more item might have been retrieved than necessary. If so,
     // the next link needs to be displayed and the item removed.
-    if (count($result) > $this->get_items_per_page()) {
+    if (count($result) > $this->getItemsPerPage()) {
       array_pop($result);
       // Make sure the pager shows the next link by setting the total items to
       // the biggest possible number but prevent failing calculations like
       // ceil(PHP_INT_MAX) we take PHP_INT_MAX / 2.
-      pager_default_initialize(PHP_INT_MAX / 2, $this->get_items_per_page(), $this->options['id']);
+      pager_default_initialize(PHP_INT_MAX / 2, $this->getItemsPerPage(), $this->options['id']);
     }
   }
 

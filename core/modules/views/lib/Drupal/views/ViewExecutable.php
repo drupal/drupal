@@ -474,7 +474,7 @@ class ViewExecutable {
   public function getItemsPerPage() {
     // If the pager is already initialized, pass it through to the pager.
     if (!empty($this->pager)) {
-      return $this->pager->get_items_per_page();
+      return $this->pager->getItemsPerPage();
     }
 
     if (isset($this->items_per_page)) {

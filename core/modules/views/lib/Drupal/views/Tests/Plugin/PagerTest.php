@@ -142,7 +142,7 @@ class PagerTest extends PluginTestBase {
     // Check some public functions.
     $this->assertFalse($view->pager->usePager());
     $this->assertFalse($view->pager->useCountQuery());
-    $this->assertEqual($view->pager->get_items_per_page(), 0);
+    $this->assertEqual($view->pager->getItemsPerPage(), 0);
   }
 
   public function testViewTotalRowsWithoutPager() {
@@ -240,7 +240,7 @@ class PagerTest extends PluginTestBase {
 
     $view->display_handler->setOption('pager', $pager);
     $this->executeView($view);
-    $this->assertEqual($view->pager->get_items_per_page(), 0);
+    $this->assertEqual($view->pager->getItemsPerPage(), 0);
     $this->assertEqual(count($view->result), 11);
   }
 
@@ -274,7 +274,7 @@ class PagerTest extends PluginTestBase {
     $this->assertEqual($view->getItemsPerPage(), NULL, 'If the pager is not initialized and no manual override there is no items per page.');
     $rand_number = rand(1, 5);
     $view->setItemsPerPage($rand_number);
-    $this->assertEqual($view->getItemsPerPage(), $rand_number, 'Make sure get_items_per_page uses the settings of set_items_per_page.');
+    $this->assertEqual($view->getItemsPerPage(), $rand_number, 'Make sure getItemsPerPage uses the settings of set_items_per_page.');
 
     $this->assertEqual($view->getOffset(), NULL, 'If the pager is not initialized and no manual override there is no offset.');
     $rand_number = rand(1, 5);
@@ -298,7 +298,7 @@ class PagerTest extends PluginTestBase {
     $view->setItemsPerPage($rand_number);
     $rand_number = rand(6, 11);
     $view->pager->set_items_per_page($rand_number);
-    $this->assertEqual($view->getItemsPerPage(), $rand_number, 'Make sure get_items_per_page uses the settings of set_items_per_page.');
+    $this->assertEqual($view->getItemsPerPage(), $rand_number, 'Make sure getItemsPerPage uses the settings of set_items_per_page.');
 
     $this->assertEqual($view->getOffset(), 0, 'Per default a view has a 0 offset.');
     $rand_number = rand(1, 5);
