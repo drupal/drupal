@@ -1389,37 +1389,7 @@ function bootstrap_hooks() {
  * @ingroup sanitization
  */
 function t($string, array $args = array(), array $options = array()) {
-  static $custom_strings;
-
-  // Merge in default.
-  if (empty($options['langcode'])) {
-    $options['langcode'] = language(Language::TYPE_INTERFACE)->langcode;
-  }
-  if (empty($options['context'])) {
-    $options['context'] = '';
-  }
-
-  // First, check for an array of customized strings. If present, use the array
-  // *instead of* database lookups. This is a high performance way to provide a
-  // handful of string replacements. See settings.php for examples.
-  // Cache the $custom_strings variable to improve performance.
-  if (!isset($custom_strings[$options['langcode']])) {
-    $custom_strings[$options['langcode']] = variable_get('locale_custom_strings_' . $options['langcode'], array());
-  }
-  // Custom strings work for English too, even if locale module is disabled.
-  if (isset($custom_strings[$options['langcode']][$options['context']][$string])) {
-    $string = $custom_strings[$options['langcode']][$options['context']][$string];
-  }
-  // Translate with locale module if enabled.
-  elseif ($options['langcode'] != Language::LANGCODE_SYSTEM && ($options['langcode'] != 'en' || variable_get('locale_translate_english', FALSE)) && function_exists('locale')) {
-    $string = locale($string, $options['context'], $options['langcode']);
-  }
-  if (empty($args)) {
-    return $string;
-  }
-  else {
-    return format_string($string, $args);
-  }
+  return Drupal::translation()->translate($string, $args, $options);
 }
 
 /**
@@ -2434,27 +2404,23 @@ function drupal_installation_attempted() {
  * Use st() if your code will only run during installation and never any other
  * time. Use get_t() if your code could run in either circumstance.
  *
+ * @todo Remove this in favor of t().
+ *
  * @see t()
  * @see st()
  * @ingroup sanitization
  */
 function get_t() {
-  static $t;
-  // This is not converted to drupal_static because there is no point in
-  // resetting this as it can not change in the course of a request.
-  if (!isset($t)) {
-    $t = drupal_installation_attempted() ? 'st' : 't';
-  }
-  return $t;
+  return 't';
 }
 
 /**
- * Initializes all the defined language types.
- *
- * @see language()
+ * Initializes all the defined language types and sets the default langcode.
  */
 function drupal_language_initialize() {
-  drupal_container()->get('language_manager')->init();
+  $language_manager = Drupal::service('language_manager');
+  $language_manager->init();
+  Drupal::translation()->setDefaultLangcode($language_manager->getLanguage(Language::TYPE_INTERFACE)->langcode);
 }
 
 /**
@@ -2464,19 +2430,12 @@ function drupal_language_initialize() {
  *
  * @param string $type
  *   The type of language object needed, e.g. Language::TYPE_INTERFACE.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   Drupal::service('language_manager')->getLanguage($type).
  */
 function language($type) {
-  $container = drupal_container();
-  if (!$container) {
-    return language_default();
-  }
-  if (!$container->has('language_manager')) {
-    // This happens in rare situations when the container has not been built by
-    // a kernel and has no services, e.g., when t() is called during unit tests
-    // for assertions.
-    $container->register('language_manager', 'Drupal\Core\Language\LanguageManager');
-  }
-  return $container->get('language_manager')->getLanguage($type);
+  return Drupal::service('language_manager')->getLanguage($type);
 }
 
 /**

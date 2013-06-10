@@ -371,4 +371,14 @@ class Drupal {
     return static::$container->get('url_generator');
   }
 
+  /**
+   * Returns the string translation service.
+   *
+   * @return \Drupal\Core\Translation\TranslationManager
+   *   The string translation manager.
+   */
+  public static function translation() {
+    return static::$container->get('string_translation');
+  }
+
 }

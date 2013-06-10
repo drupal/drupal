@@ -914,6 +914,9 @@ abstract class TestBase {
 
     // Reset and create a new service container.
     $this->container = new ContainerBuilder();
+     // @todo Remove this once this class has no calls to t() and format_plural()
+    $this->container->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager');
+
     \Drupal::setContainer($this->container);
 
     // Unset globals.

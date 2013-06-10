@@ -2,11 +2,12 @@
 
 /**
  * @file
- * Definition of LocaleLookup
+ * Contains \Drupal\locale\Locale\Lookup.
  */
 
 namespace Drupal\locale;
 
+use Drupal\Core\DestructableInterface;
 use Drupal\Core\Utility\CacheArray;
 use Drupal\locale\SourceString;
 use Drupal\locale\TranslationString;
@@ -14,50 +15,52 @@ use Drupal\locale\TranslationString;
 /**
  * Extends CacheArray to allow for dynamic building of the locale cache.
  */
-class LocaleLookup extends CacheArray {
+class LocaleLookup extends CacheArray implements DestructableInterface {
 
   /**
    * A language code.
+   *
    * @var string
    */
   protected $langcode;
 
   /**
    * The msgctxt context.
+   *
    * @var string
    */
   protected $context;
 
   /**
-   * The locale storage
+   * The locale storage.
    *
-   * @var Drupal\locale\StringStorageInterface
+   * @var \Drupal\locale\StringStorageInterface
    */
   protected $stringStorage;
 
   /**
    * Constructs a LocaleCache object.
    */
-  public function __construct($langcode, $context, $stringStorage) {
+  public function __construct($langcode, $context, $string_storage) {
     $this->langcode = $langcode;
     $this->context = (string) $context;
-    $this->stringStorage = $stringStorage;
+    $this->stringStorage = $string_storage;
 
     // Add the current user's role IDs to the cache key, this ensures that, for
     // example, strings for admin menu items and settings forms are not cached
     // for anonymous users.
-    $rids = implode(':', $GLOBALS['user']->roles);
+    $rids = isset($GLOBALS['user']) ? implode(':', array_keys($GLOBALS['user']->roles)) : '0';
     parent::__construct("locale:$langcode:$context:$rids", 'cache', array('locale' => TRUE));
   }
 
   /**
-   * Implements CacheArray::resolveCacheMiss().
+   * {@inheritdoc}
    */
   protected function resolveCacheMiss($offset) {
     $translation = $this->stringStorage->findTranslation(array(
       'language' => $this->langcode,
       'source' => $offset,
-      'context' => $this->context
+      'context' => $this->context,
     ));
 
     if ($translation) {
@@ -83,4 +86,20 @@ class LocaleLookup extends CacheArray {
     }
     return $value;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function destruct() {
+    parent::__destruct();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __destruct() {
+    // Do nothing to avoid segmentation faults. This can be restored after the
+    // cache collector from http://drupal.org/node/1786490 is used.
+  }
+
 }

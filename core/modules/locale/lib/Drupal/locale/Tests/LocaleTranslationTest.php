@@ -74,7 +74,7 @@ class LocaleTranslationTest extends WebTestBase {
     // Add string.
     t($name, array(), array('langcode' => $langcode));
     // Reset locale cache.
-    locale_reset();
+    $this->container->get('string_translation')->reset();
     $this->assertRaw('"edit-languages-' . $langcode .'-weight"', t('Language code found.'));
     $this->assertText(t($name), t('Test language added.'));
     $this->drupalLogout();
@@ -153,7 +153,7 @@ class LocaleTranslationTest extends WebTestBase {
     // Refresh the locale() cache to get fresh data from t() below. We are in
     // the same HTTP request and therefore t() is not refreshed by saving the
     // translation above.
-    locale_reset();
+    $this->container->get('string_translation')->reset();
     // Now we should get the proper fresh translation from t().
     $this->assertTrue($name != $translation_to_en && t($name, array(), array('langcode' => 'en')) == $translation_to_en, t('t() works for English.'));
     $this->assertTrue(t($name, array(), array('langcode' => Language::LANGCODE_SYSTEM)) == $name, 't() works for Language::LANGCODE_SYSTEM.');
@@ -369,7 +369,7 @@ class LocaleTranslationTest extends WebTestBase {
     // Add string.
     t($name, array(), array('langcode' => $langcode));
     // Reset locale cache.
-    locale_reset();
+    $this->container->get('string_translation')->reset();
     $this->drupalLogout();
 
     // Search for the name.
@@ -484,13 +484,13 @@ class LocaleTranslationTest extends WebTestBase {
     language_save($language);
 
     // Create test source string
-    $string = locale_storage()->createString(array(
+    $string = $this->container->get('locale.storage')->createString(array(
       'source' => $this->randomName(100),
       'context' => $this->randomName(20),
     ))->save();
 
     // Create translation for new string and save it as non-customized.
-    $translation = locale_storage()->createTranslation(array(
+    $translation = $this->container->get('locale.storage')->createTranslation(array(
       'lid' => $string->lid,
       'language' => 'de',
       'translation' => $this->randomName(100),
@@ -498,7 +498,7 @@ class LocaleTranslationTest extends WebTestBase {
     ))->save();
 
     // Reset locale cache.
-    locale_reset();
+    $this->container->get('string_translation')->reset();
 
     // Ensure non-customized translation string does appear if searching Non-customized translation.
     $search = array(

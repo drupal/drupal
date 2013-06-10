@@ -79,9 +79,12 @@ class LocaleExportTest extends WebTestBase {
     ), t('Import'));
     drupal_unlink($name);
 
-    // We can't import a string with an empty translation, but calling
-    // locale() for an new string creates an entry in the locales_source table.
-    locale('February', NULL, 'fr');
+    // Create string without translation in the locales_source table.
+    $this->container
+      ->get('locale.storage')
+      ->createString()
+      ->setString('February')
+      ->save();
 
     // Export only customized French translations.
     $this->drupalPost('admin/config/regional/translate/export', array(

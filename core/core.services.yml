@@ -170,6 +170,12 @@ services:
     arguments: ['@event_dispatcher', '@service_container', '@controller_resolver']
   language_manager:
     class: Drupal\Core\Language\LanguageManager
+  string_translator.custom_strings:
+    class: Drupal\Core\StringTranslation\Translator\CustomStrings
+    tags:
+      - { name: string_translator, priority: 30 }
+  string_translation:
+    class: Drupal\Core\StringTranslation\TranslationManager
   database.slave:
     class: Drupal\Core\Database\Connection
     factory_class: Drupal\Core\Database\Database
@@ -376,7 +382,7 @@ services:
     class: Drupal\Core\EventSubscriber\LanguageRequestSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@language_manager']
+    arguments: ['@language_manager', '@string_translation']
   exception_controller:
     class: Drupal\Core\Controller\ExceptionController
     arguments: ['@content_negotiation']

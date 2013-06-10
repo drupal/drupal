@@ -8,7 +8,8 @@
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
-use Drupal\locale\Gettext;
+use Drupal\Core\StringTranslation\TranslationManager;
+use Drupal\Core\StringTranslation\Translator\CustomStrings;
 
 /**
  * Requirement severity -- Informational message only.
@@ -941,48 +942,28 @@ function drupal_requirements_url($severity) {
  * @ingroup sanitization
  */
 function st($string, array $args = array(), array $options = array()) {
-  static $strings = NULL;
   global $install_state;
+  static $install_translation;
 
-  if (empty($options['context'])) {
-    $options['context'] = '';
+  // This may be invoked before the container has been initialized.
+  $container = Drupal::getContainer();
+  if ($container && $container->has('translation')) {
+    // Since the container is properly initialized, we can use standard translation.
+    return t($string, $args, $options);
   }
-
-  if (!isset($strings)) {
-    $strings = array();
-    if (isset($install_state['parameters']['langcode'])) {
-      // If the given langcode was selected, there should be at least one .po
-      // file with its name in the pattern drupal-$version.$langcode.po.
-      // This might or might not be the entire filename. It is also possible
-      // that multiple files end with the same suffix, even if unlikely.
-      $files = install_find_translation_files($install_state['parameters']['langcode']);
-      if (!empty($files)) {
-        // Register locale classes with the classloader. Locale module is not
-        // yet enabled at this stage, so this is not happening automatically.
-        drupal_classloader_register('locale', drupal_get_path('module', 'locale'));
-        $strings = Gettext::filesToArray($install_state['parameters']['langcode'], $files);
+  elseif (drupal_installation_attempted() && isset($install_state['parameters']['langcode'])) {
+    // The translation service is not there yet, use a temporary one.
+    if (!isset($install_translation)) {
+      $install_translation = new TranslationManager();
+      foreach (array(new CustomStrings(), install_file_translation_service()) as $translator) {
+        $install_translation->addTranslator($translator);
       }
+      $install_translation->setDefaultLangcode($install_state['parameters']['langcode']);
     }
+    return $install_translation->translate($string, $args, $options);
   }
-
-  require_once __DIR__ . '/theme.inc';
-  // Transform arguments before inserting them
-  foreach ($args as $key => $value) {
-    switch ($key[0]) {
-      // Escaped only
-      case '@':
-        $args[$key] = check_plain($value);
-        break;
-      // Escaped and placeholder
-      case '%':
-      default:
-        $args[$key] = '<em>' . check_plain($value) . '</em>';
-        break;
-      // Pass-through
-      case '!':
-    }
-  }
-  return strtr((!empty($strings[$options['context']][$string]) ? $strings[$options['context']][$string] : $string), $args);
+  // Just return an untraslated string.
+  return format_string($string, $args);
 }
 
 /**

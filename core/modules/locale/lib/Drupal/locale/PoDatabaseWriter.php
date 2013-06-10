@@ -229,7 +229,7 @@ class PoDatabaseWriter implements PoWriterInterface {
     $translation = $item->getTranslation();
 
     // Look up the source string and any existing translation.
-    $strings = locale_storage()->getTranslations(array(
+    $strings = \Drupal::service('locale.storage')->getTranslations(array(
       'language' => $this->_langcode,
       'source' => $source,
       'context' => $context
@@ -265,9 +265,9 @@ class PoDatabaseWriter implements PoWriterInterface {
       }
       else {
         // No such source string in the database yet.
-        $string = locale_storage()->createString(array('source' => $source, 'context' => $context))
+        $string = \Drupal::service('locale.storage')->createString(array('source' => $source, 'context' => $context))
           ->save();
-        $target = locale_storage()->createTranslation(array(
+        $target = \Drupal::service('locale.storage')->createTranslation(array(
           'lid' => $string->getId(),
           'language' => $this->_langcode,
           'translation' => $translation,

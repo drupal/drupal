@@ -145,11 +145,11 @@ class PoDatabaseReader implements PoReaderInterface {
         // Filter for string with translation.
         $conditions['translated'] = TRUE;
       }
-      return locale_storage()->getTranslations($conditions);
+      return \Drupal::service('locale.storage')->getTranslations($conditions);
     }
     else {
       // If no language, we don't need any of the target fields.
-      return locale_storage()->getStrings($conditions);
+      return \Drupal::service('locale.storage')->getStrings($conditions);
     }
   }
 

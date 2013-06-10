@@ -387,7 +387,6 @@ function update_prepare_d8_bootstrap() {
       $disabled_modules->save();
       $theme_config->save();
       $disabled_themes->save();
-      Drupal::service('kernel')->updateModules($sorted_with_filenames, $sorted_with_filenames);
 
       // Migrate the private key to state. This is used to create the token for
       // the upgrade batch so needs to be be done before the upgrade has begun.
@@ -400,6 +399,9 @@ function update_prepare_d8_bootstrap() {
       update_prepare_stored_includes();
       // Update the environment for the language bootstrap if needed.
       update_prepare_d8_language();
+      // Rebuild kernel after new language fields are added in the database
+      // because the translation service depends on them being there.
+      Drupal::service('kernel')->updateModules($sorted_with_filenames, $sorted_with_filenames);
 
       // Change language column to langcode in url_alias.
       if (db_table_exists('url_alias') && db_field_exists('url_alias', 'language')) {

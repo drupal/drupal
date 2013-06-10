@@ -7,7 +7,9 @@
 
 namespace Drupal\Core\EventSubscriber;
 
+use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -26,14 +28,24 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
   protected $languageManager;
 
   /**
+   * The translation service.
+   *
+   * @var \Drupal\Core\Translation\Translator\TranslatorInterface
+   */
+  protected $translation;
+
+  /**
    * Constructs a LanguageRequestSubscriber object.
    *
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager service.
    *
+   * @param \Drupal\Core\Translation\Translator\TranslatorInterface $translation
+   *   The translation service.
    */
-  public function __construct(LanguageManager $language_manager) {
+  public function __construct(LanguageManager $language_manager, TranslatorInterface $translation) {
     $this->languageManager = $language_manager;
+    $this->translation = $translation;
   }
 
   /**
@@ -45,6 +57,10 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
   public function onKernelRequestLanguage(GetResponseEvent $event) {
     if ($event->getRequestType() == HttpKernelInterface::MASTER_REQUEST) {
       $this->languageManager->setRequest($event->getRequest());
+      // After the language manager has initialized, set the default langcode
+      // for the string translations.
+      $langcode = $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->langcode;
+      $this->translation->setDefaultLangcode($langcode);
     }
   }
 

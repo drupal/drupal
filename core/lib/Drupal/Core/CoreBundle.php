@@ -16,6 +16,7 @@ use Drupal\Core\DependencyInjection\Compiler\RegisterRouteFiltersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterParamConvertersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterServicesForDestructionPass;
+use Drupal\Core\DependencyInjection\Compiler\RegisterStringTranslatorsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
@@ -60,6 +61,8 @@ class CoreBundle extends Bundle {
     // Add the compiler pass that will process the tagged services.
     $container->addCompilerPass(new RegisterPathProcessorsPass());
     $container->addCompilerPass(new ListCacheBinsPass());
+    // Add the compiler pass for appending string translators.
+    $container->addCompilerPass(new RegisterStringTranslatorsPass());
   }
 
   /**
