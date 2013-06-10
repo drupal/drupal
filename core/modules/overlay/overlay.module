@@ -79,6 +79,7 @@ function overlay_theme() {
     ),
     'overlay_disable_message' => array(
       'render element' => 'element',
+      'template' => 'overlay-disable-message',
     ),
   );
 }
@@ -362,17 +363,17 @@ function overlay_disable_message() {
 }
 
 /**
- * Returns the HTML for the message about how to disable the overlay.
+ * Prepares variables for overlay disable message templates.
  *
- * @param $variables
+ * Default template: overlay-disable-message.html.twig.
+ *
+ * @param array $variables
  *   An associative array with an 'element' element, which itself is an
  *   associative array containing:
  *   - profile_link: The link to this user's account.
  *   - dismiss_message_link: The link to dismiss the overlay.
- *
- * @ingroup themeable
  */
-function theme_overlay_disable_message($variables) {
+function template_preprocess_overlay_disable_message(&$variables) {
   $element = $variables['element'];
 
   // Add CSS classes to hide the links from most sighted users, while keeping
@@ -386,17 +387,8 @@ function theme_overlay_disable_message($variables) {
     }
   }
 
-  // Render the links.
-  $output = drupal_render($element['profile_link']) . ' ' . drupal_render($element['dismiss_message_link']);
-
-  // Add a heading for screen-reader users. The heading doesn't need to be seen
-  // by sighted users.
-  $output = '<h3 class="element-invisible">' . t('Options for the administrative overlay') . '</h3>' . $output;
-
-  // Wrap in a container for styling.
-  $output = '<div id="overlay-disable-message" class="clearfix">' . $output . '</div>';
-
-  return $output;
+  $variables['profile_link'] = $element['profile_link'];
+  $variables['dismiss_link'] = $element['dismiss_message_link'];
 }
 
 /**
