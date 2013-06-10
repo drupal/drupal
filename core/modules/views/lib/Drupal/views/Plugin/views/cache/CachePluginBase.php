@@ -130,7 +130,7 @@ abstract class CachePluginBase extends PluginBase {
         break;
       case 'output':
         $this->storage['output'] = $this->view->display_handler->output;
-        $this->gather_headers();
+        $this->gatherHeaders();
         cache($this->table)->set($this->generateOutputKey(), $this->storage, $this->cacheSetExpire($type));
         break;
     }
@@ -210,7 +210,7 @@ abstract class CachePluginBase extends PluginBase {
    * Start caching the html head.
    *
    * This takes a snapshot of the current system state so that we don't
-   * duplicate it. Later on, when gather_headers() is run, this information
+   * duplicate it. Later on, when gatherHeaders() is run, this information
    * will be removed so that we don't hold onto it.
    *
    * @see drupal_add_html_head()
@@ -222,7 +222,7 @@ abstract class CachePluginBase extends PluginBase {
   /**
    * Gather the JS/CSS from the render array, the html head from the band data.
    */
-  function gather_headers() {
+  protected function gatherHeaders() {
     // Simple replacement for head
     if (isset($this->storage['head'])) {
       $this->storage['head'] = str_replace($this->storage['head'], '', drupal_add_html_head());
