@@ -153,7 +153,19 @@ class NodeLoadHooksTestCase extends DrupalWebTestCase {
  * Tests the node revision functionality.
  */
 class NodeRevisionsTestCase extends DrupalWebTestCase {
+
+  /**
+   * Nodes used by the test.
+   *
+   * @var array
+   */
   protected $nodes;
+
+  /**
+   * The revision messages for node revisions created in the test.
+   *
+   * @var array
+   */
   protected $logs;
 
   public static function getInfo() {
@@ -289,7 +301,19 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
  * Tests the node edit functionality.
  */
 class PageEditTestCase extends DrupalWebTestCase {
+
+  /**
+   * A user with permission to create and edit own page content.
+   *
+   * @var object
+   */
   protected $web_user;
+
+  /**
+   * A user with permission to bypass node access and administer nodes.
+   *
+   * @var object
+   */
   protected $admin_user;
 
   public static function getInfo() {
@@ -741,6 +765,9 @@ class NodeBlockTestCase extends DrupalWebTestCase {
     $this->drupalLogin($admin_user);
   }
 
+  /**
+   * Tests that the "Syndicate" block is shown when enabled.
+   */
   function testSyndicateBlock() {
     // Set block title to confirm that the interface is available.
     $this->drupalPost('admin/structure/block/manage/node/syndicate/configure', array('title' => $this->randomName(8)), t('Save block'));
@@ -1778,6 +1805,12 @@ class NodeAdminTestCase extends DrupalWebTestCase {
  * Tests node title functionality.
  */
 class NodeTitleTestCase extends DrupalWebTestCase {
+
+  /**
+   * A user with permission to create and edit content and to administer nodes.
+   *
+   * @var object
+   */
   protected $admin_user;
 
   public static function getInfo() {
@@ -2062,11 +2095,15 @@ class NodeQueryAlter extends DrupalWebTestCase {
 
   /**
    * User with permission to view content.
+   *
+   * @var object
    */
   protected $accessUser;
 
   /**
    * User without permission to view content.
+   *
+   * @var object
    */
   protected $noAccessUser;
 
@@ -2261,11 +2298,15 @@ class NodeEntityFieldQueryAlter extends DrupalWebTestCase {
 
   /**
    * User with permission to view content.
+   *
+   * @var object
    */
   protected $accessUser;
 
   /**
    * User without permission to view content.
+   *
+   * @var object
    */
   protected $noAccessUser;
 
@@ -2392,10 +2433,26 @@ class NodeTokenReplaceTestCase extends DrupalWebTestCase {
  * Tests user permissions for node revisions.
  */
 class NodeRevisionPermissionsTestCase extends DrupalWebTestCase {
+
+  /**
+   * Nodes used by the test.
+   *
+   * @var array
+   */
   protected $node_revisions = array();
+
+  /**
+   * Users with different revision permission used by the test.
+   *
+   * @var array
+   */
   protected $accounts = array();
 
-  // Map revision permission names to node revision access ops.
+  /**
+   * Map revision permission names to node revision access ops.
+   *
+   * @var array
+   */
   protected $map = array(
     'view' => 'view revisions',
     'update' => 'revert revisions',
