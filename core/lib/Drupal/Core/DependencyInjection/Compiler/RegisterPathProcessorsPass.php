@@ -27,9 +27,15 @@ class RegisterPathProcessorsPass implements CompilerPassInterface {
       return;
     }
     $manager = $container->getDefinition('path_processor_manager');
+    // Add inbound path processors.
     foreach ($container->findTaggedServiceIds('path_processor_inbound') as $id => $attributes) {
       $priority = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
       $manager->addMethodCall('addInbound', array(new Reference($id), $priority));
+    }
+    // Add outbound path processors.
+    foreach ($container->findTaggedServiceIds('path_processor_outbound') as $id => $attributes) {
+      $priority = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
+      $manager->addMethodCall('addOutbound', array(new Reference($id), $priority));
     }
   }
 }

@@ -1,0 +1,6 @@
+id: user_unblock_user_action
+label: 'Unblock the selected user(s)'
+status: '1'
+langcode: en
+type: user
+plugin: user_unblock_user_action

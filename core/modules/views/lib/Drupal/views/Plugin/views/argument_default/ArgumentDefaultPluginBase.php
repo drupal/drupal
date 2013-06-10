@@ -34,7 +34,7 @@ abstract class ArgumentDefaultPluginBase extends PluginBase {
    *
    * This needs to be overridden by every default argument handler to properly do what is needed.
    */
-  function get_argument() { }
+  public function getArgument() { }
 
   /**
    * Sets the parent argument this plugin is associated with.

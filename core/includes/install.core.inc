@@ -8,6 +8,8 @@ use Drupal\Core\CoreBundle;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Install\TaskException;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\StringTranslation\Translator\FileTranslation;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -370,6 +372,12 @@ function install_begin_request(&$install_state) {
 
     // Register the 'language_manager' service.
     $container->register('language_manager', 'Drupal\Core\Language\LanguageManager');
+
+    // Register the translation services.
+    $container->register('string_translator.custom_strings', 'Drupal\Core\StringTranslation\Translator\CustomStrings')
+      ->addTag('string_translator');
+    $container->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager');
+
     foreach (array('bootstrap', 'config', 'cache', 'menu', 'page', 'path') as $bin) {
       $container
         ->register("cache.$bin", 'Drupal\Core\Cache\MemoryBackend')
@@ -410,11 +418,19 @@ function install_begin_request(&$install_state) {
     // Register Twig template engine for use during install.
     CoreBundle::registerTwig($container);
 
+    $container->register('url_generator', 'Drupal\Core\Routing\NullGenerator');
+
     Drupal::setContainer($container);
   }
 
   // Set up $language, so t() caller functions will still work.
   drupal_language_initialize();
+  // Append file translation to the translation chain.
+  Drupal::translation()->addTranslator(install_file_translation_service());
+  // Add in installation language if present.
+  if (isset($install_state['parameters']['langcode'])) {
+    Drupal::translation()->setDefaultLangcode($install_state['parameters']['langcode']);
+  }
 
   require_once __DIR__ . '/ajax.inc';
 
@@ -1369,7 +1385,7 @@ function install_select_profile_form($form, &$form_state, $install_state) {
  */
 function install_find_translations() {
   $translations = array();
-  $files = install_find_translation_files();
+  $files = install_file_translation_service()->findTranslationFiles();
   // English does not need a translation file.
   array_unshift($files, (object) array('name' => 'en'));
   foreach ($files as $uri => $file) {
@@ -1385,37 +1401,24 @@ function install_find_translations() {
 }
 
 /**
- * Finds installer translations either for a specific langcode or all languages.
+ * Build a file translation service for installation.
  *
- * @param $langcode
- *   (optional) The language code corresponding to the language for which we
- *   want to find translation files. If omitted, information on all available
- *   files will be returned.
- *
- * @return
- *   An associative array of file information objects keyed by file URIs as
- *   returned by file_scan_directory().
- *
- * @see file_scan_directory()
+ * @return Drupal\Core\StringTranslation\Translator\FileTranslation
+ *   File translation service for the installer.
  */
-function install_find_translation_files($langcode = NULL) {
-  return file_scan_directory(install_translation_directory(), '!drupal-\d+\.\d+\.' . (!empty($langcode) ? preg_quote($langcode, '!') : '[^\.]+') . '\.po$!', array('recurse' => FALSE));
-}
+function install_file_translation_service() {
+  static $translation;
 
-/**
- * Get installation translations directory path.
- *
- * @return string
- *   A string containing the installation translations directory path.
- */
-function install_translation_directory() {
-  if (isset($GLOBALS['conf']['locale.settings']['translation.path'])) {
-    $directory = $GLOBALS['conf']['locale.settings']['translation.path'];
+  if (!isset($translation)) {
+    if (isset($GLOBALS['conf']['locale.settings']['translation.path'])) {
+      $directory = $GLOBALS['conf']['locale.settings']['translation.path'];
+    }
+    else {
+      $directory = conf_path() . '/files/translations';
+    }
+    $translation = new FileTranslation($directory);
   }
-  else {
-    $directory = conf_path() . '/files/translations';
-  }
-  return $directory;
+  return $translation;
 }
 
 /**
@@ -1433,8 +1436,6 @@ function install_translation_directory() {
  *   language cannot be chosen automatically.
  */
 function install_select_language(&$install_state) {
-  include_once __DIR__ . '/standard.inc';
-
   // Find all available translation files.
   $files = install_find_translations();
   $install_state['translations'] += $files;
@@ -1446,7 +1447,7 @@ function install_select_language(&$install_state) {
   // When files from the translation directory are used, we only accept
   // languages for which a file is available.
   if (!empty($_POST['langcode'])) {
-    $standard_languages = standard_language_list();
+    $standard_languages = LanguageManager::getStandardLanguageList();
     $langcode = $_POST['langcode'];
     if ($langcode == 'en' || isset($files[$langcode]) || isset($standard_languages[$langcode])) {
       $install_state['parameters']['langcode'] = $langcode;
@@ -1492,11 +1493,10 @@ function install_select_language(&$install_state) {
  * @ingroup forms
  */
 function install_select_language_form($form, &$form_state, $files = array()) {
-  include_once __DIR__ . '/standard.inc';
   include_once __DIR__ . '/../modules/language/language.module';
   include_once __DIR__ . '/../modules/language/language.negotiation.inc';
 
-  $standard_languages = standard_language_list();
+  $standard_languages = LanguageManager::getStandardLanguageList();
   $select_options = array();
   $browser_options = array();
 
@@ -1773,10 +1773,9 @@ function install_profile_modules(&$install_state) {
  */
 function install_import_translations(&$install_state) {
   include_once __DIR__ . '/../modules/locale/locale.bulk.inc';
-  include_once __DIR__ . '/standard.inc';
 
   $langcode = $install_state['parameters']['langcode'];
-  $standard_languages = standard_language_list();
+  $standard_languages = LanguageManager::getStandardLanguageList();
   if (!isset($standard_languages[$langcode])) {
     // Drupal does not know about this language, so we prefill its values with
     // our best guess. The user will be able to edit afterwards.
@@ -1948,7 +1947,14 @@ function install_finished(&$install_state) {
 
   $messages = drupal_set_message();
   $output = '<p>' . st('Congratulations, you installed @drupal!', array('@drupal' => drupal_install_profile_distribution_name())) . '</p>';
-  $output .= '<p>' . (isset($messages['error']) ? st('Review the messages above before visiting <a href="@url">your new site</a>.', array('@url' => url(''))) : st('<a href="@url">Visit your new site</a>.', array('@url' => url('')))) . '</p>';
+  // Ensure the URL that is generated for the home page does not have 'install.php'
+  // in it.
+  $request = Request::createFromGlobals();
+  $generator = Drupal::urlGenerator();
+  $generator->setBasePath(str_replace('/core', '', $request->getBasePath()) . '/');
+  $generator->setScriptPath('');
+  $url = $generator->generateFromPath('');
+  $output .= '<p>' . (isset($messages['error']) ? st('Review the messages above before visiting <a href="@url">your new site</a>.', array('@url' => $url)) : st('<a href="@url">Visit your new site</a>.', array('@url' => $url))) . '</p>';
 
   // Run cron to populate update status tables (if available) so that users
   // will be warned if they've installed an out of date Drupal version.
@@ -1989,7 +1995,6 @@ function _install_profile_modules_finished($success, $results, $operations) {
  * Checks installation requirements and reports any errors.
  */
 function install_check_translations($install_state) {
-  include_once __DIR__ . '/standard.inc';
   $requirements = array();
 
   $readable = FALSE;
@@ -2026,7 +2031,7 @@ function install_check_translations($install_state) {
   $server_url = $elements['scheme'] . '://' . $elements['host'];
 
   // Build the language name for display.
-  $languages = standard_language_list();
+  $languages = LanguageManager::getStandardLanguageList();
   $language = isset($languages[$langcode]) ? $languages[$langcode][0] : $langcode;
 
   // Check if the desirered translation file is available and if the translation

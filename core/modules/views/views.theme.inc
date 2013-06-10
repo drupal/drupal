@@ -290,8 +290,8 @@ function template_preprocess_views_view_fields(&$vars) {
           $object->label_html .= ': ';
         }
 
-        $object->element_label_type = $object->handler->element_label_type(TRUE, !$vars['options']['default_field_elements']);
-        if ($object->element_label_type) {
+        $object->elementLabelType = $object->handler->elementLabelType(TRUE, !$vars['options']['default_field_elements']);
+        if ($object->elementLabelType) {
           $attributes = array();
           if ($object->handler->options['element_default_classes']) {
             $attributes['class'][] = 'views-label';
@@ -304,11 +304,11 @@ function template_preprocess_views_view_fields(&$vars) {
           }
           $attributes = new Attribute($attributes);
 
-          $pre = '<' . $object->element_label_type;
+          $pre = '<' . $object->elementLabelType;
           $pre .= $attributes;
           $pre .= '>';
 
-          $object->label_html = $pre . $object->label_html . '</' . $object->element_label_type . '>';
+          $object->label_html = $pre . $object->label_html . '</' . $object->elementLabelType . '>';
         }
       }
 
@@ -587,7 +587,11 @@ function template_preprocess_views_view_table(&$vars) {
 
         $title = t('sort by @s', array('@s' => $label));
         if ($active == $field) {
-          $label .= theme('tablesort_indicator', array('style' => $initial));
+          $tablesort_indicator = array(
+            '#theme' => 'tablesort_indicator',
+            '#style' => $initial,
+          );
+          $label .= drupal_render($tablesort_indicator);
         }
 
         $query['order'] = $field;
@@ -622,7 +626,7 @@ function template_preprocess_views_view_table(&$vars) {
       }
       // Add a header label wrapper if one was selected.
       if ($vars['header'][$field]) {
-        $element_label_type = $fields[$field]->element_label_type(TRUE, TRUE);
+        $element_label_type = $fields[$field]->elementLabelType(TRUE, TRUE);
         if ($element_label_type) {
           $vars['header'][$field] = '<' . $element_label_type . '>' . $vars['header'][$field] . '</' . $element_label_type . '>';
         }
@@ -1181,14 +1185,16 @@ function theme_views_mini_pager($vars) {
     '#wrapper_attributes' => array('class' => array('pager-next')),
   ) + $li_next;
 
-  return theme('item_list',
-    array(
-      'items' => $items,
-      'title' => NULL,
-      'type' => 'ul',
-      'attributes' => array('class' => array('pager')),
-    )
+  $item_list = array(
+    '#theme' => 'item_list',
+    '#items' => $items,
+    '#title' => NULL,
+    '#type' => 'ul',
+    '#attributes' => array(
+      'class' => array('pager'),
+    ),
   );
+  return drupal_render($item_list);
 }
 
 /**

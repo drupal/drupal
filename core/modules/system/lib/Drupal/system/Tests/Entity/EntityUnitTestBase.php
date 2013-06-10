@@ -51,7 +51,7 @@ abstract class EntityUnitTestBase extends DrupalUnitTestBase {
       ));
       $role->save();
       user_role_grant_permissions($role->id(), $permissions);
-      $values['roles'][$role->id()] = $role->id();
+      $values['roles'][] = $role->id();
     }
 
     $account = entity_create('user', $values + array(

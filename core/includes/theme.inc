@@ -808,6 +808,7 @@ function drupal_find_base_themes($themes, $key, $used_keys = array()) {
  * @link themeable theme function or template @endlink, by checking the theme
  * registry.
  *
+ * @section sec_theme_hooks Theme Hooks
  * Most commonly, the first argument to this function is the name of the theme
  * hook. For instance, to theme a taxonomy term, the theme hook name is
  * 'taxonomy_term'. Modules register theme hooks within a hook_theme()
@@ -819,6 +820,7 @@ function drupal_find_base_themes($themes, $key, $used_keys = array()) {
  * underscores changed to hyphens, so for the 'taxonomy_term' theme hook, the
  * default template is 'taxonomy-term.tpl.php'.
  *
+ * @subsection sub_overriding_theme_hooks Overriding Theme Hooks
  * Themes may also register new theme hooks within a hook_theme()
  * implementation, but it is more common for themes to override default
  * implementations provided by modules than to register entirely new theme
@@ -831,6 +833,7 @@ function drupal_find_base_themes($themes, $key, $used_keys = array()) {
  * engine, it overrides the default implementation of the 'page' theme hook by
  * containing a 'page.html.twig' file within its folder structure).
  *
+ * @subsection sub_preprocess_templates Preprocessing for Template Files
  * If the implementation is a template file, several functions are called
  * before the template file is invoked, to modify the $variables array. These
  * fall into the "preprocessing" phase and the "processing" phase, and are
@@ -879,12 +882,14 @@ function drupal_find_base_themes($themes, $key, $used_keys = array()) {
  * - THEME_process_HOOK(&$variables):  Allows the theme to process the
  *   variables specific to the theme hook.
  *
+ * @subsection sub_preprocess_theme_funcs Preprocessing for Theme Functions
  * If the implementation is a function, only the theme-hook-specific preprocess
  * and process functions (the ones ending in _HOOK) are called from the
  * list above. This is because theme hooks with function implementations
  * need to be fast, and calling the non-theme-hook-specific preprocess and
  * process functions for them would incur a noticeable performance penalty.
  *
+ * @subsection sub_alternate_suggestions Suggesting Alternate Hooks
  * There are two special variables that these preprocess and process functions
  * can set: 'theme_hook_suggestion' and 'theme_hook_suggestions'. These will be
  * merged together to form a list of 'suggested' alternate theme hooks to use,
@@ -1998,7 +2003,9 @@ function drupal_pre_render_table(array $element) {
  *     - "data": The localized title of the table column.
  *     - "field": The database field represented in the table column (required
  *       if user is to be able to sort on this column).
- *     - "sort": A default sort order for this column ("asc" or "desc").
+ *     - "sort": A default sort order for this column ("asc" or "desc"). Only
+ *        one column should be given a default sort order because table sorting
+ *        only applies to one column at a time.
  *     - "class": An array of values for the 'class' attribute. In particular,
  *        the least important columns that can be hidden on narrow and medium
  *        width screens should have a 'priority-low' class, referenced with the
@@ -2408,45 +2415,6 @@ function theme_feed_icon($variables) {
   $text = t('Subscribe to !feed-title', array('!feed-title' => $variables['title']));
   if ($image = theme('image', array('uri' => 'core/misc/feed.png', 'width' => 16, 'height' => 16, 'alt' => $text))) {
     return l($image, $variables['url'], array('html' => TRUE, 'attributes' => array('class' => array('feed-icon'), 'title' => $text)));
-  }
-}
-
-/**
- * Returns HTML for a generic HTML tag with attributes.
- *
- * @param $variables
- *   An associative array containing:
- *   - element: An associative array describing the tag:
- *     - #tag: The tag name to output. Typical tags added to the HTML HEAD:
- *       - meta: To provide meta information, such as a page refresh.
- *       - link: To refer to stylesheets and other contextual information.
- *       - script: To load JavaScript.
- *     - #attributes: (optional) An array of HTML attributes to apply to the
- *       tag.
- *     - #value: (optional) A string containing tag content, such as inline
- *       CSS.
- *     - #value_prefix: (optional) A string to prepend to #value, e.g. a CDATA
- *       wrapper prefix.
- *     - #value_suffix: (optional) A string to append to #value, e.g. a CDATA
- *       wrapper suffix.
- */
-function theme_html_tag($variables) {
-  $element = $variables['element'];
-  $attributes = isset($element['#attributes']) ? new Attribute($element['#attributes']) : '';
-  if (!isset($element['#value'])) {
-    return '<' . $element['#tag'] . $attributes . " />\n";
-  }
-  else {
-    $output = '<' . $element['#tag'] . $attributes . '>';
-    if (isset($element['#value_prefix'])) {
-      $output .= $element['#value_prefix'];
-    }
-    $output .= $element['#value'];
-    if (isset($element['#value_suffix'])) {
-      $output .= $element['#value_suffix'];
-    }
-    $output .= '</' . $element['#tag'] . ">\n";
-    return $output;
   }
 }
 
@@ -3222,9 +3190,6 @@ function drupal_common_theme() {
     ),
     'indentation' => array(
       'variables' => array('size' => 1),
-    ),
-    'html_tag' => array(
-      'render element' => 'element',
     ),
     // From theme.maintenance.inc.
     'maintenance_page' => array(

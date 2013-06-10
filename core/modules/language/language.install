@@ -117,3 +117,13 @@ function language_disable() {
   // will be FALSE, because the language module is disabled.
   variable_set('language_count', 1);
 }
+
+/**
+ * Implements hook_requirements().
+ */
+function language_requirements($phase) {
+  if ($phase == 'update') {
+    // Load the include files to make constants available for updates.
+    language_negotiation_include();
+  }
+}

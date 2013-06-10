@@ -30,7 +30,7 @@ class FieldImportDeleteTest extends FieldUnitTestBase {
   /**
    * Tests deleting fields and instances as part of config import.
    */
-  function testImportDelete() {
+  public function testImportDelete() {
     $field_id = 'field_test_import';
     $instance_id = "test_entity.test_bundle.$field_id";
     $field_config_name = "field.field.$field_id";
@@ -46,24 +46,11 @@ class FieldImportDeleteTest extends FieldUnitTestBase {
     $this->assertTrue($instance, 'The field instance was created.');
 
     $field_uuid = $field->uuid;
-
-    // Simulate config data to import:
-    // - the current manifest for fields, without the entry for the field we
-    //   remove,
-    // - the current manifest for instances, without the entry for the instance
-    //   we remove.
-    $field_manifest_name = 'manifest.field.field';
-    $instance_manifest_name = 'manifest.field.instance';
     $active = $this->container->get('config.storage');
-    $field_manifest = $active->read($field_manifest_name);
-    unset($field_manifest[$field_id]);
-    $instance_manifest = $active->read($instance_manifest_name);
-    unset($instance_manifest[$instance_id]);
-
-    // Save as files in the the staging directory.
     $staging = $this->container->get('config.storage.staging');
-    $staging->write($field_manifest_name, $field_manifest);
-    $staging->write($instance_manifest_name, $instance_manifest);
+    $this->copyConfig($active, $staging);
+    $staging->delete($field_config_name);
+    $staging->delete($instance_config_name);
 
     // Import the content of the staging directory.
     $this->configImporter()->import();
@@ -89,5 +76,5 @@ class FieldImportDeleteTest extends FieldUnitTestBase {
     $deleted_fields = \Drupal::state()->get('field.field.deleted') ?: array();
     $this->assertTrue(empty($deleted_fields), 'Fields are deleted');
   }
-
 }
+

@@ -50,7 +50,7 @@
 /**
  * Toolbar tray.
  */
-.toolbar .tray > .lining {
+.toolbar .tray {
   background-color: #ffffff;
 }
 .toolbar .horizontal > .lining {

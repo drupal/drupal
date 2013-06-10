@@ -162,7 +162,7 @@ class CacheTest extends PluginTestBase {
     // Make sure that this css is not added when running the cached view.
     $view->storage->set('id', 'test_cache_header_storage_2');
 
-    $system_css_path = drupal_get_path('module', 'system') . '/system.maintenance.css';
+    $system_css_path = drupal_get_path('module', 'system') . '/css/system.maintenance.css';
     drupal_add_css($system_css_path);
     $system_js_path = drupal_get_path('module', 'system') . '/system.cron.js';
     drupal_add_js($system_js_path);

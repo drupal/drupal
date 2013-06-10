@@ -78,16 +78,16 @@ class IndexTidDepth extends ArgumentPluginBase {
   }
 
   /**
-   * Override default_actions() to remove summary actions.
+   * Override defaultActions() to remove summary actions.
    */
-  function default_actions($which = NULL) {
+  protected function defaultActions($which = NULL) {
     if ($which) {
       if (in_array($which, array('ignore', 'not found', 'empty', 'default'))) {
-        return parent::default_actions($which);
+        return parent::defaultActions($which);
       }
       return;
     }
-    $actions = parent::default_actions();
+    $actions = parent::defaultActions();
     unset($actions['summary asc']);
     unset($actions['summary desc']);
     unset($actions['summary asc by count']);
@@ -143,7 +143,7 @@ class IndexTidDepth extends ArgumentPluginBase {
     }
 
     $subquery->condition($where);
-    $this->query->add_where(0, "$this->tableAlias.$this->realField", $subquery, 'IN');
+    $this->query->addWhere(0, "$this->tableAlias.$this->realField", $subquery, 'IN');
   }
 
   function title() {

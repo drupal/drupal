@@ -253,7 +253,7 @@ function views_preprocess_node(&$vars) {
   }
 
   // Allow to alter comments and links based on the settings in the row plugin.
-  if (!empty($vars['view']->rowPlugin) && $vars['view']->rowPlugin->getPluginId() == 'node') {
+  if (!empty($vars['view']->rowPlugin) && $vars['view']->rowPlugin->getPluginId() == 'entity:node') {
     node_row_node_view_preprocess_node($vars);
   }
 }
@@ -764,6 +764,13 @@ function views_hook_info() {
     'views_analyze',
     'views_invalidate_cache',
   ), array('group' => 'views'));
+
+  // Register a views_plugins alter hook for all plugin types.
+  foreach (ViewExecutable::getPluginTypes() as $type) {
+    $hooks['views_plugins_' . $type . '_alter'] = array(
+      'group' => 'views',
+    );
+  }
 
   $hooks += array_fill_keys(array(
     'views_query_substitutions',
@@ -1666,18 +1673,6 @@ function views_element_validate_tags($element, &$form_state) {
       return;
     }
   }
-}
-
-/**
- * Prerender function to move the textarea to the top.
- */
-function views_handler_field_custom_pre_render_move_text($form) {
-  $form['text'] = $form['alter']['text'];
-  $form['help'] = $form['alter']['help'];
-  unset($form['alter']['text']);
-  unset($form['alter']['help']);
-
-  return $form;
 }
 
 /**

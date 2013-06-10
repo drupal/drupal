@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Common;
 
 use Drupal\simpletest\WebTestBase;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests for URL generation functions.
@@ -261,50 +262,6 @@ class UrlTest extends WebTestBase {
     // Test that drupal_parse_url() does not allow spoofing a URL to force a malicious redirect.
     $parts = drupal_parse_url('forged:http://cwe.mitre.org/data/definitions/601.html');
     $this->assertFalse(valid_url($parts['path'], TRUE), 'drupal_parse_url() correctly parsed a forged URL.');
-  }
-
-  /**
-   * Tests url() functionality.
-   *
-   * Tests url() with/without query, with/without fragment, absolute on/off and
-   * asserts all that works when clean URLs are on and off.
-   */
-  function testUrl() {
-    global $base_url, $script_path;
-
-    $script_path_original = $script_path;
-    foreach (array('', 'index.php/') as $script_path) {
-      foreach (array(FALSE, TRUE) as $absolute) {
-        // Get the expected start of the path string.
-        $base = ($absolute ? $base_url . '/' : base_path()) . $script_path;
-        $absolute_string = $absolute ? 'absolute' : NULL;
-
-        $url = $base . 'node/123';
-        $result = url('node/123', array('absolute' => $absolute));
-        $this->assertEqual($url, $result, "$url == $result");
-
-        $url = $base . 'node/123#foo';
-        $result = url('node/123', array('fragment' => 'foo', 'absolute' => $absolute));
-        $this->assertEqual($url, $result, "$url == $result");
-
-        $url = $base . 'node/123?foo';
-        $result = url('node/123', array('query' => array('foo' => NULL), 'absolute' => $absolute));
-        $this->assertEqual($url, $result, "$url == $result");
-
-        $url = $base . 'node/123?foo=bar&bar=baz';
-        $result = url('node/123', array('query' => array('foo' => 'bar', 'bar' => 'baz'), 'absolute' => $absolute));
-        $this->assertEqual($url, $result, "$url == $result");
-
-        $url = $base . 'node/123?foo#bar';
-        $result = url('node/123', array('query' => array('foo' => NULL), 'fragment' => 'bar', 'absolute' => $absolute));
-        $this->assertEqual($url, $result, "$url == $result");
-
-        $url = $base;
-        $result = url('<front>', array('absolute' => $absolute));
-        $this->assertEqual($url, $result, "$url == $result");
-      }
-    }
-    $script_path = $script_path_original;
   }
 
   /**

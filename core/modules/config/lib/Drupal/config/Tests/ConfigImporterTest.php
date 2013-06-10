@@ -8,7 +8,8 @@
 namespace Drupal\config\Tests;
 
 use Drupal\Core\Config\ConfigImporter;
-use Drupal\Core\Config\StorageComparerManifest;
+use Drupal\Core\Config\ConfigImporterException;
+use Drupal\Core\Config\StorageComparer;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -50,9 +51,10 @@ class ConfigImporterTest extends DrupalUnitTestBase {
     unset($GLOBALS['hook_config_test']);
 
     // Set up the ConfigImporter object for testing.
-    $config_comparer = new StorageComparerManifest(
+    $config_comparer = new StorageComparer(
       $this->container->get('config.storage.staging'),
-      $this->container->get('config.storage'));
+      $this->container->get('config.storage')
+    );
     $this->configImporter = new ConfigImporter(
       $config_comparer->createChangelist(),
       $this->container->get('event_dispatcher'),
@@ -60,6 +62,7 @@ class ConfigImporterTest extends DrupalUnitTestBase {
       $this->container->get('plugin.manager.entity'),
       $this->container->get('lock')
     );
+    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.staging'));
   }
 
   /**
@@ -77,6 +80,21 @@ class ConfigImporterTest extends DrupalUnitTestBase {
   }
 
   /**
+   * Tests that trying to import from an empty staging configuration directory
+   * fails.
+   */
+  function testEmptyImportFails() {
+    try {
+      $this->container->get('config.storage.staging')->deleteAll();
+      $this->configImporter->reset()->import();
+      $this->assertFalse(FALSE, "ConfigImporterException not thrown, we didn't stop an empty import.");
+    }
+    catch (ConfigImporterException $e) {
+      $this->assertTrue(TRUE, 'ConfigImporterException thrown, successfully stopping an empty import.');
+    }
+  }
+
+  /**
    * Tests deletion of configuration during import.
    */
   function testDeleted() {
@@ -88,12 +106,13 @@ class ConfigImporterTest extends DrupalUnitTestBase {
     $config = config($dynamic_name);
     $this->assertIdentical($config->get('id'), 'dotted.default');
 
-    // Create an empty manifest to delete the configuration object.
-    $staging->write('manifest.config_test.dynamic', array());
+    // Delete the file from the staging directory.
+    $staging->delete($dynamic_name);
+
     // Import.
     $this->configImporter->reset()->import();
 
-    // Verify the values have disappeared.
+    // Verify the file has been removed.
     $this->assertIdentical($storage->read($dynamic_name), FALSE);
 
     $config = config($dynamic_name);
@@ -122,8 +141,6 @@ class ConfigImporterTest extends DrupalUnitTestBase {
     // Verify the configuration to create does not exist yet.
     $this->assertIdentical($storage->exists($dynamic_name), FALSE, $dynamic_name . ' not found.');
 
-    $this->assertIdentical($staging->exists($dynamic_name), FALSE, $dynamic_name . ' not found.');
-
     // Create new config entity.
     $original_dynamic_data = array(
       'id' => 'new',
@@ -136,11 +153,6 @@ class ConfigImporterTest extends DrupalUnitTestBase {
       'protected_property' => '',
     );
     $staging->write($dynamic_name, $original_dynamic_data);
-
-    // Create manifest for new config entity.
-    $manifest_data = config('manifest.config_test.dynamic')->get();
-    $manifest_data[$original_dynamic_data['id']]['name'] = 'config_test.dynamic.' . $original_dynamic_data['id'];
-    $staging->write('manifest.config_test.dynamic', $manifest_data);
 
     $this->assertIdentical($staging->exists($dynamic_name), TRUE, $dynamic_name . ' found.');
 
@@ -185,9 +197,6 @@ class ConfigImporterTest extends DrupalUnitTestBase {
     $original_dynamic_data = $storage->read($dynamic_name);
     $original_dynamic_data['label'] = 'Updated';
     $staging->write($dynamic_name, $original_dynamic_data);
-    // Create manifest for updated config entity.
-    $manifest_data = config('manifest.config_test.dynamic')->get();
-    $staging->write('manifest.config_test.dynamic', $manifest_data);
 
     // Verify the active configuration still returns the default values.
     $config = config($name);
@@ -219,5 +228,5 @@ class ConfigImporterTest extends DrupalUnitTestBase {
     // Verify that there is nothing more to import.
     $this->assertFalse($this->configImporter->hasUnprocessedChanges());
   }
-
 }
+

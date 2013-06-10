@@ -1,0 +1,22 @@
+# Schema for the views access plugins.
+
+views.access.none:
+  type: sequence
+  label: 'None'
+  sequence:
+    - type: string
+
+views.access.perm:
+  type: mapping
+  label: 'Permission'
+  mapping:
+    perm:
+      type: string
+      label: 'Permission'
+
+views.access.role:
+  type: sequence
+  label: 'Role'
+  sequence:
+    - type: string
+      label: 'Role'

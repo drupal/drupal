@@ -45,9 +45,28 @@ class StandardTest extends WebTestBase {
     // Verify admin user can see the block.
     $this->drupalGet('');
     $this->assertText('Main navigation');
+
+    // Verify we have role = aria on system_powered_by and system_help_block
+    // blocks.
+    $this->drupalGet('admin/structure/block');
+    $elements = $this->xpath('//div[@role=:role and @id=:id]', array(
+      ':role' => 'complementary',
+      ':id' => 'block-help',
+    ));
+
+    $this->assertEqual(count($elements), 1, 'Found complementary role on help block.');
+
+    $this->drupalGet('');
+    $elements = $this->xpath('//div[@role=:role and @id=:id]', array(
+      ':role' => 'complementary',
+      ':id' => 'block-powered',
+    ));
+    $this->assertEqual(count($elements), 1, 'Found complementary role on powered by block.');
+
     // Verify anonymous user can see the block.
     $this->drupalLogout();
     $this->assertText('Main navigation');
+
   }
 
 }

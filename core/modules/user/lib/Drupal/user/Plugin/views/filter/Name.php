@@ -26,8 +26,8 @@ class Name extends InOperator {
     if ($this->value) {
       $result = entity_load_multiple_by_properties('user', array('uid' => $this->value));
       foreach ($result as $account) {
-        if ($account->uid) {
-          $values[] = $account->name;
+        if ($account->id()) {
+          $values[] = $account->name->value;
         }
         else {
           $values[] = 'Anonymous'; // Intentionally NOT translated.
@@ -130,8 +130,8 @@ class Name extends InOperator {
 
     $result = entity_load_multiple_by_properties('user', array('name' => $args));
     foreach ($result as $account) {
-      unset($missing[strtolower($account->name)]);
-      $uids[] = $account->uid;
+      unset($missing[strtolower($account->name->value)]);
+      $uids[] = $account->id();
     }
 
     if ($missing) {
@@ -156,10 +156,10 @@ class Name extends InOperator {
       $result = entity_load_multiple_by_properties('user', array('uid' => $this->value));
       foreach ($result as $account) {
         if ($account->uid) {
-          $this->value_options[$account->uid] = $account->name;
+          $this->value_options[$account->id()] = $account->label();
         }
         else {
-          $this->value_options[$account->uid] = 'Anonymous'; // Intentionally NOT translated.
+          $this->value_options[$account->id()] = 'Anonymous'; // Intentionally NOT translated.
         }
       }
     }

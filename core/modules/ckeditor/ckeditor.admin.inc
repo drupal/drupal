@@ -58,7 +58,12 @@ function theme_ckeditor_settings_toolbar($variables) {
       $value = $button['image_alternative' . $rtl];
     }
     elseif (isset($button['image'])) {
-      $value = theme('image', array('uri' => $button['image' . $rtl], 'title' => $button['label']));
+      $image = array(
+        '#theme' => 'image',
+        '#uri' => $button['image' . $rtl],
+        '#title' => $button['label'],
+      );
+      $value = drupal_render($image);
     }
     else {
       $value = '?';

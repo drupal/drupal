@@ -467,7 +467,7 @@ class ForumTest extends WebTestBase {
     // Login as the first user.
     $this->drupalLogin($this->admin_user);
     // Create a forum container.
-    $this->container = $this->createForum('container');
+    $this->forumContainer = $this->createForum('container');
     // Create a forum.
     $this->forum = $this->createForum('forum');
     // Create a topic.

@@ -46,14 +46,13 @@ class LocaleConfigManager extends TypedConfigManager {
    *   The storage controller object to use for reading default configuration
    *   data.
    * @param \Drupal\locale\StringStorageInterface $localeStorage
-   *   (optional) The locale storage to use for reading string translations.
-   *   Defaults to locale_storage().
+   *   The locale storage to use for reading string translations.
    */
-  public function __construct(StorageInterface $configStorage, StorageInterface $schemaStorage, StorageInterface $installStorage, StringStorageInterface $localeStorage = NULL) {
+  public function __construct(StorageInterface $configStorage, StorageInterface $schemaStorage, StorageInterface $installStorage, StringStorageInterface $localeStorage) {
     // Note we use the install storage for the parent constructor.
     parent::__construct($configStorage, $schemaStorage);
     $this->installStorage = $installStorage;
-    $this->localeStorage = $localeStorage ?: locale_storage();
+    $this->localeStorage = $localeStorage;
   }
 
   /**

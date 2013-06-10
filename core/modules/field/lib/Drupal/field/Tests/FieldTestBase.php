@@ -49,9 +49,13 @@ abstract class FieldTestBase extends WebTestBase {
    *   (Optional) the name of the column to check.
    */
   function assertFieldValues(EntityInterface $entity, $field_name, $langcode, $expected_values, $column = 'value') {
-    $e = clone $entity;
-    field_attach_load('test_entity', array($e->ftid => $e));
-    $values = isset($e->{$field_name}[$langcode]) ? $e->{$field_name}[$langcode] : array();
+    // Re-load the entity to make sure we have the latest changes.
+    entity_get_controller($entity->entityType())->resetCache(array($entity->id()));
+    $e = entity_load($entity->entityType(), $entity->id());
+    $field = $values = $e->getTranslation($langcode, FALSE)->$field_name;
+    // Filter out empty values so that they don't mess with the assertions.
+    $field->filterEmptyValues();
+    $values = $field->getValue();
     $this->assertEqual(count($values), count($expected_values), 'Expected number of values were saved.');
     foreach ($expected_values as $key => $value) {
       $this->assertEqual($values[$key][$column], $value, format_string('Value @value was saved correctly.', array('@value' => $value)));

@@ -71,7 +71,7 @@ class MenuListController extends ConfigEntityListController {
    */
   public function render() {
     $build = parent::render();
-    $build['#attached']['css'][] = drupal_get_path('module', 'menu') . '/menu.admin.css';
+    $build['#attached']['css'][] = drupal_get_path('module', 'menu') . '/css/menu.admin.css';
     return $build;
   }
 

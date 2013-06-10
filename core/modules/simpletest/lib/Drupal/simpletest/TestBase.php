@@ -10,9 +10,10 @@ namespace Drupal\simpletest;
 use Drupal\Core\Database\Database;
 use Drupal\Component\Utility\Settings;
 use Drupal\Core\Config\ConfigImporter;
-use Drupal\Core\Config\StorageComparerManifest;
+use Drupal\Core\Config\StorageComparer;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Database\ConnectionNotDefinedException;
+use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Language\Language;
 use ReflectionMethod;
@@ -913,6 +914,9 @@ abstract class TestBase {
 
     // Reset and create a new service container.
     $this->container = new ContainerBuilder();
+     // @todo Remove this once this class has no calls to t() and format_plural()
+    $this->container->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager');
+
     \Drupal::setContainer($this->container);
 
     // Unset globals.
@@ -1292,9 +1296,10 @@ abstract class TestBase {
   public function configImporter() {
     if (!$this->configImporter) {
       // Set up the ConfigImporter object for testing.
-      $config_comparer = new StorageComparerManifest(
+      $config_comparer = new StorageComparer(
         $this->container->get('config.storage.staging'),
-        $this->container->get('config.storage'));
+        $this->container->get('config.storage')
+      );
       $this->configImporter = new ConfigImporter(
         $config_comparer,
         $this->container->get('event_dispatcher'),
@@ -1305,5 +1310,20 @@ abstract class TestBase {
     }
     // Always recalculate the changelist when called.
     return $this->configImporter->reset();
+  }
+
+  /**
+   * Copies configuration objects from source storage to target storage.
+   *
+   * @param \Drupal\Core\Config\StorageInterface $source_storage
+   *   The source config storage service.
+   * @param \Drupal\Core\Config\StorageInterface $target_storage
+   *   The target config storage service.
+   */
+  public function copyConfig(StorageInterface $source_storage, StorageInterface $target_storage) {
+    $target_storage->deleteAll();
+    foreach ($source_storage->listAll() as $name) {
+      $target_storage->write($name, $source_storage->read($name));
+    }
   }
 }

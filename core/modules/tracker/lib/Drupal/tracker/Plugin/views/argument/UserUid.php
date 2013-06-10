@@ -27,7 +27,7 @@ class UserUid extends CommentUserUid {
     // table, we need to make sure {tracker_user} is JOINed and use its alias
     // for the WHERE clause.
     $tracker_user_alias = $this->query->ensure_table('tracker_user');
-    $this->query->add_where(0, "$tracker_user_alias.uid", $this->argument);
+    $this->query->addWhere(0, "$tracker_user_alias.uid", $this->argument);
   }
 
 }

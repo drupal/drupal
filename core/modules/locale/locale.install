@@ -851,6 +851,10 @@ function locale_update_8011() {
  * Renames language_default language negotiation method to language_selected.
  */
 function locale_update_8013() {
+  // @todo We only need language.inc here because LANGUAGE_NEGOTIATION_SELECTED
+  //   is defined there. Remove this line once that has been converted to a class
+  //   constant.
+  require_once DRUPAL_ROOT . '/core/includes/language.inc';
   $weight = update_variable_get('language_negotiation_methods_weight_language_interface', NULL);
   if ($weight !== NULL) {
     $weight[LANGUAGE_NEGOTIATION_SELECTED] = $weight['language-default'];

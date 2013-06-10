@@ -8,7 +8,7 @@
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\block\Plugin\Core\Entity\Block;
-use Drupal\user\Plugin\Core\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_help().
@@ -79,6 +79,7 @@ function overlay_theme() {
     ),
     'overlay_disable_message' => array(
       'render element' => 'element',
+      'template' => 'overlay-disable-message',
     ),
   );
 }
@@ -140,7 +141,7 @@ function overlay_library_info() {
       $module_path . '/overlay-parent.js' => array(),
     ),
     'css' => array(
-      $module_path . '/overlay-parent.css' => array(),
+      $module_path . '/css/overlay-parent.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'jquery'),
@@ -162,7 +163,7 @@ function overlay_library_info() {
       $module_path . '/overlay-child.js' => array(),
     ),
     'css' => array(
-      $module_path . '/overlay-child.css' => array(),
+      $module_path . '/css/overlay-child.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'jquery'),
@@ -362,17 +363,17 @@ function overlay_disable_message() {
 }
 
 /**
- * Returns the HTML for the message about how to disable the overlay.
+ * Prepares variables for overlay disable message templates.
  *
- * @param $variables
+ * Default template: overlay-disable-message.html.twig.
+ *
+ * @param array $variables
  *   An associative array with an 'element' element, which itself is an
  *   associative array containing:
  *   - profile_link: The link to this user's account.
  *   - dismiss_message_link: The link to dismiss the overlay.
- *
- * @ingroup themeable
  */
-function theme_overlay_disable_message($variables) {
+function template_preprocess_overlay_disable_message(&$variables) {
   $element = $variables['element'];
 
   // Add CSS classes to hide the links from most sighted users, while keeping
@@ -386,23 +387,14 @@ function theme_overlay_disable_message($variables) {
     }
   }
 
-  // Render the links.
-  $output = drupal_render($element['profile_link']) . ' ' . drupal_render($element['dismiss_message_link']);
-
-  // Add a heading for screen-reader users. The heading doesn't need to be seen
-  // by sighted users.
-  $output = '<h3 class="element-invisible">' . t('Options for the administrative overlay') . '</h3>' . $output;
-
-  // Wrap in a container for styling.
-  $output = '<div id="overlay-disable-message" class="clearfix">' . $output . '</div>';
-
-  return $output;
+  $variables['profile_link'] = $element['profile_link'];
+  $variables['dismiss_link'] = $element['dismiss_message_link'];
 }
 
 /**
  * Implements hook_block_access().
  */
-function overlay_block_access(Block $block, $operation, User $account, $langcode) {
+function overlay_block_access(Block $block, $operation, UserInterface $account, $langcode) {
   // If we are limiting rendering to a subset of page regions, hide all blocks
   // which appear in regions not on that list. Note that overlay_page_alter()
   // does a more comprehensive job of preventing unwanted regions from being

@@ -307,4 +307,24 @@ class DisplayTest extends UITestBase {
     $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="views-ui-edit odd first last"><a href="' . base_path() . 'admin/structure/views/view/test_display/edit/page_1?destination=test-display">Edit view</a></li></ul>');
   }
 
+  /**
+   * Tests that the view status is correctly reflected on the edit form.
+   */
+  public function testViewStatus() {
+    $view = $this->randomView();
+    $id = $view['id'];
+
+    // The view should initially have the enabled class on it's form wrapper.
+    $this->drupalGet('admin/structure/views/view/' . $id);
+    $elements = $this->xpath('//div[contains(@class, :edit) and contains(@class, :status)]', array(':edit' => 'views-edit-view', ':status' => 'enabled'));
+    $this->assertTrue($elements, 'The enabled class was found on the form wrapper');
+
+    $view = views_get_view($id);
+    $view->storage->disable()->save();
+
+    $this->drupalGet('admin/structure/views/view/' . $id);
+    $elements = $this->xpath('//div[contains(@class, :edit) and contains(@class, :status)]', array(':edit' => 'views-edit-view', ':status' => 'disabled'));
+    $this->assertTrue($elements, 'The disabled class was found on the form wrapper.');
+  }
+
 }

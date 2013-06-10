@@ -24,7 +24,7 @@ use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
  */
 class Node extends ArgumentDefaultPluginBase {
 
-  function get_argument() {
+  public function getArgument() {
     foreach (range(1, 3) as $i) {
       $node = menu_get_object('node', $i);
       if (!empty($node)) {

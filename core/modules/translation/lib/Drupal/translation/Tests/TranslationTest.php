@@ -281,8 +281,7 @@ class TranslationTest extends WebTestBase {
    */
   function resetCaches() {
     drupal_static_reset('language_list');
-    drupal_static_reset('language_url_outbound_alter');
-    drupal_static_reset('language_url_rewrite_url');
+    $this->rebuildContainer();
   }
 
   /**

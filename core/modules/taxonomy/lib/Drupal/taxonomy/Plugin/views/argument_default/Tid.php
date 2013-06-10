@@ -117,7 +117,7 @@ class Tid extends ArgumentDefaultPluginBase {
     $options['vids'] = array_filter($options['vids']);
   }
 
-  function get_argument() {
+  public function getArgument() {
     // Load default argument from taxonomy page.
     if (!empty($this->options['term_page'])) {
       if (arg(0) == 'taxonomy' && arg(1) == 'term' && is_numeric(arg(2))) {

@@ -37,7 +37,7 @@ class User extends ArgumentDefaultPluginBase {
     );
   }
 
-  function get_argument() {
+  public function getArgument() {
     foreach (range(1, 3) as $i) {
       $user = menu_get_object('user', $i);
       if (!empty($user)) {

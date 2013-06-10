@@ -28,8 +28,8 @@ class UserPermissionsTest extends WebTestBase {
 
     // Find the new role ID.
     $all_rids = $this->admin_user->roles;
-    unset($all_rids[DRUPAL_AUTHENTICATED_RID]);
-    $this->rid = key($all_rids);
+    unset($all_rids[array_search(DRUPAL_AUTHENTICATED_RID, $all_rids)]);
+    $this->rid = reset($all_rids);
   }
 
   /**

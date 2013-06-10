@@ -133,7 +133,7 @@ display:
           query_comment: ''
           query_tags: {  }
       row:
-        type: node
+        type: 'entity:node'
         options:
           build_mode: teaser
           comments: '0'

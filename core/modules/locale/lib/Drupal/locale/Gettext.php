@@ -22,32 +22,6 @@ use Drupal\locale\PoDatabaseWriter;
 class Gettext {
 
   /**
-   * Reads the given Gettext PO files into a data structure.
-   *
-   * @param string $langcode
-   *   Language code string.
-   * @param array $files
-   *   List of file objects with URI properties pointing to read.
-   *
-   * @return array
-   *   Structured array as produced by a PoMemoryWriter.
-   *
-   * @see Drupal\Component\Gettext\PoMemoryWriter
-   */
-  static function filesToArray($langcode, array $files) {
-    $writer = new PoMemoryWriter();
-    $writer->setLangcode($langcode);
-    foreach ($files as $file) {
-      $reader = new PoStreamReader();
-      $reader->setURI($file->uri);
-      $reader->setLangcode($langcode);
-      $reader->open();
-      $writer->writeItems($reader, -1);
-    }
-    return $writer->getData();
-  }
-
-  /**
    * Reads the given PO files into the database.
    *
    * @param stdClass $file

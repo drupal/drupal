@@ -9,6 +9,7 @@ namespace Drupal\config\Controller;
 
 use Drupal\Core\ControllerInterface;
 use Drupal\Core\Config\StorageInterface;
+use Drupal\Component\Archiver\ArchiveTar;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -53,6 +54,20 @@ class ConfigController implements ControllerInterface {
   }
 
   /**
+   * Downloads a tarball of the site configuration.
+   */
+  public function downloadExport() {
+    $archiver = new ArchiveTar(file_directory_temp() . '/config.tar.gz', 'gz');
+    $config_dir = config_get_config_directory();
+    $config_files = array();
+    foreach (\Drupal::service('config.storage')->listAll() as $config_name) {
+      $config_files[] = $config_dir . '/' . $config_name . '.yml';
+    }
+    $archiver->createModify($config_files, '', config_get_config_directory());
+    return file_download('temporary', 'config.tar.gz');
+  }
+
+  /**
    * Shows diff of specificed configuration file.
    *
    * @param string $config_file
@@ -63,7 +78,7 @@ class ConfigController implements ControllerInterface {
    */
   public function diff($config_file) {
     // Add the CSS for the inline diff.
-    $output['#attached']['css'][] = drupal_get_path('module', 'system') . '/system.diff.css';
+    $output['#attached']['css'][] = drupal_get_path('module', 'system') . '/css/system.diff.css';
 
     $diff = config_diff($this->targetStorage, $this->sourceStorage, $config_file);
     $formatter = new \DrupalDiffFormatter();

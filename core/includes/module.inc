@@ -289,7 +289,7 @@ function module_uninstall($module_list = array(), $uninstall_dependents = TRUE) 
   * @see hooks
   * @see themeable
   *
-  * @} End of "defgroup callbacks".
+  * @}
   */
 
 /**

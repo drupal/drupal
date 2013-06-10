@@ -153,6 +153,14 @@ interface EntityStorageControllerInterface {
    *   - translatable: Whether the field is translatable. Defaults to FALSE.
    *   - configurable: A boolean indicating whether the field is configurable
    *     via field.module. Defaults to FALSE.
+   *   - property_constraints: An array of constraint arrays applying to the
+   *     field item properties, keyed by property name. E.g. the following
+   *     validates the value property to have a maximum length of 128:
+   *     @code
+   *     array(
+   *       'value' => array('Length' => array('max' => 128)),
+   *     )
+   *     @endcode
    *
    * @see Drupal\Core\TypedData\TypedDataManager::create()
    * @see \Drupal::typedData()

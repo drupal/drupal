@@ -1,0 +1,155 @@
+/**
+ * @file
+ * Basic styling for the Overlay child pages.
+ */
+
+.js {
+  background: transparent !important;
+  overflow-y: scroll;
+}
+.js body {
+  background: transparent !important;
+  margin-left: 0;
+  margin-right: 0;
+  padding: 20px 0;
+}
+
+#overlay {
+  box-sizing: border-box;
+  display: block;
+  margin: 0 auto;
+  max-width: 80em;
+  max-width: 80rem;
+  min-height: 100px;
+  position: relative;
+  padding: 2em 40px;
+  width: 100%;
+}
+#overlay-titlebar {
+  padding: 0 20px;
+  position: relative;
+  white-space: nowrap;
+  z-index: 100;
+}
+#overlay-content {
+  background: #fff;
+  clear: both;
+  color: #000;
+  padding: .5em 1em;
+  position: relative;
+}
+
+#overlay-title-wrapper {
+  overflow: hidden;
+}
+#overlay-title {
+  color: #fff;
+  float: left; /* LTR */
+  font-size: 20px;
+  margin: 0;
+  padding: 0.3em 0;
+}
+#overlay-title:active,
+#overlay-title:focus {
+  outline: 0;
+}
+.overlay #skip-link a {
+  color: #fff; /* This is white to contrast with the dark background behind it. */
+}
+
+#overlay-close-wrapper {
+  position: absolute;
+  right: 0; /* LTR */
+}
+#overlay-close,
+#overlay-close:hover {
+  background: #ffffff url(../images/close.png) no-repeat;
+  border-radius: 0 12px 12px 0; /* LTR */
+  display: block;
+  height: 26px;
+  margin: 0;
+  padding: 0;
+  /* Replace with position:fixed to get a scrolling close button. */
+  position: absolute;
+  width: 26px;
+}
+
+/**
+ * Tabs on the overlay.
+ */
+#overlay-tabs {
+  line-height: 26px;
+  margin: -28px 0 0 0;
+  position: absolute;
+  right: 20px; /* LTR */
+  text-transform: uppercase;
+}
+#overlay-tabs li {
+  display: inline-block;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+#overlay-tabs li a,
+#overlay-tabs li a:active,
+#overlay-tabs li a:visited,
+#overlay-tabs li a:hover {
+  background-color: #a6a7a2;
+  border-radius: 8px 8px 0 0;
+  color: #000;
+  display: inline-block;
+  font-size: 11px;
+  font-weight: bold;
+  margin: 0 1px;
+  outline: 0;
+  padding: 0 14px;
+  text-decoration: none;
+}
+#overlay-tabs li.active a,
+#overlay-tabs li.active a.active,
+#overlay-tabs li.active a:active,
+#overlay-tabs li.active a:visited {
+  background-color: #fff;
+  margin-bottom: 0;
+  padding-bottom: 2px;
+}
+#overlay-tabs li a:focus,
+#overlay-tabs li a:hover {
+  color: #fff;
+}
+#overlay-tabs li.active a:focus,
+#overlay-tabs li.active a:hover {
+  color: #000;
+}
+
+/**
+ * Add to shortcuts link
+ */
+#overlay-titlebar .add-or-remove-shortcuts {
+  padding-top: 0.6em;
+}
+#overlay-titlebar .add-or-remove-shortcuts .icon {
+  margin-top: 4px;
+}
+#overlay-titlebar .add-or-remove-shortcuts .text {
+  padding-top: 0;
+}
+/**
+ * Disable message.
+ */
+#overlay-disable-message {
+  background-color: #fff;
+  margin: 0 auto 20px;
+  width: 80%;
+  border-radius: 0 0 8px 8px;
+}
+.overlay-disable-message-focused {
+  padding: 0.5em;
+}
+.overlay-disable-message-focused a {
+  display: block;
+  float: left;
+}
+.overlay-disable-message-focused #overlay-dismiss-message {
+  float: right;
+}

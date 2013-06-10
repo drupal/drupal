@@ -59,6 +59,10 @@ class NodeFormController extends EntityFormController {
   public function form(array $form, array &$form_state) {
     $node = $this->entity;
 
+    if ($this->operation == 'edit') {
+      drupal_set_title(t('<em>Edit @type</em> @title', array('@type' => node_get_type_label($node), '@title' => $node->label())), PASS_THROUGH);
+    }
+
     $user_config = config('user.settings');
     // Some special stuff when previewing a node.
     if (isset($form_state['node_preview'])) {

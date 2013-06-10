@@ -17,7 +17,7 @@ function views_install() {
 /**
  * Provide an initial schema.
  *
- * @see update_module_enable().
+ * @see UpdateModuleHandler::enable().
  */
 function views_schema_0() {
   module_load_install('system');

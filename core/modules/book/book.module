@@ -322,7 +322,7 @@ function book_form_node_form_alter(&$form, &$form_state, $form_id) {
       '#submit' => array('book_pick_book_nojs_submit'),
       '#weight' => 20,
       '#attached' => array(
-        'css' => array(drupal_get_path('module', 'book') . '/book.admin.css'),
+        'css' => array(drupal_get_path('module', 'book') . '/css/book.admin.css'),
       ),
     );
   }
@@ -776,6 +776,11 @@ function book_node_view(EntityInterface $node, EntityDisplay $display, $view_mod
       $node->content['book_navigation'] = array(
         '#markup' => theme('book_navigation', array('book_link' => $node->book)),
         '#weight' => 100,
+        '#attached' => array(
+          'css' => array(
+            drupal_get_path('module', 'book') . '/css/book.theme.css',
+          ),
+        ),
       );
     }
   }
@@ -986,7 +991,6 @@ function template_preprocess_book_all_books_block(&$variables) {
  *     Properties used: bid, link_title, depth, plid, mlid.
  */
 function template_preprocess_book_navigation(&$variables) {
-  drupal_add_css(drupal_get_path('module', 'book') . '/book.theme.css');
   $book_link = $variables['book_link'];
 
   // Provide extra variables for themers. Not needed by default.
@@ -1277,7 +1281,7 @@ function book_link_load($mlid) {
  *   A fully loaded menu link.
  *
  * @return
- *   An subtree of menu links in an array, in the order they should be rendered.
+ *   A subtree of menu links in an array, in the order they should be rendered.
  */
 function book_menu_subtree_data($link) {
   $tree = &drupal_static(__FUNCTION__, array());

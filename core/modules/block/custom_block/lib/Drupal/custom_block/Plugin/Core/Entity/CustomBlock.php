@@ -180,4 +180,22 @@ class CustomBlock extends EntityNG implements CustomBlockInterface {
       )
     );
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getInstances() {
+    return entity_load_multiple_by_properties('block', array('plugin' => 'custom_block:' . $this->uuid->value));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function delete() {
+    foreach ($this->getInstances() as $instance) {
+      $instance->delete();
+    }
+    parent::delete();
+  }
+
 }

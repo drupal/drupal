@@ -110,7 +110,9 @@ pre {
 body,
 #site-slogan,
 .ui-widget,
-.comment-form label {
+.comment-form label,
+.node-form label,
+.node-form .description {
   font-family: Georgia, "Times New Roman", Times, serif;
 }
 #header,
@@ -1194,6 +1196,15 @@ input.form-submit:focus {
 }
 .form-actions {
   padding-top: 10px;
+}
+
+/* Node Form */
+#edit-body {
+  margin-bottom: 2em;
+}
+
+.node-form .form-wrapper {
+  margin-bottom: 2em;
 }
 
 /* Contact Form */

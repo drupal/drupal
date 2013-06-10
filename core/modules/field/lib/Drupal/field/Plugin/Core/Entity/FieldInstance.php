@@ -201,7 +201,28 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   protected $bundle_rename_allowed = FALSE;
 
   /**
-   * {@inheritdoc}
+   * Constructs a FieldInstance object.
+   *
+   * @param array $values
+   *   An array of field instance properties, keyed by property name. Most
+   *   array elements will be used to set the corresponding properties on the
+   *   class; see the class property documentation for details. Some array
+   *   elements have special meanings and a few are required; these special
+   *   elements are:
+   *   - field_name: optional. The name of the field this is an instance of.
+   *   - field_uuid: optional. Either field_uuid or field_name is required
+   *     to build field instance. field_name will gain higher priority.
+   *     If field_name is not provided, field_uuid will be checked then.
+   *   - entity_type: required.
+   *   - bundle: required.
+   *
+   * In most cases, Field instance entities are created via
+   * entity_create('field_instance', $values)), where $values is the same
+   * parameter as in this constructor.
+   *
+   * @see entity_create()
+   *
+   * @ingroup field_crud
    */
   public function __construct(array $values, $entity_type = 'field_instance') {
     // Accept incoming 'field_name' instead of 'field_uuid', for easier DX on

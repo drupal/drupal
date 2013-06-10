@@ -219,7 +219,7 @@ abstract class FilterPluginBase extends HandlerBase {
       // Add the subform from operator_form().
       $this->showOperatorForm($form, $form_state);
       // Add the subform from valueForm().
-      $this->show_value_form($form, $form_state);
+      $this->showValueForm($form, $form_state);
       $form['clear_markup_end'] = array(
         '#markup' => '</div>',
       );
@@ -311,7 +311,7 @@ abstract class FilterPluginBase extends HandlerBase {
   /**
    * Shortcut to display the value form.
    */
-  function show_value_form(&$form, &$form_state) {
+  protected function showValueForm(&$form, &$form_state) {
     $this->valueForm($form, $form_state);
     if (empty($this->no_operator)) {
       $form['value']['#prefix'] = '<div class="views-group-box views-right-70">' . (isset($form['value']['#prefix']) ? $form['value']['#prefix'] : '');
@@ -1367,7 +1367,7 @@ abstract class FilterPluginBase extends HandlerBase {
     // Check if we store exposed value for current user.
     global $user;
     $allowed_rids = empty($this->options['expose']['remember_roles']) ? array() : array_filter($this->options['expose']['remember_roles']);
-    $intersect_rids = array_intersect_key($allowed_rids, $user->roles);
+    $intersect_rids = array_intersect(array_keys($allowed_rids), $user->roles);
     if (empty($intersect_rids)) {
       return;
     }
@@ -1416,7 +1416,7 @@ abstract class FilterPluginBase extends HandlerBase {
    */
   public function query() {
     $this->ensureMyTable();
-    $this->query->add_where($this->options['group'], "$this->tableAlias.$this->realField", $this->value, $this->operator);
+    $this->query->addWhere($this->options['group'], "$this->tableAlias.$this->realField", $this->value, $this->operator);
   }
 
   /**

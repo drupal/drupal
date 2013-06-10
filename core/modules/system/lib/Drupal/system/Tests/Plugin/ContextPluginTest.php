@@ -104,10 +104,10 @@ class ContextPluginTest extends DrupalUnitTestBase {
     $this->assertEqual($user->label(), $plugin->getTitle());
 
     // Test the getContextDefinitions() method.
-    $this->assertIdentical($plugin->getContextDefinitions(), array('user' => array('class' => 'Drupal\user\Plugin\Core\Entity\User')));
+    $this->assertIdentical($plugin->getContextDefinitions(), array('user' => array('class' => 'Drupal\user\UserInterface')));
 
     // Test the getContextDefinition() method for a valid context.
-    $this->assertEqual($plugin->getContextDefinition('user'), array('class' => 'Drupal\user\Plugin\Core\Entity\User'));
+    $this->assertEqual($plugin->getContextDefinition('user'), array('class' => 'Drupal\user\UserInterface'));
 
     // Test the getContextDefinition() method for an invalid context.
     try {

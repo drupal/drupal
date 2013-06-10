@@ -1,0 +1,119 @@
+# Schema for the views filter plugins.
+
+views.filter.*:
+  type: views_filter
+  label: 'Default filter'
+
+views_filter_boolean:
+  type: views_filter
+  mapping:
+    value:
+      type: boolean
+
+views_filter_boolean_string:
+  type: views_filter_boolean
+
+views.filter.broken:
+  type: views_filter
+  label: 'Broken'
+
+views.filter.bundle:
+  type: views.filter.in_operator
+  label: 'Broken'
+
+views.filter.combine:
+  type: views.filter.string
+  label: 'Combine'
+
+views.filter.date:
+  type: views.filter.numeric
+  label: 'Date'
+
+views.filter.in_operator:
+  type: views_filter
+  label: 'IN operartor'
+  mapping:
+    operator:
+      type: string
+      label: 'Operator'
+    value:
+      type: sequence
+      label: 'Values'
+      sequence:
+        - type: string
+          label: 'Value'
+    expose:
+      type: mapping
+      label: 'Expose'
+      mapping:
+        reduce:
+          type: boolean
+          label: 'Reduce'
+
+views.filter.string:
+  type: views_filter
+  label: 'String'
+  mapping:
+    expose:
+      type: mapping
+      label: 'Exposed'
+      mapping:
+        required:
+          type: boolean
+          label: 'Required'
+
+views.filter.numeric:
+  type: views_filter
+  label: 'Numeric'
+  mapping:
+    value:
+      type: mapping
+      label: 'Operator'
+      mapping:
+        min:
+          type: string
+          label: 'Min'
+        max:
+          type: string
+          label: 'And max'
+        value:
+          type: string
+          label: 'Value'
+        type:
+          type: string
+          label: 'Value type'
+
+views.filter.equality:
+  type: views.filter.numeric
+  label: 'Broken'
+
+views.filter.many_to_one:
+  type: views.filter.in_operator
+  label: 'Many to one'
+  mapping:
+    operator:
+      type: string
+      label: 'Operator'
+    value:
+      type: sequence
+      label: 'Values'
+      sequence:
+        - type: string
+          label: 'Value'
+
+views.filter.group_items.string:
+  type: sequence
+  label: 'Group items'
+  sequence:
+    - type: mapping
+      label: 'Group item'
+      mapping:
+        title:
+          type: label
+          label: 'Label'
+        operator:
+          type: string
+          label: 'Operator'
+        value:
+          type: label
+          label: 'Value'

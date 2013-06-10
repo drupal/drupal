@@ -527,4 +527,12 @@ class EntityNG extends Entity {
     }
     return $label;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validate() {
+    // @todo: Add the typed data manager as proper dependency.
+    return \Drupal::typedData()->getValidator()->validate($this);
+  }
 }

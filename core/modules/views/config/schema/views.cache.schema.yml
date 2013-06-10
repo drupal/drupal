@@ -1,0 +1,33 @@
+# Schema for the views cache.
+
+views.cache.none:
+  type: mapping
+  lable: 'None'
+  mapping:
+    type:
+      type: string
+      label: 'Cache type'
+
+views.cache.time:
+  type: mapping
+  lable: 'None'
+  mapping:
+    type:
+      type: string
+      label: 'Time-based'
+    options:
+      type: mapping
+      label: 'Cache options'
+      mapping:
+        result_lifespan:
+          type: integer
+          label: 'The length of time raw query results should be cached.'
+        result_lifespan_custom:
+          type: integer
+          label: 'Length of time in seconds raw query results should be cached.'
+        output_lifespan:
+          type: integer
+          label: 'The length of time rendered HTML output should be cached.'
+        output_lifespan_custom:
+          type: integer
+          label: 'Length of time in seconds rendered HTML output should be cached.'

@@ -49,7 +49,7 @@ class BundleSchema extends EntitySchema {
    */
   public function getUri() {
     $path = str_replace(array('{entity_type}', '{bundle}'), array($this->entityType, $this->bundle), static::$uriPattern);
-    return $this->siteSchema->getUri() . $path;
+    return $this->siteSchema->getUri() . '/' . $path;
   }
 
   /**

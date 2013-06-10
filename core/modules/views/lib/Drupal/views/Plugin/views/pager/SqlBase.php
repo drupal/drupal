@@ -238,7 +238,7 @@ abstract class SqlBase extends PagerPluginBase {
     }
 
     $this->view->query->setLimit($limit);
-    $this->view->query->set_offset($offset);
+    $this->view->query->setOffset($offset);
   }
 
 
@@ -249,7 +249,7 @@ abstract class SqlBase extends PagerPluginBase {
    *   If provided, the page number will be set to this. If NOT provided,
    *   the page number will be set from the global page array.
    */
-  function set_current_page($number = NULL) {
+  public function setCurrentPage($number = NULL) {
     if (isset($number)) {
       $this->current_page = max(0, $number);
       return;
@@ -277,7 +277,7 @@ abstract class SqlBase extends PagerPluginBase {
   }
 
   public function getPagerTotal() {
-    if ($items_per_page = intval($this->get_items_per_page())) {
+    if ($items_per_page = intval($this->getItemsPerPage())) {
       return ceil($this->total_items / $items_per_page);
     }
     else {
@@ -300,7 +300,7 @@ abstract class SqlBase extends PagerPluginBase {
     }
 
     // Don't set pager settings for items per page = 0.
-    $items_per_page = $this->get_items_per_page();
+    $items_per_page = $this->getItemsPerPage();
     if (!empty($items_per_page)) {
       // Dump information about what we already know into the globals.
       global $pager_page_array, $pager_total, $pager_total_items, $pager_limits;
@@ -314,7 +314,7 @@ abstract class SqlBase extends PagerPluginBase {
       // See if the requested page was within range:
       if ($this->current_page >= $pager_total[$this->options['id']]) {
         // Pages are numbered from 0 so if there are 10 pages, the last page is 9.
-        $this->set_current_page($pager_total[$this->options['id']] - 1);
+        $this->setCurrentPage($pager_total[$this->options['id']] - 1);
       }
 
       // Put this number in to guarantee that we do not generate notices when the pager
@@ -350,7 +350,7 @@ abstract class SqlBase extends PagerPluginBase {
           '#type' => 'select',
           '#title' => $this->options['expose']['items_per_page_label'],
           '#options' => $sanitized_options,
-          '#default_value' => $this->get_items_per_page(),
+          '#default_value' => $this->getItemsPerPage(),
         );
       }
     }

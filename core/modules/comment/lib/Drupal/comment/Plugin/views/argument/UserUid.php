@@ -37,17 +37,17 @@ class UserUid extends ArgumentPluginBase {
     return check_plain($title);
   }
 
-  function default_actions($which = NULL) {
+  protected function defaultActions($which = NULL) {
     // Disallow summary views on this argument.
     if (!$which) {
-      $actions = parent::default_actions();
+      $actions = parent::defaultActions();
       unset($actions['summary asc']);
       unset($actions['summary desc']);
       return $actions;
     }
 
     if ($which != 'summary asc' && $which != 'summary desc') {
-      return parent::default_actions($which);
+      return parent::defaultActions($which);
     }
   }
 
@@ -71,7 +71,7 @@ class UserUid extends ArgumentPluginBase {
         ->condition("$this->tableAlias.uid", $this->argument, '=')
         ->exists($subselect);
 
-      $this->query->add_where(0, $condition);
+      $this->query->addWhere(0, $condition);
     }
   }
 

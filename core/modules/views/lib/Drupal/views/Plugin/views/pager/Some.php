@@ -70,7 +70,7 @@ class Some extends PagerPluginBase {
 
   public function query() {
     $this->view->query->setLimit($this->options['items_per_page']);
-    $this->view->query->set_offset($this->options['offset']);
+    $this->view->query->setOffset($this->options['offset']);
   }
 
 }

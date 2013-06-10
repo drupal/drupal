@@ -84,7 +84,7 @@ Drupal.behaviors.AJAX = {
  */
 Drupal.AjaxError = function(xmlhttp, uri) {
 
-  var statusCode, statusText, pathText, responseText, readyStateText, message;
+  var statusCode, statusText, pathText, responseText, readyStateText;
   if (xmlhttp.status) {
     statusCode = "\n" + Drupal.t("An AJAX HTTP error occurred.") +  "\n" + Drupal.t("HTTP Result Code: !status", {'!status': xmlhttp.status});
   }

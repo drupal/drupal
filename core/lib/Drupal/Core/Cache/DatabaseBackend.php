@@ -218,7 +218,7 @@ class DatabaseBackend implements CacheBackendInterface {
    * Implements Drupal\Core\Cache\CacheBackendInterface::deleteTags().
    */
   public function deleteTags(array $tags) {
-    $tag_cache = &drupal_static('Drupal\Core\Cache\CacheBackendInterface::tagCache');
+    $tag_cache = &drupal_static('Drupal\Core\Cache\CacheBackendInterface::tagCache', array());
     foreach ($this->flattenTags($tags) as $tag) {
       unset($tag_cache[$tag]);
       try {
@@ -277,7 +277,7 @@ class DatabaseBackend implements CacheBackendInterface {
    */
   public function invalidateTags(array $tags) {
     try {
-      $tag_cache = &drupal_static('Drupal\Core\Cache\CacheBackendInterface::tagCache');
+      $tag_cache = &drupal_static('Drupal\Core\Cache\CacheBackendInterface::tagCache', array());
       foreach ($this->flattenTags($tags) as $tag) {
         unset($tag_cache[$tag]);
         $this->connection->merge('cache_tags')

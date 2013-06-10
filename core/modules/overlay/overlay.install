@@ -24,7 +24,7 @@ function overlay_enable() {
 function overlay_update_dependencies() {
   // Migrate users.data after User module prepared the tables.
   $dependencies['overlay'][8000] = array(
-    'user' => 8011,
+    'user' => 8016,
   );
   return $dependencies;
 }

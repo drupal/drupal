@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Processes the inbound path by resolving it to the front page if empty.
  */
-class PathProcessorFront implements InboundPathProcessorInterface {
+class PathProcessorFront implements InboundPathProcessorInterface, OutboundPathProcessorInterface {
 
   /**
    * A config factory for retrieving required config settings.
@@ -41,6 +41,17 @@ class PathProcessorFront implements InboundPathProcessorInterface {
       if (empty($path)) {
         $path = 'user';
       }
+    }
+    return $path;
+  }
+
+  /**
+   * Implements Drupal\Core\PathProcessor\OutboundPathProcessorInterface::processOutbound().
+   */
+  public function processOutbound($path, &$options = array(), Request $request = NULL) {
+    // The special path '<front>' links to the default front page.
+    if ($path == '<front>') {
+      $path = '';
     }
     return $path;
   }

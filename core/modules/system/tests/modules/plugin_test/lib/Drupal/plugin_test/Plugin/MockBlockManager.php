@@ -72,7 +72,7 @@ class MockBlockManager extends PluginManagerBase {
       'label' => t('User name'),
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserNameBlock',
       'context' => array(
-        'user' => array('class' => 'Drupal\user\Plugin\Core\Entity\User')
+        'user' => array('class' => 'Drupal\user\UserInterface')
       ),
     ));
 
@@ -90,7 +90,7 @@ class MockBlockManager extends PluginManagerBase {
       'label' => t('Complex context'),
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockComplexContextBlock',
       'context' => array(
-        'user' => array('class' => 'Drupal\user\Plugin\Core\Entity\User'),
+        'user' => array('class' => 'Drupal\user\UserInterface'),
         'node' => array('class' => 'Drupal\Core\Entity\EntityBCDecorator'),
       ),
     ));

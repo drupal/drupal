@@ -130,7 +130,7 @@ class Search extends FilterPluginBase {
     }
     if ($required) {
       if ($this->operator == 'required') {
-        $this->query->add_where($this->options['group'], 'FALSE');
+        $this->query->addWhere($this->options['group'], 'FALSE');
       }
     }
     else {
@@ -147,7 +147,7 @@ class Search extends FilterPluginBase {
       );
       $join = drupal_container()->get('plugin.manager.views.join')->createInstance('standard', $definition);
 
-      $search_total = $this->query->add_relationship('search_total', $join, $search_index);
+      $search_total = $this->query->addRelationship('search_total', $join, $search_index);
 
       $this->search_score = $this->query->add_field('', "SUM($search_index.score * $search_total.count)", 'score', array('aggregate' => TRUE));
 
@@ -182,7 +182,7 @@ class Search extends FilterPluginBase {
         $search_condition->condition($or);
       }
 
-      $this->query->add_where($this->options['group'], $search_condition);
+      $this->query->addWhere($this->options['group'], $search_condition);
       $this->query->add_groupby("$search_index.sid");
       $matches = $this->search_query->matches();
       $placeholder = $this->placeholder();

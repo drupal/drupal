@@ -7,50 +7,13 @@
 
 namespace Drupal\field_ui\Form;
 
-use Drupal\Core\Form\FormInterface;
-use Drupal\Core\ControllerInterface;
+use Drupal\field\FieldInstanceInterface;
 use Drupal\Core\Language\Language;
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
-use Drupal\field\Plugin\Type\Widget\WidgetPluginManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form for the field instance settings form.
  */
-class FieldInstanceEditForm implements FormInterface, ControllerInterface {
-
-  /**
-   * The field instance being edited.
-   *
-   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
-   */
-  protected $instance;
-
-  /**
-   * The field widget plugin manager.
-   *
-   * @var \Drupal\field\Plugin\Type\Widget\WidgetPluginManager
-   */
-  protected $widgetManager;
-
-  /**
-   * Constructs a new FieldInstanceEditForm object.
-   *
-   * @param \Drupal\field\Plugin\Type\Widget\WidgetPluginManager $widget_manager
-   *   The field widget plugin manager.
-   */
-  public function __construct(WidgetPluginManager $widget_manager) {
-    $this->widgetManager = $widget_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('plugin.manager.field.widget')
-    );
-  }
+class FieldInstanceEditForm extends FieldInstanceFormBase {
 
   /**
    * {@inheritdoc}
@@ -62,8 +25,8 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, FieldInstance $field_instance = NULL) {
-    $this->instance = $form_state['instance'] = $field_instance;
+  public function buildForm(array $form, array &$form_state, FieldInstanceInterface $field_instance = NULL) {
+    parent::buildForm($form, $form_state, $field_instance);
 
     $bundle = $this->instance['bundle'];
     $entity_type = $this->instance['entity_type'];
@@ -208,7 +171,6 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    form_load_include($form_state, 'inc', 'field_ui', 'field_ui.admin');
     $entity = $form['#entity'];
     $entity_form_display = $form['#entity_form_display'];
 
@@ -241,7 +203,7 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
       drupal_set_message(t('Field %label is required and uses the "hidden" widget. You might want to configure a default value.', array('%label' => $this->instance['label'])), 'warning');
     }
 
-    $form_state['redirect'] = field_ui_next_destination($this->instance['entity_type'], $this->instance['bundle']);
+    $form_state['redirect'] = $this->getNextDestination();
   }
 
   /**

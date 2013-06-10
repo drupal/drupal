@@ -261,11 +261,11 @@ class String extends FilterPluginBase {
   }
 
   public function opEqual($field) {
-    $this->query->add_where($this->options['group'], $field, $this->value, $this->operator());
+    $this->query->addWhere($this->options['group'], $field, $this->value, $this->operator());
   }
 
   protected function opContains($field) {
-    $this->query->add_where($this->options['group'], $field, '%' . db_like($this->value) . '%', 'LIKE');
+    $this->query->addWhere($this->options['group'], $field, '%' . db_like($this->value) . '%', 'LIKE');
   }
 
   protected function opContainsWord($field) {
@@ -298,27 +298,27 @@ class String extends FilterPluginBase {
 
     // previously this was a call_user_func_array but that's unnecessary
     // as views will unpack an array that is a single arg.
-    $this->query->add_where($this->options['group'], $where);
+    $this->query->addWhere($this->options['group'], $where);
   }
 
   protected function opStartsWith($field) {
-    $this->query->add_where($this->options['group'], $field, db_like($this->value) . '%', 'LIKE');
+    $this->query->addWhere($this->options['group'], $field, db_like($this->value) . '%', 'LIKE');
   }
 
   protected function opNotStartsWith($field) {
-    $this->query->add_where($this->options['group'], $field, db_like($this->value) . '%', 'NOT LIKE');
+    $this->query->addWhere($this->options['group'], $field, db_like($this->value) . '%', 'NOT LIKE');
   }
 
   protected function opEndsWith($field) {
-    $this->query->add_where($this->options['group'], $field, '%' . db_like($this->value), 'LIKE');
+    $this->query->addWhere($this->options['group'], $field, '%' . db_like($this->value), 'LIKE');
   }
 
   protected function opNotEnds($field) {
-    $this->query->add_where($this->options['group'], $field, '%' . db_like($this->value), 'NOT LIKE');
+    $this->query->addWhere($this->options['group'], $field, '%' . db_like($this->value), 'NOT LIKE');
   }
 
   function op_not($field) {
-    $this->query->add_where($this->options['group'], $field, '%' . db_like($this->value) . '%', 'NOT LIKE');
+    $this->query->addWhere($this->options['group'], $field, '%' . db_like($this->value) . '%', 'NOT LIKE');
   }
 
   protected function opShorterThan($field) {
@@ -332,7 +332,7 @@ class String extends FilterPluginBase {
   }
 
   protected function opRegex($field) {
-    $this->query->add_where($this->options['group'], $field, $this->value, 'RLIKE');
+    $this->query->addWhere($this->options['group'], $field, $this->value, 'RLIKE');
   }
 
   function op_empty($field) {
@@ -343,7 +343,7 @@ class String extends FilterPluginBase {
       $operator = "IS NOT NULL";
     }
 
-    $this->query->add_where($this->options['group'], $field, NULL, $operator);
+    $this->query->addWhere($this->options['group'], $field, NULL, $operator);
   }
 
 }

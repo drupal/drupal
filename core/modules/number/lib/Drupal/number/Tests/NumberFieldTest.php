@@ -20,7 +20,7 @@ class NumberFieldTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'field_test', 'number', 'field_ui');
+  public static $modules = array('node', 'entity_test', 'number', 'field_ui');
 
   protected $field;
   protected $instance;
@@ -37,7 +37,7 @@ class NumberFieldTest extends WebTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content', 'administer content types', 'administer node fields','administer node display'));
+    $this->web_user = $this->drupalCreateUser(array('view test entity', 'administer entity_test content', 'administer content types', 'administer node fields','administer node display'));
     $this->drupalLogin($this->web_user);
   }
 
@@ -56,12 +56,12 @@ class NumberFieldTest extends WebTestBase {
     field_create_field($this->field);
     $this->instance = array(
       'field_name' => $this->field['field_name'],
-      'entity_type' => 'test_entity',
-      'bundle' => 'test_bundle',
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
     );
     field_create_instance($this->instance);
 
-    entity_get_form_display('test_entity', 'test_bundle', 'default')
+    entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($this->field['field_name'], array(
         'type' => 'number',
         'settings' => array(
@@ -69,14 +69,14 @@ class NumberFieldTest extends WebTestBase {
         ),
       ))
       ->save();
-    entity_get_display('test_entity', 'test_bundle', 'default')
+    entity_get_display('entity_test', 'entity_test', 'default')
       ->setComponent($this->field['field_name'], array(
         'type' => 'number_decimal',
       ))
       ->save();
 
     // Display creation form.
-    $this->drupalGet('test-entity/add/test_bundle');
+    $this->drupalGet('entity_test/add');
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value]", '', 'Widget is displayed');
     $this->assertRaw('placeholder="0.00"');
@@ -84,12 +84,14 @@ class NumberFieldTest extends WebTestBase {
     // Submit a signed decimal value within the allowed precision and scale.
     $value = '-1234.5678';
     $edit = array(
+      'user_id' => 1,
+      'name' => $this->randomName(),
       "{$this->field['field_name']}[$langcode][0][value]" => $value,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
-    preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
-    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), 'Entity was created');
+    $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created');
     $this->assertRaw(round($value, 2), 'Value is displayed.');
 
     // Try to create entries with more than one decimal separator; assert fail.
@@ -102,7 +104,7 @@ class NumberFieldTest extends WebTestBase {
     );
 
     foreach ($wrong_entries as $wrong_entry) {
-      $this->drupalGet('test-entity/add/test_bundle');
+      $this->drupalGet('entity_test/add');
       $edit = array(
         "{$this->field['field_name']}[$langcode][0][value]" => $wrong_entry,
       );
@@ -120,7 +122,7 @@ class NumberFieldTest extends WebTestBase {
     );
 
     foreach ($wrong_entries as $wrong_entry) {
-      $this->drupalGet('test-entity/add/test_bundle');
+      $this->drupalGet('entity_test/add');
       $edit = array(
         "{$this->field['field_name']}[$langcode][0][value]" => $wrong_entry,
       );

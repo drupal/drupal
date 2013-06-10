@@ -12,22 +12,6 @@
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Page callback: Presents the node editing form.
- *
- * @param object $node
- *   A node object.
- *
- * @return array
- *   A form array as expected by drupal_render().
- *
- * @see node_menu()
- */
-function node_page_edit($node) {
-  drupal_set_title(t('<em>Edit @type</em> @title', array('@type' => node_get_type_label($node), '@title' => $node->label())), PASS_THROUGH);
-  return entity_get_form($node);
-}
-
-/**
  * Page callback: Displays add content links for available content types.
  *
  * Redirects to node/add/[type] if only one content type is available.
@@ -148,7 +132,11 @@ function node_preview(EntityInterface $node) {
     // Display a preview of the node.
     if (!form_get_errors()) {
       $node->in_preview = TRUE;
-      $output = theme('node_preview', array('node' => $node));
+      $node_preview = array(
+        '#theme' => 'node_preview',
+        '#node' => $node,
+      );
+      $output = drupal_render($node_preview);
       unset($node->in_preview);
     }
 
@@ -265,13 +253,21 @@ function node_revision_overview($node) {
     $row = array();
     $type = $node->type;
     if ($revision->current_vid > 0) {
-      $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->revision_timestamp, 'short'), "node/$node->nid"), '!username' => theme('username', array('account' => $revision))))
+      $username = array(
+        '#theme' => 'username',
+        '#account' => $revision,
+      );
+      $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->revision_timestamp, 'short'), "node/$node->nid"), '!username' => drupal_render($username)))
                                . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : ''),
                      'class' => array('revision-current'));
       $row[] = array('data' => drupal_placeholder(t('current revision')), 'class' => array('revision-current'));
     }
     else {
-      $row[] = t('!date by !username', array('!date' => l(format_date($revision->revision_timestamp, 'short'), "node/$node->nid/revisions/$revision->vid/view"), '!username' => theme('username', array('account' => $revision))))
+      $username = array(
+        '#theme' => 'username',
+        '#account' => $revision,
+      );
+      $row[] = t('!date by !username', array('!date' => l(format_date($revision->revision_timestamp, 'short'), "node/$node->nid/revisions/$revision->vid/view"), '!username' => drupal_render($username)))
                . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : '');
       if ($revert_permission) {
         $links['revert'] = array(
@@ -300,7 +296,7 @@ function node_revision_overview($node) {
     '#rows' => $rows,
     '#header' => $header,
     '#attached' => array (
-      'css' => array(drupal_get_path('module', 'node') . '/node.admin.css'),
+      'css' => array(drupal_get_path('module', 'node') . '/css/node.admin.css'),
     ),
   );
 

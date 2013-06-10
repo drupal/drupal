@@ -35,24 +35,11 @@ class ConfigInstallTest extends DrupalUnitTestBase {
   function testModuleInstallation() {
     $default_config = 'config_test.system';
     $default_configuration_entity = 'config_test.dynamic.dotted.default';
-    $default_config_manifest = 'manifest.config_test.dynamic';
-    $expected_manifest_data = array(
-      'dotted.default' => array(
-        'name' => 'config_test.dynamic.dotted.default',
-      ),
-    );
-    $default_empty_config_manifest = 'manifest.config_test.empty_manifest';
 
     // Verify that default module config does not exist before installation yet.
     $config = config($default_config);
     $this->assertIdentical($config->isNew(), TRUE);
     $config = config($default_configuration_entity);
-    $this->assertIdentical($config->isNew(), TRUE);
-
-    // Verify that configuration entity manifests do not exist.
-    $config = config($default_config_manifest);
-    $this->assertIdentical($config->isNew(), TRUE);
-    $config = config($default_empty_config_manifest);
     $this->assertIdentical($config->isNew(), TRUE);
 
     // Install the test module.
@@ -64,13 +51,6 @@ class ConfigInstallTest extends DrupalUnitTestBase {
     $this->assertIdentical($config->isNew(), FALSE);
     $config = config($default_configuration_entity);
     $this->assertIdentical($config->isNew(), FALSE);
-
-    // Verify that configuration entity manifests have been created with
-    // expected contents.
-    $config = config($default_config_manifest);
-    $this->assertIdentical($config->get(), $expected_manifest_data);
-    $config = config($default_empty_config_manifest);
-    $this->assertIdentical($config->get(), array());
 
     // Verify that configuration import callback was invoked for the dynamic
     // configuration entity.

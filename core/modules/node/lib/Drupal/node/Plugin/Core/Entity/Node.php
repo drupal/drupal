@@ -25,7 +25,8 @@ use Drupal\node\NodeInterface;
  *     "render" = "Drupal\node\NodeRenderController",
  *     "access" = "Drupal\node\NodeAccessController",
  *     "form" = {
- *       "default" = "Drupal\node\NodeFormController"
+ *       "default" = "Drupal\node\NodeFormController",
+ *       "edit" = "Drupal\node\NodeFormController"
  *     },
  *     "translation" = "Drupal\node\NodeTranslationController"
  *   },

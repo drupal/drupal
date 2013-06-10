@@ -15,7 +15,7 @@ function image_style_list() {
   $page['image_style_list'] = array(
     '#markup' => theme('image_style_list', array('styles' => $styles)),
     '#attached' => array(
-      'css' => array(drupal_get_path('module', 'image') . '/image.admin.css' => array()),
+      'css' => array(drupal_get_path('module', 'image') . '/css/image.admin.css' => array()),
     ),
   );
 
@@ -39,7 +39,7 @@ function image_style_form($form, &$form_state, $style) {
 
   $form_state['image_style'] = $style;
   $form['#tree'] = TRUE;
-  $form['#attached']['css'][drupal_get_path('module', 'image') . '/image.admin.css'] = array();
+  $form['#attached']['css'][drupal_get_path('module', 'image') . '/css/image.admin.css'] = array();
 
   // Show the thumbnail preview.
   $form['preview'] = array(
@@ -297,7 +297,7 @@ function image_effect_form($form, &$form_state, $style, $effect) {
   }
   drupal_set_title($title, PASS_THROUGH);
 
-  $form['#attached']['css'][drupal_get_path('module', 'image') . '/image.admin.css'] = array();
+  $form['#attached']['css'][drupal_get_path('module', 'image') . '/css/image.admin.css'] = array();
 
   $form['ieid'] = array(
     '#type' => 'value',

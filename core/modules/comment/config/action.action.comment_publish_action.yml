@@ -1,0 +1,6 @@
+id: comment_publish_action
+label: 'Publish comment'
+status: '1'
+langcode: en
+type: comment
+plugin: comment_publish_action

@@ -373,15 +373,6 @@ class ConfigStorageController implements EntityStorageControllerInterface, Entit
     foreach ($entities as $id => $entity) {
       $config = $this->configFactory->get($this->getConfigPrefix() . $entity->id());
       $config->delete();
-
-      // Remove the entity from the manifest file. Entity IDs can contain a dot
-      // so we can not use Config::clear() to remove the entity from the
-      // manifest.
-      $manifest = $this->configFactory->get('manifest.' . $this->entityInfo['config_prefix']);
-      $manifest_data = $manifest->get();
-      unset($manifest_data[$entity->id()]);
-      $manifest->setData($manifest_data);
-      $manifest->save();
     }
 
     $this->postDelete($entities);
@@ -450,28 +441,6 @@ class ConfigStorageController implements EntityStorageControllerInterface, Entit
       $entity->enforceIsNew(FALSE);
       $this->postSave($entity, FALSE);
       $this->invokeHook('insert', $entity);
-    }
-
-    $update_manifest = FALSE;
-    $config = $this->configFactory->get('manifest.' . $this->entityInfo['config_prefix']);
-    $manifest = $config->get();
-    // If the save operation resulted in a rename remove the old entity id from
-    // the manifest file.
-    if ($id !== $entity->id()) {
-      // Entity IDs can contain a dot so we can not use Config::clear() to
-      // remove the entity from the manifest.
-      unset($manifest[$id]);
-      $update_manifest = TRUE;
-    }
-    // Add this entity to the manifest file if necessary.
-    if (!isset($manifest[$entity->id()])) {
-      $manifest[$entity->id()] = array(
-        'name' => $this->getConfigPrefix() . $entity->id(),
-      );
-      $update_manifest = TRUE;
-    }
-    if ($update_manifest) {
-      $config->setData($manifest)->save();
     }
 
     unset($entity->original);

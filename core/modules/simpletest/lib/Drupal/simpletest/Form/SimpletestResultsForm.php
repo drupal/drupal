@@ -97,7 +97,7 @@ class SimpletestResultsForm implements FormInterface, ControllerInterface {
     }
 
     // Load all classes and include CSS.
-    $form['#attached']['css'][] = drupal_get_path('module', 'simpletest') . '/simpletest.css';
+    $form['#attached']['css'][] = drupal_get_path('module', 'simpletest') . '/css/simpletest.module.css';
 
     // Keep track of which test cases passed or failed.
     $filter = array(

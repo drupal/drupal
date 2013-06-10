@@ -9,7 +9,7 @@ namespace Drupal\shortcut;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityAccessController;
-use Drupal\user\Plugin\Core\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * Defines the access controller for the shortcut entity type.
@@ -19,7 +19,7 @@ class ShortcutAccessController extends EntityAccessController {
   /**
    * {@inheritdoc}
    */
-  protected function checkAccess(EntityInterface $entity, $operation, $langcode, User $account) {
+  protected function checkAccess(EntityInterface $entity, $operation, $langcode, UserInterface $account) {
     switch ($operation) {
       case 'edit':
         if (user_access('administer shortcuts', $account)) {

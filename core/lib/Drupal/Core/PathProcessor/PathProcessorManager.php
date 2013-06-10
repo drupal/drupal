@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\PathProcessor;
 
-use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -16,10 +15,10 @@ use Symfony\Component\HttpFoundation\Request;
  * Holds an array of path processor objects and uses them to sequentially process
  * a path, in order of processor priority.
  */
-class PathProcessorManager implements InboundPathProcessorInterface {
+class PathProcessorManager implements InboundPathProcessorInterface, OutboundPathProcessorInterface {
 
   /**
-   * Holds the array of processors to cycle through.
+   * Holds the array of inbound processors to cycle through.
    *
    * @var array
    *   An array whose keys are priorities and whose values are arrays of path
@@ -28,12 +27,30 @@ class PathProcessorManager implements InboundPathProcessorInterface {
   protected $inboundProcessors = array();
 
   /**
-   * Holds the array of processors, sorted by priority.
+   * Holds the array of inbound processors, sorted by priority.
    *
    * @var array
    *   An array of path processor objects.
    */
   protected $sortedInbound = array();
+
+
+  /**
+   * Holds the array of outbound processors to cycle through.
+   *
+   * @var array
+   *   An array whose keys are priorities and whose values are arrays of path
+   *   processor objects.
+   */
+  protected $outboundProcessors = array();
+
+  /**
+   * Holds the array of outbound processors, sorted by priority.
+   *
+   * @var array
+   *   An array of path processor objects.
+   */
+  protected $sortedOutbound = array();
 
   /**
    * Adds an inbound processor object to the $inboundProcessors property.
@@ -72,6 +89,46 @@ class PathProcessorManager implements InboundPathProcessorInterface {
     }
 
     return $this->sortedInbound;
+  }
+
+
+  /**
+   * Adds an outbound processor object to the $outboundProcessors property.
+   *
+   * @param \Drupal\Core\PathProcessor\OutboundPathProcessorInterface $processor
+   *   The processor object to add.
+   *
+   * @param int $priority
+   *   The priority of the processor being added.
+   */
+  public function addOutbound(OutboundPathProcessorInterface $processor, $priority = 0) {
+    $this->outboundProcessors[$priority][] = $processor;
+    $this->sortedOutbound = array();
+  }
+
+  /**
+   * Implements Drupal\Core\PathProcessor\OutboundPathProcessorInterface::processOutbound().
+   */
+  public function processOutbound($path, &$options = array(), Request $request = NULL) {
+    $processors = $this->getOutbound();
+    foreach ($processors as $processor) {
+      $path = $processor->processOutbound($path, $options, $request);
+    }
+    return $path;
+  }
+
+  /**
+   * Returns the sorted array of outbound processors.
+   *
+   * @return array
+   *   An array of processor objects.
+   */
+  protected function getOutbound() {
+    if (empty($this->sortedOutbound)) {
+      $this->sortedOutbound = $this->sortProcessors('outboundProcessors');
+    }
+
+    return $this->sortedOutbound;
   }
 
   /**

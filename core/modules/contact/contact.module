@@ -147,7 +147,7 @@ function _contact_personal_tab_access($account) {
 
   // If the requested user has disabled their contact form, do not allow users
   // to contact them.
-  $account_data = drupal_container()->get('user.data')->get('contact', $account->id(), 'enabled');
+  $account_data = Drupal::service('user.data')->get('contact', $account->id(), 'enabled');
   if (isset($account_data) && empty($account_data)) {
     return FALSE;
   }
@@ -322,7 +322,7 @@ function contact_form_user_profile_form_alter(&$form, &$form_state) {
     '#weight' => 5,
   );
   $account = $form_state['controller']->getEntity();
-  $account_data = drupal_container()->get('user.data')->get('contact', $account->id(), 'enabled');
+  $account_data = Drupal::service('user.data')->get('contact', $account->id(), 'enabled');
   $form['contact']['contact'] = array(
     '#type' => 'checkbox',
     '#title' => t('Personal contact form'),
@@ -336,7 +336,7 @@ function contact_form_user_profile_form_alter(&$form, &$form_state) {
  */
 function contact_user_update($account) {
   if (isset($account->contact)) {
-    drupal_container()->get('user.data')->set('contact', $account->id(), 'enabled', (int) $account->contact);
+    Drupal::service('user.data')->set('contact', $account->id(), 'enabled', (int) $account->contact);
   }
 }
 

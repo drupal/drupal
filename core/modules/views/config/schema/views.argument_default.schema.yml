@@ -1,0 +1,28 @@
+# Schema for the views default arguments.
+
+views.argument_default.fixed:
+  type: mapping
+  label: 'Fixed'
+  mapping:
+    argument:
+      type: string
+      label: 'Fixed value'
+
+views.argument_default.php:
+  type: mapping
+  label: 'PHP Code'
+  mapping:
+    code:
+      type: string
+      label: 'PHP contextual filter code'
+
+views.argument_default.raw:
+  type: mapping
+  label: 'Raw value from URL'
+  mapping:
+    index:
+      type: integer
+      label: 'Path component'
+    use_alias:
+      type: boolean
+      label: 'Use path alias'

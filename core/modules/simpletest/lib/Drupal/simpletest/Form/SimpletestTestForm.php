@@ -54,7 +54,7 @@ class SimpletestTestForm implements FormInterface {
       }
     }
 
-    // Operation buttons.
+    // Action buttons.
     $form['tests']['op'] = array(
       '#type' => 'submit',
       '#value' => t('Run tests'),

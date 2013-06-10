@@ -1,0 +1,6 @@
+id: node_make_unsticky_action
+label: 'Make content unsticky'
+status: '1'
+langcode: en
+type: node
+plugin: node_make_unsticky_action

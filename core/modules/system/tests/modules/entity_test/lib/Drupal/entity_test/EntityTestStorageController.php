@@ -41,6 +41,9 @@ class EntityTestStorageController extends DatabaseStorageControllerNG {
       'label' => t('UUID'),
       'description' => t('The UUID of the test entity.'),
       'type' => 'string_field',
+      'property_constraints' => array(
+        'value' => array('Length' => array('max' => 128)),
+      ),
     );
     $fields['langcode'] = array(
       'label' => t('Language code'),
@@ -52,11 +55,16 @@ class EntityTestStorageController extends DatabaseStorageControllerNG {
       'description' => t('The name of the test entity.'),
       'type' => 'string_field',
       'translatable' => TRUE,
+      'property_constraints' => array(
+        'value' => array('Length' => array('max' => 32)),
+      ),
     );
     $fields['type'] = array(
       'label' => t('Type'),
       'description' => t('The bundle of the test entity.'),
       'type' => 'string_field',
+      'required' => TRUE,
+      // @todo: Add allowed values validation.
     );
     $fields['user_id'] = array(
       'label' => t('User ID'),

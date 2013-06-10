@@ -6,17 +6,25 @@
  */
 
 namespace Drupal\views\Tests;
+use Drupal\Component\Utility\Unicode;
 
 /**
  * Tests glossary view ( summary of arguments ).
  */
 class GlossaryTest extends ViewTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node');
+
   public static function getInfo() {
     return array(
       'name' => 'Glossary tests',
       'description' => 'Tests glossary functionality of views.',
-      'group' => 'Views',
+      'group' => 'Views Config',
     );
   }
 
@@ -54,6 +62,24 @@ class GlossaryTest extends ViewTestBase {
     $result_nodes_per_char = array();
     foreach ($view->result as $item) {
       $this->assertEqual($nodes_per_char[$item->title_truncated], $item->num_records);
+    }
+
+    // Enable the glossary to be displayed.
+    $view->storage->enable()->save();
+    // Check the actual page response.
+    $this->drupalGet('glossary');
+    $this->assertResponse(200);
+
+    foreach ($nodes_per_char as $char => $count) {
+      $href = url('glossary/' . $char);
+      $label = Unicode::strtoupper($char);
+      // Get the summary link for a certain character. Filter by label and href
+      // to ensure that both of them are correct.
+      $result = $this->xpath('//a[contains(@href, :href) and normalize-space(text())=:label]/..', array(':href' => $href, ':label' => $label));
+      $this->assertTrue(count($result));
+      // The rendered output looks like "| (count)" so let's figure out the int.
+      $result_count = trim(str_replace(array('|', '(', ')'), '', (string) $result[0]));
+      $this->assertEqual($result_count, $count, 'The expected number got rendered.');
     }
   }
 

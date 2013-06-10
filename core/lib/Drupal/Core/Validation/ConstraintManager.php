@@ -56,6 +56,28 @@ class ConstraintManager extends PluginManagerBase {
   }
 
   /**
+   * Creates a validation constraint.
+   *
+   * @param string $name
+   *   The name or plugin id of the constraint.
+   * @param mixed $options
+   *   The options to pass to the constraint class. Required and supported
+   *   options depend on the constraint class.
+   *
+   * @return \Symfony\Component\Validator\Constraint
+   *   A validation constraint plugin.
+   */
+  public function create($name, $options) {
+    if (!is_array($options)) {
+      // Plugins need an array as configuration, so make sure we have one.
+      // The constraint classes support passing the options as part of the
+      // 'value' key also.
+      $options = array('value' => $options);
+    }
+    return $this->createInstance($name, $options);
+  }
+
+  /**
    * Callback for registering definitions for constraints shipped with Symfony.
    *
    * @see ConstraintManager::__construct()

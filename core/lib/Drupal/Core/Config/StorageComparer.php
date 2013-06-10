@@ -139,13 +139,10 @@ class StorageComparer implements StorageComparerInterface {
    */
   public function addChangelistUpdate() {
     foreach (array_intersect($this->getSourceNames(), $this->getTargetNames()) as $name) {
-      // Ignore manifest files.
-      if (substr($name, 0, 9) != 'manifest.') {
-        $source_config_data = $this->sourceStorage->read($name);
-        $target_config_data = $this->targetStorage->read($name);
-        if ($source_config_data !== $target_config_data) {
-          $this->addChangeList('update', array($name));
-        }
+      $source_config_data = $this->sourceStorage->read($name);
+      $target_config_data = $this->targetStorage->read($name);
+      if ($source_config_data !== $target_config_data) {
+        $this->addChangeList('update', array($name));
       }
     }
     return $this;

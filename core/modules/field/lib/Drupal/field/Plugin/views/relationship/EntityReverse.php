@@ -93,7 +93,7 @@ class EntityReverse extends RelationshipPluginBase  {
     // use a short alias for this:
     $alias = $this->definition['field_name'] . '_' . $this->table;
 
-    $this->alias = $this->query->add_relationship($alias, $second_join, $this->definition['base'], $this->relationship);
+    $this->alias = $this->query->addRelationship($alias, $second_join, $this->definition['base'], $this->relationship);
   }
 
 }

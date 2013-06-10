@@ -93,7 +93,7 @@ class ManyToOneHelper {
     }
     // If we found that there are tables in between, add the relationship.
     if ($r_join->table != $join->table) {
-      $relationship = $this->handler->query->add_relationship($this->handler->table . '_' . $r_join->table, $r_join, $r_join->table, $this->handler->relationship);
+      $relationship = $this->handler->query->addRelationship($this->handler->table . '_' . $r_join->table, $r_join, $r_join->table, $this->handler->relationship);
     }
 
     // And now add our table, using the new relationship if one was used.
@@ -325,7 +325,7 @@ class ManyToOneHelper {
       }
 
       // implode on either AND or OR.
-      $this->handler->query->add_where($options['group'], $clause);
+      $this->handler->query->addWhere($options['group'], $clause);
     }
   }
 

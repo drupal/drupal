@@ -1,0 +1,47 @@
+/**
+ * @file
+ * Styling for the Forum module.
+ */
+
+#forum .description {
+  font-size: 0.9em;
+  margin: 0.5em;
+}
+#forum td.created,
+#forum td.posts,
+#forum td.topics,
+#forum td.last-reply,
+#forum td.replies,
+#forum td.pager {
+  white-space: nowrap;
+}
+#forum .icon{
+  background-image: url(../../../misc/forum-icons.png);
+  background-repeat: no-repeat;
+  float: left; /* LTR */
+  height: 24px;
+  margin: 0 9px 0 0; /* LTR */
+  width: 24px;
+}
+#forum .title {
+  overflow: hidden;
+}
+#forum div.indent {
+  margin-left: 20px; /* LTR */
+}
+
+#forum .topic-status-new {
+  background-position: -24px 0;
+}
+#forum .topic-status-hot {
+  background-position: -48px 0;
+}
+#forum .topic-status-hot-new {
+  background-position: -72px 0;
+}
+#forum .topic-status-sticky {
+  background-position: -96px 0;
+}
+#forum .topic-status-closed {
+  background-position: -120px 0;
+}

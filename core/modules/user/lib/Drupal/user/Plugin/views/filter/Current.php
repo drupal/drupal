@@ -45,7 +45,7 @@ class Current extends BooleanOperator {
     else {
       $or->condition($field, '***CURRENT_USER***', '=');
     }
-    $this->query->add_where($this->options['group'], $or);
+    $this->query->addWhere($this->options['group'], $or);
   }
 
 }

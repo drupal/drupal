@@ -15,7 +15,7 @@ function link_help($path, $arg) {
     case 'admin/help#link':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Link module defines a simple link field type for the Field module. Links are external URLs, can have an optional title for each link, and they can be formatted when displayed. See the <a href="@field-help">Field module help page</a> for more information about fields.', array('@field-help' => url('admin/help/field'))) . '</p>';
+      $output .= '<p>' . t('The Link module defines a simple link field type for the Field module. Links are external URLs, can have an optional link text for each link, and they can be formatted when displayed. See the <a href="@field-help">Field module help page</a> for more information about fields.', array('@field-help' => url('admin/help/field'))) . '</p>';
       return $output;
   }
 }
@@ -26,7 +26,7 @@ function link_help($path, $arg) {
 function link_field_info() {
   $types['link'] = array(
     'label' => t('Link'),
-    'description' => t('Stores a URL string, optional varchar title, and optional blob of attributes to assemble a link.'),
+    'description' => t('Stores a URL string, optional varchar link text, and optional blob of attributes to assemble a link.'),
     'instance_settings' => array(
       'title' => DRUPAL_OPTIONAL,
     ),
@@ -43,7 +43,7 @@ function link_field_info() {
 function link_field_instance_settings_form($field, $instance) {
   $form['title'] = array(
     '#type' => 'radios',
-    '#title' => t('Allow link title'),
+    '#title' => t('Allow link text'),
     '#default_value' => isset($instance['settings']['title']) ? $instance['settings']['title'] : DRUPAL_OPTIONAL,
     '#options' => array(
       DRUPAL_DISABLED => t('Disabled'),
@@ -84,7 +84,7 @@ function link_field_is_empty($item, $field) {
  */
 function link_field_presave(EntityInterface $entity, $field, $instance, $langcode, &$items) {
   foreach ($items as $delta => &$item) {
-    // Trim any spaces around the URL and title.
+    // Trim any spaces around the URL and link text.
     $item['url'] = trim($item['url']);
     $item['title'] = trim($item['title']);
 
@@ -105,7 +105,7 @@ function link_theme() {
 }
 
 /**
- * Formats a link as separate title and URL elements.
+ * Formats a link as separate link title and URL elements.
  */
 function theme_link_formatter_link_separate($vars) {
   $output = '';

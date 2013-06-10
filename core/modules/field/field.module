@@ -270,6 +270,9 @@ function field_entity_create(EntityInterface $entity) {
  *   Defaults to the entity language.
  */
 function field_populate_default_values(EntityInterface $entity, $langcode = NULL) {
+  // Ensure we are working with a BC mode entity.
+  $entity = $entity->getBCEntity();
+
   $entity_type = $entity->entityType();
   $langcode = $langcode ?: $entity->language()->langcode;
   foreach (field_info_instances($entity_type, $entity->bundle()) as $field_name => $instance) {
@@ -671,7 +674,7 @@ function field_cache_clear() {
  *   UTF-8.
  */
 function field_filter_xss($string) {
-  return filter_xss($string, _field_filter_xss_allowed_tags());
+  return _filter_htmlcorrector(filter_xss($string, _field_filter_xss_allowed_tags()));
 }
 
 /**
@@ -987,7 +990,7 @@ function field_extract_bundle($entity_type, $bundle) {
  */
 function field_page_build(&$page) {
   $path = drupal_get_path('module', 'field');
-  $page['#attached']['css'][$path . '/theme/field.css'] = array('every_page' => TRUE);
+  $page['#attached']['css'][$path . '/css/field.module.css'] = array('every_page' => TRUE);
 }
 
 /**
@@ -1039,7 +1042,7 @@ function template_preprocess_field(&$variables, $hook) {
     'field-label-' . $element['#label_display'],
   );
   // Add a "clearfix" class to the wrapper since we float the label and the
-  // field items in field.css if the label is inline.
+  // field items in field.module.css if the label is inline.
   if ($element['#label_display'] == 'inline') {
     $variables['attributes']['class'][] = 'clearfix';
   }

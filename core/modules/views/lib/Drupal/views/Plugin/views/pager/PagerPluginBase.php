@@ -68,7 +68,7 @@ abstract class PagerPluginBase extends PluginBase {
    * All but the leanest pagers should probably return a value here, so
    * most pagers will not need to override this method.
    */
-  function get_items_per_page() {
+  public function getItemsPerPage() {
     return isset($this->options['items_per_page']) ? $this->options['items_per_page'] : 0;
   }
 
@@ -94,7 +94,7 @@ abstract class PagerPluginBase extends PluginBase {
   /**
    * Set the page offset, or how many items to skip.
    */
-  function set_offset($offset) {
+  public function setOffset($offset) {
     $this->options['offset'] = $offset;
   }
 
@@ -114,7 +114,7 @@ abstract class PagerPluginBase extends PluginBase {
    *   If provided, the page number will be set to this. If NOT provided,
    *   the page number will be set from the global page array.
    */
-  function set_current_page($number = NULL) {
+  public function setCurrentPage($number = NULL) {
     if (!is_numeric($number) || $number < 0) {
       $number = 0;
     }
@@ -235,8 +235,8 @@ abstract class PagerPluginBase extends PluginBase {
    * This is primarily used to control the display of a more link.
    */
   public function hasMoreRecords() {
-    return $this->get_items_per_page()
-      && $this->total_items > (intval($this->current_page) + 1) * $this->get_items_per_page();
+    return $this->getItemsPerPage()
+      && $this->total_items > (intval($this->current_page) + 1) * $this->getItemsPerPage();
   }
 
   public function exposedFormAlter(&$form, &$form_state) { }

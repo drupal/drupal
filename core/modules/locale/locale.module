@@ -11,12 +11,6 @@
  */
 
 use Drupal\Core\Language\Language;
-use Drupal\locale\LocaleLookup;
-use Drupal\locale\LocaleConfigSubscriber;
-use Drupal\locale\SourceString;
-use Drupal\locale\StringDatabaseStorage;
-use Drupal\locale\TranslationsStream;
-use Drupal\Core\Database\Database;
 use Drupal\Component\Utility\Crypt;
 
 /**
@@ -315,7 +309,7 @@ function locale_language_update($language) {
  */
 function locale_language_delete($language) {
   // Remove translations.
-  locale_storage()->deleteTranslations(array('language' => $language->langcode));
+  Drupal::service('locale.storage')->deleteTranslations(array('language' => $language->langcode));
 
   // Remove interface translation files.
   module_load_include('inc', 'locale', 'locale.bulk');
@@ -346,79 +340,6 @@ function locale_translatable_language_list() {
     unset($languages['en']);
   }
   return $languages;
-}
-
-/**
- * Provides interface translation services.
- *
- * This function is called from t() to translate a string if needed.
- *
- * @param $string
- *   A string to look up translation for. If omitted, all the
- *   cached strings will be returned in all languages already
- *   used on the page.
- * @param $context
- *   The context of this string.
- * @param $langcode
- *   Language code to use for the lookup.
- */
-function locale($string = NULL, $context = NULL, $langcode = NULL) {
-  $language_interface = language(Language::TYPE_INTERFACE);
-
-  // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static_fast;
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['locale'] = &drupal_static(__FUNCTION__, array('cache' => array(), 'exists' => NULL));
-  }
-  $locale_t = &$drupal_static_fast['locale']['cache'];
-  $locale_exists = &$drupal_static_fast['locale']['exists'];
-
-  // Check whether Locale module is actually installed and operational.
-  // The mere existence of locale() does not imply that Locale module is
-  // actually enabled and its database tables are installed. Since PHP code
-  // cannot be unloaded, this is typically the case in the environment that
-  // is executing a test.
-  if (!isset($locale_exists)) {
-    $locale_exists = function_exists('module_exists') && module_exists('locale');
-  }
-  if (!$locale_exists) {
-    return $string;
-  }
-
-  if (!isset($string)) {
-    // Return all cached strings if no string was specified
-    return $locale_t;
-  }
-
-  $langcode = isset($langcode) ? $langcode : $language_interface->langcode;
-
-  // Strings are cached by langcode, context and roles, using instances of the
-  // LocaleLookup class to handle string lookup and caching.
-  if (!isset($locale_t[$langcode][$context]) && isset($language_interface)) {
-    $locale_t[$langcode][$context] = new LocaleLookup($langcode, $context, locale_storage());
-  }
-  return ($locale_t[$langcode][$context][$string] === TRUE ? $string : $locale_t[$langcode][$context][$string]);
-}
-
-/**
- * Reset static variables used by locale().
- */
-function locale_reset() {
-  drupal_static_reset('locale');
-}
-
-/**
- * Gets the locale storage controller class .
- *
- * @return Drupal\locale\StringStorageInterface
- */
-function locale_storage() {
-  $storage = &drupal_static(__FUNCTION__);
-  if (!isset($storage)) {
-    $options = array('target' => 'default');
-    $storage = new StringDatabaseStorage(Database::getConnection($options['target']), $options);
-  }
-  return $storage;
 }
 
 /**
@@ -720,12 +641,12 @@ function locale_library_info_alter(&$libraries, $module) {
 function locale_form_language_admin_overview_form_alter(&$form, &$form_state) {
   $languages = $form['languages']['#languages'];
 
-  $total_strings = locale_storage()->countStrings();
+  $total_strings = Drupal::service('locale.storage')->countStrings();
   $stats = array_fill_keys(array_keys($languages), array());
 
   // If we have source strings, count translations and calculate progress.
   if (!empty($total_strings)) {
-    $translations = locale_storage()->countTranslations();
+    $translations = Drupal::service('locale.storage')->countTranslations();
     foreach ($translations as $langcode => $translated) {
       $stats[$langcode]['translated'] = $translated;
       if ($translated > 0) {
@@ -1069,7 +990,7 @@ function _locale_refresh_translations($langcodes, $lids = array()) {
   if (!empty($langcodes)) {
     // Update javascript translations if any of the strings has a javascript
     // location, or if no string ids were provided, update all languages.
-    if (empty($lids) || ($strings = locale_storage()->getStrings(array('lid' => $lids, 'type' => 'javascript')))) {
+    if (empty($lids) || ($strings = Drupal::service('locale.storage')->getStrings(array('lid' => $lids, 'type' => 'javascript')))) {
       array_map('_locale_invalidate_js', $langcodes);
     }
   }
@@ -1189,11 +1110,11 @@ function _locale_parse_js_file($filepath) {
     $string =  implode('', preg_split('~(?<!\\\\)[\'"]\s*\+\s*[\'"]~s', substr($match['string'], 1, -1)));
     $context = implode('', preg_split('~(?<!\\\\)[\'"]\s*\+\s*[\'"]~s', substr($match['context'], 1, -1)));
 
-    $source = locale_storage()->findString(array('source' => $string, 'context' => $context));
+    $source = Drupal::service('locale.storage')->findString(array('source' => $string, 'context' => $context));
 
     if (!$source) {
       // We don't have the source string yet, thus we insert it into the database.
-      $source = locale_storage()->createString(array(
+      $source = Drupal::service('locale.storage')->createString(array(
         'source'    => $string,
         'context'   => $context,
       ));
@@ -1262,7 +1183,7 @@ function _locale_rebuild_js($langcode = NULL) {
     'translated' => TRUE,
   );
   $translations = array();
-  foreach (locale_storage()->getTranslations($conditions) as $data) {
+  foreach (Drupal::service('locale.storage')->getTranslations($conditions) as $data) {
     $translations[$data->context][$data->source] = $data->translation;
   }
 

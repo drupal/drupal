@@ -8,11 +8,15 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Yaml\Parser;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Drupal\Component\PhpStorage\PhpStorageFactory;
+use Drupal\Component\Utility\MapArray;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Routing\GeneratorNotInitializedException;
 use Drupal\Core\SystemListingInfo;
 use Drupal\Core\Template\Attribute;
 
@@ -325,7 +329,7 @@ function drupal_get_breadcrumb() {
  * @return
  *   An array of all stored HEAD elements.
  *
- * @see theme_html_tag()
+ * @see drupal_pre_render_html_tag()
  */
 function drupal_add_html_head($data = NULL, $key = NULL) {
   $stored_head = &drupal_static(__FUNCTION__);
@@ -498,42 +502,14 @@ function drupal_get_query_array($query) {
 /**
  * Parses an array into a valid, rawurlencoded query string.
  *
- * This differs from http_build_query() as we need to rawurlencode() (instead of
- * urlencode()) all query parameters.
- *
- * @param $query
- *   The query parameter array to be processed, e.g. $_GET.
- * @param $parent
- *   Internal use only. Used to build the $query array key for nested items.
- *
- * @return
- *   A rawurlencoded string which can be used as or appended to the URL query
- *   string.
- *
+ * @see \Drupal\Core\Routing\PathBasedGeneratorInterface::httpBuildQuery()
  * @see drupal_get_query_parameters()
+ * @deprecated as of Drupal 8.0. Use
+ *   Drupal::urlGenerator()->httpBuildQuery() instead.
  * @ingroup php_wrappers
  */
 function drupal_http_build_query(array $query, $parent = '') {
-  $params = array();
-
-  foreach ($query as $key => $value) {
-    $key = ($parent ? $parent . '[' . rawurlencode($key) . ']' : rawurlencode($key));
-
-    // Recurse into children.
-    if (is_array($value)) {
-      $params[] = drupal_http_build_query($value, $key);
-    }
-    // If a query parameter value is NULL, only append its key.
-    elseif (!isset($value)) {
-      $params[] = $key;
-    }
-    else {
-      // For better readability of paths in query strings, we decode slashes.
-      $params[] = $key . '=' . str_replace('%2F', '/', rawurlencode($value));
-    }
-  }
-
-  return implode('&', $params);
+  return Drupal::urlGenerator()->httpBuildQuery($query, $parent);
 }
 
 /**
@@ -564,7 +540,7 @@ function drupal_get_destination() {
   }
   else {
     $path = current_path();
-    $query = drupal_http_build_query(drupal_get_query_parameters());
+    $query = Drupal::urlGenerator()->httpBuildQuery(drupal_get_query_parameters());
     if ($query != '') {
       $path .= '?' . $query;
     }
@@ -725,8 +701,7 @@ function drupal_goto($path = '', array $options = array(), $http_response_code =
   // The 'Location' HTTP header must be absolute.
   $options['absolute'] = TRUE;
 
-  $url = url($path, $options);
-
+  $url = Drupal::urlGenerator()->generateFromPath($path, $options);
   header('Location: ' . $url, TRUE, $http_response_code);
 
   // The "Location" header sends a redirect status code to the HTTP daemon. In
@@ -1423,153 +1398,24 @@ function datetime_default_format_type() {
  * When creating links in modules, consider whether l() could be a better
  * alternative than url().
  *
- * @param $path
- *   (optional) The internal path or external URL being linked to, such as
- *   "node/34" or "http://example.com/foo". The default value is equivalent to
- *   passing in '<front>'. A few notes:
- *   - If you provide a full URL, it will be considered an external URL.
- *   - If you provide only the path (e.g. "node/34"), it will be
- *     considered an internal link. In this case, it should be a system URL,
- *     and it will be replaced with the alias, if one exists. Additional query
- *     arguments for internal paths must be supplied in $options['query'], not
- *     included in $path.
- *   - If you provide an internal path and $options['alias'] is set to TRUE, the
- *     path is assumed already to be the correct path alias, and the alias is
- *     not looked up.
- *   - The special string '<front>' generates a link to the site's base URL.
- *   - If your external URL contains a query (e.g. http://example.com/foo?a=b),
- *     then you can either URL encode the query keys and values yourself and
- *     include them in $path, or use $options['query'] to let this function
- *     URL encode them.
- * @param $options
- *   (optional) An associative array of additional options, with the following
- *   elements:
- *   - 'query': An array of query key/value-pairs (without any URL-encoding) to
- *     append to the URL.
- *   - 'fragment': A fragment identifier (named anchor) to append to the URL.
- *     Do not include the leading '#' character.
- *   - 'absolute': Defaults to FALSE. Whether to force the output to be an
- *     absolute link (beginning with http:). Useful for links that will be
- *     displayed outside the site, such as in an RSS feed.
- *   - 'alias': Defaults to FALSE. Whether the given path is a URL alias
- *     already.
- *   - 'external': Whether the given path is an external URL.
- *   - 'language': An optional language object. If the path being linked to is
- *     internal to the site, $options['language'] is used to look up the alias
- *     for the URL. If $options['language'] is omitted, the language will be
- *     obtained from language(Language::TYPE_URL).
- *   - 'https': Whether this URL should point to a secure location. If not
- *     defined, the current scheme is used, so the user stays on HTTP or HTTPS
- *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP, but HTTPS can
- *     only be enforced when the variable 'https' is set to TRUE.
- *   - 'base_url': Only used internally, to modify the base URL when a language
- *     dependent URL requires so.
- *   - 'prefix': Only used internally, to modify the path when a language
- *     dependent URL requires so.
- *   - 'script': Added to the URL between the base path and the path prefix.
- *     Defaults to empty string when clean URLs are in effect, and to
- *     'index.php/' when they are not.
- *   - 'entity_type': The entity type of the object that called url(). Only
- *     set if url() is invoked by Drupal\Core\Entity\Entity::uri().
- *   - 'entity': The entity object (such as a node) for which the URL is being
- *     generated. Only set if url() is invoked by Drupal\Core\Entity\Entity::uri().
- *
- * @return
- *   A string containing a URL to the given path.
+ * @see \Drupal\Core\Routing\PathBasedGeneratorInterface::generateFromPath().
  */
 function url($path = NULL, array $options = array()) {
-  // Merge in defaults.
-  $options += array(
-    'fragment' => '',
-    'query' => array(),
-    'absolute' => FALSE,
-    'alias' => FALSE,
-    'prefix' => '',
-    'script' => $GLOBALS['script_path'],
-  );
-
-  if (!isset($options['external'])) {
-    // Return an external link if $path contains an allowed absolute URL. Only
-    // call the slow drupal_strip_dangerous_protocols() if $path contains a ':'
-    // before any / ? or #. Note: we could use url_is_external($path) here, but
-    // that would require another function call, and performance inside url() is
-    // critical.
-    $colonpos = strpos($path, ':');
-    $options['external'] = ($colonpos !== FALSE && !preg_match('![/?#]!', substr($path, 0, $colonpos)) && drupal_strip_dangerous_protocols($path) == $path);
+  $generator = Drupal::urlGenerator();
+  try {
+    $url = $generator->generateFromPath($path, $options);
   }
-
-  // Preserve the original path before altering or aliasing.
-  $original_path = $path;
-
-  // Allow other modules to alter the outbound URL and options.
-  drupal_alter('url_outbound', $path, $options, $original_path);
-
-  if (isset($options['fragment']) && $options['fragment'] !== '') {
-    $options['fragment'] = '#' . $options['fragment'];
+  catch (GeneratorNotInitializedException $e) {
+    // Fallback to using globals.
+    // @todo Remove this once there is no code that calls url() when there is
+    //   no request.
+    global $base_url, $base_path, $script_path;
+    $generator->setBasePath($base_path);
+    $generator->setBaseUrl($base_url . '/');
+    $generator->setScriptPath($script_path);
+    $url = $generator->generateFromPath($path, $options);
   }
-
-  if ($options['external']) {
-    // Split off the fragment.
-    if (strpos($path, '#') !== FALSE) {
-      list($path, $old_fragment) = explode('#', $path, 2);
-      // If $options contains no fragment, take it over from the path.
-      if (isset($old_fragment) && !$options['fragment']) {
-        $options['fragment'] = '#' . $old_fragment;
-      }
-    }
-    // Append the query.
-    if ($options['query']) {
-      $path .= (strpos($path, '?') !== FALSE ? '&' : '?') . drupal_http_build_query($options['query']);
-    }
-    if (isset($options['https']) && settings()->get('mixed_mode_sessions', FALSE)) {
-      if ($options['https'] === TRUE) {
-        $path = str_replace('http://', 'https://', $path);
-      }
-      elseif ($options['https'] === FALSE) {
-        $path = str_replace('https://', 'http://', $path);
-      }
-    }
-    // Reassemble.
-    return $path . $options['fragment'];
-  }
-
-  global $base_url, $base_secure_url, $base_insecure_url;
-
-  // The base_url might be rewritten from the language rewrite in domain mode.
-  if (!isset($options['base_url'])) {
-    if (isset($options['https']) && settings()->get('mixed_mode_sessions', FALSE)) {
-      if ($options['https'] === TRUE) {
-        $options['base_url'] = $base_secure_url;
-        $options['absolute'] = TRUE;
-      }
-      elseif ($options['https'] === FALSE) {
-        $options['base_url'] = $base_insecure_url;
-        $options['absolute'] = TRUE;
-      }
-    }
-    else {
-      $options['base_url'] = $base_url;
-    }
-  }
-
-  // The special path '<front>' links to the default front page.
-  if ($path == '<front>') {
-    $path = '';
-  }
-  elseif (!empty($path) && !$options['alias']) {
-    $langcode = isset($options['language']) && isset($options['language']->langcode) ? $options['language']->langcode : '';
-    $alias = drupal_container()->get('path.alias_manager')->getPathAlias($original_path, $langcode);
-    if ($alias != $original_path) {
-      $path = $alias;
-    }
-  }
-
-  $base = $options['absolute'] ? $options['base_url'] . '/' : base_path();
-  $prefix = empty($path) ? rtrim($options['prefix'], '/') : $options['prefix'];
-
-  $path = drupal_encode_path($prefix . $path);
-  $query = $options['query'] ? ('?' . drupal_http_build_query($options['query'])) : '';
-  return $base . $options['script'] . $path . $query . $options['fragment'];
+  return $url;
 }
 
 /**
@@ -1749,28 +1595,10 @@ function drupal_exit() {
 /**
  * Forms an associative array from a linear array.
  *
- * This function walks through the provided array and constructs an associative
- * array out of it. The keys of the resulting array will be the values of the
- * input array. The values will be the same as the keys unless a function is
- * specified, in which case the output of the function is used for the values
- * instead.
- *
- * @param $array
- *   A linear array.
- * @param $function
- *   A name of a function to apply to all values before output.
- *
- * @return
- *   An associative array.
+ * @see \Drupal\Component\Utility\MapArray::copyValuesToKeys()
  */
-function drupal_map_assoc($array, $function = NULL) {
-  // array_combine() fails with empty arrays:
-  // http://bugs.php.net/bug.php?id=34857.
-  $array = !empty($array) ? array_combine($array, $array) : array();
-  if (is_callable($function)) {
-    $array = array_map($function, $array);
-  }
-  return $array;
+function drupal_map_assoc($array, $callable = NULL) {
+  return MapArray::copyValuesToKeys($array, $callable);
 }
 
 /**
@@ -3647,7 +3475,7 @@ function drupal_aggregate_js(&$js_groups) {
  * @code
  * $build['#attached'] = array(
  *   'library' => array(array('taxonomy', 'taxonomy')),
- *   'css' => array(drupal_get_path('module', 'taxonomy') . '/taxonomy.css'),
+ *   'css' => array(drupal_get_path('module', 'taxonomy') . '/css/taxonomy.module.css'),
  * );
  * @endcode
  *
@@ -4389,15 +4217,15 @@ function _drupal_bootstrap_full($skip = FALSE) {
  *
  * @see drupal_page_header()
  */
-function drupal_page_set_cache($body) {
+function drupal_page_set_cache(Response $response, Request $request) {
   global $base_root;
 
   if (drupal_page_is_cacheable()) {
     $cache = (object) array(
-      'cid' => $base_root . request_uri(),
+      'cid' => $base_root . $request->getRequestUri(),
       'data' => array(
-        'path' => current_path(),
-        'body' => $body,
+        'path' => $request->attributes->get('system_path'),
+        'body' => $response->getContent(),
         'title' => drupal_get_title(),
         'headers' => array(),
       ),
@@ -4406,16 +4234,18 @@ function drupal_page_set_cache($body) {
       'created' => REQUEST_TIME,
     );
 
-    // Restore preferred header names based on the lower-case names returned
-    // by drupal_get_http_header().
-    $header_names = _drupal_set_preferred_header_name();
-    foreach (drupal_get_http_header() as $name_lower => $value) {
-      $cache->data['headers'][$header_names[$name_lower]] = $value;
-      if ($name_lower == 'expires') {
-        // Use the actual timestamp from an Expires header if available.
-        $date = new DrupalDateTime($value);
-        $cache->expire = $date->getTimestamp();
-      }
+    $cache->data['headers'] = $response->headers->all();
+
+    // Hack: exclude the x-drupal-cache header; it may make it in here because
+    // of awkwardness in how we defer sending it over in _drupal_page_get_cache.
+    if (isset($cache->data['headers']['x-drupal-cache'])) {
+      unset($cache->data['headers']['x-drupal-cache']);
+    }
+
+     // Use the actual timestamp from an Expires header, if available.
+    if ($date = $response->getExpires()) {
+      $date = new DrupalDateTime($date);
+      $cache->expire = $date->getTimestamp();
     }
 
     if ($cache->data['body']) {
@@ -4631,6 +4461,44 @@ function drupal_pre_render_conditional_comments($elements) {
   }
 
   return $elements;
+}
+
+/**
+ * Pre-render callback: Renders a generic HTML tag with attributes into #markup.
+ *
+ * @param array $element
+ *   An associative array containing:
+ *   - #tag: The tag name to output. Typical tags added to the HTML HEAD:
+ *     - meta: To provide meta information, such as a page refresh.
+ *     - link: To refer to stylesheets and other contextual information.
+ *     - script: To load JavaScript.
+ *   - #attributes: (optional) An array of HTML attributes to apply to the
+ *     tag.
+ *   - #value: (optional) A string containing tag content, such as inline
+ *     CSS.
+ *   - #value_prefix: (optional) A string to prepend to #value, e.g. a CDATA
+ *     wrapper prefix.
+ *   - #value_suffix: (optional) A string to append to #value, e.g. a CDATA
+ *     wrapper suffix.
+ */
+function drupal_pre_render_html_tag($element) {
+  $attributes = isset($element['#attributes']) ? new Attribute($element['#attributes']) : '';
+  if (!isset($element['#value'])) {
+    $markup = '<' . $element['#tag'] . $attributes . " />\n";
+  }
+  else {
+    $markup = '<' . $element['#tag'] . $attributes . '>';
+    if (isset($element['#value_prefix'])) {
+      $markup .= $element['#value_prefix'];
+    }
+    $markup .= $element['#value'];
+    if (isset($element['#value_suffix'])) {
+      $markup .= $element['#value_suffix'];
+    }
+    $markup .= '</' . $element['#tag'] . ">\n";
+  }
+  $element['#markup'] = $markup;
+  return $element;
 }
 
 /**
@@ -5341,7 +5209,7 @@ function drupal_render_cid_parts($granularity = NULL) {
     // resource drag for sites with many users, so when a module is being
     // equivocal, we favor the less expensive 'PER_ROLE' pattern.
     if ($granularity & DRUPAL_CACHE_PER_ROLE) {
-      $cid_parts[] = 'r.' . implode(',', array_keys($user->roles));
+      $cid_parts[] = 'r.' . implode(',', $user->roles);
     }
     elseif ($granularity & DRUPAL_CACHE_PER_USER) {
       $cid_parts[] = "u.$user->uid";
@@ -5639,9 +5507,9 @@ function element_set_attributes(array &$element, array $map) {
  * Parses Drupal module and theme .info.yml files.
  *
  * Info files are NOT for placing arbitrary theme and module-specific settings.
- * Use variable_get() and variable_set() for that. Info files are formatted as
- * YAML. If the 'version' key is set to 'VERSION' in any info file, then the
- * value will be substituted with the current version of Drupal core.
+ * Use Config::get() and Config::set()->save() for that. Info files are
+ * formatted as YAML. If the 'version' key is set to 'VERSION' in any info file,
+ * then the value will be substituted with the current version of Drupal core.
  *
  * Information stored in a module .info.yml file:
  * - name: The real name of the module for display purposes.

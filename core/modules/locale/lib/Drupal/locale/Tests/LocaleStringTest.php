@@ -45,7 +45,7 @@ class LocaleStringTest extends WebTestBase {
   function setUp() {
     parent::setUp();
     // Add a default locale storage for all these tests.
-    $this->storage = locale_storage();
+    $this->storage = $this->container->get('locale.storage');
     // Create two languages: Spanish and German.
     foreach (array('es', 'de') as $langcode) {
       $language = new Language(array('langcode' => $langcode));
@@ -134,11 +134,11 @@ class LocaleStringTest extends WebTestBase {
     $translate2 = $this->createAllTranslations($source2, array('customized' => LOCALE_CUSTOMIZED));
     // Try quick search function with different field combinations.
     $langcode = 'es';
-    $found = locale_storage()->findTranslation(array('language' => $langcode, 'source' => $source1->source, 'context' => $source1->context));
+    $found = $this->storage->findTranslation(array('language' => $langcode, 'source' => $source1->source, 'context' => $source1->context));
     $this->assertTrue($found && isset($found->language) && isset($found->translation) && !$found->isNew(), 'Translation found searching by source and context.');
     $this->assertEqual($found->translation, $translate1[$langcode]->translation, 'Found the right translation.');
     // Now try a translation not found.
-    $found = locale_storage()->findTranslation(array('language' => $langcode,  'source' => $source3->source, 'context' => $source3->context));
+    $found = $this->storage->findTranslation(array('language' => $langcode,  'source' => $source3->source, 'context' => $source3->context));
     $this->assertTrue($found && $found->lid == $source3->lid && !isset($found->translation) && $found->isNew(), 'Translation not found but source string found.');
 
     // Load all translations. For next queries we'll be loading only translated strings.    $only_translated = array('untranslated' => FALSE);

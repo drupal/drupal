@@ -120,6 +120,11 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
     $this->assertTrue(isset($current_weights['language-selected']), 'Language-selected is present.');
     $this->assertFalse(isset($current_weights['language-default']), 'Language-default is not present.');
 
+    // @todo We only need language.inc here because LANGUAGE_NEGOTIATION_SELECTED
+    //   is defined there. Remove this line once that has been converted to a class
+    //   constant.
+    require_once DRUPAL_ROOT . '/core/includes/language.inc';
+
     // Check that negotiation callback was added to language_negotiation_language_interface.
     $language_negotiation_language_interface = update_variable_get('language_negotiation_language_interface', NULL);
     $this->assertTrue(isset($language_negotiation_language_interface[LANGUAGE_NEGOTIATION_SELECTED]['callbacks']['negotiation']), 'Negotiation callback was added to language_negotiation_language_interface.');

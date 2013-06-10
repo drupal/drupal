@@ -60,7 +60,7 @@ class QueryTest extends QueryPluginBase {
     $this->allItems = $allItems;
   }
 
-  public function add_where($group, $field, $value = NULL, $operator = NULL) {
+  public function addWhere($group, $field, $value = NULL, $operator = NULL) {
     $this->conditions[] = array(
       'field' => $field,
       'value' => $value,

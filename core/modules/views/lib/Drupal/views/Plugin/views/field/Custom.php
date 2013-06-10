@@ -38,12 +38,30 @@ class Custom extends FieldPluginBase {
     unset($form['alter']['alter_text']);
     unset($form['alter']['text']['#states']);
     unset($form['alter']['help']['#states']);
-    $form['#pre_render'][] = 'views_handler_field_custom_pre_render_move_text';
+    $form['#pre_render'][] = array($this, 'preRender');
   }
 
   function render($values) {
     // Return the text, so the code never thinks the value is empty.
     return $this->options['alter']['text'];
+  }
+
+  /**
+   * Prerender function to move the textarea to the top of a form.
+   *
+   * @param array $form
+   *   The form build array.
+   *
+   * @return array
+   *   The modified form build array.
+   */
+  public function preRender($form) {
+    $form['text'] = $form['alter']['text'];
+    $form['help'] = $form['alter']['help'];
+    unset($form['alter']['text']);
+    unset($form['alter']['help']);
+
+    return $form;
   }
 
 }

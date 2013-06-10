@@ -1,0 +1,5 @@
+# Schema for the views query.
+
+views.query.views_query:
+  type: views_query
+  label: 'Views query'

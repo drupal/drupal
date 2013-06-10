@@ -1,0 +1,8 @@
+# Schema for the views sort expose.
+
+views.sort_expose.boolean:
+  type: mapping
+  mapping:
+    label:
+      type: label
+      label: 'Label'

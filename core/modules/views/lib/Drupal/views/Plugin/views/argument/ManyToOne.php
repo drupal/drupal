@@ -115,7 +115,7 @@ class ManyToOne extends ArgumentPluginBase {
     }
     if ($empty) {
       parent::ensureMyTable();
-      $this->query->add_where(0, "$this->tableAlias.$this->realField", NULL, 'IS NULL');
+      $this->query->addWhere(0, "$this->tableAlias.$this->realField", NULL, 'IS NULL');
       return;
     }
 

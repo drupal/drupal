@@ -1,0 +1,227 @@
+/**
+ * @file toolbar.module.css
+ *
+ *
+ * Aggressive resets so we can achieve a consistent look in hostile CSS
+ * environments.
+ */
+html.js #toolbar-administration,
+html .toolbar * {
+  -moz-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+html.js #toolbar-administration {
+  font-size: small;
+  line-height: 1;
+}
+html.js .toolbar {
+  left: 0; /* LTR */
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+/**
+ * Very specific overrides for Drupal system CSS.
+ */
+.toolbar li,
+.toolbar .menu li,
+.toolbar .item-list,
+.toolbar .item-list li,
+.toolbar .menu li.expanded {
+  list-style-type: none;
+  list-style-image: none;
+}
+.toolbar .menu li {
+  padding-top: 0;
+}
+.js .toolbar .bar .tab,
+.js .toolbar .menu li {
+  display: block;
+}
+.js .toolbar .bar .tab,
+.js .toolbar .horizontal .tab  {
+  float: left; /* LTR */
+}
+.js .toolbar a {
+  display: block;
+  line-height: 1;
+}
+/**
+ * Administration menu.
+ */
+.js .toolbar .bar {
+  left: 0; /* LTR */
+  position: absolute;
+  top: 0;
+  z-index: 1250;
+  width: 100%;
+}
+@media only screen {
+  .js .toolbar .bar .tab,
+  .js .toolbar .tray li {
+    float: none; /* LTR */
+  }
+}
+@media only screen and (min-width: 16.5em) {
+  .js .toolbar .bar .tab,
+  .js .toolbar .horizontal li {
+    float: left; /* LTR */
+  }
+}
+@media only screen and (min-width: 28.125em) {
+  .js .toolbar .bar {
+    position: fixed;
+  }
+}
+
+/**
+ * Toolbar tray.
+ */
+.js .toolbar .tray {
+  display: none;
+  position: fixed;
+}
+/* Make vertical toolbar tray scroll with page for touch devices. */
+.touch .toolbar .tray {
+  position: absolute;
+}
+.toolbar .tray {
+  z-index: 1200;
+}
+.toolbar .horizontal {
+  width: 100%;
+}
+.toolbar .vertical,
+.toolbar .vertical > .lining:before {
+  bottom: 0;
+  width: 240px;
+  width: 15rem;
+}
+.toolbar .vertical {
+  left: -100%; /* LTR */
+  position: absolute;
+}
+.toolbar .horizontal {
+  left: 0; /* LTR */
+  height: 0;
+  /* Set one higher than the contextual links gear. */
+  z-index: 1000;
+}
+.toolar .tray .lining {
+  position: relative;
+}
+.toolbar .vertical > .lining,
+.toolbar .vertical > .lining:before {
+  left: -100%; /* LTR */
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: absolute;
+  width: 100%;
+}
+.toolbar .vertical > .lining:before {
+  bottom: 0;
+  -moz-box-sizing: content-box;
+  -o-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+  content: '';
+  display: none;
+  height: 100%;
+  /* Support for devices that do not support position fixed. */
+  position: absolute;
+  position: fixed;
+  top: 0;
+  z-index: -1;
+}
+.toolbar .tray.active {
+  display: block;
+}
+.toolbar .horizontal.active {
+  height: auto;
+}
+.toolbar .vertical.active,
+.toolbar .vertical.active > .lining {
+  bottom: 0;
+  left: 0; /* LTR */
+  top: 0;
+}
+/* Make vertical toolbar tray scroll with page for touch devices. */
+.touch .toolbar .vertical.active,
+.touch .toolbar .vertical.active > .lining {
+  bottom: auto;
+  top: auto;
+}
+.toolbar .horizontal .menu li ul {
+  display: none;
+}
+@media only screen {
+  .toolbar .vertical,
+  .toolbar .vertical > .lining:before {
+    bottom: auto;
+    width: 100%;
+  }
+}
+
+@media only screen and (min-width: 16.5em) {
+  .toolbar .vertical {
+    bottom: 0;
+  }
+  .toolbar .vertical,
+  .toolbar .vertical > .lining:before {
+    width: 240px;
+    width: 15rem;
+  }
+  .toolbar .vertical.active > .lining:before {
+    display: block;
+    left: -1px; /* LTR */
+  }
+}
+@media only screen and (min-width: 28.125em) {
+  .toolbar .tray.horizontal {
+    position: fixed;
+  }
+}
+/**
+ * At larger screen sizes, the tray pushes the page content.
+ */
+@media only screen and (min-width: 38.125em) {
+  body.toolbar-tray-open.toolbar-vertical {
+    margin-left: 240px; /* LTR */
+    margin-left: 15rem; /* LTR */
+  }
+}
+/**
+ * ToolBar tray orientation toggle.
+ *
+ * Hide the orientation toggle from browsers that do not interpret
+ * media queries. They get a standard horizontal toolbar.
+ */
+.toolbar .horizontal .toggle-orientation {
+  display: none;
+}
+@media only screen {
+  .toolbar .tray .toggle-orientation {
+    display: none;
+  }
+}
+@media only screen and (min-width: 16.5em)   {
+  .toolbar .tray .toggle-orientation {
+    display: block;
+  }
+}
+.toolbar .horizontal .toggle-orientation {
+  bottom: 0;
+  position: absolute;
+  right: 0; /* LTR */
+  top: 0;
+}
+.toolbar .vertical .toggle-orientation {
+  float: right; /* LTR */
+  width: 100%;
+}

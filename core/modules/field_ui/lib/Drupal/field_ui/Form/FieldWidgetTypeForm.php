@@ -7,49 +7,12 @@
 
 namespace Drupal\field_ui\Form;
 
-use Drupal\Core\Form\FormInterface;
-use Drupal\Core\ControllerInterface;
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
-use Drupal\field\Plugin\Type\Widget\WidgetPluginManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\field\FieldInstanceInterface;
 
 /**
  * Provides a form for the widget selection form.
  */
-class FieldWidgetTypeForm implements FormInterface, ControllerInterface {
-
-  /**
-   * The field instance being edited.
-   *
-   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
-   */
-  protected $instance;
-
-  /**
-   * The field widget plugin manager.
-   *
-   * @var \Drupal\field\Plugin\Type\Widget\WidgetPluginManager
-   */
-  protected $widgetManager;
-
-  /**
-   * Constructs a new FieldWidgetTypeForm object.
-   *
-   * @param \Drupal\field\Plugin\Type\Widget\WidgetPluginManager $widget_manager
-   *   The field widget plugin manager.
-   */
-  public function __construct(WidgetPluginManager $widget_manager) {
-    $this->widgetManager = $widget_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('plugin.manager.field.widget')
-    );
-  }
+class FieldWidgetTypeForm extends FieldInstanceFormBase {
 
   /**
    * {@inheritdoc}
@@ -61,9 +24,9 @@ class FieldWidgetTypeForm implements FormInterface, ControllerInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, FieldInstance $field_instance = NULL) {
-    $this->instance = $form_state['instance'] = $field_instance;
-    form_load_include($form_state, 'inc', 'field_ui', 'field_ui.admin');
+  public function buildForm(array $form, array &$form_state, FieldInstanceInterface $field_instance = NULL) {
+    parent::buildForm($form, $form_state, $field_instance);
+
     drupal_set_title($this->instance['label']);
 
     $bundle = $this->instance['bundle'];
@@ -86,7 +49,7 @@ class FieldWidgetTypeForm implements FormInterface, ControllerInterface {
       '#type' => 'select',
       '#title' => t('Widget type'),
       '#required' => TRUE,
-      '#options' => field_ui_widget_type_options($field['type']),
+      '#options' => $this->widgetManager->getOptions($field['type']),
       '#default_value' => $entity_form_display->getWidget($field_name)->getPluginId(),
       '#description' => t('The type of form element you would like to present to the user when creating this field in the %type type.', array('%type' => $bundle_label)),
     );
@@ -126,11 +89,11 @@ class FieldWidgetTypeForm implements FormInterface, ControllerInterface {
         drupal_set_message(t('Field %label is required and uses the "hidden" widget. You might want to configure a default value.', array('%label' => $instance['label'])), 'warning');
       }
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       drupal_set_message(t('There was a problem changing the widget for field %label.', array('%label' => $instance['label'])), 'error');
     }
 
-    $form_state['redirect'] = field_ui_next_destination($entity_type, $bundle);
+    $form_state['redirect'] = $this->getNextDestination();
   }
 
 }

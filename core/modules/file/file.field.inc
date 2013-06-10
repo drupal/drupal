@@ -249,7 +249,7 @@ function file_field_update(EntityInterface $entity, $field, $instance, $langcode
   }
 
   // Compare the original field values with the ones that are being saved.
-  $original = $entity->original;
+  $original = $entity->original->getBCEntity();
   $original_fids = array();
   if (!empty($original->{$field['field_name']}[$langcode])) {
     foreach ($original->{$field['field_name']}[$langcode] as $original_item) {
@@ -788,7 +788,7 @@ function theme_file_upload_help($variables) {
   $descriptions = array();
 
   if (strlen($description)) {
-    $descriptions[] = $description;
+    $descriptions[] = _filter_htmlcorrector($description);
   }
   if (isset($upload_validators['file_validate_size'])) {
     $descriptions[] = t('Files must be less than !size.', array('!size' => '<strong>' . format_size($upload_validators['file_validate_size'][0]) . '</strong>'));

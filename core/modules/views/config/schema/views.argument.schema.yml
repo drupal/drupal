@@ -1,0 +1,67 @@
+# Schema for the views argument plugins.
+
+views.argument.*:
+  type: views_argument
+  label: 'Default argument'
+
+views.argument.many_to_one:
+  type: views_argument
+  label: 'Many to one'
+  mapping:
+    break_phrase:
+      type: boolean
+      label: 'Allow multiple values'
+    add_table:
+      type: boolean
+      label: 'Allow multiple filter values to work together'
+    require_value:
+      type: boolean
+      label: 'Do not display items with no value in summary'
+
+views.argument.null:
+  type: views_argument
+  label: 'Null'
+  mapping:
+    must_not_be:
+      type: boolean
+      label: 'Fail basic validation if any argument is given'
+
+views.argument.numeric:
+  type: views_argument
+  label: 'Numeric'
+  mapping:
+    break_phrase:
+      type: boolean
+      label: 'Allow multiple values'
+    not:
+      type: boolean
+      label: 'Exclude'
+
+views.argument.string:
+  type: views_argument
+  label: 'String'
+  mapping:
+    glossary:
+      type: boolean
+      label: 'Glossary mode'
+    limit:
+      type: integer
+      label: 'Character limit'
+    case:
+      type: string
+      label: 'Case'
+    path_case:
+      type: string
+      label: 'Case in path'
+    transform_dash:
+      type: boolean
+      label: 'Transform spaces to dashes in URL'
+    break_phrase:
+      type: boolean
+      label: 'Allow multiple values'
+    add_table:
+      type: boolean
+      label: 'Allow multiple filter values to work together'
+    require_value:
+      type: boolean
+      label: 'Do not display items with no value in summary'

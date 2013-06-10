@@ -174,6 +174,16 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
         ->setFactoryMethod('get')
         ->addArgument('state');
     }
+
+    if ($container->hasDefinition('path_processor_alias')) {
+      // Prevent the alias-based path processor, which requires a url_alias db
+      // table, from being registered to the path processor manager. We do this
+      // by removing the tags that the compiler pass looks for. This means the
+      // url generator can safely be used within DUTB tests.
+      $definition = $container->getDefinition('path_processor_alias');
+      $definition->clearTag('path_processor_inbound')->clearTag('path_processor_outbound');
+    }
+
   }
 
   /**

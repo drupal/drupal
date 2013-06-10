@@ -47,6 +47,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       return;
     }
 
+    $request = $event->getRequest();
     $response = $event->getResponse();
 
     // Set the X-UA-Compatible HTTP header to force IE to use the most recent
@@ -60,7 +61,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     // since the page is in fact being regenerated right now.
     // @todo Remove this and use a more intelligent default so that HTTP
     // caching can function properly.
-    $response->headers->set('Last-Modified', gmdate(DATE_RFC1123, REQUEST_TIME));
+    $response->setLastModified(new \DateTime(gmdate(DATE_RFC1123, REQUEST_TIME)));
 
     // Also give each page a unique ETag. This will force clients to include
     // both an If-Modified-Since header and an If-None-Match header when doing
@@ -82,25 +83,31 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     // identical.
     // @todo Remove this line as no longer necessary per
     //   http://drupal.org/node/1573064
-    $response->headers->set('ETag', '"' . REQUEST_TIME . '"');
+    $response->setEtag(REQUEST_TIME);
 
     // Authenticated users are always given a 'no-cache' header, and will fetch
     // a fresh page on every request. This prevents authenticated users from
     // seeing locally cached pages.
     // @todo Revisit whether or not this is still appropriate now that the
-    //   Response object does its own cache control procesisng and we intend to
+    //   Response object does its own cache control processing and we intend to
     //   use partial page caching more extensively.
     // Commit the user session, if needed.
     drupal_session_commit();
+
+    // Attach globally-declared headers to the response object so that Symfony
+    // can send them for us correctly.
+    // @todo remove this once we have removed all drupal_add_http_header() calls
+    $headers = drupal_get_http_header();
+    foreach ($headers as $name => $value) {
+      $response->headers->set($name, $value, FALSE);
+    }
+
     $max_age = config('system.performance')->get('cache.page.max_age');
-    if ($max_age > 0 && ($cache = drupal_page_set_cache($response->getContent()))) {
-      drupal_serve_page_from_cache($cache);
-      // drupal_serve_page_from_cache() already printed the response.
-      $response->setContent('');
-      $response->headers->remove('cache-control');
+    if ($max_age > 0 && ($cache = drupal_page_set_cache($response, $request))) {
+      drupal_serve_page_from_cache($cache, $response, $request);
     }
     else {
-      $response->headers->set('Expires', 'Sun, 19 Nov 1978 05:00:00 GMT');
+      $response->setExpires(\DateTime::createFromFormat('j-M-Y H:i:s T', '19-Nov-1978 05:00:00 GMT'));
       $response->headers->set('Cache-Control', 'no-cache, must-revalidate, post-check=0, pre-check=0');
     }
   }

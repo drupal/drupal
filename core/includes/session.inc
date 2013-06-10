@@ -108,9 +108,8 @@ function _drupal_session_read($sid) {
   // active user.
   if ($user && $user->uid > 0 && $user->status == 1) {
     // Add roles element to $user.
-    $user->roles = array();
-    $user->roles[DRUPAL_AUTHENTICATED_RID] = DRUPAL_AUTHENTICATED_RID;
-    $user->roles += db_query("SELECT ur.rid FROM {users_roles} ur WHERE ur.uid = :uid", array(':uid' => $user->uid))->fetchAllKeyed(0, 0);
+    $rids = db_query("SELECT ur.rid FROM {users_roles} ur WHERE ur.uid = :uid", array(':uid' => $user->uid))->fetchCol();
+    $user->roles = array_merge(array(DRUPAL_AUTHENTICATED_RID), $rids);
   }
   elseif ($user) {
     // The user is anonymous or blocked. Only preserve two fields from the

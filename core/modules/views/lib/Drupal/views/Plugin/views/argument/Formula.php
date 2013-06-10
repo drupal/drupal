@@ -68,7 +68,7 @@ class Formula extends ArgumentPluginBase {
     $placeholders = array(
       $placeholder => $this->argument,
     );
-    $this->query->add_where(0, $formula, $placeholders, 'formula');
+    $this->query->addWhere(0, $formula, $placeholders, 'formula');
   }
 
 }

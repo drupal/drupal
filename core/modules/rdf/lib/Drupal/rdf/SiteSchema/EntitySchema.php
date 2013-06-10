@@ -58,7 +58,7 @@ class EntitySchema extends SchemaTermBase {
    */
   public function getUri() {
     $path = str_replace('{entity_type}', $this->entityType , static::$uriPattern);
-    return $this->siteSchema->getUri() . $path;
+    return $this->siteSchema->getUri() . '/' . $path;
   }
 
   /**

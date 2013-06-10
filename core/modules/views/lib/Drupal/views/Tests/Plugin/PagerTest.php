@@ -142,7 +142,7 @@ class PagerTest extends PluginTestBase {
     // Check some public functions.
     $this->assertFalse($view->pager->usePager());
     $this->assertFalse($view->pager->useCountQuery());
-    $this->assertEqual($view->pager->get_items_per_page(), 0);
+    $this->assertEqual($view->pager->getItemsPerPage(), 0);
   }
 
   public function testViewTotalRowsWithoutPager() {
@@ -240,7 +240,7 @@ class PagerTest extends PluginTestBase {
 
     $view->display_handler->setOption('pager', $pager);
     $this->executeView($view);
-    $this->assertEqual($view->pager->get_items_per_page(), 0);
+    $this->assertEqual($view->pager->getItemsPerPage(), 0);
     $this->assertEqual(count($view->result), 11);
   }
 
@@ -274,12 +274,12 @@ class PagerTest extends PluginTestBase {
     $this->assertEqual($view->getItemsPerPage(), NULL, 'If the pager is not initialized and no manual override there is no items per page.');
     $rand_number = rand(1, 5);
     $view->setItemsPerPage($rand_number);
-    $this->assertEqual($view->getItemsPerPage(), $rand_number, 'Make sure get_items_per_page uses the settings of set_items_per_page.');
+    $this->assertEqual($view->getItemsPerPage(), $rand_number, 'Make sure getItemsPerPage uses the settings of set_items_per_page.');
 
     $this->assertEqual($view->getOffset(), NULL, 'If the pager is not initialized and no manual override there is no offset.');
     $rand_number = rand(1, 5);
     $view->setOffset($rand_number);
-    $this->assertEqual($view->getOffset(), $rand_number, 'Make sure getOffset uses the settings of set_offset.');
+    $this->assertEqual($view->getOffset(), $rand_number, 'Make sure getOffset uses the settings of setOffset.');
 
     $this->assertEqual($view->getCurrentPage(), NULL, 'If the pager is not initialized and no manual override there is no current page.');
     $rand_number = rand(1, 5);
@@ -298,20 +298,20 @@ class PagerTest extends PluginTestBase {
     $view->setItemsPerPage($rand_number);
     $rand_number = rand(6, 11);
     $view->pager->set_items_per_page($rand_number);
-    $this->assertEqual($view->getItemsPerPage(), $rand_number, 'Make sure get_items_per_page uses the settings of set_items_per_page.');
+    $this->assertEqual($view->getItemsPerPage(), $rand_number, 'Make sure getItemsPerPage uses the settings of set_items_per_page.');
 
     $this->assertEqual($view->getOffset(), 0, 'Per default a view has a 0 offset.');
     $rand_number = rand(1, 5);
     $view->setOffset($rand_number);
     $rand_number = rand(6, 11);
-    $view->pager->set_offset($rand_number);
-    $this->assertEqual($view->getOffset(), $rand_number, 'Make sure getOffset uses the settings of set_offset.');
+    $view->pager->setOffset($rand_number);
+    $this->assertEqual($view->getOffset(), $rand_number, 'Make sure getOffset uses the settings of setOffset.');
 
     $this->assertEqual($view->getCurrentPage(), 0, 'Per default the current page is 0.');
     $rand_number = rand(1, 5);
     $view->setCurrentPage($rand_number);
     $rand_number = rand(6, 11);
-    $view->pager->set_current_page($rand_number);
+    $view->pager->setCurrentPage($rand_number);
     $this->assertEqual($view->getCurrentPage(), $rand_number, 'Make sure getCurrentPage uses the settings of set_current_page.');
 
     // Set an invalid page and make sure the method takes care about it.

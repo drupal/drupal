@@ -1,0 +1,21 @@
+# Schema for the views row.
+
+views.row.fields:
+  type: mapping
+  label: 'Field options'
+  mapping:
+    default_field_elements:
+      type: string
+      label: 'Provide default field wrapper elements'
+    inline:
+      type: sequence
+      label: 'Inline'
+      sequence:
+        - type: string
+          label: 'Inline'
+    separator:
+      type: string
+      label: 'Separator'
+    hide_empty:
+      type: boolean
+      label: 'Hide empty'

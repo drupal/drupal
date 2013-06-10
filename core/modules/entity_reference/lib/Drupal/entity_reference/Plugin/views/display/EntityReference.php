@@ -147,12 +147,12 @@ class EntityReference extends DisplayPluginBase {
         }
       }
 
-      $this->view->query->add_where(0, $conditions);
+      $this->view->query->addWhere(0, $conditions);
     }
 
     // Add an IN condition for validation.
     if (!empty($options['ids'])) {
-      $this->view->query->add_where(0, $id_field, $options['ids']);
+      $this->view->query->addWhere(0, $id_field, $options['ids']);
     }
 
     $this->view->setItemsPerPage($options['limit']);

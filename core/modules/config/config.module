@@ -37,6 +37,19 @@ function config_permission() {
 }
 
 /**
+ * Implements hook_file_download().
+ */
+function config_file_download($uri) {
+  $scheme = file_uri_scheme($uri);
+  $target = file_uri_target($uri);
+  if ($scheme == 'temporary' && $target == 'config.tar.gz') {
+    return array(
+      'Content-disposition' => 'attachment; filename="config.tar.gz"',
+    );
+  }
+}
+
+/**
  * Implements hook_menu().
  */
 function config_menu() {
@@ -47,6 +60,16 @@ function config_menu() {
     'page arguments' => array('config_admin_import_form'),
     'access arguments' => array('synchronize configuration'),
     'file' => 'config.admin.inc',
+  );
+  $items['admin/config/development/export'] = array(
+    'title' => 'Configuration export',
+    'description' => 'Export your site configuration',
+    'route_name' => 'config_export',
+  );
+  $items['admin/config/development/import'] = array(
+    'title' => 'Configuration import',
+    'description' => 'Import configuration for your site',
+    'route_name' => 'config_import',
   );
   $items['admin/config/development/sync/diff/%'] = array(
     'title' => 'Configuration file diff',

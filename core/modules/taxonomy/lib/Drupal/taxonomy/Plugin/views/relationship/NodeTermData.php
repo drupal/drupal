@@ -100,7 +100,7 @@ class NodeTermData extends RelationshipPluginBase  {
     // use a short alias for this:
     $alias = $def['table'] . '_' . $this->table;
 
-    $this->alias = $this->query->add_relationship($alias, $join, 'taxonomy_term_data', $this->relationship);
+    $this->alias = $this->query->addRelationship($alias, $join, 'taxonomy_term_data', $this->relationship);
   }
 
 }

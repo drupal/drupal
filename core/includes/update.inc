@@ -15,6 +15,7 @@ use Drupal\Core\Config\ConfigException;
 use Drupal\Core\DrupalKernel;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Component\Utility\NestedArray;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Minimum schema version of Drupal 7 required for upgrade to Drupal 8.
@@ -102,8 +103,10 @@ function update_prepare_d8_bootstrap() {
   $settings['cache']['default'] = 'cache.backend.memory';
   new Settings($settings);
 
-  // Enable UpdateBundle service overrides.
-  $GLOBALS['conf']['container_bundles'][] = 'Drupal\Core\DependencyInjection\UpdateBundle';
+  // Enable UpdateBundle service overrides. While the container_bundles array
+  // does not need a key, let's use so it can be removed once the upgrade are
+  // finished. @see update_flush_all_caches()
+  $GLOBALS['conf']['container_bundles']['UpdateBundle'] = 'Drupal\Core\DependencyInjection\UpdateBundle';
 
   // Check whether settings.php needs to be rewritten.
   $settings_exist = !empty($GLOBALS['config_directories']);
@@ -351,10 +354,6 @@ function update_prepare_d8_bootstrap() {
         ':schema_uninstalled' => SCHEMA_UNINSTALLED,
       ));
 
-      // Populate a fixed module list (again, why did it get lost?) to avoid
-      // errors due to the drupal_alter() in _system_rebuild_module_data().
-      $module_list['system'] = 'core/modules/system/system.module';
-      Drupal::moduleHandler()->setModuleList($module_list);
       $module_data = _system_rebuild_module_data();
 
       // Migrate each extension into configuration, varying by the extension's
@@ -388,7 +387,6 @@ function update_prepare_d8_bootstrap() {
       $disabled_modules->save();
       $theme_config->save();
       $disabled_themes->save();
-      Drupal::service('kernel')->updateModules($sorted_with_filenames, $sorted_with_filenames);
 
       // Migrate the private key to state. This is used to create the token for
       // the upgrade batch so needs to be be done before the upgrade has begun.
@@ -401,6 +399,9 @@ function update_prepare_d8_bootstrap() {
       update_prepare_stored_includes();
       // Update the environment for the language bootstrap if needed.
       update_prepare_d8_language();
+      // Rebuild kernel after new language fields are added in the database
+      // because the translation service depends on them being there.
+      Drupal::service('kernel')->updateModules($sorted_with_filenames, $sorted_with_filenames);
 
       // Change language column to langcode in url_alias.
       if (db_table_exists('url_alias') && db_field_exists('url_alias', 'language')) {
@@ -452,6 +453,9 @@ function update_prepare_stored_includes() {
  */
 function update_prepare_d8_language() {
   if (db_table_exists('languages')) {
+
+    module_enable(array('language'));
+
     $languages = db_select('languages', 'l')
       ->fields('l')
       ->execute();
@@ -489,12 +493,6 @@ function update_prepare_d8_language() {
 
     // Rename the languages table to language.
     db_rename_table('languages', 'language');
-
-    // Install/enable the language module. We need to use the update specific
-    // version of this function to ensure schema conflicts don't happen due to
-    // our updated data.
-    $modules = array('language');
-    update_module_enable($modules);
 
     // Rename language column to langcode and set it again as the primary key.
     if (db_field_exists('language', 'language')) {
@@ -631,7 +629,7 @@ function update_fix_d8_requirements() {
 
     // Make sure that file.module is enabled as it is required for the user
     // picture upgrade path.
-    update_module_enable(array('file'));
+    module_enable(array('file'));
 
     $schema = array(
       'description' => 'Generic key/value storage table with an expiration.',
@@ -671,73 +669,33 @@ function update_fix_d8_requirements() {
     );
     db_create_table('key_value_expire', $schema);
 
+    // Views module is required to convert all previously existing listings into
+    // views configurations.
+    // Like any other module APIs and services, Views' services are not available
+    // in update.php. Existing listings are migrated into configuration, using
+    // the limited standard tools of raw database queries and config().
+    module_enable(array('views'));
+
     update_variable_set('update_d8_requirements', TRUE);
   }
 }
 
 /**
- * Installs a new module in Drupal 8 via hook_update_N().
+ * Forces a module to a given schema version.
  *
- * @param array $modules
- *   List of modules to enable. Dependencies are not checked and must be
- *   ensured by the caller.
- * @param bool $update_schema_version
- *   (optional) The schema version the module should be set to. Defaults to 0
- *   which works well for completely new modules.
+ * This function is rarely necessary.
  *
- * @return array
- *   List of the old schema versions keyed by the module names,
- *   SCHEMA_UNINSTALLED if it was not installed before. Additional manual
- *   installation steps like installing default configuration might be necessary
- *   if the module was not installed before.
+ * @param string $module
+ *   Name of the module.
+ * @param string $schema_version
+ *   The schema version the module should be set to.
  */
-function update_module_enable(array $modules, $schema_version = 0) {
-  $schema_store = Drupal::keyValue('system.schema');
-  $old_schema = array();
-  foreach ($modules as $module) {
-    // Check for initial schema and install it. The schema version of a newly
-    // installed module is always 0. Using 8000 here would be inconsistent
-    // since $module_update_8000() may involve a schema change, and we want
-    // to install the schema as it was before any updates were added.
-    module_load_install($module);
-    $function = $module . '_schema_0';
-    if (function_exists($function)) {
-      $schema = $function();
-      foreach ($schema as $table => $spec) {
-        db_create_table($table, $spec);
-      }
-    }
-    // Enable the module with a weight of 0.
-    $module_config = config('system.module');
-    $module_config
-      ->set("enabled.$module", 0)
-      ->set('enabled', module_config_sort($module_config->get('enabled')))
-      ->save();
-    // Ensure the module is not contained in disabled modules.
-    config('system.module.disabled')
-      ->clear($module)
-      ->save();
-
-    $current_schema = $schema_store->get($module);
-    // Set the schema version if the module was not just disabled before.
-    if ($current_schema === NULL || $current_schema === SCHEMA_UNINSTALLED) {
-      // Change the schema version to the given value (defaults to 0), so any
-      // module updates since the module's inception are executed in a core
-      // upgrade.
-      $schema_store->set($module, $schema_version);
-      $old_schema[$module] = SCHEMA_UNINSTALLED;
-    }
-    else {
-      $old_schema[$module] = $current_schema;
-    }
-
-    // system_list_reset() is in module.inc but that would only be available
-    // once the variable bootstrap is done.
-    require_once __DIR__ . '/module.inc';
-    system_list_reset();
-    //  @todo: figure out what to do about hook_install() and hook_enable().
-  }
-  return $old_schema;
+function update_set_schema($module, $schema_version) {
+  Drupal::keyValue('system.schema')->set($module, $schema_version);
+  // system_list_reset() is in module.inc but that would only be available
+  // once the variable bootstrap is done.
+  require_once __DIR__ . '/module.inc';
+  system_list_reset();
 }
 
 /**
@@ -935,7 +893,7 @@ function update_batch($start, $redirect = NULL, $url = NULL, $batch = array(), $
  */
 function update_finished($success, $results, $operations) {
   // Clear the caches in case the data has been updated.
-  drupal_flush_all_caches();
+  update_flush_all_caches();
 
   $_SESSION['update_results'] = $results;
   $_SESSION['update_success'] = $success;
@@ -1271,7 +1229,7 @@ function update_retrieve_dependencies() {
       // Nothing to upgrade.
       continue;
     }
-     $function = $module . '_update_dependencies';
+    $function = $module . '_update_dependencies';
     // Ensure install file is loaded.
     module_load_install($module);
     if (function_exists($function)) {
@@ -1452,29 +1410,6 @@ function update_variables_to_config($config_name, array $variable_map) {
 
   // Delete the migrated variables.
   db_delete('variable')->condition('name', array_keys($variable_map), 'IN')->execute();
-}
-
-/**
- * Adds entries in a configuration entity manifest file during updates.
- *
- * @param string $config_prefix
- *   The configuration entity prefix from the annotation.
- * @param array $ids
- *   An array of configuration entities to add to the manifest.
- */
-function update_config_manifest_add($config_prefix, array $ids) {
-  $manifest = config('manifest.' . $config_prefix);
-
-  // Add record to manifest for each config entity. Operate on the data array
-  // as a whole, because $manifest->get() would treat dots in ids as nesting.
-  $data = $manifest->get();
-  foreach ($ids as $id) {
-    $data[$id] = array('name' => $config_prefix . '.' . $id);
-  }
-  $manifest->setData($data);
-
-  // Write manifest to disk.
-  $manifest->save();
 }
 
 /**

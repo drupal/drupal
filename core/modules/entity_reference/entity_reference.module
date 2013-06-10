@@ -86,7 +86,7 @@ function entity_reference_get_selection_handler($field, $instance, EntityInterfa
     'instance' => $instance,
     'entity' => $entity,
   );
-  return drupal_container()->get('plugin.manager.entity_reference.selection')->getInstance($options);
+  return Drupal::service('plugin.manager.entity_reference.selection')->getInstance($options);
 }
 
 /**
@@ -234,10 +234,10 @@ function entity_reference_field_instance_settings_form($field, $instance, $form_
   $settings += array('handler' => 'default');
 
   // Get all selection plugins for this entity type.
-  $selection_plugins = drupal_container()->get('plugin.manager.entity_reference.selection')->getSelectionGroups($field['settings']['target_type']);
+  $selection_plugins = Drupal::service('plugin.manager.entity_reference.selection')->getSelectionGroups($field['settings']['target_type']);
   $handler_groups = array_keys($selection_plugins);
 
-  $handlers = drupal_container()->get('plugin.manager.entity_reference.selection')->getDefinitions();
+  $handlers = Drupal::service('plugin.manager.entity_reference.selection')->getDefinitions();
   $handlers_options = array();
   foreach ($handlers as $plugin_id => $plugin) {
     // We only display base plugins (e.g. 'base', 'views', ..) and not entity

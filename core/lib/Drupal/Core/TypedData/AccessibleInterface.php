@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\TypedData;
 
+use Drupal\user\UserInterface;
+
 /**
  * Interface for checking access.
  */
@@ -22,7 +24,7 @@ interface AccessibleInterface {
    *   - update
    *   - delete
    *   Defaults to 'view'.
-   * @param \Drupal\user\Plugin\Core\Entity\User $account
+   * @param \Drupal\user\UserInterface $account
    *   (optional) The user for which to check access, or NULL to check access
    *   for the current user. Defaults to NULL.
    *
@@ -32,6 +34,6 @@ interface AccessibleInterface {
    *
    * @todo Don't depend on module level code.
    */
-  public function access($operation = 'view', \Drupal\user\Plugin\Core\Entity\User $account = NULL);
+  public function access($operation = 'view', UserInterface $account = NULL);
 
 }

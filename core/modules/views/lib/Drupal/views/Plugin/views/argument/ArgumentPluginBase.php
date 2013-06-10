@@ -92,7 +92,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * @return TRUE/FALSE
    */
   public function usesBreadcrumb() {
-    $info = $this->default_actions($this->options['default_action']);
+    $info = $this->defaultActions($this->options['default_action']);
     return !empty($info['breadcrumb']);
   }
 
@@ -103,7 +103,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     return !empty($this->options['exception']['value']) && $this->options['exception']['value'] === $arg;
   }
 
-  function exception_title() {
+  public function exceptionTitle() {
     // If title overriding is off for the exception, return the normal title.
     if (empty($this->options['exception']['title_enable'])) {
       return $this->getTitle();
@@ -117,8 +117,8 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * @return TRUE/FALSE
    */
   public function needsStylePlugin() {
-    $info = $this->default_actions($this->options['default_action']);
-    $validate_info = $this->default_actions($this->options['validate']['fail']);
+    $info = $this->defaultActions($this->options['default_action']);
+    $validate_info = $this->defaultActions($this->options['validate']['fail']);
     return !empty($info['style plugin']) || !empty($validate_info['style plugin']);
   }
 
@@ -223,7 +223,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     );
 
     $options = array();
-    $defaults = $this->default_actions();
+    $defaults = $this->defaultActions();
     $validate_options = array();
     foreach ($defaults as $id => $info) {
       $options[$id] = $info['title'];
@@ -440,7 +440,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    *
    * Override this method to provide additional (or fewer) default behaviors.
    */
-  function default_actions($which = NULL) {
+  protected function defaultActions($which = NULL) {
     $defaults = array(
       'ignore' => array(
         'title' => t('Display all results for the specified field'),
@@ -449,7 +449,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       ),
       'default' => array(
         'title' => t('Provide default value'),
-        'method' => 'default_default',
+        'method' => 'defaultDefault',
         'form method' => 'defaultArgumentForm',
         'has default argument' => TRUE,
         'default only' => TRUE, // this can only be used for missing argument, not validation failure
@@ -457,7 +457,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       ),
       'not found' => array(
         'title' => t('Hide view'),
-        'method' => 'default_not_found',
+        'method' => 'defaultNotFound',
         'hard fail' => TRUE, // This is a hard fail condition
       ),
       'summary' => array(
@@ -653,7 +653,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    */
   function default_action($info = NULL) {
     if (!isset($info)) {
-      $info = $this->default_actions($this->options['default_action']);
+      $info = $this->defaultActions($this->options['default_action']);
     }
 
     if (!$info) {
@@ -672,7 +672,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * How to act if validation failes
    */
   public function validateFail() {
-    $info = $this->default_actions($this->options['validate']['fail']);
+    $info = $this->defaultActions($this->options['validate']['fail']);
     return $this->default_action($info);
   }
   /**
@@ -691,7 +691,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * If an argument was expected and was not given, in this case, report
    * the view as 'not found' or hide it.
    */
-  function default_not_found() {
+  protected function defaultNotFound() {
     // Set a failure condition and let the display manager handle it.
     $this->view->build_info['fail'] = TRUE;
     return FALSE;
@@ -726,7 +726,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * This just returns true. The view argument builder will know where
    * to find the argument from.
    */
-  function default_default() {
+  protected function defaultDefault() {
     return TRUE;
   }
 
@@ -734,7 +734,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * Determine if the argument is set to provide a default argument.
    */
   function hasDefaultArgument() {
-    $info = $this->default_actions($this->options['default_action']);
+    $info = $this->defaultActions($this->options['default_action']);
     return !empty($info['has default argument']);
   }
 
@@ -744,7 +744,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
   public function getDefaultArgument() {
     $plugin = $this->getPlugin('argument_default');
     if ($plugin) {
-      return $plugin->get_argument();
+      return $plugin->getArgument();
     }
   }
 
@@ -910,7 +910,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    */
   public function query($group_by = FALSE) {
     $this->ensureMyTable();
-    $this->query->add_where(0, "$this->tableAlias.$this->realField", $this->argument);
+    $this->query->addWhere(0, "$this->tableAlias.$this->realField", $this->argument);
   }
 
   /**
@@ -961,7 +961,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * then validation cannot actually fail.
    */
   function validate_argument($arg) {
-    $validate_info = $this->default_actions($this->options['validate']['fail']);
+    $validate_info = $this->defaultActions($this->options['validate']['fail']);
     if (empty($validate_info['hard fail'])) {
       return TRUE;
     }
@@ -970,7 +970,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
 
     // If the validator has changed the validate fail condition to a
     // soft fail, deal with that:
-    $validate_info = $this->default_actions($this->options['validate']['fail']);
+    $validate_info = $this->defaultActions($this->options['validate']['fail']);
     if (empty($validate_info['hard fail'])) {
       return TRUE;
     }

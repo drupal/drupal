@@ -8,7 +8,7 @@
 namespace Drupal\translation_entity\Tests;
 
 use Drupal\Core\Language\Language;
-use Drupal\user\Plugin\Core\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * Tests entity translation workflows.
@@ -68,6 +68,7 @@ class EntityTranslationWorkflowsTest extends EntityTranslationTestBase {
     $this->drupalLogin($this->translator);
     $add_translation_path = $this->controller->getBasePath($this->entity) . "/translations/add/$default_langcode/{$this->langcodes[2]}";
     $this->drupalPost($add_translation_path, array(), t('Save'));
+    $this->rebuildContainer();
   }
 
   /**
@@ -108,13 +109,13 @@ class EntityTranslationWorkflowsTest extends EntityTranslationTestBase {
   /**
    * Checks that workflows have the expected behaviors for the given user.
    *
-   * @param \Drupal\user\Plugin\Core\Entity\User $user
+   * @param \Drupal\user\UserInterface $user
    *   The user to test the workflow behavior against.
    * @param array $expected_status
    *   The an associative array with the operation name as key and the expected
    *   status as value.
    */
-  protected function assertWorkflows(User $user, $expected_status) {
+  protected function assertWorkflows(UserInterface $user, $expected_status) {
     $default_langcode = $this->langcodes[0];
     $languages = language_list();
     $args = array('@user_label' => $user->name);

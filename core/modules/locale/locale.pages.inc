@@ -58,7 +58,7 @@ function locale_translate_filter_load_strings() {
     }
   }
 
-  return locale_storage()->getTranslations($conditions, $options);
+  return Drupal::service('locale.storage')->getTranslations($conditions, $options);
 }
 
 /**
@@ -164,7 +164,7 @@ function locale_translate_filter_form($form, &$form_state) {
   $filter_values = locale_translate_filter_values();
 
   $form['#attached']['css'] = array(
-    drupal_get_path('module', 'locale') . '/locale.admin.css',
+    drupal_get_path('module', 'locale') . '/css/locale.admin.css',
   );
 
   $form['filters'] = array(
@@ -261,7 +261,7 @@ function locale_translate_edit_form($form, &$form_state) {
 
   $path = drupal_get_path('module', 'locale');
   $form['#attached']['css'] = array(
-    $path . '/locale.admin.css',
+    $path . '/css/locale.admin.css',
   );
   $form['#attached']['library'][] = array('locale', 'drupal.locale.admin');
 
@@ -403,7 +403,7 @@ function locale_translate_edit_form_submit($form, &$form_state) {
   // Preload all translations for strings in the form.
   $lids = array_keys($form_state['values']['strings']);
   $existing_translation_objects = array();
-  foreach (locale_storage()->getTranslations(array('lid' => $lids, 'language' => $langcode, 'translated' => TRUE)) as $existing_translation_object) {
+  foreach (Drupal::service('locale.storage')->getTranslations(array('lid' => $lids, 'language' => $langcode, 'translated' => TRUE)) as $existing_translation_object) {
     $existing_translation_objects[$existing_translation_object->lid] = $existing_translation_object;
   }
 
@@ -432,7 +432,7 @@ function locale_translate_edit_form_submit($form, &$form_state) {
 
     if ($is_changed) {
       // Only update or insert if we have a value to use.
-      $target = isset($existing_translation_objects[$lid]) ? $existing_translation_objects[$lid] : locale_storage()->createTranslation(array('lid' => $lid, 'language' => $langcode));
+      $target = isset($existing_translation_objects[$lid]) ? $existing_translation_objects[$lid] : Drupal::service('locale.storage')->createTranslation(array('lid' => $lid, 'language' => $langcode));
       $target->setPlurals($new_translation['translations'])
         ->setCustomized()
         ->save();
@@ -584,7 +584,7 @@ function locale_translation_status_form($form, &$form_state) {
   );
 
   $form['#attached']['library'][] = array('locale', 'drupal.locale.admin');
-  $form['#attached']['css'] = array(drupal_get_path('module', 'locale') . '/locale.admin.css');
+  $form['#attached']['css'] = array(drupal_get_path('module', 'locale') . '/css/locale.admin.css');
 
   $form['actions'] = array('#type' => 'actions');
   if ($languages_update) {

@@ -287,64 +287,22 @@ class StringDatabaseStorage implements StringStorageInterface {
    *
    * @param Drupal\locale\StringInterface $string
    *   The string object.
-   * @param string $table
-   *   (optional) The table name.
    *
    * @return array
    *   Array with key fields if the string has all keys, or empty array if not.
    */
-  protected function dbStringKeys($string, $table = NULL) {
-    $table = $table ? $table : $this->dbStringTable($string);
-    if ($table && $schema = drupal_get_schema($table)) {
-      $keys = $schema['primary key'];
-      $values = $string->getValues($keys);
-      if (count($values) == count($keys)) {
-        return $values;
-      }
+  protected function dbStringKeys($string) {
+    if ($string->isSource()) {
+      $keys = array('lid');
     }
-    return NULL;
-  }
-
-  /**
-   * Gets field values from a string object that are in the database table.
-   *
-   * @param Drupal\locale\StringInterface $string
-   *   The string object.
-   * @param string $table
-   *   (optional) The table name.
-   *
-   * @return array
-   *   Array with field values indexed by field name.
-   */
-  protected function dbStringValues($string, $table = NULL) {
-    $table = $table ? $table : $this->dbStringTable($string);
-    if ($table && $schema = drupal_get_schema($table)) {
-      $fields = array_keys($schema['fields']);
-      return $string->getValues($fields);
+    elseif ($string->isTranslation()) {
+      $keys = array('lid', 'language');
+    }
+    if (!empty($keys) && ($values = $string->getValues($keys)) && count($keys) == count($values)) {
+      return $values;
     }
     else {
       return array();
-    }
-  }
-
-  /**
-   * Sets default values from storage.
-   *
-   * @param Drupal\locale\StringInterface $string
-   *   The string object.
-   * @param string $table
-   *   (optional) The table name.
-   */
-  protected function dbStringDefaults($string, $table = NULL) {
-    $table = $table ? $table : $this->dbStringTable($string);
-    if ($table && $schema = drupal_get_schema($table)) {
-      $values = array();
-      foreach ($schema['fields'] as $name => $info) {
-        if (isset($info['default'])) {
-          $values[$name] = $info['default'];
-        }
-      }
-      $string->setValues($values, FALSE);
     }
   }
 
@@ -504,9 +462,16 @@ class StringDatabaseStorage implements StringStorageInterface {
    *   If the string is not suitable for this storage, an exception ithrown.
    */
   protected function dbStringInsert($string) {
-    if (($table = $this->dbStringTable($string)) && ($fields = $this->dbStringValues($string, $table))) {
-      $this->dbStringDefaults($string, $table);
-      return $this->connection->insert($table, $this->options)
+    if ($string->isSource()) {
+      $string->setValues(array('context' => '', 'version' => 'none'), FALSE);
+      $fields = $string->getValues(array('source', 'context', 'version'));
+    }
+    elseif ($string->isTranslation()) {
+      $string->setValues(array('customized' => 0), FALSE);
+      $fields = $string->getValues(array('lid', 'language', 'translation', 'customized'));
+    }
+    if (!empty($fields)) {
+      return $this->connection->insert($this->dbStringTable($string), $this->options)
         ->fields($fields)
         ->execute();
     }
@@ -531,13 +496,17 @@ class StringDatabaseStorage implements StringStorageInterface {
    *   If the string is not suitable for this storage, an exception is thrown.
    */
   protected function dbStringUpdate($string) {
-    if (($table = $this->dbStringTable($string)) && ($keys = $this->dbStringKeys($string, $table)) &&
-        ($fields = $this->dbStringValues($string, $table)) && ($values = array_diff_key($fields, $keys)))
-    {
-      return $this->connection->merge($table, $this->options)
-      ->key($keys)
-      ->fields($values)
-      ->execute();
+    if ($string->isSource()) {
+      $values = $string->getValues(array('source', 'context', 'version'));
+    }
+    elseif ($string->isTranslation()) {
+      $values = $string->getValues(array('translation', 'customized'));
+    }
+    if (!empty($values) && $keys = $this->dbStringKeys($string)) {
+      return $this->connection->merge($this->dbStringTable($string), $this->options)
+        ->key($keys)
+        ->fields($values)
+        ->execute();
     }
     else {
       throw new StringStorageException(format_string('The string cannot be updated: @string', array(

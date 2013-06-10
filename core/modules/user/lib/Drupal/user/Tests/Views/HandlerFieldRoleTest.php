@@ -41,9 +41,9 @@ class HandlerFieldRoleTest extends UserTestBase {
     $this->drupalCreateRole(array('access content'), $rolename_not_assigned, $rolename_not_assigned);
 
     // Add roles to user 1.
-    $user = user_load(1);
-    $user->roles[$rid_a] = $rolename_a;
-    $user->roles[$rid_b] = $rolename_b;
+    $user = entity_load('user', 1);
+    $user->roles[1]->value = $rolename_a;
+    $user->roles[2]->value = $rolename_b;
     $user->save();
 
     $view = views_get_view('test_views_handler_field_role');

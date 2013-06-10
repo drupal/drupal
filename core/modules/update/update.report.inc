@@ -231,7 +231,7 @@ function theme_update_report($variables) {
       $output .= theme('table', array('header' => $header, 'rows' => $rows[$type_name], 'attributes' => array('class' => array('update'))));
     }
   }
-  drupal_add_css(drupal_get_path('module', 'update') . '/update.css');
+  drupal_add_css(drupal_get_path('module', 'update') . '/css/update.admin.css');
   return $output;
 }
 

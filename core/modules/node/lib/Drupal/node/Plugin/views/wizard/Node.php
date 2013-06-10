@@ -209,12 +209,12 @@ class Node extends WizardPluginBase {
   protected  function display_options_row(&$display_options, $row_plugin, $row_options) {
     switch ($row_plugin) {
       case 'full_posts':
-        $display_options['row']['type'] = 'node';
+        $display_options['row']['type'] = 'entity:node';
         $display_options['row']['options']['build_mode'] = 'full';
         $display_options['row']['options']['links'] = !empty($row_options['links']);
         break;
       case 'teasers':
-        $display_options['row']['type'] = 'node';
+        $display_options['row']['type'] = 'entity:node';
         $display_options['row']['options']['build_mode'] = 'teaser';
         $display_options['row']['options']['links'] = !empty($row_options['links']);
         break;

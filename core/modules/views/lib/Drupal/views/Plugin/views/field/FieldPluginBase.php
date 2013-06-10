@@ -226,7 +226,7 @@ abstract class FieldPluginBase extends HandlerBase {
   /**
    * Return an HTML element for the label based upon the field's element type.
    */
-  function element_label_type($none_supported = FALSE, $default_empty = FALSE) {
+  public function elementLabelType($none_supported = FALSE, $default_empty = FALSE) {
     if ($none_supported) {
       if ($this->options['element_label_type'] === '0') {
         return '';
@@ -870,11 +870,12 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
             foreach ($options[$type] as $key => $value) {
               $items[] = $key . ' == ' . $value;
             }
-            $output .= theme('item_list',
-              array(
-                'items' => $items,
-                'type' => $type
-              ));
+            $item_list = array(
+              '#theme' => 'item_list',
+              '#items' => $items,
+              '#type' => $type,
+            );
+            $output .= drupal_render($item_list);
           }
         }
       }

@@ -32,49 +32,6 @@ function node_configure_rebuild_confirm_submit($form, &$form_state) {
 }
 
 /**
- * Implements hook_node_operations().
- */
-function node_node_operations() {
-  $operations = array(
-    'publish' => array(
-      'label' => t('Publish selected content'),
-      'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('status' => NODE_PUBLISHED)),
-    ),
-    'unpublish' => array(
-      'label' => t('Unpublish selected content'),
-      'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('status' => NODE_NOT_PUBLISHED)),
-    ),
-    'promote' => array(
-      'label' => t('Promote selected content to front page'),
-      'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('status' => NODE_PUBLISHED, 'promote' => NODE_PROMOTED)),
-    ),
-    'demote' => array(
-      'label' => t('Demote selected content from front page'),
-      'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('promote' => NODE_NOT_PROMOTED)),
-    ),
-    'sticky' => array(
-      'label' => t('Make selected content sticky'),
-      'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('status' => NODE_PUBLISHED, 'sticky' => NODE_STICKY)),
-    ),
-    'unsticky' => array(
-      'label' => t('Make selected content not sticky'),
-      'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('sticky' => NODE_NOT_STICKY)),
-    ),
-    'delete' => array(
-      'label' => t('Delete selected content'),
-      'callback' => NULL,
-    ),
-  );
-  return $operations;
-}
-
-/**
  * Lists node administration filters that can be applied.
  *
  * @return
@@ -395,7 +352,11 @@ function _node_mass_update_batch_finished($success, $results, $operations) {
   else {
     drupal_set_message(t('An error occurred and processing did not complete.'), 'error');
     $message = format_plural(count($results), '1 item successfully processed:', '@count items successfully processed:');
-    $message .= theme('item_list', array('items' => $results));
+    $item_list = array(
+      '#theme' => 'item_list',
+      '#items' => $results,
+    );
+    $message .= drupal_render($item_list);
     drupal_set_message($message);
   }
 }
@@ -446,12 +407,13 @@ function node_admin_nodes() {
     '#access' => $admin_access,
   );
   $options = array();
-  foreach (module_invoke_all('node_operations') as $operation => $array) {
-    $options[$operation] = $array['label'];
+  $actions = entity_load_multiple_by_properties('action', array('type' => 'node'));
+  foreach ($actions as $id => $action) {
+    $options[$id] = $action->label();
   }
   $form['options']['operation'] = array(
     '#type' => 'select',
-    '#title' => t('Operation'),
+    '#title' => t('Action'),
     '#title_display' => 'invisible',
     '#options' => $options,
     '#default_value' => 'approve',
@@ -537,12 +499,16 @@ function node_admin_nodes() {
   );
   foreach ($nodes as $node) {
     $l_options = $node->langcode != Language::LANGCODE_NOT_SPECIFIED && isset($languages[$node->langcode]) ? array('language' => $languages[$node->langcode]) : array();
+    $mark = array(
+      '#theme' => 'mark',
+      '#type' => node_mark($node->nid, $node->changed),
+    );
     $form['nodes'][$node->nid]['title'] = array(
       '#type' => 'link',
       '#title' => $node->label(),
       '#href' => 'node/' . $node->nid,
       '#options' => $l_options,
-      '#suffix' => ' ' . theme('mark', array('type' => node_mark($node->nid, $node->changed))),
+      '#suffix' => ' ' . drupal_render($mark),
     );
     $form['nodes'][$node->nid]['type'] = array(
       '#markup' => check_plain(node_get_type_label($node)),
@@ -630,20 +596,13 @@ function node_admin_nodes() {
  * @see node_multiple_delete_confirm_submit()
  */
 function node_admin_nodes_submit($form, &$form_state) {
-  $operations = module_invoke_all('node_operations');
-  $operation = $operations[$form_state['values']['operation']];
-  // Filter out unchecked nodes
-  $nodes = array_filter($form_state['values']['nodes']);
-  if ($function = $operation['callback']) {
-    // Add in callback arguments if present.
-    if (isset($operation['callback arguments'])) {
-      $args = array_merge(array($nodes), $operation['callback arguments']);
+  if ($action = entity_load('action', $form_state['values']['operation'])) {
+    $nodes = entity_load_multiple('node', array_filter($form_state['values']['nodes']));
+    $action->execute($nodes);
+    $operation_definition = $action->getPluginDefinition();
+    if (!empty($operation_definition['confirm_form_path'])) {
+      $form_state['redirect'] = $operation_definition['confirm_form_path'];
     }
-    else {
-      $args = array($nodes);
-    }
-    call_user_func_array($function, $args);
-
     cache_invalidate_tags(array('content' => TRUE));
   }
   else {

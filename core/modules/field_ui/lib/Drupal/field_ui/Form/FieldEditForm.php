@@ -7,21 +7,32 @@
 
 namespace Drupal\field_ui\Form;
 
+use Drupal\Core\ControllerInterface;
+use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Form\FormInterface;
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
+use Drupal\field\FieldInstanceInterface;
 use Drupal\field\Field;
+use Drupal\field_ui\FieldUI;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form for the field settings edit page.
  */
-class FieldEditForm implements FormInterface {
+class FieldEditForm implements FormInterface, ControllerInterface {
 
   /**
    * The field instance being edited.
    *
-   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
+   * @var \Drupal\field\FieldInstanceInterface
    */
   protected $instance;
+
+  /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManager
+   */
+  protected $entityManager;
 
   /**
    * {@inheritdoc}
@@ -31,10 +42,31 @@ class FieldEditForm implements FormInterface {
   }
 
   /**
+   * Constructs a new FieldEditForm object.
+   *
+   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   *   The entity manager.
+   */
+  public function __construct(EntityManager $entity_manager) {
+    $this->entityManager = $entity_manager;
+  }
+
+  /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, FieldInstance $field_instance = NULL) {
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('plugin.manager.entity')
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, array &$form_state, FieldInstanceInterface $field_instance = NULL) {
     $this->instance = $form_state['instance'] = $field_instance;
+    form_load_include($form_state, 'inc', 'field_ui', 'field_ui.admin');
+
     $field = $this->instance->getField();
     $form['#field'] = $field;
 
@@ -129,7 +161,6 @@ class FieldEditForm implements FormInterface {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    form_load_include($form_state, 'inc', 'field_ui', 'field_ui.admin');
     $form_values = $form_state['values'];
     $field_values = $form_values['field'];
 
@@ -152,9 +183,13 @@ class FieldEditForm implements FormInterface {
     try {
       $field->save();
       drupal_set_message(t('Updated field %label field settings.', array('%label' => $this->instance->label())));
-      $form_state['redirect'] = field_ui_next_destination($this->instance->entity_type, $this->instance->bundle);
+      $next_destination = FieldUI::getNextDestination();
+      if (empty($next_destination)) {
+        $next_destination = $this->entityManager->getAdminPath($this->instance->entity_type, $this->instance->bundle) . '/fields';
+      }
+      $form_state['redirect'] = $next_destination;
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       drupal_set_message(t('Attempt to update field %label failed: %message.', array('%label' => $this->instance->label(), '%message' => $e->getMessage())), 'error');
     }
   }

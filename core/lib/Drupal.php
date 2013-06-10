@@ -361,4 +361,24 @@ class Drupal {
     return static::$container->get('token');
   }
 
+  /**
+   * Returns the url generator service.
+   *
+   * @return \Drupal\Core\Routing\UrlGenerator
+   *   The url generator service.
+   */
+  public static function urlGenerator() {
+    return static::$container->get('url_generator');
+  }
+
+  /**
+   * Returns the string translation service.
+   *
+   * @return \Drupal\Core\Translation\TranslationManager
+   *   The string translation manager.
+   */
+  public static function translation() {
+    return static::$container->get('string_translation');
+  }
+
 }

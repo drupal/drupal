@@ -60,8 +60,8 @@ class UserAdminTest extends WebTestBase {
 
     // Filter the users by role. Grab the system-generated role name for User C.
     $roles = $user_c->roles;
-    unset($roles[DRUPAL_AUTHENTICATED_RID]);
-    $edit['role'] = key($roles);
+    unset($roles[array_search(DRUPAL_AUTHENTICATED_RID, $roles)]);
+    $edit['role'] = reset($roles);
     $this->drupalPost('admin/people', $edit, t('Refine'));
 
     // Check if the correct users show up when filtered by role.
@@ -73,7 +73,7 @@ class UserAdminTest extends WebTestBase {
     $account = user_load($user_c->uid);
     $this->assertEqual($account->status, 1, 'User C not blocked');
     $edit = array();
-    $edit['operation'] = 'block';
+    $edit['operation'] = 'user_block_user_action';
     $edit['accounts[' . $account->uid . ']'] = TRUE;
     $this->drupalPost('admin/people', $edit, t('Update'));
     $account = user_load($user_c->uid, TRUE);
@@ -81,7 +81,7 @@ class UserAdminTest extends WebTestBase {
 
     // Test unblocking of a user from /admin/people page and sending of activation mail
     $editunblock = array();
-    $editunblock['operation'] = 'unblock';
+    $editunblock['operation'] = 'user_unblock_user_action';
     $editunblock['accounts[' . $account->uid . ']'] = TRUE;
     $this->drupalPost('admin/people', $editunblock, t('Update'));
     $account = user_load($user_c->uid, TRUE);

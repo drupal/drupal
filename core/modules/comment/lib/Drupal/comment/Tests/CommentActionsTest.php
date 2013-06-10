@@ -36,28 +36,15 @@ class CommentActionsTest extends CommentTestBase {
     $subject = $this->randomName();
     $comment = $this->postComment($this->node, $comment_text, $subject);
 
-    // Unpublish a comment (direct form: doesn't actually save the comment).
-    comment_unpublish_action($comment);
+    // Unpublish a comment.
+    $action = entity_load('action', 'comment_unpublish_action');
+    $action->execute(array($comment));
     $this->assertEqual($comment->status->value, COMMENT_NOT_PUBLISHED, 'Comment was unpublished');
-    $this->assertWatchdogMessage('Unpublished comment %subject.', array('%subject' => $subject), 'Found watchdog message');
-    $this->clearWatchdog();
 
-    // Unpublish a comment (indirect form: modify the comment in the database).
-    comment_unpublish_action(NULL, array('cid' => $comment->id()));
-    $this->assertEqual(comment_load($comment->id())->status->value, COMMENT_NOT_PUBLISHED, 'Comment was unpublished');
-    $this->assertWatchdogMessage('Unpublished comment %subject.', array('%subject' => $subject), 'Found watchdog message');
-
-    // Publish a comment (direct form: doesn't actually save the comment).
-    comment_publish_action($comment);
+    // Publish a comment.
+    $action = entity_load('action', 'comment_publish_action');
+    $action->execute(array($comment));
     $this->assertEqual($comment->status->value, COMMENT_PUBLISHED, 'Comment was published');
-    $this->assertWatchdogMessage('Published comment %subject.', array('%subject' => $subject), 'Found watchdog message');
-    $this->clearWatchdog();
-
-    // Publish a comment (indirect form: modify the comment in the database).
-    comment_publish_action(NULL, array('cid' => $comment->id()));
-    $this->assertEqual(comment_load($comment->id())->status->value, COMMENT_PUBLISHED, 'Comment was published');
-    $this->assertWatchdogMessage('Published comment %subject.', array('%subject' => $subject), 'Found watchdog message');
-    $this->clearWatchdog();
   }
 
   /**
@@ -67,9 +54,16 @@ class CommentActionsTest extends CommentTestBase {
     $this->drupalLogin($this->admin_user);
     $keyword_1 = $this->randomName();
     $keyword_2 = $this->randomName();
-    $aid = action_save('comment_unpublish_by_keyword_action', 'comment', array('keywords' => array($keyword_1, $keyword_2)), $this->randomName());
-
-    $this->assertTrue(action_load($aid), 'The action could be loaded.');
+    $action = entity_create('action', array(
+      'id' => 'comment_unpublish_by_keyword_action',
+      'label' => $this->randomName(),
+      'type' => 'comment',
+      'configuration' => array(
+        'keywords' => array($keyword_1, $keyword_2),
+      ),
+      'plugin' => 'comment_unpublish_by_keyword_action',
+    ));
+    $action->save();
 
     $comment = $this->postComment($this->node, $keyword_2, $this->randomName());
 
@@ -78,29 +72,8 @@ class CommentActionsTest extends CommentTestBase {
 
     $this->assertTrue($comment->status->value == COMMENT_PUBLISHED, 'The comment status was set to published.');
 
-    actions_do($aid, $comment, array());
+    $action->execute(array($comment));
     $this->assertTrue($comment->status->value == COMMENT_NOT_PUBLISHED, 'The comment status was set to not published.');
   }
 
-  /**
-   * Verifies that a watchdog message has been entered.
-   *
-   * @param $watchdog_message
-   *   The watchdog message.
-   * @param $variables
-   *   The array of variables passed to watchdog().
-   * @param $message
-   *   The assertion message.
-   */
-  function assertWatchdogMessage($watchdog_message, $variables, $message) {
-    $status = (bool) db_query_range("SELECT 1 FROM {watchdog} WHERE message = :message AND variables = :variables", 0, 1, array(':message' => $watchdog_message, ':variables' => serialize($variables)))->fetchField();
-    return $this->assert($status, format_string('@message', array('@message'=> $message)));
-  }
-
-  /**
-   * Clears watchdog.
-   */
-  function clearWatchdog() {
-    db_truncate('watchdog')->execute();
-  }
 }

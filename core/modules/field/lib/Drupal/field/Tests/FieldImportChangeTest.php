@@ -37,20 +37,14 @@ class FieldImportChangeTest extends FieldUnitTestBase {
 
     // Import default config.
     $this->installConfig(array('field_test_config'));
-
-    // Simulate config data to import:
-    // - the current manifest for field instances,
-    // - a modified version (modified label) of the instance config.
-    $manifest_name = 'manifest.field.instance';
     $active = $this->container->get('config.storage');
-    $manifest = $active->read($manifest_name);
+    $staging = $this->container->get('config.storage.staging');
+    $this->copyConfig($active, $staging);
+
+    // Save as files in the the staging directory.
     $instance = $active->read($instance_config_name);
     $new_label = 'Test update import field';
     $instance['label'] = $new_label;
-
-    // Save as files in the the staging directory.
-    $staging = $this->container->get('config.storage.staging');
-    $staging->write($manifest_name, $manifest);
     $staging->write($instance_config_name, $instance);
 
     // Import the content of the staging directory.
@@ -60,5 +54,5 @@ class FieldImportChangeTest extends FieldUnitTestBase {
     $instance = entity_load('field_instance', $instance_id);
     $this->assertEqual($instance['label'], $new_label, 'Instance label updated');
   }
-
 }
+

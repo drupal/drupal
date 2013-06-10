@@ -26,7 +26,7 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'entity', 'field', 'field_sql_storage', 'text', 'field_test');
+  public static $modules = array('entity', 'field', 'field_sql_storage', 'text', 'entity_test', 'system');
 
   /**
    * Contains rendered content.
@@ -48,10 +48,11 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
 
     // Configure the theme system.
     $this->installConfig(array('system', 'field'));
+    $this->installSchema('entity_test', 'entity_test');
 
     // @todo Add helper methods for all of the following.
 
-    $this->entity_type = 'test_entity';
+    $this->entity_type = 'entity_test';
     if (!isset($this->bundle)) {
       $this->bundle = $this->entity_type;
     }
@@ -123,41 +124,6 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
     $content = field_attach_view($entity, $display);
     $this->content = drupal_render($content);
     return $this->content;
-  }
-
-  /**
-   * Sets the item of a field on an entity.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity object.
-   * @param string $field_name
-   *   The name of the field.
-   * @param array $item
-   *   The new field item to set.
-   * @param int $delta
-   *   (optional) A specific delta to set. If omitted, all field items are
-   *   replaced and $item will be delta 0.
-   * @param string $langcode
-   *   (optional) A specific langcode for which to the set the field. If
-   *   omitted, $this->langcode is used.
-   */
-  protected function setFieldItem(EntityInterface $entity, $field_name, $item, $delta = NULL, $langcode = NULL) {
-    if (!isset($langcode)) {
-      $langcode = $this->langcode;
-    }
-    if (!isset($delta)) {
-      $entity->set($field_name, array(
-        $langcode => array(
-          0 => $item,
-        ),
-      ));
-    }
-    else {
-      $property = $entity->get($field_name);
-      $property[$langcode][$delta] = $item;
-      ksort($property[$langcode]);
-      $entity->set($field_name, $property);
-    }
   }
 
   /**
@@ -332,9 +298,7 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
     $value .= "\n\n" . $this->randomString();
 
     $entity = $this->createEntity(array());
-    $this->setFieldItem($entity, $this->field_name, array(
-      'value' => $value,
-    ));
+    $entity->{$this->field_name}->value = $value;
 
     // Verify that all HTML is escaped and newlines are retained.
     $this->renderEntityFields($entity, $this->display);

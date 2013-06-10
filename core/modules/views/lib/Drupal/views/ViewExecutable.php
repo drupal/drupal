@@ -424,7 +424,7 @@ class ViewExecutable {
     $this->storage->set('executable', $this);
 
     // Add the default css for a view.
-    $this->element['#attached']['css'][] = drupal_get_path('module', 'views') . '/css/views.base.css';
+    $this->element['#attached']['css'][] = drupal_get_path('module', 'views') . '/css/views.module.css';
   }
 
   /**
@@ -450,7 +450,7 @@ class ViewExecutable {
 
     // If the pager is already initialized, pass it through to the pager.
     if (!empty($this->pager)) {
-      return $this->pager->set_current_page($page);
+      return $this->pager->setCurrentPage($page);
     }
   }
 
@@ -474,7 +474,7 @@ class ViewExecutable {
   public function getItemsPerPage() {
     // If the pager is already initialized, pass it through to the pager.
     if (!empty($this->pager)) {
-      return $this->pager->get_items_per_page();
+      return $this->pager->getItemsPerPage();
     }
 
     if (isset($this->items_per_page)) {
@@ -516,7 +516,7 @@ class ViewExecutable {
 
     // If the pager is already initialized, pass it through to the pager.
     if (!empty($this->pager)) {
-      $this->pager->set_offset($offset);
+      $this->pager->setOffset($offset);
     }
   }
 
@@ -730,7 +730,7 @@ class ViewExecutable {
       $this->pager = $this->display_handler->getPlugin('pager');
 
       if ($this->pager->usePager()) {
-        $this->pager->set_current_page($this->current_page);
+        $this->pager->setCurrentPage($this->current_page);
       }
 
       // These overrides may have been set earlier via $view->set_*
@@ -740,7 +740,7 @@ class ViewExecutable {
       }
 
       if (isset($this->offset)) {
-        $this->pager->set_offset($this->offset);
+        $this->pager->setOffset($this->offset);
       }
     }
   }
@@ -876,7 +876,7 @@ class ViewExecutable {
         }
 
         if ($argument->isException()) {
-          $arg_title = $argument->exception_title();
+          $arg_title = $argument->exceptionTitle();
         }
         else {
           $arg_title = $argument->getTitle();
@@ -1018,7 +1018,7 @@ class ViewExecutable {
       if ($filter_groups) {
         $this->query->setGroupOperator($filter_groups['operator']);
         foreach ($filter_groups['groups'] as $id => $operator) {
-          $this->query->set_where_group($operator, $id);
+          $this->query->setWhereGroup($operator, $id);
         }
       }
     }
@@ -1050,7 +1050,7 @@ class ViewExecutable {
     // Build our sort criteria if we were instructed to do so.
     if (!empty($this->build_sort)) {
       // Allow the style handler to deal with sorting.
-      if ($this->style_plugin->build_sort()) {
+      if ($this->style_plugin->buildSort()) {
         $this->_build('sort');
       }
       // allow the plugin to build second sorts as well.

@@ -26,7 +26,7 @@ display:
       style:
         type: default
       row:
-        type: node
+        type: 'entity:node'
         options:
           build_mode: teaser
           links: '1'

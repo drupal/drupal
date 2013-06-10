@@ -81,8 +81,8 @@ function ajax_test_order() {
   // HTML insertion command.
   $response->addCommand(new HtmlCommand('body', 'Hello, world!'));
   // Add two CSS files (order should remain the same).
-  drupal_add_css($path . '/system.admin.css');
-  drupal_add_css($path . '/system.maintenance.css');
+  drupal_add_css($path . '/css/system.admin.css');
+  drupal_add_css($path . '/css/system.maintenance.css');
   // Add two JavaScript files (first to the footer, should appear last).
   drupal_add_js($path . '/system.modules.js', array('scope' => 'footer'));
   drupal_add_js($path . '/system.js');

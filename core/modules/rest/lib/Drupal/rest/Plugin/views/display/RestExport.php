@@ -7,11 +7,12 @@
 
 namespace Drupal\rest\Plugin\views\display;
 
-use Symfony\Component\HttpFoundation\Response;
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\PathPluginBase;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * The plugin that handles Data response callbacks for REST resources.
@@ -69,7 +70,7 @@ class RestExport extends PathPluginBase {
   protected $mimeType;
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::initDisplay().
+   * {@inheritdoc}
    */
   public function initDisplay(ViewExecutable $view, array &$display, array &$options = NULL) {
     parent::initDisplay($view, $display, $options);
@@ -81,7 +82,8 @@ class RestExport extends PathPluginBase {
     $request_content_type = $negotiation->getContentType($request);
     // Only use the requested content type if it's not 'html'. If it is then
     // default to 'json' to aid debugging.
-    if ($request_content_type !== 'html') {
+    // @todo Remove the need for this when we have better content negotiation.
+    if ($request_content_type != 'html') {
       $this->setContentType($request_content_type);
     }
 
@@ -89,21 +91,21 @@ class RestExport extends PathPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::getType().
+   * {@inheritdoc}
    */
   protected function getType() {
     return 'data';
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::usesExposed().
+   * {@inheritdoc}
    */
   public function usesExposed() {
     return FALSE;
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::displaysExposed().
+   * {@inheritdoc}
    */
   public function displaysExposed() {
     return FALSE;
@@ -122,7 +124,7 @@ class RestExport extends PathPluginBase {
   /**
    * Gets the mime type.
    *
-   * This will return any overriden mime type, otherwise returns the mime type
+   * This will return any overridden mime type, otherwise returns the mime type
    * from the request.
    *
    * @return string
@@ -153,7 +155,7 @@ class RestExport extends PathPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::defineOptions().
+   * {@inheritdoc}
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -173,7 +175,7 @@ class RestExport extends PathPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\PathPluginBase::optionsSummary().
+   * {@inheritdoc}
    */
   public function optionsSummary(&$categories, &$options) {
     parent::optionsSummary($categories, $options);
@@ -200,10 +202,27 @@ class RestExport extends PathPluginBase {
     unset($options['css_class']);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function collectRoutes(RouteCollection $collection) {
+    parent::collectRoutes($collection);
 
+    $style_plugin = $this->getPlugin('style');
+    // REST exports should only respond to get methods.
+    $requirements = array('_method' => 'GET');
+
+    // Format as a string using pipes as a delimeter.
+    $requirements['_format'] = implode('|', $style_plugin->getFormats());
+
+    // Add the new requirements to each route.
+    foreach ($collection as $route) {
+      $route->addRequirements($requirements);
+    }
+  }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\PathPluginBase::execute().
+   * {@inheritdoc}
    */
   public function execute() {
     parent::execute();
@@ -213,7 +232,7 @@ class RestExport extends PathPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::render().
+   * {@inheritdoc}
    */
   public function render() {
     $build = array();
@@ -230,7 +249,7 @@ class RestExport extends PathPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::preview().
+   * {@inheritdoc}
    *
    * The DisplayPluginBase preview method assumes we will be returning a render
    * array. The data plugin will already return the serialized string.

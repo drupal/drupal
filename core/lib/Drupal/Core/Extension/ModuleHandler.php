@@ -489,12 +489,12 @@ class ModuleHandler implements ModuleHandlerInterface {
   protected function parseDependency($dependency) {
     // We use named subpatterns and support every op that version_compare
     // supports. Also, op is optional and defaults to equals.
-    $p_op = '(?P<operation>!=|==|=|<|<=|>|>=|<>)?';
+    $p_op = '(?<operation>!=|==|=|<|<=|>|>=|<>)?';
     // Core version is always optional: 8.x-2.x and 2.x is treated the same.
     $p_core = '(?:' . preg_quote(DRUPAL_CORE_COMPATIBILITY) . '-)?';
-    $p_major = '(?P<major>\d+)';
+    $p_major = '(?<major>\d+)';
     // By setting the minor version to x, branches can be matched.
-    $p_minor = '(?P<minor>(?:\d+|x)(?:-[A-Za-z]+\d+)?)';
+    $p_minor = '(?<minor>(?:\d+|x)(?:-[A-Za-z]+\d+)?)';
     $value = array();
     $parts = explode('(', $dependency, 2);
     $value['name'] = trim($parts[0]);

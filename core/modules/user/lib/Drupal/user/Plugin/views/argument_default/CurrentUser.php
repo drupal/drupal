@@ -24,7 +24,7 @@ use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
  */
 class CurrentUser extends ArgumentDefaultPluginBase {
 
-  function get_argument() {
+  public function getArgument() {
     global $user;
     return $user->uid;
   }

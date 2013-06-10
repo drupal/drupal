@@ -8,7 +8,7 @@
 namespace Drupal\custom_block;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\user\Plugin\Core\Entity\User;
+use Drupal\user\UserInterface;
 use Drupal\Core\Entity\EntityAccessController;
 
 /**
@@ -19,7 +19,7 @@ class CustomBlockAccessController extends EntityAccessController {
   /**
    * {@inheritdoc}
    */
-  protected function checkAccess(EntityInterface $entity, $operation, $langcode, User $account) {
+  protected function checkAccess(EntityInterface $entity, $operation, $langcode, UserInterface $account) {
     if ($operation === 'view') {
       return TRUE;
     }

@@ -191,6 +191,8 @@ class DatabaseStorageController implements EntityStorageControllerInterface, Ent
     }
     else {
       $this->entityCache = array();
+      $this->entityFieldInfo = NULL;
+      $this->fieldDefinitions = array();
     }
   }
 

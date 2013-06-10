@@ -14,6 +14,7 @@
  * back to its original state!
  */
 
+use Drupal\Core\DrupalKernel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\Reference;
@@ -134,7 +135,7 @@ function update_script_selection_form($form, &$form_state) {
     );
 
     // No updates to run, so caches won't get flushed later.  Clear them now.
-    drupal_flush_all_caches();
+    update_flush_all_caches();
   }
   else {
     $form['help'] = array(
@@ -176,6 +177,20 @@ function update_helpful_links() {
     );
   }
   return $links;
+}
+
+/**
+ * Remove update overrides and flush all caches.
+ *
+ * This will need to be run once all (if any) updates are run. Do not call this
+ * while updates are running.
+ */
+function update_flush_all_caches() {
+  unset($GLOBALS['conf']['container_bundles']['UpdateBundle']);
+  Drupal::service('kernel')->updateModules(Drupal::moduleHandler()->getModuleList());
+
+  // No updates to run, so caches won't get flushed later.  Clear them now.
+  drupal_flush_all_caches();
 }
 
 /**
@@ -302,6 +317,7 @@ function update_info_page() {
  */
 function update_access_denied_page() {
   drupal_add_http_header('Status', '403 Forbidden');
+  header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
   watchdog('access denied', 'update.php', NULL, WATCHDOG_WARNING);
   drupal_set_title('Access denied');
   return '<p>Access denied. You are not authorized to access this page. Log in using either an account with the <em>administer software updates</em> permission or the site maintenance account (the account you created during installation). If you cannot log in, you will have to edit <code>settings.php</code> to bypass this access check. To do this:</p>
@@ -434,13 +450,6 @@ if (is_null($op)) {
 if (is_null($op) && update_access_allowed()) {
   require_once __DIR__ . '/includes/install.inc';
   require_once DRUPAL_ROOT . '/core/modules/system/system.install';
-
-  // Load module basics.
-  include_once __DIR__ . '/includes/module.inc';
-  $module_list['system'] = 'core/modules/system/system.module';
-  $module_handler = Drupal::moduleHandler();
-  $module_handler->setModuleList($module_list);
-  $module_handler->load('system');
 
   // Set up $language, since the installer components require it.
   drupal_language_initialize();

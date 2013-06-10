@@ -385,7 +385,7 @@ abstract class StylePluginBase extends PluginBase {
    * interfere with the sorts. If so it should build; if it returns
    * any non-TRUE value, normal sorting will NOT be added to the query.
    */
-  function build_sort() { return TRUE; }
+  public function buildSort() { return TRUE; }
 
   /**
    * Called by the view builder to let the style build a second set of

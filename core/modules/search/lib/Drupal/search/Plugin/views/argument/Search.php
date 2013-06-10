@@ -50,7 +50,7 @@ class Search extends ArgumentPluginBase {
     }
     if ($required) {
       if ($this->operator == 'required') {
-        $this->query->add_where(0, 'FALSE');
+        $this->query->addWhere(0, 'FALSE');
       }
     }
     else {
@@ -66,7 +66,7 @@ class Search extends ArgumentPluginBase {
         'left_field' => 'word',
       );
       $join = drupal_container()->get('plugin.manager.views.join')->createInstance('standard', $definition);
-      $search_total = $this->query->add_relationship('search_total', $join, $search_index);
+      $search_total = $this->query->addRelationship('search_total', $join, $search_index);
 
       $this->search_score = $this->query->add_field('', "SUM($search_index.score * $search_total.count)", 'score', array('aggregate' => TRUE));
 
@@ -102,7 +102,7 @@ class Search extends ArgumentPluginBase {
         $search_condition->condition($or);
       }
 
-      $this->query->add_where(0, $search_condition);
+      $this->query->addWhere(0, $search_condition);
       $this->query->add_groupby("$search_index.sid");
       $matches = $this->search_query->matches();
       $placeholder = $this->placeholder();

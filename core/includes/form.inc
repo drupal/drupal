@@ -26,12 +26,11 @@ use Drupal\Core\Utility\Color;
  * reference the form builder function using \@see. For examples, of this see
  * system_modules_uninstall() or user_pass(), the latter of which has the
  * following in its doxygen documentation:
+ * - \@ingroup forms
+ * - \@see user_pass_validate()
+ * - \@see user_pass_submit()
  *
- * \@ingroup forms
- * \@see user_pass_validate().
- * \@see user_pass_submit().
- *
- * @} End of "defgroup forms".
+ * @}
  */
 
 /**
@@ -1320,7 +1319,8 @@ function drupal_redirect_form($form_state) {
         $function($form_state['redirect']);
       }
     }
-    drupal_goto(current_path(), array('query' => drupal_container()->get('request')->query->all()));
+    $request = Drupal::request();
+    drupal_goto($request->attributes->get('system_path'), array('query' => $request->query->all()));
   }
 }
 

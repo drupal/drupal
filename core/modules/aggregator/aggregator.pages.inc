@@ -319,46 +319,6 @@ function template_preprocess_aggregator_item(&$variables) {
 }
 
 /**
- * Page callback: Displays all the feeds used by the Aggregator module.
- *
- * @return string
- *   An HTML-formatted string.
- *
- * @see aggregator_menu()
- */
-function aggregator_page_sources() {
-  $feeds = entity_load_multiple('aggregator_feed');
-
-  $build = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('aggregator-wrapper')),
-    '#sorted' => TRUE,
-  );
-  foreach ($feeds as $feed) {
-    // Most recent items:
-    $summary_items = array();
-    $aggregator_summary_items = config('aggregator.settings')->get('source.list_max');
-    if ($aggregator_summary_items) {
-      if ($items = aggregator_load_feed_items('source', $feed, $aggregator_summary_items)) {
-        $summary_items = entity_view_multiple($items, 'summary');
-      }
-    }
-    $feed->url = url('aggregator/sources/' . $feed->id());
-    $build[$feed->id()] = array(
-      '#theme' => 'aggregator_summary_items',
-      '#summary_items' => $summary_items,
-      '#source' => $feed,
-    );
-  }
-  $build['feed_icon'] = array(
-    '#theme' => 'feed_icon',
-    '#url' => 'aggregator/opml',
-    '#title' => t('OPML feed'),
-  );
-  return $build;
-}
-
-/**
  * Page callback: Displays all the categories used by the Aggregator module.
  *
  * @return string

@@ -377,3 +377,15 @@ function user_views_data() {
 
   return $data;
 }
+
+/**
+ * Implements hook_views_plugins_row_alter().
+ *
+ * Replaces the generic row plugin by a custom one for users.
+ *
+ * @see \Drupal\views\Plugin\views\row\EntityRow
+ */
+function user_views_plugins_row_alter(array &$plugins) {
+  $plugins['entity:user']['class'] = 'Drupal\user\Plugin\views\row\UserRow';
+  $plugins['entity:user']['module'] = 'user';
+}

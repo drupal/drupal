@@ -102,4 +102,64 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
       $this->assertTrue(count($records) > 0, 'Transactions not supported, and rollback error logged to watchdog.');
     }
   }
+
+  /**
+   * Test deleting a block.
+   */
+  public function testBlockDelete() {
+    // Create a block.
+    $edit = array();
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
+    $edit['info'] = $this->randomName(8);
+    $body = $this->randomName(16);
+    $edit["block_body[$langcode][0][value]"] = $body;
+    $this->drupalPost('block/add/basic', $edit, t('Save'));
+
+    // Place the block.
+    $instance = array(
+      'machine_name' => drupal_strtolower($edit['info']),
+      'settings[label]' => $edit['info'],
+      'region' => 'sidebar_first',
+    );
+    $this->drupalPost(NULL, $instance, t('Save block'));
+
+    $block = custom_block_load(1);
+
+    // Test getInstances method.
+    $this->assertEqual(1, count($block->getInstances()));
+
+    // Navigate to home page.
+    $this->drupalGet('');
+    $this->assertText($body);
+
+    // Delete the block.
+    $this->drupalGet('block/1/delete');
+    $this->assertText(format_plural(1, 'This will also remove 1 placed block instance.', 'This will also remove @count placed block instance.'));
+
+    $this->drupalPost(NULL, array(), 'Delete');
+    $this->assertRaw(t('Custom block %name has been deleted.', array('%name' => $edit['info'])));
+
+    // Create another block and force the plugin cache to flush.
+    $edit2 = array();
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
+    $edit2['info'] = $this->randomName(8);
+    $body2 = $this->randomName(16);
+    $edit2["block_body[$langcode][0][value]"] = $body2;
+    $this->drupalPost('block/add/basic', $edit2, t('Save'));
+
+    $this->assertNoRaw('Error message');
+
+    // Create another block with no instances, and test we don't get a
+    // confirmation message about deleting instances.
+    $edit3 = array();
+    $edit3['info'] = $this->randomName(8);
+    $body = $this->randomName(16);
+    $edit3["block_body[$langcode][0][value]"] = $body;
+    $this->drupalPost('block/add/basic', $edit3, t('Save'));
+
+    // Show the delete confirm form.
+    $this->drupalGet('block/3/delete');
+    $this->assertNoText('This will also remove');
+  }
+
 }

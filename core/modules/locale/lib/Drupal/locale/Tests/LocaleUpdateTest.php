@@ -226,9 +226,12 @@ EOF;
       'June' => 'Juni',
     );
     foreach ($non_customized_translations as $source => $translation) {
-      $string = locale_storage()->createString(array('source' => $source, 'context' => $context))
+      $string = $this->container->get('locale.storage')->createString(array(
+          'source' => $source,
+          'context' => $context,
+        ))
         ->save();
-      $target = locale_storage()->createTranslation(array(
+      $target = $this->container->get('locale.storage')->createTranslation(array(
         'lid' => $string->getId(),
         'language' => $langcode,
         'translation' => $translation,
@@ -243,9 +246,12 @@ EOF;
       'May' => 'Mai_customized',
     );
     foreach ($customized_translations as $source => $translation) {
-      $string = locale_storage()->createString(array('source' => $source, 'context' => $context))
-        ->save();
-      $target = locale_storage()->createTranslation(array(
+      $string = $this->container->get('locale.storage')->createString(array(
+        'source' => $source,
+        'context' => $context,
+      ))
+      ->save();
+      $target = $this->container->get('locale.storage')->createTranslation(array(
         'lid' => $string->getId(),
         'language' => $langcode,
         'translation' => $translation,

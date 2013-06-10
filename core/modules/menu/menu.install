@@ -86,6 +86,6 @@ function menu_update_8004() {
       ->set('label', $menu->title)
       ->set('description', $menu->description)
       ->save();
-    update_config_manifest_add('menu.menu', array($menu->menu_name));
   }
 }
+

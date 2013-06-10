@@ -1695,11 +1695,12 @@ abstract class DisplayPluginBase extends PluginBase {
               foreach ($options[$type] as $key => $value) {
                 $items[] = $key . ' == ' . $value;
               }
-              $output .= theme('item_list',
-                array(
-                  'items' => $items,
-                  'type' => $type
-                ));
+              $item_list = array(
+                '#theme' => 'item_list',
+                '#items' => $items,
+                '#type' => $type,
+              );
+              $output .= drupal_render($item_list);
             }
           }
         }
@@ -1848,7 +1849,10 @@ abstract class DisplayPluginBase extends PluginBase {
         );
 
         $form['analysis'] = array(
-          '#markup' => '<div class="form-item">' . theme('item_list', array('items' => $funcs)) . '</div>',
+          '#theme' => 'item_list',
+          '#prefix' => '<div class="form-item">',
+          '#items' => $funcs,
+          '#suffix' => '</div>',
         );
 
         $form['rescan_button'] = array(
@@ -2083,8 +2087,11 @@ abstract class DisplayPluginBase extends PluginBase {
       }
       $fixed[] = $template;
     }
-
-    return theme('item_list', array('items' => array_reverse($fixed)));
+    $item_list = array(
+      '#theme' => 'item_list',
+      '#items' => array_reverse($fixed),
+    );
+    return drupal_render($item_list);
   }
 
   /**

@@ -1,0 +1,6 @@
+id: node_save_action
+label: 'Save content'
+status: '1'
+langcode: en
+type: node
+plugin: node_save_action

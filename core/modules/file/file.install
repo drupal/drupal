@@ -234,6 +234,18 @@ function file_requirements($phase) {
 }
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function file_update_dependencies() {
+  // Convert fields and instances to ConfigEntities after the {file_usage}.id
+  // column has moved to varchar.
+  $dependencies['field'][8003] = array(
+    'file' => 8001,
+  );
+  return $dependencies;
+}
+
+/**
 * Converts default_file_main variable to config.
 *
 * @ingroup config_upgrade

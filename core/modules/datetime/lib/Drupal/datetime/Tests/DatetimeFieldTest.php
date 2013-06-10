@@ -21,7 +21,7 @@ class DatetimeFieldTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'field_test', 'datetime', 'field_ui');
+  public static $modules = array('node', 'entity_test', 'datetime', 'field_ui');
 
   /**
    * A field to use in this test class.
@@ -42,8 +42,8 @@ class DatetimeFieldTest extends WebTestBase {
     parent::setUp();
 
     $web_user = $this->drupalCreateUser(array(
-      'access field_test content',
-      'administer field_test content',
+      'view test entity',
+      'administer entity_test content',
       'administer content types',
     ));
     $this->drupalLogin($web_user);
@@ -56,8 +56,8 @@ class DatetimeFieldTest extends WebTestBase {
     ));
     $this->instance = field_create_instance(array(
       'field_name' => $this->field['field_name'],
-      'entity_type' => 'test_entity',
-      'bundle' => 'test_bundle',
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
       'settings' => array(
         'default_value' => 'blank',
       ),
@@ -85,7 +85,7 @@ class DatetimeFieldTest extends WebTestBase {
   function testDateField() {
 
     // Display creation form.
-    $this->drupalGet('test-entity/add/test_bundle');
+    $this->drupalGet('entity_test/add');
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value][date]", '', 'Date element found.');
     $this->assertNoFieldByName("{$this->field['field_name']}[$langcode][0][value][time]", '', 'Time element not found.');
@@ -98,12 +98,14 @@ class DatetimeFieldTest extends WebTestBase {
     $time_format = config('system.date')->get('formats.html_time.pattern.' . $format_type);
 
     $edit = array(
+      'user_id' => 1,
+      'name' => $this->randomName(),
       "{$this->field['field_name']}[$langcode][0][value][date]" => $date->format($date_format),
     );
     $this->drupalPost(NULL, $edit, t('Save'));
-    preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
-    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)));
+    $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
     $this->assertRaw($date->format($date_format));
     $this->assertNoRaw($date->format($time_format));
 
@@ -154,7 +156,7 @@ class DatetimeFieldTest extends WebTestBase {
     field_update_field($this->field);
 
     // Display creation form.
-    $this->drupalGet('test-entity/add/test_bundle');
+    $this->drupalGet('entity_test/add');
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value][date]", '', 'Date element found.');
     $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value][time]", '', 'Time element found.');
@@ -167,13 +169,15 @@ class DatetimeFieldTest extends WebTestBase {
     $time_format = config('system.date')->get('formats.html_time.pattern.' . $format_type);
 
     $edit = array(
+      'user_id' => 1,
+      'name' => $this->randomName(),
       "{$this->field['field_name']}[$langcode][0][value][date]" => $date->format($date_format),
       "{$this->field['field_name']}[$langcode][0][value][time]" => $date->format($time_format),
     );
     $this->drupalPost(NULL, $edit, t('Save'));
-    preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
-    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)));
+    $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
     $this->assertRaw($date->format($date_format));
     $this->assertRaw($date->format($time_format));
 
@@ -234,7 +238,7 @@ class DatetimeFieldTest extends WebTestBase {
     field_cache_clear();
 
     // Display creation form.
-    $this->drupalGet('test-entity/add/test_bundle');
+    $this->drupalGet('entity_test/add');
     $field_name = $this->field['field_name'];
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
@@ -256,7 +260,10 @@ class DatetimeFieldTest extends WebTestBase {
     $date_value = array('year' => 2012, 'month' => 12, 'day' => 31, 'hour' => 5, 'minute' => 15);
     $date = new DrupalDateTime($date_value);
 
-    $edit = array();
+    $edit = array(
+      'user_id' => 1,
+      'name' => $this->randomName(),
+    );
     // Add the ampm indicator since we are testing 12 hour time.
     $date_value['ampm'] = 'am';
     foreach ($date_value as $part => $value) {
@@ -264,9 +271,9 @@ class DatetimeFieldTest extends WebTestBase {
     }
 
     $this->drupalPost(NULL, $edit, t('Save'));
-    preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
-    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)));
+    $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
 
     $this->assertOptionSelected("edit-$field_name-$langcode-0-value-year", '2012', 'Correct year selected.');
     $this->assertOptionSelected("edit-$field_name-$langcode-0-value-month", '12', 'Correct month selected.');
@@ -293,7 +300,7 @@ class DatetimeFieldTest extends WebTestBase {
     // Display creation form.
     $date = new DrupalDateTime();
     $date_format = 'Y-m-d';
-    $this->drupalGet('test-entity/add/test_bundle');
+    $this->drupalGet('entity_test/add');
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // See if current date is set. We cannot test for the precise time because
@@ -310,7 +317,7 @@ class DatetimeFieldTest extends WebTestBase {
 
     // Display creation form.
     $date = new DrupalDateTime();
-    $this->drupalGet('test-entity/add/test_bundle');
+    $this->drupalGet('entity_test/add');
 
     // See that no date is set.
     $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value][date]", '', 'Date element found.');
@@ -327,7 +334,7 @@ class DatetimeFieldTest extends WebTestBase {
     field_update_field($this->field);
 
     // Display creation form.
-    $this->drupalGet('test-entity/add/test_bundle');
+    $this->drupalGet('entity_test/add');
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value][date]", '', 'Date element found.');
     $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value][time]", '', 'Time element found.');
@@ -403,23 +410,23 @@ class DatetimeFieldTest extends WebTestBase {
   }
 
   /**
-   * Renders a test_entity and sets the output in the internal browser.
+   * Renders a entity_test and sets the output in the internal browser.
    *
    * @param int $id
-   *   The test_entity ID to render.
+   *   The entity_test ID to render.
    * @param string $view_mode
    *   (optional) The view mode to use for rendering. Defaults to 'full'.
    * @param bool $reset
-   *   (optional) Whether to reset the test_entity controller cache. Defaults to
+   *   (optional) Whether to reset the entity_test controller cache. Defaults to
    *   TRUE to simplify testing.
    */
   protected function renderTestEntity($id, $view_mode = 'full', $reset = TRUE) {
     if ($reset) {
-      entity_get_controller('test_entity')->resetCache(array($id));
+      entity_get_controller('entity_test')->resetCache(array($id));
     }
-    $entity = field_test_entity_test_load($id);
-    $display = entity_get_display('test_entity', $entity->bundle(), 'full');
-    field_attach_prepare_view('test_entity', array($entity->id() => $entity), array($entity->bundle() => $display), $view_mode);
+    $entity = entity_load('entity_test', $id);
+    $display = entity_get_display('entity_test', $entity->bundle(), 'full');
+    field_attach_prepare_view('entity_test', array($entity->id() => $entity), array($entity->bundle() => $display), $view_mode);
     $entity->content = field_attach_view($entity, $display, $view_mode);
 
     $output = drupal_render($entity->content);

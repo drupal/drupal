@@ -41,7 +41,7 @@ abstract class NodeTestBase extends WebTestBase {
    *   operation should be granted.
    * @param \Drupal\node\Plugin\Core\Entity\Node $node
    *   The node object to check.
-   * @param \Drupal\user\Plugin\Core\Entity\User $account
+   * @param \Drupal\user\UserInterface $account
    *   The user account for which to check access.
    * @param string|null $langcode
    *   (optional) The language code indicating which translation of the node

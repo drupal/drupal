@@ -1439,7 +1439,7 @@ function filter_library_info() {
       drupal_get_path('module', 'filter') . '/filter.admin.js' => array(),
     ),
     'css' => array(
-      drupal_get_path('module', 'filter') . '/filter.admin.css'
+      drupal_get_path('module', 'filter') . '/css/filter.admin.css'
     ),
     'dependencies' => array(
       array('system', 'jquery'),
@@ -1455,7 +1455,7 @@ function filter_library_info() {
       drupal_get_path('module', 'filter') . '/filter.js' => array(),
     ),
     'css' => array(
-      drupal_get_path('module', 'filter') . '/filter.admin.css'
+      drupal_get_path('module', 'filter') . '/css/filter.admin.css'
     ),
     'dependencies' => array(
       array('system', 'jquery'),

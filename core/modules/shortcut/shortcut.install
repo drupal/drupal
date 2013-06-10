@@ -91,7 +91,6 @@ function shortcut_update_8000() {
       ->save();
     $ids[] = $set->set_name;
   }
-  update_config_manifest_add('shortcut.set', $ids);
 }
 
 /**

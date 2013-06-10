@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Installer;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\Core\StringTranslation\Translator\FileTranslation;
 
 /**
  * Tests installer language detection.
@@ -34,8 +35,6 @@ class InstallerLanguageTest extends WebTestBase {
    * Tests that the installer can find translation files.
    */
   function testInstallerTranslationFiles() {
-    include_once DRUPAL_ROOT . '/core/includes/install.core.inc';
-
     // Different translation files would be found depending on which language
     // we are looking for.
     $expected_translation_files = array(
@@ -45,8 +44,9 @@ class InstallerLanguageTest extends WebTestBase {
       'it' => array(),
     );
 
+    $file_translation = new FileTranslation($GLOBALS['conf']['locale.settings']['translation.path']);
     foreach ($expected_translation_files as $langcode => $files_expected) {
-      $files_found = install_find_translation_files($langcode);
+      $files_found = $file_translation->findTranslationFiles($langcode);
       $this->assertTrue(count($files_found) == count($files_expected), format_string('@count installer languages found.', array('@count' => count($files_expected))));
       foreach ($files_found as $file) {
         $this->assertTrue(in_array($file->filename, $files_expected), format_string('@file found.', array('@file' => $file->filename)));

@@ -114,7 +114,9 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
       '#prefix' => '',
       '#suffix' => '',
     );
-    $form['#prefix'] .= '<div class="views-edit-view views-admin clearfix">';
+
+    $view_status = $view->status() ? 'enabled' : 'disabled';
+    $form['#prefix'] .= '<div class="views-edit-view views-admin ' . $view_status . ' clearfix">';
     $form['#suffix'] = '</div>' . $form['#suffix'];
 
     $form['#attributes']['class'] = array('form-edit');

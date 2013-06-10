@@ -10,6 +10,7 @@ namespace Drupal\Core\Entity;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Language\Language;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\user\UserInterface;
 use IteratorAggregate;
 
 /**
@@ -257,7 +258,7 @@ class Entity implements IteratorAggregate, EntityInterface {
   /**
    * Implements \Drupal\Core\TypedData\AccessibleInterface::access().
    */
-  public function access($operation = 'view', \Drupal\user\Plugin\Core\Entity\User $account = NULL) {
+  public function access($operation = 'view', UserInterface $account = NULL) {
     return \Drupal::entityManager()
       ->getAccessController($this->entityType)
       ->access($this, $operation, Language::LANGCODE_DEFAULT, $account);

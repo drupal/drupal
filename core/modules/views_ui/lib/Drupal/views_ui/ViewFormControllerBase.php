@@ -79,11 +79,11 @@ abstract class ViewFormControllerBase extends EntityFormController {
   public static function getAdminCSS() {
     $module_path = drupal_get_path('module', 'views_ui');
     $list = array();
-    $list[$module_path . '/css/views-admin.css'] = array();
-    $list[$module_path . '/css/views-admin.theme.css'] = array();
+    $list[$module_path . '/css/views_ui.admin.css'] = array();
+    $list[$module_path . '/css/views_ui.admin.theme.css'] = array();
 
     if (\Drupal::moduleHandler()->moduleExists('contextual')) {
-      $list[$module_path . '/css/views-admin.contextual.css'] = array();
+      $list[$module_path . '/css/views_ui.contextual.css'] = array();
     }
 
     return $list;

@@ -7,12 +7,12 @@
 
 namespace Drupal\contextual\Tests;
 
-use Drupal\simpletest\UnitTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests _contextual_links_to_id() & _contextual_id_to_links().
  */
-class ContextualUnitTest extends UnitTestBase {
+class ContextualUnitTest extends DrupalUnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Conversion to and from "contextual id"s (for placeholders)',

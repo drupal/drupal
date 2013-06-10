@@ -1,0 +1,6 @@
+id: node_publish_action
+label: 'Publish content'
+status: '1'
+langcode: en
+type: node
+plugin: node_publish_action
