@@ -1,0 +1,19 @@
+# Schema for the views argument validators.
+
+views.argument_validator.none:
+  type: sequence
+  label: 'Basic validation'
+  sequence:
+    - type: string
+
+views.argument_validator.php:
+  type: mapping
+  label: 'PHP Code'
+  mapping:
+    code:
+      type: string
+      label: 'PHP validate code'
+
+views.argument_validator.numeric:
+  type: boolean
+  label: 'Numeric'

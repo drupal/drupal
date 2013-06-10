@@ -1,0 +1,13 @@
+# Schema for the views sort plugins.
+
+views.sort.*:
+  type: views_sort
+  label: 'Default sort'
+
+views.sort.boolean:
+  type: views_sort
+  label: 'Boolean sort'
+
+views.sort.date:
+  type: views_sort
+  label: 'Date sort'

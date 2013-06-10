@@ -1,0 +1,5 @@
+# Schema for the views filter value.
+
+views.filter_value.boolean:
+  type: boolean
+  label: 'value'
