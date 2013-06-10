@@ -2723,25 +2723,6 @@ function menu_router_build($save = FALSE) {
     $router_items = call_user_func($module . '_menu');
     if (isset($router_items) && is_array($router_items)) {
       foreach (array_keys($router_items) as $path) {
-        // If the menu item is a default local task and incorrectly references a
-        // route, remove it.
-        // @todo This may be removed later depending on the outcome of
-        // http://drupal.org/node/1889790
-        if (isset($router_items[$path]['type']) && $router_items[$path]['type'] == MENU_DEFAULT_LOCAL_TASK) {
-          unset($router_items[$path]['route_name']);
-        }
-        // If the menu item references a route, normalize the route information
-        // into the old structure. Note that routes are keyed by name, not path,
-        // so the path of the route takes precedence.
-        if (isset($router_items[$path]['route_name'])) {
-          $router_item = $router_items[$path];
-          $router_item['page callback'] = 'USES_ROUTE';
-          $router_item['access callback'] = TRUE;
-          $new_path = _menu_router_translate_route($router_item['route_name']);
-          unset($router_items[$path]);
-          $router_items[$new_path] = $router_item;
-          $path = $new_path;
-        }
         $router_items[$path]['module'] = $module;
       }
       $callbacks = array_merge($callbacks, $router_items);
@@ -2749,6 +2730,26 @@ function menu_router_build($save = FALSE) {
   }
   // Alter the menu as defined in modules, keys are like user/%user.
   drupal_alter('menu', $callbacks);
+  foreach ($callbacks as $path => $router_item) {
+    // If the menu item is a default local task and incorrectly references a
+    // route, remove it.
+    // @todo This may be removed later depending on the outcome of
+    // http://drupal.org/node/1889790
+    if (isset($router_item['type']) && $router_item['type'] == MENU_DEFAULT_LOCAL_TASK) {
+      unset($callbacks[$path]['route_name']);
+    }
+    // If the menu item references a route, normalize the route information
+    // into the old structure. Note that routes are keyed by name, not path,
+    // so the path of the route takes precedence.
+    if (isset($router_item['route_name'])) {
+      $router_item['page callback'] = 'USES_ROUTE';
+      $router_item['access callback'] = TRUE;
+      $new_path = _menu_router_translate_route($router_item['route_name']);
+
+      unset($callbacks[$path]);
+      $callbacks[$new_path] = $router_item;
+    }
+  }
   list($menu, $masks) = _menu_router_build($callbacks, $save);
   _menu_router_cache($menu);
 
