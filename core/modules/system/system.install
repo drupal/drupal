@@ -1275,14 +1275,14 @@ function system_update_8002() {
 }
 
 /**
- * Creates {cache_config} cache table for the new configuration system.
+ * Create {cache_config} cache table for the new configuration system.
  */
 function system_update_8003() {
   // Moved to update_prepare_d8_bootstrap.
 }
 
 /**
- * Adds {file_managed}.langcode field.
+ * Add {file_managed}.langcode field.
  *
  * @see http://drupal.org/node/1454538
  */
@@ -1315,22 +1315,22 @@ function system_update_8004() {
   }
 }
 
- /**
+/**
  * Remove the obsolete {session}.cache column.
  */
 function system_update_8005() {
   db_drop_field('session', 'cache');
 }
 
- /**
- * Adds the {cache_tags} table.
+/**
+ * Add the {cache_tags} table.
  */
 function system_update_8006() {
   // Moved to update_prepare_d8_bootstrap.
 }
 
 /**
- * Modifies existing cache tables, adding support for cache tags.
+ * Modify existing cache tables, adding support for cache tags.
  */
 function system_update_8007() {
   // Moved to update_prepare_d8_bootstrap.
@@ -1344,7 +1344,7 @@ function system_update_8008() {
 }
 
 /**
- * Moves cron system settings from variable to config.
+ * Move cron system settings from variable to config.
  *
  * @ingroup config_upgrade
  */
@@ -1357,7 +1357,7 @@ function system_update_8009() {
 }
 
 /**
- * Moves RSS system settings from variable to config.
+ * Move RSS system settings from variable to config.
  *
  * @ingroup config_upgrade
  */
@@ -1383,7 +1383,7 @@ function system_update_8011() {
 }
 
 /**
- * Moves site system settings from variable to config.
+ * Move site system settings from variable to config.
  *
  * @ingroup config_upgrade
  */
@@ -1426,7 +1426,7 @@ function system_update_8013() {
 }
 
 /**
- * Moves system logging settings from variables to config.
+ * Move system logging settings from variables to config.
  *
  * @ingroup config_upgrade
  */
@@ -1492,7 +1492,7 @@ function system_update_8016() {
 }
 
 /**
- * Moves system performance settings from variable to config.
+ * Move system performance settings from variable to config.
  *
  * @ingroup config_upgrade
  */
@@ -1673,7 +1673,7 @@ function system_update_8025() {
 }
 
 /**
- * Cleans up javascript_parsed variable.
+ * Clean up javascript_parsed variable.
  *
  * @ingroup system_upgrade
  */
@@ -1703,7 +1703,7 @@ function system_update_8029() {
 }
 
  /**
- * Moves authorize system settings from variable to config.
+ * Move authorize system settings from variable to config.
  *
  * @ingroup config_upgrade
  */
@@ -1732,7 +1732,7 @@ function system_update_8031() {
 }
 
 /**
- * Removes the drupal_js_cache_files variable.
+ * Remove the drupal_js_cache_files variable.
  *
  * @ingroup config_upgrade
  */
@@ -1741,7 +1741,7 @@ function system_update_8032() {
 }
 
 /**
- * Converts active_menus_default variable to config.
+ * Convert active_menus_default variable to config.
  *
  * @ingroup config_upgrade
  */
@@ -1752,7 +1752,7 @@ function system_update_8033() {
 }
 
 /**
- * Moves cron last run time and cron key from variable to state.
+ * Move cron last run time and cron key from variable to state.
  *
  * @ingroup config_upgrade
  */
@@ -1764,7 +1764,7 @@ function system_update_8034() {
 }
 
 /**
- * Moves filter_allowed_protocols variable to config.
+ * Move filter_allowed_protocols variable to config.
  *
  * This config is provided now by the system module because it is used by
  * drupal_strip_dangerous_protocols() and must to be available before the filter
@@ -1799,7 +1799,7 @@ function system_update_8037() {
 }
 
 /**
- * Moves site system regional settings from variable to config.
+ * Move site system regional settings from variable to config.
  *
  * @ingroup config_upgrade
  */
@@ -1818,7 +1818,7 @@ function system_update_8038() {
 }
 
 /**
- * Converts css and js gzip compression variables to config.
+ * Convert css and js gzip compression variables to config.
  *
  * @ingroup config_upgrade
  */
@@ -1831,7 +1831,7 @@ function system_update_8039() {
 }
 
 /**
- * Moves action_max_stack from variable to config.
+ * Move action_max_stack from variable to config.
  *
  * @ingroup config_upgrade
  */
@@ -1842,7 +1842,7 @@ function system_update_8040() {
 }
 
 /**
- * Converts admin_theme variable to config.
+ * Convert admin_theme variable to config.
  *
  * @ingroup config_upgrade
  */
@@ -1861,7 +1861,7 @@ function system_update_8042() {
 }
 
 /**
- * Moves system theme settings from variable to config.
+ * Move system theme settings from variable to config.
  *
  * @ingroup config_upgrade
  */
@@ -1872,7 +1872,7 @@ function system_update_8043() {
 }
 
 /**
- * Moves system fast 404 settings from variable to config.
+ * Move system fast 404 settings from variable to config.
  *
  * @ingroup config_upgrade
  */
@@ -1885,7 +1885,7 @@ function system_update_8044() {
 }
 
 /**
- * Converts existing date formats to the new config system.
+ * Convert existing date formats to the new config system.
  */
 function system_update_8045() {
   // Get the date config object.
@@ -1941,7 +1941,7 @@ function system_update_8046() {
 }
 
 /**
- * Moves site system settings from variable to config.
+ * Move site system settings from variable to config.
  *
  * @ingroup config_upgrade
  */
@@ -2020,7 +2020,7 @@ function system_update_8049() {
 }
 
 /**
- * Converts mail settings to config.
+ * Convert mail settings to config.
  *
  * @ingroup config_upgrade
  */
@@ -2059,7 +2059,7 @@ function system_update_8050() {
 }
 
 /**
- * Adds route_name column to the menu_links table.
+ * Add route_name column to the menu_links table.
  */
 function system_update_8051() {
   $spec = array(
@@ -2072,7 +2072,7 @@ function system_update_8051() {
 }
 
 /**
- * Moves image toolkit settings from variable to config.
+ * Move image toolkit settings from variable to config.
  *
  * @ingroup config_upgrade
  */
@@ -2093,7 +2093,7 @@ function system_update_8053() {
 }
 
 /**
- * Adds route_name column to the menu_router table.
+ * Add route_name column to the menu_router table.
  */
 function system_update_8054() {
   $spec = array(
@@ -2106,7 +2106,7 @@ function system_update_8054() {
 }
 
 /**
- * Moves system theme settings from variables to config.
+ * Move system theme settings from variables to config.
  */
 function system_update_8055() {
   // Install the global theme settings from the system module.
@@ -2146,7 +2146,7 @@ function system_update_8055() {
 }
 
 /**
- * Moves entity view modes to config.
+ * Move entity view modes to config.
  *
  * @ingroup config_upgrade
  */
