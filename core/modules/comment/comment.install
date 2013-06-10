@@ -334,8 +334,9 @@ function comment_field_schema($field) {
  * Implements hook_update_dependencies().
  */
 function comment_update_dependencies() {
-  // Node comment status have been turned to fields.
-  $dependencies['field'][8003]['comment'] = 8006;
+  // Node comment status have been turned to fields after the fields and
+  // instances are converted to ConfigEntities.
+  $dependencies['comment'][8006]['field'] = 8003;
   return $dependencies;
 }
 
@@ -560,32 +561,28 @@ function comment_update_8006(&$sandbox) {
     // COMMENT_OPEN
     $default_value = update_variable_get('comment_' . $node_type, 2);
     // Add a default comment field for existing node comments.
+    $field_name = 'comment_node_' . $node_type;
     $field = array(
       'cardinality' => '1',
       // We need one per content type to match the existing comment bundles.
-      'field_name' => 'comment_node_' . $node_type,
+      'id' => $field_name,
       'module' => 'comment',
       'settings' => array(),
       'translatable' => '0',
       'type' => 'comment',
     );
     // Make sure field doesn't already exist.
-    $original_name = $field['field_name'];
     $index = 0;
-    while (_update_7000_field_read_fields(array('field_name' => $field['field_name']))) {
+
+    while (!Drupal::config('field.field.' . $field['id'])->isNew()) {
       // Append a numeric index.
-      $field['field_name'] = $original_name . '_' . $index;
+      $field['id'] = $field_name . '_' . $index;
       // Increment index.
       $index++;
     }
-    _update_7000_field_create_field($field);
+    _update_8003_field_create_field($field);
 
-    $existing_instance = (bool) db_query_range('SELECT 1 FROM {field_config_instance} WHERE field_name = :field_name AND bundle = :bundle AND entity_type = :entity_type', 0, 1, array(
-      'field_name' => $field['field_name'],
-      'bundle' => $node_type,
-      'entity_type' => 'node',
-    ))->fetchField();
-    if (!$existing_instance) {
+    if (Drupal::config("field.instance.node.$node_type." . $field['id'])->isNew()) {
       // Add the comment field, setting the instance settings to match those for
       // the given node_type.
       $instance_settings = array(
@@ -606,12 +603,12 @@ function comment_update_8006(&$sandbox) {
         'deleted' => '0',
         'description' => '',
         'entity_type' => 'node',
-        'field_name' => $field['field_name'],
+        'id' => $field['id'],
         'label' => 'Comment settings',
         'required' => 1,
         'settings' => $instance_settings,
       );
-      _update_7000_field_create_instance($field, $instance);
+      _update_8003_field_create_instance($field, $instance);
     }
 
     // Prepare defaults for the default and full view modes.
@@ -626,14 +623,12 @@ function comment_update_8006(&$sandbox) {
     module_load_install('entity');
 
     $display = _update_8000_entity_get_display('node', $node_type, 'default');
-    $display->set('content.' . $field['field_name'], $display_options_default)
+    $display->set('content.' . $field['id'], $display_options_default)
       ->save();
-    update_config_manifest_add('entity.display', array($display->get('id')));
 
     $display = _update_8000_entity_get_display('node', $node_type, 'full');
-    $display->set('content.' . $field['field_name'], $display_options_default)
+    $display->set('content.' . $field['id'], $display_options_default)
       ->save();
-    update_config_manifest_add('entity.display', array($display->get('id')));
 
     // Assign widget settings for the 'default' form mode.
     $display_options_default = array(
@@ -642,9 +637,8 @@ function comment_update_8006(&$sandbox) {
       'weight' => 20,
     );
     $display = _update_8000_entity_get_form_display('node', $node_type, 'default');
-    $display->set('content.' . $field['field_name'], $display_options_default)
+    $display->set('content.' . $field['id'], $display_options_default)
       ->save();
-    update_config_manifest_add('entity.form_display', array($display->get('id')));
 
     // Clean up old variables.
     variable_del('comment_' . $node_type);
