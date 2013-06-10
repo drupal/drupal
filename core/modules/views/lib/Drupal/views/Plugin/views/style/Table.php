@@ -103,7 +103,7 @@ class Table extends StylePluginBase {
   /**
    * {@inheritdoc}
    */
-  function build_sort() {
+  public function buildSort() {
     $order = $this->request->query->get('order');
     if (!isset($order) && ($this->options['default'] == -1 || empty($this->view->field[$this->options['default']]))) {
       return TRUE;

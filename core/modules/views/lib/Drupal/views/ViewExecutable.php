@@ -1050,7 +1050,7 @@ class ViewExecutable {
     // Build our sort criteria if we were instructed to do so.
     if (!empty($this->build_sort)) {
       // Allow the style handler to deal with sorting.
-      if ($this->style_plugin->build_sort()) {
+      if ($this->style_plugin->buildSort()) {
         $this->_build('sort');
       }
       // allow the plugin to build second sorts as well.
