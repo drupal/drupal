@@ -51,7 +51,11 @@ class CKEditor extends EditorBase {
   public function settingsForm(array $form, array &$form_state, EditorEntity $editor) {
     $module_path = drupal_get_path('module', 'ckeditor');
     $manager = drupal_container()->get('plugin.manager.ckeditor.plugin');
-
+    $ckeditor_settings_toolbar = array(
+      '#theme' => 'ckeditor_settings_toolbar',
+      '#editor' => $editor,
+      '#plugins' => $manager->getButtonsPlugins($editor),
+    );
     $form['toolbar'] = array(
       '#type' => 'container',
       '#attached' => array(
@@ -60,7 +64,7 @@ class CKEditor extends EditorBase {
           array(
             'type' => 'setting',
             'data' => array('ckeditor' => array(
-              'toolbarAdmin' => theme('ckeditor_settings_toolbar', array('editor' => $editor, 'plugins' => $manager->getButtonsPlugins($editor))),
+              'toolbarAdmin' => drupal_render($ckeditor_settings_toolbar),
             )),
           )
         ),
