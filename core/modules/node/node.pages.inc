@@ -12,22 +12,6 @@
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Page callback: Presents the node editing form.
- *
- * @param object $node
- *   A node object.
- *
- * @return array
- *   A form array as expected by drupal_render().
- *
- * @see node_menu()
- */
-function node_page_edit($node) {
-  drupal_set_title(t('<em>Edit @type</em> @title', array('@type' => node_get_type_label($node), '@title' => $node->label())), PASS_THROUGH);
-  return entity_get_form($node);
-}
-
-/**
  * Page callback: Displays add content links for available content types.
  *
  * Redirects to node/add/[type] if only one content type is available.

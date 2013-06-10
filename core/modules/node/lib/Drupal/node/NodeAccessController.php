@@ -97,7 +97,7 @@ class NodeAccessController extends EntityAccessController {
     $query->condition('grant_' . $operation, 1, '>=');
     // Check for grants for this node and the correct langcode.
     $nids = db_and()
-      ->condition('nid', $node->nid)
+      ->condition('nid', $node->id())
       ->condition('langcode', $langcode);
     // If the node is published, also take the default grant into account. The
     // default is saved with a node ID of 0.

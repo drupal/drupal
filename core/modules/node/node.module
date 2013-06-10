@@ -1688,13 +1688,9 @@ function node_menu() {
   );
   $items['node/%node/edit'] = array(
     'title' => 'Edit',
-    'page callback' => 'node_page_edit',
-    'page arguments' => array(1),
-    'access callback' => 'node_access',
-    'access arguments' => array('update', 1),
+    'route_name' => 'node_page_edit',
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
-    'file' => 'node.pages.inc',
   );
   $items['node/%node/delete'] = array(
     'title' => 'Delete',

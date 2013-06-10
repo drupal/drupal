@@ -45,7 +45,7 @@ class EntityAccessController implements EntityAccessControllerInterface {
     // We grant access to the entity if both of these conditions are met:
     // - No modules say to deny access.
     // - At least one module says to grant access.
-    $access = module_invoke_all($entity->entityType() . '_access', $entity, $operation, $account, $langcode);
+    $access = module_invoke_all($entity->entityType() . '_access', $entity->getBCEntity(), $operation, $account, $langcode);
 
     if (in_array(FALSE, $access, TRUE)) {
       $return = FALSE;
