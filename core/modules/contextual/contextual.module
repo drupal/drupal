@@ -6,16 +6,17 @@
  */
 
 /**
- * Implements hook_custom_theme().
- *
- * @todo Add an event subscriber to the Ajax system to automatically set the
- *   base page theme for all Ajax requests, and then remove this one off.
- *   See http://drupal.org/node/1954892.
+ * Implements hook_menu().
  */
-function contextual_custom_theme() {
-  if (substr(current_path(), 0, 11) === 'contextual/') {
-    return ajax_base_page_theme();
-  }
+function contextual_menu() {
+  // @todo Remove this menu item in http://drupal.org/node/1954892 when theme
+  //   callbacks are replaced with something else.
+  $items['contextual/render'] = array(
+    'route_name' => 'contextual_render',
+    'theme callback' => 'ajax_base_page_theme',
+  );
+
+  return $items;
 }
 
 /**
