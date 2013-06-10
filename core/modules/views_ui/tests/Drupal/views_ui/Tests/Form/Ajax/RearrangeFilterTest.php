@@ -2,27 +2,20 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\UI\ViewsUITest.
+ * Contains \Drupal\views_ui\Tests\Form\Ajax\RearrangeFilterTest.
  */
 
-namespace Drupal\views\Tests\views\UI;
+namespace Drupal\views_ui\Tests\Form\Ajax;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\views_ui\Form\Ajax\RearrangeFilter;
 
 /**
- * Tests views_ui functions and methods.
+ * Tests RearrangeFilter's methods.
  *
  * @group Views UI
  */
-class ViewsUITest extends UnitTestCase {
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('views', 'views_ui');
+class RearrangeFilterTest extends UnitTestCase {
 
   public static function getInfo() {
     return array(
