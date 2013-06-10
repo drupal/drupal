@@ -123,8 +123,7 @@ class Language {
     }
     // If some options were not set, set sane defaults of a predefined language.
     if (!isset($options['name']) || !isset($options['direction'])) {
-      include_once DRUPAL_ROOT . '/core/includes/standard.inc';
-      $predefined = standard_language_list();
+      $predefined = LanguageManager::getStandardLanguageList();
       if (isset($predefined[$this->langcode])) {
         if (!isset($options['name'])) {
           $this->name = $predefined[$this->langcode][0];

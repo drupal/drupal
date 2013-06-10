@@ -165,4 +165,117 @@ class LanguageManager {
     return new Language($default_info + array('default' => TRUE));
   }
 
+  /**
+   * Some common languages with their English and native names.
+   *
+   * Language codes are defined by the W3C language tags document for
+   * interoperability. Language codes typically have a language and optionally,
+   * a script or regional variant name. See
+   * http://www.w3.org/International/articles/language-tags/ for more information.
+   *
+   * This list is based on languages available from localize.drupal.org. See
+   * http://localize.drupal.org/issues for information on how to add languages
+   * there.
+   *
+   * The "Left-to-right marker" comments and the enclosed UTF-8 markers are to
+   * make otherwise strange looking PHP syntax natural (to not be displayed in
+   * right to left). See http://drupal.org/node/128866#comment-528929.
+   *
+   * @return array
+   *   An array of language code to language name information.
+   *   Language name information itself is an array of English and native names.
+   */
+  public static function getStandardLanguageList() {
+    return array(
+      'af' => array('Afrikaans', 'Afrikaans'),
+      'am' => array('Amharic', 'አማርኛ'),
+      'ar' => array('Arabic', /* Left-to-right marker "‭" */ 'العربية', Language::DIRECTION_RTL),
+      'ast' => array('Asturian', 'Asturianu'),
+      'az' => array('Azerbaijani', 'Azərbaycanca'),
+      'be' => array('Belarusian', 'Беларуская'),
+      'bg' => array('Bulgarian', 'Български'),
+      'bn' => array('Bengali', 'বাংলা'),
+      'bo' => array('Tibetan', 'བོད་སྐད་'),
+      'bs' => array('Bosnian', 'Bosanski'),
+      'ca' => array('Catalan', 'Català'),
+      'cs' => array('Czech', 'Čeština'),
+      'cy' => array('Welsh', 'Cymraeg'),
+      'da' => array('Danish', 'Dansk'),
+      'de' => array('German', 'Deutsch'),
+      'dz' => array('Dzongkha', 'རྫོང་ཁ'),
+      'el' => array('Greek', 'Ελληνικά'),
+      'en' => array('English', 'English'),
+      'eo' => array('Esperanto', 'Esperanto'),
+      'es' => array('Spanish', 'Español'),
+      'et' => array('Estonian', 'Eesti'),
+      'eu' => array('Basque', 'Euskera'),
+      'fa' => array('Persian, Farsi', /* Left-to-right marker "‭" */ 'فارسی', Language::DIRECTION_RTL),
+      'fi' => array('Finnish', 'Suomi'),
+      'fil' => array('Filipino', 'Filipino'),
+      'fo' => array('Faeroese', 'Føroyskt'),
+      'fr' => array('French', 'Français'),
+      'gd' => array('Scots Gaelic', 'Gàidhlig'),
+      'gl' => array('Galician', 'Galego'),
+      'gsw-berne' => array('Swiss German', 'Schwyzerdütsch'),
+      'gu' => array('Gujarati', 'ગુજરાતી'),
+      'he' => array('Hebrew', /* Left-to-right marker "‭" */ 'עברית', Language::DIRECTION_RTL),
+      'hi' => array('Hindi', 'हिन्दी'),
+      'hr' => array('Croatian', 'Hrvatski'),
+      'ht' => array('Haitian Creole', 'Kreyòl ayisyen'),
+      'hu' => array('Hungarian', 'Magyar'),
+      'id' => array('Indonesian', 'Bahasa Indonesia'),
+      'is' => array('Icelandic', 'Íslenska'),
+      'it' => array('Italian', 'Italiano'),
+      'ja' => array('Japanese', '日本語'),
+      'jv' => array('Javanese', 'Basa Java'),
+      'ka' => array('Georgian', 'ქართული ენა'),
+      'kk' => array('Kazakh', 'Қазақ'),
+      'kn' => array('Kannada', 'ಕನ್ನಡ'),
+      'ko' => array('Korean', '한국어'),
+      'ku' => array('Kurdish', 'Kurdî'),
+      'ky' => array('Kyrgyz', 'Кыргызча'),
+      'lo' => array('Lao', 'ພາສາລາວ'),
+      'lt' => array('Lithuanian', 'Lietuvių'),
+      'lv' => array('Latvian', 'Latviešu'),
+      'mg' => array('Malagasy', 'Malagasy'),
+      'mk' => array('Macedonian', 'Македонски'),
+      'ml' => array('Malayalam', 'മലയാളം'),
+      'mn' => array('Mongolian', 'монгол'),
+      'mr' => array('Marathi', 'मराठी'),
+      'my' => array('Burmese', 'ဗမာစကား'),
+      'ne' => array('Nepali', 'नेपाली'),
+      'nl' => array('Dutch', 'Nederlands'),
+      'nb' => array('Norwegian Bokmål', 'Bokmål'),
+      'nn' => array('Norwegian Nynorsk', 'Nynorsk'),
+      'oc' => array('Occitan', 'Occitan'),
+      'pa' => array('Punjabi', 'ਪੰਜਾਬੀ'),
+      'pl' => array('Polish', 'Polski'),
+      'pt-pt' => array('Portuguese, Portugal', 'Português, Portugal'),
+      'pt-br' => array('Portuguese, Brazil', 'Português, Brasil'),
+      'ro' => array('Romanian', 'Română'),
+      'ru' => array('Russian', 'Русский'),
+      'sco' => array('Scots', 'Scots'),
+      'se' => array('Northern Sami', 'Sámi'),
+      'si' => array('Sinhala', 'සිංහල'),
+      'sk' => array('Slovak', 'Slovenčina'),
+      'sl' => array('Slovenian', 'Slovenščina'),
+      'sq' => array('Albanian', 'Shqip'),
+      'sr' => array('Serbian', 'Српски'),
+      'sv' => array('Swedish', 'Svenska'),
+      'ta' => array('Tamil', 'தமிழ்'),
+      'ta-lk' => array('Tamil, Sri Lanka', 'தமிழ், இலங்கை'),
+      'te' => array('Telugu', 'తెలుగు'),
+      'th' => array('Thai', 'ภาษาไทย'),
+      'tr' => array('Turkish', 'Türkçe'),
+      'tyv' => array('Tuvan', 'Тыва дыл'),
+      'ug' => array('Uyghur', 'Уйғур'),
+      'uk' => array('Ukrainian', 'Українська'),
+      'ur' => array('Urdu', /* Left-to-right marker "‭" */ 'اردو', Language::DIRECTION_RTL),
+      'vi' => array('Vietnamese', 'Tiếng Việt'),
+      'xx-lolspeak' => array('Lolspeak', 'Lolspeak'),
+      'zh-hans' => array('Chinese, Simplified', '简体中文'),
+      'zh-hant' => array('Chinese, Traditional', '繁體中文'),
+    );
+  }
+
 }

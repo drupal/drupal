@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageManager;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -334,9 +335,8 @@ function language_admin_delete_form_submit($form, &$form_state) {
  * Prepare a language code list for unused predefined languages.
  */
 function language_admin_predefined_list() {
-  include_once DRUPAL_ROOT . '/core/includes/standard.inc';
   $languages = language_list();
-  $predefined = standard_language_list();
+  $predefined = LanguageManager::getStandardLanguageList();
   foreach ($predefined as $key => $value) {
     if (isset($languages[$key])) {
       unset($predefined[$key]);

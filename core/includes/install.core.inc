@@ -8,6 +8,7 @@ use Drupal\Core\CoreBundle;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Install\TaskException;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -1435,8 +1436,6 @@ function install_file_translation_service() {
  *   language cannot be chosen automatically.
  */
 function install_select_language(&$install_state) {
-  include_once __DIR__ . '/standard.inc';
-
   // Find all available translation files.
   $files = install_find_translations();
   $install_state['translations'] += $files;
@@ -1448,7 +1447,7 @@ function install_select_language(&$install_state) {
   // When files from the translation directory are used, we only accept
   // languages for which a file is available.
   if (!empty($_POST['langcode'])) {
-    $standard_languages = standard_language_list();
+    $standard_languages = LanguageManager::getStandardLanguageList();
     $langcode = $_POST['langcode'];
     if ($langcode == 'en' || isset($files[$langcode]) || isset($standard_languages[$langcode])) {
       $install_state['parameters']['langcode'] = $langcode;
@@ -1494,11 +1493,10 @@ function install_select_language(&$install_state) {
  * @ingroup forms
  */
 function install_select_language_form($form, &$form_state, $files = array()) {
-  include_once __DIR__ . '/standard.inc';
   include_once __DIR__ . '/../modules/language/language.module';
   include_once __DIR__ . '/../modules/language/language.negotiation.inc';
 
-  $standard_languages = standard_language_list();
+  $standard_languages = LanguageManager::getStandardLanguageList();
   $select_options = array();
   $browser_options = array();
 
@@ -1775,10 +1773,9 @@ function install_profile_modules(&$install_state) {
  */
 function install_import_translations(&$install_state) {
   include_once __DIR__ . '/../modules/locale/locale.bulk.inc';
-  include_once __DIR__ . '/standard.inc';
 
   $langcode = $install_state['parameters']['langcode'];
-  $standard_languages = standard_language_list();
+  $standard_languages = LanguageManager::getStandardLanguageList();
   if (!isset($standard_languages[$langcode])) {
     // Drupal does not know about this language, so we prefill its values with
     // our best guess. The user will be able to edit afterwards.
@@ -1998,7 +1995,6 @@ function _install_profile_modules_finished($success, $results, $operations) {
  * Checks installation requirements and reports any errors.
  */
 function install_check_translations($install_state) {
-  include_once __DIR__ . '/standard.inc';
   $requirements = array();
 
   $readable = FALSE;
@@ -2035,7 +2031,7 @@ function install_check_translations($install_state) {
   $server_url = $elements['scheme'] . '://' . $elements['host'];
 
   // Build the language name for display.
-  $languages = standard_language_list();
+  $languages = LanguageManager::getStandardLanguageList();
   $language = isset($languages[$langcode]) ? $languages[$langcode][0] : $langcode;
 
   // Check if the desirered translation file is available and if the translation
