@@ -275,7 +275,7 @@ class SearchPageText extends DrupalWebTestCase {
     $edit = array();
     $edit['keys'] = 'bike shed ' . $this->randomName();
     $this->drupalPost('search/node', $edit, t('Search'));
-    $this->assertText(t('Consider loosening your query with OR. bike OR shed will often show more results than bike shed.'), t('Help text is displayed when search returns no results.'));
+    $this->assertText(t('Consider loosening your query with OR. bike OR shed will often show more results than bike shed.'), 'Help text is displayed when search returns no results.');
     $this->assertText(t('Search'));
     $this->assertTitle($title, 'Search page title is correct');
 
@@ -342,31 +342,31 @@ class SearchAdvancedSearchForm extends DrupalWebTestCase {
    * Test using the advanced search form to limit search to nodes of type "Basic page".
    */
   function testNodeType() {
-    $this->assertTrue($this->node->type == 'page', t('Node type is Basic page.'));
+    $this->assertTrue($this->node->type == 'page', 'Node type is Basic page.');
 
     // Assert that the dummy title doesn't equal the real title.
     $dummy_title = 'Lorem ipsum';
-    $this->assertNotEqual($dummy_title, $this->node->title, t("Dummy title doesn't equal node title"));
+    $this->assertNotEqual($dummy_title, $this->node->title, "Dummy title doesn't equal node title");
 
     // Search for the dummy title with a GET query.
     $this->drupalGet('search/node/' . $dummy_title);
-    $this->assertNoText($this->node->title, t('Basic page node is not found with dummy title.'));
+    $this->assertNoText($this->node->title, 'Basic page node is not found with dummy title.');
 
     // Search for the title of the node with a GET query.
     $this->drupalGet('search/node/' . $this->node->title);
-    $this->assertText($this->node->title, t('Basic page node is found with GET query.'));
+    $this->assertText($this->node->title, 'Basic page node is found with GET query.');
 
     // Search for the title of the node with a POST query.
     $edit = array('or' => $this->node->title);
     $this->drupalPost('search/node', $edit, t('Advanced search'));
-    $this->assertText($this->node->title, t('Basic page node is found with POST query.'));
+    $this->assertText($this->node->title, 'Basic page node is found with POST query.');
 
     // Advanced search type option.
     $this->drupalPost('search/node', array_merge($edit, array('type[page]' => 'page')), t('Advanced search'));
-    $this->assertText($this->node->title, t('Basic page node is found with POST query and type:page.'));
+    $this->assertText($this->node->title, 'Basic page node is found with POST query and type:page.');
 
     $this->drupalPost('search/node', array_merge($edit, array('type[article]' => 'article')), t('Advanced search'));
-    $this->assertText('bike shed', t('Article node is not found with POST query and type:article.'));
+    $this->assertText('bike shed', 'Article node is not found with POST query and type:article.');
   }
 }
 
@@ -464,7 +464,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
   function testHTMLRankings() {
     // Login with sufficient privileges.
     $this->drupalLogin($this->drupalCreateUser(array('create page content')));
-    
+
     // Test HTML tags with different weights.
     $sorted_tags = array('h1', 'h2', 'h3', 'h4', 'a', 'h5', 'h6', 'notag');
     $shuffled_tags = $sorted_tags;
@@ -496,7 +496,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
 
     // Refresh variables after the treatment.
     $this->refreshVariables();
-    
+
     // Disable all other rankings.
     $node_ranks = array('sticky', 'promote', 'recent', 'comments', 'views');
     foreach ($node_ranks as $node_rank) {
@@ -534,7 +534,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
 
       // Assert the results.
       $this->assertEqual($set[0]['node']->nid, $node->nid, 'Search tag ranking for "&lt;' . $tag . '&gt;" order.');
-      
+
       // Delete node so it doesn't show up in subsequent search results.
       node_delete($node->nid);
     }
@@ -600,13 +600,13 @@ class SearchBlockTestCase extends DrupalWebTestCase {
   function testSearchFormBlock() {
     // Set block title to confirm that the interface is available.
     $this->drupalPost('admin/structure/block/manage/search/form/configure', array('title' => $this->randomName(8)), t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
+    $this->assertText(t('The block configuration has been saved.'), 'Block configuration set.');
 
     // Set the block to a region to confirm block is available.
     $edit = array();
     $edit['blocks[search_form][region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
+    $this->assertText(t('The block settings have been updated.'), 'Block successfully move to footer region.');
   }
 
   /**
@@ -640,7 +640,7 @@ class SearchBlockTestCase extends DrupalWebTestCase {
     $this->assertEqual(
       $this->getUrl(),
       url('search/node/' . $terms['search_block_form'], array('absolute' => TRUE)),
-      t('Redirected to correct url.')
+      'Redirected to correct url.'
     );
 
     // Test an empty search via the block form, from the front page.
@@ -652,7 +652,7 @@ class SearchBlockTestCase extends DrupalWebTestCase {
     $this->assertEqual(
       $this->getUrl(),
       url('search/node/', array('absolute' => TRUE)),
-      t('Redirected to correct url.')
+      'Redirected to correct url.'
     );
   }
 }
@@ -790,20 +790,20 @@ class SearchCommentTestCase extends DrupalWebTestCase {
       'search_block_form' => "'" . $edit_comment['subject'] . "'",
     );
     $this->drupalPost('', $edit, t('Search'));
-    $this->assertText($node->title, t('Node found in search results.'));
-    $this->assertText($edit_comment['subject'], t('Comment subject found in search results.'));
+    $this->assertText($node->title, 'Node found in search results.');
+    $this->assertText($edit_comment['subject'], 'Comment subject found in search results.');
 
     // Search for the comment body.
     $edit = array(
       'search_block_form' => "'" . $comment_body . "'",
     );
     $this->drupalPost('', $edit, t('Search'));
-    $this->assertText($node->title, t('Node found in search results.'));
+    $this->assertText($node->title, 'Node found in search results.');
 
     // Verify that comment is rendered using proper format.
-    $this->assertText($comment_body, t('Comment body text found in search results.'));
-    $this->assertNoRaw(t('n/a'), t('HTML in comment body is not hidden.'));
-    $this->assertNoRaw(check_plain($edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value]']), t('HTML in comment body is not escaped.'));
+    $this->assertText($comment_body, 'Comment body text found in search results.');
+    $this->assertNoRaw(t('n/a'), 'HTML in comment body is not hidden.');
+    $this->assertNoRaw(check_plain($edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value]']), 'HTML in comment body is not escaped.');
 
     // Hide comments.
     $this->drupalLogin($this->admin_user);
@@ -816,7 +816,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
 
     // Search for $title.
     $this->drupalPost('', $edit, t('Search'));
-    $this->assertNoText($comment_body, t('Comment body text not found in search results.'));
+    $this->assertNoText($comment_body, 'Comment body text not found in search results.');
   }
 
   /**
@@ -875,7 +875,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     $this->setRolePermissions(DRUPAL_AUTHENTICATED_RID, TRUE, TRUE);
     $this->setRolePermissions($this->admin_role, TRUE, FALSE);
     $this->checkCommentAccess('Admin user has access comments permission and no search permission, but comments should be indexed because admin user inherits authenticated user\'s permission to search', TRUE);
-    
+
   }
 
   /**
@@ -926,7 +926,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     // Verify that if you view the node on its own page, 'add new comment'
     // is there.
     $this->drupalGet('node/' . $node->nid);
-    $this->assertText(t('Add new comment'), t('Add new comment appears on node page'));
+    $this->assertText(t('Add new comment'), 'Add new comment appears on node page');
 
     // Run cron to index this page.
     $this->drupalLogout();
@@ -935,13 +935,13 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     // Search for 'comment'. Should be no results.
     $this->drupalLogin($user);
     $this->drupalPost('search/node', array('keys' => 'comment'), t('Search'));
-    $this->assertText(t('Your search yielded no results'), t('No results searching for the word comment'));
+    $this->assertText(t('Your search yielded no results'), 'No results searching for the word comment');
 
     // Search for the node title. Should be found, and 'Add new comment' should
     // not be part of the search snippet.
     $this->drupalPost('search/node', array('keys' => 'short'), t('Search'));
-    $this->assertText($node->title, t('Search for keyword worked'));
-    $this->assertNoText(t('Add new comment'), t('Add new comment does not appear on search results page'));
+    $this->assertText($node->title, 'Search for keyword worked');
+    $this->assertNoText(t('Add new comment'), 'Add new comment does not appear on search results page');
   }
 
 }
@@ -1074,8 +1074,8 @@ class SearchCommentCountToggleTestCase extends DrupalWebTestCase {
 
     // Test comment count display for nodes with comment status set to Open
     $this->drupalPost('', $edit, t('Search'));
-    $this->assertText(t('0 comments'), t('Empty comment count displays for nodes with comment status set to Open'));
-    $this->assertText(t('1 comment'), t('Non-empty comment count displays for nodes with comment status set to Open'));
+    $this->assertText(t('0 comments'), 'Empty comment count displays for nodes with comment status set to Open');
+    $this->assertText(t('1 comment'), 'Non-empty comment count displays for nodes with comment status set to Open');
 
     // Test comment count display for nodes with comment status set to Closed
     $this->searchable_nodes['0 comments']->comment = COMMENT_NODE_CLOSED;
@@ -1084,8 +1084,8 @@ class SearchCommentCountToggleTestCase extends DrupalWebTestCase {
     node_save($this->searchable_nodes['1 comment']);
 
     $this->drupalPost('', $edit, t('Search'));
-    $this->assertNoText(t('0 comments'), t('Empty comment count does not display for nodes with comment status set to Closed'));
-    $this->assertText(t('1 comment'), t('Non-empty comment count displays for nodes with comment status set to Closed'));
+    $this->assertNoText(t('0 comments'), 'Empty comment count does not display for nodes with comment status set to Closed');
+    $this->assertText(t('1 comment'), 'Non-empty comment count displays for nodes with comment status set to Closed');
 
     // Test comment count display for nodes with comment status set to Hidden
     $this->searchable_nodes['0 comments']->comment = COMMENT_NODE_HIDDEN;
@@ -1094,8 +1094,8 @@ class SearchCommentCountToggleTestCase extends DrupalWebTestCase {
     node_save($this->searchable_nodes['1 comment']);
 
     $this->drupalPost('', $edit, t('Search'));
-    $this->assertNoText(t('0 comments'), t('Empty comment count does not display for nodes with comment status set to Hidden'));
-    $this->assertNoText(t('1 comment'), t('Non-empty comment count does not display for nodes with comment status set to Hidden'));
+    $this->assertNoText(t('0 comments'), 'Empty comment count does not display for nodes with comment status set to Hidden');
+    $this->assertNoText(t('1 comment'), 'Non-empty comment count does not display for nodes with comment status set to Hidden');
   }
 }
 
@@ -1160,7 +1160,7 @@ class SearchSimplifyTestCase extends DrupalWebTestCase {
     for ($i = 0; $i < 32; $i++) {
       $string .= chr($i);
     }
-    $this->assertIdentical(' ', search_simplify($string), t('Search simplify works for ASCII control characters.'));
+    $this->assertIdentical(' ', search_simplify($string), 'Search simplify works for ASCII control characters.');
   }
 
   /**
@@ -1316,7 +1316,7 @@ class SearchNumbersTestCase extends DrupalWebTestCase {
       $this->drupalPost('search/node',
         array('keys' => $number),
         t('Search'));
-      $this->assertText($node->title, $type . ': node title shown (search found the node) in search for number ' . $number);
+      $this->assertText($node->title, format_string('%type: node title shown (search found the node) in search for number %number.', array('%type' => $type, '%number' => $number)));
     }
   }
 }
@@ -1384,7 +1384,7 @@ class SearchNumberMatchingTestCase extends DrupalWebTestCase {
       $this->drupalPost('search/node',
         array('keys' => 'foo'),
         t('Search'));
-      $this->assertNoText($node->title, $i . ': node title not shown in dummy search');
+      $this->assertNoText($node->title, format_string('%number: node title not shown in dummy search', array('%number' => $i)));
 
       // Now verify that we can find node i by searching for any of the
       // numbers.
@@ -1397,7 +1397,7 @@ class SearchNumberMatchingTestCase extends DrupalWebTestCase {
         $this->drupalPost('search/node',
           array('keys' => $number),
           t('Search'));
-        $this->assertText($node->title, $i . ': node title shown (search found the node) in search for number ' . $number);
+        $this->assertText($node->title, format_string('%i: node title shown (search found the node) in search for number %number', array('%i' => $i, '%number' => $number)));
       }
     }
 
@@ -1558,7 +1558,7 @@ class SearchConfigSettingsForm extends DrupalWebTestCase {
       $this->drupalGet($path);
       foreach ($modules as $module) {
         $title = $module_info[$module]['title'];
-        $this->assertText($title, $title . ' search tab is shown');
+        $this->assertText($title, format_string('%title search tab is shown', array('%title' => $title)));
       }
     }
   }
@@ -1955,42 +1955,42 @@ class SearchLanguageTestCase extends DrupalWebTestCase {
   function testLanguages() {
     // Check that there are initially no languages displayed.
     $this->drupalGet('search/node');
-    $this->assertNoText(t('Languages'), t('No languages to choose from.'));
+    $this->assertNoText(t('Languages'), 'No languages to choose from.');
 
     // Add predefined language.
     $edit = array('langcode' => 'fr');
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
-    $this->assertText('fr', t('Language added successfully.'));
+    $this->assertText('fr', 'Language added successfully.');
 
     // Now we should have languages displayed.
     $this->drupalGet('search/node');
-    $this->assertText(t('Languages'), t('Languages displayed to choose from.'));
-    $this->assertText(t('English'), t('English is a possible choice.'));
-    $this->assertText(t('French'), t('French is a possible choice.'));
+    $this->assertText(t('Languages'), 'Languages displayed to choose from.');
+    $this->assertText(t('English'), 'English is a possible choice.');
+    $this->assertText(t('French'), 'French is a possible choice.');
 
     // Ensure selecting no language does not make the query different.
     $this->drupalPost('search/node', array(), t('Advanced search'));
-    $this->assertEqual($this->getUrl(), url('search/node/', array('absolute' => TRUE)), t('Correct page redirection, no language filtering.'));
+    $this->assertEqual($this->getUrl(), url('search/node/', array('absolute' => TRUE)), 'Correct page redirection, no language filtering.');
 
     // Pick French and ensure it is selected.
     $edit = array('language[fr]' => TRUE);
     $this->drupalPost('search/node', $edit, t('Advanced search'));
-    $this->assertFieldByXPath('//input[@name="keys"]', 'language:fr', t('Language filter added to query.'));
+    $this->assertFieldByXPath('//input[@name="keys"]', 'language:fr', 'Language filter added to query.');
 
     // Change the default language and disable English.
     $path = 'admin/config/regional/language';
     $this->drupalGet($path);
-    $this->assertFieldChecked('edit-site-default-en', t('English is the default language.'));
+    $this->assertFieldChecked('edit-site-default-en', 'English is the default language.');
     $edit = array('site_default' => 'fr');
     $this->drupalPost(NULL, $edit, t('Save configuration'));
-    $this->assertNoFieldChecked('edit-site-default-en', t('Default language updated.'));
+    $this->assertNoFieldChecked('edit-site-default-en', 'Default language updated.');
     $edit = array('enabled[en]' => FALSE);
     $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
-    $this->assertNoFieldChecked('edit-enabled-en', t('Language disabled.'));
+    $this->assertNoFieldChecked('edit-enabled-en', 'Language disabled.');
 
     // Check that there are again no languages displayed.
     $this->drupalGet('search/node');
-    $this->assertNoText(t('Languages'), t('No languages to choose from.'));
+    $this->assertNoText(t('Languages'), 'No languages to choose from.');
   }
 }
 
