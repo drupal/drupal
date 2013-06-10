@@ -226,7 +226,7 @@ abstract class FieldPluginBase extends HandlerBase {
   /**
    * Return an HTML element for the label based upon the field's element type.
    */
-  function element_label_type($none_supported = FALSE, $default_empty = FALSE) {
+  public function elementLabelType($none_supported = FALSE, $default_empty = FALSE) {
     if ($none_supported) {
       if ($this->options['element_label_type'] === '0') {
         return '';
