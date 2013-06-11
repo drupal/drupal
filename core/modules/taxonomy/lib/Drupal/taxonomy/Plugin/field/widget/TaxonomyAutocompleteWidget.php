@@ -97,7 +97,7 @@ class TaxonomyAutocompleteWidget extends WidgetBase {
           'vid' => $vocabulary->id(),
           'name' => $value,
         ));
-        $item = array('tid' => FALSE, 'entity' => $term);
+        $item = array('tid' => 0, 'entity' => $term);
       }
       $items[] = $item;
     }
