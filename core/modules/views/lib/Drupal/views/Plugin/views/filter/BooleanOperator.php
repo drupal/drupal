@@ -96,7 +96,7 @@ class BooleanOperator extends FilterPluginBase {
     return $options;
   }
 
-  function operator_form(&$form, &$form_state) {
+  protected function operatorForm(&$form, &$form_state) {
     $form['operator'] = array();
   }
 

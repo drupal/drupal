@@ -216,7 +216,7 @@ abstract class FilterPluginBase extends HandlerBase {
       }
     }
     else {
-      // Add the subform from operator_form().
+      // Add the subform from operatorForm().
       $this->showOperatorForm($form, $form_state);
       // Add the subform from valueForm().
       $this->showValueForm($form, $form_state);
@@ -266,7 +266,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * Shortcut to display the operator form.
    */
   public function showOperatorForm(&$form, &$form_state) {
-    $this->operator_form($form, $form_state);
+    $this->operatorForm($form, $form_state);
     $form['operator']['#prefix'] = '<div class="views-group-box views-left-30">';
     $form['operator']['#suffix'] = '</div>';
   }
@@ -279,7 +279,7 @@ abstract class FilterPluginBase extends HandlerBase {
    *
    * @see buildOptionsForm()
    */
-  function operator_form(&$form, &$form_state) {
+  protected function operatorForm(&$form, &$form_state) {
     $options = $this->operatorOptions();
     if (!empty($options)) {
       $form['operator'] = array(
@@ -293,7 +293,7 @@ abstract class FilterPluginBase extends HandlerBase {
 
   /**
    * Provide a list of options for the default operator form.
-   * Should be overridden by classes that don't override operator_form
+   * Should be overridden by classes that don't override operatorForm
    */
   public function operatorOptions() { return array(); }
 
@@ -787,7 +787,7 @@ abstract class FilterPluginBase extends HandlerBase {
     // Build the exposed form, when its based on an operator.
     if (!empty($this->options['expose']['use_operator']) && !empty($this->options['expose']['operator_id'])) {
       $operator = $this->options['expose']['operator_id'];
-      $this->operator_form($form, $form_state);
+      $this->operatorForm($form, $form_state);
       $form[$operator] = $form['operator'];
 
       if (isset($form[$operator]['#title'])) {
@@ -962,7 +962,7 @@ abstract class FilterPluginBase extends HandlerBase {
       // $row acts as a fake form to render each widget in a row.
       $row = array();
       $groups[$item_id] = '';
-      $this->operator_form($row, $form_state);
+      $this->operatorForm($row, $form_state);
       // Force the operator form to be a select box. Some handlers uses
       // radios and they occupy a lot of space in a table row.
       $row['operator']['#type'] = 'select';

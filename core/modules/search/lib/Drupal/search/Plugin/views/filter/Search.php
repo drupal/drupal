@@ -48,7 +48,7 @@ class Search extends FilterPluginBase {
   /**
    * Provide simple equality operator
    */
-  function operator_form(&$form, &$form_state) {
+  protected function operatorForm(&$form, &$form_state) {
     $form['operator'] = array(
       '#type' => 'radios',
       '#title' => t('On empty input'),
