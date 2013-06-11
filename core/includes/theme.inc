@@ -2275,7 +2275,7 @@ function theme_tablesort_indicator($variables) {
  *     MARK_UPDATED, MARK_READ.
  */
 function theme_mark($variables) {
-  $type = $variables['type'];
+  $type = $variables['mark_type'];
   global $user;
   if ($user->uid) {
     if ($type == MARK_NEW) {
@@ -3172,7 +3172,7 @@ function drupal_common_theme() {
       'variables' => array('style' => NULL),
     ),
     'mark' => array(
-      'variables' => array('type' => MARK_NEW),
+      'variables' => array('mark_type' => MARK_NEW),
     ),
     'item_list' => array(
       'variables' => array('items' => array(), 'title' => '', 'type' => 'ul', 'attributes' => array()),

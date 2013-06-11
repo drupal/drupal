@@ -501,7 +501,7 @@ function node_admin_nodes() {
     $l_options = $node->langcode != Language::LANGCODE_NOT_SPECIFIED && isset($languages[$node->langcode]) ? array('language' => $languages[$node->langcode]) : array();
     $mark = array(
       '#theme' => 'mark',
-      '#type' => node_mark($node->nid, $node->changed),
+      '#mark_type' => node_mark($node->nid, $node->changed),
     );
     $form['nodes'][$node->nid]['title'] = array(
       '#type' => 'link',

@@ -76,7 +76,7 @@ function tracker_page($account = NULL, $set_title = FALSE) {
 
       $mark_build = array(
         '#theme' => 'mark',
-        '#type' => node_mark($node->nid, $node->changed),
+        '#mark_type' => node_mark($node->nid, $node->changed),
       );
 
       $row = array(
