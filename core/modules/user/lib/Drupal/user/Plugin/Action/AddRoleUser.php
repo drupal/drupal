@@ -28,12 +28,11 @@ class AddRoleUser extends ChangeUserRoleBase {
   public function execute($account = NULL) {
     $rid = $this->configuration['rid'];
     // Skip adding the role to the user if they already have it.
-    if ($account !== FALSE && !isset($account->roles[$rid])) {
-      $roles = $account->roles + array($rid => $rid);
+    if ($account !== FALSE && !$account->hasRole($rid)) {
       // For efficiency manually save the original account before applying
       // any changes.
       $account->original = clone $account;
-      $account->roles = $roles;
+      $account->addRole($rid);
       $account->save();
     }
   }

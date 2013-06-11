@@ -54,4 +54,26 @@ class UserBCDecorator extends EntityBCDecorator implements UserInterface {
   public function getSessionId() {
     return $this->decorated->getSessionId();
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasRole($rid) {
+    return $this->getBCEntity()->hasRole($rid);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addRole($rid) {
+    $this->getBCEntity()->addRole($rid);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeRole($rid) {
+    $this->getBCEntity()->removeRole($rid);
+  }
+
 }
