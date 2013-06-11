@@ -142,7 +142,7 @@ abstract class CachePluginBase extends PluginBase {
    *
    * A plugin should override this to provide specialized caching behavior.
    */
-  function cache_get($type) {
+  public function cacheGet($type) {
     $cutoff = $this->cacheExpire($type);
     switch ($type) {
       case 'query':
