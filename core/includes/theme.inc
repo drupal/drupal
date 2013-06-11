@@ -461,6 +461,8 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
     'base hook' => TRUE,
   );
 
+  $module_list = array_keys(Drupal::moduleHandler()->getModuleList());
+
   // Invoke the hook_theme() implementation, process what is returned, and
   // merge it into $cache.
   $function = $name . '_theme';
@@ -525,7 +527,7 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
             // Add all modules so they can intervene with their own variable
             // processors. This allows them to provide variable processors even
             // if they are not the owner of the current hook.
-            $prefixes = array_merge($prefixes, array_keys(Drupal::moduleHandler()->getModuleList()));
+            $prefixes = array_merge($prefixes, $module_list);
           }
           elseif ($type == 'theme_engine' || $type == 'base_theme_engine') {
             // Theme engines get an extra set that come before the normally
