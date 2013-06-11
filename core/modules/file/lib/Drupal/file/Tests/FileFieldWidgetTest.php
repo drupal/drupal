@@ -205,7 +205,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    */
   function testPrivateFileSetting() {
     // Grant the admin user required permissions.
-    user_role_grant_permissions(key($this->admin_user->roles), array('administer node fields'));
+    user_role_grant_permissions($this->admin_user->roles[1], array('administer node fields'));
 
     $type_name = 'article';
     $field_name = strtolower($this->randomName());
