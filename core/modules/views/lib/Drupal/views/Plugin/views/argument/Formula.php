@@ -45,7 +45,7 @@ class Formula extends ArgumentPluginBase {
   /**
    * Build the summary query based on a formula
    */
-  function summary_query() {
+  protected function summaryQuery() {
     $this->ensureMyTable();
     // Now that our table is secure, get our formula.
     $formula = $this->getFormula();

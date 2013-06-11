@@ -780,7 +780,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     // Clear out the normal primary field and whatever else may have
     // been added and let the summary do the work.
     $this->query->clearFields();
-    $this->summary_query();
+    $this->summaryQuery();
 
     $by = $this->options['summary']['number_of_records'] ? 'num_records' : NULL;
     $this->summarySort($this->options['summary']['sort_order'], $by);
@@ -803,7 +803,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * @return
    *   The alias used to get the number of records (count) for this entry.
    */
-  function summary_query() {
+  protected function summaryQuery() {
     $this->ensureMyTable();
     // Add the field.
     $this->base_alias = $this->query->add_field($this->tableAlias, $this->realField);
@@ -849,7 +849,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
 
   /**
    * Some basic summary behavior that doesn't need to be repeated as much as
-   * code that goes into summary_query()
+   * code that goes into summaryQuery()
    */
   public function summaryBasics($count_field = TRUE) {
     // Add the number of nodes counter

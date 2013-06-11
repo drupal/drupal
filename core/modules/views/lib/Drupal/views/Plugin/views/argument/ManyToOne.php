@@ -161,7 +161,7 @@ class ManyToOne extends ArgumentPluginBase {
     return implode($this->operator == 'or' ? ' + ' : ', ', $this->titleQuery());
   }
 
-  function summary_query() {
+  protected function summaryQuery() {
     $field = $this->table . '.' . $this->field;
     $join = $this->getJoin();
 
