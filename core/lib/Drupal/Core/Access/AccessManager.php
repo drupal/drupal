@@ -14,6 +14,8 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Attaches access check services to routes and runs them on request.
+ *
+ * @see \Drupal\Tests\Core\Access\AccessManagerTest
  */
 class AccessManager extends ContainerAware {
 
@@ -22,7 +24,7 @@ class AccessManager extends ContainerAware {
    *
    * @var array
    */
-  protected $checkIds;
+  protected $checkIds = array();
 
   /**
    * Array of access check objects keyed by service id.
@@ -89,31 +91,91 @@ class AccessManager extends ContainerAware {
    *
    * @param \Symfony\Component\Routing\Route $route
    *   The route to check access to.
-   * @param \Symfony\Commponent\HttpFoundation\Request $request
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   The incoming request object.
+   *
+   * @return bool
+   *  Returns TRUE if the user has access to the route, otherwise FALSE.
    *
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    *   If any access check denies access or none explicitly approve.
    */
   public function check(Route $route, Request $request) {
-    $access = FALSE;
     $checks = $route->getOption('_access_checks') ?: array();
 
-    // No checks == deny by default.
+    $conjunction = $route->getOption('_access_mode') ?: 'ANY';
+
+    if ($conjunction == 'ALL') {
+      return $this->checkAll($checks, $route, $request);
+    }
+    else {
+      return $this->checkAny($checks, $route, $request);
+    }
+  }
+
+  /**
+   * Checks access so that every checker should allow access.
+   *
+   * @param array $checks
+   *   Contains the list of checks on the route definition.
+   * @param \Symfony\Component\Routing\Route $route
+   *   The route to check access to.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The incoming request object.
+   *
+   * @return bool
+   *  Returns TRUE if the user has access to the route, else FALSE.
+   */
+  protected function checkAll(array $checks, Route $route, Request $request) {
+    $access = FALSE;
+
     foreach ($checks as $service_id) {
       if (empty($this->checks[$service_id])) {
         $this->loadCheck($service_id);
       }
 
       $service_access = $this->checks[$service_id]->access($route, $request);
-      if ($service_access === FALSE) {
-        // A check has denied access, no need to continue checking.
+      if ($service_access === AccessCheckInterface::ALLOW) {
+        $access = TRUE;
+      }
+      else {
+        // On both KILL and DENY stop.
         $access = FALSE;
         break;
       }
-      elseif ($service_access === TRUE) {
-        // A check has explicitly granted access, so we need to remember that.
+    }
+
+    return $access;
+  }
+
+  /**
+   * Checks access so that at least one checker should allow access.
+   *
+   * @param array $checks
+   *   Contains the list of checks on the route definition.
+   * @param \Symfony\Component\Routing\Route $route
+   *   The route to check access to.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The incoming request object.
+   *
+   * @return bool
+   *  Returns TRUE if the user has access to the route, else FALSE.
+   */
+  protected function checkAny(array $checks, $route, $request) {
+    // No checks == deny by default.
+    $access = FALSE;
+
+    foreach ($checks as $service_id) {
+      if (empty($this->checks[$service_id])) {
+        $this->loadCheck($service_id);
+      }
+
+      $service_access = $this->checks[$service_id]->access($route, $request);
+      if ($service_access === AccessCheckinterface::ALLOW) {
         $access = TRUE;
+      }
+      if ($service_access === AccessCheckInterface::KILL) {
+        return FALSE;
       }
     }
 

@@ -16,6 +16,31 @@ use Symfony\Component\HttpFoundation\Request;
 interface AccessCheckInterface {
 
   /**
+   * Grant access.
+   *
+   * A checker should return this value to indicate that it grants access to a
+   * route.
+   */
+  const ALLOW = TRUE;
+
+  /**
+   * Deny access.
+   *
+   * A checker should return this value to indicate it does not grant access to
+   * a route.
+   */
+  const DENY = NULL;
+
+  /**
+   * Block access.
+   *
+   * A checker should return this value to indicate that it wants to completely
+   * block access to this route, regardless of any other access checkers. Most
+   * checkers should prefer DENY.
+   */
+  const KILL = FALSE;
+
+  /**
    * Declares whether the access check applies to a specific route or not.
    *
    * @param \Symfony\Component\Routing\Route $route

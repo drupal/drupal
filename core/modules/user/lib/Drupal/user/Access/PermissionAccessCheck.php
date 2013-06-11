@@ -31,6 +31,6 @@ class PermissionAccessCheck implements AccessCheckInterface {
     // @todo Replace user_access() with a correctly injected and session-using
     //   alternative.
     // If user_access() fails, return NULL to give other checks a chance.
-    return user_access($permission) ? TRUE : NULL;
+    return user_access($permission) ? static::ALLOW : static::DENY;
   }
 }
