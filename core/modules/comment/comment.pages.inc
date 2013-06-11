@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\node\Plugin\Core\Entity\Node;
 use Drupal\comment\Plugin\Core\Entity\Comment;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\Core\Language\Language;
@@ -90,17 +89,15 @@ function comment_reply(EntityInterface $entity, $field_name, $pid = NULL) {
     }
     // This is the case where the comment is in response to a entity. Display
     // the entity.
-    // @todo replace this with entity access controls once generic access
-    // controller lands.
-    // @see http://drupal.org/node/1696660
-    elseif (user_access('access content')) {
+    elseif ($entity->access('view')) {
       // We make sure the field value isn't set so we don't end up with a redirect loop.
-      $original = $entity->{$field_name};
-      $entity->{$field_name} = array(
+      $bc_entity = $entity->getBCEntity();
+      $original_value = $bc_entity->{$field_name};
+      $bc_entity->{$field_name} = array(
         Language::LANGCODE_NOT_SPECIFIED => array(array('status' => COMMENT_HIDDEN)),
       );
-      $build['comment_entity'] = entity_view($entity, 'full');
-      $entity->{$field_name} = $original;
+      $build['comment_entity'] = entity_view($bc_entity, 'full');
+      $bc_entity->{$field_name} = $original_value;
     }
 
     // Should we show the reply box?

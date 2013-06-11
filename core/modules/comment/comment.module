@@ -1526,12 +1526,12 @@ function comment_preview(CommentInterface $comment) {
   else {
     // We temporarily disable rendering of this field to prevent infinite
     // loop.
-    $values = $entity->{$comment->field_name->value};
+    $original_value = $entity->{$comment->field_name->value};
     $entity->{$comment->field_name->value} = array(
       Language::LANGCODE_NOT_SPECIFIED => array(array('status' => COMMENT_HIDDEN)),
     );
     $build = entity_view($entity, 'full');
-    $entity->{$comment->field_name->value} = $values;
+    $entity->{$comment->field_name->value} = $original_value;
   }
 
   $preview_build['comment_output_below'] = $build;
