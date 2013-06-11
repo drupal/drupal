@@ -141,7 +141,7 @@ class Name extends InOperator {
     return $uids;
   }
 
-  function value_submit($form, &$form_state) {
+  protected function valueSubmit($form, &$form_state) {
     // prevent array filter from removing our anonymous user.
   }
 

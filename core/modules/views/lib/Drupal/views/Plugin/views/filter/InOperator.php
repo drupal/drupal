@@ -294,7 +294,7 @@ class InOperator extends FilterPluginBase {
     return parent::acceptExposedInput($input);
   }
 
-  function value_submit($form, &$form_state) {
+  protected function valueSubmit($form, &$form_state) {
     // Drupal's FAPI system automatically puts '0' in for any checkbox that
     // was not set, and the key to the checkbox if it is set.
     // Unfortunately, this means that if the key to that checkbox is 0,
