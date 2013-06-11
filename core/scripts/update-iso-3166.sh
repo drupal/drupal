@@ -34,8 +34,9 @@ if (!file_exists($uri)) {
 // Read in existing codes.
 // @todo Allow to remove previously existing country codes.
 // @see http://drupal.org/node/1436754
-require_once DRUPAL_ROOT . '/core/includes/standard.inc';
-$existing_countries = standard_country_list();
+require_once DRUPAL_ROOT . '/core/lib/Drupal/Core/Locale/CountryManagerInterface.php';
+require_once DRUPAL_ROOT . '/core/lib/Drupal/Core/Locale/CountryManager.php';
+$existing_countries = \Drupal\Core\Locale\CountryManager::getStandardList();
 $countries = $existing_countries;
 
 // Parse the source data into an array.

@@ -7,12 +7,49 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\Context\ContextInterface;
+use Drupal\Core\Locale\CountryManagerInterface;
 use Drupal\system\SystemConfigFormBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure regional settings for this site.
  */
 class RegionalForm extends SystemConfigFormBase {
+
+  /**
+   * The country manager.
+   *
+   * @var \Drupal\Core\Locale\CountryManagerInterface
+   */
+  protected $countryManager;
+
+  /**
+   * Constructs a RegionalForm object.
+   *
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The factory for configuration objects.
+   * @param \Drupal\Core\Config\Context\ContextInterface $context
+   *   The configuration context used for this configuration object.
+   * @param \Drupal\Core\Locale\CountryManagerInterface $country_manager
+   *   The country manager.
+   */
+  public function __construct(ConfigFactory $config_factory, ContextInterface $context, CountryManagerInterface $country_manager) {
+    parent::__construct($config_factory, $context);
+    $this->countryManager = $country_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('config.factory'),
+      $container->get('config.context.free'),
+      $container->get('country_manager')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -25,7 +62,7 @@ class RegionalForm extends SystemConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $countries = country_get_list();
+    $countries = $this->countryManager->getList();
     $system_timezone = $this->configFactory->get('system.timezone');
     $system_date = $this->configFactory->get('system.date');
 

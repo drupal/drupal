@@ -446,3 +446,6 @@ services:
     class: Drupal\Core\EventSubscriber\SlaveDatabaseIgnoreSubscriber
     tags:
       - {name: event_subscriber}
+  country_manager:
+    class: Drupal\Core\Locale\CountryManager
+    arguments: ['@module_handler']
