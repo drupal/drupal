@@ -619,7 +619,7 @@ function comment_views_data_alter(&$data) {
         ),
       );
 
-      if (Drupal::moduleHandler()->moduleExists('node')) {
+      if ($entity_info['id'] == 'node') {
         // Node properties lives in data_table.
         $table = $entity_info['data_table'];
       }
