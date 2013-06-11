@@ -364,7 +364,7 @@ class Entity implements IteratorAggregate, EntityInterface {
    * Implements \Drupal\Core\Entity\EntityInterface::entityInfo().
    */
   public function entityInfo() {
-    return entity_get_info($this->entityType);
+    return \Drupal::entityManager()->getDefinition($this->entityType());
   }
 
   /**
