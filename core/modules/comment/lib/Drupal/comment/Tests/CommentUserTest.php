@@ -111,7 +111,7 @@ class CommentUserTest extends WebTestBase {
 
     // Must get the page before we test for fields.
     if ($account !== NULL) {
-      $this->drupalGet('comment/reply/user/' . $account->uid . '/comment');
+      $this->drupalGet('comment/reply/user/' . $account->id() . '/comment');
     }
 
     if ($subject_mode == TRUE) {
@@ -298,12 +298,12 @@ class CommentUserTest extends WebTestBase {
     // Attempt to view comments while disallowed.
     // NOTE: if authenticated user has permission to post comments, then a
     // "Login or register to post comments" type link may be shown.
-    $this->drupalGet('user/' . $this->web_user->uid);
+    $this->drupalGet('user/' . $this->web_user->id());
     $this->assertNoPattern('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
     $this->assertNoLink('Add new comment', 'Link to add comment was found.');
 
     // Attempt to view user-comment form while disallowed.
-    $this->drupalGet('comment/reply/user/' . $this->web_user->uid . '/comment');
+    $this->drupalGet('comment/reply/user/' . $this->web_user->id() . '/comment');
     $this->assertText('You are not authorized to post comments', 'Error attempting to post comment.');
     $this->assertNoFieldByName('subject', '', 'Subject field not found.');
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
@@ -317,7 +317,7 @@ class CommentUserTest extends WebTestBase {
     ));
     // Ensure the page cache is flushed.
     drupal_flush_all_caches();
-    $this->drupalGet('user/' . $this->web_user->uid);
+    $this->drupalGet('user/' . $this->web_user->id());
     $this->assertPattern('@<h2[^>]*>Comments</h2>@', 'Comments were displayed.');
     $this->assertLink('Log in', 0, 'Link to log in was found.');
     $this->assertLink('register', 0, 'Link to register was found.');
@@ -328,7 +328,7 @@ class CommentUserTest extends WebTestBase {
       'skip comment approval' => TRUE,
       'access user profiles' => TRUE,
     ));
-    $this->drupalGet('user/' . $this->web_user->uid);
+    $this->drupalGet('user/' . $this->web_user->id());
     $this->assertNoPattern('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
     $this->assertFieldByName('subject', '', 'Subject field found.');
     $this->assertFieldByName("comment_body[$langcode][0][value]", '', 'Comment field found.');

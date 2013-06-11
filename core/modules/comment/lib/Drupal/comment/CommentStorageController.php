@@ -203,24 +203,24 @@ class CommentStorageController extends DatabaseStorageControllerNG {
     $query = db_select('comment', 'c');
     $query->addExpression('COUNT(cid)');
     $count = $query->condition('c.entity_id', $comment->entity_id->value)
-    ->condition('c.entity_type', $comment->entity_type->value)
-    ->condition('c.field_name', $comment->field_name->value)
-    ->condition('c.status', COMMENT_PUBLISHED)
-    ->execute()
-    ->fetchField();
+      ->condition('c.entity_type', $comment->entity_type->value)
+      ->condition('c.field_name', $comment->field_name->value)
+      ->condition('c.status', COMMENT_PUBLISHED)
+      ->execute()
+      ->fetchField();
 
     if ($count > 0) {
       // Comments exist.
       $last_reply = db_select('comment', 'c')
-      ->fields('c', array('cid', 'name', 'changed', 'uid'))
-      ->condition('c.entity_id', $comment->entity_id->value)
-      ->condition('c.entity_type', $comment->entity_type->value)
-      ->condition('c.field_name', $comment->field_name->value)
-      ->condition('c.status', COMMENT_PUBLISHED)
-      ->orderBy('c.created', 'DESC')
-      ->range(0, 1)
-      ->execute()
-      ->fetchObject();
+        ->fields('c', array('cid', 'name', 'changed', 'uid'))
+        ->condition('c.entity_id', $comment->entity_id->value)
+        ->condition('c.entity_type', $comment->entity_type->value)
+        ->condition('c.field_name', $comment->field_name->value)
+        ->condition('c.status', COMMENT_PUBLISHED)
+        ->orderBy('c.created', 'DESC')
+        ->range(0, 1)
+        ->execute()
+        ->fetchObject();
       db_update('comment_entity_statistics')
         ->fields(array(
           'cid' => $last_reply->cid,
@@ -243,11 +243,11 @@ class CommentStorageController extends DatabaseStorageControllerNG {
           'comment_count' => 0,
           // Use created date of entity or default to REQUEST_TIME if none
           // exists.
-          'last_comment_timestamp' => isset($entity->created) ? $entity->created : REQUEST_TIME,
+          'last_comment_timestamp' => isset($entity->created->value) ? $entity->created->value : REQUEST_TIME,
           'last_comment_name' => '',
           // @todo refactor when http://drupal.org/node/585838 lands.
           // Get uid from entity or default to logged in user if none exists.
-          'last_comment_uid' => isset($entity->uid) ? $entity->uid : $user->uid,
+          'last_comment_uid' => isset($entity->uid->target_id) ? $entity->uid->target_id : $user->uid,
         ))
         ->condition('entity_id', $comment->entity_id->value)
         ->condition('entity_type', $comment->entity_type->value)
