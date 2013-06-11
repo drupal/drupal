@@ -91,8 +91,8 @@ class Attachment extends DisplayPluginBase {
     }
     elseif (count($displays) == 1) {
       $display = array_shift($displays);
-      if (!empty($this->view->storage->display[$display])) {
-        $attach_to = check_plain($this->view->storage->display[$display]['display_title']);
+      if ($display = $this->view->storage->getDisplay($display)) {
+        $attach_to = check_plain($display['display_title']);
       }
     }
 
@@ -217,12 +217,13 @@ class Attachment extends DisplayPluginBase {
     // It is very important to call the parent function here:
     parent::submitOptionsForm($form, $form_state);
     switch ($form_state['section']) {
+      case 'displays':
+        $form_state['values'][$form_state['section']] = array_filter($form_state['values'][$form_state['section']]);
       case 'inherit_arguments':
       case 'inherit_pager':
       case 'render_pager':
       case 'inherit_exposed_filters':
       case 'attachment_position':
-      case 'displays':
         $this->setOption($form_state['section'], $form_state['values'][$form_state['section']]);
         break;
     }

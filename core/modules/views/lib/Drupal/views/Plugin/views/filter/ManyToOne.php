@@ -65,7 +65,7 @@ class ManyToOne extends InOperator {
         'title' => t('Is one of'),
         'short' => t('or'),
         'short_single' => t('='),
-        'method' => 'op_helper',
+        'method' => 'opHelper',
         'values' => 1,
         'ensure_my_table' => 'helper',
       ),
@@ -73,7 +73,7 @@ class ManyToOne extends InOperator {
         'title' => t('Is all of'),
         'short' => t('and'),
         'short_single' => t('='),
-        'method' => 'op_helper',
+        'method' => 'opHelper',
         'values' => 1,
         'ensure_my_table' => 'helper',
       ),
@@ -81,7 +81,7 @@ class ManyToOne extends InOperator {
         'title' => t('Is none of'),
         'short' => t('not'),
         'short_single' => t('<>'),
-        'method' => 'op_helper',
+        'method' => 'opHelper',
         'values' => 1,
         'ensure_my_table' => 'helper',
       ),
@@ -130,7 +130,7 @@ class ManyToOne extends InOperator {
     return parent::ensureMyTable();
   }
 
-  function op_helper() {
+  protected function opHelper() {
     if (empty($this->value)) {
       return;
     }

@@ -27,6 +27,29 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getPath() {
+    $bits = explode('/', $this->getOption('path'));
+    if ($this->isDefaultTabPath()) {
+      array_pop($bits);
+    }
+    return implode('/', $bits);
+  }
+
+  /**
+   * Determines if this display's path is a default tab.
+   *
+   * @return bool
+   *   TRUE if the display path is for a default tab, FALSE otherwise.
+   */
+  protected function isDefaultTabPath() {
+    $menu = $this->getOption('menu');
+    $tab_options = $this->getOption('tab_options');
+    return $menu['type'] == 'default tab' && !empty($tab_options['type']) && $tab_options['type'] != 'none';
+  }
+
+  /**
    * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase:defineOptions().
    */
   protected function defineOptions() {
@@ -82,6 +105,14 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
       // specified, which means the argument is optional.
       $defaults[$arg_id] = NULL;
       $bits[] = $bit;
+    }
+
+    // If this is to be a default tab, create the route for the parent path.
+    if ($this->isDefaultTabPath()) {
+      $bit = array_pop($bits);
+      if ($bit == '%views_arg' || empty($bits)) {
+        $bits[] = $bit;
+      }
     }
 
     $route_path = '/' . implode('/', $bits);
@@ -172,38 +203,42 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
 
       // If this is a 'default' tab, check to see if we have to create the
       // parent menu item.
-      if ($menu['type'] == 'default tab') {
+      if ($this->isDefaultTabPath()) {
         $tab_options = $this->getOption('tab_options');
-        if (!empty($tab_options['type']) && $tab_options['type'] != 'none') {
-          $bits = explode('/', $path);
-          // Remove the last piece.
-          $bit = array_pop($bits);
 
-          // we can't do this if they tried to make the last path bit variable.
-          // @todo: We can validate this.
-          if ($bit != '%views_arg' && !empty($bits)) {
-            $default_path = implode('/', $bits);
-            $items[$default_path] = array(
-              // Default views page entry.
-              // Identify URL embedded arguments and correlate them to a
-              // handler.
-              'load arguments'  => array($this->view->storage->id(), $this->display['id'], '%index'),
-              'title' => $tab_options['title'],
-              'description' => $tab_options['description'],
-              'menu_name' => $tab_options['name'],
-            );
-            switch ($tab_options['type']) {
-              default:
-              case 'normal':
-                $items[$default_path]['type'] = MENU_NORMAL_ITEM;
-                break;
-              case 'tab':
-                $items[$default_path]['type'] = MENU_LOCAL_TASK;
-                break;
-            }
-            if (isset($tab_options['weight'])) {
-              $items[$default_path]['weight'] = intval($tab_options['weight']);
-            }
+        $bits = explode('/', $path);
+        // Remove the last piece.
+        $bit = array_pop($bits);
+
+        // we can't do this if they tried to make the last path bit variable.
+        // @todo: We can validate this.
+        if ($bit != '%views_arg' && !empty($bits)) {
+          // Assign the route name to the parent route, not the default tab.
+          $default_route_name = $items[$path]['route_name'];
+          unset($items[$path]['route_name']);
+
+          $default_path = implode('/', $bits);
+          $items[$default_path] = array(
+            // Default views page entry.
+            // Identify URL embedded arguments and correlate them to a
+            // handler.
+            'load arguments'  => array($this->view->storage->id(), $this->display['id'], '%index'),
+            'title' => $tab_options['title'],
+            'description' => $tab_options['description'],
+            'menu_name' => $tab_options['name'],
+            'route_name' => $default_route_name,
+          );
+          switch ($tab_options['type']) {
+            default:
+            case 'normal':
+              $items[$default_path]['type'] = MENU_NORMAL_ITEM;
+              break;
+            case 'tab':
+              $items[$default_path]['type'] = MENU_LOCAL_TASK;
+              break;
+          }
+          if (isset($tab_options['weight'])) {
+            $items[$default_path]['weight'] = intval($tab_options['weight']);
           }
         }
       }

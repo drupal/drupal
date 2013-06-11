@@ -36,14 +36,26 @@ class DisplayAttachmentTest extends UITestBase {
     $this->drupalGet('admin/structure/views/view/test_attachment_ui/edit/attachment_1');
     $this->assertText(t('Not defined'), 'The right text appears if there is no attachment selection yet.');
 
-    $this->drupalGet('admin/structure/views/nojs/display/test_attachment_ui/attachment_1/displays');
+    $attachment_display_url = 'admin/structure/views/nojs/display/test_attachment_ui/attachment_1/displays';
+    $this->drupalGet($attachment_display_url);
 
     foreach (array('default', 'page-1') as $display_id) {
       $this->assertNoFieldChecked("edit-displays-$display_id", format_string('Make sure the @display_id can be marked as attached', array('@display_id' => $display_id)));
     }
 
     // Save the attachments and test the value on the view.
-    $this->drupalPost(NULL, array('displays[default]' => 1, 'displays[page_1]' => 1), t('Apply'));
+    $this->drupalPost($attachment_display_url, array('displays[page_1]' => 1), t('Apply'));
+    $result = $this->xpath('//a[@id = :id]', array(':id' => 'views-attachment-1-displays'));
+    $this->assertEqual($result[0]->attributes()->title, t('Page'));
+    $this->drupalPost(NULL, array(), t('Save'));
+
+    $view = views_get_view('test_attachment_ui');
+    $view->initDisplay();
+    $this->assertEqual(array_keys(array_filter($view->displayHandlers->get('attachment_1')->getOption('displays'))), array('page_1'), 'The attached displays got saved as expected');
+
+    $this->drupalPost($attachment_display_url, array('displays[default]' => 1, 'displays[page_1]' => 1), t('Apply'));
+    $result = $this->xpath('//a[@id = :id]', array(':id' => 'views-attachment-1-displays'));
+    $this->assertEqual($result[0]->attributes()->title, t('Multiple displays'));
     $this->drupalPost(NULL, array(), t('Save'));
 
     $view = views_get_view('test_attachment_ui');

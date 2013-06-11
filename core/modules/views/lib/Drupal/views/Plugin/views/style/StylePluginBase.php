@@ -170,7 +170,7 @@ abstract class StylePluginBase extends PluginBase {
    *
    * Used to ensure we don't fetch tokens when not needed for performance.
    */
-  function uses_tokens() {
+  public function usesTokens() {
     if ($this->usesRowClass()) {
       $class = $this->options['row_class'];
       if (strpos($class, '[') !== FALSE || strpos($class, '!') !== FALSE || strpos($class, '%') !== FALSE) {

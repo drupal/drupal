@@ -1111,7 +1111,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
    */
   public function advancedRender($values) {
     if ($this->allowAdvancedRender() && method_exists($this, 'render_item')) {
-      $raw_items = $this->get_items($values);
+      $raw_items = $this->getItems($values);
       // If there are no items, set the original value to NULL.
       if (empty($raw_items)) {
         $this->original_value = NULL;
