@@ -617,7 +617,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * @return Drupal\views_ui\ViewUI
    *   The instantiated view UI object.
    */
-  protected function instantiate_view($form, &$form_state) {
+  protected function instantiateView($form, &$form_state) {
     // Build the basic view properties and create the view.
     $values = array(
       'id' => $form_state['values']['id'],
@@ -1150,7 +1150,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * Instantiates the view from the form submission and validates its values.
    */
   public function validateView(array $form, array &$form_state) {
-    $view = $this->instantiate_view($form, $form_state);
+    $view = $this->instantiateView($form, $form_state);
     $errors = $view->get('executable')->validate();
 
     if (empty($errors)) {
