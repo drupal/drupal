@@ -152,7 +152,7 @@ abstract class BulkFormBase extends FieldPluginBase {
 
       $operation_definition = $action->getPluginDefinition();
       if (!empty($operation_definition['confirm_form_path'])) {
-        $form_state['confirm_form_path'] = $operation_definition['confirm_form_path'];
+        $form_state['redirect'] = $operation_definition['confirm_form_path'];
       }
     }
   }

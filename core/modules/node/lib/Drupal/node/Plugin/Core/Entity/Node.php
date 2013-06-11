@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\node\NodeInterface;
+use Drupal\node\NodeBCDecorator;
 
 /**
  * Defines the node entity class.
@@ -233,6 +234,17 @@ class Node extends EntityNG implements NodeInterface {
    */
   public function getRevisionId() {
     return $this->get('vid')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBCEntity() {
+    if (!isset($this->bcEntity)) {
+      $this->getPropertyDefinitions();
+      $this->bcEntity = new NodeBCDecorator($this, $this->fieldDefinitions);
+    }
+    return $this->bcEntity;
   }
 
 }

@@ -1407,7 +1407,7 @@ function node_user_cancel($edit, $account, $method) {
         ->condition('uid', $account->uid)
         ->execute()
         ->fetchCol();
-      node_mass_update($nodes, array('status' => 0));
+      node_mass_update($nodes, array('status' => 0), NULL, TRUE);
       break;
 
     case 'user_cancel_reassign':
@@ -1419,7 +1419,7 @@ function node_user_cancel($edit, $account, $method) {
         ->condition('uid', $account->uid)
         ->execute()
         ->fetchCol();
-      node_mass_update($nodes, array('uid' => 0));
+      node_mass_update($nodes, array('uid' => 0), NULL, TRUE);
       // Anonymize old revisions.
       db_update('node_field_revision')
         ->fields(array('uid' => 0))
@@ -1595,8 +1595,7 @@ function node_menu() {
   $items['admin/content'] = array(
     'title' => 'Content',
     'description' => 'Find and manage content.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('node_admin_content'),
+    'page callback' => 'node_admin_nodes',
     'access arguments' => array('access content overview'),
     'weight' => -10,
     'file' => 'node.admin.inc',

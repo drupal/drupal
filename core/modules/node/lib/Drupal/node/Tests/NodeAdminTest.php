@@ -12,6 +12,13 @@ namespace Drupal\node\Tests;
  */
 class NodeAdminTest extends NodeTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('views');
+
   public static function getInfo() {
     return array(
       'name' => 'Node administration',
@@ -39,38 +46,42 @@ class NodeAdminTest extends NodeTestBase {
    */
   function testContentAdminSort() {
     $this->drupalLogin($this->admin_user);
+
+    // Create nodes that have different node.changed values.
+    $this->container->get('state')->set('node_test.storage_controller', TRUE);
+    module_enable(array('node_test'));
+    $changed = REQUEST_TIME;
     foreach (array('dd', 'aa', 'DD', 'bb', 'cc', 'CC', 'AA', 'BB') as $prefix) {
-      $this->drupalCreateNode(array('title' => $prefix . $this->randomName(6)));
+      $changed += 1000;
+      $this->drupalCreateNode(array('title' => $prefix . $this->randomName(6), 'changed' => $changed));
     }
 
     // Test that the default sort by node.changed DESC actually fires properly.
     $nodes_query = db_select('node_field_data', 'n')
-      ->fields('n', array('nid'))
+      ->fields('n', array('title'))
       ->orderBy('changed', 'DESC')
       ->execute()
       ->fetchCol();
 
-    $nodes_form = array();
     $this->drupalGet('admin/content');
-    foreach ($this->xpath('//table/tbody/tr/td/div/input/@value') as $input) {
-      $nodes_form[] = $input;
+    foreach ($nodes_query as $delta => $string) {
+      $elements = $this->xpath('//table[contains(@class, :class)]//tr[' . ($delta + 1) . ']/td[2]/a[normalize-space(text())=:label]', array(':class' => 'views-table', ':label' => $string));
+      $this->assertTrue(!empty($elements), 'The node was found in the correct order.');
     }
-    $this->assertEqual($nodes_query, $nodes_form, 'Nodes are sorted in the form according to the default query.');
 
     // Compare the rendered HTML node list to a query for the nodes ordered by
     // title to account for possible database-dependent sort order.
     $nodes_query = db_select('node_field_data', 'n')
-      ->fields('n', array('nid'))
+      ->fields('n', array('title'))
       ->orderBy('title')
       ->execute()
       ->fetchCol();
 
-    $nodes_form = array();
-    $this->drupalGet('admin/content', array('query' => array('sort' => 'asc', 'order' => 'Title')));
-    foreach ($this->xpath('//table/tbody/tr/td/div/input/@value') as $input) {
-      $nodes_form[] = $input;
+    $this->drupalGet('admin/content', array('query' => array('sort' => 'asc', 'order' => 'title')));
+    foreach ($nodes_query as $delta => $string) {
+      $elements = $this->xpath('//table[contains(@class, :class)]//tr[' . ($delta + 1) . ']/td[2]/a[normalize-space(text())=:label]', array(':class' => 'views-table', ':label' => $string));
+      $this->assertTrue(!empty($elements), 'The node was found in the correct order.');
     }
-    $this->assertEqual($nodes_query, $nodes_form, 'Nodes are sorted in the form the same as they are in the query.');
   }
 
   /**
@@ -95,30 +106,17 @@ class NodeAdminTest extends NodeTestBase {
       $this->assertLinkByHref('node/' . $node->nid);
       $this->assertLinkByHref('node/' . $node->nid . '/edit');
       $this->assertLinkByHref('node/' . $node->nid . '/delete');
-      // Verify tableselect.
-      $this->assertFieldByName('nodes[' . $node->nid . ']', '', 'Tableselect found.');
     }
 
     // Verify filtering by publishing status.
-    $edit = array(
-      'status' => 'status-1',
-    );
-    $this->drupalPost(NULL, $edit, t('Filter'));
-
-    $this->assertRaw(t('where %property is %value', array('%property' => t('status'), '%value' => 'published')), 'Content list is filtered by status.');
+    $this->drupalGet('admin/content', array('query' => array('status' => TRUE)));
 
     $this->assertLinkByHref('node/' . $nodes['published_page']->nid . '/edit');
     $this->assertLinkByHref('node/' . $nodes['published_article']->nid . '/edit');
     $this->assertNoLinkByHref('node/' . $nodes['unpublished_page_1']->nid . '/edit');
 
     // Verify filtering by status and content type.
-    $edit = array(
-      'type' => 'page',
-    );
-    $this->drupalPost(NULL, $edit, t('Refine'));
-
-    $this->assertRaw(t('where %property is %value', array('%property' => t('status'), '%value' => 'published')), 'Content list is filtered by status.');
-    $this->assertRaw(t('and where %property is %value', array('%property' => t('type'), '%value' => 'Basic page')), 'Content list is filtered by content type.');
+    $this->drupalGet('admin/content', array('query' => array('status' => TRUE, 'type' => 'page')));
 
     $this->assertLinkByHref('node/' . $nodes['published_page']->nid . '/edit');
     $this->assertNoLinkByHref('node/' . $nodes['published_article']->nid . '/edit');

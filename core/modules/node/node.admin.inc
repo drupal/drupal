@@ -5,8 +5,8 @@
  * Content administration and module settings user interface.
  */
 
-use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Language\Language;
+use Drupal\node\NodeInterface;
 
 /**
  * Page callback: Form constructor for the permission rebuild confirmation form.
@@ -32,197 +32,6 @@ function node_configure_rebuild_confirm_submit($form, &$form_state) {
 }
 
 /**
- * Lists node administration filters that can be applied.
- *
- * @return
- *   An associative array of filters.
- */
-function node_filters() {
-  // Regular filters
-  $filters['status'] = array(
-    'title' => t('status'),
-    'options' => array(
-      '[any]' => t('any'),
-      'status-1' => t('published'),
-      'status-0' => t('not published'),
-      'promote-1' => t('promoted'),
-      'promote-0' => t('not promoted'),
-      'sticky-1' => t('sticky'),
-      'sticky-0' => t('not sticky'),
-    ),
-  );
-  // Include translation states if we have this module enabled
-  if (module_exists('translation')) {
-    $filters['status']['options'] += array(
-      'translate-0' => t('Up to date translation'),
-      'translate-1' => t('Outdated translation'),
-    );
-  }
-
-  $filters['type'] = array(
-    'title' => t('type'),
-    'options' => array(
-      '[any]' => t('any'),
-    ) + node_type_get_names(),
-  );
-
-  // Language filter if language support is present.
-  if (language_multilingual()) {
-    $languages = language_list(Language::STATE_ALL);
-    foreach ($languages as $langcode => $language) {
-      // Make locked languages appear special in the list.
-      $language_options[$langcode] = $language->locked ? t('- @name -', array('@name' => $language->name)) : $language->name;
-    }
-    $filters['langcode'] = array(
-      'title' => t('language'),
-      'options' => array(
-        '[any]' => t('- Any -'),
-      ) + $language_options,
-    );
-  }
-  return $filters;
-}
-
-/**
- * Applies filters for the node administration overview based on session.
- *
- * @param Drupal\Core\Database\Query\SelectInterface $query
- *   A SelectQuery to which the filters should be applied.
- */
-function node_build_filter_query(SelectInterface $query) {
-  // Build query
-  $filter_data = isset($_SESSION['node_overview_filter']) ? $_SESSION['node_overview_filter'] : array();
-  foreach ($filter_data as $index => $filter) {
-    list($key, $value) = $filter;
-    switch ($key) {
-      case 'status':
-        // Note: no exploitable hole as $key/$value have already been checked when submitted
-        list($key, $value) = explode('-', $value, 2);
-      case 'type':
-      case 'langcode':
-        $query->condition('n.' . $key, $value);
-        break;
-    }
-  }
-}
-
-/**
- * Returns the node administration filters form array to node_admin_content().
- *
- * @see node_admin_nodes()
- * @see node_admin_nodes_submit()
- * @see node_admin_nodes_validate()
- * @see node_filter_form_submit()
- * @see node_multiple_delete_confirm()
- * @see node_multiple_delete_confirm_submit()
- *
- * @ingroup forms
- */
-function node_filter_form() {
-  $session = isset($_SESSION['node_overview_filter']) ? $_SESSION['node_overview_filter'] : array();
-  $filters = node_filters();
-
-  $i = 0;
-  $form['filters'] = array(
-    '#type' => 'details',
-    '#title' => t('Show only items where'),
-    '#theme' => 'exposed_filters__node',
-  );
-  foreach ($session as $filter) {
-    list($type, $value) = $filter;
-    if ($type == 'term') {
-      // Load term name from DB rather than search and parse options array.
-      $value = module_invoke('taxonomy', 'term_load', $value);
-      $value = $value->name;
-    }
-    elseif ($type == 'langcode') {
-      $value = language_name($value);
-    }
-    else {
-      $value = $filters[$type]['options'][$value];
-    }
-    $t_args = array('%property' => $filters[$type]['title'], '%value' => $value);
-    if ($i++) {
-      $form['filters']['current'][] = array('#markup' => t('and where %property is %value', $t_args));
-    }
-    else {
-      $form['filters']['current'][] = array('#markup' => t('where %property is %value', $t_args));
-    }
-    if (in_array($type, array('type', 'langcode'))) {
-      // Remove the option if it is already being filtered on.
-      unset($filters[$type]);
-    }
-  }
-
-  $form['filters']['status'] = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('clearfix')),
-    '#prefix' => ($i ? '<div class="additional-filters">' . t('and where') . '</div>' : ''),
-  );
-  $form['filters']['status']['filters'] = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('filters')),
-  );
-  foreach ($filters as $key => $filter) {
-    $form['filters']['status']['filters'][$key] = array(
-      '#type' => 'select',
-      '#options' => $filter['options'],
-      '#title' => $filter['title'],
-      '#default_value' => '[any]',
-    );
-  }
-
-  $form['filters']['status']['actions'] = array(
-    '#type' => 'actions',
-    '#attributes' => array('class' => array('container-inline')),
-  );
-  $form['filters']['status']['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => count($session) ? t('Refine') : t('Filter'),
-  );
-  if (count($session)) {
-    $form['filters']['status']['actions']['undo'] = array('#type' => 'submit', '#value' => t('Undo'));
-    $form['filters']['status']['actions']['reset'] = array('#type' => 'submit', '#value' => t('Reset'));
-  }
-
-  $form['#attached']['library'][] = array('system', 'drupal.form');
-
-  return $form;
-}
-
-/**
- * Form submission handler for node_filter_form().
- *
- * @see node_admin_content()
- * @see node_admin_nodes()
- * @see node_admin_nodes_submit()
- * @see node_admin_nodes_validate()
- * @see node_filter_form()
- * @see node_multiple_delete_confirm()
- * @see node_multiple_delete_confirm_submit()
- */
-function node_filter_form_submit($form, &$form_state) {
-  $filters = node_filters();
-  switch ($form_state['values']['op']) {
-    case t('Filter'):
-    case t('Refine'):
-      // Apply every filter that has a choice selected other than 'any'.
-      foreach ($filters as $filter => $options) {
-        if (isset($form_state['values'][$filter]) && $form_state['values'][$filter] != '[any]') {
-          $_SESSION['node_overview_filter'][] = array($filter, $form_state['values'][$filter]);
-        }
-      }
-      break;
-    case t('Undo'):
-      array_pop($_SESSION['node_overview_filter']);
-      break;
-    case t('Reset'):
-      $_SESSION['node_overview_filter'] = array();
-      break;
-  }
-}
-
-/**
  * Updates all nodes in the passed-in array with the passed-in field values.
  *
  * IMPORTANT NOTE: This function is intended to work when called from a form
@@ -230,21 +39,24 @@ function node_filter_form_submit($form, &$form_state) {
  * work correctly.
  *
  * @param array $nodes
- *   Array of node nids to update.
+ *   Array of node nids or nodes to update.
  * @param array $updates
  *   Array of key/value pairs with node field names and the value to update that
  *   field to.
  * @param string $langcode
  *   (optional) The language updates should be applied to. If none is specified
  *   all available languages are processed.
+ * @param bool $load
+ *   (optional) TRUE if $nodes contains an array of node IDs to be loaded, FALSE
+ *   if it contains fully loaded nodes. Defaults to FALSE.
  */
-function node_mass_update($nodes, $updates, $langcode = NULL) {
+function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load = FALSE) {
   // We use batch processing to prevent timeout when updating a large number
   // of nodes.
   if (count($nodes) > 10) {
     $batch = array(
       'operations' => array(
-        array('_node_mass_update_batch_process', array($nodes, $updates, $langcode))
+        array('_node_mass_update_batch_process', array($nodes, $updates, $langcode, $load))
       ),
       'finished' => '_node_mass_update_batch_finished',
       'title' => t('Processing'),
@@ -259,8 +71,11 @@ function node_mass_update($nodes, $updates, $langcode = NULL) {
     batch_set($batch);
   }
   else {
-    foreach ($nodes as $nid) {
-      _node_mass_update_helper($nid, $updates, $langcode);
+    if ($load) {
+      $nodes = entity_load_multiple('node', $nodes);
+    }
+    foreach ($nodes as $node) {
+      _node_mass_update_helper($node, $updates, $langcode);
     }
     drupal_set_message(t('The update has been performed.'));
   }
@@ -269,21 +84,20 @@ function node_mass_update($nodes, $updates, $langcode = NULL) {
 /**
  * Updates individual nodes when fewer than 10 are queued.
  *
- * @param $nid
- *   ID of node to update.
- * @param $updates
+ * @param \Drupal\node\NodeInterface $node
+ *   A node to update.
+ * @param array $updates
  *   Associative array of updates.
  * @param string $langcode
  *   (optional) The language updates should be applied to. If none is specified
  *   all available languages are processed.
  *
- * @return object
+ * @return \Drupal\node\NodeInterface
  *   An updated node object.
  *
  * @see node_mass_update()
  */
-function _node_mass_update_helper($nid, $updates, $langcode = NULL) {
-  $node = node_load($nid, TRUE);
+function _node_mass_update_helper(NodeInterface $node, array $updates, $langcode = NULL) {
   $langcodes = isset($langcode) ? array($langcode) : array_keys($node->getTranslationLanguages());
   // For efficiency manually save the original node before applying any changes.
   $node->original = clone $node;
@@ -303,10 +117,13 @@ function _node_mass_update_helper($nid, $updates, $langcode = NULL) {
  *   An array of node IDs.
  * @param array $updates
  *   Associative array of updates.
+ * @param bool $load
+ *   TRUE if $nodes contains an array of node IDs to be loaded, FALSE if it
+ *   contains fully loaded nodes.
  * @param array $context
  *   An array of contextual key/values.
  */
-function _node_mass_update_batch_process($nodes, $updates, &$context) {
+function _node_mass_update_batch_process(array $nodes, array $updates, $load, array &$context) {
   if (!isset($context['sandbox']['progress'])) {
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['max'] = count($nodes);
@@ -317,8 +134,11 @@ function _node_mass_update_batch_process($nodes, $updates, &$context) {
   $count = min(5, count($context['sandbox']['nodes']));
   for ($i = 1; $i <= $count; $i++) {
     // For each nid, load the node, reset the values, and save it.
-    $nid = array_shift($context['sandbox']['nodes']);
-    $node = _node_mass_update_helper($nid, $updates);
+    $node = array_shift($context['sandbox']['nodes']);
+    if ($load) {
+      $node = entity_load('node', $node);
+    }
+    $node = _node_mass_update_helper($node, $updates);
 
     // Store result for post-processing in the finished callback.
     $context['results'][] = l($node->label(), 'node/' . $node->nid);
@@ -362,69 +182,11 @@ function _node_mass_update_batch_finished($success, $results, $operations) {
 }
 
 /**
- * Page callback: Form constructor for the content administration form.
- *
- * @see node_admin_nodes()
- * @see node_admin_nodes_submit()
- * @see node_admin_nodes_validate()
- * @see node_filter_form()
- * @see node_filter_form_submit()
- * @see node_menu()
- * @see node_multiple_delete_confirm()
- * @see node_multiple_delete_confirm_submit()
- * @ingroup forms
- */
-function node_admin_content($form, $form_state) {
-  if (isset($form_state['values']['operation']) && $form_state['values']['operation'] == 'delete') {
-    return node_multiple_delete_confirm($form, $form_state, array_filter($form_state['values']['nodes']));
-  }
-  $form['filter'] = node_filter_form();
-  $form['#submit'][] = 'node_filter_form_submit';
-  $form['admin'] = node_admin_nodes();
-
-  return $form;
-}
-
-/**
  * Returns the admin form object to node_admin_content().
- *
- * @see node_admin_nodes_submit()
- * @see node_filter_form()
- * @see node_filter_form_submit()
- * @see node_multiple_delete_confirm()
- * @see node_multiple_delete_confirm_submit()
  *
  * @ingroup forms
  */
 function node_admin_nodes() {
-  $admin_access = user_access('administer nodes');
-
-  // Build the 'Update options' form.
-  $form['options'] = array(
-    '#type' => 'details',
-    '#title' => t('Update options'),
-    '#attributes' => array('class' => array('container-inline')),
-    '#access' => $admin_access,
-  );
-  $options = array();
-  $actions = entity_load_multiple_by_properties('action', array('type' => 'node'));
-  foreach ($actions as $id => $action) {
-    $options[$id] = $action->label();
-  }
-  $form['options']['operation'] = array(
-    '#type' => 'select',
-    '#title' => t('Action'),
-    '#title_display' => 'invisible',
-    '#options' => $options,
-    '#default_value' => 'approve',
-  );
-  $form['options']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Update'),
-    '#tableselect' => TRUE,
-    '#submit' => array('node_admin_nodes_submit'),
-  );
-
   // Enable language column and filter if multiple languages are enabled.
   $multilingual = language_multilingual();
 
@@ -462,7 +224,6 @@ function node_admin_nodes() {
   $query = db_select('node_field_data', 'n')
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
     ->extend('Drupal\Core\Database\Query\TableSortExtender');
-  node_build_filter_query($query);
 
   if (!user_access('bypass node access')) {
     // If the user is able to view their own unpublished nodes, allow them
@@ -573,95 +334,6 @@ function node_admin_nodes() {
     }
   }
 
-  // Only use a tableselect when the current user is able to perform any
-  // operations.
-  if ($admin_access) {
-    $form['nodes']['#tableselect'] = TRUE;
-  }
-
   $form['pager'] = array('#theme' => 'pager');
   return $form;
-}
-
-/**
- * Form submission handler for node_admin_nodes().
- *
- * Executes the chosen 'Update option' on the selected nodes.
- *
- * @see node_admin_nodes()
- * @see node_admin_nodes_validate()
- * @see node_filter_form()
- * @see node_filter_form_submit()
- * @see node_multiple_delete_confirm()
- * @see node_multiple_delete_confirm_submit()
- */
-function node_admin_nodes_submit($form, &$form_state) {
-  if ($action = entity_load('action', $form_state['values']['operation'])) {
-    $nodes = entity_load_multiple('node', array_filter($form_state['values']['nodes']));
-    $action->execute($nodes);
-    $operation_definition = $action->getPluginDefinition();
-    if (!empty($operation_definition['confirm_form_path'])) {
-      $form_state['redirect'] = $operation_definition['confirm_form_path'];
-    }
-    cache_invalidate_tags(array('content' => TRUE));
-  }
-  else {
-    // We need to rebuild the form to go to a second step. For example, to
-    // show the confirmation form for the deletion of nodes.
-    $form_state['rebuild'] = TRUE;
-  }
-}
-
-/**
- * Multiple node deletion confirmation form for node_admin_content().
- *
- * @see node_admin_nodes()
- * @see node_admin_nodes_submit()
- * @see node_admin_nodes_validate()
- * @see node_filter_form()
- * @see node_filter_form_submit()
- * @see node_multiple_delete_confirm_submit()
- * @ingroup forms
- */
-function node_multiple_delete_confirm($form, &$form_state, $nodes) {
-  $form['nodes'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
-  $node_entities = node_load_multiple(array_keys($nodes));
-  // array_filter returns only elements with TRUE values
-  foreach ($nodes as $nid => $value) {
-    $form['nodes'][$nid] = array(
-      '#type' => 'hidden',
-      '#value' => $nid,
-      '#prefix' => '<li>',
-      '#suffix' => check_plain($node_entities[$nid]->label()) . "</li>\n",
-    );
-  }
-  $form['operation'] = array('#type' => 'hidden', '#value' => 'delete');
-  $form['#submit'][] = 'node_multiple_delete_confirm_submit';
-  $confirm_question = format_plural(count($nodes),
-                                  'Are you sure you want to delete this item?',
-                                  'Are you sure you want to delete these items?');
-  return confirm_form($form,
-                    $confirm_question,
-                    'admin/content', t('This action cannot be undone.'),
-                    t('Delete'), t('Cancel'));
-}
-
-/**
- * Form submission handler for node_multiple_delete_confirm().
- *
- * @see node_admin_nodes()
- * @see node_admin_nodes_submit()
- * @see node_admin_nodes_validate()
- * @see node_filter_form()
- * @see node_filter_form_submit()
- * @see node_multiple_delete_confirm()
- */
-function node_multiple_delete_confirm_submit($form, &$form_state) {
-  if ($form_state['values']['confirm']) {
-    entity_delete_multiple('node', array_keys($form_state['values']['nodes']));
-    $count = count($form_state['values']['nodes']);
-    watchdog('content', 'Deleted @count posts.', array('@count' => $count));
-    drupal_set_message(format_plural($count, 'Deleted 1 post.', 'Deleted @count posts.'));
-  }
-  $form_state['redirect'] = 'admin/content';
 }

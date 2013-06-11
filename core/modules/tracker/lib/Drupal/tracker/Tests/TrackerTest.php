@@ -257,6 +257,7 @@ class TrackerTest extends WebTestBase {
    * Tests that publish/unpublish works at admin/content/node.
    */
   function testTrackerAdminUnpublish() {
+    module_enable(array('views'));
     $admin_user = $this->drupalCreateUser(array('access content overview', 'administer nodes', 'bypass node access'));
     $this->drupalLogin($admin_user);
 
@@ -271,10 +272,10 @@ class TrackerTest extends WebTestBase {
 
     // Unpublish the node and ensure that it's no longer displayed.
     $edit = array(
-      'operation' => 'node_unpublish_action',
-      'nodes[' . $node->nid . ']' => $node->nid,
+      'action' => 'node_unpublish_action',
+      'node_bulk_form[0]' => $node->nid,
     );
-    $this->drupalPost('admin/content', $edit, t('Update'));
+    $this->drupalPost('admin/content', $edit, t('Apply'));
 
     $this->drupalGet('tracker');
     $this->assertText(t('No content available.'), 'Node is displayed on the tracker listing pages.');
