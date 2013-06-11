@@ -318,7 +318,7 @@ abstract class PluginBase extends ContainerFactoryPluginBase {
     }
 
     $form['global_tokens'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('Available global token replacements'),
       '#collapsed' => TRUE,
     );

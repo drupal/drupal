@@ -16,15 +16,20 @@ use Drupal\Component\Annotation\PluginID;
  *
  * @PluginID("text_custom")
  */
-class TextCustom extends AreaPluginBase {
+class TextCustom extends TokenizeAreaPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['content'] = array('default' => '', 'translatable' => TRUE);
-    $options['tokenize'] = array('default' => FALSE, 'bool' => TRUE);
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
 
@@ -33,13 +38,6 @@ class TextCustom extends AreaPluginBase {
       '#default_value' => $this->options['content'],
       '#rows' => 6,
     );
-
-    // Add tokenization form elements.
-    $this->tokenForm($form, $form_state);
-  }
-
-  // Empty, so we don't inherit submitOptionsForm from the parent.
-  public function submitOptionsForm(&$form, &$form_state) {
   }
 
   /**
@@ -60,10 +58,7 @@ class TextCustom extends AreaPluginBase {
    */
   public function renderTextarea($value) {
     if ($value) {
-      if ($this->options['tokenize']) {
-        $value = $this->view->style_plugin->tokenizeValue($value, 0);
-      }
-      return $this->sanitizeValue($this->globalTokenReplace($value), 'xss_admin');
+      return $this->sanitizeValue($this->tokenizeValue($value), 'xss_admin');
     }
   }
 
