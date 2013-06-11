@@ -234,7 +234,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * Simple validate handler
    */
   public function validateOptionsForm(&$form, &$form_state) {
-    $this->operator_validate($form, $form_state);
+    $this->operatorValidate($form, $form_state);
     $this->valueValidate($form, $form_state);
     if (!empty($this->options['exposed']) && !$this->isAGroup()) {
       $this->validateExposeForm($form, $form_state);
@@ -300,7 +300,7 @@ abstract class FilterPluginBase extends HandlerBase {
   /**
    * Validate the operator form.
    */
-  function operator_validate($form, &$form_state) { }
+  protected function operatorValidate($form, &$form_state) { }
 
   /**
    * Perform any necessary changes to the form values prior to storage.
