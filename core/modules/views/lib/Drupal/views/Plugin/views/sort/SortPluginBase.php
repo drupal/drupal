@@ -139,7 +139,7 @@ abstract class SortPluginBase extends HandlerBase {
    * Simple validate handler
    */
   public function validateOptionsForm(&$form, &$form_state) {
-    $this->sort_validate($form, $form_state);
+    $this->sortValidate($form, $form_state);
     if (!empty($this->options['exposed'])) {
       $this->validateExposeForm($form, $form_state);
     }
@@ -171,7 +171,7 @@ abstract class SortPluginBase extends HandlerBase {
     }
   }
 
-  function sort_validate(&$form, &$form_state) { }
+  protected function sortValidate(&$form, &$form_state) { }
 
   public function sortSubmit(&$form, &$form_state) { }
 
