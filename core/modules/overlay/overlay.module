@@ -875,7 +875,7 @@ function overlay_store_rendered_content($id = NULL, $content = NULL) {
  * @see Drupal.overlay.refreshRegions()
  */
 function overlay_request_refresh($region) {
-  $class = drupal_region_class($region);
+  $class = drupal_html_class("region-$region");
   $_SESSION['overlay_regions_to_refresh'][] = array($class => $region);
 }
 
