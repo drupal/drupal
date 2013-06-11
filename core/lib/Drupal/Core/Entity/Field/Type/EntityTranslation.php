@@ -7,10 +7,10 @@
 
 namespace Drupal\Core\Entity\Field\Type;
 
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\AccessibleInterface;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Core\TypedData\TypedData;
-use Drupal\user\UserInterface;
 use ArrayIterator;
 use Drupal\Core\TypedData\TypedDataInterface;
 use IteratorAggregate;
@@ -211,7 +211,7 @@ class EntityTranslation extends TypedData implements IteratorAggregate, Accessib
   /**
    * Implements \Drupal\Core\TypedData\AccessibleInterface::access().
    */
-  public function access($operation = 'view', UserInterface $account = NULL) {
+  public function access($operation = 'view', AccountInterface $account = NULL) {
     // Determine the language code of this translation by cutting of the
     // leading "@" from the property name to get the langcode.
     // @todo Add a way to set and get the langcode so that's more obvious what

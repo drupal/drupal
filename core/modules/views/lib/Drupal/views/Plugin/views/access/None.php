@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\access;
 
 use Drupal\Core\Annotation\Translation;
 use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Session\AccountInterface;
 
 use Symfony\Component\Routing\Route;
 
@@ -32,7 +33,7 @@ class None extends AccessPluginBase {
   /**
    * Implements Drupal\views\Plugin\views\access\AccessPluginBase::access().
    */
-  public function access($account) {
+  public function access(AccountInterface $account) {
     // No access control.
     return TRUE;
   }

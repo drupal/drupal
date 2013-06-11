@@ -548,14 +548,14 @@ function hook_entity_field_info_alter(&$info, $entity_type) {
  *   \Drupal\Core\TypedData\AccessibleInterface::access() for possible values.
  * @param \Drupal\Core\Entity\Field\Type\Field $field
  *   The entity field object on which the operation is to be performed.
- * @param \Drupal\user\UserInterface $account
+ * @param \Drupal\Core\Session\AccountInterface $account
  *   The user account to check.
  *
  * @return bool|NULL
  *   TRUE if access should be allowed, FALSE if access should be denied and NULL
  *   if the implementation has no opinion.
  */
-function hook_entity_field_access($operation, $field, $account) {
+function hook_entity_field_access($operation, $field, \Drupal\Core\Session\AccountInterface $account) {
   if ($field->getName() == 'field_of_interest' && $operation == 'update') {
     return user_access('update field of interest', $account);
   }

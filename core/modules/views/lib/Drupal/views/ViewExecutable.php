@@ -1178,7 +1178,8 @@ class ViewExecutable {
     else {
       $cache = $this->display_handler->getPlugin('cache');
     }
-    if ($cache->cache_get('results')) {
+
+    if ($cache->cacheGet('results')) {
       if ($this->pager->usePager()) {
         $this->pager->total_items = $this->total_rows;
         $this->pager->updatePageInfo();
@@ -1238,7 +1239,7 @@ class ViewExecutable {
       $cache = $this->display_handler->getPlugin('cache');
     }
 
-    if ($cache && $cache->cache_get('output')) {
+    if ($cache && $cache->cacheGet('output')) {
     }
     else {
       if ($cache) {

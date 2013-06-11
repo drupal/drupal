@@ -21,8 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Lock\DatabaseLockBackend;
 use Drupal\Core\Lock\LockBackendInterface;
-use Drupal\user\Plugin\Core\Entity\User;
-use Drupal\Core\Entity\EntityBCDecorator;
+use Drupal\Core\Session\UserSession;
 
 /**
  * @file
@@ -1733,15 +1732,16 @@ function drupal_set_title($title = NULL, $output = CHECK_PLAIN) {
 /**
  * Generates a default anonymous $user object.
  *
- * @return object
- *   The user object.
+ * @return \Drupal\Core\Session\AccountInterface
+ *   The user session object.
  */
 function drupal_anonymous_user() {
-  return (object) array(
+  $values = array(
     'uid' => 0,
     'hostname' => Drupal::request()->getClientIP(),
     'roles' => array(DRUPAL_ANONYMOUS_RID),
   );
+  return new UserSession($values);
 }
 
 /**

@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Language\Language;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity\EntityFormControllerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityNG;
@@ -289,11 +290,11 @@ function translation_entity_translate_access(EntityInterface $entity) {
  *   The entity whose translation overview should be displayed.
  * @param $langcode
  *   The language code of the translation to be displayed.
- * @param \Drupal\user\UserInterface $account
+ * @param \Drupal\Core\Session\AccountInterface $account
  *   (optional) The account for which view access should be checked. Defaults to
  *   the current user.
  */
-function translation_entity_view_access(EntityInterface $entity, $langcode, $account = NULL) {
+function translation_entity_view_access(EntityInterface $entity, $langcode, AccountInterface $account = NULL) {
   $entity_type = $entity->entityType();
   return !empty($entity->translation[$langcode]['status']) || user_access('translate any entity', $account) || user_access("translate $entity_type entities", $account);
 }

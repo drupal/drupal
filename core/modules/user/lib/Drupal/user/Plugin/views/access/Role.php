@@ -11,6 +11,7 @@ use Drupal\Component\Annotation\Plugin;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
 use Drupal\Core\Annotation\Translation;
 use Symfony\Component\Routing\Route;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Access plugin that provides role-based access control.
@@ -33,7 +34,7 @@ class Role extends AccessPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function access($account) {
+  public function access(AccountInterface $account) {
     return user_access('access all views', $account) || array_intersect(array_filter($this->options['role']), $account->roles);
   }
 

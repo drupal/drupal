@@ -182,7 +182,7 @@ class Term extends ArgumentValidatorPluginBase {
     }
   }
 
-  function process_summary_arguments(&$args) {
+  public function processSummaryArguments(&$args) {
     $type = $this->options['type'];
     $transform = $this->options['transform'];
 

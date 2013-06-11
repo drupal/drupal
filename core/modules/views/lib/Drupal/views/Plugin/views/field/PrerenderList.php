@@ -100,7 +100,7 @@ class PrerenderList extends FieldPluginBase {
    * is to be made. Additionally, items that might be turned into tokens
    * should also be in this array.
    */
-  protected function getItems($values) {
+  public function getItems($values) {
     $field = $this->getValue($values);
     if (!empty($this->items[$field])) {
       return $this->items[$field];

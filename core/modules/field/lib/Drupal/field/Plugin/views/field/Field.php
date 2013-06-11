@@ -643,7 +643,7 @@ class Field extends FieldPluginBase {
   /**
    * Return an array of items for the field.
    */
-  protected function getItems($values) {
+  public function getItems($values) {
     $original_entity = $this->get_entity($values);
     if (!$original_entity) {
       return array();

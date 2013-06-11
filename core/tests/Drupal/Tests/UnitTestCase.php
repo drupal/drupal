@@ -7,7 +7,10 @@
 
 namespace Drupal\Tests;
 
-class UnitTestCase extends \PHPUnit_Framework_TestCase {
+/**
+ * Provides a base class and helpers for Drupal unit tests.
+ */
+abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
 
   /**
    * This method exists to support the simpletest UI runner.
@@ -85,9 +88,13 @@ class UnitTestCase extends \PHPUnit_Framework_TestCase {
       foreach ($config_values as $key => $value) {
         $map[] = array($key, $value);
       }
+      // Also allow to pass in no argument.
+      $map[] = array('', $config_values);
+
       $config_object->expects($this->any())
         ->method('get')
         ->will($this->returnValueMap($map));
+
       $config_map[] = array($config_name, $config_object);
     }
     // Construct a config factory with the array of configuration object stubs
@@ -100,4 +107,31 @@ class UnitTestCase extends \PHPUnit_Framework_TestCase {
       ->will($this->returnValueMap($config_map));
     return $config_factory;
   }
+
+  /**
+   * Returns a stub config storage that returns the supplied configuration.
+   *
+   * @param array $configs
+   *   An associative array of configuration settings whose keys are
+   *   configuration object names and whose values are key => value arrays
+   *   for the configuration object in question.
+   *
+   * @return \Drupal\Core\Config\StorageInterface
+   *   A mocked config storage.
+   */
+  public function getConfigStorageStub(array $configs) {
+    $config_storage = $this->getMock('Drupal\Core\Config\NullStorage');
+    $config_storage->expects($this->any())
+      ->method('listAll')
+      ->will($this->returnValue(array_keys($configs)));
+
+    foreach ($configs as $name => $config) {
+      $config_storage->expects($this->any())
+        ->method('read')
+        ->with($this->equalTo($name))
+        ->will($this->returnValue($config));
+    }
+    return $config_storage;
+  }
+
 }

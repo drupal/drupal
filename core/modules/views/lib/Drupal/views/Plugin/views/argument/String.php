@@ -146,7 +146,7 @@ class String extends ArgumentPluginBase {
   /**
    * Build the summary query based on a string
    */
-  function summary_query() {
+  protected function summaryQuery() {
     if (empty($this->definition['many to one'])) {
       $this->ensureMyTable();
     }

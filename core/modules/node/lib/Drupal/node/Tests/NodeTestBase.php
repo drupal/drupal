@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\Core\Session\AccountInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -41,13 +42,13 @@ abstract class NodeTestBase extends WebTestBase {
    *   operation should be granted.
    * @param \Drupal\node\Plugin\Core\Entity\Node $node
    *   The node object to check.
-   * @param \Drupal\user\UserInterface $account
+   * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account for which to check access.
    * @param string|null $langcode
    *   (optional) The language code indicating which translation of the node
    *   to check. If NULL, the untranslated (fallback) access is checked.
    */
-  function assertNodeAccess(array $ops, $node, $account, $langcode = NULL) {
+  function assertNodeAccess(array $ops, $node, AccountInterface $account, $langcode = NULL) {
     foreach ($ops as $op => $result) {
       $msg = format_string(
         'node_access() returns @result with operation %op, language code %langcode.',

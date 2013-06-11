@@ -3,6 +3,7 @@
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\comment\Plugin\Core\Entity\Comment;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\file\Plugin\Core\Entity\File;
@@ -454,7 +455,7 @@ function user_role_permissions($roles) {
  *
  * @param $string
  *   The permission, such as "administer nodes", being checked for.
- * @param $account
+ * @param \Drupal\Core\Session\AccountInterface $account
  *   (optional) The account to check, if not given use currently logged in user.
  *
  * @return
@@ -464,7 +465,7 @@ function user_role_permissions($roles) {
  * way, we guarantee consistent behavior, and ensure that the superuser
  * can perform all actions.
  */
-function user_access($string, $account = NULL) {
+function user_access($string, AccountInterface $account = NULL) {
   global $user;
 
   if (!isset($account)) {
@@ -488,7 +489,7 @@ function user_access($string, $account = NULL) {
   }
   $perm = &$drupal_static_fast['perm'];
   if (!isset($perm[$account->uid])) {
-    $role_permissions = user_role_permissions($account->roles);
+    $role_permissions = user_role_permissions($account->getRoles());
 
     $perms = array();
     foreach ($role_permissions as $one_role) {

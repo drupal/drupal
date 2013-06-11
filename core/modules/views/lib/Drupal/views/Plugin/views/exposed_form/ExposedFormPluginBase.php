@@ -254,9 +254,9 @@ abstract class ExposedFormPluginBase extends PluginBase {
     }
   }
 
-  function exposed_form_validate(&$form, &$form_state) {
+  public function exposedFormValidate(&$form, &$form_state) {
     if (isset($form_state['pager_plugin'])) {
-      $form_state['pager_plugin']->exposed_form_validate($form, $form_state);
+      $form_state['pager_plugin']->exposedFormValidate($form, $form_state);
     }
   }
 

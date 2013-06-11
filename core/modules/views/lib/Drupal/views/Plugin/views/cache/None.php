@@ -31,11 +31,11 @@ class None extends CachePluginBase {
 
 
   /**
-   * Overrides \Drupal\views\Plugin\views\cache\CachePluginBase::cache_get().
+   * Overrides \Drupal\views\Plugin\views\cache\CachePluginBase::cacheGet().
    *
    * Replace the cache get logic so it does not return a cache item at all.
    */
-  function cache_get($type) {
+  public function cacheGet($type) {
     return FALSE;
   }
 

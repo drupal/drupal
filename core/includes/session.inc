@@ -18,6 +18,8 @@
 
 use Drupal\Component\Utility\Crypt;
 
+use Drupal\Core\Session\UserSession;
+
 /**
  * Session handler assigned by session_set_save_handler().
  *
@@ -91,22 +93,27 @@ function _drupal_session_read($sid) {
   // a HTTPS session or we are about to log in so we check the sessions table
   // for an anonymous session with the non-HTTPS-only cookie.
   if (Drupal::request()->isSecure()) {
-    $user = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.ssid = :ssid", array(':ssid' => $sid))->fetchObject();
-    if (!$user) {
+    $values = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.ssid = :ssid", array(':ssid' => $sid))->fetchAssoc();
+    if (!$values) {
       if (isset($_COOKIE[$insecure_session_name])) {
-        $user = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid AND s.uid = 0", array(
+        $values = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid AND s.uid = 0", array(
         ':sid' => $_COOKIE[$insecure_session_name]))
-        ->fetchObject();
+        ->fetchAssoc();
       }
     }
   }
   else {
-    $user = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid", array(':sid' => $sid))->fetchObject();
+    $values = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid", array(':sid' => $sid))->fetchAssoc();
+  }
+
+  if ($values) {
+    $user = new UserSession($values);
   }
 
   // We found the client's session record and they are an authenticated,
   // active user.
-  if ($user && $user->uid > 0 && $user->status == 1) {
+  if ($values && $values['uid'] > 0 && $values['status'] == 1) {
+    $user = new UserSession($values);
     // Add roles element to $user.
     $rids = db_query("SELECT ur.rid FROM {users_roles} ur WHERE ur.uid = :uid", array(':uid' => $user->uid))->fetchCol();
     $user->roles = array_merge(array(DRUPAL_AUTHENTICATED_RID), $rids);

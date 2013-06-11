@@ -198,7 +198,7 @@ abstract class FilterPluginBase extends HandlerBase {
       $this->showExposeButton($form, $form_state);
     }
     if ($this->canBuildGroup()) {
-      $this->show_build_group_button($form, $form_state);
+      $this->showBuildGroupButton($form, $form_state);
     }
     $form['clear_markup_start'] = array(
       '#markup' => '<div class="clearfix">',
@@ -234,7 +234,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * Simple validate handler
    */
   public function validateOptionsForm(&$form, &$form_state) {
-    $this->operator_validate($form, $form_state);
+    $this->operatorValidate($form, $form_state);
     $this->valueValidate($form, $form_state);
     if (!empty($this->options['exposed']) && !$this->isAGroup()) {
       $this->validateExposeForm($form, $form_state);
@@ -252,7 +252,7 @@ abstract class FilterPluginBase extends HandlerBase {
     unset($form_state['values']['group_button']); // don't store this.
     if (!$this->isAGroup()) {
       $this->operatorSubmit($form, $form_state);
-      $this->value_submit($form, $form_state);
+      $this->valueSubmit($form, $form_state);
     }
     if (!empty($this->options['exposed'])) {
       $this->submitExposeForm($form, $form_state);
@@ -300,7 +300,7 @@ abstract class FilterPluginBase extends HandlerBase {
   /**
    * Validate the operator form.
    */
-  function operator_validate($form, &$form_state) { }
+  protected function operatorValidate($form, &$form_state) { }
 
   /**
    * Perform any necessary changes to the form values prior to storage.
@@ -338,7 +338,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * Perform any necessary changes to the form values prior to storage.
    * There is no need for this function to actually store the data.
    */
-  function value_submit($form, &$form_state) { }
+  protected function valueSubmit($form, &$form_state) { }
 
   /**
    * Shortcut to display the exposed options form.
@@ -366,7 +366,7 @@ abstract class FilterPluginBase extends HandlerBase {
   /**
    * Shortcut to display the build_group/hide button.
    */
-  function show_build_group_button(&$form, &$form_state) {
+  protected function showBuildGroupButton(&$form, &$form_state) {
 
     $form['group_button'] = array(
       '#prefix' => '<div class="views-grouped clearfix">',

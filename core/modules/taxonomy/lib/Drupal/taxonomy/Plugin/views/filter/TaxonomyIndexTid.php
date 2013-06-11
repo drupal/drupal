@@ -330,7 +330,7 @@ class TaxonomyIndexTid extends ManyToOne {
     return $tids;
   }
 
-  function value_submit($form, &$form_state) {
+  protected function valueSubmit($form, &$form_state) {
     // prevent array_filter from messing up our arrays in parent submit.
   }
 

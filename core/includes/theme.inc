@@ -3098,7 +3098,6 @@ function template_process_maintenance_page(&$variables) {
  * pluggable template engine. Uses the region name to generate a template file
  * suggestions. If none are found, the default region.tpl.php is used.
  *
- * @see drupal_region_class()
  * @see region.tpl.php
  */
 function template_preprocess_region(&$variables) {
@@ -3107,7 +3106,7 @@ function template_preprocess_region(&$variables) {
   $variables['region'] = $variables['elements']['#region'];
 
   $variables['attributes']['class'][] = 'region';
-  $variables['attributes']['class'][] = drupal_region_class($variables['region']);
+  $variables['attributes']['class'][] = drupal_html_class('region-' . $variables['region']);
   $variables['theme_hook_suggestions'][] = 'region__' . $variables['region'];
 }
 
