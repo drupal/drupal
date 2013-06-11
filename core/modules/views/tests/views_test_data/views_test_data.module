@@ -79,7 +79,7 @@ function template_preprocess_views_view_mapping_test(&$variables) {
         $field_names = array($field_names);
       }
       foreach ($field_names as $field_name) {
-        if ($value = $variables['view']->style_plugin->get_field($delta, $field_name)) {
+        if ($value = $variables['view']->style_plugin->getField($delta, $field_name)) {
           $fields[$type . '-' . $field_name] = $type . ':' . $value;
         }
       }

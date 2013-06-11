@@ -76,7 +76,7 @@ abstract class StylePluginBase extends PluginBase {
     * Stores the rendered field values, keyed by the row index and field name.
     *
     * @see \Drupal\views\Plugin\views\style\StylePluginBase::renderFields()
-    * @see \Drupal\views\Plugin\views\style\StylePluginBase::get_field()
+    * @see \Drupal\views\Plugin\views\style\StylePluginBase::getField()
     *
     * @var array|null
     */
@@ -558,7 +558,7 @@ abstract class StylePluginBase extends PluginBase {
           // we can control any special formatting of the grouping field through
           // the admin or theme layer or anywhere else we'd like.
           if (isset($this->view->field[$field])) {
-            $group_content = $this->get_field($index, $field);
+            $group_content = $this->getField($index, $field);
             if ($this->view->field[$field]->options['label']) {
               $group_content = $this->view->field[$field]->options['label'] . ': ' . $group_content;
             }
@@ -656,7 +656,7 @@ abstract class StylePluginBase extends PluginBase {
    * @return string|null
    *   The output of the field, or NULL if it was empty.
    */
-  public function get_field($index, $field) {
+  public function getField($index, $field) {
     if (!isset($this->rendered_fields)) {
       $this->renderFields($this->view->result);
     }
