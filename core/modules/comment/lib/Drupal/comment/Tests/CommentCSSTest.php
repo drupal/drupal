@@ -59,7 +59,7 @@ class CommentCSSTest extends CommentTestBase {
         'language' => Language::LANGCODE_NOT_SPECIFIED,
         'comment_body' => array(Language::LANGCODE_NOT_SPECIFIED => array($this->randomName())),
       ));
-      comment_save($comment);
+      $comment->save();
 
       // Adjust the current/viewing user.
       switch ($case['user']) {

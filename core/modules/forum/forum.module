@@ -493,7 +493,7 @@ function forum_taxonomy_term_delete(Term $term) {
  * Implements hook_comment_publish().
  *
  * This actually handles the insertion and update of published nodes since
- * comment_save() calls hook_comment_publish() for all published comments.
+ * $comment->save() calls hook_comment_publish() for all published comments.
  */
 function forum_comment_publish($comment) {
   _forum_update_forum_index($comment->nid->target_id);
@@ -506,7 +506,7 @@ function forum_comment_publish($comment) {
  * individual comments, so we need to check for those here.
  */
 function forum_comment_update($comment) {
-  // comment_save() calls hook_comment_publish() for all published comments,
+  // $comment->save() calls hook_comment_publish() for all published comments,
   // so we need to handle all other values here.
   if (!$comment->status->value) {
     _forum_update_forum_index($comment->nid->target_id);

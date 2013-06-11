@@ -89,7 +89,7 @@ class DefaultViewRecentComments extends ViewTestBase {
       $comment->created->value = $time;
       $comment->changed->value = $time;
 
-      comment_save($comment);
+      $comment->save();
     }
 
     // Store all the nodes just created to access their properties on the tests.

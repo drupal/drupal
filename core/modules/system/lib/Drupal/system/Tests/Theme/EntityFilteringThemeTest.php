@@ -113,7 +113,7 @@ class EntityFilteringThemeTest extends WebTestBase {
       'subject' => $this->xss_label,
       'comment_body' => array($this->randomName()),
     ));
-    comment_save($this->comment);
+    $this->comment->save();
   }
 
   /**

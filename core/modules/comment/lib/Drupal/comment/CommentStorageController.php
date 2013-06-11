@@ -178,7 +178,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
       ->fields('c', array('cid'))
       ->condition('pid', array(array_keys($comments)), 'IN');
     $child_cids = $query->execute()->fetchCol();
-    comment_delete_multiple($child_cids);
+    entity_delete_multiple('comment', $child_cids);
 
     foreach ($comments as $comment) {
       $this->updateNodeStatistics($comment->nid->target_id);

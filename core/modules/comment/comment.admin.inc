@@ -189,7 +189,7 @@ function comment_admin_overview_submit($form, &$form_state) {
   $cids = $form_state['values']['comments'];
 
   if ($operation == 'delete') {
-    comment_delete_multiple($cids);
+    entity_delete_multiple('comment', $cids);
   }
   else {
     foreach ($cids as $cid => $value) {
@@ -201,7 +201,7 @@ function comment_admin_overview_submit($form, &$form_state) {
       elseif ($operation == 'publish') {
         $comment->status->value = COMMENT_PUBLISHED;
       }
-      comment_save($comment);
+      $comment->save();
     }
   }
   drupal_set_message(t('The update has been performed.'));
@@ -253,7 +253,7 @@ function comment_multiple_delete_confirm($form, &$form_state) {
  */
 function comment_multiple_delete_confirm_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {
-    comment_delete_multiple(array_keys($form_state['values']['comments']));
+    entity_delete_multiple('comment', array_keys($form_state['values']['comments']));
     cache_invalidate_tags(array('content' => TRUE));
     $count = count($form_state['values']['comments']);
     watchdog('content', 'Deleted @count comments.', array('@count' => $count));

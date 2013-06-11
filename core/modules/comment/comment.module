@@ -1210,7 +1210,7 @@ function comment_node_insert(EntityInterface $node) {
  */
 function comment_node_predelete(EntityInterface $node) {
   $cids = db_query('SELECT cid FROM {comment} WHERE nid = :nid', array(':nid' => $node->nid))->fetchCol();
-  comment_delete_multiple($cids);
+  entity_delete_multiple('comment', $cids);
   db_delete('node_comment_statistics')
     ->condition('nid', $node->nid)
     ->execute();
@@ -1289,7 +1289,7 @@ function comment_user_cancel($edit, $account, $method) {
       $comments = entity_load_multiple_by_properties('comment', array('uid' => $account->uid));
       foreach ($comments as $comment) {
         $comment->status->value = 0;
-        comment_save($comment);
+        $comment->save();
       }
       break;
 
@@ -1297,7 +1297,7 @@ function comment_user_cancel($edit, $account, $method) {
       $comments = entity_load_multiple_by_properties('comment', array('uid' => $account->uid));
       foreach ($comments as $comment) {
         $comment->uid->target_id = 0;
-        comment_save($comment);
+        $comment->save();
       }
       break;
   }
@@ -1308,39 +1308,6 @@ function comment_user_cancel($edit, $account, $method) {
  */
 function comment_user_predelete($account) {
   $cids = db_query('SELECT c.cid FROM {comment} c WHERE uid = :uid', array(':uid' => $account->uid))->fetchCol();
-  comment_delete_multiple($cids);
-}
-
-/**
- * Accepts a submission of new or changed comment content.
- *
- * @param Drupal\comment\Comment $comment
- *   A comment object.
- */
-function comment_save(Comment $comment) {
-  $comment->save();
-}
-
-/**
- * Deletes a comment and all its replies.
- *
- * @param $cid
- *   The ID of the comment to delete.
- */
-function comment_delete($cid) {
-  comment_delete_multiple(array($cid));
-}
-
-/**
- * Deletes comments and all their replies.
- *
- * @param $cids
- *   The IDs of the comments to delete.
- *
- * @see hook_comment_predelete()
- * @see hook_comment_delete()
- */
-function comment_delete_multiple($cids) {
   entity_delete_multiple('comment', $cids);
 }
 

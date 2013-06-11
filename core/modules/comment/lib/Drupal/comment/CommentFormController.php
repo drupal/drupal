@@ -319,7 +319,7 @@ class CommentFormController extends EntityFormControllerNG {
         user_cookie_save(array_intersect_key($form_state['values'], array_flip(array('name', 'mail', 'homepage'))));
       }
 
-      comment_save($comment);
+      $comment->save();
       $form_state['values']['cid'] = $comment->id();
 
       // Add an entry to the watchdog log.

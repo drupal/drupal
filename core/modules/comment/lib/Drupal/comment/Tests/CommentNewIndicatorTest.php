@@ -45,7 +45,7 @@ class CommentNewIndicatorTest extends CommentTestBase {
     $this->assertLink(t('Read more'));
 
     // Create a new comment. This helper function may be run with different
-    // comment settings so use comment_save() to avoid complex setup.
+    // comment settings so use $comment->save() to avoid complex setup.
     $comment = entity_create('comment', array(
       'cid' => NULL,
       'nid' => $this->node->nid,
@@ -58,7 +58,7 @@ class CommentNewIndicatorTest extends CommentTestBase {
       'langcode' => Language::LANGCODE_NOT_SPECIFIED,
       'comment_body' => array(Language::LANGCODE_NOT_SPECIFIED => array($this->randomName())),
     ));
-    comment_save($comment);
+    $comment->save();
     $this->drupalLogout();
 
     // Log in with 'web user' and check comment links.
