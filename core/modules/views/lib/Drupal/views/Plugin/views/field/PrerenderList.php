@@ -73,7 +73,7 @@ class PrerenderList extends FieldPluginBase {
    * When using advanced render, each possible item in the list is rendered
    * individually. Then the items are all pasted together.
    */
-  function render_items($items) {
+  protected function renderItems($items) {
     if (!empty($items)) {
       if ($this->options['type'] == 'separator') {
         return implode($this->sanitizeValue($this->options['separator'], 'xss_admin'), $items);
@@ -113,7 +113,7 @@ class PrerenderList extends FieldPluginBase {
    * Determine if advanced rendering is allowed.
    *
    * By default, advanced rendering will NOT be allowed if the class
-   * inheriting from this does not implement a 'render_items' method.
+   * inheriting from this does not implement a 'renderItems' method.
    */
   protected function allowAdvancedRender() {
     // Note that the advanced render bits also use the presence of

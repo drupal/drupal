@@ -1143,7 +1143,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
           $items[] = $this->renderText($alter);
         }
 
-        $value = $this->render_items($items);
+        $value = $this->renderItems($items);
       }
       else {
         $alter = array('phase' => VIEWS_HANDLER_RENDER_TEXT_PHASE_COMPLETELY) + $this->options['alter'];
