@@ -90,7 +90,7 @@ abstract class ArgumentValidatorPluginBase extends PluginBase {
    * for a faster query. But there are use cases where you want to use
    * the old value again, for example the summary.
    */
-  function process_summary_arguments(&$args) { }
+  public function processSummaryArguments(&$args) { }
 
 }
 

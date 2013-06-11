@@ -754,10 +754,10 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * For example, the validation plugin may want to alter an argument for use in
    * the URL.
    */
-  function process_summary_arguments(&$args) {
+  public function processSummaryArguments(&$args) {
     if ($this->options['validate']['type'] != 'none') {
       if (isset($this->validator) || $this->validator = $this->getPlugin('argument_validator')) {
-        $this->validator->process_summary_arguments($args);
+        $this->validator->processSummaryArguments($args);
       }
     }
   }

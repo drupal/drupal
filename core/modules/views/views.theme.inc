@@ -435,7 +435,7 @@ function template_preprocess_views_view_summary(&$vars) {
   foreach ($vars['rows'] as $id => $row) {
     $row_args[$id] = $argument->summaryArgument($row);
   }
-  $argument->process_summary_arguments($row_args);
+  $argument->processSummaryArguments($row_args);
 
   foreach ($vars['rows'] as $id => $row) {
     $vars['rows'][$id]->link = $argument->summaryName($row);
@@ -495,7 +495,7 @@ function template_preprocess_views_view_summary_unformatted(&$vars) {
   foreach ($vars['rows'] as $id => $row) {
     $row_args[$id] = $argument->summaryArgument($row);
   }
-  $argument->process_summary_arguments($row_args);
+  $argument->processSummaryArguments($row_args);
 
   foreach ($vars['rows'] as $id => $row) {
     // Only false on first time.
