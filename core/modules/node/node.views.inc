@@ -227,6 +227,14 @@ function node_views_data() {
     );
   }
 
+  $data['node']['node_bulk_form'] = array(
+    'title' => t('Node operations bulk form'),
+    'help' => t('Add a form element that lets you run operations on multiple nodes.'),
+    'field' => array(
+      'id' => 'node_bulk_form',
+    ),
+  );
+
   // Define some fields based upon views_handler_field_entity in the entity
   // table so they can be re-used with other query backends.
   // @see views_handler_field_entity

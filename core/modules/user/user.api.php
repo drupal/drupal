@@ -124,7 +124,7 @@ function hook_user_cancel($edit, $account, $method) {
         ->condition('uid', $account->uid)
         ->execute()
         ->fetchCol();
-      node_mass_update($nodes, array('status' => 0));
+      node_mass_update($nodes, array('status' => 0), NULL, TRUE);
       break;
 
     case 'user_cancel_reassign':
@@ -135,7 +135,7 @@ function hook_user_cancel($edit, $account, $method) {
         ->condition('uid', $account->uid)
         ->execute()
         ->fetchCol();
-      node_mass_update($nodes, array('uid' => 0));
+      node_mass_update($nodes, array('uid' => 0), NULL, TRUE);
       // Anonymize old revisions.
       db_update('node_field_revision')
         ->fields(array('uid' => 0))

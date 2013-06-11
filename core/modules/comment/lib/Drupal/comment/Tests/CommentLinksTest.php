@@ -152,7 +152,7 @@ class CommentLinksTest extends CommentTestBase {
           'langcode' => Language::LANGCODE_NOT_SPECIFIED,
           'comment_body' => array(Language::LANGCODE_NOT_SPECIFIED => array($this->randomName())),
         ));
-        comment_save($comment);
+        $comment->save();
         $this->comment = $comment;
 
         // comment_num_new() relies on history_read(), so ensure that no one has
@@ -161,7 +161,7 @@ class CommentLinksTest extends CommentTestBase {
       }
       else {
         $cids = db_query("SELECT cid FROM {comment}")->fetchCol();
-        comment_delete_multiple($cids);
+        entity_delete_multiple('comment', $cids);
         unset($this->comment);
       }
     }

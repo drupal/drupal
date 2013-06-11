@@ -1,0 +1,359 @@
+base_field: nid
+base_table: node
+core: 8.x
+description: 'Find and manage content.'
+status: '1'
+display:
+  default:
+    display_options:
+      access:
+        type: perm
+        options:
+          perm: 'access content overview'
+      cache:
+        type: none
+      query:
+        type: views_query
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Filter
+          reset_button: '0'
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: '1'
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      pager:
+        type: full
+        options:
+          items_per_page: '50'
+      style:
+        type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: '1'
+          row_class_special: '1'
+          override: '1'
+          sticky: '1'
+          summary: ''
+          columns:
+            node_bulk_form: node_bulk_form
+            title: title
+            type: type
+            name: name
+            status: status
+            changed: changed
+            edit_node: edit_node
+            delete_node: delete_node
+            translation_link: translation_link
+            dropbutton: dropbutton
+          info:
+            node_bulk_form:
+              sortable: '0'
+              default_sort_order: asc
+              responsive: ''
+            title:
+              sortable: '1'
+              default_sort_order: asc
+            type:
+              sortable: '1'
+              default_sort_order: asc
+            name:
+              sortable: '0'
+              default_sort_order: asc
+              responsive: priority-low
+            status:
+              sortable: '1'
+              default_sort_order: asc
+              responsive: ''
+            changed:
+              sortable: '1'
+              default_sort_order: desc
+              responsive: priority-low
+            edit_node:
+              sortable: '0'
+              default_sort_order: asc
+              responsive: ''
+            delete_node:
+              sortable: '0'
+              default_sort_order: asc
+              responsive: ''
+            translation_link:
+              sortable: '0'
+              default_sort_order: asc
+              responsive: ''
+            dropbutton:
+              sortable: '0'
+              default_sort_order: asc
+              responsive: ''
+          default: changed
+          empty_table: '1'
+      row:
+        type: fields
+      fields:
+        node_bulk_form:
+          id: node_bulk_form
+          table: node
+          field: node_bulk_form
+          label: ''
+          exclude: '0'
+          alter:
+            alter_text: '0'
+          element_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          plugin_id: node_bulk_form
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          label: Title
+          exclude: '0'
+          alter:
+            alter_text: '0'
+          element_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          link_to_node: '1'
+          plugin_id: node
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          label: 'Content Type'
+          exclude: '0'
+          alter:
+            alter_text: '0'
+          element_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          link_to_node: '0'
+          machine_name: '0'
+          plugin_id: node_type
+        name:
+          id: name
+          table: users
+          field: name
+          relationship: uid
+          label: Author
+          exclude: '0'
+          alter:
+            alter_text: '0'
+          element_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          link_to_user: '1'
+          overwrite_anonymous: '0'
+          anonymous_text: ''
+          format_username: '1'
+          plugin_id: user_name
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          label: Status
+          exclude: '0'
+          alter:
+            alter_text: '0'
+          element_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          type: published-notpublished
+          type_custom_true: ''
+          type_custom_false: ''
+          not: '0'
+          plugin_id: boolean
+        changed:
+          id: changed
+          table: node_field_data
+          field: changed
+          label: Updated
+          exclude: '0'
+          alter:
+            alter_text: '0'
+          element_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          date_format: short
+          custom_date_format: ''
+          timezone: ''
+          plugin_id: date
+        edit_node:
+          id: edit_node
+          table: views_entity_node
+          field: edit_node
+          label: ''
+          exclude: '1'
+          text: Edit
+          plugin_id: node_link_edit
+        delete_node:
+          id: delete_node
+          table: views_entity_node
+          field: delete_node
+          label: ''
+          exclude: '1'
+          text: Delete
+          plugin_id: node_link_delete
+        translation_link:
+          id: translation_link
+          table: node
+          field: translation_link
+          label: ''
+          exclude: '1'
+          alter:
+            alter_text: '0'
+          element_class: ''
+          element_default_classes: '1'
+          hide_alter_empty: '1'
+          hide_empty: '0'
+          empty_zero: '0'
+          empty: ''
+          text: Translate
+          optional: '1'
+          plugin_id: translation_entity_link
+        dropbutton:
+          id: dropbutton
+          table: views
+          field: dropbutton
+          label: Operations
+          fields:
+            edit_node: edit_node
+            delete_node: delete_node
+            translation_link: translation_link
+          destination: '1'
+          plugin_id: dropbutton
+      filters:
+        status_extra:
+          id: status_extra
+          table: node_field_data
+          field: status_extra
+          operator: '='
+          value: ''
+          plugin_id: node_status
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          operator: '='
+          value: All
+          exposed: '1'
+          expose:
+            operator_id: ''
+            label: Status
+            description: ''
+            use_operator: '0'
+            operator: status_op
+            identifier: status
+            required: '0'
+            remember: '0'
+            multiple: '0'
+            remember_roles:
+              authenticated: authenticated
+          plugin_id: boolean
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          operator: in
+          value: {  }
+          exposed: '1'
+          expose:
+            operator_id: type_op
+            label: Type
+            description: ''
+            use_operator: '0'
+            operator: type_op
+            identifier: type
+            required: '0'
+            remember: '0'
+            multiple: '0'
+            remember_roles:
+              authenticated: authenticated
+            reduce: '0'
+          plugin_id: bundle
+        langcode:
+          id: langcode
+          table: node
+          field: langcode
+          operator: in
+          value: {  }
+          group: '1'
+          exposed: '1'
+          expose:
+            operator_id: langcode_op
+            label: Language
+            operator: langcode_op
+            identifier: langcode
+            remember_roles:
+              authenticated: authenticated
+          optional: '1'
+          plugin_id: language
+      sorts: {  }
+      title: Content
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          empty: '1'
+          content: 'No content available.'
+          plugin_id: text_custom
+      arguments: {  }
+      relationships:
+        uid:
+          id: uid
+          table: node_field_data
+          field: uid
+          admin_label: author
+          required: '1'
+          plugin_id: standard
+      show_admin_links: '0'
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+  page_1:
+    display_options:
+      path: admin/content/node
+      menu:
+        type: 'default tab'
+        title: Content
+        description: ''
+        name: admin
+        weight: '-10'
+        context: '0'
+      tab_options:
+        type: normal
+        title: Content
+        description: 'Find and manage content'
+        name: admin
+        weight: '-10'
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: '1'
+label: Content
+module: node
+id: content
+tag: default
+langcode: en

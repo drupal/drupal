@@ -231,7 +231,7 @@ function tracker_node_predelete(EntityInterface $node, $arg = 0) {
  * comments so we need to check for those here.
  */
 function tracker_comment_update($comment) {
-  // comment_save() calls hook_comment_publish() for all published comments
+  // $comment->save() calls hook_comment_publish() for all published comments
   // so we need to handle all other values here.
   if ($comment->status->value != COMMENT_PUBLISHED && $comment->entity_type->value == 'node') {
     _tracker_remove($comment->entity_id->target_id, $comment->uid->target_id, $comment->changed->value);
@@ -242,7 +242,7 @@ function tracker_comment_update($comment) {
  * Implements hook_comment_publish().
  *
  * This actually handles the insert and update of published nodes since
- * comment_save() calls hook_comment_publish() for all published comments.
+ * $comment->save() calls hook_comment_publish() for all published comments.
  */
 function tracker_comment_publish($comment) {
   if ($comment->entity_type->value == 'node') {

@@ -170,7 +170,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     ));
 
     $_SESSION['entity_crud_hook_test'] = array();
-    comment_save($comment);
+    $comment->save();
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_comment_presave called',
@@ -189,7 +189,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
 
     $_SESSION['entity_crud_hook_test'] = array();
     $comment->subject->value = 'New subject';
-    comment_save($comment);
+    $comment->save();
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_comment_presave called',

@@ -113,7 +113,7 @@ class ForumBlockTest extends WebTestBase {
         'comment_body' => $this->randomString(256),
         'created' => $date->getTimestamp(),
       ));
-      comment_save($comment);
+      $comment->save();
     }
 
     // Enable the block.
