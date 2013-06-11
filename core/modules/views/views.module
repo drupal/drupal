@@ -1454,7 +1454,7 @@ function views_exposed_form_validate(&$form, &$form_state) {
     }
   }
   $exposed_form_plugin = $form_state['exposed_form_plugin'];
-  $exposed_form_plugin->exposed_form_validate($form, $form_state);
+  $exposed_form_plugin->exposedFormValidate($form, $form_state);
 }
 
 /**

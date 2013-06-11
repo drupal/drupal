@@ -366,7 +366,7 @@ abstract class SqlBase extends PagerPluginBase {
     }
   }
 
-  function exposed_form_validate(&$form, &$form_state) {
+  public function exposedFormValidate(&$form, &$form_state) {
     if (!empty($form_state['values']['offset']) && trim($form_state['values']['offset'])) {
       if (!is_numeric($form_state['values']['offset']) || $form_state['values']['offset'] < 0) {
         form_set_error('offset', t('Offset must be an number greather or equal than 0.'));
