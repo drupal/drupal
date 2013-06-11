@@ -33,7 +33,7 @@ class None extends PagerPluginBase {
     parent::init($view, $display, $options);
 
     // If the pager is set to none, then it should show all items.
-    $this->set_items_per_page(0);
+    $this->setItemsPerPage(0);
   }
 
   public function summaryTitle() {

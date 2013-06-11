@@ -77,7 +77,7 @@ abstract class PagerPluginBase extends PluginBase {
    *
    * This is mostly used for things that will override the value.
    */
-  function set_items_per_page($items) {
+  public function setItemsPerPage($items) {
     $this->options['items_per_page'] = $items;
   }
 

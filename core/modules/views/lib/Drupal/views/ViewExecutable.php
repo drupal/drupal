@@ -490,7 +490,7 @@ class ViewExecutable {
 
     // If the pager is already initialized, pass it through to the pager.
     if (!empty($this->pager)) {
-      $this->pager->set_items_per_page($items_per_page);
+      $this->pager->setItemsPerPage($items_per_page);
     }
   }
 
@@ -736,7 +736,7 @@ class ViewExecutable {
       // These overrides may have been set earlier via $view->set_*
       // functions.
       if (isset($this->items_per_page)) {
-        $this->pager->set_items_per_page($this->items_per_page);
+        $this->pager->setItemsPerPage($this->items_per_page);
       }
 
       if (isset($this->offset)) {
