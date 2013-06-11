@@ -13,7 +13,7 @@ use Drupal\views_ui\ViewUI;
 use Drupal\views\ViewsData;
 use Drupal\user\TempStore;
 use Drupal\user\TempStoreFactory;
-use Drupal\Core\ControllerInterface;
+use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Entity\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -65,7 +65,7 @@ class ViewsUIController implements ControllerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\ControllerInterface::create().
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(

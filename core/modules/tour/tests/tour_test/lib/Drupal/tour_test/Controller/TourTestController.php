@@ -6,7 +6,7 @@
 
 namespace Drupal\tour_test\Controller;
 
-use Drupal\Core\ControllerInterface;
+use Drupal\Core\Controller\ControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

@@ -6,7 +6,7 @@
 
 namespace Drupal\layout\Controller;
 
-use Drupal\Core\ControllerInterface;
+use Drupal\Core\Controller\ControllerInterface;
 use Drupal\layout\Plugin\Type\LayoutManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

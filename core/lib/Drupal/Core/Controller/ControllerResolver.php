@@ -80,7 +80,7 @@ class ControllerResolver extends BaseControllerResolver {
         throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
       }
       // @todo Remove the second in_array() once that interface has been removed.
-      if (in_array('Drupal\Core\Controller\ControllerInterface', class_implements($class)) || in_array('Drupal\Core\ControllerInterface', class_implements($class))) {
+      if (in_array('Drupal\Core\Controller\ControllerInterface', class_implements($class))) {
         $controller = $class::create($this->container);
       }
       else {

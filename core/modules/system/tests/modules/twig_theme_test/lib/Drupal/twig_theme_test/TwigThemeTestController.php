@@ -7,7 +7,7 @@
 
 namespace Drupal\twig_theme_test;
 
-use Drupal\Core\ControllerInterface;
+use Drupal\Core\Controller\ControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

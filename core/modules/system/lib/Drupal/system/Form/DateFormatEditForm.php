@@ -8,7 +8,7 @@
 namespace Drupal\system\Form;
 
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\ControllerInterface;
+use Drupal\Core\Controller\ControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

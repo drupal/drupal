@@ -9,7 +9,7 @@ namespace Drupal\dblog\Controller;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\ControllerInterface;
+use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

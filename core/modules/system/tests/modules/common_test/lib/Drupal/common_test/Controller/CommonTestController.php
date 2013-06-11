@@ -7,7 +7,7 @@
 
 namespace Drupal\common_test\Controller;
 
-use Drupal\Core\ControllerInterface;
+use Drupal\Core\Controller\ControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class CommonTestController implements ControllerInterface {
 
   /**
-   * Implements \Drupal\Core\ControllerInterface::create().
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static();

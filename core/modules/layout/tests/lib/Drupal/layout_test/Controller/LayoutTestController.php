@@ -6,7 +6,7 @@
 
 namespace Drupal\layout_test\Controller;
 
-use Drupal\Core\ControllerInterface;
+use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

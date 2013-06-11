@@ -9,7 +9,7 @@ namespace Drupal\system\Controller;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Drupal\Core\ControllerInterface;
+use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\system\SystemManager;
 

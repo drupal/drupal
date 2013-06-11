@@ -9,7 +9,7 @@ namespace Drupal\system;
 
 use Drupal\Component\Transliteration\TransliterationInterface;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\ControllerInterface;
+use Drupal\Core\Controller\ControllerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;

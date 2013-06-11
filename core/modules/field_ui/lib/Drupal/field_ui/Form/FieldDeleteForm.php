@@ -8,7 +8,7 @@
 namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
-use Drupal\Core\ControllerInterface;
+use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\field\Plugin\Core\Entity\FieldInstance;
 use Symfony\Component\DependencyInjection\ContainerInterface;
