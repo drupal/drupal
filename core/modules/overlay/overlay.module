@@ -451,7 +451,6 @@ function overlay_preprocess_maintenance_page(&$variables) {
  * If the current page request is inside the overlay, add appropriate classes
  * to the <body> element, and simplify the page title.
  *
- * @see template_process_overlay()
  * @see overlay.tpl.php
  */
 function template_preprocess_overlay(&$variables) {
@@ -467,18 +466,6 @@ function template_preprocess_overlay(&$variables) {
   // Add attributes for the overlay content.
   $variables['content_attributes']['id'] = 'overlay-content';
   $variables['content_attributes']['class'][] = 'clearfix';
-}
-
-/**
- * Implements template_process_HOOK() for overlay.tpl.php
- *
- * Places the rendered HTML for the page body into a top level variable.
- *
- * @see template_preprocess_overlay()
- * @see overlay.tpl.php
- */
-function template_process_overlay(&$variables) {
-  $variables['page'] = $variables['page']['#children'];
 }
 
 /**

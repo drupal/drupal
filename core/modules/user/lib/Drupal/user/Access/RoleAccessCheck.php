@@ -42,19 +42,19 @@ class RoleAccessCheck implements AccessCheckInterface {
     if (count($explode_and) > 1) {
       $diff = array_diff($explode_and, $account->roles);
       if (empty($diff)) {
-        return TRUE;
+        return static::ALLOW;
       }
     }
     else {
       $explode_or = array_filter(array_map('trim', explode(',', $rid_string)));
       $intersection = array_intersect($explode_or, $account->roles);
       if (!empty($intersection)) {
-        return TRUE;
+        return static::ALLOW;
       }
     }
 
     // If there is no allowed role, return NULL to give other checks a chance.
-    return NULL;
+    return static::DENY;
   }
 
 }

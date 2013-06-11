@@ -211,7 +211,7 @@ function hook_data_type_info_alter(&$data_types) {
  * @return
  *   An associative array where the key is the queue name and the value is
  *   again an associative array. Possible keys are:
- *   - 'worker callback': The name of the function to call. It will be called
+ *   - 'worker callback': A PHP callable to call. It will be called
  *     with one argument, the item created via
  *     Drupal\Core\Queue\QueueInterface::createItem() in hook_cron().
  *   - 'cron': (optional) An associative array containing the optional key:
@@ -226,7 +226,7 @@ function hook_data_type_info_alter(&$data_types) {
 function hook_queue_info() {
   $queues['aggregator_feeds'] = array(
     'title' => t('Aggregator refresh'),
-    'worker callback' => 'aggregator_refresh',
+    'worker callback' => array('Drupal\my_module\MyClass', 'aggregatorRefresh'),
     // Only needed if this queue should be processed by cron.
     'cron' => array(
       'time' => 60,

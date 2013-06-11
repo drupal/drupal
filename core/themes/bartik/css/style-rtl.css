@@ -1,4 +1,4 @@
-/* ------------------ Reset Styles ------------------ */
+/* ------------------- Reset Styles ---------------------- */
 
 th,
 td {
@@ -18,7 +18,7 @@ tr td,
 tr th {
   text-align: right;
 }
-/* ------------------ List Styles ------------------ */
+/* ------------------- List Styles ----------------------- */
 
 .region-content ul,
 .region-content ol {
@@ -35,7 +35,7 @@ ul.tips {
   padding: 0 1em 0.25em 0;
 }
 
-/* ------------------ Header ------------------ */
+/* ------------------- Header ---------------------------- */
 
 #logo {
   padding: 15px 10px 15px 15px;
@@ -59,7 +59,7 @@ ul.tips {
   padding-right: 0.5em;
 }
 
-/* --------------- Main Menu ------------ */
+/* ------------------- Main Menu ------------------------- */
 
 #main-menu-links {
   text-align: right;
@@ -68,13 +68,13 @@ ul.tips {
   padding: 0.9em 10px 0.9em 0;
 }
 
-/* --------------- Secondary Menu ------------ */
+/* ------------------- Secondary Menu -------------------- */
 
 #secondary-menu-links {
   float: left;
 }
 
-/* ----------------- Content ------------------ */
+/* ------------------- Content --------------------------- */
 
 .submitted .field-name-field-user-picture img {
   float: right;
@@ -95,7 +95,7 @@ ul.tips {
   margin-left: 0;
 }
 
-/* ----------------- Comments ----------------- */
+/* ------------------- Comments -------------------------- */
 
 .comment .field-name-field-user-picture img {
   margin-right: 0;
@@ -122,7 +122,7 @@ ul.tips {
   padding: 5px 5px 5px 2px;
 }
 
-/* -------------- Password Meter  ------------- */
+/* ------------------- Password Meter  ------------------- */
 
 #password-strength {
   left: auto;
@@ -137,7 +137,7 @@ ul.tips {
   clear: right;
 }
 
-/* --------------- Search Form ---------------- */
+/* ------------------- Search Form ----------------------- */
 
 #search-form input#edit-keys,
 #block-search-form .form-item-search-block-form input {
@@ -146,7 +146,7 @@ ul.tips {
   margin-right: 0;
 }
 
-/* ------------------ Footer ------------------ */
+/* ------------------- Footer ---------------------------- */
 
 #footer-columns ul {
   padding-right: 0;
@@ -170,7 +170,7 @@ ul.tips {
   border-left: none;
 }
 
-/* --------------- System Tabs  --------------- */
+/* ------------------ System Tabs  ----------------------- */
 
 .tabs ul.primary li {
   margin: 0 0 0 5px;
@@ -189,7 +189,7 @@ ul.tips {
   border-left: none;
 }
 
-/* -------------- Form Elements   ------------- */
+/* ------------------- Form Elements   ------------------- */
 
 #user-profile-form input#edit-submit {
   margin-left: 0;
@@ -222,13 +222,13 @@ ul.tips {
   margin-right: 0;
 }
 
-/* -------------- Shortcut Links ------------- */
+/* ------------------- Shortcut Links -------------------- */
 
 .shortcut-wrapper h1#page-title {
   float: right;
 }
 
-/* ---------- Color Form ----------- */
+/* ------------------- Color Form ------------------------ */
 
 .color-form #palette {
   margin-left: 0;
@@ -242,10 +242,10 @@ ul.tips {
   left: 0;
 }
 
-/* ----------- media queries ------------------------------- */
+/* ------------------- Media Queries --------------------- */
 
 @media all and (min-width: 461px) and (max-width: 900px) {
- /* ------------ Header and Menus -------------------------- */
+ /* ------------------ Header and Menus ------------------ */
 
   #logo {
     padding: 5px 5px 0 0;
@@ -281,21 +281,21 @@ ul.tips {
   }
 }
 
-/* ---------- Views styling ---------- */
+/* ------------------- Views styling --------------------- */
 
- /* @group Lists */
+ /* ------------------ @group Lists ---------------------- */
 
 .views-display-top .secondary .action-list {
   padding-left: inherit;
   padding-right: 0;
 }
 
-/* @end */
+/* ------------------- @end ------------------------------ */
 
-/* @group Collapsible */
+/* ------------------- @group Collapsible ---------------- */
 
 .views-display-columns details summary {
   padding: 0 2px 4px 0;
 }
 
-/* @end */
+/* ------------------- @end ------------------------------ */

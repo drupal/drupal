@@ -4325,11 +4325,11 @@ function drupal_cron_run() {
 
   foreach ($queues as $queue_name => $info) {
     if (isset($info['cron'])) {
-      $function = $info['worker callback'];
+      $callback = $info['worker callback'];
       $end = time() + (isset($info['cron']['time']) ? $info['cron']['time'] : 15);
       $queue = Drupal::queue($queue_name);
       while (time() < $end && ($item = $queue->claimItem())) {
-        $function($item->data);
+        call_user_func_array($callback, array($item->data));
         $queue->deleteItem($item);
       }
     }

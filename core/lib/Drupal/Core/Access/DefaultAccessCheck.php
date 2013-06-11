@@ -23,9 +23,18 @@ class DefaultAccessCheck implements AccessCheckInterface {
   }
 
   /**
-   * Implements AccessCheckInterface::access().
+   * {@inheritdoc}
    */
   public function access(Route $route, Request $request) {
-    return $route->getRequirement('_access') === 'TRUE';
+    if ($route->getRequirement('_access') === 'TRUE') {
+      return static::ALLOW;
+    }
+    elseif ($route->getRequirement('_access') === 'FALSE') {
+      return static::KILL;
+    }
+    else {
+      return static::DENY;
+    }
   }
+
 }
