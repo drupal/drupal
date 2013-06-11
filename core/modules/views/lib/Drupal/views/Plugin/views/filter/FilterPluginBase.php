@@ -198,7 +198,7 @@ abstract class FilterPluginBase extends HandlerBase {
       $this->showExposeButton($form, $form_state);
     }
     if ($this->canBuildGroup()) {
-      $this->show_build_group_button($form, $form_state);
+      $this->showBuildGroupButton($form, $form_state);
     }
     $form['clear_markup_start'] = array(
       '#markup' => '<div class="clearfix">',
@@ -366,7 +366,7 @@ abstract class FilterPluginBase extends HandlerBase {
   /**
    * Shortcut to display the build_group/hide button.
    */
-  function show_build_group_button(&$form, &$form_state) {
+  protected function showBuildGroupButton(&$form, &$form_state) {
 
     $form['group_button'] = array(
       '#prefix' => '<div class="views-grouped clearfix">',
