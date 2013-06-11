@@ -83,13 +83,15 @@ class OverlaySubscriber implements EventSubscriberInterface {
         // If a previous page requested that we close the overlay, close it and
         // redirect to the final destination.
         if (isset($_SESSION['overlay_close_dialog'])) {
-          call_user_func_array('overlay_close_dialog', $_SESSION['overlay_close_dialog']);
+          $response = call_user_func_array('overlay_close_dialog', $_SESSION['overlay_close_dialog']);
           unset($_SESSION['overlay_close_dialog']);
+          $event->setResponse($response);
         }
         // If this page shouldn't be rendered inside the overlay, redirect to
         // the parent.
         elseif (!path_is_admin($current_path)) {
-          overlay_close_dialog($current_path, array('query' => drupal_get_query_parameters(NULL, array('render'))));
+          $response = overlay_close_dialog($current_path, array('query' => drupal_get_query_parameters(NULL, array('render'))));
+          $event->setResponse($response);
         }
 
         // Indicate that we are viewing an overlay child page.

@@ -7,6 +7,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -702,12 +703,19 @@ function drupal_goto($path = '', array $options = array(), $http_response_code =
   $options['absolute'] = TRUE;
 
   $url = Drupal::urlGenerator()->generateFromPath($path, $options);
-  header('Location: ' . $url, TRUE, $http_response_code);
+
+  if (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL) {
+    drupal_session_commit();
+  }
+
+  $response = new RedirectResponse($url, $http_response_code);
+  // @todo We should not send the response here: http://drupal.org/node/1668866
+  $response->sendHeaders();
 
   // The "Location" header sends a redirect status code to the HTTP daemon. In
   // some cases this can be wrong, so we make sure none of the code below the
   // drupal_goto() call gets executed upon redirection.
-  drupal_exit();
+  exit;
 }
 
 /**
@@ -1578,18 +1586,6 @@ function l($text, $path, array $options = array()) {
   $text = $variables['options']['html'] ? $variables['text'] : check_plain($variables['text']);
 
   return '<a href="' . $url . '"' . $attributes . '>' . $text . '</a>';
-}
-
-/**
- * Performs end-of-request tasks.
- *
- * There should rarely be a reason to call exit instead of drupal_exit();
- */
-function drupal_exit() {
-  if (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL) {
-    drupal_session_commit();
-  }
-  exit;
 }
 
 /**

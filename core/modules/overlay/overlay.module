@@ -493,11 +493,13 @@ function overlay_preprocess_page(&$variables) {
  * interruption, and also allowing the display of messages to be deferred to
  * the parent window (rather than displaying them in the child window, which
  * will close before the user has had a chance to read them).
+ *
+ * @return \Symfony\Component\HttpFoundation\Response
+ *   A Response object.
  */
 function overlay_deliver_empty_page() {
   $empty_page = '<html><head><title></title>' . drupal_get_css() . drupal_get_js() . '</head><body class="overlay"></body></html>';
-  print $empty_page;
-  drupal_exit();
+  return new Response($empty_page);
 }
 
 /**
@@ -637,6 +639,9 @@ function overlay_overlay_child_initialize() {
  *   (optional) An associative array of options to use when generating the
  *   redirect URL.
  *
+ * @return \Symfony\Component\HttpFoundation\Response
+ *   A Response object.
+ *
  * @todo This function should only request that the overlay close when the page
  *   is displayed (as it did in Drupal 7), not immediately end the request.
  */
@@ -656,7 +661,7 @@ function overlay_close_dialog($redirect = NULL, $redirect_options = array()) {
 
   // Since we are closing the overlay as soon as the page is displayed, we do
   // not want to show any of the page's actual content.
-  overlay_deliver_empty_page();
+  return overlay_deliver_empty_page();
 }
 
 /**

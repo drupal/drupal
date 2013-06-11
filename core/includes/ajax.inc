@@ -5,6 +5,8 @@
  * Functions for use with Drupal's Ajax framework.
  */
 
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+
 /**
  * @defgroup ajax Ajax framework
  * @{
@@ -326,7 +328,7 @@ function ajax_get_form() {
     // This is likely a hacking attempt as it never happens under normal
     // circumstances, so we just do nothing.
     watchdog('ajax', 'Invalid form POST data.', array(), WATCHDOG_WARNING);
-    drupal_exit();
+    throw new BadRequestHttpException();
   }
 
   // Since some of the submit handlers are run, redirects need to be disabled.

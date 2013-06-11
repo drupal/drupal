@@ -12,6 +12,7 @@ use Drupal\form_test\Callbacks;
 use Drupal\form_test\FormTestObject;
 use Drupal\form_test\SystemConfigFormTestForm;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Implements hook_menu().
@@ -383,10 +384,9 @@ function form_test_permission() {
  * Form submit handler to return form values as JSON.
  */
 function _form_test_submit_values_json($form, &$form_state) {
-  // This won't have a proper JSON header, but Drupal doesn't check for that
-  // anyway so this is fine until it's replaced with a JsonResponse.
-  print drupal_json_encode($form_state['values']);
-  drupal_exit();
+  $response = new JsonResponse($form_state['values']);
+  // @todo remove once converted to new routing system.
+  $response->send();
 }
 
 /**
