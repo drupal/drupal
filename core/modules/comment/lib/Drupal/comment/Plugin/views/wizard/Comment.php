@@ -100,10 +100,10 @@ class Comment extends WizardPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::page_display_options().
+   * {@inheritdoc}
    */
-  protected function page_display_options(array $form, array &$form_state) {
-    $display_options = parent::page_display_options($form, $form_state);
+  protected function pageDisplayOptions(array $form, array &$form_state) {
+    $display_options = parent::pageDisplayOptions($form, $form_state);
     $row_plugin = isset($form_state['values']['page']['style']['row_plugin']) ? $form_state['values']['page']['style']['row_plugin'] : NULL;
     $row_options = isset($form_state['values']['page']['style']['row_options']) ? $form_state['values']['page']['style']['row_options'] : array();
     $this->display_options_row($display_options, $row_plugin, $row_options);

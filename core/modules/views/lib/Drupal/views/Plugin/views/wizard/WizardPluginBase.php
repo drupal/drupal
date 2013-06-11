@@ -661,7 +661,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     // Display: Page
     if (!empty($form_state['values']['page']['create'])) {
-      $display_options['page'] = $this->page_display_options($form, $form_state);
+      $display_options['page'] = $this->pageDisplayOptions($form, $form_state);
 
       // Display: Feed (attached to the page)
       if (!empty($form_state['values']['page']['feed'])) {
@@ -954,7 +954,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * @return array
    *   Returns an array of display options.
    */
-  protected function page_display_options(array $form, array &$form_state) {
+  protected function pageDisplayOptions(array $form, array &$form_state) {
     $display_options = array();
     $page = $form_state['values']['page'];
     $display_options['title'] = $page['title'];
