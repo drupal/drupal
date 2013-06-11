@@ -21,12 +21,37 @@ class UserBCDecorator extends EntityBCDecorator implements UserInterface {
     // Special handling for roles, as the return value is expected to be an
     // array.
     if ($name == 'roles') {
-      $roles = array();
-      foreach ($this->getNGEntity()->roles as $role) {
-        $roles[] = $role->value;
-      }
+      $roles = $this->decorated->getRoles();
       return $roles;
     }
     return parent::__get($name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRoles() {
+    return $this->decorated->getRoles();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSecureSessionId() {
+    return $this->decorated->getSecureSessionId();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSessionData() {
+    return $this->decorated->getSecureSessionId();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSessionId() {
+    return $this->decorated->getSessionId();
   }
 }

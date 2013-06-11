@@ -11,10 +11,10 @@ use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Database\Database;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\query\Sql;
 use Drupal\views\Plugin\Core\Entity\View;
 use Drupal\views\ViewStorageInterface;
-use Drupal\user\UserInterface;
 
 /**
  * Stores UI related temporary settings.
@@ -943,7 +943,7 @@ class ViewUI implements ViewStorageInterface {
   /**
    * Implements \Drupal\Core\TypedData\AccessibleInterface::access().
    */
-  public function access($operation = 'view', UserInterface $account = NULL) {
+  public function access($operation = 'view', AccountInterface $account = NULL) {
     return $this->storage->access($operation, $account);
   }
 

@@ -9,6 +9,7 @@ namespace Drupal\views_test_data\Plugin\views\access;
 
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
 use Symfony\Component\Routing\Route;
 
@@ -30,7 +31,7 @@ class StaticTest extends AccessPluginBase {
     return $options;
   }
 
-  public function access($account) {
+  public function access(AccountInterface $account) {
     return !empty($this->options['access']);
   }
 

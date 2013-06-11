@@ -236,4 +236,36 @@ class User extends EntityNG implements UserInterface {
     return $this->bcEntity;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getRoles() {
+    $roles = array();
+    foreach ($this->get('roles') as $role) {
+      $roles[] = $role->value;
+    }
+    return $roles;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSecureSessionId() {
+    return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSessionData() {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSessionId() {
+    return NULL;
+  }
+
 }

@@ -361,7 +361,7 @@ function hook_user_view(\Drupal\user\UserInterface $account, \Drupal\entity\Plug
  * @see user_view()
  * @see hook_entity_view_alter()
  */
-function hook_user_view_alter(&$build, \Drupal\user\Plugin\Core\Entity\User $account, \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display) {
+function hook_user_view_alter(&$build, \Drupal\user\UserInterface $account, \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display) {
   // Check for the existence of a field added by another module.
   if (isset($build['an_additional_field'])) {
     // Change its weight.

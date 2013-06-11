@@ -8,8 +8,7 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Language\Language;
-// @todo Don't depend on module level code.
-use Drupal\user\UserInterface;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Defines a common interface for entity access controller classes.
@@ -27,14 +26,14 @@ interface EntityAccessControllerInterface {
    * @param string $langcode
    *   (optional) The language code for which to check access. Defaults to
    *   Language::LANGCODE_DEFAULT.
-   * @param \Drupal\user\UserInterface $account
-   *   (optional) The user for which to check access, or NULL to check access
-   *   for the current user. Defaults to NULL.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   (optional) The user session for which to check access, or NULL to check
+   *   access for the current user. Defaults to NULL.
    *
    * @return bool
    *   TRUE if access was granted, FALSE otherwise.
    */
-  public function access(EntityInterface $entity, $operation, $langcode = Language::LANGUAGE_DEFAULT, UserInterface $account = NULL);
+  public function access(EntityInterface $entity, $operation, $langcode = Language::LANGCODE_DEFAULT, AccountInterface $account = NULL);
 
   /**
    * Clears all cached access checks.

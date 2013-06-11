@@ -9,7 +9,7 @@ namespace Drupal\taxonomy;
 
 use Drupal\Core\Entity\EntityAccessController;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\user\UserInterface;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Defines an access controller for the taxonomy term entity.
@@ -21,7 +21,7 @@ class TermAccessController extends EntityAccessController {
   /**
    * {@inheritdoc}
    */
-  protected function checkAccess(EntityInterface $entity, $operation, $langcode, UserInterface $account) {
+  protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
     switch ($operation) {
       case 'view':
         return user_access('access content', $account);

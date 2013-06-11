@@ -12,6 +12,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\user\UserInterface;
 use IteratorAggregate;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Defines a base entity class.
@@ -258,7 +259,7 @@ class Entity implements IteratorAggregate, EntityInterface {
   /**
    * Implements \Drupal\Core\TypedData\AccessibleInterface::access().
    */
-  public function access($operation = 'view', UserInterface $account = NULL) {
+  public function access($operation = 'view', AccountInterface $account = NULL) {
     return \Drupal::entityManager()
       ->getAccessController($this->entityType)
       ->access($this, $operation, Language::LANGCODE_DEFAULT, $account);

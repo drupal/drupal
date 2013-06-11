@@ -8,6 +8,7 @@
 namespace Drupal\user\Plugin\views\access;
 
 use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
 use Drupal\Core\Annotation\Translation;
 use Symfony\Component\Routing\Route;
@@ -30,7 +31,10 @@ class Permission extends AccessPluginBase {
    */
   protected $usesOptions = TRUE;
 
-  public function access($account) {
+  /**
+   * {@inheritdoc}
+   */
+  public function access(AccountInterface $account) {
     return user_access($this->options['perm'], $account) || user_access('access all views', $account);
   }
 
