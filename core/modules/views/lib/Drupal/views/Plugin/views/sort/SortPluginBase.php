@@ -161,7 +161,7 @@ abstract class SortPluginBase extends HandlerBase {
    * Shortcut to display the value form.
    */
   protected function showSortForm(&$form, &$form_state) {
-    $options = $this->sort_options();
+    $options = $this->sortOptions();
     if (!empty($options)) {
       $form['order'] = array(
         '#type' => 'radios',
@@ -179,7 +179,7 @@ abstract class SortPluginBase extends HandlerBase {
    * Provide a list of options for the default sort form.
    * Should be overridden by classes that don't override sort_form
    */
-  function sort_options() {
+  protected function sortOptions() {
     return array(
       'ASC' => t('Sort ascending'),
       'DESC' => t('Sort descending'),
