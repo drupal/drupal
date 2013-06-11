@@ -796,7 +796,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    *
    * This must:
    * - add_groupby: group on this field in order to create summaries.
-   * - add_field: add a 'num_nodes' field for the count. Usually it will
+   * - addField: add a 'num_nodes' field for the count. Usually it will
    *   be a count on $view->base_field
    * - set_count_field: Reset the count field so we get the right paging.
    *
@@ -806,7 +806,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
   protected function summaryQuery() {
     $this->ensureMyTable();
     // Add the field.
-    $this->base_alias = $this->query->add_field($this->tableAlias, $this->realField);
+    $this->base_alias = $this->query->addField($this->tableAlias, $this->realField);
 
     $this->summaryNameField();
     return $this->summaryBasics();
@@ -840,7 +840,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     }
 
     if (isset($this->name_field)) {
-      $this->name_alias = $this->query->add_field($this->name_table_alias, $this->name_field);
+      $this->name_alias = $this->query->addField($this->name_table_alias, $this->name_field);
     }
     else {
       $this->name_alias = $this->base_alias;
@@ -855,7 +855,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     // Add the number of nodes counter
     $distinct = ($this->view->display_handler->getOption('distinct') && empty($this->query->no_distinct));
 
-    $count_alias = $this->query->add_field($this->view->storage->get('base_table'), $this->view->storage->get('base_field'), 'num_records', array('count' => TRUE, 'distinct' => $distinct));
+    $count_alias = $this->query->addField($this->view->storage->get('base_table'), $this->view->storage->get('base_field'), 'num_records', array('count' => TRUE, 'distinct' => $distinct));
     $this->query->add_groupby($this->name_alias);
 
     if ($count_field) {

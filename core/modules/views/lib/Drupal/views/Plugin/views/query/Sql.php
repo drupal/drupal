@@ -743,7 +743,7 @@ class Sql extends QueryPluginBase {
    * @return $name
    *   The name that this field can be referred to as. Usually this is the alias.
    */
-  function add_field($table, $field, $alias = '', $params = array()) {
+  public function addField($table, $field, $alias = '', $params = array()) {
     // We check for this specifically because it gets a special alias.
     if ($table == $this->view->storage->get('base_table') && $field == $this->view->storage->get('base_field') && empty($alias)) {
       $alias = $this->view->storage->get('base_field');
@@ -946,7 +946,7 @@ class Sql extends QueryPluginBase {
    *   one will be generated for from the $field; however, if the
    *   $field is a formula, this alias will likely fail.
    * @param $params
-   *   Any params that should be passed through to the add_field.
+   *   Any params that should be passed through to the addField.
    */
   function add_orderby($table, $field = NULL, $order = 'ASC', $alias = '', $params = array()) {
     // Only ensure the table if it's not the special random key.
@@ -965,7 +965,7 @@ class Sql extends QueryPluginBase {
     }
 
     if ($field) {
-      $as = $this->add_field($table, $field, $as, $params);
+      $as = $this->addField($table, $field, $as, $params);
     }
 
     $this->orderby[] = array(
@@ -1002,7 +1002,7 @@ class Sql extends QueryPluginBase {
    *
    * @access protected
    *
-   * @see views_plugin_query_default::add_field()
+   * @see \Drupal\views\Plugin\views\query\Sql::addField
    */
   protected function getFieldAlias($table_alias, $field) {
     return isset($this->field_aliases[$table_alias][$field]) ? $this->field_aliases[$table_alias][$field] : FALSE;
@@ -1200,7 +1200,7 @@ class Sql extends QueryPluginBase {
   public function query($get_count = FALSE) {
     // Check query distinct value.
     if (empty($this->no_distinct) && $this->distinct && !empty($this->fields)) {
-      $base_field_alias = $this->add_field($this->view->storage->get('base_table'), $this->view->storage->get('base_field'));
+      $base_field_alias = $this->addField($this->view->storage->get('base_table'), $this->view->storage->get('base_field'));
       $this->add_groupby($base_field_alias);
       $distinct = TRUE;
     }
@@ -1289,7 +1289,7 @@ class Sql extends QueryPluginBase {
       foreach ($entity_tables as $table_alias => $table) {
         $info = entity_get_info($table['entity_type']);
         $base_field = empty($table['revision']) ? $info['entity_keys']['id'] : $info['entity_keys']['revision'];
-        $this->add_field($table_alias, $base_field, '', $params);
+        $this->addField($table_alias, $base_field, '', $params);
       }
     }
 
@@ -1602,7 +1602,7 @@ class Sql extends QueryPluginBase {
   }
 
   public function addSignature(ViewExecutable $view) {
-    $view->query->add_field(NULL, "'" . $view->storage->id() . ':' . $view->current_display . "'", 'view_name');
+    $view->query->addField(NULL, "'" . $view->storage->id() . ':' . $view->current_display . "'", 'view_name');
   }
 
   public function getAggregationInfo() {

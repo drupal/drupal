@@ -122,7 +122,7 @@ class EntityReference extends DisplayPluginBase {
 
     // Make sure the id field is included in the results.
     $id_field = $this->view->storage->get('base_field');
-    $this->id_field_alias = $this->view->query->add_field($this->view->storage->get('base_table'), $id_field);
+    $this->id_field_alias = $this->view->query->addField($this->view->storage->get('base_table'), $id_field);
 
     $options = $this->getOption('entity_reference_options');
 
