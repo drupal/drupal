@@ -17,6 +17,10 @@ function theme_test_theme($existing, $type, $theme, $path) {
   $items['theme_test_foo'] = array(
     'variables' => array('foo' => NULL),
   );
+  $items['theme_test_render_element'] = array(
+    'render element' => 'elements',
+    'template' => 'theme-test-render-element',
+  );
   $items['theme_test_render_element_children'] = array(
     'render element' => 'element',
   );
@@ -151,6 +155,13 @@ function theme_test_preprocess_html(&$variables) {
  */
 function theme_theme_test_foo($variables) {
   return $variables['foo'];
+}
+
+/**
+ * Process variables for theme-test-render-element.tpl.php.
+ */
+function template_preprocess_theme_test_render_element(&$variables) {
+  $variables['attributes']['data-variables-are-preprocessed'] = TRUE;
 }
 
 /**

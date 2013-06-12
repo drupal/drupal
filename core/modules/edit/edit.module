@@ -14,6 +14,7 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\edit\Form\EditFieldForm;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 
 /**
  * Implements hook_menu().
@@ -142,35 +143,10 @@ function edit_preprocess_field(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for node.html.twig.
- *
- * @todo Remove this, handle in generic way: http://drupal.org/node/1972514.
+ * Implements hook_entity_view_alter().
  */
-function edit_preprocess_node(&$variables) {
-  $node = $variables['elements']['#node'];
-  $variables['attributes']['data-edit-entity'] = 'node/' . $node->nid;
-}
-
-/**
- * Implements hook_preprocess_HOOK() for taxonomy-term.tpl.php.
- *
- * @todo Remove this, handle in generic way: http://drupal.org/node/1972514.
- */
-function edit_preprocess_taxonomy_term(&$variables) {
-  $term = $variables['elements']['#term'];
-  $variables['attributes']['data-edit-entity'] = 'taxonomy_term/' . $term->id();
-}
-
-/**
- * Implements hook_preprocess_HOOK() for block.html.twig.
- *
- * @todo Remove this, handle in generic way: http://drupal.org/node/1972514.
- */
-function edit_preprocess_block(&$variables) {
-  if (isset($variables['elements']['content']['#custom_block'])) {
-    $custom_block = $variables['elements']['content']['#custom_block'];
-    $variables['attributes']['data-edit-entity'] = 'custom_block/' . $custom_block->id();
-  }
+function edit_entity_view_alter(&$build, EntityInterface $entity, EntityDisplay $display) {
+  $build['#attributes']['data-edit-entity'] = $entity->entityType() . '/' . $entity->id();
 }
 
 /**

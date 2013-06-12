@@ -36,6 +36,28 @@ class ThemeTest extends WebTestBase {
   }
 
   /**
+   * Test attribute merging.
+   *
+   * Render arrays that use a render element and templates (and hence call
+   * template_preprocess()) must ensure the attributes at different occassions
+   * are all merged correctly:
+   *   - $variables['attributes'] as passed in to theme()
+   *   - the render element's #attributes
+   *   - any attributes set in the template's preprocessing function
+   */
+  function testAttributeMerging() {
+    $output = theme('theme_test_render_element', array(
+      'elements' => array(
+        '#attributes' => array('data-foo' => 'bar'),
+      ),
+      'attributes' => array(
+        'id' => 'bazinga',
+      ),
+    ));
+    $this->assertIdentical($output, '<div id="bazinga" data-foo="bar" data-variables-are-preprocessed></div>' . "\n");
+  }
+
+  /**
    * Test function theme_get_suggestions() for SA-CORE-2009-003.
    */
   function testThemeSuggestions() {
