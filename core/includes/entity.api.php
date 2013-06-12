@@ -538,6 +538,24 @@ function hook_entity_field_info_alter(&$info, $entity_type) {
 }
 
 /**
+ * Alter entity operations.
+ *
+ * @param array $operations
+ *   Operations array as returned by
+ *   \Drupal\Core\Entity\EntityStorageControllerInterface::getOperations().
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity on which the linked operations will be performed.
+ */
+function hook_entity_operation_alter(array &$operations, \Drupal\Core\Entity\EntityInterface $entity) {
+  $uri = $entity->uri();
+  $operations['translate'] = array(
+    'title' => t('Translate'),
+    'href' => $uri['path'] . '/translate',
+    'weight' => 50,
+  );
+}
+
+/**
  * Control access to fields.
  *
  * This hook is invoked from \Drupal\Core\Entity\Field\Type\Field::access() to

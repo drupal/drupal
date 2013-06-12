@@ -207,7 +207,7 @@ class EntityManager extends PluginManagerBase {
     if (!isset($this->controllers['render'][$entity_type])) {
       $class = $this->getControllerClass($entity_type, 'render');
       if (in_array('Drupal\Core\Entity\EntityControllerInterface', class_implements($class))) {
-        $this->controllers['render'][$entity_type] = $class::createInstance($this->container, $entity_type, $this->getDefinition($entity_type));
+        $this->controllers['render'][$entity_type] = $class::createInstance($this->container, $this->getDefinition($entity_type), $entity_type);
       }
       else {
         $this->controllers['render'][$entity_type] = new $class($entity_type);
