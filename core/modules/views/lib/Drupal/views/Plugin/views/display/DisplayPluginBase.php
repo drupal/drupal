@@ -862,7 +862,7 @@ abstract class DisplayPluginBase extends PluginBase {
         // If this is during form submission and there are temporary options
         // which can only appear if the view is in the edit cache, use those
         // options instead. This is used for AJAX multi-step stuff.
-        if (isset($_POST['form_id']) && isset($this->view->temporary_options[$type][$id])) {
+        if (\Drupal::request()->request->get('form_id') && isset($this->view->temporary_options[$type][$id])) {
           $info = $this->view->temporary_options[$type][$id];
         }
 
