@@ -449,3 +449,6 @@ services:
   country_manager:
     class: Drupal\Core\Locale\CountryManager
     arguments: ['@module_handler']
+  date:
+    class: Drupal\Core\Datetime\Date
+    arguments: ['@config.factory', '@language_manager']

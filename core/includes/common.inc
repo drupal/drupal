@@ -1273,50 +1273,11 @@ function format_interval($interval, $granularity = 2, $langcode = NULL) {
  *
  * @return
  *   A translated date string in the requested format.
+ *
+ * @see \Drupal\Component\Datetime\Date::format()
  */
 function format_date($timestamp, $type = 'medium', $format = '', $timezone = NULL, $langcode = NULL) {
-  // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static_fast;
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['timezones'] = &drupal_static(__FUNCTION__);
-  }
-  $timezones = &$drupal_static_fast['timezones'];
-
-  if (!isset($timezone)) {
-    $timezone = date_default_timezone_get();
-  }
-  // Store DateTimeZone objects in an array rather than repeatedly
-  // constructing identical objects over the life of a request.
-  if (!isset($timezones[$timezone])) {
-    $timezones[$timezone] = timezone_open($timezone);
-  }
-
-  if (empty($langcode)) {
-    $langcode = language(Language::TYPE_INTERFACE)->langcode;
-  }
-
-  // Create a DrupalDateTime object from the timestamp and timezone.
-  $date = new DrupalDateTime($timestamp, $timezones[$timezone]);
-
-  // Find the appropriate format type.
-  $key = $date->canUseIntl() ? DrupalDateTime::INTL : DrupalDateTime::PHP;
-
-  // If we have a non-custom date format use the provided date format pattern.
-  if ($type != 'custom') {
-    $format = config('system.date')->get('formats.' . $type . '.pattern.' . $key);
-  }
-
-  // Fall back to medium if a format was not found.
-  if (empty($format)) {
-    $format = config('system.date')->get('formats.medium.pattern.' . $key);
-  }
-
-  // Call $date->format().
-  $settings = array(
-    'langcode' => $langcode,
-    'format_string_type' => $key,
-  );
-  return filter_xss_admin($date->format($format, $settings));
+  return Drupal::service('date')->format($timestamp, $type, $format, $timezone, $langcode);
 }
 
 /**
