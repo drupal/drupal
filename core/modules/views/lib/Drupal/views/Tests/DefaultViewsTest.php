@@ -14,7 +14,7 @@ use Drupal\views\ViewExecutable;
 /**
  * Tests for views default views.
  */
-class DefaultViewsTest extends WebTestBase {
+class DefaultViewsTest extends ViewTestBase {
 
   /**
    * Modules to enable.
@@ -82,7 +82,7 @@ class DefaultViewsTest extends WebTestBase {
     field_create_instance($this->instance);
 
     // Create a time in the past for the archive.
-    $time = time() - 3600;
+    $time = REQUEST_TIME - 3600;
 
     for ($i = 0; $i <= 10; $i++) {
       $user = $this->drupalCreateUser();
@@ -158,6 +158,57 @@ class DefaultViewsTest extends WebTestBase {
     ));
     $term->save();
     return $term;
+  }
+
+  /**
+   * Tests the archive view.
+   */
+  public function testArchiveView() {
+    // Create additional nodes compared to the one in the setup method.
+    // Create two nodes in the same month, and one in each following month.
+    $node = array(
+      'created' => 280299600, // Sun, 19 Nov 1978 05:00:00 GMT
+    );
+    $this->drupalCreateNode($node);
+    $this->drupalCreateNode($node);
+    $node = array(
+      'created' => 282891600, // Tue, 19 Dec 1978 05:00:00 GMT
+    );
+    $this->drupalCreateNode($node);
+    $node = array(
+      'created' => 285570000, // Fri, 19 Jan 1979 05:00:00 GMT
+    );
+    $this->drupalCreateNode($node);
+
+    $view = views_get_view('archive');
+    $view->setDisplay('page_1');
+    $this->executeView($view);
+    $column_map = drupal_map_assoc(array('nid', 'created_year_month', 'num_records'));
+    // Create time of additional nodes created in the setup method.
+    $created_year_month = date('Ym', REQUEST_TIME - 3600);
+    $expected_result = array(
+      array(
+        'nid' => 1,
+        'created_year_month' => $created_year_month,
+        'num_records' => 11,
+      ),
+      array(
+        'nid' => 15,
+        'created_year_month' => 197901,
+        'num_records' => 1,
+      ),
+      array(
+        'nid' => 14,
+        'created_year_month' => 197812,
+        'num_records' => 1,
+      ),
+      array(
+        'nid' => 12,
+        'created_year_month' => 197811,
+        'num_records' => 2,
+      ),
+    );
+    $this->assertIdenticalResultset($view, $expected_result, $column_map);
   }
 
 }
