@@ -49,16 +49,16 @@ abstract class PluginBase implements PluginInspectionInterface {
   }
 
   /**
-   * Implements Drupal\Component\Plugin\PluginInterface::getPluginId().
+   * {@inheritdoc}
    */
   public function getPluginId() {
     return $this->pluginId;
   }
 
   /**
-   * Implements Drupal\Component\Plugin\PluginInterface::getDefinition().
+   * {@inheritdoc}
    */
-  public function getDefinition() {
+  public function getPluginDefinition() {
     return $this->pluginDefinition;
   }
 

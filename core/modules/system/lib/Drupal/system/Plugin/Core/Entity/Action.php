@@ -111,7 +111,7 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface {
    * {@inheritdoc}
    */
   public function getPluginDefinition() {
-    return $this->getPlugin()->getDefinition();
+    return $this->getPlugin()->getPluginDefinition();
   }
 
   /**

@@ -45,7 +45,7 @@ class BlockPluginUI extends PluginUIBase {
   public function form($form, &$form_state, $facet = NULL) {
     // @todo Add an inline comment here.
     list($plugin, $theme) = explode(':', $this->getPluginId());
-    $plugin_definition = $this->getDefinition();
+    $plugin_definition = $this->getPluginDefinition();
     // @todo Find out how to let the manager be injected into the class.
     $manager = drupal_container()->get($plugin_definition['manager']);
     $plugins = $manager->getDefinitions();
@@ -141,7 +141,7 @@ class BlockPluginUI extends PluginUIBase {
    * Overrides \Drupal\system\Plugin\PluginUIBase::row().
    */
   public function row($display_plugin_id, array $display_plugin_definition) {
-    $plugin_definition = $this->getDefinition();
+    $plugin_definition = $this->getPluginDefinition();
     list($plugin, $theme) = explode(':', $this->getPluginId());
     $row = array();
     $row[] = check_plain($display_plugin_definition['admin_label']);
@@ -180,7 +180,7 @@ class BlockPluginUI extends PluginUIBase {
    *   Returns a row array comaptible with theme_links().
    */
   protected function facetLink($facet, $display_plugin_id, array $display_plugin_definition) {
-    $plugin_definition = $this->getDefinition();
+    $plugin_definition = $this->getPluginDefinition();
     return array(
       'title' => $display_plugin_definition[$facet],
       'href' => $plugin_definition['path'] . '/' . $this->getPluginId() . '/' . $facet . ':' . $display_plugin_definition[$facet],
@@ -222,7 +222,7 @@ class BlockPluginUI extends PluginUIBase {
    *   Returns a simple URL string for use within l().
    */
   protected function allPluginsUrl($display_plugin_id, $display_plugin_definition) {
-    $plugin_definition = $this->getDefinition();
+    $plugin_definition = $this->getPluginDefinition();
     return $plugin_definition['path'] . '/' . $this->getPluginId() . '/add';
   }
 

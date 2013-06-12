@@ -54,7 +54,7 @@ abstract class ContextAwarePluginBase extends PluginBase implements ContextAware
    * Implements \Drupal\Component\Plugin\ContextAwarePluginInterface::getContextDefinitions().
    */
   public function getContextDefinitions() {
-    $definition = $this->getDefinition();
+    $definition = $this->getPluginDefinition();
     return !empty($definition['context']) ? $definition['context'] : array();
   }
 
@@ -62,7 +62,7 @@ abstract class ContextAwarePluginBase extends PluginBase implements ContextAware
    * Implements \Drupal\Component\Plugin\ContextAwarePluginInterface::getContextDefinition().
    */
   public function getContextDefinition($name) {
-    $definition = $this->getDefinition();
+    $definition = $this->getPluginDefinition();
     if (empty($definition['context'][$name])) {
       throw new PluginException("The $name context is not a valid context.");
     }

@@ -32,7 +32,7 @@ class TestProcessor extends PluginBase implements ProcessorInterface {
   public function settingsForm(array $form, array &$form_state) {
     $config = config('aggregator.settings');
     $processors = $config->get('processors');
-    $info = $this->getDefinition();
+    $info = $this->getPluginDefinition();
 
     $form['processors'][$info['id']] = array(
       '#type' => 'details',

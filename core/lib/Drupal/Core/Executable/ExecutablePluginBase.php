@@ -41,7 +41,7 @@ abstract class ExecutablePluginBase extends ContextAwarePluginBase implements Ex
    *   options, keyed by option name.
    */
   public function getConfigDefinitions() {
-    $definition = $this->getDefinition();
+    $definition = $this->getPluginDefinition();
     if (!empty($definition['configuration'])) {
       return $definition['configuration'];
     }
@@ -58,7 +58,7 @@ abstract class ExecutablePluginBase extends ContextAwarePluginBase implements Ex
    *   if the option does not exist.
    */
   public function getConfigDefinition($key) {
-    $definition = $this->getDefinition();
+    $definition = $this->getPluginDefinition();
     if (!empty($definition['configuration'][$key])) {
       return $definition['configuration'][$key];
     }

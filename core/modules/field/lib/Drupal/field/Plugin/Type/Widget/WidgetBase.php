@@ -90,7 +90,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     // If the widget is handling multiple values (e.g Options), or if we are
     // displaying an individual element, just get a single form element and make
     // it the $delta value.
-    $definition = $this->getDefinition();
+    $definition = $this->getPluginDefinition();
     if (isset($get_delta) || $definition['multiple_values']) {
       $delta = isset($get_delta) ? $get_delta : 0;
       $element = array(
@@ -357,7 +357,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
 
       // Only set errors if the element is accessible.
       if (!isset($element['#access']) || $element['#access']) {
-        $definition = $this->getDefinition();
+        $definition = $this->getPluginDefinition();
         $is_multiple = $definition['multiple_values'];
 
         foreach ($field_state['errors'] as $delta => $delta_errors) {

@@ -65,7 +65,7 @@ abstract class PluginSettingsBase extends PluginBase implements PluginSettingsIn
    * Implements Drupal\field\Plugin\PluginSettingsInterface::getDefaultSettings().
    */
   public function getDefaultSettings() {
-    $definition = $this->getDefinition();
+    $definition = $this->getPluginDefinition();
     return $definition['settings'];
   }
 

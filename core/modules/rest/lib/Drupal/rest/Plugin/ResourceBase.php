@@ -25,7 +25,7 @@ abstract class ResourceBase extends PluginBase implements ResourceInterface {
    */
   public function permissions() {
     $permissions = array();
-    $definition = $this->getDefinition();
+    $definition = $this->getPluginDefinition();
     foreach ($this->availableMethods() as $method) {
       $lowered_method = strtolower($method);
       $permissions["restful $lowered_method $this->pluginId"] = array(
