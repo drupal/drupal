@@ -24,7 +24,7 @@ use Drupal\field\FieldInterface;
  *   label = @Translation("Field"),
  *   module = "field",
  *   controllers = {
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
+ *     "storage" = "Drupal\field\FieldStorageController"
  *   },
  *   config_prefix = "field.field",
  *   entity_keys = {

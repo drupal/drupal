@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field\FieldInstanceStorageController.
+ * Contains \Drupal\field\FieldStorageController.
  */
 
 namespace Drupal\field;
@@ -17,14 +17,9 @@ use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 
 /**
- * Controller class for field instances.
- *
- * Note: the class take no special care about importing instances after their
- * field in importCreate(), since this is guaranteed by the alphabetical order
- * (field.field.* entries are processed before field.instance.* entries).
- * @todo Revisit after http://drupal.org/node/1944368.
+ * Controller class for fields.
  */
-class FieldInstanceStorageController extends ConfigStorageController {
+class FieldStorageController extends ConfigStorageController {
 
   /**
    * The module handler.
@@ -48,7 +43,7 @@ class FieldInstanceStorageController extends ConfigStorageController {
   protected $state;
 
   /**
-   * Constructs a FieldInstanceStorageController object.
+   * Constructs a FieldStorageController object.
    *
    * @param string $entity_type
    *   The entity type for which the instance is created.
@@ -90,19 +85,6 @@ class FieldInstanceStorageController extends ConfigStorageController {
   /**
    * {@inheritdoc}
    */
-  public function importDelete($name, Config $new_config, Config $old_config) {
-    // If the field has been deleted in the same import, the instance will be
-    // deleted by then, and there is nothing left to do. Just return TRUE so
-    // that the file does not get written to active store.
-    if (!$old_config->get()) {
-      return TRUE;
-    }
-    return parent::importDelete($name, $new_config, $old_config);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function loadByProperties(array $conditions = array()) {
     // Include instances of inactive fields if specified in the
     // $conditions parameters.
@@ -112,78 +94,64 @@ class FieldInstanceStorageController extends ConfigStorageController {
     $include_deleted = $conditions['include_deleted'];
     unset($conditions['include_deleted']);
 
-    // Get instances stored in configuration.
-    if (isset($conditions['entity_type']) && isset($conditions['bundle']) && isset($conditions['field_name'])) {
+    // Get fields stored in configuration.
+    if (isset($conditions['field_name'])) {
       // Optimize for the most frequent case where we do have a specific ID.
-      $instances = $this->entityManager->getStorageController($this->entityType)->load(array($conditions['entity_type'] . '.' . $conditions['bundle'] . '.' . $conditions['field_name']));
+      $fields = $this->entityManager->getStorageController($this->entityType)->load(array($conditions['field_name']));
     }
     else {
-      // No specific ID, we need to examine all existing instances.
-      $instances = $this->entityManager->getStorageController($this->entityType)->load();
+      // No specific ID, we need to examine all existing fields.
+      $fields = $this->entityManager->getStorageController($this->entityType)->load();
     }
 
-    // Merge deleted instances (stored in state) if needed.
+    // Merge deleted fields (stored in state) if needed.
     if ($include_deleted) {
-      $deleted_instances = $this->state->get('field.instance.deleted') ?: array();
-      foreach ($deleted_instances as $id => $config) {
-        $instances[$id] = $this->entityManager->getStorageController($this->entityType)->create($config);
+      $deleted_fields = $this->state->get('field.field.deleted') ?: array();
+      foreach ($deleted_fields as $id => $config) {
+        $fields[$id] = $this->entityManager->getStorageController($this->entityType)->create($config);
       }
     }
 
-    // Translate "do not include inactive fields" into actual conditions.
+    // Translate "do not include inactive instances" into actual conditions.
     if (!$include_inactive) {
-      $conditions['field.active'] = TRUE;
-      $conditions['field.storage.active'] = TRUE;
+      $conditions['active'] = TRUE;
+      $conditions['storage.active'] = TRUE;
     }
 
-    // Collect matching instances.
-    $matching_instances = array();
-    foreach ($instances as $instance) {
-      // Only include instances on unknown entity types if 'include_inactive'.
-      if (!$include_inactive && !$this->entityManager->getDefinition($instance->entity_type)) {
-        continue;
-      }
-
-      // Some conditions are checked against the field.
-      $field = $instance->getField();
-
-      // Only keep the instance if it matches all conditions.
+    // Collect matching fields.
+    $matching_fields = array();
+    foreach ($fields as $field) {
       foreach ($conditions as $key => $value) {
         // Extract the actual value against which the condition is checked.
         switch ($key) {
-          case 'field_name':
-            $checked_value = $field->id;
-            break;
-
-          case 'field.active':
-            $checked_value = $field->active;
-            break;
-
-          case 'field.storage.active':
+          case 'storage.active':
             $checked_value = $field->storage['active'];
             break;
 
-          case 'field_id':
-            $checked_value = $instance->field_uuid;
+          case 'field_name';
+            $checked_value = $field->id;
             break;
 
           default:
-            $checked_value = $instance->$key;
+            $checked_value = $field->$key;
             break;
         }
 
-        // Skip to the next instance as soon as one condition does not match.
+        // Skip to the next field as soon as one condition does not match.
         if ($checked_value != $value) {
           continue 2;
         }
       }
 
-      $this->moduleHandler->invokeAll('field_read_instance', $instance);
+      $this->moduleHandler->invokeAll('field_read_field', $field);
 
-      $matching_instances[] = $instance;
+      // When returning deleted fields, key the results by UUID since they can
+      // include several fields with the same ID.
+      $key = $include_deleted ? $field->uuid : $field->id;
+      $matching_fields[$key] = $field;
     }
 
-    return $matching_instances;
-  }
+    return $matching_fields;
 
+  }
 }
