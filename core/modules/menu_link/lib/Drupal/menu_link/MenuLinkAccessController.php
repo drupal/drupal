@@ -9,7 +9,7 @@ namespace Drupal\menu_link;
 
 use Drupal\Core\Entity\EntityAccessController;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\user\Plugin\Core\Entity\User;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Defines an access controller for the menu link entity.
@@ -21,7 +21,7 @@ class MenuLinkAccessController extends EntityAccessController {
   /**
    * {@inheritdoc}
    */
-  protected function checkAccess(EntityInterface $entity, $operation, $langcode, User $account) {
+  protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
     $access = user_access('administer menu', $account);
     if ($access && $operation == 'delete') {
       // Only items created by the menu module can be deleted.

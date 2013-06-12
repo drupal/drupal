@@ -9,7 +9,7 @@ namespace Drupal\system;
 
 use Drupal\Core\Entity\EntityAccessController;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\user\Plugin\Core\Entity\User;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Defines an access controller for the menu entity.
@@ -21,7 +21,7 @@ class MenuAccessController extends EntityAccessController {
   /**
    * {@inheritdoc}
    */
-  protected function checkAccess(EntityInterface $entity, $operation, $langcode, User $account) {
+  protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
     if ($operation == 'delete') {
       // System-defined menus may not be deleted.
       // @todo Refactor https://drupal.org/node/1882552
