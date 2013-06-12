@@ -253,7 +253,7 @@ abstract class PagerPluginBase extends PluginBase {
     return FALSE;
   }
 
-  function offset_exposed() {
+  protected function isOffsetExposed() {
     return FALSE;
   }
 
