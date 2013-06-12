@@ -404,7 +404,7 @@ function views_arg_load($value, $name, $display_id, $index) {
 
     if (isset($indexes[$index])) {
       if (isset($view->argument[$indexes[$index]])) {
-        $arg = $view->argument[$indexes[$index]]->validate_argument($value) ? $value : FALSE;
+        $arg = $view->argument[$indexes[$index]]->validateMenuArgument($value) ? $value : FALSE;
         $view->destroy();
 
         // Store the output in case we load this same menu item again.

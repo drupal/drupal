@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Translation;
  */
 class None extends ArgumentValidatorPluginBase {
 
-  function validate_argument($argument) {
+  public function validateArgument($argument) {
     if (!empty($this->argument->options['must_not_be'])) {
       return !isset($argument);
     }

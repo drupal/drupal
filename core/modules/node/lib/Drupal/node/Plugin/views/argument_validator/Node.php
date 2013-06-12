@@ -80,7 +80,7 @@ class Node extends ArgumentValidatorPluginBase {
     $options['types'] = array_filter($options['types']);
   }
 
-  function validate_argument($argument) {
+  public function validateArgument($argument) {
     $types = $this->options['types'];
 
     switch ($this->options['nid_type']) {

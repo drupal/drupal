@@ -72,7 +72,7 @@ class User extends ArgumentValidatorPluginBase {
     $options['roles'] = array_filter($options['roles']);
   }
 
-  function validate_argument($argument) {
+  public function validateArgument($argument) {
     $type = $this->options['type'];
     // is_numeric() can return false positives, so we ensure it's an integer.
     // However, is_integer() will always fail, since $argument is a string.

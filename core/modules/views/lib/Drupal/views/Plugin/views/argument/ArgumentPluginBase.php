@@ -950,7 +950,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     }
 
     $plugin = $this->getPlugin('argument_validator');
-    return $this->argument_validated = $plugin->validate_argument($arg);
+    return $this->argument_validated = $plugin->validateArgument($arg);
   }
 
   /**
@@ -960,7 +960,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * argument fails to validate, but there is an action to take anyway,
    * then validation cannot actually fail.
    */
-  function validate_argument($arg) {
+  public function validateMenuArgument($arg) {
     $validate_info = $this->defaultActions($this->options['validate']['fail']);
     if (empty($validate_info['hard fail'])) {
       return TRUE;
