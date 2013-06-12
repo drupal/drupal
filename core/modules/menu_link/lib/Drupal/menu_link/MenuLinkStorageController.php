@@ -69,6 +69,18 @@ class MenuLinkStorageController extends DatabaseStorageController {
   /**
    * {@inheritdoc}
    */
+  public function create(array $values) {
+    // The bundle of menu links being the menu name is not enforced but is the
+    // default behavior if no bundle is set.
+    if (!isset($values['bundle']) && isset($values['menu_name'])) {
+      $values['bundle'] = $values['menu_name'];
+    }
+    return parent::create($values);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
     return new static(
       $entity_type,

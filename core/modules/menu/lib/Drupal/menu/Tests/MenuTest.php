@@ -354,6 +354,11 @@ class MenuTest extends WebTestBase {
     $moved_item = entity_load('menu_link', $item->id(), TRUE);
     $this->assertNotEqual($moved_item->bundle(), $item->bundle(), 'Menu link bundle was changed');
     $this->assertEqual($moved_item->bundle(), $menu->id(), 'Menu link bundle matches the menu');
+
+    $unsaved_item = entity_create('menu_link', array('menu_name' => $menu->id(), 'link_title' => $this->randomName(16), 'link_path' => '<front>'));
+    $this->assertEqual($unsaved_item->bundle(), $menu->id(), 'Unsaved menu link bundle matches the menu');
+    $this->assertEqual($unsaved_item->menu_name, $menu->id(), 'Unsaved menu link menu name matches the menu');
+
   }
 
   /**
