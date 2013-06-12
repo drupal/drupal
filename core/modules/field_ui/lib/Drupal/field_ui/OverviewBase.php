@@ -8,7 +8,7 @@
 namespace Drupal\field_ui;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\ControllerInterface;
+use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Form\FormInterface;
 

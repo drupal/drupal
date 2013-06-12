@@ -28,12 +28,11 @@ class RemoveRoleUser extends ChangeUserRoleBase {
   public function execute($account = NULL) {
     $rid = $this->configuration['rid'];
     // Skip removing the role from the user if they already don't have it.
-    if ($account !== FALSE && isset($account->roles[$rid])) {
-      $roles = array_diff($account->roles, array($rid => $rid));
+    if ($account !== FALSE && $account->hasRole($rid)) {
       // For efficiency manually save the original account before applying
       // any changes.
       $account->original = clone $account;
-      $account->roles = $roles;
+      $account->removeRole($rid);
       $account->save();
     }
   }

@@ -48,7 +48,7 @@ class Search extends FilterPluginBase {
   /**
    * Provide simple equality operator
    */
-  function operator_form(&$form, &$form_state) {
+  protected function operatorForm(&$form, &$form_state) {
     $form['operator'] = array(
       '#type' => 'radios',
       '#title' => t('On empty input'),
@@ -149,7 +149,7 @@ class Search extends FilterPluginBase {
 
       $search_total = $this->query->addRelationship('search_total', $join, $search_index);
 
-      $this->search_score = $this->query->add_field('', "SUM($search_index.score * $search_total.count)", 'score', array('aggregate' => TRUE));
+      $this->search_score = $this->query->addField('', "SUM($search_index.score * $search_total.count)", 'score', array('aggregate' => TRUE));
 
       if (empty($this->query->relationships[$this->relationship])) {
         $base_table = $this->view->storage->get('base_table');

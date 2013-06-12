@@ -16,16 +16,21 @@ use Drupal\Component\Annotation\PluginID;
  *
  * @PluginID("text")
  */
-class Text extends AreaPluginBase {
+class Text extends TokenizeAreaPluginBase {
 
+  /**
+   * Overrides \Drupal\views\Plugin\views\area\TokenizeAreaPluginBase::defineOptions().
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['content'] = array('default' => '', 'translatable' => TRUE, 'format_key' => 'format');
     $options['format'] = array('default' => NULL);
-    $options['tokenize'] = array('default' => FALSE, 'bool' => TRUE);
     return $options;
   }
 
+  /**
+   * Overrides \Drupal\views\Plugin\views\area\TokenizeAreaPluginBase::buildOptionsForm().
+   */
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
 
@@ -36,9 +41,6 @@ class Text extends AreaPluginBase {
       '#format' => isset($this->options['format']) ? $this->options['format'] : filter_default_format(),
       '#wysiwyg' => FALSE,
     );
-
-    // Add tokenization form elements.
-    $this->tokenForm($form, $form_state);
   }
 
   public function submitOptionsForm(&$form, &$form_state) {
@@ -66,10 +68,7 @@ class Text extends AreaPluginBase {
    */
   public function renderTextarea($value, $format) {
     if ($value) {
-      if ($this->options['tokenize']) {
-        $value = $this->view->style_plugin->tokenizeValue($value, 0);
-      }
-      return check_markup($this->globalTokenReplace($value), $format, '', FALSE);
+      return check_markup($this->tokenizeValue($value), $format, '', FALSE);
     }
   }
 

@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-use Drupal\Core\ControllerInterface;
+use Drupal\Core\Controller\ControllerInterface;
 use Drupal\user\UserAutocomplete;
 
 /**
@@ -36,7 +36,7 @@ class UserAutocompleteController implements ControllerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\ControllerInterface::create().
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(

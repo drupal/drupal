@@ -7,7 +7,7 @@
 
 namespace Drupal\field_ui\Form;
 
-use Drupal\Core\ControllerInterface;
+use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Form\FormInterface;
 use Drupal\field\FieldInstanceInterface;

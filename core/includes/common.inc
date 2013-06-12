@@ -7,6 +7,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -702,12 +703,19 @@ function drupal_goto($path = '', array $options = array(), $http_response_code =
   $options['absolute'] = TRUE;
 
   $url = Drupal::urlGenerator()->generateFromPath($path, $options);
-  header('Location: ' . $url, TRUE, $http_response_code);
+
+  if (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL) {
+    drupal_session_commit();
+  }
+
+  $response = new RedirectResponse($url, $http_response_code);
+  // @todo We should not send the response here: http://drupal.org/node/1668866
+  $response->sendHeaders();
 
   // The "Location" header sends a redirect status code to the HTTP daemon. In
   // some cases this can be wrong, so we make sure none of the code below the
   // drupal_goto() call gets executed upon redirection.
-  drupal_exit();
+  exit;
 }
 
 /**
@@ -1265,50 +1273,11 @@ function format_interval($interval, $granularity = 2, $langcode = NULL) {
  *
  * @return
  *   A translated date string in the requested format.
+ *
+ * @see \Drupal\Component\Datetime\Date::format()
  */
 function format_date($timestamp, $type = 'medium', $format = '', $timezone = NULL, $langcode = NULL) {
-  // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static_fast;
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['timezones'] = &drupal_static(__FUNCTION__);
-  }
-  $timezones = &$drupal_static_fast['timezones'];
-
-  if (!isset($timezone)) {
-    $timezone = date_default_timezone_get();
-  }
-  // Store DateTimeZone objects in an array rather than repeatedly
-  // constructing identical objects over the life of a request.
-  if (!isset($timezones[$timezone])) {
-    $timezones[$timezone] = timezone_open($timezone);
-  }
-
-  if (empty($langcode)) {
-    $langcode = language(Language::TYPE_INTERFACE)->langcode;
-  }
-
-  // Create a DrupalDateTime object from the timestamp and timezone.
-  $date = new DrupalDateTime($timestamp, $timezones[$timezone]);
-
-  // Find the appropriate format type.
-  $key = $date->canUseIntl() ? DrupalDateTime::INTL : DrupalDateTime::PHP;
-
-  // If we have a non-custom date format use the provided date format pattern.
-  if ($type != 'custom') {
-    $format = config('system.date')->get('formats.' . $type . '.pattern.' . $key);
-  }
-
-  // Fall back to medium if a format was not found.
-  if (empty($format)) {
-    $format = config('system.date')->get('formats.medium.pattern.' . $key);
-  }
-
-  // Call $date->format().
-  $settings = array(
-    'langcode' => $langcode,
-    'format_string_type' => $key,
-  );
-  return filter_xss_admin($date->format($format, $settings));
+  return Drupal::service('date')->format($timestamp, $type, $format, $timezone, $langcode);
 }
 
 /**
@@ -1578,18 +1547,6 @@ function l($text, $path, array $options = array()) {
   $text = $variables['options']['html'] ? $variables['text'] : check_plain($variables['text']);
 
   return '<a href="' . $url . '"' . $attributes . '>' . $text . '</a>';
-}
-
-/**
- * Performs end-of-request tasks.
- *
- * There should rarely be a reason to call exit instead of drupal_exit();
- */
-function drupal_exit() {
-  if (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL) {
-    drupal_session_commit();
-  }
-  exit;
 }
 
 /**

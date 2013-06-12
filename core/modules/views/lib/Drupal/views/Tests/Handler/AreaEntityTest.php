@@ -96,7 +96,7 @@ class AreaEntityTest extends ViewTestBase {
     $this->assertTrue(strpos(trim((string) $result[0]), 'full') !== FALSE, 'The rendered entity appeared in the right view mode.');
 
     $result = $this->xpath('//div[@class = "view-footer"]');
-    $this->assertTrue(strpos(trim((string) $result[0]), $entities[1]->label()) !== FALSE, 'The rendered entity appears in the header of the view.');
+    $this->assertTrue(strpos(trim((string) $result[0]), $entities[1]->label()) !== FALSE, 'The rendered entity appears in the footer of the view.');
     $this->assertTrue(strpos(trim((string) $result[0]), 'full') !== FALSE, 'The rendered entity appeared in the right view mode.');
 
     // Change the view mode of the area handler.

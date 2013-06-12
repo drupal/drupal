@@ -100,7 +100,7 @@ abstract class FieldPluginBase extends HandlerBase {
     $this->ensureMyTable();
     // Add the field.
     $params = $this->options['group_type'] != 'group' ? array('function' => $this->options['group_type']) : array();
-    $this->field_alias = $this->query->add_field($this->tableAlias, $this->realField, NULL, $params);
+    $this->field_alias = $this->query->addField($this->tableAlias, $this->realField, NULL, $params);
 
     $this->addAdditionalFields();
   }
@@ -153,10 +153,10 @@ abstract class FieldPluginBase extends HandlerBase {
           }
 
           $params += $group_params;
-          $this->aliases[$identifier] = $this->query->add_field($table_alias, $info['field'], NULL, $params);
+          $this->aliases[$identifier] = $this->query->addField($table_alias, $info['field'], NULL, $params);
         }
         else {
-          $this->aliases[$info] = $this->query->add_field($this->tableAlias, $info, NULL, $group_params);
+          $this->aliases[$info] = $this->query->addField($this->tableAlias, $info, NULL, $group_params);
         }
       }
     }
@@ -1143,7 +1143,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
           $items[] = $this->renderText($alter);
         }
 
-        $value = $this->render_items($items);
+        $value = $this->renderItems($items);
       }
       else {
         $alter = array('phase' => VIEWS_HANDLER_RENDER_TEXT_PHASE_COMPLETELY) + $this->options['alter'];

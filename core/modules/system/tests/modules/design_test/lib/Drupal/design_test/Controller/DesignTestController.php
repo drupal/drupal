@@ -6,7 +6,7 @@
 
 namespace Drupal\design_test\Controller;
 
-use Drupal\Core\ControllerInterface;
+use Drupal\Core\Controller\ControllerInterface;
 
 /**
  * Controller routines for design_test routes.

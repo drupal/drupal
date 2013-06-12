@@ -10,7 +10,6 @@ namespace Drupal\views\Plugin\views\area;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\Component\Annotation\PluginID;
-use Drupal\views\Plugin\views\area\AreaPluginBase;
 
 /**
  * Provides an area handler which renders an entity in a certain view mode.
@@ -19,7 +18,7 @@ use Drupal\views\Plugin\views\area\AreaPluginBase;
  *
  * @PluginID("entity")
  */
-class Entity extends AreaPluginBase {
+class Entity extends TokenizeAreaPluginBase {
 
   /**
    * Stores the entity type of the result entities.
@@ -37,20 +36,23 @@ class Entity extends AreaPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\area\AreaPluginBase::defineOptions().
+   * {@inheritdoc}
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
+    // Per default we enable tokenize, as this is the most common use case for
+    // this handler.
+    $options['tokenize']['default'] = TRUE;
+
     $options['entity_id'] = array('default' => '');
     $options['view_mode'] = array('default' => '');
-    $options['tokenize'] = array('default' => TRUE, 'bool' => TRUE);
 
     return $options;
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\area\AreaPluginBase::buildOptionsForm().
+   * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
@@ -68,9 +70,6 @@ class Entity extends AreaPluginBase {
       '#type' => 'textfield',
       '#default_value' => $this->options['entity_id'],
     );
-
-    // Add tokenization form elements.
-    $this->tokenForm($form, $form_state);
   }
 
   /**
@@ -94,11 +93,7 @@ class Entity extends AreaPluginBase {
    */
   function render($empty = FALSE) {
     if (!$empty || !empty($this->options['empty'])) {
-      $entity_id = $this->options['entity_id'];
-      if ($this->options['tokenize']) {
-        $entity_id = $this->view->style_plugin->tokenizeValue($entity_id, 0);
-      }
-      $entity_id = $this->globalTokenReplace($entity_id);
+      $entity_id = $this->tokenizeValue($this->options['entity_id']);
       if ($entity = entity_load($this->entityType, $entity_id)) {
         return entity_view($entity, $this->options['view_mode']);
       }

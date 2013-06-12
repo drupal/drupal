@@ -6,7 +6,7 @@
 
 namespace Drupal\book\Controller;
 
-use Drupal\Core\ControllerInterface;
+use Drupal\Core\Controller\ControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Drupal\book\BookManager;

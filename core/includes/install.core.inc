@@ -2383,7 +2383,7 @@ function _install_configure_form($form, &$form_state, &$install_state) {
     '#title' => st('Server settings'),
   );
 
-  $countries = country_get_list();
+  $countries = Drupal::service('country_manager')->getList();
   $form['server_settings']['site_default_country'] = array(
     '#type' => 'select',
     '#title' => st('Default country'),

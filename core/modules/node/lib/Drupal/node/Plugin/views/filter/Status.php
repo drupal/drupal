@@ -21,7 +21,7 @@ class Status extends FilterPluginBase {
 
   public function adminSummary() { }
 
-  function operator_form(&$form, &$form_state) { }
+  protected function operatorForm(&$form, &$form_state) { }
 
   public function canExpose() { return FALSE; }
 

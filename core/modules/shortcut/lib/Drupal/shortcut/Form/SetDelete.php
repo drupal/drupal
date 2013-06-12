@@ -8,7 +8,7 @@
 namespace Drupal\shortcut\Form;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\ControllerInterface;
+use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Extension\ModuleHandlerInterface;

@@ -268,4 +268,27 @@ class User extends EntityNG implements UserInterface {
     return NULL;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function hasRole($rid) {
+    return in_array($rid, $this->getRoles());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addRole($rid) {
+    $roles = $this->getRoles();
+    $roles[] = $rid;
+    $this->set('roles', array_unique($roles));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeRole($rid) {
+    $this->set('roles', array_diff($this->getRoles(), array($rid)));
+  }
+
 }

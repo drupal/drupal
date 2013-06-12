@@ -143,19 +143,19 @@ class RssFields extends RowPluginBase {
 
     // Create the RSS item object.
     $item = new \stdClass();
-    $item->title = $this->get_field($row_index, $this->options['title_field']);
-    $item->link = url($this->get_field($row_index, $this->options['link_field']), array('absolute' => TRUE));
-    $item->description = $this->get_field($row_index, $this->options['description_field']);
+    $item->title = $this->getField($row_index, $this->options['title_field']);
+    $item->link = url($this->getField($row_index, $this->options['link_field']), array('absolute' => TRUE));
+    $item->description = $this->getField($row_index, $this->options['description_field']);
     $item->elements = array(
-      array('key' => 'pubDate', 'value' => $this->get_field($row_index, $this->options['date_field'])),
+      array('key' => 'pubDate', 'value' => $this->getField($row_index, $this->options['date_field'])),
       array(
         'key' => 'dc:creator',
-        'value' => $this->get_field($row_index, $this->options['creator_field']),
+        'value' => $this->getField($row_index, $this->options['creator_field']),
         'namespace' => array('xmlns:dc' => 'http://purl.org/dc/elements/1.1/'),
       ),
     );
     $guid_is_permalink_string = 'false';
-    $item_guid = $this->get_field($row_index, $this->options['guid_field_options']['guid_field']);
+    $item_guid = $this->getField($row_index, $this->options['guid_field_options']['guid_field']);
     if ($this->options['guid_field_options']['guid_field_is_permalink']) {
       $guid_is_permalink_string = 'true';
       $item_guid = url($item_guid, array('absolute' => TRUE));
@@ -187,15 +187,15 @@ class RssFields extends RowPluginBase {
    * Retrieves a views field value from the style plugin.
    *
    * @param $index
-   *   The index count of the row as expected by views_plugin_style::get_field().
+   *   The index count of the row as expected by views_plugin_style::getField().
    * @param $field_id
    *   The ID assigned to the required field in the display.
    */
-  function get_field($index, $field_id) {
+  public function getField($index, $field_id) {
     if (empty($this->view->style_plugin) || !is_object($this->view->style_plugin) || empty($field_id)) {
       return '';
     }
-    return $this->view->style_plugin->get_field($index, $field_id);
+    return $this->view->style_plugin->getField($index, $field_id);
   }
 
 }

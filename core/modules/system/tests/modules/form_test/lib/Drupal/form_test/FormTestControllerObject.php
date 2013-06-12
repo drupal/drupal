@@ -8,7 +8,7 @@
 namespace Drupal\form_test;
 
 use Drupal\Core\Form\FormInterface;
-use Drupal\Core\ControllerInterface;
+use Drupal\Core\Controller\ControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -25,7 +25,7 @@ class FormTestControllerObject implements FormInterface, ControllerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\ControllerInterface::create().
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     drupal_set_message(t('The FormTestControllerObject::create() method was used for this form.'));

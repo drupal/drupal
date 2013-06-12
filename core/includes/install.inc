@@ -5,6 +5,7 @@
  * API functions for installing modules and themes.
  */
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
@@ -859,10 +860,12 @@ function drupal_install_fix_file($file, $mask, $message = TRUE) {
  */
 function install_goto($path) {
   global $base_url;
-  include_once __DIR__ . '/common.inc';
-  header('Location: ' . $base_url . '/' . $path);
-  header('Cache-Control: no-cache'); // Not a permanent redirect.
-  drupal_exit();
+  $headers = array(
+    // Not a permanent redirect.
+    'Cache-Control' => 'no-cache',
+  );
+  $response = new RedirectResponse($base_url . '/' . $path, 302, $headers);
+  $response->send();
 }
 
 /**

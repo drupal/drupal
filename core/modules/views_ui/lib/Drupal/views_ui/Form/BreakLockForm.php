@@ -9,7 +9,7 @@ namespace Drupal\views_ui\Form;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-use Drupal\Core\ControllerInterface;
+use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\views\ViewStorageInterface;
 use Drupal\Core\Entity\EntityManager;
@@ -55,7 +55,7 @@ class BreakLockForm extends ConfirmFormBase implements ControllerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\ControllerInterface::create().
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(

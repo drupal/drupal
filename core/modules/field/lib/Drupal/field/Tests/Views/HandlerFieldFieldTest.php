@@ -104,7 +104,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     for ($i = 0; $i < 3; $i++) {
       for ($key = 0; $key < 2; $key++) {
         $field = $this->fields[$key];
-        $rendered_field = $view->style_plugin->get_field($i, $field['field_name']);
+        $rendered_field = $view->style_plugin->getField($i, $field['field_name']);
         $expected_field = $this->nodes[$i]->{$field['field_name']}[Language::LANGCODE_NOT_SPECIFIED][0]['value'];
         $this->assertEqual($rendered_field, $expected_field);
       }
@@ -126,7 +126,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     // Take sure that the formatter works as expected.
     // @TODO: actually there should be a specific formatter.
     for ($i = 0; $i < 2; $i++) {
-      $rendered_field = $view->style_plugin->get_field($i, $this->fields[0]['field_name']);
+      $rendered_field = $view->style_plugin->getField($i, $this->fields[0]['field_name']);
       $this->assertEqual(strlen($rendered_field), 3);
     }
   }
@@ -142,7 +142,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $this->executeView($view);
 
     for ($i = 0; $i < 3; $i++) {
-      $rendered_field = $view->style_plugin->get_field($i, $field_name);
+      $rendered_field = $view->style_plugin->getField($i, $field_name);
       $items = array();
       $pure_items = $this->nodes[$i]->{$field_name}[Language::LANGCODE_NOT_SPECIFIED];
       $pure_items = array_splice($pure_items, 0, 3);
@@ -153,7 +153,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     }
 
     // Test that an empty field is rendered without error.
-    $rendered_field = $view->style_plugin->get_field(4, $this->fields[4]['field_name']);
+    $rendered_field = $view->style_plugin->getField(4, $this->fields[4]['field_name']);
 
     $view->destroy();
 
@@ -165,7 +165,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $this->executeView($view);
 
     for ($i = 0; $i < 3; $i++) {
-      $rendered_field = $view->style_plugin->get_field($i, $field_name);
+      $rendered_field = $view->style_plugin->getField($i, $field_name);
       $items = array();
       $pure_items = $this->nodes[$i]->{$field_name}[Language::LANGCODE_NOT_SPECIFIED];
       $pure_items = array_splice($pure_items, 1, 3);
@@ -185,7 +185,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $this->executeView($view);
 
     for ($i = 0; $i < 3; $i++) {
-      $rendered_field = $view->style_plugin->get_field($i, $field_name);
+      $rendered_field = $view->style_plugin->getField($i, $field_name);
       $items = array();
       $pure_items = $this->nodes[$i]->{$field_name}[Language::LANGCODE_NOT_SPECIFIED];
       array_splice($pure_items, 0, -3);
@@ -206,7 +206,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $this->executeView($view);
 
     for ($i = 0; $i < 3; $i++) {
-      $rendered_field = $view->style_plugin->get_field($i, $field_name);
+      $rendered_field = $view->style_plugin->getField($i, $field_name);
       $items = array();
       $pure_items = $this->nodes[$i]->{$field_name}[Language::LANGCODE_NOT_SPECIFIED];
       $items[] = $pure_items[0]['value'];
@@ -224,7 +224,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $this->executeView($view);
 
     for ($i = 0; $i < 3; $i++) {
-      $rendered_field = $view->style_plugin->get_field($i, $field_name);
+      $rendered_field = $view->style_plugin->getField($i, $field_name);
       $items = array();
       $pure_items = $this->nodes[$i]->{$field_name}[Language::LANGCODE_NOT_SPECIFIED];
       $pure_items = array_splice($pure_items, 0, 3);

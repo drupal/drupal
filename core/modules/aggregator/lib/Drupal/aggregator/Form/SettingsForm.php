@@ -63,7 +63,7 @@ class SettingsForm extends SystemConfigFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\ControllerInterface::create().
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(

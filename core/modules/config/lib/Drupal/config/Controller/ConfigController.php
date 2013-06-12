@@ -7,7 +7,7 @@
 
 namespace Drupal\config\Controller;
 
-use Drupal\Core\ControllerInterface;
+use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Component\Archiver\ArchiveTar;
 use Drupal\Core\Ajax\AjaxResponse;

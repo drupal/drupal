@@ -25,7 +25,7 @@ use Drupal\views\Views;
 class Field extends FieldPluginBase {
 
   /**
-   * An array to store field renderable arrays for use by render_items.
+   * An array to store field renderable arrays for use by renderItems().
    *
    * @var array
    */
@@ -620,7 +620,7 @@ class Field extends FieldPluginBase {
    * When using advanced render, each possible item in the list is rendered
    * individually. Then the items are all pasted together.
    */
-  function render_items($items) {
+  protected function renderItems($items) {
     if (!empty($items)) {
       if (!$this->options['group_rows']) {
         return implode('', $items);

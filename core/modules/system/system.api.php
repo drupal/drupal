@@ -3490,8 +3490,7 @@ function hook_updater_info_alter(&$updaters) {
  * @param $countries
  *   The associative array of countries keyed by ISO 3166-1 country code.
  *
- * @see country_get_list()
- * @see standard_country_list()
+ * @see \Drupal\Core\Locale\CountryManager::getList().
  */
 function hook_countries_alter(&$countries) {
   // Elbonia is now independent, so add it to the country list.

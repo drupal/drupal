@@ -9,7 +9,7 @@ use Drupal\Component\Gettext\PoStreamWriter;
 use Drupal\locale\Gettext;
 use Drupal\locale\PoDatabaseReader;
 use Drupal\Core\Language\Language;
-
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Form constructor for the translation import screen.
@@ -254,10 +254,11 @@ function locale_translate_export_form_submit($form, &$form_state) {
     $writer->writeItems($reader);
     $writer->close();
 
-    header("Content-Disposition: attachment; filename=$filename");
-    header("Content-Type: text/plain; charset=utf-8");
-    print file_get_contents($uri);
-    drupal_exit();
+    $response = new BinaryFileResponse($uri);
+    $response->setContentDisposition('attachment', $filename);
+    // @todo remove lines below once converted to new routing system.
+    $response->prepare(Drupal::request())
+      ->send();
   }
   else {
     drupal_set_message('Nothing to export.');

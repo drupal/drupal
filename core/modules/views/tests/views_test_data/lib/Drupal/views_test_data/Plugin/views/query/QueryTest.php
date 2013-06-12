@@ -69,7 +69,7 @@ class QueryTest extends QueryPluginBase {
 
   }
 
-  public function add_field($table, $field, $alias = '', $params = array()) {
+  public function addField($table, $field, $alias = '', $params = array()) {
     $this->fields[$field] = $field;
     return $field;
   }

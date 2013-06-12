@@ -220,7 +220,7 @@ abstract class SqlBase extends PagerPluginBase {
         $this->options['items_per_page'] = 0;
       }
     }
-    if ($this->offset_exposed()) {
+    if ($this->isOffsetExposed()) {
       $query = drupal_container()->get('request')->query;
       $offset = $query->get('offset');
       if (isset($offset) && $offset >= 0) {
@@ -324,14 +324,14 @@ abstract class SqlBase extends PagerPluginBase {
   }
 
   public function usesExposed() {
-    return $this->itemsPerPageExposed() || $this->offset_exposed();
+    return $this->itemsPerPageExposed() || $this->isOffsetExposed();
   }
 
   protected function itemsPerPageExposed() {
     return !empty($this->options['expose']['items_per_page']);
   }
 
-  function offset_exposed() {
+  protected function isOffsetExposed() {
     return !empty($this->options['expose']['offset']);
   }
 
@@ -355,7 +355,7 @@ abstract class SqlBase extends PagerPluginBase {
       }
     }
 
-    if ($this->offset_exposed()) {
+    if ($this->isOffsetExposed()) {
       $form['offset'] = array(
         '#type' => 'textfield',
         '#size' => 10,

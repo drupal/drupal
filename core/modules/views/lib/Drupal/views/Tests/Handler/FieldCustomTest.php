@@ -55,7 +55,7 @@ class FieldCustomTest extends ViewUnitTestBase {
 
     $this->executeView($view);
 
-    $this->assertEqual($random, $view->style_plugin->get_field(0, 'name'));
+    $this->assertEqual($random, $view->style_plugin->getField(0, 'name'));
   }
 
 }
