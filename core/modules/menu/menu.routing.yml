@@ -17,11 +17,11 @@ menu_link_delete:
   defaults:
     _form: '\Drupal\menu\Form\MenuLinkDeleteForm'
   requirements:
-    _access_menu_delete_link: 'TRUE'
+    _entity_access: menu_link.delete
 
 menu_delete_menu:
   pattern: 'admin/structure/menu/manage/{menu}/delete'
   defaults:
     _form: '\Drupal\menu\Form\MenuDeleteMenuForm'
   requirements:
-    _access_menu_delete_menu: 'TRUE'
+    _entity_access: menu.delete

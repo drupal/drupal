@@ -1,9 +1,0 @@
-services:
-  access_check.menu.delete_link:
-    class: Drupal\menu\Access\DeleteLinkAccessCheck
-    tags:
-      - { name: access_check }
-  access_check.menu.delete_menu:
-    class: Drupal\menu\Access\DeleteMenuAccessCheck
-    tags:
-      - { name: access_check }

@@ -71,10 +71,8 @@ class MenuFormController extends EntityFormController {
    */
   protected function actions(array $form, array &$form_state) {
     $actions = parent::actions($form, $form_state);
-    $menu = $this->entity;
 
-    $system_menus = menu_list_system_menus();
-    $actions['delete']['#access'] = !$menu->isNew() && !isset($system_menus[$menu->id()]);
+    $actions['delete']['#access'] = !$this->entity->isNew() && $this->entity->access('delete');
 
     return $actions;
   }
@@ -114,8 +112,7 @@ class MenuFormController extends EntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::delete().
    */
   public function delete(array $form, array &$form_state) {
-    $menu = $this->entity;
-    $form_state['redirect'] = 'admin/structure/menu/manage/' . $menu->id() . '/delete';
+    $form_state['redirect'] = 'admin/structure/menu/manage/' . $this->entity->id() . '/delete';
   }
 
 }

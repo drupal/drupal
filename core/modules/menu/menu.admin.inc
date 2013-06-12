@@ -125,7 +125,6 @@ function menu_overview_form($form, &$form_state) {
 function _menu_overview_tree_form($tree, $delta = 50) {
   $form = &drupal_static(__FUNCTION__, array('#tree' => TRUE));
   foreach ($tree as $data) {
-    $title = '';
     $item = $data['link'];
     // Don't show callbacks; these have $item['hidden'] < 0.
     if ($item && $item['hidden'] >= 0) {
