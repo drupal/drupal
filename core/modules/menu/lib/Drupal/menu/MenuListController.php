@@ -55,11 +55,13 @@ class MenuListController extends ConfigEntityListController {
       'options' => $uri['options'],
       'weight' => 20,
     );
-    if ($entity->access('delete')) {
-      $operations['delete']['title'] = t('Delete menu');
+    // System menus could not be deleted.
+    $system_menus = menu_list_system_menus();
+    if (isset($system_menus[$entity->id()])) {
+      unset($operations['delete']);
     }
     else {
-      unset($operations['delete']);
+      $operations['delete']['title'] = t('Delete menu');
     }
     return $operations;
   }
