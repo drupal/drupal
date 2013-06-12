@@ -15,8 +15,7 @@ use Drupal\field\Plugin\Core\Entity\FieldInstance;
  * Defines the form editor.
  *
  * @InPlaceEditor(
- *   id = "form",
- *   module = "edit"
+ *   id = "form"
  * )
  */
 class FormEditor extends EditorBase {

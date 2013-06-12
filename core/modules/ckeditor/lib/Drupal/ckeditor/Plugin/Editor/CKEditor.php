@@ -19,7 +19,6 @@ use Drupal\editor\Plugin\Core\Entity\Editor as EditorEntity;
  * @Editor(
  *   id = "ckeditor",
  *   label = @Translation("CKEditor"),
- *   module = "ckeditor",
  *   supports_inline_editing = TRUE
  * )
  */

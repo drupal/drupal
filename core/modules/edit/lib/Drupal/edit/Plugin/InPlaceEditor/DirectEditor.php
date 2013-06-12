@@ -15,8 +15,7 @@ use Drupal\field\Plugin\Core\Entity\FieldInstance;
  * Defines the direct editor.
  *
  * @InPlaceEditor(
- *   id = "direct",
- *   module = "edit"
+ *   id = "direct"
  * )
  */
 class DirectEditor extends EditorBase {

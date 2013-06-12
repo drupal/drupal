@@ -27,8 +27,7 @@ use Drupal\editor\Plugin\Core\Entity\Editor;
  *
  * @CKEditorPlugin(
  *   id = "llama",
- *   label = @Translation("Llama"),
- *   module = "ckeditor_test"
+ *   label = @Translation("Llama")
  * )
  */
 class Llama extends PluginBase implements CKEditorPluginInterface {

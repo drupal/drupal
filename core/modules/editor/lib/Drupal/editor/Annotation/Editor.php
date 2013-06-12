@@ -33,13 +33,6 @@ class Editor extends Plugin {
   public $label;
 
   /**
-   * The name of the module providing the editor plugin.
-   *
-   * @var string
-   */
-  public $module;
-
-  /**
    * Whether the editor supports the inline editing provided by the Edit module.
    *
    * @var boolean

@@ -18,8 +18,7 @@ use Drupal\editor\Plugin\Core\Entity\Editor;
  *
  * @CKEditorPlugin(
  *   id = "llama_contextual",
- *   label = @Translation("Contextual Llama"),
- *   module = "ckeditor_test"
+ *   label = @Translation("Contextual Llama")
  * )
  */
 class LlamaContextual extends Llama implements CKEditorPluginContextualInterface {
