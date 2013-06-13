@@ -68,6 +68,13 @@ class CKEditorAdminTest extends WebTestBase {
     $this->assertTrue(((string) $options[1]) === 'CKEditor', 'Option 2 in the Text Editor select is "CKEditor".');
     $this->assertTrue(((string) $options[0]['selected']) === 'selected', 'Option 1 ("None") is selected.');
 
+    // Select the "CKEditor" editor and click the "Save configuration" button.
+    $edit = array(
+      'editor[editor]' => 'ckeditor',
+    );
+    $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $this->assertRaw(t('You must configure the selected text editor.'));
+
     // Ensure the CKEditor editor returns the expected default settings.
     $expected_default_settings = array(
       'toolbar' => array(
@@ -85,10 +92,7 @@ class CKEditorAdminTest extends WebTestBase {
     );
     $this->assertIdentical($ckeditor->getDefaultSettings(), $expected_default_settings);
 
-    // Select the "CKEditor" editor and click the "Configure" button.
-    $edit = array(
-      'editor[editor]' => 'ckeditor',
-    );
+    // Keep the "CKEditor" editor selected and click the "Configure" button.
     $this->drupalPostAjax(NULL, $edit, 'editor_configure');
     $editor = entity_load('editor', 'filtered_html');
     $this->assertFalse($editor, 'No Editor config entity exists yet.');

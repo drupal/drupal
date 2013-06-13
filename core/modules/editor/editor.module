@@ -212,6 +212,7 @@ function editor_form_filter_admin_format_form_alter(&$form, &$form_state) {
     $form['#submit'][] = array($plugin, 'settingsFormSubmit');
   }
 
+  $form['#validate'][] = 'editor_form_filter_admin_format_validate';
   $form['#submit'][] = 'editor_form_filter_admin_format_submit';
 }
 
@@ -243,6 +244,24 @@ function editor_form_filter_admin_form_ajax($form, &$form_state) {
 }
 
 /**
+ * Additional validate handler for filter_admin_format_form().
+ */
+function editor_form_filter_admin_format_validate($form, &$form_state) {
+  // This validate handler is not applicable when using the 'Configure' button.
+  if ($form_state['triggering_element']['#name'] === 'editor_configure') {
+    return;
+  }
+
+  // When using this form with JavaScript disabled in the browser, the the
+  // 'Configure' button won't be clicked automatically. So, when the user has
+  // selected a text editor and has then clicked 'Save configuration', we should
+  // point out that the user must still configure the text editor.
+  if ($form_state['values']['editor']['editor'] !== '' && $form_state['editor'] === FALSE) {
+    form_set_error('editor][editor', t('You must configure the selected text editor.'));
+  }
+}
+
+/**
  * Additional submit handler for filter_admin_format_form().
  */
 function editor_form_filter_admin_format_submit($form, &$form_state) {
@@ -254,7 +273,7 @@ function editor_form_filter_admin_format_submit($form, &$form_state) {
   }
 
   // Create a new editor or update the existing editor.
-  if ($form_state['values']['editor']['editor'] !== '') {
+  if ($form_state['editor'] !== FALSE) {
     // Ensure the text format is set: when creating a new text format, this
     // would equal the empty string.
     $form_state['editor']->format = $form['#format']->format;
