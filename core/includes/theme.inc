@@ -1654,9 +1654,9 @@ function theme_status_messages($variables) {
       $output .= '<h2 class="element-invisible">' . $status_heading[$type] . "</h2>\n";
     }
     if (count($messages) > 1) {
-      $output .= " <ul>\n";
+      $output .= " <ul class=\"messages__list\">\n";
       foreach ($messages as $message) {
-        $output .= '  <li>' . $message . "</li>\n";
+        $output .= '  <li class="messages__item">' . $message . "</li>\n";
       }
       $output .= " </ul>\n";
     }
