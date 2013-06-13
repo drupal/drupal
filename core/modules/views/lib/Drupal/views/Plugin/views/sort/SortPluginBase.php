@@ -34,7 +34,7 @@ abstract class SortPluginBase extends HandlerBase {
   public function query() {
     $this->ensureMyTable();
     // Add the field.
-    $this->query->add_orderby($this->tableAlias, $this->realField, $this->options['order']);
+    $this->query->addOrderBy($this->tableAlias, $this->realField, $this->options['order']);
   }
 
   protected function defineOptions() {

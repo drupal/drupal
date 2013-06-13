@@ -17,7 +17,7 @@ use Drupal\Component\Annotation\PluginID;
 class Random extends SortPluginBase {
 
   public function query() {
-    $this->query->add_orderby('rand');
+    $this->query->addOrderBy('rand');
   }
 
   public function buildOptionsForm(&$form, &$form_state) {

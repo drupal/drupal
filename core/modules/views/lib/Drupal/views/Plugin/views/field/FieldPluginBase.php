@@ -170,7 +170,7 @@ abstract class FieldPluginBase extends HandlerBase {
       // Since fields should always have themselves already added, just
       // add a sort on the field.
       $params = $this->options['group_type'] != 'group' ? array('function' => $this->options['group_type']) : array();
-      $this->query->add_orderby(NULL, NULL, $order, $this->field_alias, $params);
+      $this->query->addOrderBy(NULL, NULL, $order, $this->field_alias, $params);
     }
   }
 

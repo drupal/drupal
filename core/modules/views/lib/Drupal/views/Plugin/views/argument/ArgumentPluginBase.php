@@ -873,7 +873,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    *   The order selected in the UI.
    */
   public function summarySort($order, $by = NULL) {
-    $this->query->add_orderby(NULL, NULL, $order, (!empty($by) ? $by : $this->name_alias));
+    $this->query->addOrderBy(NULL, NULL, $order, (!empty($by) ? $by : $this->name_alias));
   }
 
   /**

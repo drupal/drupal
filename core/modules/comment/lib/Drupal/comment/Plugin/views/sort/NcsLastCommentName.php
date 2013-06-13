@@ -37,7 +37,7 @@ class NcsLastCommentName extends SortPluginBase {
     $this->user_field = $this->query->addField($this->user_table, 'name');
 
     // Add the field.
-    $this->query->add_orderby(NULL, "LOWER(COALESCE($this->user_table.name, $this->tableAlias.$this->field))", $this->options['order'], $this->tableAlias . '_' . $this->field);
+    $this->query->addOrderBy(NULL, "LOWER(COALESCE($this->user_table.name, $this->tableAlias.$this->field))", $this->options['order'], $this->tableAlias . '_' . $this->field);
   }
 
 }

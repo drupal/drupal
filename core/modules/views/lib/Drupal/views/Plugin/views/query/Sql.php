@@ -948,9 +948,9 @@ class Sql extends QueryPluginBase {
    * @param $params
    *   Any params that should be passed through to the addField.
    */
-  function add_orderby($table, $field = NULL, $order = 'ASC', $alias = '', $params = array()) {
+  public function addOrderBy($table, $field = NULL, $order = 'ASC', $alias = '', $params = array()) {
     // Only ensure the table if it's not the special random key.
-    // @todo: Maybe it would make sense to just add a add_orderby_rand or something similar.
+    // @todo: Maybe it would make sense to just add an addOrderByRand or something similar.
     if ($table && $table != 'rand') {
       $this->ensure_table($table);
     }

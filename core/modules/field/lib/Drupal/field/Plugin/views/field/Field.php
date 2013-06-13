@@ -260,7 +260,7 @@ class Field extends FieldPluginBase {
       // Column is not in query; add a sort on it (without adding the column).
       $this->aliases[$column] = $this->tableAlias . '.' . $column;
     }
-    $this->query->add_orderby(NULL, NULL, $order, $this->aliases[$column]);
+    $this->query->addOrderBy(NULL, NULL, $order, $this->aliases[$column]);
   }
 
   protected function defineOptions() {
