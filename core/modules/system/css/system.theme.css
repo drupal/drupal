@@ -440,13 +440,13 @@ ul.tabs {
 .messages + .messages {
   margin-top: 1.538em;
 }
-.messages ul {
+.messages__list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-.messages li + li {
-  margin-top: .769em;
+.messages__item + .messages__item {
+  margin-top: 0.769em;
 }
 
 /* @TODO Separate tables and messages styling */
