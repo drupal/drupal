@@ -79,13 +79,6 @@ class Sql extends QueryPluginBase {
    */
   var $fields = array();
 
-
-  /**
-   * The table header to use for tablesort. This matters because tablesort
-   * needs to modify the query and needs the header.
-   */
-  var $header = array();
-
   /**
    * A flag as to whether or not to make the primary field distinct.
    */
@@ -177,14 +170,6 @@ class Sql extends QueryPluginBase {
       'alias' => $alias,
       'count' => TRUE,
     );
-  }
-
-  /**
-   * Set the table header; used for click-sorting because it's needed
-   * info to modify the ORDER BY clause.
-   */
-  function set_header($header) {
-    $this->header = $header;
   }
 
   protected function defineOptions() {
