@@ -121,7 +121,7 @@ class Combine extends String {
     $this->query->add_where_expression($this->options['group'], "$expression NOT LIKE $placeholder", array($placeholder => '%' . db_like($this->value)));
   }
 
-  function op_not($expression) {
+  protected function opNotLike($expression) {
     $placeholder = $this->placeholder();
     $this->query->add_where_expression($this->options['group'], "$expression NOT LIKE $placeholder", array($placeholder => '%' . db_like($this->value) . '%'));
   }

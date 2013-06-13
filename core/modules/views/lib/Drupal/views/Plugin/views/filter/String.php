@@ -95,7 +95,7 @@ class String extends FilterPluginBase {
       'not' => array(
         'title' => t('Does not contain'),
         'short' => t('!has'),
-        'method' => 'op_not',
+        'method' => 'opNotLike',
         'values' => 1,
       ),
       'shorterthan' => array(
@@ -317,7 +317,7 @@ class String extends FilterPluginBase {
     $this->query->addWhere($this->options['group'], $field, '%' . db_like($this->value), 'NOT LIKE');
   }
 
-  function op_not($field) {
+  protected function opNotLike($field) {
     $this->query->addWhere($this->options['group'], $field, '%' . db_like($this->value) . '%', 'NOT LIKE');
   }
 
