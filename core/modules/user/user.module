@@ -1051,48 +1051,6 @@ function user_menu() {
 }
 
 /**
- * Implements hook_menu_site_status_alter().
- */
-function user_menu_site_status_alter(&$menu_site_status, $path) {
-  if ($menu_site_status == MENU_SITE_OFFLINE) {
-    // If the site is offline, log out unprivileged users.
-    if (user_is_logged_in() && !user_access('access site in maintenance mode')) {
-      module_load_include('pages.inc', 'user', 'user');
-      user_logout();
-    }
-
-    if (user_is_anonymous()) {
-      switch ($path) {
-        case 'user':
-          // Forward anonymous user to login page.
-          drupal_goto('user/login');
-        case 'user/login':
-        case 'user/password':
-          // Disable offline mode.
-          $menu_site_status = MENU_SITE_ONLINE;
-          break;
-        default:
-          if (strpos($path, 'user/reset/') === 0) {
-            // Disable offline mode.
-            $menu_site_status = MENU_SITE_ONLINE;
-          }
-          break;
-      }
-    }
-  }
-  if (user_is_logged_in()) {
-    if ($path == 'user/login') {
-      // If user is logged in, redirect to 'user' instead of giving 403.
-      drupal_goto('user');
-    }
-    if ($path == 'user/register') {
-      // Authenticated user should be redirected to user edit page.
-      drupal_goto('user/' . $GLOBALS['user']->uid . '/edit');
-    }
-  }
-}
-
-/**
  * Implements hook_menu_link_presave().
  */
 function user_menu_link_presave(MenuLink $menu_link) {
@@ -2674,4 +2632,18 @@ function user_library_info() {
   );
 
   return $libraries;
+}
+
+/**
+ * Logs the current user out.
+ */
+function user_logout() {
+  global $user;
+
+  watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
+
+  Drupal::moduleHandler()->invokeAll('user_logout', array($user));
+
+  // Destroy the current session, and reset $user to the anonymous user.
+  session_destroy();
 }

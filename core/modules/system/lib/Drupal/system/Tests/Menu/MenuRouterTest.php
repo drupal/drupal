@@ -179,9 +179,9 @@ class MenuRouterTest extends WebTestBase {
   }
 
   /**
-   * Make sure the maintenance mode can be bypassed using hook_menu_site_status_alter().
+   * Make sure the maintenance mode can be bypassed using an EventSubscriber.
    *
-   * @see hook_menu_site_status_alter().
+   * @see \Drupal\menu_test\EventSubscriber\MaintenanceModeSubscriber::onKernelRequestMaintenance().
    */
   function testMaintenanceModeLoginPaths() {
     config('system.maintenance')->set('enabled', 1)->save();
@@ -190,7 +190,7 @@ class MenuRouterTest extends WebTestBase {
     $this->drupalGet('test-page');
     $this->assertText($offline_message);
     $this->drupalGet('menu_login_callback');
-    $this->assertText('This is menu_login_callback().', 'Maintenance mode can be bypassed through hook_menu_site_status_alter().');
+    $this->assertText('This is menu_login_callback().', 'Maintenance mode can be bypassed using an event subscriber.');
 
     config('system.maintenance')->set('enabled', 0)->save();
   }
