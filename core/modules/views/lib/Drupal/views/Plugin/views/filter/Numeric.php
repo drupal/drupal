@@ -92,13 +92,13 @@ class Numeric extends FilterPluginBase {
       $operators += array(
         'empty' => array(
           'title' => t('Is empty (NULL)'),
-          'method' => 'op_empty',
+          'method' => 'opEmpty',
           'short' => t('empty'),
           'values' => 0,
         ),
         'not empty' => array(
           'title' => t('Is not empty (NOT NULL)'),
-          'method' => 'op_empty',
+          'method' => 'opEmpty',
           'short' => t('not empty'),
           'values' => 0,
         ),
@@ -264,7 +264,7 @@ class Numeric extends FilterPluginBase {
     $this->query->addWhere($this->options['group'], $field, $this->value['value'], $this->operator);
   }
 
-  function op_empty($field) {
+  protected function opEmpty($field) {
     if ($this->operator == 'empty') {
       $operator = "IS NULL";
     }
