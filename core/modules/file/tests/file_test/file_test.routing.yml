@@ -1,0 +1,6 @@
+file_test:
+  pattern: '/file-test/upload'
+  defaults:
+    _form: 'Drupal\file_test\Form\FileTestForm'
+  requirements:
+    _permission: 'access content'
