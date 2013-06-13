@@ -48,7 +48,7 @@ class Link extends FieldPluginBase {
 
   // An example of field level access control.
   public function access() {
-    return user_access('access user profiles');
+    return user_access('administer users') || user_access('access user profiles');
   }
 
   public function query() {

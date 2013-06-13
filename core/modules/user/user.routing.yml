@@ -33,6 +33,13 @@ user_account_settings:
   requirements:
     _permission: 'administer users'
 
+user_admin_create:
+  pattern: '/admin/people/create'
+  defaults:
+    _entity_form: 'user.register'
+  requirements:
+    _permission: 'administer users'
+
 user_role_list:
   pattern: '/admin/people/roles'
   defaults:

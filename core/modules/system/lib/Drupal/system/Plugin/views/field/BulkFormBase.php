@@ -84,41 +84,48 @@ abstract class BulkFormBase extends FieldPluginBase {
     // Add the tableselect javascript.
     $form['#attached']['library'][] = array('system', 'drupal.tableselect');
 
-    // Render checkboxes for all rows.
-    $form[$this->options['id']]['#tree'] = TRUE;
-    foreach ($this->view->result as $row_index => $row) {
-      $form[$this->options['id']][$row_index] = array(
-        '#type' => 'checkbox',
-        // We are not able to determine a main "title" for each row, so we can
-        // only output a generic label.
-        '#title' => t('Update this item'),
-        '#title_display' => 'invisible',
-        '#default_value' => !empty($form_state['values'][$this->options['id']][$row_index]) ? 1 : NULL,
+    // Only add the bulk form options and buttons if there are results.
+    if (!empty($this->view->result)) {
+      // Render checkboxes for all rows.
+      $form[$this->options['id']]['#tree'] = TRUE;
+      foreach ($this->view->result as $row_index => $row) {
+        $form[$this->options['id']][$row_index] = array(
+          '#type' => 'checkbox',
+          // We are not able to determine a main "title" for each row, so we can
+          // only output a generic label.
+          '#title' => t('Update this item'),
+          '#title_display' => 'invisible',
+          '#default_value' => !empty($form_state['values'][$this->options['id']][$row_index]) ? 1 : NULL,
+        );
+      }
+
+      // Replace the form submit button label.
+      $form['actions']['submit']['#value'] = t('Apply');
+
+      // Ensure a consistent container for filters/operations in the view header.
+      $form['header'] = array(
+        '#type' => 'container',
+        '#weight' => -100,
       );
+
+      // Build the bulk operations action widget for the header.
+      // Allow themes to apply .container-inline on this separate container.
+      $form['header'][$this->options['id']] = array(
+        '#type' => 'container',
+      );
+      $form['header'][$this->options['id']]['action'] = array(
+        '#type' => 'select',
+        '#title' => t('With selection'),
+        '#options' => $this->getBulkOptions(),
+      );
+
+      // Duplicate the form actions into the action container in the header.
+      $form['header'][$this->options['id']]['actions'] = $form['actions'];
     }
-
-    // Replace the form submit button label.
-    $form['actions']['submit']['#value'] = t('Apply');
-
-    // Ensure a consistent container for filters/operations in the view header.
-    $form['header'] = array(
-      '#type' => 'container',
-      '#weight' => -100,
-    );
-
-    // Build the bulk operations action widget for the header.
-    // Allow themes to apply .container-inline on this separate container.
-    $form['header'][$this->options['id']] = array(
-      '#type' => 'container',
-    );
-    $form['header'][$this->options['id']]['action'] = array(
-      '#type' => 'select',
-      '#title' => t('With selection'),
-      '#options' => $this->getBulkOptions(),
-    );
-
-    // Duplicate the form actions into the action container in the header.
-    $form['header'][$this->options['id']]['actions'] = $form['actions'];
+    else {
+      // Remove the default actions build array.
+      unset($form['actions']);
+    }
   }
 
   /**
@@ -127,7 +134,11 @@ abstract class BulkFormBase extends FieldPluginBase {
    * @return array
    *   An associative array of operations, suitable for a select element.
    */
-  abstract protected function getBulkOptions();
+  protected function getBulkOptions() {
+    return array_map(function ($action) {
+      return $action->label();
+    }, $this->actions);
+  }
 
   /**
    * Submit handler for the bulk form.
@@ -161,6 +172,13 @@ abstract class BulkFormBase extends FieldPluginBase {
    * Overrides \Drupal\views\Plugin\views\Plugin\field\FieldPluginBase::query().
    */
   public function query() {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function clickSortable() {
+    return FALSE;
   }
 
 }

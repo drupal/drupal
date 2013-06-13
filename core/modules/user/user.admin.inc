@@ -6,158 +6,9 @@
  */
 
 /**
- * Page callback: Generates the appropriate user administration form.
- *
- * This function generates the user registration, multiple user cancellation,
- * or filtered user list admin form, depending on the argument and the POST
- * form values.
- *
- * @param string $callback_arg
- *   (optional) Indicates which form to build. Defaults to '', which will
- *   trigger the user filter form. If the POST value 'op' is present, this
- *   function uses that value as the callback argument.
- *
- * @return string
- *   A renderable form array for the respective request.
- */
-function user_admin($callback_arg = '') {
-  $op = isset($_POST['op']) ? $_POST['op'] : $callback_arg;
-
-  switch ($op) {
-    case t('Create new account'):
-    case 'create':
-      $account = entity_create('user', array());
-      $build['user_register'] = entity_get_form($account, 'register');
-      break;
-    default:
-      if (!empty($_POST['accounts']) && isset($_POST['operation']) && ($_POST['operation'] == 'cancel')) {
-        $build['user_multiple_cancel_confirm'] = drupal_get_form('user_multiple_cancel_confirm');
-      }
-      else {
-        $build['user_filter_form'] = drupal_get_form('user_filter_form');
-        $build['user_admin_account'] = drupal_get_form('user_admin_account');
-      }
-  }
-  return $build;
-}
-
-/**
- * Form builder; Return form for user administration filters.
- *
- * @ingroup forms
- * @see user_filter_form_submit()
- */
-function user_filter_form() {
-  $session = isset($_SESSION['user_overview_filter']) ? $_SESSION['user_overview_filter'] : array();
-  $filters = user_filters();
-
-  $i = 0;
-  $form['filters'] = array(
-    '#type' => 'details',
-    '#title' => t('Show only users where'),
-    '#theme' => 'exposed_filters__user',
-  );
-  foreach ($session as $filter) {
-    list($type, $value) = $filter;
-    if ($type == 'permission') {
-      // Merge arrays of module permissions into one.
-      // Slice past the first element '[any]' whose value is not an array.
-      $options = call_user_func_array('array_merge', array_slice($filters[$type]['options'], 1));
-      $value = $options[$value];
-    }
-    else {
-      $value = $filters[$type]['options'][$value];
-    }
-    $t_args = array('%property' => $filters[$type]['title'], '%value' => $value);
-    if ($i++) {
-      $form['filters']['current'][] = array('#markup' => t('and where %property is %value', $t_args));
-    }
-    else {
-      $form['filters']['current'][] = array('#markup' => t('%property is %value', $t_args));
-    }
-  }
-
-  $form['filters']['status'] = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('clearfix')),
-    '#prefix' => ($i ? '<div class="additional-filters">' . t('and where') . '</div>' : ''),
-  );
-  $form['filters']['status']['filters'] = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('filters')),
-  );
-  foreach ($filters as $key => $filter) {
-    $form['filters']['status']['filters'][$key] = array(
-      '#type' => 'select',
-      '#options' => $filter['options'],
-      '#title' => $filter['title'],
-      '#default_value' => '[any]',
-    );
-  }
-
-  $form['filters']['status']['actions'] = array(
-    '#type' => 'actions',
-    '#attributes' => array('class' => array('container-inline')),
-  );
-  $form['filters']['status']['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => (count($session) ? t('Refine') : t('Filter')),
-  );
-  if (count($session)) {
-    $form['filters']['status']['actions']['undo'] = array(
-      '#type' => 'submit',
-      '#value' => t('Undo'),
-    );
-    $form['filters']['status']['actions']['reset'] = array(
-      '#type' => 'submit',
-      '#value' => t('Reset'),
-    );
-  }
-
-  drupal_add_library('system', 'drupal.form');
-
-  return $form;
-}
-
-/**
- * Process result from user administration filter form.
- */
-function user_filter_form_submit($form, &$form_state) {
-  $op = $form_state['values']['op'];
-  $filters = user_filters();
-  switch ($op) {
-    case t('Filter'):
-    case t('Refine'):
-      // Apply every filter that has a choice selected other than 'any'.
-      foreach ($filters as $filter => $options) {
-        if (isset($form_state['values'][$filter]) && $form_state['values'][$filter] != '[any]') {
-          $_SESSION['user_overview_filter'][] = array($filter, $form_state['values'][$filter]);
-        }
-      }
-      break;
-    case t('Undo'):
-      array_pop($_SESSION['user_overview_filter']);
-      break;
-    case t('Reset'):
-      $_SESSION['user_overview_filter'] = array();
-      break;
-    case t('Update'):
-      return;
-  }
-
-  $form_state['redirect'] = 'admin/people';
-  return;
-}
-
-/**
- * Form builder; User administration page.
- *
- * @ingroup forms
- * @see user_admin_account_validate()
- * @see user_admin_account_submit()
+ * Page callback: User administration page.
  */
 function user_admin_account() {
-
   $header = array(
     'username' => array('data' => t('Username'), 'field' => 'u.name'),
     'status' => array('data' => t('Status'), 'field' => 'u.status', 'class' => array(RESPONSIVE_PRIORITY_LOW)),
@@ -183,29 +34,6 @@ function user_admin_account() {
     ->orderByHeader($header)
     ->setCountQuery($count_query);
   $result = $query->execute();
-
-  $form['options'] = array(
-    '#type' => 'details',
-    '#title' => t('Update options'),
-    '#attributes' => array('class' => array('container-inline')),
-  );
-  $options = array();
-  $actions = entity_load_multiple_by_properties('action', array('type' => 'user'));
-  foreach ($actions as $id => $action) {
-    $options[$id] = $action->label();
-  }
-  $form['options']['operation'] = array(
-    '#type' => 'select',
-    '#title' => t('Action'),
-    '#title_display' => 'invisible',
-    '#options' => $options,
-    '#default_value' => 'unblock',
-  );
-  $options = array();
-  $form['options']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Update'),
-  );
 
   $destination = drupal_get_destination();
   $status = array(t('blocked'), t('active'));
@@ -250,36 +78,14 @@ function user_admin_account() {
   }
 
   $form['accounts'] = array(
-    '#type' => 'tableselect',
+    '#theme' => 'table',
     '#header' => $header,
-    '#options' => $options,
+    '#rows' => $options,
     '#empty' => t('No people available.'),
   );
   $form['pager'] = array('#markup' => theme('pager'));
 
   return $form;
-}
-
-/**
- * Submit the user administration update form.
- */
-function user_admin_account_submit($form, &$form_state) {
-  if ($action = entity_load('action', $form_state['values']['operation'])) {
-    $accounts = entity_load_multiple('user', array_filter($form_state['values']['accounts']));
-    $action->execute($accounts);
-    $operation_definition = $action->getPluginDefinition();
-    if (!empty($operation_definition['confirm_form_path'])) {
-      $form_state['redirect'] = $operation_definition['confirm_form_path'];
-    }
-    drupal_set_message(t('The update has been performed.'));
-  }
-}
-
-function user_admin_account_validate($form, &$form_state) {
-  $form_state['values']['accounts'] = array_filter($form_state['values']['accounts']);
-  if (count($form_state['values']['accounts']) == 0) {
-    form_set_error('', t('No users selected.'));
-  }
 }
 
 /**

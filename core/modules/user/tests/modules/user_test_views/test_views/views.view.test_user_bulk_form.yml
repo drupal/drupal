@@ -1,0 +1,53 @@
+base_field: uid
+base_table: users
+core: 8.x
+description: ''
+status: '1'
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: ''
+    display_options:
+      style:
+        type: table
+      row:
+        type: fields
+      fields:
+        user_bulk_form:
+          id: user_bulk_form
+          table: users
+          field: user_bulk_form
+          plugin_id: user_bulk_form
+        name:
+          id: name
+          table: users
+          field: name
+          plugin_id: user_name
+      sorts:
+        uid:
+          id: uid
+          table: users
+          field: uid
+          order: ASC
+          plugin_id: user
+      filters:
+        status:
+          id: status
+          table: users
+          field: status
+          operator: '='
+          value: '1'
+          plugin_id: boolean
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: ''
+    display_options:
+      path: test-user-bulk-form
+label: ''
+module: views
+id: test_user_bulk_form
+tag: ''
