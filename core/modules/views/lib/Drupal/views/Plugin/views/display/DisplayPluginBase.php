@@ -811,12 +811,19 @@ abstract class DisplayPluginBase extends PluginBase {
   public function getPlugin($type) {
     // Look up the plugin name to use for this instance.
     $options = $this->getOption($type);
-    $name = $options['type'];
+
+    // Return now if no options have been loaded.
+    if (empty($options) || !isset($options['type'])) {
+      return;
+    }
 
     // Query plugins allow specifying a specific query class per base table.
     if ($type == 'query') {
       $views_data = Views::viewsData()->get($this->view->storage->get('base_table'));
       $name = isset($views_data['table']['base']['query_id']) ? $views_data['table']['base']['query_id'] : 'views_query';
+    }
+    else {
+      $name = $options['type'];
     }
 
     // Plugin instances are stored on the display for re-use.
