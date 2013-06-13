@@ -279,122 +279,166 @@ class Field extends ConfigEntityBase implements FieldInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Overrides \Drupal\Core\Entity\Entity::save().
+   *
+   * @return int
+   *   Either SAVED_NEW or SAVED_UPDATED, depending on the operation performed.
+   *
+   * @throws \Drupal\field\FieldException
+   *   If the field definition is invalid.
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   In case of failures at the configuration storage level.
    */
   public function save() {
-    $module_handler = \Drupal::moduleHandler();
-    $storage_controller = \Drupal::entityManager()->getStorageController($this->entityType);
-
     // Clear the derived data about the field.
     unset($this->schema, $this->storageDetails);
 
     if ($this->isNew()) {
-      // Field name cannot be longer than Field::ID_MAX_LENGTH characters. We
-      // use drupal_strlen() because the DB layer assumes that column widths
-      // are given in characters rather than bytes.
-      if (drupal_strlen($this->id) > static::ID_MAX_LENGTH) {
-        throw new FieldException(format_string(
-          'Attempt to create a field with an ID longer than @max characters: %id', array(
-            '@max' => static::ID_MAX_LENGTH,
-            '%id' => $this->id,
-          )
-        ));
-      }
-
-      // Ensure the field name is unique (we do not care about deleted fields).
-      if ($prior_field = current($storage_controller->load(array($this->id)))) {
-        $message = $prior_field->active ?
-          'Attempt to create field name %id which already exists and is active.' :
-          'Attempt to create field name %id which already exists, although it is inactive.';
-        throw new FieldException(format_string($message, array('%id' => $this->id)));
-      }
-
-      // Disallow reserved field names. This can't prevent all field name
-      // collisions with existing entity properties, but some is better than
-      // none.
-      foreach (\Drupal::entityManager()->getDefinitions() as $type => $info) {
-        if (in_array($this->id, $info['entity_keys'])) {
-          throw new FieldException(format_string('Attempt to create field %id which is reserved by entity type %type.', array('%id' => $this->id, '%type' => $type)));
-        }
-      }
-
-      // Check that the field type is known.
-      $field_type = field_info_field_types($this->type);
-      if (!$field_type) {
-        throw new FieldException(format_string('Attempt to create a field of unknown type %type.', array('%type' => $this->type)));
-      }
-      $this->module = $field_type['module'];
-      $this->active = TRUE;
-
-      // Make sure all settings are present, so that a complete field
-      // definition is passed to the various hooks and written to config.
-      $this->settings += $field_type['settings'];
-
-      // Provide default storage.
-      $this->storage += array(
-        'type' => config('field.settings')->get('default_storage'),
-        'settings' => array(),
-      );
-      // Check that the storage type is known.
-      $storage_type = field_info_storage_types($this->storage['type']);
-      if (!$storage_type) {
-        throw new FieldException(format_string('Attempt to create a field with unknown storage type %type.', array('%type' => $this->storage['type'])));
-      }
-      $this->storage['module'] = $storage_type['module'];
-      $this->storage['active'] = TRUE;
-      // Provide default storage settings.
-      $this->storage['settings'] += $storage_type['settings'];
-
-      // Invoke the storage backend's hook_field_storage_create_field().
-      $module_handler->invoke($this->storage['module'], 'field_storage_create_field', array($this));
-
-      $hook = 'field_create_field';
-      $hook_args = array($this);
+      return $this->saveNew();
     }
-    // Otherwise, the field is being updated.
     else {
-      $original = $storage_controller->loadUnchanged($this->id());
-
-      // Some updates are always disallowed.
-      if ($this->type != $original->type) {
-        throw new FieldException("Cannot change an existing field's type.");
-      }
-      if ($this->entity_types != $original->entity_types) {
-        throw new FieldException("Cannot change an existing field's entity_types property.");
-      }
-      if ($this->storage['type'] != $original->storage['type']) {
-        throw new FieldException("Cannot change an existing field's storage type.");
-      }
-
-      // Make sure all settings are present, so that a complete field
-      // definition is saved. This allows calling code to perform partial
-      // updates on a field object.
-      $this->settings += $original->settings;
-
-      $has_data = field_has_data($this);
-
-      // See if any module forbids the update by throwing an exception. This
-      // invokes hook_field_update_forbid().
-      $module_handler->invokeAll('field_update_forbid', array($this, $original, $has_data));
-
-      // Tell the storage engine to update the field by invoking the
-      // hook_field_storage_update_field(). The storage engine can reject the
-      // definition update as invalid by raising an exception, which stops
-      // execution before the definition is written to config.
-      $module_handler->invoke($this->storage['module'], 'field_storage_update_field', array($this, $original, $has_data));
-
-      $hook = 'field_update_field';
-      $hook_args = array($this, $original, $has_data);
+      return $this->saveUpdated();
     }
+  }
+
+  /**
+   * Saves a new field definition.
+   *
+   * @return int
+   *   SAVED_NEW if the definition was saved.
+   *
+   * @throws \Drupal\field\FieldException
+   *   If the field definition is invalid.
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   In case of failures at the configuration storage level.
+   */
+  protected function saveNew() {
+    $module_handler = \Drupal::moduleHandler();
+    $entity_manager = \Drupal::entityManager();
+    $storage_controller = $entity_manager->getStorageController($this->entityType);
+
+    // Field name cannot be longer than Field::ID_MAX_LENGTH characters. We
+    // use drupal_strlen() because the DB layer assumes that column widths
+    // are given in characters rather than bytes.
+    if (drupal_strlen($this->id) > static::ID_MAX_LENGTH) {
+      throw new FieldException(format_string(
+        'Attempt to create a field with an ID longer than @max characters: %id', array(
+          '@max' => static::ID_MAX_LENGTH,
+          '%id' => $this->id,
+        )
+      ));
+    }
+
+    // Ensure the field name is unique (we do not care about deleted fields).
+    if ($prior_field = current($storage_controller->load(array($this->id)))) {
+      $message = $prior_field->active ?
+        'Attempt to create field name %id which already exists and is active.' :
+        'Attempt to create field name %id which already exists, although it is inactive.';
+      throw new FieldException(format_string($message, array('%id' => $this->id)));
+    }
+
+    // Disallow reserved field names. This can't prevent all field name
+    // collisions with existing entity properties, but some is better than
+    // none.
+    foreach ($entity_manager->getDefinitions() as $type => $info) {
+      if (in_array($this->id, $info['entity_keys'])) {
+        throw new FieldException(format_string('Attempt to create field %id which is reserved by entity type %type.', array('%id' => $this->id, '%type' => $type)));
+      }
+    }
+
+    // Check that the field type is known.
+    $field_type = field_info_field_types($this->type);
+    if (!$field_type) {
+      throw new FieldException(format_string('Attempt to create a field of unknown type %type.', array('%type' => $this->type)));
+    }
+    $this->module = $field_type['module'];
+    $this->active = TRUE;
+
+    // Make sure all settings are present, so that a complete field
+    // definition is passed to the various hooks and written to config.
+    $this->settings += $field_type['settings'];
+
+    // Provide default storage.
+    $this->storage += array(
+      'type' => variable_get('field_storage_default', 'field_sql_storage'),
+      'settings' => array(),
+    );
+    // Check that the storage type is known.
+    $storage_type = field_info_storage_types($this->storage['type']);
+    if (!$storage_type) {
+      throw new FieldException(format_string('Attempt to create a field with unknown storage type %type.', array('%type' => $this->storage['type'])));
+    }
+    $this->storage['module'] = $storage_type['module'];
+    $this->storage['active'] = TRUE;
+    // Provide default storage settings.
+    $this->storage['settings'] += $storage_type['settings'];
+
+    // Invoke the storage backend's hook_field_storage_create_field().
+    $module_handler->invoke($this->storage['module'], 'field_storage_create_field', array($this));
 
     // Save the configuration.
     $result = parent::save();
     field_cache_clear();
 
-    // Invoke external hooks after the cache is cleared for API consistency.
-    // This invokes either hook_field_create_field() or
-    // hook_field_update_field() depending on whether the field is new.
-    $module_handler->invokeAll($hook, $hook_args);
+    // Invoke hook_field_create_field() after the cache is cleared for API
+    // consistency.
+    $module_handler->invokeAll('field_create_field', array($this));
+
+    return $result;
+  }
+
+  /**
+   * Saves an updated field definition.
+   *
+   * @return int
+   *   SAVED_UPDATED if the definition was saved.
+   *
+   * @throws \Drupal\field\FieldException
+   *   If the field definition is invalid.
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   In case of failures at the configuration storage level.
+   */
+  protected function saveUpdated() {
+    $module_handler = \Drupal::moduleHandler();
+    $storage_controller = \Drupal::entityManager()->getStorageController($this->entityType);
+
+    $original = $storage_controller->loadUnchanged($this->id());
+
+    // Some updates are always disallowed.
+    if ($this->type != $original->type) {
+      throw new FieldException("Cannot change an existing field's type.");
+    }
+    if ($this->entity_types != $original->entity_types) {
+      throw new FieldException("Cannot change an existing field's entity_types property.");
+    }
+    if ($this->storage['type'] != $original->storage['type']) {
+      throw new FieldException("Cannot change an existing field's storage type.");
+    }
+
+    // Make sure all settings are present, so that a complete field definition
+    // is saved. This allows calling code to perform partial updates on field
+    // objects.
+    $this->settings += $original->settings;
+
+    $has_data = field_has_data($this);
+
+    // See if any module forbids the update by throwing an exception. This
+    // invokes hook_field_update_forbid().
+    $module_handler->invokeAll('field_update_forbid', array($this, $original, $has_data));
+
+    // Tell the storage engine to update the field by invoking the
+    // hook_field_storage_update_field(). The storage engine can reject the
+    // definition update as invalid by raising an exception, which stops
+    // execution before the definition is written to config.
+    $module_handler->invoke($this->storage['module'], 'field_storage_update_field', array($this, $original, $has_data));
+
+    // Save the configuration.
+    $result = parent::save();
+    field_cache_clear();
+
+    // Invoke hook_field_update_field() after the cache is cleared for API
+    // consistency.
+    $module_handler->invokeAll('field_update_field', array($this, $original, $has_data));
 
     return $result;
   }
