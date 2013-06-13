@@ -391,7 +391,7 @@ abstract class StylePluginBase extends PluginBase {
    * Called by the view builder to let the style build a second set of
    * sorts that will come after any other sorts in the view.
    */
-  function build_sort_post() { }
+  public function buildSortPost() { }
 
   /**
    * Allow the style to do stuff before each row is rendered.
