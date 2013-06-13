@@ -170,22 +170,6 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
 }
 
 /**
- * Logs the current user out, and redirects to the home page.
- */
-function user_logout() {
-  global $user;
-
-  watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
-
-  module_invoke_all('user_logout', $user);
-
-  // Destroy the current session, and reset $user to the anonymous user.
-  session_destroy();
-
-  drupal_goto();
-}
-
-/**
  * Prepares variables for user templates.
  *
  * Default template: user.html.twig.
