@@ -35,6 +35,10 @@ class HtmlIdentifierUnitTest extends UnitTestBase {
 
     // Verify that invalid characters (including non-breaking space) are stripped from the identifier.
     $this->assertIdentical(drupal_clean_css_identifier('invalid !"#$%&\'()*+,./:;<=>?@[\\]^`{|}~ identifier', array()), 'invalididentifier', 'Strip invalid characters.');
+
+    // Verify that double underscores are not stripped from the identifier.
+    $identifier = 'css__identifier__with__double__underscores';
+    $this->assertIdentical(drupal_clean_css_identifier($identifier), $identifier, 'Verify double underscores pass through.');
   }
 
   /**
