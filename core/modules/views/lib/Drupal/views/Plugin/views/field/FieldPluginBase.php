@@ -287,7 +287,7 @@ abstract class FieldPluginBase extends HandlerBase {
   /**
    * Return the class of the field.
    */
-  function element_classes($row_index = NULL) {
+  public function elementClasses($row_index = NULL) {
     $classes = explode(' ', $this->options['element_class']);
     foreach ($classes as &$class) {
       $class = $this->tokenizeValue($class, $row_index);

@@ -222,7 +222,7 @@ function template_preprocess_views_view_fields(&$vars) {
           $attributes['class'][] = 'field-content';
         }
 
-        if ($classes = $object->handler->element_classes($view->row_index)) {
+        if ($classes = $object->handler->elementClasses($view->row_index)) {
           $attributes['class'][] = $classes;
         }
         $attributes = new Attribute($attributes);
@@ -648,7 +648,7 @@ function template_preprocess_views_view_table(&$vars) {
       }
       $vars['field_classes'][$field][$num] = new Attribute($vars['field_classes'][$field][$num]);
 
-      if ($classes = $fields[$field]->element_classes($num)) {
+      if ($classes = $fields[$field]->elementClasses($num)) {
         $vars['field_classes'][$field][$num]['class'][] = $classes;
       }
       // Add responsive header classes.
