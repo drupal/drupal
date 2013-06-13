@@ -1054,7 +1054,7 @@ class ViewExecutable {
         $this->_build('sort');
       }
       // allow the plugin to build second sorts as well.
-      $this->style_plugin->build_sort_post();
+      $this->style_plugin->buildSortPost();
     }
 
     // Allow area handlers to affect the query.

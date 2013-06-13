@@ -121,7 +121,7 @@ class Table extends StylePluginBase {
   /**
    * Add our actual sort criteria
    */
-  function build_sort_post() {
+  public function buildSortPost() {
     $query = $this->request->query;
     $order = $query->get('order');
     if (!isset($order)) {
