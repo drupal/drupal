@@ -14,7 +14,6 @@ use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Database\Connection;
-
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -25,30 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * This class can be used as-is by most simple entity types. Entity types
  * requiring special handling can extend the class.
  */
-class DatabaseStorageController implements EntityStorageControllerInterface, EntityControllerInterface {
-
-  /**
-   * Static cache of entities.
-   *
-   * @var array
-   */
-  protected $entityCache;
-
-  /**
-   * Entity type for this controller instance.
-   *
-   * @var string
-   */
-  protected $entityType;
-
-  /**
-   * Array of information about the entity.
-   *
-   * @var array
-   *
-   * @see entity_get_info()
-   */
-  protected $entityInfo;
+class DatabaseStorageController extends EntityStorageControllerBase {
 
   /**
    * An array of field information, i.e. containing definitions.
@@ -65,31 +41,6 @@ class DatabaseStorageController implements EntityStorageControllerInterface, Ent
    * @var array
    */
   protected $fieldDefinitions;
-
-  /**
-   * Additional arguments to pass to hook_TYPE_load().
-   *
-   * Set before calling Drupal\Core\Entity\DatabaseStorageController::attachLoad().
-   *
-   * @var array
-   */
-  protected $hookLoadArguments;
-
-  /**
-   * Name of the entity's ID field in the entity database table.
-   *
-   * @var string
-   */
-  protected $idKey;
-
-  /**
-   * Name of entity's UUID database table field, if it supports UUIDs.
-   *
-   * Has the value FALSE if this entity does not use UUIDs.
-   *
-   * @var string
-   */
-  protected $uuidKey;
 
   /**
    * Name of entity's revision database table field, if it supports revisions.
@@ -145,11 +96,9 @@ class DatabaseStorageController implements EntityStorageControllerInterface, Ent
    *   The database connection to be used.
    */
   public function __construct($entity_type, array $entity_info, Connection $database) {
+    parent::__construct($entity_type, $entity_info);
+
     $this->database = $database;
-    $this->entityType = $entity_type;
-    $this->entityInfo = $entity_info;
-    $this->entityCache = array();
-    $this->hookLoadArguments = array();
 
     // Check if the entity type supports IDs.
     if (isset($this->entityInfo['entity_keys']['id'])) {
@@ -174,25 +123,6 @@ class DatabaseStorageController implements EntityStorageControllerInterface, Ent
     }
     else {
       $this->revisionKey = FALSE;
-    }
-
-    // Check if the entity type supports static caching of loaded entities.
-    $this->cache = !empty($this->entityInfo['static_cache']);
-  }
-
-  /**
-   * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::resetCache().
-   */
-  public function resetCache(array $ids = NULL) {
-    if (isset($ids)) {
-      foreach ($ids as $id) {
-        unset($this->entityCache[$id]);
-      }
-    }
-    else {
-      $this->entityCache = array();
-      $this->entityFieldInfo = NULL;
-      $this->fieldDefinitions = array();
     }
   }
 
@@ -261,15 +191,6 @@ class DatabaseStorageController implements EntityStorageControllerInterface, Ent
     }
 
     return $entities;
-  }
-
-  /**
-   * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::loadUnchanged()
-   */
-  public function loadUnchanged($id) {
-    $this->resetCache(array($id));
-    $result = $this->load(array($id));
-    return reset($result);
   }
 
   /**
@@ -443,34 +364,6 @@ class DatabaseStorageController implements EntityStorageControllerInterface, Ent
     foreach (module_implements($this->entityType . '_load') as $module) {
       call_user_func_array($module . '_' . $this->entityType . '_load', $args);
     }
-  }
-
-  /**
-   * Gets entities from the static cache.
-   *
-   * @param $ids
-   *   If not empty, return entities that match these IDs.
-   *
-   * @return
-   *   Array of entities from the entity cache.
-   */
-  protected function cacheGet($ids) {
-    $entities = array();
-    // Load any available entities from the internal cache.
-    if (!empty($this->entityCache)) {
-      $entities += array_intersect_key($this->entityCache, array_flip($ids));
-    }
-    return $entities;
-  }
-
-  /**
-   * Stores entities in the static entity cache.
-   *
-   * @param $entities
-   *   Entities to store in the cache.
-   */
-  protected function cacheSet($entities) {
-    $this->entityCache += $entities;
   }
 
   /**
