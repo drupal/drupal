@@ -277,7 +277,7 @@ class Table extends StylePluginBase {
         '#options' => $field_names,
         '#default_value' => $column,
       );
-      if ($handlers[$field]->click_sortable()) {
+      if ($handlers[$field]->clickSortable()) {
         $form['info'][$field]['sortable'] = array(
           '#type' => 'checkbox',
           '#default_value' => !empty($this->options['info'][$field]['sortable']),

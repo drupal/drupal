@@ -181,7 +181,7 @@ abstract class FieldPluginBase extends HandlerBase {
    *   The value of 'click sortable' from the plugin definition, this defaults
    *   to TRUE if not set.
    */
-  function click_sortable() {
+  public function clickSortable() {
     return isset($this->definition['click sortable']) ? $this->definition['click sortable'] : TRUE;
   }
 

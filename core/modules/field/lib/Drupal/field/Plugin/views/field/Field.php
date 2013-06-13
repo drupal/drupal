@@ -231,7 +231,7 @@ class Field extends FieldPluginBase {
   /**
    * Determine if this field is click sortable.
    */
-  function click_sortable() {
+  public function clickSortable() {
     // Not click sortable in any case.
     if (empty($this->definition['click sortable'])) {
       return FALSE;

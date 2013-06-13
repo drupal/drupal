@@ -78,9 +78,9 @@ class TranslationLink extends FieldPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\Plugin\field\FieldPluginBase::click_sortable().
+   * {@inheritdoc}
    */
-  public function click_sortable() {
+  public function clickSortable() {
     return FALSE;
   }
 
