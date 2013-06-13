@@ -231,7 +231,7 @@ class Field extends FieldPluginBase {
   /**
    * Determine if this field is click sortable.
    */
-  function click_sortable() {
+  public function clickSortable() {
     // Not click sortable in any case.
     if (empty($this->definition['click sortable'])) {
       return FALSE;
@@ -260,7 +260,7 @@ class Field extends FieldPluginBase {
       // Column is not in query; add a sort on it (without adding the column).
       $this->aliases[$column] = $this->tableAlias . '.' . $column;
     }
-    $this->query->add_orderby(NULL, NULL, $order, $this->aliases[$column]);
+    $this->query->addOrderBy(NULL, NULL, $order, $this->aliases[$column]);
   }
 
   protected function defineOptions() {
@@ -644,7 +644,7 @@ class Field extends FieldPluginBase {
    * Return an array of items for the field.
    */
   public function getItems($values) {
-    $original_entity = $this->get_entity($values);
+    $original_entity = $this->getEntity($values);
     if (!$original_entity) {
       return array();
     }

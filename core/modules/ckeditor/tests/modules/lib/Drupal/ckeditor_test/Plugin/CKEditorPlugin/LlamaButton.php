@@ -17,8 +17,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @CKEditorPlugin(
  *   id = "llama_button",
- *   label = @Translation("Llama Button"),
- *   module = "ckeditor_test"
+ *   label = @Translation("Llama Button")
  * )
  */
 class LlamaButton extends Llama implements CKEditorPluginButtonsInterface {

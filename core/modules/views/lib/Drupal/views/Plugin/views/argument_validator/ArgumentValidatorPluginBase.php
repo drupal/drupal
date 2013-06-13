@@ -80,7 +80,7 @@ abstract class ArgumentValidatorPluginBase extends PluginBase {
     }
   }
 
-  function validate_argument($arg) { return TRUE; }
+  public function validateArgument($arg) { return TRUE; }
 
   /**
    * Process the summary arguments for displaying.

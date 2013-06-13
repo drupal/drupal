@@ -143,7 +143,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
 
     // Build blocks first for each region.
     foreach ($entities as $entity_id => $entity) {
-      $definition = $entity->getPlugin()->getDefinition();
+      $definition = $entity->getPlugin()->getPluginDefinition();
       $blocks[$entity->get('region')][$entity_id] = array(
         'admin_label' => $definition['admin_label'],
         'entity_id' => $entity_id,

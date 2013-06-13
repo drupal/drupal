@@ -39,7 +39,7 @@ class GroupByNumeric extends SortPluginBase {
       'function' => $this->options['group_type'],
     );
 
-    $this->query->add_orderby($this->tableAlias, $this->realField, $this->options['order'], NULL, $params);
+    $this->query->addOrderBy($this->tableAlias, $this->realField, $this->options['order'], NULL, $params);
   }
 
   public function adminLabel($short = FALSE) {

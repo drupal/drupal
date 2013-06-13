@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Translation;
  */
 class Numeric extends ArgumentValidatorPluginBase {
 
-  function validate_argument($argument) {
+  public function validateArgument($argument) {
     return is_numeric($argument);
   }
 

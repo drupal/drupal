@@ -77,7 +77,7 @@ class ImageToolkitForm extends SystemConfigFormBase {
     // If we have available toolkits, allow the user to select the image toolkit
     // to use and load the settings forms.
     foreach ($this->availableToolkits as $id => $toolkit) {
-      $definition = $toolkit->getDefinition();
+      $definition = $toolkit->getPluginDefinition();
       $form['image_toolkit']['#options'][$id] = $definition['title'];
       $form['image_toolkit_settings'][$id] = array(
         '#type' => 'fieldset',

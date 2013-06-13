@@ -19,8 +19,7 @@ use Drupal\editor\Plugin\Core\Entity\Editor;
  *
  * @CKEditorPlugin(
  *   id = "stylescombo",
- *   label = @Translation("Styles dropdown"),
- *   module = "ckeditor"
+ *   label = @Translation("Styles dropdown")
  * )
  */
 class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurableInterface {

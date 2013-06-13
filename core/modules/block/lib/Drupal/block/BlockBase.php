@@ -111,7 +111,7 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
    * @see \Drupal\block\BlockBase::blockForm()
    */
   public function form($form, &$form_state) {
-    $definition = $this->getDefinition();
+    $definition = $this->getPluginDefinition();
     $form['module'] = array(
       '#type' => 'value',
       '#value' => $definition['module'],

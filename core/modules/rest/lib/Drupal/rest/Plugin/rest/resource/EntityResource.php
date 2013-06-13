@@ -42,7 +42,7 @@ class EntityResource extends ResourceBase {
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    */
   public function get($id) {
-    $definition = $this->getDefinition();
+    $definition = $this->getPluginDefinition();
     $entity = entity_load($definition['entity_type'], $id);
     if ($entity) {
       if (!$entity->access('view')) {
@@ -75,7 +75,7 @@ class EntityResource extends ResourceBase {
     if (!$entity->access('create')) {
       throw new AccessDeniedHttpException();
     }
-    $definition = $this->getDefinition();
+    $definition = $this->getPluginDefinition();
     // Verify that the deserialized entity is of the type that we expect to
     // prevent security issues.
     if ($entity->entityType() != $definition['entity_type']) {
@@ -121,7 +121,7 @@ class EntityResource extends ResourceBase {
     if (empty($id)) {
       throw new NotFoundHttpException();
     }
-    $definition = $this->getDefinition();
+    $definition = $this->getPluginDefinition();
     if ($entity->entityType() != $definition['entity_type']) {
       throw new BadRequestHttpException(t('Invalid entity type'));
     }
@@ -178,7 +178,7 @@ class EntityResource extends ResourceBase {
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    */
   public function delete($id) {
-    $definition = $this->getDefinition();
+    $definition = $this->getPluginDefinition();
     $entity = entity_load($definition['entity_type'], $id);
     if ($entity) {
       if (!$entity->access('delete')) {

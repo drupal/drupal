@@ -7,10 +7,13 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 /**
  * Provides a generic implementation of an entity list controller.
  */
-class EntityListController implements EntityListControllerInterface {
+class EntityListController implements EntityListControllerInterface, EntityControllerInterface {
 
   /**
    * The entity storage controller class.
@@ -18,6 +21,13 @@ class EntityListController implements EntityListControllerInterface {
    * @var \Drupal\Core\Entity\EntityStorageControllerInterface
    */
   protected $storage;
+
+  /**
+   * The module handler to invoke hooks on.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
 
   /**
    * The entity type name.
@@ -36,17 +46,34 @@ class EntityListController implements EntityListControllerInterface {
   protected $entityInfo;
 
   /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+    return new static(
+      $entity_type,
+      $entity_info,
+      $container->get('plugin.manager.entity')->getStorageController($entity_type),
+      $container->get('module_handler')
+    );
+  }
+
+  /**
    * Constructs a new EntityListController object.
    *
-   * @param string $entity_type.
+   * @param string $entity_type
    *   The type of entity to be listed.
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage.
+   * @param array $entity_info
+   *   An array of entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
    *   The entity storage controller class.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler to invoke hooks on.
    */
-  public function __construct($entity_type, EntityStorageControllerInterface $storage) {
+  public function __construct($entity_type, array $entity_info, EntityStorageControllerInterface $storage, ModuleHandlerInterface $module_handler) {
     $this->entityType = $entity_type;
     $this->storage = $storage;
-    $this->entityInfo = entity_get_info($this->entityType);
+    $this->entityInfo = $entity_info;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -131,6 +158,7 @@ class EntityListController implements EntityListControllerInterface {
   public function buildOperations(EntityInterface $entity) {
     // Retrieve and sort operations.
     $operations = $this->getOperations($entity);
+    $this->moduleHandler->alter('entity_operation', $operations, $entity);
     uasort($operations, 'drupal_sort_weight');
     $build = array(
       '#type' => 'operations',

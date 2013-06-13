@@ -16,8 +16,7 @@ use Drupal\field\Plugin\Core\Entity\FieldInstance;
  *
  * @InPlaceEditor(
  *   id = "wysiwyg",
- *   alternativeTo = {"direct"},
- *   module = "edit_test"
+ *   alternativeTo = {"direct"}
  * )
  */
 class WysiwygEditor extends EditorBase {

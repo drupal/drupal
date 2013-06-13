@@ -45,7 +45,7 @@ class TranslationLink extends FieldPluginBase {
    * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::render().
    */
   function render($values) {
-    return $this->render_link($this->get_entity($values), $values);
+    return $this->render_link($this->getEntity($values), $values);
   }
 
   /**
@@ -78,9 +78,9 @@ class TranslationLink extends FieldPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\Plugin\field\FieldPluginBase::click_sortable().
+   * {@inheritdoc}
    */
-  public function click_sortable() {
+  public function clickSortable() {
     return FALSE;
   }
 

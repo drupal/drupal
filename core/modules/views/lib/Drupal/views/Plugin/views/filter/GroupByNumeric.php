@@ -44,7 +44,7 @@ class GroupByNumeric extends Numeric {
     $this->query->addHavingExpression($this->options['group'], "$field $this->operator $placeholder", array($placeholder => $this->value['value']));
   }
 
-  function op_empty($field) {
+  protected function opEmpty($field) {
     if ($this->operator == 'empty') {
       $operator = "IS NULL";
     }

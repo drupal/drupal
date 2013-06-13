@@ -35,7 +35,7 @@ class StaticLayout extends PluginBase implements LayoutInterface {
    * Implements Drupal\layout\Plugin\LayoutInterface::getRegions().
    */
   public function getRegions() {
-    $definition = $this->getDefinition();
+    $definition = $this->getPluginDefinition();
     return $definition['regions'];
   }
 
@@ -43,7 +43,7 @@ class StaticLayout extends PluginBase implements LayoutInterface {
    * Returns the list of CSS files associated with this layout.
    */
   public function getStylesheetFiles() {
-    $definition = $this->getDefinition();
+    $definition = $this->getPluginDefinition();
     return isset($definition['stylesheets']) ? $definition['stylesheets'] : array();
   }
 
@@ -51,7 +51,7 @@ class StaticLayout extends PluginBase implements LayoutInterface {
    * Returns the list of administrative CSS files associated with this layout.
    */
   public function getAdminStylesheetFiles() {
-    $definition = $this->getDefinition();
+    $definition = $this->getPluginDefinition();
     // Fall back on regular CSS for the admin page if admin CSS not provided.
     return isset($definition['admin stylesheets']) ? $definition['admin stylesheets'] : $this->getStylesheetFiles();
   }
@@ -60,7 +60,7 @@ class StaticLayout extends PluginBase implements LayoutInterface {
    * Returns the list of JS files associated with this layout.
    */
   public function getScriptFiles() {
-    $definition = $this->getDefinition();
+    $definition = $this->getPluginDefinition();
     return isset($definition['scripts']) ? $definition['scripts'] : array();
   }
 
@@ -68,7 +68,7 @@ class StaticLayout extends PluginBase implements LayoutInterface {
    * Returns the list of administrative JS files associated with this layout.
    */
   public function getAdminScriptFiles() {
-    $definition = $this->getDefinition();
+    $definition = $this->getPluginDefinition();
     return isset($definition['admin scripts']) ? $definition['admin scripts'] : $this->getScriptFiles();
   }
 
@@ -76,7 +76,7 @@ class StaticLayout extends PluginBase implements LayoutInterface {
    * Implements Drupal\layout\Plugin\LayoutInterface::renderLayout().
    */
   public function renderLayout($admin = FALSE, $regions = array()) {
-    $definition = $this->getDefinition();
+    $definition = $this->getPluginDefinition();
 
     // Assemble a render array with the regions and attached CSS/JS.
     $build = array(

@@ -9,9 +9,8 @@ namespace Drupal\Core\Config\Entity;
 
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityMalformedException;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageControllerBase;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\StorageInterface;
@@ -32,39 +31,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   after the config_prefix in a config name forms the entity ID. Additional or
  *   custom suffixes are not possible.
  */
-class ConfigStorageController implements EntityStorageControllerInterface, EntityControllerInterface {
-
-  /**
-   * Entity type for this controller instance.
-   *
-   * @var string
-   */
-  protected $entityType;
-
-  /**
-   * Array of information about the entity.
-   *
-   * @var array
-   *
-   * @see entity_get_info()
-   */
-  protected $entityInfo;
-
-  /**
-   * Additional arguments to pass to hook_TYPE_load().
-   *
-   * Set before calling Drupal\Core\Config\Entity\ConfigStorageController::attachLoad().
-   *
-   * @var array
-   */
-  protected $hookLoadArguments;
-
-  /**
-   * Name of the entity's ID field in the entity database table.
-   *
-   * @var string
-   */
-  protected $idKey;
+class ConfigStorageController extends EntityStorageControllerBase {
 
   /**
    * Name of the entity's UUID property.
@@ -107,9 +74,8 @@ class ConfigStorageController implements EntityStorageControllerInterface, Entit
    *   The config storage service.
    */
   public function __construct($entity_type, array $entity_info, ConfigFactory $config_factory, StorageInterface $config_storage) {
-    $this->entityType = $entity_type;
-    $this->entityInfo = $entity_info;
-    $this->hookLoadArguments = array();
+    parent::__construct($entity_type, $entity_info);
+
     $this->idKey = $this->entityInfo['entity_keys']['id'];
 
     if (isset($this->entityInfo['entity_keys']['status'])) {
@@ -133,14 +99,6 @@ class ConfigStorageController implements EntityStorageControllerInterface, Entit
       $container->get('config.factory'),
       $container->get('config.storage')
     );
-  }
-
-  /**
-   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::resetCache().
-   */
-  public function resetCache(array $ids = NULL) {
-    // The configuration system is fast enough and/or implements its own
-    // (advanced) caching mechanism already.
   }
 
   /**
@@ -180,15 +138,6 @@ class ConfigStorageController implements EntityStorageControllerInterface, Entit
     }
 
     return $entities;
-  }
-
-  /**
-   * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::loadUnchanged()
-   */
-  public function loadUnchanged($id) {
-    $this->resetCache(array($id));
-    $result = $this->load(array($id));
-    return reset($result);
   }
 
   /**

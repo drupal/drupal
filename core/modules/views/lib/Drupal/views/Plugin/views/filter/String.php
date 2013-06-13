@@ -95,7 +95,7 @@ class String extends FilterPluginBase {
       'not' => array(
         'title' => t('Does not contain'),
         'short' => t('!has'),
-        'method' => 'op_not',
+        'method' => 'opNotLike',
         'values' => 1,
       ),
       'shorterthan' => array(
@@ -116,13 +116,13 @@ class String extends FilterPluginBase {
       $operators += array(
         'empty' => array(
           'title' => t('Is empty (NULL)'),
-          'method' => 'op_empty',
+          'method' => 'opEmpty',
           'short' => t('empty'),
           'values' => 0,
         ),
         'not empty' => array(
           'title' => t('Is not empty (NOT NULL)'),
-          'method' => 'op_empty',
+          'method' => 'opEmpty',
           'short' => t('not empty'),
           'values' => 0,
         ),
@@ -317,7 +317,7 @@ class String extends FilterPluginBase {
     $this->query->addWhere($this->options['group'], $field, '%' . db_like($this->value), 'NOT LIKE');
   }
 
-  function op_not($field) {
+  protected function opNotLike($field) {
     $this->query->addWhere($this->options['group'], $field, '%' . db_like($this->value) . '%', 'NOT LIKE');
   }
 
@@ -335,7 +335,7 @@ class String extends FilterPluginBase {
     $this->query->addWhere($this->options['group'], $field, $this->value, 'RLIKE');
   }
 
-  function op_empty($field) {
+  protected function opEmpty($field) {
     if ($this->operator == 'empty') {
       $operator = "IS NULL";
     }

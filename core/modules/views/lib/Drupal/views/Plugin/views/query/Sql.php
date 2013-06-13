@@ -79,13 +79,6 @@ class Sql extends QueryPluginBase {
    */
   var $fields = array();
 
-
-  /**
-   * The table header to use for tablesort. This matters because tablesort
-   * needs to modify the query and needs the header.
-   */
-  var $header = array();
-
   /**
    * A flag as to whether or not to make the primary field distinct.
    */
@@ -177,14 +170,6 @@ class Sql extends QueryPluginBase {
       'alias' => $alias,
       'count' => TRUE,
     );
-  }
-
-  /**
-   * Set the table header; used for click-sorting because it's needed
-   * info to modify the ORDER BY clause.
-   */
-  function set_header($header) {
-    $this->header = $header;
   }
 
   protected function defineOptions() {
@@ -948,9 +933,9 @@ class Sql extends QueryPluginBase {
    * @param $params
    *   Any params that should be passed through to the addField.
    */
-  function add_orderby($table, $field = NULL, $order = 'ASC', $alias = '', $params = array()) {
+  public function addOrderBy($table, $field = NULL, $order = 'ASC', $alias = '', $params = array()) {
     // Only ensure the table if it's not the special random key.
-    // @todo: Maybe it would make sense to just add a add_orderby_rand or something similar.
+    // @todo: Maybe it would make sense to just add an addOrderByRand or something similar.
     if ($table && $table != 'rand') {
       $this->ensure_table($table);
     }
@@ -972,17 +957,6 @@ class Sql extends QueryPluginBase {
       'field' => $as,
       'direction' => strtoupper($order)
     );
-
-    /**
-     * -- removing, this should be taken care of by field adding now.
-     * -- leaving commented because I am unsure.
-      // If grouping, all items in the order by must also be in the
-      // group by clause. Check $table to ensure that this is not a
-      // formula.
-      if ($this->groupby && $table) {
-        $this->add_groupby($as);
-      }
-     */
   }
 
   /**
@@ -990,7 +964,7 @@ class Sql extends QueryPluginBase {
    * for ensuring that the fields are fully qualified and the table is properly
    * added.
    */
-  function add_groupby($clause) {
+  public function addGroupBy($clause) {
     // Only add it if it's not already in there.
     if (!in_array($clause, $this->groupby)) {
       $this->groupby[] = $clause;
@@ -1201,7 +1175,7 @@ class Sql extends QueryPluginBase {
     // Check query distinct value.
     if (empty($this->no_distinct) && $this->distinct && !empty($this->fields)) {
       $base_field_alias = $this->addField($this->view->storage->get('base_table'), $this->view->storage->get('base_field'));
-      $this->add_groupby($base_field_alias);
+      $this->addGroupBy($base_field_alias);
       $distinct = TRUE;
     }
 

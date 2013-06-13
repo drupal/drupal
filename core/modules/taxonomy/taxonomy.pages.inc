@@ -32,12 +32,16 @@ function taxonomy_term_page(Term $term) {
   drupal_set_breadcrumb($breadcrumb);
   drupal_add_feed('taxonomy/term/' . $term->id() . '/feed', 'RSS - ' . $term->label());
 
-  $uri = $term->uri();
+  foreach ($term->uriRelationships() as $rel) {
+    $uri = $term->uri($rel);
+    // Set the term path as the canonical URL to prevent duplicate content.
+    drupal_add_html_head_link(array('rel' => $rel, 'href' => url($uri['path'], $uri['options'])), TRUE);
 
-  // Set the term path as the canonical URL to prevent duplicate content.
-  drupal_add_html_head_link(array('rel' => 'canonical', 'href' => url($uri['path'], $uri['options'])), TRUE);
-  // Set the non-aliased path as a default shortlink.
-  drupal_add_html_head_link(array('rel' => 'shortlink', 'href' => url($uri['path'], array_merge($uri['options'], array('alias' => TRUE)))), TRUE);
+    if ($rel == 'canonical') {
+      // Set the non-aliased canonical path as a default shortlink.
+      drupal_add_html_head_link(array('rel' => 'shortlink', 'href' => url($uri['path'], array_merge($uri['options'], array('alias' => TRUE)))), TRUE);
+    }
+  }
 
   $build['taxonomy_terms'] = taxonomy_term_view_multiple(array($term->id() => $term));
   if ($nids = taxonomy_select_nodes($term->id(), TRUE, config('node.settings')->get('items_per_page'))) {

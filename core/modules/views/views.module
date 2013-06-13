@@ -404,7 +404,7 @@ function views_arg_load($value, $name, $display_id, $index) {
 
     if (isset($indexes[$index])) {
       if (isset($view->argument[$indexes[$index]])) {
-        $arg = $view->argument[$indexes[$index]]->validate_argument($value) ? $value : FALSE;
+        $arg = $view->argument[$indexes[$index]]->validateMenuArgument($value) ? $value : FALSE;
         $view->destroy();
 
         // Store the output in case we load this same menu item again.
@@ -1396,7 +1396,7 @@ function views_exposed_form($form, &$form_state) {
         // When an user choose an option the selected value is split
         // into the operator and value that the item represents.
         if ($handler->isAGroup()) {
-          $handler->group_form($form, $form_state);
+          $handler->groupForm($form, $form_state);
           $id = $handler->options['group_info']['identifier'];
         }
         else {

@@ -54,14 +54,14 @@ class MenuHierarchy extends SortPluginBase {
         $join = Views::pluginManager('join')->createInstance('standard', $definition);
 
         $menu_links = $this->query->addTable('menu_links', NULL, $join);
-        $this->query->add_orderby($menu_links, 'weight', $this->options['order']);
-        $this->query->add_orderby($menu_links, 'link_title', $this->options['order']);
+        $this->query->addOrderBy($menu_links, 'weight', $this->options['order']);
+        $this->query->addOrderBy($menu_links, 'link_title', $this->options['order']);
       }
 
       // We need this even when also sorting by weight and title, to make sure
       // that children of two parents with the same weight and title are
       // correctly separated.
-      $this->query->add_orderby($this->tableAlias, $this->field . $i, $this->options['order']);
+      $this->query->addOrderBy($this->tableAlias, $this->field . $i, $this->options['order']);
     }
   }
 

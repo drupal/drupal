@@ -18,7 +18,7 @@ abstract class ConditionPluginBase extends ExecutablePluginBase implements Condi
    * Implements \Drupal\Core\Form\FormInterface::getFormID().
    */
   public function getFormID() {
-    $definition = $this->getDefinition();
+    $definition = $this->getPluginDefinition();
     return implode('_', array($definition['module'], $definition['id'], 'condition'));
   }
 

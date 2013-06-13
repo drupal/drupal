@@ -14,6 +14,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Utility\ThemeRegistry;
 use Drupal\Core\Theme\ThemeSettings;
+use Drupal\Component\Utility\NestedArray;
 
 /**
  * @defgroup content_flags Content markers
@@ -1056,9 +1057,7 @@ function theme($hook, $variables = array()) {
       if (!empty($info[$phase])) {
         foreach ($info[$phase] as $processor_function) {
           if (function_exists($processor_function)) {
-            // We don't want a poorly behaved process function changing $hook.
-            $hook_clone = $hook;
-            $processor_function($variables, $hook_clone);
+            $processor_function($variables, $hook, $info);
           }
         }
       }
@@ -2567,7 +2566,7 @@ function _theme_table_cell($cell, $header = FALSE) {
  * @see theme()
  * @see template_process()
  */
-function template_preprocess(&$variables, $hook) {
+function template_preprocess(&$variables, $hook, $info) {
   // Tell all templates where they are located.
   $variables['directory'] = path_to_theme();
 
@@ -2582,11 +2581,16 @@ function template_preprocess(&$variables, $hook) {
   if (!isset($default_variables)) {
     $default_variables = _template_preprocess_default_variables();
   }
-  $variables += $default_variables + array(
-    'attributes' => array(),
-    'title_attributes' => array(),
-    'content_attributes' => array(),
-  );
+  $variables += $default_variables;
+
+  // When theming a render element, merge its #attributes into
+  // $variables['attributes'].
+  if (isset($info['render element'])) {
+    $key = $info['render element'];
+    if (isset($variables[$key]['#attributes'])) {
+      $variables['attributes'] = NestedArray::mergeDeep($variables['attributes'], $variables[$key]['#attributes']);
+    }
+  }
 }
 
 /**
@@ -2595,6 +2599,9 @@ function template_preprocess(&$variables, $hook) {
 function _template_preprocess_default_variables() {
   // Variables that don't depend on a database connection.
   $variables = array(
+    'attributes' => array(),
+    'title_attributes' => array(),
+    'content_attributes' => array(),
     'title_prefix' => array(),
     'title_suffix' => array(),
     'db_is_active' => !defined('MAINTENANCE_MODE'),

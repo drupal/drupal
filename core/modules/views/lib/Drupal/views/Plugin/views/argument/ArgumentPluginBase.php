@@ -795,7 +795,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * Build the info for the summary query.
    *
    * This must:
-   * - add_groupby: group on this field in order to create summaries.
+   * - addGroupBy: group on this field in order to create summaries.
    * - addField: add a 'num_nodes' field for the count. Usually it will
    *   be a count on $view->base_field
    * - set_count_field: Reset the count field so we get the right paging.
@@ -856,7 +856,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     $distinct = ($this->view->display_handler->getOption('distinct') && empty($this->query->no_distinct));
 
     $count_alias = $this->query->addField($this->view->storage->get('base_table'), $this->view->storage->get('base_field'), 'num_records', array('count' => TRUE, 'distinct' => $distinct));
-    $this->query->add_groupby($this->name_alias);
+    $this->query->addGroupBy($this->name_alias);
 
     if ($count_field) {
       $this->query->set_count_field($this->tableAlias, $this->realField);
@@ -873,7 +873,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    *   The order selected in the UI.
    */
   public function summarySort($order, $by = NULL) {
-    $this->query->add_orderby(NULL, NULL, $order, (!empty($by) ? $by : $this->name_alias));
+    $this->query->addOrderBy(NULL, NULL, $order, (!empty($by) ? $by : $this->name_alias));
   }
 
   /**
@@ -950,7 +950,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     }
 
     $plugin = $this->getPlugin('argument_validator');
-    return $this->argument_validated = $plugin->validate_argument($arg);
+    return $this->argument_validated = $plugin->validateArgument($arg);
   }
 
   /**
@@ -960,7 +960,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * argument fails to validate, but there is an action to take anyway,
    * then validation cannot actually fail.
    */
-  function validate_argument($arg) {
+  public function validateMenuArgument($arg) {
     $validate_info = $this->defaultActions($this->options['validate']['fail']);
     if (empty($validate_info['hard fail'])) {
       return TRUE;

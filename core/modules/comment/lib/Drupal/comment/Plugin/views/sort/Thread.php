@@ -25,12 +25,12 @@ class Thread extends SortPluginBase {
     //Read comment_render() in comment.module for an explanation of the
     //thinking behind this sort.
     if ($this->options['order'] == 'DESC') {
-      $this->query->add_orderby($this->tableAlias, $this->realField, $this->options['order']);
+      $this->query->addOrderBy($this->tableAlias, $this->realField, $this->options['order']);
     }
     else {
       $alias = $this->tableAlias . '_' . $this->realField . 'asc';
       //@todo is this secure?
-      $this->query->add_orderby(NULL, "SUBSTRING({$this->tableAlias}.{$this->realField}, 1, (LENGTH({$this->tableAlias}.{$this->realField}) - 1))", $this->options['order'], $alias);
+      $this->query->addOrderBy(NULL, "SUBSTRING({$this->tableAlias}.{$this->realField}, 1, (LENGTH({$this->tableAlias}.{$this->realField}) - 1))", $this->options['order'], $alias);
     }
   }
 

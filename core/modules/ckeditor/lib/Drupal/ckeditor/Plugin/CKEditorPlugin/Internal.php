@@ -18,8 +18,7 @@ use Drupal\editor\Plugin\Core\Entity\Editor;
  *
  * @CKEditorPlugin(
  *   id = "internal",
- *   label = @Translation("CKEditor core"),
- *   module = "ckeditor"
+ *   label = @Translation("CKEditor core")
  * )
  */
 class Internal extends CKEditorPluginBase {

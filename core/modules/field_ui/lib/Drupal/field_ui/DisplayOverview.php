@@ -236,7 +236,7 @@ class DisplayOverview extends OverviewBase {
         $table[$name]['format']['settings_edit_form'] = array();
 
         if ($formatter) {
-          $formatter_type_info = $formatter->getDefinition();
+          $formatter_type_info = $formatter->getPluginDefinition();
 
           // Generate the settings form and allow other modules to alter it.
           $settings_form = $formatter->settingsForm($form, $form_state);

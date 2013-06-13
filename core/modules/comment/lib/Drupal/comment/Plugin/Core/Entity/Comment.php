@@ -43,6 +43,10 @@ use Drupal\Core\Language\Language;
  *   },
  *   bundle_keys = {
  *     "bundle" = "field_name"
+ *   },
+ *   links = {
+ *     "canonical" = "/comment/{comment}",
+ *     "edit-form" = "/comment/{comment}/edit"
  *   }
  * )
  */
@@ -228,5 +232,17 @@ class Comment extends EntityNG implements CommentInterface {
    */
   public function id() {
     return $this->get('cid')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function permalink() {
+    $entity = entity_load($this->get('entity_type')->value, $this->get('entity_id')->value);
+    $uri = $entity->uri();
+    $url['path'] = $uri['path'];
+    $url['options'] = array('fragment' => 'comment-' . $this->id());
+
+    return $url;
   }
 }

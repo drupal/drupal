@@ -1135,4 +1135,13 @@ class ViewUI implements ViewStorageInterface {
   public function onChange($property_name) {
     $this->storage->onChange($property_name);
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function uriRelationships() {
+    return $this->storage->uriRelationships();
+  }
+
+
 }

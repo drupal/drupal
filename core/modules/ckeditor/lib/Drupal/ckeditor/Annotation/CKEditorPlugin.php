@@ -32,11 +32,4 @@ class CKEditorPlugin extends Plugin {
    */
   public $label;
 
-  /**
-   * The name of the module providing the CKEditor plugin.
-   *
-   * @var string
-   */
-  public $module;
-
 }

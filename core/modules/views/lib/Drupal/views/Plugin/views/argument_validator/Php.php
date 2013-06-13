@@ -49,7 +49,7 @@ class Php extends ArgumentValidatorPluginBase {
     return user_access('use PHP for settings');
   }
 
-  function validate_argument($argument) {
+  public function validateArgument($argument) {
     // set up variables to make it easier to reference during the argument.
     $view = &$this->view;
     $handler = &$this->argument;

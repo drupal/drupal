@@ -417,11 +417,11 @@ function rdf_comment_load($comments) {
     // isn't needed until rdf_preprocess_comment() is called, but set it here
     // to optimize performance for websites that implement an entity cache.
     $comment->rdf_data['date'] = rdf_rdfa_attributes($comment->rdf_mapping['created'], $comment->created->value);
-    $entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
+    $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
     $uri = $entity->uri();
-    $comment->rdf_data['entity_uri'] = url($uri['path'], $uri['options']);
-    if ($comment->pid->value) {
-      $comment->rdf_data['pid_uri'] = url('comment/' . $comment->pid->target_id, array('fragment' => 'comment-' . $comment->pid->target_id));
+    $comment->rdf_data['entity_uri'] = url($uri['path']);
+    if ($comment->pid->target_id) {
+      $comment->rdf_data['pid_uri'] = url('comment/' . $comment->pid->target_id);
     }
   }
 }

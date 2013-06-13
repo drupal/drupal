@@ -178,16 +178,14 @@ function contextual_element_info() {
  * @see contextual_page_build()
  * @see \Drupal\contextual\ContextualController::render()
  */
-function contextual_preprocess(&$variables, $hook) {
-  $hooks = theme_get_registry(FALSE);
-
+function contextual_preprocess(&$variables, $hook, $info) {
   // Determine the primary theme function argument.
-  if (!empty($hooks[$hook]['variables'])) {
-    $keys = array_keys($hooks[$hook]['variables']);
+  if (!empty($info['variables'])) {
+    $keys = array_keys($info['variables']);
     $key = $keys[0];
   }
-  elseif (!empty($hooks[$hook]['render element'])) {
-    $key = $hooks[$hook]['render element'];
+  elseif (!empty($info['render element'])) {
+    $key = $info['render element'];
   }
   if (!empty($key) && isset($variables[$key])) {
     $element = $variables[$key];

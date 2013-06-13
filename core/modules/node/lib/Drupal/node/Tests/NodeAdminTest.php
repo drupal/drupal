@@ -65,7 +65,7 @@ class NodeAdminTest extends NodeTestBase {
 
     $this->drupalGet('admin/content');
     foreach ($nodes_query as $delta => $string) {
-      $elements = $this->xpath('//table[contains(@class, :class)]//tr[' . ($delta + 1) . ']/td[2]/a[normalize-space(text())=:label]', array(':class' => 'views-table', ':label' => $string));
+      $elements = $this->xpath('//table[contains(@class, :class)]/tbody/tr[' . ($delta + 1) . ']/td[2]/a[normalize-space(text())=:label]', array(':class' => 'views-table', ':label' => $string));
       $this->assertTrue(!empty($elements), 'The node was found in the correct order.');
     }
 
@@ -79,7 +79,7 @@ class NodeAdminTest extends NodeTestBase {
 
     $this->drupalGet('admin/content', array('query' => array('sort' => 'asc', 'order' => 'title')));
     foreach ($nodes_query as $delta => $string) {
-      $elements = $this->xpath('//table[contains(@class, :class)]//tr[' . ($delta + 1) . ']/td[2]/a[normalize-space(text())=:label]', array(':class' => 'views-table', ':label' => $string));
+      $elements = $this->xpath('//table[contains(@class, :class)]/tbody/tr[' . ($delta + 1) . ']/td[2]/a[normalize-space(text())=:label]', array(':class' => 'views-table', ':label' => $string));
       $this->assertTrue(!empty($elements), 'The node was found in the correct order.');
     }
   }

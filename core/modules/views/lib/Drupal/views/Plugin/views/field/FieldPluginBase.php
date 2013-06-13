@@ -170,7 +170,7 @@ abstract class FieldPluginBase extends HandlerBase {
       // Since fields should always have themselves already added, just
       // add a sort on the field.
       $params = $this->options['group_type'] != 'group' ? array('function' => $this->options['group_type']) : array();
-      $this->query->add_orderby(NULL, NULL, $order, $this->field_alias, $params);
+      $this->query->addOrderBy(NULL, NULL, $order, $this->field_alias, $params);
     }
   }
 
@@ -181,7 +181,7 @@ abstract class FieldPluginBase extends HandlerBase {
    *   The value of 'click sortable' from the plugin definition, this defaults
    *   to TRUE if not set.
    */
-  function click_sortable() {
+  public function clickSortable() {
     return isset($this->definition['click sortable']) ? $this->definition['click sortable'] : TRUE;
   }
 
@@ -287,7 +287,7 @@ abstract class FieldPluginBase extends HandlerBase {
   /**
    * Return the class of the field.
    */
-  function element_classes($row_index = NULL) {
+  public function elementClasses($row_index = NULL) {
     $classes = explode(' ', $this->options['element_class']);
     foreach ($classes as &$class) {
       $class = $this->tokenizeValue($class, $row_index);
@@ -367,7 +367,7 @@ abstract class FieldPluginBase extends HandlerBase {
    * @return \Drupal\Core\Entity\EntityInterface
    *   Returns the entity matching the values.
    */
-  public function get_entity(\stdClass $values) {
+  public function getEntity(\stdClass $values) {
     $relationship_id = $this->options['relationship'];
     if ($relationship_id == 'none') {
       return $values->_entity;

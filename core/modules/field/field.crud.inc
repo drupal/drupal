@@ -154,64 +154,11 @@ function field_read_fields($conditions = array(), $include_additional = array())
   // the $conditions parameters.
   $include_deleted = (isset($include_additional['include_deleted']) && $include_additional['include_deleted']) || (isset($conditions['deleted']) && $conditions['deleted']);
 
-  // Get fields stored in configuration.
-  if (isset($conditions['field_name'])) {
-    // Optimize for the most frequent case where we do have a specific ID.
-    $fields = entity_load_multiple('field_entity', array($conditions['field_name']));
-  }
-  else {
-    // No specific ID, we need to examine all existing fields.
-    $fields = entity_load_multiple('field_entity');
-  }
+  // Pass include_inactive and include_deleted to the $conditions array.
+  $conditions['include_inactive'] = $include_inactive;
+  $conditions['include_deleted'] = $include_deleted;
 
-  // Merge deleted fields (stored in state) if needed.
-  if ($include_deleted) {
-    $deleted_fields = Drupal::state()->get('field.field.deleted') ?: array();
-    foreach ($deleted_fields as $id => $config) {
-      $fields[$id] = entity_create('field_entity', $config);
-    }
-  }
-
-  // Translate "do not include inactive instances" into actual conditions.
-  if (!$include_inactive) {
-    $conditions['active'] = TRUE;
-    $conditions['storage.active'] = TRUE;
-  }
-
-  // Collect matching fields.
-  $matching_fields = array();
-  foreach ($fields as $field) {
-    foreach ($conditions as $key => $value) {
-      // Extract the actual value against which the condition is checked.
-      switch ($key) {
-        case 'storage.active':
-          $checked_value = $field->storage['active'];
-          break;
-
-        case 'field_name';
-          $checked_value = $field->id;
-          break;
-
-        default:
-          $checked_value = $field->$key;
-          break;
-      }
-
-      // Skip to the next field as soon as one condition does not match.
-      if ($checked_value != $value) {
-        continue 2;
-      }
-    }
-
-    module_invoke_all('field_read_field', $field);
-
-    // When returning deleted fields, key the results by UUID since they can
-    // include several fields with the same ID.
-    $key = $include_deleted ? $field->uuid : $field->id;
-    $matching_fields[$key] = $field;
-  }
-
-  return $matching_fields;
+  return entity_load_multiple_by_properties('field_entity', $conditions);
 }
 
 /**
@@ -362,80 +309,11 @@ function field_read_instances($conditions = array(), $include_additional = array
   // or the $conditions parameters.
   $include_deleted = (isset($include_additional['include_deleted']) && $include_additional['include_deleted']) || (isset($conditions['deleted']) && $conditions['deleted']);
 
-  // Get instances stored in configuration.
-  if (isset($conditions['entity_type']) && isset($conditions['bundle']) && isset($conditions['field_name'])) {
-    // Optimize for the most frequent case where we do have a specific ID.
-    $instances = entity_load_multiple('field_instance', array($conditions['entity_type'] . '.' . $conditions['bundle'] . '.' . $conditions['field_name']));
-  }
-  else {
-    // No specific ID, we need to examine all existing instances.
-    $instances = entity_load_multiple('field_instance');
-  }
+  // Pass include_inactive and include_deleted to the $conditions array.
+  $conditions['include_inactive'] = $include_inactive;
+  $conditions['include_deleted'] = $include_deleted;
 
-  // Merge deleted instances (stored in state) if needed.
-  if ($include_deleted) {
-    $state = Drupal::state();
-    $deleted_fields = $state->get('field.field.deleted');
-    $deleted_instances = $state->get('field.instance.deleted') ?: array();
-    foreach ($deleted_instances as $id => $config) {
-      $instances[$id] = entity_create('field_instance', $config);
-    }
-  }
-
-  // Translate "do not include inactive fields" into actual conditions.
-  if (!$include_inactive) {
-    $conditions['field.active'] = TRUE;
-    $conditions['field.storage.active'] = TRUE;
-  }
-
-  // Collect matching instances.
-  $matching_instances = array();
-  foreach ($instances as $instance) {
-    // Only include instances on unknown entity types if 'include_inactive'.
-    if (!$include_inactive && !entity_get_info($instance->entity_type)) {
-      continue;
-    }
-
-    // Some conditions are checked against the field.
-    $field = $instance->getField();
-
-    // Only keep the instance if it matches all conditions.
-    foreach ($conditions as $key => $value) {
-      // Extract the actual value against which the condition is checked.
-      switch ($key) {
-        case 'field_name':
-          $checked_value = $field->id;
-          break;
-
-        case 'field.active':
-          $checked_value = $field->active;
-          break;
-
-        case 'field.storage.active':
-          $checked_value = $field->storage['active'];
-          break;
-
-        case 'field_id':
-          $checked_value = $instance->field_uuid;
-          break;
-
-        default:
-          $checked_value = $instance->$key;
-          break;
-      }
-
-      // Skip to the next instance as soon as one condition does not match.
-      if ($checked_value != $value) {
-        continue 2;
-      }
-    }
-
-    module_invoke_all('field_read_instance', $instance);
-
-    $matching_instances[] = $instance;
-  }
-
-  return $matching_instances;
+  return entity_load_multiple_by_properties('field_instance', $conditions);
 }
 
 /**

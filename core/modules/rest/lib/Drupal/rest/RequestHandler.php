@@ -53,7 +53,7 @@ class RequestHandler extends ContainerAware {
       $config = $this->container->get('config.factory')->get('rest.settings')->get('resources');
       $enabled_formats = $config[$plugin][$request->getMethod()];
       if (empty($enabled_formats) || isset($enabled_formats[$format])) {
-        $definition = $resource->getDefinition();
+        $definition = $resource->getPluginDefinition();
         $class = $definition['serialization_class'];
         try {
           $unserialized = $serializer->deserialize($received, $class, $format);

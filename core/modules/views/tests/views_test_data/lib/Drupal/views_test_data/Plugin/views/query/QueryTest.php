@@ -74,7 +74,7 @@ class QueryTest extends QueryPluginBase {
     return $field;
   }
 
-  public function add_orderby($table, $field = NULL, $order = 'ASC', $alias = '', $params = array()) {
+  public function addOrderBy($table, $field = NULL, $order = 'ASC', $alias = '', $params = array()) {
     $this->orderBy = array('field' => $field, 'order' => $order);
   }
 

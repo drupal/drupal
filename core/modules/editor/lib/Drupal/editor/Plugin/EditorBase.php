@@ -31,8 +31,7 @@ use Drupal\editor\Plugin\EditorPluginInterface;
  * @code
  * @Editor(
  *   id = "myeditor",
- *   label = @Translation("My Editor"),
- *   module = "mymodule"
+ *   label = @Translation("My Editor")
  * )
  * @endcode
  */

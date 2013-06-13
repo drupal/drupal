@@ -21,7 +21,7 @@ abstract class PluginUIBase extends PluginBase implements PluginUIInterface {
    * Implements \Drupal\system\Plugin\PluginUIInterface::form().
    */
   public function form($form, &$form_state) {
-    $plugin_definition = $this->getDefinition();
+    $plugin_definition = $this->getPluginDefinition();
     // @todo Find out how to let the manager be injected into the class.
     if (class_exists($plugin_definition['manager'])) {
       $manager = new $plugin_definition['manager']();
@@ -63,7 +63,7 @@ abstract class PluginUIBase extends PluginBase implements PluginUIInterface {
    *   Returns TRUE if plugins of this type can be accessed.
    */
   public function access() {
-    $definition = $this->getDefinition();
+    $definition = $this->getPluginDefinition();
     return call_user_func_array($definition['access_callback'], $definition['access_arguments']);
   }
 
@@ -79,7 +79,7 @@ abstract class PluginUIBase extends PluginBase implements PluginUIInterface {
    *   An array that represents a table row in the final user interface output.
    */
   public function row($display_plugin_id, array $display_plugin_definition) {
-    $plugin_definition = $this->getDefinition();
+    $plugin_definition = $this->getPluginDefinition();
     return array($display_plugin_definition['title'], l($plugin_definition['link_title'], $plugin_definition['config_path'] . '/' . $display_plugin_id));
   }
 

@@ -142,7 +142,7 @@ class Rearrange extends ViewsFormBase {
     $new_fields = $order = array();
 
     // Make an array with the weights
-    foreach ($form_state['values'] as $field => $info) {
+    foreach ($form_state['values']['fields'] as $field => $info) {
       // add each value that is a field with a weight to our list, but only if
       // it has had its 'removed' checkbox checked.
       if (is_array($info) && isset($info['weight']) && empty($info['removed'])) {

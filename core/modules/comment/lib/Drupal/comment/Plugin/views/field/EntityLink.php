@@ -64,7 +64,7 @@ class EntityLink extends FieldPluginBase {
    * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::render().
    */
   function render($values) {
-    $entity = $this->get_entity($values);
+    $entity = $this->getEntity($values);
 
     // Only render the links, if they are defined.
     return !empty($this->build[$entity->id()]['links']['comment__comment']) ? drupal_render($this->build[$entity->id()]['links']['comment__comment']) : '';

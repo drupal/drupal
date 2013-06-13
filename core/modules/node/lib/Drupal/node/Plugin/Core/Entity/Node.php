@@ -48,7 +48,12 @@ use Drupal\node\NodeBCDecorator;
  *     "bundle" = "type"
  *   },
  *   route_base_path = "admin/structure/types/manage/{bundle}",
- *   permission_granularity = "bundle"
+ *   permission_granularity = "bundle",
+ *   links = {
+ *     "canonical" = "/node/{node}",
+ *     "edit-form" = "/node/{node}/edit",
+ *     "version-history" = "/node/{node}/revisions"
+ *   }
  * )
  */
 class Node extends EntityNG implements NodeInterface {

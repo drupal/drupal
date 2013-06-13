@@ -214,6 +214,13 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
   /**
    * Forwards the call to the decorated entity.
    */
+  public function uriRelationships() {
+    return $this->decorated->uriRelationships();
+  }
+
+  /**
+   * Forwards the call to the decorated entity.
+   */
   public function access($operation = 'view', AccountInterface $account = NULL) {
     return $this->decorated->access($operation, $account);
   }
@@ -355,8 +362,8 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
   /**
    * Forwards the call to the decorated entity.
    */
-  public function uri() {
-    return $this->decorated->uri();
+  public function uri($rel = 'canonical') {
+    return $this->decorated->uri($rel);
   }
 
   /**

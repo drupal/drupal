@@ -21,8 +21,7 @@ use Drupal\editor\Plugin\Core\Entity\Editor;
  *
  * @CKEditorPlugin(
  *   id = "llama_contextual_and_button",
- *   label = @Translation("Contextual Llama With Button"),
- *   module = "ckeditor_test"
+ *   label = @Translation("Contextual Llama With Button")
  * )
  */
 class LlamaContextualAndButton extends Llama implements CKEditorPluginContextualInterface, CKEditorPluginButtonsInterface, CKEditorPluginConfigurableInterface {

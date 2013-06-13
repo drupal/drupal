@@ -41,6 +41,10 @@ use Drupal\Core\Language\Language;
  *   entity_keys = {
  *     "id" = "uid",
  *     "uuid" = "uuid"
+ *   },
+ *   links = {
+ *     "canonical" = "/user/{user}",
+ *     "edit-form" = "/user/{user}/edit"
  *   }
  * )
  */

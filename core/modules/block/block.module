@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Component\Utility\NestedArray;
 
 /**
  * Denotes that a block is not enabled in any region and should not be shown.
@@ -538,6 +539,16 @@ function template_preprocess_block(&$variables) {
 
   $variables['attributes']['class'][] = 'block';
   $variables['attributes']['class'][] = drupal_html_class('block-' . $variables['configuration']['module']);
+
+  // The block template provides a wrapping element for the content. Render the
+  // #attributes of the content on this wrapping element rather than passing
+  // them through to the content's #theme function/template. This allows the
+  // content to not require a function/template at all, or if it does use one,
+  // to not require it to output an extra wrapping element.
+  if (isset($variables['content']['#attributes'])) {
+    $variables['content_attributes'] = NestedArray::mergeDeep($variables['content_attributes'], $variables['content']['#attributes']);
+    unset($variables['content']['#attributes']);
+  }
 
   // Add default class for block content.
   $variables['content_attributes']['class'][] = 'content';

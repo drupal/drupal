@@ -18,8 +18,7 @@ use Drupal\field\Plugin\Core\Entity\FieldInstance;
  *
  * @InPlaceEditor(
  *   id = "editor",
- *   alternativeTo = {"direct"},
- *   module = "editor"
+ *   alternativeTo = {"direct"}
  * )
  */
 class Editor extends PluginBase implements EditPluginInterface {

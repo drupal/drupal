@@ -178,7 +178,7 @@ class ViewAddFormController extends ViewFormControllerBase implements EntityCont
   public function validate(array $form, array &$form_state) {
     $wizard_type = $form_state['values']['show']['wizard_key'];
     $wizard_instance = $this->wizardManager->createInstance($wizard_type);
-    $form_state['wizard'] = $wizard_instance->getDefinition();
+    $form_state['wizard'] = $wizard_instance->getPluginDefinition();
     $form_state['wizard_instance'] = $wizard_instance;
     $errors = $form_state['wizard_instance']->validateView($form, $form_state);
 
