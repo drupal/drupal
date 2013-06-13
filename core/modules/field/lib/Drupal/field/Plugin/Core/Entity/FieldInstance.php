@@ -312,66 +312,123 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Overrides \Drupal\Core\Entity\Entity::save().
+   *
+   * @return
+   *   Either SAVED_NEW or SAVED_UPDATED, depending on the operation performed.
+   *
+   * @throws \Drupal\field\FieldException
+   *   If the field instance definition is invalid.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   In case of failures at the configuration storage level.
    */
   public function save() {
-    $module_handler = \Drupal::moduleHandler();
-    $entity_manager = \Drupal::entityManager();
-    $instance_controller = $entity_manager->getStorageController($this->entityType);
-
     if ($this->isNew()) {
-      // Check that the field can be attached to this entity type.
-      if (!empty($this->field->entity_types) && !in_array($this->entity_type, $this->field->entity_types)) {
-        throw new FieldException(format_string('Attempt to create an instance of field @field_id on forbidden entity type @entity_type.', array('@field_id' => $this->field->id, '@entity_type' => $this->entity_type)));
-      }
-
-      // Assign the ID.
-      $this->id = $this->id();
-
-      // Ensure the field instance is unique within the bundle.
-      if ($prior_instance = current($instance_controller->load(array($this->id)))) {
-        throw new FieldException(format_string('Attempt to create an instance of field @field_id on bundle @bundle that already has an instance of that field.', array('@field_id' => $this->field->id, '@bundle' => $this->bundle)));
-      }
-
-      $hook = 'field_create_instance';
-      $hook_args = array($this);
+      return $this->saveNew();
     }
-    // Otherwise, the field instance is being updated.
     else {
-      $original = \Drupal::service('plugin.manager.entity')
-        ->getStorageController($this->entityType)
-        ->loadUnchanged($this->getOriginalID());
+      return $this->saveUpdated();
+    }
+  }
 
-      // Some updates are always disallowed.
-      if ($this->entity_type != $original->entity_type) {
-        throw new FieldException("Cannot change an existing instance's entity_type.");
-      }
-      if ($this->bundle != $original->bundle && empty($this->bundle_rename_allowed)) {
-        throw new FieldException("Cannot change an existing instance's bundle.");
-      }
-      if ($this->field_uuid != $original->field_uuid) {
-        throw new FieldException("Cannot change an existing instance's field.");
-      }
+  /**
+   * Saves a new field instance definition.
+   *
+   * @return
+   *   SAVED_NEW if the definition was saved.
+   *
+   * @throws \Drupal\field\FieldException
+   *   If the field instance definition is invalid.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   In case of failures at the configuration storage level.
+   */
+  protected function saveNew() {
+    $module_handler = \Drupal::moduleHandler();
+    $instance_controller = \Drupal::entityManager()->getStorageController($this->entityType);
 
-      $hook = 'field_update_instance';
-      $hook_args = array($this, $original);
+    // Check that the field can be attached to this entity type.
+    if (!empty($this->field->entity_types) && !in_array($this->entity_type, $this->field->entity_types)) {
+      throw new FieldException(format_string('Attempt to create an instance of field @field_id on forbidden entity type @entity_type.', array('@field_id' => $this->field->id, '@entity_type' => $this->entity_type)));
     }
 
-    $field_type_info = field_info_field_types($this->field->type);
+    // Assign the ID.
+    $this->id = $this->id();
 
-    // Set the default instance settings.
-    $this->settings += $field_type_info['instance_settings'];
+    // Ensure the field instance is unique within the bundle.
+    if ($prior_instance = current($instance_controller->load(array($this->id)))) {
+      throw new FieldException(format_string('Attempt to create an instance of field @field_id on bundle @bundle that already has an instance of that field.', array('@field_id' => $this->field->id, '@bundle' => $this->bundle)));
+    }
+
+    // Set the field UUID.
+    $this->field_uuid = $this->field->uuid;
+
+    // Ensure default values are present.
+    $this->prepareSave();
 
     // Save the configuration.
     $result = parent::save();
     field_cache_clear();
 
-    // Invoke external hooks after the cache is cleared for API consistency.
-    // This invokes hook_field_create_instance() or hook_field_update_instance()
-    // depending on whether the field is new.
-    $module_handler->invokeAll($hook, $hook_args);
+    // Invoke hook_field_create_instance() after the cache is cleared for API
+    // consistency.
+    $module_handler->invokeAll('field_create_instance', array($this));
 
     return $result;
+  }
+
+  /**
+   * Saves an updated field instance definition.
+   *
+   * @return
+   *   SAVED_UPDATED if the definition was saved.
+   *
+   * @throws \Drupal\field\FieldException
+   *   If the field instance definition is invalid.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   In case of failures at the configuration storage level.
+   */
+  protected function saveUpdated() {
+    $module_handler = \Drupal::moduleHandler();
+    $instance_controller = \Drupal::entityManager()->getStorageController($this->entityType);
+
+    $original = $instance_controller->loadUnchanged($this->getOriginalID());
+
+    // Some updates are always disallowed.
+    if ($this->entity_type != $original->entity_type) {
+      throw new FieldException("Cannot change an existing instance's entity_type.");
+    }
+    if ($this->bundle != $original->bundle && empty($this->bundle_rename_allowed)) {
+      throw new FieldException("Cannot change an existing instance's bundle.");
+    }
+    if ($this->field_uuid != $original->field_uuid) {
+      throw new FieldException("Cannot change an existing instance's field.");
+    }
+
+    // Ensure default values are present.
+    $this->prepareSave();
+
+    // Save the configuration.
+    $result = parent::save();
+    field_cache_clear();
+
+    // Invoke hook_field_update_instance() after the cache is cleared for API
+    // consistency.
+    $module_handler->invokeAll('field_update_instance', array($this, $original));
+
+    return $result;
+  }
+
+  /**
+   * Prepares the instance definition for saving.
+   */
+  protected function prepareSave() {
+    $field_type_info = field_info_field_types($this->field->type);
+
+    // Set the default instance settings.
+    $this->settings += $field_type_info['instance_settings'];
   }
 
   /**
