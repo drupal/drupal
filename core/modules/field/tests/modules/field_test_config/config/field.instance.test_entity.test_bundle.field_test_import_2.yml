@@ -1,9 +1,9 @@
-id: test_entity.test_bundle.field_test_import
+id: test_entity.test_bundle.field_test_import_2
 langcode: und
-field_name: field_test_import
+field_name: field_test_import_2
 entity_type: test_entity
 bundle: test_bundle
-label: 'Test import field'
+label: 'Test import field 2 on test bundle'
 description: ''
 required: '0'
 default_value: {  }
@@ -11,4 +11,10 @@ default_value_function: ''
 settings:
   text_processing: '0'
   user_register_form: false
+widget:
+  weight: '-2'
+  type: text_textfield
+  module: text
+  settings:
+    size: '60'
 field_type: text
