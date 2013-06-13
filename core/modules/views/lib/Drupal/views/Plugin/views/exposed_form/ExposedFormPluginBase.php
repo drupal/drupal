@@ -139,13 +139,12 @@ abstract class ExposedFormPluginBase extends PluginBase {
 
     $form_state['exposed_form_plugin'] = $this;
     $form = drupal_build_form('views_exposed_form', $form_state);
-    $output = drupal_render($form);
 
     if (!$this->view->display_handler->displaysExposed() || (!$block && $this->view->display_handler->getOption('exposed_block'))) {
-      return "";
+      return array();
     }
     else {
-      return $output;
+      return $form;
     }
   }
 

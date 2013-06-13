@@ -99,7 +99,8 @@ class ExposedFormTest extends ViewTestBase {
     $view = views_get_view('test_reset_button');
     $this->executeView($view);
     $exposed_form = $view->display_handler->getPlugin('exposed_form');
-    $this->drupalSetContent($exposed_form->renderExposedForm());
+    $output = $exposed_form->renderExposedForm();
+    $this->drupalSetContent(drupal_render($output));
 
     $expected_id = drupal_clean_css_identifier('views-exposed-form-' . $view->storage->id() . '-' . $view->current_display);
     $this->assertFieldByXpath('//form/@id', $expected_id, 'Expected form ID found.');
