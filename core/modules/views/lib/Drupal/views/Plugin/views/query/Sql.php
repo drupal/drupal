@@ -972,17 +972,6 @@ class Sql extends QueryPluginBase {
       'field' => $as,
       'direction' => strtoupper($order)
     );
-
-    /**
-     * -- removing, this should be taken care of by field adding now.
-     * -- leaving commented because I am unsure.
-      // If grouping, all items in the order by must also be in the
-      // group by clause. Check $table to ensure that this is not a
-      // formula.
-      if ($this->groupby && $table) {
-        $this->add_groupby($as);
-      }
-     */
   }
 
   /**
@@ -990,7 +979,7 @@ class Sql extends QueryPluginBase {
    * for ensuring that the fields are fully qualified and the table is properly
    * added.
    */
-  function add_groupby($clause) {
+  public function addGroupBy($clause) {
     // Only add it if it's not already in there.
     if (!in_array($clause, $this->groupby)) {
       $this->groupby[] = $clause;
@@ -1201,7 +1190,7 @@ class Sql extends QueryPluginBase {
     // Check query distinct value.
     if (empty($this->no_distinct) && $this->distinct && !empty($this->fields)) {
       $base_field_alias = $this->addField($this->view->storage->get('base_table'), $this->view->storage->get('base_field'));
-      $this->add_groupby($base_field_alias);
+      $this->addGroupBy($base_field_alias);
       $distinct = TRUE;
     }
 
