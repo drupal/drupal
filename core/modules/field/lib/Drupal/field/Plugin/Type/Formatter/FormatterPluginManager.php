@@ -8,7 +8,7 @@
 namespace Drupal\field\Plugin\Type\Formatter;
 
 use Drupal\Component\Plugin\PluginManagerBase;
-use Drupal\Component\Plugin\Discovery\ProcessDecorator;
+use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\AlterDecorator;
@@ -27,14 +27,6 @@ class FormatterPluginManager extends PluginManagerBase {
   protected $formatterOptions;
 
   /**
-   * Overrides Drupal\Component\Plugin\PluginManagerBase:$defaults.
-   */
-  protected $defaults = array(
-    'field_types' => array(),
-    'settings' => array(),
-  );
-
-  /**
    * Constructs a FormatterPluginManager object.
    *
    * @param \Traversable $namespaces
@@ -42,12 +34,19 @@ class FormatterPluginManager extends PluginManagerBase {
    *   keyed by the corresponding namespace to look for plugin implementations,
    */
   public function __construct(\Traversable $namespaces) {
-    $this->discovery = new AnnotatedClassDiscovery('field/formatter', $namespaces);
-    $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
+    $annotation_namespaces = array('Drupal\field\Annotation' => $namespaces['Drupal\field']);
+    $this->discovery = new AnnotatedClassDiscovery('field/formatter', $namespaces, $annotation_namespaces, 'Drupal\field\Annotation\FieldFormatter');
     $this->discovery = new AlterDecorator($this->discovery, 'field_formatter_info');
     $this->discovery = new CacheDecorator($this->discovery, 'field_formatter_types', 'field');
+  }
 
-    $this->factory = new FormatterFactory($this->discovery);
+  /**
+   * {@inheritdoc}
+   */
+  public function createInstance($plugin_id, array $configuration) {
+    $plugin_definition = $this->discovery->getDefinition($plugin_id);
+    $plugin_class = DefaultFactory::getPluginClass($plugin_id, $plugin_definition);
+    return new $plugin_class($plugin_id, $plugin_definition, $configuration['instance'], $configuration['settings'], $configuration['label'], $configuration['view_mode']);
   }
 
   /**

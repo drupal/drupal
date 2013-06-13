@@ -7,7 +7,7 @@
 
 namespace Drupal\number\Plugin\field\formatter;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 use Drupal\number\Plugin\field\formatter\DefaultNumberFormatter;
@@ -20,7 +20,7 @@ use Drupal\Core\Entity\EntityInterface;
  * for decimal and float fields on the other hand, in order to be able to use
  * different settings.
  *
- * @Plugin(
+ * @FieldFormatter(
  *   id = "number_decimal",
  *   module = "number",
  *   label = @Translation("Default"),

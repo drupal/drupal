@@ -7,7 +7,7 @@
  */
 namespace Drupal\text\Plugin\field\formatter;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 use Drupal\Core\Entity\EntityInterface;
@@ -20,7 +20,7 @@ use Drupal\Core\Entity\EntityInterface;
  *
  * @see Drupal\text\Field\Formatter\TextSummaryOrTrimmedFormatter
  *
- * @Plugin(
+ * @FieldFormatter(
  *   id = "text_trimmed",
  *   module = "text",
  *   label = @Translation("Trimmed"),

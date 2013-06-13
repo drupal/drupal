@@ -7,7 +7,7 @@
 
 namespace Drupal\entity_reference\Plugin\field\formatter;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity_reference\RecursiveRenderingException;
@@ -16,7 +16,7 @@ use Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase;
 /**
  * Plugin implementation of the 'entity reference rendered entity' formatter.
  *
- * @Plugin(
+ * @FieldFormatter(
  *   id = "entity_reference_entity_view",
  *   module = "entity_reference",
  *   label = @Translation("Rendered entity"),

@@ -7,7 +7,7 @@
 
 namespace Drupal\field_test\Plugin\field\formatter;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 use Drupal\Core\Entity\EntityInterface;
@@ -15,7 +15,7 @@ use Drupal\Core\Entity\EntityInterface;
 /**
  * Plugin implementation of the 'field_test_default' formatter.
  *
- * @Plugin(
+ * @FieldFormatter(
  *   id = "field_test_default",
  *   module = "field_test",
  *   label = @Translation("Default"),

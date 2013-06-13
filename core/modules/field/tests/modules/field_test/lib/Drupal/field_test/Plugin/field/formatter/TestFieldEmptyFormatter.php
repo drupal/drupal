@@ -7,7 +7,7 @@
  */
 namespace Drupal\field_test\Plugin\field\formatter;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
@@ -15,7 +15,7 @@ use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 /**
  * Plugin implementation of the 'field_empty_test' formatter.
  *
- * @Plugin(
+ * @FieldFormatter(
  *   id = "field_empty_test",
  *   module = "field_test",
  *   label = @Translation("Field empty test"),

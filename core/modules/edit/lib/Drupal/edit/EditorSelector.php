@@ -63,7 +63,7 @@ class EditorSelector implements EditorSelectorInterface {
     // 'form' editor, since that can work for any field. Formatter definitions
     // can use 'disabled' to explicitly opt out of in-place editing.
     $formatter_info = field_info_formatter_types($formatter_type);
-    $editor_id = isset($formatter_info['edit']['editor']) ? $formatter_info['edit']['editor'] : 'form';
+    $editor_id = $formatter_info['edit']['editor'];
     if ($editor_id === 'disabled') {
       return;
     }
