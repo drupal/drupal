@@ -40,26 +40,43 @@ table.system-status-report td.status-icon {
 /**
  * Appearance page.
  */
-table.screenshot {
-  margin-left: 1em;
+/**
+* Theme display without vertical toolbar.
+*/
+@media screen and (min-width: 45em) {
+  body:not(.toolbar-vertical) .system-themes-list-enabled .screenshot,
+  body:not(.toolbar-vertical) .system-themes-list-enabled .no-screenshot {
+    float: right;
+    margin: 0 0 0 20px;
+  }
+  body:not(.toolbar-vertical) .system-themes-list-disabled .theme-selector {
+    float: right;
+    padding: 20px 0 20px 20px;
+  }
 }
-.system-themes-list-enabled .theme-selector .screenshot,
-.system-themes-list-enabled .theme-selector .no-screenshot {
-  float: right;
-  margin: 0 0 0 20px;
-}
-.system-themes-list-disabled .theme-selector {
-  float: right;
-  padding: 20px 0 20px 20px;
+
+/**
+* Theme display with vertical toolbar.
+*/
+@media screen and (min-width: 60em) {
+  .toolbar-vertical .system-themes-list-enabled .screenshot,
+  .toolbar-vertical .system-themes-list-enabled .no-screenshot {
+    float: right;
+    margin: 0 0 0 20px;
+  }
+  .toolbar-vertical .system-themes-list-disabled .theme-selector {
+    float: right;
+    padding: 20px 0 20px 20px;
+  }
 }
 .theme-selector .operations li {
-  border-right: none;
-  border-left: 1px solid #cdcdcd;
   float: right;
+  border-left: 1px solid #cdcdcd;
+  border-right: none;
 }
 .theme-selector .operations li.last {
-  border-left: none;
   padding: 0 0.7em 0 0;
+  border-left: none;
 }
 .theme-selector .operations li.first {
   padding: 0 0 0 0.7em;
