@@ -159,11 +159,8 @@ function search_menu() {
   $items['admin/config/search/settings'] = array(
     'title' => 'Search settings',
     'description' => 'Configure relevance settings for search and other indexing options.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('search_admin_settings'),
-    'access arguments' => array('administer search'),
+    'route_name' => 'search_settings',
     'weight' => -10,
-    'file' => 'search.admin.inc',
   );
   $items['admin/config/search/settings/reindex'] = array(
     'title' => 'Clear index',

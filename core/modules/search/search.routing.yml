@@ -1,3 +1,9 @@
+search_settings:
+  pattern: '/admin/config/search/settings'
+  defaults:
+    _form: 'Drupal\search\Form\SearchSettingsForm'
+  requirements:
+    _permission: 'administer search'
 search_reindex_confirm:
   pattern: '/admin/config/search/settings/reindex'
   defaults:
