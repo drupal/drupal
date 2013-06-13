@@ -9,11 +9,13 @@ namespace Drupal\field\Plugin\views\field;
 
 use Drupal\Core\Language\Language;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\field\Plugin\Type\Formatter\FormatterPluginManager;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Views;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * A field that displays fieldapi fields.
@@ -73,6 +75,43 @@ class Field extends FieldPluginBase {
    * @var array
    */
   protected $formatterOptions;
+
+  /**
+   * The field formatter plugin manager.
+   *
+   * @var \Drupal\field\Plugin\Type\Formatter\FormatterPluginManager
+   */
+  protected $formatterPluginManager;
+
+  /**
+   * Constructs a \Drupal\field\Plugin\views\field\Field object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\field\Plugin\Type\Formatter\FormatterPluginManager $formatter_plugin_manager
+   *   The field formatter plugin manager.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, FormatterPluginManager $formatter_plugin_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->formatterPluginManager = $formatter_plugin_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('plugin.manager.field.formatter')
+    );
+  }
 
   /**
    * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::init().
@@ -333,11 +372,14 @@ class Field extends FieldPluginBase {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     $field = $this->field_info;
-    $formatters = $this->formatterOptions($field['type']);
+    $formatters = $this->formatterPluginManager->getOptions($field['type']);
     $column_names = array_keys($field['columns']);
 
     // If this is a multiple value field, add its options.
@@ -852,39 +894,6 @@ class Field extends FieldPluginBase {
     else {
       return Language::LANGCODE_NOT_SPECIFIED;
     }
-  }
-
-  /**
-   * Returns an array of formatter options for a field type.
-   *
-   * Borrowed from field_ui.
-   *
-   * @param string $field_type
-   *   (optional) The field type to get options for.
-   *
-   * @return array
-   *   An array of formatter options.
-   *
-   * @see field_ui_formatter_options().
-   */
-  protected function formatterOptions($field_type = NULL) {
-    if (!isset($this->formatterOptions)) {
-      $field_types = field_info_field_types();
-      $this->formatterOptions = array();
-      foreach (field_info_formatter_types() as $name => $formatter) {
-        foreach ($formatter['field_types'] as $formatter_field_type) {
-          // Check that the field type exists.
-          if (isset($field_types[$formatter_field_type])) {
-            $this->formatterOptions[$formatter_field_type][$name] = $formatter['label'];
-          }
-        }
-      }
-    }
-
-    if ($field_type) {
-      return !empty($this->formatterOptions[$field_type]) ? $this->formatterOptions[$field_type] : array();
-    }
-    return $options;
   }
 
 }
