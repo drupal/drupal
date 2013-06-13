@@ -1,4 +1,5 @@
-id: field_test_import
+id: field_test_import_staging_2
+uuid: 2165d9aa-9a0c-41a1-be02-2a49f3405c00
 langcode: und
 type: text
 settings:
@@ -13,7 +14,7 @@ storage:
   active: '1'
 locked: '0'
 cardinality: '1'
-translatable: false
+translatable: '0'
 indexes:
   format:
     - format
