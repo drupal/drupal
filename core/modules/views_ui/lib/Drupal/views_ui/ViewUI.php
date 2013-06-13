@@ -322,7 +322,7 @@ class ViewUI implements ViewStorageInterface {
       '#value' => empty($form_state['ok_button']) ? t('Cancel') : t('Ok'),
       '#submit' => array($cancel_submit),
       '#validate' => array(),
-      '#attributes' => array('formnovalidate' => ''),
+      '#limit_validation_errors' => array(),
     );
 
     // Compatibility, to be removed later: // TODO: When is "later"?
