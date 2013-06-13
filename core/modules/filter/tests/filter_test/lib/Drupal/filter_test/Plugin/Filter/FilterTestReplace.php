@@ -29,7 +29,7 @@ class FilterTestReplace extends FilterBase {
    */
   public function process($text, $langcode, $cache, $cache_id) {
     $text = array();
-    $text[] = 'Filter: ' . $this->getLabel() . ' (' . $this->getPluginID() . ')';
+    $text[] = 'Filter: ' . $this->getLabel() . ' (' . $this->getPluginId() . ')';
     $text[] = 'Language: ' . $langcode;
     $text[] = 'Cache: ' . ($cache ? 'Enabled' : 'Disabled');
     if ($cache_id) {
