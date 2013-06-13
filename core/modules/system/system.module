@@ -668,11 +668,9 @@ function system_menu() {
   );
   $items['admin/index'] = array(
     'title' => 'Index',
-    'page callback' => 'system_admin_index',
-    'access arguments' => array('access administration pages'),
+    'route_name' => 'system_admin_index',
     'type' => MENU_LOCAL_TASK,
     'weight' => -18,
-    'file' => 'system.admin.inc',
   );
 
   // Menu items that are basically just menu blocks.
