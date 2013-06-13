@@ -425,7 +425,7 @@ function entity_test_entity_predelete(EntityInterface $entity) {
 function entity_test_entity_operation_alter(array &$operations, EntityInterface $entity) {
   $uri = $entity->uri();
   $operations['test_operation'] = array(
-    'title' => 'Test Operation: ' . $entity->label(),
+    'title' => format_string('Test Operation: @label', array('@label' => $entity->label())),
     'href' => $uri['path'] . '/test_operation',
     'weight' => 50,
   );

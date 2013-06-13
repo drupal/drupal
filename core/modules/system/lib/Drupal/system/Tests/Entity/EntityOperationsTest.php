@@ -51,7 +51,7 @@ class EntityOperationsTest extends WebTestBase {
     foreach ($roles as $role) {
       $uri = $role->uri();
       $this->assertLinkByHref($uri['path'] . '/test_operation');
-      $this->assertLink('Test Operation: ' . $role->label());
+      $this->assertLink(format_string('Test Operation: @label', array('@label' => $role->label())));
     }
   }
 
