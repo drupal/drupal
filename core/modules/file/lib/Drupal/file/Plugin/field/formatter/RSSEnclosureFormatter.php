@@ -7,7 +7,7 @@
 
 namespace Drupal\file\Plugin\field\formatter;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 use Drupal\Core\Entity\EntityInterface;
@@ -15,7 +15,7 @@ use Drupal\Core\Entity\EntityInterface;
 /**
  * Plugin implementation of the 'file_rss_enclosure' formatter.
  *
- * @Plugin(
+ * @FieldFormatter(
  *   id = "file_rss_enclosure",
  *   module = "file",
  *   label = @Translation("RSS enclosure"),

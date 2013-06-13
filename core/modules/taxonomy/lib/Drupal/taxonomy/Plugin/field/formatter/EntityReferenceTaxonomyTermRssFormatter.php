@@ -7,7 +7,7 @@
 
 namespace Drupal\taxonomy\Plugin\field\formatter;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase;
@@ -17,7 +17,7 @@ use Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase;
  *
  * @todo: Have a way to indicate this formatter applies only to taxonomy terms.
  *
- * @Plugin(
+ * @FieldFormatter(
  *   id = "entity_reference_rss_category",
  *   module = "taxonomy",
  *   label = @Translation("RSS category"),

@@ -7,7 +7,7 @@
 
 namespace Drupal\taxonomy\Plugin\field\formatter;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
@@ -16,7 +16,7 @@ use Drupal\taxonomy\Plugin\field\formatter\TaxonomyFormatterBase;
 /**
  * Plugin implementation of the 'taxonomy_term_reference_link' formatter.
  *
- * @Plugin(
+ * @FieldFormatter(
  *   id = "taxonomy_term_reference_link",
  *   module = "taxonomy",
  *   label = @Translation("Link"),

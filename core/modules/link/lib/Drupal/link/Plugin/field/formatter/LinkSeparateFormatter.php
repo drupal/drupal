@@ -12,7 +12,7 @@
 
 namespace Drupal\link\Plugin\field\formatter;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
@@ -20,7 +20,7 @@ use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 /**
  * Plugin implementation of the 'link_separate' formatter.
  *
- * @Plugin(
+ * @FieldFormatter(
  *   id = "link_separate",
  *   module = "link",
  *   label = @Translation("Separate link text and URL"),

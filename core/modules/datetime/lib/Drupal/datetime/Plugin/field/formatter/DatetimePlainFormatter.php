@@ -7,7 +7,7 @@
 
 namespace Drupal\datetime\Plugin\field\formatter;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 use Drupal\Core\Entity\EntityInterface;
@@ -16,7 +16,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
 /**
  * Plugin implementation of the 'datetime_plain' formatter.
  *
- * @Plugin(
+ * @FieldFormatter(
  *   id = "datetime_plain",
  *   module = "datetime",
  *   label = @Translation("Plain"),

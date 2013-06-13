@@ -7,7 +7,7 @@
 
 namespace Drupal\email\Plugin\field\formatter;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 use Drupal\Core\Entity\EntityInterface;
@@ -15,7 +15,7 @@ use Drupal\Core\Entity\EntityInterface;
 /**
  * Plugin implementation of the 'email_mailto' formatter.
  *
- * @Plugin(
+ * @FieldFormatter(
  *   id = "email_mailto",
  *   module = "email",
  *   label = @Translation("Email"),
