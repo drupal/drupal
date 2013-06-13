@@ -67,7 +67,7 @@ class RevisionLink extends Link {
    */
   function get_revision_entity($values, $op) {
     $vid = $this->getValue($values, 'node_vid');
-    $node = $this->get_entity($values);
+    $node = $this->getEntity($values);
     // Unpublished nodes ignore access control.
     $node->status = 1;
     // Ensure user has access to perform the operation on this node.

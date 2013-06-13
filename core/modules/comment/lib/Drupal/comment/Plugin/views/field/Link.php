@@ -43,7 +43,7 @@ class Link extends FieldPluginBase {
   public function query() {}
 
   function render($values) {
-    $comment = $this->get_entity($values);
+    $comment = $this->getEntity($values);
     return $this->render_link($comment, $values);
   }
 

@@ -143,7 +143,7 @@ abstract class BulkFormBase extends FieldPluginBase {
       $selected = array_filter($form_state['values'][$this->options['id']]);
       $entities = array();
       foreach (array_intersect_key($this->view->result, $selected) as $row) {
-        $entity = $this->get_entity($row);
+        $entity = $this->getEntity($row);
         $entities[$entity->id()] = $entity;
       }
 

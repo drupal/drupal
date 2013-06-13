@@ -367,7 +367,7 @@ abstract class FieldPluginBase extends HandlerBase {
    * @return \Drupal\Core\Entity\EntityInterface
    *   Returns the entity matching the values.
    */
-  public function get_entity(\stdClass $values) {
+  public function getEntity(\stdClass $values) {
     $relationship_id = $this->options['relationship'];
     if ($relationship_id == 'none') {
       return $values->_entity;

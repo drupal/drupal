@@ -37,7 +37,7 @@ class FieldEntityTest extends ViewTestBase {
   }
 
   /**
-   * Tests the get_entity method.
+   * Tests the getEntity method.
    */
   public function testGetEntity() {
     // The view is a view of comments, their nodes and their authors, so there
@@ -55,13 +55,13 @@ class FieldEntityTest extends ViewTestBase {
     $row = $view->result[0];
 
     // Tests entities on the base level.
-    $entity = $view->field['cid']->get_entity($row);
+    $entity = $view->field['cid']->getEntity($row);
     $this->assertEqual($entity->id(), $comment->id(), 'Make sure the right comment entity got loaded.');
     // Tests entities as relationship on first level.
-    $entity = $view->field['nid']->get_entity($row);
+    $entity = $view->field['nid']->getEntity($row);
     $this->assertEqual($entity->id(), $node->id(), 'Make sure the right node entity got loaded.');
     // Tests entities as relationships on second level.
-    $entity = $view->field['uid']->get_entity($row);
+    $entity = $view->field['uid']->getEntity($row);
     $this->assertEqual($entity->id(), $account->id(), 'Make sure the right user entity got loaded.');
   }
 

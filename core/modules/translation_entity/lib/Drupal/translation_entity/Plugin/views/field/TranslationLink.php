@@ -45,7 +45,7 @@ class TranslationLink extends FieldPluginBase {
    * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::render().
    */
   function render($values) {
-    return $this->render_link($this->get_entity($values), $values);
+    return $this->render_link($this->getEntity($values), $values);
   }
 
   /**

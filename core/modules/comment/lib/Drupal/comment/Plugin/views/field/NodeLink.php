@@ -39,7 +39,7 @@ class NodeLink extends FieldPluginBase {
   public function query() {}
 
   function render($values) {
-    $node = $this->get_entity($values);
+    $node = $this->getEntity($values);
     comment_node_view($node, $this->options['teaser'] ? 'teaser' : 'full');
 
     // Only render the links if they are defined.
