@@ -182,6 +182,19 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
+   * {@inheritdoc}
+   *
+   * Returns a list of URI relationships supported by this entity.
+   *
+   * @return array
+   *   An array of link relationships supported by this entity.
+   */
+  public function uriRelationships() {
+    $entity_info = $this->entityInfo();
+    return isset($entity_info['links']) ? array_keys($entity_info['links']) : array();
+  }
+
+  /**
    * Implements \Drupal\Core\Entity\EntityInterface::get().
    */
   public function get($property_name, $langcode = NULL) {

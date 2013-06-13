@@ -419,7 +419,7 @@ function rdf_comment_load($comments) {
     $comment->rdf_data['date'] = rdf_rdfa_attributes($comment->rdf_mapping['created'], $comment->created->value);
     $comment->rdf_data['nid_uri'] = url('node/' . $comment->nid->target_id);
     if ($comment->pid->target_id) {
-      $comment->rdf_data['pid_uri'] = url('comment/' . $comment->pid->target_id, array('fragment' => 'comment-' . $comment->pid->target_id));
+      $comment->rdf_data['pid_uri'] = url('comment/' . $comment->pid->target_id);
     }
   }
 }

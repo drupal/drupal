@@ -253,6 +253,41 @@ class EntityType extends Plugin {
   public $menu_path_wildcard;
 
   /**
+   * Link templates using the URI template syntax.
+   *
+   * Links are an array of standard link relations to the URI template that
+   * should be used for them. Where possible, link relationships should use
+   * established IANA relationships rather than custom relationships.
+   *
+   * Every entity type should, at minimum, define "canonical", which is the
+   * pattern for URIs to that entity. Even if the entity will have no HTML page
+   * exposed to users it should still have a canonical URI in order to be
+   * compatible with web services. Entities that will be user-editable via an
+   * HTML page must also define an "edit-form" relationship.
+   *
+   * By default, the following placeholders are supported:
+   * - entityType: The machine name of the entity type.
+   * - bundle: The bundle machine name of the entity.
+   * - id: The unique ID of the entity.
+   * - uuid: The UUID of the entity.
+   * - [entityType]: The entity type itself will also be a valid token for the
+   *   ID of the entity. For instance, a placeholder of {node} used on the Node
+   *   class would have the same value as {id}. This is generally preferred
+   *   over "id" for better self-documentation.
+   *
+   * Specific entity types may also expand upon this list by overriding the
+   * uriPlaceholderReplacements() method.
+   *
+   * @link http://www.iana.org/assignments/link-relations/link-relations.xml @endlink
+   * @link http://tools.ietf.org/html/rfc6570 @endlink
+   *
+   * @var array
+   */
+  public $links = array(
+    'canonical' => '/entity/{entityType}/{id}',
+  );
+
+  /**
    * Specifies whether a module exposing permissions for the current entity type
    * should use entity-type level granularity, bundle level granularity or just
    * skip this entity. The allowed values are respectively "entity_type",

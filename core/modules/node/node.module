@@ -2164,11 +2164,18 @@ function node_page_view(EntityInterface $node) {
   // of the active trail, and the link name becomes the page title.
   // Thus, we must explicitly set the page title to be the node title.
   drupal_set_title($node->label());
-  $uri = $node->uri();
-  // Set the node path as the canonical URL to prevent duplicate content.
-  drupal_add_html_head_link(array('rel' => 'canonical', 'href' => url($uri['path'], $uri['options'])), TRUE);
-  // Set the non-aliased path as a default shortlink.
-  drupal_add_html_head_link(array('rel' => 'shortlink', 'href' => url($uri['path'], array_merge($uri['options'], array('alias' => TRUE)))), TRUE);
+
+  foreach ($node->uriRelationships() as $rel) {
+    $uri = $node->uri($rel);
+    // Set the node path as the canonical URL to prevent duplicate content.
+    drupal_add_html_head_link(array('rel' => $rel, 'href' => url($uri['path'], $uri['options'])), TRUE);
+
+    if ($rel == 'canonical') {
+      // Set the non-aliased canonical path as a default shortlink.
+      drupal_add_html_head_link(array('rel' => 'shortlink', 'href' => url($uri['path'], array_merge($uri['options'], array('alias' => TRUE)))), TRUE);
+    }
+  }
+
   return node_show($node);
 }
 

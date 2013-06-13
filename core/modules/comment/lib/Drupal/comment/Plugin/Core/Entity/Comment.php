@@ -41,6 +41,10 @@ use Drupal\Core\Language\Language;
  *     "bundle" = "node_type",
  *     "label" = "subject",
  *     "uuid" = "uuid"
+ *   },
+ *   links = {
+ *     "canonical" = "/comment/{comment}",
+ *     "edit-form" = "/comment/{comment}/edit"
  *   }
  * )
  */
@@ -218,5 +222,16 @@ class Comment extends EntityNG implements CommentInterface {
    */
   public function id() {
     return $this->get('cid')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function permalink() {
+
+    $url['path'] = 'node/' . $this->nid->value;
+    $url['options'] = array('fragment' => 'comment-' . $this->id());
+
+    return $url;
   }
 }

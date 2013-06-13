@@ -1568,10 +1568,11 @@ function template_preprocess_comment(&$variables) {
   }
 
   $uri = $comment->uri();
+  $permalink_uri = $comment->permalink();
   $uri['options'] += array('attributes' => array('class' => 'permalink', 'rel' => 'bookmark'));
 
   $variables['title'] = l($comment->subject->value, $uri['path'], $uri['options']);
-  $variables['permalink'] = l(t('Permalink'), $uri['path'], $uri['options']);
+  $variables['permalink'] = l(t('Permalink'), $permalink_uri['path'], $permalink_uri['options']);
   $variables['submitted'] = t('Submitted by !username on !datetime', array('!username' => $variables['author'], '!datetime' => $variables['created']));
 
   if ($comment->pid->target_id) {
@@ -1589,10 +1590,10 @@ function template_preprocess_comment(&$variables) {
     else {
       $variables['parent_changed'] = format_date($comment_parent->changed->value);
     }
-    $uri_parent = $comment_parent->uri();
-    $uri_parent['options'] += array('attributes' => array('class' => 'permalink', 'rel' => 'bookmark'));
-    $variables['parent_title'] = l($comment_parent->subject->value, $uri_parent['path'], $uri_parent['options']);
-    $variables['parent_permalink'] = l(t('Parent permalink'), $uri_parent['path'], $uri_parent['options']);
+    $permalink_uri_parent = $comment_parent->permalink();
+    $permalink_uri_parent['options'] += array('attributes' => array('class' => array('permalink'), 'rel' => 'bookmark'));
+    $variables['parent_title'] = l($comment_parent->subject->value, $permalink_uri_parent['path'], $permalink_uri_parent['options']);
+    $variables['parent_permalink'] = l(t('Parent permalink'), $permalink_uri_parent['path'], $permalink_uri_parent['options']);
     $variables['parent'] = t('In reply to !parent_title by !parent_username',
         array('!parent_username' => $variables['parent_author'], '!parent_title' => $variables['parent_title']));
   }

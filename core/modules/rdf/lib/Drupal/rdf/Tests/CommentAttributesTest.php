@@ -135,11 +135,11 @@ class CommentAttributesTest extends CommentTestBase {
     $this->drupalLogin($this->web_user);
     $comment_1 = $this->saveComment($this->node->nid, $this->web_user->uid);
 
-    $comment_1_uri = url('comment/' . $comment_1->id(), array('fragment' => 'comment-' . $comment_1->id(), 'absolute' => TRUE));
+    $comment_1_uri = url('comment/' . $comment_1->id(), array('absolute' => TRUE));
 
     // Posts a reply to the first comment.
     $comment_2 = $this->saveComment($this->node->nid, $this->web_user->uid, NULL, $comment_1->id());
-    $comment_2_uri = url('comment/' . $comment_2->id(), array('fragment' => 'comment-' . $comment_2->id(), 'absolute' => TRUE));
+    $comment_2_uri = url('comment/' . $comment_2->id(), array('absolute' => TRUE));
 
     $parser = new \EasyRdf_Parser_Rdfa();
     $graph = new \EasyRdf_Graph();
@@ -176,7 +176,8 @@ class CommentAttributesTest extends CommentTestBase {
    *   An array containing information about an anonymous user.
    */
   function _testBasicCommentRdfaMarkup($graph, $comment, $account = array()) {
-    $comment_uri = url('comment/' . $comment->id(), array('fragment' => 'comment-' . $comment->id(), 'absolute' => TRUE));
+    $uri = $comment->uri();
+    $comment_uri = url($uri['path'], $uri['options'] + array('absolute' => TRUE));
 
     // Comment type.
     $expected_value = array(
@@ -235,7 +236,12 @@ class CommentAttributesTest extends CommentTestBase {
     else {
       // The author is expected to be a blank node.
       $author_uri = $graph->get($comment_uri, '<http://rdfs.org/sioc/ns#has_creator>');
-      $this->assertTrue($author_uri->isBnode(), 'Comment relation to author found in RDF output (sioc:has_creator).');
+      if ($author_uri instanceof \EasyRdf_Resource) {
+        $this->assertTrue($author_uri->isBnode(), 'Comment relation to author found in RDF output (sioc:has_creator) and author is blank node.');
+      }
+      else {
+        $this->fail('Comment relation to author found in RDF output (sioc:has_creator).');
+      }
     }
 
     // Author name.

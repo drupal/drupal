@@ -136,6 +136,14 @@ interface EntityInterface extends ComplexDataInterface, AccessibleInterface, Tra
   public function uri();
 
   /**
+   * Returns a list of URI relationships supported by this entity.
+   *
+   * @return array
+   *   An array of link relationships supported by this entity.
+   */
+  public function uriRelationships();
+
+  /**
    * Saves an entity permanently.
    *
    * @return
