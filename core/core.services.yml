@@ -159,6 +159,11 @@ services:
     arguments: ['@container.namespaces']
   request:
     class: Symfony\Component\HttpFoundation\Request
+    # @TODO the synthetic setting must be uncommented whenever drupal_session_initialize()
+    # is run after there is a request and the following two lines should be removed.
+    factory_class: Symfony\Component\HttpFoundation\Request
+    factory_method: createFromGlobals
+    #synthetic: true
   event_dispatcher:
     class: Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher
     arguments: ['@service_container']
