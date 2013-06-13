@@ -210,9 +210,6 @@ table.system-status-report .status-title {
 /**
  * Appearance page.
  */
-table.screenshot {
-  margin-right: 1em; /* LTR */
-}
 .theme-info h2 {
   margin-bottom: 0;
 }
@@ -237,24 +234,20 @@ table.screenshot {
   border: 1px solid #e0e0d8;
   padding: 2px;
   vertical-align: bottom;
-  width: 294px;
-  height: 219px;
-  line-height: 219px;
+  max-width: 100%;
+  height: auto;
   text-align: center;
+}
+.theme-selector .no-screenshot {
+  display: none;
 }
 .theme-default .screenshot {
   border: 1px solid #aaa;
 }
-.system-themes-list-enabled .theme-selector .screenshot,
-.system-themes-list-enabled .theme-selector .no-screenshot {
-  float: left; /* LTR */
-  margin: 0 20px 0 0; /* LTR */
-}
-.system-themes-list-disabled .theme-selector .screenshot,
-.system-themes-list-disabled .theme-selector .no-screenshot {
-  width: 194px;
-  height: 144px;
-  line-height: 144px;
+.system-themes-list-disabled .screenshot,
+.system-themes-list-disabled .no-screenshot {
+  max-width: 194px;
+  height: auto;
 }
 .theme-selector h3 {
   font-weight: normal;
@@ -262,20 +255,84 @@ table.screenshot {
 .theme-default h3 {
   font-weight: bold;
 }
-.system-themes-list-enabled .theme-selector h3 {
-  margin-top: 0;
+
+/**
+* Theme display without vertical toolbar.
+*/
+@media screen and (min-width: 45em) {
+  body:not(.toolbar-vertical) .system-themes-list-enabled .screenshot,
+  body:not(.toolbar-vertical) .system-themes-list-enabled .no-screenshot {
+    float: left; /* LTR */
+    margin: 0 20px 0 0; /* LTR */
+    width: 294px;
+  }
+  body:not(.toolbar-vertical) .system-themes-list-enabled h3 {
+    margin-top: 0;
+  }
+  body:not(.toolbar-vertical) .system-themes-list-disabled .theme-selector {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 31.25%;
+    float: left; /* LTR */
+    padding: 20px 20px 20px 0; /* LTR */
+  }
+  body:not(.toolbar-vertical) .system-themes-list-disabled .theme-info {
+    min-height: 170px;
+  }
+  body:not(.toolbar-vertical) .no-screenshot {
+    display: block;
+    padding-bottom: 57%;
+    position: relative;
+  }
+  body:not(.toolbar-vertical) .no-screenshot__text {
+    margin-top: -0.76em;
+    position: absolute;
+    top: 50%;
+    width: 100%;
+  }
 }
-.system-themes-list-disabled .theme-selector {
-  width: 300px;
-  float: left; /* LTR */
-  padding: 20px 20px 20px 0; /* LTR */
+
+/**
+* Theme display with vertical toolbar.
+*/
+@media screen and (min-width: 60em) {
+  .toolbar-vertical .system-themes-list-enabled .screenshot,
+  .toolbar-vertical .system-themes-list-enabled .no-screenshot {
+    float: left; /* LTR */
+    margin: 0 20px 0 0; /* LTR */
+    width: 294px;
+  }
+  .toolbar-vertical .system-themes-list-enabled h3 {
+    margin-top: 0;
+  }
+  .toolbar-vertical .system-themes-list-disabled .theme-selector {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 31.25%;
+    float: left; /* LTR */
+    padding: 20px 20px 20px 0; /* LTR */
+  }
+  .toolbar-vertical .system-themes-list-disabled .theme-info {
+    min-height: 170px;
+  }
+  .toolbar-vertical .no-screenshot {
+    display: block;
+    padding-bottom: 57%;
+    position: relative;
+  }
+  .toolbar-vertical .no-screenshot__text {
+    margin-top: -0.76em;
+    position: absolute;
+    top: 50%;
+    width: 100%;
+  }
 }
 .system-themes-list-enabled .theme-info {
   max-width: 940px;
 }
-.system-themes-list-disabled .theme-info {
-  min-height: 170px;
-}
+
 .theme-selector .incompatible {
   margin-top: 10px;
   font-weight: bold;
