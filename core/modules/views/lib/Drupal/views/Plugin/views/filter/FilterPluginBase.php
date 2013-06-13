@@ -733,7 +733,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * Build a form containing a group of operator | values to apply as a
    * single filter.
    */
-  function group_form(&$form, &$form_state) {
+  public function groupForm(&$form, &$form_state) {
     if (!empty($this->options['group_info']['optional']) && !$this->multipleExposedInput()) {
 
       $old_any = $this->options['group_info']['widget'] == 'select' ? '<Any>' : '&lt;Any&gt;';

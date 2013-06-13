@@ -1396,7 +1396,7 @@ function views_exposed_form($form, &$form_state) {
         // When an user choose an option the selected value is split
         // into the operator and value that the item represents.
         if ($handler->isAGroup()) {
-          $handler->group_form($form, $form_state);
+          $handler->groupForm($form, $form_state);
           $id = $handler->options['group_info']['identifier'];
         }
         else {
