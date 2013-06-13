@@ -92,7 +92,7 @@ class Rss extends StylePluginBase {
    * @return
    *   An array that can be passed to format_xml_elements().
    */
-  function get_channel_elements() {
+  protected function getChannelElements() {
     return array();
   }
 
@@ -124,7 +124,7 @@ class Rss extends StylePluginBase {
 
     // Fetch any additional elements for the channel and merge in their
     // namespaces.
-    $this->channel_elements = $this->get_channel_elements();
+    $this->channel_elements = $this->getChannelElements();
     foreach ($this->channel_elements as $element) {
       if (isset($element['namespace'])) {
         $this->namespaces = array_merge($this->namespaces, $element['namespace']);
