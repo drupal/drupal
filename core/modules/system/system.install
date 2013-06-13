@@ -1917,14 +1917,19 @@ function system_update_8045() {
 }
 
 /**
- * Enable Views if the node listing is set as the frontpage.
+ * Install new default views.
  */
 function system_update_8046() {
-  $front_page = config('system.site')->get('page.front');
-  if (!isset($front_page) || $front_page == 'node') {
+  $config_to_import = array(
+    'views.view.user_admin_people' => 'user',
+    'views.view.content' => 'node',
+  );
+  $front_page = config('system.site')->get('page.front') ?: 'node';
+  if ($front_page == 'node') {
     // This imports the node frontpage view.
-    $module = 'node';
-    $config_name = 'views.view.frontpage';
+    $config_to_import['views.view.frontpage'] = 'node';
+  }
+  foreach ($config_to_import as $config_name => $module) {
     $module_config_path = drupal_get_path('module', $module) . '/config';
     $module_filestorage = new FileStorage($module_config_path);
     $config_storage = drupal_container()->get('config.storage');

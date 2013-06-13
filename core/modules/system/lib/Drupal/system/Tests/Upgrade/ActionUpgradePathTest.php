@@ -35,7 +35,7 @@ class ActionUpgradePathTest extends UpgradePathTestBase {
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     $this->drupalGet('admin/people');
-    $elements = $this->xpath('//select[@name="operation"]/option');
+    $elements = $this->xpath('//select[@name="action"]/option');
     $this->assertTrue(!empty($elements), 'The user actions were upgraded.');
   }
 

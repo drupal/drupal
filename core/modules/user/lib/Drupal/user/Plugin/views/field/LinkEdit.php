@@ -23,7 +23,7 @@ class LinkEdit extends Link {
    * Overrides \Drupal\user\Plugin\views\field\Link::render_link().
    */
   public function render_link(EntityInterface $entity, \stdClass $values) {
-    if ($entity && $entity->access('edit')) {
+    if ($entity && $entity->access('update')) {
       $this->options['alter']['make_link'] = TRUE;
 
       $text = !empty($this->options['text']) ? $this->options['text'] : t('Edit');

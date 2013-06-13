@@ -67,6 +67,7 @@ class UserCancelTest extends WebTestBase {
    * administer the site.
    */
   function testUserCancelUid1() {
+    module_enable(array('views'));
     // Update uid 1's name and password to we know it.
     $password = user_password();
     $account = array(
@@ -88,10 +89,10 @@ class UserCancelTest extends WebTestBase {
     $this->admin_user = $this->drupalCreateUser(array('administer users'));
     $this->drupalLogin($this->admin_user);
     $edit = array(
-      'operation' => 'user_cancel_user_action',
-      'accounts[1]' => TRUE,
+      'action' => 'user_cancel_user_action',
+      'user_bulk_form[0]' => TRUE,
     );
-    $this->drupalPost('admin/people', $edit, t('Update'));
+    $this->drupalPost('admin/people', $edit, t('Apply'));
 
     // Verify that uid 1's account was not cancelled.
     $user1 = user_load(1, TRUE);
@@ -391,6 +392,7 @@ class UserCancelTest extends WebTestBase {
    * Create an administrative user and mass-delete other users.
    */
   function testMassUserCancelByAdmin() {
+    module_enable(array('views'));
     config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
     // Enable account cancellation notification.
     config('user.settings')->set('notify.status_canceled', TRUE)->save();
@@ -408,14 +410,11 @@ class UserCancelTest extends WebTestBase {
 
     // Cancel user accounts, including own one.
     $edit = array();
-    $edit['operation'] = 'user_cancel_user_action';
-    foreach ($users as $uid => $account) {
-      $edit['accounts[' . $uid . ']'] = TRUE;
+    $edit['action'] = 'user_cancel_user_action';
+    for ($i = 0; $i <= 4; $i++) {
+      $edit['user_bulk_form[' . $i . ']'] = TRUE;
     }
-    $edit['accounts[' . $admin_user->uid . ']'] = TRUE;
-    // Also try to cancel uid 1.
-    $edit['accounts[1]'] = TRUE;
-    $this->drupalPost('admin/people', $edit, t('Update'));
+    $this->drupalPost('admin/people', $edit, t('Apply'));
     $this->assertText(t('Are you sure you want to cancel these user accounts?'), 'Confirmation form to cancel accounts displayed.');
     $this->assertText(t('When cancelling these accounts'), 'Allows to select account cancellation method.');
     $this->assertText(t('Require e-mail confirmation to cancel account.'), 'Allows to send confirmation mail.');

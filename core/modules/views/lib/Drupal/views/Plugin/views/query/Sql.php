@@ -1536,7 +1536,7 @@ class Sql extends QueryPluginBase {
 
       foreach ($results as $index => $result) {
         // Store the entity id if it was found.
-        if (!empty($result->$id_alias)) {
+        if (isset($result->{$id_alias}) && $result->{$id_alias} != '') {
           $ids_by_table[$table_alias][$index] = $result->$id_alias;
         }
       }

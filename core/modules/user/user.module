@@ -930,21 +930,12 @@ function user_menu() {
   $items['admin/people'] = array(
     'title' => 'People',
     'description' => 'Manage user accounts, roles, and permissions.',
-    'page callback' => 'user_admin',
-    'page arguments' => array('list'),
+    'page callback' => 'user_admin_account',
     'access arguments' => array('administer users'),
     'position' => 'left',
     'weight' => -4,
     'file' => 'user.admin.inc',
   );
-  $items['admin/people/people'] = array(
-    'title' => 'List',
-    'description' => 'Find and manage people interacting with your site.',
-    'access arguments' => array('administer users'),
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'file' => 'user.admin.inc',
-  );
-
   // Permissions and role forms.
   $items['admin/people/permissions'] = array(
     'title' => 'Permissions',
@@ -984,8 +975,7 @@ function user_menu() {
 
   $items['admin/people/create'] = array(
     'title' => 'Add user',
-    'page arguments' => array('create'),
-    'access arguments' => array('administer users'),
+    'route_name' => 'user_admin_create',
     'type' => MENU_LOCAL_ACTION,
   );
   $items['admin/people/cancel'] = array(
@@ -994,6 +984,7 @@ function user_menu() {
     'page arguments' => array('user_multiple_cancel_confirm'),
     'access arguments' => array('administer users'),
     'file' => 'user.admin.inc',
+    'type' => MENU_CALLBACK,
   );
 
   // Administration pages.
@@ -2064,8 +2055,6 @@ function user_role_revoke_permissions($rid, array $permissions = array()) {
 }
 
 function user_multiple_cancel_confirm($form, &$form_state) {
-  $edit = $form_state['input'];
-
   // Retrieve the accounts to be canceled from the temp store.
   $accounts = Drupal::service('user.tempstore')->get('user_user_operations_cancel')->get($GLOBALS['user']->uid);
   $form['accounts'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);

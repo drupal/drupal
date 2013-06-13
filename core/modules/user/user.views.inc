@@ -318,6 +318,14 @@ function user_views_data() {
     ),
   );
 
+  $data['users']['user_bulk_form'] = array(
+    'title' => t('Bulk update'),
+    'help' => t('Add a form element that lets you run operations on multiple users.'),
+    'field' => array(
+      'id' => 'user_bulk_form',
+    ),
+  );
+
   // Define the base group of this table. Fields that don't have a group defined
   // will go into this field by default.
   $data['users_roles']['table']['group']  = t('User');
