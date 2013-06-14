@@ -76,11 +76,6 @@ const SAVED_UPDATED = 2;
 const SAVED_DELETED = 3;
 
 /**
- * The default aggregation group for system CSS files added to the page.
- */
-const CSS_AGGREGATE_SYSTEM = -100;
-
-/**
  * The default aggregation group for CSS files added to the page.
  */
 const CSS_AGGREGATE_DEFAULT = 0;
@@ -1716,7 +1711,6 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  *     would be 'node.js.css'.
  *   - 'group': A number identifying the aggregation group in which to add the
  *     stylesheet. Available constants are:
- *     - CSS_AGGREGATE_SYSTEM: Any system-layer CSS.
  *     - CSS_AGGREGATE_DEFAULT: (default) Any module-layer CSS.
  *     - CSS_AGGREGATE_THEME: Any theme-layer CSS.
  *     The aggregate group number affects load order and the CSS cascade.
@@ -1942,10 +1936,9 @@ function drupal_get_css($css = NULL, $skip_alter = FALSE) {
  * @see drupal_add_js()
  */
 function drupal_sort_css_js($a, $b) {
-  // First order by group, so that, for example, all items in the
-  // CSS_AGGREGATE_SYSTEM group appear before items in the CSS_AGGREGATE_DEFAULT
-  // group, which appear before all items in the CSS_AGGREGATE_THEME group.
-  // Modules may create additional groups by defining their own constants.
+  // First order by group, so that all items in the CSS_AGGREGATE_DEFAULT group
+  // appear before items in the CSS_AGGREGATE_THEME group. Modules may create
+  // additional groups by defining their own constants.
   if ($a['group'] < $b['group']) {
     return -1;
   }
@@ -3434,18 +3427,10 @@ function drupal_aggregate_js(&$js_groups) {
  *
  * @param $elements
  *   The structured array describing the data being rendered.
- * @param $group
- *   The default group of JavaScript and CSS being added. This is only applied
- *   to the stylesheets and JavaScript items that don't have an explicit group
- *   assigned to them.
  * @param $dependency_check
  *   When TRUE, will exit if a given library's dependencies are missing. When
  *   set to FALSE, will continue to add the libraries, even though one or more
  *   dependencies are missing. Defaults to FALSE.
- * @param $every_page
- *   Set to TRUE to indicate that the attachments are added to every page on the
- *   site. Only attachments with the every_page flag set to TRUE can participate
- *   in JavaScript/CSS aggregation.
  *
  * @return
  *   FALSE if there were any missing library dependencies; TRUE if all library
@@ -3456,7 +3441,7 @@ function drupal_aggregate_js(&$js_groups) {
  * @see drupal_add_css()
  * @see drupal_render()
  */
-function drupal_process_attached($elements, $group = JS_DEFAULT, $dependency_check = FALSE, $every_page = NULL) {
+function drupal_process_attached($elements, $dependency_check = FALSE) {
   // Add defaults to the special attached structures that should be processed differently.
   $elements['#attached'] += array(
     'library' => array(),
@@ -3467,7 +3452,7 @@ function drupal_process_attached($elements, $group = JS_DEFAULT, $dependency_che
   // Add the libraries first.
   $success = TRUE;
   foreach ($elements['#attached']['library'] as $library) {
-    if (drupal_add_library($library[0], $library[1], $every_page) === FALSE) {
+    if (drupal_add_library($library[0], $library[1]) === FALSE) {
       $success = FALSE;
       // Exit if the dependency is missing.
       if ($dependency_check) {
@@ -3493,14 +3478,6 @@ function drupal_process_attached($elements, $group = JS_DEFAULT, $dependency_che
       if (is_numeric($data)) {
         $data = $options['data'];
         unset($options['data']);
-      }
-      // Apply the default group if it isn't explicitly given.
-      if (!isset($options['group'])) {
-        $options['group'] = $group;
-      }
-      // Set the every_page flag if one was passed.
-      if (isset($every_page)) {
-        $options['every_page'] = $every_page;
       }
       call_user_func('drupal_add_' . $type, $data, $options);
     }
@@ -3665,8 +3642,7 @@ function drupal_process_states(&$elements) {
  * @param $name
  *   The name of the library to add.
  * @param $every_page
- *   Set to TRUE if this library is added to every page on the site. Only items
- *   with the every_page flag set to TRUE can participate in aggregation.
+ *   Set to TRUE if this library is added to every page on the site.
  *
  * @return
  *   TRUE if the library was successfully added; FALSE if the library or one of
@@ -3688,7 +3664,20 @@ function drupal_add_library($module, $name, $every_page = NULL) {
         'js' => $library['js'],
         'css' => $library['css'],
       );
-      $added[$module][$name] = drupal_process_attached($elements, JS_LIBRARY, TRUE, $every_page);
+      foreach (array('js', 'css') as $type) {
+        foreach ($elements['#attached'][$type] as $data => $options) {
+          // Apply the JS_LIBRARY group if it isn't explicitly given.
+          if ($type == 'js' && !isset($options['group'])) {
+            $elements['#attached']['js'][$data]['group'] = JS_LIBRARY;
+          }
+          // Set the every_page flag if one was passed.
+          if (isset($every_page)) {
+            $elements['#attached'][$type][$data]['every_page'] = $every_page;
+          }
+        }
+      }
+
+      $added[$module][$name] = drupal_process_attached($elements, TRUE);
     }
     else {
       // Requested library does not exist.
