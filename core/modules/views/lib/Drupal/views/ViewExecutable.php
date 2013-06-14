@@ -424,7 +424,7 @@ class ViewExecutable {
     $this->storage->set('executable', $this);
 
     // Add the default css for a view.
-    $this->element['#attached']['css'][] = drupal_get_path('module', 'views') . '/css/views.module.css';
+    $this->element['#attached']['library'][] = array('views', 'views.module');
   }
 
   /**

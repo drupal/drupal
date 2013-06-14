@@ -792,13 +792,20 @@ function views_hook_info() {
  * Implements hook_library_info().
  */
 function views_library_info() {
-  $path = drupal_get_path('module', 'views') . '/js';
+  $path = drupal_get_path('module', 'views');
+  $libraries['views.module'] = array(
+    'title' => 'Views base',
+    'version' => VERSION,
+    'css' => array(
+      "$path/css/views.module.css"
+    ),
+  );
   $libraries['views.ajax'] = array(
     'title' => 'Views AJAX',
     'version' => VERSION,
     'js' => array(
-      "$path/base.js" => array('group' => JS_DEFAULT),
-      "$path/ajax_view.js" => array('group' => JS_DEFAULT),
+      "$path/js/base.js" => array('group' => JS_DEFAULT),
+      "$path/js/ajax_view.js" => array('group' => JS_DEFAULT),
     ),
     'dependencies' => array(
       array('system', 'jquery'),
@@ -813,7 +820,7 @@ function views_library_info() {
     'title' => 'Views Contextual links',
     'version' => VERSION,
     'js' => array(
-      "$path/views-contextual.js" => array('group' => JS_LIBRARY, 'weight' => -10),
+      "$path/js/views-contextual.js" => array('group' => JS_LIBRARY, 'weight' => -10),
     ),
     'dependencies' => array(
       array('system', 'jquery'),
