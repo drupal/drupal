@@ -373,7 +373,14 @@ function theme_datetime_wrapper($variables) {
   $output = '';
 
   // If the element is required, a required marker is appended to the label.
-  $required = !empty($element['#required']) ? theme('form_required_marker', array('element' => $element)) : '';
+  $required = '';
+  if(!empty($element['#required'])) {
+    $form_required_marker = array(
+      '#theme' => 'form_required_marker',
+      '#element' => $element,
+    );
+    $required = drupal_render($form_required_marker);
+  }
 
   if (!empty($element['#title'])) {
     $output .= '<h4 class="label">' . t('!title!required', array('!title' => $element['#title'], '!required' => $required)) . '</h4>';
