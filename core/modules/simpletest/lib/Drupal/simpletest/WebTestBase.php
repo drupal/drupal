@@ -1063,6 +1063,24 @@ abstract class WebTestBase extends TestBase {
       // not overwritten by Curl.
       $curl_options[CURLOPT_HTTPHEADER][] = 'Expect:';
     }
+
+    // In order to debug webtests you need to either set a cookie or have the
+    // xdebug session in the URL. If the developer listens to connection on the
+    // parent site, by default the cookie is not forwarded to the client side,
+    // so you can't debug actual running code. In order to make debuggers work
+    // this bit of information is forwarded. Make sure that the debugger listens
+    // to at least three external connections.
+    if (isset($_COOKIE['XDEBUG_SESSION'])) {
+      $curl_options += array(
+        CURLOPT_COOKIE => '',
+      );
+      // Ensure any existing cookie data string ends with the correct separator.
+      if (!empty($curl_options[CURLOPT_COOKIE])) {
+        $curl_options[CURLOPT_COOKIE] = rtrim($curl_options[CURLOPT_COOKIE], '; ') . '; ';
+      }
+      $curl_options[CURLOPT_COOKIE] .= 'XDEBUG_SESSION=' . $_COOKIE['XDEBUG_SESSION'] . '; ';
+    }
+
     curl_setopt_array($this->curlHandle, $this->additionalCurlOptions + $curl_options);
 
     if (!$redirect) {
