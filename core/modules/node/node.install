@@ -808,11 +808,9 @@ function node_update_8013() {
 }
 
 /**
- * Enable Datetime module, which is now a required dependency.
+ * Empty update. See http://drupal.org/node/1836392.
  */
 function node_update_8014() {
-  // Enable the datetime module.
-  module_enable(array('datetime'));
 }
 
 /**
