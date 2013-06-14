@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Template;
 
+use Drupal\Component\Utility\String;
 
 /**
  * A class that defines a type of Attribute that can be added to as an array.
@@ -66,7 +67,7 @@ class AttributeArray extends AttributeValueBase implements \ArrayAccess, \Iterat
    */
   public function __toString() {
     $this->printed = TRUE;
-    return implode(' ', array_map('check_plain', $this->value));
+    return implode(' ', array_map(array('Drupal\Component\Utility\String', 'checkPlain'), $this->value));
   }
 
   /**

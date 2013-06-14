@@ -2,18 +2,20 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Common\AutocompleteTagsUnitTest.
+ * Contains \Drupal\Tests\Core\Common\TagsTest.
  */
 
-namespace Drupal\system\Tests\Common;
+namespace Drupal\Tests\Core\Common;
 
-use Drupal\simpletest\UnitTestBase;
+use Drupal\Component\Utility\Tags;
+use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests drupal_explode_tags() and drupal_implode_tags().
+ * Tests Tags::explodeTags and Tags::implodeTags().
  */
-class AutocompleteTagsUnitTest extends UnitTestBase {
-  var $validTags = array(
+class TagsTest extends UnitTestCase {
+
+  protected $validTags = array(
     'Drupal' => 'Drupal',
     'Drupal with some spaces' => 'Drupal with some spaces',
     '"Legendary Drupal mascot of doom: ""Druplicon"""' => 'Legendary Drupal mascot of doom: "Druplicon"',
@@ -31,21 +33,21 @@ class AutocompleteTagsUnitTest extends UnitTestBase {
   /**
    * Explodes a series of tags.
    */
-  function testDrupalExplodeTags() {
+  public function explodeTags() {
     $string = implode(', ', array_keys($this->validTags));
-    $tags = drupal_explode_tags($string);
+    $tags = Tags::explode($string);
     $this->assertTags($tags);
   }
 
   /**
    * Implodes a series of tags.
    */
-  function testDrupalImplodeTags() {
+  public function testImplodeTags() {
     $tags = array_values($this->validTags);
     // Let's explode and implode to our heart's content.
     for ($i = 0; $i < 10; $i++) {
-      $string = drupal_implode_tags($tags);
-      $tags = drupal_explode_tags($string);
+      $string = Tags::implode($tags);
+      $tags = Tags::explode($string);
     }
     $this->assertTags($tags);
   }
@@ -53,15 +55,16 @@ class AutocompleteTagsUnitTest extends UnitTestBase {
   /**
    * Helper function: asserts that the ending array of tags is what we wanted.
    */
-  function assertTags($tags) {
+  protected function assertTags($tags) {
     $original = $this->validTags;
     foreach ($tags as $tag) {
       $key = array_search($tag, $original);
-      $this->assertTrue($key, format_string('Make sure tag %tag shows up in the final tags array (originally %original)', array('%tag' => $tag, '%original' => $key)));
+      $this->assertTrue((bool) $key, $tag, sprintf('Make sure tag %s shows up in the final tags array (originally %s)', $tag, $key));
       unset($original[$key]);
     }
     foreach ($original as $leftover) {
-      $this->fail(format_string('Leftover tag %leftover was left over.', array('%leftover' => $leftover)));
+      $this->fail(sprintf('Leftover tag %s was left over.', $leftover));
     }
   }
+
 }
