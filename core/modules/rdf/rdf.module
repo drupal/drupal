@@ -647,13 +647,14 @@ function rdf_preprocess_user(&$variables) {
  * Implements hook_preprocess_HOOK() for theme_username().
  */
 function rdf_preprocess_username(&$variables) {
+  $attributes = array();
   // Because lang is set on the HTML element that wraps the page, the
   // username inherits this language attribute. However, since the username
   // might not be transliterated to the same language that the content is in,
   // we do not want it to inherit the language attribute, so we set the
   // attribute to an empty string.
   if (empty($variables['attributes']['lang'])) {
-    $variables['attributes']['lang'] = '';
+    $attributes['lang'] = '';
   }
 
   // $variables['account'] is a pseudo account object, and as such, does not
@@ -672,10 +673,9 @@ function rdf_preprocess_username(&$variables) {
   // a user profile URI for it (only a homepage which cannot be used as user
   // profile in RDF.)
   if ($variables['uid'] > 0) {
-    $variables['attributes']['about'] = url('user/' . $variables['uid']);
+    $attributes['about'] = url('user/' . $variables['uid']);
   }
 
-  $attributes = array();
   // The typeof attribute specifies the RDF type(s) of this resource. They
   // are defined in the 'rdftype' property of the user RDF mapping.
   if (!empty($rdf_mapping['rdftype'])) {
@@ -696,8 +696,14 @@ function rdf_preprocess_username(&$variables) {
   // separating the values in the RDFa attributes
   // (see http://www.w3.org/TR/rdfa-syntax/#rdfa-attributes).
   // Therefore, merge rather than override so as not to clobber values set by
-  // earlier preprocess functions.
-  $variables['attributes'] = NestedArray::mergeDeep($variables['attributes'], $attributes);
+  // earlier preprocess functions. These attributes will be placed in the a
+  // element if a link is rendered, or on a span element otherwise.
+  if (isset($variables['link_path'])) {
+    $variables['link_options']['attributes'] = array_merge_recursive($variables['link_options']['attributes'], $attributes);
+  }
+  else {
+    $variables['attributes'] = array_merge_recursive($variables['attributes'], $attributes);
+  }
 }
 
 /**

@@ -1085,7 +1085,7 @@ function template_preprocess_node(&$variables) {
   $username = array(
     '#theme' => 'username',
     '#account' => $node,
-    '#link_attributes' => array('rel' => 'author'),
+    '#link_options' => array('attributes' => array('rel' => 'author')),
   );
   $variables['name'] = drupal_render($username);
 

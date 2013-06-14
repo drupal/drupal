@@ -739,6 +739,7 @@ function template_preprocess_username(&$variables) {
   }
 
   $variables['extra'] = '';
+  $variables['attributes'] = array();
   if (empty($account->uid)) {
    $variables['uid'] = 0;
    if (theme_get_setting('features.comment_user_verification')) {
@@ -764,45 +765,21 @@ function template_preprocess_username(&$variables) {
   // Populate link path and attributes if appropriate.
   if ($variables['uid'] && $variables['profile_access']) {
     // We are linking to a local user.
-    $variables['link_attributes']['title'] = t('View user profile.');
+    $variables['link_options']['attributes']['title'] = t('View user profile.');
     $variables['link_path'] = 'user/' . $variables['uid'];
   }
   elseif (!empty($account->homepage)) {
     // Like the 'class' attribute, the 'rel' attribute can hold a
     // space-separated set of values, so initialize it as an array to make it
     // easier for other preprocess functions to append to it.
-    $variables['link_attributes']['rel'] = 'nofollow';
+    $variables['link_options']['attributes']['rel'] = 'nofollow';
     $variables['link_path'] = $account->homepage;
     $variables['homepage'] = $account->homepage;
   }
   // We do not want the l() function to check_plain() a second time.
   $variables['link_options']['html'] = TRUE;
   // Set a default class.
-  $variables['attributes'] = array('class' => array('username'));
-}
-
-/**
- * Processes variables for theme_username().
- *
- * @see template_preprocess_username()
- */
-function template_process_username(&$variables) {
-  // Finalize the link_options array for passing to the l() function.
-  // This is done in the process phase so that attributes may be added by
-  // modules or the theme during the preprocess phase.
-  if (isset($variables['link_path'])) {
-    // $variables['attributes'] contains attributes that should be applied
-    // regardless of whether a link is being rendered or not.
-    // $variables['link_attributes'] contains attributes that should only be
-    // applied if a link is being rendered. Preprocess functions are encouraged
-    // to use the former unless they want to add attributes on the link only.
-    // If a link is being rendered, these need to be merged. Some attributes are
-    // themselves arrays, so the merging needs to be recursive.
-    // This purposefully does not use
-    // \Drupal\Component\Utility\NestedArray::mergeDeep() for performance
-    // reasons, since it is potentially called very often.
-    $variables['link_options']['attributes'] = array_merge_recursive($variables['link_attributes'], $variables['attributes']);
-  }
+  $variables['link_options']['attributes']['class'] = array('username');
 }
 
 /**
