@@ -956,7 +956,7 @@ function comment_links(Comment $comment, EntityInterface $node) {
   // Add translations link for translation-enabled comment bundles.
   if (module_exists('translation_entity') && translation_entity_translate_access($comment)) {
     $links['comment-translations'] = array(
-      'title' => t('translations'),
+      'title' => t('translate'),
       'href' => 'comment/' . $comment->id() . '/translations',
       'html' => TRUE,
     );
