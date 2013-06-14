@@ -289,6 +289,9 @@ $settings['update_free_access'] = FALSE;
  * When debugging is enabled:
  * - The markup of each Twig template is surrounded by HTML comments that
  *   contain theming information, such as template file name suggestions.
+ * - Note that this debugging markup will cause automated tests that directly
+ *   check rendered HTML to fail. When running automated tests, 'twig_debug'
+ *   should be set to FALSE.
  * - The dump() function can be used in Twig templates to output information
  *   about template variables.
  * - Twig templates are automatically recompiled whenever the source code
