@@ -531,7 +531,9 @@ abstract class WebTestBase extends TestBase {
     }
     // Generate a random label.
     if (!isset($name)) {
-      $name = $this->randomString(8);
+      // In the role UI role names are trimmed and random string can start or
+      // end with a space.
+      $name = trim($this->randomString(8));
     }
 
     // Check the all the permissions strings are valid.
