@@ -23,9 +23,9 @@ use Drupal\Core\Annotation\Translation;
 class ShortcutsBlock extends BlockBase {
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * {@inheritdoc}
    */
-  protected function blockBuild() {
+  public function build() {
     return array(
       shortcut_renderable_links(shortcut_current_displayed_set()),
     );

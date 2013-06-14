@@ -69,9 +69,9 @@ class ViewsBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * {@inheritdoc}
    */
-  protected function blockBuild() {
+  public function build() {
     if ($output = $this->view->executeDisplay($this->displayID)) {
       $output = $this->view->executeDisplay($this->displayID);
       // Set the label to the title configured in the view.

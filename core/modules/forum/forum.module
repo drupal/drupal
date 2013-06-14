@@ -652,8 +652,8 @@ function forum_form_node_form_alter(&$form, &$form_state, $form_id) {
  *
  * This function can be used as a #pre_render callback.
  *
- * @see \Drupal\forum\Plugin\block\block\NewTopicsBlock::blockBuild()
- * @see \Drupal\forum\Plugin\block\block\ActiveTopicsBlock::blockBuild()
+ * @see \Drupal\forum\Plugin\block\block\NewTopicsBlock::build()
+ * @see \Drupal\forum\Plugin\block\block\ActiveTopicsBlock::build()
  */
 function forum_block_view_pre_render($elements) {
   $result = $elements['#query']->execute();

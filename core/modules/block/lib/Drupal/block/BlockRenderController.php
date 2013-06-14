@@ -36,7 +36,25 @@ class BlockRenderController implements EntityRenderControllerInterface {
   public function viewMultiple(array $entities = array(), $view_mode = 'full', $langcode = NULL) {
     $build = array();
     foreach ($entities as $entity_id => $entity) {
-      $build[$entity_id] = $entity->getPlugin()->build();
+      $plugin = $entity->getPlugin();
+      $plugin_id = $plugin->getPluginId();
+
+      if ($content = $plugin->build()) {
+        $configuration = $plugin->getConfig();
+        $build[$entity_id] = array(
+          '#theme' => 'block',
+          'content' => $content,
+          '#configuration' => $configuration,
+          '#plugin_id' => $plugin_id,
+        );
+        $build[$entity_id]['#configuration']['label'] = check_plain($configuration['label']);
+      }
+      else {
+        $build[$entity_id] = array();
+      }
+
+      list($base_id) = explode(':', $plugin_id);
+      drupal_alter(array('block_view', "block_view_$base_id"), $build[$entity_id], $plugin);
 
       // @todo Remove after fixing http://drupal.org/node/1989568.
       $build[$entity_id]['#block'] = $entity;

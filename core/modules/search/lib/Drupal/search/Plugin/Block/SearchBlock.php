@@ -30,9 +30,9 @@ class SearchBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * {@inheritdoc}
    */
-  protected function blockBuild() {
+  public function build() {
     return array(drupal_get_form('search_block_form'));
   }
 

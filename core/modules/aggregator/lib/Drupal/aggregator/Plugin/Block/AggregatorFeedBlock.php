@@ -62,9 +62,9 @@ class AggregatorFeedBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * {@inheritdoc}
    */
-  protected function blockBuild() {
+  public function build() {
     // Plugin IDs look something like this: aggregator_feed_block:1.
     list(, $id) = explode(':', $this->getPluginId());
     if ($feed = db_query('SELECT fid, title, block FROM {aggregator_feed} WHERE block <> 0 AND fid = :fid', array(':fid' => $id))->fetchObject()) {

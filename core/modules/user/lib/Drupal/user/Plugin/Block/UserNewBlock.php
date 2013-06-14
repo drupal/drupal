@@ -62,9 +62,9 @@ class UserNewBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * {@inheritdoc}
    */
-  protected function blockBuild() {
+  public function build() {
     // Retrieve a list of new users who have accessed the site successfully.
     $items = db_query_range('SELECT uid, name FROM {users} WHERE status <> 0 AND access <> 0 ORDER BY created DESC', 0, $this->configuration['whois_new_count'])->fetchAll();
     $build = array(

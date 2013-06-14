@@ -38,9 +38,9 @@ class SystemHelpBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * {@inheritdoc}
    */
-  protected function blockBuild() {
+  public function build() {
     return array(
       '#children' => $this->help,
     );

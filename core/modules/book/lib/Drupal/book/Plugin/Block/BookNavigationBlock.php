@@ -59,9 +59,9 @@ class BookNavigationBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * {@inheritdoc}
    */
-  protected function blockBuild() {
+  public function build() {
     $current_bid = 0;
     if ($node = menu_get_object()) {
       $current_bid = empty($node->book['bid']) ? 0 : $node->book['bid'];

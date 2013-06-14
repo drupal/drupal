@@ -34,9 +34,9 @@ class TestCacheBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * {@inheritdoc}
    */
-  protected function blockBuild() {
+  public function build() {
     return array(
       '#children' => \Drupal::state()->get('block_test.content'),
     );

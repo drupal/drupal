@@ -33,9 +33,9 @@ class SystemMenuBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * {@inheritdoc}
    */
-  protected function blockBuild() {
+  public function build() {
     list($plugin, $derivative) = explode(':', $this->getPluginId());
     // Derivatives are prefixed with 'menu-'.
     $menu = substr($derivative, 5);
