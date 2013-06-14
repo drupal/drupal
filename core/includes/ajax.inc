@@ -691,7 +691,7 @@ function ajax_pre_render_element($element) {
  * The 'alert' command instructs the client to display a JavaScript alert
  * dialog box.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.alert()
+ * This command is implemented by Drupal.AjaxCommands.prototype.alert()
  * defined in misc/ajax.js.
  *
  * @param $text
@@ -714,7 +714,7 @@ function ajax_command_alert($text) {
  * jQuery DOM manipulation method has been specified in the #ajax['method']
  * variable of the element that triggered the request.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.insert()
+ * This command is implemented by Drupal.AjaxCommands.prototype.insert()
  * defined in misc/ajax.js.
  *
  * @param $selector
@@ -745,7 +745,7 @@ function ajax_command_insert($selector, $html, $settings = NULL) {
  * method to prepend the given HTML content to the inside each element matched
  * by the given selector.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.insert()
+ * This command is implemented by Drupal.AjaxCommands.prototype.insert()
  * defined in misc/ajax.js.
  *
  * @param $selector
@@ -778,7 +778,7 @@ function ajax_command_prepend($selector, $html, $settings = NULL) {
  * method to append the given HTML content to the inside of each element matched
  * by the given selector.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.insert()
+ * This command is implemented by Drupal.AjaxCommands.prototype.insert()
  * defined in misc/ajax.js.
  *
  * @param $selector
@@ -811,7 +811,7 @@ function ajax_command_append($selector, $html, $settings = NULL) {
  * to remove each of elements matched by the given selector, and everything
  * within them.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.remove()
+ * This command is implemented by Drupal.AjaxCommands.prototype.remove()
  * defined in misc/ajax.js.
  *
  * @param $selector
@@ -836,7 +836,7 @@ function ajax_command_remove($selector) {
  * This command instructs the client to mark each of the elements matched by the
  * given selector as 'ajax-changed'.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.changed()
+ * This command is implemented by Drupal.AjaxCommands.prototype.changed()
  * defined in misc/ajax.js.
  *
  * @param $selector
@@ -863,7 +863,7 @@ function ajax_command_changed($selector, $asterisk = '') {
  * The 'css' command will instruct the client to use the jQuery css() method
  * to apply the CSS arguments to elements matched by the given selector.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.css()
+ * This command is implemented by Drupal.AjaxCommands.prototype.css()
  * defined in misc/ajax.js.
  *
  * @param $selector
@@ -892,7 +892,7 @@ function ajax_command_css($selector, $argument) {
  * the settings for ajax-loaded content or to extend Drupal.settings with the
  * given array, depending on the value of the $merge parameter.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.settings()
+ * This command is implemented by Drupal.AjaxCommands.prototype.settings()
  * defined in misc/ajax.js.
  *
  * @param $argument
@@ -921,7 +921,7 @@ function ajax_command_settings($argument, $merge = FALSE) {
  *
  * This method will add css via ajax in a cross-browser compatible way.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.add_css()
+ * This command is implemented by Drupal.AjaxCommands.prototype.add_css()
  * defined in misc/ajax.js.
  *
  * @param $styles

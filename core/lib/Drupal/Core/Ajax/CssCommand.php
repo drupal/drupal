@@ -15,7 +15,7 @@ use Drupal\Core\Ajax\CommandInterface;
  * The 'css' command will instruct the client to use the jQuery css() method to
  * apply the CSS arguments to elements matched by the given selector.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.css() defined
+ * This command is implemented by Drupal.AjaxCommands.prototype.css() defined
  * in misc/ajax.js.
  *
  * @see http://docs.jquery.com/CSS/css#properties

@@ -15,7 +15,7 @@ use Drupal\Core\Ajax\CommandInterface;
  * This command instructs the client to mark each of the elements matched by the
  * given selector as 'ajax-changed'.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.changed()
+ * This command is implemented by Drupal.AjaxCommands.prototype.changed()
  * defined in misc/ajax.js.
  */
 class ChangedCommand implements CommandInterface {

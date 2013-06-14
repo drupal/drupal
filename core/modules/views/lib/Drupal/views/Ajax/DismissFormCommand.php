@@ -12,7 +12,7 @@ use Drupal\Core\Ajax\CommandInterface;
 /**
  * Provides an AJAX command for closing the views form modal.
  *
- * This command is implemented in Drupal.ajax.prototype.commands.viewsDismissForm.
+ * This command is implemented in Drupal.AjaxCommands.prototype.viewsDismissForm.
  */
 class DismissFormCommand implements CommandInterface {
 

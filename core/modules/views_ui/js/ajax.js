@@ -6,7 +6,7 @@
 
   "use strict";
 
-  Drupal.ajax.prototype.commands.viewsSetForm = function (ajax, response, status) {
+  Drupal.AjaxCommands.prototype.viewsSetForm = function (ajax, response, status) {
     var ajax_title = Drupal.settings.views.ajax.title;
     var ajax_body = Drupal.settings.views.ajax.id;
     var ajax_popup = Drupal.settings.views.ajax.popup;
@@ -37,28 +37,28 @@
     Drupal.viewsUi.resizeModal();
   };
 
-  Drupal.ajax.prototype.commands.viewsDismissForm = function (ajax, response, status) {
-    Drupal.ajax.prototype.commands.viewsSetForm({}, {'title': '', 'output': Drupal.settings.views.ajax.defaultForm});
+  Drupal.AjaxCommands.prototype.viewsDismissForm = function (ajax, response, status) {
+    Drupal.AjaxCommands.prototype.viewsSetForm({}, {'title': '', 'output': Drupal.settings.views.ajax.defaultForm});
     $(Drupal.settings.views.ajax.popup).dialog('close');
   };
 
-  Drupal.ajax.prototype.commands.viewsHighlight = function (ajax, response, status) {
+  Drupal.AjaxCommands.prototype.viewsHighlight = function (ajax, response, status) {
     $('.hilited').removeClass('hilited');
     $(response.selector).addClass('hilited');
   };
 
-  Drupal.ajax.prototype.commands.viewsShowButtons = function (ajax, response, status) {
+  Drupal.AjaxCommands.prototype.viewsShowButtons = function (ajax, response, status) {
     $('div.views-edit-view div.form-actions').removeClass('js-hide');
     $('div.views-edit-view div.view-changed.messages').removeClass('js-hide');
   };
 
-  Drupal.ajax.prototype.commands.viewsTriggerPreview = function (ajax, response, status) {
+  Drupal.AjaxCommands.prototype.viewsTriggerPreview = function (ajax, response, status) {
     if ($('input#edit-displays-live-preview').is(':checked')) {
       $('#preview-submit').trigger('click');
     }
   };
 
-  Drupal.ajax.prototype.commands.viewsReplaceTitle = function (ajax, response, status) {
+  Drupal.AjaxCommands.prototype.viewsReplaceTitle = function (ajax, response, status) {
     // In case we're in the overlay, get a reference to the underlying window.
     var doc = parent.document;
     // For the <title> element, make a best-effort attempt to replace the page

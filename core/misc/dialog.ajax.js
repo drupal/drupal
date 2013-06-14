@@ -21,7 +21,7 @@
   /**
    * Command to open a dialog.
    */
-  Drupal.ajax.prototype.commands.openDialog = function (ajax, response, status) {
+  Drupal.AjaxCommands.prototype.openDialog = function (ajax, response, status) {
     if (!response.selector) {
       return false;
     }
@@ -56,7 +56,7 @@
    *
    * If no selector is given, it defaults to trying to close the modal.
    */
-  Drupal.ajax.prototype.commands.closeDialog = function (ajax, response, status) {
+  Drupal.AjaxCommands.prototype.closeDialog = function (ajax, response, status) {
     var $dialog = $(response.selector);
     if ($dialog.length) {
       Drupal.dialog($dialog).close();
@@ -68,7 +68,7 @@
    *
    * jQuery UI specific way of setting dialog options.
    */
-  Drupal.ajax.prototype.commands.setDialogOption = function (ajax, response, status) {
+  Drupal.AjaxCommands.prototype.setDialogOption = function (ajax, response, status) {
     var $dialog = $(response.selector);
     if ($dialog.length) {
       $dialog.dialog('option', response.optionName, response.optionValue);

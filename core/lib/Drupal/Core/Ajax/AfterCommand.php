@@ -16,7 +16,7 @@ use Drupal\Core\Ajax\InsertCommand;
  * method to insert the given HTML content after each element matched by the
  * given selector.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.insert()
+ * This command is implemented by Drupal.AjaxCommands.prototype.insert()
  * defined in misc/ajax.js.
  *
  * @see http://docs.jquery.com/Manipulation/after#content

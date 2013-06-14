@@ -17,7 +17,7 @@ use Drupal\Core\Ajax\CommandInterface;
  * selector. Intended for simple jQuery commands, such as attr(), addClass(),
  * removeClass(), toggleClass(), etc.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.invoke()
+ * This command is implemented by Drupal.AjaxCommands.prototype.invoke()
  * defined in misc/ajax.js.
  */
 class InvokeCommand implements CommandInterface {

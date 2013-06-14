@@ -85,7 +85,7 @@ Drupal.edit.editors.form = Drupal.edit.EditorView.extend({
       nocssjs: false
     };
     Drupal.edit.util.form.load(formOptions, function (form, ajax) {
-      Drupal.ajax.prototype.commands.insert(ajax, {
+      Drupal.AjaxCommands.prototype.insert(ajax, {
         data: form,
         selector: '#' + id + ' .placeholder'
       });
@@ -160,7 +160,7 @@ Drupal.edit.editors.form = Drupal.edit.EditorView.extend({
     Drupal.ajax[base].commands.editFieldForm = function (ajax, response, status) {
       Drupal.edit.util.form.unajaxifySaving($(ajax.element));
 
-      Drupal.ajax.prototype.commands.insert(ajax, {
+      Drupal.AjaxCommands.prototype.insert(ajax, {
         data: response.data,
         selector: '#' + $formContainer.attr('id') + ' form'
       });
