@@ -124,7 +124,7 @@ class Drupal {
   /**
    * Retrieves the currently active request object.
    *
-   * Note: The use of this wrapper in particular is especially discourged. Most
+   * Note: The use of this wrapper in particular is especially discouraged. Most
    * code should not need to access the request directly.  Doing so means it
    * will only function when handling an HTTP request, and will require special
    * modification or wrapping when run from a command line tool, from certain
