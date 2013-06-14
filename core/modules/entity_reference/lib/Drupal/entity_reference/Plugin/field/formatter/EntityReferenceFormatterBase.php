@@ -64,7 +64,7 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
       foreach ($items[$id] as $delta => $item) {
         // If we have a revision ID, the key uses it as well.
         $identifier = !empty($item['revision_id']) ? $item['target_id'] . ':' . $item['revision_id'] : $item['target_id'];
-        if ($item['target_id'] != 'auto_create') {
+        if ($item['target_id'] !== 0) {
           if (!isset($target_entities[$identifier])) {
             // The entity no longer exists, so remove the key.
             $rekey = TRUE;
@@ -80,11 +80,7 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
           }
         }
         else {
-          // This is an "auto_create" item, so allow access to it, as the entity
-          // doesn't exists yet, and we are probably in a preview.
-          $items[$id][$delta]['entity'] = FALSE;
-          // Add the label as a special key, as we cannot use entity_label().
-          $items[$id][$delta]['label'] = $item['label'];
+          // This is an "auto_create" item, just leave the entity in place.
         }
 
         // Mark item as accessible.

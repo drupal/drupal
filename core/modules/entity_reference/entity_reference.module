@@ -93,7 +93,7 @@ function entity_reference_get_selection_handler($field, $instance, EntityInterfa
  * Implements hook_field_is_empty().
  */
 function entity_reference_field_is_empty($item, $field) {
-  if (!empty($item['target_id']) && $item['target_id'] == 'auto_create') {
+  if (empty($item['target_id']) && !empty($item['entity']) && $item['entity']->isNew()) {
     // Allow auto-create entities.
     return FALSE;
   }
@@ -106,36 +106,13 @@ function entity_reference_field_is_empty($item, $field) {
  * Create an entity on the fly.
  */
 function entity_reference_field_presave(EntityInterface $entity, $field, $instance, $langcode, &$items) {
-  global $user;
-  $target_type = $field['settings']['target_type'];
-  $entity_info = entity_get_info($target_type);
-  $bundles = entity_get_bundles($target_type);
-
-  // Get the bundle.
-  if (!empty($instance['settings']['handler_settings']['target_bundles']) && count($instance['settings']['handler_settings']['target_bundles']) == 1) {
-    $bundle = reset($instance['settings']['handler_settings']['target_bundles']);
-  }
-  else {
-    $bundle = reset($bundles);
-  }
-
   foreach ($items as $delta => $item) {
-    if ($item['target_id'] == 'auto_create') {
-      $bundle_key = $entity_info['entity_keys']['bundle'];
-      $label_key = $entity_info['entity_keys']['label'];
-      $values = array(
-        $label_key => $item['label'],
-        $bundle_key => $bundle,
-        // @todo: Use wrapper to get the user if exists or needed.
-        'uid' => isset($entity->uid) ? $entity->uid : $user->uid,
-      );
-      $target_entity = entity_create($target_type, $values);
-      $target_entity->save();
-      $items[$delta]['target_id'] = $target_entity->id();
+    if (empty($item['target_id']) && !empty($item['entity']) &&$item['entity']->isNew()) {
+      $item['entity']->save();
+      $items[$delta]['target_id'] = $item['entity']->id();
     }
   }
 }
-
 
 /**
  * Implements hook_field_validate().
@@ -143,7 +120,7 @@ function entity_reference_field_presave(EntityInterface $entity, $field, $instan
 function entity_reference_field_validate(EntityInterface $entity = NULL, $field, $instance, $langcode, $items, &$errors) {
   $ids = array();
   foreach ($items as $delta => $item) {
-    if ($item['target_id'] !== 'auto_create' && !entity_reference_field_is_empty($item, $field)) {
+    if (!empty($item['target_id']) && !$item['entity'] && !$item['entity']->isNew()) {
       $ids[$item['target_id']] = $delta;
     }
   }
