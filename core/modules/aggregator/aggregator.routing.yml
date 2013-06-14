@@ -1,7 +1,7 @@
 aggregator_admin_overview:
   pattern: 'admin/config/services/aggregator'
   defaults:
-    _content: '\Drupal\aggregator\Routing\AggregatorController::adminOverview'
+    _content: '\Drupal\aggregator\Controller\AggregatorController::adminOverview'
   requirements:
     _permission: 'administer news feeds'
 
@@ -29,14 +29,14 @@ aggregator_feed_delete:
 aggregator_feed_add:
   pattern: '/admin/config/services/aggregator/add/feed'
   defaults:
-    _content: '\Drupal\aggregator\Routing\AggregatorController::feedAdd'
+    _content: '\Drupal\aggregator\Controller\AggregatorController::feedAdd'
   requirements:
     _permission: 'administer news feeds'
 
 aggregator_feed_refresh:
   pattern: '/admin/config/services/aggregator/update/{aggregator_feed}'
   defaults:
-    _controller: '\Drupal\aggregator\Routing\AggregatorController::feedRefresh'
+    _controller: '\Drupal\aggregator\Controller\AggregatorController::feedRefresh'
   requirements:
     _permission: 'administer news feeds'
 
@@ -50,13 +50,13 @@ aggregator_opml_add:
 aggregator_page_last:
   pattern: '/aggregator'
   defaults:
-    _controller: '\Drupal\aggregator\Routing\AggregatorController::pageLast'
+    _controller: '\Drupal\aggregator\Controller\AggregatorController::pageLast'
   requirements:
     _permission: 'access news feeds'
 
 aggregator_sources:
   pattern: '/aggregator/sources'
   defaults:
-    _content: '\Drupal\aggregator\Routing\AggregatorController::sources'
+    _content: '\Drupal\aggregator\Controller\AggregatorController::sources'
   requirements:
     _permission: 'access news feeds'

@@ -8,7 +8,7 @@
 namespace Drupal\views_ui\Tests;
 
 use Drupal\views\Tests\ViewUnitTestBase;
-use Drupal\views_ui\Routing\ViewsUIController;
+use Drupal\views_ui\Controller\ViewsUIController;
 
 /**
  * Tests the views ui tagging functionality.
