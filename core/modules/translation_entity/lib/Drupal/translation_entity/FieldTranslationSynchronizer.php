@@ -9,6 +9,8 @@ namespace Drupal\translation_entity;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Entity\Field\FieldInterface;
 
 /**
  * Provides field translation synchronization capabilities.
@@ -33,9 +35,15 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
   }
 
   /**
-   * Implements \Drupal\translation_entity\FieldTranslationSynchronizerInterface::synchronizeFields().
+   * {@inheritdoc}
    */
   public function synchronizeFields(EntityInterface $entity, $sync_langcode, $original_langcode = NULL) {
+    // Field synchronization is only supported for NG entities.
+    $entity = $entity->getNGEntity();
+    if (!($entity instanceof EntityNG)) {
+      return;
+    }
+
     $translations = $entity->getTranslationLanguages();
 
     // If we have no information about what to sync to, if we are creating a new
@@ -52,17 +60,14 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
       return;
     }
 
-    // Enable compatibility mode for NG entities.
-    $entity_unchanged = $entity_unchanged->getBCEntity();
-
     // @todo Use Entity Field API to retrieve field definitions.
     $instances = field_info_instances($entity_type, $entity->bundle());
     foreach ($instances as $field_name => $instance) {
-      $field = field_info_field($field_name);
+      $field = $instance->getField();
 
       // Sync when the field is not empty, when the synchronization translations
       // setting is set, and the field is translatable.
-      if (!empty($entity->{$field_name}) && !empty($instance['settings']['translation_sync']) && field_is_translatable($entity_type, $field)) {
+      if (!$entity->get($field_name)->isEmpty() && !empty($instance['settings']['translation_sync']) && field_is_translatable($entity_type, $field)) {
         // Retrieve all the untranslatable column groups and merge them into
         // single list.
         $groups = array_keys(array_diff($instance['settings']['translation_sync'], array_filter($instance['settings']['translation_sync'])));
@@ -74,12 +79,21 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
             $columns = array_merge($columns, isset($info['columns']) ? $info['columns'] : array($group));
           }
           if (!empty($columns)) {
+            $values = array();
+            foreach ($translations as $langcode => $language) {
+              $values[$langcode] = $entity->getTranslation($langcode)->get($field_name)->getValue();
+            }
+
             // If a translation is being created, the original values should be
             // used as the unchanged items. In fact there are no unchanged items
             // to check against.
             $langcode = $original_langcode ?: $sync_langcode;
-            $unchanged_items = !empty($entity_unchanged->{$field_name}[$langcode]) ? $entity_unchanged->{$field_name}[$langcode] : array();
-            $this->synchronizeItems($entity->{$field_name}, $unchanged_items, $sync_langcode, array_keys($translations), $columns);
+            $unchanged_items = $entity_unchanged->getTranslation($langcode)->get($field_name)->getValue();
+            $this->synchronizeItems($values, $unchanged_items, $sync_langcode, array_keys($translations), $columns);
+
+            foreach ($translations as $langcode => $language) {
+              $entity->getTranslation($langcode)->get($field_name)->setValue($values[$langcode]);
+            }
           }
         }
       }
@@ -87,10 +101,10 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
   }
 
   /**
-   * Implements \Drupal\translation_entity\FieldTranslationSynchronizerInterface::synchronizeItems().
+   * {@inheritdoc}
    */
-  public function synchronizeItems(array &$field_values, array $unchanged_items, $sync_langcode, array $translations, array $columns) {
-    $source_items = $field_values[$sync_langcode];
+  public function synchronizeItems(array &$values, array $unchanged_items, $sync_langcode, array $translations, array $columns) {
+    $source_items = $values[$sync_langcode];
 
     // Make sure we can detect any change in the source items.
     $change_map = array();
@@ -112,15 +126,16 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
     }
 
     // Backup field values and the change map.
-    $original_field_values = $field_values;
+    $original_field_values = $values;
     $original_change_map = $change_map;
 
     // Reset field values so that no spurious one is stored. Source values must
     // be preserved in any case.
-    $field_values = array($sync_langcode => $source_items);
+    $values = array($sync_langcode => $source_items);
 
     // Update field translations.
     foreach ($translations as $langcode) {
+
       // We need to synchronize only values different from the source ones.
       if ($langcode != $sync_langcode) {
         // Reinitialize the change map as it is emptied while processing each
@@ -155,7 +170,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
           // If a synchronized column has changed or has been created from
           // scratch we need to override the full items array for all languages.
           elseif ($created) {
-            $field_values[$langcode][$delta] = $source_items[$delta];
+            $values[$langcode][$delta] = $source_items[$delta];
           }
           // Otherwise the current item might have been reordered.
           elseif (isset($old_delta) && isset($new_delta)) {
@@ -165,7 +180,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
             // If the value has only been reordered we just move the old one in
             // the new position.
             $item = isset($original_field_values[$langcode][$old_delta]) ? $original_field_values[$langcode][$old_delta] : $source_items[$new_delta];
-            $field_values[$langcode][$new_delta] = $item;
+            $values[$langcode][$new_delta] = $item;
           }
         }
       }
