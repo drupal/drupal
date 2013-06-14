@@ -72,7 +72,8 @@ function book_export_html(EntityInterface $node) {
     if (isset($node->book)) {
       $tree = book_menu_subtree_data($node->book);
       $contents = book_export_traverse($tree, 'book_node_export');
-      return theme('book_export_html', array('title' => $node->label(), 'contents' => $contents, 'depth' => $node->book['depth']));
+      $book_exported_html = array('#theme' => 'book_export_html', '#title' => $node->label(), '#contents' => $contents, '#depth' => $node->book['depth']);
+      return drupal_render($book_exported_html);
     }
     else {
       throw new NotFoundHttpException();

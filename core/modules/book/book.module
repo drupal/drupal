@@ -773,8 +773,9 @@ function book_node_load($nodes, $types) {
 function book_node_view(EntityInterface $node, EntityDisplay $display, $view_mode) {
   if ($view_mode == 'full') {
     if (!empty($node->book['bid']) && empty($node->in_preview)) {
+      $book_navigation = array( '#theme' => 'book_navigation', '#book_link' => $node->book);
       $node->content['book_navigation'] = array(
-        '#markup' => theme('book_navigation', array('book_link' => $node->book)),
+        '#markup' => drupal_render($book_navigation),
         '#weight' => 100,
         '#attached' => array(
           'css' => array(
@@ -1189,8 +1190,8 @@ function book_node_export(EntityInterface $node, $children = '') {
   unset($build['#theme']);
   // @todo Rendering should happen in the template using render().
   $node->rendered = drupal_render($build);
-
-  return theme('book_node_export_html', array('node' => $node, 'children' => $children));
+  $book_node_export_html = array('#theme' => 'book_node_export_html', '#node' => $node, '#children' => $children );
+  return drupal_render($book_node_export_html);
 }
 
 /**

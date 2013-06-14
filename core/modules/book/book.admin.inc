@@ -219,8 +219,9 @@ function theme_book_admin_table($variables) {
     $form[$key]['mlid']['#attributes']['class'] = array('book-mlid');
     $form[$key]['weight']['#attributes']['class'] = array('book-weight');
 
+    $indentation = array('#theme' => 'indentation', '#size' => $form[$key]['depth']['#value'] - 2);
     $data = array(
-      theme('indentation', array('size' => $form[$key]['depth']['#value'] - 2)) . drupal_render($form[$key]['title']),
+      drupal_render($indentation) . drupal_render($form[$key]['title']),
       drupal_render($form[$key]['weight']),
       drupal_render($form[$key]['plid']) . drupal_render($form[$key]['mlid']),
     );
@@ -254,6 +255,6 @@ function theme_book_admin_table($variables) {
     $row['class'][] = 'draggable';
     $rows[] = $row;
   }
-
-  return theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'book-outline'), 'empty' => t('No book content available.')));
+  $table = array('#theme' => 'table', '#header' => $header, '#rows' => $rows, '#attributes' => array('id' => 'book-outline'), '#empty' => t('No book content available.'));
+  return drupal_render($table);
 }

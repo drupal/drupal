@@ -67,8 +67,8 @@ class BookController implements ControllerInterface {
       );
       $rows[] = $row;
     }
-
-    return theme('table', array('header' => $headers, 'rows' => $rows, 'empty' => t('No books available.')));
+    $table = array('#theme' => 'table', '#header' => $headers, '#rows' => $rows, '#empty' => t('No books available.'));
+    return drupal_render($table);
   }
 
   /**
@@ -82,8 +82,8 @@ class BookController implements ControllerInterface {
     foreach ($this->bookManager->getAllBooks() as $book) {
       $book_list[] = l($book['title'], $book['href'], $book['options']);
     }
-
-    return theme('item_list', array('items' => $book_list));
+    $item_list = array('#theme' => 'item_list' , '#items' => $book_list);
+    return drupal_render($item_list);
   }
 
 }
