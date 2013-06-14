@@ -92,18 +92,7 @@ class BlockInterfaceTest extends DrupalUnitTestBase {
     $this->assertIdentical($display_block->form(array(), $form_state), $expected_form, 'Only the expected form elements were present.');
 
     $expected_build = array(
-      '#theme' => 'block',
-      'content' => array(
-        '#children' => 'My custom display message.',
-      ),
-      '#configuration' => array(
-        'label' => 'Custom Display Message',
-        'display_message' => 'My custom display message.',
-        'module' => 'block_test',
-        'label_display' => BLOCK_LABEL_VISIBLE,
-        'cache' => DRUPAL_NO_CACHE,
-      ),
-      '#plugin_id' => 'test_block_instantiation',
+      '#children' => 'My custom display message.',
     );
     // Ensure the build array is proper.
     $this->assertIdentical($display_block->build(), $expected_build, 'The plugin returned the appropriate build array.');

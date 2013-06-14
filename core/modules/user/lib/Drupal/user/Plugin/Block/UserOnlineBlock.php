@@ -76,9 +76,9 @@ class UserOnlineBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * {@inheritdoc}
    */
-  protected function blockBuild() {
+  public function build() {
     // Count users active within the defined period.
     $interval = REQUEST_TIME - $this->configuration['seconds_online'];
 

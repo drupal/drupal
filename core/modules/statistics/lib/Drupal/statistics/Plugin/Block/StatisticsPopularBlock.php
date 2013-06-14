@@ -116,9 +116,9 @@ class StatisticsPopularBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * {@inheritdoc}
    */
-  protected function blockBuild() {
+  public function build() {
     $content = array();
 
     if ($this->day_list) {

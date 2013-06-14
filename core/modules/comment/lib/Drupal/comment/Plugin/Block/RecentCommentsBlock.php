@@ -59,9 +59,9 @@ class RecentCommentsBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * {@inheritdoc}
    */
-  protected function blockBuild() {
+  public function build() {
     return array(
       '#theme' => 'comment_block',
       '#number' => $this->configuration['block_count'],
