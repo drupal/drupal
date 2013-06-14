@@ -470,9 +470,10 @@ class NodeFormController extends EntityFormController {
    */
   public function delete(array $form, array &$form_state) {
     $destination = array();
-    if (isset($_GET['destination'])) {
+    $query = \Drupal::request()->query;
+    if ($query->has('destination')) {
       $destination = drupal_get_destination();
-      unset($_GET['destination']);
+      $query->remove('destination');
     }
     $node = $this->entity;
     $form_state['redirect'] = array('node/' . $node->nid . '/delete', array('query' => $destination));
