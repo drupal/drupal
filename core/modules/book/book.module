@@ -880,9 +880,10 @@ function book_node_prepare(EntityInterface $node) {
   if (empty($node->book) && (user_access('add content to books') || user_access('administer book outlines'))) {
     $node->book = array();
 
-    if (empty($node->nid) && isset($_GET['parent']) && is_numeric($_GET['parent'])) {
+    $query = \Drupal::request()->query;
+    if (empty($node->nid) && !is_null($query->get('parent')) && is_numeric($query->get('parent'))) {
       // Handle "Add child page" links:
-      $parent = book_link_load($_GET['parent']);
+      $parent = book_link_load($query->get('parent'));
 
       if ($parent && $parent['access']) {
         $node->book['bid'] = $parent['bid'];
