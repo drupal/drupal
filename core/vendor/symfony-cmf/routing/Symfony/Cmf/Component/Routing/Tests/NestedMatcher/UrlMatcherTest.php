@@ -24,11 +24,6 @@ class UrlMatcherTest extends CmfUnitTestCase
 
     public function setUp()
     {
-        $reflection = new \ReflectionClass('Symfony\\Component\\Routing\\Matcher\\UrlMatcher');
-        if (! $reflection->hasMethod('getAttributes')) {
-            $this->markTestSkipped('This only works with symfony 2.2');
-        }
-
         $this->routeDocument = $this->buildMock('Symfony\\Cmf\\Component\\Routing\\Tests\\Routing\\RouteMock', array('getDefaults', 'getRouteKey', 'compile'));
         $this->routeCompiled = $this->buildMock('Symfony\\Component\\Routing\\CompiledRoute');
 

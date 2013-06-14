@@ -52,6 +52,7 @@ return array(
     'PHPUnit_Framework_Constraint_IsFalse' => $vendorDir . '/phpunit/phpunit/PHPUnit/Framework/Constraint/IsFalse.php',
     'PHPUnit_Framework_Constraint_IsIdentical' => $vendorDir . '/phpunit/phpunit/PHPUnit/Framework/Constraint/IsIdentical.php',
     'PHPUnit_Framework_Constraint_IsInstanceOf' => $vendorDir . '/phpunit/phpunit/PHPUnit/Framework/Constraint/IsInstanceOf.php',
+    'PHPUnit_Framework_Constraint_IsJson' => $vendorDir . '/phpunit/phpunit/PHPUnit/Framework/Constraint/IsJson.php',
     'PHPUnit_Framework_Constraint_IsNull' => $vendorDir . '/phpunit/phpunit/PHPUnit/Framework/Constraint/IsNull.php',
     'PHPUnit_Framework_Constraint_IsTrue' => $vendorDir . '/phpunit/phpunit/PHPUnit/Framework/Constraint/IsTrue.php',
     'PHPUnit_Framework_Constraint_IsType' => $vendorDir . '/phpunit/phpunit/PHPUnit/Framework/Constraint/IsType.php',

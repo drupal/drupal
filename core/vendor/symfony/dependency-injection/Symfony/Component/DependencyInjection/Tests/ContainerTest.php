@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\DependencyInjection\Exception\InactiveScopeException;
 
 class ContainerTest extends \PHPUnit_Framework_TestCase
 {
@@ -98,7 +99,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('service_container', 'foo', 'bar'), $sc->getServiceIds(), '->getServiceIds() returns all defined service ids');
 
         $sc = new ProjectServiceContainer();
-        $this->assertEquals(array('scoped', 'scoped_foo', 'bar', 'foo_bar', 'foo.baz', 'circular', 'throw_exception', 'throws_exception_on_service_configuration', 'service_container'), $sc->getServiceIds(), '->getServiceIds() returns defined service ids by getXXXService() methods');
+        $this->assertEquals(array('scoped', 'scoped_foo', 'inactive', 'bar', 'foo_bar', 'foo.baz', 'circular', 'throw_exception', 'throws_exception_on_service_configuration', 'service_container'), $sc->getServiceIds(), '->getServiceIds() returns defined service ids by getXXXService() methods');
     }
 
     /**
@@ -166,6 +167,30 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($sc->get('', ContainerInterface::NULL_ON_INVALID_REFERENCE));
     }
 
+    public function testGetThrowServiceNotFoundException()
+    {
+        $sc = new ProjectServiceContainer();
+        $sc->set('foo', $foo = new \stdClass());
+        $sc->set('bar', $foo = new \stdClass());
+        $sc->set('baz', $foo = new \stdClass());
+
+        try {
+            $sc->get('foo1');
+            $this->fail('->get() throws an Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException if the key does not exist');
+        } catch (\Exception $e) {
+            $this->assertInstanceOf('Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException', $e, '->get() throws an Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException if the key does not exist');
+            $this->assertEquals('You have requested a non-existent service "foo1". Did you mean this: "foo"?', $e->getMessage(), '->get() throws an Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException with some advices');
+        }
+
+        try {
+            $sc->get('bag');
+            $this->fail('->get() throws an Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException if the key does not exist');
+        } catch (\Exception $e) {
+            $this->assertInstanceOf('Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException', $e, '->get() throws an Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException if the key does not exist');
+            $this->assertEquals('You have requested a non-existent service "bag". Did you mean one of these: "bar", "baz"?', $e->getMessage(), '->get() throws an Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException with some advices');
+        }
+    }
+
     public function testGetCircularReference()
     {
 
@@ -177,6 +202,15 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
             $this->assertInstanceOf('\Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException', $e, '->get() throws a ServiceCircularReferenceException if it contains circular reference');
             $this->assertStringStartsWith('Circular reference detected for service "circular"', $e->getMessage(), '->get() throws a \LogicException if it contains circular reference');
         }
+    }
+
+    /**
+     * @covers Symfony\Component\DependencyInjection\Container::get
+     */
+    public function testGetReturnsNullOnInactiveScope()
+    {
+        $sc = new ProjectServiceContainer();
+        $this->assertNull($sc->get('inactive', ContainerInterface::NULL_ON_INVALID_REFERENCE));
     }
 
     /**
@@ -474,6 +508,11 @@ class ProjectServiceContainer extends Container
         }
 
         return $this->services['scoped_foo'] = $this->scopedServices['foo']['scoped_foo'] = new \stdClass();
+    }
+
+    protected function getInactiveService()
+    {
+        throw new InactiveScopeException('request', 'request');
     }
 
     protected function getBarService()

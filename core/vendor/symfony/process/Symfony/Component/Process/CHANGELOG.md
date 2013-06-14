@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+2.3.0
+-----
+
+ * added ProcessUtils::escapeArgument() to fix the bug in escapeshellarg() function on Windows
+ * added Process::signal()
+ * added Process::getPid()
+ * added support for a TTY mode
+
 2.2.0
 -----
 

@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+2.3.0
+-----
+
+ * added the ISBN, ISSN, and IBAN validators
+ * copied the constraints `Optional` and `Required` to the
+   `Symfony\Component\Validator\Constraints\` namespace and deprecated the original
+   classes.
+ * added comparison validators (EqualTo, NotEqualTo, LessThan, LessThanOrEqualTo, GreaterThan, GreaterThanOrEqualTo, IdenticalTo, NotIdenticalTo)
+
 2.2.0
 -----
 

@@ -165,6 +165,9 @@ class ChainRouter implements RouterInterface, RequestMatcherInterface, WarmableI
                 // the request/url match logic is the same as in Symfony/Component/HttpKernel/EventListener/RouterListener.php
                 // matching requests is more powerful than matching URLs only, so try that first
                 if ($router instanceof RequestMatcherInterface) {
+                    if (null === $request) {
+                        $request = Request::create($url);
+                    }
                     return $router->matchRequest($request);
                 }
                 // every router implements the match method

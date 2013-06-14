@@ -54,6 +54,12 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
         $this->values = array();
     }
 
+    public function __clone()
+    {
+        $this->filters = clone $this->filters;
+        $this->clones = new \SplObjectStorage();
+    }
+
     public function all()
     {
         return $this->assets;

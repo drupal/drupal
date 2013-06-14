@@ -55,8 +55,12 @@ if (!defined('TEST_FILES_PATH')) {
 require_once TEST_FILES_PATH . 'CoverageClassExtendedTest.php';
 require_once TEST_FILES_PATH . 'CoverageClassTest.php';
 require_once TEST_FILES_PATH . 'CoverageFunctionTest.php';
+require_once TEST_FILES_PATH . 'CoverageFunctionParenthesesTest.php';
+require_once TEST_FILES_PATH . 'CoverageFunctionParenthesesWhitespaceTest.php';
 require_once TEST_FILES_PATH . 'CoverageMethodTest.php';
 require_once TEST_FILES_PATH . 'CoverageMethodOneLineAnnotationTest.php';
+require_once TEST_FILES_PATH . 'CoverageMethodParenthesesTest.php';
+require_once TEST_FILES_PATH . 'CoverageMethodParenthesesWhitespaceTest.php';
 require_once TEST_FILES_PATH . 'CoverageNoneTest.php';
 require_once TEST_FILES_PATH . 'CoverageNotPrivateTest.php';
 require_once TEST_FILES_PATH . 'CoverageNotProtectedTest.php';
@@ -164,17 +168,29 @@ class PHP_CodeCoverage_UtilTest extends PHPUnit_Framework_TestCase
           array(
             1 => TRUE,
             2 => TRUE,
-            7 => TRUE,
             3 => TRUE,
             4 => TRUE,
             5 => TRUE,
             6 => TRUE,
+            7 => TRUE,
             8 => TRUE,
             9 => TRUE,
             10 => TRUE,
             11 => TRUE,
             12 => TRUE,
-            13 => TRUE
+            13 => TRUE,
+            14 => TRUE,
+            17 => TRUE,
+            19 => TRUE,
+            22 => TRUE,
+            23 => TRUE,
+            27 => TRUE,
+            28 => TRUE,
+            29 => TRUE,
+            30 => TRUE,
+            31 => TRUE,
+            32 => TRUE,
+            33 => TRUE,
           ),
           PHP_CodeCoverage_Util::getLinesToBeIgnored(
             TEST_FILES_PATH . 'source_with_oneline_annotations.php'

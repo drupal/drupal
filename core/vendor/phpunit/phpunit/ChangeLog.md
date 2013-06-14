@@ -3,6 +3,23 @@ PHPUnit 3.7
 
 This is the list of changes for the PHPUnit 3.7 release series.
 
+PHPUnit 3.7.21
+--------------
+
+* Fixed #277: Account for `auto-globals-jit` when setting `$_ENV` and `$_SERVER` variables in the xml config.
+* Fixed #924: PHPUnit depends on packages that broke backwards compatability.
+
+PHPUnit 3.7.20
+--------------
+
+* Fixed #883: Stand-alone functions `logicalAnd()`, `logicalOr()`, and `logicalXor()` did not work.
+* Fixed #889: Suppress `open_basedir` warnings while searching for the composer autoloader.
+* Fixed #890: Correctly parse single-line @expectedException annotations.
+* Fixed #891: Better messages when JSON-related assertions receive invalid JSON.
+* Fixed #896: Use the proper `toString()` method inside `PHPUnit_Framework_TestFailure::toString()`.
+* Fixed #902: Allow symfony/yaml >=2.0,<3.0
+* Fixed #908: Don't rely on composer to set up the `include_path` for `ErrorHandler.php`.
+
 PHPUnit 3.7.19
 --------------
 

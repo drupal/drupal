@@ -22,7 +22,7 @@ class FieldMapEnhancerTest extends CmfUnitTestCase
     public function setUp()
     {
         $this->request = Request::create('/test');
-        $mapping = array('static_pages' => 'symfony_cmf_content.controller:indexAction');
+        $mapping = array('static_pages' => 'cmf_content.controller:indexAction');
 
         $this->enhancer = new FieldMapEnhancer('type', '_controller', $mapping);
     }
@@ -32,7 +32,7 @@ class FieldMapEnhancerTest extends CmfUnitTestCase
         $defaults = array('type' => 'static_pages');
         $expected = array(
             'type' => 'static_pages',
-            '_controller' => 'symfony_cmf_content.controller:indexAction',
+            '_controller' => 'cmf_content.controller:indexAction',
         );
         $this->assertEquals($expected, $this->enhancer->enhance($defaults, $this->request));
     }

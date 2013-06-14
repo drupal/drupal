@@ -11,8 +11,8 @@
 
 namespace Assetic\Extension\Twig;
 
-use Assetic\ValueSupplierInterface;
 use Assetic\Factory\AssetFactory;
+use Assetic\ValueSupplierInterface;
 
 class AsseticExtension extends \Twig_Extension
 {

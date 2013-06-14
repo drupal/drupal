@@ -18,7 +18,7 @@ class FieldPresenceEnhancerTest extends CmfUnitTestCase
 
     public function setUp()
     {
-        $this->mapper = new FieldPresenceEnhancer('_template', '_controller', 'symfony_cmf_content.controller:indexAction');
+        $this->mapper = new FieldPresenceEnhancer('_template', '_controller', 'cmf_content.controller:indexAction');
 
         $this->request = Request::create('/test');
     }
@@ -28,7 +28,7 @@ class FieldPresenceEnhancerTest extends CmfUnitTestCase
         $defaults = array('_template' => 'Bundle:Topic:template.html.twig');
         $expected = array(
             '_template' => 'Bundle:Topic:template.html.twig',
-            '_controller' => 'symfony_cmf_content.controller:indexAction',
+            '_controller' => 'cmf_content.controller:indexAction',
         );
         $this->assertEquals($expected, $this->mapper->enhance($defaults, $this->request));
     }

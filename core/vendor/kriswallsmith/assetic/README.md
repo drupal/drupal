@@ -79,6 +79,7 @@ The core provides the following filters in the `Assetic\Filter` namespace:
  * `CssMinFilter`: minifies CSS
  * `CssRewriteFilter`: fixes relative URLs in CSS assets when moving to a new URL
  * `DartFilter`: compiles Javascript using dart2js
+ * `EmberPrecompileFilter`: precompiles Handlebars templates into Javascript for use in the Ember.js framework
  * `GoogleClosure\CompilerApiFilter`: compiles Javascript using the Google Closure Compiler API
  * `GoogleClosure\CompilerJarFilter`: compiles Javascript using the Google Closure Compiler JAR
  * `GssFilter`: compliles CSS using the Google Closure Stylesheets Compiler

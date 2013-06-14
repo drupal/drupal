@@ -11,9 +11,8 @@
 
 namespace Assetic;
 
-use Assetic\Util\PathUtils;
-
 use Assetic\Asset\AssetInterface;
+use Assetic\Util\VarUtils;
 
 /**
  * Writes assets to the filesystem.
@@ -24,20 +23,20 @@ use Assetic\Asset\AssetInterface;
 class AssetWriter
 {
     private $dir;
-    private $varValues;
+    private $values;
 
     /**
      * Constructor.
      *
-     * @param string $dir The base web directory
-     * @param array  $varValues
+     * @param string $dir    The base web directory
+     * @param array  $values Variable values
      *
      * @throws \InvalidArgumentException if a variable value is not a string
      */
-    public function __construct($dir, array $varValues = array())
+    public function __construct($dir, array $values = array())
     {
-        foreach ($varValues as $var => $values) {
-            foreach ($values as $value) {
+        foreach ($values as $var => $vals) {
+            foreach ($vals as $value) {
                 if (!is_string($value)) {
                     throw new \InvalidArgumentException(sprintf('All variable values must be strings, but got %s for variable "%s".', json_encode($value), $var));
                 }
@@ -45,7 +44,7 @@ class AssetWriter
         }
 
         $this->dir = $dir;
-        $this->varValues = $varValues;
+        $this->values = $values;
     }
 
     public function writeManagerAssets(AssetManager $am)
@@ -57,44 +56,18 @@ class AssetWriter
 
     public function writeAsset(AssetInterface $asset)
     {
-        foreach ($this->getCombinations($asset->getVars()) as $combination) {
+        foreach (VarUtils::getCombinations($asset->getVars(), $this->values) as $combination) {
             $asset->setValues($combination);
 
-            static::write($this->dir.'/'.PathUtils::resolvePath(
-                $asset->getTargetPath(), $asset->getVars(), $asset->getValues()),
-                $asset->dump());
+            static::write(
+                $this->dir.'/'.VarUtils::resolve(
+                    $asset->getTargetPath(),
+                    $asset->getVars(),
+                    $asset->getValues()
+                ),
+                $asset->dump()
+            );
         }
-    }
-
-    private function getCombinations(array $vars)
-    {
-        if (!$vars) {
-            return array(array());
-        }
-
-        $combinations = array();
-        $nbValues = array();
-        foreach ($this->varValues as $var => $values) {
-            if (!in_array($var, $vars, true)) {
-                continue;
-            }
-
-            $nbValues[$var] = count($values);
-        }
-
-        for ($i=array_product($nbValues),$c=$i*2; $i<$c; $i++) {
-            $k = $i;
-            $combination = array();
-
-            foreach ($vars as $var) {
-                $combination[$var] = $this->varValues[$var][$k % $nbValues[$var]];
-                $k = intval($k/$nbValues[$var]);
-            }
-
-            $combinations[] = $combination;
-        }
-
-        return $combinations;
     }
 
     protected static function write($path, $contents)
@@ -106,5 +79,16 @@ class AssetWriter
         if (false === @file_put_contents($path, $contents)) {
             throw new \RuntimeException('Unable to write file '.$path);
         }
+    }
+
+    /**
+     * Not used.
+     *
+     * This method is provided for backward compatibility with certain versions
+     * of AsseticBundle.
+     */
+    private function getCombinations(array $vars)
+    {
+        return VarUtils::getCombinations($vars, $this->values);
     }
 }
