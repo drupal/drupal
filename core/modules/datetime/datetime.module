@@ -9,6 +9,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Template\Attribute;
 use Drupal\datetime\DateHelper;
+use Drupal\node\NodeInterface;
 
 /**
  * Defines the timezone that dates should be stored in.
@@ -1119,4 +1120,24 @@ function datetime_range_years($string, $date = NULL) {
     $max_year = max($value_year, $max_year);
   }
   return array($min_year, $max_year);
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for node forms.
+ */
+function datetime_form_node_form_alter(&$form, &$form_state, $form_id) {
+  // Alter the 'Authored on' date to use datetime.
+  $form['author']['date']['#type'] = 'datetime';
+  $config = Drupal::config('system.date');
+  $format = $config->get('formats.html_date') . ' ' . $config->get('formats.html_time');
+  $form['author']['date']['#description'] = t('Format: %format. Leave blank to use the time of form submission.', array('%format' => datetime_format_example($format)));
+  unset($form['author']['date']['#maxlength']);
+}
+
+/**
+ * Implements hook_node_prepare().
+ */
+function datetime_node_prepare(NodeInterface $node) {
+  // Prepare the 'Authored on' date to use datetime.
+  $node->date = new DrupalDateTime($node->created);
 }

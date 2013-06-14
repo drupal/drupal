@@ -134,12 +134,12 @@ class DependencyTest extends ModuleTestBase {
     $this->assertModules(array('module_test'), TRUE);
     \Drupal::state()->set('module_test.dependency', 'dependency');
     // module_test creates a dependency chain:
-    // - forum depends on taxonomy, comment, history, and ban (via module_test)
+    // - forum depends on taxonomy, comment, datetime, history, and ban (via module_test)
     // - taxonomy depends on options
     // - options depends on number
     // - ban depends on php (via module_test)
     // The correct enable order is:
-    $expected_order = array('php', 'ban', 'comment', 'history', 'number', 'options', 'taxonomy', 'forum');
+    $expected_order = array('php', 'ban', 'datetime', 'comment', 'history', 'number', 'options', 'taxonomy', 'forum');
 
     // Enable the modules through the UI, verifying that the dependency chain
     // is correct.
@@ -147,16 +147,17 @@ class DependencyTest extends ModuleTestBase {
     $edit['modules[Core][forum][enable]'] = 'forum';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertModules(array('forum'), FALSE);
-    $this->assertText(t('You must enable the History, Taxonomy, Options, Number, Comment, Ban, PHP Filter modules to install Forum.'));
+    $this->assertText(t('You must enable the History, Taxonomy, Options, Number, Comment, Datetime, Ban, PHP Filter modules to install Forum.'));
     $edit['modules[Core][history][enable]'] = 'history';
     $edit['modules[Core][options][enable]'] = 'options';
     $edit['modules[Core][number][enable]'] = 'number';
     $edit['modules[Core][taxonomy][enable]'] = 'taxonomy';
     $edit['modules[Core][comment][enable]'] = 'comment';
+    $edit['modules[Core][datetime][enable]'] = 'datetime';
     $edit['modules[Core][ban][enable]'] = 'ban';
     $edit['modules[Core][php][enable]'] = 'php';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertModules(array('forum', 'ban', 'php', 'comment', 'history', 'taxonomy', 'options', 'number'), TRUE);
+    $this->assertModules(array('forum', 'ban', 'php', 'datetime', 'comment', 'history', 'taxonomy', 'options', 'number'), TRUE);
 
     // Check the actual order which is saved by module_test_modules_enabled().
     $module_order = \Drupal::state()->get('system_test.module_enable_order') ?: array();

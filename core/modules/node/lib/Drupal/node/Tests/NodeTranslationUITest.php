@@ -25,7 +25,7 @@ class NodeTranslationUITest extends EntityTranslationUITest {
    *
    * @var array
    */
-  public static $modules = array('language', 'translation_entity', 'node', 'field_ui');
+  public static $modules = array('language', 'translation_entity', 'node', 'datetime', 'field_ui');
 
   public static function getInfo() {
     return array(
