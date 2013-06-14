@@ -131,32 +131,3 @@ field.list_boolean.value:
         value:
           type: boolean
           label: 'Value'
-
-field_widget.options_select.settings:
-  type: sequence
-  label: 'Select list widget settings'
-  sequence:
-    - type: string
-      label: 'Value'
-
-field_widget.options_buttons.settings:
-  type: sequence
-  label: 'Check boxes/radio buttons widget settings'
-  sequence:
-    - type: string
-      label: 'Value'
-
-field_widget.options_onoff.settings:
-  type: mapping
-  label: 'Single on/off checkbox widget settings'
-  mapping:
-    display_label:
-      type: boolean
-      label: 'Use field label instead of the "On value" as label'
-
-field_widget.options_list.settings:
-  type: sequence
-  label: 'Select list widget settings'
-  sequence:
-    - type: string
-      label: 'Value'
