@@ -26,7 +26,7 @@ function translation_entity_help($path, $arg) {
       $output .= '<dd><p>' . t('Before you can translate content, there must be at least two languages added on the <a href="!url">languages administration</a> page.', array('!url' => url('admin/config/regional/language'))) . '</p>';
       $output .= '<p>' . t('After adding languages, <a href="!url">configure translation</a>.', array('!url' => url('admin/config/regional/content-language'))) . '</p>';
       $output .= '<dt>' . t('Translating content') . '</dt>';
-      $output .= '<dd>' . t('After enabling translation you can create a new piece of content, or edit existing content and assign it a language. Then, you will see a <em>Translations</em> tab or link that will gives an overview of the translation status for the current content. From there, you can add translations and edit or delete existing translations. This process is similar for every translatable element on your site, such as taxonomy terms, comments or user accounts.') . '</dd>';
+      $output .= '<dd>' . t('After enabling translation you can create a new piece of content, or edit existing content and assign it a language. Then, you will see a <em>Translate</em> tab or link that will gives an overview of the translation status for the current content. From there, you can add translations and edit or delete existing translations. This process is similar for every translatable element on your site, such as taxonomy terms, comments or user accounts.') . '</dd>';
       $output .= '<dt>' . t('Changing source language') . '</dt>';
       $output .= '<dd>' . t('When there are two or more possible source languages, selecting a <em>Source language</em> will repopulate the form using the specified source\'s values. For example, French is much closer to Spanish than to Chinese, so changing the French translation\'s source language to Spanish can assist translators.') . '</dd>';
       $output .= '<dt>' . t('Maintaining translations') . '</dt>';
@@ -147,7 +147,7 @@ function translation_entity_menu() {
       }
 
       $items["$path/translations"] = array(
-        'title' => 'Translations',
+        'title' => 'Translate',
         'page callback' => 'translation_entity_overview',
         'page arguments' => array($entity_position),
         'type' => MENU_LOCAL_TASK,

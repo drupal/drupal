@@ -101,7 +101,7 @@ class CompilerApiFilter extends BaseCompilerFilter
             curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
             if (null !== $this->timeout) {
-                curl_setopt($curl, CURLOPT_TIMEOUT, $this->timeout);
+                curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
             }
             if ($this->proxy) {
                 curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, TRUE);

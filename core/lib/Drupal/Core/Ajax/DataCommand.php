@@ -15,7 +15,7 @@ use Drupal\Core\Ajax\CommandInterface;
  * This instructs the client to attach the name=value pair of data to the
  * selector via jQuery's data cache.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.data() defined
+ * This command is implemented by Drupal.AjaxCommands.prototype.data() defined
  * in misc/ajax.js.
  */
 class DataCommand implements CommandInterface {

@@ -10,7 +10,7 @@ use Drupal\Core\Config\Entity\ConfigEntityListController;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Provides a listing of contact categories.
+ * Provides a listing of shortcut sets.
  */
 class ShortcutListController extends ConfigEntityListController {
 

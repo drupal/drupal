@@ -10,7 +10,7 @@ use Drupal\Core\Config\Entity\ConfigEntityListController;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Provides a listing of contact categories.
+ * Provides a listing of menus.
  */
 class MenuListController extends ConfigEntityListController {
 

@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
+use Assetic\Factory\AssetFactory;
 
 /**
  * Runs assets through Sprockets.
@@ -24,7 +25,7 @@ use Assetic\Exception\FilterException;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class SprocketsFilter extends BaseProcessFilter
+class SprocketsFilter extends BaseProcessFilter implements DependencyExtractorInterface
 {
     private $sprocketsLib;
     private $rubyBin;
@@ -120,6 +121,12 @@ EOF;
 
     public function filterDump(AssetInterface $asset)
     {
+    }
+
+    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
+    {
+        // todo
+        return array();
     }
 
     private function getHack(AssetInterface $asset)

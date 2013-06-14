@@ -1410,7 +1410,7 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
  * Returns a renderable array for the fields on an entity.
  *
  * Each field is displayed according to the display options specified in the
- * instance definition for the given view mode.
+ * $display parameter for the given view mode.
  *
  * field_attach_prepare_view() and field_attach_view() are two halves of the
  * same operation. It is safe to call field_attach_prepare_view() multiple times
@@ -1418,28 +1418,7 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
  * Field API operation on an entity between passing that entity to these two
  * functions may yield incorrect results.
  *
- * Sample structure:
- * @code
- * array(
- *   'field_foo' => array(
- *     '#theme' => 'field',
- *     '#title' => the label of the field instance,
- *     '#label_display' => the label display mode,
- *     '#object' => the fieldable entity being displayed,
- *     '#entity_type' => the type of the entity being displayed,
- *     '#language' => the language of the field values being displayed,
- *     '#view_mode' => the view mode,
- *     '#field_name' => the name of the field,
- *     '#field_type' => the type of the field,
- *     '#formatter' => the name of the formatter,
- *     '#items' => the field values being displayed,
- *     // The element's children are the formatted values returned by
- *     // hook_field_formatter_view().
- *   ),
- * );
- * @endcode
- *
- * @param Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to render.
  * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
  *   The entity display object.
@@ -1448,7 +1427,7 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
  *   provided the current language is used.
  * @param array $options
  *   An associative array of additional options. See field_invoke_method() for
- *   details.
+ *   details. Note: key "langcode" will be overridden inside this function.
  *
  * @return array
  *   A renderable array for the field values.

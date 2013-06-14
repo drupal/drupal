@@ -290,7 +290,7 @@ function loadMissingEditors (callback) {
   });
   // Implement a scoped insert AJAX command: calls the callback after all AJAX
   // command functions have been executed (hence the deferred calling).
-  var realInsert = Drupal.ajax.prototype.commands.insert;
+  var realInsert = Drupal.AjaxCommands.prototype.insert;
   Drupal.ajax[id].commands.insert = function (ajax, response, status) {
     _.defer(function() { callback(); });
     realInsert(ajax, response, status);

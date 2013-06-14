@@ -16,7 +16,7 @@ use Drupal\Core\Ajax\CommandInterface;
  * to remove each of elements matched by the given selector, and everything
  * within them.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.remove()
+ * This command is implemented by Drupal.AjaxCommands.prototype.remove()
  * defined in misc/ajax.js.
  *
  * @see http://docs.jquery.com/Manipulation/remove#expr

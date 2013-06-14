@@ -459,6 +459,7 @@ person@example.com or mailto:person2@example.com or ' . $long_email . ' but not 
 http://trailingslash.com/ or www.trailingslash.com/
 http://host.com/some/path?query=foo&bar[baz]=beer#fragment or www.host.com/some/path?query=foo&bar[baz]=beer#fragment
 http://twitter.com/#!/example/status/22376963142324226
+http://example.com/@user/
 ftp://user:pass@ftp.example.com/~home/dir1
 sftp://user@nonstandardport:222/dir
 ssh://192.168.0.100/srv/git/drupal.git
@@ -468,9 +469,28 @@ ssh://192.168.0.100/srv/git/drupal.git
         '<a href="http://host.com/some/path?query=foo&amp;bar[baz]=beer#fragment">http://host.com/some/path?query=foo&amp;bar[baz]=beer#fragment</a>' => TRUE,
         '<a href="http://www.host.com/some/path?query=foo&amp;bar[baz]=beer#fragment">www.host.com/some/path?query=foo&amp;bar[baz]=beer#fragment</a>' => TRUE,
         '<a href="http://twitter.com/#!/example/status/22376963142324226">http://twitter.com/#!/example/status/22376963142324226</a>' => TRUE,
+        '<a href="http://example.com/@user/">http://example.com/@user/</a>' => TRUE,
         '<a href="ftp://user:pass@ftp.example.com/~home/dir1">ftp://user:pass@ftp.example.com/~home/dir1</a>' => TRUE,
         '<a href="sftp://user@nonstandardport:222/dir">sftp://user@nonstandardport:222/dir</a>' => TRUE,
         '<a href="ssh://192.168.0.100/srv/git/drupal.git">ssh://192.168.0.100/srv/git/drupal.git</a>' => TRUE,
+      ),
+      // International Unicode characters.
+      '
+http://пример.испытание/
+http://مثال.إختبار/
+http://例子.測試/
+http://12345.中国/
+http://例え.テスト/
+http://dréißig-bücher.de/
+http://méxico-mañana.es/
+' => array(
+        '<a href="http://пример.испытание/">http://пример.испытание/</a>' => TRUE,
+        '<a href="http://مثال.إختبار/">http://مثال.إختبار/</a>' => TRUE,
+        '<a href="http://例子.測試/">http://例子.測試/</a>' => TRUE,
+        '<a href="http://12345.中国/">http://12345.中国/</a>' => TRUE,
+        '<a href="http://例え.テスト/">http://例え.テスト/</a>' => TRUE,
+        '<a href="http://dréißig-bücher.de/">http://dréißig-bücher.de/</a>' => TRUE,
+        '<a href="http://méxico-mañana.es/">http://méxico-mañana.es/</a>' => TRUE,
       ),
       // Encoding.
       '
@@ -530,6 +550,10 @@ Query string with trailing exclamation www.query.com/index.php?a=!
 Partial URL with 3 trailing www.partial.periods...
 E-mail with 3 trailing exclamations@example.com!!!
 Absolute URL and query string with 2 different punctuation characters (http://www.example.com/q=abc).
+Partial URL with brackets in the URL as well as surrounded brackets (www.foo.com/more_(than)_one_(parens)).
+Absolute URL with square brackets in the URL as well as surrounded brackets [http://www.drupal.org/?class[]=1]
+Absolute URL with quotes "http://www.drupal.org/sample"
+
 ' => array(
         'period <a href="http://www.partial.com">www.partial.com</a>.' => TRUE,
         'comma <a href="mailto:person@example.com">person@example.com</a>,' => TRUE,
@@ -538,6 +562,9 @@ Absolute URL and query string with 2 different punctuation characters (http://ww
         'trailing <a href="http://www.partial.periods">www.partial.periods</a>...' => TRUE,
         'trailing <a href="mailto:exclamations@example.com">exclamations@example.com</a>!!!' => TRUE,
         'characters (<a href="http://www.example.com/q=abc">http://www.example.com/q=abc</a>).' => TRUE,
+        'brackets (<a href="http://www.foo.com/more_(than)_one_(parens)">www.foo.com/more_(than)_one_(parens)</a>).' => TRUE,
+        'brackets [<a href="http://www.drupal.org/?class[]=1">http://www.drupal.org/?class[]=1</a>]' => TRUE,
+        'quotes "<a href="http://www.drupal.org/sample">http://www.drupal.org/sample</a>"' => TRUE,
       ),
       '
 (www.parenthesis.com/dir?a=1&b=2#a)

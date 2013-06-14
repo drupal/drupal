@@ -12,7 +12,7 @@ use Drupal\Core\Ajax\CommandInterface;
 /**
  * Provides an AJAX command for setting a form in the views edit modal.
  *
- * This command is implemented in Drupal.ajax.prototype.commands.viewsSetForm.
+ * This command is implemented in Drupal.AjaxCommands.prototype.viewsSetForm.
  */
 class SetFormCommand implements CommandInterface {
 

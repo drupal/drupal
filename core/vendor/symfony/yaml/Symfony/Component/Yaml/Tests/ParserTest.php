@@ -396,6 +396,27 @@ EOF;
         $this->assertSame($expected, $this->parser->parse($yaml));
     }
 
+    /**
+     * Regression test for issue #7989.
+     *
+     * @see https://github.com/symfony/symfony/issues/7989
+     */
+    public function testBlockLiteralWithLeadingNewlines()
+    {
+        $yaml = <<<'EOF'
+foo: |-
+
+
+    bar
+
+EOF;
+        $expected = array(
+            'foo' => "\n\nbar"
+        );
+
+        $this->assertSame($expected, $this->parser->parse($yaml));
+    }
+
     public function testObjectSupportEnabled()
     {
         $input = <<<EOF
@@ -491,6 +512,15 @@ yaml:
   hash: me
 EOF
         );
+    }
+
+    public function testEmptyValue()
+    {
+        $input = <<<EOF
+hash:
+EOF;
+
+        $this->assertEquals(array('hash' => null), Yaml::parse($input));
     }
 }
 

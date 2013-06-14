@@ -16,7 +16,7 @@ use Drupal\Core\Ajax\InsertCommand;
  * to set the HTML content of each element matched by the given selector while
  * leaving the outer tags intact.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.insert()
+ * This command is implemented by Drupal.AjaxCommands.prototype.insert()
  * defined in misc/ajax.js.
  *
  * @see http://docs.jquery.com/Attributes/html#val

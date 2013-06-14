@@ -16,7 +16,7 @@ use Drupal\Core\Ajax\InsertCommand;
  * replaceWith() method to replace each element matched matched by the given
  * selector with the given HTML.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.insert()
+ * This command is implemented by Drupal.AjaxCommands.prototype.insert()
  * defined in misc/ajax.js.
  *
  * See

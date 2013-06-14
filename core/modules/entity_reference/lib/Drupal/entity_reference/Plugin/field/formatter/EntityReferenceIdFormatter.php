@@ -34,7 +34,7 @@ class EntityReferenceIdFormatter extends EntityReferenceFormatterBase {
     $elements = array();
 
     foreach ($items as $delta => $item) {
-      if (!empty($item['entity'])) {
+      if (!empty($item['entity']) && !empty($item['target_id'])) {
         $elements[$delta] = array('#markup' => check_plain($item['target_id']));
       }
     }

@@ -33,7 +33,7 @@ interface RouteObjectInterface
 
     /**
      * Field name for an explicit template to be used with this route.
-     * i.e. SymfonyCmfContentBundle:StaticContent:index.html.twig
+     * i.e. CmfContentBundle:StaticContent:index.html.twig
      */
     const TEMPLATE_NAME = '_template';
 

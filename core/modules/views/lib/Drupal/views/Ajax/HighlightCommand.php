@@ -12,7 +12,7 @@ use Drupal\Core\Ajax\CommandInterface;
 /**
  * Provides an AJAX command for highlighting a certain new piece of html.
  *
- * This command is implemented in Drupal.ajax.prototype.commands.viewsHighlight.
+ * This command is implemented in Drupal.AjaxCommands.prototype.viewsHighlight.
  */
 class HighlightCommand implements CommandInterface {
 

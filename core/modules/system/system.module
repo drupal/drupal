@@ -2499,12 +2499,12 @@ function system_filetransfer_info() {
  */
 function system_page_build(&$page) {
   $path = drupal_get_path('module', 'system');
-  // Use the CSS_AGGREGATE_SYSTEM group to load these early.
-  $page['#attached']['css'][$path . '/css/system.module.css'] = array('group' => CSS_AGGREGATE_SYSTEM, 'every_page' => TRUE);
+  // Adjust the weights to load these early.
+  $page['#attached']['css'][$path . '/css/system.module.css'] = array('weight' => CSS_COMPONENT - 10, 'every_page' => TRUE);
+  $page['#attached']['css'][$path . '/css/system.theme.css'] = array('weight' => CSS_SKIN - 10, 'every_page' => TRUE);
   if (path_is_admin(current_path())) {
-    $page['#attached']['css'][$path . '/css/system.admin.css'] = array('group' => CSS_AGGREGATE_SYSTEM);
+    $page['#attached']['css'][$path . '/css/system.admin.css'] = array('weight' => CSS_COMPONENT - 10);
   }
-  $page['#attached']['css'][$path . '/css/system.theme.css'] = array('group' => CSS_AGGREGATE_SYSTEM, 'every_page' => TRUE);
 }
 
 /**

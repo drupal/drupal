@@ -17,9 +17,9 @@
   <email>sebastian@phpunit.de</email>
   <active>yes</active>
  </lead>
- <date>2013-03-25</date>
+ <date>2013-05-23</date>
  <version>
-  <release>3.7.19</release>
+  <release>3.7.21</release>
   <api>3.7.0</api>
  </version>
  <stability>
@@ -82,6 +82,7 @@
       <file baseinstalldir="/" name="IsFalse.php" role="php" />
       <file baseinstalldir="/" name="IsIdentical.php" role="php" />
       <file baseinstalldir="/" name="IsInstanceOf.php" role="php" />
+      <file baseinstalldir="/" name="IsJson.php" role="php" />
       <file baseinstalldir="/" name="IsNull.php" role="php" />
       <file baseinstalldir="/" name="IsTrue.php" role="php" />
       <file baseinstalldir="/" name="IsType.php" role="php" />
@@ -246,7 +247,7 @@
     <name>Yaml</name>
     <channel>pear.symfony.com</channel>
     <min>2.0.0</min>
-    <max>2.2.99</max>
+    <max>2.99.99</max>
    </package>
    <extension>
     <name>dom</name>

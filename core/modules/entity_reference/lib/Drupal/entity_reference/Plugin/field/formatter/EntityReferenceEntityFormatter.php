@@ -95,7 +95,7 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
         throw new RecursiveRenderingException(format_string('Recursive rendering detected when rendering entity @entity_type(@entity_id). Aborting rendering.', array('@entity_type' => $entity_type, '@entity_id' => $item['target_id'])));
       }
 
-      if (!empty($item['entity'])) {
+      if (!empty($item['target_id'])) {
         $entity = clone $item['entity'];
         unset($entity->content);
         $elements[$delta] = entity_view($entity, $view_mode, $langcode);
@@ -107,7 +107,7 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
       }
       else {
         // This is an "auto_create" item.
-        $elements[$delta] = array('#markup' => $item['label']);
+        $elements[$delta] = array('#markup' => $entity->label());
       }
       $depth = 0;
     }

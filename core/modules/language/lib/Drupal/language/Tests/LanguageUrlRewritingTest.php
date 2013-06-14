@@ -134,7 +134,8 @@ class LanguageUrlRewritingTest extends WebTestBase {
       'language' => $language,
     ));
 
-    $expected = $index_php ? 'http://example.fr:88/index.php/' : 'http://example.fr:88/';
+    $expected = ($index_php ? 'http://example.fr:88/index.php' : 'http://example.fr:88') . rtrim(base_path(), '/') . '/';
+
     $this->assertEqual($url, $expected, 'The right port is used.');
 
     // If we set the port explicitly in url(), it should not be overriden.
@@ -144,7 +145,8 @@ class LanguageUrlRewritingTest extends WebTestBase {
       'base_url' => $request->getBaseUrl() . ':90',
     ));
 
-    $expected = $index_php ? 'http://example.fr:90/index.php/' : 'http://example.fr:90/';
+    $expected = $index_php ? 'http://example.fr:90/index.php' : 'http://example.fr:90' . rtrim(base_path(), '/') . '/';
+
     $this->assertEqual($url, $expected, 'A given port is not overriden.');
 
   }

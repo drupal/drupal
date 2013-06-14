@@ -84,31 +84,15 @@ class PHPUnit_Framework_Constraint_JsonMatches extends PHPUnit_Framework_Constra
     {
         $decodedOther = json_decode($other);
         if (json_last_error()) {
-            $this->failure_reason = $this->getJsonError();
             return FALSE;
         }
 
         $decodedValue = json_decode($this->value);
         if (json_last_error()) {
-            $this->failure_reason = $this->getJsonError();
             return FALSE;
         }
 
         return $decodedOther == $decodedValue;
-    }
-
-    /**
-     * Finds the last occurd JSON error.
-     *
-     * @param string $messagePrefix
-     * @return string The last JSON error prefixed with $messagePrefix.
-     */
-    protected function getJsonError($messagePrefix = 'Json error!')
-    {
-        return PHPUnit_Framework_Constraint_JsonMatches_ErrorMessageProvider::determineJsonError(
-            json_last_error(),
-            $messagePrefix
-        );
     }
 
     /**

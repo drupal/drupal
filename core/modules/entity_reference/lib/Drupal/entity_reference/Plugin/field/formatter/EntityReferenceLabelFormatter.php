@@ -78,10 +78,6 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
           $elements[$delta] = array('#markup' => check_plain($label));
         }
       }
-      else {
-        // This is an "auto_create" item.
-        $elements[$delta] = array('#markup' => $item['label']);
-      }
     }
 
     return $elements;

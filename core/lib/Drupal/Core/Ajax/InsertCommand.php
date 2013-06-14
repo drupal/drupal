@@ -16,7 +16,7 @@ use Drupal\Core\Ajax\CommandInterface;
  * jQuery DOM manipulation method has been specified in the #ajax['method']
  * variable of the element that triggered the request.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.insert()
+ * This command is implemented by Drupal.AjaxCommands.prototype.insert()
  * defined in misc/ajax.js.
  */
 class InsertCommand implements CommandInterface {

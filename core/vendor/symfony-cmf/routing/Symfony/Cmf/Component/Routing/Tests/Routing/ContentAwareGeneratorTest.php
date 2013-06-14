@@ -120,7 +120,7 @@ class ContentAwareGeneratorTest extends CmfUnitTestCase
         $this->assertEquals('result_url', $this->generator->generate($route_en, array('_locale' => 'de')));
     }
 
-    public function testGenerateRouteMultilangNomatch()
+    public function testGenerateRouteMultilangLocaleNomatch()
     {
         $route_en = $this->buildMock('Symfony\\Cmf\\Component\\Routing\\Tests\\Routing\\RouteMock', array('getDefaults', 'compile', 'getRouteContent'));
         $route_en->setLocale('en');
@@ -226,6 +226,28 @@ class ContentAwareGeneratorTest extends CmfUnitTestCase
         ;
 
         $this->assertEquals('result_url', $this->generator->generate($this->contentDocument, array('_locale' => 'de')));
+    }
+
+    public function testGenerateDocumentMultilangLocaleNomatch()
+    {
+        $route_en = $this->buildMock('Symfony\\Cmf\\Component\\Routing\\Tests\\Routing\\RouteMock', array('getDefaults', 'compile'));
+        $route_en->setLocale('en');
+        $route_de = $this->routeDocument;
+        $route_de->setLocale('de');
+
+        $this->contentDocument->expects($this->once())
+            ->method('getRoutes')
+            ->will($this->returnValue(array($route_en, $route_de)))
+        ;
+        $route_en->expects($this->once())
+            ->method('compile')
+            ->will($this->returnValue($this->routeCompiled))
+        ;
+        $route_de->expects($this->never())
+            ->method('compile')
+        ;
+
+        $this->assertEquals('result_url', $this->generator->generate($this->contentDocument, array('_locale' => 'fr')));
     }
 
     /**

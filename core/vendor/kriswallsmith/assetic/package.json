@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "uglifycss": "*",
+    "coffee-script": "*",
+    "stylus": "*",
+    "ember-precompile": "*",
+    "typescript": "*",
+    "less": "*",
+    "handlebars": "*",
+    "uglify-js": "*"
+  }
+}

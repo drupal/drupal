@@ -28,6 +28,7 @@ class ProcessBuilder
     private $timeout;
     private $options;
     private $inheritEnv;
+    private $prefix;
 
     public function __construct(array $arguments = array())
     {
@@ -54,6 +55,22 @@ class ProcessBuilder
     public function add($argument)
     {
         $this->arguments[] = $argument;
+
+        return $this;
+    }
+
+    /**
+     * Adds an unescaped prefix to the command string.
+     *
+     * The prefix is preserved when reseting arguments.
+     *
+     * @param string $prefix A command prefix
+     *
+     * @return ProcessBuilder
+     */
+    public function setPrefix($prefix)
+    {
+        $this->prefix = $prefix;
 
         return $this;
     }
@@ -103,7 +120,7 @@ class ProcessBuilder
      *
      * To disable the timeout, set this value to null.
      *
-     * @param integer|null
+     * @param float|null
      *
      * @return ProcessBuilder
      *
@@ -117,10 +134,10 @@ class ProcessBuilder
             return $this;
         }
 
-        $timeout = (integer) $timeout;
+        $timeout = (float) $timeout;
 
         if ($timeout < 0) {
-            throw new InvalidArgumentException('The timeout value must be a valid positive integer.');
+            throw new InvalidArgumentException('The timeout value must be a valid positive integer or float number.');
         }
 
         $this->timeout = $timeout;
@@ -137,13 +154,14 @@ class ProcessBuilder
 
     public function getProcess()
     {
-        if (!count($this->arguments)) {
+        if (!$this->prefix && !count($this->arguments)) {
             throw new LogicException('You must add() command arguments before calling getProcess().');
         }
 
         $options = $this->options;
 
-        $script = implode(' ', array_map('escapeshellarg', $this->arguments));
+        $arguments = $this->prefix ? array_merge(array($this->prefix), $this->arguments) : $this->arguments;
+        $script = implode(' ', array_map(array(__NAMESPACE__.'\\ProcessUtils', 'escapeArgument'), $arguments));
 
         if ($this->inheritEnv) {
             $env = $this->env ? $this->env + $_ENV : null;

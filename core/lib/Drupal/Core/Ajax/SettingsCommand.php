@@ -16,7 +16,7 @@ use Drupal\Core\Ajax\CommandInterface;
  * the settings for ajax-loaded content or to extend Drupal.settings with the
  * given array, depending on the value of the $merge parameter.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.settings()
+ * This command is implemented by Drupal.AjaxCommands.prototype.settings()
  * defined in misc/ajax.js.
  */
 class SettingsCommand implements CommandInterface {

@@ -155,6 +155,9 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
             $options['base_url'] = str_replace('https://', 'http://', $options['base_url']);
           }
         }
+
+        // Add Drupal's subfolder from the base_path if there is one.
+        $options['base_url'] .= rtrim(base_path(), '/');
       }
     }
     return $path;

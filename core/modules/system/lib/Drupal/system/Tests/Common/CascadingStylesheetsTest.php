@@ -153,12 +153,13 @@ class CascadingStylesheetsTest extends WebTestBase {
    * Tests CSS ordering.
    */
   function testRenderOrder() {
-    // A module CSS file.
+    // Load a module CSS file.
     drupal_add_css(drupal_get_path('module', 'simpletest') . '/css/simpletest.module.css');
-    // A few system CSS files, ordered in a strange way.
+    // Load a few system CSS files in a custom, early-loading aggregate group.
+    $test_aggregate_group = -100;
     $system_path = drupal_get_path('module', 'system');
-    drupal_add_css($system_path . '/css/system.module.css', array('group' => CSS_AGGREGATE_SYSTEM, 'weight' => -10));
-    drupal_add_css($system_path . '/css/system.theme.css', array('group' => CSS_AGGREGATE_SYSTEM));
+    drupal_add_css($system_path . '/css/system.module.css', array('group' => $test_aggregate_group, 'weight' => -10));
+    drupal_add_css($system_path . '/css/system.theme.css', array('group' => $test_aggregate_group));
 
     $expected = array(
       $system_path . '/css/system.module.css',

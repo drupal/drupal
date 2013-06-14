@@ -12,7 +12,7 @@ use Drupal\Core\Ajax\CommandInterface;
 /**
  * Provides an AJAX command for scolling to the top of an element.
  *
- * This command is implemented in Drupal.ajax.prototype.commands.viewsScrollTop.
+ * This command is implemented in Drupal.AjaxCommands.prototype.viewsScrollTop.
  */
 class ScrollTopCommand implements CommandInterface {
 

@@ -52,8 +52,8 @@ $paths = array(
 );
 
 foreach ($paths as $path) {
-    if (is_dir($path . '/composer') &&
-        is_file($path . '/autoload.php')) {
+    if (@is_dir($path . '/composer') &&
+        @is_file($path . '/autoload.php')) {
         require_once $path . '/autoload.php';
         define('PHPUNIT_COMPOSER_INSTALL', $path . '/autoload.php');
 
@@ -118,6 +118,7 @@ spl_autoload_register(
             'phpunit_framework_constraint_isfalse' => '/Framework/Constraint/IsFalse.php',
             'phpunit_framework_constraint_isidentical' => '/Framework/Constraint/IsIdentical.php',
             'phpunit_framework_constraint_isinstanceof' => '/Framework/Constraint/IsInstanceOf.php',
+            'phpunit_framework_constraint_isjson' => '/Framework/Constraint/IsJson.php',
             'phpunit_framework_constraint_isnull' => '/Framework/Constraint/IsNull.php',
             'phpunit_framework_constraint_istrue' => '/Framework/Constraint/IsTrue.php',
             'phpunit_framework_constraint_istype' => '/Framework/Constraint/IsType.php',

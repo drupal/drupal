@@ -164,6 +164,8 @@ Drupal.ajax = function (base, element, element_settings) {
 
   $.extend(this, defaults, element_settings);
 
+  this.commands = new Drupal.AjaxCommands();
+
   // @todo Remove this after refactoring the PHP code to:
   //   - Call this 'selector'.
   //   - Include the '#' for ID-based selectors.
@@ -552,7 +554,8 @@ Drupal.ajax.prototype.error = function (response, uri) {
 /**
  * Provide a series of commands that the server can request the client perform.
  */
-Drupal.ajax.prototype.commands = {
+Drupal.AjaxCommands = function () {};
+Drupal.AjaxCommands.prototype = {
   /**
    * Command to insert new content into the DOM.
    */

@@ -12,7 +12,7 @@ use Drupal\Core\Ajax\CommandInterface;
 /**
  * An AJAX command for adding css to the page via ajax.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.add_css()
+ * This command is implemented by Drupal.AjaxCommands.prototype.add_css()
  * defined in misc/ajax.js.
  *
  * @see misc/ajax.js

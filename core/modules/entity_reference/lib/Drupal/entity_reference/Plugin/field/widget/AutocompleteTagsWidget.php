@@ -44,19 +44,18 @@ class AutocompleteTagsWidget extends AutocompleteWidgetBase {
     $auto_create = isset($this->instance['settings']['handler_settings']['auto_create']) ? $this->instance['settings']['handler_settings']['auto_create'] : FALSE;
 
     if (!empty($element['#value'])) {
-      $entities = drupal_explode_tags($element['#value']);
       $value = array();
-      foreach ($entities as $entity) {
+      foreach (drupal_explode_tags($element['#value']) as $input) {
         $match = FALSE;
 
         // Take "label (entity id)', match the id from parenthesis.
-        if (preg_match("/.+\((\d+)\)/", $entity, $matches)) {
+        if (preg_match("/.+\((\d+)\)/", $input, $matches)) {
           $match = $matches[1];
         }
         else {
           // Try to get a match from the input string when the user didn't use
           // the autocomplete but filled in a value manually.
-          $match = $handler->validateAutocompleteInput($entity, $element, $form_state, $form, !$auto_create);
+          $match = $handler->validateAutocompleteInput($input, $element, $form_state, $form, !$auto_create);
         }
 
         if ($match) {
@@ -64,10 +63,13 @@ class AutocompleteTagsWidget extends AutocompleteWidgetBase {
         }
         elseif ($auto_create && (count($this->instance['settings']['handler_settings']['target_bundles']) == 1 || count($bundles) == 1)) {
           // Auto-create item. see entity_reference_field_presave().
-          $value[] = array('target_id' => 'auto_create', 'label' => $entity);
+          $value[] = array(
+            'target_id' => 0,
+            'entity' => $this->createNewEntity($input, $element['#autocreate_uid']),
+          );
         }
       }
-    }
+    };
     // Change the element['#parents'], so in form_set_value() we
     // populate the correct key.
     array_pop($element['#parents']);
