@@ -455,7 +455,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $this->rebuildContainer();
 
     // Build the link we're going to test.
-    $link = 'it.example.com/admin';
+    $link = 'it.example.com' . rtrim(base_path(), '/') . '/admin';
 
     // Test URL in another language: http://it.example.com/admin.
     // Base path gives problems on the testbot, so $correct_link is hard-coded.
