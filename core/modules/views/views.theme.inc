@@ -726,7 +726,7 @@ function template_preprocess_views_view_table(&$vars) {
   if (empty($vars['rows']) && !empty($options['empty_table'])) {
     $build = $view->display_handler->renderArea('empty');
     $vars['rows'][0][0] = drupal_render($build);
-    $vars['row_classes'][0] = new Attribute();
+    $vars['row_classes'][0] = new Attribute(array('class' => 'odd'));
     // Calculate the amounts of rows with output.
     $vars['field_classes'][0][0] = new Attribute(array(
       'colspan' => count($vars['header']),
