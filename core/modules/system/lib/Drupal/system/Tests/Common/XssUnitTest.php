@@ -35,16 +35,6 @@ class XssUnitTest extends DrupalUnitTestBase {
   }
 
   /**
-   * Checks that invalid multi-byte sequences are rejected.
-   */
-  function testInvalidMultiByte() {
-     $text = filter_xss("Foo\xC0barbaz");
-     $this->assertEqual($text, '', 'filter_xss() rejects invalid sequence "Foo\xC0barbaz"');
-     $text = filter_xss("Fooÿñ");
-     $this->assertEqual($text, "Fooÿñ", 'filter_xss() accepts valid sequence Fooÿñ');
-  }
-
-  /**
    * Tests t() functionality.
    */
   function testT() {
