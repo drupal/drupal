@@ -12,7 +12,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormInterface;
 
 /**
- * Provides a listing of contact categories.
+ * Provides a listing of user roles.
  */
 class RoleListController extends ConfigEntityListController implements FormInterface {
 
