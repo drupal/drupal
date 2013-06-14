@@ -10,7 +10,6 @@ namespace Drupal\translation_entity;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityNG;
-use Drupal\Core\Entity\Field\FieldInterface;
 
 /**
  * Provides field translation synchronization capabilities.
