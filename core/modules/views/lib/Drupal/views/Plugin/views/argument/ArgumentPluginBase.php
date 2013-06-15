@@ -651,7 +651,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    *   A boolean value; if TRUE, continue building this view. If FALSE,
    *   building the view will be aborted here.
    */
-  function default_action($info = NULL) {
+  public function defaultAction($info = NULL) {
     if (!isset($info)) {
       $info = $this->defaultActions($this->options['default_action']);
     }
@@ -673,7 +673,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    */
   public function validateFail() {
     $info = $this->defaultActions($this->options['validate']['fail']);
-    return $this->default_action($info);
+    return $this->defaultAction($info);
   }
   /**
    * Default action: ignore.
