@@ -387,6 +387,10 @@ function theme_datetime_wrapper($variables) {
   }
   $output .= $element['#children'];
 
+  if (!empty($element['#description'])) {
+    $output .= '<div class="description">' . $element['#description'] . '</div>';
+  }
+
   return $output;
 }
 
@@ -1133,10 +1137,12 @@ function datetime_range_years($string, $date = NULL) {
  * Implements hook_form_BASE_FORM_ID_alter() for node forms.
  */
 function datetime_form_node_form_alter(&$form, &$form_state, $form_id) {
+  $format_type = datetime_default_format_type();
+
   // Alter the 'Authored on' date to use datetime.
   $form['author']['date']['#type'] = 'datetime';
   $config = Drupal::config('system.date');
-  $format = $config->get('formats.html_date') . ' ' . $config->get('formats.html_time');
+  $format = $config->get('formats.html_date.pattern.' . $format_type) . ' ' . $config->get('formats.html_time.pattern.' . $format_type);
   $form['author']['date']['#description'] = t('Format: %format. Leave blank to use the time of form submission.', array('%format' => datetime_format_example($format)));
   unset($form['author']['date']['#maxlength']);
 }
