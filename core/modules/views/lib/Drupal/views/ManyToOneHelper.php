@@ -304,15 +304,15 @@ class ManyToOneHelper {
         $placeholders = array(
           $placeholder => $value,
         ) + $this->placeholders;
-        $this->handler->query->add_where_expression($options['group'], "$field $operator", $placeholders);
+        $this->handler->query->addWhereExpression($options['group'], "$field $operator", $placeholders);
       }
       else {
         $placeholder = $this->placeholder();
         if (count($this->handler->value) > 1) {
-          $this->query->add_where_expression(0, "$field $operator($placeholder)", array($placeholder => $value));
+          $this->query->addWhereExpression(0, "$field $operator($placeholder)", array($placeholder => $value));
         }
         else {
-          $this->handler->query->add_where_expression(0, "$field $operator $placeholder", array($placeholder => $value));
+          $this->handler->query->addWhereExpression(0, "$field $operator $placeholder", array($placeholder => $value));
         }
       }
     }

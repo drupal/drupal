@@ -247,7 +247,7 @@ class Field extends FieldPluginBase {
         else {
           $langcode_fallback_candidates[] = Language::LANGCODE_NOT_SPECIFIED;
         }
-        $this->query->add_where_expression(0, "$column IN($placeholder) OR $column IS NULL", array($placeholder => $langcode_fallback_candidates));
+        $this->query->addWhereExpression(0, "$column IN($placeholder) OR $column IS NULL", array($placeholder => $langcode_fallback_candidates));
       }
     }
   }

@@ -234,7 +234,7 @@ class String extends ArgumentPluginBase {
       $placeholders = array(
         $placeholder => $argument,
       );
-      $this->query->add_where_expression(0, $field, $placeholders);
+      $this->query->addWhereExpression(0, $field, $placeholders);
     }
     else {
       $this->query->addWhere(0, $field, $argument, $operator);

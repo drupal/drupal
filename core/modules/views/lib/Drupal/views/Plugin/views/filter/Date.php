@@ -175,7 +175,7 @@ class Date extends Numeric {
     // This is safe because we are manually scrubbing the values.
     // It is necessary to do it this way because $a and $b are formulas when using an offset.
     $operator = strtoupper($this->operator);
-    $this->query->add_where_expression($this->options['group'], "$field $operator $a AND $b");
+    $this->query->addWhereExpression($this->options['group'], "$field $operator $a AND $b");
   }
 
   protected function opSimple($field) {
@@ -185,7 +185,7 @@ class Date extends Numeric {
     }
     // This is safe because we are manually scrubbing the value.
     // It is necessary to do it this way because $value is a formula when using an offset.
-    $this->query->add_where_expression($this->options['group'], "$field $this->operator $value");
+    $this->query->addWhereExpression($this->options['group'], "$field $this->operator $value");
   }
 
 }
