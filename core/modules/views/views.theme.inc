@@ -5,6 +5,7 @@
  * Preprocessors and helper functions to make theming easier.
  */
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
 use Drupal\views\ViewExecutable;
@@ -740,13 +741,24 @@ function template_preprocess_views_view_table(&$vars) {
   }
   $vars['attributes']['class'][] = 'cols-' . count($vars['header']);
 
-  if (!empty($handler->options['summary'])) {
-    $vars['attributes']['summary'] = $handler->options['summary'];
+  // Add the caption to the list if set.
+  if (!empty($handler->options['caption'])) {
+    $vars['caption'] = Xss::filterAdmin($handler->options['caption']);
+    $vars['caption_needed'] = TRUE;
   }
+  else {
+    $vars['caption'] = '';
+    $vars['caption_needed'] = FALSE;
+  }
+
+  $vars['summary'] = $handler->options['summary'];
+  $vars['description'] = $handler->options['description'];
+  $vars['caption_needed'] |= !empty($vars['summary']) || !empty($vars['description']);
+
   // If the table has headers and it should react responsively to columns hidden
   // with the classes represented by the constants RESPONSIVE_PRIORITY_MEDIUM
   // and RESPONSIVE_PRIORITY_LOW, add the tableresponsive behaviors.
-  if (count($vars['header']) && $responsive) {
+  if (isset($vars['header']) && $responsive) {
     $vars['view']->element['#attached']['library'][] = array('system', 'drupal.tableresponsive');
     // Add 'responsive-enabled' class to the table to identify it for JS.
     // This is needed to target tables constructed by this function.

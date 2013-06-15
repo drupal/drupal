@@ -94,7 +94,9 @@ class Table extends StylePluginBase {
     $options['override'] = array('default' => TRUE, 'bool' => TRUE);
     $options['sticky'] = array('default' => FALSE, 'bool' => TRUE);
     $options['order'] = array('default' => 'asc');
+    $options['caption'] = array('default' => '', 'translatable' => TRUE);
     $options['summary'] = array('default' => '', 'translatable' => TRUE);
+    $options['description'] = array('default' => '', 'translatable' => TRUE);
     $options['empty_table'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;
@@ -242,12 +244,38 @@ class Table extends StylePluginBase {
       '#description' => t('(Sticky header effects will not be active for preview below, only on live output.)'),
     );
 
-    $form['summary'] = array(
+    $form['caption'] = array(
       '#type' => 'textfield',
-      '#title' => t('Table summary'),
-      '#description' => t('This value will be displayed as table-summary attribute in the html. Set this for better accessiblity of your site.'),
-      '#default_value' => $this->options['summary'],
+      '#title' => t('Caption for the table'),
+      '#description' => t('A title which is semantically associated to your table for increased accessibility.'),
+      '#default_value' => $this->options['caption'],
       '#maxlength' => 255,
+    );
+
+    $form['accessibility_details'] = array(
+      '#type' => 'details',
+      '#title' => t('Table details'),
+      '#collapsed' => TRUE,
+    );
+
+    $form['summary'] = array(
+      '#title' => t('Summary title'),
+      '#type' => 'textfield',
+      '#default_value' => $this->options['summary'],
+      '#fieldset' => 'accessibility_details',
+    );
+
+    $form['description'] = array(
+      '#title' => t('Table description'),
+      '#type' => 'textarea',
+      '#description' => t('Provide additional details about the table to increase accessibility.'),
+      '#default_value' => $this->options['description'],
+      '#states' => array(
+        'visible' => array(
+          'input[name="style_options[summary]"]' => array('filled' => TRUE),
+        ),
+      ),
+      '#fieldset' => 'accessibility_details',
     );
 
     // Note: views UI registers this theme handler on our behalf. Your module
