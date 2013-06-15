@@ -8,9 +8,11 @@
 namespace Drupal\user\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
+use Drupal\Core\Database\Connection;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\field\PrerenderList;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Field handler to provide a list of permissions.
@@ -20,6 +22,38 @@ use Drupal\views\Plugin\views\field\PrerenderList;
  * @PluginID("user_permissions")
  */
 class Permissions extends PrerenderList {
+
+  /**
+   * Database Service Object.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  /**
+   * Constructs a Drupal\Component\Plugin\PluginBase object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Database\Connection $database
+   *   Database Service Object.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, Connection $database) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->database = $database;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('database'));
+  }
 
   /**
    * Overrides Drupal\views\Plugin\views\field\FieldPluginBase::init().
@@ -55,14 +89,8 @@ class Permissions extends PrerenderList {
 
       $permissions = module_invoke_all('permission');
 
-      $query = db_select('role_permission', 'rp');
-      $query->join('users_roles', 'u', 'u.rid = rp.rid');
-      $query->fields('u', array('uid', 'rid'));
-      $query->addField('rp', 'permission');
-      $query->condition('u.uid', $uids);
-      $query->condition('rp.module', array_keys($modules));
-      $query->orderBy('rp.permission');
-      $result = $query->execute();
+      $result = $this->database->query('SELECT u.uid, u.rid, rp.permission FROM {role_permission} rp INNER JOIN {users_roles} u ON u.rid = rp.rid WHERE u.uid IN (:uids) AND rp.module IN (:modules) ORDER BY rp.permission',
+        array(':uids' => $uids, ':modules' => array_keys($modules)));
 
       foreach ($result as $perm) {
         $this->items[$perm->uid][$perm->permission]['permission'] = $permissions[$perm->permission]['title'];

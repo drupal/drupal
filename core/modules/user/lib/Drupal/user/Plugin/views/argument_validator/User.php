@@ -9,7 +9,9 @@ namespace Drupal\user\Plugin\views\argument_validator;
 
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Database\Connection;
 use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Validate whether an argument is a valid user.
@@ -25,6 +27,38 @@ use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
  * )
  */
 class User extends ArgumentValidatorPluginBase {
+
+  /**
+   * Database Service Object.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  /**
+   * Constructs a Drupal\Component\Plugin\PluginBase object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Database\Connection $database
+   *   Database Service Object.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, Connection $database) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->database = $database;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('database'));
+  }
 
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -104,7 +138,7 @@ class User extends ArgumentValidatorPluginBase {
     }
 
     if (!isset($account)) {
-      $account = db_select('users', 'u')
+      $account = $this->database->select('users', 'u')
         ->fields('u', array('uid', 'name'))
         ->condition($condition, $argument)
         ->execute()
@@ -120,12 +154,8 @@ class User extends ArgumentValidatorPluginBase {
       $roles = $this->options['roles'];
       $account->roles = array();
       $account->roles[] = $account->uid ? DRUPAL_AUTHENTICATED_RID : DRUPAL_ANONYMOUS_RID;
-      $query = db_select('users_roles', 'u');
-      $query->addField('u', 'rid');
-      $query->condition('u.uid', $account->uid);
-      $result = $query->execute();
-      foreach ($result as $role) {
-        $account->roles[] = $role->rid;
+      foreach ($account->getRoles() as $rid) {
+        $account->roles[] = $rid;
       }
       if (!(bool) array_intersect($account->roles, $roles)) {
         return FALSE;

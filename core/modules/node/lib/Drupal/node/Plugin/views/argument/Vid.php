@@ -7,8 +7,10 @@
 
 namespace Drupal\node\Plugin\views\argument;
 
-use Drupal\views\Plugin\views\argument\Numeric;
 use Drupal\Component\Annotation\PluginID;
+use Drupal\Core\Database\Connection;
+use Drupal\views\Plugin\views\argument\Numeric;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Argument handler to accept a node revision id.
@@ -17,7 +19,37 @@ use Drupal\Component\Annotation\PluginID;
  */
 class Vid extends Numeric {
 
-  // No constructor is necessary.
+  /**
+   * Database Service Object.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  /**
+   * Constructs a Drupal\Component\Plugin\PluginBase object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Database\Connection $database
+   *   Database Service Object.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, Connection $database) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->database = $database;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('database'));
+  }
 
   /**
    * Override the behavior of title(). Get the title of the revision.
@@ -25,11 +57,7 @@ class Vid extends Numeric {
   public function titleQuery() {
     $titles = array();
 
-    $results = db_select('node_field_revision', 'npr')
-      ->fields('npr', array('vid', 'nid', 'title'))
-      ->condition('npr.vid', $this->value)
-      ->execute()
-      ->fetchAllAssoc('vid', PDO::FETCH_ASSOC);
+    $results = $this->database->query('SELECT npr.vid, npr.nid, npr.title FROM {node_field_revision} npr WHERE npr.vid IN (:vids)', array(':vids' => $this->value))->fetchAllAssoc('vid', PDO::FETCH_ASSOC);
     $nids = array();
     foreach ($results as $result) {
       $nids[] = $result['nid'];
