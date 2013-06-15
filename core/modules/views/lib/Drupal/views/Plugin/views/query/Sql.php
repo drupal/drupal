@@ -292,7 +292,7 @@ class Sql extends QueryPluginBase {
 
     // Make sure this join is adjusted for our relationship.
     if ($link_point && isset($this->relationships[$link_point])) {
-      $join = $this->adjust_join($join, $link_point);
+      $join = $this->adjustJoin($join, $link_point);
     }
 
     // Add the table directly to the queue to avoid accidentally marking
@@ -355,7 +355,7 @@ class Sql extends QueryPluginBase {
     }
 
     if ($join && $relationship) {
-      $join = $this->adjust_join($join, $relationship);
+      $join = $this->adjustJoin($join, $relationship);
     }
 
     return $this->queueTable($table, $relationship, $join, $alias);
@@ -437,7 +437,7 @@ class Sql extends QueryPluginBase {
         return FALSE;
       }
 
-      $join = $this->adjust_join($join, $relationship);
+      $join = $this->adjustJoin($join, $relationship);
     }
 
     $this->table_queue[$alias] = array(
@@ -528,7 +528,7 @@ class Sql extends QueryPluginBase {
     // Adjust this join for the relationship, which will ensure that the 'base'
     // table it links to is correct. Tables adjoined to a relationship
     // join to a link point, not the base table.
-    $join = $this->adjust_join($join, $relationship);
+    $join = $this->adjustJoin($join, $relationship);
 
     if ($this->ensurePath($table, $relationship, $join)) {
       // Attempt to eliminate redundant joins.  If this table's
@@ -598,7 +598,7 @@ class Sql extends QueryPluginBase {
 
       // Make sure that we're linking to the correct table for our relationship.
       foreach (array_reverse($add) as $table => $path_join) {
-        $this->queueTable($table, $relationship, $this->adjust_join($path_join, $relationship));
+        $this->queueTable($table, $relationship, $this->adjustJoin($path_join, $relationship));
       }
       return TRUE;
     }
@@ -624,7 +624,7 @@ class Sql extends QueryPluginBase {
    * Fix a join to adhere to the proper relationship; the left table can vary
    * based upon what relationship items are joined in on.
    */
-  function adjust_join($join, $relationship) {
+  protected function adjustJoin($join, $relationship) {
     if (!empty($join->adjusted)) {
       return $join;
     }
