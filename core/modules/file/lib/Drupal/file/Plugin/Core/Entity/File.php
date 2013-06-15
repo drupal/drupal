@@ -7,11 +7,12 @@
 
 namespace Drupal\file\Plugin\Core\Entity;
 
-use Drupal\Core\Entity\Entity;
+use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Language\Language;
 use Drupal\file\FileInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Defines the file entity class.
@@ -32,90 +33,129 @@ use Drupal\file\FileInterface;
  *   }
  * )
  */
-class File extends Entity implements FileInterface {
+class File extends EntityNG implements FileInterface {
 
   /**
-   * The file ID.
+   * The plain data values of the contained properties.
    *
-   * @var integer
+   * Define default values.
+   *
+   * @var array
    */
-  public $fid;
+  protected $values = array(
+    'langcode' => array(Language::LANGCODE_DEFAULT => array(0 => array('value' => Language::LANGCODE_NOT_SPECIFIED))),
+  );
 
   /**
-   * The file UUID.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
-   * The file language code.
-   *
-   * @var string
-   */
-  public $langcode = Language::LANGCODE_NOT_SPECIFIED;
-
-  /**
-   * The uid of the user who is associated with the file.
-   *
-   * @var integer
-   */
-  public $uid;
-
-  /**
-   * Name of the file with no path components.
-   *
-   * This may differ from the basename of the URI if the file is renamed to
-   * avoid overwriting an existing file.
-   *
-   * @var string
-   */
-  public $filename;
-
-  /**
-   * The URI to access the file (either local or remote).
-   *
-   * @var string
-   */
-  public $uri;
-
-  /**
-   * The file's MIME type.
-   *
-   * @var string
-   */
-  public $filemime;
-
-  /**
-   * The size of the file in bytes.
-   *
-   * @var integer
-   */
-  public $filesize;
-
-  /**
-   * A field indicating the status of the file.
-   *
-   * Two status are defined in core: temporary (0) and permanent (1).
-   * Temporary files older than DRUPAL_MAXIMUM_TEMP_FILE_AGE will be removed
-   * during a cron run.
-   *
-   * @var integer
-   */
-  public $status;
-
-  /**
-   * UNIX timestamp for when the file was last saved.
-   *
-   * @var integer
-   */
-  public $timestamp;
-
-  /**
-   * Overrides Drupal\Core\Entity\Entity::id().
+   * {@inheritdoc}
    */
   public function id() {
-    return $this->fid;
+    return $this->get('fid')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFilename() {
+    return $this->get('filename')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setFilename($filename) {
+    $this->get('filename')->value = $filename;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFileUri() {
+    return $this->get('uri')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setFileUri($uri) {
+    $this->get('uri')->value = $uri;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMimeType() {
+    return $this->get('filemime')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setMimeType($mime) {
+    $this->get('filemime')->value = $mime;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSize() {
+    return $this->get('filesize')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setSize($size) {
+    $this->get('filesize')->value = $size;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getChangedTime() {
+    return $this->get('timestamp')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOwner() {
+    return $this->get('uid')->entity->getBCEntity();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setOwner(UserInterface $user) {
+    return $this->get('uid')->entity = $user;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isPermanent() {
+    return $this->get('status')->value == FILE_STATUS_PERMANENT;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isTemporary() {
+    return $this->get('status')->value == 0;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPermanent() {
+    $this->get('status')->value = FILE_STATUS_PERMANENT;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setTemporary() {
+    $this->get('status')->value = 0;
   }
 
 }

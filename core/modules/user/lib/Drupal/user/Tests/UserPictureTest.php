@@ -61,7 +61,7 @@ class UserPictureTest extends WebTestBase {
 
     // Verify that the image is displayed on the user account page.
     $this->drupalGet('user');
-    $this->assertRaw(file_uri_target($file->uri), 'User picture found on user account page.');
+    $this->assertRaw(file_uri_target($file->getFileUri()), 'User picture found on user account page.');
 
     // Delete the picture.
     $edit = array();
@@ -74,15 +74,15 @@ class UserPictureTest extends WebTestBase {
       ->fields(array(
         'timestamp' => REQUEST_TIME - (DRUPAL_MAXIMUM_TEMP_FILE_AGE + 1),
       ))
-      ->condition('fid', $file->fid)
+      ->condition('fid', $file->id())
       ->execute();
     drupal_cron_run();
 
     // Verify that the image has been deleted.
-    $this->assertFalse(file_load($file->fid, TRUE), 'File was removed from the database.');
+    $this->assertFalse(file_load($file->id(), TRUE), 'File was removed from the database.');
     // Clear out PHP's file stat cache so we see the current value.
-    clearstatcache(TRUE, $file->uri);
-    $this->assertFalse(is_file($file->uri), 'File was removed from the file system.');
+    clearstatcache(TRUE, $file->getFileUri());
+    $this->assertFalse(is_file($file->getFileUri()), 'File was removed from the file system.');
   }
 
   /**
@@ -102,7 +102,7 @@ class UserPictureTest extends WebTestBase {
 
     // Verify that the image is displayed on the user account page.
     $this->drupalGet('node/' . $node->nid);
-    $this->assertRaw(file_uri_target($file->uri), 'User picture found on node page.');
+    $this->assertRaw(file_uri_target($file->getFileUri()), 'User picture found on node page.');
 
     // Enable user pictures on comments, instead of nodes.
     $this->container->get('config.factory')->get('system.theme.global')
@@ -114,7 +114,7 @@ class UserPictureTest extends WebTestBase {
       'comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]' => $this->randomString(),
     );
     $this->drupalPost('comment/reply/' . $node->nid, $edit, t('Save'));
-    $this->assertRaw(file_uri_target($file->uri), 'User picture found on comment.');
+    $this->assertRaw(file_uri_target($file->getFileUri()), 'User picture found on comment.');
 
     // Disable user pictures on comments and nodes.
     $this->container->get('config.factory')->get('system.theme.global')
@@ -123,7 +123,7 @@ class UserPictureTest extends WebTestBase {
       ->save();
 
     $this->drupalGet('node/' . $node->nid);
-    $this->assertNoRaw(file_uri_target($file->uri), 'User picture not found on node and comment.');
+    $this->assertNoRaw(file_uri_target($file->getFileUri()), 'User picture not found on node and comment.');
   }
 
   /**

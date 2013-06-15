@@ -590,12 +590,12 @@ function rdf_preprocess_field(&$variables) {
       // not output correctly if the filetype icon comes before the link to the
       // file. We correct this by adding a resource attribute to the div if
       // this field has a URI.
-      if (isset($item['uri'])) {
+      if (isset($item['entity']->uri)) {
         if (!empty($element[$delta]['#image_style'])) {
-          $variables['item_attributes'][$delta]['resource'] = image_style_url($element[$delta]['#image_style'], $item['uri']);
+          $variables['item_attributes'][$delta]['resource'] = image_style_url($element[$delta]['#image_style'], $item['entity']->getFileUri());
         }
         else {
-          $variables['item_attributes'][$delta]['resource'] = file_create_url($item['uri']);
+          $variables['item_attributes'][$delta]['resource'] = file_create_url($item['entity']->getFileUri());
         }
       }
     }

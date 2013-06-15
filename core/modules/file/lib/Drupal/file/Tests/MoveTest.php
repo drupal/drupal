@@ -33,18 +33,18 @@ class MoveTest extends FileManagedTestBase {
 
     // Check the return status and that the contents changed.
     $this->assertTrue($result, t('File moved successfully.'));
-    $this->assertFalse(file_exists($source->uri));
-    $this->assertEqual($contents, file_get_contents($result->uri), t('Contents of file correctly written.'));
+    $this->assertFalse(file_exists($source->getFileUri()));
+    $this->assertEqual($contents, file_get_contents($result->getFileUri()), t('Contents of file correctly written.'));
 
     // Check that the correct hooks were called.
     $this->assertFileHooksCalled(array('move', 'load', 'update'));
 
     // Make sure we got the same file back.
-    $this->assertEqual($source->fid, $result->fid, t("Source file id's' %fid is unchanged after move.", array('%fid' => $source->fid)));
+    $this->assertEqual($source->id(), $result->id(), t("Source file id's' %fid is unchanged after move.", array('%fid' => $source->id())));
 
     // Reload the file from the database and check that the changes were
     // actually saved.
-    $loaded_file = file_load($result->fid, TRUE);
+    $loaded_file = file_load($result->id(), TRUE);
     $this->assertTrue($loaded_file, t('File can be loaded from the database.'));
     $this->assertFileUnchanged($result, $loaded_file);
   }
@@ -61,27 +61,27 @@ class MoveTest extends FileManagedTestBase {
 
     // Clone the object so we don't have to worry about the function changing
     // our reference copy.
-    $result = file_move(clone $source, $target->uri, FILE_EXISTS_RENAME);
+    $result = file_move(clone $source, $target->getFileUri(), FILE_EXISTS_RENAME);
 
     // Check the return status and that the contents changed.
     $this->assertTrue($result, t('File moved successfully.'));
-    $this->assertFalse(file_exists($source->uri));
-    $this->assertEqual($contents, file_get_contents($result->uri), t('Contents of file correctly written.'));
+    $this->assertFalse(file_exists($source->getFileUri()));
+    $this->assertEqual($contents, file_get_contents($result->getFileUri()), t('Contents of file correctly written.'));
 
     // Check that the correct hooks were called.
     $this->assertFileHooksCalled(array('move', 'load', 'update'));
 
     // Compare the returned value to what made it into the database.
-    $this->assertFileUnchanged($result, file_load($result->fid, TRUE));
+    $this->assertFileUnchanged($result, file_load($result->id(), TRUE));
     // The target file should not have been altered.
-    $this->assertFileUnchanged($target, file_load($target->fid, TRUE));
+    $this->assertFileUnchanged($target, file_load($target->id(), TRUE));
     // Make sure we end up with two distinct files afterwards.
     $this->assertDifferentFile($target, $result);
 
     // Compare the source and results.
-    $loaded_source = file_load($source->fid, TRUE);
-    $this->assertEqual($loaded_source->fid, $result->fid, t("Returned file's id matches the source."));
-    $this->assertNotEqual($loaded_source->uri, $source->uri, t("Returned file path has changed from the original."));
+    $loaded_source = file_load($source->id(), TRUE);
+    $this->assertEqual($loaded_source->id(), $result->id(), t("Returned file's id matches the source."));
+    $this->assertNotEqual($loaded_source->getFileUri(), $source->getFileUri(), t("Returned file path has changed from the original."));
   }
 
   /**
@@ -96,11 +96,11 @@ class MoveTest extends FileManagedTestBase {
 
     // Clone the object so we don't have to worry about the function changing
     // our reference copy.
-    $result = file_move(clone $source, $target->uri, FILE_EXISTS_REPLACE);
+    $result = file_move(clone $source, $target->getFileUri(), FILE_EXISTS_REPLACE);
 
     // Look at the results.
-    $this->assertEqual($contents, file_get_contents($result->uri), t('Contents of file were overwritten.'));
-    $this->assertFalse(file_exists($source->uri));
+    $this->assertEqual($contents, file_get_contents($result->getFileUri()), t('Contents of file were overwritten.'));
+    $this->assertFalse(file_exists($source->getFileUri()));
     $this->assertTrue($result, t('File moved successfully.'));
 
     // Check that the correct hooks were called.
@@ -108,7 +108,7 @@ class MoveTest extends FileManagedTestBase {
 
     // Reload the file from the database and check that the changes were
     // actually saved.
-    $loaded_result = file_load($result->fid, TRUE);
+    $loaded_result = file_load($result->id(), TRUE);
     $this->assertFileUnchanged($result, $loaded_result);
     // Check that target was re-used.
     $this->assertSameFile($target, $loaded_result);
@@ -126,16 +126,16 @@ class MoveTest extends FileManagedTestBase {
 
     // Copy the file over itself. Clone the object so we don't have to worry
     // about the function changing our reference copy.
-    $result = file_move(clone $source, $source->uri, FILE_EXISTS_REPLACE);
+    $result = file_move(clone $source, $source->getFileUri(), FILE_EXISTS_REPLACE);
     $this->assertFalse($result, t('File move failed.'));
-    $this->assertEqual($contents, file_get_contents($source->uri), t('Contents of file were not altered.'));
+    $this->assertEqual($contents, file_get_contents($source->getFileUri()), t('Contents of file were not altered.'));
 
     // Check that no hooks were called while failing.
     $this->assertFileHooksCalled(array());
 
     // Load the file from the database and make sure it is identical to what
     // was returned.
-    $this->assertFileUnchanged($source, file_load($source->fid, TRUE));
+    $this->assertFileUnchanged($source, file_load($source->id(), TRUE));
   }
 
   /**
@@ -150,19 +150,19 @@ class MoveTest extends FileManagedTestBase {
 
     // Clone the object so we don't have to worry about the function changing
     // our reference copy.
-    $result = file_move(clone $source, $target->uri, FILE_EXISTS_ERROR);
+    $result = file_move(clone $source, $target->getFileUri(), FILE_EXISTS_ERROR);
 
     // Check the return status and that the contents did not change.
     $this->assertFalse($result, t('File move failed.'));
-    $this->assertTrue(file_exists($source->uri));
-    $this->assertEqual($contents, file_get_contents($target->uri), t('Contents of file were not altered.'));
+    $this->assertTrue(file_exists($source->getFileUri()));
+    $this->assertEqual($contents, file_get_contents($target->getFileUri()), t('Contents of file were not altered.'));
 
     // Check that no hooks were called while failing.
     $this->assertFileHooksCalled(array());
 
     // Load the file from the database and make sure it is identical to what
     // was returned.
-    $this->assertFileUnchanged($source, file_load($source->fid, TRUE));
-    $this->assertFileUnchanged($target, file_load($target->fid, TRUE));
+    $this->assertFileUnchanged($source, file_load($source->id(), TRUE));
+    $this->assertFileUnchanged($target, file_load($target->id(), TRUE));
   }
 }

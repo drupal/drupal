@@ -650,7 +650,7 @@ function update_manager_install_form_submit($form, &$form_state) {
       // failure.
       return;
     }
-    $local_cache = $finfo->uri;
+    $local_cache = $finfo->getFileUri();
   }
 
   $directory = _update_manager_extract_directory();

@@ -43,7 +43,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
 
     // Create a new node with the uploaded file.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
-    $this->assertTrue($nid !== FALSE, t('uploadNodeFile(@test_file, @field_name, @type_name) succeeded', array('@test_file' => $test_file->uri, '@field_name' => $field_name, '@type_name' => $type_name)));
+    $this->assertTrue($nid !== FALSE, t('uploadNodeFile(@test_file, @field_name, @type_name) succeeded', array('@test_file' => $test_file->getFileUri(), '@field_name' => $field_name, '@type_name' => $type_name)));
 
     $node = node_load($nid, TRUE);
 
@@ -94,13 +94,13 @@ class FileFieldValidateTest extends FileFieldTestBase {
       $nid = $this->uploadNodeFile($small_file, $field_name, $type_name);
       $node = node_load($nid, TRUE);
       $node_file = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']);
-      $this->assertFileExists($node_file, t('File exists after uploading a file (%filesize) under the max limit (%maxsize).', array('%filesize' => format_size($small_file->filesize), '%maxsize' => $max_filesize)));
-      $this->assertFileEntryExists($node_file, t('File entry exists after uploading a file (%filesize) under the max limit (%maxsize).', array('%filesize' => format_size($small_file->filesize), '%maxsize' => $max_filesize)));
+      $this->assertFileExists($node_file, t('File exists after uploading a file (%filesize) under the max limit (%maxsize).', array('%filesize' => format_size($small_file->getSize()), '%maxsize' => $max_filesize)));
+      $this->assertFileEntryExists($node_file, t('File entry exists after uploading a file (%filesize) under the max limit (%maxsize).', array('%filesize' => format_size($small_file->getSize()), '%maxsize' => $max_filesize)));
 
       // Check that uploading the large file fails (1M limit).
       $nid = $this->uploadNodeFile($large_file, $field_name, $type_name);
-      $error_message = t('The file is %filesize exceeding the maximum file size of %maxsize.', array('%filesize' => format_size($large_file->filesize), '%maxsize' => format_size($file_limit)));
-      $this->assertRaw($error_message, t('Node save failed when file (%filesize) exceeded the max upload size (%maxsize).', array('%filesize' => format_size($large_file->filesize), '%maxsize' => $max_filesize)));
+      $error_message = t('The file is %filesize exceeding the maximum file size of %maxsize.', array('%filesize' => format_size($large_file->getSize()), '%maxsize' => format_size($file_limit)));
+      $this->assertRaw($error_message, t('Node save failed when file (%filesize) exceeded the max upload size (%maxsize).', array('%filesize' => format_size($large_file->getSize()), '%maxsize' => $max_filesize)));
     }
 
     // Turn off the max filesize.
@@ -110,8 +110,8 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($large_file, $field_name, $type_name);
     $node = node_load($nid, TRUE);
     $node_file = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']);
-    $this->assertFileExists($node_file, t('File exists after uploading a file (%filesize) with no max limit.', array('%filesize' => format_size($large_file->filesize))));
-    $this->assertFileEntryExists($node_file, t('File entry exists after uploading a file (%filesize) with no max limit.', array('%filesize' => format_size($large_file->filesize))));
+    $this->assertFileExists($node_file, t('File exists after uploading a file (%filesize) with no max limit.', array('%filesize' => format_size($large_file->getSize()))));
+    $this->assertFileEntryExists($node_file, t('File entry exists after uploading a file (%filesize) with no max limit.', array('%filesize' => format_size($large_file->getSize()))));
   }
 
   /**
@@ -123,7 +123,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $this->createFileField($field_name, $type_name);
 
     $test_file = $this->getTestFile('image');
-    list(, $test_file_extension) = explode('.', $test_file->filename);
+    list(, $test_file_extension) = explode('.', $test_file->getFilename());
 
     // Disable extension checking.
     $this->updateFileField($field_name, $type_name, array('file_extensions' => ''));

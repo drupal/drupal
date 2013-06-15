@@ -197,8 +197,8 @@ function theme_picture_formatter($variables) {
   $item['style_name'] = $variables['image_style'];
   $item['breakpoints'] = $variables['breakpoints'];
 
-  if (!isset($item['path']) && isset($variables['uri'])) {
-    $item['path'] = $variables['uri'];
+  if (!isset($item['uri']) && isset($item['entity'])) {
+    $item['uri'] = $item['entity']->getFileUri();
   }
   $output = theme('picture', $item);
 

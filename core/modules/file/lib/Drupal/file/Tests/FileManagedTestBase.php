@@ -100,8 +100,8 @@ abstract class FileManagedTestBase extends FileTestBase {
    * @param $scheme
    *   Optional string indicating the stream scheme to use. Drupal core includes
    *   public, private, and temporary. The public wrapper is the default.
-   * @return
-   *   File object.
+   * @return \Drupal\file\FileInterface
+   *   File entity.
    */
   function createFile($filepath = NULL, $contents = NULL, $scheme = NULL) {
     $file = new stdClass();

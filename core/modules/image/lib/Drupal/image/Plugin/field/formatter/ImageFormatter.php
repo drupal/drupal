@@ -108,8 +108,9 @@ class ImageFormatter extends FormatterBase {
     $image_style_setting = $this->getSetting('image_style');
     foreach ($items as $delta => $item) {
       if (isset($link_file)) {
+        $image_uri = $item['entity']->getFileUri();
         $uri = array(
-          'path' => file_create_url($item['uri']),
+          'path' => file_create_url($image_uri),
           'options' => array(),
         );
       }

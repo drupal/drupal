@@ -42,8 +42,8 @@ class SaveUploadTest extends FileManagedTestBase {
     $image_files = $this->drupalGetTestFiles('image');
     $this->image = entity_create('file', (array) current($image_files));
 
-    list(, $this->image_extension) = explode('.', $this->image->filename);
-    $this->assertTrue(is_file($this->image->uri), t("The image file we're going to upload exists."));
+    list(, $this->image_extension) = explode('.', $this->image->getFilename());
+    $this->assertTrue(is_file($this->image->getFileUri()), t("The image file we're going to upload exists."));
 
     $this->phpfile = current($this->drupalGetTestFiles('php'));
     $this->assertTrue(is_file($this->phpfile->uri), t("The PHP file we're going to upload exists."));
@@ -53,7 +53,7 @@ class SaveUploadTest extends FileManagedTestBase {
     // Upload with replace to guarantee there's something there.
     $edit = array(
       'file_test_replace' => FILE_EXISTS_REPLACE,
-      'files[file_test_upload]' => drupal_realpath($this->image->uri),
+      'files[file_test_upload]' => drupal_realpath($this->image->getFileUri()),
     );
     $this->drupalPost('file-test/upload', $edit, t('Submit'));
     $this->assertResponse(200, t('Received a 200 response for posted test file.'));
@@ -74,7 +74,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $file1 = file_load($max_fid_after);
     $this->assertTrue($file1, t('Loaded the file.'));
     // MIME type of the uploaded image may be either image/jpeg or image/png.
-    $this->assertEqual(substr($file1->filemime, 0, 5), 'image', 'A MIME type was set.');
+    $this->assertEqual(substr($file1->getMimeType(), 0, 5), 'image', 'A MIME type was set.');
 
     // Reset the hook counters to get rid of the 'load' we just called.
     file_test_reset();
@@ -92,14 +92,14 @@ class SaveUploadTest extends FileManagedTestBase {
     $this->assertFileHooksCalled(array('validate', 'insert'));
 
     $file2 = file_load($max_fid_after);
-    $this->assertTrue($file2);
+    $this->assertTrue($file2, 'Loaded the file');
     // MIME type of the uploaded image may be either image/jpeg or image/png.
-    $this->assertEqual(substr($file2->filemime, 0, 5), 'image', 'A MIME type was set.');
+    $this->assertEqual(substr($file2->getMimeType(), 0, 5), 'image', 'A MIME type was set.');
 
     // Load both files using file_load_multiple().
-    $files = file_load_multiple(array($file1->fid, $file2->fid));
-    $this->assertTrue(isset($files[$file1->fid]), t('File was loaded successfully'));
-    $this->assertTrue(isset($files[$file2->fid]), t('File was loaded successfully'));
+    $files = file_load_multiple(array($file1->id(), $file2->id()));
+    $this->assertTrue(isset($files[$file1->id()]), t('File was loaded successfully'));
+    $this->assertTrue(isset($files[$file2->id()]), t('File was loaded successfully'));
 
     // Upload a third file to a subdirectory.
     $image3 = current($this->drupalGetTestFiles('image'));
@@ -126,7 +126,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $extensions = 'foo';
     $edit = array(
       'file_test_replace' => FILE_EXISTS_REPLACE,
-      'files[file_test_upload]' => drupal_realpath($this->image->uri),
+      'files[file_test_upload]' => drupal_realpath($this->image->getFileUri()),
       'extensions' => $extensions,
     );
 
@@ -146,7 +146,7 @@ class SaveUploadTest extends FileManagedTestBase {
     // Now tell file_save_upload() to allow the extension of our test image.
     $edit = array(
       'file_test_replace' => FILE_EXISTS_REPLACE,
-      'files[file_test_upload]' => drupal_realpath($this->image->uri),
+      'files[file_test_upload]' => drupal_realpath($this->image->getFileUri()),
       'extensions' => $extensions,
     );
 
@@ -164,7 +164,7 @@ class SaveUploadTest extends FileManagedTestBase {
     // Now tell file_save_upload() to allow any extension.
     $edit = array(
       'file_test_replace' => FILE_EXISTS_REPLACE,
-      'files[file_test_upload]' => drupal_realpath($this->image->uri),
+      'files[file_test_upload]' => drupal_realpath($this->image->getFileUri()),
       'allow_all_extensions' => TRUE,
     );
     $this->drupalPost('file-test/upload', $edit, t('Submit'));
@@ -225,18 +225,18 @@ class SaveUploadTest extends FileManagedTestBase {
   function testHandleFileMunge() {
     // Ensure insecure uploads are disabled for this test.
     config('system.file')->set('allow_insecure_uploads', 0)->save();
-    $this->image = file_move($this->image, $this->image->uri . '.foo.' . $this->image_extension);
+    $this->image = file_move($this->image, $this->image->getFileUri() . '.foo.' . $this->image_extension);
 
     // Reset the hook counters to get rid of the 'move' we just called.
     file_test_reset();
 
     $extensions = $this->image_extension;
     $edit = array(
-      'files[file_test_upload]' => drupal_realpath($this->image->uri),
+      'files[file_test_upload]' => drupal_realpath($this->image->getFileUri()),
       'extensions' => $extensions,
     );
 
-    $munged_filename = $this->image->filename;
+    $munged_filename = $this->image->getFilename();
     $munged_filename = substr($munged_filename, 0, strrpos($munged_filename, '.'));
     $munged_filename .= '_.' . $this->image_extension;
 
@@ -254,14 +254,14 @@ class SaveUploadTest extends FileManagedTestBase {
     file_test_reset();
 
     $edit = array(
-      'files[file_test_upload]' => drupal_realpath($this->image->uri),
+      'files[file_test_upload]' => drupal_realpath($this->image->getFileUri()),
       'allow_all_extensions' => TRUE,
     );
 
     $this->drupalPost('file-test/upload', $edit, t('Submit'));
     $this->assertResponse(200, t('Received a 200 response for posted test file.'));
     $this->assertNoRaw(t('For security reasons, your upload has been renamed'), t('Found no security message.'));
-    $this->assertRaw(t('File name is !filename', array('!filename' => $this->image->filename)), t('File was not munged when allowing any extension.'));
+    $this->assertRaw(t('File name is !filename', array('!filename' => $this->image->getFilename())), t('File was not munged when allowing any extension.'));
     $this->assertRaw(t('You WIN!'), t('Found the success message.'));
 
     // Check that the correct hooks were called.
@@ -274,7 +274,7 @@ class SaveUploadTest extends FileManagedTestBase {
   function testExistingRename() {
     $edit = array(
       'file_test_replace' => FILE_EXISTS_RENAME,
-      'files[file_test_upload]' => drupal_realpath($this->image->uri)
+      'files[file_test_upload]' => drupal_realpath($this->image->getFileUri())
     );
     $this->drupalPost('file-test/upload', $edit, t('Submit'));
     $this->assertResponse(200, t('Received a 200 response for posted test file.'));
@@ -290,7 +290,7 @@ class SaveUploadTest extends FileManagedTestBase {
   function testExistingReplace() {
     $edit = array(
       'file_test_replace' => FILE_EXISTS_REPLACE,
-      'files[file_test_upload]' => drupal_realpath($this->image->uri)
+      'files[file_test_upload]' => drupal_realpath($this->image->getFileUri())
     );
     $this->drupalPost('file-test/upload', $edit, t('Submit'));
     $this->assertResponse(200, t('Received a 200 response for posted test file.'));
@@ -306,7 +306,7 @@ class SaveUploadTest extends FileManagedTestBase {
   function testExistingError() {
     $edit = array(
       'file_test_replace' => FILE_EXISTS_ERROR,
-      'files[file_test_upload]' => drupal_realpath($this->image->uri)
+      'files[file_test_upload]' => drupal_realpath($this->image->getFileUri())
     );
     $this->drupalPost('file-test/upload', $edit, t('Submit'));
     $this->assertResponse(200, t('Received a 200 response for posted test file.'));

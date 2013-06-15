@@ -50,7 +50,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->assertFileExists($node_file, t('New file saved to disk on node creation.'));
 
       // Ensure the file can be downloaded.
-      $this->drupalGet(file_create_url($node_file->uri));
+      $this->drupalGet(file_create_url($node_file->getFileUri()));
       $this->assertResponse(200, t('Confirmed that the generated URL is correct by downloading the shipped file.'));
 
       // Ensure the edit page has a remove button instead of an upload button.
@@ -113,7 +113,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->drupalGet("node/add/$type_name");
       foreach (array($field_name2, $field_name) as $each_field_name) {
         for ($delta = 0; $delta < 3; $delta++) {
-          $edit = array('files[' . $each_field_name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_' . $delta . '][]' => drupal_realpath($test_file->uri));
+          $edit = array('files[' . $each_field_name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_' . $delta . '][]' => drupal_realpath($test_file->getFileUri()));
           // If the Upload button doesn't exist, drupalPost() will automatically
           // fail with an assertion message.
           $this->drupalPost(NULL, $edit, t('Upload'));
@@ -220,7 +220,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->assertFileExists($node_file, t('New file saved to disk on node creation.'));
 
     // Ensure the private file is available to the user who uploaded it.
-    $this->drupalGet(file_create_url($node_file->uri));
+    $this->drupalGet(file_create_url($node_file->getFileUri()));
     $this->assertResponse(200, t('Confirmed that the generated URL is correct by downloading the shipped file.'));
 
     // Ensure we can't change 'uri_scheme' field settings while there are some
@@ -274,7 +274,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     // Add a comment with a file.
     $text_file = $this->getTestFile('text');
     $edit = array(
-      'files[field_' . $name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_' . 0 . ']' => drupal_realpath($text_file->uri),
+      'files[field_' . $name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_' . 0 . ']' => drupal_realpath($text_file->getFileUri()),
       'comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]' => $comment_body = $this->randomName(),
     );
     $this->drupalPost(NULL, $edit, t('Save'));
@@ -290,14 +290,14 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $comment_file = $comment->{'field_' . $name}->entity;
     $this->assertFileExists($comment_file, t('New file saved to disk on node creation.'));
     // Test authenticated file download.
-    $url = file_create_url($comment_file->uri);
+    $url = file_create_url($comment_file->getFileUri());
     $this->assertNotEqual($url, NULL, t('Confirmed that the URL is valid'));
-    $this->drupalGet(file_create_url($comment_file->uri));
+    $this->drupalGet(file_create_url($comment_file->getFileUri()));
     $this->assertResponse(200, t('Confirmed that the generated URL is correct by downloading the shipped file.'));
 
     // Test anonymous file download.
     $this->drupalLogout();
-    $this->drupalGet(file_create_url($comment_file->uri));
+    $this->drupalGet(file_create_url($comment_file->getFileUri()));
     $this->assertResponse(403, t('Confirmed that access is denied for the file without the needed permission.'));
 
     // Unpublishes node.
@@ -306,7 +306,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Ensures normal user can no longer download the file.
     $this->drupalLogin($user);
-    $this->drupalGet(file_create_url($comment_file->uri));
+    $this->drupalGet(file_create_url($comment_file->getFileUri()));
     $this->assertResponse(403, t('Confirmed that access is denied for the file without the needed permission.'));
   }
 
@@ -330,7 +330,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $name = 'files[' . $field_name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_0]';
 
       // Upload file with incorrect extension, check for validation error.
-      $edit[$name] = drupal_realpath($test_file_image->uri);
+      $edit[$name] = drupal_realpath($test_file_image->getFileUri());
       switch ($type) {
         case 'nojs':
           $this->drupalPost(NULL, $edit, t('Upload'));
@@ -344,7 +344,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->assertRaw($error_message, t('Validation error when file with wrong extension uploaded (JSMode=%type).', array('%type' => $type)));
 
       // Upload file with correct extension, check that error message is removed.
-      $edit[$name] = drupal_realpath($test_file_text->uri);
+      $edit[$name] = drupal_realpath($test_file_text->getFileUri());
       switch ($type) {
         case 'nojs':
           $this->drupalPost(NULL, $edit, t('Upload'));

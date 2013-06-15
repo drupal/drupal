@@ -152,7 +152,7 @@ function file_test_set_return($op, $value) {
  */
 function file_test_file_load($files) {
   foreach ($files as $file) {
-    _file_test_log_call('load', array($file->fid));
+    _file_test_log_call('load', array($file->id()));
     // Assign a value on the object so that we can test that the $file is passed
     // by reference.
     $file->file_test['loaded'] = TRUE;
@@ -163,7 +163,7 @@ function file_test_file_load($files) {
  * Implements hook_file_validate().
  */
 function file_test_file_validate(File $file) {
-  _file_test_log_call('validate', array($file->fid));
+  _file_test_log_call('validate', array($file->id()));
   return _file_test_get_return('validate');
 }
 
@@ -179,35 +179,35 @@ function file_test_file_download($uri) {
  * Implements hook_file_insert().
  */
 function file_test_file_insert(File $file) {
-  _file_test_log_call('insert', array($file->fid));
+  _file_test_log_call('insert', array($file->id()));
 }
 
 /**
  * Implements hook_file_update().
  */
 function file_test_file_update(File $file) {
-  _file_test_log_call('update', array($file->fid));
+  _file_test_log_call('update', array($file->id()));
 }
 
 /**
  * Implements hook_file_copy().
  */
 function file_test_file_copy(File $file, $source) {
-  _file_test_log_call('copy', array($file->fid, $source->fid));
+  _file_test_log_call('copy', array($file->id(), $source->id()));
 }
 
 /**
  * Implements hook_file_move().
  */
 function file_test_file_move(File $file, File $source) {
-  _file_test_log_call('move', array($file->fid, $source->fid));
+  _file_test_log_call('move', array($file->id(), $source->id()));
 }
 
 /**
  * Implements hook_file_predelete().
  */
 function file_test_file_predelete(File $file) {
-  _file_test_log_call('delete', array($file->fid));
+  _file_test_log_call('delete', array($file->id()));
 }
 
 /**

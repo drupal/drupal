@@ -167,7 +167,7 @@ class PictureFormatter extends FormatterBase {
     foreach ($items as $delta => $item) {
       if (isset($link_file)) {
         $uri = array(
-          'path' => file_create_url($item['uri']),
+          'path' => file_create_url($item['entity']->getFileUri()),
           'options' => array(),
         );
       }

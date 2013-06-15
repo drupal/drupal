@@ -118,7 +118,7 @@ function file_load_multiple(array $fids = NULL, $reset = FALSE) {
  * @param $reset
  *   Whether to reset the internal file_load_multiple() cache.
  *
- * @return Drupal\file\File
+ * @return \Drupal\file\FileInterface
  *   A file entity or FALSE if the file was not found.
  *
  * @see hook_file_load()
@@ -175,34 +175,33 @@ function file_usage() {
  */
 function file_copy(File $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
   if (!file_valid_uri($destination)) {
-    if (($realpath = drupal_realpath($source->uri)) !== FALSE) {
-      watchdog('file', 'File %file (%realpath) could not be copied because the destination %destination is invalid. This is often caused by improper use of file_copy() or a missing stream wrapper.', array('%file' => $source->uri, '%realpath' => $realpath, '%destination' => $destination));
+    if (($realpath = drupal_realpath($source->getFileUri())) !== FALSE) {
+      watchdog('file', 'File %file (%realpath) could not be copied because the destination %destination is invalid. This is often caused by improper use of file_copy() or a missing stream wrapper.', array('%file' => $source->getFileUri(), '%realpath' => $realpath, '%destination' => $destination));
     }
     else {
-      watchdog('file', 'File %file could not be copied because the destination %destination is invalid. This is often caused by improper use of file_copy() or a missing stream wrapper.', array('%file' => $source->uri, '%destination' => $destination));
+      watchdog('file', 'File %file could not be copied because the destination %destination is invalid. This is often caused by improper use of file_copy() or a missing stream wrapper.', array('%file' => $source->getFileUri(), '%destination' => $destination));
     }
-    drupal_set_message(t('The specified file %file could not be copied because the destination is invalid. More information is available in the system log.', array('%file' => $source->uri)), 'error');
+    drupal_set_message(t('The specified file %file could not be copied because the destination is invalid. More information is available in the system log.', array('%file' => $source->getFileUri())), 'error');
     return FALSE;
   }
 
-  if ($uri = file_unmanaged_copy($source->uri, $destination, $replace)) {
-    $file = clone $source;
-    $file->fid = NULL;
-    $file->uri = $uri;
-    $file->filename = drupal_basename($uri);
+  if ($uri = file_unmanaged_copy($source->getFileUri(), $destination, $replace)) {
+    $file = $source->createDuplicate();
+    $file->setFileUri($uri);
+    $file->setFilename(drupal_basename($uri));
     // If we are replacing an existing file re-use its database record.
     if ($replace == FILE_EXISTS_REPLACE) {
       $existing_files = entity_load_multiple_by_properties('file', array('uri' => $uri));
       if (count($existing_files)) {
         $existing = reset($existing_files);
-        $file->fid = $existing->fid;
-        $file->filename = $existing->filename;
+        $file->fid = $existing->id();
+        $file->setFilename($existing->getFilename());
       }
     }
     // If we are renaming around an existing file (rather than a directory),
     // use its basename for the filename.
     elseif ($replace == FILE_EXISTS_RENAME && is_file($destination)) {
-      $file->filename = drupal_basename($destination);
+      $file->setFilename(drupal_basename($destination));
     }
 
     $file->save();
@@ -250,34 +249,34 @@ function file_copy(File $source, $destination = NULL, $replace = FILE_EXISTS_REN
  */
 function file_move(File $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
   if (!file_valid_uri($destination)) {
-    if (($realpath = drupal_realpath($source->uri)) !== FALSE) {
-      watchdog('file', 'File %file (%realpath) could not be moved because the destination %destination is invalid. This may be caused by improper use of file_move() or a missing stream wrapper.', array('%file' => $source->uri, '%realpath' => $realpath, '%destination' => $destination));
+    if (($realpath = drupal_realpath($source->getFileUri())) !== FALSE) {
+      watchdog('file', 'File %file (%realpath) could not be moved because the destination %destination is invalid. This may be caused by improper use of file_move() or a missing stream wrapper.', array('%file' => $source->getFileUri(), '%realpath' => $realpath, '%destination' => $destination));
     }
     else {
-      watchdog('file', 'File %file could not be moved because the destination %destination is invalid. This may be caused by improper use of file_move() or a missing stream wrapper.', array('%file' => $source->uri, '%destination' => $destination));
+      watchdog('file', 'File %file could not be moved because the destination %destination is invalid. This may be caused by improper use of file_move() or a missing stream wrapper.', array('%file' => $source->getFileUri(), '%destination' => $destination));
     }
-    drupal_set_message(t('The specified file %file could not be moved because the destination is invalid. More information is available in the system log.', array('%file' => $source->uri)), 'error');
+    drupal_set_message(t('The specified file %file could not be moved because the destination is invalid. More information is available in the system log.', array('%file' => $source->getFileUri())), 'error');
     return FALSE;
   }
 
-  if ($uri = file_unmanaged_move($source->uri, $destination, $replace)) {
+  if ($uri = file_unmanaged_move($source->getFileUri(), $destination, $replace)) {
     $delete_source = FALSE;
 
     $file = clone $source;
-    $file->uri = $uri;
+    $file->setFileUri($uri);
     // If we are replacing an existing file re-use its database record.
     if ($replace == FILE_EXISTS_REPLACE) {
       $existing_files = entity_load_multiple_by_properties('file', array('uri' => $uri));
       if (count($existing_files)) {
         $existing = reset($existing_files);
         $delete_source = TRUE;
-        $file->fid = $existing->fid;
+        $file->fid = $existing->id();
       }
     }
     // If we are renaming around an existing file (rather than a directory),
     // use its basename for the filename.
     elseif ($replace == FILE_EXISTS_RENAME && is_file($destination)) {
-      $file->filename = drupal_basename($destination);
+      $file->setFilename(drupal_basename($destination));
     }
 
     $file->save();
@@ -342,10 +341,10 @@ function file_validate(File $file, $validators = array()) {
 function file_validate_name_length(File $file) {
   $errors = array();
 
-  if (empty($file->filename)) {
+  if (!$file->getFilename()) {
     $errors[] = t("The file's name is empty. Please give a name to the file.");
   }
-  if (strlen($file->filename) > 240) {
+  if (strlen($file->getFilename()) > 240) {
     $errors[] = t("The file's name exceeds the 240 characters limit. Please rename the file and try again.");
   }
   return $errors;
@@ -369,7 +368,7 @@ function file_validate_extensions(File $file, $extensions) {
   $errors = array();
 
   $regex = '/\.(' . preg_replace('/ +/', '|', preg_quote($extensions)) . ')$/i';
-  if (!preg_match($regex, $file->filename)) {
+  if (!preg_match($regex, $file->getFilename())) {
     $errors[] = t('Only files with the following extensions are allowed: %files-allowed.', array('%files-allowed' => $extensions));
   }
   return $errors;
@@ -397,13 +396,13 @@ function file_validate_size(File $file, $file_limit = 0, $user_limit = 0) {
   global $user;
   $errors = array();
 
-  if ($file_limit && $file->filesize > $file_limit) {
-    $errors[] = t('The file is %filesize exceeding the maximum file size of %maxsize.', array('%filesize' => format_size($file->filesize), '%maxsize' => format_size($file_limit)));
+  if ($file_limit && $file->getSize() > $file_limit) {
+    $errors[] = t('The file is %filesize exceeding the maximum file size of %maxsize.', array('%filesize' => format_size($file->getSize()), '%maxsize' => format_size($file_limit)));
   }
 
   // Save a query by only calling spaceUsed() when a limit is provided.
-  if ($user_limit && (Drupal::entityManager()->getStorageController('file')->spaceUsed($user->uid) + $file->filesize) > $user_limit) {
-    $errors[] = t('The file is %filesize which would exceed your disk quota of %quota.', array('%filesize' => format_size($file->filesize), '%quota' => format_size($user_limit)));
+  if ($user_limit && (Drupal::entityManager()->getStorageController('file')->spaceUsed($user->uid) + $file->getSize()) > $user_limit) {
+    $errors[] = t('The file is %filesize which would exceed your disk quota of %quota.', array('%filesize' => format_size($file->getSize()), '%quota' => format_size($user_limit)));
   }
 
   return $errors;
@@ -423,7 +422,7 @@ function file_validate_size(File $file, $file_limit = 0, $user_limit = 0) {
 function file_validate_is_image(File $file) {
   $errors = array();
 
-  $info = image_get_info($file->uri);
+  $info = image_get_info($file->getFileUri());
   if (!$info || empty($info['extension'])) {
     $errors[] = t('Only JPEG, PNG and GIF images are allowed.');
   }
@@ -458,13 +457,13 @@ function file_validate_image_resolution(File $file, $maximum_dimensions = 0, $mi
   $errors = array();
 
   // Check first that the file is an image.
-  if ($info = image_get_info($file->uri)) {
+  if ($info = image_get_info($file->getFileUri())) {
     if ($maximum_dimensions) {
       // Check that it is smaller than the given dimensions.
       list($width, $height) = explode('x', $maximum_dimensions);
       if ($info['width'] > $width || $info['height'] > $height) {
         // Try to resize the image to fit the dimensions.
-        if ($image = image_load($file->uri)) {
+        if ($image = image_load($file->getFileUri())) {
           image_scale($image, $width, $height);
           image_save($image);
           $file->filesize = $image->info['file_size'];
@@ -506,7 +505,7 @@ function file_validate_image_resolution(File $file, $maximum_dimensions = 0, $mi
  *       unique.
  *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
  *
- * @return Drupal\file\File
+ * @return \Drupal\file\FileInterface
  *   A file entity, or FALSE on error.
  *
  * @see file_unmanaged_save_data()
@@ -535,14 +534,14 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
       $existing_files = entity_load_multiple_by_properties('file', array('uri' => $uri));
       if (count($existing_files)) {
         $existing = reset($existing_files);
-        $file->fid = $existing->fid;
-        $file->filename = $existing->filename;
+        $file->fid = $existing->id();
+        $file->setFilename($existing->getFilename());
       }
     }
     // If we are renaming around an existing file (rather than a directory),
     // use its basename for the filename.
     elseif ($replace == FILE_EXISTS_RENAME && is_file($destination)) {
-      $file->filename = drupal_basename($destination);
+      $file->setFilename(drupal_basename($destination));
     }
 
     $file->save();
@@ -562,12 +561,12 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
  *   \Symfony\Component\HttpFoundation\StreamedResponse.
  */
 function file_get_content_headers(File $file) {
-  $name = mime_header_encode($file->filename);
-  $type = mime_header_encode($file->filemime);
+  $name = mime_header_encode($file->getFilename());
+  $type = mime_header_encode($file->getMimeType());
 
   return array(
     'Content-Type' => $type,
-    'Content-Length' => $file->filesize,
+    'Content-Length' => $file->getSize(),
     'Cache-Control' => 'private',
   );
 }
@@ -619,7 +618,7 @@ function file_file_download($uri, $field_type = 'file') {
     foreach ($files as $item) {
       // Since some database servers sometimes use a case-insensitive comparison
       // by default, double check that the filename is an exact match.
-      if ($item->uri === $uri) {
+      if ($item->getFileUri() === $uri) {
         $file = $item;
         break;
       }
@@ -637,7 +636,7 @@ function file_file_download($uri, $field_type = 'file') {
   // temporary files where the host entity has not yet been saved (for example,
   // an image preview on a node/add form) in which case, allow download by the
   // file's owner.
-  if (empty($references) && ($file->status == FILE_STATUS_PERMANENT || $file->uid != $user->uid)) {
+  if (empty($references) && ($file->isPermanent() || $file->getOwner()->id() != $user->uid)) {
     return;
   }
 
@@ -709,15 +708,15 @@ function file_cron() {
     if ($file = file_load($row->fid)) {
       $references = file_usage()->listUsage($file);
       if (empty($references)) {
-        if (file_exists($file->uri)) {
+        if (file_exists($file->getFileUri())) {
           $file->delete();
         }
         else {
-          watchdog('file system', 'Could not delete temporary file "%path" during garbage collection', array('%path' => $file->uri), WATCHDOG_ERROR);
+          watchdog('file system', 'Could not delete temporary file "%path" during garbage collection', array('%path' => $file->getFileUri()), WATCHDOG_ERROR);
         }
       }
       else {
-        watchdog('file system', 'Did not delete temporary file "%path" during garbage collection because it is in use by the following modules: %modules.', array('%path' => $file->uri, '%modules' => implode(', ', array_keys($references))), WATCHDOG_INFO);
+        watchdog('file system', 'Did not delete temporary file "%path" during garbage collection because it is in use by the following modules: %modules.', array('%path' => $file->getFileUri(), '%modules' => implode(', ', array_keys($references))), WATCHDOG_INFO);
       }
     }
   }
@@ -1033,7 +1032,7 @@ function file_managed_file_value(&$element, $input = FALSE, $form_state = NULL) 
         $fids = array();
         foreach ($input['fids'] as $key => $fid) {
           if ($file = file_load($fid)) {
-            $fids[] = $file->fid;
+            $fids[] = $file->id();
           }
         }
       }
@@ -1056,7 +1055,7 @@ function file_managed_file_value(&$element, $input = FALSE, $form_state = NULL) 
       $fids = array();
       foreach ($default_fids as $key => $fid) {
         if ($file = file_load($fid)) {
-          $fids[] = $file->fid;
+          $fids[] = $file->id();
         }
       }
     }
@@ -1081,7 +1080,7 @@ function file_managed_file_validate(&$element, &$form_state) {
     $fids = $element['fids']['#value'];
     foreach ($fids as $fid) {
       if ($file = file_load($fid)) {
-        if ($file->status == FILE_STATUS_PERMANENT) {
+        if ($file->isPermanent()) {
           $references = file_usage()->listUsage($file);
           if (empty($references)) {
             form_error($element, t('The file used in the !name field may not be referenced.', array('!name' => $element['#title'])));
@@ -1145,8 +1144,8 @@ function file_managed_file_submit($form, &$form_state) {
       // If it's a temporary file we can safely remove it immediately, otherwise
       // it's up to the implementing module to remove usages of files to have them
       // removed.
-      if ($element['#files'][$fid] && $element['#files'][$fid]->status == 0) {
-        file_delete($element['#files'][$fid]->fid);
+      if ($element['#files'][$fid] && $element['#files'][$fid]->isTemporary()) {
+        $element['#files'][$fid]->delete();
       }
     }
     // Update both $form_state['values'] and $form_state['input'] to reflect
@@ -1204,7 +1203,7 @@ function file_managed_file_save_upload($element) {
 
     // Value callback expects FIDs to be keys.
     $files = array_filter($files);
-    $fids = array_map(function($file) { return $file->fid; }, $files);
+    $fids = array_map(function($file) { return $file->id(); }, $files);
 
     return empty($files) ? array() : array_combine($fids, $files);
   }
@@ -1294,7 +1293,7 @@ function theme_file_link($variables) {
   $file = $variables['file'];
   $icon_directory = $variables['icon_directory'];
 
-  $url = file_create_url($file->uri);
+  $url = file_create_url($file->getFileUri());
   // theme_file_icon() requires a file entity, make sure it gets one.
   $icon = theme('file_icon', array('file' => $file, 'icon_directory' => $icon_directory));
 
@@ -1302,17 +1301,17 @@ function theme_file_link($variables) {
   // http://microformats.org/wiki/file-format-examples
   $options = array(
     'attributes' => array(
-      'type' => $file->filemime . '; length=' . $file->filesize,
+      'type' => $file->getMimeType() . '; length=' . $file->getSize(),
     ),
   );
 
   // Use the description as the link text if available.
   if (empty($variables['description'])) {
-    $link_text = $file->filename;
+    $link_text = $file->getFilename();
   }
   else {
     $link_text = $variables['description'];
-    $options['attributes']['title'] = check_plain($file->filename);
+    $options['attributes']['title'] = check_plain($file->getFilename());
   }
 
   return '<span class="file">' . $icon . ' ' . l($link_text, $url, $options) . '</span>';
@@ -1334,7 +1333,7 @@ function theme_file_icon($variables) {
   $file = $variables['file'];
   $icon_directory = $variables['icon_directory'];
 
-  $mime = check_plain($file->filemime);
+  $mime = check_plain($file->getMimeType());
   $icon_url = file_icon_url($file, $icon_directory);
   return '<img class="file-icon" alt="" title="' . $mime . '" src="' . $icon_url . '" />';
 }
@@ -1378,7 +1377,7 @@ function file_icon_path(File $file, $icon_directory = NULL) {
   }
 
   // If there's an icon matching the exact mimetype, go for it.
-  $dashed_mime = strtr($file->filemime, array('/' => '-'));
+  $dashed_mime = strtr($file->getMimeType(), array('/' => '-'));
   $icon_path = $icon_directory . '/' . $dashed_mime . '.png';
   if (file_exists($icon_path)) {
     return $icon_path;
@@ -1393,7 +1392,7 @@ function file_icon_path(File $file, $icon_directory = NULL) {
 
   // Use generic icons for each category that provides such icons.
   foreach (array('audio', 'image', 'text', 'video') as $category) {
-    if (strpos($file->filemime, $category . '/') === 0) {
+    if (strpos($file->getMimeType(), $category . '/') === 0) {
       $icon_path = $icon_directory . '/' . $category . '-x-generic.png';
       if (file_exists($icon_path)) {
         return $icon_path;
@@ -1421,7 +1420,7 @@ function file_icon_path(File $file, $icon_directory = NULL) {
  *   The generic icon MIME package expected for this file.
  */
 function file_icon_map(File $file) {
-  switch ($file->filemime) {
+  switch ($file->getMimeType()) {
     // Word document types.
     case 'application/msword':
     case 'application/vnd.ms-word.document.macroEnabled.12':
@@ -1570,8 +1569,8 @@ function file_get_file_references(File $file, $field = NULL, $age = FIELD_LOAD_R
   $field_columns = &drupal_static(__FUNCTION__ . ':field_columns', array());
 
   // Fill the static cache, disregard $field and $field_type for now.
-  if (!isset($references[$file->fid][$age])) {
-    $references[$file->fid][$age] = array();
+  if (!isset($references[$file->id()][$age])) {
+    $references[$file->id()][$age] = array();
     $usage_list = file_usage()->listUsage($file);
     $file_usage_list = isset($usage_list['file']) ? $usage_list['file'] : array();
     foreach ($file_usage_list as $entity_type => $entity_ids) {
@@ -1609,20 +1608,20 @@ function file_get_file_references(File $file, $field = NULL, $age = FIELD_LOAD_R
           // revision.
           if (!$match && ($field_items = field_get_items($entity, $field_name))) {
             foreach ($field_items as $item) {
-              if ($file->fid == $item[$field_column]) {
+              if ($file->id() == $item[$field_column]) {
                 $match = TRUE;
                 break;
               }
             }
           }
           if ($match) {
-            $references[$file->fid][$age][$field_name][$entity_type][$entity->id()] = $entity;
+            $references[$file->id()][$age][$field_name][$entity_type][$entity->id()] = $entity;
           }
         }
       }
     }
   }
-  $return = $references[$file->fid][$age];
+  $return = $references[$file->id()][$age];
   // Filter the static cache down to the requested entries. The usual static
   // cache is very small so this will be very fast.
   if ($field || $field_type) {

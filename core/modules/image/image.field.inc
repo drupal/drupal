@@ -243,10 +243,12 @@ function image_field_prepare_view($entity_type, $entities, $field, $instances, $
 
       // Add the default image if one is found.
       if ($fid && ($file = file_load($fid[0]))) {
-        $items[$id][0] = (array) $file + array(
+        $items[$id][0] = array(
           'is_default' => TRUE,
           'alt' => '',
           'title' => '',
+          'entity' => $file,
+          'fid' => $file->id(),
         );
       }
     }
@@ -261,7 +263,7 @@ function image_field_presave(EntityInterface $entity, $field, $instance, $langco
   // Determine the dimensions if necessary.
   foreach ($items as &$item) {
     if (!isset($item['width']) || !isset($item['height'])) {
-      $info = image_get_info(file_load($item['fid'])->uri);
+      $info = image_get_info(file_load($item['fid'])->getFileUri());
 
       if (is_array($info)) {
         $item['width'] = $info['width'];
@@ -323,7 +325,7 @@ function image_field_widget_process($element, &$form_state, $form) {
     $file = reset($element['#files']);
     $variables = array(
       'style_name' => $element['#preview_image_style'],
-      'uri' => $file->uri,
+      'uri' => $file->getFileUri(),
     );
 
     // Determine image dimensions.
@@ -332,7 +334,7 @@ function image_field_widget_process($element, &$form_state, $form) {
       $variables['height'] = $element['#value']['height'];
     }
     else {
-      $info = image_get_info($file->uri);
+      $info = image_get_info($file->getFileUri());
 
       if (is_array($info)) {
         $variables['width'] = $info['width'];
@@ -440,7 +442,7 @@ function theme_image_widget($variables) {
   $output .= '<div class="image-widget-data">';
   if (!empty($element['fids']['#value'])) {
     $file = reset($element['#files']);
-    $element['file_' . $file->fid]['filename']['#markup'] .= ' <span class="file-size">(' . format_size($file->filesize) . ')</span> ';
+    $element['file_' . $file->id()]['filename']['#markup'] .= ' <span class="file-size">(' . format_size($file->getSize()) . ')</span> ';
   }
   $output .= drupal_render_children($element);
   $output .= '</div>';
@@ -466,6 +468,10 @@ function theme_image_formatter($variables) {
   // Do not output an empty 'title' attribute.
   if (isset($item['title']) && drupal_strlen($item['title']) == 0) {
     unset($item['title']);
+  }
+
+  if (isset($item['entity']) && empty($item['uri'])) {
+    $item['uri'] = $item['entity']->getFileUri();
   }
 
   if ($variables['image_style']) {

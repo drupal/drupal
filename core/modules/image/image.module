@@ -335,7 +335,7 @@ function image_file_download($uri) {
  */
 function image_file_move(File $file, File $source) {
   // Delete any image derivatives at the original image path.
-  image_path_flush($source->uri);
+  image_path_flush($source->getFileUri());
 }
 
 /**
@@ -343,7 +343,7 @@ function image_file_move(File $file, File $source) {
  */
 function image_file_predelete(File $file) {
   // Delete any image derivatives of this image.
-  image_path_flush($file->uri);
+  image_path_flush($file->getFileUri());
 }
 
 /**
@@ -391,7 +391,7 @@ function image_field_update_field($field, $prior_field, $has_data) {
   }
 
   // If the upload destination changed, then move the file.
-  if ($file_new && (file_uri_scheme($file_new->uri) != $field['settings']['uri_scheme'])) {
+  if ($file_new && (file_uri_scheme($file_new->getFileUri()) != $field['settings']['uri_scheme'])) {
     $directory = $field['settings']['uri_scheme'] . '://default_images/';
     file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     file_move($file_new, $directory . $file_new->filename);
@@ -458,7 +458,7 @@ function image_field_update_instance($instance, $prior_instance) {
   }
 
   // If the upload destination changed, then move the file.
-  if ($file_new && (file_uri_scheme($file_new->uri) != $field['settings']['uri_scheme'])) {
+  if ($file_new && (file_uri_scheme($file_new->getFileUri()) != $field['settings']['uri_scheme'])) {
     $directory = $field['settings']['uri_scheme'] . '://default_images/';
     file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     file_move($file_new, $directory . $file_new->filename);

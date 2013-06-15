@@ -33,7 +33,7 @@ class UrlPlainFormatter extends FormatterBase {
     $elements = array();
 
     foreach ($items as $delta => $item) {
-      $elements[$delta] = array('#markup' => empty($item['uri']) ? '' : file_create_url($item['uri']));
+      $elements[$delta] = array('#markup' => empty($item['entity']) ? '' : file_create_url($item['entity']->getFileUri()));
     }
 
     return $elements;

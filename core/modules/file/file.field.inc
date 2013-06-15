@@ -211,7 +211,7 @@ function file_field_prepare_view($entity_type, $entities, $field, $instances, $l
         $items[$id][$delta] = NULL;
       }
       else {
-        $items[$id][$delta] = array_merge($item, (array) $files[$item['fid']]);
+        $items[$id][$delta]['entity'] = $files[$item['fid']];
       }
     }
   }
@@ -419,7 +419,7 @@ function file_field_widget_multiple_count_validate($element, &$form_state, $form
     $removed_names = array();
     foreach ($removed_files as $fid) {
       $file = file_load($fid);
-      $removed_names[] = $file->filename;
+      $removed_names[] = $file->getFilename();
     }
     drupal_set_message(
       t(
@@ -654,7 +654,7 @@ function theme_file_widget($variables) {
   if (!empty($element['fids']['#value'])) {
     // Add the file size after the file name.
     $file = reset($element['#files']);
-    $element['file_' . $file->fid]['filename']['#markup'] .= ' <span class="file-size">(' . format_size($file->filesize) . ')</span> ';
+    $element['file_' . $file->id()]['filename']['#markup'] .= ' <span class="file-size">(' . format_size($file->getSize()) . ')</span> ';
   }
   $output .= drupal_render_children($element);
   $output .= '</div>';
@@ -861,8 +861,8 @@ function theme_file_formatter_table($variables) {
   $rows = array();
   foreach ($variables['items'] as $delta => $item) {
     $rows[] = array(
-      theme('file_link', array('file' => (object) $item)),
-      format_size($item['filesize']),
+      theme('file_link', array('file' => $item['entity'])),
+      format_size($item['entity']->getSize()),
     );
   }
 

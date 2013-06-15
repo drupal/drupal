@@ -104,9 +104,9 @@ class FileTestForm implements FormInterface {
     $file = file_save_upload('file_test_upload', $validators, $destination, 0, $form_state['values']['file_test_replace']);
     if ($file) {
       $form_state['values']['file_test_upload'] = $file;
-      drupal_set_message(t('File @filepath was uploaded.', array('@filepath' => $file->uri)));
-      drupal_set_message(t('File name is @filename.', array('@filename' => $file->filename)));
-      drupal_set_message(t('File MIME type is @mimetype.', array('@mimetype' => $file->filemime)));
+      drupal_set_message(t('File @filepath was uploaded.', array('@filepath' => $file->getFileUri())));
+      drupal_set_message(t('File name is @filename.', array('@filename' => $file->getFilename())));
+      drupal_set_message(t('File MIME type is @mimetype.', array('@mimetype' => $file->getMimeType())));
       drupal_set_message(t('You WIN!'));
     }
     elseif ($file === FALSE) {

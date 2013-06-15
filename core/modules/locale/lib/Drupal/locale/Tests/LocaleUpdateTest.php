@@ -147,8 +147,8 @@ EOF;
       'timestamp' => $timestamp,
       'status' => FILE_STATUS_PERMANENT,
     ));
-    file_put_contents($file->uri, $po_header . $text);
-    touch(drupal_realpath($file->uri), $timestamp);
+    file_put_contents($file->getFileUri(), $po_header . $text);
+    touch(drupal_realpath($file->getFileUri()), $timestamp);
     $file->save();
   }
 

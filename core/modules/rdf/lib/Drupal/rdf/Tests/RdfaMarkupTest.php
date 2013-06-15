@@ -156,8 +156,8 @@ class RdfaMarkupTest extends WebTestBase {
     // Prepares filenames for lookup in RDF graph.
     $node = node_load($node->nid);
     $node_uri = url('node/' . $node->nid, array('absolute' => TRUE));
-    $file_uri = file_create_url(file_load($node->file_test['und'][0]['fid'])->uri);
-    $image_uri = image_style_url('medium', file_load($node->field_image['und'][0]['fid'])->uri);
+    $file_uri = file_create_url(file_load($node->file_test['und'][0]['fid'])->getFileUri());
+    $image_uri = image_style_url('medium', file_load($node->field_image['und'][0]['fid'])->getFileUri());
     $base_uri = url('<front>', array('absolute' => TRUE));
 
     // Edits the node to add tags.

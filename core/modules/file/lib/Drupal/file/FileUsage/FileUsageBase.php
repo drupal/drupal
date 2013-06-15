@@ -19,8 +19,8 @@ abstract class FileUsageBase implements FileUsageInterface {
    */
   public function add(File $file, $module, $type, $id, $count = 1) {
     // Make sure that a used file is permament.
-    if ($file->status != FILE_STATUS_PERMANENT) {
-      $file->status = FILE_STATUS_PERMANENT;
+    if (!$file->isPermanent()) {
+      $file->setPermanent();
       $file->save();
     }
   }
@@ -33,7 +33,7 @@ abstract class FileUsageBase implements FileUsageInterface {
     // which result in a delete through system_cron().
     $usage = file_usage()->listUsage($file);
     if (empty($usage)) {
-      $file->status = 0;
+      $file->setTemporary();
       $file->save();
     }
   }

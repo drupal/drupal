@@ -1156,22 +1156,22 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
     if (!empty($extensions)) {
       // Munge the filename to protect against possible malicious extension
       // hiding within an unknown file type (ie: filename.html.foo).
-      $file->filename = file_munge_filename($file->filename, $extensions);
+      $file->setFilename(file_munge_filename($file->getFilename(), $extensions));
     }
 
     // Rename potentially executable files, to help prevent exploits (i.e. will
     // rename filename.php.foo and filename.php to filename.php.foo.txt and
     // filename.php.txt, respectively). Don't rename if 'allow_insecure_uploads'
     // evaluates to TRUE.
-    if (!config('system.file')->get('allow_insecure_uploads') && preg_match('/\.(php|pl|py|cgi|asp|js)(\.|$)/i', $file->filename) && (substr($file->filename, -4) != '.txt')) {
-      $file->filemime = 'text/plain';
-      $file->uri .= '.txt';
-      $file->filename .= '.txt';
+    if (!config('system.file')->get('allow_insecure_uploads') && preg_match('/\.(php|pl|py|cgi|asp|js)(\.|$)/i', $file->getFilename()) && (substr($file->getFilename(), -4) != '.txt')) {
+      $file->setMimeType('text/plain');
+      $file->setFileUri($file->getFileUri() . '.txt');
+      $file->setFilename($file->getFilename() . '.txt');
       // The .txt extension may not be in the allowed list of extensions. We have
       // to add it here or else the file upload will fail.
       if (!empty($extensions)) {
         $validators['file_validate_extensions'][0] .= ' txt';
-        drupal_set_message(t('For security reasons, your upload has been renamed to %filename.', array('%filename' => $file->filename)));
+        drupal_set_message(t('For security reasons, your upload has been renamed to %filename.', array('%filename' => $file->getFilename())));
       }
     }
 
@@ -1193,7 +1193,7 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
     if (substr($destination, -1) != '/') {
       $destination .= '/';
     }
-    $file->destination = file_destination($destination . $file->filename, $replace);
+    $file->destination = file_destination($destination . $file->getFilename(), $replace);
     // If file_destination() returns FALSE then $replace === FILE_EXISTS_ERROR and
     // there's an existing file so we need to bail.
     if ($file->destination === FALSE) {
@@ -1210,7 +1210,7 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
 
     // Check for errors.
     if (!empty($errors)) {
-      $message = t('The specified file %name could not be uploaded.', array('%name' => $file->filename));
+      $message = t('The specified file %name could not be uploaded.', array('%name' => $file->getFilename()));
       if (count($errors) > 1) {
         $message .= theme('item_list', array('items' => $errors));
       }
@@ -1226,7 +1226,7 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
     // directory. This overcomes open_basedir restrictions for future file
     // operations.
     $file->uri = $file->destination;
-    if (!drupal_move_uploaded_file($uploaded_files['files']['tmp_name'][$form_field_name][$i], $file->uri)) {
+    if (!drupal_move_uploaded_file($uploaded_files['files']['tmp_name'][$form_field_name][$i], $file->getFileUri())) {
       form_set_error($form_field_name, t('File upload error. Could not move uploaded file.'));
       watchdog('file', 'Upload error. Could not move uploaded file %file to destination %destination.', array('%file' => $file->filename, '%destination' => $file->uri));
       $files[$i] = FALSE;
@@ -1234,14 +1234,14 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
     }
 
     // Set the permissions on the new file.
-    drupal_chmod($file->uri);
+    drupal_chmod($file->getFileUri());
 
     // If we are replacing an existing file re-use its database record.
     if ($replace == FILE_EXISTS_REPLACE) {
-      $existing_files = entity_load_multiple_by_properties('file', array('uri' => $file->uri));
+      $existing_files = entity_load_multiple_by_properties('file', array('uri' => $file->getFileUri()));
       if (count($existing_files)) {
         $existing = reset($existing_files);
-        $file->fid = $existing->fid;
+        $file->fid = $existing->id();
       }
     }
 
