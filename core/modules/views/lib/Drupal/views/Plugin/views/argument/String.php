@@ -157,13 +157,13 @@ class String extends ArgumentPluginBase {
     if (empty($this->options['glossary'])) {
       // Add the field.
       $this->base_alias = $this->query->addField($this->tableAlias, $this->realField);
-      $this->query->set_count_field($this->tableAlias, $this->realField);
+      $this->query->setCountField($this->tableAlias, $this->realField);
     }
     else {
       // Add the field.
       $formula = $this->getFormula();
       $this->base_alias = $this->query->addField(NULL, $formula, $this->field . '_truncated');
-      $this->query->set_count_field(NULL, $formula, $this->field, $this->field . '_truncated');
+      $this->query->setCountField(NULL, $formula, $this->field, $this->field . '_truncated');
     }
 
     $this->summaryNameField();

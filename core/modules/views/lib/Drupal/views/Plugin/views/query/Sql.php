@@ -160,7 +160,7 @@ class Sql extends QueryPluginBase {
   /**
    * Set what field the query will count() on for paging.
    */
-  function set_count_field($table, $field, $alias = NULL) {
+  public function setCountField($table, $field, $alias = NULL) {
     if (empty($alias)) {
       $alias = $table . '_' . $field;
     }

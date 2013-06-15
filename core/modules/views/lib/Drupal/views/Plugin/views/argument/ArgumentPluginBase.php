@@ -798,7 +798,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * - addGroupBy: group on this field in order to create summaries.
    * - addField: add a 'num_nodes' field for the count. Usually it will
    *   be a count on $view->base_field
-   * - set_count_field: Reset the count field so we get the right paging.
+   * - setCountField: Reset the count field so we get the right paging.
    *
    * @return
    *   The alias used to get the number of records (count) for this entry.
@@ -859,7 +859,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     $this->query->addGroupBy($this->name_alias);
 
     if ($count_field) {
-      $this->query->set_count_field($this->tableAlias, $this->realField);
+      $this->query->setCountField($this->tableAlias, $this->realField);
     }
 
     $this->count_alias = $count_alias;
