@@ -25,7 +25,7 @@ class LinkReply extends Link {
 
   function render_link($data, $values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('reply');
-    $comment = $this->get_entity($values);
+    $comment = $this->getEntity($values);
 
     $this->options['alter']['make_link'] = TRUE;
     $this->options['alter']['path'] = "comment/reply/{$comment->entity_type->value}/{$comment->entity_id->value}/{$comment->field_name->value}/{$comment->id()}";

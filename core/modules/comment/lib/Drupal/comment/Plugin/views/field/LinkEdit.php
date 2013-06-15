@@ -10,7 +10,7 @@ namespace Drupal\comment\Plugin\views\field;
 use Drupal\Component\Annotation\PluginID;
 
 /**
- * Field handler to present a link node edit.
+ * Field handler to present a link to edit a comment.
  *
  * @ingroup views_field_handlers
  *
@@ -40,7 +40,7 @@ class LinkEdit extends Link {
   function render_link($data, $values) {
     parent::render_link($data, $values);
     // ensure user has access to edit this comment.
-    $comment = $this->get_entity($values);
+    $comment = $this->getValue($values);
     if (!$comment->access('update')) {
       return;
     }

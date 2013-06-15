@@ -10,7 +10,7 @@ namespace Drupal\comment\Plugin\views\field;
 use Drupal\Component\Annotation\PluginID;
 
 /**
- * Field handler to present a link to delete a node.
+ * Field handler to present a link to delete a comment.
  *
  * @ingroup views_field_handlers
  *
