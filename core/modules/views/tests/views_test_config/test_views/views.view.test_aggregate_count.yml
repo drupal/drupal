@@ -1,4 +1,4 @@
-base_table: node
+base_table: entity_test
 core: '8'
 description: ''
 status: '1'
@@ -8,21 +8,21 @@ display:
       access:
         type: none
       arguments:
-        type:
+        name:
           default_action: summary
           default_argument_type: fixed
-          field: type
-          id: type
+          field: name
+          id: name
           summary:
             format: default_summary
-          table: node_field_data
-          plugin_id: node_type
+          table: entity_test
+          plugin_id: string
       cache:
         type: none
       exposed_form:
         type: basic
       fields:
-        nid:
+        id:
           alter:
             alter_text: '0'
             ellipsis: '1'
@@ -32,12 +32,12 @@ display:
             trim: '0'
             word_boundary: '1'
           empty_zero: '0'
-          field: title
+          field: id
           hide_empty: '0'
-          id: nid
+          id: id
           link_to_node: '0'
-          table: node
-          plugin_id: node
+          table: entity_test
+          plugin_id: numeric
       group_by: '1'
       pager:
         type: some

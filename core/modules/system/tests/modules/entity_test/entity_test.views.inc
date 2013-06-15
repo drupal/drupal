@@ -74,64 +74,7 @@ function entity_test_views_data() {
     );
   }
 
-  $data['entity_test_property_data']['table']['join']['entity_test'] = array(
-    'left_field' => 'id',
-    'field' => 'id',
-  );
-
-  $data['entity_test_property_data']['id'] = array(
-    'title' => t('ID'),
-    'help' => t('The {entity_test}.id of the test entity.'),
-    'argument' => array(
-      'id' => 'numeric',
-    ),
-    'field' => array(
-      'id' => 'numeric',
-    ),
-    'filter' => array(
-      'id' => 'numeric',
-    ),
-    'sort' => array(
-      'id' => 'standard',
-    ),
-  );
-
-  if (module_exists('langcode')) {
-    $data['entity_test_property_data']['langcode'] = array(
-      'title' => t('Language'),
-      'help' => t('The {language}.langcode of this variant of this test entity.'),
-      'field' => array(
-        'id' => 'language',
-      ),
-      'filter' => array(
-        'id' => 'language',
-      ),
-      'argument' => array(
-        'id' => 'language',
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-    );
-    $data['entity_test_property_data']['default_langcode'] = array(
-      'title' => t('Default langcode'),
-      'help' => t('Boolean indicating whether the current variant is in the original entity language.'),
-      'field' => array(
-        'id' => 'boolean',
-      ),
-      'filter' => array(
-        'id' => 'boolean',
-      ),
-      'argument' => array(
-        'id' => 'numeric',
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-    );
-  }
-
-  $data['entity_test_property_data']['name'] = array(
+  $data['entity_test']['name'] = array(
     'title' => t('Name'),
     'help' => t('The name of the test entity.'),
     'field' => array(
@@ -148,7 +91,7 @@ function entity_test_views_data() {
     ),
   );
 
-  $data['entity_test_property_data']['user_id'] = array(
+  $data['entity_test']['user_id'] = array(
     'title' => t('Name'),
     'help' => t('The name of the test entity.'),
     'field' => array(
