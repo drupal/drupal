@@ -133,7 +133,7 @@ class ManyToOneHelper {
     }
 
     if (empty($options['add_table']) || empty($view->many_to_one_tables[$field])) {
-      return $query->ensure_table($this->handler->table, $this->handler->relationship, $join);
+      return $query->ensureTable($this->handler->table, $this->handler->relationship, $join);
     }
     else {
       if (!empty($view->many_to_one_tables[$field])) {
@@ -169,7 +169,7 @@ class ManyToOneHelper {
           if (isset($join)) {
             $join->type = 'INNER';
           }
-          $this->handler->tableAlias = $this->handler->query->ensure_table($this->handler->table, $this->handler->relationship, $join);
+          $this->handler->tableAlias = $this->handler->query->ensureTable($this->handler->table, $this->handler->relationship, $join);
           $this->handler->view->many_to_one_tables[$field] = $this->handler->value;
         }
         else {

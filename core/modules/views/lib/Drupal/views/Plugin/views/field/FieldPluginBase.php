@@ -135,7 +135,7 @@ abstract class FieldPluginBase extends HandlerBase {
       foreach ($fields as $identifier => $info) {
         if (is_array($info)) {
           if (isset($info['table'])) {
-            $table_alias = $this->query->ensure_table($info['table'], $this->relationship);
+            $table_alias = $this->query->ensureTable($info['table'], $this->relationship);
           }
           else {
             $table_alias = $this->tableAlias;

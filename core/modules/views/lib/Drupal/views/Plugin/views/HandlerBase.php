@@ -527,7 +527,7 @@ abstract class HandlerBase extends PluginBase {
    */
   public function ensureMyTable() {
     if (!isset($this->tableAlias)) {
-      $this->tableAlias = $this->query->ensure_table($this->table, $this->relationship);
+      $this->tableAlias = $this->query->ensureTable($this->table, $this->relationship);
     }
     return $this->tableAlias;
   }

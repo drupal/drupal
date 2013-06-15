@@ -832,7 +832,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
         }
       }
       else {
-        $this->name_table_alias = $this->query->ensure_table($this->name_table, $this->relationship);
+        $this->name_table_alias = $this->query->ensureTable($this->name_table, $this->relationship);
       }
     }
     else {

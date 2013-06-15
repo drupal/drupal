@@ -79,7 +79,7 @@ class QueryTest extends QueryPluginBase {
   }
 
 
-  public function ensure_table($table, $relationship = NULL, JoinPluginBase $join = NULL) {
+  public function ensureTable($table, $relationship = NULL, JoinPluginBase $join = NULL) {
     // There is no concept of joins.
   }
 

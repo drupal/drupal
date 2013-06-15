@@ -365,7 +365,7 @@ class Sql extends QueryPluginBase {
    * Add a table to the query without ensuring the path.
    *
    * This is a pretty internal function to Views and addTable() or
-   * ensure_table() should be used instead of this one, unless you are
+   * ensureTable() should be used instead of this one, unless you are
    * absolutely sure this is what you want.
    *
    * @param $table
@@ -493,7 +493,7 @@ class Sql extends QueryPluginBase {
    *   The alias used to refer to this specific table, or NULL if the table
    *   cannot be ensured.
    */
-  function ensure_table($table, $relationship = NULL, JoinPluginBase $join = NULL) {
+  public function ensureTable($table, $relationship = NULL, JoinPluginBase $join = NULL) {
     // ensure a relationship
     if (empty($relationship)) {
       $relationship = $this->view->storage->get('base_table');
@@ -645,7 +645,7 @@ class Sql extends QueryPluginBase {
       if ($join->leftTable != $this->relationships[$relationship]['table'] &&
         $join->leftTable != $this->relationships[$relationship]['base'] &&
         !isset($this->tables[$relationship][$join->leftTable]['alias'])) {
-        $this->ensure_table($join->leftTable, $relationship);
+        $this->ensureTable($join->leftTable, $relationship);
       }
 
       // First, if this is our link point/anchor table, just use the relationship
@@ -690,7 +690,7 @@ class Sql extends QueryPluginBase {
    * Get the information associated with a table.
    *
    * If you need the alias of a table with a particular relationship, use
-   * ensure_table().
+   * ensureTable().
    */
   public function getTableInfo($table) {
     if (!empty($this->table_queue[$table])) {
@@ -708,12 +708,12 @@ class Sql extends QueryPluginBase {
 
   /**
    * Add a field to the query table, possibly with an alias. This will
-   * automatically call ensure_table to make sure the required table
+   * automatically call ensureTable to make sure the required table
    * exists, *unless* $table is unset.
    *
    * @param $table
    *   The table this field is attached to. If NULL, it is assumed this will
-   *   be a formula; otherwise, ensure_table is used to make sure the
+   *   be a formula; otherwise, ensureTable is used to make sure the
    *   table exists.
    * @param $field
    *   The name of the field to add. This may be a real field or a formula.
@@ -735,7 +735,7 @@ class Sql extends QueryPluginBase {
     }
 
     if ($table && empty($this->table_queue[$table])) {
-      $this->ensure_table($table);
+      $this->ensureTable($table);
     }
 
     if (!$alias && $table) {
@@ -937,7 +937,7 @@ class Sql extends QueryPluginBase {
     // Only ensure the table if it's not the special random key.
     // @todo: Maybe it would make sense to just add an addOrderByRand or something similar.
     if ($table && $table != 'rand') {
-      $this->ensure_table($table);
+      $this->ensureTable($table);
     }
 
     // Only fill out this aliasing if there is a table;

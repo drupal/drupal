@@ -40,7 +40,7 @@ class NcsLastCommentName extends FieldPluginBase {
     $join = drupal_container()->get('plugin.manager.views.join')->createInstance('standard', $definition);
 
     // ncs_user alias so this can work with the sort handler, below.
-    $this->user_table = $this->query->ensure_table('ncs_users', $this->relationship, $join);
+    $this->user_table = $this->query->ensureTable('ncs_users', $this->relationship, $join);
 
     $this->field_alias = $this->query->addField(NULL, "COALESCE($this->user_table.name, $this->tableAlias.$this->field)", $this->tableAlias . '_' . $this->field);
 

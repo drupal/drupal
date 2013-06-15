@@ -71,12 +71,12 @@ class HistoryUserTimestamp extends FilterPluginBase {
 
     $this->ensureMyTable();
     $field = "$this->tableAlias.$this->realField";
-    $node = $this->query->ensure_table('node_field_data', $this->relationship);
+    $node = $this->query->ensureTable('node_field_data', $this->relationship);
 
     $clause = '';
     $clause2 = '';
     if (module_exists('comment')) {
-      $ncs = $this->query->ensure_table('node_comment_statistics', $this->relationship);
+      $ncs = $this->query->ensureTable('node_comment_statistics', $this->relationship);
       $clause = ("OR $ncs.last_comment_timestamp > (***CURRENT_TIME*** - $limit)");
       $clause2 = "OR $field < $ncs.last_comment_timestamp";
     }
