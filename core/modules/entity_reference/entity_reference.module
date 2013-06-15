@@ -107,7 +107,7 @@ function entity_reference_field_is_empty($item, $field) {
  */
 function entity_reference_field_presave(EntityInterface $entity, $field, $instance, $langcode, &$items) {
   foreach ($items as $delta => $item) {
-    if (empty($item['target_id']) && !empty($item['entity']) &&$item['entity']->isNew()) {
+    if (empty($item['target_id']) && !empty($item['entity']) && $item['entity']->isNew()) {
       $item['entity']->save();
       $items[$delta]['target_id'] = $item['entity']->id();
     }

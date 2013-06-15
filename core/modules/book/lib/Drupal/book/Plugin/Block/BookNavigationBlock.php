@@ -107,8 +107,9 @@ class BookNavigationBlock extends BlockBase {
         $data = array_shift($tree);
         $below = menu_tree_output($data['below']);
         if (!empty($below)) {
+          $book_title_link = array('#theme' => 'book_title_link', '#link' => $data['link']);
           return array(
-            '#title' => theme('book_title_link', array('link' => $data['link'])),
+            '#title' => drupal_render($book_title_link),
             $below,
           );
         }

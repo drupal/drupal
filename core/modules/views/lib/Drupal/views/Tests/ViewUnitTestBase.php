@@ -222,6 +222,7 @@ abstract class ViewUnitTestBase extends DrupalUnitTestBase {
     $view->setDisplay();
     $view->preExecute($args);
     $view->execute();
+    $this->verbose('<pre>Executed view: ' . ((string) $view->build_info['query']) . '</pre>');
   }
 
   /**

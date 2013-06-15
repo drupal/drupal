@@ -381,4 +381,14 @@ class Drupal {
     return static::$container->get('string_translation');
   }
 
+  /**
+   * Returns the language manager service.
+   *
+   * @return \Drupal\Core\Language\LanguageManager
+   *   The language manager.
+   */
+  public static function languageManager() {
+    return static::$container->get('language_manager');
+  }
+
 }

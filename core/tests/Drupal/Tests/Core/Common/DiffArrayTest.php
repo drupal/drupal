@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Common\DiffArrayUnitTest.
+ * Contains \Drupal\Tests\Core\Common\DiffArrayTest.
  */
 
-namespace Drupal\system\Tests\Common;
+namespace Drupal\Tests\Core\Common;
 
 use Drupal\Component\Utility\DiffArray;
-use Drupal\simpletest\UnitTestBase;
+use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests the DiffArray helper class.
  */
-class DiffArrayUnitTest extends UnitTestBase {
+class DiffArrayTest extends UnitTestCase {
 
   /**
    * Array to use for testing.
@@ -77,7 +77,7 @@ class DiffArrayUnitTest extends UnitTestBase {
       'new' => 'new',
     );
 
-    $this->assertIdentical(DiffArray::diffAssocRecursive($this->array1, $this->array2), $expected);
+    $this->assertSame(DiffArray::diffAssocRecursive($this->array1, $this->array2), $expected);
   }
 
 }

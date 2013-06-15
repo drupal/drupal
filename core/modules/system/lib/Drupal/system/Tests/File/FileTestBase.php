@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\File;
 
+use Drupal\file\FileInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -29,45 +30,45 @@ abstract class FileTestBase extends WebTestBase {
    * Check that two files have the same values for all fields other than the
    * timestamp.
    *
-   * @param $before
+   * @param \Drupal\file\FileInterface $before
    *   File object to compare.
-   * @param $after
+   * @param \Drupal\file\FileInterface $after
    *   File object to compare.
    */
-  function assertFileUnchanged($before, $after) {
-    $this->assertEqual($before->fid, $after->fid, t('File id is the same: %file1 == %file2.', array('%file1' => $before->fid, '%file2' => $after->fid)), 'File unchanged');
-    $this->assertEqual($before->uid, $after->uid, t('File owner is the same: %file1 == %file2.', array('%file1' => $before->uid, '%file2' => $after->uid)), 'File unchanged');
-    $this->assertEqual($before->filename, $after->filename, t('File name is the same: %file1 == %file2.', array('%file1' => $before->filename, '%file2' => $after->filename)), 'File unchanged');
-    $this->assertEqual($before->uri, $after->uri, t('File path is the same: %file1 == %file2.', array('%file1' => $before->uri, '%file2' => $after->uri)), 'File unchanged');
-    $this->assertEqual($before->filemime, $after->filemime, t('File MIME type is the same: %file1 == %file2.', array('%file1' => $before->filemime, '%file2' => $after->filemime)), 'File unchanged');
-    $this->assertEqual($before->filesize, $after->filesize, t('File size is the same: %file1 == %file2.', array('%file1' => $before->filesize, '%file2' => $after->filesize)), 'File unchanged');
-    $this->assertEqual($before->status, $after->status, t('File status is the same: %file1 == %file2.', array('%file1' => $before->status, '%file2' => $after->status)), 'File unchanged');
+  function assertFileUnchanged(FileInterface $before, FileInterface $after) {
+    $this->assertEqual($before->id(), $after->id(), t('File id is the same: %file1 == %file2.', array('%file1' => $before->id(), '%file2' => $after->id())), 'File unchanged');
+    $this->assertEqual($before->getOwner()->id(), $after->getOwner()->id(), t('File owner is the same: %file1 == %file2.', array('%file1' => $before->getOwner()->id(), '%file2' => $after->getOwner()->id())), 'File unchanged');
+    $this->assertEqual($before->getFilename(), $after->getFilename(), t('File name is the same: %file1 == %file2.', array('%file1' => $before->getFilename(), '%file2' => $after->getFilename())), 'File unchanged');
+    $this->assertEqual($before->getFileUri(), $after->getFileUri(), t('File path is the same: %file1 == %file2.', array('%file1' => $before->getFileUri(), '%file2' => $after->getFileUri())), 'File unchanged');
+    $this->assertEqual($before->getMimeType(), $after->getMimeType(), t('File MIME type is the same: %file1 == %file2.', array('%file1' => $before->getMimeType(), '%file2' => $after->getMimeType())), 'File unchanged');
+    $this->assertEqual($before->getSize(), $after->getSize(), t('File size is the same: %file1 == %file2.', array('%file1' => $before->getSize(), '%file2' => $after->getSize())), 'File unchanged');
+    $this->assertEqual($before->isPermanent(), $after->isPermanent(), t('File status is the same: %file1 == %file2.', array('%file1' => $before->isPermanent(), '%file2' => $after->isPermanent())), 'File unchanged');
   }
 
   /**
    * Check that two files are not the same by comparing the fid and filepath.
    *
-   * @param $file1
+   * @param \Drupal\file\FileInterface $file1
    *   File object to compare.
-   * @param $file2
+   * @param \Drupal\file\FileInterface $file2
    *   File object to compare.
    */
-  function assertDifferentFile($file1, $file2) {
-    $this->assertNotEqual($file1->fid, $file2->fid, t('Files have different ids: %file1 != %file2.', array('%file1' => $file1->fid, '%file2' => $file2->fid)), 'Different file');
-    $this->assertNotEqual($file1->uri, $file2->uri, t('Files have different paths: %file1 != %file2.', array('%file1' => $file1->uri, '%file2' => $file2->uri)), 'Different file');
+  function assertDifferentFile(FileInterface $file1, FileInterface $file2) {
+    $this->assertNotEqual($file1->id(), $file2->id(), t('Files have different ids: %file1 != %file2.', array('%file1' => $file1->id(), '%file2' => $file2->id())), 'Different file');
+    $this->assertNotEqual($file1->getFileUri(), $file2->getFileUri(), t('Files have different paths: %file1 != %file2.', array('%file1' => $file1->getFileUri(), '%file2' => $file2->getFileUri())), 'Different file');
   }
 
   /**
    * Check that two files are the same by comparing the fid and filepath.
    *
-   * @param $file1
+   * @param \Drupal\file\FileInterface $file1
    *   File object to compare.
-   * @param $file2
+   * @param \Drupal\file\FileInterface $file2
    *   File object to compare.
    */
-  function assertSameFile($file1, $file2) {
-    $this->assertEqual($file1->fid, $file2->fid, t('Files have the same ids: %file1 == %file2.', array('%file1' => $file1->fid, '%file2-fid' => $file2->fid)), 'Same file');
-    $this->assertEqual($file1->uri, $file2->uri, t('Files have the same path: %file1 == %file2.', array('%file1' => $file1->uri, '%file2' => $file2->uri)), 'Same file');
+  function assertSameFile(FileInterface $file1, FileInterface $file2) {
+    $this->assertEqual($file1->id(), $file2->id(), t('Files have the same ids: %file1 == %file2.', array('%file1' => $file1->id(), '%file2-fid' => $file2->id())), 'Same file');
+    $this->assertEqual($file1->getFileUri(), $file2->getFileUri(), t('Files have the same path: %file1 == %file2.', array('%file1' => $file1->getFileUri(), '%file2' => $file2->getFileUri())), 'Same file');
   }
 
   /**

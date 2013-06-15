@@ -10,6 +10,7 @@ use Drupal\locale\Gettext;
 use Drupal\locale\PoDatabaseReader;
 use Drupal\Core\Language\Language;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Drupal\file\FileInterface;
 
 /**
  * Form constructor for the translation import screen.
@@ -685,6 +686,14 @@ function locale_translate_file_create($filepath) {
  *   Modified file object.
  */
 function locale_translate_file_attach_properties($file, $options = array()) {
+  // If $file is a file entity, convert it to a stdClass.
+  if ($file instanceof FileInterface) {
+    $file = (object) array(
+      'filename' => $file->getFilename(),
+      'uri' => $file->getFileUri(),
+    );
+  }
+
   // Extract project, verion and language code from the file name. Supported:
   // {project}-{version}.{langcode}.po, {prefix}.{langcode}.po or {langcode}.po
   preg_match('!

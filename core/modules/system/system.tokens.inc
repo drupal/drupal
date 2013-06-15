@@ -221,49 +221,48 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
       switch ($name) {
         // Basic keys and values.
         case 'fid':
-          $replacements[$original] = $file->fid;
+          $replacements[$original] = $file->id();
           break;
 
         // Essential file data
         case 'name':
-          $replacements[$original] = $sanitize ? check_plain($file->filename) : $file->filename;
+          $replacements[$original] = $sanitize ? check_plain($file->getFilename()) : $file->getFilename();
           break;
 
         case 'path':
-          $replacements[$original] = $sanitize ? check_plain($file->uri) : $file->uri;
+          $replacements[$original] = $sanitize ? check_plain($file->getFileUri()) : $file->getFileUri();
           break;
 
         case 'mime':
-          $replacements[$original] = $sanitize ? check_plain($file->filemime) : $file->filemime;
+          $replacements[$original] = $sanitize ? check_plain($file->getMimeType()) : $file->getMimeType();
           break;
 
         case 'size':
-          $replacements[$original] = format_size($file->filesize);
+          $replacements[$original] = format_size($file->getSize());
           break;
 
         case 'url':
-          $replacements[$original] = $sanitize ? check_plain(file_create_url($file->uri)) : file_create_url($file->uri);
+          $replacements[$original] = $sanitize ? check_plain(file_create_url($file->getFileUri())) : file_create_url($file->getFileUri());
           break;
 
         // These tokens are default variations on the chained tokens handled below.
         case 'timestamp':
-          $replacements[$original] = format_date($file->timestamp, 'medium', '', NULL, $langcode);
+          $replacements[$original] = format_date($file->getChangedTime(), 'medium', '', NULL, $langcode);
           break;
 
         case 'owner':
-          $account = user_load($file->uid);
-          $name = user_format_name($account);
+          $name = $file->getOwner()->label();
           $replacements[$original] = $sanitize ? check_plain($name) : $name;
           break;
       }
     }
 
     if ($date_tokens = $token_service->findWithPrefix($tokens, 'timestamp')) {
-      $replacements += $token_service->generate('date', $date_tokens, array('date' => $file->timestamp), $options);
+      $replacements += $token_service->generate('date', $date_tokens, array('date' => $file->getChangedTime()), $options);
     }
 
-    if (($owner_tokens = $token_service->findWithPrefix($tokens, 'owner')) && $account = user_load($file->uid)) {
-      $replacements += $token_service->generate('user', $owner_tokens, array('user' => $account), $options);
+    if (($owner_tokens = $token_service->findWithPrefix($tokens, 'owner')) && $file->getOwner()) {
+      $replacements += $token_service->generate('user', $owner_tokens, array('user' => $file->getOwner()), $options);
     }
   }
 

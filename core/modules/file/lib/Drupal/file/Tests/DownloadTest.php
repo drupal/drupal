@@ -33,10 +33,10 @@ class DownloadTest extends FileManagedTestBase {
   function testPublicFileTransfer() {
     // Test generating an URL to a created file.
     $file = $this->createFile();
-    $url = file_create_url($file->uri);
+    $url = file_create_url($file->getFileUri());
     // URLs can't contain characters outside the ASCII set so $filename has to be
     // encoded.
-    $filename = $GLOBALS['base_url'] . '/' . file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath() . '/' . rawurlencode($file->filename);
+    $filename = $GLOBALS['base_url'] . '/' . file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath() . '/' . rawurlencode($file->getFilename());
     $this->assertEqual($filename, $url, t('Correctly generated a URL for a created file.'));
     $this->drupalHead($url);
     $this->assertResponse(200, t('Confirmed that the generated URL is correct by downloading the created file.'));
@@ -59,7 +59,7 @@ class DownloadTest extends FileManagedTestBase {
     // Create a file.
     $contents = $this->randomName(8);
     $file = $this->createFile(NULL, $contents, 'private');
-    $url  = file_create_url($file->uri);
+    $url  = file_create_url($file->getFileUri());
 
     // Set file_test access header to allow the download.
     file_test_set_return('download', array('x-foo' => 'Bar'));
@@ -140,7 +140,7 @@ class DownloadTest extends FileManagedTestBase {
     file_prepare_directory($directory_uri, FILE_CREATE_DIRECTORY);
     $file = $this->createFile($filepath, NULL, $scheme);
 
-    $url = file_create_url($file->uri);
+    $url = file_create_url($file->getFileUri());
     $this->assertEqual($url, $expected_url, t('Generated URL matches expected URL.'));
 
     if ($scheme == 'private') {
@@ -151,7 +151,7 @@ class DownloadTest extends FileManagedTestBase {
 
     $this->drupalGet($url);
     if ($this->assertResponse(200) == 'pass') {
-      $this->assertRaw(file_get_contents($file->uri), t('Contents of the file are correct.'));
+      $this->assertRaw(file_get_contents($file->getFileUri()), t('Contents of the file are correct.'));
     }
 
     $file->delete();

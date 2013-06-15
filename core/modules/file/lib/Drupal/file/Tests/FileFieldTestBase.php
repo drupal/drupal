@@ -8,6 +8,7 @@
 namespace Drupal\file\Tests;
 
 use Drupal\Core\Language\Language;
+use Drupal\file\FileInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -162,7 +163,7 @@ abstract class FileFieldTestBase extends WebTestBase {
     if ($field['cardinality'] != 1) {
       $name .= '[]';
     }
-    $edit[$name] = drupal_realpath($file->uri);
+    $edit[$name] = drupal_realpath($file->getFileUri());
     $this->drupalPost("node/$nid/edit", $edit, t('Save and keep published'));
 
     return $nid;
@@ -187,7 +188,7 @@ abstract class FileFieldTestBase extends WebTestBase {
    */
   function replaceNodeFile($file, $field_name, $nid, $new_revision = TRUE) {
     $edit = array(
-      'files[' . $field_name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_0]' => drupal_realpath($file->uri),
+      'files[' . $field_name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_0]' => drupal_realpath($file->getFileUri()),
       'revision' => (string) (int) $new_revision,
     );
 
@@ -199,8 +200,8 @@ abstract class FileFieldTestBase extends WebTestBase {
    * Asserts that a file exists physically on disk.
    */
   function assertFileExists($file, $message = NULL) {
-    $message = isset($message) ? $message : t('File %file exists on the disk.', array('%file' => $file->uri));
-    $this->assertTrue(is_file($file->uri), $message);
+    $message = isset($message) ? $message : t('File %file exists on the disk.', array('%file' => $file->getFileUri()));
+    $this->assertTrue(is_file($file->getFileUri()), $message);
   }
 
   /**
@@ -208,17 +209,17 @@ abstract class FileFieldTestBase extends WebTestBase {
    */
   function assertFileEntryExists($file, $message = NULL) {
     $this->container->get('plugin.manager.entity')->getStorageController('file')->resetCache();
-    $db_file = file_load($file->fid);
-    $message = isset($message) ? $message : t('File %file exists in database at the correct path.', array('%file' => $file->uri));
-    $this->assertEqual($db_file->uri, $file->uri, $message);
+    $db_file = file_load($file->id());
+    $message = isset($message) ? $message : t('File %file exists in database at the correct path.', array('%file' => $file->getFileUri()));
+    $this->assertEqual($db_file->getFileUri(), $file->getFileUri(), $message);
   }
 
   /**
    * Asserts that a file does not exist on disk.
    */
   function assertFileNotExists($file, $message = NULL) {
-    $message = isset($message) ? $message : t('File %file exists on the disk.', array('%file' => $file->uri));
-    $this->assertFalse(is_file($file->uri), $message);
+    $message = isset($message) ? $message : t('File %file exists on the disk.', array('%file' => $file->getFileUri()));
+    $this->assertFalse(is_file($file->getFileUri()), $message);
   }
 
   /**
@@ -226,15 +227,15 @@ abstract class FileFieldTestBase extends WebTestBase {
    */
   function assertFileEntryNotExists($file, $message) {
     $this->container->get('plugin.manager.entity')->getStorageController('file')->resetCache();
-    $message = isset($message) ? $message : t('File %file exists in database at the correct path.', array('%file' => $file->uri));
-    $this->assertFalse(file_load($file->fid), $message);
+    $message = isset($message) ? $message : t('File %file exists in database at the correct path.', array('%file' => $file->getFileUri()));
+    $this->assertFalse(file_load($file->id()), $message);
   }
 
   /**
    * Asserts that a file's status is set to permanent in the database.
    */
-  function assertFileIsPermanent($file, $message = NULL) {
-    $message = isset($message) ? $message : t('File %file is permanent.', array('%file' => $file->uri));
-    $this->assertTrue($file->status == FILE_STATUS_PERMANENT, $message);
+  function assertFileIsPermanent(FileInterface $file, $message = NULL) {
+    $message = isset($message) ? $message : t('File %file is permanent.', array('%file' => $file->getFileUri()));
+    $this->assertTrue($file->isPermanent(), $message);
   }
 }

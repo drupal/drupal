@@ -26,7 +26,7 @@ class UsageTest extends FileManagedTestBase {
     $file = $this->createFile();
     db_insert('file_usage')
       ->fields(array(
-        'fid' => $file->fid,
+        'fid' => $file->id(),
         'module' => 'testing',
         'type' => 'foo',
         'id' => 1,
@@ -35,7 +35,7 @@ class UsageTest extends FileManagedTestBase {
       ->execute();
     db_insert('file_usage')
       ->fields(array(
-        'fid' => $file->fid,
+        'fid' => $file->id(),
         'module' => 'testing',
         'type' => 'bar',
         'id' => 2,
@@ -65,7 +65,7 @@ class UsageTest extends FileManagedTestBase {
 
     $usage = db_select('file_usage', 'f')
       ->fields('f')
-      ->condition('f.fid', $file->fid)
+      ->condition('f.fid', $file->id())
       ->execute()
       ->fetchAllAssoc('id');
     $this->assertEqual(count($usage), 2, t('Created two records'));
@@ -84,7 +84,7 @@ class UsageTest extends FileManagedTestBase {
     $file = $this->createFile();
     db_insert('file_usage')
       ->fields(array(
-        'fid' => $file->fid,
+        'fid' => $file->id(),
         'module' => 'testing',
         'type' => 'bar',
         'id' => 2,
@@ -96,7 +96,7 @@ class UsageTest extends FileManagedTestBase {
     file_usage()->delete($file, 'testing', 'bar', 2);
     $count = db_select('file_usage', 'f')
       ->fields('f', array('count'))
-      ->condition('f.fid', $file->fid)
+      ->condition('f.fid', $file->id())
       ->execute()
       ->fetchField();
     $this->assertEqual(2, $count, t('The count was decremented correctly.'));
@@ -105,7 +105,7 @@ class UsageTest extends FileManagedTestBase {
     file_usage()->delete($file, 'testing', 'bar', 2, 2);
     $count = db_select('file_usage', 'f')
       ->fields('f', array('count'))
-      ->condition('f.fid', $file->fid)
+      ->condition('f.fid', $file->id())
       ->execute()
       ->fetchField();
     $this->assertIdentical(FALSE, $count, t('The count was removed entirely when empty.'));
@@ -114,7 +114,7 @@ class UsageTest extends FileManagedTestBase {
     file_usage()->delete($file, 'testing', 'bar', 2);
     $count = db_select('file_usage', 'f')
       ->fields('f', array('count'))
-      ->condition('f.fid', $file->fid)
+      ->condition('f.fid', $file->id())
       ->execute()
       ->fetchField();
     $this->assertIdentical(FALSE, $count, t('Decrementing non-exist record complete.'));
@@ -134,35 +134,35 @@ class UsageTest extends FileManagedTestBase {
         'status' => 0,
         'timestamp' => 1,
       ))
-      ->condition('fid', $temp_old->fid)
+      ->condition('fid', $temp_old->id())
       ->execute();
-    $this->assertTrue(file_exists($temp_old->uri), t('Old temp file was created correctly.'));
+    $this->assertTrue(file_exists($temp_old->getFileUri()), t('Old temp file was created correctly.'));
 
     // Temporary file that is less than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
     $temp_new = file_save_data('');
     db_update('file_managed')
       ->fields(array('status' => 0))
-      ->condition('fid', $temp_new->fid)
+      ->condition('fid', $temp_new->id())
       ->execute();
-    $this->assertTrue(file_exists($temp_new->uri), t('New temp file was created correctly.'));
+    $this->assertTrue(file_exists($temp_new->getFileUri()), t('New temp file was created correctly.'));
 
     // Permanent file that is older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
     $perm_old = file_save_data('');
     db_update('file_managed')
       ->fields(array('timestamp' => 1))
-      ->condition('fid', $temp_old->fid)
+      ->condition('fid', $temp_old->id())
       ->execute();
-    $this->assertTrue(file_exists($perm_old->uri), t('Old permanent file was created correctly.'));
+    $this->assertTrue(file_exists($perm_old->getFileUri()), t('Old permanent file was created correctly.'));
 
     // Permanent file that is newer than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
     $perm_new = file_save_data('');
-    $this->assertTrue(file_exists($perm_new->uri), t('New permanent file was created correctly.'));
+    $this->assertTrue(file_exists($perm_new->getFileUri()), t('New permanent file was created correctly.'));
 
     // Run cron and then ensure that only the old, temp file was deleted.
     $this->cronRun();
-    $this->assertFalse(file_exists($temp_old->uri), t('Old temp file was correctly removed.'));
-    $this->assertTrue(file_exists($temp_new->uri), t('New temp file was correctly ignored.'));
-    $this->assertTrue(file_exists($perm_old->uri), t('Old permanent file was correctly ignored.'));
-    $this->assertTrue(file_exists($perm_new->uri), t('New permanent file was correctly ignored.'));
+    $this->assertFalse(file_exists($temp_old->getFileUri()), t('Old temp file was correctly removed.'));
+    $this->assertTrue(file_exists($temp_new->getFileUri()), t('New temp file was correctly ignored.'));
+    $this->assertTrue(file_exists($perm_old->getFileUri()), t('Old permanent file was correctly ignored.'));
+    $this->assertTrue(file_exists($perm_new->getFileUri()), t('New permanent file was correctly ignored.'));
   }
 }

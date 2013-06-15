@@ -358,8 +358,9 @@ function menu_parent_options(array $menus, MenuLink $menu_link = NULL, $type = N
  */
 function menu_parent_options_js() {
   $available_menus = array();
-  if (isset($_POST['menus']) && count($_POST['menus'])) {
-    foreach ($_POST['menus'] as $menu) {
+  $menus = Drupal::request()->request->get('menus');
+  if (count($menus)) {
+    foreach ($menus as $menu) {
       $available_menus[$menu] = $menu;
     }
   }

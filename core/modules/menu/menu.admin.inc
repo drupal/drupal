@@ -288,8 +288,13 @@ function theme_menu_overview_form($variables) {
       // Change the parent field to a hidden. This allows any value but hides the field.
       $element['plid']['#type'] = 'hidden';
 
+      $indent = array(
+        '#theme' => 'indentation',
+        '#size' => $element['#item']['depth'] - 1,
+      );
+
       $row = array();
-      $row[] = theme('indentation', array('size' => $element['#item']['depth'] - 1)) . drupal_render($element['title']);
+      $row[] = drupal_render($indent) . drupal_render($element['title']);
       $row[] = array('data' => drupal_render($element['hidden']), 'class' => array('checkbox', 'menu-enabled'));
       $row[] = drupal_render($element['weight']) . drupal_render($element['plid']) . drupal_render($element['mlid']);
       $row[] = drupal_render($element['operations']);
@@ -303,8 +308,18 @@ function theme_menu_overview_form($variables) {
   if (empty($rows)) {
     $rows[] = array(array('data' => $form['#empty_text'], 'colspan' => '7'));
   }
+
+  $table = array(
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+    '#attributes' => array(
+      'id' => 'menu-overview',
+    ),
+  );
+
   $output .= drupal_render($form['inline_actions']);
-  $output .= theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'menu-overview')));
+  $output .= drupal_render($table);
   $output .= drupal_render_children($form);
   return $output;
 }

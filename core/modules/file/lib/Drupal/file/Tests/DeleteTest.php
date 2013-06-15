@@ -26,11 +26,11 @@ class DeleteTest extends FileManagedTestBase {
     $file = $this->createFile();
 
     // Check that deletion removes the file and database record.
-    $this->assertTrue(is_file($file->uri), t('File exists.'));
+    $this->assertTrue(is_file($file->getFileUri()), t('File exists.'));
     $file->delete();
     $this->assertFileHooksCalled(array('delete'));
-    $this->assertFalse(file_exists($file->uri), t('Test file has actually been deleted.'));
-    $this->assertFalse(file_load($file->fid), t('File was removed from the database.'));
+    $this->assertFalse(file_exists($file->getFileUri()), t('Test file has actually been deleted.'));
+    $this->assertFalse(file_load($file->id()), t('File was removed from the database.'));
   }
 
   /**
@@ -44,8 +44,8 @@ class DeleteTest extends FileManagedTestBase {
     file_usage()->delete($file, 'testing', 'test', 1);
     $usage = file_usage()->listUsage($file);
     $this->assertEqual($usage['testing']['test'], array(1 => 1), t('Test file is still in use.'));
-    $this->assertTrue(file_exists($file->uri), t('File still exists on the disk.'));
-    $this->assertTrue(file_load($file->fid), t('File still exists in the database.'));
+    $this->assertTrue(file_exists($file->getFileUri()), t('File still exists on the disk.'));
+    $this->assertTrue(file_load($file->id()), t('File still exists in the database.'));
 
     // Clear out the call to hook_file_load().
     file_test_reset();
@@ -54,10 +54,10 @@ class DeleteTest extends FileManagedTestBase {
     $usage = file_usage()->listUsage($file);
     $this->assertFileHooksCalled(array('load', 'update'));
     $this->assertTrue(empty($usage), t('File usage data was removed.'));
-    $this->assertTrue(file_exists($file->uri), 'File still exists on the disk.');
-    $file = file_load($file->fid);
+    $this->assertTrue(file_exists($file->getFileUri()), 'File still exists on the disk.');
+    $file = file_load($file->id());
     $this->assertTrue($file, 'File still exists in the database.');
-    $this->assertEqual($file->status, 0, 'File is temporary.');
+    $this->assertTrue($file->isTemporary(), 'File is temporary.');
     file_test_reset();
 
     // Call system_cron() to clean up the file. Make sure the timestamp
@@ -66,13 +66,13 @@ class DeleteTest extends FileManagedTestBase {
       ->fields(array(
         'timestamp' => REQUEST_TIME - (DRUPAL_MAXIMUM_TEMP_FILE_AGE + 1),
       ))
-      ->condition('fid', $file->fid)
+      ->condition('fid', $file->id())
       ->execute();
     drupal_cron_run();
 
     // system_cron() loads
     $this->assertFileHooksCalled(array('delete'));
-    $this->assertFalse(file_exists($file->uri), t('File has been deleted after its last usage was removed.'));
-    $this->assertFalse(file_load($file->fid), t('File was removed from the database.'));
+    $this->assertFalse(file_exists($file->getFileUri()), t('File has been deleted after its last usage was removed.'));
+    $this->assertFalse(file_load($file->id()), t('File was removed from the database.'));
   }
 }

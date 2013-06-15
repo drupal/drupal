@@ -64,7 +64,8 @@ class FileFieldRevisionTest extends FileFieldTestBase {
 
     // Check that the original file is still in place on the first revision.
     $node = node_revision_load($node_vid_r1);
-    $this->assertEqual($node_file_r1, file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']), t('Original file still in place after replacing file in new revision.'));
+    $current_file = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']);
+    $this->assertEqual($node_file_r1->id(), $current_file->id(), t('Original file still in place after replacing file in new revision.'));
     $this->assertFileExists($node_file_r1, t('Original file still in place after replacing file in new revision.'));
     $this->assertFileEntryExists($node_file_r1, t('Original file entry still in place after replacing file in new revision'));
     $this->assertFileIsPermanent($node_file_r1, t('Original file is still permanent.'));
@@ -75,7 +76,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     $node = node_load($nid, TRUE);
     $node_file_r3 = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']);
     $node_vid_r3 = $node->vid;
-    $this->assertEqual($node_file_r2, $node_file_r3, t('Previous revision file still in place after creating a new revision without a new file.'));
+    $this->assertEqual($node_file_r2->id(), $node_file_r3->id(), t('Previous revision file still in place after creating a new revision without a new file.'));
     $this->assertFileIsPermanent($node_file_r3, t('New revision file is permanent.'));
 
     // Revert to the first revision and check that the original file is active.
@@ -83,7 +84,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     $node = node_load($nid, TRUE);
     $node_file_r4 = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']);
     $node_vid_r4 = $node->vid;
-    $this->assertEqual($node_file_r1, $node_file_r4, t('Original revision file still in place after reverting to the original revision.'));
+    $this->assertEqual($node_file_r1->id(), $node_file_r4->id(), t('Original revision file still in place after reverting to the original revision.'));
     $this->assertFileIsPermanent($node_file_r4, t('Original revision file still permanent after reverting to the original revision.'));
 
     // Delete the second revision and check that the file is kept (since it is
@@ -95,7 +96,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
 
     // Attach the second file to a user.
     $user = $this->drupalCreateUser();
-    $user->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid'] = $node_file_r3->fid;
+    $user->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid'] = $node_file_r3->id();
     $user->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['display'] = 1;
     $user->save();
     $this->drupalGet('user/' . $user->uid . '/edit');
@@ -111,10 +112,10 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     // TODO: This seems like a bug in File API. Clearing the stat cache should
     // not be necessary here. The file really is deleted, but stream wrappers
     // doesn't seem to think so unless we clear the PHP file stat() cache.
-    clearstatcache($node_file_r1->uri);
-    clearstatcache($node_file_r2->uri);
-    clearstatcache($node_file_r3->uri);
-    clearstatcache($node_file_r4->uri);
+    clearstatcache($node_file_r1->getFileUri());
+    clearstatcache($node_file_r2->getFileUri());
+    clearstatcache($node_file_r3->getFileUri());
+    clearstatcache($node_file_r4->getFileUri());
 
     // Call system_cron() to clean up the file. Make sure the timestamp
     // of the file is older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
@@ -122,7 +123,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
       ->fields(array(
         'timestamp' => REQUEST_TIME - (DRUPAL_MAXIMUM_TEMP_FILE_AGE + 1),
       ))
-      ->condition('fid', $node_file_r3->fid)
+      ->condition('fid', $node_file_r3->id())
       ->execute();
     drupal_cron_run();
 
@@ -137,7 +138,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
       ->fields(array(
         'timestamp' => REQUEST_TIME - (DRUPAL_MAXIMUM_TEMP_FILE_AGE + 1),
       ))
-      ->condition('fid', $node_file_r1->fid)
+      ->condition('fid', $node_file_r1->id())
       ->execute();
     drupal_cron_run();
     $this->assertFileNotExists($node_file_r1, t('Original file is deleted after deleting the entire node with two revisions remaining.'));

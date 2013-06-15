@@ -122,9 +122,12 @@ function translation_permission() {
  * Implements hook_node_access().
  */
 function translation_node_access($node, $op, $account, $langcode) {
-  $request_has_translation_arg = isset($_GET['translation']) && isset($_GET['target']) && is_numeric($_GET['translation']);
+  $query = Drupal::request()->query;
+  $translation = $query->get('translation');
+  $target = $query->get('target');
+  $request_has_translation_arg = !empty($translation) && !empty($target) && is_numeric($translation);
   if ($op == 'create' && $request_has_translation_arg) {
-    $source_node = node_load($_GET['translation']);
+    $source_node = node_load($translation);
     if (empty($source_node) || !translation_user_can_translate_node($source_node, $account)){
       return NODE_ACCESS_DENY;
     }
@@ -304,19 +307,22 @@ function translation_node_view(EntityInterface $node, EntityDisplay $display, $v
  * Implements hook_node_prepare().
  */
 function translation_node_prepare(EntityInterface $node) {
+  $query = Drupal::request()->query;
+  $translation = $query->get('translation');
+  $target = $query->get('target');
   // Only act if we are dealing with a content type supporting translations.
   if (translation_supported_type($node->type) &&
     // And it's a new node.
     empty($node->nid) &&
-    // And the $_GET variables are set properly.
-    isset($_GET['translation']) &&
-    isset($_GET['target']) &&
-    is_numeric($_GET['translation'])) {
+    // And the request variables are set properly.
+    !empty($translation) &&
+    !empty($target) &&
+    is_numeric($translation)) {
 
-    $source_node = node_load($_GET['translation']);
+    $source_node = node_load($translation);
 
     $language_list = language_list();
-    $langcode = $_GET['target'];
+    $langcode = $target;
     if (!isset($language_list[$langcode]) || ($source_node->langcode == $langcode)) {
       // If not supported language, or same language as source node, break.
       return;

@@ -35,12 +35,13 @@ class RSSEnclosureFormatter extends FormatterBase {
     // enclosure per item. See: http://en.wikipedia.org/wiki/RSS_enclosure
     foreach ($items as $item) {
       if ($item['display']) {
+        $file = $item['entity'];
         $entity->rss_elements[] = array(
           'key' => 'enclosure',
           'attributes' => array(
-            'url' => file_create_url($item['uri']),
-            'length' => $item['filesize'],
-            'type' => $item['filemime'],
+            'url' => file_create_url($file->getFileUri()),
+            'length' => $file->getSize(),
+            'type' => $file->getMimeType(),
           ),
         );
         break;

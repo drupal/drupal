@@ -52,7 +52,7 @@ class Formula extends ArgumentPluginBase {
 
     // Add the field.
     $this->base_alias = $this->name_alias = $this->query->addField(NULL, $formula, $this->field);
-    $this->query->set_count_field(NULL, $formula, $this->field);
+    $this->query->setCountField(NULL, $formula, $this->field);
 
     return $this->summaryBasics(FALSE);
   }

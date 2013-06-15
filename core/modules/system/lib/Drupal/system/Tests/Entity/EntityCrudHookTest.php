@@ -243,7 +243,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     ));
 
     $_SESSION['entity_crud_hook_test'] = array();
-    $file = file_load($file->fid);
+    $file = file_load($file->id());
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_entity_load called for type file',
@@ -251,7 +251,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     ));
 
     $_SESSION['entity_crud_hook_test'] = array();
-    $file->filename = 'new.entity_crud_hook_test.file';
+    $file->setFilename('new.entity_crud_hook_test.file');
     $file->save();
 
     $this->assertHookMessageOrder(array(

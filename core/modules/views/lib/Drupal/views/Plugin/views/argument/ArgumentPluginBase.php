@@ -651,7 +651,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    *   A boolean value; if TRUE, continue building this view. If FALSE,
    *   building the view will be aborted here.
    */
-  function default_action($info = NULL) {
+  public function defaultAction($info = NULL) {
     if (!isset($info)) {
       $info = $this->defaultActions($this->options['default_action']);
     }
@@ -673,7 +673,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    */
   public function validateFail() {
     $info = $this->defaultActions($this->options['validate']['fail']);
-    return $this->default_action($info);
+    return $this->defaultAction($info);
   }
   /**
    * Default action: ignore.
@@ -798,7 +798,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * - addGroupBy: group on this field in order to create summaries.
    * - addField: add a 'num_nodes' field for the count. Usually it will
    *   be a count on $view->base_field
-   * - set_count_field: Reset the count field so we get the right paging.
+   * - setCountField: Reset the count field so we get the right paging.
    *
    * @return
    *   The alias used to get the number of records (count) for this entry.
@@ -832,7 +832,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
         }
       }
       else {
-        $this->name_table_alias = $this->query->ensure_table($this->name_table, $this->relationship);
+        $this->name_table_alias = $this->query->ensureTable($this->name_table, $this->relationship);
       }
     }
     else {
@@ -859,7 +859,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     $this->query->addGroupBy($this->name_alias);
 
     if ($count_field) {
-      $this->query->set_count_field($this->tableAlias, $this->realField);
+      $this->query->setCountField($this->tableAlias, $this->realField);
     }
 
     $this->count_alias = $count_alias;

@@ -1,7 +1,7 @@
 views_ui.list:
   pattern: '/admin/structure/views'
   defaults:
-    _controller: '\Drupal\views_ui\Routing\ViewsUIController::listing'
+    _controller: '\Drupal\views_ui\Controller\ViewsUIController::listing'
   requirements:
     _permission: 'administer views'
 
@@ -29,21 +29,21 @@ views_ui.settings.advanced:
 views_ui.reports.fields:
   pattern: '/admin/reports/fields/views-fields'
   defaults:
-    _controller: '\Drupal\views_ui\Routing\ViewsUIController::reportFields'
+    _controller: '\Drupal\views_ui\Controller\ViewsUIController::reportFields'
   requirements:
     _permission: 'administer views'
 
 views_ui.reports.plugins:
   pattern: '/admin/reports/views-plugins'
   defaults:
-    _controller: '\Drupal\views_ui\Routing\ViewsUIController::reportPlugins'
+    _controller: '\Drupal\views_ui\Controller\ViewsUIController::reportPlugins'
   requirements:
     _permission: 'administer views'
 
 views_ui.operation:
   pattern: '/admin/structure/views/view/{view}/{op}'
   defaults:
-    _controller: '\Drupal\views_ui\Routing\ViewsUIController::ajaxOperation'
+    _controller: '\Drupal\views_ui\Controller\ViewsUIController::ajaxOperation'
   requirements:
     _permission: 'administer views'
     op: 'enable|disable'
@@ -65,7 +65,7 @@ views_ui.delete:
 views_ui.autocomplete:
   pattern: '/admin/views/ajax/autocomplete/tag'
   defaults:
-    _controller: '\Drupal\views_ui\Routing\ViewsUIController::autocompleteTag'
+    _controller: '\Drupal\views_ui\Controller\ViewsUIController::autocompleteTag'
   requirements:
     _permission: 'administer views'
 
@@ -75,7 +75,7 @@ views_ui.edit:
     tempstore:
       view: 'views'
   defaults:
-    _controller: '\Drupal\views_ui\Routing\ViewsUIController::edit'
+    _controller: '\Drupal\views_ui\Controller\ViewsUIController::edit'
   requirements:
     _permission: 'administer views'
 
@@ -85,7 +85,7 @@ views_ui.edit.display:
     tempstore:
       view: 'views'
   defaults:
-    _controller: '\Drupal\views_ui\Routing\ViewsUIController::edit'
+    _controller: '\Drupal\views_ui\Controller\ViewsUIController::edit'
     display_id: NULL
   requirements:
     _permission: 'administer views'

@@ -914,7 +914,7 @@ class ViewExecutable {
       }
       else {
         // determine default condition and handle.
-        $status = $argument->default_action();
+        $status = $argument->defaultAction();
         break;
       }
 

@@ -108,39 +108,3 @@ field.text_with_summary.value:
         format:
           type: string
           label: 'Text format'
-
-field_widget.text_textfield.settings:
-  type: mapping
-  label: 'Text field widget settings'
-  mapping:
-    size:
-      type: integer
-      label: 'Size of textfield'
-    placeholder:
-      type: label
-      label: 'Placeholder'
-
-field_widget.text_textarea.settings:
-  type: mapping
-  label: 'Long text widget settings'
-  mapping:
-    rows:
-      type: integer
-      label: 'Rows'
-    placeholder:
-      type: label
-      label: 'Placeholder'
-
-field_widget.text_textarea_with_summary.settings:
-  type: mapping
-  label: 'Text area widget settings'
-  mapping:
-    rows:
-      type: integer
-      label: 'Rows'
-    summary_rows:
-      type: integer
-      label: 'Summary rows'
-    placeholder:
-      type: label
-      label: 'Placeholder'

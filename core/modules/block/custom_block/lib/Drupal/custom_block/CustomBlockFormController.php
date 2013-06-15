@@ -207,9 +207,10 @@ class CustomBlockFormController extends EntityFormControllerNG {
    */
   public function delete(array $form, array &$form_state) {
     $destination = array();
-    if (isset($_GET['destination'])) {
+    $query = \Drupal::request()->query;
+    if (!is_null($query->get('destination'))) {
       $destination = drupal_get_destination();
-      unset($_GET['destination']);
+      $query->remove('destination');
     }
     $block = $this->buildEntity($form, $form_state);
     $form_state['redirect'] = array('block/' . $block->id() . '/delete', array('query' => $destination));

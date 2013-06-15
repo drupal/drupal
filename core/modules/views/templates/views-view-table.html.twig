@@ -10,6 +10,10 @@
  * - header: Header labels.
  * - header_classes: HTML classes to apply to each header cell, indexed by
  *   the header's key.
+ * - caption_needed: Is the caption tag needed.
+ * - caption: The caption for this table.
+ * - accessibility_description: Extended description for the table details.
+ * - accessibility_summary: Summary for the table details.
  * - rows: Table row items. Rows are keyed by row number, fields within rows
  *   are keyed by field ID.
  *   - field: Table data field ID.
@@ -26,8 +30,24 @@
  */
 #}
 <table{{ attributes }}>
-  {% if title is not empty %}
-    <caption>{{ title }}</caption>
+  {% if caption_needed %}
+    <caption>
+    {% if caption %}
+      {{ caption }}
+    {% else %}
+      {{ title }}
+    {% endif %}
+    {% if (summary is not empty) or (description is not empty) %}
+      <details>
+        {% if summary is not empty %}
+          <summary>{{ summary }}</summary>
+        {% endif %}
+        {% if description is not empty %}
+          {{ description }}
+        {% endif %}
+      </details>
+    {% endif %}
+    </caption>
   {% endif %}
   {% if header %}
     <thead>

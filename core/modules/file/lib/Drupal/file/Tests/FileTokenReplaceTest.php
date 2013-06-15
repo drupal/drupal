@@ -39,7 +39,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
 
     $test_file = $this->getTestFile('text');
     // Coping a file to test uploads with non-latin filenames.
-    $filename = drupal_dirname($test_file->uri) . '/текстовый файл.txt';
+    $filename = drupal_dirname($test_file->getFileUri()) . '/текстовый файл.txt';
     $test_file = file_copy($test_file, $filename);
 
     // Create a new node with the uploaded file.
@@ -51,16 +51,16 @@ class FileTokenReplaceTest extends FileFieldTestBase {
 
     // Generate and test sanitized tokens.
     $tests = array();
-    $tests['[file:fid]'] = $file->fid;
-    $tests['[file:name]'] = check_plain($file->filename);
-    $tests['[file:path]'] = check_plain($file->uri);
-    $tests['[file:mime]'] = check_plain($file->filemime);
-    $tests['[file:size]'] = format_size($file->filesize);
-    $tests['[file:url]'] = check_plain(file_create_url($file->uri));
-    $tests['[file:timestamp]'] = format_date($file->timestamp, 'medium', '', NULL, $language_interface->langcode);
-    $tests['[file:timestamp:short]'] = format_date($file->timestamp, 'short', '', NULL, $language_interface->langcode);
+    $tests['[file:fid]'] = $file->id();
+    $tests['[file:name]'] = check_plain($file->getFilename());
+    $tests['[file:path]'] = check_plain($file->getFileUri());
+    $tests['[file:mime]'] = check_plain($file->getMimeType());
+    $tests['[file:size]'] = format_size($file->getSize());
+    $tests['[file:url]'] = check_plain(file_create_url($file->getFileUri()));
+    $tests['[file:timestamp]'] = format_date($file->getChangedTime(), 'medium', '', NULL, $language_interface->langcode);
+    $tests['[file:timestamp:short]'] = format_date($file->getChangedTime(), 'short', '', NULL, $language_interface->langcode);
     $tests['[file:owner]'] = check_plain(user_format_name($this->admin_user));
-    $tests['[file:owner:uid]'] = $file->uid;
+    $tests['[file:owner:uid]'] = $file->getOwner()->id();
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
@@ -71,10 +71,10 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     }
 
     // Generate and test unsanitized tokens.
-    $tests['[file:name]'] = $file->filename;
-    $tests['[file:path]'] = $file->uri;
-    $tests['[file:mime]'] = $file->filemime;
-    $tests['[file:size]'] = format_size($file->filesize);
+    $tests['[file:name]'] = $file->getFilename();
+    $tests['[file:path]'] = $file->getFileUri();
+    $tests['[file:mime]'] = $file->getMimeType();
+    $tests['[file:size]'] = format_size($file->getSize());
 
     foreach ($tests as $input => $expected) {
       $output = $token_service->replace($input, array('file' => $file), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));

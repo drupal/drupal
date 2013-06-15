@@ -36,7 +36,7 @@ class SerializationTest extends WebTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->serializer = drupal_container()->get('serializer');
+    $this->serializer = $this->container->get('serializer');
   }
 
   /**

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\views_ui\Routing\ViewsUIController.
+ * Contains \Drupal\views_ui\Controller\ViewsUIController.
  */
 
-namespace Drupal\views_ui\Routing;
+namespace Drupal\views_ui\Controller;
 
 use Drupal\views\ViewExecutable;
 use Drupal\views\ViewStorageInterface;
@@ -49,7 +49,7 @@ class ViewsUIController implements ControllerInterface {
   protected $tempStore;
 
   /**
-   * Constructs a new \Drupal\views_ui\Routing\ViewsUIController object.
+   * Constructs a new \Drupal\views_ui\Controller\ViewsUIController object.
    *
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   The Entity manager.

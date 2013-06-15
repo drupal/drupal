@@ -204,9 +204,10 @@ function path_admin_form($form, &$form_state, $path = array('source' => '', 'ali
  */
 function path_admin_form_delete_submit($form, &$form_state) {
   $destination = array();
-  if (isset($_GET['destination'])) {
+  $query = Drupal::request()->query;
+  if ($query->has('destination')) {
     $destination = drupal_get_destination();
-    unset($_GET['destination']);
+    $query->remove('destination');
   }
   $form_state['redirect'] = array('admin/config/search/path/delete/' . $form_state['values']['pid'], array('query' => $destination));
 }

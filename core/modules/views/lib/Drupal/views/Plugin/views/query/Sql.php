@@ -160,7 +160,7 @@ class Sql extends QueryPluginBase {
   /**
    * Set what field the query will count() on for paging.
    */
-  function set_count_field($table, $field, $alias = NULL) {
+  public function setCountField($table, $field, $alias = NULL) {
     if (empty($alias)) {
       $alias = $table . '_' . $field;
     }
@@ -292,7 +292,7 @@ class Sql extends QueryPluginBase {
 
     // Make sure this join is adjusted for our relationship.
     if ($link_point && isset($this->relationships[$link_point])) {
-      $join = $this->adjust_join($join, $link_point);
+      $join = $this->adjustJoin($join, $link_point);
     }
 
     // Add the table directly to the queue to avoid accidentally marking
@@ -355,7 +355,7 @@ class Sql extends QueryPluginBase {
     }
 
     if ($join && $relationship) {
-      $join = $this->adjust_join($join, $relationship);
+      $join = $this->adjustJoin($join, $relationship);
     }
 
     return $this->queueTable($table, $relationship, $join, $alias);
@@ -365,7 +365,7 @@ class Sql extends QueryPluginBase {
    * Add a table to the query without ensuring the path.
    *
    * This is a pretty internal function to Views and addTable() or
-   * ensure_table() should be used instead of this one, unless you are
+   * ensureTable() should be used instead of this one, unless you are
    * absolutely sure this is what you want.
    *
    * @param $table
@@ -437,7 +437,7 @@ class Sql extends QueryPluginBase {
         return FALSE;
       }
 
-      $join = $this->adjust_join($join, $relationship);
+      $join = $this->adjustJoin($join, $relationship);
     }
 
     $this->table_queue[$alias] = array(
@@ -493,7 +493,7 @@ class Sql extends QueryPluginBase {
    *   The alias used to refer to this specific table, or NULL if the table
    *   cannot be ensured.
    */
-  function ensure_table($table, $relationship = NULL, JoinPluginBase $join = NULL) {
+  public function ensureTable($table, $relationship = NULL, JoinPluginBase $join = NULL) {
     // ensure a relationship
     if (empty($relationship)) {
       $relationship = $this->view->storage->get('base_table');
@@ -528,7 +528,7 @@ class Sql extends QueryPluginBase {
     // Adjust this join for the relationship, which will ensure that the 'base'
     // table it links to is correct. Tables adjoined to a relationship
     // join to a link point, not the base table.
-    $join = $this->adjust_join($join, $relationship);
+    $join = $this->adjustJoin($join, $relationship);
 
     if ($this->ensurePath($table, $relationship, $join)) {
       // Attempt to eliminate redundant joins.  If this table's
@@ -598,7 +598,7 @@ class Sql extends QueryPluginBase {
 
       // Make sure that we're linking to the correct table for our relationship.
       foreach (array_reverse($add) as $table => $path_join) {
-        $this->queueTable($table, $relationship, $this->adjust_join($path_join, $relationship));
+        $this->queueTable($table, $relationship, $this->adjustJoin($path_join, $relationship));
       }
       return TRUE;
     }
@@ -624,7 +624,7 @@ class Sql extends QueryPluginBase {
    * Fix a join to adhere to the proper relationship; the left table can vary
    * based upon what relationship items are joined in on.
    */
-  function adjust_join($join, $relationship) {
+  protected function adjustJoin($join, $relationship) {
     if (!empty($join->adjusted)) {
       return $join;
     }
@@ -645,7 +645,7 @@ class Sql extends QueryPluginBase {
       if ($join->leftTable != $this->relationships[$relationship]['table'] &&
         $join->leftTable != $this->relationships[$relationship]['base'] &&
         !isset($this->tables[$relationship][$join->leftTable]['alias'])) {
-        $this->ensure_table($join->leftTable, $relationship);
+        $this->ensureTable($join->leftTable, $relationship);
       }
 
       // First, if this is our link point/anchor table, just use the relationship
@@ -690,7 +690,7 @@ class Sql extends QueryPluginBase {
    * Get the information associated with a table.
    *
    * If you need the alias of a table with a particular relationship, use
-   * ensure_table().
+   * ensureTable().
    */
   public function getTableInfo($table) {
     if (!empty($this->table_queue[$table])) {
@@ -708,12 +708,12 @@ class Sql extends QueryPluginBase {
 
   /**
    * Add a field to the query table, possibly with an alias. This will
-   * automatically call ensure_table to make sure the required table
+   * automatically call ensureTable to make sure the required table
    * exists, *unless* $table is unset.
    *
    * @param $table
    *   The table this field is attached to. If NULL, it is assumed this will
-   *   be a formula; otherwise, ensure_table is used to make sure the
+   *   be a formula; otherwise, ensureTable is used to make sure the
    *   table exists.
    * @param $field
    *   The name of the field to add. This may be a real field or a formula.
@@ -735,7 +735,7 @@ class Sql extends QueryPluginBase {
     }
 
     if ($table && empty($this->table_queue[$table])) {
-      $this->ensure_table($table);
+      $this->ensureTable($table);
     }
 
     if (!$alias && $table) {
@@ -857,7 +857,7 @@ class Sql extends QueryPluginBase {
    *
    * @see QueryConditionInterface::where()
    */
-  function add_where_expression($group, $snippet, $args = array()) {
+  public function addWhereExpression($group, $snippet, $args = array()) {
     // Ensure all variants of 0 are actually 0. Thus '', 0 and NULL are all
     // the default group.
     if (empty($group)) {
@@ -937,7 +937,7 @@ class Sql extends QueryPluginBase {
     // Only ensure the table if it's not the special random key.
     // @todo: Maybe it would make sense to just add an addOrderByRand or something similar.
     if ($table && $table != 'rand') {
-      $this->ensure_table($table);
+      $this->ensureTable($table);
     }
 
     // Only fill out this aliasing if there is a table;
@@ -1319,7 +1319,7 @@ class Sql extends QueryPluginBase {
   /**
    * Get the arguments attached to the WHERE and HAVING clauses of this query.
    */
-  function get_where_args() {
+  public function getWhereArgs() {
     $args = array();
     foreach ($this->where as $group => $where) {
       $args = array_merge($args, $where['args']);

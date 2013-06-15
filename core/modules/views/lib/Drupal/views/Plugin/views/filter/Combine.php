@@ -93,42 +93,42 @@ class Combine extends String {
   function opEqual($expression) {
     $placeholder = $this->placeholder();
     $operator = $this->operator();
-    $this->query->add_where_expression($this->options['group'], "$expression $operator $placeholder", array($placeholder => $this->value));
+    $this->query->addWhereExpression($this->options['group'], "$expression $operator $placeholder", array($placeholder => $this->value));
   }
 
   protected function opContains($expression) {
     $placeholder = $this->placeholder();
-    $this->query->add_where_expression($this->options['group'], "$expression LIKE $placeholder", array($placeholder => '%' . db_like($this->value) . '%'));
+    $this->query->addWhereExpression($this->options['group'], "$expression LIKE $placeholder", array($placeholder => '%' . db_like($this->value) . '%'));
   }
 
   protected function opStartsWith($expression) {
     $placeholder = $this->placeholder();
-    $this->query->add_where_expression($this->options['group'], "$expression LIKE $placeholder", array($placeholder => db_like($this->value) . '%'));
+    $this->query->addWhereExpression($this->options['group'], "$expression LIKE $placeholder", array($placeholder => db_like($this->value) . '%'));
   }
 
   protected function opNotStartsWith($expression) {
     $placeholder = $this->placeholder();
-    $this->query->add_where_expression($this->options['group'], "$expression NOT LIKE $placeholder", array($placeholder => db_like($this->value) . '%'));
+    $this->query->addWhereExpression($this->options['group'], "$expression NOT LIKE $placeholder", array($placeholder => db_like($this->value) . '%'));
   }
 
   protected function opEndsWith($expression) {
     $placeholder = $this->placeholder();
-    $this->query->add_where_expression($this->options['group'], "$expression LIKE $placeholder", array($placeholder => '%' . db_like($this->value)));
+    $this->query->addWhereExpression($this->options['group'], "$expression LIKE $placeholder", array($placeholder => '%' . db_like($this->value)));
   }
 
   protected function opNotEnds($expression) {
     $placeholder = $this->placeholder();
-    $this->query->add_where_expression($this->options['group'], "$expression NOT LIKE $placeholder", array($placeholder => '%' . db_like($this->value)));
+    $this->query->addWhereExpression($this->options['group'], "$expression NOT LIKE $placeholder", array($placeholder => '%' . db_like($this->value)));
   }
 
   protected function opNotLike($expression) {
     $placeholder = $this->placeholder();
-    $this->query->add_where_expression($this->options['group'], "$expression NOT LIKE $placeholder", array($placeholder => '%' . db_like($this->value) . '%'));
+    $this->query->addWhereExpression($this->options['group'], "$expression NOT LIKE $placeholder", array($placeholder => '%' . db_like($this->value) . '%'));
   }
 
   protected function opRegex($expression) {
     $placeholder = $this->placeholder();
-    $this->query->add_where_expression($this->options['group'], "$expression RLIKE $placeholder", array($placeholder => $this->value));
+    $this->query->addWhereExpression($this->options['group'], "$expression RLIKE $placeholder", array($placeholder => $this->value));
   }
 
   protected function opEmpty($expression) {
@@ -139,7 +139,7 @@ class Combine extends String {
       $operator = "IS NOT NULL";
     }
 
-    $this->query->add_where_expression($this->options['group'], "$expression $operator");
+    $this->query->addWhereExpression($this->options['group'], "$expression $operator");
   }
 
 }

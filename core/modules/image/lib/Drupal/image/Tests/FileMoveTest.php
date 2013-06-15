@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Image\FileMoveTest.
+ * Contains \Drupal\image\Tests\FileMoveTest.
  */
 
-namespace Drupal\system\Tests\Image;
+namespace Drupal\image\Tests;
+
+use Drupal\system\Tests\Image\ToolkitTestBase;
 
 /**
- * Tests the file move function for managed files.
- *
- * @todo This test belongs to File module.
+ * Tests the file move function for images and image styles.
  */
 class FileMoveTest extends ToolkitTestBase {
 
@@ -39,8 +39,8 @@ class FileMoveTest extends ToolkitTestBase {
     // Create derivative image.
     $styles = entity_load_multiple('image_style');
     $style = image_style_load(key($styles));
-    $derivative_uri = image_style_path($style->id(), $file->uri);
-    image_style_create_derivative($style, $file->uri, $derivative_uri);
+    $derivative_uri = image_style_path($style->id(), $file->getFileUri());
+    image_style_create_derivative($style, $file->getFileUri(), $derivative_uri);
 
     // Check if derivative image exists.
     $this->assertTrue(file_exists($derivative_uri), 'Make sure derivative image is generated successfully.');
@@ -51,7 +51,7 @@ class FileMoveTest extends ToolkitTestBase {
     $result = file_move(clone $file, $desired_filepath, FILE_EXISTS_ERROR);
 
     // Check if image has been moved.
-    $this->assertTrue(file_exists($result->uri), 'Make sure image is moved successfully.');
+    $this->assertTrue(file_exists($result->getFileUri()), 'Make sure image is moved successfully.');
 
     // Check if derivative image has been flushed.
     $this->assertFalse(file_exists($derivative_uri), 'Make sure derivative image has been flushed.');

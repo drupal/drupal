@@ -134,7 +134,7 @@ class JoinPluginBase extends ContainerFactoryPluginBase {
    * @var bool
    *
    * @see Drupal\views\Plugin\HandlerBase::getTableJoin()
-   * @see Drupal\views\Plugin\views\query\Sql::adjust_join()
+   * @see Drupal\views\Plugin\views\query\Sql::adjustJoin()
    * @see Drupal\views\Plugin\views\relationship\RelationshipPluginBase::query()
    */
   public $adjusted;

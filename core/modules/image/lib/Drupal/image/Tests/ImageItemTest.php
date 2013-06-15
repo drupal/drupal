@@ -99,7 +99,7 @@ class ImageItemTest extends FieldUnitTestBase {
     $entity->image_test->width = NULL;
     $entity->save();
     $this->assertEqual($entity->image_test->entity->id(), $image2->id());
-    $this->assertEqual($entity->image_test->entity->uri, $image2->uri);
+    $this->assertEqual($entity->image_test->entity->getFileUri(), $image2->getFileUri());
     $info = image_get_info('public://example-2.jpg');
     $this->assertEqual($entity->image_test->width, $info['width']);
     $this->assertEqual($entity->image_test->height, $info['height']);

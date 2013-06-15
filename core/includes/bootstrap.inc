@@ -2418,7 +2418,7 @@ function get_t() {
  * Initializes all the defined language types and sets the default langcode.
  */
 function drupal_language_initialize() {
-  $language_manager = Drupal::service('language_manager');
+  $language_manager = Drupal::languageManager();
   $language_manager->init();
   Drupal::translation()->setDefaultLangcode($language_manager->getLanguage(Language::TYPE_INTERFACE)->langcode);
 }
@@ -2432,10 +2432,10 @@ function drupal_language_initialize() {
  *   The type of language object needed, e.g. Language::TYPE_INTERFACE.
  *
  * @deprecated as of Drupal 8.0. Use
- *   Drupal::service('language_manager')->getLanguage($type).
+ *   Drupal::languageManager()->getLanguage($type).
  */
 function language($type) {
-  return Drupal::service('language_manager')->getLanguage($type);
+  return Drupal::languageManager()->getLanguage($type);
 }
 
 /**

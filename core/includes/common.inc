@@ -2,6 +2,7 @@
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Tags;
 use Drupal\Component\Utility\UrlValidator;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
@@ -14,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Drupal\Component\PhpStorage\PhpStorageFactory;
 use Drupal\Component\Utility\MapArray;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Database\Database;
@@ -789,6 +791,8 @@ function valid_email_address($mail) {
  *   TRUE if the URL is in a valid format.
  *
  * @see \Drupal\Component\Utility\UrlValidator::isValid()
+ *
+ * @deprecated as of Drupal 8.0. Use UrlValidator::isValid() instead.
  */
 function valid_url($url, $absolute = FALSE) {
   return UrlValidator::isValid($url, $absolute);
@@ -5508,44 +5512,24 @@ function watchdog_severity_levels() {
  * Explodes a string of tags into an array.
  *
  * @see drupal_implode_tags()
+ * @see \Drupal\Component\Utility\String::explodeTags().
+ *
+ * @deprecated as of Drupal 8.0. Use Tags::explode() instead.
  */
 function drupal_explode_tags($tags) {
-  // This regexp allows the following types of user input:
-  // this, "somecompany, llc", "and ""this"" w,o.rks", foo bar
-  $regexp = '%(?:^|,\ *)("(?>[^"]*)(?>""[^"]* )*"|(?: [^",]*))%x';
-  preg_match_all($regexp, $tags, $matches);
-  $typed_tags = array_unique($matches[1]);
-
-  $tags = array();
-  foreach ($typed_tags as $tag) {
-    // If a user has escaped a term (to demonstrate that it is a group,
-    // or includes a comma or quote character), we remove the escape
-    // formatting so to save the term into the database as the user intends.
-    $tag = trim(str_replace('""', '"', preg_replace('/^"(.*)"$/', '\1', $tag)));
-    if ($tag != "") {
-      $tags[] = $tag;
-    }
-  }
-
-  return $tags;
+  return Tags::explode($tags);
 }
 
 /**
  * Implodes an array of tags into a string.
  *
  * @see drupal_explode_tags()
+ * @see \Drupal\Component\Utility\String::implodeTags().
+ *
+ * @deprecated as of Drupal 8.0. Use Tags::implode() instead.
  */
 function drupal_implode_tags($tags) {
-  $encoded_tags = array();
-  foreach ($tags as $tag) {
-    // Commas and quotes in tag names are special cases, so encode them.
-    if (strpos($tag, ',') !== FALSE || strpos($tag, '"') !== FALSE) {
-      $tag = '"' . str_replace('"', '""', $tag) . '"';
-    }
-
-    $encoded_tags[] = $tag;
-  }
-  return implode(', ', $encoded_tags);
+  return Tags::implode($tags);
 }
 
 /**

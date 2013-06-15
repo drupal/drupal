@@ -311,7 +311,7 @@ function _block_get_renderable_region($list = array()) {
   // to other users. We therefore exclude user 1 from block caching.
   $not_cacheable = $GLOBALS['user']->uid == 1 ||
     count(module_implements('node_grants')) ||
-    !in_array($_SERVER['REQUEST_METHOD'], array('GET', 'HEAD'));
+    !\Drupal::request()->isMethodSafe();
 
   foreach ($list as $key => $block) {
     $settings = $block->get('settings');

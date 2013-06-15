@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\aggregator\Routing\AggregatorController.
+ * Contains \Drupal\aggregator\Controller\AggregatorController.
  */
 
-namespace Drupal\aggregator\Routing;
+namespace Drupal\aggregator\Controller;
 
 use Drupal\aggregator\FeedInterface;
 use Drupal\Core\Config\ConfigFactory;
@@ -52,7 +52,7 @@ class AggregatorController implements ControllerInterface {
   protected $moduleHandler;
 
   /**
-   * Constructs a \Drupal\aggregator\Routing\AggregatorController object.
+   * Constructs a \Drupal\aggregator\Controller\AggregatorController object.
    *
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   The Entity manager.

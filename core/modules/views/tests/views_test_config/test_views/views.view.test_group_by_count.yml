@@ -1,4 +1,4 @@
-base_table: node
+base_table: entity_test
 core: '8'
 description: ''
 status: '1'
@@ -12,7 +12,7 @@ display:
       exposed_form:
         type: basic
       fields:
-        nid:
+        id:
           alter:
             alter_text: '0'
             ellipsis: '1'
@@ -22,14 +22,13 @@ display:
             trim: '0'
             word_boundary: '1'
           empty_zero: '0'
-          field: nid
+          field: id
           group_type: {  }
           hide_empty: '0'
-          id: nid
-          link_to_node: '0'
-          table: node
-          plugin_id: node
-        type:
+          id: id
+          table: entity_test
+          plugin_id: numeric
+        name:
           alter:
             alter_text: '0'
             ellipsis: '1'
@@ -39,12 +38,11 @@ display:
             trim: '0'
             word_boundary: '1'
           empty_zero: '0'
-          field: type
+          field: name
           hide_empty: '0'
-          id: type
-          link_to_node: '0'
-          table: node_field_data
-          plugin_id: node_type
+          id: name
+          table: entity_test
+          plugin_id: standard
       group_by: '1'
       pager:
         type: some

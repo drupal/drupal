@@ -123,21 +123,6 @@ field.instance.*.*.*:
       label: 'Default value funtion'
     settings:
       type: field.[%parent.field_type].instance_settings
-    widget:
-      type: mapping
-      label: 'Widget'
-      mapping:
-        weight:
-          type: integer
-          label: 'Weight'
-        type:
-          type: string
-          label: 'Widget type'
-        settings:
-          type: field_widget.[%parent.type].settings
-        module:
-          type: string
-          label: 'Module'
     field_type:
       type: string
       label: 'Field type'

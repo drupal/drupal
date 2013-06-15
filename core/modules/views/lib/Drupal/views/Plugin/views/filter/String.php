@@ -323,12 +323,12 @@ class String extends FilterPluginBase {
 
   protected function opShorterThan($field) {
     $placeholder = $this->placeholder();
-    $this->query->add_where_expression($this->options['group'], "LENGTH($field) < $placeholder", array($placeholder => $this->value));
+    $this->query->addWhereExpression($this->options['group'], "LENGTH($field) < $placeholder", array($placeholder => $this->value));
   }
 
   protected function opLongerThan($field) {
     $placeholder = $this->placeholder();
-    $this->query->add_where_expression($this->options['group'], "LENGTH($field) > $placeholder", array($placeholder => $this->value));
+    $this->query->addWhereExpression($this->options['group'], "LENGTH($field) > $placeholder", array($placeholder => $this->value));
   }
 
   protected function opRegex($field) {

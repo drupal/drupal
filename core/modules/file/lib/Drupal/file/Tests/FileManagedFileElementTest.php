@@ -46,7 +46,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
 
           // Submit a new file, without using the Upload button.
           $last_fid_prior = $this->getLastFileId();
-          $edit = array($file_field_name => drupal_realpath($test_file->uri));
+          $edit = array($file_field_name => drupal_realpath($test_file->getFileUri()));
           $this->drupalPost($path, $edit, t('Save'));
           $last_fid = $this->getLastFileId();
           $this->assertTrue($last_fid > $last_fid_prior, t('New file got saved.'));
@@ -61,7 +61,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
             // Upload, then Submit.
             $last_fid_prior = $this->getLastFileId();
             $this->drupalGet($path);
-            $edit = array($file_field_name => drupal_realpath($test_file->uri));
+            $edit = array($file_field_name => drupal_realpath($test_file->getFileUri()));
             if ($ajax) {
               $this->drupalPostAJAX(NULL, $edit, $input_base_name . '_upload_button');
             }
@@ -92,7 +92,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
 
             // Upload, then Remove, then Submit.
             $this->drupalGet($path);
-            $edit = array($file_field_name => drupal_realpath($test_file->uri));
+            $edit = array($file_field_name => drupal_realpath($test_file->getFileUri()));
             if ($ajax) {
               $this->drupalPostAJAX(NULL, $edit, $input_base_name . '_upload_button');
             }
@@ -120,7 +120,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
 
     // The multiple file upload has additional conditions that need checking.
     $path = 'file/test/1/1/1';
-    $edit = array('files[nested_file][]' => drupal_realpath($test_file->uri));
+    $edit = array('files[nested_file][]' => drupal_realpath($test_file->getFileUri()));
     $fid_list = array();
 
     $this->drupalGet($path);

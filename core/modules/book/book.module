@@ -773,8 +773,9 @@ function book_node_load($nodes, $types) {
 function book_node_view(EntityInterface $node, EntityDisplay $display, $view_mode) {
   if ($view_mode == 'full') {
     if (!empty($node->book['bid']) && empty($node->in_preview)) {
+      $book_navigation = array( '#theme' => 'book_navigation', '#book_link' => $node->book);
       $node->content['book_navigation'] = array(
-        '#markup' => theme('book_navigation', array('book_link' => $node->book)),
+        '#markup' => drupal_render($book_navigation),
         '#weight' => 100,
         '#attached' => array(
           'css' => array(
@@ -880,9 +881,10 @@ function book_node_prepare(EntityInterface $node) {
   if (empty($node->book) && (user_access('add content to books') || user_access('administer book outlines'))) {
     $node->book = array();
 
-    if (empty($node->nid) && isset($_GET['parent']) && is_numeric($_GET['parent'])) {
+    $query = \Drupal::request()->query;
+    if (empty($node->nid) && !is_null($query->get('parent')) && is_numeric($query->get('parent'))) {
       // Handle "Add child page" links:
-      $parent = book_link_load($_GET['parent']);
+      $parent = book_link_load($query->get('parent'));
 
       if ($parent && $parent['access']) {
         $node->book['bid'] = $parent['bid'];
@@ -1188,8 +1190,8 @@ function book_node_export(EntityInterface $node, $children = '') {
   unset($build['#theme']);
   // @todo Rendering should happen in the template using render().
   $node->rendered = drupal_render($build);
-
-  return theme('book_node_export_html', array('node' => $node, 'children' => $children));
+  $book_node_export_html = array('#theme' => 'book_node_export_html', '#node' => $node, '#children' => $children );
+  return drupal_render($book_node_export_html);
 }
 
 /**
