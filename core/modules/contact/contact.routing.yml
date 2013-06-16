@@ -8,8 +8,7 @@ contact_category_delete:
 contact_category_list:
   pattern: '/admin/structure/contact'
   defaults:
-    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
-    entity_type: 'contact_category'
+    _entity_list: 'contact_category'
   requirements:
     _permission: 'administer contact forms'
 

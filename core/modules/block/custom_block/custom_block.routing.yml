@@ -1,8 +1,7 @@
 custom_block_type_list:
   pattern: '/admin/structure/custom-blocks'
   defaults:
-    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
-    entity_type: 'custom_block_type'
+    _entity_list: 'custom_block_type'
   requirements:
     _permission: 'administer blocks'
 

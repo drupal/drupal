@@ -1,8 +1,7 @@
 config_test_list_page:
   pattern: '/admin/structure/config_test'
   defaults:
-    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
-    entity_type: 'config_test'
+    _entity_list: 'config_test'
   requirements:
     _access: 'TRUE'
 

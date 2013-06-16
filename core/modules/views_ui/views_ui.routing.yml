@@ -1,7 +1,7 @@
 views_ui.list:
   pattern: '/admin/structure/views'
   defaults:
-    _controller: '\Drupal\views_ui\Controller\ViewsUIController::listing'
+    _entity_list: 'view'
   requirements:
     _permission: 'administer views'
 
