@@ -152,14 +152,9 @@ function field_add_more_js($form, $form_state) {
 
   // Go one level up in the form, to the widgets container.
   $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
-  $field_name = $element['#field_name'];
-  $langcode = $element['#language'];
-  $parents = $element['#field_parents'];
 
-  $field_state = field_form_get_state($parents, $field_name, $langcode, $form_state);
-
-  $field = $field_state['field'];
-  if ($field['cardinality'] != FIELD_CARDINALITY_UNLIMITED) {
+  // Ensure the widget allows adding additional items.
+  if ($element['#cardinality'] != FIELD_CARDINALITY_UNLIMITED) {
     return;
   }
 
@@ -185,8 +180,6 @@ function field_add_more_js($form, $form_state) {
  *
  * @return
  *   An array with the following key/data pairs:
- *   - field: The field definition array.
- *   - instance: The field instance definition array.
  *   - items_count: The number of widgets to display for the field.
  *   - array_parents: The location of the field's widgets within the $form
  *     structure. This entry is populated at '#after_build' time.
@@ -256,52 +249,3 @@ function _field_form_state_parents($parents, $field_name, $langcode) {
   return $form_state_parents;
 }
 
-/**
- * Retrieves the field definition for a widget's helper callbacks.
- *
- * Widget helper element callbacks (such as #process, #element_validate,
- * #value_callback, ...) should use field_widget_field() and
- * field_widget_instance() instead of field_info_field() and
- * field_info_instance() when they need to access field or instance properties.
- * See hook_field_widget_form() for more details.
- *
- * @param $element
- *   The structured array for the widget.
- * @param $form_state
- *   The form state.
- *
- * @return
- *   The $field definition array for the current widget.
- *
- * @see field_widget_instance()
- * @see hook_field_widget_form()
- */
-function field_widget_field($element, $form_state) {
-  $field_state = field_form_get_state($element['#field_parents'], $element['#field_name'], $element['#language'], $form_state);
-  return $field_state['field'];
-}
-
-/**
- * Retrieves the instance definition array for a widget's helper callbacks.
- *
- * Widgets helper element callbacks (such as #process, #element_validate,
- * #value_callback, ...) should use field_widget_field() and
- * field_widget_instance() instead of field_info_field() and
- * field_info_instance() when they need to access field or instance properties.
- * See hook_field_widget_form() for more details.
- *
- * @param $element
- *   The structured array for the widget.
- * @param $form_state
- *   The form state.
- *
- * @return
- *   The $instance definition array for the current widget.
- *
- * @see field_widget_field()
- * @see hook_field_widget_form()
- */
-function field_widget_instance($element, $form_state) {
-  $field_state = field_form_get_state($element['#field_parents'], $element['#field_name'], $element['#language'], $form_state);
-  return $field_state['instance'];
-}

@@ -11,8 +11,9 @@ use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\field\Plugin\PluginSettingsBase;
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
+use Drupal\field\FieldInstanceInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\datetime\DateHelper;
 
@@ -38,10 +39,14 @@ class DateTimeDatelistWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct($plugin_id, array $plugin_definition, FieldInstance $instance, array $settings) {
+  public function __construct($plugin_id, array $plugin_definition, FieldDefinitionInterface $field_definition, array $settings) {
     // Identify the function used to set the default value.
-    $instance['default_value_function'] = $this->defaultValueFunction();
-    parent::__construct($plugin_id, $plugin_definition, $instance, $settings);
+    // @todo Make this work for both configurable and nonconfigurable fields:
+    //   https://drupal.org/node/1989468.
+    if ($field_definition instanceof FieldInstanceInterface) {
+      $field_definition->default_value_function = $this->defaultValueFunction();
+    }
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings);
   }
 
   /**
@@ -55,13 +60,9 @@ class DateTimeDatelistWidget extends WidgetBase {
   }
 
   /**
-   * Implements \Drupal\field\Plugin\Type\Widget\WidgetInterface::formElement().
+   * {@inheritdoc}
    */
   public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
-
-    $field = $this->field;
-    $instance = $this->instance;
-
     $date_order = $this->getSetting('date_order');
     $time_type = $this->getSetting('time_type');
     $increment = $this->getSetting('increment');
@@ -78,7 +79,7 @@ class DateTimeDatelistWidget extends WidgetBase {
     $element['#element_validate'][] = 'datetime_datelist_widget_validate';
 
     // Identify the type of date and time elements to use.
-    switch ($field['settings']['datetime_type']) {
+    switch ($this->getFieldSetting('datetime_type')) {
       case 'date':
         $storage_format = DATETIME_DATE_STORAGE_FORMAT;
         $type_type = 'none';
@@ -126,7 +127,7 @@ class DateTimeDatelistWidget extends WidgetBase {
     );
 
     // Set the storage and widget options so the validation can use them. The
-    // validator will not have access to field or instance settings.
+    // validator will not have access to the field definition.
     $element['value']['#date_storage_format'] = $storage_format;
 
     if (!empty($items[$delta]['date'])) {
@@ -134,7 +135,7 @@ class DateTimeDatelistWidget extends WidgetBase {
       // The date was created and verified during field_load(), so it is safe to
       // use without further inspection.
       $date->setTimezone( new \DateTimeZone($element['value']['#date_timezone']));
-      if ($field['settings']['datetime_type'] == 'date') {
+      if ($this->getFieldSetting('datetime_type') == 'date') {
         // A date without time will pick up the current time, use the default
         // time.
         datetime_date_default_time($date);
@@ -145,21 +146,10 @@ class DateTimeDatelistWidget extends WidgetBase {
   }
 
   /**
-   *
-   *
-   * @param array $form
-   *   The form definition as an array.
-   * @param array $form_state
-   *   The current state of the form as an array.
-   *
-   * @return array
-   *
+   * {@inheritdoc}
    */
   function settingsForm(array $form, array &$form_state) {
     $element = parent::settingsForm($form, $form_state);
-
-    $field = $this->field;
-    $instance = $this->instance;
 
     $element['date_order'] = array(
       '#type' => 'select',
@@ -168,7 +158,7 @@ class DateTimeDatelistWidget extends WidgetBase {
       '#options' => array('MDY' => t('Month/Day/Year'), 'DMY' => t('Day/Month/Year'), 'YMD' => t('Year/Month/Day')),
     );
 
-    if ($field['settings']['datetime_type'] == 'datetime') {
+    if ($this->getFieldSetting('datetime_type') == 'datetime') {
       $element['time_type'] = array(
         '#type' => 'select',
         '#title' => t('Time type'),

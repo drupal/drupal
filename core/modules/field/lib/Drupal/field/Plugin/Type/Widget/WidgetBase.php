@@ -2,15 +2,16 @@
 
 /**
  * @file
- * Definition of Drupal\field\Plugin\Type\Widget\WidgetBase.
+ * Contains \Drupal\field\Plugin\Type\Widget\WidgetBase.
  */
 
 namespace Drupal\field\Plugin\Type\Widget;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
+use Drupal\field\FieldInstanceInterface;
 use Drupal\field\Plugin\PluginSettingsBase;
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
  * Base class for 'Field widget' plugin implementations.
@@ -20,16 +21,9 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * The field definition.
    *
-   * @var array
+   * @var \Drupal\Core\Entity\Field\FieldDefinitionInterface
    */
-  protected $field;
-
-  /**
-   * The field instance definition.
-   *
-   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
-   */
-  protected $instance;
+  protected $fieldDefinition;
 
   /**
    * The widget settings.
@@ -45,26 +39,23 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    *   The plugin_id for the widget.
    * @param array $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\field\Plugin\Core\Entity\FieldInstance $instance
-   *   The field instance to which the widget is associated.
+   * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition
+   *   The definition of the field to which the widget is associated.
    * @param array $settings
    *   The widget settings.
    */
-  public function __construct($plugin_id, array $plugin_definition, FieldInstance $instance, array $settings) {
+  public function __construct($plugin_id, array $plugin_definition, FieldDefinitionInterface $field_definition, array $settings) {
     parent::__construct(array(), $plugin_id, $plugin_definition);
 
-    $this->instance = $instance;
-    $this->field = field_info_field($instance['field_name']);
+    $this->fieldDefinition = $field_definition;
     $this->settings = $settings;
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::form().
+   * {@inheritdoc}
    */
   public function form(EntityInterface $entity, $langcode, array $items, array &$form, array &$form_state, $get_delta = NULL) {
-    $field = $this->field;
-    $instance = $this->instance;
-    $field_name = $field['field_name'];
+    $field_name = $this->fieldDefinition->getFieldName();
 
     $parents = $form['#parents'];
 
@@ -75,11 +66,9 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     // Store field information in $form_state.
     if (!field_form_get_state($parents, $field_name, $langcode, $form_state)) {
       $field_state = array(
-          'field' => $field,
-          'instance' => $instance,
-          'items_count' => count($items),
-          'array_parents' => array(),
-          'errors' => array(),
+        'items_count' => count($items),
+        'array_parents' => array(),
+        'errors' => array(),
       );
       field_form_set_state($parents, $field_name, $langcode, $form_state, $field_state);
     }
@@ -94,8 +83,8 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     if (isset($get_delta) || $definition['multiple_values']) {
       $delta = isset($get_delta) ? $get_delta : 0;
       $element = array(
-        '#title' => check_plain($instance['label']),
-        '#description' => field_filter_xss(\Drupal::token()->replace($instance['description'])),
+        '#title' => check_plain($this->fieldDefinition->getFieldLabel()),
+        '#description' => field_filter_xss(\Drupal::token()->replace($this->fieldDefinition->getFieldDescription())),
       );
       $element = $this->formSingleElement($entity, $items, $delta, $langcode, $element, $form, $form_state);
 
@@ -125,7 +114,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       '#type' => 'container',
       '#attributes' => array(
         'class' => array(
-          'field-type-' . drupal_html_class($field['type']),
+          'field-type-' . drupal_html_class($this->fieldDefinition->getFieldType()),
           'field-name-' . drupal_html_class($field_name),
           'field-widget-' . drupal_html_class($this->getPluginId()),
         ),
@@ -146,7 +135,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       // when $langcode is unknown.
       '#language' => $langcode,
       $langcode => $elements,
-      '#access' => field_access('edit', $field, $entity->entityType(), $entity),
+      '#access' => $this->checkFieldAccess('edit', $entity),
     );
 
     return $addition;
@@ -161,14 +150,12 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    * - table display and drag-n-drop value reordering
    */
   protected function formMultipleElements(EntityInterface $entity, array $items, $langcode, array &$form, array &$form_state) {
-    $field = $this->field;
-    $instance = $this->instance;
-    $field_name = $field['field_name'];
-
+    $field_name = $this->fieldDefinition->getFieldName();
+    $cardinality = $this->fieldDefinition->getFieldCardinality();
     $parents = $form['#parents'];
 
     // Determine the number of widgets to display.
-    switch ($field['cardinality']) {
+    switch ($cardinality) {
       case FIELD_CARDINALITY_UNLIMITED:
         $field_state = field_form_get_state($parents, $field_name, $langcode, $form_state);
         $max = $field_state['items_count'];
@@ -176,16 +163,16 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
         break;
 
       default:
-        $max = $field['cardinality'] - 1;
-        $is_multiple = ($field['cardinality'] > 1);
+        $max = $cardinality - 1;
+        $is_multiple = ($cardinality > 1);
         break;
     }
 
     $id_prefix = implode('-', array_merge($parents, array($field_name)));
     $wrapper_id = drupal_html_id($id_prefix . '-add-more-wrapper');
 
-    $title = check_plain($instance['label']);
-    $description = field_filter_xss(\Drupal::token()->replace($instance['description']));
+    $title = check_plain($this->fieldDefinition->getFieldLabel());
+    $description = field_filter_xss(\Drupal::token()->replace($this->fieldDefinition->getFieldDescription()));
 
     $elements = array();
 
@@ -221,9 +208,9 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     if ($elements) {
       $elements += array(
         '#theme' => 'field_multiple_value_form',
-        '#field_name' => $field['field_name'],
-        '#cardinality' => $field['cardinality'],
-        '#required' => $instance['required'],
+        '#field_name' => $field_name,
+        '#cardinality' => $cardinality,
+        '#required' => $this->fieldDefinition->isFieldRequired(),
         '#title' => $title,
         '#description' => $description,
         '#prefix' => '<div id="' . $wrapper_id . '">',
@@ -232,7 +219,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       );
 
       // Add 'add more' button, if not working with a programmed form.
-      if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED && empty($form_state['programmed'])) {
+      if ($cardinality == FIELD_CARDINALITY_UNLIMITED && empty($form_state['programmed'])) {
         $elements['add_more'] = array(
           '#type' => 'submit',
           '#name' => strtr($id_prefix, '-', '_') . '_add_more',
@@ -256,19 +243,15 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    * Generates the form element for a single copy of the widget.
    */
   protected function formSingleElement(EntityInterface $entity, array $items, $delta, $langcode, array $element, array &$form, array &$form_state) {
-    $instance = $this->instance;
-    $field = $this->field;
-
     $element += array(
       '#entity_type' => $entity->entityType(),
       '#bundle' => $entity->bundle(),
       '#entity' => $entity,
-      '#field_name' => $field['field_name'],
+      '#field_name' => $this->fieldDefinition->getFieldName(),
       '#language' => $langcode,
       '#field_parents' => $form['#parents'],
-      '#columns' => array_keys($field['columns']),
       // Only the first widget should be required.
-      '#required' => $delta == 0 && $instance['required'],
+      '#required' => $delta == 0 && $this->fieldDefinition->isFieldRequired(),
       '#delta' => $delta,
       '#weight' => $delta,
     );
@@ -279,8 +262,9 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       // Allow modules to alter the field widget form element.
       $context = array(
         'form' => $form,
-        'field' => $field,
-        'instance' => $instance,
+        'widget' => $this,
+        'field_definition' => $this->fieldDefinition,
+        'entity' => $entity,
         'langcode' => $langcode,
         'items' => $items,
         'delta' => $delta,
@@ -293,10 +277,10 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::extractFormValues().
+   * {@inheritdoc}
    */
   public function extractFormValues(EntityInterface $entity, $langcode, array &$items, array $form, array &$form_state) {
-    $field_name = $this->field['field_name'];
+    $field_name = $this->fieldDefinition->getFieldName();
 
     // Extract the values from $form_state['values'].
     $path = array_merge($form['#parents'], array($field_name, $langcode));
@@ -331,7 +315,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       $this->sortItems($items);
 
       // Remove empty values.
-      $items = _field_filter_items($this->field, $items);
+      $items = _field_filter_items($this->fieldDefinition->getFieldType(), $items);
 
       // Put delta mapping in $form_state, so that flagErrors() can use it.
       $field_state = field_form_get_state($form['#parents'], $field_name, $langcode, $form_state);
@@ -344,10 +328,10 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::flagErrors().
+   * {@inheritdoc}
    */
   public function flagErrors(EntityInterface $entity, $langcode, array $items, array $form, array &$form_state) {
-    $field_name = $this->field['field_name'];
+    $field_name = $this->fieldDefinition->getFieldName();
 
     $field_state = field_form_get_state($form['#parents'], $field_name, $langcode, $form_state);
 
@@ -410,7 +394,8 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    *   The field values.
    */
   protected function sortItems(array &$items) {
-    $is_multiple = ($this->field['cardinality'] == FIELD_CARDINALITY_UNLIMITED) || ($this->field['cardinality'] > 1);
+    $cardinality = $this->fieldDefinition->getFieldCardinality();
+    $is_multiple = ($cardinality == FIELD_CARDINALITY_UNLIMITED) || ($cardinality > 1);
     if ($is_multiple && isset($items[0]['_weight'])) {
       usort($items, function ($a, $b) {
         $a_weight = (is_array($a) ? $a['_weight'] : 0);
@@ -424,6 +409,45 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
         }
       }
     }
+  }
+
+  /**
+   * Returns whether the currently logged in user has access to the field.
+   *
+   * @todo Remove this once Field API access is unified with entity field
+   *   access: http://drupal.org/node/1994140.
+   */
+  protected function checkFieldAccess($op, $entity) {
+    if ($this->fieldDefinition instanceof FieldInstanceInterface) {
+      $field = $this->fieldDefinition->getField();
+      return field_access($op, $field, $entity->entityType(), $entity);
+    }
+    else {
+      return FALSE;
+    }
+  }
+
+  /**
+   * Returns the array of field settings.
+   *
+   * @return array
+   *   The array of settings.
+   */
+  protected function getFieldSettings() {
+    return $this->fieldDefinition->getFieldSettings();
+  }
+
+  /**
+   * Returns the value of a field setting.
+   *
+   * @param string $setting_name
+   *   The setting name.
+   *
+   * @return mixed
+   *   The setting value.
+   */
+  protected function getFieldSetting($setting_name) {
+    return $this->fieldDefinition->getFieldSetting($setting_name);
   }
 
 }

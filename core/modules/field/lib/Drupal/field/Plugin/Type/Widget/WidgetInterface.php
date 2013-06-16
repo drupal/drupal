@@ -48,26 +48,18 @@ interface WidgetInterface extends WidgetBaseInterface {
    * each form element. If there are multiple values for this field, the
    * formElement() method will be called as many times as needed.
    *
-   * Note that, depending on the context in which the widget is being included
-   * (regular entity form, field configuration form, advanced search form...),
-   * the values for $field and $instance might be different from the "official"
-   * definitions returned by field_info_field() and field_info_instance().
-   * Examples: mono-value widget even if the field is multi-valued, non-required
-   * widget even if the field is 'required'...
-   *
-   * Therefore, the FAPI element callbacks (such as #process, #element_validate,
-   * #value_callback...) used by the widget cannot use the field_info_field()
-   * or field_info_instance() functions to retrieve the $field or $instance
-   * definitions they should operate on. The field_widget_field() and
-   * field_widget_instance() functions should be used instead to fetch the
-   * current working definitions from $form_state, where Field API stores them.
-   *
-   * Alternatively, hook_field_widget_form() can extract the needed specific
-   * properties from $field and $instance and set them as ad-hoc
-   * $element['#custom'] properties, for later use by its element callbacks.
-   *
    * Other modules may alter the form element provided by this function using
-   * hook_field_widget_form_alter().
+   * hook_field_widget_form_alter() or
+   * hook_field_widget_WIDGET_TYPE_form_alter().
+   *
+   * The FAPI element callbacks (such as #process, #element_validate,
+   * #value_callback...) used by the widget do not have access to the original
+   * $field_definition passed to the widget's constructor. Therefore, if any
+   * information is needed from that definition by those callbacks, the widget
+   * implementing this method, or a hook_field_widget[_WIDGET_TYPE]_form_alter()
+   * implementation, must extract the needed properties from the field
+   * definition and set them as ad-hoc $element['#custom'] properties, for later
+   * use by its element callbacks.
    *
    * @param array $items
    *   Array of default values for this field.
@@ -86,7 +78,6 @@ interface WidgetInterface extends WidgetBaseInterface {
    *       $form_state['values'], and is used to access processing information
    *       for the field through the field_form_get_state() and
    *       field_form_set_state() functions.
-   *   - #columns: A list of field storage columns of the field.
    *   - #title: The sanitized element label for the field instance, ready for
    *     output.
    *   - #description: The sanitized element description for the field instance,
@@ -107,8 +98,6 @@ interface WidgetInterface extends WidgetBaseInterface {
    * @return array
    *   The form elements for a single widget for this field.
    *
-   * @see field_widget_field()
-   * @see field_widget_instance()
    * @see hook_field_widget_form_alter()
    * @see hook_field_widget_WIDGET_TYPE_form_alter()
    */

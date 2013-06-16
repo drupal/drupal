@@ -56,7 +56,7 @@ class WidgetPluginManager extends PluginManagerBase {
    *
    * @param array $options
    *   An array with the following key/value pairs:
-   *   - instance: (FieldInstance) The field instance.
+   *   - field_definition: (FieldDefinitionInterface) The field definition.
    *   - form_mode: (string) The form mode.
    *   - prepare: (bool, optional) Whether default values should get merged in
    *     the 'configuration' array. Defaults to TRUE.
@@ -75,12 +75,12 @@ class WidgetPluginManager extends PluginManagerBase {
    */
   public function getInstance(array $options) {
     $configuration = $options['configuration'];
-    $instance = $options['instance'];
-    $field = field_info_field($instance['field_name']);
+    $field_definition = $options['field_definition'];
+    $field_type = $field_definition->getFieldType();
 
     // Fill in default configuration if needed.
     if (!isset($options['prepare']) || $options['prepare'] == TRUE) {
-      $configuration = $this->prepareConfiguration($field['type'], $configuration);
+      $configuration = $this->prepareConfiguration($field_type, $configuration);
     }
 
     $plugin_id = $configuration['type'];
@@ -89,14 +89,14 @@ class WidgetPluginManager extends PluginManagerBase {
     // - $type_info doesn't exist (the widget type is unknown),
     // - the field type is not allowed for the widget.
     $definition = $this->getDefinition($configuration['type']);
-    if (!isset($definition['class']) || !in_array($field['type'], $definition['field_types'])) {
+    if (!isset($definition['class']) || !in_array($field_type, $definition['field_types'])) {
       // Grab the default widget for the field type.
-      $field_type_definition = field_info_field_types($field['type']);
+      $field_type_definition = field_info_field_types($field_type);
       $plugin_id = $field_type_definition['default_widget'];
     }
 
     $configuration += array(
-      'instance' => $instance,
+      'field_definition' => $field_definition,
     );
     return $this->createInstance($plugin_id, $configuration);
   }

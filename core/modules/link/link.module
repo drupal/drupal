@@ -75,7 +75,7 @@ function link_field_load($entity_type, $entities, $field, $instances, $langcode,
 /**
  * Implements hook_field_is_empty().
  */
-function link_field_is_empty($item, $field) {
+function link_field_is_empty($item, $field_type) {
   return !isset($item['url']) || $item['url'] === '';
 }
 

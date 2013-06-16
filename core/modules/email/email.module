@@ -45,7 +45,7 @@ function email_field_info_alter(&$info) {
 /**
  * Implements hook_field_is_empty().
  */
-function email_field_is_empty($item, $field) {
+function email_field_is_empty($item, $field_type) {
   return !isset($item['value']) || $item['value'] === '';
 }
 

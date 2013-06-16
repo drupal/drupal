@@ -136,6 +136,7 @@ class FieldInstanceEditForm extends FieldInstanceFormBase {
     $field_name = $this->instance['field_name'];
     $entity = $form['#entity'];
     $entity_form_display = $form['#entity_form_display'];
+    $field = $this->instance->getField();
 
     if (isset($form['instance']['default_value_widget'])) {
       $element = $form['instance']['default_value_widget'];
@@ -144,9 +145,8 @@ class FieldInstanceEditForm extends FieldInstanceFormBase {
       $items = array();
       $entity_form_display->getWidget($this->instance->getField()->id)->extractFormValues($entity, Language::LANGCODE_NOT_SPECIFIED, $items, $element, $form_state);
 
-      // Grab the field definition from $form_state.
+      // Get the field state.
       $field_state = field_form_get_state($element['#parents'], $field_name, Language::LANGCODE_NOT_SPECIFIED, $form_state);
-      $field = $field_state['field'];
 
       // Validate the value.
       $errors = array();

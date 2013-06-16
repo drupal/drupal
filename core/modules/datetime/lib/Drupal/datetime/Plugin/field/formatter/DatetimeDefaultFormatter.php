@@ -53,7 +53,7 @@ class DateTimeDefaultFormatter extends FormatterBase {
 
         // The formatted output will be in local time.
         $date->setTimeZone(timezone_open(drupal_get_user_timezone()));
-        if ($this->field['settings']['datetime_type'] == 'date') {
+        if ($this->getFieldSetting('datetime_type') == 'date') {
           // A date without time will pick up the current time, use the default.
           datetime_date_default_time($date);
         }

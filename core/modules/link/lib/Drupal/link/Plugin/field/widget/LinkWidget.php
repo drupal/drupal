@@ -33,8 +33,6 @@ class LinkWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
-    $instance = $this->instance;
-
     $element['url'] = array(
       '#type' => 'url',
       '#title' => t('URL'),
@@ -49,13 +47,13 @@ class LinkWidget extends WidgetBase {
       '#placeholder' => $this->getSetting('placeholder_title'),
       '#default_value' => isset($items[$delta]['title']) ? $items[$delta]['title'] : NULL,
       '#maxlength' => 255,
-      '#access' => $instance['settings']['title'] != DRUPAL_DISABLED,
+      '#access' => $this->getFieldSetting('title') != DRUPAL_DISABLED,
     );
     // Post-process the title field to make it conditionally required if URL is
     // non-empty. Omit the validation on the field edit form, since the field
     // settings cannot be saved otherwise.
     $is_field_edit_form = ($element['#entity'] === NULL);
-    if (!$is_field_edit_form && $instance['settings']['title'] == DRUPAL_REQUIRED) {
+    if (!$is_field_edit_form && $this->getFieldSetting('title') == DRUPAL_REQUIRED) {
       $element['#element_validate'] = array(array($this, 'validateTitle'));
     }
 
@@ -70,7 +68,7 @@ class LinkWidget extends WidgetBase {
 
     // If cardinality is 1, ensure a label is output for the field by wrapping it
     // in a details element.
-    if ($this->field['cardinality'] == 1) {
+    if ($this->fieldDefinition->getFieldCardinality() == 1) {
       $element += array(
         '#type' => 'fieldset',
       );

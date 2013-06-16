@@ -203,15 +203,13 @@ function field_test_field_attach_view_alter(&$output, $context) {
  * Implements hook_field_widget_form_alter().
  */
 function field_test_field_widget_form_alter(&$element, &$form_state, $context) {
-  $instance = $context['instance'];
-  $entity_form_display = entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default');
-  switch ($context['field']['field_name']) {
+  switch ($context['field_definition']->getFieldName()) {
     case 'alter_test_text':
-      drupal_set_message('Field size: ' . $entity_form_display->getWidget($context['field']['field_name'])->getSetting('size'));
+      drupal_set_message('Field size: ' . $context['widget']->getSetting('size'));
       break;
 
     case 'alter_test_options':
-      drupal_set_message('Widget type: ' . $entity_form_display->getWidget($context['field']['field_name'])->getPluginId());
+      drupal_set_message('Widget type: ' . $context['widget']->getPluginId());
       break;
   }
   // Set a message if this is for the form displayed to set default value for

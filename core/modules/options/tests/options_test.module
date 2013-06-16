@@ -6,11 +6,12 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 
 /**
  * Allowed values callback.
  */
-function options_test_allowed_values_callback($field, $instance, $entity) {
+function options_test_allowed_values_callback(FieldDefinitionInterface $field_definition, EntityInterface $entity) {
   $values = array(
     'Group 1' => array(
       0 => 'Zero',
@@ -27,7 +28,7 @@ function options_test_allowed_values_callback($field, $instance, $entity) {
 /**
  * An entity-bound allowed values callback.
  */
-function options_test_dynamic_values_callback($field, $instance, EntityInterface $entity, &$cacheable) {
+function options_test_dynamic_values_callback(FieldDefinitionInterface $field_definition, EntityInterface $entity, &$cacheable) {
   $cacheable = FALSE;
   // We need the values of the entity as keys.
   $uri = $entity->uri();

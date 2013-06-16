@@ -13,12 +13,8 @@
  * implement this hook to specify the list of options to display in the
  * widgets.
  *
- * @param $field
+ * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition
  *   The field definition.
- * @param $instance
- *   The instance definition. It is recommended to only use instance level
- *   properties to filter out values from a list defined by field level
- *   properties.
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object the field is attached to.
  *
@@ -31,7 +27,7 @@
  *   widget. The HTML tags defined in _field_filter_xss_allowed_tags() are
  *   allowed, other tags will be filtered.
  */
-function hook_options_list($field, $instance, $entity) {
+function hook_options_list(\Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition, \Drupal\Core\Entity\EntityInterface $entity) {
   // Sample structure.
   $options = array(
     0 => t('Zero'),
@@ -57,7 +53,7 @@ function hook_options_list($field, $instance, $entity) {
   // In actual implementations, the array of options will most probably depend
   // on properties of the field. Example from taxonomy.module:
   $options = array();
-  foreach ($field['settings']['allowed_values'] as $tree) {
+  foreach ($field_definition->getFieldSetting('allowed_values') as $tree) {
     $terms = taxonomy_get_tree($tree['vid'], $tree['parent'], NULL, TRUE);
     if ($terms) {
       foreach ($terms as $term) {
@@ -81,10 +77,8 @@ function hook_options_list($field, $instance, $entity) {
  *
  * @param array $context
  *   An associative array containing:
- *   - field: The field definition (\Drupal\field\Plugin\Core\Entity\Field).
- *   - instance: The instance definition. It is recommended to only use instance
- *     level properties to filter out values from a list defined by field level
- *     properties (Drupal\field\Plugin\Core\Entity\FieldInstance).
+ *   - field_definition: The field definition
+ *     (\Drupal\Core\Entity\Field\FieldDefinitionInterface).
  *   - entity: The entity object the field is attached to
  *     (\Drupal\Core\Entity\EntityInterface).
  *

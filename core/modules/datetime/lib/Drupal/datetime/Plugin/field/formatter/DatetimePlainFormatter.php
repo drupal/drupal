@@ -28,7 +28,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
 class DateTimePlainFormatter extends FormatterBase {
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::viewElements().
+   * {@inheritdoc}
    */
   public function viewElements(EntityInterface $entity, $langcode, array $items) {
 
@@ -43,7 +43,7 @@ class DateTimePlainFormatter extends FormatterBase {
         $date = $item['date'];
         $date->setTimeZone(timezone_open(drupal_get_user_timezone()));
         $format = DATETIME_DATETIME_STORAGE_FORMAT;
-        if ($this->field['settings']['datetime_type'] == 'date') {
+        if ($this->getFieldSetting('datetime_type') == 'date') {
           // A date without time will pick up the current time, use the default.
           datetime_date_default_time($date);
           $format = DATETIME_DATE_STORAGE_FORMAT;

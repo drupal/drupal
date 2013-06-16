@@ -38,7 +38,7 @@ use Drupal\entity_reference\Plugin\field\widget\AutocompleteWidgetBase;
 class AutocompleteWidget extends AutocompleteWidgetBase {
 
   /**
-   * Overrides \Drupal\entity_reference\Plugin\field\widget\AutocompleteWidgetBase::formElement().
+   * {@inheritdoc}
    */
   public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     // We let the Field API handles multiple values for us, only take care of
@@ -54,10 +54,10 @@ class AutocompleteWidget extends AutocompleteWidgetBase {
   }
 
   /**
-   * Overrides \Drupal\entity_reference\Plugin\field\widget\AutocompleteWidgetBase::elementValidate()
+   * {@inheritdoc}
    */
   public function elementValidate($element, &$form_state, $form) {
-    $auto_create = isset($this->instance['settings']['handler_settings']['auto_create']) ? $this->instance['settings']['handler_settings']['auto_create'] : FALSE;
+    $auto_create = $this->getSelectionHandlerSetting('auto_create');
 
     // If a value was entered into the autocomplete.
     $value = '';
@@ -69,11 +69,11 @@ class AutocompleteWidget extends AutocompleteWidgetBase {
       else {
         // Try to get a match from the input string when the user didn't use the
         // autocomplete but filled in a value manually.
-        $handler = entity_reference_get_selection_handler($this->field, $this->instance);
+        $handler = entity_reference_get_selection_handler($this->fieldDefinition);
         $value = $handler->validateAutocompleteInput($element['#value'], $element, $form_state, $form, !$auto_create);
       }
 
-      if (!$value && $auto_create && (count($this->instance['settings']['handler_settings']['target_bundles']) == 1)) {
+      if (!$value && $auto_create && (count($this->getSelectionHandlerSetting('target_bundles')) == 1)) {
         // Auto-create item. see entity_reference_field_presave().
         $value = array(
           'target_id' => 0,

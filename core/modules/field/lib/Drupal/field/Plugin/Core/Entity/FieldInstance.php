@@ -498,6 +498,82 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   /**
    * {@inheritdoc}
    */
+  public function getFieldName() {
+    return $this->field->id;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldType() {
+    return $this->field->type;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldSettings() {
+    return $this->settings + $this->field->getFieldSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldSetting($setting_name) {
+    if (array_key_exists($setting_name, $this->settings)) {
+      return $this->settings[$setting_name];
+    }
+    else {
+      return $this->field->getFieldSetting($setting_name);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldPropertyNames() {
+    $schema = $this->field->getSchema();
+    return array_keys($schema['columns']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isFieldTranslatable() {
+    return $this->field->translatable;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldLabel() {
+    return $this->label();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldDescription() {
+    return $this->description;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldCardinality() {
+    return $this->field->cardinality;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isFieldRequired() {
+    return $this->required;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function allowBundleRename() {
     $this->bundle_rename_allowed = TRUE;
   }

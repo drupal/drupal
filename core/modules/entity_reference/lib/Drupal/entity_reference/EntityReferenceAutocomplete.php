@@ -71,7 +71,7 @@ class EntityReferenceAutocomplete {
         throw new AccessDeniedHttpException();
       }
     }
-    $handler = entity_reference_get_selection_handler($field, $instance, $entity);
+    $handler = entity_reference_get_selection_handler($instance, $entity);
 
     if (isset($string)) {
       // Get an array of matching entities.

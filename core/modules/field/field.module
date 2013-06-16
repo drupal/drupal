@@ -7,6 +7,7 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
+use Drupal\field\FieldInterface;
 
 /*
  * Load all public Field API functions. Drupal currently has no
@@ -501,8 +502,8 @@ function field_get_default_value(EntityInterface $entity, $field, $instance, $la
 /**
  * Filters out empty field values.
  *
- * @param $field
- *   The field definition.
+ * @param $field_type
+ *   The field type.
  * @param $items
  *   The field values to filter.
  *
@@ -510,11 +511,12 @@ function field_get_default_value(EntityInterface $entity, $field, $instance, $la
  *   The array of items without empty field values. The function also renumbers
  *   the array keys to ensure sequential deltas.
  */
-function _field_filter_items($field, $items) {
-  $function = $field['module'] . '_field_is_empty';
+function _field_filter_items($field_type, $items) {
+  $field_type_info = field_info_field_types($field_type);
+  $function = $field_type_info['module'] . '_field_is_empty';
   foreach ((array) $items as $delta => $item) {
     // Explicitly break if the function is undefined.
-    if ($function($item, $field)) {
+    if ($function($item, $field_type)) {
       unset($items[$delta]);
     }
   }
@@ -808,7 +810,7 @@ function field_view_field(EntityInterface $entity, $field_name, $display_options
     $formatter_manager = drupal_container()->get('plugin.manager.field.formatter');
     $display_options = $formatter_manager->prepareConfiguration($field['type'], $display_options);
     $formatter = $formatter_manager->getInstance(array(
-      'instance' => $instance,
+      'field_definition' => $instance,
       'view_mode' => $view_mode,
       'prepare' => FALSE,
       'configuration' => $display_options,
@@ -927,9 +929,8 @@ function field_has_data($field) {
  *   The operation to be performed. Possible values:
  *   - edit
  *   - view
- * @param array $field
- *   The full field structure array for the field on which the operation is to
- *   be performed. See field_info_field().
+ * @param \Drupal\field\FieldInterface $field
+ *   The field on which the operation is to be performed.
  * @param $entity_type
  *   The type of $entity; for example, 'node' or 'user'.
  * @param $entity
@@ -940,7 +941,7 @@ function field_has_data($field) {
  * @return
  *   TRUE if the operation is allowed; FALSE if the operation is denied.
  */
-function field_access($op, $field, $entity_type, $entity = NULL, $account = NULL) {
+function field_access($op, FieldInterface $field, $entity_type, $entity = NULL, $account = NULL) {
   global $user;
 
   if (!isset($account)) {

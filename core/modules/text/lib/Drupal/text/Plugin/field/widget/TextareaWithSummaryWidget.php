@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\text\Plugin\field\widget\TextareaWithSummaryWidget.
+ * Contains \Drupal\text\Plugin\field\widget\TextareaWithSummaryWidget.
  */
 
 namespace Drupal\text\Plugin\field\widget;
@@ -30,12 +30,12 @@ use Drupal\Core\Annotation\Translation;
 class TextareaWithSummaryWidget extends TextareaWidget {
 
   /**
-   * Overrides TextareaWidget::formElement().
+   * {@inheritdoc}
    */
   function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     $element = parent::formElement($items, $delta, $element, $langcode, $form, $form_state);
 
-    $display_summary = !empty($items[$delta]['summary']) || $this->instance['settings']['display_summary'];
+    $display_summary = !empty($items[$delta]['summary']) || $this->getFieldSetting('display_summary');
     $element['summary'] = array(
       '#type' => $display_summary ? 'textarea' : 'value',
       '#default_value' => isset($items[$delta]['summary']) ? $items[$delta]['summary'] : NULL,
@@ -55,7 +55,7 @@ class TextareaWithSummaryWidget extends TextareaWidget {
   }
 
   /**
-   * Overrides TextareaWidget::errorElement().
+   * {@inheritdoc}
    */
   public function errorElement(array $element, array $error, array $form, array &$form_state) {
     switch ($error['error']) {

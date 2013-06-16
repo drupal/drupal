@@ -31,7 +31,7 @@ use Drupal\Core\Entity\EntityInterface;
 class FileWidget extends WidgetBase {
 
   /**
-   * Implements \Drupal\field\Plugin\Type\Widget\WidgetInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
     $element['progress_indicator'] = array(
@@ -50,14 +50,12 @@ class FileWidget extends WidgetBase {
   }
 
   /**
-   * Overrides \Drupal\field\Plugin\Type\Widget\WidgetBase::formMultipleElements().
+   * {@inheritdoc}
    *
    * Special handling for draggable multiple widgets and 'add more' button.
    */
   protected function formMultipleElements(EntityInterface $entity, array $items, $langcode, array &$form, array &$form_state) {
-    $field = $this->field;
-    $instance = $this->instance;
-    $field_name = $field['field_name'];
+    $field_name = $this->fieldDefinition->getFieldName();
 
     $parents = $form['#parents'];
 
@@ -70,23 +68,24 @@ class FileWidget extends WidgetBase {
     }
 
     // Determine the number of widgets to display.
-    switch ($field['cardinality']) {
+    $cardinality = $this->fieldDefinition->getFieldCardinality();
+    switch ($cardinality) {
       case FIELD_CARDINALITY_UNLIMITED:
         $max = count($items);
         $is_multiple = TRUE;
         break;
 
       default:
-        $max = $field['cardinality'] - 1;
-        $is_multiple = ($field['cardinality'] > 1);
+        $max = $cardinality - 1;
+        $is_multiple = ($cardinality > 1);
         break;
     }
 
     $id_prefix = implode('-', array_merge($parents, array($field_name)));
     $wrapper_id = drupal_html_id($id_prefix . '-add-more-wrapper');
 
-    $title = check_plain($instance['label']);
-    $description = field_filter_xss($instance['description']);
+    $title = check_plain($this->fieldDefinition->getFieldLabel());
+    $description = field_filter_xss($this->fieldDefinition->getFieldDescription());
 
     $elements = array();
 
@@ -120,8 +119,8 @@ class FileWidget extends WidgetBase {
       }
     }
 
-    $empty_single_allowed = ($this->field['cardinality'] == 1 && $delta == 0);
-    $empty_multiple_allowed = ($this->field['cardinality'] == FIELD_CARDINALITY_UNLIMITED || $delta < $this->field['cardinality']) && empty($form_state['programmed']);
+    $empty_single_allowed = ($cardinality == 1 && $delta == 0);
+    $empty_multiple_allowed = ($cardinality == FIELD_CARDINALITY_UNLIMITED || $delta < $cardinality) && empty($form_state['programmed']);
 
     // Add one more empty row for new uploads except when this is a programmed
     // multiple form as it is not necessary.
@@ -150,25 +149,39 @@ class FileWidget extends WidgetBase {
       $elements['#description'] = $description;
       $elements['#field_name'] = $element['#field_name'];
       $elements['#language'] = $element['#language'];
-      $elements['#display_field'] = !empty($this->field['settings']['display_field']);
+      $elements['#display_field'] = (bool) $this->getFieldSetting('display_field');
 
       // Add some properties that will eventually be added to the file upload
       // field. These are added here so that they may be referenced easily
       // through a hook_form_alter().
       $elements['#file_upload_title'] = t('Add a new file');
-      $elements['#file_upload_description'] = theme('file_upload_help', array('description' => '', 'upload_validators' => $elements[0]['#upload_validators'], 'cardinality' => $this->field['cardinality']));
+      $elements['#file_upload_description'] = theme('file_upload_help', array('description' => '', 'upload_validators' => $elements[0]['#upload_validators'], 'cardinality' => $cardinality));
     }
 
     return $elements;
   }
 
   /**
-   * Implements \Drupal\field\Plugin\Type\Widget\WidgetInterface::formElement().
+   * {@inheritdoc}
    */
   public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
+    $field_settings = $this->getFieldSettings();
+
+    // The field settings include defaults for the field type. However, this
+    // widget is a base class for other widgets (e.g., ImageWidget) that may act
+    // on field types without these expected settings.
+    // @todo Add support for merging settings of base types to implementations
+    //   of FieldDefinitionInterface::getFieldSettings().
+    $field_settings += array(
+      'display_default' => NULL,
+      'display_field' => NULL,
+      'description_field' => NULL,
+    );
+
+    $cardinality = $this->fieldDefinition->getFieldCardinality();
     $defaults = array(
       'fids' => array(),
-      'display' => !empty($this->field['settings']['display_default']),
+      'display' => (bool) $field_settings['display_default'],
       'description' => '',
     );
 
@@ -177,13 +190,19 @@ class FileWidget extends WidgetBase {
     $element_info = element_info('managed_file');
     $element += array(
       '#type' => 'managed_file',
-      '#upload_location' => file_field_widget_uri($this->field, $this->instance),
-      '#upload_validators' => file_field_widget_upload_validators($this->field, $this->instance),
+      '#upload_location' => file_field_widget_uri($field_settings),
+      '#upload_validators' => file_field_widget_upload_validators($field_settings),
       '#value_callback' => 'file_field_widget_value',
       '#process' => array_merge($element_info['#process'], array('file_field_widget_process')),
       '#progress_indicator' => $this->getSetting('progress_indicator'),
       // Allows this field to return an array instead of a single value.
       '#extended' => TRUE,
+      // Add properties needed by file_field_widget_value() and
+      // file_field_widget_process().
+      '#display_field' => (bool) $field_settings['display_field'],
+      '#display_default' => $field_settings['display_default'],
+      '#description_field' => $field_settings['description_field'],
+      '#cardinality' => $cardinality,
     );
 
     $element['#weight'] = $delta;
@@ -197,7 +216,6 @@ class FileWidget extends WidgetBase {
 
     $default_fids = $element['#extended'] ? $element['#default_value']['fids'] : $element['#default_value'];
     if (empty($default_fids)) {
-      $cardinality = isset($this->field['cardinality']) ? $this->field['cardinality'] : 1;
       $element['#description'] = theme('file_upload_help', array('description' => $element['#description'], 'upload_validators' => $element['#upload_validators'], 'cardinality' => $cardinality));
       $element['#multiple'] = $cardinality != 1 ? TRUE : FALSE;
       if ($cardinality != 1 && $cardinality != -1) {
@@ -209,7 +227,7 @@ class FileWidget extends WidgetBase {
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::massageFormValues().
+   * {@inheritdoc}
    */
   public function massageFormValues(array $values, array $form, array &$form_state) {
     // Since file upload widget now supports uploads of more than one file at a

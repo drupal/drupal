@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\text\Plugin\field\widget\TextareaWidget.
+ * Contains \Drupal\text\Plugin\field\widget\TextareaWidget.
  */
 
 namespace Drupal\text\Plugin\field\widget;
@@ -30,7 +30,7 @@ use Drupal\field\Plugin\Type\Widget\WidgetBase;
 class TextareaWidget extends WidgetBase {
 
   /**
-   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
     $element['rows'] = array(
@@ -50,7 +50,7 @@ class TextareaWidget extends WidgetBase {
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::formElement().
+   * {@inheritdoc}
    */
   public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     $main_widget = $element + array(
@@ -61,7 +61,7 @@ class TextareaWidget extends WidgetBase {
       '#attributes' => array('class' => array('text-full')),
     );
 
-    if ($this->instance['settings']['text_processing']) {
+    if ($this->getFieldSetting('text_processing')) {
       $element = $main_widget;
       $element['#type'] = 'text_format';
       $element['#format'] = isset($items[$delta]['format']) ? $items[$delta]['format'] : NULL;

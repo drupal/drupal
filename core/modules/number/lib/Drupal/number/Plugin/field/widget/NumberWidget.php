@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\number\Plugin\field\widget\NumberWidget.
+ * Contains \Drupal\number\Plugin\field\widget\NumberWidget.
  */
 
 namespace Drupal\number\Plugin\field\widget;
@@ -31,7 +31,7 @@ use Drupal\field\Plugin\Type\Widget\WidgetBase;
 class NumberWidget extends WidgetBase {
 
   /**
-   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
     $element['placeholder'] = array(
@@ -44,13 +44,11 @@ class NumberWidget extends WidgetBase {
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::formElement().
+   * {@inheritdoc}
    */
   public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
-    $field = $this->field;
-    $instance = $this->instance;
-
     $value = isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL;
+    $field_settings = $this->getFieldSettings();
 
     $element += array(
       '#type' => 'number',
@@ -59,9 +57,9 @@ class NumberWidget extends WidgetBase {
     );
 
     // Set the step for floating point and decimal numbers.
-    switch ($field['type']) {
+    switch ($this->fieldDefinition->getFieldType()) {
       case 'number_decimal':
-        $element['#step'] = pow(0.1, $field['settings']['scale']);
+        $element['#step'] = pow(0.1, $field_settings['scale']);
         break;
 
       case 'number_float':
@@ -70,20 +68,20 @@ class NumberWidget extends WidgetBase {
     }
 
     // Set minimum and maximum.
-    if (is_numeric($instance['settings']['min'])) {
-      $element['#min'] = $instance['settings']['min'];
+    if (is_numeric($field_settings['min'])) {
+      $element['#min'] = $field_settings['min'];
     }
-    if (is_numeric($instance['settings']['max'])) {
-      $element['#max'] = $instance['settings']['max'];
+    if (is_numeric($field_settings['max'])) {
+      $element['#max'] = $field_settings['max'];
     }
 
     // Add prefix and suffix.
-    if (!empty($instance['settings']['prefix'])) {
-      $prefixes = explode('|', $instance['settings']['prefix']);
+    if ($field_settings['prefix']) {
+      $prefixes = explode('|', $field_settings['prefix']);
       $element['#field_prefix'] = field_filter_xss(array_pop($prefixes));
     }
-    if (!empty($instance['settings']['suffix'])) {
-      $suffixes = explode('|', $instance['settings']['suffix']);
+    if ($field_settings['suffix']) {
+      $suffixes = explode('|', $field_settings['suffix']);
       $element['#field_suffix'] = field_filter_xss(array_pop($suffixes));
     }
 
@@ -91,7 +89,7 @@ class NumberWidget extends WidgetBase {
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::errorElement().
+   * {@inheritdoc}
    */
   public function errorElement(array $element, array $error, array $form, array &$form_state) {
     return $element['value'];

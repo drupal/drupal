@@ -7,6 +7,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\FieldException;
+use Drupal\field\FieldInterface;
 
 /**
  * Implements hook_field_info().
@@ -137,7 +138,7 @@ function field_test_field_validate(EntityInterface $entity = NULL, $field, $inst
 /**
  * Implements hook_field_is_empty().
  */
-function field_test_field_is_empty($item, $field) {
+function field_test_field_is_empty($item, $field_type) {
   return empty($item['value']);
 }
 
@@ -197,7 +198,7 @@ function field_test_default_value(EntityInterface $entity, $field, $instance) {
 /**
  * Implements hook_field_access().
  */
-function field_test_field_access($op, $field, $entity_type, $entity, $account) {
+function field_test_field_access($op, FieldInterface $field, $entity_type, $entity, $account) {
   if ($field['field_name'] == "field_no_{$op}_access") {
     return FALSE;
   }

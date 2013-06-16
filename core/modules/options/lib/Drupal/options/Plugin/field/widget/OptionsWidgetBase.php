@@ -7,7 +7,7 @@
 
 namespace Drupal\options\Plugin\field\widget;
 
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 
 /**
@@ -36,12 +36,10 @@ abstract class OptionsWidgetBase extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct($plugin_id, array $plugin_definition, FieldInstance $instance, array $settings) {
-    parent::__construct($plugin_id, $plugin_definition, $instance, $settings);
-
-    // Reset internal pointer since we're dealing with objects now.
-    reset($this->field['columns']);
-    $this->column = key($this->field['columns']);
+  public function __construct($plugin_id, array $plugin_definition, FieldDefinitionInterface $field_definition, array $settings) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings);
+    $property_names = $this->fieldDefinition->getFieldPropertyNames();
+    $this->column = $property_names[0];
   }
 
   /**
@@ -52,7 +50,8 @@ abstract class OptionsWidgetBase extends WidgetBase {
     // element.
     $this->entity = $element['#entity'];
     $this->required = $element['#required'];
-    $this->multiple = ($this->field['cardinality'] == FIELD_CARDINALITY_UNLIMITED) || ($this->field['cardinality'] > 1);
+    $cardinality = $this->fieldDefinition->getFieldCardinality();
+    $this->multiple = ($cardinality == FIELD_CARDINALITY_UNLIMITED) || ($cardinality > 1);
     $this->has_value = isset($items[0][$this->column]);
 
     // Add our custom validator.
@@ -115,7 +114,9 @@ abstract class OptionsWidgetBase extends WidgetBase {
       $module_handler = \Drupal::moduleHandler();
 
       // Get the list of options from the field type module, and sanitize them.
-      $options = (array) $module_handler->invoke($this->field['module'], 'options_list', array($this->field, $this->instance, $this->entity));
+      $field_type_info = field_info_field_types($this->fieldDefinition->getFieldType());
+      $module = $field_type_info['module'];
+      $options = (array) $module_handler->invoke($module, 'options_list', array($this->fieldDefinition, $this->entity));
 
       // Add an empty option if the widget needs one.
       if ($empty_option = $this->getEmptyOption()) {
@@ -133,8 +134,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
       }
 
       $context = array(
-        'field' => $this->field,
-        'instance' => $this->instance,
+        'fieldDefinition' => $this->fieldDefinition,
         'entity' => $this->entity,
       );
       $module_handler->alter('options_list', $options, $context);

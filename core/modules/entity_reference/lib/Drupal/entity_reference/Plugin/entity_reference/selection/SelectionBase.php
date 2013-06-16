@@ -12,6 +12,7 @@ use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface;
 
@@ -30,18 +31,11 @@ use Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface;
 class SelectionBase implements SelectionInterface {
 
   /**
-   * The field array.
+   * The field definition.
    *
-   * @var array
+   * @var \Drupal\Core\Entity\Field\FieldDefinitionInterface
    */
-  protected $field;
-
-  /**
-   * The instance array.
-   *
-   * @var array
-   */
-  protected $instance;
+  protected $fieldDefinition;
 
   /**
    * The entity object, or NULL
@@ -53,9 +47,8 @@ class SelectionBase implements SelectionInterface {
   /**
    * Constructs a SelectionBase object.
    */
-  public function __construct($field, $instance, EntityInterface $entity = NULL) {
-    $this->field = $field;
-    $this->instance = $instance;
+  public function __construct(FieldDefinitionInterface $field_definition, EntityInterface $entity = NULL) {
+    $this->fieldDefinition = $field_definition;
     $this->entity = $entity;
   }
 
@@ -165,7 +158,7 @@ class SelectionBase implements SelectionInterface {
    * Implements SelectionInterface::getReferencableEntities().
    */
   public function getReferencableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
-    $target_type = $this->field['settings']['target_type'];
+    $target_type = $this->fieldDefinition->getFieldSetting('target_type');
 
     $query = $this->buildEntityQuery($match, $match_operator);
     if ($limit > 0) {
@@ -204,7 +197,7 @@ class SelectionBase implements SelectionInterface {
   public function validateReferencableEntities(array $ids) {
     $result = array();
     if ($ids) {
-      $target_type = $this->field['settings']['target_type'];
+      $target_type = $this->fieldDefinition->getFieldSetting('target_type');
       $entity_info = entity_get_info($target_type);
       $query = $this->buildEntityQuery();
       $result = $query
@@ -264,7 +257,7 @@ class SelectionBase implements SelectionInterface {
    *   it.
    */
   public function buildEntityQuery($match = NULL, $match_operator = 'CONTAINS') {
-    $target_type = $this->field['settings']['target_type'];
+    $target_type = $this->fieldDefinition->getFieldSetting('target_type');
     $entity_info = entity_get_info($target_type);
 
     $query = \Drupal::entityQuery($target_type);
@@ -277,17 +270,18 @@ class SelectionBase implements SelectionInterface {
     }
 
     // Add entity-access tag.
-    $query->addTag($this->field['settings']['target_type'] . '_access');
+    $query->addTag($this->fieldDefinition->getFieldSetting('target_type') . '_access');
 
     // Add the Selection handler for
     // entity_reference_query_entity_reference_alter().
     $query->addTag('entity_reference');
-    $query->addMetaData('field', $this->field);
+    $query->addMetaData('field_definition', $this->fieldDefinition);
     $query->addMetaData('entity_reference_selection_handler', $this);
 
     // Add the sort option.
-    if (!empty($this->instance['settings']['handler_settings']['sort'])) {
-      $sort_settings = $this->instance['settings']['handler_settings']['sort'];
+    $handler_settings = $this->fieldDefinition->getFieldSetting('handler_settings');
+    if (!empty($handler_settings['sort'])) {
+      $sort_settings = $handler_settings['sort'];
       if ($sort_settings['field'] != '_none') {
         $query->sort($sort_settings['field'], $sort_settings['direction']);
       }
