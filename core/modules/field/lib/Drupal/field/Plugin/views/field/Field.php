@@ -34,12 +34,11 @@ class Field extends FieldPluginBase {
   public $items = array();
 
   /**
-   * Store the field information.
+   * The field information as returned by field_info_field().
    *
-   * @var array
+   * @var \Drupal\field\FieldInterface
    */
-  public $field_info = array();
-
+  public $field_info;
 
   /**
    * Does the field supports multiple field values.
@@ -61,13 +60,6 @@ class Field extends FieldPluginBase {
    * @var string
    */
   public $base_table;
-
-  /**
-   * Store the field instance.
-   *
-   * @var array
-   */
-  public $instance;
 
   /**
    * An array of formatter options.
@@ -435,11 +427,8 @@ class Field extends FieldPluginBase {
 
     $settings = $this->options['settings'] + field_info_formatter_settings($format);
 
-    // Provide an instance array for hook_field_formatter_settings_form().
-    $this->instance = $this->fakeFieldInstance($format, $settings);
-
     $options = array(
-      'instance' => $this->instance,
+      'field_definition' => $field,
       'configuration' => array(
         'type' => $format,
         'settings' => $settings,
@@ -455,42 +444,6 @@ class Field extends FieldPluginBase {
       $settings_form = $formatter->settingsForm($form, $form_state);
     }
     $form['settings'] = $settings_form;
-  }
-
-  /**
-   * Provides a fake field instance.
-   *
-   * @param string $formatter
-   *   The machine name of the formatter to use.
-   * @param array $formatter_settings
-   *   An associative array of settings for the formatter.
-   *
-   * @return array
-   *   An associative array of instance date for the fake field.
-   *
-   * @see field_info_instance()
-   */
-  function fakeFieldInstance($formatter, $formatter_settings) {
-    $field_name = $this->definition['field_name'];
-    $field = field_read_field($field_name);
-
-    $field_type = field_info_field_types($field['type']);
-
-    return array(
-      // Build a fake entity type and bundle.
-      'field_name' => $field_name,
-      'entity_type' => 'views_fake',
-      'bundle' => 'views_fake',
-
-      // Use the default field settings.
-      'settings' => field_info_instance_settings($field['type']),
-
-      // Set the other fields to their default values.
-      'required' => FALSE,
-      'label' => $field_name,
-      'description' => '',
-      'deleted' => FALSE,
-    );
   }
 
   /**

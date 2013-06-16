@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\text\Plugin\field\widget\TextfieldWidget.
+ * Contains \Drupal\text\Plugin\field\widget\TextfieldWidget.
  */
 
 namespace Drupal\text\Plugin\field\widget;
@@ -30,7 +30,7 @@ use Drupal\field\Plugin\Type\Widget\WidgetBase;
 class TextfieldWidget extends WidgetBase {
 
   /**
-   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
     $element['size'] = array(
@@ -50,7 +50,7 @@ class TextfieldWidget extends WidgetBase {
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::formElement().
+   * {@inheritdoc}
    */
   public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     $main_widget = $element + array(
@@ -58,11 +58,11 @@ class TextfieldWidget extends WidgetBase {
       '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
       '#size' => $this->getSetting('size'),
       '#placeholder' => $this->getSetting('placeholder'),
-      '#maxlength' => $this->field['settings']['max_length'],
+      '#maxlength' => $this->getFieldSetting('max_length'),
       '#attributes' => array('class' => array('text-full')),
     );
 
-    if ($this->instance['settings']['text_processing']) {
+    if ($this->getFieldSetting('text_processing')) {
       $element = $main_widget;
       $element['#type'] = 'text_format';
       $element['#format'] = isset($items[$delta]['format']) ? $items[$delta]['format'] : NULL;

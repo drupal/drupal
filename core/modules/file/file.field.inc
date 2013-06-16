@@ -292,7 +292,7 @@ function file_field_delete_revision(EntityInterface $entity, $field, $instance, 
 /**
  * Implements hook_field_is_empty().
  */
-function file_field_is_empty($item, $field) {
+function file_field_is_empty($item, $field_type) {
   return empty($item['fid']);
 }
 
@@ -317,18 +317,18 @@ function file_field_displayed($item, $field) {
 /**
  * Retrieves the upload validators for a file field.
  *
- * @param $field
- *   A field array.
+ * @param array $field_settings
+ *   The field settings.
  *
  * @return
  *   An array suitable for passing to file_save_upload() or the file field
  *   element's '#upload_validators' property.
  */
-function file_field_widget_upload_validators($field, $instance) {
+function file_field_widget_upload_validators(array $field_settings) {
   // Cap the upload size according to the PHP limit.
   $max_filesize = parse_size(file_upload_max_size());
-  if (!empty($instance['settings']['max_filesize']) && parse_size($instance['settings']['max_filesize']) < $max_filesize) {
-    $max_filesize = parse_size($instance['settings']['max_filesize']);
+  if (!empty($field_settings['max_filesize']) && parse_size($field_settings['max_filesize']) < $max_filesize) {
+    $max_filesize = parse_size($field_settings['max_filesize']);
   }
 
   $validators = array();
@@ -337,20 +337,18 @@ function file_field_widget_upload_validators($field, $instance) {
   $validators['file_validate_size'] = array($max_filesize);
 
   // Add the extension check if necessary.
-  if (!empty($instance['settings']['file_extensions'])) {
-    $validators['file_validate_extensions'] = array($instance['settings']['file_extensions']);
+  if (!empty($field_settings['file_extensions'])) {
+    $validators['file_validate_extensions'] = array($field_settings['file_extensions']);
   }
 
   return $validators;
 }
 
 /**
- * Determines the URI for a file field instance.
+ * Determines the URI for a file field.
  *
- * @param $field
- *   A field array.
- * @param $instance
- *   A field instance array.
+ * @param array $field_settings
+ *   The field settings.
  * @param $data
  *   An array of token objects to pass to
  *   \Drupal\Core\Utility\Token::replace().
@@ -360,13 +358,13 @@ function file_field_widget_upload_validators($field, $instance) {
  *
  * @see \Drupal\Core\Utility\Token::replace()
  */
-function file_field_widget_uri($field, $instance, $data = array()) {
-  $destination = trim($instance['settings']['file_directory'], '/');
+function file_field_widget_uri(array $field_settings, $data = array()) {
+  $destination = trim($field_settings['file_directory'], '/');
 
   // Replace tokens.
   $destination = Drupal::token()->replace($destination, $data);
 
-  return $field['settings']['uri_scheme'] . '://' . $destination;
+  return $field_settings['uri_scheme'] . '://' . $destination;
 }
 
 /**
@@ -378,9 +376,8 @@ function file_field_widget_value($element, $input = FALSE, $form_state) {
   if ($input) {
     // Checkboxes lose their value when empty.
     // If the display field is present make sure its unchecked value is saved.
-    $field = field_widget_field($element, $form_state);
     if (empty($input['display'])) {
-      $input['display'] = $field['settings']['display_field'] ? 0 : 1;
+      $input['display'] = $element['#display_field'] ? 0 : 1;
     }
   }
 
@@ -449,17 +446,14 @@ function file_field_widget_process($element, &$form_state, $form) {
   $item = $element['#value'];
   $item['fids'] = $element['fids']['#value'];
 
-  $field = field_widget_field($element, $form_state);
-  $instance = field_widget_instance($element, $form_state);
-
   $element['#theme'] = 'file_widget';
 
   // Add the display field if enabled.
-  if (!empty($field['settings']['display_field']) && $item['fids']) {
+  if ($element['#display_field'] && $item['fids']) {
     $element['display'] = array(
       '#type' => empty($item['fids']) ? 'hidden' : 'checkbox',
       '#title' => t('Include file in display'),
-      '#value' => isset($item['display']) ? $item['display'] : $field['settings']['display_default'],
+      '#value' => isset($item['display']) ? $item['display'] : $element['#display_default'],
       '#attributes' => array('class' => array('file-display')),
     );
   }
@@ -471,7 +465,7 @@ function file_field_widget_process($element, &$form_state, $form) {
   }
 
   // Add the description field if enabled.
-  if (!empty($instance['settings']['description_field']) && $item['fids']) {
+  if ($element['#description_field'] && $item['fids']) {
     $config = config('file.settings');
     $element['description'] = array(
       '#type' => $config->get('description.type'),
@@ -484,7 +478,7 @@ function file_field_widget_process($element, &$form_state, $form) {
 
   // Adjust the Ajax settings so that on upload and remove of any individual
   // file, the entire group of file fields is updated together.
-  if ($field['cardinality'] != 1) {
+  if ($element['#cardinality'] != 1) {
     $parents = array_slice($element['#array_parents'], 0, -1);
     $new_path = 'file/ajax/' . implode('/', $parents) . '/' . $form['form_build_id']['#value'];
     $field_element = NestedArray::getValue($form, $parents);

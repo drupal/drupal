@@ -1,8 +1,7 @@
 picture_mapping_page:
   pattern: '/admin/config/media/picturemapping'
   defaults:
-    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
-    entity_type: 'picture_mapping'
+    _entity_list: 'picture_mapping'
   requirements:
     _permission: 'administer pictures'
 

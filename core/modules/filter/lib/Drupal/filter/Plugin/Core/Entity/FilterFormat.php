@@ -10,6 +10,7 @@ namespace Drupal\filter\Plugin\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\filter\FilterBag;
 
@@ -21,7 +22,7 @@ use Drupal\filter\FilterBag;
  *   label = @Translation("Text format"),
  *   module = "filter",
  *   controllers = {
- *     "storage" = "Drupal\filter\FilterFormatStorageController"
+ *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
  *   },
  *   config_prefix = "filter.format",
  *   entity_keys = {
@@ -179,4 +180,50 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave(EntityStorageControllerInterface $storage_controller) {
+    $this->name = trim($this->label());
+
+    // @todo Do not save disabled filters whose properties are identical to
+    //   all default properties.
+
+    // Determine whether the format can be cached.
+    // @todo This is a derived/computed definition, not configuration.
+    $this->cache = TRUE;
+    foreach ($this->filters() as $filter) {
+      if ($filter->status && !$filter->cache) {
+        $this->cache = FALSE;
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    // Clear the static caches of filter_formats() and others.
+    filter_formats_reset();
+
+    if ($update) {
+      // Clear the filter cache whenever a text format is updated.
+      cache('filter')->deleteTags(array('filter_format' => $this->id()));
+    }
+    else {
+      // Default configuration of modules and installation profiles is allowed
+      // to specify a list of user roles to grant access to for the new format;
+      // apply the defined user role permissions when a new format is inserted
+      // and has a non-empty $roles property.
+      // Note: user_role_change_permissions() triggers a call chain back into
+      // filter_permission() and lastly filter_formats(), so its cache must be
+      // reset upfront.
+      if (($roles = $this->get('roles')) && $permission = filter_permission_name($this)) {
+        foreach (user_roles() as $rid => $name) {
+          $enabled = in_array($rid, $roles, TRUE);
+          user_role_change_permissions($rid, array($permission => $enabled));
+        }
+      }
+    }
+  }
 }

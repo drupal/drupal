@@ -8,12 +8,12 @@
 namespace Drupal\shortcut;
 
 use Drupal\Core\Config\Entity\ConfigStorageController;
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\shortcut\Plugin\Core\Entity\Shortcut;
 
 /**
  * Defines a storage controller for shortcut entities.
  */
-class ShortcutStorageController extends ConfigStorageController {
+class ShortcutStorageController extends ConfigStorageController implements ShortcutStorageControllerInterface {
 
   /**
    * Overrides \Drupal\config\ConfigStorageController::attachLoad().
@@ -30,80 +30,51 @@ class ShortcutStorageController extends ConfigStorageController {
   }
 
   /**
-   * Overrides \Drupal\config\ConfigStorageController::create().
+   * {@inheritdoc}
    */
-  public function create(array $values) {
-    $entity = parent::create($values);
-
-    // Generate menu-compatible set name.
-    if (!$entity->getOriginalID()) {
-      // Save a new shortcut set with links copied from the user's default set.
-      $default_set = shortcut_default_set();
-      // Generate a name to have no collisions with menu.
-      // Size of menu_name is 32 so id could be 23 = 32 - strlen('shortcut-').
-      $id = substr($entity->id(), 0, 23);
-      $entity->set('id', $id);
-      if ($default_set->id() != $id) {
-        foreach ($default_set->links as $link) {
-          $link = $link->createDuplicate();
-          $link->enforceIsNew();
-          $link->menu_name = $id;
-          $link->save();
-          $entity->links[$link->uuid()] = $link;
-        }
-      }
-    }
-
-    return $entity;
+  public function deleteAssignedShortcutSets(Shortcut $entity) {
+    // First, delete any user assignments for this set, so that each of these
+    // users will go back to using whatever default set applies.
+    db_delete('shortcut_set_users')
+      ->condition('set_name', $entity->id())
+      ->execute();
   }
 
   /**
-   * Overrides \Drupal\config\ConfigStorageController::preSave().
+   * {@inheritdoc}
    */
-  public function preSave(EntityInterface $entity) {
-    // Just store the UUIDs.
-    foreach ($entity->links as $uuid => $link) {
-      $entity->links[$uuid] = $uuid;
-    }
-
-    parent::preSave($entity);
+  public function assignUser($shortcut_set, $account) {
+    db_merge('shortcut_set_users')
+      ->key(array('uid' => $account->uid))
+      ->fields(array('set_name' => $shortcut_set->id()))
+      ->execute();
+    drupal_static_reset('shortcut_current_displayed_set');
   }
 
   /**
-   * Overrides \Drupal\config\ConfigStorageController::postSave().
+   * {@inheritdoc}
    */
-  function postSave(EntityInterface $entity, $update) {
-    // Process links in shortcut set.
-    foreach ($entity->links as $uuid) {
-      if ($menu_link = entity_load_by_uuid('menu_link', $uuid)) {
-        // Do not specifically associate these links with the shortcut module,
-        // since other modules may make them editable via the menu system.
-        // However, we do need to specify the correct menu name.
-        $menu_link->menu_name = 'shortcut-' . $entity->id();
-        $menu_link->plid = 0;
-        $menu_link->save();
-      }
-    }
-
-    parent::postSave($entity, $update);
+  public function unassignUser($account) {
+    $deleted = db_delete('shortcut_set_users')
+      ->condition('uid', $account->uid)
+      ->execute();
+    return (bool) $deleted;
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\ConfigStorageController::preDelete().
+   * {@inheritdoc}
    */
-  protected function preDelete($entities) {
-    foreach ($entities as $entity) {
-      // First, delete any user assignments for this set, so that each of these
-      // users will go back to using whatever default set applies.
-      db_delete('shortcut_set_users')
-        ->condition('set_name', $entity->id())
-        ->execute();
-
-      // Next, delete the menu links for this set.
-      menu_delete_links('shortcut-' . $entity->id());
-    }
-
-    parent::preDelete($entities);
+  public function getAssignedToUser($account) {
+    $query = db_select('shortcut_set_users', 'ssu');
+    $query->fields('ssu', array('set_name'));
+    $query->condition('ssu.uid', $account->uid);
+    return $query->execute()->fetchField();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function countAssignedUsers(Shortcut $shortcut) {
+    return db_query('SELECT COUNT(*) FROM {shortcut_set_users} WHERE set_name = :name', array(':name' => $shortcut->id()))->fetchField();
+  }
 }

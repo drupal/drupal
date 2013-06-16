@@ -53,7 +53,10 @@ class ContactSitewideTest extends WebTestBase {
     // Default category exists.
     $this->assertLinkByHref('admin/structure/contact/manage/feedback/delete');
     // User category could not be changed or deleted.
-    $this->assertNoLinkByHref('admin/structure/contact/manage/personal');
+    // Cannot use assertNoLinkByHref() as it does partial URL matching.
+    $edit_href = 'admin/structure/contact/manage/personal';
+    $edit_link = $this->xpath('//a[@href=:href]', array(':href' => url($edit_href)));
+    $this->assertTrue(empty($edit_link), format_string('No link containing href %href found.', array('%href' => $edit_href)));
     $this->assertNoLinkByHref('admin/structure/contact/manage/personal/delete');
 
     $this->drupalGet('admin/structure/contact/manage/personal');
@@ -189,6 +192,19 @@ class ContactSitewideTest extends WebTestBase {
     $this->drupalGet('contact');
     $this->assertResponse(403);
     $this->assertRaw(t('You cannot send more than %number messages in @interval. Try again later.', array('%number' => config('contact.settings')->get('flood.limit'), '@interval' => format_interval(600))));
+
+    // Test listing controller.
+    $this->drupalLogin($admin_user);
+
+    $this->deleteCategories();
+
+    $label = $this->randomName(16);
+    $recipients = implode(',', array($recipients[0], $recipients[1], $recipients[2]));
+    $this->addCategory(drupal_strtolower($this->randomName(16)), $label, $recipients, '', FALSE);
+    $this->drupalGet('admin/structure/contact');
+    $this->clickLink(t('Edit'));
+    $this->assertResponse(200);
+    $this->assertFieldByName('label', $label);
   }
 
   /**

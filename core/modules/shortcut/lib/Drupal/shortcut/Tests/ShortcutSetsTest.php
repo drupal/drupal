@@ -108,7 +108,9 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $set = $this->set;
 
     $new_label = $this->randomName();
-    $this->drupalPost('admin/config/user-interface/shortcut/manage/' . $set->id() . '/edit', array('label' => $new_label), t('Save'));
+    $this->drupalGet('admin/config/user-interface/shortcut');
+    $this->clickLink(t('Edit menu'));
+    $this->drupalPost(NULL, array('label' => $new_label), t('Save'));
     $set = shortcut_set_load($set->id());
     $this->assertTrue($set->label() == $new_label, 'Shortcut set has been successfully renamed.');
   }

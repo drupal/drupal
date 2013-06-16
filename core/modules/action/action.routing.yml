@@ -1,8 +1,7 @@
 action_admin:
   pattern: '/admin/config/system/actions'
   defaults:
-    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
-    entity_type: 'action'
+    _entity_list: 'action'
   requirements:
     _permission: 'administer actions'
 

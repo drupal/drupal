@@ -98,6 +98,9 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
    *   A new entity object.
    */
   public function create(array $values) {
+    $entity_class = $this->entityClass;
+    $entity_class::preCreate($this, $values);
+
     // We have to determine the bundle first.
     $bundle = FALSE;
     if ($this->bundleKey) {
@@ -118,6 +121,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       $uuid = new Uuid();
       $entity->{$this->uuidKey} = $uuid->generate();
     }
+    $entity->postCreate($this);
 
     // Modules might need to add or change the data initially held by the new
     // entity object, for instance to fill-in default values.
@@ -354,7 +358,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
         $entity->original = entity_load_unchanged($this->entityType, $entity->id());
       }
 
-      $this->preSave($entity);
+      $entity->preSave($this);
       $this->invokeHook('presave', $entity);
 
       // Create the storage record to be saved.
@@ -376,7 +380,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
           $this->savePropertyData($entity);
         }
         $this->resetCache(array($entity->id()));
-        $this->postSave($entity, TRUE);
+        $entity->postSave($this, TRUE);
         $this->invokeHook('update', $entity);
       }
       else {
@@ -394,7 +398,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
         $this->resetCache(array());
 
         $entity->enforceIsNew(FALSE);
-        $this->postSave($entity, FALSE);
+        $entity->postSave($this, FALSE);
         $this->invokeHook('insert', $entity);
       }
 
@@ -445,7 +449,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
         $record->{$this->revisionKey} = NULL;
       }
 
-      $this->preSaveRevision($record, $entity);
+      $entity->preSaveRevision($this, $record);
 
       if ($entity->isNewRevision()) {
         drupal_write_record($this->revisionTable, $record);
@@ -596,12 +600,14 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
 
     $transaction = $this->database->startTransaction();
     try {
+      $entity_class = $this->entityClass;
+      $entity_class::preDelete($this, $entities);
+
       // Ensure we are dealing with the actual entities.
       foreach ($entities as $id => $entity) {
         $entities[$id] = $entity->getNGEntity();
       }
 
-      $this->preDelete($entities);
       foreach ($entities as $id => $entity) {
         $this->invokeHook('predelete', $entity);
       }
@@ -626,7 +632,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       // Reset the cache as soon as the changes have been applied.
       $this->resetCache($ids);
 
-      $this->postDelete($entities);
+      $entity_class::postDelete($this, $entities);
       foreach ($entities as $id => $entity) {
         $this->invokeHook('delete', $entity);
       }

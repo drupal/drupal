@@ -11,6 +11,7 @@ use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface;
 
 /**
@@ -27,6 +28,20 @@ use Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface;
 class ViewsSelection implements SelectionInterface {
 
   /**
+   * The field definition.
+   *
+   * @var \Drupal\Core\Entity\Field\FieldDefinitionInterface
+   */
+  protected $fieldDefinition;
+
+  /**
+   * The entity object, or NULL
+   *
+   * @var NULL|EntityInterface
+   */
+  protected $entity;
+
+  /**
    * The loaded View object.
    *
    * @var \Drupal\views\ViewExecutable;
@@ -36,9 +51,8 @@ class ViewsSelection implements SelectionInterface {
   /**
    * Constructs a View selection handler.
    */
-  public function __construct($field, $instance = NULL, EntityInterface $entity = NULL) {
-    $this->field = $field;
-    $this->instance = $instance;
+  public function __construct(FieldDefinitionInterface $field_definition, EntityInterface $entity = NULL) {
+    $this->fieldDefinition = $field_definition;
     $this->entity = $entity;
   }
 
@@ -117,13 +131,14 @@ class ViewsSelection implements SelectionInterface {
    *   Return TRUE if the view was initialized, FALSE otherwise.
    */
   protected function initializeView($match = NULL, $match_operator = 'CONTAINS', $limit = 0, $ids = NULL) {
-    $view_name = $this->instance['settings']['handler_settings']['view']['view_name'];
-    $display_name = $this->instance['settings']['handler_settings']['view']['display_name'];
+    $handler_settings = $this->fieldDefinition->getFieldSetting('handler_settings');
+    $view_name = $handler_settings['view']['view_name'];
+    $display_name = $handler_settings['view']['display_name'];
 
     // Check that the view is valid and the display still exists.
     $this->view = views_get_view($view_name);
     if (!$this->view || !$this->view->access($display_name)) {
-      drupal_set_message(t('The reference view %view_name used in the %field_name field cannot be found.', array('%view_name' => $view_name, '%field_name' => $this->instance['label'])), 'warning');
+      drupal_set_message(t('The reference view %view_name used in the %field_name field cannot be found.', array('%view_name' => $view_name, '%field_name' => $this->fieldDefinition->getFieldLabel())), 'warning');
       return FALSE;
     }
     $this->view->setDisplay($display_name);
@@ -143,8 +158,9 @@ class ViewsSelection implements SelectionInterface {
    * Implements \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface::getReferencableEntities().
    */
   public function getReferencableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
-    $display_name = $this->instance['settings']['handler_settings']['view']['display_name'];
-    $arguments = $this->instance['settings']['handler_settings']['view']['arguments'];
+    $handler_settings = $this->fieldDefinition->getFieldSetting('handler_settings');
+    $display_name = $handler_settings['view']['display_name'];
+    $arguments = $handler_settings['view']['arguments'];
     $result = array();
     if ($this->initializeView($match, $match_operator, $limit)) {
       // Get the results.
@@ -173,8 +189,9 @@ class ViewsSelection implements SelectionInterface {
    * Implements \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface::validateReferencableEntities().
    */
   public function validateReferencableEntities(array $ids) {
-    $display_name = $this->instance['settings']['handler_settings']['view']['display_name'];
-    $arguments = $this->instance['settings']['handler_settings']['view']['arguments'];
+    $handler_settings = $this->fieldDefinition->getFieldSetting('handler_settings');
+    $display_name = $handler_settings['view']['display_name'];
+    $arguments = $handler_settings['view']['arguments'];
     $result = array();
     if ($this->initializeView(NULL, 'CONTAINS', 0, $ids)) {
       // Get the results.

@@ -9,6 +9,7 @@ namespace Drupal\file\Plugin\Core\Entity;
 
 use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Entity\Annotation\EntityType;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Language\Language;
 use Drupal\file\FileInterface;
@@ -156,6 +157,55 @@ class File extends EntityNG implements FileInterface {
    */
   public function setTemporary() {
     $this->get('status')->value = 0;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
+    // Automatically detect filename if not set.
+    if (!isset($values['filename']) && isset($values['uri'])) {
+      $values['filename'] = drupal_basename($values['uri']);
+    }
+
+    // Automatically detect filemime if not set.
+    if (!isset($values['filemime']) && isset($values['uri'])) {
+      $values['filemime'] = file_get_mimetype($values['uri']);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave(EntityStorageControllerInterface $storage_controller) {
+    $this->timestamp = REQUEST_TIME;
+    $this->setSize(filesize($this->getFileUri()));
+    if (!isset($this->langcode->value)) {
+      // Default the file's language code to none, because files are language
+      // neutral more often than language dependent. Until we have better
+      // flexible settings.
+      // @todo See http://drupal.org/node/258785 and followups.
+      $this->langcode = Language::LANGCODE_NOT_SPECIFIED;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    foreach ($entities as $entity) {
+      // Delete all remaining references to this file.
+      $file_usage = file_usage()->listUsage($entity);
+      if (!empty($file_usage)) {
+        foreach ($file_usage as $module => $usage) {
+          file_usage()->delete($entity, $module);
+        }
+      }
+      // Delete the actual file. Failures due to invalid files and files that
+      // were already deleted are logged to watchdog but ignored, the
+      // corresponding file entity will be deleted.
+      file_unmanaged_delete($entity->getFileUri());
+    }
   }
 
 }

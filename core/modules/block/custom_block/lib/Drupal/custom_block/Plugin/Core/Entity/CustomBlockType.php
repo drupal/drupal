@@ -10,6 +10,7 @@ namespace Drupal\custom_block\Plugin\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\custom_block\CustomBlockTypeInterface;
 
 /**
@@ -20,7 +21,7 @@ use Drupal\custom_block\CustomBlockTypeInterface;
  *   label = @Translation("Custom block type"),
  *   module = "custom_block",
  *   controllers = {
- *     "storage" = "Drupal\custom_block\CustomBlockTypeStorageController",
+ *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "form" = {
  *       "default" = "Drupal\custom_block\CustomBlockTypeFormController"
  *     },
@@ -82,5 +83,27 @@ class CustomBlockType extends ConfigEntityBase implements CustomBlockTypeInterfa
         'entity' => $this,
       )
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    if (!$update) {
+      entity_invoke_bundle_hook('create', 'custom_block', $this->id());
+      custom_block_add_body_field($this->id);
+    }
+    elseif ($this->originalID != $this->id) {
+      entity_invoke_bundle_hook('rename', 'custom_block', $this->originalID, $this->id);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    foreach ($entities as $entity) {
+      entity_invoke_bundle_hook('delete', 'custom_block', $entity->id());
+    }
   }
 }

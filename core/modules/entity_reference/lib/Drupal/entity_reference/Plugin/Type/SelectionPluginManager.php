@@ -42,7 +42,7 @@ class SelectionPluginManager extends PluginManagerBase {
       return parent::createInstance($plugin_id, $configuration);
     }
     catch (PluginException $e) {
-      return new SelectionBroken($configuration['field'], $configuration['instance']);
+      return new SelectionBroken($configuration['field_definition']);
     }
   }
 
@@ -50,8 +50,8 @@ class SelectionPluginManager extends PluginManagerBase {
    * Overrides \Drupal\Component\Plugin\PluginManagerBase::getInstance().
    */
   public function getInstance(array $options) {
-    $selection_handler = $options['instance']['settings']['handler'];
-    $target_entity_type = $options['field']['settings']['target_type'];
+    $selection_handler = $options['field_definition']->getFieldSetting('handler');
+    $target_entity_type = $options['field_definition']->getFieldSetting('target_type');
 
     // Get all available selection plugins for this entity type.
     $selection_handler_groups = $this->getSelectionGroups($target_entity_type);

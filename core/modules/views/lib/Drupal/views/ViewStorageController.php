@@ -35,72 +35,11 @@ class ViewStorageController extends ConfigStorageController {
    */
   protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
     foreach ($queried_entities as $id => $entity) {
-      $this->mergeDefaultDisplaysOptions($entity);
+      $entity->mergeDefaultDisplaysOptions();
     }
 
     parent::attachLoad($queried_entities, $revision_id);
   }
 
-  /**
-   * Overrides Drupal\config\ConfigStorageController::postSave().
-   */
-  protected function postSave(EntityInterface $entity, $update) {
-    parent::postSave($entity, $update);
-    // Clear caches.
-    views_invalidate_cache();
-  }
-
-  /**
-   * Overrides Drupal\config\ConfigStorageController::create().
-   */
-  public function create(array $values) {
-    // If there is no information about displays available add at least the
-    // default display.
-    $values += array(
-      'display' => array(
-        'default' => array(
-          'display_plugin' => 'default',
-          'id' => 'default',
-          'display_title' => 'Master',
-          'position' => 0,
-          'display_options' => array(),
-        ),
-      )
-    );
-
-    $entity = parent::create($values);
-
-    $this->mergeDefaultDisplaysOptions($entity);
-    return $entity;
-  }
-
-  /**
-   * Add defaults to the display options.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The view entity to attach default displays options.
-   */
-  protected function mergeDefaultDisplaysOptions(EntityInterface $entity) {
-    $displays = array();
-    foreach ($entity->get('display') as $key => $options) {
-      $options += array(
-        'display_options' => array(),
-        'display_plugin' => NULL,
-        'id' => NULL,
-        'display_title' => '',
-        'position' => NULL,
-      );
-      // Add the defaults for the display.
-      $displays[$key] = $options;
-    }
-    // Sort the displays.
-    uasort($displays, function ($display1, $display2) {
-      if ($display1['position'] != $display2['position']) {
-        return $display1['position'] < $display2['position'] ? -1 : 1;
-      }
-      return 0;
-    });
-    $entity->set('display', $displays);
-  }
 
 }

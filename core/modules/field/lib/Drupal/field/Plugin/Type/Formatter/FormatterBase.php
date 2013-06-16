@@ -2,14 +2,15 @@
 
 /**
  * @file
- * Definition of Drupal\field\Plugin\Type\Formatter\FormatterBase.
+ * Contains \Drupal\field\Plugin\Type\Formatter\FormatterBase.
  */
 
 namespace Drupal\field\Plugin\Type\Formatter;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
+use Drupal\field\FieldInstanceInterface;
 use Drupal\field\Plugin\PluginSettingsBase;
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
  * Base class for 'Field formatter' plugin implementations.
@@ -19,16 +20,9 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
   /**
    * The field definition.
    *
-   * @var array
+   * @var \Drupal\Core\Entity\Field\FieldDefinitionInterface
    */
-  protected $field;
-
-  /**
-   * The field instance definition.
-   *
-   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
-   */
-  protected $instance;
+  protected $fieldDefinition;
 
   /**
    * The formatter settings.
@@ -58,8 +52,8 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
    *   The plugin_id for the formatter.
    * @param array $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\field\Plugin\Core\Entity\FieldInstance $instance
-   *   The field instance to which the formatter is associated.
+   * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition
+   *   The definition of the field to which the formatter is associated.
    * @param array $settings
    *   The formatter settings.
    * @param string $label
@@ -67,11 +61,10 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
    * @param string $view_mode
    *   The view mode.
    */
-  public function __construct($plugin_id, array $plugin_definition, $instance, array $settings, $label, $view_mode) {
+  public function __construct($plugin_id, array $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode) {
     parent::__construct(array(), $plugin_id, $plugin_definition);
 
-    $this->instance = $instance;
-    $this->field = field_info_field($instance['field_name']);
+    $this->fieldDefinition = $field_definition;
     $this->settings = $settings;
     $this->label = $label;
     $this->viewMode = $view_mode;
@@ -81,24 +74,22 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
    * {@inheritdoc}
    */
   public function view(EntityInterface $entity, $langcode, array $items) {
-    $field = $this->field;
-    $instance = $this->instance;
-
     $addition = array();
 
     $elements = $this->viewElements($entity, $langcode, $items);
     if ($elements) {
       $entity_type = $entity->entityType();
+      $field_name = $this->fieldDefinition->getFieldName();
       $info = array(
         '#theme' => 'field',
-        '#title' => $instance['label'],
-        '#access' => field_access('view', $field, $entity->entityType(), $entity),
+        '#title' => $this->fieldDefinition->getFieldLabel(),
+        '#access' => $this->checkFieldAccess('view', $entity),
         '#label_display' => $this->label,
         '#view_mode' => $this->viewMode,
         '#language' => $langcode,
-        '#field_name' => $field['field_name'],
-        '#field_type' => $field['type'],
-        '#field_translatable' => $field['translatable'],
+        '#field_name' => $field_name,
+        '#field_type' => $this->fieldDefinition->getFieldType(),
+        '#field_translatable' => $this->fieldDefinition->isFieldTranslatable(),
         '#entity_type' => $entity_type,
         '#bundle' => $entity->bundle(),
         '#object' => $entity,
@@ -106,7 +97,7 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
         '#formatter' => $this->getPluginId(),
       );
 
-      $addition[$field['field_name']] = array_merge($info, $elements);
+      $addition[$field_name] = array_merge($info, $elements);
     }
 
     return $addition;
@@ -130,5 +121,44 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
    * {@inheritdoc}
    */
   public function prepareView(array $entities, $langcode, array &$items) { }
+
+  /**
+   * Returns whether the currently logged in user has access to the field.
+   *
+   * @todo Remove this once Field API access is unified with entity field
+   *   access: http://drupal.org/node/1994140.
+   */
+  protected function checkFieldAccess($op, $entity) {
+    if ($this->fieldDefinition instanceof FieldInstanceInterface) {
+      $field = $this->fieldDefinition->getField();
+      return field_access($op, $field, $entity->entityType(), $entity);
+    }
+    else {
+      return FALSE;
+    }
+  }
+
+  /**
+   * Returns the array of field settings.
+   *
+   * @return array
+   *   The array of settings.
+   */
+  protected function getFieldSettings() {
+    return $this->fieldDefinition->getFieldSettings();
+  }
+
+  /**
+   * Returns the value of a field setting.
+   *
+   * @param string $setting_name
+   *   The setting name.
+   *
+   * @return mixed
+   *   The setting value.
+   */
+  protected function getFieldSetting($setting_name) {
+    return $this->fieldDefinition->getFieldSetting($setting_name);
+  }
 
 }

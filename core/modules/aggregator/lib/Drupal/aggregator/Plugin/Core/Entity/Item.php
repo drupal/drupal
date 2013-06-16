@@ -8,6 +8,7 @@
 namespace Drupal\aggregator\Plugin\Core\Entity;
 
 use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\aggregator\ItemInterface;
@@ -129,5 +130,26 @@ class Item extends EntityNG implements ItemInterface {
    */
   public function label($langcode = NULL) {
     return $this->get('title')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postCreate(EntityStorageControllerInterface $storage_controller) {
+    $this->timestamp->value = REQUEST_TIME;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    $storage_controller->saveCategories($this);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    $storage_controller->deleteCategories($entities);
   }
 }

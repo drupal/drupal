@@ -39,8 +39,8 @@ class SelectionTest extends WebTestBase {
       $nodes[$node->type][$node->nid] = $node->label();
     }
 
-    // Build a fake field instance.
-    $field = array(
+    // Create a field and instance.
+    $field = entity_create('field_entity', array(
       'translatable' => FALSE,
       'entity_types' => array(),
       'settings' => array(
@@ -49,8 +49,12 @@ class SelectionTest extends WebTestBase {
       'field_name' => 'test_field',
       'type' => 'entity_reference',
       'cardinality' => '1',
-    );
-    $instance = array(
+    ));
+    $field->save();
+    $instance = entity_create('field_instance', array(
+      'field_name' => 'test_field',
+      'entity_type' => 'test_entity',
+      'bundle' => 'test_bundle',
       'settings' => array(
         'handler' => 'views',
         'handler_settings' => array(
@@ -62,10 +66,11 @@ class SelectionTest extends WebTestBase {
           ),
         ),
       ),
-    );
+    ));
+    $instance->save();
 
     // Get values from selection handler.
-    $handler = entity_reference_get_selection_handler($field, $instance);
+    $handler = entity_reference_get_selection_handler($instance);
     $result = $handler->getReferencableEntities();
 
     $success = FALSE;

@@ -779,7 +779,6 @@ function _field_invoke_widget_target($form_display) {
  *         '#default_value' => The field value for delta 0,
  *         '#required' => Whether the widget should be marked required,
  *         '#delta' => 0,
- *         '#columns' => The array of field columns,
  *         // The remaining elements in the sub-array depend on the widget.
  *         '#type' => The type of the widget,
  *         ...
@@ -791,7 +790,6 @@ function _field_invoke_widget_target($form_display) {
  *       // Only for multiple widgets:
  *       '#entity_type' => The name of the entity type,
  *       '#bundle' => $instance['bundle'],
- *       '#columns'  => array_keys($field['columns']),
  *       // The remaining elements in the sub-array depend on the widget.
  *       '#type' => The type of the widget,
  *       ...

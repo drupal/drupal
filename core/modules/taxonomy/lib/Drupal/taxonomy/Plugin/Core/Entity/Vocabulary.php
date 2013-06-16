@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\taxonomy\VocabularyInterface;
@@ -102,6 +103,80 @@ class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
         'entity' => $this,
       ),
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    if (!$update) {
+      entity_invoke_bundle_hook('create', 'taxonomy_term', $this->id());
+    }
+    elseif ($this->getOriginalID() != $this->id()) {
+      // Reflect machine name changes in the definitions of existing 'taxonomy'
+      // fields.
+      $fields = field_read_fields();
+      foreach ($fields as $field_name => $field) {
+        $update_field = FALSE;
+        if ($field['type'] == 'taxonomy_term_reference') {
+          foreach ($field['settings']['allowed_values'] as $key => &$value) {
+            if ($value['vocabulary'] == $this->getOriginalID()) {
+              $value['vocabulary'] = $this->id();
+              $update_field = TRUE;
+            }
+          }
+          if ($update_field) {
+            field_update_field($field);
+          }
+        }
+      }
+      // Update bundles.
+      entity_invoke_bundle_hook('rename', 'taxonomy_term', $this->getOriginalID(), $this->id());
+    }
+    $storage_controller->resetCache($update ? array($this->getOriginalID()) : array());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    // Only load terms without a parent, child terms will get deleted too.
+    entity_delete_multiple('taxonomy_term', $storage_controller->getToplevelTids(array_keys($entities)));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    $vocabularies = array();
+    foreach ($entities as $vocabulary) {
+      $vocabularies[$vocabulary->id()] = $vocabulary->id();
+    }
+    // Load all Taxonomy module fields and delete those which use only this
+    // vocabulary.
+    $taxonomy_fields = field_read_fields(array('module' => 'taxonomy'));
+    foreach ($taxonomy_fields as $field_name => $taxonomy_field) {
+      $modified_field = FALSE;
+      // Term reference fields may reference terms from more than one
+      // vocabulary.
+      foreach ($taxonomy_field['settings']['allowed_values'] as $key => $allowed_value) {
+        if (isset($vocabularies[$allowed_value['vocabulary']])) {
+          unset($taxonomy_field['settings']['allowed_values'][$key]);
+          $modified_field = TRUE;
+        }
+      }
+      if ($modified_field) {
+        if (empty($taxonomy_field['settings']['allowed_values'])) {
+          field_delete_field($field_name);
+        }
+        else {
+          // Update the field definition with the new allowed values.
+          field_update_field($taxonomy_field);
+        }
+      }
+    }
+    // Reset caches.
+    $storage_controller->resetCache(array_keys($vocabularies));
   }
 
 }

@@ -556,6 +556,97 @@ class Field extends ConfigEntityBase implements FieldInterface {
   /**
    * {@inheritdoc}
    */
+  public function getFieldName() {
+    return $this->id;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldType() {
+    return $this->type;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldSettings() {
+    // @todo field_info_field_types() calls _field_info_collate_types() which
+    //   maintains its own static cache. However, do some CPU and memory
+    //   profiling to see if it's worth statically caching $field_type_info, or
+    //   the default field and instance settings, within $this.
+    $field_type_info = field_info_field_types($this->type);
+
+    $settings = $field_type_info['instance_settings'] + $this->settings + $field_type_info['settings'];
+    return $settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldSetting($setting_name) {
+    // @todo See getFieldSettings() about potentially statically caching this.
+    $field_type_info = field_info_field_types($this->type);
+
+    // We assume here that consecutive array_key_exists() is more efficient than
+    // calling getFieldSettings() when all we need is a single setting.
+    if (array_key_exists($setting_name, $field_type_info['instance_settings'])) {
+      return $field_type_info['instance_settings'][$setting_name];
+    }
+    elseif (array_key_exists($setting_name, $this->settings)) {
+      return $this->settings[$setting_name];
+    }
+    else {
+      return $field_type_info['settings'][$setting_name];
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldPropertyNames() {
+    $schema = $this->getSchema();
+    return array_keys($schema['columns']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isFieldTranslatable() {
+    return $this->translatable;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldLabel() {
+    return $this->label();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldDescription() {
+    return '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldCardinality() {
+    return $this->cardinality;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isFieldRequired() {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function offsetExists($offset) {
     return isset($this->{$offset}) || in_array($offset, array('columns', 'foreign keys', 'bundles', 'storage_details'));
   }

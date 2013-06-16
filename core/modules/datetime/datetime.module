@@ -83,7 +83,7 @@ function datetime_theme() {
 /**
  * Implements hook_field_is_empty().
  */
-function datetime_field_is_empty($item, $field) {
+function datetime_field_is_empty($item, $field_type) {
   if (empty($item['value'])) {
     return TRUE;
   }

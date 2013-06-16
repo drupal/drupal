@@ -54,7 +54,7 @@ class EntityDisplay extends EntityDisplayBase implements EntityDisplayInterface 
     if ($configuration = $this->getComponent($field_name)) {
       $instance = field_info_instance($this->targetEntityType, $field_name, $this->bundle);
       $formatter = $this->pluginManager->getInstance(array(
-        'instance' => $instance,
+        'field_definition' => $instance,
         'view_mode' => $this->originalMode,
         // No need to prepare, defaults have been merged in setComponent().
         'prepare' => FALSE,

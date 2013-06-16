@@ -111,19 +111,8 @@ class ActionListController extends ConfigEntityListController implements EntityC
   public function getOperations(EntityInterface $entity) {
     $operations = array();
     if ($entity->isConfigurable()) {
-      $uri = $entity->uri();
-      $operations['edit'] = array(
-        'title' => t('Configure'),
-        'href' => $uri['path'],
-        'options' => $uri['options'],
-        'weight' => 10,
-      );
-      $operations['delete'] = array(
-        'title' => t('Delete'),
-        'href' => $uri['path'] . '/delete',
-        'options' => $uri['options'],
-        'weight' => 100,
-      );
+      $operations = parent::getOperations($entity);
+      $operations['edit']['title'] = t('Configure');
     }
     return $operations;
   }

@@ -8,11 +8,12 @@
 namespace Drupal\field;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 
 /**
  * Provides an interface defining a field entity.
  */
-interface FieldInterface extends ConfigEntityInterface, \ArrayAccess, \Serializable {
+interface FieldInterface extends ConfigEntityInterface, FieldDefinitionInterface, \ArrayAccess, \Serializable {
 
   /**
    * Returns the field schema.

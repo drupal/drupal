@@ -7,6 +7,8 @@
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
+use Drupal\field\FieldInterface;
 use Drupal\field\FieldUpdateForbiddenException;
 use Drupal\options\Plugin\field\widget\OptionsWidgetBase;
 
@@ -220,47 +222,53 @@ function options_field_update_field($field, $prior_field, $has_data) {
 }
 
 /**
+ * Implements hook_ENTITY_TYPE_delete() for 'field_entity'.
+ */
+function options_field_entity_delete(FieldInterface $field) {
+  drupal_static_reset('options_allowed_values');
+}
+
+/**
  * Returns the array of allowed values for a list field.
  *
  * The strings are not safe for output. Keys and values of the array should be
  * sanitized through field_filter_xss() before being displayed.
  *
- * @param $field
+ * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition
  *   The field definition.
- * @param $instance
- *   (optional) A field instance array. Defaults to NULL.
  * @param \Drupal\Core\Entity\EntityInterface $entity
- *   (optional) The entity object. Defaults to NULL.
+ *   The entity object.
  *
  * @return
  *   The array of allowed values. Keys of the array are the raw stored values
  *   (number or text), values of the array are the display labels.
  */
-function options_allowed_values($field, $instance = NULL, EntityInterface $entity = NULL) {
+function options_allowed_values(FieldDefinitionInterface $field_definition, EntityInterface $entity) {
   $allowed_values = &drupal_static(__FUNCTION__, array());
 
-  if (!isset($allowed_values[$field['uuid']])) {
-    $function = $field['settings']['allowed_values_function'];
+  $cache_id = implode(':', array($entity->entityType(), $entity->bundle(), $field_definition->getFieldName()));
+  if (!isset($allowed_values[$cache_id])) {
+    $function = $field_definition->getFieldSetting('allowed_values_function');
     // If $cacheable is FALSE, then the allowed values are not statically
     // cached. See options_test_dynamic_values_callback() for an example of
     // generating dynamic and uncached values.
     $cacheable = TRUE;
     if (!empty($function)) {
-      $values = $function($field, $instance, $entity, $cacheable);
+      $values = $function($field_definition, $entity, $cacheable);
     }
     else {
-      $values = $field['settings']['allowed_values'];
+      $values = $field_definition->getFieldSetting('allowed_values');
     }
 
     if ($cacheable) {
-      $allowed_values[$field['uuid']] = $values;
+      $allowed_values[$cache_id] = $values;
     }
     else {
       return $values;
     }
   }
 
-  return $allowed_values[$field['uuid']];
+  return $allowed_values[$cache_id];
 }
 
 /**
@@ -400,7 +408,16 @@ function _options_values_in_use($field, $values) {
  * - 'list_illegal_value': The value is not part of the list of allowed values.
  */
 function options_field_validate(EntityInterface $entity = NULL, $field, $instance, $langcode, $items, &$errors) {
-  $allowed_values = options_allowed_values($field, $instance, $entity);
+  // When configuring a field instance, the default value is validated without
+  // an entity, but options_allowed_values() and the callback it invokes
+  // require an entity, because the result can depend on entity type, bundle,
+  // and other entity data.
+  if (!isset($entity)) {
+    $ids = (object) array('entity_type' => $instance->entity_type, 'bundle' => $instance->bundle, 'entity_id' => NULL);
+    $entity = _field_create_entity_from_ids($ids);
+  }
+
+  $allowed_values = options_allowed_values($instance, $entity);
   foreach ($items as $delta => $item) {
     if (!empty($item['value'])) {
       if (!empty($allowed_values) && !isset($allowed_values[$item['value']])) {
@@ -416,7 +433,7 @@ function options_field_validate(EntityInterface $entity = NULL, $field, $instanc
 /**
  * Implements hook_field_is_empty().
  */
-function options_field_is_empty($item, $field) {
+function options_field_is_empty($item, $field_type) {
   if (empty($item['value']) && (string) $item['value'] !== '0') {
     return TRUE;
   }
@@ -426,7 +443,7 @@ function options_field_is_empty($item, $field) {
 /**
  * Implements hook_options_list().
  */
-function options_options_list($field, $instance, $entity) {
-  return options_allowed_values($field, $instance, $entity);
+function options_options_list(FieldDefinitionInterface $field_definition, EntityInterface $entity) {
+  return options_allowed_values($field_definition, $entity);
 }
 

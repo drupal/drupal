@@ -18,14 +18,15 @@ use LogicException;
  * This extends the Drupal\Core\Entity\DatabaseStorageController class, adding
  * required special handling for comment entities.
  */
-class CommentStorageController extends DatabaseStorageControllerNG {
+class CommentStorageController extends DatabaseStorageControllerNG implements CommentStorageControllerInterface {
+
   /**
    * The thread for which a lock was acquired.
    */
   protected $threadLock = '';
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::buildQuery().
+   * {@inheritdoc}
    */
   protected function buildQuery($ids, $revision_id = FALSE) {
     $query = parent::buildQuery($ids, $revision_id);
@@ -37,7 +38,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::attachLoad().
+   * {@inheritdoc}
    */
   protected function attachLoad(&$records, $load_revision = FALSE) {
     // Set up standard comment properties.
@@ -45,135 +46,6 @@ class CommentStorageController extends DatabaseStorageControllerNG {
       $record->name = $record->uid ? $record->registered_name : $record->name;
     }
     parent::attachLoad($records, $load_revision);
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::preSave().
-   *
-   * @see comment_int_to_alphadecimal()
-   * @see comment_alphadecimal_to_int()
-   */
-  protected function preSave(EntityInterface $comment) {
-    global $user;
-
-    if (!isset($comment->status->value)) {
-      $comment->status->value = user_access('skip comment approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED;
-    }
-    if ($comment->isNew()) {
-      // Add the comment to database. This next section builds the thread field.
-      // Also see the documentation for comment_view().
-      if (!empty($comment->thread->value)) {
-        // Allow calling code to set thread itself.
-        $thread = $comment->thread->value;
-      }
-      else {
-        if ($this->threadLock) {
-          // As preSave() is protected, this can only happen when this class
-          // is extended in a faulty manner.
-          throw new LogicException('preSave is called again without calling postSave() or releaseThreadLock()');
-        }
-        if ($comment->pid->target_id == 0) {
-          // This is a comment with no parent comment (depth 0): we start
-          // by retrieving the maximum thread level.
-          $query = db_select('comment', 'c')
-            ->condition('entity_id', $comment->entity_id->value)
-            ->condition('field_name', $comment->field_name->value)
-            ->condition('entity_type', $comment->entity_type->value);
-          $query->addExpression('MAX(thread)', 'thread');
-          $max = $query->execute()
-            ->fetchField();
-          // Strip the "/" from the end of the thread.
-          $max = rtrim($max, '/');
-          // We need to get the value at the correct depth.
-          $parts = explode('.', $max);
-          $n = comment_alphadecimal_to_int($parts[0]);
-          $prefix = '';
-        }
-        else {
-          // This is a comment with a parent comment, so increase the part of
-          // the thread value at the proper depth.
-
-          // Get the parent comment:
-          $parent = $comment->pid->entity;
-          // Strip the "/" from the end of the parent thread.
-          $parent->thread->value = (string) rtrim((string) $parent->thread->value, '/');
-          $prefix = $parent->thread->value . '.';
-          // Get the max value in *this* thread.
-          $query = db_select('comment', 'c')
-            ->condition('entity_id', $comment->entity_id->value)
-            ->condition('field_name', $comment->field_name->value)
-            ->condition('entity_type', $comment->entity_type->value)
-            ->condition('thread', $parent->thread->value . '.%', 'LIKE');
-          $query->addExpression('MAX(thread)', 'thread');
-          $max = $query->execute()
-            ->fetchField();
-
-          if ($max == '') {
-            // First child of this parent. As the other two cases do an
-            // increment of the thread number before creating the thread
-            // string set this to -1 so it requires an increment too.
-            $n = -1;
-          }
-          else {
-            // Strip the "/" at the end of the thread.
-            $max = rtrim($max, '/');
-            // Get the value at the correct depth.
-            $parts = explode('.', $max);
-            $parent_depth = count(explode('.', $parent->thread->value));
-            $n = comment_alphadecimal_to_int($parts[$parent_depth]);
-          }
-        }
-        // Finally, build the thread field for this new comment. To avoid
-        // race conditions, get a lock on the thread. If aother process already
-        // has the lock, just move to the next integer.
-        do {
-          $thread = $prefix . comment_int_to_alphadecimal(++$n) . '/';
-        } while (!lock()->acquire("comment:{$comment->entity_id->value}:{$comment->entity_type->value}:$thread"));
-        $this->threadLock = $thread;
-      }
-      if (empty($comment->created->value)) {
-        $comment->created->value = REQUEST_TIME;
-      }
-      if (empty($comment->changed->value)) {
-        $comment->changed->value = $comment->created->value;
-      }
-      // We test the value with '===' because we need to modify anonymous
-      // users as well.
-      if ($comment->uid->target_id === $user->uid && $user->uid) {
-        $comment->name->value = $user->name;
-      }
-      // Add the values which aren't passed into the function.
-      $comment->thread->value = $thread;
-      $comment->hostname->value = \Drupal::request()->getClientIP();
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function postSave(EntityInterface $comment, $update) {
-    $this->releaseThreadLock();
-    // Update the {comment_entity_statistics} table prior to executing the hook.
-    $this->updateEntityStatistics($comment);
-    if ($comment->status->value == COMMENT_PUBLISHED) {
-      module_invoke_all('comment_publish', $comment);
-    }
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::postDelete().
-   */
-  protected function postDelete($comments) {
-    // Delete the comments' replies.
-    $query = db_select('comment', 'c')
-      ->fields('c', array('cid'))
-      ->condition('pid', array(array_keys($comments)), 'IN');
-    $child_cids = $query->execute()->fetchCol();
-    entity_delete_multiple('comment', $child_cids);
-
-    foreach ($comments as $comment) {
-      $this->updateEntityStatistics($comment);
-    }
   }
 
   /**
@@ -257,17 +129,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * Release the lock acquired for the thread in preSave().
-   */
-  protected function releaseThreadLock() {
-    if ($this->threadLock) {
-      lock()->release($this->threadLock);
-      $this->threadLock = '';
-    }
-  }
-
-  /**
-   * Implements \Drupal\Core\Entity\DataBaseStorageControllerNG::basePropertyDefinitions().
+   * {@inheritdoc}
    */
   public function baseFieldDefinitions() {
     $properties['cid'] = array(
@@ -370,4 +232,41 @@ class CommentStorageController extends DatabaseStorageControllerNG {
     return $properties;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getMaxThread(EntityInterface $comment) {
+    $query = $this->database->select('comment', 'c')
+      ->condition('entity_id', $comment->entity_id->value)
+      ->condition('field_name', $comment->field_name->value)
+      ->condition('entity_type', $comment->entity_type->value);
+    $query->addExpression('MAX(thread)', 'thread');
+    return $query->execute()
+      ->fetchField();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMaxThreadPerThread(EntityInterface $comment) {
+    $query = $this->database->select('comment', 'c')
+      ->condition('entity_id', $comment->entity_id->value)
+      ->condition('field_name', $comment->field_name->value)
+      ->condition('entity_type', $comment->entity_type->value)
+      ->condition('thread', $parent->thread->value . '.%', 'LIKE');
+    $query->addExpression('MAX(thread)', 'thread');
+    return $query->execute()
+      ->fetchField();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getChildCids(array $comments) {
+    return $this->database->select('comment', 'c')
+      ->fields('c', array('cid'))
+      ->condition('pid', array_keys($comments))
+      ->execute()
+      ->fetchCol();
+  }
 }

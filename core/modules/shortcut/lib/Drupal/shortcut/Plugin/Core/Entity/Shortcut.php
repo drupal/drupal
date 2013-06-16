@@ -10,6 +10,7 @@ namespace Drupal\shortcut\Plugin\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\shortcut\ShortcutInterface;
 
 /**
@@ -79,4 +80,65 @@ class Shortcut extends ConfigEntityBase implements ShortcutInterface {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function postCreate(EntityStorageControllerInterface $storage_controller) {
+    // Generate menu-compatible set name.
+    if (!$this->getOriginalID()) {
+      // Save a new shortcut set with links copied from the user's default set.
+      $default_set = shortcut_default_set();
+      // Generate a name to have no collisions with menu.
+      // Size of menu_name is 32 so id could be 23 = 32 - strlen('shortcut-').
+      $id = substr($this->id(), 0, 23);
+      $this->set('id', $id);
+      if ($default_set->id() != $id) {
+        foreach ($default_set->links as $link) {
+          $link = $link->createDuplicate();
+          $link->enforceIsNew();
+          $link->menu_name = $id;
+          $link->save();
+          $this->links[$link->uuid()] = $link;
+        }
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave(EntityStorageControllerInterface $storage_controller) {
+    // Just store the UUIDs.
+    foreach ($this->links as $uuid => $link) {
+      $this->links[$uuid] = $uuid;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    foreach ($this->links as $uuid) {
+      if ($menu_link = entity_load_by_uuid('menu_link', $uuid)) {
+        // Do not specifically associate these links with the shortcut module,
+        // since other modules may make them editable via the menu system.
+        // However, we do need to specify the correct menu name.
+        $menu_link->menu_name = 'shortcut-' . $this->id();
+        $menu_link->plid = 0;
+        $menu_link->save();
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    foreach ($entities as $entity) {
+      $storage_controller->deleteAssignedShortcutSets($entity);
+      // Next, delete the menu links for this set.
+      menu_delete_links('shortcut-' . $entity->id());
+
+    }
+  }
 }

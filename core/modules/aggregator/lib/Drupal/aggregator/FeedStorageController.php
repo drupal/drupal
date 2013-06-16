@@ -8,6 +8,7 @@
 namespace Drupal\aggregator;
 
 use Drupal\Core\Entity\DatabaseStorageControllerNG;
+use Drupal\aggregator\Plugin\Core\Entity\Feed;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
@@ -16,101 +17,14 @@ use Drupal\Core\Entity\EntityInterface;
  * This extends the Drupal\Core\Entity\DatabaseStorageController class, adding
  * required special handling for feed entities.
  */
-class FeedStorageController extends DatabaseStorageControllerNG {
-
-  /**
-   * Overrides Drupal\Core\Entity\DataBaseStorageController::create().
-   */
-  public function create(array $values) {
-    $values += array(
-      'link' => '',
-      'description' => '',
-      'image' => '',
-    );
-    return parent::create($values);
-  }
+class FeedStorageController extends DatabaseStorageControllerNG implements FeedStorageControllerInterface {
 
   /**
    * Overrides Drupal\Core\Entity\DataBaseStorageController::attachLoad().
    */
   protected function attachLoad(&$queried_entities, $load_revision = FALSE) {
     parent::attachLoad($queried_entities, $load_revision);
-    foreach ($queried_entities as $item) {
-      $item->categories = db_query('SELECT c.cid, c.title FROM {aggregator_category} c JOIN {aggregator_category_feed} f ON c.cid = f.cid AND f.fid = :fid ORDER BY title', array(':fid' => $item->id()))->fetchAllKeyed();
-    }
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\DataBaseStorageController::preDelete().
-   */
-  protected function preDelete($entities) {
-    parent::preDelete($entities);
-
-    // Invalidate the block cache to update aggregator feed-based derivatives.
-    if (module_exists('block')) {
-      \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
-    }
-    foreach ($entities as $entity) {
-      // Notify processors to remove stored items.
-      $manager = \Drupal::service('plugin.manager.aggregator.processor');
-      foreach ($manager->getDefinitions() as $id => $definition) {
-        $manager->createInstance($id)->remove($entity);
-      }
-    }
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\DataBaseStorageController::postDelete().
-   */
-  protected function postDelete($entities) {
-    parent::postDelete($entities);
-
-    foreach ($entities as $entity) {
-      // Make sure there is no active block for this feed.
-      $block_configs = config_get_storage_names_with_prefix('plugin.core.block');
-      foreach ($block_configs as $config_id) {
-        $config = config($config_id);
-        if ($config->get('id') == 'aggregator_feed_block:' . $entity->id()) {
-          $config->delete();
-        }
-      }
-    }
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\DataBaseStorageController::preSave().
-   */
-  protected function preSave(EntityInterface $entity) {
-    parent::preSave($entity);
-
-    // Invalidate the block cache to update aggregator feed-based derivatives.
-    if (module_exists('block')) {
-      drupal_container()->get('plugin.manager.block')->clearCachedDefinitions();
-    }
-    // An existing feed is being modified, delete the category listings.
-    db_delete('aggregator_category_feed')
-      ->condition('fid', $entity->id())
-      ->execute();
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\DataBaseStorageController::postSave().
-   */
-  protected function postSave(EntityInterface $entity, $update) {
-    parent::postSave($entity, $update);
-
-    if (!empty($entity->categories)) {
-      foreach ($entity->categories as $cid => $value) {
-        if ($value) {
-          db_insert('aggregator_category_feed')
-            ->fields(array(
-              'fid' => $entity->id(),
-              'cid' => $cid,
-            ))
-            ->execute();
-        }
-      }
-    }
+    $this->loadCategories($queried_entities);
   }
 
   /**
@@ -189,6 +103,41 @@ class FeedStorageController extends DatabaseStorageControllerNG {
       'type' => 'integer_field',
     );
     return $fields;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function loadCategories(array $feeds) {
+    foreach ($feeds as $feed) {
+      $feed->categories = $this->database->query('SELECT c.cid, c.title FROM {aggregator_category} c JOIN {aggregator_category_feed} f ON c.cid = f.cid AND f.fid = :fid ORDER BY title', array(':fid' => $feed->id()))->fetchAllKeyed();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function saveCategories(Feed $feed, array $categories) {
+    foreach ($categories as $cid => $value) {
+      if ($value) {
+        $this->database->insert('aggregator_category_feed')
+          ->fields(array(
+            'fid' => $feed->id(),
+            'cid' => $cid,
+          ))
+          ->execute();
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteCategories(array $feeds) {
+    // An existing feed is being modified, delete the category listings.
+    $this->database->delete('aggregator_category_feed')
+      ->condition('fid', array_keys($feeds))
+      ->execute();
   }
 
 }

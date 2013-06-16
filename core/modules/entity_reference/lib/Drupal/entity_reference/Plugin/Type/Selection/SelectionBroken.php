@@ -15,14 +15,6 @@ use Drupal\Core\Database\Query\SelectInterface;
 class SelectionBroken implements SelectionInterface {
 
   /**
-   * Constructs a SelectionBroken object.
-   */
-  public function __construct($field, $instance = NULL) {
-    $this->field = $field;
-    $this->instance = $instance;
-  }
-
-  /**
    * Implements SelectionInterface::settingsForm().
    */
   public static function settingsForm(&$field, &$instance) {

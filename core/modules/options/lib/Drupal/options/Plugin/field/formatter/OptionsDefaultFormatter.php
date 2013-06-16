@@ -35,7 +35,7 @@ class OptionsDefaultFormatter extends FormatterBase {
   public function viewElements(EntityInterface $entity, $langcode, array $items) {
     $elements = array();
 
-    $allowed_values = options_allowed_values($this->field, $this->instance, $entity);
+    $allowed_values = options_allowed_values($this->fieldDefinition, $entity);
 
     foreach ($items as $delta => $item) {
       if (isset($allowed_values[$item['value']])) {

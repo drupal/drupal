@@ -36,7 +36,7 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
-    $view_modes = entity_get_view_modes($this->field['settings']['target_type']);
+    $view_modes = entity_get_view_modes($this->getFieldSetting('target_type'));
     $options = array();
     foreach ($view_modes as $view_mode => $view_mode_settings) {
       $options[$view_mode] = $view_mode_settings['label'];
@@ -65,7 +65,7 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
   public function settingsSummary() {
     $summary = array();
 
-    $view_modes = entity_get_view_modes($this->field['settings']['target_type']);
+    $view_modes = entity_get_view_modes($this->getFieldSetting('target_type'));
     $view_mode = $this->getSetting('view_mode');
     $summary[] = t('Rendered as @mode', array('@mode' => isset($view_modes[$view_mode]['label']) ? $view_modes[$view_mode]['label'] : $view_mode));
     $summary[] = $this->getSetting('links') ? t('Display links') : t('Do not display links');
@@ -83,7 +83,7 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
     $view_mode = $this->getSetting('view_mode');
     $links = $this->getSetting('links');
 
-    $target_type = $this->field['settings']['target_type'];
+    $target_type = $this->getFieldSetting('target_type');
 
     $elements = array();
 

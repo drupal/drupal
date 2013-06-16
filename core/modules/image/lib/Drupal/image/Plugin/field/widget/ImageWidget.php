@@ -52,37 +52,38 @@ class ImageWidget extends FileWidget {
   }
 
   /**
-   * Overrides \Drupal\file\Plugin\field\widget\FileWidget::formMultipleElements().
+   * {@inheritdoc}
    *
    * Special handling for draggable multiple widgets and 'add more' button.
    */
   protected function formMultipleElements(EntityInterface $entity, array $items, $langcode, array &$form, array &$form_state) {
     $elements = parent::formMultipleElements($entity, $items, $langcode, $form, $form_state);
 
-    if ($this->field['cardinality'] == 1) {
+    $cardinality = $this->fieldDefinition->getFieldCardinality();
+    if ($cardinality == 1) {
       // If there's only one field, return it as delta 0.
       if (empty($elements[0]['#default_value']['fids'])) {
-        $elements[0]['#description'] = theme('file_upload_help', array('description' => $this->instance['description'], 'upload_validators' => $elements[0]['#upload_validators'], 'cardinality' => $this->field['cardinality']));
+        $elements[0]['#description'] = theme('file_upload_help', array('description' => $this->fieldDefinition->getFieldDescription(), 'upload_validators' => $elements[0]['#upload_validators'], 'cardinality' => $cardinality));
       }
     }
     else {
-      $elements['#file_upload_description'] = theme('file_upload_help', array('upload_validators' => $elements[0]['#upload_validators'], 'cardinality' => $this->field['cardinality']));
+      $elements['#file_upload_description'] = theme('file_upload_help', array('upload_validators' => $elements[0]['#upload_validators'], 'cardinality' => $cardinality));
     }
 
     return $elements;
   }
 
   /**
-   * Overrides \Drupal\file\Plugin\field\widget\FileWidget::formElement().
+   * {@inheritdoc}
    */
   public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     $element = parent::formElement($items, $delta, $element, $langcode, $form, $form_state);
 
-    $settings = $this->instance['settings'];
+    $field_settings = $this->getFieldSettings();
 
     // Add upload resolution validation.
-    if ($settings['max_resolution'] || $settings['min_resolution']) {
-      $element['#upload_validators']['file_validate_image_resolution'] = array($settings['max_resolution'], $settings['min_resolution']);
+    if ($field_settings['max_resolution'] || $field_settings['min_resolution']) {
+      $element['#upload_validators']['file_validate_image_resolution'] = array($field_settings['max_resolution'], $field_settings['min_resolution']);
     }
 
     // If not using custom extension validation, ensure this is an image.
@@ -95,8 +96,9 @@ class ImageWidget extends FileWidget {
     $element['#process'][] = 'image_field_widget_process';
     // Add properties needed by image_field_widget_process().
     $element['#preview_image_style'] = $this->getSetting('preview_image_style');
-    $element['#title_field'] = $settings['title_field'];
-    $element['#alt_field'] = $settings['alt_field'];
+    $element['#title_field'] = $field_settings['title_field'];
+    $element['#alt_field'] = $field_settings['alt_field'];
+    $element['#alt_field_required'] = $field_settings['alt_field_required'];
 
     return $element;
   }

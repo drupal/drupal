@@ -593,7 +593,7 @@ function _translation_entity_update_field($entity_type, EntityInterface $entity,
 
   // Ensure that we are trying to store only valid data.
   foreach ($entity->{$field_name} as $langcode => $items) {
-    $entity->{$field_name}[$langcode] = _field_filter_items($field, $entity->{$field_name}[$langcode]);
+    $entity->{$field_name}[$langcode] = _field_filter_items($field['type'], $entity->{$field_name}[$langcode]);
     $empty += empty($entity->{$field_name}[$langcode]);
   }
 

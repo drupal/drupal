@@ -11,8 +11,9 @@ use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\field\Plugin\PluginSettingsBase;
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
+use Drupal\field\FieldInstanceInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 
 /**
@@ -32,10 +33,14 @@ class DateTimeDefaultWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct($plugin_id, array $plugin_definition, FieldInstance $instance, array $settings) {
+  public function __construct($plugin_id, array $plugin_definition, FieldDefinitionInterface $field_definition, array $settings) {
     // Identify the function used to set the default value.
-    $instance['default_value_function'] = $this->defaultValueFunction();
-    parent::__construct($plugin_id, $plugin_definition, $instance, $settings);
+    // @todo Make this work for both configurable and nonconfigurable fields:
+    //   https://drupal.org/node/1989468.
+    if ($field_definition instanceof FieldInstanceInterface) {
+      $field_definition->default_value_function = $this->defaultValueFunction();
+    }
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings);
   }
 
   /**
@@ -49,13 +54,9 @@ class DateTimeDefaultWidget extends WidgetBase {
   }
 
   /**
-   * Implements \Drupal\field\Plugin\Type\Widget\WidgetInterface::formElement().
-   *
+   * {@inheritdoc}
    */
   public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
-
-    $field = $this->field;
-    $instance = $this->instance;
     $format_type = datetime_default_format_type();
 
     // We are nesting some sub-elements inside the parent, so we need a wrapper.
@@ -69,7 +70,7 @@ class DateTimeDefaultWidget extends WidgetBase {
     $element['#element_validate'][] = 'datetime_datetime_widget_validate';
 
     // Identify the type of date and time elements to use.
-    switch ($field['settings']['datetime_type']) {
+    switch ($this->getFieldSetting('datetime_type')) {
       case 'date':
         $date_type = 'date';
         $time_type = 'none';
@@ -104,7 +105,7 @@ class DateTimeDefaultWidget extends WidgetBase {
     );
 
     // Set the storage and widget options so the validation can use them. The
-    // validator will not have access to field or instance settings.
+    // validator will not have access to the field definition.
     $element['value']['#date_element_format'] = $element_format;
     $element['value']['#date_storage_format'] = $storage_format;
 
@@ -113,7 +114,7 @@ class DateTimeDefaultWidget extends WidgetBase {
       // The date was created and verified during field_load(), so it is safe to
       // use without further inspection.
       $date->setTimezone(new \DateTimeZone($element['value']['#date_timezone']));
-      if ($field['settings']['datetime_type'] == 'date') {
+      if ($this->getFieldSetting('datetime_type') == 'date') {
         // A date without time will pick up the current time, use the default
         // time.
         datetime_date_default_time($date);

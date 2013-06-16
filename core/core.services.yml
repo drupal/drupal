@@ -293,8 +293,8 @@ services:
     tags:
       - { name: route_enhancer, priority: 20 }
       - { name: legacy_route_enhancer, priority: 20 }
-  route_enhancer.entity_form:
-    class: Drupal\Core\Entity\Enhancer\EntityFormEnhancer
+  route_enhancer.entity:
+    class: Drupal\Core\Entity\Enhancer\EntityRouteEnhancer
     arguments: ['@content_negotiation']
     tags:
       - { name: route_enhancer, priority: 15 }

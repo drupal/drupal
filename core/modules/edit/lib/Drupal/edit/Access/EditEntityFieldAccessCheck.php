@@ -41,7 +41,7 @@ class EditEntityFieldAccessCheck implements AccessCheckInterface, EditEntityFiel
    * Implements EntityFieldAccessCheckInterface::accessEditEntityField().
    */
   public function accessEditEntityField(EntityInterface $entity, $field_name) {
-    return $entity->access('update') && field_access('edit', $field_name, $entity->entityType(), $entity);
+    return $entity->access('update') && ($field = field_info_field($field_name)) && field_access('edit', $field, $entity->entityType(), $entity);
   }
 
   /**

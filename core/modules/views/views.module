@@ -855,7 +855,7 @@ function views_get_handler($item, $type, $override = NULL) {
   $field = $item['field'];
   $optional = isset($item['optional']) ? $item['optional'] : FALSE;
   // Get the plugin manager for this type.
-  $manager = Views::pluginManager($type);;
+  $manager = Views::pluginManager($type);
   $data = Views::viewsData()->get($table);
 
   if (isset($data[$field][$type])) {

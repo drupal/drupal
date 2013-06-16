@@ -34,14 +34,14 @@ use Drupal\entity_reference\Plugin\field\widget\AutocompleteWidgetBase;
 class AutocompleteTagsWidget extends AutocompleteWidgetBase {
 
   /**
-   * Overrides \Drupal\entity_reference\Plugin\field\widget\AutocompleteWidgetBase::elementValidate()
+   * {@inheritdoc}
    */
   public function elementValidate($element, &$form_state, $form) {
     $value = array();
     // If a value was entered into the autocomplete.
-    $handler = entity_reference_get_selection_handler($this->field, $this->instance);
-    $bundles = entity_get_bundles($this->field['settings']['target_type']);
-    $auto_create = isset($this->instance['settings']['handler_settings']['auto_create']) ? $this->instance['settings']['handler_settings']['auto_create'] : FALSE;
+    $handler = entity_reference_get_selection_handler($this->fieldDefinition);
+    $bundles = entity_get_bundles($this->getFieldSetting('target_type'));
+    $auto_create = $this->getSelectionHandlerSetting('auto_create');
 
     if (!empty($element['#value'])) {
       $value = array();
@@ -61,7 +61,7 @@ class AutocompleteTagsWidget extends AutocompleteWidgetBase {
         if ($match) {
           $value[] = array('target_id' => $match);
         }
-        elseif ($auto_create && (count($this->instance['settings']['handler_settings']['target_bundles']) == 1 || count($bundles) == 1)) {
+        elseif ($auto_create && (count($this->getSelectionHandlerSetting('target_bundles')) == 1 || count($bundles) == 1)) {
           // Auto-create item. see entity_reference_field_presave().
           $value[] = array(
             'target_id' => 0,

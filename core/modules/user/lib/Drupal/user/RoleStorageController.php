@@ -8,26 +8,11 @@
 namespace Drupal\user;
 
 use Drupal\Core\Config\Entity\ConfigStorageController;
-use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Controller class for user roles.
  */
-class RoleStorageController extends ConfigStorageController {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function preSave(EntityInterface $entity) {
-    if (!isset($entity->weight) && $roles = entity_load_multiple('user_role')) {
-      // Set a role weight to make this new role last.
-      $max = array_reduce($roles, function($max, $entity) {
-        return $max > $entity->weight ? $max : $entity->weight;
-      });
-      $entity->weight = $max + 1;
-    }
-    parent::preSave($entity);
-  }
+class RoleStorageController extends ConfigStorageController implements RoleStorageControllerInterface {
 
   /**
    * {@inheritdoc}
@@ -43,9 +28,7 @@ class RoleStorageController extends ConfigStorageController {
   /**
    * {@inheritdoc}
    */
-  protected function postDelete($entities) {
-    $rids = array_keys($entities);
-
+  public function deleteRoleReferences(array $rids) {
     // Delete permission assignments.
     db_delete('role_permission')
       ->condition('rid', $rids)

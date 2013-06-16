@@ -164,7 +164,7 @@ function number_field_presave(EntityInterface $entity, $field, $instance, $langc
 /**
  * Implements hook_field_is_empty().
  */
-function number_field_is_empty($item, $field) {
+function number_field_is_empty($item, $field_type) {
   if (empty($item['value']) && (string) $item['value'] !== '0') {
     return TRUE;
   }

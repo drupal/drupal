@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
  *   label = @Translation("Test Entity with a bundle key"),
  *   module = "field_test",
  *   controllers = {
- *     "storage" = "Drupal\field_test\TestEntityController",
+ *     "storage" = "Drupal\Core\Entity\DatabaseStorageController",
  *     "form" = {
  *       "default" = "Drupal\field_test\TestEntityFormController"
  *     }

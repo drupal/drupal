@@ -186,6 +186,6 @@ function node_test_node_insert(EntityInterface $node) {
  */
 function node_test_entity_info_alter(&$entity_info) {
   if (Drupal::state()->get('node_test.storage_controller')) {
-    $entity_info['node']['controllers']['storage'] = 'Drupal\node_test\NodeTestStorageController';
+    $entity_info['node']['class'] = 'Drupal\node_test\NodeTest';
   }
 }

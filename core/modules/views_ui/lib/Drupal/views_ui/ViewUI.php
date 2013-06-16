@@ -8,6 +8,7 @@
 namespace Drupal\views_ui;
 
 use Drupal\views\Views;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Database\Database;
 use Drupal\Core\TypedData\TypedDataInterface;
@@ -1139,9 +1140,66 @@ class ViewUI implements ViewStorageInterface {
   /**
    * {@inheritdoc}
    */
+  public function preSave(EntityStorageControllerInterface $storage_controller) {
+    $this->storage->presave($storage_controller);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    $this->storage->postSave($storage_controller, $update);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postCreate(EntityStorageControllerInterface $storage_controller) {
+    $this->storage->postCreate($storage_controller);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postLoad(EntityStorageControllerInterface $storage_controller, array $entities) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSaveRevision(EntityStorageControllerInterface $storage_controller, \stdClass $record) {
+    $this->storage->preSaveRevision($storage_controller, $record);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function mergeDefaultDisplaysOptions() {
+    $this->storage->mergeDefaultDisplaysOptions();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function uriRelationships() {
     return $this->storage->uriRelationships();
   }
-
-
 }

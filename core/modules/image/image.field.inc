@@ -304,8 +304,8 @@ function image_field_delete_revision(EntityInterface $entity, $field, $instance,
 /**
  * Implements hook_field_is_empty().
  */
-function image_field_is_empty($item, $field) {
-  return file_field_is_empty($item, $field);
+function image_field_is_empty($item, $field_type) {
+  return file_field_is_empty($item, $field_type);
 }
 
 /**
@@ -362,10 +362,6 @@ function image_field_widget_process($element, &$form_state, $form) {
     );
   }
 
-  // Get field settings.
-  $instance = field_widget_instance($element, $form_state);
-  $settings = $instance['settings'];
-
   // Add the additional alt and title fields.
   $element['alt'] = array(
     '#title' => t('Alternate text'),
@@ -376,7 +372,7 @@ function image_field_widget_process($element, &$form_state, $form) {
     '#maxlength' => 512,
     '#weight' => -2,
     '#access' => (bool) $item['fids'] && $element['#alt_field'],
-    '#element_validate' => $settings['alt_field_required'] == 1 ? array('_image_field_required_fields_validate') : array(),
+    '#element_validate' => $element['#alt_field_required'] == 1 ? array('_image_field_required_fields_validate') : array(),
   );
   $element['title'] = array(
     '#type' => 'textfield',
@@ -386,7 +382,7 @@ function image_field_widget_process($element, &$form_state, $form) {
     '#maxlength' => 1024,
     '#weight' => -1,
     '#access' => (bool) $item['fids'] && $element['#title_field'],
-    '#element_validate' => $settings['alt_field_required'] == 1 ? array('_image_field_required_fields_validate') : array(),
+    '#element_validate' => $element['#alt_field_required'] == 1 ? array('_image_field_required_fields_validate') : array(),
   );
 
   return $element;

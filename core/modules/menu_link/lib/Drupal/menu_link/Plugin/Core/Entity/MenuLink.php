@@ -9,9 +9,13 @@ namespace Drupal\menu_link\Plugin\Core\Entity;
 
 use Drupal\menu_link\MenuLinkInterface;
 use Symfony\Component\Routing\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Entity;
 
@@ -372,4 +376,217 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
   public function offsetUnset($offset) {
     unset($this->{$offset});
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    // Nothing to do if we don't want to reparent children.
+    if ($storage_controller->getPreventReparenting()) {
+      return;
+    }
+
+    foreach ($entities as $entity) {
+      // Children get re-attached to the item's parent.
+      if ($entity->has_children) {
+        $children = $storage_controller->loadByProperties(array('plid' => $entity->plid));
+        foreach ($children as $child) {
+          $child->plid = $entity->plid;
+          $storage_controller->save($child);
+        }
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    $affected_menus = array();
+    // Update the has_children status of the parent.
+    foreach ($entities as $entity) {
+      if (!$storage_controller->getPreventReparenting()) {
+        $storage_controller->updateParentalStatus($entity);
+      }
+
+      // Store all menu names for which we need to clear the cache.
+      if (!isset($affected_menus[$entity->menu_name])) {
+        $affected_menus[$entity->menu_name] = $entity->menu_name;
+      }
+    }
+
+    foreach ($affected_menus as $menu_name) {
+      menu_cache_clear($menu_name);
+    }
+    _menu_clear_page_cache();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave(EntityStorageControllerInterface $storage_controller) {
+    // This is the easiest way to handle the unique internal path '<front>',
+    // since a path marked as external does not need to match a router path.
+    $this->external = (url_is_external($this->link_path) || $this->link_path == '<front>') ? 1 : 0;
+
+    // Try to find a parent link. If found, assign it and derive its menu.
+    $parent_candidates = !empty($this->parentCandidates) ? $this->parentCandidates : array();
+    $parent = $this->findParent($storage_controller, $parent_candidates);
+    if ($parent) {
+      $this->plid = $parent->id();
+      $this->menu_name = $parent->menu_name;
+    }
+    // If no corresponding parent link was found, move the link to the top-level.
+    else {
+      $this->plid = 0;
+    }
+
+    // Directly fill parents for top-level links.
+    if ($this->plid == 0) {
+      $this->p1 = $this->id();
+      for ($i = 2; $i <= MENU_MAX_DEPTH; $i++) {
+        $parent_property = "p$i";
+        $this->{$parent_property} = 0;
+      }
+      $this->depth = 1;
+    }
+    // Otherwise, ensure that this link's depth is not beyond the maximum depth
+    // and fill parents based on the parent link.
+    else {
+      if ($this->has_children && $this->original) {
+        $limit = MENU_MAX_DEPTH - $storage_controller->findChildrenRelativeDepth($this->original) - 1;
+      }
+      else {
+        $limit = MENU_MAX_DEPTH - 1;
+      }
+      if ($parent->depth > $limit) {
+        return FALSE;
+      }
+      $this->depth = $parent->depth + 1;
+      $this->setParents($parent);
+    }
+
+    // Need to check both plid and menu_name, since plid can be 0 in any menu.
+    if (isset($this->original) && ($this->plid != $this->original->plid || $this->menu_name != $this->original->menu_name)) {
+      $storage_controller->moveChildren($this, $this->original);
+    }
+    // Find the router_path.
+    if (empty($this->router_path) || empty($this->original) || (isset($this->original) && $this->original->link_path != $this->link_path)) {
+      if ($this->external) {
+        $this->router_path = '';
+      }
+      else {
+        // Find the router path which will serve this path.
+        $this->parts = explode('/', $this->link_path, MENU_MAX_PARTS);
+        $this->router_path = _menu_find_router_path($this->link_path);
+      }
+    }
+    // Find the route_name.
+    if (!isset($this->route_name)) {
+      $this->route_name = $this::findRouteName($this->link_path);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    // Check the has_children status of the parent.
+    $storage_controller->updateParentalStatus($this);
+
+    menu_cache_clear($this->menu_name);
+    if (isset($this->original) && $this->menu_name != $this->original->menu_name) {
+      menu_cache_clear($this->original->menu_name);
+    }
+
+    // Now clear the cache.
+    _menu_clear_page_cache();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function findRouteName($link_path) {
+    // Look up the route_name used for the given path.
+    $request = Request::create('/' . $link_path);
+    $request->attributes->set('system_path', $link_path);
+    try {
+      // Use router.dynamic instead of router, because router will call the
+      // legacy router which will call hook_menu() and you will get back to
+      // this method.
+      $result = \Drupal::service('router.dynamic')->matchRequest($request);
+      return isset($result['_route']) ? $result['_route'] : '';
+    }
+    catch (\Exception $e) {
+      return '';
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setParents(EntityInterface $parent) {
+    $i = 1;
+    while ($i < $this->depth) {
+      $p = 'p' . $i++;
+      $this->{$p} = $parent->{$p};
+    }
+    $p = 'p' . $i++;
+    // The parent (p1 - p9) corresponding to the depth always equals the mlid.
+    $this->{$p} = $this->id();
+    while ($i <= MENU_MAX_DEPTH) {
+      $p = 'p' . $i++;
+      $this->{$p} = 0;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function findParent(EntityStorageControllerInterface $storage_controller, array $parent_candidates = array()) {
+    $parent = FALSE;
+
+    // This item is explicitely top-level, skip the rest of the parenting.
+    if (isset($this->plid) && empty($this->plid)) {
+      return $parent;
+    }
+
+    // If we have a parent link ID, try to use that.
+    $candidates = array();
+    if (isset($this->plid)) {
+      $candidates[] = $this->plid;
+    }
+
+    // Else, if we have a link hierarchy try to find a valid parent in there.
+    if (!empty($this->depth) && $this->depth > 1) {
+      for ($depth = $this->depth - 1; $depth >= 1; $depth--) {
+        $parent_property = "p$depth";
+        $candidates[] = $this->$parent_property;
+      }
+    }
+
+    foreach ($candidates as $mlid) {
+      if (isset($parent_candidates[$mlid])) {
+        $parent = $parent_candidates[$mlid];
+      }
+      else {
+        $parent = $storage_controller->load(array($mlid));
+        $parent = reset($parent);
+      }
+      if ($parent) {
+        return $parent;
+      }
+    }
+
+    // If everything else failed, try to derive the parent from the path
+    // hierarchy. This only makes sense for links derived from menu router
+    // items (ie. from hook_menu()).
+    if ($this->module == 'system') {
+      $parent = $storage_controller->getParentFromHierarchy($this);
+    }
+
+    return $parent;
+  }
+
+
 }

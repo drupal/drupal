@@ -76,16 +76,6 @@ class ViewsUIController implements ControllerInterface {
   }
 
   /**
-   * Lists all of the views.
-   *
-   * @return array
-   *   The Views listing page.
-   */
-  public function listing() {
-    return $this->entityManager->getListController('view')->render();
-  }
-
-  /**
    * Lists all instances of fields on any views.
    *
    * @return array

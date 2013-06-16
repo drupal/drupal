@@ -42,7 +42,7 @@ use Drupal\Core\Language\Language;
  */
 function field_default_validate(EntityInterface $entity, $field, $instance, $langcode, $items, &$errors) {
   // Filter out empty values.
-  $items = _field_filter_items($field, $items);
+  $items = _field_filter_items($field['type'], $items);
 
   // Check that the number of values doesn't exceed the field cardinality.
   // For form submitted values, this can only happen with 'multiple value'

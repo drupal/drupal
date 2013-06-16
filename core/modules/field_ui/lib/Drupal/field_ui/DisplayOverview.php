@@ -210,7 +210,7 @@ class DisplayOverview extends OverviewBase {
       // Get the corresponding formatter object.
       if ($display_options && $display_options['type'] != 'hidden') {
         $formatter = $this->formatterManager->getInstance(array(
-          'instance' => $instance,
+          'field_definition' => $instance,
           'view_mode' => $this->mode,
           'configuration' => $display_options
         ));

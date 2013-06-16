@@ -43,8 +43,7 @@ user_admin_create:
 user_role_list:
   pattern: '/admin/people/roles'
   defaults:
-    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
-    entity_type: 'user_role'
+    _entity_list: 'user_role'
   requirements:
     _permission: 'administer permissions'
 

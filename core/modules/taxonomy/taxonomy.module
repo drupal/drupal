@@ -9,6 +9,7 @@ use Drupal\node\Plugin\Core\Entity\Node;
 use Drupal\taxonomy\Plugin\Core\Entity\Term;
 use Drupal\taxonomy\Plugin\Core\Entity\Vocabulary;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 
 /**
  * Denotes that no term in the vocabulary has a parent.
@@ -904,6 +905,7 @@ function taxonomy_field_info() {
       'default_formatter' => 'taxonomy_term_reference_link',
       'field item class' => 'Drupal\taxonomy\Type\TaxonomyTermReferenceItem',
       'settings' => array(
+        'options_list_callback' => NULL,
         'allowed_values' => array(
           array(
             'vocabulary' => '',
@@ -926,9 +928,9 @@ function taxonomy_field_widget_info_alter(&$info) {
 /**
  * Implements hook_options_list().
  */
-function taxonomy_options_list($field, $instance, $entity) {
-  $function = !empty($field['settings']['options_list_callback']) ? $field['settings']['options_list_callback'] : 'taxonomy_allowed_values';
-  return $function($field, $instance, $entity);
+function taxonomy_options_list(FieldDefinitionInterface $field_definition, EntityInterface $entity) {
+  $function = $field_definition->getFieldSetting('options_list_callback') ?: 'taxonomy_allowed_values';
+  return $function($field_definition, $entity);
 }
 
 /**
@@ -993,28 +995,24 @@ function taxonomy_field_validate(EntityInterface $entity = NULL, $field, $instan
 /**
  * Implements hook_field_is_empty().
  */
-function taxonomy_field_is_empty($item, $field) {
+function taxonomy_field_is_empty($item, $field_type) {
   return !is_array($item) || (empty($item['tid']) && empty($item['entity']));
 }
 
 /**
  * Returns the set of valid terms for a taxonomy field.
  *
- * @param $field
+ * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition
  *   The field definition.
- * @param $instance
- *   The instance definition. It is recommended to only use instance level
- *   properties to filter out values from a list defined by field level
- *   properties.
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object the field is attached to.
  *
  * @return
  *   The array of valid terms for this field, keyed by term id.
  */
-function taxonomy_allowed_values($field, $instance, EntityInterface $entity) {
+function taxonomy_allowed_values(FieldDefinitionInterface $field_definition, EntityInterface $entity) {
   $options = array();
-  foreach ($field['settings']['allowed_values'] as $tree) {
+  foreach ($field_definition->getFieldSetting('allowed_values') as $tree) {
     if ($vocabulary = taxonomy_vocabulary_load($tree['vocabulary'])) {
       if ($terms = taxonomy_get_tree($vocabulary->id(), $tree['parent'], NULL, TRUE)) {
         foreach ($terms as $term) {
