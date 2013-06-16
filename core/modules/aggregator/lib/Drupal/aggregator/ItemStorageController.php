@@ -8,6 +8,7 @@
 namespace Drupal\aggregator;
 
 use Drupal\Core\Entity\DatabaseStorageControllerNG;
+use Drupal\aggregator\Plugin\Core\Entity\Item;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
@@ -16,55 +17,14 @@ use Drupal\Core\Entity\EntityInterface;
  * This extends the Drupal\Core\Entity\DatabaseStorageController class, adding
  * required special handling for feed item entities.
  */
-class ItemStorageController extends DatabaseStorageControllerNG {
-
-  /**
-   * Overrides Drupal\Core\Entity\DataBaseStorageController::create().
-   */
-  public function create(array $values) {
-    $entity = parent::create($values);
-
-    // Set an initial timestamp, this will be overwritten if known.
-    $entity->timestamp->value = REQUEST_TIME;
-    return $entity;
-  }
+class ItemStorageController extends DatabaseStorageControllerNG implements ItemStorageControllerInterface {
 
   /**
    * Overrides Drupal\Core\Entity\DataBaseStorageController::attachLoad().
    */
   protected function attachLoad(&$queried_entities, $load_revision = FALSE) {
     parent::attachLoad($queried_entities, $load_revision);
-    foreach ($queried_entities as $item) {
-      $item->categories = db_query('SELECT c.title, c.cid FROM {aggregator_category_item} ci LEFT JOIN {aggregator_category} c ON ci.cid = c.cid WHERE ci.iid = :iid ORDER BY c.title', array(':iid' => $item->id()))->fetchAll();
-    }
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\DataBaseStorageController::preDelete().
-   */
-  protected function preDelete($entities) {
-    parent::preDelete($entities);
-
-    db_delete('aggregator_category_item')
-      ->condition('iid', array_keys($entities), 'IN')
-      ->execute();
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\DataBaseStorageController::postSave().
-   */
-  protected function postSave(EntityInterface $entity, $update) {
-    parent::postSave($entity, $update);
-
-    $result = db_query('SELECT cid FROM {aggregator_category_feed} WHERE fid = :fid', array(':fid' => $entity->fid->value));
-    foreach ($result as $category) {
-      db_merge('aggregator_category_item')
-        ->key(array(
-          'iid' => $entity->id(),
-          'cid' => $category->cid,
-        ))
-        ->execute();
-    }
+    $this->loadCategories($queried_entities);
   }
 
   /**
@@ -120,4 +80,36 @@ class ItemStorageController extends DatabaseStorageControllerNG {
     return $fields;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function loadCategories(array $entities) {
+    foreach ($entities as $item) {
+      $item->categories = db_query('SELECT c.title, c.cid FROM {aggregator_category_item} ci LEFT JOIN {aggregator_category} c ON ci.cid = c.cid WHERE ci.iid = :iid ORDER BY c.title', array(':iid' => $item->id()))->fetchAll();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteCategories(array $entities) {
+    $this->database->delete('aggregator_category_item')
+      ->condition('iid', array_keys($entities))
+      ->execute();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function saveCategories(Item $item) {
+    $result = $this->database->query('SELECT cid FROM {aggregator_category_feed} WHERE fid = :fid', array(':fid' => $item->fid->value));
+    foreach ($result as $category) {
+      $this->database->merge('aggregator_category_item')
+        ->key(array(
+          'iid' => $item->id(),
+          'cid' => $category->cid,
+        ))
+        ->execute();
+    }
+  }
 }

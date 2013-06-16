@@ -311,11 +311,9 @@ function shortcut_set_reset_link_weights(&$shortcut_set) {
  *   A user account that will be assigned to use the set.
  */
 function shortcut_set_assign_user($shortcut_set, $account) {
-  db_merge('shortcut_set_users')
-    ->key(array('uid' => $account->uid))
-    ->fields(array('set_name' => $shortcut_set->id()))
-    ->execute();
-  drupal_static_reset('shortcut_current_displayed_set');
+  Drupal::entityManager()
+    ->getStorageController('shortcut')
+    ->assignUser($shortcut_set, $account);
 }
 
 /**
@@ -332,10 +330,9 @@ function shortcut_set_assign_user($shortcut_set, $account) {
  *   to any set.
  */
 function shortcut_set_unassign_user($account) {
-  $deleted = db_delete('shortcut_set_users')
-    ->condition('uid', $account->uid)
-    ->execute();
-  return (bool) $deleted;
+  return (bool) Drupal::entityManager()
+    ->getStorageController('shortcut')
+    ->unassignUser($account);
 }
 
 /**
@@ -362,10 +359,9 @@ function shortcut_current_displayed_set($account = NULL) {
   }
   // If none was found, try to find a shortcut set that is explicitly assigned
   // to this user.
-  $query = db_select('shortcut_set_users', 'ssu');
-  $query->fields('ssu', array('set_name'));
-  $query->condition('ssu.uid', $account->uid);
-  $shortcut_set_name = $query->execute()->fetchField();
+  $shortcut_set_name = Drupal::entityManager()
+    ->getStorageController('shortcut')
+    ->getAssignedToUser($account);
   if ($shortcut_set_name) {
     $shortcut_set = shortcut_set_load($shortcut_set_name);
   }

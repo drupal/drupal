@@ -10,6 +10,7 @@ namespace Drupal\user\Plugin\Core\Entity;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\user\RoleInterface;
 
 /**
@@ -78,4 +79,23 @@ class Role extends ConfigEntityBase implements RoleInterface {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave(EntityStorageControllerInterface $storage_controller) {
+    if (!isset($this->weight) && ($roles = $storage_controller->load())) {
+      // Set a role weight to make this new role last.
+      $max = array_reduce($roles, function($max, $role) {
+        return $max > $role->weight ? $max : $role->weight;
+      });
+      $this->weight = $max + 1;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    $storage_controller->deleteRoleReferences(array_keys($entities));
+  }
 }

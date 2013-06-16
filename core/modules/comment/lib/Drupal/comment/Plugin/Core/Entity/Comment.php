@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\comment\CommentInterface;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Language\Language;
 
 /**
@@ -222,6 +223,139 @@ class Comment extends EntityNG implements CommentInterface {
    */
   public function id() {
     return $this->get('cid')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
+    if (empty($values['node_type']) && !empty($values['nid'])) {
+      $node = node_load(is_object($values['nid']) ? $values['nid']->value : $values['nid']);
+      $values['node_type'] = 'comment_node_' . $node->type;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave(EntityStorageControllerInterface $storage_controller) {
+    global $user;
+
+    if (!isset($this->status->value)) {
+      $this->status->value = user_access('skip comment approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED;
+    }
+    // Make sure we have a proper bundle name.
+    if (!isset($this->node_type->value)) {
+      $this->node_type->value = 'comment_node_' . $this->nid->entity->type;
+    }
+    if ($this->isNew()) {
+      // Add the comment to database. This next section builds the thread field.
+      // Also see the documentation for comment_view().
+      if (!empty($this->thread->value)) {
+        // Allow calling code to set thread itself.
+        $thread = $this->thread->value;
+      }
+      else {
+        if ($this->threadLock) {
+          // As preSave() is protected, this can only happen when this class
+          // is extended in a faulty manner.
+          throw new \LogicException('preSave is called again without calling postSave() or releaseThreadLock()');
+        }
+        if ($this->pid->target_id == 0) {
+          // This is a comment with no parent comment (depth 0): we start
+          // by retrieving the maximum thread level.
+          $max = $storage_controller->getMaxThread($this);
+          // Strip the "/" from the end of the thread.
+          $max = rtrim($max, '/');
+          // We need to get the value at the correct depth.
+          $parts = explode('.', $max);
+          $n = comment_alphadecimal_to_int($parts[0]);
+          $prefix = '';
+        }
+        else {
+          // This is a comment with a parent comment, so increase the part of
+          // the thread value at the proper depth.
+
+          // Get the parent comment:
+          $parent = $this->pid->entity;
+          // Strip the "/" from the end of the parent thread.
+          $parent->thread->value = (string) rtrim((string) $parent->thread->value, '/');
+          $prefix = $parent->thread->value . '.';
+          // Get the max value in *this* thread.
+          $max = $storage_controller->getMaxThreadPerThread($this);
+
+          if ($max == '') {
+            // First child of this parent. As the other two cases do an
+            // increment of the thread number before creating the thread
+            // string set this to -1 so it requires an increment too.
+            $n = -1;
+          }
+          else {
+            // Strip the "/" at the end of the thread.
+            $max = rtrim($max, '/');
+            // Get the value at the correct depth.
+            $parts = explode('.', $max);
+            $parent_depth = count(explode('.', $parent->thread->value));
+            $n = comment_alphadecimal_to_int($parts[$parent_depth]);
+          }
+        }
+        // Finally, build the thread field for this new comment. To avoid
+        // race conditions, get a lock on the thread. If aother process already
+        // has the lock, just move to the next integer.
+        do {
+          $thread = $prefix . comment_int_to_alphadecimal(++$n) . '/';
+        } while (!lock()->acquire("comment:{$this->nid->target_id}:$thread"));
+        $this->threadLock = $thread;
+      }
+      if (empty($this->created->value)) {
+        $this->created->value = REQUEST_TIME;
+      }
+      if (empty($this->changed->value)) {
+        $this->changed->value = $this->created->value;
+      }
+      // We test the value with '===' because we need to modify anonymous
+      // users as well.
+      if ($this->uid->target_id === $user->uid && $user->uid) {
+        $this->name->value = $user->name;
+      }
+      // Add the values which aren't passed into the function.
+      $this->thread->value = $thread;
+      $this->hostname->value = \Drupal::request()->getClientIP();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    $this->releaseThreadLock();
+    // Update the {node_comment_statistics} table prior to executing the hook.
+    $storage_controller->updateNodeStatistics($this->nid->target_id);
+    if ($this->status->value == COMMENT_PUBLISHED) {
+      module_invoke_all('comment_publish', $this);
+    }
+  }
+
+  /**
+   * Release the lock acquired for the thread in preSave().
+   */
+  protected function releaseThreadLock() {
+    if ($this->threadLock) {
+      lock()->release($this->threadLock);
+      $this->threadLock = '';
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    $child_cids = $storage_controller->getChildCids($entities);
+    entity_delete_multiple('comment', $child_cids);
+
+    foreach ($entities as $id => $entity) {
+      $storage_controller->updateNodeStatistics($entity->nid->target_id);
+    }
   }
 
   /**

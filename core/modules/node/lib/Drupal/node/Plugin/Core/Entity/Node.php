@@ -8,6 +8,7 @@
 namespace Drupal\node\Plugin\Core\Entity;
 
 use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\node\NodeInterface;
@@ -244,6 +245,52 @@ class Node extends EntityNG implements NodeInterface {
   /**
    * {@inheritdoc}
    */
+  public function preSave(EntityStorageControllerInterface $storage_controller) {
+    // Before saving the node, set changed and revision times.
+    $this->changed->value = REQUEST_TIME;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSaveRevision(EntityStorageControllerInterface $storage_controller, \stdClass $record) {
+    if ($this->newRevision) {
+      // When inserting either a new node or a new node revision, $node->log
+      // must be set because {node_field_revision}.log is a text column and
+      // therefore cannot have a default value. However, it might not be set at
+      // this point (for example, if the user submitting a node form does not
+      // have permission to create revisions), so we ensure that it is at least
+      // an empty string in that case.
+      // @todo Make the {node_field_revision}.log column nullable so that we
+      //   can remove this check.
+      if (!isset($record->log)) {
+        $record->log = '';
+      }
+    }
+    elseif (isset($this->original) && (!isset($record->log) || $record->log === '')) {
+      // If we are updating an existing node without adding a new revision, we
+      // need to make sure $entity->log is reset whenever it is empty.
+      // Therefore, this code allows us to avoid clobbering an existing log
+      // entry with an empty one.
+      $record->log = $this->original->log;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    // Update the node access table for this node, but only if it is the
+    // default revision. There's no need to delete existing records if the node
+    // is new.
+    if ($this->isDefaultRevision()) {
+      node_access_acquire_grants($this->getBCEntity(), $update);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getBCEntity() {
     if (!isset($this->bcEntity)) {
       $this->getPropertyDefinitions();
@@ -251,5 +298,17 @@ class Node extends EntityNG implements NodeInterface {
     }
     return $this->bcEntity;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    if (module_exists('search')) {
+      foreach ($entities as $id => $entity) {
+        search_reindex($entity->nid->value, 'node');
+      }
+    }
+  }
+
 
 }

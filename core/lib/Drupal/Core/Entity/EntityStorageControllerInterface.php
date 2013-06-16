@@ -33,7 +33,7 @@ interface EntityStorageControllerInterface {
    * Loads one or more entities.
    *
    * @param $ids
-   *   An array of entity IDs, or FALSE to load all entities.
+   *   An array of entity IDs, or NULL to load all entities.
    *
    * @return
    *   An array of entity objects indexed by their ids.

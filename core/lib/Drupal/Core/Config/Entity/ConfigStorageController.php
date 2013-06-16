@@ -278,6 +278,7 @@ class ConfigStorageController extends EntityStorageControllerBase {
    */
   public function create(array $values) {
     $class = $this->entityInfo['class'];
+    $class::preCreate($this, $values);
 
     // Set default language to site default if not provided.
     $values += array('langcode' => language_default()->langcode);
@@ -292,6 +293,7 @@ class ConfigStorageController extends EntityStorageControllerBase {
       $uuid = new Uuid();
       $entity->{$this->uuidKey} = $uuid->generate();
     }
+    $entity->postCreate($this);
 
     // Modules might need to add or change the data initially held by the new
     // entity object, for instance to fill-in default values.
@@ -314,7 +316,8 @@ class ConfigStorageController extends EntityStorageControllerBase {
       return;
     }
 
-    $this->preDelete($entities);
+    $entity_class = $this->entityInfo['class'];
+    $entity_class::preDelete($this, $entities);
     foreach ($entities as $id => $entity) {
       $this->invokeHook('predelete', $entity);
     }
@@ -324,7 +327,7 @@ class ConfigStorageController extends EntityStorageControllerBase {
       $config->delete();
     }
 
-    $this->postDelete($entities);
+    $entity_class::postDelete($this, $entities);
     foreach ($entities as $id => $entity) {
       $this->invokeHook('delete', $entity);
     }
@@ -367,7 +370,7 @@ class ConfigStorageController extends EntityStorageControllerBase {
       $this->configFactory->rename($prefix . $id, $prefix . $entity->id());
     }
 
-    $this->preSave($entity);
+    $entity->preSave($this);
     $this->invokeHook('presave', $entity);
 
     // Retrieve the desired properties and set them in config.
@@ -378,7 +381,7 @@ class ConfigStorageController extends EntityStorageControllerBase {
     if (!$is_new) {
       $return = SAVED_UPDATED;
       $config->save();
-      $this->postSave($entity, TRUE);
+      $entity->postSave($this, TRUE);
       $this->invokeHook('update', $entity);
 
       // Immediately update the original ID.
@@ -388,52 +391,13 @@ class ConfigStorageController extends EntityStorageControllerBase {
       $return = SAVED_NEW;
       $config->save();
       $entity->enforceIsNew(FALSE);
-      $this->postSave($entity, FALSE);
+      $entity->postSave($this, FALSE);
       $this->invokeHook('insert', $entity);
     }
 
     unset($entity->original);
 
     return $return;
-  }
-
-  /**
-   * Acts on an entity before the presave hook is invoked.
-   *
-   * Used before the entity is saved and before invoking the presave hook.
-   */
-  protected function preSave(EntityInterface $entity) {
-  }
-
-  /**
-   * Acts on a saved entity before the insert or update hook is invoked.
-   *
-   * Used after the entity is saved, but before invoking the insert or update
-   * hook.
-   *
-   * @param EntityInterface $entity
-   *   The entity to act on.
-   * @param $update
-   *   (bool) TRUE if the entity has been updated, or FALSE if it has been
-   *   inserted.
-   */
-  protected function postSave(EntityInterface $entity, $update) {
-  }
-
-  /**
-   * Acts on entities before they are deleted.
-   *
-   * Used before the entities are deleted and before invoking the delete hook.
-   */
-  protected function preDelete($entities) {
-  }
-
-  /**
-   * Acts on deleted entities before the delete hook is invoked.
-   *
-   * Used after the entities are deleted but before invoking the delete hook.
-   */
-  protected function postDelete($entities) {
   }
 
   /**

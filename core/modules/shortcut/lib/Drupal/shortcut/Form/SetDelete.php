@@ -95,7 +95,7 @@ class SetDelete extends ConfirmFormBase implements ControllerInterface {
 
     // Find out how many users are directly assigned to this shortcut set, and
     // make a message.
-    $number = $this->database->query('SELECT COUNT(*) FROM {shortcut_set_users} WHERE set_name = :name', array(':name' => $this->shortcut->id()))->fetchField();
+    $number = \Drupal::entityManager()->getStorageController('shortcut')->countAssignedUsers($shortcut);
     $info = '';
     if ($number) {
       $info .= '<p>' . format_plural($number,

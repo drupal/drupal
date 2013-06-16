@@ -10,6 +10,7 @@ namespace Drupal\field_test\Plugin\Core\Entity;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 
 /**
  * Test entity class.
@@ -19,7 +20,7 @@ use Drupal\Core\Annotation\Translation;
  *   label = @Translation("Test Entity"),
  *   module = "field_test",
  *   controllers = {
- *     "storage" = "Drupal\field_test\TestEntityController",
+ *     "storage" = "Drupal\Core\Entity\DatabaseStorageController",
  *     "render" = "Drupal\Core\Entity\EntityRenderController",
  *     "form" = {
  *       "default" = "Drupal\field_test\TestEntityFormController"
@@ -86,5 +87,16 @@ class TestEntity extends Entity {
   public function bundle() {
     return !empty($this->fttype) ? $this->fttype : $this->entityType();
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSaveRevision(EntityStorageControllerInterface $storage_controller, \stdClass $record) {
+    // Allow for predefined revision ids.
+    if (!empty($record->use_provided_revision_id)) {
+      $record->ftvid = $record->use_provided_revision_id;
+    }
+  }
+
 }
 

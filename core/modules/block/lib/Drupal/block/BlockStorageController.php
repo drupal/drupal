@@ -26,13 +26,4 @@ class BlockStorageController extends ConfigStorageController {
     });
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function preSave(EntityInterface $entity) {
-    parent::preSave($entity);
-
-    $entity->set('settings', $entity->getPlugin()->getConfig());
-  }
-
 }

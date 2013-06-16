@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\views\Views;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\ViewStorageInterface;
@@ -359,6 +360,65 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
       $properties[$name] = $this->get($name);
     }
     return $properties;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    views_invalidate_cache();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
+    // If there is no information about displays available add at least the
+    // default display.
+    $values += array(
+      'display' => array(
+        'default' => array(
+          'display_plugin' => 'default',
+          'id' => 'default',
+          'display_title' => 'Master',
+          'position' => 0,
+          'display_options' => array(),
+        ),
+      )
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postCreate(EntityStorageControllerInterface $storage_controller) {
+    $this->mergeDefaultDisplaysOptions();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function mergeDefaultDisplaysOptions() {
+    $displays = array();
+    foreach ($this->get('display') as $key => $options) {
+      $options += array(
+        'display_options' => array(),
+        'display_plugin' => NULL,
+        'id' => NULL,
+        'display_title' => '',
+        'position' => NULL,
+      );
+      // Add the defaults for the display.
+      $displays[$key] = $options;
+    }
+    // Sort the displays.
+    uasort($displays, function ($display1, $display2) {
+      if ($display1['position'] != $display2['position']) {
+        return $display1['position'] < $display2['position'] ? -1 : 1;
+      }
+      return 0;
+    });
+    $this->set('display', $displays);
   }
 
 }

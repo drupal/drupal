@@ -9,6 +9,7 @@ namespace Drupal\taxonomy\Plugin\Core\Entity;
 
 use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Entity\Annotation\EntityType;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Language\Language;
 use Drupal\taxonomy\TermInterface;
@@ -151,4 +152,46 @@ class Term extends EntityNG implements TermInterface {
     unset($this->description);
     unset($this->parent);
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    // See if any of the term's children are about to be become orphans.
+    $orphans = array();
+    foreach (array_keys($entities) as $tid) {
+      if ($children = taxonomy_term_load_children($tid)) {
+        foreach ($children as $child) {
+          // If the term has multiple parents, we don't delete it.
+          $parents = taxonomy_term_load_parents($child->id());
+          // Because the parent has already been deleted, the parent count might
+          // be 0.
+          if (count($parents) <= 1) {
+            $orphans[] = $child->id();
+          }
+        }
+      }
+    }
+
+    // Delete term hierarchy information after looking up orphans but before
+    // deleting them so that their children/parent information is consistent.
+    $storage_controller->deleteTermHierarchy(array_keys($entities));
+
+    if (!empty($orphans)) {
+      entity_delete_multiple('taxonomy_term', $orphans);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    // Only change the parents if a value is set, keep the existing values if
+    // not.
+    if (isset($this->parent->value)) {
+      $storage_controller->deleteTermHierarchy(array($this->id()));
+      $storage_controller->updateTermHierarchy($this);
+    }
+  }
+
 }

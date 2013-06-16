@@ -163,6 +163,94 @@ interface EntityInterface extends ComplexDataInterface, AccessibleInterface, Tra
   public function delete();
 
   /**
+   * Acts on an entity before the presave hook is invoked.
+   *
+   * Used before the entity is saved and before invoking the presave hook.
+   *
+   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage_controller
+   *   The entity storage controller object.
+   */
+  public function preSave(EntityStorageControllerInterface $storage_controller);
+
+  /**
+   * Acts on a revision before it gets saved.
+   *
+   * @param EntityStorageControllerInterface $storage_controller
+   *   The entity storage controller object.
+   * @param \stdClass $record
+   *   The revision object.
+   */
+  public function preSaveRevision(EntityStorageControllerInterface $storage_controller, \stdClass $record);
+
+  /**
+   * Acts on a saved entity before the insert or update hook is invoked.
+   *
+   * Used after the entity is saved, but before invoking the insert or update
+   * hook.
+   *
+   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage_controller
+   *   The entity storage controller object.
+   * @param bool $update
+   *   TRUE if the entity has been updated, or FALSE if it has been inserted.
+   */
+  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE);
+
+  /**
+   * Changes the values of an entity before it is created.
+   *
+   * Load defaults for example.
+   *
+   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage_controller
+   *   The entity storage controller object.
+   * @param array $values
+   *   An array of values to set, keyed by property name. If the entity type has
+   *   bundles the bundle key has to be specified.
+   */
+  public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values);
+
+  /**
+   * Acts on an entity after it is created but before hooks are invoked.
+   *
+   * @param EntityStorageControllerInterface $storage_controller
+   *   The entity storage controller object.
+   */
+  public function postCreate(EntityStorageControllerInterface $storage_controller);
+
+  /**
+   * Acts on entities before they are deleted and before hooks are invoked.
+   *
+   * Used before the entities are deleted and before invoking the delete hook.
+   *
+   * @param EntityStorageControllerInterface $storage_controller
+   *   The entity storage controller object.
+   * @param array $entities
+   *   An array of entities.
+   */
+  public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities);
+
+  /**
+   * Acts on deleted entities before the delete hook is invoked.
+   *
+   * Used after the entities are deleted but before invoking the delete hook.
+   *
+   * @param EntityStorageControllerInterface $storage_controller
+   *   The entity storage controller object.
+   * @param array $entities
+   *   An array of entities.
+   */
+  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities);
+
+  /**
+   * Acts on loaded entities before the load hook is invoked.
+   *
+   * @param EntityStorageControllerInterface $storage_controller
+   *   The entity storage controller object.
+   * @param array $entities
+   *   An array of entities.
+   */
+  public static function postLoad(EntityStorageControllerInterface $storage_controller, array $entities);
+
+  /**
    * Creates a duplicate of the entity.
    *
    * @return \Drupal\Core\Entity\EntityInterface

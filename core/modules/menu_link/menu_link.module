@@ -103,7 +103,7 @@ function menu_link_delete_multiple(array $mlids, $force = FALSE, $prevent_repare
   else {
     $entities = $controller->load($mlids);
   }
-  $controller->preventReparenting($prevent_reparenting);
+  $controller->setPreventReparenting($prevent_reparenting);
   $controller->delete($entities);
 }
 

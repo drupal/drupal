@@ -124,63 +124,6 @@ class NodeStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::preSave().
-   */
-  protected function preSave(EntityInterface $node) {
-    // Before saving the node, set changed and revision times.
-    $node->changed->value = REQUEST_TIME;
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::preSaveRevision().
-   */
-  protected function preSaveRevision(\stdClass $record, EntityInterface $entity) {
-    if ($entity->isNewRevision()) {
-      // When inserting either a new node or a new node revision, $node->log
-      // must be set because {node_field_revision}.log is a text column and
-      // therefore cannot have a default value. However, it might not be set at
-      // this point (for example, if the user submitting a node form does not
-      // have permission to create revisions), so we ensure that it is at least
-      // an empty string in that case.
-      // @todo Make the {node_field_revision}.log column nullable so that we
-      //   can remove this check.
-      if (!isset($record->log)) {
-        $record->log = '';
-      }
-    }
-    elseif (isset($entity->original) && (!isset($record->log) || $record->log === '')) {
-      // If we are updating an existing node without adding a new revision, we
-      // need to make sure $entity->log is reset whenever it is empty.
-      // Therefore, this code allows us to avoid clobbering an existing log
-      // entry with an empty one.
-      $record->log = $entity->original->log;
-    }
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::postSave().
-   */
-  public function postSave(EntityInterface $node, $update) {
-    // Update the node access table for this node, but only if it is the
-    // default revision. There's no need to delete existing records if the node
-    // is new.
-    if ($node->isDefaultRevision()) {
-      node_access_acquire_grants($node->getBCEntity(), $update);
-    }
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::preDelete().
-   */
-  public function preDelete($entities) {
-    if (module_exists('search')) {
-      foreach ($entities as $id => $entity) {
-        search_reindex($entity->nid->value, 'node');
-      }
-    }
-  }
-
-  /**
    * Overrides Drupal\Core\Entity\DatabaseStorageController::postDelete().
    */
   protected function postDelete($nodes) {

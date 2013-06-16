@@ -25,4 +25,8 @@ interface ViewStorageInterface extends \IteratorAggregate, ConfigEntityInterface
    */
   public function &getDisplay($display_id);
 
+  /**
+   * Add defaults to the display options.
+   */
+  public function mergeDefaultDisplaysOptions();
 }

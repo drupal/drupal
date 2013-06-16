@@ -10,6 +10,7 @@ namespace Drupal\system\Plugin\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\system\ActionConfigEntityInterface;
 use Drupal\Core\Action\ActionBag;
 use Drupal\Core\Action\ConfigurableActionInterface;
@@ -22,7 +23,7 @@ use Drupal\Core\Action\ConfigurableActionInterface;
  *   label = @Translation("Action"),
  *   module = "system",
  *   controllers = {
- *     "storage" = "Drupal\system\ActionStorageController"
+ *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
  *   },
  *   config_prefix = "action.action",
  *   entity_keys = {
@@ -174,6 +175,17 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface {
       $properties[$name] = $this->get($name);
     }
     return $properties;
+  }
+
+    /**
+   * {@inheritdoc}
+   */
+  public function preSave(EntityStorageControllerInterface $storage_controller) {
+    $plugin = $this->getPlugin();
+    // If this plugin has any configuration, ensure that it is set.
+    if ($plugin instanceof ConfigurableActionInterface) {
+      $this->set('configuration', $plugin->getConfiguration());
+    }
   }
 
 }

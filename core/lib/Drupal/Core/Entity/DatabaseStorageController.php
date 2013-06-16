@@ -370,15 +370,17 @@ class DatabaseStorageController extends EntityStorageControllerBase {
    * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::create().
    */
   public function create(array $values) {
-    $class = $this->entityInfo['class'];
+    $entity_class = $this->entityInfo['class'];
+    $entity_class::preCreate($this, $values);
 
-    $entity = new $class($values, $this->entityType);
+    $entity = new $entity_class($values, $this->entityType);
 
     // Assign a new UUID if there is none yet.
     if ($this->uuidKey && !isset($entity->{$this->uuidKey})) {
       $uuid = new Uuid();
       $entity->{$this->uuidKey} = $uuid->generate();
     }
+    $entity->postCreate($this);
 
     // Modules might need to add or change the data initially held by the new
     // entity object, for instance to fill-in default values.
@@ -398,7 +400,8 @@ class DatabaseStorageController extends EntityStorageControllerBase {
     $transaction = $this->database->startTransaction();
 
     try {
-      $this->preDelete($entities);
+      $entity_class = $this->entityInfo['class'];
+      $entity_class::preDelete($this, $entities);
       foreach ($entities as $id => $entity) {
         $this->invokeHook('predelete', $entity);
       }
@@ -417,7 +420,7 @@ class DatabaseStorageController extends EntityStorageControllerBase {
       // Reset the cache as soon as the changes have been applied.
       $this->resetCache($ids);
 
-      $this->postDelete($entities);
+      $entity_class::postDelete($this, $entities);
       foreach ($entities as $id => $entity) {
         $this->invokeHook('delete', $entity);
       }
@@ -442,7 +445,7 @@ class DatabaseStorageController extends EntityStorageControllerBase {
         $entity->original = entity_load_unchanged($this->entityType, $entity->id());
       }
 
-      $this->preSave($entity);
+      $entity->preSave($this);
       $this->invokeHook('presave', $entity);
 
       if (!$entity->isNew()) {
@@ -458,7 +461,7 @@ class DatabaseStorageController extends EntityStorageControllerBase {
           $this->saveRevision($entity);
         }
         $this->resetCache(array($entity->id()));
-        $this->postSave($entity, TRUE);
+        $entity->postSave($this, TRUE);
         $this->invokeHook('update', $entity);
       }
       else {
@@ -470,7 +473,7 @@ class DatabaseStorageController extends EntityStorageControllerBase {
         $this->resetCache(array());
 
         $entity->enforceIsNew(FALSE);
-        $this->postSave($entity, FALSE);
+        $entity->postSave($this, FALSE);
         $this->invokeHook('insert', $entity);
       }
 
@@ -507,7 +510,7 @@ class DatabaseStorageController extends EntityStorageControllerBase {
     // Cast to object as preSaveRevision() expects one to be compatible with the
     // upcoming NG storage controller.
     $record = (object) $record;
-    $this->preSaveRevision($record, $entity);
+    $entity->preSaveRevision($this, $record);
     $record = (array) $record;
 
     if ($entity->isNewRevision()) {
@@ -526,49 +529,6 @@ class DatabaseStorageController extends EntityStorageControllerBase {
     // Make sure to update the new revision key for the entity.
     $entity->{$this->revisionKey} = $record[$this->revisionKey];
   }
-
-  /**
-   * Acts on an entity before the presave hook is invoked.
-   *
-   * Used before the entity is saved and before invoking the presave hook.
-   */
-  protected function preSave(EntityInterface $entity) { }
-
-  /**
-   * Acts on a saved entity before the insert or update hook is invoked.
-   *
-   * Used after the entity is saved, but before invoking the insert or update
-   * hook.
-   *
-   * @param $update
-   *   (bool) TRUE if the entity has been updated, or FALSE if it has been
-   *   inserted.
-   */
-  protected function postSave(EntityInterface $entity, $update) { }
-
-  /**
-   * Acts on entities before they are deleted.
-   *
-   * Used before the entities are deleted and before invoking the delete hook.
-   */
-  protected function preDelete($entities) { }
-
-  /**
-   * Acts on deleted entities before the delete hook is invoked.
-   *
-   * Used after the entities are deleted but before invoking the delete hook.
-   */
-  protected function postDelete($entities) { }
-
-  /**
-   * Act on a revision before being saved.
-   *
-   * @param \stdClass $record
-   *   The revision object.
-   * @param Drupal\Core\Entity\EntityInterface $entity
-   *   The entity object.
-   */
-  protected function preSaveRevision(\stdClass $record, EntityInterface $entity) { }
 
   /**
    * Invokes a hook on behalf of the entity.

@@ -8,6 +8,7 @@
 namespace Drupal\custom_block\Plugin\Core\Entity;
 
 use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\custom_block\CustomBlockInterface;
@@ -184,8 +185,40 @@ class CustomBlock extends EntityNG implements CustomBlockInterface {
   /**
    * {@inheritdoc}
    */
+  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    // Invalidate the block cache to update custom block-based derivatives.
+    \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getInstances() {
     return entity_load_multiple_by_properties('block', array('plugin' => 'custom_block:' . $this->uuid->value));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSaveRevision(EntityStorageControllerInterface $storage_controller, \stdClass $record) {
+    if ($this->isNewRevision()) {
+      // When inserting either a new custom block or a new custom_block
+      // revision, $entity->log must be set because {block_custom_revision}.log
+      // is a text column and therefore cannot have a default value. However,
+      // it might not be set at this point (for example, if the user submitting
+      // the form does not have permission to create revisions), so we ensure
+      // that it is at least an empty string in that case.
+      // @todo: Make the {block_custom_revision}.log column nullable so that we
+      // can remove this check.
+      if (!isset($record->log)) {
+        $record->log = '';
+      }
+    }
+    elseif (isset($this->original) && (!isset($record->log) || $record->log === '')) {
+      // If we are updating an existing custom_block without adding a new
+      // revision and the user did not supply a log, keep the existing one.
+      $record->log = $this->original->log->value;
+    }
   }
 
   /**

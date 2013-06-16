@@ -21,7 +21,7 @@ use Drupal\Core\Entity\DatabaseStorageControllerNG;
  * This extends the Drupal\Core\Entity\DatabaseStorageController class, adding
  * required special handling for user objects.
  */
-class UserStorageController extends DatabaseStorageControllerNG {
+class UserStorageController extends DatabaseStorageControllerNG implements UserStorageControllerInterface {
 
   /**
    * Provides the password hashing service object.
@@ -86,10 +86,7 @@ class UserStorageController extends DatabaseStorageControllerNG {
     }
 
     // Add any additional roles from the database.
-    $result = db_query('SELECT rid, uid FROM {users_roles} WHERE uid IN (:uids)', array(':uids' => array_keys($queried_users)));
-    foreach ($result as $record) {
-      $queried_users[$record->uid]->roles[] = $record->rid;
-    }
+    $this->addRoles($queried_users);
 
     // Call the default attachLoad() method. This will add fields and call
     // hook_user_load().
@@ -97,15 +94,9 @@ class UserStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::create().
+   * {@inheritdoc}
    */
   public function create(array $values) {
-    if (!isset($values['created'])) {
-      $values['created'] = REQUEST_TIME;
-    }
-    // Users always have the authenticated user role.
-    $values['roles'][] = DRUPAL_AUTHENTICATED_RID;
-
     return parent::create($values)->getBCEntity();
   }
 
@@ -126,106 +117,38 @@ class UserStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::preSave().
+   * {@inheritdoc}
    */
-  protected function preSave(EntityInterface $entity) {
-    // Update the user password if it has changed.
-    if ($entity->isNew() || ($entity->pass->value && $entity->pass->value != $entity->original->pass->value)) {
-      // Allow alternate password hashing schemes.
-      $entity->pass->value = $this->password->hash(trim($entity->pass->value));
-      // Abort if the hashing failed and returned FALSE.
-      if (!$entity->pass->value) {
-        throw new EntityMalformedException('The entity does not have a password.');
+  public function saveRoles(EntityInterface $user) {
+    $query = $this->database->insert('users_roles')->fields(array('uid', 'rid'));
+    foreach ($user->roles as $role) {
+      if (!in_array($role->value, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
+        $query->values(array(
+          'uid' => $user->id(),
+          'rid' => $role->value,
+        ));
       }
     }
+    $query->execute();
+  }
 
-    if (!$entity->isNew()) {
-      // If the password is empty, that means it was not changed, so use the
-      // original password.
-      if (empty($entity->pass->value)) {
-        $entity->pass->value = $entity->original->pass->value;
-      }
-    }
-
-    // Store account cancellation information.
-    foreach (array('user_cancel_method', 'user_cancel_notify') as $key) {
-      if (isset($entity->{$key})) {
-        $this->userData->set('user', $entity->id(), substr($key, 5), $entity->{$key});
-      }
+  /**
+   * {@inheritdoc}
+   */
+  public function addRoles(array $users) {
+    $result = db_query('SELECT rid, uid FROM {users_roles} WHERE uid IN (:uids)', array(':uids' => array_keys($users)));
+    foreach ($result as $record) {
+      $users[$record->uid]->roles[] = $record->rid;
     }
   }
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::postSave().
+   * {@inheritdoc}
    */
-  protected function postSave(EntityInterface $entity, $update) {
-
-    if ($update) {
-      // If the password has been changed, delete all open sessions for the
-      // user and recreate the current one.
-      if ($entity->pass->value != $entity->original->pass->value) {
-        drupal_session_destroy_uid($entity->id());
-        if ($entity->id() == $GLOBALS['user']->uid) {
-          drupal_session_regenerate();
-        }
-      }
-
-      // Update user roles if changed.
-      if ($entity->roles->getValue() != $entity->original->roles->getValue()) {
-        db_delete('users_roles')
-          ->condition('uid', $entity->id())
-          ->execute();
-
-        $query = $this->database->insert('users_roles')->fields(array('uid', 'rid'));
-        foreach ($entity->roles as $role) {
-          if (!in_array($role->value, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
-
-            $query->values(array(
-              'uid' => $entity->id(),
-              'rid' => $role->value,
-            ));
-          }
-        }
-        $query->execute();
-      }
-
-      // If the user was blocked, delete the user's sessions to force a logout.
-      if ($entity->original->status->value != $entity->status->value && $entity->status->value == 0) {
-        drupal_session_destroy_uid($entity->id());
-      }
-
-      // Send emails after we have the new user object.
-      if ($entity->status->value != $entity->original->status->value) {
-        // The user's status is changing; conditionally send notification email.
-        $op = $entity->status->value == 1 ? 'status_activated' : 'status_blocked';
-        _user_mail_notify($op, $entity->getBCEntity());
-      }
-    }
-    else {
-      // Save user roles.
-      if (count($entity->roles) > 1) {
-        $query = $this->database->insert('users_roles')->fields(array('uid', 'rid'));
-        foreach ($entity->roles as $role) {
-          if (!in_array($role->value, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
-            $query->values(array(
-              'uid' => $entity->id(),
-              'rid' => $role->value,
-            ));
-          }
-        }
-        $query->execute();
-      }
-    }
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::postDelete().
-   */
-  protected function postDelete($entities) {
+  public function deleteUserRoles(array $uids) {
     $this->database->delete('users_roles')
-      ->condition('uid', array_keys($entities), 'IN')
+      ->condition('uid', $uids)
       ->execute();
-    $this->userData->delete(NULL, array_keys($entities));
   }
 
   /**
