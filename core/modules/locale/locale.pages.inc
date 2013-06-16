@@ -546,7 +546,8 @@ function locale_translation_status_form($form, &$form_state) {
 
   $last_checked = Drupal::state()->get('locale.translation_last_checked');
   $form['last_checked'] = array(
-    '#markup' => '<p>' . theme('locale_translation_last_check', array('last' => $last_checked)) . '</p>',
+    '#theme' => 'locale_translation_last_check',
+    '#last' => $last_checked,
   );
 
   $header = array(
@@ -736,7 +737,11 @@ function theme_locale_translate_edit_form_strings($variables) {
 }
 
 /**
- * Returns HTML for translation status information per language.
+ * Prepares variables for translation status information templates.
+ *
+ * Translation status information is displayed per language.
+ *
+ * Default template: locale-translate-edit-form-strings.html.twig.
  *
  * @param array $variables
  *   An associative array containing:
@@ -744,10 +749,9 @@ function theme_locale_translate_edit_form_strings($variables) {
  *   - not_found: The projects which updates are not found.
  *
  * @see locale_translation_status_form()
- * @ingroup themeable
  */
-function theme_locale_translation_update_info($variables) {
-  $description = $details = '';
+function template_preprocess_locale_translation_update_info(&$variables) {
+  $details = array();
 
   // Build output for available updates.
   if (isset($variables['updates'])) {
@@ -757,16 +761,17 @@ function theme_locale_translation_update_info($variables) {
         $modules[] = $update['name'];
         $releases[] = t('@module (@date)', array('@module' => $update['name'], '@date' => format_date($update['timestamp'], 'html_date')));
       }
+      $variables['modules'] = $modules;
     }
-    $description = '<span class="text">' . t('Updates for: @modules', array('@modules' => implode(', ', $modules))) . '</span>';
-    $details = theme('item_list', array('items' => $releases));
+    $details['available_updates_list'] = array(
+      '#theme' => 'item_list',
+      '#items' => $releases,
+    );
   }
 
   // Build output for updates not found.
   if (isset($variables['not_found'])) {
-    if (empty($description)) {
-      $description = '<span class="text">' . format_plural(count($variables['not_found']), 'Missing translations for one project', 'Missing translations for @count projects') . '</span>';
-    }
+    $variables['missing_updates_status'] = format_plural(count($variables['not_found']), 'Missing translations for one project', 'Missing translations for @count projects');
     if ($variables['not_found']) {
       $releases = array();
       foreach ($variables['not_found'] as $update) {
@@ -774,38 +779,38 @@ function theme_locale_translation_update_info($variables) {
         $releases[] = t('@module (@version).', array('@module' => $update['name'], '@version' => $version)) . ' ' . $update['info'];
       }
     }
-    if ($details) {
-      $details .= t('Missing translations for:');
+    $details['missing_updates_list'] = array(
+      '#theme' => 'item_list',
+      '#items' => $releases,
+    );
+    // Prefix the missing updates list if there is an available updates lists
+    // before it.
+    if (!empty($details['available_updates_list']['#items'])) {
+      $details['missing_updates_list']['#prefix'] = t('Missing translations for:');
     }
-    $details .= theme('item_list', array('items' => $releases));
   }
-
-  $output = '<div class="inner" tabindex="0" role="button">';
-  $output .= '<span class="update-description-prefix element-invisible">Show description</span>' . $description;
-  $output .= $details ? '<div class="details">' . $details . '</div>' : '';
-  $output .= '</div>';
-  return $output;
+  $variables['details'] = $details;
 }
 
 /**
- * Returns HTML for the last time we checked for update data.
+ * Prepares variables for most recent translation update templates.
  *
- * In addition to properly formatting the given timestamp, this function also
- * provides a "Check manually" link that refreshes the available update and
- * redirects back to the same page.
+ * Displays the last time we checked for locale update data. In addition to
+ * properly formatting the given timestamp, this function also provides a "Check
+ * manually" link that refreshes the available update and redirects back to the
+ * same page.
+ *
+ * Default template: locale-translation-last-check.html.twig.
  *
  * @param $variables
  *   An associative array containing:
  *   - last: The timestamp when the site last checked for available updates.
  *
  * @see locale_translation_status_form()
- * @ingroup themeable
  */
-function theme_locale_translation_last_check($variables) {
+function template_preprocess_locale_translation_last_check(&$variables) {
   $last = $variables['last'];
-  $output = '<div class="locale checked">';
-  $output .= $last ? t('Last checked: @time ago', array('@time' => format_interval(REQUEST_TIME - $last))) : t('Last checked: never');
-  $output .= ' <span class="check-manually">(' . l(t('Check manually'), 'admin/reports/translations/check', array('query' => drupal_get_destination())) . ')</span>';
-  $output .= "</div>\n";
-  return $output;
+  $variables['last_checked'] = ($last != NULL);
+  $variables['time'] = format_interval(REQUEST_TIME - $last);
+  $variables['link'] = l(t('Check manually'), 'admin/reports/translations/check', array('query' => drupal_get_destination()));
 }

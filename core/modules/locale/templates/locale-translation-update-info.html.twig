@@ -1,0 +1,32 @@
+{#
+/**
+ * @file
+ * Default theme implementation for displaying translation status information.
+ *
+ * Displays translation status information per language.
+ *
+ * Available variables:
+ * - modules: A list of names of modules that have available translation
+ *   updates.
+ * - details: Rendered list of the translation details.
+ * - missing_updates_status: If there are any modules that are missing
+ *   translation updates, this variable will contain text indicating how many
+ *   modules are missing translations.
+ *
+ * @see template_preprocess()
+ * @see template_preprocess_locale_translation_update_info()
+ *
+ * @ingroup themeable
+ */
+#}
+<div class="inner" tabindex="0" role="button">
+  <span class="update-description-prefix element-invisible">Show description</span>
+  {% if modules %}
+    <span class="text">{{ 'Updates for: @modules'|t({'@modules': modules|join(', ')}) }}</span>
+  {% elseif missing_updates_status %}
+    <span class="text">{{ missing_updates_status }}</span>
+  {% endif %}
+  {% if details %}
+    <div class="details">{{ details }}</div>
+  {% endif %}
+</div>
