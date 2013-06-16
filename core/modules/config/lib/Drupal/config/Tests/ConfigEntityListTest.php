@@ -55,7 +55,7 @@ class ConfigEntityListTest extends WebTestBase {
     $expected_operations = array(
       'edit' => array (
         'title' => t('Edit'),
-        'href' => $uri['path'] . '/edit',
+        'href' => $uri['path'],
         'options' => $uri['options'],
         'weight' => 10,
       ),
@@ -134,7 +134,7 @@ class ConfigEntityListTest extends WebTestBase {
     $expected_operations = array(
       'edit' => array(
         'title' => t('Edit'),
-        'href' => $uri['path'] . '/edit',
+        'href' => $uri['path'],
         'options' => $uri['options'],
         'weight' => 10,
       ),
@@ -211,7 +211,7 @@ class ConfigEntityListTest extends WebTestBase {
     $this->assertFieldByXpath('//td', 'antelope', "Machine name found for added 'Antelope' entity.");
 
     // Edit the entity using the operations link.
-    $this->assertLinkByHref('admin/structure/config_test/manage/antelope/edit');
+    $this->assertLinkByHref('admin/structure/config_test/manage/antelope');
     $this->clickLink('Edit', 1);
     $this->assertResponse(200);
     $this->assertTitle('Edit Antelope | Drupal');

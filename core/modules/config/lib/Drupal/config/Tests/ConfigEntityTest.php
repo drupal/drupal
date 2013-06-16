@@ -206,7 +206,7 @@ class ConfigEntityTest extends WebTestBase {
     $this->assertResponse(200);
     $this->assertRaw($message_insert);
     $this->assertNoRaw($message_update);
-    $this->assertLinkByHref("admin/structure/config_test/manage/$id/edit");
+    $this->assertLinkByHref("admin/structure/config_test/manage/$id");
 
     // Update the configuration entity.
     $edit = array(
@@ -217,11 +217,11 @@ class ConfigEntityTest extends WebTestBase {
     $this->assertResponse(200);
     $this->assertNoRaw($message_insert);
     $this->assertRaw($message_update);
-    $this->assertLinkByHref("admin/structure/config_test/manage/$id/edit");
+    $this->assertLinkByHref("admin/structure/config_test/manage/$id");
     $this->assertLinkByHref("admin/structure/config_test/manage/$id/delete");
 
     // Delete the configuration entity.
-    $this->drupalGet("admin/structure/config_test/manage/$id/edit");
+    $this->drupalGet("admin/structure/config_test/manage/$id");
     $this->drupalPost(NULL, array(), 'Delete');
     $this->assertUrl("admin/structure/config_test/manage/$id/delete");
     $this->drupalPost(NULL, array(), 'Delete');
@@ -231,7 +231,6 @@ class ConfigEntityTest extends WebTestBase {
     $this->assertRaw($message_delete);
     $this->assertNoText($label1);
     $this->assertNoLinkByHref("admin/structure/config_test/manage/$id");
-    $this->assertNoLinkByHref("admin/structure/config_test/manage/$id/edit");
 
     // Re-create a configuration entity.
     $edit = array(
@@ -242,7 +241,7 @@ class ConfigEntityTest extends WebTestBase {
     $this->assertUrl('admin/structure/config_test');
     $this->assertResponse(200);
     $this->assertText($label1);
-    $this->assertLinkByHref("admin/structure/config_test/manage/$id/edit");
+    $this->assertLinkByHref("admin/structure/config_test/manage/$id");
 
     // Rename the configuration entity's ID/machine name.
     $edit = array(
@@ -256,9 +255,8 @@ class ConfigEntityTest extends WebTestBase {
     $this->assertNoText($label2);
     $this->assertText($label3);
     $this->assertNoLinkByHref("admin/structure/config_test/manage/$id");
-    $this->assertNoLinkByHref("admin/structure/config_test/manage/$id/edit");
     $id = $edit['id'];
-    $this->assertLinkByHref("admin/structure/config_test/manage/$id/edit");
+    $this->assertLinkByHref("admin/structure/config_test/manage/$id");
 
     // Create a configuration entity with '0' machine name.
     $edit = array(
@@ -269,7 +267,7 @@ class ConfigEntityTest extends WebTestBase {
     $this->assertResponse(200);
     $message_insert = format_string('%label configuration has been created.', array('%label' => $edit['label']));
     $this->assertRaw($message_insert);
-    $this->assertLinkByHref('admin/structure/config_test/manage/0/edit');
+    $this->assertLinkByHref('admin/structure/config_test/manage/0');
     $this->assertLinkByHref('admin/structure/config_test/manage/0/delete');
     $this->drupalPost('admin/structure/config_test/manage/0/delete', array(), 'Delete');
     $this->assertFalse(entity_load('config_test', '0'), 'Test entity deleted');

@@ -33,7 +33,7 @@ class DefaultViewsTest extends UITestBase {
   function testDefaultViews() {
     // Make sure the view starts off as disabled (does not appear on the listing
     // page).
-    $edit_href = 'admin/structure/views/view/glossary/edit';
+    $edit_href = 'admin/structure/views/view/glossary';
     $this->drupalGet('admin/structure/views');
     // @todo Disabled default views do now appear on the front page. Test this
     // behavior with templates instead.
@@ -88,14 +88,14 @@ class DefaultViewsTest extends UITestBase {
     );
     $this->assertTitle(t('Clone of @label | @site-name', array('@label' => 'Glossary', '@site-name' => config('system.site')->get('name'))));
     $this->drupalPost(NULL, $edit, t('Clone'));
-    $this->assertUrl('admin/structure/views/view/clone_of_glossary/edit', array(), 'The normal cloning name schema is applied.');
+    $this->assertUrl('admin/structure/views/view/clone_of_glossary', array(), 'The normal cloning name schema is applied.');
 
     // Clone a view and set a custom name.
     $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink(t('Clone'), '/glossary');
     $random_name = strtolower($this->randomName());
     $this->drupalPost(NULL, array('id' => $random_name), t('Clone'));
-    $this->assertUrl("admin/structure/views/view/$random_name/edit", array(), 'The custom view name got saved.');
+    $this->assertUrl("admin/structure/views/view/$random_name", array(), 'The custom view name got saved.');
 
     // Now disable the view, and make sure it stops appearing on the main view
     // listing page but instead goes back to displaying on the disabled views

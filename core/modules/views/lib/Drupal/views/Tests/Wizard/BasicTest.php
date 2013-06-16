@@ -39,10 +39,9 @@ class BasicTest extends WizardTestBase {
     $this->drupalGet('admin/structure/views');
     $this->assertText($view1['label']);
     $this->assertText($view1['description']);
-    // @todo For now, clone is being left to config.module to solve.
-    foreach (array('delete', 'edit') as $operation) {
-      $this->assertLinkByHref(url('admin/structure/views/view/' . $view1['id'] . '/' . $operation));
-    }
+    $this->assertLinkByHref(url('admin/structure/views/view/' . $view1['id']));
+    $this->assertLinkByHref(url('admin/structure/views/view/' . $view1['id'] . '/delete'));
+    $this->assertLinkByHref(url('admin/structure/views/view/' . $view1['id'] . '/clone'));
 
     // This view should not have a block.
     $this->drupalGet('admin/structure/block');

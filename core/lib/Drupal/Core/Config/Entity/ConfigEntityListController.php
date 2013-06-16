@@ -31,6 +31,10 @@ class ConfigEntityListController extends EntityListController {
     $operations = parent::getOperations($entity);
     $uri = $entity->uri();
 
+    // For configuration entities edit path is the MENU_DEFAULT_LOCAL_TASK and
+    // therefore should be accessed by the short route.
+    $operations['edit']['href'] = $uri['path'];
+
     if (isset($this->entityInfo['entity_keys']['status'])) {
       if (!$entity->status()) {
         $operations['enable'] = array(
