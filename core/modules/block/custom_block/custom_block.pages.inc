@@ -30,35 +30,6 @@ function template_preprocess_custom_block_add_list(&$variables) {
 }
 
 /**
- * Page callback: Presents the custom block creation form.
- *
- * @param Drupal\custom_block\Plugin\Core\Entity\CustomBlockType $block_type
- *   The custom block type to add.
- *
- * @return array
- *   A form array as expected by drupal_render().
- *
- * @see custom_block_menu()
- */
-function custom_block_add(CustomBlockType $block_type) {
-  drupal_set_title(t('Add %type custom block', array(
-    '%type' => $block_type->label()
-  )), PASS_THROUGH);
-  $block = entity_create('custom_block', array(
-    'type' => $block_type->id()
-  ));
-  $options = array();
-  $request = drupal_container()->get('request');
-  if (($theme = $request->attributes->get('theme')) && in_array($theme, array_keys(list_themes()))) {
-    // We have navigated to this page from the block library and will keep track
-    // of the theme for redirecting the user to the configuration page for the
-    // newly created block in the given theme.
-    $block->setTheme($theme);
-  }
-  return entity_get_form($block);
-}
-
-/**
  * Page callback: Presents the custom block edit form.
  *
  * @param Drupal\custom_block\Plugin\Core\Entity\CustomBlock $block
