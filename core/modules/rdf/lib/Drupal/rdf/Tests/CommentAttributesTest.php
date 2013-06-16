@@ -79,7 +79,7 @@ class CommentAttributesTest extends CommentTestBase {
     $parser = new \EasyRdf_Parser_Rdfa();
     $graph = new \EasyRdf_Graph();
     $parser->parse($graph, $this->drupalGet('node/' . $this->node->nid), 'rdfa', $this->base_uri);
-    $this->assertTrue($graph->hasProperty($this->node_uri, 'http://rdfs.org/sioc/ns#num_replies', $expected_value), 'Number of comments found in RDF output of full node view mode (sioc:num_replies).');;
+    $this->assertTrue($graph->hasProperty($this->node_uri, 'http://rdfs.org/sioc/ns#num_replies', $expected_value), 'Number of comments found in RDF output of full node view mode (sioc:num_replies).');
   }
 
   /**
