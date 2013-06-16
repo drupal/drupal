@@ -93,9 +93,7 @@ function template_preprocess_views_ui_display_tab_bucket(&$variables) {
  */
 function template_preprocess_views_ui_view_info(&$variables) {
   $variables['title'] = $variables['view']->label();
-
-  $displays = $variables['view']->getDisplaysList();
-  $variables['displays'] = empty($displays) ? t('None') : format_plural(count($displays), 'Display', 'Displays') . ': ' . '<em>' . implode(', ', $displays) . '</em>';
+  $variables['displays'] = empty($variables['displays']) ? t('None') : format_plural(count($variables['displays']), 'Display', 'Displays') . ': ' . '<em>' . implode(', ', $variables['displays']) . '</em>';
 }
 
 /**
