@@ -89,7 +89,7 @@ class String extends FilterPluginBase {
       'not_ends' => array(
         'title' => t('Does not end with'),
         'short' => t('not_ends'),
-        'method' => 'opNotEnds',
+        'method' => 'opNotEndsWith',
         'values' => 1,
       ),
       'not' => array(
@@ -313,7 +313,7 @@ class String extends FilterPluginBase {
     $this->query->addWhere($this->options['group'], $field, '%' . db_like($this->value), 'LIKE');
   }
 
-  protected function opNotEnds($field) {
+  protected function opNotEndsWith($field) {
     $this->query->addWhere($this->options['group'], $field, '%' . db_like($this->value), 'NOT LIKE');
   }
 
