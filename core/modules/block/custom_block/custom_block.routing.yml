@@ -11,3 +11,10 @@ custom_block_add_page:
     _content: 'Drupal\custom_block\Controller\CustomBlockController::add'
   requirements:
     _permission: 'administer blocks'
+
+custom_block_add_form:
+  pattern: block/add/{custom_block_type}
+  defaults:
+    _content: 'Drupal\custom_block\Controller\CustomBlockController::addForm'
+  requirements:
+    _permission: 'administer blocks'

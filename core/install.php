@@ -26,6 +26,14 @@ if (version_compare(PHP_VERSION, '5.3.10') < 0) {
   exit;
 }
 
+// Exit early if the PHP option safe_mode is enabled to avoid fatal errors.
+// @todo Remove this check once we require PHP > 5.4 as safe mode is deprecated
+// in PHP 5.3 and completely removed in PHP 5.4.
+if (ini_get('safe_mode')) {
+  print 'Your PHP installation has safe_mode enabled. Drupal requires the safe_mode option to be turned off. See the <a href="http://drupal.org/requirements">system requirements</a> page for more information.';
+  exit;
+}
+
 // Start the installer.
 require_once __DIR__ . '/includes/install.core.inc';
 install_drupal();

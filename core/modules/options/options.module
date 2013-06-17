@@ -68,7 +68,7 @@ function options_field_info() {
 /**
  * Implements hook_field_settings_form().
  */
-function options_field_settings_form($field, $instance, $has_data) {
+function options_field_settings_form($field, $instance) {
   $settings = $field['settings'];
 
   switch ($field['type']) {
@@ -81,7 +81,7 @@ function options_field_settings_form($field, $instance, $has_data) {
         '#default_value' => options_allowed_values_string($settings['allowed_values']),
         '#rows' => 10,
         '#element_validate' => array('options_field_settings_form_validate_allowed_values'),
-        '#field_has_data' => $has_data,
+        '#field_has_data' => $field->hasData(),
         '#field' => $field,
         '#field_type' => $field['type'],
         '#access' => empty($settings['allowed_values_function']),
@@ -217,7 +217,7 @@ function options_field_settings_form_value_boolean_allowed_values($element, $inp
 /**
  * Implements hook_field_update_field().
  */
-function options_field_update_field($field, $prior_field, $has_data) {
+function options_field_update_field($field, $prior_field) {
   drupal_static_reset('options_allowed_values');
 }
 
@@ -368,8 +368,8 @@ function options_allowed_values_string($values) {
 /**
  * Implements hook_field_update_forbid().
  */
-function options_field_update_forbid($field, $prior_field, $has_data) {
-  if ($field['module'] == 'options' && $has_data) {
+function options_field_update_forbid($field, $prior_field) {
+  if ($field['module'] == 'options' && $field->hasData()) {
     // Forbid any update that removes allowed values with actual data.
     $lost_keys = array_diff(array_keys($prior_field['settings']['allowed_values']), array_keys($field['settings']['allowed_values']));
     if (_options_values_in_use($field, $lost_keys)) {

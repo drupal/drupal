@@ -290,26 +290,6 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   }
 
   /**
-   * Gets a list of displays included in the view.
-   *
-   * @return array
-   *   An array of display types that this view includes.
-   */
-  function getDisplaysList() {
-    $manager = Views::pluginManager('display');
-    $displays = array();
-    foreach ($this->display as $display) {
-      $definition = $manager->getDefinition($display['display_plugin']);
-      if (!empty($definition['admin'])) {
-        $displays[$definition['admin']] = TRUE;
-      }
-    }
-
-    ksort($displays);
-    return array_keys($displays);
-  }
-
-  /**
    * Gets a list of paths assigned to the view.
    *
    * @return array

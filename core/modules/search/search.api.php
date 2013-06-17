@@ -217,11 +217,15 @@ function hook_search_execute($keys = NULL, $conditions = NULL) {
 
     $language = language_load($item->langcode);
     $uri = $node->uri();
+    $username = array(
+      '#theme' => 'username',
+      '#account' => $node,
+    );
     $results[] = array(
       'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE, 'language' => $language))),
       'type' => check_plain(node_get_type_label($node)),
       'title' => $node->label($item->langcode),
-      'user' => theme('username', array('account' => $node)),
+      'user' => drupal_render($username),
       'date' => $node->changed,
       'node' => $node,
       'extra' => $extra,
@@ -264,7 +268,10 @@ function hook_search_page($results) {
       '#module' => 'my_module_name',
     );
   }
-  $output['suffix']['#markup'] = '</ol>' . theme('pager');
+  $pager = array(
+    '#theme' => 'pager',
+  );
+  $output['suffix']['#markup'] = '</ol>' . drupal_render($pager);
 
   return $output;
 }

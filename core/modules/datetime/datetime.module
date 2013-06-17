@@ -115,7 +115,7 @@ function datetime_field_info() {
 /**
  * Implements hook_field_settings_form().
  */
-function datetime_field_settings_form($field, $instance, $has_data) {
+function datetime_field_settings_form($field, $instance) {
   $settings = $field['settings'];
 
   $form['datetime_type'] = array(

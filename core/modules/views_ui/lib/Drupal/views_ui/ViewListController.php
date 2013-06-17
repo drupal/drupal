@@ -7,13 +7,55 @@
 
 namespace Drupal\views_ui;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityListController;
+use Drupal\Core\Entity\EntityControllerInterface;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a listing of Views.
  */
-class ViewListController extends ConfigEntityListController {
+class ViewListController extends ConfigEntityListController implements EntityControllerInterface {
+
+  /**
+   * The views display plugin manager to use.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   */
+  protected $displayManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+    return new static(
+      $entity_type,
+      $container->get('plugin.manager.entity')->getStorageController($entity_type),
+      $entity_info,
+      $container->get('plugin.manager.views.display')
+    );
+  }
+
+  /**
+   * Constructs a new EntityListController object.
+   *
+   * @param string $entity_type.
+   *   The type of entity to be listed.
+   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage.
+   *   The entity storage controller class.
+   * @param array $entity_info
+   *   An array of entity info for this entity type.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $display_manager
+   *   The views display plugin manager to use.
+   */
+  public function __construct($entity_type, EntityStorageControllerInterface $storage, $entity_info, PluginManagerInterface $display_manager) {
+    $this->entityType = $entity_type;
+    $this->storage = $storage;
+    $this->entityInfo = $entity_info;
+    $this->displayManager = $display_manager;
+  }
 
   /**
    * Overrides Drupal\Core\Entity\EntityListController::load();
@@ -40,7 +82,13 @@ class ViewListController extends ConfigEntityListController {
   public function buildRow(EntityInterface $view) {
     return array(
       'data' => array(
-        'view_name' => theme('views_ui_view_info', array('view' => $view)),
+        'view_name' => array(
+          'data' => array(
+            '#theme' => 'views_ui_view_info',
+            '#view' => $view,
+            '#displays' => $this->getDisplaysList($view)
+          ),
+        ),
         'description' => $view->get('description'),
         'tag' => $view->get('tag'),
         'path' => implode(', ', $view->getPaths()),
@@ -154,6 +202,28 @@ class ViewListController extends ConfigEntityListController {
     $list['disabled']['table']['#empty'] = t('There are no disabled views.');
 
     return $list;
+  }
+
+  /**
+   * Gets a list of displays included in the view.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $view
+   *   The view entity instance to get a list of displays for.
+   *
+   * @return array
+   *   An array of display types that this view includes.
+   */
+  protected function getDisplaysList(EntityInterface $view) {
+    $displays = array();
+    foreach ($view->get('display') as $display) {
+      $definition = $this->displayManager->getDefinition($display['display_plugin']);
+      if (!empty($definition['admin'])) {
+        $displays[$definition['admin']] = TRUE;
+      }
+    }
+
+    ksort($displays);
+    return array_keys($displays);
   }
 
 }

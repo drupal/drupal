@@ -29,13 +29,11 @@
  *   The field structure being configured.
  * @param $instance
  *   The instance structure being configured.
- * @param $has_data
- *   TRUE if the field already has data, FALSE if not.
  *
  * @return
  *   The form definition for the field settings.
  */
-function hook_field_settings_form($field, $instance, $has_data) {
+function hook_field_settings_form($field, $instance) {
   $settings = $field['settings'];
   $form['max_length'] = array(
     '#type' => 'number',

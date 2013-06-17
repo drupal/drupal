@@ -154,7 +154,7 @@ function views_ui_theme() {
 
     // list views
     'views_ui_view_info' => array(
-      'variables' => array('view' => NULL, 'base' => NULL),
+      'variables' => array('view' => NULL, 'displays' => NULL),
       'file' => 'views_ui.theme.inc',
     ),
 

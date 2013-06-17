@@ -50,21 +50,24 @@ function field_test_entity_view_mode_info_alter(&$view_modes) {
 }
 
 /**
- * Implements hook_entity_bundle_info_alter().
+ * Implements hook_entity_bundle_info().
  */
-function field_test_entity_bundle_info_alter(&$bundles) {
+function field_test_entity_bundle_info() {
+  $bundles = array();
+
   $entity_info = entity_get_info();
-  foreach ($bundles as $entity_type => $info) {
-    if ($entity_info[$entity_type]['module'] == 'field_test') {
+  foreach ($entity_info as $entity_type => $info) {
+    if ($info['module'] == 'field_test') {
       $bundles[$entity_type] = Drupal::state()->get('field_test_bundles') ?: array('test_bundle' => array('label' => 'Test Bundle'));
-      if ($entity_type == 'test_entity_bundle') {
-        $bundles[$entity_type] += array('test_entity_2' => array('label' => 'Test entity 2'));
-      }
-      if ($entity_type == 'test_entity_bundle_key') {
-        $bundles[$entity_type] += array('bundle1' => array('label' => 'Bundle1'), 'bundle2' => array('label' => 'Bundle2'));
-      }
     }
   }
+
+  $bundles['test_entity_bundle']['test_entity_2'] = array('label' => 'Test entity 2');
+
+  $bundles['test_entity_bundle_key']['bundle1'] = array('label' => 'Bundle1');
+  $bundles['test_entity_bundle_key']['bundle2'] = array('label' => 'Bundle2');
+
+  return $bundles;
 }
 
 /**

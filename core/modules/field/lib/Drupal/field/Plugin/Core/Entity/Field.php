@@ -420,17 +420,15 @@ class Field extends ConfigEntityBase implements FieldInterface {
     // objects.
     $this->settings += $original->settings;
 
-    $has_data = field_has_data($this);
-
     // See if any module forbids the update by throwing an exception. This
     // invokes hook_field_update_forbid().
-    $module_handler->invokeAll('field_update_forbid', array($this, $original, $has_data));
+    $module_handler->invokeAll('field_update_forbid', array($this, $original));
 
     // Tell the storage engine to update the field by invoking the
     // hook_field_storage_update_field(). The storage engine can reject the
     // definition update as invalid by raising an exception, which stops
     // execution before the definition is written to config.
-    $module_handler->invoke($this->storage['module'], 'field_storage_update_field', array($this, $original, $has_data));
+    $module_handler->invoke($this->storage['module'], 'field_storage_update_field', array($this, $original));
 
     // Save the configuration.
     $result = parent::save();
@@ -438,7 +436,7 @@ class Field extends ConfigEntityBase implements FieldInterface {
 
     // Invoke hook_field_update_field() after the cache is cleared for API
     // consistency.
-    $module_handler->invokeAll('field_update_field', array($this, $original, $has_data));
+    $module_handler->invokeAll('field_update_field', array($this, $original));
 
     return $result;
   }
@@ -724,4 +722,38 @@ class Field extends ConfigEntityBase implements FieldInterface {
     return array('deleted');
   }
 
+  /**
+   * Determines whether a field has any data.
+   *
+   * @return
+   *   TRUE if the field has data for any entity; FALSE otherwise.
+   */
+  public function hasData() {
+    $storage_details = $this->getSchema();
+    $columns = array_keys($storage_details['columns']);
+    $factory = \Drupal::service('entity.query');
+    foreach ($this->getBundles() as $entity_type => $bundle) {
+      // Entity Query throws an exception if there is no base table.
+      $entity_info = \Drupal::entityManager()->getDefinition($entity_type);
+      if (!isset($entity_info['base_table'])) {
+        continue;
+      }
+      $query = $factory->get($entity_type);
+      $group = $query->orConditionGroup();
+      foreach ($columns as $column) {
+        $group->exists($this->id() . '.' . $column);
+      }
+      $result = $query
+        ->condition($group)
+        ->count()
+        ->accessCheck(FALSE)
+        ->range(0, 1)
+        ->execute();
+      if ($result) {
+        return TRUE;
+      }
+    }
+
+    return FALSE;
+  }
 }

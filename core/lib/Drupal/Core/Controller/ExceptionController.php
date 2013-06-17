@@ -255,7 +255,11 @@ class ExceptionController extends ContainerAware {
     drupal_set_title(t('Error'));
     // We fallback to a maintenance page at this point, because the page
     // generation itself can generate errors.
-    $output = theme('maintenance_page', array('content' => t('The website has encountered an error. Please try again later.')));
+    $maintenance_page = array(
+      '#theme' => 'maintenance_page',
+      '#content' => t('The website has encountered an error. Please try again later.'),
+    );
+    $output = drupal_render($maintenance_page);
 
     $response = new Response($output, 500);
     $response->setStatusCode(500, '500 Service unavailable (with message)');

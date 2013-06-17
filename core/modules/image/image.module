@@ -364,7 +364,7 @@ function image_field_delete_field($field) {
 /**
  * Implements hook_field_update_field().
  */
-function image_field_update_field($field, $prior_field, $has_data) {
+function image_field_update_field($field, $prior_field) {
   if ($field['type'] != 'image') {
     return;
   }

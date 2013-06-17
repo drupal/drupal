@@ -541,11 +541,9 @@ function hook_field_update(\Drupal\Core\Entity\EntityInterface $entity, $field, 
  *   The updated field structure to be saved.
  * @param $prior_field
  *   The previously-saved field structure.
- * @param $has_data
- *   TRUE if the field has data in storage currently.
  */
-function hook_field_storage_update_field($field, $prior_field, $has_data) {
-  if (!$has_data) {
+function hook_field_storage_update_field($field, $prior_field) {
+  if (!$field->hasData()) {
     // There is no data. Re-create the tables completely.
     $prior_schema = _field_sql_storage_schema($prior_field);
     foreach ($prior_schema as $name => $table) {
@@ -1853,15 +1851,13 @@ function hook_field_create_instance($instance) {
  *   The field as it will be post-update.
  * @param $prior_field
  *   The field as it is pre-update.
- * @param $has_data
- *   Whether any data already exists for this field.
  */
-function hook_field_update_forbid($field, $prior_field, $has_data) {
+function hook_field_update_forbid($field, $prior_field) {
   // A 'list' field stores integer keys mapped to display values. If
   // the new field will have fewer values, and any data exists for the
   // abandoned keys, the field will have no way to display them. So,
   // forbid such an update.
-  if ($has_data && count($field['settings']['allowed_values']) < count($prior_field['settings']['allowed_values'])) {
+  if ($field->hasData() && count($field['settings']['allowed_values']) < count($prior_field['settings']['allowed_values'])) {
     // Identify the keys that will be lost.
     $lost_keys = array_diff(array_keys($field['settings']['allowed_values']), array_keys($prior_field['settings']['allowed_values']));
     // If any data exist for those keys, forbid the update.
@@ -1887,10 +1883,8 @@ function hook_field_update_forbid($field, $prior_field, $has_data) {
  *   The field as it is post-update.
  * @param $prior_field
  *   The field as it was pre-update.
- * @param $has_data
- *   Whether any data already exists for this field.
  */
-function hook_field_update_field($field, $prior_field, $has_data) {
+function hook_field_update_field($field, $prior_field) {
   // Reset the static value that keeps track of allowed values for list fields.
   drupal_static_reset('list_allowed_values');
 }

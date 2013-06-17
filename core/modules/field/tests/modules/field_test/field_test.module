@@ -267,20 +267,3 @@ function field_test_field_extra_fields_alter(&$info) {
   // Remove all extra fields from the 'no_fields' content type;
   unset($info['node']['no_fields']);
 }
-
-/**
- * Implements hook_module_implements_alter().
- *
- * field_test_entity_info_alter() adds the bundles for its entities, and thus
- * needs to run before rdf_entity_info_alter().
- * @todo Remove when http://drupal.org/node/1822458 is fixed.
- */
-function field_test_module_implements_alter(&$implementations, $hook) {
-  if ($hook == 'entity_bundle_info_alter' && isset($implementations['field_test']) && isset($implementations['rdf'])) {
-    foreach (array('field_test', 'rdf') as $module) {
-      $group = $implementations[$module];
-      unset($implementations[$module]);
-      $implementations[$module] = $group;
-    }
-  }
-}

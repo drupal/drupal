@@ -82,8 +82,7 @@ class FieldEditForm implements FormInterface, ControllerInterface {
 
     // See if data already exists for this field.
     // If so, prevent changes to the field settings.
-    $has_data = field_has_data($field);
-    if ($has_data) {
+    if ($field->hasData()) {
       $form['field']['#prefix'] = '<div class="messages messages--error">' . t('There is data for this field in the database. The field settings can no longer be changed.') . '</div>' . $form['field']['#prefix'];
     }
 
@@ -135,7 +134,7 @@ class FieldEditForm implements FormInterface, ControllerInterface {
     $form['field']['settings'] = array(
       '#weight' => 10,
     );
-    $additions = \Drupal::moduleHandler()->invoke($field['module'], 'field_settings_form', array($field, $this->instance, $has_data));
+    $additions = \Drupal::moduleHandler()->invoke($field['module'], 'field_settings_form', array($field, $this->instance));
     if (is_array($additions)) {
       $form['field']['settings'] += $additions;
     }

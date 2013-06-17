@@ -219,8 +219,6 @@ class ViewStorageTest extends ViewUnitTestBase {
     );
     $view = $this->controller->create($config);
 
-    $this->assertEqual($view->getDisplaysList(), array('Feed', 'Page'), 'Make sure the display admin names are returns in alphabetic order.');
-
     // Paths with a "%" shouldn't not be linked
     $expected_paths = array();
     $expected_paths[] = l('/test', 'test');

@@ -249,15 +249,9 @@ function common_test_theme() {
   return array(
     'common_test_foo' => array(
       'variables' => array('foo' => 'foo', 'bar' => 'bar'),
+      'template' => 'common-test-foo',
     ),
   );
-}
-
-/**
- * Provides a theme function for drupal_render().
- */
-function theme_common_test_foo($variables) {
-  return $variables['foo'] . $variables['bar'];
 }
 
 /**

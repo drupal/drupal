@@ -1568,12 +1568,22 @@ function watchdog($type, $message, array $variables = NULL, $severity = WATCHDOG
       'link'        => $link,
       'user'        => $user,
       'uid'         => $user_uid,
-      'request_uri' => $base_root . request_uri(),
-      'referer'     => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
-      'ip'          => Drupal::request()->getClientIP(),
+      'request_uri' => '',
+      'referer'     => '',
+      'ip'          => '',
       // Request time isn't accurate for long processes, use time() instead.
       'timestamp'   => time(),
     );
+
+    try {
+      $request = Drupal::request();
+      $log_entry['request_uri'] = $request->getUri();
+      $log_entry['referer'] = $request->headers->get('Referer', '');
+      $log_entry['ip'] = $request->getClientIP();
+    }
+    catch (\InvalidArgumentException $e) {
+      // We are not in a request context.
+    }
 
     // Call the logging hooks to log/process the message
     foreach (module_implements('watchdog') as $module) {

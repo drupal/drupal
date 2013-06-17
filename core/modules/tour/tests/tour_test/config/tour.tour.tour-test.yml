@@ -9,7 +9,7 @@ tips:
     id: tour-test-1
     plugin: text
     label: The first tip
-    body: Is always the best dressed.
+    body: Is [site:name] always the best dressed?
     weight: "1"
     attributes:
       data-id: tour-test-1

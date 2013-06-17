@@ -122,15 +122,17 @@ function entity_test_delete_bundle($bundle, $entity_type = 'entity_test') {
 }
 
 /**
- * Implements hook_entity_bundle_info_alter().
+ * Implements hook_entity_bundle_info().
  */
-function entity_test_entity_bundle_info_alter(&$bundles) {
+function entity_test_entity_bundle_info() {
+  $bundles = array();
   $entity_info = entity_get_info();
-  foreach ($bundles as $entity_type => $info) {
-    if ($entity_info[$entity_type]['module'] == 'entity_test') {
+  foreach ($entity_info as $entity_type => $info) {
+    if ($info['module'] == 'entity_test') {
       $bundles[$entity_type] = Drupal::state()->get($entity_type . '.bundles') ?: array($entity_type => array('label' => 'Entity Test Bundle'));
     }
   }
+  return $bundles;
 }
 
 /**

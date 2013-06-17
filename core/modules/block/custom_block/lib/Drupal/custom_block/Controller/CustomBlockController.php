@@ -8,8 +8,9 @@
 namespace Drupal\custom_block\Controller;
 
 use Drupal\Core\Controller\ControllerInterface;
-use Drupal\Core\Entity\EntityManager;
-use Drupal\Core\Extension\ModuleHandler;
+use Drupal\custom_block\CustomBlockStorageController;
+use Drupal\custom_block\CustomBlockTypeInterface;
+use Drupal\custom_block\CustomBlockTypeStorageController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -23,27 +24,28 @@ class CustomBlockController implements ControllerInterface {
   protected $request;
 
   /**
-   * Entity Manager service.
+   * The custom block storage controller.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\custom_block\CustomBlockStorageController
    */
-  protected $entityManager;
+  protected $customBlockStorage;
 
   /**
-   * Module handler service.
+   * The custom block type storage controller.
    *
-   * @var \Drupal\Core\Extension\ModuleHandler
+   * @var \Drupal\custom_block\CustomBlockTypeStorageController
    */
-  protected $moduleHandler;
+  protected $customBlockTypeStorage;
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
+    $entity_manager = $container->get('plugin.manager.entity');
     return new static(
       $container->get('request'),
-      $container->get('plugin.manager.entity'),
-      $container->get('module_handler')
+      $entity_manager->getStorageController('custom_block'),
+      $entity_manager->getStorageController('custom_block_type')
     );
   }
 
@@ -52,15 +54,15 @@ class CustomBlockController implements ControllerInterface {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   Current request.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
-   *   Entity manager service.
-   * @param \Drupal\Core\Extension\ModuleHandler $module_handler
-   *   Module Handler service.
+   * @param \Drupal\custom_block\CustomBlockStorageController $custom_block_storage
+   *   The custom block storage controller.
+   * @param \Drupal\custom_block\CustomBlockTypeStorageController $custom_block_type_storage
+   *   The custom block type storage controller.
    */
-  public function __construct(Request $request, EntityManager $entity_manager, ModuleHandler $module_handler) {
+  public function __construct(Request $request, CustomBlockStorageController $custom_block_storage, CustomBlockTypeStorageController $custom_block_type_storage) {
     $this->request = $request;
-    $this->entityManager = $entity_manager;
-    $this->moduleHandler = $module_handler;
+    $this->customBlockStorage = $custom_block_storage;
+    $this->customBlockTypeStorage = $custom_block_type_storage;
   }
 
   /**
@@ -72,25 +74,39 @@ class CustomBlockController implements ControllerInterface {
    *   returns the custom block add page for that custom block type.
    */
   public function add() {
-    $options = array();
+    $types = $this->customBlockTypeStorage->load();
+    if ($types && count($types) == 1) {
+      $type = reset($types);
+      return $this->addForm($type);
+    }
+
+    return array('#theme' => 'custom_block_add_list', '#content' => $types);
+  }
+
+  /**
+   * Presents the custom block creation form.
+   *
+   * @param \Drupal\custom_block\CustomBlockTypeInterface $custom_block_type
+   *   The custom block type to add.
+   *
+   * @return array
+   *   A form array as expected by drupal_render().
+   */
+  public function addForm(CustomBlockTypeInterface $custom_block_type) {
+    // @todo Remove this when https://drupal.org/node/1981644 is in.
+    drupal_set_title(t('Add %type custom block', array(
+      '%type' => $custom_block_type->label()
+    )), PASS_THROUGH);
+    $block = $this->customBlockStorage->create(array(
+      'type' => $custom_block_type->id()
+    ));
     if (($theme = $this->request->attributes->get('theme')) && in_array($theme, array_keys(list_themes()))) {
       // We have navigated to this page from the block library and will keep track
       // of the theme for redirecting the user to the configuration page for the
       // newly created block in the given theme.
-      $options = array(
-        'query' => array('theme' => $theme)
-      );
+      $block->setTheme($theme);
     }
-    $types = $this->entityManager->getStorageController('custom_block_type')->load();
-    if ($types && count($types) == 1) {
-      $type = reset($types);
-      // @todo convert this to OO once block/add/%type uses a Controller. Will
-      //   be fixed in http://drupal.org/node/1978166.
-      $this->moduleHandler->loadInclude('custom_block', 'pages.inc');
-      return custom_block_add($type);
-    }
-
-    return array('#theme' => 'custom_block_add_list', '#content' => $types);
+    return entity_get_form($block);
   }
 
 }

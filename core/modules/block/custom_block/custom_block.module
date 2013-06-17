@@ -73,13 +73,9 @@ function custom_block_menu() {
     'route_name' => 'custom_block_add_page',
   );
   $items['block/add/%custom_block_type'] = array(
-    'title callback' => 'entity_page_label',
-    'title arguments' => array(2),
-    'page callback' => 'custom_block_add',
-    'page arguments' => array(2),
-    'access arguments' => array('administer blocks'),
+    'title' => 'Add custom block',
     'description' => 'Add custom block',
-    'file' => 'custom_block.pages.inc',
+    'route_name' => 'custom_block_add_form'
   );
   // There has to be a base-item in order for contextual links to work.
   $items['block/%custom_block'] = array(

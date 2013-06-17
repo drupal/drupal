@@ -65,7 +65,10 @@ function search_extra_type_search_page($results) {
       '#module' => 'search_extra_type',
     );
   }
-  $output['suffix']['#markup'] = '</ol>' . theme('pager');
+  $pager = array(
+    '#theme' => 'pager',
+  );
+  $output['suffix']['#markup'] = '</ol>' . drupal_render($pager);
 
   return $output;
 }

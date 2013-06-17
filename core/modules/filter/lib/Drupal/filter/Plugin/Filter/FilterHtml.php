@@ -134,7 +134,12 @@ class FilterHtml extends FilterBase {
         );
       }
     }
-    $output .= theme('table', array('header' => $header, 'rows' => $rows));
+    $table = array(
+      '#theme' => 'table',
+      '#header' => $header,
+      '#rows' => $rows,
+    );
+    $output .= drupal_render($table);
 
     $output .= '<p>' . t('Most unusual characters can be directly entered without any problems.') . '</p>';
     $output .= '<p>' . t('If you do encounter problems, try using HTML character entities. A common example looks like &amp;amp; for an ampersand &amp; character. For a full list of entities see HTML\'s <a href="@html-entities">entities</a> page. Some of the available characters include:', array('@html-entities' => 'http://www.w3.org/TR/html4/sgml/entities.html')) . '</p>';
@@ -154,7 +159,12 @@ class FilterHtml extends FilterBase {
         array('data' => $entity[1], 'class' => array('get'))
       );
     }
-    $output .= theme('table', array('header' => $header, 'rows' => $rows));
+    $table = array(
+      '#theme' => 'table',
+      '#header' => $header,
+      '#rows' => $rows,
+    );
+    $output .= drupal_render($table);
     return $output;
   }
 

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\user\Views\Argument\RolesRidTest.
+ * Contains \Drupal\user\Tests\Views\Argument\RolesRidTest.
  */
 
-namespace Drupal\Tests\user\Views\Argument;
+namespace Drupal\user\Tests\Views\Argument;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
