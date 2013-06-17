@@ -1022,7 +1022,11 @@ function theme_filter_guidelines($variables) {
   $attributes['class'][] = 'filter-guidelines-' . $format->format;
   $output = '<div' . new Attribute($attributes) . '>';
   $output .= '<h4 class="label">' . check_plain($format->name) . '</h4>';
-  $output .= theme('filter_tips', array('tips' => _filter_tips($format->format, FALSE)));
+  $filter_tips = array(
+    '#theme' => 'filter_tips',
+    '#tips' => _filter_tips($format->format, FALSE),
+  );
+  $output .= drupal_render($filter_tips);
   $output .= '</div>';
   return $output;
 }
@@ -1404,7 +1408,11 @@ function _filter_html_image_secure_process($text) {
       }
     }
     // Replace an invalid image with an error indicator.
-    theme('filter_html_image_secure_image', array('image' => $image));
+    $filter_html_image_secure_image = array(
+      '#theme' => 'filter_html_image_secure_image',
+      '#image' => $image,
+    );
+    drupal_render($filter_html_image_secure_image);
   }
   $text = filter_dom_serialize($html_dom);
   return $text;
