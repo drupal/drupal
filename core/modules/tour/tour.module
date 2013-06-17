@@ -116,7 +116,7 @@ function tour_preprocess_page(&$variables) {
   // Load all of the items and match on path.
   $tours = entity_load_multiple('tour');
 
-  $path_alias = drupal_strtolower(drupal_container()->get('path.alias_manager')->getPathAlias($path));
+  $path_alias = drupal_strtolower(Drupal::service('path.alias_manager')->getPathAlias($path));
   foreach ($tours as $tour_id => $tour) {
     // @todo Replace this with an entity query that does path matching when
     // http://drupal.org/node/1918768 lands.
@@ -135,12 +135,12 @@ function tour_preprocess_page(&$variables) {
  * Implements hook_tour_insert().
  */
 function tour_tour_insert($entity) {
-  drupal_container()->get('plugin.manager.tour.tip')->clearCachedDefinitions();
+  Drupal::service('plugin.manager.tour.tip')->clearCachedDefinitions();
 }
 
 /**
  * Implements hook_tour_update().
  */
 function tour_tour_update($entity) {
-  drupal_container()->get('plugin.manager.tour.tip')->clearCachedDefinitions();
+  Drupal::service('plugin.manager.tour.tip')->clearCachedDefinitions();
 }
