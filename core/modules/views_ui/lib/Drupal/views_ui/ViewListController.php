@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityListController;
 use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -34,7 +35,8 @@ class ViewListController extends ConfigEntityListController implements EntityCon
       $entity_type,
       $container->get('plugin.manager.entity')->getStorageController($entity_type),
       $entity_info,
-      $container->get('plugin.manager.views.display')
+      $container->get('plugin.manager.views.display'),
+      $container->get('module_handler')
     );
   }
 
@@ -49,11 +51,12 @@ class ViewListController extends ConfigEntityListController implements EntityCon
    *   An array of entity info for this entity type.
    * @param \Drupal\Component\Plugin\PluginManagerInterface $display_manager
    *   The views display plugin manager to use.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    */
-  public function __construct($entity_type, EntityStorageControllerInterface $storage, $entity_info, PluginManagerInterface $display_manager) {
-    $this->entityType = $entity_type;
-    $this->storage = $storage;
-    $this->entityInfo = $entity_info;
+  public function __construct($entity_type, EntityStorageControllerInterface $storage, $entity_info, PluginManagerInterface $display_manager, ModuleHandlerInterface $module_handler) {
+    parent::__construct($entity_type, $entity_info, $storage, $module_handler);
+
     $this->displayManager = $display_manager;
   }
 
