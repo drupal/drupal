@@ -545,7 +545,7 @@ class ViewUI implements ViewStorageInterface {
       // be in GET. Copy stuff but remove ajax-framework specific keys.
       // If we're clicking on links in a preview, though, we could actually
       // still have some in $_GET, so we use $_REQUEST to ensure we get it all.
-      $exposed_input = drupal_container()->get('request')->request->all();
+      $exposed_input = \Drupal::request()->request->all();
       foreach (array('view_name', 'view_display_id', 'view_args', 'view_path', 'view_dom_id', 'pager_element', 'view_base_path', 'ajax_html_ids', 'ajax_page_state', 'form_id', 'form_build_id', 'form_token') as $key) {
         if (isset($exposed_input[$key])) {
           unset($exposed_input[$key]);
