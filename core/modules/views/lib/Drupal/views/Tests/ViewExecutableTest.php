@@ -25,7 +25,7 @@ use Drupal\views\Plugin\views\query\Sql;
  */
 class ViewExecutableTest extends ViewUnitTestBase {
 
-  public static $modules = array('system', 'node', 'user', 'filter', 'comment', 'entity', 'field', 'field_sql_storage', 'text');
+  public static $modules = array('system', 'node', 'comment', 'user', 'filter', 'entity', 'field', 'field_sql_storage', 'text');
 
   /**
    * Views used by this test.
