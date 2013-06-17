@@ -201,7 +201,7 @@ class String extends ArgumentPluginBase {
         $this->helper->formula = TRUE;
       }
       $this->helper->ensureMyTable();
-      $this->helper->add_filter();
+      $this->helper->addFilter();
       return;
     }
 

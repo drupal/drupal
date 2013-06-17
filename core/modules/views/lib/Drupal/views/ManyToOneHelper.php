@@ -257,7 +257,7 @@ class ManyToOneHelper {
     return $this->handler->query->placeholder($this->handler->options['table'] . '_' . $this->handler->options['field']);
   }
 
-  function add_filter() {
+  public function addFilter() {
     if (empty($this->handler->value)) {
       return;
     }

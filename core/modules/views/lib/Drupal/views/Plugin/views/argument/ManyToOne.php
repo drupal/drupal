@@ -132,7 +132,7 @@ class ManyToOne extends ArgumentPluginBase {
       $this->operator = 'or';
     }
 
-    $this->helper->add_filter();
+    $this->helper->addFilter();
   }
 
   function title() {

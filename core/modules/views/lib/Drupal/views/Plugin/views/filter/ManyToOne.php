@@ -134,7 +134,7 @@ class ManyToOne extends InOperator {
     if (empty($this->value)) {
       return;
     }
-    $this->helper->add_filter();
+    $this->helper->addFilter();
   }
 
 }
