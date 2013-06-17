@@ -33,7 +33,7 @@ class CommentDefaultFormatter extends FormatterBase {
     $elements = array();
 
     $field = $this->fieldDefinition;
-    $field_name = $field->id();
+    $field_name = $field->getFieldName();
 
     $commenting_status = _comment_get_default_status($items);
     if ($commenting_status != COMMENT_HIDDEN && empty($entity->in_preview)) {
