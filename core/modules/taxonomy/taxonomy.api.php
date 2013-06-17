@@ -83,11 +83,9 @@ function hook_taxonomy_vocabulary_insert(Drupal\taxonomy\Plugin\Core\Entity\Voca
  *   A taxonomy vocabulary entity.
  */
 function hook_taxonomy_vocabulary_update(Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary) {
-  db_insert('mytable')
-    ->fields(array(
-      'vid' => $vocabulary->id(),
-      'foo' => $vocabulary->foo,
-    ))
+  db_update('mytable')
+    ->fields(array('foo' => $vocabulary->foo))
+    ->condition('vid', $vocabulary->id())
     ->execute();
 }
 
@@ -206,11 +204,9 @@ function hook_taxonomy_term_insert(Drupal\taxonomy\Term $term) {
  *   A taxonomy term entity.
  */
 function hook_taxonomy_term_update(Drupal\taxonomy\Term $term) {
-  db_insert('mytable')
-    ->fields(array(
-      'tid' => $term->id(),
-      'foo' => $term->foo,
-    ))
+  db_update('mytable')
+    ->fields(array('foo' => $term->foo))
+    ->condition('tid', $term->id())
     ->execute();
 }
 
