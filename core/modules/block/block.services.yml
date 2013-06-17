@@ -1,7 +1,7 @@
 services:
   plugin.manager.block:
     class: Drupal\block\Plugin\Type\BlockManager
-    arguments: ['@container.namespaces']
+    arguments: ['@container.namespaces', '@cache.block', '@language_manager', '@module_handler']
   cache.block:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:

@@ -215,7 +215,7 @@ class ToolkitGdTest extends DrupalUnitTestBase {
       );
     }
 
-    $manager = new ImageToolkitManager($this->container->get('container.namespaces'));
+    $manager = new ImageToolkitManager($this->container->get('container.namespaces'), $this->container->get('cache.cache'), $this->container->get('language_manager'));
     foreach ($files as $file) {
       foreach ($operations as $op => $values) {
         // Load up a fresh image.

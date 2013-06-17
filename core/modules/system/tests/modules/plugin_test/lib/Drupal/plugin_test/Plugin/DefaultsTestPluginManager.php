@@ -7,15 +7,14 @@
 
 namespace Drupal\plugin_test\Plugin;
 
-use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Discovery\StaticDiscovery;
-use Drupal\Component\Plugin\Discovery\ProcessDecorator;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
+use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
  * Defines a plugin manager used by Plugin API unit tests.
  */
-class DefaultsTestPluginManager extends PluginManagerBase {
+class DefaultsTestPluginManager extends DefaultPluginManager {
 
   public function __construct() {
     // Create the object that can be used to return definitions for all the
@@ -23,8 +22,7 @@ class DefaultsTestPluginManager extends PluginManagerBase {
     // discovery implementation, but StaticDiscovery lets us add some simple
     // mock plugins for unit testing.
     $this->discovery = new StaticDiscovery();
-    $this->discovery = new ProcessDecorator($this->discovery, array($this, 'ProcessDefinition'));
-    $this->factory = new DefaultFactory($this->discovery);
+    $this->factory = new DefaultFactory($this);
 
     // Specify default values.
     $this->defaults = array(
