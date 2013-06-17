@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Plugin\views\field\LinkEdit.
+ * Contains \Drupal\comment\Plugin\views\field\LinkEdit.
  */
 
 namespace Drupal\comment\Plugin\views\field;
@@ -10,7 +10,7 @@ namespace Drupal\comment\Plugin\views\field;
 use Drupal\Component\Annotation\PluginID;
 
 /**
- * Field handler to present a link node edit.
+ * Field handler to present a link to edit a comment.
  *
  * @ingroup views_field_handlers
  *
@@ -39,7 +39,7 @@ class LinkEdit extends Link {
 
   function render_link($data, $values) {
     parent::render_link($data, $values);
-    // ensure user has access to edit this comment.
+    // Ensure user has access to edit this comment.
     $comment = $this->getValue($values);
     if (!$comment->access('update')) {
       return;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Plugin\views\field\LinkReply.
+ * Contains \Drupal\comment\Plugin\views\field\LinkReply.
  */
 
 namespace Drupal\comment\Plugin\views\field;
@@ -10,7 +10,7 @@ namespace Drupal\comment\Plugin\views\field;
 use Drupal\Component\Annotation\PluginID;
 
 /**
- * Field handler to present a link to delete a node.
+ * Field handler to present a link to reply to a comment.
  *
  * @ingroup views_field_handlers
  *
