@@ -107,7 +107,7 @@ function taxonomy_term_feed(Term $term) {
 function taxonomy_autocomplete($field_name) {
   // A comma-separated list of term names entered in the autocomplete form
   // element. Only the last term is used for autocompletion.
-  $tags_typed = drupal_container()->get('request')->query->get('q');
+  $tags_typed = Drupal::request()->query->get('q');
 
   // Make sure the field exists and is a taxonomy field.
   if (!($field = field_info_field($field_name)) || $field['type'] !== 'taxonomy_term_reference') {

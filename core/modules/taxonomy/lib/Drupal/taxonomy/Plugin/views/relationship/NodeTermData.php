@@ -95,7 +95,7 @@ class NodeTermData extends RelationshipPluginBase  {
       $def['table formula'] = $query;
     }
 
-    $join = drupal_container()->get('plugin.manager.views.join')->createInstance('standard', $def);
+    $join = \Drupal::service('plugin.manager.views.join')->createInstance('standard', $def);
 
     // use a short alias for this:
     $alias = $def['table'] . '_' . $this->table;
