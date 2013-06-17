@@ -69,10 +69,13 @@ class ViewListControllerTest extends UnitTestCase {
           )
         ),
       )));
+    $module_handler = $this->getMockBuilder('Drupal\Core\Extension\ModuleHandler')
+      ->disableOriginalConstructor()
+      ->getMock();
 
     // Setup a view list controller with a mocked buildOperations method,
     // because t() is called on there.
-    $view_list_controller = $this->getMock('Drupal\views_ui\ViewListController', array('buildOperations'), array('view', $storage_controller, $entity_info, $display_manager));
+    $view_list_controller = $this->getMock('Drupal\views_ui\ViewListController', array('buildOperations'), array('view', $storage_controller, $entity_info, $display_manager, $module_handler));
     $view_list_controller->expects($this->any())
       ->method('buildOperations')
       ->will($this->returnValue(array()));
