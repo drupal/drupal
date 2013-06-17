@@ -1,0 +1,9 @@
+# Schema for configuration files of the Field UI module.
+
+field_ui.settings:
+  type: mapping
+  label: 'Field UI settings'
+  mapping:
+    field_prefix:
+      type: string
+      label: 'The prefix for new fields created via Field UI'
