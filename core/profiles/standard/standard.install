@@ -30,18 +30,18 @@ function standard_install() {
   $types = array(
     array(
       'type' => 'page',
-      'name' => st('Basic page'),
+      'name' => t('Basic page'),
       'base' => 'node_content',
-      'description' => st("Use <em>basic pages</em> for your static content, such as an 'About us' page."),
+      'description' => t("Use <em>basic pages</em> for your static content, such as an 'About us' page."),
       'custom' => 1,
       'modified' => 1,
       'locked' => 0,
     ),
     array(
       'type' => 'article',
-      'name' => st('Article'),
+      'name' => t('Article'),
       'base' => 'node_content',
-      'description' => st('Use <em>articles</em> for time-sensitive content like news, press releases or blog posts.'),
+      'description' => t('Use <em>articles</em> for time-sensitive content like news, press releases or blog posts.'),
       'custom' => 1,
       'modified' => 1,
       'locked' => 0,
@@ -113,7 +113,7 @@ function standard_install() {
 
   // Create a Home link in the main menu.
   $menu_link = entity_create('menu_link', array(
-    'link_title' => st('Home'),
+    'link_title' => t('Home'),
     'link_path' => '<front>',
     'menu_name' => 'main',
   ));
@@ -128,7 +128,7 @@ function standard_install() {
   $shortcut_set = shortcut_set_load('default');
   $menu_link = entity_create('menu_link', array(
     'link_path' => 'node/add',
-    'link_title' => st('Add content'),
+    'link_title' => t('Add content'),
     'weight' => -20,
   ));
   $menu_link->save();
@@ -136,7 +136,7 @@ function standard_install() {
 
   $menu_link = entity_create('menu_link', array(
     'link_path' => 'admin/content',
-    'link_title' => st('All content'),
+    'link_title' => t('All content'),
     'weight' => -19,
   ));
   $menu_link->save();

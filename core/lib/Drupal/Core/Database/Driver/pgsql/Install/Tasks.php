@@ -34,7 +34,7 @@ class Tasks extends InstallTasks {
   }
 
   public function name() {
-    return st('PostgreSQL');
+    return t('PostgreSQL');
   }
 
   public function minimumVersion() {
@@ -84,13 +84,13 @@ class Tasks extends InstallTasks {
         catch (DatabaseNotFoundException $e) {
           // Still no dice; probably a permission issue. Raise the error to the
           // installer.
-          $this->fail(st('Database %database not found. The server reports the following message when attempting to create the database: %error.', array('%database' => $database, '%error' => $e->getMessage())));
+          $this->fail(t('Database %database not found. The server reports the following message when attempting to create the database: %error.', array('%database' => $database, '%error' => $e->getMessage())));
         }
       }
       else {
         // Database connection failed for some other reason than the database
         // not existing.
-        $this->fail(st('Failed to connect to your database server. The server reports the following message: %error.<ul><li>Is the database server running?</li><li>Does the database exist, and have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname?</li></ul>', array('%error' => $e->getMessage())));
+        $this->fail(t('Failed to connect to your database server. The server reports the following message: %error.<ul><li>Is the database server running?</li><li>Does the database exist, and have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname?</li></ul>', array('%error' => $e->getMessage())));
         return FALSE;
       }
     }
@@ -103,7 +103,7 @@ class Tasks extends InstallTasks {
   protected function checkEncoding() {
     try {
       if (db_query('SHOW server_encoding')->fetchField() == 'UTF8') {
-        $this->pass(st('Database is encoded in UTF-8'));
+        $this->pass(t('Database is encoded in UTF-8'));
       }
       else {
         $replacements = array(
@@ -113,11 +113,11 @@ class Tasks extends InstallTasks {
         );
         $text  = 'The %driver database must use %encoding encoding to work with Drupal.';
         $text .= 'Recreate the database with %encoding encoding. See !link for more details.';
-        $this->fail(st($text, $replacements));
+        $this->fail(t($text, $replacements));
       }
     }
     catch (\Exception $e) {
-      $this->fail(st('Drupal could not determine the encoding of the database was set to UTF-8'));
+      $this->fail(t('Drupal could not determine the encoding of the database was set to UTF-8'));
     }
   }
 
@@ -236,4 +236,3 @@ class Tasks extends InstallTasks {
     }
   }
 }
-
