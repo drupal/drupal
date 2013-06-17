@@ -102,7 +102,7 @@ function overlay_field_extra_fields() {
 function overlay_form_user_profile_form_alter(&$form, &$form_state) {
   $account = $form_state['controller']->getEntity();
   if (user_access('access overlay', $account)) {
-    $account_data = drupal_container()->get('user.data')->get('overlay', $account->id(), 'enabled');
+    $account_data = Drupal::service('user.data')->get('overlay', $account->id(), 'enabled');
     $form['overlay_control'] = array(
       '#type' => 'details',
       '#title' => t('Administrative overlay'),
@@ -122,7 +122,7 @@ function overlay_form_user_profile_form_alter(&$form, &$form_state) {
  */
 function overlay_user_update($account) {
   if (isset($account->overlay)) {
-    drupal_container()->get('user.data')->set('overlay', $account->id(), 'enabled', (int) $account->overlay);
+    Drupal::service('user.data')->set('overlay', $account->id(), 'enabled', (int) $account->overlay);
   }
 }
 
@@ -285,12 +285,12 @@ function overlay_user_dismiss_message() {
   // @todo CSRF tokens are validated in page callbacks rather than access
   //   callbacks, because access callbacks are also invoked during menu link
   //   generation. Add token support to routing: http://drupal.org/node/755584.
-  $token = drupal_container()->get('request')->query->get('token');
+  $token = Drupal::request()->query->get('token');
   if (!isset($token) || !drupal_valid_token($token, 'overlay')) {
     throw new AccessDeniedHttpException();
   }
 
-  drupal_container()->get('user.data')->set('overlay', $user->uid, 'message_dismissed', 1);
+  Drupal::service('user.data')->set('overlay', $user->uid, 'message_dismissed', 1);
   drupal_set_message(t('The message has been dismissed. You can change your overlay settings at any time by visiting your profile page.'));
   // Destination is normally given. Go to the user profile as a fallback.
   drupal_goto('user/' . $user->uid . '/edit');
@@ -317,7 +317,7 @@ function overlay_disable_message() {
     return $build;
   }
 
-  $user_data = drupal_container()->get('user.data')->get('overlay', $user->uid);
+  $user_data = Drupal::service('user.data')->get('overlay', $user->uid);
   if (empty($user_data['message_dismissed']) && (!isset($user_data['enabled']) || $user_data['enabled'])) {
     $build = array(
       '#theme' => 'overlay_disable_message',
@@ -612,7 +612,7 @@ function overlay_overlay_child_initialize() {
   // at the end of the page request. This allows us to check if anything
   // actually did change, and, if so, trigger an immediate Ajax refresh
   // of the parent window.
-  $token = drupal_container()->get('request')->query->get('token');
+  $token = Drupal::request()->query->get('token');
   if (!empty($_POST) || isset($token)) {
     foreach (overlay_supplemental_regions() as $region) {
       overlay_store_rendered_content($region, overlay_render_region($region));
