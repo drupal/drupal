@@ -493,8 +493,8 @@ abstract class FilterPluginBase extends HandlerBase {
   public function buildExposeForm(&$form, &$form_state) {
     $form['#theme'] = 'views_ui_expose_filter_form';
     // #flatten will move everything from $form['expose'][$key] to $form[$key]
-    // prior to rendering. That's why the pre_render for it needs to run first,
-    // so that when the next pre_render (the one for fieldsets) runs, it gets
+    // prior to rendering. That's why the preRender for it needs to run first,
+    // so that when the next preRender (the one for fieldsets) runs, it gets
     // the flattened data.
     array_unshift($form['#pre_render'], 'views_ui_pre_render_flatten_data');
     $form['expose']['#flatten'] = TRUE;
@@ -836,8 +836,8 @@ abstract class FilterPluginBase extends HandlerBase {
     $form['#theme'] = 'views_ui_build_group_filter_form';
 
     // #flatten will move everything from $form['group_info'][$key] to $form[$key]
-    // prior to rendering. That's why the pre_render for it needs to run first,
-    // so that when the next pre_render (the one for fieldsets) runs, it gets
+    // prior to rendering. That's why the preRender for it needs to run first,
+    // so that when the next preRender (the one for fieldsets) runs, it gets
     // the flattened data.
     array_unshift($form['#pre_render'], 'views_ui_pre_render_flatten_data');
     $form['group_info']['#flatten'] = TRUE;

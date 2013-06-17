@@ -7,10 +7,11 @@
 
 namespace Drupal\system\Form;
 
-use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Config\ConfigFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Builds a form for enabling a module.
@@ -57,7 +58,7 @@ class DateFormatLocalizeResetForm extends ConfirmFormBase implements ControllerI
   /**
    * {@inheritdoc}
    */
-  protected function getQuestion() {
+  public function getQuestion() {
     return t('Are you sure you want to reset the date formats for %language to the global defaults?', array(
       '%language' => $this->language->name,
     ));
@@ -66,21 +67,21 @@ class DateFormatLocalizeResetForm extends ConfirmFormBase implements ControllerI
   /**
    * {@inheritdoc}
    */
-  protected function getConfirmText() {
+  public function getConfirmText() {
     return t('Reset');
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getCancelPath() {
+  public function getCancelPath() {
     return 'admin/config/regional/date-time/locale';
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getDescription() {
+  public function getDescription() {
     return t('Resetting will remove all localized date formats for this language. This action cannot be undone.');
   }
 
@@ -91,10 +92,10 @@ class DateFormatLocalizeResetForm extends ConfirmFormBase implements ControllerI
    *   The language code.
    *
    */
-  public function buildForm(array $form, array &$form_state, $langcode = NULL) {
+  public function buildForm(array $form, array &$form_state, $langcode = NULL, Request $request = NULL) {
     $this->language = language_load($langcode);
 
-    return parent::buildForm($form, $form_state);
+    return parent::buildForm($form, $form_state, $request);
   }
 
   /**

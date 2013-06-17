@@ -258,7 +258,7 @@ function views_ui_taxonomy_autocomplete_validate($element, &$form_state) {
  *
  * Many views forms use #tree = TRUE to keep their values in a hierarchy for
  * easier storage. Moving the form elements into fieldsets during form building
- * would break up that hierarchy. Therefore, we wait until the pre_render stage,
+ * would break up that hierarchy. Therefore, we wait until the preRender stage,
  * where any changes we make affect presentation only and aren't reflected in
  * $form_state['values'].
  */

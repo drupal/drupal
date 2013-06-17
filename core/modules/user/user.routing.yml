@@ -64,6 +64,6 @@ user_role_edit:
 user_role_delete:
   pattern: '/admin/people/roles/manage/{user_role}/delete'
   defaults:
-    _form: '\Drupal\user\Form\UserRoleDelete'
+    _entity_form: user_role.delete
   requirements:
     _entity_access: user_role.delete

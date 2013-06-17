@@ -750,7 +750,7 @@ function system_modules($form, $form_state = array()) {
     // Contents of confirm form is injected here because already in form
     // building function.
     $confirm_form = new ModulesInstallConfirmForm();
-    return $confirm_form->buildForm($form, $form_state, $visible_files, $form_state['storage']);
+    return $confirm_form->buildForm($form, $form_state, $visible_files, $form_state['storage'], Drupal::request());
   }
 
   // JS-only table filters.
@@ -1163,7 +1163,7 @@ function system_modules_uninstall($form, $form_state = NULL) {
     // Contents of confirm form is injected here because already in form
     // building function.
     $confirm_form = new ModulesUninstallConfirmForm();
-    return $confirm_form->buildForm($form, $form_state, $modules);
+    return $confirm_form->buildForm($form, $form_state, $modules, Drupal::request());
   }
 
   // Get a list of disabled, installed modules.

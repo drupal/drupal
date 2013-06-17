@@ -91,7 +91,7 @@ class TaxonomyIndexTid extends PrerenderList {
     $this->addAdditionalFields();
   }
 
-  function pre_render(&$values) {
+  public function preRender(&$values) {
     $vocabularies = entity_load_multiple('taxonomy_vocabulary');
     $this->field_alias = $this->aliases['nid'];
     $nids = array();

@@ -2,29 +2,61 @@
 
 /**
  * @file
- * Definition of Drupal\image\Tests\ImageDimensionsScaleUnitTest.
+ * Contains \Drupal\Tests\Component\Image\ImageTest.
  */
 
-namespace Drupal\image\Tests;
+namespace Drupal\Tests\Component\Image;
 
-use Drupal\simpletest\UnitTestBase;
+use Drupal\Component\Image\Image;
+use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests image_dimensions_scale().
+ * Tests the Image component.
+ *
+ * @see \Drupal\Component\Image\Image
  */
-class ImageDimensionsScaleUnitTest extends UnitTestBase {
+class ImageTest extends UnitTestCase {
   public static function getInfo() {
     return array(
-      'name' => 'image_dimensions_scale()',
-      'description' => 'Tests all control flow branches in image_dimensions_scale().',
+      'name' => 'Tests for the Image component',
+      'description' => 'Tests all control flow branches in Drupal\Component\Image\Image.',
       'group' => 'Image',
     );
   }
 
   /**
    * Tests all control flow branches in image_dimensions_scale().
+   *
+   * @dataProvider providerTestScaleDimensions
    */
-  function testImageDimensionsScale() {
+  function testScaleDimensions($input, $output) {
+    // Process the test dataset.
+    $return_value = Image::scaleDimensions($input['dimensions'], $input['width'], $input['height'], $input['upscale']);
+
+    // Check the width.
+    $this->assertEquals($output['dimensions']['width'], $input['dimensions']['width'], sprintf('Computed width (%s) does not equal expected width (%s)', $output['dimensions']['width'], $input['dimensions']['width']));
+
+    // Check the height.
+    $this->assertEquals($output['dimensions']['height'], $input['dimensions']['height'], sprintf('Computed height (%s) does not equal expected height (%s)', $output['dimensions']['height'], $input['dimensions']['height']));
+
+    // Check the return value.
+    $this->assertEquals($output['return_value'], $return_value, 'Incorrect return value.');
+  }
+
+  /**
+   * Provides data for image dimension scale tests.
+   *
+   * @return array
+   *   Keyed array containing:
+   * - 'input' - Array which contains input for
+   *   Image::scaleDimensions().
+   * - 'output' - Array which contains expected output after passing
+   *   through Image::scaleDimensions. Also contains a boolean
+   *   'return_value' which should match the expected return value.
+   *
+   * @see testScaleDimensions()
+   */
+  public function providerTestScaleDimensions() {
     // Define input / output datasets to test different branch conditions.
     $test = array();
 
@@ -134,18 +166,6 @@ class ImageDimensionsScaleUnitTest extends UnitTestBase {
       ),
     );
 
-    foreach ($tests as $test) {
-      // Process the test dataset.
-      $return_value = image_dimensions_scale($test['input']['dimensions'], $test['input']['width'], $test['input']['height'], $test['input']['upscale']);
-
-      // Check the width.
-      $this->assertEqual($test['output']['dimensions']['width'], $test['input']['dimensions']['width'], format_string('Computed width (@computed_width) equals expected width (@expected_width)', array('@computed_width' => $test['output']['dimensions']['width'], '@expected_width' => $test['input']['dimensions']['width'])));
-
-      // Check the height.
-      $this->assertEqual($test['output']['dimensions']['height'], $test['input']['dimensions']['height'], format_string('Computed height (@computed_height) equals expected height (@expected_height)', array('@computed_height' => $test['output']['dimensions']['height'], '@expected_height' => $test['input']['dimensions']['height'])));
-
-      // Check the return value.
-      $this->assertEqual($test['output']['return_value'], $return_value, 'Correct return value.');
-    }
+    return $tests;
   }
 }

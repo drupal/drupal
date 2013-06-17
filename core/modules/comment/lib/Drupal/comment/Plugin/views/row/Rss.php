@@ -54,7 +54,7 @@ class Rss extends RowPluginBase {
     );
   }
 
-  function pre_render($result) {
+  public function preRender($result) {
     $cids = array();
     $nids = array();
 

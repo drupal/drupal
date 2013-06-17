@@ -27,7 +27,8 @@ use Drupal\Core\Entity\EntityStorageControllerInterface;
  *     "render" = "Drupal\block\BlockRenderController",
  *     "list" = "Drupal\block\BlockListController",
  *     "form" = {
- *       "default" = "Drupal\block\BlockFormController"
+ *       "default" = "Drupal\block\BlockFormController",
+ *       "delete" = "Drupal\block\Form\BlockDeleteForm"
  *     }
  *   },
  *   config_prefix = "block.block",

@@ -8,6 +8,7 @@
 namespace Drupal\system\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Builds a confirmation form to uninstall selected modules.
@@ -19,28 +20,28 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function getQuestion() {
+  public function getQuestion() {
     return t('Confirm uninstall');
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getConfirmText() {
+  public function getConfirmText() {
     return t('Uninstall');
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getCancelPath() {
+  public function getCancelPath() {
     return 'admin/modules/uninstall';
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getDescription() {
+  public function getDescription() {
     return t('Would you like to continue with uninstalling the above?');
   }
 
@@ -57,7 +58,7 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
    * @param array $modules
    *   The array of modules.
    */
-  public function buildForm(array $form, array &$form_state, $modules = array()) {
+  public function buildForm(array $form, array &$form_state, $modules = array(), Request $request = NULL) {
     $uninstall = array();
     // Construct the hidden form elements and list items.
     foreach ($modules as $module => $value) {
@@ -71,7 +72,7 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
     $form['text'] = array('#markup' => '<p>' . t('The following modules will be completely uninstalled from your site, and <em>all data from these modules will be lost</em>!') . '</p>');
     $form['modules'] = array('#theme' => 'item_list', '#items' => $uninstall);
 
-    return parent::buildForm($form, $form_state);
+    return parent::buildForm($form, $form_state, $request);
   }
 
   /**

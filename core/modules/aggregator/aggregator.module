@@ -371,27 +371,6 @@ function aggregator_save_category($edit) {
 }
 
 /**
- * Removes all items from a feed.
- *
- * @param \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
- *   An object describing the feed to be cleared.
- */
-function aggregator_remove(Feed $feed) {
-  // Call \Drupal\aggregator\Plugin\ProcessorInterface::remove() on all
-  // processors.
-  $manager = Drupal::service('plugin.manager.aggregator.processor');
-  foreach ($manager->getDefinitions() as $id => $definition) {
-    $manager->createInstance($id)->remove($feed);
-  }
-  // Reset feed.
-  $feed->checked->value = 0;
-  $feed->hash->value = '';
-  $feed->etag->value = '';
-  $feed->modified->value = 0;
-  $feed->save();
-}
-
-/**
  * Checks a news feed for new items.
  *
  * @param \Drupal\aggregator\Plugin\Core\Entity\Feed $feed

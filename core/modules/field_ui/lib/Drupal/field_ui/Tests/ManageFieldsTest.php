@@ -245,6 +245,36 @@ class ManageFieldsTest extends FieldUiTestBase {
   }
 
   /**
+   * Tests that the 'field_prefix' setting works on Field UI.
+   */
+  function testFieldPrefix() {
+    // Change default field prefix.
+    $field_prefix = strtolower($this->randomName(10));
+    \Drupal::config('field_ui.settings')->set('field_prefix', $field_prefix)->save();
+
+    // Create a field input and label exceeding the new maxlength, which is 22.
+    $field_exceed_max_length_label = $this->randomString(23);
+    $field_exceed_max_length_input = $this->randomName(23);
+
+    // Try to create the field.
+    $edit = array(
+      'fields[_add_new_field][label]' => $field_exceed_max_length_label,
+      'fields[_add_new_field][field_name]' => $field_exceed_max_length_input,
+    );
+    $this->drupalPost('admin/structure/types/manage/' . $this->type . '/fields', $edit, t('Save'));
+    $this->assertText('New field name cannot be longer than 22 characters but is currently 23 characters long.');
+
+    // Create a valid field.
+    $edit = array(
+      'fields[_add_new_field][label]' => $this->field_label,
+      'fields[_add_new_field][field_name]' => $this->field_name_input,
+    );
+    $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->type, $edit);
+    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/node.' . $this->type . '.' . $field_prefix . $this->field_name_input);
+    $this->assertText(format_string('@label settings for @type', array('@label' => $this->field_label, '@type' => $this->type)));
+  }
+
+  /**
    * Tests that default value is correctly validated and saved.
    */
   function testDefaultValue() {

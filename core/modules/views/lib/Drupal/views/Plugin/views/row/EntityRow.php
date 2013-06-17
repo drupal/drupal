@@ -142,10 +142,10 @@ class EntityRow extends RowPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\row\RowPluginBase::pre_render().
+   * {@inheritdoc}
    */
-  public function pre_render($result) {
-    parent::pre_render($result);
+  public function preRender($result) {
+    parent::preRender($result);
 
     if ($result) {
       // Get all entities which will be used to render in rows.

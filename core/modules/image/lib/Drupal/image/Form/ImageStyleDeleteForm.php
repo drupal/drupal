@@ -7,64 +7,46 @@
 
 namespace Drupal\image\Form;
 
-use Drupal\Core\Form\ConfirmFormBase;
-use Drupal\image\Plugin\Core\Entity\ImageStyle;
+use Drupal\Core\Entity\EntityConfirmFormBase;
 
 /**
  * Creates a form to delete an image style.
  */
-class ImageStyleDeleteForm extends ConfirmFormBase {
-
-  /**
-   * The image style to be deleted.
-   *
-   * @var \Drupal\image\Plugin\Core\Entity\ImageStyle $imageStyle
-   */
-  protected $imageStyle;
+class ImageStyleDeleteForm extends EntityConfirmFormBase {
 
   /**
    * {@inheritdoc}
    */
-  protected function getQuestion() {
-    return t('Optionally select a style before deleting %style', array('%style' => $this->imageStyle->label()));
+  public function getQuestion() {
+    return t('Optionally select a style before deleting %style', array('%style' => $this->entity->label()));
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getConfirmText() {
+  public function getConfirmText() {
     return t('Delete');
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getCancelPath() {
+  public function getCancelPath() {
     return 'admin/config/media/image-styles';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
-    return 'image_style_delete_form';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getDescription() {
+  public function getDescription() {
     return t('If this style is in use on the site, you may select another style to replace it. All images that have been generated for this style will be permanently deleted.');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, ImageStyle $image_style = NULL) {
-
-    $this->imageStyle = $image_style;
-
-    $replacement_styles = array_diff_key(image_style_options(), array($this->imageStyle->id() => ''));
+  public function form(array $form, array &$form_state) {
+    $replacement_styles = array_diff_key(image_style_options(), array($this->entity->id() => ''));
     $form['replacement'] = array(
       '#title' => t('Replacement style'),
       '#type' => 'select',
@@ -72,16 +54,16 @@ class ImageStyleDeleteForm extends ConfirmFormBase {
       '#empty_option' => t('No replacement, just delete'),
     );
 
-    return parent::buildForm($form, $form_state);
+    return parent::form($form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
-    $this->imageStyle->set('replacementID', $form_state['values']['replacement']);
-    $this->imageStyle->delete();
-    drupal_set_message(t('Style %name was deleted.', array('%name' => $this->imageStyle->label())));
+  public function submit(array $form, array &$form_state) {
+    $this->entity->set('replacementID', $form_state['values']['replacement']);
+    $this->entity->delete();
+    drupal_set_message(t('Style %name was deleted.', array('%name' => $this->entity->label())));
     $form_state['redirect'] = 'admin/config/media/image-styles';
   }
 

@@ -173,7 +173,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
     }
   }
 
-  function pre_render($values) { }
+  public function preRender($values) { }
 
   public function postRender(&$output) { }
 

@@ -69,7 +69,7 @@ class Permissions extends PrerenderList {
     $this->field_alias = $this->aliases['uid'];
   }
 
-  function pre_render(&$values) {
+  public function preRender(&$values) {
     $uids = array();
     $this->items = array();
 

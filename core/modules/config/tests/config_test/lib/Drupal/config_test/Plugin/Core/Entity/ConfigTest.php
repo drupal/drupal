@@ -23,7 +23,8 @@ use Drupal\config_test\ConfigTestInterface;
  *     "storage" = "Drupal\config_test\ConfigTestStorageController",
  *     "list" = "Drupal\Core\Config\Entity\ConfigEntityListController",
  *     "form" = {
- *       "default" = "Drupal\config_test\ConfigTestFormController"
+ *       "default" = "Drupal\config_test\ConfigTestFormController",
+ *       "delete" = "Drupal\config_test\Form\ConfigTestDeleteForm"
  *     }
  *   },
  *   uri_callback = "config_test_uri",

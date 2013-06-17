@@ -14,4 +14,9 @@ use Drupal\Core\Entity\ContentEntityInterface;
  */
 interface FeedInterface extends ContentEntityInterface {
 
+  /**
+   * Removes all items from a feed.
+   */
+  public function removeItems();
+
 }

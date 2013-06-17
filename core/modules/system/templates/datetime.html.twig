@@ -1,6 +1,7 @@
 {#
 /**
- * Returns HTML for a date / time.
+ * @file
+ * Default theme implementation for a date / time element.
  *
  * Available variables
  * - timestamp: (optional) A UNIX timestamp for the datetime attribute. If the
@@ -25,4 +26,4 @@
  */
 #}
 {# @todo Revisit once http://drupal.org/node/1825952 is resolved. #}
-<time class="{{ attributes.class }}" {{ attributes }}>{{ html ? text|raw : text|escape }}</time>
+<time{{ attributes }}>{{ html ? text|raw : text|escape }}</time>

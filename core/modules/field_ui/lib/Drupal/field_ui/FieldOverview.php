@@ -11,6 +11,7 @@ use Drupal\field_ui\OverviewBase;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\field\Plugin\Type\Widget\WidgetPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\field\Plugin\Core\Entity\Field;
 
 /**
  * Field UI field overview form.
@@ -91,6 +92,9 @@ class FieldOverview extends OverviewBase {
     $widget_types = field_info_widget_types();
     $extra_fields = field_info_extra_fields($this->entity_type, $this->bundle, 'form');
     $entity_form_display = entity_get_form_display($this->entity_type, $this->bundle, $this->mode);
+
+    // Field prefix.
+    $field_prefix = config('field_ui.settings')->get('field_prefix');
 
     $form += array(
       '#entity_type' => $this->entity_type,
@@ -308,12 +312,13 @@ class FieldOverview extends OverviewBase {
           '#title' => t('New field name'),
           '#title_display' => 'invisible',
           // This field should stay LTR even for RTL languages.
-          '#field_prefix' => '<span dir="ltr">field_',
+          '#field_prefix' => '<span dir="ltr">' . $field_prefix,
           '#field_suffix' => '</span>&lrm;',
           '#size' => 15,
           '#description' => t('A unique machine-readable name containing letters, numbers, and underscores.'),
-          // 32 characters minus the 'field_' prefix.
-          '#maxlength' => 26,
+          // Calculate characters depending on the length of the field prefix
+          // setting. Maximum length is 32.
+          '#maxlength' => Field::ID_MAX_LENGTH - strlen($field_prefix),
           '#prefix' => '<div class="add-new-placeholder">&nbsp;</div>',
           '#machine_name' => array(
             'source' => array('fields', $name, 'label'),
@@ -502,8 +507,8 @@ class FieldOverview extends OverviewBase {
       else {
         $field_name = $field['field_name'];
 
-        // Add the 'field_' prefix.
-        $field_name = 'field_' . $field_name;
+        // Add the field prefix.
+        $field_name = config('field_ui.settings')->get('field_prefix') . $field_name;
         form_set_value($form['fields']['_add_new_field']['field_name'], $field_name, $form_state);
       }
 

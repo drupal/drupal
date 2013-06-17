@@ -47,15 +47,15 @@ class EntityReference extends Fields {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\row\Fields::pre_render().
+   * {@inheritdoc}
    */
-  public function pre_render($row) {
+  public function preRender($row) {
     // Force all fields to be inline by default.
     if (empty($this->options['inline'])) {
       $fields = $this->view->getItems('field', $this->displayHandler->display['id']);
       $this->options['inline'] = drupal_map_assoc(array_keys($fields));
     }
 
-    return parent::pre_render($row);
+    return parent::preRender($row);
   }
 }

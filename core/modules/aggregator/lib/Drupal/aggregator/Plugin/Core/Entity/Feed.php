@@ -25,7 +25,9 @@ use Drupal\aggregator\FeedInterface;
  *     "storage" = "Drupal\aggregator\FeedStorageController",
  *     "render" = "Drupal\aggregator\FeedRenderController",
  *     "form" = {
- *       "default" = "Drupal\aggregator\FeedFormController"
+ *       "default" = "Drupal\aggregator\FeedFormController",
+ *       "delete" = "Drupal\aggregator\Form\FeedDeleteForm",
+ *       "remove_items" = "Drupal\aggregator\Form\FeedItemsRemoveForm"
  *     }
  *   },
  *   base_table = "aggregator_feed",
@@ -178,6 +180,22 @@ class Feed extends EntityNG implements FeedInterface {
   /**
    * {@inheritdoc}
    */
+  public function removeItems() {
+    $manager = \Drupal::service('plugin.manager.aggregator.processor');
+    foreach ($manager->getDefinitions() as $id => $definition) {
+      $manager->createInstance($id)->remove($this);
+    }
+    // Reset feed.
+    $this->checked->value = 0;
+    $this->hash->value = '';
+    $this->etag->value = '';
+    $this->modified->value = 0;
+    $this->save();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
     $values += array(
       'link' => '',
@@ -245,4 +263,5 @@ class Feed extends EntityNG implements FeedInterface {
       $block_manager->clearCachedDefinitions();
     }
   }
+
 }

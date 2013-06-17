@@ -15,14 +15,14 @@ aggregator_admin_settings:
 aggregator_feed_items_delete:
   pattern: '/admin/config/services/aggregator/remove/{aggregator_feed}'
   defaults:
-    _form: '\Drupal\aggregator\Form\FeedItemsDelete'
+    _entity_form: 'aggregator_feed.remove_items'
   requirements:
     _permission: 'administer news feeds'
 
 aggregator_feed_delete:
   pattern: '/admin/config/services/aggregator/delete/feed/{aggregator_feed}'
   defaults:
-    _form: '\Drupal\aggregator\Form\FeedDelete'
+    _entity_form: 'aggregator_feed.delete'
   requirements:
     _permission: 'administer news feeds'
 

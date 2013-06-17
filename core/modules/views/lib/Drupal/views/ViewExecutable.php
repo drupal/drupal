@@ -1227,7 +1227,7 @@ class ViewExecutable {
     $config = config('views.settings');
 
     $exposed_form = $this->display_handler->getPlugin('exposed_form');
-    $exposed_form->pre_render($this->result);
+    $exposed_form->preRender($this->result);
 
     $module_handler = \Drupal::moduleHandler();
 
@@ -1246,9 +1246,9 @@ class ViewExecutable {
         $cache->cacheStart();
       }
 
-      // Run pre_render for the pager as it might change the result.
+      // Run preRender for the pager as it might change the result.
       if (!empty($this->pager)) {
-        $this->pager->pre_render($this->result);
+        $this->pager->preRender($this->result);
       }
 
       // Initialize the style plugin.
@@ -1264,12 +1264,12 @@ class ViewExecutable {
       if ($this->style_plugin->usesFields()) {
         foreach ($this->field as $id => $handler) {
           if (!empty($this->field[$id])) {
-            $this->field[$id]->pre_render($this->result);
+            $this->field[$id]->preRender($this->result);
           }
         }
       }
 
-      $this->style_plugin->pre_render($this->result);
+      $this->style_plugin->preRender($this->result);
 
       // Let each area handler have access to the result set.
       $areas = array('header', 'footer');
