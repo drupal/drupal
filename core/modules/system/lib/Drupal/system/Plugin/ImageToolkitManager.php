@@ -7,25 +7,29 @@
 
 namespace Drupal\system\Plugin;
 
-use Drupal\Component\Plugin\Factory\DefaultFactory;
-use Drupal\Component\Plugin\PluginManagerBase;
-use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
  * Manages toolkit plugins.
  */
-class ImageToolkitManager extends PluginManagerBase {
+class ImageToolkitManager extends DefaultPluginManager {
 
   /**
    * Constructs the ImageToolkitManager object.
    *
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
-   *   keyed by the corresponding namespace to look for plugin implementations,
+   *   keyed by the corresponding namespace to look for plugin implementations.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   Cache backend instance to use.
+   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   *   The language manager.
    */
-  public function __construct(\Traversable $namespaces) {
-    $this->discovery = new AnnotatedClassDiscovery('ImageToolkit', $namespaces);
-    $this->factory = new DefaultFactory($this->discovery);
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager) {
+    parent::__construct('ImageToolkit', $namespaces);
+    $this->setCacheBackend($cache_backend, $language_manager, 'image_toolkit');
   }
 
   /**

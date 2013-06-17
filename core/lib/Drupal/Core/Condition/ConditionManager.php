@@ -7,35 +7,35 @@
 
 namespace Drupal\Core\Condition;
 
-use Drupal\Component\Plugin\PluginManagerBase;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Executable\ExecutableManagerInterface;
 use Drupal\Core\Executable\ExecutableInterface;
-use Drupal\Component\Plugin\Factory\DefaultFactory;
-use Drupal\Component\Plugin\Discovery\DerivativeDiscoveryDecorator;
-use Drupal\Core\Language\Language;
-use Drupal\Core\Plugin\Discovery\AlterDecorator;
-use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
-use Drupal\Core\Plugin\Discovery\CacheDecorator;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
  * A plugin manager for condition plugins.
  */
-class ConditionManager extends PluginManagerBase implements ExecutableManagerInterface {
+class ConditionManager extends DefaultPluginManager implements ExecutableManagerInterface {
 
   /**
-   * Constructs aa ConditionManager object.
+   * Constructs a ConditionManager object.
    *
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
-   *   keyed by the corresponding namespace to look for plugin implementations,
+   *   keyed by the corresponding namespace to look for plugin implementations.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   Cache backend instance to use.
+   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   *   The language manager.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler to invoke the alter hook with.
    */
-  public function __construct(\Traversable $namespaces) {
-    $this->discovery = new AnnotatedClassDiscovery('Condition', $namespaces);
-    $this->discovery = new DerivativeDiscoveryDecorator($this->discovery);
-    $this->discovery = new AlterDecorator($this->discovery, 'condition_info');
-    $this->discovery = new CacheDecorator($this->discovery, 'condition:' . language(Language::TYPE_INTERFACE)->langcode);
-
-    $this->factory = new DefaultFactory($this);
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
+    parent::__construct('Condition', $namespaces);
+    $this->alterInfo($module_handler, 'condition_info');
+    $this->setCacheBackend($cache_backend, $language_manager, 'condition');
   }
 
   /**

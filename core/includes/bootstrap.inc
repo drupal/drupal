@@ -1361,11 +1361,6 @@ function bootstrap_hooks() {
  * Translators can then rearrange the string as necessary for the language
  * (e.g., in Spanish, it might be "blog de @name").
  *
- * @section sec_alt_funcs_install Use During Installation Phase
- * During the Drupal installation phase, some resources used by t() wil not be
- * available to code that needs localization. See st() and get_t() for
- * alternatives.
- *
  * @param $string
  *   A string containing the English string to translate.
  * @param $args
@@ -1382,8 +1377,6 @@ function bootstrap_hooks() {
  * @return
  *   The translated string.
  *
- * @see st()
- * @see get_t()
  * @see format_string()
  * @ingroup sanitization
  */
@@ -2390,38 +2383,6 @@ function drupal_installation_attempted() {
   // executed code does not involve the installer at all.
   // @see install_drupal()
   return isset($GLOBALS['install_state']) && empty($GLOBALS['install_state']['installation_finished']);
-}
-
-/**
- * Returns the name of the proper localization function.
- *
- * get_t() exists to support localization for code that might run during
- * the installation phase, when some elements of the system might not have
- * loaded.
- *
- * This would include implementations of hook_install(), which could run
- * during the Drupal installation phase, and might also be run during
- * non-installation time, such as while installing the module from the the
- * module administration page.
- *
- * Example usage:
- * @code
- *   $t = get_t();
- *   $translated = $t('translate this');
- * @endcode
- *
- * Use t() if your code will never run during the Drupal installation phase.
- * Use st() if your code will only run during installation and never any other
- * time. Use get_t() if your code could run in either circumstance.
- *
- * @todo Remove this in favor of t().
- *
- * @see t()
- * @see st()
- * @ingroup sanitization
- */
-function get_t() {
-  return 't';
 }
 
 /**

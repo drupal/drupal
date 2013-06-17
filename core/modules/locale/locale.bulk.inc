@@ -392,7 +392,6 @@ function locale_translate_batch_build($files, $options) {
     'customized' => LOCALE_NOT_CUSTOMIZED,
     'finish_feedback' => TRUE,
   );
-  $t = get_t();
   if (count($files)) {
     $operations = array();
     foreach ($files as $file) {
@@ -407,9 +406,9 @@ function locale_translate_batch_build($files, $options) {
 
     $batch = array(
       'operations'    => $operations,
-      'title'         => $t('Importing interface translations'),
+      'title'         => t('Importing interface translations'),
       'progress_message' => '',
-      'error_message' => $t('Error importing interface translations'),
+      'error_message' => t('Error importing interface translations'),
       'file'          => drupal_get_path('module', 'locale') . '/locale.bulk.inc',
     );
     if ($options['finish_feedback']) {
@@ -794,15 +793,14 @@ function locale_config_batch_update_components(array $options, $langcodes = arra
  */
 function locale_config_batch_build(array $names, array $langcodes, $options = array()) {
   $options += array('finish_feedback' => TRUE);
-  $t = get_t();
   foreach ($names as $name) {
     $operations[] = array('locale_config_batch_refresh_name', array($name, $langcodes));
   }
   $batch = array(
     'operations'    => $operations,
-    'title'         => $t('Updating configuration translations'),
-    'init_message'  => $t('Starting configuration update'),
-    'error_message' => $t('Error updating configuration translations'),
+    'title'         => t('Updating configuration translations'),
+    'init_message'  => t('Starting configuration update'),
+    'error_message' => t('Error updating configuration translations'),
     'file'          => drupal_get_path('module', 'locale') . '/locale.bulk.inc',
   );
   if (!empty($options['finish_feedback'])) {

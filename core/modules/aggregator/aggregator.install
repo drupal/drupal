@@ -10,16 +10,15 @@ use Drupal\Core\Language\Language;
  * Implements hook_requirements().
  */
 function aggregator_requirements($phase) {
-  $t = get_t();
   $has_curl = function_exists('curl_init');
   $requirements = array();
   $requirements['curl'] = array(
-    'title' => $t('cURL'),
-    'value' => $has_curl ? $t('Enabled') : $t('Not found'),
+    'title' => t('cURL'),
+    'value' => $has_curl ? t('Enabled') : t('Not found'),
   );
   if (!$has_curl) {
     $requirements['curl']['severity'] = REQUIREMENT_ERROR;
-    $requirements['curl']['description'] = $t('The Aggregator module could not be installed because the PHP <a href="@curl_url">cURL</a> library is not available.', array('@curl_url' => 'http://php.net/manual/curl.setup.php'));
+    $requirements['curl']['description'] = t('The Aggregator module could not be installed because the PHP <a href="@curl_url">cURL</a> library is not available.', array('@curl_url' => 'http://php.net/manual/curl.setup.php'));
   }
   return $requirements;
 }

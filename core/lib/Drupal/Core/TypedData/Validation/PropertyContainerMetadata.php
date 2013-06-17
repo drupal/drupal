@@ -28,7 +28,7 @@ class PropertyContainerMetadata extends Metadata implements PropertyMetadataCont
       $typed_data = NULL;
     }
     $visitor->visit($this, $typed_data, $group, $propertyPath);
-    $pathPrefix = empty($propertyPath) ? '' : $propertyPath . '.';
+    $pathPrefix = isset($propertyPath) && $propertyPath !== '' ? $propertyPath . '.' : '';
 
     if ($typed_data) {
       foreach ($typed_data as $name => $data) {

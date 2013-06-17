@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\TypedData;
 
+use Drupal\Component\Utility\String;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 use DateInterval;
@@ -548,5 +549,19 @@ class TypedDataTest extends DrupalUnitTestBase {
     $this->assertEqual($violations->count(), 1);
     $violations = $this->typedData->create($definition, 0)->validate();
     $this->assertEqual($violations->count(), 0);
+
+    // Test validating a list of a values and make sure property paths starting
+    // with "0" are created.
+    $definition = array(
+      'type' => 'integer_field',
+      'list' => TRUE,
+    );
+    $violations = $this->typedData->create($definition, array(array('value' => 10)))->validate();
+    $this->assertEqual($violations->count(), 0);
+    $violations = $this->typedData->create($definition, array(array('value' => 'string')))->validate();
+    $this->assertEqual($violations->count(), 1);
+
+    $this->assertEqual($violations[0]->getInvalidValue(), 'string');
+    $this->assertIdentical($violations[0]->getPropertyPath(), '0.value');
   }
 }

@@ -2285,8 +2285,6 @@ function hook_file_url_alter(&$uri) {
  * Drupal itself (by install.php) with an installation profile or later by hand.
  * As a consequence, install-time requirements must be checked without access
  * to the full Drupal API, because it is not available during install.php.
- * For localization you should for example use $t = get_t() to
- * retrieve the appropriate localization function name (t() or st()).
  * If a requirement has a severity of REQUIREMENT_ERROR, install.php will abort
  * or at least the module will not install.
  * Other severity levels have no effect on the installation.
@@ -2325,13 +2323,11 @@ function hook_file_url_alter(&$uri) {
  */
 function hook_requirements($phase) {
   $requirements = array();
-  // Ensure translations don't break during installation.
-  $t = get_t();
 
   // Report Drupal version
   if ($phase == 'runtime') {
     $requirements['drupal'] = array(
-      'title' => $t('Drupal'),
+      'title' => t('Drupal'),
       'value' => VERSION,
       'severity' => REQUIREMENT_INFO
     );
@@ -2339,11 +2335,11 @@ function hook_requirements($phase) {
 
   // Test PHP version
   $requirements['php'] = array(
-    'title' => $t('PHP'),
+    'title' => t('PHP'),
     'value' => ($phase == 'runtime') ? l(phpversion(), 'admin/reports/status/php') : phpversion(),
   );
   if (version_compare(phpversion(), DRUPAL_MINIMUM_PHP) < 0) {
-    $requirements['php']['description'] = $t('Your PHP installation is too old. Drupal requires at least PHP %version.', array('%version' => DRUPAL_MINIMUM_PHP));
+    $requirements['php']['description'] = t('Your PHP installation is too old. Drupal requires at least PHP %version.', array('%version' => DRUPAL_MINIMUM_PHP));
     $requirements['php']['severity'] = REQUIREMENT_ERROR;
   }
 
@@ -2352,19 +2348,19 @@ function hook_requirements($phase) {
     $cron_last = \Drupal::state()->get('system.cron_last');
 
     if (is_numeric($cron_last)) {
-      $requirements['cron']['value'] = $t('Last run !time ago', array('!time' => format_interval(REQUEST_TIME - $cron_last)));
+      $requirements['cron']['value'] = t('Last run !time ago', array('!time' => format_interval(REQUEST_TIME - $cron_last)));
     }
     else {
       $requirements['cron'] = array(
-        'description' => $t('Cron has not run. It appears cron jobs have not been setup on your system. Check the help pages for <a href="@url">configuring cron jobs</a>.', array('@url' => 'http://drupal.org/cron')),
+        'description' => t('Cron has not run. It appears cron jobs have not been setup on your system. Check the help pages for <a href="@url">configuring cron jobs</a>.', array('@url' => 'http://drupal.org/cron')),
         'severity' => REQUIREMENT_ERROR,
-        'value' => $t('Never run'),
+        'value' => t('Never run'),
       );
     }
 
-    $requirements['cron']['description'] .= ' ' . $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron')));
+    $requirements['cron']['description'] .= ' ' . t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron')));
 
-    $requirements['cron']['title'] = $t('Cron maintenance tasks');
+    $requirements['cron']['title'] = t('Cron maintenance tasks');
   }
 
   return $requirements;
@@ -2962,7 +2958,7 @@ function hook_install_tasks(&$install_state) {
     // entered data which requires that batch processing will need to occur
     // later on.
     'myprofile_data_import_form' => array(
-      'display_name' => st('Data import options'),
+      'display_name' => t('Data import options'),
       'type' => 'form',
     ),
     // Similarly, to implement this task, your profile would define a function
@@ -2973,7 +2969,7 @@ function hook_install_tasks(&$install_state) {
     // can simply define as many tasks of type 'form' as you wish to execute,
     // and the forms will be presented to the user, one after another.
     'myprofile_settings_form' => array(
-      'display_name' => st('Additional options'),
+      'display_name' => t('Additional options'),
       'type' => 'form',
     ),
     // This is an example of a task that performs batch operations. To
@@ -2984,7 +2980,7 @@ function hook_install_tasks(&$install_state) {
     // hidden and skipped unless your profile set it to TRUE in one of the
     // previous tasks.
     'myprofile_batch_processing' => array(
-      'display_name' => st('Import additional data'),
+      'display_name' => t('Import additional data'),
       'display' => $myprofile_needs_batch_processing,
       'type' => 'batch',
       'run' => $myprofile_needs_batch_processing ? INSTALL_TASK_RUN_IF_NOT_COMPLETED : INSTALL_TASK_SKIP,

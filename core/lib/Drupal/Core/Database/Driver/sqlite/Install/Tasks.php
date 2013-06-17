@@ -16,7 +16,7 @@ class Tasks extends InstallTasks {
   protected $pdoDriver = 'sqlite';
 
   public function name() {
-    return st('SQLite');
+    return t('SQLite');
   }
 
   /**
@@ -35,8 +35,8 @@ class Tasks extends InstallTasks {
     unset($form['username'], $form['password'], $form['advanced_options']['host'], $form['advanced_options']['port']);
 
     // Make the text more accurate for SQLite.
-    $form['database']['#title'] = st('Database file');
-    $form['database']['#description'] = st('The absolute path to the file where @drupal data will be stored. This must be writable by the web server and should exist outside of the web root.', array('@drupal' => drupal_install_profile_distribution_name()));
+    $form['database']['#title'] = t('Database file');
+    $form['database']['#description'] = t('The absolute path to the file where @drupal data will be stored. This must be writable by the web server and should exist outside of the web root.', array('@drupal' => drupal_install_profile_distribution_name()));
     $default_database = conf_path(FALSE, TRUE) . '/files/.ht.sqlite';
     $form['database']['#default_value'] = empty($database['database']) ? $default_database : $database['database'];
     return $form;
@@ -86,17 +86,16 @@ class Tasks extends InstallTasks {
         catch (DatabaseNotFoundException $e) {
           // Still no dice; probably a permission issue. Raise the error to the
           // installer.
-          $this->fail(st('Database %database not found. The server reports the following message when attempting to create the database: %error.', array('%database' => $database, '%error' => $e->getMessage())));
+          $this->fail(t('Database %database not found. The server reports the following message when attempting to create the database: %error.', array('%database' => $database, '%error' => $e->getMessage())));
         }
       }
       else {
         // Database connection failed for some other reason than the database
         // not existing.
-        $this->fail(st('Failed to connect to your database server. The server reports the following message: %error.<ul><li>Is the database server running?</li><li>Does the database exist, and have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname?</li></ul>', array('%error' => $e->getMessage())));
+        $this->fail(t('Failed to connect to your database server. The server reports the following message: %error.<ul><li>Is the database server running?</li><li>Does the database exist, and have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname?</li></ul>', array('%error' => $e->getMessage())));
         return FALSE;
       }
     }
     return TRUE;
   }
 }
-

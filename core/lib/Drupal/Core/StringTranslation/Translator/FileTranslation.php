@@ -17,9 +17,6 @@ use Drupal\Component\Gettext\PoMemoryWriter;
  *
  * Used during the install process, when database, theme, and localization
  * system is possibly not yet available.
- *
- * Use t() if your code will never run during the Drupal installation phase.
- * Use st() if your code will only run during installation.
  */
 class FileTranslation extends StaticTranslation {
 

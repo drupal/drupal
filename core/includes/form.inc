@@ -1348,9 +1348,6 @@ function drupal_redirect_form($form_state) {
  *   theming, and hook_form_alter functions.
  */
 function _form_validate(&$elements, &$form_state, $form_id = NULL) {
-  // Also used in the installer, pre-database setup.
-  $t = get_t();
-
   // Recurse through all children.
   foreach (element_children($elements) as $key) {
     if (isset($elements[$key]) && $elements[$key]) {
@@ -1364,7 +1361,7 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
     if (isset($elements['#needs_validation'])) {
       // Verify that the value is not longer than #maxlength.
       if (isset($elements['#maxlength']) && drupal_strlen($elements['#value']) > $elements['#maxlength']) {
-        form_error($elements, $t('!name cannot be longer than %max characters but is currently %length characters long.', array('!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'], '%max' => $elements['#maxlength'], '%length' => drupal_strlen($elements['#value']))));
+        form_error($elements, t('!name cannot be longer than %max characters but is currently %length characters long.', array('!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'], '%max' => $elements['#maxlength'], '%length' => drupal_strlen($elements['#value']))));
       }
 
       if (isset($elements['#options']) && isset($elements['#value'])) {
@@ -1378,7 +1375,7 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
           $value = in_array($elements['#type'], array('checkboxes', 'tableselect')) ? array_keys($elements['#value']) : $elements['#value'];
           foreach ($value as $v) {
             if (!isset($options[$v])) {
-              form_error($elements, $t('An illegal choice has been detected. Please contact the site administrator.'));
+              form_error($elements, t('An illegal choice has been detected. Please contact the site administrator.'));
               watchdog('form', 'Illegal choice %choice in !name element.', array('%choice' => $v, '!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']), WATCHDOG_ERROR);
             }
           }
@@ -1397,7 +1394,7 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
           form_set_value($elements, NULL, $form_state);
         }
         elseif (!isset($options[$elements['#value']])) {
-          form_error($elements, $t('An illegal choice has been detected. Please contact the site administrator.'));
+          form_error($elements, t('An illegal choice has been detected. Please contact the site administrator.'));
           watchdog('form', 'Illegal choice %choice in %name element.', array('%choice' => $elements['#value'], '%name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']), WATCHDOG_ERROR);
         }
       }
@@ -1480,7 +1477,7 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
       // constructors are encouraged to set #title anyway, and then set
       // #title_display to 'invisible'. This improves accessibility.
       elseif (isset($elements['#title'])) {
-        form_error($elements, $t('!name field is required.', array('!name' => $elements['#title'])));
+        form_error($elements, t('!name field is required.', array('!name' => $elements['#title'])));
       }
       else {
         form_error($elements);
@@ -3177,13 +3174,12 @@ function theme_checkboxes($variables) {
  * This is used as a pre render function for checkboxes and radios.
  */
 function form_pre_render_conditional_form_element($element) {
-  $t = get_t();
   // Set the element's title attribute to show #title as a tooltip, if needed.
   if (isset($element['#title']) && $element['#title_display'] == 'attribute') {
     $element['#attributes']['title'] = $element['#title'];
     if (!empty($element['#required'])) {
       // Append an indication that this field is required.
-      $element['#attributes']['title'] .= ' (' . $t('Required') . ')';
+      $element['#attributes']['title'] .= ' (' . t('Required') . ')';
     }
   }
 
@@ -4759,11 +4755,9 @@ function theme_form_element($variables) {
  * @ingroup themeable
  */
 function theme_form_required_marker($variables) {
-  // This is also used in the installer, pre-database setup.
-  $t = get_t();
   $attributes = array(
     'class' => 'form-required',
-    'title' => $t('This field is required.'),
+    'title' => t('This field is required.'),
   );
   return '<abbr' . new Attribute($attributes) . '>*</abbr>';
 }
@@ -4793,8 +4787,6 @@ function theme_form_required_marker($variables) {
  */
 function theme_form_element_label($variables) {
   $element = $variables['element'];
-  // This is also used in the installer, pre-database setup.
-  $t = get_t();
 
   // If title and required marker are both empty, output no label.
   if ((!isset($element['#title']) || $element['#title'] === '') && empty($element['#required'])) {
@@ -4820,7 +4812,7 @@ function theme_form_element_label($variables) {
     $attributes['for'] = $element['#id'];
   }
 
-  return '<label' . new Attribute($attributes) . '>' . $t('!title!required', array('!title' => $title, '!required' => $required)) . '</label>';
+  return '<label' . new Attribute($attributes) . '>' . t('!title!required', array('!title' => $title, '!required' => $required)) . '</label>';
 }
 
 /**
@@ -5029,8 +5021,6 @@ function batch_set($batch_definition) {
     }
 
     // Base and default properties for the batch set.
-    // Use get_t() to allow batches during installation.
-    $t = get_t();
     $init = array(
       'sandbox' => array(),
       'results' => array(),
@@ -5039,10 +5029,10 @@ function batch_set($batch_definition) {
       'elapsed' => 0,
     );
     $defaults = array(
-      'title' => $t('Processing'),
-      'init_message' => $t('Initializing.'),
-      'progress_message' => $t('Completed @current of @total.'),
-      'error_message' => $t('An error has occurred.'),
+      'title' => t('Processing'),
+      'init_message' => t('Initializing.'),
+      'progress_message' => t('Completed @current of @total.'),
+      'error_message' => t('An error has occurred.'),
       'css' => array(),
     );
     $batch_set = $init + $batch_definition + $defaults;
@@ -5132,8 +5122,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
     if ($batch['progressive']) {
       // Now that we have a batch id, we can generate the redirection link in
       // the generic error message.
-      $t = get_t();
-      $batch['error_message'] = $t('Please continue to <a href="@error_url">the error page</a>', array('@error_url' => url($url, array('query' => array('id' => $batch['id'], 'op' => 'finished')))));
+      $batch['error_message'] = t('Please continue to <a href="@error_url">the error page</a>', array('@error_url' => url($url, array('query' => array('id' => $batch['id'], 'op' => 'finished')))));
 
       // Clear the way for the drupal_goto() redirection to the batch processing
       // page, by saving and unsetting the 'destination', if there is any.

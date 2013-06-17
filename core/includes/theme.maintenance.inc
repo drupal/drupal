@@ -119,7 +119,6 @@ function _theme_load_offline_registry($theme, $base_theme = NULL, $theme_engine 
  * @ingroup themeable
  */
 function theme_task_list($variables) {
-  $t = get_t();
   $items = $variables['items'];
   $active = $variables['active'];
 
@@ -130,12 +129,12 @@ function theme_task_list($variables) {
   foreach ($items as $k => $item) {
     if ($active == $k) {
       $class = 'active';
-      $status = '(' . $t('active') . ')';
+      $status = '(' . t('active') . ')';
       $done = FALSE;
     }
     else {
       $class = $done ? 'done' : '';
-      $status = $done ? '(' . $t('done') . ')' : '';
+      $status = $done ? '(' . t('done') . ')' : '';
     }
     $output .= '<li';
     $output .= ($class ? ' class="' . $class . '"' : '') . '>';
