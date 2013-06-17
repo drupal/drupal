@@ -9,6 +9,7 @@ namespace Drupal\field_sql_storage\Entity;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\Query\QueryFactoryInterface;
 
 /**
  * Factory class creating entity query objects for the SQL backend.
@@ -16,7 +17,14 @@ use Drupal\Core\Entity\EntityManager;
  * @see \Drupal\field_sql_storage\Entity\Query
  * @see \Drupal\field_sql_storage\Entity\QueryAggregate
  */
-class QueryFactory {
+class QueryFactory implements QueryFactoryInterface {
+
+  /**
+   * The database connection to use.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
 
   /**
    * Constructs a QueryFactory object.
