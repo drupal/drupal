@@ -44,7 +44,7 @@ views.area.title:
   mapping:
     title:
       type: label
-      label: 'The title which will be overriden for the page'
+      label: 'The title which will be overridden for the page'
 
 views.area.view:
   type: views_area

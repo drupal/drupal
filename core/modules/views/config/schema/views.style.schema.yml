@@ -70,7 +70,7 @@ views.style.table:
               label: 'Align'
             separator:
               type: string
-              label: 'Seprator'
+              label: 'Separator'
             empty_column:
               type: boolean
               label: 'Hide empty columns'
