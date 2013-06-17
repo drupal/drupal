@@ -85,7 +85,7 @@ class StatisticsSettingsForm extends SystemConfigFormBase {
     // The popular statistics block is dependent on these settings, so clear the
     // block plugin definitions cache.
     if ($this->moduleHandler->moduleExists('block')) {
-      drupal_container()->get('plugin.manager.block')->clearCachedDefinitions();
+      \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
     }
 
     parent::submitForm($form, $form_state);

@@ -8,9 +8,8 @@
 namespace Drupal\custom_block\Controller;
 
 use Drupal\Core\Controller\ControllerInterface;
-use Drupal\custom_block\CustomBlockStorageController;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\custom_block\CustomBlockTypeInterface;
-use Drupal\custom_block\CustomBlockTypeStorageController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -26,14 +25,14 @@ class CustomBlockController implements ControllerInterface {
   /**
    * The custom block storage controller.
    *
-   * @var \Drupal\custom_block\CustomBlockStorageController
+   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
    */
   protected $customBlockStorage;
 
   /**
    * The custom block type storage controller.
    *
-   * @var \Drupal\custom_block\CustomBlockTypeStorageController
+   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
    */
   protected $customBlockTypeStorage;
 
@@ -54,12 +53,12 @@ class CustomBlockController implements ControllerInterface {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   Current request.
-   * @param \Drupal\custom_block\CustomBlockStorageController $custom_block_storage
+   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $custom_block_storage
    *   The custom block storage controller.
-   * @param \Drupal\custom_block\CustomBlockTypeStorageController $custom_block_type_storage
+   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $custom_block_type_storage
    *   The custom block type storage controller.
    */
-  public function __construct(Request $request, CustomBlockStorageController $custom_block_storage, CustomBlockTypeStorageController $custom_block_type_storage) {
+  public function __construct(Request $request, EntityStorageControllerInterface $custom_block_storage, EntityStorageControllerInterface $custom_block_type_storage) {
     $this->request = $request;
     $this->customBlockStorage = $custom_block_storage;
     $this->customBlockTypeStorage = $custom_block_type_storage;

@@ -46,7 +46,7 @@ function locale_translation_flush_projects() {
  */
 function locale_translation_build_projects() {
   // This function depends on Update module. We degrade gracefully.
-  if (!module_exists('update')) {
+  if (!Drupal::moduleHandler()->moduleExists('update')) {
     return array();
   }
 
@@ -132,7 +132,7 @@ function locale_translation_build_projects() {
  */
 function locale_translation_project_list() {
   // This function depends on Update module. We degrade gracefully.
-  if (!module_exists('update')) {
+  if (!Drupal::moduleHandler()->moduleExists('update')) {
     return array();
   }
 

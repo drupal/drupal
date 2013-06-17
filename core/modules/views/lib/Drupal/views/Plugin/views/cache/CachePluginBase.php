@@ -204,7 +204,7 @@ abstract class CachePluginBase extends PluginBase {
    * All of the cached result data will be available in $view->result, as well,
    * so all ids used in the query should be discoverable.
    */
-  function post_render(&$output) { }
+  public function postRender(&$output) { }
 
   /**
    * Start caching the html head.

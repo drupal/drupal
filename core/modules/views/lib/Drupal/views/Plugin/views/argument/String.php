@@ -151,7 +151,7 @@ class String extends ArgumentPluginBase {
       $this->ensureMyTable();
     }
     else {
-      $this->tableAlias = $this->helper->summary_join();
+      $this->tableAlias = $this->helper->summaryJoin();
     }
 
     if (empty($this->options['glossary'])) {
@@ -201,7 +201,7 @@ class String extends ArgumentPluginBase {
         $this->helper->formula = TRUE;
       }
       $this->helper->ensureMyTable();
-      $this->helper->add_filter();
+      $this->helper->addFilter();
       return;
     }
 

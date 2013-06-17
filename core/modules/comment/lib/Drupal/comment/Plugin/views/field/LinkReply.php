@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Plugin\views\field\LinkReply.
+ * Contains \Drupal\comment\Plugin\views\field\LinkReply.
  */
 
 namespace Drupal\comment\Plugin\views\field;

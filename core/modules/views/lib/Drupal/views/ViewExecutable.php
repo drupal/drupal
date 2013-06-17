@@ -1299,10 +1299,10 @@ class ViewExecutable {
       }
     }
 
-    $exposed_form->post_render($this->display_handler->output);
+    $exposed_form->postRender($this->display_handler->output);
 
     if ($cache) {
-      $cache->post_render($this->display_handler->output);
+      $cache->postRender($this->display_handler->output);
     }
 
     // Let modules modify the view output after it is rendered.

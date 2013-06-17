@@ -105,8 +105,8 @@ function config_admin_sync_form(array &$form, array &$form_state, StorageInterfa
  */
 function config_admin_import_form($form, &$form_state) {
   // Retrieve a list of differences between last known state and active store.
-  $source_storage = drupal_container()->get('config.storage.staging');
-  $target_storage = drupal_container()->get('config.storage');
+  $source_storage = Drupal::service('config.storage.staging');
+  $target_storage = Drupal::service('config.storage');
 
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(

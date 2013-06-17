@@ -634,7 +634,7 @@ function locale_translate_batch_finished($success, $results) {
       watchdog('locale', 'Translations imported: %number added, %update updated, %delete removed.', array('%number' => $additions, '%update' => $updates, '%delete' => $deletes));
 
       if ($skips) {
-        if (module_exists('dblog')) {
+        if (Drupal::moduleHandler()->moduleExists('dblog')) {
           $message = format_plural($skips, 'One translation string was skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
         }
         else {

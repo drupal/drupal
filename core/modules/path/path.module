@@ -104,7 +104,7 @@ function path_form_node_form_alter(&$form, $form_state) {
     if ($node->langcode != Language::LANGCODE_NOT_SPECIFIED) {
       $conditions['langcode'] = $node->langcode;
     }
-    $path = drupal_container()->get('path.crud')->load($conditions);
+    $path = Drupal::service('path.crud')->load($conditions);
     if ($path === FALSE) {
       $path = array();
     }
@@ -192,7 +192,7 @@ function path_node_insert(EntityInterface $node) {
       // Ensure fields for programmatic executions.
       $source = 'node/' . $node->nid;
       $langcode = isset($node->langcode) ? $node->langcode : Language::LANGCODE_NOT_SPECIFIED;
-      drupal_container()->get('path.crud')->save($source, $alias, $langcode);
+      Drupal::service('path.crud')->save($source, $alias, $langcode);
     }
   }
 }
@@ -206,14 +206,14 @@ function path_node_update(EntityInterface $node) {
     $alias = trim($path['alias']);
     // Delete old alias if user erased it.
     if (!empty($path['pid']) && empty($path['alias'])) {
-      drupal_container()->get('path.crud')->delete(array('pid' => $path['pid']));
+      Drupal::service('path.crud')->delete(array('pid' => $path['pid']));
     }
     // Only save a non-empty alias.
     if (!empty($path['alias'])) {
       // Ensure fields for programmatic executions.
       $source = 'node/' . $node->nid;
       $langcode = isset($node->langcode) ? $node->langcode : Language::LANGCODE_NOT_SPECIFIED;
-      drupal_container()->get('path.crud')->save($source, $alias, $langcode, $path['pid']);
+      Drupal::service('path.crud')->save($source, $alias, $langcode, $path['pid']);
     }
   }
 }
@@ -223,7 +223,7 @@ function path_node_update(EntityInterface $node) {
  */
 function path_node_predelete(EntityInterface $node) {
   // Delete all aliases associated with this node.
-  drupal_container()->get('path.crud')->delete(array('source' => 'node/' . $node->nid));
+  Drupal::service('path.crud')->delete(array('source' => 'node/' . $node->nid));
 }
 
 /**
