@@ -1090,7 +1090,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
    * @param $values
    *   An array of all objects returned from the query.
    */
-  function pre_render(&$values) { }
+  public function preRender(&$values) { }
 
   /**
    * Render the field.

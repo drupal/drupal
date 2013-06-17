@@ -431,7 +431,7 @@ function hook_views_pre_execute(ViewExecutable &$view) {
 /**
  * Act on the view immediately after the query has been executed.
  *
- * At this point the query has been executed, but the pre_render() phase has
+ * At this point the query has been executed, but the preRender() phase has
  * not yet happened for handlers.
  *
  * Output can be added to the view by setting $view->attachment_before
@@ -455,7 +455,7 @@ function hook_views_post_execute(ViewExecutable &$view) {
 /**
  * Act on the view immediately before rendering it.
  *
- * At this point the query has been executed, and the pre_render() phase has
+ * At this point the query has been executed, and the preRender() phase has
  * already happened for handlers, so all data should be available. This hook
  * can be utilized by themes.
  *

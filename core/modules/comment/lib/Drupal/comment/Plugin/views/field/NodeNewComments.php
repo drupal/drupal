@@ -91,7 +91,7 @@ class NodeNewComments extends Numeric {
     $this->field_alias = $this->table . '_' . $this->field;
   }
 
-  function pre_render(&$values) {
+  public function preRender(&$values) {
     global $user;
     if (!$user->uid || empty($values)) {
       return;

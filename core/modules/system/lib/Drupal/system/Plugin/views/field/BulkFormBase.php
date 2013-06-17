@@ -57,10 +57,10 @@ abstract class BulkFormBase extends FieldPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\Plugin\field\FieldPluginBase::pre_render().
+   * {@inheritdoc}
    */
-  public function pre_render(&$values) {
-    parent::pre_render($values);
+  public function preRender(&$values) {
+    parent::preRender($values);
 
     // If the view is using a table style, provide a placeholder for a
     // "select all" checkbox.

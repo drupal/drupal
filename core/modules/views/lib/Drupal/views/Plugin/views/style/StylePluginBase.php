@@ -399,9 +399,9 @@ abstract class StylePluginBase extends PluginBase {
    * @param $result
    *   The full array of results from the query.
    */
-  function pre_render($result) {
+  public function preRender($result) {
     if (!empty($this->view->rowPlugin)) {
-      $this->view->rowPlugin->pre_render($result);
+      $this->view->rowPlugin->preRender($result);
     }
   }
 
