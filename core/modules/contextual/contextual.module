@@ -40,7 +40,7 @@ function contextual_toolbar() {
       ),
     ),
     '#wrapper_attributes' => array(
-      'class' => array('element-hidden', 'contextual-toolbar-tab'),
+      'class' => array('hidden', 'contextual-toolbar-tab'),
     ),
     '#attached' => array(
       'library' => array(

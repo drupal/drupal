@@ -89,7 +89,7 @@ function tour_toolbar() {
       ),
     ),
     '#wrapper_attributes' => array(
-      'class' => array('tour-toolbar-tab', 'element-hidden'),
+      'class' => array('tour-toolbar-tab', 'hidden'),
       'id' => 'toolbar-tab-tour',
     ),
     '#attached' => array(

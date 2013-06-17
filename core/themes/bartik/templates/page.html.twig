@@ -26,10 +26,10 @@
  * - site_slogan: The slogan of the site. This is empty when displaying the site
  *   slogan has been disabled in theme settings.
  * - hide_site_name: A flag indicating if the site name has been toggled off on
- *   the theme settings page. If hidden, the "element-invisible" class is added
+ *   the theme settings page. If hidden, the "visually-hidden" class is added
  *   to make the site name visually hidden, but still accessible.
  * - hide_site_slogan: A flag indicating if the site slogan has been toggled off
- *   on the theme settings page. If hidden, the "element-invisible" class is
+ *   on the theme settings page. If hidden, the "visually-hidden" class is
  *   added to make the site slogan visually hidden, but still accessible.
  *
  * Navigation:
@@ -99,24 +99,24 @@
     {% endif %}
 
     {% if site_name or site_slogan %}
-      <div id="name-and-slogan"{% if hide_site_name and hide_site_slogan %} class="element-invisible"{% endif %}>
+      <div id="name-and-slogan"{% if hide_site_name and hide_site_slogan %} class="visually-hidden"{% endif %}>
         {% if site_name %}
           {% if title %}
-            <div id="site-name"{% if hide_site_name %} class="element-invisible"{% endif %}>
+            <div id="site-name"{% if hide_site_name %} class="visually-hidden"{% endif %}>
               <strong>
                 <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home"><span>{{ site_name }}</span></a>
               </strong>
             </div>
           {# Use h1 when the content title is empty #}
           {% else %}
-            <h1 id="site-name"{% if hide_site_name %} class="element-invisible" {% endif %}>
+            <h1 id="site-name"{% if hide_site_name %} class="visually-hidden" {% endif %}>
               <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home"><span>{{ site_name }}</span></a>
             </h1>
           {% endif %}
         {% endif %}
 
         {% if site_slogan %}
-          <div id="site-slogan"{% if hide_site_slogan %} class="element-invisible"{% endif %}>
+          <div id="site-slogan"{% if hide_site_slogan %} class="visually-hidden"{% endif %}>
             {{ site_slogan }}
           </div>
         {% endif %}

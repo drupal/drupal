@@ -65,8 +65,8 @@ class ElementsLabelsTest extends WebTestBase {
     $elements = $this->xpath('//input[@id="edit-form-textfield-test-no-title-required"]/preceding-sibling::label[@for="edit-form-textfield-test-no-title-required"]/abbr[@class="form-required"]');
     $this->assertTrue(isset($elements[0]), 'Label tag with required marker precedes required textfield with no title.');
 
-    $elements = $this->xpath('//input[@id="edit-form-textfield-test-title-invisible"]/preceding-sibling::label[@for="edit-form-textfield-test-title-invisible" and @class="element-invisible"]');
-    $this->assertTrue(isset($elements[0]), 'Label preceding field and label class is element-invisible.');
+    $elements = $this->xpath('//input[@id="edit-form-textfield-test-title-invisible"]/preceding-sibling::label[@for="edit-form-textfield-test-title-invisible" and @class="visually-hidden"]');
+    $this->assertTrue(isset($elements[0]), 'Label preceding field and label class is visually-hidden.');
 
     $elements = $this->xpath('//input[@id="edit-form-textfield-test-title"]/preceding-sibling::abbr[@class="form-required"]');
     $this->assertFalse(isset($elements[0]), 'No required marker on non-required field.');

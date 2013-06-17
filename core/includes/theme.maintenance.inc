@@ -123,7 +123,7 @@ function theme_task_list($variables) {
   $active = $variables['active'];
 
   $done = isset($items[$active]) || $active == NULL;
-  $output = '<h2 class="element-invisible">Installation tasks</h2>';
+  $output = '<h2 class="visually-hidden">Installation tasks</h2>';
   $output .= '<ol class="task-list">';
 
   foreach ($items as $k => $item) {
@@ -139,7 +139,7 @@ function theme_task_list($variables) {
     $output .= '<li';
     $output .= ($class ? ' class="' . $class . '"' : '') . '>';
     $output .= $item;
-    $output .= ($status ? '<span class="element-invisible">' . $status . '</span>' : '');
+    $output .= ($status ? '<span class="visually-hidden">' . $status . '</span>' : '');
     $output .= '</li>';
   }
   $output .= '</ol>';

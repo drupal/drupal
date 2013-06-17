@@ -236,7 +236,7 @@ function theme_toolbar(&$variables) {
     }
     return '<nav' . new Attribute($element['#attributes']) . '>'
       . '<div' . new Attribute($element['#bar']['#attributes']) . '>'
-      . '<h2 class="element-invisible">' . $element['#bar']['#heading'] . '</h2>'
+      . '<h2 class="visually-hidden">' . $element['#bar']['#heading'] . '</h2>'
       . $element['#children'] . '</div>' . $trays . '</nav>';
   }
 }
@@ -378,7 +378,7 @@ function theme_toolbar_tray_wrapper(&$variables) {
 function theme_toolbar_tray_heading_wrapper(&$variables) {
   if (!empty($variables['element']['#children'])) {
     $element = $variables['element'];
-    return '<h3 class="element-invisible">' . $element['#heading'] . '</h3>' . $element['#children'];
+    return '<h3 class="visually-hidden">' . $element['#heading'] . '</h3>' . $element['#children'];
   }
 }
 

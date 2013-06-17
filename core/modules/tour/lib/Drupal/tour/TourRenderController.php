@@ -60,7 +60,7 @@ class TourRenderController extends EntityRenderController {
           '#attributes' => array(
             'id' => 'tour',
             'class' => array(
-              'element-hidden',
+              'hidden',
             ),
           ),
         );

@@ -69,11 +69,11 @@ Drupal.behaviors.overlayChild = {
     $(context).find('#overlay-disable-message')
       .focusin(function () {
         $(this).addClass('overlay-disable-message-focused')
-          .find('a.element-focusable').removeClass('element-invisible');
+          .find('a.focusable').removeClass('visually-hidden');
       })
       .focusout(function () {
         $(this).removeClass('overlay-disable-message-focused')
-          .find('a.element-focusable').addClass('element-invisible');
+          .find('a.focusable').addClass('visually-hidden');
       });
   }
 };
@@ -157,7 +157,7 @@ Drupal.overlayChild.behaviors.tabs = function (context, settings) {
 
   $('#overlay-tabs > li > a').bind('click.drupal-overlay', function () {
     var active_tab = Drupal.t('(active tab)');
-    $tabsLinks.parent().siblings().removeClass('active').find('element-invisible:contains(' + active_tab + ')').appendTo(this);
+    $tabsLinks.parent().siblings().removeClass('active').find('visually-hidden:contains(' + active_tab + ')').appendTo(this);
     $(this).parent().addClass('active');
   });
 };

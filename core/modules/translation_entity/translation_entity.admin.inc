@@ -172,7 +172,7 @@ function _translation_entity_preprocess_language_content_settings_table(&$variab
               '#prefix' => '<label for="' . $field_element['#id'] . '">',
               '#suffix' => '</label>',
               'bundle' => array(
-                '#prefix' => '<span class="element-invisible">',
+                '#prefix' => '<span class="visually-hidden">',
                 '#suffix' => '</span> ',
                 '#markup' => check_plain($element[$bundle]['settings']['#label']),
               ),
@@ -206,12 +206,12 @@ function _translation_entity_preprocess_language_content_settings_table(&$variab
                   '#prefix' => '<label for="' . $column_element[$key]['#id'] . '">',
                   '#suffix' => '</label>',
                   'bundle' => array(
-                    '#prefix' => '<span class="element-invisible">',
+                    '#prefix' => '<span class="visually-hidden">',
                     '#suffix' => '</span> ',
                     '#markup' => check_plain($element[$bundle]['settings']['#label']),
                   ),
                   'field' => array(
-                    '#prefix' => '<span class="element-invisible">',
+                    '#prefix' => '<span class="visually-hidden">',
                     '#suffix' => '</span> ',
                     '#markup' => check_plain($field_element['#label']),
                   ),
