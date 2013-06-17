@@ -7,10 +7,11 @@
 
 namespace Drupal\path\Form;
 
-use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Path\Path;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Builds the form to delete a path alias.
@@ -60,24 +61,24 @@ class DeleteForm extends ConfirmFormBase implements ControllerInterface {
   /**
    * Implements \Drupal\Core\Form\ConfirmFormBase::getQuestion().
    */
-  protected function getQuestion() {
+  public function getQuestion() {
     return t('Are you sure you want to delete path alias %title?', array('%title' => $this->pathAlias['alias']));
   }
 
   /**
    * Implements \Drupal\Core\Form\ConfirmFormBase::getCancelPath().
    */
-  protected function getCancelPath() {
+  public function getCancelPath() {
     return 'admin/config/search/path';
   }
 
   /**
    * Overrides \Drupal\Core\Form\ConfirmFormBase::buildForm().
    */
-  public function buildForm(array $form, array &$form_state, $pid = NULL) {
+  public function buildForm(array $form, array &$form_state, $pid = NULL, Request $request = NULL) {
     $this->pathAlias = $this->path->load(array('pid' => $pid));
 
-    return parent::buildForm($form, $form_state);
+    return parent::buildForm($form, $form_state, $request);
   }
 
   /**

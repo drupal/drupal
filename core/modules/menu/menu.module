@@ -142,14 +142,18 @@ function menu_menu() {
 }
 
 /**
- * Implements hook_entity_info_alter().
+ * Implements hook_entity_info().
  */
-function menu_entity_info_alter(&$entity_info) {
+function menu_entity_info(&$entity_info) {
   $entity_info['menu']['controllers']['list'] = 'Drupal\menu\MenuListController';
   $entity_info['menu']['uri_callback'] = 'menu_uri';
   $entity_info['menu']['controllers']['form'] = array(
     'default' => 'Drupal\menu\MenuFormController',
+    'delete' => 'Drupal\menu\Form\MenuDeleteForm',
   );
+
+  $entity_info['menu_link']['controllers']['form']['delete'] = 'Drupal\menu\Form\MenuLinkDeleteForm';
+  $entity_info['menu_link']['controllers']['form']['reset'] = 'Drupal\menu\Form\MenuLinkResetForm';
 }
 
 /**

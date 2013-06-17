@@ -244,6 +244,13 @@ function field_ui_element_info() {
 }
 
 /**
+ * Implements hook_entity_info().
+ */
+function field_ui_entity_info(&$entity_info) {
+  $entity_info['field_instance']['controllers']['form']['delete'] = 'Drupal\field_ui\Form\FieldDeleteForm';
+}
+
+/**
  * Implements hook_entity_bundle_create().
  */
 function field_ui_entity_bundle_create($entity_type, $bundle) {

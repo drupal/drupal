@@ -73,21 +73,21 @@ class DeleteMultiple extends ConfirmFormBase implements ControllerInterface {
   /**
    * {@inheritdoc}
    */
-  protected function getQuestion() {
+  public function getQuestion() {
     return format_plural(count($this->nodes), 'Are you sure you want to delete this item?', 'Are you sure you want to delete these items?');
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getCancelPath() {
+  public function getCancelPath() {
     return 'admin/content';
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getConfirmText() {
+  public function getConfirmText() {
     return t('Delete');
   }
 

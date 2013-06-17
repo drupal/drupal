@@ -7,23 +7,15 @@
 
 namespace Drupal\field_ui\Form;
 
-use Drupal\Core\Form\ConfirmFormBase;
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityManager;
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form for removing a field instance from a bundle.
  */
-class FieldDeleteForm extends ConfirmFormBase implements ControllerInterface {
-
-  /**
-   * The field instance being deleted.
-   *
-   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
-   */
-  protected $instance;
+class FieldDeleteForm extends EntityConfirmFormBase implements EntityControllerInterface {
 
   /**
    * The entity manager.
@@ -45,7 +37,7 @@ class FieldDeleteForm extends ConfirmFormBase implements ControllerInterface {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
     return new static(
       $container->get('plugin.manager.entity')
     );
@@ -54,59 +46,43 @@ class FieldDeleteForm extends ConfirmFormBase implements ControllerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
-    return 'field_ui_field_delete_form';
+  public function getQuestion() {
+    return t('Are you sure you want to delete the field %field?', array('%field' => $this->entity->label()));
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getQuestion() {
-    return t('Are you sure you want to delete the field %field?', array('%field' => $this->instance->label()));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getConfirmText() {
+  public function getConfirmText() {
     return t('Delete');
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getCancelPath() {
-    return $this->entityManager->getAdminPath($this->instance->entity_type, $this->instance->bundle) . '/fields';
+  public function getCancelPath() {
+    return $this->entityManager->getAdminPath($this->entity->entity_type, $this->entity->bundle) . '/fields';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, FieldInstance $field_instance = NULL) {
-    $this->instance = $form_state['instance'] = $field_instance;
-
-    return parent::buildForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submit(array $form, array &$form_state) {
     form_load_include($form_state, 'inc', 'field_ui', 'field_ui.admin');
 
-    $field = $this->instance->getField();
+    $field = $this->entity->getField();
     $bundles = entity_get_bundles();
-    $bundle_label = $bundles[$this->instance->entity_type][$this->instance->bundle]['label'];
+    $bundle_label = $bundles[$this->entity->entity_type][$this->entity->bundle]['label'];
 
     if ($field && !$field['locked']) {
-      $this->instance->delete();
-      drupal_set_message(t('The field %field has been deleted from the %type content type.', array('%field' => $this->instance->label(), '%type' => $bundle_label)));
+      $this->entity->delete();
+      drupal_set_message(t('The field %field has been deleted from the %type content type.', array('%field' => $this->entity->label(), '%type' => $bundle_label)));
     }
     else {
-      drupal_set_message(t('There was a problem removing the %field from the %type content type.', array('%field' => $this->instance->label(), '%type' => $bundle_label)), 'error');
+      drupal_set_message(t('There was a problem removing the %field from the %type content type.', array('%field' => $this->entity->label(), '%type' => $bundle_label)), 'error');
     }
 
-    $admin_path = $this->entityManager->getAdminPath($this->instance->entity_type, $this->instance->bundle);
+    $admin_path = $this->entityManager->getAdminPath($this->entity->entity_type, $this->entity->bundle);
     $form_state['redirect'] = "$admin_path/fields";
 
     // Fields are purged on cron. However field module prevents disabling modules

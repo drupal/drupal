@@ -22,7 +22,7 @@ action_admin_configure:
 action_delete:
   pattern: 'admin/config/system/actions/configure/{action}/delete'
   defaults:
-    _form: '\Drupal\action\Form\DeleteForm'
+    _entity_form: 'action.delete'
   requirements:
     _permission: 'administer actions'
 

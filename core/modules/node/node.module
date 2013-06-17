@@ -1919,6 +1919,11 @@ function theme_node_recent_content($variables) {
  * Adds node-type specific visibility options to block configuration form.
  */
 function node_form_block_form_alter(&$form, &$form_state) {
+  // These options should be added to most block forms, but not when deleting.
+  if ($form_state['controller']->getOperation() == 'delete') {
+    return;
+  }
+
   $block = $form_state['controller']->getEntity();
   $visibility = $block->get('visibility');
   $form['visibility']['node_type'] = array(

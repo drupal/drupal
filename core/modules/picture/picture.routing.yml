@@ -29,6 +29,6 @@ picture_mapping_page_duplicate:
 picture_mapping_action_confirm:
   pattern: '/admin/config/media/picturemapping/{picture_mapping}/delete'
   defaults:
-    _form: '\Drupal\picture\Form\PictureMappingActionConfirmForm'
+    _entity_form: 'picture_mapping.delete'
   requirements:
     _permission: 'administer pictures'

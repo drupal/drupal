@@ -2,22 +2,23 @@
 
 /**
  * @file
- * Contains \Drupal\shortcut\Form\SetDelete.
+ * Contains \Drupal\shortcut\Form\ShortcutDeleteForm.
  */
 
 namespace Drupal\shortcut\Form;
 
+use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Entity\EntityControllerInterface;
+use Drupal\shortcut\ShortcutStorageControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Controller\ControllerInterface;
-use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\shortcut\Plugin\Core\Entity\Shortcut;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Builds the shortcut set deletion form.
  */
-class SetDelete extends ConfirmFormBase implements ControllerInterface {
+class ShortcutDeleteForm extends EntityConfirmFormBase implements EntityControllerInterface {
 
   /**
    * The database connection.
@@ -34,68 +35,60 @@ class SetDelete extends ConfirmFormBase implements ControllerInterface {
   protected $moduleHandler;
 
   /**
-   * The shortcut set being deleted.
+   * The shortcut storage controller.
    *
-   * @var \Drupal\shortcut\Plugin\Core\Entity\Shortcut
+   * @var \Drupal\shortcut\ShortcutStorageControllerInterface
    */
-  protected $shortcut;
+  protected $storageController;
 
   /**
-   * Constructs a SetDelete object.
+   * Constructs a ShortcutDeleteForm object.
    */
-  public function __construct(Connection $database, ModuleHandlerInterface $module_handler) {
-
+  public function __construct(Connection $database, ModuleHandlerInterface $module_handler, ShortcutStorageControllerInterface $storage_controller) {
     $this->database = $database;
     $this->moduleHandler = $module_handler;
+    $this->storageController = $storage_controller;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
     return new static(
       $container->get('database'),
-      $container->get('module_handler')
+      $container->get('module_handler'),
+      $container->get('plugin.manager.entity')->getStorageController('shortcut')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
-    return 'shortcut_set_delete_form';
+  public function getQuestion() {
+    return t('Are you sure you want to delete the shortcut set %title?', array('%title' => $this->entity->label()));
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getQuestion() {
-    return t('Are you sure you want to delete the shortcut set %title?', array('%title' => $this->shortcut->label()));
+  public function getCancelPath() {
+    return 'admin/config/user-interface/shortcut/manage/' . $this->entity->id();
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getCancelPath() {
-    return 'admin/config/user-interface/shortcut/manage/' . $this->shortcut->id();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getConfirmText() {
+  public function getConfirmText() {
     return t('Delete');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, Shortcut $shortcut = NULL) {
-    $this->shortcut = $shortcut;
-
+  public function buildForm(array $form, array &$form_state, Request $request = NULL) {
     // Find out how many users are directly assigned to this shortcut set, and
     // make a message.
-    $number = \Drupal::entityManager()->getStorageController('shortcut')->countAssignedUsers($shortcut);
+    $number = $this->storageController->countAssignedUsers($this->entity);
     $info = '';
     if ($number) {
       $info .= '<p>' . format_plural($number,
@@ -113,16 +106,16 @@ class SetDelete extends ConfirmFormBase implements ControllerInterface {
       '#markup' => $info,
     );
 
-    return parent::buildForm($form, $form_state);
+    return parent::buildForm($form, $form_state, $request);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
-    $this->shortcut->delete();
+  public function submit(array $form, array &$form_state) {
+    $this->entity->delete();
     $form_state['redirect'] = 'admin/config/user-interface/shortcut';
-    drupal_set_message(t('The shortcut set %title has been deleted.', array('%title' => $this->shortcut->label())));
+    drupal_set_message(t('The shortcut set %title has been deleted.', array('%title' => $this->entity->label())));
   }
 
 }

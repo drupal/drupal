@@ -9,6 +9,7 @@ namespace Drupal\forum\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\taxonomy\Plugin\Core\Entity\Term;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Builds the form to delete a forum term.
@@ -32,31 +33,31 @@ class DeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function getQuestion() {
+  public function getQuestion() {
     return t('Are you sure you want to delete the forum %label?', array('%label' => $this->taxonomyTerm->label()));
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getCancelPath() {
+  public function getCancelPath() {
     return 'admin/structure/forum';
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getConfirmText() {
+  public function getConfirmText() {
     return t('Delete');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, Term $taxonomy_term = NULL) {
+  public function buildForm(array $form, array &$form_state, Term $taxonomy_term = NULL, Request $request = NULL) {
     $this->taxonomyTerm = $taxonomy_term;
 
-    return parent::buildForm($form, $form_state);
+    return parent::buildForm($form, $form_state, $request);
   }
 
   /**

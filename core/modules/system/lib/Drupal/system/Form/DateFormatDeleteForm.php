@@ -11,6 +11,7 @@ use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Config\ConfigFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Builds a form to delete a date format.
@@ -64,7 +65,7 @@ class DateFormatDeleteForm extends ConfirmFormBase implements ControllerInterfac
   /**
    * {@inheritdoc}
    */
-  protected function getQuestion() {
+  public function getQuestion() {
     return t('Are you sure you want to remove the format %name : %format?', array(
       '%name' => $this->format['name'],
       '%format' => format_date(REQUEST_TIME, $this->formatID))
@@ -74,14 +75,14 @@ class DateFormatDeleteForm extends ConfirmFormBase implements ControllerInterfac
   /**
    * {@inheritdoc}
    */
-  protected function getConfirmText() {
+  public function getConfirmText() {
     return t('Remove');
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getCancelPath() {
+  public function getCancelPath() {
     return 'admin/config/regional/date-time/formats';
   }
 
@@ -91,12 +92,12 @@ class DateFormatDeleteForm extends ConfirmFormBase implements ControllerInterfac
    * @param string $format_id
    *   The date format ID.
    */
-  public function buildForm(array $form, array &$form_state, $format_id = NULL) {
+  public function buildForm(array $form, array &$form_state, $format_id = NULL, Request $request = NULL) {
     // We don't get the format ID in the returned format array.
     $this->formatID = $format_id;
     $this->format = $this->configFactory->get('system.date')->get("formats.$format_id");
 
-    return parent::buildForm($form, $form_state);
+    return parent::buildForm($form, $form_state, $request);
   }
 
   /**

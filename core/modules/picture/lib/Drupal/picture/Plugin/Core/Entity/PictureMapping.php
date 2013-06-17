@@ -25,6 +25,7 @@ use Drupal\picture\PictureMappingInterface;
  *     "form" = {
  *       "edit" = "Drupal\picture\PictureMappingFormController",
  *       "add" = "Drupal\picture\PictureMappingFormController",
+ *       "delete" = "Drupal\picture\Form\PictureMappingDeleteForm",
  *       "duplicate" = "Drupal\picture\PictureMappingFormController"
  *     }
  *   },

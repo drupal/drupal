@@ -58,7 +58,7 @@ views_ui.clone:
 views_ui.delete:
   pattern: '/admin/structure/views/view/{view}/delete'
   defaults:
-    _form: 'Drupal\views_ui\Form\DeleteForm'
+    _entity_form: 'view.delete'
   requirements:
     _permission: 'administer views'
 
@@ -104,8 +104,7 @@ views_ui.preview:
 views_ui.breakLock:
   pattern: '/admin/structure/views/view/{view}/break-lock'
   defaults:
-    _form: '\Drupal\views_ui\Form\BreakLockForm'
-    display_id: NULL
+    _entity_form: 'view.break_lock'
   requirements:
     _permission: 'administer views'
 

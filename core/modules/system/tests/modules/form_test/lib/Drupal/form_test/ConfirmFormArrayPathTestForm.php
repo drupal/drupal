@@ -22,7 +22,7 @@ class ConfirmFormArrayPathTestForm extends ConfirmFormTestForm {
   /**
    * Overrides \Drupal\form_test\ConfirmFormTestForm::getCancelPath().
    */
-  protected function getCancelPath() {
+  public function getCancelPath() {
     return array(
       'path' => 'admin',
       'query' => array(
@@ -34,7 +34,7 @@ class ConfirmFormArrayPathTestForm extends ConfirmFormTestForm {
   /**
    * Overrides \Drupal\form_test\ConfirmFormTestForm::getCancelText().
    */
-  protected function getCancelText() {
+  public function getCancelText() {
     return t('ConfirmFormArrayPathTestForm::getCancelText().');
   }
 

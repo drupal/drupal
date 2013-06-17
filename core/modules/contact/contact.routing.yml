@@ -1,7 +1,7 @@
 contact_category_delete:
   pattern: 'admin/structure/contact/manage/{contact_category}/delete'
   defaults:
-    _form: '\Drupal\contact\Form\DeleteForm'
+    _entity_form: contact_category.delete
   requirements:
     _entity_access: contact_category.delete
 
