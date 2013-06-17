@@ -726,7 +726,7 @@ function user_template_preprocess_default_variables_alter(&$variables) {
 /**
  * Preprocesses variables for theme_username().
  *
- * Modules that make any changes to variables like 'name' or 'extra' must insure
+ * Modules that make any changes to variables like 'name' or 'extra' must ensure
  * that the final string is safe to include directly in the output by using
  * check_plain() or filter_xss().
  *
