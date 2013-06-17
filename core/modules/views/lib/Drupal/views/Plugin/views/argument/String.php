@@ -151,7 +151,7 @@ class String extends ArgumentPluginBase {
       $this->ensureMyTable();
     }
     else {
-      $this->tableAlias = $this->helper->summary_join();
+      $this->tableAlias = $this->helper->summaryJoin();
     }
 
     if (empty($this->options['glossary'])) {

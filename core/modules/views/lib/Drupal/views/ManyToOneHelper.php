@@ -119,7 +119,7 @@ class ManyToOneHelper {
    * Provide the proper join for summary queries. This is important in part because
    * it will cooperate with other arguments if possible.
    */
-  function summary_join() {
+  public function summaryJoin() {
     $field = $this->handler->relationship . '_' . $this->handler->table . '.' . $this->handler->field;
     $join = $this->getJoin();
 

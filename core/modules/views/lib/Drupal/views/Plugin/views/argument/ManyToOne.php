@@ -173,7 +173,7 @@ class ManyToOne extends ArgumentPluginBase {
       $this->tableAlias = $this->query->ensureTable($this->table, $this->relationship, $join);
     }
     else {
-      $this->tableAlias = $this->helper->summary_join();
+      $this->tableAlias = $this->helper->summaryJoin();
     }
 
     // Add the field.
