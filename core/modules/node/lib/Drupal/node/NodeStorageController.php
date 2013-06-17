@@ -52,14 +52,6 @@ class NodeStorageController extends DatabaseStorageControllerNG {
       field_attach_load($this->entityType, $queried_entities);
     }
 
-    // Call object type specific callbacks on each typed array of nodes.
-    foreach ($typed_nodes as $node_type => $nodes_of_type) {
-      // Retrieve the node type 'base' hook implementation based on a Node in
-      // the type-specific stack.
-      if ($function = node_hook($node_type, 'load')) {
-        $function($nodes_of_type);
-      }
-    }
     // Besides the list of nodes, pass one additional argument to
     // hook_node_load(), containing a list of node types that were loaded.
     $argument = array_keys($typed_nodes);
@@ -84,15 +76,6 @@ class NodeStorageController extends DatabaseStorageControllerNG {
    */
   protected function invokeHook($hook, EntityInterface $node) {
     $node = $node->getBCEntity();
-
-    if ($hook == 'insert' || $hook == 'update') {
-      node_invoke($node, $hook);
-    }
-    else if ($hook == 'predelete') {
-      // 'delete' is triggered in 'predelete' is here to preserve hook ordering
-      // from Drupal 7.
-      node_invoke($node, 'delete');
-    }
 
     // Inline parent::invokeHook() to pass on BC-entities to node-specific
     // hooks.

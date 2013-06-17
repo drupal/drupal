@@ -20,8 +20,8 @@ class NodeFormController extends EntityFormController {
   /**
    * Prepares the node object.
    *
-   * Fills in a few default values, and then invokes hook_prepare() on the node
-   * type module, and hook_node_prepare() on all modules.
+   * Fills in a few default values, and then invokes hook_node_prepare() on all
+   * modules.
    *
    * Overrides Drupal\Core\Entity\EntityFormController::prepareEntity().
    */
@@ -49,7 +49,6 @@ class NodeFormController extends EntityFormController {
     // Always use the default revision setting.
     $node->setNewRevision(in_array('revision', $node_options));
 
-    node_invoke($node, 'prepare');
     module_invoke_all('node_prepare', $node);
   }
 
@@ -93,18 +92,16 @@ class NodeFormController extends EntityFormController {
       '#default_value' => isset($node->changed) ? $node->changed : NULL,
     );
 
-    // Invoke hook_form() to get the node-specific bits. Can't use node_invoke()
-    // because hook_form() needs to be able to receive $form_state by reference.
-    // @todo hook_form() implementations are unable to add #validate or #submit
-    //   handlers to the form buttons below. Remove hook_form() entirely.
-    $function = node_hook($node->type, 'form');
-    if ($function && ($extra = $function($node, $form_state))) {
-      $form = NestedArray::mergeDeep($form, $extra);
-    }
-    // If the node type has a title, and the node type form defined no special
-    // weight for it, we default to a weight of -5 for consistency.
-    if (isset($form['title']) && !isset($form['title']['#weight'])) {
-      $form['title']['#weight'] = -5;
+    $node_type = node_type_load($node->type);
+    if ($node_type->has_title) {
+      $form['title'] = array(
+        '#type' => 'textfield',
+        '#title' => check_plain($node_type->title_label),
+        '#required' => TRUE,
+        '#default_value' => $node->title,
+        '#maxlength' => 255,
+        '#weight' => -5,
+      );
     }
 
     $language_configuration = module_invoke('language', 'get_default_configuration', 'node', $node->type);
@@ -342,13 +339,9 @@ class NodeFormController extends EntityFormController {
       form_set_error('date', t('You have to specify a valid date.'));
     }
 
-    // Invoke hook_validate() for node type specific validation and
-    // hook_node_validate() for miscellaneous validation needed by modules.
-    // Can't use node_invoke() or module_invoke_all(), because $form_state must
+    // Invoke hook_node_validate() for validation needed by modules.
+    // Can't use module_invoke_all(), because $form_state must
     // be receivable by reference.
-    if ($function = node_hook($node->type, 'validate')) {
-      $function($node, $form, $form_state);
-    }
     foreach (module_implements('node_validate') as $module) {
       $function = $module . '_node_validate';
       $function($node, $form, $form_state);

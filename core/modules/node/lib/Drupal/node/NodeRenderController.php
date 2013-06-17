@@ -34,12 +34,6 @@ class NodeRenderController extends EntityRenderController {
       $bundle = $entity->bundle();
       $display = $displays[$bundle];
 
-      // The 'view' hook can be implemented to overwrite the default function
-      // to display nodes.
-      if (node_hook($bundle, 'view')) {
-        $entity = node_invoke($entity, 'view', $display, $view_mode, $langcode);
-      }
-
       $entity->content['links'] = array(
         '#theme' => 'links__node',
         '#pre_render' => array('drupal_pre_render_links'),

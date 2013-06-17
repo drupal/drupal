@@ -259,7 +259,7 @@ function hook_queue_info_alter(&$queues) {
  *
  * This hook allows modules to declare their own form element types and to
  * specify their default values. The values returned by this hook will be
- * merged with the elements returned by hook_form() implementations and so
+ * merged with the elements returned by form constructor implementations and so
  * can return defaults for any Form APIs keys in addition to those explicitly
  * mentioned below.
  *

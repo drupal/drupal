@@ -910,7 +910,7 @@ function search_expression_insert($expression, $option, $value = NULL) {
  * - Specifically for searching nodes, you can implement
  *   hook_node_update_index() and hook_node_search_result(). However, note that
  *   the search system already indexes all visible output of a node; i.e.,
- *   everything displayed normally by hook_view() and hook_node_view(). This is
+ *   everything displayed normally by hook_node_view(). This is
  *   usually sufficient. You should only use this mechanism if you want
  *   additional, non-visible data to be indexed.
  * - Implement hook_search_info(). This will create a search tab for your

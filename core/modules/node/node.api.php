@@ -19,11 +19,6 @@ use Drupal\Core\Entity\EntityInterface;
  * During node operations (create, insert, update, view, delete, etc.), there
  * are several sets of hooks that get invoked to allow modules to modify the
  * base node operation:
- * - Node-type-specific hooks: These hooks are only invoked on the primary
- *   module, using the "base" return component of hook_node_info() as the
- *   function prefix.  For example, forum.module defines the base for the Forum
- *   content type as "forum", so during creation of a forum node, hook_insert() is
- *   only invoked by calling forum_insert().
  * - All-module hooks: This set of hooks is invoked on all implementing modules,
  *   to allow other modules to modify what the primary node module is doing. For
  *   example, hook_node_insert() is invoked on all modules when creating a forum
@@ -44,7 +39,6 @@ use Drupal\Core\Entity\EntityInterface;
  *   - hook_node_presave() (all)
  *   - hook_entity_presave() (all)
  *   - Node and revision records are written to the database
- *   - hook_insert() (node-type-specific)
  *   - field_attach_insert()
  *   - hook_node_insert() (all)
  *   - hook_entity_insert() (all)
@@ -55,7 +49,6 @@ use Drupal\Core\Entity\EntityInterface;
  *   - hook_node_presave() (all)
  *   - hook_entity_presave() (all)
  *   - Node and revision records are written to the database
- *   - hook_update() (node-type-specific)
  *   - field_attach_update()
  *   - hook_node_update() (all)
  *   - hook_entity_update() (all)
@@ -64,13 +57,11 @@ use Drupal\Core\Entity\EntityInterface;
  * - Loading a node (calling node_load(), node_load_multiple(), entity_load(),
  *   or entity_load_multiple() with $entity_type of 'node'):
  *   - Node and revision information is read from database.
- *   - hook_load() (node-type-specific)
  *   - field_attach_load_revision() and field_attach_load()
  *   - hook_entity_load() (all)
  *   - hook_node_load() (all)
  * - Viewing a single node (calling node_view() - note that the input to
  *   node_view() is a loaded node, so the Loading steps above are already done):
- *   - hook_view() (node-type-specific)
  *   - field_attach_prepare_view()
  *   - hook_entity_prepare_view() (all)
  *   - field_attach_view()
@@ -83,7 +74,6 @@ use Drupal\Core\Entity\EntityInterface;
  *   above are already done):
  *   - field_attach_prepare_view()
  *   - hook_entity_prepare_view() (all)
- *   - hook_view() (node-type-specific)
  *   - field_attach_view()
  *   - hook_node_view() (all)
  *   - hook_entity_view() (all)
@@ -91,7 +81,6 @@ use Drupal\Core\Entity\EntityInterface;
  *   - hook_entity_view_alter() (all)
  * - Deleting a node (calling $node->delete() or entity_delete_multiple()):
  *   - Node is loaded (see Loading section above)
- *   - hook_delete() (node-type-specific)
  *   - hook_node_predelete() (all)
  *   - hook_entity_predelete() (all)
  *   - field_attach_delete()
@@ -105,13 +94,10 @@ use Drupal\Core\Entity\EntityInterface;
  *   - field_attach_delete_revision()
  * - Preparing a node for editing (calling node_form() - note that if it is an
  *   existing node, it will already be loaded; see the Loading section above):
- *   - hook_prepare() (node-type-specific)
  *   - hook_node_prepare() (all)
- *   - hook_form() (node-type-specific)
  *   - field_attach_form()
  * - Validating a node during editing form submit (calling
  *   node_form_validate()):
- *   - hook_validate() (node-type-specific)
  *   - hook_node_validate() (all)
  *   - field_attach_form_validate()
  * - Searching (calling node_search_execute()):
@@ -404,10 +390,9 @@ function hook_node_grants_alter(&$grants, $account, $op) {
 /**
  * Act before node deletion.
  *
- * This hook is invoked from entity_delete_multiple() after the type-specific
- * hook_delete() has been invoked, but before hook_entity_predelete() and
- * field_attach_delete() are called, and before the node is removed from the
- * node table in the database.
+ * This hook is invoked from entity_delete_multiple() before
+ * hook_entity_predelete() and field_attach_delete() are called, and before
+ * the node is removed from the node table in the database.
  *
  * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node that is about to be deleted.
@@ -461,9 +446,8 @@ function hook_node_revision_delete(\Drupal\Core\Entity\EntityInterface $node) {
  * Respond to creation of a new node.
  *
  * This hook is invoked from $node->save() after the database query that will
- * insert the node into the node table is scheduled for execution, after the
- * type-specific hook_insert() is invoked, and after field_attach_insert() is
- * called.
+ * insert the node into the node table is scheduled for execution, and after
+ * field_attach_insert() is called.
  *
  * Note that when this hook is invoked, the changes have not yet been written to
  * the database, because a database transaction is still in progress. The
@@ -515,9 +499,8 @@ function hook_node_create(\Drupal\Core\Entity\EntityInterface $node) {
  * This hook is invoked during node loading, which is handled by entity_load(),
  * via classes Drupal\node\NodeStorageController and
  * Drupal\Core\Entity\DatabaseStorageController. After the node information is
- * read from the database or the entity cache, hook_load() is invoked on the
- * node's content type module, then field_attach_load_revision() or
- * field_attach_load() is called, then hook_entity_load() is invoked on all
+ * read from the database or the entity cache, then field_attach_load_revision()
+ * or field_attach_load() is called, then hook_entity_load() is invoked on all
  * implementing modules, and finally hook_node_load() is invoked on all
  * implementing modules.
  *
@@ -525,9 +508,7 @@ function hook_node_create(\Drupal\Core\Entity\EntityInterface $node) {
  *   An array of the nodes being loaded, keyed by nid.
  * @param $types
  *   An array containing the node types present in $nodes. Allows for an early
- *   return for modules that only support certain node types. However, if your
- *   module defines a content type, you can use hook_load() to respond to
- *   loading of just that content type.
+ *   return for modules that only support certain node types.
  *
  * For a detailed usage example, see nodeapi_example.module.
  *
@@ -616,8 +597,7 @@ function hook_node_access($node, $op, $account, $langcode) {
 /**
  * Act on a node object about to be shown on the add/edit form.
  *
- * This hook is invoked from NodeFormController::prepareEntity() after the
- * type-specific hook_prepare() is invoked.
+ * This hook is invoked from NodeFormController::prepareEntity().
  *
  * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node that is about to be shown on the add/edit form.
@@ -681,9 +661,8 @@ function hook_node_presave(\Drupal\Core\Entity\EntityInterface $node) {
  * Respond to updates to a node.
  *
  * This hook is invoked from $node->save() after the database query that will
- * update node in the node table is scheduled for execution, after the
- * type-specific hook_update() is invoked, and after field_attach_update() is
- * called.
+ * update node in the node table is scheduled for execution, and after
+ * field_attach_update() is called.
  *
  * Note that when this hook is invoked, the changes have not yet been written to
  * the database, because a database transaction is still in progress. The
@@ -735,8 +714,7 @@ function hook_node_update_index(\Drupal\Core\Entity\EntityInterface $node, $lang
  *
  * This hook is invoked from NodeFormController::validate(), after a user has
  * finished editing the node and is previewing or submitting it. It is invoked
- * at the end of all the standard validation steps, and after the type-specific
- * hook_validate() is invoked.
+ * at the end of all the standard validation steps.
  *
  * To indicate a validation error, use form_set_error().
  *
@@ -793,9 +771,9 @@ function hook_node_submit(\Drupal\Core\Entity\EntityInterface $node, $form, &$fo
 /**
  * Act on a node that is being assembled before rendering.
  *
- * The module may add elements to $node->content prior to rendering. This hook
- * will be called after hook_view(). The structure of $node->content is a
- * renderable array as expected by drupal_render().
+ * The module may add elements to $node->content prior to rendering.
+ * The structure of $node->content is a renderable array as expected by
+ * drupal_render().
  *
  * When $view_mode is 'rss', modules can also add extra RSS elements and
  * namespaces to $node->rss_elements and $node->rss_namespaces respectively for
@@ -984,7 +962,6 @@ function hook_ranking() {
   }
 }
 
-
 /**
  * Respond to node type creation.
  *
@@ -1026,282 +1003,6 @@ function hook_node_type_update($info) {
  */
 function hook_node_type_delete($info) {
   variable_del('comment_' . $info->type);
-}
-
-/**
- * Respond to node deletion.
- *
- * This hook is invoked only on the module that defines the node's content type
- * (use hook_node_delete() to respond to all node deletions).
- *
- * This hook is invoked from entity_delete_multiple() after the node has been
- * removed from the node table in the database, before hook_node_delete() is
- * invoked, and before field_attach_delete() is called.
- *
- * @param \Drupal\Core\Entity\EntityInterface $node
- *   The node that is being deleted.
- *
- * @ingroup node_api_hooks
- */
-function hook_delete(\Drupal\Core\Entity\EntityInterface $node) {
-  db_delete('mytable')
-    ->condition('nid', $node->nid)
-    ->execute();
-}
-
-/**
- * Act on a node object about to be shown on the add/edit form.
- *
- * This hook is invoked only on the module that defines the node's content type
- * (use hook_node_prepare() to act on all node preparations).
- *
- * This hook is invoked from NodeFormController::prepareEntity() before the
- * general hook_node_prepare() is invoked.
- *
- * @param \Drupal\Core\Entity\EntityInterface $node
- *   The node that is about to be shown on the add/edit form.
- *
- * @ingroup node_api_hooks
- */
-function hook_prepare(\Drupal\Core\Entity\EntityInterface $node) {
-  if ($file = file_check_upload($field_name)) {
-    $file = file_save_upload($field_name, _image_filename($file->filename, NULL, TRUE), FALSE, 0);
-    if ($file) {
-      if (!image_get_info($file->uri)) {
-        form_set_error($field_name, t('Uploaded file is not a valid image'));
-        return;
-      }
-    }
-    else {
-      return;
-    }
-    $node->images['_original'] = $file->uri;
-    _image_build_derivatives($node, TRUE);
-    $node->new_file = TRUE;
-  }
-}
-
-/**
- * Display a node editing form.
- *
- * This hook, implemented by node modules, is called to retrieve the form
- * that is displayed to create or edit a node. This form is displayed at path
- * node/add/[node type] or node/[node ID]/edit.
- *
- * The submit and preview buttons, administrative and display controls, and
- * sections added by other modules (such as path settings, menu settings,
- * comment settings, and fields managed by the Field UI module) are
- * displayed automatically by the node module. This hook just needs to
- * return the node title and form editing fields specific to the node type.
- *
- * @param \Drupal\Core\Entity\EntityInterface $node
- *   The node being added or edited.
- * @param $form_state
- *   The form state array.
- *
- * @return
- *   An array containing the title and any custom form elements to be displayed
- *   in the node editing form.
- *
- * @ingroup node_api_hooks
- */
-function hook_form(\Drupal\Core\Entity\EntityInterface $node, &$form_state) {
-  $type = node_type_load($node->type);
-
-  $form['title'] = array(
-    '#type' => 'textfield',
-    '#title' => check_plain($type->title_label),
-    '#default_value' => !empty($node->title) ? $node->title : '',
-    '#required' => TRUE, '#weight' => -5
-  );
-
-  $form['field1'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Custom field'),
-    '#default_value' => $node->field1,
-    '#maxlength' => 127,
-  );
-  $form['selectbox'] = array(
-    '#type' => 'select',
-    '#title' => t('Select box'),
-    '#default_value' => $node->selectbox,
-    '#options' => array(
-      1 => 'Option A',
-      2 => 'Option B',
-      3 => 'Option C',
-    ),
-    '#description' => t('Choose an option.'),
-  );
-
-  return $form;
-}
-
-/**
- * Respond to creation of a new node.
- *
- * This hook is invoked only on the module that defines the node's content type
- * (use hook_node_insert() to act on all node insertions).
- *
- * This hook is invoked from $node->save() after the node is inserted into the
- * node table in the database, before field_attach_insert() is called, and
- * before hook_node_insert() is invoked.
- *
- * @param \Drupal\Core\Entity\EntityInterface $node
- *   The node that is being created.
- *
- * @ingroup node_api_hooks
- */
-function hook_insert(\Drupal\Core\Entity\EntityInterface $node) {
-  db_insert('mytable')
-    ->fields(array(
-      'nid' => $node->nid,
-      'extra' => $node->extra,
-    ))
-    ->execute();
-}
-
-/**
- * Act on nodes being loaded from the database.
- *
- * This hook is invoked only on the module that defines the node's content type
- * (use hook_node_load() to respond to all node loads).
- *
- * This hook is invoked during node loading, which is handled by entity_load(),
- * via classes Drupal\node\NodeStorageController and
- * Drupal\Core\Entity\DatabaseStorageController. After the node information is
- * read from the database or the entity cache, hook_load() is invoked on the
- * node's content type module, then field_attach_node_revision() or
- * field_attach_load() is called, then hook_entity_load() is invoked on all
- * implementing modules, and finally hook_node_load() is invoked on all
- * implementing modules.
- *
- * This hook should only be used to add information that is not in the node or
- * node revisions table, not to replace information that is in these tables
- * (which could interfere with the entity cache). For performance reasons,
- * information for all available nodes should be loaded in a single query where
- * possible.
- *
- * @param $nodes
- *   An array of the nodes being loaded, keyed by nid.
- *
- * For a detailed usage example, see node_example.module.
- *
- * @ingroup node_api_hooks
- */
-function hook_load($nodes) {
-  $result = db_query('SELECT nid, foo FROM {mytable} WHERE nid IN (:nids)', array(':nids' => array_keys($nodes)));
-  foreach ($result as $record) {
-    $nodes[$record->nid]->foo = $record->foo;
-  }
-}
-
-/**
- * Respond to updates to a node.
- *
- * This hook is invoked only on the module that defines the node's content type
- * (use hook_node_update() to act on all node updates).
- *
- * This hook is invoked from $node->save() after the node is updated in the
- * node table in the database, before field_attach_update() is called, and
- * before hook_node_update() is invoked.
- *
- * @param \Drupal\Core\Entity\EntityInterface $node
- *   The node that is being updated.
- *
- * @ingroup node_api_hooks
- */
-function hook_update(\Drupal\Core\Entity\EntityInterface $node) {
-  db_update('mytable')
-    ->fields(array('extra' => $node->extra))
-    ->condition('nid', $node->nid)
-    ->execute();
-}
-
-/**
- * Perform node validation before a node is created or updated.
- *
- * This hook is invoked only on the module that defines the node's content type
- * (use hook_node_validate() to act on all node validations).
- *
- * This hook is invoked from NodeFormController::validate(), after a user has
- * finished editing the node and is previewing or submitting it. It is invoked
- * at the end of all the standard validation steps, and before
- * hook_node_validate() is invoked.
- *
- * To indicate a validation error, use form_set_error().
- *
- * Note: Changes made to the $node object within your hook implementation will
- * have no effect.  The preferred method to change a node's content is to use
- * hook_node_presave() instead.
- *
- * @param \Drupal\Core\Entity\EntityInterface $node
- *   The node being validated.
- * @param $form
- *   The form being used to edit the node.
- * @param $form_state
- *   The form state array.
- *
- * @ingroup node_api_hooks
- */
-function hook_validate(\Drupal\Core\Entity\EntityInterface $node, $form, &$form_state) {
-  if (isset($node->end) && isset($node->start)) {
-    if ($node->start > $node->end) {
-      form_set_error('time', t('An event may not end before it starts.'));
-    }
-  }
-}
-
-/**
- * Display a node.
- *
- * This hook is invoked only on the module that defines the node's content type
- * (use hook_node_view() to act on all node views).
- *
- * This hook is invoked during node viewing after the node is fully loaded, so
- * that the node type module can define a custom method for display, or add to
- * the default display.
- *
- * @param \Drupal\Core\Entity\EntityInterface $node
- *   The node to be displayed, as returned by node_load().
- * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
- *   The entity_display object holding the display options configured for the
- *   node components.
- * @param $view_mode
- *   View mode, e.g. 'full', 'teaser', ...
- *
- * @return
- *   The passed $node parameter should be modified as necessary and returned so
- *   it can be properly presented. Nodes are prepared for display by assembling
- *   a structured array, formatted as in the Form API, in $node->content. As
- *   with Form API arrays, the #weight property can be used to control the
- *   relative positions of added elements. After this hook is invoked,
- *   node_view() calls field_attach_view() to add field views to $node->content,
- *   and then invokes hook_node_view() and hook_node_view_alter(), so if you
- *   want to affect the final view of the node, you might consider implementing
- *   one of these hooks instead.
- *
- * @ingroup node_api_hooks
- */
-function hook_view(\Drupal\Core\Entity\EntityInterface $node, \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display, $view_mode) {
-  if ($view_mode == 'full' && node_is_page($node)) {
-    $breadcrumb = array();
-    $breadcrumb[] = l(t('Home'), NULL);
-    $breadcrumb[] = l(t('Example'), 'example');
-    $breadcrumb[] = l($node->field1, 'example/' . $node->field1);
-    drupal_set_breadcrumb($breadcrumb);
-  }
-
-  // Only do the extra work if the component is configured to be displayed.
-  // This assumes a 'mymodule_addition' extra field has been defined for the
-  // node type in hook_field_extra_fields().
-  if ($display->getComponent('mymodule_addition')) {
-    $node->content['mymodule_addition'] = array(
-      '#markup' => mymodule_addition($node),
-      '#theme' => 'mymodule_my_additional_field',
-    );
-  }
-
-  return $node;
 }
 
 /**

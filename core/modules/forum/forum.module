@@ -632,6 +632,20 @@ function forum_form_taxonomy_term_form_alter(&$form, &$form_state, $form_id) {
  * Implements hook_form_BASE_FORM_ID_alter() for node_form().
  */
 function forum_form_node_form_alter(&$form, &$form_state, $form_id) {
+  $node = $form_state['controller']->getEntity();
+  if (isset($node->taxonomy_forums) && !$node->isNew()) {
+    $forum_terms = $node->taxonomy_forums;
+    // If editing, give option to leave shadows.
+    $shadow = (count($forum_terms) > 1);
+    $form['shadow'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Leave shadow copy'),
+      '#default_value' => $shadow,
+      '#description' => t('If you move this topic, you can leave a link in the old forum to the new forum.'),
+    );
+    $form['forum_tid'] = array('#type' => 'value', '#value' => $node->forum_tid);
+  }
+
   if (isset($form['taxonomy_forums'])) {
     $langcode = $form['taxonomy_forums']['#language'];
     // Make the vocabulary required for 'real' forum-nodes.
@@ -662,29 +676,6 @@ function forum_block_view_pre_render($elements) {
     $elements['forum_more'] = array('#theme' => 'more_link', '#url' => 'forum', '#title' => t('Read the latest forum topics.'));
   }
   return $elements;
-}
-
-/**
- * Implements hook_form().
- */
-function forum_form(EntityInterface $node, &$form_state) {
-  $type = node_type_load($node->type);
-  $form['title'] = array(
-    '#type' => 'textfield',
-    '#title' => check_plain($type->title_label),
-    '#default_value' => !empty($node->title) ? $node->title : '',
-    '#required' => TRUE, '#weight' => -5
-  );
-
-  if (!empty($node->nid)) {
-    $forum_terms = $node->taxonomy_forums;
-    // If editing, give option to leave shadows.
-    $shadow = (count($forum_terms) > 1);
-    $form['shadow'] = array('#type' => 'checkbox', '#title' => t('Leave shadow copy'), '#default_value' => $shadow, '#description' => t('If you move this topic, you can leave a link in the old forum to the new forum.'));
-    $form['forum_tid'] = array('#type' => 'value', '#value' => $node->forum_tid);
-  }
-
-  return $form;
 }
 
 /**
