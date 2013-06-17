@@ -175,7 +175,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
 
   function pre_render($values) { }
 
-  function post_render(&$output) { }
+  public function postRender(&$output) { }
 
   public function preExecute() { }
 
