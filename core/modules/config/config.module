@@ -33,6 +33,14 @@ function config_permission() {
     'title' => t('Synchronize configuration'),
     'restrict access' => TRUE,
   );
+  $permissions['export configuration'] = array(
+    'title' => t('Export configuration'),
+    'restrict access' => TRUE,
+  );
+  $permissions['import configuration'] = array(
+    'title' => t('Import configuration'),
+    'restrict access' => TRUE,
+  );
   return $permissions;
 }
 
