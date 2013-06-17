@@ -886,43 +886,6 @@ function field_get_items(EntityInterface $entity, $field_name, $langcode = NULL)
 }
 
 /**
- * Determines whether a field has any data.
- *
- * @param $field
- *   A field structure.
- *
- * @return
- *   TRUE if the field has data for any entity; FALSE otherwise.
- */
-function field_has_data($field) {
-  $columns = array_keys($field['columns']);
-  $factory = Drupal::service('entity.query');
-  foreach ($field['bundles'] as $entity_type => $bundle) {
-    // Entity Query throws an exception if there is no base table.
-    $entity_info = entity_get_info($entity_type);
-    if (!isset($entity_info['base_table'])) {
-      continue;
-    }
-    $query = $factory->get($entity_type);
-    $group = $query->orConditionGroup();
-    foreach ($columns as $column) {
-      $group->exists($field['field_name'] . '.' . $column);
-    }
-    $result = $query
-      ->condition($group)
-      ->count()
-      ->accessCheck(FALSE)
-      ->range(0, 1)
-      ->execute();
-    if ($result) {
-      return TRUE;
-    }
-  }
-
-  return FALSE;
-}
-
-/**
  * Determines whether the user has access to a given field.
  *
  * @param string $op

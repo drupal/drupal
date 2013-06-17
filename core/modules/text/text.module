@@ -84,7 +84,7 @@ function text_field_info() {
 /**
  * Implements hook_field_settings_form().
  */
-function text_field_settings_form($field, $instance, $has_data) {
+function text_field_settings_form($field, $instance) {
   $settings = $field['settings'];
 
   $form = array();
@@ -99,7 +99,7 @@ function text_field_settings_form($field, $instance, $has_data) {
       '#min' => 1,
       // @todo: If $has_data, add a validate handler that only allows
       // max_length to increase.
-      '#disabled' => $has_data,
+      '#disabled' => $field->hasData(),
     );
   }
 

@@ -346,7 +346,7 @@ function _translation_entity_update_field_translatability($settings) {
       $field_operations = array(
         array('translation_entity_translatable_switch', array($translatable, $field_name)),
       );
-      if (field_has_data($field)) {
+      if ($field->hasData()) {
         $field_operations[] = array('translation_entity_translatable_batch', array($translatable, $field_name));
         $field_operations = $translatable ? $field_operations : array_reverse($field_operations);
       }

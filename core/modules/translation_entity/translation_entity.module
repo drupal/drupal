@@ -810,7 +810,7 @@ function translation_entity_form_field_ui_field_edit_form_alter(array &$form, ar
   $translatable = $field['translatable'];
   $label = t('Field translation');
 
-  if (field_has_data($field)) {
+  if ($field->hasData()) {
     $form['field']['translatable'] = array(
       '#type' => 'item',
       '#title' => $label,

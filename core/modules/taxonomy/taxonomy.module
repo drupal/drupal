@@ -1053,7 +1053,7 @@ function taxonomy_autocomplete_validate($element, &$form_state) {
 /**
  * Implements hook_field_settings_form().
  */
-function taxonomy_field_settings_form($field, $instance, $has_data) {
+function taxonomy_field_settings_form($field, $instance) {
   // Get proper values for 'allowed_values_function', which is a core setting.
   $vocabularies = taxonomy_vocabulary_load_multiple();
   $options = array();
@@ -1072,7 +1072,7 @@ function taxonomy_field_settings_form($field, $instance, $has_data) {
       '#options' => $options,
       '#required' => TRUE,
       '#description' => t('The vocabulary which supplies the options for this field.'),
-      '#disabled' => $has_data,
+      '#disabled' => $field->hasData(),
     );
     $form['allowed_values'][$delta]['parent'] = array(
       '#type' => 'value',

@@ -64,7 +64,7 @@ function field_test_field_widget_info_alter(&$info) {
 /**
  * Implements hook_field_update_forbid().
  */
-function field_test_field_update_forbid($field, $prior_field, $has_data) {
+function field_test_field_update_forbid($field, $prior_field) {
   if ($field['type'] == 'test_field' && $field['settings']['unchangeable'] != $prior_field['settings']['unchangeable']) {
     throw new FieldException("field_test 'unchangeable' setting cannot be changed'");
   }
@@ -145,7 +145,7 @@ function field_test_field_is_empty($item, $field_type) {
 /**
  * Implements hook_field_settings_form().
  */
-function field_test_field_settings_form($field, $instance, $has_data) {
+function field_test_field_settings_form($field, $instance) {
   $settings = $field['settings'];
 
   $form['test_field_setting'] = array(

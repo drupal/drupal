@@ -143,7 +143,7 @@ function entity_reference_field_validate(EntityInterface $entity = NULL, $field,
 /**
  * Implements hook_field_settings_form().
  */
-function entity_reference_field_settings_form($field, $instance, $has_data) {
+function entity_reference_field_settings_form($field, $instance) {
   // Select the target entity type.
   $entity_type_options = array();
   foreach (entity_get_info() as $entity_type => $entity_info) {
@@ -161,7 +161,7 @@ function entity_reference_field_settings_form($field, $instance, $has_data) {
     '#options' => $entity_type_options,
     '#default_value' => $field['settings']['target_type'],
     '#required' => TRUE,
-    '#disabled' => $has_data,
+    '#disabled' => $field->hasData(),
     '#size' => 1,
   );
 
@@ -173,7 +173,7 @@ function entity_reference_field_settings_form($field, $instance, $has_data) {
  *
  * Reset the instance handler settings, when the target type is changed.
  */
-function entity_reference_field_update_field($field, $prior_field, $has_data) {
+function entity_reference_field_update_field($field, $prior_field) {
   if ($field['type'] != 'entity_reference') {
     // Not an entity reference field.
     return;

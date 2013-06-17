@@ -37,7 +37,7 @@ function file_field_info() {
 /**
  * Implements hook_field_settings_form().
  */
-function file_field_settings_form($field, $instance, $has_data) {
+function file_field_settings_form($field, $instance) {
   $defaults = field_info_field_settings($field['type']);
   $settings = array_merge($defaults, $field['settings']);
 
@@ -71,7 +71,7 @@ function file_field_settings_form($field, $instance, $has_data) {
     '#options' => $scheme_options,
     '#default_value' => $settings['uri_scheme'],
     '#description' => t('Select where the final files should be stored. Private file storage has significantly more overhead than public files, but allows restricted access to files within this field.'),
-    '#disabled' => $has_data,
+    '#disabled' => $field->hasData(),
   );
 
   return $form;

@@ -1,8 +1,8 @@
 <?php
 
-/*
+/**
  * @file
- * Definition of Drupal\field\FieldUpdateForbiddenException.
+ * Contains \Drupal\field\FieldUpdateForbiddenException.
  */
 
 namespace Drupal\field;
