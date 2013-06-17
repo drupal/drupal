@@ -300,7 +300,7 @@ class Comment extends EntityNG implements CommentInterface {
         // has the lock, just move to the next integer.
         do {
           $thread = $prefix . comment_int_to_alphadecimal(++$n) . '/';
-        } while (!lock()->acquire("comment:{$this->nid->target_id}:$thread"));
+        } while (!lock()->acquire("comment:{$this->entity_id->value}:$thread"));
         $this->threadLock = $thread;
       }
       if (empty($this->created->value)) {

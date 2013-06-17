@@ -64,7 +64,7 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
    * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
    *   The comment being saved.
    */
-  protected function updateEntityStatistics($comment) {
+  public function updateEntityStatistics($comment) {
     global $user;
     // Allow bulk updates and inserts to temporarily disable the
     // maintenance of the {comment_entity_statistics} table.
