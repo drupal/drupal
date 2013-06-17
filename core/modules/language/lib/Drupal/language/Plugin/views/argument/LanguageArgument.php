@@ -29,7 +29,7 @@ class LanguageArgument extends ArgumentPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\argument\ArgumentPluginBase::summaryName().
+   * Overrides \Drupal\views\Plugin\views\argument\ArgumentPluginBase::title().
    *
    * Gets the user friendly version of the language name for display as a
    * title placeholder.
