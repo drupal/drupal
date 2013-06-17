@@ -135,16 +135,7 @@ class EntityManager extends PluginManagerBase {
    *   A storage controller instance.
    */
   public function getStorageController($entity_type) {
-    if (!isset($this->controllers['storage'][$entity_type])) {
-      $class = $this->getControllerClass($entity_type, 'storage');
-      if (in_array('Drupal\Core\Entity\EntityControllerInterface', class_implements($class))) {
-        $this->controllers['storage'][$entity_type] = $class::createInstance($this->container, $entity_type, $this->getDefinition($entity_type));
-      }
-      else {
-        $this->controllers['storage'][$entity_type] = new $class($entity_type);
-      }
-    }
-    return $this->controllers['storage'][$entity_type];
+    return $this->getController($entity_type, 'storage');
   }
 
   /**
@@ -204,16 +195,7 @@ class EntityManager extends PluginManagerBase {
    *   A render controller instance.
    */
   public function getRenderController($entity_type) {
-    if (!isset($this->controllers['render'][$entity_type])) {
-      $class = $this->getControllerClass($entity_type, 'render');
-      if (in_array('Drupal\Core\Entity\EntityControllerInterface', class_implements($class))) {
-        $this->controllers['render'][$entity_type] = $class::createInstance($this->container, $this->getDefinition($entity_type), $entity_type);
-      }
-      else {
-        $this->controllers['render'][$entity_type] = new $class($entity_type);
-      }
-    }
-    return $this->controllers['render'][$entity_type];
+    return $this->getController($entity_type, 'render');
   }
 
   /**
@@ -226,16 +208,31 @@ class EntityManager extends PluginManagerBase {
    *   A access controller instance.
    */
   public function getAccessController($entity_type) {
-    if (!isset($this->controllers['access'][$entity_type])) {
-      $class = $this->getControllerClass($entity_type, 'access');
+    return $this->getController($entity_type, 'access');
+  }
+
+  /**
+   * Creates a new controller instance.
+   *
+   * @param string $entity_type
+   *   The entity type for this access controller.
+   * @param string $controller_type
+   *   The controller type to create an instance for.
+   *
+   * @return mixed.
+   *   A controller instance.
+   */
+  protected function getController($entity_type, $controller_type) {
+    if (!isset($this->controllers[$controller_type][$entity_type])) {
+      $class = $this->getControllerClass($entity_type, $controller_type);
       if (in_array('Drupal\Core\Entity\EntityControllerInterface', class_implements($class))) {
-        $this->controllers['access'][$entity_type] = $class::createInstance($this->container, $entity_type, $this->getDefinition($entity_type));
+        $this->controllers[$controller_type][$entity_type] = $class::createInstance($this->container, $entity_type, $this->getDefinition($entity_type));
       }
       else {
-        $this->controllers['access'][$entity_type] = new $class($entity_type);
+        $this->controllers[$controller_type][$entity_type] = new $class($entity_type);
       }
     }
-    return $this->controllers['access'][$entity_type];
+    return $this->controllers[$controller_type][$entity_type];
   }
 
   /**
