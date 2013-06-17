@@ -45,7 +45,13 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
       // Deliver the 503 page.
       drupal_maintenance_theme();
       drupal_set_title(t('Site under maintenance'));
-      $content = theme('maintenance_page', array('content' => filter_xss_admin(t(config('system.maintenance')->get('message'), array('@site' => config('system.site')->get('name'))))));
+      $maintenance_page = array(
+        '#theme' => 'maintenance_page',
+        '#content' => filter_xss_admin(
+          t(config('system.maintenance')->get('message'), array('@site' => config('system.site')->get('name')))
+        ),
+      );
+      $content = drupal_render($maintenance_page);
       $response = new Response('Service unavailable', 503);
       $response->setContent($content);
       $event->setResponse($response);

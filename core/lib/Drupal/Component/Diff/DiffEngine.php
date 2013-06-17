@@ -1260,7 +1260,12 @@ class DrupalDiffInline {
               $output .= $piece;
             }
             else {
-              $output .= theme('diff_inline_chunk', array('text' => $piece, 'type' => $chunk->type));
+              $diff_inline_chunk = array(
+                '#theme' => 'diff_inline_chunk',
+                '#text' => $piece,
+                '#type' => $chunk->type,
+              );
+              $output .= drupal_render($diff_inline_chunk);
             }
           }
           break;
@@ -1271,7 +1276,12 @@ class DrupalDiffInline {
               $output .= $piece;
             }
             else {
-              $output .= theme('diff_inline_chunk', array('text' => $piece, 'type' => $chunk->type));
+              $diff_inline_chunk = array(
+                '#theme' => 'diff_inline_chunk',
+                '#text' => $piece,
+                '#type' => $chunk->type,
+              );
+              $output .= drupal_render($diff_inline_chunk);
             }
           }
           break;

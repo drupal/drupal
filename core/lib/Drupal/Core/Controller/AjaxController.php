@@ -67,9 +67,10 @@ class AjaxController extends ContainerAware {
         // replace the element making the ajax call. The default 'replaceWith'
         // behavior can be changed with #ajax['method'].
         $response->addCommand(new InsertCommand(NULL, $html));
-        $status_messages = theme('status_messages');
-        if (!empty($status_messages)) {
-          $response->addCommand(new PrependCommand(NULL, $status_messages));
+        $status_messages = array('#theme' => 'status_messages');
+        $output = drupal_render($status_messages);
+        if (!empty($output)) {
+          $response->addCommand(new PrependCommand(NULL, $output));
         }
       }
     }
