@@ -7,13 +7,15 @@
 
 namespace Drupal\Core\TypedData;
 
+use Drupal\Component\Plugin\PluginInspectionInterface;
+
 /**
  * The abstract base class for typed data.
  *
  * Classes deriving from this base class have to declare $value
  * or override getValue() or setValue().
  */
-abstract class TypedData implements TypedDataInterface {
+abstract class TypedData implements TypedDataInterface, PluginInspectionInterface {
 
   /**
    * The data definition.
@@ -61,6 +63,20 @@ abstract class TypedData implements TypedDataInterface {
    */
   public function getType() {
     return $this->definition['type'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPluginId() {
+    return $this->definition['type'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPluginDefinition() {
+    return \Drupal::typedData()->getDefinition($this->definition['type']);
   }
 
   /**
