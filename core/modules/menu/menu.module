@@ -198,7 +198,7 @@ function menu_theme() {
  * Add a link for each custom menu.
  */
 function menu_enable() {
-  drupal_container()->get('router.builder')->rebuild();
+  Drupal::service('router.builder')->rebuild();
   menu_router_rebuild();
   $system_link = entity_load_multiple_by_properties('menu_link', array('link_path' => 'admin/structure/menu', 'module' => 'system'));
   $system_link = reset($system_link);
@@ -247,7 +247,7 @@ function menu_menu_insert(Menu $menu) {
   menu_cache_clear_all();
   // Invalidate the block cache to update menu-based derivatives.
   if (module_exists('block')) {
-    drupal_container()->get('plugin.manager.block')->clearCachedDefinitions();
+    Drupal::service('plugin.manager.block')->clearCachedDefinitions();
   }
   // Make sure the menu is present in the active menus variable so that its
   // items may appear in the menu active trail.
@@ -270,7 +270,7 @@ function menu_menu_update(Menu $menu) {
   menu_cache_clear_all();
   // Invalidate the block cache to update menu-based derivatives.
   if (module_exists('block')) {
-    drupal_container()->get('plugin.manager.block')->clearCachedDefinitions();
+    Drupal::service('plugin.manager.block')->clearCachedDefinitions();
   }
 }
 
@@ -299,7 +299,7 @@ function menu_menu_delete(Menu $menu) {
 
   // Invalidate the block cache to update menu-based derivatives.
   if (module_exists('block')) {
-    drupal_container()->get('plugin.manager.block')->clearCachedDefinitions();
+    Drupal::service('plugin.manager.block')->clearCachedDefinitions();
   }
 }
 

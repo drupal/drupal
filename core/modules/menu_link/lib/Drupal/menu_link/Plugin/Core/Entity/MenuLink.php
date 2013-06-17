@@ -292,7 +292,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
       return NULL;
     }
     if (!($this->routeObject instanceof Route)) {
-      $route_provider = drupal_container()->get('router.route_provider');
+      $route_provider = \Drupal::service('router.route_provider');
       $this->routeObject = $route_provider->getRouteByName($this->route_name);
     }
     return $this->routeObject;

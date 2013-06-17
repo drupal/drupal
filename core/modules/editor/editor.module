@@ -132,7 +132,7 @@ function editor_form_filter_admin_overview_alter(&$form, $form_state) {
   $form['formats']['#header'] = array_merge($start, $form['formats']['#header']);
 
   // Then splice in the name of each text editor for each text format.
-  $editors = drupal_container()->get('plugin.manager.editor')->getDefinitions();
+  $editors = Drupal::service('plugin.manager.editor')->getDefinitions();
   foreach (element_children($form['formats']) as $format_id) {
     $editor = editor_load($format_id);
     $editor_name = ($editor && isset($editors[$editor->editor])) ? $editors[$editor->editor]['label'] : drupal_placeholder('—');
@@ -150,7 +150,7 @@ function editor_form_filter_admin_format_form_alter(&$form, &$form_state) {
   if (!isset($form_state['editor'])) {
     $format_id = $form['#format']->format;
     $form_state['editor'] = editor_load($format_id);
-    $form_state['editor_manager'] = drupal_container()->get('plugin.manager.editor');
+    $form_state['editor_manager'] = Drupal::service('plugin.manager.editor');
   }
   $editor = $form_state['editor'];
   $manager = $form_state['editor_manager'];
@@ -345,7 +345,7 @@ function editor_pre_render_format($element) {
   $element['#attached']['library'][] = array('editor', 'drupal.editor');
 
   // Attach attachments for all available editors.
-  $manager = drupal_container()->get('plugin.manager.editor');
+  $manager = Drupal::service('plugin.manager.editor');
   $element['#attached'] = NestedArray::mergeDeep($element['#attached'], $manager->getAttachments($format_ids));
 
   return $element;

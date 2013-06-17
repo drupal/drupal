@@ -74,7 +74,7 @@ class Editor extends ConfigEntityBase implements EditorInterface {
   public function __construct(array $values, $entity_type) {
     parent::__construct($values, $entity_type);
 
-    $manager = drupal_container()->get('plugin.manager.editor');
+    $manager = \Drupal::service('plugin.manager.editor');
     $plugin = $manager->createInstance($this->editor);
 
     // Initialize settings, merging module-provided defaults.

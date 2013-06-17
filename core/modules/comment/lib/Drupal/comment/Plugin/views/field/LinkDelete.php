@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Plugin\views\field\LinkDelete.
+ * Contains \Drupal\comment\Plugin\views\field\LinkDelete.
  */
 
 namespace Drupal\comment\Plugin\views\field;

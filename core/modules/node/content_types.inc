@@ -22,46 +22,44 @@ function node_overview_types() {
 
   foreach ($names as $key => $name) {
     $type = $types[$key];
-    if (node_hook($type->type, 'form')) {
-      $row = array(theme('node_admin_overview', array('name' => $name, 'type' => $type)));
-      if ($field_ui && user_access('administer node fields')) {
-        $links['fields'] = array(
-          'title' => t('Manage fields'),
-          'href' => 'admin/structure/types/manage/' . $type->type . '/fields',
-          'weight' => 0,
-        );
-      }
-      if ($field_ui && user_access('administer node display')) {
-        $links['display'] = array(
-          'title' => t('Manage display'),
-          'href' => 'admin/structure/types/manage/' . $type->type . '/display',
-          'weight' => 5,
-        );
-      }
-
-      $links['edit'] = array(
-        'title' => t('Edit'),
-        'href' => 'admin/structure/types/manage/' . $type->type,
-        'weight' => 10,
+    $row = array(theme('node_admin_overview', array('name' => $name, 'type' => $type)));
+    if ($field_ui && user_access('administer node fields')) {
+      $links['fields'] = array(
+        'title' => t('Manage fields'),
+        'href' => 'admin/structure/types/manage/' . $type->type . '/fields',
+        'weight' => 0,
       );
-
-      if ($type->custom) {
-        $links['delete'] = array(
-          'title' => t('Delete'),
-          'href' => 'admin/structure/types/manage/' . $type->type . '/delete',
-          'weight' => 15,
-        );
-      }
-
-      $row[] = array(
-        'data' => array(
-          '#type' => 'operations',
-          '#links' => $links,
-        ),
-      );
-
-      $rows[] = $row;
     }
+    if ($field_ui && user_access('administer node display')) {
+      $links['display'] = array(
+        'title' => t('Manage display'),
+        'href' => 'admin/structure/types/manage/' . $type->type . '/display',
+        'weight' => 5,
+      );
+    }
+
+    $links['edit'] = array(
+      'title' => t('Edit'),
+      'href' => 'admin/structure/types/manage/' . $type->type,
+      'weight' => 10,
+    );
+
+    if ($type->custom) {
+      $links['delete'] = array(
+        'title' => t('Delete'),
+        'href' => 'admin/structure/types/manage/' . $type->type . '/delete',
+        'weight' => 15,
+      );
+    }
+
+    $row[] = array(
+      'data' => array(
+        '#type' => 'operations',
+        '#links' => $links,
+      ),
+    );
+
+    $rows[] = $row;
   }
 
   $build['node_table'] = array(

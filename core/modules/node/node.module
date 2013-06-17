@@ -329,8 +329,6 @@ function node_type_get_types() {
  *
  * @return string|false
  *   The node type base or FALSE if the node type is not found.
- *
- * @see node_invoke()
  */
 function node_type_get_base($type) {
   $types = _node_types_build()->types;
@@ -853,42 +851,6 @@ function node_rdf_mapping() {
       ),
     ),
   );
-}
-
-/**
- * Determines whether a node hook exists.
- *
- * @param string $type
- *   A string containing the node type.
- * @param $hook
- *   A string containing the name of the hook.
- *
- * @return string|false
- *   A string containing the function name or FALSE if it isn't found.
- */
-function node_hook($type, $hook) {
-  $base = node_type_get_base($type);
-  return module_hook($base, $hook) ? $base . '_' . $hook : FALSE;
-}
-
-/**
- * Invokes a node hook.
- *
- * @param \Drupal\Core\Entity\EntityInterface $node
- *   A Node entity.
- * @param $hook
- *   A string containing the name of the hook.
- * @param $a2, $a3, $a4
- *   (optional) Arguments to pass on to the hook, after the $node argument. All
- *   default to NULL.
- *
- * @return
- *   The returned value of the invoked hook.
- */
-function node_invoke(EntityInterface $node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
-  if ($function = node_hook($node->type, $hook)) {
-    return $function($node, $a2, $a3, $a4);
-  }
 }
 
 /**
@@ -1575,7 +1537,7 @@ function _node_revision_access(EntityInterface $node, $op = 'view', $account = N
 function _node_add_access() {
   $types = node_type_get_types();
   foreach ($types as $type) {
-    if (node_hook($type->type, 'form') && node_access('create', $type->type)) {
+    if (node_access('create', $type->type)) {
       return TRUE;
     }
   }
@@ -3110,39 +3072,6 @@ function _node_access_rebuild_batch_finished($success, $results, $operations) {
 
 /**
  * @} End of "defgroup node_access".
- */
-
-/**
- * @defgroup node_content Hook implementations for user-created content types
- * @{
- * Functions that implement hooks for user-created content types.
- */
-
-/**
- * Implements hook_form().
- */
-function node_content_form(EntityInterface $node, $form_state) {
-  // @todo It is impossible to define a content type without implementing
-  //   hook_form(). Remove this requirement.
-  $form = array();
-  $type = node_type_load($node->type);
-
-  if ($type->has_title) {
-    $form['title'] = array(
-      '#type' => 'textfield',
-      '#title' => check_plain($type->title_label),
-      '#required' => TRUE,
-      '#default_value' => $node->title,
-      '#maxlength' => 255,
-      '#weight' => -5,
-    );
-  }
-
-  return $form;
-}
-
-/**
- * @} End of "defgroup node_content".
  */
 
 /**

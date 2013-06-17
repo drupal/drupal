@@ -135,7 +135,7 @@ function file_load($fid, $reset = FALSE) {
  * @return Drupal\file\FileUsage\FileUsageInterface.
  */
 function file_usage() {
-  return drupal_container()->get('file.usage');
+  return Drupal::service('file.usage');
 }
 
 /**

@@ -82,7 +82,7 @@ class Tour extends ConfigEntityBase implements TourInterface {
   public function __construct(array $values, $entity_type) {
     parent::__construct($values, $entity_type);
 
-    $this->tipsBag = new TipsBag(drupal_container()->get('plugin.manager.tour.tip'), $this->tips);
+    $this->tipsBag = new TipsBag(\Drupal::service('plugin.manager.tour.tip'), $this->tips);
   }
 
   /**
