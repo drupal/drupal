@@ -1651,7 +1651,7 @@ function theme_status_messages($variables) {
   foreach (drupal_get_messages($display) as $type => $messages) {
     $output .= "<div class=\"messages messages--$type\">\n";
     if (!empty($status_heading[$type])) {
-      $output .= '<h2 class="element-invisible">' . $status_heading[$type] . "</h2>\n";
+      $output .= '<h2 class="visually-hidden">' . $status_heading[$type] . "</h2>\n";
     }
     if (count($messages) > 1) {
       $output .= " <ul class=\"messages__list\">\n";
@@ -1716,7 +1716,7 @@ function theme_link($variables) {
  *     When using a string it will be used as the text of the heading and the
  *     level will default to 'h2'. Headings should be used on navigation menus
  *     and any list of links that consistently appears on multiple pages. To
- *     make the heading invisible use the 'element-invisible' CSS class. Do not
+ *     make the heading invisible use the 'visually-hidden' CSS class. Do not
  *     use 'display:none', which removes it from screen-readers and assistive
  *     technology. Headings allow screen-reader and keyboard only users to
  *     navigate to or skip the links. See
@@ -1884,8 +1884,8 @@ function theme_breadcrumb($variables) {
   if (!empty($breadcrumb)) {
     $output .= '<nav role="navigation" class="breadcrumb">';
     // Provide a navigational heading to give context for breadcrumb links to
-    // screen-reader users. Make the heading invisible with .element-invisible.
-    $output .= '<h2 class="element-invisible">' . t('You are here') . '</h2>';
+    // screen-reader users. Make the heading invisible with .visually-hidden.
+    $output .= '<h2 class="visually-hidden">' . t('You are here') . '</h2>';
     $output .= '<ol><li>' . implode('</li><li>', $breadcrumb) . '</li></ol>';
     $output .= '</nav>';
   }
@@ -2817,7 +2817,7 @@ function template_preprocess_page(&$variables) {
       ),
       '#heading' => array(
         'text' => t('Main menu'),
-        'class' => array('element-invisible'),
+        'class' => array('visually-hidden'),
       )
     );
   }
@@ -2831,7 +2831,7 @@ function template_preprocess_page(&$variables) {
       ),
       '#heading' => array(
         'text' => t('Secondary menu'),
-        'class' => array('element-invisible'),
+        'class' => array('visually-hidden'),
       )
     );
   }

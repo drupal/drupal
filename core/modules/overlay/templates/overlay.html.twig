@@ -26,10 +26,10 @@
       <h1{{ title_attributes }}>{{ title }}</h1>
     </div>
     <div id="overlay-close-wrapper">
-      <a id="overlay-close" href="#" class="overlay-close" role="button" aria-controls="overlay-content"><span class="element-invisible">{{ 'Close overlay'|t }}</span></a>
+      <a id="overlay-close" href="#" class="overlay-close" role="button" aria-controls="overlay-content"><span class="visually-hidden">{{ 'Close overlay'|t }}</span></a>
     </div>
     {% if tabs %}
-      <h2 class="element-invisible">{{ 'Primary tabs'|t }}</h2><ul id="overlay-tabs">{{ tabs }}</ul>
+      <h2 class="visually-hidden">{{ 'Primary tabs'|t }}</h2><ul id="overlay-tabs">{{ tabs }}</ul>
     {% endif %}
   </div>
   <div{{ content_attributes }}>

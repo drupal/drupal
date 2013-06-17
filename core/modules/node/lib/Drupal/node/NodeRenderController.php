@@ -46,7 +46,7 @@ class NodeRenderController extends EntityRenderController {
       if ($view_mode == 'teaser') {
         $node_title_stripped = strip_tags($entity->label());
         $links['node-readmore'] = array(
-          'title' => t('Read more<span class="element-invisible"> about @title</span>', array(
+          'title' => t('Read more<span class="visually-hidden"> about @title</span>', array(
             '@title' => $node_title_stripped,
           )),
           'href' => 'node/' . $entity->nid,

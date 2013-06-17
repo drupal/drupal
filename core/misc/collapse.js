@@ -60,7 +60,7 @@ $.extend(CollapsibleDetails.prototype, {
     // Turn the summary into a clickable link.
     var $legend = this.$node.find('> summary');
 
-    $('<span class="details-summary-prefix element-invisible"></span>')
+    $('<span class="details-summary-prefix visually-hidden"></span>')
       .append(this.$node.attr('open') ? Drupal.t('Hide') : Drupal.t('Show'))
       .prependTo($legend)
       .after(' ');

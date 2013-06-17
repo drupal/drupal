@@ -704,7 +704,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
       if ($display_id) {
         $tabs[$display_id]['#active'] = TRUE;
       }
-      $tabs['#prefix'] = '<h2 class="element-invisible">' . t('Secondary tabs') . '</h2><ul id = "views-display-menu-tabs" class="tabs secondary">';
+      $tabs['#prefix'] = '<h2 class="visually-hidden">' . t('Secondary tabs') . '</h2><ul id = "views-display-menu-tabs" class="tabs secondary">';
       $tabs['#suffix'] = '</ul>';
       $element['tabs'] = $tabs;
     }
@@ -933,7 +933,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
     $count_handlers = count($executable->display_handler->getHandlers($type));
 
     // Create the add text variable for the add action.
-    $add_text = t('Add <span class="element-invisible">@type</span>', array('@type' => $types[$type]['ltitle']));
+    $add_text = t('Add <span class="visually-hidden">@type</span>', array('@type' => $types[$type]['ltitle']));
 
     $actions['add'] = array(
       'title' => $add_text,
@@ -943,7 +943,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
     );
     if ($count_handlers > 0) {
       // Create the rearrange text variable for the rearrange action.
-      $rearrange_text = $type == 'filter' ? t('And/Or Rearrange <span class="element-invisible">filter criteria</span>') : t('Rearrange <span class="element-invisible">@type</span>', array('@type' => $types[$type]['ltitle']));
+      $rearrange_text = $type == 'filter' ? t('And/Or Rearrange <span class="visually-hidden">filter criteria</span>') : t('Rearrange <span class="visually-hidden">@type</span>', array('@type' => $types[$type]['ltitle']));
 
       $actions['rearrange'] = array(
         'title' => $rearrange_text,

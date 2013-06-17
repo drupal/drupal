@@ -279,7 +279,7 @@ function loadMissingEditors (callback) {
   // @todo Simplify this once https://drupal.org/node/1533366 lands.
   var id = 'edit-load-editors';
   // Create a temporary element to be able to use Drupal.ajax.
-  var $el = $('<div id="' + id + '" class="element-hidden"></div>').appendTo('body');
+  var $el = $('<div id="' + id + '" class="hidden"></div>').appendTo('body');
   // Create a Drupal.ajax instance to load the form.
   Drupal.ajax[id] = new Drupal.ajax(id, $el, {
     url: Drupal.url('edit/attachments'),

@@ -128,7 +128,7 @@ class ReorderDisplays extends ViewsFormBase {
           '#value' => TRUE,
         );
 
-        $form['displays'][$id]['#attributes']['class'][] = 'element-hidden';
+        $form['displays'][$id]['#attributes']['class'][] = 'hidden';
       }
 
     }

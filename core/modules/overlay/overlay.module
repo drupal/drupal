@@ -381,9 +381,9 @@ function template_preprocess_overlay_disable_message(&$variables) {
   // screen-reader users, this message appears in both the parent and child
   // documents, but only the one in the child document is part of the tab order.
   foreach (array('profile_link', 'dismiss_message_link') as $key) {
-    $element[$key]['#options']['attributes']['class'][] = 'element-invisible';
+    $element[$key]['#options']['attributes']['class'][] = 'visually-hidden';
     if (overlay_get_mode() == 'child') {
-      $element[$key]['#options']['attributes']['class'][] = 'element-focusable';
+      $element[$key]['#options']['attributes']['class'][] = 'focusable';
     }
   }
 

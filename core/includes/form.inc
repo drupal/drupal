@@ -2873,7 +2873,7 @@ function theme_fieldset($variables) {
 
   $legend_attributes = array();
   if (isset($element['#title_display']) && $element['#title_display'] == 'invisible') {
-    $legend_attributes['class'][] = 'element-invisible';
+    $legend_attributes['class'][] = 'visually-hidden';
   }
 
   $output = '<fieldset' . new Attribute($element['#attributes']) . '>';
@@ -4805,7 +4805,7 @@ function theme_form_element_label($variables) {
   }
   // Show label only to screen readers to avoid disruption in visual flows.
   elseif ($element['#title_display'] == 'invisible') {
-    $attributes['class'] = 'element-invisible';
+    $attributes['class'] = 'visually-hidden';
   }
 
   if (!empty($element['#id'])) {

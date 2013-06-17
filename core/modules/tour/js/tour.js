@@ -97,7 +97,7 @@ Drupal.tour.views.ToggleTourView = Backbone.View.extend({
    */
   render: function () {
     // Render the visibility.
-    this.$el.toggleClass('element-hidden', this._getTour().length === 0);
+    this.$el.toggleClass('hidden', this._getTour().length === 0);
     // Render the state.
     var isActive = this.model.get('isActive');
     this.$el.find('button')

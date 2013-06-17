@@ -34,6 +34,6 @@
 }
 
 /* @todo Remove once http://drupal.org/node/1916690 is resolved. */
-.js .toolbar .tour-toolbar-tab.tab.element-hidden {
+.js .toolbar .tour-toolbar-tab.tab.hidden {
   display: none;
 }
