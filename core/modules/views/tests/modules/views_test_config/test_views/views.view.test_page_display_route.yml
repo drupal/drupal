@@ -137,6 +137,6 @@ display:
     display_title: Page
     id: page_7
     position: '0'
-human_name: ''
+label: ''
 id: test_page_display_route
 tag: ''

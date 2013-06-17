@@ -25,6 +25,6 @@ display:
     display_plugin: page
     display_title: Test page view
     id: page_1
-human_name: ''
+label: ''
 id: test_page_view
 tag: ''
