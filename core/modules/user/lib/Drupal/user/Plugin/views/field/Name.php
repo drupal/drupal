@@ -85,7 +85,11 @@ class Name extends User {
       }
       elseif (!empty($this->options['link_to_user'])) {
         $account->name = $this->getValue($values);
-        return theme('username', array('account' => $account));
+        $username = array(
+          '#theme' => 'username',
+          '#account' => $account,
+        );
+        return drupal_render($username);
       }
     }
     // If we want a formatted username, do that.

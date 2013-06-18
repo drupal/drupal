@@ -95,7 +95,11 @@ class UserOnlineBlock extends BlockBase {
     if ($authenticated_count && $max_users) {
       $uids = db_query_range('SELECT uid FROM {users} WHERE access >= :interval AND uid > 0 ORDER BY access DESC', 0, $max_users, array(':interval' => $interval))->fetchCol();
       foreach (user_load_multiple($uids) as $account) {
-        $build['#items'][] = theme('username', array('account' => $account));
+        $username = array(
+          '#theme' => 'username',
+          '#account' => $account,
+        );
+        $build['#items'][] = drupal_render($username);
       }
     }
 
