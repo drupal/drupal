@@ -32,23 +32,20 @@ class OptionsDynamicValuesTest extends FieldTestBase {
     parent::setUp();
 
     $this->field_name = 'test_options';
-    $this->field = array(
+    entity_create('field_entity', array(
       'field_name' => $this->field_name,
       'type' => 'list_text',
       'cardinality' => 1,
       'settings' => array(
         'allowed_values_function' => 'options_test_dynamic_values_callback',
       ),
-    );
-    $this->field = field_create_field($this->field);
-
-    $this->instance = array(
+    ))->save();
+    $this->instance = entity_create('field_instance', array(
       'field_name' => $this->field_name,
       'entity_type' => 'entity_test_rev',
       'bundle' => 'entity_test_rev',
       'required' => TRUE,
-    );
-    $this->instance = field_create_instance($this->instance);
+    ))->save();
     entity_get_form_display('entity_test_rev', 'entity_test_rev', 'default')
       ->setComponent($this->field_name, array(
         'type' => 'options_select',

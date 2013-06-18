@@ -60,8 +60,8 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
 
     // Make node body translatable.
     $field = field_info_field('body');
-    $field['translatable'] = TRUE;
-    field_update_field($field);
+    $field->translatable = TRUE;
+    $field->save();
   }
 
   /**

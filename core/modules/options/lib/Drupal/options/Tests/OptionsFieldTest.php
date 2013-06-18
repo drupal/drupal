@@ -48,9 +48,9 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
     $entity = entity_create('entity_test', array());
     $entity->{$this->fieldName}->value = 1;
     $entity->save();
-    $this->field['settings']['allowed_values'] = array(2 => 'Two');
+    $this->field->settings['allowed_values'] = array(2 => 'Two');
     try {
-      field_update_field($this->field);
+      $this->field->save();
       $this->fail(t('Cannot update a list field to not include keys with existing data.'));
     }
     catch (FieldException $e) {
@@ -61,8 +61,8 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
     $entity->save();
 
     // Removed options do not appear.
-    $this->field['settings']['allowed_values'] = array(2 => 'Two');
-    field_update_field($this->field);
+    $this->field->settings['allowed_values'] = array(2 => 'Two');
+    $this->field->save();
     $entity = entity_create('entity_test', array());
     $form = \Drupal::entityManager()->getForm($entity);
     $this->assertTrue(empty($form[$this->fieldName][$langcode][1]), 'Option 1 does not exist');
@@ -71,7 +71,7 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
 
     // Completely new options appear.
     $this->field['settings']['allowed_values'] = array(10 => 'Update', 20 => 'Twenty');
-    field_update_field($this->field);
+    $this->field->save();
     $form = \Drupal::entityManager()->getForm($entity);
     $this->assertTrue(empty($form[$this->fieldName][$langcode][1]), 'Option 1 does not exist');
     $this->assertTrue(empty($form[$this->fieldName][$langcode][2]), 'Option 2 does not exist');
@@ -80,15 +80,13 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
     $this->assertTrue(!empty($form[$this->fieldName][$langcode][20]), 'Option 20 exists');
 
     // Options are reset when a new field with the same name is created.
-    field_delete_field($this->fieldName);
-    unset($this->field['id']);
-    field_create_field($this->fieldDefinition);
-    $this->instance = array(
+    $this->field->delete();
+    entity_create('field_entity', $this->fieldDefinition)->save();
+    entity_create('field_instance', array(
       'field_name' => $this->fieldName,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-    );
-    field_create_instance($this->instance);
+    ))->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($this->fieldName, array(
         'type' => 'options_buttons',

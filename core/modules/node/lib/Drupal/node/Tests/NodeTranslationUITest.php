@@ -169,7 +169,7 @@ class NodeTranslationUITest extends EntityTranslationUITest {
     $this->assertRaw('Not translated');
 
     // Delete the only translatable field.
-    field_delete_field('field_test_et_ui_test');
+    field_info_field('field_test_et_ui_test')->delete();
 
     // Visit translation page.
     $this->drupalGet('node/' . $article->nid . '/translations');
