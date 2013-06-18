@@ -28,6 +28,34 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
    */
   public static $modules = array('field_test', 'text', 'number');
 
+  /**
+   * The name of the created field.
+   *
+   * @var string
+   */
+  protected $field_name;
+
+  /**
+   * A field to use in this class.
+   *
+   * @var \Drupal\field\Plugin\Core\Entity\Field
+   */
+  protected $field;
+
+  /**
+   * A field instance to use in this test class.
+   *
+   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
+   */
+  protected $instance;
+
+  /**
+   * Name of the revision table of the field.
+   *
+   * @var string
+   */
+  protected $revision_table;
+
   public static function getInfo() {
     return array(
       'name'  => 'Field SQL Storage tests',
@@ -41,17 +69,20 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $this->installSchema('field_test', array('test_entity', 'test_entity_revision', 'test_entity_bundle'));
 
     $this->field_name = strtolower($this->randomName());
-    $this->field = array('field_name' => $this->field_name, 'type' => 'test_field', 'cardinality' => 4);
-    $this->field = field_create_field($this->field);
-    $this->instance = array(
+    $this->field = entity_create('field_entity', array(
+      'field_name' => $this->field_name,
+      'type' => 'test_field',
+      'cardinality' => 4,
+    ));
+    $this->field->save();
+    $this->instance = entity_create('field_instance', array(
       'field_name' => $this->field_name,
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle'
-    );
-    $this->instance = field_create_instance($this->instance);
+    ));
+    $this->instance->save();
     $this->table = _field_sql_storage_tablename($this->field);
     $this->revision_table = _field_sql_storage_revision_tablename($this->field);
-
   }
 
   /**
@@ -153,7 +184,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     }
 
     // Test update.
-    $entity = field_test_create_entity(0, 1, $this->instance['bundle']);
+    $entity = field_test_create_entity(0, 1, $this->instance->bundle);
     $values = array();
     // Note: we try to update one extra value ('<=' instead of '<').
     for ($delta = 0; $delta <= $this->field['cardinality']; $delta++) {
@@ -193,7 +224,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     field_attach_update($entity);
     $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
     foreach ($values as $delta => $value) {
-      if ($delta < $this->field['cardinality']) {
+      if ($delta < $this->field->cardinality) {
         $this->assertEqual($rows[$delta][$this->field_name . '_value'], $value['value'], t("Update with no field_name entry leaves value $delta untouched"));
       }
     }
@@ -210,7 +241,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
    */
   function testFieldAttachSaveMissingData() {
     $entity_type = 'test_entity';
-    $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
+    $entity = field_test_create_entity(0, 0, $this->instance->bundle);
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Insert: Field is missing
@@ -261,7 +292,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $unavailable_langcode = 'xx';
     db_insert($this->table)
       ->fields(array('entity_type', 'bundle', 'deleted', 'entity_id', 'revision_id', 'delta', 'langcode'))
-      ->values(array($entity_type, $this->instance['bundle'], 0, 0, 0, 0, $unavailable_langcode))
+      ->values(array($entity_type, $this->instance->bundle, 0, 0, 0, 0, $unavailable_langcode))
       ->execute();
     $count = db_select($this->table)
       ->countQuery()
@@ -305,18 +336,26 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
    */
   function testUpdateFieldSchemaWithData() {
     // Create a decimal 5.2 field and add some data.
-    $field = array('field_name' => 'decimal52', 'type' => 'number_decimal', 'settings' => array('precision' => 5, 'scale' => 2));
-    $field = field_create_field($field);
-    $instance = array('field_name' => 'decimal52', 'entity_type' => 'test_entity', 'bundle' => 'test_bundle');
-    $instance = field_create_instance($instance);
-    $entity = field_test_create_entity(0, 0, $instance['bundle']);
+    $field = entity_create('field_entity', array(
+      'field_name' => 'decimal52',
+      'type' => 'number_decimal',
+      'settings' => array('precision' => 5, 'scale' => 2),
+    ));
+    $field->save();
+    $instance = entity_create('field_instance', array(
+      'field_name' => 'decimal52',
+      'entity_type' => 'test_entity',
+      'bundle' => 'test_bundle',
+    ));
+    $instance->save();
+    $entity = field_test_create_entity(0, 0, $instance->bundle);
     $entity->decimal52[Language::LANGCODE_NOT_SPECIFIED][0]['value'] = '1.235';
     $entity->save();
 
     // Attempt to update the field in a way that would work without data.
-    $field['settings']['scale'] = 3;
+    $field->settings['scale'] = 3;
     try {
-      field_update_field($field);
+      $field->save();
       $this->fail(t('Cannot update field schema with data.'));
     }
     catch (FieldException $e) {
@@ -329,14 +368,18 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
    */
   function testFieldUpdateFailure() {
     // Create a text field.
-    $field = array('field_name' => 'test_text', 'type' => 'text', 'settings' => array('max_length' => 255));
-    $field = field_create_field($field);
+    $field = entity_create('field_entity', array(
+      'field_name' => 'test_text',
+      'type' => 'text',
+      'settings' => array('max_length' => 255),
+    ));
+    $field->save();
 
     // Attempt to update the field in a way that would break the storage.
     $prior_field = $field;
-    $field['settings']['max_length'] = -1;
+    $field->settings['max_length'] = -1;
     try {
-      field_update_field($field);
+      $field->save();
       $this->fail(t('Update succeeded.'));
     }
     catch (\Exception $e) {
@@ -353,13 +396,18 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
    * Test adding and removing indexes while data is present.
    */
   function testFieldUpdateIndexesWithData() {
-
     // Create a decimal field.
     $field_name = 'testfield';
-    $field = array('field_name' => $field_name, 'type' => 'text');
-    $field = field_create_field($field);
-    $instance = array('field_name' => $field_name, 'entity_type' => 'test_entity', 'bundle' => 'test_bundle');
-    $instance = field_create_instance($instance);
+    $field = entity_create('field_entity', array(
+      'field_name' => $field_name,
+      'type' => 'text'));
+    $field->save();
+    $instance = entity_create('field_instance', array(
+      'field_name' => $field_name,
+      'entity_type' => 'test_entity',
+      'bundle' => 'test_bundle',
+    ));
+    $instance->save();
     $tables = array(_field_sql_storage_tablename($field), _field_sql_storage_revision_tablename($field));
 
     // Verify the indexes we will create do not exist yet.
@@ -369,27 +417,27 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     }
 
     // Add data so the table cannot be dropped.
-    $entity = field_test_create_entity(1, 1, $instance['bundle']);
+    $entity = field_test_create_entity(1, 1, $instance->bundle);
     $entity->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['value'] = 'field data';
     $entity->save();
 
-    // Add an index
-    $field = array('field_name' => $field_name, 'indexes' => array('value' => array(array('value', 255))));
-    field_update_field($field);
+    // Add an index.
+    $field->indexes = array('value' => array(array('value', 255)));
+    $field->save();
     foreach ($tables as $table) {
       $this->assertTrue(Database::getConnection()->schema()->indexExists($table, "{$field_name}_value"), t("Index on value created in $table"));
     }
 
     // Add a different index, removing the existing custom one.
-    $field = array('field_name' => $field_name, 'indexes' => array('value_format' => array(array('value', 127), array('format', 127))));
-    field_update_field($field);
+    $field->indexes = array('value_format' => array(array('value', 127), array('format', 127)));
+    $field->save();
     foreach ($tables as $table) {
       $this->assertTrue(Database::getConnection()->schema()->indexExists($table, "{$field_name}_value_format"), t("Index on value_format created in $table"));
       $this->assertFalse(Database::getConnection()->schema()->indexExists($table, "{$field_name}_value"), t("Index on value removed in $table"));
     }
 
     // Verify that the tables were not dropped.
-    $entity = field_test_create_entity(1, 1, $instance['bundle']);
+    $entity = field_test_create_entity(1, 1, $instance->bundle);
     field_attach_load('test_entity', array(1 => $entity));
     $this->assertEqual($entity->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['value'], 'field data', t("Index changes performed without dropping the tables"));
   }
@@ -402,21 +450,23 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $revision = _field_sql_storage_revision_tablename($this->field);
 
     // Retrieve the field and instance with field_info so the storage details are attached.
-    $field = field_info_field($this->field['field_name']);
-    $instance = field_info_instance($this->instance['entity_type'], $this->instance['field_name'], $this->instance['bundle']);
+    $field = field_info_field($this->field_name);
+    $instance = field_info_instance($this->instance->entity_type, $field->id(), $this->instance->bundle);
 
     // The storage details are indexed by a storage engine type.
-    $this->assertTrue(array_key_exists('sql', $field['storage_details']), 'The storage type is SQL.');
+    $storage_details = $field->getStorageDetails();
+    $this->assertTrue(array_key_exists('sql', $storage_details), 'The storage type is SQL.');
 
     // The SQL details are indexed by table name.
-    $details = $field['storage_details']['sql'];
+    $details = $storage_details['sql'];
     $this->assertTrue(array_key_exists($current, $details[FIELD_LOAD_CURRENT]), 'Table name is available in the instance array.');
     $this->assertTrue(array_key_exists($revision, $details[FIELD_LOAD_REVISION]), 'Revision table name is available in the instance array.');
 
     // Test current and revision storage details together because the columns
     // are the same.
-    foreach ((array) $this->field['columns'] as $column_name => $attributes) {
-      $storage_column_name = _field_sql_storage_columnname($this->field['field_name'], $column_name);
+    $schema = $this->field->getSchema();
+    foreach ($schema['columns'] as $column_name => $attributes) {
+      $storage_column_name = _field_sql_storage_columnname($this->field_name, $column_name);
       $this->assertEqual($details[FIELD_LOAD_CURRENT][$current][$column_name], $storage_column_name, t('Column name %value matches the definition in %bin.', array('%value' => $column_name, '%bin' => $current)));
       $this->assertEqual($details[FIELD_LOAD_REVISION][$revision][$column_name], $storage_column_name, t('Column name %value matches the definition in %bin.', array('%value' => $column_name, '%bin' => $revision)));
     }
@@ -430,25 +480,32 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     // field_test_field_schema()).
     $field_name = 'testfield';
     $foreign_key_name = 'shape';
-    $field = array('field_name' => $field_name, 'type' => 'shape', 'settings' => array('foreign_key_name' => $foreign_key_name));
-    field_create_field($field);
+    $field = entity_create('field_entity', array(
+      'field_name' => $field_name,
+      'type' => 'shape',
+      'settings' => array('foreign_key_name' => $foreign_key_name),
+    ));
+    $field->save();
+    // Get the field schema.
+    $schema = $field->getSchema();
 
     // Retrieve the field definition and check that the foreign key is in place.
-    $field = field_info_field($field_name);
-    $this->assertEqual($field['foreign keys'][$foreign_key_name]['table'], $foreign_key_name, 'Foreign key table name preserved through CRUD');
-    $this->assertEqual($field['foreign keys'][$foreign_key_name]['columns'][$foreign_key_name], 'id', 'Foreign key column name preserved through CRUD');
+    $this->assertEqual($schema['foreign keys'][$foreign_key_name]['table'], $foreign_key_name, 'Foreign key table name preserved through CRUD');
+    $this->assertEqual($schema['foreign keys'][$foreign_key_name]['columns'][$foreign_key_name], 'id', 'Foreign key column name preserved through CRUD');
 
     // Update the field settings, it should update the foreign key definition too.
     $foreign_key_name = 'color';
-    $field['settings']['foreign_key_name'] = $foreign_key_name;
-    field_update_field($field);
+    $field->settings['foreign_key_name'] = $foreign_key_name;
+    $field->save();
+    // Reload the field schema after the update.
+    $schema = $field->getSchema();
 
     // Retrieve the field definition and check that the foreign key is in place.
     $field = field_info_field($field_name);
-    $this->assertEqual($field['foreign keys'][$foreign_key_name]['table'], $foreign_key_name, t('Foreign key table name modified after update'));
-    $this->assertEqual($field['foreign keys'][$foreign_key_name]['columns'][$foreign_key_name], 'id', t('Foreign key column name modified after update'));
+    $this->assertEqual($schema['foreign keys'][$foreign_key_name]['table'], $foreign_key_name, t('Foreign key table name modified after update'));
+    $this->assertEqual($schema['foreign keys'][$foreign_key_name]['columns'][$foreign_key_name], 'id', t('Foreign key column name modified after update'));
 
-    // Now grab the SQL schema and verify that too.
+    // Verify the SQL schema.
     $schemas = _field_sql_storage_schema($field);
     $schema = $schemas[_field_sql_storage_tablename($field)];
     $this->assertEqual(count($schema['foreign keys']), 1, 'There is 1 foreign key in the schema');

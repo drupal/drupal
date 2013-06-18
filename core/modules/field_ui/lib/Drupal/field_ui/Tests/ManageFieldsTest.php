@@ -45,7 +45,7 @@ class ManageFieldsTest extends FieldUiTestBase {
       'field_name' => 'field_' . $vocabulary->id(),
       'type' => 'taxonomy_term_reference',
     );
-    field_create_field($field);
+    entity_create('field_entity', $field)->save();
 
     $instance = array(
       'field_name' => 'field_' . $vocabulary->id(),
@@ -53,7 +53,7 @@ class ManageFieldsTest extends FieldUiTestBase {
       'label' => 'Tags',
       'bundle' => 'article',
     );
-    field_create_instance($instance);
+    entity_create('field_instance', $instance)->save();
 
     entity_get_form_display('node', 'article', 'default')
       ->setComponent('field_' . $vocabulary->id())
@@ -280,17 +280,16 @@ class ManageFieldsTest extends FieldUiTestBase {
   function testDefaultValue() {
     // Create a test field and instance.
     $field_name = 'test';
-    $field = array(
+    entity_create('field_entity', array(
       'field_name' => $field_name,
       'type' => 'test_field'
-    );
-    field_create_field($field);
-    $instance = array(
+    ))->save();
+    $instance = entity_create('field_instance', array(
       'field_name' => $field_name,
       'entity_type' => 'node',
       'bundle' => $this->type,
-    );
-    $instance = field_create_instance($instance);
+    ));
+    $instance->save();
 
     entity_get_form_display('node', $this->type, 'default')
       ->setComponent($field_name)
@@ -431,14 +430,14 @@ class ManageFieldsTest extends FieldUiTestBase {
 
     // Create a field and an instance programmatically.
     $field_name = 'hidden_test_field';
-    field_create_field(array('field_name' => $field_name, 'type' => $field_name));
+    entity_create('field_entity', array('field_name' => $field_name, 'type' => $field_name))->save();
     $instance = array(
       'field_name' => $field_name,
       'bundle' => $this->type,
       'entity_type' => 'node',
       'label' => t('Hidden field'),
     );
-    field_create_instance($instance);
+    entity_create('field_instance', $instance)->save();
     entity_get_form_display('node', $this->type, 'default')
       ->setComponent($field_name)
       ->save();
