@@ -38,6 +38,42 @@ class BooleanOperator extends FilterPluginBase {
   // Whether to accept NULL as a false value or not
   var $accept_null = FALSE;
 
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function operatorOptions($which = 'title') {
+    $options = array();
+    foreach ($this->operators() as $id => $info) {
+      $options[$id] = $info[$which];
+    }
+
+    return $options;
+  }
+
+  /**
+   * Returns an array of operator information.
+   *
+   * @return array
+   */
+  protected function operators() {
+    return array(
+      '=' => array(
+        'title' => t('Is equal to'),
+        'method' => 'queryOpBoolean',
+        'short' => t('='),
+        'values' => 1,
+      ),
+      '!=' => array(
+        'title' => t('Is not equal to'),
+        'method' => 'queryOpBoolean',
+        'short' => t('!='),
+        'values' => 1,
+      ),
+    );
+  }
+
   /**
    * Overrides \Drupal\views\Plugin\views\filter\FilterPluginBase::init().
    */
@@ -96,10 +132,6 @@ class BooleanOperator extends FilterPluginBase {
     return $options;
   }
 
-  protected function operatorForm(&$form, &$form_state) {
-    $form['operator'] = array();
-  }
-
   protected function valueForm(&$form, &$form_state) {
     if (empty($this->value_options)) {
       // Initialize the array of possible values for this filter.
@@ -136,7 +168,7 @@ class BooleanOperator extends FilterPluginBase {
   }
 
   protected function valueValidate($form, &$form_state) {
-    if ($form_state['values']['options']['value'] == 'All' && !empty($form_state['values']['options']['expose']['required'])) {
+    if (isset($form_state['values']['options']['value']) && $form_state['values']['options']['value'] == 'All' && !empty($form_state['values']['options']['expose']['required'])) {
       form_set_error('value', t('You must select a value unless this is an non-required exposed filter.'));
     }
   }
@@ -165,10 +197,26 @@ class BooleanOperator extends FilterPluginBase {
     $this->options['expose']['required'] = TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
     $this->ensureMyTable();
     $field = "$this->tableAlias.$this->realField";
 
+    $info = $this->operators();
+    if (!empty($info[$this->operator]['method'])) {
+      call_user_func(array($this, $info[$this->operator]['method']), $field);
+    }
+  }
+
+  /**
+   * Adds a where condition to the query for a boolean value.
+   *
+   * @param string $field
+   *   The field name to add the where condition for.
+   */
+  protected function queryOpBoolean($field) {
     if (empty($this->value)) {
       if ($this->accept_null) {
         $or = db_or()

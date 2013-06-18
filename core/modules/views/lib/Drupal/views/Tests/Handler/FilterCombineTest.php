@@ -96,6 +96,7 @@ class FilterCombineTest extends ViewUnitTestBase {
       'age' => 25,
       'job' => NULL,
       'created' => gmmktime(0, 0, 0, 1, 2, 2000),
+      'status' => 1,
     );
     return $data_set;
   }
