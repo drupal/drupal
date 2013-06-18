@@ -43,18 +43,16 @@ class ImageItemTest extends FieldUnitTestBase {
 
     $this->installSchema('file', array('file_managed', 'file_usage'));
 
-    $field = array(
+    entity_create('field_entity', array(
       'field_name' => 'image_test',
       'type' => 'image',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
-    );
-    field_create_field($field);
-    $instance = array(
+    ))->save();
+    entity_create('field_instance', array(
       'entity_type' => 'entity_test',
       'field_name' => 'image_test',
       'bundle' => 'entity_test',
-    );
-    field_create_instance($instance);
+    ))->save();
     file_unmanaged_copy(DRUPAL_ROOT . '/core/misc/druplicon.png', 'public://example.jpg');
     $this->image = entity_create('file', array(
       'uri' => 'public://example.jpg',

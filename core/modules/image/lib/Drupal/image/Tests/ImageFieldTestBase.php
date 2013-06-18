@@ -76,7 +76,7 @@ abstract class ImageFieldTestBase extends WebTestBase {
       'cardinality' => !empty($field_settings['cardinality']) ? $field_settings['cardinality'] : 1,
     );
     $field['settings'] = array_merge($field['settings'], $field_settings);
-    field_create_field($field);
+    entity_create('field_entity', $field)->save();
 
     $instance = array(
       'field_name' => $field['field_name'],
@@ -88,7 +88,8 @@ abstract class ImageFieldTestBase extends WebTestBase {
       'settings' => array(),
     );
     $instance['settings'] = array_merge($instance['settings'], $instance_settings);
-    $field_instance = field_create_instance($instance);
+    $field_instance = entity_create('field_instance', $instance);
+    $field_instance->save();
 
     entity_get_form_display('node', $type_name, 'default')
       ->setComponent($field['field_name'], array(
@@ -127,4 +128,5 @@ abstract class ImageFieldTestBase extends WebTestBase {
     preg_match('/node\/([0-9]+)/', $this->getUrl(), $matches);
     return isset($matches[1]) ? $matches[1] : FALSE;
   }
+
 }

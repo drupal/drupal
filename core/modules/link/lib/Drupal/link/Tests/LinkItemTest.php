@@ -35,17 +35,15 @@ class LinkItemTest extends FieldUnitTestBase {
     parent::setUp();
 
     // Create an link field and instance for validation.
-    $this->field = array(
+    entity_create('field_entity', array(
       'field_name' => 'field_test',
       'type' => 'link',
-    );
-    field_create_field($this->field);
-    $this->instance = array(
+    ))->save();
+    entity_create('field_instance', array(
       'entity_type' => 'entity_test',
       'field_name' => 'field_test',
       'bundle' => 'entity_test',
-    );
-    field_create_instance($this->instance);
+    ))->save();
   }
 
   /**

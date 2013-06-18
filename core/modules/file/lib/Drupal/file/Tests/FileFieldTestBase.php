@@ -67,14 +67,15 @@ abstract class FileFieldTestBase extends WebTestBase {
    *   A list of widget settings that will be added to the widget defaults.
    */
   function createFileField($name, $type_name, $field_settings = array(), $instance_settings = array(), $widget_settings = array()) {
-    $field = array(
+    $field_definition = array(
       'field_name' => $name,
       'type' => 'file',
       'settings' => array(),
       'cardinality' => !empty($field_settings['cardinality']) ? $field_settings['cardinality'] : 1,
     );
-    $field['settings'] = array_merge($field['settings'], $field_settings);
-    $field = field_create_field($field);
+    $field_definition['settings'] = array_merge($field_definition['settings'], $field_settings);
+    $field = entity_create('field_entity', $field_definition);
+    $field->save();
 
     $this->attachFileField($name, 'node', $type_name, $instance_settings, $widget_settings);
     return $field;
@@ -106,7 +107,7 @@ abstract class FileFieldTestBase extends WebTestBase {
       'settings' => array(),
     );
     $instance['settings'] = array_merge($instance['settings'], $instance_settings);
-    field_create_instance($instance);
+    entity_create('field_instance', $instance)->save();
 
     entity_get_form_display($entity_type, $bundle, 'default')
       ->setComponent($name, array(
@@ -123,7 +124,7 @@ abstract class FileFieldTestBase extends WebTestBase {
     $instance = field_info_instance('node', $name, $type_name);
     $instance['settings'] = array_merge($instance['settings'], $instance_settings);
 
-    field_update_instance($instance);
+    $instance->save();
 
     entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default')
       ->setComponent($instance['field_name'], array(
@@ -238,4 +239,5 @@ abstract class FileFieldTestBase extends WebTestBase {
     $message = isset($message) ? $message : t('File %file is permanent.', array('%file' => $file->getFileUri()));
     $this->assertTrue($file->isPermanent(), $message);
   }
+
 }
