@@ -441,6 +441,8 @@ services:
     class: Drupal\system\Plugin\ImageToolkitInterface
     factory_method: getDefaultToolkit
     factory_service: image.toolkit.manager
+  breadcrumb:
+    class: Drupal\Core\Breadcrumb\BreadcrumbManager
   token:
     class: Drupal\Core\Utility\Token
     arguments: ['@module_handler']

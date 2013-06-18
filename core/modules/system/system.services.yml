@@ -9,3 +9,7 @@ services:
   system.manager:
     class: Drupal\system\SystemManager
     arguments: ['@module_handler', '@database']
+  system.breadcrumb.legacy:
+    class: Drupal\system\LegacyBreadcrumbBuilder
+    tags:
+      - {name: breadcrumb_builder, priority: 500}

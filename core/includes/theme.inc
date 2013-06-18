@@ -2840,7 +2840,7 @@ function template_process_page(&$variables) {
     // @see menu_tree_page_data()
     $variables['breadcrumb'] = array(
       '#theme' => 'breadcrumb',
-      '#breadcrumb' => drupal_get_breadcrumb(),
+      '#breadcrumb' => \Drupal::service('breadcrumb')->build(\Drupal::service('request')->attributes->all()),
     );
   }
   if (!isset($variables['title'])) {

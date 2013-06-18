@@ -1,0 +1,22 @@
+id: seven.breadcrumbs
+weight: '-2'
+status: '0'
+langcode: en
+region: '-1'
+plugin: system_breadcrumb_block
+settings:
+  label: Breadcrumbs
+  module: system
+  label_display: '0'
+  cache: '-1'
+visibility:
+  path:
+    visibility: '0'
+    pages: ''
+  role:
+    roles: {  }
+  node_type:
+    types:
+      article: '0'
+      page: '0'
+  visibility__active_tab: edit-visibility-path

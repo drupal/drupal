@@ -1670,8 +1670,8 @@ class ViewExecutable {
       }
 
       if ($set) {
-        if ($base) {
-          $breadcrumb = array_merge(drupal_get_breadcrumb(), $breadcrumb);
+        if ($base && $current_breadcrumbs = drupal_set_breadcrumb()) {
+          $breadcrumb = array_merge($current_breadcrumbs, $breadcrumb);
         }
         drupal_set_breadcrumb($breadcrumb);
       }

@@ -262,29 +262,6 @@ function _forum_node_check_node_type(EntityInterface $node) {
 }
 
 /**
- * Implements hook_node_view().
- */
-function forum_node_view(EntityInterface $node, EntityDisplay $display, $view_mode) {
-  $vid = config('forum.settings')->get('vocabulary');
-  $vocabulary = taxonomy_vocabulary_load($vid);
-  if (_forum_node_check_node_type($node)) {
-    if ($view_mode == 'full' && node_is_page($node)) {
-      // Breadcrumb navigation
-      $breadcrumb[] = l(t('Home'), NULL);
-      $breadcrumb[] = l($vocabulary->name, 'forum');
-      if ($parents = taxonomy_term_load_parents_all($node->forum_tid)) {
-        $parents = array_reverse($parents);
-        foreach ($parents as $parent) {
-          $breadcrumb[] = l($parent->label(), 'forum/' . $parent->id());
-        }
-      }
-      drupal_set_breadcrumb($breadcrumb);
-
-    }
-  }
-}
-
-/**
  * Implements hook_node_validate().
  *
  * Checks in particular that the node is assigned only a "leaf" term in the
