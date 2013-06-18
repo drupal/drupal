@@ -96,8 +96,6 @@ class CKEditorPluginManager extends PluginManagerBase {
   /**
    * Retrieves all plugins that implement CKEditorPluginButtonsInterface.
    *
-   * @param \Drupal\editor\Plugin\Core\Entity\Editor $editor
-   *   A configured text editor object.
    * @return array
    *   A list of the CKEditor plugins that implement buttons, with the plugin
    *   IDs as keys and lists of button metadata (as implemented by getButtons())
@@ -105,7 +103,7 @@ class CKEditorPluginManager extends PluginManagerBase {
    *
    * @see CKEditorPluginButtonsInterface::getButtons()
    */
-  public function getButtonsPlugins(Editor $editor) {
+  public function getButtonsPlugins() {
     $plugins = array_keys($this->getDefinitions());
     $buttons_plugins = array();
 

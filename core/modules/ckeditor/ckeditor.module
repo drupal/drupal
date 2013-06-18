@@ -47,6 +47,9 @@ function ckeditor_library_info() {
       array('system', 'jquery.ui.sortable'),
       array('system', 'jquery.ui.draggable'),
       array('system', 'jquery.ui.touch-punch'),
+      array('ckeditor', 'ckeditor'),
+      array('editor', 'drupal.editor.admin'),
+      array('system', 'underscore')
     ),
   );
   $libraries['drupal.ckeditor.stylescombo.admin'] = array(
@@ -60,6 +63,9 @@ function ckeditor_library_info() {
       array('system', 'drupal'),
       array('system', 'jquery.once'),
       array('system', 'drupal.vertical-tabs'),
+      array('system', 'drupalSettings'),
+      // @todo D8 formUpdated event should be debounced already.
+      array('system', 'drupal.debounce'),
     ),
   );
   $libraries['ckeditor'] = array(

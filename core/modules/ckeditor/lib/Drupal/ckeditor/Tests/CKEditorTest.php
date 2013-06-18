@@ -213,8 +213,14 @@ class CKEditorTest extends DrupalUnitTestBase {
     $editor->save();
     $this->assertIdentical($expected, $stylescombo_plugin->getConfig($editor), '"StylesCombo" plugin configuration built correctly for customized toolbar.');
 
+    // Slightly different configuration: class names are optional.
+    $editor->settings['plugins']['stylescombo']['styles'] = "      h1 |  Title ";
+    $editor->save();
+    $expected['stylesSet'] = array(array('name' => 'Title', 'element' => 'h1'));
+    $this->assertIdentical($expected, $stylescombo_plugin->getConfig($editor), '"StylesCombo" plugin configuration built correctly for customized toolbar.');
+
     // Invalid syntax should cause stylesSet to be set to FALSE.
-    $editor->settings['plugins']['stylescombo']['styles'] = "h1|Title";
+    $editor->settings['plugins']['stylescombo']['styles'] = "h1";
     $editor->save();
     $expected['stylesSet'] = FALSE;
     $this->assertIdentical($expected, $stylescombo_plugin->getConfig($editor), '"StylesCombo" plugin configuration built correctly for customized toolbar.');

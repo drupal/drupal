@@ -65,6 +65,18 @@ function editor_element_info() {
  */
 function editor_library_info() {
   $path = drupal_get_path('module', 'editor');
+
+  $libraries['drupal.editor.admin'] = array(
+    'title' => 'Text Editor',
+    'version' => VERSION,
+    'js' => array(
+      $path . '/js/editor.admin.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+    ),
+  );
   $libraries['drupal.editor'] = array(
     'title' => 'Text Editor',
     'version' => VERSION,
@@ -200,6 +212,11 @@ function editor_form_filter_admin_format_form_alter(&$form, &$form_state) {
     '#weight' => -8,
     '#type' => 'container',
     '#id' => 'editor-settings-wrapper',
+    '#attached' => array(
+      'library' => array(
+        array('editor', 'drupal.editor.admin'),
+      ),
+    ),
   );
 
   // Add editor-specific validation and submit handlers.

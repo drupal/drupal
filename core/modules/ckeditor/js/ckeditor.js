@@ -87,7 +87,7 @@ Drupal.editors.ckeditor = {
     return !!CKEDITOR.inline(element, settings);
   },
 
-  _loadExternalPlugins: function(format) {
+  _loadExternalPlugins: function (format) {
     var externalPlugins = format.editorSettings.drupalExternalPlugins;
     // Register and load additional CKEditor plugins as necessary.
     if (externalPlugins) {

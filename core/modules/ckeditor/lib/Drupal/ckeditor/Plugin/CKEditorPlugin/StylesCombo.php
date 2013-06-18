@@ -44,6 +44,9 @@ class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurab
    */
   public function getConfig(Editor $editor) {
     $config = array();
+    if (!isset($editor->settings['plugins']['stylescombo']['styles'])) {
+      return $config;
+    }
     $styles = $editor->settings['plugins']['stylescombo']['styles'];
     $config['stylesSet'] = $this->generateStylesSetSetting($styles);
     return $config;
@@ -126,8 +129,8 @@ class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurab
         continue;
       }
 
-      // Validate syntax: element.class[.class...]|label pattern expected.
-      if (!preg_match('@^ *[a-zA-Z0-9]+ *(\\.[a-zA-Z0-9_-]+ *)+\\| *.+ *$@', $style)) {
+      // Validate syntax: element[.class...]|label pattern expected.
+      if (!preg_match('@^ *[a-zA-Z0-9]+ *(\\.[a-zA-Z0-9_-]+ *)*\\| *.+ *$@', $style)) {
         return FALSE;
       }
 
@@ -138,13 +141,16 @@ class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurab
 
       // Build the data structure CKEditor's stylescombo plugin expects.
       // @see http://docs.cksource.com/CKEditor_3.x/Developers_Guide/Styles
-      $styles_set[] = array(
+      $configured_style = array(
         'name' => trim($label),
         'element' => trim($element),
-        'attributes' => array(
-          'class' => implode(' ', array_map('trim', $classes))
-        ),
       );
+      if (!empty($classes)) {
+        $configured_style['attributes'] = array(
+          'class' => implode(' ', array_map('trim', $classes))
+        );
+      }
+      $styles_set[] = $configured_style;
     }
     return $styles_set;
   }
