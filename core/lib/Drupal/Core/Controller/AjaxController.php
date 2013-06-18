@@ -77,5 +77,3 @@ class AjaxController extends ContainerAware {
     return $response;
   }
 }
-
-

@@ -9,6 +9,7 @@ namespace Drupal\Core\Controller;
 
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenDialogCommand;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -25,9 +26,10 @@ class DialogController {
   protected $httpKernel;
 
   /**
-   * Constructs a new HtmlPageController.
+   * Constructs a new DialogController.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $kernel
+   *   The kernel.
    */
   public function __construct(HttpKernelInterface $kernel) {
     $this->httpKernel = $kernel;
@@ -38,13 +40,11 @@ class DialogController {
    *
    * @param \Symfony\Component\HttpFoundation\RequestRequest $request
    *   The request object.
-   * @param callable $content
-   *   The body content callable that contains the body region of this page.
    *
    * @return \Symfony\Component\HttpFoundation\Response
    *   A response object.
    */
-  protected function forward(Request $request, $content) {
+  protected function forward(Request $request) {
     // @todo When we have a Generator, we can replace the forward() call with
     // a render() call, which would handle ESI and hInclude as well.  That will
     // require an _internal route.  For examples, see:
@@ -54,12 +54,16 @@ class DialogController {
     // We need to clean up the derived information and such so that the
     // subrequest can be processed properly without leaking data through.
     $attributes->remove('system_path');
+    $attributes->set('dialog', TRUE);
 
     // Remove the accept header so the subrequest does not end up back in this
     // controller.
     $request->headers->remove('accept');
+    // Remove the X-Requested-With header so the subrequest is not mistaken for
+    // an ajax request.
+    $request->headers->remove('x-requested-with');
 
-    return $this->httpKernel->forward($content, $attributes->all(), $request->query->all());
+    return $this->httpKernel->forward(NULL, $attributes->all(), $request->query->all());
   }
 
   /**
@@ -67,14 +71,12 @@ class DialogController {
    *
    * @param \Symfony\Component\HttpFoundation\RequestRequest $request
    *   The request object.
-   * @param callable $_content
-   *   The body content callable that contains the body region of this page.
    *
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   AjaxResponse to return the content wrapper in a modal dialog.
    */
-  public function modal(Request $request, $_content) {
-    return $this->dialog($request, $_content, TRUE);
+  public function modal(Request $request) {
+    return $this->dialog($request, TRUE);
   }
 
   /**
@@ -82,16 +84,14 @@ class DialogController {
    *
    * @param \Symfony\Component\HttpFoundation\RequestRequest $request
    *   The request object.
-   * @param callable $_content
-   *   The body content callable that contains the body region of this page.
    * @param bool $modal
    *   (optional) TRUE to render a modal dialog. Defaults to FALSE.
    *
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   AjaxResponse to return the content wrapper in a dialog.
    */
-  public function dialog(Request $request, $_content, $modal = FALSE) {
-    $subrequest = $this->forward($request, $_content);
+  public function dialog(Request $request, $modal = FALSE) {
+    $subrequest = $this->forward($request);
     if ($subrequest->isOk()) {
       $content = $subrequest->getContent();
       // @todo Remove use of drupal_get_title() when
@@ -120,8 +120,9 @@ class DialogController {
           unset($options['target']);
         }
         else {
-          // Generate a target based on the controller.
-          $target = '#drupal-dialog-' . drupal_html_id(drupal_clean_css_identifier(drupal_strtolower($_content)));
+          // Generate a target based on the route id.
+          $route_name = $request->attributes->get(RouteObjectInterface::ROUTE_NAME);
+          $target = '#' . drupal_html_id("drupal-dialog-$route_name");
         }
       }
       $response->addCommand(new OpenDialogCommand($target, $title, $content, $options));
