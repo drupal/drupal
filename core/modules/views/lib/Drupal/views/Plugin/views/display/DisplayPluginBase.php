@@ -2436,7 +2436,7 @@ abstract class DisplayPluginBase extends PluginBase {
    * Render the 'more' link
    */
   public function renderMoreLink() {
-    if ($this->usesMore() && ($this->useMoreAlways() || (!empty($this->view->pager) && $this->view->pager->hasMoreRecords()))) {
+    if ($this->isMoreEnabled() && ($this->useMoreAlways() || (!empty($this->view->pager) && $this->view->pager->hasMoreRecords()))) {
       $path = $this->getPath();
 
       if ($this->getOption('link_display') == 'custom_url' && $override_path = $this->getOption('link_url')) {
@@ -2539,7 +2539,7 @@ abstract class DisplayPluginBase extends PluginBase {
    */
   public function preExecute() {
     $this->view->setAjaxEnabled($this->ajaxEnabled());
-    if ($this->usesMore() && !$this->useMoreAlways()) {
+    if ($this->isMoreEnabled() && !$this->useMoreAlways()) {
       $this->view->get_total_rows = TRUE;
     }
     $this->view->initHandlers();

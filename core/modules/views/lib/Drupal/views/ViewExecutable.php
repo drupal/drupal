@@ -105,7 +105,7 @@ class ViewExecutable {
   /**
    * The total number of rows returned from the query.
    *
-   * @var array
+   * @var int
    */
   public $total_rows = NULL;
 
