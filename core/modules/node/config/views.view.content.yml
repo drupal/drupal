@@ -254,8 +254,12 @@ display:
           id: status
           table: node_field_data
           field: status
+          relationship: none
+          group_type: group
+          admin_label: ''
           operator: '='
           value: All
+          group: '1'
           exposed: '1'
           expose:
             operator_id: ''
@@ -269,6 +273,26 @@ display:
             multiple: '0'
             remember_roles:
               authenticated: authenticated
+          is_grouped: '1'
+          group_info:
+            label: 'Published status'
+            description: ''
+            identifier: status
+            optional: '1'
+            widget: select
+            multiple: '0'
+            remember: '0'
+            default_group: All
+            default_group_multiple: {  }
+            group_items:
+              1:
+                title: Published
+                operator: '='
+                value: '1'
+              2:
+                title: Unpublished
+                operator: '='
+                value: '0'
           plugin_id: boolean
         type:
           id: type
