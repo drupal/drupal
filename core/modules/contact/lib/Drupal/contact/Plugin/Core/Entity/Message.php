@@ -9,7 +9,7 @@ namespace Drupal\contact\Plugin\Core\Entity;
 
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
-use Drupal\Core\Entity\Entity;
+use Drupal\Core\Entity\EntityNG;
 use Drupal\contact\MessageInterface;
 
 /**
@@ -20,7 +20,7 @@ use Drupal\contact\MessageInterface;
  *   label = @Translation("Contact message"),
  *   module = "contact",
  *   controllers = {
- *     "storage" = "Drupal\Core\Entity\DatabaseStorageController",
+ *     "storage" = "Drupal\contact\MessageStorageController",
  *     "render" = "Drupal\contact\MessageRenderController",
  *     "form" = {
  *       "default" = "Drupal\contact\MessageFormController"
@@ -29,73 +29,14 @@ use Drupal\contact\MessageInterface;
  *   entity_keys = {
  *     "bundle" = "category"
  *   },
+ *   route_base_path = "admin/structure/contact/manage/{bundle}",
  *   fieldable = TRUE,
  *   bundle_keys = {
  *     "bundle" = "id"
  *   }
  * )
  */
-class Message extends Entity implements MessageInterface {
-
-  /**
-   * The contact category ID of this message.
-   *
-   * @var string
-   */
-  public $category;
-
-  /**
-   * The sender's name.
-   *
-   * @var string
-   */
-  public $name;
-
-  /**
-   * The sender's e-mail address.
-   *
-   * @var string
-   */
-  public $mail;
-
-  /**
-   * The user account object of the message recipient.
-   *
-   * Only applies to the user contact form. For a site contact form category,
-   * multiple recipients can be configured. The existence of a $recipient
-   * triggers user contact form specific processing in the contact message form
-   * controller.
-   *
-   * @see Drupal\contact\MessageFormController::form()
-   * @see Drupal\contact\MessageFormController::save()
-   *
-   * @todo Replace Category::$recipients with the user account's e-mail address
-   *   upon Entity::create().
-   *
-   * @var Drupal\user\Plugin\Core\Entity\User
-   */
-  public $recipient;
-
-  /**
-   * The message subject.
-   *
-   * @var string
-   */
-  public $subject;
-
-  /**
-   * The message text.
-   *
-   * @var string
-   */
-  public $message;
-
-  /**
-   * Whether to send a copy of the message to the sender.
-   *
-   * @var bool
-   */
-  public $copy;
+class Message extends EntityNG implements MessageInterface {
 
   /**
    * Overrides Drupal\Core\Entity\Entity::id().
@@ -105,17 +46,96 @@ class Message extends Entity implements MessageInterface {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\Entity::bundle().
+   * {@inheritdoc}
    */
-  public function bundle() {
-    return $this->category;
+  public function isPersonal() {
+    return $this->bundle() == 'personal';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isPersonal() {
-    return $this->bundle() == 'personal';
+  public function getCategory() {
+    return $this->get('category')->entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSenderName() {
+    return $this->get('name')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setSenderName($sender_name) {
+    $this->set('name', $sender_name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSenderMail() {
+    return $this->get('mail')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setSenderMail($sender_mail) {
+    $this->set('mail', $sender_mail);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSubject() {
+    return $this->get('subject')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setSubject($subject) {
+    $this->set('subject', $subject);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMessage() {
+    return $this->get('message')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setMessage($message) {
+    $this->set('message', $message);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function copySender() {
+    return (bool)$this->get('copy')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setCopySender($inform) {
+    $this->set('copy', (bool) $inform);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPersonalRecipient() {
+    if ($this->isPersonal()) {
+      return $this->get('recipient')->entity;
+    }
   }
 
 }

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\email\Type\EmailItem.
+ * Contains \Drupal\Core\Entity\Field\Type\EmailItem.
  */
 
-namespace Drupal\email\Type;
+namespace Drupal\Core\Entity\Field\Type;
 
 use Drupal\Core\Entity\Field\FieldItemBase;
 

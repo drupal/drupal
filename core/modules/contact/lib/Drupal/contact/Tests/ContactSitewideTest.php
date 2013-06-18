@@ -7,6 +7,7 @@
 
 namespace Drupal\contact\Tests;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -19,7 +20,7 @@ class ContactSitewideTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('contact');
+  public static $modules = array('contact', 'field_ui');
 
   public static function getInfo() {
     return array(
@@ -34,7 +35,12 @@ class ContactSitewideTest extends WebTestBase {
    */
   function testSiteWideContact() {
     // Create and login administrative user.
-    $admin_user = $this->drupalCreateUser(array('access site-wide contact form', 'administer contact forms', 'administer users'));
+    $admin_user = $this->drupalCreateUser(array(
+      'access site-wide contact form',
+      'administer contact forms',
+      'administer users',
+      'administer contact_message fields',
+    ));
     $this->drupalLogin($admin_user);
 
     $flood_limit = 3;
@@ -53,10 +59,14 @@ class ContactSitewideTest extends WebTestBase {
     // Default category exists.
     $this->assertLinkByHref('admin/structure/contact/manage/feedback/delete');
     // User category could not be changed or deleted.
-    // Cannot use assertNoLinkByHref() as it does partial URL matching.
-    $edit_href = 'admin/structure/contact/manage/personal';
-    $edit_link = $this->xpath('//a[@href=:href]', array(':href' => url($edit_href)));
-    $this->assertTrue(empty($edit_link), format_string('No link containing href %href found.', array('%href' => $edit_href)));
+    // Cannot use ::assertNoLinkByHref as it does partial url matching and with
+    // field_ui enabled admin/structure/contact/manage/personal/fields exists.
+    $edit_link = $this->xpath('//a[@href=:href]', array(
+      ':href' => url('admin/structure/contact/manage/personal')
+    ));
+    $this->assertTrue(empty($links), format_string('No link containing href %href found.',
+      array('%href' => 'admin/structure/contact/manage/personal')
+    ));
     $this->assertNoLinkByHref('admin/structure/contact/manage/personal/delete');
 
     $this->drupalGet('admin/structure/contact/manage/personal');
@@ -200,11 +210,56 @@ class ContactSitewideTest extends WebTestBase {
 
     $label = $this->randomName(16);
     $recipients = implode(',', array($recipients[0], $recipients[1], $recipients[2]));
-    $this->addCategory(drupal_strtolower($this->randomName(16)), $label, $recipients, '', FALSE);
+    $category = drupal_strtolower($this->randomName(16));
+    $this->addCategory($category, $label, $recipients, '', FALSE);
     $this->drupalGet('admin/structure/contact');
     $this->clickLink(t('Edit'));
     $this->assertResponse(200);
     $this->assertFieldByName('label', $label);
+
+    // Test field UI and field integration.
+    $this->drupalGet('admin/structure/contact');
+
+    // Find out in which row the category we want to add a field to is.
+    $i = 0;
+    foreach($this->xpath('//table/tbody/tr') as $row) {
+      if (((string)$row->td[0]) == $label) {
+        break;
+      }
+      $i++;
+    }
+
+    $this->clickLink(t('Manage fields'), $i);
+    $this->assertResponse(200);
+
+    // Create a simple textfield.
+    $edit = array(
+      'fields[_add_new_field][label]' => $field_label = $this->randomName(),
+      'fields[_add_new_field][field_name]' => Unicode::strtolower($this->randomName()),
+      'fields[_add_new_field][type]' => 'text',
+      'fields[_add_new_field][widget_type]' => 'text_textfield',
+    );
+    $field_name = 'field_' . $edit['fields[_add_new_field][field_name]'];
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPost(NULL, array(), t('Save field settings'));
+    $this->drupalPost(NULL, array(), t('Save settings'));
+
+    // Check that the field is displayed.
+    $this->drupalGet('contact/' . $category);
+    $this->assertText($field_label);
+
+    // Submit the contact form and verify the content.
+    $edit = array(
+      'subject' => $this->randomName(),
+      'message' => $this->randomName(),
+      $field_name . '[und][0][value]' => $this->randomName(),
+    );
+    $this->drupalPost(NULL, $edit, t('Send message'));
+    $mails = $this->drupalGetMails();
+    $mail = array_pop($mails);
+    $this->assertEqual($mail['subject'], t('[@label] @subject', array('@label' => $label, '@subject' => $edit['subject'])));
+    $this->assertTrue(strpos($mail['body'], $field_label));
+    $this->assertTrue(strpos($mail['body'], $edit[$field_name . '[und][0][value]']));
   }
 
   /**

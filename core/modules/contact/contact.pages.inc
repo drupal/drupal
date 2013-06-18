@@ -45,6 +45,9 @@ function contact_site_page(Category $category = NULL) {
       }
     }
   }
+  else if ($category->id() == 'personal') {
+    throw new NotFoundHttpException();
+  }
   $message = entity_create('contact_message', array(
     'category' => $category->id(),
   ));

@@ -24,11 +24,11 @@ class MessageRenderController extends EntityRenderController {
     foreach ($entities as $entity) {
       // Add the message extra field, if enabled.
       $display = $displays[$entity->bundle()];
-      if (!empty($entity->message) && $display->getComponent('message')) {
+      if ($entity->getMessage() && $display->getComponent('message')) {
         $entity->content['message'] = array(
           '#type' => 'item',
           '#title' => t('Message'),
-          '#markup' => check_plain($entity->message),
+          '#markup' => check_plain($entity->getMessage()),
         );
       }
     }

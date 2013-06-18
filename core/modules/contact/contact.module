@@ -188,12 +188,13 @@ function contact_field_extra_fields() {
       'description' => t('E-mail'),
       'weight' => -40,
     );
-    // @todo Recipient only makes sense if user contact form is a bundle/category.
-    $fields['contact_message'][$bundle]['form']['recipient'] = array(
-      'label' => t('Recipient user name'),
-      'description' => t('User'),
-      'weight' => -30,
-    );
+    if ($bundle == 'personal') {
+      $fields['contact_message'][$bundle]['form']['recipient'] = array(
+        'label' => t('Recipient user name'),
+        'description' => t('User'),
+        'weight' => -30,
+      );
+    }
     $fields['contact_message'][$bundle]['form']['subject'] = array(
       'label' => t('Subject'),
       'description' => t('Text'),
@@ -263,8 +264,8 @@ function contact_mail($key, &$message, $params) {
 
   $variables = array(
     '!site-name' => config('system.site')->get('name'),
-    '!subject' => $contact_message->subject,
-    '!category' => isset($params['contact_category']) ? $params['contact_category']->label() : NULL,
+    '!subject' => $contact_message->getSubject(),
+    '!category' => !empty($params['contact_category']) ? $params['contact_category']->label() : NULL,
     '!form-url' => url(current_path(), array('absolute' => TRUE, 'language' => $language)),
     '!sender-name' => user_format_name($sender),
   );
@@ -302,8 +303,8 @@ function contact_mail($key, &$message, $params) {
       $message['body'][] = t('Hello !recipient-name,', $variables, $options);
       $message['body'][] = t("!sender-name (!sender-url) has sent you a message via your contact form at !site-name.", $variables, $options);
       $message['body'][] = t("If you don't want to receive such e-mails, you can change your settings at !recipient-edit-url.", $variables, $options);
-      $message['body'][] = t('Message:', array(), $options);
-      $message['body'][] = $contact_message->message;
+      $build = entity_view($contact_message, 'mail', $language->langcode);
+      $message['body'][] = drupal_render($build);
       break;
   }
 }

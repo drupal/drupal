@@ -7,14 +7,14 @@
 
 namespace Drupal\contact;
 
-use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Entity\EntityFormControllerNG;
 use Drupal\Core\Language\Language;
 use Drupal\user\UserInterface;
 
 /**
  * Form controller for contact message forms.
  */
-class MessageFormController extends EntityFormController {
+class MessageFormController extends EntityFormControllerNG {
 
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
@@ -67,17 +67,11 @@ class MessageFormController extends EntityFormController {
       $form['recipient'] = array(
         '#type' => 'item',
         '#title' => t('To'),
-        '#value' => $message->recipient,
+        '#value' => $message->getPersonalRecipient()->id(),
         'name' => array(
           '#theme' => 'username',
-          '#account' => $message->recipient,
+          '#account' => $message->getPersonalRecipient(),
         ),
-      );
-    }
-    else {
-      $form['category'] = array(
-        '#type' => 'value',
-        '#value' => $message->category,
       );
     }
 
@@ -146,13 +140,13 @@ class MessageFormController extends EntityFormController {
     if (!$user->uid) {
       // At this point, $sender contains drupal_anonymous_user(), so we need to
       // take over the submitted form values.
-      $sender->name = $message->name;
-      $sender->mail = $message->mail;
+      $sender->name = $message->getSenderName();
+      $sender->mail = $message->getSenderMail();
       // Save the anonymous user information to a cookie for reuse.
-      user_cookie_save(array('name' => $message->name, 'mail' => $message->mail));
+      user_cookie_save(array('name' => $message->getSenderName(), 'mail' => $message->getSenderMail()));
       // For the e-mail message, clarify that the sender name is not verified; it
       // could potentially clash with a username on this site.
-      $sender->name = t('!name (not verified)', array('!name' => $message->name));
+      $sender->name = t('!name (not verified)', array('!name' => $message->getSenderName()));
     }
 
     // Build e-mail parameters.
@@ -161,27 +155,29 @@ class MessageFormController extends EntityFormController {
 
     if (!$message->isPersonal()) {
       // Send to the category recipient(s), using the site's default language.
-      $category = entity_load('contact_category', $message->category);
+      $category = $message->getCategory();
       $params['contact_category'] = $category;
 
       $to = implode(', ', $category->recipients);
       $recipient_langcode = language_default()->langcode;
     }
-    elseif ($message->recipient instanceof UserInterface) {
+    elseif ($recipient = $message->getPersonalRecipient()) {
       // Send to the user in the user's preferred language.
-      $to = $message->recipient->mail;
-      $recipient_langcode = user_preferred_langcode($message->recipient);
+      $to = $recipient->mail->value;
+      $recipient_langcode = user_preferred_langcode($recipient);
+      $params['recipient'] = $recipient->getBCEntity();
     }
     else {
       throw new \RuntimeException(t('Unable to determine message recipient.'));
     }
 
     // Send e-mail to the recipient(s).
-    drupal_mail('contact', 'page_mail', $to, $recipient_langcode, $params, $sender->mail);
+    $key_prefix = $message->isPersonal() ? 'user' : 'page';
+    drupal_mail('contact', $key_prefix . '_mail', $to, $recipient_langcode, $params, $sender->mail);
 
     // If requested, send a copy to the user, using the current language.
-    if ($message->copy) {
-      drupal_mail('contact', 'page_copy', $sender->mail, $language_interface->langcode, $params, $sender->mail);
+    if ($message->copySender()) {
+      drupal_mail('contact', $key_prefix . '_copy', $sender->mail, $language_interface->langcode, $params, $sender->mail);
     }
 
     // If configured, send an auto-reply, using the current language.
@@ -211,8 +207,8 @@ class MessageFormController extends EntityFormController {
 
     // To avoid false error messages caused by flood control, redirect away from
     // the contact form; either to the contacted user account or the front page.
-    if ($message->recipient instanceof UserInterface && user_access('access user profiles')) {
-      $uri = $message->recipient->uri();
+    if ($message->isPersonal() && user_access('access user profiles')) {
+      $uri = $message->getPersonalRecipient()->uri();
       $form_state['redirect'] = array($uri['path'], $uri['options']);
     }
     else {
