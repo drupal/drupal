@@ -8,9 +8,9 @@
 namespace Drupal\system\Tests\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouteCollection;
-
-use Symfony\Cmf\Component\Routing\RouteProviderInterface;
+use Drupal\Core\Routing\RouteProviderInterface;
 
 /**
  * Easily configurable mock route provider.
@@ -67,5 +67,13 @@ class MockRouteProvider implements RouteProviderInterface {
 
     return $routes;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRoutesByPattern($pattern) {
+    return new RouteCollection();
+  }
+
 
 }

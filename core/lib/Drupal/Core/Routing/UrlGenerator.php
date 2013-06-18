@@ -14,7 +14,6 @@ use Symfony\Component\Routing\Route as SymfonyRoute;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 use Symfony\Cmf\Component\Routing\ProviderBasedGenerator;
-use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 
 use Drupal\Component\Utility\Settings;
 use Drupal\Component\Utility\UrlValidator;
@@ -71,7 +70,7 @@ class UrlGenerator extends ProviderBasedGenerator implements PathBasedGeneratorI
   /**
    *  Constructs a new generator object.
    *
-   * @param \Symfony\Cmf\Component\Routing\RouteProviderInterface $provider
+   * @param \Drupal\Core\Routing\RouteProviderInterface $provider
    *   The route provider to be searched for routes.
    * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
    *   The alias manager responsible for path aliasing.
