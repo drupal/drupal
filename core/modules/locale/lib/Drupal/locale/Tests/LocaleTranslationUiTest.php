@@ -13,7 +13,7 @@ use Drupal\Core\Language\Language;
 /**
  * Functional test for string translation and validation.
  */
-class LocaleTranslationTest extends WebTestBase {
+class LocaleTranslationUiTest extends WebTestBase {
 
   /**
    * Modules to enable.
