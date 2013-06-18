@@ -54,15 +54,15 @@ class EditTestBase extends DrupalUnitTestBase {
    */
   function createFieldWithInstance($field_name, $type, $cardinality, $label, $instance_settings, $widget_type, $widget_settings, $formatter_type, $formatter_settings) {
     $field = $field_name . '_field';
-    $this->field = array(
+    $this->$field = entity_create('field_entity', array(
       'field_name' => $field_name,
       'type' => $type,
       'cardinality' => $cardinality,
-    );
-    $this->$field = field_create_field($this->field);
+    ));
+    $this->$field->save();
 
     $instance = $field_name . '_instance';
-    $this->$instance = array(
+    $this->$instance = entity_create('field_instance', array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
@@ -70,8 +70,8 @@ class EditTestBase extends DrupalUnitTestBase {
       'description' => $label,
       'weight' => mt_rand(0, 127),
       'settings' => $instance_settings,
-    );
-    field_create_instance($this->$instance);
+    ));
+    $this->$instance->save();
 
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($field_name, array(

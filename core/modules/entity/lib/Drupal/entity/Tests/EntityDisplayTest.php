@@ -139,22 +139,23 @@ class EntityDisplayTest extends DrupalUnitTestBase {
       'mode' => 'default',
     ));
 
+    $field_name = 'test_field';
     // Create a field and an instance.
-    $field = array(
-      'field_name' => 'test_field',
+    $field = entity_create('field_entity', array(
+      'field_name' => $field_name,
       'type' => 'test_field'
-    );
-    field_create_field($field);
-    $instance = array(
-      'field_name' => $field['field_name'],
+    ));
+    $field->save();
+    $instance = entity_create('field_instance', array(
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-    );
-    field_create_instance($instance);
+    ));
+    $instance->save();
 
     // Check that providing no options results in default values being used.
-    $display->setComponent($field['field_name']);
-    $field_type_info = field_info_field_types($field['type']);
+    $display->setComponent($field_name);
+    $field_type_info = field_info_field_types($field->type);
     $default_formatter = $field_type_info['default_formatter'];
     $default_settings = field_info_formatter_settings($default_formatter);
     $expected = array(
@@ -163,10 +164,10 @@ class EntityDisplayTest extends DrupalUnitTestBase {
       'type' => $default_formatter,
       'settings' => $default_settings,
     );
-    $this->assertEqual($display->getComponent($field['field_name']), $expected);
+    $this->assertEqual($display->getComponent($field_name), $expected);
 
     // Check that the getFormatter() method returns the correct formatter plugin.
-    $formatter = $display->getFormatter($field['field_name']);
+    $formatter = $display->getFormatter($field_name);
     $this->assertEqual($formatter->getPluginId(), $default_formatter);
     $this->assertEqual($formatter->getSettings(), $default_settings);
 
@@ -174,26 +175,26 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     // arbitrary property and reading it back.
     $random_value = $this->randomString();
     $formatter->randomValue = $random_value;
-    $formatter = $display->getFormatter($field['field_name']);
+    $formatter = $display->getFormatter($field_name);
     $this->assertEqual($formatter->randomValue, $random_value);
 
     // Check that changing the definition creates a new formatter.
-    $display->setComponent($field['field_name'], array(
+    $display->setComponent($field_name, array(
       'type' => 'field_test_multiple',
     ));
-    $formatter = $display->getFormatter($field['field_name']);
+    $formatter = $display->getFormatter($field_name);
     $this->assertEqual($formatter->getPluginId(), 'field_test_multiple');
     $this->assertFalse(isset($formatter->randomValue));
 
     // Check that specifying an unknown formatter (e.g. case of a disabled
     // module) gets stored as is in the display, but results in the default
     // formatter being used.
-    $display->setComponent($field['field_name'], array(
+    $display->setComponent($field_name, array(
       'type' => 'unknown_formatter',
     ));
-    $options = $display->getComponent($field['field_name']);
+    $options = $display->getComponent($field_name);
     $this->assertEqual($options['type'], 'unknown_formatter');
-    $formatter = $display->getFormatter($field['field_name']);
+    $formatter = $display->getFormatter($field_name);
     $this->assertEqual($formatter->getPluginId(), $default_formatter);
   }
 
@@ -232,32 +233,33 @@ class EntityDisplayTest extends DrupalUnitTestBase {
   public function testDeleteFieldInstance() {
     $this->enableModules(array('field_sql_storage', 'field_test'));
 
+    $field_name = 'test_field';
     // Create a field and an instance.
     $field = entity_create('field_entity', array(
-      'field_name' => 'test_field',
+      'field_name' => $field_name,
       'type' => 'test_field'
     ));
     $field->save();
     $instance = entity_create('field_instance', array(
-      'field_name' => $field['field_name'],
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
     ));
     $instance->save();
 
     // Create an entity display.
-    $display = entity_create('entity_display', array(
+    entity_create('entity_display', array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
       'viewMode' => 'default',
-    ))->setComponent($field['field_name'])->save();
+    ))->setComponent($field_name)->save();
 
     // Delete the instance.
     $instance->delete();
 
     // Check that the component has been removed from the entity display.
     $display = entity_get_display('entity_test', 'entity_test', 'default');
-    $this->assertFalse($display->getComponent($field['field_name']));
+    $this->assertFalse($display->getComponent($field_name));
   }
 
 }

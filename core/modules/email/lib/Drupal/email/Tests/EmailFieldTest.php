@@ -22,6 +22,20 @@ class EmailFieldTest extends WebTestBase {
    */
   public static $modules = array('node', 'entity_test', 'email', 'field_ui');
 
+  /**
+   * A field to use in this test class.
+   *
+   * @var \Drupal\field\Plugin\Core\Entity\Field
+   */
+  protected $field;
+
+  /**
+   * The instance used in this test class.
+   *
+   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
+   */
+  protected $instance;
+
   public static function getInfo() {
     return array(
       'name'  => 'E-mail field',
@@ -46,21 +60,22 @@ class EmailFieldTest extends WebTestBase {
    */
   function testEmailField() {
     // Create a field with settings to validate.
-    $this->field = array(
-      'field_name' => drupal_strtolower($this->randomName()),
+    $field_name = drupal_strtolower($this->randomName());
+    $this->field = entity_create('field_entity', array(
+      'field_name' => $field_name,
       'type' => 'email',
-    );
-    field_create_field($this->field);
-    $this->instance = array(
-      'field_name' => $this->field['field_name'],
+    ));
+    $this->field->save();
+    $this->instance = entity_create('field_instance', array(
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-    );
-    field_create_instance($this->instance);
+    ));
+    $this->instance->save();
 
     // Create a form display for the default form mode.
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->field['field_name'], array(
+      ->setComponent($field_name, array(
         'type' => 'email_default',
         'settings' => array(
           'placeholder' => 'example@example.com',
@@ -69,7 +84,7 @@ class EmailFieldTest extends WebTestBase {
       ->save();
     // Create a display for the full view mode.
     entity_get_display('entity_test', 'entity_test', 'full')
-      ->setComponent($this->field['field_name'], array(
+      ->setComponent($field_name, array(
         'type' => 'email_mailto',
       ))
       ->save();
@@ -77,7 +92,7 @@ class EmailFieldTest extends WebTestBase {
     // Display creation form.
     $this->drupalGet('entity_test/add');
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value]", '', 'Widget found.');
+    $this->assertFieldByName("{$field_name}[$langcode][0][value]", '', 'Widget found.');
     $this->assertRaw('placeholder="example@example.com"');
 
     // Submit a valid e-mail address and ensure it is accepted.
@@ -85,7 +100,7 @@ class EmailFieldTest extends WebTestBase {
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$this->field['field_name']}[$langcode][0][value]" => $value,
+      "{$field_name}[$langcode][0][value]" => $value,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);

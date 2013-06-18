@@ -41,7 +41,7 @@ class CommentFieldsTest extends CommentTestBase {
       $this->assertTrue(isset($instances['comment_node_' . $type_name]['comment_body']), format_string('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
 
       // Delete the instance along the way.
-      field_delete_instance($instances['comment_node_' . $type_name]['comment_body']);
+      $instances['comment_node_' . $type_name]['comment_body']->delete();
     }
 
     // Check that the 'comment_body' field is deleted.

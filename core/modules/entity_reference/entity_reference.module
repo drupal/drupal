@@ -194,8 +194,8 @@ function entity_reference_field_update_field($field, $prior_field) {
   foreach ($field['bundles'] as $entity_type => $bundles) {
     foreach ($bundles as $bundle) {
       $instance = field_info_instance($entity_type, $field_name, $bundle);
-      $instance['settings']['handler_settings'] = array();
-      field_update_instance($instance);
+      $instance->settings['handler_settings'] = array();
+      $instance->save();
     }
   }
 }
@@ -430,7 +430,7 @@ function entity_reference_create_instance($entity_type, $bundle, $field_name, $f
         'target_type' => $target_entity_type,
       ),
     );
-    field_create_field($field);
+    entity_create('field_entity', $field)->save();
   }
 
   if (empty($instance)) {
@@ -444,6 +444,7 @@ function entity_reference_create_instance($entity_type, $bundle, $field_name, $f
         'handler_settings' => $selection_handler_settings,
       ),
     );
-    field_create_instance($instance);
+    entity_create('field_instance', $instance)->save();
   }
 }
+

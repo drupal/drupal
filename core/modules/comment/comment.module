@@ -345,26 +345,26 @@ function comment_node_type_delete($info) {
 function _comment_body_field_create($info) {
   // Create the field if needed.
   if (!field_read_field('comment_body', array('include_inactive' => TRUE))) {
-    $field = array(
+    $field = entity_create('field_entity', array(
       'field_name' => 'comment_body',
       'type' => 'text_long',
       'entity_types' => array('comment'),
-    );
-    field_create_field($field);
+    ));
+    $field->save();
   }
   // Create the instance if needed.
   if (!field_read_instance('comment', 'comment_body', 'comment_node_' . $info->type, array('include_inactive' => TRUE))) {
     entity_invoke_bundle_hook('create', 'comment', 'comment_node_' . $info->type);
     // Attaches the body field by default.
-    $instance = array(
+    $instance = entity_create('field_instance', array(
       'field_name' => 'comment_body',
       'label' => 'Comment',
       'entity_type' => 'comment',
       'bundle' => 'comment_node_' . $info->type,
       'settings' => array('text_processing' => 1),
       'required' => TRUE,
-    );
-    field_create_instance($instance);
+    ));
+    $instance->save();
 
     // Assign widget settings for the 'default' form mode.
     entity_get_form_display('comment', 'comment_node_' . $info->type, 'default')

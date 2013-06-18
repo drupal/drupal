@@ -24,7 +24,7 @@ class ContactFieldsTest extends ViewTestBase {
   /**
    * Contains the field definition array attached to contact used for this test.
    *
-   * @var array
+   * @var \Drupal\field\Plugin\Core\Entity\Field
    */
   protected $field;
 
@@ -39,19 +39,17 @@ class ContactFieldsTest extends ViewTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $field = array(
+    $this->field = entity_create('field_entity', array(
       'field_name' => strtolower($this->randomName()),
       'type' => 'text'
-    );
+    ));
+    $this->field->save();
 
-    $this->field = field_create_field($field);
-
-    $instance = array(
-      'field_name' => $field['field_name'],
+    entity_create('field_instance', array(
+      'field_name' => $this->field->id(),
       'entity_type' => 'contact_message',
       'bundle' => 'contact_message',
-    );
-    field_create_instance($instance);
+    ))->save();
 
     $this->container->get('views.views_data')->clear();
   }
@@ -60,7 +58,6 @@ class ContactFieldsTest extends ViewTestBase {
    * Tests the views data generation.
    */
   public function testViewsData() {
-    $field_name = $this->field['field_name'];
     $table_name = _field_sql_storage_tablename($this->field);
     $data = $this->container->get('views.views_data')->get($table_name);
 
@@ -68,7 +65,7 @@ class ContactFieldsTest extends ViewTestBase {
     $expected = array('', '_value', '_format');
     $this->assertEqual(count($data), count($expected), 'The expected amount of array keys were found.');
     foreach ($expected as $suffix) {
-      $this->assertTrue(isset($data[$field_name . $suffix]));
+      $this->assertTrue(isset($data[$this->field->id() . $suffix]));
     }
     $this->assertTrue(empty($data['table']['join']), 'The field is not joined to the non existent contact message base table.');
   }

@@ -26,9 +26,16 @@ class DatetimeFieldTest extends WebTestBase {
   /**
    * A field to use in this test class.
    *
-   * @var \Drupal\Core\Datetime\DrupalDateTime
+   * @var \Drupal\field\Plugin\Core\Entity\Field
    */
   protected $field;
+
+  /**
+   * The instance used in this test class.
+   *
+   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
+   */
+  protected $instance;
 
   public static function getInfo() {
     return array(
@@ -49,22 +56,24 @@ class DatetimeFieldTest extends WebTestBase {
     $this->drupalLogin($web_user);
 
     // Create a field with settings to validate.
-    $this->field = field_create_field(array(
+    $this->field = entity_create('field_entity', array(
       'field_name' => drupal_strtolower($this->randomName()),
       'type' => 'datetime',
       'settings' => array('datetime_type' => 'date'),
     ));
-    $this->instance = field_create_instance(array(
-      'field_name' => $this->field['field_name'],
+    $this->field->save();
+    $this->instance = entity_create('field_instance', array(
+      'field_name' => $this->field->id(),
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
       'settings' => array(
         'default_value' => 'blank',
       ),
     ));
+    $this->instance->save();
 
-    entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
-      ->setComponent($this->field['field_name'], array(
+    entity_get_form_display($this->instance->entity_type, $this->instance->bundle, 'default')
+      ->setComponent($this->field->id(), array(
         'type' => 'datetime_default',
       ))
       ->save();
@@ -74,8 +83,8 @@ class DatetimeFieldTest extends WebTestBase {
       'label' => 'hidden',
       'settings' => array('format_type' => 'medium'),
     );
-    entity_get_display($this->instance['entity_type'], $this->instance['bundle'], 'full')
-      ->setComponent($this->field['field_name'], $this->display_options)
+    entity_get_display($this->instance->entity_type, $this->instance->bundle, 'full')
+      ->setComponent($this->field->id(), $this->display_options)
       ->save();
   }
 
@@ -83,12 +92,13 @@ class DatetimeFieldTest extends WebTestBase {
    * Tests date field functionality.
    */
   function testDateField() {
+    $field_name = $this->field->id();
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value][date]", '', 'Date element found.');
-    $this->assertNoFieldByName("{$this->field['field_name']}[$langcode][0][value][time]", '', 'Time element not found.');
+    $this->assertFieldByName("{$field_name}[$langcode][0][value][date]", '', 'Date element found.');
+    $this->assertNoFieldByName("{$field_name}[$langcode][0][value][time]", '', 'Time element not found.');
 
     // Submit a valid date and ensure it is accepted.
     $value = '2012-12-31 00:00:00';
@@ -100,7 +110,7 @@ class DatetimeFieldTest extends WebTestBase {
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$this->field['field_name']}[$langcode][0][value][date]" => $date->format($date_format),
+      "{$field_name}[$langcode][0][value][date]" => $date->format($date_format),
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
@@ -120,8 +130,8 @@ class DatetimeFieldTest extends WebTestBase {
       foreach ($values as $new_value) {
         // Update the entity display settings.
         $this->display_options['settings'] = array($setting => $new_value);
-        $display = entity_get_display($this->instance['entity_type'], $this->instance['bundle'], 'full')
-          ->setComponent($this->instance['field_name'], $this->display_options)
+        entity_get_display($this->instance->entity_type, $this->instance->bundle, 'full')
+          ->setComponent($field_name, $this->display_options)
           ->save();
 
         $this->renderTestEntity($id);
@@ -138,8 +148,8 @@ class DatetimeFieldTest extends WebTestBase {
 
     // Verify that the plain formatter works.
     $this->display_options['type'] = 'datetime_plain';
-    $display = entity_get_display($this->instance['entity_type'], $this->instance['bundle'], 'full')
-      ->setComponent($this->instance['field_name'], $this->display_options)
+    entity_get_display($this->instance->entity_type, $this->instance->bundle, 'full')
+      ->setComponent($field_name, $this->display_options)
       ->save();
     $expected = $date->format(DATETIME_DATE_STORAGE_FORMAT);
     $this->renderTestEntity($id);
@@ -150,16 +160,16 @@ class DatetimeFieldTest extends WebTestBase {
    * Tests date and time field.
    */
   function testDatetimeField() {
-
+    $field_name = $this->field->id();
     // Change the field to a datetime field.
     $this->field['settings']['datetime_type'] = 'datetime';
-    field_update_field($this->field);
+    $this->field->save();
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value][date]", '', 'Date element found.');
-    $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value][time]", '', 'Time element found.');
+    $this->assertFieldByName("{$field_name}[$langcode][0][value][date]", '', 'Date element found.');
+    $this->assertFieldByName("{$field_name}[$langcode][0][value][time]", '', 'Time element found.');
 
     // Submit a valid date and ensure it is accepted.
     $value = '2012-12-31 00:00:00';
@@ -171,8 +181,8 @@ class DatetimeFieldTest extends WebTestBase {
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$this->field['field_name']}[$langcode][0][value][date]" => $date->format($date_format),
-      "{$this->field['field_name']}[$langcode][0][value][time]" => $date->format($time_format),
+      "{$field_name}[$langcode][0][value][date]" => $date->format($date_format),
+      "{$field_name}[$langcode][0][value][time]" => $date->format($time_format),
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
@@ -189,8 +199,8 @@ class DatetimeFieldTest extends WebTestBase {
       foreach ($values as $new_value) {
         // Update the entity display settings.
         $this->display_options['settings'] = array($setting => $new_value);
-        $display = entity_get_display($this->instance['entity_type'], $this->instance['bundle'], 'full')
-          ->setComponent($this->instance['field_name'], $this->display_options)
+        entity_get_display($this->instance->entity_type, $this->instance->bundle, 'full')
+          ->setComponent($field_name, $this->display_options)
           ->save();
 
         $this->renderTestEntity($id);
@@ -207,8 +217,8 @@ class DatetimeFieldTest extends WebTestBase {
 
     // Verify that the plain formatter works.
     $this->display_options['type'] = 'datetime_plain';
-    $display = entity_get_display($this->instance['entity_type'], $this->instance['bundle'], 'full')
-      ->setComponent($this->instance['field_name'], $this->display_options)
+    entity_get_display($this->instance->entity_type, $this->instance->bundle, 'full')
+      ->setComponent($field_name, $this->display_options)
       ->save();
     $expected = $date->format(DATETIME_DATETIME_STORAGE_FORMAT);
     $this->renderTestEntity($id);
@@ -219,14 +229,14 @@ class DatetimeFieldTest extends WebTestBase {
    * Tests Date List Widget functionality.
    */
   function testDatelistWidget() {
-
+    $field_name = $this->field->id();
     // Change the field to a datetime field.
-    $this->field['settings']['datetime_type'] = 'datetime';
-    field_update_field($this->field);
+    $this->field->settings['datetime_type'] = 'datetime';
+    $this->field->save();
 
     // Change the widget to a datelist widget.
-    entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
-      ->setComponent($this->instance['field_name'], array(
+    entity_get_form_display($this->instance->entity_type, $this->instance->bundle, 'default')
+      ->setComponent($field_name, array(
         'type' => 'datetime_datelist',
         'settings' => array(
           'increment' => 1,
@@ -239,7 +249,6 @@ class DatetimeFieldTest extends WebTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $field_name = $this->field['field_name'];
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-$langcode-0-value-year\"]", NULL, 'Year element found.');
@@ -258,7 +267,6 @@ class DatetimeFieldTest extends WebTestBase {
 
     // Submit a valid date and ensure it is accepted.
     $date_value = array('year' => 2012, 'month' => 12, 'day' => 31, 'hour' => 5, 'minute' => 15);
-    $date = new DrupalDateTime($date_value);
 
     $edit = array(
       'user_id' => 1,
@@ -267,7 +275,7 @@ class DatetimeFieldTest extends WebTestBase {
     // Add the ampm indicator since we are testing 12 hour time.
     $date_value['ampm'] = 'am';
     foreach ($date_value as $part => $value) {
-      $edit["{$this->field['field_name']}[$langcode][0][value][$part]"] = $value;
+      $edit["{$field_name}[$langcode][0][value][$part]"] = $value;
     }
 
     $this->drupalPost(NULL, $edit, t('Save'));
@@ -289,13 +297,14 @@ class DatetimeFieldTest extends WebTestBase {
   function testDefaultValue() {
 
     // Change the field to a datetime field.
-    $this->field['settings']['datetime_type'] = 'datetime';
-    field_update_field($this->field);
+    $this->field->settings['datetime_type'] = 'datetime';
+    $this->field->save();
+    $field_name = $this->field->id();
 
     // Set the default value to 'now'.
-    $this->instance['settings']['default_value'] = 'now';
-    $this->instance['default_value_function'] = 'datetime_default_value';
-    field_update_instance($this->instance);
+    $this->instance->settings['default_value'] = 'now';
+    $this->instance->default_value_function = 'datetime_default_value';
+    $this->instance->save();
 
     // Display creation form.
     $date = new DrupalDateTime();
@@ -307,21 +316,21 @@ class DatetimeFieldTest extends WebTestBase {
     // it may be a few seconds between the time the comparison date is created
     // and the form date, so we just test the date and that the time is not
     // empty.
-    $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value][date]", $date->format($date_format), 'Date element found.');
-    $this->assertNoFieldByName("{$this->field['field_name']}[$langcode][0][value][time]", '', 'Time element found.');
+    $this->assertFieldByName("{$field_name}[$langcode][0][value][date]", $date->format($date_format), 'Date element found.');
+    $this->assertNoFieldByName("{$field_name}[$langcode][0][value][time]", '', 'Time element found.');
 
     // Set the default value to 'blank'.
-    $this->instance['settings']['default_value'] = 'blank';
-    $this->instance['default_value_function'] = 'datetime_default_value';
-    field_update_instance($this->instance);
+    $this->instance->settings['default_value'] = 'blank';
+    $this->instance->default_value_function = 'datetime_default_value';
+    $this->instance->save();
 
     // Display creation form.
     $date = new DrupalDateTime();
     $this->drupalGet('entity_test/add');
 
     // See that no date is set.
-    $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value][date]", '', 'Date element found.');
-    $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value][time]", '', 'Time element found.');
+    $this->assertFieldByName("{$field_name}[$langcode][0][value][date]", '', 'Date element found.');
+    $this->assertFieldByName("{$field_name}[$langcode][0][value][time]", '', 'Time element found.');
   }
 
   /**
@@ -330,44 +339,45 @@ class DatetimeFieldTest extends WebTestBase {
   function testInvalidField() {
 
     // Change the field to a datetime field.
-    $this->field['settings']['datetime_type'] = 'datetime';
-    field_update_field($this->field);
+    $this->field->settings['datetime_type'] = 'datetime';
+    $this->field->save();
+    $field_name = $this->field->id();
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value][date]", '', 'Date element found.');
-    $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value][time]", '', 'Time element found.');
+    $this->assertFieldByName("{$field_name}[$langcode][0][value][date]", '', 'Date element found.');
+    $this->assertFieldByName("{$field_name}[$langcode][0][value][time]", '', 'Time element found.');
 
     // Submit invalid dates and ensure they is not accepted.
     $date_value = '';
     $edit = array(
-      "{$this->field['field_name']}[$langcode][0][value][date]" => $date_value,
-      "{$this->field['field_name']}[$langcode][0][value][time]" => '12:00:00',
+      "{$field_name}[$langcode][0][value][date]" => $date_value,
+      "{$field_name}[$langcode][0][value][time]" => '12:00:00',
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', 'Empty date value has been caught.');
 
     $date_value = 'aaaa-12-01';
     $edit = array(
-      "{$this->field['field_name']}[$langcode][0][value][date]" => $date_value,
-      "{$this->field['field_name']}[$langcode][0][value][time]" => '00:00:00',
+      "{$field_name}[$langcode][0][value][date]" => $date_value,
+      "{$field_name}[$langcode][0][value][time]" => '00:00:00',
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', format_string('Invalid year value %date has been caught.', array('%date' => $date_value)));
 
     $date_value = '2012-75-01';
     $edit = array(
-      "{$this->field['field_name']}[$langcode][0][value][date]" => $date_value,
-      "{$this->field['field_name']}[$langcode][0][value][time]" => '00:00:00',
+      "{$field_name}[$langcode][0][value][date]" => $date_value,
+      "{$field_name}[$langcode][0][value][time]" => '00:00:00',
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', format_string('Invalid month value %date has been caught.', array('%date' => $date_value)));
 
     $date_value = '2012-12-99';
     $edit = array(
-      "{$this->field['field_name']}[$langcode][0][value][date]" => $date_value,
-      "{$this->field['field_name']}[$langcode][0][value][time]" => '00:00:00',
+      "{$field_name}[$langcode][0][value][date]" => $date_value,
+      "{$field_name}[$langcode][0][value][time]" => '00:00:00',
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', format_string('Invalid day value %date has been caught.', array('%date' => $date_value)));
@@ -375,8 +385,8 @@ class DatetimeFieldTest extends WebTestBase {
     $date_value = '2012-12-01';
     $time_value = '';
     $edit = array(
-      "{$this->field['field_name']}[$langcode][0][value][date]" => $date_value,
-      "{$this->field['field_name']}[$langcode][0][value][time]" => $time_value,
+      "{$field_name}[$langcode][0][value][date]" => $date_value,
+      "{$field_name}[$langcode][0][value][time]" => $time_value,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', 'Empty time value has been caught.');
@@ -384,8 +394,8 @@ class DatetimeFieldTest extends WebTestBase {
     $date_value = '2012-12-01';
     $time_value = '49:00:00';
     $edit = array(
-      "{$this->field['field_name']}[$langcode][0][value][date]" => $date_value,
-      "{$this->field['field_name']}[$langcode][0][value][time]" => $time_value,
+      "{$field_name}[$langcode][0][value][date]" => $date_value,
+      "{$field_name}[$langcode][0][value][time]" => $time_value,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', format_string('Invalid hour value %time has been caught.', array('%time' => $time_value)));
@@ -393,8 +403,8 @@ class DatetimeFieldTest extends WebTestBase {
     $date_value = '2012-12-01';
     $time_value = '12:99:00';
     $edit = array(
-      "{$this->field['field_name']}[$langcode][0][value][date]" => $date_value,
-      "{$this->field['field_name']}[$langcode][0][value][time]" => $time_value,
+      "{$field_name}[$langcode][0][value][date]" => $date_value,
+      "{$field_name}[$langcode][0][value][time]" => $time_value,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', format_string('Invalid minute value %time has been caught.', array('%time' => $time_value)));
@@ -402,8 +412,8 @@ class DatetimeFieldTest extends WebTestBase {
     $date_value = '2012-12-01';
     $time_value = '12:15:99';
     $edit = array(
-      "{$this->field['field_name']}[$langcode][0][value][date]" => $date_value,
-      "{$this->field['field_name']}[$langcode][0][value][time]" => $time_value,
+      "{$field_name}[$langcode][0][value][date]" => $date_value,
+      "{$field_name}[$langcode][0][value][time]" => $time_value,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', format_string('Invalid second value %time has been caught.', array('%time' => $time_value)));
