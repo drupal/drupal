@@ -67,21 +67,21 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
     $this->formatter_type = 'text_plain';
     $this->formatter_settings = array();
 
-    $this->field = array(
+    $this->field = entity_create('field_entity', array(
       'field_name' => $this->field_name,
       'type' => $this->field_type,
       'settings' => $this->field_settings,
-    );
-    $this->field = field_create_field($this->field);
+    ));
+    $this->field->save();
 
-    $this->instance = array(
+    $this->instance = entity_create('field_instance', array(
       'entity_type' => $this->entity_type,
       'bundle' => $this->bundle,
       'field_name' => $this->field_name,
       'label' => $this->randomName(),
       'settings' => $this->instance_settings,
-    );
-    $this->instance = field_create_instance($this->instance);
+    ));
+    $this->instance->save();
 
     $this->view_mode = 'default';
     $this->display = entity_get_display($this->entity_type, $this->bundle, $this->view_mode)

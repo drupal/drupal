@@ -46,7 +46,7 @@ class TermFieldTest extends TaxonomyTestBase {
 
     // Setup a field and instance.
     $this->field_name = drupal_strtolower($this->randomName());
-    $this->field = array(
+    $this->field = entity_create('field_entity', array(
       'field_name' => $this->field_name,
       'type' => 'taxonomy_term_reference',
       'settings' => array(
@@ -57,14 +57,13 @@ class TermFieldTest extends TaxonomyTestBase {
           ),
         ),
       )
-    );
-    field_create_field($this->field);
-    $this->instance = array(
+    ));
+    $this->field->save();
+    entity_create('field_instance', array(
       'field_name' => $this->field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-    );
-    field_create_instance($this->instance);
+    ))->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($this->field_name, array(
         'type' => 'options_select',
@@ -150,7 +149,7 @@ class TermFieldTest extends TaxonomyTestBase {
   function testTaxonomyTermFieldChangeMachineName() {
     // Add several entries in the 'allowed_values' setting, to make sure that
     // they all get updated.
-    $this->field['settings']['allowed_values'] = array(
+    $this->field->settings['allowed_values'] = array(
       array(
         'vocabulary' => $this->vocabulary->id(),
         'parent' => '0',
@@ -164,7 +163,7 @@ class TermFieldTest extends TaxonomyTestBase {
         'parent' => '0',
       ),
     );
-    field_update_field($this->field);
+    $this->field->save();
     // Change the machine name.
     $new_name = drupal_strtolower($this->randomName());
     $this->vocabulary->vid = $new_name;

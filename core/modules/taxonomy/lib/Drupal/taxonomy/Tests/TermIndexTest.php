@@ -33,7 +33,7 @@ class TermIndexTest extends TaxonomyTestBase {
     $this->vocabulary = $this->createVocabulary();
 
     $this->field_name_1 = drupal_strtolower($this->randomName());
-    $this->field_1 = array(
+    entity_create('field_entity', array(
       'field_name' => $this->field_name_1,
       'type' => 'taxonomy_term_reference',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
@@ -45,14 +45,12 @@ class TermIndexTest extends TaxonomyTestBase {
           ),
         ),
       ),
-    );
-    field_create_field($this->field_1);
-    $this->instance_1 = array(
+    ))->save();
+    entity_create('field_instance', array(
       'field_name' => $this->field_name_1,
       'bundle' => 'article',
       'entity_type' => 'node',
-    );
-    field_create_instance($this->instance_1);
+    ))->save();
     entity_get_form_display('node', 'article', 'default')
       ->setComponent($this->field_name_1, array(
         'type' => 'options_select',
@@ -65,7 +63,7 @@ class TermIndexTest extends TaxonomyTestBase {
       ->save();
 
     $this->field_name_2 = drupal_strtolower($this->randomName());
-    $this->field_2 = array(
+    entity_create('field_entity', array(
       'field_name' => $this->field_name_2,
       'type' => 'taxonomy_term_reference',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
@@ -77,14 +75,12 @@ class TermIndexTest extends TaxonomyTestBase {
           ),
         ),
       ),
-    );
-    field_create_field($this->field_2);
-    $this->instance_2 = array(
+    ))->save();
+    entity_create('field_instance', array(
       'field_name' => $this->field_name_2,
       'bundle' => 'article',
       'entity_type' => 'node',
-    );
-    field_create_instance($this->instance_2);
+    ))->save();
     entity_get_form_display('node', 'article', 'default')
       ->setComponent($this->field_name_2, array(
         'type' => 'options_select',

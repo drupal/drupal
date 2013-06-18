@@ -43,7 +43,8 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
       'langcode' => Language::LANGCODE_NOT_SPECIFIED,
     ));
     $vocabulary->save();
-    $field = array(
+
+    entity_create('field_entity', array(
       'field_name' => 'field_test_taxonomy',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
@@ -55,14 +56,12 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
           ),
         ),
       ),
-    );
-    field_create_field($field);
-    $instance = array(
+    ))->save();
+    entity_create('field_instance', array(
       'entity_type' => 'entity_test',
       'field_name' => 'field_test_taxonomy',
       'bundle' => 'entity_test',
-    );
-    field_create_instance($instance);
+    ))->save();
     $this->term = entity_create('taxonomy_term', array(
       'name' => $this->randomName(),
       'vid' => $vocabulary->id(),

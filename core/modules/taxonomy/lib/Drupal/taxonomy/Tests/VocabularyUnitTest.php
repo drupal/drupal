@@ -154,17 +154,15 @@ class VocabularyUnitTest extends TaxonomyTestBase {
    */
   function testTaxonomyVocabularyChangeMachineName() {
     // Add a field instance to the vocabulary.
-    $field = array(
+    entity_create('field_entity', array(
       'field_name' => 'field_test',
       'type' => 'test_field',
-    );
-    field_create_field($field);
-    $instance = array(
+    ))->save();
+    entity_create('field_instance', array(
       'field_name' => 'field_test',
       'entity_type' => 'taxonomy_term',
       'bundle' => $this->vocabulary->id(),
-    );
-    field_create_instance($instance);
+    ))->save();
 
     // Change the machine name.
     $old_name = $this->vocabulary->id();
@@ -188,15 +186,19 @@ class VocabularyUnitTest extends TaxonomyTestBase {
     // Fields and field instances attached to taxonomy term bundles should be
     // removed when the module is uninstalled.
     $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
-    $this->field_definition = array('field_name' => $this->field_name, 'type' => 'text', 'cardinality' => 4);
-    field_create_field($this->field_definition);
+    $this->field_definition = array(
+      'field_name' => $this->field_name,
+      'type' => 'text',
+      'cardinality' => 4
+    );
+    entity_create('field_entity', $this->field_definition)->save();
     $this->instance_definition = array(
       'field_name' => $this->field_name,
       'entity_type' => 'taxonomy_term',
       'bundle' => $this->vocabulary->id(),
       'label' => $this->randomName() . '_label',
     );
-    field_create_instance($this->instance_definition);
+    entity_create('field_instance', $this->instance_definition)->save();
 
     module_disable(array('taxonomy'));
     require_once DRUPAL_ROOT . '/core/includes/install.inc';
@@ -209,7 +211,7 @@ class VocabularyUnitTest extends TaxonomyTestBase {
     // an instance of this field on the same bundle name should be successful.
     $this->vocabulary->enforceIsNew();
     $this->vocabulary->save();
-    field_create_field($this->field_definition);
-    field_create_instance($this->instance_definition);
+    entity_create('field_entity', $this->field_definition)->save();
+    entity_create('field_instance', $this->instance_definition)->save();
   }
 }

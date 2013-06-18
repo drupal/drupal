@@ -1028,7 +1028,7 @@ function translation_entity_save_settings($settings) {
             else {
               unset($instance['settings']['translation_sync']);
             }
-            field_update_instance($instance);
+            $instance->save();
           }
         }
       }

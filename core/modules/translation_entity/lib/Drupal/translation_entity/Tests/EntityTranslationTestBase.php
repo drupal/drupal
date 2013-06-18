@@ -161,21 +161,18 @@ abstract class EntityTranslationTestBase extends WebTestBase {
   protected function setupTestFields() {
     $this->fieldName = 'field_test_et_ui_test';
 
-    $field = array(
+    entity_create('field_entity', array(
       'field_name' => $this->fieldName,
       'type' => 'text',
       'cardinality' => 1,
       'translatable' => TRUE,
-    );
-    field_create_field($field);
-
-    $instance = array(
+    ))->save();
+    entity_create('field_instance', array(
       'entity_type' => $this->entityType,
       'field_name' => $this->fieldName,
       'bundle' => $this->bundle,
       'label' => 'Test translatable text-field',
-    );
-    field_create_instance($instance);
+    ))->save();
     entity_get_form_display($this->entityType, $this->bundle, 'default')
       ->setComponent($this->fieldName, array(
         'type' => 'text_textfield',
