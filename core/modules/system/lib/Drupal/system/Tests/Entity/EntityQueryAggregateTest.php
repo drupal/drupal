@@ -60,18 +60,17 @@ class EntityQueryAggregateTest extends EntityUnitTestBase {
 
     // Add some fieldapi fields to be used in the test.
     for ($i = 1; $i <= 2; $i++) {
-      $field = array(
-        'field_name' => 'field_test_' . $i,
+      $field_name = 'field_test_' . $i;
+      entity_create('field_entity', array(
+        'field_name' => $field_name,
         'type' => 'number_integer',
         'cardinality' => 2,
-      );
-      field_create_field($field);
-      $instance = array(
-        'field_name' => $field['field_name'],
+      ))->save();
+      entity_create('field_instance', array(
+        'field_name' => $field_name,
         'entity_type' => 'entity_test',
         'bundle' => 'entity_test',
-      );
-      field_create_instance($instance);
+      ))->save();
     }
 
     $entity = $this->entityStorageController->create(array(

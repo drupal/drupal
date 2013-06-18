@@ -105,8 +105,8 @@ class EntityTranslationFormTest extends WebTestBase {
 
     // Make body translatable.
     $field = field_info_field('body');
-    $field['translatable'] = TRUE;
-    field_update_field($field);
+    $field->translatable = TRUE;
+    $field->save();
     $field = field_info_field('body');
     $this->assertTrue($field['translatable'], 'Field body is translatable.');
 

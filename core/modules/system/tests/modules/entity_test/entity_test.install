@@ -10,13 +10,12 @@
  */
 function entity_test_install() {
   // Auto-create a field for testing.
-  $field = array(
+  entity_create('field_entity', array(
     'field_name' => 'field_test_text',
     'type' => 'text',
     'cardinality' => 1,
     'translatable' => FALSE,
-  );
-  field_create_field($field);
+  ))->save();
 
   $entity_types = array(
     'entity_test',
@@ -25,13 +24,12 @@ function entity_test_install() {
     'entity_test_mulrev',
   );
   foreach ($entity_types as $entity_type) {
-    $instance = array(
+    entity_create('field_instance', array(
       'entity_type' => $entity_type,
       'field_name' => 'field_test_text',
       'bundle' => $entity_type,
       'label' => 'Test text-field',
-    );
-    field_create_instance($instance);
+    ))->save();
 
     entity_get_form_display($entity_type, $entity_type, 'default')
       ->setComponent('field_test_text', array('type' => 'text_text'))

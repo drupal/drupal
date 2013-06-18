@@ -598,8 +598,8 @@ class EntityFieldTest extends EntityUnitTestBase  {
   protected function assertComputedProperties($entity_type) {
     // Make the test text field processed.
     $instance = field_info_instance($entity_type, 'field_test_text', $entity_type);
-    $instance['settings']['text_processing'] = 1;
-    field_update_instance($instance);
+    $instance->settings['text_processing'] = 1;
+    $instance->save();
 
     $entity = $this->createTestEntity($entity_type);
     $entity->field_test_text->value = "The <strong>text</strong> text to filter.";

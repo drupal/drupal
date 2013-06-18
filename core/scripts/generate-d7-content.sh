@@ -93,7 +93,7 @@ for ($i = 0; $i < 24; $i++) {
       ),
     ),
   );
-  field_create_field($field);
+  entity_create('field_entity', $field)->save();
   $node_types = $i > 11 ? array('page') : array_keys(node_type_get_types());
   foreach ($node_types as $bundle) {
     $instance = array(
@@ -132,7 +132,7 @@ for ($i = 0; $i < 24; $i++) {
         'settings' => array(),
       );
     }
-    field_create_instance($instance);
+    entity_create('field_instance', $instance)->save();
   }
   $parents = array();
   // Vocabularies without hierarchy get one term, single parent vocabularies get

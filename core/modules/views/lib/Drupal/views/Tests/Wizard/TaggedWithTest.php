@@ -55,7 +55,7 @@ class TaggedWithTest extends WizardTestBase {
     $this->tag_vocabulary->save();
 
     // Create the tag field itself.
-    $this->tag_field = array(
+    $this->tag_field = entity_create('field_entity', array(
       'field_name' => 'field_views_testing_tags',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
@@ -67,8 +67,8 @@ class TaggedWithTest extends WizardTestBase {
           ),
         ),
       ),
-    );
-    field_create_field($this->tag_field);
+    ));
+    $this->tag_field->save();
 
     // Create an instance of the tag field on one of the content types, and
     // configure it to display an autocomplete widget.
@@ -77,7 +77,7 @@ class TaggedWithTest extends WizardTestBase {
       'entity_type' => 'node',
       'bundle' => $this->node_type_with_tags->type,
     );
-    field_create_instance($this->tag_instance);
+    entity_create('field_instance', $this->tag_instance)->save();
 
     entity_get_form_display('node', $this->node_type_with_tags->type, 'default')
       ->setComponent('field_views_testing_tags', array(
@@ -108,7 +108,7 @@ class TaggedWithTest extends WizardTestBase {
     $node_add_path = 'node/add/' . $this->node_type_with_tags->type;
 
     // Create three nodes, with different tags.
-    $tag_field = $this->tag_field['field_name'] . '[' . Language::LANGCODE_NOT_SPECIFIED . ']';
+    $tag_field = $this->tag_field->id() . '[' . Language::LANGCODE_NOT_SPECIFIED . ']';
     $edit = array();
     $edit['title'] = $node_tag1_title = $this->randomName();
     $edit[$tag_field] = 'tag1';
@@ -189,7 +189,7 @@ class TaggedWithTest extends WizardTestBase {
     // "tagged with" form element should not appear for it too.
     $instance = $this->tag_instance;
     $instance['bundle'] = $this->node_type_without_tags->type;
-    field_create_instance($instance);
+    entity_create('field_instance', $instance)->save();
     entity_get_form_display('node', $this->node_type_without_tags->type, 'default')
       ->setComponent('field_views_testing_tags', array(
         'type' => 'taxonomy_autocomplete',

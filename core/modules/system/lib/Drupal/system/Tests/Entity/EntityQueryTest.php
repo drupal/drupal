@@ -61,13 +61,14 @@ class EntityQueryTest extends EntityUnitTestBase {
     $figures = drupal_strtolower($this->randomName());
     $greetings = drupal_strtolower($this->randomName());
     foreach (array($figures => 'shape', $greetings => 'text') as $field_name => $field_type) {
-      $field = array(
+      $field = entity_create('field_entity', array(
         'field_name' => $field_name,
         'type' => $field_type,
         'cardinality' => 2,
         'translatable' => TRUE,
-      );
-      $fields[] = field_create_field($field);
+      ));
+      $field->save();
+      $fields[] = $field;
     }
     $bundles = array();
     for ($i = 0; $i < 2; $i++) {
@@ -78,12 +79,11 @@ class EntityQueryTest extends EntityUnitTestBase {
       } while ($bundles && strtolower($bundles[0]) >= strtolower($bundle));
       entity_test_create_bundle($bundle);
       foreach ($fields as $field) {
-        $instance = array(
-          'field_name' => $field['field_name'],
+        entity_create('field_instance', array(
+          'field_name' => $field->id(),
           'entity_type' => 'entity_test_mulrev',
           'bundle' => $bundle,
-        );
-        field_create_instance($instance);
+        ))->save();
       }
       $bundles[] = $bundle;
     }
@@ -410,12 +410,11 @@ class EntityQueryTest extends EntityUnitTestBase {
     // can test whether cross entity type fields produce the correct query.
     $field_name = $this->figures;
     $bundle = $this->randomName();
-    $instance = array(
+    entity_create('field_instance', array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'bundle' => $bundle,
-    );
-    field_create_instance($instance);
+    ))->save();
 
     $entity = entity_create('entity_test', array(
       'id' => 1,
