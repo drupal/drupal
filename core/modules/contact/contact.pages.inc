@@ -48,7 +48,7 @@ function contact_site_page(Category $category = NULL) {
   $message = entity_create('contact_message', array(
     'category' => $category->id(),
   ));
-  return entity_get_form($message);
+  return Drupal::entityManager()->getForm($message);
 }
 
 /**
@@ -78,7 +78,7 @@ function contact_personal_page($recipient) {
     'recipient' => $recipient,
     'category' => 'personal',
   ));
-  return entity_get_form($message);
+  return Drupal::entityManager()->getForm($message);
 }
 
 /**

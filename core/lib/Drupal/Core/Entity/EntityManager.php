@@ -236,6 +236,33 @@ class EntityManager extends PluginManagerBase {
   }
 
   /**
+   * Returns the built and processed entity form for the given entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to be created or edited.
+   * @param string $operation
+   *   (optional) The operation identifying the form variation to be returned.
+   *   Defaults to 'default'.
+   * @param array $form_state
+   *   (optional) An associative array containing the current state of the form.
+   *   Use this to pass additional information to the form, such as the
+   *   langcode. Defaults to an empty array.
+   * @code
+   *   $form_state['langcode'] = $langcode;
+   *   $manager = Drupal::entityManager();
+   *   $form = $manager->getForm($entity, 'default', $form_state);
+   * @endcode
+   *
+   * @return array
+   *   The processed form for the given entity and operation.
+   */
+  public function getForm(EntityInterface $entity, $operation = 'default', array $form_state = array()) {
+    $form_state += entity_form_state_defaults($entity, $operation);
+    $form_id = $form_state['build_info']['callback_object']->getFormID();
+    return drupal_build_form($form_id, $form_state);
+  }
+
+  /**
    * Returns the administration path for an entity type's bundle.
    *
    * @param string $entity_type

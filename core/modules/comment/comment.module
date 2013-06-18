@@ -729,7 +729,7 @@ function comment_node_page_additions(EntityInterface $node) {
 function comment_add(EntityInterface $node, $pid = NULL) {
   $values = array('nid' => $node->nid, 'pid' => $pid, 'node_type' => 'comment_node_' . $node->type);
   $comment = entity_create('comment', $values);
-  return entity_get_form($comment);
+  return Drupal::entityManager()->getForm($comment);
 }
 
 /**

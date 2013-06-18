@@ -485,11 +485,12 @@ function entity_form_submit(EntityInterface $entity, $operation = 'default', &$f
  *
  * @return
  *   The processed form for the given entity and operation.
+ *
+ * @deprecated Use Drupal::entityManager()->getForm() or _entity_form from a
+ *   routing.yml file instead of a page callback.
  */
 function entity_get_form(EntityInterface $entity, $operation = 'default', array $form_state = array()) {
-  $form_state += entity_form_state_defaults($entity, $operation);
-  $form_id = $form_state['build_info']['callback_object']->getFormID();
-  return drupal_build_form($form_id, $form_state);
+  return Drupal::entityManager()->getForm($entity, $operation, $form_state);
 }
 
 /**

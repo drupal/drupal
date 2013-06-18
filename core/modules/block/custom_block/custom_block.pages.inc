@@ -42,7 +42,7 @@ function template_preprocess_custom_block_add_list(&$variables) {
  */
 function custom_block_edit(CustomBlock $block) {
   drupal_set_title(t('Edit custom block %label', array('%label' => $block->label())), PASS_THROUGH);
-  return entity_get_form($block);
+  return Drupal::entityManager()->getForm($block);
 }
 
 /**

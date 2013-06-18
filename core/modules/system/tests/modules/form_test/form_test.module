@@ -2267,8 +2267,8 @@ function form_test_two_instances() {
     'langcode' => Language::LANGCODE_NOT_SPECIFIED,
   ));
   $node2 = clone($node1);
-  $return['node_form_1'] = entity_get_form($node1);
-  $return['node_form_2'] = entity_get_form($node2);
+  $return['node_form_1'] = Drupal::entityManager()->getForm($node1);
+  $return['node_form_2'] = Drupal::entityManager()->getForm($node2);
   return $return;
 }
 
