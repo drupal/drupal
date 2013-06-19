@@ -25,6 +25,26 @@ class SimpletestTestForm implements FormInterface {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
+    // JavaScript-only table filters.
+    $form['filters'] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array('table-filter', 'js-show'),
+      ),
+    );
+    $form['filters']['text'] = array(
+      '#type' => 'search',
+      '#title' => t('Search'),
+      '#size' => 30,
+      '#placeholder' => t('Enter test name…'),
+      '#attributes' => array(
+        'class' => array('table-filter-text'),
+        'data-table' => '#simpletest-test-form',
+        'autocomplete' => 'off',
+        'title' => t('Enter at least 3 characters of the test name or description to filter by.'),
+      ),
+    );
+
     $form['tests'] = array(
       '#type' => 'details',
       '#title' => t('Tests'),

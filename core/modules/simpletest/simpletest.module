@@ -700,6 +700,7 @@ function simpletest_library_info() {
       array('system', 'drupalSettings'),
       array('system', 'jquery.once'),
       array('system', 'drupal.tableselect'),
+      array('system', 'drupal.debounce'),
     ),
   );
 
