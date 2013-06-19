@@ -150,6 +150,75 @@ class ConfigLocaleOverride extends DrupalUnitTestBase {
   }
 
   /**
+   * Tests locale override based on language.
+   */
+  function testConfigLocaleLanguageOverride() {
+    $this->installSchema('system', 'variable');
+    $this->installSchema('language', 'language');
+    language_save(new Language(array(
+      'name' => 'French',
+      'langcode' => 'fr',
+    )));
+    language_save(new Language(array(
+      'name' => 'English',
+      'langcode' => 'en',
+    )));
+    language_save(new Language(array(
+      'name' => 'German',
+      'langcode' => 'de',
+    )));
+
+    $language = language_load('fr');
+    $language_config_context = config_context_enter('Drupal\language\LanguageConfigContext');
+    $language_config_context->setLanguage($language);
+    $config = config('config_test.system');
+    $this->assertIdentical($config->get('foo'), 'fr bar');
+    // Ensure the non-overridden value is still the same.
+    $this->assertIdentical($config->get('404'), 'herp');
+
+    // Ensure that we get the expected value when we leave the language context. The
+    // locale overrides contain an English override too, so although we are not
+    // in a language override context, the English language override
+    // applies due to the negotiated language for the page.
+    config_context_leave();
+    $config = config('config_test.system');
+    $this->assertIdentical($config->get('foo'), 'en bar');
+
+    $config_factory = \Drupal::service('config.factory');
+    $language = language_load('de');
+    $config_factory->enterContext($language_config_context->setLanguage($language));
+    // Should not have to re-initialize the configuration object to get new
+    // overrides as the new context will have a different uuid.
+    $config = config('config_test.system');
+    $this->assertIdentical($config->get('foo'), 'de bar');
+
+    // Enter an english context on top of the german context.
+    $language = language_load('en');
+    // Create a new language config context to stack on top of the existing one.
+    $en_language_config_context = config_context_enter('Drupal\language\LanguageConfigContext');
+    $en_language_config_context->setLanguage($language);
+    $config = config('config_test.system');
+    $this->assertIdentical($config->get('foo'), 'en bar');
+
+    // Ensure that we get the expected value when we leave the english
+    // language context.
+    config_context_leave();
+    $config = config('config_test.system');
+    $this->assertIdentical($config->get('foo'), 'de bar');
+
+    // Ensure that we get the expected value when we leave the german
+    // language context.
+    config_context_leave();
+    $config = config('config_test.system');
+    $this->assertIdentical($config->get('foo'), 'en bar');
+
+    // Ensure that we cannot leave the default context.
+    config_context_leave();
+    $config = config('config_test.system');
+    $this->assertIdentical($config->get('foo'), 'en bar');
+  }
+
+  /**
    * Tests locale override in combination with global overrides.
    */
   function testConfigLocaleUserAndGlobalOverride() {
