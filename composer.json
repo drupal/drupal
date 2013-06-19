@@ -19,7 +19,8 @@
     "kriswallsmith/assetic": "1.1.*@alpha",
     "symfony-cmf/routing": "1.1.*@alpha",
     "easyrdf/easyrdf": "0.8.*@beta",
-    "phpunit/phpunit": "3.7.*"
+    "phpunit/phpunit": "3.7.*",
+    "zendframework/zend-feed": "2.2.*"
   },
   "autoload": {
     "psr-0": {
