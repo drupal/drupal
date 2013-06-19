@@ -830,7 +830,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
  *
  * @see update_resolve_dependencies()
  */
-function update_batch($start, $redirect = NULL, $url = NULL, $batch = array(), $redirect_callback = 'drupal_goto') {
+function update_batch($start, $redirect = NULL, $url = NULL, $batch = array(), $redirect_callback = NULL) {
   // During the update, bring the site offline so that schema changes do not
   // affect visiting users.
   $maintenance_mode = config('system.maintenance')->get('enabled');
@@ -883,7 +883,7 @@ function update_batch($start, $redirect = NULL, $url = NULL, $batch = array(), $
     'file' => 'core/includes/update.inc',
   );
   batch_set($batch);
-  batch_process($redirect, $url, $redirect_callback);
+  return batch_process($redirect, $url, $redirect_callback);
 }
 
 /**

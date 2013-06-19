@@ -6,6 +6,7 @@
  */
 
 use Drupal\comment\Plugin\Core\Entity\Comment;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -238,7 +239,7 @@ function comment_multiple_delete_confirm($form, &$form_state) {
 
   if (!$comment_counter) {
     drupal_set_message(t('There do not appear to be any comments to delete, or your selected comment was deleted by another administrator.'));
-    drupal_goto('admin/content/comment');
+    return new RedirectResponse(url('admin/content/comment', array('absolute' => TRUE)));
   }
   else {
     return confirm_form($form,

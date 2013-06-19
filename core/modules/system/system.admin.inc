@@ -8,6 +8,7 @@
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\Core\Datetime\DrupalDateTime;
@@ -299,7 +300,7 @@ function system_theme_default() {
     else {
       drupal_set_message(t('The %theme theme was not found.', array('%theme' => $theme)), 'error');
     }
-    drupal_goto('admin/appearance');
+    return new RedirectResponse(url('admin/appearance', array('absolute' => TRUE)));
   }
   throw new AccessDeniedHttpException();
 }
@@ -1223,7 +1224,7 @@ function system_modules_uninstall_validate($form, &$form_state) {
   // Form submitted, but no modules selected.
   if (!count(array_filter($form_state['values']['uninstall']))) {
     drupal_set_message(t('No modules selected.'), 'error');
-    drupal_goto('admin/modules/uninstall');
+    return new RedirectResponse(url('admin/modules/uninstall', array('absolute' => TRUE)));
   }
 }
 

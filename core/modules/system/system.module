@@ -12,6 +12,7 @@ use Drupal\Core\Utility\ModuleInfo;
 use Drupal\Core\TypedData\Primitive;
 use Drupal\system\Plugin\Block\SystemMenuBlock;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Guzzle\Http\Exception\BadResponseException;
 use Guzzle\Http\Exception\RequestException;
@@ -2347,7 +2348,7 @@ function _system_themes_access($theme) {
  * or to call system_authorized_init() and then redirect to authorize.php,
  * using the URL from system_authorized_get_url(). Redirecting yourself is
  * necessary when your authorized operation is being triggered by a form
- * submit handler, since calling drupal_goto() in a submit handler is a bad
+ * submit handler, since calling redirecting in a submit handler is a bad
  * idea, and you should instead set $form_state['redirect'].
  *
  * Once the SESSION is setup for the operation and the user is redirected to
@@ -2375,7 +2376,7 @@ function _system_themes_access($theme) {
  * not to assume any code exists. Example (system_authorized_run()):
  * @code
  *   system_authorized_init($callback, $file, $arguments, $page_title);
- *   drupal_goto(system_authorized_get_url());
+ *   return new RedirectResponse(system_authorized_get_url());
  * @endcode
  * Example (update_manager_install_form_submit()):
  * @code
@@ -2436,9 +2437,13 @@ function system_authorized_get_url(array $options = array()) {
 
 /**
  * Returns the URL for the authorize.php script when it is processing a batch.
+ *
+ * @param array $options
+ *   Optional array of options to pass to url().
  */
-function system_authorized_batch_processing_url() {
-  return system_authorized_get_url(array('query' => array('batch' => '1')));
+function system_authorized_batch_processing_url(array $options = array()) {
+  $options['query'] = array('batch' => '1');
+  return system_authorized_get_url($options);
 }
 
 /**
@@ -2448,7 +2453,7 @@ function system_authorized_batch_processing_url() {
  */
 function system_authorized_run($callback, $file, $arguments = array(), $page_title = NULL) {
   system_authorized_init($callback, $file, $arguments, $page_title);
-  drupal_goto(system_authorized_get_url());
+  return new RedirectResponse(system_authorized_get_url());
 }
 
 /**
@@ -2459,7 +2464,7 @@ function system_authorized_run($callback, $file, $arguments = array(), $page_tit
 function system_authorized_batch_process() {
   $finish_url = system_authorized_get_url();
   $process_url = system_authorized_batch_processing_url();
-  batch_process($finish_url, $process_url);
+  return batch_process($finish_url, $process_url);
 }
 
 /**
@@ -3370,7 +3375,7 @@ function system_admin_compact_mode() {
  */
 function system_admin_compact_page($mode = 'off') {
   user_cookie_save(array('admin_compact_mode' => ($mode == 'on')));
-  drupal_goto();
+  return new RedirectResponse(url('<front>', array('absolute' => TRUE)));
 }
 
 /**

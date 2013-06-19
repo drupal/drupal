@@ -7,6 +7,7 @@
 
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -298,7 +299,7 @@ function language_admin_delete_form($form, &$form_state, $language) {
 
   if (language_default()->langcode == $langcode) {
     drupal_set_message(t('The default language cannot be deleted.'));
-    drupal_goto('admin/config/regional/language');
+    return new RedirectResponse(url('admin/config/regional/language', array('absolute' => TRUE)));
   }
 
   // For other languages, warn the user that data loss is ahead.

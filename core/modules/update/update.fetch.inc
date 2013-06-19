@@ -28,7 +28,7 @@ function update_manual_status() {
     'file' => drupal_get_path('module', 'update') . '/update.fetch.inc',
   );
   batch_set($batch);
-  batch_process('admin/reports/updates');
+  return batch_process('admin/reports/updates');
 }
 
 /**

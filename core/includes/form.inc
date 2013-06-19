@@ -14,6 +14,10 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Utility\Color;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 /**
  * @defgroup forms Form builder functions
@@ -227,9 +231,8 @@ function drupal_get_form($form_arg) {
  *     errors.
  *   - redirect: Used to redirect the form on submission. It may either be a
  *     string containing the destination URL, or an array of arguments
- *     compatible with drupal_goto(). See drupal_redirect_form() for complete
- *     information.
- *   - no_redirect: If set to TRUE the form will NOT perform a drupal_goto(),
+ *     compatible with url(). See url() for complete information.
+ *   - no_redirect: If set to TRUE the form will NOT perform a redirect,
  *     even if 'redirect' is set.
  *   - method: The HTTP form method to use for finding the input for this form.
  *     May be 'post' or 'get'. Defaults to 'post'. Note that 'get' method
@@ -413,7 +416,12 @@ function drupal_build_form($form_id, &$form_state) {
   //   appropriate information persists to the next page request.
   // All of the handlers in the pipeline receive $form_state by reference and
   // can use it to know or update information about the state of the form.
-  drupal_process_form($form_id, $form, $form_state);
+  $response = drupal_process_form($form_id, $form, $form_state);
+
+  // If the form returns some kind of response, deliver it.
+  if ($response instanceof Response) {
+    _drupal_form_send_response($response);
+  }
 
   // If this was a successful submission of a single-step form or the last step
   // of a multi-step form, then drupal_process_form() issued a redirect to
@@ -858,6 +866,10 @@ function drupal_retrieve_form($form_id, &$form_state) {
   // If $callback was returned by a hook_forms() implementation, call it.
   // Otherwise, call the function named after the form id.
   $form = call_user_func_array($callback, $args);
+  // If the form returns some kind of response, deliver it.
+  if ($form instanceof Response) {
+    _drupal_form_send_response($form);
+  }
   $form['#form_id'] = $form_id;
 
   return $form;
@@ -941,7 +953,10 @@ function drupal_process_form($form_id, &$form, &$form_state) {
         }
 
         $batch['progressive'] = !$form_state['programmed'];
-        batch_process();
+        $response = batch_process();
+        if ($batch['progressive']) {
+          return $response;
+        }
 
         // Execution continues only for programmatic forms.
         // For 'regular' forms, we get redirected to the batch processing
@@ -953,7 +968,10 @@ function drupal_process_form($form_id, &$form, &$form_state) {
       $form_state['executed'] = TRUE;
 
       // Redirect the form based on values in $form_state.
-      drupal_redirect_form($form_state);
+      $redirect = drupal_redirect_form($form_state);
+      if (is_object($redirect)) {
+        return $redirect;
+      }
     }
 
     // Don't rebuild or cache form submissions invoked via drupal_form_submit().
@@ -1245,10 +1263,10 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
  *
  * Usually (for exceptions, see below) $form_state['redirect'] determines where
  * to redirect the user. This can be set either to a string (the path to
- * redirect to), or an array of arguments for drupal_goto(). If
- * $form_state['redirect'] is missing, the user is usually (again, see below for
- * exceptions) redirected back to the page they came from, where they should see
- * a fresh, unpopulated copy of the form.
+ * redirect to), or an array of arguments for url(). If $form_state['redirect']
+ * is missing, the user is usually (again, see below for exceptions) redirected
+ * back to the page they came from, where they should see a fresh, unpopulated
+ * copy of the form.
  *
  * Here is an example of how to set up a form to redirect to the path 'node':
  * @code
@@ -1279,12 +1297,11 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
  *   form builder functions or form validation/submit handlers.
  * - If $form_state['redirect'] is set to FALSE, redirection is disabled.
  * - If none of the above conditions has prevented redirection, then the
- *   redirect is accomplished by calling drupal_goto(), passing in the value of
- *   $form_state['redirect'] if it is set, or the current path if it is
- *   not. drupal_goto() preferentially uses the value of $_GET['destination']
+ *   redirect is accomplished by returning a RedirectResponse, passing in the
+ *   value of $form_state['redirect'] if it is set, or the current path if it is
+ *   not. RedirectResponse preferentially uses the value of $_GET['destination']
  *   (the 'destination' URL query string) if it is present, so this will
- *   override any values set by $form_state['redirect']. Note that during
- *   installation, install_goto() is called in place of drupal_goto().
+ *   override any values set by $form_state['redirect'].
  *
  * @param $form_state
  *   An associative array containing the current state of the form.
@@ -1305,22 +1322,33 @@ function drupal_redirect_form($form_state) {
   if (!empty($form_state['no_redirect'])) {
     return;
   }
-  // Only invoke drupal_goto() if redirect value was not set to FALSE.
+  // Only invoke a redirection if redirect value was not set to FALSE.
   if (!isset($form_state['redirect']) || $form_state['redirect'] !== FALSE) {
     if (isset($form_state['redirect'])) {
       if (is_array($form_state['redirect'])) {
-        call_user_func_array('drupal_goto', $form_state['redirect']);
+        $options = isset($form_state['redirect'][1]) ? $form_state['redirect'][1] : array();
+        // Redirections should always use absolute URLs.
+        $options['absolute'] = TRUE;
+        $status_code =  isset($form_state['redirect'][2]) ? $form_state['redirect'][2] : 302;
+        return new RedirectResponse(url($form_state['redirect'][0], $options), $status_code);
       }
       else {
         // This function can be called from the installer, which guarantees
         // that $redirect will always be a string, so catch that case here
         // and use the appropriate redirect function.
-        $function = drupal_installation_attempted() ? 'install_goto' : 'drupal_goto';
-        $function($form_state['redirect']);
+        if (drupal_installation_attempted()) {
+          install_goto($form_state['redirect']);
+        }
+        else {
+          return new RedirectResponse(url($form_state['redirect'], array('absolute' => TRUE)));
+        }
       }
     }
-    $request = Drupal::request();
-    drupal_goto($request->attributes->get('system_path'), array('query' => $request->query->all()));
+    $url = url(Drupal::request()->attributes->get('system_path'), array(
+      'query' => Drupal::request()->query->all(),
+      'absolute' => TRUE,
+    ));
+    return new RedirectResponse($url);
   }
 }
 
@@ -4846,6 +4874,28 @@ function _form_set_attributes(&$element, $class = array()) {
 }
 
 /**
+ * Triggers kernel.response and sends a form response.
+ *
+ * @deprecated This function is to be used internally by Form API only.
+ *
+ * @param \Symfony\Component\HttpFoundation\Response $response
+ *   A response object.
+ */
+function _drupal_form_send_response(Response $response) {
+  $request = Drupal::request();
+  $kernel = Drupal::service('http_kernel');
+  $event = new FilterResponseEvent($kernel, $request, $kernel::MASTER_REQUEST, $response);
+
+  Drupal::service('event_dispatcher')->dispatch(KernelEvents::RESPONSE, $event);
+  // Prepare and send the response.
+  $event->getResponse()
+    ->prepare($request)
+    ->send();
+  $kernel->terminate($request, $response);
+  exit;
+}
+
+/**
  * @} End of "defgroup form_api".
  */
 
@@ -5067,9 +5117,6 @@ function batch_set($batch_definition) {
 /**
  * Processes the batch.
  *
- * Unless the batch has been marked with 'progressive' = FALSE, the function
- * issues a drupal_goto and thus ends page execution.
- *
  * This function is generally not needed in form submit handlers;
  * Form API takes care of batches that were set during form submission.
  *
@@ -5080,11 +5127,12 @@ function batch_set($batch_definition) {
  *   URL of the batch processing page.
  * @param $redirect_callback
  *   (optional) Specify a function to be called to redirect to the progressive
- *   processing page. By default drupal_goto() will be used to redirect to a
- *   page which will do the progressive page. Specifying another function will
- *   allow the progressive processing to be processed differently.
+ *   processing page.
+ *
+ * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
+ *   A redirect response if the batch is progressive. No return value otherwise.
  */
-function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'drupal_goto') {
+function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = NULL) {
   $batch =& batch_get();
 
   drupal_theme_initialize();
@@ -5124,11 +5172,12 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
       // the generic error message.
       $batch['error_message'] = t('Please continue to <a href="@error_url">the error page</a>', array('@error_url' => url($url, array('query' => array('id' => $batch['id'], 'op' => 'finished')))));
 
-      // Clear the way for the drupal_goto() redirection to the batch processing
-      // page, by saving and unsetting the 'destination', if there is any.
-      if (isset($_GET['destination'])) {
-        $batch['destination'] = $_GET['destination'];
-        unset($_GET['destination']);
+      // Clear the way for the redirection to the batch processing page, by
+      // saving and unsetting the 'destination', if there is any.
+      $request = Drupal::request();
+      if ($request->query->has('destination')) {
+        $batch['destination'] = $request->query->get('destination');
+        $request->query->remove('destination');
       }
 
       // Store the batch.
@@ -5138,8 +5187,14 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
       $_SESSION['batches'][$batch['id']] = TRUE;
 
       // Redirect for processing.
-      $function = $batch['redirect_callback'];
-      $function($batch['url'], array('query' => array('op' => 'start', 'id' => $batch['id'])));
+      $options = array('query' => array('op' => 'start', 'id' => $batch['id']));
+      if (($function = $batch['redirect_callback']) && function_exists($function)) {
+        $function($batch['url'], $options);
+      }
+      else {
+        $options['absolute'] = TRUE;
+        return new RedirectResponse(url($batch['url'], $options));
+      }
     }
     else {
       // Non-progressive execution: bypass the whole progressbar workflow

@@ -503,7 +503,7 @@ function drupal_http_build_query(array $query, $parent = '') {
 }
 
 /**
- * Prepares a 'destination' URL query parameter for use with drupal_goto().
+ * Prepares a 'destination' URL query parameter for use with url().
  *
  * Used to direct the user back to the referring page after completing a form.
  * By default the current URL is returned. If a destination exists in the
@@ -516,7 +516,6 @@ function drupal_http_build_query(array $query, $parent = '') {
  *     not available, the current path.
  *
  * @see current_path()
- * @see drupal_goto()
  */
 function drupal_get_destination() {
   $destination = &drupal_static(__FUNCTION__);
@@ -570,7 +569,6 @@ function drupal_get_destination() {
  *   - 'fragment': The fragment of $url, if existent.
  *
  * @see url()
- * @see drupal_goto()
  * @ingroup php_wrappers
  */
 function drupal_parse_url($url) {
@@ -627,84 +625,6 @@ function drupal_parse_url($url) {
  */
 function drupal_encode_path($path) {
   return str_replace('%2F', '/', rawurlencode($path));
-}
-
-/**
- * Sends the user to a different Drupal page.
- *
- * This issues an on-site HTTP redirect. The function makes sure the redirected
- * URL is formatted correctly.
- *
- * If a destination was specified in the current request's URI (i.e.,
- * $_GET['destination']) then it will override the $path and $options values
- * passed to this function. This provides the flexibility to build a link to
- * user/login and override the default redirection so that the user is
- * redirected to a specific path after logging in:
- * @code
- *   $query = array('destination' => "node/$node->nid");
- *   $link = l(t('Log in'), 'user/login', array('query' => $query));
- * @endcode
- *
- * Drupal will ensure that messages set by drupal_set_message() and other
- * session data are written to the database before the user is redirected.
- *
- * This function ends the request; use it instead of a return in your menu
- * callback.
- *
- * @param $path
- *   (optional) A Drupal path or a full URL, which will be passed to url() to
- *   compute the redirect for the URL.
- * @param $options
- *   (optional) An associative array of additional URL options to pass to url().
- * @param $http_response_code
- *   (optional) The HTTP status code to use for the redirection, defaults to
- *   302. The valid values for 3xx redirection status codes are defined in
- *   @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.3 RFC 2616 @endlink
- *   and the
- *   @link http://tools.ietf.org/html/draft-reschke-http-status-308-07 draft for the new HTTP status codes: @endlink
- *   - 301: Moved Permanently (the recommended value for most redirects).
- *   - 302: Found (default in Drupal and PHP, sometimes used for spamming search
- *     engines).
- *   - 303: See Other.
- *   - 304: Not Modified.
- *   - 305: Use Proxy.
- *   - 307: Temporary Redirect.
- *
- * @see drupal_get_destination()
- * @see url()
- */
-function drupal_goto($path = '', array $options = array(), $http_response_code = 302) {
-  // A destination in $_GET always overrides the function arguments.
-  // We do not allow absolute URLs to be passed via $_GET, as this can be an
-  // attack vector, with the following exception:
-  // - Absolute URLs that point to this site (i.e. same base URL and
-  //   base path) are allowed.
-  if (isset($_GET['destination']) && (!url_is_external($_GET['destination']) || _external_url_is_local($_GET['destination']))) {
-    $destination = drupal_parse_url($_GET['destination']);
-    $path = $destination['path'];
-    $options['query'] = $destination['query'];
-    $options['fragment'] = $destination['fragment'];
-  }
-
-  drupal_alter('drupal_goto', $path, $options, $http_response_code);
-
-  // The 'Location' HTTP header must be absolute.
-  $options['absolute'] = TRUE;
-
-  $url = Drupal::urlGenerator()->generateFromPath($path, $options);
-
-  if (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL) {
-    drupal_session_commit();
-  }
-
-  $response = new RedirectResponse($url, $http_response_code);
-  // @todo We should not send the response here: http://drupal.org/node/1668866
-  $response->sendHeaders();
-
-  // The "Location" header sends a redirect status code to the HTTP daemon. In
-  // some cases this can be wrong, so we make sure none of the code below the
-  // drupal_goto() call gets executed upon redirection.
-  exit;
 }
 
 /**

@@ -5,6 +5,7 @@
  * Administrative page callbacks for the shortcut module.
  */
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -498,7 +499,7 @@ function shortcut_link_add_inline($shortcut_set) {
     else {
       drupal_set_message(t('Unable to add a shortcut for %title.', array('%title' => $link['link_title'])));
     }
-    drupal_goto();
+    return new RedirectResponse(url('<front>', array('absolute' => TRUE)));
   }
 
   throw new AccessDeniedHttpException();

@@ -365,6 +365,12 @@ services:
       - { name: event_subscriber }
     arguments: ['@language_manager']
     scope: request
+  redirect_response_subscriber:
+    class: Drupal\Core\EventSubscriber\RedirectResponseSubscriber
+    arguments: ['@url_generator']
+    tags:
+      - { name: event_subscriber }
+    scope: request
   request_close_subscriber:
     class: Drupal\Core\EventSubscriber\RequestCloseSubscriber
     tags:

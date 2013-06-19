@@ -626,7 +626,14 @@ function install_run_task($task, &$install_state) {
       }
       // Process the batch. For progressive batches, this will redirect.
       // Otherwise, the batch will complete.
-      batch_process(install_redirect_url($install_state), install_full_redirect_url($install_state));
+      $response = batch_process(install_redirect_url($install_state), install_full_redirect_url($install_state));
+      if ($response instanceof Response) {
+        // Save $_SESSION data from batch.
+        drupal_session_commit();
+        // Send the response.
+        $response->send();
+        exit;
+      }
     }
     // If we are in the middle of processing this batch, keep sending back
     // any output from the batch process, until the task is complete.

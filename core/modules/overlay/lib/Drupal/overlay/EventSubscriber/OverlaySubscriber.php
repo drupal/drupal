@@ -8,6 +8,7 @@
 namespace Drupal\overlay\EventSubscriber;
 
 use Drupal\Core\ContentNegotiation;
+use Drupal\Core\Routing\PathBasedGeneratorInterface;
 use Drupal\user\UserData;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -35,16 +36,26 @@ class OverlaySubscriber implements EventSubscriberInterface {
   protected $userData;
 
   /**
+   * The url generator service.
+   *
+   * @var \Drupal\Core\Routing\PathBasedGeneratorInterface
+   */
+  protected $urlGenerator;
+
+  /**
    * Constructs an OverlaySubscriber object.
    *
    * @param \Drupal\Core\ContentNegotiation $negotiation
    *   The content negotiation service.
    * @param \Drupal\user\UserData $user_data
    *   The user.data service.
+   * @param \Drupal\Core\Routing\PathBasedGeneratorInterface $url_generator
+   *   The url generator service.
    */
-  public function __construct(ContentNegotiation $negotiation, UserData $user_data) {
+  public function __construct(ContentNegotiation $negotiation, UserData $user_data, PathBasedGeneratorInterface $url_generator) {
     $this->negotiation = $negotiation;
     $this->userData = $user_data;
+    $this->urlGenerator = $url_generator;
   }
 
   /**
@@ -75,7 +86,12 @@ class OverlaySubscriber implements EventSubscriberInterface {
       // <front>#overlay=admin/modules to actually enable the overlay.
       if (isset($_SESSION['overlay_enable_redirect']) && $_SESSION['overlay_enable_redirect']) {
         unset($_SESSION['overlay_enable_redirect']);
-        $response = new RedirectResponse(url('<front>', array('fragment' => 'overlay=' . $current_path, 'absolute' => TRUE)));
+        $url = $this->urlGenerator
+          ->generateFromPath('<front>', array(
+            'fragment' => 'overlay=' . $current_path,
+            'absolute' => TRUE,
+          ));
+        $response = new RedirectResponse($url);
         $event->setResponse($response);
       }
 
@@ -133,6 +149,32 @@ class OverlaySubscriber implements EventSubscriberInterface {
             overlay_request_refresh($region);
           }
         }
+      }
+      $response = $event->getResponse();
+      if ($response instanceOf RedirectResponse) {
+        $path = $response->getTargetUrl();
+        // The authorize.php script bootstraps Drupal to a very low level, where
+        // the PHP code that is necessary to close the overlay properly will not
+        // be loaded. Therefore, if we are redirecting to authorize.php inside
+        // the overlay, instead redirect back to the current page with
+        // instructions to close the overlay there before redirecting to the
+        // final destination.
+        $options = array('absolute' => TRUE);
+        if ($path == system_authorized_get_url($options) || $path == system_authorized_batch_processing_url($options)) {
+          $_SESSION['overlay_close_dialog'] = array($path, $options);
+          $path = current_path();
+          $options = drupal_get_query_parameters();
+        }
+
+        // If the current page request is inside the overlay, add ?render=overlay
+        // to the new path, so that it appears correctly inside the overlay.
+        if (isset($options['query'])) {
+          $options['query'] += array('render' => 'overlay');
+        }
+        else {
+          $options['query'] = array('render' => 'overlay');
+        }
+        $response->setTargetUrl($this->urlGenerator->generateFromPath($path, $options));
       }
     }
   }

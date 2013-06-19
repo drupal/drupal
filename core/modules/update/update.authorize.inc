@@ -53,7 +53,7 @@ function update_authorize_run_update($filetransfer, $projects) {
 
   batch_set($batch);
   // Invoke the batch via authorize.php.
-  system_authorized_batch_process();
+  return system_authorized_batch_process();
 }
 
 /**
@@ -98,7 +98,7 @@ function update_authorize_run_install($filetransfer, $project, $updater_name, $l
   batch_set($batch);
 
   // Invoke the batch via authorize.php.
-  system_authorized_batch_process();
+  return system_authorized_batch_process();
 }
 
 /**

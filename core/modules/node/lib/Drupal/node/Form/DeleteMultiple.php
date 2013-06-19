@@ -12,6 +12,7 @@ use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Component\Utility\String;
 use Drupal\user\TempStoreFactory;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -97,7 +98,7 @@ class DeleteMultiple extends ConfirmFormBase implements ControllerInterface {
   public function buildForm(array $form, array &$form_state) {
     $this->nodes = $this->tempStoreFactory->get('node_multiple_delete_confirm')->get($GLOBALS['user']->uid);
     if (empty($this->nodes)) {
-      drupal_goto($this->getCancelPath());
+      return new RedirectResponse(url($this->getCancelPath(), array('absolute' => TRUE)));
     }
 
     $form['nodes'] = array(

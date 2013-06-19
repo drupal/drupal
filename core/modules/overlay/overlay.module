@@ -5,6 +5,7 @@
  * Displays the Drupal administration interface in an overlay.
  */
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\block\Plugin\Core\Entity\Block;
@@ -177,34 +178,6 @@ function overlay_library_info() {
 }
 
 /**
- * Implements hook_drupal_goto_alter().
- */
-function overlay_drupal_goto_alter(&$path, &$options, &$http_response_code) {
-  if (overlay_get_mode() == 'child') {
-    // The authorize.php script bootstraps Drupal to a very low level, where
-    // the PHP code that is necessary to close the overlay properly will not be
-    // loaded. Therefore, if we are redirecting to authorize.php inside the
-    // overlay, instead redirect back to the current page with instructions to
-    // close the overlay there before redirecting to the final destination; see
-    // overlay_init().
-    if ($path == system_authorized_get_url() || $path == system_authorized_batch_processing_url()) {
-      $_SESSION['overlay_close_dialog'] = array($path, $options);
-      $path = current_path();
-      $options = drupal_get_query_parameters();
-    }
-
-    // If the current page request is inside the overlay, add ?render=overlay
-    // to the new path, so that it appears correctly inside the overlay.
-    if (isset($options['query'])) {
-      $options['query'] += array('render' => 'overlay');
-    }
-    else {
-      $options['query'] = array('render' => 'overlay');
-    }
-  }
-}
-
-/**
  * Implements hook_batch_alter().
  *
  * If the current page request is inside the overlay, add ?render=overlay to
@@ -293,7 +266,7 @@ function overlay_user_dismiss_message() {
   Drupal::service('user.data')->set('overlay', $user->uid, 'message_dismissed', 1);
   drupal_set_message(t('The message has been dismissed. You can change your overlay settings at any time by visiting your profile page.'));
   // Destination is normally given. Go to the user profile as a fallback.
-  drupal_goto('user/' . $user->uid . '/edit');
+  return new RedirectResponse(url('user/' . $user->uid . '/edit', array('absolute' => TRUE)));
 }
 
 /**

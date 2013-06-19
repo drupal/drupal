@@ -5,6 +5,8 @@
  * Administration pages for image settings.
  */
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
 /**
  * Menu callback; Listing of all current image styles.
  */
@@ -284,7 +286,7 @@ function image_effect_form($form, &$form_state, $style, $effect) {
   // If there's no configuration for this image effect, return to
   // the image style page.
   if (!isset($effect['form callback'])) {
-    drupal_goto('admin/config/media/image-styles/manage/' . $style->id());
+    return new RedirectResponse(url('admin/config/media/image-styles/manage/' . $style->id(), array('absolute' => TRUE)));
   }
   $form_state['image_style'] = $style;
   $form_state['image_effect'] = $effect;

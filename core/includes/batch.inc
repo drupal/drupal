@@ -15,7 +15,8 @@
  */
 
 use Drupal\Core\Batch\Percentage;
-use \Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Renders the batch processing page based on the current state of the batch.
@@ -34,7 +35,7 @@ function _batch_page() {
     $batch = Drupal::service('batch.storage')->load($_REQUEST['id']);
     if (!$batch) {
       drupal_set_message(t('No active batch.'), 'error');
-      drupal_goto();
+      return new RedirectResponse(url('<front>', array('absolute' => TRUE)));
     }
   }
 
@@ -412,7 +413,7 @@ function _batch_finished() {
   if ($_batch['progressive']) {
     // Revert the 'destination' that was saved in batch_process().
     if (isset($_batch['destination'])) {
-      $_GET['destination'] = $_batch['destination'];
+      Drupal::request()->query->set('destination', $_batch['destination']);
     }
 
     // Determine the target path to redirect to.
@@ -426,7 +427,10 @@ function _batch_finished() {
     }
 
     // Use drupal_redirect_form() to handle the redirection logic.
-    drupal_redirect_form($_batch['form_state']);
+    $redirect = drupal_redirect_form($_batch['form_state']);
+    if (is_object($redirect)) {
+      return $redirect;
+    }
 
     // If no redirection happened, redirect to the originating page. In case the
     // form needs to be rebuilt, save the final $form_state for
@@ -437,6 +441,14 @@ function _batch_finished() {
     $function = $_batch['redirect_callback'];
     if (function_exists($function)) {
       $function($_batch['source_url'], array('query' => array('op' => 'finish', 'id' => $_batch['id'])));
+    }
+    elseif ($function === NULL) {
+      // Default to RedirectResponse objects when nothing specified.
+      $url = url($_batch['source_url'], array(
+        'absolute' => TRUE,
+        'query' => array('op' => 'finish', 'id' => $_batch['id']),
+      ));
+      return new RedirectResponse($url);
     }
   }
 }

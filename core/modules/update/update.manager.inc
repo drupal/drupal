@@ -38,6 +38,7 @@
 
 use Drupal\Core\Updater\Updater;
 use Drupal\Core\FileTransfer\Local;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * @defgroup update_manager_update Update Manager module: update
@@ -356,7 +357,7 @@ function update_manager_download_batch_finished($success, $results) {
   elseif ($success) {
     drupal_set_message(t('Updates downloaded successfully.'));
     $_SESSION['update_manager_update_projects'] = $results['projects'];
-    drupal_goto('admin/update/ready');
+    return new RedirectResponse(url('admin/update/ready', array('absolute' => TRUE)));
   }
   else {
     // Ideally we're catching all Exceptions, so they should never see this,

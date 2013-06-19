@@ -387,6 +387,7 @@ function _form_test_submit_values_json($form, &$form_state) {
   $response = new JsonResponse($form_state['values']);
   // @todo remove once converted to new routing system.
   $response->send();
+  exit;
 }
 
 /**

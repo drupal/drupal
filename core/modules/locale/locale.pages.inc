@@ -8,6 +8,7 @@
 use Drupal\Core\Language\Language;
 use Drupal\locale\SourceString;
 use Drupal\locale\TranslationString;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -479,9 +480,9 @@ function locale_translation_manual_status() {
   // Execute a batch if required. A batch is only used when remote files
   // are checked.
   if (batch_get()) {
-    batch_process('admin/reports/translations');
+    return batch_process('admin/reports/translations');
   }
-  drupal_goto('admin/reports/translations');
+  return new RedirectResponse(url('admin/reports/translations', array('absolute' => TRUE)));
 }
 
 /**
