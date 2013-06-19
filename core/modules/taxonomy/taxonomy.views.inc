@@ -346,7 +346,7 @@ function taxonomy_field_views_data($field) {
     }
 
     // Add the relationship only on the tid field.
-    $data[$table_name][$field['field_name'] . '_tid']['relationship'] = array(
+    $data[$table_name][$field['field_name'] . '_target_id']['relationship'] = array(
       'id' => 'standard',
       'base' => 'taxonomy_term_data',
       'base field' => 'tid',
@@ -380,7 +380,7 @@ function taxonomy_field_views_data_views_data_alter(&$data, $field) {
       'id' => 'entity_reverse',
       'field_name' => $field['field_name'],
       'field table' => _field_sql_storage_tablename($field),
-      'field field' => $field['field_name'] . '_tid',
+      'field field' => $field['field_name'] . '_target_id',
       'base' => $entity_info['base_table'],
       'base field' => $entity_info['entity_keys']['id'],
       'label' => t('!field_name', array('!field_name' => $field['field_name'])),

@@ -55,8 +55,8 @@ abstract class TaxonomyTestBase extends ViewTestBase {
 
     $node = array();
     $node['type'] = 'article';
-    $node['field_views_testing_tags'][]['tid'] = $this->term1->id();
-    $node['field_views_testing_tags'][]['tid'] = $this->term2->id();
+    $node['field_views_testing_tags'][]['target_id'] = $this->term1->id();
+    $node['field_views_testing_tags'][]['target_id'] = $this->term2->id();
     $this->nodes[] = $this->drupalCreateNode($node);
     $this->nodes[] = $this->drupalCreateNode($node);
   }

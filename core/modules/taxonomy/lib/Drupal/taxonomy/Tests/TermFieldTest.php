@@ -84,7 +84,7 @@ class TermFieldTest extends TaxonomyTestBase {
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $entity = entity_create('entity_test', array());
     $term = $this->createTerm($this->vocabulary);
-    $entity->{$this->field_name}->tid = $term->id();
+    $entity->{$this->field_name}->target_id = $term->id();
     try {
       field_attach_validate($entity);
       $this->pass('Correct term does not cause validation error.');
@@ -95,7 +95,7 @@ class TermFieldTest extends TaxonomyTestBase {
 
     $entity = entity_create('entity_test', array());
     $bad_term = $this->createTerm($this->createVocabulary());
-    $entity->{$this->field_name}->tid = $bad_term->id();
+    $entity->{$this->field_name}->target_id = $bad_term->id();
     try {
       field_attach_validate($entity);
       $this->fail('Wrong term causes validation error.');

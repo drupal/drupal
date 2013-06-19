@@ -102,7 +102,7 @@ class EntityFilteringThemeTest extends WebTestBase {
       'title' => $this->xss_label,
       'type' => 'article',
       'promote' => NODE_PROMOTED,
-      'field_tags' => array(array('tid' => $this->term->id())),
+      'field_tags' => array(array('target_id' => $this->term->id())),
     ));
 
     // Create a test comment on the test node.

@@ -277,11 +277,11 @@ function forum_node_validate(EntityInterface $node, $form) {
       foreach ($node->taxonomy_forums[$langcode] as $delta => $item) {
         // If no term was selected (e.g. when no terms exist yet), remove the
         // item.
-        if (empty($item['tid'])) {
+        if (empty($item['target_id'])) {
           unset($node->taxonomy_forums[$langcode][$delta]);
           continue;
         }
-        $term = taxonomy_term_load($item['tid']);
+        $term = taxonomy_term_load($item['target_id']);
         if (!$term) {
           form_set_error('taxonomy_forums', t('Select a forum.'));
           continue;
@@ -310,13 +310,13 @@ function forum_node_presave(EntityInterface $node) {
     reset($node->taxonomy_forums);
     $langcode = key($node->taxonomy_forums);
     if (!empty($node->taxonomy_forums[$langcode])) {
-      $node->forum_tid = $node->taxonomy_forums[$langcode][0]['tid'];
+      $node->forum_tid = $node->taxonomy_forums[$langcode][0]['target_id'];
       // Only do a shadow copy check if this is not a new node.
       if (!$node->isNew()) {
         $old_tid = db_query_range("SELECT f.tid FROM {forum} f INNER JOIN {node} n ON f.vid = n.vid WHERE n.nid = :nid ORDER BY f.vid DESC", 0, 1, array(':nid' => $node->nid))->fetchField();
         if ($old_tid && isset($node->forum_tid) && ($node->forum_tid != $old_tid) && !empty($node->shadow)) {
           // A shadow copy needs to be created. Retain new term and add old term.
-          $node->taxonomy_forums[$langcode][] = array('tid' => $old_tid);
+          $node->taxonomy_forums[$langcode][] = array('target_id' => $old_tid);
         }
       }
     }
@@ -515,7 +515,7 @@ function forum_field_storage_pre_insert(EntityInterface $entity, &$skip_fields) 
       $query->values(array(
         'nid' => $entity->id(),
         'title' => $translation->title->value,
-        'tid' => $translation->taxonomy_forums->tid,
+        'tid' => $translation->taxonomy_forums->target_id,
         'sticky' => $entity->sticky,
         'created' => $entity->created,
         'comment_count' => 0,
@@ -550,7 +550,7 @@ function forum_field_storage_pre_update(EntityInterface $entity, &$skip_fields) 
           $query->values(array(
             'nid' => $entity->nid,
             'title' => $entity->title,
-            'tid' => $item['tid'],
+            'tid' => $item['target_id'],
             'sticky' => $entity->sticky,
             'created' => $entity->created,
             'comment_count' => 0,

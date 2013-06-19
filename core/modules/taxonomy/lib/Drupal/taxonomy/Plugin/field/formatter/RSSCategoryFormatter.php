@@ -31,10 +31,10 @@ class RSSCategoryFormatter extends TaxonomyFormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(EntityInterface $entity, $langcode, array $items) {
-    // Terms whose tid is 'autocreate' do not exist yet and $item['entity'] is
-    // not set. Theme such terms as just their name.
+    // Terms whose target_id is 'autocreate' do not exist yet and
+    // $item['entity'] is not set. Theme such terms as just their name.
     foreach ($items as $item) {
-      if ($item['tid']) {
+      if ($item['target_id']) {
         $value = $item['entity']->label();
 
         $uri = $item['entity']->uri();

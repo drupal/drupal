@@ -30,8 +30,8 @@ abstract class TaxonomyFormatterBase extends FormatterBase {
     foreach ($entities as $id => $entity) {
       foreach ($items[$id] as $delta => $item) {
         // Force the array key to prevent duplicates.
-        if ($item['tid'] !== 0) {
-          $tids[$item['tid']] = $item['tid'];
+        if ($item['target_id'] !== 0) {
+          $tids[$item['target_id']] = $item['target_id'];
         }
       }
     }
@@ -46,12 +46,12 @@ abstract class TaxonomyFormatterBase extends FormatterBase {
         foreach ($items[$id] as $delta => $item) {
           // Check whether the taxonomy term field instance value could be
           // loaded.
-          if (isset($terms[$item['tid']])) {
+          if (isset($terms[$item['target_id']])) {
             // Replace the instance value with the term data.
-            $items[$id][$delta]['entity'] = $terms[$item['tid']];
+            $items[$id][$delta]['entity'] = $terms[$item['target_id']];
           }
           // Terms to be created are not in $terms, but are still legitimate.
-          elseif ($item['tid'] === 0 && isset($item['entity'])) {
+          elseif ($item['target_id'] === 0 && isset($item['entity'])) {
             // Leave the item in place.
           }
           // Otherwise, unset the instance value, since the term does not exist.

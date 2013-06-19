@@ -87,7 +87,7 @@ class DefaultViewsTest extends ViewTestBase {
       $term = $this->createTerm($this->vocabulary);
 
       $values = array('created' => $time, 'type' => 'page');
-      $values[$this->field_name][]['tid'] = $term->id();
+      $values[$this->field_name][]['target_id'] = $term->id();
 
       // Make every other node promoted.
       if ($i % 2) {

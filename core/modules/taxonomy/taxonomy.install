@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Uuid\Uuid;
+use Drupal\field\Plugin\Core\Entity\Field;
 
 /**
  * Implements hook_uninstall().
@@ -175,22 +176,34 @@ function taxonomy_schema() {
 function taxonomy_field_schema($field) {
   return array(
     'columns' => array(
-      'tid' => array(
+      'target_id' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => FALSE,
       ),
     ),
     'indexes' => array(
-      'tid' => array('tid'),
+      'target_id' => array('target_id'),
     ),
     'foreign keys' => array(
-      'tid' => array(
+      'target_id' => array(
         'table' => 'taxonomy_term_data',
-        'columns' => array('tid' => 'tid'),
+        'columns' => array('target_id' => 'tid'),
       ),
     ),
   );
+}
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function taxonomy_update_dependencies() {
+  // Convert the 'tid' column of the taxonomy reference field to 'target_id'
+  // after fields and instances have been moved to the config system.
+  $dependencies['taxonomy'][8007] = array(
+    'field' => 8003,
+  );
+  return $dependencies;
 }
 
 /**
@@ -333,5 +346,43 @@ function taxonomy_update_8006() {
       ->condition('vid', $vid)
       ->fields(array('vid' => $machine_name))
       ->execute();
+  }
+}
+
+/**
+ * Update taxonomy_term_reference field tables to use target_id instead of tid.
+ */
+function taxonomy_update_8007() {
+  foreach (config_get_storage_names_with_prefix('field.field.') as $config_name) {
+    $field_config = config($config_name);
+    // Only update taxonomy reference fields that use the default SQL storage.
+    if ($field_config->get('type') == 'taxonomy_term_reference' && $field_config->get('storage.type') == 'field_sql_storage') {
+      $field = new Field($field_config->get());
+
+      $tables = array(
+        _field_sql_storage_tablename($field),
+        _field_sql_storage_revision_tablename($field),
+      );
+
+      foreach ($tables as $table_name) {
+        db_change_field($table_name, $field->id() . '_tid', $field->id() . '_target_id', array(
+          'description' => 'The ID of the target entity.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => FALSE,
+        ));
+
+        // Change the index.
+        db_drop_index($table_name, $field->id() . '_tid');
+        db_add_index($table_name, $field->id() . '_target_id', array($field->id() . '_target_id'));
+      }
+
+      // Update the indexes in field config as well.
+      $indexes = $field_config->get('indexes');
+      unset($indexes['tid']);
+      $indexes['target_id'] = array('target_id');
+      $field_config->set('indexes', $indexes);
+      $field_config->save();
+    }
   }
 }
