@@ -73,8 +73,8 @@ function aggregator_form_category_validate($form, &$form_state) {
 function aggregator_form_category_submit($form, &$form_state) {
   // @todo Replicate this cache invalidation when these ops are separated.
   // Invalidate the block cache to update aggregator category-based derivatives.
-  if (module_exists('block')) {
-    drupal_container()->get('plugin.manager.block')->clearCachedDefinitions();
+  if (Drupal::moduleHandler()->moduleExists('block')) {
+    Drupal::service('plugin.manager.block')->clearCachedDefinitions();
   }
   if ($form_state['values']['op'] == t('Delete')) {
     $title = $form_state['values']['title'];

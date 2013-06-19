@@ -209,7 +209,7 @@ class Feed extends EntityNG implements FeedInterface {
    */
   public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
     // Invalidate the block cache to update aggregator feed-based derivatives.
-    if (module_exists('block')) {
+    if (\Drupal::moduleHandler()->moduleExists('block')) {
       \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
     }
     $storage_controller->deleteCategories($entities);
