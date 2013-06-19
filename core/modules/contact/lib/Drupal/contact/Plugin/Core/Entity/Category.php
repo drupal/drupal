@@ -26,7 +26,8 @@ use Drupal\contact\CategoryInterface;
  *     "list" = "Drupal\contact\CategoryListController",
  *     "form" = {
  *       "add" = "Drupal\contact\CategoryFormController",
- *       "edit" = "Drupal\contact\CategoryFormController"
+ *       "edit" = "Drupal\contact\CategoryFormController",
+ *       "delete" = "Drupal\contact\Form\CategoryDeleteForm"
  *     }
  *   },
  *   uri_callback = "contact_category_uri",

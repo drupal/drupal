@@ -76,7 +76,7 @@ class RouteSubscriber implements EventSubscriberInterface {
 
         $route = new Route(
           "$path/fields/{field_instance}/delete",
-          array('_form' => '\Drupal\field_ui\Form\FieldDeleteForm'),
+          array('_entity_form' => 'field_instance.delete'),
           array('_permission' => 'administer ' . $entity_type . ' fields')
         );
         $collection->add("field_ui.delete.$entity_type", $route);

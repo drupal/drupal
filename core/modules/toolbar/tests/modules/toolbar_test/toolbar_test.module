@@ -35,7 +35,7 @@ function toolbar_test_toolbar() {
           l(t('link 2'), '<front>'),
           l(t('link 3'), '<front>'),
         ),
-        '#prefix' => '<h2 class="element-invisible">' . t('Test tray') . '</h2>',
+        '#prefix' => '<h2 class="visually-hidden">' . t('Test tray') . '</h2>',
         '#attributes' => array(
           'class' => array('menu'),
         ),

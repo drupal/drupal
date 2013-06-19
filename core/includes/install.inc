@@ -9,8 +9,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
-use Drupal\Core\StringTranslation\TranslationManager;
-use Drupal\Core\StringTranslation\Translator\CustomStrings;
 
 /**
  * Requirement severity -- Informational message only.
@@ -600,10 +598,10 @@ function drupal_verify_profile($install_state) {
       $modules[] = '<span class="admin-missing">' . drupal_ucfirst($module) . '</span>';
     }
     $requirements['required_modules'] = array(
-      'title'       => st('Required modules'),
-      'value'       => st('Required modules not found.'),
+      'title'       => t('Required modules'),
+      'value'       => t('Required modules not found.'),
       'severity'    => REQUIREMENT_ERROR,
-      'description' => st('The following modules are required but were not found. Move them into the appropriate modules subdirectory, such as <em>/modules</em>. Missing modules: !modules', array('!modules' => implode(', ', $modules))),
+      'description' => t('The following modules are required but were not found. Move them into the appropriate modules subdirectory, such as <em>/modules</em>. Missing modules: !modules', array('!modules' => implode(', ', $modules))),
     );
   }
   return $requirements;
@@ -928,45 +926,6 @@ function drupal_requirements_url($severity) {
     $query['continue'] = 1;
   }
   return drupal_current_script_url($query);
-}
-
-/**
- * Translates a string when some systems are not available.
- *
- * Used during the install process, when database, theme, and localization
- * system is possibly not yet available.
- *
- * Use t() if your code will never run during the Drupal installation phase.
- * Use st() if your code will only run during installation and never any other
- * time. Use get_t() if your code could run in either circumstance.
- *
- * @see t()
- * @see get_t()
- * @ingroup sanitization
- */
-function st($string, array $args = array(), array $options = array()) {
-  global $install_state;
-  static $install_translation;
-
-  // This may be invoked before the container has been initialized.
-  $container = Drupal::getContainer();
-  if ($container && $container->has('translation')) {
-    // Since the container is properly initialized, we can use standard translation.
-    return t($string, $args, $options);
-  }
-  elseif (drupal_installation_attempted() && isset($install_state['parameters']['langcode'])) {
-    // The translation service is not there yet, use a temporary one.
-    if (!isset($install_translation)) {
-      $install_translation = new TranslationManager();
-      foreach (array(new CustomStrings(), install_file_translation_service()) as $translator) {
-        $install_translation->addTranslator($translator);
-      }
-      $install_translation->setDefaultLangcode($install_state['parameters']['langcode']);
-    }
-    return $install_translation->translate($string, $args, $options);
-  }
-  // Just return an untraslated string.
-  return format_string($string, $args);
 }
 
 /**

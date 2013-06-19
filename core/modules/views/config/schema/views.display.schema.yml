@@ -100,7 +100,7 @@ views.display.attachment:
       label: 'Attachment position'
     inherit_arguments:
       type: boolean
-      lablel: 'Inherit contextual filters'
+      label: 'Inherit contextual filters'
     inherit_exposed_filters:
       type: boolean
       label: 'Inherit exposed filters'

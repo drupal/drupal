@@ -119,28 +119,27 @@ function _theme_load_offline_registry($theme, $base_theme = NULL, $theme_engine 
  * @ingroup themeable
  */
 function theme_task_list($variables) {
-  $t = get_t();
   $items = $variables['items'];
   $active = $variables['active'];
 
   $done = isset($items[$active]) || $active == NULL;
-  $output = '<h2 class="element-invisible">Installation tasks</h2>';
+  $output = '<h2 class="visually-hidden">Installation tasks</h2>';
   $output .= '<ol class="task-list">';
 
   foreach ($items as $k => $item) {
     if ($active == $k) {
       $class = 'active';
-      $status = '(' . $t('active') . ')';
+      $status = '(' . t('active') . ')';
       $done = FALSE;
     }
     else {
       $class = $done ? 'done' : '';
-      $status = $done ? '(' . $t('done') . ')' : '';
+      $status = $done ? '(' . t('done') . ')' : '';
     }
     $output .= '<li';
     $output .= ($class ? ' class="' . $class . '"' : '') . '>';
     $output .= $item;
-    $output .= ($status ? '<span class="element-invisible">' . $status . '</span>' : '');
+    $output .= ($status ? '<span class="visually-hidden">' . $status . '</span>' : '');
     $output .= '</li>';
   }
   $output .= '</ol>';

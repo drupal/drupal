@@ -1,7 +1,7 @@
 image_style_delete:
   pattern: 'admin/config/media/image-styles/manage/{image_style}/delete'
   defaults:
-    _form: '\Drupal\image\Form\ImageStyleDeleteForm'
+    _entity_form: 'image_style.delete'
   requirements:
     _permission: 'administer image styles'
 

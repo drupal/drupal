@@ -47,7 +47,7 @@ config_test_entity_disable:
 config_test_entity_delete:
   pattern: 'admin/structure/config_test/manage/{config_test}/delete'
   defaults:
-    _form: '\Drupal\config_test\Form\ConfigTestDeleteForm'
+    _entity_form: 'config_test.delete'
     entity_type: 'config_test'
   requirements:
     _access: 'TRUE'

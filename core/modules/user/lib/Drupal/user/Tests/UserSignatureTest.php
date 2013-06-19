@@ -84,7 +84,7 @@ class UserSignatureTest extends WebTestBase {
    * upon display.
    */
   function testUserSignature() {
-    // Create a new node with comments on.
+    // Create a new node.
     $node = $this->drupalCreateNode();
 
     // Verify that user signature field is not displayed on registration form.

@@ -150,7 +150,7 @@ Drupal.contextualToolbar = {
      */
     render: function () {
       // Render the visibility.
-      this.$el.toggleClass('element-hidden', !this.model.get('isVisible'));
+      this.$el.toggleClass('hidden', !this.model.get('isVisible'));
       // Render the state.
       this.$el.find('button').toggleClass('active', !this.model.get('isViewing'));
 

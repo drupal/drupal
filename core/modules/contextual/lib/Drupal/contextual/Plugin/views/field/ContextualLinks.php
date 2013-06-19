@@ -51,7 +51,7 @@ class ContextualLinks extends FieldPluginBase {
     );
   }
 
-  function pre_render(&$values) {
+  public function preRender(&$values) {
     // Add a row plugin css class for the contextual link.
     $class = 'contextual-region';
     if (!empty($this->view->style_plugin->options['row_class'])) {

@@ -1592,42 +1592,6 @@ function template_preprocess_datetime(&$variables) {
 }
 
 /**
- * Returns HTML for a date / time.
- *
- * @param $variables
- *   An associative array containing:
- *   - timestamp: (optional) A UNIX timestamp for the datetime attribute. If
- *     the datetime cannot be represented as a UNIX timestamp, use a valid
- *     datetime attribute value in $variables['attributes']['datetime'].
- *   - text: (optional) The content to display within the <time> element. Set
- *     'html' to TRUE if this value is already sanitized for output in HTML.
- *     Defaults to a human-readable representation of the timestamp value or
- *     the datetime attribute value using format_date().
- *     When invoked as #theme or #theme_wrappers of a render element, the
- *     rendered #children are autoamtically taken over as 'text', unless #text
- *     is explicitly set.
- *   - attributes: (optional) An associative array of HTML attributes to apply
- *     to the <time> element. A datetime attribute in 'attributes' overrides
- *     the 'timestamp'. To create a valid datetime attribute value from a UNIX
- *     timestamp, use format_date() with one of the predefined 'html_*'
- *     formats.
- *   - html: (optional) Whether 'text' is HTML markup (TRUE) or plain-text
- *     (FALSE). Defaults to FALSE. For example, to use a SPAN tag within the
- *     TIME element, this must be set to TRUE, or the SPAN tag will be escaped.
- *     It is the responsibility of the caller to properly sanitize the value
- *     contained in 'text' (or within the SPAN tag in aforementioned example).
- *
- * @see template_preprocess_datetime()
- * @see http://www.w3.org/TR/html5-author/the-time-element.html#attr-time-datetime
- */
-function theme_datetime($variables) {
-  $output = '<time' . new Attribute($variables['attributes']) . '>';
-  $output .= !empty($variables['html']) ? $variables['text'] : check_plain($variables['text']);
-  $output .= '</time>';
-  return $output;
-}
-
-/**
  * Returns HTML for status and/or error messages, grouped by type.
  *
  * An invisible heading identifies the messages for assistive technology.
@@ -1651,7 +1615,7 @@ function theme_status_messages($variables) {
   foreach (drupal_get_messages($display) as $type => $messages) {
     $output .= "<div class=\"messages messages--$type\">\n";
     if (!empty($status_heading[$type])) {
-      $output .= '<h2 class="element-invisible">' . $status_heading[$type] . "</h2>\n";
+      $output .= '<h2 class="visually-hidden">' . $status_heading[$type] . "</h2>\n";
     }
     if (count($messages) > 1) {
       $output .= " <ul class=\"messages__list\">\n";
@@ -1716,7 +1680,7 @@ function theme_link($variables) {
  *     When using a string it will be used as the text of the heading and the
  *     level will default to 'h2'. Headings should be used on navigation menus
  *     and any list of links that consistently appears on multiple pages. To
- *     make the heading invisible use the 'element-invisible' CSS class. Do not
+ *     make the heading invisible use the 'visually-hidden' CSS class. Do not
  *     use 'display:none', which removes it from screen-readers and assistive
  *     technology. Headings allow screen-reader and keyboard only users to
  *     navigate to or skip the links. See
@@ -1884,8 +1848,8 @@ function theme_breadcrumb($variables) {
   if (!empty($breadcrumb)) {
     $output .= '<nav role="navigation" class="breadcrumb">';
     // Provide a navigational heading to give context for breadcrumb links to
-    // screen-reader users. Make the heading invisible with .element-invisible.
-    $output .= '<h2 class="element-invisible">' . t('You are here') . '</h2>';
+    // screen-reader users. Make the heading invisible with .visually-hidden.
+    $output .= '<h2 class="visually-hidden">' . t('You are here') . '</h2>';
     $output .= '<ol><li>' . implode('</li><li>', $breadcrumb) . '</li></ol>';
     $output .= '</nav>';
   }
@@ -2249,20 +2213,34 @@ function theme_table($variables) {
 }
 
 /**
- * Returns HTML for a sort icon.
+ * Prepares variables for tablesort indicator templates.
  *
- * @param $variables
+ * Default template: tablesort-indicator.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
- *   - style: Set to either 'asc' or 'desc', this determines which icon to
- *     show.
+ *   - style: Set to either 'asc' or 'desc'. This determines which icon to show.
  */
-function theme_tablesort_indicator($variables) {
-  if ($variables['style'] == "asc") {
-    return theme('image', array('uri' => 'core/misc/arrow-asc.png', 'width' => 13, 'height' => 13, 'alt' => t('sort ascending'), 'title' => t('sort ascending')));
+function template_preprocess_tablesort_indicator(&$variables) {
+  // Provide the image attributes for an ascending or descending image.
+  if ($variables['style'] == 'asc') {
+    $variables['uri'] = 'core/misc/arrow-asc.png';
+    $alt_title = t('sort ascending');
   }
   else {
-    return theme('image', array('uri' => 'core/misc/arrow-desc.png', 'width' => 13, 'height' => 13, 'alt' => t('sort descending'), 'title' => t('sort descending')));
+    $variables['uri'] = 'core/misc/arrow-desc.png';
+    $alt_title = t('sort descending');
   }
+
+  // Add the image element.
+  $variables['image'] = array(
+    '#theme' => 'image',
+    '#uri' => $variables['uri'],
+    '#width' => 13,
+    '#height' => 13,
+    '#alt' => $alt_title,
+    '#title' => $alt_title,
+  );
 }
 
 /**
@@ -2817,7 +2795,7 @@ function template_preprocess_page(&$variables) {
       ),
       '#heading' => array(
         'text' => t('Main menu'),
-        'class' => array('element-invisible'),
+        'class' => array('visually-hidden'),
       )
     );
   }
@@ -2831,7 +2809,7 @@ function template_preprocess_page(&$variables) {
       ),
       '#heading' => array(
         'text' => t('Secondary menu'),
-        'class' => array('element-invisible'),
+        'class' => array('visually-hidden'),
       )
     );
   }
@@ -3177,6 +3155,7 @@ function drupal_common_theme() {
     ),
     'tablesort_indicator' => array(
       'variables' => array('style' => NULL),
+      'template' => 'tablesort-indicator',
     ),
     'mark' => array(
       'variables' => array('mark_type' => MARK_NEW),

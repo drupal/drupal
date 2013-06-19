@@ -7,7 +7,10 @@
 
 namespace Drupal\views\Plugin\views;
 
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Component\Utility\UrlValidator;
+use Drupal\Component\Utility\Xss;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\ViewExecutable;
@@ -212,16 +215,16 @@ abstract class HandlerBase extends PluginBase {
   public function sanitizeValue($value, $type = NULL) {
     switch ($type) {
       case 'xss':
-        $value = filter_xss($value);
+        $value = Xss::filter($value);
         break;
       case 'xss_admin':
-        $value = filter_xss_admin($value);
+        $value = Xss::filterAdmin($value);
         break;
       case 'url':
-        $value = check_url($value);
+        $value = String::checkPlain(UrlValidator::stripDangerousProtocols($value));
         break;
       default:
-        $value = check_plain($value);
+        $value = String::checkPlain($value);
         break;
     }
     return $value;
@@ -274,7 +277,7 @@ abstract class HandlerBase extends PluginBase {
     // Some form elements belong in a fieldset for presentation, but can't
     // be moved into one because of the form_state['values'] hierarchy. Those
     // elements can add a #fieldset => 'fieldset_name' property, and they'll
-    // be moved to their fieldset during pre_render.
+    // be moved to their fieldset during preRender.
     $form['#pre_render'][] = 'views_ui_pre_render_add_fieldset_markup';
 
     $form['admin_label'] = array(

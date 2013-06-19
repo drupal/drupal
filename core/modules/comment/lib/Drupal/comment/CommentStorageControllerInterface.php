@@ -9,6 +9,7 @@ namespace Drupal\comment;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\comment\CommentInterface;
 
 /**
  * Defines a common interface for comment entity controller classes.
@@ -61,9 +62,9 @@ interface CommentStorageControllerInterface extends EntityStorageControllerInter
    * - comment_count: The total number of approved/published comments on this
    *   entity.
    *
-   * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
+   * @param \Drupal\comment\CommentInterface $comment
    *   The comment being saved.
    */
-  public function updateEntityStatistics($comment);
+  public function updateEntityStatistics(CommentInterface $comment);
 
 }

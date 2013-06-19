@@ -28,7 +28,6 @@ require_once __DIR__ . '/locale.translation.inc';
  */
 function locale_translation_batch_update_build($projects = array(), $langcodes = array(), $options = array()) {
   module_load_include('compare.inc', 'locale');
-  $t = get_t();
   $projects = $projects ? $projects : array_keys(locale_translation_get_projects());
   $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
 
@@ -37,9 +36,9 @@ function locale_translation_batch_update_build($projects = array(), $langcodes =
 
   $batch = array(
     'operations' => $operations,
-    'title' => $t('Updating translations'),
+    'title' => t('Updating translations'),
     'progress_message' => '',
-    'error_message' => $t('Error importing translation files'),
+    'error_message' => t('Error importing translation files'),
     'finished' => 'locale_translation_batch_fetch_finished',
     'file' => drupal_get_path('module', 'locale') . '/locale.batch.inc',
   );
@@ -64,12 +63,11 @@ function locale_translation_batch_fetch_build($projects = array(), $langcodes = 
   $projects = $projects ? $projects : array_keys(locale_translation_get_projects());
   $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
 
-  $t = get_t();
   $batch = array(
     'operations' => _locale_translation_fetch_operations($projects, $langcodes, $options),
-    'title' => $t('Updating translations.'),
+    'title' => t('Updating translations.'),
     'progress_message' => '',
-    'error_message' => $t('Error importing translation files'),
+    'error_message' => t('Error importing translation files'),
     'finished' => 'locale_translation_batch_fetch_finished',
     'file' => drupal_get_path('module', 'locale') . '/locale.batch.inc',
   );

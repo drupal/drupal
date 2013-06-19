@@ -47,7 +47,7 @@ class FieldEntityTest extends ViewTestBase {
     $account->save();
     comment_add_default_comment_field('node', 'page');
     // Force a flush of the in-memory storage.
-    \Drupal::service('views.views_data')->clear();
+    $this->container->get('views.views_data')->clear();
 
     $node = entity_create('node', array('uid' => $account->id(), 'type' => 'page'));
     $node->save();

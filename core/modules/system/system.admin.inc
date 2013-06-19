@@ -750,7 +750,7 @@ function system_modules($form, $form_state = array()) {
     // Contents of confirm form is injected here because already in form
     // building function.
     $confirm_form = new ModulesInstallConfirmForm();
-    return $confirm_form->buildForm($form, $form_state, $visible_files, $form_state['storage']);
+    return $confirm_form->buildForm($form, $form_state, $visible_files, $form_state['storage'], Drupal::request());
   }
 
   // JS-only table filters.
@@ -883,7 +883,7 @@ function system_modules($form, $form_state = array()) {
       '#title' => t($package),
       '#theme' => 'system_modules_details',
       '#header' => array(
-        array('data' => t('<span class="element-invisible">Enabled</span>'), 'class' => array('checkbox')),
+        array('data' => t('<span class="visually-hidden">Enabled</span>'), 'class' => array('checkbox')),
         array('data' => t('Name'), 'class' => array('name')),
         array('data' => t('Description'), 'class' => array('description', RESPONSIVE_PRIORITY_LOW)),
       ),
@@ -1163,7 +1163,7 @@ function system_modules_uninstall($form, $form_state = NULL) {
     // Contents of confirm form is injected here because already in form
     // building function.
     $confirm_form = new ModulesUninstallConfirmForm();
-    return $confirm_form->buildForm($form, $form_state, $modules);
+    return $confirm_form->buildForm($form, $form_state, $modules, Drupal::request());
   }
 
   // Get a list of disabled, installed modules.
@@ -1466,7 +1466,7 @@ function theme_status_report($variables) {
       'class' => 'error',
     ),
   );
-  $output = '<table class="system-status-report"><thead><tr class="element-invisible">';
+  $output = '<table class="system-status-report"><thead><tr class="visually-hidden">';
   $output .= '<th>' . t('Status') . '</th><th>' . t('Component') . '</th><th>' . t('Details') . '</th>';
   $output .= '</tr></thead><tbody>';
 
@@ -1486,7 +1486,7 @@ function theme_status_report($variables) {
         $severity = $severities[REQUIREMENT_INFO];
       }
 
-      $severity['icon'] = '<div title="' . $severity['title'] . '"><span class="element-invisible">' . $severity['title'] . '</span></div>';
+      $severity['icon'] = '<div title="' . $severity['title'] . '"><span class="visually-hidden">' . $severity['title'] . '</span></div>';
 
       // Output table rows.
       $output .= '<tr class="' . $severity['class'] . '">';
@@ -1563,7 +1563,7 @@ function theme_system_modules_details($variables) {
       $description .= $links;
       $description .= '</div>';
     }
-    $col4 = '<div class="inner" tabindex="0" role="button"><span class="module-description-prefix element-invisible">Show description</span> ' . $description . '</div>';
+    $col4 = '<div class="inner" tabindex="0" role="button"><span class="module-description-prefix visually-hidden">Show description</span> ' . $description . '</div>';
     $row[] = array('class' => array('description', 'expand'), 'data' => $col4);
 
     $rows[] = $row;

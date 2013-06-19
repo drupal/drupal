@@ -639,6 +639,20 @@ function forum_form_taxonomy_term_form_alter(&$form, &$form_state, $form_id) {
  * Implements hook_form_BASE_FORM_ID_alter() for node_form().
  */
 function forum_form_node_form_alter(&$form, &$form_state, $form_id) {
+  $node = $form_state['controller']->getEntity();
+  if (isset($node->taxonomy_forums) && !$node->isNew()) {
+    $forum_terms = $node->taxonomy_forums;
+    // If editing, give option to leave shadows.
+    $shadow = (count($forum_terms) > 1);
+    $form['shadow'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Leave shadow copy'),
+      '#default_value' => $shadow,
+      '#description' => t('If you move this topic, you can leave a link in the old forum to the new forum.'),
+    );
+    $form['forum_tid'] = array('#type' => 'value', '#value' => $node->forum_tid);
+  }
+
   if (isset($form['taxonomy_forums'])) {
     $langcode = $form['taxonomy_forums']['#language'];
     // Make the vocabulary required for 'real' forum-nodes.
@@ -669,29 +683,6 @@ function forum_block_view_pre_render($elements) {
     $elements['forum_more'] = array('#theme' => 'more_link', '#url' => 'forum', '#title' => t('Read the latest forum topics.'));
   }
   return $elements;
-}
-
-/**
- * Implements hook_form().
- */
-function forum_form(EntityInterface $node, &$form_state) {
-  $type = node_type_load($node->type);
-  $form['title'] = array(
-    '#type' => 'textfield',
-    '#title' => check_plain($type->title_label),
-    '#default_value' => !empty($node->title) ? $node->title : '',
-    '#required' => TRUE, '#weight' => -5
-  );
-
-  if (!empty($node->nid)) {
-    $forum_terms = $node->taxonomy_forums;
-    // If editing, give option to leave shadows.
-    $shadow = (count($forum_terms) > 1);
-    $form['shadow'] = array('#type' => 'checkbox', '#title' => t('Leave shadow copy'), '#default_value' => $shadow, '#description' => t('If you move this topic, you can leave a link in the old forum to the new forum.'));
-    $form['forum_tid'] = array('#type' => 'value', '#value' => $node->forum_tid);
-  }
-
-  return $form;
 }
 
 /**
@@ -1104,7 +1095,7 @@ function template_preprocess_forum_list(&$variables) {
     if ($user->uid) {
       $variables['forums'][$id]->new_topics = _forum_topics_unread($forum->id(), $user->uid);
       if ($variables['forums'][$id]->new_topics) {
-        $variables['forums'][$id]->new_text = format_plural($variables['forums'][$id]->new_topics, '1 new post<span class="element-invisible"> in forum %title</span>', '@count new posts<span class="element-invisible"> in forum %title</span>', array('%title' => $variables['forums'][$id]->label()));
+        $variables['forums'][$id]->new_text = format_plural($variables['forums'][$id]->new_topics, '1 new post<span class="visually-hidden"> in forum %title</span>', '@count new posts<span class="visually-hidden"> in forum %title</span>', array('%title' => $variables['forums'][$id]->label()));
         $variables['forums'][$id]->new_url = url('forum/' . $forum->id(), array('fragment' => 'new'));
         $variables['forums'][$id]->icon_class = 'new';
         $variables['forums'][$id]->icon_title = t('New posts');
@@ -1179,7 +1170,7 @@ function template_preprocess_forum_topic_list(&$variables) {
       $variables['topics'][$id]->new_text = '';
       $variables['topics'][$id]->new_url = '';
       if ($topic->new_replies) {
-        $variables['topics'][$id]->new_text = format_plural($topic->new_replies, '1 new post<span class="element-invisible"> in topic %title</span>', '@count new posts<span class="element-invisible"> in topic %title</span>', array('%title' => $variables['topics'][$id]->title));
+        $variables['topics'][$id]->new_text = format_plural($topic->new_replies, '1 new post<span class="visually-hidden"> in topic %title</span>', '@count new posts<span class="visually-hidden"> in topic %title</span>', array('%title' => $variables['topics'][$id]->title));
         $variables['topics'][$id]->new_url = url("node/$topic->nid", array('query' => comment_new_page_count($topic->comment_count, $topic->new_replies, $topic, 'comment_node_forum'), 'fragment' => 'new'));
       }
 

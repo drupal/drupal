@@ -342,7 +342,7 @@ Drupal.overlay.loadChild = function (event) {
 Drupal.overlay.setFocusBefore = function ($element, document) {
   // Create an anchor inside the placeholder document.
   var placeholder = document.createElement('a');
-  var $placeholder = $(placeholder).addClass('element-invisible').attr('href', '#');
+  var $placeholder = $(placeholder).addClass('visually-hidden').attr('href', '#');
   // Put the placeholder where it belongs, and set the document focus to it.
   $placeholder.insertBefore($element);
   $placeholder.attr('autofocus', true);

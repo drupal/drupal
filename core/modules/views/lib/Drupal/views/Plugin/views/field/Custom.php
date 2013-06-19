@@ -38,7 +38,7 @@ class Custom extends FieldPluginBase {
     unset($form['alter']['alter_text']);
     unset($form['alter']['text']['#states']);
     unset($form['alter']['help']['#states']);
-    $form['#pre_render'][] = array($this, 'preRender');
+    $form['#pre_render'][] = array($this, 'preRenderCustomForm');
   }
 
   function render($values) {
@@ -55,7 +55,7 @@ class Custom extends FieldPluginBase {
    * @return array
    *   The modified form build array.
    */
-  public function preRender($form) {
+  public function preRenderCustomForm($form) {
     $form['text'] = $form['alter']['text'];
     $form['help'] = $form['alter']['help'];
     unset($form['alter']['text']);

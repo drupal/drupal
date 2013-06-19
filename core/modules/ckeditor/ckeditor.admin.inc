@@ -124,7 +124,7 @@ function theme_ckeditor_settings_toolbar($variables) {
 
   // aria-live region for outputing aural information about the state of the
   // configuration.
-  $output .= '<div id="ckeditor-button-configuration-aria-live" class="element-invisible" aria-live="polite"></div>';
+  $output .= '<div id="ckeditor-button-configuration-aria-live" class="visually-hidden" aria-live="polite"></div>';
 
   $output .= '<div id="ckeditor-button-description" class="fieldset-description">' . t('Move a button into the <em>Active toolbar</em> to enable it, or into the list of <em>Available buttons</em> to disable it. Use dividers to create button groups. Buttons may be moved with the mouse or keyboard arrow keys.') . '</div>';
 

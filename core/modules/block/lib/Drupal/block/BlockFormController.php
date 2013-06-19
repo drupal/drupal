@@ -101,7 +101,7 @@ class BlockFormController extends EntityFormController {
       );
       $form['visibility']['path']['pages'] = array(
         '#type' => 'textarea',
-        '#title' => '<span class="element-invisible">' . $title . '</span>',
+        '#title' => '<span class="visually-hidden">' . $title . '</span>',
         '#default_value' => !empty($visibility['path']['pages']) ? $visibility['path']['pages'] : '',
         '#description' => $description,
       );

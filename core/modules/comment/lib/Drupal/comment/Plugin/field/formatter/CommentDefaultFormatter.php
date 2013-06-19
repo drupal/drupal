@@ -32,17 +32,18 @@ class CommentDefaultFormatter extends FormatterBase {
   public function viewElements(EntityInterface $entity, $langcode, array $items) {
     $elements = array();
 
-    $field = $this->field;
+    $field = $this->fieldDefinition;
+    $field_name = $field->getFieldName();
 
     $commenting_status = _comment_get_default_status($items);
     if ($commenting_status != COMMENT_HIDDEN && empty($entity->in_preview)) {
-      $comment_settings = $this->instance['settings'];
+      $comment_settings = $this->getFieldSettings();
 
       // Only attempt to render comments if the entity has visible comments.
       // Unpublished comments are not included in
       // $entity->comment_statistics[$field_name]->comment_count, so show
       // comments unconditionally if the user is an administrator.
-      if (((!empty($entity->comment_statistics[$field['field_name']]->comment_count) && user_access('access comments')) || user_access('administer comments')) &&
+      if (((!empty($entity->comment_statistics[$field_name]->comment_count) && user_access('access comments')) || user_access('administer comments')) &&
       !empty($entity->content['#view_mode']) &&
       !in_array($entity->content['#view_mode'], array('search_result', 'search_index'))) {
 
@@ -50,7 +51,7 @@ class CommentDefaultFormatter extends FormatterBase {
         // formatter, @see comment_node_update_index().
         $mode = $comment_settings['default_mode'];
         $comments_per_page = $comment_settings['per_page'];
-        if ($cids = comment_get_thread($entity, $field['field_name'], $mode, $comments_per_page)) {
+        if ($cids = comment_get_thread($entity, $field_name, $mode, $comments_per_page)) {
           $comments = comment_load_multiple($cids);
           comment_prepare_thread($comments);
           $build = comment_view_multiple($comments);
@@ -65,16 +66,16 @@ class CommentDefaultFormatter extends FormatterBase {
         // view mode is not search_result or search_index.
         if (user_access('post comments') && !empty($entity->content['#view_mode']) &&
           !in_array($entity->content['#view_mode'], array('search_result', 'search_index'))) {
-          $additions['comment_form'] = comment_add($entity, $field['field_name']);
+          $additions['comment_form'] = comment_add($entity, $field_name);
         }
       }
     }
 
     if (!empty($additions)) {
       $elements[] = $additions + array(
-        '#theme' => 'comment_wrapper__' . $entity->entityType() . '__' . $entity->bundle() . '__' . $field['field_name'],
+        '#theme' => 'comment_wrapper__' . $entity->entityType() . '__' . $entity->bundle() . '__' . $field_name,
         '#entity' => $entity,
-        '#display_mode' => $this->instance['settings']['default_mode'],
+        '#display_mode' => $this->getFieldSetting('default_mode'),
         'comments' => array(),
         'comment_form' => array(),
       );

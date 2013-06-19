@@ -91,11 +91,11 @@ function adjustIfNestedAndOverlapping ($contextual) {
     // Retrieve height of nested contextual link.
     var height = 0;
     var $trigger = $nestedContextual.find('.trigger');
-    // Elements with the .element-invisible class have no dimensions, so this
+    // Elements with the .visually-hidden class have no dimensions, so this
     // class must be temporarily removed to the calculate the height.
-    $trigger.removeClass('element-invisible');
+    $trigger.removeClass('visually-hidden');
     height = $nestedContextual.height();
-    $trigger.addClass('element-invisible');
+    $trigger.addClass('visually-hidden');
 
     // Adjust nested contextual link's position.
     $nestedContextual.css({ top: $nestedContextual.position().top + height });
@@ -275,7 +275,7 @@ Drupal.contextual = {
         // The open state determines if the links are visible.
         .toggleClass('open', isOpen)
         // Update the visibility of the trigger.
-        .find('.trigger').toggleClass('element-invisible', !isVisible);
+        .find('.trigger').toggleClass('visually-hidden', !isVisible);
 
       // Nested contextual region handling: hide any nested contextual triggers.
       if ('isOpen' in this.model.changed) {
@@ -411,7 +411,7 @@ Drupal.contextual.collection = new Backbone.Collection([], { model: Drupal.conte
  *   A string representing a DOM fragment.
  */
 Drupal.theme.contextualTrigger = function () {
-  return '<button class="trigger element-invisible element-focusable" type="button"></button>';
+  return '<button class="trigger visually-hidden focusable" type="button"></button>';
 };
 
 })(jQuery, Drupal, drupalSettings, Backbone, Modernizr);

@@ -49,8 +49,8 @@ class HandlerFieldRoleTest extends UserTestBase {
     $view = views_get_view('test_views_handler_field_role');
     $this->executeView($view);
     $view->row_index = 0;
-    // The role field is populated during pre_render.
-    $view->field['rid']->pre_render($view->result);
+    // The role field is populated during preRender.
+    $view->field['rid']->preRender($view->result);
     $render = $view->field['rid']->advancedRender($view->result[0]);
 
     $this->assertEqual($rolename_b . $rolename_a, $render, 'View test_views_handler_field_role renders role assigned to user in the correct order.');

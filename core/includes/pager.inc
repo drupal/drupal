@@ -309,7 +309,7 @@ function theme_pager($variables) {
         '#markup' => $li_last,
       );
     }
-    return '<h2 class="element-invisible">' . t('Pages') . '</h2>' . theme('item_list', array(
+    return '<h2 class="visually-hidden">' . t('Pages') . '</h2>' . theme('item_list', array(
       'items' => $items,
       'attributes' => array('class' => array('pager')),
     ));

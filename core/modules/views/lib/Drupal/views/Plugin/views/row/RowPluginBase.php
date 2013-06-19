@@ -135,7 +135,7 @@ abstract class RowPluginBase extends PluginBase {
    * @param $result
    *   The full array of results from the query.
    */
-  function pre_render($result) { }
+  public function preRender($result) { }
 
   /**
    * Render a row object. This usually passes through to a theme template

@@ -25,7 +25,8 @@ use Drupal\user\RoleInterface;
  *     "access" = "Drupal\user\RoleAccessController",
  *     "list" = "Drupal\user\RoleListController",
  *     "form" = {
- *       "default" = "Drupal\user\RoleFormController"
+ *       "default" = "Drupal\user\RoleFormController",
+ *       "delete" = "Drupal\user\Form\UserRoleDelete"
  *     }
  *   },
  *   config_prefix = "user.role",

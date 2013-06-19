@@ -429,7 +429,7 @@ class DisplayOverview extends OverviewBase {
         // spinners will be added manually by the client-side script.
         'progress' => 'none',
       ),
-      '#attributes' => array('class' => array('element-invisible'))
+      '#attributes' => array('class' => array('visually-hidden'))
     );
 
     $form['actions'] = array('#type' => 'actions');

@@ -29,7 +29,7 @@ class CommentWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
-    $field = $this->field;
+    $field = $this->fieldDefinition;
     $entity = $element['#entity'];
 
     $element['status'] = array(
@@ -55,7 +55,7 @@ class CommentWidget extends WidgetBase {
     // If used for the field settings form or the entity doesn't have any
     // comments, the "hidden" option makes no sense, so don't even bother
     // presenting it to the user.
-    if (!empty($entity->field_ui_default_value) || empty($entity->comment_statistics[$field['field_name']]->comment_count)) {
+    if (!empty($entity->field_ui_default_value) || empty($entity->comment_statistics[$field->getFieldName()]->comment_count)) {
       $element['status'][COMMENT_HIDDEN]['#access'] = FALSE;
       // Also adjust the description of the "closed" option.
       $element['status'][COMMENT_CLOSED]['#description'] = t('Users cannot post comments.');
@@ -65,7 +65,7 @@ class CommentWidget extends WidgetBase {
       $element += array(
         '#type' => 'details',
         // Collapse details when value is the same as default for instance.
-        '#collapsed' => (_comment_get_default_status($items) == _comment_get_default_status($this->instance['default_value'])),
+        '#collapsed' => (_comment_get_default_status($items) == _comment_get_default_status($field->default_value)),
         '#group' => 'advanced',
         '#attributes' => array(
           'class' => array('comment-' . drupal_html_class($element['#entity_type']) . '-settings-form'),

@@ -13,7 +13,7 @@ use Drupal\field\FieldUpdateForbiddenException;
  *
  * Field UI's "Manage fields" and "Manage display" pages let users re-order
  * fields, but also non-field components. For nodes, these include the title
- * and other elements exposed by modules through hook_form() or hook_form_alter().
+ * and other elements exposed by modules through hook_form_alter().
  *
  * Fieldable entities or modules that want to have their components supported
  * should expose them using this hook. The user-defined settings (weight,

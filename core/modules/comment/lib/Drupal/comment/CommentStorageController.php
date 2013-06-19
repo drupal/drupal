@@ -9,8 +9,7 @@ namespace Drupal\comment;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\DatabaseStorageControllerNG;
-use Drupal\Component\Uuid\Uuid;
-use LogicException;
+use Drupal\comment\CommentInterface;
 
 /**
  * Defines the controller class for comments.
@@ -49,22 +48,9 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
   }
 
   /**
-   * Updates the comment statistics for a given entity.
-   *
-   * The {comment_entity_statistics} table has the following fields:
-   * - last_comment_timestamp: The timestamp of the last comment for this entity,
-   *   or the entity created timestamp if no comments exist for the entity.
-   * - last_comment_name: The name of the anonymous poster for the last comment.
-   * - last_comment_uid: The user ID of the poster for the last comment for
-   *   this entity, or the entity author's user ID if no comments exist for the
-   *   entity.
-   * - comment_count: The total number of approved/published comments on this
-   *   entity.
-   *
-   * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
-   *   The comment being saved.
+   * {@inheritdoc}
    */
-  public function updateEntityStatistics($comment) {
+  public function updateEntityStatistics(CommentInterface $comment) {
     global $user;
     // Allow bulk updates and inserts to temporarily disable the
     // maintenance of the {comment_entity_statistics} table.
@@ -72,7 +58,7 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
       return;
     }
 
-    $query = db_select('comment', 'c');
+    $query = $this->database->select('comment', 'c');
     $query->addExpression('COUNT(cid)');
     $count = $query->condition('c.entity_id', $comment->entity_id->value)
       ->condition('c.entity_type', $comment->entity_type->value)
@@ -83,7 +69,7 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
 
     if ($count > 0) {
       // Comments exist.
-      $last_reply = db_select('comment', 'c')
+      $last_reply = $this->database->select('comment', 'c')
         ->fields('c', array('cid', 'name', 'changed', 'uid'))
         ->condition('c.entity_id', $comment->entity_id->value)
         ->condition('c.entity_type', $comment->entity_type->value)
@@ -93,7 +79,7 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
         ->range(0, 1)
         ->execute()
         ->fetchObject();
-      db_update('comment_entity_statistics')
+      $this->database->update('comment_entity_statistics')
         ->fields(array(
           'cid' => $last_reply->cid,
           'comment_count' => $count,
@@ -109,7 +95,7 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
     else {
       // Comments do not exist.
       $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
-      db_update('comment_entity_statistics')
+      $this->database->update('comment_entity_statistics')
         ->fields(array(
           'cid' => 0,
           'comment_count' => 0,
@@ -253,7 +239,7 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
       ->condition('entity_id', $comment->entity_id->value)
       ->condition('field_name', $comment->field_name->value)
       ->condition('entity_type', $comment->entity_type->value)
-      ->condition('thread', $parent->thread->value . '.%', 'LIKE');
+      ->condition('thread', $comment->pid->entity->thread->value . '.%', 'LIKE');
     $query->addExpression('MAX(thread)', 'thread');
     return $query->execute()
       ->fetchField();

@@ -62,7 +62,7 @@ class MachineName extends FieldPluginBase {
     );
   }
 
-  function pre_render(&$values) {
+  public function preRender(&$values) {
     $this->getValueOptions();
   }
 

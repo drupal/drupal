@@ -73,5 +73,6 @@ function action_menu() {
 function action_entity_info(&$entity_info) {
   $entity_info['action']['controllers']['form']['add'] = 'Drupal\action\ActionAddFormController';
   $entity_info['action']['controllers']['form']['edit'] = 'Drupal\action\ActionEditFormController';
+  $entity_info['action']['controllers']['form']['delete'] = 'Drupal\action\Form\ActionDeleteForm';
   $entity_info['action']['controllers']['list'] = 'Drupal\action\ActionListController';
 }

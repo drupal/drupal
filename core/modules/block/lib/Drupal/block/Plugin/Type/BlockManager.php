@@ -6,15 +6,10 @@
 
 namespace Drupal\block\Plugin\Type;
 
-use Drupal\Component\Plugin\PluginManagerBase;
-use Drupal\Component\Plugin\Discovery\DerivativeDiscoveryDecorator;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Language\Language;
-use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
-use Drupal\Core\Plugin\Discovery\AlterDecorator;
-use Drupal\Core\Plugin\Discovery\CacheDecorator;
-use Drupal\Component\Plugin\Factory\DefaultFactory;
-
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Plugin\DefaultPluginManager;
 /**
  * Manages discovery and instantiation of block plugins.
  *
@@ -22,22 +17,24 @@ use Drupal\Component\Plugin\Factory\DefaultFactory;
  *
  * @see \Drupal\block\BlockPluginInterface
  */
-class BlockManager extends PluginManagerBase {
+class BlockManager extends DefaultPluginManager {
 
   /**
    * Constructs a new \Drupal\block\Plugin\Type\BlockManager object.
    *
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
-   *   keyed by the corresponding namespace to look for plugin implementations,
+   *   keyed by the corresponding namespace to look for plugin implementations.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   Cache backend instance to use.
+   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   *   The language manager.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler to invoke the alter hook with.
    */
-  public function __construct(\Traversable $namespaces) {
-    $this->discovery = new AnnotatedClassDiscovery('Block', $namespaces);
-    $this->discovery = new DerivativeDiscoveryDecorator($this->discovery);
-    $this->discovery = new AlterDecorator($this->discovery, 'block');
-    $this->discovery = new CacheDecorator($this->discovery, 'block_plugins:' . language(Language::TYPE_INTERFACE)->langcode, 'block', CacheBackendInterface::CACHE_PERMANENT, array('block'));
-
-    $this->factory = new DefaultFactory($this->discovery);
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
+    parent::__construct('Block', $namespaces);
+    $this->alterInfo($module_handler, 'block');
+    $this->setCacheBackend($cache_backend, $language_manager, 'block_plugins');
   }
-
 }

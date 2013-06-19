@@ -2,7 +2,7 @@
 
 views.cache.none:
   type: mapping
-  lable: 'None'
+  label: 'None'
   mapping:
     type:
       type: string
@@ -10,7 +10,7 @@ views.cache.none:
 
 views.cache.time:
   type: mapping
-  lable: 'None'
+  label: 'None'
   mapping:
     type:
       type: string

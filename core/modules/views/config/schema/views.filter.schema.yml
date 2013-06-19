@@ -9,6 +9,7 @@ views_filter_boolean:
   mapping:
     value:
       type: boolean
+      label: 'Value'
 
 views_filter_boolean_string:
   type: views_filter_boolean
@@ -31,7 +32,7 @@ views.filter.date:
 
 views.filter.in_operator:
   type: views_filter
-  label: 'IN operartor'
+  label: 'IN operator'
   mapping:
     operator:
       type: string

@@ -12,7 +12,7 @@ use Drupal\Component\Annotation\PluginID;
 /**
  * Field handler to provide a list of items.
  *
- * The items are expected to be loaded by a child object during pre_render,
+ * The items are expected to be loaded by a child object during preRender,
  * and 'my field' is expected to be the pointer to the items in the list.
  *
  * Items to render should be in a list in $this->items

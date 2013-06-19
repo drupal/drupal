@@ -215,7 +215,7 @@ abstract class PagerPluginBase extends PluginBase {
   /**
    * Perform any needed actions just before rendering.
    */
-  function pre_render(&$result) { }
+  public function preRender(&$result) { }
 
   /**
    * Render the pager.

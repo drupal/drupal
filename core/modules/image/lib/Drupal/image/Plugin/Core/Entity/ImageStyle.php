@@ -21,6 +21,9 @@ use Drupal\image\ImageStyleInterface;
  *   label = @Translation("Image style"),
  *   module = "image",
  *   controllers = {
+ *     "form" = {
+ *       "delete" = "Drupal\image\Form\ImageStyleDeleteForm"
+ *     },
  *     "storage" = "Drupal\image\ImageStyleStorageController"
  *   },
  *   uri_callback = "image_style_entity_uri",

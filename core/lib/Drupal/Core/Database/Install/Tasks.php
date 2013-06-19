@@ -137,7 +137,7 @@ abstract class Tasks {
           }
         }
         else {
-          throw new TaskException(st("Failed to run all tasks against the database server. The task %task wasn't found.", array('%task' => $task['function'])));
+          throw new TaskException(t("Failed to run all tasks against the database server. The task %task wasn't found.", array('%task' => $task['function'])));
         }
       }
     }
@@ -166,7 +166,7 @@ abstract class Tasks {
       $this->pass('Drupal can CONNECT to the database ok.');
     }
     catch (\Exception $e) {
-      $this->fail(st('Failed to connect to your database server. The server reports the following message: %error.<ul><li>Is the database server running?</li><li>Does the database exist, and have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname?</li></ul>', array('%error' => $e->getMessage())));
+      $this->fail(t('Failed to connect to your database server. The server reports the following message: %error.<ul><li>Is the database server running?</li><li>Does the database exist, and have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname?</li></ul>', array('%error' => $e->getMessage())));
       return FALSE;
     }
     return TRUE;
@@ -178,10 +178,10 @@ abstract class Tasks {
   protected function runTestQuery($query, $pass, $fail, $fatal = FALSE) {
     try {
       db_query($query);
-      $this->pass(st($pass));
+      $this->pass(t($pass));
     }
     catch (\Exception $e) {
-      $this->fail(st($fail, array('%query' => $query, '%error' => $e->getMessage(), '%name' => $this->name())));
+      $this->fail(t($fail, array('%query' => $query, '%error' => $e->getMessage(), '%name' => $this->name())));
       return !$fatal;
     }
   }
@@ -191,7 +191,7 @@ abstract class Tasks {
    */
   protected function checkEngineVersion() {
     if ($this->minimumVersion() && version_compare(Database::getConnection()->version(), $this->minimumVersion(), '<')) {
-      $this->fail(st("The database version %version is less than the minimum required version %minimum_version.", array('%version' => Database::getConnection()->version(), '%minimum_version' => $this->minimumVersion())));
+      $this->fail(t("The database version %version is less than the minimum required version %minimum_version.", array('%version' => Database::getConnection()->version(), '%minimum_version' => $this->minimumVersion())));
     }
   }
 
@@ -207,16 +207,16 @@ abstract class Tasks {
   public function getFormOptions($database) {
     $form['database'] = array(
       '#type' => 'textfield',
-      '#title' => st('Database name'),
+      '#title' => t('Database name'),
       '#default_value' => empty($database['database']) ? '' : $database['database'],
       '#size' => 45,
       '#required' => TRUE,
-      '#description' => st('The name of the database your @drupal data will be stored in.', array('@drupal' => drupal_install_profile_distribution_name())),
+      '#description' => t('The name of the database your @drupal data will be stored in.', array('@drupal' => drupal_install_profile_distribution_name())),
     );
 
     $form['username'] = array(
       '#type' => 'textfield',
-      '#title' => st('Database username'),
+      '#title' => t('Database username'),
       '#default_value' => empty($database['username']) ? '' : $database['username'],
       '#required' => TRUE,
       '#size' => 45,
@@ -224,7 +224,7 @@ abstract class Tasks {
 
     $form['password'] = array(
       '#type' => 'password',
-      '#title' => st('Database password'),
+      '#title' => t('Database password'),
       '#default_value' => empty($database['password']) ? '' : $database['password'],
       '#required' => FALSE,
       '#size' => 45,
@@ -232,9 +232,9 @@ abstract class Tasks {
 
     $form['advanced_options'] = array(
       '#type' => 'details',
-      '#title' => st('Advanced options'),
+      '#title' => t('Advanced options'),
       '#collapsed' => TRUE,
-      '#description' => st("These options are only necessary for some sites. If you're not sure what you should enter here, leave the default settings or check with your hosting provider."),
+      '#description' => t("These options are only necessary for some sites. If you're not sure what you should enter here, leave the default settings or check with your hosting provider."),
       '#weight' => 10,
     );
 
@@ -242,32 +242,32 @@ abstract class Tasks {
     $db_prefix = ($profile == 'standard') ? 'drupal_' : $profile . '_';
     $form['advanced_options']['db_prefix'] = array(
       '#type' => 'textfield',
-      '#title' => st('Table prefix'),
+      '#title' => t('Table prefix'),
       '#default_value' => '',
       '#size' => 45,
-      '#description' => st('If more than one application will be sharing this database, enter a table prefix such as %prefix for your @drupal site here.', array('@drupal' => drupal_install_profile_distribution_name(), '%prefix' => $db_prefix)),
+      '#description' => t('If more than one application will be sharing this database, enter a table prefix such as %prefix for your @drupal site here.', array('@drupal' => drupal_install_profile_distribution_name(), '%prefix' => $db_prefix)),
       '#weight' => 10,
     );
 
     $form['advanced_options']['host'] = array(
       '#type' => 'textfield',
-      '#title' => st('Database host'),
+      '#title' => t('Database host'),
       '#default_value' => empty($database['host']) ? 'localhost' : $database['host'],
       '#size' => 45,
       // Hostnames can be 255 characters long.
       '#maxlength' => 255,
       '#required' => TRUE,
-      '#description' => st('If your database is located on a different server, change this.'),
+      '#description' => t('If your database is located on a different server, change this.'),
     );
 
     $form['advanced_options']['port'] = array(
       '#type' => 'textfield',
-      '#title' => st('Database port'),
+      '#title' => t('Database port'),
       '#default_value' => empty($database['port']) ? '' : $database['port'],
       '#size' => 45,
       // The maximum port number is 65536, 5 digits.
       '#maxlength' => 5,
-      '#description' => st('If your database server is listening to a non-standard port, enter its number.'),
+      '#description' => t('If your database server is listening to a non-standard port, enter its number.'),
     );
 
     return $form;
@@ -290,12 +290,12 @@ abstract class Tasks {
 
     // Verify the table prefix.
     if (!empty($database['prefix']) && is_string($database['prefix']) && !preg_match('/^[A-Za-z0-9_.]+$/', $database['prefix'])) {
-      $errors[$database['driver'] . '][advanced_options][db_prefix'] = st('The database table prefix you have entered, %prefix, is invalid. The table prefix can only contain alphanumeric characters, periods, or underscores.', array('%prefix' => $database['prefix']));
+      $errors[$database['driver'] . '][advanced_options][db_prefix'] = t('The database table prefix you have entered, %prefix, is invalid. The table prefix can only contain alphanumeric characters, periods, or underscores.', array('%prefix' => $database['prefix']));
     }
 
     // Verify the database port.
     if (!empty($database['port']) && !is_numeric($database['port'])) {
-      $errors[$database['driver'] . '][advanced_options][port'] =  st('Database port must be a number.');
+      $errors[$database['driver'] . '][advanced_options][port'] =  t('Database port must be a number.');
     }
 
     return $errors;

@@ -7,80 +7,49 @@
 
 namespace Drupal\Core\Form;
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Provides an generic base class for a confirmation form.
  */
-abstract class ConfirmFormBase implements FormInterface {
+abstract class ConfirmFormBase implements ConfirmFormInterface {
 
   /**
-   * Returns the question to ask the user.
-   *
-   * @return string
-   *   The form question. The page title will be set to this value.
+   * {@inheritdoc}
    */
-  abstract protected function getQuestion();
-
-  /**
-   * Returns the page to go to if the user cancels the action.
-   *
-   * @return string|array
-   *   This can be either:
-   *   - A string containing a Drupal path.
-   *   - An associative array with a 'path' key. Additional array values are
-   *     passed as the $options parameter to l().
-   *   If the 'destination' query parameter is set in the URL when viewing a
-   *   confirmation form, that value will be used instead of this path.
-   */
-  abstract protected function getCancelPath();
-
-  /**
-   * Returns additional text to display as a description.
-   *
-   * @return string
-   *   The form description.
-   */
-  protected function getDescription() {
+  public function getDescription() {
     return t('This action cannot be undone.');
   }
 
   /**
-   * Returns a caption for the button that confirms the action.
-   *
-   * @return string
-   *   The form confirmation text.
+   * {@inheritdoc}
    */
-  protected function getConfirmText() {
+  public function getConfirmText() {
     return t('Confirm');
   }
 
   /**
-   * Returns a caption for the link which cancels the action.
-   *
-   * @return string
-   *   The form cancellation text.
+   * {@inheritdoc}
    */
-  protected function getCancelText() {
+  public function getCancelText() {
     return t('Cancel');
   }
 
   /**
-   * Returns the internal name used to refer to the confirmation item.
-   *
-   * @return string
-   *   The internal form name.
+   * {@inheritdoc}
    */
-  protected function getFormName() {
+  public function getFormName() {
     return 'confirm';
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, array &$form_state, Request $request = NULL) {
     $path = $this->getCancelPath();
     // Prepare cancel link.
-    if (isset($_GET['destination'])) {
-      $options = drupal_parse_url($_GET['destination']);
+    if ($request->query->has('destination')) {
+      $options = drupal_parse_url($request->query->get('destination'));
     }
     elseif (is_array($path)) {
       $options = $path;
@@ -114,7 +83,7 @@ abstract class ConfirmFormBase implements FormInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::validateForm().
+   * {@inheritdoc}
    */
   public function validateForm(array &$form, array &$form_state) {
   }

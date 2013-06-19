@@ -22,6 +22,9 @@ use Drupal\filter\FilterBag;
  *   label = @Translation("Text format"),
  *   module = "filter",
  *   controllers = {
+ *     "form" = {
+ *       "disable" = "Drupal\filter\Form\FilterDisableForm"
+ *     },
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
  *   },
  *   config_prefix = "filter.format",

@@ -8,6 +8,7 @@
 namespace Drupal\system\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Builds a confirmation form for required modules.
@@ -19,28 +20,28 @@ class ModulesInstallConfirmForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function getQuestion() {
+  public function getQuestion() {
     return t('Some required modules must be enabled');
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getConfirmText() {
+  public function getConfirmText() {
     return t('Continue');
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getCancelPath() {
+  public function getCancelPath() {
     return 'admin/modules';
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getDescription() {
+  public function getDescription() {
     return t('Would you like to continue with the above?');
   }
 
@@ -58,7 +59,7 @@ class ModulesInstallConfirmForm extends ConfirmFormBase {
    * @param array $storage
    *   Temporary storage of module dependency information.
    */
-  public function buildForm(array $form, array &$form_state, $modules = array(), $storage = array()) {
+  public function buildForm(array $form, array &$form_state, $modules = array(), $storage = array(), Request $request = NULL) {
     $items = array();
 
     $form['validation_modules'] = array('#type' => 'value', '#value' => $modules);
@@ -82,7 +83,7 @@ class ModulesInstallConfirmForm extends ConfirmFormBase {
 
     $form['modules'] = array('#theme' => 'item_list', '#items' => $items);
 
-    return parent::buildForm($form, $form_state);
+    return parent::buildForm($form, $form_state, $request);
   }
 
   /**

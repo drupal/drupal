@@ -61,10 +61,12 @@
   color: #007ecc;
 }
 .vertical-tabs-panes {
+  background-color: #fcfcfa;
+}
+html.js .vertical-tabs-panes {
   margin: 0 0 0 240px; /* LTR */
   padding: 10px 15px 10px 15px;
   border-left: 1px solid #a6a5a1; /* LTR */
-  background-color: #fcfcfa;
 }
 .vertical-tabs-panes:after {
   content: "";

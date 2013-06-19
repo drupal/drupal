@@ -11,3 +11,10 @@ language_test_theme_link_active_class:
     _content: '\Drupal\language_test\Controller\LanguageTestController::themeLinkActiveClass'
   requirements:
     _access: 'TRUE'
+
+language_test_subrequest:
+  pattern: '/language_test/subrequest'
+  defaults:
+    _controller: '\Drupal\language_test\Controller\LanguageTestController::testSubRequest'
+  requirements:
+    _access: 'TRUE'

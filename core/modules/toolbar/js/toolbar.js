@@ -338,7 +338,7 @@ Drupal.theme.toolbarOrientationToggle = function () {
  *   A string representing a DOM fragment.
  */
 Drupal.theme.toolbarMessageBox = function () {
-  return '<div id="toolbar-messages" class="element-invisible" role="region" aria-live="polite"></div>';
+  return '<div id="toolbar-messages" class="visually-hidden" role="region" aria-live="polite"></div>';
 };
 
 /**

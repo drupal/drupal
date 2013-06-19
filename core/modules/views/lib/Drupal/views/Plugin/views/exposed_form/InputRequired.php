@@ -71,7 +71,7 @@ class InputRequired extends ExposedFormPluginBase {
     return $cache;
   }
 
-  function pre_render($values) {
+  public function preRender($values) {
     if (!$this->exposedFilterApplied()) {
       $options = array(
         'id' => 'area',

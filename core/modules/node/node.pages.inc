@@ -27,7 +27,7 @@ function node_add_page() {
   $content = array();
   // Only use node types the user has access to.
   foreach (node_type_get_types() as $type) {
-    if (node_hook($type->type, 'form') && node_access('create', $type->type)) {
+    if (node_access('create', $type->type)) {
       $content[$type->type] = $type;
     }
   }
@@ -92,9 +92,7 @@ function node_add($node_type) {
     'langcode' => $langcode ? $langcode : language_default()->langcode,
   ))->getBCEntity();
   drupal_set_title(t('Create @name', array('@name' => $node_type->name)), PASS_THROUGH);
-  $output = entity_get_form($node);
-
-  return $output;
+  return entity_get_form($node);
 }
 
 /**
