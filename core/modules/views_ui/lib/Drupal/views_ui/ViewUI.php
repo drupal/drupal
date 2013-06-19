@@ -469,7 +469,7 @@ class ViewUI implements ViewStorageInterface {
           'table' => $table,
           'field' => $field,
         );
-        $handler = views_get_handler($item, $key);
+        $handler = Views::handlerManager($key)->getHandler($item);
         if ($this->executable->displayHandlers->get('default')->useGroupBy() && $handler->usesGroupBy()) {
           $this->addFormToStack('config-item-group', $form_state['display_id'], $type, $id);
         }
