@@ -34,6 +34,13 @@ class StyleTest extends StylePluginBase {
   public $output;
 
   /**
+   * Can the style plugin use row plugins.
+   *
+   * @var bool
+   */
+  protected $usesRowPlugin = TRUE;
+
+  /**
    * Overrides Drupal\views\Plugin\views\style\StylePluginBase::defineOptions().
    */
   protected function defineOptions() {
@@ -54,10 +61,6 @@ class StyleTest extends StylePluginBase {
       '#description' => t('This is a textfield for test_option.'),
       '#default_value' => $this->options['test_option'],
     );
-  }
-
-  function usesRowPlugin() {
-    return parent::usesRowPlugin();
   }
 
   /**

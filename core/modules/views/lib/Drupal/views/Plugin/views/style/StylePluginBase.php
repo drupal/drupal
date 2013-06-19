@@ -158,8 +158,8 @@ abstract class StylePluginBase extends PluginBase {
     // If we use a row plugin, ask the row plugin. Chances are, we don't
     // care, it does.
     $row_uses_fields = FALSE;
-    if ($this->usesRowPlugin() && !empty($this->view->rowPlugin)) {
-      $row_uses_fields = $this->view->rowPlugin->usesFields();
+    if ($this->usesRowPlugin() && ($row_plugin = $this->displayHandler->getPlugin('row'))) {
+      $row_uses_fields = $row_plugin->usesFields();
     }
     // Otherwise, check the definition or the option.
     return $row_uses_fields || $this->usesFields || !empty($this->options['uses_fields']);
