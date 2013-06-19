@@ -345,7 +345,7 @@ function aggregator_save_category($edit) {
         ->condition('cid', $edit['cid'])
         ->execute();
       // Make sure there is no active block for this category.
-      if (module_exists('block')) {
+      if (Drupal::moduleHandler()->moduleExists('block')) {
         foreach (entity_load_multiple_by_properties('block', array('plugin' => 'aggregator_category_block:' . $edit['cid'])) as $block) {
           $block->delete();
         }
@@ -365,7 +365,7 @@ function aggregator_save_category($edit) {
       ->execute();
     $op = 'insert';
   }
-  if (isset($op) && module_exists('menu_link')) {
+  if (isset($op) && Drupal::moduleHandler()->moduleExists('menu_link')) {
     menu_link_maintain('aggregator', $op, $link_path, $edit['title']);
   }
 }

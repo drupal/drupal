@@ -289,10 +289,12 @@ function theme_shortcut_set_customize($variables) {
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
+    '#empty' => t('No shortcuts available. <a href="@link">Add a shortcut</a>.', array(
+      '@link' => url('admin/config/user-interface/shortcut/manage/' . $form['#shortcut_set_name'] . '/add-link'),
+    )),
     '#attributes' => array(
       'id' => 'shortcuts',
-      'empty' => t('No shortcuts available. <a href="@link">Add a shortcut</a>.', array('@link' => url('admin/config/user-interface/shortcut/manage/' . $form['#shortcut_set_name'] . '/add-link')))
-    )
+    ),
   );
 
   $output = drupal_render($table);

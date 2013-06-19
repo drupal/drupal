@@ -7,15 +7,18 @@
 
 namespace Drupal\tour\Plugin\tour\tip;
 
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Utility\Token;
 use Drupal\tour\Annotation\Tip;
 use Drupal\tour\TipPluginBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Displays some text as a tip.
  *
  * @Tip("text")
  */
-class TipPluginText extends TipPluginBase {
+class TipPluginText extends TipPluginBase implements ContainerFactoryPluginInterface {
 
   /**
    * The body text which is used for render of this Text Tip.
@@ -25,11 +28,42 @@ class TipPluginText extends TipPluginBase {
   protected $body;
 
   /**
+   * Token service.
+   *
+   * @var \Drupal\Core\Utility\Token
+   */
+  protected $token;
+
+  /**
    * The forced position of where the tip will be located.
    *
    * @var string
    */
   protected $location;
+
+  /**
+   * Constructs a \Drupal\tour\Plugin\tour\tip\TipPluginText object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Utility\Token $token
+   *   The token service.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, Token $token) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->token = $token;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('token'));
+  }
 
   /**
    * Returns a ID that is guaranteed uniqueness.
@@ -83,7 +117,7 @@ class TipPluginText extends TipPluginBase {
    */
   public function getOutput() {
     $output = '<h2 class="tour-tip-label" id="tour-tip-' . $this->getAriaId() . '-label">' . check_plain($this->getLabel()) . '</h2>';
-    $output .= '<p class="tour-tip-body" id="tour-tip-' . $this->getAriaId() . '-contents">' . \Drupal::token()->replace(filter_xss_admin($this->getBody())) . '</p>';
+    $output .= '<p class="tour-tip-body" id="tour-tip-' . $this->getAriaId() . '-contents">' . filter_xss_admin($this->token->replace($this->getBody())) . '</p>';
     return array('#markup' => $output);
   }
 }

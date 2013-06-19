@@ -27,7 +27,7 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'block_test');
+  public static $modules = array('block', 'block_test', 'system');
 
   /**
    * The block storage controller.
