@@ -4,3 +4,11 @@ block_admin_block_delete:
     _entity_form: 'block.delete'
   requirements:
     _permission: 'administer blocks'
+
+block_admin_display:
+  pattern: '/admin/structure/block'
+  defaults:
+    _content: '\Drupal\block\Controller\BlockListController::listing'
+    entity_type: 'block'
+  requirements:
+    _permission: 'administer blocks'
