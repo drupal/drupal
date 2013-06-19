@@ -247,14 +247,21 @@ class ConnectionUnitTest extends UnitTestBase {
     $db_reflection = new \ReflectionObject($db);
     $unserialized_reflection = new \ReflectionObject($unserialized);
     foreach ($db_reflection->getProperties() as $value) {
-      // Skip the pdo connection object.
-      if ($value->getName() == 'connection') {
-        continue;
-      }
       $value->setAccessible(TRUE);
       $unserialized_property = $unserialized_reflection->getProperty($value->getName());
       $unserialized_property->setAccessible(TRUE);
-      $this->assertEqual($unserialized_property->getValue($unserialized), $value->getValue($db));
+      // For the PDO object, just check the statement class attribute.
+      if ($value->getName() == 'connection') {
+        $db_statement_class = $unserialized_property->getValue($db)->getAttribute(\PDO::ATTR_STATEMENT_CLASS);
+        $unserialized_statement_class = $unserialized_property->getValue($unserialized)->getAttribute(\PDO::ATTR_STATEMENT_CLASS);
+        // Assert the statement class.
+        $this->assertEqual($unserialized_statement_class[0], $db_statement_class[0]);
+        // Assert the connection argument that is passed into the statement.
+        $this->assertEqual(get_class($unserialized_statement_class[1][0]), get_class($db_statement_class[1][0]));
+      }
+      else {
+        $this->assertEqual($unserialized_property->getValue($unserialized), $value->getValue($db));
+      }
     }
 
   }
