@@ -7,12 +7,12 @@
 
 namespace Drupal\tour;
 
+use Drupal\Component\Plugin\Discovery\ProcessDecorator;
 use Drupal\Component\Plugin\PluginManagerBase;
-use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Core\Plugin\Discovery\AlterDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
-use Drupal\Component\Plugin\Discovery\ProcessDecorator;
+use Drupal\Core\Plugin\Factory\ContainerFactory;
 
 /**
  * Configurable tour manager.
@@ -32,7 +32,7 @@ class TipPluginManager extends PluginManagerBase {
     $this->discovery = new AlterDecorator($this->discovery, 'tour_tips_info');
     $this->discovery = new CacheDecorator($this->discovery, 'tour');
 
-    $this->factory = new DefaultFactory($this->discovery);
+    $this->factory = new ContainerFactory($this->discovery);
   }
 
 }
