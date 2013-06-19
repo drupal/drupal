@@ -256,7 +256,7 @@ function contextual_pre_render_links($element) {
     $items += menu_contextual_links($module, $args[0], $args[1]);
   }
 
-  // Transform contextual links into parameters suitable for theme_link().
+  // Transform contextual links into parameters suitable for theme_links().
   $links = array();
   foreach ($items as $class => $item) {
     $class = drupal_html_class($class);

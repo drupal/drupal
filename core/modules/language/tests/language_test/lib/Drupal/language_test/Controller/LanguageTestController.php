@@ -44,53 +44,9 @@ class LanguageTestController implements ControllerInterface {
   /**
    * Returns links to the current page with different langcodes.
    *
-   * Using #theme causes these links to be rendered with theme_link().
+   * Using #type 'link' causes these links to be rendered with l().
    */
-  public function themeLinkActiveClass() {
-    // We assume that 'en' and 'fr' have been configured.
-    $languages = language_list();
-    return array(
-      'no_language' => array(
-        '#theme' => 'link',
-        '#text' => t('Link to the current path with no langcode provided.'),
-        '#path' => current_path(),
-        '#options' => array(
-          'attributes' => array(
-            'id' => 'no_lang_link',
-          ),
-        ),
-      ),
-      'fr' => array(
-        '#theme' => 'link',
-        '#text' => t('Link to a French version of the current path.'),
-        '#path' => current_path(),
-        '#options' => array(
-          'language' => $languages['fr'],
-          'attributes' => array(
-            'id' => 'fr_link',
-          ),
-        ),
-      ),
-      'en' => array(
-        '#theme' => 'link',
-        '#text' => t('Link to an English version of the current path.'),
-        '#path' => current_path(),
-        '#options' => array(
-          'language' => $languages['en'],
-          'attributes' => array(
-            'id' => 'en_link',
-          ),
-        ),
-      ),
-    );
-  }
-
-  /**
-   * Returns links to the current page with different langcodes.
-   *
-   * Using #type causes these links to be rendered with l().
-   */
-  public function lActiveClass() {
+  public function typeLinkActiveClass() {
     // We assume that 'en' and 'fr' have been configured.
     $languages = language_list();
     return array(

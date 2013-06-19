@@ -1642,25 +1642,6 @@ function theme_status_messages($variables) {
 }
 
 /**
- * Returns HTML for a link.
- *
- * This is a wrapper around l() to allow for more flexible link themeing.
- *
- * Where performance is more important than theme flexibility, Drupal code that
- * outputs a link should call the l() function directly, as #theme 'link'
- * implementations have a measurable performance impact.
- *
- * @param $variables
- *   An associative array containing the keys 'text', 'path', and 'options'.
- *   See the l() function for information about these variables.
- *
- * @see l()
- */
-function theme_link($variables) {
-  return l($variables['text'], $variables['path'], $variables['options']);
-}
-
-/**
  * Returns HTML for a set of links.
  *
  * @param $variables
@@ -3107,9 +3088,6 @@ function drupal_common_theme() {
     ),
     'status_messages' => array(
       'variables' => array('display' => NULL),
-    ),
-    'link' => array(
-      'variables' => array('text' => NULL, 'path' => NULL, 'options' => array()),
     ),
     'links' => array(
       'variables' => array('links' => array(), 'attributes' => array('class' => array('links')), 'heading' => array()),

@@ -1468,7 +1468,6 @@ function drupal_http_header_attributes(array $attributes = array()) {
  *   An HTML string containing a link to the given path.
  *
  * @see url()
- * @see theme_link()
  */
 function l($text, $path, array $options = array()) {
   // Start building a structured representation of our link to be altered later.

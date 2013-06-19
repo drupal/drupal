@@ -580,7 +580,7 @@ function hook_views_preview_info_alter(array &$rows, ViewExecutable $view) {
  * @param array $links
  *   A renderable array of links which will be displayed at the top of the
  *   view edit form. Each entry will be in a form suitable for
- *   '#theme' => 'link'.
+ *   '#theme' => 'links'.
  * @param \Drupal\views\ViewExecutable $view
  *   The view object being edited.
  * @param string $display_id
