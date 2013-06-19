@@ -30,10 +30,7 @@ color: #494949;
 }
 
 some :pseudo .thing {
-  -webkit-border-radius: 3px;
   border-radius: 3px;
-  filter: progid:DXImageTransform.Microsoft.Shadow(color=#000000, direction='180', strength='10');
-  -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(color=#000000, direction='180', strength='10')";
 }
 
 ::-moz-selection {
