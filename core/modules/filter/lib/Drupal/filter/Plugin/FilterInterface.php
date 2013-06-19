@@ -176,6 +176,100 @@ interface FilterInterface {
   public function process($text, $langcode, $cache, $cache_id);
 
   /**
+   * Returns HTML allowed by this filter's configuration.
+   *
+   * May be implemented by filters of the type FILTER_TYPE_HTML_RESTRICTOR, this
+   * won't be used for filters of other types; they should just return FALSE.
+   *
+   * This callback function is only necessary for filters that strip away HTML
+   * tags (and possibly attributes) and allows other modules to gain insight in
+   * a generic manner into which HTML tags and attributes are allowed by a
+   * format.
+   *
+   * @return array|FALSE
+   *   A nested array with *either* of the following keys:
+   *     - 'allowed': (optional) the allowed tags as keys, and for each of those
+   *       tags (keys) either of the following values:
+   *       - TRUE to indicate any attribute is allowed
+   *       - FALSE to indicate no attributes are allowed
+   *       - an array to convey attribute restrictions: the keys must be
+   *         attribute names (which may use a wildcard, e.g. "data-*"), the
+   *         possible values are similar to the above:
+   *           - TRUE to indicate any attribute value is allowed
+   *           - FALSE to indicate the attribute is forbidden
+   *           - an array to convey attribute value restrictions: the key must
+   *             be attribute values (which may use a wildcard, e.g. "xsd:*"),
+   *             the possible values are TRUE or FALSE: to mark the attribute
+   *             value as allowed or forbidden, respectively
+   *     -  'forbidden_tags': (optional) the forbidden tags
+   *
+   *   There is one special case: the "wildcard tag", "*": any attribute
+   *   restrictions on that pseudotag apply to all tags.
+   *
+   *   If no restrictions apply, then FALSE must be returned.
+   *
+   *   Here is a concrete example, for a very granular filter:
+   *     @code
+   *     array(
+   *       'allowed' => array(
+   *         // Allows any attribute with any value on the <div> tag.
+   *         'div' => TRUE,
+   *         // Allows no attributes on the <p> tag.
+   *         'p' => FALSE,
+   *         // Allows the following attributes on the <a> tag:
+   *         //  - 'href', with any value;
+   *         //  - 'rel', with the value 'nofollow' value.
+   *         'a' => array(
+   *           'href' => TRUE,
+   *           'rel' => array('nofollow' => TRUE),
+   *         ),
+   *         // Only allows the 'src' and 'alt' attributes on the <alt> tag,
+   *         // with any value.
+   *         'img' => array(
+   *           'src' => TRUE,
+   *           'alt' => TRUE,
+   *         ),
+   *         // Allow RDFa on <span> tags, using only the dc, foaf, xsd and sioc
+   *         // vocabularies/namespaces.
+   *         'span' => array(
+   *           'property' => array('dc:*' => TRUE, 'foaf:*' => TRUE),
+   *           'datatype' => array('xsd:*' => TRUE),
+   *           'rel' => array('sioc:*' => TRUE),
+   *         ),
+   *         // Forbid the 'style' and 'on*' ('onClick' etc.) attributes on any
+   *         // tag.
+   *         '*' => array(
+   *           'style' => FALSE,
+   *           'on*' => FALSE,
+   *         ),
+   *       )
+   *     )
+   *     @endcode
+   *
+   *   A simpler example, for a very coarse filter:
+   *     @code
+   *     array(
+   *       'forbidden_tags' => array('iframe', 'script')
+   *     )
+   *     @endcode
+   *
+   *   The simplest example possible: a filter that doesn't allow any HTML:
+   *     @code
+   *     array(
+   *       'allowed' => array()
+   *     )
+   *     @endcode
+   *
+   *   And for a filter that applies no restrictions, i.e. allows any HTML:
+   *     @code
+   *     FALSE
+   *     @endcode
+   *
+   * @see filter_get_html_restrictions_by_format()
+   */
+  public function getHTMLRestrictions();
+
+  /**
    * Generates a filter's tip.
    *
    * A filter's tips should be informative and to the point. Short tips are

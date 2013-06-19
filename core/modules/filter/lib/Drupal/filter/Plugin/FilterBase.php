@@ -150,6 +150,13 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
   /**
    * {@inheritdoc}
    */
+  public function getHTMLRestrictions() {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function tips($long = FALSE) {
   }
 
