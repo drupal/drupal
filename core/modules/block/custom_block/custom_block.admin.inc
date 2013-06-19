@@ -17,7 +17,7 @@ use Drupal\custom_block\Plugin\Core\Entity\CustomBlockType;
  */
 function custom_block_type_add() {
   $block_type = entity_create('custom_block_type', array());
-  return entity_get_form($block_type);
+  return Drupal::entityManager()->getForm($block_type);
 }
 
 /**
@@ -32,7 +32,7 @@ function custom_block_type_add() {
  * @see custom_block_menu()
  */
 function custom_block_type_edit(CustomBlockType $block_type) {
-  return entity_get_form($block_type);
+  return Drupal::entityManager()->getForm($block_type);
 }
 
 /**

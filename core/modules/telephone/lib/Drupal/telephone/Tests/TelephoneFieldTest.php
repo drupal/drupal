@@ -53,19 +53,16 @@ class TelephoneFieldTest extends WebTestBase {
   function testTelephoneField() {
 
     // Add the telepone field to the article content type.
-    $field = array(
+    entity_create('field_entity', array(
       'field_name' => 'field_telephone',
       'type' => 'telephone',
-    );
-    field_create_field($field);
-
-    $instance = array(
+    ))->save();
+    entity_create('field_instance', array(
       'field_name' => 'field_telephone',
       'label' => 'Telephone Number',
       'entity_type' => 'node',
       'bundle' => 'article',
-    );
-    field_create_instance($instance);
+    ))->save();
 
     entity_get_form_display('node', 'article', 'default')
       ->setComponent('field_telephone', array(

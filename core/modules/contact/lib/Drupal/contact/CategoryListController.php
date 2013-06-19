@@ -19,6 +19,22 @@ class CategoryListController extends ConfigEntityListController {
    */
   public function getOperations(EntityInterface $entity) {
     $operations = parent::getOperations($entity);
+    if ($this->moduleHandler->moduleExists('field_ui')) {
+      $uri = $entity->uri();
+      $operations['manage-fields'] = array(
+        'title' => t('Manage fields'),
+        'href' => $uri['path'] . '/fields',
+        'options' => $uri['options'],
+        'weight' => 11,
+      );
+      $operations['manage-display'] = array(
+        'title' => t('Manage display'),
+        'href' => $uri['path'] . '/display',
+        'options' => $uri['options'],
+        'weight' => 12,
+      );
+    }
+
     if (!$entity->access('delete')) {
       unset($operations['delete']);
     }

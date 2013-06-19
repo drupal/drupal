@@ -33,11 +33,13 @@ class GenericFileFormatter extends FormatterBase {
     $elements = array();
 
     foreach ($items as $delta => $item) {
-      $elements[$delta] = array(
-        '#theme' => 'file_link',
-        '#file' => $item['entity'],
-        '#description' => $item['description'],
-      );
+      if ($item['display'] && $item['entity']) {
+        $elements[$delta] = array(
+          '#theme' => 'file_link',
+          '#file' => $item['entity'],
+          '#description' => $item['description'],
+        );
+      }
     }
 
     return $elements;

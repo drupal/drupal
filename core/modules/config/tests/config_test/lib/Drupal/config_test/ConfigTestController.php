@@ -28,7 +28,7 @@ class ConfigTestController {
    */
   public function edit(ConfigTest $config_test) {
     drupal_set_title(String::format('Edit %label', array('%label' => $config_test->label())), PASS_THROUGH);
-    return entity_get_form($config_test);
+    return \Drupal::entityManager()->getForm($config_test);
   }
 
   /**

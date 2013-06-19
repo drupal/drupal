@@ -47,13 +47,20 @@ function user_admin_account() {
       $users_roles[] = $roles[$user_role->rid];
     }
     asort($users_roles);
-
+    $username = array(
+      '#theme' => 'username',
+      '#account' => $account,
+    );
+    $item_list = array(
+      '#theme' => 'item_list',
+      '#items' => $users_roles,
+    );
     $options[$account->uid] = array(
-      'username' => theme('username', array('account' => $account)),
-      'status' =>  $status[$account->status],
-      'roles' => theme('item_list', array('items' => $users_roles)),
+      'username' => drupal_render($username),
+      'status' => $status[$account->status],
+      'roles' => drupal_render($item_list),
       'member_for' => format_interval(REQUEST_TIME - $account->created),
-      'access' =>  $account->access ? t('@time ago', array('@time' => format_interval(REQUEST_TIME - $account->access))) : t('never'),
+      'access' => $account->access ? t('@time ago', array('@time' => format_interval(REQUEST_TIME - $account->access))) : t('never'),
     );
     $links = array();
     $links['edit'] = array(
@@ -83,7 +90,9 @@ function user_admin_account() {
     '#rows' => $options,
     '#empty' => t('No people available.'),
   );
-  $form['pager'] = array('#markup' => theme('pager'));
+  $form['pager'] = array(
+    '#theme' =>'pager',
+  );
 
   return $form;
 }
@@ -137,10 +146,15 @@ function user_admin_permissions($form, $form_state, $rid = NULL) {
           'warning' => !empty($perm_item['restrict access']) ? t('Warning: Give to trusted roles only; this permission has security implications.') : '',
         );
         $options[$perm] = '';
+        $user_permission_description = array(
+          '#theme' => 'user_permission_description',
+          '#permission_item' => $perm_item,
+          '#hide' => $hide_descriptions,
+        );
         $form['permission'][$perm] = array(
           '#type' => 'item',
           '#markup' => $perm_item['title'],
-          '#description' => theme('user_permission_description', array('permission_item' => $perm_item, 'hide' => $hide_descriptions)),
+          '#description' => drupal_render($user_permission_description),
         );
         foreach ($role_names as $rid => $name) {
           // Builds arrays for checked boxes for each role
@@ -224,8 +238,19 @@ function theme_user_admin_permissions($variables) {
   foreach (element_children($form['role_names']) as $rid) {
     $header[] = array('data' => drupal_render($form['role_names'][$rid]), 'class' => array('checkbox'));
   }
-  $output = theme('system_compact_link');
-  $output .= theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'permissions')));
+  $system_compact_link = array(
+    '#theme' => 'system_compact_link',
+  );
+  $table = array(
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+    '#attributes' => array(
+      'id' => 'permissions',
+    ),
+  );
+  $output = drupal_render($system_compact_link);
+  $output .= drupal_render($table);
   $output .= drupal_render_children($form);
   return $output;
 }

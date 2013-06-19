@@ -26,13 +26,13 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
     $this->installConfig(array('field'));
 
     // Auto-create a field for testing.
-    field_create_field(array(
+    entity_create('field_entity', array(
       'field_name' => 'field_test_text',
       'type' => 'text',
       'cardinality' => 1,
       'translatable' => FALSE,
-    ));
-    $instance = array(
+    ))->save();
+    entity_create('field_instance', array(
       'entity_type' => 'entity_test_mulrev',
       'field_name' => 'field_test_text',
       'bundle' => 'entity_test_mulrev',
@@ -41,7 +41,7 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
         'type' => 'text_textfield',
         'weight' => 0,
       ),
-    );
-    field_create_instance($instance);
+    ))->save();
   }
+
 }

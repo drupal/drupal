@@ -1,0 +1,6 @@
+services:
+  forum.breadcrumb:
+    class: Drupal\forum\ForumBreadcrumbBuilder
+    arguments: ['@plugin.manager.entity', '@config.factory']
+    tags:
+      - { name: breadcrumb_builder, priority: 1001 }

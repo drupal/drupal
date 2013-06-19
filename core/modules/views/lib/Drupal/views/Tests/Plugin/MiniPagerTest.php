@@ -101,6 +101,11 @@ class MiniPagerTest extends PluginTestBase {
     $this->assertText('Page 1', 'The current page info shows the only page.');
     $this->assertNoText('‹‹ test', 'The previous link does not appear on the page.');
     $this->assertText($this->nodes[19]->label());
+
+    $view = views_get_view('test_mini_pager');
+    $this->executeView($view);
+    $this->assertIdentical($view->get_total_rows, NULL, 'The query was not forced to calculate the total number of results.');
+    $this->assertIdentical($view->total_rows, NULL, 'The query did not return the total number of rows.');
   }
 
 }

@@ -14,6 +14,7 @@
  * @see batch_get()
  */
 
+use Drupal\Core\Batch\Percentage;
 use \Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -329,27 +330,7 @@ function _batch_process() {
  * @see _batch_process()
  */
 function _batch_api_percentage($total, $current) {
-  if (!$total || $total == $current) {
-    // If $total doesn't evaluate as true or is equal to the current set, then
-    // we're finished, and we can return "100".
-    $percentage = "100";
-  }
-  else {
-    // We add a new digit at 200, 2000, etc. (since, for example, 199/200
-    // would round up to 100% if we didn't).
-    $decimal_places = max(0, floor(log10($total / 2.0)) - 1);
-    do {
-      // Calculate the percentage to the specified number of decimal places.
-      $percentage = sprintf('%01.' . $decimal_places . 'f', round($current / $total * 100, $decimal_places));
-      // When $current is an integer, the above calculation will always be
-      // correct. However, if $current is a floating point number (in the case
-      // of a multi-step batch operation that is not yet complete), $percentage
-      // may be erroneously rounded up to 100%. To prevent that, we add one
-      // more decimal place and try again.
-      $decimal_places++;
-    } while ($percentage == '100');
-  }
-  return $percentage;
+  return Percentage::format($total, $current);
 }
 
 /**

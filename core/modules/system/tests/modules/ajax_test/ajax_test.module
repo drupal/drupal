@@ -160,6 +160,37 @@ function ajax_test_dialog() {
           'class' => array('use-ajax'),
         ),
       ),
+      'link5' => array(
+        'title' => 'Link 5 (form)',
+        'href' => 'ajax-test/dialog-form',
+        'attributes' => array(
+          'class' => array('use-ajax'),
+          'data-accepts' => 'application/vnd.drupal-modal',
+        ),
+      ),
+      'link6' => array(
+        'title' => 'Link 6 (entity form)',
+        'href' => 'admin/structure/contact/add',
+        'attributes' => array(
+          'class' => array('use-ajax'),
+          'data-accepts' => 'application/vnd.drupal-modal',
+          'data-dialog-options' => json_encode(array(
+            'width' => 800,
+            'height' => 500,
+          ))
+        ),
+      ),
+      'link7' => array(
+        'title' => 'Link 7 (non-modal, no target)',
+        'href' => 'ajax-test/dialog-contents',
+        'attributes' => array(
+          'class' => array('use-ajax'),
+          'data-accepts' => 'application/vnd.drupal-dialog',
+          'data-dialog-options' => json_encode(array(
+            'width' => 800,
+          ))
+        ),
+      ),
     ),
   );
   return $build;

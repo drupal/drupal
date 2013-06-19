@@ -208,7 +208,7 @@ function field_test_entity_add($fttype) {
   $fttype = str_replace('-', '_', $fttype);
   $entity = field_test_create_entity(NULL, NULL, $fttype);
   drupal_set_title(t('Create test_entity @bundle', array('@bundle' => $fttype)), PASS_THROUGH);
-  return entity_get_form($entity);
+  return Drupal::entityManager()->getForm($entity);
 }
 
 /**
@@ -216,7 +216,7 @@ function field_test_entity_add($fttype) {
  */
 function field_test_entity_edit(TestEntity $entity) {
   drupal_set_title(t('test_entity @ftid revision @ftvid', array('@ftid' => $entity->ftid, '@ftvid' => $entity->ftvid)), PASS_THROUGH);
-  return entity_get_form($entity);
+  return Drupal::entityManager()->getForm($entity);
 }
 
 /**

@@ -7,7 +7,7 @@ id: test_entity_reference
 description: ''
 label: 'Entity reference'
 tag: ''
-disabled: false
+status: '1'
 display:
   default:
     display_plugin: default

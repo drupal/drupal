@@ -183,22 +183,22 @@ function custom_block_add_body_field($block_type_id, $label = 'Block body') {
   $field = field_info_field('block_body');
   $instance = field_info_instance('custom_block', 'block_body', $block_type_id);
   if (empty($field)) {
-    $field = array(
+    $field = entity_create('field_entity', array(
       'field_name' => 'block_body',
       'type' => 'text_with_summary',
       'entity_types' => array('custom_block'),
-    );
-    $field = field_create_field($field);
+    ));
+    $field->save();
   }
   if (empty($instance)) {
-    $instance = array(
+    $instance = entity_create('field_instance', array(
       'field_name' => 'block_body',
       'entity_type' => 'custom_block',
       'bundle' => $block_type_id,
       'label' => $label,
       'settings' => array('display_summary' => FALSE),
-    );
-    $instance = field_create_instance($instance);
+    ));
+    $instance->save();
 
     // Assign widget settings for the 'default' form mode.
     entity_get_form_display('custom_block', $block_type_id, 'default')

@@ -2260,6 +2260,12 @@ function system_data_type_info() {
       'class' => '\Drupal\Core\Entity\Field\Type\StringItem',
       'list class' => '\Drupal\Core\Entity\Field\Type\Field',
     ),
+    'email_field' => array(
+      'label' => t('E-mail field item'),
+      'description' => t('An entity field containing an e-mail value.'),
+      'class' => '\Drupal\Core\Entity\Field\Type\EmailItem',
+      'list class' => '\Drupal\Core\Entity\Field\Type\Field',
+    ),
     'integer_field' => array(
       'label' => t('Integer field item'),
       'description' => t('An entity field containing an integer value.'),

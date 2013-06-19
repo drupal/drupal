@@ -324,6 +324,9 @@ class RouteProviderTest extends UnitTestBase {
     $request = Request::create($path, 'GET');
 
     try {
+      $routes = $provider->getRoutesByPattern($path);
+      $this->assertFalse(count($routes), 'No path found with this pattern.');
+
       $routes = $provider->getRouteCollectionForRequest($request);
       $this->fail(t('No exception was thrown.'));
     }
@@ -348,7 +351,9 @@ class RouteProviderTest extends UnitTestBase {
     $request = Request::create('/path/one', 'GET');
     $request->attributes->set('system_path', 'path/two');
 
+    $routes_by_pattern = $provider->getRoutesByPattern('/path/two');
     $routes = $provider->getRouteCollectionForRequest($request);
+    $this->assertEqual(array_keys($routes_by_pattern->all()), array_keys($routes->all()), 'Ensure the expected routes are found.');
 
     foreach ($routes as $route) {
       $this->assertEqual($route->getPattern(), '/path/two', 'Found path has correct pattern');

@@ -61,7 +61,7 @@ class DefaultViewsTest extends ViewTestBase {
 
     // Setup a field and instance.
     $this->field_name = drupal_strtolower($this->randomName());
-    $this->field = array(
+    entity_create('field_entity', array(
       'field_name' => $this->field_name,
       'type' => 'taxonomy_term_reference',
       'settings' => array(
@@ -72,14 +72,12 @@ class DefaultViewsTest extends ViewTestBase {
           ),
         ),
       )
-    );
-    field_create_field($this->field);
-    $this->instance = array(
+    ))->save();
+    entity_create('field_instance', array(
       'field_name' => $this->field_name,
       'entity_type' => 'node',
       'bundle' => 'page',
-    );
-    field_create_instance($this->instance);
+    ))->save();
 
     // Create a time in the past for the archive.
     $time = REQUEST_TIME - 3600;

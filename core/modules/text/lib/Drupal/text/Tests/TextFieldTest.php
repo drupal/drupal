@@ -23,7 +23,6 @@ class TextFieldTest extends WebTestBase {
    */
   public static $modules = array('entity_test');
 
-  protected $instance;
   protected $admin_user;
   protected $web_user;
 
@@ -51,26 +50,25 @@ class TextFieldTest extends WebTestBase {
   function testTextFieldValidation() {
     // Create a field with settings to validate.
     $max_length = 3;
-    $this->field = array(
+    $this->field = entity_create('field_entity', array(
       'field_name' => drupal_strtolower($this->randomName()),
       'type' => 'text',
       'settings' => array(
         'max_length' => $max_length,
       )
-    );
-    field_create_field($this->field);
-    $this->instance = array(
-      'field_name' => $this->field['field_name'],
+    ));
+    $this->field->save();
+    entity_create('field_instance', array(
+      'field_name' => $this->field->id(),
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-    );
-    field_create_instance($this->instance);
+    ))->save();
 
     // Test valid and invalid values with field_attach_validate().
     $entity = entity_create('entity_test', array());
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
     for ($i = 0; $i <= $max_length + 2; $i++) {
-      $entity->{$this->field['field_name']}->value = str_repeat('x', $i);
+      $entity->{$this->field->id()}->value = str_repeat('x', $i);
       try {
         field_attach_validate($entity);
         $this->assertTrue($i <= $max_length, "Length $i does not cause validation error when max_length is $max_length");
@@ -96,9 +94,12 @@ class TextFieldTest extends WebTestBase {
     // Setup a field and instance
     $entity_type = 'entity_test';
     $this->field_name = drupal_strtolower($this->randomName());
-    $this->field = array('field_name' => $this->field_name, 'type' => $field_type);
-    field_create_field($this->field);
-    $this->instance = array(
+    $this->field = entity_create('field_entity', array(
+      'field_name' => $this->field_name,
+      'type' => $field_type
+    ));
+    $this->field->save();
+    entity_create('field_instance', array(
       'field_name' => $this->field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
@@ -106,8 +107,7 @@ class TextFieldTest extends WebTestBase {
       'settings' => array(
         'text_processing' => TRUE,
       ),
-    );
-    field_create_instance($this->instance);
+    ))->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($this->field_name, array(
         'type' => $widget_type,
@@ -162,9 +162,12 @@ class TextFieldTest extends WebTestBase {
   function _testTextfieldWidgetsFormatted($field_type, $widget_type) {
     // Setup a field and instance
     $this->field_name = drupal_strtolower($this->randomName());
-    $this->field = array('field_name' => $this->field_name, 'type' => $field_type);
-    field_create_field($this->field);
-    $this->instance = array(
+    $this->field = entity_create('field_entity', array(
+      'field_name' => $this->field_name,
+      'type' => $field_type
+    ));
+    $this->field->save();
+    entity_create('field_instance', array(
       'field_name' => $this->field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
@@ -172,8 +175,7 @@ class TextFieldTest extends WebTestBase {
       'settings' => array(
         'text_processing' => TRUE,
       ),
-    );
-    field_create_instance($this->instance);
+    ))->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($this->field_name, array(
         'type' => $widget_type,

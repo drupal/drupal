@@ -191,27 +191,22 @@ function file_field_prepare_view($entity_type, $entities, $field, $instances, $l
   $fids = array();
   foreach ($entities as $id => $entity) {
     foreach ($items[$id] as $delta => $item) {
-      if (!file_field_displayed($item, $field)) {
-        unset($items[$id][$delta]);
-      }
-      elseif (!empty($item['fid'])) {
+      if (file_field_displayed($item, $field) && !empty($item['fid'])) {
         // Load the files from the files table.
         $fids[] = $item['fid'];
       }
     }
-    // Ensure consecutive deltas.
-    $items[$id] = array_values($items[$id]);
   }
-  $files = file_load_multiple($fids);
 
-  foreach ($entities as $id => $entity) {
-    foreach ($items[$id] as $delta => $item) {
-      // If the file does not exist, mark the entire item as empty.
-      if (empty($item['fid']) || !isset($files[$item['fid']])) {
-        $items[$id][$delta] = NULL;
-      }
-      else {
-        $items[$id][$delta]['entity'] = $files[$item['fid']];
+  if ($fids) {
+    $files = file_load_multiple($fids);
+
+    foreach ($entities as $id => $entity) {
+      foreach ($items[$id] as $delta => $item) {
+        // If the file does not exist, mark the entire item as empty.
+        if (!empty($item['fid'])) {
+          $items[$id][$delta]['entity'] = isset($files[$item['fid']]) ? $files[$item['fid']] : NULL;
+        }
       }
     }
   }
@@ -854,10 +849,12 @@ function theme_file_formatter_table($variables) {
   $header = array(t('Attachment'), t('Size'));
   $rows = array();
   foreach ($variables['items'] as $delta => $item) {
-    $rows[] = array(
-      theme('file_link', array('file' => $item['entity'])),
-      format_size($item['entity']->getSize()),
-    );
+    if ($item['display'] && $item['entity']) {
+      $rows[] = array(
+        theme('file_link', array('file' => $item['entity'])),
+        format_size($item['entity']->getSize()),
+      );
+    }
   }
 
   return empty($rows) ? '' : theme('table', array('header' => $header, 'rows' => $rows));

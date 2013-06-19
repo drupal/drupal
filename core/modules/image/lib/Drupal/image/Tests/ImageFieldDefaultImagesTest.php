@@ -51,30 +51,28 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $widget_settings = array(
       'preview_image_style' => 'medium',
     );
-    $this->createImageField($field_name, 'article', $field_settings, $instance_settings, $widget_settings);
+    $instance = $this->createImageField($field_name, 'article', $field_settings, $instance_settings, $widget_settings);
     $field = field_info_field($field_name);
-    $instance = field_info_instance('node', $field_name, 'article');
 
     // Add another instance with another default image to the page content type.
-    $instance2 = array(
-      'field_name' => $field['field_name'],
+    $instance2 = entity_create('field_instance', array(
+      'field_name' => $field->id(),
       'entity_type' => 'node',
       'bundle' => 'page',
-      'label' => $instance['label'],
-      'required' => $instance['required'],
+      'label' => $instance->label(),
+      'required' => $instance->required,
       'settings' => array(
         'default_image' => $default_images['instance2']->id(),
       ),
-    );
-    field_create_instance($instance2);
-    $instance2 = field_info_instance('node', $field_name, 'page');
+    ));
+    $instance2->save();
 
     $widget_settings = entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default')->getComponent($field['field_name']);
     entity_get_form_display('node', 'page', 'default')
-      ->setComponent($field['field_name'], $widget_settings)
+      ->setComponent($field->id(), $widget_settings)
       ->save();
     entity_get_display('node', 'page', 'default')
-      ->setComponent($field['field_name'])
+      ->setComponent($field->id())
       ->save();
 
     // Confirm the defaults are present on the article field settings form.
@@ -145,7 +143,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
 
     // Upload a new default for the field.
     $field['settings']['default_image'] = array($default_images['field_new']->id());
-    field_update_field($field);
+    $field->save();
 
     // Confirm that the new default is used on the article field settings form.
     $this->drupalGet("admin/structure/types/manage/article/fields/$instance->id/field");
@@ -180,7 +178,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
 
     // Upload a new default for the article's field instance.
     $instance['settings']['default_image'] = $default_images['instance_new']->id();
-    field_update_instance($instance);
+    $instance->save();
 
     // Confirm the new field instance default is used on the article field
     // admin form.
@@ -219,7 +217,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
 
     // Remove the instance default from articles.
     $instance['settings']['default_image'] = 0;
-    field_update_instance($instance);
+    $instance->save();
 
     // Confirm the article field instance default has been removed.
     $this->drupalGet("admin/structure/types/manage/article/fields/$instance->id");
@@ -251,4 +249,5 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
       )
     );
   }
+
 }

@@ -53,7 +53,7 @@ class CKEditor extends EditorBase {
     $ckeditor_settings_toolbar = array(
       '#theme' => 'ckeditor_settings_toolbar',
       '#editor' => $editor,
-      '#plugins' => $manager->getButtonsPlugins($editor),
+      '#plugins' => $manager->getButtonsPlugins(),
     );
     $form['toolbar'] = array(
       '#type' => 'container',
@@ -86,6 +86,49 @@ class CKEditor extends EditorBase {
       unset($form['plugins']);
       unset($form['plugin_settings']);
     }
+
+    // Hidden CKEditor instance. We need a hidden CKEditor instance with all
+    // plugins enabled, so we can retrieve CKEditor's per-feature metadata (on
+    // which tags, attributes, styles and classes are enabled). This metadata is
+    // necessary for certain filters' (e.g. the html_filter filter) settings to
+    // be updated accordingly.
+    // Get a list of all external plugins and their corresponding files.
+    $plugins = array_keys($manager->getDefinitions());
+    $all_external_plugins = array();
+    foreach ($plugins as $plugin_id) {
+      $plugin = $manager->createInstance($plugin_id);
+      if (!$plugin->isInternal()) {
+        $all_external_plugins[$plugin_id] = $plugin->getFile();
+      }
+    }
+    // Get a list of all buttons that are provided by all plugins.
+    $all_buttons = array_reduce($manager->getButtonsPlugins(), function($result, $item) {
+      return array_merge($result, array_keys($item));
+    }, array());
+    // Build a fake Editor object, which we'll use to generate JavaScript
+    // settings for this fake Editor instance.
+    $fake_editor = entity_create('editor', array(
+      'format' => '',
+      'editor' => 'ckeditor',
+      'settings' => array(
+        // Single toolbar row that contains all existing buttons.
+        'toolbar' => array('buttons' => array(0 => $all_buttons)),
+        'plugins' => $editor->settings['plugins'],
+      ),
+    ));
+    $form['hidden_ckeditor'] = array(
+      '#markup' => '<div id="ckeditor-hidden" class="element-hidden"></div>',
+      '#attached' => array(
+        'js' => array(
+          array(
+            'type' => 'setting',
+            'data' => array('ckeditor' => array(
+              'hiddenCKEditorConfig' => $this->getJSSettings($fake_editor),
+            )),
+          ),
+        ),
+      ),
+    );
 
     return $form;
   }

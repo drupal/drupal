@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Plugin\DisplayTest.
+ * Contains \Drupal\views\Tests\Plugin\DisplayTest.
  */
 
 namespace Drupal\views\Tests\Plugin;
@@ -55,7 +55,7 @@ class DisplayTest extends PluginTestBase {
    *
    * @see Drupal\views_test_data\Plugin\views\display\DisplayTest
    */
-  function testDisplayPlugin() {
+  public function testDisplayPlugin() {
     $view = views_get_view('test_view');
 
     // Add a new 'display_test' display and test it's there.
@@ -195,6 +195,34 @@ class DisplayTest extends PluginTestBase {
     // tested.
     $more_text = $view->display_handler->useMoreText();
     $this->assertEqual($more_text, $expected_more_text, 'The right more text is chosen.');
+
+    $view = views_get_view('test_display_more');
+    $view->setDisplay();
+    $view->display_handler->setOption('use_more', 0);
+    $this->executeView($view);
+    $output = $view->preview();
+    $output = drupal_render($output);
+    $this->drupalSetContent($output);
+    $result = $this->xpath('//div[@class=:class]/a', array(':class' => 'more-link'));
+    $this->assertTrue(empty($result), 'The more link is not shown.');
+
+    $view = views_get_view('test_display_more');
+    $view->setDisplay();
+    $view->display_handler->setOption('use_more', 0);
+    $view->display_handler->setOption('use_more_always', 0);
+    $view->display_handler->setOption('pager', array(
+      'type' => 'some',
+      'options' => array(
+        'items_per_page' => 1,
+        'offset' => 0,
+      ),
+    ));
+    $this->executeView($view);
+    $output = $view->preview();
+    $output = drupal_render($output);
+    $this->drupalSetContent($output);
+    $result = $this->xpath('//div[@class=:class]/a', array(':class' => 'more-link'));
+    $this->assertTrue(empty($result), 'The more link is not shown when view has more records.');
   }
 
   /**

@@ -40,6 +40,7 @@ class SortRandomTest extends ViewUnitTestBase {
         'age' => $i,
         'job' => 'job_' . $i,
         'created' => rand(0, time()),
+        'status' => 1,
       );
     }
     return $data;

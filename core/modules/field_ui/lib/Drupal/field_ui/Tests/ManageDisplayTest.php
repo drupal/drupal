@@ -207,7 +207,7 @@ class ManageDisplayTest extends FieldUiTestBase {
     $this->drupalCreateContentType(array('type' => 'no_fields', 'name' => 'No fields'));
 
     // Remove the 'body' field.
-    field_delete_instance(field_info_instance('node', 'body', 'no_fields'));
+    field_info_instance('node', 'body', 'no_fields')->delete();
 
     $this->drupalGet('admin/structure/types/manage/no_fields/display');
     $this->assertRaw(t('There are no fields yet added. You can add new fields on the <a href="@link">Manage fields</a> page.', array('@link' => url('admin/structure/types/manage/no_fields/fields'))));

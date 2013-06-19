@@ -40,8 +40,7 @@ class CommentFieldsTest extends CommentTestBase {
     $instance = field_info_instance('comment', 'comment_body', 'comment');
     $this->assertTrue(!empty($instance), 'The comment_body field is added when a comment bundle is created');
 
-    // Delete the instance.
-    field_delete_instance($instance);
+    $instance->delete();
 
     // Check that the 'comment_body' field is deleted.
     $field = field_info_field('comment_body');

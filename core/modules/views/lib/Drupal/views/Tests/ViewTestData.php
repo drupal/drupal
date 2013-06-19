@@ -112,6 +112,13 @@ class ViewTestData {
           'not null' => TRUE,
           'default' => 0,
         ),
+        'status' => array(
+          'description' => "The status of this record",
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ),
       ),
       'primary key' => array('id'),
       'unique keys' => array(
@@ -219,6 +226,19 @@ class ViewTestData {
         'id' => 'date',
       ),
     );
+    $data['views_test_data']['status'] = array(
+      'title' => t('Status'),
+      'help' => t('The status of this record'),
+      'field' => array(
+        'id' => 'boolean',
+      ),
+      'filter' => array(
+        'id' => 'boolean',
+      ),
+      'sort' => array(
+        'id' => 'standard',
+      ),
+    );
     return $data;
   }
 
@@ -232,30 +252,35 @@ class ViewTestData {
         'age' => 25,
         'job' => 'Singer',
         'created' => gmmktime(0, 0, 0, 1, 1, 2000),
+        'status' => 1,
       ),
       array(
         'name' => 'George',
         'age' => 27,
         'job' => 'Singer',
         'created' => gmmktime(0, 0, 0, 1, 2, 2000),
+        'status' => 0,
       ),
       array(
         'name' => 'Ringo',
         'age' => 28,
         'job' => 'Drummer',
         'created' => gmmktime(6, 30, 30, 1, 1, 2000),
+        'status' => 1,
       ),
       array(
         'name' => 'Paul',
         'age' => 26,
         'job' => 'Songwriter',
         'created' => gmmktime(6, 0, 0, 1, 1, 2000),
+        'status' => 0,
       ),
       array(
         'name' => 'Meredith',
         'age' => 30,
         'job' => 'Speaker',
         'created' => gmmktime(6, 30, 10, 1, 1, 2000),
+        'status' => 1,
       ),
     );
   }

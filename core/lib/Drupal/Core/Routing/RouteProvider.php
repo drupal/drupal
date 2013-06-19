@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Routing;
 
-use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouteCollection;
@@ -97,26 +96,7 @@ class RouteProvider implements RouteProviderInterface {
       $path = rtrim($request->getPathInfo(), '/');
     }
 
-    // Filter out each empty value, though allow '0' and 0, which would be
-    // filtered out by empty().
-    $parts = array_slice(array_filter(explode('/', $path), function($value) {
-      return $value !== NULL && $value !== '';
-    }), 0, MatcherDumper::MAX_PARTS);
-
-    $ancestors = $this->getCandidateOutlines($parts);
-
-    $routes = $this->connection->query("SELECT name, route FROM {" . $this->connection->escapeTable($this->tableName) . "} WHERE pattern_outline IN (:patterns) ORDER BY fit", array(
-      ':patterns' => $ancestors,
-    ))
-    ->fetchAllKeyed();
-
-    $collection = new RouteCollection();
-    foreach ($routes as $name => $route) {
-      $route = unserialize($route);
-      if (preg_match($route->compile()->getRegex(), $path, $matches)) {
-        $collection->add($name, $route);
-      }
-    }
+    $collection = $this->getRoutesByPath($path);
 
     if (!count($collection)) {
       throw new ResourceNotFoundException();
@@ -237,6 +217,49 @@ class RouteProvider implements RouteProviderInterface {
       $ancestors[] = '/' . $current;
     }
     return $ancestors;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRoutesByPattern($pattern) {
+    $path = RouteCompiler::getPatternOutline($pattern);
+
+    return $this->getRoutesByPath($path);
+  }
+
+  /**
+   * Get all routes which match a certain pattern.
+   *
+   * @param string $path
+   *   The route pattern to search for (contains % as placeholders).
+   *
+   * @return \Symfony\Component\Routing\RouteCollection
+   *   Returns a route collection of matching routes.
+   */
+  protected function getRoutesByPath($path) {
+    // Filter out each empty value, though allow '0' and 0, which would be
+    // filtered out by empty().
+    $parts = array_slice(array_filter(explode('/', $path), function($value) {
+      return $value !== NULL && $value !== '';
+    }), 0, MatcherDumper::MAX_PARTS);
+
+    $ancestors = $this->getCandidateOutlines($parts);
+
+    $routes = $this->connection->query("SELECT name, route FROM {" . $this->connection->escapeTable($this->tableName) . "} WHERE pattern_outline IN (:patterns) ORDER BY fit", array(
+      ':patterns' => $ancestors,
+    ))
+      ->fetchAllKeyed();
+
+    $collection = new RouteCollection();
+    foreach ($routes as $name => $route) {
+      $route = unserialize($route);
+      if (preg_match($route->compile()->getRegex(), $path, $matches)) {
+        $collection->add($name, $route);
+      }
+    }
+
+    return $collection;
   }
 
 }

@@ -55,7 +55,7 @@ function forum_enable() {
   // is being enabled at the same time as taxonomy after both modules have been
   // enabled, the field might exist but still be marked inactive.
   if (!field_read_field('taxonomy_forums', array('include_inactive' => TRUE))) {
-    $field = array(
+    entity_create('field_entity', array(
       'field_name' => 'taxonomy_forums',
       'type' => 'taxonomy_term_reference',
       'settings' => array(
@@ -66,8 +66,7 @@ function forum_enable() {
           ),
         ),
       ),
-    );
-    field_create_field($field);
+    ))->save();
 
     // Create a default forum so forum posts can be created.
     $term = entity_create('taxonomy_term', array(
@@ -80,14 +79,13 @@ function forum_enable() {
     $term->save();
 
     // Create the instance on the bundle.
-    $instance = array(
+    entity_create('field_instance', array(
       'field_name' => 'taxonomy_forums',
       'entity_type' => 'node',
       'label' => $vocabulary->name,
       'bundle' => 'forum',
       'required' => TRUE,
-    );
-    field_create_instance($instance);
+    ))->save();
 
     // Assign form display settings for the 'default' form mode.
     entity_get_form_display('node', 'forum', 'default')
@@ -130,12 +128,12 @@ function forum_uninstall() {
 
   variable_del('node_options_forum');
 
-  field_delete_field('taxonomy_forums');
+  field_info_field('taxonomy_forums')->delete();
 
   // Delete comment field, load comment in case it has been disabled.
   drupal_load('module', 'comment');
   // Remove the forum comment field.
-  field_delete_field('comment_node_forum');
+  field_info_field('comment_node_forum')->delete();
 
   // Purge field data now to allow taxonomy and comment modules to be
   // uninstalled if these were the only fields remaining. We need to call

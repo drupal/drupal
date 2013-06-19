@@ -1002,7 +1002,7 @@ abstract class FilterPluginBase extends HandlerBase {
       }
 
       if ($without_children) {
-        if (!empty($this->options['group_info']['group_items'][$item_id]['value'])) {
+        if (isset($this->options['group_info']['group_items'][$item_id]['value']) && $this->options['group_info']['group_items'][$item_id]['value'] != '') {
           $row['value']['#default_value'] = $this->options['group_info']['group_items'][$item_id]['value'];
         }
       }
@@ -1339,8 +1339,6 @@ abstract class FilterPluginBase extends HandlerBase {
           return FALSE;
         }
       }
-
-
       if (isset($value)) {
         $this->value = $value;
         if (empty($this->always_multiple) && empty($this->options['expose']['multiple'])) {

@@ -175,7 +175,7 @@ function shortcut_set_switch_submit($form, &$form_state) {
  */
 function shortcut_set_add() {
   $entity = entity_create('shortcut', array());
-  return entity_get_form($entity);
+  return Drupal::entityManager()->getForm($entity);
 }
 
 /**

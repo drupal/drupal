@@ -30,16 +30,6 @@ function bartik_preprocess_html(&$variables) {
 }
 
 /**
- * Implements hook_process_HOOK() for html.tpl.php.
- */
-function bartik_process_html(&$variables) {
-  // Hook into color.module.
-  if (module_exists('color')) {
-    _color_html_alter($variables);
-  }
-}
-
-/**
  * Implements hook_preprocess_HOOK() for page.html.twig.
  */
 function bartik_preprocess_page(&$variables) {
@@ -51,17 +41,8 @@ function bartik_preprocess_page(&$variables) {
   if (!empty($variables['secondary_menu'])) {
     $variables['secondary_menu']['#attributes']['id'] = 'secondary-menu-links';
   }
-}
 
-/**
- * Implements hook_process_HOOK() for page.html.twig.
- */
-function bartik_process_page(&$variables) {
   $site_config = config('system.site');
-  // Hook into color.module.
-  if (module_exists('color')) {
-    _color_page_alter($variables);
-  }
   // Always print the site name and slogan, but if they are toggled off, we'll
   // just hide them visually.
   $variables['hide_site_name']   = theme_get_setting('features.name') ? FALSE : TRUE;
@@ -103,12 +84,8 @@ function bartik_preprocess_maintenance_page(&$variables) {
     $variables['site_name'] = '';
   }
   drupal_add_css(drupal_get_path('theme', 'bartik') . '/css/maintenance-page.css');
-}
+  $variables['styles'] = drupal_get_css();
 
-/**
- * Implements hook_process_HOOK() for maintenance-page.html.twig.
- */
-function bartik_process_maintenance_page(&$variables) {
   $site_config = config('system.site');
   // Always print the site name and slogan, but if they are toggled off, we'll
   // just hide them visually.

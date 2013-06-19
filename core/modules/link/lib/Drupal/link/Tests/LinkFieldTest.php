@@ -22,6 +22,27 @@ class LinkFieldTest extends WebTestBase {
    */
   public static $modules = array('entity_test', 'link');
 
+  /**
+   * A field to use in this test class.
+   *
+   * @var \Drupal\field\Plugin\Core\Entity\Field
+   */
+  protected $field;
+
+  /**
+   * The instance used in this test class.
+   *
+   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
+   */
+  protected $instance;
+
+  /**
+   * A user with permission to view and manage test entities.
+   *
+   * @var object
+   */
+  protected $web_user;
+
   public static function getInfo() {
     return array(
       'name' => 'Link field',
@@ -44,23 +65,23 @@ class LinkFieldTest extends WebTestBase {
    * Tests link field URL validation.
    */
   function testURLValidation() {
+    $field_name = drupal_strtolower($this->randomName());
     // Create a field with settings to validate.
-    $this->field = array(
-      'field_name' => drupal_strtolower($this->randomName()),
+    $this->field = entity_create('field_entity', array(
+      'field_name' => $field_name,
       'type' => 'link',
-    );
-    field_create_field($this->field);
-    $this->instance = array(
-      'field_name' => $this->field['field_name'],
+    ));
+    $this->field->save();
+    entity_create('field_instance', array(
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
       'settings' => array(
         'title' => DRUPAL_DISABLED,
       ),
-    );
-    field_create_instance($this->instance);
+    ))->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->field['field_name'], array(
+      ->setComponent($field_name, array(
         'type' => 'link_default',
         'settings' => array(
           'placeholder_url' => 'http://example.com',
@@ -68,7 +89,7 @@ class LinkFieldTest extends WebTestBase {
       ))
       ->save();
     entity_get_display('entity_test', 'entity_test', 'full')
-      ->setComponent($this->field['field_name'], array(
+      ->setComponent($field_name, array(
         'type' => 'link',
       ))
       ->save();
@@ -77,7 +98,7 @@ class LinkFieldTest extends WebTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][url]", '', 'Link URL field is displayed');
+    $this->assertFieldByName("{$field_name}[$langcode][0][url]", '', 'Link URL field is displayed');
     $this->assertRaw('placeholder="http://example.com"');
 
     // Verify that a valid URL can be submitted.
@@ -85,7 +106,7 @@ class LinkFieldTest extends WebTestBase {
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$this->field['field_name']}[$langcode][0][url]" => $value,
+      "{$field_name}[$langcode][0][url]" => $value,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
@@ -107,7 +128,7 @@ class LinkFieldTest extends WebTestBase {
       $edit = array(
         'user_id' => 1,
         'name' => $this->randomName(),
-        "{$this->field['field_name']}[$langcode][0][url]" => $invalid_value,
+        "{$field_name}[$langcode][0][url]" => $invalid_value,
       );
       $this->drupalPost(NULL, $edit, t('Save'));
       $this->assertText(t('The URL @url is not valid.', array('@url' => $invalid_value)));
@@ -118,24 +139,25 @@ class LinkFieldTest extends WebTestBase {
    * Tests the link title settings of a link field.
    */
   function testLinkTitle() {
+    $field_name = drupal_strtolower($this->randomName());
     // Create a field with settings to validate.
-    $this->field = array(
-      'field_name' => drupal_strtolower($this->randomName()),
+    $this->field = entity_create('field_entity', array(
+      'field_name' => $field_name,
       'type' => 'link',
-    );
-    field_create_field($this->field);
-    $this->instance = array(
-      'field_name' => $this->field['field_name'],
+    ));
+    $this->field->save();
+    $this->instance = entity_create('field_instance', array(
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
       'label' => 'Read more about this entity',
       'settings' => array(
         'title' => DRUPAL_OPTIONAL,
       ),
-    );
-    field_create_instance($this->instance);
+    ));
+    $this->instance->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->field['field_name'], array(
+      ->setComponent($field_name, array(
         'type' => 'link_default',
         'settings' => array(
           'placeholder_url' => 'http://example.com',
@@ -144,7 +166,7 @@ class LinkFieldTest extends WebTestBase {
       ))
       ->save();
     entity_get_display('entity_test', 'entity_test', 'full')
-      ->setComponent($this->field['field_name'], array(
+      ->setComponent($field_name, array(
         'type' => 'link',
         'label' => 'hidden',
       ))
@@ -155,35 +177,35 @@ class LinkFieldTest extends WebTestBase {
     // Verify that the link text field works according to the field setting.
     foreach (array(DRUPAL_DISABLED, DRUPAL_REQUIRED, DRUPAL_OPTIONAL) as $title_setting) {
       // Update the link title field setting.
-      $this->instance['settings']['title'] = $title_setting;
-      field_update_instance($this->instance);
+      $this->instance->settings['title'] = $title_setting;
+      $this->instance->save();
 
       // Display creation form.
       $this->drupalGet('entity_test/add');
       // Assert label is shown.
       $this->assertText('Read more about this entity');
-      $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][url]", '', 'URL field found.');
+      $this->assertFieldByName("{$field_name}[$langcode][0][url]", '', 'URL field found.');
       $this->assertRaw('placeholder="http://example.com"');
 
       if ($title_setting === DRUPAL_DISABLED) {
-        $this->assertNoFieldByName("{$this->field['field_name']}[$langcode][0][title]", '', 'Link text field not found.');
+        $this->assertNoFieldByName("{$field_name}[$langcode][0][title]", '', 'Link text field not found.');
         $this->assertNoRaw('placeholder="Enter the text for this link"');
       }
       else {
         $this->assertRaw('placeholder="Enter the text for this link"');
 
-        $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][title]", '', 'Link text field found.');
+        $this->assertFieldByName("{$field_name}[$langcode][0][title]", '', 'Link text field found.');
         if ($title_setting === DRUPAL_REQUIRED) {
           // Verify that the link text is required, if the URL is non-empty.
           $edit = array(
-            "{$this->field['field_name']}[$langcode][0][url]" => 'http://www.example.com',
+            "{$field_name}[$langcode][0][url]" => 'http://www.example.com',
           );
           $this->drupalPost(NULL, $edit, t('Save'));
           $this->assertText(t('!name field is required.', array('!name' => t('Link text'))));
 
           // Verify that the link text is not required, if the URL is empty.
           $edit = array(
-            "{$this->field['field_name']}[$langcode][0][url]" => '',
+            "{$field_name}[$langcode][0][url]" => '',
           );
           $this->drupalPost(NULL, $edit, t('Save'));
           $this->assertNoText(t('!name field is required.', array('!name' => t('Link text'))));
@@ -191,8 +213,8 @@ class LinkFieldTest extends WebTestBase {
           // Verify that a URL and link text meets requirements.
           $this->drupalGet('entity_test/add');
           $edit = array(
-            "{$this->field['field_name']}[$langcode][0][url]" => 'http://www.example.com',
-            "{$this->field['field_name']}[$langcode][0][title]" => 'Example',
+            "{$field_name}[$langcode][0][url]" => 'http://www.example.com',
+            "{$field_name}[$langcode][0][title]" => 'Example',
           );
           $this->drupalPost(NULL, $edit, t('Save'));
           $this->assertNoText(t('!name field is required.', array('!name' => t('Link text'))));
@@ -205,8 +227,8 @@ class LinkFieldTest extends WebTestBase {
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$this->field['field_name']}[$langcode][0][url]" => $value,
-      "{$this->field['field_name']}[$langcode][0][title]" => '',
+      "{$field_name}[$langcode][0][url]" => $value,
+      "{$field_name}[$langcode][0][title]" => '',
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
@@ -222,7 +244,7 @@ class LinkFieldTest extends WebTestBase {
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$this->field['field_name']}[$langcode][0][title]" => $title,
+      "{$field_name}[$langcode][0][title]" => $title,
     );
     $this->drupalPost("entity_test/manage/$id/edit", $edit, t('Save'));
     $this->assertText(t('entity_test @id has been updated.', array('@id' => $id)));
@@ -236,34 +258,34 @@ class LinkFieldTest extends WebTestBase {
    * Tests the default 'link' formatter.
    */
   function testLinkFormatter() {
+    $field_name = drupal_strtolower($this->randomName());
     // Create a field with settings to validate.
-    $this->field = array(
-      'field_name' => drupal_strtolower($this->randomName()),
+    $this->field = entity_create('field_entity', array(
+      'field_name' => $field_name,
       'type' => 'link',
       'cardinality' => 2,
-    );
-    field_create_field($this->field);
-    $this->instance = array(
-      'field_name' => $this->field['field_name'],
+    ));
+    $this->field->save();
+    entity_create('field_instance', array(
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'label' => 'Read more about this entity',
       'bundle' => 'entity_test',
       'settings' => array(
         'title' => DRUPAL_OPTIONAL,
       ),
-    );
+    ))->save();
+    entity_get_form_display('entity_test', 'entity_test', 'default')
+      ->setComponent($field_name, array(
+        'type' => 'link_default',
+      ))
+      ->save();
     $display_options = array(
       'type' => 'link',
       'label' => 'hidden',
     );
-    field_create_instance($this->instance);
-    entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->field['field_name'], array(
-        'type' => 'link_default',
-      ))
-      ->save();
     entity_get_display('entity_test', 'entity_test', 'full')
-      ->setComponent($this->field['field_name'], $display_options)
+      ->setComponent($field_name, $display_options)
       ->save();
 
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
@@ -282,11 +304,11 @@ class LinkFieldTest extends WebTestBase {
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$this->field['field_name']}[$langcode][0][url]" => $url1,
+      "{$field_name}[$langcode][0][url]" => $url1,
       // Note that $title1 is not submitted.
-      "{$this->field['field_name']}[$langcode][0][title]" => '',
-      "{$this->field['field_name']}[$langcode][1][url]" => $url2,
-      "{$this->field['field_name']}[$langcode][1][title]" => $title2,
+      "{$field_name}[$langcode][0][title]" => '',
+      "{$field_name}[$langcode][1][url]" => $url2,
+      "{$field_name}[$langcode][1][title]" => $title2,
     );
     // Assert label is shown.
     $this->assertText('Read more about this entity');
@@ -321,7 +343,7 @@ class LinkFieldTest extends WebTestBase {
           $display_options['settings'] = $new_value;
         }
         entity_get_display('entity_test', 'entity_test', 'full')
-          ->setComponent($this->field['field_name'], $display_options)
+          ->setComponent($field_name, $display_options)
           ->save();
 
         $this->renderTestEntity($id);
@@ -379,33 +401,33 @@ class LinkFieldTest extends WebTestBase {
    * merged, since they involve different configuration and output.
    */
   function testLinkSeparateFormatter() {
+    $field_name = drupal_strtolower($this->randomName());
     // Create a field with settings to validate.
-    $this->field = array(
-      'field_name' => drupal_strtolower($this->randomName()),
+    $this->field = entity_create('field_entity', array(
+      'field_name' => $field_name,
       'type' => 'link',
       'cardinality' => 2,
-    );
-    field_create_field($this->field);
-    $this->instance = array(
-      'field_name' => $this->field['field_name'],
+    ));
+    $this->field->save();
+    entity_create('field_instance', array(
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
       'settings' => array(
         'title' => DRUPAL_OPTIONAL,
       ),
-    );
+    ))->save();
     $display_options = array(
       'type' => 'link_separate',
       'label' => 'hidden',
     );
-    field_create_instance($this->instance);
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->field['field_name'], array(
+      ->setComponent($field_name, array(
         'type' => 'link_default',
       ))
       ->save();
     entity_get_display('entity_test', 'entity_test', 'full')
-      ->setComponent($this->field['field_name'], $display_options)
+      ->setComponent($field_name, $display_options)
       ->save();
 
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
@@ -423,9 +445,9 @@ class LinkFieldTest extends WebTestBase {
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$this->field['field_name']}[$langcode][0][url]" => $url1,
-      "{$this->field['field_name']}[$langcode][1][url]" => $url2,
-      "{$this->field['field_name']}[$langcode][1][title]" => $title2,
+      "{$field_name}[$langcode][0][url]" => $url1,
+      "{$field_name}[$langcode][1][url]" => $url2,
+      "{$field_name}[$langcode][1][title]" => $title2,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
@@ -506,4 +528,5 @@ class LinkFieldTest extends WebTestBase {
     $this->drupalSetContent($output);
     $this->verbose($output);
   }
+
 }

@@ -462,7 +462,7 @@ function translation_entity_translatable_switch($translatable, $field_name) {
   $field = field_info_field($field_name);
   if ($field['translatable'] !== $translatable) {
     $field['translatable'] = $translatable;
-    field_update_field($field);
+    $field->save();
   }
 }
 

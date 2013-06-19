@@ -41,14 +41,14 @@ class TermTest extends TaxonomyTestBase {
         ),
       ),
     );
-    field_create_field($field);
+    entity_create('field_entity', $field)->save();
 
-    $this->instance = array(
+    $this->instance = entity_create('field_instance', array(
       'field_name' => 'taxonomy_' . $this->vocabulary->id(),
       'bundle' => 'article',
       'entity_type' => 'node',
-    );
-    field_create_instance($this->instance);
+    ));
+    $this->instance->save();
     entity_get_form_display('node', 'article', 'default')
       ->setComponent('taxonomy_' . $this->vocabulary->id(), array(
         'type' => 'options_select',

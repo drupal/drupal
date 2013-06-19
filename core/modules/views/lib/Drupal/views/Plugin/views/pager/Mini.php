@@ -84,8 +84,12 @@ class Mini extends SqlBase {
       // Make sure the pager shows the next link by setting the total items to
       // the biggest possible number but prevent failing calculations like
       // ceil(PHP_INT_MAX) we take PHP_INT_MAX / 2.
-      pager_default_initialize(PHP_INT_MAX / 2, $this->getItemsPerPage(), $this->options['id']);
+      $total = PHP_INT_MAX / 2;
     }
+    else {
+      $total = $this->getCurrentPage() * $this->getItemsPerPage() + count($result);
+    }
+    pager_default_initialize($total, $this->getItemsPerPage(), $this->options['id']);
   }
 
   /**

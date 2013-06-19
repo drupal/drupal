@@ -49,7 +49,7 @@ function node_access_test_language_node_access_records(EntityInterface $node) {
  * (restricted access) in a given translation.
  */
 function node_access_test_language_enable() {
-  $field_private = array(
+  $field_private = entity_create('field_entity', array(
     'field_name' => 'field_private',
     'type' => 'list_boolean',
     'cardinality' => 1,
@@ -57,23 +57,22 @@ function node_access_test_language_enable() {
     'settings' => array(
       'allowed_values' => array(0 => 'Not private', 1 => 'Private'),
     ),
-  );
-  $field_private = field_create_field($field_private);
+  ));
+  $field_private->save();
 
-  $instance = array(
-    'field_name' => $field_private['field_name'],
+  entity_create('field_instance', array(
+    'field_name' => $field_private->id(),
     'entity_type' => 'node',
     'bundle' => 'page',
     'widget' => array(
       'type' => 'options_buttons',
     ),
-  );
-  $instance = field_create_instance($instance);
+  ))->save();
 }
 
 /**
  * Implements hook_disable().
  */
 function node_access_test_language_disable() {
-  field_delete_instance(field_read_instance('node', 'field_private', 'page'));
+  field_read_instance('node', 'field_private', 'page')->delete();
 }

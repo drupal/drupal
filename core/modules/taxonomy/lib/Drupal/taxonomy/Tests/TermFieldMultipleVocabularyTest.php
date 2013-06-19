@@ -21,7 +21,6 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
    */
   public static $modules = array('entity_test');
 
-  protected $instance;
   protected $vocabulary1;
   protected $vocabulary2;
 
@@ -43,7 +42,7 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
 
     // Set up a field and instance.
     $this->field_name = drupal_strtolower($this->randomName());
-    $this->field = array(
+    entity_create('field_entity', array(
       'field_name' => $this->field_name,
       'type' => 'taxonomy_term_reference',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
@@ -59,14 +58,12 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
           ),
         ),
       )
-    );
-    field_create_field($this->field);
-    $this->instance = array(
+    ))->save();
+    entity_create('field_instance', array(
       'field_name' => $this->field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-    );
-    field_create_instance($this->instance);
+    ))->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($this->field_name, array(
         'type' => 'options_select',

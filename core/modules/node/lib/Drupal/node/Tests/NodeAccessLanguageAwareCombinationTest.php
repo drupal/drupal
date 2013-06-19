@@ -31,9 +31,16 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
   /**
    * A normal authenticated user.
    *
-   * @var \Drupal\user\Plugin\Core\Entity\User.
+   * @var \Drupal\user\Plugin\Core\Entity\UserInterface.
    */
   protected $web_user;
+
+  /**
+   * User 1.
+   *
+   * @var \Drupal\user\Plugin\Core\Entity\UserInterface.
+   */
+  protected $admin_user;
 
   public static function getInfo() {
     return array(

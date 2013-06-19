@@ -54,7 +54,7 @@ function block_admin_add($plugin_id, $theme) {
     'plugin' => $plugin_id,
     'theme' => $theme,
   ));
-  return entity_get_form($entity);
+  return Drupal::entityManager()->getForm($entity);
 }
 
 /**
@@ -84,5 +84,5 @@ function block_admin_edit(Block $entity) {
   // Get the block label for the page title.
   drupal_set_title(t("Configure %label block in %theme", array('%label' => $entity->label(), '%theme' => $theme_title)), PASS_THROUGH);
 
-  return entity_get_form($entity);
+  return Drupal::entityManager()->getForm($entity);
 }

@@ -35,17 +35,15 @@ class EmailItemTest extends FieldUnitTestBase {
     parent::setUp();
 
     // Create an email field and instance for validation.
-    $this->field = array(
+    entity_create('field_entity', array(
       'field_name' => 'field_email',
       'type' => 'email',
-    );
-    field_create_field($this->field);
-    $this->instance = array(
+    ))->save();
+    entity_create('field_instance', array(
       'entity_type' => 'entity_test',
       'field_name' => 'field_email',
       'bundle' => 'entity_test',
-    );
-    field_create_instance($this->instance);
+    ))->save();
 
     // Create a form display for the default form mode.
     entity_get_form_display('entity_test', 'entity_test', 'default')

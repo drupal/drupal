@@ -97,7 +97,7 @@ class AggregatorController implements ControllerInterface {
         'refresh' => 3600,
         'block' => 5,
       ));
-    return entity_get_form($feed);
+    return $this->entityManager->getForm($feed);
   }
 
   /**

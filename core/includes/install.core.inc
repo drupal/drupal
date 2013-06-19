@@ -1508,7 +1508,7 @@ function install_select_language(&$install_state) {
         return;
       }
       else {
-        throw new Exception(st('Sorry, you must select a language to continue the installation.'));
+        throw new Exception(t('Sorry, you must select a language to continue the installation.'));
       }
     }
   }
@@ -1697,7 +1697,7 @@ function install_get_localization_release() {
  * Indicates that there are no profiles available.
  */
 function install_no_profile_error() {
-  drupal_set_title(st('No profiles available'));
+  drupal_set_title(t('No profiles available'));
   return t('We were unable to find any installation profiles. Installation profiles tell us what modules to enable and what schema to install in the database. A profile is necessary to continue with the installation process.');
 }
 
@@ -1707,7 +1707,7 @@ function install_no_profile_error() {
 function install_already_done_error() {
   global $base_url;
 
-  drupal_set_title(st('Drupal already installed'));
+  drupal_set_title(t('Drupal already installed'));
   return t('<ul><li>To start over, you must empty your existing database, delete your active configuration, and copy <em>default.settings.php</em> over <em>settings.php</em>.</li><li>To install to a different database, edit the appropriate <em>settings.php</em> file in the <em>sites</em> folder.</li><li>To locate your active configuration, view the appropriate <em>settings.php</em> file in the <em>sites</em> folder.</em></li></li><li>To upgrade an existing installation, proceed to the <a href="@base-url/core/update.php">update script</a>.</li><li>View your <a href="@base-url">existing site</a>.</li></ul>', array('@base-url' => $base_url));
 }
 
@@ -1727,7 +1727,7 @@ function install_load_profile(&$install_state) {
     $install_state['profile_info'] = install_profile_info($install_state['parameters']['profile'], $install_state['parameters']['langcode']);
   }
   else {
-    throw new Exception(st('Sorry, the profile you have chosen cannot be loaded.'));
+    throw new Exception(t('Sorry, the profile you have chosen cannot be loaded.'));
   }
 }
 

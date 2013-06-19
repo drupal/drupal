@@ -530,39 +530,39 @@ function node_add_body_field($type, $label = 'Body') {
   $field = field_info_field('body');
   $instance = field_info_instance('node', 'body', $type->type);
   if (empty($field)) {
-    $field = array(
+    $field = entity_create('field_entity', array(
       'field_name' => 'body',
       'type' => 'text_with_summary',
       'entity_types' => array('node'),
-    );
-    $field = field_create_field($field);
+    ));
+    $field->save();
   }
   if (empty($instance)) {
-    $instance = array(
+    $instance = entity_create('field_instance', array(
       'field_name' => 'body',
       'entity_type' => 'node',
       'bundle' => $type->type,
       'label' => $label,
       'settings' => array('display_summary' => TRUE),
-    );
-    $instance = field_create_instance($instance);
+    ));
+    $instance->save();
 
     // Assign widget settings for the 'default' form mode.
     entity_get_form_display('node', $type->type, 'default')
-      ->setComponent($field['field_name'], array(
+      ->setComponent($field->id(), array(
         'type' => 'text_textarea_with_summary',
       ))
       ->save();
 
     // Assign display settings for the 'default' and 'teaser' view modes.
     entity_get_display('node', $type->type, 'default')
-      ->setComponent($field['field_name'], array(
+      ->setComponent($field->id(), array(
         'label' => 'hidden',
         'type' => 'text_default',
       ))
       ->save();
     entity_get_display('node', $type->type, 'teaser')
-      ->setComponent($field['field_name'], array(
+      ->setComponent($field->id(), array(
         'label' => 'hidden',
         'type' => 'text_summary_or_trimmed',
       ))

@@ -72,7 +72,11 @@ class UserNewBlock extends BlockBase {
       '#items' => array(),
     );
     foreach ($items as $account) {
-      $build['#items'][] = theme('username', array('account' => $account));
+      $username = array(
+        '#theme' => 'username',
+        '#account' => $account,
+      );
+      $build['#items'][] = drupal_render($username);
     }
     return $build;
   }

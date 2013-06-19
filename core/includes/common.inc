@@ -288,6 +288,11 @@ function drupal_get_profile() {
  * @param $breadcrumb
  *   Array of links, starting with "home" and proceeding up to but not including
  *   the current page.
+ *
+ * @deprecated This will be removed in 8.0. Instead, register a new breadcrumb
+ *   builder service.
+ *
+ * @see Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface
  */
 function drupal_set_breadcrumb($breadcrumb = NULL) {
   $stored_breadcrumb = &drupal_static(__FUNCTION__);
@@ -296,19 +301,6 @@ function drupal_set_breadcrumb($breadcrumb = NULL) {
     $stored_breadcrumb = $breadcrumb;
   }
   return $stored_breadcrumb;
-}
-
-/**
- * Gets the breadcrumb trail for the current page.
- */
-function drupal_get_breadcrumb() {
-  $breadcrumb = drupal_set_breadcrumb();
-
-  if (!isset($breadcrumb)) {
-    $breadcrumb = menu_get_active_breadcrumb();
-  }
-
-  return $breadcrumb;
 }
 
 /**

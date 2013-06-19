@@ -48,11 +48,20 @@ class ContentControllerEnhancer implements RouteEnhancerInterface {
    * {@inheritdoc}
    */
   public function enhance(array $defaults, Request $request) {
-    if (empty($defaults['_controller']) && !empty($defaults['_content'])) {
-      $type = $this->negotiation->getContentType($request);
+    // If no controller is set and either _content is set or the request is
+    // for a dialog or modal, then enhance.
+    if (empty($defaults['_controller']) &&
+      ($type = $this->negotiation->getContentType($request)) &&
+      (!empty($defaults['_content']) ||
+      in_array($type, array('drupal_dialog', 'drupal_modal')))) {
       if (isset($this->types[$type])) {
         $defaults['_controller'] = $this->types[$type];
       }
+    }
+    // When the dialog attribute is TRUE this is a DialogController sub-request.
+    // Route the sub-request to the _content callable.
+    if ($request->attributes->get('dialog') && !empty($defaults['_content'])) {
+      $defaults['_controller'] = $defaults['_content'];
     }
     return $defaults;
   }

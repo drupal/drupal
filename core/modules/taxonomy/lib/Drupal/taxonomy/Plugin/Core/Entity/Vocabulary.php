@@ -126,7 +126,7 @@ class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
             }
           }
           if ($update_field) {
-            field_update_field($field);
+            $field->save();
           }
         }
       }
@@ -167,11 +167,11 @@ class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
       }
       if ($modified_field) {
         if (empty($taxonomy_field['settings']['allowed_values'])) {
-          field_delete_field($field_name);
+          $taxonomy_field->delete();
         }
         else {
           // Update the field definition with the new allowed values.
-          field_update_field($taxonomy_field);
+          $taxonomy_field->save();
         }
       }
     }

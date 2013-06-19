@@ -161,7 +161,7 @@ class Tasks extends InstallTasks {
             '%needed_value' => 'escape',
             '!query' => "<code>" . $query . "</code>",
           );
-          $this->fail(st("The %setting setting is currently set to '%current_value', but needs to be '%needed_value'. Change this by running the following query: !query", $replacements));
+          $this->fail(t("The %setting setting is currently set to '%current_value', but needs to be '%needed_value'. Change this by running the following query: !query", $replacements));
         }
       }
     }
@@ -229,10 +229,10 @@ class Tasks extends InstallTasks {
         LANGUAGE \'sql\'
       ');
 
-      $this->pass(st('PostgreSQL has initialized itself.'));
+      $this->pass(t('PostgreSQL has initialized itself.'));
     }
     catch (\Exception $e) {
-      $this->fail(st('Drupal could not be correctly setup with the existing database. Revise any errors.'));
+      $this->fail(t('Drupal could not be correctly setup with the existing database. Revise any errors.'));
     }
   }
 }

@@ -52,7 +52,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $this->assertFileEntryExists($node_file, t('File entry exists after uploading to the required field.'));
 
     // Try again with a multiple value field.
-    field_delete_field($field_name);
+    $field->delete();
     $this->createFileField($field_name, $type_name, array('cardinality' => FIELD_CARDINALITY_UNLIMITED), array('required' => '1'));
 
     // Try to post a new node without uploading a file in the multivalue field.
@@ -153,4 +153,5 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $this->assertFileExists($node_file, t('File exists after uploading a file with extension checking.'));
     $this->assertFileEntryExists($node_file, t('File entry exists after uploading a file with extension checking.'));
   }
+
 }

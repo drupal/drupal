@@ -36,17 +36,15 @@ class NumberItemTest extends FieldUnitTestBase {
 
     // Create number fields and instances for validation.
     foreach (array('integer', 'float', 'decimal') as $type) {
-      $this->field[$type] = array(
+      entity_create('field_entity', array(
         'field_name' => 'field_' . $type,
         'type' => 'number_' . $type,
-      );
-      field_create_field($this->field[$type]);
-      $this->instance[$type] = array(
+      ))->save();
+      entity_create('field_instance', array(
         'entity_type' => 'entity_test',
         'field_name' => 'field_' . $type,
         'bundle' => 'entity_test',
-      );
-      field_create_instance($this->instance[$type]);
+      ))->save();
     }
   }
 

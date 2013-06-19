@@ -75,7 +75,7 @@ class CommentTranslationUITest extends EntityTranslationUITest {
     parent::setupTestFields();
     $field = field_info_field('comment_body');
     $field['translatable'] = TRUE;
-    field_update_field($field);
+    $field->save();
   }
 
   /**

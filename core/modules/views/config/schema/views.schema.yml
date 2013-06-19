@@ -4,9 +4,9 @@ views.view.*:
   type: mapping
   label: 'View'
   mapping:
-    disabled:
+    status:
       type: boolean
-      label: 'Disabled'
+      label: 'Status'
     api_version:
       label: 'API version'
     module:

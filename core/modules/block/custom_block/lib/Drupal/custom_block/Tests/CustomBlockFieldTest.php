@@ -25,14 +25,14 @@ class CustomBlockFieldTest extends CustomBlockTestBase {
   /**
    * The created field.
    *
-   * @var array
+   * @var \Drupal\field\Plugin\Core\Entity\Field
    */
   protected $field;
 
   /**
-   * The created instance
+   * The created instance.
    *
-   * @var array
+   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
    */
   protected $instance;
 
@@ -64,21 +64,21 @@ class CustomBlockFieldTest extends CustomBlockTestBase {
     $this->blockType = $this->createCustomBlockType('link');
 
     // Create a field with settings to validate.
-    $this->field = array(
+    $this->field = entity_create('field_entity', array(
       'field_name' => drupal_strtolower($this->randomName()),
       'type' => 'link',
       'cardinality' => 2,
-    );
-    field_create_field($this->field);
-    $this->instance = array(
-      'field_name' => $this->field['field_name'],
+    ));
+    $this->field->save();
+    $this->instance = entity_create('field_instance', array(
+      'field_name' => $this->field->id(),
       'entity_type' => 'custom_block',
       'bundle' => 'link',
       'settings' => array(
         'title' => DRUPAL_OPTIONAL,
       ),
-    );
-    field_create_instance($this->instance);
+    ));
+    $this->instance->save();
     entity_get_form_display('custom_block', 'link', 'default')
       ->setComponent($this->field['field_name'], array(
         'type' => 'link_default',

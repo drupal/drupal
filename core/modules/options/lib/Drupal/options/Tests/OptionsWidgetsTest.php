@@ -22,6 +22,35 @@ class OptionsWidgetsTest extends FieldTestBase {
    */
   public static $modules = array('options', 'entity_test', 'options_test', 'taxonomy', 'field_ui');
 
+ /**
+   * A field with cardinality 1 to use in this test class.
+   *
+   * @var \Drupal\field\Plugin\Core\Entity\Field
+   */
+  protected $card_1;
+
+  /**
+   * A field with cardinality 2 to use in this test class.
+   *
+   * @var \Drupal\field\Plugin\Core\Entity\Field
+   */
+  protected $card_2;
+
+  /**
+   * A boolean field to use in this test class.
+   *
+   * @var \Drupal\field\Plugin\Core\Entity\Field
+   */
+  protected $bool;
+
+  /**
+   * A user with permission to view and manage entities.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $web_user;
+
+
   public static function getInfo() {
     return array(
       'name'  => 'Options widgets',
@@ -34,7 +63,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     parent::setUp();
 
     // Field with cardinality 1.
-    $this->card_1 = array(
+    $this->card_1 = entity_create('field_entity', array(
       'field_name' => 'card_1',
       'type' => 'list_integer',
       'cardinality' => 1,
@@ -42,11 +71,11 @@ class OptionsWidgetsTest extends FieldTestBase {
         // Make sure that 0 works as an option.
         'allowed_values' => array(0 => 'Zero', 1 => 'One', 2 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>'),
       ),
-    );
-    $this->card_1 = field_create_field($this->card_1);
+    ));
+    $this->card_1->save();
 
     // Field with cardinality 2.
-    $this->card_2 = array(
+    $this->card_2 = entity_create('field_entity', array(
       'field_name' => 'card_2',
       'type' => 'list_integer',
       'cardinality' => 2,
@@ -54,19 +83,19 @@ class OptionsWidgetsTest extends FieldTestBase {
         // Make sure that 0 works as an option.
         'allowed_values' => array(0 => 'Zero', 1 => 'One', 2 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>'),
       ),
-    );
-    $this->card_2 = field_create_field($this->card_2);
+    ));
+    $this->card_2->save();
 
     // Boolean field.
-    $this->bool = array(
+    $this->bool = entity_create('field_entity', array(
       'field_name' => 'bool',
       'type' => 'list_boolean',
       'cardinality' => 1,
       'settings' => array(
         'allowed_values' => array(0 => 'Zero', 1 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>'),
       ),
-    );
-    $this->bool = field_create_field($this->bool);
+    ));
+    $this->bool->save();
 
     // Create a web user.
     $this->web_user = $this->drupalCreateUser(array('view test entity', 'administer entity_test content'));
@@ -78,14 +107,14 @@ class OptionsWidgetsTest extends FieldTestBase {
    */
   function testRadioButtons() {
     // Create an instance of the 'single value' field.
-    $instance = array(
-      'field_name' => $this->card_1['field_name'],
+    $instance = entity_create('field_instance', array(
+      'field_name' => $this->card_1->id(),
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-    );
-    $instance = field_create_instance($instance);
+    ));
+    $instance->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->card_1['field_name'], array(
+      ->setComponent($this->card_1->id(), array(
         'type' => 'options_buttons',
       ))
       ->save();
@@ -124,10 +153,10 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertFieldValues($entity_init, 'card_1', $langcode, array());
 
     // Check that required radios with one option is auto-selected.
-    $this->card_1['settings']['allowed_values'] = array(99 => 'Only allowed value');
-    field_update_field($this->card_1);
-    $instance['required'] = TRUE;
-    field_update_instance($instance);
+    $this->card_1->settings['allowed_values'] = array(99 => 'Only allowed value');
+    $this->card_1->save();
+    $instance->required = TRUE;
+    $instance->save();
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
     $this->assertFieldChecked("edit-card-1-$langcode-99");
   }
@@ -137,14 +166,14 @@ class OptionsWidgetsTest extends FieldTestBase {
    */
   function testCheckBoxes() {
     // Create an instance of the 'multiple values' field.
-    $instance = array(
-      'field_name' => $this->card_2['field_name'],
+    $instance = entity_create('field_instance', array(
+      'field_name' => $this->card_2->id(),
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-    );
-    $instance = field_create_instance($instance);
+    ));
+    $instance->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->card_2['field_name'], array(
+      ->setComponent($this->card_2->id(), array(
         'type' => 'options_buttons',
       ))
       ->save();
@@ -216,10 +245,10 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertFieldValues($entity_init, 'card_2', $langcode, array());
 
     // Required checkbox with one option is auto-selected.
-    $this->card_2['settings']['allowed_values'] = array(99 => 'Only allowed value');
-    field_update_field($this->card_2);
-    $instance['required'] = TRUE;
-    field_update_instance($instance);
+    $this->card_2->settings['allowed_values'] = array(99 => 'Only allowed value');
+    $this->card_2->save();
+    $instance->required = TRUE;
+    $instance->save();
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
     $this->assertFieldChecked("edit-card-2-$langcode-99");
   }
@@ -229,15 +258,15 @@ class OptionsWidgetsTest extends FieldTestBase {
    */
   function testSelectListSingle() {
     // Create an instance of the 'single value' field.
-    $instance = array(
-      'field_name' => $this->card_1['field_name'],
+    $instance = entity_create('field_instance', array(
+      'field_name' => $this->card_1->id(),
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
       'required' => TRUE,
-    );
-    $instance = field_create_instance($instance);
+    ));
+    $instance->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->card_1['field_name'], array(
+      ->setComponent($this->card_1->id(), array(
         'type' => 'options_select',
       ))
       ->save();
@@ -283,8 +312,8 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertNoOptionSelected("edit-card-1-$langcode", 2);
 
     // Make the field non required.
-    $instance['required'] = FALSE;
-    field_update_instance($instance);
+    $instance->required = FALSE;
+    $instance->save();
 
     // Display form.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
@@ -299,7 +328,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     $this->card_1['settings']['allowed_values'] = array();
     $this->card_1['settings']['allowed_values_function'] = 'options_test_allowed_values_callback';
-    field_update_field($this->card_1);
+    $this->card_1->save();
 
     // Display form: with no field data, nothing is selected
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
@@ -331,14 +360,14 @@ class OptionsWidgetsTest extends FieldTestBase {
    */
   function testSelectListMultiple() {
     // Create an instance of the 'multiple values' field.
-    $instance = array(
-      'field_name' => $this->card_2['field_name'],
+    $instance = entity_create('field_instance', array(
+      'field_name' => $this->card_2->id(),
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-    );
-    $instance = field_create_instance($instance);
+    ));
+    $instance->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->card_2['field_name'], array(
+      ->setComponent($this->card_2->id(), array(
         'type' => 'options_select',
       ))
       ->save();
@@ -406,8 +435,8 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertFieldValues($entity_init, 'card_2', $langcode, array());
 
     // A required select list does not have an empty key.
-    $instance['required'] = TRUE;
-    field_update_instance($instance);
+    $instance->required = TRUE;
+    $instance->save();
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
     $this->assertFalse($this->xpath('//select[@id=:id]//option[@value=""]', array(':id' => 'edit-card-2-' . $langcode)), 'A required select list does not have an empty key.');
 
@@ -417,11 +446,11 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Test optgroups.
 
     // Use a callback function defining optgroups.
-    $this->card_2['settings']['allowed_values'] = array();
-    $this->card_2['settings']['allowed_values_function'] = 'options_test_allowed_values_callback';
-    field_update_field($this->card_2);
-    $instance['required'] = FALSE;
-    field_update_instance($instance);
+    $this->card_2->settings['allowed_values'] = array();
+    $this->card_2->settings['allowed_values_function'] = 'options_test_allowed_values_callback';
+    $this->card_2->save();
+    $instance->required = FALSE;
+    $instance->save();
 
     // Display form: with no field data, nothing is selected.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
@@ -453,14 +482,13 @@ class OptionsWidgetsTest extends FieldTestBase {
    */
   function testOnOffCheckbox() {
     // Create an instance of the 'boolean' field.
-    $instance = array(
-      'field_name' => $this->bool['field_name'],
+    entity_create('field_instance', array(
+      'field_name' => $this->bool->id(),
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-    );
-    $instance = field_create_instance($instance);
+    ))->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->bool['field_name'], array(
+      ->setComponent($this->bool->id(), array(
         'type' => 'options_onoff',
       ))
       ->save();
@@ -508,13 +536,12 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Create a test field instance.
     $fieldUpdate = $this->bool;
     $fieldUpdate['settings']['allowed_values'] = array(0 => 0, 1 => 'MyOnValue');
-    field_update_field($fieldUpdate);
-    $instance = array(
+    $fieldUpdate->save();
+    entity_create('field_instance', array(
       'field_name' => $this->bool['field_name'],
       'entity_type' => 'node',
       'bundle' => 'page',
-    );
-    field_create_instance($instance);
+    ))->save();
 
     entity_get_form_display('node', 'page', 'default')
       ->setComponent($this->bool['field_name'], array(

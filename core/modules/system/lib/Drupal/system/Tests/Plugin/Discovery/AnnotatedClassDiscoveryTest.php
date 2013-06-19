@@ -30,6 +30,7 @@ class AnnotatedClassDiscoveryTest extends DiscoveryTestBase {
         'label' => 'Apple',
         'color' => 'green',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Apple',
+        'module' => 'plugin_test',
       ),
       'banana' => array(
         'id' => 'banana',
@@ -39,18 +40,21 @@ class AnnotatedClassDiscoveryTest extends DiscoveryTestBase {
           'bread' => t('Banana bread'),
         ),
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Banana',
+        'module' => 'plugin_test',
       ),
       'cherry' => array(
         'id' => 'cherry',
         'label' => 'Cherry',
         'color' => 'red',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Cherry',
+        'module' => 'plugin_test',
       ),
       'orange' => array(
         'id' => 'orange',
         'label' => 'Orange',
         'color' => 'orange',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Orange',
+        'module' => 'plugin_test',
       ),
     );
     $namespaces = new \ArrayObject(array('Drupal\plugin_test' => DRUPAL_ROOT . '/core/modules/system/tests/modules/plugin_test/lib'));

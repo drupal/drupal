@@ -53,21 +53,18 @@ function color_form_system_theme_settings_alter(&$form, &$form_state) {
 }
 
 /**
+ * Implements hook_css_alter().
+ *
  * Replaces style sheets with color-altered style sheets.
- *
- * A theme that supports the color module should call this function from its
- * THEME_process_html() function, so that the correct style sheets are
- * included when html.tpl.php is rendered.
- *
- * @see theme()
  */
-function _color_html_alter(&$vars) {
+function color_css_alter(&$css) {
   global $theme_key;
   $themes = list_themes();
 
   // Override stylesheets.
   $color_paths = config('color.' . $theme_key)->get('stylesheets');
-  if (!empty($color_paths)) {
+
+  if (!empty($color_paths) && !empty($themes[$theme_key]->stylesheets['all'])) {
 
     foreach ($themes[$theme_key]->stylesheets['all'] as $base_filename => $old_path) {
       // Loop over the path array with recolored CSS files to find matching
@@ -78,25 +75,19 @@ function _color_html_alter(&$vars) {
         if (drupal_basename($old_path) == drupal_basename($color_path)) {
           // Replace the path to the new css file.
           // This keeps the order of the stylesheets intact.
-          $vars['css'][drupal_basename($old_path)]['data'] = $color_path;
+          $css[drupal_basename($old_path)]['data'] = $color_path;
         }
       }
     }
-
-    $vars['styles'] = drupal_get_css($vars['css']);
   }
 }
 
 /**
- * Replaces the logo with a color-altered logo.
+ * Implements hook_preprocess_page().
  *
- * A theme that supports the color module should call this function from its
- * THEME_process_page() function, so that the correct logo is included when
- * page.tpl.php is rendered.
- *
- * @see theme()
+ * Replace the logo with the colored version if available.
  */
-function _color_page_alter(&$vars) {
+function color_preprocess_page(&$vars) {
   global $theme_key;
 
   // Override logo.

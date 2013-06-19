@@ -137,8 +137,8 @@ class EditIntegrationTest extends EditTestBase {
     $this->assertEqual('editor', $this->getSelectedEditor($items, $this->field_name), "With cardinality 1, and the full_html text format, the 'editor' editor is selected.");
 
     // Editor selection with text processing, cardinality >1
-    $this->field_textarea_field['cardinality'] = 2;
-    field_update_field($this->field_textarea_field);
+    $this->field_textarea_field->cardinality = 2;
+    $this->field_textarea_field->save();
     $items[] = array('value' => 'Hallo, wereld!', 'format' => 'full_html');
     $this->assertEqual('form', $this->getSelectedEditor($items, $this->field_name), "With cardinality >1, and both items using the full_html text format, the 'form' editor is selected.");
   }

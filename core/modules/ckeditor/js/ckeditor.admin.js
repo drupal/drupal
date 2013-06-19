@@ -1,4 +1,4 @@
-(function ($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings, CKEDITOR, _) {
 
 "use strict";
 
@@ -11,6 +11,8 @@ Drupal.behaviors.ckeditorAdmin = {
   attach: function (context) {
     var $context = $(context);
     var $ckeditorToolbar = $context.find('.ckeditor-toolbar-configuration').once('ckeditor-toolbar');
+    var featuresMetadata = {};
+    var hiddenCKEditorConfig = drupalSettings.ckeditor.hiddenCKEditorConfig;
 
     /**
      * Event callback for keypress. Move buttons based on arrow keys.
@@ -168,6 +170,8 @@ Drupal.behaviors.ckeditorAdmin = {
      * textarea.
      */
     function adminToolbarValue (event, ui) {
+      var oldToolbarConfig = JSON.parse($textarea.val());
+
       // Update the toolbar config after updating a sortable.
       var toolbarConfig = [];
       var $button = ui.item;
@@ -184,16 +188,167 @@ Drupal.behaviors.ckeditorAdmin = {
       });
       $textarea.val(JSON.stringify(toolbarConfig, null, '  '));
 
-      // Determine whether we should trigger an event.
-      var from = $(event.target).parents('div[data-toolbar]').attr('data-toolbar');
-      var to = $(event.toElement).parents('div[data-toolbar]').attr('data-toolbar');
-      if (from !== to) {
-        $ckeditorToolbar.find('.ckeditor-toolbar-active')
+      if (!ui.silent) {
+        // Determine whether we should trigger an event.
+        var prev = _.flatten(oldToolbarConfig);
+        var next = _.flatten(toolbarConfig);
+        if (prev.length !== next.length) {
+          $ckeditorToolbar
+          .find('.ckeditor-toolbar-active')
           .trigger('CKEditorToolbarChanged', [
-            (to === 'active') ? 'added' : 'removed',
-            ui.item.get(0).getAttribute('data-button-name')
+            (prev.length < next.length) ? 'added' : 'removed',
+            _.difference(_.union(prev, next), _.intersection(prev, next))[0]
           ]);
+        }
       }
+    }
+
+    /**
+     * Asynchronously retrieve the metadata for all available CKEditor features.
+     *
+     * In order to get a list of all features needed by CKEditor, we create a
+     * hidden CKEditor instance, then check the CKEditor's "allowedContent"
+     * filter settings. Because creating an instance is expensive, a callback
+     * must be provided that will receive a hash of Drupal.EditorFeature
+     * features keyed by feature (button) name.
+     */
+    function getCKEditorFeatures(CKEditorConfig, callback) {
+      var getProperties = function (CKEPropertiesList) {
+        return (_.isObject(CKEPropertiesList)) ? _.keys(CKEPropertiesList) : [];
+      };
+
+      var convertCKERulesToEditorFeature = function (feature, CKEFeatureRules) {
+        for (var i = 0; i < CKEFeatureRules.length; i++) {
+          var CKERule = CKEFeatureRules[i];
+          var rule = new Drupal.EditorFeatureHTMLRule();
+
+          // Tags.
+          var tags = getProperties(CKERule.elements);
+          rule.required.tags = (CKERule.propertiesOnly) ? [] : tags;
+          rule.allowed.tags = tags;
+          // Attributes.
+          rule.required.attributes = getProperties(CKERule.requiredAttributes);
+          rule.allowed.attributes = getProperties(CKERule.attributes);
+          // Styles.
+          rule.required.styles = getProperties(CKERule.requiredStyles);
+          rule.allowed.styles = getProperties(CKERule.styles);
+          // Classes.
+          rule.required.classes = getProperties(CKERule.requiredClasses);
+          rule.allowed.classes = getProperties(CKERule.classes);
+          // Raw.
+          rule.raw = CKERule;
+
+          feature.addHTMLRule(rule);
+        }
+      };
+
+      // Create hidden CKEditor with all features enabled, retrieve metadata.
+      // @see \Drupal\ckeditor\Plugin\editor\editor\CKEditor::settingsForm.
+      var hiddenCKEditorID = 'ckeditor-hidden';
+      if (CKEDITOR.instances[hiddenCKEditorID]) {
+        CKEDITOR.instances[hiddenCKEditorID].destroy(true);
+      }
+      CKEDITOR.inline($('#' + hiddenCKEditorID).get(0), CKEditorConfig);
+
+      // Once the instance is ready, retrieve the allowedContent filter rules
+      // and convert them to Drupal.EditorFeature objects.
+      CKEDITOR.once('instanceReady', function (e) {
+        if (e.editor.name === hiddenCKEditorID) {
+          // First collect all CKEditor allowedContent rules.
+          var CKEFeatureRulesMap = {};
+          var rules = e.editor.filter.allowedContent;
+          var rule, name;
+          for (var i = 0; i < rules.length; i++) {
+            rule = rules[i];
+            name = rule.featureName || ':(';
+            if (!CKEFeatureRulesMap[name]) {
+              CKEFeatureRulesMap[name] = [];
+            }
+            CKEFeatureRulesMap[name].push(rule);
+          }
+
+          // Now convert these to Drupal.EditorFeature objects.
+          var features = {};
+          for (var featureName in CKEFeatureRulesMap) {
+            if (CKEFeatureRulesMap.hasOwnProperty(featureName)) {
+              var feature = new Drupal.EditorFeature(featureName);
+              convertCKERulesToEditorFeature(feature, CKEFeatureRulesMap[featureName]);
+              features[featureName] = feature;
+            }
+          }
+
+          callback(features);
+        }
+      });
+    }
+
+    /**
+     * Retrieves the feature for a given button from featuresMetadata. Returns
+     * false if the given button is in fact a divider.
+     */
+    function getFeatureForButton (button) {
+      // Return false if the button being added is a divider.
+      if (button === '|' || button === '-') {
+        return false;
+      }
+
+      // Get a Drupal.editorFeature object that contains all metadata for
+      // the feature that was just added or removed. Not every feature has
+      // such metadata.
+      var featureName = button.toLowerCase();
+      if (!featuresMetadata[featureName]) {
+        featuresMetadata[featureName] = new Drupal.EditorFeature(featureName);
+      }
+      return featuresMetadata[featureName];
+    }
+
+    /**
+     * Sets up broadcasting of CKEditor toolbar configuration changes.
+     */
+    function broadcastConfigurationChanges ($ckeditorToolbar) {
+      $ckeditorToolbar
+        .find('.ckeditor-toolbar-active')
+        // Listen for CKEditor toolbar configuration changes. When a button is
+        // added/removed, call an appropriate Drupal.editorConfiguration method.
+        .on('CKEditorToolbarChanged.ckeditorAdmin', function (e, action, button) {
+          var feature = getFeatureForButton(button);
+
+          // Early-return if the button being added is a divider.
+          if (feature === false) {
+            return;
+          }
+
+          // Trigger a standardized text editor configuration event to indicate
+          // whether a feature was added or removed, so that filters can react.
+          var event = (action === 'added') ? 'addedFeature' : 'removedFeature';
+          Drupal.editorConfiguration[event](feature);
+        })
+        // Listen for CKEditor plugin settings changes. When a plugin setting is
+        // changed, rebuild the CKEditor features metadata.
+        .on('CKEditorPluginSettingsChanged.ckeditorAdmin', function (e, settingsChanges) {
+          // Update hidden CKEditor configuration.
+          for (var key in settingsChanges) {
+            if (settingsChanges.hasOwnProperty(key)) {
+              hiddenCKEditorConfig[key] = settingsChanges[key];
+            }
+          }
+
+          // Retrieve features for the updated hidden CKEditor configuration.
+          getCKEditorFeatures(hiddenCKEditorConfig, function (features) {
+            // Trigger a standardized text editor configuration event for each
+            // feature that was modified by the configuration changes.
+            for (var name in features) {
+              if (features.hasOwnProperty(name)) {
+                var feature = features[name];
+                if (featuresMetadata.hasOwnProperty(name) && !_.isEqual(featuresMetadata[name], feature)) {
+                  Drupal.editorConfiguration.modifiedFeature(feature);
+                }
+              }
+            }
+            // Update the CKEditor features metadata.
+            featuresMetadata = features;
+          });
+        });
     }
 
     if ($ckeditorToolbar.length) {
@@ -242,6 +397,66 @@ Drupal.behaviors.ckeditorAdmin = {
       // Identify the aria-live element for interaction updates for screen
       // readers.
       $messages = $('#ckeditor-button-configuration-aria-live');
+
+      getCKEditorFeatures(hiddenCKEditorConfig, function (features) {
+        featuresMetadata = features;
+
+        // Ensure that toolbar configuration changes are broadcast.
+        broadcastConfigurationChanges($ckeditorToolbar);
+
+        // Initialization: not all of the default toolbar buttons may be allowed
+        // by the current filter settings. Remove any of the default toolbar
+        // buttons that require more permissive filter settings. The remaining
+        // default toolbar buttons are marked as "added".
+        var $activeToolbar = $ckeditorToolbar.find('.ckeditor-toolbar-active');
+        var existingButtons = _.unique(_.flatten(JSON.parse($textarea.val())));
+        for (var i = 0; i < existingButtons.length; i++) {
+          var button = existingButtons[i];
+          var feature = getFeatureForButton(button);
+
+          // Skip dividers.
+          if (feature === false) {
+            continue;
+          }
+
+          if (Drupal.editorConfiguration.featureIsAllowedByFilters(feature)) {
+            // Default toolbar buttons are in fact "added features".
+            $activeToolbar.trigger('CKEditorToolbarChanged', ['added', existingButtons[i]]);
+          }
+          else {
+            // Move the button element from the active the active toolbar to the
+            // list of available buttons.
+            var $button = $('.ckeditor-toolbar-active > ul > li[data-button-name="' + button + '"]')
+              .detach()
+              .appendTo('.ckeditor-toolbar-disabled > ul');
+            // Update the toolbar value field.
+            adminToolbarValue({}, { silent: true, item: $button});
+          }
+        }
+      });
+    }
+  },
+  detach: function (context, settings, trigger) {
+    // Early-return if the trigger for detachment is something else than unload.
+    if (trigger !== 'unload') {
+      return;
+    }
+
+    // We're detaching because CKEditor as text editor has been disabled; this
+    // really means that all CKEditor toolbar buttons have been removed. Hence,
+    // all editor features will be removed, so any reactions from filters will
+    // be undone.
+    var $ckeditorToolbar = $(context).find('.ckeditor-toolbar-configuration.ckeditor-toolbar-processed');
+    if ($ckeditorToolbar.length) {
+      var value = $ckeditorToolbar
+        .find('.form-item-editor-settings-toolbar-buttons')
+        .find('textarea')
+        .val();
+      var $activeToolbar = $ckeditorToolbar.find('.ckeditor-toolbar-active');
+      var buttons = _.unique(_.flatten(JSON.parse(value)));
+      for (var i = 0; i < buttons.length; i++) {
+        $activeToolbar.trigger('CKEditorToolbarChanged', ['removed', buttons[i]]);
+      }
     }
   }
 };
@@ -292,4 +507,4 @@ function grantRowFocus (event) {
   }
 }
 
-})(jQuery, Drupal, drupalSettings);
+})(jQuery, Drupal, drupalSettings, CKEDITOR, _);

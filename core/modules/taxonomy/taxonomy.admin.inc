@@ -17,7 +17,7 @@ function taxonomy_vocabulary_add() {
     // most likely default value until we have better flexible settings.
     'langcode' => language_default()->langcode,
   ));
-  return entity_get_form($vocabulary);
+  return Drupal::entityManager()->getForm($vocabulary);
 }
 
 /**
@@ -398,7 +398,7 @@ function taxonomy_term_add($vocabulary) {
   if (module_exists('language')) {
     $term->langcode = language_get_default_langcode('taxonomy_term', $vocabulary->id());
   }
-  return entity_get_form($term);
+  return Drupal::entityManager()->getForm($term);
 }
 
 /**

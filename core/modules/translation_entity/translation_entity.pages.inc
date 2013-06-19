@@ -202,7 +202,7 @@ function translation_entity_add_page(EntityInterface $entity, Language $source =
   $form_state['translation_entity']['target'] = $target;
   $controller = translation_entity_controller($entity->entityType());
   $form_state['translation_entity']['translation_form'] = !$controller->getAccess($entity, 'update');
-  return entity_get_form($entity, $operation, $form_state);
+  return Drupal::entityManager()->getForm($entity, $operation, $form_state);
 }
 
 /**
@@ -223,7 +223,7 @@ function translation_entity_edit_page(EntityInterface $entity, Language $languag
   $operation = isset($info['default_operation']) ? $info['default_operation'] : 'default';
   $form_state['langcode'] = $language->langcode;
   $form_state['translation_entity']['translation_form'] = TRUE;
-  return entity_get_form($entity, $operation, $form_state);
+  return Drupal::entityManager()->getForm($entity, $operation, $form_state);
 }
 
 /**

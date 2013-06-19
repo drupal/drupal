@@ -34,22 +34,20 @@ class EntityResolverTest extends NormalizerTestBase {
     parent::setUp();
 
     // Create the test field.
-    $field = array(
+    entity_create('field_entity', array(
       'settings' => array(
         'target_type' => 'entity_test_mulrev',
       ),
       'field_name' => 'field_test_entity_reference',
       'type' => 'entity_reference',
-    );
-    field_create_field($field);
+    ))->save();
 
     // Create the test field instance.
-    $instance = array(
+    entity_create('field_instance', array(
       'entity_type' => 'entity_test_mulrev',
       'field_name' => 'field_test_entity_reference',
       'bundle' => 'entity_test_mulrev',
-    );
-    field_create_instance($instance);
+    ))->save();
   }
 
   /**

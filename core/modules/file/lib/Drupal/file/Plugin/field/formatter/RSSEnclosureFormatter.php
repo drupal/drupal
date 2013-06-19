@@ -34,7 +34,7 @@ class RSSEnclosureFormatter extends FormatterBase {
     // Add the first file as an enclosure to the RSS item. RSS allows only one
     // enclosure per item. See: http://en.wikipedia.org/wiki/RSS_enclosure
     foreach ($items as $item) {
-      if ($item['display']) {
+      if ($item['display'] && $item['entity']) {
         $file = $item['entity'];
         $entity->rss_elements[] = array(
           'key' => 'enclosure',

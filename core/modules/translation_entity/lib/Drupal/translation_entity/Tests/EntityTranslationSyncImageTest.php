@@ -56,15 +56,14 @@ class EntityTranslationSyncImageTest extends EntityTranslationTestBase {
     $this->fieldName = 'field_test_et_ui_image';
     $this->cardinality = 3;
 
-    $field = array(
+    entity_create('field_entity', array(
       'field_name' => $this->fieldName,
       'type' => 'image',
       'cardinality' => $this->cardinality,
       'translatable' => TRUE,
-    );
-    field_create_field($field);
+    ))->save();
 
-    $instance = array(
+    entity_create('field_instance', array(
       'entity_type' => $this->entityType,
       'field_name' => $this->fieldName,
       'bundle' => $this->entityType,
@@ -76,8 +75,7 @@ class EntityTranslationSyncImageTest extends EntityTranslationTestBase {
           'title' => 'title',
         ),
       ),
-    );
-    field_create_instance($instance);
+    ))->save();
   }
 
   /**

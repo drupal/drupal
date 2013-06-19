@@ -29,7 +29,7 @@ function menu_overview_page() {
  */
 function menu_menu_add() {
   $menu = entity_create('menu', array());
-  return entity_get_form($menu);
+  return Drupal::entityManager()->getForm($menu);
 }
 
 /**
@@ -45,7 +45,7 @@ function menu_menu_add() {
  */
 function menu_menu_edit(Menu $menu) {
   drupal_set_title(t('Edit menu %label', array('%label' => $menu->label())), PASS_THROUGH);
-  return entity_get_form($menu);
+  return Drupal::entityManager()->getForm($menu);
 }
 
 /**
@@ -387,5 +387,5 @@ function menu_link_add(Menu $menu) {
     'menu_name' => $menu->id(),
   ));
   drupal_set_title(t('Add menu link'));
-  return entity_get_form($menu_link);
+  return Drupal::entityManager()->getForm($menu_link);
 }

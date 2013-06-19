@@ -1452,14 +1452,16 @@ function theme_filter_html_image_secure_image(&$variables) {
  * Implements hook_library_info().
  */
 function filter_library_info() {
+  $path = drupal_get_path('module', 'filter');
+
   $libraries['drupal.filter.admin'] = array(
     'title' => 'Filter',
     'version' => VERSION,
     'js' => array(
-      drupal_get_path('module', 'filter') . '/filter.admin.js' => array(),
+      $path . '/filter.admin.js' => array(),
     ),
     'css' => array(
-      drupal_get_path('module', 'filter') . '/css/filter.admin.css'
+      $path . '/css/filter.admin.css'
     ),
     'dependencies' => array(
       array('system', 'jquery'),
@@ -1468,14 +1470,26 @@ function filter_library_info() {
       array('system', 'drupal.form'),
     ),
   );
+  $libraries['drupal.filter.filter_html.admin'] = array(
+    'title' => 'Automatic "Limit allowed HTML tags" filter setting updating.',
+    'version' => VERSION,
+    'js' => array(
+      $path . '/filter.filter_html.admin.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'jquery.once'),
+      array('system', 'underscore'),
+    ),
+  );
   $libraries['drupal.filter'] = array(
     'title' => 'Filter',
     'version' => VERSION,
     'js' => array(
-      drupal_get_path('module', 'filter') . '/filter.js' => array(),
+      $path . '/filter.js' => array(),
     ),
     'css' => array(
-      drupal_get_path('module', 'filter') . '/css/filter.admin.css'
+      $path . '/css/filter.admin.css'
     ),
     'dependencies' => array(
       array('system', 'jquery'),

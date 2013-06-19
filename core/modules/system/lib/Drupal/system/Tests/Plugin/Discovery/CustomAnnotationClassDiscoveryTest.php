@@ -32,11 +32,13 @@ class CustomAnnotationClassDiscoveryTest extends DiscoveryTestBase {
         'id' => 'example_1',
         'custom' => 'John',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\custom_annotation\Example1',
+        'module' => 'plugin_test',
       ),
       'example_2' => array(
         'id' => 'example_2',
         'custom' => 'Paul',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\custom_annotation\Example2',
+        'module' => 'plugin_test',
       ),
     );
     $root_namespaces = new \ArrayObject(array('Drupal\plugin_test' => DRUPAL_ROOT . '/core/modules/system/tests/modules/plugin_test/lib'));

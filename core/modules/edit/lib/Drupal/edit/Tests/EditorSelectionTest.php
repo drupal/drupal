@@ -79,24 +79,24 @@ class EditorSelectionTest extends EditTestBase {
     $this->assertEqual('direct', $this->getSelectedEditor($items, $field_name), "Without text processing, cardinality 1, the 'direct' editor is selected.");
 
     // Editor selection with text processing, cardinality 1.
-    $this->field_text_instance['settings']['text_processing'] = 1;
-    field_update_instance($this->field_text_instance);
+    $this->field_text_instance->settings['text_processing'] = 1;
+    $this->field_text_instance->save();
     $this->assertEqual('form', $this->getSelectedEditor($items, $field_name), "With text processing, cardinality 1, the 'form' editor is selected.");
 
     // Editor selection without text processing, cardinality 1 (again).
-    $this->field_text_instance['settings']['text_processing'] = 0;
-    field_update_instance($this->field_text_instance);
+    $this->field_text_instance->settings['text_processing'] = 0;
+    $this->field_text_instance->save();
     $this->assertEqual('direct', $this->getSelectedEditor($items, $field_name), "Without text processing again, cardinality 1, the 'direct' editor is selected.");
 
     // Editor selection without text processing, cardinality >1
-    $this->field_text_field['cardinality'] = 2;
-    field_update_field($this->field_text_field);
+    $this->field_text_field->cardinality = 2;
+    $this->field_text_field->save();
     $items[] = array('value' => 'Hallo, wereld!', 'format' => 'full_html');
     $this->assertEqual('form', $this->getSelectedEditor($items, $field_name), "Without text processing, cardinality >1, the 'form' editor is selected.");
 
     // Editor selection with text processing, cardinality >1
-    $this->field_text_instance['settings']['text_processing'] = 1;
-    field_update_instance($this->field_text_instance);
+    $this->field_text_instance->settings['text_processing'] = 1;
+    $this->field_text_instance->save();
     $this->assertEqual('form', $this->getSelectedEditor($items, $field_name), "With text processing, cardinality >1, the 'form' editor is selected.");
   }
 
@@ -133,8 +133,8 @@ class EditorSelectionTest extends EditTestBase {
     $this->assertEqual('wysiwyg', $this->getSelectedEditor($items, $field_name), "With cardinality 1, and the full_html text format, the 'wysiwyg' editor is selected.");
 
     // Editor selection with text processing, cardinality >1
-    $this->field_textarea_field['cardinality'] = 2;
-    field_update_field($this->field_textarea_field);
+    $this->field_textarea_field->cardinality = 2;
+    $this->field_textarea_field->save();
     $items[] = array('value' => 'Hallo, wereld!', 'format' => 'full_html');
     $this->assertEqual('form', $this->getSelectedEditor($items, $field_name), "With cardinality >1, and both items using the full_html text format, the 'form' editor is selected.");
   }
@@ -163,8 +163,8 @@ class EditorSelectionTest extends EditTestBase {
     $this->assertEqual('form', $this->getSelectedEditor($items, $field_name), "With cardinality 1, the 'form' editor is selected.");
 
     // Editor selection with cardinality >1.
-    $this->field_nr_field['cardinality'] = 2;
-    field_update_field($this->field_nr_field);
+    $this->field_nr_field->cardinality = 2;
+    $this->field_nr_field->save();
     $this->assertEqual('form', $this->getSelectedEditor($items, $field_name), "With cardinality >1, the 'form' editor is selected.");
   }
 

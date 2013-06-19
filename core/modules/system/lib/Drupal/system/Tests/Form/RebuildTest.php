@@ -76,13 +76,13 @@ class RebuildTest extends WebTestBase {
       'type' => 'text',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
     );
-    field_create_field($field);
+    entity_create('field_entity', $field)->save();
     $instance = array(
       'field_name' => $field_name,
       'entity_type' => 'node',
       'bundle' => 'page',
     );
-    field_create_instance($instance);
+    entity_create('field_instance', $instance)->save();
     entity_get_form_display('node', 'page', 'default')
       ->setComponent($field_name, array('type' => 'text_test'))
       ->save();

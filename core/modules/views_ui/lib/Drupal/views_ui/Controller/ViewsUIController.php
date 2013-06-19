@@ -234,8 +234,8 @@ class ViewsUIController implements ControllerInterface {
     }
     drupal_set_title($name);
 
-    $build['edit'] = entity_get_form($view, 'edit', array('display_id' => $display_id));
-    $build['preview'] = entity_get_form($view, 'preview', array('display_id' => $display_id));
+    $build['edit'] = $this->entityManager->getForm($view, 'edit', array('display_id' => $display_id));
+    $build['preview'] = $this->entityManager->getForm($view, 'preview', array('display_id' => $display_id));
     return $build;
   }
 

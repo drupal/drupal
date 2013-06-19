@@ -49,8 +49,8 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     // Make the body field translatable.
     // The parent class has already created the article and page content types.
     $field = field_info_field('body');
-    $field['translatable'] = TRUE;
-    field_update_field($field);
+    $field->translatable = TRUE;
+    $field->save();
 
     // Create a few page nodes with multilingual body values.
     $default_format = filter_default_format();

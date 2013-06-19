@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Language\LocaleTranslation.
+ * Contains \Drupal\locale\LocaleTranslation.
  */
 
 namespace Drupal\locale;
@@ -35,7 +35,7 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
    *   Array of \Drupal\locale\LocaleLookup objects indexed by language code
    *   and context.
    */
-  protected $translations;
+  protected $translations = array();
 
   /**
    * Constructs a translator using a string storage.

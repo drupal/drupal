@@ -107,17 +107,15 @@ class RdfaMarkupTest extends WebTestBase {
     $bundle_name = "article";
 
     $field_name = 'file_test';
-    $field = array(
+    entity_create('field_entity', array(
       'field_name' => $field_name,
       'type' => 'file',
-    );
-    field_create_field($field);
-    $instance = array(
+    ))->save();
+    entity_create('field_instance', array(
       'field_name' => $field_name,
       'entity_type' => 'node',
       'bundle' => $bundle_name,
-    );
-    field_create_instance($instance);
+    ))->save();
 
     entity_get_form_display('node', $bundle_name, 'default')
       ->setComponent($field_name, array(

@@ -28,22 +28,6 @@ function forum_page($forum_term = NULL) {
     drupal_set_title($vocabulary->label());
   }
 
-  // Breadcrumb navigation.
-  $breadcrumb[] = l(t('Home'), NULL);
-  if ($forum_term->id()) {
-    // Parent of all forums is the vocabulary name.
-    $breadcrumb[] = l($vocabulary->label(), 'forum');
-  }
-  // Add all parent forums to breadcrumbs.
-  if ($forum_term->parents) {
-    foreach (array_reverse($forum_term->parents) as $parent) {
-      if ($parent->id() != $forum_term->id()) {
-        $breadcrumb[] = l($parent->label(), 'forum/' . $parent->id());
-      }
-    }
-  }
-  drupal_set_breadcrumb($breadcrumb);
-
   if ($forum_term->id() && array_search($forum_term->id(), $config->get('containers')) === FALSE) {
     // Add RSS feed for forums.
     drupal_add_feed('taxonomy/term/' . $forum_term->id() . '/feed', 'RSS - ' . $forum_term->label());

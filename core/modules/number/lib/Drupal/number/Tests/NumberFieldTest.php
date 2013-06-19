@@ -22,8 +22,25 @@ class NumberFieldTest extends WebTestBase {
    */
   public static $modules = array('node', 'entity_test', 'number', 'field_ui');
 
+  /**
+   * A field to use in this class.
+   *
+   * @var \Drupal\field\Plugin\Core\Entity\Field
+   */
   protected $field;
+
+  /**
+   * A field instance to use in this test class.
+   *
+   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
+   */
   protected $instance;
+
+  /**
+   * A user with permission to view and manage entities and content types.
+   *
+   * @var \Drupal\user\UserInterface
+   */
   protected $web_user;
 
   public static function getInfo() {
@@ -46,23 +63,22 @@ class NumberFieldTest extends WebTestBase {
    */
   function testNumberDecimalField() {
     // Create a field with settings to validate.
-    $this->field = array(
+    $this->field = entity_create('field_entity', array(
       'field_name' => drupal_strtolower($this->randomName()),
       'type' => 'number_decimal',
       'settings' => array(
         'precision' => 8, 'scale' => 4, 'decimal_separator' => '.',
       )
-    );
-    field_create_field($this->field);
-    $this->instance = array(
-      'field_name' => $this->field['field_name'],
+    ));
+    $this->field->save();
+    entity_create('field_instance', array(
+      'field_name' => $this->field->id(),
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-    );
-    field_create_instance($this->instance);
+    ))->save();
 
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->field['field_name'], array(
+      ->setComponent($this->field->id(), array(
         'type' => 'number',
         'settings' => array(
           'placeholder' => '0.00'
@@ -70,7 +86,7 @@ class NumberFieldTest extends WebTestBase {
       ))
       ->save();
     entity_get_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->field['field_name'], array(
+      ->setComponent($this->field->id(), array(
         'type' => 'number_decimal',
       ))
       ->save();

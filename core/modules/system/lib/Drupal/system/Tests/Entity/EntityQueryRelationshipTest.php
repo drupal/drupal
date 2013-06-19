@@ -85,14 +85,13 @@ class EntityQueryRelationshipTest extends EntityUnitTestBase  {
       'type' => 'taxonomy_term_reference',
     );
     $field['settings']['allowed_values']['vocabulary'] = $vocabulary->id();
-    field_create_field($field);
+    entity_create('field_entity', $field)->save();
     // Third, create the instance.
-    $instance = array(
+    entity_create('field_instance', array(
       'entity_type' => 'entity_test',
       'field_name' => $this->fieldName,
       'bundle' => 'entity_test',
-    );
-    field_create_instance($instance);
+    ))->save();
     // Create two terms and also two accounts.
     for ($i = 0; $i <= 1; $i++) {
       $term = entity_create('taxonomy_term', array(
