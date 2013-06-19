@@ -56,4 +56,13 @@ class Views {
     return Drupal::service('plugin.manager.views.' . $type);
   }
 
+  /**
+   * Returns the plugin manager for a certain views handler type.
+   *
+   * @return \Drupal\views\Plugin\ViewsHandlerManager
+   */
+  public static function handlerManager($type) {
+    return Drupal::service('plugin.manager.views.' . $type);
+  }
+
 }

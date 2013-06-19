@@ -80,7 +80,7 @@ class HandlerAllTest extends HandlerTestBase {
             if (isset($field_info[$type]['id'])) {
               $options = array();
               if ($type == 'filter') {
-                $handler = views_get_handler($item, $type);
+                $handler = $this->container->get("plugin.manager.views.$type")->getHandler($item);
                 if ($handler instanceof InOperator) {
                   $options['value'] = array(1);
                 }

@@ -51,7 +51,7 @@ class ModuleTest extends ViewUnitTestBase {
         'table' => $this->randomName(),
         'field' => $this->randomName(),
       );
-      $handler = views_get_handler($item, $type);
+      $handler = Views::handlerManager($type)->getHandler($item);
       $this->assertEqual('Drupal\views\Plugin\views\\' . $type . '\Broken', get_class($handler), t('Make sure that a broken handler of type: @type are created', array('@type' => $type)));
     }
 
@@ -66,7 +66,7 @@ class ModuleTest extends ViewUnitTestBase {
         );
         foreach ($data as $id => $field_data) {
           if (!in_array($id, array('title', 'help'))) {
-            $handler = views_get_handler($item, $id);
+            $handler = Views::handlerManager($id)->getHandler($item);
             $this->assertInstanceHandler($handler, $table, $field, $id);
           }
         }
@@ -78,7 +78,7 @@ class ModuleTest extends ViewUnitTestBase {
       'table' => 'views_test_data',
       'field' => 'job',
     );
-    $handler = views_get_handler($item, 'filter', 'standard');
+    $handler = Views::handlerManager('filter')->getHandler($item, 'standard');
     $this->assertTrue($handler instanceof Standard);
 
     // @todo Reinstate these tests when the debug() in views_get_handler() is
@@ -91,7 +91,7 @@ class ModuleTest extends ViewUnitTestBase {
       'table' => 'views_test_data',
       'field' => 'field_invalid',
     );
-    views_get_handler($item, 'field');
+    Views::handlerManager('field')->getHandler($item);
     $this->assertTrue(strpos($this->lastErrorMessage, format_string("Missing handler: @table @field @type", array('@table' => 'views_test_data', '@field' => 'field_invalid', '@type' => 'field'))) !== FALSE, 'An invalid field name throws a debug message.');
     unset($this->lastErrorMessage);
 
@@ -99,7 +99,7 @@ class ModuleTest extends ViewUnitTestBase {
       'table' => 'table_invalid',
       'field' => 'id',
     );
-    views_get_handler($item, 'filter');
+    Views::handlerManager('filter')->getHandler($item);
     $this->assertEqual(strpos($this->lastErrorMessage, format_string("Missing handler: @table @field @type", array('@table' => 'table_invalid', '@field' => 'id', '@type' => 'filter'))) !== FALSE, 'An invalid table name throws a debug message.');
     unset($this->lastErrorMessage);
 
@@ -108,7 +108,7 @@ class ModuleTest extends ViewUnitTestBase {
       'field' => 'id',
       'optional' => FALSE,
     );
-    views_get_handler($item, 'filter');
+    Views::handlerManager('filter')->getHandler($item);
     $this->assertEqual(strpos($this->lastErrorMessage, format_string("Missing handler: @table @field @type", array('@table' => 'table_invalid', '@field' => 'id', '@type' => 'filter'))) !== FALSE, 'An invalid table name throws a debug message.');
     unset($this->lastErrorMessage);
 
@@ -117,8 +117,7 @@ class ModuleTest extends ViewUnitTestBase {
       'field' => 'id',
       'optional' => TRUE,
     );
-
-    views_get_handler($item, 'filter');
+    Views::handlerManager('filter')->getHandler($item);
     $this->assertFalse($this->lastErrorMessage, "An optional handler does not throw a debug message.");
     unset($this->lastErrorMessage);
 

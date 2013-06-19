@@ -10,6 +10,7 @@ namespace Drupal\views\Tests\Handler;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Plugin\views\HandlerBase;
+use Drupal\views\Views;
 
 /**
  * Tests abstract handlers of views.
@@ -105,7 +106,7 @@ class HandlerTest extends ViewTestBase {
       'table' => 'node',
       'field' => 'title',
     );
-    $handler = views_get_handler($item, 'argument');
+    $handler = $this->container->get('plugin.manager.views.argument')->getHandler($item);
     $this->assertEqual($handler, HandlerBase::breakPhraseString('', $handler), 'The breakPhraseString() method works correctly.');
 
     // test ors
@@ -164,7 +165,7 @@ class HandlerTest extends ViewTestBase {
       'table' => 'node',
       'field' => 'title',
     );
-    $handler = views_get_handler($item, 'argument');
+    $handler = $this->container->get('plugin.manager.views.argument')->getHandler($item);
     $this->assertEqual($handler, HandlerBase::breakPhrase('', $handler), 'The breakPhrase() method works correctly.');
 
     // Generate three random numbers which can be used below;

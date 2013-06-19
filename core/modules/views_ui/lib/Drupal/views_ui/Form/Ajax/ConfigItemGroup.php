@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui\Form\Ajax;
 
+use Drupal\views\Views;
 use Drupal\views\ViewStorageInterface;
 use Drupal\views\ViewExecutable;
 
@@ -99,7 +100,7 @@ class ConfigItemGroup extends ViewsFormBase {
     $type = $form_state['type'];
     $id = $form_state['id'];
 
-    $handler = views_get_handler($item, $type);
+    $handler = Views::handlerManager($type)->getHandler($item);
     $executable = $form_state['view']->get('executable');
     $handler->init($executable, $executable->display_handler, $item);
 
