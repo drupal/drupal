@@ -1,0 +1,168 @@
+base_field: iid
+base_table: aggregator_item
+core: 8.x
+description: ''
+status: '1'
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: ''
+    display_options:
+      access:
+        type: none
+      cache:
+        type: none
+      query:
+        type: views_query
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+      style:
+        type: default
+      row:
+        type: fields
+      fields:
+        iid:
+          table: aggregator_item
+          field: iid
+          id: iid
+          plugin_id: numeric
+        title:
+          table: aggregator_item
+          field: title
+          id: title
+          plugin_id: aggregator_title_link
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+        timestamp:
+          table: aggregator_item
+          field: timestamp
+          id: timestamp
+          plugin_id: date
+        author:
+          table: aggregator_item
+          field: author
+          id: author
+          plugin_id: aggregator_xss
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+        description:
+          id: description
+          table: aggregator_item
+          field: description
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Body
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          plugin_id: aggregator_xss
+      filters: {  }
+      sorts: {  }
+  feed_1:
+    display_plugin: feed
+    id: feed_1
+    display_title: Feed
+    position: ''
+    display_options:
+      path: test-aggregator-items-feed
+      row:
+        type: aggregator_rss
+        options:
+          item_length: default
+label: test_aggregator_items
+module: views
+id: test_aggregator_items
+tag: ''
+langcode: en
