@@ -136,7 +136,9 @@ class Item extends EntityNG implements ItemInterface {
    * {@inheritdoc}
    */
   public function postCreate(EntityStorageControllerInterface $storage_controller) {
-    $this->timestamp->value = REQUEST_TIME;
+    if (!isset($this->timestamp->value)) {
+      $this->timestamp->value = REQUEST_TIME;
+    }
   }
 
   /**

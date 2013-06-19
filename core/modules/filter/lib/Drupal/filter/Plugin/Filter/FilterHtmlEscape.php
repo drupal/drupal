@@ -34,6 +34,14 @@ class FilterHtmlEscape extends FilterBase {
   /**
    * {@inheritdoc}
    */
+  public function getHTMLRestrictions() {
+    // Nothing is allowed.
+    return array('allowed' => array());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function tips($long = FALSE) {
     return t('No HTML tags allowed.');
   }

@@ -11,6 +11,7 @@
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Extension\ExtensionNameLengthException;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Utility\ThemeRegistry;
 use Drupal\Core\Theme\ThemeSettings;
@@ -1498,6 +1499,14 @@ function theme_enable($theme_list) {
   $theme_config = config('system.theme');
   $disabled_themes = config('system.theme.disabled');
   foreach ($theme_list as $key) {
+    // Throw an exception if the theme name is too long.
+    if (strlen($key) > DRUPAL_EXTENSION_NAME_MAX_LENGTH) {
+      throw new ExtensionNameLengthException(format_string('Theme name %name is over the maximum allowed length of @max characters.', array(
+        '%name' => $key,
+        '@max' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
+      )));
+    }
+
     // The value is not used; the weight is ignored for themes currently.
     $theme_config->set("enabled.$key", 0);
     $disabled_themes->clear($key);
@@ -1630,25 +1639,6 @@ function theme_status_messages($variables) {
     $output .= "</div>\n";
   }
   return $output;
-}
-
-/**
- * Returns HTML for a link.
- *
- * This is a wrapper around l() to allow for more flexible link themeing.
- *
- * Where performance is more important than theme flexibility, Drupal code that
- * outputs a link should call the l() function directly, as #theme 'link'
- * implementations have a measurable performance impact.
- *
- * @param $variables
- *   An associative array containing the keys 'text', 'path', and 'options'.
- *   See the l() function for information about these variables.
- *
- * @see l()
- */
-function theme_link($variables) {
-  return l($variables['text'], $variables['path'], $variables['options']);
 }
 
 /**
@@ -3098,9 +3088,6 @@ function drupal_common_theme() {
     ),
     'status_messages' => array(
       'variables' => array('display' => NULL),
-    ),
-    'link' => array(
-      'variables' => array('text' => NULL, 'path' => NULL, 'options' => array()),
     ),
     'links' => array(
       'variables' => array('links' => array(), 'attributes' => array('class' => array('links')), 'heading' => array()),

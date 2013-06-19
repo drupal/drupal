@@ -90,7 +90,11 @@ class HistoryUserTimestamp extends Node {
       elseif ($last_comment > $last_read && $last_comment > HISTORY_READ_LIMIT) {
         $mark = MARK_UPDATED;
       }
-      return $this->render_link(theme('mark', array('mark_type' => $mark)), $values);
+      $build = array(
+        '#theme' => 'mark',
+        '#mark_type' => $mark,
+      );
+      return $this->render_link(drupal_render($build), $values);
     }
   }
 

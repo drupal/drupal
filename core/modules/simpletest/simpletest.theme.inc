@@ -100,11 +100,11 @@ function theme_simpletest_test_table($variables) {
       );
       $row[] = array(
         'data' => '<label for="' . $test['#id'] . '">' . $title . '</label>',
-        'class' => array('simpletest-test-label'),
+        'class' => array('simpletest-test-label', 'table-filter-text-source'),
       );
       $row[] = array(
-        'data' => '<div class="description">' . $description . '</div>',
-        'class' => array('simpletest-test-description'),
+        'data' => '<div class="description">' . format_string('@description (@class)', array('@description' => $description, '@class' => $test_name)) . '</div>',
+        'class' => array('simpletest-test-description', 'table-filter-text-source'),
       );
 
       $rows[] = array('data' => $row, 'class' => array($test_class . '-test', ($collapsed ? 'js-hide' : '')));

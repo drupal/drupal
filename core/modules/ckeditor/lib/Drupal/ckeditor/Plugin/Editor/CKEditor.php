@@ -186,6 +186,8 @@ class CKEditor extends EditorBase {
       'drupalExternalPlugins' => array_map('file_create_url', $external_plugins),
     );
 
+    ksort($settings);
+
     return $settings;
   }
 

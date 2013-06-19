@@ -55,7 +55,11 @@ class Internal extends CKEditorPluginBase {
       ),
     );
 
-    // Next, add the format_tags setting, if its button is enabled.
+    // Add the allowedContent setting, which ensures CKEditor only allows tags
+    // and attributes that are allowed by the text format for this text editor.
+    $config['allowedContent'] = $this->generateAllowedContentSetting($editor);
+
+    // Add the format_tags setting, if its button is enabled.
     $toolbar_buttons = array_unique(NestedArray::mergeDeepArray($editor->settings['toolbar']['buttons']));
     if (in_array('Format', $toolbar_buttons)) {
       $config['format_tags'] = $this->generateFormatTagsSetting($editor);
@@ -242,6 +246,7 @@ class Internal extends CKEditorPluginBase {
    *
    * @param \Drupal\editor\Plugin\Core\Entity\Editor $editor
    *   A configured text editor object.
+   *
    * @return array
    *   An array containing the "format_tags" configuration.
    */
@@ -262,6 +267,151 @@ class Internal extends CKEditorPluginBase {
     }
 
     return implode(';', $format_tags);
+  }
+
+  /**
+   * Builds the "allowedContent" configuration part of the CKEditor JS settings.
+   *
+   * This ensures that CKEditor obeys the HTML restrictions defined by Drupal's
+   * filter system, by enabling CKEditor's Advanced Content Filter (ACF)
+   * functionality: http://ckeditor.com/blog/CKEditor-4.1-RC-Released.
+   *
+   * @see getConfig()
+   *
+   * @param \Drupal\editor\Plugin\Core\Entity\Editor $editor
+   *   A configured text editor object.
+   *
+   * @return string|TRUE
+   *   The "allowedContent" configuration: a well-formatted string or TRUE. The
+   *   latter indicates that anything is allowed.
+   */
+  protected function generateAllowedContentSetting(Editor $editor) {
+    // When nothing is disallowed, set allowedContent to true.
+    $filter_types = filter_get_filter_types_by_format($editor->format);
+    if (!in_array(FILTER_TYPE_HTML_RESTRICTOR, $filter_types)) {
+      return TRUE;
+    }
+    // Generate setting that accurately reflects allowed tags and attributes.
+    else {
+      $get_allowed_attribute_values = function($attribute_values) {
+        $values = array_keys(array_filter($attribute_values, function($value) {
+         return $value !== FALSE;
+        }));
+        if (count($values)) {
+          return implode(',', $values);
+        }
+        else {
+          return NULL;
+        }
+      };
+
+      $html_restrictions = filter_get_html_restrictions_by_format($editor->format);
+      // When all HTML is allowed, also set allowedContent to true.
+      if ($html_restrictions === FALSE) {
+        return TRUE;
+      }
+      $setting = array();
+      foreach ($html_restrictions['allowed'] as $tag => $attributes) {
+        // Tell CKEditor the tag is allowed, but no attributes.
+        if ($attributes === FALSE) {
+          $setting[$tag] = array(
+            'attributes' => FALSE,
+            'styles' => FALSE,
+            'classes' => FALSE,
+          );
+        }
+        // Tell CKEditor the tag is allowed, as well as any attribute on it. The
+        // "style" and "class" attributes are handled separately by CKEditor:
+        // they are disallowed even if you specify it in the list of allowed
+        // attributes, unless you state specific values for them that are
+        // allowed. Or, in this case: any value for them is allowed.
+        elseif ($attributes === TRUE) {
+          $setting[$tag] = array(
+            'attributes' => TRUE,
+            'styles' => TRUE,
+            'classes' => TRUE,
+          );
+          // We've just marked that any value for the "style" and "class"
+          // attributes is allowed. However, that may not be the case: the "*"
+          // tag may still apply restrictions.
+          // Since CKEditor's ACF follows the following principle:
+          //     Once validated, an element or its property cannot be
+          //     invalidated by another rule.
+          // That means that the most permissive setting wins. Which means that
+          // it will still be allowed by CKEditor to e.g. define any style, no
+          // matter what the "*" tag's restrictions may be. If there's a setting
+          // for either the "style" or "class" attribute, it cannot possibly be
+          // more permissive than what was set above. Hence: inherit from the
+          // "*" tag where possible.
+          if (isset($html_restrictions['allowed']['*'])) {
+            $wildcard = $html_restrictions['allowed']['*'];
+            if (isset($wildcard['style'])) {
+              if (!is_array($wildcard['style'])) {
+                $setting[$tag]['styles'] = $wildcard['style'];
+              }
+              else {
+                $allowed_styles = $get_allowed_attribute_values($wildcard['style']);
+                if (isset($allowed_styles)) {
+                  $setting[$tag]['styles'] = $allowed_styles;
+                }
+                else {
+                  unset($setting[$tag]['styles']);
+                }
+              }
+            }
+            if (isset($wildcard['class'])) {
+              if (!is_array($wildcard['class'])) {
+                $setting[$tag]['classes'] = $wildcard['class'];
+              }
+              else {
+                $allowed_classes = $get_allowed_attribute_values($wildcard['class']);
+                if (isset($allowed_classes)) {
+                  $setting[$tag]['classes'] = $allowed_classes;
+                }
+                else {
+                  unset($setting[$tag]['classes']);
+                }
+              }
+            }
+          }
+        }
+        // Tell CKEditor the tag is allowed, along with some tags.
+        elseif (is_array($attributes)) {
+          // CKEditor does not yet support blacklisting, so ignore those.
+          // @todo Update this once http://dev.ckeditor.com/ticket/10276 lands.
+          $attributes = array_filter($attributes, function($value) {
+            return $value !== FALSE;
+          });
+
+          // Configure allowed attributes, allowed "style" attribute values and
+          // allowed "class" attribute values.
+          // CKEditor only allows specific values for the "class" and "style"
+          // attributes; so ignore restrictions on other attributes, which
+          // Drupal filters may provide.
+          // NOTE: A Drupal contrib module can subclass this class, override the
+          // getConfig() method, and override the JavaScript at
+          // Drupal.editors.ckeditor to somehow make validation of values for
+          // attributes other than "class" and "style" work.
+          if (count($attributes)) {
+            $setting[$tag]['attributes'] = implode(',', array_keys($attributes));
+          }
+          if (isset($attributes['style']) && is_array($attributes['style'])) {
+            $allowed_styles = $get_allowed_attribute_values($attributes['style']);
+            if (isset($allowed_values)) {
+              $setting[$tag]['styles'] = $allowed_styles;
+            }
+          }
+          if (isset($attributes['class']) && is_array($attributes['class'])) {
+            $allowed_classes = $get_allowed_attribute_values($attributes['class']);
+            if (isset($allowed_classes)) {
+              $setting[$tag]['classes'] = $allowed_classes;
+            }
+          }
+        }
+      }
+
+      return $setting;
+    }
   }
 
 }

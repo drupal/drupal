@@ -469,7 +469,7 @@ class EntityTranslationController implements EntityTranslationControllerInterfac
     $entity = $form_controller->getEntity();
     $source = $form_state['values']['source_langcode']['source'];
     $path = $this->getBasePath($entity) . '/translations/add/' . $source . '/' . $form_controller->getFormLangcode($form_state);
-    $form_state['redirect'] = array('path' => $path);
+    $form_state['redirect'] = $path;
     $languages = language_list();
     drupal_set_message(t('Source language set to: %language', array('%language' => $languages[$source]->name)));
   }

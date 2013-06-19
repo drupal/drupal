@@ -31,7 +31,7 @@ class UuidUnitTest extends UnitTestBase {
   }
 
   public function setUp() {
-    // Initiate the generator. This will lazy-load uuid.inc.
+    // Initiate the generator object.
     $this->uuid = new Uuid();
     parent::setUp();
   }

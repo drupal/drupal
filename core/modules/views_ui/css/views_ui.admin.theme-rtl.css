@@ -114,9 +114,6 @@
  */
 
 .views-displays .secondary .action-list  li:first-child {
-  -moz-border-radius: 7px 0 0 0;
-  -webkit-border-top-left-radius: 7px;
-  -webkit-border-top-right-radius: 0;
   border-radius: 7px 0 0 0;
 }
 

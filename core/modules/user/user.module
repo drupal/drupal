@@ -12,6 +12,7 @@ use Drupal\user\UserInterface;
 use Drupal\user\UserRole;
 use Drupal\user\RoleInterface;
 use Drupal\Core\Template\Attribute;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
 
@@ -2013,7 +2014,7 @@ function user_multiple_cancel_confirm($form, &$form_state) {
     drupal_set_message($message, $redirect ? 'error' : 'warning');
     // If only user 1 was selected, redirect to the overview.
     if ($redirect) {
-      drupal_goto('admin/people');
+      return new RedirectResponse(url('admin/people', array('absolute' => TRUE)));
     }
   }
 

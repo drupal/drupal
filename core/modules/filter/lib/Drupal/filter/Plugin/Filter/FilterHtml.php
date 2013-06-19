@@ -68,6 +68,21 @@ class FilterHtml extends FilterBase {
   /**
    * {@inheritdoc}
    */
+  public function getHTMLRestrictions() {
+    $restrictions = array('allowed' => array());
+    $tags = preg_split('/\s+|<|>/', $this->settings['allowed_html'], -1, PREG_SPLIT_NO_EMPTY);
+    // List the allowed HTML tags.
+    foreach ($tags as $tag) {
+      $restrictions['allowed'][$tag] = TRUE;
+    }
+    // The 'style' and 'on*' ('onClick' etc.) attributes are always forbidden.
+    $restrictions['allowed']['*'] = array('style' => FALSE, 'on*' => FALSE);
+    return $restrictions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function tips($long = FALSE) {
     global $base_url;
 

@@ -359,6 +359,18 @@ function update_prepare_d8_bootstrap() {
       // Migrate each extension into configuration, varying by the extension's
       // status, and record its schema version.
       foreach ($result as $record) {
+        // Before migrating any extension into configuration, make sure the
+        // extensions name length is not higher than the limit.
+        if (drupal_strlen($record->name) > 50) {
+          $requirements['module name too long ' . $record->name] = array(
+            'title' => 'Module name too long',
+            'value' => format_string('@name is @count characters long.', array('@name' => $record->name, '@count' => drupal_strlen($record->name))),
+            'description' => 'Module names longer than 50 characters are <a href="https://drupal.org/node/2014073">no longer supported</a>.',
+            'severity' => REQUIREMENT_ERROR,
+          );
+          update_extra_requirements($requirements);
+        }
+
         if ($record->type == 'module') {
           if ($record->status && isset($module_data[$record->name])) {
             $module_config->set('enabled.' . $record->name, $record->weight);
@@ -818,7 +830,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
  *
  * @see update_resolve_dependencies()
  */
-function update_batch($start, $redirect = NULL, $url = NULL, $batch = array(), $redirect_callback = 'drupal_goto') {
+function update_batch($start, $redirect = NULL, $url = NULL, $batch = array(), $redirect_callback = NULL) {
   // During the update, bring the site offline so that schema changes do not
   // affect visiting users.
   $maintenance_mode = config('system.maintenance')->get('enabled');
@@ -871,7 +883,7 @@ function update_batch($start, $redirect = NULL, $url = NULL, $batch = array(), $
     'file' => 'core/includes/update.inc',
   );
   batch_set($batch);
-  batch_process($redirect, $url, $redirect_callback);
+  return batch_process($redirect, $url, $redirect_callback);
 }
 
 /**

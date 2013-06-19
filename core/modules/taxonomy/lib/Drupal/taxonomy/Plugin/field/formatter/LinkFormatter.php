@@ -33,9 +33,10 @@ class LinkFormatter extends TaxonomyFormatterBase {
   public function viewElements(EntityInterface $entity, $langcode, array $items) {
     $elements = array();
 
-    // Terms without tid do not exist yet, theme such terms as just their name.
+    // Terms without target_id do not exist yet, theme such terms as just their
+    // name.
     foreach ($items as $delta => $item) {
-      if (!$item['tid']) {
+      if (!$item['target_id']) {
         $elements[$delta] = array(
           '#markup' => check_plain($item['entity']->label()),
         );

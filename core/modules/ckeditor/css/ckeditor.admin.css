@@ -156,8 +156,6 @@ ul.ckeditor-multiple-buttons li.ckeditor-button-separator a {
   height: 18px;
   width: 1px;
   display: block;
-  -webkit-box-shadow: 1px 0 1px rgba(255, 255, 255, .5);
-  -moz-box-shadow: 1px 0 1px rgba(255,255,255,.5);
   box-shadow: 1px 0 1px rgba(255, 255, 255, .5)
 }
 .ckeditor-button-arrow {

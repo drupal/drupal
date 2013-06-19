@@ -10,6 +10,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Page callback: Displays add content links for available content types.
@@ -34,7 +35,7 @@ function node_add_page() {
   // Bypass the node/add listing if only one content type is available.
   if (count($content) == 1) {
     $type = array_shift($content);
-    drupal_goto('node/add/' . $type->type);
+    return new RedirectResponse(url('node/add/' . $type->type, array('absolute' => TRUE)));
   }
   return array('#theme' => 'node_add_list', '#content' => $content);
 }

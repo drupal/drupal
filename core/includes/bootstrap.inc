@@ -190,6 +190,11 @@ const DRUPAL_AUTHENTICATED_RID = 'authenticated';
 const DRUPAL_KILOBYTE = 1024;
 
 /**
+ * The maximum number of characters in a module or theme name.
+ */
+const DRUPAL_EXTENSION_NAME_MAX_LENGTH = 50;
+
+/**
  * Time of the current request in seconds elapsed since the Unix Epoch.
  *
  * This differs from $_SERVER['REQUEST_TIME'], which is stored as a float

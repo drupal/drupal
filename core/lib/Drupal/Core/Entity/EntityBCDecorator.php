@@ -535,6 +535,13 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
   }
 
   /**
+   * Forwards the call to the decorated entity.
+   */
+  public function applyDefaultValue($notify = TRUE) {
+    return $this->decorated->applyDefaultValue($notify);
+  }
+
+  /*
    * {@inheritdoc}
    */
   public function preSave(EntityStorageControllerInterface $storage_controller) {

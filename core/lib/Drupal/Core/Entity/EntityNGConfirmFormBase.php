@@ -25,6 +25,13 @@ abstract class EntityNGConfirmFormBase extends EntityFormControllerNG implements
   /**
    * {@inheritdoc}
    */
+  public function getBaseFormID() {
+    return $this->entity->entityType() . '_confirm_form';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getDescription() {
     return t('This action cannot be undone.');
   }

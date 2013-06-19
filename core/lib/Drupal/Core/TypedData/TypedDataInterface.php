@@ -79,6 +79,19 @@ interface TypedDataInterface {
   public function validate();
 
   /**
+   * Applies the default value.
+   *
+   * @param bool $notify
+   *   (optional) Whether to notify the parent object of the change. Defaults to
+   *   TRUE. If a property is updated from a parent object, set it to FALSE to
+   *   avoid being notified again.
+   *
+   * @return \Drupal\Core\TypedData\TypedDataInterface
+   *   Returns itself to allow for chaining.
+   */
+  public function applyDefaultValue($notify = TRUE);
+
+  /**
    * Returns the name of a property or item.
    *
    * @return string

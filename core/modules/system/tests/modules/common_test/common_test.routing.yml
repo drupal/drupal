@@ -1,14 +1,6 @@
 common_test_l_active_class:
-  pattern: '/common-test/l-active-class'
+  pattern: '/common-test/type-link-active-class'
   defaults:
-    _content: '\Drupal\common_test\Controller\CommonTestController::lActiveClass'
+    _content: '\Drupal\common_test\Controller\CommonTestController::typeLinkActiveClass'
   requirements:
     _access: 'TRUE'
-
-common_test_theme_link_active_class:
-  pattern: '/common-test/theme-link-active-class'
-  defaults:
-    _content: '\Drupal\common_test\Controller\CommonTestController::themeLinkActiveClass'
-  requirements:
-    _access: 'TRUE'
-

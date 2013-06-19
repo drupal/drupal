@@ -122,16 +122,6 @@ class Term extends EntityNG implements TermInterface {
   public $parent;
 
   /**
-   * Default values for the term.
-   *
-   * @var array
-   */
-  protected $values = array(
-    'langcode' => array(Language::LANGCODE_DEFAULT => array(0 => array('value' => Language::LANGCODE_NOT_SPECIFIED))),
-    'weight' => array(Language::LANGCODE_DEFAULT => array(0 => array('value' => 0))),
-  );
-
-  /**
    * Implements Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {

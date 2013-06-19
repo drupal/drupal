@@ -112,7 +112,7 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
         drupal_set_message(t('The one-time login link you clicked is invalid.'));
       }
     }
-    drupal_goto();
+    return new RedirectResponse(url('<front>', array('absolute' => TRUE)));
   }
   else {
     // Time out, in seconds, until login URL expires.
@@ -124,7 +124,7 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
       // No time out for first time login.
       if ($account->login && $current - $timestamp > $timeout) {
         drupal_set_message(t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'));
-        drupal_goto('user/password');
+        return new RedirectResponse(url('user/password', array('absolute' => TRUE)));
       }
       elseif ($account->uid && $timestamp >= $account->login && $timestamp <= $current && $hashed_pass == user_pass_rehash($account->pass, $timestamp, $account->login)) {
         // First stage is a confirmation form, then login
@@ -139,7 +139,10 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
           // Let the user's password be changed without the current password check.
           $token = Crypt::randomStringHashed(55);
           $_SESSION['pass_reset_' . $user->uid] = $token;
-          drupal_goto('user/' . $user->uid . '/edit', array('query' => array('pass-reset-token' => $token)));
+          return new RedirectResponse(url('user/' . $user->uid . '/edit', array(
+            'query' => array('pass-reset-token' => $token),
+            'absolute' => TRUE,
+          )));
         }
         else {
           if (!$account->login) {
@@ -158,7 +161,7 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
       }
       else {
         drupal_set_message(t('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.'));
-        drupal_goto('user/password');
+        return new RedirectResponse(url('user/password', array('absolute' => TRUE)));
       }
     }
     else {
@@ -389,11 +392,11 @@ function user_cancel_confirm($account, $timestamp = 0, $hashed_pass = '') {
       // Since user_cancel() is not invoked via Form API, batch processing needs
       // to be invoked manually and should redirect to the front page after
       // completion.
-      batch_process('');
+      return batch_process('');
     }
     else {
       drupal_set_message(t('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.'));
-      drupal_goto("user/$account->uid/cancel");
+      return new RedirectResponse(url("user/$account->uid/cancel", array('absolute' => TRUE)));
     }
   }
   throw new AccessDeniedHttpException();

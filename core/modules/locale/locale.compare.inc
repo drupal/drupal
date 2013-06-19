@@ -80,11 +80,6 @@ function locale_translation_build_projects() {
           }
         }
       }
-      // If project is not a dev version, but is core, pick latest release.
-      elseif ($name == "drupal") {
-        // Pick latest available release.
-        $release = array_shift($project_updates[$name]['releases']);
-      }
 
       if (!empty($release['version'])) {
         $data['info']['version'] = $release['version'];

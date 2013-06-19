@@ -875,7 +875,7 @@ abstract class HandlerBase extends PluginBase {
 
     // Create a new handler and unpack the options from the form onto it. We
     // can use that for storage.
-    $handler = views_get_handler($item, $handler_type, $override);
+    $handler = Views::handlerManager($handler_type)->getHandler($item, $override);
     $handler->init($executable, $executable->display_handler, $item);
 
     // Add the incoming options to existing options because items using

@@ -529,17 +529,17 @@ class FieldUnitTest extends ViewUnitTestBase {
       'table' => 'views_test_data',
       'field' => 'name',
     );
-    $plugin = views_get_handler($item, 'field');
+    $plugin = $this->container->get('plugin.manager.views.field')->getHandler($item);
     $this->assertTrue($plugin->clickSortable(), 'TRUE as a default value is correct.');
 
     // Test that clickSortable is TRUE by when set TRUE in the data.
     $item['field'] = 'id';
-    $plugin = views_get_handler($item, 'field');
+    $plugin = $this->container->get('plugin.manager.views.field')->getHandler($item);
     $this->assertTrue($plugin->clickSortable(), 'TRUE as a views data value is correct.');
 
     // Test that clickSortable is FALSE by when set FALSE in the data.
     $item['field'] = 'job';
-    $plugin = views_get_handler($item, 'field');
+    $plugin = $this->container->get('plugin.manager.views.field')->getHandler($item);
     $this->assertFalse($plugin->clickSortable(), 'FALSE as a views data value is correct.');
   }
 

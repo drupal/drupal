@@ -294,7 +294,7 @@ function batch_test_nested_drupal_form_submit($value = 1) {
     array('_batch_test_nested_drupal_form_submit_callback', array($value)),
   );
   batch_set($batch);
-  batch_process('batch-test/redirect');
+  return batch_process('batch-test/redirect');
 }
 
 /**
@@ -338,7 +338,7 @@ function batch_test_no_form() {
   batch_test_stack(NULL, TRUE);
 
   batch_set(_batch_test_batch_1());
-  batch_process('batch-test/redirect');
+  return batch_process('batch-test/redirect');
 }
 
 /**
@@ -348,7 +348,7 @@ function batch_test_large_percentage() {
   batch_test_stack(NULL, TRUE);
 
   batch_set(_batch_test_batch_5());
-  batch_process('batch-test/redirect');
+  return batch_process('batch-test/redirect');
 }
 
 /**
@@ -506,7 +506,7 @@ function batch_test_theme_batch() {
     ),
   );
   batch_set($batch);
-  batch_process('batch-test/redirect');
+  return batch_process('batch-test/redirect');
 }
 
 /**

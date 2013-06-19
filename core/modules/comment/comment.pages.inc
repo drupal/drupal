@@ -7,6 +7,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\comment\Plugin\Core\Entity\Comment;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\Core\Language\Language;
 
@@ -54,8 +55,8 @@ function comment_reply(EntityInterface $entity, $field_name, $pid = NULL) {
     }
     else {
       drupal_set_message(t('You are not authorized to post comments.'), 'error');
-      $uri = $entity->uri();
-      drupal_goto($uri['path']);
+      $uri['options']['absolute'] = TRUE;
+      return new RedirectResponse(url($uri['path'], $uri['options']));
     }
   }
   else {
@@ -72,19 +73,22 @@ function comment_reply(EntityInterface $entity, $field_name, $pid = NULL) {
               $comment->entity_type->value != $entity->entityType()) {
             // Attempting to reply to a comment not belonging to the current entity.
             drupal_set_message(t('The comment you are replying to does not exist.'), 'error');
-            drupal_goto($uri['path']);
+            $uri['options']['absolute'] = TRUE;
+            return new RedirectResponse(url($uri['path'], $uri['options']));
           }
           // Display the parent comment.
           $build['comment_parent'] = comment_view($comment);
         }
         else {
           drupal_set_message(t('The comment you are replying to does not exist.'), 'error');
-          drupal_goto($uri['path']);
+          $uri['options']['absolute'] = TRUE;
+          return new RedirectResponse(url($uri['path'], $uri['options']));
         }
       }
       else {
         drupal_set_message(t('You are not authorized to view comments.'), 'error');
-        drupal_goto($uri['path']);
+        $uri['options']['absolute'] = TRUE;
+        return new RedirectResponse(url($uri['path'], $uri['options']));
       }
     }
     // This is the case where the comment is in response to a entity. Display
@@ -104,14 +108,16 @@ function comment_reply(EntityInterface $entity, $field_name, $pid = NULL) {
     $commenting_status = _comment_get_default_status(field_get_items($entity, $field_name));
     if ($commenting_status != COMMENT_OPEN) {
       drupal_set_message(t("This discussion is closed: you can't post new comments."), 'error');
-      drupal_goto($uri['path']);
+      $uri['options']['absolute'] = TRUE;
+      return new RedirectResponse(url($uri['path'], $uri['options']));
     }
     elseif (user_access('post comments')) {
       $build['comment_form'] = comment_add($entity, $field_name, $pid);
     }
     else {
       drupal_set_message(t('You are not authorized to post comments.'), 'error');
-      drupal_goto($uri['path']);
+      $uri['options']['absolute'] = TRUE;
+      return new RedirectResponse(url($uri['path'], $uri['options']));
     }
   }
 
@@ -142,7 +148,8 @@ function comment_approve(Comment $comment) {
   $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
   if ($entity) {
     $uri = $entity->uri();
-    drupal_goto($uri['path']);
+    $uri['options']['absolute'] = TRUE;
+    return new RedirectResponse(url($uri['path'], $uri['options']));
   }
   throw new NotFoundHttpException();
 }

@@ -1063,7 +1063,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
   }
 
   /**
-   * Returns all field lables of fields before this field.
+   * Returns all field labels of fields before this field.
    *
    * @return array
    *   An array of field labels keyed by their field IDs.

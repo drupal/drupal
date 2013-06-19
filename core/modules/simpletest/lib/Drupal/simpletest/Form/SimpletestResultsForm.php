@@ -11,6 +11,7 @@ use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Test results form for $test_id.
@@ -91,9 +92,7 @@ class SimpletestResultsForm implements FormInterface, ControllerInterface {
 
     if (is_numeric($test_id) && !$results = $this->getResults($test_id)) {
       drupal_set_message(t('No test results to display.'), 'error');
-      drupal_goto('admin/config/development/testing');
-
-      return $form;
+      return new RedirectResponse(url('admin/config/development/testing', array('absolute' => TRUE)));
     }
 
     // Load all classes and include CSS.

@@ -46,7 +46,7 @@ class CommentRow extends EntityRow {
     if (!$this->options['links']) {
       unset($build['links']);
     }
-    return drupal_render($build);
+    return $build;
   }
 
 }

@@ -171,7 +171,7 @@ class TermIndexTest extends TaxonomyTestBase {
     $this->assertEqual(1, $index_count, 'Term 2 is indexed once.');
 
     // Update the article to change one term.
-    $node->{$this->field_name_1}[$langcode] = array(array('tid' => $term_1->id()));
+    $node->{$this->field_name_1}[$langcode] = array(array('target_id' => $term_1->id()));
     $node->save();
 
     // Check that both terms are indexed.
@@ -187,7 +187,7 @@ class TermIndexTest extends TaxonomyTestBase {
     $this->assertEqual(1, $index_count, 'Term 2 is indexed.');
 
     // Update the article to change another term.
-    $node->{$this->field_name_2}[$langcode] = array(array('tid' => $term_1->id()));
+    $node->{$this->field_name_2}[$langcode] = array(array('target_id' => $term_1->id()));
     $node->save();
 
     // Check that only one term is indexed.

@@ -480,6 +480,15 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function applyDefaultValue($notify = TRUE) {
+    foreach ($this->getProperties() as $property) {
+      $property->applyDefaultValue(FALSE);
+    }
+  }
+
+  /**
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::onChange().
    */
   public function onChange($property_name) {

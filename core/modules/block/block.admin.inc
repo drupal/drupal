@@ -22,23 +22,6 @@ function block_admin_demo($theme = NULL) {
 }
 
 /**
- * Page callback: Shows the block administration page.
- *
- * @param string $theme
- *   The theme to display the administration page for.
- *
- * @return array
- *   A render array for a page containing a list of blocks.
- *
- * @see block_menu()
- */
-function block_admin_display($theme) {
-  return Drupal::entityManager()
-    ->getListController('block')
-    ->render($theme);
-}
-
-/**
  * Page callback: Build the block instance add form.
  *
  * @param string $plugin_id

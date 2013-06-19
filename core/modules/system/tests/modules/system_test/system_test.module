@@ -1,5 +1,7 @@
 <?php
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
 /**
  * Implements hook_menu().
  */
@@ -276,5 +278,5 @@ function system_test_filetransfer_info() {
 function system_test_authorize_init_page($page_title) {
   $authorize_url = $GLOBALS['base_url'] . '/core/authorize.php';
   system_authorized_init('system_test_authorize_run', drupal_get_path('module', 'system_test') . '/system_test.module', array(), $page_title);
-  drupal_goto($authorize_url);
+  return new RedirectResponse($authorize_url);
 }

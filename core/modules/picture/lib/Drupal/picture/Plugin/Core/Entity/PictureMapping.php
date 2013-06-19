@@ -30,7 +30,6 @@ use Drupal\picture\PictureMappingInterface;
  *     }
  *   },
  *   list_path = "admin/config/media/picturemapping",
- *   uri_callback = "picture_mapping_uri",
  *   config_prefix = "picture.mappings",
  *   entity_keys = {
  *     "id" = "id",
@@ -163,4 +162,16 @@ class PictureMapping extends ConfigEntityBase implements PictureMappingInterface
     return $mapping_found;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function uri() {
+    return array(
+      'path' => 'admin/config/media/picturemapping/' . $this->id(),
+      'options' => array(
+        'entity_type' => $this->entityType,
+        'entity' => $this,
+      ),
+    );
+  }
 }

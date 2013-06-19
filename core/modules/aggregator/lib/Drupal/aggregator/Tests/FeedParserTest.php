@@ -7,6 +7,8 @@
 
 namespace Drupal\aggregator\Tests;
 
+use Zend\Feed\Reader\Reader;
+
 /**
  * Tests feed parsing in the Aggregator module.
  */
@@ -25,6 +27,11 @@ class FeedParserTest extends AggregatorTestBase {
     // feeds have hardcoded dates in them (which may be expired when this test
     // is run).
     config('aggregator.settings')->set('items.expire', AGGREGATOR_CLEAR_NEVER)->save();
+    // Reset any reader cache between tests.
+    Reader::reset();
+    // Set our bridge extension manager to Zend Feed.
+    $bridge = $this->container->get('feed.bridge.reader');
+    Reader::setExtensionManager($bridge);
   }
 
   /**

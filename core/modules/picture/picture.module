@@ -117,24 +117,6 @@ function picture_mapping_load($id) {
 }
 
 /**
- * Gets Picture uri callback.
- */
-function picture_mapping_uri(PictureMapping $picture_mapping) {
-  return array(
-    'path' => 'admin/config/media/picturemapping/' . $picture_mapping->id(),
-  );
-}
-
-/**
- * Sets Picture uri callback.
- */
-function picture_mapping_set_uri(PictureMapping $picture_mapping) {
-  return array(
-    'path' => 'admin/config/media/picturemapping/' . $picture_mapping->id(),
-  );
-}
-
-/**
  * Implements hook_theme().
  */
 function picture_theme() {

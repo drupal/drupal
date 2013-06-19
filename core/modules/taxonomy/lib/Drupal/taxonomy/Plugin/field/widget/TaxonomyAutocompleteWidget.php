@@ -50,7 +50,7 @@ class TaxonomyAutocompleteWidget extends WidgetBase {
   public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     $tags = array();
     foreach ($items as $item) {
-      $tags[$item['tid']] = isset($item['taxonomy_term']) ? $item['taxonomy_term'] : taxonomy_term_load($item['tid']);
+      $tags[$item['target_id']] = isset($item['taxonomy_term']) ? $item['taxonomy_term'] : taxonomy_term_load($item['target_id']);
     }
     $element += array(
       '#type' => 'textfield',
@@ -86,7 +86,7 @@ class TaxonomyAutocompleteWidget extends WidgetBase {
       // otherwise, create a new term.
       if ($possibilities = entity_load_multiple_by_properties('taxonomy_term', array('name' => trim($value), 'vid' => array_keys($vocabularies)))) {
         $term = array_pop($possibilities);
-        $item = array('tid' => $term->id());
+        $item = array('target_id' => $term->id());
       }
       else {
         $vocabulary = reset($vocabularies);
@@ -94,7 +94,7 @@ class TaxonomyAutocompleteWidget extends WidgetBase {
           'vid' => $vocabulary->id(),
           'name' => $value,
         ));
-        $item = array('tid' => 0, 'entity' => $term);
+        $item = array('target_id' => 0, 'entity' => $term);
       }
       $items[] = $item;
     }

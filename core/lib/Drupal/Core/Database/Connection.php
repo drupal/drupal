@@ -1265,6 +1265,11 @@ abstract class Connection implements \Serializable {
     }
     // Re-establish the PDO connection using the original options.
     $this->connection = static::open($this->connectionOptions);
+
+    // Re-set a Statement class if necessary.
+    if (!empty($this->statementClass)) {
+      $this->connection->setAttribute(PDO::ATTR_STATEMENT_CLASS, array($this->statementClass, array($this)));
+    }
   }
 
 }

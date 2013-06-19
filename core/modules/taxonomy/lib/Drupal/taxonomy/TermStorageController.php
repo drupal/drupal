@@ -70,7 +70,7 @@ class TermStorageController extends DatabaseStorageControllerNG implements TermS
     $properties['uuid'] = array(
       'label' => t('UUID'),
       'description' => t('The term UUID.'),
-      'type' => 'string_field',
+      'type' => 'uuid_field',
       'read-only' => TRUE,
     );
     $properties['vid'] = array(
@@ -103,11 +103,14 @@ class TermStorageController extends DatabaseStorageControllerNG implements TermS
       'label' => t('Weight'),
       'description' => t('The weight of this term in relation to other terms.'),
       'type' => 'integer_field',
+      'settings' => array('default_value' => 0),
     );
     $properties['parent'] = array(
       'label' => t('Term Parents'),
       'description' => t('The parents of this term.'),
       'type' => 'integer_field',
+      // Save new terms with no parents by default.
+      'settings' => array('default_value' => 0),
       'computed' => TRUE,
     );
     return $properties;

@@ -117,10 +117,7 @@ function block_menu() {
   $items['admin/structure/block'] = array(
     'title' => 'Blocks',
     'description' => 'Configure what block content appears in your site\'s sidebars and other regions.',
-    'page callback' => 'block_admin_display',
-    'page arguments' => array($default_theme),
-    'access arguments' => array('administer blocks'),
-    'file' => 'block.admin.inc',
+    'route_name' => 'block_admin_display',
   );
   $items['admin/structure/block/add/%/%'] = array(
     'title' => 'Configure block',
@@ -160,11 +157,8 @@ function block_menu() {
       $theme = $themes[$key];
       $items['admin/structure/block/list/' . $plugin_id] = array(
         'title' => check_plain($theme->info['name']),
-        'page arguments' => array($key),
         'type' => $key == $default_theme ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
-        'access callback' => '_block_themes_access',
-        'access arguments' => array($key),
-        'file' => 'block.admin.inc',
+        'route_name' => 'block_admin_display.' . $plugin_id
       );
       $items['admin/structure/block/demo/' . $key] = array(
         'title' => check_plain($theme->info['name']),

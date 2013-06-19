@@ -567,6 +567,16 @@ class ModuleHandler implements ModuleHandlerInterface {
       $module_list = array_keys($module_list);
     }
 
+    foreach ($module_list as $module) {
+      // Throw an exception if the module name is too long.
+      if (strlen($module) > DRUPAL_EXTENSION_NAME_MAX_LENGTH) {
+        throw new ExtensionNameLengthException(format_string('Module name %name is over the maximum allowed length of @max characters.', array(
+          '%name' => $module,
+          '@max' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
+        )));
+      }
+    }
+
     // Required for module installation checks.
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
 

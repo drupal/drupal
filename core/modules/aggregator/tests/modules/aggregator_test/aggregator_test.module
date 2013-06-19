@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Component\Utility\Crypt;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Implements hook_menu().
@@ -70,5 +71,5 @@ function aggregator_test_feed($use_last_modified = FALSE, $use_etag = FALSE) {
  * Page callback that redirects to another feed.
  */
 function aggregator_test_redirect() {
-  drupal_goto('aggregator/test-feed', array(), 301);
+  return new RedirectResponse(url('aggregator/test-feed', array('absolute' => TRUE)), 301);
 }

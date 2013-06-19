@@ -41,9 +41,7 @@ class UserController implements ControllerInterface {
    */
   public function logout(Request $request) {
     user_logout();
-    // @todo Remove the destination check once drupal.org/node/1668866 is in.
-    $url = $request->query->get('destination') ?: '<front>';
-    return new RedirectResponse(url($url, array('absolute' => TRUE)));
+    return new RedirectResponse(url('<front>', array('absolute' => TRUE)));
   }
 
 }

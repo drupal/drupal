@@ -128,6 +128,15 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function applyDefaultValue($notify = TRUE) {
+    // Default to no default value.
+    $this->setValue(NULL, $notify);
+    return $this;
+  }
+
+  /**
    * Implements \Drupal\Core\TypedData\TypedDataInterface::setContext().
    */
   public function setContext($name = NULL, TypedDataInterface $parent = NULL) {

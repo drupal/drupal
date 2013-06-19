@@ -47,21 +47,6 @@ function locale_test_locale_translation_projects_alter(&$projects) {
     // Completely replace the project data with a set of test projects.
     $base_url = url();
     $projects = array (
-      'drupal' => array (
-        'name' => 'drupal',
-        'info' => array (
-          'name' => 'Drupal',
-          'interface translation server pattern' => $remote_url . '%core/%project/%project-%version.%language._po',
-          'package' => 'Core',
-          'version' => '8.0',
-          'project' => 'drupal',
-          '_info_file_ctime' => 1348824632,
-          'datestamp' => 0,
-        ),
-        'datestamp' => 0,
-        'project_type' => 'core',
-        'project_status' => TRUE,
-      ),
       'contrib_module_one' => array (
         'name' => 'contrib_module_one',
         'info' => array (

@@ -512,7 +512,7 @@ if (update_access_allowed()) {
         // update.php correctly by default.
         $batch_url = $base_root . drupal_current_script_url();
         $redirect_url = $base_root . drupal_current_script_url(array('op' => 'results'));
-        update_batch($request->request->get('start'), $redirect_url, $batch_url);
+        $output = update_batch($request->request->get('start'), $redirect_url, $batch_url);
         break;
       }
 

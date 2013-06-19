@@ -64,6 +64,13 @@ class StyleUITest extends UITestBase {
     $style = $view->display_handler->getOption('style');
     $this->assertEqual($style['type'], 'test_style', 'Make sure that the test_style got saved as used style plugin.');
     $this->assertEqual($style['options']['test_option'], $random_name, 'Make sure that the custom settings field got saved as expected.');
+
+    // Test that fields are working correctly in the UI for style plugins when
+    // a field row plguin is selected.
+    $this->drupalPost("admin/structure/views/view/$view_name/edit", array(), 'Add Page');
+    $this->drupalPost("admin/structure/views/nojs/display/$view_name/page_1/row", array('row' => 'fields'), t('Apply'));
+    // If fields are being used this text will not be shown.
+    $this->assertNoText(t('The selected style or row format does not utilize fields.'));
   }
 
 }
