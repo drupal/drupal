@@ -8,6 +8,9 @@ email:
 integer:
   label: 'Integer'
   class: '\Drupal\Core\TypedData\Type\Integer'
+float:
+  label: 'Float'
+  class: '\Drupal\Core\TypedData\Type\Float'
 string:
   label: 'String'
   class: '\Drupal\Core\TypedData\Type\String'
