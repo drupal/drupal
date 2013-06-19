@@ -8,7 +8,7 @@
 namespace Drupal\Core\Entity\Field\Type;
 
 use Drupal\Core\Entity\Field\FieldItemBase;
-use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\Language\Language;
 
 /**
  * Defines the 'language_field' entity field item.
@@ -51,14 +51,28 @@ class LanguageItem extends FieldItemBase {
    */
   public function setValue($values, $notify = TRUE) {
     // Treat the values as property value of the language property, if no array
-    // is given.
+    // is given as this handles language codes and objects.
     if (isset($values) && !is_array($values)) {
-      $values = array('language' => $values);
+      // Directly update the property instead of invoking the parent, so that
+      // the language property can take care of updating the language code
+      // property.
+      $this->properties['language']->setValue($values, $notify);
     }
-    // Make sure that the 'language' property gets set as 'value'.
-    if (isset($values['value']) && !isset($values['language'])) {
-      $values['language'] = $values['value'];
+    else {
+      // Make sure that the 'language' property gets set as 'value'.
+      if (isset($values['value']) && !isset($values['language'])) {
+        $values['language'] = $values['value'];
+      }
+      parent::setValue($values, $notify);
     }
-    parent::setValue($values, $notify);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function applyDefaultValue($notify = TRUE) {
+    // Default to LANGCODE_NOT_SPECIFIED.
+    $this->setValue(array('value' => Language::LANGCODE_NOT_SPECIFIED), $notify);
+    return $this;
   }
 }

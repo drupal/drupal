@@ -68,15 +68,19 @@ class ImageItem extends FieldItemBase {
    * Overrides \Drupal\Core\Entity\Field\FieldItemBase::get().
    */
   public function setValue($values, $notify = TRUE) {
-    // Treat the values as property value of the entity property, if no array is
-    // given.
+    // Treat the values as value of the entity property, if no array is
+    // given as this handles entity IDs and objects.
     if (isset($values) && !is_array($values)) {
-      $values = array('entity' => $values);
+      // Directly update the property instead of invoking the parent, so that
+      // the entity property can take care of updating the ID property.
+      $this->properties['entity']->setValue($values, $notify);
     }
-    // Make sure that the 'entity' property gets set as 'fid'.
-    if (isset($values['fid']) && !isset($values['entity'])) {
-      $values['entity'] = $values['fid'];
+    else {
+      // Make sure that the 'entity' property gets set as 'target_id'.
+      if (isset($values['fid']) && !isset($values['entity'])) {
+        $values['entity'] = $values['fid'];
+      }
+      parent::setValue($values, $notify);
     }
-    parent::setValue($values, $notify);
   }
 }

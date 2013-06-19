@@ -40,10 +40,7 @@ class EntityTestStorageController extends DatabaseStorageControllerNG {
     $fields['uuid'] = array(
       'label' => t('UUID'),
       'description' => t('The UUID of the test entity.'),
-      'type' => 'string_field',
-      'property_constraints' => array(
-        'value' => array('Length' => array('max' => 128)),
-      ),
+      'type' => 'uuid_field',
     );
     $fields['langcode'] = array(
       'label' => t('Language code'),

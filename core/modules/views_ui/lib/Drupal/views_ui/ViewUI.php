@@ -1140,6 +1140,13 @@ class ViewUI implements ViewStorageInterface {
   /**
    * {@inheritdoc}
    */
+  public function applyDefaultValue($notify = TRUE) {
+    return $this->storage->applyDefaultValue($notify);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
     $this->storage->presave($storage_controller);
   }

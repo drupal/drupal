@@ -86,11 +86,4 @@ class TextProcessed extends TypedData {
       throw new ReadOnlyException('Unable to set a computed property.');
     }
   }
-
-  /**
-   * Implements \Drupal\Core\TypedData\TypedDataInterface::validate().
-   */
-  public function validate() {
-    // @todo: Implement.
-  }
 }

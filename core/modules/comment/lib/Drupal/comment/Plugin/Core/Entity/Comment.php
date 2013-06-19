@@ -97,7 +97,6 @@ class Comment extends EntityNG implements CommentInterface {
    */
   public $subject;
 
-
   /**
    * The comment author ID.
    *
@@ -180,19 +179,6 @@ class Comment extends EntityNG implements CommentInterface {
    * @var \Drupal\Core\Entity\Field\FieldInterface
    */
   public $new;
-
-  /**
-   * The plain data values of the contained properties.
-   *
-   * Define default values.
-   *
-   * @var array
-   */
-  protected $values = array(
-    'langcode' => array(Language::LANGCODE_DEFAULT => array(0 => array('value' => Language::LANGCODE_NOT_SPECIFIED))),
-    'name' => array(Language::LANGCODE_DEFAULT => array(0 => array('value' => ''))),
-    'uid' => array(Language::LANGCODE_DEFAULT => array(0 => array('target_id' => 0))),
-  );
 
   /**
    * Initialize the object. Invoked upon construction and wake up.

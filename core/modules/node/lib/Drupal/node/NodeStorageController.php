@@ -131,7 +131,7 @@ class NodeStorageController extends DatabaseStorageControllerNG {
     $properties['uuid'] = array(
       'label' => t('UUID'),
       'description' => t('The node UUID.'),
-      'type' => 'string_field',
+      'type' => 'uuid_field',
       'read-only' => TRUE,
     );
     $properties['vid'] = array(

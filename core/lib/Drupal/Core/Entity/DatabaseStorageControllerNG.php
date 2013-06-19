@@ -105,21 +105,25 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
     $bundle = FALSE;
     if ($this->bundleKey) {
       if (!isset($values[$this->bundleKey])) {
-        throw new EntityStorageException(t('Missing bundle for entity type @type', array('@type' => $this->entityType)));
+        throw new EntityStorageException(format_string('Missing bundle for entity type @type', array('@type' => $this->entityType)));
       }
       $bundle = $values[$this->bundleKey];
     }
     $entity = new $this->entityClass(array(), $this->entityType, $bundle);
 
-    // Set all other given values.
-    foreach ($values as $name => $value) {
-      $entity->$name = $value;
+    foreach ($entity as $name => $field) {
+      if (isset($values[$name])) {
+        $entity->$name = $values[$name];
+      }
+      elseif (!array_key_exists($name, $values)) {
+        $entity->get($name)->applyDefaultValue();
+      }
+      unset($values[$name]);
     }
 
-    // Assign a new UUID if there is none yet.
-    if ($this->uuidKey && !isset($entity->{$this->uuidKey}->value)) {
-      $uuid = new Uuid();
-      $entity->{$this->uuidKey} = $uuid->generate();
+    // Set any passed values for non-defined fields also.
+    foreach ($values as $name => $value) {
+      $entity->$name = $value;
     }
     $entity->postCreate($this);
 

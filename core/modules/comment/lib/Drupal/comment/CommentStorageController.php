@@ -113,7 +113,7 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
     $properties['uuid'] = array(
       'label' => t('UUID'),
       'description' => t('The comment UUID.'),
-      'type' => 'string_field',
+      'type' => 'uuid_field',
     );
     $properties['pid'] = array(
       'label' => t('Parent ID'),
@@ -142,12 +142,16 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
       'label' => t('User ID'),
       'description' => t('The user ID of the comment author.'),
       'type' => 'entity_reference_field',
-      'settings' => array('target_type' => 'user'),
+      'settings' => array(
+        'target_type' => 'user',
+        'default_value' => 0,
+      ),
     );
     $properties['name'] = array(
       'label' => t('Name'),
       'description' => t("The comment author's name."),
       'type' => 'string_field',
+      'settings' => array('default_value' => ''),
     );
     $properties['mail'] = array(
       'label' => t('e-mail'),

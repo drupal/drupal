@@ -184,7 +184,7 @@ class UserStorageController extends DatabaseStorageControllerNG implements UserS
     $properties['uuid'] = array(
       'label' => t('UUID'),
       'description' => t('The user UUID.'),
-      'type' => 'string_field',
+      'type' => 'uuid_field',
       'read-only' => TRUE,
     );
     $properties['langcode'] = array(
@@ -206,6 +206,7 @@ class UserStorageController extends DatabaseStorageControllerNG implements UserS
       'label' => t('Name'),
       'description' => t('The name of this user'),
       'type' => 'string_field',
+      'settings' => array('default_value' => ''),
     );
     $properties['pass'] = array(
       'label' => t('Name'),
@@ -216,6 +217,7 @@ class UserStorageController extends DatabaseStorageControllerNG implements UserS
       'label' => t('Name'),
       'description' => t('The e-mail of this user'),
       'type' => 'string_field',
+      'settings' => array('default_value' => ''),
     );
     $properties['signature'] = array(
       'label' => t('Name'),
@@ -241,6 +243,7 @@ class UserStorageController extends DatabaseStorageControllerNG implements UserS
       'label' => t('User status'),
       'description' => t('Whether the user is active (1) or blocked (0).'),
       'type' => 'boolean_field',
+      'settings' => array('default_value' => 1),
     );
     $properties['created'] = array(
       'label' => t('Created'),
@@ -251,16 +254,19 @@ class UserStorageController extends DatabaseStorageControllerNG implements UserS
       'label' => t('Last access'),
       'description' => t('The time that the user last accessed the site.'),
       'type' => 'integer_field',
+      'settings' => array('default_value' => 0),
     );
     $properties['login'] = array(
       'label' => t('Last login'),
       'description' => t('The time that the user last logged in.'),
       'type' => 'integer_field',
+      'settings' => array('default_value' => 0),
     );
     $properties['init'] = array(
       'label' => t('Init'),
       'description' => t('The email address used for initial account creation.'),
       'type' => 'string_field',
+      'settings' => array('default_value' => ''),
     );
     $properties['roles'] = array(
       'label' => t('Roles'),

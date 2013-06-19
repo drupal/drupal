@@ -180,25 +180,6 @@ class User extends EntityNG implements UserInterface {
    */
   public $roles;
 
-    /**
-   * The plain data values of the contained properties.
-   *
-   * Define default values.
-   *
-   * @var array
-   */
-  protected $values = array(
-    'langcode' => array(Language::LANGCODE_DEFAULT => array(0 => array('value' => Language::LANGCODE_NOT_SPECIFIED))),
-    'preferred_langcode' => array(Language::LANGCODE_DEFAULT => array(0 => array('value' => Language::LANGCODE_NOT_SPECIFIED))),
-    'admin_preffered_langcode' => array(Language::LANGCODE_DEFAULT => array(0 => array('value' => Language::LANGCODE_NOT_SPECIFIED))),
-    'name' => array(Language::LANGCODE_DEFAULT => array(0 => array('value' => ''))),
-    'mail' => array(Language::LANGCODE_DEFAULT => array(0 => array('value' => ''))),
-    'init' => array(Language::LANGCODE_DEFAULT => array(0 => array('value' => ''))),
-    'access' => array(Language::LANGCODE_DEFAULT => array(0 => array('value' => 0))),
-    'login' => array(Language::LANGCODE_DEFAULT => array(0 => array('value' => 0))),
-    'status' => array(Language::LANGCODE_DEFAULT => array(0 => array('value' => 1))),
-  );
-
   /**
    * {@inheritdoc}
    */
