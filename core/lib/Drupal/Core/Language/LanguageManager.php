@@ -76,12 +76,13 @@ class LanguageManager {
    * Returns a language object for the given type.
    *
    * @param string $type
-   *   The language type, e.g. Language::TYPE_INTERFACE.
+   *   (optional) The language type, e.g. the interface or the content language.
+   *   Defaults to \Drupal\Core\Language\Language::TYPE_INTERFACE.
    *
    * @return \Drupal\Core\Language\Language
    *   A language object for the given type.
    */
-  public function getLanguage($type) {
+  public function getLanguage($type = Language::TYPE_INTERFACE) {
     if (isset($this->languages[$type])) {
       return $this->languages[$type];
     }
