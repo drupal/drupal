@@ -461,7 +461,13 @@ function rdf_process(&$variables, $hook) {
         'variable_name' => $variable_name,
         'variables' => $variables,
       );
-      $variables[$variable_name] = theme('rdf_template_variable_wrapper', array('content' => $variables[$variable_name], 'attributes' => $attributes, 'context' => $context));
+      $rdf_template_variable_wrapper = array(
+        '#theme' => 'rdf_template_variable_wrapper',
+        '#content' => $variables[$variable_name],
+        '#attributes' => $attributes,
+        '#context' => $context,
+      );
+      $variables[$variable_name] = drupal_render($rdf_template_variable_wrapper);
     }
   }
   // Handles additional attributes about a template entity that for RDF parsing
@@ -472,7 +478,11 @@ function rdf_process(&$variables, $hook) {
     if (!isset($variables['content']['#prefix'])) {
       $variables['content']['#prefix'] = '';
     }
-    $variables['content']['#prefix'] = theme('rdf_metadata', array('metadata' => $variables['rdf_metadata_attributes'])) . $variables['content']['#prefix'];
+    $rdf_metadata = array(
+      '#theme' => 'rdf_metadata',
+      '#metadata' => $variables['rdf_metadata_attributes'],
+    );
+    $variables['content']['#prefix'] = drupal_render($rdf_metadata) . $variables['content']['#prefix'];
   }
 }
 
