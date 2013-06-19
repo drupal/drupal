@@ -412,7 +412,7 @@ function node_schema() {
       'module' => array(
         'description' => 'The module defining this node type.',
         'type' => 'varchar',
-        'length' => 255,
+        'length' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
         'not null' => TRUE,
       ),
       'description' => array(
@@ -1141,6 +1141,21 @@ function node_update_8018() {
   $fields = array('title', 'uid', 'status', 'created', 'changed', 'comment', 'promote', 'sticky');
   foreach ($fields as $field) {
     db_drop_field('node', $field);
+  }
+}
+
+/**
+ * Convert the 'module' column in {node_type} to the maximum shortname length.
+ */
+function node_update_8019() {
+  if (db_field_exists('node_type', 'module')) {
+    $spec = array(
+      'description' => 'The module defining this node type.',
+      'type' => 'varchar',
+      'length' => 50,
+      'not null' => TRUE,
+    );
+    db_change_field('node_type', 'module', 'module', $spec);
   }
 }
 

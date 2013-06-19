@@ -2226,6 +2226,25 @@ function system_update_8057() {
 }
 
 /**
+ * Change the length of the 'module' column to the maximum length.
+ *
+ * @see system_update_8048()
+ */
+function system_update_8058() {
+  if (db_field_exists('menu_links', 'module')) {
+    $spec = array(
+      'description' => 'The name of the module that generated this link.',
+      'type' => 'varchar',
+      'length' => 50,
+      'not null' => TRUE,
+      'default' => 'system',
+    );
+    db_change_field('menu_links', 'module', 'module', $spec);
+  }
+
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

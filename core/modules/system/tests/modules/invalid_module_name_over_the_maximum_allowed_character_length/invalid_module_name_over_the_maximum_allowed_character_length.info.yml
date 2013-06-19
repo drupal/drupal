@@ -1,0 +1,7 @@
+name: 'Module name length test'
+type: module
+description: 'Test module with a name over the maximum allowed characters.'
+package: Testing
+version: VERSION
+core: 8.x
+hidden: TRUE

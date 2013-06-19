@@ -75,7 +75,7 @@ function menu_link_schema() {
       'module' => array(
         'description' => 'The name of the module that generated this link.',
         'type' => 'varchar',
-        'length' => 255,
+        'length' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
         'not null' => TRUE,
         'default' => 'system',
       ),
