@@ -31,7 +31,7 @@ class NodeAccessLanguageAwareTest extends NodeTestBase {
   /**
    * A normal authenticated user.
    *
-   * @var \Drupal\user\Plugin\Core\Entity\User.
+   * @var \Drupal\user\UserInterface
    */
   protected $web_user;
 

@@ -28,7 +28,7 @@ class IntegrationTest extends ViewTestBase {
   /**
    * Stores the user object that accesses the page.
    *
-   * @var \Drupal\user\Plugin\Core\Entity\User
+   * @var \Drupal\user\UserInterface
    */
   protected $webUser;
 

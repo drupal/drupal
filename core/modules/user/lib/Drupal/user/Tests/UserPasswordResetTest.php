@@ -16,7 +16,7 @@ class UserPasswordResetTest extends WebTestBase {
   /**
    * The user object to test password resetting.
    *
-   * @var \Drupal\user\Plugin\Core\Entity\User
+   * @var \Drupal\user\UserInterface
    */
   protected $account;
 

@@ -24,7 +24,7 @@ class UserBlocksTests extends WebTestBase {
   /**
    * The admin user used in this test.
    *
-   * @var \Drupal\user\Plugin\Core\Entity\User
+   * @var \Drupal\user\UserInterface
    */
   protected $adminUser;
 

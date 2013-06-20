@@ -40,21 +40,21 @@ abstract class EntityTranslationTestBase extends WebTestBase {
   /**
    * The account to be used to test translation operations.
    *
-   * @var \Drupal\user\Plugin\Core\Entity\User
+   * @var \Drupal\user\UserInterface
    */
   protected $translator;
 
   /**
    * The account to be used to test multilingual entity editing.
    *
-   * @var \Drupal\user\Plugin\Core\Entity\User
+   * @var \Drupal\user\UserInterface
    */
   protected $editor;
 
   /**
    * The account to be used to test access to both workflows.
    *
-   * @var \Drupal\user\Plugin\Core\Entity\User
+   * @var \Drupal\user\UserInterface
    */
   protected $administrator;
 

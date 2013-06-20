@@ -15,14 +15,14 @@ class NodeBlockFunctionalTest extends NodeTestBase {
   /**
    * An administrative user for testing.
    *
-   * @var \Drupal\user\Plugin\Core\Entity\User
+   * @var \Drupal\user\UserInterface
    */
   protected $adminUser;
 
   /**
    * An unprivileged user for testing.
    *
-   * @var \Drupal\user\Plugin\Core\Entity\User
+   * @var \Drupal\user\UserInterface
    */
   protected $webUser;
 

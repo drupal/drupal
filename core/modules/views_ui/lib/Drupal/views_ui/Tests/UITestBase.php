@@ -17,14 +17,14 @@ abstract class UITestBase extends ViewTestBase {
   /**
    * An admin user with the 'administer views' permission.
    *
-   * @var \Drupal\user\Plugin\Core\Entity\User
+   * @var \Drupal\user\UserInterface
    */
   protected $adminUser;
 
   /**
    * An admin user with administrative permissions for views, blocks, and nodes.
    *
-   * @var \Drupal\user\Plugin\Core\Entity\User
+   * @var \Drupal\user\UserInterface
    */
   protected $fullAdminUser;
 
