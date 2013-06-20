@@ -314,9 +314,10 @@ function image_effect_form($form, &$form_state, $style, $effect) {
   $form['data']['#tree'] = TRUE;
 
   // Check the URL for a weight, then the image effect, otherwise use default.
+  $weight = Drupal::request()->query->get('weight');
   $form['weight'] = array(
     '#type' => 'hidden',
-    '#value' => isset($_GET['weight']) ? intval($_GET['weight']) : (isset($effect['weight']) ? $effect['weight'] : count($style->effects)),
+    '#value' => isset($weight) ? intval($weight) : (isset($effect['weight']) ? $effect['weight'] : count($style->effects)),
   );
 
   $form['actions'] = array('#type' => 'actions');
