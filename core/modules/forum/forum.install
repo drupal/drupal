@@ -133,7 +133,9 @@ function forum_uninstall() {
   // Delete comment field, load comment in case it has been disabled.
   drupal_load('module', 'comment');
   // Remove the forum comment field.
-  field_info_field('comment_node_forum')->delete();
+  if ($field = field_info_field('comment_node_forum')) {
+    $field->delete();
+  }
 
   // Purge field data now to allow taxonomy and comment modules to be
   // uninstalled if these were the only fields remaining. We need to call

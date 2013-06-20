@@ -12,7 +12,9 @@ use Drupal\Core\Language\Language;
  */
 function comment_uninstall() {
   // Delete comment_body field.
-  field_info_field('comment_body')->delete();
+  if ($field = field_info_field('comment_body')) {
+    $field->delete();
+  }
 
   // Remove variables.
   variable_del('comment_block_count');
