@@ -17,7 +17,6 @@ function comment_field_info() {
     'comment' => array(
       'label' => t('Comments'),
       'description' => t('This field manages configuration and presentation of comments on an entity'),
-      'settings' => array(),
       'instance_settings' => array(
         // Save this settings to allow other modules to migrate their data.
         // @todo The "comment_default" formatter settings should used instead.

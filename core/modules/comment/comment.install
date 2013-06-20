@@ -564,7 +564,6 @@ function comment_update_8006(&$sandbox) {
       // We need one per content type to match the existing comment bundles.
       'id' => $field_name,
       'module' => 'comment',
-      'settings' => array(),
       'translatable' => '0',
       'type' => 'comment',
     );
