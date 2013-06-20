@@ -38,7 +38,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 function comment_reply(EntityInterface $node, $pid = NULL) {
   // Set the breadcrumb trail.
   drupal_set_breadcrumb(array(l(t('Home'), NULL), l($node->label(), 'node/' . $node->nid)));
-  $op = isset($_POST['op']) ? $_POST['op'] : '';
+  $op = Drupal::request()->request->get('op');
   $build = array();
 
   // The user is previewing a comment prior to submitting it.
