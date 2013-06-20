@@ -44,14 +44,67 @@ class CommentUpgradePathTest extends UpgradePathTestBase {
     $this->assertText('First test comment', 'Comment 1 displayed after update.');
     $this->assertText('Reply to first test comment', 'Comment 2 displayed after update.');
 
+    $expected_settings = array(
+      'article' => array (
+        'default_mode' => 1,
+        'per_page' => 50,
+        'form_location' => 1,
+        'anonymous' => 0,
+        'subject' => 1,
+        'preview' => 1,
+        'user_register_form' => false,
+      ),
+      'blog' => array (
+        'default_mode' => 1,
+        'per_page' => 50,
+        'form_location' => 1,
+        'anonymous' => 0,
+        'subject' => 1,
+        'preview' => 1,
+        'user_register_form' => false,
+      ),
+      'book' => array (
+        'default_mode' => 1,
+        'per_page' => 50,
+        'form_location' => 1,
+        'anonymous' => 0,
+        'subject' => 1,
+        'preview' => 1,
+        'user_register_form' => false,
+      ),
+      'forum' => array (
+        'default_mode' => 1,
+        'per_page' => 50,
+        'form_location' => 1,
+        'anonymous' => 0,
+        'subject' => 1,
+        'preview' => 1,
+        'user_register_form' => false,
+      ),
+      'page' => array (
+        'default_mode' => 1,
+        'per_page' => 50,
+        'form_location' => 1,
+        'anonymous' => 0,
+        'subject' => 1,
+        'preview' => 1,
+        'user_register_form' => false,
+      ),
+    );
     // Check one instance exists for each node type.
     $types = node_type_get_types();
-    foreach (array_keys($types) as $type) {
+    $types = array_keys($types);
+    sort($types);
+    $this->assertIdentical(array_keys($expected_settings), $types, 'All node types are upgraded');
+    foreach ($types as $type) {
       $instance = field_info_instance('node', 'comment_node_' . $type, $type);
       $this->assertTrue($instance, format_string('Comment field found for the %type node type', array(
         '%type' => $type
       )));
+      $this->assertIdentical($instance->settings, $expected_settings[$type], format_string('Comment field settings migrated for the %type node type', array(
+        '%type' => $type,
+      )));
     }
-
   }
+
 }
