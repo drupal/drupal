@@ -281,10 +281,8 @@ class EntityNG extends Entity {
    */
   public function getPropertyDefinitions() {
     if (!isset($this->fieldDefinitions)) {
-      $this->fieldDefinitions = \Drupal::entityManager()->getStorageController($this->entityType)->getFieldDefinitions(array(
-        'EntityType' => $this->entityType,
-        'Bundle' => $this->bundle,
-      ));
+      $bundle = $this->bundle != $this->entityType ? $this->bundle : NULL;
+      $this->fieldDefinitions = \Drupal::entityManager()->getFieldDefinitions($this->entityType, $bundle);
     }
     return $this->fieldDefinitions;
   }

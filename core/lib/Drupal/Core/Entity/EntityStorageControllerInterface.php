@@ -126,46 +126,16 @@ interface EntityStorageControllerInterface {
   public function save(EntityInterface $entity);
 
   /**
-   * Gets an array of entity field definitions.
-   *
-   * If a 'bundle' key is present in the given entity definition, fields
-   * specific to this bundle are included.
-   * Entity fields are always multi-valued, so 'list' is TRUE for each
-   * returned field definition.
-   *
-   * @param array $constraints
-   *   An array of entity constraints as used for entities in typed data
-   *   definitions, i.e. an array having an 'entity type' and optionally a
-   *   'bundle' key. For example:
-   *   @code
-   *   array(
-   *     'EntityType' => 'node',
-   *     'Bundle' => 'article',
-   *   )
-   *   @endcode
+   * Defines the base fields of the entity type.
    *
    * @return array
-   *   An array of field definitions of entity fields, keyed by field
-   *   name. In addition to the typed data definition keys as described at
-   *   \Drupal::typedData()->create() the follow keys are supported:
-   *   - queryable: Whether the field is queryable via QueryInterface.
-   *     Defaults to TRUE if 'computed' is FALSE or not set, to FALSE otherwise.
-   *   - translatable: Whether the field is translatable. Defaults to FALSE.
-   *   - configurable: A boolean indicating whether the field is configurable
-   *     via field.module. Defaults to FALSE.
-   *   - property_constraints: An array of constraint arrays applying to the
-   *     field item properties, keyed by property name. E.g. the following
-   *     validates the value property to have a maximum length of 128:
-   *     @code
-   *     array(
-   *       'value' => array('Length' => array('max' => 128)),
-   *     )
-   *     @endcode
+   *   An array of entity field definitions as specified by
+   *   \Drupal\Core\Entity\EntityManager::getFieldDefinitions(), keyed by field
+   *   name.
    *
-   * @see Drupal\Core\TypedData\TypedDataManager::create()
-   * @see \Drupal::typedData()
+   * @see \Drupal\Core\Entity\EntityManager::getFieldDefinitions()
    */
-  public function getFieldDefinitions(array $constraints);
+  public function baseFieldDefinitions();
 
   /**
    * Gets the name of the service for the query for this entity storage.

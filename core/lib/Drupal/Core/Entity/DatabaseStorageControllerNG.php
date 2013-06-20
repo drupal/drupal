@@ -309,7 +309,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       }
 
       $data = $query->execute();
-      $field_definition = $this->getFieldDefinitions(array());
+      $field_definition = \Drupal::entityManager()->getFieldDefinitions($this->entityType);
       if ($this->revisionTable) {
         $data_fields = array_flip(array_diff(drupal_schema_fields_sql($this->entityInfo['revision_table']), drupal_schema_fields_sql($this->entityInfo['base_table'])));
       }

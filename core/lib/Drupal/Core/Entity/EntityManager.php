@@ -9,6 +9,9 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
+use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Plugin\Discovery\AlterDecorator;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
@@ -48,6 +51,43 @@ class EntityManager extends PluginManagerBase {
   protected $controllers = array();
 
   /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * The cache backend to use.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cache;
+
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManager
+   */
+  protected $languageManager;
+
+  /**
+   * An array of field information per entity type, i.e. containing definitions.
+   *
+   * @var array
+   *
+   * @see hook_entity_field_info()
+   */
+  protected $entityFieldInfo;
+
+  /**
+   * Static cache of field definitions per bundle and entity type.
+   *
+   * @var array
+   */
+  protected $fieldDefinitions;
+
+  /**
    * Constructs a new Entity plugin manager.
    *
    * @param \Traversable $namespaces
@@ -55,16 +95,27 @@ class EntityManager extends PluginManagerBase {
    *   keyed by the corresponding namespace to look for plugin implementations,
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
    *   The service container this object should use.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The cache backend to use.
+   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   *   The language manager.
    */
-  public function __construct(\Traversable $namespaces, ContainerInterface $container) {
+  public function __construct(\Traversable $namespaces, ContainerInterface $container, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManager $language_manager) {
     // Allow the plugin definition to be altered by hook_entity_info_alter().
     $annotation_namespaces = array(
       'Drupal\Core\Entity\Annotation' => DRUPAL_ROOT . '/core/lib',
     );
+
+    $this->moduleHandler = $module_handler;
+    $this->cache = $cache;
+    $this->languageManager = $language_manager;
+
     $this->discovery = new AnnotatedClassDiscovery('Core/Entity', $namespaces, $annotation_namespaces, 'Drupal\Core\Entity\Annotation\EntityType');
     $this->discovery = new InfoHookDecorator($this->discovery, 'entity_info');
     $this->discovery = new AlterDecorator($this->discovery, 'entity_info');
-    $this->discovery = new CacheDecorator($this->discovery, 'entity_info:' . language(Language::TYPE_INTERFACE)->langcode, 'cache', CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
+    $this->discovery = new CacheDecorator($this->discovery, 'entity_info:' . $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->langcode, 'cache', CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
 
     $this->factory = new DefaultFactory($this->discovery);
     $this->container = $container;
@@ -287,6 +338,120 @@ class EntityManager extends PluginManagerBase {
     }
 
     return $admin_path;
+  }
+
+  /**
+   * Gets an array of entity field definitions.
+   *
+   * If a bundle is passed, fields specific to this bundle are included. Entity
+   * fields are always multi-valued, so 'list' is TRUE for each returned field
+   * definition.
+   *
+   * @param string $entity_type
+   *   The entity type to get field definitions for.
+   * @param string $bundle
+   *   (optional) The entity bundle for which to get field definitions. If NULL
+   *   is passed, no bundle-specific fields are included. Defaults to NULL.
+   *
+   * @return array
+   *   An array of field definitions of entity fields, keyed by field
+   *   name. In addition to the typed data definition keys as described at
+   *   \Drupal\Core\TypedData\TypedDataManager::create() the following keys are
+   *   supported:
+   *   - queryable: Whether the field is queryable via QueryInterface.
+   *     Defaults to TRUE if 'computed' is FALSE or not set, to FALSE otherwise.
+   *   - translatable: Whether the field is translatable. Defaults to FALSE.
+   *   - configurable: A boolean indicating whether the field is configurable
+   *     via field.module. Defaults to FALSE.
+   *
+   * @see \Drupal\Core\TypedData\TypedDataManager::create()
+   * @see \Drupal\Core\Entity\EntityManager::getFieldDefinitionsByConstraints()
+   */
+  public function getFieldDefinitions($entity_type, $bundle = NULL) {
+    if (!isset($this->entityFieldInfo[$entity_type])) {
+      // First, try to load from cache.
+      $cid = 'entity_field_definitions:' . $entity_type . ':' . $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->langcode;
+      if ($cache = $this->cache->get($cid)) {
+        $this->entityFieldInfo[$entity_type] = $cache->data;
+      }
+      else {
+        $this->entityFieldInfo[$entity_type] = array(
+          'definitions' => $this->getStorageController($entity_type)->baseFieldDefinitions(),
+          // Contains definitions of optional (per-bundle) fields.
+          'optional' => array(),
+          // An array keyed by bundle name containing the optional fields added
+          // by the bundle.
+          'bundle map' => array(),
+        );
+
+        // Invoke hooks.
+        $result = $this->moduleHandler->invokeAll($entity_type . '_field_info');
+        $this->entityFieldInfo[$entity_type] = NestedArray::mergeDeep($this->entityFieldInfo[$entity_type], $result);
+        $result = $this->moduleHandler->invokeAll('entity_field_info', array($entity_type));
+        $this->entityFieldInfo[$entity_type] = NestedArray::mergeDeep($this->entityFieldInfo[$entity_type], $result);
+
+        $hooks = array('entity_field_info', $entity_type . '_field_info');
+        $this->moduleHandler->alter($hooks, $this->entityFieldInfo[$entity_type], $entity_type);
+
+        // Enforce fields to be multiple by default.
+        foreach ($this->entityFieldInfo[$entity_type]['definitions'] as &$definition) {
+          $definition['list'] = TRUE;
+        }
+        foreach ($this->entityFieldInfo[$entity_type]['optional'] as &$definition) {
+          $definition['list'] = TRUE;
+        }
+        $this->cache->set($cid, $this->entityFieldInfo[$entity_type], CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE, 'entity_field_info' => TRUE));
+      }
+    }
+
+    if (!$bundle) {
+      return $this->entityFieldInfo[$entity_type]['definitions'];
+    }
+    else {
+      // Add in per-bundle fields.
+      if (!isset($this->fieldDefinitions[$entity_type][$bundle])) {
+        $this->fieldDefinitions[$entity_type][$bundle] = $this->entityFieldInfo[$entity_type]['definitions'];
+        if (isset($this->entityFieldInfo[$entity_type]['bundle map'][$bundle])) {
+          $this->fieldDefinitions[$entity_type][$bundle] += array_intersect_key($this->entityFieldInfo[$entity_type]['optional'], array_flip($this->entityFieldInfo[$entity_type]['bundle map'][$bundle]));
+        }
+      }
+      return $this->fieldDefinitions[$entity_type][$bundle];
+    }
+  }
+
+  /**
+   * Gets an array of entity field definitions based on validation constraints.
+   *
+   * @param string $entity_type
+   *   The entity type to get field definitions for.
+   * @param array $constraints
+   *   An array of entity constraints as used for entities in typed data
+   *   definitions, i.e. an array optionally including a 'Bundle' key.
+   *   For example the constraints used by an entity reference could be:
+   *   @code
+   *   array(
+   *     'Bundle' => 'article',
+   *   )
+   *   @endcode
+   *
+   * @return array
+   *   An array of field definitions of entity fields, keyed by field
+   *   name.
+   *
+   * @see \Drupal\Core\Entity\EntityManager::getFieldDefinitions()
+   */
+  public function getFieldDefinitionsByConstraints($entity_type, array $constraints) {
+    // @todo: Add support for specifying multiple bundles.
+    return $this->getFieldDefinitions($entity_type, isset($constraints['Bundle']) ? $constraints['Bundle'] : NULL);
+  }
+
+  /**
+   * Clears static and persistent field definition caches.
+   */
+  public function clearCachedFieldDefinitions() {
+    unset($this->entityFieldInfo);
+    unset($this->fieldDefinitions);
+    $this->cache->deleteTags(array('entity_field_info' => TRUE));
   }
 
 }
