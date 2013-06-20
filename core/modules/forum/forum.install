@@ -122,7 +122,10 @@ function forum_uninstall() {
 
   variable_del('node_options_forum');
 
-  field_info_field('taxonomy_forums')->delete();
+  if ($field = field_info_field('taxonomy_forums')) {
+    $field->delete();
+  }
+
   // Purge field data now to allow taxonomy module to be uninstalled
   // if this is the only field remaining.
   field_purge_batch(10);
