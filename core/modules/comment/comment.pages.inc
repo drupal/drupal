@@ -45,7 +45,7 @@ function comment_reply(EntityInterface $entity, $field_name, $pid = NULL) {
     l(t('Home'), NULL),
     l($entity->label(), $uri['path'], $uri['options']))
   );
-  $op = isset($_POST['op']) ? $_POST['op'] : '';
+  $op = Drupal::request()->request->get('op');
   $build = array();
 
   // The user is previewing a comment prior to submitting it.

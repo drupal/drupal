@@ -98,7 +98,7 @@ class LocaleTranslationUiTest extends WebTestBase {
     );
     // No t() here, it's surely not translated yet.
     $this->assertText($name, t('name found on edit screen.'));
-    $this->assertNoText('English', t('No way to translate the string to English.'));
+    $this->assertNoOption('edit-langcode', 'en', t('No way to translate the string to English.'));
     $this->drupalLogout();
     $this->drupalLogin($admin_user);
     $this->drupalPost('admin/config/regional/language/edit/en', array('locale_translate_english' => TRUE), t('Save language'));

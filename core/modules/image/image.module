@@ -537,7 +537,8 @@ function image_style_deliver($style, $scheme) {
   // denial-of-service attacks.)
   $valid = !empty($style) && file_stream_wrapper_valid_scheme($scheme);
   if (!config('image.settings')->get('allow_insecure_derivatives')) {
-    $valid = $valid && isset($_GET[IMAGE_DERIVATIVE_TOKEN]) && $_GET[IMAGE_DERIVATIVE_TOKEN] === image_style_path_token($style->name, $scheme . '://' . $target);
+    $image_derivative_token = Drupal::request()->query->get(IMAGE_DERIVATIVE_TOKEN);
+    $valid = $valid && isset($image_derivative_token) && $image_derivative_token === image_style_path_token($style->name, $scheme . '://' . $target);
   }
   if (!$valid) {
     throw new AccessDeniedHttpException();

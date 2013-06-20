@@ -30,8 +30,9 @@ class UserAdminTest extends WebTestBase {
    * Registers a user and deletes it.
    */
   function testUserAdmin() {
-
-    $user_a = $this->drupalCreateUser(array());
+    $user_a = $this->drupalCreateUser();
+    $user_a->mail = $this->randomName() . '@example.com';
+    $user_a->save();
     $user_b = $this->drupalCreateUser(array('administer taxonomy'));
     $user_c = $this->drupalCreateUser(array('administer taxonomy'));
 
@@ -47,6 +48,17 @@ class UserAdminTest extends WebTestBase {
     // Test for existence of edit link in table.
     $link = l(t('Edit'), "user/$user_a->uid/edit", array('query' => array('destination' => 'admin/people')));
     $this->assertRaw($link, 'Found user A edit link on admin users page');
+
+    // Filter the users by name/e-mail.
+    $this->drupalGet('admin/people', array('query' => array('user' => $user_a->name)));
+    $result = $this->xpath('//table/tbody/tr');
+    $this->assertEqual(1, count($result), 'Filter by username returned the right amount.');
+    $this->assertEqual($user_a->name, (string) $result[0]->td[1]->span, 'Filter by username returned the right user.');
+
+    $this->drupalGet('admin/people', array('query' => array('user' => $user_a->mail)));
+    $result = $this->xpath('//table/tbody/tr');
+    $this->assertEqual(1, count($result), 'Filter by username returned the right amount.');
+    $this->assertEqual($user_a->name, (string) $result[0]->td[1]->span, 'Filter by username returned the right user.');
 
     // Filter the users by permission 'administer taxonomy'.
     $this->drupalGet('admin/people', array('query' => array('permission' => 'administer taxonomy')));
@@ -75,6 +87,12 @@ class UserAdminTest extends WebTestBase {
     $this->drupalPost('admin/people', $edit, t('Apply'));
     $account = user_load($user_c->uid, TRUE);
     $this->assertEqual($account->status, 0, 'User C blocked');
+
+    // Test filtering on admin page for blocked users
+    $this->drupalGet('admin/people', array('query' => array('status' => 0)));
+    $this->assertNoText($user_a->name, 'User A not on filtered by status on admin users page');
+    $this->assertNoText($user_b->name, 'User B not on filtered by status on admin users page');
+    $this->assertText($user_c->name, 'User C on filtered by status on admin users page');
 
     // Test unblocking of a user from /admin/people page and sending of activation mail
     $editunblock = array();

@@ -584,13 +584,13 @@ function comment_permalink(CommentInterface $comment) {
     $page = comment_get_display_page($comment->id(), $instance);
 
     // @todo: Cleaner sub request handling.
-    $request = drupal_container()->get('request');
+    $request = Drupal::request();
     $uri = $entity->uri();
     $subrequest = Request::create($uri['path'], 'GET', $request->query->all(), $request->cookies->all(), array(), $request->server->all());
     $subrequest->query->set('page', $page);
     // @todo: Convert the pager to use the request object.
-    $_GET['page'] = $page;
-    return drupal_container()->get('http_kernel')->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
+    $request->query->set('page', $page);
+    return Drupal::service('http_kernel')->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
   }
   throw new NotFoundHttpException();
 }

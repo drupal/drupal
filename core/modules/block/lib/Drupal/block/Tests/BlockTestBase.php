@@ -31,7 +31,7 @@ abstract class BlockTestBase extends WebTestBase {
   /**
    * A test user with administrative privileges.
    *
-   * @var \Drupal\user\Plugin\Core\Entity\User
+   * @var \Drupal\user\UserInterface
    */
   protected $adminUser;
 

@@ -67,3 +67,10 @@ user_role_delete:
     _entity_form: user_role.delete
   requirements:
     _entity_access: user_role.delete
+
+user_pass:
+  pattern: '/user/password'
+  defaults:
+    _form: '\Drupal\user\Form\UserPasswordForm'
+  requirements:
+    _access: 'TRUE'

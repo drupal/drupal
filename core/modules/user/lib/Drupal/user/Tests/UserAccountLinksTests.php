@@ -117,10 +117,6 @@ class UserAccountLinksTests extends WebTestBase {
     $this->drupalGet('user/password');
     $this->assertTitle('Request new password' . $title_suffix, "Page title of /user/register is 'Request new password' for anonymous users.");
 
-    // Tests the default fallback title.
-    $this->drupalGet('user/password/' . $this->randomName());
-    $this->assertTitle('User account' . $title_suffix, "Fallback page title for user pages is 'User account' for anonymous users.");
-
     // Check the page title for registered users is "My Account" in menus.
     $this->drupalLogin($this->drupalCreateUser());
     // After login, the client is redirected to /user.

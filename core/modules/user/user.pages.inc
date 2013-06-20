@@ -5,88 +5,11 @@
  * User page callback file for the user module.
  */
 
-use Drupal\Core\Language\Language;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Drupal\Component\Utility\Crypt;
-
-/**
- * Form builder; Request a password reset.
- *
- * @ingroup forms
- * @see user_pass_validate()
- * @see user_pass_submit()
- */
-function user_pass() {
-  global $user;
-
-  $form['name'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Username or e-mail address'),
-    '#size' => 60,
-    '#maxlength' => max(USERNAME_MAX_LENGTH, EMAIL_MAX_LENGTH),
-    '#required' => TRUE,
-    '#attributes' => array(
-      'autocorrect' => 'off',
-      'autocapitalize' => 'off',
-      'spellcheck' => 'false',
-      'autofocus' => 'autofocus',
-    ),
-  );
-  // Allow logged in users to request this also.
-  if ($user->uid > 0) {
-    $form['name']['#type'] = 'value';
-    $form['name']['#value'] = $user->mail;
-    $form['mail'] = array(
-      '#prefix' => '<p>',
-      '#markup' =>  t('Password reset instructions will be mailed to %email. You must log out to use the password reset link in the e-mail.', array('%email' => $user->mail)),
-      '#suffix' => '</p>',
-    );
-  }
-  else {
-    $form['name']['#default_value'] = Drupal::Request()->query->get('name');
-  }
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('E-mail new password'));
-
-  return $form;
-}
-
-function user_pass_validate($form, &$form_state) {
-  $name = trim($form_state['values']['name']);
-  // Try to load by email.
-  $users = entity_load_multiple_by_properties('user', array('mail' => $name, 'status' => '1'));
-  $account = reset($users);
-  if (!$account) {
-    // No success, try to load by name.
-    $users = entity_load_multiple_by_properties('user', array('name' => $name, 'status' => '1'));
-    $account = reset($users);
-  }
-  if (isset($account->uid)) {
-    form_set_value(array('#parents' => array('account')), $account, $form_state);
-  }
-  else {
-    form_set_error('name', t('Sorry, %name is not recognized as a username or an e-mail address.', array('%name' => $name)));
-  }
-}
-
-function user_pass_submit($form, &$form_state) {
-  $language_interface = language(Language::TYPE_INTERFACE);
-
-  $account = $form_state['values']['account'];
-  // Mail one time login URL and instructions using current language.
-  $mail = _user_mail_notify('password_reset', $account->getBCEntity(), $language_interface->langcode);
-  if (!empty($mail)) {
-    watchdog('user', 'Password reset instructions mailed to %name at %email.', array('%name' => $account->name, '%email' => $account->mail));
-    drupal_set_message(t('Further instructions have been sent to your e-mail address.'));
-  }
-
-  $form_state['redirect'] = 'user';
-  return;
-}
 
 /**
  * Menu callback; process one time login link and redirects to the user page on success.

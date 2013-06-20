@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @see comment_multiple_delete_confirm()
  */
 function comment_admin($type = 'new') {
-  $edit = $_POST;
+  $edit = Drupal::request()->request->all();
 
   if (isset($edit['operation']) && ($edit['operation'] == 'delete') && !empty($edit['comments'])) {
     return drupal_get_form('comment_multiple_delete_confirm');

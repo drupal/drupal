@@ -881,11 +881,8 @@ function user_menu() {
 
   $items['user/password'] = array(
     'title' => 'Request new password',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('user_pass'),
-    'access callback' => TRUE,
+    'route_name' => 'user_pass',
     'type' => MENU_LOCAL_TASK,
-    'file' => 'user.pages.inc',
   );
   $items['user/reset/%/%/%'] = array(
     'title' => 'Reset password',

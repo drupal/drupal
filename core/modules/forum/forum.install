@@ -128,7 +128,9 @@ function forum_uninstall() {
 
   variable_del('node_options_forum');
 
-  field_info_field('taxonomy_forums')->delete();
+  if ($field = field_info_field('taxonomy_forums')) {
+    $field->delete();
+  }
 
   // Delete comment field, load comment in case it has been disabled.
   drupal_load('module', 'comment');

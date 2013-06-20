@@ -11,11 +11,6 @@ use Drupal\Core\Language\Language;
  * Implements hook_uninstall().
  */
 function comment_uninstall() {
-  // Delete comment_body field.
-  if ($field = field_info_field('comment_body')) {
-    $field->delete();
-  }
-
   // Remove variables.
   variable_del('comment_block_count');
   // We cannot use comment_get_comment_fields because comment.module is
