@@ -32,6 +32,7 @@ class CommentItem extends FieldItemBase {
       static::$propertyDefinitions['status'] = array(
         'type' => 'integer',
         'label' => t('Comment status value'),
+        'settings' => array('default_value' => COMMENT_OPEN),
       );
     }
     return static::$propertyDefinitions;
