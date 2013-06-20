@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Dummy module implementing hook menu.
+ * Module that implements various hooks for menu tests.
  */
 
 use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
@@ -33,12 +33,14 @@ function menu_test_menu() {
     'file' => 'system.admin.inc',
     'file path' => drupal_get_path('module', 'system'),
   );
+  // This item tests the description key.
   $items['menu_callback_description/description-plain'] = array(
     'title' => 'Menu item with a regular description',
     'page callback' => 'menu_test_callback',
     'description' => 'Menu item description text',
     'access arguments' => array('access content'),
   );
+  // This item tests using a description callback.
   $items['menu_callback_description/description-callback'] = array(
     'title' => 'Menu item with a description set with a callback',
     'page callback' => 'menu_test_callback',
@@ -204,7 +206,7 @@ function menu_test_menu() {
   );
 
   // Breadcrumbs tests.
-  // @see BreadcrumbTest
+  // @see \Drupal\system\Tests\Menu\BreadcrumbTest
   $base = array(
     'page callback' => 'menu_test_callback',
     'access callback' => TRUE,
@@ -239,7 +241,7 @@ function menu_test_menu() {
   ) + $base;
 
   // Menu local tasks tests.
-  // @see Drupal\system\Tests\Menu\LocalTasksTest
+  // @see \Drupal\system\Tests\Menu\TrailTest
   $items['menu-test/tasks'] = array(
     'title' => 'Local tasks',
   ) + $base;
@@ -309,12 +311,14 @@ function menu_test_menu() {
     'access arguments' => array('access content'),
   );
 
+  // Test the access key with a function callback.
   $items['menu_login_callback'] = array(
     'title' => 'Used as a login path',
     'page callback' => 'menu_login_callback',
     'access callback' => TRUE,
   );
 
+  // Test the access key.
   $items['menu-title-test/case1'] = array(
    'title' => 'Example title - Case 1',
    'access callback' => TRUE,
@@ -386,7 +390,7 @@ function menu_test_menu() {
     'page callback' => 'menu_test_callback',
     'access callback' => TRUE,
   );
-  // Explict load arguments should not be overriden (even if empty).
+  // Explicit load arguments should not be overridden (even if empty).
   $items['menu-test/arguments/%menu_test_argument/%/explicit-arguments'] = array(
     'title' => 'An item defining explicit load arguments',
     'load arguments' => array(),
@@ -448,6 +452,9 @@ function menu_test_local_actions() {
 
 /**
  * Implements hook_menu_local_tasks().
+ *
+ * If the menu_test.settings configuration 'tasks.add' has been set, adds
+ * several local tasks to menu-test/tasks.
  */
 function menu_test_menu_local_tasks(&$data, $router_item, $root_path) {
   if (!config('menu_test.settings')->get('tasks.add')) {
@@ -475,6 +482,9 @@ function menu_test_menu_local_tasks(&$data, $router_item, $root_path) {
 
 /**
  * Implements hook_menu_local_tasks_alter().
+ *
+ * If the menu_test.settings configuration 'tasks.alter' has been set, adds
+ * several local tasks to menu-test/tasks.
  */
 function menu_test_menu_local_tasks_alter(&$data, $router_item, $root_path) {
   if (!config('menu_test.settings')->get('tasks.alter')) {
@@ -497,31 +507,57 @@ function menu_test_menu_local_tasks_alter(&$data, $router_item, $root_path) {
 }
 
 /**
- * Dummy argument loader for hook_menu() to point to.
+ * Argument callback: Loads an argument using a function for hook_menu().
+ *
+ * @param string $arg1
+ *   A parameter passed in via the URL.
+ *
+ * @return false
+ *   Always return FALSE.
+ *
+ * @see menu_test_menu();
  */
 function menu_test_argument_load($arg1) {
   return FALSE;
 }
 
 /**
- * Dummy argument loader for hook_menu() to point to.
+ * Argument callback: Loads an argument using a function for hook_menu().
+ *
+ * @param string $arg1
+ *   A parameter passed in via the URL.
+ *
+ * @return false
+ *   Always return FALSE.
+ *
+ * @see menu_test_menu();
  */
 function menu_test_other_argument_load($arg1) {
   return FALSE;
 }
 
 /**
- * Dummy callback for hook_menu() to point to.
+ * Page callback: Provides a dummy function which can be used as a placeholder.
  *
- * @return
- *  A random string.
+ * @return string
+ *   A string that can be used for comparison.
+ *
+ * @see menu_test_menu().
  */
 function menu_test_callback() {
   return 'This is menu_test_callback().';
 }
 
 /**
- * Callback that test menu_test_menu_tree_set_path().
+ * Page callback: Tests menu_test_menu_tree_set_path().
+ *
+ * Retrieves the current menu path and if the menu path is not empty updates
+ * the menu path that is used to determine the active menu trail.
+ *
+ * @return string
+ *   A string that can be used for comparison.
+ *
+ * @see menu_test_menu().
  */
 function menu_test_menu_trail_callback() {
   $menu_path = Drupal::state()->get('menu_test.menu_tree_set_path') ?: array();
@@ -532,12 +568,17 @@ function menu_test_menu_trail_callback() {
 }
 
 /**
- * Callback for our custom 403 and 404 pages.
+ * Page callback: Sets the active menu trail for our custom 403 and 404 pages.
+ *
+ * @return string
+ *   A text string that can be used for comparison.
+ *
+ * @see menu_test_menu().
  */
 function menu_test_custom_403_404_callback() {
-  // When requested by one of the MenuTrailTestCase tests, record the final
+  // When requested by one of the TrailTest tests, record the final
   // active trail now that the user has been redirected to the custom 403 or
-  // 404 page. See menu_test_init().
+  // 404 page.
   if (Drupal::state()->get('menu_test.record_active_trail') ?: FALSE) {
     Drupal::state()->set('menu_test.active_trail_final', menu_get_active_trail());
   }
@@ -546,14 +587,17 @@ function menu_test_custom_403_404_callback() {
 }
 
 /**
- * Page callback to use when testing the theme callback functionality.
+ * Page callback: Tests the theme callback functionality.
  *
- * @param $inherited
- *   An optional boolean to set to TRUE when the requested page is intended to
- *   inherit the theme of its parent.
- * @return
+ * @param bool $inherited
+ *   (optional) TRUE when the requested page is intended to inherit
+ *   the theme of its parent.
+ *
+ * @return string
  *   A string describing the requested custom theme and actual theme being used
  *   for the current page request.
+ *
+ * @see menu_test_menu().
  */
 function menu_test_theme_page_callback($inherited = FALSE) {
   global $theme_key;
@@ -570,12 +614,18 @@ function menu_test_theme_page_callback($inherited = FALSE) {
 }
 
 /**
- * Theme callback to use when testing the theme callback functionality.
+ * Theme callback: Tests the theme callback functionality.
  *
- * @param $argument
+ * Retrieves the theme key of the theme to use for the current request based on
+ * the theme name provided in the URL.
+ *
+ * @param string $argument
  *   The argument passed in from the URL.
- * @return
+ *
+ * @return string
  *   The name of the custom theme to request for the current page.
+ *
+ * @see menu_test_menu().
  */
 function menu_test_theme_callback($argument) {
   // Test using the variable administrative theme.
@@ -596,10 +646,10 @@ function menu_test_theme_callback($argument) {
 }
 
 /**
- * Implement hook_custom_theme().
+ * Implements hook_custom_theme().
  *
- * @return
- *   The name of the custom theme to use for the current page.
+ * If an appropriate variable has been set in the database, request the theme
+ * that is stored there. Otherwise, do not attempt to dynamically set the theme.
  */
 function menu_test_custom_theme() {
   // When requested by one of the MenuTrailTestCase tests, record the initial
@@ -608,36 +658,32 @@ function menu_test_custom_theme() {
   if (Drupal::state()->get('menu_test.record_active_trail') ?: FALSE) {
     Drupal::state()->set('menu_test.active_trail_initial', menu_get_active_trail());
   }
-  // If an appropriate variable has been set in the database, request the theme
-  // that is stored there. Otherwise, do not attempt to dynamically set the
-  // theme.
   if ($theme = Drupal::state()->get('menu_test.hook_custom_theme_name') ?: FALSE) {
     return $theme;
   }
 }
 
 /**
- * Helper function for the testMenuName() test. Used to change the menu_name
- * parameter of a menu.
+ * Sets a static variable for the testMenuName() test.
  *
- * @param $new_name
- *   If set, will change the menu_name value.
- * @return
- *   The menu_name value to use.
+ * Used to change the menu_name parameter of a menu.
+ *
+ * @param string $new_name
+ *   (optional) If set, will change the $menu_name value.
+ *
+ * @return string
+ *   The $menu_name value to use.
  */
 function menu_test_menu_name($new_name = '') {
-  static $name = 'original';
+  static $menu_name = 'original';
   if ($new_name) {
-    $name = $new_name;
+    $menu_name = $new_name;
   }
-  return $name;
+  return $menu_name;
 }
 
 /**
  * Implements hook_menu_link_insert().
- *
- * @return
- *  A random string.
  */
 function menu_test_menu_link_insert(MenuLink $item) {
   menu_test_static_variable('insert');
@@ -645,9 +691,6 @@ function menu_test_menu_link_insert(MenuLink $item) {
 
 /**
  * Implements hook_menu_link_update().
- *
- * @return
- *  A random string.
  */
 function menu_test_menu_link_update(MenuLink $item) {
   menu_test_static_variable('update');
@@ -655,20 +698,18 @@ function menu_test_menu_link_update(MenuLink $item) {
 
 /**
  * Implements hook_menu_link_delete().
- *
- * @return
- *  A random string.
  */
 function menu_test_menu_link_delete(MenuLink $item) {
   menu_test_static_variable('delete');
 }
 
 /**
- * Static function for testing hook results.
+ * Sets a static variable for testing hook results.
  *
- * @param $value
- *   The value to set or NULL to return the current value.
- * @return
+ * @param null|string $value
+ *   (optional) The value to set or NULL to return the current value.
+ *
+ * @return null|string
  *   A text string for comparison to test assertions.
  */
 function menu_test_static_variable($value = NULL) {
@@ -680,20 +721,30 @@ function menu_test_static_variable($value = NULL) {
 }
 
 /**
- * Menu callback to be used as a login path.
+ * Page callback: Provides a login path.
+ *
+ * @return string
+ *   A text string that can be used for comparison.
+ *
+ * @see menu_test_menu().
  */
 function menu_login_callback() {
   return 'This is menu_login_callback().';
 }
 
 /**
- * Concatenates a string, by using the t() function and a case number.
+ * Title callback: Concatenates the title and case number.
  *
- * @param $title
+ * @param string $title
  *   Title string.
- * @param $case_number
- *   The current case number which is tests (defaults to 3).
+ * @param int $case_number
+ *   (optional) The current case number which it tests (defaults to 3).
+ *
+ * @return string
+ *   A string containing the title and case number.
+ *
+ * @see menu_test_menu().
  */
-function menu_test_title_callback($title, $case_no = 3) {
-  return t($title) . ' - Case ' . $case_no;
+function menu_test_title_callback($title, $case_number = 3) {
+  return t($title) . ' - Case ' . $case_number;
 }
