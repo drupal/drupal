@@ -297,9 +297,9 @@ function locale_translate_edit_form($form, &$form_state) {
         );
         $form['strings'][$string->lid]['original'] = array(
           '#type' => 'item',
-          '#title' => t('Source string'),
+          '#title' => t('Source string (@language)', array('@language' => t('Built-in English'))),
           '#title_display' => 'invisible',
-          '#markup' => check_plain($source_array[0]),
+          '#markup' => '<span lang="en">' . check_plain($source_array[0]) . '</span>',
         );
       }
       else {
@@ -311,18 +311,19 @@ function locale_translate_edit_form($form, &$form_state) {
         $form['strings'][$string->lid]['original_singular'] = array(
           '#type' => 'item',
           '#title' => t('Singular form'),
-          '#markup' => check_plain($source_array[0]),
+          '#markup' => '<span lang="en">' . check_plain($source_array[0]) . '</span>',
+          '#prefix' => '<span class="visually-hidden">' . t('Source string (@language)', array('@language' => t('Built-in English'))) . '</span>',
         );
         $form['strings'][$string->lid]['original_plural'] = array(
           '#type' => 'item',
           '#title' => t('Plural form'),
-          '#markup' => check_plain($source_array[1]),
+          '#markup' => '<span lang="en">' . check_plain($source_array[1]) . '</span>',
         );
       }
       if (!empty($string->context)) {
         $form['strings'][$string->lid]['context'] = array(
           '#type' => 'value',
-          '#value' => check_plain($string->context),
+          '#value' => '<span lang="en">' . check_plain($string->context) . '</span>',
         );
       }
       // Approximate the number of rows to use in the default textarea.
@@ -330,10 +331,11 @@ function locale_translate_edit_form($form, &$form_state) {
       if (empty($form['strings'][$string->lid]['plural']['#value'])) {
         $form['strings'][$string->lid]['translations'][0] = array(
           '#type' => 'textarea',
-          '#title' => t('Translated string'),
+          '#title' => t('Translated string (@language)', array('@language' => $langname)),
           '#title_display' => 'invisible',
           '#rows' => $rows,
           '#default_value' => $translation_array[0],
+          '#attributes' => array('lang' => $langcode),
         );
       }
       else {
@@ -346,6 +348,8 @@ function locale_translate_edit_form($form, &$form_state) {
               '#title' => ($i == 0 ? t('Singular form') : format_plural($i, 'First plural form', '@count. plural form')),
               '#rows' => $rows,
               '#default_value' => isset($translation_array[$i]) ? $translation_array[$i] : '',
+              '#attributes' => array('lang' => $langcode),
+              '#prefix' => $i == 0 ? ('<span class="visually-hidden">' . t('Translated string (@language)',  array('@language' => $langname)) . '</span>') : '',
             );
           }
         }
@@ -356,12 +360,15 @@ function locale_translate_edit_form($form, &$form_state) {
             '#title' => t('Singular form'),
             '#rows' => $rows,
             '#default_value' => $translation_array[0],
+            '#attributes' => array('lang' => $langcode),
+            '#prefix' => '<span class="visually-hidden">' . t('Translated string (@language)',  array('@language' => $langname)) . '</span>',
           );
           $form['strings'][$string->lid]['translations'][1] = array(
             '#type' => 'textarea',
             '#title' => t('Plural form'),
             '#rows' => $rows,
             '#default_value' => isset($translation_array[1]) ? $translation_array[1] : '',
+            '#attributes' => array('lang' => $langcode),
           );
         }
       }
