@@ -197,8 +197,9 @@ function file_requirements($phase) {
   // Check the server's ability to indicate upload progress.
   if ($phase == 'runtime') {
     $implementation = file_progress_implementation();
-    $apache = strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') !== FALSE;
-    $fastcgi = strpos($_SERVER['SERVER_SOFTWARE'], 'mod_fastcgi') !== FALSE || strpos($_SERVER["SERVER_SOFTWARE"], 'mod_fcgi') !== FALSE;
+    $server_software = Drupal::request()->server->get('SERVER_SOFTWARE');
+    $apache = strpos($server_software, 'Apache') !== FALSE;
+    $fastcgi = strpos($server_software, 'mod_fastcgi') !== FALSE || strpos($server_software, 'mod_fcgi') !== FALSE;
     $description = NULL;
     if (!$apache) {
       $value = t('Not enabled');
