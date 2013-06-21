@@ -12,6 +12,9 @@ use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\views\Ajax\ScrollTopCommand;
 use Drupal\views\Ajax\ViewAjaxResponse;
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Component\Utility\Tags;
+use Drupal\Component\Utility\Unicode;
+use Drupal\Component\Utility\String;
 
 /**
  * @defgroup views_ajax Views AJAX library
@@ -153,13 +156,13 @@ function views_ajax_form_wrapper($form_id, &$form_state) {
  * @see taxonomy_autocomplete()
  */
 function views_ajax_autocomplete_taxonomy($vid) {
-  // The user enters a comma-separated list of tags. We only autocomplete the last tag.
-  $tags_typed = drupal_explode_tags(drupal_container()->get('request')->query->get('q'));
-  $tag_last = drupal_strtolower(array_pop($tags_typed));
+  // The user enters a comma-separated list of tags. We only autocomplete the
+  // last tag.
+  $tags_typed = Tags::explode(Drupal::request()->query->get('q'));
+  $tag_last = Unicode::strtolower(array_pop($tags_typed));
+  $term_matches = array();
 
-  $matches = array();
   if ($tag_last != '') {
-
     $query = db_select('taxonomy_term_data', 't');
     $query->addTag('term_access');
 
@@ -176,9 +179,8 @@ function views_ajax_autocomplete_taxonomy($vid) {
       ->execute()
       ->fetchAllKeyed();
 
-    $prefix = count($tags_typed) ? drupal_implode_tags($tags_typed) . ', ' : '';
+    $prefix = count($tags_typed) ? Tags::implode($tags_typed) . ', ' : '';
 
-    $term_matches = array();
     foreach ($tags_return as $tid => $name) {
       $n = $name;
       // Term names containing commas or quotes must be wrapped in quotes.
@@ -186,7 +188,7 @@ function views_ajax_autocomplete_taxonomy($vid) {
         $n = '"' . str_replace('"', '""', $name) . '"';
       }
       // Add term name to list of matches.
-      $term_matches[$prefix . $n] = check_plain($name);
+      $term_matches[$prefix . $n] = String::checkPlain($name);
     }
   }
 

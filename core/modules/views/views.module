@@ -308,6 +308,7 @@ function views_menu() {
   // does not support a vid a argument anymore
   $items['admin/views/ajax/autocomplete/taxonomy/%'] = array(
     'page callback' => 'views_ajax_autocomplete_taxonomy',
+    'page arguments' => array(5),
     'theme callback' => 'ajax_base_page_theme',
     'access callback' => 'user_access',
     'access arguments' => array('access content'),
