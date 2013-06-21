@@ -62,8 +62,8 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
   public function configContext(ConfigEvent $event) {
     $context = $event->getContext();
 
-    // If there is a language set explicitly in current context, use it.
-    // otherwise check if there is a user set in the current context,
+    // If there is a language set explicitly in the current context, use it.
+    // Otherwise check if there is a user set in the current context,
     // to set the language based on the preferred language of the user.
     // Otherwise set it based on the negotiated interface language.
     if ($language = $context->get('language')) {
