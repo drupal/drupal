@@ -14,12 +14,8 @@ function comment_uninstall() {
   // Remove variables.
   variable_del('comment_block_count');
   // We cannot use comment_get_comment_fields because comment.module is
-  // disabled.
-  $comment_fields = array_filter(field_info_field_map(), function ($value) {
-    if ($value['type']  == 'comment') {
-      return TRUE;
-    }
-  });
+  // disabled and it's fields inactive.
+  $comment_fields = field_read_fields(array('type' => 'comment'), array('include_inactive' => TRUE));
   foreach ($comment_fields as $field_name => $field) {
     entity_invoke_bundle_hook('delete', 'comment', $field_name);
   }
