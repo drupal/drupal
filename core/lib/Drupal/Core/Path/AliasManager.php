@@ -217,7 +217,7 @@ class AliasManager implements AliasManagerInterface {
     // Check the path whitelist, if the top-level part before the first /
     // is not in the list, then there is no need to do anything further,
     // it is not in the database.
-    elseif (!isset($this->whitelist[strtok($path, '/')])) {
+    elseif (!$this->whitelist->get(strtok($path, '/'))) {
       return FALSE;
     }
     // For system paths which were not cached, query aliases individually.
@@ -307,7 +307,7 @@ class AliasManager implements AliasManagerInterface {
     // When paths are inserted, only rebuild the whitelist if the system path
     // has a top level component which is not already in the whitelist.
     if (!empty($source)) {
-      if (isset($this->whitelist[strtok($source, '/')])) {
+      if ($this->whitelist->get(strtok($source, '/'))) {
         return;
      }
     }

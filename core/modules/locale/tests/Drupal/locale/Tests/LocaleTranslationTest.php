@@ -38,13 +38,15 @@ class LocaleTranslationTest extends UnitTestCase {
    */
   protected function setUp() {
     $this->storage = $this->getMock('Drupal\locale\StringStorageInterface');
+    $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->lock = $this->getMock('Drupal\Core\Lock\LockBackendInterface');
   }
 
   /**
    * Tests for \Drupal\locale\LocaleTranslation::destruct()
    */
   public function testDestruct() {
-    $translation = new LocaleTranslation($this->storage);
+    $translation = new LocaleTranslation($this->storage, $this->cache, $this->lock);
     // Prove that destruction works without errors when translations are empty.
     $this->assertAttributeEmpty('translations', $translation);
     $translation->destruct();

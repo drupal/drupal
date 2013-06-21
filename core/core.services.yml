@@ -131,7 +131,7 @@ services:
     class: Drupal\Core\Path\AliasWhitelist
     tags:
       - { name: needs_destruction }
-    arguments: [path_alias_whitelist, cache, '@keyvalue', '@database']
+    arguments: [path_alias_whitelist, '@cache.cache', '@lock', '@state', '@database']
   path.alias_manager:
     class: Drupal\Core\Path\AliasManager
     arguments: ['@database', '@path.alias_whitelist', '@language_manager']
