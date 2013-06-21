@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\field\Tests\FieldInfoTest.
+ * Contains \Drupal\field\Tests\FieldInfoTest.
  */
 
 namespace Drupal\field\Tests;
@@ -54,11 +54,11 @@ class FieldInfoTest extends FieldUnitTestBase {
 
     // Create a field, verify it shows up.
     $core_fields = field_info_fields();
-    $field = array(
+    $field = entity_create('field_entity', array(
       'field_name' => drupal_strtolower($this->randomName()),
       'type' => 'test_field',
-    );
-    field_create_field($field);
+    ));
+    $field->save();
     $fields = field_info_fields();
     $this->assertEqual(count($fields), count($core_fields) + 1, 'One new field exists');
     $this->assertEqual($fields[$field['field_name']]['field_name'], $field['field_name'], 'info fields contains field name');
@@ -72,7 +72,7 @@ class FieldInfoTest extends FieldUnitTestBase {
     $this->assertEqual($fields[$field['field_name']]['active'], TRUE, 'info fields contains active 1');
 
     // Create an instance, verify that it shows up
-    $instance = array(
+    $instance_definition = array(
       'field_name' => $field['field_name'],
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
@@ -80,14 +80,15 @@ class FieldInfoTest extends FieldUnitTestBase {
       'description' => $this->randomName(),
       'weight' => mt_rand(0, 127),
     );
-    field_create_instance($instance);
+    $instance = entity_create('field_instance', $instance_definition);
+    $instance->save();
 
     $info = entity_get_info('test_entity');
     $instances = field_info_instances('test_entity', $instance['bundle']);
     $this->assertEqual(count($instances), 1, format_string('One instance shows up in info when attached to a bundle on a @label.', array(
       '@label' => $info['label']
     )));
-    $this->assertTrue($instance < $instances[$instance['field_name']], 'Instance appears in info correctly');
+    $this->assertTrue($instance_definition < $instances[$instance['field_name']], 'Instance appears in info correctly');
 
     // Test a valid entity type but an invalid bundle.
     $instances = field_info_instances('test_entity', 'invalid_bundle');
@@ -127,7 +128,8 @@ class FieldInfoTest extends FieldUnitTestBase {
       'field_name' => 'field',
       'type' => 'test_field',
     );
-    $field = field_create_field($field_definition);
+    $field = entity_create('field_entity', $field_definition);
+    $field->save();
 
     // Simulate a stored field definition missing a field setting (e.g. a
     // third-party module adding a new field setting has been enabled, and
@@ -153,13 +155,14 @@ class FieldInfoTest extends FieldUnitTestBase {
       'field_name' => 'field',
       'type' => 'test_field',
     );
-    field_create_field($field_definition);
+    entity_create('field_entity', $field_definition)->save();
     $instance_definition = array(
       'field_name' => $field_definition['field_name'],
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
     );
-    $instance = field_create_instance($instance_definition);
+    $instance = entity_create('field_instance', $instance_definition);
+    $instance->save();
 
     // Simulate a stored instance definition missing various settings (e.g. a
     // third-party module adding instance or widget settings has been enabled,
@@ -189,13 +192,13 @@ class FieldInfoTest extends FieldUnitTestBase {
       'field_name' => 'field',
       'type' => 'test_field',
     );
-    field_create_field($field_definition);
+    entity_create('field_entity', $field_definition)->save();
     $instance_definition = array(
       'field_name' => 'field',
       'entity_type' => 'comment',
       'bundle' => 'comment_node_article',
     );
-    field_create_instance($instance_definition);
+    entity_create('field_instance', $instance_definition)->save();
 
     // Disable coment module. This clears field_info cache.
     module_disable(array('comment'));
@@ -224,7 +227,7 @@ class FieldInfoTest extends FieldUnitTestBase {
       ),
     );
     foreach ($fields as $field) {
-      field_create_field($field);
+      entity_create('field_entity', $field)->save();
     }
 
     // Create a couple instances.
@@ -251,7 +254,7 @@ class FieldInfoTest extends FieldUnitTestBase {
       ),
     );
     foreach ($instances as $instance) {
-      field_create_instance($instance);
+      entity_create('field_instance', $instance)->save();
     }
 
     $expected = array(
@@ -308,11 +311,11 @@ class FieldInfoTest extends FieldUnitTestBase {
     // Create a test field and ensure it's in the array returned by
     // field_info_fields().
     $field_name = drupal_strtolower($this->randomName());
-    $field = array(
+    $field = entity_create('field_entity', array(
       'field_name' => $field_name,
       'type' => 'test_field',
-    );
-    field_create_field($field);
+    ));
+    $field->save();
     $fields = field_info_fields();
     $this->assertTrue(isset($fields[$field_name]), 'The test field is initially found in the array returned by field_info_fields().');
 
@@ -330,11 +333,10 @@ class FieldInfoTest extends FieldUnitTestBase {
    * Test that the widget definition functions work.
    */
   function testWidgetDefinition() {
-
     $widget_definition = field_info_widget_types('test_field_widget_multiple');
 
     // Test if hook_field_widget_info_alter is beïng called.
     $this->assertTrue(in_array('test_field', $widget_definition['field_types']), "The 'test_field_widget_multiple' widget is enabled for the 'test_field' field type in field_test_field_widget_info_alter().");
-
   }
+
 }

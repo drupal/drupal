@@ -54,12 +54,13 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
     $field = 'field' . $suffix;
     $field_id = 'field_id' . $suffix;
     $instance = 'instance' . $suffix;
+    $instance_definition = 'instance_definition' . $suffix;
 
     $this->$field_name = drupal_strtolower($this->randomName() . '_field_name' . $suffix);
-    $this->$field = array('field_name' => $this->$field_name, 'type' => 'test_field', 'cardinality' => 4);
-    $this->$field = field_create_field($this->$field);
+    $this->$field = entity_create('field_entity', array('field_name' => $this->$field_name, 'type' => 'test_field', 'cardinality' => 4));
+    $this->$field->save();
     $this->$field_id = $this->{$field}['uuid'];
-    $this->$instance = array(
+    $this->$instance_definition = array(
       'field_name' => $this->$field_name,
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
@@ -70,7 +71,8 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
         'test_instance_setting' => $this->randomName(),
       ),
     );
-    field_create_instance($this->$instance);
+    $this->$instance = entity_create('field_instance', $this->$instance_definition);
+    $this->$instance->save();
 
     entity_get_form_display('test_entity', 'test_bundle', 'default')
       ->setComponent($this->$field_name, array(

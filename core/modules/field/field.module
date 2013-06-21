@@ -75,8 +75,7 @@ require_once __DIR__ . '/field.form.inc';
  *   field_sql_storage.module, stores field data in the local SQL database.
  *
  * - @link field_purge Field API bulk data deletion @endlink: Cleans up after
- *   bulk deletion operations such as field_delete_field() and
- *   field_delete_instance().
+ *   bulk deletion operations such as deletion of field or field_instance.
  *
  * - @link field_language Field language API @endlink: Provides native
  *   multilingual support for the Field API.

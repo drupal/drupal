@@ -147,7 +147,7 @@ function field_test_field_language_alter(&$display_langcode, $context) {
  *   field_test_memorize();
  *
  *   // call some Field API functions that invoke field_test hooks
- *   $field = field_create_field(...);
+ *   entity_create('field_entity', $field_definition)->save();
  *
  *   // retrieve and reset the memorized hook call data
  *   $mem = field_test_memorize();

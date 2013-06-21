@@ -22,6 +22,13 @@ class TestItemTest extends FieldUnitTestBase {
    */
   public static $modules = array('field_test');
 
+  /**
+   * The name of the field to use in this test.
+   *
+   * @var string
+   */
+  protected $field_name = 'field_test';
+
   public static function getInfo() {
     return array(
       'name' => 'Test field item',
@@ -34,17 +41,17 @@ class TestItemTest extends FieldUnitTestBase {
     parent::setUp();
 
     // Create an field field and instance for validation.
-    $this->field = array(
-      'field_name' => 'field_test',
+    $field = array(
+      'field_name' => $this->field_name,
       'type' => 'test_field',
     );
-    field_create_field($this->field);
-    $this->instance = array(
+    entity_create('field_entity', $field)->save();
+    $instance = array(
       'entity_type' => 'entity_test',
-      'field_name' => 'field_test',
+      'field_name' => $this->field_name,
       'bundle' => 'entity_test',
     );
-    field_create_instance($this->instance);
+    entity_create('field_instance', $instance)->save();
   }
 
   /**
@@ -61,20 +68,20 @@ class TestItemTest extends FieldUnitTestBase {
     // Verify entity has been created properly.
     $id = $entity->id();
     $entity = entity_load('entity_test', $id);
-    $this->assertTrue($entity->field_test instanceof FieldInterface, 'Field implements interface.');
-    $this->assertTrue($entity->field_test[0] instanceof FieldItemInterface, 'Field item implements interface.');
-    $this->assertEqual($entity->field_test->value, $value);
-    $this->assertEqual($entity->field_test[0]->value, $value);
+    $this->assertTrue($entity->{$this->field_name} instanceof FieldInterface, 'Field implements interface.');
+    $this->assertTrue($entity->{$this->field_name}[0] instanceof FieldItemInterface, 'Field item implements interface.');
+    $this->assertEqual($entity->{$this->field_name}->value, $value);
+    $this->assertEqual($entity->{$this->field_name}[0]->value, $value);
 
     // Verify changing the field value.
     $new_value = rand(1, 10);
     $entity->field_test->value = $new_value;
-    $this->assertEqual($entity->field_test->value, $new_value);
+    $this->assertEqual($entity->{$this->field_name}->value, $new_value);
 
     // Read changed entity and assert changed values.
     $entity->save();
     $entity = entity_load('entity_test', $id);
-    $this->assertEqual($entity->field_test->value, $new_value);
+    $this->assertEqual($entity->{$this->field_name}->value, $new_value);
   }
 
 }

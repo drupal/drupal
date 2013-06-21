@@ -36,7 +36,7 @@ class ApiDataTest extends FieldTestBase {
       'entity_type' => 'node',
       'bundle' => 'page',
     );
-    field_create_instance($instance);
+    entity_create('field_instance', $instance)->save();
 
     // The second one will be attached to users only.
     $instance = array(
@@ -44,7 +44,7 @@ class ApiDataTest extends FieldTestBase {
       'entity_type' => 'user',
       'bundle' => 'user',
     );
-    field_create_instance($instance);
+    entity_create('field_instance', $instance)->save();
 
     // The third will be attached to both nodes and users.
     $instance = array(
@@ -52,13 +52,13 @@ class ApiDataTest extends FieldTestBase {
       'entity_type' => 'node',
       'bundle' => 'page',
     );
-    field_create_instance($instance);
+    entity_create('field_instance', $instance)->save();
     $instance = array(
       'field_name' => $field_names[2],
       'entity_type' => 'user',
       'bundle' => 'user',
     );
-    field_create_instance($instance);
+    entity_create('field_instance', $instance)->save();
 
     // Now create some example nodes/users for the view result.
     for ($i = 0; $i < 5; $i++) {
@@ -66,7 +66,7 @@ class ApiDataTest extends FieldTestBase {
         'field_name_0' => array((array('value' => $this->randomName()))),
         'field_name_2' => array((array('value' => $this->randomName()))),
       );
-      $this->nodes[] = $this->drupalCreateNode($edit);
+      $nodes[] = $this->drupalCreateNode($edit);
     }
 
     $this->container->get('views.views_data')->clear();

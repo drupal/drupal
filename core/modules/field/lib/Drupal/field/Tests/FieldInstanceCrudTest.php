@@ -2,17 +2,35 @@
 
 /**
  * @file
- * Definition of Drupal\field\Tests\FieldInstanceCrudTest.
+ * Contains \Drupal\field\Tests\FieldInstanceCrudTest.
  */
 
 namespace Drupal\field\Tests;
 
 use Drupal\field\FieldException;
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 class FieldInstanceCrudTest extends FieldUnitTestBase {
 
+  /**
+   * The field entity.
+   *
+   * @var \Drupal\field\Plugin\Core\Entity\Field
+   */
   protected $field;
+
+  /**
+   * The field entity definition.
+   *
+   * @var array
+   */
+  protected $field_definition;
+
+  /**
+   * The field instance entity definition.
+   *
+   * @var array
+   */
+  protected $instance_definition;
 
   public static function getInfo() {
     return array(
@@ -25,11 +43,12 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->field = array(
+    $this->field_definition = array(
       'field_name' => drupal_strtolower($this->randomName()),
       'type' => 'test_field',
     );
-    field_create_field($this->field);
+    $this->field = entity_create('field_entity', $this->field_definition);
+    $this->field->save();
     $this->instance_definition = array(
       'field_name' => $this->field['field_name'],
       'entity_type' => 'test_entity',
@@ -47,14 +66,15 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
    * Test the creation of a field instance.
    */
   function testCreateFieldInstance() {
-    $instance = field_create_instance($this->instance_definition);
+    $instance = entity_create('field_instance', $this->instance_definition);
+    $instance->save();
 
     // Read the configuration. Check against raw configuration data rather than
     // the loaded ConfigEntity, to be sure we check that the defaults are
     // applied on write.
     $config = \Drupal::config('field.instance.' . $instance->id())->get();
 
-    $field_type = field_info_field_types($this->field['type']);
+    $field_type = field_info_field_types($this->field_definition['type']);
 
     // Check that default values are set.
     $this->assertEqual($config['required'], FALSE, 'Required defaults to false.');
@@ -66,7 +86,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
 
     // Guarantee that the field/bundle combination is unique.
     try {
-      field_create_instance($this->instance_definition);
+      entity_create('field_instance', $this->instance_definition)->save();
       $this->fail(t('Cannot create two instances with the same field / bundle combination.'));
     }
     catch (FieldException $e) {
@@ -76,7 +96,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     // Check that the specified field exists.
     try {
       $this->instance_definition['field_name'] = $this->randomName();
-      field_create_instance($this->instance_definition);
+      entity_create('field_instance', $this->instance_definition)->save();
       $this->fail(t('Cannot create an instance of a non-existing field.'));
     }
     catch (FieldException $e) {
@@ -84,20 +104,21 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     }
 
     // Create a field restricted to a specific entity type.
-    $field_restricted = array(
+    $field_restricted_definition = array(
       'field_name' => drupal_strtolower($this->randomName()),
       'type' => 'test_field',
       'entity_types' => array('test_cacheable_entity'),
     );
-    field_create_field($field_restricted);
+    $field_restricted = entity_create('field_entity', $field_restricted_definition);
+    $field_restricted->save();
 
     // Check that an instance can be added to an entity type allowed
     // by the field.
     try {
       $instance = $this->instance_definition;
-      $instance['field_name'] = $field_restricted['field_name'];
+      $instance['field_name'] = $field_restricted_definition['field_name'];
       $instance['entity_type'] = 'test_cacheable_entity';
-      field_create_instance($instance);
+      entity_create('field_instance', $instance)->save();
       $this->pass(t('Can create an instance on an entity type allowed by the field.'));
     }
     catch (FieldException $e) {
@@ -108,8 +129,8 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     // forbidden by the field.
     try {
       $instance = $this->instance_definition;
-      $instance['field_name'] = $field_restricted['field_name'];
-      field_create_instance($instance);
+      $instance['field_name'] = $field_restricted_definition['field_name'];
+      entity_create('field_instance', $instance)->save();
       $this->fail(t('Cannot create an instance on an entity type forbidden by the field.'));
     }
     catch (FieldException $e) {
@@ -123,7 +144,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
    * Test reading back an instance definition.
    */
   function testReadFieldInstance() {
-    field_create_instance($this->instance_definition);
+    entity_create('field_instance', $this->instance_definition)->save();
 
     // Read the instance back.
     $instance = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
@@ -136,7 +157,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
    * Test the update of a field instance.
    */
   function testUpdateFieldInstance() {
-    field_create_instance($this->instance_definition);
+    entity_create('field_instance', $this->instance_definition)->save();
 
     // Check that basic changes are saved.
     $instance = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
@@ -144,7 +165,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     $instance['label'] = $this->randomName();
     $instance['description'] = $this->randomName();
     $instance['settings']['test_instance_setting'] = $this->randomName();
-    field_update_instance($instance);
+    $instance->save();
 
     $instance_new = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
     $this->assertEqual($instance['required'], $instance_new['required'], '"required" change is saved');
@@ -164,15 +185,15 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
 
     // Create two instances for the same field so we can test that only one
     // is deleted.
-    field_create_instance($this->instance_definition);
-    $this->another_instance_definition = $this->instance_definition;
-    $this->another_instance_definition['bundle'] .= '_another_bundle';
-    $instance = field_create_instance($this->another_instance_definition);
+    entity_create('field_instance', $this->instance_definition)->save();
+    $another_instance_definition = $this->instance_definition;
+    $another_instance_definition['bundle'] .= '_another_bundle';
+    entity_create('field_instance', $another_instance_definition)->save();
 
     // Test that the first instance is not deleted, and then delete it.
     $instance = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle'], array('include_deleted' => TRUE));
     $this->assertTrue(!empty($instance) && empty($instance['deleted']), 'A new field instance is not marked for deletion.');
-    field_delete_instance($instance);
+    $instance->delete();
 
     // Make sure the instance is marked as deleted when the instance is
     // specifically loaded.
@@ -184,14 +205,15 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     $this->assertTrue(empty($instance), 'A deleted field instance is not loaded by default.');
 
     // Make sure the other field instance is not deleted.
-    $another_instance = field_read_instance('test_entity', $this->another_instance_definition['field_name'], $this->another_instance_definition['bundle']);
+    $another_instance = field_read_instance('test_entity', $another_instance_definition['field_name'], $another_instance_definition['bundle']);
     $this->assertTrue(!empty($another_instance) && empty($another_instance['deleted']), 'A non-deleted field instance is not marked for deletion.');
 
     // Make sure the field is deleted when its last instance is deleted.
-    field_delete_instance($another_instance);
+    $another_instance->delete();
     $deleted_fields = \Drupal::state()->get('field.field.deleted');
     $this->assertTrue(isset($deleted_fields[$another_instance['field_id']]), 'A deleted field is marked for deletion.');
     $field = field_read_field($another_instance['field_name']);
     $this->assertFalse($field, 'The field marked to be deleted is not found anymore in the configuration.');
   }
+
 }

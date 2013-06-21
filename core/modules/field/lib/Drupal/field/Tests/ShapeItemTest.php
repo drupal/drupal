@@ -22,6 +22,13 @@ class ShapeItemTest extends FieldUnitTestBase {
    */
   public static $modules = array('field_test');
 
+  /**
+   * The name of the field to use in this test.
+   *
+   * @var string
+   */
+  protected $field_name = 'field_shape';
+
   public static function getInfo() {
     return array(
       'name' => 'Shape field item',
@@ -34,17 +41,17 @@ class ShapeItemTest extends FieldUnitTestBase {
     parent::setUp();
 
     // Create an field field and instance for validation.
-    $this->field = array(
-      'field_name' => 'field_shape',
+    $field = array(
+      'field_name' => $this->field_name,
       'type' => 'shape',
     );
-    field_create_field($this->field);
-    $this->instance = array(
+    entity_create('field_entity', $field)->save();
+    $instance = array(
       'entity_type' => 'entity_test',
-      'field_name' => 'field_shape',
+      'field_name' => $this->field_name,
       'bundle' => 'entity_test',
     );
-    field_create_instance($this->instance);
+    entity_create('field_instance', $instance)->save();
   }
 
   /**
@@ -55,34 +62,34 @@ class ShapeItemTest extends FieldUnitTestBase {
     $entity = entity_create('entity_test', array());
     $shape = 'cube';
     $color = 'blue';
-    $entity->field_shape->shape = $shape;
-    $entity->field_shape->color = $color;
+    $entity->{$this->field_name}->shape = $shape;
+    $entity->{$this->field_name}->color = $color;
     $entity->name->value = $this->randomName();
     $entity->save();
 
     // Verify entity has been created properly.
     $id = $entity->id();
     $entity = entity_load('entity_test', $id);
-    $this->assertTrue($entity->field_shape instanceof FieldInterface, 'Field implements interface.');
-    $this->assertTrue($entity->field_shape[0] instanceof FieldItemInterface, 'Field item implements interface.');
-    $this->assertEqual($entity->field_shape->shape, $shape);
-    $this->assertEqual($entity->field_shape->color, $color);
-    $this->assertEqual($entity->field_shape[0]->shape, $shape);
-    $this->assertEqual($entity->field_shape[0]->color, $color);
+    $this->assertTrue($entity->{$this->field_name} instanceof FieldInterface, 'Field implements interface.');
+    $this->assertTrue($entity->{$this->field_name}[0] instanceof FieldItemInterface, 'Field item implements interface.');
+    $this->assertEqual($entity->{$this->field_name}->shape, $shape);
+    $this->assertEqual($entity->{$this->field_name}->color, $color);
+    $this->assertEqual($entity->{$this->field_name}[0]->shape, $shape);
+    $this->assertEqual($entity->{$this->field_name}[0]->color, $color);
 
     // Verify changing the field value.
     $new_shape = 'circle';
     $new_color = 'red';
-    $entity->field_shape->shape = $new_shape;
-    $entity->field_shape->color = $new_color;
-    $this->assertEqual($entity->field_shape->shape, $new_shape);
-    $this->assertEqual($entity->field_shape->color, $new_color);
+    $entity->{$this->field_name}->shape = $new_shape;
+    $entity->{$this->field_name}->color = $new_color;
+    $this->assertEqual($entity->{$this->field_name}->shape, $new_shape);
+    $this->assertEqual($entity->{$this->field_name}->color, $new_color);
 
     // Read changed entity and assert changed values.
     $entity->save();
     $entity = entity_load('entity_test', $id);
-    $this->assertEqual($entity->field_shape->shape, $new_shape);
-    $this->assertEqual($entity->field_shape->color, $new_color);
+    $this->assertEqual($entity->{$this->field_name}->shape, $new_shape);
+    $this->assertEqual($entity->{$this->field_name}->color, $new_color);
   }
 
 }

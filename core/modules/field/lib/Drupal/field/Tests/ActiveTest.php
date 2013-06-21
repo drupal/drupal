@@ -37,7 +37,7 @@ class ActiveTest extends FieldTestBase {
         'type' => 'field_sql_storage',
       ),
     );
-    field_create_field($field_definition);
+    entity_create('field_entity', $field_definition)->save();
 
     // Test disabling and enabling:
     // - the field type module,
