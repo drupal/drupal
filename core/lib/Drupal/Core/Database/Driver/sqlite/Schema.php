@@ -73,14 +73,23 @@ class Schema extends DatabaseSchema {
   /**
    * Build the SQL expression for creating columns.
    */
-  protected function createColumsSql($tablename, $schema) {
+  protected function createColumsSql($tablename, &$schema) {
     $sql_array = array();
 
     // Add the SQL statement for each field.
     foreach ($schema['fields'] as $name => $field) {
       if (isset($field['type']) && $field['type'] == 'serial') {
         if (isset($schema['primary key']) && ($key = array_search($name, $schema['primary key'])) !== FALSE) {
+
+          $primary = $schema['primary key'];
           unset($schema['primary key'][$key]);
+
+            if (!empty($schema['primary key'])) {
+                $key = implode('_', $primary);
+                $schema['unique keys'][$key] = $primary;
+            }
+
+            unset($schema['primary key']);
         }
       }
       $sql_array[] = $this->createFieldSql($name, $this->processField($field));
