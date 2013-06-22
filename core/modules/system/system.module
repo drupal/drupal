@@ -889,13 +889,6 @@ function system_menu() {
     'description' => 'Allow users to delete a configured date format.',
     'route_name' => 'date_format_delete',
   );
-  $items['admin/config/regional/date-time/formats/lookup'] = array(
-    'title' => 'Date and time lookup',
-    'page callback' => 'system_date_time_lookup',
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_CALLBACK,
-    'file' => 'system.admin.inc',
-  );
 
   // Search settings.
   $items['admin/config/search'] = array(

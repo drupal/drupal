@@ -14,6 +14,21 @@ use Drupal\field\FieldValidationException;
  * Unit test class for non-storage related field_attach_* functions.
  */
 class FieldAttachOtherTest extends FieldUnitTestBase {
+
+  /**
+   * Field name to use in the test.
+   *
+   * @var string
+   */
+  protected $field_name;
+
+  /**
+   * Field name to use in the test.
+   *
+   * @var string
+   */
+  protected $field_name_2;
+
   public static function getInfo() {
     return array(
       'name' => 'Field attach tests (other)',
@@ -192,9 +207,10 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     // hook_field_formatter_prepare_view().
     field_test_create_bundle('test_bundle_2');
     $formatter_setting = $this->randomName();
-    $this->instance2 = $this->instance;
-    $this->instance2['bundle'] = 'test_bundle_2';
-    field_create_instance($this->instance2);
+    $instance_definition = $this->instance_definition;
+    $instance_definition['bundle'] = 'test_bundle_2';
+    $this->instance2 = entity_create('field_instance', $instance_definition);
+    $this->instance2->save();
 
     $display_2 = entity_get_display('test_entity', 'test_bundle_2', 'full')
       ->setComponent($this->field['field_name'], array(
@@ -268,9 +284,9 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
       'fttype' => $this->instance['bundle'],
     ));
     $cid = "field:$entity_type:{$entity_init->ftid}";
-    $instance = $this->instance;
-    $instance['entity_type'] = $entity_type;
-    field_create_instance($instance);
+    $instance_definition = $this->instance_definition;
+    $instance_definition['entity_type'] = $entity_type;
+    entity_create('field_instance', $instance_definition)->save();
 
     // Check that no initial cache entry is present.
     $this->assertFalse(cache('field')->get($cid), 'Cached: no initial cache entry');
@@ -553,4 +569,5 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $this->assertFalse(isset($entity->{$this->field_name}), 'The first field does not exist in the entity object');
     $this->assertIdentical($entity->{$this->field_name_2}[$langcode], $expected_values_2, 'Submit filters empty values');
   }
+
 }

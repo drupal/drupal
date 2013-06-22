@@ -1587,7 +1587,7 @@ function field_entity_bundle_delete($entity_type, $bundle) {
   // entity types or bundles.
   $instances = field_read_instances(array('entity_type' => $entity_type, 'bundle' => $bundle), array('include_inactive' => TRUE));
   foreach ($instances as $instance) {
-    field_delete_instance($instance);
+    $instance->delete();
   }
 
   // Clear the cache.

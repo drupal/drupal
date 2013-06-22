@@ -19,6 +19,20 @@ class FieldAccessTest extends FieldTestBase {
    */
   public static $modules = array('node', 'field_test');
 
+  /**
+   * Node entity to use in this test.
+   *
+   * @var \Drupal\node\Plugin\Core\Entity\Node
+   */
+  protected $node;
+
+  /**
+   * Field value to test display on nodes.
+   *
+   * @var string
+   */
+  protected $test_view_field_value;
+
   public static function getInfo() {
     return array(
       'name' => 'Field access tests',
@@ -34,32 +48,32 @@ class FieldAccessTest extends FieldTestBase {
     $this->drupalLogin($web_user);
 
     // Create content type.
-    $this->content_type_info = $this->drupalCreateContentType();
-    $this->content_type = $this->content_type_info->type;
+    $content_type_info = $this->drupalCreateContentType();
+    $content_type = $content_type_info->type;
 
-    $this->field = array(
+    $field = array(
       'field_name' => 'test_view_field',
       'type' => 'text',
     );
-    field_create_field($this->field);
-    $this->instance = array(
-      'field_name' => $this->field['field_name'],
+    entity_create('field_entity', $field)->save();
+    $instance = array(
+      'field_name' => $field['field_name'],
       'entity_type' => 'node',
-      'bundle' => $this->content_type,
+      'bundle' => $content_type,
     );
-    field_create_instance($this->instance);
+    entity_create('field_instance', $instance)->save();
 
     // Assign display properties for the 'default' and 'teaser' view modes.
     foreach (array('default', 'teaser') as $view_mode) {
-      entity_get_display('node', $this->content_type, $view_mode)
-        ->setComponent($this->field['field_name'])
+      entity_get_display('node', $content_type, $view_mode)
+        ->setComponent($field['field_name'])
         ->save();
     }
 
     // Create test node.
     $this->test_view_field_value = 'This is some text';
     $settings = array();
-    $settings['type'] = $this->content_type;
+    $settings['type'] = $content_type;
     $settings['title'] = 'Field view access test';
     $settings['test_view_field'] = array(array('value' => $this->test_view_field_value));
     $this->node = $this->drupalCreateNode($settings);

@@ -353,7 +353,7 @@ Bartik theme
 - Jeff Burns 'Jeff Burnz' http://drupal.org/user/61393
 
 Seven theme
-- Jeff Burns 'Jeff Burnz' http://drupal.org/user/61393
+- Lewis Nyman 'LewisNyman' https://drupal.org/user/751964
 
 Stark theme
 - John Albin Wilkins 'JohnAlbin' http://drupal.org/user/32095

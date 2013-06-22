@@ -26,6 +26,49 @@ class TranslationTest extends FieldUnitTestBase {
    */
   public static $modules = array('language', 'node');
 
+  /**
+   * The name of the field to use in this test.
+   *
+   * @var string
+   */
+  protected $field_name;
+
+  /**
+   * The name of the entity type to use in this test.
+   *
+   * @var string
+   */
+  protected $entity_type = 'test_entity';
+
+
+  /**
+   * An array defining the field to use in this test.
+   *
+   * @var array
+   */
+  protected $field_definition;
+
+  /**
+   * An array defining the field instance to use in this test.
+   *
+   * @var array
+   */
+  protected $instance_definition;
+
+  /**
+   * The field to use in this test.
+   *
+   * @var \Drupal\field\Plugin\Core\Entity\Field
+   */
+  protected $field;
+
+  /**
+   * The field instance to use in this test.
+   *
+   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
+   */
+  protected $instance;
+
   public static function getInfo() {
     return array(
       'name' => 'Field translations tests',
@@ -41,15 +84,13 @@ class TranslationTest extends FieldUnitTestBase {
 
     $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
 
-    $this->entity_type = 'test_entity';
-
     $this->field_definition = array(
       'field_name' => $this->field_name,
       'type' => 'test_field',
       'cardinality' => 4,
       'translatable' => TRUE,
     );
-    field_create_field($this->field_definition);
+    entity_create('field_entity', $this->field_definition)->save();
     $this->field = field_read_field($this->field_name);
 
     $this->instance_definition = array(
@@ -57,7 +98,7 @@ class TranslationTest extends FieldUnitTestBase {
       'entity_type' => $this->entity_type,
       'bundle' => 'test_bundle',
     );
-    field_create_instance($this->instance_definition);
+    entity_create('field_instance', $this->instance_definition)->save();
     $this->instance = field_read_instance('test_entity', $this->field_name, 'test_bundle');
 
     for ($i = 0; $i < 3; ++$i) {
@@ -95,7 +136,7 @@ class TranslationTest extends FieldUnitTestBase {
 
     // Test field_available_languages() behavior for untranslatable fields.
     $this->field['translatable'] = FALSE;
-    field_update_field($this->field);
+    $this->field->save();
     $available_langcodes = field_available_languages($this->entity_type, $this->field);
     $this->assertTrue(count($available_langcodes) == 1 && $available_langcodes[0] === Language::LANGCODE_NOT_SPECIFIED, 'For untranslatable fields only Language::LANGCODE_NOT_SPECIFIED is available.');
   }
@@ -107,7 +148,6 @@ class TranslationTest extends FieldUnitTestBase {
     // Enable field translations for the entity.
     field_test_entity_info_translatable('test_entity', TRUE);
 
-    $entity_type = 'test_entity';
     $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
 
     // Populate some extra languages to check if _field_invoke() correctly uses
@@ -251,12 +291,13 @@ class TranslationTest extends FieldUnitTestBase {
     $field_name_default = drupal_strtolower($this->randomName() . '_field_name');
     $field_definition = $this->field_definition;
     $field_definition['field_name'] = $field_name_default;
-    $field = field_create_field($field_definition);
+    entity_create('field_entity', $field_definition)->save();
 
     $instance_definition = $this->instance_definition;
     $instance_definition['field_name'] = $field_name_default;
     $instance_definition['default_value'] = array(array('value' => rand(1, 127)));
-    $instance = field_create_instance($instance_definition);
+    $instance = entity_create('field_instance', $instance_definition);
+    $instance->save();
 
     $translation_langcodes = array_slice($available_langcodes, 0, 2);
     asort($translation_langcodes);
@@ -310,14 +351,14 @@ class TranslationTest extends FieldUnitTestBase {
       'cardinality' => 2,
       'translatable' => TRUE,
     );
-    field_create_field($field);
+    entity_create('field_entity', $field)->save();
 
     $instance = array(
       'field_name' => $field['field_name'],
       'entity_type' => $entity_type,
       'bundle' => 'test_bundle',
     );
-    field_create_instance($instance);
+    entity_create('field_instance', $instance)->save();
 
     $entity = field_test_create_entity(1, 1, $this->instance['bundle']);
     $instances = field_info_instances($entity_type, $this->instance['bundle']);
@@ -387,4 +428,5 @@ class TranslationTest extends FieldUnitTestBase {
     $display_langcode = field_language($entity, $this->field_name, $requested_langcode);
     $this->assertEqual($display_langcode, $requested_langcode, 'Display language behave correctly when language fallback is disabled');
   }
+
 }

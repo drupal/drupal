@@ -7,8 +7,11 @@
 
 namespace Drupal\locale;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DestructableInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Lock\LockBackendAbstract;
+use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
 use Drupal\locale\StringStorageInterface;
 use Drupal\locale\LocaleLookup;
@@ -38,13 +41,33 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
   protected $translations = array();
 
   /**
+   * The cache backend that should be used.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cache;
+
+  /**
+   * The lock backend that should be used.
+   *
+   * @var \Drupal\Core\Lock\LockBackendInterface
+   */
+  protected $lock;
+
+  /**
    * Constructs a translator using a string storage.
    *
    * @param \Drupal\locale\StringStorageInterface $storage
    *   Storage to use when looking for new translations.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The cache backend.
+   * @param \Drupal\Core\Lock\LockBackendInterface $lock
+   *   The lock backend.
    */
-  public function __construct(StringStorageInterface $storage) {
+  public function __construct(StringStorageInterface $storage, CacheBackendInterface $cache, LockBackendInterface $lock) {
     $this->storage = $storage;
+    $this->cache = $cache;
+    $this->lock = $lock;
   }
 
   /**
@@ -58,9 +81,9 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
     // Strings are cached by langcode, context and roles, using instances of the
     // LocaleLookup class to handle string lookup and caching.
     if (!isset($this->translations[$langcode][$context])) {
-      $this->translations[$langcode][$context] = new LocaleLookup($langcode, $context, $this->storage);
+      $this->translations[$langcode][$context] = new LocaleLookup($langcode, $context, $this->storage, $this->cache, $this->lock);
     }
-    $translation = $this->translations[$langcode][$context][$string];
+    $translation = $this->translations[$langcode][$context]->get($string);
     return $translation === TRUE ? FALSE : $translation;
   }
 
@@ -75,8 +98,6 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
    * {@inheritdoc}
    */
   public function destruct() {
-    // @see \Drupal\locale\Locale\Lookup::__destruct().
-    // @todo Remove once http://drupal.org/node/1786490 is in.
     foreach ($this->translations as $context) {
       foreach ($context as $lookup) {
         if ($lookup instanceof DestructableInterface) {

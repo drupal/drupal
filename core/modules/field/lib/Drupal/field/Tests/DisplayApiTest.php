@@ -11,6 +11,48 @@ use Drupal\Core\Language\Language;
 
 class DisplayApiTest extends FieldUnitTestBase {
 
+  /**
+   * The field name to use in this test.
+   *
+   * @var string
+   */
+  protected $field_name;
+
+  /**
+   * The field label to use in this test.
+   *
+   * @var string
+   */
+  protected $label;
+
+  /**
+   * The field cardinality to use in this test.
+   *
+   * @var number
+   */
+  protected $cardinality;
+
+  /**
+   * The field display options to use in this test.
+   *
+   * @var array
+   */
+  protected $display_options;
+
+  /**
+   * The field display options to use in this test.
+   *
+   * @var \Drupal\Core\Entity\EntityInterface
+   */
+  protected $entity;
+
+  /**
+   * An array of random values, in the format expected for field values.
+   *
+   * @var array
+   */
+  protected $values;
+
   public static function getInfo() {
     return array(
       'name' => 'Field Display API tests',
@@ -27,12 +69,12 @@ class DisplayApiTest extends FieldUnitTestBase {
     $this->label = $this->randomName();
     $this->cardinality = 4;
 
-    $this->field = array(
+    $field = array(
       'field_name' => $this->field_name,
       'type' => 'test_field',
       'cardinality' => $this->cardinality,
     );
-    $this->instance = array(
+    $instance = array(
       'field_name' => $this->field_name,
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
@@ -54,14 +96,14 @@ class DisplayApiTest extends FieldUnitTestBase {
       ),
     );
 
-    field_create_field($this->field);
-    field_create_instance($this->instance);
+    entity_create('field_entity', $field)->save();
+    entity_create('field_instance', $instance)->save();
     // Create a display for the default view mode.
-    entity_get_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
+    entity_get_display($instance['entity_type'], $instance['bundle'], 'default')
       ->setComponent($this->field_name, $this->display_options['default'])
       ->save();
     // Create a display for the teaser view mode.
-    entity_get_display($this->instance['entity_type'], $this->instance['bundle'], 'teaser')
+    entity_get_display($instance['entity_type'], $instance['bundle'], 'teaser')
       ->setComponent($this->field_name, $this->display_options['teaser'])
       ->save();
 

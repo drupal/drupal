@@ -7,15 +7,15 @@
 
 namespace Drupal\locale;
 
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\CacheCollector;
 use Drupal\Core\DestructableInterface;
-use Drupal\Core\Utility\CacheArray;
-use Drupal\locale\SourceString;
-use Drupal\locale\TranslationString;
+use Drupal\Core\Lock\LockBackendInterface;
 
 /**
- * Extends CacheArray to allow for dynamic building of the locale cache.
+ * A cache collector to allow for dynamic building of the locale cache.
  */
-class LocaleLookup extends CacheArray implements DestructableInterface {
+class LocaleLookup extends CacheCollector {
 
   /**
    * A language code.
@@ -39,9 +39,34 @@ class LocaleLookup extends CacheArray implements DestructableInterface {
   protected $stringStorage;
 
   /**
-   * Constructs a LocaleCache object.
+   * The cache backend that should be used.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
    */
-  public function __construct($langcode, $context, $string_storage) {
+  protected $cache;
+
+  /**
+   * The lock backend that should be used.
+   *
+   * @var \Drupal\Core\Lock\LockBackendInterface
+   */
+  protected $lock;
+
+  /**
+   * Constructs a LocaleLookup object.
+   *
+   * @param string $langcode
+   *   The language code.
+   * @param string $context
+   *   The string context.
+   * @param \Drupal\locale\StringStorageInterface $string_storage
+   *   The string storage.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The cache backend.
+   * @param \Drupal\Core\Lock\LockBackendInterface $lock
+   *   The lock backend.
+   */
+  public function __construct($langcode, $context, StringStorageInterface $string_storage, CacheBackendInterface $cache, LockBackendInterface $lock) {
     $this->langcode = $langcode;
     $this->context = (string) $context;
     $this->stringStorage = $string_storage;
@@ -50,7 +75,7 @@ class LocaleLookup extends CacheArray implements DestructableInterface {
     // example, strings for admin menu items and settings forms are not cached
     // for anonymous users.
     $rids = isset($GLOBALS['user']) ? implode(':', array_keys($GLOBALS['user']->roles)) : '0';
-    parent::__construct("locale:$langcode:$context:$rids", 'cache', array('locale' => TRUE));
+    parent::__construct("locale:$langcode:$context:$rids", $cache, $lock, array('locale' => TRUE));
   }
 
   /**
@@ -85,21 +110,6 @@ class LocaleLookup extends CacheArray implements DestructableInterface {
       $this->persist($offset);
     }
     return $value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function destruct() {
-    parent::__destruct();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __destruct() {
-    // Do nothing to avoid segmentation faults. This can be restored after the
-    // cache collector from http://drupal.org/node/1786490 is used.
   }
 
 }

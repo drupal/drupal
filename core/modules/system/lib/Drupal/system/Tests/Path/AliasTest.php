@@ -31,7 +31,7 @@ class AliasTest extends PathUnitTestBase {
     $this->fixtures->createTables($connection);
 
     //Create AliasManager and Path object.
-    $whitelist = new AliasWhitelist('path_alias_whitelist', 'cache', $this->container->get('keyvalue'), $connection);
+    $whitelist = new AliasWhitelist('path_alias_whitelist', $this->container->get('cache.cache'), $this->container->get('lock'), $this->container->get('state'), $connection);
     $aliasManager = new AliasManager($connection, $whitelist, $this->container->get('language_manager'));
     $path = new Path($connection, $aliasManager);
 
@@ -85,7 +85,7 @@ class AliasTest extends PathUnitTestBase {
     $this->fixtures->createTables($connection);
 
     //Create AliasManager and Path object.
-    $whitelist = new AliasWhitelist('path_alias_whitelist', 'cache', $this->container->get('keyvalue'), $connection);
+    $whitelist = new AliasWhitelist('path_alias_whitelist', $this->container->get('cache.cache'), $this->container->get('lock'), $this->container->get('state'), $connection);
     $aliasManager = new AliasManager($connection, $whitelist, $this->container->get('language_manager'));
     $pathObject = new Path($connection, $aliasManager);
 
@@ -159,35 +159,35 @@ class AliasTest extends PathUnitTestBase {
     $connection = Database::getConnection();
     $this->fixtures->createTables($connection);
     // Create AliasManager and Path object.
-    $whitelist = new AliasWhitelist('path_alias_whitelist', 'cache', $this->container->get('keyvalue'), $connection);
+    $whitelist = new AliasWhitelist('path_alias_whitelist', $this->container->get('cache.cache'), $this->container->get('lock'), $this->container->get('state'), $connection);
     $aliasManager = new AliasManager($connection, $whitelist, $this->container->get('language_manager'));
     $path = new Path($connection, $aliasManager);
 
     // No alias for user and admin yet, so should be NULL.
-    $this->assertNull($whitelist['user']);
-    $this->assertNull($whitelist['admin']);
+    $this->assertNull($whitelist->get('user'));
+    $this->assertNull($whitelist->get('admin'));
 
     // Non-existing path roots should be NULL too. Use a length of 7 to avoid
     // possible conflict with random aliases below.
-    $this->assertNull($whitelist[$this->randomName()]);
+    $this->assertNull($whitelist->get($this->randomName()));
 
     // Add an alias for user/1, user should get whitelisted now.
     $path->save('user/1', $this->randomName());
-    $this->assertTrue($whitelist['user']);
-    $this->assertNull($whitelist['admin']);
-    $this->assertNull($whitelist[$this->randomName()]);
+    $this->assertTrue($whitelist->get('user'));
+    $this->assertNull($whitelist->get('admin'));
+    $this->assertNull($whitelist->get($this->randomName()));
 
     // Add an alias for admin, both should get whitelisted now.
     $path->save('admin/something', $this->randomName());
-    $this->assertTrue($whitelist['user']);
-    $this->assertTrue($whitelist['admin']);
-    $this->assertNull($whitelist[$this->randomName()]);
+    $this->assertTrue($whitelist->get('user'));
+    $this->assertTrue($whitelist->get('admin'));
+    $this->assertNull($whitelist->get($this->randomName()));
 
     // Remove the user alias again, whitelist entry should be removed.
     $path->delete(array('source' => 'user/1'));
-    $this->assertNull($whitelist['user']);
-    $this->assertTrue($whitelist['admin']);
-    $this->assertNull($whitelist[$this->randomName()]);
+    $this->assertNull($whitelist->get('user'));
+    $this->assertTrue($whitelist->get('admin'));
+    $this->assertNull($whitelist->get($this->randomName()));
 
   }
 }

@@ -35,12 +35,15 @@ abstract class FieldTestBase extends ViewTestBase {
 
   /**
    * Stores the field definitions used by the test.
+   *
    * @var array
    */
   public $fields;
+
   /**
    * Stores the instances of the fields. They have
    * the same keys as the fields.
+   *
    * @var array
    */
   public $instances;
@@ -58,7 +61,8 @@ abstract class FieldTestBase extends ViewTestBase {
       $field_names[$i] = 'field_name_' . $i;
       $field = array('field_name' => $field_names[$i], 'type' => 'text');
 
-      $this->fields[$i] = $field = field_create_field($field);
+      $this->fields[$i] = $field = entity_create('field_entity', $field);
+      $field->save();
     }
     return $field_names;
   }
@@ -70,7 +74,8 @@ abstract class FieldTestBase extends ViewTestBase {
         'entity_type' => 'node',
         'bundle' => 'page',
       );
-      $this->instances[$key] = field_create_instance($instance);
+      $this->instances[$key] = entity_create('field_instance', $instance);
+      $this->instances[$key]->save();
     }
   }
 

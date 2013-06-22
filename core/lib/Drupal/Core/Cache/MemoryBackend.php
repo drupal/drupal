@@ -142,7 +142,9 @@ class MemoryBackend implements CacheBackendInterface {
    * Implements Drupal\Core\Cache\CacheBackendInterface::invalidate().
    */
   public function invalidate($cid) {
-    $this->cache[$cid]->expire = REQUEST_TIME - 1;
+    if (isset($this->cache[$cid])) {
+      $this->cache[$cid]->expire = REQUEST_TIME - 1;
+    }
   }
 
   /**
