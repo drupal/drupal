@@ -139,7 +139,7 @@ function theme_task_list($variables) {
     $output .= '<li';
     $output .= ($class ? ' class="' . $class . '"' : '') . '>';
     $output .= $item;
-    $output .= ($status ? '<span class="visually-hidden">' . $status . '</span>' : '');
+    $output .= ($status ? '<span class="visually-hidden"> ' . $status . '</span>' : '');
     $output .= '</li>';
   }
   $output .= '</ol>';
