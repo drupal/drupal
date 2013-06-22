@@ -9,6 +9,7 @@ namespace Drupal\views_ui\Form\Ajax;
 
 use Drupal\views\ViewExecutable;
 use Drupal\views\ViewStorageInterface;
+use Drupal\views\Views;
 
 /**
  * Provides a form for adding an item in the Views UI.
@@ -81,7 +82,7 @@ class AddItem extends ViewsFormBase {
 
     // Figure out all the base tables allowed based upon what the relationships provide.
     $base_tables = $executable->getBaseTables();
-    $options = views_fetch_fields(array_keys($base_tables), $type, $display->useGroupBy(), $form_state['type']);
+    $options = Views::viewsDataHelper()->fetchFields(array_keys($base_tables), $type, $display->useGroupBy(), $form_state['type']);
 
     if (!empty($options)) {
       $form['override']['controls'] = array(
