@@ -69,27 +69,27 @@ class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
     $definitions = parent::getDefinitions();
     foreach ($definitions as &$definition) {
       // Extract the module name from the class namespace if it's not set.
-      if (!isset($definition['module'])) {
-        $definition['module'] = $this->getModuleFromNamespace($definition['class']);
+      if (!isset($definition['provider'])) {
+        $definition['provider'] = $this->getProviderFromNamespace($definition['class']);
       }
     }
     return $definitions;
   }
 
   /**
-   * Extracts a module name from a Drupal namespace.
+   * Extracts the provider name from a Drupal namespace.
    *
    * @param string $namespace
-   *   The namespace to extract the module name from.
+   *   The namespace to extract the provider from.
    *
    * @return string|null
-   *   The matches module name, or NULL otherwise.
+   *   The matching provider name, or NULL otherwise.
    */
-  protected function getModuleFromNamespace($namespace) {
-    preg_match('|^Drupal\\\\(?<module>[\w]+)\\\\|', $namespace, $matches);
+  protected function getProviderFromNamespace($namespace) {
+    preg_match('|^Drupal\\\\(?<provider>[\w]+)\\\\|', $namespace, $matches);
 
-    if (isset($matches['module'])) {
-      return $matches['module'];
+    if (isset($matches['provider'])) {
+      return $matches['provider'];
     }
 
     return NULL;
