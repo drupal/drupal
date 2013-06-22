@@ -873,7 +873,7 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
             $item_list = array(
               '#theme' => 'item_list',
               '#items' => $items,
-              '#type' => $type,
+              '#list_type' => $type,
             );
             $output .= drupal_render($item_list);
           }

@@ -54,7 +54,7 @@ class FunctionsTest extends WebTestBase {
         'childlist' => array(
           '#theme' => 'item_list',
           '#attributes' => array('id' => 'blist'),
-          '#type' => 'ol',
+          '#list_type' => 'ol',
           '#items' => array(
             'ba',
             array(

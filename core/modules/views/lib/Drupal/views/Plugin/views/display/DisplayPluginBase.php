@@ -1705,7 +1705,7 @@ abstract class DisplayPluginBase extends PluginBase {
               $item_list = array(
                 '#theme' => 'item_list',
                 '#items' => $items,
-                '#type' => $type,
+                '#list_type' => $type,
               );
               $output .= drupal_render($item_list);
             }

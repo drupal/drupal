@@ -2275,7 +2275,7 @@ function template_preprocess_item_list(&$variables) {
           }
           // Lastly, inherit the original theme variables of the current list.
           $child['#theme'] = $variables['theme_hook_original'];
-          $child['#type'] = $variables['type'];
+          $child['#list_type'] = $variables['list_type'];
         }
       }
     }
@@ -2291,19 +2291,18 @@ function template_preprocess_item_list(&$variables) {
  *     render arrays. Render arrays can specify list item attributes in the
  *     #wrapper_attributes property.
  *   - title: The title of the list.
- *   - type: The type of list to return (e.g. "ul", "ol").
+ *   - list_type: The type of HTML list (e.g. "ul", "ol").
  *   - attributes: The attributes applied to the list element.
  */
 function theme_item_list($variables) {
   $items = $variables['items'];
   $title = (string) $variables['title'];
-  // @todo 'type' clashes with '#type'. Rename to 'tag'.
-  $type = $variables['type'];
+  $list_type = $variables['list_type'];
   $list_attributes = $variables['attributes'];
 
   $output = '';
   if ($items) {
-    $output .= '<' . $type . new Attribute($list_attributes) . '>';
+    $output .= '<' . $list_type . new Attribute($list_attributes) . '>';
 
     $num_items = count($items);
     $i = 0;
@@ -2325,7 +2324,7 @@ function theme_item_list($variables) {
       }
       $output .= '<li' . new Attribute($attributes) . '>' . $item . '</li>';
     }
-    $output .= "</$type>";
+    $output .= "</$list_type>";
   }
 
   // Only output the list container and title, if there are any list items.
@@ -3130,7 +3129,7 @@ function drupal_common_theme() {
       'variables' => array('mark_type' => MARK_NEW),
     ),
     'item_list' => array(
-      'variables' => array('items' => array(), 'title' => '', 'type' => 'ul', 'attributes' => array()),
+      'variables' => array('items' => array(), 'title' => '', 'list_type' => 'ul', 'attributes' => array()),
     ),
     'more_help_link' => array(
       'variables' => array('url' => NULL),
