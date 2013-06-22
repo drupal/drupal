@@ -1517,6 +1517,7 @@ function theme_enable($theme_list) {
   $disabled_themes->save();
 
   list_themes(TRUE);
+  Drupal::service('router.builder')->rebuild();
   menu_router_rebuild();
   drupal_theme_rebuild();
 
@@ -1552,6 +1553,7 @@ function theme_disable($theme_list) {
   $disabled_themes->save();
 
   list_themes(TRUE);
+  Drupal::service('router.builder')->rebuild();
   menu_router_rebuild();
   drupal_theme_rebuild();
 

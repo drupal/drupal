@@ -143,3 +143,17 @@ system_admin_index:
     _content: 'Drupal\system\Controller\AdminController::index'
   requirements:
     _permission: 'access administration pages'
+
+system_theme_settings:
+  pattern: '/admin/appearance/settings'
+  defaults:
+    _form: '\Drupal\system\Form\ThemeSettingsForm'
+  requirements:
+    _permission: 'administer themes'
+
+system_theme_settings_global:
+  pattern: '/admin/appearance/settings/global'
+  defaults:
+    _form: '\Drupal\system\Form\ThemeSettingsForm'
+  requirements:
+    _permission: 'administer themes'

@@ -48,6 +48,8 @@ class ColorTest extends WebTestBase {
       ),
     );
     theme_enable(array_keys($this->themes));
+    $this->container->get('router.builder')->rebuild();
+    menu_router_rebuild();
 
     // Array filled with valid and not valid color values
     $this->colorTests = array(

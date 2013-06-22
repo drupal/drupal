@@ -13,3 +13,7 @@ services:
     class: Drupal\system\LegacyBreadcrumbBuilder
     tags:
       - {name: breadcrumb_builder, priority: 500}
+  system.route_subscriber:
+    class: Drupal\system\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
