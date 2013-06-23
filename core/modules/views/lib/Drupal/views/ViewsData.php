@@ -11,6 +11,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageManager;
 
 /**
  * Class to manage and lazy load cached views data.
@@ -72,6 +73,13 @@ class ViewsData {
   protected $moduleHandler;
 
   /**
+   * The language manager
+   *
+   * @var \Drupal\Core\Language\LanguageManager
+   */
+  protected $languageManager;
+
+  /**
    * Constructs this ViewsData object.
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
@@ -80,12 +88,15 @@ class ViewsData {
    *   The configuration factory object to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler class to use for invoking hooks.
+   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   *   The language manager.
    */
-  public function __construct(CacheBackendInterface $cache_backend, ConfigFactory $config, ModuleHandlerInterface $module_handler) {
+  public function __construct(CacheBackendInterface $cache_backend, ConfigFactory $config, ModuleHandlerInterface $module_handler, LanguageManager $language_manager) {
     $this->cacheBackend = $cache_backend;
     $this->moduleHandler = $module_handler;
+    $this->languageManager = $language_manager;
 
-    $this->langcode = language(Language::TYPE_INTERFACE)->langcode;
+    $this->langcode = $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->langcode;
     $this->skipCache = $config->get('views.settings')->get('skip_cache');
   }
 

@@ -58,7 +58,10 @@ services:
     arguments: [wizard, '@container.namespaces']
   views.views_data:
     class: Drupal\views\ViewsData
-    arguments: ['@cache.views_info', '@config.factory', '@module_handler']
+    arguments: ['@cache.views_info', '@config.factory', '@module_handler', '@language_manager']
+  views.views_data_helper:
+    class: Drupal\views\ViewsDataHelper
+    arguments: ['@views.views_data']
   views.executable:
     class: Drupal\views\ViewExecutableFactory
   views.analyzer:

@@ -137,18 +137,18 @@ class ViewTestData {
   public static function viewsData() {
     // Declaration of the base table.
     $data['views_test_data']['table'] = array(
-      'group' => t('Views test'),
+      'group' => 'Views test',
       'base' => array(
         'field' => 'id',
-        'title' => t('Views test data'),
-        'help' => t('Users who have created accounts on your site.'),
+        'title' => 'Views test data',
+        'help' => 'Users who have created accounts on your site.',
       ),
     );
 
     // Declaration of fields.
     $data['views_test_data']['id'] = array(
-      'title' => t('ID'),
-      'help' => t('The test data ID'),
+      'title' => 'ID',
+      'help' => 'The test data ID',
       'field' => array(
         'id' => 'numeric',
       ),
@@ -163,8 +163,8 @@ class ViewTestData {
       ),
     );
     $data['views_test_data']['name'] = array(
-      'title' => t('Name'),
-      'help' => t('The name of the person'),
+      'title' => 'Name',
+      'help' => 'The name of the person',
       'field' => array(
         'id' => 'standard',
       ),
@@ -179,8 +179,8 @@ class ViewTestData {
       ),
     );
     $data['views_test_data']['age'] = array(
-      'title' => t('Age'),
-      'help' => t('The age of the person'),
+      'title' => 'Age',
+      'help' => 'The age of the person',
       'field' => array(
         'id' => 'numeric',
       ),
@@ -195,8 +195,8 @@ class ViewTestData {
       ),
     );
     $data['views_test_data']['job'] = array(
-      'title' => t('Job'),
-      'help' => t('The job of the person'),
+      'title' => 'Job',
+      'help' => 'The job of the person',
       'field' => array(
         'id' => 'standard',
       ),
@@ -211,8 +211,8 @@ class ViewTestData {
       ),
     );
     $data['views_test_data']['created'] = array(
-      'title' => t('Created'),
-      'help' => t('The creation date of this record'),
+      'title' => 'Created',
+      'help' => 'The creation date of this record',
       'field' => array(
         'id' => 'date',
       ),

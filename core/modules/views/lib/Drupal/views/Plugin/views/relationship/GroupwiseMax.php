@@ -88,7 +88,7 @@ class GroupwiseMax extends RelationshipPluginBase {
     parent::buildOptionsForm($form, $form_state);
 
     // Get the sorts that apply to our base.
-    $sorts = views_fetch_fields($this->definition['base'], 'sort');
+    $sorts = Views::viewsDataHelper()->fetchFields($this->definition['base'], 'sort');
     foreach ($sorts as $sort_id => $sort) {
       $sort_options[$sort_id] = "$sort[group]: $sort[title]";
     }

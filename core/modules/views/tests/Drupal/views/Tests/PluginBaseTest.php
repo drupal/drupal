@@ -2,37 +2,93 @@
 
 /**
  * @file
- * Contains \Drupal\views\Tests\PluginBaseUnitTest.
+ * Contains \Drupal\views\Tests\PluginBaseTest.
  */
 
 namespace Drupal\views\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
-use Drupal\Component\Plugin\Discovery\StaticDiscovery;
+use Drupal\Tests\UnitTestCase;
+use Drupal\views\Tests\TestHelperPlugin;
 
 /**
  * Tests code of the views plugin base class.
  *
  * @see \Drupal\views\Plugin\views\PluginBase.
  */
-class PluginBaseUnitTest extends DrupalUnitTestBase {
+class PluginBaseTest extends UnitTestCase {
+
+  /**
+   * The test helper plugin to use for the tests.
+   *
+   * @var \Drupal\views\Tests\TestHelperPlugin
+   */
+  protected $testHelperPlugin;
 
   public static function getInfo() {
     return array(
-      'name' => 'Plugin base unit tests',
+      'name' => 'Plugin base test',
       'description' => 'Tests code of the views plugin base class.',
       'group' => 'Views Plugins',
     );
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    $this-> testHelperPlugin = new TestHelperPlugin(array(), 'default', array());
+  }
+
+  /**
    * Tests the unpackOptions method.
    *
+   * @param array $storage
+   *   The storage array to unpack option into.
+   * @param array $options
+   *   The array of options to unpack.
+   * @param array $definition
+   *   The definition array, defining default options.
+   * @param array $expected
+   *   The expected array after unpacking
+   * @param bool $all
+   *   Whether to unpack all options.
+   *
    * @see \Drupal\views\Plugin\views\PluginBase::unpackOptions.
+   *
+   * @dataProvider providerTestUnpackOptions
    */
-  public function testUnpackOptions() {
-    $plugin = $this->getTestPlugin();
+  public function testUnpackOptions($storage, $options, $definition, $expected, $all = FALSE) {
+    $this->testHelperPlugin->unpackOptions($storage, $options, $definition, $all);
+    $this->assertEquals($storage, $expected);
+  }
 
+  /**
+   * Tests the setOptionDefault method.
+   *
+   * @param array $storage
+   *   The storage array to unpack option into.
+   * @param array $definition
+   *   The definition array, defining default options.
+   * @param array $expected
+   *   The expected array after unpacking
+   *
+   * @see \Drupal\views\Plugin\views\PluginBase::setOptionDefaults.
+   *
+   * @dataProvider providerTestSetOptionDefault
+   */
+  public function testSetOptionDefault($storage, $definition, $expected) {
+    $this->testHelperPlugin->testSetOptionDefaults($storage, $definition);
+    $this->assertEquals($storage, $expected);
+  }
+
+  /**
+   * Data provider for testUnpackOptions().
+   *
+   * @return array
+   */
+  public function providerTestUnpackOptions() {
     $test_parameters = array();
     // Set a storage but no value, so the storage value should be kept.
     $test_parameters[] = array(
@@ -66,6 +122,7 @@ class PluginBaseUnitTest extends DrupalUnitTestBase {
     );
     // Set no storage but an options value, so the options value should be kept.
     $test_parameters[] = array(
+      'storage' => array(),
       'options' => array(
         'key' => 'value',
       ),
@@ -79,6 +136,7 @@ class PluginBaseUnitTest extends DrupalUnitTestBase {
     // Set additional options, which aren't part of the definition, so they
     // should be ignored if all is set.
     $test_parameters[] = array(
+      'storage' => array(),
       'options' => array(
         'key' => 'value',
         'key2' => 'value2',
@@ -91,6 +149,7 @@ class PluginBaseUnitTest extends DrupalUnitTestBase {
       ),
     );
     $test_parameters[] = array(
+      'storage' => array(),
       'options' => array(
         'key' => 'value',
         'key2' => 'value2',
@@ -106,6 +165,7 @@ class PluginBaseUnitTest extends DrupalUnitTestBase {
     );
     // Provide multiple options with their corresponding definition.
     $test_parameters[] = array(
+      'storage' => array(),
       'options' => array(
         'key' => 'value',
         'key2' => 'value2',
@@ -121,6 +181,7 @@ class PluginBaseUnitTest extends DrupalUnitTestBase {
     );
     // Set a complex definition structure with a zero and a one level structure.
     $test_parameters[] = array(
+      'storage' => array(),
       'options' => array(
         'key0' => 'value',
         'key1' => array('key1:1' => 'value1', 'key1:2' => 'value2'),
@@ -138,6 +199,7 @@ class PluginBaseUnitTest extends DrupalUnitTestBase {
     );
     // Setup a two level structure.
     $test_parameters[] = array(
+      'storage' => array(),
       'options' => array(
         'key2' => array(
           'key2:1' => array(
@@ -170,31 +232,25 @@ class PluginBaseUnitTest extends DrupalUnitTestBase {
       ),
     );
 
-    foreach ($test_parameters as $parameter) {
-      $parameter += array(
-        'storage' => array(),
-      );
-      $plugin->unpackOptions($parameter['storage'], $parameter['options'], $parameter['definition'], !empty($parameter['all']));
-      $this->assertEqual($parameter['storage'], $parameter['expected']);
-    }
+    return $test_parameters;
   }
 
   /**
-   * Tests the setOptionDefault method.
+   * Data provider for testSetOptionDefault().
    *
-   * @see \Drupal\views\Plugin\views\PluginBase::setOptionDefaults.
+   * @return array
    */
-  public function testSetOptionDefault() {
-    $plugin = $this->getTestPlugin();
-
+  public function providerTestSetOptionDefault() {
     $test_parameters = array();
-    // No definition mustn't change anything on the storage.
+    // No definition should change anything on the storage.
     $test_parameters[] = array(
+      'storage' => array(),
       'definition' => array(),
       'expected' => array(),
     );
     // Set a single definition, which should be picked up.
     $test_parameters[] = array(
+      'storage' => array(),
       'definition' => array(
         'key' => array('default' => 'value'),
       ),
@@ -204,6 +260,7 @@ class PluginBaseUnitTest extends DrupalUnitTestBase {
     );
     // Set multiple keys, all should be picked up.
     $test_parameters[] = array(
+      'storage' => array(),
       'definition' => array(
         'key' => array('default' => 'value'),
         'key2' => array('default' => 'value2'),
@@ -217,6 +274,7 @@ class PluginBaseUnitTest extends DrupalUnitTestBase {
     );
     // Setup a definition with multiple levels.
     $test_parameters[] = array(
+      'storage' => array(),
       'definition' => array(
         'key' => array('default' => 'value'),
         'key2' => array('contains' => array(
@@ -233,23 +291,7 @@ class PluginBaseUnitTest extends DrupalUnitTestBase {
       ),
     );
 
-    foreach ($test_parameters as $parameter) {
-      $parameter += array(
-        'storage' => array(),
-      );
-      $plugin->testSetOptionDefaults($parameter['storage'], $parameter['definition']);
-      $this->assertEqual($parameter['storage'], $parameter['expected']);
-    }
-  }
-
-  /**
-   * Sets up and returns a basic instance of a plugin.
-   *
-   * @return \Drupal\views\Tests\TestHelperPlugin
-   *   A test plugin instance.
-   */
-  protected function getTestPlugin() {
-    return new TestHelperPlugin(array(), 'default', array());
+    return $test_parameters;
   }
 
 }

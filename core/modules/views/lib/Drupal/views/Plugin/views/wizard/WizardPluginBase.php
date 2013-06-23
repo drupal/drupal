@@ -831,7 +831,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       // the base table for the view; the taxonomy vocabulary machine_name, for
       // example, is stored in taxonomy_vocabulary, not taxonomy_term_data.
       module_load_include('inc', 'views_ui', 'admin');
-      $fields = views_fetch_fields($this->base_table, 'filter');
+      $fields = Views::viewsDataHelper()->fetchFields($this->base_table, 'filter');
       if (isset($fields[$this->base_table . '.' . $bundle_key])) {
         $table = $this->base_table;
       }

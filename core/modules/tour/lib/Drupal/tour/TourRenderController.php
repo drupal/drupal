@@ -56,7 +56,7 @@ class TourRenderController extends EntityRenderController {
         $build[$entity_id] = array(
           '#theme' => 'item_list',
           '#items' => $list_items,
-          '#type' => 'ol',
+          '#list_type' => 'ol',
           '#attributes' => array(
             'id' => 'tour',
             'class' => array(

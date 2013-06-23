@@ -105,7 +105,7 @@ class ConfigItem extends ViewsFormBase {
           // If this relationship is valid for this type, add it to the list.
           $data = Views::viewsData()->get($relationship['table']);
           $base = $data[$relationship['field']]['relationship']['base'];
-          $base_fields = views_fetch_fields($base, $form_state['type'], $executable->display_handler->useGroupBy());
+          $base_fields = Views::viewsDataHelper()->fetchFields($base, $form_state['type'], $executable->display_handler->useGroupBy());
           if (isset($base_fields[$item['table'] . '.' . $item['field']])) {
             $relationship_handler->init($executable, $executable->display_handler, $relationship);
             $relationship_options[$relationship['id']] = $relationship_handler->adminLabel();
@@ -115,7 +115,7 @@ class ConfigItem extends ViewsFormBase {
         if (!empty($relationship_options)) {
           // Make sure the existing relationship is even valid. If not, force
           // it to none.
-          $base_fields = views_fetch_fields($view->get('base_table'), $form_state['type'], $executable->display_handler->useGroupBy());
+          $base_fields = Views::viewsDataHelper()->fetchFields($view->get('base_table'), $form_state['type'], $executable->display_handler->useGroupBy());
           if (isset($base_fields[$item['table'] . '.' . $item['field']])) {
             $relationship_options = array_merge(array('none' => t('Do not use a relationship')), $relationship_options);
           }

@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests;
 
 use Drupal\Core\Cache\MemoryCounterBackend;
+use Drupal\Core\Language\LanguageManager;
 use Drupal\views\ViewsData;
 
 /**
@@ -231,7 +232,7 @@ class ViewsDataTest extends ViewUnitTestBase {
    */
   protected function initViewsData() {
     $this->memoryCounterBackend->resetCounter();
-    $this->viewsData = new ViewsData($this->memoryCounterBackend, $this->container->get('config.factory'), $this->container->get('module_handler'));
+    $this->viewsData = new ViewsData($this->memoryCounterBackend, $this->container->get('config.factory'), $this->container->get('module_handler'), $this->container->get('language_manager'));
   }
 
   /**
@@ -267,7 +268,8 @@ class ViewsDataTest extends ViewUnitTestBase {
   protected function viewsData() {
     $data = parent::viewsData();
 
-    // Tweak the views data to have a base for testing views_fetch_fields().
+    // Tweak the views data to have a base for testing
+    // \Drupal\views\ViewsDataHelper::fetchFields().
     unset($data['views_test_data']['id']['field']);
     unset($data['views_test_data']['name']['argument']);
     unset($data['views_test_data']['age']['filter']);
@@ -280,75 +282,6 @@ class ViewsDataTest extends ViewUnitTestBase {
 
 
     return $data;
-  }
-
-
-  /**
-   * Tests the views_fetch_fields function().
-   */
-  public function testViewsFetchFields() {
-    $this->enableModules(array('views_ui'));
-    $this->container->get('module_handler')->loadInclude('views_ui', 'inc', 'admin');
-
-    $expected = array(
-      'field' => array(
-        'name',
-        'age',
-        'job',
-        'created',
-      ),
-      'argument' => array(
-        'id',
-        'age',
-        'job',
-        'created',
-      ),
-      'filter' => array(
-        'id',
-        'name',
-        'job',
-        'created',
-      ),
-      'sort' => array(
-        'id',
-        'name',
-        'age',
-        'created',
-      ),
-      'area' => array(
-        'created',
-        'job',
-        'age'
-      ),
-      'header' => array(
-        'created',
-        'job',
-        'age'
-      ),
-      'footer' => array(
-        'created',
-        'job',
-      ),
-    );
-
-    $handler_types = array('field', 'argument', 'filter', 'sort', 'area');
-    foreach ($handler_types as $handler_type) {
-      $fields = views_fetch_fields('views_test_data', $handler_type);
-      $expected_keys = array_walk($expected[$handler_type], function(&$item) {
-        $item = "views_test_data.$item";
-      });
-      $this->assertEqual($expected_keys, array_keys($fields), format_string('Handlers of type @handler_type are listed as expected.', array('@handler_type' => $handler_type)));
-    }
-
-    // Check for subtype filtering, so header and footer.
-    foreach (array('header', 'footer') as $sub_type) {
-      $fields = views_fetch_fields('views_test_data', 'area', FALSE, $sub_type);
-
-      $expected_keys = array_walk($expected[$sub_type], function(&$item) {
-        $item = "views_test_data.$item";
-      });
-      $this->assertEqual($expected_keys, array_keys($fields), format_string('Sub_type @sub_type is filtered as expected.', array('@sub_type' => $sub_type)));
-    }
   }
 
   /**

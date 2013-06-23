@@ -1201,7 +1201,7 @@ function theme_views_mini_pager($vars) {
     '#theme' => 'item_list',
     '#items' => $items,
     '#title' => NULL,
-    '#type' => 'ul',
+    '#list_type' => 'ul',
     '#attributes' => array(
       'class' => array('pager'),
     ),

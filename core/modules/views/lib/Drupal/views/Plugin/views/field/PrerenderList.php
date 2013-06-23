@@ -83,7 +83,7 @@ class PrerenderList extends FieldPluginBase {
           '#theme' => 'item_list',
           '#items' => $items,
           '#title' => NULL,
-          '#type' => $this->options['type'],
+          '#list_type' => $this->options['type'],
         );
         return drupal_render($item_list);
       }

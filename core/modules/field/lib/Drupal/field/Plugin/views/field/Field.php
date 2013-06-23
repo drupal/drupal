@@ -629,7 +629,7 @@ class Field extends FieldPluginBase {
           array(
             'items' => $items,
             'title' => NULL,
-            'type' => $this->options['multi_type']
+            'list_type' => $this->options['multi_type'],
           ));
       }
     }

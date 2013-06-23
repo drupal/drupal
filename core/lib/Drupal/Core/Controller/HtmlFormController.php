@@ -57,10 +57,12 @@ class HtmlFormController implements ContainerAwareInterface {
     $request->attributes->set('form', array());
     $request->attributes->set('form_state', $form_state);
     $args = $this->container->get('controller_resolver')->getArguments($request, array($form_object, 'buildForm'));
-    unset($args[0], $args[1]);
     $request->attributes->remove('form');
     $request->attributes->remove('form_state');
-    $form_state['build_info']['args'] = $args;
+
+    // Remove $form and $form_state from the arguments, and re-index them.
+    unset($args[0], $args[1]);
+    $form_state['build_info']['args'] = array_values($args);
 
     $form_id = _drupal_form_id($form_object, $form_state);
     return drupal_build_form($form_id, $form_state);

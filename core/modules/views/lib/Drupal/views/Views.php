@@ -25,6 +25,16 @@ class Views {
   }
 
   /**
+   * Returns the views data helper service.
+   *
+   * @return \Drupal\views\ViewsData
+   *   Returns a views data helper object.
+   */
+  public static function viewsDataHelper() {
+    return Drupal::service('views.views_data_helper');
+  }
+
+  /**
    * Returns the view executable factory service.
    *
    * @return \Drupal\views\ViewExecutableFactory
