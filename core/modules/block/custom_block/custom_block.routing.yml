@@ -18,3 +18,10 @@ custom_block_add_form:
     _content: 'Drupal\custom_block\Controller\CustomBlockController::addForm'
   requirements:
     _permission: 'administer blocks'
+
+custom_block_type_delete:
+  pattern: '/admin/structure/custom-blocks/manage/{custom_block_type}/delete'
+  defaults:
+    _entity_form: 'custom_block_type.delete'
+  requirements:
+    _permission: 'administer blocks'

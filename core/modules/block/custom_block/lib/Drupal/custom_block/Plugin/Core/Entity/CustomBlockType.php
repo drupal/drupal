@@ -23,7 +23,8 @@ use Drupal\custom_block\CustomBlockTypeInterface;
  *   controllers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "form" = {
- *       "default" = "Drupal\custom_block\CustomBlockTypeFormController"
+ *       "default" = "Drupal\custom_block\CustomBlockTypeFormController",
+ *       "delete" = "Drupal\custom_block\Form\CustomBlockTypeDeleteForm"
  *     },
  *     "list" = "Drupal\custom_block\CustomBlockTypeListController"
  *   },
