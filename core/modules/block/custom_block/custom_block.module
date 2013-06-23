@@ -60,14 +60,10 @@ function custom_block_menu() {
   );
   $items['admin/structure/custom-blocks/manage/%custom_block_type/delete'] = array(
     'title' => 'Delete',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('custom_block_type_delete_form', 4),
-    'access arguments' => array('administer blocks'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
-    'file' => 'custom_block.admin.inc',
+    'route_name' => 'custom_block_type_delete',
   );
-
   $items['block/add'] = array(
     'title' => 'Add custom block',
     'route_name' => 'custom_block_add_page',
