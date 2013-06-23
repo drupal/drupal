@@ -218,12 +218,16 @@ define('LANGUAGE_RTL', 1);
 define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
 
 /**
- * Flag for drupal_set_title(); text is not sanitized, so run check_plain().
+ * Flag used to indicate that text is not sanitized, so run check_plain().
+ *
+ * @see drupal_set_title()
  */
 define('CHECK_PLAIN', 0);
 
 /**
- * Flag for drupal_set_title(); text has already been sanitized.
+ * Flag used to indicate that text has already been sanitized.
+ *
+ * @see drupal_set_title()
  */
 define('PASS_THROUGH', -1);
 

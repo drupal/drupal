@@ -41,10 +41,17 @@ function image_schema() {
         'not null' => TRUE,
       ),
       'name' => array(
-        'description' => 'The style name.',
+        'description' => 'The style machine name.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
+      ),
+      'label' => array(
+        'description' => 'The style administrative name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
       ),
     ),
     'primary key' => array('isid'),
@@ -445,6 +452,30 @@ function image_update_7004() {
       db_change_field($table, $alt_column, $alt_column, $alt_spec);
       db_change_field($table, $title_column, $title_column, $title_spec);
     }
+  }
+}
+
+/**
+ * Add a column to the 'image_style' table to store administrative labels.
+ */
+function image_update_7005() {
+  $field = array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => 'The style administrative name.',
+  );
+  db_add_field('image_styles', 'label', $field);
+
+  // Do a direct query here, rather than calling image_styles(),
+  // in case Image module is disabled.
+  $styles = db_query('SELECT name FROM {image_styles}')->fetchCol();
+  foreach ($styles as $style) {
+    db_update('image_styles')
+      ->fields(array('label' => $style))
+      ->condition('name', $style)
+      ->execute();
   }
 }
 

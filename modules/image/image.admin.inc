@@ -32,10 +32,9 @@ function image_style_list() {
  *   An image style array.
  * @ingroup forms
  * @see image_style_form_submit()
- * @see image_style_name_validate()
  */
 function image_style_form($form, &$form_state, $style) {
-  $title = t('Edit %name style', array('%name' => $style['name']));
+  $title = t('Edit %name style', array('%name' => $style['label']));
   drupal_set_title($title, PASS_THROUGH);
 
   // Adjust this form for styles that must be overridden to edit.
@@ -56,27 +55,31 @@ function image_style_form($form, &$form_state, $style) {
     '#markup' => theme('image_style_preview', array('style' => $style)),
   );
 
+  // Show the Image Style label.
+  $form['label'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Image style name'),
+    '#default_value' => $style['label'],
+    '#disabled' => !$editable,
+    '#required' => TRUE,
+  );
+
   // Allow the name of the style to be changed, unless this style is
   // provided by a module's hook_default_image_styles().
-  if ($style['storage'] & IMAGE_STORAGE_MODULE) {
-    $form['name'] = array(
-      '#type' => 'item',
-      '#title' => t('Image style name'),
-      '#markup' => $style['name'],
-      '#description' => t('This image style is being provided by %module module and may not be renamed.', array('%module' => $style['module'])),
-    );
-  }
-  else {
-    $form['name'] = array(
-      '#type' => 'textfield',
-      '#size' => '64',
-      '#title' => t('Image style name'),
-      '#default_value' => $style['name'],
-      '#description' => t('The name is used in URLs for generated images. Use only lowercase alphanumeric characters, underscores (_), and hyphens (-).'),
-      '#element_validate' => array('image_style_name_validate'),
-      '#required' => TRUE,
-    );
-  }
+  $form['name'] = array(
+    '#type' => 'machine_name',
+    '#size' => '64',
+    '#default_value' => $style['name'],
+    '#disabled' => !$editable,
+    '#description' => t('The name is used in URLs for generated images. Use only lowercase alphanumeric characters, underscores (_), and hyphens (-).'),
+    '#required' => TRUE,
+    '#machine_name' => array(
+      'exists' => 'image_style_load',
+      'source' => array('label'),
+      'replace_pattern' => '[^0-9a-z_\-]',
+      'error' => t('Please only use lowercase alphanumeric characters, underscores (_), and hyphens (-) for style names.'),
+    ),
+  );
 
   // Build the list of existing image effects for this image style.
   $form['effects'] = array(
@@ -199,7 +202,7 @@ function image_style_form_add_submit($form, &$form_state) {
  * Submit handler for overriding a module-defined style.
  */
 function image_style_form_override_submit($form, &$form_state) {
-  drupal_set_message(t('The %style style has been overridden, allowing you to change its settings.', array('%style' => $form_state['image_style']['name'])));
+  drupal_set_message(t('The %style style has been overridden, allowing you to change its settings.', array('%style' => $form_state['image_style']['label'])));
   image_default_style_save($form_state['image_style']);
 }
 
@@ -207,11 +210,10 @@ function image_style_form_override_submit($form, &$form_state) {
  * Submit handler for saving an image style.
  */
 function image_style_form_submit($form, &$form_state) {
-  // Update the image style name if it has changed.
+  // Update the image style.
   $style = $form_state['image_style'];
-  if (isset($form_state['values']['name']) && $style['name'] != $form_state['values']['name']) {
-    $style['name'] = $form_state['values']['name'];
-  }
+  $style['name'] = $form_state['values']['name'];
+  $style['label'] = $form_state['values']['label'];
 
   // Update image effect weights.
   if (!empty($form_state['values']['effects'])) {
@@ -236,17 +238,25 @@ function image_style_form_submit($form, &$form_state) {
  *
  * @ingroup forms
  * @see image_style_add_form_submit()
- * @see image_style_name_validate()
  */
 function image_style_add_form($form, &$form_state) {
-  $form['name'] = array(
+  $form['label'] = array(
     '#type' => 'textfield',
-    '#size' => '64',
     '#title' => t('Style name'),
     '#default_value' => '',
-    '#description' => t('The name is used in URLs for generated images. Use only lowercase alphanumeric characters, underscores (_), and hyphens (-).'),
-    '#element_validate' => array('image_style_name_validate'),
     '#required' => TRUE,
+  );
+  $form['name'] = array(
+    '#type' => 'machine_name',
+    '#description' => t('The name is used in URLs for generated images. Use only lowercase alphanumeric characters, underscores (_), and hyphens (-).'),
+    '#size' => '64',
+    '#required' => TRUE,
+    '#machine_name' => array(
+      'exists' => 'image_style_load',
+      'source' => array('label'),
+      'replace_pattern' => '[^0-9a-z_\-]',
+      'error' => t('Please only use lowercase alphanumeric characters, underscores (_), and hyphens (-) for style names.'),
+    ),
   );
 
   $form['submit'] = array(
@@ -261,14 +271,22 @@ function image_style_add_form($form, &$form_state) {
  * Submit handler for adding a new image style.
  */
 function image_style_add_form_submit($form, &$form_state) {
-  $style = array('name' => $form_state['values']['name']);
+  $style = array(
+    'name' => $form_state['values']['name'],
+    'label' => $form_state['values']['label'],
+  );
   $style = image_style_save($style);
-  drupal_set_message(t('Style %name was created.', array('%name' => $style['name'])));
+  drupal_set_message(t('Style %name was created.', array('%name' => $style['label'])));
   $form_state['redirect'] = 'admin/config/media/image-styles/edit/' . $style['name'];
 }
 
 /**
  * Element validate function to ensure unique, URL safe style names.
+ *
+ * This function is no longer used in Drupal core since image style names are
+ * now validated using #machine_name functionality. It is kept for backwards
+ * compatibility (since non-core modules may be using it) and will be removed
+ * in Drupal 8.
  */
 function image_style_name_validate($element, $form_state) {
   // Check for duplicates.
@@ -295,7 +313,7 @@ function image_style_name_validate($element, $form_state) {
 function image_style_delete_form($form, &$form_state, $style) {
   $form_state['image_style'] = $style;
 
-  $replacement_styles = array_diff_key(image_style_options(), array($style['name'] => ''));
+  $replacement_styles = array_diff_key(image_style_options(TRUE, PASS_THROUGH), array($style['name'] => ''));
   $form['replacement'] = array(
     '#title' => t('Replacement style'),
     '#type' => 'select',
@@ -305,7 +323,7 @@ function image_style_delete_form($form, &$form_state, $style) {
 
   return confirm_form(
     $form,
-    t('Optionally select a style before deleting %style', array('%style' => $style['name'])),
+    t('Optionally select a style before deleting %style', array('%style' => $style['label'])),
     'admin/config/media/image-styles',
     t('If this style is in use on the site, you may select another style to replace it. All images that have been generated for this style will be permanently deleted.'),
     t('Delete'),  t('Cancel')
@@ -319,7 +337,7 @@ function image_style_delete_form_submit($form, &$form_state) {
   $style = $form_state['image_style'];
 
   image_style_delete($style, $form_state['values']['replacement']);
-  drupal_set_message(t('Style %name was deleted.', array('%name' => $style['name'])));
+  drupal_set_message(t('Style %name was deleted.', array('%name' => $style['label'])));
   $form_state['redirect'] = 'admin/config/media/image-styles';
 }
 
@@ -331,7 +349,7 @@ function image_style_revert_form($form, &$form_state, $style) {
 
   return confirm_form(
     $form,
-    t('Revert the %style style?', array('%style' => $style['name'])),
+    t('Revert the %style style?', array('%style' => $style['label'])),
     'admin/config/media/image-styles',
     t('Reverting this style will delete the customized settings and restore the defaults provided by the @module module.', array('@module' => $style['module'])),
     t('Revert'),  t('Cancel')
@@ -342,7 +360,7 @@ function image_style_revert_form($form, &$form_state, $style) {
  * Submit handler to convert an overridden style to its default.
  */
 function image_style_revert_form_submit($form, &$form_state) {
-  drupal_set_message(t('The %style style has been reverted to its defaults.', array('%style' => $form_state['image_style']['name'])));
+  drupal_set_message(t('The %style style has been reverted to its defaults.', array('%style' => $form_state['image_style']['label'])));
   image_default_style_revert($form_state['image_style']);
   $form_state['redirect'] = 'admin/config/media/image-styles';
 }
@@ -439,7 +457,7 @@ function image_effect_delete_form($form, &$form_state, $style, $effect) {
   $form_state['image_style'] = $style;
   $form_state['image_effect'] = $effect;
 
-  $question = t('Are you sure you want to delete the @effect effect from the %style style?', array('%style' => $style['name'], '@effect' => $effect['label']));
+  $question = t('Are you sure you want to delete the @effect effect from the %style style?', array('%style' => $style['label'], '@effect' => $effect['label']));
   return confirm_form($form, $question, 'admin/config/media/image-styles/edit/' . $style['name'], '', t('Delete'));
 }
 
@@ -650,7 +668,7 @@ function theme_image_style_list($variables) {
   $rows = array();
   foreach ($styles as $style) {
     $row = array();
-    $row[] = l($style['name'], 'admin/config/media/image-styles/edit/' . $style['name']);
+    $row[] = l($style['label'], 'admin/config/media/image-styles/edit/' . $style['name']);
     $link_attributes = array(
       'attributes' => array(
         'class' => array('image-style-link'),
@@ -805,7 +823,7 @@ function theme_image_style_preview($variables) {
   // Build the preview of the image style.
   $preview_url = file_create_url($preview_file) . '?cache_bypass=' . REQUEST_TIME;
   $output .= '<div class="preview-image-wrapper">';
-  $output .= check_plain($style['name']) . ' (' . l(t('view actual size'), file_create_url($preview_file) . '?' . time()) . ')';
+  $output .= check_plain($style['label']) . ' (' . l(t('view actual size'), file_create_url($preview_file) . '?' . time()) . ')';
   $output .= '<div class="preview-image modified-image" style="' . $preview_attributes['style'] . '">';
   $output .= '<a href="' . file_create_url($preview_file) . '?' . time() . '">' . theme('image', array('path' => $preview_url, 'alt' => t('Sample modified image'), 'title' => '', 'attributes' => $preview_attributes)) . '</a>';
   $output .= '<div class="height" style="height: ' . $preview_height . 'px"><span>' . $preview_image['height'] . 'px</span></div>';

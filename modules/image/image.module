@@ -347,6 +347,7 @@ function image_image_default_styles() {
   $styles = array();
 
   $styles['thumbnail'] = array(
+    'label' => 'Thumbnail (100x100)',
     'effects' => array(
       array(
         'name' => 'image_scale',
@@ -357,6 +358,7 @@ function image_image_default_styles() {
   );
 
   $styles['medium'] = array(
+    'label' => 'Medium (220x220)',
     'effects' => array(
       array(
         'name' => 'image_scale',
@@ -367,6 +369,7 @@ function image_image_default_styles() {
   );
 
   $styles['large'] = array(
+    'label' => 'Large (480x480)',
     'effects' => array(
       array(
         'name' => 'image_scale',
@@ -575,6 +578,7 @@ function image_styles() {
         $module_styles = module_invoke($module, 'image_default_styles');
         foreach ($module_styles as $style_name => $style) {
           $style['name'] = $style_name;
+          $style['label'] = empty($style['label']) ? $style_name : $style['label'];
           $style['module'] = $module;
           $style['storage'] = IMAGE_STORAGE_DEFAULT;
           foreach ($style['effects'] as $key => $effect) {
@@ -689,6 +693,10 @@ function image_style_save($style) {
     }
   }
   else {
+    // Add a default label when not given.
+    if (empty($style['label'])) {
+      $style['label'] = $style['name'];
+    }
     drupal_write_record('image_styles', $style);
     $style['is_new'] = TRUE;
   }
@@ -758,20 +766,28 @@ function image_style_effects($style) {
  *
  * @param $include_empty
  *   If TRUE a <none> option will be inserted in the options array.
+ * @param $output
+ *   Optional flag determining how the options will be sanitized on output.
+ *   Leave this at the default (CHECK_PLAIN) if you are using the output of
+ *   this function directly in an HTML context, such as for checkbox or radio
+ *   button labels, and do not plan to sanitize it on your own. If using the
+ *   output of this function as select list options (its primary use case), you
+ *   should instead set this flag to PASS_THROUGH to avoid double-escaping of
+ *   the output (the form API sanitizes select list options by default).
  *
  * @return
- *   Array of image styles both key and value are set to style name.
+ *   Array of image styles with the machine name as key and the label as value.
  */
-function image_style_options($include_empty = TRUE) {
+function image_style_options($include_empty = TRUE, $output = CHECK_PLAIN) {
   $styles = image_styles();
   $options = array();
   if ($include_empty && !empty($styles)) {
     $options[''] = t('<none>');
   }
-  // Use the array concatenation operator '+' here instead of array_merge(),
-  // because the latter loses the datatype of the array keys, turning
-  // associative string keys into numeric ones without warning.
-  $options = $options + drupal_map_assoc(array_keys($styles));
+  foreach ($styles as $name => $style) {
+    $options[$name] = ($output == PASS_THROUGH) ? $style['label'] : check_plain($style['label']);
+  }
+
   if (empty($options)) {
     $options[''] = t('No defined styles');
   }

@@ -406,7 +406,7 @@ function user_admin_settings() {
     $form['personalization']['pictures']['settings']['user_picture_style'] = array(
       '#type' => 'select',
       '#title' => t('Picture display style'),
-      '#options' => image_style_options(TRUE),
+      '#options' => image_style_options(TRUE, PASS_THROUGH),
       '#default_value' => variable_get('user_picture_style', ''),
       '#description' => t('The style selected will be used on display, while the original image is retained. Styles may be configured in the <a href="!url">Image styles</a> administration area.', array('!url' => url('admin/config/media/image-styles'))),
     );

@@ -177,6 +177,7 @@ function hook_image_default_styles() {
   $styles = array();
 
   $styles['mymodule_preview'] = array(
+    'label' => 'My module preview',
     'effects' => array(
       array(
         'name' => 'image_scale',
