@@ -1,6 +1,8 @@
 
 Drupal 7.23, xxxx-xx-xx (development version)
 -----------------------
+- Added a drupal_array_diff_assoc_recursive() function to allow associative
+  arrays to be compared recursively (API addition).
 - Added human-readable labels to image styles, in addition to the existing
   machine-readable name (API change).
 - Moved the drupal_get_hash_salt() function to bootstrap.inc and used it in
