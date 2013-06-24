@@ -89,34 +89,37 @@ function tracker_page($account = NULL, $set_title = FALSE) {
       );
 
       // Adds extra RDFa markup to the $row array if the RDF module is enabled.
-      if (function_exists('rdf_mapping_load')) {
-        // Each node is not loaded for performance reasons, as a result we need
-        // to retrieve the RDF mapping for each node type.
-        $mapping = rdf_mapping_load('node', $node->type);
+      if (module_exists('rdf')) {
+        $mapping = rdf_get_mapping('node', $node->type);
         // Adds RDFa markup to the title of the node. Because the RDFa markup is
         // added to the td tag which might contain HTML code, we specify an
         // empty datatype to ensure the value of the title read by the RDFa
         // parsers is a plain literal.
-        $row['title'] += rdf_rdfa_attributes($mapping['title']) + array('datatype' => '');
+        $title_mapping = $mapping->getPreparedFieldMapping('title');
+        $row['title'] += rdf_rdfa_attributes($title_mapping) + array('datatype' => '');
         // Annotates the td tag containing the author of the node.
-        $row['author'] += rdf_rdfa_attributes($mapping['uid']);
+        $uid_mapping = $mapping->getPreparedFieldMapping('uid');
+        $row['author'] += rdf_rdfa_attributes($uid_mapping);
         // Annotates the td tag containing the number of replies. We add the
         // content attribute to ensure that only the comment count is used as
         // the value for 'num_replies'. Otherwise, other text such as a link
         // to the number of new comments could be included in the 'num_replies'
         // value.
-        $row['replies'] += rdf_rdfa_attributes($mapping['comment_count']);
+        $comment_count_mapping = $mapping->getPreparedFieldMapping('comment_count');
+        $row['replies'] += rdf_rdfa_attributes($comment_count_mapping);
         $row['replies'] += array('content' => $node->comment_count);
         // If the node has no comments, we assume the node itself was modified
         // and apply 'changed' in addition to 'last_activity'.  If there are
         // comments present, we cannot infer whether the node itself was
         // modified or a comment was posted, so we use only 'last_activity'.
-        $mapping_last_activity = rdf_rdfa_attributes($mapping['last_activity'], $node->last_activity);
+        $last_activity_mapping = $mapping->getPreparedFieldMapping('last_activity');
+        $last_activity_attributes = rdf_rdfa_attributes($last_activity_mapping, $node->last_activity);
         if ($node->comment_count == 0) {
-          $mapping_changed = rdf_rdfa_attributes($mapping['changed'], $node->last_activity);
-          $mapping_last_activity['property'] = array_merge($mapping_last_activity['property'], $mapping_changed['property']);
+          $changed_mapping = $mapping->getPreparedFieldMapping('changed');
+          $changed_attributes = rdf_rdfa_attributes($changed_mapping, $node->last_activity);
+          $last_activity_attributes['property'] = array_merge($last_activity_attributes['property'], $changed_attributes['property']);
         }
-        $row['last updated'] += $mapping_last_activity;
+        $row['last updated'] += $last_activity_attributes;
 
         // We need to add the about attribute on the tr tag to specify which
         // node the RDFa annotations above apply to. We move the content of

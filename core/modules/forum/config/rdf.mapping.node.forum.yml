@@ -1,0 +1,11 @@
+id: node.forum
+targetEntityType: node
+bundle: forum
+types:
+  - 'sioc:Post'
+  - 'sioct:BoardPost'
+fieldMappings:
+  taxonomy_forums:
+    properties:
+      - 'sioc:has_container'
+    mapping_type: 'rel'

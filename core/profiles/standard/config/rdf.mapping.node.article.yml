@@ -1,0 +1,49 @@
+id: node.article
+targetEntityType: node
+bundle: article
+types:
+  - 'foaf:Document'
+  - 'sioc:Item'
+fieldMappings:
+  title:
+    properties:
+      - 'dc:title'
+  created:
+    properties:
+      - 'dc:date'
+      - 'dc:created'
+    datatype: 'xsd:dateTime'
+    datatype_callback: 'date_iso8601'
+  changed:
+    properties:
+      - 'dc:modified'
+    datatype: 'xsd:dateTime'
+    datatype_callback: 'date_iso8601'
+  body:
+    properties:
+      - 'content:encoded'
+  uid:
+    properties:
+      - 'sioc:has_creator'
+    mapping_type: 'rel'
+  name:
+    properties:
+      - 'foaf:name'
+  comment_count:
+    properties:
+      - 'sioc:num_replies'
+    datatype: 'xsd:integer'
+  last_activity:
+    properties:
+      - 'sioc:last_activity_date'
+    datatype: 'xsd:dateTime'
+    datatype_callback: 'date_iso8601'
+  field_image:
+    properties:
+      - 'og:image'
+      - 'rdfs:seeAlso'
+    mapping_type: 'rel'
+  field_tags:
+    properties:
+      - 'dc:subject'
+    mapping_type: 'rel'

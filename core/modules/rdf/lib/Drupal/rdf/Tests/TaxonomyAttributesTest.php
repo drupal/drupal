@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\rdf\Tests\TaxonomyAttributesTest.
+ * Contains \Drupal\rdf\Tests\TaxonomyAttributesTest.
  */
 
 namespace Drupal\rdf\Tests;
@@ -29,12 +29,25 @@ class TaxonomyAttributesTest extends TaxonomyTestBase {
     );
   }
 
+  function setUp() {
+    parent::setUp();
+
+    $this->vocabulary = $this->createVocabulary();
+
+    // RDF mapping - term bundle.
+    rdf_get_mapping('taxonomy_term', $this->vocabulary->id())
+      ->setBundleMapping(array('types' => array('skos:Concept')))
+      ->setFieldMapping('name', array(
+        'properties' => array('rdfs:label', 'skos:prefLabel'),
+      ))
+      ->save();
+  }
+
   /**
    * Creates a random term and ensures the RDF output is correct.
    */
   function testTaxonomyTermRdfaAttributes() {
-    $vocabulary = $this->createVocabulary();
-    $term = $this->createTerm($vocabulary);
+    $term = $this->createTerm($this->vocabulary);
     $term_uri = url('taxonomy/term/' . $term->id(), array('absolute' => TRUE));
 
     // Parses the term's page and checks that the RDF output is correct.

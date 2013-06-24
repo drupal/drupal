@@ -2454,28 +2454,6 @@ function user_cookie_delete($cookie_name) {
 }
 
 /**
- * Implements hook_rdf_mapping().
- */
-function user_rdf_mapping() {
-  return array(
-    array(
-      'type' => 'user',
-      'bundle' => RDF_DEFAULT_BUNDLE,
-      'mapping' => array(
-        'rdftype' => array('sioc:UserAccount'),
-        'name' => array(
-          'predicates' => array('foaf:name'),
-        ),
-        'homepage' => array(
-          'predicates' => array('foaf:page'),
-          'type' => 'rel',
-        ),
-      ),
-    ),
-  );
-}
-
-/**
  * Implements hook_file_download_access().
  */
 function user_file_download_access($field, EntityInterface $entity, File $file) {

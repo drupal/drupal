@@ -1798,48 +1798,6 @@ function comment_ranking() {
 }
 
 /**
- * Implements hook_rdf_mapping().
- */
-function comment_rdf_mapping() {
-  return array(
-    array(
-      'type' => 'comment',
-      'bundle' => RDF_DEFAULT_BUNDLE,
-      'mapping' => array(
-        'rdftype' => array('sioc:Post', 'sioct:Comment'),
-        'title' => array(
-          'predicates' => array('dc:title'),
-        ),
-        'created' => array(
-          'predicates' => array('dc:date', 'dc:created'),
-          'datatype' => 'xsd:dateTime',
-          'callback' => 'date_iso8601',
-        ),
-        'changed' => array(
-          'predicates' => array('dc:modified'),
-          'datatype' => 'xsd:dateTime',
-          'callback' => 'date_iso8601',
-        ),
-        'comment_body' => array(
-          'predicates' => array('content:encoded'),
-        ),
-        'pid' => array(
-          'predicates' => array('sioc:reply_of'),
-          'type' => 'rel',
-        ),
-        'uid' => array(
-          'predicates' => array('sioc:has_creator'),
-          'type' => 'rel',
-        ),
-        'name' => array(
-          'predicates' => array('foaf:name'),
-        ),
-      ),
-    ),
-  );
-}
-
-/**
  * Implements hook_file_download_access().
  */
 function comment_file_download_access($field, EntityInterface $entity, File $file) {

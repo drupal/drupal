@@ -19,7 +19,7 @@ class UserAttributesTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('rdf', 'rdf_test');
+  public static $modules = array('rdf');
 
   public static function getInfo() {
     return array(
@@ -27,6 +27,18 @@ class UserAttributesTest extends WebTestBase {
       'description' => 'Tests the RDFa markup of users.',
       'group' => 'RDF',
     );
+  }
+
+  public function setUp() {
+    parent::setUp();
+    rdf_get_mapping('user', 'user')
+      ->setBundleMapping(array(
+        'types' => array('sioc:UserAccount'),
+      ))
+      ->setFieldMapping('name', array(
+        'properties' => array('foaf:name'),
+      ))
+      ->save();
   }
 
   /**
@@ -39,7 +51,6 @@ class UserAttributesTest extends WebTestBase {
     // Creates two users, one with access to user profiles.
     $user1 = $this->drupalCreateUser(array('access user profiles'));
     $user2 = $this->drupalCreateUser();
-    $username = $user2->name;
     $this->drupalLogin($user1);
 
     $account_uri = url('user/' . $user2->uid, array('absolute' => TRUE));

@@ -1,0 +1,35 @@
+id: comment.comment_node_article
+targetEntityType: comment
+bundle: comment_node_article
+types:
+  - 'sioc:Post'
+  - 'sioct:Comment'
+fieldMappings:
+  title:
+    properties:
+      - 'dc:title'
+  created:
+    properties:
+      - 'dc:date'
+      - 'dc:created'
+    datatype: 'xsd:dateTime'
+    datatype_callback: 'date_iso8601'
+  changed:
+    properties:
+      - 'dc:modified'
+    datatype: 'xsd:dateTime'
+    datatype_callback: 'date_iso8601'
+  comment_body:
+    properties:
+      - 'content:encoded'
+  uid:
+    properties:
+      - 'sioc:has_creator'
+    mapping_type: 'rel'
+  name:
+    properties:
+      - 'foaf:name'
+  pid:
+    properties:
+      - 'sioc:reply_of'
+    mapping_type: 'rel'

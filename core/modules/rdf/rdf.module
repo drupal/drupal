@@ -36,45 +36,51 @@ function rdf_help($path, $arg) {
  * classes and properties. This module takes care of injecting these mappings
  * into variables available to theme functions and templates. All Drupal core
  * themes are coded to be RDFa compatible.
- *
- * Example mapping from node.module:
- * @code
- *   array(
- *     'type' => 'node',
- *     'bundle' => RDF_DEFAULT_BUNDLE,
- *     'mapping' => array(
- *       'rdftype' => array('sioc:Item', 'foaf:Document'),
- *       'title' => array(
- *         'predicates' => array('dc:title'),
- *       ),
- *       'created' => array(
- *         'predicates' => array('dc:date', 'dc:created'),
- *         'datatype' => 'xsd:dateTime',
- *         'callback' => 'date_iso8601',
- *       ),
- *      'body' => array(
- *         'predicates' => array('content:encoded'),
- *       ),
- *       'uid' => array(
- *         'predicates' => array('sioc:has_creator'),
- *       ),
- *       'name' => array(
- *         'predicates' => array('foaf:name'),
- *       ),
- *     ),
- *   );
- * @endcode
  */
-
 /**
- * RDF bundle flag: Default bundle.
+ * Returns the RDF mapping object associated to a bundle.
  *
- * Implementations of hook_rdf_mapping() should use this constant for the
- * 'bundle' key when defining a default set of RDF mappings for an entity type.
- * Each bundle will inherit the default mappings defined for the entity type
- * unless the bundle defines its own specific mappings.
+ * The function reads the rdf_mapping object from the current configuration,
+ * or returns a ready-to-use empty one if no configuration entry exists yet for
+ * this bundle. This streamlines the manipulation of mapping objects by always
+ * returning a consistent object that reflects the current state of the
+ * configuration.
+ *
+ * Example usage:
+ * -Map the 'article' bundle to 'sioc:Post' and the 'title' field to 'dc:title'.
+ * @code
+ * rdf_get_mapping('node', 'article')
+ *   ->setBundleMapping(array(
+ *     'types' => array('sioc:Post'),
+ *   ))
+ *   ->setFieldMapping('title', array(
+ *     'properties' => array('dc:title')
+ *   ))
+ *   ->save();
+ * @endcode
+ *
+ * @param string $entity_type
+ *   The entity type.
+ * @param string $bundle
+ *   The bundle.
+ *
+ * @return \Drupal\rdf\Plugin\Core\Entity\RdfMapping
+ *   The RdfMapping object.
  */
-const RDF_DEFAULT_BUNDLE = '';
+function rdf_get_mapping($entity_type, $bundle) {
+  // Try loading the mapping from configuration.
+  $mapping = entity_load('rdf_mapping', $entity_type . '.' . $bundle);
+
+  // If not found, create a fresh mapping object.
+  if (!$mapping) {
+    $mapping = entity_create('rdf_mapping', array(
+      'targetEntityType' => $entity_type,
+      'bundle' => $bundle,
+    ));
+  }
+
+  return $mapping;
+}
 
 /**
  * Implements hook_rdf_namespaces().
@@ -113,165 +119,13 @@ function rdf_get_namespaces() {
 }
 
 /**
- * Returns the mapping for attributes of a given entity type/bundle pair.
- *
- * @param $type
- *   An entity type.
- * @param $bundle
- *   (optional) A bundle name.
- *
- * @return
- *   The mapping corresponding to the requested entity type/bundle pair or an
- *   empty array.
- */
-function rdf_mapping_load($type, $bundle = RDF_DEFAULT_BUNDLE) {
-  // Retrieves the bundle-specific mapping from the entity info.
-  $bundles = entity_get_bundles($type);
-  if (!empty($bundles[$bundle]['rdf_mapping'])) {
-    return $bundles[$bundle]['rdf_mapping'];
-  }
-  // If there is no mapping defined for this bundle, we return the default
-  // mapping that is defined for this entity type.
-  else {
-    return _rdf_get_default_mapping($type);
-  }
-}
-
-/**
  * @} End of "defgroup rdf".
  */
-
-/**
- * Gets the default RDF mapping for a given entity type.
- *
- * @param $type
- *   An entity type, e.g. 'node' or 'comment'.
- *
- * @return
- *   The RDF mapping or an empty array if no mapping is defined for this entity
- *   type.
- */
-function _rdf_get_default_mapping($type) {
-  $default_mappings = &drupal_static(__FUNCTION__);
-
-  if (!isset($default_mappings)) {
-    // Get all of the modules that implement hook_rdf_mapping().
-    $modules = module_implements('rdf_mapping');
-
-    // Only consider the default entity mapping definitions.
-    foreach ($modules as $module) {
-      $mappings = module_invoke($module, 'rdf_mapping');
-      foreach ($mappings as $mapping) {
-        if ($mapping['bundle'] === RDF_DEFAULT_BUNDLE) {
-          $default_mappings[$mapping['type']] = $mapping['mapping'];
-        }
-      }
-    }
-  }
-
-  return isset($default_mappings[$type]) ? $default_mappings[$type] : array();
-}
-
-/**
- * Retrieves an RDF mapping from the database.
- *
- * @param $type
- *   The entity type the mapping refers to.
- * @param $bundle
- *   The bundle the mapping refers to.
- *
- * @return
- *   An RDF mapping structure or, FALSE if the mapping does not exist.
- */
-function _rdf_mapping_load($type, $bundle) {
-  $mappings = _rdf_mapping_load_multiple($type, array($bundle));
-  return $mappings ? reset($mappings) : FALSE;
-}
-
-/**
- * Helper function to retrieve a set of RDF mappings from the database.
- *
- * @param $type
- *   The entity type of the mappings.
- * @param $bundles
- *   The bundles the mappings refer to.
- *
- * @return
- *   An array of RDF mapping structures, or an empty array.
- */
-function _rdf_mapping_load_multiple($type, array $bundles) {
-  $mappings = db_select('rdf_mapping')
-    ->fields(NULL, array('bundle', 'mapping'))
-    ->condition('type', $type)
-    ->condition('bundle', $bundles)
-    ->execute()
-    ->fetchAllKeyed();
-
-  foreach ($mappings as $bundle => $mapping) {
-    $mappings[$bundle] = unserialize($mapping);
-  }
-  return $mappings;
-}
 
 /**
  * @addtogroup rdf
  * @{
  */
-
-/**
- * Saves an RDF mapping to the database.
- *
- * Takes a mapping structure returned by hook_rdf_mapping() implementations
- * and creates or updates a record mapping for each encountered entity
- * type/bundle pair. If available, adds default values for non-existent mapping
- * keys.
- *
- * @param $mapping
- *   The RDF mapping to save.
- *
- * @return
- *   MergeQuery object that indicates the outcome of the operation.
- */
-function rdf_mapping_save($mapping) {
-  // In the case where a field has a mapping defined in the default entity
-  // mapping, but a mapping is not specified in the bundle-specific mapping,
-  // then use the default mapping for that field.
-  $mapping['mapping'] += _rdf_get_default_mapping($mapping['type']);
-
-  $status = db_merge('rdf_mapping')
-    ->key(array(
-      'type' => $mapping['type'],
-      'bundle' => $mapping['bundle'],
-    ))
-    ->fields(array(
-      'mapping' => serialize($mapping['mapping']),
-    ))
-    ->execute();
-
-  entity_info_cache_clear();
-
-  return $status;
-}
-
-/**
- * Deletes the mapping for the given bundle from the database.
- *
- * @param $type
- *   The entity type the mapping refers to.
- * @param $bundle
- *   The bundle the mapping refers to.
- *
- * @return
- *   TRUE if the mapping is deleted, FALSE if not.
- */
-function rdf_mapping_delete($type, $bundle) {
-  $num_rows = db_delete('rdf_mapping')
-    ->condition('type', $type)
-    ->condition('bundle', $bundle)
-    ->execute();
-
-  return (bool) ($num_rows > 0);
-}
 
 /**
  * Builds an array of RDFa attributes for a given mapping.
@@ -281,50 +135,54 @@ function rdf_mapping_delete($type, $bundle) {
  * These include $attributes, $title_attributes, $content_attributes and the
  * field-specific $item_attributes variables.
  *
- * @param $mapping
- *   An array containing a mandatory 'predicates' key and optional 'datatype',
- *   'callback' and 'type' keys. For example:
+ * @param array $mapping
+ *   An array containing a mandatory 'properties' key and optional 'datatype',
+ *   'datatype_callback' and 'type' keys. For example:
  *   @code
  *     array(
- *       'predicates' => array('dc:created'),
+ *       'properties' => array('dc:created'),
  *       'datatype' => 'xsd:dateTime',
- *       'callback' => 'date_iso8601',
+ *       'datatype_callback' => 'date_iso8601',
  *       ),
  *     );
  *   @endcode
- * @param $data
+ * @param mixed $data
  *   (optional) A value that needs to be converted by the provided callback
  *   function.
  *
- * @return
+ * @return array
  *   RDFa attributes suitable for Drupal\Core\Template\Attribute.
  *
  * @see theme_rdf_template_variable_wrapper()
  */
 function rdf_rdfa_attributes($mapping, $data = NULL) {
+  $attributes = array();
+
   // The type of mapping defaults to 'property'.
-  $type = isset($mapping['type']) ? $mapping['type'] : 'property';
+  $type = isset($mapping['mapping_type']) ? $mapping['mapping_type'] : 'property';
 
   switch ($type) {
     // The mapping expresses the relationship between two resources.
     case 'rel':
     case 'rev':
-      $attributes[$type] = $mapping['predicates'];
+      $attributes[$type] = $mapping['properties'];
       break;
 
     // The mapping expresses the relationship between a resource and some
     // literal text.
     case 'property':
-      $attributes['property'] = $mapping['predicates'];
-      // Convert $data to a specific format as per the callback function.
-      if (isset($data) && isset($mapping['callback'])) {
-        $callback = $mapping['callback'];
-        $attributes['content'] = $callback($data);
+      if (!empty($mapping['properties'])) {
+        $attributes['property'] = $mapping['properties'];
+        // Convert $data to a specific format as per the callback function.
+        if (isset($data) && !empty($mapping['datatype_callback'])) {
+          $callback = $mapping['datatype_callback'];
+          $attributes['content'] = $callback($data);
+        }
+        if (isset($mapping['datatype'])) {
+          $attributes['datatype'] = $mapping['datatype'];
+        }
+        break;
       }
-      if (isset($mapping['datatype'])) {
-        $attributes['datatype'] = $mapping['datatype'];
-      }
-      break;
   }
 
   return $attributes;
@@ -335,80 +193,6 @@ function rdf_rdfa_attributes($mapping, $data = NULL) {
  */
 
 /**
- * Implements hook_modules_installed().
- *
- * Checks if the installed modules have any RDF mapping definitions to declare
- * and stores them in the rdf_mapping table.
- *
- * While both default entity mappings and specific bundle mappings can be
- * defined in hook_rdf_mapping(), default entity mappings are not stored in the
- * database. Only overridden mappings are stored in the database. The default
- * entity mappings can be overriden by specific bundle mappings which are
- * stored in the database and can be altered via the RDF CRUD mapping API.
- */
-function rdf_modules_installed($modules) {
-  foreach ($modules as $module) {
-    $function = $module . '_rdf_mapping';
-    if (function_exists($function)) {
-      foreach ($function() as $mapping) {
-        // Only the bundle mappings are saved in the database.
-        if ($mapping['bundle'] !== RDF_DEFAULT_BUNDLE) {
-          rdf_mapping_save($mapping);
-        }
-      }
-    }
-  }
-}
-
-/**
- * Implements hook_modules_uninstalled().
- */
-function rdf_modules_uninstalled($modules) {
-  // @todo Remove RDF mappings of uninstalled modules.
-}
-
-/**
- * Implements hook_entity_bundle_info_alter().
- *
- * Adds the proper RDF mapping to each entity type/bundle pair.
- *
- * @todo May need to move the comment below to another place.
- * This hook should not be used by modules to alter the bundle mappings. The UI
- * should always be authoritative. UI mappings are stored in the database and
- * if hook_entity_info_alter() was used to override module defined mappings, it
- * would override the user defined mapping as well.
- *
- */
-function rdf_entity_bundle_info_alter(&$bundles) {
-  // Loop through each entity type and its bundles.
-  foreach ($bundles as $entity_type => $bundle_info) {
-    $bundle_names = array_keys($bundle_info);
-    $mappings = _rdf_mapping_load_multiple($entity_type, $bundle_names);
-
-    foreach ($bundle_names as $bundle) {
-      if (isset($mappings[$bundle])) {
-        $bundles[$entity_type][$bundle]['rdf_mapping'] = $mappings[$bundle];
-      }
-      else {
-        // If no mapping was found in the database, assign the default RDF
-        // mapping for this entity type.
-        $bundles[$entity_type][$bundle]['rdf_mapping'] = _rdf_get_default_mapping($entity_type);
-      }
-    }
-  }
-}
-
-/**
- * Implements hook_entity_load().
- */
-function rdf_entity_load($entities, $type) {
-  foreach ($entities as $entity) {
-    // Extracts the bundle of the entity being loaded.
-    $entity->rdf_mapping = rdf_mapping_load($type, $entity->bundle());
-  }
-}
-
-/**
  * Implements hook_comment_load().
  */
 function rdf_comment_load($comments) {
@@ -416,7 +200,9 @@ function rdf_comment_load($comments) {
     // Pages with many comments can show poor performance. This information
     // isn't needed until rdf_preprocess_comment() is called, but set it here
     // to optimize performance for websites that implement an entity cache.
-    $comment->rdf_data['date'] = rdf_rdfa_attributes($comment->rdf_mapping['created'], $comment->created->value);
+    $created_mapping = rdf_get_mapping('comment', $comment->bundle())
+      ->getPreparedFieldMapping('created');
+    $comment->rdf_data['date'] = rdf_rdfa_attributes($created_mapping, $comment->created->value);
     $comment->rdf_data['nid_uri'] = url('node/' . $comment->nid->target_id);
     if ($comment->pid->target_id) {
       $comment->rdf_data['pid_uri'] = url('comment/' . $comment->pid->target_id);
@@ -509,14 +295,18 @@ function rdf_preprocess_node(&$variables) {
   // URI of the resource described within the HTML element, while the @typeof
   // attribute indicates its RDF type (e.g., foaf:Document, sioc:Person, and so
   // on.)
+  $bundle = $variables['node']->bundle();
+  $mapping = rdf_get_mapping('node', $bundle);
+  $bundle_mapping = $mapping->getPreparedBundleMapping('node', $bundle);
   $variables['attributes']['about'] = empty($variables['node_url']) ? NULL: $variables['node_url'];
-  $variables['attributes']['typeof'] = empty($variables['node']->rdf_mapping['rdftype']) ? NULL : $variables['node']->rdf_mapping['rdftype'];
+  $variables['attributes']['typeof'] = empty($bundle_mapping['types']) ? NULL : $bundle_mapping['types'];
 
   // Adds RDFa markup to the title of the node. Because the RDFa markup is
   // added to the <h2> tag which might contain HTML code, we specify an empty
   // datatype to ensure the value of the title read by the RDFa parsers is a
   // literal.
-  $variables['title_attributes']['property'] = empty($variables['node']->rdf_mapping['title']['predicates']) ? NULL : $variables['node']->rdf_mapping['title']['predicates'];
+  $title_mapping = $mapping->getPreparedFieldMapping('title');
+  $variables['title_attributes']['property'] = empty($title_mapping['properties']) ? NULL : $title_mapping['properties'];
   $variables['title_attributes']['datatype'] = '';
 
   // In full node mode, the title is not displayed by node.html.twig so it is
@@ -529,35 +319,40 @@ function rdf_preprocess_node(&$variables) {
         'about' => $variables['node_url'],
       ),
     );
-    if (!empty($variables['node']->rdf_mapping['title']['predicates'])) {
-      $element['#attributes']['property'] = $variables['node']->rdf_mapping['title']['predicates'];
+    if (!empty($title_mapping['properties'])) {
+      $element['#attributes']['property'] = $title_mapping['properties'];
     }
     drupal_add_html_head($element, 'rdf_node_title');
   }
 
   // Adds RDFa markup for the date.
-  if (!empty($variables['node']->rdf_mapping['created'])) {
-    $date_attributes = rdf_rdfa_attributes($variables['node']->rdf_mapping['created'], $variables['node']->created);
+  $created_mapping = $mapping->getPreparedFieldMapping('created');
+  if (!empty($created_mapping)) {
+    $date_attributes = rdf_rdfa_attributes($created_mapping, $variables['node']->created);
     $variables['rdf_template_variable_attributes']['date'] = $date_attributes;
     if ($variables['submitted']) {
       $variables['rdf_template_variable_attributes']['submitted'] = $date_attributes;
     }
   }
   // Adds RDFa markup for the relation between the node and its author.
-  if (!empty($variables['node']->rdf_mapping['uid'])) {
-    $variables['rdf_template_variable_attributes']['name']['rel'] = $variables['node']->rdf_mapping['uid']['predicates'];
+  $uid_mapping = $mapping->getPreparedFieldMapping('uid');
+  if (!empty($uid_mapping)) {
+    $variables['rdf_template_variable_attributes']['name']['rel'] = $uid_mapping['properties'];
     if ($variables['submitted']) {
-      $variables['rdf_template_variable_attributes']['submitted']['rel'] = $variables['node']->rdf_mapping['uid']['predicates'];
+      $variables['rdf_template_variable_attributes']['submitted']['rel'] = $uid_mapping['properties'];
     }
   }
 
   // Adds RDFa markup annotating the number of comments a node has.
-  if (isset($variables['node']->comment_count) && !empty($variables['node']->rdf_mapping['comment_count']['predicates'])) {
+  $comment_count_mapping = $mapping->getPreparedFieldMapping('comment_count');
+  if (isset($variables['node']->comment_count) && !empty($comment_count_mapping['properties'])) {
     // Annotates the 'x comments' link in teaser view.
     if (isset($variables['content']['links']['comment']['#links']['comment-comments'])) {
-      $comment_count_attributes['property'] = $variables['node']->rdf_mapping['comment_count']['predicates'];
+      $comment_count_attributes['property'] = $comment_count_mapping['properties'];
       $comment_count_attributes['content'] = $variables['node']->comment_count;
-      $comment_count_attributes['datatype'] = $variables['node']->rdf_mapping['comment_count']['datatype'];
+      if (isset($comment_count_mapping['datatype'])) {
+        $comment_count_attributes['datatype'] = $comment_count_mapping['datatype'];
+      }
       // According to RDFa parsing rule number 4, a new subject URI is created
       // from the href attribute if no rel/rev attribute is present. To get the
       // original node URL from the about attribute of the parent container we
@@ -574,9 +369,9 @@ function rdf_preprocess_node(&$variables) {
         '#tag' => 'meta',
         '#attributes' => array(
           'about' => $variables['node_url'],
-          'property' => $variables['node']->rdf_mapping['comment_count']['predicates'],
+          'property' => $comment_count_mapping['properties'],
           'content' => $variables['node']->comment_count,
-          'datatype' => $variables['node']->rdf_mapping['comment_count']['datatype'],
+          'datatype' => $comment_count_mapping['datatype'],
         ),
       );
       drupal_add_html_head($element, 'rdf_node_comment_count');
@@ -589,12 +384,15 @@ function rdf_preprocess_node(&$variables) {
  */
 function rdf_preprocess_field(&$variables) {
   $element = $variables['element'];
-  $mapping = rdf_mapping_load($element['#entity_type'], $element['#bundle']);
+  $entity_type = $element['#entity_type'];
+  $bundle = $element['#bundle'];
   $field_name = $element['#field_name'];
+  $field_mapping = rdf_get_mapping($entity_type, $bundle)
+    ->getPreparedFieldMapping($field_name);
 
-  if (!empty($mapping) && !empty($mapping[$field_name])) {
+  if (!empty($field_mapping)) {
     foreach ($element['#items'] as $delta => $item) {
-      $variables['item_attributes'][$delta] = rdf_rdfa_attributes($mapping[$field_name], $item);
+      $variables['item_attributes'][$delta] = rdf_rdfa_attributes($field_mapping, $item);
       // If this field is an image, RDFa will not output correctly when the
       // image is in a containing <a> tag. If the field is a file, RDFa will
       // not output correctly if the filetype icon comes before the link to the
@@ -618,11 +416,13 @@ function rdf_preprocess_field(&$variables) {
 function rdf_preprocess_user(&$variables) {
   $account = $variables['elements']['#user'];
   $uri = $account->uri();
+  $mapping = rdf_get_mapping('user', 'user');
+  $bundle_mapping = $mapping->getPreparedBundleMapping();
 
   // Adds RDFa markup to the user profile page. Fields displayed in this page
   // will automatically describe the user.
-  if (!empty($account->rdf_mapping['rdftype'])) {
-    $variables['attributes']['typeof'] = $account->rdf_mapping['rdftype'];
+  if (!empty($bundle_mapping['types'])) {
+    $variables['attributes']['typeof'] = $bundle_mapping['types'];
     $variables['attributes']['about'] = url($uri['path'], $uri['options']);
   }
   // If we are on the user account page, add the relationship between the
@@ -639,17 +439,20 @@ function rdf_preprocess_user(&$variables) {
     );
     // Adds the markup for username as language neutral literal, see
     // rdf_preprocess_username().
-    $username_meta = array(
-      '#tag' => 'meta',
-      '#attributes' => array(
-        'about' => url($uri['path'], $uri['options']),
-        'property' => $account->rdf_mapping['name']['predicates'],
-        'content' => $account->name,
-        'lang' => '',
-      )
-    );
+    $name_mapping = $mapping->getPreparedFieldMapping('name');
+    if (!empty($name_mapping['properties'])) {
+      $username_meta = array(
+        '#tag' => 'meta',
+        '#attributes' => array(
+          'about' => url($uri['path'], $uri['options']),
+          'property' => $name_mapping['properties'],
+          'content' => $account->name,
+          'lang' => '',
+        ),
+      );
+      drupal_add_html_head($username_meta, 'rdf_user_username');
+    }
     drupal_add_html_head($account_holder_meta, 'rdf_user_account_holder');
-    drupal_add_html_head($username_meta, 'rdf_user_username');
   }
 }
 
@@ -667,16 +470,8 @@ function rdf_preprocess_username(&$variables) {
     $attributes['lang'] = '';
   }
 
-  // $variables['account'] is a pseudo account object, and as such, does not
-  // contain the RDF mappings for the user. In the case of nodes and comments,
-  // it contains the mappings for the node or comment object instead. However,
-  // while the RDF mappings are available from a full user_load(), this should
-  // be avoided for performance reasons. Since the type and bundle for users is
-  // already known, call rdf_mapping_load() directly.
-  $rdf_mapping = rdf_mapping_load('user', 'user');
-
   // The profile URI is used to identify the user account. The about attribute
-  // is used to set the URI as the default subject of the predicates embedded
+  // is used to set the URI as the default subject of the properties embedded
   // as RDFa in the child elements. Even if the user profile is not accessible
   // to the current user, we use its URI in order to identify the user in RDF.
   // We do not use this attribute for the anonymous user because we do not have
@@ -686,21 +481,24 @@ function rdf_preprocess_username(&$variables) {
     $attributes['about'] = url('user/' . $variables['uid']);
   }
 
-  // The typeof attribute specifies the RDF type(s) of this resource. They
-  // are defined in the 'rdftype' property of the user RDF mapping.
-  if (!empty($rdf_mapping['rdftype'])) {
-    $attributes['typeof'] = $rdf_mapping['rdftype'];
+  // Add RDF type of user.
+  $mapping = rdf_get_mapping('user', 'user');
+  $bundle_mapping = $mapping->getPreparedBundleMapping();
+  if (!empty($bundle_mapping['types'])) {
+    $attributes['typeof'] = $bundle_mapping['types'];
   }
   // Annotate the username in RDFa. A property attribute is used with an empty
   // datatype attribute to ensure the username is parsed as a plain literal
   // in RDFa 1.0 and 1.1.
-  if (!empty($rdf_mapping['name'])) {
-    $attributes['property'] = $rdf_mapping['name']['predicates'];
+  $name_mapping = $mapping->getPreparedFieldMapping('name');
+  if (!empty($name_mapping)) {
+    $attributes['property'] = $name_mapping['properties'];
     $attributes['datatype'] = '';
   }
   // Add the homepage RDFa markup if present.
-  if (!empty($variables['homepage']) && !empty($rdf_mapping['homepage'])) {
-    $attributes['rel'] = $rdf_mapping['homepage']['predicates'];
+  $homepage_mapping = $mapping->getPreparedFieldMapping('homepage');
+  if (!empty($variables['homepage']) && !empty($homepage_mapping)) {
+    $attributes['rel'] = $homepage_mapping['properties'];
   }
   // The remaining attributes can have multiple values listed, with whitespace
   // separating the values in the RDFa attributes
@@ -721,18 +519,22 @@ function rdf_preprocess_username(&$variables) {
  */
 function rdf_preprocess_comment(&$variables) {
   $comment = $variables['comment'];
-  if (!empty($comment->rdf_mapping['rdftype'])) {
+  $mapping = rdf_get_mapping('comment', $comment->bundle());
+  $bundle_mapping = $mapping->getPreparedBundleMapping();
+
+  if (!empty($bundle_mapping['types'])) {
     // Adds RDFa markup to the comment container. The about attribute specifies
     // the URI of the resource described within the HTML element, while the
     // typeof attribute indicates its RDF type (e.g., sioc:Post, foaf:Document,
     // and so on.)
     $uri = $comment->uri();
     $variables['attributes']['about'] = url($uri['path'], $uri['options']);
-    $variables['attributes']['typeof'] = $comment->rdf_mapping['rdftype'];
+    $variables['attributes']['typeof'] = $bundle_mapping['types'];
   }
 
   // Adds RDFa markup for the date of the comment.
-  if (!empty($comment->rdf_mapping['created'])) {
+  $created_mapping = $mapping->getPreparedFieldMapping('created');
+  if (!empty($created_mapping)) {
     // The comment date is precomputed as part of the rdf_data so that it can be
     // cached as part of the entity.
     $date_attributes = $comment->rdf_data['date'];
@@ -740,24 +542,27 @@ function rdf_preprocess_comment(&$variables) {
     $variables['rdf_template_variable_attributes']['submitted'] = $date_attributes;
   }
   // Adds RDFa markup for the relation between the comment and its author.
-  if (!empty($comment->rdf_mapping['uid'])) {
-    $variables['rdf_template_variable_attributes']['author']['rel'] = $comment->rdf_mapping['uid']['predicates'];
-    $variables['rdf_template_variable_attributes']['submitted']['rel'] = $comment->rdf_mapping['uid']['predicates'];
+  $uid_mapping = $mapping->getPreparedFieldMapping('uid');
+  if (!empty($uid_mapping)) {
+    $variables['rdf_template_variable_attributes']['author']['rel'] = $uid_mapping['properties'];
+    $variables['rdf_template_variable_attributes']['submitted']['rel'] = $uid_mapping['properties'];
   }
-  if (!empty($comment->rdf_mapping['title'])) {
+  $title_mapping = $mapping->getPreparedFieldMapping('title');
+  if (!empty($title_mapping)) {
     // Adds RDFa markup to the subject of the comment. Because the RDFa markup
     // is added to an <h3> tag which might contain HTML code, we specify an
     // empty datatype to ensure the value of the title read by the RDFa parsers
     // is a literal.
-    $variables['title_attributes']['property'] = $comment->rdf_mapping['title']['predicates'];
+    $variables['title_attributes']['property'] = $title_mapping['properties'];
     $variables['title_attributes']['datatype'] = '';
   }
 
   // Annotates the parent relationship between the current comment and the node
   // it belongs to. If available, the parent comment is also annotated.
-  if (!empty($comment->rdf_mapping['pid'])) {
+  $pid_mapping = $mapping->getPreparedFieldMapping('pid');
+  if (!empty($pid_mapping)) {
     // Adds the relation to the parent node.
-    $parent_node_attributes['rel'] = $comment->rdf_mapping['pid']['predicates'];
+    $parent_node_attributes['rel'] = $pid_mapping['properties'];
     // The parent node URI is precomputed as part of the rdf_data so that it can
     // be cached as part of the entity.
     $parent_node_attributes['resource'] = $comment->rdf_data['nid_uri'];
@@ -765,7 +570,7 @@ function rdf_preprocess_comment(&$variables) {
 
     // Adds the relation to parent comment, if it exists.
     if ($comment->pid->target_id != 0) {
-      $parent_comment_attributes['rel'] = $comment->rdf_mapping['pid']['predicates'];
+      $parent_comment_attributes['rel'] = $pid_mapping['properties'];
       // The parent comment URI is precomputed as part of the rdf_data so that
       // it can be cached as part of the entity.
       $parent_comment_attributes['resource'] = $comment->rdf_data['pid_uri'];
@@ -778,17 +583,20 @@ function rdf_preprocess_comment(&$variables) {
  * Implements hook_preprocess_HOOK() for taxonomy-term.tpl.php.
  */
 function rdf_preprocess_taxonomy_term(&$variables) {
-  // Adds the RDF type of the term and the term name in a <meta> tag.
   $term = $variables['term'];
+  $mapping = rdf_get_mapping('taxonomy_term', $term->bundle());
+  $bundle_mapping = $mapping->getPreparedBundleMapping();
+  $name_field_mapping = $mapping->getPreparedFieldMapping('name');
+  // Adds the RDF type of the term and the term name in a <meta> tag.
   $term_label_meta = array(
-      '#tag' => 'meta',
-      '#attributes' => array(
-        'about' => url('taxonomy/term/' . $term->id()),
-        'typeof' => $term->rdf_mapping['rdftype'],
-        'property' => $term->rdf_mapping['name']['predicates'],
-        'content' => $term->label(),
-      ),
-    );
+    '#tag' => 'meta',
+    '#attributes' => array(
+      'about' => url('taxonomy/term/' . $term->id()),
+      'typeof' => $bundle_mapping['types'],
+      'property' => $name_field_mapping['properties'],
+      'content' => $term->label(),
+    ),
+  );
   drupal_add_html_head($term_label_meta, 'rdf_term_label');
 }
 
@@ -806,13 +614,16 @@ function rdf_field_attach_view_alter(&$output, $context) {
         // yet and thus have no $item['entity'].
         if (isset($item['entity'])) {
           $term = $item['entity'];
-          if (!empty($term->rdf_mapping['rdftype'])) {
-            $element[$delta]['#options']['attributes']['typeof'] = $term->rdf_mapping['rdftype'];
+          $mapping = rdf_get_mapping('taxonomy_term', $term->bundle());
+          $bundle_mapping = $mapping->getPreparedBundleMapping();
+          if (!empty($bundle_mapping['types'])) {
+            $element[$delta]['#options']['attributes']['typeof'] = $bundle_mapping['types'];
           }
-          if (!empty($term->rdf_mapping['name']['predicates'])) {
+          $name_field_mapping = $mapping->getPreparedFieldMapping('name');
+          if (!empty($name_field_mapping['properties'])) {
             // A property attribute is used with an empty datatype attribute so
             // the term name is parsed as a plain literal in RDFa 1.0 and 1.1.
-            $element[$delta]['#options']['attributes']['property'] = $term->rdf_mapping['name']['predicates'];
+            $element[$delta]['#options']['attributes']['property'] = $name_field_mapping['properties'];
             $element[$delta]['#options']['attributes']['datatype'] = '';
           }
         }

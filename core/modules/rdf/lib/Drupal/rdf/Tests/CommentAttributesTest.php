@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\rdf\Tests\CommentAttributesTest.
+ * Contains \Drupal\rdf\Tests\CommentAttributesTest.
  */
 
 namespace Drupal\rdf\Tests;
@@ -48,6 +48,59 @@ class CommentAttributesTest extends CommentTestBase {
     // Prepares commonly used URIs.
     $this->base_uri = url('<front>', array('absolute' => TRUE));
     $this->node_uri = url('node/' . $this->node->nid, array('absolute' => TRUE));
+
+    // Set relation between node and comment.
+    $article_mapping = rdf_get_mapping('node', 'article');
+    $comment_count_mapping = array(
+      'properties' => array('sioc:num_replies'),
+      'datatype' => 'xsd:integer',
+    );
+    $article_mapping->setFieldMapping('comment_count', $comment_count_mapping)->save();
+
+    // Save user mapping.
+    $user_mapping = rdf_get_mapping('user', 'user');
+    $username_mapping = array(
+      'properties' => array('foaf:name'),
+    );
+    $user_mapping->setFieldMapping('name', $username_mapping)->save();
+    $user_mapping->setFieldMapping('homepage', array('properties' => array('foaf:page'), 'mapping_type' => 'rel'))->save();
+
+    // Save comment mapping.
+    $mapping = rdf_get_mapping('comment', 'comment_node_article');
+    $mapping->setBundleMapping(array('types' => array('sioc:Post', 'sioct:Comment')))->save();
+    $field_mappings = array(
+      'title' => array(
+        'properties' => array('dc:title'),
+      ),
+      'created' => array(
+        'properties' => array('dc:date', 'dc:created'),
+        'datatype' => 'xsd:dateTime',
+        'datatype_callback' => 'date_iso8601',
+      ),
+      'changed' => array(
+        'properties' => array('dc:modified'),
+        'datatype' => 'xsd:dateTime',
+        'datatype_callback' => 'date_iso8601',
+      ),
+      'comment_body' => array(
+        'properties' => array('content:encoded'),
+      ),
+      'pid' => array(
+        'properties' => array('sioc:reply_of'),
+        'mapping_type' => 'rel',
+      ),
+      'uid' => array(
+        'properties' => array('sioc:has_creator'),
+        'mapping_type' => 'rel',
+      ),
+      'name' => array(
+        'properties' => array('foaf:name'),
+      ),
+    );
+    // Iterate over shared field mappings and save.
+    foreach ($field_mappings as $field_name => $field_mapping) {
+      $mapping->setFieldMapping($field_name, $field_mapping)->save();
+    }
   }
 
   /**
@@ -274,6 +327,9 @@ class CommentAttributesTest extends CommentTestBase {
    *   array of values to set contact info.
    * @param $pid
    *   Comment id of the parent comment in a thread.
+   *
+   * @return \Drupal\comment\Plugin\Core\Entity\Comment
+   *   The saved comment.
    */
   function saveComment($nid, $uid, $contact = NULL, $pid = 0) {
     $values = array(
@@ -292,5 +348,5 @@ class CommentAttributesTest extends CommentTestBase {
     $comment = entity_create('comment', $values);
     $comment->save();
     return $comment;
-   }
+  }
 }
