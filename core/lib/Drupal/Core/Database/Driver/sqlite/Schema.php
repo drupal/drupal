@@ -32,7 +32,7 @@ class Schema extends DatabaseSchema {
    * @return
    *   Boolean true if the table exists, else FALSE.
    */
-    public function tableExists($table) {
+  public function tableExists($table) {
     $info = $this->getPrefixInfo($table);
 
     // Don't use {} around sqlite_master table.
