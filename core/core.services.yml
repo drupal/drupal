@@ -453,7 +453,7 @@ services:
     class: Drupal\Core\Utility\Token
     arguments: ['@module_handler']
   batch.storage:
-    class: Drupal\Core\Utility\BatchStorage
+    class: Drupal\Core\Batch\BatchStorage
     arguments: ['@database']
   slave_database_ignore__subscriber:
     class: Drupal\Core\EventSubscriber\SlaveDatabaseIgnoreSubscriber

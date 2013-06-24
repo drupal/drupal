@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Utility\BatchStorage.
+ * Contains \Drupal\Core\Batch\BatchStorage.
  */
 
-namespace Drupal\Core\Utility;
+namespace Drupal\Core\Batch;
 
 use Drupal\Core\Database\Connection;
 

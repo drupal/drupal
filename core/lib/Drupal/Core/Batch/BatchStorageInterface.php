@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of \Drupal\Core\Utility\BatchStorageInterface.
+ * Definition of \Drupal\Core\Batch\BatchStorageInterface.
  */
 
-namespace Drupal\Core\Utility;
+namespace Drupal\Core\Batch;
 
 
 interface BatchStorageInterface {
