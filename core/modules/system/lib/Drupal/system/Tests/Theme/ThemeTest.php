@@ -204,7 +204,7 @@ class ThemeTest extends WebTestBase {
     // throws an exception.
     $this->rebuildContainer();
     $this->container->get('module_handler')->loadAll();
-    $this->assertIdentical(theme('theme_test_foo', array('foo' => 'b')), FALSE, 'The theme registry does not contain theme_test_foo, because the module is disabled.');
+    $this->assertIdentical(theme('theme_test_foo', array('foo' => 'b')), '', 'The theme registry does not contain theme_test_foo, because the module is disabled.');
 
     module_enable(array('theme_test'), FALSE);
     // After enabling/disabling a module during a test, we need to rebuild the

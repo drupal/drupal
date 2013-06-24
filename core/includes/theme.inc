@@ -932,9 +932,8 @@ function drupal_find_base_themes($themes, $key, $used_keys = array()) {
  *   properties are mapped to variables expected by the theme hook
  *   implementations.
  *
- * @return string|false
- *   An HTML string representing the themed output or FALSE if the passed $hook
- *   is not implemented.
+ * @return
+ *   An HTML string representing the themed output.
  *
  * @see themeable
  * @see hook_theme()
@@ -983,10 +982,7 @@ function theme($hook, $variables = array()) {
       if (!isset($candidate)) {
         watchdog('theme', 'Theme hook %hook not found.', array('%hook' => $hook), WATCHDOG_WARNING);
       }
-      // There is no theme implementation for the hook passed. Return FALSE so
-      // the function calling theme() can differentiate between a hook that
-      // exists and renders an empty string and a hook that is not implemented.
-      return FALSE;
+      return '';
     }
   }
 
