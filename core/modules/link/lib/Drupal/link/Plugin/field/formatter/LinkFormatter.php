@@ -167,7 +167,6 @@ class LinkFormatter extends FormatterBase {
 
       if (!empty($settings['url_only']) && !empty($settings['url_plain'])) {
         $element[$delta] = array(
-          '#type' => 'markup',
           '#markup' => check_plain($link_title),
         );
       }

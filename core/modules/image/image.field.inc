@@ -346,7 +346,6 @@ function image_field_widget_process($element, &$form_state, $form) {
     }
 
     $element['preview'] = array(
-      '#type' => 'markup',
       '#markup' => theme('image_style', $variables),
     );
 

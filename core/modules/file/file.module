@@ -965,7 +965,6 @@ function file_managed_file_process($element, &$form_state, $form) {
       }
       else {
         $element['file_' . $delta]['filename'] = array(
-          '#type' => 'markup',
           '#markup' => theme('file_link', array('file' => $file)) . ' ',
           '#weight' => -10,
         );

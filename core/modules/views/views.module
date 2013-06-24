@@ -1171,7 +1171,6 @@ function views_form_views_form($form, &$form_state, ViewExecutable $view, $outpu
   // Add the output markup to the form array so that it's included when the form
   // array is passed to the theme function.
   $form['output'] = array(
-    '#type' => 'markup',
     '#markup' => $output,
     // This way any additional form elements will go before the view
     // (below the exposed widgets).

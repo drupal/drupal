@@ -66,7 +66,6 @@ function custom_block_delete_form($form, &$form_state, CustomBlock $block) {
   $instances = $block->getInstances();
 
   $form['message'] = array(
-    '#type' => 'markup',
     '#markup' => format_plural(count($instances), 'This will also remove 1 placed block instance.', 'This will also remove @count placed block instances.'),
     '#access' => !empty($instances),
   );
