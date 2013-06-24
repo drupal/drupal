@@ -4689,25 +4689,32 @@ function drupal_render(&$elements) {
   // element have to be rendered there. If the internal #render_children
   // property is set, do not call the #theme function to prevent infinite
   // recursion.
+  $theme_is_implemented = FALSE;
   if (isset($elements['#theme']) && !isset($elements['#render_children'])) {
     $elements['#children'] = theme($elements['#theme'], $elements);
+    // If theme() returns FALSE this means that the hook in #theme was not found
+    // in the registry. This is common for theme suggestions.
+    $theme_is_implemented = ($elements['#children'] !== FALSE);
   }
-  // If #theme was not set and the element has children, render them now.
-  // This is the same process as drupal_render_children() but is inlined
-  // for speed.
-  if ($elements['#children'] === '') {
+  // #theme is either not set or does not exist in the registry.
+  if (!$theme_is_implemented) {
+    // If #theme is not implemented and the element has children, render them
+    // now. This is the same process as drupal_render_children() but is inlined
+    // for speed.
     foreach ($children as $key) {
       $elements['#children'] .= drupal_render($elements[$key]);
     }
-  }
-  // If #theme was not set, but the element has raw #markup, prepend the content
-  // in #markup to #children. #children may contain the rendered content
-  // supplied by #theme, or the rendered child elements, as processed above. If
-  // both #theme and #markup are set, then #theme is responsible for rendering
-  // the element. Eventually assigned #theme_wrappers will expect both the
-  // element's #markup and the rendered content of child elements in #children.
-  if (!isset($elements['#theme']) && isset($elements['#markup'])) {
-    $elements['#children'] = $elements['#markup'] . $elements['#children'];
+
+    // If #theme is not implemented and the element has raw #markup as a
+    // fallback, prepend the content in #markup to #children. In this case
+    // #children will contain whatever is provided by #pre_render prepended to
+    // what is rendered recursively above. If #theme is implemented then it is
+    // the responsibility of that theme implementation to render #markup if
+    // required. Eventually #theme_wrappers will expect both #markup and
+    // #children to be a single string as #children.
+    if (isset($elements['#markup'])) {
+      $elements['#children'] = $elements['#markup'] . $elements['#children'];
+    }
   }
 
   // Add any JavaScript state information associated with the element.

@@ -84,6 +84,59 @@ class RenderTest extends WebTestBase {
   }
 
   /**
+   * Tests fallback rendering behaviour when #theme is not implemented.
+   *
+   * If #theme is set and is an implemented theme hook then theme() is 100%
+   * responsible for rendering the array including children and #markup.
+   *
+   * If #theme is not set or is not found in the registry then drupal_render()
+   * should recursively render child attributes of the array and #markup.
+   *
+   * This dual rendering behaviour is only relevant to the internal processing
+   * of drupal_render() before #theme_wrappers are called, so not #prefix and
+   * #suffix for example.
+   */
+  function testDrupalRenderFallbackRender() {
+    // Theme suggestion is not implemented, #markup should be rendered.
+    $theme_suggestion_not_implemented_has_markup = array(
+      '#theme' => array('suggestionnotimplemented'),
+      '#markup' => 'foo',
+    );
+    $rendered = drupal_render($theme_suggestion_not_implemented_has_markup);
+    $this->assertIdentical($rendered, 'foo');
+
+    // Theme suggestion is not implemented, children should be rendered.
+    $theme_suggestion_not_implemented_has_children = array(
+      '#theme' => array('suggestionnotimplemented'),
+      'child' => array(
+        '#markup' => 'foo',
+      ),
+    );
+    $rendered = drupal_render($theme_suggestion_not_implemented_has_children);
+    $this->assertIdentical($rendered, 'foo');
+
+    // Theme suggestion is implemented but returns empty string, #markup should
+    // not be rendered.
+    $theme_implemented_is_empty_has_markup = array(
+      '#theme' => array('common_test_empty'),
+      '#markup' => 'foo',
+    );
+    $rendered = drupal_render($theme_implemented_is_empty_has_markup);
+    $this->assertIdentical($rendered, '');
+
+    // Theme suggestion is implemented but returns empty string, children should
+    // not be rendered.
+    $theme_implemented_is_empty_has_children = array(
+      '#theme' => array('common_test_empty'),
+      'child' => array(
+        '#markup' => 'foo',
+      ),
+    );
+    $rendered = drupal_render($theme_implemented_is_empty_has_children);
+    $this->assertIdentical($rendered, '');
+  }
+
+  /**
    * Tests sorting by weight.
    */
   function testDrupalRenderSorting() {

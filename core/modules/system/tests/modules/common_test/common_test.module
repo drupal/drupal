@@ -164,7 +164,24 @@ function common_test_theme() {
       'variables' => array('foo' => 'foo', 'bar' => 'bar'),
       'template' => 'common-test-foo',
     ),
+    'common_test_empty' => array(
+      'variables' => array('foo' => 'foo'),
+    ),
   );
+}
+
+/**
+ * Provides a theme function for drupal_render().
+ */
+function theme_common_test_foo($variables) {
+  return $variables['foo'] . $variables['bar'];
+}
+
+/**
+ * Always returns an empty string.
+ */
+function theme_common_test_empty($variables) {
+  return '';
 }
 
 /**
