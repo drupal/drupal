@@ -27,7 +27,6 @@ function layout_page_view($key) {
     $regions[$region] = '<div class="layout-region-demonstration">' . check_plain($info['label']) . '</div>';
   }
   $build['demonstration'] = array(
-    '#type' => 'markup',
     '#markup' => $instance->renderLayout(TRUE, $regions),
   );
   $build['#attached']['css'][] = drupal_get_path('module', 'layout') . '/css/layout.admin.css';

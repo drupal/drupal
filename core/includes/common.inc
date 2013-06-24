@@ -4651,12 +4651,6 @@ function drupal_render(&$elements) {
     }
   }
 
-  // If #markup is set, ensure #type is set. This allows to specify just #markup
-  // on an element without setting #type.
-  if (isset($elements['#markup']) && !isset($elements['#type'])) {
-    $elements['#type'] = 'markup';
-  }
-
   // If the default values for this element have not been loaded yet, populate
   // them.
   if (isset($elements['#type']) && empty($elements['#defaults_loaded'])) {

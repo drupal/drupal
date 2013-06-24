@@ -68,17 +68,30 @@ class AggregatorCategoryBlock extends BlockBase {
     $id = $this->getPluginId();
     if ($category = db_query('SELECT cid, title, block FROM {aggregator_category} WHERE cid = :cid', array(':cid' => $id))->fetchObject()) {
       $result = db_query_range('SELECT i.* FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON ci.iid = i.iid WHERE ci.cid = :cid ORDER BY i.timestamp DESC, i.iid DESC', 0, $this->configuration['block_count'], array(':cid' => $category->cid));
-      $read_more = theme('more_link', array('url' => 'aggregator/categories/' . $category->cid, 'title' => t("View this category's recent news.")));
+      $more_link = array(
+        '#theme' => 'more_link',
+        '#url' => 'aggregator/categories/' . $category->cid,
+        '#title' => t("View this category's recent news."),
+      );
+      $read_more = drupal_render($more_link);
 
       $items = array();
       foreach ($result as $item) {
-        $items[] = theme('aggregator_block_item', array('item' => $item));
+        $aggregator_block_item = array(
+          '#theme' => 'aggregator_block_item',
+          '#item' => $item,
+        );
+        $items[] = drupal_render($aggregator_block_item);
       }
 
       // Only display the block if there are items to show.
       if (count($items) > 0) {
+        $item_list = array(
+          '#theme' => 'item_list',
+          '#items' => $items,
+        );
         return array(
-          '#children' => theme('item_list', array('items' => $items)) . $read_more,
+          '#children' => drupal_render($item_list) . $read_more,
         );
       }
       return array();
