@@ -36,6 +36,7 @@ use Drupal\Core\Entity\Entity;
  *   static_cache = FALSE,
  *   base_table = "menu_links",
  *   uri_callback = "menu_link_uri",
+ *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "mlid",
  *     "label" = "link_title",
