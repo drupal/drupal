@@ -742,7 +742,7 @@ display:
           plugin_id: user_roles
         permission:
           id: permission
-          table: role_permission
+          table: users_roles
           field: permission
           relationship: none
           group_type: group

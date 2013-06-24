@@ -1542,3 +1542,34 @@ function update_add_cache_columns($table) {
     ));
   }
 }
+
+/**
+ * Replace permissions during update.
+ *
+ * This function can replace one permission to several or even delete an old
+ * one.
+ *
+ * @param array $replace
+ *   An associative array. The keys are the old permissions the values are lists
+ *   of new permissions. If the list is an empty array, the old permission is
+ *   removed.
+ */
+function update_replace_permissions($replace) {
+  $prefix = 'user.role.';
+  $cut = strlen($prefix);
+  $role_names = Drupal::service('config.storage')->listAll($prefix);
+  foreach ($role_names as $role_name) {
+    $rid = substr($role_name, $cut);
+    $config = Drupal::config("user.role.$rid");
+    $permissions = $config->get('permissions') ?: array();
+    foreach ($replace as $old_permission => $new_permissions) {
+      if (($index = array_search($old_permission, $permissions)) !== FALSE) {
+        unset($permissions[$index]);
+        $permissions = array_unique(array_merge($permissions, $new_permissions));
+      }
+    }
+    $config
+      ->set('permissions', $permissions)
+      ->save();
+  }
+}

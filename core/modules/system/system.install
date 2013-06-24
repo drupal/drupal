@@ -1520,13 +1520,9 @@ function system_update_8020() {
   $blocked_ips_exists = db_query_range('SELECT 1 FROM {blocked_ips}', 0, 1)->fetchField();
   if ($blocked_ips_exists) {
     // Rename the permission name.
-    db_update('role_permission')
-      ->fields(array(
-        'permission' => 'ban IP addresses',
-        'module' => 'ban',
-      ))
-      ->condition('permission', 'block IP addresses')
-      ->execute();
+    update_replace_permissions(array(
+      'block IP addresses' => array('ban IP addresses'),
+    ));
     // Rename {blocked_ips} table into {ban_ip}.
     db_rename_table('blocked_ips', 'ban_ip');
     // Remove all references to the removed action callback.

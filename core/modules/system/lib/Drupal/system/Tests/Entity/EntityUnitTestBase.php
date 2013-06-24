@@ -36,8 +36,7 @@ abstract class EntityUnitTestBase extends DrupalUnitTestBase {
    *   (optional) The values used to create the entity.
    * @param array $permissions
    *   (optional) Array of permission names to assign to user. The
-   *   role_permission and users_roles tables must be installed before this can
-   *   be used.
+   *   users_roles tables must be installed before this can be used.
    *
    * @return \Drupal\user\Plugin\Core\Entity\User
    *   The created user entity.

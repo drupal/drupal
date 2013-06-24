@@ -1,0 +1,135 @@
+base_field: uid
+base_table: users
+core: 8.x
+description: ''
+status: '1'
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: ''
+    display_options:
+      access:
+        type: none
+      cache:
+        type: none
+      query:
+        type: views_query
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+      style:
+        type: default
+      row:
+        type: fields
+      fields:
+        uid:
+          id: uid
+          table: users
+          field: uid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Uid
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          link_to_user: '0'
+          plugin_id: user
+        permission:
+          id: permission
+          table: users_roles
+          field: permission
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Permission
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          type: separator
+          separator: ', '
+          plugin_id: user_permissions
+      filters: {  }
+      sorts: {  }
+human_name: test_field_permission
+module: views
+id: test_field_permission
+tag: ''
+langcode: en

@@ -4,12 +4,10 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\comment\Plugin\Core\Entity\Comment;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\file\Plugin\Core\Entity\File;
 use Drupal\user\Plugin\Core\Entity\User;
 use Drupal\user\UserInterface;
-use Drupal\user\UserRole;
 use Drupal\user\RoleInterface;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -410,44 +408,44 @@ function user_password($length = 10) {
 /**
  * Determine the permissions for one or more roles.
  *
- * @param $roles
- *   An array whose values are the role IDs of interest, such as $user->roles.
+ * @param array $roles
+ *   An array of role IDs.
  *
- * @return
- *   An array indexed by role ID. Each value is an array whose keys are the
- *   permission strings for the given role ID.
+ * @return array
+ *   An array indexed by role ID. Each value is an array of permission strings
+ *   for the given role.
  */
-function user_role_permissions($roles) {
-  $cache = &drupal_static(__FUNCTION__, array());
-
-  $role_permissions = $fetch = array();
-
+function user_role_permissions(array $roles) {
+  if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update') {
+    return _user_role_permissions_update($roles);
+  }
+  $entities = entity_load_multiple('user_role', $roles);
+  $role_permissions = array();
   foreach ($roles as $rid) {
-    if (isset($cache[$rid])) {
-      $role_permissions[$rid] = $cache[$rid];
-    }
-    else {
-      // Add this rid to the list of those needing to be fetched.
-      $fetch[] = $rid;
-      // Prepare in case no permissions are returned.
-      $cache[$rid] = array();
-    }
+    $role_permissions[$rid] = isset($entities[$rid]) ? $entities[$rid]->getPermissions() : array();
   }
+  return $role_permissions;
+}
 
-  if ($fetch) {
-    // Get from the database permissions that were not in the static variable.
-    // Only role IDs with at least one permission assigned will return rows.
-    $result = db_query("SELECT rid, permission FROM {role_permission} WHERE rid IN (:fetch)", array(':fetch' => $fetch));
-
-    foreach ($result as $row) {
-      $cache[$row->rid][$row->permission] = TRUE;
-    }
-    foreach ($fetch as $rid) {
-      // For every rid, we know we at least assigned an empty array.
-      $role_permissions[$rid] = $cache[$rid];
-    }
+/**
+ * Determine the permissions for one or more roles during update.
+ *
+ * A separate version is needed because during update the entity system can't
+ * be used and in non-update situations the entity system is preferred because
+ * of the hook system.
+ *
+ * @param array $roles
+ *   An array of role IDs.
+ *
+ * @return array
+ *   An array indexed by role ID. Each value is an array of permission strings
+ *   for the given role.
+ */
+function _user_role_permissions_update($roles) {
+  $role_permissions = array();
+  foreach ($roles as $rid) {
+    $role_permissions[$rid] = Drupal::config("user.role.$rid")->get('permissions') ?: array();
   }
-
   return $role_permissions;
 }
 
@@ -490,13 +488,10 @@ function user_access($string, AccountInterface $account = NULL) {
   }
   $perm = &$drupal_static_fast['perm'];
   if (!isset($perm[$account->uid])) {
-    $role_permissions = user_role_permissions($account->getRoles());
-
-    $perms = array();
-    foreach ($role_permissions as $one_role) {
-      $perms += $one_role;
+    $perm[$account->uid] = array();
+    foreach (user_role_permissions($account->getRoles()) as $role_permissions) {
+      $perm[$account->uid] += array_fill_keys($role_permissions, TRUE);
     }
-    $perm[$account->uid] = $perms;
   }
 
   return isset($perm[$account->uid][$string]);
@@ -1759,7 +1754,7 @@ function user_mail_tokens(&$replacements, $data, $options) {
  *   value.
  */
 function user_role_names($membersonly = FALSE, $permission = NULL) {
-  return array_map(function($item) {
+  return array_map(function ($item) {
     return $item->label();
   }, user_roles($membersonly, $permission));
 }
@@ -1844,12 +1839,9 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
   }
 
   if (!empty($permission)) {
-    $result = db_select('role_permission', 'p')
-      ->fields('p', array('rid'))
-      ->condition('p.rid', array_keys($roles))
-      ->condition('p.permission', $permission)
-      ->execute()->fetchCol();
-    $roles = array_intersect_key($roles, array_flip($result));
+    $roles = array_filter($roles, function ($role) use ($permission) {
+      return $role->hasPermission($permission);
+    });
   }
 
   if (empty($permission)) {
@@ -1944,23 +1936,14 @@ function user_role_change_permissions($rid, array $permissions = array()) {
  * @see user_role_revoke_permissions()
  */
 function user_role_grant_permissions($rid, array $permissions = array()) {
-  $modules = user_permission_get_modules();
   // Grant new permissions for the role.
-  foreach ($permissions as $name) {
-    db_merge('role_permission')
-      ->key(array(
-        'rid' => $rid,
-        'permission' => $name,
-      ))
-      ->fields(array(
-        'module' => $modules[$name],
-      ))
-      ->execute();
+  $role = entity_load('user_role', $rid);
+  foreach ($permissions as $permission) {
+    $role->grantPermission($permission);
   }
-
+  $role->save();
   // Clear the user access cache.
   drupal_static_reset('user_access');
-  drupal_static_reset('user_role_permissions');
 }
 
 /**
@@ -1976,14 +1959,13 @@ function user_role_grant_permissions($rid, array $permissions = array()) {
  */
 function user_role_revoke_permissions($rid, array $permissions = array()) {
   // Revoke permissions for the role.
-  db_delete('role_permission')
-    ->condition('rid', $rid)
-    ->condition('permission', $permissions, 'IN')
-    ->execute();
-
+  $role = entity_load('user_role', $rid);
+  foreach ($permissions as $permission) {
+    $role->revokePermission($permission);
+  }
+  $role->save();
   // Clear the user access cache.
   drupal_static_reset('user_access');
-  drupal_static_reset('user_role_permissions');
 }
 
 function user_multiple_cancel_confirm($form, &$form_state) {
@@ -2143,18 +2125,20 @@ function user_build_filter_query(SelectInterface $query) {
     // the authenticated role. If so, then all users would be listed, and we can
     // skip adding it to the filter query.
     if ($key == 'permission') {
-      $account = entity_create('user', array(
-        'uid' => 'user_filter',
-        'roles' => array(DRUPAL_AUTHENTICATED_RID),
-      ));
-      if (user_access($value, $account)) {
+      $roles = user_roles(FALSE, $value);
+      if (isset($roles[DRUPAL_AUTHENTICATED_RID])) {
         continue;
       }
-      $users_roles_alias = $query->join('users_roles', 'ur', '%alias.uid = u.uid');
-      $permission_alias = $query->join('role_permission', 'p', $users_roles_alias . '.rid = %alias.rid');
-      $query->condition($permission_alias . '.permission', $value);
+      if (!empty($roles)) {
+        $value = array_keys($roles);
+      }
+      else {
+        // There's no role that has this permission set value to an impossible
+        // rid so that no users are matched.
+        $value = array('');
+      }
     }
-    elseif ($key == 'role') {
+    if ($key == 'permission' || $key == 'role') {
       $users_roles_alias = $query->join('users_roles', 'ur', '%alias.uid = u.uid');
       $query->condition($users_roles_alias . '.rid' , $value);
     }
@@ -2427,9 +2411,6 @@ function user_modules_installed($modules) {
  * Implements hook_modules_uninstalled().
  */
 function user_modules_uninstalled($modules) {
-   db_delete('role_permission')
-     ->condition('module', $modules, 'IN')
-     ->execute();
   // Remove any potentially orphan module data stored for users.
   drupal_container()->get('user.data')->delete($modules);
 }

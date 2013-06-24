@@ -105,7 +105,6 @@ function user_admin_account() {
  * @see theme_user_admin_permissions()
  */
 function user_admin_permissions($form, $form_state, $rid = NULL) {
-
   // Retrieve role names for columns.
   $role_names = user_role_names();
   if (isset($rid)) {
@@ -158,7 +157,7 @@ function user_admin_permissions($form, $form_state, $rid = NULL) {
         );
         foreach ($role_names as $rid => $name) {
           // Builds arrays for checked boxes for each role
-          if (isset($role_permissions[$rid][$perm])) {
+          if (in_array($perm, $role_permissions[$rid])) {
             $status[$rid][] = $perm;
           }
         }

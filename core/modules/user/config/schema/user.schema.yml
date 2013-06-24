@@ -131,6 +131,12 @@ user.role.*:
     weight:
       type: integer
       label: 'User role weight'
+    permissions:
+      type: sequence
+      label: 'Permissions'
+      sequence:
+        - type: string
+          label: 'Permission'
     langcode:
       type: string
       label: 'Default language'

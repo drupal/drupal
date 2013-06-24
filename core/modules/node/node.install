@@ -571,6 +571,15 @@ function _update_7000_node_get_types() {
  */
 
 /**
+ * Implements hook_update_dependency().
+ */
+function node_update_dependency() {
+  $dependencies['node'][8013] = array(
+    'user' => 8002,
+  );
+}
+
+/**
  * Rename node type language variable names.
  *
  * @see http://drupal.org/node/540294
@@ -796,15 +805,11 @@ function node_update_8012() {
  * Renames global revision permissions to use the word 'all'.
  */
 function node_update_8013() {
-  $actions = array('view', 'delete', 'revert');
-
-  foreach ($actions as $action) {
-    db_update('role_permission')
-      ->fields(array('permission' => $action . ' all revisions'))
-      ->condition('permission', $action . ' revisions')
-      ->condition('module', 'node')
-      ->execute();
-  }
+  update_replace_permissions(array(
+    'view revisions' => array('view all revisions'),
+    'revert revisions' => array('revert all revisions'),
+    'delete revisions' => array('delete all revisions'),
+  ));
 }
 
 /**

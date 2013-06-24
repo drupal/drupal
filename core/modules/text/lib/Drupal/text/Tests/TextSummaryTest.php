@@ -28,7 +28,6 @@ class TextSummaryTest extends DrupalUnitTestBase {
     parent::setUp();
 
     $this->installSchema('system', 'url_alias');
-    $this->installSchema('user', 'role_permission');
     $this->installConfig(array('text'));
   }
 

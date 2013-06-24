@@ -1223,20 +1223,24 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
   $index_comments = &drupal_static(__FUNCTION__);
 
   if ($index_comments === NULL) {
-    // Find and save roles that can 'access comments' or 'search content'.
-    $perms = array('access comments' => array(), 'search content' => array());
-    $result = db_query("SELECT rid, permission FROM {role_permission} WHERE permission IN ('access comments', 'search content')");
-    foreach ($result as $record) {
-      $perms[$record->permission][$record->rid] = $record->rid;
-    }
-
-    // Prevent indexing of comments if there are any roles that can search but
-    // not view comments.
+    // Do not index in the following three cases:
+    // 1. 'Authenticated user' can search content but can't access comments.
+    // 2. 'Anonymous user' can search content but can't access comments.
+    // 3. Any role can search content but can't access comments and access
+    // comments is not granted by the 'authenticated user' role. In this case
+    // all users might have both permissions from various roles but it is also
+    // possible to set up a user to have only search content and so a user
+    // edit could change the security situation so it is not safe to index the
+    // comments.
     $index_comments = TRUE;
-    foreach ($perms['search content'] as $rid) {
-      if (!isset($perms['access comments'][$rid]) && (($rid == DRUPAL_AUTHENTICATED_RID || $rid == DRUPAL_ANONYMOUS_RID) || !isset($perms['access comments'][DRUPAL_AUTHENTICATED_RID]))) {
-        $index_comments = FALSE;
-        break;
+    $roles = Drupal::entityManager()->getStorageController('user_role')->load();
+    $authenticated_can_access = $roles[DRUPAL_AUTHENTICATED_RID]->hasPermission('access comments');
+    foreach ($roles as $rid => $role) {
+      if ($role->hasPermission('search content') && !$role->hasPermission('access comments')) {
+        if ($rid == DRUPAL_AUTHENTICATED_RID || $rid == DRUPAL_ANONYMOUS_RID || !$authenticated_can_access) {
+          $index_comments = FALSE;
+          break;
+        }
       }
     }
   }

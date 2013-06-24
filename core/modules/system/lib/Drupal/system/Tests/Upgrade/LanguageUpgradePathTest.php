@@ -191,6 +191,8 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
    * Tests upgrading translations permissions.
    */
   public function testLanguagePermissionsUpgrade() {
+    // Insert a permission into the Drupal 7 database before running the
+    // upgrade.
     db_insert('role_permission')->fields(array(
       'rid' => 2,
       'permission' => 'translate content',
@@ -198,12 +200,8 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
     ))->execute();
 
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
-
-    // Check that translate content role doesn't exist on database.
-    $old_permission_exists = db_query('SELECT * FROM {role_permission} WHERE permission LIKE ?', array('translate content'))->fetchObject();
-    $this->assertFalse($old_permission_exists, 'No translate content role left on database.');
+    $this->assertFalse(user_roles(FALSE, 'translate content'), 'No translate content role left in config.');
     // Check that translate content has been renamed to translate all content.
-    $new_permission_exists = db_query('SELECT * FROM {role_permission} WHERE permission LIKE ?', array('translate all content'))->fetchObject();
-    $this->assertTrue($new_permission_exists, 'Rename role translate content to translate all content was completed successfully.');
+    $this->assertTrue(user_roles(FALSE, 'translate all content'), 'Rename role translate content to translate all content was completed successfully.');
   }
 }

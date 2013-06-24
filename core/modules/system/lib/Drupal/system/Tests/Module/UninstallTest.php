@@ -38,8 +38,7 @@ class UninstallTest extends WebTestBase {
     module_disable(array('module_test'));
     module_uninstall(array('module_test'));
 
-    // Are the perms defined by module_test removed from {role_permission}.
-    $count = db_query("SELECT COUNT(rid) FROM {role_permission} WHERE permission = :perm", array(':perm' => 'module_test perm'))->fetchField();
-    $this->assertEqual(0, $count, 'Permissions were all removed.');
+    // Are the perms defined by module_test removed?
+    $this->assertFalse(user_roles(FALSE, 'module_test perm'), 'Permissions were all removed.');
   }
 }
