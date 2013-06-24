@@ -376,7 +376,12 @@ function aggregator_page_rss() {
   }
 
   $feeds = $result->fetchAll();
-  return theme('aggregator_page_rss', array('feeds' => $feeds, 'category' => $category));
+  $aggregator_page_rss = array(
+    '#theme' => 'aggregator_page_rss',
+    '#feeds' => $feeds,
+    '#category' => $category,
+  );
+  return drupal_render($aggregator_page_rss);
 }
 
 /**
@@ -448,7 +453,11 @@ function aggregator_page_opml($cid = NULL) {
   }
 
   $feeds = $result->fetchAll();
-  return theme('aggregator_page_opml', array('feeds' => $feeds));
+  $aggregator_page_opml = array(
+    '#theme' => 'aggregator_page_opml',
+    '#feeds' => $feeds,
+  );
+  return drupal_render($aggregator_page_opml);
 }
 
 /**
@@ -523,14 +532,16 @@ function template_preprocess_aggregator_summary_item(&$variables) {
       'class' => array('feed-item-url',),
     ),
   ));
-  $variables['item_age'] = theme('datetime', array(
-    'attributes' => array(
+  $datetime = array(
+    '#theme' => 'datetime',
+    '#attributes' => array(
       'datetime' => format_date($item->timestamp->value, 'html_datetime', '', 'UTC'),
       'class' => array('feed-item-age',),
     ),
-    'text' => t('%age old', array('%age' => format_interval(REQUEST_TIME - $item->timestamp->value))),
-    'html' => TRUE,
-  ));
+    '#text' => t('%age old', array('%age' => format_interval(REQUEST_TIME - $item->timestamp->value))),
+    '#html' => TRUE,
+  );
+  $variables['item_age'] = drupal_render($datetime);
 }
 
 /**
@@ -546,10 +557,20 @@ function template_preprocess_aggregator_summary_item(&$variables) {
 function template_preprocess_aggregator_feed_source(&$variables) {
   $feed = $variables['aggregator_feed'];
 
-  $variables['source_icon'] = theme('feed_icon', array('url' => $feed->url->value, 'title' => t('!title feed', array('!title' => $feed->label()))));
+  $feed_icon = array(
+    '#theme' => 'feed_icon',
+    '#url' => $feed->url->value,
+    '#title' => t('!title feed', array('!title' => $feed->label())),
+  );
+  $variables['source_icon'] = drupal_render($feed_icon);
 
   if (!empty($feed->image->value) && $feed->label() && !empty($feed->link->value)) {
-    $variables['source_image'] = l(theme('image', array('path' => $feed->image->value, 'alt' => $feed->title->value)), $feed->link->value, array('html' => TRUE, 'attributes' => array('class' => 'feed-image')));
+    $image = array(
+      '#theme' => 'image',
+      '#path' => $feed->image->value,
+      '#alt' => $feed->title->value,
+    );
+    $variables['source_image'] = l($image, $feed->link->value, array('html' => TRUE, 'attributes' => array('class' => 'feed-image')));
   }
   else {
     $variables['source_image'] = '';

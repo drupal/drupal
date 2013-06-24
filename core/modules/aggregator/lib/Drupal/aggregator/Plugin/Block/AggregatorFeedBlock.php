@@ -69,16 +69,28 @@ class AggregatorFeedBlock extends BlockBase {
     list(, $id) = explode(':', $this->getPluginId());
     if ($feed = db_query('SELECT fid, title, block FROM {aggregator_feed} WHERE block <> 0 AND fid = :fid', array(':fid' => $id))->fetchObject()) {
       $result = db_query_range("SELECT * FROM {aggregator_item} WHERE fid = :fid ORDER BY timestamp DESC, iid DESC", 0, $this->configuration['block_count'], array(':fid' => $id));
-      $read_more = theme('more_link', array('url' => 'aggregator/sources/' . $feed->fid, 'title' => t("View this feed's recent news.")));
-
+      $more_link = array(
+        '#theme' => 'more_link',
+        '#url' => 'aggregator/sources/' . $feed->fid,
+        '#title' => t("View this feed's recent news."),
+      );
+      $read_more = drupal_render($more_link);
       $items = array();
       foreach ($result as $item) {
-        $items[] = theme('aggregator_block_item', array('item' => $item));
+        $aggregator_block_item = array(
+          '#theme' => 'aggregator_block_item',
+          '#item' => $item,
+        );
+        $items[] = drupal_render($aggregator_block_item);
       }
       // Only display the block if there are items to show.
       if (count($items) > 0) {
+        $item_list = array(
+          '#theme' => 'item_list',
+          '#items' => $items,
+        );
         return array(
-          '#children' => theme('item_list', array('items' => $items)) . $read_more,
+          '#children' => drupal_render($item_list) . $read_more,
         );
       }
     }
