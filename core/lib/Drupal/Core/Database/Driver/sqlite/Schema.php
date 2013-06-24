@@ -23,13 +23,36 @@ class Schema extends DatabaseSchema {
    */
   protected $defaultSchema = 'main';
 
+  /**
+   * Determines if the named table exists.
+   *
+   * @param $table
+   *   Name of the database table to be used.
+   *
+   * @return
+   *   Boolean true if the table exists, else FALSE.
+   */
   public function tableExists($table) {
     $info = $this->getPrefixInfo($table);
 
     // Don't use {} around sqlite_master table.
-    return (bool) $this->connection->query('SELECT 1 FROM ' . $info['schema'] . '.sqlite_master WHERE type = :type AND name = :name', array(':type' => 'table', ':name' => $info['table']))->fetchField();
+    return (bool) $this->connection->query(
+      'SELECT 1 FROM ' . $info['schema'] . '.sqlite_master WHERE type = :type AND name = :name',
+      array(':type' => 'table', ':name' => $info['table'])
+    )->fetchField();
   }
 
+  /**
+   * Determines if the name field exists in the defined table.
+   *
+   * @param $table
+   *   Name of the table the field shall be defined in.
+   * @param $column
+   *   Name of the field to be found.
+   *
+   * @return bool
+   *   True, if the field is defined, else FALSE.
+   */
   public function fieldExists($table, $column) {
     $schema = $this->introspectSchema($table);
     return !empty($schema['fields'][$column]);
@@ -47,16 +70,30 @@ class Schema extends DatabaseSchema {
    */
   public function createTableSql($name, $table) {
     $sql = array();
-    $sql[] = "CREATE TABLE {" . $name . "} (\n" . $this->createColumsSql($name, $table) . "\n);\n";
-    return array_merge($sql, $this->createIndexSql($name, $table));
+    $sanitizedSchema = $this->sanitizeSchema($table);
+
+    $sql[] = "CREATE TABLE {" . $name . "} (\n" . $this->createColumsSql($name, $sanitizedSchema) . "\n);\n";
+
+    return array_merge($sql, $this->createIndexSql($name, $sanitizedSchema));
   }
 
   /**
    * Build the SQL expression for indexes.
+   *
+   * @param $tablename
+   * @param $schema
+   *
+   * @return array
    */
   protected function createIndexSql($tablename, $schema) {
     $sql = array();
     $info = $this->getPrefixInfo($tablename);
+
+    // Process keys.
+    if (!empty($schema['primary key'])) {
+        $sql[] = " PRIMARY KEY (" . $this->createKeySql($schema['primary key']) . ")";
+    }
+
     if (!empty($schema['unique keys'])) {
       foreach ($schema['unique keys'] as $key => $fields) {
         $sql[] = 'CREATE UNIQUE INDEX ' . $info['schema'] . '.' . $info['table'] . '_' . $key . ' ON ' . $info['table'] . ' (' . $this->createKeySql($fields) . "); \n";
@@ -72,26 +109,54 @@ class Schema extends DatabaseSchema {
 
   /**
    * Build the SQL expression for creating columns.
+   *
+   * @param $tablename
+   *   Name of the table the fields shall be created in.
+   * @param $schema
+   *   Sql database field defeinitions
+   *
+   * @return
+   *   String represention the database fields to be created.
    */
   protected function createColumsSql($tablename, $schema) {
     $sql_array = array();
 
     // Add the SQL statement for each field.
     foreach ($schema['fields'] as $name => $field) {
-      if (isset($field['type']) && $field['type'] == 'serial') {
-        if (isset($schema['primary key']) && ($key = array_search($name, $schema['primary key'])) !== FALSE) {
-          unset($schema['primary key'][$key]);
-        }
-      }
       $sql_array[] = $this->createFieldSql($name, $this->processField($field));
     }
 
-    // Process keys.
-    if (!empty($schema['primary key'])) {
-      $sql_array[] = " PRIMARY KEY (" . $this->createKeySql($schema['primary key']) . ")";
+    return implode(", \n", $sql_array);
+  }
+
+  /**
+   * Checks for errors in given schema definition.
+   *
+   * @param $schema
+   *   Array of field definitions
+   *
+   * @return array
+   */
+  function sanitizeSchema(array $schema) {
+
+    foreach ($schema['fields'] as $name => $field) {
+      if (isset($field['type']) && $field['type'] == 'serial') {
+        if (isset($schema['primary key']) && ($key = array_search($name, $schema['primary key'])) !== FALSE) {
+
+          $primary = $schema['primary key'];
+          unset($schema['primary key'][$key]);
+
+            if (!empty($schema['primary key'])) {
+              $key = implode('_', $primary);
+              $schema['unique keys'][$key] = $primary;
+            }
+
+            unset($schema['primary key']);
+        }
+      }
     }
 
-    return implode(", \n", $sql_array);
+    return $schema;
   }
 
   /**
@@ -562,6 +627,19 @@ class Schema extends DatabaseSchema {
     return $key_definition;
   }
 
+  /**
+   * Adds an index to a table including the given fields.
+   *
+   * @param $table
+   *   Name of the table the index shall be added to
+   * @param $name
+   *   Name of the index to be added
+   * @param $fields
+   *   array of fields to be recognized by the index.
+   *
+   * @throws \Drupal\Core\Database\SchemaObjectExistsException
+   * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
+   */
   public function addIndex($table, $name, $fields) {
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException(t("Cannot add index @name to table @table: table doesn't exist.", array('@table' => $table, '@name' => $name)));
