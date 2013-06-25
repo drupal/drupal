@@ -777,9 +777,13 @@ function _menu_translate(&$router_item, $map, $to_arg = FALSE) {
   $router_item['tab_parent_href'] = implode('/', $tab_parent_map);
   $router_item['options'] = array();
   if (!empty($router_item['route_name'])) {
+    // Route-provided menu items do not have menu loaders, so replace the map
+    // with the link map.
+    $map = $link_map;
+
     $route_provider = Drupal::getContainer()->get('router.route_provider');
     $route = $route_provider->getRouteByName($router_item['route_name']);
-    $router_item['access'] = menu_item_route_access($route, $router_item['href']);
+    $router_item['access'] = menu_item_route_access($route, $router_item['href'], $map);
   }
   else {
     // @todo: Remove once all routes are converted.
@@ -917,7 +921,7 @@ function _menu_link_translate(&$item, $translate = FALSE) {
     // menu_tree_check_access() may set this ahead of time for links to nodes.
     if (!isset($item['access'])) {
       if ($route = $item->getRoute()) {
-        $item['access'] = menu_item_route_access($route, $item['href']);
+        $item['access'] = menu_item_route_access($route, $item['href'], $map);
       }
       elseif (!empty($item['load_functions']) && !_menu_load_objects($item, $map)) {
         // An error occurred loading an object.
@@ -953,23 +957,41 @@ function _menu_link_translate(&$item, $translate = FALSE) {
  *   Router for the given menu item.
  * @param string $href
  *   Menu path as returned by $item['href'] of menu_get_item().
+ * @param array $map
+ *   An array of path arguments, for example, array('node', '5').
  *
  * @return bool
  *   TRUE if the user has access or FALSE if the user should be presented
  *   with access denied.
  */
-function menu_item_route_access(Route $route, $href) {
+function menu_item_route_access(Route $route, $href, &$map) {
   $request = Request::create('/' . $href);
   $request->attributes->set('system_path', $href);
   // Attempt to match this path to provide a fully built request to the
   // access checker.
   try {
     $request->attributes->add(Drupal::service('router.dynamic')->matchRequest($request));
-    return Drupal::service('access_manager')->check($route, $request);
   }
   catch (NotFoundHttpException $e) {
     return FALSE;
   }
+
+  // Populate the map with any matching values from the request.
+  $path_bits = explode('/', trim($route->getPath(), '/'));
+  foreach ($map as $index => $map_item) {
+    $matches = array();
+    // Search for placeholders wrapped by curly braces. For example, a path
+    // 'foo/{bar}/baz' would return 'bar'.
+    if (isset($path_bits[$index]) && preg_match('/{(?<placeholder>.*)}/', $path_bits[$index], $matches)) {
+      // If that placeholder is present on the request attributes, replace the
+      // placeholder in the map with the value.
+      if ($request->attributes->has($matches['placeholder'])) {
+        $map[$index] = $request->attributes->get($matches['placeholder']);
+      }
+    }
+  }
+
+  return Drupal::service('access_manager')->check($route, $request);
 }
 
 /**

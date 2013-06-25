@@ -83,7 +83,7 @@ function field_ui_menu() {
         'weight' => 1,
       );
       $items["$path/fields/%"] = array(
-        'title callback' => 'field_ui_instance_title',
+        'title callback' => 'entity_page_label',
         'title arguments' => array($field_position),
         'route_name' => "field_ui.instance_edit.$entity_type",
       );
@@ -207,16 +207,6 @@ function field_ui_instance_load($field_name, $entity_type, $bundle_name, $bundle
     }
   }
   return FALSE;
-}
-
-/**
- * Title callback: Returns the name of a given instance.
- *
- * @see field_ui_menu()
- */
-function field_ui_instance_title($instance) {
-  $entity = entity_load('field_instance', $instance);
-  return $entity->label();
 }
 
 /**
