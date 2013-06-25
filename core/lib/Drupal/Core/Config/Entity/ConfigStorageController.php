@@ -14,6 +14,7 @@ use Drupal\Core\Entity\EntityStorageControllerBase;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\StorageInterface;
+use Drupal\Core\Entity\Query\QueryFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -62,6 +63,13 @@ class ConfigStorageController extends EntityStorageControllerBase {
   protected $configStorage;
 
   /**
+   * The entity query factory.
+   *
+   * @var \Drupal\Core\Entity\Query\QueryFactory
+   */
+  protected $entityQueryFactory;
+
+  /**
    * Constructs a ConfigStorageController object.
    *
    * @param string $entity_type
@@ -72,8 +80,10 @@ class ConfigStorageController extends EntityStorageControllerBase {
    *   The config factory service.
    * @param \Drupal\Core\Config\StorageInterface $config_storage
    *   The config storage service.
+   * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query_factory
+   *   The entity query factory.
    */
-  public function __construct($entity_type, array $entity_info, ConfigFactory $config_factory, StorageInterface $config_storage) {
+  public function __construct($entity_type, array $entity_info, ConfigFactory $config_factory, StorageInterface $config_storage, QueryFactory $entity_query_factory) {
     parent::__construct($entity_type, $entity_info);
 
     $this->idKey = $this->entityInfo['entity_keys']['id'];
@@ -87,6 +97,7 @@ class ConfigStorageController extends EntityStorageControllerBase {
 
     $this->configFactory = $config_factory;
     $this->configStorage = $config_storage;
+    $this->entityQueryFactory = $entity_query_factory;
   }
 
   /**
@@ -97,7 +108,8 @@ class ConfigStorageController extends EntityStorageControllerBase {
       $entity_type,
       $entity_info,
       $container->get('config.factory'),
-      $container->get('config.storage')
+      $container->get('config.storage'),
+      $container->get('entity.query')
     );
   }
 
@@ -165,6 +177,22 @@ class ConfigStorageController extends EntityStorageControllerBase {
       });
     }
     return $entities;
+  }
+
+  /**
+   * Returns an entity query instance.
+   *
+   * @param string $conjunction
+   *   - AND: all of the conditions on the query need to match.
+   *   - OR: at least one of the conditions on the query need to match.
+   *
+   * @return \Drupal\Core\Entity\Query\QueryInterface
+   *   The query instance.
+   *
+   * @see \Drupal\Core\Entity\EntityStorageControllerInterface::getQueryServicename()
+   */
+  public function getQuery($conjunction = 'AND') {
+    return $this->entityQueryFactory->get($this->entityType, $conjunction);
   }
 
   /**

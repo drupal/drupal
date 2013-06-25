@@ -154,6 +154,8 @@ class ConfigEntityTest extends WebTestBase {
     $this->assertIdentical($same_id->label(), '');
     $this->assertNotEqual($same_id->uuid(), $config_test->uuid());
 
+    // Delete the overridden entity first.
+    $same_id->delete();
     // Revert to previous state.
     $config_test->save();
 

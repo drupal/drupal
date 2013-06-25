@@ -179,6 +179,8 @@ class ViewStorageTest extends ViewUnitTestBase {
     $executable->initDisplay();
     $this->assertTrue($executable->displayHandlers->get($new_id) instanceof Page, 'New page display "test" uses the right display plugin.');
 
+    // To save this with a new ID, we should use createDuplicate().
+    $view = $view->createDuplicate();
     $view->set('id', 'test_view_storage_new_new2');
     $view->save();
     $values = config('views.view.test_view_storage_new_new2')->get();
