@@ -1333,7 +1333,7 @@ class ViewExecutable {
   public function executeDisplay($display_id = NULL, $args = array()) {
     if (empty($this->current_display) || $this->current_display != $this->chooseDisplay($display_id)) {
       if (!$this->setDisplay($display_id)) {
-        return FALSE;
+        return NULL;
       }
     }
 

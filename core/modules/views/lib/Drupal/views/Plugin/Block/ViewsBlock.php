@@ -11,6 +11,7 @@ use Drupal\block\BlockBase;
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Component\Utility\Xss;
 
 /**
  * Provides a generic Views block.
@@ -74,14 +75,11 @@ class ViewsBlock extends BlockBase {
    */
   public function build() {
     if ($output = $this->view->executeDisplay($this->displayID)) {
-      $output = $this->view->executeDisplay($this->displayID);
       // Set the label to the title configured in the view.
-      $this->configuration['label'] = filter_xss_admin($this->view->getTitle());
+      $this->configuration['label'] = Xss::filterAdmin($this->view->getTitle());
       // Before returning the block output, convert it to a renderable array
       // with contextual links.
       $this->addContextualLinks($output);
-
-      $this->view->destroy();
       return $output;
     }
 
