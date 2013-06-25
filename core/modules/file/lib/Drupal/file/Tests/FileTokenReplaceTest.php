@@ -63,11 +63,11 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     $tests['[file:owner:uid]'] = $file->getOwner()->id();
 
     // Test to make sure that we generated something for each token.
-    $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
       $output = $token_service->replace($input, array('file' => $file), array('langcode' => $language_interface->langcode));
-      $this->assertEqual($output, $expected, t('Sanitized file token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, format_string('Sanitized file token %token replaced.', array('%token' => $input)));
     }
 
     // Generate and test unsanitized tokens.
@@ -78,7 +78,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
 
     foreach ($tests as $input => $expected) {
       $output = $token_service->replace($input, array('file' => $file), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));
-      $this->assertEqual($output, $expected, t('Unsanitized file token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, format_string('Unsanitized file token %token replaced.', array('%token' => $input)));
     }
   }
 }

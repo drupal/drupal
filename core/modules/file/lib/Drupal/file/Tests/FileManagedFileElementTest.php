@@ -42,19 +42,19 @@ class FileManagedFileElementTest extends FileFieldTestBase {
 
           // Submit without a file.
           $this->drupalPost($path, array(), t('Save'));
-          $this->assertRaw(t('The file ids are %fids.', array('%fids' => implode(',', array()))), t('Submitted without a file.'));
+          $this->assertRaw(t('The file ids are %fids.', array('%fids' => implode(',', array()))), 'Submitted without a file.');
 
           // Submit a new file, without using the Upload button.
           $last_fid_prior = $this->getLastFileId();
           $edit = array($file_field_name => drupal_realpath($test_file->getFileUri()));
           $this->drupalPost($path, $edit, t('Save'));
           $last_fid = $this->getLastFileId();
-          $this->assertTrue($last_fid > $last_fid_prior, t('New file got saved.'));
-          $this->assertRaw(t('The file ids are %fids.', array('%fids' => implode(',', array($last_fid)))), t('Submit handler has correct file info.'));
+          $this->assertTrue($last_fid > $last_fid_prior, 'New file got saved.');
+          $this->assertRaw(t('The file ids are %fids.', array('%fids' => implode(',', array($last_fid)))), 'Submit handler has correct file info.');
 
           // Submit no new input, but with a default file.
           $this->drupalPost($path . '/' . $last_fid, array(), t('Save'));
-          $this->assertRaw(t('The file ids are %fids.', array('%fids' => implode(',', array($last_fid)))), t('Empty submission did not change an existing file.'));
+          $this->assertRaw(t('The file ids are %fids.', array('%fids' => implode(',', array($last_fid)))), 'Empty submission did not change an existing file.');
 
           // Now, test the Upload and Remove buttons, with and without Ajax.
           foreach (array(FALSE, TRUE) as $ajax) {
@@ -69,9 +69,9 @@ class FileManagedFileElementTest extends FileFieldTestBase {
               $this->drupalPost(NULL, $edit, t('Upload'));
             }
             $last_fid = $this->getLastFileId();
-            $this->assertTrue($last_fid > $last_fid_prior, t('New file got uploaded.'));
+            $this->assertTrue($last_fid > $last_fid_prior, 'New file got uploaded.');
             $this->drupalPost(NULL, array(), t('Save'));
-            $this->assertRaw(t('The file ids are %fids.', array('%fids' => implode(',', array($last_fid)))), t('Submit handler has correct file info.'));
+            $this->assertRaw(t('The file ids are %fids.', array('%fids' => implode(',', array($last_fid)))), 'Submit handler has correct file info.');
 
             // Remove, then Submit.
             $remove_button_title = $multiple ? t('Remove selected') : t('Remove');
@@ -88,7 +88,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
               $this->drupalPost(NULL, $remove_edit, $remove_button_title);
             }
             $this->drupalPost(NULL, array(), t('Save'));
-            $this->assertRaw(t('The file ids are %fids.', array('%fids' => '')), t('Submission after file removal was successful.'));
+            $this->assertRaw(t('The file ids are %fids.', array('%fids' => '')), 'Submission after file removal was successful.');
 
             // Upload, then Remove, then Submit.
             $this->drupalGet($path);
@@ -112,7 +112,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
             }
 
             $this->drupalPost(NULL, array(), t('Save'));
-            $this->assertRaw(t('The file ids are %fids.', array('%fids' => '')), t('Submission after file upload and removal was successful.'));
+            $this->assertRaw(t('The file ids are %fids.', array('%fids' => '')), 'Submission after file upload and removal was successful.');
           }
         }
       }
@@ -137,7 +137,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
 
     // Save the entire form.
     $this->drupalPost(NULL, array(), t('Save'));
-    $this->assertRaw(t('The file ids are %fids.', array('%fids' => implode(',', $fid_list))), t('Two files saved into a single multiple file element.'));
+    $this->assertRaw(t('The file ids are %fids.', array('%fids' => implode(',', $fid_list))), 'Two files saved into a single multiple file element.');
 
     // Delete only the first file.
     $edit = array(

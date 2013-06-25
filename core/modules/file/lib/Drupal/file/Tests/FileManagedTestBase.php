@@ -44,19 +44,19 @@ abstract class FileManagedTestBase extends FileTestBase {
     // Determine if there were any expected that were not called.
     $uncalled = array_diff($expected, $actual);
     if (count($uncalled)) {
-      $this->assertTrue(FALSE, t('Expected hooks %expected to be called but %uncalled was not called.', array('%expected' => implode(', ', $expected), '%uncalled' => implode(', ', $uncalled))));
+      $this->assertTrue(FALSE, format_string('Expected hooks %expected to be called but %uncalled was not called.', array('%expected' => implode(', ', $expected), '%uncalled' => implode(', ', $uncalled))));
     }
     else {
-      $this->assertTrue(TRUE, t('All the expected hooks were called: %expected', array('%expected' => empty($expected) ? t('(none)') : implode(', ', $expected))));
+      $this->assertTrue(TRUE, format_string('All the expected hooks were called: %expected', array('%expected' => empty($expected) ? '(none)' : implode(', ', $expected))));
     }
 
     // Determine if there were any unexpected calls.
     $unexpected = array_diff($actual, $expected);
     if (count($unexpected)) {
-      $this->assertTrue(FALSE, t('Unexpected hooks were called: %unexpected.', array('%unexpected' => empty($unexpected) ? t('(none)') : implode(', ', $unexpected))));
+      $this->assertTrue(FALSE, format_string('Unexpected hooks were called: %unexpected.', array('%unexpected' => empty($unexpected) ? '(none)' : implode(', ', $unexpected))));
     }
     else {
-      $this->assertTrue(TRUE, t('No unexpected hooks were called.'));
+      $this->assertTrue(TRUE, 'No unexpected hooks were called.');
     }
   }
 
@@ -75,13 +75,13 @@ abstract class FileManagedTestBase extends FileTestBase {
 
     if (!isset($message)) {
       if ($actual_count == $expected_count) {
-        $message = t('hook_file_@name was called correctly.', array('@name' => $hook));
+        $message = format_string('hook_file_@name was called correctly.', array('@name' => $hook));
       }
       elseif ($expected_count == 0) {
         $message = format_plural($actual_count, 'hook_file_@name was not expected to be called but was actually called once.', 'hook_file_@name was not expected to be called but was actually called @count times.', array('@name' => $hook, '@count' => $actual_count));
       }
       else {
-        $message = t('hook_file_@name was expected to be called %expected times but was called %actual times.', array('@name' => $hook, '%expected' => $expected_count, '%actual' => $actual_count));
+        $message = format_string('hook_file_@name was expected to be called %expected times but was called %actual times.', array('@name' => $hook, '%expected' => $expected_count, '%actual' => $actual_count));
       }
     }
     $this->assertEqual($actual_count, $expected_count, $message);
@@ -114,7 +114,7 @@ abstract class FileManagedTestBase extends FileTestBase {
     $file->status = 0;
     // Write the record directly rather than using the API so we don't invoke
     // the hooks.
-    $this->assertNotIdentical(drupal_write_record('file_managed', $file), FALSE, t('The file was added to the database.'), 'Create test file');
+    $this->assertNotIdentical(drupal_write_record('file_managed', $file), FALSE, 'The file was added to the database.', 'Create test file');
 
     return entity_create('file', (array) $file);
   }

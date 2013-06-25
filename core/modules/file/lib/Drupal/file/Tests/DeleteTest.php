@@ -26,11 +26,11 @@ class DeleteTest extends FileManagedTestBase {
     $file = $this->createFile();
 
     // Check that deletion removes the file and database record.
-    $this->assertTrue(is_file($file->getFileUri()), t('File exists.'));
+    $this->assertTrue(is_file($file->getFileUri()), 'File exists.');
     $file->delete();
     $this->assertFileHooksCalled(array('delete'));
-    $this->assertFalse(file_exists($file->getFileUri()), t('Test file has actually been deleted.'));
-    $this->assertFalse(file_load($file->id()), t('File was removed from the database.'));
+    $this->assertFalse(file_exists($file->getFileUri()), 'Test file has actually been deleted.');
+    $this->assertFalse(file_load($file->id()), 'File was removed from the database.');
   }
 
   /**
@@ -43,9 +43,9 @@ class DeleteTest extends FileManagedTestBase {
 
     file_usage()->delete($file, 'testing', 'test', 1);
     $usage = file_usage()->listUsage($file);
-    $this->assertEqual($usage['testing']['test'], array(1 => 1), t('Test file is still in use.'));
-    $this->assertTrue(file_exists($file->getFileUri()), t('File still exists on the disk.'));
-    $this->assertTrue(file_load($file->id()), t('File still exists in the database.'));
+    $this->assertEqual($usage['testing']['test'], array(1 => 1), 'Test file is still in use.');
+    $this->assertTrue(file_exists($file->getFileUri()), 'File still exists on the disk.');
+    $this->assertTrue(file_load($file->id()), 'File still exists in the database.');
 
     // Clear out the call to hook_file_load().
     file_test_reset();
@@ -53,7 +53,7 @@ class DeleteTest extends FileManagedTestBase {
     file_usage()->delete($file, 'testing', 'test', 1);
     $usage = file_usage()->listUsage($file);
     $this->assertFileHooksCalled(array('load', 'update'));
-    $this->assertTrue(empty($usage), t('File usage data was removed.'));
+    $this->assertTrue(empty($usage), 'File usage data was removed.');
     $this->assertTrue(file_exists($file->getFileUri()), 'File still exists on the disk.');
     $file = file_load($file->id());
     $this->assertTrue($file, 'File still exists in the database.');
@@ -72,7 +72,7 @@ class DeleteTest extends FileManagedTestBase {
 
     // system_cron() loads
     $this->assertFileHooksCalled(array('delete'));
-    $this->assertFalse(file_exists($file->getFileUri()), t('File has been deleted after its last usage was removed.'));
-    $this->assertFalse(file_load($file->id()), t('File was removed from the database.'));
+    $this->assertFalse(file_exists($file->getFileUri()), 'File has been deleted after its last usage was removed.');
+    $this->assertFalse(file_load($file->id()), 'File was removed from the database.');
   }
 }
