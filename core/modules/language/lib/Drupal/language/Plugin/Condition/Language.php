@@ -8,17 +8,16 @@
 namespace Drupal\language\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Condition\Annotation\Condition;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Language\Language as Lang;
 
 /**
  * Provides a 'Language' condition.
  *
- * @Plugin(
+ * @Condition(
  *   id = "language",
  *   label = @Translation("Language"),
- *   module = "language",
  *   context = {
  *     "language" = {
  *       "type" = "language"
