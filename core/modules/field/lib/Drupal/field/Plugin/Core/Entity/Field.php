@@ -208,6 +208,13 @@ class Field extends ConfigEntityBase implements FieldInterface {
   protected $storageDetails;
 
   /**
+   * The original field.
+   *
+   * @var \Drupal\field\Plugin\Core\Entity\Field
+   */
+  public $original = NULL;
+
+  /**
    * Constructs a Field object.
    *
    * @param array $values
@@ -378,10 +385,6 @@ class Field extends ConfigEntityBase implements FieldInterface {
     $result = parent::save();
     field_cache_clear();
 
-    // Invoke hook_field_create_field() after the cache is cleared for API
-    // consistency.
-    $module_handler->invokeAll('field_create_field', array($this));
-
     return $result;
   }
 
@@ -401,6 +404,7 @@ class Field extends ConfigEntityBase implements FieldInterface {
     $storage_controller = \Drupal::entityManager()->getStorageController($this->entityType);
 
     $original = $storage_controller->loadUnchanged($this->id());
+    $this->original = $original;
 
     // Some updates are always disallowed.
     if ($this->type != $original->type) {
@@ -431,10 +435,6 @@ class Field extends ConfigEntityBase implements FieldInterface {
     // Save the configuration.
     $result = parent::save();
     field_cache_clear();
-
-    // Invoke hook_field_update_field() after the cache is cleared for API
-    // consistency.
-    $module_handler->invokeAll('field_update_field', array($this, $original));
 
     return $result;
   }
@@ -481,9 +481,6 @@ class Field extends ConfigEntityBase implements FieldInterface {
 
       // Clear the cache.
       field_cache_clear();
-
-      // Invoke hook_field_delete_field().
-      $module_handler->invokeAll('field_delete_field', array($this));
     }
   }
 

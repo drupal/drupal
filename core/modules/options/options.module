@@ -10,7 +10,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\field\FieldInterface;
 use Drupal\field\FieldUpdateForbiddenException;
-use Drupal\options\Plugin\field\widget\OptionsWidgetBase;
 
 /**
  * Implements hook_help().
@@ -215,9 +214,9 @@ function options_field_settings_form_value_boolean_allowed_values($element, $inp
 }
 
 /**
- * Implements hook_field_update_field().
+ * Implements hook_ENTITY_TYPE_update() for 'field_entity'.
  */
-function options_field_update_field($field, $prior_field) {
+function options_field_entity_update(FieldInterface $field) {
   drupal_static_reset('options_allowed_values');
 }
 

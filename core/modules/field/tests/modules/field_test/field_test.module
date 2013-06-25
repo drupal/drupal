@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\field\FieldInterface;
 
 /**
  * @file
@@ -125,8 +126,8 @@ function field_test_field_language_alter(&$display_langcode, $context) {
  *   $mem = field_test_memorize();
  *
  *   // make sure hook_field_create_field() is invoked correctly
- *   assertEqual(count($mem['field_test_field_create_field']), 1);
- *   assertEqual($mem['field_test_field_create_field'][0], array($field));
+ *   assertEqual(count($mem['field_test_field_entity_create']), 1);
+ *   assertEqual($mem['field_test_field_entity_create'][0], array($field));
  * @endcode
  *
  * @param $key
@@ -151,9 +152,9 @@ function field_test_memorize($key = NULL, $value = NULL) {
 }
 
 /**
- * Memorize calls to hook_field_create_field().
+ * Memorize calls to field_test_field_entity_create() for field creation.
  */
-function field_test_field_create_field($field) {
+function field_test_field_entity_create(FieldInterface $field) {
   $args = func_get_args();
   field_test_memorize(__FUNCTION__, $args);
 }

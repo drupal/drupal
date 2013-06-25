@@ -44,8 +44,8 @@ class CrudTest extends FieldUnitTestBase {
     $field = entity_create('field_entity', $field_definition);
     $field->save();
     $mem = field_test_memorize();
-    $this->assertIdentical($mem['field_test_field_create_field'][0][0]['field_name'], $field_definition['field_name'], 'hook_field_create_field() called with correct arguments.');
-    $this->assertIdentical($mem['field_test_field_create_field'][0][0]['type'], $field_definition['type'], 'hook_field_create_field() called with correct arguments.');
+    $this->assertIdentical($mem['field_test_field_entity_create'][0][0]['field_name'], $field_definition['field_name'], 'hook_entity_create() called with correct arguments.');
+    $this->assertIdentical($mem['field_test_field_entity_create'][0][0]['type'], $field_definition['type'], 'hook_entity_create() called with correct arguments.');
 
     // Read the configuration. Check against raw configuration data rather than
     // the loaded ConfigEntity, to be sure we check that the defaults are

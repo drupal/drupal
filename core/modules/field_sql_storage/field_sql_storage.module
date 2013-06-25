@@ -251,16 +251,6 @@ function field_sql_storage_field_storage_create_field($field) {
 }
 
 /**
- * Implements hook_field_create_field().
- */
-function field_sql_storage_field_create_field($field) {
-  // Rebuild the schema now that the field has been saved.
-  if ($field['storage']['type'] == 'field_sql_storage') {
-    drupal_get_schema(NULL, TRUE);
-  }
-}
-
-/**
  * Implements hook_field_update_forbid().
  *
  * Forbids any field update that changes column definitions if there is any

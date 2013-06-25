@@ -1218,33 +1218,6 @@ function hook_field_info_max_weight($entity_type, $bundle, $context, $context_mo
  */
 
 /**
- * Act on a field being created.
- *
- * This hook lets modules react to the creation of a field. It is called after
- * the definition is saved, so it cannot be used to modify the field itself.
- *
- * @param $field
- *   The field just created.
- */
-function hook_field_create_field($field) {
-  // @todo Needs function body.
-}
-
-/**
- * Act on a field instance being created.
- *
- * This hook lets modules react to the creation of a field instance. It is
- * called after the definition is saved, so it cannot be used to modify the
- * instance itself.
- *
- * @param $instance
- *   The instance just created.
- */
-function hook_field_create_instance($instance) {
-  // @todo Needs function body.
-}
-
-/**
  * Forbid a field update from occurring.
  *
  * Any module may forbid any update for any reason. For example, the
@@ -1280,89 +1253,6 @@ function hook_field_update_forbid($field, $prior_field) {
       throw new FieldUpdateForbiddenException("Cannot update a list field not to include keys with existing data");
     }
   }
-}
-
-/**
- * Act on a field being updated.
- *
- * This hook lets modules react to the update of an existing field. It is
- * called after the definition is saved, so it cannot be used to modify the
- * field itself.
- *
- * @param $field
- *   The field as it is post-update.
- * @param $prior_field
- *   The field as it was pre-update.
- */
-function hook_field_update_field($field, $prior_field) {
-  // Reset the static value that keeps track of allowed values for list fields.
-  drupal_static_reset('list_allowed_values');
-}
-
-/**
- * Act on a field being deleted.
- *
- * This hook lets modules react to the deletion of an existing field. It is
- * called after the definition is deleted.
- *
- * @param $field
- *   The field just deleted.
- */
-function hook_field_delete_field($field) {
-  // @todo Needs function body.
-}
-
-/**
- * Act on a field instance being updated.
- *
- * This hook lets modules react to the update of an existing field instance. It
- * is called after the definition is saved, so it cannot be used to modify the
- * instance itself.
- *
- * @param $instance
- *   The instance as it is post-update.
- * @param $prior_$instance
- *   The instance as it was pre-update.
- */
-function hook_field_update_instance($instance, $prior_instance) {
-  // @todo Needs function body.
-}
-
-/**
- * Act on a field instance being deleted.
- *
- * This hook lets modules react to the deletion of an existing field instance.
- * It is called after the definition is deleted.
- *
- * @param $instance
- *   The instance just deleted.
- */
-function hook_field_delete_instance($instance) {
-  // @todo Needs function body.
-}
-
-/**
- * Act on field records being read from the database.
- *
- * This hook is invoked from field_read_fields() on each field being read.
- *
- * @param $field
- *   The field record just read from the database.
- */
-function hook_field_read_field($field) {
-  // @todo Needs function body.
-}
-
-/**
- * Act on a field record being read from the database.
- *
- * This hook is invoked from field_read_instances() on each instance being read.
- *
- * @param $instance
- *   The instance record just read from the database.
- */
-function hook_field_read_instance($instance) {
-  // @todo Needs function body.
 }
 
 /**

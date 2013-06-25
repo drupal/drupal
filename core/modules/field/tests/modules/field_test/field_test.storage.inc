@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\field\FieldInstanceInterface;
 
 /**
  * Implements hook_field_storage_info().
@@ -441,17 +442,17 @@ function field_test_entity_bundle_rename($entity_type, $bundle_old, $bundle_new)
 }
 
 /**
- * Implements hook_field_delete_instance().
+ * Implements hook_ENTITY_TYPE_delete() for 'field_instance'.
  */
-function field_test_field_delete_instance($instance) {
+function field_test_field_instance_delete(FieldInstanceInterface $field_instance) {
   $data = _field_test_storage_data();
 
-  $field = field_info_field($instance['field_name']);
-  if ($field['storage']['type'] == 'field_test_storage') {
-    $field_data = &$data[$field['uuid']];
+  $field = $field_instance->getField();
+  if ($field->storage['type'] == 'field_test_storage') {
+    $field_data = &$data[$field->uuid];
     foreach (array('current', 'revisions') as $sub_table) {
       foreach ($field_data[$sub_table] as &$row) {
-        if ($row->bundle == $instance['bundle']) {
+        if ($row->bundle == $field_instance->bundle) {
           $row->deleted = TRUE;
         }
       }
