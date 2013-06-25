@@ -8,22 +8,22 @@
 namespace Drupal\custom_block;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\translation_entity\EntityTranslationControllerNG;
+use Drupal\content_translation\ContentTranslationControllerNG;
 
 /**
  * Defines the translation controller class for custom blocks.
  */
-class CustomBlockTranslationController extends EntityTranslationControllerNG {
+class CustomBlockTranslationController extends ContentTranslationControllerNG {
 
   /**
-   * Overrides EntityTranslationController::getAccess().
+   * Overrides ContentTranslationController::getAccess().
    */
   public function getAccess(EntityInterface $entity, $op) {
     return user_access('administer blocks');
   }
 
   /**
-   * Overrides EntityTranslationController::entityFormAlter().
+   * Overrides ContentTranslationController::entityFormAlter().
    */
   public function entityFormAlter(array &$form, array &$form_state, EntityInterface $entity) {
     parent::entityFormAlter($form, $form_state, $entity);
@@ -40,7 +40,7 @@ class CustomBlockTranslationController extends EntityTranslationControllerNG {
   }
 
   /**
-   * Overrides EntityTranslationController::entityFormTitle().
+   * Overrides ContentTranslationController::entityFormTitle().
    */
   protected function entityFormTitle(EntityInterface $entity) {
     $block_type = entity_load('custom_block_type', $entity->type->value);

@@ -63,7 +63,7 @@ class EntityType extends Plugin {
    *   Defaults to \Drupal\Core\Entity\EntityAccessController.
    * - translation: The name of the controller class that should be used to
    *   handle the translation process. The class must implement
-   *   \Drupal\translation_entity\EntityTranslationControllerInterface.
+   *   \Drupal\content_translation\ContentTranslationControllerInterface.
    *
    * @todo Interfaces from outside \Drupal\Core or \Drupal\Component should not
    *   be used here.
@@ -148,7 +148,7 @@ class EntityType extends Plugin {
   public $translatable = FALSE;
 
   /**
-   * @todo translation_entity_entity_info_alter() uses this but it is undocumented.
+   * @todo content_translation_entity_info_alter() uses this but it is undocumented.
    *
    * @var array
    */

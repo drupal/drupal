@@ -1,0 +1,106 @@
+<?php
+
+/**
+ * @file
+ * Installation functions for Content Translation module.
+ */
+
+use Drupal\Core\Language\Language;
+
+/**
+ * Implements hook_schema().
+ */
+function content_translation_schema() {
+  $schema['content_translation'] = array(
+    'description' => 'Table to track content translations',
+    'fields' => array(
+      'entity_type' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The entity type this translation relates to',
+      ),
+      'entity_id' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The entity id this translation relates to',
+      ),
+      'langcode' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The target language for this translation.',
+      ),
+      'source' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The source language from which this translation was created.',
+      ),
+      'outdated' => array(
+        'description' => 'A boolean indicating whether this translation needs to be updated.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'uid' => array(
+        'description' => 'The author of this translation.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'status' => array(
+        'description' => 'Boolean indicating whether the translation is visible to non-translators.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the translation was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'changed' => array(
+        'description' => 'The Unix timestamp when the translation was most recently saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('entity_type', 'entity_id', 'langcode'),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function content_translation_install() {
+  // Assign a fairly low weight to ensure our implementation of
+  // hook_module_implements_alter() is run among the last ones.
+  module_set_weight('content_translation', 10);
+  language_negotiation_include();
+  language_negotiation_set(Language::TYPE_CONTENT, array(LANGUAGE_NEGOTIATION_URL => 0));
+}
+
+/**
+ * Implements hook_enable().
+ */
+function content_translation_enable() {
+  // Translation works when at least two languages are enabled.
+  if (count(language_list()) < 2) {
+    $t_args = array('!language_url' => url('admin/config/regional/language'));
+    $message = t('Be sure to <a href="!language_url">enable at least two languages</a> to translate content.', $t_args);
+    drupal_set_message($message, 'warning');
+  }
+  // Point the user to the content translation settings.
+  $t_args = array('!settings_url' => url('admin/config/regional/content-language'));
+  $message = t('<a href="!settings_url">Enable translation</a> for <em>content types</em>, <em>taxonomy vocabularies</em>, <em>accounts</em>, or any other element you wish to translate.', $t_args);
+  drupal_set_message($message, 'warning');
+}

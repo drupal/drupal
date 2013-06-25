@@ -8,12 +8,12 @@
 namespace Drupal\node\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\translation_entity\Tests\EntityTranslationUITest;
+use Drupal\content_translation\Tests\ContentTranslationUITest;
 
 /**
  * Tests the Node Translation UI.
  */
-class NodeTranslationUITest extends EntityTranslationUITest {
+class NodeTranslationUITest extends ContentTranslationUITest {
 
   /**
    * The title of the test node.
@@ -25,7 +25,7 @@ class NodeTranslationUITest extends EntityTranslationUITest {
    *
    * @var array
    */
-  public static $modules = array('language', 'translation_entity', 'node', 'datetime', 'field_ui');
+  public static $modules = array('language', 'content_translation', 'node', 'datetime', 'field_ui');
 
   public static function getInfo() {
     return array(
@@ -43,7 +43,7 @@ class NodeTranslationUITest extends EntityTranslationUITest {
   }
 
   /**
-   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::setupBundle().
+   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::setupBundle().
    */
   protected function setupBundle() {
     parent::setupBundle();
@@ -51,14 +51,14 @@ class NodeTranslationUITest extends EntityTranslationUITest {
   }
 
   /**
-   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::getTranslatorPermission().
+   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::getTranslatorPermission().
    */
   protected function getTranslatorPermissions() {
     return array_merge(parent::getTranslatorPermissions(), array('administer nodes', "edit any $this->bundle content"));
   }
 
   /**
-   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::getNewEntityValues().
+   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::getNewEntityValues().
    */
   protected function getNewEntityValues($langcode) {
     // Node title is not translatable yet, hence we use a fixed value.
@@ -66,7 +66,7 @@ class NodeTranslationUITest extends EntityTranslationUITest {
   }
 
   /**
-   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::getFormSubmitAction().
+   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::getFormSubmitAction().
    */
   protected function getFormSubmitAction(EntityInterface $entity) {
     if ($entity->status) {
@@ -76,7 +76,7 @@ class NodeTranslationUITest extends EntityTranslationUITest {
   }
 
   /**
-   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::assertPublishedStatus().
+   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::assertPublishedStatus().
    */
   protected function assertPublishedStatus() {
     $entity = entity_load($this->entityType, $this->entityId, TRUE);
@@ -108,7 +108,7 @@ class NodeTranslationUITest extends EntityTranslationUITest {
   }
 
   /**
-   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::assertAuthoringInfo().
+   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::assertAuthoringInfo().
    */
   protected function assertAuthoringInfo() {
     $entity = entity_load($this->entityType, $this->entityId, TRUE);
@@ -189,8 +189,8 @@ class NodeTranslationUITest extends EntityTranslationUITest {
     $disabledNode = $this->drupalCreateNode(array('type' => $disabledBundle));
 
     // Make sure that only a single row was inserted into the
-    // {translation_entity} table.
-    $rows = db_query('SELECT * FROM {translation_entity}')->fetchAll();
+    // {content_translation} table.
+    $rows = db_query('SELECT * FROM {content_translation}')->fetchAll();
     $this->assertEqual(1, count($rows));
     $this->assertEqual($enabledNode->id(), reset($rows)->entity_id);
   }

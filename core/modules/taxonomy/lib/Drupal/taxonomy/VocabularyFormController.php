@@ -98,8 +98,8 @@ class VocabularyFormController extends EntityFormController {
       // We cannot leverage the regular submit handler definition because we
       // have button-specific ones here. Hence we need to explicitly set it for
       // the submit action, otherwise it would be ignored.
-      if (module_exists('translation_entity')) {
-        array_unshift($actions['submit']['#submit'], 'translation_entity_language_configuration_element_submit');
+      if (module_exists('content_translation')) {
+        array_unshift($actions['submit']['#submit'], 'content_translation_language_configuration_element_submit');
       }
       return $actions;
     }

@@ -68,7 +68,7 @@ function user_admin_account() {
       'href' => 'user/' . $account->uid . '/edit',
       'query' => $destination,
     );
-    if (module_invoke('translation_entity', 'translate_access', $account)) {
+    if (module_invoke('content_translation', 'translate_access', $account)) {
       $links['translate'] = array(
         'title' => t('Translate'),
         'href' => 'user/' . $account->uid . '/translations',

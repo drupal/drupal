@@ -281,12 +281,12 @@ function user_views_data() {
     ),
   );
 
-  if (Drupal::moduleHandler()->moduleExists('translation_entity')) {
+  if (Drupal::moduleHandler()->moduleExists('content_translation')) {
     $data['users']['translation_link'] = array(
       'title' => t('Translation link'),
       'help' => t('Provide a link to the translations overview for users.'),
       'field' => array(
-        'id' => 'translation_entity_link',
+        'id' => 'content_translation_link',
       ),
     );
   }

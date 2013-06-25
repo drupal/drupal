@@ -7,13 +7,13 @@
 
 namespace Drupal\custom_block\Tests;
 
-use Drupal\translation_entity\Tests\EntityTranslationUITest;
+use Drupal\content_translation\Tests\ContentTranslationUITest;
 use Drupal\custom_block\Plugin\Core\Entity\CustomBlock;
 
 /**
  * Tests the Custom Block Translation UI.
  */
-class CustomBlockTranslationUITest extends EntityTranslationUITest {
+class CustomBlockTranslationUITest extends ContentTranslationUITest {
 
   /**
    * The name of the test block.
@@ -27,7 +27,7 @@ class CustomBlockTranslationUITest extends EntityTranslationUITest {
    */
   public static $modules = array(
     'language',
-    'translation_entity',
+    'content_translation',
     'block',
     'field_ui',
     'custom_block'
@@ -56,7 +56,7 @@ class CustomBlockTranslationUITest extends EntityTranslationUITest {
   }
 
   /**
-   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::getTranslatorPermission().
+   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::getTranslatorPermission().
    */
   public function getTranslatorPermissions() {
     return array_merge(parent::getTranslatorPermissions(), array(
@@ -93,7 +93,7 @@ class CustomBlockTranslationUITest extends EntityTranslationUITest {
   }
 
   /**
-   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::getNewEntityValues().
+   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::getNewEntityValues().
    */
   protected function getNewEntityValues($langcode) {
     return array('info' => $this->name) + parent::getNewEntityValues($langcode);
@@ -117,8 +117,8 @@ class CustomBlockTranslationUITest extends EntityTranslationUITest {
     $disabled_custom_block = $this->createCustomBlock(FALSE, $bundle->id());
 
     // Make sure that only a single row was inserted into the
-    // {translation_entity} table.
-    $rows = db_query('SELECT * FROM {translation_entity}')->fetchAll();
+    // {content_translation} table.
+    $rows = db_query('SELECT * FROM {content_translation}')->fetchAll();
     $this->assertEqual(1, count($rows));
     $this->assertEqual($enabled_custom_block->id(), reset($rows)->entity_id);
   }

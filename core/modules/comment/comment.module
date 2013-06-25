@@ -954,7 +954,7 @@ function comment_links(Comment $comment, EntityInterface $node) {
   }
 
   // Add translations link for translation-enabled comment bundles.
-  if (module_exists('translation_entity') && translation_entity_translate_access($comment)) {
+  if (module_exists('content_translation') && content_translation_translate_access($comment)) {
     $links['comment-translations'] = array(
       'title' => t('translate'),
       'href' => 'comment/' . $comment->id() . '/translations',
@@ -1059,10 +1059,10 @@ function comment_form_node_type_form_alter(&$form, $form_state) {
       ),
     );
     // @todo Remove this check once language settings are generalized.
-    if (module_exists('translation_entity')) {
+    if (module_exists('content_translation')) {
       $comment_form = $form;
-      $comment_form_state['translation_entity']['key'] = 'language_configuration';
-      $form['comment'] += translation_entity_enable_widget('comment', 'comment_node_' . $form['#node_type']->type, $comment_form, $comment_form_state);
+      $comment_form_state['content_translation']['key'] = 'language_configuration';
+      $form['comment'] += content_translation_enable_widget('comment', 'comment_node_' . $form['#node_type']->type, $comment_form, $comment_form_state);
       array_unshift($form['#submit'], 'comment_translation_configuration_element_submit');
     }
   }
@@ -1083,11 +1083,11 @@ function comment_translation_configuration_element_submit($form, &$form_state) {
   // settings.
   $key = 'language_configuration';
   $comment_form_state = array(
-    'translation_entity' => array('key' => $key),
+    'content_translation' => array('key' => $key),
     'language' => array($key => array('entity_type' => 'comment', 'bundle' => 'comment_node_' . $form['#node_type']->type)),
-    'values' => array($key => array('translation_entity' => $form_state['values']['translation_entity'])),
+    'values' => array($key => array('content_translation' => $form_state['values']['content_translation'])),
   );
-  translation_entity_language_configuration_element_submit($form, $comment_form_state);
+  content_translation_language_configuration_element_submit($form, $comment_form_state);
 }
 
 /**

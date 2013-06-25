@@ -1,0 +1,10 @@
+name: 'Content translation test views'
+type: module
+description: 'Provides default views for views content translation tests.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - content_translation
+  - views
+hidden: true

@@ -548,7 +548,7 @@ display:
           hide_alter_empty: '1'
           text: Translate
           optional: '1'
-          plugin_id: translation_entity_link
+          plugin_id: content_translation_link
         dropbutton:
           id: dropbutton
           table: views
