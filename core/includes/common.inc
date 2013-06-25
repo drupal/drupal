@@ -5376,7 +5376,7 @@ function element_set_attributes(array &$element, array $map) {
  *   The info array.
  */
 function drupal_parse_info_file($filename) {
-  $info = &drupal_static(__FUNCTION__, array());
+  static $info = array();
 
   if (!isset($info[$filename])) {
     if (!file_exists($filename)) {

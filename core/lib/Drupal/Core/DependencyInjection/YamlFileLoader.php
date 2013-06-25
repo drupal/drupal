@@ -24,6 +24,15 @@ use Symfony\Component\Yaml\Parser;
 class YamlFileLoader {
 
   /**
+   * Statically cached yaml files.
+   *
+   * Especially during tests, yaml files are re-parsed often.
+   *
+   * @var array
+   */
+  static protected $yaml = array();
+
+  /**
    * @param \Drupal\Core\DependencyInjection\ContainerBuilder $container
    */
   protected $container;
@@ -39,7 +48,10 @@ class YamlFileLoader {
    *   The name of the file to load.
    */
   public function load($filename) {
-    $content = $this->loadFile($filename);
+    if (!isset(static::$yaml[$filename])) {
+      static::$yaml[$filename] = $this->loadFile($filename);
+    }
+    $content = static::$yaml[$filename];
     $content += array('parameters' => array(), 'services' => array());
     // parameters
     foreach ($content['parameters'] as $key => $value) {
