@@ -7,8 +7,6 @@
 
 namespace Drupal\rdf\Tests;
 
-use Drupal\Core\Language\Language;
-use Drupal\rdf\Tests\RdfTestHelper;
 use Drupal\taxonomy\Tests\TaxonomyTestBase;
 
 /**
@@ -22,6 +20,20 @@ class TaxonomyTermFieldAttributesTest extends TaxonomyTestBase {
    * @var array
    */
   public static $modules = array('rdf', 'field_test', 'file', 'image');
+
+  /**
+   * The name of the taxonomy term reference field used in the test.
+   *
+   * @var string
+   */
+  protected $fieldName;
+
+  /**
+   * The vocabulary object used in the test.
+   *
+   * @var \Drupal\taxonomy\VocabularyInterface
+   */
+  protected $vocabulary;
 
   public static function getInfo() {
     return array(
@@ -141,7 +153,7 @@ class TaxonomyTermFieldAttributesTest extends TaxonomyTestBase {
    * @todo Move this to TaxonomyTestBase, like the other field modules.
    */
   protected function createTaxonomyTermReferenceField($field_name, $vocabulary) {
-    $field = array(
+    entity_create('field_entity', array(
       'field_name' => $field_name,
       'type' => 'taxonomy_term_reference',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
@@ -153,14 +165,12 @@ class TaxonomyTermFieldAttributesTest extends TaxonomyTestBase {
           ),
         ),
       ),
-    );
-    field_create_field($field);
-    $instance = array(
+    ))->save();
+    entity_create('field_instance', array(
       'field_name' => $field_name,
       'entity_type' => 'node',
       'bundle' => 'article',
-    );
-    field_create_instance($instance);
+    ))->save();
     entity_get_form_display('node', 'article', 'default')
       ->setComponent($field_name, array('type' => 'options_select'))
       ->save();
@@ -168,4 +178,5 @@ class TaxonomyTermFieldAttributesTest extends TaxonomyTestBase {
       ->setComponent($field_name, array('type' => 'taxonomy_term_reference_link'))
       ->save();
   }
+
 }

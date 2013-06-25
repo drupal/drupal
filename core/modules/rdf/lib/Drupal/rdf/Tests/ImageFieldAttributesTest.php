@@ -9,7 +9,6 @@ namespace Drupal\rdf\Tests;
 
 use Drupal\Core\Language\Language;
 use Drupal\image\Tests\ImageFieldTestBase;
-use Drupal\rdf\Tests\RdfTestHelper;
 
 /**
  * Tests RDFa markup generation for image fields.
@@ -22,6 +21,27 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
    * @var array
    */
   public static $modules = array('rdf', 'image');
+
+  /**
+   * The name of the image field used in the test.
+   *
+   * @var string
+   */
+  protected $fieldName;
+
+  /**
+   * The file object used in the test.
+   *
+   * @var \Drupal\file\FileInterface
+   */
+  protected $file;
+
+  /**
+   * The node object used in the test.
+   *
+   * @var \Drupal\node\NodeInterface
+   */
+  protected $node;
 
   public static function getInfo() {
     return array(
@@ -60,9 +80,6 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
    * Tests that image fields in teasers have correct resources.
    */
   function testNodeTeaser() {
-    $node = $this->node;
-    $node_file = $this->file;
-
     // Set the display options for the teaser.
     $display_options = array(
       'type' => 'image',
@@ -73,7 +90,7 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
       ->save();
 
     // Render the teaser.
-    $node_render_array = node_view($node, 'teaser');
+    $node_render_array = node_view($this->node, 'teaser');
     $html = drupal_render($node_render_array);
 
     // Parse the teaser.
@@ -83,8 +100,8 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
     $parser->parse($graph, $html, 'rdfa', $base_uri);
 
     // Construct the node and image URIs for testing.
-    $node_uri = url('node/' . $node->nid, array('absolute' => TRUE));
-    $image_uri = image_style_url('medium', $node_file->getFileUri());
+    $node_uri = url('node/' . $this->node->id(), array('absolute' => TRUE));
+    $image_uri = image_style_url('medium', $this->file->getFileUri());
 
     // Test relations from node to image.
     $expected_value = array(

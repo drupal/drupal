@@ -22,6 +22,27 @@ class FileFieldAttributesTest extends FileFieldTestBase {
    */
   public static $modules = array('rdf', 'file');
 
+  /**
+   * The name of the file field used in the test.
+   *
+   * @var string
+   */
+  protected $fieldName;
+
+  /**
+   * The file object used in the test.
+   *
+   * @var \Drupal\file\FileInterface
+   */
+  protected $file;
+
+  /**
+   * The node object used in the test.
+   *
+   * @var \Drupal\node\NodeInterface
+   */
+  protected $node;
+
   public static function getInfo() {
     return array(
       'name' => 'RDFa markup for files',
@@ -63,11 +84,8 @@ class FileFieldAttributesTest extends FileFieldTestBase {
    * when displayed as a teaser.
    */
   function testNodeTeaser() {
-    $node = $this->node;
-    $node_file = $this->file;
-
     // Render the teaser.
-    $node_render_array = entity_view_multiple(array($node), 'teaser');
+    $node_render_array = entity_view_multiple(array($this->node), 'teaser');
     $html = drupal_render($node_render_array);
 
     // Parses front page where the node is displayed in its teaser form.
@@ -76,8 +94,8 @@ class FileFieldAttributesTest extends FileFieldTestBase {
     $base_uri = url('<front>', array('absolute' => TRUE));
     $parser->parse($graph, $html, 'rdfa', $base_uri);
 
-    $node_uri = url('node/' . $node->nid, array('absolute' => TRUE));
-    $file_uri = file_create_url($node_file->getFileUri());
+    $node_uri = url('node/' . $this->node->id(), array('absolute' => TRUE));
+    $file_uri = file_create_url($this->file->getFileUri());
 
     // Node relation to attached file.
     $expected_value = array(
@@ -87,4 +105,5 @@ class FileFieldAttributesTest extends FileFieldTestBase {
     $this->assertTrue($graph->hasProperty($node_uri, 'http://www.w3.org/2000/01/rdf-schema#seeAlso', $expected_value), 'Node to file relation found in RDF output (rdfs:seeAlso).');
     $this->drupalGet('node');
   }
+
 }
