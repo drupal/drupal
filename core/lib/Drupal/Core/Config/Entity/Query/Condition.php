@@ -162,8 +162,6 @@ class Condition extends ConditionBase {
           return $value >= $condition['value'];
         case '<=':
           return $value <= $condition['value'];
-        case '<>':
-          return $value != $condition['value'];
         case 'IN':
           return array_search($value, $condition['value']) !== FALSE;
         case 'NOT IN':

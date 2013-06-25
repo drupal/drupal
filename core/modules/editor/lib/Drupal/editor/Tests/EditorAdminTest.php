@@ -50,7 +50,7 @@ class EditorAdminTest extends WebTestBase {
    */
   function testNoEditorAvailable() {
     $this->drupalLogin($this->admin_user);
-    $this->drupalGet('admin/config/content/formats/manage/filtered_html');
+    $this->drupalGet('admin/config/content/formats/filtered_html');
 
     // Ensure the form field order is correct.
     $roles_pos = strpos($this->drupalGetContent(), 'Roles');
@@ -75,7 +75,7 @@ class EditorAdminTest extends WebTestBase {
   function testAddEditorToExistingFormat() {
     $this->enableUnicornEditor();
     $this->drupalLogin($this->admin_user);
-    $this->drupalGet('admin/config/content/formats/manage/filtered_html');
+    $this->drupalGet('admin/config/content/formats/filtered_html');
     $edit = $this->selectUnicornEditor();
     // Configure Unicorn Editor's setting to another value.
     $edit['editor[settings][foo]'] = 'baz';
@@ -155,7 +155,7 @@ class EditorAdminTest extends WebTestBase {
     $this->assertIdentical($editor->settings['ponies too'], true, 'The text editor defaults are retrieved correctly.');
     $this->assertIdentical($editor->settings['rainbows'], true, 'The text editor defaults added by hook_editor_settings_defaults() are retrieved correctly.');
     $this->assertIdentical($editor->settings['sparkles'], false, 'The text editor defaults modified by hook_editor_settings_defaults_alter() are retrieved correctly.');
-    $this->drupalGet('admin/config/content/formats/manage/'. $format_id);
+    $this->drupalGet('admin/config/content/formats/'. $format_id);
     $select = $this->xpath('//select[@name="editor[editor]"]');
     $select_is_disabled = $this->xpath('//select[@name="editor[editor]" and @disabled="disabled"]');
     $options = $this->xpath('//select[@name="editor[editor]"]/option');
