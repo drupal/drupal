@@ -129,15 +129,6 @@ function shortcut_menu() {
     'type' => MENU_LOCAL_ACTION,
     'file' => 'shortcut.admin.inc',
   );
-  $items['admin/config/user-interface/shortcut/manage/%shortcut_set/add-link-inline'] = array(
-    'title' => 'Add shortcut',
-    'page callback' => 'shortcut_link_add_inline',
-    'page arguments' => array(5),
-    'access callback' => 'shortcut_set_edit_access',
-    'access arguments' => array(5),
-    'type' => MENU_CALLBACK,
-    'file' => 'shortcut.admin.inc',
-  );
   $items['admin/config/user-interface/shortcut/link/%menu_link'] = array(
     'title' => 'Edit shortcut',
     'page callback' => 'drupal_get_form',

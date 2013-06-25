@@ -477,32 +477,3 @@ function shortcut_admin_add_link($shortcut_link, &$shortcut_set) {
   $shortcut_set->links[$menu_link->uuid()] = $menu_link;
   shortcut_set_reset_link_weights($shortcut_set);
 }
-
-/**
- * Menu page callback: creates a new link in the provided shortcut set.
- *
- * After completion, redirects the user back to where they came from.
- *
- * @param $shortcut_set Drupal\shortcut\Plugin\Core\Entity\Shortcut
- *   Returned from shortcut_set_load().
- */
-function shortcut_link_add_inline($shortcut_set) {
-  if (isset($_REQUEST['token']) && drupal_valid_token($_REQUEST['token'], 'shortcut-add-link') && shortcut_valid_link($_GET['link'])) {
-    $item = menu_get_item($_GET['link']);
-    $title = ($item && $item['title']) ? $item['title'] : $_GET['name'];
-    $link = array(
-      'link_title' => $title,
-      'link_path' => $_GET['link'],
-    );
-    shortcut_admin_add_link($link, $shortcut_set);
-    if ($shortcut_set->save() == SAVED_UPDATED) {
-      drupal_set_message(t('Added a shortcut for %title.', array('%title' => $link['link_title'])));
-    }
-    else {
-      drupal_set_message(t('Unable to add a shortcut for %title.', array('%title' => $link['link_title'])));
-    }
-    return new RedirectResponse(url('<front>', array('absolute' => TRUE)));
-  }
-
-  throw new AccessDeniedHttpException();
-}

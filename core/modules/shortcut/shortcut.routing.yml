@@ -15,7 +15,7 @@ shortcut_set_delete:
 shortcut_set_admin:
   pattern: '/admin/config/user-interface/shortcut'
   defaults:
-    _content: 'Drupal\shortcut\Controller\ShortcutController::shortcutSetAdmin'
+    _entity_list: 'shortcut'
   requirements:
     _permission: 'administer shortcuts'
 
@@ -23,5 +23,12 @@ shortcut_set_edit:
   pattern: '/admin/config/user-interface/shortcut/manage/{shortcut}/edit'
   defaults:
     _entity_form: 'shortcut.edit'
+  requirements:
+    _entity_access: 'shortcut.edit'
+
+shortcut_link_add_inline:
+  pattern: '/admin/config/user-interface/shortcut/manage/{shortcut}/add-link-inline'
+  defaults:
+    _controller: 'Drupal\shortcut\Controller\ShortcutController::addShortcutLinkInline'
   requirements:
     _entity_access: 'shortcut.edit'
