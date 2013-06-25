@@ -8,19 +8,19 @@
 namespace Drupal\system\Tests\Common;
 
 use Drupal\Core\Language\Language;
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests the Drupal CSS system.
  */
-class CascadingStylesheetsTest extends WebTestBase {
+class CascadingStylesheetsTest extends DrupalUnitTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('language', 'common_test');
+  public static $modules = array('language', 'system');
 
   public static function getInfo() {
     return array(
@@ -117,39 +117,6 @@ class CascadingStylesheetsTest extends WebTestBase {
   }
 
   /**
-   * Tests rendering inline stylesheets through a full page request.
-   */
-  function testRenderInlineFullPage() {
-    module_enable(array('php'));
-
-    $css = 'body { font-size: 254px; }';
-    // Inline CSS is minified unless 'preprocess' => FALSE is passed as a
-    // drupal_add_css() option.
-    $expected = 'body{font-size:254px;}';
-
-    // Create Basic page node type.
-    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
-
-    // Create a node, using the PHP filter that tests drupal_add_css().
-    $php_format_id = 'php_code';
-    $settings = array(
-      'type' => 'page',
-      'body' => array(
-        array(
-          'value' => t('This tests the inline CSS!') . "<?php drupal_add_css('$css', 'inline'); ?>",
-          'format' => $php_format_id,
-        ),
-      ),
-      'promote' => 1,
-    );
-    $node = $this->drupalCreateNode($settings);
-
-    // Fetch the page.
-    $this->drupalGet('node/' . $node->nid);
-    $this->assertRaw($expected, 'Inline stylesheets appear in the full page rendering.');
-  }
-
-  /**
    * Tests CSS ordering.
    */
   function testRenderOrder() {
@@ -225,9 +192,14 @@ class CascadingStylesheetsTest extends WebTestBase {
    * Tests that CSS query string remains intact when added to file.
    */
   function testAddCssFileWithQueryString() {
-    $this->drupalGet('common-test/query-string');
+    $css_without_query_string = drupal_get_path('module', 'node') . '/css/node.admin.css';
+    $css_with_query_string = '/' . drupal_get_path('module', 'node') . '/node-fake.css?arg1=value1&arg2=value2';
+    drupal_add_css($css_without_query_string);
+    drupal_add_css($css_with_query_string);
+
+    $styles = drupal_get_css();
     $query_string = variable_get('css_js_query_string', '0');
-    $this->assertRaw(drupal_get_path('module', 'node') . '/css/node.admin.css?' . $query_string, 'Query string was appended correctly to css.');
-    $this->assertRaw(drupal_get_path('module', 'node') . '/node-fake.css?arg1=value1&amp;arg2=value2', 'Query string not escaped on a URI.');
+    $this->assertTrue(strpos($styles, $css_without_query_string . '?' . $query_string), 'Query string was appended correctly to css.');
+    $this->assertTrue(strpos($styles, str_replace('&', '&amp;', $css_with_query_string)), 'Query string not escaped on a URI.');
   }
 }
