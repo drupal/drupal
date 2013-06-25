@@ -65,7 +65,7 @@ function filter_help($path, $arg) {
       $output .= '<p>' . t('Text formats are presented on content editing pages in the order defined on this page. The first format available to a user will be selected by default.') . '</p>';
       return $output;
 
-    case 'admin/config/content/formats/%':
+    case 'admin/config/content/formats/manage/%':
       $output = '<p>' . t('A text format contains filters that change the user input, for example stripping out malicious HTML or making URLs clickable. Filters are executed from top to bottom and the order is important, since one filter may prevent another filter from doing its job. For example, when URLs are converted into links before disallowed HTML tags are removed, all links may be removed. When this happens, the order of filters may need to be re-arranged.') . '</p>';
       return $output;
   }
@@ -123,10 +123,7 @@ function filter_menu() {
   $items['admin/config/content/formats'] = array(
     'title' => 'Text formats',
     'description' => 'Configure how content input by users is filtered, including allowed HTML tags. Also allows enabling of module-provided filters.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('filter_admin_overview'),
-    'access arguments' => array('administer filters'),
-    'file' => 'filter.admin.inc',
+    'route_name' => 'filter_admin_overview',
   );
   $items['admin/config/content/formats/list'] = array(
     'title' => 'List',
@@ -134,20 +131,15 @@ function filter_menu() {
   );
   $items['admin/config/content/formats/add'] = array(
     'title' => 'Add text format',
-    'page callback' => 'filter_admin_format_page',
-    'access arguments' => array('administer filters'),
+    'route_name' => 'filter_format_add',
     'type' => MENU_LOCAL_ACTION,
-    'file' => 'filter.admin.inc',
   );
-  $items['admin/config/content/formats/%filter_format'] = array(
+  $items['admin/config/content/formats/manage/%'] = array(
     'title callback' => 'filter_admin_format_title',
-    'title arguments' => array(4),
-    'page callback' => 'filter_admin_format_page',
-    'page arguments' => array(4),
-    'access arguments' => array('administer filters'),
-    'file' => 'filter.admin.inc',
+    'title arguments' => array(5),
+    'route_name' => 'filter_format_edit',
   );
-  $items['admin/config/content/formats/%filter_format/disable'] = array(
+  $items['admin/config/content/formats/manage/%/disable'] = array(
     'title' => 'Disable text format',
     'route_name' => 'filter_admin_disable',
   );
@@ -194,16 +186,16 @@ function filter_format_exists($format_id) {
 /**
  * Displays a text format form title.
  *
- * @param object $format_id
- *   A format object.
+ * @param string $format_id
+ *   A format ID.
  *
  * @return string
  *   The name of the format.
- *
- * @see filter_menu()
  */
-function filter_admin_format_title($format) {
-  return $format->name;
+function filter_admin_format_title($format_id) {
+  if ($format = filter_format_load($format_id)) {
+    return $format->label();
+  }
 }
 
 /**
@@ -225,7 +217,7 @@ function filter_permission() {
     if (!empty($permission)) {
       // Only link to the text format configuration page if the user who is
       // viewing this will have access to that page.
-      $format_name_replacement = user_access('administer filters') ? l($format->name, 'admin/config/content/formats/' . $format->format) : drupal_placeholder($format->name);
+      $format_name_replacement = user_access('administer filters') ? l($format->name, 'admin/config/content/formats/manage/' . $format->format) : drupal_placeholder($format->name);
       $perms[$permission] = array(
         'title' => t("Use the !text_format text format", array('!text_format' => $format_name_replacement,)),
         'description' => drupal_placeholder(t('Warning: This permission may have security implications depending on how the text format is configured.')),

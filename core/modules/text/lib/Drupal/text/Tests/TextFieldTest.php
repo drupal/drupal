@@ -189,7 +189,7 @@ class TextFieldTest extends WebTestBase {
     $this->drupalLogin($this->admin_user);
     foreach (filter_formats() as $format) {
       if ($format->format != filter_fallback_format()) {
-        $this->drupalPost('admin/config/content/formats/' . $format->format . '/disable', array(), t('Disable'));
+        $this->drupalPost('admin/config/content/formats/manage/' . $format->format . '/disable', array(), t('Disable'));
       }
     }
     $this->drupalLogin($this->web_user);

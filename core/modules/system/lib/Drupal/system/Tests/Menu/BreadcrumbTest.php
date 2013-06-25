@@ -167,11 +167,11 @@ class BreadcrumbTest extends MenuTestBase {
       'admin/config/content/formats' => t('Text formats and editors'),
     );
     $this->assertBreadcrumb('admin/config/content/formats/add', $trail);
-    $this->assertBreadcrumb("admin/config/content/formats/$format_id", $trail);
+    $this->assertBreadcrumb("admin/config/content/formats/manage/$format_id", $trail);
     $trail += array(
-      "admin/config/content/formats/$format_id" => $format->name,
+      "admin/config/content/formats/manage/$format_id" => $format->name,
     );
-    $this->assertBreadcrumb("admin/config/content/formats/$format_id/disable", $trail);
+    $this->assertBreadcrumb("admin/config/content/formats/manage/$format_id/disable", $trail);
 
     // Verify node breadcrumbs (without menu link).
     $node1 = $this->drupalCreateNode();

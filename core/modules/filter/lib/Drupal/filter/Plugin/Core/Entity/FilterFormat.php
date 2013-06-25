@@ -23,8 +23,11 @@ use Drupal\filter\FilterBag;
  *   module = "filter",
  *   controllers = {
  *     "form" = {
+ *       "add" = "Drupal\filter\FilterFormatAddFormController",
+ *       "edit" = "Drupal\filter\FilterFormatEditFormController",
  *       "disable" = "Drupal\filter\Form\FilterDisableForm"
  *     },
+ *     "list" = "Drupal\filter\FilterFormatListController",
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
  *   },
  *   config_prefix = "filter.format",
