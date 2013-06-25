@@ -20,7 +20,6 @@ function user_admin_account() {
 
   $query = db_select('users', 'u');
   $query->condition('u.uid', 0, '<>');
-  user_build_filter_query($query);
 
   $count_query = clone $query;
   $count_query->addExpression('COUNT(u.uid)');
