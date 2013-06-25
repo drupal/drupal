@@ -9,8 +9,8 @@ namespace Drupal\picture\Plugin\field\formatter;
 
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
-use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\image\Plugin\field\formatter\ImageFormatterBase;
 
 /**
  * Plugin for picture formatter.
@@ -29,7 +29,7 @@ use Drupal\Core\Entity\EntityInterface;
  *   }
  * )
  */
-class PictureFormatter extends FormatterBase {
+class PictureFormatter extends ImageFormatterBase {
 
   /**
    * {@inheritdoc}

@@ -152,4 +152,34 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
     return $constraints;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave() { }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function insert() { }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function update() { }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function delete() { }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteRevision() { }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function prepareView(array $entities_items) { }
+
 }

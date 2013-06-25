@@ -29,7 +29,7 @@ function file_field_info() {
       ),
       'default_widget' => 'file_generic',
       'default_formatter' => 'file_default',
-      'field item class' => '\Drupal\file\Type\FileItem',
+      'class' => '\Drupal\file\Type\FileItem',
     ),
   );
 }
@@ -184,35 +184,6 @@ function _file_generic_settings_file_directory_validate($element, &$form_state) 
 }
 
 /**
- * Implements hook_field_prepare_view().
- */
-function file_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items) {
-  // Remove files specified to not be displayed.
-  $fids = array();
-  foreach ($entities as $id => $entity) {
-    foreach ($items[$id] as $delta => $item) {
-      if (file_field_displayed($item, $field) && !empty($item['fid'])) {
-        // Load the files from the files table.
-        $fids[] = $item['fid'];
-      }
-    }
-  }
-
-  if ($fids) {
-    $files = file_load_multiple($fids);
-
-    foreach ($entities as $id => $entity) {
-      foreach ($items[$id] as $delta => $item) {
-        // If the file does not exist, mark the entire item as empty.
-        if (!empty($item['fid'])) {
-          $items[$id][$delta]['entity'] = isset($files[$item['fid']]) ? $files[$item['fid']] : NULL;
-        }
-      }
-    }
-  }
-}
-
-/**
  * Implements hook_field_insert().
  */
 function file_field_insert(EntityInterface $entity, $field, $instance, $langcode, &$items) {
@@ -289,24 +260,6 @@ function file_field_delete_revision(EntityInterface $entity, $field, $instance, 
  */
 function file_field_is_empty($item, $field_type) {
   return empty($item['fid']);
-}
-
-/**
- * Determines whether a file should be displayed when outputting field content.
- *
- * @param $item
- *   A field item array.
- * @param $field
- *   A field array.
- *
- * @return
- *   Boolean TRUE if the file will be displayed, FALSE if the file is hidden.
- */
-function file_field_displayed($item, $field) {
-  if (!empty($field['settings']['display_field'])) {
-    return (bool) $item['display'];
-  }
-  return TRUE;
 }
 
 /**

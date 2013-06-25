@@ -205,7 +205,8 @@ class BulkDeleteTest extends FieldUnitTestBase {
     // The instance still exists, deleted.
     $instances = field_read_instances(array('field_id' => $field->uuid, 'deleted' => TRUE), array('include_deleted' => TRUE, 'include_inactive' => TRUE));
     $this->assertEqual(count($instances), 1, 'There is one deleted instance');
-    $this->assertEqual($instances[0]['bundle'], $bundle, 'The deleted instance is for the correct bundle');
+    $instance = $instances[0];
+    $this->assertEqual($instance['bundle'], $bundle, 'The deleted instance is for the correct bundle');
 
     // There are 0 entities of this bundle with non-deleted data.
     $found = $factory->get('test_entity')
@@ -230,7 +231,7 @@ class BulkDeleteTest extends FieldUnitTestBase {
       $ids->entity_id = $entity_id;
       $entities[$entity_id] = _field_create_entity_from_ids($ids);
     }
-    field_attach_load($this->entity_type, $entities, FIELD_LOAD_CURRENT, array('field_id' => $field->uuid, 'deleted' => TRUE));
+    field_attach_load($this->entity_type, $entities, FIELD_LOAD_CURRENT, array('instance' => $instance));
     $this->assertEqual(count($found), 10, 'Correct number of entities found after deleting');
     foreach ($entities as $id => $entity) {
       $this->assertEqual($this->entities[$id]->{$field->id()}, $entity->{$field->id()}, "Entity $id with deleted data loaded correctly");
@@ -270,17 +271,13 @@ class BulkDeleteTest extends FieldUnitTestBase {
     }
 
     // Check hooks invocations.
-    // - hook_field_load() (multiple hook) should have been called on all
-    // entities by pairs of two.
-    // - hook_field_delete() should have been called once for each entity in the
-    // bundle.
+    // hook_field_load() and hook_field_delete() should have been called once
+    // for each entity in the bundle.
     $actual_hooks = field_test_memorize();
     $hooks = array();
     $entities = $this->convertToPartialEntities($this->entities_by_bundles[$bundle], $field->id());
-    foreach (array_chunk($entities, $batch_size, TRUE) as $chunk_entity) {
-      $hooks['field_test_field_load'][] = $chunk_entity;
-    }
-    foreach ($entities as $entity) {
+    foreach ($entities as $id => $entity) {
+      $hooks['field_test_field_load'][] = array($id => $entity);
       $hooks['field_test_field_delete'][] = $entity;
     }
     $this->checkHooksInvocations($hooks, $actual_hooks);
@@ -324,15 +321,15 @@ class BulkDeleteTest extends FieldUnitTestBase {
     field_purge_batch(10);
 
     // Check hooks invocations.
-    // - hook_field_load() (multiple hook) should have been called once, for all
-    // entities in the bundle.
-    // - hook_field_delete() should have been called once for each entity in the
-    // bundle.
+    // hook_field_load() and hook_field_delete() should have been called once
+    // for each entity in the bundle.
     $actual_hooks = field_test_memorize();
     $hooks = array();
     $entities = $this->convertToPartialEntities($this->entities_by_bundles[$bundle], $field->id());
-    $hooks['field_test_field_load'][] = $entities;
-    $hooks['field_test_field_delete'] = $entities;
+    foreach ($entities as $id => $entity) {
+      $hooks['field_test_field_load'][] = array($id => $entity);
+      $hooks['field_test_field_delete'][] = $entity;
+    }
     $this->checkHooksInvocations($hooks, $actual_hooks);
 
     // Purge again to purge the instance.
@@ -358,8 +355,10 @@ class BulkDeleteTest extends FieldUnitTestBase {
     $actual_hooks = field_test_memorize();
     $hooks = array();
     $entities = $this->convertToPartialEntities($this->entities_by_bundles[$bundle], $field->id());
-    $hooks['field_test_field_load'][] = $entities;
-    $hooks['field_test_field_delete'] = $entities;
+    foreach ($entities as $id => $entity) {
+      $hooks['field_test_field_load'][] = array($id => $entity);
+      $hooks['field_test_field_delete'][] = $entity;
+    }
     $this->checkHooksInvocations($hooks, $actual_hooks);
 
     // The field still exists, deleted.

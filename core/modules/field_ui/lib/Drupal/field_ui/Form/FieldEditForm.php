@@ -9,6 +9,7 @@ namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\field\FieldInstanceInterface;
 use Drupal\field\Field;
@@ -134,10 +135,11 @@ class FieldEditForm implements FormInterface, ControllerInterface {
     $form['field']['settings'] = array(
       '#weight' => 10,
     );
-    $additions = \Drupal::moduleHandler()->invoke($field['module'], 'field_settings_form', array($field, $this->instance));
-    if (is_array($additions)) {
-      $form['field']['settings'] += $additions;
-    }
+    // Create an arbitrary entity object, so that we can have an instantiated
+    // FieldItem.
+    $ids = (object) array('entity_type' => $this->instance['entity_type'], 'bundle' => $this->instance['bundle'], 'entity_id' => NULL);
+    $entity = _field_create_entity_from_ids($ids);
+    $form['field']['settings'] += $this->getFieldItem($entity, $field['field_name'])->settingsForm($form, $form_state);
 
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save field settings'));
@@ -191,6 +193,30 @@ class FieldEditForm implements FormInterface, ControllerInterface {
     catch (\Exception $e) {
       drupal_set_message(t('Attempt to update field %label failed: %message.', array('%label' => $this->instance->label(), '%message' => $e->getMessage())), 'error');
     }
+  }
+
+  /**
+   * Returns a FieldItem object for an entity.
+   *
+   * @todo Remove when all entity types extend EntityNG.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   An entity.
+   * @param string $field_name
+   *   The field name.
+   *
+   * @return \Drupal\field\Plugin\Type\FieldType\ConfigFieldItemInterface
+   *   The field item object.
+   */
+  protected function getFieldItem(EntityInterface $entity, $field_name) {
+    if ($entity instanceof \Drupal\Core\Entity\EntityNG) {
+      $item = $entity->get($field_name)->offsetGet(0);
+    }
+    else {
+      $definitions = \Drupal::entityManager()->getFieldDefinitions($entity->entityType(), $entity->bundle());
+      $item = \Drupal::typedData()->create($definitions[$field_name], array(), $field_name, $entity)->offsetGet(0);
+    }
+    return $item;
   }
 
 }

@@ -862,10 +862,11 @@ function translation_entity_field_info_alter(&$info) {
 }
 
 /**
- * Implements hook_field_attach_presave().
+ * Implements hook_entity_presave().
  */
-function translation_entity_field_attach_presave(EntityInterface $entity) {
-  if ($entity->isTranslatable()) {
+function translation_entity_entity_presave(EntityInterface $entity) {
+  $entity_info = $entity->entityInfo();
+  if ($entity->isTranslatable() && !empty($entity_info['fieldable'])) {
     $attributes = drupal_container()->get('request')->attributes;
     Drupal::service('translation_entity.synchronizer')->synchronizeFields($entity, $attributes->get('working_langcode'), $attributes->get('source_langcode'));
   }

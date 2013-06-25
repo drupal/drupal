@@ -12,7 +12,7 @@ use Drupal\Core\Language\Language;
 /**
  * Unit test class for the multilanguage fields logic.
  *
- * The following tests will check the multilanguage logic of _field_invoke() and
+ * The following tests will check the multilanguage logic in field handling, and
  * that only the correct values are returned by field_available_languages().
  */
 class TranslationTest extends FieldUnitTestBase {
@@ -139,116 +139,6 @@ class TranslationTest extends FieldUnitTestBase {
     $this->field->save();
     $available_langcodes = field_available_languages($this->entity_type, $this->field);
     $this->assertTrue(count($available_langcodes) == 1 && $available_langcodes[0] === Language::LANGCODE_NOT_SPECIFIED, 'For untranslatable fields only Language::LANGCODE_NOT_SPECIFIED is available.');
-  }
-
-  /**
-   * Test the multilanguage logic of _field_invoke().
-   */
-  function testFieldInvoke() {
-    // Enable field translations for the entity.
-    field_test_entity_info_translatable('test_entity', TRUE);
-
-    $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
-
-    // Populate some extra languages to check if _field_invoke() correctly uses
-    // the result of field_available_languages().
-    $values = array();
-    $extra_langcodes = mt_rand(1, 4);
-    $langcodes = $available_langcodes = field_available_languages($this->entity_type, $this->field);
-    for ($i = 0; $i < $extra_langcodes; ++$i) {
-      $langcodes[] = $this->randomName(2);
-    }
-
-    // For each given language provide some random values.
-    foreach ($langcodes as $langcode) {
-      for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
-        $values[$langcode][$delta]['value'] = mt_rand(1, 127);
-      }
-    }
-    $entity->{$this->field_name} = $values;
-
-    $results = _field_invoke('test_op', $entity);
-    foreach ($results as $langcode => $result) {
-      $hash = hash('sha256', serialize(array($entity, $this->field_name, $langcode, $values[$langcode])));
-      // Check whether the parameters passed to _field_invoke() were correctly
-      // forwarded to the callback function.
-      $this->assertEqual($hash, $result, format_string('The result for %language is correctly stored.', array('%language' => $langcode)));
-    }
-
-    $this->assertEqual(count($results), count($available_langcodes), 'No unavailable language has been processed.');
-  }
-
-  /**
-   * Test the multilanguage logic of _field_invoke_multiple().
-   */
-  function testFieldInvokeMultiple() {
-    // Enable field translations for the entity.
-    field_test_entity_info_translatable('test_entity', TRUE);
-
-    $values = array();
-    $options = array();
-    $entities = array();
-    $entity_type = 'test_entity';
-    $entity_count = 5;
-    $available_langcodes = field_available_languages($this->entity_type, $this->field);
-
-    for ($id = 1; $id <= $entity_count; ++$id) {
-      $entity = field_test_create_entity($id, $id, $this->instance['bundle']);
-      $langcodes = $available_langcodes;
-
-      // Populate some extra languages to check whether _field_invoke()
-      // correctly uses the result of field_available_languages().
-      $extra_langcodes = mt_rand(1, 4);
-      for ($i = 0; $i < $extra_langcodes; ++$i) {
-        $langcodes[] = $this->randomName(2);
-      }
-
-      // For each given language provide some random values.
-      $language_count = count($langcodes);
-      for ($i = 0; $i < $language_count; ++$i) {
-        $langcode = $langcodes[$i];
-        // Avoid to populate at least one field translation to check that
-        // per-entity language suggestions work even when available field values
-        // are different for each language.
-        if ($i !== $id) {
-          for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
-            $values[$id][$langcode][$delta]['value'] = mt_rand(1, 127);
-          }
-        }
-        // Ensure that a language for which there is no field translation is
-        // used as display language to prepare per-entity language suggestions.
-        elseif (!isset($display_langcode)) {
-          $display_langcode = $langcode;
-        }
-      }
-
-      $entity->{$this->field_name} = $values[$id];
-      $entities[$id] = $entity;
-
-      // Store per-entity language suggestions.
-      $options['langcode'][$id] = field_language($entity, NULL, $display_langcode);
-    }
-
-    $grouped_results = _field_invoke_multiple('test_op_multiple', $entity_type, $entities);
-    foreach ($grouped_results as $id => $results) {
-      foreach ($results as $langcode => $result) {
-        if (isset($values[$id][$langcode])) {
-          $hash = hash('sha256', serialize(array($entity_type, $entities[$id], $this->field_name, $langcode, $values[$id][$langcode])));
-          // Check whether the parameters passed to _field_invoke_multiple()
-          // were correctly forwarded to the callback function.
-          $this->assertEqual($hash, $result, format_string('The result for entity %id/%language is correctly stored.', array('%id' => $id, '%language' => $langcode)));
-        }
-      }
-      $this->assertEqual(count($results), count($available_langcodes), format_string('No unavailable language has been processed for entity %id.', array('%id' => $id)));
-    }
-
-    $null = NULL;
-    $grouped_results = _field_invoke_multiple('test_op_multiple', $entity_type, $entities, $null, $null, $options);
-    foreach ($grouped_results as $id => $results) {
-      foreach ($results as $langcode => $result) {
-        $this->assertTrue(isset($options['langcode'][$id]), format_string('The result language code %langcode for entity %id was correctly suggested (display language: %display_langcode).', array('%id' => $id, '%langcode' => $langcode, '%display_langcode' => $display_langcode)));
-      }
-    }
   }
 
   /**

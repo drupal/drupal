@@ -29,8 +29,7 @@ function entity_reference_field_info() {
     ),
     'default_widget' => 'entity_reference_autocomplete',
     'default_formatter' => 'entity_reference_label',
-    'data_type' => 'entity_reference_configurable_field',
-    'field item class' => '\Drupal\entity_reference\Type\ConfigurableEntityReferenceItem',
+    'class' => '\Drupal\entity_reference\Type\ConfigurableEntityReferenceItem',
   );
   return $field_info;
 }
@@ -87,17 +86,6 @@ function entity_reference_get_selection_handler(FieldDefinitionInterface $field_
     'entity' => $entity,
   );
   return Drupal::service('plugin.manager.entity_reference.selection')->getInstance($options);
-}
-
-/**
- * Implements hook_field_is_empty().
- */
-function entity_reference_field_is_empty($item, $field_type) {
-  if (empty($item['target_id']) && !empty($item['entity']) && $item['entity']->isNew()) {
-    // Allow auto-create entities.
-    return FALSE;
-  }
-  return !isset($item['target_id']) || !is_numeric($item['target_id']);
 }
 
 /**

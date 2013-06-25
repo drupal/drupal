@@ -30,6 +30,13 @@ services:
     factory_method: get
     factory_service: cache_factory
     arguments: [cache]
+  cache.entity:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory_method: get
+    factory_service: cache_factory
+    arguments: [entity]
   cache.menu:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
@@ -151,6 +158,9 @@ services:
   plugin.manager.entity:
     class: Drupal\Core\Entity\EntityManager
     arguments: ['@container.namespaces', '@service_container', '@module_handler', '@cache.cache', '@language_manager']
+  plugin.manager.entity.field.field_type:
+    class: Drupal\Core\Entity\Field\FieldTypePluginManager
+    arguments: ['@container.namespaces', '@cache.entity', '@language_manager', '@module_handler']
   plugin.manager.archiver:
     class: Drupal\Core\Archiver\ArchiverManager
     arguments: ['@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']

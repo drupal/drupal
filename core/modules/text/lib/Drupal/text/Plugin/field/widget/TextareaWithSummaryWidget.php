@@ -9,6 +9,7 @@ namespace Drupal\text\Plugin\field\widget;
 
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
+use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
  * Plugin implementation of the 'text_textarea_with_summary' widget.
@@ -57,18 +58,8 @@ class TextareaWithSummaryWidget extends TextareaWidget {
   /**
    * {@inheritdoc}
    */
-  public function errorElement(array $element, array $error, array $form, array &$form_state) {
-    switch ($error['error']) {
-      case 'text_summary_max_length':
-        $error_element = $element['summary'];
-        break;
-
-      default:
-        $error_element = $element;
-        break;
-    }
-
-    return $error_element;
+  public function errorElement(array $element, ConstraintViolationInterface $violation, array $form, array &$form_state) {
+    return $element[$violation->arrayPropertyPath[0]];
   }
 
 }

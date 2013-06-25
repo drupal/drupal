@@ -7,12 +7,12 @@
 
 namespace Drupal\image\Type;
 
-use Drupal\Core\Entity\Field\FieldItemBase;
+use Drupal\field\Plugin\field\field_type\LegacyConfigFieldItem;
 
 /**
  * Defines the 'image_field' entity field item.
  */
-class ImageItem extends FieldItemBase {
+class ImageItem extends LegacyConfigFieldItem {
 
   /**
    * Property definitions of the contained properties.
@@ -33,7 +33,7 @@ class ImageItem extends FieldItemBase {
         'label' => t('Referenced file id.'),
       );
       static::$propertyDefinitions['alt'] = array(
-        'type' => 'boolean',
+        'type' => 'string',
         'label' => t("Alternative image text, for the image's 'alt' attribute."),
       );
       static::$propertyDefinitions['title'] = array(

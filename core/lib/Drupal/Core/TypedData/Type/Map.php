@@ -53,11 +53,11 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
   /**
    * Overrides \Drupal\Core\TypedData\TypedData::getValue().
    */
-  public function getValue() {
+  public function getValue($include_computed = FALSE) {
     // Update the values and return them.
     foreach ($this->properties as $name => $property) {
       $definition = $property->getDefinition();
-      if (empty($definition['computed'])) {
+      if ($include_computed || empty($definition['computed'])) {
         $value = $property->getValue();
         // Only write NULL values if the whole map is not NULL.
         if (isset($this->values) || isset($value)) {

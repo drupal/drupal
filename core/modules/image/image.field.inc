@@ -48,7 +48,7 @@ function image_field_info() {
       ),
       'default_widget' => 'image_image',
       'default_formatter' => 'image',
-      'field item class' => '\Drupal\image\Type\ImageItem',
+      'class' => '\Drupal\image\Type\ImageItem',
     ),
   );
 }
@@ -219,39 +219,6 @@ function _image_field_resolution_validate($element, &$form_state) {
   }
   else {
     form_set_value($element, '', $form_state);
-  }
-}
-
-/**
- * Implements hook_field_prepare_view().
- */
-function image_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items) {
-  // Load the images.
-  file_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, $items);
-  // If there are no files specified at all, use the default.
-  foreach ($entities as $id => $entity) {
-    if (empty($items[$id])) {
-      $fid = array();
-      // Use the default for the instance if one is available.
-      if (!empty($instances[$id]['settings']['default_image'])) {
-        $fid = array($instances[$id]['settings']['default_image']);
-      }
-      // Otherwise, use the default for the field.
-      elseif (!empty($field['settings']['default_image'])) {
-        $fid = array($field['settings']['default_image']);
-      }
-
-      // Add the default image if one is found.
-      if ($fid && ($file = file_load($fid[0]))) {
-        $items[$id][0] = array(
-          'is_default' => TRUE,
-          'alt' => '',
-          'title' => '',
-          'entity' => $file,
-          'fid' => $file->id(),
-        );
-      }
-    }
   }
 }
 

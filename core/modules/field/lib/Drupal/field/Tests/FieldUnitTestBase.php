@@ -48,8 +48,14 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
    * @param string $suffix
    *   (optional) A string that should only contain characters that are valid in
    *   PHP variable names as well.
+   * @param string $entity_type
+   *   (optional) The entity type on which the instance should be created.
+   *   Defaults to 'test_entity'.
+   * @param string $bundle
+   *   (optional) The entity type on which the instance should be created.
+   *   Defaults to 'test_bundle'.
    */
-  function createFieldWithInstance($suffix = '') {
+  function createFieldWithInstance($suffix = '', $entity_type = 'test_entity', $bundle = 'test_bundle') {
     $field_name = 'field_name' . $suffix;
     $field = 'field' . $suffix;
     $field_id = 'field_id' . $suffix;
@@ -62,11 +68,10 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
     $this->$field_id = $this->{$field}['uuid'];
     $this->$instance_definition = array(
       'field_name' => $this->$field_name,
-      'entity_type' => 'test_entity',
-      'bundle' => 'test_bundle',
+      'entity_type' => $entity_type,
+      'bundle' => $bundle,
       'label' => $this->randomName() . '_label',
       'description' => $this->randomName() . '_description',
-      'weight' => mt_rand(0, 127),
       'settings' => array(
         'test_instance_setting' => $this->randomName(),
       ),

@@ -1042,14 +1042,16 @@ abstract class WebTestBase extends TestBase {
   protected function curlExec($curl_options, $redirect = FALSE) {
     $this->curlInitialize();
 
-    // cURL incorrectly handles URLs with a fragment by including the
-    // fragment in the request to the server, causing some web servers
-    // to reject the request citing "400 - Bad Request". To prevent
-    // this, we strip the fragment from the request.
-    // TODO: Remove this for Drupal 8, since fixed in curl 7.20.0.
-    if (!empty($curl_options[CURLOPT_URL]) && strpos($curl_options[CURLOPT_URL], '#')) {
-      $original_url = $curl_options[CURLOPT_URL];
-      $curl_options[CURLOPT_URL] = strtok($curl_options[CURLOPT_URL], '#');
+    if (!empty($curl_options[CURLOPT_URL])) {
+      // cURL incorrectly handles URLs with a fragment by including the
+      // fragment in the request to the server, causing some web servers
+      // to reject the request citing "400 - Bad Request". To prevent
+      // this, we strip the fragment from the request.
+      // TODO: Remove this for Drupal 8, since fixed in curl 7.20.0.
+      if (strpos($curl_options[CURLOPT_URL], '#')) {
+        $original_url = $curl_options[CURLOPT_URL];
+        $curl_options[CURLOPT_URL] = strtok($curl_options[CURLOPT_URL], '#');
+      }
     }
 
     $url = empty($curl_options[CURLOPT_URL]) ? curl_getinfo($this->curlHandle, CURLINFO_EFFECTIVE_URL) : $curl_options[CURLOPT_URL];

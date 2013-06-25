@@ -8,7 +8,6 @@
 namespace Drupal\taxonomy\Tests;
 
 use Drupal\Core\Language\Language;
-use Drupal\field\FieldValidationException;
 
 /**
  * Tests for taxonomy term field and formatter.
@@ -80,29 +79,19 @@ class TermFieldTest extends TaxonomyTestBase {
    * Test term field validation.
    */
   function testTaxonomyTermFieldValidation() {
-    // Test valid and invalid values with field_attach_validate().
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $entity = entity_create('entity_test', array());
+    // Test validation with a valid value.
     $term = $this->createTerm($this->vocabulary);
-    $entity->{$this->field_name}->target_id = $term->id();
-    try {
-      field_attach_validate($entity);
-      $this->pass('Correct term does not cause validation error.');
-    }
-    catch (FieldValidationException $e) {
-      $this->fail('Correct term does not cause validation error.');
-    }
-
     $entity = entity_create('entity_test', array());
+    $entity->{$this->field_name}->target_id = $term->id();
+    $violations = $entity->{$this->field_name}->validate();
+    $this->assertEqual(count($violations) , 0, 'Correct term does not cause validation error.');
+
+    // Test validation with an invalid valid value (wrong vocabulary).
     $bad_term = $this->createTerm($this->createVocabulary());
+    $entity = entity_create('entity_test', array());
     $entity->{$this->field_name}->target_id = $bad_term->id();
-    try {
-      field_attach_validate($entity);
-      $this->fail('Wrong term causes validation error.');
-    }
-    catch (FieldValidationException $e) {
-      $this->pass('Wrong term causes validation error.');
-    }
+    $violations = $entity->{$this->field_name}->validate();
+    $this->assertEqual(count($violations) , 1, 'Wrong term causes validation error.');
   }
 
   /**

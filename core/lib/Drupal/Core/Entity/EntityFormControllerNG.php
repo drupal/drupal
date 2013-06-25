@@ -42,25 +42,6 @@ class EntityFormControllerNG extends EntityFormController {
   }
 
   /**
-   * Overrides EntityFormController::validate().
-   */
-  public function validate(array $form, array &$form_state) {
-    // @todo Exploit the Field API to validate the values submitted for the
-    // entity fields.
-    $entity = $this->buildEntity($form, $form_state);
-    $info = $entity->entityInfo();
-
-    if (!empty($info['fieldable'])) {
-      field_attach_form_validate($entity, $form, $form_state);
-    }
-
-    // @todo Remove this.
-    // Execute legacy global validation handlers.
-    unset($form_state['validate_handlers']);
-    form_execute_handlers('validate', $form, $form_state);
-  }
-
-  /**
    * Overrides EntityFormController::submitEntityLanguage().
    */
   protected function submitEntityLanguage(array $form, array &$form_state) {

@@ -107,7 +107,7 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
       foreach ($this->decorated->fields[$name] as $langcode => $field) {
         // Only set if it's not empty, otherwise there can be ghost values.
         if (!$field->isEmpty()) {
-          $this->decorated->values[$name][$langcode] = $field->getValue();
+          $this->decorated->values[$name][$langcode] = $field->getValue(TRUE);
         }
       }
       // The returned values might be changed by reference, so we need to remove
@@ -124,11 +124,10 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
         $this->decorated->values[$name][Language::LANGCODE_DEFAULT][0]['value'] = NULL;
       }
       if (is_array($this->decorated->values[$name][Language::LANGCODE_DEFAULT])) {
-        // This will work with all defined properties that have a single value.
         // We need to ensure the key doesn't matter. Mostly it's 'value' but
-        // e.g. EntityReferenceItem uses target_id.
-        if (isset($this->decorated->values[$name][Language::LANGCODE_DEFAULT][0]) && count($this->decorated->values[$name][Language::LANGCODE_DEFAULT][0]) == 1) {
-          return $this->decorated->values[$name][Language::LANGCODE_DEFAULT][0][key($this->decorated->values[$name][Language::LANGCODE_DEFAULT][0])];
+        // e.g. EntityReferenceItem uses target_id - so just take the first one.
+        if (isset($this->decorated->values[$name][Language::LANGCODE_DEFAULT][0]) && is_array($this->decorated->values[$name][Language::LANGCODE_DEFAULT][0])) {
+          return $this->decorated->values[$name][Language::LANGCODE_DEFAULT][0][current(array_keys($this->decorated->values[$name][Language::LANGCODE_DEFAULT][0]))];
         }
       }
       return $this->decorated->values[$name][Language::LANGCODE_DEFAULT];

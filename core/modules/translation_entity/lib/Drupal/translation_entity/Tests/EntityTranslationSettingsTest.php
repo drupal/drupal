@@ -117,6 +117,7 @@ class EntityTranslationSettingsTest extends WebTestBase {
     $this->drupalPost('admin/config/regional/content-language', $edit, t('Save'));
     $args = array('@entity_type' => $entity_type, '@bundle' => $bundle, '@enabled' => $enabled ? 'enabled' : 'disabled');
     $message = format_string('Translation for entity @entity_type (@bundle) is @enabled.', $args);
+    field_info_cache_clear();
     entity_info_cache_clear();
     return $this->assertEqual(translation_entity_enabled($entity_type, $bundle), $enabled, $message);
   }

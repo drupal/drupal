@@ -224,10 +224,10 @@ function field_test_entity_edit(TestEntity $entity) {
  */
 function field_test_entity_nested_form($form, &$form_state, $entity_1, $entity_2) {
   // First entity.
-  foreach (array('ftid', 'ftvid', 'fttype') as $key) {
+  foreach (array('id', 'type') as $key) {
     $form[$key] = array(
       '#type' => 'value',
-      '#value' => $entity_1->$key,
+      '#value' => $entity_1->$key->value,
     );
   }
   $form_state['form_display'] = entity_get_form_display($entity_1->entityType(), $entity_1->bundle(), 'default');
@@ -241,10 +241,10 @@ function field_test_entity_nested_form($form, &$form_state, $entity_1, $entity_2
     '#parents' => array('entity_2'),
     '#weight' => 50,
   );
-  foreach (array('ftid', 'ftvid', 'fttype') as $key) {
+  foreach (array('id', 'type') as $key) {
     $form['entity_2'][$key] = array(
       '#type' => 'value',
-      '#value' => $entity_2->$key,
+      '#value' => $entity_2->$key->value,
     );
   }
   $form_state['form_display'] = entity_get_form_display($entity_1->entityType(), $entity_1->bundle(), 'default');
@@ -263,11 +263,11 @@ function field_test_entity_nested_form($form, &$form_state, $entity_1, $entity_2
  * Validate handler for field_test_entity_nested_form().
  */
 function field_test_entity_nested_form_validate($form, &$form_state) {
-  $entity_1 = entity_create('test_entity', $form_state['values']);
+  $entity_1 = entity_create('entity_test', $form_state['values']);
   field_attach_extract_form_values($entity_1, $form, $form_state);
   field_attach_form_validate($entity_1, $form, $form_state);
 
-  $entity_2 = entity_create('test_entity', $form_state['values']['entity_2']);
+  $entity_2 = entity_create('entity_test', $form_state['values']['entity_2']);
   field_attach_extract_form_values($entity_2, $form['entity_2'], $form_state);
   field_attach_form_validate($entity_2, $form['entity_2'], $form_state);
 }
@@ -276,13 +276,13 @@ function field_test_entity_nested_form_validate($form, &$form_state) {
  * Submit handler for field_test_entity_nested_form().
  */
 function field_test_entity_nested_form_submit($form, &$form_state) {
-  $entity_1 = entity_create('test_entity', $form_state['values']);
+  $entity_1 = entity_create('entity_test', $form_state['values']);
   field_attach_extract_form_values($entity_1, $form, $form_state);
   field_test_entity_save($entity_1);
 
-  $entity_2 = entity_create('test_entity', $form_state['values']['entity_2']);
+  $entity_2 = entity_create('entity_test', $form_state['values']['entity_2']);
   field_attach_extract_form_values($entity_2, $form['entity_2'], $form_state);
   field_test_entity_save($entity_2);
 
-  drupal_set_message(t('test_entities @id_1 and @id_2 have been updated.', array('@id_1' => $entity_1->ftid, '@id_2' => $entity_2->ftid)));
+  drupal_set_message(t('test_entities @id_1 and @id_2 have been updated.', array('@id_1' => $entity_1->id(), '@id_2' => $entity_2->id())));
 }

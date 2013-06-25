@@ -175,7 +175,8 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
 
     // Check that the single-field load option works.
     $entity = field_test_create_entity(1, 1, $bundles[1]);
-    field_attach_load($entity_type, array(1 => $entity), FIELD_LOAD_CURRENT, array('field_id' => $field_ids[1]));
+    $instance = field_info_instance($entity->entityType(), $field_names[1], $entity->bundle());
+    field_attach_load($entity_type, array(1 => $entity), FIELD_LOAD_CURRENT, array('instance' => $instance));
     $this->assertEqual($entity->{$field_names[1]}[$langcode][0]['value'], $values[1][$field_names[1]], format_string('Entity %index: expected value was found.', array('%index' => 1)));
     $this->assertEqual($entity->{$field_names[1]}[$langcode][0]['additional_key'], 'additional_value', format_string('Entity %index: extra information was found', array('%index' => 1)));
     $this->assert(!isset($entity->{$field_names[2]}), format_string('Entity %index: field %field_name is not loaded.', array('%index' => 2, '%field_name' => $field_names[2])));

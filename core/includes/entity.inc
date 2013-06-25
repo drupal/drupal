@@ -44,6 +44,7 @@ function entity_info_cache_clear() {
   drupal_static_reset('entity_get_bundles');
   // Clear all languages.
   Drupal::entityManager()->clearCachedDefinitions();
+  Drupal::entityManager()->clearCachedFieldDefinitions();
 }
 
 /**

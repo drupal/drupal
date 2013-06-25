@@ -68,8 +68,6 @@ class Field extends ConfigEntityBase implements FieldInterface {
   /**
    * The field type.
    *
-   * Field types are defined by modules that implement hook_field_info().
-   *
    * Example: text, number_integer.
    *
    * @var string
@@ -94,7 +92,7 @@ class Field extends ConfigEntityBase implements FieldInterface {
    * Field-type specific settings.
    *
    * An array of key/value pairs, The keys and default values are defined by the
-   * field type in the 'settings' entry of hook_field_info().
+   * field type.
    *
    * @var array
    */
@@ -494,15 +492,12 @@ class Field extends ConfigEntityBase implements FieldInterface {
    */
   public function getSchema() {
     if (!isset($this->schema)) {
-      $module_handler = \Drupal::moduleHandler();
-
-      // Collect the schema from the field type.
-      // @todo Use $module_handler->loadInclude() once
-      // http://drupal.org/node/1941000 is fixed.
-      module_load_install($this->module);
-      // Invoke hook_field_schema() for the field.
-      $schema = (array) $module_handler->invoke($this->module, 'field_schema', array($this));
-      $schema += array('columns' => array(), 'indexes' => array(), 'foreign keys' => array());
+      // Get the schema from the field item class.
+      $definition = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($this->type);
+      $class = $definition['class'];
+      $schema = $class::schema($this);
+      // Fill in default values for optional entries.
+      $schema += array('indexes' => array(), 'foreign keys' => array());
 
       // Check that the schema does not include forbidden column names.
       if (array_intersect(array_keys($schema['columns']), static::getReservedColumns())) {
@@ -517,6 +512,20 @@ class Field extends ConfigEntityBase implements FieldInterface {
     }
 
     return $this->schema;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getColumns() {
+    $schema = $this->getSchema();
+    // A typical use case for the method is to iterate on the columns, while
+    // some other use cases rely on identifying the first column with the key()
+    // function. Since the schema is persisted in the Field object, we take care
+    // of resetting the array pointer so that the former does not interfere with
+    // the latter.
+    reset($schema['columns']);
+    return $schema['columns'];
   }
 
   /**

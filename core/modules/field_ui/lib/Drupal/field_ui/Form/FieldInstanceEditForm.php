@@ -7,8 +7,10 @@
 
 namespace Drupal\field_ui\Form;
 
-use Drupal\field\FieldInstanceInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Language\Language;
+use Drupal\field\FieldInstanceInterface;
 
 /**
  * Provides a form for the field instance settings form.
@@ -97,12 +99,9 @@ class FieldInstanceEditForm extends FieldInstanceFormBase {
       '#weight' => -5,
     );
 
-    // Add additional field instance settings from the field module.
-    $additions = \Drupal::moduleHandler()->invoke($field['module'], 'field_instance_settings_form', array($field, $this->instance, $form_state));
-    if (is_array($additions)) {
-      $form['instance']['settings'] = $additions;
-      $form['instance']['settings']['#weight'] = 10;
-    }
+    // Add instance settings for the field type.
+    $form['instance']['settings'] = $this->getFieldItem($form['#entity'], $this->instance['field_name'])->instanceSettingsForm($form, $form_state);
+    $form['instance']['settings']['#weight'] = 10;
 
     // Add widget settings for the widget type.
     $additions = $entity_form_display->getWidget($this->instance->getField()->id)->settingsForm($form, $form_state);
@@ -136,7 +135,6 @@ class FieldInstanceEditForm extends FieldInstanceFormBase {
     $field_name = $this->instance['field_name'];
     $entity = $form['#entity'];
     $entity_form_display = $form['#entity_form_display'];
-    $field = $this->instance->getField();
 
     if (isset($form['instance']['default_value_widget'])) {
       $element = $form['instance']['default_value_widget'];
@@ -145,20 +143,25 @@ class FieldInstanceEditForm extends FieldInstanceFormBase {
       $items = array();
       $entity_form_display->getWidget($this->instance->getField()->id)->extractFormValues($entity, Language::LANGCODE_NOT_SPECIFIED, $items, $element, $form_state);
 
-      // Get the field state.
-      $field_state = field_form_get_state($element['#parents'], $field_name, Language::LANGCODE_NOT_SPECIFIED, $form_state);
-
-      // Validate the value.
-      $errors = array();
-      $function = $field['module'] . '_field_validate';
-      if (function_exists($function)) {
-        $function(NULL, $field, $this->instance, Language::LANGCODE_NOT_SPECIFIED, $items, $errors);
+      // @todo Simplify when all entity types are converted to EntityNG.
+      if ($entity instanceof EntityNG) {
+        $entity->{$field_name}->setValue($items);
+        $itemsNG = $entity->{$field_name};
       }
+      else {
+        // For BC entities, instantiate NG items objects manually.
+        $definitions = \Drupal::entityManager()->getFieldDefinitions($entity->entityType(), $entity->bundle());
+        $itemsNG = \Drupal::typedData()->create($definitions[$field_name], $items, $field_name, $entity);
+      }
+      $violations = $itemsNG->validate();
+
+      // Grab the field definition from $form_state.
 
       // Report errors.
-      if (isset($errors[$field_name][Language::LANGCODE_NOT_SPECIFIED])) {
+      if (count($violations)) {
+        $field_state = field_form_get_state($element['#parents'], $field_name, Language::LANGCODE_NOT_SPECIFIED, $form_state);
         // Store reported errors in $form_state.
-        $field_state['errors'] = $errors[$field_name][Language::LANGCODE_NOT_SPECIFIED];
+        $field_state['constraint_violations'] = $violations;
         field_form_set_state($element['#parents'], $field_name, Language::LANGCODE_NOT_SPECIFIED, $form_state, $field_state);
 
         // Assign reported errors to the correct form element.
@@ -263,6 +266,30 @@ class FieldInstanceEditForm extends FieldInstanceFormBase {
     $element += $entity_form_display->getWidget($this->instance->getField()->id)->form($entity, Language::LANGCODE_NOT_SPECIFIED, $items, $element, $form_state);
 
     return $element;
+  }
+
+  /**
+   * Returns a FieldItem object for an entity.
+   *
+   * @todo Remove when all entity types extend EntityNG.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   An entity.
+   * @param string $field_name
+   *   The field name.
+   *
+   * @return \Drupal\field\Plugin\Type\FieldType\ConfigFieldItemInterface
+   *   The field item object.
+   */
+  protected function getFieldItem(EntityInterface $entity, $field_name) {
+    if ($entity instanceof EntityNG) {
+      $item = $entity->get($field_name)->offsetGet(0);
+    }
+    else {
+      $definitions = \Drupal::entityManager()->getFieldDefinitions($entity->entityType(), $entity->bundle());
+      $item = \Drupal::typedData()->create($definitions[$field_name], array(), $field_name, $entity)->offsetGet(0);
+    }
+    return $item;
   }
 
 }

@@ -589,20 +589,20 @@ function translation_entity_translatable_batch($translatable, $field_name, &$con
  */
 function _translation_entity_update_field($entity_type, EntityInterface $entity, $field_name) {
   $empty = 0;
-  $field = field_info_field($field_name);
+  $translations = $entity->getTranslationLanguages();
 
   // Ensure that we are trying to store only valid data.
-  foreach ($entity->{$field_name} as $langcode => $items) {
-    $entity->{$field_name}[$langcode] = _field_filter_items($field['type'], $entity->{$field_name}[$langcode]);
-    $empty += empty($entity->{$field_name}[$langcode]);
+  foreach (array_keys($translations) as $langcode) {
+    $items = $entity->getTranslation($langcode)->get($field_name);
+    $items->filterEmptyValues();
+    $empty += $items->isEmpty();
   }
 
   // Save the field value only if there is at least one item available,
   // otherwise any stored empty field value would be deleted. If this happens
   // the range queries would be messed up.
-  if ($empty < count($entity->{$field_name})) {
-    field_attach_presave($entity);
-    field_attach_update($entity);
+  if ($empty < count($translations)) {
+    $entity->save();
   }
 }
 

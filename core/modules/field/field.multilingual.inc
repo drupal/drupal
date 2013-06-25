@@ -34,10 +34,9 @@ use Drupal\Core\Language\Language;
  * property returned by field_info_field() and whether the entity type the field
  * is attached to supports translation.
  *
- * By default, _field_invoke() and _field_invoke_multiple() process a field in
- * all available languages, unless they are given a language code suggestion.
- * Based on that suggestion, _field_language_suggestion() determines the
- * languages to act on.
+ * By default, field_invoke_method() processes a field in all available
+ * languages, unless they are given a language code suggestion. Based on that
+ * suggestion, _field_language_suggestion() determines the languages to act on.
  *
  * Most field_attach_*() functions act on all available language codes, except
  * for the following:

@@ -419,7 +419,7 @@ class ManageFieldsTest extends FieldUiTestBase {
   }
 
   /**
-   * Tests that Field UI respects the 'no_ui' option in hook_field_info().
+   * Tests that Field UI respects the 'no_ui' flag in the field type definition.
    */
   function testHiddenFields() {
     $bundle_path = 'admin/structure/types/manage/' . $this->type . '/fields/';

@@ -2299,6 +2299,11 @@ function system_data_type_info() {
         ),
       ),
     ),
+    // Expose each field type as a data type. We add one single entry, which
+    // will be expanded through plugin derivatives.
+    'field_item' => array(
+      'derivative' => '\Drupal\Core\Entity\Plugin\DataType\FieldDataTypeDerivative',
+    ),
   );
 }
 

@@ -7,12 +7,12 @@
 
 namespace Drupal\field_test\Type;
 
-use Drupal\Core\Entity\Field\FieldItemBase;
+use Drupal\field\Plugin\field\field_type\LegacyConfigFieldItem;
 
 /**
  * Defines the 'test_field' entity field item.
  */
-class TestItem extends FieldItemBase {
+class TestItem extends LegacyConfigFieldItem {
 
   /**
    * Property definitions of the contained properties.

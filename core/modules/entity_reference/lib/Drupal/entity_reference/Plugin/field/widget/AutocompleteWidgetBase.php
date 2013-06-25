@@ -10,6 +10,7 @@ namespace Drupal\entity_reference\Plugin\field\widget;
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
+use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
  * Parent plugin for entity reference autocomplete widgets.
@@ -86,7 +87,7 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function errorElement(array $element, array $error, array $form, array &$form_state) {
+  public function errorElement(array $element, ConstraintViolationInterface $error, array $form, array &$form_state) {
     return $element['target_id'];
   }
 

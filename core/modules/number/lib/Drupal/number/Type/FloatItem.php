@@ -7,12 +7,12 @@
 
 namespace Drupal\number\Type;
 
-use Drupal\Core\Entity\Field\FieldItemBase;
+use Drupal\field\Plugin\field\field_type\LegacyConfigFieldItem;
 
 /**
  * Defines the 'number_float_field' entity field item.
  */
-class FloatItem extends FieldItemBase {
+class FloatItem extends LegacyConfigFieldItem {
 
   /**
    * Definitions of the contained properties.

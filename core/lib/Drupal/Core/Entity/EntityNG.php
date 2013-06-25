@@ -61,6 +61,13 @@ class EntityNG extends Entity {
   protected $bcEntity;
 
   /**
+   * Local cache for the entity language.
+   *
+   * @var \Drupal\Core\Language\Language
+   */
+  protected $language;
+
+  /**
    * Local cache for field definitions.
    *
    * @see EntityNG::getPropertyDefinitions()
@@ -326,15 +333,30 @@ class EntityNG extends Entity {
    * Implements \Drupal\Core\TypedData\TranslatableInterface::language().
    */
   public function language() {
-    // Get the language code if the property exists.
-    if ($this->getPropertyDefinition('langcode')) {
-      $language = $this->get('langcode')->language;
+    // Keep a local cache of the language object and clear it if the langcode
+    // gets changed, see EntityNG::onChange().
+    if (!isset($this->language)) {
+      // Get the language code if the property exists.
+      if ($this->getPropertyDefinition('langcode')) {
+        $this->language = $this->get('langcode')->language;
+      }
+      if (empty($this->language)) {
+        // Make sure we return a proper language object.
+        $this->language = new Language(array('langcode' => Language::LANGCODE_NOT_SPECIFIED));
+      }
     }
-    if (empty($language)) {
-      // Make sure we return a proper language object.
-      $language = new Language(array('langcode' => Language::LANGCODE_NOT_SPECIFIED));
+    return $this->language;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onChange($property_name) {
+    if ($property_name == 'langcode') {
+      // Avoid using unset as this unnecessarily triggers magic methods later
+      // on.
+      $this->language = NULL;
     }
-    return $language;
   }
 
   /**
@@ -386,18 +408,20 @@ class EntityNG extends Entity {
     $definitions = $this->getPropertyDefinitions();
     // Build an array with the translation langcodes set as keys. Empty
     // translations should not be included and must be skipped.
-    foreach ($this->getProperties() as $name => $property) {
-      foreach ($this->fields[$name] as $langcode => $field) {
-        if (!$field->isEmpty()) {
-          $translations[$langcode] = TRUE;
+    foreach ($definitions as $name => $definition) {
+      if (isset($this->fields[$name])) {
+        foreach ($this->fields[$name] as $langcode => $field) {
+          if (!$field->isEmpty()) {
+            $translations[$langcode] = TRUE;
+          }
         }
-        if (isset($this->values[$name])) {
-          foreach ($this->values[$name] as $langcode => $values) {
-            // If a value is there but the field object is empty, it has been
-            // unset, so we need to skip the field also.
-            if ($values && !empty($definitions[$name]['translatable']) && !(isset($this->fields[$name][$langcode]) && $this->fields[$name][$langcode]->isEmpty())) {
-              $translations[$langcode] = TRUE;
-            }
+      }
+      if (isset($this->values[$name])) {
+        foreach ($this->values[$name] as $langcode => $values) {
+          // If a value is there but the field object is empty, it has been
+          // unset, so we need to skip the field also.
+          if ($values && !empty($definition['translatable']) && !(isset($this->fields[$name][$langcode]) && $this->fields[$name][$langcode]->isEmpty())) {
+            $translations[$langcode] = TRUE;
           }
         }
       }

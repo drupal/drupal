@@ -102,7 +102,7 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
    * Field-type specific settings.
    *
    * An array of key/value pairs. The keys and default values are defined by the
-   * field type in the 'instance_settings' entry of hook_field_info().
+   * field type.
    *
    * @var array
    */

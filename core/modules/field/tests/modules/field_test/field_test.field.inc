@@ -28,7 +28,7 @@ function field_test_field_info() {
       ),
       'default_widget' => 'test_field_widget',
       'default_formatter' => 'field_test_default',
-      'field item class' => 'Drupal\field_test\Type\TestItem',
+      'class' => 'Drupal\field_test\Type\TestItem',
     ),
     'shape' => array(
       'label' => t('Shape'),
@@ -39,7 +39,7 @@ function field_test_field_info() {
       'instance_settings' => array(),
       'default_widget' => 'test_field_widget',
       'default_formatter' => 'field_test_default',
-      'field item class' => 'Drupal\field_test\Type\ShapeItem',
+      'class' => 'Drupal\field_test\Type\ShapeItem',
     ),
     'hidden_test_field' => array(
       'no_ui' => TRUE,
@@ -49,7 +49,7 @@ function field_test_field_info() {
       'instance_settings' => array(),
       'default_widget' => 'test_field_widget',
       'default_formatter' => 'field_test_default',
-      'field item class' => 'Drupal\field_test\Type\TestItem',
+      'class' => 'Drupal\field_test\Type\HiddenTestItem',
     ),
   );
 }
@@ -139,7 +139,10 @@ function field_test_field_validate(EntityInterface $entity = NULL, $field, $inst
  * Implements hook_field_is_empty().
  */
 function field_test_field_is_empty($item, $field_type) {
-  return empty($item['value']);
+  if ($field_type == 'test_field') {
+    return empty($item['value']);
+  }
+  return empty($item['shape']) && empty($item['color']);
 }
 
 /**

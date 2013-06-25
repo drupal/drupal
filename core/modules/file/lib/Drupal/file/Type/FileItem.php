@@ -7,13 +7,12 @@
 
 namespace Drupal\file\Type;
 
-use Drupal\Core\Entity\Field\FieldItemBase;
-use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\field\Plugin\field\field_type\LegacyConfigFieldItem;
 
 /**
  * Defines the 'file_field' entity field item.
  */
-class FileItem extends FieldItemBase {
+class FileItem extends LegacyConfigFieldItem {
 
   /**
    * Property definitions of the contained properties.

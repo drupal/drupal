@@ -36,7 +36,7 @@ function options_field_info() {
       'settings' => array('allowed_values' => array(), 'allowed_values_function' => ''),
       'default_widget' => 'options_select',
       'default_formatter' => 'list_default',
-      'field item class' => '\Drupal\number\Type\IntegerItem',
+      'class' => '\Drupal\options\Type\ListIntegerItem',
     ),
     'list_float' => array(
       'label' => t('List (float)'),
@@ -44,7 +44,7 @@ function options_field_info() {
       'settings' => array('allowed_values' => array(), 'allowed_values_function' => ''),
       'default_widget' => 'options_select',
       'default_formatter' => 'list_default',
-      'field item class' => '\Drupal\number\Type\FloatItem',
+      'class' => '\Drupal\options\Type\ListFloatItem',
     ),
     'list_text' => array(
       'label' => t('List (text)'),
@@ -52,7 +52,7 @@ function options_field_info() {
       'settings' => array('allowed_values' => array(), 'allowed_values_function' => ''),
       'default_widget' => 'options_select',
       'default_formatter' => 'list_default',
-      'field item class' => '\Drupal\text\Type\TextItem',
+      'class' => '\Drupal\options\Type\ListTextItem',
     ),
     'list_boolean' => array(
       'label' => t('Boolean'),
@@ -60,7 +60,7 @@ function options_field_info() {
       'settings' => array('allowed_values' => array(), 'allowed_values_function' => ''),
       'default_widget' => 'options_buttons',
       'default_formatter' => 'list_default',
-      'field item class' => '\Drupal\number\Type\IntegerItem',
+      'class' => '\Drupal\options\Type\ListBooleanItem',
     ),
   );
 }

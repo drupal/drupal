@@ -63,43 +63,15 @@ function field_test_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
 
-  $items['test-entity/nested/%field_test_entity_test/%field_test_entity_test'] = array(
+  $items['test-entity/nested/%entity_test/%entity_test'] = array(
     'title' => 'Nested entity form',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('field_test_entity_nested_form', 2, 3),
-    'access arguments' => array('administer field_test content'),
+    'access arguments' => array('administer entity_test content'),
     'type' => MENU_NORMAL_ITEM,
   );
 
   return $items;
-}
-
-/**
- * Generic op to test _field_invoke behavior.
- *
- * This simulates a field operation callback to be invoked by _field_invoke().
- */
-function field_test_field_test_op(EntityInterface $entity, $field, $instance, $langcode, &$items) {
-  return array($langcode => hash('sha256', serialize(array($entity, $field['field_name'], $langcode, $items))));
-}
-
-/**
- * Generic op to test _field_invoke_multiple behavior.
- *
- * This simulates a multiple field operation callback to be invoked by
- * _field_invoke_multiple().
- */
-function field_test_field_test_op_multiple($entity_type, $entities, $field, $instances, $langcode, &$items) {
-  $result = array();
-  foreach ($entities as $id => $entity) {
-    // Entities, instances and items are assumed to be consistently grouped by
-    // language. To verify this we try to access all the passed data structures
-    // by entity id. If they are grouped correctly, one entity, one instance and
-    // one array of items should be available for each entity id.
-    $field_name = $instances[$id]['field_name'];
-    $result[$id] = array($langcode => hash('sha256', serialize(array($entity_type, $entity, $field_name, $langcode, $items[$id]))));
-  }
-  return $result;
 }
 
 /**

@@ -137,4 +137,101 @@ abstract class EntityStorageControllerBase implements EntityStorageControllerInt
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function invokeFieldMethod($method, EntityInterface $entity) {
+    foreach (array_keys($entity->getTranslationLanguages()) as $langcode) {
+      // @todo getTranslation() only works on NG entities. Remove the condition
+      // and the second code branch when all core entity types are converted.
+      if ($translation = $entity->getTranslation($langcode)) {
+        foreach ($translation as $field_name => $field) {
+          $field->$method();
+        }
+      }
+      else {
+        // For BC entities, iterate through fields and instantiate NG items
+        // objects manually.
+        $definitions = \Drupal::entityManager()->getFieldDefinitions($entity->entityType(), $entity->bundle());
+        foreach ($definitions as $field_name => $definition) {
+          if (!empty($definition['configurable'])) {
+            // Create the items object.
+            $itemsBC = isset($entity->{$field_name}[$langcode]) ? $entity->{$field_name}[$langcode] : array();
+            // @todo Exception : this calls setValue(), tries to set the
+            // 'formatted' property. For now, this is worked around by
+            // commenting out the Exception in TextProcessed::setValue().
+            $items = \Drupal::typedData()->create($definition, $itemsBC, $field_name, $entity);
+            $items->$method();
+
+            // Put back the items values in the entity.
+            $itemsBC = $items->getValue(TRUE);
+            if ($itemsBC !== array() || isset($entity->{$field_name}[$langcode])) {
+              $entity->{$field_name}[$langcode] = $itemsBC;
+            }
+          }
+        }
+      }
+    }
+  }
+
+   /**
+   * {@inheritdoc}
+   */
+  public function invokeFieldItemPrepareCache(EntityInterface $entity) {
+    foreach (array_keys($entity->getTranslationLanguages()) as $langcode) {
+      // @todo getTranslation() only works on NG entities. Remove the condition
+      // and the second code branch when all core entity types are converted.
+      if ($translation = $entity->getTranslation($langcode)) {
+        foreach ($translation->getPropertyDefinitions() as $property => $definition) {
+          $type_definition = \Drupal::typedData()->getDefinition($definition['type']);
+          // Only create the item objects if needed.
+          if (is_subclass_of($type_definition['class'], '\Drupal\Core\Entity\Field\PrepareCacheInterface')
+            // Prevent legacy field types from skewing performance too much by
+            // checking the existence of the legacy function directly, instead
+            // of making LegacyConfigFieldItem implement PrepareCacheInterface.
+            // @todo Remove once all core field types have been converted (see
+            // http://drupal.org/node/2014671).
+            || (is_subclass_of($type_definition['class'], '\Drupal\field\Plugin\field\field_type\LegacyConfigFieldItem') && function_exists($type_definition['module'] . '_field_load'))) {
+
+            // Call the prepareCache() method directly on each item
+            // individually.
+            foreach ($translation->get($property) as $item) {
+              $item->prepareCache();
+            }
+          }
+        }
+      }
+      else {
+        // For BC entities, iterate through the fields and instantiate NG items
+        // objects manually.
+        $definitions = \Drupal::entityManager()->getFieldDefinitions($entity->entityType(), $entity->bundle());
+        foreach ($definitions as $field_name => $definition) {
+          if (!empty($definition['configurable'])) {
+            $type_definition = \Drupal::typedData()->getDefinition($definition['type']);
+            // Only create the item objects if needed.
+            if (is_subclass_of($type_definition['class'], '\Drupal\Core\Entity\Field\PrepareCacheInterface')
+              // @todo Remove once all core field types have been converted
+              // (see http://drupal.org/node/2014671).
+              || (is_subclass_of($type_definition['class'], '\Drupal\field\Plugin\field\field_type\LegacyConfigFieldItem') && function_exists($type_definition['module'] . '_field_load'))) {
+
+              // Create the items object.
+              $items = isset($entity->{$field_name}[$langcode]) ? $entity->{$field_name}[$langcode] : array();
+              $itemsNG = \Drupal::typedData()->create($definition, $items, $field_name, $entity);
+
+              foreach ($itemsNG as $item) {
+                $item->prepareCache();
+              }
+
+              // Put back the items values in the entity.
+              $items = $itemsNG->getValue(TRUE);
+              if ($items !== array() || isset($entity->{$field_name}[$langcode])) {
+                $entity->{$field_name}[$langcode] = $items;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
 }

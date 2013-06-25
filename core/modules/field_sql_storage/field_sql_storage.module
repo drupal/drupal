@@ -416,7 +416,8 @@ function field_sql_storage_field_storage_load($entity_type, $entities, $age, $fi
         // from the prefixed database column.
         foreach ($field['columns'] as $column => $attributes) {
           $column_name = _field_sql_storage_columnname($field_name, $column);
-          $item[$column] = $row->$column_name;
+          // Unserialize the value if specified in the column schema.
+          $item[$column] = (!empty($attributes['serialize'])) ? unserialize($row->$column_name) : $row->$column_name;
         }
 
         // Add the item to the field values for the entity.
@@ -496,7 +497,10 @@ function field_sql_storage_field_storage_write(EntityInterface $entity, $op, $fi
           'langcode' => $langcode,
         );
         foreach ($field['columns'] as $column => $attributes) {
-          $record[_field_sql_storage_columnname($field_name, $column)] = isset($item[$column]) ? $item[$column] : NULL;
+          $column_name = _field_sql_storage_columnname($field_name, $column);
+          $value = isset($item[$column]) ? $item[$column] : NULL;
+          // Serialize the value if specified in the column schema.
+          $record[$column_name] = (!empty($attributes['serialize'])) ? serialize($value) : $value;
         }
         $query->values($record);
         if (isset($vid)) {
