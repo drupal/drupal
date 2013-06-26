@@ -63,7 +63,7 @@ class SearchCommentTest extends SearchTestBase {
     $edit = array(
       'filters[filter_html_escape][status]' => TRUE,
     );
-    $this->drupalPost('admin/config/content/formats/' . $basic_html_format_id, $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/content/formats/manage/' . $basic_html_format_id, $edit, t('Save configuration'));
     // Allow anonymous users to search content.
     $edit = array(
       DRUPAL_ANONYMOUS_RID . '[search content]' => 1,

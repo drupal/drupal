@@ -181,6 +181,12 @@ class ConfigEntityQueryTest extends DrupalUnitTestBase {
       ->execute();
     $this->assertResults(array('3', '4', '5'));
 
+    // Filter by ID with the <> operator.
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->condition('id', '3', '<>')
+      ->execute();
+    $this->assertResults(array('1', '2', '4', '5'));
+
     // Filter by ID with the < operator.
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('id', '3', '<')

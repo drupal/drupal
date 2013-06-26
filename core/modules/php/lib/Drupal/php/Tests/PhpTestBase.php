@@ -47,7 +47,7 @@ abstract class PhpTestBase extends WebTestBase {
     $this->assertText('PHP code', 'PHP code text format was created.');
 
     // Verify that anonymous and authenticated user roles do not have access.
-    $this->drupalGet('admin/config/content/formats/' . $php_format_id);
+    $this->drupalGet('admin/config/content/formats/manage/' . $php_format_id);
     $this->assertFieldByName('roles[' . DRUPAL_ANONYMOUS_RID . ']', FALSE, 'Anonymous users do not have access to PHP code format.');
     $this->assertFieldByName('roles[' . DRUPAL_AUTHENTICATED_RID . ']', FALSE, 'Authenticated users do not have access to PHP code format.');
   }
