@@ -92,8 +92,8 @@ function _drupal_maintenance_theme() {
   }
   _drupal_theme_initialize($themes[$theme], array_reverse($base_theme), '_theme_load_offline_registry');
 
-  // These are usually added from system_init() -except maintenance.css.
-  // When the database is inactive it's not called so we add it here.
+  // These CSS files are normally added by system_page_build() -except maintenance.css.
+  // When the database is inactive it's not called so we add them here.
   $path = drupal_get_path('module', 'system');
   drupal_add_css($path . '/css/system.module.css');
   drupal_add_css($path . '/css/system.theme.css');
