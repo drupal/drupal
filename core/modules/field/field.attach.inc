@@ -900,16 +900,9 @@ function field_attach_update(EntityInterface $entity) {
   foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
     $field_id = $field['uuid'];
-    $field_name = $field['field_name'];
-    // Leave the field untouched if $entity comes with no $field_name property,
-    // but empty the field if it comes as a NULL value or an empty array.
-    // Function property_exists() is slower, so we catch the more frequent
-    // cases where it's an empty array with the faster isset().
-    if (isset($entity->$field_name) || property_exists($entity, $field_name)) {
-      // Collect the storage backend if the field has not been written yet.
-      if (!isset($skip_fields[$field_id])) {
-        $storages[$field['storage']['type']][$field_id] = $field_id;
-      }
+    // Collect the storage backend if the field has not been written yet.
+    if (!isset($skip_fields[$field_id])) {
+      $storages[$field['storage']['type']][$field_id] = $field_id;
     }
   }
 

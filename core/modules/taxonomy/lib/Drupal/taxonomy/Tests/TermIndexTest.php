@@ -151,9 +151,8 @@ class TermIndexTest extends TaxonomyTestBase {
     $this->assertEqual(1, $index_count, 'Term 2 is indexed once.');
 
     // Redo the above tests without interface.
+    $node = node_load($node->id(), TRUE);
     $node->title = $this->randomName();
-    unset($node->{$this->field_name_1});
-    unset($node->{$this->field_name_2});
 
     // Update the article with no term changed.
     $node->save();

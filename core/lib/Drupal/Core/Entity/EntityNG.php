@@ -235,6 +235,13 @@ class EntityNG extends Entity {
         if (isset($this->values[$property_name][$langcode])) {
           $value = $this->values[$property_name][$langcode];
         }
+        // @todo Remove this once the BC decorator is gone.
+        elseif ($property_name != 'langcode') {
+          $default_langcode = $this->language()->langcode;
+          if ($langcode == Language::LANGCODE_DEFAULT && isset($this->values[$property_name][$default_langcode])) {
+            $value = $this->values[$property_name][$default_langcode];
+          }
+        }
         $this->fields[$property_name][$langcode] = \Drupal::typedData()->getPropertyInstance($this, $property_name, $value);
       }
     }

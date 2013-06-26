@@ -1,9 +1,9 @@
-id: test_entity.test_bundle_2.field_test_import_2
+id: entity_test.test_bundle.field_test_import_2
 langcode: und
 field_name: field_test_import_2
-entity_type: test_entity
-bundle: test_bundle_2
-label: 'Test import field 2 on test bundle 2'
+entity_type: entity_test
+bundle: test_bundle
+label: 'Test import field 2 on test bundle'
 description: ''
 required: '0'
 default_value: {  }

@@ -1,8 +1,8 @@
-id: test_entity.test_bundle.field_test_import
+id: entity_test.entity_test.field_test_import
 langcode: und
 field_name: field_test_import
-entity_type: test_entity
-bundle: test_bundle
+entity_type: entity_test
+bundle: entity_test
 label: 'Test import field'
 description: ''
 required: '0'
