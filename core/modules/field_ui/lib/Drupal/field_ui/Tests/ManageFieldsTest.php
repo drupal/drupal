@@ -72,6 +72,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->updateField();
     $this->addExistingField();
     $this->cardinalitySettings();
+    $this->fieldListAdminPage();
   }
 
   /**
@@ -594,5 +595,14 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->drupalGet('node/add/article');
     $this->assertRaw('<strong>Test with an upload field.</strong>');
     $this->assertRaw('<em>Test with a non upload field.</em>');
+  }
+
+  /**
+   * Tests that the field list administration page operates correctly.
+   */
+  function fieldListAdminPage() {
+    $this->drupalGet('admin/reports/fields');
+    $this->assertText($this->field_name, 'Field name is displayed in field list.');
+    $this->assertTrue($this->assertLinkByHref('admin/structure/types/manage/' . $this->type . '/fields'), 'Link to content type using field is displayed in field list.');
   }
 }

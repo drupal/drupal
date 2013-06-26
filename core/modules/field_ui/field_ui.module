@@ -56,10 +56,8 @@ function field_ui_menu() {
   $items['admin/reports/fields'] = array(
     'title' => 'Field list',
     'description' => 'Overview of fields on all entity types.',
-    'page callback' => 'field_ui_fields_list',
-    'access arguments' => array('administer content types'),
+    'route_name' => 'field_list',
     'type' => MENU_NORMAL_ITEM,
-    'file' => 'field_ui.admin.inc',
   );
   $items['admin/reports/fields/list'] = array(
     'title' => 'Entities',
@@ -238,6 +236,7 @@ function field_ui_element_info() {
  */
 function field_ui_entity_info(&$entity_info) {
   $entity_info['field_instance']['controllers']['form']['delete'] = 'Drupal\field_ui\Form\FieldDeleteForm';
+  $entity_info['field_entity']['controllers']['list'] = 'Drupal\field_ui\FieldListController';
 }
 
 /**
