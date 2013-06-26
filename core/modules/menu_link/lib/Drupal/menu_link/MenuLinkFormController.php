@@ -52,13 +52,10 @@ class MenuLinkFormController extends EntityFormController implements EntityContr
   /**
    * Constructs a new MenuLinkFormController object.
    *
-   * @param string $operation
-   *   The name of the current operation.
    * @param \Drupal\Core\Path\AliasManagerInterface $path_alias_manager
    *   The path alias manager.
    */
-  public function __construct($operation, MenuLinkStorageControllerInterface $menu_link_storage_controller, AliasManagerInterface $path_alias_manager, UrlGenerator $url_generator, ModuleHandlerInterface $module_handler) {
-    parent::__construct($operation);
+  public function __construct(MenuLinkStorageControllerInterface $menu_link_storage_controller, AliasManagerInterface $path_alias_manager, UrlGenerator $url_generator, ModuleHandlerInterface $module_handler) {
     $this->menuLinkStorageController = $menu_link_storage_controller;
     $this->pathAliasManager = $path_alias_manager;
     $this->urlGenerator = $url_generator;
@@ -68,9 +65,8 @@ class MenuLinkFormController extends EntityFormController implements EntityContr
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info, $operation = NULL) {
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
     return new static(
-      $operation,
       $container->get('plugin.manager.entity')->getStorageController('menu_link'),
       $container->get('path.alias_manager.cached'),
       $container->get('url_generator'),
