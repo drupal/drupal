@@ -1,4 +1,0 @@
-services:
-  entity.query.field_sql_storage:
-    class: Drupal\field_sql_storage\Entity\QueryFactory
-    arguments: ['@database']

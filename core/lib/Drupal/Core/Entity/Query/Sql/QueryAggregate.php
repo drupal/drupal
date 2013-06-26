@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\field_sql_storage\Entity\QueryAggregate.
+ * Contains \Drupal\Core\Entity\Query\Sql\QueryAggregate.
  */
 
-namespace Drupal\field_sql_storage\Entity;
+namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Entity\Query\QueryAggregateInterface;
 
@@ -39,7 +39,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
   }
 
   /**
-   * Overrides \Drupal\field_sql_storage\Entity::prepare().
+   * Overrides \Drupal\Core\Entity\Query\Sql::prepare().
    */
   public function prepare() {
     parent::prepare();
@@ -73,7 +73,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
   /**
    * Adds the aggregations to the query.
    *
-   * @return \Drupal\field_sql_storage\Entity\QueryAggregate
+   * @return \Drupal\Core\Entity\Query\Sql\QueryAggregate
    *   Returns the called object.
    */
   protected function addAggregate() {
@@ -89,7 +89,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
   /**
    * Builds the aggregation conditions part of the query.
    *
-   * @return \Drupal\field_sql_storage\Entity\QueryAggregate
+   * @return \Drupal\Core\Entity\Query\Sql\QueryAggregate
    *   Returns the called object.
    */
   protected function compileAggregate() {
@@ -100,7 +100,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
   /**
    * Adds the groupby values to the actual query.
    *
-   * @return \Drupal\field_sql_storage\Entity\QueryAggregate
+   * @return \Drupal\Core\Entity\Query\Sql\QueryAggregate
    *   Returns the called object.
    */
   protected function addGroupBy() {
@@ -118,7 +118,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
   /**
    * Builds the aggregation sort part of the query.
    *
-   * @return \Drupal\field_sql_storage\Entity\QueryAggregate
+   * @return \Drupal\Core\Entity\Query\Sql\QueryAggregate
    *   Returns the called object.
    */
   protected function addSortAggregate() {
@@ -132,7 +132,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
 
 
   /**
-   * Overrides \Drupal\field_sql_storage\Entity\Query::finish().
+   * Overrides \Drupal\Core\Entity\Query\Sql\Query::finish().
    *
    * Adds the sql expressions to the query.
    */
@@ -165,7 +165,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
   }
 
   /**
-   * Overrides \Drupal\field_sql_storage\Entity\Query::result().
+   * Overrides \Drupal\Core\Entity\Query\Sql\Query::result().
    *
    * @return array|int
    *   Returns the aggregated result, or a number if it's a count query.

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\field_sql_storage\Entity\QueryFactory.
+ * Contains \Drupal\Core\Entity\Query\Sql\QueryFactory.
  */
 
-namespace Drupal\field_sql_storage\Entity;
+namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityManager;
@@ -14,8 +14,8 @@ use Drupal\Core\Entity\Query\QueryFactoryInterface;
 /**
  * Factory class creating entity query objects for the SQL backend.
  *
- * @see \Drupal\field_sql_storage\Entity\Query
- * @see \Drupal\field_sql_storage\Entity\QueryAggregate
+ * @see \Drupal\Core\Entity\Query\Sql\Query
+ * @see \Drupal\Core\Entity\Query\Sql\QueryAggregate
  */
 class QueryFactory implements QueryFactoryInterface {
 
@@ -45,7 +45,7 @@ class QueryFactory implements QueryFactoryInterface {
    *   - AND: all of the conditions on the query need to match.
    *   - OR: at least one of the conditions on the query need to match.
    *
-   * @return \Drupal\field_sql_storage\Entity\Query
+   * @return \Drupal\Core\Entity\Query\Sql\Query
    *   The factored query.
    */
   function get($entity_type, $conjunction, EntityManager $entity_manager) {
@@ -61,7 +61,7 @@ class QueryFactory implements QueryFactoryInterface {
    *   - AND: all of the conditions on the query need to match.
    *   - OR: at least one of the conditions on the query need to match.
    *
-   * @return \Drupal\field_sql_storage\Entity\QueryAggregate
+   * @return \Drupal\Core\Entity\Query\Sql\QueryAggregate
    *   The factored aggregation query.
    */
   function getAggregate($entity_type, $conjunction, EntityManager $entity_manager) {

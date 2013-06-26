@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\field_sql_storage\Entity\Query.
+ * Contains \Drupal\Core\Entity\Query\Sql\Query.
  */
 
-namespace Drupal\field_sql_storage\Entity;
+namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityManager;
@@ -111,7 +111,7 @@ class Query extends QueryBase implements QueryInterface {
    * @throws \Drupal\Core\Entity\Query\QueryException
    *   Thrown if the base table does not exists.
    *
-   * @return \Drupal\field_sql_storage\Entity\Query
+   * @return \Drupal\Core\Entity\Query\Sql\Query
    *   Returns the called object.
    */
   protected function prepare() {
@@ -173,7 +173,7 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * Compiles the conditions.
    *
-   * @return \Drupal\field_sql_storage\Entity\Query
+   * @return \Drupal\Core\Entity\Query\Sql\Query
    *   Returns the called object.
    */
   protected function compile() {
@@ -184,7 +184,7 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * Adds the sort to the build query.
    *
-   * @return \Drupal\field_sql_storage\Entity\Query
+   * @return \Drupal\Core\Entity\Query\Sql\Query
    *   Returns the called object.
    */
   protected function addSort() {
@@ -242,7 +242,7 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * Finish the query by adding fields, GROUP BY and range.
    *
-   * @return \Drupal\field_sql_storage\Entity\Query
+   * @return \Drupal\Core\Entity\Query\Sql\Query
    *   Returns the called object.
    */
   protected function finish() {

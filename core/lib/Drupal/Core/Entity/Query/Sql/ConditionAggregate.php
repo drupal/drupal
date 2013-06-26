@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\field_sql_storage\Query\ConditionAggregate.
+ * Contains \Drupal\Core\Entity\Query\Sql\ConditionAggregate.
  */
 
-namespace Drupal\field_sql_storage\Entity;
+namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\Query\ConditionAggregateBase;

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\field_sql_storage\Query\ConditionSql.
+ * Contains \Drupal\Core\Entity\Query\Sql\Condition.
  */
 
-namespace Drupal\field_sql_storage\Entity;
+namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Entity\Query\ConditionBase;
 use Drupal\Core\Entity\Query\ConditionInterface;

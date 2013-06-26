@@ -253,6 +253,9 @@ services:
   entity.query.config:
     class: Drupal\Core\Config\Entity\Query\QueryFactory
     arguments: ['@config.storage']
+  entity.query.sql:
+    class: Drupal\Core\Entity\Query\Sql\QueryFactory
+    arguments: ['@database']
   router.dumper:
     class: Drupal\Core\Routing\MatcherDumper
     arguments: ['@database']

@@ -556,6 +556,6 @@ class DatabaseStorageController extends EntityStorageControllerBase {
    * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::getQueryServiceName().
    */
   public function getQueryServiceName() {
-    return 'entity.query.field_sql_storage';
+    return 'entity.query.sql';
   }
 }

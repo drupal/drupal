@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\field_sql_storage\Entity\Tables.
+ * Contains \Drupal\Core\Entity\Query\Sql\Tables.
  */
 
-namespace Drupal\field_sql_storage\Entity;
+namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\Query\QueryException;
