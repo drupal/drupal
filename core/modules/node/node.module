@@ -16,6 +16,7 @@ use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\node\NodeTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
@@ -77,13 +78,6 @@ const NODE_ACCESS_DENY = FALSE;
 const NODE_ACCESS_IGNORE = NULL;
 
 /**
- * Implements hook_rebuild().
- */
-function node_rebuild() {
-  node_types_rebuild();
-}
-
-/**
  * Implements hook_help().
  */
 function node_help($path, $arg) {
@@ -125,8 +119,9 @@ function node_help($path, $arg) {
       return '<p>' . t('Individual content types can have different fields, behaviors, and permissions assigned to them.') . '</p>';
 
     case 'admin/structure/types/manage/%/display':
+      $type =  entity_load('node_type', $arg[4]);
       return '<p>' . t('Content items can be displayed using different view modes: Teaser, Full content, Print, RSS, etc. <em>Teaser</em> is a short format that is typically used in lists of multiple content items. <em>Full content</em> is typically used when the content is displayed on its own page.') . '</p>' .
-        '<p>' . t('Here, you can define which fields are shown and hidden when %type content is displayed in each view mode, and define how the fields are displayed in each view mode.', array('%type' => node_type_get_label($arg[4]))) . '</p>';
+        '<p>' . t('Here, you can define which fields are shown and hidden when %type content is displayed in each view mode, and define how the fields are displayed in each view mode.', array('%type' => $type->label())) . '</p>';
 
     case 'node/%/revisions':
       return '<p>' . t('Revisions allow you to track differences between multiple versions of your content, and revert back to older versions.') . '</p>';
@@ -163,10 +158,6 @@ function node_theme() {
       'variables' => array('node' => NULL),
       'file' => 'node.pages.inc',
     ),
-    'node_admin_overview' => array(
-      'variables' => array('name' => NULL, 'type' => NULL),
-      'file' => 'content_types.inc',
-    ),
     'node_recent_block' => array(
       'variables' => array('nodes' => NULL),
     ),
@@ -187,9 +178,8 @@ function node_entity_bundle_info() {
   $bundles = array();
   // Bundles must provide a human readable name so we can create help and error
   // messages.
-  node_type_cache_reset();
-  foreach (node_type_get_names() as $type => $name) {
-    $bundles['node'][$type]['label'] = $name;
+  foreach (node_type_get_names() as $id => $label) {
+    $bundles['node'][$id]['label'] = $label;
   }
   return $bundles;
 }
@@ -305,63 +295,43 @@ function node_mark($nid, $timestamp) {
  * Returns a list of all the available node types.
  *
  * This list can include types that are queued for addition or deletion.
- * See _node_types_build() for details.
  *
- * @return
- *   An array of node types, as objects, keyed by the type.
+ * @return array
+ *   An array of node type entities, keyed by ID.
  *
- * @see _node_types_build()
  * @see node_type_load()
  */
 function node_type_get_types() {
-  return _node_types_build()->types;
-}
-
-/**
- * Returns the node type base of the passed node or node type string.
- *
- * The base indicates which module implements this node type and is used to
- * execute node-type-specific hooks. For types defined in the user interface
- * and managed by node.module, the base is 'node_content'.
- *
- * @param string $type
- *   A string that indicates the node type to return.
- *
- * @return string|false
- *   The node type base or FALSE if the node type is not found.
- */
-function node_type_get_base($type) {
-  $types = _node_types_build()->types;
-  return isset($types[$type]) && isset($types[$type]->base) ? $types[$type]->base : FALSE;
+  return entity_load_multiple('node_type');
 }
 
 /**
  * Returns a list of available node type names.
  *
  * This list can include types that are queued for addition or deletion.
- * See _node_types_build() for details.
  *
- * @return
+ * @return array
  *   An array of node type labels, keyed by the node type name.
- *
- * @see _node_types_build()
  */
 function node_type_get_names() {
-  return _node_types_build()->names;
-}
-
-/**
- * Returns the node type label for the passed node type name.
- *
- * @param string $name
- *   The machine name of a node type.
- *
- * @return string|false
- *   The node type label or FALSE if the node type is not found.
- */
-function node_type_get_label($name) {
-  $types = _node_types_build()->names;
-  return isset($types[$name]) ? $types[$name] : FALSE;
+  $cid = 'node_type:names:' . language(Language::TYPE_INTERFACE)->langcode;
+  if ($cache = cache()->get($cid)) {
+    return $cache->data;
+  }
+  // Not using node_type_get_types() or entity_load_multiple() here, to allow
+  // this function being used in hook_entity_info() implementations.
+  // @todo Consider to convert this into a generic config entity helper.
+  $config_names = config_get_storage_names_with_prefix('node.type.');
+  $names = array();
+  foreach ($config_names as $config_name) {
+    $config = config($config_name);
+    $names[$config->get('type')] = $config->get('name');
+  }
+  cache()->set($cid, $names, CacheBackendInterface::CACHE_PERMANENT, array(
+    'node_type' => array_keys($names),
+    'node_types' => TRUE,
+  ));
+  return $names;
 }
 
 /**
@@ -372,50 +342,26 @@ function node_type_get_label($name) {
  *
  * @return string|false
  *   The node type label or FALSE if the node type is not found.
+ *
+ * @todo Add this as generic helper method for config entities representing
+ *   entity bundles.
  */
 function node_get_type_label(EntityInterface $node) {
-  $types = _node_types_build()->names;
-  return isset($types[$node->type]) ? $types[$node->type] : FALSE;
-}
-
-/**
- * Title callback: Returns the sanitized node type name.
- *
- * @param $node_type
- *   The node type object.
- *
- * @return
- *   The node type name that is safe for printing.
- */
-function node_type_get_clean_name($node_type) {
-  return check_plain($node_type->name);
+  $type = entity_load('node_type', $node->bundle());
+  return $type ? $type->label() : FALSE;
 }
 
 /**
  * Description callback: Returns the node type description.
  *
- * @param $node_type
+ * @param \Drupal\node\NodeTypeInterface $node_type
  *   The node type object.
  *
- * @return
+ * @return string
  *   The node type description.
  */
-function node_type_get_description($node_type) {
+function node_type_get_description(NodeTypeInterface $node_type) {
   return $node_type->description;
-}
-
-/**
- * Updates the database cache of node types.
- *
- * All new module-defined node types are saved to the database via a call to
- * node_type_save(), and obsolete ones are deleted via a call to
- * node_type_delete(). See _node_types_build() for an explanation of the new
- * and obsolete types.
- *
- * @see _node_types_build()
- */
-function node_types_rebuild() {
-  _node_types_build(TRUE);
 }
 
 /**
@@ -424,100 +370,17 @@ function node_types_rebuild() {
  * @param $name
  *   The machine name of a node type to load.
  *
- * @return
+ * @return \Drupal\node\NodeTypeInterface
  *   A node type object or FALSE if $name does not exist.
  */
 function node_type_load($name) {
-  $types = _node_types_build()->types;
-  return isset($types[$name]) ? $types[$name] : FALSE;
-}
-
-/**
- * Saves a node type to the database.
- *
- * @param object $info
- *   The node type to save; an object with the following properties:
- *   - type: A string giving the machine name of the node type.
- *   - name: A string giving the human-readable name of the node type.
- *   - base: A string that indicates the base string for hook functions. For
- *     example, 'node_content' is the value used by the UI when creating a new
- *     node type.
- *   - description: A string that describes the node type.
- *   - help: A string giving the help information shown to the user when
- *     creating a node of this type.
- *   - custom: TRUE or FALSE indicating whether this type is defined by a module
- *     (FALSE) or by a user (TRUE) via Add Content Type.
- *   - modified: TRUE or FALSE indicating whether this type has been modified by
- *     an administrator. Currently not used in any way.
- *   - locked: TRUE or FALSE indicating whether the administrator can change the
- *     machine name of this type.
- *   - disabled: TRUE or FALSE indicating whether this type has been disabled.
- *   - has_title: TRUE or FALSE indicating whether this type uses the node title
- *     field.
- *   - title_label: A string containing the label for the title.
- *   - module: A string giving the module defining this type of node.
- *   - orig_type: A string giving the original machine-readable name of this
- *     node type. This may be different from the current type name if the locked
- *     field is 0.
- *
- * @return int
- *   A status flag indicating the outcome of the operation, either SAVED_NEW or
- *   SAVED_UPDATED.
- */
-function node_type_save($info) {
-  $existing_type = !empty($info->old_type) ? $info->old_type : $info->type;
-  $is_existing = (bool) db_query_range('SELECT 1 FROM {node_type} WHERE type = :type', 0, 1, array(':type' => $existing_type))->fetchField();
-  $type = node_type_set_defaults($info);
-
-  $fields = array(
-    'type' => (string) $type->type,
-    'name' => (string) $type->name,
-    'base' => (string) $type->base,
-    'has_title' => (int) $type->has_title,
-    'title_label' => (string) $type->title_label,
-    'description' => (string) $type->description,
-    'help' => (string) $type->help,
-    'custom' => (int) $type->custom,
-    'modified' => (int) $type->modified,
-    'locked' => (int) $type->locked,
-    'disabled' => (int) $type->disabled,
-    'module' => $type->module,
-  );
-
-  if ($is_existing) {
-    db_update('node_type')
-      ->fields($fields)
-      ->condition('type', $existing_type)
-      ->execute();
-
-    if (!empty($type->old_type) && $type->old_type != $type->type) {
-      entity_invoke_bundle_hook('rename', 'node', $type->old_type, $type->type);
-    }
-    module_invoke_all('node_type_update', $type);
-    $status = SAVED_UPDATED;
-  }
-  else {
-    $fields['orig_type'] = (string) $type->orig_type;
-    db_insert('node_type')
-      ->fields($fields)
-      ->execute();
-
-    entity_invoke_bundle_hook('create', 'node', $type->type);
-
-    module_invoke_all('node_type_insert', $type);
-    $status = SAVED_NEW;
-  }
-
-  // Clear the node type cache.
-  node_type_cache_reset();
-
-  return $status;
+  return entity_load('node_type', $name);
 }
 
 /**
  * Adds the default body field to a node type.
  *
- * @param $type
+ * @param \Drupal\node\NodeTypeInterface $type
  *   A node type object.
  * @param $label
  *   (optional) The label for the body instance.
@@ -525,10 +388,10 @@ function node_type_save($info) {
  * @return
  *   Body field instance.
  */
-function node_add_body_field($type, $label = 'Body') {
+function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
    // Add or remove the body field, as needed.
   $field = field_info_field('body');
-  $instance = field_info_instance('node', 'body', $type->type);
+  $instance = field_info_instance('node', 'body', $type->id());
   if (empty($field)) {
     $field = entity_create('field_entity', array(
       'field_name' => 'body',
@@ -541,7 +404,7 @@ function node_add_body_field($type, $label = 'Body') {
     $instance = entity_create('field_instance', array(
       'field_name' => 'body',
       'entity_type' => 'node',
-      'bundle' => $type->type,
+      'bundle' => $type->id(),
       'label' => $label,
       'settings' => array('display_summary' => TRUE),
     ));
@@ -615,195 +478,21 @@ function node_field_extra_fields() {
 }
 
 /**
- * Deletes a node type from the database.
- *
- * @param $name
- *   The machine name of the node type to delete.
- */
-function node_type_delete($name) {
-  $type = node_type_load($name);
-  db_delete('node_type')
-    ->condition('type', $name)
-    ->execute();
-  entity_invoke_bundle_hook('delete', 'node', $name);
-  module_invoke_all('node_type_delete', $type);
-
-  // Clear the node type cache.
-  node_type_cache_reset();
-}
-
-/**
  * Updates all nodes of one type to be of another type.
  *
- * @param $old_type
+ * @param string $old_id
  *   The current node type of the nodes.
- * @param $type
+ * @param string $new_id
  *   The new node type of the nodes.
  *
  * @return
  *   The number of nodes whose node type field was modified.
  */
-function node_type_update_nodes($old_type, $type) {
+function node_type_update_nodes($old_id, $new_id) {
   return db_update('node')
-    ->fields(array('type' => $type))
-    ->condition('type', $old_type)
+    ->fields(array('type' => $new_id))
+    ->condition('type', $old_id)
     ->execute();
-}
-
-/**
- * Builds and returns the list of available node types.
- *
- * The list of types is built by invoking hook_node_info() on all modules and
- * comparing this information with the node types in the {node_type} table.
- * These two information sources are not synchronized during module installation
- * until node_types_rebuild() is called.
- *
- * @param $rebuild
- *  (optional) TRUE to rebuild node types. Equivalent to calling
- *  node_types_rebuild(). Defaults to FALSE.
- *
- * @return
- *   An object with two properties:
- *   - names: Associative array of the names of node types, keyed by the type.
- *   - types: Associative array of node type objects, keyed by the type.
- *   Both of these arrays will include new types that have been defined by
- *   hook_node_info() implementations but not yet saved in the {node_type}
- *   table. These are indicated in the type object by $type->is_new being set
- *   to the value 1. These arrays will also include obsolete types: types that
- *   were previously defined by modules that have now been disabled, or for
- *   whatever reason are no longer being defined in hook_node_info()
- *   implementations, but are still in the database. These are indicated in the
- *   type object by $type->disabled being set to TRUE.
- */
-function _node_types_build($rebuild = FALSE) {
-  $cid = 'node_types:' . language(Language::TYPE_INTERFACE)->langcode;
-
-  if (!$rebuild) {
-    $_node_types = &drupal_static(__FUNCTION__);
-    if (isset($_node_types)) {
-      return $_node_types;
-    }
-    if ($cache = cache()->get($cid)) {
-      $_node_types = $cache->data;
-      return $_node_types;
-    }
-  }
-
-  $_node_types = (object) array('types' => array(), 'names' => array());
-
-  foreach (module_implements('node_info') as $module) {
-    $info_array = module_invoke($module, 'node_info');
-    foreach ($info_array as $type => $info) {
-      $info['type'] = $type;
-      $_node_types->types[$type] = node_type_set_defaults($info);
-      $_node_types->types[$type]->module = $module;
-      $_node_types->names[$type] = $info['name'];
-    }
-  }
-  $query = db_select('node_type', 'nt')
-    ->addTag('node_type_access')
-    ->fields('nt')
-    ->orderBy('nt.type', 'ASC');
-  if (!$rebuild) {
-    $query->condition('disabled', 0);
-  }
-  foreach ($query->execute() as $type_object) {
-    $type_db = $type_object->type;
-    // Original disabled value.
-    $disabled = $type_object->disabled;
-    // Check for node types from disabled modules and mark their types for removal.
-    // Types defined by the node module in the database (rather than by a separate
-    // module using hook_node_info) have a base value of 'node_content'. The isset()
-    // check prevents errors on old (pre-Drupal 7) databases.
-    if (isset($type_object->base) && $type_object->base != 'node_content' && empty($_node_types->types[$type_db])) {
-      $type_object->disabled = TRUE;
-    }
-    if (isset($_node_types->types[$type_db])) {
-      $type_object->disabled = FALSE;
-    }
-    if (!isset($_node_types->types[$type_db]) || $type_object->modified) {
-      $_node_types->types[$type_db] = $type_object;
-      $_node_types->names[$type_db] = $type_object->name;
-
-      if ($type_db != $type_object->orig_type) {
-        unset($_node_types->types[$type_object->orig_type]);
-        unset($_node_types->names[$type_object->orig_type]);
-      }
-    }
-    $_node_types->types[$type_db]->disabled = $type_object->disabled;
-    $_node_types->types[$type_db]->disabled_changed = $disabled != $type_object->disabled;
-  }
-
-  if ($rebuild) {
-    foreach ($_node_types->types as $type => $type_object) {
-      if (!empty($type_object->is_new) || !empty($type_object->disabled_changed)) {
-        node_type_save($type_object);
-      }
-    }
-  }
-
-  asort($_node_types->names);
-
-  cache()->set($cid, $_node_types, CacheBackendInterface::CACHE_PERMANENT, array('node_types' => TRUE));
-
-  return $_node_types;
-}
-
-/**
- * Clears the node type cache.
- */
-function node_type_cache_reset() {
-  cache()->deleteTags(array('node_types' => TRUE));
-  drupal_static_reset('_node_types_build');
-}
-
-/**
- * Sets the default values for a node type.
- *
- * The defaults are appropriate for a type defined through hook_node_info(),
- * since 'custom' is TRUE for types defined in the user interface, and FALSE
- * for types defined by modules. (The 'custom' flag prevents types from being
- * deleted through the user interface.) Also, the default for 'locked' is TRUE,
- * which prevents users from changing the machine name of the type.
- *
- * @param $info
- *   (optional) An object or array containing values to override the defaults.
- *   See hook_node_info() for details on what the array elements mean. Defaults
- *   to an empty array.
- *
- * @return
- *   A node type object, with missing values in $info set to their defaults.
- *
- * @see hook_node_info()
- */
-function node_type_set_defaults($info = array()) {
-  $info = (array) $info;
-  $new_type = $info + array(
-    'type' => '',
-    'name' => '',
-    'base' => '',
-    'description' => '',
-    'help' => '',
-    'custom' => 0,
-    'modified' => 0,
-    'locked' => 1,
-    'disabled' => 0,
-    'is_new' => 1,
-    'has_title' => 1,
-    'title_label' => 'Title',
-  );
-  $new_type = (object) $new_type;
-
-  // If the type has no title, set an empty label.
-  if (!$new_type->has_title) {
-    $new_type->title_label = '';
-  }
-  if (empty($new_type->module)) {
-    $new_type->module = $new_type->base == 'node_content' ? 'node' : '';
-  }
-  $new_type->orig_type = isset($info['type']) ? $info['type'] : '';
-
-  return $new_type;
 }
 
 /**
@@ -1066,7 +755,9 @@ function template_preprocess_node(&$variables) {
   field_attach_preprocess($node, $variables['content'], $variables);
 
   // Display post information only on certain node types.
-  if (variable_get('node_submitted_' . $node->type, TRUE)) {
+  // Avoid loading the entire node type config entity here.
+  $submitted = Drupal::config('node.type.' . $node->type)->get('settings.node.submitted') ?: TRUE;
+  if ($submitted) {
     $variables['display_submitted'] = TRUE;
     $variables['submitted'] = t('Submitted by !username on !datetime', array('!username' => $variables['name'], '!datetime' => $variables['date']));
     if (theme_get_setting('features.node_user_picture')) {
@@ -1581,9 +1272,7 @@ function node_menu() {
   $items['admin/structure/types'] = array(
     'title' => 'Content types',
     'description' => 'Manage content types, including default status, front page promotion, comment settings, etc.',
-    'page callback' => 'node_overview_types',
-    'access arguments' => array('administer content types'),
-    'file' => 'content_types.inc',
+    'route_name' => 'node_overview_types',
   );
   $items['admin/structure/types/list'] = array(
     'title' => 'List',
@@ -1591,20 +1280,14 @@ function node_menu() {
   );
   $items['admin/structure/types/add'] = array(
     'title' => 'Add content type',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('node_type_form'),
-    'access arguments' => array('administer content types'),
+    'route_name' => 'node_type_add',
     'type' => MENU_LOCAL_ACTION,
-    'file' => 'content_types.inc',
   );
   $items['admin/structure/types/manage/%node_type'] = array(
     'title' => 'Edit content type',
-    'title callback' => 'node_type_page_title',
+    'title callback' => 'entity_page_label',
     'title arguments' => array(4),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('node_type_form', 4),
-    'access arguments' => array('administer content types'),
-    'file' => 'content_types.inc',
+    'route_name' => 'node_type_edit',
   );
   $items['admin/structure/types/manage/%node_type/edit'] = array(
     'title' => 'Edit',
@@ -1612,9 +1295,7 @@ function node_menu() {
   );
   $items['admin/structure/types/manage/%node_type/delete'] = array(
     'title' => 'Delete',
-    'page arguments' => array('node_type_delete_confirm', 4),
-    'access arguments' => array('administer content types'),
-    'file' => 'content_types.inc',
+    'route_name' => 'node_type_delete_confirm',
   );
   $items['node/add'] = array(
     'title' => 'Add content',
@@ -1623,7 +1304,7 @@ function node_menu() {
     'file' => 'node.pages.inc',
   );
   $items['node/add/%node_type'] = array(
-    'title callback' => 'node_type_get_clean_name',
+    'title callback' => 'entity_page_label',
     'title arguments' => array(2),
     'page callback' => 'node_add',
     'page arguments' => array(2),
@@ -1714,21 +1395,6 @@ function node_menu_local_tasks(&$data, $router_item, $root_path) {
       );
     }
   }
-}
-
-/**
- * Title callback: Provides the title for a node type edit form.
- *
- * @param $type
- *   The node type object.
- *
- * @return string
- *   An unsanitized string that is the title of the node type edit form.
- *
- * @see node_menu()
- */
-function node_type_page_title($type) {
-  return $type->name;
 }
 
 /**
@@ -1935,6 +1601,27 @@ function node_form_block_form_alter(&$form, &$form_state) {
     '#options' => node_type_get_names(),
     '#description' => t('Show this block only on pages that display content of the given type(s). If you select no types, there will be no type-specific limitation.'),
   );
+}
+
+/**
+ * Implements hook_modules_uninstalled().
+ */
+function node_modules_uninstalled($modules) {
+  // Remove module-specific settings from all node types.
+  $config_names = config_get_storage_names_with_prefix('node.type.');
+  foreach ($config_names as $config_name) {
+    $config = config($config_name);
+    $changed = FALSE;
+    foreach ($modules as $module) {
+      if ($config->get('settings.' . $module)) {
+        $config->clear('settings.' . $module);
+        $changed = TRUE;
+      }
+    }
+    if ($changed) {
+      $config->save();
+    }
+  }
 }
 
 /**
@@ -2463,8 +2150,10 @@ function node_form_system_themes_admin_form_submit($form, &$form_state) {
  */
 function node_access($op, $node, $account = NULL, $langcode = NULL) {
   if (!$node instanceof EntityInterface) {
-    $type = is_object($node) ? $node->type : $node;
-    $node = entity_create('node', array('type' => $type));
+    $node = entity_create('node', array('type' => $node));
+  }
+  elseif ($node instanceof NodeTypeInterface) {
+    $node = entity_create('node', array('type' => $node->id()));
   }
 
   // If no language code was provided, default to the node's langcode.
@@ -2580,7 +2269,8 @@ function node_list_permissions($type) {
 function node_permissions_get_configured_types() {
   $configured_types = array();
   foreach (node_type_get_types() as $name => $type) {
-    if (variable_get('node_permissions_' . $name, 1)) {
+    $node_settings = $type->getModuleSettings('node');
+    if (!isset($node_settings['permissions']) || !empty($node_settings['permissions'])) {
       $configured_types[$name] = $type;
     }
   }

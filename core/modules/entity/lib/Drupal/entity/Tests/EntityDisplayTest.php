@@ -202,19 +202,19 @@ class EntityDisplayTest extends DrupalUnitTestBase {
    * Tests renaming and deleting a bundle.
    */
   public function testRenameDeleteBundle() {
-    $this->enableModules(array('field_sql_storage', 'field_test', 'node', 'system'));
-    $this->installSchema('node', array('node_type'));
+    $this->enableModules(array('field_sql_storage', 'field_test', 'node', 'system', 'text'));
     $this->installSchema('system', array('variable'));
+    $this->installSchema('node', array('node'));
 
     // Create a node bundle and display object.
-    node_type_save((object) array('type' => 'article'));
+    entity_create('node_type', array('type' => 'article'))->save();
     entity_get_display('node', 'article', 'default')->save();
 
     // Rename the article bundle and assert the entity display is renamed.
     $info = node_type_load('article');
     $info->old_type = 'article';
     $info->type = 'article_rename';
-    node_type_save($info);
+    $info->save();
     $old_display = entity_load('entity_display', 'node.article.default');
     $this->assertFalse($old_display);
     $new_display = entity_load('entity_display', 'node.article_rename.default');
@@ -222,7 +222,7 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     $this->assertEqual('node.article_rename.default', $new_display->id);
 
     // Delete the bundle.
-    node_type_delete('article_rename');
+    $info->delete();
     $display = entity_load('entity_display', 'node.article_rename.default');
     $this->assertFalse($display);
   }

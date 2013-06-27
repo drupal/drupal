@@ -9,6 +9,7 @@
  * book page, etc.
  */
 
+use Drupal\node\NodeTypeInterface;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\file\Plugin\Core\Entity\File;
 use Drupal\Core\Entity\EntityInterface;
@@ -111,25 +112,6 @@ function comment_entity_bundle_info() {
     );
   }
   return $bundles;
-}
-
-/**
- * Loads the comment bundle name corresponding a given content type.
- *
- * This function is used as a menu loader callback in comment_menu().
- *
- * @param $name
- *   The machine name of the node type whose comment fields are to be edited.
- *
- * @return
- *   The comment bundle name corresponding to the node type.
- *
- * @see comment_menu_alter()
- */
-function comment_node_type_load($name) {
-  if ($type = node_type_load($name)) {
-    return 'comment_node_' . $type->type;
-  }
 }
 
 /**
@@ -277,10 +259,10 @@ function comment_menu_alter(&$items) {
 
   // Adjust the Field UI tabs on admin/structure/types/manage/[node-type].
   // See comment_entity_bundle_info().
-  $items['admin/structure/types/manage/%/comment/fields']['title'] = 'Comment fields';
-  $items['admin/structure/types/manage/%/comment/fields']['weight'] = 3;
-  $items['admin/structure/types/manage/%/comment/display']['title'] = 'Comment display';
-  $items['admin/structure/types/manage/%/comment/display']['weight'] = 4;
+  $items['admin/structure/types/manage/{bundle}/comment/fields']['title'] = 'Comment fields';
+  $items['admin/structure/types/manage/{bundle}/comment/fields']['weight'] = 3;
+  $items['admin/structure/types/manage/{bundle}/comment/display']['title'] = 'Comment display';
+  $items['admin/structure/types/manage/{bundle}/comment/display']['weight'] = 4;
 }
 
 /**
@@ -309,9 +291,9 @@ function comment_node_type_insert($info) {
 /**
  * Implements hook_node_type_update().
  */
-function comment_node_type_update($info) {
-  if (!empty($info->old_type) && $info->type != $info->old_type) {
-    entity_invoke_bundle_hook('rename', 'comment', 'comment_node_' . $info->old_type, 'comment_node_' . $info->type);
+function comment_node_type_update(NodeTypeInterface $type) {
+  if ($type->original->id() != $type->id()) {
+    entity_invoke_bundle_hook('rename', 'comment', 'comment_node_' . $type->original->id(), 'comment_node_' . $type->id());
   }
 }
 
@@ -990,6 +972,7 @@ function comment_view_multiple($comments, $view_mode = 'full', $langcode = NULL)
  */
 function comment_form_node_type_form_alter(&$form, $form_state) {
   if (isset($form['type'])) {
+    $node_type = $form_state['controller']->getEntity();
     $form['comment'] = array(
       '#type' => 'details',
       '#title' => t('Comment settings'),
@@ -1008,7 +991,7 @@ function comment_form_node_type_form_alter(&$form, $form_state) {
     $form['comment']['comment'] = array(
       '#type' => 'select',
       '#title' => t('Default comment setting for new content'),
-      '#default_value' => variable_get('comment_' . $form['#node_type']->type, COMMENT_NODE_OPEN),
+      '#default_value' => variable_get('comment_' . $node_type->id(), COMMENT_NODE_OPEN),
       '#options' => array(
         COMMENT_NODE_OPEN => t('Open'),
         COMMENT_NODE_CLOSED => t('Closed'),
@@ -1018,19 +1001,19 @@ function comment_form_node_type_form_alter(&$form, $form_state) {
     $form['comment']['comment_default_mode'] = array(
       '#type' => 'checkbox',
       '#title' => t('Threading'),
-      '#default_value' => variable_get('comment_default_mode_' . $form['#node_type']->type, COMMENT_MODE_THREADED),
+      '#default_value' => variable_get('comment_default_mode_' . $node_type->id(), COMMENT_MODE_THREADED),
       '#description' => t('Show comment replies in a threaded list.'),
     );
     $form['comment']['comment_default_per_page'] = array(
       '#type' => 'select',
       '#title' => t('Comments per page'),
-      '#default_value' => variable_get('comment_default_per_page_' . $form['#node_type']->type, 50),
+      '#default_value' => variable_get('comment_default_per_page_' . $node_type->id(), 50),
       '#options' => _comment_per_page(),
     );
     $form['comment']['comment_anonymous'] = array(
       '#type' => 'select',
       '#title' => t('Anonymous commenting'),
-      '#default_value' => variable_get('comment_anonymous_' . $form['#node_type']->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT),
+      '#default_value' => variable_get('comment_anonymous_' . $node_type->id(), COMMENT_ANONYMOUS_MAYNOT_CONTACT),
       '#options' => array(
         COMMENT_ANONYMOUS_MAYNOT_CONTACT => t('Anonymous posters may not enter their contact information'),
         COMMENT_ANONYMOUS_MAY_CONTACT => t('Anonymous posters may leave their contact information'),
@@ -1041,17 +1024,17 @@ function comment_form_node_type_form_alter(&$form, $form_state) {
     $form['comment']['comment_subject_field'] = array(
       '#type' => 'checkbox',
       '#title' => t('Allow comment title'),
-      '#default_value' => variable_get('comment_subject_field_' . $form['#node_type']->type, 1),
+      '#default_value' => variable_get('comment_subject_field_' . $node_type->id(), 1),
     );
     $form['comment']['comment_form_location'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show reply form on the same page as comments'),
-      '#default_value' => variable_get('comment_form_location_' . $form['#node_type']->type, COMMENT_FORM_BELOW),
+      '#default_value' => variable_get('comment_form_location_' . $node_type->id(), COMMENT_FORM_BELOW),
     );
     $form['comment']['comment_preview'] = array(
       '#type' => 'radios',
       '#title' => t('Preview comment'),
-      '#default_value' => variable_get('comment_preview_' . $form['#node_type']->type, DRUPAL_OPTIONAL),
+      '#default_value' => variable_get('comment_preview_' . $node_type->id(), DRUPAL_OPTIONAL),
       '#options' => array(
         DRUPAL_DISABLED => t('Disabled'),
         DRUPAL_OPTIONAL => t('Optional'),
@@ -1062,7 +1045,7 @@ function comment_form_node_type_form_alter(&$form, $form_state) {
     if (module_exists('content_translation')) {
       $comment_form = $form;
       $comment_form_state['content_translation']['key'] = 'language_configuration';
-      $form['comment'] += content_translation_enable_widget('comment', 'comment_node_' . $form['#node_type']->type, $comment_form, $comment_form_state);
+      $form['comment'] += translation_entity_enable_widget('comment', 'comment_node_' . $node_type->id(), $comment_form, $comment_form_state);
       array_unshift($form['#submit'], 'comment_translation_configuration_element_submit');
     }
   }
@@ -1084,7 +1067,7 @@ function comment_translation_configuration_element_submit($form, &$form_state) {
   $key = 'language_configuration';
   $comment_form_state = array(
     'content_translation' => array('key' => $key),
-    'language' => array($key => array('entity_type' => 'comment', 'bundle' => 'comment_node_' . $form['#node_type']->type)),
+    'language' => array($key => array('entity_type' => 'comment', 'bundle' => 'comment_node_' . $form_state['controller']->getEntity()->id())),
     'values' => array($key => array('content_translation' => $form_state['values']['content_translation'])),
   );
   content_translation_language_configuration_element_submit($form, $comment_form_state);

@@ -182,7 +182,9 @@ class EntityListController implements EntityListControllerInterface, EntityContr
       '#empty' => t('There is no @label yet.', array('@label' => $this->entityInfo['label'])),
     );
     foreach ($this->load() as $entity) {
-      $build['#rows'][$entity->id()] = $this->buildRow($entity);
+      if ($row = $this->buildRow($entity)) {
+        $build['#rows'][$entity->id()] = $row;
+      }
     }
     return $build;
   }

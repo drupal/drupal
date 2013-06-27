@@ -4,9 +4,46 @@ node_multiple_delete_confirm:
     _form: '\Drupal\node\Form\DeleteMultiple'
   requirements:
     _permission: 'administer nodes'
+
 node_page_edit:
   pattern: '/node/{node}/edit'
   defaults:
     _entity_form: 'node.edit'
   requirements:
     _entity_access: 'node.update'
+
+node_overview_types:
+  pattern: '/admin/structure/types'
+  defaults:
+    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
+    entity_type: 'node_type'
+  requirements:
+    _permission: 'administer content types'
+
+node_type_add:
+  pattern: '/admin/structure/types/add'
+  defaults:
+    _entity_form: 'node_type.add'
+  requirements:
+    _permission: 'administer content types'
+
+node_type_edit:
+  pattern: '/admin/structure/types/manage/{node_type}'
+  defaults:
+    _entity_form: 'node_type.edit'
+  requirements:
+    _permission: 'administer content types'
+
+node_type_edit_default:
+  pattern: '/admin/structure/types/manage/{node_type}/edit'
+  defaults:
+    _entity_form: 'node_type.edit'
+  requirements:
+    _permission: 'administer content types'
+
+node_type_delete_confirm:
+  pattern: '/admin/structure/types/manage/{node_type}/delete'
+  defaults:
+    _entity_form: 'node_type.delete'
+  requirements:
+    _entity_access: 'node_type.delete'

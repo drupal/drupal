@@ -166,7 +166,7 @@ function translation_form_node_type_form_alter(&$form, &$form_state) {
   $form['language']['node_type_language_translation_enabled'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable translation'),
-    '#default_value' => variable_get('node_type_language_translation_enabled_' . $form['#node_type']->type, FALSE),
+    '#default_value' => variable_get('node_type_language_translation_enabled_' . $form_state['controller']->getEntity()->id(), FALSE),
     '#element_validate' => array('translation_node_type_language_translation_enabled_validate'),
     '#prefix' => "<label class='form-item-node-type-language-translation-enabled'>" . t('Translation') . "</label>",
   );

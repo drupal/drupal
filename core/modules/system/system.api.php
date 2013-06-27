@@ -2416,7 +2416,7 @@ function hook_schema() {
         'default' => 0,
       ),
       'type' => array(
-        'description' => 'The {node_type} of this node.',
+        'description' => 'The type of this node.',
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,

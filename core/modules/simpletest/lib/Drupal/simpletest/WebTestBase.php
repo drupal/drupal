@@ -292,48 +292,32 @@ abstract class WebTestBase extends TestBase {
   /**
    * Creates a custom content type based on default settings.
    *
-   * @param $settings
+   * @param array $values
    *   An array of settings to change from the defaults.
    *   Example: 'type' => 'foo'.
-   * @return
+   *
+   * @return \Drupal\node\Plugin\Core\Entity\NodeType
    *   Created content type.
    */
-  protected function drupalCreateContentType($settings = array()) {
+  protected function drupalCreateContentType(array $values = array()) {
     // Find a non-existent random type name.
-    do {
-      $name = strtolower($this->randomName(8));
-    } while (node_type_load($name));
-
-    // Populate defaults array.
-    $defaults = array(
-      'type' => $name,
-      'name' => $name,
-      'base' => 'node_content',
-      'description' => '',
-      'help' => '',
-      'title_label' => 'Title',
-      'body_label' => 'Body',
-      'has_title' => 1,
-      'has_body' => 1,
+    if (!isset($values['type'])) {
+      do {
+        $id = strtolower($this->randomName(8));
+      } while (node_type_load($id));
+    }
+    else {
+      $id = $values['type'];
+    }
+    $values += array(
+      'type' => $id,
+      'name' => $id,
     );
-    // Imposed values for a custom type.
-    $forced = array(
-      'orig_type' => '',
-      'old_type' => '',
-      'module' => 'node',
-      'custom' => 1,
-      'modified' => 1,
-      'locked' => 0,
-    );
-    $type = $forced + $settings + $defaults;
-    $type = (object) $type;
-
-    $saved_type = node_type_save($type);
-    node_types_rebuild();
+    $type = entity_create('node_type', $values);
+    $status = $type->save();
     menu_router_rebuild();
-    node_add_body_field($type);
 
-    $this->assertEqual($saved_type, SAVED_NEW, t('Created content type %type.', array('%type' => $type->type)));
+    $this->assertEqual($status, SAVED_NEW, t('Created content type %type.', array('%type' => $type->id())));
 
     // Reset permissions so that permissions for this content type are available.
     $this->checkPermissions(array(), TRUE);

@@ -1,0 +1,18 @@
+type: article
+uuid: 38fcdfbf-92a0-43d3-af30-8395cba668d4
+name: Article
+description: 'Use <em>articles</em> for time-sensitive content like news, press releases or blog posts.'
+help: ''
+has_title: '1'
+title_label: Title
+settings:
+  node:
+    preview: '1'
+    options:
+      status: status
+      promote: promote
+      sticky: '0'
+      revision: '0'
+    submitted: '1'
+status: '1'
+langcode: en

@@ -107,7 +107,7 @@ class NodeCreationTest extends NodeTestBase {
     config('system.site')->set('page.front', 'test-page')->save();
 
     // Set "Basic page" content type to be unpublished by default.
-    variable_set('node_options_page', array());
+    config('node.type.page')->set('settings.node.options', array())->save();
 
     // Create a node.
     $edit = array();

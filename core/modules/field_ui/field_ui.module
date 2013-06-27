@@ -267,13 +267,11 @@ function field_ui_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
  */
 function field_ui_form_node_type_form_alter(&$form, $form_state) {
   // We want to display the button only on add page.
-  if (empty($form['#node_type']->type)) {
-    $form['actions']['save_continue'] = array(
-      '#type' => 'submit',
-      '#value' => t('Save and manage fields'),
-      '#weight' => 45,
-    );
-    $form['#submit'][] = 'field_ui_form_node_type_form_submit';
+  if ($form_state['controller']->getEntity()->isNew()) {
+    $form['actions']['save_continue'] = $form['actions']['submit'];
+    $form['actions']['save_continue']['#value'] = t('Save and manage fields');
+    $form['actions']['save_continue']['#weight'] = $form['actions']['save_continue']['#weight'] + 5;
+    $form['actions']['save_continue']['#submit'][] = 'field_ui_form_node_type_form_submit';
   }
 }
 

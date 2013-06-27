@@ -31,12 +31,11 @@ class NodeTypePersistenceTest extends NodeTestBase {
     $forum_enable = array($forum_key => "1");
     $forum_disable = array($forum_key => FALSE);
 
-    // Enable forum and verify that the node type is in the DB and is not
-    // disabled.
+    // Enable forum and verify that the node type exists and is not disabled.
     $this->drupalPost('admin/modules', $forum_enable, t('Save configuration'));
-    $disabled = db_query('SELECT disabled FROM {node_type} WHERE type = :type', array(':type' => 'forum'))->fetchField();
-    $this->assertNotIdentical($disabled, FALSE, 'Forum node type found in the database');
-    $this->assertEqual($disabled, 0, 'Forum node type is not disabled');
+    $forum = entity_load('node_type', 'forum');
+    $this->assertTrue($forum->id(), 'Forum node type found.');
+    $this->assertTrue($forum->isLocked(), 'Forum node type is locked');
 
     // Check that forum node type (uncustomized) shows up.
     $this->drupalGet('node/add');
@@ -53,17 +52,17 @@ class NodeTypePersistenceTest extends NodeTestBase {
 
     // Disable forum and check that the node type gets disabled.
     $this->drupalPost('admin/modules', $forum_disable, t('Save configuration'));
-    $disabled = db_query('SELECT disabled FROM {node_type} WHERE type = :type', array(':type' => 'forum'))->fetchField();
-    $this->assertEqual($disabled, 1, 'Forum node type is disabled');
+    $forum = entity_load('node_type', 'forum');
+    $this->assertTrue($forum->isLocked(), 'Forum node type is node locked');
     $this->drupalGet('node/add');
     $this->assertNoText('forum', 'forum type is not found on node/add');
 
     // Reenable forum and check that the customization survived the module
     // disable.
     $this->drupalPost('admin/modules', $forum_enable, t('Save configuration'));
-    $disabled = db_query('SELECT disabled FROM {node_type} WHERE type = :type', array(':type' => 'forum'))->fetchField();
-    $this->assertNotIdentical($disabled, FALSE, 'Forum node type found in the database');
-    $this->assertEqual($disabled, 0, 'Forum node type is not disabled');
+    $forum = entity_load('node_type', 'forum');
+    $this->assertTrue($forum->id(), 'Forum node type found.');
+    $this->assertTrue($forum->isLocked(), 'Forum node type is locked');
     $this->drupalGet('node/add');
     $this->assertText($description, 'Customized description found');
 
@@ -72,8 +71,8 @@ class NodeTypePersistenceTest extends NodeTestBase {
     $edit = array('uninstall[forum]' => 'forum');
     $this->drupalPost('admin/modules/uninstall', $edit, t('Uninstall'));
     $this->drupalPost(NULL, array(), t('Uninstall'));
-    $disabled = db_query('SELECT disabled FROM {node_type} WHERE type = :type', array(':type' => 'forum'))->fetchField();
-    $this->assertTrue($disabled, 'Forum node type is in the database and is disabled');
+    $forum = entity_load('node_type', 'forum');
+    $this->assertFalse($forum->isLocked(), 'Forum node type is not locked');
     $this->drupalGet('node/add');
     $this->assertNoText('forum', 'forum type is no longer found on node/add');
 
@@ -83,4 +82,5 @@ class NodeTypePersistenceTest extends NodeTestBase {
     $this->drupalGet('node/add');
     $this->assertText($description, 'Customized description is found even after uninstall and reenable.');
   }
+
 }

@@ -69,9 +69,6 @@ function comment_modules_enabled($modules) {
   // hook_node_type_insert() is used to create body fields while the comment
   // module is enabled.
   if (in_array('comment', $modules)) {
-    // Ensure that the list of node types reflects newly enabled modules.
-    node_types_rebuild();
-
     // Create comment body fields for each node type, if needed.
     foreach (node_type_get_types() as $type => $info) {
       _comment_body_field_create($info);

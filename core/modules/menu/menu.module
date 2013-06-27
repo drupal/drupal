@@ -670,7 +670,7 @@ function menu_node_submit(EntityInterface $node, $form, $form_state) {
  */
 function menu_form_node_type_form_alter(&$form, $form_state) {
   $menu_options = menu_get_menus();
-  $type = $form['#node_type'];
+  $type = $form_state['controller']->getEntity();
   $form['menu'] = array(
     '#type' => 'details',
     '#title' => t('Menu settings'),
@@ -683,7 +683,7 @@ function menu_form_node_type_form_alter(&$form, $form_state) {
   $form['menu']['menu_options'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Available menus'),
-    '#default_value' => variable_get('menu_options_' . $type->type, array('main')),
+    '#default_value' => variable_get('menu_options_' . $type->id(), array('main')),
     '#options' => $menu_options,
     '#description' => t('The menus available to place links in for this content type.'),
   );
@@ -696,7 +696,7 @@ function menu_form_node_type_form_alter(&$form, $form_state) {
   $form['menu']['menu_parent'] = array(
     '#type' => 'select',
     '#title' => t('Default parent item'),
-    '#default_value' => variable_get('menu_parent_' . $type->type, 'main:0'),
+    '#default_value' => variable_get('menu_parent_' . $type->id(), 'main:0'),
     '#options' => $options,
     '#description' => t('Choose the menu item to be the default parent for a new link in the content authoring form.'),
     '#attributes' => array('class' => array('menu-title-select')),

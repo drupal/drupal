@@ -166,6 +166,11 @@ abstract class RESTTestBase extends WebTestBase {
         );
       case 'node':
         return array('title' => $this->randomString(), 'type' => $this->randomString());
+      case 'node_type':
+        return array(
+          'type' => 'article',
+          'name' => $this->randomName(),
+        );
       case 'user':
         return array('name' => $this->randomName());
       default:

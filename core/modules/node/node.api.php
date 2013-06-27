@@ -14,7 +14,7 @@ use Drupal\Core\Entity\EntityInterface;
  *
  * Each content type is maintained by a primary module, which is either
  * node.module (for content types created in the user interface) or the module
- * that implements hook_node_info() to define the content type.
+ * that defines the content type by providing configuration file.
  *
  * During node operations (create, insert, update, view, delete, etc.), there
  * are several sets of hooks that get invoked to allow modules to modify the
@@ -844,62 +844,6 @@ function hook_node_view_alter(&$build, \Drupal\Core\Entity\EntityInterface $node
 }
 
 /**
- * Define module-provided node types.
- *
- * This hook allows a module to define one or more of its own node types. For
- * example, the forum module uses it to define a forum node-type named "Forum
- * topic." The name and attributes of each desired node type are specified in an
- * array returned by the hook.
- *
- * Only module-provided node types should be defined through this hook. User-
- * provided (or 'custom') node types should be defined only in the 'node_type'
- * database table, and should be maintained by using the node_type_save() and
- * node_type_delete() functions.
- *
- * @return
- *   An array of information defining the module's node types. The array
- *   contains a sub-array for each node type, with the the machine name of a
- *   content type as the key. Each sub-array has up to 10 attributes.
- *   Possible attributes:
- *   - name: (required) The human-readable name of the node type.
- *   - base: (required) The base string used to construct callbacks
- *     corresponding to this node type (for example, if base is defined as
- *     example_foo, then example_foo_insert will be called when inserting a node
- *     of that type). This string is usually the name of the module, but not
- *     always.
- *   - description: (required) A brief description of the node type.
- *   - help: (optional) Help information shown to the user when creating a node
- *     of this type.
- *   - has_title: (optional) A Boolean indicating whether or not this node type
- *     has a title field.
- *   - title_label: (optional) The label for the title field of this content
- *     type.
- *   - locked: (optional) A Boolean indicating whether the administrator can
- *     change the machine name of this type. FALSE = changeable (not locked),
- *     TRUE = unchangeable (locked).
- *
- * The machine name of a node type should contain only letters, numbers, and
- * underscores. Underscores will be converted into hyphens for the purpose of
- * constructing URLs.
- *
- * All attributes of a node type that are defined through this hook (except for
- * 'locked') can be edited by a site administrator. This includes the
- * machine-readable name of a node type, if 'locked' is set to FALSE.
- *
- * @ingroup node_api_hooks
- */
-function hook_node_info() {
-  return array(
-    'forum' => array(
-      'name' => t('Forum topic'),
-      'base' => 'forum',
-      'description' => t('A <em>forum topic</em> starts a new discussion thread within a forum.'),
-      'title_label' => t('Subject'),
-    )
-  );
-}
-
-/**
  * Provide additional methods of scoring for core search results for nodes.
  *
  * A node's search score is used to rank it among other nodes matched by the
@@ -964,44 +908,33 @@ function hook_ranking() {
 /**
  * Respond to node type creation.
  *
- * This hook is invoked from node_type_save() after the node type is added to
- * the database.
- *
- * @param $info
- *   The node type object that is being created.
+ * @param \Drupal\node\NodeTypeInterface $type
+ *   The node type entity that was created.
  */
-function hook_node_type_insert($info) {
-  drupal_set_message(t('You have just created a content type with a machine name %type.', array('%type' => $info->type)));
+function hook_node_type_insert(\Drupal\node\NodeTypeInterface $type) {
+  drupal_set_message(t('You have just created a content type with a machine name %type.', array('%type' => $type->id())));
 }
 
 /**
  * Respond to node type updates.
  *
- * This hook is invoked from node_type_save() after the node type is updated in
- * the database.
- *
- * @param $info
- *   The node type object that is being updated.
+ * @param \Drupal\node\NodeTypeInterface $type
+ *   The node type entity that was updated.
  */
-function hook_node_type_update($info) {
-  if (!empty($info->old_type) && $info->old_type != $info->type) {
-    $setting = variable_get('comment_' . $info->old_type, COMMENT_NODE_OPEN);
-    variable_del('comment_' . $info->old_type);
-    variable_set('comment_' . $info->type, $setting);
+function hook_node_type_update(\Drupal\node\NodeTypeInterface $type) {
+  if ($type->original->id() != $type->id()) {
+    drupal_set_message(t('You have just changed the machine name of a content type from %old_type to %type.', array('%old_type' => $type->original->id(), '%type' => $type->id())));
   }
 }
 
 /**
  * Respond to node type deletion.
  *
- * This hook is invoked from node_type_delete() after the node type is removed
- * from the database.
- *
- * @param $info
- *   The node type object that is being deleted.
+ * @param \Drupal\node\NodeTypeInterface $type
+ *   The node type entity that was deleted.
  */
-function hook_node_type_delete($info) {
-  variable_del('comment_' . $info->type);
+function hook_node_type_delete(\Drupal\node\NodeTypeInterface $type) {
+  drupal_set_message(t('You have just deleted a content type with the machine name %type.', array('%type' => $type->id())));
 }
 
 /**

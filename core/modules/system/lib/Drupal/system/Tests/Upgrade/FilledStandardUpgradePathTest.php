@@ -95,9 +95,10 @@ class FilledStandardUpgradePathTest extends UpgradePathTestBase {
     $this->assertFalse($result, 'No {menu_links} entry exists for user/autocomplete');
 
     // Verify that the blog node type has been assigned to node module.
-    $blog_type = node_type_load('blog');
-    $this->assertEqual($blog_type->module, 'node', "Content type 'blog' has been reassigned from the blog module to the node module.");
-    $this->assertEqual($blog_type->base, 'node_content', "The base string used to construct callbacks corresponding to content type 'Blog' has been reassigned to 'node_content'.");
+    $node_type = entity_load('node_type', 'blog');
+    $this->assertFalse($node_type->isLocked(), "Content type 'blog' has been reassigned from the blog module to the node module.");
+    $node_type = entity_load('node_type', 'forum');
+    $this->assertTrue($node_type->isLocked(), "The base string used to construct callbacks corresponding to content type 'Forum' has been reassigned to forum module.");
 
     // Each entity type has a 'full' view mode, ensure it was migrated.
     $all_view_modes = entity_get_view_modes();

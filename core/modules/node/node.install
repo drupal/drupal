@@ -5,6 +5,7 @@
  * Install, update and uninstall functions for the node module.
  */
 
+use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Language\Language;
 
 /**
@@ -36,7 +37,7 @@ function node_schema() {
         'default' => NULL,
       ),
       'type' => array(
-        'description' => 'The {node_type}.type of this node.',
+        'description' => 'The type of this node.',
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
@@ -387,100 +388,6 @@ function node_schema() {
     ),
   );
 
-  $schema['node_type'] = array(
-    'description' => 'Stores information about all defined {node} types.',
-    'fields' => array(
-      'type' => array(
-        'description' => 'The machine-readable name of this type.',
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-      ),
-      'name' => array(
-        'description' => 'The human-readable name of this type.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'base' => array(
-        'description' => 'The base string used to construct callbacks corresponding to this node type.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-      ),
-      'module' => array(
-        'description' => 'The module defining this node type.',
-        'type' => 'varchar',
-        'length' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
-        'not null' => TRUE,
-      ),
-      'description' => array(
-        'description' => 'A brief description of this type.',
-        'type' => 'text',
-        'not null' => TRUE,
-        'size' => 'medium',
-      ),
-      'help' => array(
-        'description' => 'Help information shown to the user when creating a {node} of this type.',
-        'type' => 'text',
-        'not null' => TRUE,
-        'size' => 'medium',
-      ),
-      'has_title' => array(
-        'description' => 'Boolean indicating whether this type uses the {node}.title field.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'size' => 'tiny',
-      ),
-      'title_label' => array(
-        'description' => 'The label displayed for the title field on the edit form.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'custom' => array(
-        'description' => 'A boolean indicating whether this type is defined by a module (FALSE) or by a user via Add content type (TRUE).',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-      ),
-      'modified' => array(
-        'description' => 'A boolean indicating whether this type has been modified by an administrator; currently not used in any way.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-      ),
-      'locked' => array(
-        'description' => 'A boolean indicating whether the administrator can change the machine name of this type.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-      ),
-      'disabled' => array(
-        'description' => 'A boolean indicating whether the node type is disabled.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-      ),
-      'orig_type' => array(
-        'description' => 'The original machine-readable name of this node type. This may be different from the current type name if the locked field is 0.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-    ),
-    'primary key' => array('type'),
-  );
-
-
   return $schema;
 }
 
@@ -509,17 +416,9 @@ function node_install() {
  */
 function node_uninstall() {
   // Delete node type variables.
-  $types = db_query('SELECT type FROM {node_type}')->fetchCol();
-  foreach ($types as $type) {
-    db_delete('variable')
-      ->condition(db_or()
-        ->condition('name', 'node_preview_' . $type)
-        ->condition('name', 'node_options_' . $type)
-        ->condition('name', 'node_submitted_' . $type)
-        ->condition('name', 'node_permissions_' . $type)
-        ->condition('name', 'node_type_language_translation_enabled_' . $type)
-      )
-      ->execute();
+  $types = config_get_storage_names_with_prefix('node.type.');
+  foreach ($types as $config_name) {
+    $type = config($config_name)->get('type');
     config('language.settings')->clear('node. ' . $type . '.language.default_configuration')->save();
   }
 
@@ -1162,6 +1061,57 @@ function node_update_8019() {
     );
     db_change_field('node_type', 'module', 'module', $spec);
   }
+}
+
+/**
+ * Convert node types into configuration.
+ *
+ * @ingroup config_upgrade
+*/
+function node_update_8020() {
+  $uuid = new Uuid();
+  // Properties to drop: custom, disabled.
+  $locked = array();
+  // Note: {node_type}.name was the label, .type the machine name.
+  $result = db_query('SELECT * FROM {node_type}')
+    ->fetchAllAssoc('type', PDO::FETCH_ASSOC);
+  foreach ($result as $id => $node_type) {
+    $config = config('node.type.' . $id);
+    // Node type.
+    $config->setData($node_type);
+    $config->set('uuid', $uuid->generate());
+    $config->set('langcode', Language::LANGCODE_NOT_SPECIFIED);
+
+    // Node type settings.
+    $variables = db_query('SELECT name, value FROM {variable} WHERE name IN (:names)', array(
+      ':names' => array(
+        'node_submitted_' . $id,
+        'node_preview_' . $id,
+        'node_options_' . $id,
+      ),
+    ))->fetchAllKeyed();
+    $variables = array_map('unserialize', $variables);
+    // There are not necessarily values for all settings, so pollute defaults.
+    $variables += array(
+      'node_submitted_' . $id => TRUE,
+      'node_preview_' . $id => 1, // DRUPAL_OPTIONAL
+      'node_options_' . $id => array('status', 'promote'),
+    );
+    foreach ($variables as $name => $value) {
+      // Turn e.g. 'node_submitted_ID' into 'submitted'.
+      $name = str_replace(array('node_', '_' . $id), '', $name);
+      $config->set('settings.node.' . $name, $value);
+
+      update_variable_del($name);
+    }
+    $config->save();
+    // Convert the 'base' property to state. Note that we could have disabled
+    // modules at this time but we still need to preserve the relation.
+    if ($node_type['base'] !== 'node_content') {
+      $locked[$id] = $node_type['base'];
+    }
+  }
+  Drupal::state()->set('node.type.locked', $locked);
 }
 
 /**

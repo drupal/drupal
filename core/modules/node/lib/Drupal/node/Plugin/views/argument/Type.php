@@ -33,11 +33,9 @@ class Type extends String {
     return $this->node_type($this->argument);
   }
 
-  function node_type($type) {
-    $output = node_type_get_label($type);
-    if (empty($output)) {
-      $output = t('Unknown content type');
-    }
+  function node_type($type_name) {
+    $type = entity_load('node_type', $type_name);
+    $output = $type ? $type->label() : t('Unknown content type');
     return check_plain($output);
   }
 

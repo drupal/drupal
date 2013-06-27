@@ -41,9 +41,9 @@ class NodeTypeTest extends NodeTestBase {
 
     $this->assertEqual($node_types['article']->name, $node_names['article'], 'Correct node type base has been returned.');
 
-    $this->assertEqual($node_types['article'], node_type_load('article'), 'Correct node type has been returned.');
-    $this->assertEqual($node_types['article']->name, node_type_get_label('article'), 'Correct node type name has been returned.');
-    $this->assertEqual($node_types['page']->base, node_type_get_base('page'), 'Correct node type base has been returned.');
+    $article = entity_load('node_type', 'article');
+    $this->assertEqual($node_types['article'], $article, 'Correct node type has been returned.');
+    $this->assertEqual($node_types['article']->name, $article->label(), 'Correct node type name has been returned.');
   }
 
   /**
@@ -53,7 +53,7 @@ class NodeTypeTest extends NodeTestBase {
     // Create a content type programmaticaly.
     $type = $this->drupalCreateContentType();
 
-    $type_exists = db_query('SELECT 1 FROM {node_type} WHERE type = :type', array(':type' => $type->type))->fetchField();
+    $type_exists = (bool) entity_load('node_type', $type->type);
     $this->assertTrue($type_exists, 'The new content type has been created in the database.');
 
     // Login a test user.
@@ -72,7 +72,7 @@ class NodeTypeTest extends NodeTestBase {
       'type' => 'foo',
     );
     $this->drupalPost('admin/structure/types/add', $edit, t('Save content type'));
-    $type_exists = db_query('SELECT 1 FROM {node_type} WHERE type = :type', array(':type' => 'foo'))->fetchField();
+    $type_exists = (bool) entity_load('node_type', 'foo');
     $this->assertTrue($type_exists, 'The new content type has been created in the database.');
   }
 
@@ -130,34 +130,31 @@ class NodeTypeTest extends NodeTestBase {
   }
 
   /**
-   * Tests that node_types_rebuild() correctly handles the 'disabled' flag.
+   * Tests that node types correctly handles their locking.
    */
   function testNodeTypeStatus() {
     // Enable all core node modules, and all types should be active.
-    module_enable(array('book'), FALSE);
-    node_types_rebuild();
+    $this->container->get('module_handler')->enable(array('book'), FALSE);
     $types = node_type_get_types();
     foreach (array('book', 'article', 'page') as $type) {
       $this->assertTrue(isset($types[$type]), format_string('%type is found in node types.', array('%type' => $type)));
-      $this->assertTrue(isset($types[$type]->disabled) && empty($types[$type]->disabled), format_string('%type type is enabled.', array('%type' => $type)));
+      $this->assertFalse($types[$type]->isLocked(), format_string('%type type is not locked.', array('%type' => $type)));
     }
 
     // Disable book module and the respective type should still be active, since
-    // it is not provided by hook_node_info().
-    module_disable(array('book'), FALSE);
-    node_types_rebuild();
+    // it is not provided by shipped configuration entity.
+    $this->container->get('module_handler')->disable(array('book'), FALSE);
     $types = node_type_get_types();
-    $this->assertTrue(isset($types['book']) && empty($types['book']->disabled), "Book module's node type still active.");
-    $this->assertTrue(isset($types['article']) && empty($types['article']->disabled), 'Article node type still active.');
-    $this->assertTrue(isset($types['page']) && empty($types['page']->disabled), 'Basic page node type still active.');
+    $this->assertFalse($types['book']->isLocked(), "Book module's node type still active.");
+    $this->assertFalse($types['article']->isLocked(), 'Article node type still active.');
+    $this->assertFalse($types['page']->isLocked(), 'Basic page node type still active.');
 
     // Re-enable the modules and verify that the types are active again.
-    module_enable(array('book'), FALSE);
-    node_types_rebuild();
+    $this->container->get('module_handler')->enable(array('book'), FALSE);
     $types = node_type_get_types();
     foreach (array('book', 'article', 'page') as $type) {
       $this->assertTrue(isset($types[$type]), format_string('%type is found in node types.', array('%type' => $type)));
-      $this->assertTrue(isset($types[$type]->disabled) && empty($types[$type]->disabled), format_string('%type type is enabled.', array('%type' => $type)));
+      $this->assertFalse($types[$type]->isLocked(), format_string('%type type is not locked.', array('%type' => $type)));
     }
   }
 
@@ -194,6 +191,14 @@ class NodeTypeTest extends NodeTestBase {
       'The content type is available for deletion.'
     );
     $this->assertText(t('This action cannot be undone.'), 'The node type deletion confirmation form is available.');
+    // Test that forum node type could not be deleted while forum active.
+    $this->container->get('module_handler')->enable(array('forum'));
+    $this->drupalGet('admin/structure/types/manage/forum/delete');
+    $this->assertResponse(403);
+    $this->container->get('module_handler')->disable(array('forum'));
+    $this->container->get('module_handler')->uninstall(array('forum'));
+    $this->drupalGet('admin/structure/types/manage/forum/delete');
+    $this->assertResponse(200);
   }
 
 }

@@ -80,7 +80,6 @@ class TranslationTest extends FieldUnitTestBase {
   function setUp() {
     parent::setUp();
     $this->installSchema('language', array('language'));
-    $this->installSchema('node', array('node_type'));
 
     $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
 
