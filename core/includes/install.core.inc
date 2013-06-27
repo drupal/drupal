@@ -2096,7 +2096,7 @@ function install_check_translations($install_state) {
   else {
     $requirements['translations directory exists'] = array(
       'title'       => t('Translations directory'),
-      'value'       => t('The diretory %translations_directory exists.', array('%translations_directory' => $translations_directory)),
+      'value'       => t('The directory %translations_directory exists.', array('%translations_directory' => $translations_directory)),
     );
     // If the translations directory is not readable, throw an error.
     if (!$readable) {
