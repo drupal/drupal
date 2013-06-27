@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\entity\Plugin\Core\Entity\EntityDisplayBaseInterface.
+ * Contains \Drupal\entity\EntityDisplayBaseInterface.
  */
 
 namespace Drupal\entity;
@@ -80,5 +80,16 @@ interface EntityDisplayBaseInterface extends ConfigEntityInterface {
    *   display is empty.
    */
   public function getHighestWeight();
+
+  /**
+   * Returns the renderer plugin for a field (e.g. widget, formatter).
+   *
+   * @param string $field_name
+   *   The field name.
+   *
+   * @return \Drupal\field\Plugin\PluginSettingsInterface|null
+   *   A widget or formatter plugin or NULL if the field does not exist.
+   */
+  public function getRenderer($field_name);
 
 }

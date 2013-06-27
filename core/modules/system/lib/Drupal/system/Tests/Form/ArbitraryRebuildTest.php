@@ -44,11 +44,8 @@ class ArbitraryRebuildTest extends WebTestBase {
       'field_name' => 'test_multiple',
       'bundle' => 'user',
       'label' => 'Test a multiple valued field',
-      'settings' => array(
-        'user_register_form' => TRUE,
-      ),
     ))->save();
-    entity_get_form_display('user', 'user', 'default')
+    entity_get_form_display('user', 'user', 'register')
       ->setComponent('test_multiple', array(
         'type' => 'text_textfield',
         'weight' => 0,

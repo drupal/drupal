@@ -103,11 +103,6 @@ class FieldInstanceEditForm extends FieldInstanceFormBase {
     $form['instance']['settings'] = $this->getFieldItem($form['#entity'], $this->instance['field_name'])->instanceSettingsForm($form, $form_state);
     $form['instance']['settings']['#weight'] = 10;
 
-    // Add widget settings for the widget type.
-    $additions = $entity_form_display->getWidget($this->instance->getField()->id)->settingsForm($form, $form_state);
-    $form['instance']['widget']['settings'] = $additions ?: array('#type' => 'value', '#value' => array());
-    $form['instance']['widget']['#weight'] = 20;
-
     // Add handling for default value if not provided by any other module.
     if (field_behaviors_widget('default_value', $this->instance) == FIELD_BEHAVIOR_DEFAULT && empty($this->instance['default_value_function'])) {
       $form['instance']['default_value_widget'] = $this->getDefaultValueWidget($field, $form, $form_state);
@@ -141,7 +136,7 @@ class FieldInstanceEditForm extends FieldInstanceFormBase {
 
       // Extract the 'default value'.
       $items = array();
-      $entity_form_display->getWidget($this->instance->getField()->id)->extractFormValues($entity, Language::LANGCODE_NOT_SPECIFIED, $items, $element, $form_state);
+      $entity_form_display->getRenderer($this->instance->getField()->id)->extractFormValues($entity, Language::LANGCODE_NOT_SPECIFIED, $items, $element, $form_state);
 
       // @todo Simplify when all entity types are converted to EntityNG.
       if ($entity instanceof EntityNG) {
@@ -165,7 +160,7 @@ class FieldInstanceEditForm extends FieldInstanceFormBase {
         field_form_set_state($element['#parents'], $field_name, Language::LANGCODE_NOT_SPECIFIED, $form_state, $field_state);
 
         // Assign reported errors to the correct form element.
-        $entity_form_display->getWidget($this->instance->getField()->id)->flagErrors($entity, Language::LANGCODE_NOT_SPECIFIED, $items, $element, $form_state);
+        $entity_form_display->getRenderer($this->instance->getField()->id)->flagErrors($entity, Language::LANGCODE_NOT_SPECIFIED, $items, $element, $form_state);
       }
     }
   }
@@ -183,16 +178,10 @@ class FieldInstanceEditForm extends FieldInstanceFormBase {
 
       // Extract field values.
       $items = array();
-      $entity_form_display->getWidget($this->instance->getField()->id)->extractFormValues($entity, Language::LANGCODE_NOT_SPECIFIED, $items, $element, $form_state);
+      $entity_form_display->getRenderer($this->instance->getField()->id)->extractFormValues($entity, Language::LANGCODE_NOT_SPECIFIED, $items, $element, $form_state);
 
       $this->instance['default_value'] = $items ? $items : NULL;
     }
-
-    // Handle widget settings.
-    $options = $entity_form_display->getComponent($this->instance->getField()->id);
-    $options['settings'] = $form_state['values']['instance']['widget']['settings'];
-    $entity_form_display->setComponent($this->instance->getField()->id, $options)->save();
-    unset($form_state['values']['instance']['widget']);
 
     // Merge incoming values into the instance.
     foreach ($form_state['values']['instance'] as $key => $value) {
@@ -201,10 +190,6 @@ class FieldInstanceEditForm extends FieldInstanceFormBase {
     $this->instance->save();
 
     drupal_set_message(t('Saved %label configuration.', array('%label' => $this->instance->label())));
-
-    if ($this->instance['required'] && empty($this->instance['default_value']) && empty($this->instance['default_value_function']) && $this->instance['widget']['type'] == 'field_hidden') {
-      drupal_set_message(t('Field %label is required and uses the "hidden" widget. You might want to configure a default value.', array('%label' => $this->instance['label'])), 'warning');
-    }
 
     $form_state['redirect'] = $this->getNextDestination();
   }
@@ -246,7 +231,9 @@ class FieldInstanceEditForm extends FieldInstanceFormBase {
 
     // Adjust the instance definition to use the default widget of this field type
     // instead of the hidden widget.
-    if ($this->instance['widget']['type'] == 'field_hidden') {
+    // @todo Clean this up since we don't have $this->instance['widget'] anymore.
+    //   see https://drupal.org/node/2028759
+    if ($this->instance['widget']['type'] == 'hidden') {
       $field_type = field_info_field_types($field['type']);
       $default_widget = $this->widgetManager->getDefinition($field_type['default_widget']);
 
@@ -263,7 +250,7 @@ class FieldInstanceEditForm extends FieldInstanceFormBase {
     if (!empty($this->instance['default_value'])) {
       $items = (array) $this->instance['default_value'];
     }
-    $element += $entity_form_display->getWidget($this->instance->getField()->id)->form($entity, Language::LANGCODE_NOT_SPECIFIED, $items, $element, $form_state);
+    $element += $entity_form_display->getRenderer($this->instance->getField()->id)->form($entity, Language::LANGCODE_NOT_SPECIFIED, $items, $element, $form_state);
 
     return $element;
   }

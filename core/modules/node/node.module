@@ -119,6 +119,9 @@ function node_help($path, $arg) {
     case 'admin/structure/types/add':
       return '<p>' . t('Individual content types can have different fields, behaviors, and permissions assigned to them.') . '</p>';
 
+    case 'admin/structure/types/manage/%/form-display':
+      return '<p>' . t('Content items can be edited using different form modes. Here, you can define which fields are shown and hidden when %type content is edited in each form mode, and define how the field form widgets are displayed in each form mode.', array('%type' => node_type_get_label($arg[4]))) . '</p>' ;
+
     case 'admin/structure/types/manage/%/display':
       $type =  entity_load('node_type', $arg[4]);
       return '<p>' . t('Content items can be displayed using different view modes: Teaser, Full content, Print, RSS, etc. <em>Teaser</em> is a short format that is typically used in lists of multiple content items. <em>Full content</em> is typically used when the content is displayed on its own page.') . '</p>' .

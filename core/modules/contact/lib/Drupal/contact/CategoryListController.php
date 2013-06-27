@@ -27,11 +27,17 @@ class CategoryListController extends ConfigEntityListController {
         'options' => $uri['options'],
         'weight' => 11,
       );
+      $operations['manage-form-display'] = array(
+        'title' => t('Manage form display'),
+        'href' => $uri['path'] . '/form-display',
+        'options' => $uri['options'],
+        'weight' => 12,
+      );
       $operations['manage-display'] = array(
         'title' => t('Manage display'),
         'href' => $uri['path'] . '/display',
         'options' => $uri['options'],
-        'weight' => 12,
+        'weight' => 13,
       );
     }
     return $operations;

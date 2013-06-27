@@ -24,10 +24,6 @@ class FieldInfoTest extends FieldUnitTestBase {
     // Test that field_test module's fields, widgets, and formatters show up.
 
     $field_test_info = field_test_field_info();
-    // We need to account for the existence of user_field_info_alter().
-    foreach (array_keys($field_test_info) as $name) {
-      $field_test_info[$name]['instance_settings']['user_register_form'] = FALSE;
-    }
     $info = field_info_field_types();
     foreach ($field_test_info as $t_key => $field_type) {
       foreach ($field_type as $key => $val) {
@@ -165,12 +161,10 @@ class FieldInfoTest extends FieldUnitTestBase {
     $instance->save();
 
     // Simulate a stored instance definition missing various settings (e.g. a
-    // third-party module adding instance or widget settings has been enabled,
-    // but existing instances do not know the new settings).
+    // third-party module adding instance settings has been enabled, but
+    // existing instances do not know the new settings).
     \Drupal::config('field.instance.' . $instance->id())
       ->set('settings', array())
-      ->set('widget.type', 'unavailable_widget')
-      ->set('widget.settings', array())
       ->save();
     field_info_cache_clear();
 
@@ -284,10 +278,6 @@ class FieldInfoTest extends FieldUnitTestBase {
    */
   function testSettingsInfo() {
     $info = field_test_field_info();
-    // We need to account for the existence of user_field_info_alter().
-    foreach (array_keys($info) as $name) {
-      $info[$name]['instance_settings']['user_register_form'] = FALSE;
-    }
     foreach ($info as $type => $data) {
       $this->assertIdentical(field_info_field_settings($type), $data['settings'], format_string("field_info_field_settings returns %type's field settings", array('%type' => $type)));
       $this->assertIdentical(field_info_instance_settings($type), $data['instance_settings'], format_string("field_info_field_settings returns %type's field instance settings", array('%type' => $type)));

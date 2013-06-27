@@ -47,6 +47,23 @@ class NumberWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
+  public function settingsSummary() {
+    $summary = array();
+
+    $placeholder = $this->getSetting('placeholder');
+    if (!empty($placeholder)) {
+      $summary[] = t('Placeholder: @placeholder', array('@placeholder' => $placeholder));
+    }
+    else {
+      $summary[] = t('No placeholder');
+    }
+
+    return $summary;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     $value = isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL;
     $field_settings = $this->getFieldSettings();

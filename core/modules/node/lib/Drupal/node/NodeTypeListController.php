@@ -99,12 +99,20 @@ class NodeTypeListController extends ConfigEntityListController implements Entit
         'weight' => 0,
       );
     }
+    if ($this->moduleHandler->moduleExists('field_ui') && user_access('administer node form display')) {
+      $operations['manage-form-display'] = array(
+        'title' => t('Manage form display'),
+        'href' => $uri['path'] . '/form-display',
+        'options' => $uri['options'],
+        'weight' => 5,
+      );
+    }
     if ($this->moduleHandler->moduleExists('field_ui') && user_access('administer node display')) {
       $operations['manage-display'] = array(
         'title' => t('Manage display'),
         'href' => $uri['path'] . '/display',
         'options' => $uri['options'],
-        'weight' => 5,
+        'weight' => 10,
       );
     }
     if ($entity->isLocked()) {

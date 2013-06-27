@@ -80,7 +80,9 @@ function user_help($path, $arg) {
       $output .= '</ul>';
       return $output;
     case 'admin/config/people/accounts/fields':
-      return '<p>' . t('This form lets administrators add, edit, and arrange fields for storing user data.') . '</p>';
+      return '<p>' . t('This form lets administrators add and edit fields for storing user data.') . '</p>';
+    case 'admin/config/people/accounts/form-display':
+      return '<p>' . t('This form lets administrators configure how form fields should be displayed when editing a user profile.') . '</p>';
     case 'admin/config/people/accounts/display':
       return '<p>' . t('This form lets administrators configure how fields should be displayed when rendering a user profile page.') . '</p>';
     case 'admin/people/search':
@@ -197,19 +199,6 @@ function user_attach_accounts(array $entities) {
  */
 function user_picture_enabled() {
   return (bool) field_info_instance('user', 'user_picture', 'user');
-}
-
-/**
- * Implements hook_field_info_alter().
- */
-function user_field_info_alter(&$info) {
-  // Add the 'user_register_form' instance setting to all field types.
-  foreach ($info as $field_type => &$field_type_info) {
-    $field_type_info += array('instance_settings' => array());
-    $field_type_info['instance_settings'] += array(
-      'user_register_form' => FALSE,
-    );
-  }
 }
 
 /**
@@ -1007,7 +996,7 @@ function user_menu() {
   $items['user/%user/edit'] = array(
     'title' => 'Edit',
     'page callback' => 'entity_get_form',
-    'page arguments' => array(1, 'profile'),
+    'page arguments' => array(1),
     'access callback' => 'entity_page_access',
     'access arguments' => array(1, 'update'),
     'type' => MENU_LOCAL_TASK,
@@ -2097,55 +2086,6 @@ function user_node_load($nodes, $types) {
   // Add these values back into the node objects.
   foreach ($uids as $nid => $uid) {
     $nodes[$nid]->name = $user_names[$uid];
-  }
-}
-
-/**
- * Implements hook_form_FORM_ID_alter() for 'field_ui_field_instance_edit_form'.
- *
- * Add a checkbox for the 'user_register_form' instance settings on the 'Edit
- * field instance' form.
- */
-function user_form_field_ui_field_instance_edit_form_alter(&$form, &$form_state, $form_id) {
-  $instance = $form_state['instance'];
-
-  if ($instance['entity_type'] == 'user') {
-    $form['instance']['settings']['user_register_form'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Display on user registration form.'),
-      '#description' => t("This is compulsory for 'required' fields."),
-      // Field instances created in D7 beta releases before the setting was
-      // introduced might be set as 'required' and 'not shown on user_register
-      // form'. We make sure the checkbox comes as 'checked' for those.
-      '#default_value' => $instance['settings']['user_register_form'] || $instance['required'],
-      // Display just below the 'required' checkbox.
-      '#weight' => $form['instance']['required']['#weight'] + .1,
-      // Disabled when the 'required' checkbox is checked.
-      '#states' => array(
-        'enabled' => array('input[name="instance[required]"]' => array('checked' => FALSE)),
-      ),
-      // Checked when the 'required' checkbox is checked. This is done through
-      // a custom behavior, since the #states system would also synchronize on
-      // uncheck.
-      '#attached' => array(
-        'library' => array(array('user', 'drupal.user')),
-      ),
-    );
-
-    array_unshift($form['#submit'], 'user_form_field_ui_field_instance_edit_form_submit');
-  }
-}
-
-/**
- * Additional submit handler for the 'Edit field instance' form.
- *
- * Make sure the 'user_register_form' setting is set for required fields.
- */
-function user_form_field_ui_field_instance_edit_form_submit($form, &$form_state) {
-  $instance = $form_state['values']['instance'];
-
-  if (!empty($instance['required'])) {
-    form_set_value($form['instance']['settings']['user_register_form'], 1, $form_state);
   }
 }
 

@@ -379,6 +379,39 @@ function field_update_8004() {
 }
 
 /**
+ * Removes the 'user_register_form' setting from field instances and populates
+ * the user.user.register form display.
+ */
+function field_update_8005() {
+  $uuid = new Uuid();
+
+  $user_default_form_display = Drupal::config('entity.form_display.user.user.default');
+  $user_register_config_data = array(
+    'id' => 'user.user.register',
+    'uuid' => $uuid->generate(),
+    'targetEntityType' => 'user',
+    'bundle' => 'user',
+    'mode' => 'register',
+    'content' => array(),
+  );
+  foreach (config_get_storage_names_with_prefix('field.instance') as $config_id) {
+    $instance_config = Drupal::config($config_id);
+    if ($instance_config->get('entity_type') == 'user' && $instance_config->get('settings.user_register_form')) {
+      list(, , $field_id) = explode('.', $instance_config->get('id'));
+      $user_register_config_data['content'][$field_id] = $user_default_form_display->get('content.' . $field_id);
+    }
+    $settings = $instance_config->get('settings');
+    unset($settings['user_register_form']);
+    $instance_config->set('settings', $settings)->save();
+  }
+
+  // Save the new 'register' form display.
+  Drupal::config('entity.form_display.user.user.register')
+    ->setData($user_register_config_data)
+    ->save();
+}
+
+/**
  * @} End of "addtogroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

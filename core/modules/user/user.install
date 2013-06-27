@@ -1075,5 +1075,20 @@ function user_update_8019() {
 }
 
 /**
+ * Create the 'register' form mode.
+ */
+function user_update_8020() {
+  $uuid = new Uuid();
+
+  config("entity.form_mode.user.register")
+    ->set('id', "user.register")
+    ->set('uuid', $uuid->generate())
+    ->set('label', 'Register')
+    ->set('targetEntityType', 'user')
+    ->set('status', '1')
+    ->save();
+}
+
+/**
  * @} End of "addtogroup updates-7.x-to-8.x".
  */

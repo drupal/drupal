@@ -402,7 +402,7 @@ function _field_invoke_get_instances($entity_type, $bundle, $options) {
  */
 function _field_invoke_widget_target($form_display) {
   return function ($instance) use ($form_display) {
-    return $form_display->getWidget($instance['field_name']);
+    return $form_display->getRenderer($instance['field_name']);
   };
 }
 
@@ -1048,7 +1048,7 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
   // the entity display.
   $target_function = function ($instance) use ($displays) {
     if (isset($displays[$instance['bundle']])) {
-      return $displays[$instance['bundle']]->getFormatter($instance['field_name']);
+      return $displays[$instance['bundle']]->getRenderer($instance['field_name']);
     }
   };
   $null = NULL;
@@ -1093,7 +1093,7 @@ function field_attach_view(EntityInterface $entity, EntityDisplay $display, $lan
   // For each instance, call the view() method on the formatter object handed
   // by the entity display.
   $target_function = function ($instance) use ($display) {
-    return $display->getFormatter($instance['field_name']);
+    return $display->getRenderer($instance['field_name']);
   };
   $null = NULL;
   $output = field_invoke_method('view', $target_function, $entity, $null, $null, $options);

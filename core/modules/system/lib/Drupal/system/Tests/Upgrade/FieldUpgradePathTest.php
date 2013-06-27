@@ -170,7 +170,9 @@ class FieldUpgradePathTest extends UpgradePathTestBase {
         'settings' => array(
           'display_summary' => TRUE,
           'text_processing' => 1,
-          'user_register_form' => FALSE,
+          // This setting has been removed in field_update_8005(). We keep it
+          // here, commented out, to prove that the upgrade path is working.
+          //'user_register_form' => FALSE,
         ),
         'status' => 1,
         'langcode' => 'und',

@@ -33,6 +33,32 @@ class TextareaWithSummaryWidget extends TextareaWidget {
   /**
    * {@inheritdoc}
    */
+  public function settingsForm(array $form, array &$form_state) {
+    $element = parent::settingsForm($form, $form_state);
+    $element['summary_rows'] = array(
+      '#type' => 'number',
+      '#title' => t('Summary rows'),
+      '#default_value' => $this->getSetting('summary_rows'),
+      '#required' => TRUE,
+      '#min' => 1,
+    );
+    return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsSummary() {
+    $summary = parent::settingsSummary();
+
+    $summary[] = t('Number of summary rows: !rows', array('!rows' => $this->getSetting('summary_rows')));
+
+    return $summary;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     $element = parent::formElement($items, $delta, $element, $langcode, $form, $form_state);
 

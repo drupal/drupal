@@ -31,7 +31,7 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
 class TestFieldWidget extends WidgetBase {
 
   /**
-   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
     $element['test_widget_setting'] = array(
@@ -45,7 +45,16 @@ class TestFieldWidget extends WidgetBase {
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::formElement().
+   * {@inheritdoc}
+   */
+  public function settingsSummary() {
+    $summary = array();
+    $summary[] = t('@setting: @value', array('@setting' => 'test_widget_setting', '@value' => $this->getSetting('test_widget_setting')));
+    return $summary;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     $element += array(
@@ -56,7 +65,7 @@ class TestFieldWidget extends WidgetBase {
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::errorElement().
+   * {@inheritdoc}
    */
   public function errorElement(array $element, ConstraintViolationInterface $error, array $form, array &$form_state) {
     return $element['value'];

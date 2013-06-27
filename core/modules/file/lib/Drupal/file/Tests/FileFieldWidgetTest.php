@@ -253,7 +253,6 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       'fields[_add_new_field][label]' => $label = $this->randomName(),
       'fields[_add_new_field][field_name]' => $name = strtolower($this->randomName()),
       'fields[_add_new_field][type]' => 'file',
-      'fields[_add_new_field][widget_type]' => 'file_generic',
     );
     $this->drupalPost('admin/structure/types/manage/article/comment/fields', $edit, t('Save'));
     $edit = array('field[settings][uri_scheme]' => 'private');

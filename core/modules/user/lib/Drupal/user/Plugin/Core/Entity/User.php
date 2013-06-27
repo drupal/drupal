@@ -28,12 +28,11 @@ use Drupal\Core\Language\Language;
  *     "access" = "Drupal\user\UserAccessController",
  *     "render" = "Drupal\Core\Entity\EntityRenderController",
  *     "form" = {
- *       "profile" = "Drupal\user\ProfileFormController",
+ *       "default" = "Drupal\user\ProfileFormController",
  *       "register" = "Drupal\user\RegisterFormController"
  *     },
  *     "translation" = "Drupal\user\ProfileTranslationController"
  *   },
- *   default_operation = "profile",
  *   base_table = "users",
  *   uri_callback = "user_uri",
  *   route_base_path = "admin/config/people/accounts",

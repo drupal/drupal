@@ -28,11 +28,17 @@ class CustomBlockTypeListController extends ConfigEntityListController {
         'options' => $uri['options'],
         'weight' => 15,
       );
+      $operations['manage-form-display'] = array(
+        'title' => t('Manage form display'),
+        'href' => $uri['path'] . '/form-display',
+        'options' => $uri['options'],
+        'weight' => 20,
+      );
       $operations['manage-display'] = array(
         'title' => t('Manage display'),
         'href' => $uri['path'] . '/display',
         'options' => $uri['options'],
-        'weight' => 20,
+        'weight' => 25,
       );
     }
     return $operations;

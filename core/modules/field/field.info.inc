@@ -31,6 +31,7 @@ use Drupal\field\Field;
  */
 function field_info_cache_clear() {
   drupal_static_reset('field_view_mode_settings');
+  drupal_static_reset('field_form_mode_settings');
   drupal_static_reset('field_available_languages');
 
   // @todo: Remove this when field_attach_*_bundle() bundle management

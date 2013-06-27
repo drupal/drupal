@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field_ui\Access\ViewModeAccessCheck.
+ * Contains \Drupal\field_ui\Access\FormModeAccessCheck.
  */
 
 namespace Drupal\field_ui\Access;
@@ -14,13 +14,13 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Allows access to routes to be controlled by an '_access' boolean parameter.
  */
-class ViewModeAccessCheck implements AccessCheckInterface {
+class FormModeAccessCheck implements AccessCheckInterface {
 
   /**
    * {@inheritdoc}
    */
   public function applies(Route $route) {
-    return array_key_exists('_field_ui_view_mode_access', $route->getRequirements());
+    return array_key_exists('_field_ui_form_mode_access', $route->getRequirements());
   }
 
   /**
@@ -29,12 +29,12 @@ class ViewModeAccessCheck implements AccessCheckInterface {
   public function access(Route $route, Request $request) {
     if ($entity_type = $request->attributes->get('entity_type')) {
       $bundle = $request->attributes->get('bundle');
-      $view_mode = $request->attributes->get('mode');
+      $form_mode = $request->attributes->get('mode');
 
-      $view_mode_settings = field_view_mode_settings($entity_type, $bundle);
-      $visibility = ($view_mode == 'default') || !empty($view_mode_settings[$view_mode]['status']);
+      $form_mode_settings = field_form_mode_settings($entity_type, $bundle);
+      $visibility = ($form_mode == 'default') || !empty($form_mode_settings[$form_mode]['status']);
       if ($visibility) {
-        $permission = $route->getRequirement('_field_ui_view_mode_access');
+        $permission = $route->getRequirement('_field_ui_form_mode_access');
         return user_access($permission);
       }
     }

@@ -39,6 +39,18 @@ interface WidgetInterface extends WidgetBaseInterface {
   public function settingsForm(array $form, array &$form_state);
 
   /**
+   * Returns a short summary for the current widget settings.
+   *
+   * If an empty result is returned, the widget is assumed to have no
+   * configurable settings, and no UI will be provided to display a settings
+   * form.
+   *
+   * @return array
+   *   A short summary of the widget settings.
+   */
+  public function settingsSummary();
+
+  /**
    * Returns the form for a single field widget.
    *
    * Field widget form elements should be based on the passed-in $element, which

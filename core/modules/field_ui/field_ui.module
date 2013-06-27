@@ -94,11 +94,6 @@ function field_ui_menu() {
         'type' => MENU_LOCAL_TASK,
         'route_name' => "field_ui.field_edit.$entity_type",
       );
-      $items["$path/fields/%/widget-type"] = array(
-        'title' => 'Widget type',
-        'type' => MENU_LOCAL_TASK,
-        'route_name' => "field_ui.widget_type.$entity_type",
-      );
       $items["$path/fields/%/delete"] = array(
         'title' => 'Delete',
         'type' => MENU_VISIBLE_IN_BREADCRUMB,
@@ -106,25 +101,46 @@ function field_ui_menu() {
         'weight' => 10,
       );
 
+      // 'Manage form display' tab.
+      $items["$path/form-display"] = array(
+        'title' => 'Manage form display',
+        'type' => MENU_LOCAL_TASK,
+        'route_name' => "field_ui.form_display_overview.$entity_type",
+        'weight' => 2,
+      );
+
       // 'Manage display' tab.
       $items["$path/display"] = array(
         'title' => 'Manage display',
         'type' => MENU_LOCAL_TASK,
         'route_name' => "field_ui.display_overview.$entity_type",
-        'weight' => 2,
+        'weight' => 3,
       );
 
-      // View modes secondary tabs.
+      // View and form modes secondary tabs.
       // The same base $path for the menu item (with a placeholder) can be
       // used for all bundles of a given entity type; but depending on
       // administrator settings, each bundle has a different set of view
       // modes available for customisation. So we define menu items for all
       // view modes, and use a route requirement to determine which ones are
       // actually visible for a given bundle.
+      $items["$default_path/form-display/default"] = array(
+        'title' => t('Default'),
+        'type' => MENU_DEFAULT_LOCAL_TASK,
+      );
       $items["$default_path/display/default"] = array(
         'title' => t('Default'),
         'type' => MENU_DEFAULT_LOCAL_TASK,
       );
+      $weight = 0;
+      foreach (entity_get_form_modes($entity_type) as $form_mode => $form_mode_info) {
+        $items["$path/form-display/$form_mode"] = array(
+          'title' => $form_mode_info['label'],
+          'type' => MENU_LOCAL_TASK,
+          'weight' => $weight++,
+          'route_name' => "field_ui.form_display_overview.$entity_type.$form_mode",
+        );
+      }
       $weight = 0;
       foreach (entity_get_view_modes($entity_type) as $view_mode => $view_mode_info) {
         $items["$path/display/$view_mode"] = array(
@@ -152,6 +168,9 @@ function field_ui_permission() {
       $permissions['administer ' . $entity_type . ' fields'] = array(
         'title' => t('%entity_label: Administer fields', array('%entity_label' => $entity_info['label'])),
         'restrict access' => TRUE,
+      );
+      $permissions['administer ' . $entity_type . ' form display'] = array(
+        'title' => t('%entity_label: Administer form display', array('%entity_label' => $entity_info['label']))
       );
       $permissions['administer ' . $entity_type . ' display'] = array(
         'title' => t('%entity_label: Administer display', array('%entity_label' => $entity_info['label']))

@@ -129,15 +129,13 @@ class EntityFormController implements EntityFormControllerInterface {
     $form_state['controller'] = $this;
     $this->prepareEntity();
 
-    // @todo Allow the usage of different form modes by exposing a hook and the
-    // UI for them.
-    $form_display = entity_get_render_form_display($this->entity, 'default');
+    $form_display = entity_get_render_form_display($this->entity, $this->getOperation());
 
     // Let modules alter the form display.
     $form_display_context = array(
       'entity_type' => $this->entity->entityType(),
       'bundle' => $this->entity->bundle(),
-      'form_mode' => 'default',
+      'form_mode' => $this->getOperation(),
     );
     \Drupal::moduleHandler()->alter('entity_form_display', $form_display, $form_display_context);
 
@@ -158,12 +156,8 @@ class EntityFormController implements EntityFormControllerInterface {
       field_attach_form($entity, $form, $form_state, $this->getFormLangcode($form_state));
     }
 
-    // Assign the weights configured in the form display.
-    foreach ($this->getFormDisplay($form_state)->getComponents() as $name => $options) {
-      if (isset($form[$name])) {
-        $form[$name]['#weight'] = $options['weight'];
-      }
-    }
+    // Add a process callback so we can assign weights and hide extra fields.
+    $form['#process'][] = array($this, 'processForm');
 
     if (!isset($form['langcode'])) {
       // If the form did not specify otherwise, default to keeping the existing
@@ -175,6 +169,30 @@ class EntityFormController implements EntityFormControllerInterface {
       );
     }
     return $form;
+  }
+
+  /**
+   * Process callback: assigns weights and hides extra fields.
+   *
+   * @see \Drupal\Core\Entity\EntityFormController::form()
+   */
+  public function processForm($element, $form_state, $form) {
+    // Assign the weights configured in the form display.
+    foreach ($this->getFormDisplay($form_state)->getComponents() as $name => $options) {
+      if (isset($element[$name])) {
+        $element[$name]['#weight'] = $options['weight'];
+      }
+    }
+
+    // Hide extra fields.
+    $extra_fields = field_info_extra_fields($this->entity->entityType(), $this->entity->bundle(), 'form');
+    foreach ($extra_fields as $extra_field => $info) {
+      if (!$this->getFormDisplay($form_state)->getComponent($extra_field)) {
+        $element[$extra_field]['#access'] = FALSE;
+      }
+    }
+
+    return $element;
   }
 
   /**

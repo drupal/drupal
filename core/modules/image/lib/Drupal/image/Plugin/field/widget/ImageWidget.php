@@ -33,7 +33,7 @@ use Drupal\Core\Entity\EntityInterface;
 class ImageWidget extends FileWidget {
 
   /**
-   * Overrides \Drupal\file\Plugin\field\widget\FileWidget::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
     $element = parent::settingsForm($form, $form_state);
@@ -53,6 +53,30 @@ class ImageWidget extends FileWidget {
 
   /**
    * {@inheritdoc}
+   */
+  public function settingsSummary() {
+    $summary = parent::settingsSummary();
+
+    $image_styles = image_style_options(FALSE);
+    // Unset possible 'No defined styles' option.
+    unset($image_styles['']);
+    // Styles could be lost because of enabled/disabled modules that defines
+    // their styles in code.
+    $image_style_setting = $this->getSetting('preview_image_style');
+    if (isset($image_styles[$image_style_setting])) {
+      $preview_image_style = t('Preview image style: @style', array('@style' => $image_styles[$image_style_setting]));
+    }
+    else {
+      $preview_image_style = t('Original image');
+    }
+
+    array_unshift($summary, $preview_image_style);
+
+    return $summary;
+  }
+
+  /**
+   * Overrides \Drupal\file\Plugin\field\widget\FileWidget::formMultipleElements().
    *
    * Special handling for draggable multiple widgets and 'add more' button.
    */

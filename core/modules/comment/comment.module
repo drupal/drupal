@@ -257,8 +257,10 @@ function comment_menu_alter(&$items) {
   // See comment_entity_bundle_info().
   $items['admin/structure/types/manage/{bundle}/comment/fields']['title'] = 'Comment fields';
   $items['admin/structure/types/manage/{bundle}/comment/fields']['weight'] = 3;
+  $items['admin/structure/types/manage/{bundle}/comment/form-display']['title'] = 'Comment form display';
+  $items['admin/structure/types/manage/{bundle}/comment/form-display']['weight'] = 4;
   $items['admin/structure/types/manage/{bundle}/comment/display']['title'] = 'Comment display';
-  $items['admin/structure/types/manage/{bundle}/comment/display']['weight'] = 4;
+  $items['admin/structure/types/manage/{bundle}/comment/display']['weight'] = 5;
 }
 
 /**

@@ -2556,7 +2556,7 @@ function system_custom_theme() {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function system_form_user_profile_form_alter(&$form, &$form_state) {
+function system_form_user_form_alter(&$form, &$form_state) {
   if (config('system.timezone')->get('user.configurable')) {
     system_user_timezone($form, $form_state);
   }
@@ -2608,7 +2608,7 @@ function system_user_timezone(&$form, &$form_state) {
   $form['timezone']['timezone'] = array(
     '#type' => 'select',
     '#title' => t('Time zone'),
-    '#default_value' => isset($account->timezone) ? $account->timezone : ($account->uid == $user->uid ? config('system.date')->get('timezone.default') : ''),
+    '#default_value' => isset($account->timezone) ? $account->timezone : ($account->uid == $user->uid ? config('system.timezone')->get('default') : ''),
     '#options' => system_time_zones($account->uid != $user->uid),
     '#description' => t('Select the desired local time and time zone. Dates and times throughout this site will be displayed using this time zone.'),
   );

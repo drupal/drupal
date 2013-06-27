@@ -51,6 +51,15 @@ class FileWidget extends WidgetBase {
 
   /**
    * {@inheritdoc}
+   */
+  public function settingsSummary() {
+    $summary = array();
+    $summary[] = t('Progress indicator: @progress_indicator', array('@progress_indicator' => $this->getSetting('progress_indicator')));
+    return $summary;
+  }
+
+  /**
+   * Overrides \Drupal\field\Plugin\Type\Widget\WidgetBase::formMultipleElements().
    *
    * Special handling for draggable multiple widgets and 'add more' button.
    */

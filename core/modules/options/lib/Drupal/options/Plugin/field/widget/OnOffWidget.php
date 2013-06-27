@@ -44,6 +44,18 @@ class OnOffWidget extends OptionsWidgetBase {
   /**
    * {@inheritdoc}
    */
+  public function settingsSummary() {
+    $summary = array();
+
+    $display_label = $this->getSetting('display_label');
+    $summary[] = t('Use field label: @display_label', array('@display_label' => ($display_label ? t('Yes') : 'No')));
+
+    return $summary;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     $element = parent::formElement($items, $delta, $element, $langcode, $form, $form_state);
 

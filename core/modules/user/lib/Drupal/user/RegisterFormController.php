@@ -42,14 +42,8 @@ class RegisterFormController extends AccountFormController {
     // Start with the default user account fields.
     $form = parent::form($form, $form_state, $account);
 
-    // Attach field widgets, and hide the ones where the 'user_register_form'
-    // setting is not on.
+    // Attach field widgets.
     field_attach_form($account, $form, $form_state);
-    foreach (field_info_instances('user', 'user') as $field_name => $instance) {
-      if (empty($instance['settings']['user_register_form'])) {
-        $form[$field_name]['#access'] = FALSE;
-      }
-    }
 
     if ($admin) {
       // Redirect back to page which initiated the create request; usually

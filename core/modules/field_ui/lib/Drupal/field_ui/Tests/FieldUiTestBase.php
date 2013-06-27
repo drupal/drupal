@@ -26,7 +26,7 @@ abstract class FieldUiTestBase extends WebTestBase {
     parent::setUp();
 
     // Create test user.
-    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer node fields', 'administer node display', 'administer taxonomy', 'administer taxonomy_term fields', 'administer taxonomy_term display', 'administer users', 'administer user display', 'bypass node access'));
+    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer node fields', 'administer node form display', 'administer node display', 'administer taxonomy', 'administer taxonomy_term fields', 'administer taxonomy_term display', 'administer users', 'administer user display', 'bypass node access'));
     $this->drupalLogin($admin_user);
 
     // Create content type, with underscores.
@@ -67,10 +67,8 @@ abstract class FieldUiTestBase extends WebTestBase {
     // Use 'test_field' field type by default.
     $initial_edit += array(
       'fields[_add_new_field][type]' => 'test_field',
-      'fields[_add_new_field][widget_type]' => 'test_field_widget',
     );
     $label = $initial_edit['fields[_add_new_field][label]'];
-    $field_name = $initial_edit['fields[_add_new_field][field_name]'];
 
     // First step : 'Add new field' on the 'Manage fields' page.
     $this->drupalPost("$bundle_path/fields",  $initial_edit, t('Save'));
@@ -101,12 +99,7 @@ abstract class FieldUiTestBase extends WebTestBase {
    *   form).
    */
   function fieldUIAddExistingField($bundle_path, $initial_edit, $instance_edit = array()) {
-    // Use 'test_field_widget' by default.
-    $initial_edit += array(
-      'fields[_add_existing_field][widget_type]' => 'test_field_widget',
-    );
     $label = $initial_edit['fields[_add_existing_field][label]'];
-    $field_name = $initial_edit['fields[_add_existing_field][field_name]'];
 
     // First step : 'Re-use existing field' on the 'Manage fields' page.
     $this->drupalPost("$bundle_path/fields", $initial_edit, t('Save'));

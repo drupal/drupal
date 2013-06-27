@@ -161,4 +161,19 @@ class WidgetPluginManager extends PluginManagerBase {
     return $this->widgetOptions;
   }
 
+  /**
+   * Returns the default settings of a field widget.
+   *
+   * @param string $type
+   *   A field widget type name.
+   *
+   * @return array
+   *   The widget type's default settings, as provided by the plugin
+   *   definition, or an empty array if type or settings are undefined.
+   */
+  public function getDefaultSettings($type) {
+    $info = $this->getDefinition($type);
+    return isset($info['settings']) ? $info['settings'] : array();
+  }
+
 }

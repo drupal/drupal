@@ -68,7 +68,7 @@ class MetadataGenerator implements MetadataGeneratorInterface {
     }
 
     // Early-return if no editor is available.
-    $formatter_id = entity_get_render_display($entity, $view_mode)->getFormatter($instance['field_name'])->getPluginId();
+    $formatter_id = entity_get_render_display($entity, $view_mode)->getRenderer($instance['field_name'])->getPluginId();
     $items = $entity->getTranslation($langcode, FALSE)->get($field_name)->getValue();
     $editor_id = $this->editorSelector->getEditor($formatter_id, $instance, $items);
     if (!isset($editor_id)) {

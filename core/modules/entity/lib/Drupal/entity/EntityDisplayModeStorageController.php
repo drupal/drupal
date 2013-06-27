@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\entity\EntityViewModeStorageController.
+ * Contains \Drupal\entity\EntityDisplayModeStorageController.
  */
 
 namespace Drupal\entity;
@@ -11,9 +11,9 @@ use Drupal\Core\Config\Entity\ConfigStorageController;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Defines the storage controller class for entity view modes.
+ * Defines the storage controller class for entity form and view modes.
  */
-class EntityViewModeStorageController extends ConfigStorageController {
+class EntityDisplayModeStorageController extends ConfigStorageController {
 
   /**
    * {@inheritdoc}

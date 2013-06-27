@@ -47,6 +47,24 @@ class TaxonomyAutocompleteWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
+  public function settingsSummary() {
+    $summary = array();
+
+    $summary[] = t('Textfield size: !size', array('!size' => $this->getSetting('size')));
+    $placeholder = $this->getSetting('placeholder');
+    if (!empty($placeholder)) {
+      $summary[] = t('Placeholder: @placeholder', array('@placeholder' => $placeholder));
+    }
+    else {
+      $summary[] = t('No placeholder');
+    }
+
+    return $summary;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     $tags = array();
     foreach ($items as $item) {

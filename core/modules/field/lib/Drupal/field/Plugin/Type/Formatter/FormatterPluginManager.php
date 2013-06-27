@@ -160,4 +160,19 @@ class FormatterPluginManager extends PluginManagerBase {
     return $this->formatterOptions;
   }
 
+  /**
+   * Returns the default settings of a field formatter.
+   *
+   * @param string $type
+   *   A field formatter type name.
+   *
+   * @return array
+   *   The formatter type's default settings, as provided by the plugin
+   *   definition, or an empty array if type or settings are undefined.
+   */
+  public function getDefaultSettings($type) {
+    $info = $this->getDefinition($type);
+    return isset($info['settings']) ? $info['settings'] : array();
+  }
+
 }

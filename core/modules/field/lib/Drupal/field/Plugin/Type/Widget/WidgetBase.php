@@ -393,6 +393,13 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function settingsSummary() {
+    return array();
+  }
+
+  /**
    * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::errorElement().
    */
   public function errorElement(array $element, ConstraintViolationInterface $error, array $form, array &$form_state) {

@@ -80,7 +80,7 @@ class RssTest extends TaxonomyTestBase {
     // RSS display must be added manually.
     $this->drupalGet("admin/structure/types/manage/article/display");
     $edit = array(
-      "view_modes_custom[rss]" => '1',
+      "display_modes_custom[rss]" => '1',
     );
     $this->drupalPost(NULL, $edit, t('Save'));
 

@@ -8,3 +8,7 @@ services:
     class: Drupal\field_ui\Access\ViewModeAccessCheck
     tags:
      - { name: access_check }
+  access_check.field_ui.form_mode:
+    class: Drupal\field_ui\Access\FormModeAccessCheck
+    tags:
+     - { name: access_check }

@@ -48,7 +48,7 @@ class FileFieldRSSContentTest extends FileFieldTestBase {
     // RSS display must be added manually.
     $this->drupalGet("admin/structure/types/manage/$type_name/display");
     $edit = array(
-      "view_modes_custom[rss]" => '1',
+      "display_modes_custom[rss]" => '1',
     );
     $this->drupalPost(NULL, $edit, t('Save'));
 

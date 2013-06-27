@@ -167,7 +167,7 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     $this->assertEqual($display->getComponent($field_name), $expected);
 
     // Check that the getFormatter() method returns the correct formatter plugin.
-    $formatter = $display->getFormatter($field_name);
+    $formatter = $display->getRenderer($field_name);
     $this->assertEqual($formatter->getPluginId(), $default_formatter);
     $this->assertEqual($formatter->getSettings(), $default_settings);
 
@@ -175,14 +175,14 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     // arbitrary property and reading it back.
     $random_value = $this->randomString();
     $formatter->randomValue = $random_value;
-    $formatter = $display->getFormatter($field_name);
+    $formatter = $display->getRenderer($field_name);
     $this->assertEqual($formatter->randomValue, $random_value);
 
     // Check that changing the definition creates a new formatter.
     $display->setComponent($field_name, array(
       'type' => 'field_test_multiple',
     ));
-    $formatter = $display->getFormatter($field_name);
+    $formatter = $display->getRenderer($field_name);
     $this->assertEqual($formatter->getPluginId(), 'field_test_multiple');
     $this->assertFalse(isset($formatter->randomValue));
 
@@ -194,7 +194,7 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     ));
     $options = $display->getComponent($field_name);
     $this->assertEqual($options['type'], 'unknown_formatter');
-    $formatter = $display->getFormatter($field_name);
+    $formatter = $display->getRenderer($field_name);
     $this->assertEqual($formatter->getPluginId(), $default_formatter);
   }
 

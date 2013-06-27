@@ -89,7 +89,6 @@ class ManageFieldsTest extends FieldUiTestBase {
       t('Label'),
       t('Machine name'),
       t('Field type'),
-      t('Widget'),
       t('Operations'),
     );
     foreach ($table_headers as $table_header) {
@@ -145,7 +144,6 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/' . $instance_id);
     $edit = array(
       'instance[settings][test_instance_setting]' => $string,
-      'instance[widget][settings][test_widget_setting]' => $string,
     );
     $this->drupalPost(NULL, $edit, t('Save settings'));
 
@@ -236,13 +234,9 @@ class ManageFieldsTest extends FieldUiTestBase {
     $field = field_info_field($field_name);
     $this->assertTrue($field['settings']['test_field_setting'] == $string, 'Field settings were found.');
 
-    // Assert instance and widget settings.
+    // Assert instance settings.
     $instance = field_info_instance($entity_type, $field_name, $bundle);
     $this->assertTrue($instance['settings']['test_instance_setting'] == $string, 'Field instance settings were found.');
-
-    // Assert widget settings.
-    $widget_configuration = entity_get_form_display($entity_type, $bundle, 'default')->getComponent($field_name);
-    $this->assertTrue($widget_configuration['settings']['test_widget_setting'] == $string, 'Field widget settings were found.');
   }
 
   /**
@@ -411,11 +405,11 @@ class ManageFieldsTest extends FieldUiTestBase {
 
     // Check that the links for edit and delete are not present.
     $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields');
-    $locked = $this->xpath('//tr[@id=:field_name]/td[7]', array(':field_name' => $field->id()));
+    $locked = $this->xpath('//tr[@id=:field_name]/td[4]', array(':field_name' => $field->id()));
     $this->assertTrue(in_array('Locked', $locked), 'Field is marked as Locked in the UI');
-    $edit_link = $this->xpath('//tr[@id=:field_name]/td[7]', array(':field_name' => $field->id()));
+    $edit_link = $this->xpath('//tr[@id=:field_name]/td[4]', array(':field_name' => $field->id()));
     $this->assertFalse(in_array('edit', $edit_link), 'Edit option for locked field is not present the UI');
-    $delete_link = $this->xpath('//tr[@id=:field_name]/td[8]', array(':field_name' => $field->id()));
+    $delete_link = $this->xpath('//tr[@id=:field_name]/td[4]', array(':field_name' => $field->id()));
     $this->assertFalse(in_array('delete', $delete_link), 'Delete option for locked field is not present the UI');
   }
 
@@ -454,15 +448,6 @@ class ManageFieldsTest extends FieldUiTestBase {
     $bundle_path = 'admin/structure/types/manage/article/fields/';
     $this->drupalGet($bundle_path);
     $this->assertFalse($this->xpath('//select[@id="edit-add-existing-field-field-name"]//option[@value=:field_name]', array(':field_name' => $field_name)), "The 're-use existing field' select respects field types 'no_ui' property.");
-
-    // Remove the form display component to check the fallback label.
-    entity_get_form_display('node', $this->type, 'default')
-      ->removeComponent($field_name)
-      ->save();
-
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/');
-    $this->assertLinkByHref(url('admin/structure/types/manage/' . $this->type . '/fields/node.' . $this->type . '.'  . $field_name . '/widget-type'));
-    $this->assertLink('- Hidden -');
   }
 
   /**
@@ -488,56 +473,12 @@ class ManageFieldsTest extends FieldUiTestBase {
       'fields[_add_new_field][field_name]' => 'tags',
       'fields[_add_new_field][label]' => $this->randomName(),
       'fields[_add_new_field][type]' => 'taxonomy_term_reference',
-      'fields[_add_new_field][widget_type]' => 'options_select',
     );
     $url = 'admin/structure/types/manage/' . $this->type . '/fields';
     $this->drupalPost($url, $edit, t('Save'));
 
     $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
     $this->assertUrl($url, array(), 'Stayed on the same page.');
-  }
-
-  /**
-   * Tests changing the widget used by a field.
-   */
-  function testWidgetChange() {
-    $url_fields = 'admin/structure/types/manage/article/fields';
-    $url_tags_widget = $url_fields . '/node.article.field_tags/widget-type';
-
-    // Check that the field_tags field currently uses the 'options_select'
-    // widget.
-    $entity_form_display = entity_get_form_display('node', 'article', 'default')->getComponent('field_tags');
-    $this->assertEqual($entity_form_display['type'], 'options_select');
-
-    // Check that the "Manage fields" page shows the correct widget type.
-    $this->drupalGet($url_fields);
-    $link = current($this->xpath('//a[contains(@href, :href)]', array(':href' => $url_tags_widget)));
-    $this->assertEqual((string) $link, 'Select list');
-
-    // Go to the 'Widget type' form and check that the correct widget is
-    // selected.
-    $this->drupalGet($url_tags_widget);
-    $this->assertFieldByXPath("//select[@name='widget_type']", 'options_select');
-
-    // Change the widget type.
-    $edit = array(
-      'widget_type' => 'options_buttons',
-    );
-    $this->drupalPost(NULL, $edit, t('Continue'));
-
-    // Check that the "Manage fields" page shows the correct widget type.
-    $link = current($this->xpath('//a[contains(@href, :href)]', array(':href' => $url_tags_widget)));
-    $this->assertEqual((string) $link, 'Check boxes/radio buttons');
-
-    // Check that the field uses the newly set widget.
-    field_cache_clear();
-    $widget_configuration = entity_get_form_display('node', 'article', 'default')->getComponent('field_tags');
-    $this->assertEqual($widget_configuration['type'], 'options_buttons');
-
-    // Go to the 'Widget type' form and check that the correct widget is
-    // selected.
-    $this->drupalGet($url_tags_widget);
-    $this->assertFieldByXPath("//select[@name='widget_type']", 'options_buttons');
   }
 
   /**

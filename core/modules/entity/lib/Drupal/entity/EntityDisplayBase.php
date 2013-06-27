@@ -163,7 +163,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   public function getComponents() {
     $result = array();
     foreach ($this->content as $name => $options) {
-      if (!isset($options['visible']) || $options['visible'] === TRUE) {
+      if (!isset($options['visible']) || $options['visible'] == TRUE) {
         unset($options['visible']);
         $result[$name] = $options;
       }

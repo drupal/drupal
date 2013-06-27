@@ -550,10 +550,46 @@ function field_bundle_settings($entity_type, $bundle, $settings = NULL) {
     $settings = variable_get('field_bundle_settings_' . $entity_type . '__' . $bundle, array());
     $settings += array(
       'view_modes' => array(),
+      'form_modes' => array(),
     );
 
     return $settings;
   }
+}
+
+/**
+ * Returns form mode settings in a given bundle.
+ *
+ * @param string $entity_type
+ *   The type of entity; e.g. 'node' or 'user'.
+ * @param string $bundle
+ *   The bundle name to return form mode settings for.
+ *
+ * @return
+ *   An array keyed by form mode, with the following key/value pairs:
+ *   - status: Boolean specifying whether the form mode uses a dedicated set of
+ *     display options (TRUE), or the 'default' options (FALSE). Defaults to
+ *     FALSE.
+ */
+function field_form_mode_settings($entity_type, $bundle) {
+  $cache = &drupal_static(__FUNCTION__, array());
+
+  if (!isset($cache[$entity_type][$bundle])) {
+    $bundle_settings = field_bundle_settings($entity_type, $bundle);
+    $settings = $bundle_settings['form_modes'];
+    // Include form modes for which nothing has been stored yet, but whose
+    // definition in hook_entity_info_alter() specify they should use custom
+    // settings by default.
+    $form_modes = entity_get_form_modes($entity_type);
+    foreach ($form_modes as $form_mode => $form_mode_info) {
+      if (!isset($settings[$form_mode]['status']) && $form_mode_info['status']) {
+        $settings[$form_mode]['status'] = TRUE;
+      }
+    }
+    $cache[$entity_type][$bundle] = $settings;
+  }
+
+  return $cache[$entity_type][$bundle];
 }
 
 /**
@@ -744,7 +780,7 @@ function field_view_field(EntityInterface $entity, $field_name, $display_options
   // Get the formatter object.
   if (is_string($display_options)) {
     $view_mode = $display_options;
-    $formatter = entity_get_render_display($entity, $view_mode)->getFormatter($field_name);
+    $formatter = entity_get_render_display($entity, $view_mode)->getRenderer($field_name);
   }
   else {
     $view_mode = '_custom';

@@ -45,7 +45,7 @@ class EntityDisplay extends EntityDisplayBase implements EntityDisplayInterface 
   /**
    * {@inheritdoc}
    */
-  public function getFormatter($field_name) {
+  public function getRenderer($field_name) {
     if (isset($this->plugins[$field_name])) {
       return $this->plugins[$field_name];
     }

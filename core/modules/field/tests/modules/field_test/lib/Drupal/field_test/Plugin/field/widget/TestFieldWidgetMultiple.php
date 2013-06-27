@@ -32,21 +32,30 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
 class TestFieldWidgetMultiple extends WidgetBase {
 
   /**
-   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
-    $element['test_field_widget_multiple'] = array(
+    $element['test_widget_setting_multiple'] = array(
       '#type' => 'textfield',
       '#title' => t('Field test field widget setting'),
       '#description' => t('A dummy form element to simulate field widget setting.'),
-      '#default_value' => $this->getSetting('test_widget_setting'),
+      '#default_value' => $this->getSetting('test_widget_setting_multiple'),
       '#required' => FALSE,
     );
     return $element;
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::formElement().
+   * {@inheritdoc}
+   */
+  public function settingsSummary() {
+    $summary = array();
+    $summary[] = t('@setting: @value', array('@setting' => 'test_widget_setting_multiple', '@value' => $this->getSetting('test_widget_setting_multiple')));
+    return $summary;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     $values = array();
@@ -62,7 +71,7 @@ class TestFieldWidgetMultiple extends WidgetBase {
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::errorElement().
+   * {@inheritdoc}
    */
   public function errorElement(array $element, ConstraintViolationInterface $error, array $form, array &$form_state) {
     return $element;
