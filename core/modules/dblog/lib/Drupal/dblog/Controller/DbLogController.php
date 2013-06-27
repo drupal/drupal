@@ -162,6 +162,10 @@ class DbLogController implements ControllerInterface {
           $message = l($log_text, 'admin/reports/event/' . $dblog->wid, array('html' => TRUE));
         }
       }
+      $username = array(
+        '#theme' => 'username',
+        '#account' => $dblog,
+      );
       $rows[] = array(
         'data' => array(
           // Cells.
@@ -169,7 +173,7 @@ class DbLogController implements ControllerInterface {
           t($dblog->type),
           format_date($dblog->timestamp, 'short'),
           $message,
-          theme('username', array('account' => $dblog)),
+          array('data' => $username),
           filter_xss($dblog->link),
         ),
         // Attributes for table row.
