@@ -155,6 +155,9 @@ function field_behaviors_widget($op, $instance) {
  *   ),
  * );
  * @endcode
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   Field::fieldInfo()->getFieldMap().
  */
 function field_info_field_map() {
   return Field::fieldInfo()->getFieldMap();
@@ -292,6 +295,9 @@ function field_info_fields() {
  *   found.
  *
  * @see field_info_field_by_id()
+
+ * @deprecated as of Drupal 8.0. Use
+ *   Field::fieldInfo()->getField($field_name).
  */
 function field_info_field($field_name) {
   return Field::fieldInfo()->getField($field_name);
@@ -310,6 +316,9 @@ function field_info_field($field_name) {
  *   belongs to.
  *
  * @see field_info_field()
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   Field::fieldInfo()->getFieldById($field_id).
  */
 function field_info_field_by_id($field_id) {
   return Field::fieldInfo()->getFieldById($field_id);
@@ -332,6 +341,9 @@ function field_info_field_by_id($field_id) {
  *
  * @see field_info_field()
  * @see field_info_field_by_id()
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   Field::fieldInfo()->getFields().
  */
 function field_info_field_by_ids() {
   return Field::fieldInfo()->getFields();
@@ -361,6 +373,11 @@ function field_info_field_by_ids() {
  *   bundle name. If $entity_type is set, return all instances for that entity
  *   type, keyed by bundle name. If $entity_type and $bundle_name are set,
  *   return all instances for that bundle.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   Field::fieldInfo()->getInstances(),
+ *   Field::fieldInfo()->getInstances($entity_type) or
+ *   Field::fieldInfo()->getBundleInstances($entity_type, $bundle_name).
  */
 function field_info_instances($entity_type = NULL, $bundle_name = NULL) {
   $cache = Field::fieldInfo();
@@ -393,12 +410,12 @@ function field_info_instances($entity_type = NULL, $bundle_name = NULL) {
  * @return
  *   An associative array of instance data for the specific field and bundle;
  *   NULL if the instance does not exist.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   Field::fieldInfo()->getBundleInstance($entity_type, $bundle, $field_name).
  */
 function field_info_instance($entity_type, $field_name, $bundle_name) {
-  $info = Field::fieldInfo()->getBundleInstances($entity_type, $bundle_name);
-  if (isset($info[$field_name])) {
-    return $info[$field_name];
-  }
+  return Field::fieldInfo()->getInstance($entity_type, $bundle_name, $field_name);
 }
 
 /**

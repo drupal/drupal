@@ -481,6 +481,27 @@ class FieldInfo {
   }
 
   /**
+   * Returns an array of instance data for a specific field and bundle.
+   *
+   * @param string $entity_type
+   *   The entity type for the instance.
+   * @param string $bundle
+   *   The bundle name for the instance.
+   * @param string $field_name
+   *   The field name for the instance.
+   *
+   * @return array
+   *   An associative array of instance data for the specific field and bundle;
+   *   NULL if the instance does not exist.
+   */
+  function getInstance($entity_type, $bundle, $field_name) {
+    $info = $this->getBundleInstances($entity_type, $bundle);
+    if (isset($info[$field_name])) {
+      return $info[$field_name];
+    }
+  }
+
+  /**
    * Retrieves the "extra fields" for a bundle.
    *
    * @param $entity_type
