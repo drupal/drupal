@@ -50,8 +50,14 @@ class ToolbarHookToolbarTest extends WebTestBase {
     // Assert that the tab registered by toolbar_test is present.
     $this->assertRaw('id="toolbar-tab-testing"');
 
+    // Assert that the tab item descriptions are present.
+    $this->assertRaw('title="Test tab"');
+
     // Assert that the tray registered by toolbar_test is present.
     $this->assertRaw('id="toolbar-tray-testing"');
+
+    // Assert that tray item descriptions are present.
+    $this->assertRaw('title="Test link 1 title"');
   }
 
 }
