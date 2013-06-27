@@ -9,6 +9,9 @@ namespace Drupal\views\Plugin\views\argument_default;
 
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Path\AliasManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Default argument plugin to use the raw value from the URL.
@@ -21,6 +24,54 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class Raw extends ArgumentDefaultPluginBase {
+
+  /**
+   * The request object.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected $request;
+
+  /**
+   * The alias manager.
+   *
+   * @var \Drupal\Core\Path\AliasManagerInterface
+   */
+  protected $aliasManager;
+
+  /**
+   * Constructs a Raw object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
+   *   The alias manager.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, Request $request, AliasManagerInterface $alias_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->request = $request;
+    $this->aliasManager = $alias_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('request'),
+      $container->get('path.alias_manager.cached')
+    );
+  }
 
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -50,12 +101,13 @@ class Raw extends ArgumentDefaultPluginBase {
   }
 
   public function getArgument() {
-    $path = NULL;
+    $path = $this->request->attributes->get('system_path');
     if ($this->options['use_alias']) {
-      $path = drupal_get_path_alias();
+      $path = $this->aliasManager->getPathAlias($path);
     }
-    if ($arg = arg($this->options['index'], $path)) {
-      return $arg;
+    $args = explode('/', $path);
+    if (isset($args[$this->options['index']])) {
+      return $args[$this->options['index']];
     }
   }
 
