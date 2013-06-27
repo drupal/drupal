@@ -221,12 +221,8 @@ function comment_menu() {
   );
   $items['comment/%comment/approve'] = array(
     'title' => 'Approve',
-    'page callback' => 'comment_approve',
-    'page arguments' => array(1),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(1, 'approve'),
-    'file' => 'comment.pages.inc',
     'weight' => 10,
+    'route_name' => 'comment_approve',
   );
   $items['comment/%comment/delete'] = array(
     'title' => 'Delete',
