@@ -21,6 +21,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\file\Plugin\Core\Entity\File;
+use Drupal\node\NodeInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -128,7 +129,7 @@ function node_help($path, $arg) {
 
     case 'node/%/edit':
       $node = node_load($arg[1]);
-      $type = node_type_load($node->type);
+      $type = node_type_load($node->bundle());
       return (!empty($type->help) ? '<p>' . filter_xss_admin($type->help) . '</p>' : '');
   }
 
@@ -210,7 +211,7 @@ function node_entity_display_alter(EntityDisplay $display, $context) {
  */
 function node_uri(EntityInterface $node) {
   return array(
-    'path' => 'node/' . $node->nid->value,
+    'path' => 'node/' . $node->id(),
   );
 }
 
@@ -542,7 +543,7 @@ function node_rdf_mapping() {
   );
 }
 
-/**
+/**s
  * Loads node entities from the database.
  *
  * This function should be used whenever you need to load more than one node
@@ -616,20 +617,20 @@ function node_submit(EntityInterface $node) {
   // form, which we then need to translate to a user ID.
   if (isset($node->name)) {
     if ($account = user_load_by_name($node->name)) {
-      $node->uid = $account->uid;
+      $node->setAuthorId($account->id());
     }
     else {
-      $node->uid = 0;
+      $node->setAuthorId(0);
     }
   }
 
   // If a new revision is created, save the current user as revision author.
   if ($node->isNewRevision()) {
-    $node->revision_uid = $user->uid;
-    $node->revision_timestamp = REQUEST_TIME;
+    $node->setRevisionAuthorId($user->id());
+    $node->setRevisionCreationTime(REQUEST_TIME);
   }
 
-  $node->created = !empty($node->date) && $node->date instanceOf DrupalDateTime ? $node->date->getTimestamp() : REQUEST_TIME;
+  $node->setCreatedTime(!empty($node->date) && $node->date instanceOf DrupalDateTime ? $node->date->getTimestamp() : REQUEST_TIME);
   $node->validated = TRUE;
 
   return $node;
@@ -664,15 +665,15 @@ function node_revision_delete($revision_id) {
  */
 function node_show(EntityInterface $node, $message = FALSE) {
   if ($message) {
-    drupal_set_title(t('Revision of %title from %date', array('%title' => $node->label(), '%date' => format_date($node->revision_timestamp))), PASS_THROUGH);
+    drupal_set_title(t('Revision of %title from %date', array('%title' => $node->label(), '%date' => format_date($node->getRevisionCreationTime()))), PASS_THROUGH);
   }
 
   // For markup consistency with other pages, use node_view_multiple() rather than node_view().
-  $nodes = array('nodes' => node_view_multiple(array($node->nid => $node), 'full'));
+  $nodes = array('nodes' => node_view_multiple(array($node->id() => $node), 'full'));
 
   // Update the history table, stating that this user viewed this node.
   if (module_exists('history')) {
-    history_write($node->nid);
+    history_write($node->id());
   }
 
   return $nodes;
@@ -689,7 +690,7 @@ function node_show(EntityInterface $node, $message = FALSE) {
  */
 function node_is_page(EntityInterface $node) {
   $page_node = menu_get_object();
-  return (!empty($page_node) ? $page_node->nid == $node->nid : FALSE);
+  return (!empty($page_node) ? $page_node->id() == $node->id() : FALSE);
 }
 
 /**
@@ -730,7 +731,7 @@ function template_preprocess_node(&$variables) {
   $variables['node'] = $variables['elements']['#node'];
   $node = $variables['node'];
 
-  $variables['date'] = format_date($node->created);
+  $variables['date'] = format_date($node->getCreatedTime());
   // @todo Change 'name' to 'author' and also convert to a render array pending
   //   http://drupal.org/node/1941286.
   $username = array(
@@ -756,7 +757,7 @@ function template_preprocess_node(&$variables) {
 
   // Display post information only on certain node types.
   // Avoid loading the entire node type config entity here.
-  $submitted = Drupal::config('node.type.' . $node->type)->get('settings.node.submitted') ?: TRUE;
+  $submitted = Drupal::config('node.type.' . $node->bundle())->get('settings.node.submitted') ?: TRUE;
   if ($submitted) {
     $variables['display_submitted'] = TRUE;
     $variables['submitted'] = t('Submitted by !username on !datetime', array('!username' => $variables['name'], '!datetime' => $variables['date']));
@@ -764,7 +765,7 @@ function template_preprocess_node(&$variables) {
       // To change user picture settings (e.g. image style), edit the 'compact'
       // view mode on the User entity. Note that the 'compact' view mode might
       // not be configured, so remember to always check the theme setting first.
-      $variables['user_picture'] = user_view($node->account, 'compact');
+      $variables['user_picture'] = user_view($node->getAuthor(), 'compact');
     }
     else {
       $variables['user_picture'] = array();
@@ -781,14 +782,14 @@ function template_preprocess_node(&$variables) {
 
   // Gather node classes.
   $variables['attributes']['class'][] = 'node';
-  $variables['attributes']['class'][] = drupal_html_class('node-' . $node->type);
-  if ($node->promote) {
+  $variables['attributes']['class'][] = drupal_html_class('node-' . $node->bundle());
+  if ($node->isPromoted()) {
     $variables['attributes']['class'][] = 'promoted';
   }
-  if ($node->sticky) {
+  if ($node->isSticky()) {
     $variables['attributes']['class'][] = 'sticky';
   }
-  if (!$node->status) {
+  if (!$node->isPublished()) {
     $variables['attributes']['class'][] = 'unpublished';
   }
   if ($variables['view_mode']) {
@@ -799,8 +800,8 @@ function template_preprocess_node(&$variables) {
   }
 
   // Clean up name so there are no underscores.
-  $variables['theme_hook_suggestions'][] = 'node__' . $node->type;
-  $variables['theme_hook_suggestions'][] = 'node__' . $node->nid;
+  $variables['theme_hook_suggestions'][] = 'node__' . $node->bundle();
+  $variables['theme_hook_suggestions'][] = 'node__' . $node->id();
 
   $variables['content_attributes']['class'][] = 'content';
 }
@@ -1000,12 +1001,12 @@ function node_search_execute($keys = NULL, $conditions = NULL) {
       'type' => check_plain(node_get_type_label($node)),
       'title' => $node->label($item->langcode),
       'user' => drupal_render($username),
-      'date' => $node->changed,
+      'date' => $node->getChangedTime(),
       'node' => $node,
       'extra' => $extra,
       'score' => $item->calculated_score,
       'snippet' => search_excerpt($keys, $node->rendered, $item->langcode),
-      'langcode' => $node->langcode,
+      'langcode' => $node->language()->langcode,
     );
   }
   return $results;
@@ -1165,10 +1166,11 @@ function _node_revision_access(EntityInterface $node, $op = 'view', $account = N
     'update' => 'revert all revisions',
     'delete' => 'delete all revisions',
   );
+  $bundle = $node->bundle();
   $type_map = array(
-    'view' => "view $node->type revisions",
-    'update' => "revert $node->type revisions",
-    'delete' => "delete $node->type revisions",
+    'view' => "view $bundle revisions",
+    'update' => "revert $bundle revisions",
+    'delete' => "delete $bundle revisions",
   );
 
   if (!$node || !isset($map[$op]) || !isset($type_map[$op])) {
@@ -1183,12 +1185,12 @@ function _node_revision_access(EntityInterface $node, $op = 'view', $account = N
 
   // If no language code was provided, default to the node revision's langcode.
   if (empty($langcode)) {
-    $langcode = $node->langcode;
+    $langcode = $node->language()->langcode;
   }
 
   // Statically cache access by revision ID, language code, user account ID,
   // and operation.
-  $cid = $node->vid . ':' . $langcode . ':' . $account->uid . ':' . $op;
+  $cid = $node->getRevisionId() . ':' . $langcode . ':' . $account->id() . ':' . $op;
 
   if (!isset($access[$cid])) {
     // Perform basic permission checks first.
@@ -1201,7 +1203,7 @@ function _node_revision_access(EntityInterface $node, $op = 'view', $account = N
     // different revisions so there is no need for a separate database check.
     // Also, if you try to revert to or delete the default revision, that's
     // not good.
-    if ($node->isDefaultRevision() && (db_query('SELECT COUNT(*) FROM {node_field_revision} WHERE nid = :nid AND default_langcode = 1', array(':nid' => $node->nid))->fetchField() == 1 || $op == 'update' || $op == 'delete')) {
+    if ($node->isDefaultRevision() && (db_query('SELECT COUNT(*) FROM {node_field_revision} WHERE nid = :nid AND default_langcode = 1', array(':nid' => $node->id()))->fetchField() == 1 || $op == 'update' || $op == 'delete')) {
       $access[$cid] = FALSE;
     }
     elseif (user_access('administer nodes', $account)) {
@@ -1210,7 +1212,7 @@ function _node_revision_access(EntityInterface $node, $op = 'view', $account = N
     else {
       // First check the access to the default revision and finally, if the
       // node passed in is not the default revision then access to that, too.
-      $access[$cid] = node_access($op, node_load($node->nid), $account, $langcode) && ($node->isDefaultRevision() || node_access($op, $node, $account, $langcode));
+      $access[$cid] = node_access($op, node_load($node->id()), $account, $langcode) && ($node->isDefaultRevision() || node_access($op, $node, $account, $langcode));
     }
   }
 
@@ -1441,7 +1443,7 @@ function node_last_changed($nid, $langcode = NULL) {
  */
 function node_revision_list(EntityInterface $node) {
   $revisions = array();
-  $result = db_query('SELECT nfr.vid, nfr.title, nfr.log, nfr.revision_uid AS uid, n.vid AS current_vid, nfr.revision_timestamp, u.name FROM {node_field_revision} nfr LEFT JOIN {node} n ON n.vid = nfr.vid INNER JOIN {users} u ON u.uid = nfr.revision_uid WHERE nfr.nid = :nid AND nfr.default_langcode = 1 ORDER BY nfr.vid DESC', array(':nid' => $node->nid));
+  $result = db_query('SELECT nfr.vid, nfr.title, nfr.log, nfr.revision_uid AS uid, n.vid AS current_vid, nfr.revision_timestamp, u.name FROM {node_field_revision} nfr LEFT JOIN {node} n ON n.vid = nfr.vid INNER JOIN {users} u ON u.uid = nfr.revision_uid WHERE nfr.nid = :nid AND nfr.default_langcode = 1 ORDER BY nfr.vid DESC', array(':nid' => $node->id()));
   foreach ($result as $revision) {
     $revisions[$revision->vid] = $revision;
   }
@@ -1517,13 +1519,13 @@ function theme_node_recent_block($variables) {
     );
     if (node_access('update', $node)) {
       $row[] = array(
-        'data' => l(t('edit'), 'node/' . $node->nid . '/edit', $l_options),
+        'data' => l(t('edit'), 'node/' . $node->id() . '/edit', $l_options),
         'class' => 'edit',
       );
     }
     if (node_access('delete', $node)) {
       $row[] = array(
-        'data' => l(t('delete'), 'node/' . $node->nid . '/delete', $l_options),
+        'data' => l(t('delete'), 'node/' . $node->id() . '/delete', $l_options),
         'class' => 'delete',
       );
     }
@@ -1552,7 +1554,7 @@ function theme_node_recent_block($variables) {
 /**
  * Returns HTML for a recent node to be displayed in the recent content block.
  *
- * @param $variables
+ * @param $variable
  *   An associative array containing:
  *   - node: A node entity.
  *
@@ -1562,16 +1564,16 @@ function theme_node_recent_content($variables) {
   $node = $variables['node'];
 
   $output = '<div class="node-title">';
-  $output .= l($node->label(), 'node/' . $node->nid);
+  $output .= l($node->label(), 'node/' . $node->id());
   $mark = array(
     '#theme' => 'mark',
-    '#mark_type' => node_mark($node->nid, $node->changed),
+    '#mark_type' => node_mark($node->id(), $node->getChangedTime()),
   );
   $output .= drupal_render($mark);
   $output .= '</div><div class="node-author">';
   $username = array(
     '#theme' => 'username',
-    '#account' => user_load($node->uid),
+    '#account' => $node->getAuthor(),
   );
   $output .= drupal_render($username);
   $output .= '</div>';
@@ -1652,7 +1654,7 @@ function node_block_access($block) {
     // the settings from this block, deny access to it.
     if (!empty($node)) {
       // This is a node or node edit page.
-      return in_array($node->type, $allowed_types);
+      return in_array($node->bundle(), $allowed_types);
     }
     elseif (isset($node_add_arg) && isset($node_types[$node_add_arg])) {
       // This is a node creation page
@@ -1717,12 +1719,12 @@ function node_feed($nids = FALSE, $channel = array()) {
   foreach ($nodes as $node) {
     $item_text = '';
 
-    $node->link = url("node/$node->nid", array('absolute' => TRUE));
+    $node->link = url('node/' . $node->id(), array('absolute' => TRUE));
     $node->rss_namespaces = array();
     $node->rss_elements = array(
-      array('key' => 'pubDate', 'value' => gmdate('r', $node->created)),
-      array('key' => 'dc:creator', 'value' => $node->name),
-      array('key' => 'guid', 'value' => $node->nid . ' at ' . $base_url, 'attributes' => array('isPermaLink' => 'false'))
+      array('key' => 'pubDate', 'value' => gmdate('r', $node->getCreatedTime())),
+      array('key' => 'dc:creator', 'value' => $node->getAuthor()->label()),
+      array('key' => 'guid', 'value' => $node->id() . ' at ' . $base_url, 'attributes' => array('isPermaLink' => 'false'))
     );
 
     // The node gets built and modules add to or modify $node->rss_elements
@@ -1863,7 +1865,7 @@ function _node_index_node(EntityInterface $node) {
 
   // Save the changed time of the most recent indexed node, for the search
   // results half-life calculation.
-  Drupal::state()->set('node.cron_last', $node->changed);
+  Drupal::state()->set('node.cron_last', $node->getChangedTime());
 
   $languages = $node->getTranslationLanguages();
 
@@ -1883,7 +1885,7 @@ function _node_index_node(EntityInterface $node) {
     }
 
     // Update index.
-    search_index($node->nid, 'node', $text, $language->langcode);
+    search_index($node->id(), 'node', $text, $language->langcode);
   }
 }
 
@@ -2195,13 +2197,13 @@ function node_node_access($node, $op, $account) {
     }
 
     if ($op == 'update') {
-      if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->uid == $node->uid))) {
+      if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->uid == $node->getAuthorId()))) {
         return NODE_ACCESS_ALLOW;
       }
     }
 
     if ($op == 'delete') {
-      if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->uid == $node->uid))) {
+      if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->uid == $node->getAuthorId()))) {
         return NODE_ACCESS_ALLOW;
       }
     }
@@ -2510,18 +2512,18 @@ function node_query_node_access_alter(AlterableInterface $query) {
  * via hook_node_access_records_alter() implementations, and saves the collected
  * and altered grants to the database.
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   The $node to acquire grants for.
  * @param $delete
  *   (optional) Whether to delete existing node access records before inserting
  *   new ones. Defaults to TRUE.
  */
-function node_access_acquire_grants(EntityInterface $node, $delete = TRUE) {
+function node_access_acquire_grants(NodeInterface $node, $delete = TRUE) {
   $grants = module_invoke_all('node_access_records', $node);
   // Let modules alter the grants.
   drupal_alter('node_access_records', $grants, $node);
   // If no grants are set and the node is published, then use the default grant.
-  if (empty($grants) && !empty($node->status)) {
+  if (empty($grants) && $node->isPublished()) {
     $grants[] = array('realm' => 'all', 'gid' => 0, 'grant_view' => 1, 'grant_update' => 0, 'grant_delete' => 0);
   }
   _node_access_write_grants($node, $grants, NULL, $delete);
@@ -2555,7 +2557,7 @@ function node_access_acquire_grants(EntityInterface $node, $delete = TRUE) {
  */
 function _node_access_write_grants(EntityInterface $node, $grants, $realm = NULL, $delete = TRUE) {
   if ($delete) {
-    $query = db_delete('node_access')->condition('nid', $node->nid);
+    $query = db_delete('node_access')->condition('nid', $node->id());
     if ($realm) {
       $query->condition('realm', array($realm, 'all'), 'IN');
     }
@@ -2579,7 +2581,7 @@ function _node_access_write_grants(EntityInterface $node, $grants, $realm = NULL
       foreach ($grant_languages as $grant_langcode => $grant_language) {
         // Only write grants; denies are implicit.
         if ($grant['grant_view'] || $grant['grant_update'] || $grant['grant_delete']) {
-          $grant['nid'] = $node->nid;
+          $grant['nid'] = $node->id();
           $grant['langcode'] = $grant_langcode;
           // The record with the original langcode is used as the fallback.
           if ($grant['langcode'] == $node->langcode) {
