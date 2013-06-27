@@ -201,4 +201,27 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertResponse(200);
   }
 
+  /**
+   * Tests Field UI integration for content types.
+   */
+  public function testNodeTypeFieldUiPermissions() {
+    // Create an admin user who can only manage node fields.
+    $admin_user_1 = $this->drupalCreateUser(array('administer content types', 'administer node fields'));
+    $this->drupalLogin($admin_user_1);
+
+    // Test that the user only sees the actions available to him.
+    $this->drupalGet('admin/structure/types');
+    $this->assertLinkByHref('admin/structure/types/manage/article/fields');
+    $this->assertNoLinkByHref('admin/structure/types/manage/article/display');
+
+    // Create another admin user who can manage node fields display.
+    $admin_user_2 = $this->drupalCreateUser(array('administer content types', 'administer node display'));
+    $this->drupalLogin($admin_user_2);
+
+    // Test that the user only sees the actions available to him.
+    $this->drupalGet('admin/structure/types');
+    $this->assertNoLinkByHref('admin/structure/types/manage/article/fields');
+    $this->assertLinkByHref('admin/structure/types/manage/article/display');
+  }
+
 }
