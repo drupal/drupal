@@ -389,7 +389,14 @@ function theme_views_ui_style_plugin_table($variables) {
 }
 
 /**
- * Theme preprocess for theme_views_ui_view_preview_section().
+ * Prepares variables for views UI view preview section templates.
+ *
+ * Default template: views-ui-view-preview-section.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - view: The view object.
+ *   - section: The section name of a View (e.g. title, rows or pager).
  */
 function template_preprocess_views_ui_view_preview_section(&$vars) {
   switch ($vars['section']) {
@@ -439,8 +446,6 @@ function template_preprocess_views_ui_view_preview_section(&$vars) {
 
   if (isset($links)) {
     $build = array(
-      '#prefix' => '<div class="contextual">',
-      '#suffix' => '</div>',
       '#theme' => 'links__contextual',
       '#links' => $links,
       '#attributes' => array('class' => array('contextual-links')),
@@ -448,16 +453,7 @@ function template_preprocess_views_ui_view_preview_section(&$vars) {
         'library' => array(array('contextual', 'drupal.contextual-links')),
       ),
     );
-    $vars['links'] = drupal_render($build);
+    $vars['links'] = $build;
   }
   $vars['theme_hook_suggestions'][] = 'views_ui_view_preview_section__' . $vars['section'];
-}
-
-/**
- * Returns the HTML for a section of a View being previewed within the Views UI.
- */
-function theme_views_ui_view_preview_section($vars) {
-  return '<h1 class="section-title">' . $vars['title'] . '</h1>'
-  . $vars['links']
-  . '<div class="preview-section">'. drupal_render($vars['content']) . '</div>';
 }

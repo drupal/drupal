@@ -176,6 +176,7 @@ function views_ui_theme() {
     'views_ui_view_preview_section' => array(
       'variables' => array('view' => NULL, 'section' => NULL, 'content' => NULL, 'links' => ''),
       'file' => 'views_ui.theme.inc',
+      'template' => 'views-ui-view-preview-section',
     ),
 
     // Generic container wrapper, to use instead of theme_container when an id
