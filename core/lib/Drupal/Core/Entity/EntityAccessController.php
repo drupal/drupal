@@ -67,11 +67,11 @@ class EntityAccessController implements EntityAccessControllerInterface {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity for which to check 'create' access.
    * @param string $operation
-   *   The entity operation. Usually one of 'view', 'edit', 'create' or
+   *   The entity operation. Usually one of 'view', 'update', 'create' or
    *   'delete'.
    * @param string $langcode
    *   The language code for which to check access.
-   * @param \Drupal\Core\Session\AccountInterface; $account
+   * @param \Drupal\Core\Session\AccountInterface $account
    *   The user for which to check access.
    *
    * @return bool|null
@@ -88,7 +88,7 @@ class EntityAccessController implements EntityAccessControllerInterface {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity for which to check 'create' access.
    * @param string $operation
-   *   The entity operation. Usually one of 'view', 'edit', 'create' or
+   *   The entity operation. Usually one of 'view', 'update', 'create' or
    *   'delete'.
    * @param string $langcode
    *   The language code for which to check access.
@@ -113,10 +113,12 @@ class EntityAccessController implements EntityAccessControllerInterface {
   /**
    * Statically caches whether the given user has access.
    *
+   * @param bool $access
+   *   TRUE if the user has access, FALSE otherwise.
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity for which to check 'create' access.
    * @param string $operation
-   *   The entity operation. Usually one of 'view', 'edit', 'create' or
+   *   The entity operation. Usually one of 'view', 'update', 'create' or
    *   'delete'.
    * @param string $langcode
    *   The language code for which to check access.

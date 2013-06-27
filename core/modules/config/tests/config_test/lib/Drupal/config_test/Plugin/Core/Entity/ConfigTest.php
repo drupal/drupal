@@ -25,7 +25,8 @@ use Drupal\config_test\ConfigTestInterface;
  *     "form" = {
  *       "default" = "Drupal\config_test\ConfigTestFormController",
  *       "delete" = "Drupal\config_test\Form\ConfigTestDeleteForm"
- *     }
+ *     },
+ *     "access" = "Drupal\config_test\ConfigTestAccessController"
  *   },
  *   uri_callback = "config_test_uri",
  *   config_prefix = "config_test.dynamic",

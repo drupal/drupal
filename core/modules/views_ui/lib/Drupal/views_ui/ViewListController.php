@@ -133,13 +133,13 @@ class ViewListController extends ConfigEntityListController implements EntityCon
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityListController::getOperations().
+   * {@inheritdoc}
    */
-  public function getOperations(EntityInterface $view) {
-    $definition = parent::getOperations($view);
-    $uri = $view->uri();
+  public function getOperations(EntityInterface $entity) {
+    $operations = parent::getOperations($entity);
+    $uri = $entity->uri();
 
-    $definition['clone'] = array(
+    $operations['clone'] = array(
       'title' => t('Clone'),
       'href' => $uri['path'] . '/clone',
       'options' => $uri['options'],
@@ -148,12 +148,12 @@ class ViewListController extends ConfigEntityListController implements EntityCon
 
     // Add AJAX functionality to enable/disable operations.
     foreach (array('enable', 'disable') as $op) {
-      if (isset($definition[$op])) {
-        $definition[$op]['ajax'] = TRUE;
+      if (isset($operations[$op])) {
+        $operations[$op]['ajax'] = TRUE;
       }
     }
 
-    return $definition;
+    return $operations;
   }
 
   /**
@@ -168,10 +168,6 @@ class ViewListController extends ConfigEntityListController implements EntityCon
         $operation['attributes']['class'][] = 'use-ajax';
       }
     }
-
-    // Use the dropbutton #type.
-    unset($build['#theme']);
-    $build['#type'] = 'dropbutton';
 
     return $build;
   }

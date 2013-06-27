@@ -16,7 +16,7 @@ use Drupal\Core\Entity\EntityInterface;
 class CustomBlockTypeListController extends ConfigEntityListController {
 
   /**
-   * Overrides \Drupal\Core\Entity\EntityListController::getOperations().
+   * {@inheritdoc}
    */
   public function getOperations(EntityInterface $entity) {
     $operations = parent::getOperations($entity);

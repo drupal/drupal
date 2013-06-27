@@ -24,22 +24,21 @@ class ShortcutListController extends ConfigEntityListController {
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\EntityListController::getOperations().
+   * {@inheritdoc}
    */
   public function getOperations(EntityInterface $entity) {
     $operations = parent::getOperations($entity);
     $uri = $entity->uri();
 
-    $operations['edit']['title'] = t('Edit menu');
-    $operations['edit']['href'] = $uri['path'] . '/edit';
+    if (isset($operations['edit'])) {
+      $operations['edit']['title'] = t('Edit menu');
+      $operations['edit']['href'] = $uri['path'] . '/edit';
+    }
 
     $operations['list'] = array(
       'title' => t('List links'),
       'href' => $uri['path'],
     );
-    if (!$entity->access('delete')) {
-      unset($operations['delete']);
-    }
     return $operations;
   }
 

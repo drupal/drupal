@@ -24,7 +24,8 @@ use Drupal\Core\Annotation\Translation;
  *   label = @Translation("View"),
  *   module = "views",
  *   controllers = {
- *     "storage" = "Drupal\views\ViewStorageController"
+ *     "storage" = "Drupal\views\ViewStorageController",
+ *     "access" = "Drupal\views\ViewAccessController"
  *   },
  *   config_prefix = "views.view",
  *   entity_keys = {

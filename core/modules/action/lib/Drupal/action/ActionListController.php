@@ -109,9 +109,8 @@ class ActionListController extends ConfigEntityListController implements EntityC
    * {@inheritdoc}
    */
   public function getOperations(EntityInterface $entity) {
-    $operations = array();
-    if ($entity->isConfigurable()) {
-      $operations = parent::getOperations($entity);
+    $operations = $entity->isConfigurable() ? parent::getOperations($entity) : array();
+    if (isset($operations['edit'])) {
       $operations['edit']['title'] = t('Configure');
     }
     return $operations;

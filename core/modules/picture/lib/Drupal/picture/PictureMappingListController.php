@@ -32,7 +32,7 @@ class PictureMappingListController extends ConfigEntityListController {
   }
 
   /**
-   * Overrides Drupal\config\ConfigEntityListController::getOperations();
+   * {@inheritdoc}
    */
   public function getOperations(EntityInterface $entity) {
     $operations = parent::getOperations($entity);

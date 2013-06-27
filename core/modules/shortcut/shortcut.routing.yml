@@ -24,11 +24,11 @@ shortcut_set_edit:
   defaults:
     _entity_form: 'shortcut.edit'
   requirements:
-    _entity_access: 'shortcut.edit'
+    _entity_access: 'shortcut.update'
 
 shortcut_link_add_inline:
   pattern: '/admin/config/user-interface/shortcut/manage/{shortcut}/add-link-inline'
   defaults:
     _controller: 'Drupal\shortcut\Controller\ShortcutController::addShortcutLinkInline'
   requirements:
-    _entity_access: 'shortcut.edit'
+    _entity_access: 'shortcut.update'

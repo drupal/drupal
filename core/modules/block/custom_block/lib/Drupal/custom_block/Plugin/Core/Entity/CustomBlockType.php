@@ -22,6 +22,7 @@ use Drupal\custom_block\CustomBlockTypeInterface;
  *   module = "custom_block",
  *   controllers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
+ *     "access" = "Drupal\custom_block\CustomBlockTypeAccessController",
  *     "form" = {
  *       "default" = "Drupal\custom_block\CustomBlockTypeFormController",
  *       "delete" = "Drupal\custom_block\Form\CustomBlockTypeDeleteForm"

@@ -41,27 +41,24 @@ class MenuListController extends ConfigEntityListController {
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\EntityListController::getOperations();
+   * {@inheritdoc}
    */
   public function getOperations(EntityInterface $entity) {
     $operations = parent::getOperations($entity);
     $uri = $entity->uri();
 
-    $operations['edit']['title'] = t('Edit menu');
+    if (isset($operations['edit'])) {
+      $operations['edit']['title'] = t('Edit menu');
+    }
+    if (isset($operations['delete'])) {
+      $operations['delete']['title'] = t('Delete menu');
+    }
     $operations['add'] = array(
       'title' => t('Add link'),
       'href' => $uri['path'] . '/add',
       'options' => $uri['options'],
       'weight' => 20,
     );
-    // System menus could not be deleted.
-    $system_menus = menu_list_system_menus();
-    if (isset($system_menus[$entity->id()])) {
-      unset($operations['delete']);
-    }
-    else {
-      $operations['delete']['title'] = t('Delete menu');
-    }
     return $operations;
   }
 

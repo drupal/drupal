@@ -21,7 +21,7 @@ class ShortcutAccessController extends EntityAccessController {
    */
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
     switch ($operation) {
-      case 'edit':
+      case 'update':
         if (user_access('administer shortcuts', $account)) {
           return TRUE;
         }
