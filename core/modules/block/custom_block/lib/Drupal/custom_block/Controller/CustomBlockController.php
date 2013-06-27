@@ -68,16 +68,19 @@ class CustomBlockController implements ControllerInterface {
   /**
    * Displays add custom block links for available types.
    *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request object.
+   *
    * @return array
    *   A render array for a list of the custom block types that can be added or
    *   if there is only one custom block type defined for the site, the function
    *   returns the custom block add page for that custom block type.
    */
-  public function add() {
+  public function add(Request $request) {
     $types = $this->customBlockTypeStorage->load();
     if ($types && count($types) == 1) {
       $type = reset($types);
-      return $this->addForm($type);
+      return $this->addForm($type, $request);
     }
 
     return array('#theme' => 'custom_block_add_list', '#content' => $types);
