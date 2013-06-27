@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Utility\Json;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Tags;
 use Drupal\Component\Utility\UrlValidator;
@@ -3900,10 +3901,11 @@ function drupal_clear_js_cache() {
  *
  * @see drupal_json_decode()
  * @ingroup php_wrappers
+ * @deprecated as of Drupal 8.0. Use Drupal\Component\Utility\Json::encode()
+ *   directly instead.
  */
 function drupal_json_encode($var) {
-  // Encode <, >, ', &, and " using the json_encode() options parameter.
-  return json_encode($var, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
+  return Json::encode($var);
 }
 
 /**
@@ -3911,9 +3913,11 @@ function drupal_json_encode($var) {
  *
  * @see drupal_json_encode()
  * @ingroup php_wrappers
+ * @deprecated as of Drupal 8.0. Use Drupal\Component\Utility\Json::decode()
+ *   directly instead.
  */
 function drupal_json_decode($var) {
-  return json_decode($var, TRUE);
+  return Json::decode($var);
 }
 
 /**
