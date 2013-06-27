@@ -22,7 +22,7 @@ function image_field_info() {
         'column_groups' => array(
           'file' => array(
             'label' => t('File'),
-            'columns' => array('fid', 'width', 'height'),
+            'columns' => array('target_id', 'width', 'height'),
           ),
           'alt' => array(
             'label' => t('Alt'),
@@ -230,7 +230,7 @@ function image_field_presave(EntityInterface $entity, $field, $instance, $langco
   // Determine the dimensions if necessary.
   foreach ($items as &$item) {
     if (!isset($item['width']) || !isset($item['height'])) {
-      $info = image_get_info(file_load($item['fid'])->getFileUri());
+      $info = image_get_info(file_load($item['target_id'])->getFileUri());
 
       if (is_array($info)) {
         $item['width'] = $info['width'];

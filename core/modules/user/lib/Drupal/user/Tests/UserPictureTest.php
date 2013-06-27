@@ -135,6 +135,6 @@ class UserPictureTest extends WebTestBase {
 
     // Load actual user data from database.
     $account = user_load($this->web_user->uid, TRUE);
-    return file_load($account->user_picture[Language::LANGCODE_NOT_SPECIFIED][0]['fid'], TRUE);
+    return file_load($account->user_picture[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'], TRUE);
   }
 }

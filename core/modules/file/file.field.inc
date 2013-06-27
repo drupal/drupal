@@ -189,7 +189,7 @@ function _file_generic_settings_file_directory_validate($element, &$form_state) 
 function file_field_insert(EntityInterface $entity, $field, $instance, $langcode, &$items) {
   // Add a new usage of each uploaded file.
   foreach ($items as $item) {
-    file_usage()->add(file_load($item['fid']), 'file', $entity->entityType(), $entity->id());
+    file_usage()->add(file_load($item['target_id']), 'file', $entity->entityType(), $entity->id());
   }
 }
 
@@ -203,7 +203,7 @@ function file_field_update(EntityInterface $entity, $field, $instance, $langcode
   // deletion of previous file usages are necessary.
   if (!empty($entity->original) && $entity->getRevisionId() != $entity->original->getRevisionId()) {
     foreach ($items as $item) {
-      file_usage()->add(file_load($item['fid']), 'file', $entity->entityType(), $entity->id());
+      file_usage()->add(file_load($item['target_id']), 'file', $entity->entityType(), $entity->id());
     }
     return;
   }
@@ -211,7 +211,7 @@ function file_field_update(EntityInterface $entity, $field, $instance, $langcode
   // Build a display of the current FIDs.
   $current_fids = array();
   foreach ($items as $item) {
-    $current_fids[] = $item['fid'];
+    $current_fids[] = $item['target_id'];
   }
 
   // Compare the original field values with the ones that are being saved.
@@ -219,18 +219,18 @@ function file_field_update(EntityInterface $entity, $field, $instance, $langcode
   $original_fids = array();
   if (!empty($original->{$field['field_name']}[$langcode])) {
     foreach ($original->{$field['field_name']}[$langcode] as $original_item) {
-      $original_fids[] = $original_item['fid'];
-      if (isset($original_item['fid']) && !in_array($original_item['fid'], $current_fids)) {
+      $original_fids[] = $original_item['target_id'];
+      if (isset($original_item['target_id']) && !in_array($original_item['target_id'], $current_fids)) {
         // Decrement the file usage count by 1.
-        file_usage()->delete(file_load($original_item['fid']), 'file', $entity->entityType(), $entity->id());
+        file_usage()->delete(file_load($original_item['target_id']), 'file', $entity->entityType(), $entity->id());
       }
     }
   }
 
   // Add new usage entries for newly added files.
   foreach ($items as $item) {
-    if (!in_array($item['fid'], $original_fids)) {
-      file_usage()->add(file_load($item['fid']), 'file', $entity->entityType(), $entity->id());
+    if (!in_array($item['target_id'], $original_fids)) {
+      file_usage()->add(file_load($item['target_id']), 'file', $entity->entityType(), $entity->id());
     }
   }
 }
@@ -241,7 +241,7 @@ function file_field_update(EntityInterface $entity, $field, $instance, $langcode
 function file_field_delete(EntityInterface $entity, $field, $instance, $langcode, &$items) {
   // Delete all file usages within this entity.
   foreach ($items as $delta => $item) {
-    file_usage()->delete(file_load($item['fid']), 'file', $entity->entityType(), $entity->id(), 0);
+    file_usage()->delete(file_load($item['target_id']), 'file', $entity->entityType(), $entity->id(), 0);
   }
 }
 
@@ -251,7 +251,7 @@ function file_field_delete(EntityInterface $entity, $field, $instance, $langcode
 function file_field_delete_revision(EntityInterface $entity, $field, $instance, $langcode, &$items) {
   foreach ($items as $delta => $item) {
     // Decrement the file usage count by 1.
-    file_usage()->delete(file_load($item['fid']), 'file', $entity->entityType(), $entity->id());
+    file_usage()->delete(file_load($item['target_id']), 'file', $entity->entityType(), $entity->id());
   }
 }
 
@@ -259,7 +259,7 @@ function file_field_delete_revision(EntityInterface $entity, $field, $instance, 
  * Implements hook_field_is_empty().
  */
 function file_field_is_empty($item, $field_type) {
-  return empty($item['fid']);
+  return empty($item['target_id']);
 }
 
 /**

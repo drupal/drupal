@@ -47,7 +47,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
 
     // Load the node and the file.
     $node = node_load($nid, TRUE);
-    $file = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']);
+    $file = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id']);
 
     // Generate and test sanitized tokens.
     $tests = array();

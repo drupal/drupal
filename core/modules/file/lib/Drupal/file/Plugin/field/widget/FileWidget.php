@@ -209,8 +209,8 @@ class FileWidget extends WidgetBase {
 
     // Field stores FID value in a single mode, so we need to transform it for
     // form element to recognize it correctly.
-    if (!isset($items[$delta]['fids']) && isset($items[$delta]['fid'])) {
-      $items[$delta]['fids'][0] = $items[$delta]['fid'];
+    if (!isset($items[$delta]['fids']) && isset($items[$delta]['target_id'])) {
+      $items[$delta]['fids'][0] = $items[$delta]['target_id'];
     }
     $element['#default_value'] = !empty($items[$delta]) ? $items[$delta] : $defaults;
 
@@ -237,7 +237,7 @@ class FileWidget extends WidgetBase {
     foreach ($values as &$value) {
       foreach ($value['fids'] as $fid) {
         $new_value = $value;
-        $new_value['fid'] = $fid;
+        $new_value['target_id'] = $fid;
         unset($new_value['fids']);
         $new_values[] = $new_value;
       }

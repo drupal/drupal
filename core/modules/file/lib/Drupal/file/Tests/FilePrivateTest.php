@@ -50,7 +50,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $test_file = $this->getTestFile('text');
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name, TRUE, array('private' => TRUE));
     $node = node_load($nid, TRUE);
-    $node_file = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']);
+    $node_file = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id']);
     // Ensure the file can be downloaded.
     $this->drupalGet(file_create_url($node_file->getFileUri()));
     $this->assertResponse(200, 'Confirmed that the generated URL is correct by downloading the shipped file.');
@@ -62,7 +62,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->drupalLogin($this->admin_user);
     $nid = $this->uploadNodeFile($test_file, $no_access_field_name, $type_name, TRUE, array('private' => TRUE));
     $node = node_load($nid, TRUE);
-    $node_file = file_load($node->{$no_access_field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']);
+    $node_file = file_load($node->{$no_access_field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id']);
     // Ensure the file cannot be downloaded.
     $this->drupalGet(file_create_url($node_file->getFileUri()));
     $this->assertResponse(403, 'Confirmed that access is denied for the file without view field access permission.');

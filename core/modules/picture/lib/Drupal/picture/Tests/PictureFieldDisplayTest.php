@@ -123,7 +123,7 @@ class PictureFieldDisplayTest extends ImageFieldTestBase {
     $node = node_load($nid, TRUE);
 
     // Test that the default formatter is being used.
-    $image_uri = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid'])->getFileUri();
+    $image_uri = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'])->getFileUri();
     $image_info = array(
       'uri' => $image_uri,
       'width' => 40,

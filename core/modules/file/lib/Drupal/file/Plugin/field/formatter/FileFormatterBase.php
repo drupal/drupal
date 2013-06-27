@@ -22,9 +22,9 @@ abstract class FileFormatterBase extends FormatterBase {
     $fids = array();
     foreach ($entities as $id => $entity) {
       foreach ($items[$id] as $delta => $item) {
-        if ($this->isDisplayed($item) && !empty($item['fid'])) {
+        if ($this->isDisplayed($item) && !empty($item['target_id'])) {
           // Load the files from the files table.
-          $fids[] = $item['fid'];
+          $fids[] = $item['target_id'];
         }
       }
     }
@@ -35,8 +35,8 @@ abstract class FileFormatterBase extends FormatterBase {
       foreach ($entities as $id => $entity) {
         foreach ($items[$id] as $delta => $item) {
           // If the file does not exist, mark the entire item as empty.
-          if (!empty($item['fid'])) {
-            $items[$id][$delta]['entity'] = isset($files[$item['fid']]) ? $files[$item['fid']] : NULL;
+          if (!empty($item['target_id'])) {
+            $items[$id][$delta]['entity'] = isset($files[$item['target_id']]) ? $files[$item['target_id']] : NULL;
           }
         }
       }

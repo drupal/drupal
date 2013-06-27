@@ -38,7 +38,7 @@ function hook_file_load($files) {
   $result = db_query('SELECT * FROM {upload} u WHERE u.fid IN (:fids)', array(':fids' => array_keys($files)))->fetchAll(PDO::FETCH_ASSOC);
   foreach ($result as $record) {
     foreach ($record as $key => $value) {
-      $files[$record['fid']]->$key = $value;
+      $files[$record['target_id']]->$key = $value;
     }
   }
 }

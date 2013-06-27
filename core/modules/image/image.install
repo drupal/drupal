@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Uuid\Uuid;
+use Drupal\field\Plugin\Core\Entity\Field;
 
 /**
  * Implements hook_install().
@@ -30,10 +31,10 @@ function image_uninstall() {
 function image_field_schema($field) {
   return array(
     'columns' => array(
-      'fid' => array(
-        'description' => 'The {file_managed}.fid being referenced in this field.',
+      'target_id' => array(
+        'description' => 'The ID of the target entity.',
         'type' => 'int',
-        'not null' => FALSE,
+        'not null' => TRUE,
         'unsigned' => TRUE,
       ),
       'alt' => array(
@@ -60,12 +61,12 @@ function image_field_schema($field) {
       ),
     ),
     'indexes' => array(
-      'fid' => array('fid'),
+      'target_id' => array('target_id'),
     ),
     'foreign keys' => array(
-      'fid' => array(
+      'target_id' => array(
         'table' => 'file_managed',
-        'columns' => array('fid' => 'fid'),
+        'columns' => array('target_id' => 'fid'),
       ),
     ),
   );

@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for File module.
  */
 
+use Drupal\field\Plugin\Core\Entity\Field;
+
 /**
  * Implements hook_schema().
  */
@@ -154,10 +156,10 @@ function file_schema() {
 function file_field_schema($field) {
   return array(
     'columns' => array(
-      'fid' => array(
-        'description' => 'The {file_managed}.fid being referenced in this field.',
+      'target_id' => array(
+        'description' => 'The ID of the target entity.',
         'type' => 'int',
-        'not null' => FALSE,
+        'not null' => TRUE,
         'unsigned' => TRUE,
       ),
       'display' => array(
@@ -175,12 +177,12 @@ function file_field_schema($field) {
       ),
     ),
     'indexes' => array(
-      'fid' => array('fid'),
+      'target_id' => array('target_id'),
     ),
     'foreign keys' => array(
-      'fid' => array(
+      'target_id' => array(
         'table' => 'file_managed',
-        'columns' => array('fid' => 'fid'),
+        'columns' => array('target_id' => 'fid'),
       ),
     ),
   );
@@ -243,6 +245,12 @@ function file_update_dependencies() {
   $dependencies['field'][8003] = array(
     'file' => 8001,
   );
+
+  // Convert the 'fid' column of file fields to 'target_id' after fields and
+  // instances have been moved to the config system.
+  $dependencies['file'][8003] = array(
+    'field' => 8003,
+  );
   return $dependencies;
 }
 
@@ -286,5 +294,48 @@ function file_update_8002() {
       'default' => '',
     );
     db_change_field('file_usage', 'module', 'module', $spec);
+  }
+}
+
+/**
+ * Update file field tables to use target_id instead of fid.
+ */
+function file_update_8003() {
+  foreach (config_get_storage_names_with_prefix('field.field.') as $config_name) {
+    $field_config = config($config_name);
+    // Only update file fields that use the default SQL storage.
+    if (in_array($field_config->get('type'), array('file', 'image')) && $field_config->get('storage.type') == 'field_sql_storage') {
+      $field = new Field($field_config->get());
+
+      $tables = array(
+        _field_sql_storage_tablename($field),
+        _field_sql_storage_revision_tablename($field),
+      );
+
+      foreach ($tables as $table_name) {
+        // Skip fields which were created during the upgrade process.
+        if (!db_field_exists($table_name, $field->id() . '_fid')) {
+          continue 2;
+        }
+
+        db_change_field($table_name, $field->id() . '_fid', $field->id() . '_target_id', array(
+          'description' => 'The ID of the target entity.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ));
+
+        // Change the index.
+        db_drop_index($table_name, $field->id() . '_fid');
+        db_add_index($table_name, $field->id() . '_target_id', array($field->id() . '_target_id'));
+      }
+
+      // Update the indexes in field config as well.
+      $indexes = $field_config->get('indexes');
+      unset($indexes['fid']);
+      $indexes['target_id'] = array('target_id');
+      $field_config->set('indexes', $indexes);
+      $field_config->save();
+    }
   }
 }

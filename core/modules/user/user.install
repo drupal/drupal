@@ -273,7 +273,7 @@ function user_install_picture_field() {
     'type' => 'image',
     'cardinality' => 1,
     'locked' => FALSE,
-    'indexes' => array('fid' => array('fid')),
+    'indexes' => array('target_id' => array('target_id')),
     'settings' => array(
       'uri_scheme' => 'public',
       'default_image' => FALSE,
@@ -660,7 +660,7 @@ function user_update_8011() {
     'type' => 'image',
     'cardinality' => 1,
     'locked' => FALSE,
-    'indexes' => array('fid' => array('fid')),
+    'indexes' => array('target_id' => array('target_id')),
     'settings' => array(
       'uri_scheme' => 'public',
       'default_image' => FALSE,
@@ -783,7 +783,7 @@ function user_update_8012(&$sandbox) {
           'revision_id' => $uid,
           'langcode' => Language::LANGCODE_NOT_SPECIFIED,
           'delta' => 0,
-          'user_picture_fid' => $fid,
+          'user_picture_target_id' => $fid,
         ))
         ->execute();
       db_insert('field_revision_user_picture')
@@ -794,7 +794,7 @@ function user_update_8012(&$sandbox) {
           'revision_id' => $uid,
           'langcode' => Language::LANGCODE_NOT_SPECIFIED,
           'delta' => 0,
-          'user_picture_fid' => $fid,
+          'user_picture_target_id' => $fid,
         ))
         ->execute();
 

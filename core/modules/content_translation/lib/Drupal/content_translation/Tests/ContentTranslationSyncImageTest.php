@@ -119,7 +119,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
       // Generate the item for the current image file entity and attach it to
       // the entity.
       $item = array(
-        'fid' => $fid,
+        'target_id' => $fid,
         'alt' => $default_langcode . '_' . $fid . '_' . $this->randomName(),
         'title' => $default_langcode . '_' . $fid . '_' . $this->randomName(),
       );
@@ -144,7 +144,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
       // the entity.
       $fid = $this->files[$index]->fid;
       $item = array(
-        'fid' => $fid,
+        'target_id' => $fid,
         'alt' => $langcode . '_' . $fid . '_' . $this->randomName(),
         'title' => $langcode . '_' . $fid . '_' . $this->randomName(),
       );
@@ -166,11 +166,11 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
     // have been retained.
     $fids = array();
     foreach ($entity->{$this->fieldName} as $delta => $item) {
-      $value = $values[$default_langcode][$item->fid];
+      $value = $values[$default_langcode][$item->target_id];
       $source_item = $entity->getTranslation($langcode)->{$this->fieldName}->offsetGet($delta);
-      $assert = $item->fid == $source_item->fid && $item->alt == $value['alt'] && $item->title == $value['title'];
-      $this->assertTrue($assert, format_string('Field item @fid has been successfully synchronized.', array('@fid' => $item->fid)));
-      $fids[$item->fid] = TRUE;
+      $assert = $item->target_id == $source_item->target_id && $item->alt == $value['alt'] && $item->title == $value['title'];
+      $this->assertTrue($assert, format_string('Field item @fid has been successfully synchronized.', array('@fid' => $item->target_id)));
+      $fids[$item->target_id] = TRUE;
     }
 
     // Check that the dropped value is the right one.
@@ -179,7 +179,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
 
     // Add back an item for the dropped value and perform synchronization again.
     $values[$langcode][$removed_fid] = array(
-      'fid' => $removed_fid,
+      'target_id' => $removed_fid,
       'alt' => $langcode . '_' . $removed_fid . '_' . $this->randomName(),
       'title' => $langcode . '_' . $removed_fid . '_' . $this->randomName(),
     );
@@ -196,11 +196,11 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
       // When adding an item its value is copied over all the target languages,
       // thus in this case the source language needs to be used to check the
       // values instead of the target one.
-      $fid_langcode = $item->fid != $removed_fid ? $default_langcode : $langcode;
-      $value = $values[$fid_langcode][$item->fid];
+      $fid_langcode = $item->target_id != $removed_fid ? $default_langcode : $langcode;
+      $value = $values[$fid_langcode][$item->target_id];
       $source_item = $entity->getTranslation($langcode)->{$this->fieldName}->offsetGet($delta);
-      $assert = $item->fid == $source_item->fid && $item->alt == $value['alt'] && $item->title == $value['title'];
-      $this->assertTrue($assert, format_string('Field item @fid has been successfully synchronized.', array('@fid' => $item->fid)));
+      $assert = $item->target_id == $source_item->target_id && $item->alt == $value['alt'] && $item->title == $value['title'];
+      $this->assertTrue($assert, format_string('Field item @fid has been successfully synchronized.', array('@fid' => $item->target_id)));
     }
   }
 

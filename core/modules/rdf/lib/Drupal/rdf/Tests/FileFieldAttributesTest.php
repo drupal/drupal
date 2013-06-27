@@ -73,7 +73,7 @@ class FileFieldAttributesTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $this->fieldName, $type_name);
 
     $this->node = node_load($nid, TRUE);
-    $this->file = file_load($this->node->{$this->fieldName}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']);
+    $this->file = file_load($this->node->{$this->fieldName}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id']);
 
   }
 
