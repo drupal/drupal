@@ -507,6 +507,8 @@ function _field_invoke_widget_target($form_display) {
  *   An associative array of additional options. See field_invoke_method() for
  *   details.
  *
+ * @deprecated as of Drupal 8.0. Use the entity system instead.
+ *
  * @see field_form_get_state()
  * @see field_form_set_state()
  */
@@ -562,6 +564,8 @@ function field_attach_form(EntityInterface $entity, &$form, &$form_state, $langc
  *   - instance: A field instance entity, If provided, only values for the
  *     corresponding field will be loaded, and no cache is written. This
  *     option is only supported when all $entities are within the same bundle.
+ *
+ * @deprecated as of Drupal 8.0. Use the entity system instead.
  */
 function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $options = array()) {
   $load_current = $age == FIELD_LOAD_CURRENT;
@@ -733,6 +737,8 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
  * @param $options
  *   An associative array of additional options. See field_attach_load() for
  *   details.
+ *
+ * @deprecated as of Drupal 8.0. Use the entity system instead.
  */
 function field_attach_load_revision($entity_type, $entities, $options = array()) {
   return field_attach_load($entity_type, $entities, FIELD_LOAD_REVISION, $options);
@@ -766,6 +772,8 @@ function field_attach_load_revision($entity_type, $entities, $options = array())
  * @param array $options
  *   An associative array of additional options. See field_invoke_method() for
  *   details.
+ *
+ * @deprecated as of Drupal 8.0. Use the entity system instead.
  */
 function field_attach_form_validate(EntityInterface $entity, $form, &$form_state, array $options = array()) {
   // Only support NG entities.
@@ -813,6 +821,8 @@ function field_attach_form_validate(EntityInterface $entity, $form, &$form_state
  * @param array $options
  *   An associative array of additional options. See field_invoke_method() for
  *   details.
+ *
+ * @deprecated as of Drupal 8.0. Use the entity system instead.
  */
 function field_attach_extract_form_values(EntityInterface $entity, $form, &$form_state, array $options = array()) {
   // Ensure we are working with a BC mode entity.
@@ -843,6 +853,8 @@ function field_attach_extract_form_values(EntityInterface $entity, $form, &$form
  * @return
  *   Default values (if any) will be added to the $entity parameter for fields
  *   it leaves unspecified.
+ *
+ * @deprecated as of Drupal 8.0. Use the entity system instead.
  */
 function field_attach_insert(EntityInterface $entity) {
   // Ensure we are working with a BC mode entity.
@@ -882,6 +894,8 @@ function field_attach_insert(EntityInterface $entity) {
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to save.
+ *
+ * @deprecated as of Drupal 8.0. Use the entity system instead.
  */
 function field_attach_update(EntityInterface $entity) {
   // Ensure we are working with a BC mode entity.
@@ -924,6 +938,8 @@ function field_attach_update(EntityInterface $entity) {
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity whose field data to delete.
+ *
+ * @deprecated as of Drupal 8.0. Use the entity system instead.
  */
 function field_attach_delete(EntityInterface $entity) {
   // Ensure we are working with a BC mode entity.
@@ -955,6 +971,8 @@ function field_attach_delete(EntityInterface $entity) {
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to save.
+ *
+ * @deprecated as of Drupal 8.0. Use the entity system instead.
  */
 function field_attach_delete_revision(EntityInterface $entity) {
   // Ensure we are working with a BC mode entity.
@@ -998,6 +1016,8 @@ function field_attach_delete_revision(EntityInterface $entity) {
  * @param $langcode
  *   (Optional) The language the field values are to be shown in. If no language
  *   is provided the current language is used.
+ *
+ * @deprecated as of Drupal 8.0. Use the entity system instead.
  */
 function field_attach_prepare_view($entity_type, array $entities, array $displays, $langcode = NULL) {
   $options['langcode'] = array();
@@ -1060,6 +1080,8 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
  *
  * @return array
  *   A renderable array for the field values.
+ *
+ * @deprecated as of Drupal 8.0. Use the entity system instead.
  */
 function field_attach_view(EntityInterface $entity, EntityDisplay $display, $langcode = NULL, array $options = array()) {
   // Ensure we are working with a BC mode entity.

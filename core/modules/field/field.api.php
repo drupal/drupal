@@ -320,6 +320,8 @@ function hook_field_formatter_info_alter(array &$info) {
  * @param $langcode
  *   The language the field values are going to be entered in. If no language is
  *   provided the default site language will be used.
+ *
+ * @deprecated as of Drupal 8.0. Use the entity system instead.
  */
 function hook_field_attach_form(\Drupal\Core\Entity\EntityInterface $entity, &$form, &$form_state, $langcode) {
   // Add a checkbox allowing a given field to be emptied.
@@ -345,6 +347,8 @@ function hook_field_attach_form(\Drupal\Core\Entity\EntityInterface $entity, &$f
  * for subsequent loads.
  *
  * See field_attach_load() for details and arguments.
+ *
+ * @deprecated as of Drupal 8.0. Use the entity system instead.
  */
 function hook_field_attach_load($entity_type, $entities, $age, $options) {
   // @todo Needs function body.
@@ -365,6 +369,8 @@ function hook_field_attach_load($entity_type, $entities, $age, $options) {
  *   $form_state['values'].
  * @param $form_state
  *   An associative array containing the current state of the form.
+ *
+ * @deprecated as of Drupal 8.0. Use the entity system instead.
  */
 function hook_field_attach_extract_form_values(\Drupal\Core\Entity\EntityInterface $entity, $form, &$form_state) {
   // Sample case of an 'Empty the field' checkbox added on the form, allowing
@@ -437,6 +443,8 @@ function hook_field_attach_purge(\Drupal\Core\Entity\EntityInterface $entity, $f
  *     See field_view_field() for more information on what its $display_options
  *     argument contains.
  *   - langcode: The language code used for rendering.
+ *
+ * @deprecated as of Drupal 8.0. Use the entity system instead.
  */
 function hook_field_attach_view_alter(&$output, $context) {
   // Append RDF term mappings on displayed taxonomy links.
