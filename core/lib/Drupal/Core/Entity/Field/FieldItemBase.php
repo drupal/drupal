@@ -177,9 +177,4 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
    */
   public function deleteRevision() { }
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function prepareView(array $entities_items) { }
-
 }

@@ -107,50 +107,6 @@ abstract class LegacyConfigFieldItem extends ConfigFieldItemBase {
   }
 
   /**
-   * {@inherotdoc}
-   */
-  public static function prepareView(array $entities_items) {
-    if ($entities_items) {
-      // Determine the legacy callback.
-      $field_type_definition = current($entities_items)->getPluginDefinition();
-      $module = $field_type_definition['module'];
-      $callback = "{$module}_field_prepare_view";
-      if (function_exists($callback)) {
-        $entities = array();
-        $instances = array();
-        $itemsBC = array();
-        foreach ($entities_items as $id => $items) {
-          $entities[$id] = $items->getParent();
-          $instances[$id] = $items->offsetGet(0)->getInstance();
-          // We need to remove the empty "prototype" item here.
-          // @todo Revisit after http://drupal.org/node/1988492.
-          $items->filterEmptyValues();
-          $itemsBC[$id] = $items->getValue(TRUE);
-        }
-
-        // Determine the entity type, langcode and field.
-        $entity_type = current($entities)->entityType();
-        $langcode = current($entities)->language()->langcode;
-        $field = current($instances)->getField();
-
-        $args = array(
-          $entity_type,
-          $entities,
-          $field,
-          $instances,
-          $langcode,
-          &$itemsBC,
-        );
-        call_user_func_array($callback, $args);
-
-        foreach ($entities_items as $id => $items) {
-          $items->setValue($itemsBC[$id]);
-        }
-      }
-    }
-  }
-
-  /**
    * Returns the legacy callback for a given field type "hook".
    *
    * @param string $hook

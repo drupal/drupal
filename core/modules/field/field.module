@@ -776,21 +776,11 @@ function field_view_field(EntityInterface $entity, $field_name, $display_options
       $items = \Drupal::typedData()->create($definitions[$field_name], $itemsBC, $field_name, $entity);
     }
 
-    // Invoke prepare_view steps if needed.
+    // Invoke the formatter's prepareView() and view() methods.
     $id = $entity->id();
-
-    // First let the field type do its preparation. prepareView() is a static
-    // method.
-    $type_definition = \Drupal::typedData()->getDefinition($definition['type']);
-    $class = $type_definition['class'];
-    $class::prepareView(array($id => $items), $definition);
-
-    // Then let the formatter do its own specific massaging.
     $itemsBC_multi = array($id => $items->getValue());
     $formatter->prepareView(array($id => $entity), $display_langcode, $itemsBC_multi);
     $itemsBC = $itemsBC_multi[$id];
-
-    // Build the renderable array.
     $result = $formatter->view($entity, $display_langcode, $itemsBC);
 
     // Invoke hook_field_attach_view_alter() to let other modules alter the

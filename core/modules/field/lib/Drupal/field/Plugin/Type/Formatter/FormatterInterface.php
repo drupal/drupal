@@ -53,9 +53,6 @@ interface FormatterInterface extends PluginSettingsInterface {
    * field that displays properties of the referenced entities such as name or
    * type.
    *
-   * This method is called after the field type's implementation of
-   * hook_field_prepare_view().
-   *
    * This method operates on multiple entities. The $entities and $items
    * parameters are arrays keyed by entity ID. For performance reasons,
    * information for all involved entities should be loaded in a single query
