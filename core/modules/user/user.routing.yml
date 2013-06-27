@@ -74,3 +74,17 @@ user_pass:
     _form: '\Drupal\user\Form\UserPasswordForm'
   requirements:
     _access: 'TRUE'
+
+user_page:
+  pattern: '/user'
+  defaults:
+    _content: '\Drupal\user\Controller\UserController::userPage'
+  requirements:
+    _access: 'TRUE'
+
+user_login:
+  pattern: '/user/login'
+  defaults:
+    _form: '\Drupal\user\Form\UserLoginForm'
+  requirements:
+    _access: 'TRUE'

@@ -850,16 +850,13 @@ function user_menu() {
   $items['user'] = array(
     'title' => 'User account',
     'title callback' => 'user_menu_title',
-    'page callback' => 'user_page',
-    'access callback' => TRUE,
-    'file' => 'user.pages.inc',
     'weight' => -10,
+    'route_name' => 'user_page',
     'menu_name' => 'account',
   );
 
   $items['user/login'] = array(
     'title' => 'Log in',
-    'access callback' => 'user_is_anonymous',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   // Other authentication methods may add pages below user/login/.
@@ -1151,44 +1148,6 @@ function user_page_title($account) {
 }
 
 /**
- * Form builder; the main user login form.
- *
- * @ingroup forms
- */
-function user_login_form($form, &$form_state) {
-  // Display login form:
-  $form['name'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Username'),
-    '#size' => 60,
-    '#maxlength' => USERNAME_MAX_LENGTH,
-    '#description' => t('Enter your @s username.', array('@s' => config('system.site')->get('name'))),
-    '#required' => TRUE,
-    '#attributes' => array(
-      'autocorrect' => 'off',
-      'autocapitalize' => 'off',
-      'spellcheck' => 'false',
-      'autofocus' => 'autofocus',
-    ),
-  );
-
-  $form['pass'] = array(
-    '#type' => 'password',
-    '#title' => t('Password'),
-    '#size' => 60,
-    '#description' => t('Enter the password that accompanies your username.'),
-    '#required' => TRUE,
-  );
-
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
-
-  $form['#validate'] = user_login_default_validators();
-
-  return $form;
-}
-
-/**
  * Set up a series for validators which check for blocked users,
  * then authenticate against local database, then return an error if
  * authentication fails. Distributed authentication modules are welcome
@@ -1208,109 +1167,6 @@ function user_login_form($form, &$form_state) {
  */
 function user_login_default_validators() {
   return array('user_login_name_validate', 'user_login_authenticate_validate', 'user_login_final_validate');
-}
-
-/**
- * A FAPI validate handler. Sets an error if supplied username has been blocked.
- */
-function user_login_name_validate($form, &$form_state) {
-  if (!empty($form_state['values']['name']) && user_is_blocked($form_state['values']['name'])) {
-    // Blocked in user administration.
-    form_set_error('name', t('The username %name has not been activated or is blocked.', array('%name' => $form_state['values']['name'])));
-  }
-}
-
-/**
- * A validate handler on the login form. Check supplied username/password
- * against local users table. If successful, $form_state['uid']
- * is set to the matching user ID.
- */
-function user_login_authenticate_validate($form, &$form_state) {
-  $password = trim($form_state['values']['pass']);
-  $flood_config = config('user.flood');
-  $flood = Drupal::service('flood');
-  if (!empty($form_state['values']['name']) && !empty($password)) {
-    // Do not allow any login from the current user's IP if the limit has been
-    // reached. Default is 50 failed attempts allowed in one hour. This is
-    // independent of the per-user limit to catch attempts from one IP to log
-    // in to many different user accounts.  We have a reasonably high limit
-    // since there may be only one apparent IP for all users at an institution.
-    if (!$flood->isAllowed('user.failed_login_ip', $flood_config->get('ip_limit'), $flood_config->get('ip_window'))) {
-      $form_state['flood_control_triggered'] = 'ip';
-      return;
-    }
-    $account = db_query("SELECT * FROM {users} WHERE name = :name AND status = 1", array(':name' => $form_state['values']['name']))->fetchObject();
-    if ($account) {
-      if ($flood_config->get('uid_only')) {
-        // Register flood events based on the uid only, so they apply for any
-        // IP address. This is the most secure option.
-        $identifier = $account->uid;
-      }
-      else {
-        // The default identifier is a combination of uid and IP address. This
-        // is less secure but more resistant to denial-of-service attacks that
-        // could lock out all users with public user names.
-        $identifier = $account->uid . '-' . Drupal::request()->getClientIP();
-      }
-      $form_state['flood_control_user_identifier'] = $identifier;
-
-      // Don't allow login if the limit for this user has been reached.
-      // Default is to allow 5 failed attempts every 6 hours.
-      if (!$flood->isAllowed('user.failed_login_user', $flood_config->get('user_limit'), $flood_config->get('user_window'), $identifier)) {
-        $form_state['flood_control_triggered'] = 'user';
-        return;
-      }
-    }
-    // We are not limited by flood control, so try to authenticate.
-    // Set $form_state['uid'] as a flag for user_login_final_validate().
-    $form_state['uid'] = user_authenticate($form_state['values']['name'], $password);
-  }
-}
-
-/**
- * The final validation handler on the login form.
- *
- * Sets a form error if user has not been authenticated, or if too many
- * logins have been attempted. This validation function should always
- * be the last one.
- */
-function user_login_final_validate($form, &$form_state) {
-  $flood_config = config('user.flood');
-  $flood = Drupal::service('flood');
-  if (empty($form_state['uid'])) {
-    // Always register an IP-based failed login event.
-    $flood->register('user.failed_login_ip', $flood_config->get('ip_window'));
-    // Register a per-user failed login event.
-    if (isset($form_state['flood_control_user_identifier'])) {
-      $flood->register('user.failed_login_user', $flood_config->get('user_window'), $form_state['flood_control_user_identifier']);
-    }
-
-    if (isset($form_state['flood_control_triggered'])) {
-      if ($form_state['flood_control_triggered'] == 'user') {
-        form_set_error('name', format_plural($flood_config->get('user_limit'), 'Sorry, there has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', 'Sorry, there have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
-      }
-      else {
-        // We did not find a uid, so the limit is IP-based.
-        form_set_error('name', t('Sorry, too many failed login attempts from your IP address. This IP address is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
-      }
-    }
-    else {
-      form_set_error('name', t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password', array('query' => array('name' => $form_state['values']['name']))))));
-      if (user_load_by_name($form_state['values']['name'])) {
-        watchdog('user', 'Login attempt failed for %user.', array('%user' => $form_state['values']['name']));
-      }
-      else {
-        // If the username entered is not a valid user,
-        // only store the IP address.
-        watchdog('user', 'Login attempt failed from %ip.', array('%ip' => Drupal::request()->getClientIp()));
-      }
-    }
-  }
-  elseif (isset($form_state['flood_control_user_identifier'])) {
-    // Clear past failures for this user so as not to block a user who might
-    // log in and out more than once in an hour.
-    $flood->clear('user.failed_login_user', $form_state['flood_control_user_identifier']);
-  }
 }
 
 /**
@@ -1345,18 +1201,22 @@ function user_authenticate($name, $password) {
 }
 
 /**
- * Finalize the login process. Must be called when logging in a user.
+ * Finalizes the login process and logs in a user.
  *
- * The function records a watchdog message about the new session, saves the
- * login timestamp, calls hook_user_login(), and generates a new session.
+ * The function logs in the user, records a watchdog message about the new
+ * session, saves the login timestamp, calls hook_user_login(), and generates a
+ * new session.
  *
- * @param array $edit
- *   The array of form values submitted by the user.
+ * The global $user object is replaced with the passed in account.
+ *
+ * @param \Drupal\Core\Session\AccountInterface $account
+ *   The account to log in.
  *
  * @see hook_user_login()
  */
-function user_login_finalize(&$edit = array()) {
+function user_login_finalize(AccountInterface $account) {
   global $user;
+  $user = $account;
   watchdog('user', 'Session opened for %name.', array('%name' => $user->name));
   // Update the user table timestamp noting user has logged in.
   // This is also used to invalidate one-time login links.
@@ -1372,19 +1232,6 @@ function user_login_finalize(&$edit = array()) {
   drupal_session_regenerate();
 
   module_invoke_all('user_login', $user);
-}
-
-/**
- * Submit handler for the login form. Load $user object and perform standard login
- * tasks. The user is then redirected to the My Account page. Setting the
- * destination in the query string overrides the redirect.
- */
-function user_login_form_submit($form, &$form_state) {
-  global $user;
-  $user = user_load($form_state['uid']);
-  $form_state['redirect'] = 'user/' . $user->uid;
-
-  user_login_finalize($form_state);
 }
 
 /**
@@ -2327,21 +2174,6 @@ function user_modules_installed($modules) {
 function user_modules_uninstalled($modules) {
   // Remove any potentially orphan module data stored for users.
   drupal_container()->get('user.data')->delete($modules);
-}
-
-/**
- * Helper function to rewrite the destination to avoid redirecting to login page after login.
- *
- * Third-party authentication modules may use this function to determine the
- * proper destination after a user has been properly logged in.
- */
-function user_login_destination() {
-  $destination = drupal_get_destination();
-  // Modules may provide login pages under the "user/login/" path prefix.
-  if (preg_match('@^user/login(/.*|)$@', $destination['destination'])) {
-    $destination['destination'] = 'user';
-  }
-  return $destination;
 }
 
 /**
