@@ -116,6 +116,10 @@ class CKEditor extends EditorBase {
         'plugins' => $editor->settings['plugins'],
       ),
     ));
+    $config = $this->getJSSettings($fake_editor);
+    // Remove the ACF configuration that is generated based on filter settings,
+    // because otherwise we cannot retrieve per-feature metadata.
+    unset($config['allowedContent']);
     $form['hidden_ckeditor'] = array(
       '#markup' => '<div id="ckeditor-hidden" class="element-hidden"></div>',
       '#attached' => array(
@@ -123,7 +127,7 @@ class CKEditor extends EditorBase {
           array(
             'type' => 'setting',
             'data' => array('ckeditor' => array(
-              'hiddenCKEditorConfig' => $this->getJSSettings($fake_editor),
+              'hiddenCKEditorConfig' => $config,
             )),
           ),
         ),
