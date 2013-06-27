@@ -1,0 +1,32 @@
+/**
+ * @file
+ * Right-to-left styles for installation.
+ */
+
+body.install-page #page {
+  padding: 1em 0 1em 2em;
+}
+body.install-page #content {
+  padding-left: 0;
+  padding-right: 30px;
+}
+body.install-page #site-name {
+  margin: 0.75em 50px 0.75em 0;
+}
+.install-task-list {
+  margin-right: 0;
+  padding-right: 0;
+}
+.install-task-list li {
+  padding: 0.5em 20px 0.5em 1em;
+}
+.install-task-list li.active:after {
+  left: auto;
+  right: 100%;
+  border-left-color: transparent;
+  border-right-color: #ebeae4;
+}
+.step-indicator {
+  left: 40px;
+  right: auto;
+}

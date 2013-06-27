@@ -914,7 +914,6 @@ body.in-maintenance #sidebar-first {
 }
 body.in-maintenance #content {
   float: right; /* LTR */
-  max-width: 550px;
   clear: none;
   width: 72%;
 }
@@ -953,40 +952,24 @@ body.in-maintenance #logo {
     width: auto;
   }
 }
-ol.task-list {
+
+.task-list {
   margin-left: 0; /* LTR */
   list-style-type: none;
   list-style-image: none;
 }
-ol.task-list li {
+.task-list li {
   padding: 0.5em 1em 0.5em 20px; /* LTR */
   color: #adadad;
 }
-ol.task-list li.active {
+.task-list li.active {
   background: transparent url(images/task-item.png) no-repeat 3px 50%; /* LTR */
   padding: 0.5em 1em 0.5em 20px; /* LTR */
   color: #000;
 }
-ol.task-list li.done {
+.task-list li.done {
   background: transparent url(images/task-check.png) no-repeat 0 50%;
   color: green;
-}
-body.in-maintenance #branding .step-indicator {
-  display: none;
-}
-@media all and (max-width: 768px) {
-  ol.task-list,
-  body.in-maintenance #logo {
-    display: none;
-  }
-  body.in-maintenance #branding h1 {
-    float: left;
-    width: auto;
-  }
-  body.in-maintenance #branding .step-indicator {
-    display: block;
-    float: right;
-  }
 }
 
 /* Overlay theming */
@@ -1655,7 +1638,6 @@ details.fieldset-no-legend {
     display: none;
   }
 }
-
 
 /**
  * Node form dropbuttons.

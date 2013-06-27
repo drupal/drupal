@@ -43,10 +43,3 @@
 #edit-connection-settings-change-connection-type {
   margin: 2.6em 0.5em 0 1em;
 }
-
-/**
- * Installation task list
- */
-.task-list li.active {
-  font-weight: bold;
-}

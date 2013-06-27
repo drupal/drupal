@@ -3004,6 +3004,40 @@ function template_process_maintenance_page(&$variables) {
 }
 
 /**
+ * Prepares variables for install page templates.
+ *
+ * Default template: install-page.html.twig.
+ *
+ * The variables array generated here is a mirror of
+ * template_preprocess_page(). This preprocessor will run its course when
+ * theme_install_page() is invoked.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - content - An array of page content.
+ *
+ * @see template_preprocess_maintenance_page()
+ *
+ */
+function template_preprocess_install_page(&$variables) {
+  template_preprocess_maintenance_page($variables);
+  // Override the site name that is displayed on the page, since Drupal is
+  // still in the process of being installed.
+  $variables['site_name'] = drupal_install_profile_distribution_name();
+}
+
+/**
+ * Preprocess variables for install-page.html.twig.
+ *
+ * @see install-page.html.twig
+ * @see template_process_html()
+ *
+ */
+function template_process_install_page(&$variables) {
+  template_process_maintenance_page($variables);
+}
+
+/**
  * Preprocess variables for region.tpl.php
  *
  * Prepares the values passed to the theme_region function to be passed into a
@@ -3106,10 +3140,11 @@ function drupal_common_theme() {
       'template' => 'maintenance-page',
     ),
     'install_page' => array(
-      'variables' => array('content' => NULL),
+      'variables' => array('content' => NULL, 'show_messages' => TRUE),
+      'template' => 'install-page',
     ),
     'task_list' => array(
-      'variables' => array('items' => NULL, 'active' => NULL),
+      'variables' => array('items' => NULL, 'active' => NULL,  'variant' => NULL),
     ),
     'authorize_message' => array(
       'variables' => array('message' => NULL, 'success' => TRUE),

@@ -16,13 +16,13 @@
   }
 
   function installStepsSetup () {
-    var steps = document.querySelectorAll('.task-list li');
+    var steps = document.querySelectorAll('.install-task-list li');
     if (steps.length) {
-      var branding = document.querySelector('#branding');
+      var header = document.querySelector('#header');
       var stepIndicator = document.createElement('div');
       stepIndicator.className = 'step-indicator';
       stepIndicator.innerHTML = findActiveStep(steps) + '/' + steps.length;
-      branding.appendChild(stepIndicator);
+      header.appendChild(stepIndicator);
     }
   }
 
