@@ -292,17 +292,17 @@ function locale_requirements($phase) {
   $requirements = array();
   if ($phase == 'runtime') {
     $available_updates = array();
-    $updates_not_found = array();
+    $untranslated = array();
     $languages = locale_translatable_language_list();
 
     if ($languages) {
       // Determine the status of the translation updates per lanuage.
-      $status = Drupal::state()->get('locale.translation_status');
+      $status = locale_translation_get_status();
       if ($status) {
         foreach ($status as $project_id => $project) {
           foreach ($project as $langcode => $project_info) {
-            if (!isset($project_info->type)) {
-              $updates_not_found[$langcode] = $languages[$langcode]->name;
+            if (empty($project_info->type)) {
+              $untranslated[$langcode] = $languages[$langcode]->name;
             }
             elseif ($project_info->type == LOCALE_TRANSLATION_LOCAL || $project_info->type == LOCALE_TRANSLATION_REMOTE) {
               $available_updates[$langcode] = $languages[$langcode]->name;
@@ -310,7 +310,7 @@ function locale_requirements($phase) {
           }
         }
 
-        if ($available_updates || $updates_not_found) {
+        if ($available_updates || $untranslated) {
           if ($available_updates) {
             $requirements['locale_translation'] = array(
               'title' => 'Translation update status',
@@ -324,7 +324,7 @@ function locale_requirements($phase) {
               'title' => 'Translation update status',
               'value' => t('Missing translations'),
               'severity' => REQUIREMENT_INFO,
-              'description' => t('Missing translations for: @languages. See the <a href="@updates">Available translation updates</a> page for more information.', array('@languages' => implode(', ', $updates_not_found), '@updates' => url('admin/reports/translations'))),
+              'description' => t('Missing translations for: @languages. See the <a href="@updates">Available translation updates</a> page for more information.', array('@languages' => implode(', ', $untranslated), '@updates' => url('admin/reports/translations'))),
             );
           }
         }

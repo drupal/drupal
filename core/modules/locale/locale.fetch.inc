@@ -30,8 +30,12 @@ function locale_translation_batch_update_build($projects = array(), $langcodes =
   module_load_include('compare.inc', 'locale');
   $projects = $projects ? $projects : array_keys(locale_translation_get_projects());
   $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
+  $status_options = $options;
+  $status_options['finish_feedback'] = FALSE;
 
-  $operations = _locale_translation_batch_status_operations($projects, $langcodes);
+  // Check status of local and remote translation files.
+  $operations = _locale_translation_batch_status_operations($projects, $langcodes, $status_options);
+  // Download and import translations.
   $operations = array_merge($operations, _locale_translation_fetch_operations($projects, $langcodes, $options));
 
   $batch = array(
@@ -90,9 +94,7 @@ function locale_translation_batch_fetch_build($projects = array(), $langcodes = 
  */
 function _locale_translation_fetch_operations($projects, $langcodes, $options) {
   $operations = array();
-  $config = config('locale.settings');
 
-  $operations[] = array('locale_translation_batch_fetch_sources', array($projects, $langcodes));
   foreach ($projects as $project) {
     foreach ($langcodes as $langcode) {
       if (locale_translation_use_remote_source()) {
@@ -101,13 +103,6 @@ function _locale_translation_fetch_operations($projects, $langcodes, $options) {
       $operations[] = array('locale_translation_batch_fetch_import', array($project, $langcode, $options));
     }
   }
-
-  // Update and save the translation status.
-  $operations[] = array('locale_translation_batch_fetch_update_status', array());
-
-  // Update and save the source status. New translation files have been
-  // downloaded, so other sources will be newer. We update the status now.
-  $operations[] = array('locale_translation_batch_status_compare', array());
 
   return $operations;
 }

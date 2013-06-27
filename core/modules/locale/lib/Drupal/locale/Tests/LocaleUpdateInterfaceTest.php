@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Tests for the locale translation update status user interfaces.
  */
-class LocaleUpdateInterfaceTest extends WebTestBase {
+class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
 
   /**
    * Modules to enable.
@@ -51,16 +51,13 @@ class LocaleUpdateInterfaceTest extends WebTestBase {
     $this->assertRaw(t('No translatable languages available. <a href="@add_language">Add a language</a> first.', array('@add_language' => url('admin/config/regional/language'))), 'Language message');
 
     // Add German language.
-    $edit = array(
-      'predefined_langcode' => 'de',
-    );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->addLanguage('de');
 
     // Drupal core is probably in 8.x, but tests may also be executed with
     // stable releases. As this is an uncontrolled factor in the test, we will
-    // ignore Drupal core here and continue with the prepared modules.
-    $status = \Drupal::state()->get('locale.translation_status');
-    unset($status['drupal']);
+    // mark Drupal core as translated and continue with the prepared modules.
+    $status = locale_translation_get_status();
+    $status['drupal']['de']->type = 'current';
     \Drupal::state()->set('locale.translation_status', $status);
 
     // One language added, all translations up to date.
@@ -71,7 +68,7 @@ class LocaleUpdateInterfaceTest extends WebTestBase {
     $this->assertText(t('All translations up to date.'), 'Translations up to date');
 
     // Set locale_test_translate module to have a local translation available.
-    $status = \Drupal::state()->get('locale.translation_status');
+    $status = locale_translation_get_status();
     $status['locale_test_translate']['de']->type = 'local';
     \Drupal::state()->set('locale.translation_status', $status);
 
@@ -84,9 +81,9 @@ class LocaleUpdateInterfaceTest extends WebTestBase {
 
     // Set locale_test_translate module to have a dev release and no
     // translation found.
-    $status = \Drupal::state()->get('locale.translation_status');
+    $status = locale_translation_get_status();
     $status['locale_test_translate']['de']->version = '1.3-dev';
-    unset($status['locale_test_translate']['de']->type);
+    $status['locale_test_translate']['de']->type = '';
     \Drupal::state()->set('locale.translation_status', $status);
 
     // Check if no updates were found.

@@ -104,12 +104,12 @@ function locale_translation_load_sources($projects = NULL, $langcodes = NULL) {
   $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
 
   // Load source data from locale_translation_status cache.
-  $status = Drupal::state()->get('locale.translation_status');
+  $status = locale_translation_get_status();
 
   // Use only the selected projects and languages for update.
   foreach($projects as $project) {
     foreach ($langcodes as $langcode) {
-      $sources[$project . ':' . $langcode] = isset($status[$project][$langcode]) ? $status[$project][$langcode] : NULL;
+      $sources[$project][$langcode] = isset($status[$project][$langcode]) ? $status[$project][$langcode] : NULL;
     }
   }
   return $sources;
@@ -124,7 +124,7 @@ function locale_translation_load_sources($projects = NULL, $langcodes = NULL) {
  *   Array of language codes. Defaults to all translatable languages.
  *
  * @return array
- *   Array of source objects. Keyed with <project name>:<language code>.
+ *   Array of source objects. Keyed by project name and language code.
  *
  * @see locale_translation_source_build()
  */
@@ -136,7 +136,7 @@ function locale_translation_build_sources($projects = array(), $langcodes = arra
   foreach ($projects as $project) {
     foreach ($langcodes as $langcode) {
       $source = locale_translation_source_build($project, $langcode);
-      $sources[$source->name . ':' . $source->langcode] = $source;
+      $sources[$source->name][$source->langcode] = $source;
     }
   }
   return $sources;
@@ -159,32 +159,24 @@ function locale_translation_build_sources($projects = array(), $langcodes = arra
  *   Translation source object.
  *
  * @return stdClass
- *   File object (filename, basename, name) updated with data of the po file.
- *   On success the files property of the source object is updated.
- *   files[LOCALE_TRANSLATION_LOCAL]:
+ *   Source file object of the po file, updated with:
  *   - "uri": File name and path.
  *   - "timestamp": Last updated time of the po file.
  *   FALSE if the file is not found.
  *
  * @see locale_translation_source_build()
  */
-function locale_translation_source_check_file(&$source) {
+function locale_translation_source_check_file($source) {
   if (isset($source->files[LOCALE_TRANSLATION_LOCAL])) {
-    $directory = $source->files[LOCALE_TRANSLATION_LOCAL]->directory;
-    $filename = '/' . preg_quote($source->files[LOCALE_TRANSLATION_LOCAL]->filename) . '$/';
-
-    // If the directory contains a stream wrapper, it is converted to a real
-    // path. This is required for file_scan_directory() which can not handle
-    // stream wrappers.
-    if ($scheme = file_uri_scheme($directory)) {
-      $directory = str_replace($scheme . '://', drupal_realpath($scheme . '://'), $directory);
-    }
+    $source_file = $source->files[LOCALE_TRANSLATION_LOCAL];
+    $directory = $source_file->directory;
+    $filename = '/' . preg_quote($source_file->filename) . '$/';
 
     if ($files = file_scan_directory($directory, $filename, array('key' => 'name', 'recurse' => FALSE))) {
       $file = current($files);
-      $source->files[LOCALE_TRANSLATION_LOCAL]->uri = $file->uri;
-      $source->files[LOCALE_TRANSLATION_LOCAL]->timestamp = filemtime($file->uri);
-      return $file;
+      $source_file->uri = $file->uri;
+      $source_file->timestamp = filemtime($file->uri);
+      return $source_file;
     }
   }
   return FALSE;
@@ -211,13 +203,14 @@ function locale_translation_source_check_file(&$source) {
  *   - "files": Array of file objects containing properties of local and remote
  *     translation files.
  *   Other processes can add the following properties:
- *   - "type": Most recent file type LOCALE_TRANSLATION_REMOTE or
- *      LOCALE_TRANSLATION_LOCAL. Corresponding with a key of the
- *      "files" array.
- *   - "timestamp": Timestamp of the most recent translation file.
+ *   - "type": Most recent translation source found. LOCALE_TRANSLATION_REMOTE and
+ *      LOCALE_TRANSLATION_LOCAL indicate available new translations,
+ *      LOCALE_TRANSLATION_CURRENT indicate that the current translation is them
+ *      most recent. "type" sorresponds with a key of the "files" array.
+ *   - "timestamp": The creation time of the "type" translation (file).
+ *   - "last_checked": The time when the "type" translation was last checked.
  *   The "files" array can hold file objects of type:
- *   LOCALE_TRANSLATION_LOCAL, LOCALE_TRANSLATION_REMOTE,
- *   LOCALE_TRANSLATION_DOWNLOADED, LOCALE_TRANSLATION_IMPORTED and
+ *   LOCALE_TRANSLATION_LOCAL, LOCALE_TRANSLATION_REMOTE and
  *   LOCALE_TRANSLATION_CURRENT. Each contains following properties:
  *   - "type": The object type (LOCALE_TRANSLATION_LOCAL,
  *     LOCALE_TRANSLATION_REMOTE, etc. see above).
@@ -239,6 +232,9 @@ function locale_translation_source_build($project, $langcode, $filename = NULL) 
   $source = clone $project;
   $source->project = $project->name;
   $source->langcode = $langcode;
+  $source->type = '';
+  $source->timestamp = 0;
+  $source->last_checked = 0;
 
   $filename = $filename ? $filename : config('locale.settings')->get('translation.default_filename');
 
@@ -256,17 +252,15 @@ function locale_translation_source_build($project, $langcode, $filename = NULL) 
       'filename' => locale_translation_build_server_pattern($source, basename($source->server_pattern)),
       'uri' => locale_translation_build_server_pattern($source, $source->server_pattern),
     );
-    if (config('locale.settings')->get('translation.path')) {
-      $files[LOCALE_TRANSLATION_LOCAL] = (object) array(
-        'project' => $project->name,
-        'langcode' => $langcode,
-        'version' => $project->version,
-        'type' => LOCALE_TRANSLATION_LOCAL,
-        'filename' => locale_translation_build_server_pattern($source, $filename),
-        'directory' => 'translations://',
-      );
-      $files[LOCALE_TRANSLATION_LOCAL]->uri = $files[LOCALE_TRANSLATION_LOCAL]->directory . $files[LOCALE_TRANSLATION_LOCAL]->filename;
-    }
+    $files[LOCALE_TRANSLATION_LOCAL] = (object) array(
+      'project' => $project->name,
+      'langcode' => $langcode,
+      'version' => $project->version,
+      'type' => LOCALE_TRANSLATION_LOCAL,
+      'filename' => locale_translation_build_server_pattern($source, $filename),
+      'directory' => 'translations://',
+    );
+    $files[LOCALE_TRANSLATION_LOCAL]->uri = $files[LOCALE_TRANSLATION_LOCAL]->directory . $files[LOCALE_TRANSLATION_LOCAL]->filename;
   }
   else {
     $files[LOCALE_TRANSLATION_LOCAL] = (object) array(
@@ -281,7 +275,91 @@ function locale_translation_source_build($project, $langcode, $filename = NULL) 
   }
   $source->files = $files;
 
+  // If this project+language is already translated, we add its status and
+  // update the current translation timestamp and last_updated time. If the
+  // project+language is not translated before, create a new record.
+  $history = locale_translation_get_file_history();
+  if (isset($history[$project->name][$langcode]) && $history[$project->name][$langcode]->timestamp) {
+    $source->files[LOCALE_TRANSLATION_CURRENT] = $history[$project->name][$langcode];
+    $source->type = LOCALE_TRANSLATION_CURRENT;
+    $source->timestamp = $history[$project->name][$langcode]->timestamp;
+    $source->last_checked = $history[$project->name][$langcode]->last_checked;
+  }
+  else {
+    locale_translation_update_file_history($source);
+  }
+
   return $source;
+}
+
+/**
+ * Build path to translation source, out of a server path replacement pattern.
+ *
+ * @param stdClass $project
+ *   Project object containing data to be inserted in the template.
+ * @param string $template
+ *   String containing placeholders. Available placeholders:
+ *   - "%project": Project name.
+ *   - "%version": Project version.
+ *   - "%core": Project core version.
+ *   - "%language": Language code.
+ *
+ * @return string
+ *   String with replaced placeholders.
+ */
+function locale_translation_build_server_pattern($project, $template) {
+  $variables = array(
+    '%project' => $project->name,
+    '%version' => $project->version,
+    '%core' => $project->core,
+    '%language' => isset($project->langcode) ? $project->langcode : '%language',
+  );
+  return strtr($template, $variables);
+}
+
+/**
+ * Populate a queue with project to check for translation updates.
+ */
+function locale_cron_fill_queue() {
+  $updates = array();
+  $config = config('locale.settings');
+
+  // Determine which project+language should be updated.
+  $last = REQUEST_TIME - $config->get('translation.update_interval_days') * 3600 * 24;
+  $query = db_select('locale_file', 'f');
+  $query->join('locale_project', 'p', 'p.name = f.project');
+  $query->condition('f.last_checked', $last, '<');
+  $query->fields('f', array('project', 'langcode'));
+  if (!$config->get('translation.check_disabled_modules')) {
+    $query->condition('p.status', 1);
+  }
+  $files = $query->execute()->fetchAll();
+  foreach ($files as $file) {
+    $updates[$file->project][] = $file->langcode;
+
+    // Update the last_checked timestamp of the project+language that will
+    // be checked for updates.
+    db_update('locale_file')
+      ->fields(array('last_checked' => REQUEST_TIME))
+      ->condition('project', $file->project)
+      ->condition('langcode', $file->langcode)
+      ->execute();
+  }
+
+  // For each project+language combination a number of tasks are added to
+  // the queue.
+  if ($updates) {
+    module_load_include('fetch.inc', 'locale');
+    $options = _locale_translation_default_update_options();
+    $queue = Drupal::queue('locale_translation', TRUE);
+
+    foreach ($updates as $project => $languages) {
+      $batch = locale_translation_batch_update_build(array($project), $languages, $options);
+      foreach ($batch['operations'] as $item) {
+        $queue->createItem($item);
+      }
+    }
+  }
 }
 
 /**
@@ -354,5 +432,7 @@ function _locale_translation_default_update_options() {
       'not_customized' => $config->get('translation.overwrite_not_customized'),
       'customized' => $config->get('translation.overwrite_customized'),
     ),
+    'finish_feedback' => TRUE,
+    'use_remote' => locale_translation_use_remote_source(),
   );
 }

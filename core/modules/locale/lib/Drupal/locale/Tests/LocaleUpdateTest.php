@@ -12,35 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Tests for update translations.
  */
-class LocaleUpdateTest extends WebTestBase {
-
-  /**
-   * The path of the translations directory where local translations are stored.
-   *
-   * @var string
-   */
-  private $tranlations_directory;
-
-  /**
-   * Timestamp for an old translation.
-   *
-   * @var integer
-   */
-  private $timestamp_old;
-
-  /**
-   * Timestamp for a medium aged translation.
-   *
-   * @var integer
-   */
-  private $timestamp_medium;
-
-  /**
-   * Timestamp for a new translation.
-   *
-   * @var integer
-   */
-  private $timestamp_new;
+class LocaleUpdateTest extends LocaleUpdateBase {
 
   /**
    * Modules to enable.
@@ -66,249 +38,7 @@ class LocaleUpdateTest extends WebTestBase {
     // We use German as test language. This language must match the translation
     // file that come with the locale_test module (test.de.po) and can therefore
     // not be chosen randomly.
-    $this->drupalPost('admin/config/regional/language/add', array('predefined_langcode' => 'de'), t('Add language'));
-
-    // Setup timestamps to identify old and new translation sources.
-    $this->timestamp_old = REQUEST_TIME - 300;
-    $this->timestamp_medium = REQUEST_TIME - 200;
-    $this->timestamp_new = REQUEST_TIME - 100;
-    $this->timestamp_now = REQUEST_TIME;
-  }
-
-  /**
-   * Sets the value of the default translations directory.
-   *
-   * @param string $path
-   *   Path of the translations directory relative to the drupal installation
-   *   directory.
-   */
-  private function setTranslationsDirectory($path) {
-    $this->tranlations_directory = $path;
-    file_prepare_directory($path, FILE_CREATE_DIRECTORY);
-    config('locale.settings')->set('translation.path', $path)->save();
-  }
-
-  /**
-   * Adds a language.
-   *
-   * @param $langcode
-   *   The language code of the language to add.
-   */
-  function addLanguage($langcode) {
-    $edit = array('predefined_langcode' => $langcode);
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
-    drupal_static_reset('language_list');
-    $this->assertTrue(language_load($langcode), t('Language %langcode added.', array('%langcode' => $langcode)));
-  }
-
-  /**
-   * Creates a translation file and tests its timestamp.
-   *
-   * @param string $path
-   *   Path of the file relative to the public file path.
-   * @param string $filename
-   *   Name of the file to create.
-   * @param integer $timestamp
-   *   Timestamp to set the file to. Defaults to current time.
-   * @param array $translations
-   *   Array of source/target value translation strings. Only singular strings
-   *   are supported, no plurals. No double quotes are allowed in source and
-   *   translations strings.
-   */
-  private function makePoFile($path, $filename, $timestamp = NULL, $translations = array()) {
-    $timestamp = $timestamp ? $timestamp : REQUEST_TIME;
-    $path = 'public://' . $path;
-    $text = '';
-    $po_header = <<<EOF
-msgid ""
-msgstr ""
-"Project-Id-Version: Drupal 8\\n"
-"MIME-Version: 1.0\\n"
-"Content-Type: text/plain; charset=UTF-8\\n"
-"Content-Transfer-Encoding: 8bit\\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\\n"
-
-EOF;
-
-    // Convert array of translations to Gettext source and translation strings.
-    if ($translations) {
-      foreach ($translations as $source => $target) {
-        $text .= 'msgid "'. $source . '"' . "\n";
-        $text .= 'msgstr "'. $target . '"' . "\n";
-      }
-    }
-
-    file_prepare_directory($path, FILE_CREATE_DIRECTORY);
-    $file = entity_create('file', array(
-      'uid' => 1,
-      'filename' => $filename,
-      'uri' => $path . '/' . $filename,
-      'filemime' => 'text/x-gettext-translation',
-      'timestamp' => $timestamp,
-      'status' => FILE_STATUS_PERMANENT,
-    ));
-    file_put_contents($file->getFileUri(), $po_header . $text);
-    touch(drupal_realpath($file->getFileUri()), $timestamp);
-    $file->save();
-  }
-
-  /**
-   * Setup the environment containting local and remote translation files.
-   *
-   * Update tests require a simulated environment for local and remote files.
-   * Normally remote files are located at a remote server (e.g. ftp.drupal.org).
-   * For testing we can not rely on this. A directory in the file system of the
-   * test site is designated for remote files and is addressed using an absolute
-   * URL. Because Drupal does not allow files with a po extension to be accessed
-   * (denied in .htaccess) the translation files get a _po extension. Another
-   * directory is designated for local translation files.
-   *
-   * The environment is set up with the following files. File creation times are
-   * set to create different variations in test conditions.
-   *   contrib_module_one
-   *    - remote file: timestamp new
-   *    - local file:  timestamp old
-   *   contrib_module_two
-   *    - remote file: timestamp old
-   *    - local file:  timestamp new
-   *   contrib_module_three
-   *    - remote file: timestamp old
-   *    - local file:  timestamp old
-   *   custom_module_one
-   *    - local file:  timestamp new
-   * Time stamp of current translation set by setCurrentTranslations() is always
-   * timestamp medium. This makes it easy to predict which translation will be
-   * imported.
-   */
-  private function setTranslationFiles() {
-    $config = config('locale.settings');
-
-    // A flag is set to let the locale_test module replace the project data with
-    // a set of test projects which match the below project files.
-    \Drupal::state()->set('locale.test_projects_alter', TRUE);
-
-    // Setup the environment.
-    $public_path = variable_get('file_public_path', conf_path() . '/files');
-    $this->setTranslationsDirectory($public_path . '/local');
-    $config->set('translation.default_filename', '%project-%version.%language._po')->save();
-
-    // Setting up sets of translations for the translation files.
-    $translations_one = array('January' => 'Januar_1', 'February' => 'Februar_1', 'March' => 'Marz_1');
-    $translations_two = array( 'February' => 'Februar_2', 'March' => 'Marz_2', 'April' => 'April_2');
-    $translations_three = array('April' => 'April_3', 'May' => 'Mai_3', 'June' => 'Juni_3');
-
-    // Add a number of files to the local file system to serve as remote
-    // translation server and match the project definitions set in
-    // locale_test_locale_translation_projects_alter().
-    $this->makePoFile('remote/8.x/contrib_module_one', 'contrib_module_one-8.x-1.1.de._po', $this->timestamp_new, $translations_one);
-    $this->makePoFile('remote/8.x/contrib_module_two', 'contrib_module_two-8.x-2.0-beta4.de._po', $this->timestamp_old, $translations_two);
-    $this->makePoFile('remote/8.x/contrib_module_three', 'contrib_module_three-8.x-1.0.de._po', $this->timestamp_old, $translations_three);
-
-    // Add a number of files to the local file system to serve as local
-    // translation files and match the project definitions set in
-    // locale_test_locale_translation_projects_alter().
-    $this->makePoFile('local', 'contrib_module_one-8.x-1.1.de._po', $this->timestamp_old, $translations_one);
-    $this->makePoFile('local', 'contrib_module_two-8.x-2.0-beta4.de._po', $this->timestamp_new, $translations_two);
-    $this->makePoFile('local', 'contrib_module_three-8.x-1.0.de._po', $this->timestamp_old, $translations_three);
-    $this->makePoFile('local', 'custom_module_one.de.po', $this->timestamp_new);
-  }
-
-  /**
-   * Setup existing translations in the database and set up the status of
-   * existing translations.
-   */
-  private function setCurrentTranslations() {
-    // Add non customized translations to the database.
-    $langcode = 'de';
-    $context = '';
-    $non_customized_translations = array(
-      'March' => 'Marz',
-      'June' => 'Juni',
-    );
-    foreach ($non_customized_translations as $source => $translation) {
-      $string = $this->container->get('locale.storage')->createString(array(
-          'source' => $source,
-          'context' => $context,
-        ))
-        ->save();
-      $target = $this->container->get('locale.storage')->createTranslation(array(
-        'lid' => $string->getId(),
-        'language' => $langcode,
-        'translation' => $translation,
-        'customized' => LOCALE_NOT_CUSTOMIZED,
-      ))->save();
-    }
-
-    // Add customized translations to the database.
-    $customized_translations = array(
-      'January' => 'Januar_customized',
-      'February' => 'Februar_customized',
-      'May' => 'Mai_customized',
-    );
-    foreach ($customized_translations as $source => $translation) {
-      $string = $this->container->get('locale.storage')->createString(array(
-        'source' => $source,
-        'context' => $context,
-      ))
-      ->save();
-      $target = $this->container->get('locale.storage')->createTranslation(array(
-        'lid' => $string->getId(),
-        'language' => $langcode,
-        'translation' => $translation,
-        'customized' => LOCALE_CUSTOMIZED,
-      ))->save();
-    }
-
-    // Add a state of current translations in locale_files.
-    $default = array(
-      'langcode' => $langcode,
-      'uri' => '',
-      'timestamp' => $this->timestamp_medium,
-      'last_checked' => $this->timestamp_medium,
-    );
-    $data[] = array(
-      'project' => 'contrib_module_one',
-      'filename' => 'contrib_module_one-8.x-1.1.de._po',
-      'version' => '8.x-1.1',
-    );
-    $data[] = array(
-      'project' => 'contrib_module_two',
-      'filename' => 'contrib_module_two-8.x-2.0-beta4.de._po',
-      'version' => '8.x-2.0-beta4',
-    );
-    $data[] = array(
-      'project' => 'contrib_module_three',
-      'filename' => 'contrib_module_three-8.x-1.0.de._po',
-      'version' => '8.x-1.0',
-    );
-    $data[] = array(
-      'project' => 'custom_module_one',
-      'filename' => 'custom_module_one.de.po',
-      'version' => '',
-    );
-    foreach ($data as $file) {
-      $file = (object) array_merge($default, $file);
-      drupal_write_record('locale_file', $file);
-    }
-  }
-
-  /**
-   * Checks the translation of a string.
-   *
-   * @param string $source
-   *   Translation source string
-   * @param string $translation
-   *   Translation to check. Use empty string to check for a not existing
-   *   translation.
-   * @param string $langcode
-   *   Language code of the language to translate to.
-   * @param string $message
-   *   (optional) A message to display with the assertion.
-   */
-  function assertTranslation($source, $translation, $langcode, $message = '') {
-    $db_translation = db_query('SELECT translation FROM {locales_target} lt INNER JOIN {locales_source} ls ON ls.lid = lt.lid WHERE ls.source = :source AND lt.language = :langcode', array(':source' => $source, ':langcode' => $langcode))->fetchField();
-    $db_translation = $db_translation == FALSE ? '' : $db_translation;
-    $this->assertEqual($translation, $db_translation, $message ? $message : format_string('Correct translation of %source (%language)', array('%source' => $source, '%language' => $langcode)));
+    $this->addLanguage('de');
   }
 
   /**
@@ -384,7 +114,7 @@ EOF;
 
     // Get status of translation sources at local file system.
     $this->drupalGet('admin/reports/translations/check');
-    $result = \Drupal::state()->get('locale.translation_status');
+    $result = locale_translation_get_status();
     $this->assertEqual($result['contrib_module_one']['de']->type, LOCALE_TRANSLATION_LOCAL, 'Translation of contrib_module_one found');
     $this->assertEqual($result['contrib_module_one']['de']->timestamp, $this->timestamp_old, 'Translation timestamp found');
     $this->assertEqual($result['contrib_module_two']['de']->type, LOCALE_TRANSLATION_LOCAL, 'Translation of contrib_module_two found');
@@ -400,8 +130,8 @@ EOF;
 
     // Get status of translation sources at both local and remote locations.
     $this->drupalGet('admin/reports/translations/check');
-    $result = \Drupal::state()->get('locale.translation_status');
-    $this->assertEqual($result['contrib_module_one']['de']->type, 'remote', 'Translation of contrib_module_one found');
+    $result = locale_translation_get_status();
+    $this->assertEqual($result['contrib_module_one']['de']->type, LOCALE_TRANSLATION_REMOTE, 'Translation of contrib_module_one found');
     $this->assertEqual($result['contrib_module_one']['de']->timestamp, $this->timestamp_new, 'Translation timestamp found');
     $this->assertEqual($result['contrib_module_two']['de']->type, LOCALE_TRANSLATION_LOCAL, 'Translation of contrib_module_two found');
     $this->assertEqual($result['contrib_module_two']['de']->timestamp, $this->timestamp_new, 'Translation timestamp found');
@@ -417,7 +147,6 @@ EOF;
    * Test conditions:
    *  - Source: remote and local files
    *  - Import overwrite: all existing translations
-   *  - Translation directory: available
    */
   function testUpdateImportSourceRemote() {
     $config = config('locale.settings');
@@ -440,7 +169,6 @@ EOF;
     // Check the status on the Available translation status page.
     $this->assertRaw('<label for="edit-langcodes-de" class="language-name">German</label>', 'German language found');
     $this->assertText('Updates for: Contributed module one, Contributed module two, Custom module one, Locale test', 'Updates found');
-    $this->assertText('Updates for: Contributed module one, Contributed module two, Custom module one, Locale test', 'Updates found');
     $this->assertText('Contributed module one (' . format_date($this->timestamp_now, 'html_date') . ')', 'Updates for Contrib module one');
     $this->assertText('Contributed module two (' . format_date($this->timestamp_new, 'html_date') . ')', 'Updates for Contrib module two');
 
@@ -448,7 +176,7 @@ EOF;
     $this->drupalPost('admin/reports/translations', array(), t('Update translations'));
 
     // Check if the translation has been updated, using the status cache.
-    $status = \Drupal::state()->get('locale.translation_status');
+    $status = locale_translation_get_status();
     $this->assertEqual($status['contrib_module_one']['de']->type, LOCALE_TRANSLATION_CURRENT, 'Translation of contrib_module_one found');
     $this->assertEqual($status['contrib_module_two']['de']->type, LOCALE_TRANSLATION_CURRENT, 'Translation of contrib_module_two found');
     $this->assertEqual($status['contrib_module_three']['de']->type, LOCALE_TRANSLATION_CURRENT, 'Translation of contrib_module_three found');
@@ -481,7 +209,6 @@ EOF;
    * Test conditions:
    *  - Source: local files only
    *  - Import overwrite: all existing translations
-   *  - Translation directory: available
    */
   function testUpdateImportSourceLocal() {
     $config = config('locale.settings');
@@ -503,7 +230,7 @@ EOF;
     $this->drupalPost('admin/reports/translations', array(), t('Update translations'));
 
     // Check if the translation has been updated, using the status cache.
-    $status = \Drupal::state()->get('locale.translation_status');
+    $status = locale_translation_get_status();
     $this->assertEqual($status['contrib_module_one']['de']->type, LOCALE_TRANSLATION_CURRENT, 'Translation of contrib_module_one found');
     $this->assertEqual($status['contrib_module_two']['de']->type, LOCALE_TRANSLATION_CURRENT, 'Translation of contrib_module_two found');
     $this->assertEqual($status['contrib_module_three']['de']->type, LOCALE_TRANSLATION_CURRENT, 'Translation of contrib_module_three found');
@@ -531,68 +258,11 @@ EOF;
   }
 
   /**
-   * Tests translation import without a translations directory.
-   *
-   * Test conditions:
-   *  - Source: remote and local files
-   *  - Import overwrite: all existing translations
-   *  - Translation directory: not available
-   */
-  function testUpdateImportWithoutDirectory() {
-    $config = config('locale.settings');
-
-    // Build the test environment.
-    $this->setTranslationFiles();
-    $this-> setCurrentTranslations();
-    $config->set('translation.default_filename', '%project-%version.%language._po');
-
-    // Set the update conditions for this test.
-    $this->setTranslationsDirectory('');
-    $edit = array(
-      'use_source' => LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL,
-      'overwrite' => LOCALE_TRANSLATION_OVERWRITE_ALL,
-    );
-    $this->drupalPost('admin/config/regional/translate/settings', $edit, t('Save configuration'));
-
-    // Execute the translation update.
-    $this->drupalGet('admin/reports/translations/check');
-    $this->drupalPost('admin/reports/translations', array(), t('Update translations'));
-
-    // Check if the translation has been updated, using the status cache.
-    $status = \Drupal::state()->get('locale.translation_status');
-    $this->assertEqual($status['contrib_module_one']['de']->type, LOCALE_TRANSLATION_CURRENT, 'Translation of contrib_module_one found');
-    $this->assertEqual($status['contrib_module_two']['de']->type, LOCALE_TRANSLATION_CURRENT, 'Translation of contrib_module_two found');
-    $this->assertEqual($status['contrib_module_three']['de']->type, LOCALE_TRANSLATION_CURRENT, 'Translation of contrib_module_three found');
-
-    // Check the new translation status.
-    // The static cache needs to be flushed first to get the most recent data
-    // from the database. The function was called earlier during this test.
-    drupal_static_reset('locale_translation_get_file_history');
-    $history = locale_translation_get_file_history();
-    $this->assertTrue($history['contrib_module_one']['de']->timestamp >= $this->timestamp_now, 'Translation of contrib_module_one is imported');
-    $this->assertTrue($history['contrib_module_one']['de']->last_checked >= $this->timestamp_now, 'Translation of contrib_module_one is updated');
-    $this->assertEqual($history['contrib_module_two']['de']->timestamp, $this->timestamp_medium, 'Translation of contrib_module_two is imported');
-    $this->assertEqual($history['contrib_module_two']['de']->last_checked, $this->timestamp_medium, 'Translation of contrib_module_two is updated');
-    $this->assertEqual($history['contrib_module_three']['de']->timestamp, $this->timestamp_medium, 'Translation of contrib_module_three is not imported');
-    $this->assertEqual($history['contrib_module_three']['de']->last_checked, $this->timestamp_medium, 'Translation of contrib_module_three is not updated');
-
-    // Check whether existing translations have (not) been overwritten.
-    $this->assertEqual(t('January', array(), array('langcode' => 'de')), 'Januar_1', 'Translation of January');
-    $this->assertEqual(t('February', array(), array('langcode' => 'de')), 'Februar_1', 'Translation of February');
-    $this->assertEqual(t('March', array(), array('langcode' => 'de')), 'Marz_1', 'Translation of March');
-    $this->assertEqual(t('May', array(), array('langcode' => 'de')), 'Mai_customized', 'Translation of May');
-    $this->assertEqual(t('June', array(), array('langcode' => 'de')), 'Juni', 'Translation of June');
-    $this->assertEqual(t('Monday', array(), array('langcode' => 'de')), 'Montag', 'Translation of Monday');
-  }
-
-  /**
-   * Tests translation import with a translations directory and only overwrite
-   * non-customized translations.
+   * Tests translation import and only overwrite non-customized translations.
    *
    * Test conditions:
    *  - Source: remote and local files
    *  - Import overwrite: only overwrite non-customized translations
-   *  - Translation directory: available
    */
   function testUpdateImportModeNonCustomized() {
     $config = config('locale.settings');
@@ -624,13 +294,11 @@ EOF;
   }
 
   /**
-   * Tests translation import with a translations directory and don't overwrite
-   * any translation.
+   * Tests translation import and don't overwrite any translation.
    *
    * Test conditions:
    *  - Source: remote and local files
    *  - Import overwrite: don't overwrite any existing translation
-   *  - Translation directory: available
    */
   function testUpdateImportModeNone() {
     $config = config('locale.settings');
