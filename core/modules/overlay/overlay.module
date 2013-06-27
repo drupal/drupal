@@ -586,7 +586,8 @@ function overlay_overlay_child_initialize() {
   // actually did change, and, if so, trigger an immediate Ajax refresh
   // of the parent window.
   $token = Drupal::request()->query->get('token');
-  if (!empty($_POST) || isset($token)) {
+  $post = Drupal::request()->request->count();
+  if (!empty($post) || isset($token)) {
     foreach (overlay_supplemental_regions() as $region) {
       overlay_store_rendered_content($region, overlay_render_region($region));
     }
