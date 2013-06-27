@@ -166,7 +166,8 @@ function locale_help($path, $arg) {
 
     case 'admin/config/regional/translate/import':
       $output = '<p>' . t('Translation files are automatically downloaded and imported when <a href="@language">languages</a> are added, or when modules or themes are enabled.', array('@language' => url('admin/config/regional/language'))). '</p>';
-      $output .= '<p>' . t('For situations where translations need to be manually imported, this page imports the translated strings contained in a Gettext Portable Object (.po) file, which can be downloaded from the <a href="@url">Drupal translation server</a>. Alternatively, a .po file may need to be imported after offline editing in a Gettext translation editor. Importing an individual .po file may be a lengthy process.', array('@url' => 'http://localize.drupal.org')) . '</p>';
+      $output .= '<p>' . t('This page allows translators to manually import translated strings contained in a Gettext Portable Object (.po) file. Manual import may be used for customized translations or for the translation of custom modules and themes. To customize translations you can download a translation file from the <a href="@url">Drupal translation server</a> or <a href="@export">export</a> translations from the site, customize the translations using a Gettext translation editor, and import the result using this page.', array('@url' => 'http://localize.drupal.org', '@export' => url('admin/config/regional/translate/export'))) . '</p>';
+      $output .= '<p>' . t('Note that importing large .po files may take several minutes.') . '</p>';
       return $output;
 
     case 'admin/config/regional/translate/export':

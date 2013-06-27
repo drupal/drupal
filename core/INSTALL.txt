@@ -7,6 +7,7 @@ CONTENTS OF THIS FILE
  * Installation
  * Building and customizing your site
  * Multisite configuration
+ * Multilingual configuration
  * More information
 
 REQUIREMENTS AND NOTES
@@ -82,27 +83,7 @@ INSTALLATION
 
      mv drupal-x.y/* drupal-x.y/.htaccess /path/to/your/installation
 
-2. Optionally, download a translation.
-
-   By default, Drupal is installed in English, and further languages may be
-   installed later. If you prefer to install Drupal in another language
-   initially:
-
-   - Download a translation file for the correct Drupal version and language
-     from the translation server: http://localize.drupal.org/translate/downloads
-
-   - Place the file into the dedicated translations directory. By default this
-     directory is:
-
-       sites/default/files/translations/
-
-     If the directory doesn't exist, you should create it. Make sure your file
-     is named drupal-VERSION.LANGCODE.po (for example, the German
-     translation for Drupal 8.0 should be named drupal-8.0.de.po).
-
-   For detailed instructions, visit http://drupal.org/localize
-
-3. Create the Drupal database.
+2. Create the Drupal database.
 
    Because Drupal stores all site information in a database, the Drupal
    installer will attempt to create this database for you. If you create the
@@ -114,7 +95,7 @@ INSTALLATION
    Take note of the username, password, database name, and hostname as you
    create the database. You will enter this information during the install.
 
-4. Run the install script.
+3. Run the install script.
 
    To run the install script, point your browser to the base URL of your
    website (e.g., http://www.example.com).
@@ -194,7 +175,7 @@ INSTALLATION
         chmod go-w sites/default/settings.php
         chmod go-w sites/default
 
-5. Verify that the site is working.
+4. Verify that the site is working.
 
    When the install script finishes, you will be logged in with the site
    maintenance account on a "Welcome" page. If the default Drupal theme is not
@@ -202,7 +183,7 @@ INSTALLATION
    you may be experiencing problems with clean URLs. Visit
    http://drupal.org/getting-started/clean-urls to troubleshoot.
 
-6. Change file system storage settings (optional).
+5. Change file system storage settings (optional).
 
    The files directory created in step 4 is the default file system path used to
    store all uploaded files, as well as some temporary files created by
@@ -242,7 +223,7 @@ INSTALLATION
    on an existing site, remember to copy all files from the original location
    to the new location.
 
-7. Revoke documentation file permissions (optional).
+6. Revoke documentation file permissions (optional).
 
    Some administrators suggest making the documentation files, especially
    CHANGELOG.txt, non-readable so that the exact version of Drupal you are
@@ -262,7 +243,7 @@ INSTALLATION
    "Modifying Windows file permissions" (http://drupal.org/node/202491) in the
    Drupal.org online documentation.
 
-8. Set up independent "cron" maintenance jobs.
+7. Set up independent "cron" maintenance jobs.
 
    Many Drupal modules have tasks that must be run periodically, including the
    Search module (building and updating the index used for keyword searching),
@@ -383,6 +364,14 @@ settings, consult http://drupal.org/getting-started/6/install/multi-site
 
 For more information on configuring Drupal's file system path in a multisite
 configuration, see step 6 above.
+
+MULTILINGUAL CONFIGURATION
+--------------------------
+
+By default, Drupal is installed in one language, and further languages may be
+installed later.
+
+For detailed instructions, visit http://drupal.org/documentation/multilingual
 
 MORE INFORMATION
 ----------------
